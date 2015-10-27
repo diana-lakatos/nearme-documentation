@@ -70,18 +70,17 @@ class PaymentTransfer < ActiveRecord::Base
   # Attempt to payout through the billing gateway
   def payout
 
-    return if !billing_gateway.present?
+    return if !payout_gateway.present?
     return if transferred?
     return if amount <= 0
 
     # Generates a ChargeAttempt with this record as the reference.
-    payout = billing_gateway.payout(
+    payout = payout_gateway.payout(
       company,
       amount: amount,
       reference: self,
       payment_gateway_mode: payment_gateway_mode
     )
-
 
     if payout.success
       touch(:transferred_at)
@@ -107,13 +106,13 @@ class PaymentTransfer < ActiveRecord::Base
   end
 
   def payout_processor
-    billing_gateway
+    payout_gateway
   end
 
   def possible_automated_payout_not_supported?
     # true if instance makes it possible to make automated payout for given currency, but company does not support it
     # false if either company can process this payment transfer automatically or instance does not support it
-    billing_gateway.try(:supports_payout?) && company.merchant_accounts.where(payment_gateway: billing_gateway).count.zero?
+    payout_gateway.try(:supports_payout?) && company.merchant_accounts.where(payment_gateway: payout_gateway).count.zero?
   end
 
   def total_service_fee_cents
@@ -136,20 +135,10 @@ class PaymentTransfer < ActiveRecord::Base
     end
   end
 
-  def billing_gateway
-    if @billing_gateway.nil?
-      concrete_payment_gateway = payment_gateway || instance.payment_gateway(company.iso_country_code, currency)
-      @billing_gateway = if concrete_payment_gateway.try(:supports_payout?)
-                           concrete_payment_gateway
-                           # this is hack for now - currently we might accept payments via Stripe, but do payout via PayPal
-                         else
-                           concrete_payment_gateway = instance.payment_gateways.find do |pg|
-                             pg.supports_payout? && pg.supports_currency?(currency) && pg.class.supported_countries.include?(company.iso_country_code)
-                           end
-                           concrete_payment_gateway
-                         end
+  def payout_gateway
+    if @payout_gateway.nil?
+      @payout_gateway = payment_gateway || instance.payout_gateway(company.iso_country_code, currency)
     end
-    @billing_gateway
+    @payout_gateway
   end
-
 end

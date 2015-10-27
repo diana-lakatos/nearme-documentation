@@ -2,21 +2,18 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
 
   include ActionView::Helpers::SanitizeHelper
   include PaymentGateway::ActiveMerchantGateway
-  include PaymentExtention::PaypalMerchantBoarding
-
-  has_many :merchant_accounts, class_name: 'MerchantAccount::PaypalMerchantAccount'
 
   # Global setting for all marketplaces
   # Send to paypal with every action as BN CODE
   ActiveMerchant::Billing::Gateway.application_id = Rails.configuration.active_merchant_billing_gateway_app_id
 
+  supported :multiple_currency, :express_checkout_payment
+
   def self.settings
     {
-      email: "",
       login: "",
       password: "",
       signature: "",
-      app_id: "",
       partner_id: ""
     }
   end
@@ -37,30 +34,6 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
     PaymentAuthorizer::PaypalExpressPaymentAuthorizer.new(self, authoriazable, options).process!
   end
 
-  def gateway_capture(amount, token, options)
-    gateway(@payable.merchant_subject).capture(amount, token, options)
-  end
-
-  def custom_capture_options
-    {
-      token: @payable.express_token,
-      payer_id: @payable.express_payer_id
-    }
-  end
-
-  def merchant_account(company)
-    return nil if company.nil?
-    MerchantAccount::PaypalMerchantAccount.where(merchantable: company, test: MerchantAccount::PaypalMerchantAccount::SEPARATE_TEST_ACCOUNTS && test_mode?).where(state: 'verified').first
-  end
-
-  def express_checkout?
-    true
-  end
-
-  def type_name
-    "paypal"
-  end
-
   def gateway(subject=nil)
     if @gateway.nil? || subject.present?
       ActiveMerchant::Billing::Base.mode = :test if test_mode?
@@ -76,23 +49,15 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
 
   alias_method :express_gateway, :gateway
 
-  def immediate_payout(company)
-    merchant_account(company).present?
+  def gateway_capture(amount, token, options)
+    gateway(@payable.merchant_subject).capture(amount, token, options)
   end
 
-  def process_payout(merchant_account, amount, reference)
-    reference_id = merchant_account.try(:billing_agreement_id)
-    response = if reference.total_service_fee.cents > 0
-      gateway.reference_transaction(reference.total_service_fee.cents, { reference_id: reference_id })
-    else
-      OpenStruct.new(success: true, success?: true, refunded_ammount: reference.total_service_fee.cents)
-    end
-
-    if response.success?
-      payout_successful(response)
-    else
-      payout_failed(response)
-    end
+  def custom_capture_options
+    {
+      token: @payable.express_token,
+      payer_id: @payable.express_payer_id
+    }
   end
 
   def gateway_refund(amount, charge, options)
@@ -145,13 +110,6 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
     )
   end
 
-  def set_billing_agreement(options)
-    @response = gateway.setup_authorization(0, options.deep_merge({ billing_agreement: {
-      type: "MerchantInitiatedBilling",
-      description: "#{PlatformContext.current.instance.name} Billing Agreement"
-    }}))
-  end
-
   def redirect_url
     gateway.redirect_url_for(token)
   end
@@ -164,16 +122,8 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
     @token ||= @response.token
   end
 
-  def supports_payout?
-    true
-  end
-
   def supports_paypal_chain_payments?
     settings[:partner_id].present?
-  end
-
-  def supports_immediate_payout?
-    true
   end
 
   private
@@ -184,11 +134,6 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
       @payment.company.payment_transfers.create!(payments: [@payment.reload], payment_gateway_mode: mode, payment_gateway_id: self.id)
     end
     @charge.charge_successful(response)
-  end
-
-
-  def merchant_subject
-    @merchant_account.subject
   end
 
   def line_items

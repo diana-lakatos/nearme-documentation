@@ -1,4 +1,6 @@
 class Reservation < ActiveRecord::Base
+  include Payment::PaymentModule
+
   class NotFound < ActiveRecord::RecordNotFound; end
   class InvalidPaymentState < StandardError; end
   has_paper_trail
@@ -11,15 +13,6 @@ class Reservation < ActiveRecord::Base
   after_create :create_waiver_agreements
   after_create :copy_dimensions_template
 
-  PAYMENT_METHODS = {
-    :credit_card => 'credit_card',
-    :express_checkout => 'express_checkout',
-    :manual => 'manual',
-    :nonce => 'nonce',
-    :remote => 'remote',
-    :free => 'free'
-  }.freeze
-
   PAYMENT_STATUSES = {
     :paid => 'paid',
     :failed => 'failed',
@@ -30,15 +23,16 @@ class Reservation < ActiveRecord::Base
 
   attr_accessor :payment_response_params
 
+  belongs_to :administrator, -> { with_deleted }, class_name: "User"
+  belongs_to :company, -> { with_deleted }
+  belongs_to :creator, -> { with_deleted }, class_name: "User"
+  belongs_to :credit_card
   belongs_to :instance
   belongs_to :listing, -> { with_deleted }, class_name: 'Transactable', foreign_key: 'transactable_id'
   belongs_to :owner, -> { with_deleted }, :class_name => "User", counter_cache: true
-  belongs_to :creator, -> { with_deleted }, class_name: "User"
-  belongs_to :administrator, -> { with_deleted }, class_name: "User"
-  belongs_to :company, -> { with_deleted }
-  belongs_to :recurring_booking
   belongs_to :platform_context_detail, :polymorphic => true
-  belongs_to :credit_card
+  belongs_to :payment_method
+  belongs_to :recurring_booking
   has_many :user_messages, as: :thread_context
   has_many :waiver_agreements, as: :target
   has_many :additional_charges, as: :target
@@ -236,7 +230,7 @@ class Reservation < ActiveRecord::Base
 
   scope :with_listing, -> {where.not(transactable_id: nil)}
 
-  validates_presence_of :payment_method, :in => Reservation::PAYMENT_METHODS.values
+  validates_presence_of :payment_method_id
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
   delegate :location, :show_company_name, :transactable_type_id, :billing_authorizations, to: :listing
@@ -244,7 +238,7 @@ class Reservation < ActiveRecord::Base
   delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :listing, allow_nil: true
 
   def authorize
-    billing_gateway = instance.payment_gateway(listing.company.iso_country_code, currency)
+    billing_gateway = self.payment_method.try(:payment_gateway)
     billing_gateway.present? ? billing_gateway.authorize(self) : false
   end
 
@@ -389,36 +383,8 @@ class Reservation < ActiveRecord::Base
     successful_payment_amount_cents - total_amount_cents
   end
 
-  def active_merchant_payment?
-    credit_card_payment? || nonce_payment? || express_checkout_payment?
-  end
-
-  def credit_card_payment?
-    payment_method == Reservation::PAYMENT_METHODS[:credit_card]
-  end
-
-  def express_checkout_payment?
-    payment_method == Reservation::PAYMENT_METHODS[:express_checkout]
-  end
-
-  def nonce_payment?
-    payment_method == Reservation::PAYMENT_METHODS[:nonce]
-  end
-
-  def manual_payment?
-    payment_method == Reservation::PAYMENT_METHODS[:manual]
-  end
-
   def merchant_subject
-    listing.company.paypal_merchant_account.try(:subject)
-  end
-
-  def possible_manual_payment?
-    instance.possible_manual_payment?
-  end
-
-  def remote_payment?
-    payment_method == Reservation::PAYMENT_METHODS[:remote]
+    listing.company.paypal_express_chain_merchant_account.try(:subject)
   end
 
   def currency

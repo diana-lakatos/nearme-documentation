@@ -346,7 +346,7 @@ GEM
     devise-token_authenticatable (0.4.0)
       devise (~> 3.5.0)
     diff-lcs (1.2.5)
-    disposable (0.1.6)
+    disposable (0.1.11)
       representable (>= 2.2.3, <= 2.3.0)
       uber
     docile (1.1.5)
@@ -576,7 +576,6 @@ GEM
       railties (>= 3.2, < 5)
       responders
     ipaddress (0.8.0)
-    iso_country_codes (0.6.1)
     jquery-fileupload-rails (0.4.4)
       actionpack (>= 3.1)
       railties (>= 3.1)
@@ -843,12 +842,10 @@ GEM
       redis-store (~> 1.1.0)
     redis-store (1.1.4)
       redis (>= 2.2)
-    reform (2.0.0.rc2)
-      disposable (~> 0.1.5)
+    reform (2.0.4)
+      disposable (~> 0.1.11)
       uber (~> 0.0.11)
-    representable (2.2.3)
-      multi_json
-      nokogiri
+    representable (2.3.0)
       uber (~> 0.0.7)
     request_store (1.1.0)
     require_all (1.3.2)
@@ -983,7 +980,7 @@ GEM
       ethon (>= 0.7.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uber (0.0.13)
+    uber (0.0.15)
     uglifier (2.1.2)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
@@ -1112,7 +1109,6 @@ DEPENDENCIES
   ice_cube
   inherited_resources (~> 1.6)
   instagram!
-  iso_country_codes
   jcrop-rails!
   jquery-fileupload-rails
   jquery-rails (~> 4.0)
@@ -1176,7 +1172,7 @@ DEPENDENCIES
   recurring_select!
   redis
   redis-rails (~> 4.0.0)
-  reform (~> 2.0.0.rc2)
+  reform (~> 2.0.4)
   rest-client
   ri_cal
   routing-filter (~> 0.5.0)

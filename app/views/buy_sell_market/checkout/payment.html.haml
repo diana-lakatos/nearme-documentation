@@ -16,51 +16,12 @@
                 %ul
                   - @order.errors[:checkout_fields].each do |error|
                     %li.error-block= error
-
       %section.checkout-form#credit-card-select
-
         .container-fluid
-          %h2 Payment Information
-          = f.error :payment_method
-          - if @payment_gateway.credit_card_payment?
-            .row-fluid
-              .span3
-                %label
-                  = f.radio_button :payment_method, Spree::Order::PAYMENT_METHODS[:credit_card], checked: true
-                  = t('buy_sell_market.checkout.credit_card')
-              .span9
-                - if @order.billing_authorization.nil?
-                  = render 'checkout_credit_card_fields', f: f
-                - else
-                  Payment has been already authorized. Please proceed.
-          - if @payment_gateway.nonce_payment?
-            .row-fluid
-              .span3
-                %label
-                  = f.radio_button :payment_method, Spree::Order::PAYMENT_METHODS[:nonce]
-                  = t('buy_sell_market.checkout.nonce')
-              .span9
-                - if @order.billing_authorization.nil?
-                  = render 'nonce_payment', f: f
-                - else
-                  Payment has been already authorized. Please proceed.
-          - if @payment_gateway.manual_payment?
-            .row-fluid
-              .span3
-                %label
-                  = f.radio_button :payment_method, Spree::Order::PAYMENT_METHODS[:manual], checked: !@payment_gateway.credit_card_payment?
-                  = t('buy_sell_market.checkout.manual_payment')
-              .span9
-                = t('buy_sell_market.checkout.manual_payment_description')
+          = render 'shared/payments', f: f
 
-          - if @payment_gateway.express_checkout?
-            - if @order.express_token.blank?
-              = f.hidden_field :start_express_checkout, value: true
-              = image_submit_tag("https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif")
-            - else
-              = t('buy_sell_market.checkout.payment_authorized')
-              = f.hidden_field :express_token
-      - if @payment_gateway.express_checkout? && @order.express_token.blank?
+
+      - if @payment_methods.count == 1 && @payment_methods.any?{ |p| p.express_checkout? } && @order.express_token.blank?
         = render partial: 'checkout_buttons'
       - else
         = render partial: 'checkout_buttons', locals: { form: f, final: true }

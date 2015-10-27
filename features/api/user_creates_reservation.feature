@@ -3,6 +3,7 @@ Feature: User creates reservation
 
   Scenario: Creating a reservation that requires confirmation by the listing owner
     Given I am an authenticated api user
+    And a manual_payment_gateway exists
     And a listed location in San Francisco that does require confirmation
     When I send an authenticated POST request to "listings/:id/reservation":
     """
@@ -20,6 +21,7 @@ Feature: User creates reservation
 
   Scenario: Creating a reservation that does not require confirmation by the listing owner
     Given I am an authenticated api user
+    And a manual_payment_gateway exists
     And a transactable_type_listing exists with name: "Listing"
     And a listed location in San Francisco that does not require confirmation
     When I send an authenticated POST request to "listings/:id/reservation":

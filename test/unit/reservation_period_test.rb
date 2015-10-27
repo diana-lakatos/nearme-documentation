@@ -5,7 +5,8 @@ class ReservationPeriodTest < ActiveSupport::TestCase
   setup do
     @listing = FactoryGirl.create(:transactable, quantity: 2)
     @user = FactoryGirl.create(:user)
-    @reservation = @listing.reservations.build(:user => @user)
+    @payment_method = FactoryGirl.create(:manual_payment_method)
+    @reservation = @listing.reservations.build(:user => @user, payment_method: @payment_method)
     @next_monday = Time.zone.today.advance(:weeks => 1).beginning_of_week
   end
 
@@ -15,11 +16,11 @@ class ReservationPeriodTest < ActiveSupport::TestCase
         period = @reservation.periods.build(:date => @next_monday)
         assert period.bookable?
 
-        res = @listing.reservations.create(:quantity => 1, :date => @next_monday, :user => @user)
+        res = @listing.reservations.create(:quantity => 1, :date => @next_monday, :user => @user, payment_method: @payment_method)
         res.confirm
         assert period.bookable?
 
-        res = @listing.reservations.create(:quantity => 1, :date => @next_monday, :user => @user)
+        res = @listing.reservations.create(:quantity => 1, :date => @next_monday, :user => @user, payment_method: @payment_method)
         res.confirm
         assert !period.bookable?
       end
@@ -35,13 +36,13 @@ class ReservationPeriodTest < ActiveSupport::TestCase
         period = @reservation.periods.build(:date => @next_monday, :start_minute => @nine, :end_minute => @one)
         assert period.bookable?
 
-        res = @listing.reservations.build(:quantity => 1, :user => @user)
+        res = @listing.reservations.build(:quantity => 1, :user => @user, payment_method: @payment_method)
         res.add_period(@next_monday, @nine, @one)
         res.save!
         res.confirm
         assert period.bookable?
 
-        res = @listing.reservations.build(:quantity => 1, :user => @user)
+        res = @listing.reservations.build(:quantity => 1, :user => @user, payment_method: @payment_method)
         res.add_period(@next_monday, @nine, @one)
         res.save!
         res.confirm

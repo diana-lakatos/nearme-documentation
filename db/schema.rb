@@ -475,6 +475,24 @@ ActiveRecord::Schema.define(version: 20151023103850) do
 
   add_index "content_holders", ["instance_id", "theme_id", "name"], name: "index_content_holders_on_instance_id_and_theme_id_and_name", using: :btree
 
+  create_table "countries", force: :cascade do |t|
+    t.string   "iso_name",        limit: 255
+    t.string   "iso",             limit: 255
+    t.string   "iso3",            limit: 255
+    t.string   "name",            limit: 255
+    t.integer  "numcode"
+    t.boolean  "states_required",             default: false
+    t.datetime "updated_at"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "user_id"
+    t.string   "calling_code"
+  end
+
+  add_index "countries", ["iso"], name: "index_countries_on_iso", using: :btree
+  add_index "countries", ["name"], name: "index_countries_on_name", using: :btree
+
   create_table "country_payment_gateways", force: :cascade do |t|
     t.string   "country_alpha2_code", limit: 255
     t.integer  "payment_gateway_id"
@@ -497,6 +515,24 @@ ActiveRecord::Schema.define(version: 20151023103850) do
 
   add_index "credit_cards", ["instance_client_id"], name: "index_credit_cards_on_instance_client_id", using: :btree
   add_index "credit_cards", ["instance_id"], name: "index_credit_cards_on_instance_id", using: :btree
+
+  create_table "currencies", force: :cascade do |t|
+    t.string  "symbol"
+    t.integer "priority"
+    t.boolean "symbol_first"
+    t.string  "thousands_separator"
+    t.string  "html_entity"
+    t.string  "decimal_mark"
+    t.string  "name"
+    t.integer "subunit_to_unit"
+    t.float   "exponent"
+    t.string  "iso_code"
+    t.integer "iso_numeric"
+    t.string  "subunit"
+    t.integer "smallest_denomination"
+  end
+
+  add_index "currencies", ["iso_code"], name: "index_currencies_on_iso_code", using: :btree
 
   create_table "custom_attributes", force: :cascade do |t|
     t.string   "name",                 limit: 255
@@ -1179,7 +1215,51 @@ ActiveRecord::Schema.define(version: 20151023103850) do
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
     t.string   "type",                    limit: 255
+    t.boolean  "test_active"
+    t.boolean  "live_active"
   end
+
+  create_table "payment_gateways_countries", force: :cascade do |t|
+    t.integer  "country_id"
+    t.integer  "payment_gateway_id"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "payment_gateways_countries", ["country_id"], name: "index_payment_gateways_countries_on_country_id", using: :btree
+  add_index "payment_gateways_countries", ["instance_id"], name: "index_payment_gateways_countries_on_instance_id", using: :btree
+  add_index "payment_gateways_countries", ["payment_gateway_id"], name: "index_payment_gateways_countries_on_payment_gateway_id", using: :btree
+
+  create_table "payment_gateways_currencies", force: :cascade do |t|
+    t.integer  "currency_id"
+    t.integer  "payment_gateway_id"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "payment_gateways_currencies", ["currency_id"], name: "index_payment_gateways_currencies_on_currency_id", using: :btree
+  add_index "payment_gateways_currencies", ["instance_id"], name: "index_payment_gateways_currencies_on_instance_id", using: :btree
+  add_index "payment_gateways_currencies", ["payment_gateway_id"], name: "index_payment_gateways_currencies_on_payment_gateway_id", using: :btree
+
+  create_table "payment_methods", force: :cascade do |t|
+    t.integer  "payment_gateway_id"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.string   "payment_method_type"
+    t.boolean  "active",              default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "payment_methods", ["instance_id"], name: "index_payment_methods_on_instance_id", using: :btree
+  add_index "payment_methods", ["payment_gateway_id"], name: "index_payment_methods_on_payment_gateway_id", using: :btree
 
   create_table "payment_transfers", force: :cascade do |t|
     t.integer  "company_id"
@@ -1501,7 +1581,7 @@ ActiveRecord::Schema.define(version: 20151023103850) do
     t.datetime "deleted_at"
     t.text     "comment"
     t.boolean  "create_charge"
-    t.string   "payment_method",                                limit: 255,                         default: "manual",  null: false
+    t.string   "old_payment_method",                            limit: 255,                         default: "manual",  null: false
     t.string   "payment_status",                                limit: 255,                         default: "unknown", null: false
     t.float    "quantity",                                                                          default: 1.0,       null: false
     t.decimal  "service_fee_amount_guest_cents",                            precision: 8, scale: 2
@@ -1532,6 +1612,7 @@ ActiveRecord::Schema.define(version: 20151023103850) do
     t.text     "guest_notes"
     t.string   "express_token",                                 limit: 255
     t.string   "express_payer_id",                              limit: 255
+    t.integer  "payment_method_id"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -2005,12 +2086,13 @@ ActiveRecord::Schema.define(version: 20151023103850) do
     t.string   "platform_context_detail_type",   limit: 255
     t.decimal  "service_fee_amount_guest_cents",             precision: 8,  scale: 2, default: 0.0
     t.decimal  "service_fee_amount_host_cents",              precision: 8,  scale: 2, default: 0.0
-    t.string   "payment_method",                 limit: 255
+    t.string   "old_payment_method",             limit: 255
     t.string   "express_token",                  limit: 255
     t.string   "express_payer_id",               limit: 255
     t.datetime "canceled_at"
     t.integer  "canceler_id"
     t.integer  "store_id"
+    t.integer  "payment_method_id"
     t.boolean  "insurance_enabled",                                                   default: false,   null: false
   end
 

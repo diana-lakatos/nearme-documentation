@@ -2,6 +2,6 @@ FactoryGirl.define do
   factory :zone, class: Spree::Zone do
     name { generate(:random_string) }
     description { generate(:random_string) }
-    country_ids { [create(:country).id]}
+    country_ids { [Country.first.try(:id) || create(:country).id]}
   end
 end

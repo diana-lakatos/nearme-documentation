@@ -1,0 +1,18 @@
+<input class="string optional" id="company_paypal_adaptive_merchant_account_attributes_email" name="company[paypal_adaptive_merchant_account_attributes][id]" placeholder="" type="hidden" value="{{ merchant_account.id}}">
+
+<h3>{{ 'simple_form.labels.company.payout.via_paypal' | translate }}</h3>
+
+<div class="string optional company_paypal_adaptive_merchant_account_attributes_email">
+  <div class="row">
+    <div class="col-md-3">
+      <label class="string optional control-label" for="company_paypal_adaptive_merchant_account_attributes_email">Paypal Email</label>
+    </div>
+    <div class="col-md-9 input-container">
+      <input class="string optional" id="company_paypal_adaptive_merchant_account_attributes_email" name="company[paypal_adaptive_merchant_account_attributes][email]" placeholder="" type="text" value="{{ merchant_account.data['email']}}">
+    </div>
+  </div>
+</div>
+<div class="submit-bar">
+  <input class="btn medium blue" type="submit" value="Save">
+</div>
+

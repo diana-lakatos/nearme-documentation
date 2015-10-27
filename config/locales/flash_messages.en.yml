@@ -166,6 +166,15 @@ en:
           updated: 'Language has been successfully updated'
           deleted: 'Language has been successfully deleted'
           keys_updated: 'Language keys have been successfully updated'
+        payments:
+          payment_transfers:
+            generated: "Transfers are being generated, pelase refresh the page to see them on the list."
+            no_new_transfers: "There are no pending payments"
+          payment_gateways:
+            created: 'Payment gateway has been successfully created.\n Add proper configuration to use it in live mode.'
+            updated: 'Payment gateway has been successfully updated'
+            deleted: 'Payment gateway has been successfully deleted'
+
 
       theme:
         theme_updated_successfully: 'Theme updated.'

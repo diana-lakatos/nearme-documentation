@@ -20,6 +20,7 @@ class TransactableTest < ActiveSupport::TestCase
 
   setup do
     @listing = FactoryGirl.build(:transactable)
+    @manual_payment_method = FactoryGirl.create(:manual_payment_gateway).payment_methods.first
   end
 
   context 'validation' do

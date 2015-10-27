@@ -53,6 +53,7 @@ class SearchControllerTest < ActionController::TestCase
 
       context 'for unavailable listings' do
         should 'display also unavailable listings' do
+          FactoryGirl.create(:manual_payment_gateway)
           unavaliable_location = FactoryGirl.create(:fully_booked_listing_in_cleveland).location
           available_location = FactoryGirl.create(:listing_in_cleveland).location
 

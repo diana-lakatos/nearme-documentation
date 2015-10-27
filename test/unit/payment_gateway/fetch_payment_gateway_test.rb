@@ -3,12 +3,12 @@ require 'test_helper'
 class PaymentGateway::FetchPaymentGatewayTest < ActiveSupport::TestCase
 
   setup do
-    @billing_gateway = FactoryGirl.create(:fetch_country_payment_gateway).payment_gateway
+    @payment_gateway = FactoryGirl.create(:fetch_payment_gateway)
   end
 
   should "set fetch as processor for NZ companies with NZD currency" do
-    assert_equal ['NZD'], @billing_gateway.supported_currencies
-    assert_equal ['NZ'], @billing_gateway.class.supported_countries
+    assert_equal ['NZD'], @payment_gateway.supported_currencies
+    assert_equal ['NZ'], @payment_gateway.class.supported_countries
   end
 
   should "set reservation as paid after success response" do

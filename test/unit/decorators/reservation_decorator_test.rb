@@ -109,7 +109,6 @@ class ReservationDecoratorTest < ActionView::TestCase
     context 'that was confirmed ( = paid)' do
       setup do
         payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
-        @reservation.instance.payment_gateways << payment_gateway
         stub_active_merchant_interaction
         @reservation.create_billing_authorization(token: "token", payment_gateway: payment_gateway, payment_gateway_mode: "test")
         @reservation.save!

@@ -11,12 +11,7 @@ class BoardingFormTest < ActiveSupport::TestCase
     @shipping_category.company_id = @boarding_form.product_form.product.company.id
     @shipping_category.user_id = @user.id
     @shipping_category.save!
-    10.times do
-      FactoryGirl.create(:category)
-      FactoryGirl.create(:country)
-    end
-    @category_ids = Category.all.map(&:id)
-    @countries = [FactoryGirl.create(:country)]
+    @category_ids = FactoryGirl.create_list(:category, 10).map(&:id)
   end
 
   context "Boarding First Product" do

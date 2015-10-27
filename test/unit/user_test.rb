@@ -435,7 +435,7 @@ class UserTest < ActiveSupport::TestCase
 
   context '#full_mobile_number' do
     setup do
-      @nz = Country.find('New Zealand')
+      @nz = FactoryGirl.create(:country_nz)
     end
 
     should 'prefix with international calling code' do

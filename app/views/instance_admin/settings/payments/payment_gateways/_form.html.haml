@@ -1,0 +1,45 @@
+= simple_form_for [:instance_admin, :settings, @payment_gateway] do |f|
+  - if @payment_gateway.new_record?
+    .row
+      .input-container.col-xs-12
+        = f.input :type, collection: PaymentGateway::PAYMENT_GATEWAYS, :input_html => {data: { "payment-gateway": true }}
+  - else
+    = f.hidden_field :type
+    .row
+      %h4= @payment_gateway.name.to_s + " " + t('instance_admin.settings.payments.payment_gateways.edit') + ":"
+    .row
+      .input-container.col-xs-6
+        = f.association :payment_countries, label_method: :full_name, collection: @payment_gateway.available_payment_countries, input_html: { class: 'selectpicker', "data-live-search" => "true", multiple: true }
+      .input-container.col-xs-6
+        = f.association :payment_currencies, label_method: :full_name, collection: @payment_gateway.available_currencies, input_html: { class: 'selectpicker', "data-live-search" => "true", multiple: @payment_gateway.supports_multiple_currency? }
+
+    - if @payment_gateway.payment_methods.any?
+      .row
+        %h4 Payment Methods:
+      .row
+        = f.simple_fields_for :payment_methods do |p|
+          .input-container.col-xs-3
+            = p.input :payment_method_type, as: :hidden
+            = p.input :active, as: :boolean, inline_label: p.object.name
+    %br
+      %h4 Available in mode:
+    .row
+      .input-container.col-xs-6
+        = f.input :live_active, as: :bootstrap_switch, label: "Live mode"
+      .input-container.col-xs-6
+        = f.input :test_active, as: :bootstrap_switch, label: "Test mode"
+    .row
+      -if @payment_gateway.class.settings.present?
+        .input-container.col-xs-6
+          = f.fields_for :live_settings, OpenStruct.new(@payment_gateway.live_settings) do |live|
+            - f.object.class.settings.keys.each do |setting|
+              = live.input setting, as: :string, input_html: { class: 'form-control', required: false }
+      -if @payment_gateway.class.settings.present?
+        .input-container.col-xs-6
+          = f.fields_for :test_settings, OpenStruct.new(@payment_gateway.test_settings) do |test|
+            - f.object.class.settings.keys.each do |setting|
+              = test.input setting, as: :string, input_html: { class: 'form-control', required: false }
+
+  = content_for :header_buttons do
+    = f.button :submit, t('instance_admin.save'), class: "btn btn-blue pull-right", data: { 'submit-form' => 1, 'form-selector' => 'form' }
+    = link_to t('instance_admin.cancel'), instance_admin_settings_payments_url , class: 'btn btn-light pull-right'

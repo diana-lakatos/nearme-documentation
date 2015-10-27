@@ -6,6 +6,7 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
       redirect_to redirection_path
     end
   end
+
   before_filter :reservation, only: [:booking_successful_modal, :booking_failed_modal]
 
   def user_cancel
@@ -86,9 +87,7 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
   protected
 
   def setup_payment_gateway
-    res = reservation
-    @billing_gateway = res.instance.payment_gateway(res.listing.company.iso_country_code, res.currency)
-    @billing_gateway.set_payment_data(res)
+    reservation.payment_gateway.set_payment_data(reservation)
   end
 
   def reservations

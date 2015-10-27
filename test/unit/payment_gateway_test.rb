@@ -5,23 +5,24 @@ class PaymentGatewayTest < ActiveSupport::TestCase
   validate_presence_of(:test_settings)
   validate_presence_of(:live_settings)
 
-  should have_many(:country_payment_gateways)
   should belong_to(:instance)
   should belong_to(:payment_gateway)
 
+  setup do
+    stub_active_merchant_interaction({success?: true, params: SUCCESS_RESPONSE })
+  end
+
   should 'get proper payment gateway from instance' do
     @stripe = FactoryGirl.create(:stripe_payment_gateway)
+    @stripe.payment_countries = [Country.find_by_iso("PL") || FactoryGirl.create(:country_pl)]
     @paypal = FactoryGirl.create(:paypal_payment_gateway)
+    @paypal.payment_countries = [Country.find_by_iso("GB") || FactoryGirl.create(:country_gb)]
     @fetch = FactoryGirl.create(:fetch_payment_gateway)
     @braintree = FactoryGirl.create(:braintree_payment_gateway)
     @instance = PlatformContext.current.instance
-    FactoryGirl.create(:country_payment_gateway, country_alpha2_code: 'PL', payment_gateway: @stripe)
-    FactoryGirl.create(:country_payment_gateway, country_alpha2_code: 'NZ', payment_gateway: @fetch)
-    FactoryGirl.create(:country_payment_gateway, country_alpha2_code: 'EN', payment_gateway: @paypal)
-    FactoryGirl.create(:country_payment_gateway, country_alpha2_code: 'US', payment_gateway: @braintree)
 
     assert_equal @stripe, @instance.payment_gateway('PL', 'USD')
-    assert_equal @paypal, @instance.payment_gateway('EN', 'USD')
+    assert_equal @paypal, @instance.payment_gateway('GB', 'USD')
     assert_equal @fetch, @instance.payment_gateway('NZ', 'NZD')
     assert_equal @braintree, @instance.payment_gateway('US', 'USD')
 
@@ -31,65 +32,14 @@ class PaymentGatewayTest < ActiveSupport::TestCase
     assert_nil @instance.payment_gateway('RU', 'USD')
   end
 
-  class PaymentGateway::TestPaymentGateway < PaymentGateway
-    class TestGateway
-
-      def authorize(money, payment, options = {})
-        if options[:error]
-          OpenStruct.new(success?: false, message: 'fail')
-        else
-          OpenStruct.new(success?: true, authorization: "auhorization_token")
-        end
-      end
-
-      def capture(*args)
-        if args[1] == "2"
-          OpenStruct.new(success?: false, params: FAILURE_RESPONSE)
-        else
-          OpenStruct.new(success?: true, params: SUCCESS_RESPONSE)
-        end
-      end
-
-      def refund(*args)
-        if args[1] == "2"
-          OpenStruct.new(success?: false, params: FAILURE_RESPONSE)
-        else
-          OpenStruct.new(success?: true, params: SUCCESS_RESPONSE)
-        end
-      end
-    end
-
-    attr_accessor :success
-
-    def gateway
-      @gateway ||= TestGateway.new
-    end
-
-    def refund_identification(charge)
-      charge.response.params["id"]
-    end
-
-    def credit_card_payment?
-      true
-    end
-
-    def supported_currencies
-      ["USD"]
-    end
-
-  end
-
-  class MerchantAccount::TestMerchantAccount < MerchantAccount
-  end
-
   SUCCESS_RESPONSE = {"paid_amount"=>"10.00"}
   FAILURE_RESPONSE = {"paid_amount"=>"10.00", "error"=>"fail"}
 
   context 'payments' do
     setup do
       @user = FactoryGirl.create(:user)
-      @test_processor = PaymentGateway::TestPaymentGateway.new(country: 'US')
-      @test_processor.save!
+      @payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
+      @payment_method = @payment_gateway.payment_methods.first
     end
 
     context 'authorize' do
@@ -99,26 +49,28 @@ class PaymentGatewayTest < ActiveSupport::TestCase
           @transactable,
           @user,
           PlatformContext.current,
-          FactoryGirl.attributes_for(:reservation_request)
+          FactoryGirl.attributes_for(:reservation_request, payment_method: @payment_method)
         )
       end
 
       should "authorize when provided right details" do
-        assert_equal('auhorization_token', @test_processor.authorize(@reservation_request))
+        assert_equal("54533", @payment_gateway.authorize(@reservation_request))
         billing_authorization = BillingAuthorization.last
         assert billing_authorization.success?
-        assert_equal @test_processor, billing_authorization.payment_gateway
-        assert_equal(billing_authorization.response, OpenStruct.new(success?: true, authorization: "auhorization_token"))
+        assert_equal @payment_gateway, billing_authorization.payment_gateway
+        assert_equal(OpenStruct.new(authorization: "54533", success?: true, params: {"paid_amount"=>"10.00"}), billing_authorization.response)
       end
 
       should "not authorize when authorization response is not success" do
-        assert_equal(false, @test_processor.authorize(@reservation_request, {error: true}))
+        stub_active_merchant_interaction({success?: false, message: "fail"})
+
+        assert_equal(false, @payment_gateway.authorize(@reservation_request))
         billing_authorization = BillingAuthorization.last
         assert_equal true, @reservation_request.errors.present?
-        assert_equal @test_processor, billing_authorization.payment_gateway
+        assert_equal @payment_gateway, billing_authorization.payment_gateway
         assert_equal billing_authorization, @transactable.billing_authorizations.last
         assert_equal billing_authorization.success?, false
-        assert_equal(billing_authorization.response, OpenStruct.new(success?: false, message: 'fail'))
+        assert_equal(billing_authorization.response, OpenStruct.new(authorization: "54533", success?: false, message: 'fail'))
       end
     end
 
@@ -130,10 +82,10 @@ class PaymentGatewayTest < ActiveSupport::TestCase
           @transactable,
           @user,
           PlatformContext.current,
-          FactoryGirl.attributes_for(:reservation_request_with_not_valid_cc)
+          FactoryGirl.attributes_for(:reservation_request_with_not_valid_cc, payment_method: @payment_gateway.payment_methods.first)
         )
 
-        assert_equal(false, @test_processor.authorize(@reservation_request, {error: true}))
+        assert_equal(false, @payment_gateway.authorize(@reservation_request, {error: true}))
         assert_equal [I18n.t('buy_sell_market.checkout.invalid_cc')], @reservation_request.errors[:cc]
       end
     end
@@ -144,7 +96,7 @@ class PaymentGatewayTest < ActiveSupport::TestCase
         reservation = FactoryGirl.create(:reservation_with_credit_card, user: @user)
         billing_authorization = FactoryGirl.create(:billing_authorization,
           reference: reservation,
-          payment_gateway: @test_processor)
+          payment_gateway: @payment_gateway)
 
         payment = FactoryGirl.create(:payment_unpaid, payable: reservation.reload)
         charge = Charge.last
@@ -158,10 +110,12 @@ class PaymentGatewayTest < ActiveSupport::TestCase
       end
 
       should 'fail' do
+        stub_active_merchant_interaction({success?: false, params: FAILURE_RESPONSE })
+
         reservation = FactoryGirl.create(:reservation_with_credit_card, user: @user)
         billing_authorization = FactoryGirl.create(:billing_authorization,
           reference: reservation,
-          payment_gateway: @test_processor,
+          payment_gateway: @payment_gateway,
           token: '2')
         payment = FactoryGirl.create(:payment_unpaid, payable: reservation.reload)
 
@@ -183,7 +137,7 @@ class PaymentGatewayTest < ActiveSupport::TestCase
         charge_params = { "id" => "3" }
         charge_response = ActiveMerchant::Billing::Response.new true, 'OK', charge_params
         @charge.update_attribute(:response, charge_response)
-        refund = @test_processor.refund(1000, @currency, @payment, @charge)
+        refund = @payment_gateway.refund(1000, @currency, @payment, @charge)
         assert_equal 1000, refund.amount
         assert_equal 'JPY', refund.currency
         assert_equal SUCCESS_RESPONSE, refund.response.params
@@ -192,10 +146,12 @@ class PaymentGatewayTest < ActiveSupport::TestCase
       end
 
       should 'create refund object when failed' do
+        stub_active_merchant_interaction({success?: false, params: FAILURE_RESPONSE })
+
         charge_params = { "id" => "2" }
         charge_response = ActiveMerchant::Billing::Response.new true, 'OK', charge_params
         @charge.update_attribute(:response, charge_response)
-        refund = @test_processor.refund(1000, @currency, @payment, @charge)
+        refund = @payment_gateway.refund(1000, @currency, @payment, @charge)
         assert_equal 1000, refund.amount
         assert_equal 'JPY', refund.currency
         assert_equal FAILURE_RESPONSE, refund.response.params
@@ -214,29 +170,6 @@ class PaymentGatewayTest < ActiveSupport::TestCase
       assert @stripe.respond_to?(:country)
     end
 
-    should "set country settings after save" do
-      @stripe.country = "US"
-      assert_equal PlatformContext.current.instance.country_payment_gateways.count, 0
-      @stripe.save!
-      assert_equal PlatformContext.current.instance.country_payment_gateways.count, 1
-      assert_equal PlatformContext.current.instance.country_payment_gateways.first.country_alpha2_code, "US"
-      assert_equal PlatformContext.current.instance.country_payment_gateways.first.payment_gateway_id, @stripe.id
-    end
-
-    should "change gateway preference for country after save" do
-      @stripe.country = "US"
-      @stripe.save!
-      assert_equal PlatformContext.current.instance.country_payment_gateways.count, 1
-      assert_equal PlatformContext.current.instance.country_payment_gateways.first.country_alpha2_code, "US"
-      assert_equal PlatformContext.current.instance.country_payment_gateways.first.payment_gateway_id, @stripe.id
-
-      @paypal.country = "US"
-      @paypal.save
-      assert_equal PlatformContext.current.instance.country_payment_gateways.count, 1
-      assert_equal PlatformContext.current.instance.country_payment_gateways.first.country_alpha2_code, "US"
-      assert_equal PlatformContext.current.instance.country_payment_gateways.first.payment_gateway_id, @paypal.id
-    end
-
     should "set default values for live_settings and test_settings after find" do
       @stripe = FactoryGirl.create(:stripe_payment_gateway)
       @stripe.live_settings = ""
@@ -247,40 +180,18 @@ class PaymentGatewayTest < ActiveSupport::TestCase
     end
   end
 
-  class PaymentGateway::TestPayoutPaymentGateway < PaymentGateway
-
-    attr_accessor :success, :pending
-
-    def process_payout(merchant_account, amount, reference)
-      if self.pending
-        payout_pending('pending payout response')
-      elsif self.success
-        payout_successful('successful payout response')
-      else
-        payout_failed('failed payout response')
-      end
-    end
-
-  end
-
-  class MerchantAccount::TestPayoutMerchantAccount < MerchantAccount
-  end
-
   context 'payout' do
 
     setup do
-      @test_processor = PaymentGateway::TestPayoutPaymentGateway.create!
+      @payout_gateway = FactoryGirl.create(:paypal_adaptive_payment_gateway)
+      @payout_gateway.payment_currencies << (Currency.find_by_iso_code("JPY") || FactoryGirl.create(:currency, iso_code: "JPY"))
       @payment_transfer = FactoryGirl.create(:payment_transfer_unpaid)
       @amount = Money.new(1234, 'JPY')
-
-      CountryPaymentGateway.delete_all
-      FactoryGirl.create(:country_payment_gateway, payment_gateway: @test_processor, country_alpha2_code: 'US')
-      MerchantAccount::TestPayoutMerchantAccount.create(payment_gateway: @test_processor, merchantable: @payment_transfer.company, state: 'verified')
+      @merchant_account = MerchantAccount::PaypalAdaptiveMerchantAccount.create(payment_gateway: @payout_gateway, merchantable: @payment_transfer.company, state: 'verified')
     end
 
     should 'create payout object when succeeded' do
-      @test_processor.success = true
-      @test_processor.payout(@payment_transfer.company, {:amount => @amount, :reference => @payment_transfer})
+      @payout_gateway.payout(@payment_transfer.company, {amount: @amount, reference: @payment_transfer})
       payout = Payout.last
       assert_equal 1234, payout.amount
       assert_equal 'JPY', payout.currency
@@ -290,20 +201,20 @@ class PaymentGatewayTest < ActiveSupport::TestCase
       refute payout.failed?
     end
 
-    should 'create payout object when pending' do
-      @test_processor.pending = true
-      @test_processor.payout(@payment_transfer.company, {:amount => @amount, :reference => @payment_transfer})
-      payout = Payout.last
-      assert_equal 1234, payout.amount
-      assert_equal 'JPY', payout.currency
-      assert payout.pending?
-      refute payout.success?
-      refute payout.failed?
-    end
+    # should 'create payout object when payout' do
+    #   @payout_gateway.payout(@payment_transfer.company, {amount: @amount, reference: @payment_transfer})
+    #   payout = Payout.last
+    #   assert_equal 1234, payout.amount
+    #   assert_equal 'JPY', payout.currency
+    #   assert payout.pending?
+    #   refute payout.success?
+    #   refute payout.failed?
+    # end
 
     should 'create payout object when failed' do
-      @test_processor.success = false
-      @test_processor.payout(@payment_transfer.company, {:amount => @amount, :reference => @payment_transfer})
+      stub_active_merchant_interaction({success?: false})
+
+      @payout_gateway.payout(@payment_transfer.company, {amount: @amount, reference: @payment_transfer})
       payout = Payout.last
       assert_equal 1234, payout.amount
       assert_equal 'JPY', payout.currency
@@ -314,12 +225,11 @@ class PaymentGatewayTest < ActiveSupport::TestCase
 
     should 'be invoked with right arguments' do
       Payout.any_instance.stubs(:should_be_verified_after_time?).returns(false)
-      @test_processor.expects(:process_payout).with do |merchant_account, payout_argument, reference|
+      @payout_gateway.expects(:process_payout).with do |merchant_account, payout_argument, reference|
         payout_argument == @amount
       end
-      @test_processor.payout(@payment_transfer.company, {:amount => @amount, :reference => @payment_transfer})
+      @payout_gateway.payout(@payment_transfer.company, {amount: @amount, reference: @payment_transfer})
     end
   end
-
 end
 

@@ -52,6 +52,7 @@ Feature: A user can book at a space
      Given I am logged in as the user
        And a location exists with company: that company
        And a transactable exists with location: that location, quantity: 10, currency: "JPY"
+       And a paypal_payment_gateway exists
        When I book space for:
         | Transactable     | Date   | Quantity |
         | the transactable | Monday | 1        |
