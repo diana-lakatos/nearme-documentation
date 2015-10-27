@@ -1,6 +1,6 @@
 en:
   flash_messages:
-    close_label: "Remove this alert"
+    close_label: "Close"
     authentications:
       already_connected_to_other_user: "The social provider you have chosen is already connected to other user. Please log out first if you want to log in to other account."
       authentication_successful: "Authentication successful."
@@ -8,6 +8,9 @@ en:
       disconnected: "Successfully disconnected your %{provider_name}"
       signed_in_successfully: "Signed in successfully."
       unable_to_disconnect: "We are unable to disconnect your account from %{provider_name}. Make sure you have at least one other account linked so you can log in!"
+      inactive_for_authentication:
+        banned: "We cannot authorize you, because you have been banned from the marketplace."
+        unknown: "We cannot authorize you."
     authorizations:
       not_authorized: "Sorry, you do not have permission to view that page."
     shipping_options:
@@ -163,6 +166,15 @@ en:
           updated: 'Language has been successfully updated'
           deleted: 'Language has been successfully deleted'
           keys_updated: 'Language keys have been successfully updated'
+        payments:
+          payment_transfers:
+            generated: "Transfers are being generated, pelase refresh the page to see them on the list."
+            no_new_transfers: "There are no pending payments"
+          payment_gateways:
+            created: 'Payment gateway has been successfully created.\n Add proper configuration to use it in live mode.'
+            updated: 'Payment gateway has been successfully updated'
+            deleted: 'Payment gateway has been successfully deleted'
+
 
       theme:
         theme_updated_successfully: 'Theme updated.'
@@ -181,9 +193,13 @@ en:
         created: 'Your data has been processed successfully and is now being imported.'
       projects:
         topics:
+          created: "Successfully created topic"
           updated: "Successfully updated topic"
+          deleted: "Successfully deleted topic"
         project_types:
+          created: "Successfully created project type"
           updated: "Successfully updated project type"
+          deleted: "Successfully deleted project type"
     listings:
       listing_disabled: "This listing has been temporarily disabled by the owner. Displaying other listings in this location."
       listing_disabled_but_admin: "This listing has been temporarily disabled by the owner. Other users will not be able to browse it."

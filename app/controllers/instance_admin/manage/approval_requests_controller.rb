@@ -36,7 +36,7 @@ class InstanceAdmin::Manage::ApprovalRequestsController < InstanceAdmin::Manage:
     params[:show] ||= 'pending'
     @approval_request_search_form = InstanceAdmin::ApprovalRequestSearchForm.new
     @approval_request_search_form.validate(params)
-    @approval_requests = SearchService.new(ApprovalRequest.order('created_at DESC')).search(@approval_request_search_form.to_search_params).paginate(page: params[:page])
+    @approval_requests = SearchService.new(ApprovalRequest.for_non_drafts.order('created_at DESC')).search(@approval_request_search_form.to_search_params).paginate(page: params[:page])
   end
 
   def approval_request_params

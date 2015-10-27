@@ -12,13 +12,14 @@ module ReservationTestSupport
   # Prepares some charged reservations for a listing
   def prepare_charged_reservations_for_listing(listing, count = 1, options = {})
     user = FactoryGirl.create(:user)
-    stub_billing_gateway(listing.instance)
+    payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
+    payment_method = payment_gateway.payment_methods.first
     stub_active_merchant_interaction
 
     date = Time.zone.now.advance(:weeks => 1).beginning_of_week.to_date
     reservations = []
     count.times do |i|
-      reservation_request_attributes = FactoryGirl.attributes_for(:reservation_request)
+      reservation_request_attributes = FactoryGirl.attributes_for(:reservation_request, payment_method: payment_method)
       reservation_request_attributes.merge!({ dates:[(date + i).to_s(:db)] })
 
       reservation_request = ReservationRequest.new(listing, user, PlatformContext.current, reservation_request_attributes )

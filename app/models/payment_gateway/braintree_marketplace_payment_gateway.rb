@@ -2,6 +2,8 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
 
   has_many :merchant_accounts, class_name: 'MerchantAccount::BraintreeMarketplaceMerchantAccount'
 
+  supported :any_currency, :company_onboarding, :immediate_payout, :credit_card_payment
+
   def self.supported_countries
     ['US']
   end
@@ -11,9 +13,12 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
       merchant_id: "",
       public_key: "",
       private_key: "",
-      supported_currency: "",
       master_merchant_account_id: ""
     }
+  end
+
+  def self.payout_supported_countries
+    self.supported_countries
   end
 
   def settings
@@ -67,13 +72,6 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
     settings[:supported_currency]
   end
 
-  def requires_company_onboarding?
-    true
-  end
-
-  def supports_payout?
-    true
-  end
 
   def immediate_payout(company)
     merchant_account(company).present?

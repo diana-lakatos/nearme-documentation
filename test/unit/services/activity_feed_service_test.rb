@@ -45,26 +45,14 @@ class ActivityFeedServiceTest < ActiveSupport::TestCase
 
       assert_equal 4, @feed.events.count
 
-      # You can unfollow users - but events aren't deleted from your
+      # You can unfollow users - and events are deleted from your
       # timeline.
       #
       @user.feed_unfollow!(followed1)
-      assert_equal 4, @feed.events.count
+      assert_equal 3, @feed.events.count
 
       @user.feed_unfollow!(followed2)
-      assert_equal 4, @feed.events.count
-
-      # Pagination testing - we'd only want to display the amount of events
-      # that was requested.
-      #
-
-      ActivityFeedService::EVENTS_PER_PAGE.times { create(:user) }
-      User.first(ActivityFeedService::EVENTS_PER_PAGE).each { |followed| @user.feed_follow!(followed) }
-      # On the first page are the new 20 user_followed_user events
-      # and on the second, the first 5.
-      #
-      assert_equal 20, @feed.events.count
-      assert_equal 2, @feed.events({page: 2}).count
+      assert_equal 2, @feed.events.count
     end
 
     should "#owner_id" do
@@ -90,21 +78,6 @@ class ActivityFeedServiceTest < ActiveSupport::TestCase
           @user
         )
       end
-
-      # If an event has the same exact aspects (event, followed and event_source),
-      # a new event shouldn't be created
-      count = ActivityFeedEvent.count
-
-      3.times do
-        ActivityFeedService.create_event(
-          :user_followed_user,
-          followed,
-          [followed],
-          @user
-        )
-      end
-
-      assert_equal count, ActivityFeedEvent.count
     end
   end
 end

@@ -3,8 +3,18 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
   belongs_to :instance
   has_many :merchant_accounts, class_name: 'MerchantAccount::StripeConnectMerchantAccount'
 
+  supported :immediate_payout, :credit_card_payment, :multiple_currency
+
+  # def self.supported_countries
+  #   %w(AT AU BE CA CH DE DK ES FI FR GB IE IT JP LU MX NL NO SE US)
+  # end
+
   def self.supported_countries
-    %w(AT AU BE CA CH DE DK ES FI FR GB IE IT JP LU MX NL NO SE US)
+    ["AU", "DK", "FI", "IE", 'NO', 'SE', "US", "GB", "CA"]
+  end
+
+  def supported_currencies
+    ["AUD", "CAD", "USD", "DKK", "NOK", "SEK", "EUR", "GBP"]
   end
 
   def self.settings
@@ -46,28 +56,12 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
     charge_record
   end
 
-  def support_any_currency!
-    true
-  end
-
-  def supports_payout?
-    true
-  end
-
-  def supports_immediate_payout?
-    true
-  end
-
   def payout(*args)
     OpenStruct.new(success: true, success?: true)
   end
 
   def immediate_payout(company)
     merchant_account(company).present?
-  end
-
-  def supports_immediate_payout?
-    true
   end
 
   def refund_identification(charge)

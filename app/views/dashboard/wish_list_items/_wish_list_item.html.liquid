@@ -1,0 +1,24 @@
+{% if wish_list_item.wishlistable_present? %}
+  <div class="listings">
+    <div class="row">
+      <div class="col-md-3 listing-img">
+        <a href="{{ wish_list_item.wishlistable_path }}" target="_blank">
+          <img src="{{ wish_list_item.image_url | image_url }}" />
+        </a>
+      </div>
+      <div class="col-md-6">
+        <a href="{{ wish_list_item.wishlistable_path }}" target="_blank">{{ wish_list_item.wishlistable_name }}</a>
+        <br />
+        <span style="color: gray;">
+          {{ wish_list_item.company_name }}
+        </span>
+        <br/>
+        {{ wish_list_item.price }}
+      </div>
+      <div class="col-md-3 listing-attr">
+        <a href="{{ wish_list_item.dashboard_wish_list_item_path }}" data-method="delete" class="btn gray">{{ 'wish_lists.buttons.delete' | translate }}</a>
+      </div>
+    </div>  
+  </div>
+{% endif %}
+

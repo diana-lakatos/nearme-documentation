@@ -5,14 +5,16 @@
     - if current_user.id == f.object.creator_id
       = f.input :name
 
-      = f.input :summary, as: :text, input_html: { cols: 40, rows: 4 }
+      = f.input :summary, as: :text, limit: 140, input_html: { maxlength: 140, cols: 40, rows: 4 }
 
     = f.input :description, as: :text, input_html: { cols: 40, rows: 8 }
 
-    = f.association :topics, as: :select, input_html: { multiple: true, class: 'selectize', data: { placeholder: t(:topics, scope: [:simple_form, :placeholders, :activity_feed]) } }, wrapper_html: { class: 'topics' }
+    = f.association :topics, as: :select, input_html: { multiple: true, class: 'selectize', data: { placeholder: t(:topics, scope: [:simple_form, :placeholders, :activity_feed]) } }, wrapper_html: { class: 'topics' }, required: true
 
     %fieldset.media-group.sep
-      %legend= t :images
+      %legend
+        %abbr{:title => t('general.required')} *
+        = t :images
 
       - if is_i18n_set?('forms.hints.transactable_form.photos')
         %p.photo-uploader-hint
@@ -60,10 +62,11 @@
           = render 'dashboard/projects/link_fields', f: link_form
         .fieldset-actions
           = link_to_add_association t(:add_link), f, :links, class: 'button-a small'
-
+    %anchor#collaborators
     - if current_user.id == f.object.creator_id
       = f.input :seek_collaborators, as: :switch, wrapper_html: { class: 'sep' }
 
+    - if (current_user.id == f.object.creator_id ? @project.project_collaborators : current_user.project_collaborators.find_by(project: f.object)).count > 0
       %table.collaborators-listing-a
         %thead
           %tr
@@ -76,17 +79,17 @@
         %tbody
           = render current_user.id == f.object.creator_id ? @project.project_collaborators : current_user.project_collaborators.find_by(project: f.object)
 
-      - if current_user.id == f.object.creator_id
-        #new_collaborators
-          = f.simple_fields_for :new_collaborators do |new_collaborator_form|
-            = render 'dashboard/projects/new_collaborator_fields', f: new_collaborator_form
-          .links
-            = link_to_add_association t(:add_collaborator), f, :new_collaborators, class: 'button-a small'
+    - if current_user.id == f.object.creator_id
+      #new_collaborators
+        = f.simple_fields_for :new_collaborators do |new_collaborator_form|
+          = render 'dashboard/projects/new_collaborator_fields', f: new_collaborator_form
+        .links
+          = link_to_add_association t(:add_collaborator), f, :new_collaborators, class: 'button-a small'
 
 
   %p.action
 
-    - if f.object.new_record? || f.object.draft_at
+    - if f.object.new_record? || f.object.draft?
       = f.submit t(:save_for_later), name: 'save_for_later', class: 'button-a white'
 
       = f.submit t(:publish_project), name: 'submit', class: 'button-a'

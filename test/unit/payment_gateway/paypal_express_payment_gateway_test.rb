@@ -3,7 +3,7 @@ require 'test_helper'
 class PaymentGateway::PaypalExpressPaymentGatewayTest < ActiveSupport::TestCase
 
   setup do
-    @paypal_express_processor = FactoryGirl.build(:paypal_express_payment_gateway, live_settings: {email: "sender@example.com"}, test_settings: {email: "sender@example.com"})
+    @paypal_express_processor = FactoryGirl.build(:paypal_express_chain_payment_gateway, live_settings: {email: "sender@example.com"}, test_settings: {email: "sender@example.com"})
   end
 
   should "#setup_api_on_initialize should return a ActiveMerchant PaypalGateway object" do
@@ -18,7 +18,7 @@ class PaymentGateway::PaypalExpressPaymentGatewayTest < ActiveSupport::TestCase
 
   should "build correct boarding_url" do
     @company = create(:company)
-    @merchant = @company.create_paypal_merchant_account
+    @merchant = @company.create_paypal_express_chain_merchant_account
     assert boarding_url, @paypal_express_processor.boarding_url(@merchant)
   end
 

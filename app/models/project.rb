@@ -1,6 +1,4 @@
 class Project < ActiveRecord::Base
-  include ActivityFeedService::Followed
-
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
@@ -8,8 +6,10 @@ class Project < ActiveRecord::Base
   has_custom_attributes target_type: 'ProjectType', target_id: :transactable_type_id
 
   attr_reader :collaborator_email
+  attr_readonly :followers_count
 
   DEFAULT_ATTRIBUTES = %w(name description)
+  SORT_OPTIONS = ['All', 'Featured', 'Most Recent', 'Most Popular', 'Contributors']
 
   belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :projects, counter_cache: true
   belongs_to :transactable_type, -> { with_deleted }, foreign_key: 'transactable_type_id'
@@ -39,23 +39,28 @@ class Project < ActiveRecord::Base
 
   scope :by_topic, -> (topic_ids) { includes(:topics).where(topics: {id: topic_ids}) if topic_ids.present?}
   scope :seek_collaborators, -> { where(seek_collaborators: true) }
-  scope :featured, -> { where(featured: true) }
+  scope :featured, -> { enabled.where(featured: true) }
+  scope :by_search_query, lambda { |query|
+    where("name ilike ? or description ilike ? or summary ilike ?", query, query, query)
+  }
+  scope :with_date, ->(date) { where(created_at: date) }
+  scope :enabled, -> { where(draft_at: nil) }
 
   accepts_nested_attributes_for :photos, allow_destroy: true
-  accepts_nested_attributes_for :links, allow_destroy: true
+  accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
 
   attr_accessor :photo_not_required
 
-  validates :photos, length: {minimum: 1}, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
-  validates :topics, length: {:minimum => 1}
-  validates_presence_of :name
+  validates :photos, length: {minimum: 1}, unless: ->(record) { record.draft? || record.photo_not_required || !record.transactable_type.enable_photo_required }
+  validates :topics, length: {:minimum => 1}, unless: ->(record) { record.draft? }
+  validates :summary, length: { maximum: 140 }, unless: ->(record) { record.draft? }
+  validates :name, presence: true, unless: ->(record) { record.draft? }
 
   # TODO: move to form object
-  after_save :trigger_workflow_alert_for_added_collaborators
+  after_save :trigger_workflow_alert_for_added_collaborators, unless: ->(record) { record.draft? }
 
-  def self.featured
-    where(featured: true)
-  end
+  before_restore :restore_photos
+  before_restore :restore_links
 
   def self.custom_order(order)
     case order
@@ -65,10 +70,13 @@ class Project < ActiveRecord::Base
       #TODO check most popular sort after followers are implemented
       order('projects.followers_count DESC')
     when /contributors/i
-      #TODO check contributors search after followers are implemented
-      joins(:contributors).order('count(contributors.id) DESC')
+      group('projects.id').
+        joins("LEFT OUTER JOIN project_collaborators pc ON projects.id = pc.project_id AND (pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)").
+        order('count(pc.id) DESC')
     when /featured/i
-      order('projects.featured DESC')
+      where(featured: true)
+    when /pending/i
+      where("(SELECT pc.id from project_collaborators pc WHERE pc.project_id = projects.id AND pc.user_id = 6520 AND ( approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) IS NOT NULL")
     else
       all
     end
@@ -77,15 +85,9 @@ class Project < ActiveRecord::Base
   after_commit :user_created_project_event, on: :create
   def user_created_project_event
     event = :user_created_project
-    ActivityFeedService.create_event(event, self, [self.creator], self)
-  end
-
-  after_commit :user_added_photos_to_project_event, on: :update
-  def user_added_photos_to_project_event
-    if self.photos.map(&:id_changed?)
-      event = :user_added_photos_to_project
-      ActivityFeedService.create_event(event, self, [self.creator], self)
-    end
+    user = self.creator.try(:object).presence || self.creator
+    affected_objects = [user] + self.topics
+    ActivityFeedService.create_event(event, self, affected_objects, self)
   end
 
   def to_liquid
@@ -107,6 +109,14 @@ class Project < ActiveRecord::Base
     else
       all
     end
+  end
+
+  def draft?
+    draft_at.present?
+  end
+
+  def enabled?
+    draft_at.nil?
   end
 
   def cover_photo
@@ -133,7 +143,26 @@ class Project < ActiveRecord::Base
       user = User.find_by(email: collaborator_email)
       next unless user.present?
       unless self.project_collaborators.where(user: user).exists?
-        WorkflowStepJob.perform(WorkflowStep::ProjectWorkflow::CollaboratorAddedByProjectOwner, self.project_collaborators.create!(user: user, approved_at: Time.zone.now).id)
+        WorkflowStepJob.perform(WorkflowStep::ProjectWorkflow::CollaboratorAddedByProjectOwner, self.project_collaborators.create!(user: user, approved_by_owner_at: Time.zone.now).id)
+      end
+    end
+  end
+
+
+  def restore_photos
+    self.photos.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', self.deleted_at - 30.seconds, self.deleted_at + 30.seconds).each do |photo|
+      begin
+        photo.restore(recursive: true)
+      rescue
+      end
+    end
+  end
+
+  def restore_links
+    self.links.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', self.deleted_at - 30.seconds, self.deleted_at + 30.seconds).each do |link|
+      begin
+        link.restore(recursive: true)
+      rescue
       end
     end
   end

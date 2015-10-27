@@ -7,6 +7,7 @@ Feature: A user can add a space
     Given a location_type exists with name: "Business"
     Given a location_type exists with name: "Public Space"
     Given a transactable_type_listing exists with name: "Listing"
+    Given a country_nz exists
     Given a required_user_custom_attribute exists with name: "user_custom_attribute", attribute_type: "string", html_tag: "input", label: "Custom Att"
     And a form component exists with form_componentable: the transactable_type_listing
     And a form_component_with_user_custom_attributes exists with form_componentable: the transactable_type_listing

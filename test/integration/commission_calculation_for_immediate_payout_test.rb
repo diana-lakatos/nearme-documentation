@@ -43,6 +43,7 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
         card_code: '411',
         card_holder_first_name: 'Maciej',
         card_holder_last_name: 'Krajowski',
+        payment_method_id: @payment_gateway.payment_methods.first.id
       }
     }
   end
@@ -60,13 +61,11 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
     @listing.transactable_type.update_attribute(:service_fee_guest_percent, 15)
     @instance.update_attribute(:payment_transfers_frequency, 'daily')
 
-    CountryPaymentGateway.delete_all
-    payment_gateway = FactoryGirl.create(:braintree_marketplace_payment_gateway)
-    FactoryGirl.create(:country_payment_gateway, payment_gateway: payment_gateway, country_alpha2_code: 'US')
+    @payment_gateway = FactoryGirl.create(:braintree_marketplace_payment_gateway)
     ActiveMerchant::Billing::BraintreeMarketplacePayments.any_instance.stubs(:onboard!).returns(OpenStruct.new(success?: true))
-    FactoryGirl.create(:braintree_marketplace_merchant_account, payment_gateway: payment_gateway, merchantable: @listing.company)
-    Instance.any_instance.stubs(:payment_gateway).returns(payment_gateway)
-    PaymentTransfer.any_instance.stubs(:billing_gateway).returns(payment_gateway)
+    FactoryGirl.create(:braintree_marketplace_merchant_account, payment_gateway: @payment_gateway, merchantable: @listing.company)
+    Instance.any_instance.stubs(:payment_gateway).returns(@payment_gateway)
+    PaymentTransfer.any_instance.stubs(:billing_gateway).returns(@payment_gateway)
     PaymentGateway.any_instance.stubs(:supported_currencies).returns([currency])
 
     create_logged_in_user

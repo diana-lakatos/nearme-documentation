@@ -126,18 +126,14 @@ ActiveSupport::TestCase.class_eval do
   end
 
   def stub_billing_gateway(instance)
-    country_ipg = FactoryGirl.create(
-      :country_payment_gateway,
-      country_alpha2_code: "US",
-      payment_gateway: FactoryGirl.create(:stripe_payment_gateway)
-    )
-    country_ipg.update_column(:instance_id, instance.id)
+    FactoryGirl.create(:stripe_payment_gateway, instance_id: instance.id)
   end
 
-  def stub_active_merchant_interaction
-    PaymentAuthorizer.any_instance.stubs(:gateway_authorize).returns(OpenStruct.new(success?: true, authorization: "54533"))
-    PaymentGateway.any_instance.stubs(:gateway_capture).returns(OpenStruct.new(success?: true, params: {"id" => '12345'}))
-    PaymentGateway.any_instance.stubs(:gateway_refund).returns(OpenStruct.new(success?: true, params: {"id" => '12345'}))
+  def stub_active_merchant_interaction(response={success?: true})
+    PaymentAuthorizer.any_instance.stubs(:gateway_authorize).returns(OpenStruct.new(response.reverse_merge({authorization: "54533"})))
+    PaymentGateway.any_instance.stubs(:gateway_capture).returns(OpenStruct.new(response.reverse_merge({params: {"id" => '12345'}})))
+    PaymentGateway.any_instance.stubs(:gateway_refund).returns(OpenStruct.new(response.reverse_merge({params: {"id" => '12345'}})))
+    PayPal::SDK::AdaptivePayments::API.any_instance.stubs(:pay).returns(OpenStruct.new(response.reverse_merge(paymentExecStatus: "COMPLETED")))
 
     stub = OpenStruct.new(params: {
       "object" => 'customer',
@@ -208,6 +204,8 @@ class TestDataSeeder
       @@data_seeded = true
       FactoryGirl.create(:instance).set_context!
       FactoryGirl.create(:transactable_type_listing, generate_rating_systems: true)
+      FactoryGirl.create(:country_us)
+      FactoryGirl.create(:country_pl)
     end
   end
 end

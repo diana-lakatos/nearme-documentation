@@ -96,6 +96,13 @@ en:
   projects: 'Projects'
   about: 'About'
 
+  # user profile
+  user_profile:
+    empty_resultset:
+      users: 'No users to show at the moment.'
+      topics: 'No topics to show at the moment.'
+      projects: 'No projects to show at the moment.'
+
 
   # search
   search: "Search"
@@ -187,10 +194,17 @@ en:
   edit_project: 'Edit Project'
   actions: 'Actions'
   approve: 'Approve'
+  decline: 'Decline'
+  cancel_request: "Cancel request"
   approved: 'Approved'
   pending: 'Pending'
   save_changes: 'Save Changes'
   delete_project: 'Delete Project'
+  draft_project: 'This project is disabled.'
+
+  #collaborators
+  collaboration_cancelled: "Collaboration request has been cancelled."
+  collaboration_accepted: "Collaboration request has been approved."
 
   # account
   my_account: 'My Account'
@@ -207,6 +221,7 @@ en:
     title: "Activity Feed"
     user_status_text: "What are you working on?"
     user_status_submit: "Post"
+    no_interactions_yet: "There were no interactions yet."
     verbs:
       follow: "Follow"
       unfollow: "Unfollow"
@@ -219,5 +234,7 @@ en:
       user_updated_project_status: '%{user} updated project %{updated} status'
       user_updated_topic_status: '%{user} updated topic %{updated} status'
       user_added_photos_to_project: '%{user} added photos to project %{project}'
+      user_added_links_to_project: '%{user} added links to project %{project}'
       topic_created: '%{topic} has been created'
       user_commented: "%{user} added a comment on %{followed}'s %{activity}"
+      user_commented_on_project: "%{user} added a comment on project %{project}"

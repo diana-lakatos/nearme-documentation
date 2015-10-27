@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151011094217) do
+ActiveRecord::Schema.define(version: 20151023103850) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -475,6 +475,24 @@ ActiveRecord::Schema.define(version: 20151011094217) do
 
   add_index "content_holders", ["instance_id", "theme_id", "name"], name: "index_content_holders_on_instance_id_and_theme_id_and_name", using: :btree
 
+  create_table "countries", force: :cascade do |t|
+    t.string   "iso_name",        limit: 255
+    t.string   "iso",             limit: 255
+    t.string   "iso3",            limit: 255
+    t.string   "name",            limit: 255
+    t.integer  "numcode"
+    t.boolean  "states_required",             default: false
+    t.datetime "updated_at"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "user_id"
+    t.string   "calling_code"
+  end
+
+  add_index "countries", ["iso"], name: "index_countries_on_iso", using: :btree
+  add_index "countries", ["name"], name: "index_countries_on_name", using: :btree
+
   create_table "country_payment_gateways", force: :cascade do |t|
     t.string   "country_alpha2_code", limit: 255
     t.integer  "payment_gateway_id"
@@ -497,6 +515,24 @@ ActiveRecord::Schema.define(version: 20151011094217) do
 
   add_index "credit_cards", ["instance_client_id"], name: "index_credit_cards_on_instance_client_id", using: :btree
   add_index "credit_cards", ["instance_id"], name: "index_credit_cards_on_instance_id", using: :btree
+
+  create_table "currencies", force: :cascade do |t|
+    t.string  "symbol"
+    t.integer "priority"
+    t.boolean "symbol_first"
+    t.string  "thousands_separator"
+    t.string  "html_entity"
+    t.string  "decimal_mark"
+    t.string  "name"
+    t.integer "subunit_to_unit"
+    t.float   "exponent"
+    t.string  "iso_code"
+    t.integer "iso_numeric"
+    t.string  "subunit"
+    t.integer "smallest_denomination"
+  end
+
+  add_index "currencies", ["iso_code"], name: "index_currencies_on_iso_code", using: :btree
 
   create_table "custom_attributes", force: :cascade do |t|
     t.string   "name",                 limit: 255
@@ -869,26 +905,26 @@ ActiveRecord::Schema.define(version: 20151011094217) do
   add_index "instance_views", ["instance_id", "transactable_type_id", "path", "locale", "format", "handler"], name: "instance_path_with_format_and_handler", unique: true, using: :btree
 
   create_table "instances", force: :cascade do |t|
-    t.string   "name",                                    limit: 255
-    t.datetime "created_at",                                                                                          null: false
-    t.datetime "updated_at",                                                                                          null: false
-    t.string   "bookable_noun",                           limit: 255,                         default: "Desk"
-    t.decimal  "service_fee_guest_percent",                           precision: 5, scale: 2, default: 0.0
-    t.string   "lessor",                                  limit: 255
-    t.string   "lessee",                                  limit: 255
-    t.boolean  "skip_company",                                                                default: false
+    t.string   "name",                                  limit: 255
+    t.datetime "created_at",                                                                                        null: false
+    t.datetime "updated_at",                                                                                        null: false
+    t.string   "bookable_noun",                         limit: 255,                         default: "Desk"
+    t.decimal  "service_fee_guest_percent",                         precision: 5, scale: 2, default: 0.0
+    t.string   "lessor",                                limit: 255
+    t.string   "lessee",                                limit: 255
+    t.boolean  "skip_company",                                                              default: false
     t.text     "pricing_options"
-    t.decimal  "service_fee_host_percent",                            precision: 5, scale: 2, default: 0.0
-    t.string   "live_stripe_public_key",                  limit: 255
-    t.string   "paypal_email",                            limit: 255
-    t.string   "encrypted_live_paypal_username",          limit: 255
-    t.string   "encrypted_live_paypal_password",          limit: 255
-    t.string   "encrypted_live_paypal_signature",         limit: 255
-    t.string   "encrypted_live_paypal_app_id",            limit: 255
-    t.string   "encrypted_live_paypal_client_id",         limit: 255
-    t.string   "encrypted_live_paypal_client_secret",     limit: 255
-    t.string   "encrypted_live_stripe_api_key",           limit: 255
-    t.string   "encrypted_marketplace_password",          limit: 255
+    t.decimal  "service_fee_host_percent",                          precision: 5, scale: 2, default: 0.0
+    t.string   "live_stripe_public_key",                limit: 255
+    t.string   "paypal_email",                          limit: 255
+    t.string   "encrypted_live_paypal_username",        limit: 255
+    t.string   "encrypted_live_paypal_password",        limit: 255
+    t.string   "encrypted_live_paypal_signature",       limit: 255
+    t.string   "encrypted_live_paypal_app_id",          limit: 255
+    t.string   "encrypted_live_paypal_client_id",       limit: 255
+    t.string   "encrypted_live_paypal_client_secret",   limit: 255
+    t.string   "encrypted_live_stripe_api_key",         limit: 255
+    t.string   "encrypted_marketplace_password",        limit: 255
     t.integer  "min_hourly_price_cents"
     t.integer  "max_hourly_price_cents"
     t.integer  "min_daily_price_cents"
@@ -897,77 +933,78 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.integer  "max_weekly_price_cents"
     t.integer  "min_monthly_price_cents"
     t.integer  "max_monthly_price_cents"
-    t.boolean  "password_protected",                                                          default: false
-    t.boolean  "test_mode",                                                                   default: false
-    t.string   "encrypted_test_paypal_username",          limit: 255
-    t.string   "encrypted_test_paypal_password",          limit: 255
-    t.string   "encrypted_test_paypal_signature",         limit: 255
-    t.string   "encrypted_test_paypal_app_id",            limit: 255
-    t.string   "encrypted_test_paypal_client_id",         limit: 255
-    t.string   "encrypted_test_paypal_client_secret",     limit: 255
-    t.string   "encrypted_test_stripe_api_key",           limit: 255
-    t.string   "test_stripe_public_key",                  limit: 255
-    t.string   "encrypted_olark_api_key",                 limit: 255
-    t.boolean  "olark_enabled",                                                               default: false
-    t.string   "encrypted_facebook_consumer_key",         limit: 255
-    t.string   "encrypted_facebook_consumer_secret",      limit: 255
-    t.string   "encrypted_linkedin_consumer_key",         limit: 255
-    t.string   "encrypted_linkedin_consumer_secret",      limit: 255
-    t.string   "encrypted_twitter_consumer_key",          limit: 255
-    t.string   "encrypted_twitter_consumer_secret",       limit: 255
-    t.string   "encrypted_instagram_consumer_key",        limit: 255
-    t.string   "encrypted_instagram_consumer_secret",     limit: 255
+    t.boolean  "password_protected",                                                        default: false
+    t.boolean  "test_mode",                                                                 default: false
+    t.string   "encrypted_test_paypal_username",        limit: 255
+    t.string   "encrypted_test_paypal_password",        limit: 255
+    t.string   "encrypted_test_paypal_signature",       limit: 255
+    t.string   "encrypted_test_paypal_app_id",          limit: 255
+    t.string   "encrypted_test_paypal_client_id",       limit: 255
+    t.string   "encrypted_test_paypal_client_secret",   limit: 255
+    t.string   "encrypted_test_stripe_api_key",         limit: 255
+    t.string   "test_stripe_public_key",                limit: 255
+    t.string   "encrypted_olark_api_key",               limit: 255
+    t.boolean  "olark_enabled",                                                             default: false
+    t.string   "encrypted_facebook_consumer_key",       limit: 255
+    t.string   "encrypted_facebook_consumer_secret",    limit: 255
+    t.string   "encrypted_linkedin_consumer_key",       limit: 255
+    t.string   "encrypted_linkedin_consumer_secret",    limit: 255
+    t.string   "encrypted_twitter_consumer_key",        limit: 255
+    t.string   "encrypted_twitter_consumer_secret",     limit: 255
+    t.string   "encrypted_instagram_consumer_key",      limit: 255
+    t.string   "encrypted_instagram_consumer_secret",   limit: 255
     t.integer  "instance_type_id"
     t.text     "metadata"
-    t.string   "support_email",                           limit: 255
-    t.string   "encrypted_db_connection_string",          limit: 255
-    t.string   "stripe_currency",                         limit: 255,                         default: "USD"
-    t.boolean  "user_info_in_onboarding_flow",                                                default: false
-    t.string   "default_search_view",                     limit: 255,                         default: "mixed"
-    t.boolean  "user_based_marketplace_views",                                                default: false
-    t.string   "searcher_type",                           limit: 255,                         default: "geo"
+    t.string   "support_email",                         limit: 255
+    t.string   "encrypted_db_connection_string",        limit: 255
+    t.string   "stripe_currency",                       limit: 255,                         default: "USD"
+    t.boolean  "user_info_in_onboarding_flow",                                              default: false
+    t.string   "default_search_view",                   limit: 255,                         default: "mixed"
+    t.boolean  "user_based_marketplace_views",                                              default: false
+    t.string   "searcher_type",                         limit: 255,                         default: "geo"
     t.datetime "master_lock"
-    t.boolean  "apply_text_filters",                                                          default: false
+    t.boolean  "apply_text_filters",                                                        default: false
     t.text     "user_required_fields"
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
-    t.string   "payment_transfers_frequency",             limit: 255,                         default: "fortnightly"
+    t.string   "payment_transfers_frequency",           limit: 255,                         default: "fortnightly"
     t.text     "hidden_ui_controls"
-    t.string   "encrypted_shippo_username",               limit: 255
-    t.string   "encrypted_shippo_password",               limit: 255
-    t.string   "twilio_from_number",                      limit: 255
-    t.string   "test_twilio_from_number",                 limit: 255
-    t.string   "encrypted_test_twilio_consumer_key",      limit: 255
-    t.string   "encrypted_test_twilio_consumer_secret",   limit: 255
-    t.string   "encrypted_twilio_consumer_key",           limit: 255
-    t.string   "encrypted_twilio_consumer_secret",        limit: 255
-    t.boolean  "user_blogs_enabled",                                                          default: false
-    t.boolean  "wish_lists_enabled",                                                          default: false
-    t.string   "wish_lists_icon_set",                     limit: 255,                         default: "heart"
+    t.string   "encrypted_shippo_username",             limit: 255
+    t.string   "encrypted_shippo_password",             limit: 255
+    t.string   "twilio_from_number",                    limit: 255
+    t.string   "test_twilio_from_number",               limit: 255
+    t.string   "encrypted_test_twilio_consumer_key",    limit: 255
+    t.string   "encrypted_test_twilio_consumer_secret", limit: 255
+    t.string   "encrypted_twilio_consumer_key",         limit: 255
+    t.string   "encrypted_twilio_consumer_secret",      limit: 255
+    t.boolean  "user_blogs_enabled",                                                        default: false
+    t.boolean  "wish_lists_enabled",                                                        default: false
+    t.string   "wish_lists_icon_set",                   limit: 255,                         default: "heart"
     t.boolean  "possible_manual_payment"
-    t.string   "support_imap_username",                   limit: 255
-    t.string   "encrypted_support_imap_password",         limit: 255
-    t.string   "support_imap_server",                     limit: 255
+    t.string   "support_imap_username",                 limit: 255
+    t.string   "encrypted_support_imap_password",       limit: 255
+    t.string   "support_imap_server",                   limit: 255
     t.integer  "support_imap_port"
     t.boolean  "support_imap_ssl"
-    t.hstore   "search_settings",                                                             default: {},            null: false
-    t.string   "default_country",                         limit: 255
+    t.hstore   "search_settings",                                                           default: {},            null: false
+    t.string   "default_country",                       limit: 255
     t.text     "allowed_countries"
-    t.string   "default_currency",                        limit: 255
+    t.string   "default_currency",                      limit: 255
     t.text     "allowed_currencies"
-    t.string   "category_search_type",                    limit: 255,                         default: "AND"
-    t.string   "search_engine",                           limit: 255,                         default: "postgresql",  null: false
+    t.string   "category_search_type",                  limit: 255,                         default: "AND"
+    t.string   "search_engine",                         limit: 255,                         default: "postgresql",  null: false
     t.integer  "search_radius"
-    t.string   "search_text",                             limit: 255
+    t.string   "search_text",                           limit: 255
     t.integer  "last_index_job_id"
-    t.string   "context_cache_key",                       limit: 255
-    t.string   "encrypted_shippo_api_token",              limit: 255
+    t.string   "context_cache_key",                     limit: 255
+    t.string   "encrypted_shippo_api_token",            limit: 255
     t.string   "encrypted_webhook_token"
-    t.boolean  "is_community",                                                                default: false
-    t.string   "encrypted_github_consumer_key",           limit: 255
-    t.string   "encrypted_github_consumer_secret",        limit: 255
-    t.string   "encrypted_google_oauth2_consumer_key",    limit: 255
-    t.string   "encrypted_google_oauth2_consumer_secret", limit: 255
+    t.boolean  "is_community",                                                              default: false
+    t.string   "encrypted_github_consumer_key",         limit: 255
+    t.string   "encrypted_github_consumer_secret",      limit: 255
+    t.string   "encrypted_google_consumer_key",         limit: 255
+    t.string   "encrypted_google_consumer_secret",      limit: 255
+    t.string   "default_oauth_signin_provider"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1117,20 +1154,25 @@ ActiveRecord::Schema.define(version: 20151011094217) do
   add_index "merchant_accounts", ["instance_id", "merchantable_id", "merchantable_type"], name: "index_on_merchant_accounts_on_merchant", using: :btree
 
   create_table "pages", force: :cascade do |t|
-    t.string   "path",               limit: 255,                null: false
+    t.string   "path",                      limit: 255,                 null: false
     t.text     "content"
-    t.string   "hero_image",         limit: 255
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
+    t.string   "hero_image",                limit: 255
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
     t.integer  "theme_id"
-    t.string   "slug",               limit: 255
+    t.string   "slug",                      limit: 255
     t.integer  "position"
     t.text     "html_content"
     t.datetime "deleted_at"
-    t.string   "redirect_url",       limit: 255
-    t.boolean  "open_in_new_window",             default: true
+    t.string   "redirect_url",              limit: 255
+    t.boolean  "open_in_new_window",                    default: true
     t.integer  "instance_id"
     t.text     "css_content"
+    t.boolean  "no_layout",                             default: false
+    t.string   "metadata_title"
+    t.string   "metadata_meta_description"
+    t.integer  "redirect_code"
+    t.string   "metadata_canonical_url"
   end
 
   add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree
@@ -1173,7 +1215,51 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
     t.string   "type",                    limit: 255
+    t.boolean  "test_active"
+    t.boolean  "live_active"
   end
+
+  create_table "payment_gateways_countries", force: :cascade do |t|
+    t.integer  "country_id"
+    t.integer  "payment_gateway_id"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "payment_gateways_countries", ["country_id"], name: "index_payment_gateways_countries_on_country_id", using: :btree
+  add_index "payment_gateways_countries", ["instance_id"], name: "index_payment_gateways_countries_on_instance_id", using: :btree
+  add_index "payment_gateways_countries", ["payment_gateway_id"], name: "index_payment_gateways_countries_on_payment_gateway_id", using: :btree
+
+  create_table "payment_gateways_currencies", force: :cascade do |t|
+    t.integer  "currency_id"
+    t.integer  "payment_gateway_id"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "payment_gateways_currencies", ["currency_id"], name: "index_payment_gateways_currencies_on_currency_id", using: :btree
+  add_index "payment_gateways_currencies", ["instance_id"], name: "index_payment_gateways_currencies_on_instance_id", using: :btree
+  add_index "payment_gateways_currencies", ["payment_gateway_id"], name: "index_payment_gateways_currencies_on_payment_gateway_id", using: :btree
+
+  create_table "payment_methods", force: :cascade do |t|
+    t.integer  "payment_gateway_id"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.string   "payment_method_type"
+    t.boolean  "active",              default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "payment_methods", ["instance_id"], name: "index_payment_methods_on_instance_id", using: :btree
+  add_index "payment_methods", ["payment_gateway_id"], name: "index_payment_methods_on_payment_gateway_id", using: :btree
 
   create_table "payment_transfers", force: :cascade do |t|
     t.integer  "company_id"
@@ -1281,10 +1367,11 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.integer  "instance_id"
     t.integer  "user_id"
     t.integer  "project_id"
-    t.datetime "approved_at"
+    t.datetime "approved_by_owner_at"
     t.datetime "deleted_at"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.datetime "approved_by_user_at"
   end
 
   add_index "project_collaborators", ["instance_id"], name: "index_project_collaborators_on_instance_id", using: :btree
@@ -1313,11 +1400,11 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.string   "external_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "followers_count",       default: 0,     null: false
     t.boolean  "seek_collaborators",    default: false
     t.text     "summary"
     t.boolean  "featured",              default: false
     t.datetime "draft_at"
+    t.integer  "followers_count",       default: 0,     null: false
   end
 
   add_index "projects", ["instance_id", "creator_id"], name: "index_projects_on_instance_id_and_creator_id", using: :btree
@@ -1494,7 +1581,7 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.datetime "deleted_at"
     t.text     "comment"
     t.boolean  "create_charge"
-    t.string   "payment_method",                                limit: 255,                         default: "manual",  null: false
+    t.string   "old_payment_method",                            limit: 255,                         default: "manual",  null: false
     t.string   "payment_status",                                limit: 255,                         default: "unknown", null: false
     t.float    "quantity",                                                                          default: 1.0,       null: false
     t.decimal  "service_fee_amount_guest_cents",                            precision: 8, scale: 2
@@ -1525,6 +1612,7 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.text     "guest_notes"
     t.string   "express_token",                                 limit: 255
     t.string   "express_payer_id",                              limit: 255
+    t.integer  "payment_method_id"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -1998,12 +2086,14 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.string   "platform_context_detail_type",   limit: 255
     t.decimal  "service_fee_amount_guest_cents",             precision: 8,  scale: 2, default: 0.0
     t.decimal  "service_fee_amount_host_cents",              precision: 8,  scale: 2, default: 0.0
-    t.string   "payment_method",                 limit: 255
+    t.string   "old_payment_method",             limit: 255
     t.string   "express_token",                  limit: 255
     t.string   "express_payer_id",               limit: 255
     t.datetime "canceled_at"
     t.integer  "canceler_id"
     t.integer  "store_id"
+    t.integer  "payment_method_id"
+    t.boolean  "insurance_enabled",                                                   default: false,   null: false
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree
@@ -2160,7 +2250,7 @@ ActiveRecord::Schema.define(version: 20151011094217) do
   end
 
   create_table "spree_products", force: :cascade do |t|
-    t.string   "name",                    limit: 255, default: "",    null: false
+    t.string   "name",                    limit: 255,                          default: "",    null: false
     t.text     "description"
     t.datetime "available_on"
     t.datetime "deleted_at"
@@ -2177,20 +2267,21 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.integer  "user_id"
     t.hstore   "extra_properties"
     t.hstore   "status"
-    t.boolean  "products_public",                     default: true
-    t.boolean  "approved",                            default: true
-    t.text     "cross_sell_skus",                     default: [],                 array: true
+    t.boolean  "products_public",                                              default: true
+    t.boolean  "approved",                                                     default: true
+    t.text     "cross_sell_skus",                                              default: [],                 array: true
     t.integer  "administrator_id"
-    t.boolean  "shippo_enabled",                      default: false
-    t.boolean  "draft",                               default: false
-    t.float    "average_rating",                      default: 0.0,   null: false
-    t.integer  "wish_list_items_count",               default: 0
+    t.boolean  "shippo_enabled",                                               default: false
+    t.boolean  "draft",                                                        default: false
+    t.float    "average_rating",                                               default: 0.0,   null: false
+    t.integer  "wish_list_items_count",                                        default: 0
     t.integer  "product_type_id"
     t.string   "external_id",             limit: 255
     t.boolean  "action_rfq"
     t.boolean  "possible_manual_payment"
-    t.boolean  "promotionable",                       default: true
+    t.boolean  "promotionable",                                                default: true
     t.string   "meta_title"
+    t.decimal  "insurance_amount",                    precision: 10, scale: 2, default: 0.0,   null: false
   end
 
   add_index "spree_products", ["available_on"], name: "index_spree_products_on_available_on", using: :btree
@@ -2533,13 +2624,15 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.integer  "user_id"
-    t.integer  "processing_time",                                            default: 0
+    t.integer  "processing_time",                                             default: 0
     t.integer  "order_id"
-    t.decimal  "precalculated_cost",                 precision: 8, scale: 2
+    t.decimal  "precalculated_cost",                 precision: 8,  scale: 2
     t.string   "shippo_rate_id",         limit: 230
     t.text     "shippo_label_url"
     t.text     "shippo_tracking_number"
     t.string   "code"
+    t.decimal  "insurance_amount",                   precision: 10, scale: 2, default: 0.0
+    t.string   "insurance_currency"
   end
 
   add_index "spree_shipping_methods", ["company_id"], name: "index_spree_shipping_methods_on_company_id", using: :btree
@@ -3163,7 +3256,6 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "followers_count",                   default: 0,     null: false
     t.boolean  "featured",                          default: false
     t.string   "cover_image"
     t.integer  "cover_image_original_height"
@@ -3177,6 +3269,7 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.text     "image_transformation_data"
     t.string   "image_original_url"
     t.datetime "image_versions_generated_at"
+    t.integer  "followers_count",                   default: 0,     null: false
   end
 
   add_index "topics", ["instance_id", "category_id"], name: "index_topics_on_instance_id_and_category_id", using: :btree
@@ -3253,9 +3346,11 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.boolean  "search_location_type_filter",                                                    default: true
     t.boolean  "show_company_name",                                                              default: true
     t.boolean  "action_subscription_booking"
+    t.string   "slug"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
+  add_index "transactable_types", ["slug"], name: "index_transactable_types_on_slug", using: :btree
 
   create_table "transactables", force: :cascade do |t|
     t.integer  "instance_type_id"
@@ -3313,11 +3408,13 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.boolean  "action_subscription_booking"
     t.integer  "weekly_subscription_price_cents"
     t.integer  "monthly_subscription_price_cents"
+    t.string   "slug"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
   add_index "transactables", ["opened_on_days"], name: "index_transactables_on_opened_on_days", using: :gin
   add_index "transactables", ["parent_transactable_id"], name: "index_transactables_on_parent_transactable_id", using: :btree
+  add_index "transactables", ["slug"], name: "index_transactables_on_slug", using: :btree
   add_index "transactables", ["transactable_type_id"], name: "index_transactables_on_transactable_type_id", using: :btree
 
   create_table "translations", force: :cascade do |t|
@@ -3556,8 +3653,6 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.string   "paypal_merchant_id",                     limit: 255
     t.float    "left_by_seller_average_rating",                      default: 0.0
     t.float    "left_by_buyer_average_rating",                       default: 0.0
-    t.integer  "followers_count",                                    default: 0,                                                                                   null: false
-    t.integer  "following_count",                                    default: 0,                                                                                   null: false
     t.boolean  "featured",                                           default: false
     t.integer  "projects_count"
     t.boolean  "onboarding_completed",                               default: false
@@ -3568,6 +3663,8 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.string   "cover_image_original_url"
     t.datetime "cover_image_versions_generated_at"
     t.boolean  "tutorial_displayed",                                 default: false
+    t.integer  "followers_count",                                    default: 0,                                                                                   null: false
+    t.integer  "following_count",                                    default: 0,                                                                                   null: false
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

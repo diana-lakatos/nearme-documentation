@@ -24,6 +24,6 @@
           %td= humanized_money_with_cents_and_symbol(payment.service_fee_amount_guest)
           %td= humanized_money_with_cents_and_symbol(payment.service_fee_amount_host)
           %td= humanized_money_with_cents_and_symbol(payment.subtotal_amount)
-          %td= payment.payable.billing_authorization.payment_gateway.name if payment.payable
+          %td= payment.payable.billing_authorization.payment_gateway.try(:name) if payment.payable
           %td= l(payment.created_at, format: :long)
 

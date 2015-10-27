@@ -203,6 +203,15 @@ class Transactable < ActiveRecord::Base
   monetize :weekly_subscription_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :monthly_subscription_price_cents, with_model_currency: :currency, allow_nil: true
 
+  extend FriendlyId
+  friendly_id :slug_candidates, use: [:slugged, :finders, :scoped], scope: :instance
+  def slug_candidates
+    [
+      :name,
+      [:name, DateTime.now.strftime("%b %d %Y")]
+    ]
+  end
+
   # Defer to the parent Location for availability rules unless this Listing has specific
   # rules.
   def availability
@@ -380,14 +389,9 @@ class Transactable < ActiveRecord::Base
     photos_metadata.try(:count).to_i > 0
   end
 
-  def to_param
-    "#{id}-#{name}".parameterize
-  rescue
-    id
-  end
-
   def reserve!(reserving_user, dates, quantity)
-    reservation = reservations.build(:user => reserving_user, :quantity => quantity)
+    payment_method  = PaymentMethod.manual.first
+    reservation = reservations.build(:user => reserving_user, :quantity => quantity, :payment_method => payment_method)
     dates.each do |date|
       raise ::DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
       reservation.add_period(date)
@@ -635,8 +639,8 @@ class Transactable < ActiveRecord::Base
     super && self.transactable_type.action_rfq?
   end
 
-  def possible_express_checkout?
-    instance.payment_gateway(company.iso_country_code, currency).try(:express_checkout?)
+  def express_checkout_payment?
+    instance.payment_gateway(company.iso_country_code, currency).try(:express_checkout_payment?)
   end
 
   def possible_delivery?
@@ -679,6 +683,10 @@ class Transactable < ActiveRecord::Base
 
   def translation_namespace_was
     service_type.try(:translation_namespace_was)
+  end
+
+  def required?(attribute)
+    RequiredFieldChecker.new(self, attribute).required?
   end
 
   private

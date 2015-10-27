@@ -3,6 +3,10 @@ require Rails.root.join('app', 'controllers', 'registrations_controller.rb') if 
 
 DesksnearMe::Application.routes.draw do
 
+
+  # Legacy pages redirect. Can be removed in Feb 16th. The redirect matches the route below.
+  get "/pages/:slug(.:format)", to: 'pages#redirect'
+
   get 'comments/index'
   get 'comments/create'
 
@@ -52,6 +56,7 @@ DesksnearMe::Application.routes.draw do
   namespace :webhooks do
     resource :'profile', only: [] do
       collection do
+        match 'create_profile', via: [:get, :post], as: :create_profile, action: :create
         match '', via: [:get, :post], as: :webhook, action: :webhook
       end
     end
@@ -203,6 +208,9 @@ DesksnearMe::Application.routes.draw do
       resources :listing_types, only: [:index, :create, :destroy_modal, :destroy] do
         get 'destroy_modal', on: :member
       end
+      resources :payments
+      resources :payment_gateways, controller: 'payments/payment_gateways'
+
       resource :translations, :only => [:show, :update], :controller => 'translations'
       resource :cancellation_policy, :only => [:show, :update], :controller => 'cancellation_policy'
       resource :documents_upload, except: [:index, :destroy], :controller => 'documents_upload'
@@ -475,30 +483,17 @@ DesksnearMe::Application.routes.draw do
       end
       resources :topics
       resources :spam_reports
+      resources :projects, only: [:index, :destroy, :edit, :update] do
+        post :restore, on: :member
+      end
     end
 
   end
 
   resources :blog_posts, path: 'blog', only: [:index, :show], controller: 'blog/blog_posts'
 
-  resources :transactable_types, only: [] do
-    resources :locations, :only => [] do
-      member do
-        get "(:listing_id)", :to => "locations#show", :as => ''
-      end
-
-      resources :listings, :controller => 'locations/listings', :only => [:show] do
-        member do
-          get :ask_a_question
-        end
-      end
-
-      resource :social_share, :only => [:new], :controller => 'locations/social_share'
-    end
-  end
-
   resources :reviews, only: [:index]
-  resources :locations, :only => [] do
+  resources :locations, only: [] do
     member do
       get "(:listing_id)", :to => "locations#show", :as => ''
     end
@@ -519,7 +514,11 @@ DesksnearMe::Application.routes.draw do
 
   resources :topics, only: [:show]
   resources :projects, only: [:show] do
-    resources :project_collaborators, only: [:create, :destroy]
+    resources :project_collaborators, only: [:create, :destroy] do
+      member do
+        get :accept
+      end
+    end
     resources :comments, only: [:update, :create, :index, :destroy] do
       resources :spam_reports,  only: [:create, :destroy]
     end
@@ -855,6 +854,7 @@ DesksnearMe::Application.routes.draw do
   get "/see_more_following_topics", to: "activity_feed#following_topics", as: :see_more_following_topics
   get "/see_more_followers", to: "activity_feed#followers", as: :see_more_followers
   get "/see_more_projects", to: "activity_feed#projects", as: :see_more_projects
+  get "/see_more_collaborators", to: "activity_feed#collaborators", as: :see_more_collaborators
 
   resources :user_status_updates, only: [ :create ]
 
@@ -955,12 +955,28 @@ DesksnearMe::Application.routes.draw do
     get 'organizations', to: 'organizations#index'
   end
 
+  resources :transactable_types, only: [], path: "/" do
+    resources :locations, :only => [], path: "/" do
+      member do
+        get "(:listing_id)", :to => "locations#show", :as => ''
+      end
+
+      resources :listings, controller: 'locations/listings', only: [:show] do
+        member do
+          get :ask_a_question
+        end
+      end
+
+      resource :social_share, :only => [:new], :controller => 'locations/social_share'
+    end
+  end
+
+  get "/:slug(.:format)", to: 'pages#show', as: :pages, constraints: Constraints::PageConstraints.new
+
   # delayed_job web gui
   match "/delayed_job" => DelayedJobWeb, :anchor => false, via: [:get, :post]
 
   get "/dashboard/api", to: 'dashboard#api', as: :spree
-
-  get "/pages/:path", to: 'pages#show', as: :pages
 
   get "/w-hotels-desks-near-me", to: 'locations#w_hotels', as: :w_hotels_location
   get "/W-hotels-desks-near-me", to: 'locations#w_hotels'

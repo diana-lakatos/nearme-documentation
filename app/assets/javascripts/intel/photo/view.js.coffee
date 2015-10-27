@@ -30,7 +30,7 @@ class @Photo.View
   singlePhotoHtml: ->
     actions = $('<div class="media-actions"></div>')
 
-    cropLink = $('<button type="button" class="button-a small action-edit" data-resize-photo data-modal title="Rotate & Crop"><span class="intelicon-edit"></span></button>')
+    cropLink = $('<button type="button" class="button-a small action--edit" data-resize-photo data-modal title="Rotate & Crop"><span class="intelicon-edit"></span></button>')
     cropLink.attr('data-href', @data.resize_url)
     cropLink.attr('data-id', @data.id)
     actions.append(cropLink)

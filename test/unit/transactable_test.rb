@@ -20,6 +20,7 @@ class TransactableTest < ActiveSupport::TestCase
 
   setup do
     @listing = FactoryGirl.build(:transactable)
+    @manual_payment_method = FactoryGirl.create(:manual_payment_gateway).payment_methods.first
   end
 
   context 'validation' do
@@ -534,7 +535,7 @@ class TransactableTest < ActiveSupport::TestCase
   context 'schedule booking timezone offset' do
     should 'display occurrences including offset' do
       location_pacific = FactoryGirl.create(:location, time_zone: "Pacific/Honolulu")
-      location_dublin = FactoryGirl.create(:location, time_zone: "Europe/Dublin")
+      location_dublin = FactoryGirl.create(:location, time_zone: "Europe/Warsaw")
       @transactable =  FactoryGirl.create(:transactable, :fixed_price, location: location_pacific)
       @transactable_utc =  FactoryGirl.create(:transactable, :fixed_price, location: location_dublin )
       assert_not_equal @transactable.next_available_occurrences(1)[0][:text], @transactable_utc.next_available_occurrences(1)[0][:text]

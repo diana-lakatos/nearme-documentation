@@ -160,10 +160,6 @@ Spree::Product.class_eval do
     false
   end
 
-  def possible_manual_payment?
-    super && product_type.try(:possible_manual_payment)
-  end
-
   def action_rfq?
     super && product_type.try(:action_rfq?)
   end
@@ -182,6 +178,10 @@ Spree::Product.class_eval do
 
   def should_populate_user_listings_metadata?
     paranoia_destroyed? || %w(id draft).any? { |attr| metadata_relevant_attribute_changed?(attr) }
+  end
+
+  def required?(attribute)
+    RequiredFieldChecker.new(self, attribute).required?
   end
 
   private

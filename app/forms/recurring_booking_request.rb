@@ -69,13 +69,7 @@ class RecurringBookingRequest < Form
   end
 
   def payment_method
-    @payment_method = if @listing.action_free_booking?
-                        Reservation::PAYMENT_METHODS[:free]
-                      elsif @billing_gateway.present?
-                        Reservation::PAYMENT_METHODS[:credit_card]
-                      else
-                        Reservation::PAYMENT_METHODS[:manual]
-                      end
+    'credit_card'
   end
 
   def credit_card

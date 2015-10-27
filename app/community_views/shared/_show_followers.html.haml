@@ -1,6 +1,3 @@
-= simple_form_for :search_filter, url: search_path(search_type: :people) do |f|
-  .filters-a
-    .results
-      = f.input :sort, as: :select, collection: ['Name', 'Date'], input_html: { class: 'selectize', data: { placeholder: t(:sort, scope: [:simple_form, :placeholders, :search_filter] )}}, wrapper_html: { class: 'sort' }
+= render 'shared/sort_form', form_url: see_more_route, sort_options: User::SORT_OPTIONS, container: container
 
-= render 'shared/listing_people', users: @followers, see_more_type: "followers", see_more_route: see_more_followers_path(id: object.id, type: object.class.name)
+= render 'shared/listing_people', users: collection, see_more_route: see_more_route

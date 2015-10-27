@@ -1,8 +1,8 @@
 - render_content_outside_container!
 - hidden = [:user_reviews, :shipping, :refunds] # TODO: Remove when implemented
 
-- meta_title @product.name
-- meta_description @product.try(:description).to_s.truncate(250, :separator => ' ')
+- title @product.name
+- meta_description @product.try(:description).to_s.truncate(130, separator: ' ')
 = product_structured_data
 
 %section.product-head

@@ -1,6 +1,8 @@
 class PaymentGateway::SpreedlyPaymentGateway < PaymentGateway
   include PaymentGateway::ActiveMerchantGateway
 
+  supported :any_currency
+
   def self.settings
     {
       login: "",
@@ -11,10 +13,6 @@ class PaymentGateway::SpreedlyPaymentGateway < PaymentGateway
 
   def self.active_merchant_class
     ActiveMerchant::Billing::SpreedlyCoreGateway
-  end
-
-  def support_any_currency!
-    true
   end
 end
 

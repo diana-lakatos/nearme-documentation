@@ -5,7 +5,15 @@ class Billing::Gateway::Processor::Response::Paypal < Billing::Gateway::Processo
   end
 
   def failure_message
-    @response.first.message
+    @response.error.first.message
+  end
+
+  def response
+    @response
+  end
+
+  def params
+    @response.params
   end
 
   def confirmation_url

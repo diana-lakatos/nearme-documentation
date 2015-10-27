@@ -13,8 +13,13 @@
 
     td, th {
         border: none;
-        padding: 20px 20px 20px 0;
-        vertical-align: top
+        padding: 20px 0;
+        vertical-align: top;
+        overflow: hidden;
+    }
+
+    td + td, th + th, td + th, th + td {
+        padding-left: 20px;
     }
 
     th {
@@ -97,6 +102,23 @@
             &:before {
                 padding: 8px;
             }
+        }
+    }
+
+    .project-summary-wrapper {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        padding-right: 30px;
+
+        &:after {
+            position: absolute;
+            content: "";
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 30px;
+            background: linear-gradient(90deg, rgba(#fff, 0), #fff);
         }
     }
 }

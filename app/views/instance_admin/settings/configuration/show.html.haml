@@ -36,9 +36,6 @@
     %h4
       = t('instance_admin.settings.configuration.checkout')
     .row
-      .input-container.col-xs-4
-        = f.input :possible_manual_payment, as: :boolean, input_html: { checked: f.object.possible_manual_payment? }, inline_label: true
-    .row
       .input-container.col-xs-6
         .control-group.optional
           %label.optional.control-label
@@ -60,13 +57,6 @@
         = f.input :marketplace_password, placeholder: t('simple_form.labels.instance.marketplace_password'), as: :string, input_html: { class: 'form-control' }
       .input-container.col-xs-6
         = f.input :password_protected, as: :boolean, inline_label: true
-
-  .content-container
-    %h4
-      = t('instance_admin.settings.configuration.payment_transfers')
-    .row
-      .input-container.col-xs-6
-        = f.input :payment_transfers_frequency, collection: PaymentTransfer::FREQUENCIES.collect { |f| [t(".#{f}"), f] }, input_html: { class: 'form-control' }, prompt: true
 
   .content-container
     .row.heading-row

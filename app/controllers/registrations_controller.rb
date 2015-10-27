@@ -88,8 +88,11 @@ class RegistrationsController < Devise::RegistrationsController
       @feed = ActivityFeedService.new(@user)
       @events = @feed.events(params)
 
-      @following = @user.feed_following(params)
-      @followers = @user.feed_followers(params)
+      @projects_followed = @user.feed_followed_projects.enabled.paginate(pagination_params)
+      @topics_followed = @user.feed_followed_topics.paginate(pagination_params)
+      @users_followed = @user.feed_followed_users.paginate(pagination_params)
+      @followers = @user.feed_followers.paginate(pagination_params)
+      @all_projects = @user.all_projects(current_user == @user).enabled.paginate(pagination_params)
     else
       @company = @user.companies.first
       if @company.present? && buyable?
@@ -221,10 +224,13 @@ class RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @user.password = params[:user][:password]
     @user.skip_password = false
+    @user.custom_validation = false
+    @user.skip_custom_attribute_validation = true
     if @user.save
       flash[:success] = t('flash_messages.registrations.password_set')
       redirect_to edit_user_registration_path(:token => @user.authentication_token)
     else
+      flash[:success] = @user.errors.full_messages.join(', ')
       render :set_password
     end
   end
@@ -366,4 +372,10 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def pagination_params
+    {
+      page: 1,
+      per_page: ActivityFeedService::Helpers::FOLLOWED_PER_PAGE
+    }
+  end
 end

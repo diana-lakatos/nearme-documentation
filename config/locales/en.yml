@@ -1,6 +1,25 @@
 en:
   activerecord:
+    models:
+      payment_gateway: "Payment gateway"
+      payment_method: "Payment method"
     attributes:
+      payment_method/payment_method_type:
+        credit_card: "Credit Card"
+        nonce: "PayPal"
+        express_checkout: "PayPal Express Checkout"
+        manual: "Offline Payments"
+        remote: 'Fetch'
+        free: 'Free Payments'
+      payment_gateway:
+        name: "Name"
+        type: "Type"
+        live_active: "Live"
+        test_active: "Test"
+        supported_countries: "Supported Countries"
+        supported_currencies: "Supported Currencies"
+        payout_supported_countries: "Payout countries"
+        payout_supported_currencies: "Payout currencies"
       listing_type:
         name: "Listing type"
       location_type:
@@ -12,6 +31,8 @@ en:
         height_unit: 'Type of Unit'
         width_unit: 'Type of Unit'
         depth_unit: 'Type of Unit'
+      spree/order:
+        insurance_enabled: "Enable shipping insurance (if available)"
       saved_search:
         title: 'Title'
         created_at: 'Created at'
@@ -86,6 +107,7 @@ en:
     daily: 'Daily'
     weekly: 'Weekly'
     browse: 'Browse'
+    required: 'required'
     day:
       one: "day"
       other: "days"
@@ -145,6 +167,7 @@ en:
       dimensions_templates:
         explanation1: 'This will provide a tracking code and a shipping label for your product sale.'
         explanation2: "Select your item's dimensions from the menu below or add your own measures."
+      insurance_explanation: "The insurance covers up to $5,000.00 per package. Packages shipped via Canada Post, FedEx Smart Post, UPS Mail Innovations, and USPS First Class Mail are limited to $1,000.00, per package. Leave zero for no insurance."
       shipping_profiles:
         add_new_shipping_profile: 'Create New Shipping Profile'
         add_new_shipping_rule: 'Add New Shipping Rule'
@@ -303,6 +326,7 @@ en:
       configuration:
         master_lock: 'Master Lock'
         update_lock: 'Update Lock'
+        user_authorization: 'User Authorization'
         basic_configuration: 'Basic Configuration'
         basic_configuration_section:
           placeholder_marketplace_name: 'Your marketplace name'
@@ -322,6 +346,10 @@ en:
           replacement_text: "Replacement Text"
           ignore_case: "Ignore case"
         support: "Support"
+      payments:
+        payment_gateways:
+          new: "New Payment Gateway"
+          edit: "Payment Gateway Configuration"
       domains:
         domains: "Domains"
         domain: "Domain"
@@ -899,6 +927,8 @@ en:
       nonce: 'PayPal Payment'
       manual_payment: 'Manual Payment'
       manual_payment_description: 'You will make payment in person'
+      free_payment: 'Free Payment'
+      free_payment_description: 'This service does not require payment'
       invalid_cc: "Those credit card details don't look valid"
       invalid_payment_method: "Please choose payment method"
       payment_authorized: 'Your payment is now authorized, please confirm your order.'
@@ -1028,6 +1058,9 @@ en:
       tickets: "Tickets"
       view_all_tickets: "View all tickets"
       open_a_ticket: "Open a Ticket"
+    user:
+      tickets: 'Your Support Requests'
+      no_tickets: 'You have no open tickets.'
     statuses:
       past:
         open: "Opened"
@@ -1083,6 +1116,7 @@ en:
       archived: "ARCHIVED"
       track_package: 'Track Package'
       return_label: 'Return Label'
+      uploaded_file: "Uploaded file"
     user_recurring_bookings:
       active: "ACTIVE"
       archived: "ARCHIVED"
@@ -1121,7 +1155,7 @@ en:
       payment_methods:
         credit_card: "Credit Card"
         express_checkout: "PayPal"
-        manual: "Manual payment"
+        manual: "Offline payment"
         nonce: "PayPal"
         remote: "Fetch"
         free: "None"
@@ -1468,6 +1502,12 @@ en:
     per_day: 'PER DAY'
     per_week: 'PER WEEK'
     per_month: 'PER MONTH'
+    slash_per_hour: '/ hour'
+    slash_per_night: '/ night'
+    slash_per_day: '/ day'
+    slash_per_week: '/ week'
+    slash_per_month: '/ month'
+    from_price: "From"
     first_day: 'Select a start date'
     last_day: 'Select an end date'
     booking_module:
@@ -1525,6 +1565,7 @@ en:
       month_year: "%B %Y"
       start_hours: "%-H:%M"
       end_hours: "%-H:%M"
+      date_time: "%d/%m/%y %l:%M%P"
   date:
     formats:
       short: '%B %d, %-Y'
@@ -1684,6 +1725,8 @@ en:
       days_first: 'Please select days first'
 
   reservations_review:
+    missing_payment_method: "Payment is not possible"
+    missing_payment_method_info: 'Unfortunately we do not sell in this country.'
     shipping_address: 'Shipping address'
     heading: 'Review your booking'
     summary: 'Order summary'
@@ -1702,7 +1745,6 @@ en:
     pick_up: 'Pick Up'
     delivery: 'Delivery'
     delivery_hint: 'Prices include return delivery'
-
     buttons:
       request: 'Request Booking'
       continue: 'Continue'
@@ -1718,6 +1760,8 @@ en:
       book_it_out_not_available: 'Book It Out option is no longer available'
       exclusive_price_not_available: 'Exclusive Price option is no longer available'
       no_delivery_options: 'There are no delivery options available.'
+    payments:
+      submit: "Submit a secure payment."
 
   recurring_reservations_review:
     total: 'Total per reservation'
@@ -1855,3 +1899,8 @@ en:
       unread_messages_subject: "You have unread messages"
       you_have_unread_messages: "This is a notification to let you know you have unread messages waiting for you in your inbox."
 
+  metadata:
+    search:
+      title:
+        search: "Search"
+        in: " in "

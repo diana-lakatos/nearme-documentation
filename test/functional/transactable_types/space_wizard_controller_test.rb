@@ -120,6 +120,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
 
     should "be set to Greece" do
       VCR.use_cassette "freegeoip_greece" do
+        FactoryGirl.create(:country, name: "Greece", iso: "GR")
         # Set request ip to an ip address in Greece
         @request.env['REMOTE_ADDR'] = '2.87.255.255'
         get :list, transactable_type_id: @transactable_type.id
@@ -130,6 +131,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
 
     should "be set to Brazil" do
       VCR.use_cassette "freegeoip_brazil" do
+        FactoryGirl.create(:country, name: "Brazil", iso: "BR")
         # Set request ip to an ip address in Brazil
         @request.env['REMOTE_ADDR'] = '139.82.255.255'
         get :list, transactable_type_id: @transactable_type.id
@@ -238,21 +240,21 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     should 'redirect to manage listings page if has listings' do
       create_listing
       get :new, transactable_type_id: @transactable_type.id
-      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.id)
+      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.slug)
     end
 
     should 'redirect to new location if no listings' do
       create_listing
       @location.destroy
       get :new, transactable_type_id: @transactable_type.id
-      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.id)
+      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.slug)
     end
 
     should 'redirect to new listing if no listings but with one location' do
       create_listing
       @listing.destroy
       get :new, transactable_type_id: @transactable_type.id
-      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.id)
+      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.slug)
     end
 
     should 'redirect to dashboard if no listings but more than one location' do
@@ -260,7 +262,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
       @listing.destroy
       FactoryGirl.create(:location, :company => @company)
       get :new, transactable_type_id: @transactable_type.id
-      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.id)
+      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.slug)
     end
 
     should 'redirect to space wizard list if no listings' do
@@ -330,6 +332,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
 
       should 'create listing when location skip_company is set to true and address is missing' do
         stub_us_geolocation
+
         @params_without_company_name['user']['companies_attributes']['0'].delete('company_address_attributes')
 
         assert_difference('Location.count', 1) do
@@ -340,8 +343,8 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
         location = Location.last
         assert_equal 37.09024, company.latitude
         assert_equal -95.712891, company.longitude
-        assert_equal 37.09024, location.latitude
-        assert_equal -95.712891, location.longitude
+        assert_equal 5, location.latitude
+        assert_equal 8, location.longitude
       end
 
       should 'create listing with company address when location skip_company and skip_listing set' do

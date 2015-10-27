@@ -17,6 +17,10 @@ class WishListItem < ActiveRecord::Base
   after_create :increment_counters
   after_destroy :decrement_counters
 
+  def to_liquid
+    @wish_list_item_drop ||= WishListItemDrop.new(self)
+  end
+
   private
 
   def increment_counters

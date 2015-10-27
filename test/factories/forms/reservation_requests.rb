@@ -12,7 +12,7 @@ FactoryGirl.define do
     card_number "4111111111111111"
     country_name "Great Britan"
     mobile_number '666 666 666'
-    payment_method 'credit_card'
+    payment_method_id { payment_method.id }
     reservation_type 'daily'
 
     factory :reservation_request_with_not_valid_cc do

@@ -5,6 +5,7 @@ Feature: Emails should be sent out informing parties about reservations
 
   Background:
     Given a user: "Keith Contractor" exists with name: "Keith Contractor", email: "keith@example.com"
+    And a manual_payment_gateway exists
     And a user: "Bo Jeanes" exists with name: "Bo Jeanes", email: "bo@example.com"
     And Reservation alerts exist
 

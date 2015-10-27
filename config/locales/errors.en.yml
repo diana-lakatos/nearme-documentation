@@ -59,6 +59,12 @@ en:
           attributes:
             rating:
               rating_is_required: 'Rating is required'
+        project:
+          attributes:
+            photos:
+              too_short: 'You need to add at least one photo to your project'
+            topics:
+              too_short: 'You need to select at least one topic for your project'
   errors:
     messages:
       free: "must be free if no prices are provided"

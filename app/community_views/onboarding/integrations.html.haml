@@ -7,8 +7,7 @@
       .connect-a
         %ul
           - @supported_providers.each do |provider|
-            -# dirty hack for google_oauth2 provider
-            %li{class: provider.split("_")[0].downcase}
+            %li{class: provider.downcase}
               %span
                 = t :connect_with_service, service: provider
               = build_link_for(provider, "button-a white").html_safe

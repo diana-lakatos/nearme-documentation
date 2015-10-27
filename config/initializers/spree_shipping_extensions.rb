@@ -49,8 +49,19 @@ if Spree::Stock::Estimator.methods.include?(:new)
           )
         end
 
+        insurance = nil
+        if products.first.insurance_amount > 0 && package.try(:order).try('insurance_enabled?')
+          insurance = {
+            insurance_amount: products.first.insurance_amount.to_f,
+            insurance_currency: products.first.currency,
+            extra: {
+              insurance_content: products.first.name
+            }
+          }
+        end
+
         shippo_api = self.get_shippo_api_instance
-        rates = shippo_api.get_rates(shippo_address_from, shippo_address_to, shippo_parcel, shippo_customs_item, shippo_customs_declaration)
+        rates = shippo_api.get_rates(shippo_address_from, shippo_address_to, shippo_parcel, shippo_customs_item, shippo_customs_declaration, insurance)
 
         if !package.try(:order).try(:id).nil?
           Spree::ShippingMethod.where(:order_id => package.order.id).destroy_all
@@ -91,7 +102,9 @@ if Spree::Stock::Estimator.methods.include?(:new)
                 :precalculated_cost => rate[:amount],
                 :calculator => Spree::Calculator::Shipping::PrecalculatedCostCalculator.new,
                 :shipping_categories => [shipping_category],
-                :shippo_rate_id => rate[:object_id]
+                :shippo_rate_id => rate[:object_id],
+                :insurance_amount => rate[:insurance_amount],
+                :insurance_currency => rate[:insurance_currency]
               )
 
             end

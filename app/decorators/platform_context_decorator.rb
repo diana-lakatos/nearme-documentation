@@ -96,7 +96,8 @@ class PlatformContextDecorator
   end
 
   def stripe_public_key
-    @platform_context.instance.payment_gateways.where(type: 'PaymentGateway::StripePaymentGateway').first.settings[:public_key] rescue nil
+    # TODO - remove stripe public key as it's not used anymore
+    PaymentGateway::StripePaymentGateway.first.settings[:public_key] rescue nil
   end
 
   def supported_payout_via_ach?

@@ -16,7 +16,7 @@ class BuySellMarket::CheckoutController < ApplicationController
   before_filter :set_state, only: [:show]
   before_filter :check_qty_on_step, only: [:show, :update]
   before_filter :assign_order_attributes, only: [:update]
-  before_filter :set_payment_gateway, only: [:show, :update, :express]
+  before_filter :set_payment_methods, only: [:show, :update]
   before_filter :set_countries_states, only: [:show, :update]
 
   def show
@@ -30,7 +30,7 @@ class BuySellMarket::CheckoutController < ApplicationController
       build_approval_request_for_object(current_user)
       checkout_service.build_payment_documents
       @additional_charges = platform_context.instance.additional_charge_types
-      @order.express_token = express_checkout_token if express_checkout_token.present?
+      @order.express_token = params[:token] if params[:token].present?
     when :complete
       @current_order = nil
       flash[:success] = t('buy_sell_market.checkout.notices.order_placed')
@@ -42,12 +42,6 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   def update
-    if @order.start_express_checkout
-      setup_upsell_charges
-      redirect_to(action: :express)
-      return
-    end
-
     if @order.payable?
       checkout_extra_fields = @order.checkout_extra_fields(params[:order][:checkout_extra_fields])
       checkout_extra_fields.assign_attributes! if checkout_extra_fields.are_fields_present?
@@ -64,48 +58,32 @@ class BuySellMarket::CheckoutController < ApplicationController
       checkout_service.update_payment_documents
       setup_upsell_charges
 
-      # This is temporal solution that should be removed when we support multiple payment gateways for one country
-      @payment_gateway = PaymentGateway::ManualPaymentGateway.new if @order.manual_payment? && @order.possible_manual_payment?
-
-      @payment_gateway.authorize(@order)
+      @order.payment_method.payment_gateway.authorize(@order)
     elsif @order.save && @order.address?
       save_user_addresses
       update_blank_user_fields
     end
 
-    # We don't want to override validation messages by calling next
-    jump_to next_step if spree_errors.blank? && @order.valid? && (@order.complete? || @order.next)
+    if @order.payment_method.try(:express_checkout?) && @order.express_checkout_redirect_url.present?
+      @order.save
+      redirect_to @order.express_checkout_redirect_url
+    else
+      # We don't want to override validation messages by calling next
+      jump_to next_step if spree_errors.blank? && @order.valid? && (@order.complete? || @order.next)
 
-    flash.now[:error] = spree_errors if spree_errors.present?
-    render_wizard
+      flash.now[:error] = spree_errors if spree_errors.present?
+      render_wizard
+    end
   end
 
   def get_states
     @states = Spree::State.where(country_id: params[:country_id])
   end
 
-  def express
-    if @payment_gateway.express_checkout?
-      @payment_gateway.process_express_checkout(@order, {
-        ip: request.remote_ip,
-        return_url: order_checkout_url(order_id: @order, id: 'payment', host: request.host_with_port),
-        cancel_return_url: cart_index_url(host: request.host_with_port)
-      })
-
-      redirect_to @payment_gateway.redirect_url
-    else
-      redirect_to cart_index_path, error: t('buy_sell_market.checkout.errors.skip')
-    end
-  end
-
   private
 
   def assign_order_attributes
     @order.assign_attributes(spree_order_params)
-  end
-
-  def express_checkout_token
-    params[:token]
   end
 
   def set_theme
@@ -147,7 +125,7 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   def set_countries_states
-    if @order.address?
+    if step == :address
       @countries = Spree::Country.order('name')
       @billing_states = billing_states
       @shipping_states = shipping_states
@@ -192,12 +170,14 @@ class BuySellMarket::CheckoutController < ApplicationController
     @order.state.to_sym
   end
 
-  def set_payment_gateway
-    @payment_gateway = current_instance.payment_gateway(@order.company.iso_country_code, @order.currency)
+  def set_payment_methods
+    payment_gateways = current_instance.payment_gateways(@order.company.iso_country_code, @order.currency)
 
-    if @payment_gateway.nil?
+    if payment_gateways.blank?
       flash[:error] = t('flash_messages.buy_sell.no_payment_gateway')
       redirect_to(cart_index_path)
+    else
+      @payment_methods = payment_gateways.map(&:active_payment_methods).flatten
     end
   end
 

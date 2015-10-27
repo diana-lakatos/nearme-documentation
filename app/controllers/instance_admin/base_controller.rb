@@ -48,6 +48,7 @@ class InstanceAdmin::BaseController < ApplicationController
 
   SETTINGS_CONTROLLERS = {
     'configuration'        => { default_action: 'show' },
+    'payments'             => { default_action: 'index' },
     'domains'              => { default_action: 'index' },
     'hidden_controls'      => { default_action: 'show' },
     'locations'            => { default_action: 'show' },
@@ -87,7 +88,9 @@ class InstanceAdmin::BaseController < ApplicationController
 
   PROJECTS_CONTROLLERS = {
     'project_types'  => { default_action: 'index' },
+    'projects'   => { default_action: 'index' },
     'topics'  => { default_action: 'index' },
+    'users'   => { controller: '/instance_admin/manage/users', default_action: 'index' },
     'spam_reports'  => { default_action: 'index' }
   }
 

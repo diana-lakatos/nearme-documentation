@@ -1,0 +1,385 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="viewport" content="width=device-width" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Intel&reg; Developer Zone</title>
+  <style type="text/css">
+    /* -------------------------------------
+        GLOBAL
+    ------------------------------------- */
+    * {
+      margin:0;
+      padding:0;
+      font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+      font-size: 100%;
+      line-height: 1.6;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 20px 0;
+    }
+
+    body {
+      -webkit-font-smoothing:antialiased;
+      -webkit-text-size-adjust:none;
+      width: 100%!important;
+      height: 100%;
+      color: #53565a;
+      background-color: #f6f6f6;
+    }
+    /* -------------------------------------
+        ELEMENTS
+    ------------------------------------- */
+    a {
+      color: #0071C5;
+      text-decoration: none;
+    }
+
+    a img {
+      border-bottom: 2px solid #00AEEF;
+    }
+
+    .btn-primary, .btn-secondary {
+      text-decoration:none;
+      color: #FFF;
+      background-color: #0071C5;
+      padding:7px 20px;
+      font-weight:bold;
+      margin: 20px 10px 20px 0;
+      text-align:center;
+      display: inline-block;
+      border-radius: 3px;
+    }
+
+    .btn-secondary {
+      background: #aaa;
+    }
+
+    .last {
+      margin-bottom: 0;
+    }
+
+    .first{
+      margin-top: 0;
+    }
+
+    .logo {
+      padding: 0!important;
+      margin: 0 auto;
+    }
+
+    .ruler1 {
+      border-top: 1px solid #ccc;
+      margin: 20px 0 0 0!important;
+    }
+
+    .ruler2 {
+      border-top: 1px dashed #ccc;
+      margin: 20px 0 0 0!important;
+    }
+
+    .ruler3 {
+      border-top: 3px double #ccc;
+      margin: 20px 0 0 0!important;
+    }
+
+    .ruler4 {
+      border-top: 1px dotted #ccc;
+      margin: 20px 0 0 0!important;
+    }
+
+    table.pic_left {
+      margin: 30px 0 0;
+    }
+
+    table.pic_left p {
+      padding: 0 0 10px;
+      margin: 0;
+    }
+
+    table.pic_left img {
+      width: 40%;
+      padding: 0 20px 0 0;
+      margin: 5px 0;
+    }
+
+    table.pic_right {
+      margin: 30px 0 0;
+    }
+
+    table.pic_right p {
+      padding: 0 0 10px;
+      margin: 0;
+    }
+
+    table.pic_right img {
+      width: 40%;
+      padding: 0 0 0 20px;
+      margin: 5px 0;
+    }
+
+    img.fullwidth {
+      margin: 0;
+    }
+
+    /* -------------------------------------
+        BODY
+    ------------------------------------- */
+    table.body-wrap {
+      width: 100%;
+      padding: 0 20px;
+    }
+
+    table.body-wrap .container{
+      border: 1px solid #f0f0f0;
+    }
+
+    table.header-wrap {
+      width: 100%;
+      padding: 0 20px;
+    }
+
+    /* -------------------------------------
+        FOOTER/View in Browser
+    ------------------------------------- */
+    table.footer-wrap {
+      width: 100%;
+      clear:both!important;
+    }
+
+    .footer-wrap .container p {
+      font-size:12px;
+      color:#666;
+    }
+
+    table.footer-wrap a{
+      color: #999;
+      text-decoration: underline;
+    }
+
+
+    /* -------------------------------------
+        TYPOGRAPHY
+    ------------------------------------- */
+    h1,h2,h3{
+      font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+      margin: 40px 0 10px;
+      line-height: 1.2;
+      font-weight:200;
+      color: #00aeef;
+    }
+
+    h1 {
+      font-size: 36px;
+    }
+    h2 {
+      font-size: 27px;
+    }
+    h3 {
+      font-size: 22px;
+    }
+
+    /* ----- h4 for header only ----- */
+    h4 {
+      font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+      line-height: 1.1;
+      font-weight:200;
+      font-size: 22px;
+      color: #ffffff;
+      margin: 0 10px;
+      padding: 0;
+    }
+
+    /* ------ h5 SubHeader ------ */
+    h5 {
+      font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+      line-height: 1.1;
+      font-weight: bold;
+      font-size: 16px;
+      color: #53565a;
+      margin: 20px 0 10px;
+      padding: 0;
+    }
+
+    p, ul {
+      margin-bottom: 10px;
+      font-weight: normal;
+      font-size:14px;
+    }
+
+    ul li {
+      margin-left:30px;
+    }
+
+    .preheaderContent{
+      color:#808080;
+      font-size:10px;
+    }
+
+    .username {
+      font-weight: bold;
+    }
+
+    .postscript p {
+      font-size: 12px;
+      font-style: italic;
+      color: #00AEEF;
+      padding: 20px 0;
+    }
+    .description p {
+      font-size: 11px;
+      font-style: italic;
+      color: #939598;
+    }
+
+    /* ---------------------------------------------------
+        RESPONSIVENESS
+    ------------------------------------------------------ */
+
+    /* Set a max-width, and make it display as block */
+    .container {
+      display:block!important;
+      max-width:600px!important;
+      margin:0 auto!important; /* centers it */
+      clear:both!important;
+    }
+
+    /* Fill 100% of the .container */
+    .content {
+      padding:20px;
+      max-width:600px;
+      margin:0 auto;
+      display:block;
+    }
+
+    .precontent {
+      padding: 10px;
+      max-width:600px;
+      margin:0 auto;
+      display:block;
+    }
+
+    .header {
+      padding:15px;
+      max-width:600px;
+      margin:0 auto;
+      display:block;
+    }
+
+    /* Make sure tables in the content area are 100% wide */
+    .content table {
+      width: 100%;
+    }
+
+    .precontent table {
+      width: 100%;
+    }
+  </style>
+</head>
+<body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
+  <center>
+    <!-- body -->
+
+    {% comment %}
+    <!-- View in browser example -->
+    <table border="0" cellpadding="0" cellspacing="0" class="footer-wrap">
+      <tr>
+        <td align="center" class="container">
+          <!-- view in browser -->
+          <div class="precontent">
+          <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td align="center" class="preheaderContent" >Email not displaying correctly?&nbsp;&nbsp;&nbsp;<a href="#" target="_blank">View it in your browser.</a></td>
+            </tr>
+          </table>
+          </div>
+          <!-- /view in browser -->
+        </td>
+      </tr>
+    </table>
+    {% endcomment %}
+
+    <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" class="header-wrap">
+      <tr>
+        <td valign="top" class="container" bgcolor="#0071C5">
+
+          <!-- header -->
+          <div class="header">
+          <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td width="72">
+                <img class="logo" src="{{ platform_context.logo_url }}" width="72" height="48" title="Intel&reg; Developer Zone" alt="Intel&reg; Developer Zone" />
+              </td>
+              <td>
+                <h4>Developer Zone</h4>
+              </td>
+            </tr>
+          </table>
+          </div>
+          <!-- /header -->
+        </td>
+      </tr>
+    </table>
+
+    {% comment %}
+    <!-- full width image example -->
+    <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" class="header-wrap">
+      <tr>
+        <td valign="top" class="container">
+          <img src="http://www.seventriangle.com/test/images/full-width.jpg" title="Image Description" class="fullwidth"/>
+        </td>
+      </tr>
+    </table>
+    {% endcomment %}
+
+    <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" class="body-wrap">
+      <tr>
+        <td align="center" valign="top" class="container" bgcolor="#FFFFFF">
+          <!-- content -->
+          <div class="content">
+            <table border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td>
+                  {{ content_for_layout }}
+                  <br/>
+                  <p><a href="https://devmesh.intel.com">The Intel Developer Mesh Team</a></p>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- /content -->
+        </td>
+      </tr>
+    </table>
+    <!-- /body -->
+    <!-- footer -->
+    <table border="0" cellpadding="0" cellspacing="0" class="footer-wrap">
+      <tr>
+        <td class="container">
+          <div class="content">
+            <table border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td align="center" valign="top">
+                  <p>Intel is committed to protecting your privacy. For more information about Intel's
+                    Privacy Notice, please visit Intel privacy or write to Intel Corporation, ATTN Privacy,
+                    Mailstop RNB4-145, 2200 Mission College Blvd., Santa Clara, CA 95054 USA.
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td align="center">
+                  <p>Don't want to receive these emails anymore? <a href="{{platform_context.unsubscribe_url}}"><unsubscribe>Unsubscribe</unsubscribe></a>.
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <!-- /footer -->
+  </center>
+</body>
+</html>

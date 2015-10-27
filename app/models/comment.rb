@@ -14,10 +14,19 @@ class Comment < ActiveRecord::Base
 
   after_commit :user_commented_event, on: :create
   def user_commented_event
-    if self.commentable_type == "ActivityFeedEvent"
+    case self.commentable_type
+    when "ActivityFeedEvent"
       event = :user_commented
-      ActivityFeedService.create_event(event, self.commentable.followed, [self.creator], self)
+      followed = self.commentable.followed
+    when "Project"
+      event = :user_commented_on_project
+      followed = self.commentable.creator
+    else
+      return
     end
+
+    affected_objects = [self.creator]
+    ActivityFeedService.create_event(event, followed, affected_objects, self)
   end
 
   def reported_by(user, ip)

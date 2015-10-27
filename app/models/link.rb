@@ -5,9 +5,27 @@ class Link < ActiveRecord::Base
 
   belongs_to :linkable, polymorphic: true
 
-  validates_presence_of  :url
+  validates_url :url, { no_local: true, schemes: %w(http https) }
+  validate :text_or_image_present
 
   mount_uploader :image, LinkImageUploader
+
+  after_commit :user_added_links_to_project_event, on: [:create, :update]
+  def user_added_links_to_project_event
+    if linkable_type == "Project"
+      event = :user_added_links_to_project
+      ActivityFeedService.create_event(event, self.linkable, [self.linkable.creator], self.linkable)
+    end
+  end
+
+  protected
+
+  def text_or_image_present
+    if self.text.blank? && self.image.blank?
+      self.errors.add(:text, :blank)
+      self.errors.add(:image, :blank)
+    end
+  end
 
 end
 

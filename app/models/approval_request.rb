@@ -15,6 +15,7 @@ class ApprovalRequest < ActiveRecord::Base
   scope :approved, lambda { with_state(:approved) }
   scope :rejected, lambda { with_state(:rejected) }
   scope :questioned, lambda { with_state(:questionable) }
+  scope :for_non_drafts, lambda { joins("left join transactables trdrafts on trdrafts.id = approval_requests.owner_id and approval_requests.owner_type = 'Transactable'").where('trdrafts.draft is null') }
 
   scope :with_date, ->(date) { where(created_at: date) }
 

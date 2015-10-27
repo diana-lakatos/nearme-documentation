@@ -1,6 +1,8 @@
 class PaymentGateway::PaystationPaymentGateway < PaymentGateway
   include PaymentGateway::ActiveMerchantGateway
 
+  supported  :credit_card_payment
+
   def self.settings
     {
       paystation_id: "",

@@ -7,7 +7,7 @@ module ContentHoldersHelper
   def inject_pages_collection
     ContentHolder::INJECT_PAGES.values.uniq.map do |path|
       [path.humanize, path]
-    end
+    end + [['Any page', 'any_page']]
   end
 
   def content_holder_cache_key(name)

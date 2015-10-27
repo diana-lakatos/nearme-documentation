@@ -2,10 +2,7 @@
 
 .row-fluid.reservation-wizard
   .span8.offset2
-    .header
-      %h1= t 'reservations_review.heading'
-      %p.location-name= @reservation_request.listing.name
-      %p.location-address= @reservation_request.location.address
+    = render 'header', listing: @reservation_request.listing, location: @reservation_request.location
 
     .box
       %h2
@@ -96,20 +93,22 @@
           %br
           = render 'shared/checkout_extra_fields', f: f, show_company_name: @reservation.show_company_name
 
-        = render 'documents', :f => f
-        = render 'payments/payment_options', :f => f
+        - if f.object.payment_methods.blank?
+          %h2= t("reservations_review.missing_payment_method")
+          %span= t("reservations_review.missing_payment_method_info")
+        - else
+          = render 'documents', :f => f
+          = render 'shared/payments', f: f
 
+          - @reservation.assigned_waiver_agreement_templates.each do |wat|
+            %div
+              %label.checkbox.controls{for: "reservation_request_waiver_agreement_templates_#{wat.id}"}
+                = check_box_tag "reservation_request[waiver_agreement_templates][#{wat.id}]", "1", f.object.send(:waiver_agreement_templates).include?("#{wat.id}"), { class: 'input-block-level' }
+                = t('reservations_review.wat_accept', link_to_wat: link_to(wat.name, '#',
+                  data: { modal: true, href: waiver_agreement_template_path(wat)})).html_safe
+              - if f.object.errors.include?(:"waiver_agreement_template_#{wat.id}")
+                %p.error-block= f.object.errors[:"waiver_agreement_template_#{wat.id}"].first
 
-        - @reservation.assigned_waiver_agreement_templates.each do |wat|
-          %div
-            %label.checkbox.controls{for: "reservation_request_waiver_agreement_templates_#{wat.id}"}
-              = check_box_tag "reservation_request[waiver_agreement_templates][#{wat.id}]", "1", f.object.send(:waiver_agreement_templates).include?("#{wat.id}"), { class: 'input-block-level' }
-              = t('reservations_review.wat_accept', link_to_wat: link_to(wat.name, '#',
-                data: { modal: true, href: waiver_agreement_template_path(wat)})).html_safe
-            - if f.object.errors.include?(:"waiver_agreement_template_#{wat.id}")
-              %p.error-block= f.object.errors[:"waiver_agreement_template_#{wat.id}"].first
-
-        - unless f.object.possible_express_payment?
           = f.button :submit, t('reservations_review.buttons.request'), class: 'btn-green', data: { disable_with: t('reservations_review.disabled_buttons.request') }
 
 - content_for :domready do
@@ -123,16 +122,3 @@
       );
       window.sessioncamConfiguration.customDataObjects.push( { key: "event", value: "booking_modal_opened" } );
     });
-
-
-- if @reservation_request.client_token.present?
-  = javascript_include_tag "https://js.braintreegateway.com/v2/braintree.js"
-  - content_for :script do
-    :javascript
-      $(function() {
-        if('braintree' in window) {
-          braintree.setup("#{@reservation_request.client_token}", 'paypal', {
-            container: 'paypal-button'
-          });
-        }
-      });

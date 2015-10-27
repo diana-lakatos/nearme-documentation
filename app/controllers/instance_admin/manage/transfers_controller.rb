@@ -19,6 +19,18 @@ class InstanceAdmin::Manage::TransfersController < InstanceAdmin::Manage::BaseCo
     redirect_to instance_admin_manage_transfer_path(resource)
   end
 
+  def generate
+    if Company.needs_payment_transfer.any?
+      Company.needs_payment_transfer.uniq.find_each do |company|
+        SchedulePaymentTransferJob.perform(company.id)
+      end
+      flash[:notice] = t('flash_messages.instance_admin.settings.payments.payment_transfers.generated')
+    else
+      flash[:error] = t('flash_messages.instance_admin.settings.payments.payment_transfers.no_new_transfers')
+    end
+    redirect_to action: :index
+  end
+
   def payout
     if resource.transferred?
       flash[:notice] = t('flash_messages.payments.payout_already_successful')

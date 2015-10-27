@@ -1,8 +1,8 @@
-- activity_feed_event = setup_activity_feed_event(event)
 
 - if event.followed.present?
+  - activity_feed_event = setup_activity_feed_event(event)
   %header
-    %figure= image_tag activity_feed_event.image
+    %figure= image_tag(activity_feed_event.image)
     %p.desc= activity_feed_event.text
 
     %p.meta

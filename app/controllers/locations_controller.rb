@@ -38,7 +38,6 @@ class LocationsController < ApplicationController
   private
 
   def find_location
-    # tmp hack before migrating to Rails 4.1 - with deleted breaks default scope
     @location = Location.find(params[:id])
   end
 
@@ -49,6 +48,14 @@ class LocationsController < ApplicationController
       scope = scope.for_transactable_type_id(@transactable_type.id) if @transactable_type.present?
       @listing = scope.find(params[:listing_id])
     end
+
+  rescue
+    # We used to use to_param set as $id-$name.parameterize, so
+    # we're assuming the first - will separate id from the parameterized name.
+    #
+    old_id = params[:listing_id].split("-").first
+    @listing = scope.find(old_id)
+    redirect_to location_listing_path(@location.slug, @listing.slug), status: 301
   end
 
   def redirect_if_location_deleted
@@ -76,7 +83,13 @@ class LocationsController < ApplicationController
 
   def redirect_if_no_active_listings
     if current_user_can_manage_location?
-      flash.now[:warning] = t('flash_messages.locations.browsing_no_listings') if @listings.searchable.empty?
+      # We only show non-draft listings even to the admin because otherwise weird errors can occur
+      # when showing him incomplete listings, especially if he tries to book it
+      @listings = @listings.active
+
+      # If from among the non-draft listings remaining all are enabled=false (that is, visible.empty?)
+      # we show a warning to the admin
+      flash.now[:warning] = t('flash_messages.locations.browsing_no_listings') if @listings.visible.empty?
     else
       @listings = @listings.searchable
     end

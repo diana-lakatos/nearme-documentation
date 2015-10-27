@@ -4,6 +4,7 @@ class SearchController < ApplicationController
   include SearchHelper
   include SearcherHelper
 
+  before_filter :ensure_valid_params
   before_filter :find_transactable_type
   before_filter :theme_name
 
@@ -42,6 +43,15 @@ class SearchController < ApplicationController
     render text: @categories_html
   end
 
+  def ensure_valid_params
+    if !is_valid_single_param?(params[:transactable_type_id])
+      redirect_to :back
+    end
+  rescue
+    # No referrer was present
+    redirect_to root_path
+  end
+
   private
 
   def should_log_conducted_search?
@@ -68,11 +78,11 @@ class SearchController < ApplicationController
   end
 
   def first_result_page?
-    !params[:page] || params[:page].to_i==1
+    !params[:page] || params[:page].to_pagination_number==1
   end
 
   def per_page
-    (params[:per_page] || 20).to_i
+    (params[:per_page] || 20).to_pagination_number(20)
   end
 
   def ignore_search_event_flag_false?

@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :transactable do
-    name "Listing #{Random.rand(1000)}"
+    sequence(:name) { |n| "Listing #{n}" }
     description "Aliquid eos ab quia officiis sequi."
     ignore do
       photos_count 0

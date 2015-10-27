@@ -5,7 +5,10 @@
         = link_to project_path(project) do
           -# tmp rescue - need to recreate versions
           = image_tag project.cover_photo.image_url(:project_cover)
-          - if project.featured?
+          - if project.try(:pending_collaboration)
+            %figcaption
+              = t :pending
+          - elsif project.featured?
             %figcaption
               = t :featured
       %ul.numbers
@@ -14,10 +17,13 @@
           %span= project.project_collaborators.approved.count
         %li
           = t :followers
-          %span= project.followers.count
+          %span= project.followers_count
       %p.action
         %p{:'data-follow-button' => true}
-          = render partial: 'shared/follow_button', locals: { object: project, css_class: 'tiny' }
+          - if project.try(:pending_collaboration)
+            =render 'shared/collaboration_buttons', project: project, collaboration: project.project_collaborators.find(project.pending_collaboration)
+          - else
+            = render partial: 'shared/follow_button', locals: { object: project, css_class: 'tiny' }
       %h3.hx
         = link_to project.name, project_path(project)
       %p.user

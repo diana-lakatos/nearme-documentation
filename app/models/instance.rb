@@ -10,8 +10,7 @@ class Instance < ActiveRecord::Base
     :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret,
     :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string, :shippo_username, :shippo_password, :shippo_api_token,
     :twilio_consumer_key, :twilio_consumer_secret, :test_twilio_consumer_key, :test_twilio_consumer_secret, :support_imap_password, :webhook_token,
-    :google_oauth2_consumer_key, :google_oauth2_consumer_secret,
-    :github_consumer_key, :github_consumer_secret,
+    :google_consumer_key, :google_consumer_secret, :github_consumer_key, :github_consumer_secret,
     :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   attr_accessor :mark_as_locked
@@ -71,9 +70,8 @@ class Instance < ActiveRecord::Base
   has_many :transactable_types
   has_many :service_types
   has_many :product_types, class_name: "Spree::ProductType"
-  has_many :payment_gateways, -> { distinct }, through: :country_payment_gateways
-  has_many :country_payment_gateways, inverse_of: :instance
   has_many :project_types, class_name: "ProjectType"
+  has_many :all_payment_gateways, class_name: "PaymentGateway"
   has_many :users, inverse_of: :instance
   has_many :text_filters, inverse_of: :instance
   has_many :waiver_agreement_templates, as: :target
@@ -109,7 +107,7 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :listing_amenity_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :translations, allow_destroy: true, reject_if: proc { |params| params[:value].blank? && params[:id].blank? }
   accepts_nested_attributes_for :instance_billing_gateways, allow_destroy: true, reject_if: proc { |params| params[:billing_gateway].blank? }
-  accepts_nested_attributes_for :payment_gateways, allow_destroy: true
+  accepts_nested_attributes_for :all_payment_gateways, allow_destroy: true
   accepts_nested_attributes_for :transactable_types
   accepts_nested_attributes_for :text_filters, allow_destroy: true
 
@@ -234,20 +232,23 @@ class Instance < ActiveRecord::Base
   end
 
   def default_country_code
-    if default_country.present?
-      codes = IsoCountryCodes.search_by_name(default_country)
-      if codes.uniq.length == 1
-        codes.first.alpha2
-      else
-        raise "Ambiguous default country: #{default_country}, possible codes: #{codes.map(&:alpha2)}"
-      end
-    else
-      nil
-    end
+    Country.find_by_name(default_country).try(:iso)
+  end
+
+  def payment_gateways(country, currency)
+    PaymentGateway.payment_type.mode_scope.joins(:payment_countries, :payment_currencies).where(currencies: {iso_code: currency}, countries: {iso: country})
   end
 
   def payment_gateway(country, currency)
-    country_payment_gateways.includes(:payment_gateway).where(country_alpha2_code: country).find { |cpg| cpg.payment_gateway.supports_currency?(currency) }.try(:payment_gateway)
+    payment_gateways(country, currency).first
+  end
+
+  def payout_gateways(country, currency)
+    PaymentGateway.payout_type.mode_scope.joins(:payment_countries, :payment_currencies).where(currencies: {iso_code: currency}, countries: {iso: country})
+  end
+
+  def payout_gateway(country, currency)
+    payout_gateways(country, currency).first
   end
 
   def buyable?
@@ -391,6 +392,4 @@ class Instance < ActiveRecord::Base
   def generate_webhook_token
     self.webhook_token = SecureRandom.uuid.gsub(/\-/,'')
   end
-
 end
-

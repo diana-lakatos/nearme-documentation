@@ -85,6 +85,7 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
         card_code: '411',
         card_holder_first_name: 'Maciej',
         card_holder_last_name: 'Krajowski',
+        payment_method_id: @payment_method.id
       }
     }
   end
@@ -102,11 +103,13 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
     @listing.transactable_type.update_attribute(:service_fee_guest_percent, 15)
     @instance.update_attribute(:payment_transfers_frequency, 'daily')
 
-    CountryPaymentGateway.delete_all
     payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
-    payout_gateway = FactoryGirl.create(:paypal_payment_gateway)
-    FactoryGirl.create(:country_payment_gateway, payment_gateway: payment_gateway, country_alpha2_code: 'US')
-    FactoryGirl.create(:paypal_merchant_account, payment_gateway: payout_gateway, merchantable: @listing.company)
+    payout_gateway = FactoryGirl.create(:paypal_adaptive_payment_gateway)
+    currency = Currency.find_by_iso_code(currency) || FactoryGirl.create(:currency, iso_code: currency)
+    payout_gateway.payment_currencies << currency unless payout_gateway.payment_currencies.include?(currency)
+    @payment_method = payment_gateway.payment_methods.first
+
+    FactoryGirl.create(:paypal_adaptive_merchant_account, payment_gateway: payout_gateway, merchantable: @listing.company)
     Company.any_instance.stubs(:payout_payment_gateway).returns(payout_gateway)
     Instance.any_instance.stubs(:payment_gateway).returns(payment_gateway)
     PaymentTransfer.any_instance.stubs(:billing_gateway).returns(payout_gateway)

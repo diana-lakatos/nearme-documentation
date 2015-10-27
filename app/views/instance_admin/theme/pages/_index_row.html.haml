@@ -2,7 +2,7 @@
   %td= page.path
   %td
     - if page.redirect?
-      = link_to page.redirect_url, page.redirect_url, target: '_blank'
+      = link_to pages_path(page), page.redirect_url, target: '_blank'
     - else
       = link_to pages_path(page), pages_path(page), target: '_blank'
   %td

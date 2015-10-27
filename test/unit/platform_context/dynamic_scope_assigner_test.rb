@@ -128,19 +128,26 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
 
         # if we are on whitelabelcompany.com we want to see records only for this company
         should 'scope these objects to company' do
+          # We do this here to ensure the white label companies we work with
+          # have the same instance_id as the objects because in the app
+          # we don't/can't have companies belonging to an instance and company
+          # belonging to a different instance
+          PlatformContext.current = PlatformContext.new(Instance.first)
+          @this_current_company = FactoryGirl.create(:white_label_company)
+          @this_other_company = FactoryGirl.create(:white_label_company)
           MODELS_SCOPEABLE_TO_WHITE_LABEL_COMPANY_AND_PARTNER.each do |model_symbol|
             PlatformContext.current = PlatformContext.new(Instance.first)
             model_symbol.to_s.camelize.constantize.destroy_all
             @current_object = FactoryGirl.create(model_symbol)
             @current_object.update_column(:instance_id, @instance.id)
             @company_object = FactoryGirl.create(model_symbol)
-            @company_object.update_column(:company_id, @current_company.id)
+            @company_object.update_column(:company_id, @this_current_company.id)
             @other_company_object = FactoryGirl.create(model_symbol)
-            @other_company_object.update_column(:company_id, @other_company.id)
-            @other_company_object.update_column(:instance_id, @other_company.instance_id)
+            @other_company_object.update_column(:company_id, @this_other_company.id)
+            @other_company_object.update_column(:instance_id, @this_other_company.instance_id)
             @other_object = FactoryGirl.create(model_symbol)
             @other_object.update_column(:instance_id, @other_instance.id)
-            PlatformContext.current = PlatformContext.new(@current_company)
+            PlatformContext.current = PlatformContext.new(@this_current_company)
             assert_equal [@company_object.id], model_symbol.to_s.camelize.constantize.pluck(:id)
           end
         end

@@ -18,7 +18,9 @@ class MerchantAccount < ActiveRecord::Base
   MERCHANT_ACCOUNTS = {
     'braintree_marketplace' => MerchantAccount::BraintreeMarketplaceMerchantAccount,
     'stripe_connect'        => MerchantAccount::StripeConnectMerchantAccount,
-    'paypal'                => MerchantAccount::PaypalMerchantAccount
+    'paypal'                => MerchantAccount::PaypalMerchantAccount,
+    'paypal_adaptive'       => MerchantAccount::PaypalAdaptiveMerchantAccount,
+    'paypal_express_chain'  => MerchantAccount::PaypalExpressChainMerchantAccount
   }
 
   validates_presence_of :merchantable_id, :merchantable_type, :unless => lambda { |ic| ic.merchantable.present? }

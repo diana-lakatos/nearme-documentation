@@ -3,7 +3,7 @@
     / project header
     .project-a
       %figure
-        = image_tag @project.cover_photo.image_url(:project_cover), width: PhotoUploader.dimensions[:project_cover][:width], height: PhotoUploader.dimensions[:project_cover][:height], alt: @project.name
+        = image_tag @project.cover_photo.image_url(:project_cover), alt: @project.name
         - if @project.featured?
           %figcaption
             = t :featured
@@ -25,15 +25,13 @@
         %ul
           %li
             %span
-              %strong= @project.project_collaborators.approved.count
+              %strong{:'data-collaborators-count' => true}= @project.project_collaborators.approved.count
               = t :collaborators
-            - if @project_collaborator
-              = link_to t(:leave_project), project_project_collaborator_path(@project, @project_collaborator), method: :delete , class: 'button-a small red', confirm: t("leave_project_confirm")
-            - elsif @project.seek_collaborators
-              = link_to t(:join_project), project_project_collaborators_path(@project), method: :post , class: 'button-a small'
+            %p{:'data-collaborators-button' => true}
+              = render partial: 'shared/collaborators_button', locals: { project: @project }
           %li
             %span
-              %strong= @followers.count
+              %strong{:'data-followers-count' => true}= @followers.total_entries
               = t :followers
             %p{:'data-follow-button' => true}
               = render partial: 'shared/follow_button', locals: { object: @project }
@@ -60,7 +58,7 @@
         #comments.tab-pane.fade{:role => "tabpanel"}
           = render 'comments/comments', comment: @comment
         #collaborators.tab-pane.fade{:role => "tabpanel"}
-          = render 'show_collaborators'
+          = render 'shared/show_followers', see_more_route: see_more_collaborators_path(id: @project.id, type: 'Project', container: '#collaborators'), collection: @collaborators, container: '#collaborators'
         #followers.tab-pane.fade{:role => "tabpanel"}
-          = render 'shared/show_followers', object: @project
+          = render 'shared/show_followers', see_more_route: see_more_followers_path(id: @project.id, type: 'Project', container: '#followers'), container: '#followers', collection: @followers
 

@@ -1,7 +1,7 @@
 {% cache_for listing, listing.availability, listing.amenities, listing.company, description %}
   <h2>{{ 'transactable_types.locations.listings.the_listing' || translate }}</h2>
   <p>{{ listing.description | filter_text | custom_sanitize }}</p>
-  
+
   <div class='amenities-block'>
     <div class='amenities-header'>
       <h3>{{ 'transactable_types.locations.listings.hours' | translate }}</h3>
@@ -12,7 +12,7 @@
       </div>
     </div>
   </div>
-  
+
   {% if listing.amenities.size > 0 %}
       <div class='amenities-block'>
         <div class='amenities-header'>
@@ -31,7 +31,7 @@
       </div>
   {% endif %}
   <div class="clearfix"></div>
-  
+
   <article class='company'>
     <h2>
       {{ listing.company.name }}
@@ -39,7 +39,7 @@
         <a href="{{ listing.company.url }}" rel='nofollow', target='_blank'><span class='ico-open-link'></span></a>
       {% endif %}
     </h2>
-  
+
     <p> {{ listing.company.description | filter_text | custom_sanitize }}</p>
     <div class='clearfix'></div>
   </article>

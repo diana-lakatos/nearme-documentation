@@ -42,6 +42,21 @@ class UserDecorator < Draper::Decorator
     @count.nil? ? @count = !friends.count.zero? : @count
   end
 
+  def feed_follow_term(object)
+    feed_subscribed_to?(object) ? I18n.t("activity_feed.verbs.unfollow") : I18n.t("activity_feed.verbs.follow")
+  end
+
+  def feed_follow_url(object)
+    url_helpers = Rails.application.routes.url_helpers
+    params = { id: object.id, type: object.class.name }
+
+    feed_subscribed_to?(object) ? url_helpers.unfollow_path(params) : url_helpers.follow_path(params)
+  end
+
+  def feed_follow_http_method(object)
+    feed_subscribed_to?(object) ? "delete" : "post"
+  end
+
   private
 
   def user_messages_decorator_for(instance)

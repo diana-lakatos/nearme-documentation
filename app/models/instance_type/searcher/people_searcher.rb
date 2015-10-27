@@ -11,11 +11,10 @@ class InstanceType::Searcher::PeopleSearcher
   end
 
   def fetcher
-    #TODO add bio or desc to search
-    @fetcher = User.search_by_query([:first_name, :last_name], @params[:query])
+    @fetcher = User.for_instance(PlatformContext.current.instance).search_by_query([:first_name, :last_name, :name], @params[:query])
     @fetcher = @fetcher.by_topic(selected_values(:topic_ids)).custom_order(@params[:sort], @current_user)
     @fetcher = @fetcher.filtered_by_role(selected_values(:role))
-    @fetcher
+    @fetcher.includes(:current_address)
   end
 
   def topics_for_filter

@@ -42,7 +42,7 @@ DesksnearMe::Application.configure do
     config.storage              = :fog
   end
 
-  config.action_controller.asset_host = "//production-nearme.netdna-ssl.com"
+  config.action_controller.asset_host = "https://production-nearme.netdna-ssl.com"
   config.action_mailer.asset_host     = "https://production-nearme.netdna-ssl.com"
 
   config.paypal_mode = 'live'

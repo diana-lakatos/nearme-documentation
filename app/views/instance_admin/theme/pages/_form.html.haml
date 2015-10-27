@@ -2,15 +2,35 @@
   .row
     .input-container.col-xs-12
       = f.input :path, :placeholder => 'Page title', input_html: { class: 'form-control' }
+
   .row
     .input-container.col-xs-12
-      = f.input :content, input_html: { class: 'form-control', rows: "20" }
+      = f.input :slug, :placeholder => 'New Slug', input_html: { class: 'form-control' }
+
+  .row
+    .input-container.col-xs-12
+      = f.input :no_layout, as: :boolean
+  .row
+    .input-container.col-xs-12
+      = f.input :content, hint: "Insert HTML, Markdown or Plain text here", input_html: { class: 'form-control', rows: "20" }
   .row
     .input-container.col-xs-12
       = f.input :css_content, label: 'Page CSS', input_html: { class: 'form-control', rows: "20" }
   .row
     .input-container.col-xs-12
       = f.input :hero_image
+
+  .row
+    .input-container.col-xs-12
+      = f.input :metadata_title, hint: "A good title has between 40 - 250 characters", input_html: { class: 'form-control' }
+
+  .row
+    .input-container.col-xs-12
+      = f.input :metadata_meta_description, as: :text, hint: "A good meta description has between 100 - 350 characters", input_html: { class: 'form-control' }
+
+  .row
+    .input-container.col-xs-12
+      = f.input :metadata_canonical_url, input_html: { class: 'form-control' }
 
   - if resource.hero_image.present?
     .row

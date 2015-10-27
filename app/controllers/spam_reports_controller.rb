@@ -1,6 +1,7 @@
 class SpamReportsController < ApplicationController
 
   before_filter :find_spamable
+  before_action :authenticate_user!
 
   def create
     @spamable.spam_reports.create!(user: current_user, ip_address: request.remote_ip)

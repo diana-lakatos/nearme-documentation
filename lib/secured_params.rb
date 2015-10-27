@@ -24,6 +24,7 @@ class SecuredParams
       :price,
       :quantity,
       :shippo_enabled,
+      :insurance_amount,
       :weight,
       :depth,
       :width,
@@ -35,7 +36,6 @@ class SecuredParams
       :shipping_category_id,
       :unit_of_measure,
       :action_rfq,
-      :possible_manual_payment,
       image_ids: [],
       category_ids: [],
       company_address_attributes: nested(self.address),
@@ -309,12 +309,13 @@ class SecuredParams
       :db_connection_string,
       :default_country,
       :default_currency,
+      :default_oauth_signin_provider,
       :default_products_search_view,
       :default_search_view,
       :facebook_consumer_key,
       :facebook_consumer_secret,
-      :google_oauth2_consumer_key,
-      :google_oauth2_consumer_secret,
+      :google_consumer_key,
+      :google_consumer_secret,
       :github_consumer_key,
       :github_consumer_secret,
       :force_accepting_tos,
@@ -342,7 +343,6 @@ class SecuredParams
       :password_protected,
       :payment_transfers_frequency,
       :paypal_email,
-      :possible_manual_payment,
       :price_slider,
       :price_types,
       :saved_search,
@@ -393,7 +393,6 @@ class SecuredParams
       custom_translations: [:'buy_sell_market.checkout.manual_payment', :'buy_sell_market.checkout.manual_payment_description'],
       user_required_fields: [],
       domains_attributes: nested(self.domain),
-      payment_gateways_attributes: nested(self.payment_gateway),
       listing_amenity_types_attributes: nested(self.amenity_type),
       location_types_attributes: nested(self.location_type),
       location_amenity_types_attributes: nested(self.amenity_type),
@@ -454,9 +453,10 @@ class SecuredParams
       :card_holder_first_name,
       :card_holder_last_name,
       :express_token,
-      :payment_method,
+      :payment_method_id,
       :payment_method_nonce,
-      :start_express_checkout
+      :start_express_checkout,
+      :insurance_enabled
     ]
   end
 
@@ -624,13 +624,32 @@ class SecuredParams
     ]
   end
 
-  def payment_gateway
+  def payment_gateway(payment_gateway_class)
     [
       :type,
-      :live_settings,
-      :test_settings,
-      :country,
-      :supported_countries
+      :live_active,
+      :test_active,
+      :payout_enabled,
+      :immediate_payout_enabled,
+      :payment_currency_ids,
+      :payment_country_ids,
+      :payout_currency_ids,
+      :payout_country_ids,
+      payment_currency_ids: [],
+      payment_country_ids: [],
+      payout_currency_ids: [],
+      payout_country_ids: [],
+      live_settings: payment_gateway_class.settings.keys,
+      test_settings: payment_gateway_class.settings.keys,
+      payment_methods_attributes: nested(self.payment_method)
+    ]
+  end
+
+  def payment_method
+    [
+      :active,
+      :payment_method_type,
+      :id
     ]
   end
 
@@ -664,7 +683,12 @@ class SecuredParams
       :slug,
       :position,
       :redirect_url,
-      :open_in_new_window
+      :redirect_code,
+      :open_in_new_window,
+      :no_layout,
+      :metadata_title,
+      :metadata_meta_description,
+      :metadata_canonical_url
     ]
   end
 
@@ -1053,7 +1077,8 @@ class SecuredParams
       :id,
       :url,
       :text,
-      :image
+      :image,
+      :image_cache
     ]
   end
 
@@ -1121,6 +1146,7 @@ class SecuredParams
     [
       :about,
       :name,
+      :description,
       :image,
       :cover_image,
       :featured,

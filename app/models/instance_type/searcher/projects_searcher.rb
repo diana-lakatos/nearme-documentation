@@ -10,7 +10,7 @@ class InstanceType::Searcher::ProjectsSearcher
   end
 
   def fetcher
-    @fetcher  = Project.search_by_query([:name, :description], @params[:query])
+    @fetcher  = Project.enabled.search_by_query([:name, :description], @params[:query])
     @fetcher = @fetcher.by_topic(selected_topic_ids).custom_order(@params[:sort])
     @fetcher = @fetcher.seek_collaborators if @params[:seek_collaborators] == "1"
     @fetcher.includes(:topics, :creator)

@@ -7,7 +7,10 @@
       = t('instance_admin.manage.transfers.transfers_are_generated_automatically')
       %strong
         = next_payment_transfers_date
-  
+    .input-container.col-xs-12
+
+      = link_to t('instance_admin.generate_transfers'), generate_instance_admin_manage_transfers_path, class: 'btn btn-blue pull-right', method: :post, data: { confirm: "Are you sure you want to generate  transfers manually?" }
+
   = render 'list_table'
 
 

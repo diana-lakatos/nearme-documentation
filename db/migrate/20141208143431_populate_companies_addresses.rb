@@ -140,7 +140,7 @@ class PopulateCompaniesAddresses < ActiveRecord::Migration
         @countries ||= load_countries
       end
 
-      def find_by_alpha2(alpha2)
+      def find_by_iso(alpha2)
         country = IsoCountryCodes.find(alpha2)
         countries[country.name]
       end

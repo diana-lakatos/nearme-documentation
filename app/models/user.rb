@@ -2,8 +2,8 @@ class User < ActiveRecord::Base
   geocoded_by :current_location, :latitude  => :last_geolocated_location_latitude, :longitude => :last_geolocated_location_longitude
 
   include Spree::UserPaymentSource
-  include ActivityFeedService::Follower
-  include ActivityFeedService::Followed
+
+  SORT_OPTIONS = ['All', 'Featured', 'People I know', 'Most Popular', 'Distance', 'Number of Projects']
 
   has_paper_trail ignore: [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                            :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
@@ -20,6 +20,9 @@ class User < ActiveRecord::Base
   has_metadata accessors: [:support_metadata]
   friendly_id :name, use: [:slugged, :finders]
 
+  attr_readonly :following_count
+  attr_readonly :followers_count
+
   belongs_to :billing_address, class_name: 'Spree::Address'
   belongs_to :domain
   belongs_to :instance
@@ -27,10 +30,9 @@ class User < ActiveRecord::Base
   belongs_to :partner
   belongs_to :spree_shipping_address, class_name: 'Spree::Address', foreign_key: 'shipping_address_id'
   has_many :shipping_addresses
-
   has_many :activity_feed_events, as: :event_source, dependent: :destroy
   has_many :activity_feed_subscriptions, foreign_key: 'follower_id'
-  has_many :activity_feed_subscriptions_as_followed, as: :followed
+  has_many :activity_feed_subscriptions_as_followed, as: :followed, class_name: 'ActivityFeedSubscription'
   has_many :administered_locations, class_name: "Location", foreign_key: 'administrator_id', inverse_of: :administrator
   has_many :administered_listings, class_name: "Transactable", through: :administered_locations, source: :listings, inverse_of: :administrator
   has_many :authentications, dependent: :destroy
@@ -47,10 +49,11 @@ class User < ActiveRecord::Base
   has_many :companies, through: :company_users
   has_many :comments, inverse_of: :creator
   has_many :created_companies, class_name: "Company", foreign_key: 'creator_id', inverse_of: :creator
-  has_many :feed_followers, -> { where(activity_feed_subscriptions: { active: true}) }, through: :activity_feed_subscriptions, source: :activity_feed_subscriptions_as_followed
-  has_many :feed_followed_projects, -> { where(activity_feed_subscriptions: { active: true}) }, through: :activity_feed_subscriptions, source: :followed, source_type: 'Project'
-  has_many :feed_followed_topics, -> { where(activity_feed_subscriptions: { active: true}) }, through: :activity_feed_subscriptions, source: :followed, source_type: 'Topic'
-  has_many :feed_followed_users, -> { where(activity_feed_subscriptions: { active: true}) }, through: :activity_feed_subscriptions,  source: :followed, source_type: 'User'
+  has_many :feed_followers, through: :activity_feed_subscriptions_as_followed, source: :follower
+  has_many :feed_followed_projects, through: :activity_feed_subscriptions, source: :followed, source_type: 'Project'
+  has_many :feed_followed_topics, through: :activity_feed_subscriptions, source: :followed, source_type: 'Topic'
+  has_many :feed_followed_users, through: :activity_feed_subscriptions,  source: :followed, source_type: 'User'
+  has_many :feed_following, through: :activity_feed_subscriptions, source: :follower
   has_many :followed_users, through: :relationships, source: :followed
   has_many :followers, through: :reverse_relationships, source: :follower
   has_many :instance_clients, as: :client, dependent: :destroy
@@ -66,9 +69,9 @@ class User < ActiveRecord::Base
   has_many :products_images, foreign_key: 'uploader_id', class_name: 'Spree::Image'
   has_many :products, foreign_key: 'user_id', class_name: 'Spree::Product'
   has_many :projects, foreign_key: 'creator_id', inverse_of: :creator
-  has_many :project_collaborators, -> { approved }
   has_many :projects_collaborated, through: :project_collaborators, source: :project
   has_many :project_collaborators
+  has_many :approved_project_collaborations, -> { approved }, class_name: 'ProjectCollaborator'
   has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
   has_many :reservations, foreign_key: 'owner_id'
   has_many :recurring_bookings, foreign_key: 'owner_id'
@@ -145,6 +148,12 @@ class User < ActiveRecord::Base
     joins(:followers).select('"users".*, "user_relationships"."follower_id" AS mutual_friendship_source')
   }
 
+  scope :friends_of, -> (user) {
+    joins(
+      sanitize_sql(['INNER JOIN user_relationships ur on ur.followed_id = users.id and ur.follower_id = ?', user.id])
+    ) if user.try(:id)
+  }
+
   scope :for_instance, -> (instance) {
     where(:'users.instance_id' => instance.id)
   }
@@ -153,10 +162,15 @@ class User < ActiveRecord::Base
 
   scope :admin,     -> { where(admin: true) }
   scope :not_admin, -> { where("admin iS NULL") }
+  scope :with_joined_project_collaborations, -> { joins("LEFT OUTER JOIN project_collaborators pc ON users.id = pc.user_id AND (pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)")}
 
-  #TODO make sure that works after collaborators are implemented
-  scope :by_topic, -> (topic_ids) { includes(:topics).where(topics: {id: topic_ids}) if topic_ids.present?}
-
+  scope :by_topic, -> (topic_ids) do
+    if topic_ids.present?
+      with_joined_project_collaborations.
+      joins(" LEFT OUTER JOIN project_topics pt on pt.project_id = pc.project_id").
+      where(pt: {topic_id: topic_ids}).group('users.id')
+    end
+  end
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((users.properties->?), ',') && ARRAY[?]", property, values) if values.present? }
 
   mount_uploader :avatar, AvatarUploader
@@ -259,8 +273,23 @@ class User < ActiveRecord::Base
                           token_expires_at: expires_at)
   end
 
-  def all_projects
-    projects | projects_collaborated
+  def all_projects(with_pending = false)
+    projects = Project.where("
+      creator_id = ? OR
+      EXISTS (SELECT 1 from project_collaborators pc WHERE pc.project_id = projects.id AND pc.user_id = ? AND deleted_at IS NULL)
+      ",id, id)
+    if with_pending
+      projects = projects.select(
+        ActiveRecord::Base.send(:sanitize_sql_array,
+          ["projects.*,
+            (SELECT pc.id from project_collaborators pc WHERE pc.project_id = projects.id AND pc.user_id = ? AND ( approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) as pending_collaboration
+            ",
+            id
+          ]
+        )
+      )
+    end
+    projects
   end
 
   def category_ids=(ids)
@@ -433,7 +462,7 @@ class User < ActiveRecord::Base
   end
 
   def country
-    Country.find(country_name) if country_name.present?
+    Country.find_by_name(country_name) if country_name.present?
   end
 
   # Returns the mobile number with the full international calling prefix
@@ -847,20 +876,17 @@ class User < ActiveRecord::Base
   def self.custom_order(order, user)
     case order
     when /featured/i
-      order('users.featured DESC')
+      where(featured: true)
     when /people i know/i
-      return all unless user.try(:id)
-      order sanitize_sql(["(SELECT 1 FROM user_relationships WHERE follower_id = ? AND followed_id = users.id LIMIT 1) ASC", user.id])
+      friends_of(user)
     when /most popular/i
-      #TODO check most popular sort after followers are implemented
       order('followers_count DESC')
     when /distance/i
       return all unless user
       near(user.current_geolocation, 8_000_000, units: :km, order: 'distance')
-      #TODO check most popular sort after followers are implemented
     when /number of projects/i
-      #TODO fix Number of projects sort after contributors are implemented
-      # joins(:followed_projects).order('count(projects.id) DESC')
+      with_joined_project_collaborations.group('users.id').
+        order('count(pc.id) DESC')
     else
       all
     end
@@ -876,6 +902,26 @@ class User < ActiveRecord::Base
 
   def can_update_feed_status?(record)
     record == self || self.is_instance_owner? || record.try(:creator) === self || record.try(:user_id) === self.id
+  end
+
+  def social_friends
+    User.where(id: social_friends_ids)
+  end
+
+  def nearby_friends(distance)
+    User.near([current_address.latitude, current_address.longitude], distance).where.not(id: id)
+  end
+
+  def feed_subscribed_to?(object)
+    activity_feed_subscriptions.where(followed: object).any?
+  end
+
+  def feed_follow!(object)
+    activity_feed_subscriptions.where(followed: object).first_or_create!
+  end
+
+  def feed_unfollow!(object)
+    activity_feed_subscriptions.where(followed: object).destroy_all
   end
 
   private

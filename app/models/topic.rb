@@ -1,12 +1,11 @@
 class Topic < ActiveRecord::Base
-  include ActivityFeedService::Followed
-
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
 
   belongs_to :category
+  attr_readonly :followers_count
 
   has_many :activity_feed_events, as: :event_source, dependent: :destroy
   has_many :activity_feed_subscriptions, as: :followed
@@ -36,6 +35,10 @@ class Topic < ActiveRecord::Base
     event = :topic_created
     affected_objects = [self] + self.projects.to_a
     ActivityFeedService.create_event(event, self, affected_objects, self)
+  end
+
+  def all_projects
+    projects
   end
 
   def self.search_by_query(attributes = [], query)

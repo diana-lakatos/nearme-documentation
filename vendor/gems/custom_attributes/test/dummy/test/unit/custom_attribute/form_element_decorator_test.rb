@@ -7,7 +7,7 @@ class CustomAttributes::CustomAttribute::FormElementDecoratorTest < ActionView::
     should 'be correct' do
       expected_default_options = {
         :input_html=>{"hello"=>"world"},
-        :label=>"attribute",
+        :label=>"Attribute",
         :hint=>nil,
         :placeholder=>nil,
         :include_blank=>nil,

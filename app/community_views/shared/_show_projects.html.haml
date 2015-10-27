@@ -1,0 +1,4 @@
+- sort_options ||= Project::SORT_OPTIONS
+= render 'shared/sort_form', form_url: see_more_route, sort_options: sort_options, container: container
+
+= render 'shared/listing_projects', projects: projects, see_more_type: "projects", see_more_route: see_more_route

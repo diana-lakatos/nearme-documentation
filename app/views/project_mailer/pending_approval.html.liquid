@@ -1,0 +1,5 @@
+<h1>Hi {{ owner.first_name }},</h1>
+
+<p><a href="{{ enquirer.profile_url }}">{{ enquirer.name }}</a> would like join your project, <a href="{{ project.show_url }}">{{ project.name }}</a>.
+<p>Check out their profile and see what you think. They might just be what you're looking for.</p>
+<p><a href="{{ project.edit_url_with_token }}">Approve | Decline collaborator</a></p>

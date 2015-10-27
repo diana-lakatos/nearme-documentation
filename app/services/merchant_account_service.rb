@@ -12,16 +12,12 @@ class MerchantAccountService
                end.try(:new, @merchantable)
   end
 
-  def country_payment_gateway
-    @country_payment_gateway ||= PlatformContext.current.instance.country_payment_gateways.where(country_alpha2_code: @merchantable.iso_country_code).first
-  end
-
   def needs_merchant_account?
-    country_payment_gateway.try(:requires_company_onboarding?) && !merchant_account.persisted?
+    payment_gateway.try(:supports_company_onboarding?) && !merchant_account.persisted?
   end
 
   def payment_gateway
-    @payment_gateway ||= country_payment_gateway.try(:payment_gateway)
+    @payment_gateway ||= PlatformContext.current.instance.payout_gateways(@merchantable.iso_country_code).first
   end
 
   def merchant_account

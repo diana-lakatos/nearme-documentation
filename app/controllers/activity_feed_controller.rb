@@ -10,6 +10,7 @@ class ActivityFeedController < ApplicationController
 
   def follow
     current_user.feed_follow!(@object)
+    @followers_count = @object.feed_followers.count
     respond_to do |format|
       format.js { render :follow_and_unfollow }
     end
@@ -17,6 +18,7 @@ class ActivityFeedController < ApplicationController
 
   def unfollow
     current_user.feed_unfollow!(@object)
+    @followers_count = @object.feed_followers.count
     respond_to do |format|
       format.js { render :follow_and_unfollow }
     end
@@ -40,8 +42,7 @@ class ActivityFeedController < ApplicationController
 
     @partial = "shared/activity_status"
     @as = :event
-    @collection = @feed.events(params)
-    @hide = !@feed.next_page?
+    @collection = @feed.events(pagination_params)
 
     respond_to do |format|
       format.js { render :see_more }
@@ -53,8 +54,7 @@ class ActivityFeedController < ApplicationController
 
     @partial = "shared/person"
     @as = :user
-    @collection = @object.feed_following(params).users
-    @hide = @collection.count == 0
+    @collection = @object.feed_followed_users.custom_order(params[:sort], current_user).paginate(pagination_params)
 
     respond_to do |format|
       format.js { render :see_more }
@@ -66,8 +66,7 @@ class ActivityFeedController < ApplicationController
 
     @partial = "shared/project"
     @as = :project
-    @collection = @object.feed_following(params).projects
-    @hide = @collection.count == 0
+    @collection = @object.feed_followed_projects.enabled.custom_order(params[:sort]).paginate(pagination_params)
 
     respond_to do |format|
       format.js { render :see_more }
@@ -79,8 +78,7 @@ class ActivityFeedController < ApplicationController
 
     @partial = "shared/topic"
     @as = :topic
-    @collection = @object.feed_following(params).topics
-    @hide = @collection.count == 0
+    @collection = @object.feed_followed_topics.paginate(pagination_params)
 
     respond_to do |format|
       format.js { render :see_more }
@@ -92,8 +90,7 @@ class ActivityFeedController < ApplicationController
 
     @partial = "shared/person"
     @as = :user
-    @collection = @object.feed_followers(params)
-    @hide = @collection.count == 0
+    @collection = @object.feed_followers.custom_order(params[:sort], current_user).paginate(pagination_params)
 
     respond_to do |format|
       format.js { render :see_more }
@@ -103,13 +100,21 @@ class ActivityFeedController < ApplicationController
   def projects
     @container = params[:container].presence || "#projects"
 
-    per = ActivityFeedService::EVENTS_PER_PAGE
-    offset = params[:page].to_i * per - per
-
     @partial = "shared/project"
     @as = :project
-    @collection = @object.try(:projects_collaborated).try(:offset, offset).try(:limit, per) || @object.projects.offset(offset).limit(per)
-    @hide = @collection.count == 0
+    @collection = @object.all_projects.enabled.custom_order(params[:sort]).paginate(pagination_params)
+
+    respond_to do |format|
+      format.js { render :see_more }
+    end
+  end
+
+  def collaborators
+    @container = params[:container].presence || "#collaborators"
+
+    @partial = "shared/person"
+    @as = :user
+    @collection = @object.collaborating_users.custom_order(params[:sort], current_user).paginate(pagination_params)
 
     respond_to do |format|
       format.js { render :see_more }
@@ -131,5 +136,12 @@ class ActivityFeedController < ApplicationController
 
   def set_object_with_followed_whitelist
     set_object(ActivityFeedService::Helpers::FOLLOWED_WHITELIST)
+  end
+
+  def pagination_params
+    {
+      page: params[:page].to_i > 0 ? params[:page] : 1,
+      per_page: ActivityFeedService::Helpers::FOLLOWED_PER_PAGE
+    }
   end
 end

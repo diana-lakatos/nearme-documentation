@@ -6,9 +6,9 @@ class WorkflowStep::ProjectWorkflow::BaseStep < WorkflowStep::BaseStep
 
   def initialize(project_collaborator_id)
     @project_collaborator = ProjectCollaborator.find_by(id: project_collaborator_id)
-    @project = @project_collaborator.project
-    @user = @project_collaborator.user
-    @owner = @project.creator
+    @project = @project_collaborator.try(:project)
+    @user = @project_collaborator.try(:user)
+    @owner = @project.try(:creator)
   end
 
   def workflow_type
@@ -36,6 +36,7 @@ class WorkflowStep::ProjectWorkflow::BaseStep < WorkflowStep::BaseStep
       project_collaborator: @project_collaborator,
       project: @project,
       user: @user,
+      enquirer: @user,
       owner: @owner
     }
   end
@@ -45,7 +46,7 @@ class WorkflowStep::ProjectWorkflow::BaseStep < WorkflowStep::BaseStep
   end
 
   def should_be_processed?
-    @project_collaborator && @project.present?
+    @project_collaborator.present? && @project.present? && @user.present?
   end
 
 end

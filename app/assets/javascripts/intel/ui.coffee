@@ -21,7 +21,7 @@ class @UI
 
   # toggles visibility of the comment form
   @toggleCommentForm: ()->
-    $('[data-comment]').on "click", (event) ->
+    $('body').on 'click', '[data-comment]', (event) ->
       event.preventDefault()
       $(this).closest('footer').find('> .comment').toggleClass 'is-active'
 
@@ -53,6 +53,12 @@ class @UI
 
       list.after(select)
 
+  @activeTabFromAnchor: ->
+    anchor = window.location.hash.substring(1)
+    if anchor.length > 0
+      if $("##{anchor}.tab-pane").length > 0
+        $("[href='##{anchor}'][data-toggle=tab]").click()
+
   @initialize: ()->
     @equalize()
     @nav()
@@ -60,5 +66,6 @@ class @UI
     @toggleCommentForm()
     @tabsStatic()
     @tabsDynamic()
+    @activeTabFromAnchor()
 
 

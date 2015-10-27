@@ -1,18 +1,18 @@
 = simple_form_for [:instance_admin, :manage, @user], html: { class: 'form-a', data: { modal: true } } do |f|
-  .modal-header
-    .modal-title
-      Edit #{@user.first_name}
+  .content-container
+    %h4 Edit #{@user.first_name}
 
-    %button.modal-close
-      %span.intelicon-close-outlined
-      Close
-  .modal-body
-    .fields
-      = f.input :featured, as: :switch, label: 'Featured'
-      - custom_attrs = @user.instance_profile_type.custom_attributes.where(public: false)
-      - unless custom_attrs.empty?
-        = f.simple_fields_for :properties, f.object.properties do |properties_form|
-          - custom_attrs.each do |attribute|
-            = draw_attribute_for_form(attribute, properties_form, true)
-  .modal-footer
-    = f.submit 'Update'
+    .row
+      .input-container.col-xs-12
+        = f.input :featured, as: :switch, label: 'Featured'
+    - custom_attrs = @user.try(:instance_profile_type).try(:custom_attributes).try(:where, public: false) || []
+    - unless custom_attrs.empty?
+      = f.simple_fields_for :properties, f.object.properties do |properties_form|
+        - custom_attrs.each do |attribute|
+          .row
+            .input-container.col-xs-12
+              = draw_attribute_for_form(attribute, properties_form, true)
+
+  = content_for :header_buttons do
+    = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+

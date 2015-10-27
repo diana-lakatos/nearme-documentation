@@ -19,6 +19,7 @@ class CreateCustomAttributes < ActiveRecord::Migration
       t.boolean :internal, default: false
       t.integer :target_id
       t.string  :target_type
+      t.boolean :searchable
       t.timestamps
     end
     add_index :custom_attributes, :instance_id

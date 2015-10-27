@@ -18,6 +18,9 @@
             = b.association :state, collection: @billing_states, include_blank: false, input_html: { class: 'checkout-select' }
             = b.input :phone, as: :string
 
+          - if @order.products.first.try(:insurance_amount).to_f > 0
+            = f.input :insurance_enabled, as: :boolean
+
       %section.checkout-form
         .container-fluid
           %h2= t 'buy_sell_market.checkout.labels.shipping_address'

@@ -215,6 +215,28 @@ class InstanceView < ActiveRecord::Base
       blog_posts: 'BlogPostDrop',
       blog_instance: 'BlogInstanceDrop',
       is_partial: false
+    },
+    'dashboard/wish_list_items/wish_list_item' => {
+      'wish_list_item': 'WishListItemDrop',
+      is_partial: true
+    },
+    'listings/recurring_bookings/header' => {
+      'listing': 'TransactableDrop',
+      'location': 'LocationDrop',
+      is_partial: true
+    },
+    'listings/reservations/header' => {
+      'listing': 'TransactableDrop',
+      'location': 'LocationDrop',
+      is_partial: true
+    },
+    'locations/twitter_social_button' => {
+      'location': 'LocationDrop',
+      is_partial: true
+    },
+    'registrations/profile/tabs/transactable' => {
+      'transactable': 'TransactableDrop',
+      is_partial: true
     }
   }.freeze
 

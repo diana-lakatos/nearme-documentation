@@ -14,35 +14,38 @@ class ProjectCollaborator < ActiveRecord::Base
 
   validates :project, presence: true
 
-  scope :approved, -> { where.not(approved_at: nil) }
-
-  after_create :notify_project_owner
+  scope :approved, -> { where.not(approved_by_owner_at: nil, approved_by_user_at: nil) }
 
   def name
     @name ||= user.try(:name)
   end
 
   def pending?
-    self.approved_at.nil?
+    !approved?
   end
 
   def approved?
-    self.approved_at.present?
+    approved_by_owner_at && approved_by_user_at
   end
 
   def approved=(approve=nil)
-    self.update_attribute(:approved_at, Time.zone.now) if approve.present?
+    self.update_attribute(:approved_by_owner_at, Time.zone.now) if approve.present?
   end
 
   def email=(email)
     self.user = User.find_by_email(email)
   end
 
-  private
-
-  def notify_project_owner
-    if self.pending?
-      #TODO add Workflow Alert
-    end
+  def approve_by_user!
+    self.update_attribute(:approved_by_user_at, Time.now)
   end
+
+  def approved_by_user?
+    approved_by_user_at.present?
+  end
+
+  def approved_by_owner?
+    approved_by_owner_at.present?
+  end
+
 end

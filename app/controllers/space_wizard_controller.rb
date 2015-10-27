@@ -31,8 +31,9 @@ class SpaceWizardController < ApplicationController
 
   def can_delete_photo?(photo, user)
     return true if photo.creator == user                         # if the user created the photo
-    return true if photo.listing.administrator == user    # if the user is an admin of the photos content
-    return true if @company.listings.include?(photo.listing)     # if the photo content is a listing and belongs to company
+    return true if photo.listing.present? && photo.listing.administrator == user    # if the user is an admin of the photos content
+    return true if user.present? && user.companies.any? { |c| c.listings.include?(photo.listing) } # if the photo content is a listing and belongs to one of the companies of the user
+    false
   end
 
 end
