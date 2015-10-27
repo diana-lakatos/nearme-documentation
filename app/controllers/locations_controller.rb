@@ -55,7 +55,7 @@ class LocationsController < ApplicationController
     #
     old_id = params[:listing_id].split("-").first
     @listing = scope.find(old_id)
-    redirect_to location_listing_path(@location.slug, @listing.slug), status: 301
+    redirect_to location_listing_path(@location, @listing), status: 301
   end
 
   def redirect_if_location_deleted
