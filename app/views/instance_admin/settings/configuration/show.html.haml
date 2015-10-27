@@ -31,6 +31,9 @@
         = f.input :allowed_currencies, as: :currency,  input_html: { class: 'selectpicker', "data-live-search" => "true", multiple: true }, hint: t('instance_admin.settings.configuration.leave_blank_to_use_all_currencies')
       .input-container.col-xs-6
         = f.input :default_currency, as: :currency,  input_html: { class: 'selectpicker', "data-live-search" => "true"}
+    .row
+      .input-container.col-xs-6
+        = f.input :custom_waiver_agreements, as: :boolean, inline_label: true
 
   .content-container
     %h4

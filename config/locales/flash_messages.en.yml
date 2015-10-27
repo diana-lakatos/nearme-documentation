@@ -313,6 +313,7 @@ en:
         not_scheduled: 'The task has not been queued. Either data has already been imported or task is already in queue.'
         too_many_rows: 'Max amount of rows in CSV is %{max}'
       waiver_agreement_templates:
+        disabled: "You are not allowed to create custom waiver agreement templates in this marketplace"
         created: 'Waiver agreement template has been created.'
         deleted: 'Waiver agreement template has been deleted.'
         updated: 'Waiver agreement template has been updated.'

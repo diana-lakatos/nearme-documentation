@@ -1005,6 +1005,7 @@ ActiveRecord::Schema.define(version: 20151023103850) do
     t.string   "encrypted_google_consumer_key",         limit: 255
     t.string   "encrypted_google_consumer_secret",      limit: 255
     t.string   "default_oauth_signin_provider"
+    t.boolean  "custom_waiver_agreements",                                                  default: true
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -2092,8 +2093,8 @@ ActiveRecord::Schema.define(version: 20151023103850) do
     t.datetime "canceled_at"
     t.integer  "canceler_id"
     t.integer  "store_id"
-    t.integer  "payment_method_id"
     t.boolean  "insurance_enabled",                                                   default: false,   null: false
+    t.integer  "payment_method_id"
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree
