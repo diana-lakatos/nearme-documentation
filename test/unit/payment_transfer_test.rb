@@ -15,7 +15,6 @@ class PaymentTransferTest < ActiveSupport::TestCase
       @reservation_1.payments.to_a,
       @reservation_2.payments.to_a
     ].flatten
-    PaymentGateway.any_instance.stubs(:payout).returns(stub(:success => true)).at_least(0)
   end
 
   context "creating" do
@@ -139,17 +138,18 @@ class PaymentTransferTest < ActiveSupport::TestCase
     setup do
       @payment_transfer = @company.payment_transfers.build(currency: 'USD')
       @payment_transfer.payments = @payments
-      FactoryGirl.create(:country_payment_gateway, payment_gateway: FactoryGirl.create(:paypal_payment_gateway), country_alpha2_code: @company.iso_country_code)
+      @payout_gateway = FactoryGirl.create(:paypal_adaptive_payment_gateway)
+      @merchant_account = MerchantAccount::PaypalAdaptiveMerchantAccount.create(payment_gateway: @payout_gateway, merchantable: @payment_transfer.company, state: 'verified')
     end
 
     should 'be not paid if attempt to payout failed' do
-      PaymentGateway.any_instance.expects(:payout).with { |company, hash| company == @payment_transfer.company &&  Money === hash[:amount] && @payment_transfer == hash[:reference] }.once.returns(stub(:success => false))
+      stub_active_merchant_interaction({success?: false})
       @payment_transfer.save!
       refute @payment_transfer.transferred?
     end
 
     should 'be paid if attempt to payout succeeded' do
-      PaymentGateway.any_instance.expects(:payout).with { |company, hash| company == @payment_transfer.company && Money === hash[:amount] && @payment_transfer == hash[:reference] }.once.returns(stub(:success => true))
+      stub_active_merchant_interaction({success?: true})
       @payment_transfer.save!
       assert @payment_transfer.transferred?
     end
@@ -160,29 +160,26 @@ class PaymentTransferTest < ActiveSupport::TestCase
     setup do
       @payment_transfer = @company.payment_transfers.build(currency: 'USD')
       @payment_transfer.payments = @payments
-      @paypal_gateway = FactoryGirl.create(:paypal_payment_gateway)
+      @paypal_gateway = FactoryGirl.create(:paypal_adaptive_payment_gateway)
     end
 
     should "return true if possible processor exists but company has not provided settings" do
-      CountryPaymentGateway.delete_all
-      FactoryGirl.create(:country_payment_gateway, payment_gateway: @paypal_gateway, country_alpha2_code: @company.iso_country_code)
-      FactoryGirl.create(:paypal_merchant_account, payment_gateway: @paypal_gateway, merchantable: FactoryGirl.create(:company))
+      FactoryGirl.create(:paypal_adaptive_merchant_account, payment_gateway: @paypal_gateway, merchantable: FactoryGirl.create(:company))
       assert @payment_transfer.possible_automated_payout_not_supported?
     end
 
     should "return false if there is no potential processor and company has not provided settings" do
-      CountryPaymentGateway.delete_all
+      PaymentGateway.destroy_all
       refute @payment_transfer.possible_automated_payout_not_supported?
     end
 
     should "return false if there is no possible processor and company has provided settings" do
-      FactoryGirl.create(:paypal_merchant_account, payment_gateway: @paypal_gateway, merchantable: @company)
+      FactoryGirl.create(:paypal_adaptive_merchant_account, payment_gateway: @paypal_gateway, merchantable: @company)
       refute @payment_transfer.possible_automated_payout_not_supported?
     end
 
     should "return false if possible processor exists and company has provided settings" do
-      FactoryGirl.create(:country_payment_gateway, payment_gateway: @paypal_gateway, country_alpha2_code: @company.iso_country_code)
-      FactoryGirl.create(:paypal_merchant_account, payment_gateway: @paypal_gateway, merchantable: @company)
+      FactoryGirl.create(:paypal_adaptive_merchant_account, payment_gateway: @paypal_gateway, merchantable: @company)
       refute @payment_transfer.possible_automated_payout_not_supported?
     end
 

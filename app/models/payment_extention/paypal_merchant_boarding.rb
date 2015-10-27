@@ -10,7 +10,7 @@ module PaymentExtention::PaypalMerchantBoarding
   private
 
   def available_products
-    if @merchant.iso_country_code == 'US' && !self.express_checkout?
+    if @merchant.iso_country_code == 'US' && !self.supports_express_checkout_payment?
       products = WP_PRO
     else
       products = ADDIPMT

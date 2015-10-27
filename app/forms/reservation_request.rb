@@ -1,9 +1,11 @@
 class ReservationRequest < Form
 
+  include Payment::PaymentModule
+
   attr_accessor :dates, :start_minute, :end_minute, :book_it_out, :exclusive_price, :guest_notes,
     :card_number, :card_exp_month, :card_exp_year, :card_code, :card_holder_first_name,
     :card_holder_last_name, :payment_method_nonce, :waiver_agreement_templates, :documents,
-    :payment_method, :checkout_extra_fields, :express_checkout_redirect_url, :mobile_number, :delivery_ids,
+    :checkout_extra_fields, :express_checkout_redirect_url, :mobile_number, :delivery_ids,
     :delivery_type
   attr_reader   :reservation, :listing, :location, :user, :client_token, :payment_method_nonce
 
@@ -14,7 +16,7 @@ class ReservationRequest < Form
     :service_fee_amount_host_cents, :total_amount_cents, :create_billing_authorization,
     :express_token, :express_token=, :express_payer_id, :service_fee_guest_without_charges,
     :additional_charges, :shipping_costs_cents, :service_fee_amount_guest_cents, :merchant_subject, :shipments,
-    :shipments_attributes=,
+    :shipments_attributes=, :payment_method=, :payment_method, :payment_method_id, :billing_authorization,
     to: :@reservation
 
   before_validation :build_documents, :if => lambda { reservation.present? && documents.present? }
@@ -44,19 +46,15 @@ class ReservationRequest < Form
         @reservation.exclusive_price_cents = @listing.exclusive_price_cents
         attributes[:quantity] = @listing.quantity # ignore user's input, exclusive is exclusive - full quantity
       end
-      @billing_gateway = @instance.payment_gateway(@listing.company.iso_country_code, @reservation.currency)
-      @client_token = @billing_gateway.try(:client_token)
+      @client_token = payment_gateway.try(:client_token)
       @reservation.user = user
       @reservation.additional_charges << get_additional_charges(attributes)
       @reservation = @reservation.decorate
       attributes = update_shipments(attributes)
+      store_attributes(attributes)
     end
-
-    store_attributes(attributes)
-
-    @reservation.try(:payment_method=, (payment_method.present? && payment_methods.include?(payment_method.to_s)) ? payment_method : payment_methods.first)
-    self.payment_method = @reservation.try(:payment_method)
     build_return_shipment
+
     if @user
       @user.phone ||= @user.mobile_number
       @card_holder_first_name ||= @user.first_name
@@ -87,6 +85,14 @@ class ReservationRequest < Form
     end
   end
 
+  def express_return_url
+    PlatformContext.current.decorate.build_url_for_path("/listings/#{self.listing.to_param}/reservations/return_express_checkout")
+  end
+
+  def express_cancel_return_url
+    PlatformContext.current.decorate.build_url_for_path("/listings/#{self.listing.to_param}/reservations/cancel_express_checkout")
+  end
+
   def credit_card
     @credit_card ||= ActiveMerchant::Billing::CreditCard.new(
       first_name: card_holder_first_name.to_s,
@@ -103,27 +109,11 @@ class ReservationRequest < Form
     @checkout_extra_fields.valid?
     @checkout_extra_fields.errors.full_messages.each { |m| add_error(m, :base) }
     clear_errors(:cc)
-    # This is temporal solution that should be removed when we support multiple payment gateways for one country
-    @billing_gateway = PaymentGateway::ManualPaymentGateway.new if (manual_payment? && possible_manual_payment?) || is_free?
-    @checkout_extra_fields.valid? && valid? && @billing_gateway.authorize(self) && save_reservation
+    @checkout_extra_fields.valid? && valid? && payment_gateway.authorize(self) && save_reservation
   end
 
   def reservation_periods
     reservation.periods
-  end
-
-  def payment_methods
-    @payment_methods = []
-    if is_free?
-      @payment_methods << Reservation::PAYMENT_METHODS[:free]
-    else
-      @payment_methods << Reservation::PAYMENT_METHODS[:remote] if possible_remote_payment?
-      @payment_methods << Reservation::PAYMENT_METHODS[:express_checkout] if possible_express_payment?
-      @payment_methods << Reservation::PAYMENT_METHODS[:nonce] if possible_nonce_payment?
-      @payment_methods << Reservation::PAYMENT_METHODS[:credit_card] if possible_credit_card_payment?
-      @payment_methods << Reservation::PAYMENT_METHODS[:manual] if possible_manual_payment?
-    end
-    @payment_methods
   end
 
   def update_shipments(attributes)
@@ -143,26 +133,6 @@ class ReservationRequest < Form
 
   def with_delivery?
     PlatformContext.current.instance.shippo_enabled? && (@listing.rental_shipping_type == 'delivery' || (@listing.rental_shipping_type == 'both' && delivery_type == 'delivery'))
-  end
-
-  def possible_credit_card_payment?
-    @billing_gateway.present? && @billing_gateway.credit_card_payment? && !possible_remote_payment? && !is_free?
-  end
-
-  def possible_manual_payment?
-    @reservation.try(:possible_manual_payment?) || !(possible_credit_card_payment? || possible_remote_payment? || possible_nonce_payment? || possible_express_payment?)
-  end
-
-  def possible_remote_payment?
-    @billing_gateway.try(:remote?) && !is_free?
-  end
-
-  def possible_express_payment?
-    @billing_gateway.try(:express_checkout?)
-  end
-
-  def possible_nonce_payment?
-    @billing_gateway.try(:nonce_payment?) && !is_free?
   end
 
   # We don't process taxes for reservations

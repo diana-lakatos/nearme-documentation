@@ -463,7 +463,7 @@ class User < ActiveRecord::Base
   end
 
   def country
-    Country.find(country_name) if country_name.present?
+    Country.find_by_name(country_name) if country_name.present?
   end
 
   # Returns the mobile number with the full international calling prefix

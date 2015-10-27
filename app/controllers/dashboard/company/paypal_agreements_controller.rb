@@ -38,7 +38,7 @@ class Dashboard::Company::PaypalAgreementsController < Dashboard::Company::BaseC
   end
 
   def get_merchant_account
-    @merchant_account = @company.send("paypal_merchant_account")
+    @merchant_account = @company.send("paypal_express_chain_merchant_account")
     redirect_to redirect_url if @merchant_account.blank?
   end
 

@@ -70,7 +70,7 @@ class Listings::ReservationsController < ApplicationController
 
       if @reservation.remote_payment?
         redirect_to remote_payment_dashboard_user_reservation_path(@reservation, host: platform_context.decorate.host)
-      elsif @reservation_request.possible_express_payment?
+      elsif @reservation_request.express_checkout_payment?
         redirect_to @reservation_request.express_checkout_redirect_url
       else
         redirect_to booking_successful_dashboard_user_reservation_path(@reservation, host: platform_context.decorate.host)
@@ -81,7 +81,7 @@ class Listings::ReservationsController < ApplicationController
   end
 
   def return_express_checkout
-    reservation = Reservation.find_by_express_token(params[:token])
+    reservation = Reservation.find_by_express_token!(params[:token])
     reservation.express_payer_id = params[:PayerID]
     if reservation.authorize
       redirect_to booking_successful_dashboard_user_reservation_path(reservation, host: platform_context.decorate.host)
@@ -187,7 +187,7 @@ class Listings::ReservationsController < ApplicationController
         card_code: attributes[:card_code],
         card_number: attributes[:card_number],
         guest_notes: attributes[:guest_notes],
-        payment_method: attributes[:payment_method],
+        payment_method_id: attributes[:payment_method_id],
         waiver_agreement_templates: attributes[:waiver_agreement_templates],
         payment_method_nonce: params[:payment_method_nonce],
         additional_charge_ids: attributes[:additional_charge_ids],

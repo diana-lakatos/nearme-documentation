@@ -390,7 +390,8 @@ class Transactable < ActiveRecord::Base
   end
 
   def reserve!(reserving_user, dates, quantity)
-    reservation = reservations.build(:user => reserving_user, :quantity => quantity)
+    payment_method  = PaymentMethod.manual.first
+    reservation = reservations.build(:user => reserving_user, :quantity => quantity, :payment_method => payment_method)
     dates.each do |date|
       raise ::DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
       reservation.add_period(date)
@@ -638,8 +639,8 @@ class Transactable < ActiveRecord::Base
     super && self.transactable_type.action_rfq?
   end
 
-  def possible_express_checkout?
-    instance.payment_gateway(company.iso_country_code, currency).try(:express_checkout?)
+  def express_checkout_payment?
+    instance.payment_gateway(company.iso_country_code, currency).try(:express_checkout_payment?)
   end
 
   def possible_delivery?

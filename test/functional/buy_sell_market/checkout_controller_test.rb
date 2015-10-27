@@ -29,7 +29,6 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
 
       should 'redirect if no payment gateway available for given country' do
         FactoryGirl.create(:stripe_payment_gateway)
-        FactoryGirl.create(:country_payment_gateway)
         @order.company.company_address.update_column(:iso_country_code, 'PL')
         get :show, order_id: @order, id: 'address'
         assert_redirected_to cart_index_path
@@ -39,7 +38,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
     context 'with billing gateway' do
 
       setup do
-        FactoryGirl.create(:country_payment_gateway, payment_gateway_id: FactoryGirl.create(:stripe_payment_gateway).id)
+        FactoryGirl.create(:stripe_payment_gateway)
       end
 
       context 'address' do
@@ -65,7 +64,9 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
 
         setup do
           stub_active_merchant_interaction
-          @payment_gateway = FactoryGirl.create(:country_payment_gateway, payment_gateway_id: FactoryGirl.create(:stripe_payment_gateway).id).payment_gateway
+          @payment_gateway = FactoryGirl.create(:stripe_connect_payment_gateway)
+          @payment_method = FactoryGirl.create(:credit_card_payment_method, payment_gateway: @payment_gateway)
+          @payment_gateway.payment_currencies << (Currency.find_by_iso_code("PLN") || FactoryGirl.create(:currency_pl))
           @order = FactoryGirl.create(:order_waiting_for_payment, user: @user, service_fee_buyer_percent: 10, currency: 'PLN')
         end
 
@@ -73,7 +74,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
           @credit_card = stub('valid?' => true)
           ActiveMerchant::Billing::CreditCard.expects(:new).returns(@credit_card)
           assert_difference 'Spree::Payment.count' do
-            put :update, order_id: @order, id: 'payment', order: { payment_method: 'credit_card' }
+            put :update, order_id: @order, id: 'payment', order: { payment_method_id: @payment_method.id }
           end
           payment = @order.reload.payments.first
           assert_not_nil payment
@@ -91,7 +92,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
         should 'render error if CC is invalid' do
           ActiveMerchant::Billing::CreditCard.expects(:new).returns(stub('valid?' => false))
           assert_no_difference 'Spree::Payment.count' do
-            put :update, order_id: @order, id: 'payment', order: { payment_method: 'credit_card' }
+            put :update, order_id: @order, id: 'payment', order: { payment_method_id: @payment_method.id }
           end
           order = assigns(:order)
           assert_contains "Those credit card details don't look valid", order.errors[:cc].first
@@ -105,7 +106,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
           PaymentAuthorizer.any_instance.stubs(:gateway_authorize).returns(authorize_response)
 
           assert_difference 'Spree::Payment.count' do
-            put :update, order_id: @order, id: 'payment', order: { payment_method: 'credit_card' }
+            put :update, order_id: @order, id: 'payment', order: { payment_method_id: @payment_method.id }
           end
           order = assigns(:order)
           assert_contains "No $$$ on account", order.errors[:cc]
@@ -125,7 +126,8 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
 
         setup do
           FactoryGirl.create(:additional_charge_type, currency: 'USD', amount: 15)
-          @payment_gateway = FactoryGirl.create(:country_payment_gateway, payment_gateway_id: FactoryGirl.create(:braintree_marketplace_payment_gateway).id).payment_gateway
+          @payment_gateway = FactoryGirl.create(:braintree_marketplace_payment_gateway)
+          @payment_method = FactoryGirl.create(:credit_card_payment_method, payment_gateway: @payment_gateway)
           PlatformContext.current.instance.update_attributes(service_fee_host_percent: 15, service_fee_guest_percent: 10)
           @order = FactoryGirl.create(:order_waiting_for_payment, user: @user, currency: 'USD')
           ActiveMerchant::Billing::BraintreeMarketplacePayments.any_instance.stubs(:onboard!).returns(OpenStruct.new(success?: true))
@@ -150,7 +152,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
 
         should 'correct proceed to complete state if all is ok' do
           assert_difference 'Spree::Payment.count' do
-            put :update, order_id: @order, id: 'payment', order: { payment_method: 'credit_card', card_number: "4111 1111 1111 1111", card_exp_month: 1.year.from_now.month.to_s, card_exp_year: 1.year.from_now.year.to_s, card_code: '411', card_holder_first_name: 'Maciej', card_holder_last_name: 'Krajowski' }
+            put :update, order_id: @order, id: 'payment', order: { payment_method_id: @payment_method.id, card_number: "4111 1111 1111 1111", card_exp_month: 1.year.from_now.month.to_s, card_exp_year: 1.year.from_now.year.to_s, card_code: '411', card_holder_first_name: 'Maciej', card_holder_last_name: 'Krajowski' }
           end
           payment = @order.reload.payments.first
           assert_equal 17000, @order.total_amount_to_charge.cents

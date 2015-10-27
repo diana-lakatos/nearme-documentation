@@ -15,20 +15,25 @@ class Payout < ActiveRecord::Base
   scope :failed, -> { where(:pending => false, :success => false) }
 
   monetize :amount, with_model_currency: :currency
-  serialize :response, Hash
 
-  attr_encrypted :response, :key => DesksnearMe::Application.config.secret_token, marshal: true
+  attr_encrypted :response, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
+
+  alias_method :decrypted_response, :response
+
+  def response
+    @response_object ||= Billing::Gateway::Processor::Response::ResponseFactory.create(decrypted_response)
+  end
 
   def payout_pending(response)
     self.pending = true
-    self.response = response.to_yaml
+    self.response = response.to_yaml if response
     save!
   end
 
   def payout_successful(response = nil)
     self.success = true
     self.pending = false
-    self.response = response
+    self.response = response.to_yaml if response
     save!
     self.reference.try(:success!)
   end
@@ -40,8 +45,6 @@ class Payout < ActiveRecord::Base
     save!
     self.reference.try(:fail!)
   end
-
-  alias_method :decrypted_response, :response
 
   def failure_message
     response.failure_message

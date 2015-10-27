@@ -8,7 +8,7 @@ Feature: A user can add a product
     And a form component product wizard exists with form_componentable: the wizard_product_type
     And current instance with integrated shipping
     And a state exists
-    And a country exists
+    And a country_nz exists
     And I go to the home page
     And I follow "List Your" bookable noun
     And I sign up as a user in the modal

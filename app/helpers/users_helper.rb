@@ -12,7 +12,7 @@ module UsersHelper
   end
 
   def user_country_default(country)
-    Country.find(country) ? country : current_instance.default_country
+    Country.find_by_name(country) ? country : current_instance.default_country
   end
 
   def admin_as_user?
@@ -53,7 +53,7 @@ module UsersHelper
       !param_reviews_page_present? && @products.count > 0
     when 'services'
       !param_reviews_page_present? && @listings.count > 0
-    when 'reviews' 
+    when 'reviews'
       param_reviews_page_present? || @company.nil?
     end
   end

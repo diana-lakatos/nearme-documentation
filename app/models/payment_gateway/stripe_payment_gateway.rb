@@ -1,6 +1,8 @@
 class PaymentGateway::StripePaymentGateway < PaymentGateway
   include PaymentGateway::ActiveMerchantGateway
 
+  supported :multiple_currency, :recurring_payment, :credit_card_payment
+
   def self.settings
     { login: "" }
   end
@@ -17,12 +19,12 @@ class PaymentGateway::StripePaymentGateway < PaymentGateway
     'stripe_id'
   end
 
-  def support_any_currency!
-    true
+  def self.supported_countries
+    ["AU", "DK", "FI", "IE", 'NO', 'SE', "US", "GB", "CA"]
   end
 
-  def supports_recurring_payment?
-    true
+  def supported_currencies
+    ["AUD", "CAD", "USD", "DKK", "NOK", "SEK", "EUR", "GBP"]
   end
 
   def gateway

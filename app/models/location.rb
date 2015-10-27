@@ -46,11 +46,11 @@ class Location < ActiveRecord::Base
 
   validates_presence_of :company
   validates_presence_of :location_type_id, if: :location_type_required
-  validates_presence_of :description, :if => :name_and_description_required
-  validates_presence_of :name, :if => :name_and_description_required
+  validates_presence_of :description, if: :name_and_description_required
+  validates_presence_of :name, if: :name_and_description_required
   validates :email, email: true, allow_nil: true
-  validates_length_of :description, :maximum => 250, :if => :name_and_description_required
-  validates_length_of :name, :maximum => 50, :if => :name_and_description_required
+  validates_length_of :description, maximum: 250, if: :name_and_description_required
+  validates_length_of :name, maximum: 50, if: :name_and_description_required
 
   before_save :set_location_type, :set_time_zone
   before_save :assign_default_availability_rules

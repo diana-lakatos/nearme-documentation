@@ -56,7 +56,6 @@ en:
         default_country: "Default country"
         allowed_currencies: "Allowed currencies"
         default_currency: "Default currency"
-        possible_manual_payment: "Is it possible to skip paying?"
         marketplace_password: 'Password'
         password_protected: 'Require password to access marketplace'
         payment_transfers_frequency: 'Payment transfers frequency'

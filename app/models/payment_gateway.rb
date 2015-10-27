@@ -8,13 +8,16 @@ class PaymentGateway < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
+  scope :mode_scope, -> { test_mode? ? where(test_active: true) : where(live_active: true)}
+  scope :payout_type, -> { where(type: PAYOUT_GATEWAYS.values + IMMEDIATE_PAYOUT_GATEWAYS.values) }
+  scope :payment_type, -> { where.not(type: PAYOUT_GATEWAYS.values) }
+
   serialize :test_settings, Hash
   serialize :live_settings, Hash
 
   belongs_to :instance
   belongs_to :payment_gateway
 
-  has_many :country_payment_gateways, dependent: :destroy
   has_many :charges
   has_many :refunds
   has_many :billing_authorizations
@@ -23,32 +26,80 @@ class PaymentGateway < ActiveRecord::Base
   has_many :credit_cards
   has_many :merchant_accounts
 
+  has_many :payment_gateways_countries
+  has_many :payment_countries, through: :payment_gateways_countries, source: 'country'
+
+  has_many :payment_gateways_currencies
+  has_many :payment_currencies, through: :payment_gateways_currencies, source: 'currency'
+
+  has_many :payment_methods
+  has_many :active_payment_methods, -> (object) { active.except_free },  class_name: "PaymentMethod"
+  has_many :active_free_payment_methods, -> (object) { active.free }, class_name: "PaymentMethod"
+
+  accepts_nested_attributes_for :payment_methods, :reject_if => :all_blank
+
+  validates :payment_countries, presence: true, if: Proc.new { |p| p.active? && !p.supports_payout? }
+  validates :payment_currencies, presence: true, if: Proc.new { |p| p.active? && !p.supports_payout? }
+  validates :payment_methods, presence: true, if: Proc.new { |p| p.active? && !p.supports_payout?}
+  validate do
+    errors.add(:payment_methods, "At least one payment method must be selected") if active? && !supports_payout? && !payment_methods.any?{ |p| p.active? }
+  end
+
+  PAYOUT_GATEWAYS = {
+    'PayPal Adpative Payments (Payouts)' => 'PaymentGateway::PaypalAdaptivePaymentGateway',
+  }
+
+  IMMEDIATE_PAYOUT_GATEWAYS = {
+    'Braintree Marketplace' => 'PaymentGateway::BraintreeMarketplacePaymentGateway',
+    'PayPal Express In Chain Payments' => 'PaymentGateway::PaypalExpressChainPaymentGateway',
+    'Stripe Connect' => 'PaymentGateway::StripeConnectPaymentGateway',
+  }
+
   PAYMENT_GATEWAYS = {
-    'AuthorizeNet' => PaymentGateway::AuthorizeNetPaymentGateway,
-    'Braintree' => PaymentGateway::BraintreePaymentGateway,
-    'Braintree Marketplace' => PaymentGateway::BraintreeMarketplacePaymentGateway,
-    'Fetch' => PaymentGateway::FetchPaymentGateway,
-    'Ogone' => PaymentGateway::OgonePaymentGateway,
-    'PayPal Payments Pro' => PaymentGateway::PaypalPaymentGateway,
-    'PayPal Express' => PaymentGateway::PaypalExpressPaymentGateway,
-    'Paystation' => PaymentGateway::PaystationPaymentGateway,
-    'SagePay' => PaymentGateway::SagePayPaymentGateway,
-    'Spreedly' => PaymentGateway::SpreedlyPaymentGateway,
-    'Stripe' => PaymentGateway::StripePaymentGateway,
-    'Stripe Connect' => PaymentGateway::StripeConnectPaymentGateway,
-    'Worldpay' => PaymentGateway::WorldpayPaymentGateway,
-    'Manual' => PaymentGateway::ManualPaymentGateway,
-  }.freeze
+    'AuthorizeNet' => 'PaymentGateway::AuthorizeNetPaymentGateway',
+    'Braintree' => 'PaymentGateway::BraintreePaymentGateway',
+    'Braintree Marketplace' => 'PaymentGateway::BraintreeMarketplacePaymentGateway',
+    'Fetch' => 'PaymentGateway::FetchPaymentGateway',
+    'Ogone' => 'PaymentGateway::OgonePaymentGateway',
+    'PayPal Payments Pro' => 'PaymentGateway::PaypalPaymentGateway',
+    'PayPal Adpative Payments (Payouts)' => 'PaymentGateway::PaypalAdaptivePaymentGateway',
+    'PayPal Express' => 'PaymentGateway::PaypalExpressPaymentGateway',
+    'PayPal Express In Chain Payments' => 'PaymentGateway::PaypalExpressChainPaymentGateway',
+    'Paystation' => 'PaymentGateway::PaystationPaymentGateway',
+    'SagePay' => 'PaymentGateway::SagePayPaymentGateway',
+    'Spreedly' => 'PaymentGateway::SpreedlyPaymentGateway',
+    'Stripe' => 'PaymentGateway::StripePaymentGateway',
+    'Stripe Connect' => 'PaymentGateway::StripeConnectPaymentGateway',
+    'Worldpay' => 'PaymentGateway::WorldpayPaymentGateway',
+    'Offline Paymment' => 'PaymentGateway::ManualPaymentGateway',
+  }
+
+  # supported/unsuppoted class method definition in config/initializers/act_as_supported.rb
+
+  unsupported :payout, :recurring_payment, :any_country, :any_currency, :paypal_express_payment, :paypal_chain_payments,
+    :multiple_currency, :express_checkout_payment, :nonce_payment, :company_onboarding, :remote_paymnt,
+    :recurring_payment, :credit_card_payment, :manual_payment, :remote_payment, :free_payment, :immediate_payout, :free_payment
 
   attr_encrypted :test_settings, :live_settings, key: DesksnearMe::Application.config.secret_token, marshal: true
 
   attr_accessor :country
-  after_save :set_country_config
 
   #- CLASS METHODS STARTS HERE
 
   def self.supported_countries
     raise NotImplementedError.new("#{self.name} has not implemented self.supported_countries")
+  end
+
+  def active?
+    self.live_active? || self.test_active?
+  end
+
+  def client_token
+    nil
+  end
+
+  def supported_currencies
+    []
   end
 
   def self.find_or_initialize_by_gateway_name(gateway_name)
@@ -76,6 +127,10 @@ class PaymentGateway < ActiveRecord::Base
     raise NotImplementedError.new("#{self.name} active_merchant_class not implemented")
   end
 
+  def self.model_name
+    ActiveModel::Name.new(PaymentGateway)
+  end
+
   #- END CLASS METHODS
 
   def authorize(authoriazable, options = {})
@@ -83,8 +138,16 @@ class PaymentGateway < ActiveRecord::Base
     PaymentAuthorizer.new(self, authoriazable, options).process!
   end
 
+  def editable?
+    true # TODO figure out if there is a case when we should block edition for payment_gateway
+  end
+
+  def deletable?
+    true # TODO figure out if there is a case when we should block delete for payment_gateway
+  end
+
   def name
-    @name ||= PaymentGateway::PAYMENT_GATEWAYS.key(self.class)
+    @name ||= PaymentGateway::PAYMENT_GATEWAYS.key(self.class.name)
   end
 
   def gateway
@@ -104,41 +167,37 @@ class PaymentGateway < ActiveRecord::Base
     "http://#{PlatformContext.current.decorate.host}#{Rails.env.development? ? port : ''}"
   end
 
-  def set_country_config
-    if country.present?
-      country_payment_gateway = self.instance.country_payment_gateways.where(country_alpha2_code: country).first_or_initialize
-      country_payment_gateway.payment_gateway_id = self.id
-      country_payment_gateway.save!
+  def available_payment_countries
+    if supports_any_country?
+      Country.all
+    else
+      Country.where(iso: self.class.supported_countries)
+    end
+  end
+
+  def available_currencies
+    if supports_any_currency?
+      Currency.order(:name)
+    else
+      Currency.where(iso_code: self.supported_currencies).order(:name)
     end
   end
 
   def settings
-    (test_mode? ? test_settings : live_settings).with_indifferent_access
-  end
-
-  def supports_paypal_chain_payments?
-    false
+    (test_mode? ? test_settings || {} : live_settings || {}).with_indifferent_access
   end
 
   def supports_currency?(currency)
-    return true if defined? self.support_any_currency!
+    return true if self.supports_any_currency?
     self.supported_currencies.include?(currency)
   end
 
-  def supports_payout?
-    false
-  end
-
-  def supports_recurring_payment?
-    false
-  end
-
   def configured?(country_alpha2_code)
-    settings.present? && country_payment_gateways.where(country_alpha2_code: country_alpha2_code).any?
+    settings.present? && payment_countries.where(iso: country_alpha2_code).any?
   end
 
-  def manual_payment?
-    instance.possible_manual_payment?
+  def self.test_mode?
+    @test_mode.nil? ? PlatformContext.current.try {|c| c.instance.test_mode? } : @test_mode
   end
 
   def test_mode?
@@ -227,32 +286,6 @@ class PaymentGateway < ActiveRecord::Base
     @credit_card.id
   end
 
-  def payout_supports_country?(country)
-    self.class.supported_countries.include?(country)
-  end
-
-  # Set to true if payment gateway requires redirect to external page
-  def remote?
-    return false
-  end
-
-  # Set to true if payment gateway supports multiple payment channels like CC and PayPal
-  def nonce_payment?
-    return false
-  end
-
-  def requires_company_onboarding?
-    false
-  end
-
-  def client_token
-    nil
-  end
-
-  def express_checkout?
-    false
-  end
-
   def payout(company, payout_details)
     force_mode(payout_details[:payment_gateway_mode])
     merchant_account = merchant_account(company)
@@ -289,14 +322,13 @@ class PaymentGateway < ActiveRecord::Base
     end
   end
 
-  def credit_card_payment?
-    gateway.try(:supported_cardtypes).present?
-  rescue NotImplementedError
-    false
-  end
 
-  def supports_immediate_payout?
-    false
+  def build_payment_methods(active = false)
+    PaymentMethod::PAYMENT_METHOD_TYPES.each do |payment_method|
+      if self.send("supports_#{payment_method}_payment?") && payment_methods.find_by_payment_method_type(payment_method).blank?
+        payment_methods.build(payment_method_type: payment_method, active: active, instance_id: self.instance_id)
+      end
+    end
   end
 
   protected

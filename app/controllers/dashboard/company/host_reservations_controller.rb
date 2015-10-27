@@ -79,7 +79,7 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
   private
 
   def find_reservation
-    @reservation = @company.reservations.find(params[:id])
+    @reservation = @company.reservations.includes(:owner).find(params[:id])
   end
 
   def rejection_reason

@@ -1,8 +1,8 @@
 Given /^Current marketplace is buy_sell$/ do
   TransactableType.destroy_all
   @instance = PlatformContext.current.instance
-  FactoryGirl.create(:product_type, instance: @instance)
   Utils::SpreeDefaultsLoader.new(@instance).load!
+  FactoryGirl.create(:product_type, instance: @instance)
   @instance.update_attribute(:service_fee_host_percent, 10)
   @instance.update_attribute(:service_fee_guest_percent, 15)
   @instance.update_attribute(:payment_transfers_frequency, 'daily')
@@ -10,7 +10,7 @@ end
 
 Given /^Instance without payment gateway defined$/ do
   @instance = PlatformContext.current.instance
-  @instance.payment_gateways.destroy_all
+  @instance.all_payment_gateways.destroy_all
 end
 
 Given /^A buy sell product exist in current marketplace$/ do

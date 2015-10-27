@@ -10,7 +10,8 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     stub_mixpanel
     stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
 
-    stub_billing_gateway(@listing.instance)
+    @payment_gateway = stub_billing_gateway(@listing.instance)
+    @payment_method = @payment_gateway.payment_methods.first
     stub_active_merchant_interaction
 
     ActiveMerchant::Billing::Base.mode = :test
@@ -238,7 +239,8 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
         card_number: 4242424242424242,
         card_exp_month: '05',
         card_exp_year: '2020',
-        card_code: "411"
+        card_code: "411",
+        payment_method_id: @payment_method.id
       }
     }
   end

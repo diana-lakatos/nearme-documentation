@@ -144,7 +144,7 @@ class Company < ActiveRecord::Base
       charges_without_payment_transfer.group_by(&:currency).each do |currency, all_charges|
         all_charges.group_by(&:payment_gateway_mode).each do |mode, charges|
           payment_transfer = payment_transfers.create!(payments: charges, payment_gateway_mode: mode)
-          self.created_payment_transfers << payment_transfer if possible_payout_not_configured?(instance.payment_gateway(iso_country_code, currency))
+          self.created_payment_transfers << payment_transfer if possible_payout_not_configured?(instance.payout_gateway(iso_country_code, currency))
         end
       end
     end
@@ -158,11 +158,7 @@ class Company < ActiveRecord::Base
   def payout_payment_gateway
     if @payment_gateway.nil?
       currency = locations.first.try(:listings).try(:first).try(:currency).presence || 'USD'
-      @payment_gateway = instance.payment_gateway(iso_country_code, currency)
-      # tmp hack before we will have proper multiple payment gateways for one country handling. the problem is that we might accept payments via Stripe, but would like to payout via PayPal
-      if !@payment_gateway.try(:supports_payout?)
-        @payment_gateway = PaymentGateway.where(instance: instance).all.find { |pg| pg.supports_currency?(currency) && pg.payout_supports_country?(iso_country_code) && pg.supports_payout? }
-      end
+      @payment_gateway = instance.payout_gateway(iso_country_code, currency)
     end
     @payment_gateway
   end

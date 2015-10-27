@@ -17,5 +17,4 @@ class FactoriesTest < ActiveSupport::TestCase
       end
     end
   end
-
 end

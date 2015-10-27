@@ -1,0 +1,40 @@
+= simple_nested_form_for @instance, :url => instance_admin_settings_payment_path(@instance), :html => { :multipart => true } do |f|
+  .content-container
+    %h4
+      = t('instance_admin.settings.integrations.test_mode')
+    .row
+      .input-container.col-xs-12
+        = f.input :test_mode, required: false, as: :boolean, label: (t('instance_admin.settings.integrations.test_mode_section.test_mode_label') + " " + link_to(t('instance_admin.settings.integrations.test_mode_section.test_mode_label_link'), instance_admin_settings_configuration_path, :target => "_blank")).html_safe, inline_label: true
+    .row
+      .input-container.col-xs-12
+        = f.button :submit, t('instance_admin.save'), class: 'btn btn-light pull-right'
+  .content-container
+    %h4
+      = t('instance_admin.settings.configuration.payment_transfers')
+    .row
+      .input-container.col-xs-6
+        = f.input :payment_transfers_frequency, collection: PaymentTransfer::FREQUENCIES.collect { |f| [t(".#{f}"), f] }, input_html: { class: 'form-control' }, prompt: true
+    .row
+      .input-container.col-xs-12
+        = f.button :submit, t('instance_admin.save'), class: 'btn btn-light pull-right'
+        = link_to t('instance_admin.transfer_list'), instance_admin_manage_transfers_path, class: 'btn btn-blue pull-right'
+
+.content-container
+  %h4
+    = t('instance_admin.settings.integrations.payment_gateways')
+  .row
+    .table-responsive
+      %table.table.table-striped.sortable
+        %thead
+          %tr
+            %th= PaymentGateway.human_attribute_name(:name)
+            %th= PaymentGateway.human_attribute_name(:live_active)
+            %th= PaymentGateway.human_attribute_name(:test_active)
+            %th= PaymentGateway.human_attribute_name(:payout)
+            %th= PaymentGateway.human_attribute_name(:supported_countries)
+            %th= PaymentGateway.human_attribute_name(:supported_currencies)
+        %tbody
+          = render partial: 'payment_gateway', collection: @payment_gateways
+
+= content_for :header_buttons do
+  = link_to t('instance_admin.settings.payments.payment_gateways.new'), new_instance_admin_settings_payment_gateway_path, class: 'pull-right btn btn-blue'

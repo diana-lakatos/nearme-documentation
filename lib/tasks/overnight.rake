@@ -7,7 +7,7 @@ namespace :overnight do
           last_period = reservation.periods.order("date DESC").first
           puts "processing reservation #{reservation.id} - #{last_period}"
           #reservation.add_period(last_period.date + 1.day)
-          reservation.save!
+          reservation.save!(validate: false)
         end
       end
     end

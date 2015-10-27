@@ -6,7 +6,7 @@ FactoryGirl.define do
       if usa = Spree::Country.find_by_numcode(840)
         country = usa
       else
-        country.association(:country)
+        country.association(:spree_country)
       end
     end
   end

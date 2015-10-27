@@ -31,7 +31,7 @@
             = t('instance_admin.manage.transfers.automatic_payout_is_not_available')
 
 
-- if resource.payout_processor.try(:supports_immediate_payout?)
+- if resource.payout_processor.try(:supports_payout?)
   .content-container
     .payout-attemps
       %h4

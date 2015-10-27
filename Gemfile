@@ -42,7 +42,7 @@ gem 'instagram', github: '0tofu/instagram-ruby-gem', branch: 'master'
 gem 'github_api'
 gem 'google_plus'
 
-gem 'reform', '~> 2.0.0.rc2'
+gem 'reform', '~> 2.0.4'
 gem 'tilt'
 gem 'yui-compressor'
 gem 'fog'
@@ -146,7 +146,6 @@ gem 'newrelic_rpm'
 gem 'unicorn-worker-killer'
 
 gem 'activemerchant'
-gem 'iso_country_codes'
 
 gem 'shippo'
 

@@ -95,7 +95,7 @@ class ShippoTest < ActionView::TestCase
   context 'shippo' do
 
     setup do
-      FactoryGirl.create(:country_payment_gateway, payment_gateway_id: FactoryGirl.create(:stripe_payment_gateway).id)
+      FactoryGirl.create(:stripe_payment_gateway)
     end
 
     should 'create spree shipping methods if shippo enabled' do
