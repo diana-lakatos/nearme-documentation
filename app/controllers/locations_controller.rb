@@ -134,10 +134,6 @@ class LocationsController < ApplicationController
     if @transactable_type.try(:groupable_with_others)
       redirect_to location_path(params.except(:transactable_type_id)), status: :found
     end
-  rescue
-    # Just in case we don't find the transactable type.
-    path = request.referer.present? ? request.referer : root_path
-    redirect_to path
   end
 
 end

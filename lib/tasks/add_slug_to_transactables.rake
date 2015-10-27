@@ -15,7 +15,7 @@ task add_slug_to_transactables: :environment do
       t.save(validate: false)
     end
 
-    puts "  -> Transactables (#{TransactableType.count})"
+    puts "  -> Transactable Types (#{TransactableType.count})"
     TransactableType.find_each do |tt|
       tt.send(:set_slug)
       tt.save(validate: false)
@@ -23,8 +23,10 @@ task add_slug_to_transactables: :environment do
 
     puts "  -> Pages (#{Page.count})"
     Page.find_each do |p|
-      p.send(:set_slug)
-      p.save(validate: false)
+      unless p.slug.present?
+        p.send(:set_slug)
+        p.save(validate: false)
+      end
     end
   end
 
