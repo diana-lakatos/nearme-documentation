@@ -17,6 +17,7 @@ FactoryGirl.define do
     lessor 'host'
     lessee 'guest'
     type 'ServiceType'
+    searchable true
 
     ignore do
       generate_rating_systems false

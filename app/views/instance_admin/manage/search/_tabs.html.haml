@@ -1,11 +1,7 @@
 .sub-header-nav
   %ul
     %li
-      = link_to t('instance_admin.manage.search.tabs.search_settings'), instance_admin_manage_search_settings_path, class: (tab == :global ? 'active' : '')
-    %li
-      = link_to t('instance_admin.manage.search.tabs.services_search'), instance_admin_manage_search_service_types_path, class: (tab == :services ? 'active' : '')
-    %li
-      = link_to t('instance_admin.manage.search.tabs.products_search'), instance_admin_manage_search_product_types_path, class: (tab == :products ? 'active' : '')
+      = link_to t('instance_admin.manage.search.tabs.search_settings'), instance_admin_manage_search_path, class: (tab == :global ? 'active' : '')
     %li
       = link_to t('instance_admin.manage.search.tabs.elastic_search'), instance_admin_manage_search_elastic_path, class: (tab == :elastic ? 'active' : '')
 

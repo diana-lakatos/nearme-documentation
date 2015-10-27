@@ -22,12 +22,12 @@ class Spree::Product::SearchFetcherTest < ActiveSupport::TestCase
 
     should 'find products with specified category' do
       @filters.merge!({ category_ids: @category1.id.to_s })
-      assert_equal [@product1], Spree::Product::SearchFetcher.new(@filters).products
+      assert_equal [@product1], Spree::Product::SearchFetcher.new(@filters, @product1.product_type).products
     end
 
     should 'find products with any keyword from query' do
       @filters.merge!({ query: 'product' })
-      assert_equal [@product1, @product2].sort, Spree::Product::SearchFetcher.new(@filters).products.sort
+      assert_equal [@product1, @product2].sort, Spree::Product::SearchFetcher.new(@filters, @product1.product_type).products.sort
     end
 
     context 'extra_properties' do
@@ -39,12 +39,12 @@ class Spree::Product::SearchFetcherTest < ActiveSupport::TestCase
 
       should 'find products with any keyword from query in properties' do
         @filters.merge!({ query: 'bosh' })
-        assert_equal [@product3], Spree::Product::SearchFetcher.new(@filters).products
+        assert_equal [@product3], Spree::Product::SearchFetcher.new(@filters, @product3.product_type).products
       end
 
       should 'find products with any keyword from query in properties and name' do
         @filters.merge!({ query: 'bosh product' })
-        assert_equal [@product1, @product2, @product3].sort, Spree::Product::SearchFetcher.new(@filters).products.sort
+        assert_equal [@product1, @product2, @product3].sort, Spree::Product::SearchFetcher.new(@filters, @product1.product_type).products.sort
       end
     end
   end

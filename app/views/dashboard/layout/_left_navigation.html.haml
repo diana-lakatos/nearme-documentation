@@ -73,5 +73,5 @@
       = dashboard_menu_item 'registrations/edit', dashboard_profile_path, link_text: t('dashboard.nav.edit'), active: (params[:controller].include?('registration') && params[:action].include?('edit'))
       = dashboard_menu_item 'dashboard/notification_preferences', edit_dashboard_notification_preferences_path, link_text: t('dashboard.nav.notification_preferences'), active: params[:controller].include?('notification_preferences')
       = dashboard_menu_item 'registrations/social_accounts', social_accounts_path, link_text: t('dashboard.nav.social_accounts'), active: (params[:controller].include?('registration') && params[:action].include?('social_accounts'))
-      - if platform_context.display_saved_search? && HiddenUiControls.find('dashboard/saved_searches').visible?
+      - if HiddenUiControls.find('dashboard/saved_searches').visible?
         = dashboard_menu_item 'dashboard/saved_searches', dashboard_saved_searches_path, link_text: t('dashboard.nav.saved_searches'), active: (params[:controller].include?('saved_searches'))

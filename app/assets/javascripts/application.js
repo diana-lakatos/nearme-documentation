@@ -71,6 +71,7 @@ window.DNM = {
     this.centerSearchBoxOnHomePage();
     this.setFooterPushHeight();
     this.setRotuesPrefix();
+    this.initializeSearchBox();
   },
 
   setRotuesPrefix: function() {
@@ -135,6 +136,12 @@ window.DNM = {
   initializeBrowsersSpecificCode: function() {
     this.fixInputIconBackgroundTransparency();  // fix icon in input transparency in IE8
     this.fixMobileFixedPositionAfterInputFocus();
+  },
+
+  initializeSearchBox: function(){
+    $('form.search-box').each(function(){
+      new Search.HomeController($(this));
+    });
   },
 
   centerSearchBoxOnHomePage: function() {

@@ -1,7 +1,7 @@
 # Base search controller
 # Extended by Search.HomeController and Search.SearchController
 class Search.Controller
-  constructor: (@form) ->
+  constructor: (@form, @container = nil) ->
     @unfilteredPrice = 0
     @initializeFields()
     @initializeGeolocateButton()
@@ -9,16 +9,18 @@ class Search.Controller
     if @autocompleteEnabled()
       @initializeAutocomplete()
     @initializeGeocoder()
+    new Search.Datepickers(@container)
 
-  initializeAutocomplete: ->
-    @autocomplete = new google.maps.places.Autocomplete(@queryField[0], {})
+  initializeAutocomplete: (queryField)->
+    queryField ||= @queryField
+    autocomplete = new google.maps.places.Autocomplete(queryField[0], {})
     @submit_form = false
-    google.maps.event.addListener @autocomplete, 'place_changed', =>
-      place = Search.Geocoder.wrapResult @autocomplete.getPlace()
+    google.maps.event.addListener autocomplete, 'place_changed', =>
+      place = Search.Geocoder.wrapResult autocomplete.getPlace()
       place = null unless place.isValid()
 
-      @setGeolocatedQuery(@queryField.val(), place)
-      @fieldChanged('query', @queryField.val())
+      @setGeolocatedQuery(queryField.val(), place)
+      @fieldChanged('query', queryField.val())
       if @submit_form
         @form.submit()
 
@@ -34,7 +36,7 @@ class Search.Controller
     # Override to trigger automatic updating etc.
 
   initializeQueryField: ->
-    @queryField = @form.find('input#search')
+    @queryField = @form.find('input[name="loc"]')
     @keywordField = @form.find('input[name="query"]')
 
     query_value = DNM.util.Url.getParameterByName('loc')
@@ -128,9 +130,8 @@ class Search.Controller
 
 
   buildSeoFriendlyQuery: (result) ->
-    query = $.trim(@form.find("input#search").val().replace(', United States', ''))
-
     if result
+      query = $.trim(result.formattedAddress().replace(', United States', ''))
       if result.country() and result.country() == 'United States'
         stateRegexp = new RegExp("#{result.state()}$", 'i')
         if result.state() and query.match(stateRegexp)
@@ -138,7 +139,7 @@ class Search.Controller
 
       query
     else
-      query
+      $.trim(@form.find("input[name='loc']").val().replace(', United States', ''))
 
 
   formatCoordinate: (coord) ->

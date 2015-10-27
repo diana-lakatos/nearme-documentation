@@ -29,7 +29,7 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
   end
 
   should 'return result for right transactable type' do
-    assert_equal [@public_listing_other_tt], Listing::SearchFetcher.new(@filters.merge({transactable_type_id: @public_listing_other_tt.transactable_type_id})).listings.sort
+    assert_equal [@public_listing_other_tt], Listing::SearchFetcher.new(@filters.merge({transactable_type_id: @public_listing_other_tt.transactable_type_id}), @public_listing_other_tt.transactable_type).listings.sort
   end
 
   context '#geolocation' do
@@ -37,17 +37,17 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
     should 'find locations near midpoint within given radius' do
       @filters.merge!({ midpoint: [5, 6], radius: 300 })
 
-      assert_equal [@public_listing, @public_office_listing].sort, Listing::SearchFetcher.new(@filters).listings.sort
+      assert_equal [@public_listing, @public_office_listing].sort, Listing::SearchFetcher.new(@filters, @public_listing.transactable_type).listings.sort
     end
 
     should 'return all locations if midpoint is missing' do
       @filters.merge!({ midpoint: nil, radius: 2 })
-      assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing, @free_listing], Listing::SearchFetcher.new(@filters).listings.sort
+      assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing, @free_listing], Listing::SearchFetcher.new(@filters, @public_listing.transactable_type).listings.sort
     end
 
     should 'return all locations if radius is missing' do
       @filters.merge!({ midpoint: [1, 3], radius: nil })
-      assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing, @free_listing], Listing::SearchFetcher.new(@filters).listings.sort
+      assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing, @free_listing], Listing::SearchFetcher.new(@filters, @public_listing.transactable_type).listings.sort
     end
   end
 
@@ -55,7 +55,7 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
 
     should 'find location with specified location type' do
       @filters.merge!({ location_types_ids: [@public_location_type.id] })
-      assert_equal [@public_listing, @public_office_listing].sort, Listing::SearchFetcher.new(@filters).listings.sort
+      assert_equal [@public_listing, @public_office_listing].sort, Listing::SearchFetcher.new(@filters, @public_listing.transactable_type).listings.sort
     end
 
     context '#availability' do
@@ -69,17 +69,17 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
 
       should 'find listings that have specified desk' do
         @filters.merge!({ custom_attributes: { listing_type: [@public_listing_type, @private_listing_type] } })
-        assert_equal [@public_listing, @private_listing].sort, Listing::SearchFetcher.new(@filters).listings.sort
+        assert_equal [@public_listing, @private_listing].sort, Listing::SearchFetcher.new(@filters, @public_listing.transactable_type).listings.sort
       end
 
       should 'return empty array if none listing is satisfying conditions' do
         @filters.merge!({ custom_attributes: { listing_type: ["Shared Something"] } })
-        assert_equal [], Listing::SearchFetcher.new(@filters).listings
+        assert_equal [], Listing::SearchFetcher.new(@filters, @public_listing.transactable_type).listings
       end
 
       should 'find listings that belong to certain location type and listing type' do
         @filters.merge!({location_types_ids: [@public_location_type.id], custom_attributes: { listing_type: [@office_listing_type] } })
-        assert_equal [@public_office_listing], Listing::SearchFetcher.new(@filters).listings
+        assert_equal [@public_office_listing], Listing::SearchFetcher.new(@filters, @public_listing.transactable_type).listings
       end
 
     end
@@ -88,12 +88,12 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
 
       should 'find listings that are free' do
         @filters.merge!({ midpoint: nil, listing_pricing: ['free'] })
-        assert_equal [@free_listing], Listing::SearchFetcher.new(@filters).listings
+        assert_equal [@free_listing], Listing::SearchFetcher.new(@filters, @public_listing.transactable_type).listings
       end
 
       should 'find listings that are daily' do
         @filters.merge!({ midpoint: nil, listing_pricing: ['daily'] })
-        assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing].sort, Listing::SearchFetcher.new(@filters).listings.sort
+        assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing].sort, Listing::SearchFetcher.new(@filters, @public_listing.transactable_type).listings.sort
       end
 
     end
@@ -122,17 +122,17 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
 
       should 'filter by single company industries' do
         @filters.merge!({industries_ids: [@economics_industry.id]})
-        assert_equal [@listing2], Listing::SearchFetcher.new(@filters).listings
+        assert_equal [@listing2], Listing::SearchFetcher.new(@filters, @listing2.transactable_type).listings
       end
 
       should 'filter by multiple company industries' do
         @filters.merge!({industries_ids: [@economics_industry.id, @internet_industry.id]})
-        assert_equal [@listing1, @listing2].sort, Listing::SearchFetcher.new(@filters).listings.sort
+        assert_equal [@listing1, @listing2].sort, Listing::SearchFetcher.new(@filters, @listing1.transactable_type).listings.sort
       end
 
       should 'be able to return multiple results for single industry' do
         @filters.merge!({industries_ids: [@food_industry.id]})
-        assert_equal [@listing1, @listing2].sort, Listing::SearchFetcher.new(@filters).listings.sort
+        assert_equal [@listing1, @listing2].sort, Listing::SearchFetcher.new(@filters, @listing1.transactable_type).listings.sort
       end
 
     end

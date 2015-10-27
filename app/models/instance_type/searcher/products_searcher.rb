@@ -26,7 +26,7 @@ class InstanceType::Searcher::ProductsSearcher
           category_ids: search.category_ids,
           sort: search.sort
         })
-        Spree::Product::SearchFetcher.new(@search_params)
+        Spree::Product::SearchFetcher.new(@search_params, @transactable_type)
       end
   end
 
@@ -49,12 +49,12 @@ class InstanceType::Searcher::ProductsSearcher
   end
 
   def min_price
-    return 0 if !PlatformContext.current.instance.price_slider || results.blank?
+    return 0 if !@transactable_type.show_price_slider || results.blank?
     @min_fixed_price ||= prices.min
   end
 
   def max_price
-    return 0 if !PlatformContext.current.instance.price_slider || results.blank?
+    return 0 if !@transactable_type.show_price_slider || results.blank?
     @max_fixed_price ||= prices.max
   end
 

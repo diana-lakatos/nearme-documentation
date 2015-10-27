@@ -9,7 +9,7 @@
         = render partial: 'search/categories', locals: { container_class: 'span2' }
         = yield :category_tree
 
-        - if platform_context.instance.price_slider
+        - if @transactable_type.show_price_slider
           .span10
             = render partial: 'search/shared/product_table_slider'
         .search-max-price{:'data-max-price' => @searcher.max_price, :'data-min-price' => @searcher.min_price}

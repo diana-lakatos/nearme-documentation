@@ -30,12 +30,23 @@ class TransactableType < ActiveRecord::Base
   serialize :availability_options, Hash
 
   after_update :destroy_translations!, if: lambda { |transactable_type| transactable_type.name_changed? || transactable_type.bookable_noun_changed? || transactable_type.lessor_changed? || transactable_type.lessee_changed? }
+  before_validation :set_default_options
   after_create :create_translations!
-
-  validates_presence_of :name
 
   scope :products, -> { where(type: 'Spree::ProductType') }
   scope :services, -> { where(type: 'ServiceType') }
+  scope :searchable, -> { where(searchable: true) }
+  scope :by_position, -> { order('position ASC') }
+  scope :order_by_array_of_names, -> (names) {
+    names_decorated = names.each_with_index.map {|tt, i| "WHEN transactable_types.name='#{tt}' THEN #{i}" }
+    order("CASE #{names_decorated.join(' ')} END") if names.present?
+  }
+  scope :found_and_sorted_by_names, -> (names) { where(name: names).order_by_array_of_names(names) }
+
+  validates :name, :default_search_view, :searcher_type, presence: true
+  validates :category_search_type, presence: true, if: -> (transactable_type){ transactable_type.show_categories }
+
+  accepts_nested_attributes_for :custom_attributes, update_only: true
 
   delegate :translation_namespace, :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
     :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
@@ -107,6 +118,29 @@ class TransactableType < ActiveRecord::Base
       rating_system = self.rating_systems.create!(subject: subject)
       RatingConstants::VALID_VALUES.each { |value| rating_system.rating_hints.create!(value: value) }
     end
+  end
+
+  def category_search_type=(cat_search_type)
+    super(cat_search_type.presence || 'AND')
+  end
+
+  def and_category_search?
+    category_search_type == "AND"
+  end
+
+  def or_category_search?
+    category_search_type == "OR"
+  end
+
+  def date_pickers_relative_mode?
+    date_pickers_mode == 'relative'
+  end
+
+  private
+
+  def set_default_options
+    self.default_search_view ||=  available_search_views.first
+    self.search_engine ||= Instance::SEARCH_ENGINES.first
   end
 
 end

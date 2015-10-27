@@ -39,7 +39,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location
   def page_elastic; end
 
   def max_price
-    return 0 if !PlatformContext.current.instance.price_slider || results.blank?
+    return 0 if !@transactable_type.show_price_slider || results.blank?
     @max_fixed_price ||= results.map{|r|
       r.listings.map(&:fixed_price_cents).compact.max.to_i
     }.max / 100

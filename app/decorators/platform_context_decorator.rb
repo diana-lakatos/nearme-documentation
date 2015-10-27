@@ -58,33 +58,8 @@ class PlatformContextDecorator
     @platform_context.theme.contact_email_with_fallback
   end
 
-  def search_field_placeholder
-    case instance.buyable?
-    when false
-      instance.searcher_type == 'fulltext' ? I18n.t('homepage.search_field_placeholder.full_text') : I18n.t('homepage.search_field_placeholder.location')
-    when true
-      I18n.t 'homepage.search_field_placeholder.search'
-    end
-  end
-
-  def bookable_search_field_placeholder
-    instance.searcher_type == 'fulltext' ? I18n.t('homepage.search_field_placeholder.full_text') : I18n.t('homepage.search_field_placeholder.location')
-  end
-
   def search_by_keyword_placeholder
     I18n.t('homepage.search_field_placeholder.full_text')
-  end
-
-  def searcher_type
-    instance.searcher_type
-  end
-
-  def fulltext_search?
-    ['fulltext', 'fulltext_category'].include?(searcher_type)
-  end
-
-  def fulltext_geo_search?
-    searcher_type == "fulltext_geo"
   end
 
   def platform_context_detail_key
@@ -104,32 +79,12 @@ class PlatformContextDecorator
     Billing::Gateway::Processor::Outgoing::ProcessorFactory.supported_payout_via_ach?(self.instance)
   end
 
-  def map_view
-    if ['mixed', 'listing_mixed'].include?(platform_context.instance.default_search_view)
-      platform_context.instance.default_search_view
-    else
-      'mixed'
-    end
-  end
-
   def bookable_nouns
     @bookable_nouns ||= transactable_types.map { |tt| tt.translated_bookable_noun }.to_sentence(last_word_connector: I18n.t('general.or_spaced'))
   end
 
   def bookable_nouns_plural
     @bookable_nouns_plural ||= transactable_types.map { |tt| tt.translated_bookable_noun(10) }.to_sentence(last_word_connector: I18n.t('general.or_spaced'))
-  end
-
-  def display_taxonomy_tree?
-    platform_context.instance.taxonomy_tree
-  end
-
-  def display_saved_search?
-    platform_context.instance.saved_search
-  end
-
-  def search_input_name
-    fulltext_search? ? "query" : "loc"
   end
 
   def homepage_content

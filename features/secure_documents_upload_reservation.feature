@@ -11,7 +11,6 @@ Feature: Secure documents upload
       And a listed location in San Francisco that does not require confirmation
       And the transactable_type_listing exists
       And the transactable_type_buy_sell exists
-      And current instance is buyable
       And product exists with name: "Awesome product"
 
 

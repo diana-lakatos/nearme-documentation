@@ -37,7 +37,7 @@ class InstanceAdmin::BaseController < ApplicationController
     'user_profiles'      => { controller: '/instance_admin/manage/instance_profile_types', default_action: 'index' },
     'service_types'      => { controller: '/instance_admin/manage/service_types', default_action: 'index' },
     'upsell_addons'      => { controller: '/instance_admin/manage/upsell_addons', default_action: 'index', title: 'Upsell & Add-ons' },
-    'search'             => { controller: '/instance_admin/manage/search/settings', default_action: 'show', title: 'Search' }
+    'search'             => { controller: '/instance_admin/manage/search', default_action: 'show', title: 'Search' }
   }
 
   MANAGE_BLOG_CONTROLLERS = {

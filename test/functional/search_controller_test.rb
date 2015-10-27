@@ -141,7 +141,7 @@ class SearchControllerTest < ActionController::TestCase
           end
 
           should 'filter only filtered locations when "OR" search mode' do
-            PlatformContext.current.instance.update_attribute(:category_search_type, 'OR')
+            TransactableType.first.update_attribute(:category_search_type, 'OR')
             get :index, { loc: 'Auckland', category_ids: @filtered_category.id, v: 'mixed', buyable: false}
             assert_location_in_mixed_result(@filtered_auckland_1)
             assert_location_in_mixed_result(@filtered_auckland_2)
@@ -149,7 +149,7 @@ class SearchControllerTest < ActionController::TestCase
           end
 
           should 'filter only filtered locations when "AND" search mode' do
-            PlatformContext.current.instance.update_attribute(:category_search_type, 'AND')
+            TransactableType.first.update_attribute(:category_search_type, 'AND')
             get :index, { loc: 'Auckland', category_ids: "#{@filtered_category.id},#{@another_category.id}", v: 'mixed', buyable: false}
             assert_location_in_mixed_result(@filtered_auckland_1)
             refute_location_in_mixed_result(@filtered_auckland_2)
@@ -197,8 +197,7 @@ class SearchControllerTest < ActionController::TestCase
                   sign_in(@me)
                   @me.stubs(:unread_messages_count).returns(0)
 
-                  get :index, loc: 'Adelaide', v: 'list'
-
+                  get :index, loc: 'Adelaide', v: 'list', transactable_type_id: @adelaide.listings.first.transactable_type_id
                   assert_select '.connections[rel=?]', 'tooltip', 1
                   assert_select '[title=?]', "#{@friend.name} worked here"
                 end
@@ -226,7 +225,7 @@ class SearchControllerTest < ActionController::TestCase
            @adelaide_super = FactoryGirl.create(:listing_in_adelaide)
            @adelaide_super.description = "super location"
            @adelaide_super.save
-           PlatformContext.current.instance.update_attribute(:searcher_type, "fulltext_geo")
+           @adelaide.transactable_type.update_attribute(:searcher_type, "fulltext_geo")
         end
 
         context 'on mixed results page' do
@@ -389,31 +388,31 @@ class SearchControllerTest < ActionController::TestCase
 
   context 'for transactable type buy/sell' do
     setup do
+      TransactableType.destroy_all
       FactoryGirl.create(:product_type)
     end
 
     context 'search integration' do
-      setup do
-        Spree::Product.destroy_all
-      end
+      # setup do
+      # end
 
       context 'for disabled listing' do
         should 'exclude disabled listing' do
           FactoryGirl.create(:product, approved: false, name: 'product')
 
-          get :index, query: 'product', v: 'products', buyable: 'true'
+          get :index, query: 'product', v: 'products'
           assert_no_products_found
         end
       end
 
       context 'for invalid place' do
         should 'find nothing for empty query' do
-          get :index, query: '', v: 'products', buyable: 'true'
+          get :index, query: '', v: 'products'
           assert_no_products_found
         end
 
         should 'find nothing for invalid query' do
-          get :index, query: 'bung', v: 'products', buyable: 'true'
+          get :index, query: 'bung', v: 'products'
           assert_no_products_found
         end
       end
@@ -429,7 +428,7 @@ class SearchControllerTest < ActionController::TestCase
           end
 
           should 'filter only filtered products' do
-            get :index, { category_ids: @category.id, v: 'products', buyable: 'true' }
+            get :index, { category_ids: @category.id, v: 'products' }
 
             assert_product_in_result(@filtered_product)
             refute_product_in_result(@another_product)
@@ -438,7 +437,7 @@ class SearchControllerTest < ActionController::TestCase
           should 'query only filtered products' do
             another_product2 = FactoryGirl.create(:product, name: 'product three', categories: [@another_category])
 
-            get :index, { category_ids: @category.id, v: 'products', buyable: 'true', query: 'product' }
+            get :index, { category_ids: @category.id, v: 'products', query: 'product' }
 
             assert_product_in_result(@filtered_product)
             refute_products_in_result([@another_product, another_product2])
@@ -456,23 +455,23 @@ class SearchControllerTest < ActionController::TestCase
           end
 
           should 'not show products that belong to different product type' do
-            get :index, query: 'product_one', v: 'products', buyable: 'true', transactable_type_id: FactoryGirl.create(:product_type).id
+            get :index, query: 'product_one', v: 'products', transactable_type_id: FactoryGirl.create(:product_type).id
             refute_products_in_result([@product1, @product2, @product3])
           end
 
           should 'show only valid products' do
-            get :index, query: 'product_one', v: 'products', buyable: 'true', transactable_type_id: @product_type.id
+            get :index, query: 'product_one', v: 'products', transactable_type_id: @product_type.id
             assert_product_in_result(@product1)
             refute_products_in_result([@product2, @product3])
           end
 
           should 'show only valid products like' do
-            get :index, query: 'product one', v: 'products', buyable: 'true', transactable_type_id: @product_type.id
+            get :index, query: 'product one', v: 'products', transactable_type_id: @product_type.id
             assert_products_in_result([@product1, @product2, @product3])
           end
 
           should 'show only valid products from extra_properties' do
-            get :index, query: 'product_one bosh', v: 'products', buyable: 'true', transactable_type_id: @product_type.id
+            get :index, query: 'product_one bosh', v: 'products', transactable_type_id: @product_type.id
             assert_products_in_result([@product1, @product3])
             refute_product_in_result(@product2)
           end
@@ -484,39 +483,39 @@ class SearchControllerTest < ActionController::TestCase
 
       should "not track search for empty query" do
         @tracker.expects(:conducted_a_search).never
-        get :index, query: nil, v: 'products', buyable: 'true'
+        get :index, query: nil, v: 'products'
       end
 
       should 'track search for first page' do
         @tracker.expects(:conducted_a_search).once
-        get :index, query: 'product_1', page: 1, v: 'products', buyable: 'true'
+        get :index, query: 'product_1', page: 1, v: 'products'
       end
 
       should 'not track search for second page' do
         @tracker.expects(:conducted_a_search).never
-        get :index, query: 'product_1', page: 2, v: 'products', buyable: 'true'
+        get :index, query: 'product_1', page: 2, v: 'products'
       end
 
       should 'not track second search for the different query' do
         @tracker.expects(:conducted_a_search).twice
-        get :index, query: 'product_1', v: 'products', buyable: 'true'
-        get :index, query: 'product_2', v: 'products', buyable: 'true'
+        get :index, query: 'product_1', v: 'products'
+        get :index, query: 'product_2', v: 'products'
       end
 
       should 'track search if ignore_search flag is set to 0' do
         @tracker.expects(:conducted_a_search).once
-        get :index, query: 'product_1', ignore_search_event: "0", v: 'products', buyable: 'true'
+        get :index, query: 'product_1', ignore_search_event: "0", v: 'products'
       end
 
       should 'not track search if ignore_search flag is set to 1' do
         @tracker.expects(:conducted_a_search).never
-        get :index, query: 'product_1', ignore_search_event: "1", v: 'products', buyable: 'true'
+        get :index, query: 'product_1', ignore_search_event: "1", v: 'products'
       end
 
       should 'not track second search for the same query if filters have not been changed' do
         @tracker.expects(:conducted_a_search).once
-        get :index, query: 'product_1', v: 'products', buyable: 'true'
-        get :index, query: 'product_1', v: 'products', buyable: 'true'
+        get :index, query: 'product_1', v: 'products'
+        get :index, query: 'product_1', v: 'products'
       end
 
       should 'log filters in mixpanel along with other arguments for products result type' do
@@ -529,7 +528,7 @@ class SearchControllerTest < ActionController::TestCase
         @tracker.expects(:conducted_a_search).with do |search, custom_options|
           expected_custom_options == custom_options
         end
-        get :index, { query: 'product_1', lg_custom_attributes: { attribute_filter: ['Lefthanded'] }, v: 'products', buyable: 'true' }
+        get :index, { query: 'product_1', lg_custom_attributes: { attribute_filter: ['Lefthanded'] }, v: 'products' }
       end
     end
   end

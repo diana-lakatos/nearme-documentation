@@ -6,7 +6,7 @@
 class Search.SearchController extends Search.Controller
   constructor: (form, @container) ->
 
-    super(form)
+    super(form, @container)
     @redirectIfNecessary()
     @initializeDateRangeField()
 

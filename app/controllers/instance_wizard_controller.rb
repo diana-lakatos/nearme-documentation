@@ -53,7 +53,6 @@ class InstanceWizardController < ActionController::Base
     ipt = @instance.instance_profile_types.create!(name: 'User Custom Attributes')
     if params[:marketplace_type] == "Buy/Sell"
       tp = @instance.product_types.create(name: @instance.bookable_noun)
-      @instance.update_attribute :default_search_view, 'products'
     else
       tp = @instance.service_types.create(
         name: @instance.bookable_noun,

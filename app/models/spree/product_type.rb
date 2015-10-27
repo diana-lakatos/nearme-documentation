@@ -4,6 +4,8 @@ class Spree::ProductType < TransactableType
   has_many :categories, as: :categorizable, dependent: :destroy
   has_many :products, dependent: :destroy, class_name: "Spree::Product", inverse_of: :product_type
 
+  SEARCH_VIEWS = %w(products products_table products_list)
+
   belongs_to :user
 
   def wizard_path
@@ -33,12 +35,15 @@ class Spree::ProductType < TransactableType
     I18n.t('buy_sell_market.buyer', :default => 'buyer')
   end
 
-  def lessors
-    lessor.to_s.pluralize
+  def available_search_views
+    SEARCH_VIEWS
   end
 
-  def lessees
-    lessee.to_s.pluralize
+  private
+
+  def set_default_options
+    super
+    self.searcher_type ||= 'fulltext'
   end
 
 end

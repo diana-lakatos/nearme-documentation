@@ -135,7 +135,6 @@ section.home {
     clear: both;
 
     label {
-      display: block;
       margin-bottom: 8px;
     }
   }
@@ -146,6 +145,13 @@ section.home {
     width: 370px;
     margin-right: 0;
     margin-left: 0px;
+  }
+}
+
+form.search-box-liquid-tag {
+  a.search-button {
+    background-color: #e6e6e6;
+    padding: 0 50px;
   }
 }
 

@@ -26,11 +26,7 @@ FactoryGirl.define do
     test_twilio_consumer_secret 'test_tc2'
     test_twilio_from_number 'test_501'
 
-    date_pickers '0'
     tt_select_type 'dropdown'
-    date_pickers_mode 'relative'
-    date_pickers_use_availability_rules '1'
-    default_products_search_view 'products'
 
     seller_attachments_access_level 'all'
 
