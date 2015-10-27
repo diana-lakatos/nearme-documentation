@@ -388,6 +388,7 @@ class SecuredParams
       :webhook_token,
       :wish_lists_enabled,
       :wish_lists_icon_set,
+      :custom_waiver_agreements,
       allowed_currencies: [],
       allowed_countries: [],
       custom_translations: [:'buy_sell_market.checkout.manual_payment', :'buy_sell_market.checkout.manual_payment_description'],
