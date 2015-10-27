@@ -214,6 +214,10 @@ class PlatformContextDrop < BaseDrop
     routes.new_project_type_project_wizard_path(@project_type) if @project_type
   end
 
+  def spam_reports_path
+    urlify(routes.instance_admin_projects_spam_reports_path)
+  end
+
   private
 
   def theme_color(color)

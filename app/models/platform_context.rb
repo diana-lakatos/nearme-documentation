@@ -241,5 +241,4 @@ class PlatformContext
   def remove_port_from_hostname(hostname)
     hostname.split(':').first
   end
-
 end

@@ -957,7 +957,7 @@ DesksnearMe::Application.routes.draw do
     get 'organizations', to: 'organizations#index'
   end
 
-  resources :transactable_types, only: [], path: "/" do
+  resources :transactable_types, only: [], path: "/", constraints: Constraints::TransactableTypeConstraints.new do
     resources :locations, :only => [], path: "/" do
       member do
         get "(:listing_id)", :to => "locations#show", :as => ''

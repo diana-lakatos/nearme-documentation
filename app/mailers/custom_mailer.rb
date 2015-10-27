@@ -24,7 +24,7 @@ class CustomMailer < InstanceMailer
   protected
 
   def get_email_for_type_with_fallback(field)
-    (case @workflow_alert.send("#{field}_type")
+    emails = (case @workflow_alert.send("#{field}_type")
     when 'lister'
       [@step.lister.try(:email)]
     when 'enquirer'
@@ -32,6 +32,16 @@ class CustomMailer < InstanceMailer
     else
       InstanceAdminRole.where(name: @workflow_alert.send("#{field}_type")).first.try(:instance_admins).try(:joins, :user).try(:pluck, :email) || []
     end + (@workflow_alert.send(field).try(:split, ',') || [])).compact.uniq
+
+    unless emails.present?
+      mp_error_logger = Rails.application.config.marketplace_error_logger
+      mp_error_logger.log_issue(
+        MarketplaceErrorLogger::BaseLogger::MAILER_ERROR,
+        "Sending e-mail for workflow alert failed because of 'to' was empty"
+      )
+    end
+
+    emails
   end
 
   def filter_emails_to_only_these_which_accepts_emails(emails)
