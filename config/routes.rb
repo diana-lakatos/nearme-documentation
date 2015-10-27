@@ -3,6 +3,10 @@ require Rails.root.join('app', 'controllers', 'registrations_controller.rb') if 
 
 DesksnearMe::Application.routes.draw do
 
+
+  # Legacy pages redirect. Can be removed in Feb 16th. The redirect matches the route below.
+  get "/pages/:slug(.:format)", to: 'pages#redirect'
+
   get 'comments/index'
   get 'comments/create'
 
@@ -486,7 +490,7 @@ DesksnearMe::Application.routes.draw do
   resources :blog_posts, path: 'blog', only: [:index, :show], controller: 'blog/blog_posts'
 
   resources :reviews, only: [:index]
-  resources :locations, :only => [] do
+  resources :locations, only: [] do
     member do
       get "(:listing_id)", :to => "locations#show", :as => ''
     end
@@ -963,9 +967,6 @@ DesksnearMe::Application.routes.draw do
       resource :social_share, :only => [:new], :controller => 'locations/social_share'
     end
   end
-
-  # Legacy pages redirect. Can be removed in Feb 16th. The redirect matches the route below.
-  get "/pages/:slug(.:format)" => redirect { |request, params| "/#{params[:slug]}" }
 
   get "/:slug(.:format)", to: 'pages#show', as: :pages, constraints: Constraints::PageConstraints.new
 

@@ -13,6 +13,10 @@ class PagesController < ApplicationController
     end
   end
 
+  def redirect
+    redirect_to pages_path(params[:slug])
+  end
+
   private
 
   # Layout per action
