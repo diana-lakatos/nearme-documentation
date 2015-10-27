@@ -13,7 +13,7 @@ class TransactableTypeDrop < BaseDrop
   #   translation namespace that is a prefix for translation keys specific to this transactable type
   # translated_bookable_noun
   #   translated name of this transactable type, based on current language
-  delegate :id, :buyable?, :action_price_per_unit, :show_page_enabled?, :translated_bookable_noun, :translation_key_suffix, :translation_namespace, to: :transactable_type
+  delegate :id, :buyable?, :action_price_per_unit, :show_page_enabled?, :translated_bookable_noun, :translation_key_suffix, :translation_namespace, :slug, to: :transactable_type
 
   def initialize(transactable_type)
     @transactable_type = transactable_type
