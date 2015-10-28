@@ -1,10 +1,11 @@
 class ProjectCollaboratorsController < ApplicationController
   layout :dashboard_or_community_layout
 
-  before_filter :find_project
+  before_filter :find_project, except: [:create]
   before_action :authenticate_user!
 
   def create
+    @project = Project.seek_collaborators.find(params[:project_id])
     project_collaborator = @project.project_collaborators.create(user: current_user, approved_by_user_at: Time.now)
     @collaborators_count = @project.reload.project_collaborators.approved.count
     WorkflowStepJob.perform(WorkflowStep::ProjectWorkflow::CollaboratorPendingApproval, project_collaborator.id)
@@ -31,7 +32,7 @@ class ProjectCollaboratorsController < ApplicationController
   protected
 
   def find_project
-    @project = Project.seek_collaborators.find(params[:project_id])
+    @project = Project.find(params[:project_id])
   end
 
 end
