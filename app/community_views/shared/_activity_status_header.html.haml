@@ -2,7 +2,7 @@
 - if event.followed.present?
   - activity_feed_event = setup_activity_feed_event(event)
   %header
-    %figure= image_tag(activity_feed_event.image)
+    %figure= activity_feed_event.image.present? ? image_tag(activity_feed_event.image) : space_listing_placeholder_path(width: 80, height: 80)
     %p.desc= activity_feed_event.text
 
     %p.meta
