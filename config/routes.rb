@@ -6,6 +6,8 @@ DesksnearMe::Application.routes.draw do
 
   # Legacy pages redirect. Can be removed in Feb 16th. The redirect matches the route below.
   get "/pages/:slug(.:format)", to: 'pages#redirect'
+  get "/transactable_types/:id/locations/:location_id/listings/:listing_id", to: 'locations#redirect'
+
 
   get 'comments/index'
   get 'comments/create'
