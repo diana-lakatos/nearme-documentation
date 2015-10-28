@@ -8,6 +8,8 @@ class PagesController < ApplicationController
 
     if @page.redirect?
       redirect_to @page.redirect_url, status: @page.redirect_code
+    elsif @page.no_layout?
+      render text: @page.content
     else
       render :show, platform_context: [platform_context.decorate]
     end
@@ -21,8 +23,6 @@ class PagesController < ApplicationController
 
   # Layout per action
   def resolve_layout
-    return false if @page.no_layout?
-
     case action_name
     when "host_signup"
       "landing"
