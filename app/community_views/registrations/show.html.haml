@@ -14,7 +14,7 @@
           = t :featured_user
     %nav.navbar-a
       %ul.nav.nav-tabs{role: "tablist"}
-        %li.active
+        %li
           = link_to '#activity', role: "tab", :'data-toggle' => "tab" do
             = t(:activity)
         %li
@@ -39,7 +39,7 @@
             = render partial: 'shared/follow_button', locals: { object: @user }
 
 .tab-content
-  #activity.tab-pane.fade.active{:role => "tabpanel"}
+  #activity.tab-pane.fade{:role => "tabpanel"}
     = render 'show_activity', object: @user, feed: @feed
 
   #following.tab-pane.fade{:role => "tabpanel"}
