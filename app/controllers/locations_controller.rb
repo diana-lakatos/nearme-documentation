@@ -35,6 +35,14 @@ class LocationsController < ApplicationController
     restore_initial_bookings_from_stored_reservation
   end
 
+  def redirect
+    tt = TransactableType.find(params[:id])
+    loc = Location.find(params[:location_id])
+    listing = Transactable.find(params[:listing_id].split("-").first)
+
+    redirect_to transactable_type_location_listing_path(tt, loc, listing)
+  end
+
   private
 
   def find_location
