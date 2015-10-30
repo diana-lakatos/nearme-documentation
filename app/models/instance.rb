@@ -145,12 +145,12 @@ class Instance < ActiveRecord::Base
 
   def allowed_currencies=(currencies)
     currencies.reject!(&:blank?)
-    super(currencies)
+    write_attribute(:allowed_currencies, currencies)
   end
 
   def allowed_countries=(countries)
     countries.reject!(&:blank?)
-    super(countries)
+    write_attribute(:allowed_countries, countries)
   end
 
   def check_lock
