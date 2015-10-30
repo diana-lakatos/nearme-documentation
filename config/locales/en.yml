@@ -4,6 +4,8 @@ en:
       payment_gateway: "Payment gateway"
       payment_method: "Payment method"
     attributes:
+      instance:
+        time_zone: "Default Time Zone"
       payment_method/payment_method_type:
         credit_card: "Credit Card"
         nonce: "PayPal"
