@@ -7,7 +7,7 @@ class Blog::BlogPostsController < Blog::ApplicationController
 
   def index
     @tags = Tag.alphabetically
-    @blog_posts = get_blog_posts.sort_by(&:published_at).reverse.paginate(page: params[:page], per_page: 10)
+    @blog_posts = get_blog_posts
     respond_to do |format|
       format.html { render :index }
     end
@@ -52,7 +52,7 @@ class Blog::BlogPostsController < Blog::ApplicationController
       @instance_blog_posts + @user_blog_posts
     end
 
-    posts.paginate(page: params[:page])
+    posts.sort_by(&:published_at).reverse.paginate(page: params[:page], per_page: 10)
   end
 
 end
