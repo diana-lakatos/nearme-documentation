@@ -1477,6 +1477,7 @@ en:
     overbooked: "Subscription can't be confirmed due to overbooking."
     active: 'active'
   reservations:
+    mpo_shipping_settings_not_valid: "The administrator of the site hasn't correctly set the shipping API settings yet."
     charge_after_confirmation: "You will not be charged until the booking is confirmed."
     manually_confirm: "This %{lessor} manually confirms all bookings."
     paypal_and_cc_charge_after_confirmation: "Your will not be charged until the booking is confirmed."

@@ -36,7 +36,7 @@
       %li.divider-vertical
       %li
         = link_to cart_index_path, class: 'nav-link' do
-          %span.text= t 'top_navbar.cart', cart: CartDecorator.new(current_user).navigation
+          %span.text= t('top_navbar.cart', cart: CartDecorator.new(current_user, current_order, checkout_step).navigation).html_safe
           %span.icon.ico-cart
 
     %li.divider-vertical

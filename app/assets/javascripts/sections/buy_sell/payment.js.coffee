@@ -4,6 +4,7 @@ class @PaymentController
     @totalPriceContainer = @container.find('[data-total-price]')
     @totalPriceValue = parseFloat(@totalPriceContainer.html())
     @totalAmount = $('.summary-line-value.total-amount')
+    @cartPrice = $("[data-cart-total]")
     @deliveryPriceContainer = $('.summary-line-value.delivery-amount')
 
     @serviceFeeRow = @container.find('[data-service-fee]').parents('tr')
@@ -40,6 +41,7 @@ class @PaymentController
 
       new_price = @totalPriceValue + charge_price
       @totalPriceContainer.html(new_price.toFixed(2))
+      @cartPrice.html(new_price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');)
 
     @paymentOptions.on 'change', (e) =>
       target = $(e.target)
