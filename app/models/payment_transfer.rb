@@ -4,7 +4,7 @@ class PaymentTransfer < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  FREQUENCIES = %w(monthly fortnightly weekly semiweekly daily)
+  FREQUENCIES = %w(monthly fortnightly weekly semiweekly daily manually)
   DEFAULT_FREQUENCY = "fortnightly"
 
   belongs_to :company
