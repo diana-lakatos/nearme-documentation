@@ -1,5 +1,6 @@
 class ActivityFeedController < ApplicationController
-  before_filter :authenticate_user!, :set_object_with_followed_whitelist
+  before_filter :set_object_with_followed_whitelist
+  before_filter :authenticate_user!, only: [:follow, :unfollow]
 
   # "Follow/Unfollow" feature section
   #
@@ -42,7 +43,7 @@ class ActivityFeedController < ApplicationController
 
     @partial = "shared/activity_status"
     @as = :event
-    @collection = @feed.events(pagination_params)
+    @collection = @feed.events(pagination_params.merge(per_page: ActivityFeedService::Helpers::EVENTS_PER_PAGE))
 
     respond_to do |format|
       format.js { render :see_more }
