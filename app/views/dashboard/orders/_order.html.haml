@@ -66,14 +66,9 @@
                   = image_tag 'themes/buy_sell/x-red.png'
                   %p.unconfirmed Order not approved
 
-              - if order.pending_payments.empty?
-                .order-tracking
-                  = image_tag 'themes/buy_sell/green-check.png'
-                  %p.confirmed No payments pending
-              - else
-                .order-tracking
-                  = image_tag 'themes/buy_sell/x-red.png'
-                  %p.unconfirmed Payment not captured
+              .order-tracking
+                = image_tag "themes/buy_sell/#{order.paid? ? 'green-check' : 'x-red'}.png"
+                %p{class: order.paid? ? 'confirmed' : 'unconfirmed'}= t("orders.payment_state.#{order.payment_state}")
 
               - if order.shipped?
                 .order-tracking
