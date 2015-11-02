@@ -23,6 +23,8 @@ module PaymentTransfers
     end
 
     def generate_payment_transfers_today?
+      return false if @instance.manual_transfers?
+
       date = Time.zone.now.beginning_of_day
       next_payment_transfers_date(date - 1.day) == date
     end

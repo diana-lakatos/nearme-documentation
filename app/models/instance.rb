@@ -271,6 +271,10 @@ class Instance < ActiveRecord::Base
     TransactableType::AVAILABLE_TYPES[buyable? ? 1 : 0]
   end
 
+  def manual_transfers?
+    payment_transfers_frequency == 'manually'
+  end
+
   def payment_gateway_mode
     test_mode? ? "test" : "live"
   end
