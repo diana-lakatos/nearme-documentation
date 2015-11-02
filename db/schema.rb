@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151023103850) do
+ActiveRecord::Schema.define(version: 20151030100759) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1006,6 +1006,7 @@ ActiveRecord::Schema.define(version: 20151023103850) do
     t.string   "encrypted_google_consumer_secret",      limit: 255
     t.string   "default_oauth_signin_provider"
     t.boolean  "custom_waiver_agreements",                                                  default: true
+    t.string   "time_zone"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree

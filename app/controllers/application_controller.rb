@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   layout :layout_for_request_type
 
+
   before_filter :set_locale
   before_filter :log_out_if_token_exists
   before_filter :log_out_if_sso_logout
@@ -17,6 +18,8 @@ class ApplicationController < ActionController::Base
   before_filter :redirect_if_marketplace_password_protected
   before_filter :set_raygun_custom_data
   before_filter :filter_out_token
+
+  around_filter :set_time_zone
 
   # We need to persist some mixpanel attributes for subsequent
   # requests.
@@ -58,6 +61,11 @@ class ApplicationController < ActionController::Base
     end
 
     I18n.locale = locale_service.locale
+  end
+
+  def set_time_zone(&block)
+    time_zone = current_user.try(:time_zone) || current_instance.try(:timze_zone) || 'UTC'
+    Time.use_zone(time_zone, &block)
   end
 
   # Returns the layout to use for the current request.
