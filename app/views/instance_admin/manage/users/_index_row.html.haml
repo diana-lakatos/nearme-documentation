@@ -13,10 +13,10 @@
     - if resource != current_user && !resource.deleted?
       - if resource.banned?
         = link_to t('instance_admin.manage.users.account.unban'), instance_admin_manage_user_user_ban_path(resource, resource.user_bans.first), :method => :delete,
-          data: { confirm:  'You will ban this user from logging in to your marketplace, do you want to continue?' }
+          data: { confirm:  'You will unban this user from your marketplace, do you want to continue?' }
       - else
         = link_to t('instance_admin.manage.users.account.ban'), instance_admin_manage_user_user_bans_path(resource), :method => :post,
-          data: { confirm:  'You will unban this user from your marketplace, do you want to continue?' }
+          data: { confirm:  'You will ban this user from logging in to your marketplace, do you want to continue?' }
   %td
     - if resource != current_user
       - if resource.deleted?

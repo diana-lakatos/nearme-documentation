@@ -10,6 +10,10 @@ html, body {
   height: auto;
 }
 
+.dnm-page-body.modal-body-wrapper {
+    position: fixed;
+}
+
 .content-wrapper {
   min-height: 100%;
   height: auto;

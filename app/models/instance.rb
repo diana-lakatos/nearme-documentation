@@ -145,12 +145,12 @@ class Instance < ActiveRecord::Base
 
   def allowed_currencies=(currencies)
     currencies.reject!(&:blank?)
-    super(currencies)
+    write_attribute(:allowed_currencies, currencies)
   end
 
   def allowed_countries=(countries)
     countries.reject!(&:blank?)
-    super(countries)
+    write_attribute(:allowed_countries, countries)
   end
 
   def check_lock
@@ -269,6 +269,10 @@ class Instance < ActiveRecord::Base
 
   def marketplace_type
     TransactableType::AVAILABLE_TYPES[buyable? ? 1 : 0]
+  end
+
+  def manual_transfers?
+    payment_transfers_frequency == 'manually'
   end
 
   def payment_gateway_mode

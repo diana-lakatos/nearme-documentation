@@ -35,6 +35,14 @@ class LocationsController < ApplicationController
     restore_initial_bookings_from_stored_reservation
   end
 
+  def redirect
+    tt = TransactableType.find(params[:id])
+    loc = Location.find(params[:location_id])
+    listing = Transactable.find(params[:listing_id].split("-").first)
+
+    redirect_to transactable_type_location_listing_path(tt, loc, listing)
+  end
+
   private
 
   def find_location
@@ -55,7 +63,7 @@ class LocationsController < ApplicationController
     #
     old_id = params[:listing_id].split("-").first
     @listing = scope.find(old_id)
-    redirect_to location_listing_path(@location.slug, @listing.slug), status: 301
+    redirect_to location_listing_path(@location, @listing), status: 301
   end
 
   def redirect_if_location_deleted

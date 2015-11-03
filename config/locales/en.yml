@@ -4,6 +4,8 @@ en:
       payment_gateway: "Payment gateway"
       payment_method: "Payment method"
     attributes:
+      instance:
+        time_zone: "Default Time Zone"
       payment_method/payment_method_type:
         credit_card: "Credit Card"
         nonce: "PayPal"
@@ -514,6 +516,10 @@ en:
           plural:
             payment_transfer: "Payment tranfers"
         transfers_are_generated_automatically: "Transfers are generated automatically depending on your setting in 'Settings > Configuration' for outstanding charges we've recieved on behalf of hosts. The next batch will be generated at about:"
+        payments_awaiting_transfers:
+          zero: "There are no payments awaiting for transfers."
+          one: "There is one payment awaiting for transfer."
+          other: "There are %{count} payments awaiting for transfers."
         charges: "Charges"
         created_at: "Created at"
         transferred_at: "Transferred at"
@@ -1477,6 +1483,7 @@ en:
     overbooked: "Subscription can't be confirmed due to overbooking."
     active: 'active'
   reservations:
+    mpo_shipping_settings_not_valid: "The administrator of the site hasn't correctly set the shipping API settings yet."
     charge_after_confirmation: "You will not be charged until the booking is confirmed."
     manually_confirm: "This %{lessor} manually confirms all bookings."
     paypal_and_cc_charge_after_confirmation: "Your will not be charged until the booking is confirmed."
