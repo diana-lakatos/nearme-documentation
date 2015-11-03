@@ -7,6 +7,7 @@ class Transactable < ActiveRecord::Base
   include Impressionable
   include Searchable
   include SitemapService::Callbacks
+  include SellerAttachments
 
   DEFAULT_ATTRIBUTES = %w(name description capacity)
 
@@ -35,6 +36,7 @@ class Transactable < ActiveRecord::Base
       (first || build).thumb
     end
   end
+  has_many :attachments, -> { order(:id) }, class_name: 'SellerAttachment', as: :assetable
   has_many :recurring_bookings, inverse_of: :listing
   has_many :reservations, inverse_of: :listing
   has_many :transactable_tickets, as: :target, class_name: 'Support::Ticket'
@@ -57,6 +59,7 @@ class Transactable < ActiveRecord::Base
 
   accepts_nested_attributes_for :availability_rules, allow_destroy: true
   accepts_nested_attributes_for :photos, allow_destroy: true
+  accepts_nested_attributes_for :attachments, allow_destroy: true
   accepts_nested_attributes_for :waiver_agreement_templates, allow_destroy: true
   accepts_nested_attributes_for :approval_requests
   accepts_nested_attributes_for :document_requirements, allow_destroy: true, reject_if: :document_requirement_hidden?

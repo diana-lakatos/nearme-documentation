@@ -1,5 +1,7 @@
 class ProductTypes::ProductWizardController < ApplicationController
 
+  include AttachmentsHelper
+
   before_filter :authenticate_user!
   before_filter :find_product_type
   before_filter :redirect_to_dashboard_if_registration_completed, only: [:new]
@@ -12,10 +14,12 @@ class ProductTypes::ProductWizardController < ApplicationController
     @boarding_form = BoardingForm.new(current_user, @product_type)
     @boarding_form.assign_all_attributes
     @images = (@boarding_form.product_form.try(:product).try(:images) || []) + current_user.products_images.where(viewable_id: nil, viewable_type: nil)
+    @attachments = (@boarding_form.product_form.try(:product).try(:attachments) || []) + current_user.attachments.where(assetable_id: nil)
   end
 
   def create
     @boarding_form = BoardingForm.new(current_user, @product_type)
+    @boarding_form.product_form.product.attachment_ids = attachment_ids_for(@boarding_form.product_form.product)
     @images = @boarding_form.product_form.product.images
     if @boarding_form.submit(boarding_form_params)
       if @boarding_form.draft?

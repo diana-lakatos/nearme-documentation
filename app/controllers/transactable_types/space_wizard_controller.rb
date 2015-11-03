@@ -1,5 +1,7 @@
 class TransactableTypes::SpaceWizardController < ApplicationController
 
+  include AttachmentsHelper
+
   before_filter :find_transactable_type
   before_filter :redirect_to_dashboard_if_registration_completed, only: [:new, :list]
   before_filter :redirect_to_dashboard_if_started_other_listing, only: [:new, :list]
@@ -22,6 +24,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     build_objects
     build_approval_requests
     @photos = (@user.first_listing.try(:photos) || []) + @user.photos.where(transactable_id: nil)
+    @attachments = (@user.first_listing.try(:attachments) || []) + @user.attachments.where(assetable_id: nil)
     @user.phone_required = true
     event_tracker.viewed_list_your_bookable
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
@@ -69,6 +72,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
+      @attachments = @user.first_listing ? @user.first_listing.attachments : nil
       flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(filter_error_messages(@user.errors.full_messages + @user.properties.errors.full_messages))
       render :list
     end
@@ -121,7 +125,8 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     @user.companies.build if @user.companies.first.nil?
     @user.companies.first.locations.build if @user.companies.first.locations.first.nil?
     @user.companies.first.locations.first.transactable_type = @transactable_type
-    @user.companies.first.locations.first.listings.build({transactable_type_id: @transactable_type.id, booking_type: @transactable_type.booking_choices.first}) if @user.companies.first.locations.first.listings.first.nil?
+    listing = @user.companies.first.locations.first.listings.first || @user.companies.first.locations.first.listings.build({transactable_type_id: @transactable_type.id, booking_type: @transactable_type.booking_choices.first})
+    listing.attachment_ids = attachment_ids_for(listing) if params.has_key?(:attachment_ids)
   end
 
   def redirect_to_dashboard_if_registration_completed

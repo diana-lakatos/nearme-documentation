@@ -7,6 +7,9 @@ class @Ckfile.Collection
   add : ->
     @currentIndex += 1
 
-  update: (fileIndex, contents) ->
-    @container.prepend(contents)
+  update: (fileIndex, contents, append = false) ->
+    if append
+      @container.append(contents)
+    else
+      @container.prepend(contents)
 

@@ -216,6 +216,7 @@ DesksnearMe::Application.routes.draw do
       resource :translations, :only => [:show, :update], :controller => 'translations'
       resource :cancellation_policy, :only => [:show, :update], :controller => 'cancellation_policy'
       resource :documents_upload, except: [:index, :destroy], :controller => 'documents_upload'
+      resource :seller_attachments, only: %i(show update destroy), controller: 'seller_attachments'
 
       resources :locales, except: [:show], controller: 'locales' do
         member do
@@ -612,6 +613,8 @@ DesksnearMe::Application.routes.draw do
 
   resources :approval_request_attachments, only: %i(create destroy)
 
+  resources :seller_attachments, only: :show
+
   namespace :dashboard do
     namespace :api do
       resources :categories do
@@ -767,6 +770,7 @@ DesksnearMe::Application.routes.draw do
       end
     end
     resources :photos, :only => [:create, :destroy, :edit, :update]
+    resources :seller_attachments, only: %i(create update destroy)
     resources :reviews, :only => [:index, :create, :update, :destroy]
 
     resources :transactable_types, only: [] do

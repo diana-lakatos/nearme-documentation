@@ -166,6 +166,29 @@
       }
     }
 
+    .seller-attachments {
+      font-size: 0.50em;
+
+      h3 {
+        color: $gray160 !important;
+      }
+
+      a {
+        color: $gray160 !important;
+        &:hover {
+          text-decoration: underline !important;
+        }
+      }
+
+      h3 {
+        font-size: 1.1em;
+      }
+
+      @media (max-width: $booking-module-breakpoint-size) {
+        font-size: 0.6em;
+      }
+    }
+
     .label {
       display: block;
       float: left;

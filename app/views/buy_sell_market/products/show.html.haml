@@ -60,6 +60,10 @@
         %li{ class: "#{ 'active' if !param_reviews_page_present? }" }
           %a{'data-toggle' => 'tab', href: '#product-details', role: 'tab'}
             = t 'buy_sell_market.products.labels.item_details'
+        - if @platform_context.instance.seller_attachments_enabled? && (attachments = @product.attachments_for_user(current_user)) && attachments.present?
+          %li
+            %a{'data-toggle' => 'tab', href: '#product-attachments', role: 'tab'}
+              = t 'buy_sell_market.products.labels.documents'
         - if @product.has_reviews?
           %li{ class: "#{ 'active' if param_reviews_page_present? }" }
             %a{'data-toggle' => 'tab', href: '#product-reviews', role: 'tab'}
@@ -78,6 +82,13 @@
         - if @product.description.present?
           %article#product-details.tab-pane{ class: "#{ 'active' if !param_reviews_page_present? }" }
             %p= @product.description.html_safe
+
+        - if @platform_context.instance.seller_attachments_enabled? && (attachments = @product.attachments_for_user(current_user)) && attachments.present?
+          %article#product-attachments.tab-pane{ class: "#{ 'active' if param_reviews_page_present? }" }
+            %h3= t 'buy_sell_market.products.labels.documents'
+            %ul
+              - attachments.each do |attachment|
+                %li= link_to attachment.decorate.title, seller_attachment_path(attachment), target: '_blank'
 
         - if @product.has_reviews?
           %article#product-reviews.tab-pane{ class: "#{ 'active' if param_reviews_page_present? }" }

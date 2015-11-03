@@ -10,6 +10,7 @@ class @Fileupload
     @upload_type = @fileInput.attr('data-upload-type')
     @files_container = @fileInput.attr('data-files-container')
     @wrong_file_message = @fileInput.attr('data-wrong-file-message')
+    @append_result = if @fileInput.attr('data-append-result') == '1' then true else false
     @preventEarlySubmission()
     @processing = 0
 
@@ -61,7 +62,7 @@ class @Fileupload
           @fileInputWrapper.parent().find('[data-uploaded]').html(data.result)
         else
           fileIndex = @fileCollection.add()
-          @fileCollection.update(fileIndex, data.result)
+          @fileCollection.update(fileIndex, data.result, @append_result)
 
   preventEarlySubmission: ->
     @fileInputWrapper.parents('form').on 'submit', =>
