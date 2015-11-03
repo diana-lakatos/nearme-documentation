@@ -3,6 +3,7 @@ Spree::Product.class_eval do
   include Impressionable
   include Searchable
   include SitemapService::Callbacks
+  include SellerAttachments
 
   attr_accessor :validate_exisiting
 
@@ -20,6 +21,7 @@ Spree::Product.class_eval do
   has_many :orders, through: :line_items
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :wish_list_items, as: :wishlistable
+  has_many :attachments, -> { order(:id) }, class_name: 'SellerAttachment', as: :assetable
 
   has_one :master,
     -> { where("is_master = ?", true) },
@@ -68,6 +70,7 @@ Spree::Product.class_eval do
   store_accessor :status, [:current_status]
 
   accepts_nested_attributes_for :shipping_category
+  accepts_nested_attributes_for :attachments, allow_destroy: true
 
   def self.csv_fields(product_type)
     {

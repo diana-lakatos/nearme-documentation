@@ -32,6 +32,8 @@ FactoryGirl.define do
     date_pickers_use_availability_rules '1'
     default_products_search_view 'products'
 
+    seller_attachments_access_level 'all'
+
     after(:create) do |instance, evaluator|
       instance.theme = FactoryGirl.create(:theme, skip_compilation: true, owner: instance) unless instance.theme
     end

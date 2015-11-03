@@ -395,6 +395,9 @@ ActiveRecord::Schema.define(version: 20151030100759) do
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
     t.integer  "instance_id"
+    t.string   "access_level",      limit: 255
+    t.integer  "user_id"
+    t.string   "title"
   end
 
   add_index "ckeditor_assets", ["assetable_type", "assetable_id"], name: "idx_ckeditor_assetable", using: :btree
@@ -1007,6 +1010,8 @@ ActiveRecord::Schema.define(version: 20151030100759) do
     t.string   "default_oauth_signin_provider"
     t.boolean  "custom_waiver_agreements",                                                  default: true
     t.string   "time_zone"
+    t.string   "seller_attachments_access_level",       limit: 255,                         default: "disabled",    null: false
+    t.integer  "seller_attachments_documents_num",                                          default: 10,            null: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1647,7 +1652,6 @@ ActiveRecord::Schema.define(version: 20151030100759) do
 
   add_index "reviews", ["deleted_at"], name: "index_reviews_on_deleted_at", using: :btree
   add_index "reviews", ["instance_id"], name: "index_reviews_on_instance_id", using: :btree
-  add_index "reviews", ["rating_system_id", "reviewable_id", "reviewable_type"], name: "index_reviews_on_rating_system_id_and_reviewable", unique: true, using: :btree
   add_index "reviews", ["reviewable_id", "reviewable_type"], name: "index_reviews_on_reviewable_id_and_reviewable_type", using: :btree
   add_index "reviews", ["transactable_type_id"], name: "index_reviews_on_transactable_type_id", using: :btree
   add_index "reviews", ["user_id"], name: "index_reviews_on_user_id", using: :btree

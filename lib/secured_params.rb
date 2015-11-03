@@ -37,6 +37,7 @@ class SecuredParams
       :unit_of_measure,
       :action_rfq,
       image_ids: [],
+      attachment_ids: [],
       category_ids: [],
       company_address_attributes: nested(self.address),
       images_attributes: nested(self.spree_image),
@@ -390,6 +391,8 @@ class SecuredParams
       :wish_lists_enabled,
       :wish_lists_icon_set,
       :custom_waiver_agreements,
+      :seller_attachments_access_level,
+      :seller_attachments_enabled,
       allowed_currencies: [],
       allowed_countries: [],
       custom_translations: [:'buy_sell_market.checkout.manual_payment', :'buy_sell_market.checkout.manual_payment_description'],
@@ -960,6 +963,7 @@ class SecuredParams
       amenity_ids: [],
       category_ids: [],
       dimensions_template_attributes: nested(self.dimensions_template),
+      attachment_ids: [],
       waiver_agreement_template_ids: [],
       schedule_attributes: nested(self.schedule),
       document_requirements_attributes: nested(self.document_requirement),
@@ -1350,5 +1354,11 @@ class SecuredParams
       :updateable_id,
       :updateable_type
     ]
+  end
+
+  def seller_attachment(instance)
+    allowed = [:title]
+    allowed << :access_level if instance.seller_attachments_access_sellers_preference?
+    allowed
   end
 end

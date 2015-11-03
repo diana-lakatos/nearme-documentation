@@ -107,4 +107,28 @@ section.space_wizard {
     @include opacity(.4);
     filter: inherit;
   }
+
+  .with-upload-button .fileupload {
+    margin-left: 15px;
+    margin-bottom: 10px;
+  
+    .btn-blue {
+      background: $blue;
+      color: #fff;
+    }
+  
+    .uploaded {
+      .attachment {
+        margin-left: 10px;
+  
+        img {
+          vertical-align: text-top;
+        }
+      }
+    }
+  
+    .hint-block {
+      font-size: 12px;
+    }
+  }
 }

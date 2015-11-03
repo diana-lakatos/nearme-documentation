@@ -406,6 +406,18 @@ en:
         documents_can_be: "These documents can be ids, licenses, certifications, and other files."
         can_make_this: "You can make this a mandatory requirement within your marketplace, optional or let vendors decide."
         mark_your_choice: "Please mark your choice below:"
+      seller_attachments:
+        seller_attachments: "Seller attachments"
+        activate_seller_attachments: "Activate seller attachments"
+        description: "If enabled, seller can upload additional documents for listings/products."
+        formats: "Following formats supported: %{formats}."
+        choices: "You can choose access level for these documents, they can be accessible to all or registered users or to purchasers only."
+        choice: "Please mark your choice below:"
+        access_levels:
+          all: "All"
+          users: "Users"
+          purchasers: "Purchasers"
+          sellers_preference: "Sellers preference"
     theme:
       info:
         title_and_description: "Title & Description"
@@ -893,6 +905,7 @@ en:
         refunds_and_exchanges: 'Refunds and Exchanges'
         phone_number: 'Phone Number'
         email_address: 'Email Address'
+        documents: 'Documents'
 
     checkout:
       labels:
@@ -1528,6 +1541,7 @@ en:
       per_unit: 'Per Unit'
       number_of_units: 'Number Of Units'
       not_bookable: 'Suggest date'
+      documents: 'Documents'
   search:
     pricing_types:
       daily: "Daily"
@@ -1834,7 +1848,6 @@ en:
       public_url: Public URL
       search: Search
       wrong_file_message: 'does not have an accepted extension. Please select a document or an image.'
-
   approval_request_attachments:
     please_upload_document: 'Please upload document'
     please_fill_in_message: "Please fill in message"
@@ -1911,3 +1924,14 @@ en:
       title:
         search: "Search"
         in: " in "
+
+  seller_attachments:
+    seller_attachments: "Seller attachments"
+    upload_attachments: "Upload attachments"
+    wrong_file_message: 'Uploaded documents does not have an accepted extension. Accepted extensions are %{formats}'
+    access_levels:
+      all: 'All users'
+      users: 'Registered users'
+      purchasers: 'Purchasers only'
+    max_num_reached: "Max number of attached documents reached"
+

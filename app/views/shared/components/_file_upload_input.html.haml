@@ -8,7 +8,7 @@
       %span.btn.btn-blue.btn-medium.upload-photos.fileinput-button
         %span
           = text
-        %input.browse-file.hidden{name: name, type: 'file', multiple: !options['no-multiple'], data: { 'file-types' => options[:file_types], 'upload-type' => options[:upload_type], 'files-container' => options[:files_container], 'wrong-file-message' => options[:wrong_file_message]}}
+        %input.browse-file.hidden{name: name, type: 'file', multiple: !options['no-multiple'], data: { 'file-types' => options[:file_types], 'upload-type' => options[:upload_type], 'files-container' => options[:files_container], 'append-result' => options[:append_result], 'wrong-file-message' => options[:wrong_file_message]}}
       - if uploaded_content_placement == :right
         %span.uploaded{ data: {uploaded: true, row: "#{options[:row]}"},  style: "float: right; #{"height: #{options[:height]}px;" if options[:height].to_f > 0}"}
           = uploaded_content
