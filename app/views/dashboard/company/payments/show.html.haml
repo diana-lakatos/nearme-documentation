@@ -1,0 +1,37 @@
+.dash-head.clearfix
+  %p #{t('buy_sell_market.checkout.labels.payment_details')} - ID: #{@payment.id}
+
+.dash-body
+  .action-row
+    = link_to dashboard_company_orders_received_path(@order) do
+      .btn.blue= t("dashboard.payments.order")
+    - if @payment.paid? && !@payment.refunded?
+      = link_to refund_dashboard_company_orders_received_payment_path(@order, @payment) do
+        .btn.red= t("dashboard.payments.refund")
+
+  .divider
+
+  .row
+    .col-md-3= t 'dashboard.payments.total'
+    .col-md-4= humanized_money_with_cents_and_symbol(@payment.total_amount)
+
+  .row
+    .col-md-3= t 'dashboard.payments.service_fee'
+    .col-md-4= humanized_money_with_cents_and_symbol(@payment.total_service_fee)
+
+  - if @payment.paid?
+    .row
+      .col-md-3= t 'dashboard.payments.paid_at'
+      .col-md-4= l @payment.paid_at, format: :long
+
+  - if @payment.failed?
+    .row
+      .col-md-3= t 'dashboard.payments.failed_at'
+      .col-md-4= l @payment.failed_at, format: :long
+
+  - if @payment.refunded?
+    .row
+      .col-md-3= t 'dashboard.payments.refunded_at'
+      .col-md-4= l @payment.refunded_at, format: :long
+
+  .clearfix

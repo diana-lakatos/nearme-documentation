@@ -129,6 +129,7 @@ Spree::Order.class_eval do
     self.total.zero?
   end
 
+
   def paypal_express_payment?
     self.express_token.present?
   end
@@ -175,6 +176,10 @@ Spree::Order.class_eval do
     Money.new(service_fee_calculator.service_fee_host.cents, currency)
   end
 
+  def total_service_fee_amount
+   Money.new(service_fee_amount_host_cents + service_fee_amount_guest_cents, currency)
+  end
+
   def service_fee_amount_host_cents
     Money.new(service_fee_calculator.service_fee_host.cents, currency).cents
   end
@@ -194,6 +199,39 @@ Spree::Order.class_eval do
       additional_charges: additional_charges
     }
     @service_fee_calculator ||= ::Payment::ServiceFeeCalculator.new(subtotal_amount_to_charge, options)
+  end
+
+
+  def update_payment_total
+    # self.payment_total = near_me_payments.paid.includes(:refunds).inject(0) { |sum, payment| sum + payment.amount - payment.refunds.sum(:amount) }
+  end
+
+  def has_successful_payments?
+    near_me_payments.paid.not_refunded.any?
+  end
+
+  def has_refunded_payments?
+    near_me_payments.paid.refunded.any?
+  end
+
+  def has_any_payment?
+    near_me_payments.any?
+  end
+
+  def update_order
+    if self.has_any_payment?
+      self.update_payment_total
+    end
+
+    if self.completed?
+      self.updater.update_payment_state
+      self.updater.update_shipments
+      self.updater.update_shipment_state
+    end
+
+    if self.completed?
+      self.persist_totals
+    end
   end
 
   def monetize(amount)
@@ -265,8 +303,7 @@ Spree::Order.class_eval do
 
   def after_cancel
     shipments.each(&:cancel!)
-    payments.completed.each(&:cancel!)
-    near_me_payments.each(&:refund)
+    near_me_payments.paid.not_refunded.each(&:refund)
     WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::Cancelled, id)
     self.update!
   end

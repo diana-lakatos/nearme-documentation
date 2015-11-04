@@ -545,6 +545,7 @@ en:
           plural:
             payment: Payments
         here_you_can_see_all_payments: "Here you can see all payments that are pending transfer. Next transfer will happen at "
+        here_you_can_see_all_payments_manual: "Here you can see all payments that are pending transfer. Next transfer will be generated manually"
         company: Company
         lessor: Lessor
         state: State
@@ -1147,6 +1148,15 @@ en:
       rejection_reason: 'Rejection reason'
       user_note: 'User note: '
 
+    payments:
+      order: "Back to order"
+      total: "Captured price"
+      service_fee: "Marketplace fee"
+      payment_id: "Payment ID"
+      paid_at: "Paid at"
+      failed_at: "Failed at"
+      refunded_at: "Refunded at"
+
     host_reservations:
       reservation_state: "Reservation state: "
       payment_state: "Payment state: "
@@ -1450,6 +1460,10 @@ en:
 
   orders:
     empty_list: "You don't have any orders yet"
+    payment_state:
+      paid: "Payment captured"
+      failed: "Payment failed"
+      pending: "Payment not captured"
 
     index:
       title: 'My orders'
