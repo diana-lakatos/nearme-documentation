@@ -50,7 +50,8 @@
         - if reservation.active_merchant_payment?
           - if reservation.billing_authorization.present?
             %p= I18n.t('dashboard.host_reservations.money_info')
-            %p= I18n.t('dashboard.host_reservations.next_payment_transfer', next_payment_transfer: reservation.next_payment_transfer)
+            - unless current_instance.manual_transfers?
+              %p= I18n.t('dashboard.host_reservations.next_payment_transfer', next_payment_transfer: reservation.next_payment_transfer)
             - if reservation.company.possible_payout_not_configured?(reservation.billing_authorization.payment_gateway)
               %p
                 %i.ico-warning
