@@ -30,6 +30,14 @@ class Payment < ActiveRecord::Base
     where("#{table_name}.paid_at IS NOT NULL")
   }
 
+  scope :refunded, -> {
+    where("#{table_name}.refunded_at IS NOT NULL")
+  }
+
+  scope :not_refunded, -> {
+    where("#{table_name}.refunded_at IS NULL")
+  }
+
   scope :last_x_days, lambda { |days_in_past|
     where('DATE(payments.created_at) >= ? ', days_in_past.days.ago)
   }
@@ -59,6 +67,7 @@ class Payment < ActiveRecord::Base
   monetize :subtotal_amount_cents, with_model_currency: :currency
   monetize :service_fee_amount_guest_cents, with_model_currency: :currency
   monetize :service_fee_amount_host_cents, with_model_currency: :currency
+  monetize :total_service_fee_cents, with_model_currency: :currency
   monetize :total_amount_cents, with_model_currency: :currency
 
   def total_amount_cents
@@ -95,6 +104,10 @@ class Payment < ActiveRecord::Base
     end
 
     result
+  end
+
+  def total_service_fee_cents
+    final_service_fee_amount_host_cents + final_service_fee_amount_guest_cents
   end
 
   def amount
@@ -170,6 +183,10 @@ class Payment < ActiveRecord::Base
 
   def paid?
     paid_at.present?
+  end
+
+  def failed?
+    failed_at.present?
   end
 
   private

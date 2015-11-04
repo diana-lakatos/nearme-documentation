@@ -1,0 +1,42 @@
+.content-container
+  %h4 Payment capture
+
+  - @payment.charges.each do |charge|
+    .content-container
+
+      .row
+        .text-container{class: charge.success? ? 'text-success' : 'text-danger' }
+          %p
+            Success:
+            = charge.success
+          %p
+            Created at:
+            = l charge.created_at, format: :long
+          %p
+            Payment Gateway:
+            = link_to charge.payment_gateway.try(:name), edit_instance_admin_settings_payment_gateway_path(charge.payment_gateway)
+          %p
+            Response:
+            = charge.response.to_yaml
+
+.content-container
+
+  %h4 Payment refund
+
+  - @payment.refunds.each do |refund|
+    .content-container
+
+      .row
+        .text-container{class: refund.success? ? 'text-success' : 'text-danger' }
+          %p
+            Success:
+            = refund.success
+          %p
+            Created at:
+            = l refund.created_at, format: :long
+          %p
+            Payment Gateway:
+            = link_to refund.payment_gateway.try(:name), edit_instance_admin_settings_payment_gateway_path(refund.payment_gateway)
+          %p
+            Response:
+            = refund.response.to_yaml

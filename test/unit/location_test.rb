@@ -238,7 +238,7 @@ class LocationTest < ActiveSupport::TestCase
       location.time_zone = "Pacific Time (US & Canada)"
       assert location.save
       first_occurence_in_pst = @listing.reload.schedule.schedule.next_occurrences(1)
-      refute first_occurence_in_pst[0] == first_occurence_in_utc[0]
+      refute first_occurence_in_pst[0].to_s == first_occurence_in_utc[0].to_s
     end
   end
 end

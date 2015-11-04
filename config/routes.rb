@@ -371,7 +371,7 @@ DesksnearMe::Application.routes.draw do
           post :generate
         end
       end
-      resources :payments, only: [:index]
+      resources :payments, only: [:index, :show]
 
       resources :partners
 
@@ -655,7 +655,7 @@ DesksnearMe::Application.routes.draw do
 
         resources :payments do
           member do
-            get :capture
+            get :refund
           end
         end
 

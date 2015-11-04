@@ -459,10 +459,14 @@ en:
       inquiry_added: "Thanks, we'll be in touch!"
       inquiry_not_added: "Please provide a name, company and valid email address."
     payments:
+      refund_failed: "Refund failed. Contact marketplace owner for more information."
+      refunded: "Refund captured"
       marked_transferred: "Marked payment transfer as transferred"
       marked_as_not_failed: "Marked payment transfer as not failed"
       payout_failed: 'Payout failed'
       capture_failed: 'Payment failed'
+      capture_success: 'Payment captured'
+      paid: 'This payment was already paid'
       payout_need_confirmation: 'We are not authorized to make automated payout on your behalf. Please confirm payment transfer and manually mark it as transferred.'
       payout_need_verification: 'Payout request has been successfully created. It might take quite a few business days to know whether it succeeded or not. Please mark transfer payment as transferred once you are sure it succeeded.'
       payout_pending_verification: 'We are still waiting for confirmation whether payout has succeeded or not.'
