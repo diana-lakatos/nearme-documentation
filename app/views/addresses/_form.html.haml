@@ -2,7 +2,7 @@
 %div{'data-address-field' => true, class: "control-group required#{"error" if f.object.errors.any?}"}
   = f.label :address, class: "control-label required" do
     %abbr{title: "required"} *
-    = label
+    = label.presence || I18n.t('simple_form.labels.location.location_address.address', default: '')
   .controls
     = f.text_field :address, :'data-behavior' => 'address-autocomplete', 'data-address-input' => true
     - if f.object.errors.include?(:address) || f.object.errors.include?(:latitude)
