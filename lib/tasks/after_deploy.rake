@@ -27,6 +27,7 @@ namespace :after_deploy do
     SendSearchesWeeklyAlerts.schedule!
     SendAnalyticsMails.schedule!
     SendUnreadMessagesReminders.schedule!
+    SendSpamReportsSummaryDaily.schedule!
 
   end
 end

@@ -46,16 +46,18 @@
             #{t('buy_sell_market.checkout.labels.ending_in')} #{@charge_info.response['card']['last4']}
             #{@charge_info.response['card']['name']}
 
-          - unless @order.canceled?
-            - @order.payments.each do |payment|
-              - if payment.completed?
-                .btn.gray.disabled Payment captured
-              - elsif payment.failed?
-                %p Payment failed
-              - else
-                = link_to capture_dashboard_company_orders_received_payment_path(@order.number, payment.id),
-                    data: { confirm: 'Are you sure you want to capture payment for this order?' } do
-                  .btn.blue Capture
+          - @order.near_me_payments.each do |payment|
+            - if payment.paid? && !payment.refunded?
+              .btn.gray.disabled Payment captured
+            - elsif payment.paid? && payment.refunded?
+              .btn.red.disabled Payment refunded
+            - elsif payment.failed?
+              %p Payment failed
+            = link_to t("buy_sell_market.checkout.labels.payment_details"), dashboard_company_orders_received_payment_path(@order.number, payment), class: "btn blue"
+          - if @order.near_me_payments.blank?
+            = link_to dashboard_company_orders_received_payments_path(@order.number), method: :post,
+                data: { confirm: 'Are you sure you want to capture payment for this order?' } do
+              .btn.blue Capture
 
       - if @order.bill_address.company.present? || @order.ship_address.company.present?
         %tr
@@ -161,7 +163,7 @@
       %td= humanized_money_with_cents_and_symbol @order.monetize(@order.additional_tax_total)
     %tr
       %td= t 'buy_sell_market.checkout.labels.service_fee'
-      %td= humanized_money_with_cents_and_symbol @order.service_fee_amount_guest
+      %td= humanized_money_with_cents_and_symbol @order.total_service_fee_amount
     %tr
       %td.total= t 'buy_sell_market.checkout.labels.total2'
       %td.total= humanized_money_with_cents_and_symbol @order.total_amount_to_charge

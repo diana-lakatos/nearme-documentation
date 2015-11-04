@@ -2098,8 +2098,8 @@ ActiveRecord::Schema.define(version: 20151030100759) do
     t.datetime "canceled_at"
     t.integer  "canceler_id"
     t.integer  "store_id"
-    t.boolean  "insurance_enabled",                                                   default: false,   null: false
     t.integer  "payment_method_id"
+    t.boolean  "insurance_enabled",                                                   default: false,   null: false
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree

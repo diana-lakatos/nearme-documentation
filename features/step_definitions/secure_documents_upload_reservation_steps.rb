@@ -15,7 +15,7 @@ Given (/^a documents upload is vendor decides$/) do
 end
 
 And (/^I visit the listing page$/) do
-  visit(transactable_type_location_listing_path(1, Location.first, Location.first.listings.first))
+  visit(transactable_type_location_listing_path(TransactableType.first, Location.first, Location.first.listings.first))
 end
 
 And (/^I book product$/) do

@@ -371,7 +371,7 @@ DesksnearMe::Application.routes.draw do
           post :generate
         end
       end
-      resources :payments, only: [:index]
+      resources :payments, only: [:index, :show]
 
       resources :partners
 
@@ -655,7 +655,7 @@ DesksnearMe::Application.routes.draw do
 
         resources :payments do
           member do
-            get :capture
+            get :refund
           end
         end
 
@@ -961,7 +961,7 @@ DesksnearMe::Application.routes.draw do
     get 'organizations', to: 'organizations#index'
   end
 
-  resources :transactable_types, only: [], path: "/" do
+  resources :transactable_types, only: [], path: "/", constraints: Constraints::TransactableTypeConstraints.new do
     resources :locations, :only => [], path: "/" do
       member do
         get "(:listing_id)", :to => "locations#show", :as => ''

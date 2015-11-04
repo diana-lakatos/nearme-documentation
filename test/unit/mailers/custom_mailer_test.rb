@@ -48,6 +48,7 @@ class CustomMailerTest < ActiveSupport::TestCase
     @email_template_for_tt = FactoryGirl.create(:instance_view_email_html, transactable_type_id: @transactable_type.id, body: "Hi TT {{dummy_arg.name}}")
     @layout_template = FactoryGirl.create(:instance_view_layout)
     @layout_template_for_tt = FactoryGirl.create(:instance_view_layout, transactable_type_id: @transactable_type.id, body: "This is TTHeader {{ content_for_layout }} This is TTFooter")
+    FactoryGirl.create(:instance_admin)
   end
 
   should 'be able to send email to lister' do

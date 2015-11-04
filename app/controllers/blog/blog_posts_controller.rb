@@ -54,5 +54,4 @@ class Blog::BlogPostsController < Blog::ApplicationController
 
     posts.sort_by(&:published_at).reverse.paginate(page: params[:page], per_page: 10)
   end
-
 end

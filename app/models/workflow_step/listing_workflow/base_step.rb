@@ -24,7 +24,7 @@ class WorkflowStep::ListingWorkflow::BaseStep < WorkflowStep::BaseStep
   # listing:
   #   Transactable object
   def data
-    { 
+    {
       listing: @transactable,
       approval_request: @approval_request
     }

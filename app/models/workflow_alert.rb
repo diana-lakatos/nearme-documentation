@@ -26,7 +26,6 @@ class WorkflowAlert < ActiveRecord::Base
   validates :cc, emails_list: true, allow_blank: true
   validates :bcc, emails_list: true, allow_blank: true
 
-
   serialize :custom_options, Hash
 
   def recipient_types

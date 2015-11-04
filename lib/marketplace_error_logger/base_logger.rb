@@ -11,6 +11,7 @@ module MarketplaceErrorLogger
     SMS_ERROR = 'SMS Not Sent'
     REFUND_ERROR = 'Refund failed'
     IMAP_ERROR = 'Email receiver failed'
+    MAILER_ERROR = 'Mailer Not Sent'
 
     def log_issue(error_type, message, options = {})
       raise NotImplementedError
