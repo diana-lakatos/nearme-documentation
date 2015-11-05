@@ -31,6 +31,8 @@ class TransactableDrop < BaseDrop
   #   returns true if the availability rules are deferred to the location object
   # lowest_price
   #   lowest price for this listing
+  # lowest_full_price
+  #   lowest price listing for this location (i.e. including service fees and mandatory additional charges)
   # company
   #   the company object to which this listing belongs
   # properties
@@ -56,7 +58,7 @@ class TransactableDrop < BaseDrop
   delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :action_rfq?, :creator, :administrator, :last_booked_days,
     :defer_availability_rules?, :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?,
     :action_free_booking?, :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at,
-    :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :slug, to: :transactable
+    :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, to: :transactable
 
   # action_price_per_unit
   #   returns true if there is a single unit available of the transactable item for a given time period

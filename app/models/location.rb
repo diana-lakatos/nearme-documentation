@@ -172,6 +172,10 @@ class Location < ActiveRecord::Base
     (listings.loaded? ? listings : listings.searchable).map{|l| l.lowest_price_with_type(available_price_types)}.compact.sort{|a, b| a[0].to_f <=> b[0].to_f}.first
   end
 
+  def lowest_full_price(available_price_types = [])
+    (listings.loaded? ? listings : listings.searchable).map{|l| l.lowest_full_price(available_price_types)}.compact.sort{|a, b| a[0].to_f <=> b[0].to_f}.first
+  end
+
   def approval_request_templates
     @approval_request_templates ||= PlatformContext.current.instance.approval_request_templates.for("Location").older_than(created_at)
   end

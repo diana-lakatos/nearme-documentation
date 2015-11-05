@@ -364,6 +364,25 @@ class Transactable < ActiveRecord::Base
     lowest_price_with_type(available_price_types)
   end
 
+  def lowest_full_price(available_price_types = [])
+    lowest_full_price = nil
+    lowest_price = lowest_price_with_type(available_price_types)
+
+    if lowest_price.present?
+      full_price_cents = lowest_price[0]
+
+      if !service_fee_guest_percent.to_f.zero?
+        full_price_cents = full_price_cents * (1 + service_fee_guest_percent / 100.0)
+      end
+
+      full_price_cents += Money.new(AdditionalChargeType.where(status: 'mandatory').sum(:amount_cents), full_price_cents.currency.iso_code)
+
+      lowest_full_price = [full_price_cents, lowest_price[1]]
+    end
+
+    lowest_full_price
+  end
+
   def null_price!
     PRICE_TYPES.map { |price|
       self.send(:"#{price}_price_cents=", nil) if self.respond_to?(:"#{price}_price_cents=")

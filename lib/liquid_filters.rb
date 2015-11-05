@@ -32,18 +32,41 @@ module LiquidFilters
   end
 
   def lowest_price_without_cents_with_currency(object, lgpricing_filters = [])
+    get_lowest_price_with_options(object, lgpricing_filters)
+  end
+
+  def lowest_full_price_without_cents_with_currency(object, lgpricing_filters = [])
+    get_lowest_price_with_options(object, lgpricing_filters, :full_price => true)
+  end
+
+  def lowest_full_price_with_cents_with_currency(object, lgpricing_filters = [])
+    get_lowest_price_with_options(object, lgpricing_filters, :full_price => true, :with_cents => true)
+  end
+
+  def get_lowest_price_with_options(object, lgpricing_filters, options = {})
     lgpricing_filters ||= []
-    prices = object.lowest_price(lgpricing_filters)
+
+    if options[:full_price]
+      prices = object.lowest_full_price(lgpricing_filters)
+    else
+      prices = object.lowest_price(lgpricing_filters)
+    end
+
     if prices
       periods = {
-        monthly: t('periods.month'),
-        weekly: t('periods.week'),
-        daily: object.try(:overnight_booking?) ? t('periods.night') : t('periods.day'),
-        hourly: t('periods.hour'),
-        weekly_subscription: t('periods.week'),
-        monthly_subscriptiont: ('periods.month')
+        monthly: I18n.t('periods.month'),
+        weekly: I18n.t('periods.week'),
+        daily: object.try(:overnight_booking?) ? I18n.t('periods.night') : I18n.t('periods.day'),
+        hourly: I18n.t('periods.hour'),
+        weekly_subscription: I18n.t('periods.week'),
+        monthly_subscription: I18n.t('periods.month')
       }
-      { 'price' => self.price_without_cents_with_currency(prices[0]), 'period' =>  periods[prices[1]] }
+
+      if options[:with_cents]
+        { 'price' => self.price_with_cents_with_currency(prices[0]), 'period' =>  periods[prices[1]] }
+      else
+        { 'price' => self.price_without_cents_with_currency(prices[0]), 'period' =>  periods[prices[1]] }
+      end
     else
       object.try(:action_free_booking?) ? { 'free' => true } : {}
     end
@@ -87,6 +110,10 @@ module LiquidFilters
     connections = connections.first(5)
     connections << t('search.list.additional_social_connections', count: difference) if difference > 0
     connections.join('<br />').html_safe
+  end
+
+  def price_with_cents_with_currency(money)
+    humanized_money_with_symbol(money)
   end
 
   def price_without_cents_with_currency(money)
