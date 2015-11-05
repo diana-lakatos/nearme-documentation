@@ -8,7 +8,7 @@ class Topic < ActiveRecord::Base
   attr_readonly :followers_count
 
   has_many :activity_feed_events, as: :event_source, dependent: :destroy
-  has_many :activity_feed_subscriptions, as: :followed
+  has_many :activity_feed_subscriptions, as: :followed, dependent: :destroy
   has_many :data_source_contents, through: :data_source
   has_many :feed_followers, through: :activity_feed_subscriptions, source: :follower
   has_many :projects, through: :project_topics
