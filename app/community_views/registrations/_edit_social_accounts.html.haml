@@ -7,7 +7,7 @@
           - provider_key = provider.downcase.split("_").first
           %li{class: provider_key}
             %span
-              = t :connect_with_service, service: provider_key.capitalize
+              = t :connect_with_service, service: provider
             = build_link_for(provider, "button-a").html_safe
       - else
         %div
