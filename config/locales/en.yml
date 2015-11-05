@@ -406,6 +406,18 @@ en:
         documents_can_be: "These documents can be ids, licenses, certifications, and other files."
         can_make_this: "You can make this a mandatory requirement within your marketplace, optional or let vendors decide."
         mark_your_choice: "Please mark your choice below:"
+      seller_attachments:
+        seller_attachments: "Seller attachments"
+        activate_seller_attachments: "Activate seller attachments"
+        description: "If enabled, seller can upload additional documents for listings/products."
+        formats: "Following formats supported: %{formats}."
+        choices: "You can choose access level for these documents, they can be accessible to all or registered users or to purchasers only."
+        choice: "Please mark your choice below:"
+        access_levels:
+          all: "All"
+          users: "Users"
+          purchasers: "Purchasers"
+          sellers_preference: "Sellers preference"
     theme:
       info:
         title_and_description: "Title & Description"
@@ -516,6 +528,10 @@ en:
           plural:
             payment_transfer: "Payment tranfers"
         transfers_are_generated_automatically: "Transfers are generated automatically depending on your setting in 'Settings > Configuration' for outstanding charges we've recieved on behalf of hosts. The next batch will be generated at about:"
+        payments_awaiting_transfers:
+          zero: "There are no payments awaiting for transfers."
+          one: "There is one payment awaiting for transfer."
+          other: "There are %{count} payments awaiting for transfers."
         charges: "Charges"
         created_at: "Created at"
         transferred_at: "Transferred at"
@@ -529,6 +545,7 @@ en:
           plural:
             payment: Payments
         here_you_can_see_all_payments: "Here you can see all payments that are pending transfer. Next transfer will happen at "
+        here_you_can_see_all_payments_manual: "Here you can see all payments that are pending transfer. Next transfer will be generated manually"
         company: Company
         lessor: Lessor
         state: State
@@ -889,6 +906,7 @@ en:
         refunds_and_exchanges: 'Refunds and Exchanges'
         phone_number: 'Phone Number'
         email_address: 'Email Address'
+        documents: 'Documents'
 
     checkout:
       labels:
@@ -1129,6 +1147,15 @@ en:
       next_payment_at: 'Next payment'
       rejection_reason: 'Rejection reason'
       user_note: 'User note: '
+
+    payments:
+      order: "Back to order"
+      total: "Captured price"
+      service_fee: "Marketplace fee"
+      payment_id: "Payment ID"
+      paid_at: "Paid at"
+      failed_at: "Failed at"
+      refunded_at: "Refunded at"
 
     host_reservations:
       reservation_state: "Reservation state: "
@@ -1433,6 +1460,10 @@ en:
 
   orders:
     empty_list: "You don't have any orders yet"
+    payment_state:
+      paid: "Payment captured"
+      failed: "Payment failed"
+      pending: "Payment not captured"
 
     index:
       title: 'My orders'
@@ -1479,6 +1510,7 @@ en:
     overbooked: "Subscription can't be confirmed due to overbooking."
     active: 'active'
   reservations:
+    mpo_shipping_settings_not_valid: "The administrator of the site hasn't correctly set the shipping API settings yet."
     charge_after_confirmation: "You will not be charged until the booking is confirmed."
     manually_confirm: "This %{lessor} manually confirms all bookings."
     paypal_and_cc_charge_after_confirmation: "Your will not be charged until the booking is confirmed."
@@ -1523,6 +1555,7 @@ en:
       per_unit: 'Per Unit'
       number_of_units: 'Number Of Units'
       not_bookable: 'Suggest date'
+      documents: 'Documents'
   search:
     pricing_types:
       daily: "Daily"
@@ -1567,7 +1600,8 @@ en:
       month_year: "%B %Y"
       start_hours: "%-H:%M"
       end_hours: "%-H:%M"
-      date_time: "%d/%m/%y %l:%M%P"
+      date_time: "%m/%d/%Y %I:%M %P"
+      full_date: "%a, %m/%d/%Y %H:%M"
   date:
     formats:
       short: '%B %d, %-Y'
@@ -1829,7 +1863,6 @@ en:
       public_url: Public URL
       search: Search
       wrong_file_message: 'does not have an accepted extension. Please select a document or an image.'
-
   approval_request_attachments:
     please_upload_document: 'Please upload document'
     please_fill_in_message: "Please fill in message"
@@ -1906,3 +1939,14 @@ en:
       title:
         search: "Search"
         in: " in "
+
+  seller_attachments:
+    seller_attachments: "Seller attachments"
+    upload_attachments: "Upload attachments"
+    wrong_file_message: 'Uploaded documents does not have an accepted extension. Accepted extensions are %{formats}'
+    access_levels:
+      all: 'All users'
+      users: 'Registered users'
+      purchasers: 'Purchasers only'
+    max_num_reached: "Max number of attached documents reached"
+

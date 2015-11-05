@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
   has_many :shipping_addresses
   has_many :activity_feed_events, as: :event_source, dependent: :destroy
   has_many :activity_feed_subscriptions, foreign_key: 'follower_id'
-  has_many :activity_feed_subscriptions_as_followed, as: :followed, class_name: 'ActivityFeedSubscription'
+  has_many :activity_feed_subscriptions_as_followed, as: :followed, class_name: 'ActivityFeedSubscription', dependent: :destroy
   has_many :administered_locations, class_name: "Location", foreign_key: 'administrator_id', inverse_of: :administrator
   has_many :administered_listings, class_name: "Transactable", through: :administered_locations, source: :listings, inverse_of: :administrator
   has_many :authentications, dependent: :destroy
@@ -66,6 +66,7 @@ class User < ActiveRecord::Base
   has_many :mailer_unsubscriptions
   has_many :orders, foreign_key: :user_id, class_name: 'Spree::Order'
   has_many :photos, foreign_key: 'creator_id', inverse_of: :creator
+  has_many :attachments, class_name: 'SellerAttachment'
   has_many :products_images, foreign_key: 'uploader_id', class_name: 'Spree::Image'
   has_many :products, foreign_key: 'user_id', class_name: 'Spree::Product'
   has_many :projects, foreign_key: 'creator_id', inverse_of: :creator

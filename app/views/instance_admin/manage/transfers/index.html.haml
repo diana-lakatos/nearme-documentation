@@ -3,16 +3,17 @@
     = t("instance_admin.manage.transfers.resource.plural.#{resource_class.name.underscore}")
 
   .row
-    .text-container
-      = t('instance_admin.manage.transfers.transfers_are_generated_automatically')
-      %strong
-        = next_payment_transfers_date
-    .input-container.col-xs-12
-
-      = link_to t('instance_admin.generate_transfers'), generate_instance_admin_manage_transfers_path, class: 'btn btn-blue pull-right', method: :post, data: { confirm: "Are you sure you want to generate  transfers manually?" }
-
+    - if current_instance.manual_transfers?
+      .input-container.col-xs-12
+        = t('instance_admin.manage.transfers.payments_awaiting_transfers', count: (count = Payment.needs_payment_transfer.count).zero? ? "no" : count)
+        - unless count.zero?
+          = link_to t('instance_admin.generate_transfers'), generate_instance_admin_manage_transfers_path, class: 'btn btn-blue pull-right', method: :post, data: { confirm: "Are you sure you want to generate  transfers manually?" }
+    - else
+      .text-container
+        = t('instance_admin.manage.transfers.transfers_are_generated_automatically')
+        %strong
+          = next_payment_transfers_date
   = render 'list_table'
-
 
 .row
   .text-container

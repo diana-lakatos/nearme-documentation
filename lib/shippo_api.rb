@@ -186,8 +186,23 @@ module ShippoApi
       begin
         if instance_params[:shippo_api_token].present?
           Shippo::api_token = instance_params[:shippo_api_token]
-          Shippo::Transaction.all
+          Shippo::Transaction.all({results: 1})
         end
+        true
+      rescue Shippo::APIError
+        false
+      end
+    end
+
+    def self.shippo_api_token_present?
+      Shippo::api_token.present?
+    end
+
+    # Can be used to validate whether the current Shippo API settings
+    # are valid - i.e. will lead to successful API calls
+    def self.verify_shippo_settings
+      begin
+        Shippo::Transaction.all({results: 1})
         true
       rescue Shippo::APIError
         false

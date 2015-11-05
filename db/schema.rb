@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151030100759) do
+ActiveRecord::Schema.define(version: 20151105094747) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -395,6 +395,9 @@ ActiveRecord::Schema.define(version: 20151030100759) do
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
     t.integer  "instance_id"
+    t.string   "access_level",      limit: 255
+    t.integer  "user_id"
+    t.string   "title"
   end
 
   add_index "ckeditor_assets", ["assetable_type", "assetable_id"], name: "idx_ckeditor_assetable", using: :btree
@@ -750,6 +753,7 @@ ActiveRecord::Schema.define(version: 20151030100759) do
     t.integer  "rank"
     t.string   "form_componentable_type",       limit: 255
     t.boolean  "is_approval_request_surfacing",             default: false
+    t.string   "ui_version"
   end
 
   add_index "form_components", ["instance_id", "form_componentable_id", "form_type"], name: "ttfs_instance_tt_form_type", using: :btree
@@ -1006,7 +1010,10 @@ ActiveRecord::Schema.define(version: 20151030100759) do
     t.string   "encrypted_google_consumer_secret",      limit: 255
     t.string   "default_oauth_signin_provider"
     t.boolean  "custom_waiver_agreements",                                                  default: true
+    t.string   "priority_view_path"
     t.string   "time_zone"
+    t.string   "seller_attachments_access_level",       limit: 255,                         default: "disabled",    null: false
+    t.integer  "seller_attachments_documents_num",                                          default: 10,            null: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1688,15 +1695,32 @@ ActiveRecord::Schema.define(version: 20151030100759) do
 
   add_index "schedule_exception_rules", ["instance_id", "schedule_id"], name: "index_schedule_exception_rules_on_instance_id_and_schedule_id", using: :btree
 
+  create_table "schedule_rules", force: :cascade do |t|
+    t.string  "run_hours_mode"
+    t.decimal "every_hours",    precision: 8, scale: 2
+    t.time    "time_start"
+    t.time    "time_end"
+    t.time    "times",                                  default: [], array: true
+    t.string  "run_dates_mode"
+    t.integer "week_days",                              default: [], array: true
+    t.date    "dates",                                  default: [], array: true
+    t.date    "date_start"
+    t.date    "date_end"
+    t.integer "instance_id"
+    t.integer "schedule_id"
+  end
+
+  add_index "schedule_rules", ["instance_id", "schedule_id"], name: "index_schedule_rules_on_instance_id_and_schedule_id", using: :btree
+
   create_table "schedules", force: :cascade do |t|
     t.datetime "start_at"
     t.datetime "end_at"
     t.text     "schedule"
-    t.string   "scheduable_type",     limit: 255
+    t.string   "scheduable_type",            limit: 255
     t.integer  "scheduable_id"
     t.integer  "instance_id"
     t.datetime "deleted_at"
-    t.boolean  "exception",                       default: false
+    t.boolean  "exception",                              default: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "simple_rules"
@@ -1704,8 +1728,9 @@ ActiveRecord::Schema.define(version: 20151030100759) do
     t.time     "sr_from_hour"
     t.time     "sr_to_hour"
     t.integer  "sr_every_hours"
-    t.text     "sr_days_of_week",                 default: [],    array: true
-    t.boolean  "use_simple_schedule",             default: true
+    t.text     "sr_days_of_week",                        default: [],    array: true
+    t.boolean  "use_simple_schedule",                    default: true
+    t.boolean  "unavailable_period_enabled",             default: true
   end
 
   add_index "schedules", ["instance_id", "scheduable_id", "scheduable_type"], name: "index_schedules_scheduable", using: :btree
@@ -2094,8 +2119,8 @@ ActiveRecord::Schema.define(version: 20151030100759) do
     t.datetime "canceled_at"
     t.integer  "canceler_id"
     t.integer  "store_id"
-    t.boolean  "insurance_enabled",                                                   default: false,   null: false
     t.integer  "payment_method_id"
+    t.boolean  "insurance_enabled",                                                   default: false,   null: false
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree

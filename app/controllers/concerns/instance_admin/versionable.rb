@@ -19,7 +19,7 @@ module InstanceAdmin::Versionable
       redirect_url = respond_to?(:show) ? { action: :show, id: resource.id } : { action: :index }
       redirect_to redirect_url, notice: "Page has been successfully restored to previous version"
     else
-      flash[:error] = "Unable to restore page to previus version"
+      flash[:error] = "Unable to restore page to previous version"
       render :show_version
     end
   end

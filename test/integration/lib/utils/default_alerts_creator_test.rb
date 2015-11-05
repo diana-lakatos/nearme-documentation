@@ -4,6 +4,7 @@ class Utils::DefaultAlertsCreatorTest < ActionDispatch::IntegrationTest
 
   setup do
     @default_alerts_creator = Utils::DefaultAlertsCreator.new
+    FactoryGirl.create(:instance_admin)
   end
 
   context '#create_all_workflows' do

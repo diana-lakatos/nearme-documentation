@@ -11,6 +11,7 @@
           %th= t('instance_admin.manage.payments.payment_amount')
           %th= t('instance_admin.manage.payments.payment_gateway')
           %th= t('instance_admin.manage.payments.created_at')
+          %th= t('instance_admin.manage.payments.details')
 
       - @payments.each do |payment|
         %tr
@@ -26,4 +27,4 @@
           %td= humanized_money_with_cents_and_symbol(payment.subtotal_amount)
           %td= payment.payable.billing_authorization.payment_gateway.try(:name) if payment.payable
           %td= l(payment.created_at, format: :long)
-
+          %td= link_to 'Details',  instance_admin_manage_payment_path(payment)

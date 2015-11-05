@@ -35,7 +35,7 @@ class Photo < ActiveRecord::Base
 
   after_commit :user_added_photos_to_project_event, on: [:create, :update]
   def user_added_photos_to_project_event
-    if owner_type == "Project"
+    if owner_type == "Project" && owner.present?
       event = :user_added_photos_to_project
       ActivityFeedService.create_event(event, self.owner, [self.owner.creator], self.owner)
     end

@@ -74,6 +74,10 @@ class LocationDrop < BaseDrop
     tweet_location_path(routes.location_url(@location))
   end
 
+  def tweet_button_url
+    urlify(url)
+  end
+
   # array of photo items; each photo item is a hash with the keys being:
   #   space_listing - photo having a dimension of the space_listing type
   #   golden - photo having a dimension of the golden type

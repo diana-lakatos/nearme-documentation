@@ -60,41 +60,6 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
     }
   end
 
-  def gateway_refund(amount, charge, options)
-    if refund_service_fee(options)
-      gateway(@payment.payable.merchant_subject).refund(amount, refund_identification(charge), options)
-    else
-      OpenStruct.new(success: false, success?: false)
-    end
-  end
-
-  def refund_service_fee(options)
-    @payment_transfer = @payment.payment_transfer
-
-    service_fee_refund = @payment.refunds.create(
-      amount: @payment_transfer.total_service_fee.cents,
-      currency: @payment.currency,
-      payment: @payment,
-      payment_gateway_mode: mode
-    )
-
-    payment_transfer = @payment.payment_transfer
-    payout = payment_transfer.payout_attempts.successful.first
-    refund_response = if @payment_transfer.total_service_fee.cents > 0
-      gateway.refund(@payment_transfer.total_service_fee.cents, refund_identification(payout), options)
-    else
-      OpenStruct.new(success: true, success?: true, refunded_ammount: @payment_transfer.total_service_fee.cents)
-    end
-
-    if refund_response.success?
-      service_fee_refund.refund_successful(refund_response)
-      true
-    else
-      service_fee_refund.refund_failed(refund_response)
-      false
-    end
-  end
-
   def process_express_checkout(transactable, options)
     @transactable = transactable
     @response = gateway(@transactable.merchant_subject).setup_authorization(@transactable.total_amount_cents , options.deep_merge(

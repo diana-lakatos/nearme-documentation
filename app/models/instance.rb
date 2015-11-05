@@ -1,5 +1,9 @@
 class Instance < ActiveRecord::Base
+
   include DomainsCacheable
+
+  SELLER_ATTACHMENTS_ACCESS_LEVELS = SellerAttachment::ACCESS_LEVELS + ['sellers_preference']
+
   has_paper_trail
 
   has_metadata :accessors => [:support_metadata]
@@ -91,6 +95,8 @@ class Instance < ActiveRecord::Base
   has_one :documents_upload, dependent: :destroy
   has_many :locales, dependent: :destroy
   has_many :dimensions_templates, as: :entity
+  has_many :seller_attachments
+
   serialize :pricing_options, Hash
 
   validates :category_search_type, presence: true, inclusion: %w(AND OR)
@@ -99,6 +105,7 @@ class Instance < ActiveRecord::Base
   validates :password_protected, presence: { if: :test_mode, message: I18n.t("activerecord.errors.models.instance.test_mode_needs_password") }
   validates :olark_api_key, presence: { if: :olark_enabled }
   validates :payment_transfers_frequency, presence: true, inclusion: { in: PaymentTransfer::FREQUENCIES }
+  validates :seller_attachments_access_level, inclusion: { in: SELLER_ATTACHMENTS_ACCESS_LEVELS + ['disabled'] }
 
   accepts_nested_attributes_for :domains, allow_destroy: true, reject_if: proc { |params| params[:name].blank? && params.has_key?(:name) }
   accepts_nested_attributes_for :theme
@@ -271,6 +278,10 @@ class Instance < ActiveRecord::Base
     TransactableType::AVAILABLE_TYPES[buyable? ? 1 : 0]
   end
 
+  def manual_transfers?
+    payment_transfers_frequency == 'manually'
+  end
+
   def payment_gateway_mode
     test_mode? ? "test" : "live"
   end
@@ -392,4 +403,20 @@ class Instance < ActiveRecord::Base
   def generate_webhook_token
     self.webhook_token = SecureRandom.uuid.gsub(/\-/,'')
   end
+
+  def seller_attachments_enabled
+    seller_attachments_access_level != 'disabled'
+  end
+  alias_method :seller_attachments_enabled?, :seller_attachments_enabled
+
+  def seller_attachments_enabled=(val)
+    self.seller_attachments_access_level = 'disabled' if val == '0'
+  end
+
+  SELLER_ATTACHMENTS_ACCESS_LEVELS.each do |access_level|
+    define_method "seller_attachments_access_#{access_level}?" do
+      seller_attachments_access_level == access_level
+    end
+  end
+
 end

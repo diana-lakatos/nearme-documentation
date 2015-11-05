@@ -1,0 +1,23 @@
+%li{data: {'seller_attachment' => attachment.id}}
+  = hidden_field_tag "[attachment_ids][]", attachment.id
+  .attachment-container
+    = link_to image_tag(attachment.url_thumb, title: attachment.filename), attachment.url_content, target: '_blank'
+    = link_to attachment.filename, attachment.url_content, target: '_blank'
+    = attachment.format_created_at
+    = number_to_human_size(attachment.size) if attachment.size
+
+    = link_to image_tag('ckeditor/filebrowser/images/gal_del.png',
+      title: I18n.t('ckeditor.buttons.delete')),
+      dashboard_seller_attachment_path(attachment),
+      method: :delete,
+      remote: true,
+      data: {confirm: t('ckeditor.confirm_delete')}
+
+  .title
+    = label_tag :title
+    = text_field_tag :title, attachment.title, data: {'seller-attachment-title' => true, 'seller-attachment-update-url' => dashboard_seller_attachment_path(attachment.id)}
+  - if @platform_context.instance.seller_attachments_access_sellers_preference?
+    .access-level
+      = label_tag :access_level
+      .access-level-select-container
+        = select_tag :access_level, options_for_select(SellerAttachment::ACCESS_LEVELS.map { |level| [t(level, scope: 'seller_attachments.access_levels'), level] }, attachment.access_level), data: {'seller-attachment-access-level' => true, 'seller-attachment-update-url' => dashboard_seller_attachment_path(attachment.id)}

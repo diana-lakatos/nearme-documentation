@@ -44,6 +44,8 @@ class HiddenUiControls
       'dashboard/support/tickets',
       'registrations/edit',
       'dashboard/notification_preferences',
+      'dashboard/notification_preferences/emails',
+      'dashboard/notification_preferences/sms',
       'registrations/social_accounts',
       'dashboard/blog',
       'registrations/show#reviews',

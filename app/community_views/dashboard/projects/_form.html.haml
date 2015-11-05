@@ -3,11 +3,11 @@
   = f.input :id, as: :hidden
   .fields
     - if current_user.id == f.object.creator_id
-      = f.input :name
+      = f.input :name, required: true
 
-      = f.input :summary, as: :text, limit: 140, input_html: { maxlength: 140, cols: 40, rows: 4 }
+      = f.input :summary, as: :text, limit: 140, required: true, input_html: { maxlength: 140, cols: 40, rows: 4 }
 
-    = f.input :description, as: :text, input_html: { cols: 40, rows: 8 }
+    = f.input :description, as: :text, required: true, input_html: { cols: 40, rows: 8 }
 
     = f.association :topics, as: :select, input_html: { multiple: true, class: 'selectize', data: { placeholder: t(:topics, scope: [:simple_form, :placeholders, :activity_feed]) } }, wrapper_html: { class: 'topics' }, required: true
 
@@ -102,7 +102,7 @@
 
   %p.required-info
     %em *
-    required
+    Required
 
 - content_for :page_scripts do
   :javascript

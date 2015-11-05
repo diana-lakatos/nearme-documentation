@@ -2,6 +2,8 @@ class ApprovalRequestAttachmentsController < ApplicationController
 
   before_action :check_for_xhr
 
+  before_action :check_user_present, only: :create
+
   def create
     template = ApprovalRequestAttachmentTemplate.find(params[:approval_request_attachment_template_id])
     @attachment = ApprovalRequestAttachment.new(
@@ -26,6 +28,12 @@ class ApprovalRequestAttachmentsController < ApplicationController
   end
 
   private
+
+  def check_user_present
+    if current_user.blank?
+      render partial: 'approval_requests/failed_attachment'
+    end
+  end
 
   def check_for_xhr
     raise ActionController::MethodNotAllowed unless request.xhr?

@@ -1,0 +1,5 @@
+= render 'attachment', attachment: attachment, f: nil
+
+:javascript
+  $('li[data-seller-attachment="#{attachment.id}"] select[data-seller-attachment-access-level]').customSelect();
+  new SellerAttachmentAccessLevelSelector($('li[data-seller-attachment="#{attachment.id}"]'));

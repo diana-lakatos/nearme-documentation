@@ -99,6 +99,20 @@
                     = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][id]", photo.id
                     = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
 
+      - when 'seller_attachments'
+        .row
+          .col-md-3
+            = f.label :attachments
+          .col-md-9.with-upload-button
+            = file_upload_input("#{f.object_name}[attachments_attributes][0][data]", dashboard_seller_attachments_path, nil, t('seller_attachments.upload_attachments'), "no-multiple" => true, file_types: '(\.|\/)(' + Ckeditor.attachment_file_types.join('|') + ')$', upload_type: 'ckfile', files_container: 'ul[data-attachments-container]', append_result: '1', wrong_file_message: t('seller_attachments.wrong_file_message', formats: Ckeditor.attachment_file_types.join(', '))) do
+              %ul.seller-attachments{data: {'attachments-container' => true}}
+                - if @attachments.present?
+                  - @attachments.each do |attachment|
+                    = render 'dashboard/seller_attachments/attachment', attachment: attachment
+
+          - content_for :domready do
+            new SellerAttachmentAccessLevelSelector();
+
       - when 'waiver_agreement_templates'
         - if @company.waiver_agreement_templates.any?
           = f.association :waiver_agreement_templates, collection: @company.waiver_agreement_templates.order(:name).pluck(:name, :id), as: :check_boxes

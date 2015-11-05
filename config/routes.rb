@@ -6,6 +6,8 @@ DesksnearMe::Application.routes.draw do
 
   # Legacy pages redirect. Can be removed in Feb 16th. The redirect matches the route below.
   get "/pages/:slug(.:format)", to: 'pages#redirect'
+  get "/transactable_types/:id/locations/:location_id/listings/:listing_id", to: 'locations#redirect'
+
 
   get 'comments/index'
   get 'comments/create'
@@ -214,6 +216,7 @@ DesksnearMe::Application.routes.draw do
       resource :translations, :only => [:show, :update], :controller => 'translations'
       resource :cancellation_policy, :only => [:show, :update], :controller => 'cancellation_policy'
       resource :documents_upload, except: [:index, :destroy], :controller => 'documents_upload'
+      resource :seller_attachments, only: %i(show update destroy), controller: 'seller_attachments'
 
       resources :locales, except: [:show], controller: 'locales' do
         member do
@@ -368,7 +371,7 @@ DesksnearMe::Application.routes.draw do
           post :generate
         end
       end
-      resources :payments, only: [:index]
+      resources :payments, only: [:index, :show]
 
       resources :partners
 
@@ -610,6 +613,8 @@ DesksnearMe::Application.routes.draw do
 
   resources :approval_request_attachments, only: %i(create destroy)
 
+  resources :seller_attachments, only: :show
+
   namespace :dashboard do
     namespace :api do
       resources :categories do
@@ -650,7 +655,7 @@ DesksnearMe::Application.routes.draw do
 
         resources :payments do
           member do
-            get :capture
+            get :refund
           end
         end
 
@@ -765,6 +770,7 @@ DesksnearMe::Application.routes.draw do
       end
     end
     resources :photos, :only => [:create, :destroy, :edit, :update]
+    resources :seller_attachments, only: %i(create update destroy)
     resources :reviews, :only => [:index, :create, :update, :destroy]
 
     resources :transactable_types, only: [] do
@@ -955,7 +961,7 @@ DesksnearMe::Application.routes.draw do
     get 'organizations', to: 'organizations#index'
   end
 
-  resources :transactable_types, only: [], path: "/" do
+  resources :transactable_types, only: [], path: "/", constraints: Constraints::TransactableTypeConstraints.new do
     resources :locations, :only => [], path: "/" do
       member do
         get "(:listing_id)", :to => "locations#show", :as => ''
