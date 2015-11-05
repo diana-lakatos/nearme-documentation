@@ -23,6 +23,7 @@
             font-size: 20px;
             font-weight: bold;
             line-height: 40px;
+            margin-top: 29px;
         }
 
         > div {
@@ -32,7 +33,7 @@
 
         > .drop {
             position: relative;
-            width: 250px;
+            width: 472px;
         }
 
         > .drop + .drop {
@@ -47,24 +48,11 @@
             pointer-events: none;
         }
 
-        .no-touch & > .drop label {
-            display: block;
-            position: absolute;
-            left: 10px;
-            top: 0;
-            z-index: 5;
-            margin: 0;
-            line-height: 43px;
-        }
-
-        > .drop .item {
-            display: none;
-        }
-
         > .tick {
             font-size: 16px;
             font-weight: bold;
             line-height: 40px;
+            margin-top: 29px;
         }
 
         > .tick label:before {
