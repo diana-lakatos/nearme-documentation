@@ -7,4 +7,4 @@
 
     %p.meta
       %time
-        = event.created_at.strftime("%d/%m/%y")
+        = l(event.created_at, format: :full_date)
