@@ -1,6 +1,6 @@
 class Authentication::GithubProvider < Authentication::BaseProvider
 
-  META   = { name: "Github",
+  META   = { name: "GitHub",
              url: "http://github.com/",
              auth: "OAuth 2" }
 
@@ -54,7 +54,7 @@ class Authentication::GithubProvider < Authentication::BaseProvider
       @image_url    = raw["avatar_url"]
       @profile_url  = raw["url"]
       @location     = raw["location"]
-      @provider     = 'Github'
+      @provider     = 'GitHub'
     end
 
   end
