@@ -53,7 +53,7 @@
     = image_tag "spinner.gif"
     %br/
     .span= t('manage.listings.photos.waiting_for_photo_processing')
-  = file_upload_input_with_label('Photos',
+  = file_upload_input_with_label(t('simple_form.labels.listing.photos'),
                                   "#{f.object_name}[photos_attributes][0][image]",
                                   dashboard_photos_path,
                                   Photo.new.image.thumbnail_dimensions[:medium],
