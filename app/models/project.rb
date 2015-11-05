@@ -54,7 +54,7 @@ class Project < ActiveRecord::Base
   validates :photos, length: {minimum: 1}, unless: ->(record) { record.draft? || record.photo_not_required || !record.transactable_type.enable_photo_required }
   validates :topics, length: {:minimum => 1}, unless: ->(record) { record.draft? }
   validates :summary, length: { maximum: 140 }, unless: ->(record) { record.draft? }
-  validates :name, presence: true, unless: ->(record) { record.draft? }
+  validates :name, :description, :summary, presence: true, unless: ->(record) { record.draft? }
 
   # TODO: move to form object
   after_save :trigger_workflow_alert_for_added_collaborators, unless: ->(record) { record.draft? }
