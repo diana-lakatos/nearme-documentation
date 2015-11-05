@@ -18,6 +18,10 @@
           = link_to '#activity', role: "tab", :'data-toggle' => "tab" do
             = t(:activity)
         %li
+          = link_to '#projects', role: "tab", :'data-toggle' => "tab" do
+            = t :projects
+            %small= "(#{@all_projects.total_count})"
+        %li
           = link_to '#following', role: "tab", :'data-toggle' => "tab" do
             = t :following
             %small= "(#{@user.activity_feed_subscriptions.count})"
@@ -25,10 +29,6 @@
           = link_to '#followers', role: "tab", :'data-toggle' => "tab" do
             = t :followers
             %small= "(#{@user.followers_count})"
-        %li
-          = link_to '#projects', role: "tab", :'data-toggle' => "tab" do
-            = t :projects
-            %small= "(#{@all_projects.total_count})"
       %p
         - if current_user.try(:id) == resource.id
           = link_to t(:edit), dashboard_profile_path, class: 'button-a small'
@@ -42,6 +42,14 @@
   #activity.tab-pane.fade.active{:role => "tabpanel"}
     = render 'show_activity', object: @user, feed: @feed
 
+  #projects.tab-pane.fade{:role => "tabpanel"}
+    / content wrapper
+    .wrap-a.reduce-top
+      .contain
+        / white box
+        .box-a
+          = render 'shared/show_projects', projects: @all_projects, container: '#projects', see_more_route: see_more_projects_path(id: @user.id, type: @user.class.name, container: '#projects'), sort_options: Project::SORT_OPTIONS + ['Pending approvals']
+
   #following.tab-pane.fade{:role => "tabpanel"}
     = render 'show_following', object: @user
 
@@ -50,11 +58,4 @@
       .contain
         .box-a= render 'shared/show_followers', container: '#followers', see_more_route: see_more_followers_path(id: @user.id, type: 'User', container: '#followers'), collection: @followers
 
-  #projects.tab-pane.fade{:role => "tabpanel"}
-    / content wrapper
-    .wrap-a.reduce-top
-      .contain
-        / white box
-        .box-a
-          = render 'shared/show_projects', projects: @all_projects, container: '#projects', see_more_route: see_more_projects_path(id: @user.id, type: @user.class.name, container: '#projects'), sort_options: Project::SORT_OPTIONS + ['Pending approvals']
 
