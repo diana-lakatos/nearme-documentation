@@ -164,13 +164,13 @@ class Reservation < ActiveRecord::Base
 
   scope :upcoming, lambda {
     joins(:periods).
-    where('reservation_periods.date >= ?', Time.zone.today).
+    where('reservation_periods.date >= ?', Time.today).
     uniq
   }
 
   scope :past, lambda {
     joins(:periods).
-    where('reservation_periods.date < ?', Time.zone.today).
+    where('reservation_periods.date < ?', Time.today).
     uniq
   }
 
@@ -215,7 +215,7 @@ class Reservation < ActiveRecord::Base
   }
 
   scope :archived, lambda {
-    joins(:periods).where('reservation_periods.date < ? OR reservations.state IN (?)', Time.zone.today, ['rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest']).uniq
+    joins(:periods).where('reservation_periods.date < ? OR reservations.state IN (?)', Time.today, ['rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest']).uniq
   }
 
   scope :last_x_days, lambda { |days_in_past|
@@ -308,7 +308,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def archived?
-    rejected? || cancelled? || (periods.all? {|p| p.date < Time.zone.today} || expired?)
+    rejected? || cancelled? || (periods.all? {|p| p.date < Time.today} || expired?)
   end
 
   def cancelled?
