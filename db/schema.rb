@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151105094747) do
+ActiveRecord::Schema.define(version: 20151105191133) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,11 +24,12 @@ ActiveRecord::Schema.define(version: 20151105094747) do
     t.string   "event"
     t.integer  "followed_id"
     t.string   "followed_type"
-    t.text     "affected_objects_identifiers", default: [], array: true
+    t.text     "affected_objects_identifiers", default: [],    array: true
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "event_source_id"
     t.string   "event_source_type"
+    t.boolean  "spam_ignored",                 default: false
   end
 
   add_index "activity_feed_events", ["instance_id", "followed_id", "followed_type"], name: "activity_feed_events_instance_followed", using: :btree
@@ -412,8 +413,9 @@ ActiveRecord::Schema.define(version: 20151105094747) do
     t.integer  "creator_id"
     t.integer  "instance_id"
     t.datetime "deleted_at"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.boolean  "spam_ignored",     default: false
   end
 
   add_index "comments", ["creator_id"], name: "index_comments_on_creator_id", using: :btree
@@ -1009,9 +1011,9 @@ ActiveRecord::Schema.define(version: 20151105094747) do
     t.string   "encrypted_google_consumer_secret",      limit: 255
     t.string   "default_oauth_signin_provider"
     t.boolean  "custom_waiver_agreements",                                                  default: true
-    t.string   "time_zone"
     t.string   "seller_attachments_access_level",       limit: 255,                         default: "disabled",    null: false
     t.integer  "seller_attachments_documents_num",                                          default: 10,            null: false
+    t.string   "time_zone"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1652,6 +1654,7 @@ ActiveRecord::Schema.define(version: 20151105094747) do
 
   add_index "reviews", ["deleted_at"], name: "index_reviews_on_deleted_at", using: :btree
   add_index "reviews", ["instance_id"], name: "index_reviews_on_instance_id", using: :btree
+  add_index "reviews", ["rating_system_id", "reviewable_id", "reviewable_type"], name: "index_reviews_on_rating_system_id_and_reviewable", unique: true, using: :btree
   add_index "reviews", ["reviewable_id", "reviewable_type"], name: "index_reviews_on_reviewable_id_and_reviewable_type", using: :btree
   add_index "reviews", ["transactable_type_id"], name: "index_reviews_on_transactable_type_id", using: :btree
   add_index "reviews", ["user_id"], name: "index_reviews_on_user_id", using: :btree

@@ -485,7 +485,13 @@ DesksnearMe::Application.routes.draw do
         end
       end
       resources :topics
-      resources :spam_reports
+
+      resources :spam_reports, only: [ :index, :show, :destroy ] do
+        member do
+          post :ignore
+        end
+      end
+
       resources :projects, only: [:index, :destroy, :edit, :update] do
         post :restore, on: :member
       end
