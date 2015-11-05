@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :project do
     name "Project Manhattan"
     description "The Manhattan Project was a research and development project that produced the first nuclear weapon"
+    summary "The Manhattan Project was a research"
     seek_collaborators true
     creator
     photo_not_required true
