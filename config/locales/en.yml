@@ -1600,7 +1600,8 @@ en:
       month_year: "%B %Y"
       start_hours: "%-H:%M"
       end_hours: "%-H:%M"
-      date_time: "%d/%m/%y %l:%M%P"
+      date_time: "%m/%d/%Y %I:%M %P"
+      full_date: "%a, %m/%d/%Y %H:%M"
   date:
     formats:
       short: '%B %d, %-Y'

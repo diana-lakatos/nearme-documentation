@@ -55,9 +55,14 @@ class @UI
 
   @activeTabFromAnchor: ->
     anchor = window.location.hash.substring(1)
+    tab = ''
     if anchor.length > 0
-      if $("##{anchor}.tab-pane").length > 0
-        $("[href='##{anchor}'][data-toggle=tab]").click()
+      tab = $("[href='##{anchor}'][data-toggle=tab]")
+    else
+      tab = $("[data-toggle=tab]:first")
+    if tab.length > 0
+        tab.click()
+
 
   @initialize: ()->
     @equalize()

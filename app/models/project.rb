@@ -9,13 +9,13 @@ class Project < ActiveRecord::Base
   attr_readonly :followers_count
 
   DEFAULT_ATTRIBUTES = %w(name description)
-  SORT_OPTIONS = ['All', 'Featured', 'Most Recent', 'Most Popular', 'Contributors']
+  SORT_OPTIONS = ['All', 'Featured', 'Most Recent', 'Most Popular', 'Collaborators']
 
   belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :projects, counter_cache: true
   belongs_to :transactable_type, -> { with_deleted }, foreign_key: 'transactable_type_id'
 
   has_many :activity_feed_events, as: :event_source, dependent: :destroy
-  has_many :activity_feed_subscriptions, as: :followed
+  has_many :activity_feed_subscriptions, as: :followed, dependent: :destroy
   has_many :approved_project_collaborators, -> { approved }, class_name: 'ProjectCollaborator'
   has_many :comments, as: :commentable
   has_many :collaborating_users, through: :approved_project_collaborators, source: :user
@@ -54,7 +54,7 @@ class Project < ActiveRecord::Base
   validates :photos, length: {minimum: 1}, unless: ->(record) { record.draft? || record.photo_not_required || !record.transactable_type.enable_photo_required }
   validates :topics, length: {:minimum => 1}, unless: ->(record) { record.draft? }
   validates :summary, length: { maximum: 140 }, unless: ->(record) { record.draft? }
-  validates :name, presence: true, unless: ->(record) { record.draft? }
+  validates :name, :description, :summary, presence: true, unless: ->(record) { record.draft? }
 
   # TODO: move to form object
   after_save :trigger_workflow_alert_for_added_collaborators, unless: ->(record) { record.draft? }
@@ -69,7 +69,7 @@ class Project < ActiveRecord::Base
     when /most popular/i
       #TODO check most popular sort after followers are implemented
       order('projects.followers_count DESC')
-    when /contributors/i
+    when /collaborators/i
       group('projects.id').
         joins("LEFT OUTER JOIN project_collaborators pc ON projects.id = pc.project_id AND (pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)").
         order('count(pc.id) DESC')

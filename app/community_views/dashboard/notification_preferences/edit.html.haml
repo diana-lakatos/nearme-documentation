@@ -16,8 +16,10 @@
     .box-a
       = simple_form_for @user, url: dashboard_notification_preferences_path, html: { class: 'form-a' } do |f|
         .fields
-          = f.input :accept_emails, as: :switch, wrapper_html: { class: 'sep' }
-          = f.input :sms_notifications_enabled, as: :switch, wrapper_html: { class: 'sep' }
+          - if HiddenUiControls.find('dashboard/notification_preferences/emails').visible?
+            = f.input :accept_emails, as: :switch, wrapper_html: { class: 'sep' }
+          - if HiddenUiControls.find('dashboard/notification_preferences/sms').visible?
+            = f.input :sms_notifications_enabled, as: :switch, wrapper_html: { class: 'sep' }
 
         %p.action
           = f.submit t('general.save')
