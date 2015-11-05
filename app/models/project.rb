@@ -9,7 +9,7 @@ class Project < ActiveRecord::Base
   attr_readonly :followers_count
 
   DEFAULT_ATTRIBUTES = %w(name description)
-  SORT_OPTIONS = ['All', 'Featured', 'Most Recent', 'Most Popular', 'Contributors']
+  SORT_OPTIONS = ['All', 'Featured', 'Most Recent', 'Most Popular', 'Collaborators']
 
   belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :projects, counter_cache: true
   belongs_to :transactable_type, -> { with_deleted }, foreign_key: 'transactable_type_id'
@@ -69,7 +69,7 @@ class Project < ActiveRecord::Base
     when /most popular/i
       #TODO check most popular sort after followers are implemented
       order('projects.followers_count DESC')
-    when /contributors/i
+    when /collaborators/i
       group('projects.id').
         joins("LEFT OUTER JOIN project_collaborators pc ON projects.id = pc.project_id AND (pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)").
         order('count(pc.id) DESC')
