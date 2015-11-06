@@ -23,7 +23,7 @@
         - if resource.pending?
           %p
             = t('instance_admin.manage.transfers.we_are_waiting_for_confirmation')
-        - elsif resource.payout_processor.present?
+        - elsif resource.payout_processor.present? && !%w(PaymentGateway::StripeConnectPaymentGateway PaymentGateway::BraintreeMarketplacePaymentGateway).include?(resource.payout_processor.class.to_s)
           = link_to "#{t('instance_admin.manage.transfers.payout_via')} #{resource.payout_processor}", payout_instance_admin_manage_transfer_path(resource), method: :post, class: 'btn btn-blue', data: { confirm: t('instance_admin.manage.transfers.payment_will_go_live') }
         - else
           %p
