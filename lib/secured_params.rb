@@ -377,7 +377,6 @@ class SecuredParams
       :test_twilio_consumer_key,
       :test_twilio_consumer_secret,
       :test_twilio_from_number,
-      :time_zone,
       :tt_select_type,
       :twilio_consumer_key,
       :twilio_consumer_secret,
