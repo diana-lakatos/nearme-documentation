@@ -37,6 +37,10 @@ class Comment < ActiveRecord::Base
     end
   end
 
+  def can_be_reported?
+    !spam_ignored
+  end
+
   def can_remove?(current_user)
     return unless current_user
     [creator, commentable.creator].include?(current_user)

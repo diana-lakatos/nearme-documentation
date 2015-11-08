@@ -1,3 +1,5 @@
+- hide_comment_options = local_assigns[:hide_comment_options].presence || false
+
 .comment-a{"data-comment-id": comment.id}
   %figure
     = image_tag comment.creator.avatar.url(:thumb), width: 50
@@ -7,12 +9,15 @@
     %p= readmore(comment.body)
   %p.meta
     %time{datetime: comment.created_at.strftime('%Y-%m-%d %H:%M')}= I18n.l(comment.created_at, format: :full_date)
-    %span &bull;
-    - if report = comment.reported_by(current_user, request.remote_ip)
-      = link_to t(:cancel_spam_report), url_for([comment.commentable, comment, report]), remote: true, method: :delete
-    - else
-      = link_to t(:report_as_spam), url_for([comment.commentable, comment, comment.spam_reports.build]), remote: true, method: :post
 
-    - if comment.can_remove?(current_user)
-      %span &bull;
-      = link_to t(:remove_comment), url_for([comment.commentable, comment]), remote: true, method: :delete
+    - unless hide_comment_options
+      - if comment.can_be_reported?
+        %span &bull;
+        - if report = comment.reported_by(current_user, request.remote_ip)
+          = link_to t(:cancel_spam_report), url_for([comment.commentable, comment, report]), remote: true, method: :delete
+        - else
+          = link_to t(:report_as_spam), url_for([comment.commentable, comment, comment.spam_reports.build]), remote: true, method: :post
+
+      - if comment.can_remove?(current_user)
+        %span &bull;
+        = link_to t(:remove_comment), url_for([comment.commentable, comment]), remote: true, method: :delete
