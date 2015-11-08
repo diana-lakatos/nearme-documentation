@@ -24,7 +24,9 @@ module ListingsHelper
       initial_bookings: @initial_bookings ? @initial_bookings[listing.id] : {},
       booking_type: listing.booking_type,
       continuous_dates: listing.transactable_type.action_continuous_dates_booking,
-      subscription_prices: listing.subscription_variants
+      subscription_prices: listing.subscription_variants,
+      zone_offset: listing.zone_utc_offset,
+      timezone_info: listing.timezone_info,  
     }
     if listing.schedule_booking?
       base_data.merge!({
@@ -43,7 +45,8 @@ module ListingsHelper
       second_date = listing.second_available_date
 
       # Daily open/quantity availability data for datepickers
-      availability = listing.availability_status_between(Time.zone.today, Time.zone.today.advance(:years => 1))
+      today = Time.now.in_time_zone(listing.timezone).to_date
+      availability = listing.availability_status_between(today, today.advance(:years => 1))
 
       # Initial hourly availability schedule data for hourly reservations
       hourly_availability = {

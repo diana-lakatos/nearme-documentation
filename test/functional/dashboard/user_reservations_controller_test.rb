@@ -30,71 +30,64 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
   end
 
   context 'export' do
-
-    setup do
+    should 'be exportable to .ics format' do
       @listing = FactoryGirl.create(:transactable, :name => 'ICS Listing')
       @reservation = FactoryGirl.build(:reservation_with_credit_card, :listing => @listing)
       @reservation.periods = []
-      Timecop.freeze(Time.zone.local(2013, 6, 28, 10, 5, 0))
-      @reservation.add_period(Time.zone.local(2013, 7, 1, 10, 5, 0).to_date)
-      @reservation.add_period(Time.zone.local(2013, 7, 2, 10, 5, 0).to_date)
-      @reservation.add_period(Time.zone.local(2013, 7, 3, 10, 5, 0).to_date)
-      @reservation.save!
-      sign_in @reservation.owner
-    end
+      travel_to Time.zone.local(2013, 6, 28, 10, 5, 0) do
+        @reservation.add_period(Time.zone.local(2013, 7, 1, 10, 5, 0).to_date)
+        @reservation.add_period(Time.zone.local(2013, 7, 2, 10, 5, 0).to_date)
+        @reservation.add_period(Time.zone.local(2013, 7, 3, 10, 5, 0).to_date)
+        @reservation.save!
+        sign_in @reservation.owner
 
-    should 'be exportable to .ics format' do
-      url = dashboard_user_reservations_url(id: @reservation.id, host: Rails.application.routes.default_url_options[:host])
-      get :export, :format => :ics, :listing_id => @reservation.listing.id, :id => @reservation.id
-      assert_response :success
-      assert_equal "text/calendar", response.content_type
-      expected_result = ["BEGIN:VCALENDAR",
-                         "PRODID;X-RICAL-TZSOURCE=TZINFO:-//com.denhaven2/NONSGML ri_cal gem//EN",
-                         "CALSCALE:GREGORIAN",
-                         "VERSION:2.0",
-                         "X-WR-CALNAME::#{@reservation.listing.company.instance.name}",
-                         "X-WR-RELCALID::#{@reservation.owner.id}",
-                         "BEGIN:VEVENT",
-                         "CREATED;VALUE=DATE-TIME:20130628T100500Z",
-                         "DTEND;VALUE=DATE-TIME:20130701T170000",
-                         "DTSTART;VALUE=DATE-TIME:20130701T090000",
-                         "LAST-MODIFIED;VALUE=DATE-TIME:20130628T100500Z",
-                         "UID:#{@reservation.id}_2013-07-01",
-                         "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
-                         "URL:#{url}",
-                         "SUMMARY:ICS Listing",
-                         "LOCATION:42 Wallaby Way\\, North Highlands\\, California",
-                         "END:VEVENT",
-                         "BEGIN:VEVENT",
-                         "CREATED;VALUE=DATE-TIME:20130628T100500Z",
-                         "DTEND;VALUE=DATE-TIME:20130702T170000",
-                         "DTSTART;VALUE=DATE-TIME:20130702T090000",
-                         "LAST-MODIFIED;VALUE=DATE-TIME:20130628T100500Z",
-                         "UID:#{@reservation.id}_2013-07-02",
-                         "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
-                         "URL:#{url}",
-                         "SUMMARY:ICS Listing",
-                         "LOCATION:42 Wallaby Way\\, North Highlands\\, California",
-                         "END:VEVENT",
-                         "BEGIN:VEVENT",
-                         "CREATED;VALUE=DATE-TIME:20130628T100500Z",
-                         "DTEND;VALUE=DATE-TIME:20130703T170000",
-                         "DTSTART;VALUE=DATE-TIME:20130703T090000",
-                         "LAST-MODIFIED;VALUE=DATE-TIME:20130628T100500Z",
-                         "UID:#{@reservation.id}_2013-07-03",
-                         "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
-                         "URL:#{url}",
-                         "SUMMARY:ICS Listing",
-                         "LOCATION:42 Wallaby Way\\, North Highlands\\, California",
-                         "END:VEVENT",
-                         "END:VCALENDAR"]
-      assert_equal expected_result, response.body.split("\r\n").reject { |el| el.include?('DTSTAMP') }
+        url = dashboard_user_reservations_url(id: @reservation.id, host: Rails.application.routes.default_url_options[:host])
+        get :export, :format => :ics, :listing_id => @reservation.listing.id, :id => @reservation.id
+        assert_response :success
+        assert_equal "text/calendar", response.content_type
+        expected_result = ["BEGIN:VCALENDAR",
+                           "PRODID;X-RICAL-TZSOURCE=TZINFO:-//com.denhaven2/NONSGML ri_cal gem//EN",
+                           "CALSCALE:GREGORIAN",
+                           "VERSION:2.0",
+                           "X-WR-CALNAME::#{@reservation.listing.company.instance.name}",
+                           "X-WR-RELCALID::#{@reservation.owner.id}",
+                           "BEGIN:VEVENT",
+                           "CREATED;VALUE=DATE-TIME:20130628T100500Z",
+                           "DTEND;VALUE=DATE-TIME:20130701T170000",
+                           "DTSTART;VALUE=DATE-TIME:20130701T090000",
+                           "LAST-MODIFIED;VALUE=DATE-TIME:20130628T100500Z",
+                           "UID:#{@reservation.id}_2013-07-01",
+                           "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
+                           "URL:#{url}",
+                           "SUMMARY:ICS Listing",
+                           "LOCATION:42 Wallaby Way\\, North Highlands\\, California",
+                           "END:VEVENT",
+                           "BEGIN:VEVENT",
+                           "CREATED;VALUE=DATE-TIME:20130628T100500Z",
+                           "DTEND;VALUE=DATE-TIME:20130702T170000",
+                           "DTSTART;VALUE=DATE-TIME:20130702T090000",
+                           "LAST-MODIFIED;VALUE=DATE-TIME:20130628T100500Z",
+                           "UID:#{@reservation.id}_2013-07-02",
+                           "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
+                           "URL:#{url}",
+                           "SUMMARY:ICS Listing",
+                           "LOCATION:42 Wallaby Way\\, North Highlands\\, California",
+                           "END:VEVENT",
+                           "BEGIN:VEVENT",
+                           "CREATED;VALUE=DATE-TIME:20130628T100500Z",
+                           "DTEND;VALUE=DATE-TIME:20130703T170000",
+                           "DTSTART;VALUE=DATE-TIME:20130703T090000",
+                           "LAST-MODIFIED;VALUE=DATE-TIME:20130628T100500Z",
+                           "UID:#{@reservation.id}_2013-07-03",
+                           "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
+                           "URL:#{url}",
+                           "SUMMARY:ICS Listing",
+                           "LOCATION:42 Wallaby Way\\, North Highlands\\, California",
+                           "END:VEVENT",
+                           "END:VCALENDAR"]
+        assert_equal expected_result, response.body.split("\r\n").reject { |el| el.include?('DTSTAMP') }
+      end
     end
-
-    teardown do
-      Timecop.return
-    end
-
   end
 
   context 'GET bookings' do
@@ -120,6 +113,8 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
       should 'if any upcoming bookings' do
         @reservation = FactoryGirl.create(:reservation, owner: @user)
         @reservation.add_period((Time.zone.now.next_week + 4.days).to_date)
+        @reservation.starts_at = @reservation.first_period.starts_at
+        @reservation.ends_at = @reservation.last_period.ends_at
         @reservation.save
         get :upcoming
         assert_response :success
@@ -130,7 +125,6 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
 
       should 'if any archived bookings' do
         FactoryGirl.create(:past_reservation, owner: @user)
-
         get :archived
         assert_response :success
         assert_select ".order", 1

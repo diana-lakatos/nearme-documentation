@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151110174210) do
+ActiveRecord::Schema.define(version: 20151116100557) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1622,6 +1622,9 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.string   "express_token",                                 limit: 255
     t.string   "express_payer_id",                              limit: 255
     t.integer  "payment_method_id"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.string   "time_zone"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -3303,10 +3306,10 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.datetime "cancellation_policy_enabled"
     t.integer  "cancellation_policy_hours_for_cancellation",                                     default: 0
     t.integer  "cancellation_policy_penalty_percentage",                                         default: 0
-    t.boolean  "action_recurring_booking",                                                       default: false, null: false
+    t.boolean  "action_recurring_booking",                                                       default: false,      null: false
     t.boolean  "show_page_enabled",                                                              default: false
     t.text     "custom_csv_fields"
-    t.boolean  "action_overnight_booking",                                                       default: false, null: false
+    t.boolean  "action_overnight_booking",                                                       default: false,      null: false
     t.text     "onboarding_form_fields"
     t.decimal  "service_fee_guest_percent",                              precision: 5, scale: 2, default: 0.0
     t.decimal  "service_fee_host_percent",                               precision: 5, scale: 2, default: 0.0
@@ -3370,6 +3373,7 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.integer  "position",                                                                       default: 0
     t.boolean  "action_weekly_subscription_booking"
     t.boolean  "action_monthly_subscription_booking"
+    t.string   "timezone_rule",                                                                  default: "location"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -3688,11 +3692,12 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.boolean  "tutorial_displayed",                                 default: false
     t.integer  "followers_count",                                    default: 0,                                                                                   null: false
     t.integer  "following_count",                                    default: 0,                                                                                   null: false
+    t.string   "external_id"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
   add_index "users", ["domain_id"], name: "index_users_on_domain_id", using: :btree
-  add_index "users", ["instance_id", "email"], name: "index_users_on_slug", unique: true, where: "(deleted_at IS NULL)", using: :btree
+  add_index "users", ["instance_id", "email", "external_id"], name: "index_users_on_instance_id_and_email_and_external_id", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "users", ["instance_id", "reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["instance_id", "slug"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["instance_id"], name: "index_users_on_instance_id", using: :btree

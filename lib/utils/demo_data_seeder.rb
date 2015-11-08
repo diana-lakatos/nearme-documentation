@@ -1,4 +1,4 @@
-require 'timecop'
+include ActiveSupport::Testing::TimeHelpers
 
 module Utils
   class DemoDataSeeder
@@ -168,7 +168,7 @@ module Utils
         companies.each do |company|
           company.locations.each do |location|
             period.each do |date|
-              Timecop.freeze(date) do
+              travel_to(date) do
                 1.upto(rand(3).to_i) do
                   impression = location.track_impression
                   impression.save!

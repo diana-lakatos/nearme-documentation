@@ -4,6 +4,8 @@ en:
       payment_gateway: "Payment gateway"
       payment_method: "Payment method"
     attributes:
+      instance:
+        time_zone: "Default Time Zone"
       payment_method/payment_method_type:
         credit_card: "Credit Card"
         nonce: "PayPal"
@@ -18,8 +20,6 @@ en:
         test_active: "Test"
         supported_countries: "Supported Countries"
         supported_currencies: "Supported Currencies"
-        payout_supported_countries: "Payout countries"
-        payout_supported_currencies: "Payout currencies"
       listing_type:
         name: "Listing type"
       location_type:
@@ -38,6 +38,7 @@ en:
         created_at: 'Created at'
         results: 'Results'
       transactable:
+        timezone_info: "Please note that this reservation operates in %{timezone} time zone."
         action_rfq: 'Request for Quote'
       "user/companies/locations/listings":
         action_free_booking: "Price type"

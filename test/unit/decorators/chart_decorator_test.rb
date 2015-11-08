@@ -3,7 +3,7 @@ require 'test_helper'
 class ChartDecoratorTest < ActionView::TestCase
 
   setup do
-    Timecop.travel(Time.zone.parse('2013-01-01'))
+    travel_to(Time.zone.parse('2013-01-01'))
   end
 
   context 'a blank PaymentTransfer collection decorated with WeeklyChartDecorator' do
@@ -47,7 +47,7 @@ class ChartDecoratorTest < ActionView::TestCase
   end
 
   teardown do
-    Timecop.return
+    travel_back
   end
 
   private

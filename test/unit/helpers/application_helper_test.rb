@@ -20,7 +20,7 @@ class ApplicationHelperTest < ActionView::TestCase
   context 'distance_of_time_in_words_or_date' do
     setup do
       @datetime = DateTime.new(2013, 1, 1, 12, 0, 0).in_time_zone
-      Timecop.travel(@datetime)
+      travel_to(@datetime)
     end
 
     should 'return hour and time' do
@@ -40,7 +40,7 @@ class ApplicationHelperTest < ActionView::TestCase
     end
 
     teardown do
-      Timecop.return
+      travel_back
     end
 
   end
