@@ -435,11 +435,3 @@ Then /^I should be offered calendar and manage options$/ do
     page.should have_content('Manage')
   end
 end
-
-Before('@timecop') do
-  Timecop.freeze Time.zone.now
-end
-
-After('@timecop') do
-  Timecop.return
-end

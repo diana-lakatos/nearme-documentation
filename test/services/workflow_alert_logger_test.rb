@@ -65,12 +65,12 @@ class WorkflowAlertLoggerTest < ActiveSupport::TestCase
           @email_alert = FactoryGirl.create(:workflow_alert)
           @base_date = Time.zone.local(2013, 1, 27, 10, 5)
           assert_difference 'WorkflowAlertWeeklyAggregatedLog.count' do
-            Timecop.freeze(@base_date) do
+            travel_to @base_date do
               WorkflowAlertLogger.new(@email_alert).log!
             end
           end
           assert_no_difference 'WorkflowAlertWeeklyAggregatedLog.count' do
-            Timecop.freeze(@base_date + 6.days) do
+            travel_to @base_date + 6.days do
               WorkflowAlertLogger.new(@email_alert).log!
             end
           end
@@ -80,7 +80,7 @@ class WorkflowAlertLoggerTest < ActiveSupport::TestCase
           assert_equal 4, workflow_alert_for_5th_week.week_number
           assert_equal 2013, workflow_alert_for_5th_week.year
           assert_difference 'WorkflowAlertWeeklyAggregatedLog.count' do
-            Timecop.freeze(@base_date+ 7.days) do
+            travel_to @base_date+ 7.days do
               WorkflowAlertLogger.new(@email_alert).log!
             end
           end
@@ -96,7 +96,7 @@ class WorkflowAlertLoggerTest < ActiveSupport::TestCase
           @email_alert = FactoryGirl.create(:workflow_alert)
           @base_date = Time.zone.local(2013, 1, 27, 10, 5)
           assert_difference 'WorkflowAlertMonthlyAggregatedLog.count' do
-            Timecop.freeze(@base_date) do
+            travel_to @base_date do
               WorkflowAlertLogger.new(@email_alert).log!
             end
           end
@@ -106,12 +106,12 @@ class WorkflowAlertLoggerTest < ActiveSupport::TestCase
           assert_equal 1, workflow_alert_for_1st_month.month
           assert_equal 2013, workflow_alert_for_1st_month.year
           assert_difference 'WorkflowAlertMonthlyAggregatedLog.count' do
-            Timecop.freeze(@base_date + 6.days) do
+            travel_to @base_date + 6.days do
               WorkflowAlertLogger.new(@email_alert).log!
             end
           end
           assert_difference 'WorkflowAlertWeeklyAggregatedLog.count' do
-            Timecop.freeze(@base_date+ 7.days) do
+            travel_to @base_date+ 7.days do
               WorkflowAlertLogger.new(@email_alert).log!
             end
           end

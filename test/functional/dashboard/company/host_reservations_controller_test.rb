@@ -15,7 +15,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     end
 
     should 'show related guests and appropriate units' do
-      FactoryGirl.create(:reservation, owner: @user, listing: @related_listing)
+      FactoryGirl.create(:future_reservation, owner: @user, listing: @related_listing)
       get :index
       assert_response :success
       assert_select ".order", 1
@@ -55,6 +55,39 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       get :index
       assert_response :success
       assert_select ".sharelocation", 0
+    end
+
+
+
+    should 'show reservation properly in correct time zones' do
+      @user.update_attribute(:time_zone, 'Hawaii')
+      Time.use_zone 'Hawaii' do
+        reservation = FactoryGirl.create(:reservation, owner: @user, listing: @related_listing)
+        ReservationPeriod.destroy_all
+        reservation.add_period(Time.zone.tomorrow, 600, 720) # Tommorow form 10:00 - 12:00 AM
+        reservation.starts_at = Time.zone.tomorrow.at_beginning_of_day.advance(hours: 10)
+        reservation.ends_at = Time.zone.tomorrow.at_beginning_of_day.advance(hours: 12)
+        reservation.save
+
+        # Current time is before the reservation
+        get :index
+        @guest_list = assigns(:guest_list)
+        assert_equal [reservation], @guest_list.reservations
+
+        # Travel to time in the middle of reservation
+        travel_to Time.zone.tomorrow.at_beginning_of_day.advance(hours: 11) do
+          get :index
+          @guest_list = assigns(:guest_list)
+          assert_equal [reservation], @guest_list.reservations
+
+          # Travel just after reservation is over
+          travel_to Time.zone.today.at_beginning_of_day.advance(hours: 13) do
+            get :index
+            @guest_list = assigns(:guest_list)
+            assert_equal [], @guest_list.reservations
+          end
+        end
+      end
     end
 
   end

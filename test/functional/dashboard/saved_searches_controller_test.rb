@@ -10,7 +10,7 @@ class Dashboard::SavedSearchesControllerTest < ActionController::TestCase
     end
 
     should 'update saved_search#last_viewed_at' do
-      Timecop.freeze(Time.zone.now) do
+      travel_to Time.zone.now do
         get :search, id: @saved_search.id
         assert_equal Time.zone.now.to_i, @saved_search.reload.last_viewed_at.to_i
       end

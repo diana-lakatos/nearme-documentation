@@ -495,9 +495,6 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.string   "calling_code"
   end
 
-  add_index "countries", ["iso"], name: "index_countries_on_iso", using: :btree
-  add_index "countries", ["name"], name: "index_countries_on_name", using: :btree
-
   create_table "country_payment_gateways", force: :cascade do |t|
     t.string   "country_alpha2_code", limit: 255
     t.integer  "payment_gateway_id"
@@ -536,8 +533,6 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.string  "subunit"
     t.integer "smallest_denomination"
   end
-
-  add_index "currencies", ["iso_code"], name: "index_currencies_on_iso_code", using: :btree
 
   create_table "custom_attributes", force: :cascade do |t|
     t.string   "name",                 limit: 255
@@ -1234,13 +1229,10 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.integer  "instance_id"
     t.integer  "company_id"
     t.integer  "partner_id"
+    t.boolean  "payout",             default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "payment_gateways_countries", ["country_id"], name: "index_payment_gateways_countries_on_country_id", using: :btree
-  add_index "payment_gateways_countries", ["instance_id"], name: "index_payment_gateways_countries_on_instance_id", using: :btree
-  add_index "payment_gateways_countries", ["payment_gateway_id"], name: "index_payment_gateways_countries_on_payment_gateway_id", using: :btree
 
   create_table "payment_gateways_currencies", force: :cascade do |t|
     t.integer  "currency_id"
@@ -1248,13 +1240,10 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.integer  "instance_id"
     t.integer  "company_id"
     t.integer  "partner_id"
+    t.boolean  "payout",             default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "payment_gateways_currencies", ["currency_id"], name: "index_payment_gateways_currencies_on_currency_id", using: :btree
-  add_index "payment_gateways_currencies", ["instance_id"], name: "index_payment_gateways_currencies_on_instance_id", using: :btree
-  add_index "payment_gateways_currencies", ["payment_gateway_id"], name: "index_payment_gateways_currencies_on_payment_gateway_id", using: :btree
 
   create_table "payment_methods", force: :cascade do |t|
     t.integer  "payment_gateway_id"
@@ -1266,9 +1255,6 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "payment_methods", ["instance_id"], name: "index_payment_methods_on_instance_id", using: :btree
-  add_index "payment_methods", ["payment_gateway_id"], name: "index_payment_methods_on_payment_gateway_id", using: :btree
 
   create_table "payment_transfers", force: :cascade do |t|
     t.integer  "company_id"
@@ -1622,6 +1608,9 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.string   "express_token",                                 limit: 255
     t.string   "express_payer_id",                              limit: 255
     t.integer  "payment_method_id"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.string   "time_zone"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -3303,10 +3292,10 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.datetime "cancellation_policy_enabled"
     t.integer  "cancellation_policy_hours_for_cancellation",                                     default: 0
     t.integer  "cancellation_policy_penalty_percentage",                                         default: 0
-    t.boolean  "action_recurring_booking",                                                       default: false, null: false
+    t.boolean  "action_recurring_booking",                                                       default: false,      null: false
     t.boolean  "show_page_enabled",                                                              default: false
     t.text     "custom_csv_fields"
-    t.boolean  "action_overnight_booking",                                                       default: false, null: false
+    t.boolean  "action_overnight_booking",                                                       default: false,      null: false
     t.text     "onboarding_form_fields"
     t.decimal  "service_fee_guest_percent",                              precision: 5, scale: 2, default: 0.0
     t.decimal  "service_fee_host_percent",                               precision: 5, scale: 2, default: 0.0
@@ -3355,8 +3344,7 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.boolean  "search_location_type_filter",                                                    default: true
     t.boolean  "show_company_name",                                                              default: true
     t.string   "slug"
-    t.boolean  "action_weekly_subscription_booking"
-    t.boolean  "action_monthly_subscription_booking"
+    t.string   "timezone_rule",                                                                  default: "location"
     t.string   "default_search_view"
     t.string   "search_engine"
     t.string   "searcher_type"
@@ -3370,6 +3358,8 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.boolean  "date_pickers_use_availability_rules"
     t.string   "date_pickers_mode"
     t.integer  "position",                                                                       default: 0
+    t.boolean  "action_weekly_subscription_booking"
+    t.boolean  "action_monthly_subscription_booking"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

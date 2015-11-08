@@ -2,6 +2,17 @@
 # Migrate rake task to help with all kind of data migration
 
 namespace :migrate do
+  task :populate_reservation_start_and_end => :environment do
+    Reservation.includes(:periods).find_each do |reservation|
+      timezone = reservation.time_zone = reservation.listing.try(:timezone) || Time.zone.name
+      reservation.update_columns(
+        time_zone: timezone,
+        starts_at: reservation.first_period.try(:starts_at),
+        ends_at: reservation.last_period.try(:ends_at)
+      )
+    end
+  end
+
 
   task :country_payment_gateway => :environment do
     class CountryPaymentGateway < ActiveRecord::Base

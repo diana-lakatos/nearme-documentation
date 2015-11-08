@@ -87,6 +87,10 @@ class @Bookings.Listing
     true
 
   canBookDate: (date, min) ->
+    if date.setHours(0,0,0,0) == (new Date()).setHours(0,0,0,0)
+      if ((new Date().getUTCHours() + @data.zone_offset) * 60) + (new Date).getMinutes() > min
+        return false
+
     @availabilityFor(date, min) >= @defaultQuantity
 
   availabilityFor: (date, minute = null) ->

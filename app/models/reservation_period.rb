@@ -7,7 +7,7 @@ class ReservationPeriod < ActiveRecord::Base
 
   # attr_accessible :date, :start_minute, :end_minute
 
-  delegate :listing, :to => :reservation
+  delegate :listing, :time_zone, :to => :reservation
 
   # Returns the number of hours reserved on this date.
   # If no hourly time specified, it is assumed that the reservation is for all open
@@ -29,11 +29,11 @@ class ReservationPeriod < ActiveRecord::Base
   end
 
   def start_minute
-    super || listing.availability.open_minute_for(date)
+    super || listing.try { |l| l.availability.open_minute_for(date) }
   end
 
   def end_minute
-    super || listing.availability.close_minute_for(date)
+    super || listing.try { |l| l.availability.close_minute_for(date) }
   end
 
   def bookable?
@@ -51,6 +51,26 @@ class ReservationPeriod < ActiveRecord::Base
       Time.parse("#{date} #{hour}:#{minute}").to_formatted_s(:db)
     else
       date.strftime('%Y-%m-%d')
+    end
+  end
+
+  def starts_at
+    Time.use_zone time_zone do
+      if start_minute
+        Time.zone.parse("#{date} #{Time.at(start_minute.to_i * 60).utc.strftime("%H:%M:%S")}")
+      else
+        Time.zone.parse("#{date}").beginning_of_day
+      end
+    end
+  end
+
+  def ends_at
+    Time.use_zone time_zone do
+      if end_minute
+        Time.zone.parse("#{date} #{Time.at(end_minute.to_i * 60).utc.strftime("%H:%M:%S")}")
+      else
+        Time.zone.parse("#{date}").end_of_day
+      end
     end
   end
 

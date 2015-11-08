@@ -162,17 +162,8 @@ class Reservation < ActiveRecord::Base
 
   scope :no_recurring, lambda { where(recurring_booking_id: nil) }
 
-  scope :upcoming, lambda {
-    joins(:periods).
-    where('reservation_periods.date >= ?', Time.zone.today).
-    uniq
-  }
-
-  scope :past, lambda {
-    joins(:periods).
-    where('reservation_periods.date < ?', Time.zone.today).
-    uniq
-  }
+  scope :past, lambda { where("ends_at < ?", Time.current)}
+  scope :upcoming, lambda { where("ends_at >= ?", Time.current)}
 
   scope :visible, lambda {
     without_state(:cancelled_by_guest, :cancelled_by_host).upcoming
@@ -215,7 +206,7 @@ class Reservation < ActiveRecord::Base
   }
 
   scope :archived, lambda {
-    joins(:periods).where('reservation_periods.date < ? OR reservations.state IN (?)', Time.zone.today, ['rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest']).uniq
+    where('reservations.ends_at < ? OR reservations.state IN (?)', Time.current, ['rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest'])
   }
 
   scope :last_x_days, lambda { |days_in_past|
@@ -269,6 +260,10 @@ class Reservation < ActiveRecord::Base
 
   def first_period
     @first_period ||= periods.sort_by(&:date).first
+  end
+
+  def last_period
+    @last_period ||= periods.sort_by(&:date).last
   end
 
   def date

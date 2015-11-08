@@ -8,7 +8,7 @@ class ReservationDecoratorTest < ActionView::TestCase
 
     setup do
       @time = DateTime.new(2014, 1, 1).in_time_zone
-      Timecop.travel(@time)
+      travel_to(@time)
       @reservation = FactoryGirl.build(:reservation, date: @time.next_week.to_date).decorate
     end
 
@@ -60,7 +60,7 @@ class ReservationDecoratorTest < ActionView::TestCase
     end
 
     teardown do
-      Timecop.return
+      travel_back
     end
   end
 
@@ -142,7 +142,7 @@ class ReservationDecoratorTest < ActionView::TestCase
     setup do
       stub_mixpanel
       @time = DateTime.new(2014, 1, 1).in_time_zone
-      Timecop.travel(@time)
+      travel_to(@time)
       listing = FactoryGirl.create(:transactable, action_hourly_booking: true)
       @reservation = FactoryGirl.build(:reservation,
                                        subtotal_amount_cents: 500_00,
@@ -166,7 +166,7 @@ class ReservationDecoratorTest < ActionView::TestCase
     end
 
     teardown do
-      Timecop.return
+      travel_back
     end
   end
 

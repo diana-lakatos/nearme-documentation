@@ -206,6 +206,8 @@ class @Bookings.Datepicker
     @timePicker.on 'change', =>
       @updateTimes()
     @updateTimes()
+    @timePicker.updateSelectableTimes()
+
 
 
   updateTimes: ->

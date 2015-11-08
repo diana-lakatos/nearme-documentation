@@ -166,9 +166,11 @@ class Bookings.Controller
 
     if !@listing.isBooked()
       @bookButton.addClass('disabled')
+      @bookButton.removeAttr("data-disable-with")
       @bookButton.tooltip()
     else
       @bookButton.removeClass('disabled')
+      @bookButton.attr("data-disable-with", "Processing ...")
       @bookButton.tooltip('destroy')
 
   disableBookButton: ->
