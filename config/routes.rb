@@ -181,6 +181,12 @@ DesksnearMe::Application.routes.draw do
           get :download_report
         end
       end
+
+      resources :projects do
+        collection do
+          get :download_report
+        end
+      end
     end
 
     namespace :settings do
