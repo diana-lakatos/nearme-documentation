@@ -82,7 +82,7 @@ class Project < ActiveRecord::Base
     end
   end
 
-  after_commit :user_created_project_event, on: :create
+  after_commit :user_created_project_event, on: :create, unless: ->(record) { record.draft? }
   def user_created_project_event
     event = :user_created_project
     user = self.creator.try(:object).presence || self.creator

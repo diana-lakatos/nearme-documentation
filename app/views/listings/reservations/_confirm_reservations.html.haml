@@ -9,8 +9,10 @@
     - if f.object.listing.transactable_type.cancellation_policy_hours_for_cancellation.zero?
       = t('reservations.no_cancellation_time')
     - else
-      = t('reservations.cancellation_time', time: f.object.listing.transactable_type.cancellation_policy_hours_for_cancellation)
+      %span.cancellation-time
+        = t('reservations.cancellation_time', time: f.object.listing.transactable_type.cancellation_policy_hours_for_cancellation)
     - if f.object.listing.transactable_type.cancellation_policy_penalty_percentage.zero?
       = t('reservations.no_cancellation_fee')
     - else
-      = t('reservations.cancellation_fee', fee: f.object.listing.transactable_type.cancellation_policy_penalty_percentage)
+      %span.cancellation-fee
+        = t('reservations.cancellation_fee', fee: f.object.listing.transactable_type.cancellation_policy_penalty_percentage)

@@ -13,7 +13,8 @@ en:
 
     placeholders:
       defaults:
-        topic_ids: 'Topic'
+        topic_ids: 'Select Topic'
+        role: 'Select Role'
       search:
         search: 'Search'
 
