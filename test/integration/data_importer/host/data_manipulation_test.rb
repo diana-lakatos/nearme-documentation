@@ -9,6 +9,12 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @location_type = FactoryGirl.create(:location_type, name: 'My Type')
     @transactable_type = FactoryGirl.create(:transactable_type_current_data)
     GmapsFake.stub_requests
+
+    @category1 = FactoryGirl.create(:category)
+    @category2 = FactoryGirl.create(:category)
+    @category1.update_column(:permalink, 'category1_permalink')
+    @category2.update_column(:permalink, 'category2_permalink')
+
     stub_mixpanel
   end
 
@@ -68,6 +74,63 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
             assert_no_difference 'Photo.count' do
               DataUploadHostConvertJob.perform(@data_upload.id)
               assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
+            end
+          end
+        end
+      end
+    end
+  end
+
+  should 'existing listings should have categories after import of modified data with categories' do
+    setup_current_data
+
+    setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data_with_categories.csv'), true)
+    assert_no_difference 'Company.count' do
+      assert_no_difference 'Location.count' do
+        assert_no_difference 'Address.count' do
+          assert_no_difference 'Transactable.count' do
+            assert_no_difference 'Photo.count' do
+              DataUploadHostConvertJob.perform(@data_upload.id)
+              assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
+
+              assert_equal [@category1.id, @category2.id], @listing_one.categories.map(&:id).sort
+              assert_equal [@category1.id, @category2.id], @listing_two.categories.map(&:id).sort
+            end
+          end
+        end
+      end
+    end
+  end
+
+  should 'existing listings should have their categories overwritten after import of modified data with categories' do
+    setup_current_data
+
+    # We setup two categories for each listing
+    @listing_one.categories = [@category1, @category2]
+    @listing_two.categories = [@category1, @category2]
+
+    # We reload to ensure the categories are in the DB
+    @listing_one.reload
+    @listing_two.reload
+
+    assert_equal [@category1.id, @category2.id], @listing_one.categories.map(&:id).sort
+    assert_equal [@category1.id, @category2.id], @listing_two.categories.map(&:id).sort
+
+    # After upload, they should no longer have two categories each, but only one
+    setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data_with_single_categories.csv'), true)
+    assert_no_difference 'Company.count' do
+      assert_no_difference 'Location.count' do
+        assert_no_difference 'Address.count' do
+          assert_no_difference 'Transactable.count' do
+            assert_no_difference 'Photo.count' do
+              DataUploadHostConvertJob.perform(@data_upload.id)
+              assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
+
+              @listing_one.reload
+              @listing_two.reload
+
+              assert_equal [@category1.id], @listing_one.categories.map(&:id).sort
+              assert_equal [@category1.id], @listing_two.categories.map(&:id).sort
             end
           end
         end

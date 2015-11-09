@@ -118,6 +118,15 @@ class DataImporter::Product::Importer
     end
   end
 
+  def assign_product_categories(categories_text, product)
+    if categories_text.present?
+      categories_text.split(/\s*,\s*/).each do |category_permalink|
+        category = Category.find_by_permalink(category_permalink)
+        product.categories << category if category.present?
+      end
+    end
+  end
+
   def import_product(params, user, company, shipping_category, price, &block)
     external_id = params.delete(:external_id)
     if external_id.nil?
@@ -128,7 +137,8 @@ class DataImporter::Product::Importer
       add_warning("Product name is too long: #{params[:name]}")
       params[:name] = params[:name][0..251] + '...'
     end
-    import_entity(block) do
+    product_categories = params.delete(:product_categories)
+    product = import_entity(block) do
       find_or_initialize_by_and_assign(Spree::Product, external_id: external_id, company_id: company.id) do |product|
         unless product.deleted_at.nil?
           product.update_column(:deleted_at, nil)
@@ -143,6 +153,9 @@ class DataImporter::Product::Importer
         product.shipping_category = shipping_category
       end
     end
+    # We do this here, after the product is saved to the DB because manipulating
+    # the categories association will force the committing of the product to the DB
+    assign_product_categories(product_categories.to_s, product)
   end
 
 
