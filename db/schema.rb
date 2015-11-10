@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151105191133) do
+ActiveRecord::Schema.define(version: 20151110174210) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -3354,8 +3354,9 @@ ActiveRecord::Schema.define(version: 20151105191133) do
     t.boolean  "rental_shipping",                                                                default: false
     t.boolean  "search_location_type_filter",                                                    default: true
     t.boolean  "show_company_name",                                                              default: true
-    t.boolean  "action_subscription_booking"
     t.string   "slug"
+    t.boolean  "action_weekly_subscription_booking"
+    t.boolean  "action_monthly_subscription_booking"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

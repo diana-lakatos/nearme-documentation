@@ -53,8 +53,8 @@
           .col-md-11
             = t('simple_form.labels.listings.subscription_periods')
             .row.half-margin.price-input-options
-              = render 'price_field', :f => f, :price => 'weekly_subscription', :label => t("simple_form.labels.transactable.price.weekly_subscription"), :include_checkbox => true
-              = render 'price_field', :f => f, :price => 'monthly_subscription', :label => t("simple_form.labels.transactable.price.monthly_subscription"), :include_checkbox => true
+              - f.object.transactable_type.subscription_options_names.each do |price|
+                = render 'price_field', :f => f, :price => price, :label => t("simple_form.labels.transactable.price.#{price}"), :include_checkbox => true
 
 - if f.object.transactable_type.schedule_booking_enabled?
   - content_for :booking_type_schedule_tab_content do
