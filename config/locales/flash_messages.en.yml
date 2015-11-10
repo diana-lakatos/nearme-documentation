@@ -171,7 +171,7 @@ en:
             generated: "Transfers are being generated, pelase refresh the page to see them on the list."
             no_new_transfers: "There are no pending payments"
           payment_gateways:
-            created: 'Payment gateway has been successfully created.\n Add proper configuration to use it in live mode.'
+            created: "Payment gateway has been successfully created. Please add the proper configuration/settings to start using it in your Marketplace."
             updated: 'Payment gateway has been successfully updated'
             deleted: 'Payment gateway has been successfully deleted'
 
