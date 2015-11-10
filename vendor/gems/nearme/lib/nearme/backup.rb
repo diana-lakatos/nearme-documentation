@@ -116,6 +116,10 @@ module NearMe
       puts "Restoring remote db dump..."
       remote_command = "sudo -H -u deploy bash -c 'cd /srv/www/nearme/current && AWS_ACCESS_KEY_ID=#{ENV['AWS_ACCESS_KEY_ID']} AWS_SECRET_ACCESS_KEY=#{ENV['AWS_SECRET_ACCESS_KEY']} RAILS_ENV=#{@environment} bundle exec rake backup:restore'"
       run_remote_command(remote_command)
+
+      puts "Adding stack domains..."
+      remote_command = "sudo -H -u deploy bash -c 'cd /srv/www/nearme/current && RAILS_ENV=#{@environment} bundle exec rake backup:create_stack_domains[#{@stack_name}] '"
+      run_remote_command(remote_command)
     end
 
     private
