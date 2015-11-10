@@ -1011,9 +1011,9 @@ ActiveRecord::Schema.define(version: 20151105191133) do
     t.string   "encrypted_google_consumer_secret",      limit: 255
     t.string   "default_oauth_signin_provider"
     t.boolean  "custom_waiver_agreements",                                                  default: true
+    t.string   "time_zone"
     t.string   "seller_attachments_access_level",       limit: 255,                         default: "disabled",    null: false
     t.integer  "seller_attachments_documents_num",                                          default: 10,            null: false
-    t.string   "time_zone"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree

@@ -6,13 +6,13 @@
   - followed = event.followed
   - body = event.description
   - image = image_for_followed(followed)
-  - title = link_to event.name, followed
+  - title = link_to event.name, followed, target: target
 
 %section
   %article.status-a
     %header
       %figure
-        = link_to followed do
+        = link_to followed, target: target do
           = image.present? ? image_tag(image) : image_tag(space_listing_placeholder_path(width: 80, height: 80))
     %section
       %h3.hx= title if title.present?
