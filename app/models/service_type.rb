@@ -68,6 +68,13 @@ class ServiceType < TransactableType
     pricing_options
   end
 
+  def subscription_options_names
+    pricing_options = []
+    pricing_options << "weekly_subscription" if action_weekly_subscription_booking
+    pricing_options << "monthly_subscription" if action_monthly_subscription_booking
+    pricing_options
+  end
+
   def min_max_prices_are_correct
     Transactable::PRICE_TYPES.each do |price|
       next unless respond_to?(:"min_#{price}_price_cents") || respond_to?(:"max_#{price}_price_cents")
@@ -105,8 +112,12 @@ class ServiceType < TransactableType
 
   def booking_choices
     BOOKING_TYPES.select do |booking_type|
-      attributes["action_#{booking_type}_booking"]
+      try("action_#{booking_type}_booking")
     end
+  end
+
+  def action_subscription_booking
+    action_monthly_subscription_booking || action_weekly_subscription_booking
   end
 
   BOOKING_TYPES.each do |booking_type|
