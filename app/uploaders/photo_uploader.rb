@@ -63,7 +63,7 @@ class PhotoUploader < BaseImageUploader
     process resize_to_fill: [dimensions[:project_cover][:width], dimensions[:project_cover][:height]]
   end
 
-  version :project_thumbnail, from_version: :transformed, if: :generate_project_versions? do
+  version :project_thumbnail, from_version: :transformed do
     process resize_to_fill: [dimensions[:project_thumbnail][:width], dimensions[:project_thumbnail][:height]]
   end
 
