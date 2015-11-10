@@ -25,7 +25,7 @@ DesksnearMe::Application.routes.draw do
       resources :checkout do
         collection do
           get 'get_states'
-          get 'express'
+          get 'cancel_express_checkout'
         end
       end
     end
