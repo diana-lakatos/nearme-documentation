@@ -854,6 +854,25 @@ class User < ActiveRecord::Base
     save(validate: false)
   end
 
+  def self.reset_password_by_token(attributes={})
+    original_token       = attributes[:reset_password_token]
+    reset_password_token = Devise.token_generator.digest(self, :reset_password_token, original_token)
+
+    recoverable = find_or_initialize_with_error_by(:reset_password_token, reset_password_token)
+    recoverable.skip_custom_attribute_validation = true
+
+    if recoverable.persisted?
+      if recoverable.reset_password_period_valid?
+        recoverable.reset_password(attributes[:password], attributes[:password_confirmation])
+      else
+        recoverable.errors.add(:reset_password_token, :expired)
+      end
+    end
+
+    recoverable.reset_password_token = original_token if recoverable.reset_password_token.present?
+    recoverable
+  end
+
   def self.search_by_query(attributes = [], query)
     if query.present?
       words = query.split.map.with_index{|w, i| ["word#{i}".to_sym, "%#{w}%"]}.to_h
