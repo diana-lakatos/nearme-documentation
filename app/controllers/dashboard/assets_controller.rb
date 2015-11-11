@@ -13,6 +13,7 @@ class Dashboard::AssetsController < Dashboard::BaseController
       @listing = current_user.listings.find(params[:transactable][:id]) if params[:transactable][:id].present?
     elsif params[:project]
       @listing_params = params[:project]
+      @owner_type = "Project"
       @listing = current_user.projects.find(params[:project][:id]) if params[:project][:id].present?
     elsif params[:user]
       @listing_params = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]
