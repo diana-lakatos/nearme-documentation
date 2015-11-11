@@ -38,9 +38,11 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     @user.assign_attributes(wizard_params)
     # TODO: tmp hack, the way we use rails-money does not work if you pass currency and daily_price at the same time
     # We remove schedule attributes when assigning the attributes the second time so that we don't end up with duplicated schedule-related objects
+    # We also remove approval requests attributes
     begin
       wizard_params_listing = wizard_params[:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]
       wizard_params_listing.delete(:schedule_attributes)
+      wizard_params_listing.delete(:approval_requests_attributes)
       @user.companies.first.try(:locations).try(:first).try(:listings).try(:first).try(:assign_attributes, wizard_params_listing)
     rescue
       # listing attributes not present in the form, we ignore the error
