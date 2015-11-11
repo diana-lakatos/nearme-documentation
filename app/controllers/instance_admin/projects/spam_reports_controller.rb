@@ -10,10 +10,10 @@ class InstanceAdmin::Projects::SpamReportsController < InstanceAdmin::Projects::
   def show
     if @spamable.is_a?(Comment)
       @partial_name = "comments/activity_feed_comment"
-      @locals = { comment: @spamable, hide_comment_options: true }
+      @locals = { comment: @spamable, hide_comment_options: true, target: "_blank" }
     else
       @partial_name = "shared/activity_status"
-      @locals = { event: @spamable }
+      @locals = { event: @spamable, hide_comment_options: true, target: "_blank" }
     end
 
     render :show, layout: false
