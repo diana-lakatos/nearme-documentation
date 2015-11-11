@@ -84,15 +84,15 @@ When /^I search for product "([^"]*)"$/ do |text|
   search_for_product(text)
 end
 
-When /^I performed search for "([^"]*)"$/ do |query|
+When /^I performed search for "([^\"]*)"$/ do |query|
   visit search_path(:q => query)
 end
 
-When /^I search for "([^"]*)" with location type (.*) forcing list view$/ do |query, lntype|
+When /^I search for "([^\"]*)" with location type (.*) forcing list view$/ do |query, lntype|
   visit search_path(q: query, lntype: lntype.downcase, v: 'list')
 end
 
-When /^I make another search for "([^"]*)"$/ do |query|
+When /^I make another search for "([^\"]*)"$/ do |query|
   visit root_path
   search_for(query)
 end
@@ -113,4 +113,42 @@ Then /^I (do not )?see a search results for the ([^\$].*)$/ do |negative, produc
   else
     page.should have_selector('.result-item[data-product-id="' + product.id.to_s + '"]')
   end
+end
+
+Given(/^21 listings in Auckland$/) do
+  tt = FactoryGirl.create(:transactable_type)
+  21.times { FactoryGirl.create(:listing_in_auckland, transactable_type: tt) }
+end
+
+Then(/^I should see pagination links$/) do
+  # one at top, one at bottom
+  assert_equal 2, page.all(".search-pagination .pagination").count
+
+  # We have two pages and two arrows on each container. But we should
+  # consider that one page is selected (the first), and the first arrow is disabled
+  # since we're on page one. (2+2-1-1)*2 = 4
+  assert_equal 4, page.all(".search-pagination .pagination a").count
+end
+
+Then(/^I should be able to check next page$/) do
+  page.all(".search-pagination .pagination a[rel=next]").first.click
+end
+
+
+Then(/^I should be able to see one listing at last page$/) do
+  sleep(5)
+  assert_equal 1, page.all("article.location").count
+end
+
+Given(/^a listing exists with name: "(.*?)"$/) do |name|
+  FactoryGirl.create(:transactable, name: name)
+end
+
+Given(/^no listings exists$/) do
+  Transactable.unscoped.destroy_all
+  Company.unscoped.destroy_all
+end
+
+Then(/^I should see filtering options$/) do
+  assert_equal 6, page.all(".filter-option").count
 end
