@@ -28,6 +28,9 @@ en:
         blog_post_added: 'New blog post has been added.'
         blog_post_deleted: 'Blog post has been deleted.'
         blog_post_updated: 'Blog post has been updated.'
+    buy_sell_market:
+      checkout:
+        cancel_paypal_express: "PayPal payment canceled"
     buy_sell:
       configuration_saved_successful: 'Configuration saved successfully.'
       commissions_saved_successful: 'Commissions saved successfully.'
