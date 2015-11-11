@@ -80,6 +80,13 @@ class BuySellMarket::CheckoutController < ApplicationController
     @states = Spree::State.where(country_id: params[:country_id])
   end
 
+  def cancel_express_checkout
+    @order.update_attribute(:express_token, nil)
+    flash[:notice] = I18n.t('flash_messages.buy_sell_market.checkout.cancel_paypal_express')
+    jump_to :payment
+    render_wizard
+  end
+
   private
 
   def assign_order_attributes
