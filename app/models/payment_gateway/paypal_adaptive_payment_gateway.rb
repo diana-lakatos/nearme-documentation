@@ -28,6 +28,7 @@ class PaymentGateway::PaypalAdaptivePaymentGateway < PaymentGateway
   def payout_gateway
     if @payout_gateway.nil?
       PayPal::SDK.configure(
+        :mode      => test_mode? ? "sandbox" : "live",
         :app_id    => (test_mode? || !Rails.env.production?) ? 'APP-80W284485P519543T' : settings[:app_id],
         :username  => settings[:login],
         :password  => settings[:password],
