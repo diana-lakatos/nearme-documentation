@@ -916,6 +916,7 @@ en:
         shipping_method: 'Shipping Method'
         shipping_method2: 'SHIPPING METHOD'
         billing_address: 'Billing Address'
+        email_address: 'Email Address'
         shipping_address: 'Shipping Address'
         order_summary: 'Order Summary'
         order_details: 'ORDER DETAILS'
