@@ -16,7 +16,7 @@ class Search.Datepickers
       altField: @container.find('[name="availability[dates][start]"]'),
       showOtherMonths: true,
       selectOtherMonths: true,
-      onClose: (selectedDateString) ->
+      onClose: (selectedDateString) =>
         selectedDate = new Date(selectedDateString)
         if selectedDate > new Date(end_date.val()) || selectedDate > new Date(@container.find('[name="fake_end_date"]').val())
           newEndDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() + 1)
@@ -28,7 +28,7 @@ class Search.Datepickers
       defaultDate: 1,
       showOtherMonths: false,
       selectOtherMonths: false,
-      onClose: (selectedDateString) ->
+      onClose: (selectedDateString) =>
         selectedDate = new Date(selectedDateString)
         if selectedDate < new Date(start_date.val()) || selectedDate < new Date(@container.find('[name="fake_start_date"]').val())
           newStartDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() - 1)
