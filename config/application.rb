@@ -55,8 +55,6 @@ module DesksnearMe
     config.assets.paths           << %(#{Rails.root}/app/assets/swfs)
     config.assets.paths           << %(#{Rails.root}/app/assets/videos)
 
-    config.assets.precompile +=  ['*.js']
-
     config.assets.precompile += [
       "vendor/jquery.backgroundSize.min.js","vendor/respond.proxy.js", "vendor/respond.min.js",
       "admin.js", "blog.js", "blog_admin.js", "chrome_frame.js", "instance_admin.js", "community.js",
