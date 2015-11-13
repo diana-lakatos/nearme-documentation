@@ -68,6 +68,13 @@ module CustomAttributes
                 value[k] = v.join(',')
               end
             end
+            set_keys = value.keys.map(&:to_s)
+            self.custom_attributes.select { |ca| !set_keys.include?(ca[#{CustomAttribute::NAME}].to_s) }.each do |ca|
+              value[ca[#{CustomAttribute::NAME}]] = ca[#{CustomAttribute::VALUE}]
+            end
+            custom_attribute_names = self.custom_attributes.map { |a| a[#{CustomAttribute::NAME}].to_s }
+            value = value.reject { |custom_attribute_name, value| !custom_attribute_names.include?(custom_attribute_name.to_s) }
+
             super(value)
           end
 
