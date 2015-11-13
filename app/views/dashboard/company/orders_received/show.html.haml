@@ -24,6 +24,7 @@
     %thead
       %th= t 'buy_sell_market.checkout.labels.billing_address'
       %th= t 'buy_sell_market.checkout.labels.shipping_address'
+      %th= t 'buy_sell_market.checkout.labels.email_address'
       %th= t 'buy_sell_market.checkout.labels.shipping_method'
       %th= t 'buy_sell_market.checkout.labels.payment'
 
@@ -31,6 +32,7 @@
       %tr
         %td= @order.bill_address.full_name
         %td= @order.ship_address.full_name
+        %td= @order.try(:user).try(:email)
         %td{rowspan: 6}
           - @order.shipments.each do |shipment|
             - if shipment.selected_shipping_rate.present?
@@ -65,10 +67,12 @@
           %td= @order.ship_address.company
           %td
           %td
+          %td
 
       %tr
         %td= @order.bill_address.address1
         %td= @order.ship_address.address1
+        %td
         %td
         %td
 
@@ -77,10 +81,12 @@
         %td= @order.ship_address.address2
         %td
         %td
+        %td
 
       %tr
         %td= @order.bill_address.city
         %td= @order.ship_address.city
+        %td
         %td
         %td
 
@@ -89,16 +95,19 @@
         %td= @order.ship_address.country.name
         %td
         %td
+        %td
 
       %tr
         %td= @order.bill_address.state.abbr
         %td= @order.ship_address.state.abbr
         %td
         %td
+        %td
 
       %tr
         %td= @order.bill_address.zipcode
         %td= @order.ship_address.zipcode
+        %td
         %td
         %td
 
