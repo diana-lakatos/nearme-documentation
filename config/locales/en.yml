@@ -764,16 +764,9 @@ en:
         select_the_service_associated: 'Select the service that is associated to this upsell'
         select_commission_receiver: 'Select commission receiver'
       search:
-        type_of_search: "Type of search"
-        date_pickers: "Date pickers"
-        search_radius: "Search Radius"
-        category_tree_search: "Category tree search"
-        saved_search: "Saved Search"
-        price_filters: "Price filters"
+        search_results: "Search & Results"
         tabs:
           search_settings: 'Search Settings'
-          services_search: 'Services Search'
-          products_search: 'Products Search'
           elastic_search: 'ElasticSearch'
         custom_attributes:
           name: "Name"

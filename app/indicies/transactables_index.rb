@@ -81,8 +81,8 @@ module TransactablesIndex
       __elasticsearch__.search(query)
     end
 
-    def self.regular_search(query)
-      query_builder = Elastic::QueryBuilder.new(query.with_indifferent_access, searchable_custom_attributes)
+    def self.regular_search(query, service_type = nil)
+      query_builder = Elastic::QueryBuilder.new(query.with_indifferent_access, searchable_custom_attributes(service_type), service_type)
 
       __elasticsearch__.search(query_builder.geo_regular_query)
     end
@@ -99,7 +99,7 @@ module TransactablesIndex
     end
 
     def self.geo_search(query, service_type = nil)
-      query_builder = Elastic::QueryBuilder.new(query.with_indifferent_access, searchable_custom_attributes(service_type))
+      query_builder = Elastic::QueryBuilder.new(query.with_indifferent_access, searchable_custom_attributes(service_type), service_type)
       __elasticsearch__.search(query_builder.geo_query)
     end
 

@@ -21,7 +21,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
     context 'strict mode' do
 
       setup do
-        PlatformContext.current.instance.update_attribute(:date_pickers_mode, 'strict')
+        TransactableType.first.update_attribute(:date_pickers_mode, 'strict')
       end
 
       should 'get only listings that are booked for each day if search above week' do
@@ -54,7 +54,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
 
     context 'relative mode' do
       setup do
-        PlatformContext.current.instance.update_attribute(:date_pickers_mode, 'relative')
+        TransactableType.first.update_attribute(:date_pickers_mode, 'relative')
       end
 
       should 'get all listings if search for more than week' do
@@ -99,7 +99,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
     context 'listings' do
 
       should 'return correct transactables for searching the same day' do
-        PlatformContext.current.instance.update_attribute(:date_pickers_mode, 'relative')
+        TransactableType.first.update_attribute(:date_pickers_mode, 'relative')
         @params = { availability: { dates: { start: @date_start.to_s, end: @date_start.to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
         assert_equal([
@@ -111,7 +111,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
       end
 
       should 'return correct transactables for searching for 1 day difference' do
-        PlatformContext.current.instance.update_attribute(:date_pickers_mode, 'relative')
+        TransactableType.first.update_attribute(:date_pickers_mode, 'relative')
         @params = { availability: { dates: { start: @date_start.to_s, end: (@date_start + 1.day).to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
         assert_equal([
@@ -124,7 +124,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
       end
 
       should 'return correct transactables for relative mode' do
-        PlatformContext.current.instance.update_attribute(:date_pickers_mode, 'relative')
+        TransactableType.first.update_attribute(:date_pickers_mode, 'relative')
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
         assert_equal([
           @transactable_with_some_days_fully_booked_via_one_reservation,
@@ -136,7 +136,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
       end
 
       should 'return correct transactables for strict mode' do
-        PlatformContext.current.instance.update_attribute(:date_pickers_mode, 'strict')
+        TransactableType.first.update_attribute(:date_pickers_mode, 'strict')
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
         assert_equal([
           @transactable_with_some_days_fully_booked_on_other_days,
@@ -148,7 +148,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
 
     context 'locations' do
       should 'return correct transactables for relative mode' do
-        PlatformContext.current.instance.update_attribute(:date_pickers_mode, 'relative')
+        TransactableType.first.update_attribute(:date_pickers_mode, 'relative')
         @searcher = InstanceType::Searcher::GeolocationSearcher::Location.new(TransactableType.first, @params)
         assert_equal([
           @transactable_with_some_days_fully_booked_via_one_reservation,
@@ -160,7 +160,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
       end
 
       should 'return correct transactables for strict mode' do
-        PlatformContext.current.instance.update_attribute(:date_pickers_mode, 'strict')
+        TransactableType.first.update_attribute(:date_pickers_mode, 'strict')
         @searcher = InstanceType::Searcher::GeolocationSearcher::Location.new(TransactableType.first, @params)
         assert_equal([
           @transactable_with_some_days_fully_booked_on_other_days,

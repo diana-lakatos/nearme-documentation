@@ -10,13 +10,29 @@
     }
   }
 }
+
+#main-container {
+  ul.sortable {
+    list-style: none;
+    li {
+      background-color: #B7B7B7;
+      height: 26px;
+      line-height: 26px;
+      padding-left: 15px;
+      margin-bottom: 5px;
+      border-radius: 3px;
+      text-align: center;
+      cursor: move;
+    }
+  }
+}
 .service_types, .product_types {
   font-family: "Avenir Regular",Helvetica,Arial,sans-serif;
   input[type='text'] {
     padding: 3px 5px;
     border: 1px solid #eee;
   }
-  .search-system {
+  .custom-attributes-settings {
     @extend .clearfix;
   }
   .save-btn {
@@ -83,7 +99,7 @@
       margin-top: 10px;
     }
   }
-  .search-system {
+  .custom-attributes-settings {
     margin-left: 30px;
     padding-right: 20px;
     .table-container {
@@ -96,6 +112,9 @@
     }
     .sub-header-nav {
       margin-bottom: 0px !important;
+      line-height: 40px;
+      padding-left: 20px;
+      font-weight: 600;
     }
     .line {
       position: relative;

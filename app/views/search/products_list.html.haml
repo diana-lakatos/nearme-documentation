@@ -12,7 +12,7 @@
 
       .span2
 
-        - if platform_context.instance.price_slider
+        - if @transactable_type.show_price_slider
           = render partial: 'search/shared/product_list_slider'
 
         .search__filter-row
@@ -21,13 +21,13 @@
       .span10
 
         - if @searcher.results.any?
-          %section#results{ class: "products_list #{platform_context.display_taxonomy_tree? ? 'with_taxons' : 'no_taxons'}" }
+          %section#results{ class: "products_list #{@searcher.transactable_type.display_taxonomy_tree? ? 'with_taxons' : 'no_taxons'}" }
             .search-max-price{:'data-max-price' => @searcher.max_price, :'data-min-price' => @searcher.min_price}
             = render partial: 'search/products_list/product', collection: @searcher.results
             = will_paginate @searcher.results
             = render 'shared/loading_spinner'
         - else
-          %section#results{ class: "no_products_list no_results #{platform_context.display_taxonomy_tree? ? 'with_taxons' : 'no_taxons'}" }
+          %section#results{ class: "no_products_list no_results #{@searcher.transactable_type.display_taxonomy_tree? ? 'with_taxons' : 'no_taxons'}" }
             = render 'shared/loading_spinner'
             .text-center
               %br/

@@ -29,5 +29,21 @@ namespace :fix do
     Spree::Variant.only_deleted.delete_all
     Spree::StockItem.only_deleted.delete_all
   end
+
+  task transactable_types_availability_options: :environment do
+    Instance.find_each do |instance|
+      instance.set_context!
+      TransactableType.all.reject(&:valid?).each do |tt|
+        tt.update!(availability_options: {
+          "defer_availability_rules" => true,
+          "confirm_reservations" => {
+            "default_value" => true,
+            "public" => true
+          }
+        })
+      end
+    end
+  end
+
 end
 

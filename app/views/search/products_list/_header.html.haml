@@ -1,7 +1,7 @@
-%header#listing_search.products_list{class: platform_context.display_taxonomy_tree? ? "span8 with_taxons" : "span10 no_taxons"}
+%header#listing_search.products_list{class: @searcher.transactable_type.display_taxonomy_tree? ? "span8 with_taxons" : "span10 no_taxons"}
   .header-inner
     %form.search_results{:action => search_path(v: result_view), :method => "get"}
-      -unless platform_context.fulltext_search?
+      -unless @searcher.transactable_type.fulltext_search?
         - search_geofields.each do |geofield|
           = hidden_field_tag geofield, ''
       = hidden_field_tag :v, result_view
@@ -13,7 +13,7 @@
       = hidden_field_tag 'price[max]', @searcher.current_min_price
       .row-fluid
         .geolocation-input.span11
-          %input#search.query{:name => 'query', :placeholder => platform_context.search_field_placeholder, :type => "text", :value => @searcher.query, :autocomplete => "off", 'data-disable-autocomplete' => true}
+          %input#search.query{:name => 'query', :placeholder => @searcher.transactable_type.search_field_placeholder, :type => "text", :value => @searcher.query, :autocomplete => "off", 'data-disable-autocomplete' => true}
         .span1
           .search-icon.btn.btn-green
             %span.ico-search

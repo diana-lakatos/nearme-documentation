@@ -197,4 +197,35 @@ module LiquidFilters
 
     link_to(tag.name, href, class: classes.join(" "))
   end
+
+  # Renders search_box with options
+  # tt_names - Transactable Type names separated by ','
+  # class_name - additional CSS class name
+  # inputs - what inputs should be displayed: geolocation, fulltext, categories, datepickers. Separated by ','
+  def search_box_for(tt_names, class_name = '', inputs = '')
+    names = tt_names.split(',').map(&:strip)
+    tt = TransactableType.found_and_sorted_by_names(names)
+    if tt.any?
+      @context.registers[:action_view].render 'home/search_box_inputs.html',
+        transactable_types: tt,
+        custom_search_inputs: inputs.split(',').map(&:strip),
+        class_name: class_name + ' search-box-liquid-tag',
+        transactable_type_picker: tt.many?
+    else
+      "No Service or Product type with names: #{tt_names}"
+    end
+  end
+
+  # Renders search_button with options
+  # tt_name - Transactable Type name
+  # class_name - additional CSS class name
+  def search_button_for(tt_name, class_name = '')
+    if tt = TransactableType.find_by(name: tt_name.strip)
+      @context.registers[:action_view].render 'home/search_button_tag.html',
+        transactable_type: tt,
+        class_name: class_name + ' search-box-liquid-tag'
+    else
+      "No Service or Product type with name: #{tt_name}"
+    end
+  end
 end

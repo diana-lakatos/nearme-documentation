@@ -6,7 +6,7 @@
     = hidden_field_tag :transactable_type_id, @transactable_type.id
     = hidden_field_tag :category_ids, @searcher.category_ids
     = hidden_field_tag :page, params[:page]
-    - if platform_context.instance.price_slider
+    - if @transactable_type.show_price_slider
       = hidden_field_tag 'price[min]', @searcher.current_min_price
       = hidden_field_tag 'price[max]', @searcher.current_max_price
 
@@ -25,7 +25,7 @@
       = label_tag :per_page, 'Per page:'
       = select_tag :per_page, options_for_select(%w(20 50 100).map{|v| [v, v]}, params[:per_page]), class: 'select2'
 
-  - if platform_context.instance.price_slider
+  - if @transactable_type.show_price_slider
     .search-mixed-filter{:'data-filter' => true}
       #price-slider.slider
 

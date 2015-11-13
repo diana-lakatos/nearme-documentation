@@ -72,6 +72,6 @@ class Listing::Search::ParamsTest <  ActiveSupport::TestCase
   private
 
   def build_params(options)
-    Listing::Search::Params.new(options)
+    Listing::Search::Params.new(options, TransactableType.first)
   end
 end

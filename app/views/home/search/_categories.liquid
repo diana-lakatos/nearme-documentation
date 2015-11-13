@@ -1,0 +1,8 @@
+<div class="span2">
+  <select class="no-icon select2 service_category_select" name="category_ids">
+    <option value="" >- Select Category - </option>
+    {% for category in transactable_type.searchable_categories %}
+      <option value="{{ category.id }}" >{{ category.name }}</option>
+    {% endfor %}
+  </select>
+</div>

@@ -3,7 +3,8 @@ class Listing::SearchFetcher
 
   TOP_CITIES = ['san francisco', 'london', 'new york', 'los angeles', 'chicago']
 
-  def initialize(filters = {})
+  def initialize(filters = {}, transactable_type)
+    @transactable_type = transactable_type
     if filters.fetch(:transactable_type_id, nil).blank?
       raise NotImplementedError.new('transactable_type_id filter is mandatory')
     end
@@ -43,7 +44,7 @@ class Listing::SearchFetcher
     end
 
     if @filters[:category_ids].present?
-      if PlatformContext.current.instance.category_search_type == "AND"
+      if @transactable_type.category_search_type == "AND"
         @listings_scope = @listings_scope.
           joins(:categories_categorizables).
           where(categories_categorizables: {category_id: @filters[:category_ids]}).
@@ -86,6 +87,6 @@ class Listing::SearchFetcher
   end
 
   def relative_availability?
-    @relative ||= PlatformContext.current.instance.date_pickers_relative_mode?
+    @relative ||= @transactable_type.date_pickers_relative_mode?
   end
 end

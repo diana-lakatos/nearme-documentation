@@ -3,6 +3,7 @@ class ServiceType < TransactableType
 
   MAX_PRICE = 2147483647
   BOOKING_TYPES = %w(regular overnight recurring schedule subscription).freeze
+  SEARCH_VIEWS = %w(mixed list listing_mixed)
 
   attr_accessor :enable_cancellation_policy
 
@@ -127,6 +128,17 @@ class ServiceType < TransactableType
 
   def buyable?
     false
+  end
+
+  def available_search_views
+    SEARCH_VIEWS
+  end
+
+  private
+
+  def set_default_options
+    super
+    self.searcher_type ||= 'geo'
   end
 
 end

@@ -13,7 +13,8 @@ module Elastic
     PER_PAGE = 20
     PAGE = 1
 
-    def initialize(query, searchable_custom_attributes=nil)
+    def initialize(query, searchable_custom_attributes = nil, transactable_type)
+      @transactable_type = transactable_type
       @query = query
       @bounding_box = query[:bounding_box]
       @searchable_custom_attributes = searchable_custom_attributes
@@ -251,9 +252,9 @@ module Elastic
     end
 
     def apply_product_search_filters
-      category_search_type = PlatformContext.current.instance.category_search_type
+      category_search_type = @transactable_type.category_search_type
 
-      if PlatformContext.current.instance.price_slider && @query[:price] && @query[:price][:max].present?
+      if @transactable_type.show_price_slider && @query[:price] && @query[:price][:max].present?
         @filters << {
           range: {
             price: {
@@ -310,7 +311,7 @@ module Elastic
         end
       end
 
-      category_search_type = PlatformContext.current.instance.category_search_type
+      category_search_type = @transactable_type.category_search_type
 
       if @query[:category_ids] && @query[:category_ids].any?
         if category_search_type == 'OR'

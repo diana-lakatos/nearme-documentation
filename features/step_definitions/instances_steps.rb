@@ -6,7 +6,6 @@ end
 
 When(/^I fill instance form with valid details$/) do
   fill_in 'instance_name', with: 'Test instance'
-  fill_in 'instance_default_search_view', with: 'mixed'
 end
 
 When(/^I fill instance form with a valid user$/) do
@@ -29,9 +28,4 @@ end
 
 Then(/^I should have blog instance created$/) do
   BlogInstance.last.name.should == 'Test instance Blog'
-end
-
-And(/^current instance is buyable$/) do
-  instance = PlatformContext.current.instance
-  instance.update_attribute(:default_search_view, 'products')
 end
