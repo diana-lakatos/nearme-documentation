@@ -67,7 +67,7 @@
       - when 'photos'
         .row
           .col-md-3
-            = f.label :photos
+            = f.label :photos, t('simple_form.labels.listing.photos')
           .col-md-9
             - if is_i18n_set?('forms.hints.transactable_form.photos')
               %p.photo-uploader-hint
