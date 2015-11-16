@@ -1,4 +1,4 @@
-require 'timecop'
+include ActiveSupport::Testing::TimeHelpers
 
 module Utils
   class DesksnearmeDemoDataSeeder < Utils::DemoDataSeeder
@@ -61,10 +61,10 @@ module Utils
           date = initial_date.first
           initial_date.second.times do |index|
             listing = company.listings.sample
-            Timecop.freeze(date + 1.day) do
+            travel_to(date + 1.day) do
               date = listing.first_available_date
             end
-            Timecop.freeze(date) do
+            travel_to(date) do
               (date_index == 1 ? 2 : 1).times do
                 create_reservation(listing, date, date_index > 0, {:user => (users - [@user]).sample, :quantity => 1, :currency => 'USD'})
                 listing = company.listings.sample
@@ -82,10 +82,10 @@ module Utils
               other_company = (companies - [company]).sample
             end while other_company.locations.empty?
             listing = other_company.listings.sample
-            Timecop.freeze(date + 1.day) do
+            travel_to(date + 1.day) do
               date = listing.first_available_date
             end
-            Timecop.freeze(date) do
+            travel_to(date) do
               reservation_date = listing.first_available_date
               create_reservation(listing, reservation_date, index.zero?, {:user => creator, :quantity => 1, :currency => 'USD'})
             end

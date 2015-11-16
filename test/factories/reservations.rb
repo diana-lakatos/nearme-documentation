@@ -9,6 +9,7 @@ FactoryGirl.define do
     state 'unconfirmed'
     platform_context_detail_type "Instance"
     platform_context_detail_id { PlatformContext.current.instance.id }
+    time_zone { Time.zone.name }
 
     before(:create) do |reservation|
       make_valid_period(reservation).save! unless reservation.valid?
@@ -16,6 +17,12 @@ FactoryGirl.define do
 
     after(:build) do |reservation|
       make_valid_period(reservation) unless reservation.valid?
+    end
+
+    after(:create) do |reservation|
+      reservation.starts_at = reservation.first_period.starts_at
+      reservation.ends_at = reservation.last_period.ends_at
+      reservation.save!
     end
 
     factory :reservation_hourly do
@@ -44,6 +51,9 @@ FactoryGirl.define do
           period.date = Date.tomorrow + i.days
           period.save!
         end
+        reservation.starts_at = reservation.first_period.starts_at
+        reservation.ends_at = reservation.last_period.ends_at
+        reservation.save!
       end
     end
 
@@ -55,10 +65,12 @@ FactoryGirl.define do
           period.date = Date.yesterday - i.days
           period.save!
         end
+        reservation.starts_at = reservation.first_period.starts_at
+        reservation.ends_at = reservation.last_period.ends_at
+        reservation.save!
       end
     end
   end
-
 end
 
 private

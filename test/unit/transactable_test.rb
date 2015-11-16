@@ -251,26 +251,25 @@ class TransactableTest < ActiveSupport::TestCase
 
   context "first available date" do
 
-    teardown do
-      Timecop.return
-    end
-
     should "return monday for saturday" do
       saturday = Time.zone.today.sunday + 6.days
-      Timecop.freeze(saturday.beginning_of_day)
-      assert_equal saturday+2.day, @listing.first_available_date
+      travel_to saturday.beginning_of_day do
+        assert_equal saturday+2.day, @listing.first_available_date
+      end
     end
 
     should "return monday for sunday" do
       sunday = Time.zone.today.sunday
-      Timecop.freeze(sunday.beginning_of_day)
-      assert_equal sunday+1.day, @listing.first_available_date
+      travel_to sunday.beginning_of_day do
+        assert_equal sunday+1.day, @listing.first_available_date
+      end
     end
 
     should "return tuesday for monday" do
       tuesday = Time.zone.today.sunday + 2
-      Timecop.freeze(tuesday.beginning_of_day)
-      assert_equal tuesday, @listing.first_available_date
+      travel_to tuesday.beginning_of_day do
+        assert_equal tuesday, @listing.first_available_date
+      end
     end
 
     should "return monday for tuesday if the whole week is booked" do
@@ -281,15 +280,16 @@ class TransactableTest < ActiveSupport::TestCase
 
       @listing.save!
       tuesday = Time.zone.today.sunday + 2
-      Timecop.freeze(tuesday.beginning_of_day)
-      dates = [tuesday]
-      4.times do |i|
-        dates << tuesday + i.day
+      travel_to tuesday.beginning_of_day do
+        dates = [tuesday]
+        4.times do |i|
+          dates << tuesday + i.day
+        end
+        res = @listing.reserve!(FactoryGirl.build(:user), dates, 1)
+        res.confirm
+        # wednesday, thursday, friday = 3, saturday, sunday = 2 -> monday is sixth day
+        assert_equal tuesday+6.day, @listing.first_available_date
       end
-      res = @listing.reserve!(FactoryGirl.build(:user), dates, 1)
-      res.confirm
-      # wednesday, thursday, friday = 3, saturday, sunday = 2 -> monday is sixth day
-      assert_equal tuesday+6.day, @listing.first_available_date
     end
 
     should "return wednesday for tuesday if there is one desk left" do
@@ -300,15 +300,16 @@ class TransactableTest < ActiveSupport::TestCase
       @listing.quantity = 2
       @listing.save!
       tuesday = Time.zone.today.sunday + 2
-      Timecop.freeze(tuesday.beginning_of_day)
-      # book all seats on wednesday
-      res = @listing.reserve!(FactoryGirl.build(:user), [tuesday], 2)
-      res.confirm
-      # leave one seat free on thursday
-      res = @listing.reserve!(FactoryGirl.build(:user), [tuesday+1.day], 1)
-      res.confirm
-      # the soonest day should be the one with at least one seat free
-      assert_equal tuesday+1.day, @listing.first_available_date
+      travel_to tuesday.beginning_of_day do
+        # book all seats on wednesday
+        res = @listing.reserve!(FactoryGirl.build(:user), [tuesday], 2)
+        res.confirm
+        # leave one seat free on thursday
+        res = @listing.reserve!(FactoryGirl.build(:user), [tuesday+1.day], 1)
+        res.confirm
+        # the soonest day should be the one with at least one seat free
+        assert_equal tuesday+1.day, @listing.first_available_date
+      end
     end
 
     should "return wednesday for monday if hourly reservation and custom availability template" do
@@ -322,9 +323,9 @@ class TransactableTest < ActiveSupport::TestCase
       @listing.availability_rules.create!({:day => 3, :open_hour => 9, :close_hour => 16, :open_minute => 0, :close_minute => 0})
 
       monday = Time.zone.today.sunday + 1
-      Timecop.freeze(monday.beginning_of_day)
-
-      assert_equal monday+2.day, @listing.first_available_date
+      travel_to monday.beginning_of_day do
+        assert_equal monday+2.day, @listing.first_available_date
+      end
     end
   end
 

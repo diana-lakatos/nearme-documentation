@@ -160,16 +160,8 @@ class Location < ActiveRecord::Base
     @location_drop ||= LocationDrop.new(self)
   end
 
-  def timezone
-    if latitude && longitude
-      NearestTimeZone.to(latitude, longitude)
-    else
-      self.company.try(:time_zone)
-    end
-  end
-
   def local_time
-    Time.now.in_time_zone(timezone)
+    Time.now.in_time_zone(time_zone)
   end
 
   def self.xml_attributes
@@ -256,10 +248,15 @@ class Location < ActiveRecord::Base
   end
 
   def set_time_zone
-    if time_zone.blank? && latitude && longitude
-      tz = NearestTimeZone.to(latitude, longitude)
-      self.time_zone = ActiveSupport::TimeZone::MAPPING.select {|k, v| v == tz }.keys.first
-    end
+    self.time_zone ||= timezone
   end
 
+  def timezone
+    if latitude && longitude
+      tz = NearestTimeZone.to(latitude, longitude)
+      ActiveSupport::TimeZone::MAPPING.select {|k, v| v == tz }.keys.first || tz
+    else
+      self.company.try(:time_zone) || self.instance.try(:default_timezone)
+    end
+  end
 end

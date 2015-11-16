@@ -4,7 +4,7 @@ class SavedSearchTest < ActiveSupport::TestCase
 
   context '#unseen_results' do
     setup do
-      Timecop.freeze(Time.zone.now) do
+      travel_to Time.zone.now do
         @saved_search = create(:saved_search, created_at: 3.days.ago)
         4.times do |n|
           log = @saved_search.alert_logs.create(results_count: n+1)
