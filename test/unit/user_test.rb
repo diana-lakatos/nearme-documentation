@@ -397,6 +397,16 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  should "allow users to use the same email if external id is different" do
+    @user = FactoryGirl.create(:user, email: "hulk@desksnear.me", external_id: 'something')
+    assert_raise ActiveRecord::RecordInvalid do
+      FactoryGirl.create(:user, email: "hulk@desksnear.me", external_id: 'something')
+    end
+    assert_nothing_raised do
+      FactoryGirl.create(:user, email: "hulk@desksnear.me", external_id: 'different')
+    end
+  end
+
   should "have full email address" do
     @user = User.new(name: "Hulk Hogan", email: "hulk@desksnear.me")
 
@@ -951,17 +961,40 @@ class UserTest < ActiveSupport::TestCase
         FactoryGirl.create(:user, email: @other_user.email)
       end
     end
+
     should "not allow to create new account if other user exists with this email in this marketplace" do
       @user = FactoryGirl.create(:user)
       assert_raise ActiveRecord::RecordInvalid do
         FactoryGirl.create(:user, email: @user.email)
       end
     end
+
+    should "not allow to create new account without external id if other user exists with this email in this marketplace with external_id set" do
+      @user = FactoryGirl.create(:user, external_id: 'something')
+      assert_raise ActiveRecord::RecordInvalid do
+        FactoryGirl.create(:user, email: @user.email)
+      end
+    end
+
+    should "allow to create new account with external id if other user exists with this email in this marketplace but with external_id set" do
+      @user = FactoryGirl.create(:user, external_id: 'something')
+      assert_nothing_raised  do
+        FactoryGirl.create(:user, email: @user.email, external_id: 'else')
+      end
+    end
+
+    should "allow to create new account with external id if other user exists with this email in this marketplace without external_id set" do
+      @user = FactoryGirl.create(:user)
+      assert_nothing_raised  do
+        FactoryGirl.create(:user, email: @user.email, external_id: 'else')
+      end
+    end
+
     should "not allow to create new account with email that belongs to admin" do
       @admin = FactoryGirl.create(:admin)
       @admin.update_column(:instance_id, PlatformContext.current.instance.id + 1)
       assert_raise ActiveRecord::RecordInvalid do
-        FactoryGirl.create(:user, email: @admin.email)
+        FactoryGirl.create(:user, email: @admin.email, external_id: 'something_else')
       end
     end
   end

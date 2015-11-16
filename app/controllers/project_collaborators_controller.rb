@@ -15,7 +15,7 @@ class ProjectCollaboratorsController < ApplicationController
   end
 
   def destroy
-    @project.project_collaborators.where(user: current_user).destroy_all
+    @project.project_collaborators.for_user(current_user).destroy_all
     @collaborators_count = @project.reload.project_collaborators.approved.count
     respond_to do |format|
       format.js { render :collaborators_button }
@@ -24,7 +24,8 @@ class ProjectCollaboratorsController < ApplicationController
   end
 
   def accept
-    project_collaboration = @project.project_collaborators.where(user: current_user).find(params[:id])
+    project_collaboration = @project.project_collaborators.for_user(current_user).find(params[:id])
+    project_collaboration.update_attribute(:user_id, current_user.id) unless project_collaboration.approved_by_owner_at.present?
     project_collaboration.approve_by_user!
     redirect_to profile_path(current_user, anchor: :projects), notice: t('collaboration_accepted')
   end

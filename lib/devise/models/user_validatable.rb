@@ -18,7 +18,9 @@ module Devise
 
         base.class_eval do
           validates_presence_of   :email, if: :email_required?
-          validates_uniqueness_of :email, allow_blank: true, conditions: -> { where('(instance_id = ? or admin = ?) AND deleted_at IS NULL', PlatformContext.current.instance.id, true) }, if: :email_changed?
+          validates_uniqueness_of :email, scope: [:instance_id, :external_id], allow_blank: true, if: :email_changed?
+          validate                :no_admin_with_such_email_exists, if: :email_changed?
+          validate                :no_account_hijacking_attempt, if: :email_changed?
           validates               :email, email: true, if: :email_changed?
 
           validates_presence_of     :password, if: :password_required?
@@ -27,7 +29,15 @@ module Devise
         end
       end
 
-    protected
+      protected
+
+      def no_admin_with_such_email_exists
+        errors.add(:email, :taken) if User.admin.where(email: self.email).exists?
+      end
+
+      def no_account_hijacking_attempt
+        errors.add(:email, :taken) if User.where(email: self.email).exists? if self.external_id.blank?
+      end
 
       # Checks whether a password is needed or not. For validations only.
       # Passwords are always required if it's a new record, or if the password
