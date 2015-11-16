@@ -20,7 +20,7 @@ class ScheduleChargeSubscriptionJob < Job
     until recurring_booking.next_charge_date > Time.zone.now
       period = recurring_booking.generate_next_period!
       period.generate_payment!
-      raise 'Invalid state, next charge date has not moved forward! Infinite loop would occur.' if recurring_booking.next_charge_date.to_i <= current_charge_date.to_i
+      raise 'Invalid state, next charge date has not moved forward! Infinite loop would occur.' if recurring_booking.next_charge_date.nil? || (recurring_booking.next_charge_date <= current_charge_date)
     end
   end
 
