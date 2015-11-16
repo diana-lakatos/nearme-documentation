@@ -58,7 +58,7 @@ module DesksnearMe
     config.assets.precompile += [
       "vendor/jquery.backgroundSize.min.js","vendor/respond.proxy.js", "vendor/respond.min.js",
       "admin.js", "blog.js", "blog_admin.js", "chrome_frame.js", "instance_admin.js", "community.js",
-      "platform_home.js", "analytics/sessioncam.js", "blog/admin/*"
+      "platform_home.js", "analytics/sessioncam.js", "blog/admin/*", 'dashboard.js'
     ]
     config.assets.precompile += [
       "browser_specific/ie8.css", "admin.css", "blog.css", "blog_admin.css", "errors.css",
