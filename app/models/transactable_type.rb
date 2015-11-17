@@ -13,8 +13,6 @@ class TransactableType < ActiveRecord::Base
     :last_request_photos_sent_at, :capacity
   ]
 
-  attr_accessor :enable_cancellation_policy
-
   has_many :form_components, as: :form_componentable
   has_many :data_uploads, as: :importable, dependent: :destroy
   has_many :rating_systems

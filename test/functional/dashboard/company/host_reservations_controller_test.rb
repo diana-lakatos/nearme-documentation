@@ -65,8 +65,6 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
         reservation = FactoryGirl.create(:reservation, owner: @user, listing: @related_listing)
         ReservationPeriod.destroy_all
         reservation.add_period(Time.zone.tomorrow, 600, 720) # Tommorow form 10:00 - 12:00 AM
-        reservation.starts_at = Time.zone.tomorrow.at_beginning_of_day.advance(hours: 10)
-        reservation.ends_at = Time.zone.tomorrow.at_beginning_of_day.advance(hours: 12)
         reservation.save
 
         # Current time is before the reservation

@@ -83,11 +83,6 @@ class ReservationRequest < Form
       @dates.reject(&:blank?).each do |date_string|
         @reservation.add_period(Date.parse(date_string), start_minute, end_minute)
       end
-
-      @reservation.assign_attributes(
-        starts_at: @reservation.first_period.starts_at,
-        ends_at: @reservation.last_period.ends_at
-      )
     end
   end
 

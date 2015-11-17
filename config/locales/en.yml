@@ -1122,6 +1122,8 @@ en:
       products_header: 'PRODUCTS'
       services_header: 'SERVICES'
     user_reservations:
+      penalty_info: "The penalty fee for cancelling the reservation is %{penalty}% of the reservation price."
+      cancel: 'Do you really want to cancel this reservation? %{penalty}'
       pending_confirmation: 'Pending confirmation from host. Booking will expire in '
       money_info: "Payment has been authorized but it will be captured only upon confirmation."
       exclusive_price_guests_notes: 'Exclusive booking instructions: %{guest_notes}'

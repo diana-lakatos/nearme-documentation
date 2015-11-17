@@ -19,10 +19,17 @@ FactoryGirl.define do
       make_valid_period(reservation) unless reservation.valid?
     end
 
-    after(:create) do |reservation|
-      reservation.starts_at = reservation.first_period.starts_at
-      reservation.ends_at = reservation.last_period.ends_at
-      reservation.save!
+    factory :lasting_reservation do
+      after(:create) do |reservation|
+        reservation.periods.destroy_all
+        make_valid_period(
+          reservation,
+          Time.now.in_time_zone(reservation.time_zone).to_date,
+          Time.now.in_time_zone(reservation.time_zone).to_minutes - 60,
+          Time.now.in_time_zone(reservation.time_zone).to_minutes + 60
+        )
+        reservation.save!
+      end
     end
 
     factory :reservation_hourly do
@@ -51,8 +58,6 @@ FactoryGirl.define do
           period.date = Date.tomorrow + i.days
           period.save!
         end
-        reservation.starts_at = reservation.first_period.starts_at
-        reservation.ends_at = reservation.last_period.ends_at
         reservation.save!
       end
     end
@@ -65,8 +70,6 @@ FactoryGirl.define do
           period.date = Date.yesterday - i.days
           period.save!
         end
-        reservation.starts_at = reservation.first_period.starts_at
-        reservation.ends_at = reservation.last_period.ends_at
         reservation.save!
       end
     end
@@ -75,8 +78,8 @@ end
 
 private
 
-def make_valid_period(reservation)
+def make_valid_period(reservation, date=Time.zone.now.next_week.to_date, start_minute = nil, end_minute = nil)
   reservation.periods = []
-  reservation.add_period(Time.zone.now.next_week.to_date)
+  reservation.add_period(date, start_minute, end_minute)
   reservation
 end

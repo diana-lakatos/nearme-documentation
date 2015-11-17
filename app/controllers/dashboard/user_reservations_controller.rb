@@ -10,14 +10,18 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
   before_filter :reservation, only: [:booking_successful_modal, :booking_failed_modal]
 
   def user_cancel
-    if reservation.user_cancel
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestCancelled, reservation.id)
-      event_tracker.cancelled_a_booking(reservation, { actor: 'guest' })
-      event_tracker.updated_profile_information(reservation.owner)
-      event_tracker.updated_profile_information(reservation.host)
-      flash[:success] = t('flash_messages.reservations.reservation_cancelled')
+    if reservation.cancelable?
+      if reservation.user_cancel
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestCancelled, reservation.id)
+        event_tracker.cancelled_a_booking(reservation, { actor: 'guest' })
+        event_tracker.updated_profile_information(reservation.owner)
+        event_tracker.updated_profile_information(reservation.host)
+        flash[:success] = t('flash_messages.reservations.reservation_cancelled')
+      else
+        flash[:error] = t('flash_messages.reservations.reservation_not_confirmed')
+      end
     else
-      flash[:error] = t('flash_messages.reservations.reservation_not_confirmed')
+      flash[:error] = t('flash_messages.reservations.reservation_not_cancellable')
     end
     redirect_to redirection_path
   end
