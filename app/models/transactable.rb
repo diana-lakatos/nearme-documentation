@@ -260,9 +260,9 @@ class Transactable < ActiveRecord::Base
     if schedule_booking?
       hour = start_min/60
       minute = start_min - (60 * hour)
-      Time.zone = location.time_zone
-      self.schedule.schedule.occurs_at?(Time.zone.parse("#{date} #{hour}:#{minute}"))
-      Time.zone = "UTC"
+      Time.use_zone(timezone) do
+        self.schedule.schedule.occurs_at?(Time.zone.parse("#{date} #{hour}:#{minute}"))
+      end
     else
       availability.open_on?(:date => date, :start_minute => start_min, :end_minute => end_min)
     end
@@ -430,9 +430,16 @@ class Transactable < ActiveRecord::Base
   end
 
   def first_available_date
-    date = Time.now.in_time_zone(timezone).to_date
-
+    time = Time.now.in_time_zone(timezone)
+    date = time.to_date
     max_date = date + 31.days
+
+    closed_at = self.availability.close_minute_for(date)
+
+    if closed_at && (closed_at < (time.hour * 60 + time.min))
+      date = date + 1.day
+    end
+
     date = date + 1.day until availability_for(date) > 0 || date==max_date
     date
   end
