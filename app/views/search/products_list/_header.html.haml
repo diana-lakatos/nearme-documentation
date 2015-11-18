@@ -13,7 +13,7 @@
       = hidden_field_tag 'price[max]', @searcher.current_min_price
       .row-fluid
         .geolocation-input.span11
-          %input#search.query{:name => 'query', :placeholder => @searcher.transactable_type.search_field_placeholder, :type => "text", :value => @searcher.query, :autocomplete => "off", 'data-disable-autocomplete' => true}
+          %input#search.query{:name => 'query', :placeholder => @searcher.transactable_type.fulltext_placeholder, :type => "text", :value => @searcher.query, :autocomplete => "off", 'data-disable-autocomplete' => true}
         .span1
           .search-icon.btn.btn-green
             %span.ico-search

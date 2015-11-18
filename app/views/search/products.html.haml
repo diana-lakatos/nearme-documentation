@@ -12,7 +12,7 @@
 
     = label_tag 'What are you looking for?'
     .search-input.clearfix
-      = text_field_tag :query, @searcher.query, placeholder: 'Search for...'
+      = text_field_tag :query, @searcher.query, placeholder: @searcher.transactable_type.fulltext_placeholder
       %button.btn.blue.search
         = image_tag 'themes/buy_sell/search-icon.png'
 

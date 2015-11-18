@@ -31,4 +31,16 @@ class TransactableTypeDecorator < Draper::Decorator
     fulltext_search? ? "query" : "loc"
   end
 
+  def geolocation_placeholder
+    I18n.t "#{translation_namespace}.search_field_placeholder.location" , default: I18n.t('homepage.search_field_placeholder.location')
+  end
+
+  def fulltext_placeholder
+    I18n.t "#{translation_namespace}.search_field_placeholder.full_text" , default: I18n.t('homepage.search_field_placeholder.full_text')
+  end
+
+  def search_field_placeholder
+    searcher_type == 'fulltext' ? fulltext_placeholder : geolocation_placeholder
+  end
+
 end

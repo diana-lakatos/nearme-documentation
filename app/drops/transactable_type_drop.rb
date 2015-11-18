@@ -41,6 +41,16 @@ class TransactableTypeDrop < BaseDrop
     @decorated.search_field_placeholder
   end
 
+  # search geolocation field placeholder as a string
+  def geolocation_placeholder
+    @decorated.geolocation_placeholder
+  end
+
+  # search full text field placeholder as a string
+  def fulltext_placeholder
+    @decorated.fulltext_placeholder
+  end
+
   # returns true if searcher_type is "fulltext_category"
   def fulltext_category_search?
     @transactable_type.searcher_type == 'fulltext_category'
