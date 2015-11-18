@@ -245,6 +245,17 @@ body.user-blog {
     margin-left: auto;
     margin-right: auto;
 
+    .blog-nav {
+      padding-bottom:45px;
+      width:100%;
+      float: left;
+      .rss-feed-button {
+        float:right;
+        color: #1a7fbb;
+        padding-top:12px;
+      }
+    }
+
 
     .blog-post-detail {
 

@@ -8,6 +8,7 @@
     = yield(:meta)
     = csrf_meta_tag
     = render 'layouts/favicon'
+    = auto_discovery_link_tag(:rss, current_url)
     /[if lt IE 9]
       = stylesheet_link_tag 'browser_specific/ie8'
     = stylesheet_link_tag '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css'
