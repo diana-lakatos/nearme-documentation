@@ -23,7 +23,8 @@ class Search.HomeController extends Search.Controller
   assignFormParams: (paramsHash) ->
     # Write params to search form
     for field, value of paramsHash
-      @visibleFields().find("input[name='#{field}']").val(value)
+      if field != 'loc'
+        @visibleFields().find("input[name='#{field}']").val(value)
 
   initializeQueryField: (queryField)->
     queryField.bind 'focus', (event) =>
