@@ -152,11 +152,11 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
         verify(persisted?)
         yield('verified') if block_given?
       else
-        fail(persisted?)
+        failure(persisted?)
         yield('failed') if block_given?
       end
     elsif verified? && (!stripe_account.charges_enabled || !stripe_account.transfers_enabled || !stripe_account.verification.fields_needed.empty?)
-      fail(persisted?)
+      failure(persisted?)
       yield('failed') if block_given?
     end
   end
