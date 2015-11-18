@@ -2,11 +2,11 @@
   - if platform_context.single_type?
     - if current_user.nil?
       = link_to_registration({return_to: transactable_type.wizard_path}, platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal' }, class: 'nav-link btn btn-blue btn-medium') do
-        %span= t('ui.header.list_your_thing', thing: transactable_type.translated_bookable_noun)
+        %span.text= t('ui.header.list_your_thing', thing: transactable_type.translated_bookable_noun)
         %span.icon.ico-plus
     - else
       = link_to transactable_type.wizard_path, :class => "nav-link btn btn-blue btn-medium" do
-        %span= t('ui.header.list_your_thing', thing: transactable_type.translated_bookable_noun)
+        %span.text= t('ui.header.list_your_thing', thing: transactable_type.translated_bookable_noun)
         %span.icon.ico-plus
   - else
     - if current_user.nil?

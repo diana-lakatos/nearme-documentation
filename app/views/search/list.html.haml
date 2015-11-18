@@ -3,7 +3,7 @@
   = render 'search/header'
   #search-result-google-map{:'data-marker' => image_path("components/map-pin.png")}
     #search-result-movable-google-map{:style => 'width: 100%; height: 100%;'}
-- if !platform_context.display_taxonomy_tree? ||  request.xhr?
+- if !@searcher.transactable_type.display_taxonomy_tree? ||  request.xhr?
   = render 'search/list_results'
 - else
   .span3{"data-search-filters-container" => true}
@@ -14,7 +14,7 @@
             %ul
               %li.nav-heading
                 = label_tag "category_#{category.id}" do
-                  - if current_instance.category_search_type == "OR"
+                  - if @searcher.transactable_type.category_search_type == "OR"
                     = check_box_tag("category_ids[]", category.id, @searcher.category_ids.include?(category.id.to_s), id: "category_#{category.id}")
                   - else
                     = check_box_tag("parent_category_ids[]", category.id, @searcher.category_ids.include?(category.id.to_s), hidden: true, id: "category_#{category.id}")

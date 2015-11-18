@@ -4,28 +4,23 @@ class GuestListTest < ActiveSupport::TestCase
 
   context '#filter' do
     setup do
-      Timecop.travel(Time.local(2013, 10, 21, 12, 0, 0))
       @user = create(:user)
       @company = create(:company, creator: @user)
       @location = create(:location, company: @company)
       @listings = create(:transactable, quantity: 10, location: @location)
-      @unconfirmed_reservation =  create(:reservation, listing: @listings, state: :unconfirmed)
-      @confirmed_reservation =  create(:reservation, listing: @listings, state: :confirmed)
+      @unconfirmed_reservation =  create(:future_reservation, listing: @listings, state: :unconfirmed)
+      @confirmed_reservation =  create(:future_reservation, listing: @listings, state: :confirmed)
 
       @archived_reservations = []
-      Timecop.travel(7.days.ago) { @archived_reservations << create(:reservation, listing: @listings, state: :cancelled_by_guest) }
-      Timecop.travel(8.days.ago) { @archived_reservations << create(:reservation, listing: @listings, state: :cancelled_by_host) }
-      Timecop.travel(9.days.ago) { @archived_reservations << create(:reservation, listing: @listings, state: :rejected) }
+      travel_to(7.days.ago) { @archived_reservations << create(:reservation, listing: @listings, state: :cancelled_by_guest) }
+      travel_to(8.days.ago) { @archived_reservations << create(:reservation, listing: @listings, state: :cancelled_by_host) }
+      travel_to(9.days.ago) { @archived_reservations << create(:reservation, listing: @listings, state: :rejected) }
 
       (10..12).each do |i|
-        Timecop.travel(i.days.ago) { @archived_reservations << create(:reservation, listing: @listings, state: :confirmed) }
+        travel_to(i.days.ago) { @archived_reservations << create(:reservation, listing: @listings, state: :confirmed) }
       end
 
       @guest_list = Controller::GuestList.new(@user)
-    end
-
-    teardown do
-      Timecop.return
     end
 
     should 'filter unconfirmed reservation for user' do

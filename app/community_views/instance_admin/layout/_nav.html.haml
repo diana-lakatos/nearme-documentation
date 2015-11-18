@@ -38,7 +38,7 @@
           %span Settings
         %ul#settings-sub.sub-nav.collapse{:class => ("in" if controller.class.to_s.split("::").first(2).join("::") == "InstanceAdmin::Settings")}
           - InstanceAdmin::BaseController::SETTINGS_CONTROLLERS.each do |controller_name, settings|
-            - next if %(hidden_controls locations listings documents_upload).include?(controller_name)
+            - next if %(hidden_controls locations listings documents_upload seller_attachments).include?(controller_name)
             %li
               %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/settings/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
                 %span= "#{controller_name.titleize}"

@@ -48,7 +48,6 @@ module Utils
     end
 
     def load_instance_serach_defaults
-      @instance.default_search_view = 'products'
       @instance.save
     end
 

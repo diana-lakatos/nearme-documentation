@@ -5,8 +5,8 @@ Feature: A user can see search results
   I want to see search results
 
   Background:
-    Given I am on the home page
-      And a listing in Auckland exists
+    Given a listing in Auckland exists
+    And I am on the home page
 
   Scenario: Shows $0 only for day if all prices are 0
     Given Auckland listing has prices: 0, 0, 0

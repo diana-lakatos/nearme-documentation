@@ -28,6 +28,9 @@ en:
         blog_post_added: 'New blog post has been added.'
         blog_post_deleted: 'Blog post has been deleted.'
         blog_post_updated: 'Blog post has been updated.'
+    buy_sell_market:
+      checkout:
+        cancel_paypal_express: "PayPal payment canceled"
     buy_sell:
       configuration_saved_successful: 'Configuration saved successfully.'
       commissions_saved_successful: 'Commissions saved successfully.'
@@ -171,7 +174,7 @@ en:
             generated: "Transfers are being generated, pelase refresh the page to see them on the list."
             no_new_transfers: "There are no pending payments"
           payment_gateways:
-            created: 'Payment gateway has been successfully created.\n Add proper configuration to use it in live mode.'
+            created: "Payment gateway has been successfully created. Please add the proper configuration/settings to start using it in your Marketplace."
             updated: 'Payment gateway has been successfully updated'
             deleted: 'Payment gateway has been successfully deleted'
 

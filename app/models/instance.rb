@@ -30,9 +30,6 @@ class Instance < ActiveRecord::Base
   SEARCH_TYPES = %w(geo fulltext fulltext_geo fulltext_category geo_category)
   SEARCH_ENGINES = %w(postgresql elasticsearch)
   SEARCH_MODULES = { 'elasticsearch' => 'Elastic' }
-  SEARCH_SERVICE_VIEWS = %w(mixed list listing_mixed)
-  SEARCH_PRODUCTS_VIEWS = %w(products products_table products_list)
-  SEARCH_COMMUNITY_VIEWS = %w(community)
   PRICING_OPTIONS = %w(free hourly daily weekly monthly fixed)
 
   API_KEYS.each do |meth|
@@ -99,7 +96,6 @@ class Instance < ActiveRecord::Base
 
   serialize :pricing_options, Hash
 
-  validates :category_search_type, presence: true, inclusion: %w(AND OR)
   validates :name, presence: true
   validates :marketplace_password, presence: { if: :password_protected }
   validates :password_protected, presence: { if: :test_mode, message: I18n.t("activerecord.errors.models.instance.test_mode_needs_password") }
@@ -122,8 +118,7 @@ class Instance < ActiveRecord::Base
 
   scope :with_deleted, -> { all }
 
-  store_accessor :search_settings, :date_pickers, :tt_select_type, :date_pickers_mode, :default_products_search_view,
-    :date_pickers_use_availability_rules, :taxonomy_tree, :saved_search, :price_slider, :price_types
+  store_accessor :search_settings, :tt_select_type
 
   before_create :generate_webhook_token
   before_update :check_lock
@@ -324,34 +319,6 @@ class Instance < ActiveRecord::Base
     end
   end
 
-  def taxonomy_tree
-    super == '1'
-  end
-
-  def price_slider
-    super == '1'
-  end
-
-  def price_types
-    super == '1'
-  end
-
-  def date_pickers
-    super == '1'
-  end
-
-  def date_pickers_use_availability_rules
-    super == '1'
-  end
-
-  def saved_search
-    super == '1'
-  end
-
-  def date_pickers_relative_mode?
-    date_pickers_mode == 'relative'
-  end
-
   def primary_locale
     Rails.cache.fetch("locale.primary_#{cache_key}") do
       locales.default_locale || :en
@@ -372,14 +339,6 @@ class Instance < ActiveRecord::Base
 
   def shippo_api
     @api ||= ShippoApi::ShippoApi.new(shippo_api_token)
-  end
-
-  def and_category_search?
-    category_search_type == "AND"
-  end
-
-  def or_category_search?
-    category_search_type == "OR"
   end
 
   def recalculate_cache_key!

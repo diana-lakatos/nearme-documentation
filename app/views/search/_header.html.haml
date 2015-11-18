@@ -2,7 +2,7 @@
   %header#listing_search.container-fluid{class: result_view == 'map' ? 'with-map' : ''}
     .header-inner
       %form.search_results{:action => search_path(v: result_view), :method => "get"}
-        -unless platform_context.fulltext_search?
+        -unless @searcher.transactable_type.fulltext_search?
           - search_geofields.each do |geofield|
             = hidden_field_tag geofield, ''
         = hidden_field_tag :v, result_view
@@ -22,13 +22,13 @@
             .list-map-toggle.span2
               %a.list{ href: search_path(params.merge(v: 'list')), class: active_class(result_view, 'list'), title: t('search.header.list'), data: { view: 'list' } }
                 = t('search.header.list')
-              %a.map{ href: search_path(params.merge(v: platform_context.map_view)), class: active_class(result_view, platform_context.map_view), title: t('search.header.map'), data: { view: platform_context.map_view } }
+              %a.map{ href: search_path(params.merge(v: @transactable_type.default_search_view)), class: active_class(result_view, @transactable_type.default_search_view), title: t('search.header.map'), data: { view: @transactable_type.default_search_view } }
                 = t('search.header.map')
-            .geolocation-input{ :class => (platform_context.fulltext_geo_search? ? 'span3' : 'span6')}
+            .geolocation-input{ :class => (@searcher.transactable_type.fulltext_geo_search? ? 'span3' : 'span6')}
               .geolocation
                 %span.ico-crosshairs
-              %input#search.query{:name => platform_context.search_input_name, :placeholder => platform_context.search_field_placeholder, :type => "text", :value => @searcher.input_value(platform_context.search_input_name), :autocomplete => "off", 'data-disable-autocomplete' => platform_context.fulltext_search?}
-            -if platform_context.fulltext_geo_search?
+              %input#search.query{:name => @searcher.transactable_type.search_input_name, :placeholder => @searcher.transactable_type.search_field_placeholder, :type => "text", :value => @searcher.input_value(@searcher.transactable_type.search_input_name), :autocomplete => "off", 'data-disable-autocomplete' => @searcher.transactable_type.fulltext_search?}
+            -if @searcher.transactable_type.fulltext_geo_search?
               .keyword-input.span3
                 .search-loop-icon
                   %span.ico-search

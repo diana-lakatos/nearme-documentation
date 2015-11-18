@@ -40,7 +40,7 @@ class LocationsController < ApplicationController
     loc = Location.find(params[:location_id])
     listing = Transactable.find(params[:listing_id].split("-").first)
 
-    redirect_to transactable_type_location_listing_path(tt, loc, listing)
+    redirect_to transactable_type_location_listing_path(tt, loc, listing), status: 301
   end
 
   private

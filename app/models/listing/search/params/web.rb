@@ -3,8 +3,9 @@ class Listing::Search::Params::Web < Listing::Search::Params
   attr_reader :location_types_ids, :industries_ids, :lntype, :lgtype, :lgpricing,
     :lntypes, :sort, :order, :dates, :start_date, :end_date, :display_dates, :lg_custom_attributes, :category_ids
 
-  def initialize(options)
+  def initialize(options, transactable_type)
     super
+    @transactable_type = transactable_type
     @location_types_ids = @options[:location_types_ids]
     @lntype = @options[:lntype].blank? ? nil : @options[:lntype]
     @lgtype = @options[:lgtype].blank? ? nil : @options[:lgtype]
@@ -44,7 +45,7 @@ class Listing::Search::Params::Web < Listing::Search::Params
   def get_category_ids
     categories = Category.where(id: @options[:category_ids].split(',')) if @options[:category_ids]
     if categories.present?
-      if PlatformContext.current.instance.category_search_type == "OR"
+      if @transactable_type.category_search_type == "OR"
         parent_ids = categories.map(&:parent_id)
         categories.map do |category|
           unless parent_ids.include?(category.id)

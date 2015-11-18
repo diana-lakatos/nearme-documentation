@@ -1,4 +1,5 @@
 class InstanceAdmin::BuySell::ProductTypesController < InstanceAdmin::BuySell::BaseController
+  before_filter :find_product_type, except: [:index, :new, :create]
 
   def index
     @product_types = product_type_scope.all
@@ -9,7 +10,6 @@ class InstanceAdmin::BuySell::ProductTypesController < InstanceAdmin::BuySell::B
   end
 
   def edit
-    @product_type = product_type_scope.find(params[:id])
   end
 
   def create
@@ -26,24 +26,29 @@ class InstanceAdmin::BuySell::ProductTypesController < InstanceAdmin::BuySell::B
   end
 
   def update
-    @product_type = product_type_scope.find(params[:id])
     if @product_type.update_attributes(product_type_params)
       flash[:success] = t 'flash_messages.instance_admin.buy_sell.product_types.updated'
       redirect_to instance_admin_buy_sell_product_types_path
     else
       flash[:error] = @product_type.errors.full_messages.to_sentence
-      render action: :edit
+      render action: params[:action_name]
     end
   end
 
   def destroy
-    @product_type = product_type_scope.find(params[:id])
     @product_type.destroy
     flash[:success] = t 'flash_messages.instance_admin.buy_sell.product_types.deleted'
     redirect_to instance_admin_buy_sell_product_types_path
   end
 
+  def search_settings
+  end
+
   private
+
+  def find_product_type
+    @product_type = product_type_scope.find(params[:id])
+  end
 
   def product_type_scope
     Spree::ProductType

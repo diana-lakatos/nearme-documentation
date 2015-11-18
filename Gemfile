@@ -137,11 +137,7 @@ gem 'ranked-model'
 gem 'jquery-fileupload-rails'
 
 gem 'premailer-rails'
-
 gem 'addressable'
-
-gem 'timecop', '0.3.5'
-
 gem 'newrelic_rpm'
 gem 'unicorn-worker-killer'
 

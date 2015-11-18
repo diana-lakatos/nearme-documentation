@@ -54,7 +54,7 @@ class ReservationTest < ActiveSupport::TestCase
 
     should 'have correct confirmed_at' do
       @reservation = FactoryGirl.create(:reservation, :state => 'unconfirmed')
-      Timecop.freeze(Time.zone.now) do
+      travel_to Time.zone.now do
         @reservation.confirm!
         assert_equal Time.zone.now, @reservation.confirmed_at
         assert_nil @reservation.cancelled_at
@@ -63,9 +63,27 @@ class ReservationTest < ActiveSupport::TestCase
 
     should 'have correct cancelled_at when cancelled by guest' do
       @reservation = FactoryGirl.create(:reservation, :state => 'confirmed')
-      Timecop.freeze(Time.zone.now) do
+      travel_to Time.zone.now do
         @reservation.user_cancel!
         assert_equal Time.zone.now, @reservation.cancelled_at
+      end
+    end
+
+    should 'should properly cast time zones' do
+      Time.use_zone 'Hawaii' do
+        FactoryGirl.create(:reservation_with_credit_card)
+        assert_equal 1, Reservation.where("created_at < ? ", Time.now).count
+        assert_equal 1, Reservation.where(["created_at < ?", Time.current]).count
+        assert_equal 1, Reservation.where(["created_at < ?", Time.zone.now]).count
+      end
+
+      Reservation.destroy_all
+
+      Time.use_zone 'Sydney' do
+        FactoryGirl.create(:reservation_with_credit_card)
+        assert_equal 1, Reservation.where(["created_at < ?", Time.now]).count
+        assert_equal 1, Reservation.where(["created_at < ?", Time.current]).count
+        assert_equal 1, Reservation.where(["created_at < ?", Time.zone.now]).count
       end
     end
 
@@ -279,7 +297,7 @@ class ReservationTest < ActiveSupport::TestCase
     end
 
     should 'be able to schedule refund' do
-      Timecop.freeze(Time.zone.now) do
+      travel_to Time.zone.now do
         ReservationRefundJob.expects(:perform_later).with do |time, id, counter|
           time.to_i == Time.zone.now.to_i && id == @reservation.id && counter == 0
         end.once
@@ -297,7 +315,7 @@ class ReservationTest < ActiveSupport::TestCase
     should 'schedule next refund attempt on fail' do
       @reservation.update_column(:payment_method_id, FactoryGirl.create(:credit_card_payment_method).id)
       Payment.any_instance.expects(:refund).returns(false)
-      Timecop.freeze(Time.zone.now) do
+      travel_to Time.zone.now do
         ReservationRefundJob.expects(:perform_later).with do |time, id, counter|
           time.to_i == (Time.zone.now + 12.hours).to_i && id == @reservation.id && counter == 2
         end.once
@@ -363,7 +381,7 @@ class ReservationTest < ActiveSupport::TestCase
     should 'set proper expiration time' do
       TransactableType.first.update_attribute(:hours_to_expiration, 45)
       @reservation = FactoryGirl.create(:reservation)
-      Timecop.freeze Time.zone.now do
+      travel_to Time.zone.now do
         ReservationExpiryJob.expects(:perform_later).with do |hours, id|
           hours == 45.hours && id == @reservation.id
         end

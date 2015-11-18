@@ -11,7 +11,7 @@ class CacheableTest < ActionDispatch::IntegrationTest
   end
 
   should 'populate cache variable and timestamp' do
-    Timecop.freeze(Time.zone.now) do
+    travel_to(Time.zone.now) do
       SampleModel.clear_custom_attributes_cache
       @sample_model.custom_attributes
       assert_equal [@sample_model_type.id], CustomAttributes::CustomAttribute::CacheDataHolder.custom_attributes_as_array['SampleModelType'].keys
@@ -35,7 +35,7 @@ class CacheableTest < ActionDispatch::IntegrationTest
       @sample_model.custom_attributes
       assert_equal 1, CustomAttributes::CustomAttribute::CacheDataHolder.custom_attributes_as_array['SampleModelType'][@sample_model_type.id].count
       old_time = CustomAttributes::CustomAttribute::CacheTimestampsHolder.custom_attributes_cache_update_at['SampleModelType'][@sample_model_type.id]
-      Timecop.freeze(Time.zone.now + 10.seconds) do
+      travel_to(Time.zone.now + 10.seconds) do
         SampleModel.clear_custom_attributes_cache
         @sample_model.custom_attributes
         assert_equal ['my_attribute', 'my_second_attribute'], CustomAttributes::CustomAttribute::CacheDataHolder.custom_attributes_as_array['SampleModelType'][@sample_model_type.id].map { |arr| arr[0] }.sort
@@ -46,7 +46,7 @@ class CacheableTest < ActionDispatch::IntegrationTest
 
     should 'see changes done to existing attributes' do
       assert_equal ['my_attribute'], CustomAttributes::CustomAttribute::CacheDataHolder.custom_attributes_as_array['SampleModelType'][@sample_model_type.id].map { |arr| arr[0] }.sort
-      Timecop.freeze(Time.zone.now + 10.seconds) do
+      travel_to(Time.zone.now + 10.seconds) do
         @custom_attribute.update_attribute(:name, 'updated_attr')
         SampleModel.clear_custom_attributes_cache
         @sample_model.custom_attributes
@@ -56,7 +56,7 @@ class CacheableTest < ActionDispatch::IntegrationTest
 
     should 'forget destroyed attribute' do
       assert_equal 1, CustomAttributes::CustomAttribute::CacheDataHolder.custom_attributes_as_array['SampleModelType'][@sample_model_type.id].count
-      Timecop.freeze(Time.zone.now + 10.seconds) do
+      travel_to(Time.zone.now + 10.seconds) do
         @custom_attribute.destroy
         SampleModel.clear_custom_attributes_cache
         @sample_model.custom_attributes

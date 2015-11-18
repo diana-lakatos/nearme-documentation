@@ -115,14 +115,14 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
         end
 
         should "schedule payment transfers every 15th day of the month" do
-          Timecop.travel(Time.zone.now.next_month.beginning_of_month + 14.days) do
+          travel_to(Time.zone.now.next_month.beginning_of_month + 14.days) do
             PaymentTransferSchedulerJob.perform
           end
           assert_equal 1, @company_1.payment_transfers.count
         end
 
         should "not schedule payment transfers first Monday after 1st day of the month" do
-          Timecop.travel(Time.zone.now.next_month.beginning_of_month.next_week) do
+          travel_to(Time.zone.now.next_month.beginning_of_month.next_week) do
             PaymentTransferSchedulerJob.perform
           end
           assert_equal 0, @company_1.payment_transfers.count

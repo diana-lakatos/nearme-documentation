@@ -279,7 +279,7 @@ class EventTrackerTest < ActiveSupport::TestCase
   end
 
   def build_search_params(options)
-    Listing::Search::Params::Web.new(options)
+    Listing::Search::Params::Web.new(options, TransactableType.first)
   end
 
   # FIXME: test all valid cases for TrackSerializer in dedicated unit test

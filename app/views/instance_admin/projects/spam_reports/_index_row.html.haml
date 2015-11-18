@@ -1,0 +1,9 @@
+%tr{:"data-spamable-id" => spamable.id}
+  %td= I18n.l(spam_reports.last.created_at, format: :long)
+  %td= spam_reports.last.user.try(:name) || "Anonymous"
+  %td= spam_reports.length
+  %td= spamable.class.name
+
+  %td= link_to "See #{spamable.class.name}", "javascript:void(0);", data: {modal: true, href: instance_admin_projects_spam_report_path(spam_reports.first)}
+  %td= link_to "Not Spam", ignore_instance_admin_projects_spam_report_path(spam_reports.first), method: :post, data: { confirm: "Are you sure?" }, remote: true
+  %td= link_to "Spam", instance_admin_projects_spam_report_path(spam_reports.first), method: :delete, data: { confirm: "Are you sure? You will delete the comment by flagging it as spam." }, remote: true

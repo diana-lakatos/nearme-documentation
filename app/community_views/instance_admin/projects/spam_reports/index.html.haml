@@ -1,22 +1,66 @@
 .content-container
   %h4 Manage Spam
+
+  .row
+    .text-container
+      = form_tag instance_admin_projects_spam_reports_path, method: :get, enforce_utf8: :false do
+        .filters
+          .filter.period
+            .dropdown.date-dropdown
+              %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button"}
+                - if params[:date].present?
+                  %span.current= selected_date_value(params[:date])
+                - else
+                  %span.current
+                    = t('instance_admin.manage.admin_searchable.title_all')
+                %span.caret
+                = hidden_field_tag 'date', date_param_value
+              %ul.dropdown-menu{"aria-labelledby" => "dLabel", :role => "menu"}
+                %li
+                  %a{data: {date: ''}}
+                    = t('instance_admin.manage.admin_searchable.title_all')
+                - Review::DATE_VALUES.each do |value|
+                  %li
+                    %a{data: {date: value}}
+                      = selected_date_value(value)
+                %li.divider
+                %li.date-range
+                  .date-range-header
+                    = t('instance_admin.manage.admin_searchable.date_range')
+                  .from
+                    = t('instance_admin.manage.admin_searchable.from')
+                  %input#from{type: 'text'}
+                  .to
+                    = t('instance_admin.manage.admin_searchable.to')
+                  %input#to{type: 'text'}
+                  %button.apply-filter.btn.btn-blue
+                    = t('instance_admin.manage.admin_searchable.apply_filter')
+
+
   .row
     .table-container.col-xs-12
       %table.table
         %tbody
           %tr
-            %td Reported Object Class
-            %td Reported Object Id
-            %td Reported Object
-            %td Reported by
-            %td Reports Count
+            %th Last Reported at
+            %th Last Reported by
+            %th Reports Count
+            %th Reported Object
+            %th
+            %th
+            %th
 
-          - @spam_reports.each do |resource|
-            - next if resource.spamable.nil?
-            %tr
-              %td= resource.spamable.class.name
-              %td= resource.spamable.id
-              %td= resource.spamable.event
-              %td= resource.user.try(:name) || "Anonymous"
-              %td= resource.spamable.spam_reports.count
-              %td= link_to "Delete", instance_admin_projects_spam_report_path(resource), method: :delete, data: { confirm: "Are you sure you want to delete this #{resource.spamable.class.name}?", class: "pull-right" }
+          - @spam_reports.each do |spamable, spam_reports|
+            - next if spamable.nil?
+            = render "index_row", spamable: spamable, spam_reports: spam_reports
+
+
+.row
+  .text-container
+    .pull-right
+      = will_paginate @spam_reports
+
+= render partial: 'shared/modal'
+
+- content_for :domready do
+  new InstanceAdmin.SpamReportsController($('.spam_reports'))

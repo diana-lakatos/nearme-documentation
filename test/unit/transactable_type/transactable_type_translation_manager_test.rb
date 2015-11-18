@@ -67,7 +67,7 @@ class TransactableType::TransactableTypeTranslationManagerTest < ActiveSupport::
 
   def translation_manager
     # we do not want to cache this
-    @translation_manager ||= TranslationManager.new(@transactable_type.reload)
+    @translation_manager = TranslationManager.new(@transactable_type.reload)
   end
 
   def custom_attribute(field)

@@ -72,9 +72,9 @@ Before '~@photo' do
 end
 
 Around('@elasticsearch') do |scenario, block|
-  Instance.update_all(search_engine: Instance::SEARCH_ENGINES.last)
+  TransactableType.update_all(search_engine: Instance::SEARCH_ENGINES.last)
   block.call
-  Instance.update_all(search_engine: Instance::SEARCH_ENGINES.first)
+  TransactableType.update_all(search_engine: Instance::SEARCH_ENGINES.first)
 end
 
 Around('@elasticreindex') do |scenario, block|

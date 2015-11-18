@@ -9,7 +9,7 @@ class ReservationRequest < Form
     :delivery_type
   attr_reader   :reservation, :listing, :location, :user, :client_token, :payment_method_nonce
 
-  delegate :confirm_reservations?, :location, :billing_authorizations, :company, to: :@listing
+  delegate :confirm_reservations?, :location, :billing_authorizations, :company, :timezone, to: :@listing
   delegate :country_name, :country_name=, :country, to: :@user
   delegate :guest_notes, :quantity, :quantity=, :action_hourly_booking?, :reservation_type=,
     :credit_card_payment?, :manual_payment?, :remote_payment?, :nonce_payment?, :currency,
@@ -39,6 +39,7 @@ class ReservationRequest < Form
       @reservation = @listing.reservations.build
       @instance = platform_context.instance
       @reservation.currency = @listing.currency
+      @reservation.time_zone = timezone
       @reservation.company = @listing.company
       @reservation.guest_notes = attributes[:guest_notes]
       @reservation.book_it_out_discount = @listing.book_it_out_discount if attributes[:book_it_out] == 'true'
@@ -82,6 +83,11 @@ class ReservationRequest < Form
       @dates.reject(&:blank?).each do |date_string|
         @reservation.add_period(Date.parse(date_string), start_minute, end_minute)
       end
+
+      @reservation.assign_attributes(
+        starts_at: @reservation.first_period.starts_at,
+        ends_at: @reservation.last_period.ends_at
+      )
     end
   end
 

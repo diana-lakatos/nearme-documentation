@@ -2,7 +2,8 @@ class HourlyPresenter
   include ActionView::Helpers::TextHelper
   attr_accessor :date, :start_minute, :end_minute
 
-  def initialize(date, start_minute, end_minute)
+  def initialize(date, start_minute, end_minute, timezone=nil)
+    @timezone = timezone
     @date = date
     @start_minute = start_minute
     @end_minute = end_minute
@@ -39,10 +40,12 @@ class HourlyPresenter
         ('%s' % [start_time]).html_safe
       end
     else
+      timezone_info = (@timezone.present? && @timezone != Time.zone.name) ? " #{@timezone} Time zone" : ""
+
       if show_date
-        ('%s%s%s&ndash;%s%s(%0.2f %s)' % [I18n.l(date, format: :short), options[:separator], start_time, end_time, options[:separator], hours, 'hour'.pluralize(hours.to_i)]).html_safe
+        ('%s%s%s&ndash;%s%s(%0.2f %s)%s' % [I18n.l(date, format: :short), options[:separator], start_time, end_time, options[:separator], hours, 'hour'.pluralize(hours.to_i), timezone_info ]).html_safe
       else
-        ('%s&ndash;%s<br />(%0.2f %s)' % [start_time, end_time, hours, 'hour'.pluralize(hours.to_i)]).html_safe
+        ('%s&ndash;%s<br />(%0.2f %s)%s' % [start_time, end_time, hours, 'hour'.pluralize(hours.to_i), timezone_info]).html_safe
       end
     end
   end
@@ -50,7 +53,7 @@ class HourlyPresenter
   def minute_of_day_to_time(minute)
     hour = minute / 60
     min  = minute % 60
-    Time.zone.local(Time.zone.today.year, Time.zone.today.month, Time.zone.today.day, hour, min)
+    time = Time.zone.local(Time.zone.today.year, Time.zone.today.month, Time.zone.today.day, hour, min)
   end
 
   def start_minute_of_day_to_time

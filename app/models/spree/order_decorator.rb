@@ -108,7 +108,7 @@ Spree::Order.class_eval do
   end
 
   def express_cancel_return_url
-    PlatformContext.current.decorate.build_url_for_path("/cart")
+    PlatformContext.current.decorate.build_url_for_path("/orders/#{self.number}/checkout/cancel_express_checkout")
   end
 
   def set_credit_card(order_params)

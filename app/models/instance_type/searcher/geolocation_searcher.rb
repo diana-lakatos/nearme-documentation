@@ -18,7 +18,7 @@ module InstanceType::Searcher::GeolocationSearcher
           query: search.keyword,
           loc: search.loc,
         })
-        radius = PlatformContext.current.instance.search_radius.to_i
+        radius = @transactable_type.search_radius.to_i
         radius = search.radius.to_i if radius.zero?
 
         if located || adjust_to_map
@@ -33,12 +33,12 @@ module InstanceType::Searcher::GeolocationSearcher
           end
         end
 
-        ::Listing::SearchFetcher.new(@search_params)
+        ::Listing::SearchFetcher.new(@search_params, @transactable_type)
       end
   end
 
   def search
-    @search ||= ::Listing::Search::Params::Web.new(@params)
+    @search ||= ::Listing::Search::Params::Web.new(@params, @transactable_type)
   end
 
   def search_query_values
@@ -57,7 +57,7 @@ module InstanceType::Searcher::GeolocationSearcher
   end
 
   def max_price
-    return 0 if !PlatformContext.current.instance.price_slider || results.blank?
+    return 0 if !@transactable_type.show_price_slider || results.blank?
     @max_fixed_price ||= results.maximum(:fixed_price_cents).to_f / 100
     @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
   end

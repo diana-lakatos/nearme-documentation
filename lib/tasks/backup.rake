@@ -49,4 +49,23 @@ namespace :backup do
 
     puts "[#{Time.now}] Done"
   end
+
+  task :create_stack_domains, [:stack_name] => :environment do |t, args|
+    stack_name = case args[:stack_name]
+    when 'nm-qa-1' then 'qa-1'
+    when 'nm-qa-2' then 'qa-2'
+    when 'nm-qa-3' then 'qa-3'
+    when 'nm-staging' then 'staging'
+    end
+
+    if stack_name.blank?
+      puts "Stack name can't be blank"
+    else
+      Instance.find_each do |instance|
+        instance.domains.create(name: "#{instance.name.to_url}.#{stack_name}.near-me.com")
+      end
+
+      puts "Stack domains created."
+    end
+  end
 end

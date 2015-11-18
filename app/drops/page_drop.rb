@@ -1,5 +1,9 @@
 class PageDrop < BaseDrop
 
+  attr_reader :page
+
+  delegate :slug, to: :page
+
   def initialize(page)
     @page = page
   end

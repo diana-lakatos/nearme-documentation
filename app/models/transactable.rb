@@ -260,9 +260,9 @@ class Transactable < ActiveRecord::Base
     if schedule_booking?
       hour = start_min/60
       minute = start_min - (60 * hour)
-      Time.zone = location.time_zone
-      self.schedule.schedule.occurs_at?(Time.zone.parse("#{date} #{hour}:#{minute}"))
-      Time.zone = "UTC"
+      Time.use_zone(timezone) do
+        self.schedule.schedule.occurs_at?(Time.zone.parse("#{date} #{hour}:#{minute}"))
+      end
     else
       availability.open_on?(:date => date, :start_minute => start_min, :end_minute => end_min)
     end
@@ -277,9 +277,10 @@ class Transactable < ActiveRecord::Base
     else
       @start_date = params[:last_occurrence].try(:to_date)
     end
-    @start_date = Time.now if @start_date.nil? || @start_date < Time.now
+    time_now = Time.now.in_time_zone(timezone)
+    @start_date = time_now if @start_date.nil? || @start_date < time_now
     end_date = params[:end_date].try(:to_date).try(:end_of_day)
-    excluded_ranges = schedule.schedule_exception_rules.where('duration_range_end > ?', end_date || Time.now)
+    excluded_ranges = schedule.schedule_exception_rules.where('duration_range_end > ?', end_date || time_now)
       .select('duration_range_start, duration_range_end').map { |ser| ser.duration_range_start..ser.duration_range_end }
     loop do
       checks_to_be_performed -= 1
@@ -289,7 +290,7 @@ class Transactable < ActiveRecord::Base
           start_minute = occurrence.to_datetime.min.to_i + (60 * occurrence.to_datetime.hour.to_i)
           availability = self.quantity - desks_booked_on(occurrence.to_datetime, start_minute, start_minute)
           if availability > 0
-            occurrences << { id: I18n.l(occurrence.utc, format: :long), text: I18n.l(occurrence.utc, format: :long), availability: availability.to_i }
+            occurrences << { id: I18n.l(occurrence.in_time_zone(timezone), format: :long), text: I18n.l(occurrence.in_time_zone(timezone), format: :long), availability: availability.to_i }
           end
         end
         @start_date = occurrence
@@ -400,6 +401,11 @@ class Transactable < ActiveRecord::Base
       reservation.add_period(date)
     end
 
+    reservation.assign_attributes(
+      starts_at: reservation.first_period.starts_at,
+      ends_at: reservation.last_period.ends_at
+    )
+
     reservation.save!
 
     if reservation.listing.confirm_reservations?
@@ -424,9 +430,16 @@ class Transactable < ActiveRecord::Base
   end
 
   def first_available_date
-    date = Date.today
-
+    time = Time.now.in_time_zone(timezone)
+    date = time.to_date
     max_date = date + 31.days
+
+    closed_at = self.availability.close_minute_for(date)
+
+    if closed_at && (closed_at < (time.hour * 60 + time.min))
+      date = date + 1.day
+    end
+
     date = date + 1.day until availability_for(date) > 0 || date==max_date
     date
   end
@@ -690,6 +703,26 @@ class Transactable < ActiveRecord::Base
 
   def required?(attribute)
     RequiredFieldChecker.new(self, attribute).required?
+  end
+
+  def zone_utc_offset
+    Time.now.in_time_zone(timezone).utc_offset / 3600
+  end
+
+  def timezone
+    case self.transactable_type.timezone_rule
+    when 'location' then self.location.time_zone || Time.zone.name
+    when 'seller' then self.location.creator.time_zone || Time.zone.name
+    when 'instance' then self.instance.time_zone || Time.zone.name
+    else
+      Time.zone.name
+    end
+  end
+
+  def timezone_info
+    unless Time.zone.name == timezone
+      I18n.t('activerecord.attributes.transactable.timezone_info', timezone: timezone)
+    end
   end
 
   private

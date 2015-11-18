@@ -70,11 +70,11 @@
         - @searcher.filterable_custom_attributes.each do |ca|
           - if ca.valid_values_translated.any?
             = render partial: 'search/mixed/filter', locals: { header_name: t(ca.label_key), selected_values: @searcher.search.lg_custom_attributes[ca.name.to_sym] || [], input_name: "lg_custom_attributes[#{ca.name}][]", options: ca.valid_values_translated, name: ca.name }
-        - if platform_context.instance.price_types
+        - if @transactable_type.search_price_types_filter
           = render partial: 'search/mixed/filter', locals: { header_name: 'Pricing', selected_values: @searcher.search.lgpricing_filters || [], input_name: 'listing_pricing[]', options: @searcher.filterable_pricing }
         - if @searcher.transactable_type.display_location_type_filter?
           = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Location Type', :selected_values => @searcher.search.lntypes_filters || [], :input_name => 'location_types_ids[]', :options => @searcher.filterable_location_types.map { |lt| [lt.name.downcase, lt.name ] } }
-        - if platform_context.instance.price_slider
+        - if @transactable_type.show_price_slider
           = render partial: 'search/shared/price_slider'
 
       .sort

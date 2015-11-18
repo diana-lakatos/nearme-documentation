@@ -2,15 +2,13 @@ module SearcherHelper
 
   def result_view
     return @result_view = 'community' if PlatformContext.current.instance.is_community?
-    @result_view = params[:v].presence || (@transactable_type.buyable? ? PlatformContext.current.instance.default_products_search_view : PlatformContext.current.instance.default_search_view)
-    @result_view = @result_view.in?(Instance::SEARCH_SERVICE_VIEWS + Instance::SEARCH_PRODUCTS_VIEWS + Instance::SEARCH_COMMUNITY_VIEWS) ? @result_view : 'mixed'
-    (@result_view.in?(Instance::SEARCH_PRODUCTS_VIEWS) && !@transactable_type.buyable?) ? 'mixed' : @result_view
-    (@result_view.in?(Instance::SEARCH_SERVICE_VIEWS) && @transactable_type.buyable?) ? 'products' : @result_view
+    @result_view = params[:v].presence
+    @result_view = @result_view.in?(@transactable_type.available_search_views) ? @result_view : @transactable_type.default_search_view
   end
 
   def find_transactable_type
     @transactable_type = TransactableType.find(params[:transactable_type_id]) if params[:transactable_type_id].present?
-    @transactable_type ||= (PlatformContext.current.instance.buyable? ?  Spree::ProductType.first : ServiceType.first)
+    @transactable_type ||= TransactableType.searchable.by_position.first
     params[:transactable_type_id] ||= @transactable_type.try(:id)
 
     if @transactable_type.blank?

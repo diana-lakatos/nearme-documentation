@@ -16,7 +16,7 @@ class PagesController < ApplicationController
   end
 
   def redirect
-    redirect_to pages_path(params[:slug])
+    redirect_to pages_path(params[:slug]), status: 301
   end
 
   private

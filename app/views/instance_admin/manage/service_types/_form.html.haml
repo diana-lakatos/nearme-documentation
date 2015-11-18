@@ -1,4 +1,5 @@
 = simple_nested_form_for [:instance_admin, :manage, resource], :html => { :multipart => true} do |f|
+  %input{ name: :action_name, type: :hidden, value: :edit }
   .content-container
     %h4= t('instance_admin.manage.service_types.basic_configuration')
     .row
@@ -66,14 +67,17 @@
     .row
       .input-container.col-xs-12
         = f.input :minimum_booking_minutes, required: false, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-12
+        = f.input :timezone_rule, collection: {'Location' => 'location', "Buyer Time Zone" => 'buyer', 'Seller Time Zone' => 'seller', 'Dafault Time Zone' => 'instance'}, required: false, input_html: { class: 'form-control' }, include_blank: false
 
   .content-container
     %h4= t('instance_admin.manage.service_types.pricing')
-    - %w(hourly daily weekly monthly free).each do |price|
+    - %w(hourly daily weekly monthly free weekly_subscription monthly_subscription).each do |price|
       .row
         .input-container.col-xs-4
           = f.input :"action_#{price}_booking", as: :boolean, label: t("instance_admin.manage.service_types.pricing_types.#{price}"), :inline_label => true
-        - unless price == 'free'
+        - unless %w(weekly_subscription monthly_subscription free).include? price
           .input-container.col-xs-4
             = f.input :"min_#{price}_price", input_html: { class: 'form-control' }
           .input-container.col-xs-4
@@ -88,10 +92,6 @@
         = f.input :action_exclusive_price, as: :boolean, :inline_label => true
       .input-container.col-xs-4
         = f.input :action_price_per_unit, as: :boolean, :inline_label => true
-    .row
-      .input-container.col-xs-4
-        = f.input :action_subscription_booking, as: :boolean, :inline_label => true
-
 
   .content-container
     %h4= t('instance_admin.manage.service_types.calendar')

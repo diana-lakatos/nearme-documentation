@@ -24,7 +24,7 @@ class Utils::DefaultAlertsCreator::SpamReportCreatorTest < ActionDispatch::Integ
     @spam_report_creator.create_summary_email!
 
     datetime = 5.hours.ago.to_date
-    Timecop.freeze(datetime) do
+    travel_to datetime do
       3.times { FactoryGirl.create(:spam_report) }
     end
 

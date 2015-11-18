@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
 
   include Spree::UserPaymentSource
 
-  SORT_OPTIONS = ['All', 'Featured', 'People I know', 'Most Popular', 'Distance', 'Number of Projects']
+  SORT_OPTIONS = ['All', 'Featured', 'People I know', 'Most Popular', 'Location', 'Number of Projects']
 
   has_paper_trail ignore: [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                            :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
@@ -882,7 +882,7 @@ class User < ActiveRecord::Base
       friends_of(user)
     when /most popular/i
       order('followers_count DESC')
-    when /distance/i
+    when /location/i
       return all unless user
       near(user.current_geolocation, 8_000_000, units: :km, order: 'distance')
     when /number of projects/i

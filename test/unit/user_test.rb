@@ -555,13 +555,13 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should "not update timestamp when saved" do
-        Timecop.freeze(Time.zone.now)
-        @user.stubs(:full_mobile_number_updated?).returns(false)
-        notified_at = Time.zone.now - 5.days
-        @user.notified_about_mobile_number_issue_at = notified_at
-        @user.save!
-        assert_equal notified_at, @user.notified_about_mobile_number_issue_at
-        Timecop.return
+        travel_to Time.zone.now do
+          @user.stubs(:full_mobile_number_updated?).returns(false)
+          notified_at = Time.zone.now - 5.days
+          @user.notified_about_mobile_number_issue_at = notified_at
+          @user.save!
+          assert_equal notified_at, @user.notified_about_mobile_number_issue_at
+        end
       end
     end
   end
@@ -594,9 +594,10 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'update timestamp of notification' do
-      Timecop.freeze(Time.zone.now)
-      @user.notify_about_wrong_phone_number
-      assert_equal Time.zone.now.to_a, @user.notified_about_mobile_number_issue_at.to_a
+      travel_to Time.zone.now do
+        @user.notify_about_wrong_phone_number
+        assert_equal Time.zone.now.to_a, @user.notified_about_mobile_number_issue_at.to_a
+      end
     end
 
   end

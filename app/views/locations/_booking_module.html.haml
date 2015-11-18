@@ -74,18 +74,24 @@
                       - else
                         = '-'
                       %span.period= t('reservations.per_month')
-            - if listing.weekly_subscription_price.to_f > 0
+            - if listing.transactable_type.action_weekly_subscription_booking
               %li{ data: { subscription: 'weekly' } }
                 = link_to "#recurring-booking-#{listing.id}", class: 'possible' do
                   %span.label
-                    = "#{listing.price_with_currency(:weekly_subscription_price)}"
+                    - unless listing.weekly_subscription_price.to_f.zero?
+                      = "#{listing.price_with_currency(:weekly_subscription_price)}"
+                    - else
+                      = '-'
                     %span.period= t('reservations.per_week')
 
-            - if listing.monthly_subscription_price.to_f > 0
+            - if listing.transactable_type.action_monthly_subscription_booking
               %li{ data: { subscription: 'monthly' } }
                 = link_to "#recurring-booking-#{listing.id}", class: 'possible' do
                   %span.label
-                    = "#{listing.price_with_currency(:monthly_subscription_price)}"
+                    - unless listing.monthly_subscription_price.to_f.zero?
+                      = "#{listing.price_with_currency(:monthly_subscription_price)}"
+                    - else
+                      = '-'
                     %span.period= t('reservations.per_month')
 
       .clearfix

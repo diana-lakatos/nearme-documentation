@@ -13,7 +13,7 @@ class @Bookings.TimePicker
     @initialStartMinute = options.startMinute if options.startMinute?
     @initialEndMinute = options.endMinute if options.endMinute?
 
-    @view = new View(positionTarget: @container)
+    @view = new View(positionTarget: @container, @listing)
     @view.appendTo($('body'))
     @view.closeIfClickedOutside(@container)
 
@@ -182,8 +182,12 @@ class @Bookings.TimePicker
         Time
       </div>
 
+
       <div class="datepicker-text">
         <div class="datepicker-text-fadein">Select booking duration</div>
+      </div>
+      <div class="datepicker-text">
+        <div class="datepicker-text-fadein timezone"></div>
       </div>
 
       <div class="time-wrapper">
@@ -205,7 +209,7 @@ class @Bookings.TimePicker
     defaultOptions:
       containerClass: 'dnm-datepicker'
 
-    constructor: (@options) ->
+    constructor: (@options, @listing) ->
       @options = $.extend({}, @defaultOptions, @options)
       super(@options)
 
@@ -215,6 +219,7 @@ class @Bookings.TimePicker
       @endTime = @container.find('.time-end select')
       @endTimeSpan = @container.find('.time-end span label')
       @loading = @container.find('.datepicker-loading')
+      @timezone = @container.find('.timezone')
 
       @bindEvents()
 
@@ -225,9 +230,14 @@ class @Bookings.TimePicker
       @endTime.on 'change', =>
         @endTimeDidChange()
 
+      @addTimezoneInfo()
+
     startTimeDidChange: ->
       @startTimeSpan.text(@startTime.find('option:selected').text())
 
     endTimeDidChange: ->
       @endTimeSpan.text(@endTime.find('option:selected').text())
 
+    addTimezoneInfo: ->
+      if @listing.data.timezone_info?
+        @timezone.text(@listing.data.timezone_info)
