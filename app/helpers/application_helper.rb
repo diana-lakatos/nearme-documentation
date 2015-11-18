@@ -376,8 +376,8 @@ module ApplicationHelper
     end
   end
 
-  def setup_activity_feed_event(event)
-    event = ActivityFeedService::Event.new(event)
+  def setup_activity_feed_event(event, target="_self")
+    event = ActivityFeedService::Event.new(event, target)
     OpenStruct.new(text: event.text, image: event.image)
   end
 

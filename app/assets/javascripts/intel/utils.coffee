@@ -3,9 +3,9 @@ class @Utils
 
   # Opens links marked as external in a new browser window
   @links: ()->
-    $('a[rel*="external"]').on 'click', (e)->
+    $('body').on 'click', 'a[rel*="external"]', (e)->
       e.preventDefault()
-      window.open $(el).attr(href)
+      window.open $(e.target).closest('a').attr('href')
 
   # Simple spam prevention by changing example/at/example.com to proper email string
   @mails: ()->

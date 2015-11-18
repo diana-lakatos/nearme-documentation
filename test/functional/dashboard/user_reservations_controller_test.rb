@@ -111,11 +111,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
       end
 
       should 'if any upcoming bookings' do
-        @reservation = FactoryGirl.create(:reservation, owner: @user)
-        @reservation.add_period((Time.zone.now.next_week + 4.days).to_date)
-        @reservation.starts_at = @reservation.first_period.starts_at
-        @reservation.ends_at = @reservation.last_period.ends_at
-        @reservation.save
+        @reservation = FactoryGirl.create(:future_reservation, owner: @user)
         get :upcoming
         assert_response :success
         assert_select ".order", 1

@@ -9,11 +9,6 @@ module NearMe
       @host_name = options[:host] || stack_to_host_mapping[@stack_name]
       @environment = options[:environment] || stack_to_env_mapping[@stack_name]
 
-      if ENV['AWS_PEM_FILE_PATH'].nil?
-        puts "You must set the AWS_PEM_FILE_PATH enviroment variable for AWS."
-        exit 1
-      end
-
       if ENV['AWS_USER'].nil?
         puts "You must set the AWS_USER enviroment variable for AWS."
         exit 1
@@ -125,7 +120,7 @@ module NearMe
     private
 
     def run_remote_command(remote_command)
-      if not Kernel.system("ssh -i #{ENV['AWS_PEM_FILE_PATH']} #{ENV['AWS_USER']}@#{public_dns} \"#{remote_command}\"")
+      if not Kernel.system("ssh #{ENV['AWS_USER']}@#{public_dns} \"#{remote_command}\"")
         puts "Remote command failed."
         exit 1
       end

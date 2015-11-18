@@ -910,6 +910,7 @@ en:
         shipping_method: 'Shipping Method'
         shipping_method2: 'SHIPPING METHOD'
         billing_address: 'Billing Address'
+        email_address: 'Email Address'
         shipping_address: 'Shipping Address'
         order_summary: 'Order Summary'
         order_details: 'ORDER DETAILS'
@@ -943,7 +944,7 @@ en:
       free_payment_description: 'This service does not require payment'
       invalid_cc: "Those credit card details don't look valid"
       invalid_payment_method: "Please choose payment method"
-      payment_authorized: 'Your payment is now authorized, please confirm your order.'
+      payment_authorized: 'Your payment is now ready to authorize, please complete checkout to place the order or go back to cancel.'
       order_missing: 'Sorry, we can not find this order.'
 
       placeholders:

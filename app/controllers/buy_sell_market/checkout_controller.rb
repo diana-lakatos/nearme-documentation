@@ -65,6 +65,7 @@ class BuySellMarket::CheckoutController < ApplicationController
     end
 
     if @order.payment_method.try(:express_checkout?) && @order.express_checkout_redirect_url.present?
+      @order.express_token = nil
       @order.save
       redirect_to @order.express_checkout_redirect_url
     else

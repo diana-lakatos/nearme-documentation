@@ -9,8 +9,9 @@ class ActivityFeedService::Event
   attr_accessor :image
   attr_accessor :text
 
-  def initialize(event)
+  def initialize(event, target="_self")
     @event = event
+    @target = target
     self.send(event.event.to_sym)
   end
 
@@ -81,7 +82,7 @@ class ActivityFeedService::Event
 
   def link_if_not_deleted(record, method_name_attempt, second_method_name_attempt=nil)
     text = record.try(method_name_attempt).presence || record.send(second_method_name_attempt)
-    record.deleted? ? text : link_to(text, record)
+    record.deleted? ? text : link_to(text, record, target: @target)
   end
 
   def image_or_placeholder(image)
