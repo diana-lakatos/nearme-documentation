@@ -48,7 +48,8 @@ module ListingsHelper
       time_now = Time.now.in_time_zone(listing.timezone)
       minimum_date = time_now.to_date
 
-      if listing.availability.close_minute_for(minimum_date).to_i < (time_now.hour * 60 + time_now.min)
+      close_minute = listing.availability.close_minute_for(minimum_date)
+      if close_minute.present? && (close_minute < (time_now.hour * 60 + time_now.min))
         minimum_date = time_now.tomorrow.to_date
       end
 
