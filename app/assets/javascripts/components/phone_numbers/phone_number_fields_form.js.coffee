@@ -47,10 +47,12 @@ class PhoneNumbers.FieldsForm
       "+#{code}"
     else
       ""
-    if @callingCodeText.find('.country-calling-code').length > 0
-      @callingCodeText.find('.country-calling-code').text(code)
+
+    if code != ''
+      if @callingCodeText.find('.country-calling-code').length > 0
+        @callingCodeText.find('.country-calling-code').text(code)
+      else
+        @callingCodeText.prepend("<div class='country-calling-code'>#{code}</div>")
     else
-      @callingCodeText.prepend("<div class='country-calling-code'>#{code}</div>")
-    @mobileNumberField.prop('disabled', (code is ""))
-    @phoneNumberField.prop('disabled', (code is ""))
+      @callingCodeText.find('.country-calling-code').remove()
 
