@@ -2,7 +2,7 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
   include PaymentGateway::ActiveMerchantGateway
 
   supported :any_currency, :company_onboarding, :recurring_payment, :nonce_payment,
-    :credit_card_payment
+    :credit_card_payment, :partial_refunds
 
   def self.settings
     {
