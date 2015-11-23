@@ -73,9 +73,12 @@ class ActivityFeedEvent < ActiveRecord::Base
       user_added_links_to_project
       topic_created
       user_commented_on_project
-      user_commented_on_event
+      user_commented
     ).include?(event)
   end
+
+  # Since both restrictions are the same
+  alias_method :is_reportable?, :has_body?
 
   def i18n_key
     "activity_feed.events.#{event}"
