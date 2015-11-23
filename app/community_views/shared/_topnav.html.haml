@@ -43,7 +43,7 @@
           %li{ class: (controller_name == 'registrations' && action_name != 'show' ? 'active' : '') }
             = link_to t(:account), dashboard_profile_path
           %li
-            = link_to t(:log_out), destroy_user_session_path, method: :delete
+            = link_to t(:log_out), community_logout_path
     - else
       %p.actions
         = link_to t(:log_in), new_user_session_path(wizard: :onboarding), class: 'button-a small orange'
