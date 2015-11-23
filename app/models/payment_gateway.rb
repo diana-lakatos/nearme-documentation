@@ -78,7 +78,8 @@ class PaymentGateway < ActiveRecord::Base
 
   unsupported :payout, :recurring_payment, :any_country, :any_currency, :paypal_express_payment, :paypal_chain_payments,
     :multiple_currency, :express_checkout_payment, :nonce_payment, :company_onboarding, :remote_paymnt,
-    :recurring_payment, :credit_card_payment, :manual_payment, :remote_payment, :free_payment, :immediate_payout, :free_payment
+    :recurring_payment, :credit_card_payment, :manual_payment, :remote_payment, :free_payment, :immediate_payout, :free_payment,
+    :partial_refunds
 
   attr_encrypted :test_settings, :live_settings, key: DesksnearMe::Application.config.secret_token, marshal: true
 

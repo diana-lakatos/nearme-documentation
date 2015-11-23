@@ -83,11 +83,6 @@ class ReservationRequest < Form
       @dates.reject(&:blank?).each do |date_string|
         @reservation.add_period(Date.parse(date_string), start_minute, end_minute)
       end
-
-      @reservation.assign_attributes(
-        starts_at: @reservation.first_period.starts_at,
-        ends_at: @reservation.last_period.ends_at
-      )
     end
   end
 
@@ -202,18 +197,22 @@ class ReservationRequest < Form
     remove_empty_optional_documents
     User.transaction do
       checkout_extra_fields.save! if checkout_extra_fields.are_fields_present?
-
-      if active_merchant_payment?
-        if reservation.listing.transactable_type.cancellation_policy_enabled.present?
-          reservation.cancellation_policy_hours_for_cancellation = reservation.listing.transactable_type.cancellation_policy_hours_for_cancellation
-          reservation.cancellation_policy_penalty_percentage = reservation.listing.transactable_type.cancellation_policy_penalty_percentage
-        end
-      end
+      set_cancellation_policy
       reservation.save!
     end
   rescue ActiveRecord::RecordInvalid => error
     add_errors(error.record.errors.full_messages)
     false
+  end
+
+  def set_cancellation_policy
+    transactable_type = reservation.listing.transactable_type
+    if transactable_type.cancellation_policy_enabled.present?
+      reservation.cancellation_policy_hours_for_cancellation = transactable_type.cancellation_policy_hours_for_cancellation
+      if payment_gateway.supports_partial_refunds?
+        reservation.cancellation_policy_penalty_percentage = transactable_type.cancellation_policy_penalty_percentage
+      end
+    end
   end
 
   def build_documents

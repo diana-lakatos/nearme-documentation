@@ -3,14 +3,10 @@ require 'test_helper'
 class Dashboard::UserReservationsControllerTest < ActionController::TestCase
 
   context '#event_tracker' do
-
-    setup do
-      @reservation = FactoryGirl.create(:reservation_with_credit_card)
-      sign_in @reservation.owner
-      stub_mixpanel
-    end
-
     should "track and redirect a host to the My Bookings page when they cancel a booking" do
+      @reservation = FactoryGirl.create(:future_reservation)
+      stub_mixpanel
+      sign_in @reservation.owner
       WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::GuestCancelled, @reservation.id)
 
       @tracker.expects(:cancelled_a_booking).with do |reservation, custom_options|
@@ -99,7 +95,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
       @location = FactoryGirl.create(:location_in_auckland)
       @listing = FactoryGirl.create(:transactable, location: @location)
       @company.locations << @location
-
+      stub_mixpanel
     end
 
     context 'render view' do
@@ -126,13 +122,86 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
         assert_select ".order", 1
       end
 
+      context 'with upcoming reservation' do
+
+        setup do
+          @reservation = FactoryGirl.create(:future_reservation, owner: @user)
+          get :upcoming
+          assert_response :success
+          assert_select ".order", 1
+        end
+
+        should 'if any upcoming bookings' do
+          dates = @reservation.periods.map{|p| I18n.l(p.date, format: :only_date_short) }.join(' ; ')
+          assert_select ".order .dates", dates
+        end
+
+        should 'allow to cancel if cancelation policy does not apply' do
+          assert_select "form[action=?]", user_cancel_dashboard_user_reservation_path(@reservation)
+          post :user_cancel, id: @reservation
+          assert_redirected_to dashboard_user_reservations_path
+          assert_select ".order", 0
+          assert @reservation.reload.cancelled?
+        end
+      end
+
+      context 'reservation with cancellation policy' do
+        should 'not allow to cancel if cancelation policy does apply' do
+          @reservation = FactoryGirl.create(:future_reservation, owner: @user, cancellation_policy_hours_for_cancellation: 1)
+          time = Time.now.in_time_zone(@reservation.time_zone).advance(minutes: 59)
+          @reservation.add_period(time.to_date, time.to_minutes, time.to_minutes + 60)
+          @reservation.save
+
+          get :upcoming
+          assert_response :success
+          assert_select ".order", 1
+          assert_select ".order form", 0
+          post :user_cancel, id: @reservation
+          assert_redirected_to dashboard_user_reservations_path
+          assert_not @reservation.reload.cancelled?
+        end
+
+        should 'not allow to cancel when reservation already started' do
+          @reservation = FactoryGirl.create(:lasting_reservation, owner: @user, cancellation_policy_hours_for_cancellation: nil)
+          get :upcoming
+          assert_response :success
+          assert_select ".order", 1
+          assert_select ".order form", 0
+          post :user_cancel, id: @reservation
+          assert_redirected_to dashboard_user_reservations_path
+          assert_not @reservation.reload.cancelled?
+        end
+
+        should 'not allow to cancel if cancelation policy does apply for user in different timezone' do
+          @user.update_attributes(time_zone: "London")
+          @reservation = FactoryGirl.create(:future_reservation, owner: @user, time_zone: "Tokelau Is.", cancellation_policy_hours_for_cancellation: 1 )
+          @reservation.periods.destroy_all
+
+          # Adding new period form 13:15 to 14:00 2016-01-30 Tokelau Is. Timezone
+          reservation_period = @reservation.add_period(Date.parse('2016-01-30'), 13*60+15, 14*60)
+          @reservation.save!
+
+          # Travel to UTC time - similar as user London 13h before reservation happends but reservation zone is +13h
+          # Lising should be stil visible but not cancelable anymore
+
+          travel_to Date.parse('2016-01-30').beginning_of_day do
+            get :upcoming
+            assert_response :success
+            assert_select ".order", 1
+            assert_select ".order form", 0
+            post :user_cancel, id: @reservation
+            assert_redirected_to dashboard_user_reservations_path
+            assert_not @reservation.reload.cancelled?
+          end
+        end
+      end
     end
   end
 
   context 'versions' do
 
     should 'store new version after user cancel' do
-      @reservation = FactoryGirl.create(:reservation_with_credit_card)
+      @reservation = FactoryGirl.create(:future_reservation)
       sign_in @reservation.owner
       stub_mixpanel
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do

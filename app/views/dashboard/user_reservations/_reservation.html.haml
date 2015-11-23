@@ -36,6 +36,10 @@
           - if reservation.active_merchant_payment?
             - if reservation.billing_authorization.present?
               %p= I18n.t('dashboard.user_reservations.money_info')
+      - if reservation.confirmed?
+        - if reservation.active_merchant_payment?
+          - if reservation.cancelable? && reservation.cancellation_policy_penalty_percentage.to_i > 0
+            %p= I18n.t('dashboard.user_reservations.penalty_info', penalty: reservation.cancellation_policy_penalty_percentage)
 
     .row
       .order-item
@@ -56,8 +60,9 @@
 
         .col-md-4.order-actions
           - unless reservation.archived?
-            = form_for reservation, method: :post, url: user_cancel_dashboard_user_reservation_path(reservation) do |f|
-              = f.submit I18n.t('general.cancel'), data: { confirm: 'Do you really want to cancel this reservation?' }, class: 'btn dark-gray full'
+            - if reservation.cancelable?
+              = form_for reservation, method: :post, url: user_cancel_dashboard_user_reservation_path(reservation) do |f|
+                = f.submit I18n.t('general.cancel'), data: { confirm: I18n.t("dashboard.user_reservations.cancel", penalty: reservation.confirmed? && reservation.cancellation_policy_penalty_percentage.to_i > 0 ? I18n.t('dashboard.user_reservations.penalty_info', penalty: reservation.cancellation_policy_penalty_percentage) : '') }, class: 'btn dark-gray full'
 
             - if reservation.remote_payment? && !reservation.paid? && !reservation.archived?
               = link_to 'Pay now', remote_payment_dashboard_user_reservation_path(reservation), class: 'btn blue full'

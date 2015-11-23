@@ -16,27 +16,35 @@
             Payment Gateway:
             = link_to charge.payment_gateway.try(:name), edit_instance_admin_settings_payment_gateway_path(charge.payment_gateway)
           %p
+            Amount:
+            = number_to_currency_symbol(charge.currency, Money.new(charge.amount))
+
+          %p
             Response:
             = charge.response.to_yaml
 
-.content-container
+- if @payment.refunds.any?
+  .content-container
 
-  %h4 Payment refund
+    %h4 Payment refund
 
-  - @payment.refunds.each do |refund|
-    .content-container
+    - @payment.refunds.each do |refund|
+      .content-container
 
-      .row
-        .text-container{class: refund.success? ? 'text-success' : 'text-danger' }
-          %p
-            Success:
-            = refund.success
-          %p
-            Created at:
-            = l refund.created_at, format: :long
-          %p
-            Payment Gateway:
-            = link_to refund.payment_gateway.try(:name), edit_instance_admin_settings_payment_gateway_path(refund.payment_gateway)
-          %p
-            Response:
-            = refund.response.to_yaml
+        .row
+          .text-container{class: refund.success? ? 'text-success' : 'text-danger' }
+            %p
+              Success:
+              = refund.success
+            %p
+              Created at:
+              = l refund.created_at, format: :long
+            %p
+              Payment Gateway:
+              = link_to refund.payment_gateway.try(:name), edit_instance_admin_settings_payment_gateway_path(refund.payment_gateway)
+            %p
+              Amount:
+              = number_to_currency_symbol(refund.currency, Money.new(refund.amount))
+            %p
+              Response:
+              = refund.response.to_yaml
