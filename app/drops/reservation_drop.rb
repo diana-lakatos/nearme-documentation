@@ -31,7 +31,7 @@ class ReservationDrop < BaseDrop
   #   returns true if hourly booking is available
   # guest_notes
   #   guest notes for this reservation as a string
-  delegate :id, :quantity, :subtotal_price, :service_fee_guest, :total_price, :pending?, :listing, :state_to_string,
+  delegate :id, :quantity, :subtotal_price, :service_fee_guest, :total_price, :total_price_cents, :pending?, :listing, :state_to_string,
   :credit_card_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, to: :reservation
 
   # bookable_noun

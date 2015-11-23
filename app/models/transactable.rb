@@ -401,11 +401,6 @@ class Transactable < ActiveRecord::Base
       reservation.add_period(date)
     end
 
-    reservation.assign_attributes(
-      starts_at: reservation.first_period.starts_at,
-      ends_at: reservation.last_period.ends_at
-    )
-
     reservation.save!
 
     if reservation.listing.confirm_reservations?

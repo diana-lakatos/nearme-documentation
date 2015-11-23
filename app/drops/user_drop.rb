@@ -42,7 +42,7 @@ class UserDrop < BaseDrop
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of,
     :with_mutual_friendship_source, :first_name, :middle_name, :last_name,
     :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
-    :country_name, :phone, :current_location, :is_trusted?, to: :user
+    :country_name, :phone, :current_location, :is_trusted?, :reservations, to: :user
 
   def initialize(user)
     @user = user.decorate

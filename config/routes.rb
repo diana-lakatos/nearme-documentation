@@ -978,6 +978,8 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
+  get "/community_logout", to: 'authentications#community_logout', as: :community_logout
+
   get "/:slug(.:format)", to: 'pages#show', as: :pages, constraints: Constraints::PageConstraints.new
 
   # delayed_job web gui

@@ -245,15 +245,6 @@ class ApplicationController < ActionController::Base
     url
   end
 
-  def after_sign_out_path_for(resource)
-    if current_instance.is_community?
-      cookies.each do |cookie|
-        cookie.delete cookie[0]
-      end
-    end
-    super
-  end
-
   def redirect_to_different_host?(url)
     uri = Addressable::URI.parse(url)
     uri.host && (uri.host != request.host)

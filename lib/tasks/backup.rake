@@ -62,8 +62,9 @@ namespace :backup do
       puts "Stack name can't be blank"
     else
       Instance.find_each do |instance|
-        instance.domains.create(name: "#{instance.name.to_url}.#{stack_name}.near-me.com")
+        instance.domains.find_or_create_by(name: "#{instance.name.to_url}.#{stack_name}.near-me.com")
       end
+      Instance.first.domains.find_or_create_by(name: "#{stack_name}.desksnear.me")
 
       puts "Stack domains created."
     end
