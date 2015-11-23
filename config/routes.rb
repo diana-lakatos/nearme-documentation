@@ -356,11 +356,6 @@ DesksnearMe::Application.routes.draw do
         resources :user_bans, only: [:create, :index, :destroy], controller: 'users/user_bans'
       end
 
-      resources :payouts, only: [] do
-        member do
-          post :update_status
-        end
-      end
       resources :transfers do
         member do
           post :transferred
