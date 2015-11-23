@@ -63,6 +63,11 @@ class AuthenticationsController < ApplicationController
     redirect_to user_signed_in? ? social_accounts_url : new_user_session_url
   end
 
+  def community_logout
+    sign_out :user
+    redirect_to "https://signin.intel.com/Logout"
+  end
+
   private
 
   def wizard_id
