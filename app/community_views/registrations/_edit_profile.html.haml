@@ -2,6 +2,7 @@
 .box-a
   = simple_form_for resource, url: registration_path(resource_name), html: { class: 'form-a' } do |f|
     .fields
+      = f.input :name
       = f.simple_fields_for :properties, f.object.properties do |properties_form|
         - if f.object.instance_profile_type
           - f.object.instance_profile_type.custom_attributes.each do |attribute|
