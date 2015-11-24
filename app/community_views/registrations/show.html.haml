@@ -7,7 +7,7 @@
     .header
       %figure
         = image_tag @user.avatar.url(:big), size: "180x180", alt: @user.name
-      %h2.hx= @user.name
+      %h2.hx= @user.decorate.name_with_affiliation
       = @user.decorate.display_address
       - if @user.featured?
         %p.label.featured

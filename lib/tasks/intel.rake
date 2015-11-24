@@ -71,6 +71,16 @@ namespace :intel do
         ca.max_length = 140
       end.save!
 
+      ipt.custom_attributes.where(name: 'is_intel').first_or_initialize.tap do |ca|
+        ca.attribute_type = 'boolean'
+        ca.html_tag = 'check_box'
+        ca.default_value = 'false'
+        ca.label = 'Intel Affiliate?'
+        ca.hint = 'Intel Affiliate?'
+        ca.public = false
+        ca.searchable = false
+      end.save!
+
       Utils::DefaultAlertsCreator::ProjectCreator.new.create_all!
       PlatformContext.current.theme.update_attributes(
         facebook_url: 'https://www.facebook.com/IntelDeveloperZone/',

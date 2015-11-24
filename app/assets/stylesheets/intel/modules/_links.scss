@@ -164,3 +164,19 @@
         }
     }
 }
+
+.intel-affiliate-badge {
+    background: #2071B9;
+    color: #fff;
+    font-size: .5em;
+    padding: .2em .5em;
+    border-radius: .3em;
+    position: relative;
+    top: -.2em;
+    margin-left: 0.3em;
+    transition: border 0.25s, background 0.25s, color 0.25s, box-shadow 0.25s, opacity 0.25s;
+}
+
+a:hover .intel-affiliate-badge {
+    background: #00aeef;
+}
