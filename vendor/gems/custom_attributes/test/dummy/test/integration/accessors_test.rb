@@ -55,14 +55,29 @@ class AccessorsTest < ActionDispatch::IntegrationTest
         assert_equal 6, @sample_model.properties.destroy
       end
 
-      should 'properly persist new hash if provided and do not add defaults this time' do
+      should 'properly persist new hash if provided and do add defaults for new one' do
         @sample_model = FactoryGirl.create(:sample_model, sample_model_type: @sample_model_type)
         assert_equal 3, @sample_model.properties.attr
         assert_equal 6, @sample_model.properties.destroy
         @sample_model.update_attribute(:properties, { 'attr' => '50' })
         @sample_model.reload
         assert_equal 50, @sample_model.properties.attr
-        assert_equal nil, @sample_model.properties.destroy
+        assert_equal 6, @sample_model.properties.destroy
+        @custom_attribute3 = FactoryGirl.create(:custom_attribute, name: 'another_attr', target: @sample_model_type, default_value: 20)
+
+        SampleModel.clear_custom_attributes_cache
+        @sample_model = SampleModel.find(@sample_model.id)
+        assert_equal 50, @sample_model.properties.attr
+        assert_equal 6, @sample_model.properties.destroy
+        assert_equal 20, @sample_model.properties.another_attr
+        assert_equal({'attr' => '50', 'destroy' => '6', 'another_attr' => '20'}, @sample_model.properties.instance_variable_get('@hash'))
+        @custom_attribute3.destroy
+        SampleModel.clear_custom_attributes_cache
+        @sample_model = SampleModel.find(@sample_model.id)
+        assert_equal 50, @sample_model.properties.attr
+        assert_equal 6, @sample_model.properties.destroy
+        assert_equal({'attr' => '50', 'destroy' => '6'}, @sample_model.properties.instance_variable_get('@hash'))
+        refute @sample_model.properties.respond_to?(:another_attr)
       end
 
       should 'properly set default if setting properties is delayed' do
