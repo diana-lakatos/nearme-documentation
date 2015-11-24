@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151110174210) do
+ActiveRecord::Schema.define(version: 20151124130739) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.boolean  "active",              default: true
   end
 
+  add_index "activity_feed_subscriptions", ["follower_id", "followed_id", "followed_type"], name: "afs_followers_followed", unique: true, using: :btree
   add_index "activity_feed_subscriptions", ["instance_id", "followed_id", "followed_type"], name: "activity_feed_subscriptions_instance_followed", using: :btree
 
   create_table "additional_charge_types", force: :cascade do |t|
@@ -495,6 +496,9 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.string   "calling_code"
   end
 
+  add_index "countries", ["iso"], name: "index_countries_on_iso", using: :btree
+  add_index "countries", ["name"], name: "index_countries_on_name", using: :btree
+
   create_table "country_payment_gateways", force: :cascade do |t|
     t.string   "country_alpha2_code", limit: 255
     t.integer  "payment_gateway_id"
@@ -533,6 +537,8 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.string  "subunit"
     t.integer "smallest_denomination"
   end
+
+  add_index "currencies", ["iso_code"], name: "index_currencies_on_iso_code", using: :btree
 
   create_table "custom_attributes", force: :cascade do |t|
     t.string   "name",                 limit: 255
@@ -1229,10 +1235,13 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.integer  "instance_id"
     t.integer  "company_id"
     t.integer  "partner_id"
-    t.boolean  "payout",             default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "payment_gateways_countries", ["country_id"], name: "index_payment_gateways_countries_on_country_id", using: :btree
+  add_index "payment_gateways_countries", ["instance_id"], name: "index_payment_gateways_countries_on_instance_id", using: :btree
+  add_index "payment_gateways_countries", ["payment_gateway_id"], name: "index_payment_gateways_countries_on_payment_gateway_id", using: :btree
 
   create_table "payment_gateways_currencies", force: :cascade do |t|
     t.integer  "currency_id"
@@ -1240,10 +1249,13 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.integer  "instance_id"
     t.integer  "company_id"
     t.integer  "partner_id"
-    t.boolean  "payout",             default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "payment_gateways_currencies", ["currency_id"], name: "index_payment_gateways_currencies_on_currency_id", using: :btree
+  add_index "payment_gateways_currencies", ["instance_id"], name: "index_payment_gateways_currencies_on_instance_id", using: :btree
+  add_index "payment_gateways_currencies", ["payment_gateway_id"], name: "index_payment_gateways_currencies_on_payment_gateway_id", using: :btree
 
   create_table "payment_methods", force: :cascade do |t|
     t.integer  "payment_gateway_id"
@@ -1255,6 +1267,9 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "payment_methods", ["instance_id"], name: "index_payment_methods_on_instance_id", using: :btree
+  add_index "payment_methods", ["payment_gateway_id"], name: "index_payment_methods_on_payment_gateway_id", using: :btree
 
   create_table "payment_transfers", force: :cascade do |t|
     t.integer  "company_id"
@@ -3344,7 +3359,6 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.boolean  "search_location_type_filter",                                                    default: true
     t.boolean  "show_company_name",                                                              default: true
     t.string   "slug"
-    t.string   "timezone_rule",                                                                  default: "location"
     t.string   "default_search_view"
     t.string   "search_engine"
     t.string   "searcher_type"
@@ -3358,6 +3372,7 @@ ActiveRecord::Schema.define(version: 20151110174210) do
     t.boolean  "date_pickers_use_availability_rules"
     t.string   "date_pickers_mode"
     t.integer  "position",                                                                       default: 0
+    t.string   "timezone_rule",                                                                  default: "location"
     t.boolean  "action_weekly_subscription_booking"
     t.boolean  "action_monthly_subscription_booking"
   end
