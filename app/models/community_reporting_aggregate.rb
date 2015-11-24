@@ -61,7 +61,7 @@ class CommunityReportingAggregate < ActiveRecord::Base
   end
 
   def get_values_for_record
-    [start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d')] + COLUMNS.keys.collect do |key|
+    [I18n.l(start_date), I18n.l(end_date)] + COLUMNS.keys.collect do |key|
       statistics[key.to_s]
     end
   end
@@ -69,11 +69,11 @@ class CommunityReportingAggregate < ActiveRecord::Base
   protected
 
   def update_number_of_new_users
-    statistics[:number_of_new_users] = User.where('created_at >= ? AND created_at < ?', start_date, end_date).count
+    statistics[:number_of_new_users] = User.created_between(start_date, end_date).count
   end
 
   def update_number_of_new_projects
-    statistics[:number_of_new_projects] = Project.where('created_at >= ? AND created_at < ?', start_date, end_date).count
+    statistics[:number_of_new_projects] = Project.created_between(start_date, end_date).count
   end
 
   def update_number_of_projects_by_collaborators_range(from_collaborators, to_collaborators)
@@ -87,7 +87,7 @@ class CommunityReportingAggregate < ActiveRecord::Base
         hash_key = "projects_with_#{from_collaborators}_to_#{to_collaborators}_collaborators"
       end
 
-      statistics[hash_key.to_sym] = Project.joins('left join project_collaborators pc ON pc.project_id = projects.id').where('pc.created_at >= ? AND pc.created_at < ?', start_date, end_date).group('projects.id').having('count(projects.id) >= ? AND count(projects.id) < ?', from_collaborators, to_collaborators).count.length
+      statistics[hash_key.to_sym] = Project.joins('left join project_collaborators pc ON pc.project_id = projects.id').where('pc.created_at >= ? AND pc.created_at < ?', start_date, end_date).where('pc.approved_by_owner_at is not null AND pc.approved_by_user_at is not null').group('projects.id').having('count(projects.id) >= ? AND count(projects.id) <= ?', from_collaborators, to_collaborators).count.length
     end
   end
 
@@ -102,20 +102,20 @@ class CommunityReportingAggregate < ActiveRecord::Base
         hash_key = "projects_with_#{from_followers}_to_#{to_followers}_followers"
       end
 
-      statistics[hash_key.to_sym] = Project.joins("left join activity_feed_subscriptions afs ON afs.followed_id = projects.id AND afs.followed_type = 'Project'").where('afs.created_at >= ? AND afs.created_at < ?', start_date, end_date).group('projects.id').having('count(projects.id) >= ? AND count(projects.id) < ?', from_followers, to_followers).count.length
+      statistics[hash_key.to_sym] = Project.joins("left join activity_feed_subscriptions afs ON afs.followed_id = projects.id AND afs.followed_type = 'Project'").where('afs.created_at >= ? AND afs.created_at < ?', start_date, end_date).group('projects.id').having('count(projects.id) >= ? AND count(projects.id) <= ?', from_followers, to_followers).count.length
     end
   end
 
   def update_total_number_of_updates
-    statistics["total_number_of_updates"] = ActivityFeedEvent.where('created_at >= ? AND created_at < ?', start_date, end_date).count
+    statistics[:total_number_of_updates] = ActivityFeedEvent.created_between(start_date, end_date).count
   end
 
   def update_total_number_of_topics
-    statistics["total_number_of_topics"] = Topic.where('created_at >= ? AND created_at < ?', start_date, end_date).count
+    statistics[:total_number_of_topics] = Topic.created_between(start_date, end_date).count
   end
 
   def update_total_number_of_comments
-    statistics["total_number_of_comments"] = Comment.where('created_at >= ? AND created_at < ?', start_date, end_date).count
+    statistics[:total_number_of_comments] = Comment.created_between(start_date, end_date).count
   end
 
 end

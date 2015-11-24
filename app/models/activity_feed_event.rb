@@ -23,6 +23,8 @@ class ActivityFeedEvent < ActiveRecord::Base
 
   attr_accessor :affected_objects
 
+  include CreationFilter
+
   auto_set_platform_context
   scoped_to_platform_context
 

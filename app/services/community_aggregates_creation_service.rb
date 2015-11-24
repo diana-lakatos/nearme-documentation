@@ -28,7 +28,7 @@ class CommunityAggregatesCreationService
         current_report.start_date = start_date
         current_report.end_date = end_date
         current_report.update_all_statistics
-        current_report.save
+        current_report.save!
 
         start_date, end_date = current_report.get_next_reporting_period
       end
