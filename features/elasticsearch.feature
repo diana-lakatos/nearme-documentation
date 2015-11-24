@@ -60,6 +60,7 @@ Feature: A user can search for a listing
 
   Scenario: It should paginate as expected
     Given 21 listings in Auckland
+    And I am on the home page
     When I search for "Auckland"
     Then I should see pagination links
     And I should be able to check next page
@@ -70,5 +71,6 @@ Feature: A user can search for a listing
     Given a listing in Auckland exists
     Given a listing in Adelaide exists
     Given a listing in Wellington exists
+    And I am on the home page
     When I search for ""
     Then I should see filtering options
