@@ -12,7 +12,7 @@
         .row-fluid
           .span10
             .search-container
-              %input#search{:name => "query", :placeholder => @searcher.transactable_type.search_field_placeholder, :type => "text", :value => @searcher.query, :class => "query", :autocomplete => "off"}
+              %input#search{:name => "query", :placeholder => @searcher.transactable_type.fulltext_placeholder, :type => "text", :value => @searcher.query, :class => "query", :autocomplete => "off"}
           .span2
             .search-icon.btn.btn-green
               %span.ico-search

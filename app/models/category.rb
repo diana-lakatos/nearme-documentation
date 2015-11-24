@@ -23,6 +23,7 @@ class Category < ActiveRecord::Base
   belongs_to :instance
 
   before_save :set_permalink
+  after_save :children_update
   after_save :create_translation_key
   after_save :rename_form_component, if: -> (category) { category.name_changed? }
   after_destroy :rename_form_component, :remove_translation_key
@@ -86,6 +87,10 @@ class Category < ActiveRecord::Base
     else
       self.permalink = name.to_url
     end
+  end
+
+  def children_update
+    self.children.each(&:save)
   end
 
   def translation_key

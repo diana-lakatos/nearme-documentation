@@ -24,7 +24,7 @@
         %li
           = link_to '#following', role: "tab", :'data-toggle' => "tab" do
             = t :following
-            %small= "(#{@user.activity_feed_subscriptions.count})"
+            %small= "(#{@user.following_count})"
         %li
           = link_to '#followers', role: "tab", :'data-toggle' => "tab" do
             = t :followers

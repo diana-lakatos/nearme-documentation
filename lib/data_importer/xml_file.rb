@@ -159,6 +159,7 @@ class DataImporter::XmlFile < DataImporter::File
       @node = listing_node
       @object = @listing
       @listing.photo_not_required = true
+      @listing.categories_not_required = true
       @listing = @synchronizer.unmark_object(@listing)
       if @listing.deleted?
         @listing.update_column(:deleted_at, nil)
@@ -167,6 +168,7 @@ class DataImporter::XmlFile < DataImporter::File
         ApprovalRequest.with_deleted.where(owner: @listing).update_all(deleted_at: nil)
         Impression.with_deleted.where(impressionable: @listing).update_all(deleted_at: nil)
       end
+
       if @listing.valid?
         trigger_event('object_valid', @listing)
         yield
@@ -174,10 +176,26 @@ class DataImporter::XmlFile < DataImporter::File
         @listing.skip_metadata = true
         @listing.save! if @listing.changed? || (@listing_photo_updated && @listing.new_record?)
         @listing.populate_photos_metadata! if @listing_photo_updated
+        # We do this here, after the listing is saved and done because working on the categories association
+        # forces the committing of the listing to the DB
+        assign_listing_categories(listing_node, @listing)
       else
         trigger_event('object_not_valid', @listing, @listing.external_id)
         @synchronizer.unmark_object!(@listing)
       end
+    end
+  end
+
+  def assign_listing_categories(listing_node, listing)
+    categories = listing_node.xpath('listing_categories').text
+    if categories.present?
+      # This will work always because @listing.categories_not_required was set earlier
+      listing.categories = []
+      categories.split(/\s*,\s*/).each do |category_permalink|
+        category = Category.find_by_permalink(category_permalink)
+        listing.categories << category if category.present?
+      end
+      listing.save
     end
   end
 

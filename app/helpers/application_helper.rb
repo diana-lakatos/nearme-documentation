@@ -413,4 +413,8 @@ module ApplicationHelper
     image = (followed.try(:image).presence || followed.try(:avatar)).try(:url, :medium)
     image.present? ? image : followed.try(:cover_photo).try(:image).try(:url, :medium)
   end
+
+  def current_url
+    request.protocol + platform_context.host + request.fullpath
+  end
 end
