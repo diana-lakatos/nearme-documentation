@@ -77,7 +77,8 @@ Spree::Product.class_eval do
       name: 'Product Name', description: 'Product Description', external_id: 'Product External Id',
       price: 'Price', total_on_hand: 'Quantity', available_on: 'Available On',
       meta_description: 'Meta Description', meta_keywords: 'Meta Keywords',
-      products_public: 'Public',  shippo_enabled: 'Shippo Enabled', draft: 'Draft'
+      products_public: 'Public',  shippo_enabled: 'Shippo Enabled', draft: 'Draft',
+      product_categories: 'Product categories'
     }.reverse_merge(
       product_type.custom_attributes.shared.pluck(:name, :label).inject({}) do |hash, arr|
         hash[arr[0].to_sym] = arr[1].presence || arr[0].humanize

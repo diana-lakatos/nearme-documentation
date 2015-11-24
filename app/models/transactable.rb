@@ -168,7 +168,7 @@ class Transactable < ActiveRecord::Base
   validates_presence_of :dimensions_template, if: lambda { |record| ['delivery', 'both'].include?(record.rental_shipping_type) }
 
   validate :check_book_it_out_minimum_qty, if: ->(record) { record.book_it_out_minimum_qty.present? }
-  validate :validate_mandatory_categories
+  validate :validate_mandatory_categories, unless: ->(record) { record.categories_not_required}
   validate :booking_availability, if: ->(record) { record.overnight_booking? }
 
   def validate_mandatory_categories
@@ -194,7 +194,7 @@ class Transactable < ActiveRecord::Base
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, to: :transactable_type
 
-  attr_accessor :distance_from_search_query, :photo_not_required
+  attr_accessor :distance_from_search_query, :photo_not_required, :categories_not_required
 
   monetize :daily_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :hourly_price_cents, with_model_currency: :currency, allow_nil: true
@@ -602,7 +602,8 @@ class Transactable < ActiveRecord::Base
     end.merge(
       name: 'Name', description: 'Description',
       external_id: 'External Id', enabled: 'Enabled',
-      confirm_reservations: 'Confirm reservations', capacity: 'Capacity', quantity: 'Quantity'
+      confirm_reservations: 'Confirm reservations', capacity: 'Capacity', quantity: 'Quantity',
+      listing_categories: 'Listing categories'
     ).reverse_merge(
       transactable_type.custom_attributes.shared.pluck(:name, :label).inject({}) do |hash, arr|
         hash[arr[0].to_sym] = arr[1].presence || arr[0].humanize
