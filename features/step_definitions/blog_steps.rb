@@ -112,3 +112,35 @@ Then(/^a visitor should see promoted blog post in main blog$/) do
   visit '/blog/'
   page.should have_content('This blog post is going to be promoted')
 end
+
+Given(/^that I am on blog's homepage$/) do
+  visit '/blog/'
+end
+
+And(/^it has two posts$/) do
+  2.times { FactoryGirl.create(:blog_post, blog_instance: @blog_instance) }
+end
+
+And(/^I click on RSS Feed button$/) do
+  page.find('.rss-feed-button').click
+end
+
+Then(/^the feed xml should have (\d+) node(.*)$/) do |amount, plural|
+  doc = Nokogiri::XML.parse(page.html)
+  assert_equal amount.to_i, doc.xpath('//item').count
+end
+
+And(/^the latest has tag "(.*?)" associated$/) do |tag_name|
+  blog_post = BlogPost.last
+  blog_post.tag_list = tag_name
+  blog_post.save!
+end
+
+And(/^I filter for a tag$/) do
+  page.all('.tag-filter-link a').first.click
+end
+
+Then(/^I should see "(.*?)" in it's content$/) do |tag_name|
+  assert page.text.downcase.include?(tag_name)
+end
+

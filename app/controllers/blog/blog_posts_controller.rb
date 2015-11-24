@@ -8,8 +8,10 @@ class Blog::BlogPostsController < Blog::ApplicationController
   def index
     @tags = Tag.alphabetically
     @blog_posts = get_blog_posts
+    @blog_rss_feed_url = view_context.blog_rss_feed_url
     respond_to do |format|
       format.html { render :index }
+      format.rss { render layout: false }
     end
   end
 
@@ -46,8 +48,8 @@ class Blog::BlogPostsController < Blog::ApplicationController
     @user_blog_posts = instance.user_blog_posts.includes(:user).published.highlighted
 
     posts = if params[:tags].present?
-      selected_tags = Tag.where(slug: params[:tags].split(",")).pluck(:name)
-      @instance_blog_posts.tagged_with(selected_tags, any: true) + @user_blog_posts.tagged_with(selected_tags, any: true)
+      @selected_tags = Tag.where(slug: params[:tags].split(",")).pluck(:name)
+      @instance_blog_posts.tagged_with(@selected_tags, any: true) + @user_blog_posts.tagged_with(@selected_tags, any: true)
     else
       @instance_blog_posts + @user_blog_posts
     end

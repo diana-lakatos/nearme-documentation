@@ -9,10 +9,12 @@ class Registrations::BlogController < ApplicationController
 
     @no_footer = true
     @render_content_outside_container = true
+    @blog_rss_feed_url = view_context.blog_rss_feed_url
 
     respond_to do |format|
       format.html
       format.js
+      format.rss { render layout: false }
     end
   end
 
@@ -39,13 +41,14 @@ class Registrations::BlogController < ApplicationController
       return
     end
 
-    blog_user.blog.test_enabled
+    @user_blog = blog_user.blog
+    @user_blog.test_enabled
   end
 
   def get_blog_posts
     posts = if params[:tags].present?
-      selected_tags = Tag.where(slug: params[:tags].split(",")).pluck(:name)
-      @user.published_blogs.tagged_with(selected_tags, any: true)
+      @selected_tags = Tag.where(slug: params[:tags].split(",")).pluck(:name)
+      @user.published_blogs.tagged_with(@selected_tags, any: true)
     else
       @user.published_blogs
     end
