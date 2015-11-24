@@ -16,6 +16,8 @@ class LocationDrop < BaseDrop
   #   array of listings for this location
   # lowest_price
   #   lowest price listing for this location
+  # lowest_full_price
+  #   lowest price listing for this location (i.e. including service fees and mandatory additional charges)
   # name
   #   name of this location as string
   # description
@@ -49,7 +51,7 @@ class LocationDrop < BaseDrop
   # state
   #   state for this location
   delegate :id, :slug, :listings, :lowest_price, :name, :description, :phone, :street, :city, :suburb, :company, :address, :latitude, :longitude, :creator, :administrator, :updated_at, :postcode,
-    :country, :state, to: :location
+    :country, :state, :lowest_full_price, to: :location
 
   def initialize(location)
     @location = location
