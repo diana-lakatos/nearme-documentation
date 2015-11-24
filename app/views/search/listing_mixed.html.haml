@@ -45,7 +45,7 @@
           #listings_map.inner
     .list{:'data-list' => true}
       .filters{:'data-search-filters-container' => true}
-        - if platform_context.transactable_types.services.many?
+        - if current_instance.service_types.searchable.many?
           .search-mixed-filter{:'data-transactable-type-filter' => true}
             .container-fluid
               .row-fluid
@@ -53,7 +53,7 @@
                   %h4 Service Type
                 .span10
                   %ul
-                    - platform_context.transactable_types.services.each do |transactable_type|
+                    - current_instance.service_types.searchable.each do |transactable_type|
                       %li.filter-option
                         %label.radio.small-radio
                           %input{type: 'radio', name: 'transactable_type_id', value: transactable_type.id, checked: @transactable_type.id == transactable_type.id}
