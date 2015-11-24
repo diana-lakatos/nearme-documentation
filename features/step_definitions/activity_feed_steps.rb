@@ -93,6 +93,10 @@ Then(/^I can see the event on the Activity Feed$/) do
   page.should have_content(@text)
 end
 
+And(/^I shouldn't see report as spam button$/) do
+  page.text.should_not have_content(I18n.t(:report_as_spam))
+end
+
 def follow
   visit @resource_path
   page.find("[data-follow-button] a").click

@@ -39,3 +39,10 @@ Feature: A user can interact with activity feeds
     Then I can fill status update and submit it
     And I can see the event on the Activity Feed
 
+  Scenario: A user can't report a follow event
+    When I visit another user page
+    Then I can see and press "Follow" button
+    Then I should be following it
+    And I should see the event on the user's Activity Feed
+    And I shouldn't see report as spam button
+
