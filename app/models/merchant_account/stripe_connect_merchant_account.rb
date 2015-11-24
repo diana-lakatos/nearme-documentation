@@ -7,7 +7,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   SUPPORTED_CURRENCIES = {
     'US'   => %w(USD),
-    'CA'   => %w(USD CA),
+    'CA'   => %w(USD CAD),
     'AU'   => %w(AUD),
     'JP'   => %w(JPY),
     'EUUK' => %w(EUR GBP USD),
