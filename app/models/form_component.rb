@@ -16,6 +16,7 @@ class FormComponent < ActiveRecord::Base
   belongs_to :form_componentable, -> { with_deleted }, polymorphic: true, touch: true
   belongs_to :instance
   validates_inclusion_of :form_type, in: FORM_TYPES, allow_nil: false
+  validates_length_of :name, maximum: 255
 
   serialize :form_fields, Array
 
