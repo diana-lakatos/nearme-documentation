@@ -16,7 +16,6 @@ class PhotoUploader < BaseImageUploader
     #project_standard: { width: 460, height: 340 },
     project_cover: { width: 680, height: 546 },
     project_thumbnail: { width: 200, height: 175 },
-    project_thumbnail_to_fit: { :width => 460, :height => 460 },
     project_small: { width: 250, height: 200 },
     golden: { width: SPACE_FULL_IMAGE_W, height: SPACE_FULL_IMAGE_H },
   }
@@ -66,10 +65,6 @@ class PhotoUploader < BaseImageUploader
 
   version :project_thumbnail, from_version: :transformed do
     process resize_to_fill: [dimensions[:project_thumbnail][:width], dimensions[:project_thumbnail][:height]]
-  end
-
-  version :project_thumbnail_to_fit, from_version: :transformed, if: :generate_project_versions? do
-    process resize_to_fit: [dimensions[:project_thumbnail_to_fit][:width], dimensions[:project_thumbnail_to_fit][:height]]
   end
 
   version :project_small, from_version: :transformed, if: :generate_project_versions? do
