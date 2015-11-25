@@ -1,7 +1,7 @@
 class BuySell::CheckoutService
   def initialize(user, order, params = {})
     @order = order
-    @params = params
+    @params = params.permit(SecuredParams.new.spree_order)
     @user = user
   end
 
@@ -37,8 +37,8 @@ class BuySell::CheckoutService
   end
 
   def update_payment_documents
-    if @params[:order][:payment_documents_attributes].present?
-      @params[:order][:payment_documents_attributes].each do |document|
+    if @params[:payment_documents_attributes].present?
+      @params[:payment_documents_attributes].each do |document|
         document_requirement_id = document.last.try(:fetch, 'payment_document_info_attributes').try(:fetch, 'document_requirement_id')
         if document.last['file'].present? ||
           DocumentRequirement.find_by(id: document_requirement_id).try(:item).try(:upload_obligation).required?
