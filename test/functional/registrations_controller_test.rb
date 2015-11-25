@@ -319,4 +319,3 @@ class RegistrationsControllerTest < ActionController::TestCase
   end
 
 end
-
