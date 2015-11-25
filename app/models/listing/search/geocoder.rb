@@ -3,7 +3,6 @@ class Listing::Search::Geocoder
   def self.find_search_area(query)
     geocoded = ::Geocoder.search(query).try(:first)
     return nil if geocoded.nil?
-
     geo = geocoded.data['geometry']
     center = [geo['location']['lat'], geo['location']['lng']]
 

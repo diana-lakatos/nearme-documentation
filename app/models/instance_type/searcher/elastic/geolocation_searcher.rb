@@ -31,7 +31,7 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
           radius = @transactable_type.search_radius.to_i
           radius = search.radius.to_i if radius.zero?
           lat, lng = search.midpoint.nil? ? [0.0, 0.0] : search.midpoint.map(&:to_s)
-          if !search.country.blank? && search.city.blank? || global_map
+          if search.country.present? && search.city.blank? || global_map
             @search_params.merge!({
               bounding_box: search.bounding_box
             })

@@ -26,7 +26,7 @@ module InstanceType::Searcher::GeolocationSearcher
             midpoint: search.midpoint,
             radius: radius,
           })
-          if !search.country.blank? && search.city.blank? || global_map
+          if search.country.present? && search.city.blank? || global_map
             @search_params.merge!({
               bounding_box: search.bounding_box
             })
