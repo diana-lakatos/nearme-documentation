@@ -16,7 +16,7 @@ class ReservationRequest < Form
     :express_token, :express_token=, :express_payer_id, :service_fee_amount_guest,
     :additional_charges, :merchant_subject, :shipments,
     :shipments_attributes=, :payment_method=, :payment_method, :payment_method_id, :billing_authorization,
-    :total_service_amount, :total_amount,
+    :total_service_amount, :total_amount, :shipping_amount, :tax_amount,
     to: :@reservation
 
   before_validation :build_documents, :if => lambda { reservation.present? && documents.present? }
@@ -27,6 +27,7 @@ class ReservationRequest < Form
   validates :delivery_ids, presence: true, if: -> { with_delivery? &&  reservation.shipments.any? }
 
   validate :validate_acceptance_of_waiver_agreements
+  validate :validate_reservation
   validate :validate_credit_card, if: lambda { reservation.present? && reservation.credit_card_payment? }
   validate :validate_empty_files, if: lambda { reservation.present? }
 
@@ -288,6 +289,10 @@ class ReservationRequest < Form
 
   def validate_credit_card
     errors.add(:cc, I18n.t('buy_sell_market.checkout.invalid_cc')) unless credit_card.valid?
+  end
+
+  def validate_reservation
+    errors.add(:base, reservation.errors.full_messages.join("\n")) if reservation && !reservation.valid?
   end
 
   def validate_empty_files
