@@ -3,7 +3,7 @@ class Search.MapMixed extends Search.Map
   asEvented.call(MapMixed.prototype)
 
   GOOGLE_MAP_OPTIONS =
-    zoom: 8,
+    zoom: 12,
     minZoom: 2,
     maxZoom: 18,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
