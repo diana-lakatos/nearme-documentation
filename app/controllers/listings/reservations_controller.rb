@@ -97,7 +97,7 @@ class Listings::ReservationsController < ApplicationController
   end
 
   def cancel_express_checkout
-    reservation = Reservation.find_by_express_token(params[:token])
+    reservation = Reservation.find_by_express_token!(params[:token])
     redirect_to booking_failed_dashboard_user_reservation_path(reservation, host: platform_context.decorate.host)
   end
 

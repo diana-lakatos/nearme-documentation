@@ -449,7 +449,27 @@ class SecuredParams
       :payment_method_id,
       :payment_method_nonce,
       :start_express_checkout,
-      :insurance_enabled
+      :insurance_enabled,
+      payment_documents_attributes: nested(self.payment_documents)
+    ]
+  end
+
+  def payment_documents
+    [
+      :type,
+      :file,
+      :attachable_id,
+      :attachable_type,
+      :id,
+      :user_id,
+      payment_document_info_attributes: nested(self.payment_document_info)
+    ]
+  end
+
+  def payment_document_info
+    [
+      :document_requirement_id,
+      :attachment_id
     ]
   end
 
