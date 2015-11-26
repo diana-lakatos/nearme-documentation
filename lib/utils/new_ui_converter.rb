@@ -25,6 +25,7 @@ class NewUiConverter
           week_days: schedule.sr_days_of_week.presence || (1..5).to_a
         )
       end
+      @instance.theme.update_attribute(:color_blue, '239ed9') if @instance.theme.color_blue.blank? || @instance.theme.color_blue == '41bf8b'
     end
     @instance.save!
     true
@@ -46,6 +47,7 @@ class NewUiConverter
         return false
       end
     end
+    @instance.theme.update_attribute(:color_blue, '41bf8b') if @instance.theme.color_blue.blank? || @instance.theme.color_blue == '239ed9'
     true
   end
 
