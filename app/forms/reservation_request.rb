@@ -1,6 +1,6 @@
 class ReservationRequest < Form
 
-  include Payment::PaymentModule
+  include Payable
 
   attr_accessor :dates, :start_minute, :end_minute, :book_it_out, :exclusive_price, :guest_notes,
     :card_number, :card_exp_month, :card_exp_year, :card_code, :card_holder_first_name,
@@ -12,11 +12,11 @@ class ReservationRequest < Form
   delegate :confirm_reservations?, :location, :billing_authorizations, :company, :timezone, to: :@listing
   delegate :country_name, :country_name=, :country, to: :@user
   delegate :guest_notes, :quantity, :quantity=, :action_hourly_booking?, :reservation_type=,
-    :credit_card_payment?, :manual_payment?, :remote_payment?, :nonce_payment?, :currency,
-    :service_fee_amount_host_cents, :total_amount_cents, :create_billing_authorization,
-    :express_token, :express_token=, :express_payer_id, :service_fee_guest_without_charges,
-    :additional_charges, :shipping_costs_cents, :service_fee_amount_guest_cents, :merchant_subject, :shipments,
+    :credit_card_payment?, :manual_payment?, :remote_payment?, :nonce_payment?, :currency, :create_billing_authorization,
+    :express_token, :express_token=, :express_payer_id, :service_fee_amount_guest,
+    :additional_charges, :merchant_subject, :shipments,
     :shipments_attributes=, :payment_method=, :payment_method, :payment_method_id, :billing_authorization,
+    :total_service_amount, :total_amount,
     to: :@reservation
 
   before_validation :build_documents, :if => lambda { reservation.present? && documents.present? }
@@ -49,7 +49,7 @@ class ReservationRequest < Form
       end
       @client_token = payment_gateway.try(:client_token)
       @reservation.user = user
-      @reservation.additional_charges << get_additional_charges(attributes)
+      @reservation.build_additional_charges(attributes)
       @reservation = @reservation.decorate
       attributes = update_shipments(attributes)
       store_attributes(attributes)
@@ -143,17 +143,8 @@ class ReservationRequest < Form
     PlatformContext.current.instance.shippo_enabled? && (@listing.rental_shipping_type == 'delivery' || (@listing.rental_shipping_type == 'both' && delivery_type == 'delivery'))
   end
 
-  # We don't process taxes for reservations
-  def tax_total_cents
-    0
-  end
-
   def line_items
     [@reservation]
-  end
-
-  def total_amount_cents_without_shipping
-    total_amount_cents - shipping_costs_cents
   end
 
   def get_shipping_rates
@@ -179,15 +170,8 @@ class ReservationRequest < Form
 
   private
 
-  def get_additional_charges(attributes)
-    additional_charge_ids = AdditionalChargeType.get_mandatory_and_optional_charges(attributes.delete(:additional_charge_ids)).pluck(:id)
-    additional_charges = additional_charge_ids.map { |id|
-      AdditionalCharge.new(
-        additional_charge_type_id: id,
-        currency: currency
-      )
-    }
-    additional_charges
+  def transactable_type
+    @transactable_type ||= reservation.listing.transactable_type
   end
 
   def payment_method_nonce=(token)
@@ -213,7 +197,6 @@ class ReservationRequest < Form
   end
 
   def set_cancellation_policy
-    transactable_type = reservation.listing.transactable_type
     if transactable_type.cancellation_policy_enabled.present?
       reservation.cancellation_policy_hours_for_cancellation = transactable_type.cancellation_policy_hours_for_cancellation
       if payment_gateway.supports_partial_refunds?

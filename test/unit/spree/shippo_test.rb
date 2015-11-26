@@ -63,7 +63,7 @@ class ShippoTest < ActionView::TestCase
       ShippoApi::ShippoApi.expects(:new).returns(shippo_api_mock)
     end
 
-    order = FactoryGirl.create(:order_waiting_for_delivery, user: @user, service_fee_buyer_percent: 10, currency: 'USD')
+    order = FactoryGirl.create(:order_waiting_for_delivery, user: @user, service_fee_amount_guest_cents: 500, currency: 'USD')
 
     order.line_items.map(&:variant).map(&:shipping_category).uniq.map(&:shipping_methods).flatten.compact.each { |shipping_method| shipping_method.destroy }
 
@@ -157,7 +157,7 @@ class ShippoTest < ActionView::TestCase
         params.has_key?(:rate)
       end.returns(shippo_mock_transaction)
 
-      @order = FactoryGirl.create(:order_waiting_for_payment, user: @user, service_fee_buyer_percent: 10, currency: 'USD')
+      @order = FactoryGirl.create(:order_waiting_for_payment, user: @user, service_fee_amount_guest_cents: 500, currency: 'USD')
 
       credit_card = stub('valid?' => true)
 
@@ -173,7 +173,7 @@ class ShippoTest < ActionView::TestCase
       credit_card = ActiveMerchant::Billing::CreditCard.new({})
 
       assert credit_card.valid?
-      response = @payment_gateway.authorize(@order.total_amount_to_charge, 'USD', credit_card)
+      response = @payment_gateway.authorize(@order.total_amount, 'USD', credit_card)
       assert !response[:error].present?
 
       @order.create_billing_authorization(
@@ -181,7 +181,7 @@ class ShippoTest < ActionView::TestCase
           payment_gateway: @payment_gateway,
           payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live"
       )
-      p = @order.payments.create(amount: @order.total_amount_to_charge, company_id: @order.company_id)
+      p = @order.payments.create(amount: @order.total_amount, company_id: @order.company_id)
 
       shipping_category = Spree::ShippingCategory.create!(
         :name => 'Default',

@@ -66,17 +66,26 @@
         %b= reservation.total_price
 
 
-  - if reservation.guest_notes.present?
-    %h3= t('dashboard.user_reservations.exclusive_price_guests_notes')
-    %blockquote= reservation.guest_notes
+  .row
+    - if reservation.guest_notes.present?
+      .col-sm-3
+        %h3= t('dashboard.user_reservations.exclusive_price_guests_notes')
+        %blockquote= reservation.guest_notes
 
-  - if reservation.payment_documents.present?
-    %h3=  t('dashboard.user_reservations.payment_documents')
-    %ul.payment-documents
-    - reservation.payment_documents.each do |pd|
-      %li
-        %a{:href => pd.file.url, download: true}= pd.file.file_name
-
+    - if reservation.payment_documents.present?
+      .col-sm-3
+        %h3=  t('dashboard.user_reservations.payment_documents')
+        %ul.payment-documents
+        - reservation.payment_documents.each do |pd|
+          %li
+            %a{:href => pd.file.url, download: true}= pd.file.file_name
+    - if reservation.additional_charges.present?
+      .col-sm-3.right
+        %h3=  t('dashboard.user_reservations.additional_charges')
+        %ul.payment-documents
+        - reservation.additional_charges.each do |ac|
+          %li
+            =ac.name + ' - ' + humanized_money_with_cents_and_symbol(ac.amount)
 
   .row
     .col-sm-9.col-sm-push-3

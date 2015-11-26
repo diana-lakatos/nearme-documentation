@@ -145,8 +145,8 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
     refute @listing.reservations.last.billing_authorization.immediate_payout
     assert_equal @listing.currency, @reservation.currency
     assert_equal 25.to_money(@listing.currency), @reservation.subtotal_amount
-    assert_equal 3.75.to_money(@listing.currency), @reservation.service_fee_guest_wo_charges  if %w(USD IQD).include?(@listing.currency)
-    assert_equal 18.75.to_money(@listing.currency), @reservation.service_fee_amount_guest
+    assert_equal 3.75.to_money(@listing.currency), @reservation.service_fee_amount_guest  if %w(USD IQD).include?(@listing.currency)
+    assert_equal 18.75.to_money(@listing.currency), @reservation.service_fee_amount_guest + @reservation.service_additional_charges
     assert_equal 2.5.to_money(@listing.currency), @reservation.service_fee_amount_host if %w(USD IQD).include?(@listing.currency)
     assert_equal 43.75.to_money(@listing.currency), @reservation.total_amount
     assert_equal 1, @reservation.additional_charges.count

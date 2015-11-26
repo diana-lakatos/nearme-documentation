@@ -1,7 +1,7 @@
 Spree::LineItem.class_eval do
   include Spree::Scoper
   inherits_columns_from_association([:company_id], :order) if ActiveRecord::Base.connection.table_exists?(self.table_name)
-  delegate :transactable_type_id, to: :product
+  delegate :transactable_type_id, :product_type, to: :product
   delegate :owner_id, to: :order
   delegate :creator_id, to: :product
 

@@ -80,18 +80,17 @@ class Spree::OrderDrop < BaseDrop
 
   # the guest part of the service fee for this particular order
   def service_fee_amount_guest
-    Spree::Money.new(@order.service_fee_amount_guest, currency: @order.currency).to_s
+    @order.service_fee_amount_guest.to_s
   end
 
   # the total amount to be charged for this order
-  def total_amount_to_charge
-    Spree::Money.new(@order.total_amount_to_charge, currency: @order.currency).to_s
+  def total_amount
+    @order.total_amount.to_s
   end
 
   # total for this item as a string including the currency symbol
   def display_item_total
     @order.display_item_total.to_s
-
   end
 
   # whether or not the order has products with seller attachments

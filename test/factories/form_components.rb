@@ -15,13 +15,13 @@ FactoryGirl.define do
     factory :form_component_product do
       form_type { FormComponent::PRODUCT_ATTRIBUTES }
       form_componentable { Spree::ProductType.first.presence || FactoryGirl.create(:product_type) }
-      form_fields { [{ 'product' => 'name'}, { 'product' => 'description'}, { 'product' => 'photos'}, { 'product' => 'action_rfq' }, { 'product' => 'price'}, { 'product' => 'quantity'}, { 'product' => 'integrated_shipping'}, { 'product' => 'documents_upload'}, {'product' => 'shipping_info'}] + form_componentable.categories.map {|c| [ {'product' => "Category - #{c.name}"} ] }}
+      form_fields { [{'product' => 'additional_charges'}, { 'product' => 'name'}, { 'product' => 'description'}, { 'product' => 'photos'}, { 'product' => 'action_rfq' }, { 'product' => 'price'}, { 'product' => 'quantity'}, { 'product' => 'integrated_shipping'}, { 'product' => 'documents_upload'}, {'product' => 'shipping_info'}] + form_componentable.categories.map {|c| [ {'product' => "Category - #{c.name}"} ] }}
     end
 
     factory :form_component_transactable do
       form_type { FormComponent::TRANSACTABLE_ATTRIBUTES }
 
-      form_fields { [ {'transactable' => 'schedule'},{'transactable' => 'location_id'}, { 'transactable' => 'price' }, {'transactable' => 'description'}, { 'transactable' => 'photos' }, {'transactable' => 'quantity'}, { 'transactable' => 'name' }, { 'transactable' => 'listing_type' }, { 'transactable' => 'waiver_agreement_templates'}, {'transactable' => 'documents_upload'} ] }
+      form_fields { [ {'transactable' => 'additional_charges'},{'transactable' => 'schedule'},{'transactable' => 'location_id'}, { 'transactable' => 'price' }, {'transactable' => 'description'}, { 'transactable' => 'photos' }, {'transactable' => 'quantity'}, { 'transactable' => 'name' }, { 'transactable' => 'listing_type' }, { 'transactable' => 'waiver_agreement_templates'}, {'transactable' => 'documents_upload'} ] }
     end
 
     factory :form_component_with_user_custom_attributes do

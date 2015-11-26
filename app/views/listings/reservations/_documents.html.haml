@@ -3,7 +3,7 @@
     %h2 Required Documents
 
     = f.simple_fields_for :reservation do |r|
-      - f.object.reservation.payment_documents.each_with_index do |doc, index|        
+      - f.object.reservation.payment_documents.each_with_index do |doc, index|
         = r.simple_fields_for :payment_documents do |document|
           .row-fluid
             .span3

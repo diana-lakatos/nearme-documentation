@@ -1,4 +1,5 @@
-module Payment::PaymentModule
+module Payable
+  extend ActiveSupport::Concern
 
   PaymentMethod::PAYMENT_METHOD_TYPES.each do |pmt|
     define_method("#{pmt}_payment?") { self.payment_method.try(:payment_method_type) == pmt.to_s }

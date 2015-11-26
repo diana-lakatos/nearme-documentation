@@ -38,6 +38,9 @@
         - when 'price'
           = render "dashboard/company/transactables/form_fields/price", f: f, form_fields: form_component.form_fields, model: model
 
+        - when 'additional_charges'
+          = render "dashboard/company/transactables/form_fields/additional_charges", f: f
+
         - when 'photos'
           = render "dashboard/company/transactables/form_fields/photos", f: f
 

@@ -30,19 +30,6 @@ class @PaymentController
       fileName = $(@).val().split(/(\\|\/)/g).pop()
       span.html(fileName)
 
-    @container.find('[data-additional-charges]').on 'change', (e) =>
-      target = $(e.target)
-      checked_charges = []
-      @container.find("[data-additional-charge-wrapper]").each ->
-        if $(this).find("input:checked").length > 0
-          checked_charges.push(parseFloat($(this).find('[data-additional-charge-price]').html()))
-
-      charge_price = _.reduce(checked_charges, ((memo, num) -> memo + num), 0)
-
-      new_price = @totalPriceValue + charge_price
-      @totalPriceContainer.html(new_price.toFixed(2))
-      @cartPrice.html(new_price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');)
-
     @paymentOptions.on 'change', (e) =>
       target = $(e.target)
       @hideServiceFee(target)
@@ -54,6 +41,24 @@ class @PaymentController
 
     @creditCardInputs.on "focus", (e) =>
       @container.find('#order_payment_method_credit_card').prop('checked',true)
+
+    @container.find('[data-additional-charges]').on 'change', (e) =>
+      @count_additional_charges_price()
+
+    @count_additional_charges_price()
+
+  count_additional_charges_price: () =>
+    checked_charges = []
+    @container.find("[data-additional-charge-wrapper]").each ->
+      if $(this).find("input:checked").length == 0
+        checked_charges.push(parseFloat($(this).find('[data-additional-charge-price]').html()))
+
+    charge_price = _.reduce(checked_charges, ((memo, num) -> memo + num), 0)
+
+    new_price = @totalPriceValue - charge_price
+    @totalPriceContainer.html(new_price.toFixed(2))
+    @cartPrice.html(new_price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');)
+
 
   hideServiceFee: (target) =>
     if target.is(':checked') && target.val() == 'manual'

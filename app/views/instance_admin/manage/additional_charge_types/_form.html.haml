@@ -1,0 +1,26 @@
+= simple_form_for ['instance_admin', 'manage', @additional_charge_type], wrapper: "admin" do |f|
+  .row
+    .input-container.col-xs-12
+      = f.input :name
+  .row
+    .input-container.col-xs-12
+      = f.input :description
+  .row
+    .input-container.col-xs-12
+      = f.input :additional_charge_type_target, collection: @additional_charge_type.additional_charge_type_targets, selected: f.object.additional_charge_type_target.try(:signature),
+        prompt: t('instance_admin.manage.upsell_addons.select_the_service_associated')
+  .row
+    .input-container.col-xs-6
+      = f.input :amount
+    .input-container.col-xs-6
+      = f.input :status, collection: AdditionalChargeType::STATUSES,
+        prompt: t('instance_admin.manage.upsell_addons.select_optional_or_mandatory')
+  .row
+    .input-container.col-xs-12
+      = f.input :commission_receiver, collection: AdditionalChargeType::COMMISSION_TYPES,
+        prompt: t('instance_admin.manage.upsell_addons.select_commission_receiver')
+
+  = content_for :header_buttons do
+    = link_to t('instance_admin.cancel'), instance_admin_manage_additional_charge_types_path, class: 'btn btn-light'
+    = f.button :submit, t('instance_admin.add'), class: 'btn btn-blue', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+

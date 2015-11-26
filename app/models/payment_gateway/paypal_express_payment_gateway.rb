@@ -62,15 +62,15 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
 
   def process_express_checkout(transactable, options)
     @transactable = transactable
-    @response = gateway(@transactable.merchant_subject).setup_authorization(@transactable.total_amount_cents , options.deep_merge(
+    @response = gateway(@transactable.merchant_subject).setup_authorization(@transactable.total_amount.cents , options.deep_merge(
       {
         currency: @transactable.currency,
         allow_guest_checkout: true,
         items: line_items + service_fee + additional_charges,
-        subtotal: @transactable.total_amount_cents_without_shipping,
-        shipping: @transactable.shipping_costs_cents,
+        subtotal: @transactable.total_amount.cents - @transactable.shipping_amount.cents - @transactable.tax_amount.cents,
+        shipping: @transactable.shipping_amount.cents,
         handling: 0,
-        tax: @transactable.tax_total_cents
+        tax: @transactable.tax_amount.cents
       })
     )
   end
@@ -117,7 +117,7 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
       {
         name: I18n.t('buy_sell_market.checkout.labels.service_fee'),
         quantity: 1,
-        amount: @transactable.service_fee_guest_without_charges.cents
+        amount: @transactable.service_fee_amount_guest.cents
       }
     ]
   end

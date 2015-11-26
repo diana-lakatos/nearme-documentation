@@ -13,6 +13,8 @@ Spree::Product.class_eval do
   belongs_to :administrator, -> { with_deleted }, class_name: 'User'
   belongs_to :product_type, class_name: "Spree::ProductType", foreign_key: :product_type_id
 
+  has_many :additional_charge_types, as: :additional_charge_type_target
+  has_many :attachments, -> { order(:id) }, class_name: 'SellerAttachment', as: :assetable
   has_many :categories_categorizables, as: :categorizable
   has_many :categories, through: :categories_categorizables
   has_many :document_requirements, as: :item, dependent: :destroy
@@ -21,7 +23,6 @@ Spree::Product.class_eval do
   has_many :orders, through: :line_items
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :wish_list_items, as: :wishlistable
-  has_many :attachments, -> { order(:id) }, class_name: 'SellerAttachment', as: :assetable
 
   has_one :master,
     -> { where("is_master = ?", true) },
@@ -69,6 +70,7 @@ Spree::Product.class_eval do
 
   store_accessor :status, [:current_status]
 
+  accepts_nested_attributes_for :additional_charge_types, reject_if: :all_blank, allow_destroy: true
   accepts_nested_attributes_for :shipping_category
   accepts_nested_attributes_for :attachments, allow_destroy: true
 

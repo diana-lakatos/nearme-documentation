@@ -3,10 +3,14 @@ class AdditionalCharge < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
+  attr_accessor :selected
+
   after_initialize :copy_ac_type_data, if: :new_record?
 
   belongs_to :instance, touch: true
   belongs_to :additional_charge_type
+
+  before_destroy :check_if_mandatory
 
   # Target is Spree::Order or Reservation
   belongs_to :target, polymorphic: true
@@ -16,6 +20,9 @@ class AdditionalCharge < ActiveRecord::Base
   monetize :amount_cents, with_model_currency: :currency
 
   scope :mandatory, -> { where(status: 'mandatory') }
+  scope :optional, -> { where(status: 'optional') }
+  scope :host, -> { where(commission_receiver: 'host') }
+  scope :service, -> { where(commission_receiver: 'mpo') }
 
   def mandatory?
     status == 'mandatory'
@@ -40,5 +47,9 @@ class AdditionalCharge < ActiveRecord::Base
     self.amount_cents = additional_charge_type.amount_cents / (100 / Money::Currency.new(currency.presence || PlatformContext.current.instance.default_currency).subunit_to_unit.to_f)
     self.commission_receiver = additional_charge_type.commission_receiver
     self.status = additional_charge_type.status
+  end
+
+  def check_if_mandatory
+    false if mandatory?
   end
 end

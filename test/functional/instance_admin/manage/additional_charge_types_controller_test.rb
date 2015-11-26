@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class InstanceAdmin::Manage::UpsellAddonsControllerTest < ActionController::TestCase
+class InstanceAdmin::Manage::AdditionalChargeTypesControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user, :name => 'John X')
@@ -17,7 +17,7 @@ class InstanceAdmin::Manage::UpsellAddonsControllerTest < ActionController::Test
     should "get index" do
       get :index
       assert_response :success
-      assert assigns[:additional_charges], [@act]
+      assert assigns[:additional_charge_types], [@act]
       assert_template :index
     end
   end
@@ -26,7 +26,7 @@ class InstanceAdmin::Manage::UpsellAddonsControllerTest < ActionController::Test
     should 'get new' do
       get :new
       assert_response :success
-      assert_not_nil assigns[:additional_charge]
+      assert_not_nil assigns[:additional_charge_type]
       assert_select 'form#new_additional_charge_type'
     end
 
@@ -35,7 +35,7 @@ class InstanceAdmin::Manage::UpsellAddonsControllerTest < ActionController::Test
       assert_difference 'AdditionalChargeType.count', 1 do
         post :create, additional_charge_type: params
       end
-      assert_redirected_to instance_admin_manage_upsell_addons_path
+      assert_redirected_to instance_admin_manage_additional_charge_types_path
     end
 
     should 'not render new when invalid params' do
@@ -54,13 +54,13 @@ class InstanceAdmin::Manage::UpsellAddonsControllerTest < ActionController::Test
     should 'get edit' do
       get :edit, id: @act.id
       assert_template :edit
-      assert assigns[:additional_charge], @act
+      assert assigns[:additional_charge_type], @act
     end
 
     should 'update with valid params' do
       params = { status: 'optional' }
       put :update, id: @act.id, additional_charge_type: params
-      assert_redirected_to instance_admin_manage_upsell_addons_path
+      assert_redirected_to instance_admin_manage_additional_charge_types_path
       assert @act.status, params[:status]
     end
 
@@ -77,6 +77,6 @@ class InstanceAdmin::Manage::UpsellAddonsControllerTest < ActionController::Test
     assert_difference 'AdditionalChargeType.count', -1 do
       delete :destroy, id: act.id
     end
-    assert_redirected_to instance_admin_manage_upsell_addons_path
+    assert_redirected_to instance_admin_manage_additional_charge_types_path
   end
 end
