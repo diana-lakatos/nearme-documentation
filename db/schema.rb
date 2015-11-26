@@ -3388,8 +3388,6 @@ ActiveRecord::Schema.define(version: 20151125171443) do
     t.boolean  "search_location_type_filter",                                                    default: true
     t.boolean  "show_company_name",                                                              default: true
     t.string   "slug"
-    t.boolean  "action_weekly_subscription_booking"
-    t.boolean  "action_monthly_subscription_booking"
     t.string   "default_search_view"
     t.string   "search_engine"
     t.string   "searcher_type"
@@ -3404,6 +3402,8 @@ ActiveRecord::Schema.define(version: 20151125171443) do
     t.string   "date_pickers_mode"
     t.integer  "position",                                                                       default: 0
     t.string   "timezone_rule",                                                                  default: "location"
+    t.boolean  "action_weekly_subscription_booking"
+    t.boolean  "action_monthly_subscription_booking"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
