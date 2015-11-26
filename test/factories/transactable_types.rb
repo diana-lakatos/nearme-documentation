@@ -18,6 +18,7 @@ FactoryGirl.define do
     lessee 'guest'
     type 'ServiceType'
     searchable true
+    enable_reviews true
 
     ignore do
       generate_rating_systems false

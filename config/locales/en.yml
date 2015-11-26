@@ -71,6 +71,8 @@ en:
   confirmations:
     are_you_sure: 'Are you sure?'
     are_you_sure_you_want_to_delete_this_item: "Are you sure you want to delete this item?"
+    are_you_sure_you_want_to_delete_this_image: "Are you sure you want to delete this image?"
+    are_you_sure_you_want_to_delete_this_saved_search: "Are you sure you want to delete this saved search?"
   day:
     one: "1 day"
     other: "%{count} days"
@@ -107,6 +109,7 @@ en:
     weekly: 'Weekly'
     browse: 'Browse'
     required: 'required'
+    show: 'Show'
     day:
       one: "day"
       other: "days"
@@ -128,8 +131,10 @@ en:
       both: 'Delivery or pick up'
   locations:
     add_new_location: "Add New Location"
+    edit_location: "Edit Location"
     save_location: "Save Location"
     does_not_exist: "does not exist"
+    address_placeholder: 'Enter location address'
 
   manage:
     companies:
@@ -140,6 +145,10 @@ en:
       changes_applied_soon: 'Your changes will be applied within a few minutes.'
       continue: 'Continue'
       crop_and_rotate: 'Crop And Rotate'
+      edit:
+        error: 'Unable to save image'
+        rotate: 'Rotate'
+        process: 'Process'
     listings:
       no_trust_explanation: "Your listing will remain disabled until approved."
       photos:
@@ -164,10 +173,12 @@ en:
           title: "Product Images"
           new_title: "New Product Image"
       dimensions_templates:
+        select: 'Select dimensions template'
         explanation1: 'This will provide a tracking code and a shipping label for your product sale.'
         explanation2: "Select your item's dimensions from the menu below or add your own measures."
       insurance_explanation: "The insurance covers up to $5,000.00 per package. Packages shipped via Canada Post, FedEx Smart Post, UPS Mail Innovations, and USPS First Class Mail are limited to $1,000.00, per package. Leave zero for no insurance."
       shipping_profiles:
+        shipping_profile: 'Shipping Profile'
         add_new_shipping_profile: 'Create New Shipping Profile'
         add_new_shipping_rule: 'Add New Shipping Rule'
         shipping_rule: 'Shipping Rule'
@@ -177,6 +188,13 @@ en:
         shipping_cost: 'Shipping Cost'
         enter_name_for_shipping_profile: 'Enter a name for your shipping profile'
         ready_to_ship_in: 'Ready to ship in...'
+        save: 'Save'
+        ships_to:
+          label: 'Ships to'
+          country_based: 'Country based'
+          state_based: 'State based'
+          countries: 'Countries'
+          states: 'States'
   admin:
     general:
       search: "Search"
@@ -897,7 +915,17 @@ en:
         phone_number: 'Phone Number'
         email_address: 'Email Address'
         documents: 'Documents'
-
+      shipping:
+        from: 'From'
+        via: 'via'
+        tracking_number: "Tracking number: %{number}"
+        number: 'Number'
+        state: 'State'
+        stock_location: 'Stock location'
+        label_url: 'Label URL'
+        tracking_number: 'Tracking Number'
+        mark_as_shipped: 'Mark as shipped'
+        confirm: 'Are you sure you want to ship this package?'
     checkout:
       labels:
         checkout: 'Checkout'
@@ -908,6 +936,7 @@ en:
         shipping_method: 'Shipping Method'
         shipping_method2: 'SHIPPING METHOD'
         billing_address: 'Billing Address'
+        email_address: 'Email Address'
         shipping_address: 'Shipping Address'
         order_summary: 'Order Summary'
         order_details: 'ORDER DETAILS'
@@ -933,6 +962,21 @@ en:
         choose_another_file: 'Choose another file'
         choose_file: 'Choose file'
         no_file_chosen: 'No file chosen'
+        actions:
+          approve: 'Approve Order'
+          confirm_approve: 'Are you sure you want to approve this order?'
+          cancel: 'Cancel Order'
+          confirm_cancel: 'Are you sure you want to cancel this order?'
+          resume: 'Resume Order'
+          confirm_resume: 'Are you sure you want to resume this order?'
+        order_no: 'Order number: %{number}'
+
+        payments:
+          captured: 'Payment captured'
+          refunded: 'Payment refunded'
+          failed: 'Payment failed'
+          details: 'Payment details'
+
       credit_card: 'Credit Card'
       nonce: 'PayPal Payment'
       manual_payment: 'Manual Payment'
@@ -941,7 +985,7 @@ en:
       free_payment_description: 'This service does not require payment'
       invalid_cc: "Those credit card details don't look valid"
       invalid_payment_method: "Please choose payment method"
-      payment_authorized: 'Your payment is now authorized, please confirm your order.'
+      payment_authorized: 'Your payment is now ready to authorize, please complete checkout to place the order or go back to cancel.'
       order_missing: 'Sorry, we can not find this order.'
 
       placeholders:
@@ -1061,6 +1105,14 @@ en:
     shipping_info: "Shipping Info"
     continue_and_preview_listing: "Continue and Preview Listing"
     save_for_later: "Save for Later"
+    finish_later: 'Want to Finish Later?'
+    save_draft:
+      label: 'Save as Draft'
+      disable_with: 'Saving...'
+    cancel: 'Cancel'
+    save_continue: 'Save & Continue >'
+    vendor_approval:
+      intro: 'Please provide the following information to become an approved seller for this service. Your listing will be published when the Marketplace Owner approves your status.'
 
   support:
     dashboard:
@@ -1079,12 +1131,50 @@ en:
     items:
       list_new_item: "List New Item"
       edit_item: "Edit Item"
+      new_listing_full: 'List New %{type}'
+      new_listing_short: 'New'
+      listing_published: 'Listing published?'
       search:
         search_your_products: 'Search your products'
         search: 'Search'
+      bulk_actions:
+        label: 'Bulk Actions'
+        publish: 'Publish'
+        delete: 'Delete'
+
+      columns:
+        photo: 'Photo'
+        name: 'Name'
+        price: 'Price'
+        type: 'Type'
+        added: 'Added'
+        location: 'Location'
+        quantity: 'Quantity'
+      edit_listing: 'Edit Listing'
+      unsaved_listing_changes: 'You have unsaved changes to this listing'
+      save: 'Save'
+      view_listing: 'View listing'
+      unsaved_changes: 'You have unsaved changes'
+      details: 'Details'
+      price_availability: 'Price & Availability'
+      general: 'General'
+      delete_listing: 'Delete listing'
+      confirm_delete: 'Are you sure you want to delete this listing?'
+      remove_amenity: 'Remove'
+      view_edit_location: 'view / edit location'
+      location_amenities: 'Location Amenities'
+      add_waiver: 'add another waiver requirement'
+      add_document: 'add another document requirement'
+      required_documents: 'Please enter the documents your customers will need to provide before booking this service.'
+      empty: 'There are no %{name} to show.'
+
+    modal:
+      close: 'Close modal'
+
     nav:
       orders: 'My Orders'
       user_reservations: 'My Bookings'
+      user_reservations_count_html: 'My Bookings <span>%{count}</span>'
       user_messages: 'Messages'
       companies: 'Shop Details'
       products: 'My Products'
@@ -1108,28 +1198,62 @@ en:
       blog_posts: 'Posts'
       blog_settings: 'Settings'
       reviews: 'Reviews'
+      reviews_rate: 'Rate Your Experience'
+      reviews_completed: 'Completed Feedback'
       sent_to_me: 'Uploaded Files'
       saved_searches: 'Saved Searches'
 
-      your_shop: 'YOUR SHOP'
-      admin: 'ADMIN'
-      account: 'ACCOUNT'
-      menu: 'MENU'
-      blog: 'BLOG'
-      products_header: 'PRODUCTS'
-      services_header: 'SERVICES'
+      your_shop: 'Your Shop'
+      admin: 'Admin'
+      account: 'Account'
+      menu: 'Menu'
+      blog: 'Blog'
+      products_header: 'Products'
+      services_header: 'Services'
+      reviews_header: 'Reviews'
+
+    white_labels:
+      save: 'Save'
+      theme:
+        title: 'Theme'
+        photos: 'Photos'
+        colors: 'Colors'
+
     user_reservations:
+      title_count: "Bookings (%{count})"
+      penalty_info: "The penalty fee for cancelling the reservation is %{penalty}% of the reservation price."
+      cancel: 'Do you really want to cancel this reservation? %{penalty}'
       pending_confirmation: 'Pending confirmation from host. Booking will expire in '
       money_info: "Payment has been authorized but it will be captured only upon confirmation."
-      exclusive_price_guests_notes: 'Exclusive booking instructions: %{guest_notes}'
-      upcoming: "UPCOMING"
-      archived: "ARCHIVED"
+      exclusive_price_guests_notes: 'Exclusive booking instructions:'
+      upcoming: "Upcoming"
+      archived: "Archived"
       track_package: 'Track Package'
       return_label: 'Return Label'
       uploaded_file: "Uploaded file"
+      show_listing_page: 'Show listing page'
+      show_on_map: 'show on map'
+      listing_deleted: 'Listing deleted'
+      cancel_confirmation: 'Do you really want to cancel this reservation?'
+      pay_now: 'Pay now'
+      add_to_ical: 'Add to iCal'
+      quantity: 'Quantity'
+      requested_dates:
+        one: 'Requested date'
+        other: 'Requested dates'
+      requested_time: 'Requested time'
+      not_available_na: 'N/A'
+      total: 'Total'
+      reservation_placed_html: 'Reservation placed: <span>%{date}</span>'
+      guest_notes: 'Guest Notes'
+      payment_documents: 'Payment documents'
+      address: 'Address'
+      user_note: 'User note: '
+
     user_recurring_bookings:
-      active: "ACTIVE"
-      archived: "ARCHIVED"
+      title: "Subscriptions (%{count})"
+      active: "Active"
+      archived: "Archived"
       monthly_price: 'Monthly price'
       weekly_price: 'Weekly price'
       starts_from: 'Starts from'
@@ -1137,29 +1261,64 @@ en:
       next_payment_at: 'Next payment'
       rejection_reason: 'Rejection reason'
       user_note: 'User note: '
+      successful_booking: 'Your recurring booking was requested successfully!'
+      other_recurring_booking:
+        one: '1 other recurring booking'
+        other: '%{count} other recurring bookings'
+      listing_deleted: 'Listing deleted'
+      cancel_confirmation: 'Do you really want to cancel this recurring booking?'
+      booking_placed_html: 'Reservation placed: <span>%{date}</span>'
+      quantity: 'Quantity'
+      total: 'Total'
+      guest_notes: 'Guest Notes'
+      payment_documents: 'Payment documents'
+      address: 'Address'
+      show_on_map: 'show on map'
+      periods:
+        title: 'Periods'
+        start_end: 'Start - End'
+        total_amount: 'Total Amount'
+        paid_at: 'Paid at'
+      not_paid: 'Not Paid'
+      booked: 'booked'
+      host_actions:
+        confirmations:
+          cancel: 'Do you really want to cancel subscription?'
+          confirm: 'Do you want to confirm subscription?'
+          decline: 'Are you sure you want to decline?'
+        cancel: 'Cancel'
+        confirm: 'Confirm'
+        decline: 'Decline'
+      decline_reason_placeholder: 'Optionally, provide a reason.'
+      paid_until: 'Paid until'
+
 
     payments:
       order: "Back to order"
+      back_to_order_html: "Back <span class='hidden-xs'>to order</span>"
       total: "Captured price"
       service_fee: "Marketplace fee"
       payment_id: "Payment ID"
       paid_at: "Paid at"
       failed_at: "Failed at"
       refunded_at: "Refunded at"
+      refund: 'Refund'
 
     host_reservations:
+      booked: 'booked'
       reservation_state: "Reservation state: "
       payment_state: "Payment state: "
       payment_method: "Payment method: "
-      unconfirmed: 'UNCONFIRMED'
-      confirmed: 'CONFIRMED'
-      archived: 'ARCHIVED'
-      overdue: 'OVERDUE'
-      active: "ACTIVE"
+      unconfirmed: 'Unconfirmed'
+      confirmed: 'Confirmed'
+      archived: 'Archived'
+      overdue: 'Overdue'
+      active: "Active"
       paid_until: 'Paid until'
       no_unconfirmed_reservations: 'You have no unconfirmed reservations.'
       no_confirmed_reservations: "You haven't confirmed any reservations yet."
       no_archived_reservations: "You don't have any archived reservations."
+      no_overdue_reservations: "You don't have any overdue reservations."
       no_reservations_promote_reservations: "You currently have no reservations. Promote your locations by tweeting or sharing a direct link!"
       pending_confirmation: 'You must confirm this booking within <strong>%{time_to_expiry}</strong> or it will expire.'
       money_info: "Payment has been authorized but it will be captured only upon confirmation."
@@ -1181,6 +1340,29 @@ en:
       delivery:
         pick_up: 'Pick up'
         delivery: 'Delivery'
+      order_placed_html: 'Order placed: <span>%{date}</span>'
+      requested_time: 'Requested time'
+      not_available_na: 'N/A'
+      requested_dates:
+        one: 'Requested date'
+        other: 'Requested dates'
+      show_listing_page: 'Show listing page'
+      address: 'Location address'
+      listing_deleted: 'Listing deleted'
+      actions:
+        cancel: 'Cancel'
+        confirm: 'Confirm'
+        decline: 'Decline'
+        request_payment: 'Request payment'
+        mark_as_paid: 'Mark as paid'
+      confirmations:
+        cancel: 'Do you really want to cancel this reservation?'
+        confirm: 'Do you want to confirm this reservation?'
+        mark_as_paid: 'Do you want to mark this reservation as paid?'
+        request_payment: 'Do you want to send payment request email for this guest?'
+      booked: 'booked'
+      direct_link: 'Direct link'
+      you_havent_added_anything_yet: "You haven't added anything yet!"
 
     merchant_account:
       header: 'Merchant account details'
@@ -1229,9 +1411,21 @@ en:
     reservations:
       purchase_was_successful: "Your purchase was successful!"
     products:
-      manage: 'MANAGE PRODUCTS'
+      manage: 'Manage Products'
+      new: 'List New Item'
+      edit: 'Edit Item'
+      view_html: 'View <span class="hidden-xs">Item</span>'
+      save: 'Save item'
+      product_not_saved: 'Product not saved.'
+      address_errors_html: 'Please address the following <b>%{count}</b> errors in order to save your listing.'
+
     transactables:
-      manage: 'MANAGE LISTINGS'
+      manage: 'Manage Listings'
+      list_new_item: 'List New Item'
+      edit: 'Edit Item'
+      view: 'View Listing'
+      view_html: 'View <span class="hidden-xs">Listing</span>'
+      list_new_item: 'List New Item'
       pricing:
         free: "Free"
       pricing_periods:
@@ -1240,6 +1434,9 @@ en:
         day: "day"
         hour: "hour"
         night: "night"
+      transactable_not_saved: 'Listing not saved.'
+      address_errors_html: 'Please address the following <b>%{count}</b> errors in order to save your listing.'
+
     reviews:
       templates:
         comments: "Comments"
@@ -1258,6 +1455,10 @@ en:
         show_details: "Show details"
         order_placed: "Order placed"
         order: "Order #"
+        order_id: 'Order #%{id}'
+        order_placed_with_date: "Order placed: %{date}"
+        overall: 'Overall:'
+        details: 'Details'
         view_order_details: "View Order Details"
         comments: "Comments"
         view_seller_profile: "View Seller's Profile"
@@ -1280,14 +1481,16 @@ en:
         title: "Reviews"
         rate_your_experience: "Rate Your Experience"
         completed_feedback: "Completed Feedback"
+        no_reviews: "There are no reviews to show in the given time period"
     document_requirements:
       upload_files: "Upload Files"
       enter_your_documents: "Please, enter below the documents your users will need to provide before booking the item"
       add_new_document_requirement: "Add new Document Requirement"
+      remove: 'Remove document requirement'
     payment_documents:
-      files_sent_to_me: "Files sent to me"
-      files_sent_by_me: "Files sent by me"
-      files_uploaded_by_me: "Files uploaded by me"
+      files_sent_to_me: "Sent to me"
+      files_sent_by_me: "Sent by me"
+      files_uploaded_by_me: "Uploaded by me"
       order: "Order"
       reservation: "Reservation"
       table_head:
@@ -1300,7 +1503,14 @@ en:
       cannot_transfer: "You haven't set a payment method yet."
       setup: "Set one up now."
       no_transfers_last_week: 'No transfers have been made in the preceding 7 day period.'
+      seven_days_total: '7 days total'
+      columns:
+        gross: 'Gross'
+        fees: 'Fees'
+        total: 'Total'
+        transferred: 'Transferred'
     analytics:
+      title: 'Analytics'
       revenue: 'Revenue'
       bookings: 'Bookings'
       orders: 'Orders'
@@ -1311,8 +1521,67 @@ en:
       no_product_views_yet: "Your products haven't been visited yet."
       no_location_visits_yet: "Your locations haven't been visited yet."
       no_payments_received_last_7_days: "You have not received any payments in the preceding 7 day period."
+      7_days_total: '7 days total'
+      30_days_total: '30 days total'
+      columns:
+        date: 'Date'
+        count: 'Count'
+        bookings: 'Bookings'
+        orders: 'Orders'
+        amount: 'Amount'
+        location: 'Location'
+      total:
+        visits: '%{total} visits'
+        bookings: '%{total} bookings'
+        orders: '%{total} orders'
+        all_time: 'all time total'
+      deleted: '[Deleted]'
+
     location:
       are_you_sure: 'If you continue, %{listings_count} listings which belong to this location will also be deleted. Are you really sure you want to proceed?'
+      edit: 'Edit'
+      remove: 'Remove'
+      add_new: 'Add new location'
+
+    users:
+      no_users: 'There are no users to display'
+      add_admin_html: 'Add <span class="hidden-xs">Admin</span>'
+      columns:
+        name: 'Name'
+        email: 'Email'
+        actions: 'Actions'
+      confirm_delete: 'Are you sure you want to remove user %{name}'
+      delete: 'Delete'
+      new_admin_dialog:
+        title_html: 'Add New Admin to <span>%{name}</span>'
+        submit: 'Add Admin'
+    waiver_agreements:
+      title: 'Waiver Agreements'
+      add_html: 'Add <span class="hidden-xs">Waiver Agreement</span>'
+      no_entries: 'There are no waiver agreements to show.'
+      agreement: 'Agreement'
+      actions: 'Actions'
+      confirm_delete: 'Are you sure you want to remove %{name} waiver agreement template?'
+      dialog:
+        title:
+          new: 'New Waiver Agreement Template'
+          edit: 'Edit %{name} Waiver Agreement Template'
+        submit: 'Save'
+      actions:
+        edit: 'Edit'
+        delete: 'Delete'
+
+    saved_searches:
+      visit: 'Show results'
+
+    photos:
+      title: 'Photos'
+      requirement: 'Please upload at least one photo for your listing.'
+      edit: 'Crop & Rotate'
+      delete: 'Delete'
+      add: 'Add Photo'
+      drag_info: 'or drag photo here to upload'
+
   hidden_items:
     registrations:
       show:
@@ -1410,7 +1679,7 @@ en:
 
   user_blog:
     titles:
-      index: 'Blog posts'
+      index: 'Blog'
       edit: 'Edit blog post'
       new: 'New blog post'
       settings: 'Blog settings'
@@ -1427,8 +1696,9 @@ en:
       published_at: 'Published at'
       actions: 'Actions'
 
-      no_posts: "You don't have any blog posts published yet. Click on the 'add new blog post' button above to create your first post."
+      no_posts: "You don't have any blog posts published yet. Click on the '%{button_name}' button above to create your first post."
       blog_disabled: "To activate the user's blog functionality, please go to the 'blog settings' and click 'Enable Blog'"
+      blog_disabled_html: "<b>Blog is disabled.</b> To activate the user's blog functionality, please go to the 'blog settings' and click 'Enable Blog'"
 
       please_wait: 'Please wait ...'
 
@@ -1436,36 +1706,60 @@ en:
       delete: 'Are you sure you want to delete this post?'
 
     buttons:
-      add_post: 'Add New Blog Post'
-      visit_blog: 'Visit my blog'
+      add_post_html: 'Write<span class="visible-lg-inline"> a new post</span>'
+      write_post: 'Write a new post'
+      add_post: 'Add post'
+      visit_blog_html: 'Visit<span class="visible-lg-inline"> my blog</span>'
       save: 'Save'
 
       prev_post: 'PREV POST'
       next_post: 'NEXT POST'
 
+    dates:
+      published_at_html: 'Published: <time datetime="%{datetime}">%{date}</time>'
+      going_to_be_published_at_html: 'Going to be published: <time datetime="%{datetime}">%{date}</time>'
+
+    actions:
+      visit: 'Visit'
+      edit: 'Edit'
+      delete: 'Delete'
+
 
     errors:
       blogs_disabled: 'Marketplace owner has disabled blog functionality'
       blog_disabled: "You can't visit your blog, because it's disabled."
+      post_not_yet_published: "This post hasn't been published yet."
 
   orders:
+    title:
+      my_orders: 'My Orders'
+      orders_received: 'Orders Received'
     empty_list: "You don't have any orders yet"
     payment_state:
       paid: "Payment captured"
       failed: "Payment failed"
       pending: "Payment not captured"
+      refunded: "Payment refunded"
 
     index:
       title: 'My orders'
 
     labels:
-      order_placed: 'ORDER PLACED'
-      total: 'TOTAL'
-      ship_to: 'SHIP TO'
-      order: 'ORDER'
+      order_placed: 'Order Placed'
+      order_placed_html: 'Order placed: <span>%{date}</span>'
+      total: 'Total'
+      ship_to: 'Ship To'
+      order: 'Order'
+      order_no: 'Order %{number} [show details]'
       sold_by: 'Sold by:'
       est_delivery: 'Estimated delivery:'
       no_orders: "You don't have any orders."
+    tracking:
+      title: 'Order tracking'
+      approved: 'Approved'
+      not_approved: "Not approved"
+      shipped: "Shipped"
+      not_shipped: "Not shipped"
 
     buttons:
       track: 'Track package'
@@ -1509,6 +1803,7 @@ en:
     cancellation_fee: "The penalty fee for cancelling is %{fee}%. Service fee is not refunded."
     no_cancellation_fee: "You will get full refund except of service fee."
     no_bookings_html: "You don't have any %{type} bookings. <a href='/search'>Find %{bookable_nouns} near you!</a>"
+    no_tickets: "There are no tickets to show."
     upcoming: 'upcoming'
     archived: 'archived'
     payment_in_person: "You will make payment in person."
@@ -1546,6 +1841,24 @@ en:
       number_of_units: 'Number Of Units'
       not_bookable: 'Suggest date'
       documents: 'Documents'
+    filters:
+      open: 'Open'
+      resolved: 'Resolved'
+      all: 'All'
+    tickets:
+      ticket_no: 'Ticket #'
+      details: 'Details'
+      target: 'Target'
+      last_updated: 'Last updated'
+      status: 'Status'
+      deleted: 'Deleted'
+      quantity: 'Quantity'
+      user: 'User'
+    form:
+      send: 'Send'
+      send_and_resolve: 'Send and Resolve'
+      message:
+        placeholder: 'Please, enter your message'
   search:
     pricing_types:
       daily: "Daily"
@@ -1601,21 +1914,32 @@ en:
       month_year: "%B %Y"
       only_date_short: "%-e %b, %Y"
   user_messages:
+    title: "Messages"
+    archived: "Archived"
+    archive_html: "Archive <span class='hidden-xs'>conversation</span>"
     inbox:
       one: "Inbox (1)"
       other: "Inbox (%{count})"
       zero: Inbox
-    no_new_messages: "No new messages!"
+    no_new_messages: "No new messages"
     no_archived_messages: 'No archived messages'
     send_a_message_to: "Send a message to %{recipient_name}"
     send_message: "Send"
+    conversation_with_name: "Conversation with %{name}"
+    author_deleted: '%{author} (deleted)'
+    read_more_html: 'more&hellip;'
+    thread_locked: 'You can no longer send messages regarding this context, as it has been deleted.'
+
+
   validation_messages:
     price_too_high: '%{price} is too high'
     price_too_low: '%{price} is too low'
   data_upload:
     manage:
       bulk_upload: 'Bulk upload'
-      csv_file: 'Csv File'
+      format_info_html: 'In order for data to be properly imported, you must use a specific format: %{link}'
+      download_csv_template: 'Download CSV template'
+      csv_file: 'CSV File'
       review_file: 'Review File'
       import: 'Import '
       status: 'Status'
@@ -1630,6 +1954,7 @@ en:
       new:
         header: 'New Data Upload %{transactable_type_name}'
         sync_mode_hint: 'Checking this checkbox allows you to delelete anything that is not included in CSV. Use with caution! Empty CSV file is ignored to protect your data.'
+        sync_mode_hint_html: 'Checking this checkbox allows you to delelete anything that is not included in CSV. <strong>Use with caution!</strong> Empty CSV file is ignored to protect your data.'
         sync_mode: 'Delete absent objects'
         enable_rfq: 'Enable request for quote'
         external_id_hint: 'Objects that are already in the system are matched to your CSV based on the External ID. Thus, external IDs should be unique in scope to their parent element (if applicable). Please ensure that you have specified a unique external ID for any new objects in your CSV, otherwise the end result might not be as intended.'
@@ -1669,7 +1994,8 @@ en:
     my_orders: 'My Orders'
     manage_bookable: 'Manage %{bookable_noun}'
     marketplace_admin: 'Marketplace Admin'
-    cart: 'CART %{cart}'
+    cart: 'Cart %{cart}'
+    cart_dashboard: 'Cart'
     my_subscriptions: 'My Subscriptions'
 
   sign_up_form:
@@ -1841,6 +2167,14 @@ en:
     revoke_permission: 'Revoke permission'
     revoke_permission_confirmation: 'Are you sure you want to revoke permission?'
     in_chain_settings: 'Chain payment settings'
+    buttons:
+      save: 'Save'
+    paypal:
+      connect: 'Connect with PayPal'
+      email: 'PayPal Email'
+    braintree:
+      title: 'Braintree'
+      terms_of_service_html: '%{name} uses Braintree, a division of PayPal, Inc. (Braintree) for payment processing services. By using the Braintree payment processing services you agree to the Braintree Payment Services Agreement available at <a href="https://www.braintreepayments.com/legal/gateway-agreement">https://www.braintreepayments.com/legal/gateway-agreement</a>, and the applicable bank agreement available at <a href="https://www.braintreepayments.com/legal/cea-wells">https://www.braintreepayments.com/legal/cea-wells</a>'
 
   amenities_attribute: 'Amenities'
   amenity_attribute: 'amenity'
@@ -1891,6 +2225,7 @@ en:
   forms:
     product_form:
       photos: 'Photos'
+      attachments: 'Attachments'
     errors:
       user_form:
         avatar: "Please upload at least one photo."
@@ -1939,4 +2274,31 @@ en:
       users: 'Registered users'
       purchasers: 'Purchasers only'
     max_num_reached: "Max number of attached documents reached"
+
+  image_upload:
+    preview: 'Preview'
+    remove: 'Remove'
+    edit: 'Rotate & Crop'
+    download: 'Download'
+    upload: 'Upload new image'
+    add_photo: 'Select image file(s)...'
+    upload_photo: 'Select image file...'
+    drag_label: 'or drag photo here to upload'
+
+  image_edit:
+
+  attachment_upload:
+    remove: 'Remove'
+    download: 'Download'
+    upload: 'Upload new attachment'
+    add_file: 'Select file(s)...'
+    upload_file: 'Select file...'
+    are_you_sure_you_want_to_delete_this_attachment: 'Are you sure you want to remove this attachment?'
+    label: 'Attachment label'
+    access_level: 'Access Level'
+
+
+  pagination:
+    previous: 'Previous'
+    next: 'Next'
 

@@ -11,11 +11,10 @@
           %h2= t('instance_admin.manage.data_uploads.data_has_been_imported')
           %p= "#{t('instance_admin.manage.data_uploads.new_entities')}: #{@data_upload.parse_summary[:new].map { |k, v| "#{k.to_s.humanize}: #{v}"}.sort.join(', ')}"
           %p= "#{t('instance_admin.manage.data_uploads.updated_entities')}: #{@data_upload.parse_summary[:updated].map { |k, v| "#{k.to_s.humanize}: #{v}"}.sort.join(', ')}"
-          - if @data_upload.parsing_result_log
-            %p= "#{t('instance_admin.manage.data_uploads.errors_and_warnings_encountered')}:"
-            %textarea{disabled: 'disabled', style: "width: 98%", rows: 10}= @data_upload.parsing_result_log
-          - else
-            = t('instance_admin.manage.data_uploads.no_validation_errors')
         - else
           = t('instance_admin.manage.data_uploads.data_has_not_been_imported', href: link_to(t('instance_admin.manage.data_uploads.preview_xml'), @data_upload.xml_file.url, target: :blank)).html_safe
+
+        - if @data_upload.parsing_result_log.present? || @data_upload.encountered_error.present?
+          %p= "#{t('instance_admin.manage.data_uploads.errors_and_warnings_encountered')}:"
+          %textarea{disabled: 'disabled', style: "width: 98%", rows: 10}= data_upload_full_log_summary(@data_upload)
 

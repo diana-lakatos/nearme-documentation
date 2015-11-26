@@ -1,0 +1,10 @@
+[data-phone-fields-container] {
+    margin-bottom: 50px;
+
+    .form-group.tel {
+        [disabled] {
+            background: #fff;
+            opacity: 0.6;
+        }
+    }
+}

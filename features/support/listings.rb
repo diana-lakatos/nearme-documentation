@@ -47,12 +47,9 @@ module ListingsHelpers
     end
 
     if num_days = options.fetch(:number_of_days, false)
-      listing.availability_rules.clear
-
       wday = Time.zone.today.wday
-      (wday .. (wday+num_days.to_i)).each do |day|
-        listing.availability_rules.create!(:day => day % 7, :open_hour => 8, :close_hour => 18)
-      end
+      days = (wday .. (wday+num_days.to_i)).to_a.map{|day| day % 7 }
+      listing.availability_template = AvailabilityTemplate.create!(parent: listing, availability_rules_attributes: { :days => days , :open_hour => 8, :close_hour => 18})
     end
   end
 

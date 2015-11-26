@@ -1,10 +1,11 @@
 - hide_comment_options = local_assigns[:hide_comment_options].presence || false
+- target = local_assigns[:target].presence || "_self"
 
 .comment-a{"data-comment-id": comment.id}
   %figure
     = image_tag comment.creator.avatar.url(:thumb), width: 50
   %p.author
-    = link_to comment.creator.decorate.secret_name, profile_path(comment.creator)
+    = link_to comment.creator.decorate.secret_name, profile_path(comment.creator), target: target
   %blockquote
     %p= readmore(comment.body)
   %p.meta

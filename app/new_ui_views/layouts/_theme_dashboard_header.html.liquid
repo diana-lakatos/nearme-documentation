@@ -1,0 +1,15 @@
+<nav class="navbar navbar-default navbar-fixed-top navbar-primary">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div class="navbar-brand">
+                <a href="{{ platform_context.root_path }}">
+                  <img src="{{ platform_context.logo_url }}" alt="{{ platform_context.name }}" height="52">
+                </a>
+            </div>
+        </div>
+
+        {% if no_header_links == false %}
+            {{ navigation_links }}
+        {% endif %}
+    </div>
+</nav>

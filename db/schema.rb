@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151116100557) do
+ActiveRecord::Schema.define(version: 20151125171443) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 20151116100557) do
     t.boolean  "active",              default: true
   end
 
+  add_index "activity_feed_subscriptions", ["follower_id", "followed_id", "followed_type"], name: "afs_followers_followed", unique: true, using: :btree
   add_index "activity_feed_subscriptions", ["instance_id", "followed_id", "followed_type"], name: "activity_feed_subscriptions_instance_followed", using: :btree
 
   create_table "additional_charge_types", force: :cascade do |t|
@@ -250,9 +251,10 @@ ActiveRecord::Schema.define(version: 20151116100557) do
     t.integer  "open_minute"
     t.integer  "close_hour"
     t.integer  "close_minute"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.datetime "deleted_at"
+    t.integer  "days",                     default: [],              array: true
   end
 
   add_index "availability_rules", ["target_type", "target_id"], name: "index_availability_rules_on_target_type_and_target_id", using: :btree
@@ -265,9 +267,12 @@ ActiveRecord::Schema.define(version: 20151116100557) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.integer  "parent_id"
+    t.string   "parent_type"
   end
 
   add_index "availability_templates", ["instance_id", "transactable_type_id"], name: "availability_templates_on_instance_id_and_tt_id", using: :btree
+  add_index "availability_templates", ["parent_type", "parent_id"], name: "index_availability_templates_on_parent_type_and_parent_id", using: :btree
 
   create_table "billing_authorizations", force: :cascade do |t|
     t.integer  "instance_id"
@@ -1016,6 +1021,7 @@ ActiveRecord::Schema.define(version: 20151116100557) do
     t.string   "time_zone"
     t.string   "seller_attachments_access_level",       limit: 255,                         default: "disabled",    null: false
     t.integer  "seller_attachments_documents_num",                                          default: 10,            null: false
+    t.string   "priority_view_path"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1099,6 +1105,7 @@ ActiveRecord::Schema.define(version: 20151116100557) do
     t.integer  "wish_list_items_count",                      default: 0
     t.integer  "opened_on_days",                             default: [],                 array: true
     t.string   "time_zone",                      limit: 255
+    t.integer  "availability_template_id"
   end
 
   add_index "locations", ["address_id"], name: "index_locations_on_address_id", using: :btree
@@ -1659,7 +1666,7 @@ ActiveRecord::Schema.define(version: 20151116100557) do
 
   add_index "reviews", ["deleted_at"], name: "index_reviews_on_deleted_at", using: :btree
   add_index "reviews", ["instance_id"], name: "index_reviews_on_instance_id", using: :btree
-  add_index "reviews", ["rating_system_id", "reviewable_id", "reviewable_type"], name: "index_reviews_on_rating_system_id_and_reviewable", unique: true, using: :btree
+  add_index "reviews", ["rating_system_id", "reviewable_id", "reviewable_type", "deleted_at"], name: "index_reviews_on_rating_system_id_and_reviewable_and_deleted_at", unique: true, using: :btree
   add_index "reviews", ["reviewable_id", "reviewable_type"], name: "index_reviews_on_reviewable_id_and_reviewable_type", using: :btree
   add_index "reviews", ["transactable_type_id"], name: "index_reviews_on_transactable_type_id", using: :btree
   add_index "reviews", ["user_id"], name: "index_reviews_on_user_id", using: :btree
@@ -1701,18 +1708,20 @@ ActiveRecord::Schema.define(version: 20151116100557) do
   add_index "schedule_exception_rules", ["instance_id", "schedule_id"], name: "index_schedule_exception_rules_on_instance_id_and_schedule_id", using: :btree
 
   create_table "schedule_rules", force: :cascade do |t|
-    t.string  "run_hours_mode"
-    t.decimal "every_hours",    precision: 8, scale: 2
-    t.time    "time_start"
-    t.time    "time_end"
-    t.time    "times",                                  default: [], array: true
-    t.string  "run_dates_mode"
-    t.integer "week_days",                              default: [], array: true
-    t.date    "dates",                                  default: [], array: true
-    t.date    "date_start"
-    t.date    "date_end"
-    t.integer "instance_id"
-    t.integer "schedule_id"
+    t.string   "run_hours_mode"
+    t.decimal  "every_hours",    precision: 8, scale: 2
+    t.datetime "time_start"
+    t.datetime "time_end"
+    t.datetime "times",                                  default: [], array: true
+    t.string   "run_dates_mode"
+    t.integer  "week_days",                              default: [], array: true
+    t.datetime "dates",                                  default: [], array: true
+    t.datetime "date_start"
+    t.datetime "date_end"
+    t.integer  "instance_id"
+    t.integer  "schedule_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "schedule_rules", ["instance_id", "schedule_id"], name: "index_schedule_rules_on_instance_id_and_schedule_id", using: :btree
@@ -3276,6 +3285,8 @@ ActiveRecord::Schema.define(version: 20151116100557) do
     t.string   "compiled_dashboard_stylesheet",           limit: 255
     t.string   "theme_digest",                            limit: 40
     t.string   "theme_dashboard_digest",                  limit: 40
+    t.string   "compiled_new_dashboard_stylesheet"
+    t.string   "theme_new_dashboard_digest"
   end
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
@@ -3456,6 +3467,7 @@ ActiveRecord::Schema.define(version: 20151116100557) do
     t.integer  "weekly_subscription_price_cents"
     t.integer  "monthly_subscription_price_cents"
     t.string   "slug"
+    t.integer  "availability_template_id"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
@@ -3701,7 +3713,6 @@ ActiveRecord::Schema.define(version: 20151116100557) do
     t.float    "left_by_seller_average_rating",                      default: 0.0
     t.float    "left_by_buyer_average_rating",                       default: 0.0
     t.boolean  "featured",                                           default: false
-    t.integer  "projects_count"
     t.boolean  "onboarding_completed",                               default: false
     t.string   "cover_image"
     t.integer  "cover_image_original_height"
@@ -3712,12 +3723,11 @@ ActiveRecord::Schema.define(version: 20151116100557) do
     t.boolean  "tutorial_displayed",                                 default: false
     t.integer  "followers_count",                                    default: 0,                                                                                   null: false
     t.integer  "following_count",                                    default: 0,                                                                                   null: false
-    t.string   "external_id"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
   add_index "users", ["domain_id"], name: "index_users_on_domain_id", using: :btree
-  add_index "users", ["instance_id", "email", "external_id"], name: "index_users_on_instance_id_and_email_and_external_id", unique: true, where: "(deleted_at IS NULL)", using: :btree
+  add_index "users", ["instance_id", "email"], name: "index_users_on_slug", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "users", ["instance_id", "reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["instance_id", "slug"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["instance_id"], name: "index_users_on_instance_id", using: :btree

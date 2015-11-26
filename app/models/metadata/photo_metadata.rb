@@ -6,6 +6,7 @@ module Metadata
 
       attr_accessor :skip_metadata
       after_commit :listing_populate_photos_metadata!, :if => lambda { |p| !p.skip_metadata && p.should_populate_metadata? }
+      after_update :listing_populate_photos_metadata!, :if => lambda { |p| !p.skip_metadata && p.should_populate_metadata? }
 
       def should_populate_metadata?
         deleted? || (listing.present? && relevant_attribute_changed?)

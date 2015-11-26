@@ -93,7 +93,7 @@ class Instance < ActiveRecord::Base
   has_many :locales, dependent: :destroy
   has_many :dimensions_templates, as: :entity
   has_many :seller_attachments
-
+  has_many :availability_templates, as: :parent
   serialize :pricing_options, Hash
 
   validates :name, presence: true
@@ -120,7 +120,7 @@ class Instance < ActiveRecord::Base
 
   store_accessor :search_settings, :tt_select_type
 
-  before_create :generate_webhook_token
+  before_create :generate_webhook_token, :build_availability_templates
   before_update :check_lock
   after_save :recalculate_cache_key!, if: -> { custom_sanitize_config_changed? }
 
@@ -378,4 +378,33 @@ class Instance < ActiveRecord::Base
     end
   end
 
+  def build_availability_templates
+    self.availability_templates.build(
+      name: "Working Week",
+      instance: self,
+      description: "Mon - Fri, 9:00 AM - 5:00 PM",
+      availability_rules_attributes: [{
+        days: (1..5).to_a,
+        open_hour: 9, open_minute: 0,
+        close_hour: 17, close_minute: 0
+      }]
+    )
+
+    self.availability_templates.build(
+      name: "24/7",
+      instance: self,
+      description: "Sunday - Saturday, 12am-11:59pm",
+      availability_rules_attributes: [{
+        days: (0..6).to_a,
+        open_hour: 0, open_minute: 0,
+        close_hour: 23, close_minute: 59
+      }]
+    )
+  end
+
+  def new_ui?
+    priority_view_path == "new_ui"
+  end
+
 end
+

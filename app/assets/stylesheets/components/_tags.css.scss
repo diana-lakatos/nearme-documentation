@@ -22,7 +22,7 @@ $tags-border: 1px solid #ccc;
 
     li {
         list-style-type: none;
-        
+
         input {
             border: 0;
             width: 100%;
@@ -128,17 +128,18 @@ $tags-border: 1px solid #ccc;
 
 .tags-filters {
     list-style: none;
-    width:100%;
-    text-align:center;
+    width:80%;
+    float:left;
 
     li.tag-filter-link {
         display: inline-block;
         position: relative;
         padding-left: 5px;
         margin-top:12px;
-      
-        a { 
+
+        a {
             color:#bbb;
+            text-align: center;
         }
 
         &:after {
@@ -152,7 +153,7 @@ $tags-border: 1px solid #ccc;
             font-weight: 300;
             color: #ddd;
         }
-        
+
         &:last-child:after {
             content: "";
         }

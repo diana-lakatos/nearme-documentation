@@ -246,6 +246,8 @@ DesksnearMe::Application.routes.draw do
       resource :design, :only => [:show, :update], :controller => 'design' do
         member do
           delete 'delete_font'
+          get :revert_to_old_ui
+          get :convert_to_new_ui
         end
       end
 
@@ -356,11 +358,6 @@ DesksnearMe::Application.routes.draw do
         resources :user_bans, only: [:create, :index, :destroy], controller: 'users/user_bans'
       end
 
-      resources :payouts, only: [] do
-        member do
-          post :update_status
-        end
-      end
       resources :transfers do
         member do
           post :transferred
@@ -621,6 +618,7 @@ DesksnearMe::Application.routes.draw do
       resources :categories do
         member do
           get :tree
+          get :tree_new_ui
         end
       end
     end
@@ -636,7 +634,11 @@ DesksnearMe::Application.routes.draw do
       collection do
         delete :delete_image
       end
-      resources :posts, controller: 'user_blog/blog_posts'
+      resources :posts, controller: 'user_blog/blog_posts' do
+        member do
+          delete :delete_image
+        end
+      end
     end
 
     resources :project_types do
@@ -772,7 +774,12 @@ DesksnearMe::Application.routes.draw do
     end
     resources :photos, :only => [:create, :destroy, :edit, :update]
     resources :seller_attachments, only: %i(create update destroy)
-    resources :reviews, :only => [:index, :create, :update, :destroy]
+    resources :reviews, :only => [:index, :create, :update, :destroy] do
+      collection do
+        get :rate
+        get :completed
+      end
+    end
 
     resources :transactable_types, only: [] do
       resources :listings, only: [:new, :create] do
@@ -977,6 +984,8 @@ DesksnearMe::Application.routes.draw do
       resource :social_share, :only => [:new], :controller => 'locations/social_share'
     end
   end
+
+  get "/community_logout", to: 'authentications#community_logout', as: :community_logout
 
   get "/:slug(.:format)", to: 'pages#show', as: :pages, constraints: Constraints::PageConstraints.new
 

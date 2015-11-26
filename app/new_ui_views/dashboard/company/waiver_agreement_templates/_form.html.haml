@@ -1,0 +1,17 @@
+%header.dialog__header
+  %h2#dialog__title
+    - if @waiver_agreement_template.new_record?
+      = t('dashboard.waiver_agreements.dialog.title.new')
+    - else
+      = t('dashboard.waiver_agreements.dialog.title.edit', name: @waiver_agreement_template.name)
+
+= dashboard_simple_form_for([:dashboard, :company, @waiver_agreement_template], html: { :"data-modal" => true } ) do |f|
+  .dialog__body
+
+    = render 'dashboard/shared/flash'
+
+    = f.input :name
+    = f.input :content, as: :text, input_html: {rows: 10}
+
+  .dialog__actions
+    = f.submit t('dashboard.waiver_agreements.dialog.submit')

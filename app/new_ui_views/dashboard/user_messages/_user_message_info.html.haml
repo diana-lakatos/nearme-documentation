@@ -1,0 +1,3 @@
+.span2
+  %p.name= link_to author.first_name, profile_path(author.slug)
+  %p.date= distance_of_time_in_words_or_date_in_time_zone(user_message.created_at, current_user.time_zone)

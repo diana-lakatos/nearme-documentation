@@ -57,3 +57,20 @@ Feature: A user can search for a listing
     Given a listing in Auckland exists
     Given Auckland listing has fixed_price: 10
     When I search for "Auckland" with prices 0 15
+
+  Scenario: It should paginate as expected
+    Given 21 listings in Auckland
+    And I am on the home page
+    When I search for "Auckland"
+    Then I should see pagination links
+    And I should be able to check next page
+    And I should be able to see one listing at last page
+
+  Scenario: It should be filterable
+    Given no listings exists
+    Given a listing in Auckland exists
+    Given a listing in Adelaide exists
+    Given a listing in Wellington exists
+    And I am on the home page
+    When I search for ""
+    Then I should see filtering options

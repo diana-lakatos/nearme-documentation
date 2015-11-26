@@ -7,25 +7,17 @@ class ReservationPeriod < ActiveRecord::Base
 
   # attr_accessible :date, :start_minute, :end_minute
 
-  delegate :listing, :time_zone, :to => :reservation
+  delegate :listing, :time_zone, :to => :reservation, allow_nil: true
 
   # Returns the number of hours reserved on this date.
   # If no hourly time specified, it is assumed that the reservation is for all open
   # hours of that booking.
   def hours
-    if start_minute && end_minute
-      (end_minute - start_minute) / 60.0
-    else
-      0
-    end
+    minutes / 60.0
   end
 
   def minutes
-    if start_minute && end_minute
-      (end_minute - start_minute)
-    else
-      0
-    end
+    (end_minute || start_minute).to_i - start_minute.to_i
   end
 
   def start_minute
@@ -46,32 +38,18 @@ class ReservationPeriod < ActiveRecord::Base
 
   def date_with_time
     if listing.schedule_booking?
-      hour = start_minute/60
-      minute = start_minute - (60 * hour)
-      Time.parse("#{date} #{hour}:#{minute}").to_formatted_s(:db)
+      Minute.new(start_minute, date).to_time.to_formatted_s(:db)
     else
       date.strftime('%Y-%m-%d')
     end
   end
 
   def starts_at
-    Time.use_zone time_zone do
-      if start_minute
-        Time.zone.parse("#{date} #{Time.at(start_minute.to_i * 60).utc.strftime("%H:%M:%S")}")
-      else
-        Time.zone.parse("#{date}").beginning_of_day
-      end
-    end
+    Minute.new(start_minute.to_i, date).to_time_in_timezone(time_zone)
   end
 
   def ends_at
-    Time.use_zone time_zone do
-      if end_minute
-        Time.zone.parse("#{date} #{Time.at(end_minute.to_i * 60).utc.strftime("%H:%M:%S")}")
-      else
-        Time.zone.parse("#{date}").end_of_day
-      end
-    end
+    Minute.new(end_minute || 1439, date).to_time_in_timezone(time_zone)
   end
 
   private

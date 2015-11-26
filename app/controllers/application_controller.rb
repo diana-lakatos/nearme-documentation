@@ -237,15 +237,6 @@ class ApplicationController < ActionController::Base
     url
   end
 
-  def after_sign_out_path_for(resource)
-    if current_instance.is_community?
-      cookies.each do |cookie|
-        cookie.delete cookie[0]
-      end
-    end
-    super
-  end
-
   def redirect_to_different_host?(url)
     uri = Addressable::URI.parse(url)
     uri.host && (uri.host != request.host)
@@ -513,6 +504,8 @@ class ApplicationController < ActionController::Base
   helper_method :ckeditor_toolbar_creator
 
   def prepend_view_paths
+    # a quick and dirty hack for Chris D to let him start working
+    prepend_view_path("app/#{PlatformContext.current.instance.priority_view_path}_views") if PlatformContext.current.instance.priority_view_path && ['new_ui'].include?(PlatformContext.current.instance.priority_view_path)
     prepend_view_path("app/community_views") if PlatformContext.current.instance.is_community?
     prepend_view_path InstanceViewResolver.instance
   end

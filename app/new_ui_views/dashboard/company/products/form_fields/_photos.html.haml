@@ -1,0 +1,3 @@
+%h2= t('dashboard.photos.title')
+
+= f.input :image, as: :image, label: false, multiple: true, upload_url: dashboard_images_path, upload_attr_name: "#{f.object_name}[images_attributes][0][image]", collection: dashboard_product_images_to_image_input_collection(@images), sortable: true

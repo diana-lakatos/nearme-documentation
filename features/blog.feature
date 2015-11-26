@@ -23,3 +23,18 @@ Regular visitor can see recent blog posts, paginate to history and check blog po
     And we have some user blog posts
     Then I can promote one user blog post
     Then a visitor should see promoted blog post in main blog
+
+  Scenario: User can see RSS feed for a blog
+    Given that I am on blog's homepage
+    And it has two posts
+    And I click on RSS Feed button
+    Then the feed xml should have 2 nodes
+
+  Scenario: User can see RSS feed for a blog filtered by tag
+    Given it has two posts
+    And the latest has tag "something interesting" associated
+    Given that I am on blog's homepage
+    And I filter for a tag
+    And I click on RSS Feed button
+    Then the feed xml should have 1 node
+    And I should see "something interesting" in it's content

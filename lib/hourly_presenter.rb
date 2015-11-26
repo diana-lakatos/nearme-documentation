@@ -53,7 +53,12 @@ class HourlyPresenter
   def minute_of_day_to_time(minute)
     hour = minute / 60
     min  = minute % 60
-    time = Time.zone.local(Time.zone.today.year, Time.zone.today.month, Time.zone.today.day, hour, min)
+    day = Time.zone.today.day
+    if hour >= 24
+      hour -= 24
+      day += 1
+    end
+    Time.zone.local(Time.zone.today.year, Time.zone.today.month, day, hour, min)
   end
 
   def start_minute_of_day_to_time

@@ -61,13 +61,8 @@ class InstanceWizardController < ActionController::Base
         action_daily_booking: "1",
         action_weekly_booking: "1",
         action_monthly_booking: "1",
-        availability_options: { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } }
+        availability_options: { "defer_availability_rules" => true, "confirm_reservations" => { "default_value" => true, "public" => true } }
       )
-      at = tp.availability_templates.build(name: "Working Week", description: "Mon - Fri, 9:00 AM - 5:00 PM")
-      (1..5).each do |i|
-        at.availability_rules.build(day: i, open_hour: 9, open_minute: 0,close_hour: 17, close_minute: 0)
-      end
-      at.save!
     end
 
     Utils::FormComponentsCreator.new(ipt).create!

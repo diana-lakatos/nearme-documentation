@@ -28,10 +28,6 @@ class Listing::WebSerializationTest < ActiveSupport::TestCase
       assert_equal @listing.listing_type_id, @json[:listing_type_id]
     end
 
-    should "have a defer_availabity_rules flag" do
-      assert_equal 1, @json[:defer_availability_rules]
-    end
-
     should "have a daily_price" do
       assert_equal @listing.daily_price, @json[:daily_price]
     end
@@ -42,10 +38,6 @@ class Listing::WebSerializationTest < ActiveSupport::TestCase
 
     should "have a monthly_price" do
       assert_equal @listing.monthly_price, @json[:monthly_price]
-    end
-
-    should "have an availability_template_id" do
-      assert @json[:availability_template_id].empty?
     end
 
     should "have 7 availability rules defined" do

@@ -13,8 +13,9 @@
         = hidden_field_tag :category_ids, @searcher.search.category_ids
         = hidden_field_tag :start_date, @searcher.search.display_dates[:start]
         = hidden_field_tag :end_date, @searcher.search.display_dates[:end]
-        = hidden_field_tag 'availability[dates][start]', @searcher.search.start_date
-        = hidden_field_tag 'availability[dates][end]', @searcher.search.end_date
+        - if @transactable_type.show_date_pickers?
+          = hidden_field_tag 'availability[dates][start]', @searcher.search.start_date
+          = hidden_field_tag 'availability[dates][end]', @searcher.search.end_date
         - @searcher.filterable_custom_attributes.each do |ca|
           = hidden_field_tag "lg_custom_attributes[#{ca.name}]", @searcher.search.lg_custom_attributes[ca.name]
         .row-fluid
@@ -32,7 +33,7 @@
               .keyword-input.span3
                 .search-loop-icon
                   %span.ico-search
-                %input.query{:name => "query", :placeholder => platform_context.search_by_keyword_placeholder, :type => "text", :value => @searcher.keyword, :autocomplete => "off"}
+                %input.query{:name => "query", :placeholder => @searcher.transactable_type.fulltext_placeholder, :type => "text", :value => @searcher.keyword, :autocomplete => "off"}
             .span1
               .search-icon.btn.btn-green
                 %span.ico-search

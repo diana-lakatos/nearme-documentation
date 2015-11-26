@@ -13,15 +13,18 @@
       %p
         = t :join_us_on
       %ul
-        %li.facebook
-          = link_to root_url do
-            %span Facebook
-        %li.twitter
-          = link_to root_url do
-            %span Twitter
-        %li.google
-          = link_to root_url do
-            %span Google+
+        - if current_instance.theme.facebook_url.present?
+          %li.facebook
+            = link_to current_instance.theme.facebook_url, rel: 'external' do
+              %span Facebook
+        - if current_instance.theme.twitter_url.present?
+          %li.twitter
+            = link_to current_instance.theme.twitter_url, rel: 'external' do
+              %span Twitter
+        - if current_instance.theme.gplus_url.present?
+          %li.google
+            = link_to current_instance.theme.gplus_url, rel: 'external' do
+              %span Google+
         %li.youtube
-          = link_to root_url do
-            %span Youtube
+          = link_to 'https://www.youtube.com/user/intelswnetwork', rel: 'external' do
+            %span YouTube

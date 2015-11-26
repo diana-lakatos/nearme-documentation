@@ -9,6 +9,7 @@ class Reservation < ActiveRecord::Base
   scoped_to_platform_context
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id], :listing)
 
+  before_save :set_start_and_end
   before_create :store_platform_context_detail
   after_create :create_waiver_agreements
   after_create :copy_dimensions_template
@@ -259,11 +260,11 @@ class Reservation < ActiveRecord::Base
   end
 
   def first_period
-    @first_period ||= periods.sort_by(&:date).first
+    periods.sort_by {|p| [p.date, p.start_minute] }.first
   end
 
   def last_period
-    @last_period ||= periods.sort_by(&:date).last
+    periods.sort_by {|p| [p.date, p.start_minute] }.last
   end
 
   def date
@@ -517,6 +518,11 @@ class Reservation < ActiveRecord::Base
   end
 
   private
+
+  def set_start_and_end
+    self.starts_at = first_period.starts_at
+    self.ends_at = last_period.ends_at
+  end
 
   def service_fee_calculator
     options = {

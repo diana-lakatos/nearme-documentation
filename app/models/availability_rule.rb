@@ -3,10 +3,9 @@ class AvailabilityRule < ActiveRecord::Base
   # attr_accessible :day, :close_hour, :close_minute, :open_hour, :open_minute, :open_time, :close_time
 
   # === Associations
-  belongs_to :target, :polymorphic => true, inverse_of: :availability_rules
+  belongs_to :target, :polymorphic => true, inverse_of: :availability_rules, touch: true
 
   # === Validations
-  validates :day, :inclusion => 0..6
   validates :open_hour, :inclusion => 0..23
   validates :close_hour, :inclusion => 0..23
   validates :open_minute, :inclusion => 0..59
@@ -14,9 +13,9 @@ class AvailabilityRule < ActiveRecord::Base
   validates_each :day do |record, attr, value|
     total_opening_time = record.floor_total_opening_time_in_hours
     if total_opening_time < 0
-      record.errors["day_#{value}"] << "The opening hour must occur before the closing hour."
+      record.errors["open_time"] << "The opening hour must occur before the closing hour."
     elsif total_opening_time < record.minimum_booking_hours
-      record.errors["day_#{value}"] << "must be opened for at least #{sprintf('%.2f', record.minimum_booking_hours)} #{'hour'.pluralize(record.minimum_booking_hours)}"
+      record.errors["close_time"] << "must be opened for at least #{sprintf('%.2f', record.minimum_booking_hours)} #{'hour'.pluralize(record.minimum_booking_hours)}"
     end
   end
 
@@ -25,15 +24,15 @@ class AvailabilityRule < ActiveRecord::Base
 
   # Return a list of predefined availability rule templates
   def self.templates
-    TransactableType.first.try(:availability_templates) || []
+    AvailabilityTemplate.all || []
   end
 
   def self.default_template
     templates[0]
   end
 
-  def day_name
-    Date::DAYNAMES[day]
+  def days=(days_array)
+    super(days_array.select(&:present?)) if days_array
   end
 
   def minimum_booking_hours
@@ -68,11 +67,19 @@ class AvailabilityRule < ActiveRecord::Base
   end
 
   def day_open_minute
-    open_hour*60+open_minute
+    open_hour * 60 + open_minute
   end
 
   def day_close_minute
-    close_hour*60+close_minute
+    close_hour * 60 + close_minute
+  end
+
+  def open_time_with_default
+    open_hour && open_minute ? open_time : "9:00"
+  end
+
+  def close_time_with_default
+    close_hour && close_minute ? close_time : "17:00"
   end
 
   def floor_total_opening_time_in_hours
@@ -80,11 +87,11 @@ class AvailabilityRule < ActiveRecord::Base
   end
 
   def close_time_minus_open_time_in_minutes
-    ((self.close_hour*60 + self.close_minute) - (self.open_hour*60 + self.open_minute))
+    day_close_minute - day_open_minute
   end
 
   def self.xml_attributes
-    [:day, :open_hour, :open_minute, :close_hour, :close_minute]
+    [:day, :open_hour, :open_minute, :close_hour, :close_minute, :days]
   end
 
   private

@@ -11,7 +11,7 @@
 
       .col-md-3
         %p= t("dashboard.user_recurring_bookings.#{recurring_booking.interval}_price")
-        %p= recurring_booking.total_price
+        %p= recurring_booking.subtotal_price_for_guest
 
       - if recurring_booking.next_charge_date
         .col-md-3

@@ -1,0 +1,11 @@
+- title t('dashboard.nav.social_accounts')
+
+- content_for :page_header do
+  %h1= yield :title
+
+.panel.verification
+  .panel-body.notifications
+    - if @supported_providers.any?
+      = render "registrations/networks", supported_providers: @supported_providers
+    - else
+      %p.empty-resultset= t('registrations.social_accounts.no_social_providers', marketplace_name: platform_context.name).html_safe

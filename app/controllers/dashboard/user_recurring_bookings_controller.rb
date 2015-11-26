@@ -31,6 +31,10 @@ class Dashboard::UserRecurringBookingsController < Dashboard::BaseController
     redirect_to active_dashboard_user_recurring_booking_path(params[:id])
   end
 
+  def index
+    active
+  end
+
   def active
     @recurring_bookings = recurring_bookings.not_archived.order(:start_on, :end_on)
     render :index

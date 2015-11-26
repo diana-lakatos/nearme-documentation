@@ -43,6 +43,19 @@
 //= require instance_admin/data_tables/dataTables.bootstrap
 //= require instance_admin/bootstrap-colorpicker.js
 
+// NEW UI LIBS
+
+// Date picker
+//= require moment/min/moment.min
+//= require eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker
+
+// Cocoon for nested forms
+//= require cocoon
+
+//= require new_ui/index
+//= require new_ui/instance_admin/index
+//= require new_ui/listings/schedule
+
 $(function() {
   Fileupload.initialize();
 })

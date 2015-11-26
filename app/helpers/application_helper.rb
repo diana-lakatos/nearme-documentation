@@ -274,6 +274,14 @@ module ApplicationHelper
     end
   end
 
+  def will_paginate_dashboard(collection, options = {})
+    options[:renderer] = BuySellMarket::WillPaginateDashboardLinkRenderer::LinkRenderer
+    options[:class] = ''
+    options[:inner_window] = 1
+    options[:outer_window] = 0
+    will_paginate collection, options
+  end
+
   def active_class(arg1, arg2, class_name = 'active')
     class_name if arg1 == arg2
   end
@@ -376,8 +384,8 @@ module ApplicationHelper
     end
   end
 
-  def setup_activity_feed_event(event)
-    event = ActivityFeedService::Event.new(event)
+  def setup_activity_feed_event(event, target="_self")
+    event = ActivityFeedService::Event.new(event, target)
     OpenStruct.new(text: event.text, image: event.image)
   end
 
@@ -412,5 +420,9 @@ module ApplicationHelper
   def image_for_followed(followed)
     image = (followed.try(:image).presence || followed.try(:avatar)).try(:url, :medium)
     image.present? ? image : followed.try(:cover_photo).try(:image).try(:url, :medium)
+  end
+
+  def current_url
+    request.protocol + platform_context.host + request.fullpath
   end
 end

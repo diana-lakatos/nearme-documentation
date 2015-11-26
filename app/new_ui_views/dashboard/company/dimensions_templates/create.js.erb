@@ -1,0 +1,16 @@
+(function($){
+  $('html').trigger('hide.dialog');
+
+  var
+    select = $('#select_instance_dimensions_template')[0].selectize;
+
+  select.addOption({
+    value: '<%= @dimensions_template.id %>',
+    text: '<%= @dimensions_template.name %>',
+    template: <%= @dimensions_template.to_json(only: [:name, :unit_of_measure, :weight, :height, :width, :depth, :weight_unit, :height_unit, :width_unit, :depth_unit, :use_as_default]).html_safe %>
+  });
+
+  select.setValue('<%= @dimensions_template.id %>');
+
+}(jQuery));
+

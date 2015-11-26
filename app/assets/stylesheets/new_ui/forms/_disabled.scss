@@ -1,0 +1,7 @@
+.form-section-disabled {
+    opacity: 0.5;
+
+    [readonly] {
+        background: $input-bg;
+    }
+}

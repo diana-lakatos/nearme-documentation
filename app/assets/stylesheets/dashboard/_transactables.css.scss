@@ -3,3 +3,27 @@ div.booking-types-tab-menu {
     padding-bottom: 10px;
   }
 }
+
+.availability-rules-wrapper {
+    h4 {
+        font-size: 1em;
+        font-weight: bold;
+    }
+
+    .nested-fields-set {
+        > .fields {
+            padding: 0 20px 20px;
+            border: 1px solid #efefef;
+            margin-bottom: 20px;
+
+            p:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .always-inline.check_boxes .input-container > .checkbox {
+        display: inline-block;
+        margin-right: 10px;
+    }
+}

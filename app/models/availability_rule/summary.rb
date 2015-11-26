@@ -18,22 +18,14 @@ class AvailabilityRule::Summary
   def full_week(monday_first = true)
     result = []
     each_day do |day, rule|
-        result << { day: day, rule: (rule || AvailabilityRule.new(:day => day))}
+      result << { day: day, rule: (rule || AvailabilityRule.new(:days => [day]))}
     end
     result
   end
 
   # Return the availability rule (if any) for the given day of the week.
   def rule_for_day(day)
-    @rules.detect { |rule| rule.day == day }
-  end
-
-  def matches_template?(template)
-    each_day do |day, rule|
-      next if !rule && !template.availability_rules.pluck(:day).include?(day)
-      return false unless rule && template.includes_rule?(rule)
-    end
-    true
+    @rules.detect { |rule| day.in? rule.days }
   end
 
   # Return whether or not the target is open given options
@@ -72,7 +64,7 @@ class AvailabilityRule::Summary
   # Returns an array of days that the listing is open for
   # Days are 0..6, where 0 is Sunday and 6 is Saturday
   def days_open
-    @days_open ||= @rules.map { |rule| rule.day }
+    @days_open ||= @rules.map(&:days).flatten.compact.uniq
   end
 
   def consecutive_days_open?

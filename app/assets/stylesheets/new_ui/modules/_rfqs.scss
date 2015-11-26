@@ -1,0 +1,29 @@
+.rfq-status-a {
+    text-align: right;
+    font-size: 18px;
+
+
+    span:before {
+        @include fa-icon();
+    }
+
+    .open:before {
+        content: $fa-var-exclamation;
+        color: $brand-warning;
+    }
+
+    .resolved:before {
+        content: $fa-var-check;
+        color: $brand-success;
+    }
+}
+
+.rfq-form-a {
+    .attachments {
+        padding: 0;
+        list-style: none;
+    }
+    .attachment {
+        margin-top: 10px;
+    }
+}

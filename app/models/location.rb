@@ -10,8 +10,10 @@ class Location < ActiveRecord::Base
   inherits_columns_from_association([:creator_id, :listings_public], :company)
 
   include Impressionable
+  # Include a set of helpers for handling availability rules and interface onto them
+  include AvailabilityRule::TargetHelper
 
-  attr_accessor :name_and_description_required, :search_rank, :transactable_type
+  attr_accessor :name_and_description_required, :search_rank, :transactable_type, :availability_template_attributes
 
   liquid_methods :name
 
@@ -21,7 +23,7 @@ class Location < ActiveRecord::Base
   has_many :amenity_holders, as: :holder, dependent: :destroy
   has_many :amenities, through: :amenity_holders
   has_many :assigned_waiver_agreement_templates, as: :target
-  has_many :availability_rules, -> { order 'day ASC' }, :as => :target
+  has_many :availability_templates, as: :parent
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :company_industries, through: :company
   has_many :impressions, :as => :impressionable, :dependent => :destroy
@@ -39,6 +41,7 @@ class Location < ActiveRecord::Base
   belongs_to :administrator, -> { with_deleted }, class_name: "User", inverse_of: :administered_locations
   belongs_to :instance
   belongs_to :creator, -> { with_deleted }, class_name: "User"
+  belongs_to :availability_template
   delegate :company_users, :url, to: :company, allow_nil: true
   delegate :phone, :to => :creator, :allow_nil => true
   delegate :address, :address2, :formatted_address, :postcode, :suburb, :city, :state, :country, :street, :address_components,
@@ -52,7 +55,7 @@ class Location < ActiveRecord::Base
   validates_length_of :description, maximum: 250, if: :name_and_description_required
   validates_length_of :name, maximum: 50, if: :name_and_description_required
 
-  before_save :set_location_type, :set_time_zone
+  before_save :set_location_type, :set_time_zone, :build_availability_template
   before_save :assign_default_availability_rules
   after_save :set_external_id
   after_save :update_schedules_timezones
@@ -61,17 +64,17 @@ class Location < ActiveRecord::Base
   friendly_id :slug_candidates, use: [:slugged, :history, :finders, :scoped], scope: :instance
 
   # We do this (:dependent => :delete_all) because:
-  # * we want to have acts_as_paranoid out of the equation on the friendly_id_slugs (history table) because 
+  # * we want to have acts_as_paranoid out of the equation on the friendly_id_slugs (history table) because
   #   with it, the uniqueness constraints on the table will fail because of lingering records that friendly_id
   #   is not able to find when deciding a slug is available (because it's not using with_deleted)
-  # * removing dependent destroy is not an option to just keep records there; it merely results in the 
+  # * removing dependent destroy is not an option to just keep records there; it merely results in the
   #   nullification of sluggable_id which makes friendly_id still not able to find
   #   them when looking for existing slugs because it's using a join on location (by sluggable_id);
   #   even if it were not nullified it would probably still not be able to find them because of the join on locations
   #   (which no longer exist)
   # * removing acts_as_paranoid on the friendly_id_slugs is not an option at this point because it's being
   #   added by Spree (!) and messing with it at this point would add even more complications (before we remove Spree)
-  # * Using :dependent => :delete_all effectively disables acts_as_paranoid on the friendly_id_slugs table as it just deletes the 
+  # * Using :dependent => :delete_all effectively disables acts_as_paranoid on the friendly_id_slugs table as it just deletes the
   #   records from the database avoiding the acts_as_paranoid overrides
   # * after removing Spree, the proper fix would be to remove acts_as_paranoid on the FriendlyId::Slug
   has_many :slugs, -> {order("friendly_id_slugs.id DESC")}, {
@@ -93,19 +96,19 @@ class Location < ActiveRecord::Base
   }
   # Useful for storing the full geo info for an address, like time zone
 
-  # Include a set of helpers for handling availability rules and interface onto them
-  include AvailabilityRule::TargetHelper
-  accepts_nested_attributes_for :availability_rules, :allow_destroy => true
+  accepts_nested_attributes_for :availability_templates
   accepts_nested_attributes_for :listings, :location_address
   accepts_nested_attributes_for :waiver_agreement_templates, :allow_destroy => true
   accepts_nested_attributes_for :approval_requests
 
   after_save do
-    days = availability_rules.order(:day).pluck(:day)
-    self.update_column(:opened_on_days, days)
-    self.listings.each do |l|
-      l.update_column(:opened_on_days, days) if l.defer_availability_rules?
-      ElasticIndexerJob.perform(:update, l.class.to_s, l.id)
+    days_open = availability.try(:days_open)
+    if days_open.present? && opened_on_days & days_open != opened_on_days
+      self.update_column(:opened_on_days, days_open)
+      self.listings.where(availability_template_id: nil).update_all(opened_on_days: days_open)
+      self.listings.where(availability_template_id: nil).pluck(:id).find_each do |t_id|
+        ElasticIndexerJob.perform(:update, 'Transactable', t_id)
+      end
     end
   end
 
@@ -122,9 +125,7 @@ class Location < ActiveRecord::Base
   end
 
   def assign_default_availability_rules
-    if availability_rules.reject(&:marked_for_destruction?).empty?
-      AvailabilityRule.default_template.try(:apply, self)
-    end
+    self.availability_template ||= instance.availability_templates.first
   end
 
   def name
@@ -170,6 +171,10 @@ class Location < ActiveRecord::Base
 
   def lowest_price(available_price_types = [])
     (listings.loaded? ? listings : listings.searchable).map{|l| l.lowest_price_with_type(available_price_types)}.compact.sort{|a, b| a[0].to_f <=> b[0].to_f}.first
+  end
+
+  def lowest_full_price(available_price_types = [])
+    (listings.loaded? ? listings : listings.searchable).map{|l| l.lowest_full_price(available_price_types)}.compact.sort{|a, b| a[0].to_f <=> b[0].to_f}.first
   end
 
   def approval_request_templates
@@ -259,4 +264,23 @@ class Location < ActiveRecord::Base
       self.company.try(:time_zone) || self.instance.try(:default_timezone)
     end
   end
+
+  def hide_defered_availability_rules?
+    true
+  end
+
+  def build_availability_template
+    if availability_template_attributes.present?
+      if availability_template_attributes["id"].present?
+        self.availability_template.attributes = availability_template_attributes
+      else
+        availability_template_attributes.merge!({
+          name: 'Custom location availability',
+          parent: self
+        })
+        self.availability_template = AvailabilityTemplate.new(availability_template_attributes)
+      end
+    end
+  end
 end
+

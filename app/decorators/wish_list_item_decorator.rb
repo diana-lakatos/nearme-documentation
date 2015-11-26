@@ -23,6 +23,16 @@ class WishListItemDecorator < Draper::Decorator
     object.wishlistable.company.name
   end
 
+  def polymorphic_wishlistable_path
+    if wishlistable.is_a?(Transactable)
+      transactable_type_location_listing_path(wishlistable.transactable_type, wishlistable.location, wishlistable)
+    elsif wishlistable.is_a?(Location)
+      location_path(wishlistable)
+    elsif wishlistable.is_a?(Spree::Product)
+      product_path(wishlistable)
+    end
+  end
+
   private
 
   def wishlistable

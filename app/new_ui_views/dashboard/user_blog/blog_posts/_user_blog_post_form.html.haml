@@ -1,0 +1,27 @@
+.row
+  .col-md-6
+    = f.input :title
+  .col-md-3
+    = f.input :slug
+  .col-md-3
+    = f.input :published_at, as: :date_picker
+
+= f.input :content, as: :ckeditor, input_html: { rows: 12, ckeditor: { toolbar: 'simple' , height: 500 } }
+= f.input :excerpt, input_html: { rows: 3 }
+
+= f.input :tag_list, as: :tags
+
+- delete_hero_url = f.object.new_record? ? nil : delete_image_dashboard_blog_post_path(blog_post: f.object, :image_type => 'hero_image')
+= f.input :hero_image, as: :image, delete_url: delete_hero_url
+
+%h2.sep Author
+
+.row
+  .col-md-4
+    = f.input :author_name
+    - delete_avatar_url = f.object.new_record? ? nil : delete_image_dashboard_blog_post_path(blog_post: f.object, :image_type => 'author_avatar_img')
+
+    = f.input :author_avatar_img, as: :image, delete_url: delete_avatar_url
+
+  .col-md-8
+    = f.input :author_biography, input_html: { rows: 6 }

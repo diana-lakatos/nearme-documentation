@@ -10,10 +10,35 @@ class CategoryTest < ActiveSupport::TestCase
       @category_child = FactoryGirl.create(:category, parent_id: @category.id)
       @category_grand_child = FactoryGirl.create(:category, parent_id: @category_child.id)
       @category_sibling = FactoryGirl.create(:category)
+      @category_child.reload
       @category.reload
     end
 
+    should 'present categories added to Transactable in liquid' do
+      transactable = FactoryGirl.create(:transactable)
+      transactable.transactable_type.categories << @category
+      transactable.categories << @category_grand_child
+      transactable.reload
+      assert_equal [@category_grand_child], transactable.categories
+      assert_equal ({@category.name => { 'name' => @category.translated_name, 'children' => [] }}), transactable.reload.to_liquid.categories
+
+      @category.name = "Some new name"
+      @category.save
+      @category.reload
+      assert_equal ({@category.name => { 'name' => @category.translated_name, 'children' => [] }}), Transactable.find(transactable.id).to_liquid.categories
+    end
+
+    should 'update children permalink' do
+      @category.name = 'New name'
+      @category.save
+      @category.reload
+
+      assert_equal 'new-name', @category.permalink
+      assert_equal "new-name/#{@category_child.name.to_url}", @category_child.reload.permalink
+    end
+
     should 'create familiy relations' do
+
       assert_equal [@category_child], @category.children
       assert_equal [@category_grand_child], @category_child.children
       assert_equal [@category_sibling], @category.siblings
@@ -61,9 +86,7 @@ class CategoryTest < ActiveSupport::TestCase
     should 'remove translations when category has been deleted' do
       translation = Translation.where(value: @category.name, locale: @locale.code, key: @category.translation_key).first
       assert translation.present?
-      
       @category.destroy
-      
       translation = Translation.where(value: @category.name, locale: @locale.code, key: @category.translation_key).first
       refute translation.present?
     end

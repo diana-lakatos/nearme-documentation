@@ -2,8 +2,15 @@ module LimitedInput
   def prepare_limiter
     input_html_options[:class] << 'limited'
     input_html_options[:data] ||= {}
+    input_html_options[:maxlength] = options[:limit] || column.limit
     input_html_options[:data].merge!(:'counter-limit' => options[:limit] || column.limit)
     normalized_object_name = object_name.to_s.gsub('[', '_').gsub(']', '') # attribute[value] to attribute_value
-    template.content_tag(:p, I18n.t('form.characters_left', count: 0), data: {:'counter-for' => "#{normalized_object_name}_#{attribute_name}"}, class: 'help-block limiter')
+    data = {
+      :'counter-for' => "#{normalized_object_name}_#{attribute_name}",
+      :'label-one' => t('form.characters_left.one'),
+      :'label-few' => t('form.characters_left.few'),
+      :'label-zero' => t('form.characters_left.zero')
+    }
+    template.content_tag(:p, I18n.t('form.characters_left', count: 0), data: data, class: 'help-block limiter')
   end
 end

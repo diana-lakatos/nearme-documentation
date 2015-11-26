@@ -1,3 +1,5 @@
+require "autoprefixer-rails"
+
 # Compiles our custom instance theme stylesheets, etc.
 class Theme::Compiler
   def initialize(theme)
@@ -22,6 +24,14 @@ class Theme::Compiler
         :filename => "theme-dashboard-#{Time.zone.now.to_i}.css"
       }
       @theme.theme_dashboard_digest = cumulative_digest('dashboard_theme')
+    end
+
+    if cumulative_digest('new_dashboard_theme') != @theme.theme_new_dashboard_digest
+      @theme.compiled_new_dashboard_stylesheet = {
+        :tempfile => create_compiled_file('new_dashboard_theme.scss.erb'),
+        :filename => "theme-new-dashboard-#{Time.zone.now.to_i}.css"
+      }
+      @theme.theme_new_dashboard_digest = cumulative_digest('new_dashboard_theme')
     end
 
     if @theme.changed?
@@ -63,12 +73,12 @@ class Theme::Compiler
     FileUtils.touch(path)
     if Rails.env.test? || Rails.env.development?
       File.open(path, 'w') do |gz|
-        gz.write render_stylesheet(base_file_name)
+        gz.write AutoprefixerRails.process(render_stylesheet(base_file_name)).css
       end
     else
       compressor = YUI::CssCompressor.new
       Zlib::GzipWriter.open(path, 9) do |gz|
-        gz.write compressor.compress(render_stylesheet(base_file_name))
+        gz.write compressor.compress(AutoprefixerRails.process(render_stylesheet(base_file_name)).css)
       end
     end
     File.open(path, 'rb')

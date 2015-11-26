@@ -112,6 +112,16 @@ module ListingsHelper
     find_connections_for(listing, current_user)
   end
 
+  def get_availability_template_object(parent)
+    if parent.availability_template && parent.availability_template.custom_for_transactable?
+      parent.availability_template
+    else
+      parent.availability_templates.first_or_initialize do |at|
+        at.availability_rules = [AvailabilityRule.new]
+      end
+    end
+  end
+
   private
 
   def find_connections_for(listing, current_user)

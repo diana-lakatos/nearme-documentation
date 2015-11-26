@@ -1,0 +1,46 @@
+- content_for :booking_type_regular_tab_content do
+  -# Availability
+  %hr/
+  %h3
+    = t(:title, scope: [:pricing, :availability])
+
+  .listing-availability
+    = f.input :availability_template_id, label: false do
+      %ul.box-options
+        - availability_choices(f.object).each do |template_id, label_text, options|
+          %li
+            = f.radio_button :availability_template_id, template_id, options
+            = label_tag options[:id] do
+              %h5
+                = label_text
+              %p
+                = options[:description]
+
+      .custom-availability{:style => ('display: none' unless availability_custom?(f.object))}
+        %h4.control-label
+          = t(:available_from, scope: [:pricing, :availability])
+        = f.simple_fields_for :availability_template, get_availability_template_object(f.object) do |at|
+          = at.input :id, as: :hidden, input_html: { value: at.object.id }
+          .nested-fields-set
+            = at.simple_fields_for(:availability_rules) do |af|
+              .nested-container
+                = af.input :_destroy, as: :hidden
+                = render 'dashboard/company/transactables/form_fields/time_availability', f: af, index: 1
+
+          %p
+            = t(:different_availability_info, scope: [:pricing, :availability])
+
+          %p
+            = link_to_add_association t(:add_availability, scope: [:pricing, :availability]) , at, :availability_rules, partial: 'dashboard/company/transactables/form_fields/time_availability', class: 'btn btn-primary', data: { association_insertion_node: '.nested-fields-set', association_insertion_method: :append }, render_options: { locals: { index: 2} }
+        /
+          %p
+            = t(:preset_info, scope: [:pricing, :availability])
+
+          %p
+            %button.btn.btn-default{:type => "button"}
+              = t(:save_preset, scope: [:pricing, :availability])
+
+    %hr/
+
+- content_for :domready do
+  new DNM.Listings.AvailabilityRules($('.listing-availability'))

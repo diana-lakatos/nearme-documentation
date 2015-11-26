@@ -1,0 +1,61 @@
+.nested-fields{ :"data-availability-entry" => true }
+  .control-label.and
+    %i= t('pricing.schedule.and')
+
+  .row.include-form-action
+    .col-xs-11
+
+      %div.row{"data-pricing-run-mode" => true }
+
+        .col-md-3
+          = f.input :run_hours_mode, as: :select, collection: { t(:recurring, scope: [:pricing, :schedule, :run_hours_mode]) => ScheduleRule::RECURRING_MODE,  t(:specific, scope: [:pricing, :schedule, :run_hours_mode]) => ScheduleRule::SPECIFIC_MODE }, label: false, input_html: { "data-pricing-run-mode-selector": true }, prompt: t(:choose_hours, scope: [:pricing, :schedule, :run_hours_mode])
+
+        .col-md-9
+          .form-inline
+            .run-mode.recurring
+              = f.input :every_hours, as: :numeric, label: false, wrapper_html: { class: 'form-control-xs' }, input_html: { min: 1 }
+
+              .form-unit
+                = t :from, scope: [:pricing, :schedule, :recurring]
+
+              = f.input :user_time_start, as: :time_picker, wrapper_html: { class: 'form-control-sm' }, label: false
+
+              .form-unit
+                = t :to, scope: [:pricing, :schedule, :recurring]
+
+              = f.input :user_time_end, as: :time_picker, wrapper_html: { class: 'form-control-sm' }, label: false
+
+            .run-mode.specific
+              - if f.object.user_times.blank?
+                - f.object.user_times = [Time.zone.now]
+              = f.input :user_times, as: :time_picker_array, label: false, wrapper_html: { class: 'form-control-sm' }
+
+
+      %p.control-label
+        %b
+          = t :on_days, scope: [:pricing, :schedule]
+
+      %div.row{"data-pricing-run-mode" => true }
+        .col-md-3
+          = f.input :run_dates_mode, as: :select, collection: { t(:recurring, scope: [:pricing, :schedule, :run_dates_mode]) => ScheduleRule::RECURRING_MODE,  t(:specific, scope: [:pricing, :schedule, :run_dates_mode]) => ScheduleRule::SPECIFIC_MODE, t(:range, scope: [:pricing, :schedule, :run_dates_mode]) => ScheduleRule::RANGE_MODE }, label: false, input_html: { "data-pricing-run-mode-selector": true }, prompt: t(:choose_dates, scope: [:pricing, :schedule, :run_dates_mode])
+
+        .col-md-9
+          .form-inline
+            .run-mode.recurring
+              = f.input :week_days, as: :week_days, label: false, boolean_style: :inline
+
+            .run-mode.specific
+              - if f.object.user_dates.blank?
+                - f.object.user_dates = [Time.zone.now]
+              = f.input :user_dates, as: :date_picker_array, label: false, wrapper_html: { class: 'form-control-sm' }
+
+            .run-mode.range
+              = f.input :user_date_start, as: :date_picker, label: false
+              .form-unit
+                = t :to, scope: [:pricing, :schedule, :range]
+              = f.input :user_date_end, as: :date_picker, label: false
+
+    .form-action
+      = link_to_remove_association(f) do
+        %button.action--remove{:type => "button"}
+          = t :remove_period, scope: [:pricing, :schedule]

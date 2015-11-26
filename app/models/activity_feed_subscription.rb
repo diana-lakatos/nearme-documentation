@@ -10,7 +10,7 @@ class ActivityFeedSubscription < ActiveRecord::Base
   }
 
   validates_uniqueness_of :followed_identifier, scope: [:follower_id]
-
+  validates_uniqueness_of :follower_id, scope: [:followed_id, :followed_type]
   validates_inclusion_of :followed_type, in: ActivityFeedService::Helpers::FOLLOWED_WHITELIST
 
   before_save :set_followed_identifier

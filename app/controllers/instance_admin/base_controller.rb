@@ -91,7 +91,6 @@ class InstanceAdmin::BaseController < ApplicationController
     'project_types'  => { default_action: 'index' },
     'projects'   => { default_action: 'index' },
     'topics'  => { default_action: 'index' },
-    'users'   => { controller: '/instance_admin/manage/users', default_action: 'index' },
     'spam_reports'  => { default_action: 'index' }
   }
 

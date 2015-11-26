@@ -1,0 +1,41 @@
+.search-frequency {
+
+    label {
+        display: block;
+    }
+
+    .form-control {
+        width: 200px;
+        display: inline-block;
+    }
+
+    .selectize-control {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    &:after {
+        @include fa-icon();
+        content: $fa-var-check-circle;
+        vertical-align: top;
+        margin-left: 15px;
+        font-size: 30px;
+        color: $brand-success;
+        opacity: 0;
+        transition: all .3s ease;
+    }
+
+    &.field-updated:after {
+        opacity: 1;
+    }
+}
+
+.table.saved-searches {
+    .actions {
+        text-align: right;
+    }
+}
+
+.saved-searches__title {
+    width: 50%;
+}

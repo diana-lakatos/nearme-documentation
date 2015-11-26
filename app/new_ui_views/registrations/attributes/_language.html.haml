@@ -1,0 +1,3 @@
+- if only_inputs.empty? || only_inputs.include?(:language)
+  = f.input :language, collection: platform_context.instance.locales.by_created_at, label_method: :display_name,
+    value_method: :code, include_blank: false

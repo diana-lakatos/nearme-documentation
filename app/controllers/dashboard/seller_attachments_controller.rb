@@ -8,10 +8,18 @@ class Dashboard::SellerAttachmentsController < Dashboard::AssetsController
     attachment.user = current_user
     attachment.data = @file
     attachment.set_initial_access_level
-    if attachment.save
-      render partial: 'new_attachment', locals: { attachment: attachment }
+    if current_instance.new_ui?
+      if attachment.save
+        render partial: 'dashboard/shared/attachments/seller_attachment', locals: { attachment: attachment }
+      else
+        render partial: 'errors', locals: { errors: attachment.errors.full_messages.join(', ') }
+      end
     else
-      render partial: 'errors', locals: { errors: attachment.errors.full_messages.join(', ') }
+      if attachment.save
+        render partial: 'new_attachment', locals: { attachment: attachment }
+      else
+        render partial: 'errors', locals: { errors: attachment.errors.full_messages.join(', ') }
+      end
     end
   end
 
@@ -26,7 +34,11 @@ class Dashboard::SellerAttachmentsController < Dashboard::AssetsController
   def destroy
     attachment = @platform_context.instance.seller_attachments.find(params[:id])
     attachment.destroy
-    render text: "$('li[data-seller-attachment=#{attachment.id}]').remove();"
+    if current_instance.new_ui?
+      render text: "$('li[data-attachment=#{attachment.id}]').remove();"
+    else
+      render text: "$('li[data-seller-attachment=#{attachment.id}]').remove();"
+    end
   end
 
   private

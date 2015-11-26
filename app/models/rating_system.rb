@@ -17,7 +17,7 @@ class RatingSystem < ActiveRecord::Base
 
   default_scope { order('active ASC') }
 
-  scope :active, -> { where(active: true) }
+  scope :active, -> { where(active: true).joins(:transactable_type).where(transactable_types: { enable_reviews: true }) }
   scope :active_with_subject, ->(subject) { active.with_subject(subject) }
   scope :with_subject, -> (subject) { where(subject: subject) }
   scope :for_type_of_transactable_type, -> (type) { joins(:transactable_type).where('transactable_types.type = ?', type) }

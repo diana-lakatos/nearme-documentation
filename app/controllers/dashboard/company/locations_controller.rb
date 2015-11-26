@@ -6,7 +6,6 @@ class Dashboard::Company::LocationsController < Dashboard::Company::BaseControll
     @location = @company.locations.build
     @location.administrator_id = current_user.id if current_user.is_location_administrator?
     build_approval_request_for_object(@location) unless @location.is_trusted?
-    AvailabilityRule.default_template.try(:apply, @location)
     render partial: "form"
   end
 

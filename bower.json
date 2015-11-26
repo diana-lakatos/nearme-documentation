@@ -1,0 +1,31 @@
+{
+  "name": "desksnearme",
+  "version": "8.0.2",
+  "homepage": "https://github.com/mdyd-dev/desksnearme",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "jquery.cookie": "~1.4.1",
+    "eonasdan-bootstrap-datetimepicker": "~4.17.37",
+    "font-awesome": "~4.4.0",
+    "bootstrap-sass": "~3.3.5",
+    "swipebox": "~1.4.1",
+    "underscore": "~1.8.3",
+    "selectize": "~0.12.1",
+    "x-editable": "~1.5.1",
+    "blueimp-file-upload": "jquery-file-upload#~9.11.2",
+    "raty": "~2.7.0",
+    "asEvented": "https://github.com/mkuklis/asEvented.git#~0.4.5",
+    "Chart.js": "~1.0.2",
+    "jquery-ui": "~1.11.4",
+    "cropper": "~1.0.0",
+    "jstree": "~3.2.1"
+  }
+}

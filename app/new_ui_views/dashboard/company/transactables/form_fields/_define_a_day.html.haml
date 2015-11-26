@@ -1,0 +1,18 @@
+%hr/
+.define-a-day
+  %h3.control-label
+    = t :title, scope: [:pricing, :daily_rate]
+    = hint_button t(:hint, scope: [:pricing, :daily_rate])
+
+  .form-row-option
+    .form-row-option__choice
+      .radio-standalone
+        = radio_button_tag :define_day, 'regular', f.object.booking_type == 'regular', id: 'define-day-custom'
+        = label_tag 'define-day-custom', t(:business_day, scope: [:pricing, :daily_rate])
+
+
+  .form-row-option
+    .form-row-option__choice
+      .radio-standalone
+        = radio_button_tag :define_day, 'overnight', f.object.booking_type == 'overnight', id: 'define-day-fixed'
+        = label_tag 'define-day-fixed', t(:hotel_day, scope: [:pricing, :daily_rate])

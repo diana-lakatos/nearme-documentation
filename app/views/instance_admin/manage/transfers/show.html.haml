@@ -31,7 +31,7 @@
             = t('instance_admin.manage.transfers.automatic_payout_is_not_available')
 
 
-- if resource.payout_processor.try(:supports_payout?)
+- if resource.payout_attempts.last && resource.payout_attempts.last.payment_gateway.try(:supports_payout?)
   .content-container
     .payout-attemps
       %h4
@@ -50,8 +50,7 @@
                   = t('instance_admin.failed')
                   = " - #{payout_attempt.failure_message}" if payout_attempt.failure_message.present?
                 - if payout_attempt.pending?
-                  = "#{t('instance_admin.pending')} - "
-                  = link_to "check and update status", update_status_instance_admin_manage_payout_path(payout_attempt), method: :post, data: { confirm: 'Are you sure you want to check status?' }
+                  = "#{t('instance_admin.pending')}"
                 = (link_to(t('instance_admin.confirm'), payout_attempt.confirmation_url)).html_safe if payout_attempt.confirmation_url.present?
 
 .content-container
@@ -118,6 +117,8 @@
               %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.reference')
               %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.id')
               %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.lessor')
+              %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.amount')
+              %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.refunded_amount')
               %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.paid_at')
 
           %tbody
@@ -126,5 +127,8 @@
                 %td= payment.payable_type
                 %td= payment.payable_id
                 %td= payment.payable.try(:user).try(:name)
+                %td= number_to_currency_symbol(payment.currency, Money.new(payment.amount))
+                %td= number_to_currency_symbol(payment.currency, Money.new(payment.refunds.sum :amount))
+
                 %td= l(payment.created_at, format: :long)
 

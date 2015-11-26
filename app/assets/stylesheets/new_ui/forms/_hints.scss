@@ -1,0 +1,21 @@
+// display toggler button inside label instead of the hint itself
+.js .form-group .hint {
+    display: none;
+}
+
+// display toggler button inside label instead of the hint itself
+.hint-toggler {
+    margin-left: 5px;
+    border: none;
+    background: none;
+    padding: 5px;
+    font-size: 0;
+
+    &:before {
+        @include fa-icon();
+        font-size: 16px;
+        font-weight: normal;
+        content: $fa-var-question-circle;
+        color: $form-hint-trigger-color;
+    }
+}

@@ -3,8 +3,7 @@
     %article.card-a{"data-equalize" => true}
       %figure
         = link_to project_path(project) do
-          -# tmp rescue - need to recreate versions
-          = image_tag project.cover_photo.image_url(:project_cover)
+          = image_tag project.cover_photo.image_url(:project_thumbnail)
           - if project.try(:pending_collaboration)
             %figcaption
               = t :pending

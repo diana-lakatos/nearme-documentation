@@ -448,7 +448,27 @@ class SecuredParams
       :payment_method_id,
       :payment_method_nonce,
       :start_express_checkout,
-      :insurance_enabled
+      :insurance_enabled,
+      payment_documents_attributes: nested(self.payment_documents)
+    ]
+  end
+
+  def payment_documents
+    [
+      :type,
+      :file,
+      :attachable_id,
+      :attachable_type,
+      :id,
+      :user_id,
+      payment_document_info_attributes: nested(self.payment_document_info)
+    ]
+  end
+
+  def payment_document_info
+    [
+      :document_requirement_id,
+      :attachment_id
     ]
   end
 
@@ -927,7 +947,7 @@ class SecuredParams
       :administrator_id, :name, :location_address,
       :availability_template_id,
       :time_zone,
-      availability_rules_attributes: nested(self.availability_rule),
+      availability_template_attributes: nested(self.availability_template),
       location_address_attributes: nested(self.address),
       listings_attributes: nested(self.transactable(transactable_type)),
       approval_requests_attributes: nested(self.approval_request),
@@ -939,12 +959,13 @@ class SecuredParams
   def transactable(transactable_type)
     [
       :name, :description, :capacity, :confirm_reservations,
-      :location_id, :availability_template_id,
-      :defer_availability_rules, :free,
+      :location_id, :availability_template_id, :free,
       :price_type, :draft, :enabled,
       :hourly_price, :daily_price, :weekly_price, :monthly_price, :fixed_price, :fixed_price_cents,
+      :enable_daily, :enable_weekly, :enable_monthly,
       :hourly_price_cents, :daily_price_cents, :weekly_price_cents, :monthly_price_cents,
       :weekly_subscription_price_cents, :monthly_subscription_price_cents,
+      :enable_weekly_subscription, :enable_monthly_subscription,
       :weekly_subscription_price, :monthly_subscription_price,
       :book_it_out_discount,
       :book_it_out_minimum_qty,
@@ -962,7 +983,6 @@ class SecuredParams
       :rental_shipping_type, :dimensions_template_id,
       photos_attributes: nested(self.photo),
       approval_requests_attributes: nested(self.approval_request),
-      availability_rules_attributes: nested(self.availability_rule),
       photo_ids: [],
       amenity_ids: [],
       category_ids: [],
@@ -971,7 +991,8 @@ class SecuredParams
       waiver_agreement_template_ids: [],
       schedule_attributes: nested(self.schedule),
       document_requirements_attributes: nested(self.document_requirement),
-      upload_obligation_attributes: nested(self.upload_obligation)
+      upload_obligation_attributes: nested(self.upload_obligation),
+      availability_template_attributes: nested(self.availability_template),
     ] +
     Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
   end
@@ -1005,16 +1026,35 @@ class SecuredParams
       :sr_to_hour,
       :sr_every_hours,
       :use_simple_schedule,
+      :unavailable_period_enabled,
       sr_days_of_week: [],
-      schedule_exception_rules_attributes: nested(self.schedule_exclude_rule)
+      schedule_rules_attributes: nested(self.schedule_rule),
+      schedule_exception_rules_attributes: nested(self.schedule_exception_rule)
     ]
   end
 
-  def schedule_exclude_rule
+  def schedule_exception_rule
     [
       :label,
       :duration_range_start,
-      :duration_range_end
+      :duration_range_end,
+      :user_duration_range_start,
+      :user_duration_range_end
+    ]
+  end
+
+  def schedule_rule
+    [
+      :run_hours_mode,
+      :every_hours,
+      :user_time_start,
+      :user_time_end,
+      :run_dates_mode,
+      :user_date_start,
+      :user_date_end,
+      user_times: [],
+      week_days: [],
+      user_dates: [],
     ]
   end
 
@@ -1027,6 +1067,7 @@ class SecuredParams
       :open_minute,
       :open_time,
       :close_time,
+      days: []
     ]
   end
 
@@ -1320,7 +1361,10 @@ class SecuredParams
   end
 
   def saved_search
-    %i(title query)
+    [
+      :title,
+      :query
+    ]
   end
 
   def shipment

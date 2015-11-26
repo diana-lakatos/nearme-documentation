@@ -241,3 +241,4 @@ gem 'parser'
 gem 'routing-filter', '~> 0.5.0'
 
 gem 'autoprefixer-rails'
+gem 'simple-navigation'

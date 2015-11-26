@@ -1,10 +1,13 @@
 <div class='blog-container'>
-  <ul class='tags-filters'>
-    {% for tag in tags %}
-      <li class='tag-filter-link'>{{ tag | tag_filter_link }}</li>
-    {% endfor %}
-  </ul>
-  
+  <div class='blog-nav'>
+    <ul class='tags-filters'>
+      {% for tag in tags %}
+        <li class='tag-filter-link'>{{ tag | tag_filter_link }}</li>
+      {% endfor %}
+    </ul>
+    <a class='rss-feed-button' href='{{ blog_rss_feed_url }}'>RSS Feed</a>
+  </div>
+
   <div class='blog-posts'>
     {% for blog_post in blog_posts %}
       {% include 'blog/blog_posts/blog_post.html' %}

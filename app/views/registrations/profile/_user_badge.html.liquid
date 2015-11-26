@@ -9,16 +9,17 @@
 
 		<div class="vendor-info">
 			<h3>{{user.first_name}}</h3>
-			{% if user.public_profile? %}
-				{% assign displayable_properties = "country_name|phone|mobile_number|company_name|job_title|skills_and_interests|biography|twitter_url|linkedin_url|facebook_url|google_plus_url" | split: "|" %}
-			{% else %}
-				{% assign displayable_properties = "country_name|gender" | split: "|" %}
+			{% if user.country_name != blank %}
+				<p> {{ user.country_name }} </p>
 			{% endif %}
-			{% for property in displayable_properties %}
-				{% if user.properties[property] != blank %}
-					<p>{{ user.properties[property] | filter_text | custom_sanitize }}</p>
-				{% endif %}
-			{% endfor %}
+			{% if user.public_profile? %}
+				{% assign displayable_properties = "phone|mobile_number|company_name|job_title|skills_and_interests|biography|twitter_url|linkedin_url|facebook_url|google_plus_url" | split: "|" %}
+				{% for property in displayable_properties %}
+					{% if user[property] != blank %}
+						<p>{{ user[property] | filter_text | custom_sanitize }}</p>
+					{% endif %}
+				{% endfor %}
+			{% endif %}
 		</div>
 
 		<a href="{{user.user_message_path}}" rel="modal">

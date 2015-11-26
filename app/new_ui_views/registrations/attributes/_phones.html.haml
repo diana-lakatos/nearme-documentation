@@ -1,0 +1,13 @@
+- if only_inputs.empty? || only_inputs.include?(:phone)
+  %div{'data-phone-fields-container' => true}
+    = f.input :country_name, :as => :select, :collection => user_country_name_options, :selected => user_country_default(@country), input_html: { 'data-country-selector' => true, class: 'selectpicker', "data-live-search" => "true", autocomplete: false }, :required => true, include_blank: true
+
+    - calling_code = '&nbsp;'
+    - calling_code = "+#{f.object.country.calling_code}" if f.object.country
+
+    = f.input :phone, as: :tel, prefix: calling_code, required: true, input_html: { data: { 'phone': true }}
+    = f.input :mobile_number, as: :tel, required: true,input_html: { data: { 'mobile-number': true }}, prefix: calling_code
+
+    = label_tag do
+      = check_box_tag "#{f.object.class.name.underscore}_mobile_same_as_phone", '1', (f.object.phone == f.object.mobile_number), data: { 'same-as-phone-checkbox' => true }
+      = "Same as phone"
