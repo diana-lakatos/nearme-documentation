@@ -13,6 +13,7 @@ class UserBlogPost < ActiveRecord::Base
   mount_uploader :author_avatar_img, AuthorAvatarUploader
 
   validates :title, :published_at, :user, :content, presence: true
+  validates :title, :slug, length: { maximum: 255 }
 
   scope :by_date, -> { order('published_at desc') }
   scope :published, -> { by_date.where('published_at < ? OR published_at IS NULL', Time.zone.now) }
@@ -42,6 +43,10 @@ class UserBlogPost < ActiveRecord::Base
 
   def to_liquid
     @user_blog_post_drop ||= UserBlogPostDrop.new(self)
+  end
+
+  def published?
+    published_at <= Time.zone.now
   end
 
   private

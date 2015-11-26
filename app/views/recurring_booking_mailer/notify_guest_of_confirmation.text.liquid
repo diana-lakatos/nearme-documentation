@@ -9,7 +9,7 @@ What: {{ listing.name }} x {{ recurring_booking.quantity }}
 Starting at:
 {{ recurring_booking.start_date }}
 
-Total: {{ recurring_booking.total_price }}
+Total: {{ recurring_booking.subtotal_price_for_guest }}
 
 You can manage your booking here: {{ platform_context.host | append:recurring_booking.bookings_dashboard_url_with_tracking | append:signature_for_tracking }}
 

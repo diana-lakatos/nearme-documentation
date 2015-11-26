@@ -35,9 +35,7 @@ FactoryGirl.define do
 
     factory :always_open_listing do
       after(:create) do |listing|
-        listing.availability.each_day do |dow, rule|
-          listing.availability_rules.create!(:day => dow, :open_hour => 9, :close_hour => 18)
-        end
+        listing.availability_template = AvailabilityTemplate.find_by(name: '24/7')
         listing.save!
       end
     end

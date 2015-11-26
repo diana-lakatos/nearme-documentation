@@ -1,0 +1,3 @@
+%h3= t('forms.product_form.attachments')
+
+= f.input :attachment, as: :attachment, collection: @attachments, upload_url: dashboard_seller_attachments_path, label: false, attachment_template: "dashboard/shared/attachments/seller_attachment"

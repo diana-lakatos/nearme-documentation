@@ -1,0 +1,16 @@
+$button-mid-min-width: 150px;
+
+%button-mid-width {
+    min-width: $button-mid-min-width;
+}
+
+.btn-default:hover {
+    border-color: darken($brand-primary, 20%);
+    color: darken($brand-primary, 20%);
+    background: #fff;
+}
+
+.btn-primary:hover {
+    background: darken($brand-primary, 20%);
+    color: #fff;
+}

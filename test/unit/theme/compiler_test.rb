@@ -18,6 +18,8 @@ class CompilerTest < ActiveSupport::TestCase
 
   context '#generate_and_update_assets' do
     should 'compile a css file and save it to the Theme' do
+      Theme.any_instance.stubs(:theme_new_dashboard_digest).returns('digest')
+      Theme::Compiler.any_instance.stubs(:cumulative_digest).returns('digest')
       @compiler.generate_and_update_assets
 
       assert_not_nil @theme.reload.compiled_stylesheet
@@ -33,6 +35,7 @@ class CompilerTest < ActiveSupport::TestCase
     should 'not compile css if digests are the same' do
       Theme.any_instance.stubs(:theme_digest).returns('digest')
       Theme.any_instance.stubs(:theme_dashboard_digest).returns('digest')
+      Theme.any_instance.stubs(:theme_new_dashboard_digest).returns('digest')
       Theme::Compiler.any_instance.stubs(:cumulative_digest).returns('digest')
       @compiler.expects(:create_compiled_file).never
       @compiler.generate_and_update_assets

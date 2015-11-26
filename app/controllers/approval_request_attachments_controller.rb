@@ -6,6 +6,7 @@ class ApprovalRequestAttachmentsController < ApplicationController
 
   def create
     template = ApprovalRequestAttachmentTemplate.find(params[:approval_request_attachment_template_id])
+
     @attachment = ApprovalRequestAttachment.new(
       file: params[:file],
       uploader_id: current_user.id,
@@ -14,10 +15,19 @@ class ApprovalRequestAttachmentsController < ApplicationController
       hint:     template.hint,
       required: template.required
     )
-    if @attachment.save
-      render partial: 'approval_requests/uploaded_attachment', locals: {attachment: @attachment}
+
+    if current_instance.new_ui?
+      if @attachment.save
+        render partial: 'dashboard/shared/attachments/approval_request_attachment', locals: { attachment: @attachment }
+      else
+        render partial: 'dashboard/shared/errors', locals: { errors: @attachment.errors.full_messages.join(', ') }
+      end
     else
-      render partial: 'approval_requests/failed_attachment'
+      if @attachment.save
+        render partial: 'approval_requests/uploaded_attachment', locals: {attachment: @attachment}
+      else
+        render partial: 'approval_requests/failed_attachment'
+      end
     end
   end
 

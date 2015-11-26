@@ -8,6 +8,9 @@ class Transactable < ActiveRecord::Base
   include Searchable
   include SitemapService::Callbacks
   include SellerAttachments
+    # == Helpers
+  include Listing::Search
+  include AvailabilityRule::TargetHelper
 
   DEFAULT_ATTRIBUTES = %w(name description capacity)
 
@@ -15,11 +18,13 @@ class Transactable < ActiveRecord::Base
 
   RENTAL_SHIPPING_TYPES = %w(no_rental delivery pick_up both).freeze
 
+  PRICE_TYPES = [:hourly, :weekly, :daily, :monthly, :fixed, :exclusive, :weekly_subscription, :monthly_subscription]
+
   has_custom_attributes target_type: 'ServiceType', target_id: :transactable_type_id
   has_metadata accessors: [:photos_metadata]
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
 
-  has_many :availability_rules, -> { order 'day ASC' }, as: :target, dependent: :destroy, inverse_of: :target
+  has_many :availability_templates, as: :parent
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :amenity_holders, as: :holder, dependent: :destroy, inverse_of: :holder
   has_many :amenities, through: :amenity_holders, inverse_of: :listings
@@ -51,13 +56,14 @@ class Transactable < ActiveRecord::Base
   belongs_to :instance, inverse_of: :listings
   belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :listings, counter_cache: true
   belongs_to :administrator, -> { with_deleted }, class_name: "User", inverse_of: :administered_listings
+  belongs_to :availability_template
   has_one :dimensions_template, as: :entity
 
   has_one :location_address, through: :location
   has_one :schedule, as: :scheduable, dependent: :destroy
   has_one :upload_obligation, as: :item, dependent: :destroy
 
-  accepts_nested_attributes_for :availability_rules, allow_destroy: true
+  accepts_nested_attributes_for :availability_template
   accepts_nested_attributes_for :photos, allow_destroy: true
   accepts_nested_attributes_for :attachments, allow_destroy: true
   accepts_nested_attributes_for :waiver_agreement_templates, allow_destroy: true
@@ -67,9 +73,20 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :schedule, allow_destroy: true
   accepts_nested_attributes_for :dimensions_template, allow_destroy: true
 
+  # == Callbacks
   before_destroy :decline_reservations
+  before_validation :pass_timezone_to_schedule
   before_save :set_currency
   before_save :set_is_trusted
+  before_validation :set_booking_type_for_free, :set_activated_at, :set_enabled, :nullify_not_needed_attributes,
+    :set_confirm_reservations, :build_availability_template
+  after_save :set_external_id
+  after_save do
+    if availability.try(:days_open).present?
+      self.update_column(:opened_on_days, availability.days_open.sort)
+    end
+    true
+  end
 
   # == Scopes
   scope :featured, -> { where(%{ (select count(*) from "photos" where owner_type LIKE 'Transactable' AND owner_id = "listings".id) > 0  }).
@@ -147,12 +164,6 @@ class Transactable < ActiveRecord::Base
 
   scope :with_date, ->(date) { where(created_at: date) }
 
-  # == Callbacks
-  before_validation :set_activated_at, :set_enabled, :nullify_not_needed_attributes,
-    :set_confirm_reservations
-  after_save :set_external_id
-  after_save { self.update_column(:opened_on_days, availability.days_open.sort) }
-
   # == Validations
   validates_with PriceValidator
   validates_with CustomValidators
@@ -177,12 +188,6 @@ class Transactable < ActiveRecord::Base
     end
   end
 
-  # == Helpers
-  include Listing::Search
-  include AvailabilityRule::TargetHelper
-
-  PRICE_TYPES = [:hourly, :weekly, :daily, :monthly, :fixed, :exclusive, :weekly_subscription, :monthly_subscription]
-
   delegate :latitude, :longitude, to: :location_address, allow_nil: true
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
@@ -194,7 +199,11 @@ class Transactable < ActiveRecord::Base
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, to: :transactable_type
 
-  attr_accessor :distance_from_search_query, :photo_not_required, :categories_not_required
+  attr_accessor :distance_from_search_query, :photo_not_required, :enable_monthly,
+    :categories_not_required, :enable_weekly, :enable_daily, :enable_hourly,
+    :enable_weekly_subscription,:enable_monthly_subscription,
+    :availability_template_attributes, :enable_exclusive_price,
+    :enable_book_it_out_discount
 
   monetize :daily_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :hourly_price_cents, with_model_currency: :currency, allow_nil: true
@@ -215,14 +224,8 @@ class Transactable < ActiveRecord::Base
     ]
   end
 
-  # Defer to the parent Location for availability rules unless this Listing has specific
-  # rules.
-  def availability
-    if defer_availability_rules? && location
-      location.availability
-    else
-      super # See: AvailabilityRule::TargetHelper#availability
-    end
+  def availability_template
+    super || location.try(:availability_template)
   end
 
   def category_ids=ids
@@ -233,15 +236,12 @@ class Transactable < ActiveRecord::Base
     categories & category.descendants
   end
 
-  # Trigger clearing of all existing availability rules on save
-  def defer_availability_rules=(clear)
-    if clear.to_i == 1
-      availability_rules.each(&:mark_for_destruction)
-    end
+  def common_categories_json(category)
+    JSON.generate(common_categories(category).map { |c| { id: c.id, name: c.translated_name }})
   end
 
-  def display_defered_availability_rules?
-    respond_to?(:defer_availability_rules) && !transactable_type.skip_location?
+  def hide_defered_availability_rules?
+    service_type.try(:hide_location_availability)
   end
 
   def set_is_trusted
@@ -249,22 +249,38 @@ class Transactable < ActiveRecord::Base
     true
   end
 
-  # Are we deferring availability rules to the Location?
-  def defer_availability_rules
-    availability_rules.to_a.reject(&:marked_for_destruction?).empty?
+  def set_booking_type_for_free
+    if transactable_type.booking_choices.one? && transactable_type.regular_booking_enabled? && transactable_type.available_price_types.none?
+      self.booking_type ||= 'free'
+      self.action_free_booking = true
+    end
+    true
   end
 
-  alias_method :defer_availability_rules?, :defer_availability_rules
+  def build_availability_template
+    if availability_template_attributes.present?
+      if availability_template_attributes["id"].present?
+        self.availability_template.attributes = availability_template_attributes
+      else
+        availability_template_attributes.merge!({
+          name: 'Custom transactable availability',
+          parent: self
+        })
+        self.availability_template = AvailabilityTemplate.new(availability_template_attributes)
+      end
+    end
+  end
 
   def open_on?(date, start_min = nil, end_min = nil)
     if schedule_booking?
       hour = start_min/60
       minute = start_min - (60 * hour)
       Time.use_zone(timezone) do
-        self.schedule.schedule.occurs_at?(Time.zone.parse("#{date} #{hour}:#{minute}"))
+        t = Time.zone.parse("#{date} #{hour}:#{minute}")
+        self.schedule.schedule.occurs_between?(t - 1.second, t) || self.schedule.schedule.occurs_on?(t)
       end
     else
-      availability.open_on?(:date => date, :start_minute => start_min, :end_minute => end_min)
+      availability.try(:open_on?, date: date, start_minute: start_min, end_minute: end_min)
     end
   end
 
@@ -275,13 +291,12 @@ class Transactable < ActiveRecord::Base
     if params[:page].to_i <= 1
       @start_date = params[:start_date].try(:to_date).try(:beginning_of_day)
     else
-      @start_date = params[:last_occurrence].try(:to_date)
+      @start_date = params[:last_occurrence].in_time_zone
     end
     time_now = Time.now.in_time_zone(timezone)
     @start_date = time_now if @start_date.nil? || @start_date < time_now
     end_date = params[:end_date].try(:to_date).try(:end_of_day)
-    excluded_ranges = schedule.schedule_exception_rules.where('duration_range_end > ?', end_date || time_now)
-      .select('duration_range_start, duration_range_end').map { |ser| ser.duration_range_start..ser.duration_range_end }
+    excluded_ranges = schedule.unavailable_period_enabled ? schedule.schedule_exception_rules.where('duration_range_end > ?', end_date || Time.zone.now).select('duration_range_start, duration_range_end').map { |ser| ser.duration_range_start..ser.duration_range_end.end_of_day } : []
     loop do
       checks_to_be_performed -= 1
       next_occurrences = schedule.schedule.next_occurrences(number_of_occurrences, @start_date)
@@ -480,7 +495,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def booking_days_per_week
-    @booking_days_per_week ||= availability.days_open.length
+    @booking_days_per_week ||= availability.try(:days_open).try(:length)
   end
 
   def booking_nights_per_week
@@ -684,7 +699,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def currency
-    super.presence || transactable_type.try(:default_currency)
+    read_attribute(:currency).presence || transactable_type.try(:default_currency)
   end
 
   def self.search_by_query(attributes = [], query)
@@ -725,6 +740,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def timezone
+    return Time.zone.name if self.location.nil?
     case self.transactable_type.timezone_rule
     when 'location' then self.location.time_zone || Time.zone.name
     when 'seller' then self.location.creator.time_zone || Time.zone.name
@@ -773,6 +789,7 @@ class Transactable < ActiveRecord::Base
     else
       self.fixed_price = Money.new(nil, currency)
       self.action_schedule_booking = false
+      self.schedule = nil
     end
     true
   end
@@ -788,6 +805,10 @@ class Transactable < ActiveRecord::Base
     attributes['hidden'] == '1'
   end
 
+  def pass_timezone_to_schedule
+    schedule.try(:timezone=, timezone)
+  end
+
   def should_create_sitemap_node?
     draft.nil? && enabled?
   end
@@ -800,8 +821,8 @@ class Transactable < ActiveRecord::Base
     if monthly_price_cents.to_i > 0 && availability.days_open.length < 7
       errors.add(:monthly_price, I18n.t('activerecord.errors.models.transactable.attributes.cant_set_montly_price'))
     end
-    unless availability.consecutive_days_open?
-      errors.add(:availability_rules, I18n.t('activerecord.errors.models.transactable.attributes.no_consecutive_days'))
+    unless (availability && availability.consecutive_days_open?)
+      errors.add(:availability_template, I18n.t('activerecord.errors.models.transactable.attributes.no_consecutive_days'))
     end
   end
 

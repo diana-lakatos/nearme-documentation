@@ -15,8 +15,8 @@
           = link_to transactable_type.translated_bookable_noun(10), dashboard_company_transactable_type_transactables_path(transactable_type)
 
   - if HiddenUiControls.find('dashboard/transactables/search').visible?
-    = simple_form_for :search, wrapper: :bs3, :url => dashboard_company_transactable_type_transactables_path(@transactable_type), :method => :get do |f|
-      = f.input :query, label: t('dashboard.items.search.search_your_products'), input_html: { value: (params[:search] || {})[:query] }
+    = simple_form_for '', wrapper: :bs3, :url => dashboard_company_transactable_type_transactables_path(@transactable_type), :method => :get do |f|
+      = f.input :query, label: t('dashboard.items.search.search_your_products'), input_html: { value: params[:query] }
       .row
         .col-md-12
           = f.submit t('dashboard.items.search.search'), class: "btn medium blue pull-right"

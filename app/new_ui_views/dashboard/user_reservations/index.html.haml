@@ -1,0 +1,30 @@
+- title t('dashboard.user_reservations.title_count', count: @reservations.count)
+
+- content_for :page_header do
+  %h1= yield :title
+
+%nav.panel-nav
+  %ul.tabs.pull-left
+    - actions = ['booking_successful', 'upcoming', 'booking_failed']
+    %li{class: actions.include?(params[:action]) ? 'active' : ''}
+      = link_to t('dashboard.user_reservations.upcoming'), upcoming_dashboard_user_reservations_path
+    %li{class: params[:action] == 'archived' ? 'active' : ''}
+      = link_to t('dashboard.user_reservations.archived'), archived_dashboard_user_reservations_path
+
+.panel
+  .panel-body
+    - if @reservations.empty?
+      %p.empty-resultset
+        = t('reservations.no_bookings_html', {bookable_nouns: platform_context.bookable_nouns, type: booking_type_from_action(params[:action])})
+    - else
+
+      .orders-a
+        - if @reservation
+          = render 'dashboard/user_reservations/reservation_successful'
+
+        - (@reservations - [@reservation]).each_with_index do |reservation, index|
+          = render 'dashboard/user_reservations/reservation', reservation: reservation.decorate
+
+
+= render 'modals'
+

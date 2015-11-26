@@ -1,0 +1,191 @@
+@mixin clearfix {
+    &:after {
+        content: "";
+        width: 100%;
+        display: table;
+        clear: both;
+    }
+}
+
+@media (min-width: 768px) {
+    .form-inline {
+        .select.form-control {
+            min-width: 140px;
+        }
+        .form-group, .form-unit {
+            display: inline-block;
+            margin-right: 20px;
+            vertical-align: top;
+            margin-bottom: 10px;
+        }
+
+        .removable-field {
+            margin-bottom: 10px;
+
+            .form-group, .form-unit {
+                margin-bottom: 0;
+            }
+        }
+
+        .control-label {
+            margin-right: 20px;
+        }
+
+        .controls {
+            display: inline-block;
+        }
+
+        .radio, .checkbox, .checkbox-standalone, .radio-standalone {
+            margin-right: 20px;
+
+            input[type=radio], input[type=checkbox] {
+                position: absolute;
+            }
+        }
+
+        + .form-inline, + .form-group {
+            margin-top: 20px;
+        }
+
+        .control-label.block-label {
+            display: block;
+            margin-bottom: 5px;
+            margin-right: 0;
+        }
+    }
+}
+
+// custom input widths
+@media (min-width: 768px) {
+    .form-control-xs,
+    .form-inline .form-control-xs,
+    .form-inline .form-control-xs .input-group {
+        > input, > select, > textarea {
+            max-width: 70px;
+        }
+    }
+
+    .form-control-sm,
+    .form-inline .form-control-sm,
+    .form-control-sm .input-group,
+    .form-inline .form-control-sm .input-group {
+        > input, > select, > textarea {
+            max-width: 140px;
+        }
+    }
+}
+
+
+
+.transactable-schedule-container {
+
+    [data-pricing-run-mode] + p {
+        margin-top: 0;
+    }
+
+    .nested-fields {
+        position: relative;
+    }
+
+    .nested-fields + .nested-fields {
+        margin-top: 50px;
+    }
+
+
+    #main-container .content-container & h4.control-label {
+        margin-left: 15px;
+    }
+
+    .control-label.and {
+        margin-left: 15px;
+    }
+
+    .service_type_schedule_schedule_exception_rules_label {
+        margin-top: 15px;
+    }
+
+    h4 + .fields > .nested-fields > .control-label.and {
+        display: none;
+    }
+
+    .include-form-action {
+        @include clearfix;
+
+        .form-action {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
+
+    .col-md-3 select {
+        width: 100%;
+    }
+
+    .form-inline {
+        .control-group, .form-unit {
+            display: inline-block;
+            margin-right: 20px;
+        }
+    }
+
+    .control-group.switch {
+        margin-left: 15px;
+        label {
+            display: inline-block
+        }
+        .controls {
+            display: inline-block;
+            margin-left: 10px;
+        }
+    }
+
+    .col-xs-11 {
+        margin-left: 0;
+    }
+
+    p.sep.add-availability-wrapper {
+        margin-left: -15px;
+
+        > span:first-child {
+            margin-left: 20px;
+        }
+    }
+
+    .check_boxes {
+        .checkbox {
+            input {
+                position: relative;
+            }
+            label {
+                display: inline;
+            }
+        }
+    }
+
+    .add-entry .btn {
+        @extend .btn-primary;
+    }
+
+    .action--remove {
+        // border: none;
+        // padding: 0;
+        // background: none;
+        font-size: 0;
+
+        &:before {
+            font-size: 12px;
+            content: 'Remove'
+        }
+    }
+
+    .label-offset {
+        margin-top: 50px;
+    }
+
+}
+.add-availability-wrapper > span {
+    display: block;
+    margin-bottom: 10px;
+}

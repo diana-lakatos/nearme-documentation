@@ -9,7 +9,7 @@ module Metadata
       end
 
       def build_photos_metadata_array
-        self.reload.photos.inject([]) do |array, photo| 
+        self.reload.photos.inject([]) do |array, photo|
           array << photo.to_location_metadata
           array
         end

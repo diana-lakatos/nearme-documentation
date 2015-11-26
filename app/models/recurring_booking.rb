@@ -7,6 +7,7 @@ class RecurringBooking < ActiveRecord::Base
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id], :listing)
 
   before_create :store_platform_context_detail
+  after_create :auto_confirm_reservation
 
   attr_encrypted :authorization_token, :payment_gateway_class, :key => DesksnearMe::Application.config.secret_token
 
@@ -110,6 +111,10 @@ class RecurringBooking < ActiveRecord::Base
     elsif cancelled_by_host?
       WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::HostCancelled, self.id)
     end
+  end
+
+  def auto_confirm_reservation
+    confirm! unless listing.confirm_reservations?
   end
 
   def store_platform_context_detail

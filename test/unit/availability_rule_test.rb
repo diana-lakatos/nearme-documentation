@@ -60,17 +60,17 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
   context 'validation' do
 
     should 'not be valid if close hour happens before open hour' do
-      @availability_rule = AvailabilityRule.new(:day => 1, :open_hour => 17, :open_minute => 0, :close_hour => 9, :close_minute => 0)
+      @availability_rule = AvailabilityRule.new(:days => [1], :open_hour => 17, :open_minute => 0, :close_hour => 9, :close_minute => 0)
       assert !@availability_rule.valid?
     end
 
     should 'not be valid if not opened for at least 1 hour' do
-      @availability_rule = AvailabilityRule.new(:day => 1, :open_hour => 0, :open_minute => 0, :close_hour => 0, :close_minute => 45)
+      @availability_rule = AvailabilityRule.new(:days => [1], :open_hour => 0, :open_minute => 0, :close_hour => 0, :close_minute => 45)
       assert !@availability_rule.valid?
     end
 
     should 'be valid if opened for at least 1 hour' do
-      @availability_rule = AvailabilityRule.new(:day => 1, :open_hour => 0, :open_minute => 0, :close_hour => 1, :close_minute => 0)
+      @availability_rule = AvailabilityRule.new(:days => [1], :open_hour => 0, :open_minute => 0, :close_hour => 1, :close_minute => 0)
       assert @availability_rule.valid?
     end
   end
@@ -79,18 +79,6 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
   context "templates" do
     setup do
       @object = Location.new
-    end
-
-    context "applying" do
-      should "clear previous availability rules" do
-        rule = AvailabilityRule.new(:day => 6, :open_hour => 20, :open_minute => 0, :close_hour => 23, :close_minute => 59)
-        @object.availability_rules << rule
-        assert @object.availability.open_on?(:day => 6, :hour => 22)
-
-        @object.availability_template_id = AvailabilityTemplate.first.id
-        assert rule.marked_for_destruction?
-        assert !@object.availability.open_on?(:day => 6, :hour => 22)
-      end
     end
 
     context "M-F9-5" do

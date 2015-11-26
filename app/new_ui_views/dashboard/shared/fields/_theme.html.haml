@@ -1,0 +1,51 @@
+%fieldset
+  %legend= t('dashboard.white_labels.theme.title')
+
+  .row
+    .col-sm-6
+      = f.input :site_name
+      = f.input :tagline
+
+    .col-sm-6
+      = f.input :meta_title
+      = f.input :description, :as => :limited_text, :limit => 250
+
+
+  .row
+    .col-sm-6
+      = f.input :address
+      = f.input :phone_number, as: :string
+    .col-sm-6
+      = f.input :support_email
+      = f.input :contact_email
+
+  .row
+    .col-sm-6
+      = f.input :gplus_url
+      = f.input :twitter_url
+      = f.input :facebook_url
+
+    .col-sm-6
+      = f.input :support_url
+      = f.input :blog_url
+
+
+%fieldset
+  %legend= t('dashboard.white_labels.theme.photos')
+
+  .row
+    - %w(logo_image logo_retina_image favicon_image icon_image icon_retina_image hero_image).each_slice(2) do |image_attrs|
+      .col-sm-4
+        - image_attrs.each do |image_attr|
+          - upload_url = upload_theme_image_dashboard_company_white_label_path(image: image_attr)
+          - delete_url = destroy_theme_image_dashboard_company_white_label_path(image: image_attr)
+          - edit_url = edit_theme_image_dashboard_company_white_label_path(image: image_attr)
+          - thumb_url = f.object.send("#{image_attr}_url")
+
+          = f.input image_attr, as: :image, upload_url: upload_url, upload_attr_name: 'image_data', delete_url: delete_url, edit_url: edit_url, thumb_url: thumb_url, label: t("simple_form.labels.theme.#{image_attr.to_s}_html")
+
+%fieldset
+  %legend= t('dashboard.white_labels.theme.colors')
+  .form-inline
+    - Theme::COLORS.each_with_index do |color, index|
+      = f.input "color_#{color}", as: :color, :label => color.humanize, input_html: { data: { default: hexify(Theme::COLORS_DEFAULT_VALUES[index]), color: color }, value: f.object.hex_color(color).presence || hexify(Theme::COLORS_DEFAULT_VALUES[index])}

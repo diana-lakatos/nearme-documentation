@@ -7,6 +7,10 @@ class UserBlogPostDecorator < UserBlogDecorator
     link_to object.title, user_blog_post_show_path(object.user.id, object), target: '_blank'
   end
 
+  def url_to
+    user_blog_post_show_path(object.user.id, object)
+  end
+
   def author_name
     object.author_name.empty? ? object.user.name : object.author_name
   end
@@ -17,6 +21,10 @@ class UserBlogPostDecorator < UserBlogDecorator
 
   def published_at
     l object.published_at, format: :only_date
+  end
+
+  def published_at_datetime
+    l object.published_at, format: '%Y-%m-%d'
   end
 
   def created_at

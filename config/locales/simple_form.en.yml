@@ -5,6 +5,7 @@ en:
       few: "%{count} characters left"
       one: "1 character left"
       zero: "0 characters left"
+    required: 'required'
   simple_form:
     "yes": 'Yes'
     "no": 'No'
@@ -34,7 +35,7 @@ en:
       support_ticket_message:
         message: "Message"
       user_message:
-        body: "Body"
+        body: "Your message"
       boarding_form:
         company:
           company_address:
@@ -82,10 +83,10 @@ en:
         service_fee_guest_percent: 'Service fee paid by BUYER'
         service_fee_host_percent: 'Service fee paid by SELLER'
       domain:
-        google_analytics_tracking_code: "GA Tracking Code"
+        google_analytics_tracking_code: "Google Analytics Tracking Code"
         secured: "Enable HTTPS"
         use_as_default: "Use as default domain"
-        name: "Domain"
+        name: "Your Domain"
         certificate_body: "Certificate body"
         private_key: "Private key"
         certificate_chain: "Certificate chain (optional for HTTPS)"
@@ -103,9 +104,10 @@ en:
 
       availability_template:
         custom: 'Custom'
-        use_parent_availability: 'Use Location availability'
+        use_parent_availability: 'Location Hours'
         full_name:
-          working_week: 'Working Week (Mon - Fri, 9:00 AM - 5:00 PM)'
+          working_week: 'Business Hours'
+          24/7: '24/7'
       availability_rule:
         open: 'Open'
 
@@ -142,17 +144,23 @@ en:
         address: Address
         contact_email: "Contact email"
         support_email: "Support email"
-        support_url: "Support url"
+        support_url: "Support URL"
         blog_url: Blog
         facebook_url: "Facebook URL"
         twitter_url: "Twitter URL"
-        gplus_url: "Gplus URL"
-        favicon_image: 'Favicon (16 x 16px or 32 x 32px)'
+        gplus_url: "Goggle+ URL"
+        favicon_image: 'Favicon (16x16px or 32x32px)'
+        favicon_image_html: 'Favicon (16&times;16px or 32&times;32px)'
         hero_image: 'Hero image'
-        icon_image: 'Icon (60 x 60px)'
-        icon_retina_image: 'Icon Retina (120 x 120px)'
-        logo_image: 'Logo (240 x 60px)'
-        logo_retina_image: 'Logo Retina (480 x 120px)'
+        hero_image_html: 'Hero image'
+        icon_image: 'Icon (60x60px)'
+        icon_image_html: 'Icon (60&times;60px)'
+        icon_retina_image: 'Icon Retina (120x120px)'
+        icon_retina_image_html: 'Icon Retina (120&times;120px)'
+        logo_image: 'Logo (240x60px)'
+        logo_image_html: 'Logo (240&times;60px)'
+        logo_retina_image: 'Logo Retina (480x120px)'
+        logo_retina_image_html: 'Logo Retina (480&times;120px)'
         call_to_action: "CTA button text"
         homepage_content: "Homepage HTML"
         homepage_css: "Homepage CSS"
@@ -186,7 +194,7 @@ en:
         location_type: 'Location type'
         currency: 'Currency'
         location_address:
-          address: 'Address'
+          address: 'Location address'
 
       location:
         name: 'Location name'
@@ -233,6 +241,23 @@ en:
           ach_update: 'Update bank account details for ACH payouts'
           ach_error: 'Unfortunately we could not process the credentials you have entered.'
 
+        braintree_marketplace_merchant_account_attributes:
+          bank_routing_number: 'Routing Number'
+          bank_account_number: 'Account Number'
+          date_of_birth: 'Date of Birth'
+          first_name: 'First Name'
+          last_name: 'Last Name'
+          email: 'E-mail'
+          street_address: 'Street Address'
+          city: 'City'
+          state: 'State'
+          postal_code: 'Postal Code'
+
+        white_label_enabled: 'Enable'
+        listings_public: 'Enable public listings'
+        payments_mailing_address:
+          address: 'Address to send checks'
+
       transactable:
         name: "Item Title"
         description: "Item description"
@@ -253,8 +278,8 @@ en:
           hourly: 'hour'
           exclusive_price: 'full quantity'
           per_unit: "per unit"
-          weekly_subscription: 'weekly'
-          monthly_subscription: 'monthly'
+          weekly_subscription: 'weekly subscription'
+          monthly_subscription: 'monthly subscription'
         book_it_out_minimum_qty: "Book It Out minimum quantity"
         book_it_out_discount: "Book It Out discount"
         amenities: "Amenities"
@@ -340,6 +365,8 @@ en:
         depth_unit: "Type of Unit"
 
     placeholders:
+      user_message:
+        body: "Leave a message..."
       boarding_form:
         product_form:
           name: 'Name'
@@ -392,6 +419,10 @@ en:
         description: 'Give a brief description of your company.'
         company_address:
           address: 'Where is your store located?'
+        braintree_marketplace_merchant_account_attributes:
+          region: 'e.g. CA'
+        domain_attributes:
+          name: 'e.g. example.com'
       location:
         email: 'Your booking email'
         special_notes: "For example, how your %{lessees} should check in, your Wi-Fi password, whether you have pets, or other special information relevant to your %{lessee}'s stay"
@@ -444,6 +475,8 @@ en:
       zone:
         name: 'What is the name of the zone?'
         description: 'Enter description'
+      user:
+        email: 'e.g. name@company.com'
 
     prompts:
       companies:
@@ -476,6 +509,12 @@ en:
         allowed_countries: "Leave blank to use all countries"
         allowed_currencies: "Leave blank to use all currencies"
         action_schedule_booking: 'Use recurring rules to define recurring services instead of simple availability rules'
+      availability_template:
+        description:
+          working_week: 'Monday - Friday, 9am - 5pm'
+          24/7: 'Sunday - Saturday, 12am-11:59pm'
+          location_hours: 'Monday - Friday, 9am - 5pm'
+          custom: 'Define Custom Availability'
       user:
         mobile_number: ''
         phone: ''

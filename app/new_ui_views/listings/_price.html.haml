@@ -1,0 +1,94 @@
+- if f.object.transactable_type.schedule_booking_enabled?
+  - content_for :booking_type_schedule_tab_content do
+    %div{:class => "control-group #{"error" if f.object.errors.include?(:fixed_price).present?}"}
+      = f.label :daily_price, :price, :class => 'control-label flush-top' do
+        %abbr{:title => "required"}= t('simple_form.required.mark')
+        =t('simple_form.labels.listings.price')
+      .controls
+        -if f.object.transactable_type.action_price_per_unit?
+          = render 'listings/price_field', :f => f, :price => 'fixed', :label => t("simple_form.labels.transactable.price.per_unit"), :include_checkbox => false
+        -else
+          = render 'listings/price_field', :f => f, :price => 'fixed', :label => t("simple_form.labels.transactable.price.fixed"), :include_checkbox => false
+    - if form_fields.find{ |h| h['transactable'] == 'exclusive_price' }
+      %div.control-group
+      = f.label :exclusive_price, :price, :class => 'control-label flush-top' do
+        =t('simple_form.labels.listings.exclusive_price')
+      .controls
+        = render 'listings/price_field', :f => f, :price => 'exclusive', :label => t("simple_form.labels.transactable.price.exclusive_price"), :include_checkbox => false
+    - if form_fields.find{ |h| h['transactable'] == 'book_it_out' }
+      %div.price_container
+        =f.input :book_it_out_discount, label: t('simple_form.labels.transactable.book_it_out_discount'), hint: t('simple_form.hints.transactable.book_it_out_discount')
+        =f.input :book_it_out_minimum_qty, label: t('simple_form.labels.transactable.book_it_out_minimum_qty'), hint: t('simple_form.hints.transactable.book_it_out_minimum_qty')
+
+- if f.object.transactable_type.action_subscription_booking
+  - content_for :booking_type_subscription_tab_content do
+    %div{:class => "control-group #{"error" if f.object.errors[:monthly_subscription].present? || f.object.errors[:weekly_subscription].present?}"}
+      = f.label :daily_price, :price, :class => 'control-label flush-top' do
+        %abbr{:title => "required"}= t('simple_form.required.mark')
+        =t('simple_form.labels.listings.price')
+      .controls
+        .price-inputs-subscription{'data-period' => 'subscription', style: "#{'display: none;' if f.object.overnight_booking?}"}
+          %label.checkbox
+            = f.check_box :action_subscription_booking, checked: only_one_option_available?(f.object, 'subscription')
+            = t('simple_form.labels.listings.subscription_periods')
+
+          .price-input-options
+            .price-inputs-wrapper.left
+              = render 'listings/price_field', :f => f, :price => 'weekly_subscription', :label => t("simple_form.labels.transactable.price.weekly_subscription"), :include_checkbox => true
+              = render 'listings/price_field', :f => f, :price => 'monthly_subscription', :label => t("simple_form.labels.transactable.price.monthly_subscription"), :include_checkbox => true
+- if overnight_or_regular_booking?(f.object.transactable_type)
+  - content_for :booking_type_regular_tab_content do
+    %div{:class => "control-group #{"error" if f.object.errors.include?(:free).present?}"}
+      = f.label :daily_price, :price, :class => 'control-label flush-top' do
+        %abbr{:title => "required"}= t('simple_form.required.mark')
+        =t('simple_form.labels.listings.price')
+
+      .controls
+        - if f.object.transactable_type.action_daily_booking || f.object.transactable_type.action_weekly_booking || f.object.transactable_type.action_monthly_booking
+          %div.price-inputs-daily
+            %label.checkbox
+              = f.check_box :action_daily_booking, checked: only_one_option_available?(f.object, 'daily')
+              = render 'listings/periods_label', transactable: f.object
+
+            .price-input-options
+              .price-inputs-wrapper.left
+                - f.object.transactable_type.daily_options_names.each do |price|
+                  %div{'data-period' => price, style: "#{'display: none;' if price != 'daily' && f.object.recurring_booking?}"}
+                    = render 'listings/price_field', :f => f, :price => price, :label => t("simple_form.labels.transactable.price.#{price}"), :include_checkbox => true
+
+        - if f.object.transactable_type.action_subscription_booking
+          .price-inputs-subscription
+            %label.checkbox
+              = f.check_box :action_subscription_booking, checked: only_one_option_available?(f.object, 'subscription')
+              = t('simple_form.labels.listings.subscription_periods')
+            .price-input-options
+              .price-inputs-wrapper.left
+                %div
+                  = render 'listings/price_field', :f => f, :price => 'weekly_subscription', :label => t("simple_form.labels.transactable.price.weekly_subscription"), :include_checkbox => true
+                  = render 'listings/price_field', :f => f, :price => 'monthly_subscription', :label => t("simple_form.labels.transactable.price.monthly_subscription"), :include_checkbox => true
+
+        - if f.object.transactable_type.action_hourly_booking
+          %div.price-inputs-hourly{'data-period' => 'hourly', style: "#{'display: none;' if f.object.overnight_booking?}"}
+            %label.checkbox
+              = f.check_box :action_hourly_booking, checked: only_one_option_available?(f.object, 'hourly')
+              = t("simple_form.labels.transactable.price_hourly")
+
+            .price-input-options
+              .price-inputs-wrapper.left
+                = render 'listings/price_field', :f => f, :price => :hourly, :label => t("simple_form.labels.transactable.price.hourly")
+
+        - if f.object.errors.include?(:action_hourly_booking).present?
+          %p.error-block= f.object.errors[:action_hourly_booking].first
+
+        - if f.object.transactable_type.action_free_booking
+          %div.price-inputs-free
+            %label.checkbox
+              = f.check_box :action_free_booking, checked: only_one_option_available?(f.object, 'free')
+              = t("simple_form.labels.transactable.price_free")
+
+        - if f.object.errors.include?(:price_type).present?
+          %p.error-block= f.object.errors[:price_type].first
+
+        - if f.object.errors.include?(:free).present?
+          %p.error-block
+            = t('errors.messages.free_if_zero')

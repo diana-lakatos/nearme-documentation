@@ -6,6 +6,22 @@ class Dashboard::ReviewsController < Dashboard::BaseController
     @collections = reviews_service.get_reviews_collection(completed_tab)
   end
 
+  def rate
+    @status = 'uncompleted'
+    @rating_systems = reviews_service.get_rating_systems
+    @collections = reviews_service.get_reviews_collection(false)
+
+    render action: :index
+  end
+
+  def completed
+    @status = 'completed'
+    @rating_systems = reviews_service.get_rating_systems
+    @collections = reviews_service.get_reviews_collection(true)
+
+    render action: :index
+  end
+
   def create
     @review = current_user.reviews.build
     @review.transactable_type_id = reviews_service.get_transactable_type_id
@@ -26,12 +42,13 @@ class Dashboard::ReviewsController < Dashboard::BaseController
     @review.destroy
     @review.recalculate_reviewable_average_rating
     flash[:success] = t('flash_messages.dashboard.reviews.review_deleted')
-    redirect_to dashboard_reviews_path
+    redirect_to current_instance.new_ui? ? completed_dashboard_reviews_path : dashboard_reviews_path
   end
 
   def update
     @review = current_user.reviews.find(params[:id])
     @review.transactable_type_id = reviews_service.get_transactable_type_id
+
     if @review.update(review_params)
       rating_answers_params.values.each do |rating_answer_param|
         if rating_answer_param[:id]

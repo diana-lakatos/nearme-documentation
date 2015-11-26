@@ -44,3 +44,4 @@ class TransactableTypeDecorator < Draper::Decorator
   end
 
 end
+

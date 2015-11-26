@@ -1,0 +1,23 @@
+%b= address.full_name
+
+- if address.company.present?
+  %br/
+  = address.company
+
+%br/
+
+= address.address1
+- if address.address2.present?
+  %br/
+  = address.address2
+
+%br/
+
+= address.city
+,
+= address.state.abbr
+= address.zipcode
+
+%br/
+
+= address.country.name

@@ -20,7 +20,7 @@ Feature: A user can add a space
 Scenario: An unregistered user starts a draft, comes back to it, and saves it
     And I fill in valid space details
     And I press "Submit"
-    Then I should see "Please complete all fields! Alternatively, you can Save a Draft for later."
+    Then I should see "Please complete all fields! Alternatively, you can Save for later."
     And I fill in "Custom Att" with "MyCustomAttributeIsHere"
     And I press "Submit"
     Then I should see "Your Desk was listed!"

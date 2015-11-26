@@ -4,7 +4,7 @@ FactoryGirl.define do
   factory :rating_system do
     instance
     subject { %w(transactable host guest).sample }
-    transactable_type { TransactableType.first }
+    transactable_type { TransactableType.first || FactoryGirl.create(:transactable_type) }
     active true
   end
 

@@ -608,7 +608,7 @@ class ReservationTest < ActiveSupport::TestCase
       @user = FactoryGirl.create(:user)
 
       @listing = FactoryGirl.create(:transactable, quantity: 2)
-      @listing.availability_template_id = AvailabilityRule.templates.first.id
+      @listing.availability_template = AvailabilityTemplate.first
       @listing.save!
 
       @reservation = Reservation.new(:user => @user, :quantity => 1, payment_method: @manual_payment_method)
@@ -645,6 +645,7 @@ class ReservationTest < ActiveSupport::TestCase
         reservation.confirm
 
         @reservation.add_period(@monday)
+        @reservation.validate_all_dates_available
         refute @reservation.valid?
       end
     end

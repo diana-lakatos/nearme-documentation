@@ -1,0 +1,18 @@
+.row.unavailable-period.schedule-exception-rule.nested-fields
+  .col-xs-11
+    = f.input :id, as: :hidden
+    .form-inline
+      = f.input :user_duration_range_start, as: :date_picker, wrapper_html: { class: 'form-control-sm'}, label: t('exception_start', scope: [:pricing, :schedule]),  label_html: { class: 'block-label' }, required: false
+
+      .form-unit.label-offset
+        %b
+          = t :from_to_separator, scope: [:pricing, :unavailability]
+
+      = f.input :user_duration_range_end, as: :date_picker, wrapper_html: { class: 'form-control-sm label-offset'}, label: false, required: false
+
+    = f.input :label, required: false
+
+  .col-xs-1
+    = link_to_remove_association(f) do
+      %button.action--remove{:type => "button"}
+        = t(:remove_period, scope: [:pricing, :unavailability])

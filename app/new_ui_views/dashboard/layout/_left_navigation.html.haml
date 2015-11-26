@@ -1,0 +1,6 @@
+%aside.sidebar{role: "complementary"}
+  %nav.nav-primary
+    .dashboard
+      = link_to 'Dashboard', dashboard_path
+
+    = render_navigation expand_all: true, context: :dashboard

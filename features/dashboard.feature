@@ -105,15 +105,13 @@ Feature: As a user of the site
     And I am browsing transactables
     When I edit first transactable
     And  I select custom availability:
-        | Day | Availabile | Open Time | Close Time |
-        | 1   | Yes        | 9:00      | 17:00      |
-        | 2   | Yes        | 9:00      | 17:00      |
+        | Open Time | Close Time | Days |
+        | 9:00      | 17:00      | 1,2  |
     And I submit the transactable form
     And I should see "Great, your listing's details have been updated."
     Then the transactable should have availability:
-        | Day | Availabile | Open Time | Close Time |
-        | 1   | Yes        | 9:00      | 17:00      |
-        | 2   | Yes        | 9:00      | 17:00      |
+        | Open Time | Close Time | Days |
+        | 9:00      | 17:00      | 1,2  |
 
   Scenario: A user can't manage blog if blogging is disabled on instance
     Given I visit blog section of dashboard

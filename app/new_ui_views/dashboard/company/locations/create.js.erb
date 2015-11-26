@@ -1,0 +1,19 @@
+(function($){
+  'use strict';
+
+  $('html').trigger('hide.dialog');
+
+  var
+    select = $('[data-location-field]')[0].selectize,
+    actionsContainer = $('[data-location-actions]');
+
+  select.addOption({ value: '<%= @location.id %>', text: '<%= @location.name %>' });
+  select.refreshOptions();
+
+  $('[data-location-actions] [data-location-id]').attr('hidden', true)
+  actionsContainer.append('<%= escape_javascript( render @location ) %>');
+  $('main').prepend('<%= escape_javascript( render "dashboard/shared/flash") %>');
+
+}(window.jQuery));
+
+<% flash.discard %>

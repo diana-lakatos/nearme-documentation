@@ -1,0 +1,96 @@
+//
+// Pagination (multiple pages)
+// --------------------------------------------------
+.pagination {
+    display: block;
+    text-align: center;
+
+    > li {
+        > a,
+        > span {
+            display: inline-block;
+            float: none;
+            margin-right: 5px;
+            padding: 9px 6px;
+            min-width: 40px;
+            text-align: center;
+        }
+    }
+
+    .next > a span, .prev > a span {
+        font-size: 0;
+        &:before {
+            @include fa-icon();
+            font-size: 18px;
+        }
+    }
+
+    .next > a span:before {
+        content: $fa-var-angle-right;
+    }
+
+    .prev > a span:before {
+        content: $fa-var-angle-left;
+    }
+
+    &.pull-right > li {
+        > a,
+        > span {
+            margin-right: 0;
+            margin-left: 5px;
+        }
+    }
+
+    @media (min-width: $screen-desktop) {
+        float: right;
+
+        > li {
+            > a,
+            > span {
+                padding: $padding-base-vertical 6px;
+                min-width: 30px;
+            }
+        }
+
+    }
+
+    // hide before and after gap elements on small screens
+
+    @media (max-width: $screen-xs-max) {
+        .prev ~ li {
+            display: none;
+        }
+
+        .prev ~ .gap ~ li {
+            display: inline-block;
+        }
+
+        .prev ~ .gap ~ .gap {
+            display: inline-block;
+        }
+
+        .prev ~ .gap ~ .gap {
+            display: none;
+        }
+
+        .prev ~ .gap ~ .gap ~ li {
+            display: none;
+        }
+
+        .prev ~ .gap ~ .gap ~ .next{
+            display: inline-block;
+        }
+
+        li:first-child:not(.prev) ~ .gap {
+            display: none;
+        }
+
+        li:first-child:not(.prev) ~ .gap ~ li {
+            display: none;
+        }
+
+        li:first-child:not(.prev) ~ .gap ~ .next {
+            display: inline-block
+        }
+    }
+}

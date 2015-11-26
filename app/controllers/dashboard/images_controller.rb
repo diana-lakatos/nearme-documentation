@@ -11,13 +11,22 @@ class Dashboard::ImagesController < Dashboard::BaseController
     end
     @image.image = @image_data
     if @image.save
+
+      sizes = {}
+      @image.image.thumbnail_dimensions.each_with_index do |dimensions, index|
+        sizes[dimensions[0]] = { width: dimensions[1][:width], height: dimensions[1][:height], url: @image.image_url(dimensions[0].to_sym) }
+      end
+
+      sizes[:full] = { url: @image.image_url }
+
       render :text => {
         :id => @image.id,
         :transactable_id => @image.viewable_id,
         :thumbnail_dimensions => @image.image.thumbnail_dimensions[:medium],
         :url => @image.image_url(:medium),
         :destroy_url => dashboard_image_path(@image),
-        :resize_url =>  edit_dashboard_image_path(@image)
+        :resize_url =>  edit_dashboard_image_path(@image),
+        :sizes => sizes
       }.to_json,
       :content_type => 'text/plain'
     else

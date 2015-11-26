@@ -61,7 +61,7 @@ module DesksnearMe
     config.assets.precompile += [
       "vendor/jquery.backgroundSize.min.js","vendor/respond.proxy.js", "vendor/respond.min.js",
       "admin.js", "blog.js", "blog_admin.js", "chrome_frame.js", "instance_admin.js", "community.js",
-      "platform_home.js", "analytics/sessioncam.js", "blog/admin/*", 'dashboard.js'
+      "platform_home.js", "analytics/sessioncam.js", "blog/admin/*", 'dashboard.js', "new_ui.js", "new_ui/vendor/modernizr.js"
     ]
     config.assets.precompile += [
       "browser_specific/ie8.css", "admin.css", "blog.css", "blog_admin.css", "errors.css",
@@ -186,5 +186,8 @@ module DesksnearMe
     config.force_disable_es = false
     config.active_merchant_billing_gateway_app_id = 'NearMe_SP'
     config.redis_cache_client = NullRedisCache
+
+    config.attachment_upload_file_types = %w(doc docx xls odt ods pdf rar zip tar tar.gz swf mp4 css txt text js xlsx)
+    config.private_upload_file_types = %w(jpg jpeg png pdf doc docx)
   end
 end

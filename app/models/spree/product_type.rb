@@ -17,7 +17,7 @@ class Spree::ProductType < TransactableType
   end
 
   def create_rating_systems
-    [RatingConstants::GUEST, RatingConstants::TRANSACTABLE].each do |subject|
+    [RatingConstants::HOST, RatingConstants::TRANSACTABLE].each do |subject|
       rating_system = self.rating_systems.create!(subject: subject)
       RatingConstants::VALID_VALUES.each { |value| rating_system.rating_hints.create!(value: value) }
     end

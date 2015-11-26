@@ -40,6 +40,7 @@ class InstanceAdmin::Manage::ServiceTypesController < InstanceAdmin::Manage::Bas
 
   def update
     if @service_type.update_attributes(service_type_params)
+      @service_type.schedule.try(:create_schedule_from_schedule_rules) if PlatformContext.current.instance.priority_view_path == 'new_ui'
       flash[:success] = t 'flash_messages.instance_admin.manage.service_types.updated'
       redirect_to instance_admin_manage_service_types_path
     else
@@ -79,7 +80,7 @@ class InstanceAdmin::Manage::ServiceTypesController < InstanceAdmin::Manage::Bas
   end
 
   def find_service_type
-    @service_type = ServiceType.find(params[:id])
+    @service_type = TransactableType.find(params[:id])
   end
 
   def service_type_state_params

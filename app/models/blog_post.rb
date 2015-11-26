@@ -10,6 +10,7 @@ class BlogPost < ActiveRecord::Base
   delegate :instance, to: :blog_instance
 
   before_validation :sanitize_content
+  validates :title, :slug, length: { maximum: 255 }
   validates_presence_of :blog_instance, :user, :title, :content, :published_at
 
   mount_uploader :header, HeroImageUploader

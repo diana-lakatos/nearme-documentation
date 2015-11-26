@@ -51,7 +51,7 @@ class PhotoUploader < BaseImageUploader
     process resize_to_fill: [dimensions[:large][:width], dimensions[:large][:height]]
   end
 
-  version :space_listing, from_version: :transformed, if: :generate_transactable_versions? do
+  version :space_listing, from_version: :transformed do
     process resize_to_fill: [dimensions[:space_listing][:width], dimensions[:space_listing][:height]]
   end
 

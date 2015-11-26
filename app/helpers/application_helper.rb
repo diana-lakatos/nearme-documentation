@@ -274,6 +274,14 @@ module ApplicationHelper
     end
   end
 
+  def will_paginate_dashboard(collection, options = {})
+    options[:renderer] = BuySellMarket::WillPaginateDashboardLinkRenderer::LinkRenderer
+    options[:class] = ''
+    options[:inner_window] = 1
+    options[:outer_window] = 0
+    will_paginate collection, options
+  end
+
   def active_class(arg1, arg2, class_name = 'active')
     class_name if arg1 == arg2
   end

@@ -4,5 +4,5 @@
   %td= ticket.target.present? ? link_to(ticket.target.name, ticket.show_target_path) : 'Deleted'
   %td= support_author(ticket.first_message)
   %td
-    %abbr.timeago= timeago(ticket.created_at)
+    %abbr.timeago= timeago(ticket.updated_at)
   %td= ticket.state.titleize

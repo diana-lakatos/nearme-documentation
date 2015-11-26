@@ -6,6 +6,11 @@ en:
           attributes:
             base:
               file_cannot_be_empty: "File cannot be empty"
+        product_form:
+          attributes:
+            base:
+              label_empty: "Document requirements label can't be blank"
+              description_empty: "Document requirements description can't be blank"
   activerecord:
     attributes:
       listing_type:
@@ -77,4 +82,7 @@ en:
       cant_review_own_product: "can't review own product"
       onboard_issue: "Onboarding failed, the error message was: %{error}"
       inaccurate_address: 'Please provide a more accurate address'
+      must_be_later: 'must occur after beginning'
+      not_in_past: 'must be not in past'
+      range_too_wide: "can 't be later than 1 year from starting date"
 

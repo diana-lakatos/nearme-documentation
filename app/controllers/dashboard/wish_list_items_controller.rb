@@ -4,7 +4,7 @@ class Dashboard::WishListItemsController < Dashboard::BaseController
   before_filter :find_item, only: [:destroy]
 
   def index
-    @items = @wish_list.items.by_date
+    @items = @wish_list.items.by_date.decorate
   end
 
   def destroy

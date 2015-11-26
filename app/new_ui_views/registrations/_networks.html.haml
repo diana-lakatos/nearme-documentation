@@ -1,0 +1,8 @@
+- supported_providers.each do |provider|
+  .row-fluid
+    .col-md-7
+      %h3= provider.camelize
+      %p= t("registrations.social_accounts.#{provider.downcase}_info")
+    .col-md-5
+      = build_link_for(provider, "btn btn-primary #{provider.downcase} provider_#{provider.downcase}").html_safe
+- end unless supported_providers.nil?

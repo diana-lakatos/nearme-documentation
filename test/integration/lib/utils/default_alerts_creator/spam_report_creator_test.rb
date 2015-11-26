@@ -26,10 +26,10 @@ class Utils::DefaultAlertsCreator::SpamReportCreatorTest < ActionDispatch::Integ
     datetime = 5.hours.ago.to_date
     travel_to datetime do
       3.times { FactoryGirl.create(:spam_report) }
-    end
 
-    assert_difference 'ActionMailer::Base.deliveries.size' do
-      WorkflowStepJob.perform(WorkflowStep::SpamReportWorkflow::SummaryStep, SpamReport.count)
+      assert_difference 'ActionMailer::Base.deliveries.size' do
+        WorkflowStepJob.perform(WorkflowStep::SpamReportWorkflow::SummaryStep, SpamReport.count)
+      end
     end
     mail = ActionMailer::Base.deliveries.last
     assert_equal "[#{I18n.l(datetime, format: :short)}] - #{SpamReport.count} Spam Reports on #{@platform_context.decorate.name}", mail.subject

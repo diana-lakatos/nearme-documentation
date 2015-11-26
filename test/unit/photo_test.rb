@@ -17,6 +17,7 @@ class PhotoTest < ActiveSupport::TestCase
     context 'triggering' do
 
       should 'not trigger populate metadata on listing if condition fails' do
+        @transactable = FactoryGirl.create(:transactable)
         CarrierWave::SourceProcessing::Processor.any_instance.stubs(:enqueue_processing).returns(true)
         Transactable.any_instance.expects(:populate_photos_metadata!).never
         Photo.any_instance.expects(:should_populate_metadata?).returns(false).at_least(1)

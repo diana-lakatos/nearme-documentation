@@ -1,0 +1,12 @@
+= f.input_field :quantity, as: :hidden
+
+- @reservation_request.reservation_periods.each do |period|
+  = hidden_field_tag "reservation_request[dates][]", period.date.strftime('%Y-%m-%d')
+
+= f.input :start_minute, as: :hidden, input_html: {value: @reservation_request.reservation_periods.first.try(:start_minute)}
+= f.input :end_minute, as: :hidden, input_html: {value: @reservation_request.reservation_periods.first.try(:end_minute)}
+= f.input :reservation_type, as: :hidden, input_html: {value: @reservation_request.reservation.reservation_type}
+= f.input :book_it_out, as: :hidden, input_html: {value: @reservation_request.book_it_out}
+= f.input :exclusive_price, as: :hidden, input_html: {value: @reservation_request.exclusive_price}
+= f.input :guest_notes, as: :hidden, input_html: {value: @reservation_request.guest_notes}
+

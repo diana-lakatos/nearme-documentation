@@ -1,0 +1,16 @@
+// time pickers
+
+.input-group.datetimepicker {
+    > input {
+        border-right: none;
+    }
+    .input-group-addon {
+        border-left: none;
+        background: transparent;
+        color: $link-color;
+    }
+
+    &:hover .input-group-addon {
+        color: $link-hover-color
+    }
+}

@@ -1,0 +1,29 @@
+- title "#{platform_context.lessee.capitalize.pluralize} (#{@guest_list.recurring_bookings.size})"
+
+- content_for :page_header do
+  %h1= yield :title
+
+%nav.panel-nav
+  %ul.tabs.pull-left
+    %li{class: (params[:action] == 'index' && (params[:state].blank? || params[:state] == 'unconfirmed')) ? 'active' : ''}
+      = link_to t('dashboard.host_reservations.unconfirmed'), dashboard_company_host_recurring_bookings_path(state: 'unconfirmed')
+    %li{class: (params[:action] == 'index' && params[:state] == 'confirmed') ? 'active' : ''}
+      = link_to t('dashboard.host_reservations.active'), dashboard_company_host_recurring_bookings_path(state: 'confirmed')
+    %li{class: (params[:action] == 'index' && params[:state] == 'overdue') ? 'active' : ''}
+      = link_to t('dashboard.host_reservations.overdue'), dashboard_company_host_recurring_bookings_path(state: 'overdue')
+    %li{class: (params[:action] == 'index' && params[:state] == 'archived') ? 'active' : ''}
+      = link_to t('dashboard.host_reservations.archived'), dashboard_company_host_recurring_bookings_path(state: 'archived')
+
+
+.panel
+  .panel-body
+    - if @guest_list.reservations_scope.empty? && @guest_list.recurring_bookings_scope.empty?
+      = render 'dashboard/company/host_reservations/promote_locations', locations: @company.locations
+    - else
+      - only_reservations ||= false
+      - if @guest_list.recurring_bookings.empty?
+        %p.empty-resultset= no_reservations_info_for_state(@guest_list.state)
+      - else
+        .orders-a
+          - @guest_list.recurring_bookings.each do |recurring_booking|
+            = render 'dashboard/company/host_recurring_bookings/recurring_booking', recurring_booking: recurring_booking

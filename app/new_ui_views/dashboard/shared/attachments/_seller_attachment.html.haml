@@ -1,0 +1,24 @@
+%li{ class: "type-#{File.extname(attachment.filename).gsub('.','')}", data: {'attachment' => attachment.id, 'update-url': dashboard_seller_attachment_path(attachment.id)} }
+  = hidden_field_tag "[attachment_ids][]", attachment.id
+  .attachment-container
+    %span.link
+      = link_to attachment.filename, attachment.url_content, download: attachment.filename
+    %span.meta
+      %time{ datetime: attachment.created_at}
+        = attachment.format_created_at
+
+      - if attachment.size
+        %span.size= number_to_human_size(attachment.size)
+
+  %button.action--remove{ type: :button, data: { delete: true, url: dashboard_seller_attachment_path(attachment), "label-confirm": t('attachment_upload.are_you_sure_you_want_to_delete_this_attachment') }}
+
+
+  .form-inline
+    .title.form-group
+      = label_tag :title, t('attachment_upload.label'), class: 'control-label'
+      = text_field_tag :title, attachment.title, data: {'attachment-property' => 'title' }, class: 'form-control'
+
+    - if @platform_context.instance.seller_attachments_access_sellers_preference?
+      .access-level.form-group
+        = label_tag :access_level, t('attachment_upload.access_level'), class: 'control-label'
+        = select_tag :access_level, options_for_select(SellerAttachment::ACCESS_LEVELS.map { |level| [t(level, scope: 'seller_attachments.access_levels'), level] }, attachment.access_level), data: {'attachment-property' => 'access_level' }, class: 'form-control'

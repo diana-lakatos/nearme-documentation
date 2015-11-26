@@ -19,7 +19,6 @@ config/redis.yml
 config/application.yml
 config/database.yml
 config/elasticsearch.yml
-bower_components
 log
 node_modules
 tmp

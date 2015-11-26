@@ -1,4 +1,4 @@
-- title "#{platform_context.lessee.capitalize.pluralize} (#{@guest_list.reservations.size + @guest_list.recurring_bookings.size})"
+- title "#{platform_context.lessee.capitalize.pluralize} (#{@guest_list.recurring_bookings.size})"
 
 .dash-head.clearfix
   %ul
@@ -17,10 +17,9 @@
     #reservations
       .row-fluid
         .span8.offset2
-          - if @guest_list.reservations_scope.empty? && @guest_list.recurring_bookings_scope.empty?
+          - if @guest_list.recurring_bookings_scope.empty?
             = render 'dashboard/company/host_reservations/promote_locations', locations: @company.locations
           - else
-            - only_reservations ||= false
             - if @guest_list.recurring_bookings.empty?
               .text-center
                 = no_reservations_info_for_state(@guest_list.state)

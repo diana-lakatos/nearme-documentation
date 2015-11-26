@@ -1,0 +1,36 @@
+.shipping-method
+  .row
+    .col-md-3
+      %h4= t('manage.buy_sell.shipping_profiles.shipping_rule')
+    .col-md-9
+      .remove_shipping_profile.hidden.clearfix
+
+        - attr_name = f.object.new_record? ? :hidden : :removed
+
+        = f.check_box attr_name, class: "hidden shipping-#{attr_name}"
+        = f.label attr_name, class: 'pull-right' do
+          %span.btn.btn-xs.btn-warning{ type: :button }
+            = t('manage.buy_sell.shipping_profiles.remove_shipping_rule')
+
+      .shipping-form
+        = f.input :name, placeholder: t('manage.buy_sell.shipping_profiles.enter_name_for_shipping_profile'), label: t('manage.buy_sell.shipping_profiles.new_rule_name')
+
+        .row
+          .col-md-6
+            = f.input :processing_time, placeholder: t('manage.buy_sell.shipping_profiles.ready_to_ship_in'), label: t('manage.buy_sell.shipping_profiles.processing_time_in_days')
+
+          .col-md-6
+            = f.fields_for :calculator do |fc|
+              = fc.input :preferred_amount, as: :price, label: t('manage.buy_sell.shipping_profiles.shipping_cost'), input_html: { currency: currency_symbol_from_code(Spree::Config[:currency] ) }, wrapper: :dashboard_form
+
+        = f.fields_for :zones do |z|
+          = z.hidden_field :name
+          .row
+            .col-md-6
+              = z.input :kind, as: :select, include_blank: false, label: t('manage.buy_sell.shipping_profiles.ships_to.label'), collection: [[t('manage.buy_sell.shipping_profiles.ships_to.state_based'), "state_based"], [t('manage.buy_sell.shipping_profiles.ships_to.country_based'), "country"]], input_html: { data: { 'zone-kind-select': true } }, wrapper: :dashboard_form
+
+            .col-md-6
+              - countries = []
+              = z.input :country_ids, label: t('manage.buy_sell.shipping_profiles.ships_to.countries'), input_html: { value: z.object.country_ids.join(","), data: { api: 'countries', items: z.object.countries_json }}, required: true, wrapper: :dashboard_form, wrapper_html: { 'data-ships-to': 'countries' }
+
+              = z.input :state_ids, label: t('manage.buy_sell.shipping_profiles.ships_to.states'), input_html: { value: z.object.state_ids.join(","), data: { api: 'states', items: z.object.states_json  }}, required: true, wrapper: :dashboard_form,wrapper_html: { 'data-ships-to': 'states' }

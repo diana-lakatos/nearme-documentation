@@ -117,7 +117,7 @@ class User < ActiveRecord::Base
   }
 
   scope :by_search_query, lambda { |query|
-    where("name ilike ? or email ilike ?", query, query)
+    where("name ilike ? or email ilike ? or id = ?", query, query, query.remove('%').to_i)
   }
 
   scope :featured, -> { where(featured: true) }
@@ -277,13 +277,13 @@ class User < ActiveRecord::Base
   def all_projects(with_pending = false)
     projects = Project.where("
       creator_id = ? OR
-      EXISTS (SELECT 1 from project_collaborators pc WHERE pc.project_id = projects.id AND pc.user_id = ? AND deleted_at IS NULL)
+      EXISTS (SELECT 1 from project_collaborators pc WHERE pc.project_id = projects.id AND pc.user_id = ? AND (approved_by_user_at IS NOT NULL OR approved_by_owner_at IS NOT NULL) AND deleted_at IS NULL)
       ",id, id)
     if with_pending
       projects = projects.select(
         ActiveRecord::Base.send(:sanitize_sql_array,
           ["projects.*,
-            (SELECT pc.id from project_collaborators pc WHERE pc.project_id = projects.id AND pc.user_id = ? AND ( approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) as pending_collaboration
+            (SELECT pc.id from project_collaborators pc WHERE pc.project_id = projects.id AND (pc.user_id = ?) AND (approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) as pending_collaboration
             ",
             id
           ]
@@ -300,6 +300,10 @@ class User < ActiveRecord::Base
 
   def common_categories(category)
     categories & category.descendants
+  end
+
+  def common_categories_json(category)
+    JSON.generate(common_categories(category).map { |c| { id: c.id, name: c.translated_name }})
   end
 
   def create_blog

@@ -1,0 +1,12 @@
+.nested-fields
+  = f.input :open_time, label: t('pricing.availability.available_from'), input_html: { value: f.object.try(:open_time_with_default) }
+
+  = f.input :close_time, label: t('pricing.availability.available_to'), input_html: { value: f.object.try(:close_time_with_default) }
+
+  = f.input :days, as: :week_days, label: t('pricing.availability.available_on'), checked: f.object.try(:days).presence || (0..6).to_a
+
+  %p.text-right
+    %button.btn.btn-warning.btn-small.btn-gray.remove_fields.dynamic{:type => "button"}
+      = t('pricing.availability.remove_period')
+
+
