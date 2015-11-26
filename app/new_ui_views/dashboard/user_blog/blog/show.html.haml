@@ -4,7 +4,7 @@
   %h1= yield :title
 
   .options
-    = link_to t('user_blog.buttons.visit_blog_html'), user_blog_posts_list_path(current_user), rel: 'external'
+    = link_to t('user_blog.buttons.visit_blog_html'), user_blog_posts_list_path(current_user), rel: 'external', class: 'hidden-xs'
 
     - unless !@blog.enabled?
       = link_to t('user_blog.buttons.add_post_html'), new_dashboard_blog_post_path

@@ -206,6 +206,10 @@ module DashboardHelper
     cookies[:navigation_visible] == 'true'
   end
 
+  def dashboard_nav_user_messages_label
+    t('dashboard.nav.user_messages_count', count: current_user.unread_user_message_threads_count_for(platform_context.instance)).html_safe
+  end
+
   def dashboard_nav_user_reservations_label
     reservations_count = current_user.reservations.no_recurring.not_archived.count
     reservations_count > 0 ? t('dashboard.nav.user_reservations_count_html', count: reservations_count) : t('dashboard.nav.user_reservations')
@@ -222,6 +226,7 @@ module DashboardHelper
       item[:thumb_url] = photo.image_url(:space_listing)
       item[:edit_url] = edit_dashboard_photo_path(photo)
       item[:delete_url] = destroy_space_wizard_photo_path(photo)
+      item[:caption] = photo.caption if photo.respond_to?(:caption)
       collection << item
     end
 
@@ -239,10 +244,42 @@ module DashboardHelper
       item[:thumb_url] = image.image_url(:space_listing)
       item[:edit_url] = edit_dashboard_image_path(image)
       item[:delete_url] = dashboard_image_path(image)
+      item[:caption] = image.caption if image.respond_to?(:caption)
       collection << item
     end
 
     return collection
+  end
+
+  def dashboard_panel_multi_tabs(items)
+    out = ActiveSupport::SafeBuffer.new
+    active = items.select {|item| item[:active] }.first
+
+    out << content_tag(:nav, class: 'panel-nav-mobile visible-sm visible-xs') do
+      dropdown_menu active[:name], { wrapper_class: 'links'} do
+        links = ActiveSupport::SafeBuffer.new
+        items.each do |item|
+          links << content_tag(:li, class: (item[:active] ? 'active' : nil)) do
+            link_to item[:name], item[:url]
+          end
+        end
+        links
+      end
+    end
+
+    out << content_tag(:nav, class: 'panel-nav hidden-sm hidden-xs') do
+      content_tag(:ul, class: 'tabs pull-left') do
+        links = ActiveSupport::SafeBuffer.new
+        items.each do |item|
+          links << content_tag(:li, class: (item[:active] ? 'active' : nil)) do
+            link_to item[:name], item[:url]
+          end
+        end
+        links
+      end
+    end
+
+    out
   end
 
   def object_aspect_ratio(object)

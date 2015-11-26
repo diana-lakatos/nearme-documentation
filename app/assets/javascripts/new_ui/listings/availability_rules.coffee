@@ -30,15 +30,7 @@ class @DNM.Listings.AvailabilityRules
       @updateCustomState()
 
     @customFields.on 'cocoon:before-remove', (e,fields)->
-      $(fields).closest('.nested-container').find('.transactable_availability_template_availability_rules__destroy input').val('true')
-
-    # @customFields.on 'cocoon:after-insert', (e,fields)->
-    #   $(fields).find('select').selectize {
-    #     plugins: ['remove_button']
-    #     onInitialize: ->
-    #       s = @;
-    #       @revertSettings.$children.each ()->
-    #         $.extend(s.options[@value], $(@).data())
-    #   }
-
-
+      parent = $(fields).closest('.nested-container')
+      parent.find('.transactable_availability_template_availability_rules__destroy input').val('true')
+      parent.hide()
+      parent.prependTo(parent.closest('form'))

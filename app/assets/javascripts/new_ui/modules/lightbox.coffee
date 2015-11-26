@@ -1,5 +1,5 @@
 class @DNM.Lightbox
   constructor: (el)->
-    $(el).swipebox()
+    # $(el).swipebox()
 
 new @DNM.Lightbox('.action--preview')

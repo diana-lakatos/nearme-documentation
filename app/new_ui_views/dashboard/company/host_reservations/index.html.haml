@@ -3,14 +3,10 @@
 - content_for :page_header do
   %h1= yield :title
 
-%nav.panel-nav
-  %ul.tabs.pull-left
-    %li{class: (params[:action] == 'index' && (params[:state].blank? || params[:state] == 'unconfirmed')) ? 'active' : ''}
-      = link_to t('dashboard.host_reservations.unconfirmed'), dashboard_company_host_reservations_path(state: 'unconfirmed')
-    %li{class: (params[:action] == 'index' && params[:state] == 'confirmed') ? 'active' : ''}
-      = link_to t('dashboard.host_reservations.confirmed'), dashboard_company_host_reservations_path(state: 'confirmed')
-    %li{class: (params[:action] == 'index' && params[:state] == 'archived') ? 'active' : ''}
-      = link_to t('dashboard.host_reservations.archived'), dashboard_company_host_reservations_path(state: 'archived')
+- active_state = params[:state] || 'unconfirmed'
+- tabs = ['unconfirmed', 'confirmed', 'archived'].map { |state| { name: t(state.to_sym, scope: [:dashboard, :host_reservations]), url:  dashboard_company_host_reservations_path(state: state), active: (params[:action] == 'index' && active_state == state) }}
+
+= dashboard_panel_multi_tabs(tabs)
 
 .panel
   .panel-body

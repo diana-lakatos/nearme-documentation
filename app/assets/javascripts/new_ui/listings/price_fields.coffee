@@ -27,6 +27,11 @@ class @DNM.Listings.PriceFields
 
   bindEvents: ->
     @container.closest('form').on 'submit', (event) =>
+      # this is related to image uploading prevening form submission when upload is in progress
+      # having this here is less than optimal but I don't have better idea on how to decouple these modules better
+      # it should probably by tied in into client validation if we ever get to implement it
+      return if $(event.target).data('processing')
+
       @inputWrapper.find('input[readonly]').prop('disabled', true)
       if @bookingTypeInput.val() == 'regular'
         if @subscriptionBookingField.val() == 'true'

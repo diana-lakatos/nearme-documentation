@@ -4,7 +4,7 @@
   %h1= t 'user_blog.nav.settings'
 
   .options
-    = link_to t('user_blog.buttons.visit_blog'), user_blog_posts_list_path(current_user), rel: 'external'
+    = link_to t('user_blog.buttons.visit_blog_html'), user_blog_posts_list_path(current_user), rel: 'external'
 
 
 = render partial: 'user_blog_settings_form'

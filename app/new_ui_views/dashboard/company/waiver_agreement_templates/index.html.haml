@@ -1,7 +1,7 @@
 - title t('dashboard.waiver_agreements.title')
 
 - content_for :page_header do
-  %h1= yield :title
+  %h1= t('dashboard.waiver_agreements.title_html')
 
   .options
     = link_to t('dashboard.waiver_agreements.add_html'), new_dashboard_company_waiver_agreement_template_path, data: { modal: true }

@@ -83,6 +83,10 @@
 
     li li a, li li > span {
         font-weight: normal;
+
+        line-height: 1.4em;
+        padding-top: 0.8em;
+        padding-bottom: 0.8em;
         padding-left: 60px;
 
         &:before {
@@ -109,12 +113,6 @@
 
         li ul {
             border-top: none;
-        }
-
-        li li a, li li > span {
-            line-height: 1.4em;
-            padding-top: 0.8em;
-            padding-bottom: 0.8em;
         }
     }
 }

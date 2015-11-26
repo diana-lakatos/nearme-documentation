@@ -21,7 +21,7 @@
 
   .panel.form-actions
     .panel-body
-      = f.button :submit, class: 'btn-lg'
+      = f.button :submit, t('dashboard.items.save')
 
   .form-actions
     = link_to t('dashboard.items.delete_listing'), dashboard_company_transactable_type_transactable_path(@transactable_type, @transactable), method: :delete, data: { confirm: t('dashboard.items.confirm_delete') }

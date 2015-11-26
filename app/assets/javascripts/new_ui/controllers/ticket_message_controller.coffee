@@ -5,7 +5,15 @@ class @DNM.TicketMessageController
     @form = @container.find('[data-rfq-attachment-form]')
     @input = @form.find('input[data-file]')
     @attachmentList = @container.find('[data-attachment-list]')
+    @label = @container.find('[data-attachment-label]')
+    @labelTextHolder = @label.find('span')
+    @labelText =
+      default: @labelTextHolder.text()
+      uploading: @label.data('attachment-label')
+
     @bindEvents()
+
+  initializeLabel: ->
 
   bindEvents: ->
     @attachmentList.on 'click', 'a[data-delete]', @deleteAttachment
@@ -45,6 +53,9 @@ class @DNM.TicketMessageController
       data.append('support_ticket_message_attachment[file]', file)
       data.append('form_name', @input.data('form-name'))
 
+      @label.addClass('uploading')
+      @labelTextHolder.text(@labelText.uploading)
+
       $.ajax
         type: 'POST'
         url: @form.attr("action")
@@ -54,9 +65,13 @@ class @DNM.TicketMessageController
         processData: false
         contentType: false
         success: (data) =>
+          @label.removeClass('uploading');
+          @labelTextHolder.text(@labelText.default)
+
           new_item = $(data.attachment_content)
           @attachmentList.append(data.attachment_content)
           $('html').trigger('selects.init.forms', [new_item])
+
         error: (xhr) =>
           alert @input.data('error')
 

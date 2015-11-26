@@ -14,32 +14,33 @@
       = t('reservations.tickets.deleted')
 
 
-.row
-  .col-xs-7
-    %h2
-      - if @ticket.target.present?
-        - if @ticket.reservation_details && @ticket.reservation_details['quantity'].present?
-          = t('reservations.tickets.quantity')
-          = @ticket.reservation_details['quantity']
+.content-box-a
+  .row
+    .col-xs-7
+      %h2
+        - if @ticket.target.present?
+          - if @ticket.reservation_details && @ticket.reservation_details['quantity'].present?
+            = t('reservations.tickets.quantity')
+            = @ticket.reservation_details['quantity']
 
-        - if @ticket.target.try(:schedule_booking?) && @ticket.reservation_date.present?
-          = "; #{l(@ticket.reservation_date, format: :long)}"
-        - elsif @ticket.reservation_dates.any?
-          - if @ticket.reservation_details['start_minute'].present? && @ticket.reservation_details['end_minute'].present?
-            - @hourly_presenter = HourlyPresenter.new(@ticket.reservation_dates.first, @ticket.reservation_details['start_minute'].to_i, @ticket.reservation_details['end_minute'].to_i)
-            = "; #{I18n.l(@ticket.reservation_dates.first, format: :long)} #{@hourly_presenter.hours} #{'hour'.pluralize(@hourly_presenter.hours.to_i)}"
-          - else
-            - @date_presenter = DatePresenter.new(@ticket.reservation_dates)
-            = " &times; #{@date_presenter.days_in_words}"
+          - if @ticket.target.try(:schedule_booking?) && @ticket.reservation_date.present?
+            = "; #{l(@ticket.reservation_date, format: :long)}"
+          - elsif @ticket.reservation_dates.any?
+            - if @ticket.reservation_details['start_minute'].present? && @ticket.reservation_details['end_minute'].present?
+              - @hourly_presenter = HourlyPresenter.new(@ticket.reservation_dates.first, @ticket.reservation_details['start_minute'].to_i, @ticket.reservation_details['end_minute'].to_i)
+              = "; #{I18n.l(@ticket.reservation_dates.first, format: :long)} #{@hourly_presenter.hours} #{'hour'.pluralize(@hourly_presenter.hours.to_i)}"
+            - else
+              - @date_presenter = DatePresenter.new(@ticket.reservation_dates)
+              = " &times; #{@date_presenter.days_in_words}"
 
-        = link_to @ticket.target.name, @ticket.show_target_path
-      - else
-        = t('reservations.tickets.deleted')
+          = link_to @ticket.target.name, @ticket.show_target_path
+        - else
+          = t('reservations.tickets.deleted')
 
-  .col-xs-5
-    .rfq-status-a
-      %span{class: @ticket.state }
-        = @ticket.state.titleize
+    .col-xs-5
+      .rfq-status-a
+        %span{class: @ticket.state }
+          = @ticket.state.titleize
 
 .inbox-thread
   = render partial: 'dashboard/company/support/tickets/ticket_message', collection: @ticket.messages.reverse

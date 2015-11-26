@@ -32,10 +32,12 @@ class @PhotoManipulator
     }
     options.data = @imageCropCoords() if @imageCropped()
 
-    @image.cropper options
+    setTimeout =>
+      @image.cropper(options)
+    , 100
 
   onCropEnd: =>
-    data = @image.cropper('getData')
+    data = @image.cropper('getData', true)
     @crop = {
       x: data.x
       y: data.y
@@ -54,10 +56,10 @@ class @PhotoManipulator
 
   imageCropCoords: ->
     {
-      x: @originalCrop['x']
-      y: @originalCrop['y']
-      width: @originalCrop['w']
-      height: @originalCrop['h']
+      x: parseInt(@originalCrop['x'], 10)
+      y: parseInt(@originalCrop['y'], 10)
+      width: parseInt(@originalCrop['w'], 10)
+      height: parseInt(@originalCrop['h'], 10)
       rotate: @originalRotate
     }
 

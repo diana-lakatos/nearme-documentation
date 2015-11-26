@@ -41,6 +41,9 @@
 // Raty
 //= require raty/lib/jquery.raty.js
 
+// File drag and drop
+//= require jquery-dragster/jquery.dragster
+
 // Cocoon for nested forms
 //= require cocoon
 

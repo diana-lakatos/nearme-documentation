@@ -3,35 +3,125 @@ class @DNM.ImageInput
   constructor : (input) ->
     @fileInput = $(input)
     @container = @fileInput.closest('.form-group')
+    @form = @fileInput.closest('form')
+    @fieldWrapper = @fileInput.closest('.input-preview')
+
     @isMultiple = !!@fileInput.attr('multiple')
     @isJsUpload = !!@fileInput.data('upload-url')
+    @hasCaptions = !!@fileInput.data('has-captions')
+    @captionPlaceholder = @fileInput.data('caption-placeholder')
+
     @objectName = @fileInput.data('object-name')
     @modelName = @fileInput.data('model-name')
     @label = @container.find('label')
+
+    @dropzoneLabel = @fileInput.data('dropzone-label')
+    @updateOnSaveLabel = @fileInput.data('upload-on-save-label')
+
     @collection = @container.find('[data-image-collection]')
     @isSortable = !!@collection.attr('data-sortable')
-    @preventEarlySubmission()
+
+    @allowedFileTypes = ['jpg','jpeg','gif','png']
+
+
     @processing = 0
 
-    @bindEvents()
+    @initializePreview()
 
     @initializeSortable() if @isSortable
-    @initializeFileUpload() if @isJsUpload
+
+    if @isJsUpload
+      @initializeFileUpload()
+      @initializeDraggable()
+      @initializeProgressbar()
+
+    @bindEvents()
 
     if sessioncamConfiguration?
       sessioncamConfiguration.customDataObjects.push( { key: "event", value: "first_listing_form_visit" } )
 
   bindEvents: ->
     @listenToDeletePhoto()
-    @listenToFormSubmit()
     @listenToEditPhoto()
+    @listenToDragFile()
+    @listenToPreviewEvents()
+    @preventEarlySubmission()
 
-    @listenToInputChange() if !@isJsUpload
+    @listenToInputChange() if !@isJsUpload and Modernizr.filereader
+
+  initializePreview: ->
+    @preview = $('<div class="form-images__preview"><figure><img src=""></figure><span class="form-images__preview__close">Close preview</span></div>')
+    @preview.appendTo('body')
+
+  showPreview: (url)->
+    @preview.find('figure').html("<img src='#{url}'>")
+    @preview.addClass('preview--active')
+
+    # close on ESC
+    $('body').on 'keydown.preview', (e)=>
+      @hidePreview() if e.which is 27
+
+  hidePreview: ->
+    @preview.removeClass('preview--active')
+    # remove close on ESC event
+    $('body').off 'keydown.preview'
+
+  listenToPreviewEvents: ->
+    @preview.on 'click', =>
+      @hidePreview()
+
+    @container.on 'click', '.action--preview', (e)=>
+      e.preventDefault()
+      e.stopPropagation()
+      url = $(e.target).closest('a').attr('href')
+      @showPreview(url)
+
+  validateFileType: (file)->
+    types = $.map @allowedFileTypes, (item)->
+      "image/#{item}"
+
+    return $.inArray(file.type, types) > -1
+
+
+  # It will show the dropzone on file dragging to browser window
+  listenToDragFile: ->
+    $(window).dragster
+      enter: =>
+        @fieldWrapper.addClass('drag-active')
+      leave: =>
+        @fieldWrapper.removeClass('drag-active')
+      drop: =>
+        @fieldWrapper.removeClass('drag-active')
+
+  listenToDataUrlPreview: ()->
+    @container.on 'click', 'action--dataurl-preview', (e)=>
+      src = $(e.target).closest('a').find('img').attr('src')
+      showPreview()
 
 
   listenToInputChange: ->
-    @fileInput.on 'change', =>
-      @updateLabel()
+    reader = new FileReader()
+
+    reader.onloadend = =>
+      @updatePreview({ dataUrl: reader.result })
+
+    @fileInput.on 'change', ->
+      if @isMultiple
+        throw new Error('Support for multiple files without XHR is not implemented')
+      else
+        file = this.files[0]
+        reader.readAsDataURL(file) if file
+
+  initializeDraggable: ->
+    @fieldWrapper.addClass('draggable-enabled')
+
+    @dropzone = $("<div class='drop-zone'><div class='text'>#{@dropzoneLabel}</div></div>")
+    @dropzone.prependTo(@fieldWrapper)
+
+
+  initializeProgressbar: ->
+    @fieldWrapper.prepend("<div class='file-progress'><div class='bar'></div><div class='text'></div></div>")
+    @uploadLabelContainer = @container.find('.file-progress  .text')
 
   initializeFileUpload: ->
 
@@ -39,30 +129,68 @@ class @DNM.ImageInput
       url: @fileInput.data('upload-url')
       paramName: @fileInput.data('upload-name')
       dataType: 'json'
-      dropZone: @container
+      dropZone: @dropZone
       formData: (form) ->
         params = form.clone()
         params.find("input[name=_method]").remove()
         params.serializeArray()
+
+      start: =>
+        @fieldWrapper.addClass('progress--active')
+
+      stop: =>
+        @fieldWrapper.removeClass('progress--active')
+
       add: (e, data) =>
-        @processing += 1
-        types = /(\.|\/)(gif|jpe?g|png)$/i
+        @updateProcessing(1)
         file = data.files[0]
-        if types.test(file.type) || types.test(file.name)
+        if @validateFileType(file)
           @updateLabel()
           data.submit()
         else
-          if @wrong_file_message && @wrong_file_message != ''
-            alert("#{file.name} " + @wrong_file_message)
-          else
-            alert("#{file.name} seems to not be an image - please select gif, jpg, jpeg or png file")
+          alert("#{file.name} seems to not be an image - please select gif, jpg, jpeg or png file")
+
       done: (e, data) =>
-        @processing -= 1
+        @updateProcessing(-1)
         @updateLabel()
-        @collection.append @createItem(data.result)
+        if @isMultiple
+          @collection.append @createCollectionItem(data.result)
+          @reorderSortableList()
+        else
+          @updatePreview(data.result)
+
         @rebindEvents()
 
-        @reorderSortableList()
+  updatePreview: (data)->
+    preview = @fieldWrapper.find('.preview').empty()
+
+    if preview.length is 0
+      preview = $('<div class="preview"/>').prependTo(@fieldWrapper)
+
+    preview.html('<figure/><div class="form-images__options"/>')
+
+    options = preview.find('.form-images__options')
+
+    if data.sizes?
+      preview.find('figure').append("<a href='#{data.sizes.full.url}' class='action--preview'><img src='#{data.sizes.space_listing.url}'></a>")
+
+    if data.url?
+      preview.find('figure').append("<a href='#{data.url}' class='action--preview'><img src='#{data.url}'></a>")
+
+    if data.dataUrl?
+      a = $('<a class="action--preview"/>')
+      a.attr('href', data.dataUrl)
+      a.append('<img src="' + data.dataUrl + '">')
+      preview.find('figure').append(a)
+
+    if data.resize_url?
+      options.append("<button type='button' class='action--edit' data-edit data-url='#{data.resize_url}'>Crop & Resize</button>")
+
+    if data.destroy_url?
+      options.append("<button type='button' class='action--delete' data-delete data-url='#{data.destroy_url}' data-label-confirm='Are you sure you want to delete this image?'>Remove</button>")
+
+    preview.append("<small>#{@updateOnSaveLabel}</small>") unless @isJsUpload
+
 
   initializeSortable: ->
     @collection.sortable
@@ -71,16 +199,17 @@ class @DNM.ImageInput
       placeholder: 'photo-placeholder'
       handle: '.sort-handle'
       cancel: 'input'
+      scroll: false
 
     @reorderSortableList()
 
   rebindEvents: ->
     @collection.find('.action--preview').swipebox()
 
-  createItem: (data)->
+  createCollectionItem: (data)->
     container = $('<li data-photo-item/>')
-    container.append("<a href='#{data.sizes.full.url}' class='action--preview' rel='preview-#{data.id}'><img src='#{data.sizes.space_listing.url}'></a>")
-    options = $('<div class="options">').appendTo(container)
+    container.append("<a href='#{data.sizes.full.url}' class='action--preview'><img src='#{data.sizes.space_listing.url}'></a>")
+    options = $('<div class="form-images__options">').appendTo(container)
     if data.resize_url
       options.append("<button type='button' class='action--edit' data-edit data-url='#{data.resize_url}'>Crop & Resize</button>")
 
@@ -93,81 +222,60 @@ class @DNM.ImageInput
       container.append("<input type='hidden' name='#{@objectName}[#{@modelName}s_attributes][#{data.id}][id]' value='#{data.id}'>")
       container.append("<input type='hidden' name='#{@objectName}[#{@modelName}s_attributes][#{data.id}][position]' value='' class='photo-position-input'>")
 
+    if @hasCaptions
+      container.append("<span class='caption'><input type='text' name='#{@objectName}[#{@modelName}s_attributes][#{data.id}][caption]' value='' placeholder='#{@captionPlaceholder}'></span>")
+
     container
 
   listenToDeletePhoto: ->
-    @collection.on 'click', '[data-delete]', (e) =>
+    @container.on 'click', '[data-delete]', (e) =>
       e.preventDefault()
 
-      @processingPhotos += 1
+      @updateProcessing(1)
       trigger = $(e.target).closest('[data-delete]')
       url = trigger.data("url")
       labelConfirm = trigger.data('label-confirm')
       return unless confirm(labelConfirm)
 
-      photo = trigger.closest("[data-photo-item]").addClass('deleting')
+      photo = trigger.closest("[data-photo-item], .preview").addClass('deleting')
 
       $.post url, { _method: 'delete' }, =>
         photo.remove()
-        @processingPhotos -= 1
+        @updateProcessing(-1)
         @reorderSortableList()
 
   listenToEditPhoto: ->
-    @collection.on 'click', '[data-edit]', (e) =>
+    @container.on 'click', '[data-edit]', (e) =>
       e.preventDefault()
       trigger = $(e.target).closest('[data-edit]')
       url = trigger.data("url")
       $('html').trigger('load.dialog', [{ url: url }])
 
-  listenToFormSubmit: ->
-    @container.parents('form').on 'submit', (e)=>
-      e.preventDefault() if @processingPhotos > 0
-
-
   updateLabel: ->
-    if @isJsUpload then @updateLabelJS() else @updateLabelStatic()
-
-  updateLabelStatic: ->
-    if @fileInput.get(0).files
-      output = []
-      _.each @fileInput.get(0).files, (item)->
-        output.push(item.name)
-
-      output = output.join(', ')
-    else
-      matches = @fileInput.val().match /\\([^\\]+)$/i
-      output = matches[1]
-
-    @label.find('.add-label').html output
-
-  updateLabelJS: ->
-    defaultLabel = if @isMultiple then 'Add photo' else 'Upload photo'
     switch @processing
-      when 0 then text = defaultLabel
+      when 0 then text = 'All files uploaded'
       when 1 then text = 'Uploading photo...'
       else text = "Uploading #{@processing} photos..."
 
-    @label.find('.add-label').html text
-    @label.find('.drag-label').toggle(@processing is 0)
-    @label.toggleClass('active-upload', @processing > 0)
+    @uploadLabelContainer.html text
+
+  updateProcessing: (change)=>
+    @processing = @processing + change
+    @form.data('processing', @processing > 0)
 
   preventEarlySubmission: ->
-    @container.parents('form').on 'submit', =>
-      if @processing > 0
+    @form.on 'submit', (e)=>
+      if @form.data('processing')
         alert 'Please wait until all files are uploaded before submitting.'
-        false
+        e.preventDefault()
+        e.stopPropagation()
 
   reorderSortableList: ->
-
     return unless @isSortable
 
     @collection.sortable('refresh')
-
-    i = 0
-    for index, el of @collection.sortable('toArray')
-      if el != '' and $("##{el}.photo-item").length > 0
-        $("##{el}").find('.photo-position-input').val(i)
-        i++
+    @collection.find('li').each (index, el)=>
+      $(el).find('.photo-position-input').val(index)
 
 $('input[data-image-input]').each ->
   new DNM.ImageInput(@)
