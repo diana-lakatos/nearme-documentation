@@ -108,7 +108,7 @@ class Theme < ActiveRecord::Base
       when "Instance"
         owner
       when "Company"
-         (owner || Company.with_deleted.where(id: object_id).first).try(:instance)
+        (owner || Company.with_deleted.where(id: owner_id).first).try(:instance)
       when "Partner"
         owner.try(:instance)
       else
