@@ -6,8 +6,6 @@
       <span>{{ listing[property] | filter_text | custom_sanitize }}</span>
     {% endif %}
   {% endfor %}
-  {% if listing.defer_availability_rules? %}
-    <h3>{{ 'booking_module.hours' | translate }}</h3>
-    <span>{{ listing.availability }}</span>
-  {% endif %}
+  <h3>{{ 'booking_module.hours' | translate }}</h3>
+  <span>{{ listing.availability }}</span>
 </div>

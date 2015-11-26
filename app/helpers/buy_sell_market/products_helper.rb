@@ -19,4 +19,14 @@ module BuySellMarket::ProductsHelper
       ]
     end
   end
+
+  def dashboard_collection_for_shipping_profiles_radio_buttons(object)
+    collection = object.respond_to?(:each) ? object : object.all_shipping_categories
+    collection.collect do |sc|
+      [
+       sc.id,
+       raw("#{h(sc.name)} #{link_to("Edit", edit_dashboard_shipping_category_path(sc), data: { modal: true, 'modal-class' => 'shipping_profiles_modal' }, class: 'shipping_profiles_modal_edit_link')}")
+      ]
+    end
+  end
 end

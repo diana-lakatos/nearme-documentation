@@ -1,0 +1,122 @@
+%article.order{id: dom_id(reservation)}
+  %header
+  .row
+    .col-xs-7
+      - if reservation.listing.present?
+        %h2
+          - if reservation.owner.present?
+            = link_to reservation.owner, profile_path(reservation.owner.slug)
+            = link_to '', new_reservation_user_message_path(reservation), data: { modal: true }, class: 'contact-owner'
+          - else
+            = "#{reservation.owner_including_deleted} (Deleted)"
+
+          = t('dashboard.host_reservations.booked')
+
+          - listing_name = reservation.listing.try(:name)
+          - listing_name = t('dashboard.host_reservations.show_listing_page') if listing_name.blank?
+          = link_to listing_name, location_path(reservation.listing.location, reservation.listing)
+
+      - else
+        %h2= t('dashboard.host_reservations.listing_deleted')
+
+    .col-xs-5
+      .order-status
+        %span{class: reservation.state }
+          = reservation.state.humanize.capitalize
+
+
+
+  - if reservation.can_confirm?
+    .alert.alert-warning= reservation.manage_booking_status_info_new
+    - if reservation.active_merchant_payment?
+      - if reservation.billing_authorization.present?
+        .alert.alert-warning= I18n.t('dashboard.host_reservations.money_info')
+        .alert.alert-warning= I18n.t('dashboard.host_reservations.next_payment_transfer', next_payment_transfer: reservation.next_payment_transfer)
+        - if reservation.company.possible_payout_not_configured?(reservation.billing_authorization.payment_gateway)
+          .alert.alert-warning= I18n.t('dashboard.host_reservations.remember_to_setup_automated_payout', setup_link: edit_dashboard_company_payouts_path).html_safe
+
+  .row
+    .col-sm-3
+      - if reservation.listing.present?
+        %h3= t('dashboard.host_reservations.address')
+
+        %p
+          = reservation.listing.location.address.gsub(', ', '<br>').html_safe
+
+      - else
+        %h3 [#{t('dashboard.host_reservations.listing_deleted')}]
+
+    .col-sm-3
+      - requested_dates = reservation.long_dates.split(' ; ')
+      %h3= t('dashboard.host_reservations.requested_dates', count: requested_dates.count)
+      %ul.dates
+        - requested_dates.each do |s|
+          %li= s
+
+    .col-sm-3
+      %h3= t('dashboard.host_reservations.requested_time')
+
+      %p.times
+        - if reservation.action_hourly_booking?
+          = reservation.hourly_summary_for_first_period(false)
+        - else
+          = t('dashboard.host_reservations.not_available_na')
+
+    .col-sm-2
+      %h3= t('dashboard.user_reservations.quantity')
+      %p= reservation.quantity
+      %p= reservation.total_units_text
+
+    .col-sm-1
+      %h3= t('dashboard.user_reservations.total')
+      %p
+        %b= reservation.total_price
+
+
+  - if reservation.guest_notes.present?
+    %h3= t('dashboard.user_reservations.exclusive_price_guests_notes')
+    %blockquote= reservation.guest_notes
+
+  - if reservation.payment_documents.present?
+    %h3=  t('dashboard.user_reservations.payment_documents')
+    %ul.payment-documents
+    - reservation.payment_documents.each do |pd|
+      %li
+        %a{:href => pd.file.url, download: true}= pd.file.file_name
+
+
+  %hr/
+
+  .row
+    .col-md-3
+      %h3
+        = t("dashboard.host_reservations.payment_state")
+    .col-md-9{class: reservation.paid? ? 'info' : "warn" }
+      = reservation.payment_status.humanize.capitalize
+
+  .row
+    .col-md-3
+      %h3
+        = t("dashboard.host_reservations.payment_method")
+    .col-md-3{class: reservation.paid? ? 'info' : "warn" }
+      - if reservation.payment_method
+        = t("dashboard.host_reservations.payment_methods." + reservation.payment_method.payment_method_type)
+
+  - if reservation.listing.possible_delivery?
+    .row
+      .col-md-3
+        %h3
+          = t("dashboard.host_reservations.delivery_type")
+      .col-md-9
+        = reservation.shipments.any? ? t("dashboard.host_reservations.delivery.delivery") : t("dashboard.host_reservations.delivery.pick_up")
+
+  %hr/
+
+  .row
+    .col-sm-9.col-sm-push-3
+      .order-actions
+        = render 'dashboard/company/host_reservations/owner_actions', reservation: reservation
+
+    .col-sm-3.col-sm-pull-9
+      %small= t('dashboard.host_reservations.order_placed_html', date: l(reservation.created_at, format: :only_date))
+

@@ -6,34 +6,42 @@ class AvailabilityTemplate < ActiveRecord::Base
   has_many :availability_rules, :as => :target, :inverse_of => :target, :dependent => :destroy
   belongs_to :transactable_type
   belongs_to :instance
+  has_many :transactables
+  belongs_to :parent, polymorphic: true, touch: true
 
   # attr_accessible :transactable_type, :name, :description, :availability_rules, :availability_rules_attributes
 
-  accepts_nested_attributes_for :availability_rules
+  accepts_nested_attributes_for :availability_rules, allow_destroy: true
+
+  # AR can't handle parent: [different_objects] condition.
+  scope :for_parents, -> (parents) {
+    parents.compact!
+    types = parents.group_by(&:class)
+    if types.one?
+      where(parent: parents)
+    else
+      conditions = []
+      types.each_pair do |type, objects|
+        conditions << send(:sanitize_sql_array, ["(parent_id in (?) AND parent_type = ?)", objects, type])
+      end
+      where(conditions.join(' OR '))
+    end
+  }
 
   def full_name
     "#{name} (#{description})"
   end
 
-  def includes_rule?(rule)
-    availability_rules.find do |existing_rule|
-      existing_rule.day == rule.day && existing_rule.open_hour == rule.open_hour && existing_rule.close_hour == rule.close_hour &&
-        existing_rule.open_minute == rule.open_minute && existing_rule.close_minute == rule.close_minute
-    end
+  def minimum_booking_hours
+    parent.respond_to?(:minimum_booking_minutes) || 1
   end
 
-  def apply(target)
-    # Flag existing availability rules for destruction
-    target.availability_rules.each(&:mark_for_destruction)
-
-    availability_rules.each do |rule|
-      target.availability_rules.build(
-        :day => rule.day,
-        :open_hour => rule.open_hour,
-        :open_minute => rule.open_minute,
-        :close_hour => rule.close_hour,
-        :close_minute => rule.close_minute
-      )
-    end
+  def availability
+    AvailabilityRule::Summary.new(availability_rules)
   end
+
+  def custom_for_transactable?
+    parent_type == 'Transactable'
+  end
+
 end

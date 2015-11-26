@@ -1,0 +1,23 @@
+$search-input-right-offset: $button-mid-min-width + $padding-base-horizontal;
+
+form.search {
+    @include clear;
+
+    .form-group {
+        margin-bottom: 0;
+    }
+
+    @media (min-width: $screen-desktop) {
+        .form-group {
+            float: left;
+            width: calc(100% - #{$search-input-right-offset}) ;
+            margin-bottom: 15px;
+        }
+
+        [type=submit] {
+            float: right;
+            margin-top: 5px;
+            width: $button-mid-min-width;
+        }
+    }
+}

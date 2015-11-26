@@ -29,5 +29,9 @@ module Taggable
 
       Tag.includes(:taggings).where(conditions).order(:name)
     end
+
+    def tags_as_comma_string(tagger=nil)
+      tags.pluck(:name).join(',')
+    end
   end
 end

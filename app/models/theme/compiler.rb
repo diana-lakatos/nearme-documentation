@@ -24,6 +24,14 @@ class Theme::Compiler
       @theme.theme_dashboard_digest = cumulative_digest('dashboard_theme')
     end
 
+    if cumulative_digest('new_dashboard_theme') != @theme.theme_new_dashboard_digest
+      @theme.compiled_new_dashboard_stylesheet = {
+        :tempfile => create_compiled_file('new_dashboard_theme.scss.erb'),
+        :filename => "theme-new-dashboard-#{Time.zone.now.to_i}.css"
+      }
+      @theme.theme_new_dashboard_digest = cumulative_digest('new_dashboard_theme')
+    end
+
     if @theme.changed?
       @theme.skipping_compilation do
         @theme.save!(validate: false)

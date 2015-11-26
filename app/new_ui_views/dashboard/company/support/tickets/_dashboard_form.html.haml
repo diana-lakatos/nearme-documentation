@@ -1,0 +1,23 @@
+- submit_label ||= t('reservations.form.send')
+- submit_and_resolve_label ||= t('reservations.form.send_and_resolve')
+- message_label ||= false
+- with_close ||= false
+
+.rfq-form-a
+  = dashboard_simple_form_for message, url: form_url do |f|
+    = f.input :message, as: :text, label: message_label, placeholder: t('reservations.form.message.placeholder')
+
+    %p.clearfix
+      %label.btn.btn-default.btn-xs{:for => "rfq-attachment"}
+        = t('support.attachment.add')
+
+    %ul.attachments{:'data-attachment-list' => true }
+      = render partial: 'dashboard/company/support/ticket_message_attachments/attachment', collection: message.attachments, as: :ticket_message_attachment
+    %p
+      = f.submit submit_label, class: 'btn btn-primary'
+      - if with_close
+        = f.submit submit_and_resolve_label, class: 'btn btn-primary'
+
+  = dashboard_simple_form_for ticket.attachments.build, url: dashboard_company_support_ticket_ticket_message_attachments_path(ticket), html: { multipart: true, class: 'hidden', :'data-rfq-attachment-form'=> true } do |f|
+    - accept = Rails.application.config.private_upload_file_types.map { |ext| ".#{ext}"}.join(',')
+    = f.input :file, as: :file, input_html: { accept: accept, id: 'rfq-attachment', data: { file: true, uploading: t('support.attachment.uploading'), error: t('support.attachment.error'), :'destroy-error' => t('support.attachment.destroy_error') } }

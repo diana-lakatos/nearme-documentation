@@ -1,0 +1,6 @@
+= render 'dashboard/company/transactables/price_form', f: f, form_fields: form_fields
+- if overnight_or_regular_booking?(f.object.transactable_type) && form_fields.find { |ff| ff.keys.first == model && ff.values.first == 'schedule' }
+  = render 'dashboard/company/transactables/form_fields/availability', f: f
+- if f.object.transactable_type.schedule_booking_enabled?
+  = render 'dashboard/company/transactables/schedule_form', f: f
+= render 'dashboard/shared/booking_types_tabs', f: f

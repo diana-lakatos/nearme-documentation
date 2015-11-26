@@ -1,0 +1,7 @@
+.js .panel-tab-container {
+    display: none;
+
+    &.active {
+        display: block;
+    }
+}

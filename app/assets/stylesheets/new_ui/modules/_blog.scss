@@ -1,0 +1,36 @@
+.blog-listing {
+    list-style: none;
+    padding: 0;
+
+    > li {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid $blog-listing-item-border;
+
+        &:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border: none;
+        }
+    }
+
+    h3 {
+
+    }
+
+    .meta {
+        margin-bottom: 10px;
+    }
+
+    .actions {
+        > a {
+            @extend .btn;
+            @extend .btn-primary;
+            @extend .btn-sm;
+        }
+
+        [data-method="delete"] {
+            @extend .btn-warning;
+        }
+    }
+}

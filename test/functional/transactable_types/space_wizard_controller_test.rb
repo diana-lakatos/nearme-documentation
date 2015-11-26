@@ -366,14 +366,14 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
   context 'schedule bookings' do
     should 'not have duplicated schedule expiration rules' do
       stub_us_geolocation
-      params = get_params
+      params = get_params(booking_type: 'schedule', fixed_price: 1000)
       params['user']['companies_attributes']["0"]['locations_attributes']["0"]['listings_attributes']["0"]["schedule_attributes"] = {
         "sr_start_datetime(1i)"=>"2015",
         "sr_start_datetime(2i)"=>"8",
         "sr_start_datetime(3i)"=>"5",
         "sr_start_datetime(4i)"=>"12",
         "sr_start_datetime(5i)"=>"36",
-        "sr_every_hours"=>"",
+        "sr_every_hours"=>"2",
         "sr_from_hour(1i)"=>"2015",
         "sr_from_hour(2i)"=>"8",
         "sr_from_hour(3i)"=>"5",
@@ -384,7 +384,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
         "sr_to_hour(3i)"=>"5",
         "sr_to_hour(4i)"=>"12",
         "sr_to_hour(5i)"=>"36",
-        "sr_days_of_week"=>[""],
+        "sr_days_of_week"=>["1","2"],
         "use_simple_schedule"=>"1",
         "schedule"=>
          "{\"start_date\":\"2015-03-03T04:49:00.000Z\",\"rrules\":[{\"rule_type\":\"IceCube::WeeklyRule\",\"interval\":1,\"validations\":{\"day\":[1,5]}}]}",
@@ -447,7 +447,9 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
                "description"=>"We have a group of several shared desks available.",
                "action_hourly_booking" => false,
                "quantity"=>"1",
+               "booking_type" => options[:booking_type] || 'regular',
                "daily_price"=>options[:daily_price],
+               "fixed_price"=>options[:fixed_price],
                "weekly_price"=>options[:weekly_price],
                "monthly_price"=> options[:monthly_price],
                "action_free_booking"=>options[:free],

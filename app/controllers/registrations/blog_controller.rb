@@ -20,9 +20,12 @@ class Registrations::BlogController < ApplicationController
 
   def show
     @user = blog_user
-    @blog_post = blog_user.published_blogs.find(params[:id])
+    @blog_post = blog_user.blog_posts.find(params[:id])
     @render_content_outside_container = true
     @tags = @blog_post.tags
+    if !@blog_post.published? && @user != current_user
+      redirect_to user_path(blog_user), notice: t('user_blog.errors.post_not_yet_published')
+    end
   end
 
   private

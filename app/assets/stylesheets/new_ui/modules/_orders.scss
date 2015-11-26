@@ -1,0 +1,162 @@
+.orders-a {
+    .order {
+        padding: 30px;
+        border: 1px solid $reservation-border;
+    }
+
+
+    .order + .order {
+        margin-top: 30px;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    h3 + p {
+        margin-top: 0;
+    }
+
+    .dates {
+        list-style: none;
+        margin-top: 0;
+        padding: 0;
+    }
+
+    .times {
+        margin-top: 0;
+    }
+
+    .order-status {
+        font-size: 18px;
+
+
+        span:before {
+            @include fa-icon();
+        }
+
+        .confirmed:before, .completed:before {
+            content: $fa-var-check;
+            color: $brand-success;
+        }
+
+        .shipped:before {
+            content: $fa-var-plane;
+            color: $brand-success;
+        }
+
+
+        .unconfirmed:before {
+            content: $fa-var-exclamation;
+            color: $brand-warning;
+        }
+
+        @media (min-width: $screen-sm) {
+            text-align: right;
+        }
+    }
+
+    .order-actions {
+
+        form, .btn {
+            display: block;
+            width: 100%;
+            margin: 0 0 10px;
+        }
+
+        @media (min-width: $screen-sm) {
+
+            text-align: right;
+
+            form, .btn {
+                display: inline-block;
+                width: auto;
+            }
+        }
+    }
+
+    .order-tracking {
+        &:before {
+            display: inline-block;
+            @include fa-icon();
+            width: 15px;
+            text-align: center;
+            margin-right: 5px;
+        }
+
+        &.success:before {
+            content: $fa-var-check;
+            color: $brand-success;
+        }
+
+        &.warning:before {
+            content: $fa-var-exclamation;
+            color: $brand-warning;
+        }
+    }
+
+    .order-item {
+        margin: 20px 0;
+        img {
+            width: 100%;
+        }
+    }
+
+    .order-item + .order-item {
+        padding-top: 20px;
+        border-top: 1px solid $reservation-border;
+    }
+
+    .payment-documents {
+        margin-left: 20px;
+    }
+
+    .payment-totals {
+        width: 100%;
+
+        th, td {
+            padding-bottom: 10px;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        td {
+            text-align: right;
+        }
+
+        .total {
+            padding-top: 10px;
+            border-top: 1px solid;
+            font-size: 1.5em;
+        }
+    }
+
+    .shipment-summary {
+        th {
+            text-align: left;
+            padding-right: 20px;
+        }
+    }
+
+    @media (max-width: $screen-sm-min) {
+        h3, h4 {
+            margin-top: 1em;
+        }
+    }
+}
+
+.promote-location {
+    text-align: center;
+
+    .btn-primary {
+        margin: 0 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+
+        .fa {
+            margin-right: 5px;
+        }
+    }
+}

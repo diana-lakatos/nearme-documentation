@@ -1,0 +1,24 @@
+- if reservation.can_host_cancel?
+  = form_for reservation, method: :post, url: host_cancel_dashboard_company_host_reservation_path(reservation, listing_id: reservation.listing) do |f|
+    = f.submit t('dashboard.host_reservations.actions.cancel'), data: { confirm: t('dashboard.host_reservations.confirmations.cancel')}, class: 'btn btn-warning'
+
+- if reservation.can_confirm?
+  = form_for reservation, method: :post, url: confirm_dashboard_company_host_reservation_path(reservation, listing_id: reservation.listing) do |f|
+    = f.submit t('dashboard.host_reservations.actions.confirm'), data: { confirm: t('dashboard.host_reservations.confirmations.confirm') }, class: 'btn btn-success'
+
+- if reservation.can_reject?
+  = link_to t('dashboard.host_reservations.actions.decline'), rejection_form_dashboard_company_host_reservation_path(reservation, listing_id:reservation.listing), class: 'btn btn-warning', data: { modal: true }
+
+- if reservation.pending? && (reservation.unconfirmed? || reservation.confirmed?)
+  - if reservation.remote_payment?
+    = link_to  t('dashboard.host_reservations.actions.request_payment'), request_payment_dashboard_company_host_reservation_path(reservation, listing_id: reservation.listing), class: 'btn btn-warning', data: { confirm: t('dashboard.host_reservations.confirmations.request_payment') }
+  - elsif reservation.manual_payment?
+    = form_for reservation, method: :post, url: mark_as_paid_dashboard_company_host_reservation_path(reservation, listing_id: reservation.listing) do |f|
+      = f.submit  t('dashboard.host_reservations.actions.mark_as_paid'), data: { confirm:  t('dashboard.host_reservations.confirmations.mark_as_paid') }, class: 'btn btn-default'
+- if reservation.confirmed?
+  - if reservation.shipments.outbound.first
+    = link_to t('dashboard.host_reservations.shipping_label'), reservation.shipments.outbound.first.try(:label_url), class: 'btn btn-primary'
+    = link_to t('dashboard.host_reservations.track_package'), reservation.shipments.outbound.first.try(:tracking_url_provider), class: 'btn btn-primary'
+  - if reservation.shipments.inbound.first
+    = link_to t('dashboard.host_reservations.return_label'), reservation.shipments.inbound.first.try(:label_url), class: 'btn btn-default'
+    = link_to t('dashboard.host_reservations.return_track_package'), reservation.shipments.inbound.first.try(:tracking_url_provider), class: 'btn gray full'

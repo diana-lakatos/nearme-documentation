@@ -12,9 +12,8 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
       @transactable_in_location_opened_from_mon_to_friday = FactoryGirl.create(:transactable)
       @transactable_opened_whole_week = FactoryGirl.create(:always_open_listing)
       @transactable_with_own_availability_rules_for_tuesday = FactoryGirl.create(:transactable)
-      @transactable_with_own_availability_rules_for_tuesday.availability.each_day do |dow, rule|
-        @transactable_with_own_availability_rules_for_tuesday.availability_rules.create!(:day => dow, :open_hour => 9, :close_hour => 18) if dow == 2
-      end
+      @transactable_with_own_availability_rules_for_tuesday.availability_template.availability_rules.destroy_all
+      @transactable_with_own_availability_rules_for_tuesday.availability_template.availability_rules.create!(days: [2], open_hour: 9, close_hour: 18)
       @transactable_with_own_availability_rules_for_tuesday.save!
     end
 

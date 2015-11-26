@@ -1,0 +1,35 @@
+- title t('reservations.rfq_long')
+
+- content_for :page_header do
+  %h1= yield :title
+
+%nav.panel-nav
+  %ul.tabs.pull-left
+    - actions = ['open', 'resolved', 'all']
+    %li{class: @filter == 'open' ? 'active' : ''}
+      = link_to t('reservations.filters.open'), url_for(:filter => 'open')
+    %li{class: @filter == 'resolved' ? 'active' : ''}
+      = link_to t('reservations.filters.resolved'), url_for(:filter => 'resolved')
+    %li{class: @filter == 'all' ? 'active' : ''}
+      = link_to t('reservations.filters.all'), url_for(:filter => 'all')
+
+.panel
+  .panel-body
+    - if @tickets.empty?
+      %p.empty-resultset
+        = t('reservations.no_tickets')
+    - else
+      .table-responsive
+        %table.table
+          %thead
+            %tr
+              %th= t('reservations.tickets.ticket_no')
+              %th.hidden-xs= t('reservations.tickets.details')
+              %th.hidden-xs= t('reservations.tickets.target')
+              %th.hidden-xs= t('reservations.tickets.user')
+              %th.hidden-xs= t('reservations.tickets.last_updated')
+              %th= t('reservations.tickets.status')
+          %tbody
+            = render partial: 'dashboard/company/support/tickets/ticket', collection: @tickets
+
+= will_paginate_dashboard @tickets

@@ -1,0 +1,72 @@
+%h3= t('dashboard.merchant_account.header')
+
+= f.fields_for :stripe_connect_merchant_account do |maf|
+  - if merchant_account.persisted?
+    = maf.hidden_field :id
+    %div= t("dashboard.merchant_account.#{merchant_account.state}")
+
+  - if merchant_account.errors.present?
+    .errors-global
+      %ul
+        - merchant_account.errors.messages.values.each do |err|
+          %li= err
+
+  .form-group.string.optional
+    = maf.label :account_type, t('dashboard.merchant_account.account_type'), class: 'string optional control-label'
+    = maf.select :account_type, options_for_select([[t('dashboard.merchant_account.select_account_type'), '']] + MerchantAccount::StripeConnectMerchantAccount::ACCOUNT_TYPES.map { |at| [t("dashboard.merchant_account.#{at}"), at] }, maf.object.account_type), {}, class: 'form-control optional', data: {'account-type' => true}
+
+    - if MerchantAccount::StripeConnectMerchantAccount::SUPPORTED_CURRENCIES[merchant_account.location.upcase].size > 1
+      .form-group.string.optional
+        = maf.label :currency, t('dashboard.merchant_account.currency'), class: 'string optional control-label'
+        = maf.select :currency, options_for_select([[t('dashboard.merchant_account.select_currency'), '']] + MerchantAccount::StripeConnectMerchantAccount::SUPPORTED_CURRENCIES[merchant_account.location.upcase], maf.object.currency), {}, class: 'optional form-control'
+
+    .form-group.string.optional
+      = maf.label :bank_routing_number, t("dashboard.merchant_account.bank_routing_number.#{merchant_account.location}"), class: 'string optional control-label'
+      = maf.text_field :bank_routing_number, class: 'string optional form-control'
+
+    .form-group.string.optional
+      = maf.label :bank_account_number, t("dashboard.merchant_account.bank_account_number.#{merchant_account.location}"), class: 'string optional control-label'
+      = maf.text_field :bank_account_number, class: 'string optional form-control'
+
+
+    .form-group.string.optional
+      = maf.label :first_name, t('dashboard.merchant_account.first_name'), class: 'string optional control-label'
+      = maf.text_field :first_name, class: 'string optional form-control'
+
+    .form-group.string.optional
+      = maf.label :last_name, t('dashboard.merchant_account.last_name'), class: 'string optional control-label'
+      = maf.text_field :last_name, class: 'string optional form-control'
+
+    - if merchant_account.needs?('legal_entity.business_tax_id')
+      .hidden.form-group.string.optional{'data-account-type' => 'company'}
+        = maf.label :business_tax_id, t("dashboard.merchant_account.business_tax_id.#{merchant_account.location}"), class: 'string optional control-label'
+        = maf.text_field :business_tax_id, class: 'string optional form-control'
+
+    - if merchant_account.needs?('legal_entity.business_vat_id')
+      .hidden.string.form-group.optional{'data-account-type' => 'company'}
+        = maf.label :business_vat_id, t('dashboard.merchant_account.business_vat_id'), class: 'string optional control-label'
+        = maf.text_field :business_vat_id, class: 'string optional form-control'
+
+    - if merchant_account.needs?('legal_entity.ssn_last_4')
+      .form-group.string.optional
+        = maf.label :ssn_last_4, t('dashboard.merchant_account.ssn_last_4'), class: 'string optional control-label'
+        = maf.text_field :ssn_last_4, class: 'string optional form-control'
+
+    - if merchant_account.needs?('legal_entity.personal_id_number')
+      .form-group.string.optional
+        = maf.label :personal_id_number, t("dashboard.merchant_account.personal_id_number.#{merchant_account.location}"), class: 'string optional control-label'
+        = maf.text_field :personal_id_number, class: 'string optional form-control'
+
+    = maf.fields_for :owners do |maof|
+      = render 'dashboard/company/merchant_accounts/stripe_connect_owner_fields', f: maof, merchant_account: merchant_account
+
+    - if merchant_account.data[:fields_needed] && merchant_account.data[:fields_needed].join.index('additional_owners')
+      #owners
+        .links
+          = link_to_add_association t('dashboard.merchant_account.add_owner'), maf, :owners,
+            partial: 'dashboard/company/merchant_accounts/stripe_connect_owner_fields', render_options: {locals: {merchant_account: merchant_account}}
+          %br
+
+    %label
+      = maf.check_box :tos
+      Payment processing services for #{platform_context.lessee} on #{platform_context.name} are provided by Stripe and are subject to the <a href="https://stripe.com/connect/account-terms" target="_blank">Stripe Connected Account Agreement</a>, which includes the <a href="https://stripe.com/us/terms" target="_blank">Stripe Terms of Service</a> (collectively, the “Stripe Services Agreement”). By agreeing to [this agreement / these terms / etc.] or continuing to operate as a #{platform_context.lessee} on #{platform_context.name}, you agree to be bound by the Stripe Services Agreement, as the same may be modified by Stripe from time to time. As a condition of #{platform_context.name} enabling payment processing services through Stripe, you agree to provide #{platform_context.name} accurate and complete information about you and your business, and you authorize #{platform_context.name} to share it and transaction information related to your use of the payment processing services provided by Stripe.

@@ -1,0 +1,17 @@
+.transactable-schedule-container {
+    h4 + .nested-fields > .control-label.and {
+        display: none;
+    }
+
+    [data-pricing-run-mode] + p {
+        margin-top: 0;
+    }
+
+    .nested-fields + .nested-fields {
+        margin-top: 50px;
+    }
+}
+.add-availability-wrapper > span {
+    display: block;
+    margin-bottom: 10px;
+}

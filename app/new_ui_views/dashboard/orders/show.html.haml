@@ -1,0 +1,96 @@
+- title t('buy_sell_market.checkout.labels.order_details')
+
+- content_for :page_header do
+  %h1
+    = link_to t('orders.title.my_orders'), dashboard_orders_path, class: 'hidden-xs hidden-sm'
+    %span.hidden-xs.hidden-sm >
+    =  t('buy_sell_market.checkout.labels.order_details')
+
+
+
+.panel
+  .panel-body
+    .orders-a
+      %article.order
+        %header
+          %h2= t('buy_sell_market.checkout.labels.order_no', number: @order.number)
+
+        .row
+          .col-sm-3
+            %h4= t 'buy_sell_market.checkout.labels.billing_address'
+            %p= render 'dashboard/orders/address', address: @order.bill_address
+
+
+          .col-sm-3
+            %h4= t 'buy_sell_market.checkout.labels.shipping_address'
+            %p= render 'dashboard/orders/address', address: @order.shipping_address
+
+          .col-sm-3
+            %h4= t 'buy_sell_market.checkout.labels.shipping_method'
+            - @order.shipments.each do |shipment|
+              %p
+                = t('buy_sell_market.products.shipping.from')
+                %strong= shipment.stock_location.name
+                = t('buy_sell_market.products.shipping.via')
+                %br
+                %strong=shipment.selected_shipping_rate.name
+                - if shipment.shippo_tracking_number.present?
+                  %br
+                  = t('buy_sell_market.products.shipping.tracking_number', number: shipment.shippo_tracking_number)
+
+          .col-sm-3
+            %h4= t 'buy_sell_market.checkout.labels.payment'
+
+            %p
+              - if @charge_info && @charge_info.response['card']
+                #{t('buy_sell_market.checkout.labels.ending_in')} #{@charge_info.response['card']['last4']}
+                #{@charge_info.response['card']['name']}
+              - else
+                = t 'buy_sell_market.checkout.labels.na'
+
+        %h2= t 'buy_sell_market.checkout.labels.order_summary'
+
+        .table-responsive
+          %table.table
+            %thead
+              %th= t 'buy_sell_market.checkout.labels.item'
+              %th= t 'buy_sell_market.checkout.labels.price'
+              %th= t 'buy_sell_market.checkout.labels.qty'
+              %th= t 'buy_sell_market.checkout.labels.total'
+
+            %tbody
+              - @order.line_items.decorate.each do |item|
+                %tr
+                  %td= item.name_with_link
+                  %td= item.price
+                  %td= item.quantity
+                  %td= item.display_amount
+
+        .row
+          .col-sm-4.col-sm-push-8
+
+            %table.payment-totals
+              %tr
+                %th= t 'buy_sell_market.checkout.labels.subtotal'
+                %td= humanized_money_with_cents_and_symbol @order.monetize(@order.item_total)
+              %tr
+                %th= t 'buy_sell_market.checkout.labels.shipping'
+                %td= humanized_money_with_cents_and_symbol @order.monetize(@order.shipment_total)
+              %tr
+                %th= t 'buy_sell_market.checkout.labels.tax'
+                %td= humanized_money_with_cents_and_symbol @order.monetize(@order.additional_tax_total)
+              %tr
+                %th= t 'buy_sell_market.checkout.labels.service_fee'
+                %td= humanized_money_with_cents_and_symbol @order.service_fee_guest_without_charges
+              - if @order.additional_charges.any?
+                - @order.additional_charges.each do |charge|
+                  %tr
+                    %th= charge.name
+                    %td= humanized_money_with_cents_and_symbol charge.amount
+              %tr
+                %th.total= t 'buy_sell_market.checkout.labels.total2'
+                %td.total= humanized_money_with_cents_and_symbol @order.total_amount_to_charge
+
+        %br/
+
+        %small= t('orders.labels.order_placed_html', date: l(@order.completed_at, :format => :only_date))

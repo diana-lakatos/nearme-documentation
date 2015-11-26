@@ -40,6 +40,7 @@
 //= require custom_liquid_tags
 //= require dimensions_templates_select_behaviors
 //= require dimensions_templates_admin_behaviors
+//= require cocoon
 //
 //
 //= require_self

@@ -106,23 +106,18 @@ class Dashboard::Company::LocationsControllerTest < ActionController::TestCase
       assert_equal 'new description', @location.description
     end
 
-    should "should use default template if custom availability rules were not checked" do
-      put :update, format: :js, id: @location.id, location: { availability_template_id: "custom", availability_rules_attributes: availability_rules_params }
-      @location.reload
-      assert_equal 5, @location.availability_rules.count
-    end
-
     should "require availability rule to be opened for at least 1 hour" do
       put :update, format: :js, id: @location.id, location: {
-        availability_template_id: "custom",
-        availability_rules_attributes: {
-          "0" => { "day" => "1", "open_hour" => '9', "close_hour" => '9' }
+        availability_template_attributes: {
+          availability_rules_attributes: {
+            "0" => { "days" => [1], "open_hour" => '9', "close_hour" => '9' }
+          }
         }
 
       }
       @location = assigns(:location)
-      assert !@location.valid?
-      assert @location.errors.any? { |e| e.to_s == 'availability_rules.day_1' }
+      refute @location.availability_template.valid?
+      assert @location.availability_template.errors.any? { |e| e.to_s == 'availability_rules.close_time' }
     end
 
     should "destroy location" do
@@ -205,8 +200,8 @@ class Dashboard::Company::LocationsControllerTest < ActionController::TestCase
   private
 
   def availability_rules_params
-    @location.availability_rules.each.with_index.inject([]) do |arr, (a, index)|
-      arr[index] = { "id" => a.id, "day" => a.day, "_destroy" => "1" }
+    @location.availability_template.availability_rules.each.with_index.inject([]) do |arr, (a, index)|
+      arr[index] = { "id" => a.id, "days" => a.day, "_destroy" => "1" }
       arr
     end
   end

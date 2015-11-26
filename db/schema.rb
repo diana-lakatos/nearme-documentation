@@ -251,9 +251,10 @@ ActiveRecord::Schema.define(version: 20151125171443) do
     t.integer  "open_minute"
     t.integer  "close_hour"
     t.integer  "close_minute"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.datetime "deleted_at"
+    t.integer  "days",                     default: [],              array: true
   end
 
   add_index "availability_rules", ["target_type", "target_id"], name: "index_availability_rules_on_target_type_and_target_id", using: :btree
@@ -266,9 +267,12 @@ ActiveRecord::Schema.define(version: 20151125171443) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.integer  "parent_id"
+    t.string   "parent_type"
   end
 
   add_index "availability_templates", ["instance_id", "transactable_type_id"], name: "availability_templates_on_instance_id_and_tt_id", using: :btree
+  add_index "availability_templates", ["parent_type", "parent_id"], name: "index_availability_templates_on_parent_type_and_parent_id", using: :btree
 
   create_table "billing_authorizations", force: :cascade do |t|
     t.integer  "instance_id"
@@ -756,6 +760,7 @@ ActiveRecord::Schema.define(version: 20151125171443) do
     t.integer  "rank"
     t.string   "form_componentable_type",       limit: 255
     t.boolean  "is_approval_request_surfacing",             default: false
+    t.string   "ui_version"
   end
 
   add_index "form_components", ["instance_id", "form_componentable_id", "form_type"], name: "ttfs_instance_tt_form_type", using: :btree
@@ -1015,6 +1020,7 @@ ActiveRecord::Schema.define(version: 20151125171443) do
     t.string   "time_zone"
     t.string   "seller_attachments_access_level",       limit: 255,                         default: "disabled",    null: false
     t.integer  "seller_attachments_documents_num",                                          default: 10,            null: false
+    t.string   "priority_view_path"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1098,6 +1104,7 @@ ActiveRecord::Schema.define(version: 20151125171443) do
     t.integer  "wish_list_items_count",                      default: 0
     t.integer  "opened_on_days",                             default: [],                 array: true
     t.string   "time_zone",                      limit: 255
+    t.integer  "availability_template_id"
   end
 
   add_index "locations", ["address_id"], name: "index_locations_on_address_id", using: :btree
@@ -1658,7 +1665,7 @@ ActiveRecord::Schema.define(version: 20151125171443) do
 
   add_index "reviews", ["deleted_at"], name: "index_reviews_on_deleted_at", using: :btree
   add_index "reviews", ["instance_id"], name: "index_reviews_on_instance_id", using: :btree
-  add_index "reviews", ["rating_system_id", "reviewable_id", "reviewable_type"], name: "index_reviews_on_rating_system_id_and_reviewable", unique: true, using: :btree
+  add_index "reviews", ["rating_system_id", "reviewable_id", "reviewable_type", "deleted_at"], name: "index_reviews_on_rating_system_id_and_reviewable_and_deleted_at", unique: true, using: :btree
   add_index "reviews", ["reviewable_id", "reviewable_type"], name: "index_reviews_on_reviewable_id_and_reviewable_type", using: :btree
   add_index "reviews", ["transactable_type_id"], name: "index_reviews_on_transactable_type_id", using: :btree
   add_index "reviews", ["user_id"], name: "index_reviews_on_user_id", using: :btree
@@ -1699,15 +1706,34 @@ ActiveRecord::Schema.define(version: 20151125171443) do
 
   add_index "schedule_exception_rules", ["instance_id", "schedule_id"], name: "index_schedule_exception_rules_on_instance_id_and_schedule_id", using: :btree
 
+  create_table "schedule_rules", force: :cascade do |t|
+    t.string   "run_hours_mode"
+    t.decimal  "every_hours",    precision: 8, scale: 2
+    t.datetime "time_start"
+    t.datetime "time_end"
+    t.datetime "times",                                  default: [], array: true
+    t.string   "run_dates_mode"
+    t.integer  "week_days",                              default: [], array: true
+    t.datetime "dates",                                  default: [], array: true
+    t.datetime "date_start"
+    t.datetime "date_end"
+    t.integer  "instance_id"
+    t.integer  "schedule_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "schedule_rules", ["instance_id", "schedule_id"], name: "index_schedule_rules_on_instance_id_and_schedule_id", using: :btree
+
   create_table "schedules", force: :cascade do |t|
     t.datetime "start_at"
     t.datetime "end_at"
     t.text     "schedule"
-    t.string   "scheduable_type",     limit: 255
+    t.string   "scheduable_type",            limit: 255
     t.integer  "scheduable_id"
     t.integer  "instance_id"
     t.datetime "deleted_at"
-    t.boolean  "exception",                       default: false
+    t.boolean  "exception",                              default: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "simple_rules"
@@ -1715,8 +1741,9 @@ ActiveRecord::Schema.define(version: 20151125171443) do
     t.time     "sr_from_hour"
     t.time     "sr_to_hour"
     t.integer  "sr_every_hours"
-    t.text     "sr_days_of_week",                 default: [],    array: true
-    t.boolean  "use_simple_schedule",             default: true
+    t.text     "sr_days_of_week",                        default: [],    array: true
+    t.boolean  "use_simple_schedule",                    default: true
+    t.boolean  "unavailable_period_enabled",             default: true
   end
 
   add_index "schedules", ["instance_id", "scheduable_id", "scheduable_type"], name: "index_schedules_scheduable", using: :btree
@@ -3257,6 +3284,8 @@ ActiveRecord::Schema.define(version: 20151125171443) do
     t.string   "compiled_dashboard_stylesheet",           limit: 255
     t.string   "theme_digest",                            limit: 40
     t.string   "theme_dashboard_digest",                  limit: 40
+    t.string   "compiled_new_dashboard_stylesheet"
+    t.string   "theme_new_dashboard_digest"
   end
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
@@ -3372,9 +3401,9 @@ ActiveRecord::Schema.define(version: 20151125171443) do
     t.boolean  "date_pickers_use_availability_rules"
     t.string   "date_pickers_mode"
     t.integer  "position",                                                                       default: 0
-    t.string   "timezone_rule",                                                                  default: "location"
     t.boolean  "action_weekly_subscription_booking"
     t.boolean  "action_monthly_subscription_booking"
+    t.string   "timezone_rule",                                                                  default: "location"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -3437,6 +3466,7 @@ ActiveRecord::Schema.define(version: 20151125171443) do
     t.integer  "weekly_subscription_price_cents"
     t.integer  "monthly_subscription_price_cents"
     t.string   "slug"
+    t.integer  "availability_template_id"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

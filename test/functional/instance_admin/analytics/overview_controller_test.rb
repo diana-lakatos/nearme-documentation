@@ -13,7 +13,7 @@ class InstanceAdmin::Analytics::OverviewControllerTest < ActionController::TestC
 
     should 'show listings from last 30 days' do
       @fresh_transactable = FactoryGirl.create(:transactable)
-      @old_transactable = FactoryGirl.create(:transactable).update_column(:created_at, 31.days.ago)
+      @old_transactable = FactoryGirl.create(:transactable).update_column(:created_at, 32.days.ago)
       get :show
       assert_response :success
       assert_equal(

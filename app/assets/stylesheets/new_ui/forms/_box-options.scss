@@ -1,0 +1,84 @@
+// box options
+.box-options {
+    padding: 0;
+    list-style: none;
+    display: flex;
+
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+
+    > li {
+        position: relative;
+        width: 100%;
+        margin-bottom: 10px;
+        text-align: center;
+
+        @media (min-width: $screen-desktop) {
+            width: 32.5%;
+            margin-left: 1.25%;
+
+            &:nth-child(3n+1) {
+                margin-left: 0;
+            }
+        }
+
+        > label, > a, > .box-option {
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            background: $box-option-background;
+            border: 1px solid $box-option-border;
+            align-items: center;
+            padding: 0 30px;
+            height: 70px;
+            cursor: pointer;
+
+            &:hover, &:active {
+                outline: none;
+                text-decoration: none;
+                border: 3px solid $box-option-border-active;
+            }
+        }
+
+        > input[type=checkbox], input[type=radio] {
+            position: absolute;
+            clip: rect(0,0,0,0);
+        }
+
+        h5 {
+            font-size: 16px;
+            color: $box-option-heading-color;
+            margin: 0 0 5px;
+        }
+
+        p {
+            color: $box-option-text-color;
+            font-size: 12px;
+            margin: 0;
+            font-weight: normal;
+        }
+
+        > input:checked + label, &.active > a {
+            background: $box-option-background-active;
+            border: 3px solid $box-option-border-active;
+        }
+    }
+
+    .action--remove {
+        position: absolute;
+        z-index: 100;
+        right: 0;
+        top: 0;
+        padding: 10px;
+    }
+
+    @media (min-width: $screen-desktop) {
+        > li {
+            > label, > a, > .box-option {
+               height: 100px;
+            }
+        }
+    }
+}

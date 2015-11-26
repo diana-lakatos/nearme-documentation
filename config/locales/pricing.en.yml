@@ -1,0 +1,142 @@
+en:
+  pricing:
+    how_is_the_service_priced: 'How is the service priced?'
+    title: 'Pricing'
+    mode:
+      regular:
+        label: 'Time-Based'
+        description: 'Customer is charged per hour, day, week or month'
+      schedule:
+        label: 'Event'
+        description: 'Customer attends and pays for a scheduled event'
+      fixed:
+        label: 'Fixed'
+        description: 'Consumer pays one fixed price or a fixed price per unit'
+    price: 'Price'
+    required: 'required'
+    price_unit:
+      person: '/ person'
+      person_hour: '/ person / hour'
+      person_day: '/ person / day'
+      person_week: '/ person / week'
+      person_month: '/ person / month'
+      person_weekly: '/ person / weekly'
+      person_monthly: '/ person / monthly'
+    daily_rate:
+      title: 'For daily rates, what defines one day?'
+      hint: 'List a price hint text'
+      start_end_separator: 'starting day, to'
+      which_day_label: 'on the'
+      hours_count: 'hours after booking begins'
+      business_day: 'Business day (until closing time)'
+      hotel_day: 'Hotel day (ending next day)'
+    time_booking_option:
+      range:
+        label: 'Customer Chooses a Time Range'
+        hint: 'Hint text'
+        example: 'Example of time range based booking option'
+      quantity:
+        label: 'Customer Chooses a Quantity'
+        hint: 'Hint text'
+        example: 'Example of quantity based booking option'
+      example: 'Example'
+      or: 'or'
+    availability:
+      title: 'Availability'
+      mode:
+        edit: 'edit'
+        business_hours:
+          title: 'Business Hours'
+          description: 'Monday - Friday, 9am - 5pm'
+        alltime:
+          title: '24/7'
+          description: 'Sunday - Saturday, 12am-11:59pm'
+        location_hours:
+          title: 'Location Hours'
+          description: 'Monday - Friday, 9am - 10pm'
+        custom:
+          title: 'Custom'
+          description: 'Define Custom Availability'
+      available_from: 'Available from'
+      available_to: 'to'
+      available_on: 'on'
+      available_and: 'and'
+      remove_period: 'Remove this availability period'
+      different_availability_info: 'Do you have different availability on another day or days? If so, click ‘Add Availability’'
+      different_event_availability_info: 'Does your event run at different times on another day or days? If so, click ‘Add Availability’'
+      add_availability: 'Add Availability'
+      preset_info: 'Want to use this availability schedule for other listings?'
+      event_preset_info: 'Want to use this event schedule for other listings?'
+      save_preset: 'Save as Preset'
+
+    unavailability:
+      title: 'Add Unavailable Period?'
+      info: 'Unavailable periods can be used for holidays, vacations and other temporary closures'
+      remove_period: 'Remove this unavailability period'
+      add_another: 'Add Another'
+      from_to_separator: 'to'
+
+    # event pricing
+    capacity_unit:
+      people: '/ people'
+    discounts:
+      people: 'people'
+      square_feet: 'square feet'
+      remove: 'Remove discount'
+      add: 'Add Discount'
+
+    schedule:
+      exception_start: 'Date range'
+      and: 'and'
+      title: 'Event Schedule'
+      mode:
+        title: 'When does this event run?'
+        mpo: 'MPO Preset'
+        seller: 'Seller Preset'
+        custom: 'Custom'
+      remove: 'Remove preset'
+      remove_period: 'Remove period'
+      define_custom: 'Define Custom Schedule'
+      event_runs: 'Event Runs'
+      run_dates_mode:
+        recurring: 'recurring days'
+        specific: 'specific days'
+        range: 'date range'
+        choose_dates: 'Choose dates'
+      run_hours_mode:
+        recurring: 'every'
+        specific: 'at'
+        choose_hours: 'Choose hours'
+      and: 'and'
+      on_days: 'on'
+      book_it_out:
+        percent_discount: 'Percent discount'
+        minimum_bookings: 'Minimum bookings'
+        enable: 'Book it Out Discount'
+      exclusive_price:
+        enable: 'Exclusive price'
+        exclusive_price: 'Cost to Book Entire Event'
+
+      recurring:
+        from: 'hours, from'
+        to: 'to'
+      specific:
+        remove_time: 'Remove time'
+        add_time_prefix: 'and'
+        add_time: 'Add Time'
+        add_date_prefix: 'and'
+        add_date: 'Add Date'
+      range:
+        to: 'to'
+      events_count: '%{count} events'
+
+    fixed_pricing_option:
+      per_unit:
+        label: 'Fixed Price per Unit'
+        hint: 'Hint text'
+        square_foot: '/ square foot'
+      per_service:
+        label: 'Fixed Price per Service'
+        hint: 'Hint text'
+        total: 'total'
+      or: 'or'

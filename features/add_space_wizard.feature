@@ -19,7 +19,7 @@ Feature: A user can add a space
   Scenario: An unregistered user starts a draft, comes back to it, and saves it
     And I partially fill in space details
     And I press "Submit"
-    Then I should see "Please complete all fields! Alternatively, you can Save a Draft for later."
+    Then I should see "Please complete all fields! Alternatively, you can Save for later."
     And I press "Save as draft"
     Then I should see "Your draft has been saved!"
     And I fill in valid space details

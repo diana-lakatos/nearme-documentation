@@ -27,8 +27,8 @@ class TransactableDrop < BaseDrop
   #   the user object representing the administrator of this listing (if present)
   # last_booked_days
   #   number of days since the last reservation has been made
-  # defer_availability_rules?
-  #   returns true if the availability rules are deferred to the location object
+  # hide_defered_availability_rules?
+  #   returns true if the availability rules cann't be defered to the location object
   # lowest_price
   #   lowest price for this listing
   # lowest_full_price
@@ -56,7 +56,7 @@ class TransactableDrop < BaseDrop
   # possible_express_checkout
   #   returns true if paypal express gateway defined for country assigned to transactable
   delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :action_rfq?, :creator, :administrator, :last_booked_days,
-    :defer_availability_rules?, :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?,
+    :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?,
     :action_free_booking?, :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at,
     :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, to: :transactable
 

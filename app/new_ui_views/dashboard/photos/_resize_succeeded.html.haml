@@ -1,0 +1,9 @@
+%header.dialog__header
+  %h2#dialog__title= t('manage.photos.resize_succeeded')
+
+.dialog__body
+  %p.aligncenter
+    = t('manage.photos.changes_applied_soon')
+
+.dialog__actions
+  %button.btn.btn-primary{:type => "button", :"data-modal-close" => true}= t('manage.photos.continue')

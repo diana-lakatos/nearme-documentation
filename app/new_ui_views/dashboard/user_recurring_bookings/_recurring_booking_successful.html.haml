@@ -1,0 +1,6 @@
+%h2= t('dashboard.user_recurring_bookings.successful_booking')
+
+= render 'recurring_booking', recurring_booking: @recurring_booking.decorate, booking_class: 'emf'
+
+- unless (@recurring_bookings - [@recurring_booking]).empty?
+  %h2= t('dashboard.user_recurring_bookings.other_recurring_booking', count: (@recurring_bookings - [@recurring_booking]).count)

@@ -1,0 +1,32 @@
+h1, .h1,
+h2, .h2,
+h3, .h3,
+h4, .h4,
+h5, .h5,
+h6, .h6 {
+    &:first-child {
+        margin-top: 0;
+    }
+
+    &.sep {
+        margin-top: 50px;
+    }
+}
+
+p {
+  margin: $line-height-computed 0 ($line-height-computed / 2);
+
+  &.sep {
+    margin-top: 50px;
+  }
+}
+
+p + p {
+    margin-top: 0;
+}
+
+
+.leadin {
+    font-size: 16px;
+    font-weight: 300;
+}

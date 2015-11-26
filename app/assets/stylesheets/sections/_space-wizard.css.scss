@@ -111,24 +111,46 @@ section.space_wizard {
   .with-upload-button .fileupload {
     margin-left: 15px;
     margin-bottom: 10px;
-  
+
     .btn-blue {
       background: $blue;
       color: #fff;
     }
-  
+
     .uploaded {
       .attachment {
         margin-left: 10px;
-  
+
         img {
           vertical-align: text-top;
         }
       }
     }
-  
+
     .hint-block {
       font-size: 12px;
     }
   }
+
+    .availability-rules-wrapper {
+
+        .nested-fields-set {
+            .nested-fields {
+                padding: 20px;
+                border: 1px solid #efefef;
+                border-radius: 10px;
+                margin: 20px 0;
+
+                p:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        .always-inline.check_boxes .controls > .checkbox {
+            display: inline-block;
+            margin-right: 10px;
+        }
+    }
+
 }

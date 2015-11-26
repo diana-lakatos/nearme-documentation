@@ -14,6 +14,13 @@
 
     .row
       &nbsp;
+  .content-container
+    %h4 New dashboard UI
+    .row
+      - if current_instance.new_ui?
+        = link_to "Turn off New UI", revert_to_old_ui_instance_admin_theme_design_path, class: "btn btn-neutral btn-medium", data: { confirm: 'Are you sure?' }
+      -else
+        = link_to "Turn on New UI", convert_to_new_ui_instance_admin_theme_design_path, class: "btn btn-blue btn-medium", data: { confirm: 'Are you sure?' }
 
   .content-container
     %h4

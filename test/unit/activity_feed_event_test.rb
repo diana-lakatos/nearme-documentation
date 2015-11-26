@@ -53,7 +53,7 @@ class ActivityFeedEventTest < ActiveSupport::TestCase
 
       @activity_feed_event.event_source = event_source2
       assert_equal "&#147;#{event_source2.text}&#148;".html_safe, @activity_feed_event.description
-      
+
     end
 
     should "#event=" do

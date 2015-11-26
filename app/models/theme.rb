@@ -37,6 +37,7 @@ class Theme < ActiveRecord::Base
   mount_uploader :hero_image, ThemeImageUploader
   mount_uploader :compiled_stylesheet, ThemeStylesheetUploader
   mount_uploader :compiled_dashboard_stylesheet, ThemeStylesheetUploader
+  mount_uploader :compiled_new_dashboard_stylesheet, ThemeStylesheetUploader
 
   # Don't delete the from s3
   skip_callback :commit, :after, :remove_icon_image!
@@ -199,8 +200,9 @@ class Theme < ActiveRecord::Base
   def clear_stylesheets!
     self.remove_compiled_stylesheet = true
     self.compiled_dashboard_stylesheet = true
+    self.compiled_new_dashboard_stylesheet = true
     self.save(validate: true)
-    self.update_attributes(theme_digest: nil, theme_dashboard_digest: nil)
+    self.update_attributes(theme_digest: nil, theme_dashboard_digest: nil, theme_new_dashboard_digest: nil)
   end
 
   private

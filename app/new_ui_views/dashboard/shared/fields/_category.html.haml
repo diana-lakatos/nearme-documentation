@@ -1,0 +1,9 @@
+- error = f.object.errors[category.name.to_sym]
+= content_tag :div, class: error.present?  ? 'error' : '' do
+  -if category.present?
+    - if category.autocomplete?
+      = f.input :category_ids, as: :string, label: category.translated_name, :placeholder => "Enter a category", input_html: { "data-category-autocomplete" => true, "data-category-id" => category.id, "data-items" => f.object.common_categories_json(category), :"data-api" => dashboard_api_category_path(category), value: f.object.common_categories(category).map(&:id).join(',')}, required: category.mandatory?
+
+    - else
+      - hint = is_i18n_set?('simple_form.hints.shared.categories') ? t('simple_form.hints.shared.categories') : nil
+      = f.input :category_ids, as: :category_tree, label: category.translated_name, required: category.mandatory?, hint: hint, category: category

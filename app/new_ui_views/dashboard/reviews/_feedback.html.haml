@@ -1,0 +1,109 @@
+- if is_completed
+  - reviewable_id = feedback.reviewable_id
+  - reviewable_type = feedback.reviewable_type
+  - review_id = feedback.id
+- else
+  - reviewable_id = feedback.id
+  - reviewable_type = feedback.class.name
+  - review_id = nil
+
+
+= form_tag dashboard_reviews_path, class: 'review-form', data: { 'rating-system-id' => rating_system.id, 'review-id' => review_id, 'reviewable-id' => reviewable_id, 'reviewable-type' => reviewable_type, :'review-form' => (is_completed ? 'update' : 'create') } do
+
+  %h2.review-title= feedback.decorate.review_title
+
+  = hidden_field_tag :rating_system_id, rating_system.id
+  = hidden_field_tag :reviewable_id, reviewable_id
+  = hidden_field_tag :reviewable_type, reviewable_type
+
+  .row
+    .col-sm-3
+
+      .order-image
+        = feedback.decorate.order_image
+
+      .order-info
+        - created_at = is_completed ? feedback.reviewable.created_at : feedback.created_at
+        %p
+          = t('dashboard.reviews.feedback.order_placed_with_date', date: I18n.l(created_at, format: :only_date))
+
+        %p
+          = t('dashboard.reviews.feedback.order_id', id: (is_completed ? feedback.reviewable_id : feedback.id))
+
+        - if feedback.decorate.line_item?
+          %p
+            = link_to t('dashboard.reviews.feedback.view_order_details'), dashboard_order_path(is_completed ? feedback.reviewable.order : feedback.order)
+
+        - if is_completed
+          %p= feedback.decorate.link_to_user_profile
+
+        - else
+          %p
+            - if feedback.is_a?(Reservation)
+              - if rating_system.subject == RatingConstants::GUEST
+                = link_to t('dashboard.reviews.feedback.view_guest_profile'), user_path(feedback.owner)
+              - else
+                = link_to t('dashboard.reviews.feedback.view_host_profile'), user_path(feedback.creator)
+            - else
+              - if rating_system.subject == RatingConstants::GUEST
+                = link_to t('dashboard.reviews.feedback.view_buyer_profile'), user_path(feedback.order.user)
+              - else
+                = link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(feedback.order.company.creator)
+
+        - if platform_context.support_email
+          %p
+            = mail_to platform_context.support_email, t('dashboard.reviews.feedback.contact_name_support', name: PlatformContext.current.instance.name)
+
+    .col-sm-9
+      - if is_completed
+        %h3= t('dashboard.reviews.feedback.your_submitted_feedback')
+      - else
+        %h3= t('dashboard.reviews.feedback.leave_subject_feedback', subject: t("dashboard.reviews.feedback.subject.#{subject}", default: 'user'))
+
+      - score = is_completed ? feedback.rating : 0
+      %h4.overall
+        %span= t('dashboard.reviews.feedback.overall')
+        .rating{ data: { score: score, hints: rating_system.rating_hints.map(&:description_or_value).reverse }}
+
+
+      %h4= t('dashboard.reviews.feedback.details')
+
+      - if is_completed
+        - answers = feedback.rating_answers.reject { |answer| answer.rating_question.nil? }
+        - unless answers.blank?
+          %ul.rating-questions
+            - answers.each do |answer|
+              %li
+                %span= answer.rating_question.text
+                .rating{'data-score' => answer.rating, 'data-question-id' => answer.rating_question_id, 'data-answer-id' => answer.id}
+
+
+      - else
+        - unless rating_system.rating_questions.blank?
+          %ul.rating-questions
+            - rating_system.rating_questions.each do |q|
+              %li
+                %span= q.text
+                .rating{'data-question-id' => q.id, 'data-hints' => rating_system.rating_hints.map(&:description_or_value).reverse}
+
+      .comment
+        %blockquote=feedback.try(:comment)
+
+        .form-group
+          = label_tag "#{subject}-#{feedback.id}-comments".to_sym, t('dashboard.reviews.feedback.comments'), class: 'form-label'
+          = text_area_tag :comment, nil, id: "#{subject}-#{feedback.id}-comments", class: 'form-control'
+
+
+      %button.btn.btn-primary{ :type => "submit" }
+        = t('dashboard.reviews.feedback.submit_review')
+
+
+      - if is_completed
+        .review-actions
+          %button.btn.btn-primary.btn-sm{'data-edit-toggle' => true}= t('dashboard.reviews.feedback.edit')
+
+          = link_to dashboard_review_path(feedback), method: :delete, class: 'btn btn-warning btn-sm',
+              data: { confirm: t('dashboard.reviews.feedback.are_you_sure') } do
+            %span.fa.fa-trash
+            = t('general.delete')
+

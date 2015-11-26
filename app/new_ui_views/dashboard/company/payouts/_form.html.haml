@@ -1,0 +1,7 @@
+- if @payment_gateway.present?
+  = render @merchant_account_form_path, f: f, merchant_account: @merchant_account if @merchant_account_form_path
+- else
+  = f.simple_fields_for :payments_mailing_address, (f.object.payments_mailing_address.presence || f.object.build_payments_mailing_address) do |address_form|
+
+    = render 'dashboard/shared/fields/address', :f => address_form, field_label: t('payouts.mailing_address')
+

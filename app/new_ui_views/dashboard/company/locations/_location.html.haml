@@ -1,0 +1,8 @@
+- is_hidden = defined?(f) && f.object.location_id != location.id
+%span{:"data-location-id" => location.id, hidden: defined?(f) ? is_hidden : false }
+  |
+  = link_to t('dashboard.location.edit'), edit_dashboard_company_location_path(location, should_check_address: @transactable_type.try(:rental_shipping)), data: { modal: true }
+  - if !defined?(f) || f.object.location_id != location.id
+    |
+    = link_to t('dashboard.location.remove'), dashboard_company_location_path(location), remote: true, method: :delete,
+        data: { confirm: location.listings.count > 0 ? I18n.t('dashboard.location.are_you_sure', listings_count: location.listings.count) : I18n.t('confirmations.are_you_sure') }

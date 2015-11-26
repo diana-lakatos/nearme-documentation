@@ -1,0 +1,13 @@
+-# TODO: Probably obsolete
+%div
+  %header
+    %h2
+      %span.padding You are now being redirected.
+  = form_tag @billing_gateway.processor.gateway_url, :method => :post, id: 'remote-payment' do
+    -@billing_gateway.processor.payment_data.each do |key, val|
+      =hidden_field_tag key, val
+  =image_tag(@billing_gateway.processor.logo_image)
+:javascript
+  $(function() {
+    $('#remote-payment').submit()
+  });

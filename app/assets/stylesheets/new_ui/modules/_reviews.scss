@@ -1,0 +1,115 @@
+.review-form {
+
+    .order-image {
+        margin: 15px 0;
+
+        img {
+            display: block;
+            width: 100%;
+        }
+    }
+
+    .overall {
+        @include clear;
+        @media (min-width: $screen-md) {
+
+            .rating {
+                display: inline-block;
+                vertical-align: middle;
+                margin-left: 20px;
+            }
+        }
+    }
+
+    & + & {
+        margin-top: 50px;
+    }
+
+    .rating-error {
+        display: block;
+        color: $brand-warning;
+        font-weight: bold;
+    }
+
+    .thanks {
+        padding: 10px;
+        color: #fff;
+        background: $brand-success;
+        border-radius: $border-radius-base;
+        font-weight: bold;
+        margin: 20px 0;
+        text-align: center;
+    }
+
+    .rating-questions {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 20px;
+
+        li {
+            position: relative;
+            @include clear;
+
+            span {
+                display: block;
+            }
+
+            @media (min-width: $screen-md) {
+                span {
+                    float: left;
+                }
+
+                .rating {
+                    float: right;
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+
+    .comment {
+        .form-group {
+            display: none;
+        }
+    }
+
+    [type=submit] {
+        display: none;
+    }
+
+    blockquote:empty { display: none; }
+
+    &.is-editable {
+        .comment {
+            blockquote {
+                display: none;
+            }
+
+            .form-group {
+                display: block;
+            }
+        }
+
+        [type=submit] {
+            display: inline;
+        }
+    }
+
+    .rating-questions + .form-group {
+        margin-top: 20px;
+    }
+
+
+    .blockquote {
+        margin-bottom: 0;
+    }
+
+    .review-actions {
+        text-align: right;
+        margin-top: 20px;
+
+        .btn {
+            margin-left: 10px;
+        }
+    }
+}

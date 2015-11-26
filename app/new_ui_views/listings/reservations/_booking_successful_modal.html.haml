@@ -1,0 +1,3 @@
+- content_for :domready do
+  - if params[:action] == 'booking_successful'
+    Modal.load('#{booking_successful_listing_reservation_path(@reservation.listing, @reservation)}')

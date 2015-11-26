@@ -1,0 +1,81 @@
+- title t "dashboard.transactables.manage"
+- content_for :page_header do
+  %h1= yield :title
+
+
+-# top navigation in listing, this has to be duplicated
+-# for different mobile / desktop elements
+
+%nav.panel-nav-mobile.visible-sm.visible-xs
+  = dropdown_menu @transactable_type.translated_bookable_noun(10), { wrapper_class: 'links' } do
+    - TransactableType.services.each do |transactable_type|
+      %li{class: transactable_type == @transactable_type ? "active" : ""}
+        = link_to transactable_type.translated_bookable_noun(10), dashboard_company_transactable_type_transactables_path(transactable_type)
+
+  .options
+    = link_to new_dashboard_company_transactable_type_transactable_path(@transactable_type), class: "btn btn-primary" do
+      %span.fa.fa-plus
+      = t('dashboard.items.new_listing_short')
+
+
+%nav.panel-nav.hidden-xs.hidden-sm
+  %ul.tabs.pull-left
+    - TransactableType.services.each do |transactable_type|
+      %li{class: transactable_type == @transactable_type ? "active" : ""}
+        = link_to transactable_type.translated_bookable_noun(10), dashboard_company_transactable_type_transactables_path(transactable_type)
+
+  .pull-right.options
+    - if HiddenUiControls.find('dashboard/transactables/bulk_upload').visible?
+      = link_to t('data_upload.manage.bulk_upload'), new_dashboard_company_transactable_type_data_upload_path(@transactable_type), data: { modal: true }
+
+    = link_to new_dashboard_company_transactable_type_transactable_path(@transactable_type), class: "btn btn-primary navbar-btn" do
+      %span.fa.fa-plus
+      = t('dashboard.items.new_listing_full', type: @transactable_type.translated_bookable_noun(10))
+
+
+
+.panel.panel-default
+  .panel-body
+
+    - if HiddenUiControls.find('dashboard/transactables/search').visible?
+      = dashboard_simple_form_for '', :url => dashboard_company_transactable_type_transactables_path(@transactable_type), method: :get, html: { class: 'search' } do |f|
+        = f.input :query, as: :search, label: t('dashboard.items.search.search_your_products'), input_html: { value: params[:query] }, label_html: { class: 'sr-only' }
+        = f.button :submit, t('dashboard.items.search.search'), class: "hidden-xs hidden-sm btn btn-default"
+
+    -#
+      .listing-actions.hidden-sm.hidden-xs
+        .select-all.checkbox-standalone
+          = check_box_tag :select_all
+          = label_tag :select_all
+
+        = dropdown_menu t('dashboard.items.bulk_actions.label'), { toggler_class: 'btn-link' } do
+          %li
+            %a{:href => "#"}
+              = t('dashboard.items.bulk_actions.publish')
+          %li
+            %a{:href => "#"}
+              = t('dashboard.items.bulk_actions.delete')
+
+
+  - if @transactables.empty?
+    %p.empty-resultset= t('dashboard.items.empty', name: @transactable_type.name.pluralize.downcase)
+  - else
+    %table.table.table-listing
+      %thead.hidden-sm.hidden-xs
+        %tr
+          -# %td
+          %th.thumb{:scope => "col"}= t('dashboard.items.columns.photo')
+          %th.name{:scope => "col"}= t('dashboard.items.columns.name')
+          %th.location{:scope => "col"}
+            = @transactable_type.skip_location? ? t('dashboard.items.columns.quantity') : t('dashboard.items.columns.location')
+          %th.price{:scope => "col"}= t('dashboard.items.columns.price')
+          %th.added{:scope => "col"}= t('dashboard.items.columns.added')
+          %td.actions
+      %tbody
+        = render @transactables
+
+= will_paginate_dashboard @transactables
+
+
+
+

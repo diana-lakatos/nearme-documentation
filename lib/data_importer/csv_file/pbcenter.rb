@@ -27,7 +27,7 @@ class DataImporter::CsvFile::Pbcenter < DataImporter::CsvFile
       :phone => @current_row[10],
       :description => @current_row[12],
       :special_notes => (@current_row[13].to_s + "\n" + @current_row[14].to_s).strip,
-      :availability_rule_attributes => parse_availability_rules(@current_row[11]),
+      :availability_template_attributes => parse_availability_rules(@current_row[11]),
       :amenities => provided_amenities.compact.uniq
     }
   end
@@ -58,7 +58,7 @@ class DataImporter::CsvFile::Pbcenter < DataImporter::CsvFile
       :quantity => @current_row[18],
       :hourly_price_cents => (@current_row[20].to_i * 100),
       :daily_price_cents => (@current_row[21].to_i * 100),
-      :availability_rule_attributes => parse_availability_rules(@current_row[16])
+      :availability_template_attributes => parse_availability_rules(@current_row[16])
     }
   end
 
@@ -69,10 +69,8 @@ class DataImporter::CsvFile::Pbcenter < DataImporter::CsvFile
 
   def parse_availability_rules(cell)
     availability_hash = parse_availability_string(cell)
-    (1..5).inject([]) do |arr, day|
-      availability_hash[:day] = day
-      arr.tap { |a| a <<  availability_hash.clone }
-    end
+    availability_hash[:days] = (1..5).to_a
+    arr.tap { |a| a <<  availability_hash.clone }
   end
 
 
@@ -81,10 +79,12 @@ class DataImporter::CsvFile::Pbcenter < DataImporter::CsvFile
     open_array = open_close_array[0].split(':')
     close_array = open_close_array[1].split(':')
     {
-      :open_hour => open_array[0],
-      :open_minute => open_array[1].to_i,
-      :close_hour => close_array[0].to_i + 12,
-      :close_minute => close_array[1].to_i
+      availability_rules_attributes: {
+        :open_hour => open_array[0],
+        :open_minute => open_array[1].to_i,
+        :close_hour => close_array[0].to_i + 12,
+        :close_minute => close_array[1].to_i
+      }
     }
   end
 

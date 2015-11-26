@@ -19,7 +19,7 @@
         - if !@blog.enabled?
           = t 'user_blog.labels.blog_disabled'
         - else
-          = t 'user_blog.labels.no_posts'
+          = t 'user_blog.labels.no_posts', button_name: t('user_blog.buttons.add_post')
 
   - else
     .table-responsive

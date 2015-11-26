@@ -8,6 +8,15 @@ class InstanceTest < ActiveSupport::TestCase
     @instance = Instance.first
   end
 
+  context 'availability_templates' do
+    should 'should have 2 availability_templates' do
+      @new_instance = FactoryGirl.create(:instance)
+      @new_instance.set_context!
+      assert_equal 2, @new_instance.availability_templates.count
+      assert_equal ['24/7', 'Working Week'], @new_instance.availability_templates.pluck(:name).sort
+    end
+  end
+
   context 'imap' do
 
     setup do

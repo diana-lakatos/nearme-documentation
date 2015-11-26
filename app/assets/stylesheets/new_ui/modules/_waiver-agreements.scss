@@ -1,0 +1,22 @@
+.waiver-agreement {
+
+    & + & {
+        margin-top: 50px;
+    }
+
+    .actions {
+        margin-bottom: 20px;
+    }
+
+
+    @media (min-width: $screen-sm) {
+        header {
+            border-bottom: 1px solid $waiver-agreement-header-border;
+            margin-bottom: 20px;
+        }
+
+        .actions {
+            text-align: right;
+        }
+    }
+}

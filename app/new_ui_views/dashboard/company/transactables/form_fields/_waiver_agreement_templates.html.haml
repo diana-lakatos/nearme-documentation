@@ -1,0 +1,2 @@
+- if @company.waiver_agreement_templates.any?
+  = f.association :waiver_agreement_templates, collection: @company.waiver_agreement_templates.order(:name).pluck(:name, :id), as: :check_boxes

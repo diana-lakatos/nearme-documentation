@@ -1,0 +1,20 @@
+- price ||= nil
+- label ||= nil
+- include_checkbox ||= nil
+.col-md-12.price-containter{class: "#{'error' if f.object.errors[:"#{price}_price"].present? || f.object.errors[:price_type].present?}"}
+  -if include_checkbox
+    .col-md-1
+      %label.checkbox{for: "enable_#{price}"}
+        = check_box_tag "enable_#{price}", "1", f.object.send("#{price}_price").present?, class: "enable_#{price}", :'data-behavior' => 'enable-price'
+  .col-md-5
+    .input-group
+      %span.input-group-addon.currency_addon= currency_symbol_from_code(@transactable.try(:currency) || PlatformContext.current.instance.default_currency)
+      = f.number_field "#{price}_price", as: :decimal, label: false, class: 'mini price-input', :'data-type' => 'price-input'
+  .col-md-3
+    %span.periodicity /#{label}
+
+  - if f.object.errors[:"#{price}_price"].present? || f.object.errors[:price_type].present?
+    .col-md-3
+      %p.error-block
+        = f.object.errors[:"#{price}_price"].try(:first)
+        = f.object.errors[:price_type].try(:first)

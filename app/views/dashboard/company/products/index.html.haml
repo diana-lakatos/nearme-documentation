@@ -15,8 +15,8 @@
           = link_to product_type.name.pluralize, dashboard_company_product_type_products_path(product_type)
 
   - if HiddenUiControls.find('dashboard/products/search').visible?
-    = simple_form_for :search, wrapper: :bs3, :url => dashboard_company_products_path, :method => :get do |f|
-      = f.input :query, label: t('dashboard.items.search.search_your_products'), input_html: { value: (params[:search] || {})[:query] }
+    = simple_form_for '', wrapper: :bs3, :url => dashboard_company_product_type_products_path(@product_type), html: { class: 'search' }, :method => :get do |f|
+      = f.input :query, label: t('dashboard.items.search.search_your_products'), input_html: { value: params[:query] }
       .row
         .col-md-12
           = f.submit t('dashboard.items.search.search'), class: "btn medium blue pull-right"

@@ -1,0 +1,186 @@
+.panel-body {
+  padding: 10px $panel-body-padding;
+
+  @media (min-width: $screen-desktop) {
+    padding: $panel-body-padding;
+  }
+}
+
+.panel-nav-mobile {
+    @include clear;
+    padding: 10px $panel-body-padding;
+    margin-top: -30px;
+
+    .alert + & {
+        margin-top: 0;
+    }
+
+    .links {
+        float: left;
+
+        > button {
+            padding-left: 0;
+            padding-right: 0;
+            height: 30px;
+            border: none;
+            background: none;
+            color: inherit;
+        }
+    }
+
+    .options {
+        float: right;
+    }
+}
+
+.panel-nav {
+    @include clear;
+    background: $panel-nav-background;
+    border: 1px solid $panel-nav-border;
+    padding: 0;
+
+    .tabs {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        display: flex;
+        width: 100%;
+
+        li {
+            flex: 1;
+            text-align: center;
+        }
+
+        > li > a {
+            position: relative;
+            display: block;
+            height: 50px;
+            padding-left: 20px;
+            padding-right: 20px;
+            line-height: 50px;
+            text-decoration: none;
+            color: $panel-nav-link;
+            border-right: 1px solid $panel-nav-border;
+        }
+
+        > li.active > a {
+            color: $panel-nav-link-active;
+            background: $panel-nav-link-active-background;
+
+            &:after {
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 100%;
+                border-bottom: 1px solid $panel-nav-link-active-background;
+            }
+        }
+
+        .error-count {
+
+        }
+    }
+
+    @media (max-width: $screen-desktop) {
+        .tabs li:last-child a {
+            border-right: none;
+        }
+    }
+
+    @media (min-width: $screen-desktop) {
+        padding: 0 $padding-base-horizontal;
+
+        .tabs.pull-left {
+            margin-left: -$padding-base-horizontal;
+            width: auto;
+        }
+
+        .tabs {
+            display: block;
+
+            > li {
+                float: left;
+
+                > a {
+                    padding-left: $padding-base-horizontal;
+                    padding-right: $padding-base-horizontal;
+                }
+            }
+        }
+    }
+
+    .options {
+        display: none;
+        padding-top: 9px;
+
+        @media (min-width: $screen-desktop) {
+            display: block;
+        }
+
+        a {
+            margin-left: 20px;
+        }
+
+        .btn {
+            @extend %button-mid-width;
+        }
+
+        .form-group {
+            display: inline-block;
+            margin: 0;
+
+            label {
+                display: inline-block;
+                margin-bottom: 0;
+                font-weight: normal;
+            }
+
+            &.switch {
+                display: inline-block;
+                vertical-align: middle;
+                white-space: nowrap;
+
+                overflow: hidden;
+
+                .controls {
+                    display: inline-block;
+                    vertical-align: middle;
+                    margin-left: 20px;
+                }
+            }
+        }
+    }
+}
+
+.panel-nav + .panel {
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.panel-default {
+    > .panel-heading, > .panel-footer {
+        @include clear;
+        background: none;
+        font-size: 16px;
+        padding: 15px $panel-body-padding;
+    }
+}
+
+// Dashboard classes
+.dash-page {
+    @extend .panel;
+}
+
+.dash-body {
+    @extend .panel-body;
+}
+
+.dash-head {
+    @extend .panel-heading;
+}
+
+.dash-foot {
+    @extend .panel-footer;
+}

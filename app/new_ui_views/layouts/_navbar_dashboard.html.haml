@@ -1,0 +1,4 @@
+- navigation_links = render 'layouts/dashboard_header_navigation'
+= render 'layouts/theme_dashboard_header', navigation_links: navigation_links,
+    no_header_links: (no_header_links?.nil? ? false : no_header_links?)
+

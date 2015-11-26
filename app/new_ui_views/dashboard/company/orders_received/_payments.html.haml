@@ -1,0 +1,21 @@
+-# TODO Deprecated
+%h3 Payment information:
+
+%br
+%ul.location-and-listings
+  %li.listing.action-buttons
+    .span2= t('payment.created_at')
+    .span2= t('payment.amount')
+    .span2= t('payment.payment_method')
+    .span2= t('payment.payment_state')
+    .span2.state.text-right
+  - @order.payments.valid.each do |payment|
+    %li.listing.action-buttons
+      .span2= payment.created_at.to_date
+      .span2= number_to_currency_symbol(payment.order.currency, payment.amount)
+      .span2 Credit Card
+      .span2= payment.state
+      .span2
+        = link_to("Capture", capture_dashboard_company_orders_received_payment_path(@order.number, payment.id),
+            class: 'btn btn-medium btn-green',
+            data: { confirm: 'Are you sure you want to capture this order?' }) unless payment.completed?

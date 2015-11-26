@@ -8,7 +8,11 @@ class Spree::LineItemDecorator < Draper::Decorator
   MAX_QTY_FOR_SELECT = 15
 
   def name_with_link(target='')
-    link_to object.product.name, product_url(object.product), target: target
+    unless object.product.deleted?
+      link_to object.product.name, product_url(object.product), target: target
+    else
+      object.product.name
+    end
   end
 
   def description
@@ -36,12 +40,16 @@ class Spree::LineItemDecorator < Draper::Decorator
   end
 
   def image(target='')
-    link_to product_url(object.product), target: target do
-      if object.product.variant_images.count > 0
-        image_tag object.product.variant_images.first.image.url(:medium)
-      else
-        image_tag 'placeholders/144x89.gif'
+    unless object.product.deleted?
+      link_to product_url(object.product), target: target do
+        if object.product.variant_images.count > 0
+          image_tag object.product.variant_images.last.image.url(:medium)
+        else
+          image_tag 'placeholders/144x89.gif'
+        end
       end
+    else
+      image_tag 'placeholders/144x89.gif'
     end
   end
 

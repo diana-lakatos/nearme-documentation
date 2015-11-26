@@ -4,7 +4,9 @@ class Dashboard::ProjectsController < Dashboard::BaseController
   before_filter :set_form_components, only: [:new, :create, :edit, :update]
 
   def index
-    @projects = CustomObjectHstoreSearcher.new(@transactable_type, @transactable_type.projects.where(creator_id: current_user.id)).projects(params[:search]).order('created_at DESC').paginate(page: params[:page], per_page: 20)
+    @projects = @transactable_type.projects.where(creator_id: current_user.id).
+      search_by_query([:name, :description, :summary], params[:query]).
+        order('created_at DESC').paginate(page: params[:page], per_page: 20)
   end
 
   def new

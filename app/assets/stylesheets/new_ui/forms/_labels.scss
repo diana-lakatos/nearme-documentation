@@ -1,0 +1,9 @@
+.control-label {
+    font-size: $form-element-font-size;
+    font-weight: bold;
+}
+
+abbr[title="required"] {
+    color: $form-label-required;
+    border: none;
+}

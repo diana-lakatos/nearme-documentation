@@ -13,7 +13,9 @@ class Dashboard::Company::ProductsController < Dashboard::Company::BaseControlle
   before_filter :ensure_system_shipping_categories_copied, only: [:new, :edit]
 
   def index
-    @products = CustomObjectHstoreSearcher.new(@product_type, @company.products.of_type(@product_type)).products(params[:search]).paginate(page: params[:page], per_page: 20)
+    @products = @company.products.of_type(@product_type).
+      search_by_query([:name, :description, :extra_properties], params[:query]).
+        paginate(page: params[:page], per_page: 20)
   end
 
   def new
@@ -33,8 +35,10 @@ class Dashboard::Company::ProductsController < Dashboard::Company::BaseControlle
     else
       @images = @product_form.product.images
       @attachments = current_user.attachments.where(assetable_id: nil)
-      flash.now[:error] = t('flash_messages.product.complete_fields')
-      flash.now[:error] = t('flash_messages.product.missing_fields_invalid') if @product_form.required_field_missing?
+      unless current_instance.new_ui?
+        flash.now[:error] = t('flash_messages.product.complete_fields')
+        flash.now[:error] = t('flash_messages.product.missing_fields_invalid') if @product_form.required_field_missing?
+      end
       render :new
     end
   end

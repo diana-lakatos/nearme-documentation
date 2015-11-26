@@ -1,0 +1,16 @@
+%header.dialog__header
+  %h2#dialog__title
+    - if @location.new_record?
+      = t('locations.add_new_location')
+    - else
+      = t('locations.edit_location')
+
+= dashboard_simple_form_for([:dashboard, :company, @location], html: { :"data-modal" => true, :"data-includes-address-field" => true } ) do |f|
+  .dialog__body
+
+    = render 'dashboard/shared/flash'
+
+    = render :partial => 'location_form', :locals => { :f => f, :location => @location }
+
+  .dialog__actions
+    = f.submit t('locations.save_location')

@@ -52,4 +52,8 @@ class TransactableDecorator < Draper::Decorator
     @first_occurrence ||= next_available_occurrences(1, { start_date: start_date }).first || {}
   end
 
+  def listing_date
+    I18n.l(created_at, format: :day_month_year)
+  end
+
 end

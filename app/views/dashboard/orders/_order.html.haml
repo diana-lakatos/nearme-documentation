@@ -40,7 +40,7 @@
           = render 'dashboard/orders/line_item', item: item
 
           .col-md-4.order-actions
-            - if has_active_rating_system? && order.reviewable? && !received_orders
+            - if has_active_rating_system? && order.reviewable?(current_user) && !received_orders
 
               - if item.has_seller_reviews?
                 = link_to dashboard_reviews_path(tab: 'completed') do
@@ -85,7 +85,7 @@
           .additional-item
             = render 'dashboard/orders/line_item', item: item
             .col-md-4
-            - if order.reviewable? && !received_orders
+            - if order.reviewable?(current_user) && !received_orders
               - if item.has_product_reviews?
                 = link_to dashboard_reviews_path(tab: 'completed') do
                   %span.btn.blue= t 'orders.buttons.update_product_review'

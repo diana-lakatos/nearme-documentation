@@ -1,0 +1,53 @@
+// Flash messages
+@mixin alert-color($class, $background, $color: null, $close: null) {
+    &.#{$class} {
+        background: $background;
+        color: $color;
+
+        .close {
+            color: $close;
+        }
+    }
+}
+
+.alert {
+    margin: 0 20px 10px;
+    overflow: hidden;
+
+    .close {
+        vertical-align: middle;
+        margin-left: 30px;
+        padding: 0;
+        background: none;
+        text-align: center;
+        border: none;
+        font-size: 16px;
+        color: inherit;
+        font-size: 0;
+
+        &:before {
+            @include fa-icon();
+            content: $fa-var-times-circle;
+            font-size: 22px;
+        }
+    }
+
+    ul {
+        margin-bottom: 0;
+    }
+
+    li + .close, ul + .close {
+        margin-left: 0;
+    }
+
+    @include alert-color(error,   $flash-error-background,   $flash-error-color,   $flash-error-close);
+    @include alert-color(notice,  $flash-notice-background,  $flash-notice-color,  $flash-notice-close);
+    @include alert-color(warning, $flash-warning-background, $flash-warning-color, $flash-warning-close);
+    @include alert-color(success, $flash-success-background, $flash-success-color, $flash-success-close);
+    @include alert-color(deleted, $flash-deleted-background, $flash-deleted-color, $flash-deleted-close);
+
+    @media (min-width: $screen-sm) {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
