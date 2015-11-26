@@ -9,6 +9,10 @@ class ElasticIndexerJob < Job
     @options = options
   end
 
+  def self.priority
+    5
+  end
+
   def perform
     return if Rails.env.test?
     client = Elasticsearch::Model.client
