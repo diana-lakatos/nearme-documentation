@@ -56,7 +56,8 @@ module DesksnearMe
     config.assets.paths           << %(#{Rails.root}/app/assets/videos)
 
     config.assets.precompile += [
-      'ckeditor/*'
+      'ckeditor/*',
+      'jquery.js'
     ]
     config.assets.precompile += [
       "vendor/jquery.backgroundSize.min.js","vendor/respond.proxy.js", "vendor/respond.min.js",
