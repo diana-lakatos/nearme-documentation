@@ -24,12 +24,12 @@ $gray:                   #555;
 $gray-light:             #808080;
 $gray-lighter:           #ccc;
 
-$brand-primary:         <%= theme.hex_color(:blue) %>;
+$brand-primary:         <%= theme.hex_color(:blue).presence || '#239ed9' %>;
 $brand-primary-dark:    darken($brand-primary, 13.5%);
 $brand-success:         #5cb85c !default;
 $brand-info:            #5bc0de !default;
-$brand-warning:         <%= theme.hex_color(:orange) %>;
-$brand-danger:          <%= theme.hex_color(:red) %>;
+$brand-warning:         <%= theme.hex_color(:orange).presence || '#e45d51' %>;
+$brand-danger:          <%= theme.hex_color(:red).presence || '#e45d51' %>;
 
 $brand-danger-dark:     darken($brand-danger, 13.5%);
 
@@ -1019,23 +1019,23 @@ $modal-content-background: #fff;
 $chart-border: #f4f4f4;
 
 // Flash messages
-$flash-error-background: <%= theme.hex_color(:red) %>;
+$flash-error-background: <%= theme.hex_color(:red).presence || '#e45d51' %>;
 $flash-error-color: #fff;
 $flash-error-close: #fff;
 
-$flash-notice-background: <%= theme.hex_color(:green) %>;
+$flash-notice-background: <%= theme.hex_color(:green).presence || '#157a49' %>;
 $flash-notice-color: #fff;
 $flash-notice-close: #fff;
 
-$flash-warning-background: <%= theme.hex_color(:orange) %>;
+$flash-warning-background: <%= theme.hex_color(:orange).presence || '#e45d51' %>;
 $flash-warning-color: #fff;
 $flash-warning-close: #fff;
 
-$flash-success-background: <%= theme.hex_color(:green) %>;
+$flash-success-background: <%= theme.hex_color(:green).presence || '#157a49' %>;
 $flash-success-color: #fff;
 $flash-success-close: #fff;
 
-$flash-deleted-background: <%= theme.hex_color(:red) %>;
+$flash-deleted-background: <%= theme.hex_color(:red).presence || '#e45d51' %>;
 $flash-deleted-color: #fff;
 $flash-deleted-close: #fff;
 

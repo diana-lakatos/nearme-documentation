@@ -37,14 +37,14 @@
 
           .row
             .inline
-              - if recurring_booking.listing.present?
+              - if recurring_booking.listing.present? && !recurring_booking.listing.deleted?
                 = link_to recurring_booking.listing.try(:name), location_path(recurring_booking.listing.location, recurring_booking.listing)
                 %br
                 %span.address
                   = link_to recurring_booking.listing.location.address,
                       "http://maps.apple.com/?q=#{recurring_booking.listing.location.address}", target: '_blank'
               - else
-                [listing deleted]
+                = "#{recurring_booking.listing.try(:name)} [listing deleted]"
               %p QTY: #{recurring_booking.quantity}
               - if recurring_booking.guest_notes.present?
                 %p= "#{t('dashboard.user_recurring_bookings.user_note')} #{recurring_booking.guest_notes}"

@@ -16,12 +16,6 @@ FactoryGirl.define do
     facebook_url 'https://www.facebook.com/DesksNearMe'
     owner_id { PlatformContext.current.instance.id }
     owner_type "Instance"
-    color_blue '41bf8b'
-    color_red 'e83d33'
-    color_orange 'FF8D00'
-    color_green '6651af'
-    color_black '1e2222'
-    color_white 'fafafa'
     skip_compilation true
 
     factory :theme_with_logo_image do

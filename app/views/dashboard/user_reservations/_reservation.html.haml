@@ -46,14 +46,14 @@
         .col-md-8
           .row
             .inline
-              - if reservation.listing.present?
+              - if reservation.listing.present? && !reservation.listing.deleted?
                 = link_to reservation.listing.try(:name), location_path(reservation.listing.location, reservation.listing)
                 %br
                 %span.address
                   = link_to reservation.listing.location.address,
                       "http://maps.apple.com/?q=#{reservation.listing.location.address}", target: '_blank'
               - else
-                [listing deleted]
+                = "#{reservation.listing.try(:name)} [listing deleted]"
               %p QTY: #{reservation.quantity}
               - if reservation.guest_notes.present?
                 %p= t('dashboard.user_reservations.exclusive_price_guests_notes', guest_notes: reservation.guest_notes)

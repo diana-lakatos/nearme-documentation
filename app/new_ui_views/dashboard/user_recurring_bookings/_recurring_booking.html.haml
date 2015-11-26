@@ -3,10 +3,10 @@
     .row
       .col-sm-7
         %h2
-          - if recurring_booking.listing.present?
+          - if recurring_booking.listing.present? && !recurring_booking.listing.deleted?
             = link_to recurring_booking.listing.try(:name), location_path(recurring_booking.listing.location, recurring_booking.listing)
           - else
-            = t('dashboard.user_recurring_bookings.listing_deleted')
+            = "#{recurring_booking.listing.try(:name)} [#{t('dashboard.user_recurring_bookings.listing_deleted')}]"
 
       .col-sm-5
         .order-status
@@ -33,7 +33,7 @@
           = link_to t('dashboard.user_recurring_bookings.show_on_map'), "http://maps.apple.com/?q=#{recurring_booking.listing.location.address}", target: '_blank'
           ]
       - else
-        %h3 [#{t('dashboard.user_recurring_bookings.listing_deleted')}]
+        %h3= t('dashboard.user_reservations.listing_deleted')
 
     .col-sm-2
       %h3= t('dashboard.user_recurring_bookings.quantity')
