@@ -3,12 +3,13 @@ require "autoprefixer-rails"
 # Compiles our custom instance theme stylesheets, etc.
 class Theme::Compiler
   def initialize(theme)
-    PlatformContext.current = PlatformContext.new(theme.instance)
+    PlatformContext.current = PlatformContext.new(theme.instance) if theme.instance
     @theme = Theme.find(theme.id)
   end
 
   # Generates the new stylesheet assets and updates the theme data accordingly.
   def generate_and_update_assets
+    raise "Skipping Theme #{theme.id}. Instance for Theme doesn't exist" unless PlatformContext.current
 
     if cumulative_digest('theme') != @theme.theme_digest
       @theme.compiled_stylesheet = {

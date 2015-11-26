@@ -2,14 +2,14 @@
   %header
     .row
       .col-sm-7
-        - if reservation.listing.present?
+        - if reservation.listing.present? && !reservation.listing.deleted?
           %h2
             - listing_name = reservation.listing.try(:name)
             - listing_name = t('dashboard.host_reservations.show_listing_page') if listing_name.blank?
             = link_to listing_name, location_path(reservation.listing.location, reservation.listing)
 
         - else
-          %h2= t('dashboard.user_reservations.listing_deleted')
+          %h2= "#{reservation.listing.try(:name)} [#{t('dashboard.user_reservations.listing_deleted')}]"
 
       .col-sm-5
         .order-status
@@ -38,7 +38,7 @@
           = link_to t('dashboard.user_reservations.show_on_map'), "http://maps.apple.com/?q=#{reservation.listing.location.address}", target: '_blank'
           ]
       - else
-        %h3 [#{t('dashboard.user_reservations.listing_deleted')}]
+        %h3= t('dashboard.user_reservations.listing_deleted')
 
     .col-sm-2
       %h3= t('dashboard.user_reservations.quantity')
