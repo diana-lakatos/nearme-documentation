@@ -11,11 +11,13 @@ class CustomFieldsBuilder
     when FormComponent::SPACE_WIZARD
       if @form_componentable.instance_of?(ServiceType)
         to_object_field_notation(user_fields, 'user') +
+          to_object_field_notation(seller_fields, 'seller') +
           to_object_field_notation(company_fields, 'company') +
           to_object_field_notation(location_fields, 'location') +
           to_object_field_notation(transactable_fields, 'transactable')
       elsif @form_componentable.instance_of?(Spree::ProductType)
         to_object_field_notation(user_fields, 'user') +
+          to_object_field_notation(seller_fields, 'seller') +
           to_object_field_notation(company_fields, 'company') +
           to_object_field_notation(product_fields, 'product')
       elsif @form_componentable.instance_of?(ProjectType)
@@ -32,6 +34,10 @@ class CustomFieldsBuilder
       to_object_field_notation(dashboard_transactable_fields, 'transactable')
     when FormComponent::INSTANCE_PROFILE_TYPES
       to_object_field_notation(user_fields, 'user')
+    when FormComponent::SELLER_PROFILE_TYPES
+      to_object_field_notation(seller_fields, 'seller')
+    when FormComponent::BUYER_PROFILE_TYPES
+      to_object_field_notation(buyer_fields, 'buyer')
     else
       raise NotImplementedError
     end
@@ -65,6 +71,8 @@ class CustomFieldsBuilder
       case object
       when 'user'
         user_fields
+      when 'seller'
+        seller_fields
       when 'company'
         company_fields
       when 'location'
@@ -92,6 +100,14 @@ class CustomFieldsBuilder
 
   def user_fields
     @user_fields = form_attributes.user.map(&:to_s)
+  end
+
+  def seller_fields
+    @seller_fields = form_attributes.seller.map(&:to_s)
+  end
+
+  def buyer_fields
+    @buyer_fields = form_attributes.buyer.map(&:to_s)
   end
 
   def company_fields

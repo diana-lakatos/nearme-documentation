@@ -24,7 +24,9 @@ Before do
   FactoryGirl.create(:domain, target: instance, name: "example.org")
   store_model("instance", nil, instance)
   store_model("theme", nil, instance.theme)
-  Thread.current[:platform_context] = PlatformContext.new(instance)
+  instance.set_context!
+  FactoryGirl.create(:seller_profile_type)
+  FactoryGirl.create(:buyer_profile_type)
   FactoryGirl.create(:instance)
 
   ActiveMerchant::Billing::Base.mode = :test

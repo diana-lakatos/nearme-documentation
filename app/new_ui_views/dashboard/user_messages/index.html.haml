@@ -11,7 +11,7 @@
       = link_to archived_dashboard_user_messages_path do
         = t('user_messages.archived')
 
-.panel.panel-default
+.panel
   .panel-body
     - if @threaded_user_messages.blank?
       - if params[:action] == 'index'

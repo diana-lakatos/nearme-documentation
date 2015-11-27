@@ -46,6 +46,10 @@ section.reservations {
       }
     }
 
+    .tree_container .help-inline {
+      color: $theme_red;
+    }
+
     .flash {
       &.error {
 

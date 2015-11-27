@@ -80,7 +80,7 @@ SimpleNavigation::Configuration.run do |navigation|
     end
 
     primary.item :account, t('dashboard.nav.account'), nil do |sub_nav|
-      dashboard_nav_item sub_nav, 'registrations/edit', dashboard_profile_path, link_text: t('dashboard.nav.edit')
+      dashboard_nav_item sub_nav, 'registrations/edit', dashboard_profile_path, link_text: t('dashboard.nav.edit'), highlights_on: /^\/(users\/edit|dashboard\/seller\/edit|dashboard\/buyer\/edit)/
       dashboard_nav_item sub_nav, 'dashboard/notification_preferences', edit_dashboard_notification_preferences_path, link_text: t('dashboard.nav.notification_preferences')
       dashboard_nav_item sub_nav, 'registrations/social_accounts', social_accounts_path, link_text: t('dashboard.nav.social_accounts')
       if HiddenUiControls.find('dashboard/saved_searches').visible?

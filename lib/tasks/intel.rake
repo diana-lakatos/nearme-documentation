@@ -27,7 +27,7 @@ namespace :intel do
         end.save!
       end
 
-      ipt = InstanceProfileType.first
+      ipt = InstanceProfileType.default.first
       ipt.custom_attributes.where(name: 'role').first_or_initialize.tap do |ca|
         ca.public = false
         ca.valid_values = ['Black Belt', 'Innovator', 'Featured', 'Other']

@@ -3,11 +3,11 @@ class InstanceAdmin::Manage::InstanceProfileTypesController < InstanceAdmin::Man
   before_filter :set_breadcrumbs
 
   def index
-    @instance_profile_type = InstanceProfileType.first
+    @instance_profile_types = InstanceProfileType.all
   end
 
   def enable
-    if (@instance_profile_type = InstanceProfileType.first).nil?
+    if (@instance_profile_type = InstanceProfileType.default.first).nil?
        @instance_profile_type = InstanceProfileType.create(name: "User Instance Profile")
       flash[:notice] = 'Custom attributes for user have been enabled'
     else

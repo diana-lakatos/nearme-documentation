@@ -1,0 +1,23 @@
+#category_form
+  = render 'form'
+  .content-container
+
+    - if @category.present?
+      .row
+        .input-container.col-xs-12
+          #ajax_error{style: 'display: none;'}
+          %p= t('instance_admin.manage.categories.right_click_a_child_in_the_tree')
+          #category_tree
+
+    .row.dropshadow
+
+
+- if @category.present?
+  - content_for :domready do
+    var categories_path = "#{url_for(['instance_admin', 'manage', 'categories'])}";
+    new InstanceAdmin.CategoriesController($('#category_form'), #{@category.id});
+
+= content_for :header_buttons do
+  = link_to t('instance_admin.manage.categories.categories'), url_for(['instance_admin', 'manage', 'categories']), class: 'pull-right btn btn-blue'
+  = link_to t('instance_admin.delete'), url_for(['instance_admin', 'manage', @category]),  class: 'pull-right btn btn-neutral', method: :delete, data: { confirm: t('instance_admin.manage.categories.are_you_sure_delete_category_group') }
+

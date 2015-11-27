@@ -1252,6 +1252,15 @@ en:
       address: 'Address'
       user_note: 'User note: '
 
+    user_profile:
+      view_profile: 'View Profile'
+      submit: 'Save'
+      sections:
+        default: 'Default'
+        seller: 'Seller'
+        buyer: 'Buyer'
+
+
     user_recurring_bookings:
       title: "Subscriptions (%{count})"
       active: "Active"
