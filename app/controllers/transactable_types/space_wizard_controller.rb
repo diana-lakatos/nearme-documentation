@@ -36,6 +36,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     params[:user][:companies_attributes]["0"][:name] = current_user.first_name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     set_proper_currency
+    @user.build_seller_profile(instance_profile_type: current_instance.seller_profile_type) if @user.seller_profile.blank?
     @user.assign_attributes(wizard_params)
     # TODO: tmp hack, the way we use rails-money does not work if you pass currency and daily_price at the same time
     # We remove schedule attributes when assigning the attributes the second time so that we don't end up with duplicated schedule-related objects
@@ -191,13 +192,9 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   def wizard_params
     params.require(:user).permit(secured_params.user(@transactable_type)).tap do |whitelisted|
-      begin
-        whitelisted[:properties] = params[:user][:properties] rescue {}
-        whitelisted[:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:properties] = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:properties] rescue {}
-      rescue
-        nil
-      end
-
+      (whitelisted[:seller_profile_attributes][:properties] = params[:user][:seller_profile_attributes][:properties]) rescue {}
+      (whitelisted[:properties] = params[:user][:properties]) rescue {}
+      (whitelisted[:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:properties] = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:properties]) rescue {}
     end
   end
 

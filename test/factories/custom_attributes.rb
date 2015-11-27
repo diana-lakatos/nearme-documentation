@@ -72,7 +72,7 @@ FactoryGirl.define do
     end
 
     factory :user_custom_attribute do
-      target { InstanceProfileType.first || FactoryGirl.create(:instance_profile_type) }
+      target { InstanceProfileType.default.first || FactoryGirl.create(:instance_profile_type) }
       attribute_type 'string'
       factory :required_user_custom_attribute do
         validation_rules { { 'presence' => {} } }

@@ -48,7 +48,7 @@ end
 Given /^Extra fields are prepared for booking$/ do
   ensure_required_custom_attribute_is_present
 
-  User.last.update_column(:instance_profile_type_id, InstanceProfileType.first.id)
+  User.last.update_column(:instance_profile_type_id, InstanceProfileType.default.first.id)
   User.last.update_column(:mobile_number, '')
   User.last.update_column(:first_name, '')
   User.last.update_column(:last_name, '')

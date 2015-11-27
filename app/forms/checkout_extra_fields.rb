@@ -1,6 +1,6 @@
 class CheckoutExtraFields < Form
 
-  attr_accessor :user
+  attr_accessor :user, :buyer_profile
 
   def initialize(user, attributes)
     # ugly fix for custom properties issue
@@ -10,6 +10,7 @@ class CheckoutExtraFields < Form
     @secured_params = SecuredParams.new
     @all_attachments_present = true
     @all_approval_requests_messages_present = true
+    @buyer_profile = @user.try(:buyer_profile) || @user.try(:build_buyer_profile, instance_profile_type: PlatformContext.current.instance.buyer_profile_type)
   end
 
   def are_fields_present?
@@ -26,12 +27,22 @@ class CheckoutExtraFields < Form
       @user.send("#{key}=", value)
     end
 
-    public_attributes = User.public_custom_attributes_names(InstanceProfileType.first.try(:id))
+    public_attributes = User.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id))
     if @attributes['user'].present? && @attributes['user']['properties'].present?
       @attributes['user']['properties'].each do |key, value|
         next if !public_attributes.include?(key)
-
         @user.properties.send("#{key}=", value)
+      end
+    end
+
+    public_attributes = UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id))
+    if @attributes['user'].present? && @attributes['user']['buyer_profile_attributes'].present?
+      @buyer_profile.category_ids = @attributes['user']['buyer_profile_attributes']['category_ids'] if @attributes['user']['buyer_profile_attributes']['category_ids'].present?
+      if @attributes['user']['buyer_profile_attributes']['properties'].present?
+        @attributes['user']['buyer_profile_attributes']['properties'].each do |key, value|
+          next if !public_attributes.include?(key)
+          @buyer_profile.properties[key] = value
+        end
       end
     end
 
@@ -75,6 +86,7 @@ class CheckoutExtraFields < Form
   def save!
     if @all_attachments_present && @all_approval_requests_messages_present
       @user.save!
+      @buyer_profile.save!
     else
       # We do this to avoid a successful booking/purchase if the documents are not present
       # user errors are required in order to have the document upload notice in the form

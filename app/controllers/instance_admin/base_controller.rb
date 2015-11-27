@@ -36,6 +36,7 @@ class InstanceAdmin::BaseController < ApplicationController
     'wish_lists'         => { controller: '/instance_admin/manage/wish_lists', default_action: 'show' },
     'user_profiles'      => { controller: '/instance_admin/manage/instance_profile_types', default_action: 'index' },
     'service_types'      => { controller: '/instance_admin/manage/service_types', default_action: 'index' },
+    'categories'         => { controller: '/instance_admin/manage/categories', default_action: 'index', title: 'Categories' },
     'upsell_addons'      => { controller: '/instance_admin/manage/upsell_addons', default_action: 'index', title: 'Upsell & Add-ons' },
     'search'             => { controller: '/instance_admin/manage/search', default_action: 'show', title: 'Search' }
   }

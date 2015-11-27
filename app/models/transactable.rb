@@ -184,7 +184,7 @@ class Transactable < ActiveRecord::Base
 
   def validate_mandatory_categories
     transactable_type.categories.mandatory.each do |mandatory_category|
-      errors.add(mandatory_category.name, I18n.t('errors.messages.blank')) if common_categories(mandatory_category).blank? && (!mandatory_category.shared_with_users || (mandatory_category.shared_with_users && creator.common_categories(mandatory_category).blank?))
+      errors.add(mandatory_category.name, I18n.t('errors.messages.blank')) if common_categories(mandatory_category).blank?
     end
   end
 

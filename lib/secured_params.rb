@@ -4,6 +4,7 @@ class SecuredParams
     [
       :draft,
       user_attributes: nested(self.user),
+      seller_profile_properties: nested(self.seller),
       company_attributes: nested(self.company),
       product_form: nested(self.product_form(product_type))
     ]
@@ -189,10 +190,13 @@ class SecuredParams
       :parent_id,
       :child_index,
       :multiple_root_categories,
-      :shared_with_users,
       :search_options,
       :display_options,
-      :mandatory
+      :mandatory,
+      service_type_ids: [],
+      project_type_ids: [],
+      product_type_ids: [],
+      instance_profile_type_ids: []
     ]
   end
 
@@ -1169,11 +1173,21 @@ class SecuredParams
       :twitter_url,
       industry_ids: [],
       category_ids: [],
+      seller_profile_attributes: nested(self.seller),
+      buyer_profile_attributes: nested(self.buyer),
       current_address_attributes: nested(self.address),
       companies_attributes: nested(self.company(transactable_type)),
       approval_requests_attributes: nested(self.approval_request),
       projects_attributes: nested(self.project(transactable_type)),
-    ] + User.public_custom_attributes_names(InstanceProfileType.first.try(:id))
+    ] + User.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id))
+  end
+
+  def seller
+    UserProfile.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id))
+  end
+
+  def buyer
+    UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id))
   end
 
   def notification_preferences
