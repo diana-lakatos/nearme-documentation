@@ -11,7 +11,7 @@ class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin
   def new
     @shipping_category_form = ShippingCategoryForm.new(Spree::ShippingCategory.new)
     @shipping_category_form.assign_all_attributes
-    render :partial => 'dashboard/shipping_categories/shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post }
+    render :partial => 'shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post }
   end
 
   def create
@@ -19,9 +19,9 @@ class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin
     @shipping_category.user_id = current_user.id
     @shipping_category_form = ShippingCategoryForm.new(@shipping_category, is_system_profile: true)
     if @shipping_category_form.submit(shipping_category_form_params)
-      render :partial => 'dashboard/shipping_categories/shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post, :is_success => true }
+      render :partial => 'shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post, :is_success => true }
     else
-      render :partial => 'dashboard/shipping_categories/shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post }
+      render :partial => 'shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post }
     end
   end
 
@@ -30,7 +30,7 @@ class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin
 
     @shipping_category_form = ShippingCategoryForm.new(shipping_category)
     @shipping_category_form.assign_all_attributes
-    render :partial => 'dashboard/shipping_categories/shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profile_path(shipping_category), :form_method => :put }
+    render :partial => 'shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profile_path(shipping_category), :form_method => :put }
   end
 
   def update
@@ -38,9 +38,9 @@ class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin
 
     @shipping_category_form = ShippingCategoryForm.new(@shipping_category, is_system_profile: true)
     if @shipping_category_form.submit(shipping_category_form_params)
-      render :partial => 'dashboard/shipping_categories/shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post, :is_success => true }
+      render :partial => 'shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post, :is_success => true }
     else
-      render :partial => 'dashboard/shipping_categories/shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post }
+      render :partial => 'shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post }
     end
   end
 
@@ -72,10 +72,6 @@ class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin
   end
 
   private
-
-  def prepend_view_paths
-    prepend_view_path InstanceViewResolver.instance
-  end
 
   def get_company
     @company = current_user.companies.first || Company.new
