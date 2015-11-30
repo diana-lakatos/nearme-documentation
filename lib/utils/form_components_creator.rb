@@ -10,7 +10,16 @@ module Utils
                  when ProjectType
                    ProjectComponentCreator
                  when InstanceProfileType
-                   InstanceProfileCreator
+                   case form_componentable.profile_type
+                   when InstanceProfileType::SELLER
+                     InstanceSellerProfileCreator
+                   when InstanceProfileType::BUYER
+                     InstanceBuyerProfileCreator
+                   when InstanceProfileType::DEFAULT
+                     InstanceProfileCreator
+                   else
+                     raise NotImplementedError
+                   end
                  else
                    raise NotImplementedError
                  end.new(form_componentable)
@@ -44,7 +53,7 @@ module Utils
     def create_components!(components)
       raise AlreadyCreatedError.new("This #{@form_componentable.class} already has form components for #{@form_type_class} populated") if @form_componentable.form_components.where(form_type: @form_type_class).count > 0
       components.each do |component|
-        next unless component[:fields].try(:present?)
+        next if component[:fields].nil?
         @form_componentable.form_components.create!(name: component[:name], form_type: @form_type_class, form_fields: component[:fields])
       end
     end
@@ -179,6 +188,40 @@ module Utils
         {
           name: 'Profile',
           fields: [{ "user" => "public_profile" }, { "user" => "password" }, { "user" => "industries" }, { "user" => "email" }, { "user" => "phone" }, { "user" => "job_title" }, { "user" => "avatar" }, { "user" => "biography" }, { "user" => "facebook_url" }, { "user" => "twitter_url" }, { "user" => "linkedin_url" }, { "user" => "instagram_url" }, { "user" => "skills_and_interests" }, { "user" => "name" }, { "user" => "first_name" }, { "user" => "middle_name" }, { "user" => "last_name" }, { "user" => "gender" }, { "user" => "drivers_licence_number" }, { "user" => "gov_number" }, { "user" => "approval_requests" }, { "user" => "google_plus_url" }, { "user" => "degree"}, { "user" => "language" }, { "user" => "time_zone" }, { "user" => "current_location" }, { "user" => "company_name" } ]
+        }
+      ])
+    end
+  end
+
+  class InstanceSellerProfileCreator < BaseComponentCreator
+
+    def create!
+      create_dashboard_form!
+    end
+
+    def create_dashboard_form!
+      @form_type_class = FormComponent::SELLER_PROFILE_TYPES
+      create_components!([
+        {
+          name: 'Seller',
+          fields: []
+        }
+      ])
+    end
+  end
+
+  class InstanceBuyerProfileCreator < BaseComponentCreator
+
+    def create!
+      create_dashboard_form!
+    end
+
+    def create_dashboard_form!
+      @form_type_class = FormComponent::BUYER_PROFILE_TYPES
+      create_components!([
+        {
+          name: 'Buyer',
+          fields: []
         }
       ])
     end

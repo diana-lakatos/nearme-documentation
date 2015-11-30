@@ -18,7 +18,13 @@ namespace :instance_profile do
       instance.set_context!
       puts "Processing #{instance.name}"
       seller = instance.instance_profile_types.where(name: 'Seller', profile_type: InstanceProfileType::SELLER).first_or_create!
+      if seller.form_components.count == 0
+        Utils::FormComponentsCreator.new(seller).create!
+      end
       buyer = instance.instance_profile_types.where(name: 'Buyer', profile_type: InstanceProfileType::BUYER).first_or_create!
+      if buyer.form_components.count == 0
+        Utils::FormComponentsCreator.new(buyer).create!
+      end
       User.find_each do |u|
         if u.listings.count > 0
           u.create_seller_profile!(instance_profile_type: seller) if u.seller_profile.blank?
