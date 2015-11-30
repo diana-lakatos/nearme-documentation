@@ -32,6 +32,12 @@ class UserProfile < ActiveRecord::Base
     self.properties[field_name].blank? || (db_field_value != self.properties[field_name])
   end
 
+  def category_blank_or_changed?(category)
+    return true unless self.persisted?
+    db_value = UserProfile.find_by(id: self.id).common_categories(category)
+    self.common_categories(category).blank? || (db_value != self.common_categories(category))
+  end
+
   def validate_mandatory_categories
     instance_profile_type.try(:categories).try(:mandatory).try(:each) do |mandatory_category|
       errors.add(mandatory_category.name, I18n.t('errors.messages.blank')) if common_categories(mandatory_category).blank?
