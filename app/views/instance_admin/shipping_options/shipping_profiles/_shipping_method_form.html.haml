@@ -1,0 +1,39 @@
+.row.shipping_method_block
+  .col-md-3
+    .row
+      %label{:for => ""}
+        = t('manage.buy_sell.shipping_profiles.shipping_rule')
+  .col-md-9.input-container
+    .remove_shipping_profile.hidden
+      -if f.object.new_record?
+        = f.check_box :hidden, class: "hidden shipping_hidden"
+        = f.label :hidden, t('manage.buy_sell.shipping_profiles.remove_shipping_rule')
+      -else
+        = f.check_box :removed, class: "hidden remove_shipping red"
+        = f.label :removed, t('manage.buy_sell.shipping_profiles.remove_shipping_rule')
+    .shipping-form
+      .row.no-padding-top
+        = f.input :name, wrapper: :bs3_simple,  placeholder: t('manage.buy_sell.shipping_profiles.enter_name_for_shipping_profile'), label: t('manage.buy_sell.shipping_profiles.new_rule_name'), wrapper_html: {class: 'col-md-12 '}
+      .row
+        .col-md-6
+          = f.input :processing_time, wrapper: :bs3_simple, placeholder: t('manage.buy_sell.shipping_profiles.ready_to_ship_in'), label: t('manage.buy_sell.shipping_profiles.processing_time_in_days')
+
+        .col-md-1
+        .col-md-6.shipping-cost
+          =f.fields_for :calculator do |fc|
+            = fc.input :preferred_amount, as: :price, label: t('manage.buy_sell.shipping_profiles.shipping_cost'), input_html: { currency: currency_symbol_from_code(Spree::Config[:currency] ) }
+
+      =f.fields_for :zones do |z|
+        =z.hidden_field :name
+        .row
+          .col-md-12
+            Ships To
+          .col-md-6
+            = z.input :kind, as: :select, include_blank: false, label: false,  collection: [["State based", "state_based"], ["Country based", "country"]], input_html: {class: 'zone_kind_select selectpicker'}
+          .col-md-1
+          .col-md-6
+            =# z.input :country_ids, collection: Spree::Country.all, label: false, :blank => false, :required => true,  as: :select, input_html: { class: 'country_based_select selectpicker', "data-live-search" => "true", multiple: true }
+            = z.input :country_ids, wrapper: :bs3_simple, label: false, as: :text,  input_html: { value: z.object.country_ids.join(","), class: 'country_based_select select2', data: {api: 'countries'}}, required: true
+            = z.input :state_ids, wrapper: :bs3_simple, label: false, as: :text, input_html: { value: z.object.state_ids.join(","), class: 'state_based_select  select2', data: {api: 'states'}}, required: true
+
+

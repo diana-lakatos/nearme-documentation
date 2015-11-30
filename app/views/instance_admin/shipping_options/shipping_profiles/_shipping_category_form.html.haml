@@ -8,7 +8,7 @@
       = f.input :name
       = f.simple_fields_for :shipping_methods do |shipping_method|
         %fieldset
-          = render 'dashboard/shipping_categories/shipping_method_form', f: shipping_method
+          = render 'shipping_method_form', f: shipping_method
 
       %a.shipping-profile-top.add_shipping_profile.add_shipping_rule.pull-right{ :href => '#', :data => { :shipping_category_id => @shipping_category_form.shipping_category.id } }
         =image_tag("themes/buy_sell/icon-cross.png")
