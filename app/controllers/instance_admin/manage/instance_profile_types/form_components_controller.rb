@@ -4,7 +4,16 @@ class InstanceAdmin::Manage::InstanceProfileTypes::FormComponentsController < In
   private
 
   def form_type
-    @form_type = 'instance_profile_types'
+    @form_type = case find_form_componentable.profile_type
+                 when InstanceProfileType::DEFAULT
+                   FormComponent::INSTANCE_PROFILE_TYPES
+                 when InstanceProfileType::SELLER
+                   FormComponent::SELLER_PROFILE_TYPES
+                 when InstanceProfileType::BUYER
+                   FormComponent::BUYER_PROFILE_TYPES
+                 else
+                   raise NotImplementedError.new("Unknown profile_type: #{find_form_componentable.profile_type}")
+                 end
   end
 
   def find_form_componentable

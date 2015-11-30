@@ -18,36 +18,40 @@
             = f.submit t('onboarding_wizard.save_draft.label'), :name => "save_as_draft", data: { disable_with: t('onboarding_wizard.save_draft.disable_with') }, :class => "saveasdraft btn-link"
 
 
-    = f.simple_fields_for :companies, @user.companies.first do |companies_form|
-      = companies_form.simple_fields_for :locations, @user.companies.first.locations.first do |locations_form|
-        = locations_form.simple_fields_for :listings, @user.companies.first.locations.first.listings.first do |listings_form|
-          = listings_form.simple_fields_for :properties, @user.companies.first.locations.first.listings.first.properties do |properties_form|
+    = f.simple_fields_for :seller_profile, @user.seller_profile || @user.build_seller_profile(instance_profile_type: current_instance.seller_profile_type) do |seller_profile_form|
+      = seller_profile_form.simple_fields_for :properties, @user.seller_profile.properties do |seller_properties_form|
+        = f.simple_fields_for :companies, @user.companies.first do |companies_form|
+          = companies_form.simple_fields_for :locations, @user.companies.first.locations.first do |locations_form|
+            = locations_form.simple_fields_for :listings, @user.companies.first.locations.first.listings.first do |listings_form|
+              = listings_form.simple_fields_for :properties, @user.companies.first.locations.first.listings.first.properties do |properties_form|
 
-            - @form_components.each do |form_component|
-              .panel
-                .panel-body
+                - @form_components.each do |form_component|
+                  .panel
+                    .panel-body
 
-                  %h2= form_component.name
+                      %h2= form_component.name
 
-                  - form_component.form_fields.each do |form_field|
-                    - model = form_field.keys.first
-                    - field = form_field[model]
-                    - if model == 'user'
-                      = render :partial => 'registrations/new_attributes', :locals => { f: f, only_inputs: [field.to_sym], country: @country }
-                    - elsif model == 'company'
-                      = render :partial => 'companies/company_form', :locals => { :f => companies_form, :company => companies_form.object, :only_inputs => [ field.to_sym ] }
-                    - elsif model == 'location'
-                      = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => locations_form.object, :only_inputs => [ field.to_sym ] }
-                    - elsif model == 'transactable'
-                      = render 'listings/listing_form', f: listings_form, properties_form: properties_form, listing: listings_form.object, only_inputs: [ field.to_sym ], photos: @photos, form_fields: form_component.form_fields, model: model
+                      - form_component.form_fields.each do |form_field|
+                        - model = form_field.keys.first
+                        - field = form_field[model]
+                        - if model == 'user'
+                          = render :partial => 'registrations/new_attributes', :locals => { f: f, only_inputs: [field.to_sym], country: @country }
+                        - if model == 'seller'
+                          = render 'sellers/seller_form', f: seller_profile_form, properties_form: seller_properties_form, only_inputs: [ field.to_sym ]
+                        - elsif model == 'company'
+                          = render :partial => 'companies/company_form', :locals => { :f => companies_form, :company => companies_form.object, :only_inputs => [ field.to_sym ] }
+                        - elsif model == 'location'
+                          = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => locations_form.object, :only_inputs => [ field.to_sym ] }
+                        - elsif model == 'transactable'
+                          = render 'listings/listing_form', f: listings_form, properties_form: properties_form, listing: listings_form.object, only_inputs: [ field.to_sym ], photos: @photos, form_fields: form_component.form_fields, model: model
 
-            = render 'listings/listing_form', f: listings_form, properties_form: properties_form, listing: listings_form.object, only_inputs: [ :transactable_type_id, :booking_type, :id ]
+                = render 'listings/listing_form', f: listings_form, properties_form: properties_form, listing: listings_form.object, only_inputs: [ :transactable_type_id, :booking_type, :id ]
 
-            .hidden
-              - Money::Currency.table.values.each do |c|
-                %span{:id => "currency_#{c[:iso_code]}"}
-                  = c[:symbol]
-              %span{:id => "default_currency"}= @transactable_type.default_currency
+                .hidden
+                  - Money::Currency.table.values.each do |c|
+                    %span{:id => "currency_#{c[:iso_code]}"}
+                      = c[:symbol]
+                  %span{:id => "default_currency"}= @transactable_type.default_currency
 
     .panel.form-actions
       .panel-body

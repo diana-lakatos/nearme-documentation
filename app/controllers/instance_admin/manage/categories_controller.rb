@@ -1,25 +1,23 @@
-class InstanceAdmin::CategoriesController < InstanceAdmin::BaseController
-
-  before_filter :find_categorizable
+class InstanceAdmin::Manage::CategoriesController < InstanceAdmin::Manage::BaseController
 
   def index
-    @categories = @categorizable.categories.roots.order(:position)
-    @category = Category.new categorizable: @categorizable
+    @categories = Category.roots.order(:position)
+    @category = Category.new
   end
 
   def create
-    @category = @categorizable.categories.build(category_params)
+    @category = Category.new(category_params)
 
     if @category.save
       flash[:success] = t 'flash_messages.instance_admin.manage.category.created'
 
       respond_to do |format|
-        format.html { redirect_to( redirect_path) }
+        format.html { redirect_to edit_instance_admin_manage_category_path(@category) }
         format.js { render json: @category.to_json }
       end
     else
-      @new_category = Category.new categorizable: @categorizable
-      @categories = @categorizable.categories.roots.order(:position)
+      @new_category = Category.new
+      @categories = Category.roots.order(:position)
 
       flash[:error] = @category.errors.full_messages.to_sentence
       render action: :index
@@ -28,9 +26,9 @@ class InstanceAdmin::CategoriesController < InstanceAdmin::BaseController
 
   def jstree
     if params[:root]
-      @categories = @categorizable.categories.roots.where(id: params[:id]).order(:position)
+      @categories = Category.roots.where(id: params[:id]).order(:position)
     else
-      @category = @categorizable.categories.find(params[:id])
+      @category = Category.find(params[:id])
       @categories = @category.children.order(:position)
     end
     render json: {} if @categories.empty?
@@ -38,11 +36,11 @@ class InstanceAdmin::CategoriesController < InstanceAdmin::BaseController
 
   def edit
     append_to_breadcrumbs(t('instance_admin.edit'))
-    @category = @categorizable.categories.find(params[:id])
+    @category = Category.find(params[:id])
   end
 
   def update
-    @category = @categorizable.categories.find(params[:id])
+    @category = Category.find(params[:id])
     @category.attributes = category_params
     rename_message =  t 'flash_messages.instance_admin.manage.category.renamed' if @category.name_changed? && @category.root?
     if @category.save
@@ -50,7 +48,7 @@ class InstanceAdmin::CategoriesController < InstanceAdmin::BaseController
         format.html do
           flash[:error] = rename_message if rename_message.present?
           flash[:success] = t 'flash_messages.instance_admin.manage.category.updated'
-          redirect_to( redirect_path)
+          redirect_to edit_instance_admin_manage_category_path(@category)
         end
         format.js { render json: {message: rename_message}.to_json }
       end
@@ -61,19 +59,17 @@ class InstanceAdmin::CategoriesController < InstanceAdmin::BaseController
   end
 
   def destroy
-    @category = @categorizable.categories.find(params[:id])
+    @category = Category.find(params[:id])
     @category.destroy
     flash[:success] = t 'flash_messages.instance_admin.manage.category.deleted'
-    redirect_to redirect_path.split(/\/\d*\/edit/)[0]
+    redirect_to instance_admin_manage_categories_path
   end
 
   private
 
-  def redirect_path
-    @redirect_path ||= url_for(['instance_admin', @controller_scope, @categorizable, @category]) + '/edit'
-  end
-
   def category_params
     params.require(:category).permit(secured_params.category)
   end
+
 end
+

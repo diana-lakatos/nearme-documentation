@@ -18,5 +18,18 @@
         - if attribute.public? && ::CustomAttributes::CustomAttribute::FormElementDecorator.new(attribute).options[:required] && uf.object.field_blank_or_changed?(attribute.name)
           = draw_attribute_for_form(attribute, properties_form)
 
+    = uf.simple_fields_for :buyer_profile, uf.object.buyer_profile  do |buyer_profile_form|
+      = buyer_profile_form.simple_fields_for :properties, buyer_profile_form.object.properties do |properties_form|
+        - (buyer_profile_form.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
+          - if attribute.public? && buyer_profile_form.object.field_blank_or_changed?(attribute.name)
+            = draw_attribute_for_form(attribute, properties_form)
+
+      - unless buyer_profile_form.object.valid?
+        - buyer_profile_form.object.instance_profile_type.try(:categories).try(:roots).find_each do |category|
+          = render partial: 'shared/category_old_bootstrap', locals: { category: category, f: buyer_profile_form, categorizable: buyer_profile_form.object.instance_profile_type }
+
     = render :partial => 'approval_requests/form', :locals => { f: uf, object: uf.object, only_required: true, only_missing: true }
+
+- content_for :domready do
+  new CategoriesController($('form'));
 

@@ -93,14 +93,19 @@ class User < ActiveRecord::Base
   has_one :blog, class_name: 'UserBlog'
   has_one :current_address, class_name: 'Address', as: :entity
 
+  has_one :seller_profile, -> { seller }, class_name: 'UserProfile'
+  has_one :buyer_profile, -> { buyer }, class_name: 'UserProfile'
+
   has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
+
 
   after_create :create_blog
   after_destroy :perform_cleanup
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
+
   before_create do
-    self.instance_profile_type_id ||= PlatformContext.current.present? ? InstanceProfileType.first.try(:id) : InstanceProfileType.where(instance_id: self.instance_id).try(:first).try(:id)
+    self.instance_profile_type_id ||= PlatformContext.current.present? ? InstanceProfileType.default.first.try(:id) : InstanceProfileType.default.where(instance_id: self.instance_id).try(:first).try(:id)
   end
 
   before_restore :recover_companies
@@ -111,6 +116,8 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :companies
   accepts_nested_attributes_for :projects
   accepts_nested_attributes_for :current_address
+  accepts_nested_attributes_for :seller_profile
+  accepts_nested_attributes_for :buyer_profile
 
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(reservations: { transactable_id: listing.id }).uniq

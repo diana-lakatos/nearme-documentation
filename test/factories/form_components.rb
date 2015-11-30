@@ -39,6 +39,16 @@ FactoryGirl.define do
         { "user" => "language" }, { "user" => "time_zone" }, { "user" => "current_location" }, { "user" => "company_name" }
       ]}
     end
+
+    factory :form_component_instance_profile_type_seller do
+      form_type { FormComponent::SELLER_PROFILE_TYPES }
+      form_fields { []}
+    end
+
+    factory :form_component_instance_profile_type_buyer do
+      form_type { FormComponent::BUYER_PROFILE_TYPES }
+      form_fields { []}
+    end
   end
 end
 

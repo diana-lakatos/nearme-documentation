@@ -14,7 +14,7 @@ FactoryGirl.define do
     sms_notifications_enabled true
     sms_preferences { Hash[%w(user_message reservation_state_changed new_reservation).map{|sp| [sp, '1']}] }
     instance_unread_messages_threads_count Hash.new
-    instance_profile_type { InstanceProfileType.first || FactoryGirl.create(:instance_profile_type) }
+    instance_profile_type { InstanceProfileType.default.first || FactoryGirl.create(:instance_profile_type) }
 
     after(:create) do |u|
       if u.last_name.blank?

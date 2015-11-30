@@ -36,7 +36,7 @@ class RegistrationsController < Devise::RegistrationsController
       # Only track the sign up if the user has actually been saved (i.e. there are no errors)
       if @user.persisted?
         User.where(id: @user.id).update_all({
-          instance_profile_type_id: InstanceProfileType.first.try(:id),
+          instance_profile_type_id: current_instance.default_profile_type.try(:id),
           referer: session[:referer],
           source: cookies.signed[:source],
           campaign: cookies.signed[:campaign],
@@ -330,7 +330,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def set_form_components
-    @form_components = InstanceProfileType.first.form_components.where(form_type: FormComponent::INSTANCE_PROFILE_TYPES).rank(:rank)
+    @form_components = current_instance.default_profile_type.form_components.where(form_type: FormComponent::INSTANCE_PROFILE_TYPES).rank(:rank)
   end
 
   def signed_up_via
