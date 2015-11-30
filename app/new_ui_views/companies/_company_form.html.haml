@@ -1,7 +1,7 @@
 - only_inputs = [] if only_inputs.nil?
 
 - if (only_inputs.empty? || only_inputs.include?(:name))
-  = f.input :name, :as => :limited_string, :limit => 50
+  = f.input :name, :as => :limited_string, :limit => 50, required: !current_instance.skip_company
 
 - if only_inputs.empty? || only_inputs.include?(:approval_requests)
   = render 'dashboard/shared/fields/approval_requests', f: f
