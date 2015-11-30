@@ -37,7 +37,7 @@ class CheckoutExtraFields < Form
 
     public_attributes = UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id))
     if @attributes['user'].present? && @attributes['user']['buyer_profile_attributes'].present?
-      @buyer_profile.category_ids = @attributes['user']['buyer_profile_attributes']['category_ids'] if @attributes['user']['buyer_profile_attributes']['category_ids'].present?
+      @buyer_profile.category_ids = ((@buyer_profile.category_ids || []).map(&:to_s) + @attributes['user']['buyer_profile_attributes']['category_ids']).uniq if @attributes['user']['buyer_profile_attributes']['category_ids'].present?
       if @attributes['user']['buyer_profile_attributes']['properties'].present?
         @attributes['user']['buyer_profile_attributes']['properties'].each do |key, value|
           next if !public_attributes.include?(key)
