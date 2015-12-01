@@ -1,4 +1,4 @@
-class TimePickerArrayInput < ArrayInput
+class TimePickerArrayInput < SimpleForm::Inputs::TextInput
 
   def input
     Array(object.public_send(attribute_name)).map do |array_el|
@@ -31,6 +31,10 @@ class TimePickerArrayInput < ArrayInput
 
   def remove_button
     content_tag(:button, I18n.t(:remove_time, scope: [:pricing, :schedule, :specific]), type: 'button', class: 'action--remove', :'data-remove-datetime' => true)
+  end
+
+  def input_type
+    :text
   end
 end
 
