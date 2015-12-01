@@ -64,7 +64,7 @@
           %span Manage
         %ul#manage-sub.sub-nav.collapse{:class => ("in" if controller.class.to_s.split("::").first(2).join("::") == "InstanceAdmin::Manage")}
           - InstanceAdmin::BaseController::MANAGE_CONTROLLERS.each do |controller_name, settings|
-            - next unless ['users', 'admins', 'support', 'email layouts', 'emails', 'smses', 'workflows', 'user_profiles'].include?(controller_name)
+            - next unless ['users', 'admins', 'support', 'email layouts', 'emails', 'smses', 'workflows', 'user_profiles', 'categories'].include?(controller_name)
             %li
               %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/manage/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
                 %span= settings[:title] || controller_name.titleize
