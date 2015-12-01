@@ -5,7 +5,7 @@ class ScheduleChargeSubscriptions
   timezone 'UTC'
   queue 'recurring-jobs'
   def perform
-    ChargeSubscriptionsJob.perform
+    ChargeSubscriptionsJob.perform if Rails.env.production?
   end
 end
 
