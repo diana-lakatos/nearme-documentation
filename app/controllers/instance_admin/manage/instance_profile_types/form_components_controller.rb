@@ -1,6 +1,15 @@
 class InstanceAdmin::Manage::InstanceProfileTypes::FormComponentsController < InstanceAdmin::FormComponentsController
   before_filter :form_type, only: [:index]
 
+  def create_as_copy
+    transactable_type_id = params[:copy_template][:form_componentable_id]
+    form_type = params[:copy_template][:form_type]
+    InstanceProfileType.find(transactable_type_id).form_components.where(form_type: form_type).each do |form_component|
+      @form_componentable.form_components << form_component.dup
+    end
+    redirect_to redirect_path
+  end
+
   private
 
   def form_type
