@@ -1,6 +1,9 @@
 .modal-header
   .modal-title
-    = t('locations.add_new_location')
+    - if @location.new_record?
+      = t('locations.add_new_location')
+    - else
+      = t('locations.edit_location')
 .modal-body
   = simple_form_for [:dashboard, :company, @location], html: {id: 'location-form'}, wrapper: :bs3_simple, data: { modal: true }  do |f|
     .errors
