@@ -58,6 +58,14 @@ module ApplicationHelper
     @show_title
   end
 
+  def meta_og_image_content
+    content_for?(:meta_og_image) ? content_for(:meta_og_image) : platform_context.logo_image.url
+  end
+
+  def meta_og_image(image)
+    content_for(:meta_og_image) { image }
+  end
+
   def apply_analytics?
     # Enable mixpanel in all environments. We use a different account for
     # production.

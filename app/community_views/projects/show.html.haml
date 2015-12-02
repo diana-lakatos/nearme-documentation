@@ -1,3 +1,8 @@
+- title raw(@project.name)
+- canonical_url project_path(@project)
+- meta_description "#{mask_phone_and_email_if_necessary(@project.summary).try(:truncate, 130)}"
+- meta_og_image @project.cover_photo.image.url if @project.cover_photo.id.present?
+
 .wrap-a.white.reduce
   .contain
     / project header
