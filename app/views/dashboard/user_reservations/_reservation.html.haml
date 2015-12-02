@@ -13,7 +13,7 @@
           - else
             = reservation.long_dates
 
-      .col-md-4
+      .col-md-3
         %p Requested time
         %p
           - if reservation.periods.first.read_attribute(:start_minute).present?
@@ -24,11 +24,17 @@
 
       .col-md-2
         %p Total
-        %p= reservation.total_price
+        %p
+          = reservation.total_price
+
+      .col-md-1
+        %p Currency
+        %p
+          = reservation.currency
 
   .order-body
     .order-status
-      %h3= reservation.state.humanize.capitalize
+      %h3= t("reservations.states.#{reservation.state}")
       - if reservation.state == 'unconfirmed'
         %p
           #{t('dashboard.user_reservations.pending_confirmation')} <strong>#{reservation.time_to_expiry(reservation.expiry_time)}</strong>.

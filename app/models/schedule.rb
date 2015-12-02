@@ -96,6 +96,7 @@ class Schedule < ActiveRecord::Base
   def validate_schedule_rules
     Time.use_zone(timezone) do
       schedule_rules.each { |sr| sr.parse_user_input }
+      schedule_exception_rules.each { |sr| sr.parse_user_input }
     end
   end
 

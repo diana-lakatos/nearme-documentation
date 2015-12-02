@@ -57,7 +57,8 @@ module DesksnearMe
 
     config.assets.precompile += [
       'ckeditor/*',
-      'jquery.js'
+      'jquery.js',
+      'select2.js'
     ]
     config.assets.precompile += [
       "vendor/jquery.backgroundSize.min.js","vendor/respond.proxy.js", "vendor/respond.min.js",
@@ -67,7 +68,7 @@ module DesksnearMe
     config.assets.precompile += [
       "browser_specific/ie8.css", "admin.css", "blog.css", "blog_admin.css", "errors.css",
       "instance_admin.css", "platform_home.css", "instance_admin/shipping_profiles_includes.css",
-      "dashboard.css", 'vendor/powerange.css', 'instance_wizard.css', "community.css"
+      "dashboard.css", 'vendor/powerange.css', 'instance_wizard.css', "community.css", "select2.css"
     ]
 
     config.assets.precompile += [

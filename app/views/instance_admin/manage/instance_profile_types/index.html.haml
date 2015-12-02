@@ -5,8 +5,10 @@
       .table-container.col-xs-12
         %table.table
           %tbody
-            %tr.instance-admins-table
-              %td
-                = link_to t('instance_admin.manage.user_profiles.custom_attributes'), instance_admin_manage_instance_profile_type_custom_attributes_path(@instance_profile_type), class: 'pull-left btn btn-blue btn-bottom-margin'
-                = link_to t('instance_admin.manage.user_profiles.form_components'), instance_admin_manage_instance_profile_type_form_components_path(@instance_profile_type), class: 'pull-left btn btn-blue btn-bottom-margin'
+            - @instance_profile_types.each do |instance_profile_type|
+              %tr.instance-admins-table
+                %td= instance_profile_type.name
+                %td
+                  = link_to t('instance_admin.manage.user_profiles.custom_attributes'), instance_admin_manage_instance_profile_type_custom_attributes_path(instance_profile_type), class: 'pull-left btn btn-blue btn-bottom-margin'
+                  = link_to t('instance_admin.manage.user_profiles.form_components'), instance_admin_manage_instance_profile_type_form_components_path(instance_profile_type), class: 'pull-left btn btn-blue btn-bottom-margin'
 

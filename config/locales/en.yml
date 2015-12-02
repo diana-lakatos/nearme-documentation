@@ -1252,6 +1252,15 @@ en:
       address: 'Address'
       user_note: 'User note: '
 
+    user_profile:
+      view_profile: 'View Profile'
+      submit: 'Save'
+      sections:
+        default: 'Default'
+        seller: 'Seller'
+        buyer: 'Buyer'
+
+
     user_recurring_bookings:
       title: "Subscriptions (%{count})"
       active: "Active"
@@ -1796,6 +1805,7 @@ en:
     overbooked: "Subscription can't be confirmed due to overbooking."
     active: 'active'
   reservations:
+    booking_was_requested_successfully: "Your booking was requested successfully!"
     mpo_shipping_settings_not_valid: "The administrator of the site hasn't correctly set the shipping API settings yet."
     charge_after_confirmation: "You will not be charged until the booking is confirmed."
     manually_confirm: "This %{lessor} manually confirms all bookings."
@@ -1861,6 +1871,13 @@ en:
       send_and_resolve: 'Send and Resolve'
       message:
         placeholder: 'Please, enter your message'
+    states:
+      cancelled_by_guest: "Cancelled by guest"
+      expired: "Expired"
+      unconfirmed: "Unconfirmed"
+      cancelled_by_host: "Cancelled by host"
+      rejected: "Rejected"
+      confirmed: "Confirmed"
   search:
     pricing_types:
       daily: "Daily"

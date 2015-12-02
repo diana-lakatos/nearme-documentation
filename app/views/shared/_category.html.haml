@@ -2,7 +2,7 @@
 = content_tag :div, class: error.present?  ? 'error' : '' do
   -if category.present?
     - if category.autocomplete?
-      = f.input :category_ids, as: :array, label: category.translated_name, :placeholder => "Enter a category", input_html: { "data-category-autocomplete" => true, "data-category-id" => category.id, "data-selected-catgories" => f.object.common_categories(category).map(&:id).join(','), value: []}, required: category.mandatory?
+      = f.input :category_ids, as: :array, label: category.translated_name, :placeholder => "Enter a category", input_html: { "data-category-autocomplete" => true, "data-category-id" => category.id, "data-selected-categories" => f.object.common_categories(category).map(&:id).join(','), value: []}, required: category.mandatory?
 
     - else
       = content_tag :div, class: "tree_container", data: { category_id: category.id } do

@@ -7,7 +7,5 @@
           - @project_types.each do |resource|
             %tr
               %td= resource.name.humanize
-              %td
-                = link_to 'Categories', instance_admin_projects_project_type_categories_path(resource), class: 'pull-left btn btn-blue btn-bottom-margin'
               %td= link_to 'Edit', edit_instance_admin_projects_project_type_path(resource), class: 'pull-right'
 

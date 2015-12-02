@@ -9,4 +9,31 @@ namespace :instance_profile do
     end
     puts 'Done'
   end
+
+  desc 'creates instance profile types'
+  task :populate => :environment do
+    InstanceProfileType.where(name: 'Instance Profile Type').update_all(name: 'Default')
+    InstanceProfileType.where(name: 'User Instance Profile').update_all(name: 'Default')
+    Instance.find_each do |instance|
+      instance.set_context!
+      puts "Processing #{instance.name}"
+      seller = instance.instance_profile_types.where(name: 'Seller', profile_type: InstanceProfileType::SELLER).first_or_create!
+      if seller.form_components.count == 0
+        Utils::FormComponentsCreator.new(seller).create!
+      end
+      buyer = instance.instance_profile_types.where(name: 'Buyer', profile_type: InstanceProfileType::BUYER).first_or_create!
+      if buyer.form_components.count == 0
+        Utils::FormComponentsCreator.new(buyer).create!
+      end
+      User.find_each do |u|
+        if u.listings.count > 0
+          u.create_seller_profile!(instance_profile_type: seller) if u.seller_profile.blank?
+        end
+        if u.reservations.count > 0 || u.orders.count > 0
+          u.create_buyer_profile!(instance_profile_type: buyer) if u.buyer_profile.blank?
+        end
+      end
+    end
+
+  end
 end

@@ -62,8 +62,15 @@ class LocationsController < ApplicationController
     # we're assuming the first - will separate id from the parameterized name.
     #
     old_id = params[:listing_id].split("-").first
-    @listing = scope.find(old_id)
-    redirect_to location_listing_path(@location, @listing), status: 301
+    old_slug = params[:listing_id].split("-").try(:[], 1..-1).try(:join, "-")
+
+    @listing = scope.find_by(id: old_id).presence || scope.find_by(slug: old_slug)
+    if @listing.present?
+      redirect_to location_listing_path(@location, @listing), status: 301
+    else
+      flash[:warning] = t('flash_messages.locations.listing_removed')
+      redirect_to request.referer
+    end
   end
 
   def redirect_if_location_deleted

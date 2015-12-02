@@ -43,7 +43,6 @@ Feature: As a user of the site
 
   Scenario: A user can add new listing
     Given the location exists with company: the company
-    Given instance_profile_type exists
       And a transactable exists with location: the location
       And transactable type has multiple booking types enabled
       And I am browsing transactables

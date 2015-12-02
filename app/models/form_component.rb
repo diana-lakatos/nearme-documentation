@@ -9,7 +9,9 @@ class FormComponent < ActiveRecord::Base
   PROJECT_ATTRIBUTES = 'project_attributes'
   TRANSACTABLE_ATTRIBUTES = 'transactable_attributes'
   INSTANCE_PROFILE_TYPES = 'instance_profile_types'
-  FORM_TYPES = [SPACE_WIZARD, PRODUCT_ATTRIBUTES, TRANSACTABLE_ATTRIBUTES, INSTANCE_PROFILE_TYPES, PROJECT_ATTRIBUTES]
+  SELLER_PROFILE_TYPES = 'seller_profile_types'
+  BUYER_PROFILE_TYPES = 'buyer_profile_types'
+  FORM_TYPES = [SPACE_WIZARD, PRODUCT_ATTRIBUTES, TRANSACTABLE_ATTRIBUTES, INSTANCE_PROFILE_TYPES, PROJECT_ATTRIBUTES, BUYER_PROFILE_TYPES, SELLER_PROFILE_TYPES]
 
   include RankedModel
 
@@ -31,7 +33,16 @@ class FormComponent < ActiveRecord::Base
 
   def form_types(form_componentable)
     if form_componentable.instance_of?(InstanceProfileType)
-      [INSTANCE_PROFILE_TYPES]
+      case form_componentable.profile_type
+      when InstanceProfileType::DEFAULT
+        [INSTANCE_PROFILE_TYPES]
+      when InstanceProfileType::SELLER
+        [SELLER_PROFILE_TYPES]
+      when InstanceProfileType::BUYER
+        [BUYER_PROFILE_TYPES]
+      else
+        raise NotImplementedError
+      end
     elsif form_componentable.instance_of?(ServiceType)
       [SPACE_WIZARD, TRANSACTABLE_ATTRIBUTES]
     elsif form_componentable.instance_of?(Spree::ProductType)

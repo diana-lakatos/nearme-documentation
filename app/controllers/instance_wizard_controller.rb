@@ -50,7 +50,12 @@ class InstanceWizardController < ActionController::Base
     @instance_creator.update_attribute(:created_instance, true)
     @instance.set_context!
 
-    ipt = @instance.instance_profile_types.create!(name: 'User Custom Attributes')
+    ipt = @instance.instance_profile_types.create!(name: 'Default', profile_type: InstanceProfileType::DEFAULT)
+    Utils::FormComponentsCreator.new(ipt).create!
+    ipt = @instance.instance_profile_types.create!(name: 'Seller', profile_type: InstanceProfileType::SELLER)
+    Utils::FormComponentsCreator.new(ipt).create!
+    ipt = @instance.instance_profile_types.create!(name: 'Buyer', profile_type: InstanceProfileType::BUYER)
+    Utils::FormComponentsCreator.new(ipt).create!
     if params[:marketplace_type] == "Buy/Sell"
       tp = @instance.product_types.create(name: @instance.bookable_noun)
     else
@@ -65,7 +70,6 @@ class InstanceWizardController < ActionController::Base
       )
     end
 
-    Utils::FormComponentsCreator.new(ipt).create!
 
     tp.create_rating_systems
     Utils::FormComponentsCreator.new(tp).create!

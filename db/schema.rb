@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151125171443) do
+ActiveRecord::Schema.define(version: 20151128132413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -373,6 +373,17 @@ ActiveRecord::Schema.define(version: 20151125171443) do
 
   add_index "categories_categorizables", ["category_id"], name: "index_categories_categorizables_on_category_id", using: :btree
   add_index "categories_categorizables", ["instance_id", "categorizable_id", "categorizable_type"], name: "poly_categorizables", using: :btree
+
+  create_table "category_linkings", force: :cascade do |t|
+    t.integer  "category_id"
+    t.integer  "category_linkable_id"
+    t.string   "category_linkable_type"
+    t.integer  "instance_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "category_linkings", ["instance_id", "category_linkable_id", "category_linkable_type", "category_id"], name: "index_category_linkings_on_instance_id_linkable_unique", unique: true, using: :btree
 
   create_table "charges", force: :cascade do |t|
     t.integer  "payment_id"
@@ -886,10 +897,13 @@ ActiveRecord::Schema.define(version: 20151125171443) do
   add_index "instance_creators", ["email"], name: "index_instance_creators_on_email", using: :btree
 
   create_table "instance_profile_types", force: :cascade do |t|
-    t.string   "name",        limit: 255
+    t.string   "name",         limit: 255
     t.integer  "instance_id"
     t.datetime "deleted_at"
+    t.string   "profile_type"
   end
+
+  add_index "instance_profile_types", ["instance_id", "profile_type"], name: "index_instance_profile_types_on_instance_id_and_profile_type", unique: true, using: :btree
 
   create_table "instance_types", force: :cascade do |t|
     t.string   "name",         limit: 255
@@ -3388,8 +3402,6 @@ ActiveRecord::Schema.define(version: 20151125171443) do
     t.boolean  "search_location_type_filter",                                                    default: true
     t.boolean  "show_company_name",                                                              default: true
     t.string   "slug"
-    t.boolean  "action_weekly_subscription_booking"
-    t.boolean  "action_monthly_subscription_booking"
     t.string   "default_search_view"
     t.string   "search_engine"
     t.string   "searcher_type"
@@ -3403,7 +3415,11 @@ ActiveRecord::Schema.define(version: 20151125171443) do
     t.boolean  "date_pickers_use_availability_rules"
     t.string   "date_pickers_mode"
     t.integer  "position",                                                                       default: 0
+    t.boolean  "action_weekly_subscription_booking"
+    t.boolean  "action_monthly_subscription_booking"
     t.string   "timezone_rule",                                                                  default: "location"
+    t.boolean  "action_weekly_subscription_booking"
+    t.boolean  "action_monthly_subscription_booking"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -3588,6 +3604,20 @@ ActiveRecord::Schema.define(version: 20151125171443) do
   end
 
   add_index "user_messages", ["instance_id"], name: "index_user_messages_on_instance_id", using: :btree
+
+  create_table "user_profiles", force: :cascade do |t|
+    t.hstore   "properties"
+    t.integer  "user_id"
+    t.integer  "instance_profile_type_id"
+    t.integer  "instance_id"
+    t.string   "profile_type"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_profiles", ["instance_id", "user_id", "profile_type"], name: "index_user_profiles_on_instance_id_and_user_id_and_profile_type", unique: true, using: :btree
+  add_index "user_profiles", ["instance_profile_type_id"], name: "index_user_profiles_on_instance_profile_type_id", using: :btree
 
   create_table "user_relationships", force: :cascade do |t|
     t.integer  "follower_id"

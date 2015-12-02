@@ -1,5 +1,5 @@
 - only_inputs = [] if only_inputs.nil?
-= f.input :name, :as => :limited_string, :limit => 50  if (only_inputs.empty? || only_inputs.include?(:name))
+= f.input :name, :as => :limited_string, :limit => 50, required: !current_instance.skip_company  if (only_inputs.empty? || only_inputs.include?(:name))
 
 - if only_inputs.empty? || only_inputs.include?(:approval_requests)
   = render :partial => 'approval_requests/form', :locals => { f: f }
