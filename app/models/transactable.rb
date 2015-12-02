@@ -299,7 +299,7 @@ class Transactable < ActiveRecord::Base
     excluded_ranges = schedule.unavailable_period_enabled ? schedule.schedule_exception_rules.where('duration_range_end > ?', end_date || Time.zone.now).select('duration_range_start, duration_range_end').map { |ser| ser.duration_range_start..ser.duration_range_end.end_of_day } : []
     loop do
       checks_to_be_performed -= 1
-      next_occurrences = schedule.schedule.next_occurrences(number_of_occurrences, @start_date)
+      next_occurrences = schedule.schedule.next_occurrences(number_of_occurrences, @start_date).uniq
       next_occurrences.each do |occurrence|
         if occurrence && excluded_ranges.none? { |r| r.cover?(occurrence) } && (!end_date || occurrence <= end_date)
           start_minute = occurrence.to_datetime.min.to_i + (60 * occurrence.to_datetime.hour.to_i)

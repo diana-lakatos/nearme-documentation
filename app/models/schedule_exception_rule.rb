@@ -5,8 +5,6 @@ class ScheduleExceptionRule < ActiveRecord::Base
 
   belongs_to :schedule
 
-  before_validation :parse_user_input
-
   attr_accessor :user_duration_range_start, :user_duration_range_end
 
   [:user_duration_range_start, :user_duration_range_end].each do |method|
@@ -17,8 +15,6 @@ class ScheduleExceptionRule < ActiveRecord::Base
 
   default_scope { order('created_at DESC') }
 
-  protected
-
   def parse_user_input
     self.duration_range_start = date_time_handler.convert_to_datetime(user_duration_range_start).try(:beginning_of_day) if user_duration_range_start.present?
     self.duration_range_end = date_time_handler.convert_to_datetime(user_duration_range_end).try(:end_of_day) if user_duration_range_end.present?
@@ -27,6 +23,9 @@ class ScheduleExceptionRule < ActiveRecord::Base
     self.user_duration_range_end = duration_range_end
     true
   end
+
+  protected
+
 
   def date_time_handler
     @date_time_handler ||= DateTimeHandler.new
