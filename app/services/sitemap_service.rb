@@ -58,7 +58,7 @@ module SitemapService
 
     klass.constantize
   end
-  
+
   def tmp_path
     "#{Rails.root}/tmp/sitemaps"
   end
@@ -75,11 +75,16 @@ module SitemapService
       tmp_file.write(sitemap_xml.to_s.squish)
       domain.generated_sitemap = tmp_file
       domain.save(validate: false)
+      update_on_search_engines(domain)
     ensure
       tmp_file.close
       tmp_file.unlink
     end
 
   end
-end
 
+  def update_on_search_engines(domain)
+    sitemap_url = "http://#{domain.name}/sitemap.xml"
+    ::SitemapSearchEngineUpdateJob.perform(sitemap_url)
+  end
+end

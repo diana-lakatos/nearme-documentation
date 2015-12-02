@@ -6,6 +6,7 @@ class SitemapServiceTest < ActiveSupport::TestCase
     @transactable = create(:transactable)
     @product = create(:product)
     @domain = PlatformContext.current.domain
+    SitemapService.stubs(:update_on_search_engines).returns(nil)
   end
 
   context ".content_for" do
