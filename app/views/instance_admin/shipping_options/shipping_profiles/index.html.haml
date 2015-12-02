@@ -6,7 +6,7 @@
     .text-container
       .shipping_method_block.shipping_method_list
         = render partial: 'categories_list', locals: { shipping_categories: @shipping_categories }
-    
+
       %a.shipping-profile-top.add_shipping_profile{ :href => '#', :data => { :modal => true, 'href' => new_instance_admin_shipping_options_shipping_profile_path, 'modal-class' => 'shipping_profiles_modal' } }
         =image_tag("themes/buy_sell/icon-cross.png")
         %span
@@ -16,9 +16,4 @@
 
 - content_for :styles do
   = stylesheet_link_tag 'instance_admin/shipping_profiles_includes'
-
-- content_for :script do
-  = javascript_include_tag 'select2'
-  = javascript_include_tag 'advanced_closest'
-  = javascript_include_tag 'sections/dashboard/shipping_profiles'
 
