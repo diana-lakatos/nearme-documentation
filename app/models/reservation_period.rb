@@ -21,11 +21,11 @@ class ReservationPeriod < ActiveRecord::Base
   end
 
   def start_minute
-    super || listing.try { |l| l.availability.open_minute_for(date) }
+    super || listing.try { |l| l.availability.try(:open_minute_for, date) }
   end
 
   def end_minute
-    super || listing.try { |l| l.availability.close_minute_for(date) }
+    super || listing.try { |l| l.availability.try(:close_minute_for, date) }
   end
 
   def bookable?
