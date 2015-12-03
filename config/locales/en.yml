@@ -2291,6 +2291,7 @@ en:
       users: 'Registered users'
       purchasers: 'Purchasers only'
     max_num_reached: "Max number of attached documents reached"
+    associated_with_order: "Here are the seller attachments associated with your order"
 
   image_upload:
     preview: 'Preview'
