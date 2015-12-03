@@ -2,6 +2,19 @@
 
 <p>{{ 'buy_sell_market.checkout.order_mailer.approved_email.instructions' || translate }}</p>
 
+{% if order.has_seller_attachments? %}
+  <p>{{ 'seller_attachments.associated_with_order' | translate }}:</p>
+  <ul>
+    {% for item in order.line_items %}
+      {% for attachment in item.product.attachments %}
+        <li>
+          <a href="{{ attachment.attachment_url }}">{{ attachment.title }}</a>
+        </li>
+      {% endfor %}
+    {% endfor %}
+  </ul>
+{% endif %}
+
 <ul>
     {% for item in order.line_items %}
         <li>{{item.variant.sku}} {{item.variant.product.name}} {{ item.variant.options_text }} {{item.quantity}} @ {{item.single_money}} = {{item.display_amount}}</li>
