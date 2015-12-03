@@ -3,7 +3,7 @@ class Listings::RecurringBookingsController < ApplicationController
 
   before_filter :find_listing
   before_filter :require_login_for_recurring_booking, :only => [:review, :create]
-  before_filter :build_recurring_booking_request, only: [:review, :create, :store_recurring_booking_request]
+  before_filter :build_recurring_booking_request, only: [:review, :create]
   before_filter :secure_payment_with_token, only: [:review]
   before_filter :load_payment_with_token, only: [:review]
   before_filter :find_recurring_booking, only: [:booking_successful]
@@ -64,35 +64,11 @@ class Listings::RecurringBookingsController < ApplicationController
     render :json => schedule.presence || {}
   end
 
-  # Store the recurring_booking request in the session so that it can be restored when returning to the listings controller.
-  def store_recurring_booking_request
-    session[:stored_recurring_booking_location_id] = @listing.location.id
-    session[:stored_reservation_trigger] ||= {}
-    session[:stored_reservation_trigger]["#{@listing.location.id}"] = params[:commit]
-
-    # Marshals the booking request parameters into a better structured hash format for transmission and
-    # future assignment to the Bookings JS controller.
-    #
-    # Returns a Hash of listing id's to hash of date & quantity values.
-    #  { '123' => { 'date' => '2012-08-10', 'quantity => '1' }, ... }
-    session[:stored_recurring_booking_bookings] = {
-      @listing.id => {
-        :quantity => @recurring_booking_request.recurring_booking.quantity,
-        :schedule_params => @recurring_booking_request.recurring_booking.schedule_params,
-        :start_on => @recurring_booking_request.recurring_booking.start_on.to_date,
-        :dates => @recurring_booking_request.recurring_booking.start_on.to_date,
-        :interval => @recurring_booking_request.recurring_booking.interval
-      }
-    }
-    head 200 if params[:action] == 'store_recurring_booking_request'
-  end
-
   private
 
   def require_login_for_recurring_booking
     unless user_signed_in?
-      store_recurring_booking_request
-      redirect_to new_user_registration_path(return_to: location_url(@listing.location, @listing, restore_recurring_bookings: true))
+      redirect_to new_user_registration_path(return_to: location_url(@listing.location, @listing))
     end
   end
 
