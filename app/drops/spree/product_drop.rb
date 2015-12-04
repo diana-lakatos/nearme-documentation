@@ -16,7 +16,9 @@ class Spree::ProductDrop < BaseDrop
   # company
   #   the company (object) to which the user who has created this product
   #   belongs
-  delegate :id, :name, :extra_properties, :total_on_hand, :product_type, :company, :updated_at, to: :product
+  # attachments
+  #   array of (seller) attachments for this product
+  delegate :id, :name, :extra_properties, :total_on_hand, :product_type, :company, :updated_at, :attachments, to: :product
 
   def initialize(product)
     @product = product.decorate

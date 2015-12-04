@@ -41,6 +41,17 @@
     <span style="float: right; clear: right;">{{ reservation.total_price }}</span>
   </div>
 
+  {% if listing.has_seller_attachments? %}
+    <div class="row">
+      <p>{{ 'seller_attachments.associated_with_order' | translate }}:</p>
+      {% for attachment in listing.attachments %}
+        <p>
+          <a href="{{ attachment.attachment_url }}">{{ attachment.title }}</a>
+        </p>
+      {% endfor %}
+    </div>
+  {% endif %}
+
 </div>
 
 <p>You can manage your booking here:</p>

@@ -55,10 +55,12 @@ class TransactableDrop < BaseDrop
   #   returns true if the exclusive price defined for this listing is the only price defined for this listing
   # possible_express_checkout
   #   returns true if paypal express gateway defined for country assigned to transactable
+  # attachments
+  #   array of (seller) attachments for this listing
   delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :action_rfq?, :creator, :administrator, :last_booked_days,
     :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?,
     :action_free_booking?, :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at,
-    :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, to: :transactable
+    :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, :attachments, to: :transactable
 
   # action_price_per_unit
   #   returns true if there is a single unit available of the transactable item for a given time period
@@ -221,6 +223,11 @@ class TransactableDrop < BaseDrop
       @categories = build_categories_hash_for_object(@transactable, @transactable.transactable_type.categories.roots.includes(:children))
     end
     @categories
+  end
+
+  # returns whether or not the listing has seller attachments
+  def has_seller_attachments?
+    attachments.exists?
   end
 
 end
