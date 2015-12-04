@@ -1,0 +1,24 @@
+- title t('dashboard.nav.edit')
+
+- content_for :page_header do
+  %h1= yield :title
+
+  .options
+    = link_to t('dashboard.user_profile.view_profile'), user_path(current_user)
+
+= render 'dashboard/shared/profile_nav', active: :seller
+
+= dashboard_simple_form_for [:dashboard, @seller_profile], url: dashboard_seller_path, method: :put , as: :seller_profile, html: { class: "form-expandable" } do |f|
+  = f.simple_fields_for :properties, @seller_profile.properties do |seller_properties_form|
+    .panel
+      .panel-body
+        - @form_components.each do |form_component|
+          - form_component.form_fields.each do |form_field|
+            - model = form_field.keys.first
+            - field = form_field[model]
+            - if model == 'seller'
+              = render :partial => 'sellers/seller_form', :locals => { f: f, only_inputs: [field.to_sym], properties_form: seller_properties_form }
+
+    .panel.form-actions
+      .panel-body
+        = f.submit "Save"

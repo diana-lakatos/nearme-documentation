@@ -107,12 +107,13 @@ class @CategoriesController
   autocomplete: () ->
     if @container.find("input[data-category-autocomplete]").length > 0
       $.each @container.find("input[data-category-autocomplete]"), (index, select) ->
+
         $(select).select2
           placeholder: "Enter a category"
           multiple: true
           initSelection: (element, callback) ->
             url = Routes.dashboard_api_category_path($(select).attr('data-category-id'))
-            $.getJSON url, { init_selection: 'true', ids: $(select).attr("data-selected-catgories") }, (data) ->
+            $.getJSON url, { init_selection: 'true', ids: $(select).attr("data-selected-categories") }, (data) ->
               callback data
 
           ajax:
@@ -132,4 +133,9 @@ class @CategoriesController
 
           formatSelection: (category) ->
             category.pretty_name
+
+        # select2 will not call initSelection if the input has an empty value
+        # (which is always the case with :array_input the way we built it)
+        # This is a workaround to trigger the initial value readout
+        $(select).select2('val', []);
 

@@ -1,4 +1,4 @@
-- project_collaborator = project.project_collaborators.where(user: current_user).first
+- project_collaborator = project.project_collaborators.for_user(current_user).first
 
 - if project_collaborator
   = link_to t(:leave_project), project_project_collaborator_path(project, project_collaborator), method: :delete , class: 'button-a small red', remote: true

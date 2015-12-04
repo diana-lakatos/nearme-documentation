@@ -18,8 +18,12 @@ class Category < ActiveRecord::Base
   # Validation
   validates :name, presence: true
 
-  # Polymprophic association to TransactableType, ProductType
-  belongs_to :categorizable, polymorphic: true, touch: true
+  has_many :category_linkings
+  has_many :service_types, through: :category_linkings
+  has_many :product_types, through: :category_linkings, class_name: 'Spree::ProductType'
+  has_many :project_types, through: :category_linkings
+  has_many :instance_profile_types, through: :category_linkings
+
   belongs_to :instance
 
   before_save :set_permalink
@@ -31,10 +35,12 @@ class Category < ActiveRecord::Base
   # Scopes
 
   scope :mandatory, -> { where(mandatory: true) }
-  scope :products, -> { where(categorizable_type: 'Spree::ProductType') }
+  scope :products, -> { joins(:category_linkings).where(category_linkings: { category_linkable_type: 'Spree::ProductType' } ) }
   scope :searchable, -> { where(search_options: 'include') }
-  scope :services, -> { where(categorizable_type: 'TransactableType') }
-  scope :users, -> { where(shared_with_users: true) }
+  scope :services, -> { joins(:category_linkings).where(category_linkings: { category_linkable_type: 'ServiceType' } ) }
+  scope :users, -> { joins(:category_linkings).where(category_linkings: { category_linkable: PlatformContext.current.instance.default_profile_type } ) }
+  scope :sellers, -> { joins(:category_linkings).where(category_linkings: { category_linkable: PlatformContext.current.instance.seller_profile_type } ) }
+  scope :buyers, -> { joins(:category_linkings).where(category_linkings: { category_linkable: PlatformContext.current.instance.buyer_profile_type } ) }
 
   def autocomplete?
     self.display_options == 'autocomplete'
@@ -64,7 +70,8 @@ class Category < ActiveRecord::Base
 
   def pretty_name
     ancestor_chain = self.ancestors.inject("") do |name, ancestor|
-      name += "#{ancestor.translated_name} -> "
+      # we do not want the root category as it's duplicating content
+      name = name.to_s + "#{ancestor.translated_name} -> " unless ancestor.parent == nil
     end
     ancestor_chain + translated_name
   end
@@ -114,19 +121,23 @@ class Category < ActiveRecord::Base
   end
 
   def rename_form_component
-    if categorizable.try(:form_components)
-      categorizable.form_components.each do |fc|
-        old_field = fc.form_fields.select{|pair| pair.first[1] =~ /Category - #{name_was}$/}
-        if old_field.present?
-          if deleted_at
-            fc.form_fields.delete(old_field[0])
-          else
-            old_field[0].values[0].gsub!(name_was, name)
+    category_linkings.find_each do |category_linking|
+      categorizable = category_linking.category_linkable
+      if categorizable.try(:form_components)
+        categorizable.form_components.each do |fc|
+          old_field = fc.form_fields.select{|pair| pair.first[1] =~ /Category - #{name_was}$/}
+          if old_field.present?
+            if deleted_at
+              fc.form_fields.delete(old_field[0])
+            else
+              old_field[0].values[0].gsub!(name_was, name)
+            end
+            fc.save!
           end
-          fc.save!
         end
       end
     end
   end
+
 end
 

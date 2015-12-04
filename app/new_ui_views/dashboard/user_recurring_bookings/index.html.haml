@@ -11,7 +11,7 @@
     %li{class: params[:action] == 'archived' ? 'active' : ''}
       = link_to t('dashboard.user_recurring_bookings.archived'), archived_dashboard_user_recurring_bookings_path
 
-.panel.panel-default
+.panel
   .panel-body
     - if @recurring_bookings.blank?
       %p.empty-resultset

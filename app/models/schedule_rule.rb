@@ -62,11 +62,13 @@ class ScheduleRule < ActiveRecord::Base
   end
 
   def dates_not_in_past
-    if date_start < Date.current
-      errors.add(:user_date_start, :not_in_past)
-    end
-    if date_end < Date.current
-      errors.add(:user_date_end, :not_in_past)
+    Time.use_zone(date_start.time_zone) do
+      if date_start < Time.zone.now.beginning_of_day
+        errors.add(:user_date_start, :not_in_past)
+      end
+      if date_end < Time.zone.now.beginning_of_day
+        errors.add(:user_date_end, :not_in_past)
+      end
     end
   end
 

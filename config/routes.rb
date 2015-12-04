@@ -322,7 +322,6 @@ DesksnearMe::Application.routes.draw do
             post :create_as_copy
           end
         end
-        resources :categories, controller: 'instance_profile_types/categories'
       end
 
       resources :service_types do
@@ -342,11 +341,6 @@ DesksnearMe::Application.routes.draw do
           end
           collection do
             post :create_as_copy
-          end
-        end
-        resources :categories, except: [:new, :show], controller: 'service_types/categories' do
-          member do
-            get :jstree
           end
         end
       end
@@ -391,6 +385,12 @@ DesksnearMe::Application.routes.draw do
         end
         resource :elastic, only: [:show, :update], controller: 'search/elastic'
       end
+
+      resources :categories, except: [:new, :show] do
+        member do
+          get :jstree
+        end
+      end
     end
 
     namespace :manage_blog do
@@ -414,11 +414,6 @@ DesksnearMe::Application.routes.draw do
       resource :commissions, :only => [:show, :update], :controller => 'commissions'
       resources :product_types do
         get :search_settings, on: :member
-        resources :categories, except: [:new, :show], controller: 'product_types/categories' do
-          member do
-            get :jstree
-          end
-        end
         resources :custom_attributes, controller: 'product_types/custom_attributes'
         resources :custom_validators, controller: 'product_types/custom_validators'
         resources :data_uploads, only: %i(new index create show), controller: 'product_types/data_uploads' do
@@ -640,6 +635,8 @@ DesksnearMe::Application.routes.draw do
         end
       end
     end
+    resource :seller, only: [:edit, :update]
+    resource :buyer, only: [:edit, :update]
 
     resources :project_types do
       resources :projects do

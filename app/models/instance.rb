@@ -78,7 +78,9 @@ class Instance < ActiveRecord::Base
   has_many :waiver_agreement_templates, as: :target
   has_many :approval_request_templates
   has_many :instance_profile_types
-  has_one :instance_profile_type, -> { where(instance_id: PlatformContext.current.try(:instance).try(:id)) }
+  has_one :default_profile_type, -> { default }, class_name: 'InstanceProfileType'
+  has_one :seller_profile_type, -> { seller }, class_name: 'InstanceProfileType'
+  has_one :buyer_profile_type, -> { buyer }, class_name: 'InstanceProfileType'
   has_many :data_uploads, as: :target
   has_many :industries
   has_many :user_blog_posts

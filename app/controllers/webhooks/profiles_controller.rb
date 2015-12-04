@@ -12,7 +12,8 @@ class Webhooks::ProfilesController < Webhooks::BaseController
     unless authentication.present?
       user = User.create!(
         custom_validation: true,
-        instance_profile_type_id: InstanceProfileType.first.id,
+        instance_profile_type_id: InstanceProfileType.default.first.id,
+        external_id: params[:enterprise_id],
         email: params[:email],
         name: [params[:first_name], params[:last_name]].reject(&:blank?).join(' '),
         password: SecureRandom.hex(8)

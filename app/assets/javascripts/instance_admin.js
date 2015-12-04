@@ -15,6 +15,8 @@
 //= require components/modal
 //= require components/tags
 //= require jcrop
+//= require select2
+//= require advanced_closest
 //= require sections/search_instance_admin
 //= require javascript_module
 //= require ./instance_admin/searchable_admin_resource
@@ -36,13 +38,13 @@
 //= require sections/support
 //= require sections/support/attachment_form
 //= require sections/support/ticket_message_controller
+//= require sections/dashboard/shipping_profiles
 //= require ./instance_admin/script
 //= require chosen-jquery
 //= require instance_admin/jquery-ui-datepicker
 //= require instance_admin/data_tables/jquery.dataTables.min
 //= require instance_admin/data_tables/dataTables.bootstrap
 //= require instance_admin/bootstrap-colorpicker.js
-
 // NEW UI LIBS
 
 // Date picker

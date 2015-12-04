@@ -93,14 +93,19 @@ class User < ActiveRecord::Base
   has_one :blog, class_name: 'UserBlog'
   has_one :current_address, class_name: 'Address', as: :entity
 
+  has_one :seller_profile, -> { seller }, class_name: 'UserProfile'
+  has_one :buyer_profile, -> { buyer }, class_name: 'UserProfile'
+
   has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
+
 
   after_create :create_blog
   after_destroy :perform_cleanup
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
+
   before_create do
-    self.instance_profile_type_id ||= PlatformContext.current.present? ? InstanceProfileType.first.try(:id) : InstanceProfileType.where(instance_id: self.instance_id).try(:first).try(:id)
+    self.instance_profile_type_id ||= PlatformContext.current.present? ? InstanceProfileType.default.first.try(:id) : InstanceProfileType.default.where(instance_id: self.instance_id).try(:first).try(:id)
   end
 
   before_restore :recover_companies
@@ -111,6 +116,8 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :companies
   accepts_nested_attributes_for :projects
   accepts_nested_attributes_for :current_address
+  accepts_nested_attributes_for :seller_profile
+  accepts_nested_attributes_for :buyer_profile
 
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(reservations: { transactable_id: listing.id }).uniq
@@ -168,8 +175,8 @@ class User < ActiveRecord::Base
   scope :by_topic, -> (topic_ids) do
     if topic_ids.present?
       with_joined_project_collaborations.
-      joins(" LEFT OUTER JOIN project_topics pt on pt.project_id = pc.project_id").
-      where(pt: {topic_id: topic_ids}).group('users.id')
+        joins(" LEFT OUTER JOIN project_topics pt on pt.project_id = pc.project_id").
+        where(pt: {topic_id: topic_ids}).group('users.id')
     end
   end
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((users.properties->?), ',') && ARRAY[?]", property, values) if values.present? }
@@ -225,6 +232,10 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable,
     :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
+  def self.find_for_database_authentication(warden_conditions)
+    where(warden_conditions.to_h).order('external_id NULLS FIRST').first
+  end
+
   attr_accessor :phone_required, :country_name_required, :skip_password, :verify_identity, :mobile_number_required, :last_name_required
 
   serialize :sms_preferences, Hash
@@ -264,6 +275,7 @@ class User < ActiveRecord::Base
     self.name = omniauth['info']['name'].presence || ("#{omniauth['info']['first_name']} #{omniauth['info']['last_name']}").presence || ("#{omniauth['info']['First_name']} #{omniauth['info']['Last_name']}").presence || ("#{omniauth['extra'] && omniauth['extra']['raw_info'] && omniauth['extra']['raw_info']['First_name']} #{omniauth['extra'] && omniauth['extra']['raw_info'] && omniauth['extra']['raw_info']['Last_name']}")if name.blank?
     self.email = omniauth['info']['email'].presence || omniauth['extra'] && omniauth['extra']['raw_info'] && omniauth['extra']['raw_info']['email_address'] if email.blank?
     expires_at = omniauth['credentials'] && omniauth['credentials']['expires_at'] ? Time.at(omniauth['credentials']['expires_at']) : nil
+    self.external_id = omniauth['extra']['raw_info']['enterprise_id'] rescue nil
     token = (omniauth['credentials'] && omniauth['credentials']['token']).presence || (omniauth['extra'] && omniauth['extra']['raw_info'] && (omniauth['extra']['raw_info']['enterprise_id'].presence || omniauth['extra']['raw_info']['CustID']))
     secret = omniauth['credentials'] && omniauth['credentials']['secret']
     authentications.build(provider: omniauth['provider'],
@@ -276,18 +288,18 @@ class User < ActiveRecord::Base
 
   def all_projects(with_pending = false)
     projects = Project.where("
-      creator_id = ? OR
-      EXISTS (SELECT 1 from project_collaborators pc WHERE pc.project_id = projects.id AND pc.user_id = ? AND (approved_by_user_at IS NOT NULL OR approved_by_owner_at IS NOT NULL) AND deleted_at IS NULL)
-      ",id, id)
+     creator_id = ? OR
+     EXISTS (SELECT 1 from project_collaborators pc WHERE pc.project_id = projects.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NOT NULL OR approved_by_owner_at IS NOT NULL) AND deleted_at IS NULL)
+                             ",id, id, email)
     if with_pending
       projects = projects.select(
         ActiveRecord::Base.send(:sanitize_sql_array,
-          ["projects.*,
-            (SELECT pc.id from project_collaborators pc WHERE pc.project_id = projects.id AND (pc.user_id = ?) AND (approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) as pending_collaboration
-            ",
-            id
-          ]
-        )
+                                ["projects.*,
+           (SELECT pc.id from project_collaborators pc WHERE pc.project_id = projects.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) as pending_collaboration
+                                 ",
+                                 id, email
+      ]
+                               )
       )
     end
     projects

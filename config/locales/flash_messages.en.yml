@@ -90,6 +90,7 @@ en:
           deleted: 'Email layout template has been deleted.'
           invalid: 'Not a valid email layout template.'
           updated: 'Email layout template has been updated.'
+          cannot_be_deleted: 'Email layout template cannot be deleted because it is used in at least one workflow alert.'
         form_component:
           created: 'Form component has been created.'
           deleted: 'Form component has been deleted.'
@@ -216,6 +217,10 @@ en:
       add_your_company: "Please add your company first"
       company_not_valid: "Please add necessary details to your company first."
       no_bookings: "You haven't made any bookings yet!"
+      seller:
+        updated: 'Seller profile has been updated'
+      buyer:
+        updated: 'Buyer profile has been updated'
       order:
         deleted: 'Order has been deleted.'
         updated: 'Order has been updated.'
