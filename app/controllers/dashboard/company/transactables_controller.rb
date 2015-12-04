@@ -36,9 +36,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
 
     if @transactable.save
-      binding.pry
       @transactable.schedule.try(:create_schedule_from_schedule_rules) if PlatformContext.current.instance.priority_view_path == 'new_ui'
-      binding.pry
       WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @transactable.id) unless @transactable.is_trusted?
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.translated_bookable_noun)
       flash[:error] = t('manage.listings.no_trust_explanation') if !@transactable.is_trusted?
