@@ -7,7 +7,7 @@ class Spree::LineItemDrop < BaseDrop
   #   order to which this line item belongs
   # variant
   #   variant of this product that is to be ordered
-  delegate :quantity, :order, :variant, to: :line_item
+  delegate :quantity, :order, :variant, :product, to: :line_item
 
   def initialize(line_item)
     @line_item = line_item.decorate
