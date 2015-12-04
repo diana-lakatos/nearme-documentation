@@ -736,6 +736,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def zone_utc_offset
+    binding.pry
     Time.now.in_time_zone(timezone).utc_offset / 3600
   end
 
