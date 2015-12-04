@@ -56,11 +56,15 @@ class Project < ActiveRecord::Base
   validates :summary, length: { maximum: 140 }, unless: ->(record) { record.draft? }
   validates :name, :description, :summary, presence: true, unless: ->(record) { record.draft? }
 
+  validates_with CustomValidators
+
   # TODO: move to form object
   after_save :trigger_workflow_alert_for_added_collaborators, unless: ->(record) { record.draft? }
 
   before_restore :restore_photos
   before_restore :restore_links
+
+  delegate :custom_validators, to: :transactable_type
 
   def self.custom_order(order)
     case order

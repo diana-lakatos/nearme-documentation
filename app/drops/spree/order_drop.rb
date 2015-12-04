@@ -94,5 +94,13 @@ class Spree::OrderDrop < BaseDrop
 
   end
 
+  # whether or not the order has products with seller attachments
+  def has_seller_attachments?
+    @order.line_items.each do |line_item|
+      return true if line_item.product.attachments.exists?
+    end
+
+    false
+  end
 
 end
