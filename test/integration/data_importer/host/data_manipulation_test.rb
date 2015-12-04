@@ -213,8 +213,8 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data_modified.csv'), true)
     DataUploadHostConvertJob.perform(@data_upload.id)
     assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
-    assert @photo_one.reload.deleted?
-    refute @photo_two.reload.deleted?
+    assert @photo_two.reload.deleted?
+    refute @photo_one.reload.deleted?
     assert_equal 2, @listing_one.reload.photos.count
     assert_equal ['http://www.example.com/image2.jpg', 'http://www.example.com/image3.jpg'], @listing_one.photos.map(&:image_original_url).sort
     # we want to be able to delete location via csv
@@ -250,8 +250,8 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     stub_image_url('http://www.example.com/image1.jpg')
     stub_image_url('http://www.example.com/image2.jpg')
     stub_image_url('http://www.example.com/image3.jpg')
-    @photo_one = FactoryGirl.create(:photo, owner: @listing_one, image_original_url: 'http://www.example.com/image1.jpg')
-    @photo_two = FactoryGirl.create(:photo, owner: @listing_one, image_original_url: 'http://www.example.com/image2.jpg')
+    @photo_one = FactoryGirl.create(:photo, owner: @listing_one, image_original_url: 'http://www.example.com/image2.jpg')
+    @photo_two = FactoryGirl.create(:photo, owner: @listing_one, image_original_url: 'http://www.example.com/image1.jpg')
     @listing_two = FactoryGirl.create(:transactable, location: @location_not_empty, name: 'my name2', properties: { my_attribute: 'attribute' }, daily_price: 89, external_id: 4354)
     @location_empty = FactoryGirl.create(:location_czestochowa, name: 'Czestochowa', company: @company, location_type: @location_type, external_id: 1)
   end

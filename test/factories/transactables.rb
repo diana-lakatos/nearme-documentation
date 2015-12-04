@@ -22,7 +22,7 @@ FactoryGirl.define do
       end
       if listing.photos.empty? && evaluator.photos_count > 0
         listing.photos = create_list(:photo, evaluator.photos_count,
-                                     listing: nil,
+                                     owner: listing,
                                      creator: listing.location.creator)
       end
     end
@@ -154,7 +154,7 @@ FactoryGirl.define do
       end
 
       after(:create) do |listing, evaluator|
-        listing.photos = FactoryGirl.create_list(:demo_photo, 2, creator: listing.location.creator )
+        listing.photos = FactoryGirl.create_list(:demo_photo, 2, creator: listing.location.creator, owner: listing )
         listing.save!
       end
     end

@@ -154,7 +154,7 @@ class LocationTest < ActiveSupport::TestCase
       context'with second image' do
 
         setup do
-          @photo2 = FactoryGirl.create(:photo, owner: @location.listings.first)
+          @photo2 = FactoryGirl.create(:photo, owner: @location.listings.first, creator: @location.creator)
         end
 
         should 'update existing metadata' do
@@ -163,19 +163,20 @@ class LocationTest < ActiveSupport::TestCase
 
           @location.expects(:update_metadata).with(photos_metadata: [
             {
-              space_listing:  photo2.image_url(:space_listing),
-              golden:  photo2.image_url(:golden),
-              large:  photo2.image_url(:large),
-              listing_name:  photo2.listing.name,
-              caption:  photo2.caption
-            },
-            {
               space_listing:  @photo.image_url(:space_listing),
               golden:  @photo.image_url(:golden),
               large:  @photo.image_url(:large),
               listing_name:  @photo.listing.name,
               caption:  @photo.caption
-            }])
+            },
+            {
+              space_listing:  photo2.image_url(:space_listing),
+              golden:  photo2.image_url(:golden),
+              large:  photo2.image_url(:large),
+              listing_name:  photo2.listing.name,
+              caption:  photo2.caption
+            }
+          ])
           @location.populate_photos_metadata!
         end
       end
