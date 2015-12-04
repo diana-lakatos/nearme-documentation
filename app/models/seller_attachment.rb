@@ -56,6 +56,10 @@ class SellerAttachment < Ckeditor::Asset
     end
   end
 
+  def to_liquid
+    @seller_attachment_drop ||= SellerAttachmentDrop.new(self)
+  end
+
   private
 
   def max_attachments_num
