@@ -1,6 +1,5 @@
 class ProjectCollaborator < ActiveRecord::Base
 
-  attr_accessor :email
 
   acts_as_paranoid
   auto_set_platform_context
@@ -15,6 +14,7 @@ class ProjectCollaborator < ActiveRecord::Base
   validates :project, presence: true
 
   scope :approved, -> { where.not(approved_by_owner_at: nil, approved_by_user_at: nil) }
+  scope :for_user, -> (user) { where('user_id = ? OR email = ?', user.id, user.email) }
 
   def name
     @name ||= user.try(:name)
@@ -30,10 +30,6 @@ class ProjectCollaborator < ActiveRecord::Base
 
   def approved=(approve=nil)
     self.update_attribute(:approved_by_owner_at, Time.zone.now) if approve.present?
-  end
-
-  def email=(email)
-    self.user = User.find_by_email(email)
   end
 
   def approve_by_user!

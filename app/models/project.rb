@@ -138,12 +138,14 @@ class Project < ActiveRecord::Base
   def trigger_workflow_alert_for_added_collaborators
     return true if @new_collaborators.nil?
     @new_collaborators.each do |collaborator|
-      collaborator_email = collaborator.email
+      collaborator_email = collaborator.email.try(:downcase)
       next if collaborator_email.blank?
       user = User.find_by(email: collaborator_email)
       next unless user.present?
-      unless self.project_collaborators.where(user: user).exists?
-        WorkflowStepJob.perform(WorkflowStep::ProjectWorkflow::CollaboratorAddedByProjectOwner, self.project_collaborators.create!(user: user, approved_by_owner_at: Time.zone.now).id)
+      unless self.project_collaborators.for_user(user).exists?
+        pc = self.project_collaborators.build(user: user, email: collaborator_email, approved_by_owner_at: Time.zone.now)
+        pc.save!
+        WorkflowStepJob.perform(WorkflowStep::ProjectWorkflow::CollaboratorAddedByProjectOwner, pc.id)
       end
     end
   end
