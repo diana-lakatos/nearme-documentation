@@ -9,6 +9,7 @@ class Authentication::InfoUpdater
   end
 
   def update
+    return if @provider.nil?
     return if @authentication.token_expired?
     info = @provider.info
     info_hash = info.to_hash

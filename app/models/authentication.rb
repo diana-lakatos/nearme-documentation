@@ -30,7 +30,7 @@ class Authentication < ActiveRecord::Base
   ALLOWED_LOGIN_PROVIDERS = PROVIDERS + ["SAML"] - ["Instagram"]
 
   def social_connection
-    @social_connection ||= self.class.provider_class(provider).new_from_authentication(self)
+    @social_connection ||= self.class.provider_class(provider).try(:new_from_authentication, self)
   end
 
   def self.available_providers
