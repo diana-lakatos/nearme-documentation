@@ -744,7 +744,7 @@ class Transactable < ActiveRecord::Base
     return Time.zone.name if self.location.nil?
     case self.transactable_type.timezone_rule
     when 'location' then self.location.time_zone || Time.zone.name
-    when 'seller' then self.location.creator.time_zone || Time.zone.name
+    when 'seller' then (self.creator || self.try(:location).try(:creator) || self.company.try(:creator) || self.location.try(:company).try(:creator)).try(:time_zone) || Time.zone.name
     when 'instance' then self.instance.time_zone || Time.zone.name
     else
       Time.zone.name
