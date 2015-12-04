@@ -10,7 +10,7 @@ class Comment < ActiveRecord::Base
 
   has_many :spam_reports, as: :spamable, dependent: :destroy
 
-  validates :body, presence: true
+  validates :body, presence: true, length: { maximum: 5000 }
 
   after_commit :user_commented_event, on: :create
   def user_commented_event
