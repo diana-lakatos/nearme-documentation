@@ -361,14 +361,14 @@ class TransactableTest < ActiveSupport::TestCase
         should 'update existing metadata' do
           @listing.expects(:update_metadata).with(:photos_metadata => [
             {
-              :space_listing => @photo.image_url(:space_listing),
-              :golden => @photo.image_url(:golden),
-              :large => @photo.image_url(:large),
-            },
-            {
               :space_listing => @photo2.image_url(:space_listing),
               :golden => @photo2.image_url(:golden),
               :large => @photo2.image_url(:large),
+            },
+            {
+              :space_listing => @photo.image_url(:space_listing),
+              :golden => @photo.image_url(:golden),
+              :large => @photo.image_url(:large),
             }
           ])
           @listing.populate_photos_metadata!
