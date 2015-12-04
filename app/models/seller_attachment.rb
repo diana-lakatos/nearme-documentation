@@ -21,9 +21,11 @@ class SellerAttachment < Ckeditor::Asset
   end
 
   def set_initial_access_level
-    self.access_level = if !instance.seller_attachments_enabled?
-        raise 'Seller attachments disabled'
-      elsif !instance.seller_attachments_access_sellers_preference?
+    if !instance.seller_attachments_enabled?
+      Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::SELLER_ATTACHMENTS_ERROR, "Tried to set initial access level on SellerAttachment while attachments are disabled")
+    end
+
+    self.access_level = if instance.seller_attachments_enabled? && !instance.seller_attachments_access_sellers_preference?
         instance.seller_attachments_access_level
       else
         'all'
