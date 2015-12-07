@@ -59,7 +59,7 @@ namespace :intel do
         ca.attribute_type = 'text'
         ca.input_html_options = { cols: 40, rows: 8 }
         ca.label = 'About me'
-        ca.max_length = 5000
+        ca.max_length = 500
       end.save!
 
       ipt.custom_attributes.where(name: 'short_bio').first_or_initialize.tap do |ca|
@@ -70,8 +70,6 @@ namespace :intel do
         ca.label = 'Short Bio'
         ca.max_length = 140
       end.save!
-
-
 
       Utils::DefaultAlertsCreator::ProjectCreator.new.create_all!
       PlatformContext.current.theme.update_attributes(
