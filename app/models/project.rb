@@ -5,6 +5,8 @@ class Project < ActiveRecord::Base
   scoped_to_platform_context
   has_custom_attributes target_type: 'ProjectType', target_id: :transactable_type_id
 
+  include CreationFilter
+
   attr_reader :collaborator_email
   attr_readonly :followers_count
 

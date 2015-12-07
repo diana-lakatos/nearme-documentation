@@ -5,6 +5,8 @@ class Comment < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
+  include CreationFilter
+
   belongs_to :commentable, polymorphic: true
   belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :comments
 
