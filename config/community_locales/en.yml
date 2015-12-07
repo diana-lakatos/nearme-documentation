@@ -73,7 +73,7 @@ en:
 
   # featured
   featured_projects: 'Featured Projects'
-  featured_users: 'Featured Users'
+  featured_users: 'Featured Developers'
   featured_topics: 'Featured Topics'
   view_all: 'View All'
   follow: 'Follow'
@@ -81,12 +81,12 @@ en:
 
   # home overview
   hero_slogan: 'Connect with the World’s Brightest Minds'
-  hero_description: 'Find world-class developers, revolutionary designers, rockstar collaborators and globally-disruptive projects.'
-  join_now: 'Join Now'
-  explore_the_most_popular_projects: 'Explore the most popular projects in Connect and collaborate on those that interest you'
-  connect_with_influencers: Connect with Influencers
-  connect_with_influencers_description: Follow our evangelists and learn about the latest news and top projects in the Connect Network
-  featured_topics_description: 'Follow the topics that interest you and discover projects and information related to them'
+  hero_description: 'Find and follow world-class developers, share your own projects, and collaborate with others.'
+  join_now: 'JOIN NOW'
+  explore_the_most_popular_projects: 'Browse featured projects, follow your favorites, contribute ideas, or share your own work.'
+  connect_with_influencers: 'Featured Developers'
+  connect_with_influencers_description: "Find and connect with the most interesting developers in your field, or even your city."
+  featured_topics_description: 'Follow your favorite development topics, including the latest trends, tutorials, and support.'
 
   # user activity
   featured_user: 'Featured User'
@@ -133,24 +133,25 @@ en:
   # tutorial
   step_no: 'Step %{number}'
   tutorial:
-    step_1: 'The Feed will show you the most interesting and recent activity from IDZ Connect'
-    step_2: 'To post a status update, type your update in text box at the top of the Activity Feed.'
-    step_3: 'Discover the most interesting projects, users and topics and start following them'
-    step_4: 'Start your own project by hitting the button in the top right corner of the page'
+    step_1: 'The Activity Feed will show you the most recent updates from the people, projects,
+and topics you follow.'
+    step_2: "Let your followers know what you're up to by posting a status update."
+    step_3: 'Get recommendations for developers, projects, and topics to follow.'
+    step_4: "Share your projects to show what you're working on, get feedback from the community, and find collaborators."
   next: 'Next'
   finish: 'Finish'
 
   # onboarding
   onboarding:
     step_1:
-      title: 'Where are you located?'
-      description: 'Let us know your location to provide you with relevant projects and information in your area.'
+      title: 'Almost there! Just a couple more questions to set up your Mesh account. Where do you live?'
+      description: "Let us know what city you're in so we can connect you with developers and events in your area."
     step_2:
       title: 'Connect your social accounts'
-      description: 'Link your social accounts, find your friends, and add your own content to IDZ Mesh'
+      description: 'Get a jump start on building your Mesh network with people you already know.'
     step_3:
-      title: 'Follow some of the most interesting people on Mesh'
-      description: 'Based on your interests we have selected some users, topics and projects that are right up your alley!'
+      title: 'Recommendations to get started'
+      description: "Based on what you've already told us, we've selected some people, projects, and topics for you to follow. You can find and follow more at any time."
     step_4:
       title: 'Congrats! Your account has been successfully created.'
       description: 'Introduce yourself to the community in the most interesting way! It will make it easy for people to find you and follow you.'
@@ -161,7 +162,7 @@ en:
   continue: 'Continue'
   connect_with_service: 'Connect with %{service}'
   connect: 'Connect'
-  people_to_follow: 'People to Follow'
+  people_to_follow: 'Developers to Follow'
   projects_to_follow: 'Projects to Follow'
   topics_to_follow: 'Topics to Follow'
   add_photo: 'Add Photo'

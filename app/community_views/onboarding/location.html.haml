@@ -7,7 +7,7 @@
     = simple_form_for @address, url: wizard_path, html: { class: 'form-a', method: :put } do |address_form|
 
       .fields.location
-        = render :partial => 'addresses/form', locals: { f: address_form, label: "Location"}
+        = render :partial => 'addresses/form', locals: { f: address_form, placeholder: I18n.t('simple_form.placeholders.address.address') }
 
       %p.action
         %button.button-a{:type => "submit"}
