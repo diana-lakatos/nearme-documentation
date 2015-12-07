@@ -23,7 +23,7 @@
 
                   %h3.hx
                     = link_to person.name, user_path(person)
-                  %p= person.properties.biography rescue ""
+                  %p= person.properties.about_me rescue ""
                   %p.location= "#{person.current_address.city}, #{person.current_address.state}" rescue ""
 
       %h2
