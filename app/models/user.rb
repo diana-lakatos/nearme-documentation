@@ -307,6 +307,9 @@ class User < ActiveRecord::Base
     projects
   end
 
+  def all_projects_count
+    projects_count + project_collborations_count
+  end
 
   def category_ids=(ids)
     super(ids.map {|e| e.gsub(/\[|\]/, '').split(',')}.flatten.compact.map(&:to_i))
@@ -924,8 +927,7 @@ class User < ActiveRecord::Base
       return all unless user
       all.merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance').select('users.*'))
     when /number of projects/i
-      with_joined_project_collaborations.group('users.id').
-        order('count(pc.id) DESC')
+      order('projects_count + project_collborations_count DESC')
     else
       all
     end

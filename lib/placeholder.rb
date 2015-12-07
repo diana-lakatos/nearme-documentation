@@ -12,7 +12,7 @@ class Placeholder
     if IN_FILESYSTEM.member?(@format)
       "placeholders/#{@format}.gif"
     else
-      "http://placehold.it/#{@format}&text=Photos+Unavailable"
+      "//placehold.it/#{@format}&text=Photos+Unavailable"
     end
   end
 
