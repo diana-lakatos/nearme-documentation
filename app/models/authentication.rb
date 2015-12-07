@@ -16,7 +16,7 @@ class Authentication < ActiveRecord::Base
 
   serialize :info, Hash
 
-  delegate :new_connections, :friend_ids, to: :social_connection
+  delegate :new_connections, :friend_ids, to: :social_connection, allow_nil: true
 
   scope :with_valid_token, -> {
     where('authentications.token_expires_at > ? OR authentications.token_expires_at IS NULL', Time.now).
