@@ -11,8 +11,16 @@ namespace :intel do
 
       puts "Processing #{i.name} - adding dummy pages"
       Page.where(instance_id: i).destroy_all
-      ["Help", "Terms of Service", "Trademarks", "Privacy", "Cookies"].each do |page_name|
-        Page.new(path: page_name, instance_id: i, theme_id: PlatformContext.current.theme.id ).save!
+      [
+        { "Help" => 'https://software.intel.com/en-us/support?source=devmesh'},
+        {"Terms of Service"=> 'http://www.intel.com/content/www/us/en/legal/terms-of-use.html'},
+        {"Trademarks"=> 'http://www.intel.com/content/www/us/en/legal/trademarks.html'},
+        { "Privacy" => 'http://www.intel.com/content/www/us/en/privacy/intel-online-privacy-notice-summary.html'},
+        { "Cookies" => 'http://www.intel.com/content/www/us/en/privacy/intel-cookie-notice.html' }
+      ].each do |page|
+        page.each do |text, url|
+          Page.new(path: text, instance_id: i, theme_id: PlatformContext.current.theme.id, redirect_url: url, redirect_code: 301).save!
+        end
       end
 
       project_type = ProjectType.first || ProjectType.create(name: 'Project')
@@ -44,6 +52,12 @@ namespace :intel do
         ca.label = 'Biography'
       end.save!
       Utils::DefaultAlertsCreator::ProjectCreator.new.create_all!
+      PlatformContext.current.theme.update_attributes(
+        facebook_url: 'https://www.facebook.com/IntelDeveloperZone/',
+        twitter_url: 'https://twitter.com/intelsoftware',
+        gplus_url: 'href="https://plus.google.com/+IntelSoftware/posts',
+        instagram_url: 'https://instagram.com/inteldeveloperzone'
+      )
     end
     Rails.cache.clear
   end
