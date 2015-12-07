@@ -171,12 +171,13 @@ class User < ActiveRecord::Base
   scope :admin,     -> { where(admin: true) }
   scope :not_admin, -> { where("admin iS NULL") }
   scope :with_joined_project_collaborations, -> { joins("LEFT OUTER JOIN project_collaborators pc ON users.id = pc.user_id AND (pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)")}
+  scope :created_projects, -> { joins('LEFT OUTER JOIN projects p ON users.id = p.creator_id') }
 
   scope :by_topic, -> (topic_ids) do
     if topic_ids.present?
-      with_joined_project_collaborations.
-        joins(" LEFT OUTER JOIN project_topics pt on pt.project_id = pc.project_id").
-        where(pt: {topic_id: topic_ids}).group('users.id')
+      with_joined_project_collaborations.created_projects.
+        joins(" LEFT OUTER JOIN project_topics pt on pt.project_id = pc.project_id OR pt.project_id = p.id ").
+        where('pt.topic_id IN (?)', topic_ids).group('users.id')
     end
   end
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((users.properties->?), ',') && ARRAY[?]", property, values) if values.present? }
