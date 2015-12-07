@@ -28,8 +28,9 @@ en:
       search_filter:
         sort: 'Sort by:'
 
+
       address:
-        address: 'Enter your city'
+        address: "What’s your nearest city?"
       onboarding:
         short_bio: 'Ex: I’m a IoT advocate and a technology wizard'
 
@@ -69,6 +70,9 @@ en:
         'follow[]': 'Follow'
         short_bio: 'Short Bio'
         photo: 'Profile Photo'
+      address:
+        show:
+          address: "Location"
 
       project:
         name: 'Project Name'
