@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   geocoded_by :current_location, :latitude  => :last_geolocated_location_latitude, :longitude => :last_geolocated_location_longitude
 
   include Spree::UserPaymentSource
+  include CreationFilter
 
   SORT_OPTIONS = ['All', 'Featured', 'People I know', 'Most Popular', 'Location', 'Number of Projects']
 
@@ -171,12 +172,13 @@ class User < ActiveRecord::Base
   scope :admin,     -> { where(admin: true) }
   scope :not_admin, -> { where("admin iS NULL") }
   scope :with_joined_project_collaborations, -> { joins("LEFT OUTER JOIN project_collaborators pc ON users.id = pc.user_id AND (pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)")}
+  scope :created_projects, -> { joins('LEFT OUTER JOIN projects p ON users.id = p.creator_id') }
 
   scope :by_topic, -> (topic_ids) do
     if topic_ids.present?
-      with_joined_project_collaborations.
-      joins(" LEFT OUTER JOIN project_topics pt on pt.project_id = pc.project_id").
-      where(pt: {topic_id: topic_ids}).group('users.id')
+      with_joined_project_collaborations.created_projects.
+        joins(" LEFT OUTER JOIN project_topics pt on pt.project_id = pc.project_id OR pt.project_id = p.id ").
+        where('pt.topic_id IN (?)', topic_ids).group('users.id')
     end
   end
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((users.properties->?), ',') && ARRAY[?]", property, values) if values.present? }
@@ -232,6 +234,10 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable,
     :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
+  def self.find_for_database_authentication(warden_conditions)
+    where(warden_conditions.to_h).order('external_id NULLS FIRST').first
+  end
+
   attr_accessor :phone_required, :country_name_required, :skip_password, :verify_identity, :mobile_number_required, :last_name_required
 
   serialize :sms_preferences, Hash
@@ -271,6 +277,7 @@ class User < ActiveRecord::Base
     self.name = omniauth['info']['name'].presence || ("#{omniauth['info']['first_name']} #{omniauth['info']['last_name']}").presence || ("#{omniauth['info']['First_name']} #{omniauth['info']['Last_name']}").presence || ("#{omniauth['extra'] && omniauth['extra']['raw_info'] && omniauth['extra']['raw_info']['First_name']} #{omniauth['extra'] && omniauth['extra']['raw_info'] && omniauth['extra']['raw_info']['Last_name']}")if name.blank?
     self.email = omniauth['info']['email'].presence || omniauth['extra'] && omniauth['extra']['raw_info'] && omniauth['extra']['raw_info']['email_address'] if email.blank?
     expires_at = omniauth['credentials'] && omniauth['credentials']['expires_at'] ? Time.at(omniauth['credentials']['expires_at']) : nil
+    self.external_id ||= omniauth['uid'] if PlatformContext.current.instance.is_community?
     token = (omniauth['credentials'] && omniauth['credentials']['token']).presence || (omniauth['extra'] && omniauth['extra']['raw_info'] && (omniauth['extra']['raw_info']['enterprise_id'].presence || omniauth['extra']['raw_info']['CustID']))
     secret = omniauth['credentials'] && omniauth['credentials']['secret']
     authentications.build(provider: omniauth['provider'],
@@ -283,18 +290,18 @@ class User < ActiveRecord::Base
 
   def all_projects(with_pending = false)
     projects = Project.where("
-      creator_id = ? OR
-      EXISTS (SELECT 1 from project_collaborators pc WHERE pc.project_id = projects.id AND pc.user_id = ? AND (approved_by_user_at IS NOT NULL OR approved_by_owner_at IS NOT NULL) AND deleted_at IS NULL)
-      ",id, id)
+     creator_id = ? OR
+     EXISTS (SELECT 1 from project_collaborators pc WHERE pc.project_id = projects.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NOT NULL OR approved_by_owner_at IS NOT NULL) AND deleted_at IS NULL)
+                             ",id, id, email)
     if with_pending
       projects = projects.select(
         ActiveRecord::Base.send(:sanitize_sql_array,
-          ["projects.*,
-            (SELECT pc.id from project_collaborators pc WHERE pc.project_id = projects.id AND (pc.user_id = ?) AND (approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) as pending_collaboration
-            ",
-            id
-          ]
-        )
+                                ["projects.*,
+           (SELECT pc.id from project_collaborators pc WHERE pc.project_id = projects.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) as pending_collaboration
+                                 ",
+                                 id, email
+      ]
+                               )
       )
     end
     projects

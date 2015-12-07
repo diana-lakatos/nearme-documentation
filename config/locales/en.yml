@@ -312,6 +312,7 @@ en:
       listing: "Listing"
       listings: "Listings"
       reports: "Reports"
+      projects: "Projects"
 
     analytics:
       no_revenue_yet: 'No revenue yet.'
@@ -340,6 +341,10 @@ en:
         name: "Name"
         description: "Description"
         properties: "Properties"
+      projects:
+        community_reports: "Community reports"
+        week_start: "Starting week"
+        week_end: "Ending week"
 
     settings:
       configuration:
@@ -2293,6 +2298,7 @@ en:
       users: 'Registered users'
       purchasers: 'Purchasers only'
     max_num_reached: "Max number of attached documents reached"
+    associated_with_order: "Here are the seller attachments associated with your order"
 
   image_upload:
     preview: 'Preview'

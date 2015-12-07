@@ -2,13 +2,13 @@
   .contain
     .wrap
       %h2.hx
-        = link_to root_url do
+        = link_to 'https://software.intel.com' do
           = image_tag "intel/logo-blue.png", width: 59, height: 39, alt: 'Intel'
           = t :developer_zone
       %ul.nav
         - platform_context.pages.each do |page|
           %li
-            = link_to page.path, pages_path(page)
+            = link_to page.path, page.redirect_url.present? ? page.redirect_url : pages_path(page)
     .socials-a
       %p
         = t :join_us_on
@@ -21,6 +21,10 @@
           %li.twitter
             = link_to current_instance.theme.twitter_url, rel: 'external' do
               %span Twitter
+        - if current_instance.theme.instagram_url.present?
+          %li.instagram
+            = link_to current_instance.theme.instagram_url, rel: 'external' do
+              %span Instagram
         - if current_instance.theme.gplus_url.present?
           %li.google
             = link_to current_instance.theme.gplus_url, rel: 'external' do

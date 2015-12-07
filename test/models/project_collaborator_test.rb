@@ -6,14 +6,6 @@ class ProjectCollaboratorTest < ActiveSupport::TestCase
 
   context 'state machine' do
 
-    should 'assign proper user' do
-      @user = FactoryGirl.create(:user)
-      @project = FactoryGirl.create(:project)
-      @project_collaborator = @project.project_collaborators.create(email: @user.email)
-
-      assert_equal @user.name, @project_collaborator.name
-    end
-
     should 'apply correct states' do
       @project_collaborator = FactoryGirl.create(:project_collaborator)
 

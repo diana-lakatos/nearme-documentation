@@ -14,8 +14,6 @@
             = t :featured
       .wrap
         %h1= @project.name
-        - if current_user && InstanceAdminAuthorizer.new(current_user).authorized?('Manage')
-          %p= link_to t(:edit), edit_instance_admin_manage_project_path(@project), class: 'button-a small', rel: "modal"
         .user
           %figure
             = link_to user_path(@project.creator) do

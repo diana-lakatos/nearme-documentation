@@ -90,6 +90,7 @@ en:
           deleted: 'Email layout template has been deleted.'
           invalid: 'Not a valid email layout template.'
           updated: 'Email layout template has been updated.'
+          cannot_be_deleted: 'Email layout template cannot be deleted because it is used in at least one workflow alert.'
         form_component:
           created: 'Form component has been created.'
           deleted: 'Form component has been deleted.'

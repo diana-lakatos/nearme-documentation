@@ -618,7 +618,7 @@ class Transactable < ActiveRecord::Base
       name: 'Name', description: 'Description',
       external_id: 'External Id', enabled: 'Enabled',
       confirm_reservations: 'Confirm reservations', capacity: 'Capacity', quantity: 'Quantity',
-      listing_categories: 'Listing categories'
+      listing_categories: 'Listing categories', rental_shipping_type: "Rental shipping type"
     ).reverse_merge(
       transactable_type.custom_attributes.shared.pluck(:name, :label).inject({}) do |hash, arr|
         hash[arr[0].to_sym] = arr[1].presence || arr[0].humanize
@@ -743,7 +743,7 @@ class Transactable < ActiveRecord::Base
     return Time.zone.name if self.location.nil?
     case self.transactable_type.timezone_rule
     when 'location' then self.location.time_zone || Time.zone.name
-    when 'seller' then self.location.creator.time_zone || Time.zone.name
+    when 'seller' then (self.creator || self.try(:location).try(:creator) || self.company.try(:creator) || self.location.try(:company).try(:creator)).try(:time_zone) || Time.zone.name
     when 'instance' then self.instance.time_zone || Time.zone.name
     else
       Time.zone.name

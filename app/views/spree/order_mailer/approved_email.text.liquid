@@ -8,3 +8,13 @@
 {% endfor %}
 ============================================================
 
+{% if order.has_seller_attachments? %}
+{{ 'seller_attachments.associated_with_order' | translate }}:
+  {% for item in order.line_items %}
+    {% for attachment in item.product.attachments %}
+{{ attachment.title }}: {{ attachment.attachment_url }}
+    {% endfor %}
+  {% endfor %}
+{% endif %}
+
+============================================================

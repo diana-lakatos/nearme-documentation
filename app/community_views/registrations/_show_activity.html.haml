@@ -15,6 +15,6 @@
         .box-a
           %h2
             = t :about
-          %p= @user.properties.try(:biography)
+          %p= @user.properties.try(:about_me)
 
         = render 'shared/featured_projects', projects: Project.featured.where.not(id: current_user.try(:feed_followed_projects) || []).take(10)

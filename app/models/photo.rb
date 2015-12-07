@@ -8,7 +8,7 @@ class Photo < ActiveRecord::Base
   include RankedModel
   has_metadata :without_db_column => true
 
-  ranks :position, with_same: [:transactable_id]
+  ranks :position, with_same: [:owner_id, :owner_type, :creator_id]
 
   belongs_to :owner, -> { with_deleted }, polymorphic: true
   belongs_to :creator, -> { with_deleted }, class_name: "User"

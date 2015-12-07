@@ -66,7 +66,7 @@
     - if current_user.id == f.object.creator_id
       = f.input :seek_collaborators, as: :switch, wrapper_html: { class: 'sep' }
 
-    - if (current_user.id == f.object.creator_id ? @project.project_collaborators : current_user.project_collaborators.find_by(project: f.object)).count > 0
+    - if (current_user.id == f.object.creator_id ? @project.project_collaborators : current_user.project_collaborators.where(project: f.object)).count > 0
       %table.collaborators-listing-a
         %thead
           %tr

@@ -1,8 +1,9 @@
 - label ||= nil
+- placeholder ||= nil
 %div{'data-address-field' => true, class: "control-group #{"error" if f.object.errors.any?}"}
   = f.label :address, label: label, class: "control-label", required: true
   .controls
-    = f.text_field :address, :'data-behavior' => 'address-autocomplete', 'data-address-input' => true
+    = f.text_field :address, :'data-behavior' => 'address-autocomplete', :'data-address-input' => true, placeholder: placeholder
     - if f.object.errors.include?(:address) || f.object.errors.include?(:latitude)
       %p.error-block
         - if f.object.errors[:address].present?

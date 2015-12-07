@@ -1,9 +1,9 @@
 And(/^wish lists are enabled for the instance$/) do
-  Instance.first.update_attribute :wish_lists_enabled, true
+  PlatformContext.current.instance.update_attribute :wish_lists_enabled, true
 end
 
 And(/^wish lists are disabled for the instance$/) do
-  Instance.first.update_attribute :wish_lists_enabled, false
+  PlatformContext.current.instance.update_attribute :wish_lists_enabled, false
 end
 
 When(/^I click to Add to Favorites$/) do

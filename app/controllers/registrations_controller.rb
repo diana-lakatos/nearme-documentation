@@ -114,7 +114,7 @@ class RegistrationsController < Devise::RegistrationsController
   def update
     # next line is there to prevent unwanted UI changes [i.e. the name in the navbar] (it's a bug in devise, resource === current_user)
     @user = User.find(resource.id) # maybe a little bit hackish way, but 'dup' or 'clone' doesn't work
-    resource.country_name_required = true
+    resource.country_name_required = !PlatformContext.current.instance.is_community?
     resource.custom_validation = true
     resource.assign_attributes(user_params)
     build_approval_request_for_object(resource) unless resource.is_trusted?
@@ -132,7 +132,7 @@ class RegistrationsController < Devise::RegistrationsController
       event_tracker.updated_profile_information(@user)
       redirect_to dashboard_profile_path
     else
-      flash[:error] = (@user.errors.full_messages + @user.properties.errors.full_messages).join(', ')
+      flash[:error] = (@user.errors.full_messages).join(', ')
       @company = current_user.companies.first
       @country = resource.country_name
       render :edit, layout: dashboard_or_community_layout

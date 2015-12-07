@@ -18,6 +18,10 @@ class InstanceAdmin::BaseController < ApplicationController
     'products' => { default_action: 'index' },
   }
 
+  COMMUNITY_REPORTS_CONTROLLERS = {
+    'projects' => { default_action: 'index' },
+  }
+
   MANAGE_CONTROLLERS = {
     'transfers'          => { controller: '/instance_admin/manage/transfers', default_action: 'index' },
     'payments'          => { controller: '/instance_admin/manage/payments', default_action: 'index' },
