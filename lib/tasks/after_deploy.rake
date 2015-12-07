@@ -29,6 +29,7 @@ namespace :after_deploy do
     SendUnreadMessagesReminders.schedule!
     SendSpamReportsSummaryDaily.schedule!
     ScheduleChargeSubscriptions.schedule! if Rails.env.production?
+    ScheduleCommunityAggregatesCreation.schedule!
 
   end
 end

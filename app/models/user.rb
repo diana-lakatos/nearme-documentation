@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   geocoded_by :current_location, :latitude  => :last_geolocated_location_latitude, :longitude => :last_geolocated_location_longitude
 
   include Spree::UserPaymentSource
+  include CreationFilter
 
   SORT_OPTIONS = ['All', 'Featured', 'People I know', 'Most Popular', 'Location', 'Number of Projects']
 

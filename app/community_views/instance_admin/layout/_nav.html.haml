@@ -18,14 +18,14 @@
               %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/analytics/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
                 %span= "#{controller_name.titleize}"
 
-    - if @authorizer.authorized?('Reports') && false # to be implemented
+    - if @authorizer.authorized?('Reports')
       %li#reports
         %a{"data-parent" => "#reports", "data-toggle" => "collapse", :href => "#reports-sub"}
           %i.fa.fa-file-text-o
           %span
             = t('instance_admin.general.reports')
         %ul#reports-sub.sub-nav.collapse{:class => ("in" if controller.class.to_s.split("::").first(2).join("::") == "InstanceAdmin::Reports")}
-          - InstanceAdmin::BaseController::REPORTS_CONTROLLERS.each do |controller_name, settings|
+          - InstanceAdmin::BaseController::COMMUNITY_REPORTS_CONTROLLERS.each do |controller_name, settings|
             %li
               %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/reports/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
                 %span= "#{controller_name.titleize}"
