@@ -27,7 +27,13 @@ module Liquid
       if template_body.nil?
         template_path_splited = template_path.split('/')
         template_path_splited[-1] = "_#{template_path_splited[-1]}"
-        File.read(File.join('app/views', "#{template_path_splited.join('/')}.liquid"))
+        context.registers[:controller].view_paths.each do |view_path|
+          if path = view_path.try(:to_path)
+            if File.exists?(File.join(path, "#{template_path_splited.join('/')}.liquid"))
+              return File.read(File.join(path, "#{template_path_splited.join('/')}.liquid"))
+            end
+          end
+        end
       else
         template_body
       end

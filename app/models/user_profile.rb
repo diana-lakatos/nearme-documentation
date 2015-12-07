@@ -15,13 +15,15 @@ class UserProfile < ActiveRecord::Base
 
   SELLER  = 'seller'.freeze
   BUYER = 'buyer'.freeze
-  PROFILE_TYPES = [SELLER, BUYER].freeze
+  DEFAULT = 'default'.freeze
+  PROFILE_TYPES = [SELLER, BUYER, DEFAULT].freeze
 
   validates_inclusion_of :profile_type, in: PROFILE_TYPES
-  validate :validate_mandatory_categories
+  validate :validate_mandatory_categories, unless: ->(record) { record.skip_custom_attribute_validation }
 
   scope :seller, -> { where(profile_type: SELLER) }
   scope :buyer, -> { where(profile_type: BUYER) }
+  scope :default, -> { where(profile_type: DEFAULT) }
 
   has_many :categories_categorizables, as: :categorizable
   has_many :categories, through: :categories_categorizables

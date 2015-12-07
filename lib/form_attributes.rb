@@ -3,17 +3,17 @@ class FormAttributes
   def user
     [
       :email, :phone, :avatar, :name, :first_name, :middle_name, :last_name, :approval_requests, :current_address
-    ] + User.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
+    ] + UserProfile.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
     Category.users.roots.map { |k| ('Category - ' + k.name).to_sym }.flatten
   end
 
   def seller
-    User.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
+    UserProfile.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
     Category.sellers.roots.map { |k| ('Category - ' + k.name).to_sym }.flatten
   end
 
   def buyer
-    User.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
+    UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
     Category.buyers.roots.map { |k| ('Category - ' + k.name).to_sym }.flatten
   end
 

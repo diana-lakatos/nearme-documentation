@@ -1,6 +1,7 @@
 <form action="/search" class="home_search {{ class_name }}" method="get">
   <div class="no-text-search">
     <input name="transactable_type_id" type="hidden" value="{{ transactable_type.id }}">
+    <input type="hidden" name="transactable_type_class" value="{{ transactable_type.class_name }}">
     <a class="btn btn-green btn-large search-button" data-disable-with="{{ 'homepage.disabled_buttons.search' | translate }}" rel="submit" href="">
       <span class="ico-search"></span>
       {{ 'homepage.buttons.search' | translate }}

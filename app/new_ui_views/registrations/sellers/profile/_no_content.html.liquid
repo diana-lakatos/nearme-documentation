@@ -1,0 +1,22 @@
+{% if tab == 'products' %}
+  {% assign link = 'dashboard_company_products_path' | generate_url %}
+{% elsif tab == 'services' %}
+  {% assign link = 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.service_types[0].id %}
+{% elsif tab == 'reviews' %}
+  {% assign link = 'dashboard_reviews_path' | generate_url %}
+{% elsif tab == 'blog_posts' %}
+  {% assign link = 'dashboard_blog_path' | generate_url %}
+{% endif %}
+
+<div class="text-center">
+  {% if user.is_current_user? %}
+    {{ "user_profile.labels.user.no_" | append: tab | translate: name: user.first_name }}
+    {% if tab != 'reviews' %}
+      <br/>
+      <br/>
+      <a href="{{ link }}" class='btn green cta'>{{ 'user_profile.buttons.cta' | translate }}</a>
+    {% endif %}
+  {% else %}
+    {{ "user_profile.labels.visitor.no_" | append: tab | translate: name: user.first_name }}
+  {% endif %}
+</div>

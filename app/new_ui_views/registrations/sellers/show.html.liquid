@@ -1,0 +1,78 @@
+
+<div class='profile'>
+  <div class='container row-fluid page-wrapper'>
+    {% include 'registrations/sellers/profile/user_badge.html' %}
+    <div class='profile-content'>
+      <ul class='nav nav-tabs'>
+        {% if user.show_products_tab? %}
+          <li>
+            <a data-toggle='tab' href='#products'>{{ 'user_profile.labels.tabs.products' | translate }}</a>
+          </li>
+        {% endif %}
+        {% if user.show_services_tab? %}
+          <li>
+            <a data-toggle='tab' href='#services'>{{ 'user_profile.labels.tabs.services' | translate }}</a>
+          </li>
+        {% endif %}
+        {% if platform_context.active_rating_systems_present? %}
+          <li>
+            <a class='reviews-tab' data-toggle='tab' href='#reviews'>{{ 'user_profile.labels.tabs.reviews' | translate: count: total_reviews_count}}</a>
+          </li>
+        {% endif %}
+        {% if user.show_blog_tab? %}
+          <li>
+            <a data-toggle='tab' href='#blog_posts'>{{ 'user_profile.labels.tabs.blog_posts' | translate }}</a>
+          </li>
+        {% endif %}
+      </ul>
+      <div class='profile-listings tab-content'>
+        {% if user.show_products_tab? %}
+          <div id="products" class="tab-pane">
+            {% if company and products.size > 0 %}
+              {% include 'registrations/sellers/profile/tabs/products.html' %}
+            {% else %}
+              {% assign tab = 'products' %}
+              {% include 'registrations/sellers/profile/no_content.html' %}
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if user.show_services_tab? %}
+          <div id="services" class="tab-pane">
+            {% if company and listings.size > 0 %}
+              {% include 'registrations/sellers/profile/tabs/services.html' %}
+            {% else %}
+              {% assign tab = 'services' %}
+              {% include 'registrations/sellers/profile/no_content.html' %}
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if platform_context.active_rating_systems_present? %}
+          <div id="reviews" class="tab-pane">
+            {% if total_reviews_count > 0 %}
+              {% include 'registrations/sellers/profile/tabs/reviews.html' %}
+            {% else %}
+              {% assign tab = 'reviews' %}
+              {% include 'registrations/sellers/profile/no_content.html' %}
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if user.show_blog_tab? %}
+          <div class='tab-pane' id='blog_posts'>
+            {% if user.has_published_posts? %}
+              {% include 'registrations/sellers/profile/tabs/blog_posts.html' %}
+            {% else %}
+              {% assign tab = 'blog_posts' %}
+              {% include 'registrations/sellers/profile/no_content.html' %}
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% content_for 'domready' %}
+  new UserReviews($("#reviews"));
+  $('ul.nav-tabs li:first').addClass('active');
+  $('.tab-content .tab-pane:first').addClass('active');
+{% endcontent_for %}

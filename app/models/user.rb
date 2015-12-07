@@ -43,8 +43,7 @@ class User < ActiveRecord::Base
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :authored_messages, class_name: "UserMessage", foreign_key: 'author_id', inverse_of: :author
   has_many :blog_posts, class_name: 'UserBlogPost'
-  has_many :categories_categorizable, as: :categorizable
-  has_many :categories, through: :categories_categorizable
+  has_many :categories_categorizable, as: :categorizable, through: :user_profiles
   has_many :charges, foreign_key: 'user_id', dependent: :destroy
   has_many :company_users, -> { order(created_at: :asc) }, dependent: :destroy
   has_many :companies, through: :company_users
@@ -90,20 +89,20 @@ class User < ActiveRecord::Base
   has_many :user_status_updates
   has_many :wish_lists, dependent: :destroy
   has_many :dimensions_templates, as: :entity
+  has_many :user_profiles
 
   has_one :blog, class_name: 'UserBlog'
   has_one :current_address, class_name: 'Address', as: :entity
 
   has_one :seller_profile, -> { seller }, class_name: 'UserProfile'
   has_one :buyer_profile, -> { buyer }, class_name: 'UserProfile'
-
-  has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
-
+  has_one :default_profile, -> { default }, class_name: 'UserProfile'
 
   after_create :create_blog
   after_destroy :perform_cleanup
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
+  before_create :build_profile
 
   before_create do
     self.instance_profile_type_id ||= PlatformContext.current.present? ? InstanceProfileType.default.first.try(:id) : InstanceProfileType.default.where(instance_id: self.instance_id).try(:first).try(:id)
@@ -119,6 +118,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :current_address
   accepts_nested_attributes_for :seller_profile
   accepts_nested_attributes_for :buyer_profile
+  accepts_nested_attributes_for :default_profile
 
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(reservations: { transactable_id: listing.id }).uniq
@@ -181,7 +181,7 @@ class User < ActiveRecord::Base
         where('pt.topic_id IN (?)', topic_ids).group('users.id')
     end
   end
-  scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((users.properties->?), ',') && ARRAY[?]", property, values) if values.present? }
+  scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((user_profiles.properties->?), ',') && ARRAY[?]", property, values) if values.present? }
 
   mount_uploader :avatar, AvatarUploader
   mount_uploader :cover_image, CoverImageUploader
@@ -267,7 +267,7 @@ class User < ActiveRecord::Base
 
   def self.filtered_by_role(values)
     if values.present? && 'Other'.in?(values)
-      role_attribute = PlatformContext.current.instance.instance_profile_type.custom_attributes.find_by(name: 'role')
+      role_attribute = PlatformContext.current.instance.default_profile_type.custom_attributes.find_by(name: 'role')
       values += role_attribute.valid_values.reject { |val| val =~ /Featured|Innovator|Black Belt/i }
     end
 
@@ -316,8 +316,24 @@ class User < ActiveRecord::Base
     projects_count + project_collborations_count
   end
 
+  UserProfile::PROFILE_TYPES.each do |profile_type|
+    define_method "#{profile_type}_properties" do
+      send("#{profile_type}_profile").properties
+    end
+  end
+
+  def build_profile
+    self.build_default_profile(instance_profile_type: instance.default_profile_type)
+  end
+
+  alias_method :properties, :default_properties
+
   def category_ids=(ids)
-    super(ids.map {|e| e.gsub(/\[|\]/, '').split(',')}.flatten.compact.map(&:to_i))
+    default_profile.category_ids = ids
+  end
+
+  def categories
+    default_profile.categories
   end
 
   def common_categories(category)
@@ -769,7 +785,7 @@ class User < ActiveRecord::Base
     blog_posts.recent
   end
 
-  def has_published_blogs?
+  def has_published_posts?
     blog_posts.published.any?
   end
 

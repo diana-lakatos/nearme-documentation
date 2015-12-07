@@ -1,6 +1,6 @@
 class UserBlogPostDrop < BaseDrop
   attr_reader :blog_post
-  
+
   # title
   #   Post's title
   # previous_blog_post
@@ -80,6 +80,10 @@ class UserBlogPostDrop < BaseDrop
   # url for author's avatar image
   def author_avatar_url(style=:medium)
     @blog_post.author_avatar.url(style)
+  end
+
+  def published_at
+    @blog_post.decorate.published_at
   end
 
 end

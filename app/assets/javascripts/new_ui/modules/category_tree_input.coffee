@@ -69,9 +69,11 @@ class @DNM.CategoryTreeInput
     ids = @treeContainer.jstree('get_checked')
     ids = _.uniq(ids)
     @valueInputsContainer.empty()
-
-    $.each ids, (index, id)=>
-      @valueInputsContainer.append("<input type='hidden' name='#{@attrName}' value='#{id}'>")
+    if ids.length > 0
+      $.each ids, (index, id)=>
+        @valueInputsContainer.append("<input type='hidden' name='#{@attrName}' value='#{id}'>")
+    else
+      @valueInputsContainer.append("<input type='hidden' name='#{@attrName}' value=''>")
 
 $('[data-category-tree-input]').each ->
   new DNM.CategoryTreeInput(@)

@@ -7,7 +7,11 @@ module SearcherHelper
   end
 
   def find_transactable_type
-    @transactable_type = TransactableType.find(params[:transactable_type_id]) if params[:transactable_type_id].present?
+    if params[:transactable_type_class].in? Instance::SEARCHABLE_CLASSES
+      @transactable_type = params[:transactable_type_class].constantize.find(params[:transactable_type_id]) if params[:transactable_type_id].present?
+    elsif params[:transactable_type_id].present?
+      @transactable_type = TransactableType.find(params[:transactable_type_id])
+    end
     @transactable_type ||= TransactableType.searchable.by_position.first
     params[:transactable_type_id] ||= @transactable_type.try(:id)
 

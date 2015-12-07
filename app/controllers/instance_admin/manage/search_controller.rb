@@ -2,7 +2,8 @@ class InstanceAdmin::Manage::SearchController < InstanceAdmin::Manage::BaseContr
   before_filter :find_instance
 
   def show
-    @transactable_types = TransactableType.by_position
+    @transactable_types = TransactableType.searchable.by_position
+    @instance_profile_types = InstanceProfileType.searchable.by_position
   end
 
   def update
@@ -19,6 +20,9 @@ class InstanceAdmin::Manage::SearchController < InstanceAdmin::Manage::BaseContr
   def sort_transactable_types
     TransactableType.searchable.each do |tt|
       tt.update_column(:position, params[:transactable_types].index("tt_#{tt.id}"))
+    end
+    InstanceProfileType.searchable.each do |tt|
+      tt.update_column(:position, params[:transactable_types].index("pt_#{tt.id}"))
     end
     render nothing: true
   end

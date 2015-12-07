@@ -941,12 +941,12 @@ class UserTest < ActiveSupport::TestCase
     setup do
       @type = FactoryGirl.create(:instance_profile_type)
       @custom_attribute = FactoryGirl.create(:custom_attribute, name: 'custom_profile_attr', label: 'Custom Profile Attr', target: @type, attribute_type: 'string')
-      @user = @type.users.build
+      @user = FactoryGirl.create(:user, instance_profile_type: @type)
     end
 
     should 'be able to set value' do
       assert_nothing_raised do
-        @user.properties.custom_profile_attr = 'hello'
+        @user.default_profile.properties.custom_profile_attr = 'hello'
         assert_equal 'hello', @user.properties.custom_profile_attr
       end
     end

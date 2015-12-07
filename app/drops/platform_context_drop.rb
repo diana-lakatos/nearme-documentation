@@ -64,6 +64,8 @@ class PlatformContextDrop < BaseDrop
   #   array of transactable_types (service types) for this marketplace
   # product_types
   #   array of product types for this instance
+  # service_types
+  #   array of service types for this instance
   # bookable_nouns
   #   text containing the bookable nouns as a sentence (e.g. "desk or table or room")
   # bookable_nouns_plural
@@ -74,7 +76,7 @@ class PlatformContextDrop < BaseDrop
     :search_by_keyword_placeholder, :facebook_url, :address, :phone_number, :gplus_url,
     :site_name, :support_url, :support_email, :logo_image, :hero_image, :tagline, :homepage_content,
     :is_company_theme?, :call_to_action, :latest_products, :buyable?, :bookable?, :transactable_types, :product_types,
-    :bookable_nouns, :bookable_nouns_plural, :search_input_name, to: :platform_context_decorator
+    :bookable_nouns, :bookable_nouns_plural, :search_input_name, :service_types, to: :platform_context_decorator
 
 
   def initialize(platform_context_decorator)
@@ -150,6 +152,10 @@ class PlatformContextDrop < BaseDrop
 
   def spam_reports_path
     urlify(routes.instance_admin_projects_spam_reports_path)
+  end
+
+  def active_rating_systems_present?
+    RatingSystem.active.any?
   end
 
   private

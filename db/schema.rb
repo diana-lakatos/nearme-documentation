@@ -908,13 +908,18 @@ ActiveRecord::Schema.define(version: 20151207161603) do
   add_index "instance_creators", ["email"], name: "index_instance_creators_on_email", using: :btree
 
   create_table "instance_profile_types", force: :cascade do |t|
-    t.string   "name",         limit: 255
+    t.string   "name",                 limit: 255
     t.integer  "instance_id"
     t.datetime "deleted_at"
     t.string   "profile_type"
+    t.boolean  "searchable"
+    t.boolean  "show_categories"
+    t.string   "category_search_type"
+    t.integer  "position",                         default: 0
   end
 
   add_index "instance_profile_types", ["instance_id", "profile_type"], name: "index_instance_profile_types_on_instance_id_and_profile_type", unique: true, using: :btree
+  add_index "instance_profile_types", ["instance_id", "searchable"], name: "index_instance_profile_types_on_instance_id_and_searchable", using: :btree
 
   create_table "instance_types", force: :cascade do |t|
     t.string   "name",         limit: 255
@@ -3586,17 +3591,6 @@ ActiveRecord::Schema.define(version: 20151207161603) do
   end
 
   add_index "user_industries", ["industry_id", "user_id"], name: "index_user_industries_on_industry_id_and_user_id", using: :btree
-
-  create_table "user_instance_profiles", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "instance_id"
-    t.integer  "instance_profile_type_id"
-    t.text     "metadata"
-    t.hstore   "properties"
-    t.datetime "deleted_at"
-    t.integer  "reservations_count",       default: 0
-    t.integer  "transactables_count",      default: 0
-  end
 
   create_table "user_messages", force: :cascade do |t|
     t.integer  "thread_owner_id"

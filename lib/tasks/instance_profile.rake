@@ -34,6 +34,34 @@ namespace :instance_profile do
         end
       end
     end
+  end
 
+  desc 'Create user_profile for all users and migrate custom attributes from user to user_profile'
+  task create_default_profile: :environment do
+    Instance.find_each do |instance|
+      instance.set_context!
+      puts "Processing #{instance.name}"
+      default_profile = instance.default_profile_type
+      instance.users.find_each do |user|
+        if user.default_profile.blank?
+          user.create_default_profile!(
+            instance_profile_type: default_profile,
+            skip_custom_attribute_validation: true,
+            properties: user[:properties]
+          )
+        end
+      end
+    end
+  end
+
+  desc 'Create translations'
+  task create_translations: :environment do
+    Instance.find_each do |instance|
+      instance.set_context!
+      puts "Processing #{instance.name}"
+      instance.instance_profile_types.each do |ipt|
+        ipt.create_translations!
+      end
+    end
   end
 end

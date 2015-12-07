@@ -28,7 +28,7 @@ class CheckoutExtraFields < Form
       @user.send("#{key}=", value)
     end
 
-    public_attributes = User.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id))
+    public_attributes = UserProfile.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id))
     if @attributes['user'].present? && @attributes['user']['properties'].present?
       @attributes['user']['properties'].each do |key, value|
         next if !public_attributes.include?(key)

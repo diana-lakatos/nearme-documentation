@@ -1,5 +1,5 @@
 - if only_inputs.empty? || Category.users.roots.map { |c| "Category - #{c.name}".to_sym }.include?(only_inputs.first)
   - category_name = only_inputs.first.to_s.split(" - ")[1]
   - category = Category.users.roots.where(name: category_name).first
-
-  = render partial: 'dashboard/shared/fields/category', locals: { category: category, f: f }
+  = f.simple_fields_for :default_profile do |default_profile_form|
+    = render partial: 'dashboard/shared/fields/category', locals: { category: category, f: default_profile_form }

@@ -12,13 +12,20 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
   end
 
   def new
-    opts = { 
+    opts = {
       path: params[:path],
       partial: true
     }
     if params[:path] && @base_view = InstanceView::DEFAULT_LIQUID_VIEWS_PATHS[params[:path]]
-      view_path = DbViewResolver.virtual_path(params[:path].dup, @base_view.fetch(:is_partial, true))
-      opts[:body] = File.read(File.join(Rails.root, 'app', 'views', "#{view_path}.html.liquid"))
+      view_file = DbViewResolver.virtual_path(params[:path].dup, @base_view.fetch(:is_partial, true))
+      view_paths.each do |view_path|
+        if path = view_path.try(:to_path)
+          if File.exists?(File.join(path, "#{view_file}.html.liquid"))
+            opts[:body] = File.read(File.join(path, "#{view_file}.html.liquid"))
+            break
+          end
+        end
+      end
       opts[:partial] = @base_view.fetch(:is_partial, true)
     end
     @liquid_view = platform_context.instance.instance_views.build opts
