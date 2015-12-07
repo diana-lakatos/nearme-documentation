@@ -44,13 +44,24 @@ namespace :intel do
         ca.label = 'Role'
       end.save!
 
-      ipt.custom_attributes.where(name: 'biography').first_or_initialize.tap do |ca|
+      ipt.custom_attributes.where(name: 'about_me').first_or_initialize.tap do |ca|
         ca.public = true
         ca.html_tag = 'textarea'
         ca.attribute_type = 'text'
         ca.input_html_options = { cols: 40, rows: 8 }
-        ca.label = 'Biography'
+        ca.label = 'About me'
       end.save!
+
+      ipt.custom_attributes.where(name: 'short_bio').first_or_initialize.tap do |ca|
+        ca.public = true
+        ca.html_tag = 'textarea'
+        ca.attribute_type = 'text'
+        ca.input_html_options = { cols: 40, rows: 8 }
+        ca.label = 'Short Bio'
+      end.save!
+
+
+
       Utils::DefaultAlertsCreator::ProjectCreator.new.create_all!
       PlatformContext.current.theme.update_attributes(
         facebook_url: 'https://www.facebook.com/IntelDeveloperZone/',
