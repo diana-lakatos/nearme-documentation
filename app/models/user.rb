@@ -277,7 +277,7 @@ class User < ActiveRecord::Base
     self.name = omniauth['info']['name'].presence || ("#{omniauth['info']['first_name']} #{omniauth['info']['last_name']}").presence || ("#{omniauth['info']['First_name']} #{omniauth['info']['Last_name']}").presence || ("#{omniauth['extra'] && omniauth['extra']['raw_info'] && omniauth['extra']['raw_info']['First_name']} #{omniauth['extra'] && omniauth['extra']['raw_info'] && omniauth['extra']['raw_info']['Last_name']}")if name.blank?
     self.email = omniauth['info']['email'].presence || omniauth['extra'] && omniauth['extra']['raw_info'] && omniauth['extra']['raw_info']['email_address'] if email.blank?
     expires_at = omniauth['credentials'] && omniauth['credentials']['expires_at'] ? Time.at(omniauth['credentials']['expires_at']) : nil
-    self.external_id = omniauth['extra']['raw_info']['enterprise_id'] rescue nil
+    self.external_id ||= omniauth['uid'] if PlatformContext.current.instance.is_community?
     token = (omniauth['credentials'] && omniauth['credentials']['token']).presence || (omniauth['extra'] && omniauth['extra']['raw_info'] && (omniauth['extra']['raw_info']['enterprise_id'].presence || omniauth['extra']['raw_info']['CustID']))
     secret = omniauth['credentials'] && omniauth['credentials']['secret']
     authentications.build(provider: omniauth['provider'],

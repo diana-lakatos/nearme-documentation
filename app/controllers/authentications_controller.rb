@@ -29,6 +29,20 @@ class AuthenticationsController < ApplicationController
       # There is no authentication in our system, and the user is not logged in. Hence, we create a new user and then new authentication
     else
       if @oauth.create_user(cookies[:google_analytics_id])
+        if PlatformContext.current.instance.is_community?
+          user = @oauth.authenticated_user
+          raise 'External id is nil' if user.external_id.blank?
+          uri = URI.parse("https://idz-profile-rest-prod.wdg.infra-host.com")
+          http = Net::HTTP.new(uri.host, uri.port)
+          http.use_ssl = true
+          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+          request = Net::HTTP::Post.new("/api/update-profile")
+          request.add_field('Content-Type', 'application/json')
+          request.add_field('x-token', PlatformContext.current.instance.webhook_token)
+          request.body = {'enterprise_id' => user.external_id}.to_json
+          http.request(request)
+        end
+
         # User and authentication created successfully. User is now logged in
         new_user_created_successfully
       else

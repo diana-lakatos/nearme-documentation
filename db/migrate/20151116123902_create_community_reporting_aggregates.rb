@@ -9,6 +9,6 @@ class CreateCommunityReportingAggregates < ActiveRecord::Migration
       t.datetime :updated_at,         :null => false
     end
 
-    add_index :community_reporting_aggregates, [:instance_id, :start_date, :end_date], unique: true
+    add_index :community_reporting_aggregates, [:instance_id, :start_date, :end_date], unique: true, name: 'index_community_reporting_aggregates_on_dates'
   end
 end

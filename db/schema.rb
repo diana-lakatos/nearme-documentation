@@ -437,6 +437,17 @@ ActiveRecord::Schema.define(version: 20151207102024) do
   add_index "comments", ["creator_id"], name: "index_comments_on_creator_id", using: :btree
   add_index "comments", ["instance_id", "commentable_id", "commentable_type"], name: "index_on_commentable", using: :btree
 
+  create_table "community_reporting_aggregates", force: :cascade do |t|
+    t.datetime "start_date",               null: false
+    t.datetime "end_date",                 null: false
+    t.integer  "instance_id",              null: false
+    t.hstore   "statistics",  default: {}, null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "community_reporting_aggregates", ["instance_id", "start_date", "end_date"], name: "index_community_reporting_aggregates_on_dates", unique: true, using: :btree
+
   create_table "companies", force: :cascade do |t|
     t.integer  "creator_id"
     t.string   "name",                limit: 255
