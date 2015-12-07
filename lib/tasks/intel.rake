@@ -34,6 +34,15 @@ namespace :intel do
           t.description = "Quisque euismod orci sed nisi malesuada porta. In non molestie purus. Sed ut maximus nibh, eu ultrices massa. In accum san augue nisl, eget ultrices"
         end.save!
       end
+      project_type.custom_validators.where(field_name: 'name').first_or_initialize.tap do |cv|
+        cv.max_length = 140
+      end.save!
+      project_type.custom_validators.where(field_name: 'description').first_or_initialize.tap do |cv|
+        cv.max_length = 5000
+      end.save!
+      project_type.custom_validators.where(field_name: 'summary').first_or_initialize.tap do |cv|
+        cv.max_length = 140
+      end.save!
 
       ipt = InstanceProfileType.default.first
       ipt.custom_attributes.where(name: 'role').first_or_initialize.tap do |ca|
@@ -50,6 +59,7 @@ namespace :intel do
         ca.attribute_type = 'text'
         ca.input_html_options = { cols: 40, rows: 8 }
         ca.label = 'About me'
+        ca.max_length = 5000
       end.save!
 
       ipt.custom_attributes.where(name: 'short_bio').first_or_initialize.tap do |ca|
@@ -58,6 +68,7 @@ namespace :intel do
         ca.attribute_type = 'text'
         ca.input_html_options = { cols: 40, rows: 8 }
         ca.label = 'Short Bio'
+        ca.max_length = 140
       end.save!
 
 
