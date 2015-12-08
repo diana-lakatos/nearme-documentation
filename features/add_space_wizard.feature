@@ -32,6 +32,7 @@ Feature: A user can add a space
     Then I should see "Your Desk was listed!"
 
   Scenario: An unregistered user starts by signing up
-    When I press "Submit"
+    When custom validator exists for field location_type_id
+    And I press "Submit"
     Then I should see shortened error messages
 

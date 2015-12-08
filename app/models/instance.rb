@@ -97,6 +97,7 @@ class Instance < ActiveRecord::Base
   has_many :dimensions_templates, as: :entity
   has_many :seller_attachments
   has_many :availability_templates, as: :parent
+  has_many :custom_validators
   serialize :pricing_options, Hash
 
   validates :name, presence: true

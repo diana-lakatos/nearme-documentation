@@ -4,20 +4,20 @@
 - if only_inputs.empty? || only_inputs.include?(:approval_requests)
   = render :partial => 'approval_requests/form', :locals => { f: f }
 
-= f.input :name, :as => :limited_string, :limit => 50, :hint => t('simple_form.hints.location.name'), :required => f.object.name_and_description_required if only_inputs.empty? || only_inputs.include?(:name)
+= f.input :name, :as => :limited_string, :hint => t('simple_form.hints.location.name'), :required => f.object.validation_for(:name).try(:is_required?) if only_inputs.empty? || only_inputs.include?(:name)
 
 - if only_inputs.empty? || only_inputs.include?(:address)
   = f.simple_fields_for :location_address, (f.object.location_address.presence || f.object.build_location_address) do |address_form|
     = render :partial => 'addresses/form', :locals => { :f => address_form }
 = f.input :time_zone if only_inputs.empty? || only_inputs.include?(:time_zone)
-= f.input :description, :as => :limited_text, :limit => 250, :required => f.object.name_and_description_required, :input_html => { :maxlength => 250, :rows => 2 } if only_inputs.empty? || only_inputs.include?(:description)
+= f.input :description, :as => :limited_text, :required => f.object.validation_for(:description).try(:is_required?), :input_html => { :rows => 2 } if only_inputs.empty? || only_inputs.include?(:description)
 - if instance.location_types.many?
-  = f.association :location_type, :collection => instance.location_types if only_inputs.empty? || only_inputs.include?(:location_type)
+  = f.association :location_type, :collection => instance.location_types, required: f.object.validation_for(:location_type_id).try(:is_required?) if only_inputs.empty? || only_inputs.include?(:location_type)
 - elsif
   = f.hidden_field :location_type_id, value: instance.location_types.first.try(:id)
 = f.input :email if only_inputs.empty? || only_inputs.include?(:email)
 = f.association :administrator, :collection => f.object.company_users.includes(:user).order('users.name').map(&:user), :label_method => 'name', :value_method => 'id', :input_html => { :class => 'custom-select' }, :include_blank => t('simple_form.prompts.location.administrator') if only_inputs.empty? || only_inputs.include?(:administrator)
-= f.input :special_notes, :label => t('simple_form.labels.location.special_notes', lessee: platform_context.lessee.capitalize), :placeholder => t('simple_form.placeholders.location.special_notes', lessee: platform_context.lessee, lessees: platform_context.lessee.pluralize) if only_inputs.empty? || only_inputs.include?(:special_notes)
+= f.input :special_notes, :label => t('simple_form.labels.location.special_notes', lessee: platform_context.lessee.capitalize), :placeholder => t('simple_form.placeholders.location.special_notes', lessee: platform_context.lessee, lessees: platform_context.lessee.pluralize), required: f.object.validation_for(:special_notes).try(:is_required?) if only_inputs.empty? || only_inputs.include?(:special_notes)
 - if only_inputs.empty? || only_inputs.include?(:availability_rules)
   .control-group
     = render :partial => 'availability_rules/form', :locals => { :f => f }

@@ -27,9 +27,6 @@ end
 Then /^I should see shortened error messages$/ do
   page.should have_content('Price type must be free if all prices are zero')
   page.should have_content('Location type can\'t be blank')
-  page.should have_content('Location description can\'t be blank')
-  page.should have_content('Location name can\'t be blank')
-  page.should have_content('Location address can\'t be blank')
   page.should have_content('Company name can\'t be blank')
   page.should have_content('Company industry can\'t be blank')
   page.should have_content('Company address can\'t be blank')
