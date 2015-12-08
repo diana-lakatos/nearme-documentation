@@ -55,8 +55,9 @@ class Project < ActiveRecord::Base
 
   validates :photos, length: {minimum: 1}, unless: ->(record) { record.draft? || record.photo_not_required || !record.transactable_type.enable_photo_required }
   validates :topics, length: {:minimum => 1}, unless: ->(record) { record.draft? }
-  validates :summary, length: { maximum: 140 }, unless: ->(record) { record.draft? }
   validates :name, :description, :summary, presence: true, unless: ->(record) { record.draft? }
+  validates :name, :summary, length: { maximum: 140 }, unless: ->(record) { record.draft? }
+  validates :description, length: { maximum: 5000 }, unless: ->(record) { record.draft? }
 
   validates_with CustomValidators
 
