@@ -3428,6 +3428,8 @@ ActiveRecord::Schema.define(version: 20151207102024) do
     t.boolean  "date_pickers_use_availability_rules"
     t.string   "date_pickers_mode"
     t.integer  "position",                                                                       default: 0
+    t.boolean  "action_weekly_subscription_booking"
+    t.boolean  "action_monthly_subscription_booking"
     t.string   "timezone_rule",                                                                  default: "location"
     t.boolean  "action_weekly_subscription_booking"
     t.boolean  "action_monthly_subscription_booking"

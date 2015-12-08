@@ -1496,6 +1496,13 @@ body.buy-sell-theme {
       margin-top: 11px;
     }
   }
+
+  .modal-content .btn[type="submit"] {
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 50px;
+    height: auto;
+  }
 }
 
 

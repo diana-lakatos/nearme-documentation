@@ -14,7 +14,7 @@ class ProjectCollaborator < ActiveRecord::Base
   validates :project, presence: true
 
   scope :approved, -> { where.not(approved_by_owner_at: nil, approved_by_user_at: nil) }
-  scope :for_user, -> (user) { where('user_id = ? OR email = ?', user.id, user.email) }
+  scope :for_user, -> (user) { user.present? ? where('user_id = ? OR email = ?', user.id, user.email) : nil }
 
   def name
     @name ||= user.try(:name)

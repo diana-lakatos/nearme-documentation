@@ -120,7 +120,7 @@ class ReviewDecorator < Draper::Decorator
   end
 
   def default_item_photo
-    "ratings/reviews-placeholder.png"
+    asset_url 'placeholders/895x554.gif'
   end
 
   def get_product_info

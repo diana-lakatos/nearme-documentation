@@ -73,7 +73,11 @@
       %li= link_to t('top_navbar.log_out'), main_app.destroy_user_session_path, :method => :delete, class: 'nav-link dropdown-toggle', :data => {:user => current_user.first_name }
 
     - if HiddenUiControls.find('main_menu/messages').visible?
-      %li.visible-lg-block= link_to t('top_navbar.messages'), main_app.dashboard_user_messages_path, class: 'nav-link'
+      %li.visible-lg-block
+        = link_to main_app.dashboard_user_messages_path, class: 'nav-link' do
+          = t('top_navbar.messages')
+          - if current_user.unread_user_message_threads_count_for(platform_context.instance) > 0
+            %span.count= "(#{current_user.unread_user_message_threads_count_for(platform_context.instance)})"
 
   - else
     %li

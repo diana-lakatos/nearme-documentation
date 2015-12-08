@@ -2,11 +2,8 @@ class InstanceAdmin::Settings::ConfigurationController < InstanceAdmin::Settings
   skip_before_filter :check_if_locked, only: :lock
 
   def update
-    if params[:validate_imap_settings_button]
-      validate_imap_settings
-    else
-      super
-    end
+    validate_imap_settings if params[:validate_imap_settings_button]
+    super
   end
 
   def lock
@@ -25,12 +22,9 @@ class InstanceAdmin::Settings::ConfigurationController < InstanceAdmin::Settings
     isv = ImapSettingsValidator.new(PlatformContext.current.instance)
     if isv.validate_settings
       flash[:success] = t('flash_messages.instance_admin.imap_settings.validation_successful')
-      redirect_to action: :show
     else
       flash[:error] = t('flash_messages.instance_admin.imap_settings.could_not_validate')
-      redirect_to action: :show
     end
   end
-
 end
 

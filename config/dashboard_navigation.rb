@@ -15,7 +15,8 @@ SimpleNavigation::Configuration.run do |navigation|
 
   navigation.items do |primary|
 
-    dashboard_nav_item primary, 'dashboard/user_messages', dashboard_user_messages_path, highlights_on: /^\/dashboard\/user_messages(\/.+)*/, link_text: t('dashboard.nav.user_messages')
+    dashboard_nav_item primary, 'dashboard/user_messages', dashboard_user_messages_path, highlights_on: /user_messages/, link_text: dashboard_nav_user_messages_label
+
     primary.item :reviews, t('dashboard.nav.reviews'), nil, if: Proc.new { platform_context.instance.rating_systems.where(active: true).present? } do |sub_nav|
       dashboard_nav_item sub_nav, 'dashboard/reviews_rate', rate_dashboard_reviews_path
       dashboard_nav_item sub_nav, 'dashboard/reviews_completed', completed_dashboard_reviews_path
@@ -80,7 +81,7 @@ SimpleNavigation::Configuration.run do |navigation|
     end
 
     primary.item :account, t('dashboard.nav.account'), nil do |sub_nav|
-      dashboard_nav_item sub_nav, 'registrations/edit', dashboard_profile_path, link_text: t('dashboard.nav.edit'), highlights_on: /^\/(users\/edit|dashboard\/seller\/edit|dashboard\/buyer\/edit)/
+      dashboard_nav_item sub_nav, 'registrations/edit', dashboard_profile_path, link_text: t('dashboard.nav.edit'), highlights_on: /^\/(users\/edit|dashboard\/seller\/edit|dashboard\/buyer\/edit|dashboard\/edit_profile)/
       dashboard_nav_item sub_nav, 'dashboard/notification_preferences', edit_dashboard_notification_preferences_path, link_text: t('dashboard.nav.notification_preferences')
       dashboard_nav_item sub_nav, 'registrations/social_accounts', social_accounts_path, link_text: t('dashboard.nav.social_accounts')
       if HiddenUiControls.find('dashboard/saved_searches').visible?
