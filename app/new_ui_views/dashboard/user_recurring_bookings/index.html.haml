@@ -3,13 +3,12 @@
 - content_for :page_header do
   %h1= yield :title
 
-%nav.panel-nav
-  %ul.tabs.pull-left
-    - actions = ['booking_successful', 'active', 'booking_failed']
-    %li{class: actions.include?(params[:action]) ? 'active' : ''}
-      = link_to t('dashboard.user_recurring_bookings.active'), active_dashboard_user_recurring_bookings_path
-    %li{class: params[:action] == 'archived' ? 'active' : ''}
-      = link_to t('dashboard.user_recurring_bookings.archived'), archived_dashboard_user_recurring_bookings_path
+- actions = ['booking_successful', 'active', 'booking_failed']
+- tabs = []
+- tabs.push({ name: t('dashboard.user_recurring_bookings.active'), url: active_dashboard_user_recurring_bookings_path, active: actions.include?(params[:action]) })
+- tabs.push({ name: t('dashboard.user_recurring_bookings.archived'), url: archived_dashboard_user_recurring_bookings_path, active: params[:action] == 'archived' })
+
+= dashboard_panel_multi_tabs(tabs)
 
 .panel
   .panel-body

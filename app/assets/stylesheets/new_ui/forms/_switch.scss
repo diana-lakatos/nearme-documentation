@@ -66,7 +66,7 @@ $switch-toggler-background: #fff;
         display: block;
         width: 200%;
         margin-left: -100%;
-        transition: margin 0.3s ease-in 0s;
+        transition: margin 0.3s ease-in;
     }
     .onoffswitch-inner:before, .onoffswitch-inner:after {
         display: block;
@@ -99,7 +99,7 @@ $switch-toggler-background: #fff;
         bottom: 0;
         border-style: solid;
         border-color: $switch-border-color;
-        transition: all 0.3s ease-in 0s;
+        transition: all 0.3s ease-in;
     }
     .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
         margin-left: 0;

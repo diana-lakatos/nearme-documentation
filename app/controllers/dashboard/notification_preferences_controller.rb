@@ -8,6 +8,7 @@ class Dashboard::NotificationPreferencesController < Dashboard::BaseController
     @user = current_user
     @user.assign_attributes(notification_preferences_params)
     if @user.save
+      flash[:success] = t('flash_messages.dashboard.notification_preferences.updated')
       redirect_to edit_dashboard_notification_preferences_path
     else
       render :edit

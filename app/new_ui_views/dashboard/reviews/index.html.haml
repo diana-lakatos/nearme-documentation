@@ -11,17 +11,18 @@
       = t('dashboard.reviews.index.completed_feedback')
 
 #reviews
-  .form-inline
-    .form-group
-      = label_tag :"reviews-period", t('dashboard.reviews.feedback.see_reviews_from'), class: 'control-label'
-      %select.form-control#reviews-period{:'data-period-selection' => true}
-        %option{value: Review::LAST_30_DAYS, selected: period_selected?(Review::LAST_30_DAYS)}
-          = t('dashboard.reviews.feedback.last_30_days')
-        %option{value: Review::LAST_6_MONTHS, selected: period_selected?(Review::LAST_6_MONTHS)}
-          = t('dashboard.reviews.feedback.past_6_months')
-        - array_of_last_years(4).each do |number|
-          %option{value: "#{number}", selected: period_selected?("#{number}")}
-            = number
+  .content-box-a
+    .form-inline
+      .form-group
+        = label_tag :"reviews-period", t('dashboard.reviews.feedback.see_reviews_from'), class: 'control-label'
+        %select.form-control#reviews-period{:'data-period-selection' => true}
+          %option{value: Review::LAST_30_DAYS, selected: period_selected?(Review::LAST_30_DAYS)}
+            = t('dashboard.reviews.feedback.last_30_days')
+          %option{value: Review::LAST_6_MONTHS, selected: period_selected?(Review::LAST_6_MONTHS)}
+            = t('dashboard.reviews.feedback.past_6_months')
+          - array_of_last_years(4).each do |number|
+            %option{value: "#{number}", selected: period_selected?("#{number}")}
+              = number
 
   - if @rating_systems[:seller_rating_system] && seller_collection.present? || @rating_systems[:product_rating_system]  && product_collection.present? || @rating_systems[:buyer_rating_system] && buyer_collection.present?
     %nav.panel-nav{:'data-internal-nav' => true}

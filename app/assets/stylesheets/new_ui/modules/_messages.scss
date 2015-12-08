@@ -6,60 +6,104 @@
         border-bottom: 1px solid $messages-border;
 
         > a {
-            padding: 10px;
+            position: relative;
+            padding: 10px 80px 10px 10px;
             display: block;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            overflow: hidden;
 
             &:hover, &:focus, &:active {
-
                 background: $messages-message-background-hover;
             }
         }
 
         .avatar {
+            float: left;
             width: 50px;
             height: 50px;
             overflow: hidden;
-            margin-right: 20px;
 
             img {
                 width: 100%;
             }
         }
 
-        .author {
-            width: 100px;
-            font-weight: bold;
-            color: $messages-author-color;
-            margin-right: 20px;
+        .avatar ~ * {
+            margin-left: 70px;
         }
 
-        .date {
-            color: $messages-date-color;
-            width: 100px;
-            margin-left: 20px;
+        .author {
+            font-weight: bold;
+            color: $messages-author-color;
         }
+
 
         .summary {
             color: $text-color;
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
-            flex-grow: 5;
         }
+
+        .date {
+            color: $messages-date-color;
+        }
+
         .actions {
-            width: 40px;
-            margin-left: 20px;
-            text-align: right;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            margin: 0;
 
             span + span {
                 margin-left: 15px;
             }
         }
-    }
 
+        @media (min-width: $screen-sm) {
+            > a {
+                padding-right: 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .avatar {
+                float: none;
+                margin-right: 20px;
+            }
+
+            .avatar ~ * {
+                margin-left: 0;
+            }
+
+
+            .author {
+                width: 100px;
+                margin-right: 20px;
+            }
+
+            .date {
+                float: none;
+                width: 100px;
+                margin-left: 20px;
+            }
+
+            .summary {
+                flex-grow: 5;
+            }
+            .actions {
+                position: relative;
+                float: none;
+                width: 40px;
+                margin-left: 20px;
+                text-align: right;
+                top: 0;
+                right: auto;
+                transform: none;
+            }
+        }
+    }
 }
 
 
@@ -80,7 +124,7 @@
     .message {
         position: relative;
         @include clear;
-        padding: 10px;
+        padding: 10px $panel-body-padding;
         border-radius: $border-radius-base;
         background: $messages-background;
         border: 1px solid $messages-border;
@@ -88,7 +132,7 @@
 
 
         > header {
-            @include clear;
+            // @include clear;
             margin-bottom: 5px;
         }
 

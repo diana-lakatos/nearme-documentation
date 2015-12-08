@@ -1,7 +1,7 @@
 - title t('dashboard.nav.users')
 
 - content_for :page_header do
-  %h1= yield :title
+  %h1= t('dashboard.users.title_html')
 
   .options
     = link_to t('dashboard.users.add_admin_html'), new_dashboard_company_user_path, :"data-modal" => true

@@ -225,6 +225,7 @@ class ReservationRequest < Form
       else
         build_document(document)
       end
+      documents.delete(document)
     end
   end
 

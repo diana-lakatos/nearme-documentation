@@ -1,4 +1,14 @@
-input[type="color"].form-control {
-    width: 80px;
-    padding: 0;
+.form-group.color {
+    @media (max-width: $screen-xs-max) {
+        label {
+            display: block;
+        }
+    }
+
+    input[type="color"].form-control {
+        width: 80px;
+        padding: 0;
+        display: inline-block;
+        vertical-align: middle;
+    }
 }

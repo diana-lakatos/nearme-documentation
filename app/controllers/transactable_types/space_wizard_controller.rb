@@ -24,7 +24,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   def list
     build_objects
     build_approval_requests
-    @photos = (@user.first_listing.try(:photos) || []) + @user.photos.where(transactable_id: nil)
+    @photos = (@user.first_listing.try(:photos) || []) + @user.photos.where(owner_id: nil)
     @attachments = (@user.first_listing.try(:attachments) || []) + @user.attachments.where(assetable_id: nil)
     @user.phone_required = true
     event_tracker.viewed_list_your_bookable

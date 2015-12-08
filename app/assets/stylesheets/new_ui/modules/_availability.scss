@@ -1,0 +1,14 @@
+.listing-availability {
+    .nested-container + .nested-container > .row[data-junction-label],
+    .nested-container + .row[data-junction-label],
+    .row[data-junction-label] + .row[data-junction-label] {
+        &:before {
+            font-style: italic;
+            display: block;
+            content: attr(data-junction-label);
+            margin-left: ceil(($grid-gutter-width / 2));
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+    }
+}
