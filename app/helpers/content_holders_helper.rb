@@ -14,8 +14,8 @@ module ContentHoldersHelper
     "theme.#{platform_context.theme.id}.content_holders.names.#{name}"
   end
 
-  def content_holder_for_path_cache_key
-    "theme.#{platform_context.theme.id}.content_holders.paths.#{controller_path}##{action_name}"
+  def content_holder_for_path_cache_key(path = nil)
+    "theme.#{platform_context.theme.id}.content_holders.paths.#{path}"
   end
 
   def inject_content_holder(name)
@@ -25,7 +25,9 @@ module ContentHoldersHelper
   end
 
   def get_content_holders_for_path(path)
-    platform_context.content_holders.enabled.by_inject_pages(path)
+    Rails.cache.fetch content_holder_for_path_cache_key(path), expires_in: 12.hours do
+      platform_context.content_holders.enabled.by_inject_pages(path)
+    end
   end
 
   def get_content_holder(name)
