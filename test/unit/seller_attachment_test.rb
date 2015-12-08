@@ -26,12 +26,6 @@ class SellerAttachmentTest < ActiveSupport::TestCase
   end
 
   context '#set_initial_access_level' do
-    should 'raise an error if seller attachment disabled' do
-      @instance.update_column :seller_attachments_access_level, 'disabled'
-      assert_raises do
-        @attachment.set_initial_access_level
-      end
-    end
 
     should 'set to instance access level unless it is not set to sellers_preference' do
       @instance.update_column :seller_attachments_access_level, 'users'
