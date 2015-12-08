@@ -1,4 +1,4 @@
-OmniAuth.config.failure_raise_out_environments = ['development', 'staging']
+OmniAuth.config.failure_raise_out_environments = ['development']
 
 Rails.application.config.middleware.use OmniAuth::Builder do
   provider :twitter, setup: Authentication::TwitterProvider.setup_proc, image_size: 'original'

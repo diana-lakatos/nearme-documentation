@@ -75,7 +75,7 @@ namespace :intel do
       PlatformContext.current.theme.update_attributes(
         facebook_url: 'https://www.facebook.com/IntelDeveloperZone/',
         twitter_url: 'https://twitter.com/intelsoftware',
-        gplus_url: 'href="https://plus.google.com/+IntelSoftware/posts',
+        gplus_url: 'https://plus.google.com/+IntelSoftware/posts',
         instagram_url: 'https://instagram.com/inteldeveloperzone'
       )
     end
