@@ -922,7 +922,7 @@ class User < ActiveRecord::Base
       order('followers_count DESC')
     when /location/i
       return all unless user
-      near(user.current_geolocation, 8_000_000, units: :km, order: 'distance')
+      all.merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance').select('users.*'))
     when /number of projects/i
       with_joined_project_collaborations.group('users.id').
         order('count(pc.id) DESC')
@@ -932,10 +932,12 @@ class User < ActiveRecord::Base
   end
 
   def current_geolocation
-    if last_geolocated_location_latitude.to_f.zero? || last_geolocated_location_longitude.to_f.zero?
+    latitude = last_geolocated_location_latitude || current_address.try(:latitude)
+    longitude = last_geolocated_location_latitude || current_address.try(:longitude)
+    if latitude.to_f.zero? || longitude.to_f.zero?
       current_location
     else
-      [last_geolocated_location_latitude, last_geolocated_location_longitude]
+      [latitude, longitude]
     end
   end
 
