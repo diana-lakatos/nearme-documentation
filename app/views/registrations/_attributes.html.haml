@@ -45,4 +45,5 @@
   - category_name = only_inputs.first.to_s.split(" - ")[1]
   - category = Category.users.roots.where(name: category_name).first
   -if category.present?
-    = render partial: 'shared/category_old_bootstrap', locals: { category: category, f: f }
+    = f.simple_fields_for :default_profile do |f|
+      = render partial: 'shared/category_old_bootstrap', locals: { category: category, f: f }
