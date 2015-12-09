@@ -1,11 +1,11 @@
 class ProjectCollaborator < ActiveRecord::Base
-
-
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
 
   belongs_to :user
+  counter_culture :user, column_name: ->(p) { p.approved? ? 'project_collborations_count' : nil }
+
   belongs_to :project
 
   validates :user, presence: { message: I18n.t(:not_exist)}
@@ -14,7 +14,7 @@ class ProjectCollaborator < ActiveRecord::Base
   validates :project, presence: true
 
   scope :approved, -> { where.not(approved_by_owner_at: nil, approved_by_user_at: nil) }
-  scope :for_user, -> (user) { user.present? ? where('user_id = ? OR email = ?', user.id, user.email) : nil }
+  scope :for_user, -> (user) { user.present? ? where('user_id = ? OR email = ?', user.id, user.email) : [] }
 
   def name
     @name ||= user.try(:name)

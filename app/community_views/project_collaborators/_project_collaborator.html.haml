@@ -9,7 +9,7 @@
     %ul.numbers
       %li
         = t :projects
-        %span= project_collaborator.user.project_collaborators.approved.count
+        %span= project_collaborator.user.all_projects_count
       %li
         = t :followers
         %span 120
