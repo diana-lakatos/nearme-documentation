@@ -144,4 +144,12 @@ class TransactableTypeDrop < BaseDrop
     @transactable_type.categories.searchable.roots
   end
 
+  def class_name
+    @transactable_type.class.name
+  end
+
+  def select_id
+    "#{class_name}-#{id}"
+  end
+
 end

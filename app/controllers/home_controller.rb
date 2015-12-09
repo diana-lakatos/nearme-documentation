@@ -1,9 +1,11 @@
 class HomeController < ApplicationController
 
   def index
-    @transactable_types = current_instance.transactable_types.searchable.by_position
+    @transactable_types = current_instance.transactable_types.searchable
     @service_types = @transactable_types.select{|tt| tt.type == 'ServiceType'}
     @product_types = @transactable_types.select{|tt| tt.type == 'Spree::ProductType'}
+    @transactable_types +=  current_instance.instance_profile_types.searchable
+    @transactable_types.sort_by!(&:position)
     @transactable_type = @transactable_types.first
     if current_instance.is_community?
       order = ["Networking", "Dual Screen", "Big Data", "Open Source", "Android", "Real Sense"]

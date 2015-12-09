@@ -1,26 +1,27 @@
-- error = f.object.errors[category.name.to_sym]
-= content_tag :div, class: error.present?  ? 'error' : '' do
-  -if category.present?
-    - if category.autocomplete?
-      = f.input :category_ids, as: :array, wrapper: :bootstrap, label: category.translated_name, :placeholder => "Enter a category", input_html: { "data-category-autocomplete" => true, "data-category-id" => category.id, "data-selected-categories" => f.object.common_categories(category).map(&:id).join(','), value: f.object.common_categories(category).map(&:id)}, required: category.mandatory?
+= f.simple_fields_for :default_profile do |default_profile_form|
+  - error = default_profile_form.object.errors[category.name.to_sym]
+  = content_tag :div, class: error.present?  ? 'error' : '' do
+    -if category.present?
+      - if category.autocomplete?
+        = default_profile_form.input :category_ids, as: :array, wrapper: :bootstrap, label: category.translated_name, :placeholder => "Enter a category", input_html: { "data-category-autocomplete" => true, "data-category-id" => category.id, "data-selected-categories" => default_profile_form.object.common_categories(category).map(&:id).join(','), value: default_profile_form.object.common_categories(category).map(&:id)}, required: category.mandatory?
 
-    - else
-      = content_tag :div, class: "tree_container", data: { category_id: category.id } do
-        = hidden_field_tag "single_choice_category", category.multiple_root_categories == true, class: 'single_choice_category'
-        = f.hidden_field 'category_ids', multiple: true, class: 'category_ids', value: nil, "data-value" => f.object.category_ids.join(",")
-        .control-group
-          = f.label :categories, class: 'control-label' do
-            - if category.mandatory?
-              %abbr{title: 'required'} *
-            = category.translated_name
-          .controls
-            #ajax_error{style: 'display: none;'}
-            .category_tree
-            .category_tree_inputs
-            - if error.present?
-              .help-inline= error.first
+      - else
+        = content_tag :div, class: "tree_container", data: { category_id: category.id } do
+          = hidden_field_tag "single_choice_category", category.multiple_root_categories == true, class: 'single_choice_category'
+          = default_profile_form.hidden_field 'category_ids', multiple: true, class: 'category_ids', value: nil, "data-value" => default_profile_form.object.category_ids.join(",")
+          .control-group
+            = default_profile_form.label :categories, class: 'control-label' do
+              - if category.mandatory?
+                %abbr{title: 'required'} *
+              = category.translated_name
+            .controls
+              #ajax_error{style: 'display: none;'}
+              .category_tree
+              .category_tree_inputs
+              - if error.present?
+                .help-inline= error.first
 
-            - if is_i18n_set?('simple_form.hints.shared.categories')
-              %p.help-block
-                = t('simple_form.hints.shared.categories')
+              - if is_i18n_set?('simple_form.hints.shared.categories')
+                %p.help-block
+                  = t('simple_form.hints.shared.categories')
 

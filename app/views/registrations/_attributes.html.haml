@@ -10,9 +10,10 @@
   = f.input :first_name, input_html: { value: f.object.first_name } if only_inputs.empty? || only_inputs.include?(:first_name)
   = f.input :middle_name, input_html: { value: f.object.middle_name } if only_inputs.empty? || only_inputs.include?(:middle_name)
   = f.input :last_name, input_html: { value: f.object.last_name } if only_inputs.empty? || only_inputs.include?(:last_name)
-  = f.simple_fields_for :properties, f.object.properties do |properties_form|
-    - (f.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
-      = draw_attribute_for_form(attribute, properties_form) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
+  = f.simple_fields_for :default_profile do |default_profile_form|
+    = default_profile_form.simple_fields_for :properties, default_profile_form.object.properties do |properties_form|
+      - (default_profile_form.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
+        = draw_attribute_for_form(attribute, properties_form) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
 = f.input :email, label: "Email" if only_inputs.empty? || only_inputs.include?(:email)
 = f.input :time_zone if only_inputs.empty? || only_inputs.include?(:time_zone)
 
@@ -44,4 +45,4 @@
   - category_name = only_inputs.first.to_s.split(" - ")[1]
   - category = Category.users.roots.where(name: category_name).first
   -if category.present?
-    = render partial: 'shared/category_old_bootstrap', locals: { category: category, f: f, categorizable: @transactable_type }
+    = render partial: 'shared/category_old_bootstrap', locals: { category: category, f: f }

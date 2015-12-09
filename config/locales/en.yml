@@ -493,6 +493,8 @@ en:
       upload_file: "Upload File"
       search: "Search"
     manage:
+      instance_profile_types:
+        manage: 'Manage User Profiles'
       admin_searchable:
         today: "Today"
         yesterday: "Yesterday"
@@ -1945,6 +1947,7 @@ en:
       day_month_year: "%m/%d/%Y"
       month_year: "%B %Y"
       only_date_short: "%-e %b, %Y"
+      only_date: "%B %d, %-Y"
   user_messages:
     title: "Messages"
     archived: "Archived"

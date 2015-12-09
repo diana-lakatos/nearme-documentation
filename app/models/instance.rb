@@ -31,6 +31,7 @@ class Instance < ActiveRecord::Base
   SEARCH_ENGINES = %w(postgresql elasticsearch)
   SEARCH_MODULES = { 'elasticsearch' => 'Elastic' }
   PRICING_OPTIONS = %w(free hourly daily weekly monthly fixed)
+  SEARCHABLE_CLASSES = ['TransactableType', 'ServiceType', 'Spree::ProductType', 'InstanceProfileType']
 
   API_KEYS.each do |meth|
     define_method(meth) do

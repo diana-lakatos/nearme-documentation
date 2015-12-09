@@ -140,6 +140,10 @@ class InstanceView < ActiveRecord::Base
       listing: 'TransactableDrop',
       current_user: 'UserDrop'
     },
+    'search/list/user' => {
+      user: 'UserDrop',
+      current_user: 'UserDrop'
+    },
     'search/products/product' => {
       product: 'Spree::ProductDrop'
     },
@@ -189,6 +193,64 @@ class InstanceView < ActiveRecord::Base
     'registrations/blog/index' => {
       blog_posts: 'UserBlogPostDrop',
       user: 'UserDrop',
+      is_partial: false
+    },
+    'registrations/buyers/profile/no_content' => {
+      user: 'UserDrop',
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/buyers/profile/user_badge' => {
+      user: 'UserDrop',
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/buyers/profile/tabs/blog_posts' => {
+      user: 'UserDrop',
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/buyers/profile/tabs/products' => {
+      user: 'UserDrop',
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/buyers/profile/tabs/reviews' => {
+      user: 'UserDrop',
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/buyers/profile/tabs/services' => {
+      user: 'UserDrop',
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/buyers/show' => {
+      user: 'UserDrop',
+      platform_context: 'PlatformContextDrop',
+      is_partial: false
+    },
+    'registrations/sellers/profile/no_content' => {
+      user: 'UserDrop',
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/sellers/profile/user_badge' => {
+      user: 'UserDrop',
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/sellers/profile/tabs/blog_posts' => {
+      user: 'UserDrop',
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/sellers/profile/tabs/products' => {
+      user: 'UserDrop',
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/sellers/profile/tabs/reviews' => {
+      user: 'UserDrop',
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/sellers/profile/tabs/services' => {
+      user: 'UserDrop',
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/sellers/show' => {
+      user: 'UserDrop',
+      platform_context: 'PlatformContextDrop',
       is_partial: false
     },
     'blog/blog_posts/header' => {

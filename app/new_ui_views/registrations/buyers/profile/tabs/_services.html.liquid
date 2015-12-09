@@ -1,0 +1,26 @@
+{% assign groups = listings | in_groups_of:2 %}
+{% for line in groups %}
+  <div class='row-fluid'>
+    {% for transactable in line %}
+      <div class='span6'>
+        <a href="{{ transactable.location_prefixed_path }}">
+          <div class="item-img">
+            <img src="{{ transactable.photo_url }}" />
+          </div>
+          <div class="details clearfix">
+            <p>
+              {{ transactable.name }}
+            </p>
+            <p>
+              {{ transactable.address }}
+            </p>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+{% endfor %}
+
+<div class="pagination">
+  {{ listings | pagination_links: param_name: 'services_page', renderer: 'LiquidStyledLinkRenderer' }}
+</div>

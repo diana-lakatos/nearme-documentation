@@ -2,6 +2,11 @@ class BaseDrop < Liquid::Drop
 
   private
 
+  def hide_tab?(tab)
+    key = "#{@context['params'][:controller]}/#{@context['params'][:action]}##{tab}"
+    HiddenUiControls.find(key).hidden?
+  end
+
   def routes
     Rails.application.routes.url_helpers
   end

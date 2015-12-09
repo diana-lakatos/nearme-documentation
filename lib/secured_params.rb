@@ -400,6 +400,16 @@ class SecuredParams
     ]
   end
 
+  def instance_profile_type
+    [
+      :searchable,
+      :show_categories,
+      :category_search_type,
+      :position,
+      custom_attributes_attributes: [:searchable, :id]
+    ]
+  end
+
   def spree_image
     [
       :position
@@ -1176,11 +1186,33 @@ class SecuredParams
       category_ids: [],
       seller_profile_attributes: nested(self.seller),
       buyer_profile_attributes: nested(self.buyer),
+      default_profile_attributes: nested(self.default_profile),
       current_address_attributes: nested(self.address),
       companies_attributes: nested(self.company(transactable_type)),
       approval_requests_attributes: nested(self.approval_request),
       projects_attributes: nested(self.project(transactable_type)),
-    ] + User.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id))
+    ]
+  end
+
+  def user_from_instance_admin
+    self.user + [
+      :featured,
+      default_profile_attributes: nested(self.default_profile_with_private_attribs)
+    ]
+  end
+
+  def default_profile
+    [
+      properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id)),
+      category_ids: []
+    ]
+  end
+
+  def default_profile_with_private_attribs
+    [
+      properties: PlatformContext.current.instance.default_profile_type.custom_attributes.pluck(&:name),
+      category_ids: []
+    ]
   end
 
   def seller

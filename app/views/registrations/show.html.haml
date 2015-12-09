@@ -6,13 +6,13 @@
     .profile-content
       %ul.nav.nav-tabs
         - unless hide_tab?('products') || @products.nil?
-          %li{ class: "#{ 'active' if active_tab?('products') }"}
+          %li
             %a{href: '#products', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.products'
         - unless hide_tab?('services') || @listings.nil?
-          %li{ class: "#{ 'active' if active_tab?('services') }"}
+          %li
             %a{href: '#services', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.services'
         - if RatingSystem.active.any?
-          %li{ class: "#{ 'active' if active_tab?('reviews') }"}
+          %li
             %a{href: '#reviews', 'data-toggle' => 'tab', class: 'reviews-tab'}= t 'user_profile.labels.tabs.reviews', count: @total_reviews_count
         - if platform_context.instance.user_blogs_enabled? && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
           %li
@@ -20,20 +20,20 @@
 
       .profile-listings.tab-content
         - unless hide_tab?('products') || @products.nil?
-          #products.tab-pane{ class: "#{ 'active' if active_tab?('products') }"}
+          #products.tab-pane
             - if @company.present? && @products.count > 0
               = render 'registrations/profile/tabs/products'
             - else
               = render 'registrations/profile/no_content', tab: :products
         - unless hide_tab?('services') || @listings.nil?
-          #services.tab-pane{ class: "#{ 'active' if active_tab?('services') }"}
+          #services.tab-pane
             - if @company.present? && @listings.count > 0
               = render 'registrations/profile/tabs/services'
             - else
               = render 'registrations/profile/no_content', tab: :services
 
         - if RatingSystem.active.any?
-          #reviews.tab-pane{ class: "#{ 'active' if param_reviews_page_present? || @company.nil? }"}
+          #reviews.tab-pane
             - if @total_reviews_count > 0
               = render 'registrations/profile/tabs/reviews'
             - else
@@ -42,10 +42,12 @@
         - if platform_context.instance.user_blogs_enabled? && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
           - unless hide_tab?('blog_posts')
             #blog_posts.tab-pane
-              - if @user.blog.present? && @user.has_published_blogs?
+              - if @user.blog.present? && @user.has_published_posts?
                 = render 'registrations/profile/tabs/blog_posts'
               - else
                 = render 'registrations/profile/no_content', tab: :blog_posts
 
 - content_for :domready do
   new UserReviews($("#reviews"));
+  $('ul.nav-tabs li:first').addClass('active');
+  $('.tab-content .tab-pane:first').addClass('active');

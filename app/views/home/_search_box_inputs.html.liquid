@@ -3,7 +3,7 @@
 
     <div class="row-fluid">
       {% for transactable_type in transactable_types %}
-        <div class="transactable-type-search-box" data-transactable-type-id="{{ transactable_type.id }}" style="display: none;">
+        <div class="transactable-type-search-box" data-transactable-type-id="{{ transactable_type.select_id }}" style="display: none;">
 
           {% for input in transactable_type.search_inputs %}
             {% assign input_path = input | prepend: 'home/search/' %}
@@ -15,16 +15,15 @@
       {% if transactable_types.size > 1 %}
         {% if platform_context.tt_select_type == 'dropdown' %}
           <div class="span2">
-            <select class="no-icon select2 transactable_select" data-transactable-type-picker name="transactable_type_id">
+            <select class="no-icon select2 transactable_select" data-transactable-type-picker name="transactable_type_selector">
               {% for transactable_type in transactable_types %}
-                <option value="{{ transactable_type.id }}">{{ transactable_type.name }}</option>
+                <option value="{{ transactable_type.select_id }}">{{ transactable_type.name }}</option>
               {% endfor %}
             </select>
           </div>
         {% endif %}
-      {% else %}
-        <input name="transactable_type_id" type="hidden" value="{{ transactable_type.id }}">
       {% endif %}
+      <input name="transactable_type_id" type="hidden" value="{{ transactable_type.id }}">
 
       <div class="span2 pull-right">
         <a class="btn btn-green btn-large search-button" data-disable-with="{{ 'homepage.disabled_buttons.search' | translate }}" rel="submit" href="">
@@ -46,6 +45,6 @@
       </div>
     {% endif %}
   </div>
-
+  <input type="hidden" name="transactable_type_class">
   <input type="submit"/>
 </form>

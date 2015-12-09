@@ -175,10 +175,12 @@ module LiquidFilters
     end
   end
 
-  def pagination_links(collection)
-    will_paginate collection,
-                  controller: @context.registers[:controller],
-                  renderer: 'LiquidLinkRenderer'
+  def pagination_links(collection, options = {})
+    opts = {
+      controller: @context.registers[:controller],
+      renderer: 'LiquidLinkRenderer'
+    }.merge(options.symbolize_keys)
+    will_paginate collection, opts
   end
 
   def request_parameter(method)
@@ -231,13 +233,16 @@ module LiquidFilters
   # inputs - what inputs should be displayed: geolocation, fulltext, categories, datepickers. Separated by ','
   def search_box_for(tt_names, class_name = '', inputs = '')
     names = tt_names.split(',').map(&:strip)
-    tt = TransactableType.found_and_sorted_by_names(names)
+    tt = TransactableType.where(name: names) + InstanceProfileType.where(name: names)
     if tt.any?
+      ordered = {}
+      tt.map{|searchable| ordered[names.index(searchable.name)] = searchable}
+      ordered = ordered.sort.to_h
       @context.registers[:action_view].render 'home/search_box_inputs.html',
-        transactable_types: tt,
+        transactable_types: ordered.values,
         custom_search_inputs: inputs.split(',').map(&:strip),
         class_name: class_name + ' search-box-liquid-tag',
-        transactable_type_picker: tt.many?
+        transactable_type_picker: ordered.values.many?
     else
       "No Service or Product type with names: #{tt_names}"
     end
@@ -247,12 +252,17 @@ module LiquidFilters
   # tt_name - Transactable Type name
   # class_name - additional CSS class name
   def search_button_for(tt_name, class_name = '')
-    if tt = TransactableType.find_by(name: tt_name.strip)
+    if tt = TransactableType.find_by(name: tt_name.strip) || tt = InstanceProfileType.find_by(name: tt_name.strip)
       @context.registers[:action_view].render 'home/search_button_tag.html',
         transactable_type: tt,
         class_name: class_name + ' search-box-liquid-tag'
     else
       "No Service or Product type with name: #{tt_name}"
     end
+  end
+
+  # Returns url for url helper name and arguments
+  def generate_url(url_name, *args)
+    Rails.application.routes.url_helpers.try(url_name, args)
   end
 end

@@ -315,9 +315,12 @@ DesksnearMe::Application.routes.draw do
         resources :workflow_alerts, except: [:index], controller: 'workflows/workflow_alerts'
       end
 
-      resources :instance_profile_types, :only => [:index, :destroy] do
+      resources :instance_profile_types, :only => [:index, :destroy, :update] do
         collection do
           post :enable
+        end
+        member do
+          get :search_settings
         end
         resources :custom_attributes, controller: 'instance_profile_types/custom_attributes'
         resources :form_components, controller: 'instance_profile_types/form_components' do
@@ -590,6 +593,8 @@ DesksnearMe::Application.routes.draw do
     get "users/:id", :to => "registrations#show", :as => "profile"
     get "users/:user_id/blog", :to => "registrations/blog#index", :as => "user_blog_posts_list"
     get "users/:user_id/blog/:id", :to => "registrations/blog#show", :as => "user_blog_post_show"
+    get "sellers/:user_id", :to => "registrations/sellers#show", :as => "seller_profile"
+    get "buyers/:user_id", :to => "registrations/buyers#show", :as => "buyer_profile"
     get "users/unsubscribe/:signature", :to => "registrations#unsubscribe", :as => "unsubscribe"
     get "dashboard/edit_profile", :to => "registrations#edit", :as => "dashboard_profile"
     get "dashboard/social_accounts", :to => "registrations#social_accounts", :as => "social_accounts"
@@ -641,8 +646,8 @@ DesksnearMe::Application.routes.draw do
         end
       end
     end
-    resource :seller, only: [:edit, :update]
-    resource :buyer, only: [:edit, :update]
+    resource :seller, only: [:show, :edit, :update]
+    resource :buyer, only: [:show, :edit, :update]
 
     resources :project_types do
       resources :projects do

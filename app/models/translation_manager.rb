@@ -22,6 +22,10 @@ class TranslationManager
     "#{translation_namespace}.#{key}"
   end
 
+  def translated_bookable_noun(count = 1)
+    find_key_with_count('name', count)
+  end
+
   def create_plural_and_singular_translation(key, value)
     create_singular_translation(key, value)
     create_plural_translation(key, value)

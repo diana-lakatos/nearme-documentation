@@ -39,10 +39,17 @@ class UserDrop < BaseDrop
   #   user phone number including country code
   # current_location
   #   current location of the user
+  # has_published_posts?
+  #   returns true if user has any published posts
+  # seller_properties
+  #   returns an array of custom attributes values for seller profile
+  # buyer_properties
+  #   returns an array of custom attributes values for buyer profile
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of,
     :with_mutual_friendship_source, :first_name, :middle_name, :last_name,
     :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
-    :country_name, :phone, :current_location, :is_trusted?, :reservations, to: :user
+    :country_name, :phone, :current_location, :is_trusted?, :reservations,
+    :has_published_posts?, :seller_properties, :buyer_properties, to: :user
 
   def initialize(user)
     @user = user.decorate
@@ -157,6 +164,38 @@ class UserDrop < BaseDrop
     routes.profile_path(@user.slug)
   end
 
+  # url for seller/buyer/default user profile
+  def profile_url_for_search
+    case @context['transactable_type'].profile_type
+    when UserProfile::SELLER
+      routes.seller_profile_path(@user.slug)
+    when UserProfile::BUYER
+      routes.buyer_profile_path(@user.slug)
+    else
+      routes.profile_path(@user.slug)
+    end
+  end
+
+  def show_products_tab?
+    !hide_tab?('products') && @context['products']
+  end
+
+  def show_services_tab?
+    !hide_tab?('services') && @context['listings']
+  end
+
+  def show_blog_tab?
+    PlatformContext.current.instance.user_blogs_enabled? && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
+  end
+
+  def published_posts
+    @user.published_blogs.limit(5)
+  end
+
+  def reviews_collection_path
+    routes.reviews_collections_path(@user)
+  end
+
   def profile_url
     urlify(routes.profile_path(@user.slug))
   end
@@ -253,5 +292,40 @@ class UserDrop < BaseDrop
   # User's current address
   def address
     @user.current_address.presence || @user.locations.first.try(:location_address)
+  end
+
+  # Returns true if currently logged user is this user
+  def is_current_user?
+    @user.id == @context['current_user'].try(:id)
+  end
+
+  # Returns an array of custom attributes for seller profile
+  def seller_attributes
+    @user.seller_profile.instance_profile_type.custom_attributes.public_display
+  end
+
+  # Returns an array of custom attributes for buyer profile
+  def buyer_attributes
+    @user.buyer_profile.instance_profile_type.custom_attributes.public_display
+  end
+
+  # Returns an array of custom attributes for default profile
+  def default_attributes
+    @user.default_profile.instance_profile_type.custom_attributes.public_display
+  end
+
+  # Returns an array of custom attributes for default and seller profile
+  def default_and_seller_attributes
+    default_attributes + seller_attributes
+  end
+
+  # Returns an array of custom attributes for default and buyer profile
+  def default_and_buyer_attributes
+    default_attributes + buyer_attributes
+  end
+
+  # Returns an array of custom attributes values for all user profiles
+  def all_properties
+    @all_properties ||= @user.default_properties.to_h.merge(@user.seller_properties.to_h.merge(user.buyer_properties.to_h))
   end
 end

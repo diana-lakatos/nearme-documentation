@@ -11,6 +11,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   after_save :create_translations
 
   scope :searchable, -> { where(searchable: true) }
+  scope :public_display, -> { where(public: true) }
 
   validates_presence_of :valid_values, if: :searchable
 
@@ -21,6 +22,10 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
 
   def expire_cache_options
     { target_type: self.target_type }
+  end
+
+  def to_liquid
+    @custom_attribute_drop ||= CustomAttributeDrop.new(self)
   end
 end
 

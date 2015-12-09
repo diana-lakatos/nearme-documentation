@@ -19,7 +19,9 @@ class InstanceType::SearcherFactory
   def get_searcher
     if @params[:search_type].in? %w(topics projects people)
       community_searcher
-    elsif @transactable_type.buyable?
+    elsif @transactable_type.is_a? InstanceProfileType
+      user_searcher
+    elsif @transactable_type.is_a? Spree::ProductType
       product_searcher
     elsif @result_view == 'mixed'
       location_searcher
@@ -45,7 +47,16 @@ class InstanceType::SearcherFactory
   end
 
   def community_searcher
-    "InstanceType::Searcher#{search_module}::#{@params[:search_type].titleize}Searcher".constantize.new(@params, @current_user)
+    if @params[:search_type] == 'people'
+      @transactable_type = InstanceProfileType.default.first
+      user_searcher
+    else
+      "InstanceType::Searcher#{search_module}::#{@params[:search_type].titleize}Searcher".constantize.new(@params, @current_user)
+    end
+  end
+
+  def user_searcher
+    "InstanceType::Searcher#{search_module}::UserSearcher".constantize.new(@params, @current_user, @transactable_type)
   end
 
   private

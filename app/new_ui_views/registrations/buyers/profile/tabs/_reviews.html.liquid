@@ -1,0 +1,42 @@
+<div class='sorting-reviews' data-sorting-reviews>
+  <div class='row-fluid'>
+    <div class='span7'></div>
+    <div class='span5'>
+      {{ 'registrations.choose' | translate }}
+      <div class='dropdown reviews-dropdown' data-reviews-dropdown data-url='{{ user.reviews_collection_path }}'>
+        <a class='nav-link dropdown-toggle' data-toggle='dropdown' href='#'>
+          <span class='title' data-title>{{ 'user_reviews.reviews_about_this_seller' | translate: first_name: user.first_name }}</span>
+          <span class='ico-chevron-down'></span>
+        </a>
+        <div class='clearfix'></div>
+        <ul class='dropdown-menu'>
+          {% if reviews_count > 0 %}
+            <li data-option='reviews_about_seller'>
+              {{ 'user_reviews.reviews_about_this_seller' | translate: first_name: @user.first_name}} ({{reviews_count}})
+            </li>
+          {% endif %}
+          {% if @reviews_left_by_seller_count > 0 %}
+            <li data-option='reviews_left_by_seller'>
+              {{ 'user_reviews.reviews_left_by_this_seller' | translate: first_name: @user.first_name}} ({{reviews_left_by_seller_count}})
+            </li>
+          {% endif %}
+          {% if @reviews_about_buyer_count > 0 %}
+            <li data-option='reviews_about_buyer'>
+              {{ 'user_reviews.reviews_about_this_buyer' | translate: first_name: @user.first_name}} ({{reviews_about_this_buyer}})
+            </li>
+          {% endif %}
+          {% if @reviews_left_by_buyer_count > 0 %}
+            <li data-option='reviews_left_by_buyer'>
+              {{ 'user_reviews.reviews_left_by_this_buyer' | translate: first_name: @user.first_name}} ({{reviews_left_by_buyer_count}})
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class='loading text-center' data-loading style='display: none'>
+    <img src="/assets/spinner.gif" alt="Spinner" />
+</div>
+<div class='reviews-content' data-reviews-content></div>

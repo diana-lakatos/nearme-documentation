@@ -3,7 +3,7 @@ require 'test_helper'
 class RegistrationsControllerTest < ActionController::TestCase
 
   setup do
-    @user = FactoryGirl.create(:user, properties: {company_name: "DesksNearMe", country_name: "United States"})
+    @user = FactoryGirl.create(:user, default_profile_attributes: { properties: {company_name: "DesksNearMe", country_name: "United States" } })
     @request.env["devise.mapping"] = Devise.mappings[:user]
     stub_mixpanel
   end
