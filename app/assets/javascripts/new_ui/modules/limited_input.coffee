@@ -19,7 +19,7 @@ class @DNM.Limiter
 
   updateLimiter: =>
     text = @input.val()
-    chars = text.replace(/\n/g, "\r\n").length
+    chars = text.replace(/\n/g, "aa").length
 
     if chars > @limit
       @input.val text.substr(0, limit)
