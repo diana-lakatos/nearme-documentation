@@ -318,7 +318,7 @@ class User < ActiveRecord::Base
 
   UserProfile::PROFILE_TYPES.each do |profile_type|
     define_method "#{profile_type}_properties" do
-      send("#{profile_type}_profile").properties
+      send("#{profile_type}_profile").try(:properties)
     end
   end
 
