@@ -48,9 +48,9 @@ class User::UserValidatableTest < ActiveSupport::TestCase
     should 'blow up if we try to recover user whose email has been taken while he was deleted' do
       @user.destroy
       FactoryGirl.create(:user, :email => @email)
-      #assert_raise ActiveRecord::RecordNotUnique do
-      #  @user.restore
-      #end
+      assert_raise ActiveRecord::RecordNotUnique do
+        @user.restore
+      end
     end
   end
 end

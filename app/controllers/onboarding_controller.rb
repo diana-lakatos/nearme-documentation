@@ -69,11 +69,11 @@ class OnboardingController < ApplicationController
     end
 
     def address_params
-      params.permit(:address).permit(secured_params.address)
+      params.require(:address).permit(secured_params.address)
     end
 
     def followed_params
-      params.permit(:followed).permit(people: [], projects: [], topics: [])
+      params.require(:followed).permit(people: [], projects: [], topics: [])
     end
 
     def redirect_if_completed

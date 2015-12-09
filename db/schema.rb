@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151209124035) do
+ActiveRecord::Schema.define(version: 20151209220732) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -3780,6 +3780,7 @@ ActiveRecord::Schema.define(version: 20151209124035) do
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
   add_index "users", ["domain_id"], name: "index_users_on_domain_id", using: :btree
   add_index "users", ["instance_id", "email", "external_id"], name: "index_users_on_instance_id_and_email_and_external_id", unique: true, where: "(deleted_at IS NULL)", using: :btree
+  add_index "users", ["instance_id", "email"], name: "index_users_on_instance_id_and_email", unique: true, where: "((external_id IS NULL) AND (deleted_at IS NULL))", using: :btree
   add_index "users", ["instance_id", "reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["instance_id", "slug"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["instance_id"], name: "index_users_on_instance_id", using: :btree
