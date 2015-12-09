@@ -13,10 +13,6 @@
       %fieldset.media-group.sep
         %legend Cover Photo
 
-        - if is_i18n_set?('forms.hints.user_form.cover_image')
-          %p.photo-uploader-hint
-            = t('forms.hints.user_form.cover_image')
-
         .single-photo
           = new_file_upload_input("cover_image",
             cover_image_path,
@@ -35,12 +31,13 @@
                   %button.button-a.small.red.action--remove{:type => "button", :data => { :"delete-photo" => true, :url => destroy_cover_image_path }, :title => t('forms.photos.collection.delete') }
                     %span.intelicon-trash-outlined
 
+        - if is_i18n_set?('simple_form.hints.profile.cover_image')
+          %p.photo-uploader-hint
+            = t('simple_form.hints.profile.cover_image')
+
+
       %fieldset.media-group.sep
         %legend Avatar
-
-        - if is_i18n_set?('forms.hints.user_form.avatar')
-          %p.photo-uploader-hint
-            = t('forms.hints.user_form.avatar')
 
         .single-photo
           = new_file_upload_input("avatar",
@@ -59,6 +56,10 @@
 
                   %button.button-a.small.red.action--remove{:type => "button", :data => { :"delete-photo" => true, :url => destroy_avatar_path }, :title => t('forms.photos.collection.delete') }
                     %span.intelicon-trash-outlined
+
+        - if is_i18n_set?('simple_form.hints.profile.avatar')
+          %p.photo-uploader-hint
+            = t('simple_form.hints.profile.avatar')
 
 
     = f.simple_fields_for :current_address, (f.object.current_address.presence || f.object.build_current_address) do |address_form|
