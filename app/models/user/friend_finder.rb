@@ -17,12 +17,14 @@ class User::FriendFinder
       end
 
       # add friends
-      new_friends.each do |new_friend|
-        user.add_friend(new_friend, authentication)
-      end
+      if new_friends.present?
+        new_friends.each do |new_friend|
+          user.add_friend(new_friend, authentication)
+        end
 
-      # update total connections
-      authentication.update_attribute(:total_social_connections, authentication.friend_ids.count)
+        # update total connections
+        authentication.update_attribute(:total_social_connections, authentication.friend_ids.count)
+      end
     end
 
     return true

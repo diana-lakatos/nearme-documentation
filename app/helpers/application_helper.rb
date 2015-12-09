@@ -399,7 +399,7 @@ module ApplicationHelper
     if text.size < limit
       text
     else
-      text[0..limit] + content_tag(:span, content_tag(:span, text[limit + 1..-1]), class: 'readmore-a', data: {label: t(:read_more)})
+      text[0..limit].html_safe + content_tag(:span, content_tag(:span, text[limit + 1..-1]), class: 'readmore-a', data: {label: t(:read_more)})
     end
   end
 

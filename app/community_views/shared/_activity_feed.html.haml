@@ -6,7 +6,7 @@
       - image = current_user.try(:avatar).try(:url, :medium)
       %figure= image_tag(image || space_listing_placeholder_path(width: 80, height: 80))
 
-      = f.input :text, label: false, placeholder: I18n.t('activity_feed.user_status_text'), input_html: { cols: 40, rows: 3 }
+      = f.input :text, label: false, placeholder: I18n.t('activity_feed.user_status_text'), input_html: { maxlength: 5000, cols: 40, rows: 3 }
 
       - unless no_topic_select
         = f.association :topics, as: :select, collection: Topic.all, input_html: { multiple: true, class: 'selectize', data: { placeholder: t(:topics, scope: [:simple_form, :placeholders, :activity_feed]) } }, wrapper_html: { class: 'topics' }

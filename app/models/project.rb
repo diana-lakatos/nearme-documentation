@@ -14,6 +14,7 @@ class Project < ActiveRecord::Base
   SORT_OPTIONS = ['All', 'Featured', 'Most Recent', 'Most Popular', 'Collaborators']
 
   belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :projects
+  counter_culture :creator, column_name: ->(p) { p.enabled? ? 'projects_count' : nil }
   belongs_to :transactable_type, -> { with_deleted }, foreign_key: 'transactable_type_id'
 
   has_many :activity_feed_events, as: :event_source, dependent: :destroy
@@ -55,8 +56,9 @@ class Project < ActiveRecord::Base
 
   validates :photos, length: {minimum: 1}, unless: ->(record) { record.draft? || record.photo_not_required || !record.transactable_type.enable_photo_required }
   validates :topics, length: {:minimum => 1}, unless: ->(record) { record.draft? }
-  validates :summary, length: { maximum: 140 }, unless: ->(record) { record.draft? }
   validates :name, :description, :summary, presence: true, unless: ->(record) { record.draft? }
+  validates :name, :summary, length: { maximum: 140 }, unless: ->(record) { record.draft? }
+  validates :description, length: { maximum: 5000 }, unless: ->(record) { record.draft? }
 
   validates_with CustomValidators
 

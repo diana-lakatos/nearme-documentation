@@ -268,9 +268,14 @@ class User < ActiveRecord::Base
   def self.filtered_by_role(values)
     if values.present? && 'Other'.in?(values)
       role_attribute = PlatformContext.current.instance.instance_profile_type.custom_attributes.find_by(name: 'role')
-      values += role_attribute.valid_values.reject{ |val| val =~ /Featured|Innovator|Black Belt/i }
+      values += role_attribute.valid_values.reject { |val| val =~ /Featured|Innovator|Black Belt/i }
     end
-    filtered_by_custom_attribute('role', values)
+
+    if values.present? && values.include?("Featured")
+      featured
+    else
+      filtered_by_custom_attribute('role', values)
+    end
   end
 
   def apply_omniauth(omniauth)
@@ -307,6 +312,9 @@ class User < ActiveRecord::Base
     projects
   end
 
+  def all_projects_count
+    projects_count + project_collborations_count
+  end
 
   def category_ids=(ids)
     super(ids.map {|e| e.gsub(/\[|\]/, '').split(',')}.flatten.compact.map(&:to_i))
@@ -924,8 +932,7 @@ class User < ActiveRecord::Base
       return all unless user
       all.merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance').select('users.*'))
     when /number of projects/i
-      with_joined_project_collaborations.group('users.id').
-        order('count(pc.id) DESC')
+      order('projects_count + project_collborations_count DESC')
     else
       all
     end
