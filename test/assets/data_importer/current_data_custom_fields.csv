@@ -1,5 +1,5 @@
 My Attribute,Location Email,City,Location External Id,Street,Photo URL,External Id,Location Description
 ,maciej.krajowski@gmail.com,,1,Aleja Niepodległości 40,,,desc2
-attribute,example@empty.com,,2,Ludwika Rydygiera 8,http://www.example.com/image2.jpg,4353,desc
 attribute,example@empty.com,,2,Ludwika Rydygiera 8,http://www.example.com/image1.jpg,4353,desc
+attribute,example@empty.com,,2,Ludwika Rydygiera 8,http://www.example.com/image2.jpg,4353,desc
 attribute,example@empty.com,,2,Ludwika Rydygiera 8,,4354,desc

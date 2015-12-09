@@ -1,5 +1,5 @@
 Location Name,Location Email,Location External Id,Location Type,Location Description,Location Special Notes,Address,City,Street,Suburb,State,Postcode,Monthly price cents,Weekly price cents,Daily price cents,Name,My Attribute,External Id,Enabled,Photo URL
 Czestochowa,maciej.krajowski@gmail.com,1,My Type,desc2,,"Aleja Niepodległości 40, Czestochowa, Poland",,Aleja Niepodległości 40,,,,,,,,,,,
-Rydygiera,example@empty.com,2,My Type,desc,,"Ludwika Rydygiera 8, 01-793 Warsaw, Poland",,Ludwika Rydygiera 8,,,,0,0,8900,my name,attribute,4353,true,http://www.example.com/image2.jpg
 Rydygiera,example@empty.com,2,My Type,desc,,"Ludwika Rydygiera 8, 01-793 Warsaw, Poland",,Ludwika Rydygiera 8,,,,0,0,8900,my name,attribute,4353,true,http://www.example.com/image1.jpg
+Rydygiera,example@empty.com,2,My Type,desc,,"Ludwika Rydygiera 8, 01-793 Warsaw, Poland",,Ludwika Rydygiera 8,,,,0,0,8900,my name,attribute,4353,true,http://www.example.com/image2.jpg
 Rydygiera,example@empty.com,2,My Type,desc,,"Ludwika Rydygiera 8, 01-793 Warsaw, Poland",,Ludwika Rydygiera 8,,,,0,0,8900,my name2,attribute,4354,true,

@@ -250,8 +250,8 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     stub_image_url('http://www.example.com/image1.jpg')
     stub_image_url('http://www.example.com/image2.jpg')
     stub_image_url('http://www.example.com/image3.jpg')
-    @photo_one = FactoryGirl.create(:photo, owner: @listing_one, image_original_url: 'http://www.example.com/image1.jpg')
-    @photo_two = FactoryGirl.create(:photo, owner: @listing_one, image_original_url: 'http://www.example.com/image2.jpg')
+    @photo_one = FactoryGirl.create(:photo, owner: @listing_one, creator: @user, image_original_url: 'http://www.example.com/image1.jpg')
+    @photo_two = FactoryGirl.create(:photo, owner: @listing_one, creator: @user, image_original_url: 'http://www.example.com/image2.jpg')
     @listing_two = FactoryGirl.create(:transactable, location: @location_not_empty, name: 'my name2', properties: { my_attribute: 'attribute' }, daily_price: 89, external_id: 4354)
     @location_empty = FactoryGirl.create(:location_czestochowa, name: 'Czestochowa', company: @company, location_type: @location_type, external_id: 1)
   end
