@@ -52,6 +52,21 @@ namespace :instance_profile do
         end
       end
     end
+
+    User.admin.find_each do |user|
+      Instance.find_each do |instance|
+        instance.set_context!
+        default_profile = instance.default_profile_type
+        if user.default_profile.blank?
+          user.create_default_profile!(
+            instance_profile_type: default_profile,
+            skip_custom_attribute_validation: true,
+            properties: user[:properties]
+          )
+        end
+      end
+      PlatformContext.current = nil
+    end
   end
 
   desc 'Create translations'

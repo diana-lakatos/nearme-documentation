@@ -1,6 +1,6 @@
 - project_collaborator = project.project_collaborators.for_user(current_user).first
 
-- if current_user.id == project.creator_id
+- if current_user.try(:id) == project.creator_id
   - # do nothing
 - elsif project_collaborator
   = link_to t(:leave_project), project_project_collaborator_path(project, project_collaborator), method: :delete , class: 'button-a small red', remote: true
