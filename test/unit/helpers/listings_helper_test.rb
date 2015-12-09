@@ -10,7 +10,7 @@ class ListingsHelperTest < ActionView::TestCase
     end
 
     should "return valid placeholder from placehold.it" do
-      expected_path = "http://placehold.it/10x700&text=Photos+Unavailable"
+      expected_path = "//placehold.it/10x700&text=Photos+Unavailable"
       assert_equal expected_path, space_listing_placeholder_path(height: 700, width: 10)
     end
   end
