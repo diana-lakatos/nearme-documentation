@@ -31,7 +31,7 @@ class ContentHolder < ActiveRecord::Base
     [name, name_was].each do |field|
       Rails.cache.delete("theme.#{theme_id}.content_holders.names.#{field}")
     end
-    Rails.cache.delete_matched("views/theme.#{theme_id}.content_holders.paths.*")
+    Rails.cache.delete_matched("theme.#{theme_id}.content_holders.paths.*")
   end
 
   def with_content_for

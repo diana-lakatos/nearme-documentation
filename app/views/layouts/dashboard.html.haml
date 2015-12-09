@@ -1,8 +1,7 @@
 !!!
 %html
   %head
-    -cache content_holder_for_path_cache_key, expires_in: 12.hours, skip_digest: true do
-      = render 'layouts/content_holder_injector'
+    = render 'layouts/content_holder_injector'
     - if content_for(:canonical_url)
       %link{rel:"canonical", href: yield(:canonical_url)}
     - if ActionController::Base.asset_host
