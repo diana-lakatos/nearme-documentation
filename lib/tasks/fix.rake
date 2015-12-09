@@ -31,14 +31,14 @@ namespace :fix do
   end
 
   task :cleanup_marketplace => [:environment] do
-    Instance.find(X).set_context!
+    Instance.find(75).set_context!
     [Payment,PaymentTransfer,Charge, Payout,
      RecurringBooking, Reservation, ReservationPeriod, Transactable,
      Schedule, AvailabilityTemplate, AvailabilityRule,
      Location, Company, Address, ApprovalRequest,
      ApprovalRequestAttachment, AssignedWaiverAgreementTemplate,
-     Categoriescategorizable, Comment, CompanyIndustry, CompanyUser,
-     CreditCard, DataUpload, DocumentsUpload, Impression, Inquiry,
+     CategoriesCategorizable, Comment, CompanyIndustry, CompanyUser,
+     CreditCard, DataUpload, DocumentsUpload, Impression,
      InstanceClient, MerchantAccount, Photo, RatingAnswer,
      RecurringBookingPeriod, Refund, Review, SavedSearch,
      SavedSearchAlertLog, ScheduleExceptionRule, ScheduleRule,
@@ -48,10 +48,10 @@ namespace :fix do
       if klass.respond_to?(:with_deleted)
         klass = klass.with_deleted
       end
-      klass.delete_all if PlatformContext.current.instance.present?
+      klass.where(instance_id: PlatformContext.current.instance.id).delete_all
     end
     AvailabilityTemplate.create!(
-      name: "Working week",
+      name: "Business Hours",
       parent: PlatformContext.current.instance,
       description: "Monday - Friday, 9am-5pm",
       availability_rules_attributes: [{ open_hour: 9, open_minute: 0, close_hour: 17, close_minute: 0, days: (0..5).to_a }]
