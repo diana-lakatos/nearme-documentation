@@ -75,7 +75,7 @@ en:
   featured_projects: 'Featured Projects'
   featured_users: 'Featured Developers'
   featured_topics: 'Featured Topics'
-  view_all: 'View All'
+  view_all: 'See All'
   follow: 'Follow'
 
 
@@ -133,8 +133,7 @@ en:
   # tutorial
   step_no: 'Step %{number}'
   tutorial:
-    step_1: 'The Activity Feed will show you the most recent updates from the people, projects,
-and topics you follow.'
+    step_1: 'The Activity Feed will show you the most recent updates from the people, projects, and topics you follow.'
     step_2: "Let your followers know what you're up to by posting a status update."
     step_3: 'Get recommendations for developers, projects, and topics to follow.'
     step_4: "Share your projects to show what you're working on, get feedback from the community, and find collaborators."
