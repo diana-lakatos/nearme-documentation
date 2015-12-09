@@ -16,9 +16,6 @@
         %abbr{:title => t('general.required')} *
         = t :images
 
-      - if is_i18n_set?('forms.hints.transactable_form.photos')
-        %p.photo-uploader-hint
-          = t('forms.hints.transactable_form.photos')
       .loading{:style => "display: none"}
         = image_tag "spinner.gif"
         %br/
@@ -52,6 +49,10 @@
               = hidden_field_tag "#{f.object_name}[photo_ids][]", photo.id
               = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][id]", photo.id
               = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
+
+      - if is_i18n_set?('simple_form.hints.project.photos')
+        %p.photo-uploader-hint
+          = t('simple_form.hints.project.photos')
 
     %fieldset.media-group.sep
       %legend

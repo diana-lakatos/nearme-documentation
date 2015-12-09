@@ -105,6 +105,11 @@ en:
     hints:
       project:
         seek_collaborators: 'You can add people to help your project'
+        photos: 'For best results use images with dimensions 680×546px or crop them after upload.'
+
+      profile:
+        cover_image: 'For best results use an image with dimensions 1920×285px or crop it after upload.'
+        avatar: 'For best results use a rectangular image with dimensions 200×200px or crop it after upload.'
 
   search_submit: 'Go'
 
