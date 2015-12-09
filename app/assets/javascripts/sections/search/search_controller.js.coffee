@@ -272,7 +272,7 @@ class Search.SearchController extends Search.Controller
   # Trigger the search after waiting a set time for further updated user input/filters
   triggerSearchFromQueryAfterDelay: _.debounce(->
     @triggerSearchFromQuery()
-  , 2000)
+  , 500)
 
   # Triggers a search with default UX behaviour and semantics.
   triggerSearchAndHandleResults: (callback) ->
@@ -321,7 +321,6 @@ class Search.SearchController extends Search.Controller
 
   # Trigger automatic updating of search results
   fieldChanged: (field, value) ->
-    @loader.show()
     @triggerSearchFromQueryAfterDelay()
 
   updateUrlForSearchQuery: ->

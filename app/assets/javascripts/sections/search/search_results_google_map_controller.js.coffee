@@ -3,9 +3,10 @@
 class Search.SearchResultsGoogleMapController
 
   constructor: (@container, @googleMapWrapper) ->
-    @googleMapWrapper = @googleMapWrapper.clone()
-    @map = @initializeGoogleMap()
-    @setBindings()
+    if @googleMapWrapper.length > 0
+      @googleMapWrapper = @googleMapWrapper.clone()
+      @map = @initializeGoogleMap()
+      @setBindings()
 
   setBindings: ->
     @container.on 'mouseenter', '.photo-container', (event) =>
