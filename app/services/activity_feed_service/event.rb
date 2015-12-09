@@ -10,9 +10,14 @@ class ActivityFeedService::Event
   attr_accessor :text
 
   def initialize(event, target="_self")
-    @event = event
-    @target = target
-    self.send(event.event.to_sym)
+    begin
+      @event = event
+      @target = target
+      self.send(event.event.to_sym)
+    rescue
+      self.image = nil
+      self.text = nil
+    end
   end
 
   def user_updated_user_status

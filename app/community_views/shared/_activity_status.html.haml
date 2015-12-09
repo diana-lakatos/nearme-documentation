@@ -1,8 +1,9 @@
 - hide_comment_options = local_assigns[:hide_comment_options].presence || false
 - target = local_assigns[:target].presence || "_self"
+- formatted_event = setup_activity_feed_event(event, target)
 
-- if event.event_source.present?
+- if event.event_source.present? && formatted_event.text.present? && formatted_event.image.present?
   %article.status-a{data: { event: event.id }}
-    = render 'shared/activity_status_header', event: event, target: target
+    = render 'shared/activity_status_header', event: event, target: target, formatted_event: formatted_event
     = render 'shared/activity_status_body', event: event, target: target if event.has_body?
     = render 'shared/activity_status_footer', event: event unless event.has_body? || hide_comment_options
