@@ -268,9 +268,14 @@ class User < ActiveRecord::Base
   def self.filtered_by_role(values)
     if values.present? && 'Other'.in?(values)
       role_attribute = PlatformContext.current.instance.instance_profile_type.custom_attributes.find_by(name: 'role')
-      values += role_attribute.valid_values.reject{ |val| val =~ /Featured|Innovator|Black Belt/i }
+      values += role_attribute.valid_values.reject { |val| val =~ /Featured|Innovator|Black Belt/i }
     end
-    filtered_by_custom_attribute('role', values)
+
+    if values.present? && values.include?("Featured")
+      featured
+    else
+      filtered_by_custom_attribute('role', values)
+    end
   end
 
   def apply_omniauth(omniauth)
