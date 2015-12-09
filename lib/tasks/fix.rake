@@ -30,6 +30,40 @@ namespace :fix do
     Spree::StockItem.only_deleted.delete_all
   end
 
+  task :cleanup_marketplace => [:environment] do
+    Instance.find(X).set_context!
+    [Payment,PaymentTransfer,Charge, Payout,
+     RecurringBooking, Reservation, ReservationPeriod, Transactable,
+     Schedule, AvailabilityTemplate, AvailabilityRule,
+     Location, Company, Address, ApprovalRequest,
+     ApprovalRequestAttachment, AssignedWaiverAgreementTemplate,
+     Categoriescategorizable, Comment, CompanyIndustry, CompanyUser,
+     CreditCard, DataUpload, DocumentsUpload, Impression, Inquiry,
+     InstanceClient, MerchantAccount, Photo, RatingAnswer,
+     RecurringBookingPeriod, Refund, Review, SavedSearch,
+     SavedSearchAlertLog, ScheduleExceptionRule, ScheduleRule,
+     Shipment, UserMessage, Support::Ticket, WaiverAgreement
+    ].each do |klass|
+      puts "Deleting: #{klass} for #{PlatformContext.current.instance.name}"
+      if klass.respond_to?(:with_deleted)
+        klass = klass.with_deleted
+      end
+      klass.delete_all if PlatformContext.current.instance.present?
+    end
+    AvailabilityTemplate.create!(
+      name: "Working week",
+      parent: PlatformContext.current.instance,
+      description: "Monday - Friday, 9am-5pm",
+      availability_rules_attributes: [{ open_hour: 9, open_minute: 0, close_hour: 17, close_minute: 0, days: (0..5).to_a }]
+    )
+    AvailabilityTemplate.create!(
+      name: "24/7",
+      parent: PlatformContext.current.instance,
+      description: "Sunday - Saturday, 12am-11:59pm",
+      availability_rules_attributes: [{ open_hour: 0, open_minute: 0, close_hour: 23, close_minute: 59, days: (0..6).to_a }]
+    )
+  end
+
   task transactable_types_availability_options: :environment do
     Instance.find_each do |instance|
       instance.set_context!

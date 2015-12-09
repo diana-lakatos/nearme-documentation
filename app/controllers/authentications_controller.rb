@@ -41,7 +41,7 @@ class AuthenticationsController < ApplicationController
           request.add_field('x-token', PlatformContext.current.instance.webhook_token)
           request.body = {'enterprise_id' => user.external_id}.to_json
           http.request(request)
-          session[:return_to] ||= onboarding_index_url
+          session[:user_return_to] = onboarding_index_url
         end
 
         # User and authentication created successfully. User is now logged in
