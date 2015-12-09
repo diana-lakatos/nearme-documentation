@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151207161603) do
+ActiveRecord::Schema.define(version: 20151209124035) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -255,6 +255,7 @@ ActiveRecord::Schema.define(version: 20151207161603) do
     t.datetime "updated_at",                            null: false
     t.datetime "deleted_at"
     t.integer  "days",                     default: [],              array: true
+    t.integer  "instance_id"
   end
 
   add_index "availability_rules", ["target_type", "target_id"], name: "index_availability_rules_on_target_type_and_target_id", using: :btree
@@ -477,6 +478,7 @@ ActiveRecord::Schema.define(version: 20151207161603) do
     t.integer  "industry_id"
     t.integer  "company_id"
     t.datetime "deleted_at"
+    t.integer  "instance_id"
   end
 
   add_index "company_industries", ["industry_id", "company_id"], name: "index_company_industries_on_industry_id_and_company_id", using: :btree
@@ -484,9 +486,10 @@ ActiveRecord::Schema.define(version: 20151207161603) do
   create_table "company_users", force: :cascade do |t|
     t.integer  "company_id"
     t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.datetime "deleted_at"
+    t.integer  "instance_id"
   end
 
   add_index "company_users", ["company_id"], name: "index_company_users_on_company_id", using: :btree
@@ -1600,6 +1603,7 @@ ActiveRecord::Schema.define(version: 20151207161603) do
     t.datetime "deleted_at"
     t.integer  "start_minute"
     t.integer  "end_minute"
+    t.integer  "instance_id"
   end
 
   add_index "reservation_periods", ["reservation_id"], name: "index_reservation_periods_on_reservation_id", using: :btree
@@ -3433,8 +3437,6 @@ ActiveRecord::Schema.define(version: 20151207161603) do
     t.boolean  "date_pickers_use_availability_rules"
     t.string   "date_pickers_mode"
     t.integer  "position",                                                                       default: 0
-    t.boolean  "action_weekly_subscription_booking"
-    t.boolean  "action_monthly_subscription_booking"
     t.string   "timezone_rule",                                                                  default: "location"
     t.boolean  "action_weekly_subscription_booking"
     t.boolean  "action_monthly_subscription_booking"
@@ -3591,6 +3593,17 @@ ActiveRecord::Schema.define(version: 20151207161603) do
   end
 
   add_index "user_industries", ["industry_id", "user_id"], name: "index_user_industries_on_industry_id_and_user_id", using: :btree
+
+  create_table "user_instance_profiles", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "instance_id"
+    t.integer  "instance_profile_type_id"
+    t.text     "metadata"
+    t.hstore   "properties"
+    t.datetime "deleted_at"
+    t.integer  "reservations_count",       default: 0
+    t.integer  "transactables_count",      default: 0
+  end
 
   create_table "user_messages", force: :cascade do |t|
     t.integer  "thread_owner_id"

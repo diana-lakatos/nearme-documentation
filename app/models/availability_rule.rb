@@ -1,9 +1,11 @@
 class AvailabilityRule < ActiveRecord::Base
+  auto_set_platform_context
+  scoped_to_platform_context
   acts_as_paranoid
   # attr_accessible :day, :close_hour, :close_minute, :open_hour, :open_minute, :open_time, :close_time
 
   # === Associations
-  belongs_to :target, :polymorphic => true, inverse_of: :availability_rules, touch: true
+  belongs_to :target, :polymorphic => true, touch: true
 
   # === Validations
   validates :open_hour, :inclusion => 0..23
