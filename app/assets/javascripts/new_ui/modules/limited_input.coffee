@@ -19,6 +19,7 @@ class @DNM.Limiter
 
   updateLimiter: =>
     text = @input.val()
+    # new line character is treated as a 2 characters in textarea, that's why we use 'aa'
     chars = text.replace(/\n/g, "aa").length
 
     if chars > @limit

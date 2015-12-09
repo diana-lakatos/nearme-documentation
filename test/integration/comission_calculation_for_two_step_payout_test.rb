@@ -131,6 +131,7 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
     gateway.expects(:authorize).with do |total_amount_cents, credit_card_or_token, options|
       total_amount_cents == 43.75.to_money(@listing.currency).cents
     end.returns(stubs[:authorize])
+    gateway.expects(:store).returns(1)
     PaymentGateway::StripePaymentGateway.any_instance.stubs(:gateway).returns(gateway).at_least(0)
     PaymentGateway::PaypalPaymentGateway.any_instance.stubs(:gateway).returns(gateway).at_least(0)
     PaymentGateway::StripePaymentGateway.any_instance.stubs(:credit_card_payment?).returns(true)
