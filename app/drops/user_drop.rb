@@ -328,4 +328,26 @@ class UserDrop < BaseDrop
   def all_properties
     @all_properties ||= @user.default_properties.to_h.merge(@user.seller_properties.to_h.merge(user.buyer_properties.to_h))
   end
+
+  # Is the user "twitter connected" to the site
+  def is_twitter_connected
+    social_connections.where(provider: 'twitter').exists?
+  end
+
+  # Is the user "facebook connected" to the site
+  def is_facebook_connected
+    social_connections.where(provider: 'facebook').exists?
+  end
+
+  # Is the user "linkedin connected" to the site
+  def is_linkedin_connected
+    social_connections.where(provider: 'linkedin').exists?
+  end
+
+  private
+
+  def social_connections
+    @social_connections_cache ||= @user.social_connections
+  end
+
 end

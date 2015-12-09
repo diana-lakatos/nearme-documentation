@@ -18,7 +18,12 @@ class Spree::ProductDrop < BaseDrop
   #   belongs
   # attachments
   #   array of (seller) attachments for this product
-  delegate :id, :name, :extra_properties, :total_on_hand, :product_type, :company, :updated_at, :attachments, to: :product
+  # administrator
+  #   administrator (user) of the product
+  # administrator_location
+  #   location of the administrator of the product
+  delegate :id, :name, :extra_properties, :total_on_hand, :product_type, :company, :updated_at, :attachments, 
+    :administrator, :administrator_location, to: :product
 
   def initialize(product)
     @product = product.decorate
@@ -32,6 +37,11 @@ class Spree::ProductDrop < BaseDrop
   # price for this product as a string including the currency symbol
   def price
     @product.humanized_price
+  end
+
+  # price for this product as a floating point number
+  def price_as_number
+    @product.price.to_f
   end
 
   # price for this product as a string including the currency symbol
@@ -70,6 +80,11 @@ class Spree::ProductDrop < BaseDrop
       @categories = build_categories_hash_for_object(@product, @product.product_type.categories.roots.includes(:children))
     end
     @categories
+  end
+
+  # path to the url for sending the product administrator a new message
+  def new_product_user_message_path
+    routes.new_product_user_message_path(@product)
   end
 
 end
