@@ -61,8 +61,9 @@ class CategoryTest < ActiveSupport::TestCase
       @product_type = FactoryGirl.create(:product_type)
       @product_type.categories << Category.all
       assert_equal 4, @product_type.categories.count
-      @product_type.destroy
-      assert_equal 0, Category.count
+      assert_difference 'CategoryLinking.count', -4 do
+        @product_type.destroy
+      end
     end
 
     should 'maintain change descendants when category move around'  do
