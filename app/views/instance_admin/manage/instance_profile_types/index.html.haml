@@ -1,6 +1,5 @@
 #instance_admins_form
   .content-container
-    %h4= t('instance_admin.manage.user_profiles.custom_attributes')
     .row
       .table-container.col-xs-12
         %table.table
@@ -11,4 +10,5 @@
                 %td
                   = link_to t('instance_admin.manage.user_profiles.custom_attributes'), instance_admin_manage_instance_profile_type_custom_attributes_path(instance_profile_type), class: 'pull-left btn btn-blue btn-bottom-margin'
                   = link_to t('instance_admin.manage.user_profiles.form_components'), instance_admin_manage_instance_profile_type_form_components_path(instance_profile_type), class: 'pull-left btn btn-blue btn-bottom-margin'
+                  = link_to t('instance_admin.manage.user_profiles.search'), search_settings_instance_admin_manage_instance_profile_type_path(instance_profile_type), class: 'pull-left btn btn-blue btn-bottom-margin'
 

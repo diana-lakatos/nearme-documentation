@@ -47,7 +47,7 @@ class TransactableType < ActiveRecord::Base
 
   accepts_nested_attributes_for :custom_attributes, update_only: true
 
-  delegate :translation_namespace, :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
+  delegate :translated_bookable_noun, :translation_namespace, :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
     :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
 
   extend FriendlyId
@@ -74,10 +74,6 @@ class TransactableType < ActiveRecord::Base
 
   def default_currency
     super.presence || instance.default_currency
-  end
-
-  def translated_bookable_noun(count = 1)
-    translation_manager.find_key_with_count('name', count)
   end
 
   def translated_lessor(count = 1)

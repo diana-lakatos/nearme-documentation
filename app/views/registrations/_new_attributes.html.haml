@@ -13,9 +13,10 @@
   = f.input :middle_name, input_html: { value: f.object.middle_name } if only_inputs.empty? || only_inputs.include?(:middle_name)
   = f.input :last_name, input_html: { value: f.object.last_name } if only_inputs.empty? || only_inputs.include?(:last_name)
 
-= f.simple_fields_for :properties, f.object.properties do |properties_form|
-  - (f.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
-    = draw_attribute_for_form(attribute, properties_form) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
+= f.simple_fields_for :default_profile do |default_profile_form|
+  = default_profile_form.simple_fields_for :properties, default_profile_form.object.properties do |properties_form|
+    - (default_profile_form.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
+      = draw_attribute_for_form(attribute, properties_form) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
 
 - if only_inputs.empty? || Category.users.roots.map { |c| "Category - #{c.name}".to_sym }.include?(only_inputs.first)
   - category_name = only_inputs.first.to_s.split(" - ")[1]

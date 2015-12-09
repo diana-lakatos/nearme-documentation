@@ -15,7 +15,7 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
 
   def update
     @user = User.find(params[:id])
-    @user.update_columns(params[:user])
+    @user.update(user_params)
     if request.xhr?
       render layout: false
     else
@@ -70,6 +70,10 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
   end
 
   protected
+
+  def user_params
+    params.require(:user).permit(secured_params.user_from_instance_admin)
+  end
 
   def collection_search_fields
     %w(name email)

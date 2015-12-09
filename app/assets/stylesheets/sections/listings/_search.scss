@@ -906,6 +906,13 @@ section.search section#results.list {
     }
   }
 
+  article.listing.user {
+    .heading {
+      height: 43px;
+    }
+  }
+
+
   @media (max-width: $search-bar-breakpoint-desktop) {
     margin-top: 125px;
   }

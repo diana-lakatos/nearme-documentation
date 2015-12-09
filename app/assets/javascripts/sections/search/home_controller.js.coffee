@@ -3,6 +3,8 @@ class Search.HomeController extends Search.Controller
   constructor: (form, @container) ->
     @form = form
     @transactableTypePicker = @form.find("[data-transactable-type-picker]")
+    @transactableTypeClass = @form.find("[name='transactable_type_class']")
+    @transactableTypeId = @form.find("[name='transactable_type_id']")
     @queryField = @form.find('input[name="loc"]')
     @initializeSearchForm()
     @visibleFields = => @form.find('.transactable-type-search-box:visible')
@@ -39,26 +41,11 @@ class Search.HomeController extends Search.Controller
         _.defer(=>input.val(input.data('placeholder')))
       true
 
-  initializeSearchForm: ->
-    if @transactableTypePicker.length > 0
-      @toggleTransactableTypes(@transactableTypePicker.val())
-      @transactableTypePicker.bind "change", (event) =>
-        @toggleTransactableTypes($(event.target).val())
-    else
-      @form.find('.transactable-type-search-box:first').show()
-
-
-  toggleTransactableTypes: (tt_id) ->
-    inputs = @form.find("[data-transactable-type-id=#{tt_id}]")
-    other_inputs = @form.find(".transactable-type-search-box")
-    other_inputs.hide().find('input').prop('disabled', true)
-    inputs.show().find('input').prop('disabled', false)
-
     # when submitting the form without clicking on autocomplete, we need to check if the field's value has been changed to update lat/lon and address components.
     # otherwise, no matter what we type in, we will always get results for geolocated address
     @form.submit (e) =>
       e.preventDefault()
-      if(@visibleQueryField().val() != @cached_geolocate_me_city_address)
+      if(@visibleQueryField().length > 0 && @visibleQueryField().val() != @cached_geolocate_me_city_address)
         if(@visibleQueryField().val())
           @geocoder = new Search.Geocoder()
           deferred = @geocoder.geocodeAddress(@visibleQueryField().val())
@@ -71,3 +58,22 @@ class Search.HomeController extends Search.Controller
           $(e.target).unbind('submit').submit()
       else
         $(e.target).unbind('submit').submit()
+
+  initializeSearchForm: ->
+    if @transactableTypePicker.length > 0
+      @toggleTransactableTypes(@transactableTypePicker.val())
+      @transactableTypePicker.bind "change", (event) =>
+        @toggleTransactableTypes($(event.target).val())
+    else
+      @form.find('.transactable-type-search-box:first').show()
+
+
+  toggleTransactableTypes: (tt_id) ->
+    id = tt_id.split('-')
+    @transactableTypeClass.val(id[0])
+    @transactableTypeId.val(id[1])
+    inputs = @form.find("[data-transactable-type-id='#{tt_id}']")
+    other_inputs = @form.find(".transactable-type-search-box")
+    other_inputs.hide().find('input').prop('disabled', true)
+    inputs.show().find('input').prop('disabled', false)
+

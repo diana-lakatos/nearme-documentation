@@ -1,0 +1,11 @@
+.rating-averages
+  .row-fluid.reviews-summary
+    .span8
+      %p= t 'buy_sell_market.products.labels.summary'
+    .span3
+      .rating
+        = render partial: 'buy_sell_market/products/stars', locals: { stars: @average_rating.to_i }
+.reviews
+  = render partial: 'reviews/review', collection: @reviews
+
+  = will_paginate_styled reviews, param_name: 'reviews_page'

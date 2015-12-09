@@ -14,16 +14,17 @@ class NewUiConverter
         @old_forms.update_all ui_version: 'old_dashboard'
         @old_forms.destroy_all
       end
-      schedule = service_type.schedule
-      if schedule && schedule.schedule_rules.count == 0 && schedule.use_simple_schedule
-        schedule.schedule_rules.create!(
-          run_hours_mode: ScheduleRule::RECURRING_MODE,
-          time_start: schedule.sr_from_hour,
-          time_end: schedule.sr_to_hour,
-          every_hours: schedule.sr_every_hours || 2,
-          run_dates_mode: ScheduleRule::RECURRING_MODE,
-          week_days: schedule.sr_days_of_week.presence || (1..5).to_a
-        )
+      Schedule.find_each do |schedule|
+        if schedule && schedule.schedule_rules.count == 0 && schedule.sr_start_datetime.present?
+          schedule.schedule_rules.create!(
+            run_hours_mode: ScheduleRule::RECURRING_MODE,
+            time_start: schedule.sr_from_hour,
+            time_end: schedule.sr_to_hour,
+            every_hours: schedule.sr_every_hours || 2,
+            run_dates_mode: ScheduleRule::RECURRING_MODE,
+            week_days: schedule.sr_days_of_week.presence || (1..5).to_a
+          )
+        end
       end
     end
     @instance.save!

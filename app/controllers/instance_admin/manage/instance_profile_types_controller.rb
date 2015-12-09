@@ -3,7 +3,7 @@ class InstanceAdmin::Manage::InstanceProfileTypesController < InstanceAdmin::Man
   before_filter :set_breadcrumbs
 
   def index
-    @instance_profile_types = InstanceProfileType.all
+    @instance_profile_types = InstanceProfileType.order(:name)
   end
 
   def enable
@@ -16,6 +16,17 @@ class InstanceAdmin::Manage::InstanceProfileTypesController < InstanceAdmin::Man
     redirect_to instance_admin_manage_instance_profile_type_custom_attributes_path(@instance_profile_type)
   end
 
+  def update
+    @instance_profile_type = InstanceProfileType.find(params[:id])
+    if @instance_profile_type.update_attributes(instance_profile_type_params)
+      flash[:success] = t 'flash_messages.instance_admin.manage.service_types.updated'
+      redirect_to instance_admin_manage_instance_profile_types_path
+    else
+      flash[:error] = @instance_profile_type.errors.full_messages.to_sentence
+      render action: params[:action_name]
+    end
+  end
+
   def destroy
     @instance_profile_type = InstanceProfileType.find(params[:id])
     @instance_profile_type.destroy
@@ -23,11 +34,18 @@ class InstanceAdmin::Manage::InstanceProfileTypesController < InstanceAdmin::Man
     redirect_to instance_admin_manage_instance_profile_types_path
   end
 
+  def search_settings
+    @instance_profile_type = InstanceProfileType.find(params[:id])
+  end
 
   private
 
   def set_breadcrumbs
-    @breadcrumbs_title = 'Manage Attributes'
+    @breadcrumbs_title = I18n.t('instance_admin.manage.instance_profile_types.manage')
+  end
+
+  def instance_profile_type_params
+    params.require(:instance_profile_type).permit(secured_params.instance_profile_type)
   end
 
 end

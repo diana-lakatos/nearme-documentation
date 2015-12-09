@@ -53,7 +53,7 @@ end
 
 After do
   Transactable.clear_custom_attributes_cache
-  User.clear_custom_attributes_cache
+  UserProfile.clear_custom_attributes_cache
   Spree::Product.clear_custom_attributes_cache
 end
 

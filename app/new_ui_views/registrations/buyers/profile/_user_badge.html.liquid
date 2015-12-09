@@ -1,0 +1,92 @@
+<div class="user-badge">
+	<div class="vendor-profile" id="vendor-profile">
+		{% if user.is_current_user? %}
+			<a href="{{ user.edit_profile_path }}" class="edit-link">Edit</a>
+		{% endif %}
+		<div class="vendor-pic">
+			<img src={{user.avatar_url_big}}>
+		</div>
+
+		<div class="vendor-info">
+			<h3>{{user.first_name}}</h3>
+			{% if user.country_name != blank %}
+				<p> {{ user.country_name }} fds</p>
+			{% endif %}
+			{% if user.public_profile? %}
+				{% for attribute in user.default_and_buyer_attributes %}
+					{% if user.all_properties[attribute.name].size > 0 %}
+						<p>{{ user.all_properties[attribute.name] | filter_text | custom_sanitize }}</p>
+					{% endif %}
+				{% endfor %}
+			{% endif %}
+		</div>
+
+		<a href="{{user.user_message_path}}" rel="modal">
+			<div class="btn blue">
+				{{ 'buy_sell_market.products.buttons.contact_host' | translate }}
+			</div>
+		</a>
+	</div>
+	{% if company %}
+		<div class="vendor-profile shop-info" id="shop-info">
+			<p>
+				{{ 'user_profile.labels.shop_info' | translate }}
+				{% if user.is_current_user? %}
+				    <a href="{{company.edit_path}}" class="edit-link">Edit</a>
+				{% endif %}
+			</p>
+			<h3>{{company.name}}</h3>
+			<p>
+				{% if company.country %}
+				  {{company.country}}
+				{% endif %}
+				{% if company.url %}
+					<br/>
+					<a href="{{company.url}}" target='_blank'>{{company.url}}</a>
+				{% endif %}
+			</p>
+		</div>
+	{% endif %}
+	<div class="vendor-profile shop-info">
+		<p>
+			{{ 'user_profile.labels.verifications' | translate }}
+		</p>
+		<div class="verifications clearfix">
+			<ul class="pull-left">
+				<li>
+					{% if user.email %}
+						<img src='{{ platform_context.checked_badge_url }}' class='check'>
+						{{ 'buy_sell_market.products.labels.email_address' | translate }}
+					{% endif %}
+				</li>
+				<li>
+					{% if user.phone %}
+						<img src='{{ platform_context.checked_badge_url }}' class='check'>
+						{{ 'buy_sell_market.products.labels.phone_number' | translate }}
+					{% endif %}
+				</li>
+				<li>
+					{% if user.facebook_connections %}
+						<img src='{{ platform_context.checked_badge_url }}' class='check'>
+						Facebook
+					{% endif %}
+				</li>
+			</ul>
+
+			<ul class="pull-right">
+				<li>
+					{% if user.linkedin_connections %}
+						<img src='{{ platform_context.checked_badge_url }}' class='check'>
+						LinkedIn
+					{% endif %}
+				</li>
+				<li>
+					{% if user.twitter_connections %}
+						<img src='{{ platform_context.checked_badge_url }}' class='check'>
+						Twitter
+					{% endif %}
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

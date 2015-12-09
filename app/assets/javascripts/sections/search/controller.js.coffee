@@ -46,7 +46,7 @@ class Search.Controller
       @fieldChanged('query', @queryField.val())
 
     @keywordField.bind 'change', =>
-      @fieldChanged('query', @queryField.val())
+      @fieldChanged('query', @keywordField.val())
 
     @queryField.bind 'focus', =>
       if @queryField.val() is @queryField.data('placeholder')
@@ -124,7 +124,6 @@ class Search.Controller
       params['street']  = result.street()
       params['postcode']  = result.postcode()
     params['loc'] = @buildSeoFriendlyQuery(result)
-    params['query'] = @keywordField.val()
 
     params
 
