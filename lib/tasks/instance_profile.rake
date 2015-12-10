@@ -53,9 +53,9 @@ namespace :instance_profile do
       end
     end
 
-    User.admin.find_each do |user|
-      Instance.find_each do |instance|
-        instance.set_context!
+    Instance.find_each do |instance|
+      instance.set_context!
+      User.admin.find_each do |user|
         default_profile = instance.default_profile_type
         if user.default_profile.blank?
           user.create_default_profile!(
