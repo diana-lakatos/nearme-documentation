@@ -188,12 +188,12 @@ window.DNM = {
 
   setFooterPushHeight: function() {
     if ($('.footer-wrapper').length > 0) {
-      $('.footer-push').height($('.footer-wrapper').height());
+      $('.footer-push').height($('.footer-wrapper').outerHeight());
     }
 
     $(window).resize(function(){
       if ($('.footer-wrapper').length > 0) {
-        $('.footer-push').height($('.footer-wrapper').height());
+        $('.footer-push').height($('.footer-wrapper').outerHeight());
       }
     })
   },
