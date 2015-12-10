@@ -54,4 +54,4 @@
   = render 'dashboard/company/transactables/form_fields/currency', f: f
 
 - if @transactable_type.rental_shipping && (only_inputs.empty? || only_inputs.include?(:rental_shipping_type))
-  = render 'dashboard/company/transactables/form_fields/rental_shipping_type', { f: f, space_wizard: true }
+  = render 'shared/rental_shipping_type', { f: f, space_wizard: true }
