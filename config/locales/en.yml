@@ -1434,6 +1434,9 @@ en:
     reservations:
       purchase_was_successful: "Your purchase was successful!"
     products:
+      title:
+        manage: 'Manage'
+        products: 'Products'
       manage: 'Manage Products'
       new: 'List New Item'
       edit: 'Edit Item'
@@ -1443,6 +1446,9 @@ en:
       address_errors_html: 'Please address the following <b>%{count}</b> errors in order to save your listing.'
 
     transactables:
+      title:
+        manage: 'Manage'
+        listings: 'Listings'
       manage: 'Manage Listings'
       list_new_item: 'List New Item'
       edit: 'Edit Item'

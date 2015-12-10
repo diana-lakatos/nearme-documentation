@@ -149,18 +149,18 @@ en:
         facebook_url: "Facebook URL"
         twitter_url: "Twitter URL"
         gplus_url: "Goggle+ URL"
-        favicon_image: 'Favicon (16x16px or 32x32px)'
-        favicon_image_html: 'Favicon (16&times;16px or 32&times;32px)'
+        favicon_image: 'Favicon (16px x 16px or 32px x 32px)'
+        favicon_image_html: 'Favicon (16px &times; 16px or 32px &times; 32px)'
         hero_image: 'Hero image'
         hero_image_html: 'Hero image'
-        icon_image: 'Icon (60x60px)'
-        icon_image_html: 'Icon (60&times;60px)'
-        icon_retina_image: 'Icon Retina (120x120px)'
-        icon_retina_image_html: 'Icon Retina (120&times;120px)'
-        logo_image: 'Logo (240x60px)'
-        logo_image_html: 'Logo (240&times;60px)'
-        logo_retina_image: 'Logo Retina (480x120px)'
-        logo_retina_image_html: 'Logo Retina (480&times;120px)'
+        icon_image: 'Icon (60px x 60px)'
+        icon_image_html: 'Icon (60px &times; 60px)'
+        icon_retina_image: 'Icon Retina (120px x 120px)'
+        icon_retina_image_html: 'Icon Retina (120px &times; 120px)'
+        logo_image: 'Logo (240px x 60px)'
+        logo_image_html: 'Logo (240px &times; 60px)'
+        logo_retina_image: 'Logo Retina (480px x 120px)'
+        logo_retina_image_html: 'Logo Retina (480px &times; 120px)'
         call_to_action: "CTA button text"
         homepage_content: "Homepage HTML"
         homepage_css: "Homepage CSS"
@@ -283,6 +283,7 @@ en:
         book_it_out_minimum_qty: "Book It Out minimum quantity"
         book_it_out_discount: "Book It Out discount"
         amenities: "Amenities"
+        fixed_price: "Fixed price"
       transactable_type:
         action_book_it_out: 'Enable Book it Out option'
       service_type:
