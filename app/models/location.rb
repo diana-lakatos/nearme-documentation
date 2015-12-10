@@ -13,7 +13,7 @@ class Location < ActiveRecord::Base
   # Include a set of helpers for handling availability rules and interface onto them
   include AvailabilityRule::TargetHelper
 
-  attr_accessor :name_and_description_required, :search_rank, :transactable_type, :availability_template_attributes
+  attr_accessor :search_rank, :transactable_type, :availability_template_attributes
 
   liquid_methods :name
 
@@ -33,6 +33,7 @@ class Location < ActiveRecord::Base
   has_many :reservations, :through => :listings
   has_many :wish_list_items, as: :wishlistable
   has_many :waiver_agreement_templates, through: :assigned_waiver_agreement_templates
+  has_many :custom_validators, -> { where(validatable_type: 'Location') }, :through => :instance
 
   has_one :location_address, class_name: 'Address', as: :entity
 
@@ -48,12 +49,8 @@ class Location < ActiveRecord::Base
    :latitude, :longitude, :state_code, :iso_country_code, :street_number, to: :location_address, allow_nil: true
 
   validates_presence_of :company
-  validates_presence_of :location_type_id, if: :location_type_required
-  validates_presence_of :description, if: :name_and_description_required
-  validates_presence_of :name, if: :name_and_description_required
   validates :email, email: true, allow_nil: true
-  validates_length_of :description, maximum: 250, if: :name_and_description_required
-  validates_length_of :name, maximum: 50, if: :name_and_description_required
+  validates_with CustomValidators
 
   before_save :set_location_type, :set_time_zone, :build_availability_template
   before_save :assign_default_availability_rules
@@ -112,12 +109,8 @@ class Location < ActiveRecord::Base
     end
   end
 
-  def name_and_description_required
-    TransactableType.first.try(:name) == "Listing"
-  end
-
-  def location_type_required
-    !transactable_type.try(:skip_location) || LocationType.count == 0
+  def validation_for(field_name)
+    custom_validators.detect{ |cv| cv.field_name == field_name.to_s }
   end
 
   def minimum_booking_minutes

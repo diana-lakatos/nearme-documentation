@@ -136,7 +136,7 @@ class RecurringBookingRequest < Form
         if response
           @token = response
           if (credit_card_id = @billing_gateway.store_credit_card(@recurring_booking.owner, credit_card)).nil?
-            add_error("Unfortunately we have some internal issues with processing your credit card. There is nothing you can do, changing credit card will not help. Please try again later", :cc)
+            add_error(I18n.t('reservations_review.errors.internal_payment', :cc))
           else
             @recurring_booking.credit_card_id = credit_card_id
           end
