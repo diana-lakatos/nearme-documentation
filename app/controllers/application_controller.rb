@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   before_filter :redirect_if_marketplace_password_protected
   before_filter :set_raygun_custom_data
   before_filter :filter_out_token
-  before_filter :sign_out_if_signed_out_from_intel_sso
+  before_filter :sign_out_if_signed_out_from_intel_sso, if: -> { PlatformContext.current.instance.is_community? && current_user.present? && !current_user.admin? }
 
   around_filter :set_time_zone
 
@@ -535,7 +535,7 @@ class ApplicationController < ActionController::Base
 
   def sign_out_if_signed_out_from_intel_sso
     signed_out_from_sso = cookies['SecureSESSION'] == 'LOGGEDOFF' && cookies['SMSSESSION'] == 'LOGGEDOFF'
-    if !!PlatformContext.current.instance.is_community && signed_out_from_sso
+    if signed_out_from_sso
       sign_out(current_user)
       cookies.delete('SecureSESSION') && cookies.delete('SMSSESSION')
     end
