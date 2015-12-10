@@ -1,5 +1,7 @@
+- reviewables = [ { id: @listing.id, type: 'Transactable', subject: RatingConstants::TRANSACTABLE }, { id: @listing.creator_id, type: 'User', subject: RatingConstants::HOST }]
+
 .container-fluid
-  .tab-content-container#navigation-tabs
+  .tab-content-container#navigation-tabs{ data: { "reviews-controller": true, path: reviews_path, reviewables: reviewables.to_json }}
     %ul.nav.nav-tabs.page-tabs{role: 'tablist', :'data-tab-header' => true}
       %li{ class: "#{ 'active' if !param_reviews_page_present? }" }
         %a{'data-toggle' => 'tab', href: '#location-details', role: 'tab'}
@@ -15,18 +17,3 @@
         %article#location-documents.location.listing.tab-pane
           - attachments.each do |attachment|
             %p= link_to attachment.decorate.title, seller_attachment_path(attachment), target: '_blank'
-
-
-- content_for :script do
-  :javascript
-    new Reviews.Controller(
-    $('#navigation-tabs'),
-    {
-      path: "#{reviews_path}",
-      reviewables: [
-         { id: #{@listing.id}, type: 'Transactable', subject: "#{RatingConstants::TRANSACTABLE}" },
-         { id: #{@listing.creator_id}, type: 'User', subject: "#{RatingConstants::HOST}" }
-        ]
-    }
-    )
-

@@ -16,8 +16,5 @@
     .row
       .instance-payment-gateway-form
 
-= render 'instance_admin/shared/modal', heading: "Payment Gateways per Country"
-
-- content_for :domready do
-  new InstanceAdmin.PaymentGatewaySelect($(".country-select"));
-  new InstanceAdmin.SettingsController($('#instanceAdminModal'))
+.settings-controller-modal
+  = render 'instance_admin/shared/modal', heading: "Payment Gateways per Country"

@@ -453,7 +453,27 @@ module ApplicationHelper
     request.protocol + platform_context.host + request.fullpath
   end
 
+
   def is_required?(object, fields)
     object.try(:validation_for, fields).try(:any?, &:is_required?)
+  end
+
+  def webpack_bundle_tag(bundle)
+    src =
+      if Rails.configuration.webpack[:use_manifest]
+        manifest = Rails.configuration.webpack[:asset_manifest]
+        filename = manifest[bundle]
+
+        "#{compute_asset_host}/assets/#{filename}"
+      else
+        "#{compute_asset_host}/assets/#{bundle}-bundle.js"
+      end
+
+    javascript_include_tag(src)
+  end
+
+  def webpack_manifest_script
+    return '' unless Rails.configuration.webpack[:use_manifest]
+    javascript_tag "(function(){ window.webpackBundleManifest = #{Rails.configuration.webpack[:common_manifest].to_json}; }());"
   end
 end

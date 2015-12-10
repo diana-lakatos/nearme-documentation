@@ -14,11 +14,3 @@
 = f.input :author_biography
 = f.input :author_avatar_img
 = @blog_post.decorate.image_preview(:author_avatar_img)
-
-
-= javascript_include_tag 'vendor/jquery.min'
-= javascript_include_tag 'vendor/jquery-ui-1.10.4.custom.min'
-
-= content_for :domready do
-  $('#user_blog_post_published_at').datepicker({ showOtherMonths: true, selectOtherMonths: false, dateFormat: 'yy-mm-dd'});
-  new Tags()

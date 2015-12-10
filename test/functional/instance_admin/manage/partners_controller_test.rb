@@ -33,31 +33,5 @@ class InstanceAdmin::Manage::PartnersControllerTest < ActionController::TestCase
     end
   end
 
-  context 'theme' do
-    setup do
-      CompileThemeJob.stubs(:perform)
-    end
-
-    %i(create update).each do |action|
-      context action do
-        should 'not create a theme unless add_theme param passed' do
-          assert_no_difference 'Theme.count' do
-            params = {"partner"=> {"name" => "New Partner", "search_scope_option" => "no_scoping"}}
-            params.merge!(id: create(:partner).id) if action == :update
-            post action, params
-          end
-          assert_redirected_to(action == :create ? {action: :index} : {action: :edit, id: assigns(:partner).id})
-        end
-
-        should 'create theme if add_theme param passed' do
-          assert_difference 'Theme.count', 1 do
-            params = {"partner" => {"name" => "New Partner","search_scope_option" => "no_scoping"}, "add_theme" => '1'}
-            params.merge!(id: create(:partner).id) if action == :update
-            post action, params
-          end
-          assert_redirected_to(action: :edit, id: assigns(:partner).id)
-        end
-      end
-    end
-  end
 end
+

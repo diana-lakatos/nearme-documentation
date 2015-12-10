@@ -1,4 +1,4 @@
-.checkout-wizard
+.checkout-wizard{ :"data-shipping-country-controller" => true }
   .page-wrapper
     = render 'header'
 
@@ -40,38 +40,3 @@
               = s.input :phone, as: :string
 
       = render partial: 'checkout_buttons', locals: { form: f }
-
--# TODO Refactor to asset pipeline
-= javascript_include_tag 'jquery'
-
-:javascript
-  function hide_or_show_shipping_address() {
-    if ($('#order_use_billing').prop('checked'))
-      {
-        $('#shipping-address').hide();
-      } else {
-        $('#shipping-address').show();
-      }
-  }
-
-  $('#order_use_billing').on('click', function() {
-    hide_or_show_shipping_address();
-  });
-
-  if ($('#order_use_billing').prop('checked')) {}
-
-  function load_states_for_country(country_id, bill_address) {
-    $.get('get_states.js', { country_id: country_id, bill_address: bill_address });
-  }
-
-  $('#order_bill_address_attributes_country_id').on('change', function() {
-    var country_id = $('#order_bill_address_attributes_country_id').val();
-    load_states_for_country(country_id, 1);
-  });
-
-  $('#order_ship_address_attributes_country_id').on('change', function() {
-    var country_id = $('#order_ship_address_attributes_country_id').val();
-    load_states_for_country(country_id, 0);
-  });
-
-  hide_or_show_shipping_address();

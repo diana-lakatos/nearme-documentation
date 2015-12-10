@@ -4,7 +4,7 @@
       %h1= (@product.action_free? ? t('reservations.rfq') : t('reservations.make_offer'))
       %h2= @product.name
       .form
-        = simple_form_for @ticket, url: product_tickets_path(@product), html: { id: 'rfq' }, method: :post do |t|
+        = simple_form_for @ticket, url: product_tickets_path(@product), html: { id: 'rfq', :"data-modal-form" => request.xhr? }, method: :post do |t|
           = t.simple_fields_for :messages do |f|
             .columns
               .row-fluid
@@ -15,5 +15,5 @@
   - if request.xhr?
     :javascript
       $(function() {
-        new ModalForm($('#rfq'));
+        $(document).trigger('init.modalform', ['#rfq']);
       });

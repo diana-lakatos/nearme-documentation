@@ -129,7 +129,7 @@ class RecurringBookingDecorator < Draper::Decorator
     periods.map do |period|
       period = period.decorate
       date = I18n.l(period.date.to_date, format: :long)
-      
+
       if listing.action_hourly_booking?
         start_time = I18n.l(period.start_minute_of_day_to_time, format: :short)
         end_time = I18n.l(period.end_minute_of_day_to_time, format: :short)

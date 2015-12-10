@@ -16,7 +16,7 @@
     %h4= form_type.humanize
     .row
       .table-container.col-xs-12
-        %ol.formComponentPanelList
+        %ol.formComponentPanelList{:"data-initial-path" => polymorphic_path([:instance_admin, @controller_scope, @form_componentable, FormComponent.new]) }
           - form_components.each do |form_component|
             %li.panel.panel-info{'data-id'=>form_component.id}
               %div.panel-heading
@@ -24,8 +24,3 @@
 
 = content_for :header_buttons do
   = link_to t('instance_admin.manage.form_components.new_form_component'), new_polymorphic_path([:instance_admin, @controller_scope, @form_componentable, FormComponent.new], :form_type => @form_type || :space_wizard), class: 'pull-right btn btn-blue'
-
-= content_for :script do
-  :javascript
-    new FormComponents("ol.formComponentPanelList", "#{polymorphic_path([:instance_admin, @controller_scope, @form_componentable, FormComponent.new])}")
-

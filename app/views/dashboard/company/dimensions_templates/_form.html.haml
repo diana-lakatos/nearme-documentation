@@ -10,4 +10,4 @@
         = f.submit t('dimensions_templates.modal.save_dimensions_template'), id: 'submit-link', class: "btn blue pull-right"
 
 :javascript
-  new UserDimensionsTemplates(#{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json});
+  $(document).trigger('init.userdimensinstemplates', [#{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json}]);

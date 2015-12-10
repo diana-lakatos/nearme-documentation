@@ -31,22 +31,12 @@
     = render 'layouts/favicon'
 
     = stylesheet_link_tag 'dashboard'
-    - if platform_context.compiled_dashboard_stylesheet_url
-      = stylesheet_link_tag platform_context.compiled_dashboard_stylesheet_url
+    = render "dynamic_theme/dashboard"
 
-    /[if lt IE 9]
-      = stylesheet_link_tag 'browser_specific/ie8'
-      = javascript_include_tag '//html5shim.googlecode.com/svn/trunk/html5.js'
-      = javascript_include_tag "//explorercanvas.googlecode.com/svn/trunk/excanvas.js"
-      = javascript_include_tag 'vendor/jquery.backgroundSize.min.js'
-      = javascript_include_tag 'vendor/respond.min.js'
-      - unless CarrierWave::Uploader::Base.asset_host.nil?
-        = tag('link', {href: "#{CarrierWave::Uploader::Base.asset_host}/respond-proxy/respond-proxy.html", id: 'respond-proxy', rel: 'respond-proxy'})
-        = tag('link', {href: image_path('respond.proxy.gif'), id: 'respond-redirect', rel: 'respond-redirect'})
-        = javascript_include_tag(javascript_path('vendor/respond.proxy.js'))
-    /[if lt IE 8]
-      = javascript_include_tag "//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"
-      = javascript_include_tag :chrome_frame
+    = render 'layouts/homepage_css' if home_page?
+
+    = render 'shared/ckeditor_basepath'
+    = render "shared/javascript_assets"
 
   %body
     = yield(:body_top)
@@ -68,7 +58,11 @@
       = render 'layouts/footer'
 
     = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places&sensor=false"
-    = javascript_include_tag :dashboard
+
+    = webpack_manifest_script
+    = webpack_bundle_tag 'common'
+    = webpack_bundle_tag 'dashboard'
+
     = render 'layouts/initializers'
     = render 'layouts/scripts'
     = yield(:body_bottom)

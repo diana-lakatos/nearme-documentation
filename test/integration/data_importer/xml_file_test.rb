@@ -192,6 +192,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
     end
 
     should 'send emails only once to users if settting is on' do
+      PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
       @xml_file = FactoryGirl.create(:xml_template_file_send_invitations)
       assert_difference('ActionMailer::Base.deliveries.count', 2) do
         @xml_file.parse

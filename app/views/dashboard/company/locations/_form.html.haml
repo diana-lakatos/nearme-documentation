@@ -13,6 +13,6 @@
       = f.submit t('locations.save_location'), id: 'submit-link', class: "btn blue pull-right"
 
 :javascript
-  DNM.initializeBootstrap();
-  new Dashboard.LocationController($('#location-form'));
-  Limiter.initialize($('#location-form'));
+  $(document).trigger('init.selectpicker');
+  $(document).trigger('init.bootstrapswitch');
+  $(document).trigger('init.locationform');

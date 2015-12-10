@@ -25,7 +25,6 @@ Feature: Secure documents upload
     And I choose file
     And I make booking request
     Then I should see page with booking requests with files
-    Then I travel back
 
   Scenario: User can make reservation without documents when documents upload is optional
     Given a documents upload is optional
@@ -36,7 +35,6 @@ Feature: Secure documents upload
     And I enter data in the credit card form
     And I make booking request
     Then I should see page with booking requests without files
-    Then I travel back
 
   Scenario: User can make reservation with documents when documents upload is optional
     Given a documents upload is optional
@@ -48,7 +46,6 @@ Feature: Secure documents upload
     And I choose file
     And I make booking request
     Then I should see page with booking requests with files
-    Then I travel back
 
   Scenario: User can make reservation without documents
     Given a documents upload is vendor decides
@@ -72,7 +69,6 @@ Feature: Secure documents upload
     And I choose file
     And I make booking request
     Then I should see page with booking requests with files
-    Then I travel back
 
   Scenario: User can make reservation of listing with optional documents
     Given a upload_obligation exists for listing
@@ -85,7 +81,6 @@ Feature: Secure documents upload
     And I enter data in the credit card form
     And I make booking request
     Then I should see page with booking requests without files
-    Then I travel back
 
   Scenario: User can make reservation of listing with optional documents file attached
     Given a upload_obligation exists for listing
@@ -99,7 +94,6 @@ Feature: Secure documents upload
     And I choose file
     And I make booking request
     Then I should see page with booking requests with files
-    Then I travel back
 
   Scenario: User can make reservation of listing with existing not required
     Given a upload_obligation exists for listing
@@ -111,4 +105,4 @@ Feature: Secure documents upload
     And I book product
     And I enter data in the credit card form
     Then I can not see section Required Documents
-    Then I travel back
+

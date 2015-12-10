@@ -7,18 +7,20 @@
 
     = csrf_meta_tag
     = render 'layouts/favicon'
+    = stylesheet_link_tag 'instance_admin_vendor'
     = stylesheet_link_tag 'instance_admin'
     = yield :styles
-    %script{:src => "//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"}
-    /[if lt IE 9]
-      = javascript_include_tag '//html5shim.googlecode.com/svn/trunk/html5.js'
+
+    = render 'shared/ckeditor_basepath'
+    = render "shared/javascript_assets"
+
+    = javascript_include_tag 'vendor/modernizr'
     %link{:href => "//fonts.googleapis.com/css?family=Lato:100,300,400,700,900", :rel => "stylesheet"}
-    %link{:href => "//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css", :rel => "stylesheet"}/
-    /[if IE 8] <style>#help-bar {display: none;}</style>
     /[if IE 9] <style>#help-bar {display: none;}</style>
 
   %body{ class: !user_signed_in? ? 'login' : ''}
     - if user_signed_in?
+
       %header
         = render 'instance_admin/layout/header'
 
@@ -31,14 +33,17 @@
         .flash-container
           = render 'instance_admin/shared/render_flash'
 
-        #main-container.container-fluid{class: section_class(@section_name)}
+        #main-container.container-fluid{class: section_class(@section_name) }
           = yield
 
     - else
       = render 'instance_admin/shared/render_flash'
       = yield
 
-    = javascript_include_tag :instance_admin
+    = webpack_manifest_script
+    = webpack_bundle_tag 'common'
+    = webpack_bundle_tag 'instanceadmin'
+
     = yield :script
     = javascript_tag do
       = javascript_i18n_include_tag

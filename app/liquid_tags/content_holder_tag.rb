@@ -14,5 +14,4 @@ class ContentHolderTag < Liquid::Tag
 
 end
 
-Liquid::Template.register_tag('inject_content_holder', ContentHolderTag)
 

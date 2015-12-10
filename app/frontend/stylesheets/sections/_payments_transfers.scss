@@ -1,0 +1,49 @@
+section#payments, section#transfers {
+
+  .chart {
+    margin-bottom: 20px;
+    padding: 20px 0;
+    border: 1px solid $gray230;
+    border-radius: $border-radius-default;
+
+    .total {
+      padding-right: 20px;
+    }
+  }
+
+  .total-number {
+    padding: 0px 10px 0px 0px;
+  }
+
+  .total-text {
+    color: $gray190;
+  }
+
+}
+
+section#payments {
+
+  select {
+    &.analytics-mode {
+      width: auto !important;
+    }
+  }
+
+}
+
+section#transfers {
+
+  .warning {
+    margin-bottom: $padding-default;
+    padding: $padding-small;
+    border: 1px solid $gray230;
+    text-align: center;
+    border-radius: $border-radius-default;
+
+    i {
+      position: relative;
+      top: 3px;
+      padding-right: $padding-small;
+    }
+  }
+}

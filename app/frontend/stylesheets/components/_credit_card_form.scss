@@ -1,0 +1,100 @@
+.submit-secure-payment {
+
+  .text {
+    line-height: 40px;
+  }
+
+  .credit-card-images {
+    text-align: right;
+    line-height: 18px;
+  }
+
+  @media (max-width: $ipad-width) {
+    .text {
+      line-height: inherit;
+      margin-bottom: 15px;
+    }
+    .credit-card-images {
+      text-align: left;
+    }
+  }
+}
+
+.credit-card-fields {
+  border: 1px solid $gray230;
+  padding: $padding-default;
+
+  input {
+    font-size: 18px;
+    height: 49px;
+  }
+
+  .credit-card {
+    margin-top: $padding-default;
+
+    .card-number {
+
+      #reservation_request_card_number {
+        padding-right: 40px !important;
+      }
+
+      @mixin placeholder_with_icons($padding-top: 3px, $font-size: 10px, $letter-spacing: 3px) {
+        padding-top: $padding-top;
+        color: $gray190;
+        font-family: 'icon-font';
+        font-size: $font-size;
+        letter-spacing: $letter-spacing;
+      }
+      ::-webkit-input-placeholder { /* WebKit browsers */
+        @include placeholder_with_icons;
+      }
+      :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+        @include placeholder_with_icons;
+      }
+      ::-moz-placeholder { /* Mozilla Firefox 19+ */
+        @include placeholder_with_icons;
+      }
+      :-ms-input-placeholder { /* Internet Explorer 10+ */
+        @include placeholder_with_icons;
+        line-height: 46px;
+        height: 49px;
+        vertical-align: middle;
+      }
+    }
+    .ico-credit-card:before {
+      font-size: 30px;
+    }
+  }
+
+  .card-info.expiry {
+
+    @media (min-width: $ipad-width) and (max-width: $host-card-breakpoint-small) {
+      label {
+        text-overflow: clip;
+        white-space: nowrap;
+        width: 70px;
+        overflow: hidden;
+      }
+    }
+  }
+
+  .select2-container {
+    border: 2px solid #e6e6e6;
+    border-radius: 4px;
+    background: #e6e6e6 url('/assets/themes/buy_sell/arrow.png') right no-repeat;
+    width: 100%;
+    font-size: 22px;
+    box-sizing: border-box;
+    padding: 10px 0 10px 5px;
+
+    .select2-choice {
+      border: none;
+      background: none;
+      box-shadow: none;
+
+      .select2-arrow {
+        display: none;
+      }
+    }
+  }
+}

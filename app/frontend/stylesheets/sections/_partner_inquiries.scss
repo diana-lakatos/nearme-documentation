@@ -1,0 +1,351 @@
+section.partner_inquiries {
+  #hero {
+    margin-top: -30px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+
+  .container-fluid {
+
+    ul {
+      list-style-type: disc;
+      margin: 0 0 12px 20px;
+    }
+
+    .become-a-partner {
+      text-align: center;
+      padding-top: 7%;
+      padding-bottom: 9%;
+
+      h1 {
+        color: $dnm_green;
+        margin-bottom: 20px;
+        font-size: 280%;
+      }
+
+      .text {
+        line-height: 150%;
+        font-size: 145%;
+      }
+    }
+
+    .partners {
+      padding: 4% 0;
+      border-top: 1px solid rgb(183, 200, 186);
+      border-bottom: 1px solid rgb(183, 200, 186);
+
+      .table {
+        width: 100%;
+        display: table;
+
+        .row {
+          display: table-row;
+
+          .cell {
+            display: table-cell;
+            vertical-align: middle;
+          }
+
+          @media (max-width: $ipad-width) {
+            display: block;
+
+            .cell {
+              display: block;
+              text-align: center !important;
+              padding: 10px 0;
+            }
+          }
+        }
+      }
+    }
+
+    .w-hotels {
+      padding-top: 13%;
+      padding-bottom: 6%;
+      border-bottom: 1px solid $gray220;
+
+      .w-content {
+        padding-top: 6%;
+
+        .text {
+          padding-top: 5%;
+          line-height: 190%;
+        }
+      }
+
+      @media (max-width: $ipad-width) {
+        .span5 {
+          text-align: center;
+        }
+
+        .w-content {
+          .text {
+            line-height: 150%;
+          }
+        }
+      }
+    }
+
+    .extra-money {
+      padding: 10% 0;
+      border-bottom: 1px solid $gray210;
+
+      .text {
+        padding-top: 10%;
+        line-height: 190%;
+      }
+
+      .green-box {
+        background-color: $dnm_green;
+        border-radius: $border-radius-default;
+        padding: 30px;
+        margin: 50px;
+        margin-bottom: 0;
+        color: $gray240;
+        line-height: 170%;
+        position: relative;
+
+        &:before {
+          content: "";
+          position: absolute;
+          top: 0%;
+          right: 0%;
+          width: 0px;
+          height: 0px;
+          border-bottom: 40px solid $gray100;
+          border-right: 40px solid transparent;
+        }
+
+        &:after {
+          content: "";
+          position: absolute;
+          top: 0%;
+          right: 0%;
+          width: 0px;
+          height: 0px;
+          border-top: 39px solid $gray240;
+          border-left: 39px solid transparent;
+        }
+
+        .testimonial {
+          margin-top: 10px;
+
+          .avatar-row {
+            display: table-row;
+
+            .avatar, .avatar-name {
+              padding-top: 10px;
+              display: table-cell;
+              vertical-align: middle;
+            }
+
+            .avatar-name {
+              padding-left: 20px;
+              padding-top: 0;
+            }
+          }
+        }
+
+        @media (max-width: $iphone-landscape) {
+          margin-left: 0;
+          margin-right: 0;
+        }
+      }
+    }
+
+    .share-your-space {
+      border: 0;
+
+      .w-content {
+        padding-top: 3%;
+      }
+    }
+  }
+
+  .testimonials-tab {
+    color: $gray240;
+    background-color: $dnm_green;
+    border-top-left-radius: 10px; border-top-right-radius: 10px;
+    font-size: 140%;
+    text-align: center;
+    padding: 10px;
+    width: 200px !important;
+  }
+
+  .testimonials {
+
+    .body {
+      padding-top: 3%;
+      padding-bottom: 5%;
+      background-color: $dnm_green;
+
+      .white-box {
+        background-color: $gray240;
+        border-radius: $border-radius-default;
+        padding: 30px;
+        margin: 50x;
+        padding-bottom: 10px;
+        margin-top: 20px;
+        line-height: 170%;
+        position: relative;
+
+        &:before {
+          content: "";
+          position: absolute;
+          top: 0%;
+          right: 0%;
+          width: 0px;
+          height: 0px;
+          border-bottom: 40px solid $gray220;
+          border-right: 40px solid transparent;
+        }
+
+        &:after {
+          content: "";
+          position: absolute;
+          top: 0%;
+          right: 0%;
+          width: 0px;
+          height: 0px;
+          border-top: 39px solid #427A43;
+          border-left: 39px solid transparent;
+        }
+
+        .testimonial {
+          margin-top: 10px;
+
+          .avatar-row {
+            display: table-row;
+
+            .avatar, .avatar-name {
+              padding-top: 10px;
+              display: table-cell;
+              vertical-align: middle;
+            }
+
+            .avatar-name {
+              padding-left: 20px;
+              padding-top: 0;
+            }
+          }
+        }
+
+        @media (max-width: $iphone-landscape) {
+          margin-left: 0;
+          margin-right: 0;
+        }
+      }
+
+      @media (max-width: $ipad-width) {
+        padding-bottom: 8%;
+      }
+    }
+  }
+
+  .about {
+
+    .body {
+      padding: 5% 0;
+      background-color: $gray40;
+
+      h2 {
+        padding-bottom: 2%;
+        color: $gray220;
+      }
+
+      .intro {
+        line-height: 200%;
+        font-size: 100%;
+        padding-bottom: 8%;
+      }
+
+      .box {
+        background-color: $gray40;
+        border: 2px solid $gray80;
+        height: 240px;
+        position: relative;
+
+        .icon {
+          height: 80px;
+          position: relative;
+
+          img {
+            display: block;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+          }
+        }
+
+        .text {
+          padding-top: 8%;
+          text-align: center;
+        }
+      }
+    }
+  }
+
+
+  .get-started {
+
+    .body {
+      padding: 5% 0;
+      background-color: $dnm_green;
+
+      h2 {
+        padding-bottom: 2%;
+        color: $gray220;
+      }
+
+      form {
+        .validation-fail {
+          padding: 3% 0;
+          color: $red;
+          text-align: center;
+        }
+
+        input[type="text"], input[type="email"] {
+          background-color: $dnm_green;
+          border-radius: 0;
+          border: 0;
+          border-bottom: 1px solid $gray160;
+          color: $gray240;
+          padding: 0;
+          margin-bottom: 40px;
+          font-size: 110%;
+
+          &:focus {
+            border-bottom-color: $gray240;
+          }
+        }
+
+        input[type="submit"] {
+          padding: 4px;
+          line-height: 40px;
+          padding: 0;
+          height: 40px;
+          outline: none;
+        }
+
+        .form-actions {
+          padding-top: 3%;
+        }
+      }
+
+      .thanks {
+        font-size: 120%;
+        text-align: center;
+        padding-top: 5%;
+        color: $gray240;
+      }
+    }
+  }
+}

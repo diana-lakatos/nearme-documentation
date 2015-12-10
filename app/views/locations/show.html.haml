@@ -7,7 +7,9 @@
 = transactable_structured_data
 
 - content_for :hero do
-  %article#space
+  // Have we returned from setting up a session. If there are bookings, the JS controller
+  // will trigger showing the booking confirmation modal.
+  %article#space{ data: { listings: location_listings_json, "returned-from-session": (@initial_bookings.present? ? ("'#{@form_trigger}'") : 'false') }}
     .container-fluid
       .row-fluid.padding-row
         .span12.nested
@@ -41,32 +43,11 @@
           = render 'locations/google_map', location: @location
 
           .padding-row
+
           = render 'locations/social_buttons', location: @location
 
 .clearfix.padding-row
 
-- content_for :script do
-  :javascript
-    // Initialize the ui controller
-    $(function() {
-      new Space.Controller(
-        $('article#space'),
-        {
-          bookings: {
-            listings: #{raw location_listings_json},
-            // Have we returned from setting up a session. If there are bookings, the JS controller
-            // will trigger showing the booking confirmation modal.
-            returnedFromSession: #{@initial_bookings.present? ? ("'" + @form_trigger + "'") : 'false'}
-          }
-        });
-      });
-
 - content_for :domready do
-  $(function() { new RouteLink($('[data-routelink]')); });
   - if @listing && params[:action] == 'ask_a_question'
-    Modal.load('#{new_listing_listing_message_path(@listing)}')
-  $(".booking-module-container .pricing-tabs a").click(function (e) {
-  e.preventDefault();
-  $(this).tab('show');
-  });
-  $(".booking-module-container .pricing-tabs a.possible:first").click();
+    $(document).trigger('load.modal', ['#{new_listing_user_message_path(@listing)}']);

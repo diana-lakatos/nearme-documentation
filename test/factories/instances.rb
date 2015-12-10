@@ -31,7 +31,7 @@ FactoryGirl.define do
     seller_attachments_access_level 'all'
 
     after(:create) do |instance, evaluator|
-      instance.theme = FactoryGirl.create(:theme, skip_compilation: true, owner: instance) unless instance.theme
+      instance.theme = FactoryGirl.create(:theme, owner: instance) unless instance.theme
     end
 
     after(:create) do |instance|

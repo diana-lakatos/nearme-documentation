@@ -17,8 +17,8 @@
 
 - if request.xhr?
   :javascript
-    Modal.setClass('sign-up-modal')
+    $(document).trigger('setclass.modal', ['sign-up-modal']);
 
 - content_for :domready do
-  $(function() { new SigninForm($('#signup')) });
+  $(function() { $(document).trigger('init.signinform'); });
 

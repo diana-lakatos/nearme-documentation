@@ -1,5 +1,4 @@
-
-= simple_form_for @dimensions_template, :url => [:instance_admin, :shipping_options, @dimensions_template], :html => { :autocomplete => 'off', :method => form_method } do |f|
+= simple_form_for @dimensions_template, :url => [:instance_admin, :shipping_options, @dimensions_template], :html => { :autocomplete => 'off', :method => form_method, data: { 'dimensions-template-form': true, units: units } } do |f|
 
   .content-container
     = render partial: 'shared/dimensions_templates_admin_fields', locals: { f: f }

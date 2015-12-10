@@ -13,10 +13,3 @@
 
     = content_for :header_buttons do
       = f.button :submit, class: "btn btn-blue pull-right", data: { 'submit-form' => 1, 'form-selector' => 'form' }
-
-- unless @taxonomy.new_record?
-  - content_for :domready do
-    var taxonomy_taxons_path = "#{instance_admin_buy_sell_taxonomy_taxons_path(@taxonomy)}";
-    var jstree_theme_path = "#{stylesheet_path("instance_admin/jstree_themes/apple/style.css")}";
-    new InstanceAdmin.BuySellController($('#taxonomy_form'), #{@taxonomy.id});
-

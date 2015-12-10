@@ -24,7 +24,6 @@
             = render partial: 'company_order', locals: { order: order }
 
   -# TODO Refactor to asset pipeline
-  = javascript_include_tag 'jquery'
   :javascript
     $('select[name^=quantity]').on('change', function() {
       $('#cart').submit();

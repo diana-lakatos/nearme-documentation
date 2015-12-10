@@ -68,7 +68,7 @@ class EventTracker::BaseTracker
   def track(event_name, *objects)
     additional_params = Serializers::TrackSerializer.new(*objects).serialize
     @mixpanel_api.track(event_name, additional_params)
-    stack_trace_parser = StackTraceParser.new(caller[0])
+    stack_trace_parser = ::StackTraceParser.new(caller[0])
     @google_analytics_api.track(stack_trace_parser.humanized_file_name, event_name, additional_params)
     triggered_event = stack_trace_parser.humanized_method_name
     @invoked_events_tracker.push(triggered_event)

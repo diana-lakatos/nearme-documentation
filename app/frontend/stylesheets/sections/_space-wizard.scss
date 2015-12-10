@@ -1,0 +1,156 @@
+section.space_wizard {
+
+  .select2-container {
+    padding-bottom: 8px;
+
+    a.select2-choice {
+      background: #e6e6e6;
+      height: 45px;
+      border: none;
+
+      .select2-chosen {
+        line-height: 43px;
+      }
+
+      .select2-arrow {
+        width: 23px;
+
+        b {
+          background-size: 77px 73px !important;
+        }
+      }
+    }
+  }
+
+  #space_wizard {
+
+  	margin: 0 0 60px 0;
+
+    form.new_desks {
+
+      .currency-type {
+        display: inline-block;
+        margin-left: 8px;
+        font-size: 16px;
+      }
+
+      input {
+        z-index: 1;
+        margin-left: -30px;
+        padding-left: 30px;
+        positon: relative;
+      }
+
+      .fieldset.template {
+        display: none;
+      }
+    }
+
+    .already-a-user {
+      display: none;
+    }
+
+    .help-block {
+      color: $dark-gray;
+    }
+
+    .actions {
+      background: $dnm_black;
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      padding: 10px 0;
+      z-index: 2;
+      text-align: center;
+
+      .centerbuttons {
+        display: inline-block;
+        width: 50%;
+
+        .listmydesk, .saveasdraft {
+          float: left;
+          margin: 0 1% 0 1%;
+          width: 48%;
+        }
+
+        @media(max-width: $ipad-width) {
+          width: 100%;
+        }
+
+      }
+
+      @media(max-width: 1024px) {
+        padding: 10px 0 40px 0;
+      }
+
+    }
+
+    // hack to save a lot of time - due to compatibility issue we can't have both old version and new version of modal
+    .resize-photo {
+      display: none;
+    }
+
+    div.booking-types-tab-menu {
+      width: 50%;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    ul li a {
+      color: #5dbded;
+    }
+  }
+
+  .input-disabled{
+    opacity: .4;
+    filter: inherit;
+  }
+
+  .with-upload-button .fileupload {
+    margin-left: 15px;
+    margin-bottom: 10px;
+
+    .btn-blue {
+      background: $blue;
+      color: #fff;
+    }
+
+    .uploaded {
+      .attachment {
+        margin-left: 10px;
+
+        img {
+          vertical-align: text-top;
+        }
+      }
+    }
+
+    .hint-block {
+      font-size: 12px;
+    }
+  }
+
+    .availability-rules-wrapper {
+
+        .nested-fields-set {
+            .nested-fields {
+                padding: 20px;
+                border: 1px solid #efefef;
+                border-radius: 10px;
+                margin: 20px 0;
+
+                p:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        .always-inline.check_boxes .controls > .checkbox {
+            display: inline-block;
+            margin-right: 10px;
+        }
+    }
+
+}

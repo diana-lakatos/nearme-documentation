@@ -44,7 +44,7 @@
               = render 'dashboard/seller_attachments/attachment', attachment: attachment
 
   - content_for :domready do
-    new SellerAttachmentAccessLevelSelector();
+    $(document).trigger('init.sellerattachmentaccesslevelselector');
 
 - if only_inputs.empty? || only_inputs.include?(:shipping_info)
   .row.shipping_method_block.shipping_method_list

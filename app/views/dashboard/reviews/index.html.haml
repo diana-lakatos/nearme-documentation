@@ -19,7 +19,4 @@
               #completed-feedback
                 = render 'dashboard/reviews/feedback_list', product_collection: @collections[:product_collection], seller_collection: @collections[:seller_collection], buyer_collection: @collections[:buyer_collection], status: 'completed'
 
-  - content_for :domready do
-    new Dashboard.ReviewsController($('#reviews'))
-
   = render 'dashboard/reviews/reviews_templates'

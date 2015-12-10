@@ -30,7 +30,3 @@
               %a.delete{href: dashboard_saved_search_path(saved_search), data: {method: :delete, confirm: t('confirmations.are_you_sure')}}
                 %span.glyphicon.glyphicon-trash{:'aria-hidden' => true}
                 = t('general.delete')
-
-
-- content_for :domready do
-  $(function() { new Dashboard.SavedSearchController($('table[data-saved-searches]')); });

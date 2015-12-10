@@ -1,6 +1,6 @@
 - title "Analytics"
 
-.dash-page.analytics
+#dashboard-analytics-controller.dash-page.analytics
   .dash-head
     .row
       .col-md-3= select_tag :analytics_mode, analytics_options_for_select, class: 'analytics-mode'
@@ -8,5 +8,4 @@
     = render :partial => "analytics_#{@analytics_mode}"
 
 - content_for :domready do
-  new Dashboard.AnalyticsController($('.analytics'))
-  new ChartWrapper.Line($('#chart'), #{@chart.values.to_json.html_safe}, #{@chart.labels.to_json.html_safe})
+  $(document).trigger('linechart.dnm', [$('#chart'), #{@chart.values.to_json.html_safe}, #{@chart.labels.to_json.html_safe}]);

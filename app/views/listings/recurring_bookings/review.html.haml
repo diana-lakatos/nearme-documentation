@@ -1,6 +1,6 @@
 - @recurring_booking = @recurring_booking_request.recurring_booking.decorate
 
-.row-fluid
+.row-fluid{ :"data-payment-controller" => true }
   .span8.offset2
     = render 'header', listing: @recurring_booking_request.listing, location: @recurring_booking_request.location
 
@@ -63,19 +63,11 @@
   = javascript_include_tag "https://js.stripe.com/v1/"
   :javascript
     $(function() {
-      new PaymentController($('.reservation-wizard'))
-      new PhoneNumbers.FieldsForm(
-        $('form.payment'),
-        {
-          countrySelector : '#reservation_request_country_name',
-          mobileSelector  : '#reservation_request_mobile_number',
-          phoneSelector   : '#reservation_request_phone',
-          sameAsSelector  : '#reservation_request_mobile_same_as_phone'
-        }
-      );
+      $(document).trigger('init.phonenumberfieldsform', 'form.payment', {
+        countrySelector : '#reservation_request_country_name',
+        mobileSelector  : '#reservation_request_mobile_number',
+        phoneSelector   : '#reservation_request_phone',
+        sameAsSelector  : '#reservation_request_mobile_same_as_phone'
+      });
       window.sessioncamConfiguration.customDataObjects.push( { key: "event", value: "booking_modal_opened" } );
     });
-    $(function() {
-      $('input[data-card-number]').eq(0).payment('formatCardNumber');
-      $('input[data-card-code]').eq(0).payment('formatCardCVC');
-    })

@@ -13,7 +13,3 @@
             = week_field_tag :week_end, DateTime.now.utc.weeks_ago(1).strftime('%Y-W%V')
           .filter.filter-download-report
             = link_to t('instance_admin.reports.download_report_as_csv'), '', data: { 'download-report' => 1, 'report-url' => download_report_instance_admin_reports_projects_path(format: 'csv') }, class: "btn btn-blue"
-
-- content_for :domready do
-  new InstanceAdmin.ProjectsController($('.projects'))
-

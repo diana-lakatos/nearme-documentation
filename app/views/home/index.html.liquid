@@ -21,8 +21,3 @@
 <section class="how-it-works">
   {% include 'home/homepage_content.html' %}
 </section>
-
-{% content_for 'domready' %}
-  new Home.BackgroundController($('#hero'))
-  new Home.Controller($('body'))
-{% endcontent_for %}

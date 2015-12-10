@@ -1,11 +1,6 @@
 - if current_user && @searcher.transactable_type.display_saved_search? && HiddenUiControls.find('dashboard/saved_searches').visible?
 
-  - content_for :domready do
-    new Search.SaveSearchController($('#listing_search form'));
-
-
   = link_to t('saved_searches.buttons.save_search'), '#', :'data-save-search' => true, class: 'saved-search-btn btn btn-medium btn-gray'
-
 
   - content_for :modals do
     #save-search-modal.modal.fade{:'data-save-search-modal' => true}

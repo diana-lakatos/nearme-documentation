@@ -1,0 +1,62 @@
+@import "vendor/bootstrap";
+@import "vendor/bootstrap-theme";
+@import "vendor/bootstrap-select";
+@import "bootstrap-switch/dist/css/bootstrap3/bootstrap-switch";
+@import "bootstrap-select/sass/bootstrap-select";
+
+@import "chosen/chosen.min";
+
+@import "select2/select2";
+
+@import "Jcrop/css/jquery.Jcrop";
+@import "vendor/overrides/jcrop";
+@import "vendor/overrides/chosen";
+@import "vendor/icui";
+
+@import "common/common";
+@import "components/nav";
+@import "components/modal";
+@import "components/flash";
+@import "components/fileupload";
+@import "components/tags";
+@import "sections/schedule";
+
+$font-stack: $font-regular, sans-serif, helvetica;
+
+$color-blue: #5dbded;
+$color-light-blue: #acdef7;
+$color-dark-blue: #51a1ca;
+$color-red: #e85c41;
+$color-green: #007F00;
+$color-light-red: #f5ad9e;
+$color-dark-red: #c6533a;
+$color-dark-gray: #555;
+$color-gray: #b6b6b6;
+$color-light-gray: #dadada;
+$color-ultra-light-gray: #f2f2f2;
+$color-headings: #3a3a3a;
+$color-placeholder: #ccc;
+$dark_text_color: #3B3B3B;
+
+@import "dashboard/alert";
+@import "dashboard/attachments";
+@import "dashboard/button";
+@import "dashboard/fileupload";
+@import "dashboard/form";
+@import "dashboard/header";
+@import "dashboard/jquery_datepicker";
+@import "dashboard/modal";
+@import "dashboard/nav";
+@import "dashboard/pagination";
+@import "dashboard/photo";
+@import "dashboard/reviews";
+@import "dashboard/style";
+@import "dashboard/tables";
+@import "dashboard/transactables";
+
+@import "common/fonts";
+@import "layout/footer";
+
+@import "vendor/jstree";
+@import "vendor/jstree_themes/apple/style";
+

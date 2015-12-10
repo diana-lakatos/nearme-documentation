@@ -9,9 +9,6 @@ gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 gem 'patron'
 
-gem 'sprockets', '2.11.0'
-gem 'sprockets-rails', '~> 2.1'
-
 gem 'redis'
 gem 'redis-rails', '~> 4.0.0'
 gem 'raygun4ruby'
@@ -46,11 +43,11 @@ gem 'google_plus'
 
 gem 'reform', '~> 2.0.4'
 gem 'tilt'
-gem 'yui-compressor'
+
+
 gem 'fog'
 gem 'geocoder'
 gem 'nearest_time_zone'
-gem 'sass', '~> 3.2.2'
 gem 'haml'
 gem 'le'
 gem 'mini_magick', '~> 4.0.1'
@@ -58,7 +55,8 @@ gem 'money-rails', github: 'RubyMoney/money-rails'
 gem 'simple_form', '~> 3.1'
 gem "paranoia", :github => "radar/paranoia", :branch => "rails4"
 gem 'nested_form'
-gem 'cocoon'
+
+
 gem 'nokogiri', '~> 1.6.0'
 gem 'hpricot'
 gem 'amatch'
@@ -81,9 +79,8 @@ gem 'rack-rewrite', :require => 'rack/rewrite'
 
 gem 'state_machine', '~> 1.2.0'
 gem 'will_paginate'
-gem 'compass-rails'
-gem 'animate'
-gem 'coffee-rails'
+
+
 gem 'delayed_job_active_record'
 gem 'delayed_job_web'
 gem 'delayed_job_recurring'
@@ -97,14 +94,9 @@ gem 'paypal-sdk-adaptivepayments'
 gem 'braintree', '2.46.0'
 gem 'faraday', '~> 0.9'
 gem 'friendly_id', '~> 5.1'
-gem 'non-stupid-digest-assets'
-gem 'asset_sync'
-gem 'sass-rails', github: 'rails/sass-rails', branch: '4-0-stable'
-gem 'bootstrap-sass', '~> 2.3'
-gem 'bootstrap-switch-rails'
+
 gem 'chronic', '~> 0.9.1'
-gem 'jcrop-rails', github: 'bukalapak/jcrop-rails'
-gem 'js-routes'
+
 
 gem 'unicorn'
 
@@ -125,17 +117,12 @@ gem 'gibbon'
 gem 'twilio-ruby'
 gem 'googl'
 
-gem 'jquery-rails', '~> 4.0'
-gem 'select2-rails'
-gem 'chosen-rails', '~> 1.2.0'
-gem 'spectrum-rails'
 
 gem 'inherited_resources', '~> 1.6'
-gem 'historyjs-rails'
 
 gem 'ranked-model'
 
-gem 'jquery-fileupload-rails'
+
 
 gem 'premailer-rails'
 gem 'addressable'
@@ -170,10 +157,6 @@ end
 group :coverage do
   gem 'simplecov', require: 'simplecov'
   gem 'simplecov-rcov-text', require: 'simplecov-rcov-text'
-end
-
-group :assets do
-  gem 'uglifier', '~>2.1.0'
 end
 
 group :development, :test, :staging do
@@ -241,5 +224,17 @@ gem 'parser'
 
 gem 'routing-filter', '~> 0.5.0'
 
-gem 'autoprefixer-rails'
 gem 'simple-navigation'
+
+# Gems below should be eventually replaced with bower / gulp completely.
+# For now they are here for backwards compatibility until we fully migrate
+# to new workflow.
+
+gem 'sprockets'
+gem 'sprockets-rails'
+# gem 'sass-rails'
+# gem 'coffee-rails'
+gem 'cocoon'
+# gem 'yui-compressor'
+
+# gem 'js-routes'

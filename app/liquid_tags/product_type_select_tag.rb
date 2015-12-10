@@ -8,4 +8,3 @@ class ProductTypeSelectTag < TransactableTypeSelectTag
   end
 end
 
-Liquid::Template.register_tag('product_type_select', ProductTypeSelectTag)

@@ -15,8 +15,8 @@
           = t('instance_admin.analytics.no_revenue_yet')
       - else
         .chart
-          %canvas#revenue_chart
-  
+          %canvas#revenue_chart{ "data-line-chart": true }
+
 
   %h4
     = t('instance_admin.bookings')
@@ -27,9 +27,9 @@
           = t('instance_admin.analytics.no_bookings_yet')
       - else
         .chart
-          %canvas#bookings_chart
+          %canvas#bookings_chart{ "data-line-chart": true }
 
-  
+
   %h4
     = t('instance_admin.listings')
   .row
@@ -39,8 +39,8 @@
           = t('instance_admin.analytics.no_listings_visits_yet')
       - else
         .chart
-          %canvas#listings_chart
-  
+          %canvas#listings_chart{ "data-line-chart": true }
+
   %h4
     = t('instance_admin.downloads')
   .row
@@ -51,6 +51,8 @@
         = link_to t('instance_admin.analytics.marketplace_users'), instance_admin_analytics_profiles_path(format: :csv)
 
 - content_for :domready do
-  new ChartWrapper.Line($('#revenue_chart'), #{@revenue_chart.values.to_json.html_safe}, #{@revenue_chart.labels.to_json.html_safe})
-  new ChartWrapper.Line($('#bookings_chart'), #{@bookings_chart.values.to_json.html_safe}, #{@bookings_chart.labels.to_json.html_safe})
-  new ChartWrapper.Line($('#listings_chart'), #{@listings_chart.values.to_json.html_safe}, #{@listings_chart.labels.to_json.html_safe})
+  $(document).trigger('linechart.dnm', ['#revenue_chart', #{@revenue_chart.values.to_json.html_safe}, #{@revenue_chart.labels.to_json.html_safe}]);
+
+  $(document).trigger('linechart.dnm', ['#bookings_chart', #{@bookings_chart.values.to_json.html_safe}, #{@bookings_chart.labels.to_json.html_safe}]);
+
+  $(document).trigger('linechart.dnm', ['#listings_chart', #{@listings_chart.values.to_json.html_safe}, #{@listings_chart.labels.to_json.html_safe}]);

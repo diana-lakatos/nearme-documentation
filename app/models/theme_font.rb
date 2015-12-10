@@ -2,12 +2,8 @@ class ThemeFont < ActiveRecord::Base
   FONT_TYPES = %w(regular medium bold)
   FONT_EXTENSIONS = %w(eot ttf svg woff)
 
-  belongs_to :theme
+  belongs_to :theme, touch: true
   delegate :instance, to: :theme
-
-  after_save :recompile_theme, :if => :theme_font_changed?
-
-  after_destroy :recompile_theme
 
   mount_uploader :bold_eot, ThemeFontUploader
   mount_uploader :bold_svg, ThemeFontUploader
@@ -28,7 +24,6 @@ class ThemeFont < ActiveRecord::Base
     end
   end
 
-
   def theme_font_changed?
     attrs = attributes.keys - %w(updated_at)
     attrs.any? { |attr|
@@ -36,7 +31,5 @@ class ThemeFont < ActiveRecord::Base
     }
   end
 
-  def recompile_theme
-    CompileThemeJob.perform(theme) unless theme.skip_compilation
-  end
 end
+

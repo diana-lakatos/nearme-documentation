@@ -8,7 +8,7 @@
       %h1{style: 'margin-bottom: 15px'}= t('flash_messages.space_wizard.complete_fields')
       = @errors.html_safe
 
-= simple_form_for @boarding_form, wrapper: :bs3, url: product_type_product_wizard_index_path(@product_type), html: { multipart: true, id: "boarding_form" }, method: :post do |f|
+= simple_form_for @boarding_form, wrapper: :bs3, url: product_type_product_wizard_index_path(@product_type), html: { multipart: true, id: "boarding_form", :"data-dimensions-template" => DimensionsTemplate::UNITS_OF_MEASURE.to_json }, method: :post do |f|
   = f.simple_fields_for :user, @boarding_form.user do |user_form|
     = f.simple_fields_for :company, @boarding_form.company do |companies_form|
       = f.simple_fields_for f.object.product_form do |product_form|
@@ -35,10 +35,3 @@
   .submit-bar
     = f.submit t('onboarding_wizard.continue_and_preview_listing'), class: "btn medium blue"
     = f.submit t('onboarding_wizard.save_for_later'), class: "btn medium green", name: "boarding_form[draft]"
-
-
-- content_for :domready do
-  new Dashboard.AddressController($("#boarding_form"));
-  var boarding_form = new BoardingForm($("#boarding_form"));
-  new ShippoFieldsManager(#{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json});
-  new CategoriesController($('#boarding_form'));

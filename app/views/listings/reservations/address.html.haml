@@ -42,18 +42,21 @@
 
 - content_for :script do
   :javascript
-    function toggleAddressForm(elem) {
-      if(elem.val() == 'delivery'){
-        $('#shipping-address').show();
-        DNM.initializeBootstrapSwitch();
-      }else{
+    (function(){
+      function toggleAddressForm(elem) {
+        if(elem.val() == 'delivery'){
+          $('#shipping-address').show();
+          $(document).trigger('init.bootstrapswitch');
+          return;
+        }
+
         $('#shipping-address').hide();
       }
-    }
 
-    if($('input[name="reservation_request[delivery_type]"]:checked').length > 0)
-      toggleAddressForm($('input[name="reservation_request[delivery_type]"]:checked'));
+      if($('input[name="reservation_request[delivery_type]"]:checked').length > 0)
+        toggleAddressForm($('input[name="reservation_request[delivery_type]"]:checked'));
 
-    $('input[name="reservation_request[delivery_type]"]').on('change', function(){
-      toggleAddressForm($(this));
-    });
+      $('input[name="reservation_request[delivery_type]"]').on('change', function(){
+        toggleAddressForm($(this));
+      });
+    }());

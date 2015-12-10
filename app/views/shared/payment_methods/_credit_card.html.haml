@@ -87,8 +87,3 @@
 
 - content_for :script do
   = javascript_include_tag "https://js.stripe.com/v1/"
-  :javascript
-    $(function() {
-      $('input[data-card-number]').eq(0).payment('formatCardNumber');
-      $('input[data-card-code]').eq(0).payment('formatCardCVC');
-    })

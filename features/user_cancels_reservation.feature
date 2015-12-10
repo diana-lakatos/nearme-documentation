@@ -25,7 +25,6 @@ Feature: User Cancels Reservation
       |10/19/2010|
       |10/20/2010|
       |10/21/2010|
-    Then I travel back
 
   Scenario: A user can cancel a reservation
     When I travel to time "17th October 2010"
@@ -37,4 +36,3 @@ Feature: User Cancels Reservation
       |10/18/2010|
       |10/20/2010|
       |10/21/2010|
-    Then I travel back
