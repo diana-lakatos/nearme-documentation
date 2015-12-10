@@ -6,7 +6,7 @@ class AvailabilityTemplateDecorator < Draper::Decorator
   end
 
   def translated_name
-    if custom_for_transactable?
+    if custom?
       I18n.t('simple_form.labels.availability_template.custom')
     else
       I18n.t("simple_form.labels.availability_template.full_name.#{name_underscored}")
@@ -14,7 +14,7 @@ class AvailabilityTemplateDecorator < Draper::Decorator
   end
 
   def translated_description
-    if custom_for_transactable?
+    if custom?
       I18n.t('simple_form.hints.availability_template.description.custom')
     else
       I18n.t("simple_form.hints.availability_template.description.#{name_underscored}")

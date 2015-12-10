@@ -1,5 +1,4 @@
 - only_inputs = [] if only_inputs.nil?
-
 - unless only_inputs.include?(:currency)
   = render 'dashboard/shared/fields/approval_requests', f: f
 
@@ -25,7 +24,7 @@
 = f.input :special_notes, :label => t('simple_form.labels.location.special_notes', lessee: platform_context.lessee.capitalize), :placeholder => t('simple_form.placeholders.location.special_notes', lessee: platform_context.lessee, lessees: platform_context.lessee.pluralize) if only_inputs.empty? || only_inputs.include?(:special_notes)
 
 - if only_inputs.empty? || only_inputs.include?(:availability_rules)
-  = render :partial => 'dashboard/company/transactables/availability_rules_form', :locals => { :f => f }
+  = render 'dashboard/company/transactables/form_fields/availability', f: f, id_prefix: 'dialog'
 
 - unless platform_context.instance.location_amenity_types.count.zero?
   = f.association :amenities, :collection => platform_context.instance.location_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :blank => false, :label_method => :name, :value_method => :id, :input_html => {'data-placeholder' => "Select one or more", :class => 'selectpicker', :multiple => true } if only_inputs.empty? || only_inputs.include?(:amenities)

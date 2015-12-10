@@ -113,7 +113,7 @@ module ListingsHelper
   end
 
   def get_availability_template_object(parent)
-    if parent.availability_template && parent.availability_template.custom_for_transactable?
+    if parent.availability_template && parent.custom_availability_template?
       parent.availability_template
     else
       parent.availability_templates.first_or_initialize do |at|

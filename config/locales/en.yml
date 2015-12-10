@@ -1265,7 +1265,7 @@ en:
 
     user_profile:
       view_profile: 'View Profile'
-      view_profile_html: 'View<span class="hidden-xs">Profile</span>'
+      view_profile_html: 'View <span class="hidden-xs">Profile</span>'
       submit: 'Save'
       sections:
         default: 'Default'

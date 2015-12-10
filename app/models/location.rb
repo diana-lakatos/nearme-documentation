@@ -33,7 +33,6 @@ class Location < ActiveRecord::Base
   has_many :reservations, :through => :listings
   has_many :wish_list_items, as: :wishlistable
   has_many :waiver_agreement_templates, through: :assigned_waiver_agreement_templates
-  has_many :custom_validators, -> { where(validatable_type: 'Location') }, :through => :instance
 
   has_one :location_address, class_name: 'Address', as: :entity
 
@@ -52,8 +51,8 @@ class Location < ActiveRecord::Base
   validates :email, email: true, allow_nil: true
   validates_with CustomValidators
 
-  before_save :set_location_type, :set_time_zone, :build_availability_template
-  before_save :assign_default_availability_rules
+  before_validation :build_availability_template, :assign_default_availability_rules
+  before_save :set_location_type, :set_time_zone
   after_save :set_external_id
   after_save :update_schedules_timezones
 
@@ -107,6 +106,10 @@ class Location < ActiveRecord::Base
         ElasticIndexerJob.perform(:update, 'Transactable', t_id)
       end
     end
+  end
+
+  def custom_validators
+    CustomValidator.where(validatable_type: 'Location')
   end
 
   def validation_for(field_name)
@@ -208,6 +211,14 @@ class Location < ActiveRecord::Base
     ShippoApi::ShippoFromAddressFillerFromSpree.new(self).to_hash
   end
 
+  def hide_defered_availability_rules?
+    true
+  end
+
+  def custom_availability_template?
+    availability_template.try(:custom_for_location?)
+  end
+
   private
 
   def company_and_city
@@ -258,14 +269,11 @@ class Location < ActiveRecord::Base
     end
   end
 
-  def hide_defered_availability_rules?
-    true
-  end
-
   def build_availability_template
     if availability_template_attributes.present?
       if availability_template_attributes["id"].present?
         self.availability_template.attributes = availability_template_attributes
+        self.availability_template.save
       else
         availability_template_attributes.merge!({
           name: 'Custom location availability',
@@ -275,5 +283,6 @@ class Location < ActiveRecord::Base
       end
     end
   end
+
 end
 
