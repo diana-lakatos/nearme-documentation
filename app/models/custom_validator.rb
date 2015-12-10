@@ -15,8 +15,6 @@ class CustomValidator < ActiveRecord::Base
 
   attr_accessor :required, :min_length, :max_length
 
-  inherits_columns_from_association([:instance_id], :validatable)
-
   def inclusion?
     validation_rules.keys.include?('inclusion') || valid_values.present?
   end
@@ -33,6 +31,18 @@ class CustomValidator < ActiveRecord::Base
     self.max_length = validation_rules['length']['maximum'] rescue nil
   end
 
+  def length_rules
+    validation_rules['length']
+  end
+
+  def max_length_rule
+    length_rules['maximum']
+  end
+
+  def is_required?
+    validation_rules['presence'] == {}
+  end
+
   def valid_values=(values)
     if values.is_a? String
       self[:valid_values] = values.split(',')
@@ -42,6 +52,7 @@ class CustomValidator < ActiveRecord::Base
   end
 
   def set_validation_rules
+    self.instance_id ||= validatable.try(:instance_id)
     self.validation_rules ||= {}
     self.required.to_i == 1 ? (self.validation_rules['presence'] = {}) : self.validation_rules.delete('presence')
     if self.min_length.present? || self.max_length.present?

@@ -14,7 +14,6 @@ module Cacheable
 
       RedisCache.client.zadd 'cache_expiration', Time.now.to_f, opts.to_json
       RedisCache.client.zadd 'cache_expiration_persisted', Time.now.to_f, opts.to_json
-      RedisCache.client.expire 'cache_expiration', 5.minutes
     end
 
     def expire_cache_options

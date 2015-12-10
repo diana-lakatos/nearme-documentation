@@ -1,0 +1,26 @@
+.content-container
+  .row
+    .table-container.col-xs-12
+      %table.table
+        %thead
+          %tr
+            %th= t('instance_admin.manage.custom_validators.model_name')
+            %th= t('instance_admin.manage.custom_validators.field_name')
+            %th= t('instance_admin.manage.custom_validators.presence')
+            %th= t('instance_admin.manage.custom_validators.inclusion')
+            %th= t('instance_admin.manage.custom_validators.numericality')
+            %th
+            %th
+        %tbody
+          - collection.each do |resource|
+            %tr
+              %td= resource.validatable_type.titleize
+              %td= resource.field_name.humanize
+              %td= resource.presence?
+              %td= resource.inclusion?
+              %td= resource.numericality?
+              %td= link_to t('instance_admin.edit'), edit_polymorphic_url([:instance_admin, @controller_scope, resource]), class: 'pull-right'
+              %td= link_to t('instance_admin.delete'), polymorphic_url([:instance_admin, @controller_scope, resource]), :method => :delete, data: { confirm: t('instance_admin.are_you_sure') }, :class => "pull-right"
+
+= content_for :header_buttons do
+  = link_to t('instance_admin.manage.custom_validators.add_validator'), new_polymorphic_url([:instance_admin, @controller_scope, CustomValidator.new]), class: 'pull-right btn btn-blue'

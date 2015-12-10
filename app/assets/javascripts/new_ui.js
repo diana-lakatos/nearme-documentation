@@ -24,7 +24,7 @@
 //= require swipebox/src/js/jquery.swipebox
 
 // Date picker
-//= require moment/min/moment.min
+//= require moment/min/moment-with-locales.min
 //= require eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker
 
 // x-editable

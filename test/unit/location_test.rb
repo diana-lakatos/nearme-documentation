@@ -12,7 +12,6 @@ class LocationTest < ActiveSupport::TestCase
   should have_many(:listings)
 
   should validate_presence_of(:company)
-  should validate_presence_of(:location_type_id)
   should_not allow_value('not_an_email').for(:email)
   should allow_value('an_email@domain.com').for(:email)
 

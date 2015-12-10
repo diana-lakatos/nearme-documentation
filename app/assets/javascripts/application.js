@@ -188,12 +188,12 @@ window.DNM = {
 
   setFooterPushHeight: function() {
     if ($('.footer-wrapper').length > 0) {
-      $('.footer-push').height($('.footer-wrapper').height());
+      $('.footer-push').height($('.footer-wrapper').outerHeight());
     }
 
     $(window).resize(function(){
       if ($('.footer-wrapper').length > 0) {
-        $('.footer-push').height($('.footer-wrapper').height());
+        $('.footer-push').height($('.footer-wrapper').outerHeight());
       }
     })
   },
@@ -306,3 +306,15 @@ function centerSearchBox(){
   wood_box_height = $('.wood-box').height()
   $('#search_row').css('margin-top', (image_height)/2 - search_height/2 + navbar_height/2 - wood_box_height/2 + 'px');
 }
+
+// Re-enable form submit buttons on sign-in/sign-up modal close
+$(function() {
+  $(document).on('click', '.sign-up-modal a.modal-close', function() {
+    var reservation_request_form = $('form.reservation_request');
+    if(reservation_request_form.length > 0) {
+      $.rails.enableFormElements(reservation_request_form);
+      reservation_request_form.find('[data-behavior=reviewBooking]').removeClass('click-disabled');
+    }
+  });
+});
+

@@ -1,0 +1,45 @@
+.panel
+  .panel-body
+
+    - if HiddenUiControls.find('dashboard/transactables/search').visible?
+      = dashboard_simple_form_for '', :url => dashboard_company_transactable_type_transactables_path(@transactable_type), method: :get, html: { class: 'search' } do |f|
+        = f.input :query, as: :search, label: t('dashboard.items.search.search_your_products'), input_html: { value: params[:query] }, label_html: { class: 'sr-only' }
+        = f.button :submit, t('dashboard.items.search.search'), class: "hidden-xs hidden-sm btn btn-default"
+
+    -#
+      .listing-actions.hidden-sm.hidden-xs
+        .select-all.checkbox-standalone
+          = check_box_tag :select_all
+          = label_tag :select_all
+
+        = dropdown_menu t('dashboard.items.bulk_actions.label'), { toggler_class: 'btn-link' } do
+          %li
+            %a{:href => "#"}
+              = t('dashboard.items.bulk_actions.publish')
+          %li
+            %a{:href => "#"}
+              = t('dashboard.items.bulk_actions.delete')
+
+
+  - if @transactables.empty?
+    %p.empty-resultset= t('dashboard.items.empty', name: @transactable_type.name.pluralize.downcase)
+  - else
+    %table.table.table-listing
+      %thead.hidden-sm.hidden-xs
+        %tr
+          -# %td
+          %th.thumb{:scope => "col"}= t('dashboard.items.columns.photo')
+          %th.name{:scope => "col"}= t('dashboard.items.columns.name')
+          %th.location{:scope => "col"}
+            = @transactable_type.skip_location? ? t('dashboard.items.columns.quantity') : t('dashboard.items.columns.location')
+          %th.price{:scope => "col"}= t('dashboard.items.columns.price')
+          %th.added{:scope => "col"}= t('dashboard.items.columns.added')
+          %td.actions
+      %tbody
+        = render @transactables
+
+= will_paginate_dashboard @transactables
+
+
+
+

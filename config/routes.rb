@@ -354,6 +354,8 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
+      resources :custom_validators
+
       resources :users, only: [:index, :destroy, :edit, :update] do
         post :login_as, on: :member
         post :restore, on: :member

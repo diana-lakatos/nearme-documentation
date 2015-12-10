@@ -110,7 +110,14 @@ class ReservationRequest < Form
     @checkout_extra_fields.valid?
     @checkout_extra_fields.errors.full_messages.each { |m| add_error(m, :base) }
     clear_errors(:cc)
-    @checkout_extra_fields.valid? && valid? && payment_gateway.authorize(self) && save_reservation
+    if @checkout_extra_fields.valid? && valid? && payment_gateway.authorize(self)
+      if !payment_gateway.supports_recurring_payment? || @reservation.credit_card_id = payment_gateway.store_credit_card(user, credit_card)
+        return save_reservation
+      else
+        add_error(I18n.t('reservations_review.errors.internal_payment', :cc))
+      end
+    end
+    false
   end
 
   def reservation_periods

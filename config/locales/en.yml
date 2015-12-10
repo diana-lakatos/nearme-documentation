@@ -1434,6 +1434,9 @@ en:
     reservations:
       purchase_was_successful: "Your purchase was successful!"
     products:
+      title:
+        manage: 'Manage'
+        products: 'Products'
       manage: 'Manage Products'
       new: 'List New Item'
       edit: 'Edit Item'
@@ -1443,6 +1446,9 @@ en:
       address_errors_html: 'Please address the following <b>%{count}</b> errors in order to save your listing.'
 
     transactables:
+      title:
+        manage: 'Manage'
+        listings: 'Listings'
       manage: 'Manage Listings'
       list_new_item: 'List New Item'
       edit: 'Edit Item'
@@ -2147,6 +2153,7 @@ en:
       book_it_out_not_available: 'Book It Out option is no longer available'
       exclusive_price_not_available: 'Exclusive Price option is no longer available'
       no_delivery_options: 'There are no delivery options available.'
+      internal_payment: 'Unfortunately we have some internal issues with processing your credit card. Please try again later.'
     payments:
       submit: "Submit a secure payment."
 
