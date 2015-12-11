@@ -534,7 +534,7 @@ class ApplicationController < ActionController::Base
   end
 
   def sign_out_if_signed_out_from_intel_sso
-    signed_out_from_sso = cookies['SecureSESSION'] == 'LOGGEDOFF' && cookies['SMSSESSION'] == 'LOGGEDOFF'
+    signed_out_from_sso = (cookies['SecureSESSION'].nil? && cookies['SMSSESSION'].nil?) || (cookies['SecureSESSION'] == 'LOGGEDOFF' && cookies['SMSSESSION'] == 'LOGGEDOFF')
     if signed_out_from_sso
       sign_out(current_user)
       cookies.delete('SecureSESSION') && cookies.delete('SMSSESSION')
