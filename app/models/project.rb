@@ -14,7 +14,10 @@ class Project < ActiveRecord::Base
   SORT_OPTIONS = ['All', 'Featured', 'Most Recent', 'Most Popular', 'Collaborators']
 
   belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :projects
-  counter_culture :creator, column_name: ->(p) { p.enabled? ? 'projects_count' : nil }
+  counter_culture :creator,
+    column_name: -> (p) { p.enabled? ? 'projects_count' : nil },
+    column_names: { ["projects.draft_at IS NULL"] => 'projects_count' }
+
   belongs_to :transactable_type, -> { with_deleted }, foreign_key: 'transactable_type_id'
 
   has_many :activity_feed_events, as: :event_source, dependent: :destroy
