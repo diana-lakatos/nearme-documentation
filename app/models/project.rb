@@ -22,8 +22,8 @@ class Project < ActiveRecord::Base
 
   has_many :activity_feed_events, as: :event_source, dependent: :destroy
   has_many :activity_feed_subscriptions, as: :followed, dependent: :destroy
-  has_many :approved_project_collaborators, -> { approved }, class_name: 'ProjectCollaborator'
-  has_many :comments, as: :commentable
+  has_many :approved_project_collaborators, -> { approved }, class_name: 'ProjectCollaborator', dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
   has_many :collaborating_users, through: :approved_project_collaborators, source: :user
   has_many :data_source_contents, through: :project_topics
   has_many :feed_followers, through: :activity_feed_subscriptions, source: :follower
@@ -37,8 +37,8 @@ class Project < ActiveRecord::Base
       offset(1)
     end
   end
-  has_many :project_collaborators
-  has_many :project_topics
+  has_many :project_collaborators, dependent: :destroy
+  has_many :project_topics, dependent: :destroy
   has_many :topics, through: :project_topics
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :wish_list_items, as: :wishlistable
@@ -70,6 +70,7 @@ class Project < ActiveRecord::Base
 
   before_restore :restore_photos
   before_restore :restore_links
+  before_restore :restore_project_collaborators
 
   delegate :custom_validators, to: :transactable_type
 
@@ -175,6 +176,15 @@ class Project < ActiveRecord::Base
     self.links.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', self.deleted_at - 30.seconds, self.deleted_at + 30.seconds).each do |link|
       begin
         link.restore(recursive: true)
+      rescue
+      end
+    end
+  end
+
+  def restore_project_collaborators
+    self.project_collaborators.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', self.deleted_at - 30.seconds, self.deleted_at + 30.seconds).each do |pc|
+      begin
+        pc.restore(recursive: true)
       rescue
       end
     end
