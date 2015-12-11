@@ -397,9 +397,10 @@ module ApplicationHelper
   # Styled only for comunity layout
   def readmore(text, limit=255)
     if text.size < limit
-      text
+      auto_link(text, html: { target: '_blank', ref: 'nofollow' })
     else
-      text[0..limit].html_safe + content_tag(:span, content_tag(:span, text[limit + 1..-1]), class: 'readmore-a', data: {label: t(:read_more)})
+      auto_link(text[0..limit], html: { target: '_blank', ref: 'nofollow' }) +
+        content_tag(:span, content_tag(:span, auto_link(text[limit + 1..-1], html: { target: '_blank', ref: 'nofollow' })), class: 'readmore-a', data: {label: t(:read_more)})
     end
   end
 
