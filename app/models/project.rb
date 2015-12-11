@@ -127,7 +127,7 @@ class Project < ActiveRecord::Base
   end
 
   def enabled?
-    draft_at.nil?
+    draft_at.nil? && !deleted?
   end
 
   def cover_photo
