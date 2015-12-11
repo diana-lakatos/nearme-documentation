@@ -37,8 +37,8 @@ class Project < ActiveRecord::Base
       offset(1)
     end
   end
-  has_many :project_collaborators
-  has_many :project_topics
+  has_many :project_collaborators, dependent: :destroy
+  has_many :project_topics, dependent: :destroy
   has_many :topics, through: :project_topics
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :wish_list_items, as: :wishlistable
