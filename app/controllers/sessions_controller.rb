@@ -114,7 +114,11 @@ class SessionsController < Devise::SessionsController
   end
 
   def after_sign_out_path_for(resource_or_scope)
-    (request.referrer && request.referrer.include?('instance_admin')) ? instance_admin_login_path : root_path
+    if PlatformContext.instance.is_cummnity?
+      "https://signin.intel.com/Logout"
+    else
+      (request.referrer && request.referrer.include?('instance_admin')) ? instance_admin_login_path : root_path
+    end
   end
 
 end
