@@ -7,7 +7,7 @@ class ProjectCollaborator < ActiveRecord::Base
 
   counter_culture :user,
     column_name: ->(p) { p.approved? ? 'project_collborations_count' : nil },
-    column_names: { ["project_collaborators.approved_by_owner_at IS NOT NULL AND project_collaborators.approved_by_user_at IS NOT NULL AND deleted_at IS NULL"] => 'project_collborations_count' }
+    column_names: { ["project_collaborators.approved_by_owner_at IS NOT NULL AND project_collaborators.approved_by_user_at IS NOT NULL AND project_collaborators.deleted_at IS NULL"] => 'project_collborations_count' }
 
   belongs_to :project
 
