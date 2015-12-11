@@ -67,7 +67,7 @@ gem 'counter_culture'
 gem 'crummy'
 gem 'ice_cube'
 gem 'recurring_select', path: 'vendor/gems/recurring_select'
-
+gem 'rails_autolink'
 
 gem 'i18n-active_record',
     git: 'git://github.com/svenfuchs/i18n-active_record.git',

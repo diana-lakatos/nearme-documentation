@@ -16,6 +16,6 @@
           = image.present? ? image_tag(image) : image_tag(space_listing_placeholder_path(width: 80, height: 80))
     %section
       %h3.hx= title if title.present?
-      %p= body
+      %p= auto_link(body, html: { target: '_blank', ref: 'nofollow' })
 
     = render 'shared/activity_status_footer', event: event
