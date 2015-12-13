@@ -265,4 +265,11 @@ module LiquidFilters
   def generate_url(url_name, *args)
     Rails.application.routes.url_helpers.try(url_name, args)
   end
+
+  # Make the text html_safe; mainly used for testing the 
+  # sanitization in Liquid::Variable to make sure that
+  # html_safe text is not escaped
+  def make_html_safe(html = '')
+    html.html_safe
+  end
 end
