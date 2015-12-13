@@ -1818,6 +1818,8 @@ en:
       twitter_info: "Sign in with your Twitter account and connect with your followers."
       facebook_info: "Log in with Facebook and connect with your friends around the world."
       instagram_info: "Connect your Instagram account and link your visual content."
+      google_info: "Connect with your Google account."
+      github_info: "Connect with your GitHub account."
 
     accept_terms_of_service: 'confirm that you accept the <a href="/pages/legal" target="_blank">Terms of Service and Privacy Policy</a>'
   recurring_bookings:
