@@ -9,7 +9,7 @@
         </div>
 
         {% if no_header_links == false %}
-            {{ navigation_links }}
+            {{ navigation_links | make_html_safe }}
         {% endif %}
     </div>
 </nav>
