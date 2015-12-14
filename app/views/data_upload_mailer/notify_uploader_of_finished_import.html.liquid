@@ -13,7 +13,7 @@ Deleted entities: {{ data_upload.deleted_parse_summary }}
 <p>
 {% if data_upload.parsing_result_log %}
   Encountered validation errors log:
-  {{ data_upload.parsing_result_log_html }}
+  {{ data_upload.parsing_result_log_html | make_html_safe }}
 {% endif %}
 </p>
 
