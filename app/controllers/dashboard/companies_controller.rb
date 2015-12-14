@@ -22,7 +22,7 @@ class Dashboard::CompaniesController < Dashboard::BaseController
       # We assign the industry ids to the company if they're not blank (see above)
       # if blank, would result in invalid object post-save
       industry_ids = company_params.select { |k,v| k == 'industry_ids' }
-      @company.assign_attributes(industry_ids) if industry_ids[:industry_ids].select { |item| item.present? }.present?
+      @company.assign_attributes(industry_ids) if industry_ids[:industry_ids].try(:select) { |item| item.present? }.present?
 
       flash[:success] = t('flash_messages.manage.companies.company_updated')
       redirect_to edit_dashboard_company_path(@company.id)
