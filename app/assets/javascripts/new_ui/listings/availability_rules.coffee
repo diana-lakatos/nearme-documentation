@@ -5,6 +5,7 @@ class @DNM.Listings.AvailabilityRules
       @selector = @container.find('input[type=radio][name*=availability_template]')
       @customFields = @container.find('.custom-availability')
       @bindEvents()
+      @updateCustomState(@selector)
 
   updateCustomState: (selector) ->
     if selector.filter(':checked').attr('data-custom-rules')?

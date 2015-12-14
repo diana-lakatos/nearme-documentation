@@ -32,7 +32,7 @@ class AddInstanceIdToReservationPeriods < ActiveRecord::Migration
 
     puts "Processing availability rules..."
     AvailabilityRule.unscoped.where(target_type: 'Listing').delete_all
-    AvailabilityRule.unscoped.each do |ar|
+    AvailabilityRule.unscoped.where(instance_id: nil).find_each do |ar|
       if ar.target.nil?
         ar.destroy unless ar.deleted_at.present?
         next

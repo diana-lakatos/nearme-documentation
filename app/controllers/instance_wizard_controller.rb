@@ -52,6 +52,16 @@ class InstanceWizardController < ActionController::Base
 
     ipt = @instance.instance_profile_types.create!(name: 'Default', profile_type: InstanceProfileType::DEFAULT)
     Utils::FormComponentsCreator.new(ipt).create!
+
+    User.admin.find_each do |user|
+      if user.default_profile.blank?
+        user.create_default_profile!(
+          instance_profile_type: ipt,
+          skip_custom_attribute_validation: true
+        )
+      end
+    end
+
     ipt = @instance.instance_profile_types.create!(name: 'Seller', profile_type: InstanceProfileType::SELLER)
     Utils::FormComponentsCreator.new(ipt).create!
     ipt = @instance.instance_profile_types.create!(name: 'Buyer', profile_type: InstanceProfileType::BUYER)
@@ -69,6 +79,8 @@ class InstanceWizardController < ActionController::Base
         availability_options: { "defer_availability_rules" => true, "confirm_reservations" => { "default_value" => true, "public" => true } }
       )
     end
+
+
 
 
     tp.create_rating_systems

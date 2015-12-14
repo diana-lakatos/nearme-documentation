@@ -45,10 +45,12 @@ namespace :fix do
      Shipment, UserMessage, Support::Ticket, WaiverAgreement
     ].each do |klass|
       puts "Deleting: #{klass} for #{PlatformContext.current.instance.name}"
+        puts "Before count: #{klass.count}"
       if klass.respond_to?(:with_deleted)
         klass = klass.with_deleted
       end
-      klass.where(instance_id: PlatformContext.current.instance.id).delete_all
+        puts "Removed: #{klass.where(instance_id: PlatformContext.current.instance.id).delete_all}"
+        puts "After count: #{klass.count}"
     end
     AvailabilityTemplate.create!(
       name: "Business Hours",
