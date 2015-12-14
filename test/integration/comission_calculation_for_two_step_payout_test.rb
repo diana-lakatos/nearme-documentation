@@ -66,7 +66,6 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
   end
 
   def stub_what_has_to_be_stubbed
-    stub_mixpanel
     stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
     api_mock = mock()
     api_mock.expects(:build_pay)

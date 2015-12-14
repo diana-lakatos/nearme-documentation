@@ -49,7 +49,6 @@ class SecuredDomainTest < ActionDispatch::IntegrationTest
       end
 
       should 'be redirected back with valid token' do
-        stub_mixpanel
         domain = FactoryGirl.create(:unsecured_domain, name: 'unsecured.com')
         user = FactoryGirl.create(:user)
         host! domain.name
@@ -66,7 +65,6 @@ class SecuredDomainTest < ActionDispatch::IntegrationTest
   context 'logout request' do
     context 'for multiple logins' do
       should 'destroy all logins' do
-        stub_mixpanel
         user = FactoryGirl.create(:user)
         unsecured = FactoryGirl.create(:unsecured_domain, name: 'unsecured.com')
         secured = FactoryGirl.create(:secured_domain, name: 'secured.com')

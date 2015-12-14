@@ -6,7 +6,6 @@ class TransactableTypes::Locations::ListingsControllerTest < ActionController::T
     @listing = FactoryGirl.create(:transactable)
     @transactable_type = @listing.transactable_type
     @location = @listing.location
-    stub_mixpanel
   end
 
   should "redirect to locations#show and remember which listing has been chosen if show page disabled" do
@@ -33,7 +32,7 @@ class TransactableTypes::Locations::ListingsControllerTest < ActionController::T
     end
 
     should 'track viewed_a_location event' do
-      @tracker.expects(:viewed_a_listing).with do |listing|
+      Rails.application.config.event_tracker.any_instance.expects(:viewed_a_listing).with do |listing|
         listing == assigns(:listing)
       end
       get :show, transactable_type_id: @transactable_type.id, location_id: @location.id, id: @listing.id

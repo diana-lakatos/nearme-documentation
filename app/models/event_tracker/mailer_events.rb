@@ -1,4 +1,4 @@
-module Analytics::MailerEvents
+module EventTracker::MailerEvents
 
   def track_event_within_email(user, request)
     path_spec = Rails.application.routes.router.recognize(request) { |route, _| route.name }.flatten.last.path.spec.to_s.gsub(/\([^\)]*\)/, '')

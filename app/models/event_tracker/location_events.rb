@@ -1,4 +1,4 @@
-module Analytics::LocationEvents
+module EventTracker::LocationEvents
 
   def created_a_location(location, custom_options = {})
     track 'Created a Location', location, custom_options

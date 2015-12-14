@@ -4,9 +4,6 @@ class DataUploadImportJobTest < ActiveSupport::TestCase
 
   context 'mailers' do
 
-    setup do
-    end
-
     should 'send finish mail if succeeded' do
       @stub = mock(queued?: false, succeeded?: true, id: 1)
       DataUpload.stubs(:find).returns(@stub)

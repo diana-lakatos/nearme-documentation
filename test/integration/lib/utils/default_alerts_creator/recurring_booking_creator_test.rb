@@ -29,7 +29,6 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
 
   context 'methods' do
     setup do
-      stub_mixpanel
       @recurring_booking = FactoryGirl.create(:recurring_booking)
       PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
       @platform_context = PlatformContext.current

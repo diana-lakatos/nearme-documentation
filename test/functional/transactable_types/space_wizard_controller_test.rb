@@ -10,7 +10,6 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     sign_in @user
     FactoryGirl.create(:location_type)
     @partner = FactoryGirl.create(:partner)
-    stub_mixpanel
 
     @transactable_type = FactoryGirl.create(:transactable_type_listing)
   end
@@ -168,21 +167,18 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
   end
 
   context 'track' do
-    setup do
-      @tracker = Analytics::EventTracker.any_instance
-    end
 
     should "track location and listing creation" do
-      @tracker.expects(:created_a_location).with do |location, custom_options|
+      Rails.application.config.event_tracker.any_instance.expects(:created_a_location).with do |location, custom_options|
         location == assigns(:location) && custom_options == { via: 'wizard' }
       end
-      @tracker.expects(:created_a_listing).with do |listing, custom_options|
+      Rails.application.config.event_tracker.any_instance.expects(:created_a_listing).with do |listing, custom_options|
         listing == assigns(:listing) && custom_options == { via: 'wizard' }
       end
-      @tracker.expects(:created_a_company).with do |company, custom_options|
+      Rails.application.config.event_tracker.any_instance.expects(:created_a_company).with do |company, custom_options|
         company == assigns(:company)
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == @user
       end
 
@@ -191,25 +187,25 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     end
 
     should "track draft creation" do
-      @tracker.expects(:saved_a_draft)
+      Rails.application.config.event_tracker.any_instance.expects(:saved_a_draft)
       stub_us_geolocation
       post :submit_listing, get_params.merge({"save_as_draft"=>"Save as draft"})
     end
 
     should 'track clicked list your bookable when logged in' do
-      @tracker.expects(:clicked_list_your_bookable)
+      Rails.application.config.event_tracker.any_instance.expects(:clicked_list_your_bookable)
       get :new, transactable_type_id: @transactable_type.id
     end
 
     should 'track clicked list your bookable when not logged in' do
       sign_out @user
-      @tracker.expects(:clicked_list_your_bookable)
+      Rails.application.config.event_tracker.any_instance.expects(:clicked_list_your_bookable)
       get :new, transactable_type_id: @transactable_type.id
     end
 
 
     should 'track viewed list your bookable' do
-      @tracker.expects(:viewed_list_your_bookable)
+      Rails.application.config.event_tracker.any_instance.expects(:viewed_list_your_bookable)
       get :list, transactable_type_id: @transactable_type.id
     end
 
@@ -222,12 +218,12 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
       end
 
       should 'not track clicked list your bookable if user already has bookable ' do
-        @tracker.expects(:clicked_list_your_bookable).never
+        Rails.application.config.event_tracker.any_instance.expects(:clicked_list_your_bookable).never
         get :new, transactable_type_id: @transactable_type.id
       end
 
       should 'not track viewed list your bookable if user already has bookable ' do
-        @tracker.expects(:viewed_list_your_bookable).never
+        Rails.application.config.event_tracker.any_instance.expects(:viewed_list_your_bookable).never
         get :list, transactable_type_id: @transactable_type.id
 
       end

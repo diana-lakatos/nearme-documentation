@@ -1,17 +1,17 @@
 require 'test_helper'
 
-class InvokedEventsTrackerTest < ActiveSupport::TestCase
+class EventTracker::BaseTracker::InvokedEventsTrackerTest < ActiveSupport::TestCase
 
   context '#event tracker' do
 
     should "should be able to trigger each taggable event" do
-      Analytics::EventTracker::InvokedEventsTracker::TAGGABLE_EVENTS.each do |taggable_event|
-        assert Analytics::EventTracker.method_defined?(taggable_event.parameterize('_').underscore), "Taggable event #{taggable_event} will never be triggered, because EventTracker has no #{taggable_event.parameterize('_').underscore} method"
+      EventTracker::BaseTracker::InvokedEventsTracker::TAGGABLE_EVENTS.each do |taggable_event|
+        assert Rails.application.config.event_tracker.method_defined?(taggable_event.parameterize('_').underscore), "Taggable event #{taggable_event} will never be triggered, because EventTracker has no #{taggable_event.parameterize('_').underscore} method"
       end
     end
 
     setup do
-      @invoked_events_tracker = Analytics::EventTracker::InvokedEventsTracker.new
+      @invoked_events_tracker = EventTracker::BaseTracker::InvokedEventsTracker.new
     end
 
     should 'know which events are taggable' do

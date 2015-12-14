@@ -15,7 +15,6 @@ class Utils::DefaultAlertsCreator::UserMessageCreatorTest < ActionDispatch::Inte
 
   context 'methods' do
     setup do
-      stub_mixpanel
       @user_message = FactoryGirl.create(:user_message)
     end
 
