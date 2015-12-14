@@ -756,6 +756,10 @@ class Transactable < ActiveRecord::Base
     end
   end
 
+  def custom_availability_template?
+    availability_template.try(:custom_for_transactable?)
+  end
+
   private
 
   def set_currency

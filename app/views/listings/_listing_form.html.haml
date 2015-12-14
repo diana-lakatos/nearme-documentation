@@ -35,18 +35,17 @@
         .controls
           = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule).try(:to_hash).try(:to_json)) do |schedule_form|
             = render 'schedules/fields', f: schedule_form
+  - if form_fields.find { |ff| ff.keys.first == model && ff.values.first == 'availability_rules' }
+    - if overnight_or_regular_booking?(@transactable_type)
+      - content_for :booking_type_regular_tab_content do
+        .control-group
+          = render :partial => 'availability_rules/form', :locals => { :f => f }
   = render partial: "listings/price", locals: { f: f, form_fields: form_fields }
   = render partial: 'shared/booking_types_tabs', locals: { f: f }
 
 - if only_inputs.empty? || only_inputs.include?(:action_rfq)
   - if f.object.transactable_type.action_rfq?
     = f.input :action_rfq, as: :boolean
-
-- if only_inputs.empty? || only_inputs.include?(:availability_rules)
-  - if overnight_or_regular_booking?(@transactable_type)
-    - content_for :booking_type_regular_tab_content do
-      .control-group
-        = render :partial => 'availability_rules/form', :locals => { :f => f }
 
 - if only_inputs.empty? || only_inputs.include?(:photos)
   .loading{:style => "display: none"}

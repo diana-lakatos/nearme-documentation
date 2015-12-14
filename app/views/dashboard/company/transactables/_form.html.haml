@@ -61,8 +61,8 @@
         - if form_component.form_fields.find { |ff| ff.keys.first == model && ff.values.first == 'schedule' }
           - if overnight_or_regular_booking?(f.object.transactable_type)
             = render 'availability_rules_form', f: f
-          - if f.object.transactable_type.schedule_booking_enabled?
-            = render 'schedule_form', f: f
+        - if f.object.transactable_type.schedule_booking_enabled?
+          = render 'schedule_form', f: f
         = render 'shared/booking_types_tabs', f: f
       - when 'photos'
         .row

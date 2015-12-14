@@ -12,7 +12,7 @@ class AvailabilityRule < ActiveRecord::Base
   validates :close_hour, :inclusion => 0..23
   validates :open_minute, :inclusion => 0..59
   validates :close_minute, :inclusion => 0..59
-  validates_each :day do |record, attr, value|
+  validate do |record|
     total_opening_time = record.floor_total_opening_time_in_hours
     if total_opening_time < 0
       record.errors["open_time"] << "The opening hour must occur before the closing hour."

@@ -31,7 +31,7 @@
                     - elsif model == 'location'
                       = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => locations_form.object, :only_inputs => [ field.to_sym ] }
                     - elsif model == 'transactable'
-                      = render 'listings/listing_form', f: listings_form, properties_form: properties_form, listing: listings_form.object, only_inputs: [ field.to_sym ], photos: @photos, form_fields: form_component.form_fields
+                      = render 'listings/listing_form', f: listings_form, properties_form: properties_form, listing: listings_form.object, only_inputs: [ field.to_sym ], photos: @photos, form_fields: form_component.form_fields, model: model
               .hidden
                 - Money::Currency.table.values.each do |c|
                   %span{:id => "currency_#{c[:iso_code]}"}

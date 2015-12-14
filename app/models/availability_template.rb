@@ -40,6 +40,14 @@ class AvailabilityTemplate < ActiveRecord::Base
     AvailabilityRule::Summary.new(availability_rules)
   end
 
+  def custom?
+    parent_type.in? ['Location', 'Transactable']
+  end
+
+  def custom_for_location?
+    parent_type == 'Location'
+  end
+
   def custom_for_transactable?
     parent_type == 'Transactable'
   end

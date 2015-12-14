@@ -5,29 +5,28 @@ class @DNM.Listings.AvailabilityRules
       @selector = @container.find('input[type=radio][name*=availability_template]')
       @customFields = @container.find('.custom-availability')
       @bindEvents()
-      @updateCustomState()
 
-
-  updateCustomState: ->
-    if @selector.filter(':checked').attr('data-custom-rules')?
-      @showCustom()
+  updateCustomState: (selector) ->
+    if selector.filter(':checked').attr('data-custom-rules')?
+      @showCustom(selector)
     else
-      @hideCustom()
+      @hideCustom(selector)
 
 
-  showCustom: ->
+  showCustom: (selector) ->
+    @customFields = selector.closest('.listing-availability').find('.custom-availability')
     @customFields.find('input, select').prop('disabled', false)
     @customFields.find('.disabled').removeClass('disabled')
     @customFields.show()
 
-  hideCustom: ->
+  hideCustom: (selector) ->
     @customFields.hide()
     @customFields.find('input, select').prop('disabled', true)
 
   bindEvents: ->
     # Whenever the template selector changes we need to update the state of the UI
     @selector.change (event) =>
-      @updateCustomState()
+      @updateCustomState($(event.target))
 
     @customFields.on 'cocoon:before-remove', (e,fields)->
       parent = $(fields).closest('.nested-container')
