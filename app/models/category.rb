@@ -72,6 +72,7 @@ class Category < ActiveRecord::Base
     ancestor_chain = self.ancestors.inject("") do |name, ancestor|
       # we do not want the root category as it's duplicating content
       name = name.to_s + "#{ancestor.translated_name} -> " unless ancestor.parent == nil
+      name
     end
     ancestor_chain + translated_name
   end
