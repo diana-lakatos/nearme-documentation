@@ -3,7 +3,7 @@
         <a href="{{ platform_context.root_path }}" id="logo">{{ platform_context.name }}</a>
         {% if no_header_links == false %}
             <div id="header_links" class="links-container pull-right">
-                {{ navigation_links }}
+                {{ navigation_links | make_html_safe }}
             </div>
         {% endif %}
     </div>
