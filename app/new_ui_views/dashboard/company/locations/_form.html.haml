@@ -5,7 +5,7 @@
     - else
       = t('locations.edit_location')
 
-= dashboard_simple_form_for([:dashboard, :company, @location], html: { :"data-modal" => true, :"data-includes-address-field" => true } ) do |f|
+= dashboard_simple_form_for([:dashboard, :company, @location], html: { :"data-modal" => true, :"data-includes-address-field" => true, :'data-add-edit-location-form' => true } ) do |f|
   .dialog__body
 
     = render 'dashboard/shared/flash'
@@ -14,3 +14,9 @@
 
   .dialog__actions
     = f.submit t('locations.save_location')
+
+:javascript
+  $('[data-add-edit-location-form]').find('[data-counter-limit]').each(function(index, item) {
+    new DNM.Limiter(item)
+  });
+
