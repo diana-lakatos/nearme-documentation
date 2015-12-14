@@ -51,8 +51,11 @@ class ReviewsService
   end
 
   def get_rating_systems
-    active_rating_systems = RatingSystem.includes(:rating_hints, :rating_questions).active
-    {
+    return @rating_system_hash if @rating_system_hash.present?
+    active_rating_systems = RatingSystem.includes(:rating_hints, :rating_questions, :transactable_type).active
+    @rating_system_hash ||= {
+      active_rating_systems_services: active_rating_systems.select{ |rs| rs.transactable_type.is_a?(ServiceType) }.inject({}){ |hash, rs| hash[rs.subject] ||= []; hash[rs.subject] << rs.transactable_type_id; hash },
+      active_rating_systems_products: active_rating_systems.select{ |rs| rs.transactable_type.is_a?(Spree::ProductType) }.inject({}){ |hash, rs| hash[rs.subject] ||= []; hash[rs.subject] << rs.transactable_type_id; hash },
       active_rating_systems: active_rating_systems.group_by { |rating_system| rating_system.transactable_type_id },
       buyer_rating_system: active_rating_systems.with_subject(RatingConstants::GUEST).group_by { |rating_system| rating_system.transactable_type_id },
       seller_rating_system: active_rating_systems.with_subject(RatingConstants::HOST).group_by { |rating_system| rating_system.transactable_type_id },
@@ -61,21 +64,25 @@ class ReviewsService
   end
 
   def get_line_items_for_owner_and_creator
+    active_systems_for_host = get_rating_systems[:active_rating_systems_products][RatingConstants::HOST]
+    active_systems_for_guest = get_rating_systems[:active_rating_systems_products][RatingConstants::GUEST]
+    active_systems_for_listing = get_rating_systems[:active_rating_systems_products][RatingConstants::TRANSACTABLE]
     orders_ids = @current_user.orders.reviewable.pluck(:id)
-    creator_products = Spree::Product.where(administrator_id: @current_user.id)
+    creator_products = Spree::Product.where(administrator_id: @current_user.id, product_type_id: active_systems_for_host)
     creator_line_items_ids = []
     creator_products.each {|p| creator_line_items_ids << p.line_items.pluck(:id) }
     {
-      owner_line_items: Spree::LineItem.where(order_id: orders_ids).joins(:product).where('spree_products.user_id != ?', @current_user.id),
-      creator_line_items: Spree::LineItem.where(id: creator_line_items_ids.uniq).joins(:order).where('spree_orders.user_id != ?', @current_user.id)
+      RatingConstants::TRANSACTABLE => Spree::LineItem.where(order_id: orders_ids).joins(:product).where('spree_products.user_id != ?', @current_user.id).where(spree_products: { product_type_id: active_systems_for_listing}),
+      RatingConstants::HOST => Spree::LineItem.where(order_id: orders_ids).joins(:product).where('spree_products.user_id != ?', @current_user.id).where(spree_products: { product_type_id: active_systems_for_host}),
+      RatingConstants::GUEST => Spree::LineItem.where(id: creator_line_items_ids.uniq).joins(:product).joins(:order).where('spree_orders.user_id != ?', @current_user.id).where(spree_products: { product_type_id: active_systems_for_guest})
     }
   end
 
   def get_orders_reviews(line_items)
     {
-      seller_collection: Review.active_with_subject(RatingConstants::HOST).by_line_items(line_items[:owner_line_items].pluck(:id)),
-      product_collection: Review.active_with_subject(RatingConstants::TRANSACTABLE).by_line_items(line_items[:owner_line_items].pluck(:id)),
-      buyer_collection: Review.active_with_subject(RatingConstants::GUEST).by_line_items(line_items[:creator_line_items].pluck(:id))
+      seller_collection: Review.active_with_subject(RatingConstants::HOST).by_line_items(line_items[RatingConstants::HOST].try(:pluck, :id)),
+      product_collection: Review.active_with_subject(RatingConstants::TRANSACTABLE).by_line_items(line_items[RatingConstants::TRANSACTABLE].try(:pluck, :id)),
+      buyer_collection: Review.active_with_subject(RatingConstants::GUEST).by_line_items(line_items[RatingConstants::GUEST].try(:pluck, :id))
     }
   end
 
@@ -88,18 +95,26 @@ class ReviewsService
   end
 
   def get_reservations_for_owner_and_creator
-    reservations = Reservation.with_listing.past.confirmed.includes(listing: :transactable_type)
-    {
-      owner_reservations: reservations.where(owner_id: @current_user.id).where('reservations.owner_id != reservations.creator_id').by_period(*filter_period),
-      creator_reservations: reservations.where(creator_id: @current_user.id).where('reservations.owner_id != reservations.creator_id').by_period(*filter_period)
-    }
+    if get_rating_systems[:active_rating_systems_services].any?
+      active_systems_for_host = get_rating_systems[:active_rating_systems_services][RatingConstants::HOST]
+      active_systems_for_guest = get_rating_systems[:active_rating_systems_services][RatingConstants::GUEST]
+      active_systems_for_listing = get_rating_systems[:active_rating_systems_services][RatingConstants::TRANSACTABLE]
+      reservations = Reservation.with_listing.past.confirmed.includes(listing: :transactable_type)
+      {
+        RatingConstants::TRANSACTABLE => reservations.where(owner_id: @current_user.id, transactables: {transactable_type_id: active_systems_for_listing}).where('reservations.owner_id != reservations.creator_id').by_period(*filter_period),
+        RatingConstants::HOST => reservations.where(owner_id: @current_user.id, transactables: {transactable_type_id: active_systems_for_host}).where('reservations.owner_id != reservations.creator_id').by_period(*filter_period),
+        RatingConstants::GUEST => reservations.where(creator_id: @current_user.id, transactables: {transactable_type_id: active_systems_for_guest}).where('reservations.owner_id != reservations.creator_id').by_period(*filter_period)
+      }
+    else
+      {}
+    end
   end
 
   def get_reviews_by(reservations)
     {
-      seller_collection: Review.active_with_subject(RatingConstants::HOST).by_reservations(reservations[:owner_reservations].pluck(:id)),
-      product_collection: Review.active_with_subject(RatingConstants::TRANSACTABLE).by_reservations(reservations[:owner_reservations].pluck(:id)),
-      buyer_collection: Review.active_with_subject(RatingConstants::GUEST).by_reservations(reservations[:creator_reservations].pluck(:id))
+      seller_collection: Review.active_with_subject(RatingConstants::HOST).by_reservations(reservations[RatingConstants::HOST].try(:pluck, :id)),
+      product_collection: Review.active_with_subject(RatingConstants::TRANSACTABLE).by_reservations(reservations[RatingConstants::TRANSACTABLE].try(:pluck, :id)),
+      buyer_collection: Review.active_with_subject(RatingConstants::GUEST).by_reservations(reservations[RatingConstants::GUEST].try(:pluck, :id))
     }
   end
 
@@ -137,13 +152,19 @@ class ReviewsService
   end
 
   def exclude_reservations_by(reservations, subject)
-    collection = subject == RatingConstants::GUEST ? reservations[:creator_reservations] : reservations[:owner_reservations]
-    collection.where.not(id: reservation_ids_with_feedback[key_for_constant(subject)])
+    if collection = reservations[subject]
+      collection.where.not(id: reservation_ids_with_feedback[key_for_constant(subject)])
+    else
+      []
+    end
   end
 
   def exclude_line_items_by(line_items, subject)
-    collection = subject == RatingConstants::GUEST ? line_items[:creator_line_items] : line_items[:owner_line_items]
-    collection.where.not(id: line_items_ids_with_feedback[key_for_constant(subject)])
+    if collection = line_items[subject]
+      collection.where.not(id: line_items_ids_with_feedback[key_for_constant(subject)])
+    else
+      []
+    end
   end
 
   def reservation_ids_with_feedback

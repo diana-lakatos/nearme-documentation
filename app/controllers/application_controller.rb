@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   before_filter :redirect_if_marketplace_password_protected
   before_filter :set_raygun_custom_data
   before_filter :filter_out_token
-  before_filter :sign_out_if_signed_out_from_intel_sso, if: -> { PlatformContext.current.instance.is_community? && current_user.present? && !current_user.admin? }
+  before_filter :sign_out_if_signed_out_from_intel_sso, if: -> { PlatformContext.current.instance.is_community? && current_user.present? && !current_user.admin? && !Rails.env.test? }
 
   around_filter :set_time_zone
 

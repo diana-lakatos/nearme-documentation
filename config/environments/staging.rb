@@ -35,11 +35,11 @@ DesksnearMe::Application.configure do
   CarrierWave.configure do |config|
     config.fog_credentials = {
       :provider                   => 'AWS',
-      :aws_access_key_id          => 'AKIAI5EVP6HB47OZZXXA',
-      :aws_secret_access_key      => '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',
+      :aws_access_key_id          => 'AKIAJC37Z6XCOCR245YA',
+      :aws_secret_access_key      => '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',
       :path_style                 => true
     }
-    config.fog_directory        = 'near-me.staging'
+    config.fog_directory        = 'near-me-staging'
     config.asset_host           = 'https://staging-uploads-nearme.netdna-ssl.com'
     config.storage              = :fog
   end
