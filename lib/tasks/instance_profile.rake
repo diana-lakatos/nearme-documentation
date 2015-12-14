@@ -79,4 +79,5 @@ namespace :instance_profile do
       end
     end
   end
+
 end
