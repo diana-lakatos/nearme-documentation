@@ -30,6 +30,6 @@ namespace :after_deploy do
     SendSpamReportsSummaryDaily.schedule!
     ScheduleChargeSubscriptions.schedule! if Rails.env.production?
     ScheduleCommunityAggregatesCreation.schedule!
-
   end
 end
+

@@ -80,9 +80,6 @@ class InstanceWizardController < ActionController::Base
       )
     end
 
-
-
-
     tp.create_rating_systems
     Utils::FormComponentsCreator.new(tp).create!
 
