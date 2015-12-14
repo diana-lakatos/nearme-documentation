@@ -80,7 +80,7 @@ class ReservationRequest < Form
       else
         @dates = @dates.split(',') if @dates.is_a?(String)
       end
-      @dates.reject(&:blank?).each do |date_string|
+      @dates.try(:reject, &:blank?).each do |date_string|
         @reservation.add_period(Date.parse(date_string), start_minute, end_minute)
       end
     end
@@ -126,7 +126,7 @@ class ReservationRequest < Form
 
   def update_shipments(attributes)
     if attributes[:delivery_ids].present? && attributes[:shipments_attributes]
-      ids = attributes[:delivery_ids].split(',').each do |delivery|
+      attributes[:delivery_ids].split(',').each do |delivery|
         attributes[:shipments_attributes].each_value do |attribs|
           attribs['shippo_rate_id'] = delivery.split(':')[1] if attribs['direction'] == delivery.split(':')[0]
         end
