@@ -14,7 +14,7 @@
         = dr.input :description, input_html: { disabled: true}
 
         .remove-document-requirement.hidden.clearfix
-          = dr.check_box :hidden, class: "hidden document-hidden"
+          = dr.check_box :hidden, class: "hidden document-hidden", disabled: true
           - if dr.object.new_record?
             = dr.label :hidden, class: 'pull-right' do
               %span.btn.btn-xs.btn-warning{ type: :button }

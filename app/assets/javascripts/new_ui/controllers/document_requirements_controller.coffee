@@ -61,7 +61,7 @@ class @DNM.DocumentRequirementsController
     @removeFields.filter(':checked').each ->
       $(@).closest('[data-requirement]').hide()
 
-    unless @container.find('.radio_buttons [type=radio]').val() is 'Not Required'
+    unless @container.find('.radio_buttons [type=radio]:checked').val() is 'Not Required'
       @container.find('.document-requirements-fields input, textarea').prop("disabled",false)
 
 $('[data-document-requirements]').each ->
