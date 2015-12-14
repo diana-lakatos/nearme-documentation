@@ -28,7 +28,7 @@ class ProjectCollaborator < ActiveRecord::Base
   end
 
   def approved?
-    approved_by_owner_at.present? && approved_by_user_at.present? && !deleted?
+    approved_by_owner_at.present? && approved_by_user_at.present?
   end
 
   def approved=(approve=nil)
