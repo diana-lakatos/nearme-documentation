@@ -102,7 +102,7 @@ class Location < ActiveRecord::Base
     if days_open.present? && opened_on_days & days_open != opened_on_days
       self.update_column(:opened_on_days, days_open)
       self.listings.where(availability_template_id: nil).update_all(opened_on_days: days_open)
-      self.listings.where(availability_template_id: nil).pluck(:id).find_each do |t_id|
+      self.listings.where(availability_template_id: nil).pluck(:id).each do |t_id|
         ElasticIndexerJob.perform(:update, 'Transactable', t_id)
       end
     end
