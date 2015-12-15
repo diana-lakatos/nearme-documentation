@@ -23,13 +23,6 @@ Feature: A user can search for a listing
     When I search for "Auckland" with location type CoffeeShop forcing list view
     Then I do see result for the CoffeeShop listing
     Then I do not see result for the Winery listing
-    Then I click on Location Types
-    When I check location type Winery
-    When I check location type CoffeeShop
-    Then I see all results for location types CoffeeShop and Winery
-    When I uncheck location type CoffeeShop
-    Then I do see result for the Winery listing
-    Then I do not see result for the CoffeeShop listing
 
   Scenario: Displaying no results found when searching for nonexisting product.
     Given the user exists

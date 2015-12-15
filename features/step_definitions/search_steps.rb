@@ -57,15 +57,6 @@ Then /^I click on Location Types$/ do
   click_link 'Location Types'
 end
 
-When /^I (check|uncheck) location type (.*)$/ do |action_type, lntype|
-  include_hidden_fields do
-    find("input[value='#{lntype.downcase}']").click
-  end
-  while (page.evaluate_script('$.active') == 0) do
-    sleep(1)
-  end
-end
-
 Then /^I do( not)? see result for the (.*) listing$/ do |confirmation, lntype|
   listing = Transactable.all.select{|t| lntype == t.location.location_type.name}.first
   listing_selector = '.listing[data-id="' + listing.id.to_s + '"]'
