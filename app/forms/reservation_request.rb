@@ -126,7 +126,7 @@ class ReservationRequest < Form
 
   def update_shipments(attributes)
     if attributes[:delivery_ids].present? && attributes[:shipments_attributes]
-      ids = attributes[:delivery_ids].split(',').each do |delivery|
+      attributes[:delivery_ids].split(',').each do |delivery|
         attributes[:shipments_attributes].each_value do |attribs|
           attribs['shippo_rate_id'] = delivery.split(':')[1] if attribs['direction'] == delivery.split(':')[0]
         end

@@ -2,9 +2,9 @@
   %ul.tabs.pull-left
     %li{class: "#{'active' if active == :default}"}
       = link_to t('dashboard.user_profile.sections.default'), edit_registration_path(current_user)
-    - if current_user.seller_profile.present?
+    - if current_user.seller_profile.present? && current_instance.seller_profile_enabled?
       %li{class: "#{'active' if active == :seller}"}
         = link_to t('dashboard.user_profile.sections.seller'), edit_dashboard_seller_path
-    - if current_user.buyer_profile.present?
+    - if current_user.buyer_profile.present? && current_instance.buyer_profile_enabled?
       %li{class: "#{'active' if active == :buyer}"}
         = link_to t('dashboard.user_profile.sections.buyer'), edit_dashboard_buyer_path

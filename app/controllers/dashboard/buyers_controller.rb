@@ -20,7 +20,7 @@ class Dashboard::BuyersController < Dashboard::BaseController
 
   def set_buyer_profile
     @buyer_profile = current_user.buyer_profile
-    redirect_to edit_registration_path(current_user) unless @buyer_profile.present?
+    redirect_to edit_registration_path(current_user) unless @buyer_profile.present? && current_instance.buyer_profile_enabled?
   end
 
   def set_form_components
