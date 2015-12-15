@@ -9,6 +9,6 @@
     = image_tag 'components/modal/loader.gif'
 
   #fullscreen-gallery-content.modal-body
-    = render :layout => 'locations/photos_gallery', :locals =>  {:location => location, :gallery_id => 'photos-container-enlarged', :photo_size => 'large', :fullscreen => true} do
+    = render :layout => 'locations/photos_gallery_full_screen', :locals =>  {:location => location, :gallery_id => 'photos-container-enlarged'} do
       %button.btn.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"}
         %span.ico-close
