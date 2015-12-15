@@ -43,7 +43,7 @@ class PaymentGateway::FetchPaymentGatewayTest < ActiveSupport::TestCase
       end
     end
     @reservation.reload
-    assert_equal "failed", @reservation.payment_status
+    assert_equal "payment_failed", @reservation.payment_status
     assert_equal 1, @reservation.payments.count
     @charge = @reservation.payments.last.charges.last
     refute @charge.success

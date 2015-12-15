@@ -99,7 +99,7 @@ class RatingReminderJobTest < ActiveSupport::TestCase
   context "With an already expired reservation" do
 
     setup do
-      @reservation = FactoryGirl.create(:past_reservation, state: 'expired')
+      @reservation = FactoryGirl.create(:expired_reservation)
     end
 
     should 'not send any reminders to expired reservations' do

@@ -295,7 +295,7 @@ module Utils
 
         if confirmed
           reservation.confirm!
-          reservation.update_attribute :payment_status, Reservation::PAYMENT_STATUSES[:paid]
+          reservation.mark_as_paid!
           reservation.update_attribute :payment_method, "credit_card"
 
           payment = reservation.payments.create!(

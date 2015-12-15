@@ -105,8 +105,8 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
     should 'create a delayed_job task to run in 24 hours time when saved' do
       travel_to Time.zone.now do
-        ReservationExpiryJob.expects(:perform_later).with do |hours, id|
-          hours == 24.hours
+        ReservationExpiryJob.expects(:perform_later).with do |expires_at, id|
+          expires_at == 24.hours.from_now
         end
         post :create, booking_params_for(@listing)
       end

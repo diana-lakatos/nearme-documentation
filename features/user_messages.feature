@@ -25,7 +25,7 @@ Feature: A user can communicate with other user with context
     And I should be able to read, answer and archive this question
 
   Scenario: A host can send a message to reservation owner
-    Given a future_reservation exists
+    Given a future_unconfirmed_reservation exists
     Given I am logged in as the reservation administrator
     When I am on the manage guests dashboard page
     And I send a message to reservation owner

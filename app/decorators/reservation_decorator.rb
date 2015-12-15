@@ -122,15 +122,15 @@ class ReservationDecorator < Draper::Decorator
   end
 
   def my_booking_status_info
-    status_info("Pending confirmation from host. Booking will expire in #{time_to_expiry(expiry_time)}.")
+    status_info("Pending confirmation from host. Booking will expire in #{time_to_expiry(expire_at)}.")
   end
 
   def manage_booking_status_info
-    status_info("You must confirm this booking within #{time_to_expiry(expiry_time)} or it will expire.")
+    status_info("You must confirm this booking within #{time_to_expiry(expire_at)} or it will expire.")
   end
 
   def manage_booking_status_info_new
-    I18n.t('dashboard.host_reservations.pending_confirmation', time_to_expiry: time_to_expiry(expiry_time)).html_safe
+    I18n.t('dashboard.host_reservations.pending_confirmation', time_to_expiry: time_to_expiry(expire_at)).html_safe
   end
 
   def next_payment_transfer

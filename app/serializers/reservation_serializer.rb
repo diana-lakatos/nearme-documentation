@@ -11,6 +11,7 @@ class ReservationSerializer < ApplicationSerializer
 
   # Return reservation states as expected by the mobile application
   RESERVATION_STATES = {
+    inactive: 'inactive',
     unconfirmed: 'pending',
     confirmed: 'confirmed',
     rejected: 'rejected',

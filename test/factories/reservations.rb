@@ -6,7 +6,7 @@ FactoryGirl.define do
     date { Time.zone.today }
     payment_status 'pending'
     quantity 1
-    state 'unconfirmed'
+    state 'inactive'
     platform_context_detail_type "Instance"
     platform_context_detail_id { PlatformContext.current.instance.id }
     time_zone { Time.zone.name }
@@ -17,6 +17,18 @@ FactoryGirl.define do
 
     after(:build) do |reservation|
       make_valid_period(reservation) unless reservation.valid?
+    end
+
+    factory :authorized_reservation do
+      after(:create) do |reservation|
+        reservation.mark_as_authorized!
+      end
+
+      factory :confirmed_reservation do
+        after(:create) do |reservation|
+          reservation.confirm!
+        end
+      end
     end
 
     factory :lasting_reservation do
@@ -55,17 +67,43 @@ FactoryGirl.define do
     factory :future_reservation do
       after(:create) do |reservation|
         reservation.periods.reverse.each_with_index do |period, i|
-          period.date = Date.tomorrow + i.days
+          period.date = Date.today.next_week + i.days
+          period.save!
+        end
+        reservation.save!
+      end
+
+      factory :future_unconfirmed_reservation do
+        after(:create) do |reservation|
+          reservation.mark_as_authorized!
+        end
+
+        factory :future_confirmed_reservation do
+          after(:create) do |reservation|
+            reservation.confirm!
+          end
+        end
+
+      end
+    end
+
+    factory :expired_reservation do
+      after(:create) do |reservation|
+        reservation.mark_as_authorized!
+        reservation.expire!
+        reservation.periods.reverse.each_with_index do |period, i|
+          period.date = Date.yesterday - i.days
           period.save!
         end
         reservation.save!
       end
     end
 
-    factory :past_reservation do
-      state 'confirmed'
 
+    factory :past_reservation do
       after(:create) do |reservation|
+        reservation.mark_as_authorized!
+        reservation.confirm!
         reservation.periods.reverse.each_with_index do |period, i|
           period.date = Date.yesterday - i.days
           period.save!

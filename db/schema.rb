@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151214135805) do
+ActiveRecord::Schema.define(version: 20151216200556) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,7 +63,6 @@ ActiveRecord::Schema.define(version: 20151214135805) do
     t.string   "additional_charge_type_target_type"
   end
 
-  add_index "additional_charge_types", ["additional_charge_type_target_id", "additional_charge_type_target_type"], name: "act_target", using: :btree
   add_index "additional_charge_types", ["instance_id"], name: "index_additional_charge_types_on_instance_id", using: :btree
 
   create_table "additional_charges", force: :cascade do |t|
@@ -1056,6 +1055,7 @@ ActiveRecord::Schema.define(version: 20151214135805) do
     t.string   "time_zone"
     t.string   "seller_attachments_access_level",       limit: 255,                         default: "disabled",    null: false
     t.integer  "seller_attachments_documents_num",                                          default: 10,            null: false
+    t.boolean  "payout_information_required",                                               default: true
     t.string   "priority_view_path"
   end
 
@@ -1673,6 +1673,7 @@ ActiveRecord::Schema.define(version: 20151214135805) do
     t.datetime "starts_at"
     t.datetime "ends_at"
     t.string   "time_zone"
+    t.datetime "expire_at"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -2174,6 +2175,7 @@ ActiveRecord::Schema.define(version: 20151214135805) do
     t.integer  "store_id"
     t.integer  "payment_method_id"
     t.boolean  "insurance_enabled",                                                   default: false,   null: false
+    t.boolean  "payout_available",                                                    default: false
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree
@@ -3128,6 +3130,23 @@ ActiveRecord::Schema.define(version: 20151214135805) do
   add_index "spree_zones", ["partner_id"], name: "index_spree_zones_on_partner_id", using: :btree
   add_index "spree_zones", ["user_id"], name: "index_spree_zones_on_user_id", using: :btree
 
+  create_table "states", force: :cascade do |t|
+    t.string   "name",        limit: 255
+    t.string   "abbr",        limit: 255
+    t.integer  "country_id"
+    t.datetime "updated_at"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "user_id"
+  end
+
+  add_index "states", ["company_id"], name: "index_states_on_company_id", using: :btree
+  add_index "states", ["country_id"], name: "index_states_on_country_id", using: :btree
+  add_index "states", ["instance_id"], name: "index_states_on_instance_id", using: :btree
+  add_index "states", ["partner_id"], name: "index_states_on_partner_id", using: :btree
+  add_index "states", ["user_id"], name: "index_states_on_user_id", using: :btree
+
   create_table "support_faqs", force: :cascade do |t|
     t.integer  "instance_id"
     t.text     "question",      null: false
@@ -3508,6 +3527,7 @@ ActiveRecord::Schema.define(version: 20151214135805) do
     t.integer  "monthly_subscription_price_cents"
     t.string   "slug"
     t.integer  "availability_template_id"
+    t.boolean  "payout_available",                             default: false
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

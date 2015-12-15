@@ -7,6 +7,7 @@ class ReservationChargeTrackerJobTest < ActiveSupport::TestCase
     @listing = FactoryGirl.create(:transactable, :daily_price => 89.39)
     @reservation = FactoryGirl.create(:reservation_with_credit_card, :listing => @listing)
     @reservation.create_billing_authorization(token: "token", payment_gateway: FactoryGirl.create(:stripe_payment_gateway), payment_gateway_mode: "test")
+    @reservation.mark_as_authorized!
     @reservation.confirm!
   end
 
