@@ -67,9 +67,10 @@ class LocationsController < ApplicationController
     @listing = scope.find_by(id: old_id).presence || scope.find_by(slug: old_slug)
     if @listing.present?
       redirect_to location_listing_path(@location, @listing), status: 301
+    elsif @location.present?
+      flash.now[:warning] = t('flash_messages.locations.listing_removed', address: @location.formatted_address)
     else
-      flash[:warning] = t('flash_messages.locations.listing_removed')
-      redirect_to request.referer
+      redirect_to request.referer.presence || root_path
     end
   end
 
