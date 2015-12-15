@@ -7,6 +7,10 @@ class WorkflowStep::SpamReportWorkflow::SummaryStep < WorkflowStep::BaseStep
     'spam_report'
   end
 
+  # amount_or_no:
+  #   no - if the spam report count is 0, otherwise the number of spam reports
+  # date:
+  #   current date
   def data
     {
       amount_or_no: (@spam_report_count == 0 ? "no" : @spam_report_count),
