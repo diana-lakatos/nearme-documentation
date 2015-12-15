@@ -1,11 +1,12 @@
 class ReviewsController < ApplicationController
   def index
-    if params[:subject].blank? || params[:reviewable_parent_type].blank? || params[:reviewable_parent_id].blank?
+    if invalid_subject? || params[:reviewable_parent_type].blank? || params[:reviewable_parent_id].blank?
       render nothing: true, status: :bad_request
     else
       # do not try to set default params[:page] - see reviews/index.html.haml
       #
       get_reviewable_parent
+
       page = params[:page].present? ? params[:page] : 1
 
       tab_content, tab_header = Rails.cache.fetch(['reviews_view', @reviewable_parent, params[:subject], page], expires_in: 2.hours) do
@@ -32,7 +33,7 @@ class ReviewsController < ApplicationController
       when 'Transactable' then Transactable
       when 'Spree::Product' then Spree::Product
       when 'User' then User
-    end.with_deleted.find(params[:reviewable_parent_id])
+      end.with_deleted.find(params[:reviewable_parent_id])
   end
 
   def set_reviews_avg_rating_and_question_avg_rating
@@ -46,6 +47,10 @@ class ReviewsController < ApplicationController
       @average_rating = @reviewable_parent.seller_average_rating
       @question_average_rating = @reviewable_parent.question_average_rating(@reviews)
     end
+  end
+
+  def invalid_subject?
+    ![RatingConstants::TRANSACTABLE, RatingConstants::HOST].include?(params[:subject])
   end
 end
 

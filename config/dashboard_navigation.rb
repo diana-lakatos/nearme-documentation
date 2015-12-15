@@ -18,18 +18,18 @@ SimpleNavigation::Configuration.run do |navigation|
     dashboard_nav_item primary, 'dashboard/user_messages', dashboard_user_messages_path, highlights_on: /user_messages/, link_text: dashboard_nav_user_messages_label
 
     primary.item :reviews, t('dashboard.nav.reviews'), nil, if: Proc.new { platform_context.instance.rating_systems.where(active: true).present? } do |sub_nav|
-      dashboard_nav_item sub_nav, 'dashboard/reviews_rate', rate_dashboard_reviews_path
-      dashboard_nav_item sub_nav, 'dashboard/reviews_completed', completed_dashboard_reviews_path
+      dashboard_nav_item sub_nav, 'dashboard/reviews_rate', rate_dashboard_reviews_path, highlights_on: /dashboard\/reviews\/rate/
+      dashboard_nav_item sub_nav, 'dashboard/reviews_completed', completed_dashboard_reviews_path, highlights_on: /dashboard\/reviews\/completed/
     end
-    dashboard_nav_item primary, 'dashboard/wish_list_items', dashboard_wish_list_items_path, link_text: t('wish_lists.name'), if: platform_context.instance.wish_lists_enabled?
-    dashboard_nav_item primary, 'dashboard/my_rfq', dashboard_user_requests_for_quotes_path, not_hideable: true, if: platform_context.instance.action_rfq?, highlights_on: /^\/dashboard\/user_requests_for_quotes(\/.+)*/
+    dashboard_nav_item primary, 'dashboard/wish_list_items', dashboard_wish_list_items_path, link_text: t('wish_lists.name'), if: platform_context.instance.wish_lists_enabled?, highlights_on: /dashboard\/favorites/
+    dashboard_nav_item primary, 'dashboard/my_rfq', dashboard_user_requests_for_quotes_path, not_hideable: true, if: platform_context.instance.action_rfq?, highlights_on: /dashboard\/user_requests_for_quotes(\/.+)*/
 
     if buyable?
       primary.item :products_header, t('dashboard.nav.products_header'), nil do |sub_nav|
-        dashboard_nav_item sub_nav, 'dashboard/orders', dashboard_orders_path, highlights_on: /^\/dashboard\/orders(\/.+)*/
+        dashboard_nav_item sub_nav, 'dashboard/orders', dashboard_orders_path, highlights_on: /dashboard\/orders(\/.+)*/
         if current_user.registration_completed?
-          dashboard_nav_item sub_nav, 'dashboard/orders_received', dashboard_company_orders_received_index_path, highlights_on: /^\/dashboard\/company\/orders_received(\/.+)*/
-          dashboard_nav_item sub_nav, 'dashboard/products', dashboard_company_product_type_products_path(Spree::ProductType.first), highlights_on: /^\/dashboard\/company\/product_type(\/.+)*/
+          dashboard_nav_item sub_nav, 'dashboard/orders_received', dashboard_company_orders_received_index_path, highlights_on: /dashboard\/company\/orders_received(\/.+)*/
+          dashboard_nav_item sub_nav, 'dashboard/products', dashboard_company_product_type_products_path(Spree::ProductType.first), highlights_on: /dashboard\/company\/product_type(\/.+)*/
         end
       end
     end
@@ -61,13 +61,13 @@ SimpleNavigation::Configuration.run do |navigation|
 
     if current_user.registration_completed? && @company
       primary.item :admin, t('dashboard.nav.admin'), nil do |sub_nav|
-        dashboard_nav_item sub_nav, 'dashboard/companies', edit_dashboard_company_path(@company), highlights_on: /^\/dashboard\/companies\/[0-9]+(\/edit)?/
-        dashboard_nav_item sub_nav, 'dashboard/payouts', edit_dashboard_company_payouts_path
-        dashboard_nav_item sub_nav, 'dashboard/transfers', dashboard_company_transfers_path
-        dashboard_nav_item sub_nav, 'dashboard/analytics', dashboard_company_analytics_path
-        dashboard_nav_item sub_nav, 'dashboard/users', dashboard_company_users_path
-        dashboard_nav_item sub_nav, 'dashboard/waiver_agreement_templates', dashboard_company_waiver_agreement_templates_path
-        dashboard_nav_item sub_nav, 'dashboard/white_labels', edit_dashboard_company_white_label_path(current_user.companies.first)
+        dashboard_nav_item sub_nav, 'dashboard/companies', edit_dashboard_company_path(@company), highlights_on: /dashboard\/companies\/[0-9]+(\/edit)?/
+        dashboard_nav_item sub_nav, 'dashboard/payouts', edit_dashboard_company_payouts_path, highlights_on: /dashboard\/company\/payouts/
+        dashboard_nav_item sub_nav, 'dashboard/transfers', dashboard_company_transfers_path, highlights_on: /dashboard\/company\/transfers/
+        dashboard_nav_item sub_nav, 'dashboard/analytics', dashboard_company_analytics_path, highlights_on: /dashboard\/company\/analytics/
+        dashboard_nav_item sub_nav, 'dashboard/users', dashboard_company_users_path, highlights_on: /dashboard\/company\/users/
+        dashboard_nav_item sub_nav, 'dashboard/waiver_agreement_templates', dashboard_company_waiver_agreement_templates_path, highlights_on: /dashboard\/company\/waiver_agreement_templates/
+        dashboard_nav_item sub_nav, 'dashboard/white_labels', edit_dashboard_company_white_label_path(current_user.companies.first), highlights_on: /dashboard\/company\/white_labels/
         dashboard_nav_item sub_nav, 'dashboard/tickets', dashboard_company_support_tickets_path, if: platform_context.instance.action_rfq?, highlights_on: /^\/dashboard\/company\/support\/tickets(\/[0-9]+)?/
         dashboard_nav_item sub_nav, 'dashboard/payment_documents/sent_to_me', sent_to_me_dashboard_company_payment_documents_path, if: platform_context.instance.documents_upload_enabled?, highlights_on: /^\/dashboard\/company\/payment_documents/
       end
@@ -82,10 +82,10 @@ SimpleNavigation::Configuration.run do |navigation|
 
     primary.item :account, t('dashboard.nav.account'), nil do |sub_nav|
       dashboard_nav_item sub_nav, 'registrations/edit', dashboard_profile_path, link_text: t('dashboard.nav.edit'), highlights_on: /^\/(users\/edit|dashboard\/seller\/edit|dashboard\/buyer\/edit|dashboard\/edit_profile)/
-      dashboard_nav_item sub_nav, 'dashboard/notification_preferences', edit_dashboard_notification_preferences_path, link_text: t('dashboard.nav.notification_preferences')
-      dashboard_nav_item sub_nav, 'registrations/social_accounts', social_accounts_path, link_text: t('dashboard.nav.social_accounts')
+      dashboard_nav_item sub_nav, 'dashboard/notification_preferences', edit_dashboard_notification_preferences_path, link_text: t('dashboard.nav.notification_preferences'), highlights_on: /dashboard\/notification_preferences/
+      dashboard_nav_item sub_nav, 'registrations/social_accounts', social_accounts_path, link_text: t('dashboard.nav.social_accounts'), highlights_on: /dashboard\/social_accounts/
       if HiddenUiControls.find('dashboard/saved_searches').visible?
-        dashboard_nav_item sub_nav, 'dashboard/saved_searches', dashboard_saved_searches_path, link_text: t('dashboard.nav.saved_searches')
+        dashboard_nav_item sub_nav, 'dashboard/saved_searches', dashboard_saved_searches_path, link_text: t('dashboard.nav.saved_searches'), highlights_on: /dashboard\/saved_searches/
       end
     end
   end

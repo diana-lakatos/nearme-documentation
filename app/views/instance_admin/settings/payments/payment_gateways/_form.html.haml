@@ -9,9 +9,9 @@
       %h4= @payment_gateway.name.to_s + " " + t('instance_admin.settings.payments.payment_gateways.edit') + ":"
     .row
       .input-container.col-xs-6
-        = f.association :payment_countries, label_method: :full_name, collection: @payment_gateway.available_payment_countries, input_html: { class: 'selectpicker', "data-live-search" => "true", multiple: true }
+        = f.association :payment_countries, label_method: :full_name, collection: @payment_gateway.available_payment_countries, input_html: { "data-live-search" => "true", multiple: true }
       .input-container.col-xs-6
-        = f.association :payment_currencies, label_method: :full_name, collection: @payment_gateway.available_currencies, input_html: { class: 'selectpicker', "data-live-search" => "true", multiple: @payment_gateway.supports_multiple_currency? }
+        = f.association :payment_currencies, label_method: :full_name, collection: @payment_gateway.available_currencies, input_html: { "data-live-search" => "true", multiple: @payment_gateway.supports_multiple_currency? }
 
     - if @payment_gateway.payment_methods.any?
       .row

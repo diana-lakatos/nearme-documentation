@@ -41,7 +41,7 @@ class Webhooks::BraintreeMarketplacesController < Webhooks::BaseWebhookControlle
           })
         end
       end
-      merchant_account.webhooks.create!(response: notification.to_yaml)
+      merchant_account.try(:webhooks).try(:create!, response: notification.to_yaml)
       render nothing: true
     end
   end

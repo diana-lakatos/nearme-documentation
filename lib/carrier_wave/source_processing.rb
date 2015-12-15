@@ -15,7 +15,7 @@ module CarrierWave
 
       def generate_versions(all = true)
         # return if there is no persisted AR object (e.g. photo was deleted before crop job ran)
-        return unless @model.persisted?
+        return unless @model.persisted? || !@model.send(@field).present?
 
         # external url has not changed, meaning we can just recreate versions
         uploader = @model.send(@field)

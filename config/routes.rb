@@ -323,7 +323,7 @@ DesksnearMe::Application.routes.draw do
           get :search_settings
         end
         resources :custom_attributes, controller: 'instance_profile_types/custom_attributes'
-        resources :form_components, controller: 'instance_profile_types/form_components' do
+        resources :form_components, controller: 'instance_profile_types/form_components', except: [:show] do
           member do
             patch :update_rank
           end
@@ -344,7 +344,7 @@ DesksnearMe::Application.routes.draw do
             get :download_current_data
           end
         end
-        resources :form_components, controller: 'service_types/form_components' do
+        resources :form_components, controller: 'service_types/form_components', except: [:show] do
           member do
             patch :update_rank
           end
@@ -432,7 +432,7 @@ DesksnearMe::Application.routes.draw do
             get :download_csv_template
           end
         end
-        resources :form_components, controller: 'product_types/form_components' do
+        resources :form_components, controller: 'product_types/form_components', except: [:show] do
           member do
             patch :update_rank
           end
@@ -473,7 +473,7 @@ DesksnearMe::Application.routes.draw do
             get :jstree
           end
         end
-        resources :form_components, controller: 'project_types/form_components' do
+        resources :form_components, controller: 'project_types/form_components', except: [:show] do
           member do
             patch :update_rank
           end
