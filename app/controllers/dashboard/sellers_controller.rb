@@ -20,7 +20,7 @@ class Dashboard::SellersController < Dashboard::BaseController
 
   def set_seller_profile
     @seller_profile = current_user.seller_profile
-    redirect_to edit_registration_path(current_user) unless @seller_profile.present?
+    redirect_to edit_registration_path(current_user) unless @seller_profile.present? && current_instance.seller_profile_enabled?
   end
 
   def set_form_components
