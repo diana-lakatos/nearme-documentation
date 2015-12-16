@@ -11,7 +11,7 @@ class SellerAttachmentDrop < BaseDrop
 
   # URL to the attachment
   def attachment_url
-    routes.seller_attachment_url(@seller_attachment)
+    urlify(routes.seller_attachment_path(@seller_attachment))
   end
 
 end
