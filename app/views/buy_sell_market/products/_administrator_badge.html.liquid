@@ -1,0 +1,66 @@
+{% if product.administrator %}
+  <div class="vendor-pic inline">
+    <a href="{{ product.administrator.user_profile_url }}">
+      <img src="{{ product.administrator.avatar_url_big }}" />
+    </a>
+  </div>
+  <div class="vendor-info inline">
+    <h2>
+      <a href="{{ product.administrator.user_profile_url }}">{{ product.administrator.name }}</a>
+    </h2>
+    <p>
+      {{ product.administrator_location }}
+    </p>
+  </div>
+  <a data-modal="true" data-href="{{ product.new_product_user_message_path }}">
+    <div class="btn blue">
+      {{ 'buy_sell_market.products.buttons.contact_host' | translate }}
+    </div>
+  </a>
+  <div class="divider"></div>
+
+  <h4>
+    {{ 'buy_sell_market.products.labels.verifications' | translate }}
+  </h4>
+  <div class="verifications">
+    <div class="row-fluid">
+      <div class="span12">
+        {% if product.administrator.email %}
+          <p>
+            <img src="{{ 'themes/buy_sell/check.png' | image_url }}" class="check" />
+            {{ 'buy_sell_market.products.labels.email_address' | translate }}
+          </p>
+        {% endif %}
+
+        {% if product.administrator.phone %}
+          <p>
+            <img src="{{ 'themes/buy_sell/check.png' | image_url }}" class="check" />
+            {{ 'buy_sell_market.products.labels.phone_number' | translate }}
+          </p>
+        {% endif %}
+
+        {% if product.administrator.is_facebook_connected %}
+          <p>
+            <img src="{{ 'themes/buy_sell/check.png' | image_url }}" class="check" />
+            Facebook
+          </p>
+        {% endif %}
+
+        {% if product.administrator.is_linkedin_connected %}
+          <p>
+            <img src="{{ 'themes/buy_sell/check.png' | image_url }}" class="check" />
+            LinkedIn
+          </p>
+        {% endif %}
+
+        {% if product.administrator.is_twitter_connected %}
+          <p>
+            <img src="{{ 'themes/buy_sell/check.png' | image_url }}" class="check" />
+            Twitter
+          </p>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+{% endif %}
