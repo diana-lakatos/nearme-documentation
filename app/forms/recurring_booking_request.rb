@@ -8,7 +8,7 @@ class RecurringBookingRequest < Form
 
   delegate :credit_card_payment?, :manual_payment?, :reservation_type=, :currency,
     :service_fee_amount_host_cents, :service_fee_amount_guest_cents, :billing_authorization,
-    :create_billing_authorization, to: :recurring_booking
+    :create_billing_authorization, :total_service_amount, :total_amount, to: :recurring_booking
   delegate :confirm_reservations?, :location, :action_hourly_booking?, :company, to: :listing
   delegate :mobile_number, :mobile_number=, :country_name, :country_name=, :country, to: :user
 
