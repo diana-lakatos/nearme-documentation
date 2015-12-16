@@ -1,5 +1,6 @@
 .additional-charges{id: "additional-charges-#{listing.id}", :'data-additional-charges' => true}
-  - platform_context.instance.additional_charge_types.sort.each do |ac|
+  %h4=  t('dashboard.user_reservations.additional_charges')
+  - listing.all_additional_charge_types.each do |ac|
     - if ac.mandatory?
       .mandatory-charge{ data: { 'mandatory-charge' => ac.amount } }
         %span

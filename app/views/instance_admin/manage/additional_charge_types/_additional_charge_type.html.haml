@@ -1,0 +1,10 @@
+%tr
+  %td= additional_charge_type.name
+  %td= additional_charge_type.additional_charge_type_target.try(&:name)
+  %td= additional_charge_type.amount
+  %td= additional_charge_type.status.capitalize
+  %td= {"host" => "Host", "mpo" => "Service"}[additional_charge_type.commission_receiver]
+  %td
+    = link_to t('instance_admin.edit'), edit_instance_admin_manage_additional_charge_type_path(additional_charge_type.id)
+    &nbsp;
+    = link_to t('instance_admin.delete'), instance_admin_manage_additional_charge_type_path(additional_charge_type.id), method: :delete, data: { confirm: t('instance_admin.are_you_sure') }

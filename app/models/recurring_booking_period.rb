@@ -39,10 +39,6 @@ class RecurringBookingPeriod < ActiveRecord::Base
     subtotal_amount_cents + service_fee_amount_guest_cents
   end
 
-  def total_amount_to_charge
-    total_amount_cents
-  end
-
   def monetized_total_amount
     subtotal_amount + service_fee_amount_guest
   end

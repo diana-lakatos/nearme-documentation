@@ -7,10 +7,13 @@ Spree::Order.class_eval do
   )
 
   include Spree::Scoper
-  include Payment::PaymentModule
+  include Payable
+  include Chargeable
 
   attr_reader :card_number, :card_code, :card_exp_month, :card_exp_year, :card_holder_first_name, :card_holder_last_name
   attr_accessor :payment_method_nonce, :start_express_checkout, :express_checkout_redirect_url
+
+  delegate :service_fee_guest_percent, :service_fee_host_percent, to: :instance
 
   scope :completed, -> { where(state: 'complete') }
   scope :approved, -> { where.not(approved_at: nil) }
@@ -32,10 +35,11 @@ Spree::Order.class_eval do
   has_many :additional_charges, as: :target
   has_many :payment_documents, as: :attachable, class_name: 'Attachable::PaymentDocument', dependent: :destroy
 
-  accepts_nested_attributes_for :additional_charges
+  accepts_nested_attributes_for :additional_charges, allow_destroy: true
   accepts_nested_attributes_for :payment_documents
 
   after_save :purchase_shippo_rate
+  after_update :prepare_payments
   before_create :store_platform_context_detail
   before_update :reject_empty_documents
 
@@ -82,11 +86,11 @@ Spree::Order.class_eval do
   end
 
   def create_pending_payment!
-    payments.create(amount: total_amount_to_charge, company_id: company_id)
+    payments.create(amount: total_amount, company_id: company_id)
   end
 
   def create_failed_payment!
-    p = payments.build(amount: total_amount_to_charge, company_id: company_id)
+    p = payments.build(amount: total_amount, company_id: company_id)
     p.started_processing
     p.failure!
   end
@@ -129,78 +133,30 @@ Spree::Order.class_eval do
     self.total.zero?
   end
 
+  def additional_charge_types
+    ids = []
+    ids += line_items.map { |l| l.product.additional_charge_types.pluck(:id) }
+    ids += line_items.map { |l| l.product_type.additional_charge_types.pluck(:id) }
+    ids += instance.additional_charge_types.pluck(:id)
 
-  def paypal_express_payment?
-    self.express_token.present?
+    AdditionalChargeType.where(id: ids.flatten)
   end
 
-  def total_amount_to_charge
-    monetize(self.total) + service_fee_amount_guest
+  def shipping_amount_cents
+    monetize(shipment_total).cents
   end
 
-  def total_amount_cents
-    total_amount_to_charge.cents
-  end
-
-  def total_amount_without_fee
-    monetize(self.total)
-  end
-
-  def tax_total_cents
+  def tax_amount_cents
     monetize(tax_total).cents
   end
 
-  # LineItems and Fee summary (without taxes)
   def subtotal_amount_cents
-    monetize(self.amount).cents + service_fee_amount_guest.cents
+    monetize(self.amount).cents
   end
-  alias_method :total_amount_cents_without_shipping, :subtotal_amount_cents
 
   def seller_iso_country_code
     line_items.first.product.company.company_address.iso_country_code
   end
-
-  def subtotal_amount_to_charge
-    monetize(self.item_total)
-  end
-
-  def service_fee_amount_guest
-    service_fee_calculator.service_fee_guest
-  end
-
-  def service_fee_guest_without_charges
-    service_fee_calculator.service_fee_guest_wo_ac
-  end
-
-  def service_fee_amount_host
-    Money.new(service_fee_calculator.service_fee_host.cents, currency)
-  end
-
-  def total_service_fee_amount
-   Money.new(service_fee_amount_host_cents + service_fee_amount_guest_cents, currency)
-  end
-
-  def service_fee_amount_host_cents
-    Money.new(service_fee_calculator.service_fee_host.cents, currency).cents
-  end
-
-  def service_fee_amount_guest_cents
-    Money.new(service_fee_calculator.service_fee_guest.cents, currency).cents
-  end
-
-  def shipping_costs_cents
-    monetize(shipment_total).cents
-  end
-
-  def service_fee_calculator
-    options = {
-      guest_fee_percent:  (manual_payment? ? 0 : instance.service_fee_guest_percent),
-      host_fee_percent:   (manual_payment? ? 0 : instance.service_fee_host_percent),
-      additional_charges: additional_charges
-    }
-    @service_fee_calculator ||= ::Payment::ServiceFeeCalculator.new(subtotal_amount_to_charge, options)
-  end
-
 
   def update_payment_total
     # self.payment_total = near_me_payments.paid.includes(:refunds).inject(0) { |sum, payment| sum + payment.amount - payment.refunds.sum(:amount) }
@@ -232,10 +188,6 @@ Spree::Order.class_eval do
     if self.completed?
       self.persist_totals
     end
-  end
-
-  def monetize(amount)
-    Money.new(amount*Money::Currency.new(self.currency).subunit_to_unit, currency)
   end
 
   def reviewable?(current_user)
@@ -314,6 +266,24 @@ Spree::Order.class_eval do
 
   def confirm_reservations?
     false
+  end
+
+  def fees_persisted?
+    payment? || completed?
+  end
+
+  private
+
+  def prepare_payments
+    if self.delivery?
+      update_columns({
+        service_fee_amount_guest_cents: service_fee_amount_guest_cents,
+        service_fee_amount_host_cents: service_fee_amount_host_cents
+      })
+      additional_charge_types.each do |act|
+        self.additional_charges.find_or_create_by(additional_charge_type_id: act.id, currency: currency)
+      end
+    end
   end
 end
 

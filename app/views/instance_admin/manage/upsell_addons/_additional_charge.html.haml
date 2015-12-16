@@ -1,9 +1,0 @@
-%tr
-  %td= additional_charge.name
-  %td= additional_charge.service
-  %td= additional_charge.amount
-  %td= additional_charge.status
-  %td
-    = link_to t('instance_admin.edit'), edit_instance_admin_manage_upsell_addon_path(additional_charge.id)
-    &nbsp;
-    = link_to t('instance_admin.delete'), instance_admin_manage_upsell_addon_path(additional_charge.id), method: :delete, data: { confirm: t('instance_admin.are_you_sure') }

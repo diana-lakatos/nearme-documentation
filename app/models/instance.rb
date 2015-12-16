@@ -91,7 +91,7 @@ class Instance < ActiveRecord::Base
   has_many :rating_questions
   has_many :rating_answers
   has_many :rating_hints
-  has_many :additional_charge_types
+  has_many :additional_charge_types, as: :additional_charge_type_target
   has_one :documents_upload, dependent: :destroy
   has_many :locales, dependent: :destroy
   has_many :dimensions_templates, as: :entity
@@ -343,6 +343,10 @@ class Instance < ActiveRecord::Base
 
   def shippo_api
     @api ||= ShippoApi::ShippoApi.new(shippo_api_token)
+  end
+
+  def signature
+    [id, "Instance"].join(",")
   end
 
   def recalculate_cache_key!

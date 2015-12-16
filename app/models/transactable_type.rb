@@ -21,6 +21,7 @@ class TransactableType < ActiveRecord::Base
   has_many :category_linkings, as: :category_linkable, dependent: :destroy
   has_many :categories, through: :category_linkings
   has_many :custom_validators, as: :validatable
+  has_many :additional_charge_types, as: :additional_charge_type_target
 
   belongs_to :instance
 
@@ -129,6 +130,10 @@ class TransactableType < ActiveRecord::Base
 
   def date_pickers_relative_mode?
     date_pickers_mode == 'relative'
+  end
+
+  def signature
+    [id, type].join(",")
   end
 
   private
