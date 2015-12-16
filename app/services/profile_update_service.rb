@@ -63,7 +63,7 @@ class ProfileUpdateService
   def custom_attributes
     {
       belt: :role,
-      bio: :short_bio
+      bio: :short_bio,
       is_intel: :is_internal
     }.with_indifferent_access
   end
