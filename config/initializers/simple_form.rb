@@ -5,11 +5,11 @@ SimpleForm.setup do |config|
   # wrapper, change the order or even add your own to the
   # stack. The options given below are used to wrap the
   # whole input.
-  config.wrappers :default, :class => :input,
-    :hint_class => :field_with_hint, :error_class => :field_with_errors do |b|
+  config.wrappers :default, class: :input,
+    hint_class: :field_with_hint, error_class: :field_with_errors do |b|
     ## Extensions enabled by default
     # Any of these extensions can be disabled for a
-    # given input by passing: `f.input EXTENSION_NAME => false`.
+    # given input by passing: `f.inputEXTENSION_NAME: false`.
     # You can make any of these extensions optional by
     # renaming `b.use` to `b.optional`.
 
@@ -18,11 +18,11 @@ SimpleForm.setup do |config|
     b.use :html5
 
     # Calculates placeholders automatically from I18n
-    # You can also pass a string as f.input :placeholder => "Placeholder"
+    # You can also pass a string as f.input placeholder: "Placeholder"
     b.use :placeholder
 
     ## Optional extensions
-    # They are disabled unless you pass `f.input EXTENSION_NAME => :lookup`
+    # They are disabled unless you pass `f.inputEXTENSION_NAME: :lookup`
     # to the input. If so, they will retrieve the values from the model
     # if any exists. If you want to enable the lookup for any of those
     # extensions by default, you can change `b.optional` to `b.use`.
@@ -41,8 +41,8 @@ SimpleForm.setup do |config|
 
     ## Inputs
     b.use :label_input
-    b.use :hint,  :wrap_with => { :tag => :span, :class => :hint }
-    b.use :error, :wrap_with => { :tag => :span, :class => :error }
+    b.use :hint,  wrap_with: { tag: :span, class: :hint }
+    b.use :error, wrap_with: { tag: :span, class: :error }
   end
 
   config.wrappers :modal do |b|
@@ -60,104 +60,116 @@ SimpleForm.setup do |config|
     b.optional :error
   end
 
-  config.wrappers :bootstrap, :tag => 'div', :class => 'control-group', :error_class => 'error' do |b|
+  config.wrappers :bootstrap, tag: 'div', class: 'control-group', error_class: 'error' do |b|
     b.use :html5
     b.use :placeholder
     b.use :label
-    b.wrapper :tag => 'div', :class => 'controls' do |ba|
+    b.wrapper tag: 'div', class: 'controls' do |ba|
       ba.use :input
-      ba.use :error, :wrap_with => { :tag => 'p', :class => 'error-block' }
-      ba.use :hint,  :wrap_with => { :tag => 'p', :class => 'help-block' }
+      ba.use :error, wrap_with: { tag: 'p', class: 'error-block' }
+      ba.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
     end
   end
 
-  config.wrappers :bs_phone, :tag => 'div', :class => 'control-group', :error_class => 'error' do |b|
+  config.wrappers :admin, tag: 'div', class: 'control-group', error_class: 'error' do |b|
     b.use :html5
     b.use :placeholder
     b.use :label
-    b.wrapper :tag => 'div', :class => 'controls' do |ba|
-      ba.wrapper :tag => 'div', :class => 'phone-number-country-code-field' do |prepend|
+    b.wrapper tag: 'div', class: 'controls' do |ba|
+      ba.use :input, class: 'form-control'
+      ba.use :error, wrap_with: { tag: 'p', class: 'error-block' }
+      ba.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
+    end
+  end
+
+
+  config.wrappers :bs_phone, tag: 'div', class: 'control-group', error_class: 'error' do |b|
+    b.use :html5
+    b.use :placeholder
+    b.use :label
+    b.wrapper tag: 'div', class: 'controls' do |ba|
+      ba.wrapper tag: 'div', class: 'phone-number-country-code-field' do |prepend|
         prepend.use :input
       end
-      ba.use :error, :wrap_with => { :tag => 'p', :class => 'error-block' }
-      ba.use :hint,  :wrap_with => { :tag => 'p', :class => 'help-block' }
+      ba.use :error, wrap_with: { tag: 'p', class: 'error-block' }
+      ba.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
     end
   end
 
-  config.wrappers :prepend, :tag => 'div', :class => "control-group", :error_class => 'error' do |b|
+  config.wrappers :prepend, tag: 'div', class: "control-group", error_class: 'error' do |b|
     b.use :html5
     b.use :placeholder
     b.use :label
-    b.wrapper :tag => 'div', :class => 'controls' do |input|
-      input.wrapper :tag => 'div', :class => 'input-prepend' do |prepend|
+    b.wrapper tag: 'div', class: 'controls' do |input|
+      input.wrapper tag: 'div', class: 'input-prepend' do |prepend|
         prepend.use :input
       end
-      input.use :hint,  :wrap_with => { :tag => 'span', :class => 'help-block' }
-      input.use :error, :wrap_with => { :tag => 'span', :class => 'help-inline' }
+      input.use :hint,  wrap_with: { tag: 'span', class: 'help-block' }
+      input.use :error, wrap_with: { tag: 'span', class: 'help-inline' }
     end
   end
 
-  config.wrappers :append, :tag => 'div', :class => "control-group", :error_class => 'error' do |b|
+  config.wrappers :append, tag: 'div', class: "control-group", error_class: 'error' do |b|
     b.use :html5
     b.use :placeholder
     b.use :label
-    b.wrapper :tag => 'div', :class => 'controls' do |input|
-      input.wrapper :tag => 'div', :class => 'input-append' do |append|
+    b.wrapper tag: 'div', class: 'controls' do |input|
+      input.wrapper tag: 'div', class: 'input-append' do |append|
         append.use :input
       end
-      input.use :hint,  :wrap_with => { :tag => 'span', :class => 'help-block' }
-      input.use :error, :wrap_with => { :tag => 'span', :class => 'help-inline' }
+      input.use :hint,  wrap_with: { tag: 'span', class: 'help-block' }
+      input.use :error, wrap_with: { tag: 'span', class: 'help-inline' }
     end
   end
 
-  config.wrappers :product, :tag => 'div', :class => "control-group", :error_class => 'error' do |b|
+  config.wrappers :product, tag: 'div', class: "control-group", error_class: 'error' do |b|
     b.use :html5
     b.use :placeholder
-    b.wrapper :tag => 'div', :class => 'row-fluid' do |input|
-      input.wrapper :tag => 'div', :class => 'span3' do |label_container|
+    b.wrapper tag: 'div', class: 'row-fluid' do |input|
+      input.wrapper tag: 'div', class: 'span3' do |label_container|
         label_container.use :label
       end
-      input.wrapper :tag => 'div', :class => 'span9 input-container' do |append|
-        append.use :hint,  :wrap_with => { :tag => 'p' }
+      input.wrapper tag: 'div', class: 'span9 input-container' do |append|
+        append.use :hint,  wrap_with: { tag: 'p' }
         append.use :input
       end
-      input.use :error, :wrap_with => { :tag => 'span', :class => 'help-inline' }
+      input.use :error, wrap_with: { tag: 'span', class: 'help-inline' }
     end
   end
 
-  config.wrappers :bs3, :error_class => 'error' do |b|
+  config.wrappers :bs3, error_class: 'error' do |b|
     b.use :html5
     b.use :placeholder
-    b.wrapper :tag => 'div', :class => 'row' do |input|
-      input.wrapper :tag => 'div', :class => 'col-md-3' do |label_container|
+    b.wrapper tag: 'div', class: 'row' do |input|
+      input.wrapper tag: 'div', class: 'col-md-3' do |label_container|
         label_container.use :label
       end
-      input.wrapper :tag => 'div', :class => 'col-md-9 input-container' do |append|
-        append.use :hint,  :wrap_with => { :tag => 'p' }
+      input.wrapper tag: 'div', class: 'col-md-9 input-container' do |append|
+        append.use :hint,  wrap_with: { tag: 'p' }
         append.use :input
       end
-      input.use :error, :wrap_with => { :tag => 'col-md-9', :class => 'help-inline' }
+      input.use :error, wrap_with: { tag: 'col-md-9', class: 'help-inline' }
     end
   end
 
-  config.wrappers :bs3_simple, :error_class => 'error' do |b|
+  config.wrappers :bs3_simple, error_class: 'error' do |b|
     b.use :html5
     b.use :placeholder
     b.use :label
     b.use :input
-    b.use :error, :wrap_with => { :tag => 'col-md-9', :class => 'help-inline' }
+    b.use :error, wrap_with: { tag: 'col-md-9', class: 'help-inline' }
   end
 
-  config.wrappers :inline_checkbox, :tag => 'div', :class => 'control-group', :error_class => 'error', :boolean_style => 'inline' do |b|
+  config.wrappers :inline_checkbox, tag: 'div', class: 'control-group', error_class: 'error', boolean_style: 'inline' do |b|
     b.use :html5
     b.use :placeholder
     b.use :input
     b.use :label
-    b.use :error, :wrap_with => { :tag => 'p', :class => 'error-block' }
-    b.use :hint,  :wrap_with => { :tag => 'p', :class => 'help-block' }
+    b.use :error, wrap_with: { tag: 'p', class: 'error-block' }
+    b.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
   end
 
-  config.wrappers :vertical_radio_and_checkboxes, tag: 'div', class: 'form-group', error_class: 'has-error', :boolean_style => 'inline' do |b|
+  config.wrappers :vertical_radio_and_checkboxes, tag: 'div', class: 'form-group', error_class: 'has-error', boolean_style: 'inline' do |b|
     b.use :html5
     b.optional :readonly
     b.use :label, class: 'control-label'
@@ -174,8 +186,8 @@ SimpleForm.setup do |config|
 
   # Define the way to render check boxes / radio buttons with labels.
   # Defaults to :nested for bootstrap config.
-  #   :inline => input + label
-  #   :nested => label > input
+  #   inline: input + label
+  #   nested: label > input
   config.boolean_style = :nested
 
   # Default class for buttons

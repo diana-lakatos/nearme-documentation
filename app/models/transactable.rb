@@ -24,6 +24,7 @@ class Transactable < ActiveRecord::Base
   has_metadata accessors: [:photos_metadata]
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
 
+  has_many :additional_charge_types, as: :additional_charge_type_target
   has_many :availability_templates, as: :parent
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :amenity_holders, as: :holder, dependent: :destroy, inverse_of: :holder
@@ -63,15 +64,16 @@ class Transactable < ActiveRecord::Base
   has_one :schedule, as: :scheduable, dependent: :destroy
   has_one :upload_obligation, as: :item, dependent: :destroy
 
-  accepts_nested_attributes_for :availability_template
-  accepts_nested_attributes_for :photos, allow_destroy: true
-  accepts_nested_attributes_for :attachments, allow_destroy: true
-  accepts_nested_attributes_for :waiver_agreement_templates, allow_destroy: true
+  accepts_nested_attributes_for :additional_charge_types, reject_if: :all_blank, allow_destroy: true
   accepts_nested_attributes_for :approval_requests
-  accepts_nested_attributes_for :document_requirements, allow_destroy: true, reject_if: :document_requirement_hidden?
-  accepts_nested_attributes_for :upload_obligation
-  accepts_nested_attributes_for :schedule, allow_destroy: true
+  accepts_nested_attributes_for :attachments, allow_destroy: true
+  accepts_nested_attributes_for :availability_template
   accepts_nested_attributes_for :dimensions_template, allow_destroy: true
+  accepts_nested_attributes_for :document_requirements, allow_destroy: true, reject_if: :document_requirement_hidden?
+  accepts_nested_attributes_for :photos, allow_destroy: true
+  accepts_nested_attributes_for :schedule, allow_destroy: true
+  accepts_nested_attributes_for :upload_obligation
+  accepts_nested_attributes_for :waiver_agreement_templates, allow_destroy: true
 
   # == Callbacks
   before_destroy :decline_reservations
@@ -528,6 +530,11 @@ class Transactable < ActiveRecord::Base
           reject { |size, price| !price || price.zero? }
       ]
     end
+  end
+
+  def all_additional_charge_types
+    ids = (additional_charge_types + transactable_type.additional_charge_types + instance.additional_charge_types).map(&:id)
+    AdditionalChargeType.where(id: ids).order(:status, :name)
   end
 
   def availability_status_between(start_date, end_date)

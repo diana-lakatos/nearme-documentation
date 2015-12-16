@@ -1,6 +1,6 @@
 class Attachable::PaymentDocumentDecorator < Draper::Decorator
   include Draper::LazyHelpers
-  
+
   delegate_all
 
   def document_info_label

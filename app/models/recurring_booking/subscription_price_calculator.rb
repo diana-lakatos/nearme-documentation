@@ -10,6 +10,6 @@ class RecurringBooking::SubscriptionPriceCalculator
   end
 
   def total_amount
-    subtotal_amount + @subscription.guest_service_fee + @subscription.additional_charges_amount
+    subtotal_amount + @subscription.service_fee_amount_guest + @subscription.service_additional_charges
   end
 end

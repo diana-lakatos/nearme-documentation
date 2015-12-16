@@ -299,7 +299,38 @@ class InstanceView < ActiveRecord::Base
     'registrations/profile/tabs/transactable' => {
       'transactable': 'TransactableDrop',
       is_partial: true
-    }
+    },
+    'buy_sell_market/products/above_cart_management' => {
+      'product': 'Spree::ProductDrop',
+    },
+    'buy_sell_market/products/above_social_buttons' => {
+      'product': 'Spree::ProductDrop',
+    },
+    'buy_sell_market/products/above_wish_lists' => {
+      'product': 'Spree::ProductDrop',
+    },
+    'buy_sell_market/products/below_cart_module' => {
+      'product': 'Spree::ProductDrop',
+    },
+    'buy_sell_market/products/extra_tab_panes' => {
+      'product': 'Spree::ProductDrop',
+    },
+    'buy_sell_market/products/extra_tab_titles' => {
+      'product': 'Spree::ProductDrop',
+    },
+    'buy_sell_market/products/name_and_price' => {
+      'product': 'Spree::ProductDrop',
+    },
+    'buy_sell_market/products/product_description' => {
+      'product': 'Spree::ProductDrop',
+    },
+    'buy_sell_market/products/seller_attachments' => {
+      'product': 'Spree::ProductDrop',
+      'attachments': 'list of seller attachments',
+    },
+    'buy_sell_market/products/administrator_badge' => {
+      'product': 'Spree::ProductDrop',
+    },
   }.freeze
 
   scope :for_instance_type_id, ->(instance_type_id) {

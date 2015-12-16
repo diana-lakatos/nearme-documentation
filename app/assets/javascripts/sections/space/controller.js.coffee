@@ -30,6 +30,11 @@ class @Space.Controller
       @adjustBookingModulePosition()
       @adjustFullGalleryHeight()
 
+    @fullScreenGalleryContainer.on 'slid.bs.carousel', =>
+      @adjustFullGalleryHeight()
+      # To call modal's resize handlers
+      $(window).resize()
+
     @siblingListingsCarousel.on 'slid.bs.carousel', =>
       currentSlide = @siblingListingsCarousel.find('.item.active').eq(0)
       @container.find('.other-listings header p a').text(currentSlide.data('listing-name')).attr('href', currentSlide.data('listing-url'))

@@ -29,7 +29,6 @@ class BuySellMarket::CheckoutController < ApplicationController
     when :payment
       build_approval_request_for_object(current_user)
       checkout_service.build_payment_documents
-      @additional_charges = platform_context.instance.additional_charge_types
       @order.express_token = params[:token] if params[:token].present?
     when :complete
       @current_order = nil
@@ -52,12 +51,8 @@ class BuySellMarket::CheckoutController < ApplicationController
         checkout_extra_fields.errors.full_messages.each { |m| @order.errors[:checkout_fields] ||= []; @order.errors[:checkout_fields] << m }
         render_step order_state and return
       end
-      # Remove this line when refactoring Additional Costs/Charges
-      @additional_charges = platform_context.instance.additional_charge_types
 
       checkout_service.update_payment_documents
-      setup_upsell_charges
-
       @order.payment_method.payment_gateway.authorize(@order)
     elsif @order.save && @order.address?
       save_user_addresses
@@ -157,15 +152,6 @@ class BuySellMarket::CheckoutController < ApplicationController
     if @order.blank?
       flash[:error] = t('buy_sell_market.checkout.order_missing')
       redirect_to cart_index_path
-    end
-  end
-
-  def setup_upsell_charges
-    @order.additional_charges.destroy_all
-    additional_charge_ids = AdditionalChargeType.get_mandatory_and_optional_charges(params[:additional_charge_ids]).pluck(:id)
-    additional_charge_ids.each do |id|
-      next if @order.additional_charges.pluck(:additional_charge_type_id).include?(id)
-      @order.additional_charges.create!(additional_charge_type_id: id, currency: @order.currency)
     end
   end
 

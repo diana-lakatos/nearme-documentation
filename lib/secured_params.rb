@@ -45,6 +45,7 @@ class SecuredParams
       document_requirements_attributes: nested(self.document_requirement),
       upload_obligation_attributes: nested(self.upload_obligation),
       shipping_methods_attributes: nested(self.spree_shipping_method),
+      additional_charge_types_attributes: nested(self.additional_charge_type),
       extra_properties:  Spree::Product.public_custom_attributes_names((product_type.presence || PlatformContext.current.try(:instance).try(:product_types).try(:first)).try(:id)),
     ]
   end
@@ -465,11 +466,12 @@ class SecuredParams
       :payment_method_nonce,
       :start_express_checkout,
       :insurance_enabled,
-      payment_documents_attributes: nested(self.payment_documents)
+      additional_charges_attributes: nested(self.additional_charge),
+      payment_documents_attributes: nested(self.payment_document)
     ]
   end
 
-  def payment_documents
+  def payment_document
     [
       :type,
       :file,
@@ -1009,6 +1011,7 @@ class SecuredParams
       document_requirements_attributes: nested(self.document_requirement),
       upload_obligation_attributes: nested(self.upload_obligation),
       availability_template_attributes: nested(self.availability_template),
+      additional_charge_types_attributes: nested(self.additional_charge_type),
     ] +
     Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
   end
@@ -1356,6 +1359,24 @@ class SecuredParams
     ]
   end
 
+  def additional_charge
+    [
+      :id,
+      :name,
+      :description,
+      :amount,
+      :currency,
+      :commission_receiver,
+      :provider_commission_percentage,
+      :status,
+      :selected,
+      :instance_id,
+      :additional_charge_type_target,
+      :additional_charge_type_id,
+      :_destroy
+    ]
+  end
+
   def additional_charge_type
     [
       :id,
@@ -1366,7 +1387,8 @@ class SecuredParams
       :commission_receiver,
       :provider_commission_percentage,
       :status,
-      :instance_id
+      :instance_id,
+      :additional_charge_type_target
     ]
   end
 

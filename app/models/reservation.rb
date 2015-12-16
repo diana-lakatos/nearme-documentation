@@ -1,5 +1,6 @@
 class Reservation < ActiveRecord::Base
-  include Payment::PaymentModule
+  include Payable
+  include Chargeable
 
   class NotFound < ActiveRecord::RecordNotFound; end
   class InvalidPaymentState < StandardError; end
@@ -68,12 +69,24 @@ class Reservation < ActiveRecord::Base
   before_validation :set_default_payment_status, on: :create, if: lambda { listing }
 
   before_create :set_hours_to_expiration, if: lambda { listing }
-  before_create :set_costs, :if => lambda { listing }
+  before_create :set_costs, if: lambda { listing }
 
   after_create :auto_confirm_reservation
 
   alias_method :seller_type_review_receiver, :creator
   alias_method :buyer_type_review_receiver, :owner
+
+  def additional_charge_types
+    listing.all_additional_charge_types
+  end
+
+
+  def build_additional_charges(attributes)
+    act_ids = attributes.delete(:additional_charge_ids)
+    additional_charge_types.get_mandatory_and_optional_charges(act_ids).uniq.map do |act|
+      self.additional_charges.build(additional_charge_type_id: act.id, currency: currency)
+    end
+  end
 
   def perform_expiry!
     if unconfirmed? && !deleted?
@@ -108,14 +121,6 @@ class Reservation < ActiveRecord::Base
     super.presence || creator
   end
 
-  def shipping_costs_cents
-    shipments.sum(:price)
-  end
-
-  monetize :total_amount_cents, with_model_currency: :currency
-  monetize :subtotal_amount_cents, with_model_currency: :currency
-  monetize :service_fee_amount_guest_cents, with_model_currency: :currency
-  monetize :service_fee_amount_host_cents, with_model_currency: :currency
   monetize :successful_payment_amount_cents, with_model_currency: :currency
   monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true
 
@@ -225,7 +230,7 @@ class Reservation < ActiveRecord::Base
   validates_presence_of :payment_method_id
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
-  delegate :location, :show_company_name, :transactable_type_id, :billing_authorizations, to: :listing
+  delegate :location, :show_company_name, :transactable_type_id, :transactable_type, :billing_authorizations, to: :listing
   delegate :administrator=, to: :location
   delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :listing, allow_nil: true
 
@@ -319,29 +324,22 @@ class Reservation < ActiveRecord::Base
     periods.detect { |period| period.date == date }
   end
 
-  def total_amount_cents
-    subtotal_amount_cents + service_fee_amount_guest_cents + shipping_costs_cents rescue nil
-  end
+  #----- PRICE METHODS -----#
 
   def subtotal_amount_cents
     super || price_calculator.price.cents rescue nil
   end
 
+  def shipping_amount_cents
+    shipments.sum(:price)
+  end
+
+  def tax_amount_cents
+    0
+  end
+
   def price_in_cents
     subtotal_amount_cents / quantity
-  end
-
-  def service_fee_amount_guest_cents
-    persisted? ? super : service_fee_calculator.service_fee_guest.cents rescue nil
-  end
-
-  def service_fee_guest_wo_charges
-    service_fee_calculator.service_fee_guest_wo_ac rescue nil
-  end
-  alias_method :service_fee_guest_without_charges, :service_fee_guest_wo_charges
-
-  def service_fee_amount_host_cents
-    persisted? ? super : service_fee_calculator.service_fee_host.cents rescue nil
   end
 
   def total_amount_dollars
@@ -351,6 +349,21 @@ class Reservation < ActiveRecord::Base
   def total_negative_amount_dollars
     total_amount_dollars * -1
   end
+
+  def successful_payment_amount_cents
+    payments.paid.first.try(:total_amount_cents) || 0
+  end
+
+  # FIXME: This should be +balance_cents+ to conform to our conventions
+  def balance
+    successful_payment_amount_cents - total_amount_cents
+  end
+
+  def currency
+    super.presence || listing.try(:currency)
+  end
+
+  #----- PRICE METHODS ENDS -----#
 
   def total_days
     periods.size
@@ -370,21 +383,8 @@ class Reservation < ActiveRecord::Base
     (quantity || 0) * periods.size
   end
 
-  def successful_payment_amount_cents
-    payments.paid.first.try(:total_amount_cents) || 0
-  end
-
-  # FIXME: This should be +balance_cents+ to conform to our conventions
-  def balance
-    successful_payment_amount_cents - total_amount_cents
-  end
-
   def merchant_subject
     listing.company.paypal_express_chain_merchant_account.try(:subject)
-  end
-
-  def currency
-    super.presence || listing.try(:currency)
   end
 
   def action_free_booking?
@@ -392,7 +392,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def has_service_fee?
-    !service_fee_guest_wo_charges.to_f.zero?
+    !service_fee_amount_guest.to_f.zero?
   end
 
   def paid?
@@ -474,6 +474,8 @@ class Reservation < ActiveRecord::Base
       subtotal_amount: subtotal_amount,
       service_fee_amount_guest: service_fee_amount_guest,
       service_fee_amount_host: service_fee_amount_host,
+      service_additional_charges_cents: service_additional_charges_cents,
+      host_additional_charges_cents: host_additional_charges_cents,
       cancellation_policy_hours_for_cancellation: cancellation_policy_hours_for_cancellation,
       cancellation_policy_penalty_percentage: cancellation_policy_penalty_percentage
     )
@@ -519,19 +521,6 @@ class Reservation < ActiveRecord::Base
 
   private
 
-  def set_start_and_end
-    self.starts_at = first_period.starts_at
-    self.ends_at = last_period.ends_at
-  end
-
-  def service_fee_calculator
-    options = {
-      guest_fee_percent:  manual_payment? ? 0 : service_fee_guest_percent,
-      host_fee_percent:   service_fee_host_percent,
-      additional_charges: additional_charges
-    }
-    @service_fee_calculator ||= Payment::ServiceFeeCalculator.new(subtotal_amount, options)
-  end
 
   def price_calculator
     @price_calculator ||= if listing.schedule_booking?
@@ -541,43 +530,6 @@ class Reservation < ActiveRecord::Base
                           else
                             DailyPriceCalculator.new(self)
                           end
-  end
-
-  def set_default_payment_status
-    return if paid?
-
-    self.payment_status = if action_free_booking?
-                            PAYMENT_STATUSES[:paid]
-                          else
-                            PAYMENT_STATUSES[:pending]
-                          end
-  end
-
-  def set_costs
-    self.subtotal_amount_cents = price_calculator.price.try(:cents)
-    if active_merchant_payment? || remote_payment?
-      self.service_fee_amount_guest_cents = service_fee_calculator.service_fee_guest.try(:cents)
-      self.service_fee_amount_host_cents = service_fee_calculator.service_fee_host.try(:cents)
-    else
-      # This feels a bit hax, but the this is a specific edge case where we don't
-      # apply a service fee to manual payments at this stage. However, we still
-      # need to calculate and present the service fee as the payment type for
-      # supported listings is not confirmed until the executes the reservation.
-      self.service_fee_amount_guest_cents = 0
-      self.service_fee_amount_host_cents = 0
-    end
-  end
-
-  def set_hours_to_expiration
-    self.hours_to_expiration = listing.hours_to_expiration
-  end
-
-  def set_minimum_booking_minutes
-    self.minimum_booking_minutes = listing.minimum_booking_minutes
-  end
-
-  def set_currency
-    self.currency ||= listing.try(:currency)
   end
 
   def auto_confirm_reservation
@@ -595,6 +547,63 @@ class Reservation < ActiveRecord::Base
   def schedule_payment_capture
     ReservationPaymentCaptureJob.perform_later(date + first_period.start_minute.minutes - recurring_booking.hours_before_reservation_to_charge.hours, self.id)
   end
+
+  def create_waiver_agreements
+    assigned_waiver_agreement_templates.each do |t|
+      waiver_agreements.create(waiver_agreement_template: t, vendor_name: host.name, guest_name: owner.name)
+    end
+  end
+
+  def copy_dimensions_template
+    if listing.dimensions_template.present?
+      copied_dimensions_template = listing.dimensions_template.dup
+      copied_dimensions_template.entity = self
+      copied_dimensions_template.save!
+    end
+
+    true
+  end
+
+  def fees_persisted?
+    persisted?
+  end
+
+  # ----- SETTERS ------ #
+
+  def set_currency
+    self.currency ||= listing.try(:currency)
+  end
+
+  def set_costs
+    self.subtotal_amount_cents = price_calculator.price.try(:cents)
+    self.service_fee_amount_guest_cents = service_fee_amount_guest.try(:cents)
+    self.service_fee_amount_host_cents = service_fee_amount_host.try(:cents)
+  end
+
+  def set_default_payment_status
+    return if paid?
+
+    self.payment_status = if action_free_booking?
+                            PAYMENT_STATUSES[:paid]
+                          else
+                            PAYMENT_STATUSES[:pending]
+                          end
+  end
+
+  def set_start_and_end
+    self.starts_at = first_period.starts_at
+    self.ends_at = last_period.ends_at
+  end
+
+  def set_hours_to_expiration
+    self.hours_to_expiration = listing.hours_to_expiration
+  end
+
+  def set_minimum_booking_minutes
+    self.minimum_booking_minutes = listing.minimum_booking_minutes
+  end
+
+  # VALIDATION METHODS
 
   def validate_booking_selection
     unless price_calculator.valid?
@@ -619,22 +628,6 @@ class Reservation < ActiveRecord::Base
     unless listing.exclusive_price_available?
       errors.add(:base, I18n.t('reservations_review.errors.exclusive_price_not_available'))
     end
-  end
-
-  def create_waiver_agreements
-    assigned_waiver_agreement_templates.each do |t|
-      waiver_agreements.create(waiver_agreement_template: t, vendor_name: host.name, guest_name: owner.name)
-    end
-  end
-
-  def copy_dimensions_template
-    if listing.dimensions_template.present?
-      copied_dimensions_template = listing.dimensions_template.dup
-      copied_dimensions_template.entity = self
-      copied_dimensions_template.save!
-    end
-
-    true
   end
 
 end

@@ -1,9 +1,9 @@
 <h2>{{ 'simple_form.labels.company.payout.via_paypal' | translate }}</h2>
 
-<input class="string optional" id="company_paypal_merchant_account_attributes_email" name="company[paypal_merchant_account_attributes][id]" placeholder="" type="hidden" value="{{ merchant_account.id }}">
+<input id="company_paypal_merchant_account_attributes_id" name="company[paypal_merchant_account_attributes][id]" type="hidden" value="{{ merchant_account.id }}">
 
 {% if merchant_account.chain_payments? %}
-  <input class="string optional" id="company_paypal_merchant_account_attributes_email" name="company[paypal_merchant_account_attributes][merchant_token]" placeholder="" type="hidden" value="{{ merchant_account.data['merchant_token']}}">
+  <input id="company_paypal_merchant_account_attributes_id" name="company[paypal_merchant_account_attributes][merchant_token]" type="hidden" value="{{ merchant_account.data['merchant_token']}}">
 
   <p>
     <button type="submit" class="btn btn-primary">{{ 'payouts.paypal.connect' | translate }}</button>
@@ -26,7 +26,7 @@
   <div class="form-group string optional company_paypal_merchant_account_attributes_email">
     <label class="control-label" for="company_paypal_merchant_account_attributes_email">{{ 'payouts.paypal.email' | translate }}</label>
 
-    <input class="form-control string" id="company_paypal_merchant_account_attributes_email" name="company[paypal_merchant_account_attributes][email]" placeholder="" type="email" value="{{ merchant_account.data['email']}}">
+    <input class="form-control string" id="company_paypal_merchant_account_attributes_email" name="company[paypal_merchant_account_attributes][email]" type="email" value="{{ merchant_account.data['email']}}">
   </div>
 
 {% endif %}

@@ -42,7 +42,7 @@ class InstanceAdmin::BaseController < ApplicationController
     'service_types'      => { controller: '/instance_admin/manage/service_types', default_action: 'index' },
     'custom_validators'  => { controller: '/instance_admin/manage/custom_validators', default_action: 'index', title: 'Custom Validators' },
     'categories'         => { controller: '/instance_admin/manage/categories', default_action: 'index', title: 'Categories' },
-    'upsell_addons'      => { controller: '/instance_admin/manage/upsell_addons', default_action: 'index', title: 'Upsell & Add-ons' },
+    'upsell_addons'      => { controller: '/instance_admin/manage/additional_charge_types', default_action: 'index', title: 'Upsell & Add-ons' },
     'search'             => { controller: '/instance_admin/manage/search', default_action: 'show', title: 'Search' }
   }
 

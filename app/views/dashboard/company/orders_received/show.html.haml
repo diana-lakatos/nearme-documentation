@@ -172,9 +172,9 @@
       %td= humanized_money_with_cents_and_symbol @order.monetize(@order.additional_tax_total)
     %tr
       %td= t 'buy_sell_market.checkout.labels.service_fee'
-      %td= humanized_money_with_cents_and_symbol @order.total_service_fee_amount
+      %td= humanized_money_with_cents_and_symbol @order.total_service_fee_amount_cents
     %tr
       %td.total= t 'buy_sell_market.checkout.labels.total2'
-      %td.total= humanized_money_with_cents_and_symbol @order.total_amount_to_charge
+      %td.total= humanized_money_with_cents_and_symbol @order.total_amount
 
   .clearfix

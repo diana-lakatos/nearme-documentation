@@ -12,10 +12,8 @@ class RecurringBookingRequest < Form
   delegate :confirm_reservations?, :location, :action_hourly_booking?, :company, to: :listing
   delegate :mobile_number, :mobile_number=, :country_name, :country_name=, :country, to: :user
 
-  validates :listing, :user, :recurring_booking, presence: true
-  validates :card_number, :card_exp_month, :card_exp_year, :card_code, :card_holder_first_name,
-            :card_holder_last_name, presence: true
-
+  validates :listing, :user, :recurring_booking, :card_number, :card_exp_month,
+    :card_exp_year, :card_code, :card_holder_first_name, :card_holder_last_name, presence: true
   validate :validate_phone_and_country
 
   def initialize(listing, user, platform_context, attributes = {})
@@ -41,8 +39,8 @@ class RecurringBookingRequest < Form
       @billing_gateway = @instance.payment_gateway(@listing.company.iso_country_code, @recurring_booking.currency)
       @recurring_booking.payment_method = payment_method
       @recurring_booking.subtotal_amount = @recurring_booking.total_amount_calculator.subtotal_amount
-      @recurring_booking.service_fee_amount_guest = @recurring_booking.guest_service_fee
-      @recurring_booking.service_fee_amount_host = @recurring_booking.host_service_fee
+      @recurring_booking.service_fee_amount_guest = @recurring_booking.service_fee_amount_guest
+      @recurring_booking.service_fee_amount_host = @recurring_booking.service_fee_amount_host
       self.total_amount_cents = @recurring_booking.total_amount.cents
     end
 

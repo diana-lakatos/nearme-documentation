@@ -64,6 +64,7 @@ class ProfileUpdateService
     {
       belt: :role,
       bio: :short_bio
+      is_intel: :is_internal
     }.with_indifferent_access
   end
 

@@ -1,5 +1,8 @@
 class RecurringBooking < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
+
+  include Chargeable
+
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
@@ -9,23 +12,28 @@ class RecurringBooking < ActiveRecord::Base
   before_create :store_platform_context_detail
   after_create :auto_confirm_reservation
 
+  delegate :location, to: :listing
+  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :listing, allow_nil: true
+
   attr_encrypted :authorization_token, :payment_gateway_class, :key => DesksnearMe::Application.config.secret_token
 
   has_one :billing_authorization, as: :reference
   belongs_to :instance
   belongs_to :listing, class_name: 'Transactable', foreign_key: 'transactable_id', inverse_of: :recurring_bookings
-  delegate :location, to: :listing
   belongs_to :owner, :class_name => "User"
   belongs_to :creator, class_name: "User"
   belongs_to :administrator, class_name: "User"
   belongs_to :company
   belongs_to :platform_context_detail, :polymorphic => true
   belongs_to :payment_gateway
+
+  # Note: additional_charges are not yet implemented for RecurringBooking
+  # Following line is added only for the purpouse of including Chargebale model
+  has_many :additional_charges, as: :target
   has_many :recurring_booking_periods, dependent: :destroy
   has_many :user_messages, as: :thread_context
 
-  validates :transactable_id, :interval, :presence => true
-  validates :owner_id, presence: true, unless: -> { owner.present? }
+  accepts_nested_attributes_for :additional_charges
 
   scope :upcoming, lambda { where('end_on > ?', Time.zone.now) }
   scope :not_archived, lambda { without_state(:cancelled_by_guest, :cancelled_by_host, :rejected, :expired).uniq }
@@ -37,14 +45,12 @@ class RecurringBooking < ActiveRecord::Base
   scope :expired, lambda { with_state(:expired) }
   scope :cancelled_or_expired_or_rejected, lambda { with_state(:cancelled_by_guest, :cancelled_by_host, :rejected, :expired) }
   scope :archived, lambda { where('end_on < ? OR state IN (?)', Time.zone.today, ['rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest']).uniq }
-
   scope :needs_charge, -> (date) { confirmed.where('next_charge_date <= ?', date) }
 
-  monetize :subtotal_amount_cents, with_model_currency: :currency
-  monetize :service_fee_amount_guest_cents, with_model_currency: :currency
-  monetize :service_fee_amount_host_cents, with_model_currency: :currency
 
-  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :listing, allow_nil: true
+  validates :transactable_id, :interval, :presence => true
+  validates :owner_id, presence: true, unless: -> { owner.present? }
+
 
   state_machine :state, initial: :unconfirmed do
     before_transition unconfirmed: :confirmed do |reservation, transaction|
@@ -173,14 +179,12 @@ class RecurringBooking < ActiveRecord::Base
       # If we invoke this job later than we should, we don't want to corrupt dates,
       # this is much more safer
       period_start_date = next_charge_date
-      amount_to_charge = amount_calculator.subtotal_amount.cents
-      host_service_fee = amount_calculator.host_service_fee.cents
-      guest_service_fee = amount_calculator.guest_service_fee.cents
+
       recalculate_next_charge_date!
       recurring_booking_periods.create!(
-        service_fee_amount_guest_cents: guest_service_fee,
-        service_fee_amount_host_cents: host_service_fee,
-        subtotal_amount_cents: amount_to_charge,
+        service_fee_amount_guest_cents: amount_calculator.guest_service_fee.cents,
+        service_fee_amount_host_cents: amount_calculator.host_service_fee.cents,
+        subtotal_amount_cents: amount_calculator.subtotal_amount.cents,
         period_start_date: period_start_date,
         period_end_date: next_charge_date - 1.day,
         credit_card_id: credit_card_id,
@@ -192,33 +196,20 @@ class RecurringBooking < ActiveRecord::Base
     end
   end
 
-  def host_service_fee
-    service_fee_calculator.service_fee_host
-  end
-
-  def guest_service_fee
-    service_fee_calculator.service_fee_guest
-  end
-
-  def additional_charges_amount
-    service_fee_calculator.additional_charges_amount
-  end
-
   def total_amount
     total_amount_calculator.total_amount
   end
 
-  def has_service_fee?
-    !guest_service_fee.to_f.zero?
+  def tax_amount_cents
+    0
   end
 
-  def service_fee_calculator
-    options = {
-      guest_fee_percent:  service_fee_guest_percent,
-      host_fee_percent:   service_fee_host_percent,
-      additional_charges: []
-    }
-    @service_fee_calculator ||= Payment::ServiceFeeCalculator.new(subtotal_amount, options)
+  def shipping_amount_cents
+    0
+  end
+
+  def has_service_fee?
+    !service_fee_amount_guest.to_f.zero?
   end
 
   def total_amount_calculator
@@ -231,6 +222,10 @@ class RecurringBooking < ActiveRecord::Base
 
   def expiry_time
     created_at + listing.hours_to_expiration.to_i.hours
+  end
+
+  def fees_persisted?
+    persisted?
   end
 
 end

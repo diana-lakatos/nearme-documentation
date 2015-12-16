@@ -474,15 +474,10 @@ class ReservationTest < ActiveSupport::TestCase
 
         reservation.save!
 
-        options = {
-          guest_fee_percent: reservation.service_fee_guest_percent,
-          host_fee_percent: reservation.service_fee_host_percent
-        }
-        service_fee_calculator = Payment::ServiceFeeCalculator.new(Money.new(reservation.subtotal_amount_cents, reservation.currency), options)
-        assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents, reservation.subtotal_amount_cents
-        assert_equal service_fee_calculator.service_fee_guest.cents, reservation.service_fee_amount_guest_cents
-        assert_equal service_fee_calculator.service_fee_host.cents, reservation.service_fee_amount_host_cents
-        assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents + service_fee_calculator.service_fee_guest.cents, reservation.total_amount_cents
+        assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents, reservation.subtotal_amount.cents
+        assert_equal reservation.subtotal_amount_cents * 0.1, reservation.service_fee_amount_guest.cents
+        assert_equal reservation.subtotal_amount_cents * 0.1, reservation.service_fee_amount_host.cents
+        assert_equal reservation.subtotal_amount_cents + reservation.service_fee_amount_guest_cents, reservation.total_amount.cents
 
       end
 
@@ -524,11 +519,11 @@ class ReservationTest < ActiveSupport::TestCase
           payment_method: @payment_method
         )
 
-        assert_not_equal 0, reservation.service_fee_amount_guest_cents
-        assert_not_equal 0, reservation.service_fee_amount_host_cents
+        assert_not_equal 0, reservation.service_fee_amount_guest.cents
+        assert_not_equal 0, reservation.service_fee_amount_host.cents
       end
 
-      should "not charge a service fee to manual payment reservations" do
+      should "charge a service fee to manual payment reservations" do
         reservation = @listing.reservations.create!(
           user: @user,
           date: 1.week.from_now.monday,
@@ -536,8 +531,8 @@ class ReservationTest < ActiveSupport::TestCase
           payment_method: @manual_payment_method
         )
 
-        assert_equal 0, reservation.service_fee_amount_guest_cents
-        assert_equal 0, reservation.service_fee_amount_host_cents
+        assert_not_equal 0, reservation.service_fee_amount_guest.cents
+        assert_not_equal 0, reservation.service_fee_amount_host.cents
       end
 
       context 'with additional charges' do
@@ -547,11 +542,11 @@ class ReservationTest < ActiveSupport::TestCase
         end
 
         should 'include fee for additional charges' do
-          assert_equal @act.amount_cents, @reservation.service_fee_amount_guest_cents
+          assert_equal @act.amount_cents, @reservation.service_additional_charges_cents
         end
 
         should 'calculate fee wo additional charges' do
-          assert_equal 0, @reservation.service_fee_guest_wo_charges
+          assert_equal 0, @reservation.service_fee_amount_guest
         end
       end
     end
@@ -564,14 +559,8 @@ class ReservationTest < ActiveSupport::TestCase
 
       should "set total cost based on HourlyPriceCalculator" do
         @reservation.periods.build date: Time.zone.today.advance(weeks: 1).beginning_of_week, start_minute: 9*60, end_minute: 12*60
-        options = {
-          guest_fee_percent: @reservation.service_fee_guest_percent,
-          host_fee_percent: @reservation.service_fee_host_percent
-        }
         assert_equal Reservation::HourlyPriceCalculator.new(@reservation).price.cents +
-          Payment::ServiceFeeCalculator.new(Money.new(@reservation.subtotal_amount_cents, @reservation.currency), options)
-          .service_fee_guest.cents,
-        @reservation.total_amount_cents
+          @reservation.service_fee_amount_guest.cents, @reservation.total_amount_cents
       end
     end
   end

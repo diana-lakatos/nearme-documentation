@@ -34,7 +34,7 @@ class PaymentAuthorizer
   private
 
   def gateway_authorize
-    @payment_gateway.gateway.authorize(@authorizable.total_amount_cents, credit_card_or_token, @options)
+    @payment_gateway.gateway.authorize(@authorizable.total_amount.cents, credit_card_or_token, @options)
   end
 
   def handle_failure
@@ -74,7 +74,7 @@ class PaymentAuthorizer
   end
 
   def payment_record
-    @authorizable.payments.build(amount: @authorizable.total_amount_to_charge, company_id: @authorizable.company_id)
+    @authorizable.payments.build(amount: @authorizable.total_amount, company_id: @authorizable.company_id)
   end
 
   def prepare_options(options)
@@ -83,7 +83,7 @@ class PaymentAuthorizer
       currency: @authorizable.currency,
       merchant_account: @payment_gateway.merchant_account(@authorizable.company),
       payment_method_nonce: @authorizable.try(:payment_method_nonce),
-      service_fee_host: @authorizable.service_fee_amount_host_cents + @authorizable.service_fee_amount_guest_cents
+      service_fee_host: @authorizable.total_service_amount.cents
     }).with_indifferent_access
   end
 

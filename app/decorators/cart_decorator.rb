@@ -26,10 +26,10 @@ class CartDecorator
 
   def total
     case @step
-    when :payment then cart_orders.map(&:total_amount_to_charge).sum
+    when :payment then cart_orders.map(&:total_amount).sum
     when :delivery then cart_orders.map(&:total).sum
     else
-      cart_orders.map(&:subtotal_amount_to_charge).sum
+      cart_orders.map(&:subtotal_amount).sum
     end
   end
 

@@ -4,6 +4,8 @@ en:
       payment_gateway: "Payment gateway"
       payment_method: "Payment method"
     attributes:
+      additional_charge_type:
+        additional_charge_type_target: "Product/Service Type"
       instance:
         time_zone: "Default Time Zone"
       payment_method/payment_method_type:
@@ -97,6 +99,7 @@ en:
     validation:
       question_quantity: "Only %{number} questions or less for one rating system"
   general:
+    remove: "Remove"
     processing: 'Processing ...'
     submit: 'Submit'
     cancel: 'Cancel'
@@ -780,7 +783,7 @@ en:
         no_addons_yet: "You don't have any add-ons yet. Click on the link below and start upselling now"
         add_new_upsell: '+ Add new Upsell'
         name: "Name"
-        service: "Service"
+        service: "ServiceType/ProductType"
         amount: "Amount"
         status: "Status"
         add_upsell: '+ Add Upsell'
@@ -1137,6 +1140,8 @@ en:
         open: "Opened"
         resolved: "Resolved"
   dashboard:
+    additional_charge_type:
+      new: "New Upsell & Add-ons"
     items:
       list_new_item: "List New Item"
       edit_item: "Edit Item"
@@ -1239,6 +1244,7 @@ en:
       pending_confirmation: 'Pending confirmation from host. Booking will expire in '
       money_info: "Payment has been authorized but it will be captured only upon confirmation."
       exclusive_price_guests_notes: 'Exclusive booking instructions:'
+      additional_charges: 'Upsell & Add-ons:'
       upcoming: "Upcoming"
       archived: "Archived"
       track_package: 'Track Package'
@@ -1348,6 +1354,8 @@ en:
       next_payment_transfer: "The next automated payout occurs at %{next_payment_transfer}."
       remember_to_setup_automated_payout: "To receive automated payout please <a href='%{setup_link}'>setup payouts</a>."
       exclusive_price_guests_notes: 'Exclusive booking instructions from guest: %{guest_notes}'
+      payment_documents: 'Payment documents:'
+      additional_charges: 'Upsell & Add-ons:'
       track_package: 'Track package'
       return_track_package: 'Track return package'
       shipping_label: 'Shipping label'
