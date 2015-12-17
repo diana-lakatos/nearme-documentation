@@ -40,11 +40,11 @@ module Chargeable
   end
 
   def service_fee_amount_guest_cents
-    fees_persisted? ? super : (subtotal_amount_cents * service_fee_guest_percent / BigDecimal(100))
+    fees_persisted? ? super : (subtotal_amount_cents * service_fee_guest_percent.to_f / BigDecimal(100))
   end
 
   def service_fee_amount_host_cents
-    fees_persisted? ? super : (subtotal_amount_cents * service_fee_host_percent / BigDecimal(100))
+    fees_persisted? ? super : (subtotal_amount_cents * service_fee_host_percent.to_f / BigDecimal(100))
   end
 
   def total_service_fee_amount_cents
