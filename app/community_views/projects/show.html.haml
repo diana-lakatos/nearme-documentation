@@ -19,7 +19,7 @@
             = link_to user_path(@project.creator) do
               = image_tag @project.creator.avatar.url(:thumb), width: 40, height: 40, alt: @project.creator.name
           %h3.hx
-            = link_to @project.creator.name, user_path(@project.creator)
+            = link_to @project.creator.decorate.name_with_affiliation, user_path(@project.creator)
           %p.location= "#{@project.creator.current_address.try(:city)}, #{@project.creator.current_address.try(:state)}"
         %p.tx-a= @project.summary
         %p.topics
