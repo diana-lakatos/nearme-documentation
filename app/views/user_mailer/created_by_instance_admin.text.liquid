@@ -4,5 +4,3 @@ You have been invited by {{ creator.name }} to join {{ platform_context.name }}!
 The e-mail that was used as an username is {{ new_user.email }}, you can set the password manually by clicking the big blue button below
 
 Set your password at {{ platform_context.host | append:new_user.set_password_url_with_token_and_tracking | append:signature_for_tracking }}
-
-You can access to admin area by going to {{ instance_admin_path }}
