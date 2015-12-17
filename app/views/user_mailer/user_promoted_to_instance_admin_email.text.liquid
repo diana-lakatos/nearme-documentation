@@ -1,0 +1,4 @@
+Welcome, {{ user_who_was_promoted.first_name }}!
+
+You have been promoted to Admin by {{ user_who_promoted.name }} in {{ platform_context.instance_admin_path.name }}!
+The e-mail that was used as an username is {{ user_who_was_promoted.email }}, you now have access to admin area by going to {{ platform_context.instance_admin_path }}

@@ -1,0 +1,4 @@
+<h2>Welcome, {{ user_who_was_promoted.first_name }}!</h2>
+
+<p>You have been promoted to Admin by {{ user_who_promoted.name }} in {{ platform_context.name }}! </p>
+<p>The e-mail that was used as an username is {{ user_who_was_promoted.email }}, you now have access to admin area by going to <a href="{{ platform_context.instance_admin_path }}">{{ platform_context.instance_admin_path }}</a></p>
