@@ -17,9 +17,7 @@ class Shipment < ActiveRecord::Base
 
   def get_rates(reservation)
     self.reservation ||= reservation
-    location_address = reservation.location.address_to_shippo
-    location_address[:company] = reservation.company.name
-    location_address = instance.shippo_api.create_address(location_address)[:object_id]
+    location_address = instance.shippo_api.create_address(address_from_hash(reservation))[:object_id]
     if outbound?
       address_from = location_address
       address_to = shipping_address.get_shippo_id
@@ -30,6 +28,20 @@ class Shipment < ActiveRecord::Base
     parcel = reservation.listing.dimensions_template.get_shippo_id
     shipment = instance.shippo_api.create_shipment(address_from, address_to, parcel, customs_declaration, insurance)
     rates = instance.shippo_api.get_rates_for_shipment(shipment)
+  end
+
+  def address_from_hash(reservation)
+    location_address_hash = reservation.location.address_to_shippo
+    location_address_hash[:company] = reservation.company.name
+    location_address_hash
+  end
+
+  def valid_sending_company_address?(reservation)
+    location_address = instance.shippo_api.create_address(address_from_hash(reservation))[:object_id]
+
+    ShippoApi::ShippoAddressInfo.valid?(location_address)
+  rescue
+    false
   end
 
   def outbound?
