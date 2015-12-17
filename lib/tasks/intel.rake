@@ -82,6 +82,7 @@ namespace :intel do
       end.save!
 
       Utils::DefaultAlertsCreator::ProjectCreator.new.create_all!
+      Utils::DefaultAlertsCreator::UserCreator.new.create_user_promoted_email!
       PlatformContext.current.theme.update_attributes(
         facebook_url: 'https://www.facebook.com/IntelDeveloperZone/',
         twitter_url: 'https://twitter.com/intelsoftware',
