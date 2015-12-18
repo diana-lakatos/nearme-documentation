@@ -9,7 +9,7 @@ class Search.Controller
     if @autocompleteEnabled()
       @initializeAutocomplete()
     @initializeGeocoder()
-    new Search.Datepickers(@container)
+    new Search.Datepickers($('body'))
 
   initializeAutocomplete: (queryField)->
     queryField ||= @queryField
