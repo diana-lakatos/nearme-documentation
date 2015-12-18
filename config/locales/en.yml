@@ -1837,6 +1837,7 @@ en:
   reservations:
     booking_was_requested_successfully: "Your booking was requested successfully!"
     mpo_shipping_settings_not_valid: "The administrator of the site hasn't correctly set the shipping API settings yet."
+    company_address_not_valid: "The location address of the seller is not correct or complete. Please contact the seller."
     charge_after_confirmation: "You will not be charged until the booking is confirmed."
     manually_confirm: "This %{lessor} manually confirms all bookings."
     paypal_and_cc_charge_after_confirmation: "Your will not be charged until the booking is confirmed."
