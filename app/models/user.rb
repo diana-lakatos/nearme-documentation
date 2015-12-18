@@ -392,7 +392,7 @@ class User < ActiveRecord::Base
     secret_name = secret_name.present? ? "#{first_name} #{secret_name[0]}." : first_name
 
     if self.properties.try(:is_intel) == true
-      secret_name += '<span class="intel-affiliate-badge">Intel</span>' 
+      secret_name += ' (Intel)'
       secret_name.html_safe
     else
       secret_name
