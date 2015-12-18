@@ -24,7 +24,7 @@ class UserDecorator < Draper::Decorator
 
   def name_with_affiliation
     if properties.try(:is_intel) == true
-      "#{name} <span class='intel-affiliate-badge'>Intel</span>".html_safe
+      "#{name} <span>(Intel)</span>".html_safe
     else
       name
     end
