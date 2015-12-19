@@ -31,3 +31,8 @@
 
 / - content_for :domready do
 /   $(function() { new CompanyForm($('#edit_company')) });
+/ This is to fix the wrong state of white-label-fields (shown or not shown) due to white_label_enabled checkbox keeping the same state on page refresh even though
+/ it's not persisted in the DB
+- content_for :domready do
+  $(document).ready(function() { if($('#company_white_label_enabled').is(':checked')) { $('#white-label-fields').attr('class', 'collapse in'); } else { $('#white-label-fields').attr('class', 'collapse'); } });
+
