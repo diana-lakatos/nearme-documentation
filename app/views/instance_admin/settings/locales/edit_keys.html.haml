@@ -6,7 +6,7 @@
         .filter.search
           = form_tag edit_keys_instance_admin_settings_locale_path, method: :get do
             %input{placeholder: t('instance_admin.manage.users.index.search_by_keyword'), type: 'text', name: 'q', value: params[:q]}
-            =fa_icon "search"
+            = fa_icon "search", class: 'fa-action-icon-submit'
       %table#translations-table
         = simple_nested_form_for @instance, url: instance_admin_settings_translations_path, html: { multipart: true, 'data-edit' => 'keys' } do |f|
           %thead
