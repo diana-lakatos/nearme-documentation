@@ -10,6 +10,7 @@
 
     = render 'dashboard/shared/flash'
 
+    %input{name: 'with_deleted_link', type: 'hidden', value: params[:with_deleted_link]}
     = render :partial => 'location_form', :locals => { :f => f, :location => @location }
 
   .dialog__actions
