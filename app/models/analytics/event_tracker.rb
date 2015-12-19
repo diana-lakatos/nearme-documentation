@@ -38,14 +38,14 @@ class Analytics::EventTracker
     @invoked_events_tracker.events
   end
 
-  include ListingEvents
-  include LocationEvents
-  include ReservationEvents
-  include RecurringBookingEvents
-  include SpaceWizardEvents
-  include UserEvents
-  include MailerEvents
   include Analytics::CompanyEvents
+  include Analytics::ListingEvents
+  include Analytics::LocationEvents
+  include Analytics::MailerEvents
+  include Analytics::RecurringBookingEvents
+  include Analytics::ReservationEvents
+  include Analytics::SpaceWizardEvents
+  include Analytics::UserEvents
 
   def pixel_track_url(event_name, properties)
     @mixpanel_api.pixel_track_url(event_name, properties)
