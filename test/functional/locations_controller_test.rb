@@ -6,7 +6,6 @@ class LocationsControllerTest < ActionController::TestCase
     @location = FactoryGirl.create(:location_in_auckland)
     @listing = FactoryGirl.create(:transactable, :location => @location)
     @second_listing = FactoryGirl.create(:transactable, :location => @location)
-    stub_mixpanel
   end
 
   context '#show' do
@@ -25,7 +24,7 @@ class LocationsControllerTest < ActionController::TestCase
       end
 
       should 'track viewed_a_location event' do
-        @tracker.expects(:viewed_a_location).with do |location|
+        Rails.application.config.event_tracker.any_instance.expects(:viewed_a_location).with do |location|
           location == assigns(:location)
         end
         get :show, id: @location.id
@@ -36,7 +35,7 @@ class LocationsControllerTest < ActionController::TestCase
     context 'with listing' do
 
       should 'track viewed_a_location event' do
-        @tracker.expects(:viewed_a_location).with do |location|
+        Rails.application.config.event_tracker.any_instance.expects(:viewed_a_location).with do |location|
           location == assigns(:location)
         end
         get :show, id: @location.id, listing_id: @listing

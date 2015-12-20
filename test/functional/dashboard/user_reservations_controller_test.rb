@@ -5,17 +5,16 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
   context '#event_tracker' do
     should "track and redirect a host to the My Bookings page when they cancel a booking" do
       @reservation = FactoryGirl.create(:future_reservation)
-      stub_mixpanel
       sign_in @reservation.owner
       WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::GuestCancelled, @reservation.id)
 
-      @tracker.expects(:cancelled_a_booking).with do |reservation, custom_options|
+      Rails.application.config.event_tracker.any_instance.expects(:cancelled_a_booking).with do |reservation, custom_options|
         reservation == assigns(:reservation) && custom_options == { actor: 'guest' }
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).owner
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).host
       end
 
@@ -95,7 +94,6 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
       @location = FactoryGirl.create(:location_in_auckland)
       @listing = FactoryGirl.create(:transactable, location: @location)
       @company.locations << @location
-      stub_mixpanel
     end
 
     context 'render view' do
@@ -203,7 +201,6 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
     should 'store new version after user cancel' do
       @reservation = FactoryGirl.create(:future_reservation)
       sign_in @reservation.owner
-      stub_mixpanel
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
         with_versioning do
           post :user_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }

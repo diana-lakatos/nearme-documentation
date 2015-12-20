@@ -11,7 +11,6 @@ class InstanceAdmin::Manage::ServiceTypes::CustomValidatorsControllerTest < Acti
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
     sign_in @user
-    stub_mixpanel
   end
 
   should '#index' do

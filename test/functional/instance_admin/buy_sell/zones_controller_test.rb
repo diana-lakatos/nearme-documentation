@@ -3,7 +3,6 @@ require 'test_helper'
 class InstanceAdmin::BuySell::ZonesControllerTest < ActionController::TestCase
 
   setup do
-    stub_mixpanel
     @user = FactoryGirl.create(:user)
     sign_in @user
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
@@ -23,7 +22,7 @@ class InstanceAdmin::BuySell::ZonesControllerTest < ActionController::TestCase
     should 'allow create zone' do
       @country = FactoryGirl.create(:spree_country)
       assert_difference 'Spree::Zone.count', 1 do
-        post :create, zone: { 
+        post :create, zone: {
                         name: 'new name',
                         description: 'test',
                         default_tax: '1',

@@ -13,11 +13,10 @@ class Dashboard::Company::LocationsControllerTest < ActionController::TestCase
   context "#create" do
 
     should "create location and log" do
-      stub_mixpanel
-      @tracker.expects(:created_a_location).with do |location, custom_options|
+      Rails.application.config.event_tracker.any_instance.expects(:created_a_location).with do |location, custom_options|
         location == assigns(:location) && custom_options == { via: 'dashboard' }
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == @user
       end
       assert_difference('@user.locations.count') do
@@ -27,7 +26,6 @@ class Dashboard::Company::LocationsControllerTest < ActionController::TestCase
     end
 
     should "have correct slug" do
-      stub_mixpanel
       post :create, { format: :js, location: FactoryGirl.attributes_for(:location_in_auckland).merge(location_address_attributes: FactoryGirl.attributes_for(:address_in_auckland)).reverse_merge({location_type_id: @location_type.id})}
       assert_equal "#{assigns(:location).company.name.parameterize}-auckland", assigns(:location).reload.slug
     end
@@ -41,7 +39,6 @@ class Dashboard::Company::LocationsControllerTest < ActionController::TestCase
 
     context 'CRUD' do
       setup do
-        stub_mixpanel
         @related_instance = FactoryGirl.create(:instance)
         PlatformContext.current = PlatformContext.new(@related_instance)
         @user = FactoryGirl.create(:user)
@@ -79,11 +76,11 @@ class Dashboard::Company::LocationsControllerTest < ActionController::TestCase
 
       context '#destroy' do
         should 'allow destroy for related location' do
-          @tracker.expects(:deleted_a_location).with do |location, custom_options|
+          Rails.application.config.event_tracker.any_instance.expects(:deleted_a_location).with do |location, custom_options|
             location == assigns(:location)
           end
           @location.listings.each do |_listing|
-            @tracker.expects(:deleted_a_listing).with do |listing, custom_options|
+            Rails.application.config.event_tracker.any_instance.expects(:deleted_a_listing).with do |listing, custom_options|
               listing == _listing
             end
           end
@@ -121,8 +118,7 @@ class Dashboard::Company::LocationsControllerTest < ActionController::TestCase
     end
 
     should "destroy location" do
-      stub_mixpanel
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == @user
       end
       assert_difference('@user.locations.count', -1) do
@@ -139,7 +135,6 @@ class Dashboard::Company::LocationsControllerTest < ActionController::TestCase
       end
 
       should "not create location" do
-        stub_mixpanel
         assert_no_difference('@user.locations.count') do
           post :create, format: :js, location: FactoryGirl.attributes_for(:location_in_auckland).merge(location_address_attributes: FactoryGirl.attributes_for(:address_in_auckland)).reverse_merge!({location_type_id: @location_type.id})
         end
@@ -168,7 +163,6 @@ class Dashboard::Company::LocationsControllerTest < ActionController::TestCase
   context 'versions' do
 
     should 'track version change on create' do
-      stub_mixpanel
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Location", "create").count') do
         with_versioning do
           post :create, format: :js, location: FactoryGirl.attributes_for(:location_in_auckland).merge(location_address_attributes: FactoryGirl.attributes_for(:address_in_auckland)).reverse_merge!({location_type_id: @location_type.id})
@@ -187,7 +181,6 @@ class Dashboard::Company::LocationsControllerTest < ActionController::TestCase
     end
 
     should 'track version change on destroy' do
-      stub_mixpanel
       @location = FactoryGirl.create(:location_in_auckland, company: @company)
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Location", "destroy").count') do
         with_versioning do

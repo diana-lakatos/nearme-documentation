@@ -4,7 +4,6 @@ class BuySellMarket::ProductsControllerTest < ActionController::TestCase
 
   setup do
     @product = FactoryGirl.create(:product)
-    stub_mixpanel
   end
 
   context 'show' do

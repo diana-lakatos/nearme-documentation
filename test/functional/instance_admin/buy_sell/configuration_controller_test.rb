@@ -3,7 +3,6 @@ require 'test_helper'
 class InstanceAdmin::BuySell::ConfigurationControllerTest < ActionController::TestCase
 
   setup do
-    stub_mixpanel
     PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
     @user = FactoryGirl.create(:user)
     sign_in @user

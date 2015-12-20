@@ -8,9 +8,7 @@ groups[:profiling] =  [Rails.env.to_s] if ENV['PERF']
 
 Bundler.require(*Rails.groups(groups)) if defined?(Bundler)
 
-require File.dirname(__FILE__) + '/../lib/null_logger.rb'
 require File.dirname(__FILE__) + '/../lib/null_redis_cache.rb'
-require File.dirname(__FILE__) + '/../lib/marketplace_error_logger.rb'
 
 module DesksnearMe
   class Application < Rails::Application
@@ -184,7 +182,6 @@ module DesksnearMe
     config.googl_api_key = nil
 
     config.default_cache_expires_in = 30.minutes
-    config.marketplace_error_logger = MarketplaceErrorLogger::ActiveRecordLogger.new
     config.force_disable_es = false
     config.active_merchant_billing_gateway_app_id = 'NearMe_SP'
     config.redis_cache_client = NullRedisCache

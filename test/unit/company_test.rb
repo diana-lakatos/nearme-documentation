@@ -50,7 +50,6 @@ class CompanyTest < ActiveSupport::TestCase
 
     context 'no payout address' do
       setup do
-        stub_mixpanel
         PlatformContext.current = PlatformContext.new(@company)
       end
 

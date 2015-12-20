@@ -14,7 +14,7 @@
 #
 # Usage:
 #
-#   tracker = Analytics::EventTracker.new(mixpanel_analytics_backend)
+#   tracker = EventTracker::BaseTracker.new(mixpanel_analytics_backend)
 #   tracker.signed_up(user)
 #   tracker.cancelled_reservation(reservation)
 #   tracker.accepted_reservation(reservation),
@@ -24,7 +24,7 @@
 # In order to test the execution of events in unit or functional tests, we simply need
 # to mock out the relevant tracker instance and assert an expectation to call the
 # relevant event method(s).
-class Analytics::EventTracker
+class EventTracker::BaseTracker
 
 
   def initialize(mixpanel_api, google_analytics_api)
@@ -38,14 +38,14 @@ class Analytics::EventTracker
     @invoked_events_tracker.events
   end
 
-  include ListingEvents
-  include LocationEvents
-  include ReservationEvents
-  include RecurringBookingEvents
-  include SpaceWizardEvents
-  include UserEvents
-  include MailerEvents
-  include Analytics::CompanyEvents
+  include EventTracker::CompanyEvents
+  include EventTracker::ListingEvents
+  include EventTracker::LocationEvents
+  include EventTracker::MailerEvents
+  include EventTracker::RecurringBookingEvents
+  include EventTracker::ReservationEvents
+  include EventTracker::SpaceWizardEvents
+  include EventTracker::UserEvents
 
   def pixel_track_url(event_name, properties)
     @mixpanel_api.pixel_track_url(event_name, properties)
@@ -58,12 +58,18 @@ class Analytics::EventTracker
     @google_analytics_api.track_charge(serialized_objects_hash)
   end
 
+  def apply_user(*args)
+    mixpanel.apply_user(*args)
+    google_analytics.apply_user(*args)
+  end
+
   private
 
   def track(event_name, *objects)
-    @mixpanel_api.track(event_name, Serializers::TrackSerializer.new(*objects).serialize)
+    additional_params = Serializers::TrackSerializer.new(*objects).serialize
+    @mixpanel_api.track(event_name, additional_params)
     stack_trace_parser = StackTraceParser.new(caller[0])
-    @google_analytics_api.track(stack_trace_parser.humanized_file_name, event_name)
+    @google_analytics_api.track(stack_trace_parser.humanized_file_name, event_name, additional_params)
     triggered_event = stack_trace_parser.humanized_method_name
     @invoked_events_tracker.push(triggered_event)
   end

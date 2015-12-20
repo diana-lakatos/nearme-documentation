@@ -94,7 +94,6 @@ class V1::ListingsControllerTest < ActionController::TestCase
 
   context "when successful" do
     setup do
-      stub_mixpanel
       authenticate!
 
       WorkflowStepJob.expects(:perform).with do |klass, int|
@@ -162,7 +161,6 @@ class V1::ListingsControllerTest < ActionController::TestCase
   # Inquiry
 
   test "should accept inquiry" do
-    stub_mixpanel
     authenticate!
     listing         = Transactable.find(@listing.id)
     listing.creator = FactoryGirl.create(:user)

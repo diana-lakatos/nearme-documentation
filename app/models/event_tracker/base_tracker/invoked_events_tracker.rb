@@ -1,6 +1,6 @@
 # Stores all events that were invoked by user.
 # Used by third party software tagging system - current one is sessioncam
-class Analytics::EventTracker::InvokedEventsTracker
+class EventTracker::BaseTracker::InvokedEventsTracker
 
   TAGGABLE_EVENTS = ['Requested a booking', 'Created a location', 'Created a listing', 'Saved a draft', 'Signed up', 'Logged in' ]
 

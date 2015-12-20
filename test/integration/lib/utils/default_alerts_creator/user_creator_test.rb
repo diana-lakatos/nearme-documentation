@@ -15,7 +15,6 @@ class Utils::DefaultAlertsCreator::UserCreatorTest < ActionDispatch::Integration
   context 'methods' do
 
     setup do
-      stub_mixpanel
       @user = FactoryGirl.create(:user, name: 'John Doe')
       @platform_context = PlatformContext.current
       PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))

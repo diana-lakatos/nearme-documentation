@@ -17,7 +17,6 @@ class Utils::DefaultAlertsCreator::OrderCreatorTest < ActionDispatch::Integratio
 
   context 'methods' do
     setup do
-      stub_mixpanel
       @platform_context = PlatformContext.current
       @instance = @platform_context.instance
       PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))

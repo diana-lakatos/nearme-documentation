@@ -137,7 +137,7 @@ class ReservationRequest < Form
   end
 
   def is_free?
-    @listing.try(:action_free_booking?) && @reservation.try(:additional_charges).try(:count).try(:zero?)
+    @listing.try(:action_free_booking?) && additional_charges.blank?
   end
 
   def with_delivery?

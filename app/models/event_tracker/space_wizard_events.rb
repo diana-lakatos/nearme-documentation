@@ -1,4 +1,4 @@
-module Analytics::SpaceWizardEvents
+module EventTracker::SpaceWizardEvents
 
   def clicked_list_your_bookable(custom_options = {})
     track 'Clicked List your Bookable', custom_options

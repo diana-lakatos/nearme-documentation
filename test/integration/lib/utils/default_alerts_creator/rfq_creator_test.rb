@@ -18,7 +18,6 @@ class Utils::DefaultAlertsCreator::RfqCreatorTest < ActionDispatch::IntegrationT
   context 'methods' do
 
     setup do
-      stub_mixpanel
       @user = FactoryGirl.create(:user)
       @transactable = FactoryGirl.create(:transactable)
       @ticket = FactoryGirl.create(:support_ticket, user: @user, assigned_to: @transactable.creator, target: @transactable)
