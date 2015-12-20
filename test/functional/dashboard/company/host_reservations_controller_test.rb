@@ -64,6 +64,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       Time.use_zone 'Hawaii' do
         reservation = FactoryGirl.create(:reservation, owner: @user, listing: @related_listing)
         ReservationPeriod.destroy_all
+        reservation.reload
         reservation.add_period(Time.zone.tomorrow, 600, 720) # Tommorow form 10:00 - 12:00 AM
         reservation.save
 
@@ -77,13 +78,13 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
           get :index
           @guest_list = assigns(:guest_list)
           assert_equal [reservation], @guest_list.reservations
+        end
 
-          # Travel just after reservation is over
-          travel_to Time.zone.today.at_beginning_of_day.advance(hours: 13) do
-            get :index
-            @guest_list = assigns(:guest_list)
-            assert_equal [], @guest_list.reservations
-          end
+        # Travel just after reservation is over
+        travel_to Time.zone.tomorrow.at_beginning_of_day.advance(hours: 13) do
+          get :index
+          @guest_list = assigns(:guest_list)
+          assert_equal [], @guest_list.reservations
         end
       end
     end

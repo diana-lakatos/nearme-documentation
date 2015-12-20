@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :reservation_request do
     quantity 1
-    dates { Date.today.to_s }
+    dates { Date.today.next_week.to_s }
     start_minute 600
     end_minute 900
     card_holder_first_name "Rowan"
