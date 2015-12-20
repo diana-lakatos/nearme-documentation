@@ -1,14 +1,17 @@
 require 'test_helper'
 require 'helpers/search_params_test_helper'
 
-class EventTrackerTest < ActiveSupport::TestCase
+class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
   include SearchParamsTestHelper
 
   setup do
     @user = FactoryGirl.create(:user)
     @mixpanel = stub() # Represents our internal MixpanelApi instance
     @google_analytics = stub()
-    @tracker = Analytics::EventTracker.new(@mixpanel, @google_analytics)
+    stub_mixpanel()
+    @old_tracker = Rails.application.config.event_tracker
+    Rails.application.config.event_tracker = EventTracker::BaseTracker
+    @tracker = Rails.application.config.event_tracker.new(@mixpanel, @google_analytics)
   end
 
   context 'track_charge' do
@@ -258,11 +261,15 @@ class EventTrackerTest < ActiveSupport::TestCase
     @tracker.pixel_track_url(event_name, properties)
   end
 
+  teardown do
+    Rails.application.config.event_tracker = @old_tracker
+  end
+
   private
 
   def expect_event(event_name, properties = nil)
     @mixpanel.expects(:track).with(event_name, properties)
-    @google_analytics.expects(:track).with(@category, event_name)
+    @google_analytics.expects(:track).with(@category, event_name, properties)
   end
 
 

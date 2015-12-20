@@ -36,7 +36,6 @@ class CustomMailerTest < ActiveSupport::TestCase
 
 
   setup do
-    stub_mixpanel
     @transactable_type = FactoryGirl.create(:transactable_type)
     @lister = FactoryGirl.create(:user, email: 'lister@example.com', accept_emails: true)
     @enquirer = FactoryGirl.create(:user, email: 'enquirer@example.com', accept_emails: true)

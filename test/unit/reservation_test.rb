@@ -12,7 +12,6 @@ class ReservationTest < ActiveSupport::TestCase
   should have_many(:additional_charges)
 
   setup do
-    stub_mixpanel
     @manual_payment_method = FactoryGirl.create(:manual_payment_gateway).payment_methods.first
   end
 

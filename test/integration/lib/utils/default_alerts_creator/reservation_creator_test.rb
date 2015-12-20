@@ -33,7 +33,6 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
   context 'methods' do
     setup do
-      stub_mixpanel
       @user = FactoryGirl.create(:user)
       @reservation = FactoryGirl.build(:reservation, user: @user)
       @reservation.periods = [ReservationPeriod.new(:date => Date.parse("2012/12/12")), ReservationPeriod.new(:date => Date.parse("2012/12/13"))]

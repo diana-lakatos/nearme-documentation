@@ -579,7 +579,6 @@ class UserTest < ActiveSupport::TestCase
   context "notify about invalid mobile phone" do
 
     setup do
-      stub_mixpanel
       FactoryGirl.create(:instance)
       @user = FactoryGirl.create(:user)
       Utils::DefaultAlertsCreator::SignUpCreator.new.create_notify_of_wrong_phone_number_email!

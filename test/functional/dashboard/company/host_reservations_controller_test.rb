@@ -98,7 +98,6 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       @reservation.create_billing_authorization(token: "123", payment_gateway: @payment_gateway, payment_gateway_mode: "test")
       @user = @reservation.listing.creator
       sign_in @user
-      stub_mixpanel
       stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
       stub_billing_gateway(@reservation.instance)
       stub_active_merchant_interaction
@@ -107,13 +106,13 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     should "track and redirect a host to the Manage Guests page when they confirm a booking" do
       WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::ManuallyConfirmed, @reservation.id)
 
-      @tracker.expects(:confirmed_a_booking).with do |reservation|
+      Rails.application.config.event_tracker.any_instance.expects(:confirmed_a_booking).with do |reservation|
         reservation == assigns(:reservation)
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).owner
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).host
       end
 
@@ -125,13 +124,13 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     should "track and redirect a host to the Manage Guests page when they reject a booking" do
       WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::Rejected, @reservation.id)
 
-      @tracker.expects(:rejected_a_booking).with do |reservation|
+      Rails.application.config.event_tracker.any_instance.expects(:rejected_a_booking).with do |reservation|
         reservation == assigns(:reservation)
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).owner
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).host
       end
       Reservation.any_instance.expects(:schedule_void_payment).once
@@ -144,13 +143,13 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
 
       @reservation.confirm # Must be confirmed before can be cancelled
 
-      @tracker.expects(:cancelled_a_booking).with do |reservation, custom_options|
+      Rails.application.config.event_tracker.any_instance.expects(:cancelled_a_booking).with do |reservation, custom_options|
         reservation == assigns(:reservation) && custom_options == { actor: 'host' }
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).owner
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).host
       end
       post :host_cancel, { id: @reservation.id }

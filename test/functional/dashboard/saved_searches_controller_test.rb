@@ -6,7 +6,6 @@ class Dashboard::SavedSearchesControllerTest < ActionController::TestCase
     setup do
       @saved_search = create(:saved_search, query: '?loc=Auckland&query=&transactable_type_id=1&buyable=false')
       sign_in @saved_search.user
-      stub_mixpanel
     end
 
     should 'update saved_search#last_viewed_at' do

@@ -4,7 +4,6 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
-    stub_mixpanel
     sign_in @user
   end
 

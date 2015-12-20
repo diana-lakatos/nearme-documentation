@@ -4,7 +4,6 @@ class SessionsTest < ActionDispatch::IntegrationTest
 
   setup do
     @user = FactoryGirl.create(:user)
-    stub_mixpanel
     @role = FactoryGirl.create(:instance_admin_role)
     @role.update_attribute(:permission_analytics, false)
     @role.update_attribute(:permission_settings, true)

@@ -27,5 +27,5 @@ DesksnearMe::Application.configure do
   config.eager_load = false
   config.run_jobs_in_background = false
   config.allow_concurrency = false
-  config.marketplace_error_logger = MarketplaceErrorLogger::DummyLogger.new
+
 end

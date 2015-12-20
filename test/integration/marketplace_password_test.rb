@@ -4,7 +4,6 @@ class MarketplacePasswordTest < ActionDispatch::IntegrationTest
 
   setup do
     @user = FactoryGirl.create(:user)
-    stub_mixpanel
     @instance = PlatformContext.current.instance
     @role = FactoryGirl.create(:instance_admin_role, permission_analytics: false, permission_settings: true)
     @instance_admin = FactoryGirl.create(:instance_admin, user_id: @user.id, instance_id: @instance.id, instance_owner: false, instance_admin_role_id: @role.id)

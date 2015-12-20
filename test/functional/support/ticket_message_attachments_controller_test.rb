@@ -10,7 +10,6 @@ class Support::TicketMessageAttachmentsControllerTest < ActionController::TestCa
 
   context '#create' do
     should 'create message' do
-      stub_mixpanel
       params = {
         support_ticket_message_attachment: FactoryGirl.attributes_for(:support_ticket_message_attachment)
       }

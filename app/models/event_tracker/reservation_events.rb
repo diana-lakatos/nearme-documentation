@@ -1,4 +1,4 @@
-module Analytics::ReservationEvents
+module EventTracker::ReservationEvents
 
   def reviewed_a_booking(reservation, custom_options = {})
     track 'Reviewed a Booking', reservation, custom_options

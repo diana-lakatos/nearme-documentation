@@ -5,7 +5,6 @@ class Utils::DefaultAlertsCreator::PayoutTest < ActionDispatch::IntegrationTest
   include ReservationTestSupport
 
   setup do
-    stub_mixpanel
     @company_owner = FactoryGirl.create(:user, :mobile_number => "124456789")
     User.any_instance.stubs(:temporary_token).returns('abc')
     @instance = FactoryGirl.create(:instance, :name => 'MyBoat')

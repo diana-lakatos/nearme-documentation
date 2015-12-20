@@ -1,6 +1,6 @@
 # Extracts necessary attributes from objects passed to track_charge
 
-class Analytics::EventTracker::Serializers::TrackSerializer
+class EventTracker::BaseTracker::Serializers::TrackSerializer
 
   def initialize(*objects)
     @objects = objects

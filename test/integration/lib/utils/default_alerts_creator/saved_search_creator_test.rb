@@ -15,7 +15,6 @@ class Utils::DefaultAlertsCreator::SavedSearchCreatorTest < ActionDispatch::Inte
   context 'methods' do
 
     setup do
-      stub_mixpanel
       @user = FactoryGirl.create(:user)
       @saved_search = FactoryGirl.create(:saved_search,
         user: @user,
