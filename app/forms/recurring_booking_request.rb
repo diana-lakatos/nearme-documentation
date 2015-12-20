@@ -54,6 +54,11 @@ class RecurringBookingRequest < Form
 
   end
 
+
+  def mark_as_authorized!
+    #TODO we can move payment_status to state machine soon
+  end
+
   def process
     valid? && check_overbooking && setup_credit_card_customer && errors.empty? && save_reservations
   end
