@@ -59,8 +59,8 @@ class EventTracker::BaseTracker
   end
 
   def apply_user(*args)
-    mixpanel.apply_user(*args)
-    google_analytics.apply_user(*args)
+    @mixpanel_api.apply_user(*args)
+    @google_analytics_api.apply_user(*args)
   end
 
   private
