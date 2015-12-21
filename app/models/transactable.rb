@@ -438,12 +438,7 @@ class Transactable < ActiveRecord::Base
     end
 
     reservation.save!
-
-    if reservation.listing.confirm_reservations?
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation, reservation.id)
-    else
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, reservation.id)
-    end
+    reservation.mark_as_paid!
     reservation
   end
 

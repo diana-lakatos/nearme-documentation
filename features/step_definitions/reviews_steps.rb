@@ -17,12 +17,15 @@ end
 Given(/^I receive an email request for (host and listing|guest) rating$/) do |kind|
   stub_local_time_to_return_hour(Location.any_instance, 12)
   RatingReminderJob.perform(Date.current.to_s)
-  assert_equal 2, ActionMailer::Base.deliveries.size
-  @request_email = ActionMailer::Base.deliveries.detect { |e| e.to == [@user.email] }
+  assert_equal 4, ActionMailer::Base.deliveries.size
+
+  @emails = ActionMailer::Base.deliveries.select { |e| e.to == [@user.email] }
   if kind=='host and listing'
-    assert_match /\[#{model!('instance').name}\] How was your experience at 'Listing \d+'/, @request_email.subject
+    assert_match /\[#{model!('instance').name}\] #{@user.first_name}, your booking is pending confirmation/, @emails[0].subject
+    assert_match /\[#{model!('instance').name}\] How was your experience at 'Listing \d+'/, @emails[1].subject
   else
-    assert_match /\[#{model!('instance').name}\] How was your experience hosting User-\d+/, @request_email.subject
+    assert_match /\[#{model!('instance').name}\] #{@user.first_name} just booked your Desk!/, @emails[0].subject
+    assert_match /\[#{model!('instance').name}\] How was your experience hosting User-\d+/, @emails[1].subject
   end
 end
 

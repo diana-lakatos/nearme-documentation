@@ -491,6 +491,7 @@ en:
     reservations:
       credit_card_will_be_charged: "Your credit card will be charged when your reservation is confirmed by the host."
       invalid_operation:  "Not a valid reservation operation."
+      booking_failed:  "Your reservation was canceled."
       reservation_cancelled: "You have cancelled your reservation."
       reservation_not_cancellable: "This reservation can not be canceled anymore."
       reservation_made: "Your reservation has been made! %{message}"

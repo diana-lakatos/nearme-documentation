@@ -335,7 +335,7 @@ module Utils
 
         if [true, false].sample
           reservation.confirm!
-          reservation.update_attribute :payment_status, Reservation::PAYMENT_STATUSES[:paid]
+          reservation.mark_as_paid!
           reservation.update_attribute :payment_method, "credit_card"
           charge = Charge.new(
             :amount => reservation.total_amount_cents,

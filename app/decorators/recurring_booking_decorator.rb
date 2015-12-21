@@ -146,19 +146,19 @@ class RecurringBookingDecorator < Draper::Decorator
   end
 
   def my_booking_status_info
-    status_info("Pending confirmation from host. Booking will expire in #{time_to_expiry(expiry_time)}.")
+    status_info("Pending confirmation from host. Booking will expire in #{time_to_expiry(expire_at)}.")
   end
 
   def my_booking_status_info_new
-    raw("Pending confirmation from host. Booking will expire in <strong>#{time_to_expiry(expiry_time)}</strong>.")
+    raw("Pending confirmation from host. Booking will expire in <strong>#{time_to_expiry(expire_at)}</strong>.")
   end
 
   def manage_booking_status_info
-    status_info("You must confirm this booking within #{time_to_expiry(expiry_time)} or it will expire.")
+    status_info("You must confirm this booking within #{time_to_expiry(expire_at)} or it will expire.")
   end
 
   def manage_booking_status_info_new
-    raw("You must confirm this booking within <strong>#{time_to_expiry(expiry_time)}</strong> or it will expire.")
+    raw("You must confirm this booking within <strong>#{time_to_expiry(expire_at)}</strong> or it will expire.")
   end
 
   def user_message_recipient

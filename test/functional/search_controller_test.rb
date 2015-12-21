@@ -189,7 +189,7 @@ class SearchControllerTest < ActionController::TestCase
                   @friend = FactoryGirl.create(:user)
                   @me.add_friend(@friend)
 
-                  FactoryGirl.create(:past_reservation, listing: FactoryGirl.create(:transactable, location: @adelaide), user: @friend, state: 'confirmed')
+                  FactoryGirl.create(:past_reservation, listing: FactoryGirl.create(:transactable, location: @adelaide), user: @friend)
                 end
 
                 should 'are shown for logged user' do

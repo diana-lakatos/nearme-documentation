@@ -220,7 +220,7 @@ class RecurringBooking < ActiveRecord::Base
     interval == 'weekly'
   end
 
-  def expiry_time
+  def expire_at
     created_at + listing.hours_to_expiration.to_i.hours
   end
 

@@ -19,7 +19,7 @@
 
   - if reservation.state == 'unconfirmed'
     .alert.alert-warning
-      #{t('dashboard.user_reservations.pending_confirmation')} <strong>#{reservation.time_to_expiry(reservation.expiry_time)}</strong>.
+      #{t('dashboard.user_reservations.pending_confirmation')} <strong>#{reservation.time_to_expiry(reservation.expire_at)}</strong>.
 
     - if reservation.active_merchant_payment?
       - if reservation.billing_authorization.present?
