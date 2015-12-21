@@ -69,9 +69,16 @@ class Payment < ActiveRecord::Base
   monetize :service_fee_amount_host_cents, with_model_currency: :currency
   monetize :total_service_fee_cents, with_model_currency: :currency
   monetize :total_amount_cents, with_model_currency: :currency
+  monetize :total_additional_charges_cents, with_model_currency: :currency
+  monetize :service_additional_charges_cents, with_model_currency: :currency
+  monetize :host_additional_charges_cents, with_model_currency: :currency
 
   def total_amount_cents
-    subtotal_amount.cents + service_fee_amount_guest.cents
+    subtotal_amount.cents + service_fee_amount_guest.cents + total_additional_charges.cents
+  end
+
+  def total_additional_charges_cents
+    service_additional_charges_cents + host_additional_charges_cents
   end
 
   def subtotal_amount_cents_after_refund
@@ -80,7 +87,7 @@ class Payment < ActiveRecord::Base
     if self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?
       result = 0
     else
-      result = subtotal_amount.cents - refunds.successful.sum(:amount)
+      result = subtotal_amount.cents + host_additional_charges.cents - refunds.successful.sum(:amount)
     end
 
     result
@@ -97,7 +104,7 @@ class Payment < ActiveRecord::Base
   end
 
   def final_service_fee_amount_guest_cents
-    result = self.service_fee_amount_guest.cents
+    result = self.service_fee_amount_guest.cents + self.service_additional_charges.cents
 
     if self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?
       result = 0
@@ -120,7 +127,6 @@ class Payment < ActiveRecord::Base
 
     begin
       # Generates a ChargeAttempt with this record as the payable.
-
       if payable.try(:billing_authorization).nil? && !(payable.try(:remote_payment?) || payable.try(:manual_payment?))
         unless billing_gateway.authorize(payable, { customer: payable.credit_card.instance_client.customer_id, order_id: payable.id })
           raise "Failed authorization of credit card token of InstanceClient(id=#{payable.owner.instance_clients.first.try(:id)}) - #{payable.errors[:ccc].try(:first)}"

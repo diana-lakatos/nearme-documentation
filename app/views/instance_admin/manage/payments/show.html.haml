@@ -1,5 +1,24 @@
 .content-container
-  %h4 Payment capture
+  %h4 Payment details
+  .row
+    %ul
+      %li
+        Total:
+        = humanized_money_with_cents_and_symbol @payment.total_amount
+      %li
+        Subtotal:
+        = humanized_money_with_cents_and_symbol @payment.subtotal_amount
+      %li
+        Service Fee:
+        = humanized_money_with_cents_and_symbol @payment.service_fee_amount_guest
+      %li
+        Service Usell & Addons:
+        = humanized_money_with_cents_and_symbol @payment.service_additional_charges
+      %li
+        Host Usell & Addons:
+        = humanized_money_with_cents_and_symbol @payment.host_additional_charges
+
+  %h4 Charge attempts:
 
   - @payment.charges.each do |charge|
     .content-container
@@ -17,7 +36,7 @@
             = link_to charge.payment_gateway.try(:name), edit_instance_admin_settings_payment_gateway_path(charge.payment_gateway)
           %p
             Amount:
-            = number_to_currency_symbol(charge.currency, Money.new(charge.amount))
+            = humanized_money_with_cents_and_symbol charge.price
 
           %p
             Response:

@@ -9,11 +9,12 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsController < InstanceAdmin::M
   def create
     @user = User.where(:email => params[:email]).first
     if @user
-      if InstanceAdmin.where(:user_id => @user.id).first.present?
+      if InstanceAdmin.where(user_id: @user.id).first.present?
         flash[:warning] = "User with email #{@user.email} has already been added as admin"
       else
-        InstanceAdmin.create(:user_id => @user.id)
+        InstanceAdmin.create(user_id: @user.id)
         flash[:success] = "User with email #{@user.email} has been successfully added as admin"
+        WorkflowStepJob.perform(WorkflowStep::UserWorkflow::PromotedToAdmin, @user.id, current_user.id)
       end
       redirect_to instance_admin_manage_admins_path
     else

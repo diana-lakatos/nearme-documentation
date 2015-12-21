@@ -51,16 +51,19 @@ class ProductForm < Form
 
   # DELEGATORS
 
-
   delegate :id, :price, :categories, :category_ids, :price=,
     :name, :name=, :description, :id=, :description=, :shippo_enabled=, :shippo_enabled, :action_rfq, :action_rfq=,
     :draft?, :draft=, :draft, :extra_properties, :extra_properties=, :custom_validators,
-    :translation_namespace, :master, :insurance_amount, :insurance_amount=, to: :product
+    :translation_namespace, :master, :insurance_amount, :insurance_amount=,
+    :additional_charge_types, :additional_charge_types_attributes, :additional_charge_types_attributes=, to: :product
 
   delegate :weight_unit, :weight_unit=, :height_unit, :height_unit=,
     :width_unit, :width_unit=, :depth_unit, :depth_unit=,
     :unit_of_measure, :unit_of_measure=, to: :master
 
+  def self.reflect_on_association(arg)
+    Spree::Product.reflect_on_association(arg)
+  end
 
   def common_categories(category)
     categories & category.descendants

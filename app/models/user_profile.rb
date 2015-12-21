@@ -58,6 +58,5 @@ class UserProfile < ActiveRecord::Base
     JSON.generate(common_categories(category).map { |c| { id: c.id, name: c.translated_name }})
   end
 
-
 end
 

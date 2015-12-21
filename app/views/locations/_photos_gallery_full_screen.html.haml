@@ -1,0 +1,30 @@
+.listing-photos{:'data-photo-aspect-w' => PhotoUploader::SPACE_FULL_IMAGE_W, :'data-photo-aspect-h' => PhotoUploader::SPACE_FULL_IMAGE_H}
+  .carousel{id: gallery_id}
+    - if location.photos.try(:count).to_i > 0
+      %ol.carousel-indicators
+        - location.photos.each_with_index do |photo, index|
+          %li{:class => index.zero? ? "active" : '', :'data-target' => "##{gallery_id}", :'data-slide-to' => index}
+            = index+1
+      .carousel-inner
+        - location.photos.each_with_index do |photo, index|
+          - if Location === location
+            - listing_name = photo.try(:listing).try(:name).presence || location.try(:name)
+          -else
+            - listing_name = location.try(:name)
+
+          .item{:class => ("active" if index == 0), :'data-modalize' => true}
+            %img{:alt => listing_name, :title => listing_name, :'data-src' => photo.original_image_url}
+            .info
+              .caption
+                = "#{photo.caption} #{listing_name}".strip
+      = yield
+
+    - else
+      .carousel-inner
+        .item{:class => ("active")}
+          = image_tag space_listing_placeholder_path(:height => 554, :width => 895), :title => location.name, :alt => location.name
+
+    - if location.photos.try(:count).to_i > 1
+      .carousel-nav
+        = link_to "", "##{gallery_id}", :class => "carousel-control left ico-chevron-left", 'data-slide' => 'prev'
+        = link_to "", "##{gallery_id}", :class => "carousel-control right ico-chevron-right", 'data-slide' => 'next'

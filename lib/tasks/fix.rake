@@ -31,7 +31,9 @@ namespace :fix do
   end
 
   task :cleanup_marketplace => [:environment] do
-    Instance.find(75).set_context!
+    #instance_id = 75
+    instance = Instance.find(instance_id)
+    instance.set_context!
     [Payment,PaymentTransfer,Charge, Payout,
      RecurringBooking, Reservation, ReservationPeriod, Transactable,
      Schedule, AvailabilityTemplate, AvailabilityRule,
@@ -44,23 +46,23 @@ namespace :fix do
      SavedSearchAlertLog, ScheduleExceptionRule, ScheduleRule,
      Shipment, UserMessage, Support::Ticket, WaiverAgreement
     ].each do |klass|
-      puts "Deleting: #{klass} for #{PlatformContext.current.instance.name}"
+      puts "Deleting: #{klass} for #{instance.name}"
         puts "Before count: #{klass.count}"
       if klass.respond_to?(:with_deleted)
         klass = klass.with_deleted
       end
-        puts "Removed: #{klass.where(instance_id: PlatformContext.current.instance.id).delete_all}"
+        puts "Removed: #{klass.where(instance_id: instance.id).delete_all}"
         puts "After count: #{klass.count}"
     end
     AvailabilityTemplate.create!(
       name: "Business Hours",
-      parent: PlatformContext.current.instance,
+      parent: instance,
       description: "Monday - Friday, 9am-5pm",
       availability_rules_attributes: [{ open_hour: 9, open_minute: 0, close_hour: 17, close_minute: 0, days: (0..5).to_a }]
     )
     AvailabilityTemplate.create!(
       name: "24/7",
-      parent: PlatformContext.current.instance,
+      parent: instance,
       description: "Sunday - Saturday, 12am-11:59pm",
       availability_rules_attributes: [{ open_hour: 0, open_minute: 0, close_hour: 23, close_minute: 59, days: (0..6).to_a }]
     )

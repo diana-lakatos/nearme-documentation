@@ -18,7 +18,7 @@
         %p= order.display_completed_at
       .col-md-3
         %p= t('orders.labels.total')
-        %p= humanized_money_with_cents_and_symbol(order.total_amount_to_charge)
+        %p= humanized_money_with_cents_and_symbol(order.total_amount)
       .col-md-3
         %p= t('orders.labels.ship_to')
         %p= order.display_shipping_address

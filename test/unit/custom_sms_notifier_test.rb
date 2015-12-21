@@ -24,7 +24,6 @@ class CustomSmsNotifierTest < ActiveSupport::TestCase
   end
 
   setup do
-    stub_mixpanel
     @user = FactoryGirl.create(:user, name: 'John Doe')
     @step = DummyWorkflow::DummyStep.new('dummy value', @user)
     @render_response = "Hello John Doe"

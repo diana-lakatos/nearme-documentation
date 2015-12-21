@@ -22,6 +22,14 @@ class UserDecorator < Draper::Decorator
     object
   end
 
+  def name_with_affiliation
+    if properties.try(:is_intel) == true
+      "#{name} <span>(Intel)</span>".html_safe
+    else
+      name
+    end
+  end
+
   def user_message_summary(user_message)
     link_to user_message.thread_context.name, profile_path(user_message.thread_context.slug)
   end

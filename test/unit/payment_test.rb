@@ -9,7 +9,6 @@ class PaymentTest < ActiveSupport::TestCase
   context 'capture' do
     setup do
       @reservation = FactoryGirl.create(:reservation_with_credit_card)
-      stub_mixpanel
     end
 
     context 'mixpanel' do

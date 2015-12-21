@@ -54,7 +54,7 @@
     .col-sm-1
       %h3= t('orders.labels.total')
       %p
-        %b= humanized_money_with_cents_and_symbol(order.total_amount_to_charge)
+        %b= humanized_money_with_cents_and_symbol(order.total_amount)
 
   - order.line_items.each_with_index do |item, index|
     .order-item

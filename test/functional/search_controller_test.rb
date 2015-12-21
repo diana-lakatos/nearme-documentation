@@ -3,7 +3,6 @@ require 'test_helper'
 class SearchControllerTest < ActionController::TestCase
   setup do
     stub_request(:get, /.*maps\.googleapis\.com.*/).to_return(status: 404, body: {}.to_json, headers: {})
-    stub_mixpanel
   end
 
   context 'for anything when no TransactableType exists' do
@@ -286,17 +285,17 @@ class SearchControllerTest < ActionController::TestCase
 
 
       should "not track search for empty query" do
-        @tracker.expects(:conducted_a_search).never
+        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).never
         get :index, loc: nil
       end
 
       should 'track search for first page' do
-        @tracker.expects(:conducted_a_search).once
+        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).once
         get :index, loc: 'adelaide', page: 1
       end
 
       should 'not track search for second page' do
-        @tracker.expects(:conducted_a_search).never
+        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).never
         get :index, loc: 'adelaide', page: 2
       end
 
@@ -312,7 +311,7 @@ class SearchControllerTest < ActionController::TestCase
           location_type_filter: [@location_type.name],
           industry_filter: [@industry.name],
         }
-        @tracker.expects(:conducted_a_search).with do |search, custom_options|
+        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).with do |search, custom_options|
           expected_custom_options == custom_options
         end
         get :index, { loc: 'adelaide', lg_custom_attributes: { listing_type: [@listing_type] }, location_types_ids: [@location_type.id], industries_ids: [@industry.id], v: 'list' }
@@ -329,24 +328,24 @@ class SearchControllerTest < ActionController::TestCase
           location_type_filter: [@location_type.name],
           listing_pricing_filter: ['daily'],
         }
-        @tracker.expects(:conducted_a_search).with do |search, custom_options|
+        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).with do |search, custom_options|
           expected_custom_options == custom_options
         end
         get :index, { loc: 'adelaide', lg_custom_attributes: { listing_type: [@listing_type] }, lntype: @location_type.name.downcase, lgpricing: 'daily', v: 'mixed' }
       end
 
       should 'track search if ignore_search flag is set to 0' do
-        @tracker.expects(:conducted_a_search).once
+        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).once
         get :index, loc: 'adelaide', ignore_search_event: "0"
       end
 
       should 'not track search if ignore_search flag is set to 1' do
-        @tracker.expects(:conducted_a_search).never
+        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).never
         get :index, loc: 'adelaide', ignore_search_event: "1"
       end
 
       should 'not track second search for the same query if filters have not been changed' do
-        @tracker.expects(:conducted_a_search).once
+        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).once
         get :index, loc: 'adelaide'
         get :index, loc: 'adelaide'
       end
@@ -354,7 +353,7 @@ class SearchControllerTest < ActionController::TestCase
       context 'modified filters' do
 
         setup do
-          @tracker.expects(:conducted_a_search).twice
+          Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).twice
           get :index, loc: 'adelaide'
           @controller.instance_variable_set(:@search, nil)
         end
@@ -378,7 +377,7 @@ class SearchControllerTest < ActionController::TestCase
       end
 
       should 'not track second search for the different query' do
-        @tracker.expects(:conducted_a_search).twice
+        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).twice
         get :index, loc: 'adelaide'
         get :index, loc: 'auckland'
       end
@@ -482,38 +481,38 @@ class SearchControllerTest < ActionController::TestCase
     context 'conduct search' do
 
       should "not track search for empty query" do
-        @tracker.expects(:conducted_a_search).never
+        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).never
         get :index, query: nil, v: 'products'
       end
 
       should 'track search for first page' do
-        @tracker.expects(:conducted_a_search).once
+        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).once
         get :index, query: 'product_1', page: 1, v: 'products'
       end
 
       should 'not track search for second page' do
-        @tracker.expects(:conducted_a_search).never
+        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).never
         get :index, query: 'product_1', page: 2, v: 'products'
       end
 
       should 'not track second search for the different query' do
-        @tracker.expects(:conducted_a_search).twice
+        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).twice
         get :index, query: 'product_1', v: 'products'
         get :index, query: 'product_2', v: 'products'
       end
 
       should 'track search if ignore_search flag is set to 0' do
-        @tracker.expects(:conducted_a_search).once
+        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).once
         get :index, query: 'product_1', ignore_search_event: "0", v: 'products'
       end
 
       should 'not track search if ignore_search flag is set to 1' do
-        @tracker.expects(:conducted_a_search).never
+        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).never
         get :index, query: 'product_1', ignore_search_event: "1", v: 'products'
       end
 
       should 'not track second search for the same query if filters have not been changed' do
-        @tracker.expects(:conducted_a_search).once
+        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).once
         get :index, query: 'product_1', v: 'products'
         get :index, query: 'product_1', v: 'products'
       end
@@ -525,7 +524,7 @@ class SearchControllerTest < ActionController::TestCase
           result_count: 0,
           custom_attributes: { 'attribute_filter' => ['Lefthanded'] }
         }
-        @tracker.expects(:conducted_a_search).with do |search, custom_options|
+        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).with do |search, custom_options|
           expected_custom_options == custom_options
         end
         get :index, { query: 'product_1', lg_custom_attributes: { attribute_filter: ['Lefthanded'] }, v: 'products' }

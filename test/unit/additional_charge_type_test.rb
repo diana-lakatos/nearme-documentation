@@ -4,7 +4,7 @@ class AdditionalChargeTypeTest < ActiveSupport::TestCase
 
   context 'associations' do
     should have_many(:additional_charges)
-    should belong_to(:instance)
+    should belong_to(:additional_charge_type_target)
   end
 
   context 'validations' do

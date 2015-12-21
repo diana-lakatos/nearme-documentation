@@ -5,7 +5,6 @@ class InstanceAdmin::AdminSessionsTest < ActionDispatch::IntegrationTest
   setup do
     @user = FactoryGirl.create(:user)
     @admin = FactoryGirl.create(:admin)
-    stub_mixpanel
   end
 
   should 'test user access restrictions to instance admin panel' do

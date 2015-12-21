@@ -72,7 +72,7 @@ class InstanceMailer < ActionMailer::Base
       :current_user       => @user,
       :request_details    => { current_instance_id: @platform_context.instance.id }
     )
-    @event_tracker ||= Analytics::EventTracker.new(@mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(@user))
+    @event_tracker ||= Rails.application.config.event_tracker.new(@mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(@user))
     @event_tracker
   end
 

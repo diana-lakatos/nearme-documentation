@@ -39,3 +39,6 @@
 
 - if only_inputs.empty? || only_inputs.include?(:documents_upload)
   = render "dashboard/company/products/form_fields/document_requirements", f: f
+
+- if only_inputs.empty? || only_inputs.include?(:additional_charges)
+  = render "dashboard/company/products/form_fields/additional_charges", f: f

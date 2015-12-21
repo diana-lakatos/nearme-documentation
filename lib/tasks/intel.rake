@@ -59,7 +59,7 @@ namespace :intel do
         ca.attribute_type = 'text'
         ca.input_html_options = { cols: 40, rows: 8 }
         ca.label = 'About me'
-        ca.max_length = 500
+        ca.max_length = 5000
       end.save!
 
       ipt.custom_attributes.where(name: 'short_bio').first_or_initialize.tap do |ca|
@@ -71,7 +71,18 @@ namespace :intel do
         ca.max_length = 140
       end.save!
 
+      ipt.custom_attributes.where(name: 'is_intel').first_or_initialize.tap do |ca|
+        ca.attribute_type = 'boolean'
+        ca.html_tag = 'check_box'
+        ca.default_value = 'false'
+        ca.label = 'Intel Affiliate?'
+        ca.hint = 'Intel Affiliate?'
+        ca.public = false
+        ca.searchable = false
+      end.save!
+
       Utils::DefaultAlertsCreator::ProjectCreator.new.create_all!
+      Utils::DefaultAlertsCreator::UserCreator.new.create_user_promoted_email!
       PlatformContext.current.theme.update_attributes(
         facebook_url: 'https://www.facebook.com/IntelDeveloperZone/',
         twitter_url: 'https://twitter.com/intelsoftware',

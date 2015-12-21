@@ -24,7 +24,7 @@
               <h3 class="hx">
                 <a href="{{ project.show_path}}">{{ project.name }}</a>
               </h3>
-              <p class="user"><a href="{{ project.creator.profile_path}}"><img src="{{ project.creator.avatar_url_thumb }}" width="30" height="30" />{{ project.creator.name }}</a></p>
+              <p class="user"><a href="{{ project.creator.profile_path}}"><img src="{{ project.creator.avatar_url_thumb }}" width="30" height="30" />{{ project.creator.name_with_affiliation }}</a></p>
               <p>{{ project.summary }}</p>
             </article>
           </div>
@@ -58,9 +58,9 @@
               <a href="/auth/saml" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
               </p>
               <h3 class="hx">
-                <a href="{{ user.profile_path }}">{{ user.name }}</a>
+                <a href="{{ user.profile_path }}">{{ user.name_with_affiliation }}</a>
               </h3>
-              <p>{{ user.properties.about_me }}</p>
+              <p>{{ user.properties.short_bio }}</p>
               <p class="location">{{ user.display_location }}</p>
             </article>
           </div>

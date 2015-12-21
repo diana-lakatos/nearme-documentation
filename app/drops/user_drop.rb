@@ -49,7 +49,7 @@ class UserDrop < BaseDrop
     :with_mutual_friendship_source, :first_name, :middle_name, :last_name,
     :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
     :country_name, :phone, :current_location, :is_trusted?, :reservations,
-    :has_published_posts?, :seller_properties, :buyer_properties, to: :user
+    :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation, to: :user
 
   def initialize(user)
     @user = user.decorate
@@ -328,4 +328,26 @@ class UserDrop < BaseDrop
   def all_properties
     @all_properties ||= @user.default_properties.to_h.merge(@user.seller_properties.to_h.merge(user.buyer_properties.to_h))
   end
+
+  # Is the user "twitter connected" to the site
+  def is_twitter_connected
+    social_connections.where(provider: 'twitter').exists?
+  end
+
+  # Is the user "facebook connected" to the site
+  def is_facebook_connected
+    social_connections.where(provider: 'facebook').exists?
+  end
+
+  # Is the user "linkedin connected" to the site
+  def is_linkedin_connected
+    social_connections.where(provider: 'linkedin').exists?
+  end
+
+  private
+
+  def social_connections
+    @social_connections_cache ||= @user.social_connections
+  end
+
 end

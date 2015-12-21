@@ -61,7 +61,7 @@ FactoryGirl.define do
           shipment_state 'ready'
           after(:create) do |order|
             create(:payment,
-              subtotal_amount: order.total_amount_without_fee,
+              subtotal_amount: order.subtotal_amount + order.tax_amount + order.shipping_amount,
               service_fee_amount_guest: order.service_fee_amount_guest,
               service_fee_amount_host: order.service_fee_amount_host,
               payable: order

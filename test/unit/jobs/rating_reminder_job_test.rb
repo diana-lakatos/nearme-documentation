@@ -2,10 +2,6 @@ require 'test_helper'
 
 class RatingReminderJobTest < ActiveSupport::TestCase
 
-  setup do
-    stub_mixpanel
-  end
-
   context "With yesterday ending reservation" do
 
     setup do

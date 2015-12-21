@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   before_filter :redirect_if_marketplace_password_protected
   before_filter :set_raygun_custom_data
   before_filter :filter_out_token
-  before_filter :sign_out_if_signed_out_from_intel_sso, if: -> { PlatformContext.current.instance.is_community? && current_user.present? && !current_user.admin? && !Rails.env.test? }
+  before_filter :sign_out_if_signed_out_from_intel_sso, if: -> { should_log_out_from_intel? }
 
   around_filter :set_time_zone
 
@@ -132,9 +132,7 @@ class ApplicationController < ActionController::Base
   # Use this for triggering predefined events from actions via
   # the application controllers.
   def event_tracker
-    @event_tracker ||= begin
-                         Analytics::EventTracker.new(mixpanel, google_analytics)
-                       end
+    @event_tracker ||= Rails.application.config.event_tracker.new(mixpanel, google_analytics)
   end
 
   def mixpanel
@@ -194,8 +192,7 @@ class ApplicationController < ActionController::Base
 
   def analytics_apply_user(user, with_alias = true)
     store_user_browser_details(user)
-    mixpanel.apply_user(user, :alias => with_alias)
-    google_analytics.apply_user(user)
+    event_tracker.apply_user(user, alias: with_alias)
   end
 
   def store_user_browser_details(user)
@@ -343,7 +340,7 @@ class ApplicationController < ActionController::Base
   helper_method :user_google_analytics_id
 
   def store_client_taggable_events
-    if @event_tracker
+    if @event_tracker.present?
       session[:triggered_client_taggable_events] ||= []
       session[:triggered_client_taggable_events] += @event_tracker.triggered_client_taggable_methods
     end
@@ -539,6 +536,14 @@ class ApplicationController < ActionController::Base
       sign_out(current_user)
       cookies.delete('SecureSESSION') && cookies.delete('SMSSESSION')
     end
+  end
+
+  def should_log_out_from_intel?
+    PlatformContext.current.instance.is_community? &&
+      current_user.present? &&
+      !current_user.admin? &&
+      !Rails.env.test? &&
+      !session[:instance_admin_as_user].present?
   end
 end
 

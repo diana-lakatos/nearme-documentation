@@ -5,7 +5,6 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
   include ReservationTestSupport
 
   setup do
-    stub_mixpanel
     PaymentTransfer.any_instance.stubs(:possible_automated_payout_not_supported?).returns(false).at_least(0)
     PaymentGateway.any_instance.stubs(:payout).returns(stub(:success => true)).at_least(0)
   end

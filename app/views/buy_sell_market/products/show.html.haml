@@ -11,15 +11,14 @@
       .span8
         = render partial: 'photos', locals: { product: @product }
       .span4
-        %h1= @product.name
-        - if @product.price.to_f > 0
-          %h1= @product.humanized_price
+        = render 'name_and_price', product: @product
         - if @product.has_reviews?
           .rating.product-rating
             %p= t 'buy_sell_market.products.labels.rating'
             = render partial: 'stars', locals: { stars: @product.try(:average_rating).try(:round), count: @product.reviews_count }
         - else
           %br
+        = render 'above_cart_management', product: @product
         - if @product.total_on_hand > 0
           - unless @product.action_free?
             = form_tag cart_add_product_path, method: :get, class: 'inline' do
@@ -47,11 +46,17 @@
         - else
           .btn.disabled= t('buy_sell_market.products.buttons.out_of_stock')
 
+        = render 'above_wish_lists', product: @product
+
         .product-social-wrapper
           - if platform_context.instance.wish_lists_enabled?
             = render 'shared/components/wish_list_button', object:  Draper.undecorate(@product), link_to_class: 'btn gray'
 
+          = render 'above_social_buttons', product: @product
+
           = render partial: 'social_buttons', locals: { product: @product }
+
+        = render 'below_cart_module', product: @product
 
 %section.product-details
   .container-fluid
@@ -78,17 +83,16 @@
             %a{'data-toggle' => 'tab', href: '#product-properties', role: 'tab'}
               = t 'buy_sell_market.products.labels.properties'
 
+        = render 'extra_tab_titles', product: @product
+
       .tab-content
         - if @product.description.present?
           %article#product-details.tab-pane{ class: "#{ 'active' if !param_reviews_page_present? }" }
-            %p= @product.description.html_safe
+            = render 'product_description', product: @product
 
         - if @platform_context.instance.seller_attachments_enabled? && (attachments = @product.attachments_for_user(current_user)) && attachments.present?
           %article#product-attachments.tab-pane{ class: "#{ 'active' if param_reviews_page_present? }" }
-            %h3= t 'buy_sell_market.products.labels.documents'
-            %ul
-              - attachments.each do |attachment|
-                %li= link_to attachment.decorate.title, seller_attachment_path(attachment), target: '_blank'
+            = render 'seller_attachments', product: @product, attachments: attachments
 
         - if @product.has_reviews?
           %article#product-reviews.tab-pane{ class: "#{ 'active' if param_reviews_page_present? }" }
@@ -163,6 +167,9 @@
           %article#product-properties.tab-pane
             = render partial: 'extra_properties', locals: { product: @product }
 
+        = render 'extra_tab_panes', product: @product
+
     .product-profile-badge
       .vendor-profile
-        = render partial: 'administrator', locals: { product: @product, hidden: hidden}
+        = render 'administrator_badge', product: @product
+

@@ -4,7 +4,6 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
-    stub_mixpanel
     sign_in @user
   end
 
@@ -67,7 +66,8 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
           @payment_gateway = FactoryGirl.create(:stripe_connect_payment_gateway)
           @payment_method = FactoryGirl.create(:credit_card_payment_method, payment_gateway: @payment_gateway)
           @payment_gateway.payment_currencies << (Currency.find_by_iso_code("PLN") || FactoryGirl.create(:currency_pl))
-          @order = FactoryGirl.create(:order_waiting_for_payment, user: @user, service_fee_buyer_percent: 10, currency: 'PLN')
+          @order = FactoryGirl.create(:order_waiting_for_delivery, user: @user, service_fee_buyer_percent: 10, currency: 'PLN')
+          @order.update({}) && @order.next # necesary to invoke prepare_payments method
         end
 
         should 'correct proceed to complete state if all is ok' do
@@ -129,7 +129,8 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
           @payment_gateway = FactoryGirl.create(:braintree_marketplace_payment_gateway)
           @payment_method = FactoryGirl.create(:credit_card_payment_method, payment_gateway: @payment_gateway)
           PlatformContext.current.instance.update_attributes(service_fee_host_percent: 15, service_fee_guest_percent: 10)
-          @order = FactoryGirl.create(:order_waiting_for_payment, user: @user, currency: 'USD')
+          @order = FactoryGirl.create(:order_waiting_for_delivery, user: @user, currency: 'USD')
+          @order.update({}) && @order.next # necesary to invoke prepare_payments method
           ActiveMerchant::Billing::BraintreeMarketplacePayments.any_instance.stubs(:onboard!).returns(OpenStruct.new(success?: true))
           # create unrelated merchant account
           FactoryGirl.create(:braintree_marketplace_merchant_account, payment_gateway: @payment_gateway, merchantable: FactoryGirl.create(:company))
@@ -147,7 +148,6 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
             total_amount_cents == 170.to_money(@order.currency).cents && options['service_fee_host'] == (5 + 15 + 7.5).to_money(@order.currency).cents
           end.returns(stubs[:authorize])
           PaymentGateway::BraintreeMarketplacePaymentGateway.any_instance.stubs(:gateway).returns(gateway).at_least(0)
-
         end
 
         should 'correct proceed to complete state if all is ok' do
@@ -155,11 +155,13 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
             put :update, order_id: @order, id: 'payment', order: { payment_method_id: @payment_method.id, card_number: "4111 1111 1111 1111", card_exp_month: 1.year.from_now.month.to_s, card_exp_year: 1.year.from_now.year.to_s, card_code: '411', card_holder_first_name: 'Maciej', card_holder_last_name: 'Krajowski' }
           end
           payment = @order.reload.payments.first
-          assert_equal 17000, @order.total_amount_to_charge.cents
-          assert_equal 10000, @order.shipping_costs_cents
-          assert_equal 5000, @order.subtotal_amount_to_charge.cents
-          assert_equal 500 + 1500, @order.service_fee_amount_guest_cents
-          assert_equal 750, @order.service_fee_amount_host_cents
+          assert_equal 17000, @order.total_amount.cents
+          assert_equal 10000, @order.shipping_amount.cents
+          assert_equal 5000, @order.subtotal_amount.cents
+          assert_equal 500, @order.service_fee_amount_guest.cents
+          assert_equal 1500, @order.service_additional_charges.cents
+          assert_equal 750, @order.service_fee_amount_host.cents
+          assert_equal 500 + 1500 + 750, @order.total_service_amount.cents
           assert_not_nil payment
           assert_equal 170, payment.amount.to_i
           assert_equal 'USD', payment.currency

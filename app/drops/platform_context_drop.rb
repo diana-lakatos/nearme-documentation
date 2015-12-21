@@ -154,6 +154,10 @@ class PlatformContextDrop < BaseDrop
     urlify(routes.instance_admin_projects_spam_reports_path)
   end
 
+  def instance_admin_path
+    urlify(routes.instance_admin_path)
+  end
+
   def active_rating_systems_present?
     RatingSystem.active.any?
   end

@@ -1,0 +1,24 @@
+- if @additional_charge_types.blank?
+  .content-container.blank-state-container
+    .row
+      .table-container.col-xs-12
+        .text-center
+          .question-icon !
+          = t('instance_admin.manage.upsell_addons.no_addons_yet')
+          %br
+          = link_to t('instance_admin.manage.upsell_addons.add_new_upsell'), new_instance_admin_manage_additional_charge_type_path
+- else
+  .content-container
+    .row
+      .table-container.col-xs-12
+        %table.table
+          %tbody
+            %tr
+              %td= t('instance_admin.manage.upsell_addons.name')
+              %td= t('instance_admin.manage.upsell_addons.service')
+              %td= t('instance_admin.manage.upsell_addons.amount')
+              %td= t('instance_admin.manage.upsell_addons.status')
+              %td= t('instance_admin.manage.upsell_addons.commission_receiver')
+              %td= link_to t('instance_admin.manage.upsell_addons.add_upsell'), new_instance_admin_manage_additional_charge_type_path
+
+            = render @additional_charge_types

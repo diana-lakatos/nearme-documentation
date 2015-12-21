@@ -4,3 +4,5 @@
 <p>The e-mail that was used as an username is {{ new_user.email }}, you can set the password manually by clicking the big blue button below.</p>
 
 <a class="btn" href="{{ platform_context.host | append:new_user.set_password_url_with_token_and_tracking | append:signature_for_tracking }}">Set your password</a>
+
+<p>You can access to admin area by going to <a class="btn" href="{{ instance_admin_path }}">{{ instance_admin_path }}</a>

@@ -46,7 +46,7 @@
           .filter.search
             %input{placeholder: t('instance_admin.manage.admin_searchable.search_by_keyword'), type: 'text', name: 'q', value: params[:q]}
             %input{type: 'submit', name: 'commit', value:'submit', class: 'hidden_form_element2'}
-            =fa_icon "search"
+            =fa_icon "search", class: 'fa-action-icon-submit'
         = hidden_field_tag :show, params[:show]
   
   .row

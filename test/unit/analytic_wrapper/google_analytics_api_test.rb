@@ -59,12 +59,12 @@ class AnalyticWrapper::GoogleAnalyticsApiTest < ActiveSupport::TestCase
 
     should 'return correct params for not logged in user' do
       @google_analytics = AnalyticWrapper::GoogleAnalyticsApi.new(nil)
-      assert_equal({ v: @version, tid: @tracking_code, cid: '555' }, @google_analytics.send(:default_params))
+      assert_equal({ v: @version, tid: @tracking_code, cid: '555', :an=>"DesksNearMe" }, @google_analytics.send(:default_params))
     end
 
     should 'return correct params for logged in user' do
       @google_analytics = AnalyticWrapper::GoogleAnalyticsApi.new(FactoryGirl.create(:user, :google_analytics_id => '123'))
-      assert_equal({ v: @version, tid: @tracking_code, cid: '123' }, @google_analytics.send(:default_params))
+      assert_equal({ v: @version, tid: @tracking_code, cid: '123', :an=>"DesksNearMe" }, @google_analytics.send(:default_params))
     end
   end
 end

@@ -279,18 +279,19 @@ class User < ActiveRecord::Base
   end
 
   def apply_omniauth(omniauth)
-    self.name = omniauth['info']['name'].presence || ("#{omniauth['info']['first_name']} #{omniauth['info']['last_name']}").presence || ("#{omniauth['info']['First_name']} #{omniauth['info']['Last_name']}").presence || ("#{omniauth['extra'] && omniauth['extra']['raw_info'] && omniauth['extra']['raw_info']['First_name']} #{omniauth['extra'] && omniauth['extra']['raw_info'] && omniauth['extra']['raw_info']['Last_name']}")if name.blank?
-    self.email = omniauth['info']['email'].presence || omniauth['extra'] && omniauth['extra']['raw_info'] && omniauth['extra']['raw_info']['email_address'] if email.blank?
-    expires_at = omniauth['credentials'] && omniauth['credentials']['expires_at'] ? Time.at(omniauth['credentials']['expires_at']) : nil
-    self.external_id ||= omniauth['uid'] if PlatformContext.current.instance.is_community?
-    token = (omniauth['credentials'] && omniauth['credentials']['token']).presence || (omniauth['extra'] && omniauth['extra']['raw_info'] && (omniauth['extra']['raw_info']['enterprise_id'].presence || omniauth['extra']['raw_info']['CustID']))
-    secret = omniauth['credentials'] && omniauth['credentials']['secret']
-    authentications.build(provider: omniauth['provider'],
-                          uid: omniauth['uid'],
-                          info: omniauth['info'],
-                          token: token,
-                          secret: secret,
-                          token_expires_at: expires_at)
+    omniauth_coercions = OmniAuthCoercionService.new(omniauth)
+    self.name = omniauth_coercions.name if name.blank?
+    self.email = omniauth_coercions.email if email.blank?
+    self.external_id ||= omniauth_coercions.external_id if PlatformContext.current.instance.is_community?
+
+    authentications.build(
+      provider: omniauth['provider'],
+      uid: omniauth['uid'],
+      info: omniauth['info'],
+      token: omniauth_coercions.token,
+      secret: omniauth_coercions.secret,
+      token_expires_at: omniauth_coercions.expires_at
+    )
   end
 
   def all_projects(with_pending = false)
@@ -388,7 +389,14 @@ class User < ActiveRecord::Base
 
   def secret_name
     secret_name = last_name.present? ? last_name[0] : middle_name.try(:[], 0)
-    secret_name.present? ? "#{first_name} #{secret_name[0]}." : first_name
+    secret_name = secret_name.present? ? "#{first_name} #{secret_name[0]}." : first_name
+
+    if self.properties.try(:is_intel) == true
+      secret_name += ' (Intel)'
+      secret_name.html_safe
+    else
+      secret_name
+    end
   end
 
   # Whether to validate the presence of a password
@@ -988,7 +996,7 @@ class User < ActiveRecord::Base
     activity_feed_subscriptions.where(followed: object).destroy_all
   end
 
-  private
+private
 
   def get_first_name_from_name
     name(true).split[0...1].join(' ')

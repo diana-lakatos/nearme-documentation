@@ -9,6 +9,8 @@ class ProfileUpdateService
     @user.update_attributes(white_listed_attributes['user'])
     @user.metadata['webhook_attributes'] = @attributes
     @user.save!
+    @user.default_profile.properties = white_listed_attributes['default_profile_attributes'].presence || {}
+    @user.default_profile.save(validate: false)
     address = @user.current_address || @user.build_current_address
     address.attributes = white_listed_attributes['current_address_attributes']
     address.save(validation: false) unless address.address.blank?
@@ -20,13 +22,13 @@ class ProfileUpdateService
   def extract_whitelist_attributes(attributes)
     attributes.keys.inject({}) do |attrs, key|
       attrs['user'] ||= {}
-      attrs['user']['properties'] ||= {}
+      attrs['default_profile_attributes'] ||= {}
       attrs['current_address_attributes'] ||= {}
       if user_attributes.keys.include?(key)
         attrs['user'][user_attributes[key]] = attributes[key] unless key == 'email' && attributes[key].present?
       end
       if custom_attributes.keys.include?(key)
-        attrs['user']['properties'][custom_attributes[key]] = attributes[key]
+        attrs['default_profile_attributes'][custom_attributes[key]] = attributes[key]
       end
       if current_address_attributes.keys.include?(key)
         if key == 'address_1'
@@ -63,7 +65,8 @@ class ProfileUpdateService
   def custom_attributes
     {
       belt: :role,
-      bio: :short_bio
+      bio: :short_bio,
+      is_internal: :is_intel
     }.with_indifferent_access
   end
 

@@ -12,7 +12,6 @@ class Support::TicketMessagesControllerTest < ActionController::TestCase
   context '#create' do
     context 'with message params' do
       should 'create message' do
-        stub_mixpanel
         params = {
           :ticket_id => @ticket.id,
           :support_ticket_message => {
@@ -26,7 +25,6 @@ class Support::TicketMessagesControllerTest < ActionController::TestCase
       end
 
       should 'create and close message' do
-        stub_mixpanel
         params = {
           :commit => "Close Ticket",
           :ticket_id => @ticket.id,

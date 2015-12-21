@@ -12,7 +12,6 @@ class Utils::DefaultAlertsCreator::SpamReportCreatorTest < ActionDispatch::Integ
   end
 
   should 'create summary email' do
-    stub_mixpanel
     @platform_context = PlatformContext.current
     @instance = @platform_context.instance
     @instance.is_community = true

@@ -49,18 +49,21 @@ ActiveRecord::Schema.define(version: 20151214135805) do
   add_index "activity_feed_subscriptions", ["instance_id", "followed_id", "followed_type"], name: "activity_feed_subscriptions_instance_followed", using: :btree
 
   create_table "additional_charge_types", force: :cascade do |t|
-    t.string   "name",                           limit: 255
+    t.string   "name",                               limit: 255
     t.text     "description"
     t.integer  "amount_cents"
-    t.string   "currency",                       limit: 255
-    t.string   "commission_receiver",            limit: 255
+    t.string   "currency",                           limit: 255
+    t.string   "commission_receiver",                limit: 255
     t.integer  "provider_commission_percentage"
-    t.string   "status",                         limit: 255
+    t.string   "status",                             limit: 255
     t.integer  "instance_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "additional_charge_type_target_id"
+    t.string   "additional_charge_type_target_type"
   end
 
+  add_index "additional_charge_types", ["additional_charge_type_target_id", "additional_charge_type_target_type"], name: "act_target", using: :btree
   add_index "additional_charge_types", ["instance_id"], name: "index_additional_charge_types_on_instance_id", using: :btree
 
   create_table "additional_charges", force: :cascade do |t|
@@ -1354,6 +1357,8 @@ ActiveRecord::Schema.define(version: 20151214135805) do
     t.string   "payable_type",                               limit: 255
     t.integer  "payable_id"
     t.string   "external_transaction_id",                    limit: 255
+    t.decimal  "service_additional_charges_cents",                                               default: 0.0
+    t.decimal  "host_additional_charges_cents",                                                  default: 0.0
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
@@ -3437,9 +3442,9 @@ ActiveRecord::Schema.define(version: 20151214135805) do
     t.boolean  "date_pickers_use_availability_rules"
     t.string   "date_pickers_mode"
     t.integer  "position",                                                                       default: 0
+    t.string   "timezone_rule",                                                                  default: "location"
     t.boolean  "action_weekly_subscription_booking"
     t.boolean  "action_monthly_subscription_booking"
-    t.string   "timezone_rule",                                                                  default: "location"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

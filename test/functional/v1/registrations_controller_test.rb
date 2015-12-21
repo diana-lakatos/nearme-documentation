@@ -2,12 +2,8 @@ require 'test_helper'
 
 class V1::RegistrationsControllerTest < ActionController::TestCase
 
-  setup do
-    stub_mixpanel
-  end
-
   test "successfull sign up and track" do
-    @tracker.expects(:signed_up).with do |user, custom_options|
+    Rails.application.config.event_tracker.any_instance.expects(:signed_up).with do |user, custom_options|
       user == assigns(:user) && custom_options == { signed_up_via: 'api', provider: 'native' }
     end
     assert_difference('User.count') do

@@ -15,7 +15,6 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @category1.update_column(:permalink, 'category1_permalink')
     @category2.update_column(:permalink, 'category2_permalink')
 
-    stub_mixpanel
   end
 
   context 'current data' do

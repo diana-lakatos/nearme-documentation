@@ -28,7 +28,6 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
   end
 
   def stub_what_has_to_be_stubbed
-    stub_mixpanel
     stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
   end
 
@@ -94,9 +93,9 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
     assert @listing.reservations.last.billing_authorization.immediate_payout
     assert_equal @listing.currency, @reservation.currency
     assert_equal 25.to_money(@listing.currency), @reservation.subtotal_amount
-    assert_equal 3.75.to_money(@listing.currency), @reservation.service_fee_guest_wo_charges
-    assert_equal 18.75.to_money(@listing.currency), @reservation.service_fee_amount_guest
+    assert_equal 3.75.to_money(@listing.currency), @reservation.service_fee_amount_guest
     assert_equal 2.5.to_money(@listing.currency), @reservation.service_fee_amount_host
+    assert_equal 18.75.to_money(@listing.currency), @reservation.service_fee_amount_guest + @reservation.service_additional_charges
     assert_equal 43.75.to_money(@listing.currency), @reservation.total_amount
     assert_equal 1, @reservation.additional_charges.count
     additional_charge = @reservation.additional_charges.last

@@ -49,7 +49,7 @@ class Dashboard::Company::WaiverAgreementTemplatesController < Dashboard::Compan
 
   def check_if_waiver_agreement_enabled
     unless PlatformContext.current.instance.custom_waiver_agreements?
-      flash[:warning] = t 'flash_messages.manage.waiver_agreement_templates.disabled'
+      flash[:warning] = t 'flash_messages.dashboard.waiver_agreement_templates.disabled'
       redirect_to dashboard_path
     end
   end

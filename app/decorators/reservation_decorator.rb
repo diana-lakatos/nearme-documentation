@@ -30,7 +30,7 @@ class ReservationDecorator < Draper::Decorator
     if service_fee_amount_guest.to_f.zero?
       "Free!"
     else
-      humanized_money_with_cents_and_symbol(service_fee_guest_wo_charges)
+      humanized_money_with_cents_and_symbol(service_fee_amount_guest)
     end
   end
 

@@ -5,11 +5,10 @@ class InstanceAdmin::SessionsControllerTest < ActionController::TestCase
   setup do
     @user = FactoryGirl.create(:user)
     @request.env["devise.mapping"] = Devise.mappings[:user]
-    stub_mixpanel
   end
 
   should 'successfully sign up and track and redirected to instance admin' do
-    @tracker.expects(:logged_in).with do |user, custom_options|
+    Rails.application.config.event_tracker.any_instance.expects(:logged_in).with do |user, custom_options|
       user == @user && custom_options == { provider: 'native' }
     end
     post :create, user: { email: @user.email, password: @user.password }, return_to: instance_admin_path

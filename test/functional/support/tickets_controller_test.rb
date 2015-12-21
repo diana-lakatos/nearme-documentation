@@ -48,7 +48,6 @@ class Support::TicketsControllerTest < ActionController::TestCase
   context '#create' do
     context 'logged' do
       should 'create ticket' do
-        stub_mixpanel
         params = {
           "support_ticket" => {
             "messages_attributes" => [
@@ -68,7 +67,6 @@ class Support::TicketsControllerTest < ActionController::TestCase
 
     context 'unlogger' do
       should 'create ticket' do
-        stub_mixpanel
         params = {
           "support_ticket" => {
             "messages_attributes" => [

@@ -10,7 +10,7 @@ class AnalyticWrapper::GoogleAnalyticsApi
     @current_user = user
   end
 
-  def apply_user(user)
+  def apply_user(user, options = {})
     @current_user = user
   end
 
@@ -58,7 +58,8 @@ class AnalyticWrapper::GoogleAnalyticsApi
     {
       v: version,
       tid: tracking_code,
-      cid: (@current_user.try(:google_analytics_id) ? @current_user.google_analytics_id : '555')
+      cid: (@current_user.try(:google_analytics_id) ? @current_user.google_analytics_id : '555'),
+      an: PlatformContext.current.instance.name
     }
   end
 
