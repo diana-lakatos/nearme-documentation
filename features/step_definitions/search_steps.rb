@@ -125,9 +125,8 @@ Then(/^I should be able to check next page$/) do
   page.all(".search-pagination .pagination a[rel=next]").first.click
 end
 
-
 Then(/^I should be able to see one listing at last page$/) do
-  sleep(5)
+  expect(page).to have_css('.page-entries-info', text: '21 - 21 of 21 results')
   assert_equal 1, page.all("article.location").count
 end
 
