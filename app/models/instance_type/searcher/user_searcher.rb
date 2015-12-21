@@ -6,7 +6,7 @@ class InstanceType::Searcher::UserSearcher
     @current_user = current_user
     @params = params
     @transactable_type = transactable_type
-    @results = fetcher
+    @results = fetcher.not_admin
     set_options_for_filters
   end
 

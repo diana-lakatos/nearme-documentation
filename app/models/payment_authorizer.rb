@@ -40,7 +40,11 @@ class PaymentAuthorizer
   def handle_failure
     @authorizable.errors.add(:cc, @response.message)
     @authorizable.billing_authorizations.create(billing_authoriazation_params.merge({ success: false })) if @authorizable.respond_to?(:billing_authorizations)
-    @authorizable.create_failed_payment! if @authorizable.instance_of?(Spree::Order)
+    if @authorizable.instance_of?(Spree::Order)
+      @authorizable.create_failed_payment!
+    else
+      @authorizable.mark_as_authorize_failed!
+    end
 
     false
   end
@@ -55,7 +59,11 @@ class PaymentAuthorizer
         }
       )
     )
-    @authorizable.create_pending_payment! if @authorizable.instance_of?(Spree::Order)
+    if @authorizable.instance_of?(Spree::Order)
+      @authorizable.create_pending_payment!
+    else
+      @authorizable.mark_as_authorized!
+    end
     @response.authorization
   end
 

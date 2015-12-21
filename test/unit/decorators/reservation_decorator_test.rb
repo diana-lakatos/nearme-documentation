@@ -67,9 +67,9 @@ class ReservationDecoratorTest < ActionView::TestCase
   context 'A free reservation' do
 
     setup do
-      @reservation = FactoryGirl.build(:reservation_with_credit_card,
-                                       subtotal_amount: 0,
-                                       service_fee_amount_guest: 0).decorate
+      ServiceType.first.update_columns(service_fee_guest_percent: 0)
+      @reservation = FactoryGirl.build(:reservation_with_credit_card, listing: create(:free_listing)).decorate
+      @reservation.mark_as_paid!
     end
 
     should 'return that its free' do
@@ -110,7 +110,8 @@ class ReservationDecoratorTest < ActionView::TestCase
         stub_active_merchant_interaction
         @reservation.create_billing_authorization(token: "token", payment_gateway: payment_gateway, payment_gateway_mode: "test")
         @reservation.save!
-        @reservation.confirm
+        @reservation.mark_as_authorized!
+        @reservation.confirm!
       end
 
       should "return right paid amount" do

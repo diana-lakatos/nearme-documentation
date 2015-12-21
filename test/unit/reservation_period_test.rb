@@ -17,11 +17,13 @@ class ReservationPeriodTest < ActiveSupport::TestCase
         assert period.bookable?
 
         res = @listing.reservations.create(:quantity => 1, :date => @next_monday, :user => @user, payment_method: @payment_method)
-        res.confirm
+        res.mark_as_authorized!
+        res.confirm!
         assert period.bookable?
 
         res = @listing.reservations.create(:quantity => 1, :date => @next_monday, :user => @user, payment_method: @payment_method)
-        res.confirm
+        res.mark_as_authorized!
+        res.confirm!
         assert !period.bookable?
       end
     end
@@ -39,13 +41,15 @@ class ReservationPeriodTest < ActiveSupport::TestCase
         res = @listing.reservations.build(:quantity => 1, :user => @user, payment_method: @payment_method)
         res.add_period(@next_monday, @nine, @one)
         res.save!
-        res.confirm
+        res.mark_as_authorized!
+        res.confirm!
         assert period.bookable?
 
         res = @listing.reservations.build(:quantity => 1, :user => @user, payment_method: @payment_method)
         res.add_period(@next_monday, @nine, @one)
         res.save!
-        res.confirm
+        res.mark_as_authorized!
+        res.confirm!
         assert !period.bookable?
       end
 
