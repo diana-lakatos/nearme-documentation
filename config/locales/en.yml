@@ -985,6 +985,7 @@ en:
 
         payments:
           captured: 'Payment captured'
+          paid: 'Paid'
           refunded: 'Payment refunded'
           failed: 'Payment failed'
           details: 'Payment details'
@@ -1776,6 +1777,8 @@ en:
     empty_list: "You don't have any orders yet"
     payment_state:
       paid: "Payment captured"
+      paid_offline: "Payment received"
+      pending_offline: "Offline payment not received"
       failed: "Payment failed"
       pending: "Payment not captured"
       refunded: "Payment refunded"
