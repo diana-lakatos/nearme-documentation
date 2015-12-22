@@ -20,7 +20,6 @@ class Dashboard::Company::ProductsController < Dashboard::Company::BaseControlle
 
   def new
     @product = @company.products.build(user: current_user, product_type: @product_type)
-    @product.additional_charge_types.build
     @product_form = ProductForm.new(@product)
     @product_form.assign_all_attributes
     @images = current_user.products_images.where(viewable_id: nil, viewable_type: nil)
@@ -46,7 +45,6 @@ class Dashboard::Company::ProductsController < Dashboard::Company::BaseControlle
 
   def edit
     @product_form = ProductForm.new(@product)
-    @product.additional_charge_types.build
     @product_form.assign_all_attributes
     @images = @product_form.product.images
     @attachments = @product_form.product.attachments
