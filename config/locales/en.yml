@@ -1321,6 +1321,7 @@ en:
         decline: 'Decline'
       decline_reason_placeholder: 'Optionally, provide a reason.'
       paid_until: 'Paid until'
+      contact_subscriber: 'Contact %{name}'
 
 
     payments:
@@ -1395,6 +1396,7 @@ en:
       booked: 'booked'
       direct_link: 'Direct link'
       you_havent_added_anything_yet: "You haven't added anything yet!"
+      contact_subscriber: 'Contact %{name}'
 
     merchant_account:
       header: 'Merchant account details'
