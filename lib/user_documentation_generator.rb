@@ -200,24 +200,6 @@ class UserDocumentationGenerator
               end
             end
           end
-        else
-          node_value.each do |delegate|
-            delegate.each do |delegate_name, delegate_value|
-              content_tag('table') do
-                content_tag('tr') do
-                  content_tag('td') do
-                    content_tag('strong') do
-                      output_text delegate_name
-                    end
-                  end
-
-                  content_tag('td') do
-                    output_text htmlize_node_value(delegate_value)
-                  end
-                end
-              end
-            end
-          end
         end
       end
     end
@@ -242,6 +224,16 @@ class UserDocumentationGenerator
           workflow_alert_info[:alert_type] = workflow_alert.alert_type
           workflow_alert_info[:recipient_type] = workflow_alert.recipient_type
           workflow_alert_info[:variables] = get_variables_for_workflow_alert(workflow_alert)
+        end
+      end
+    end
+
+    @workflow_variables = @workflow_variables.sort { |v1, v2| v1[0] <=> v2[0] }.to_h
+    @workflow_variables.each do |k, v|
+      @workflow_variables[k] = v.sort { |v1, v2| v1[0] <=> v2[0] }.to_h
+      @workflow_variables[k].each do |workflow_step_name, alert_infos|
+        alert_infos.each do |alert_info|
+          alert_info[:variables] = alert_info[:variables].sort { |v1, v2| v1[0] <=> v2[0] }.to_h
         end
       end
     end
@@ -318,10 +310,19 @@ class UserDocumentationGenerator
     @files.each do |file|
       parse_drop_file(file)
     end
+
+    @drops_documentation = @drops_documentation.sort { |v1, v2| v1[0] <=> v2[0] }.to_h
+    @drops_documentation.each do |k, v|
+      @drops_documentation[k] = v.sort { |v1, v2| v1[0] <=> v2[0] }.to_h
+    end
   end
 
   def parse_liquid_views_variables
     @liquid_views_variables = InstanceView::DEFAULT_LIQUID_VIEWS_PATHS.dup
+    @liquid_views_variables = @liquid_views_variables.sort { |v1, v2| v1[0] <=> v2[0] }.to_h
+    @liquid_views_variables.each do |k, v|
+      @liquid_views_variables[k] = @liquid_views_variables[k].sort { |v1, v2| v1[0] <=> v2[0] }.to_h
+    end
   end
 
   def parse_drop_file(file_path)
@@ -394,11 +395,11 @@ class UserDocumentationGenerator
 
           if node.type == :def
             node_name = node.to_a[0]
-            node_documentation[node_name] = parsed_comment.strip
+            node_documentation[node_name.to_s] = parsed_comment.strip
           else
-            node_name = :delegate
-            node_documentation[:delegate] ||= []
-            node_documentation[:delegate] << parse_delegate_comment(parsed_comment)
+            parse_delegate_comment(parsed_comment).each do |k, v|
+              node_documentation[k.to_s] = v
+            end
           end
         end
       end
