@@ -20,7 +20,6 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
   context 'methods' do
 
     setup do
-      stub_mixpanel
       @user = FactoryGirl.create(:user)
       @platform_context = PlatformContext.current
       @instance = @platform_context.instance

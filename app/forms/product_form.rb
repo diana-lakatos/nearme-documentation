@@ -8,8 +8,7 @@ class ProductForm < Form
   # VALIDATIONS
 
   validates :name, presence: true, length: {minimum: 3}
-  validates :price, presence: true, numericality: { greater_than: 0 }, unless: lambda { |f| @product.action_rfq? }
-  validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }, if: lambda { |f| @product.action_rfq? }
+  validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :quantity, numericality: { only_integer: true, :less_than => 2147483647 }, presence: true
   validate :validate_images
   validates_presence_of :weight, :if => :shippo_enabled

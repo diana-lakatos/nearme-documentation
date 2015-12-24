@@ -59,7 +59,6 @@ class BuySellMarket::CheckoutController < ApplicationController
       update_blank_user_fields
     end
 
-
     if @order.payment_method.try(:express_checkout?) && @order.express_checkout_redirect_url.present? && @order.save
       redirect_to @order.express_checkout_redirect_url
     else

@@ -13,7 +13,7 @@ class BuySellMarket::CartController < ApplicationController
   end
 
   def add
-    if !@product.action_free? && @cart_service.add_product(@product, params[:quantity])
+    if @cart_service.add_product(@product, params[:quantity])
       flash[:notice] = t('buy_sell_market.cart.notices.add')
     else
       flash[:error] = cart_errors

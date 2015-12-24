@@ -2,10 +2,6 @@ require 'test_helper'
 
 class RatingReminderJobTest < ActiveSupport::TestCase
 
-  setup do
-    stub_mixpanel
-  end
-
   context "With yesterday ending reservation" do
 
     setup do
@@ -103,7 +99,7 @@ class RatingReminderJobTest < ActiveSupport::TestCase
   context "With an already expired reservation" do
 
     setup do
-      @reservation = FactoryGirl.create(:past_reservation, state: 'expired')
+      @reservation = FactoryGirl.create(:expired_reservation)
     end
 
     should 'not send any reminders to expired reservations' do

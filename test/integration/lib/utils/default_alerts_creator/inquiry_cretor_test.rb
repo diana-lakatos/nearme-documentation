@@ -14,7 +14,6 @@ class Utils::DefaultAlertsCreator::InquiryCreatorTest < ActionDispatch::Integrat
 
   context 'methods' do
     setup do
-      stub_mixpanel
       @inquiry = FactoryGirl.create(:inquiry)
     end
 

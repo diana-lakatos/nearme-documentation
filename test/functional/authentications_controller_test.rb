@@ -1,4 +1,4 @@
-  require 'test_helper'
+require 'test_helper'
 
 class AuthenticationsControllerTest < ActionController::TestCase
 
@@ -11,8 +11,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
 
   test "authentication can be deleted if user has password set" do
     create_signed_in_user_with_authentication
-    stub_mixpanel
-    @tracker.expects(:disconnected_social_provider).once.with do |user, custom_options|
+    Rails.application.config.event_tracker.any_instance.expects(:disconnected_social_provider).once.with do |user, custom_options|
       user == @user && custom_options == { provider: @user.authentications.first.provider }
     end
     assert_difference('@user.authentications.count', -1) do
@@ -23,8 +22,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
   test "authentication can be deleted if user has no  password but more than one authentications" do
     create_signed_in_user_with_authentication
     add_authentication("twitter", "abc123")
-    stub_mixpanel
-    @tracker.expects(:disconnected_social_provider).once.with do |user, custom_options|
+    Rails.application.config.event_tracker.any_instance.expects(:disconnected_social_provider).once.with do |user, custom_options|
       user == @user && custom_options == { provider: @user.authentications.first.provider }
     end
     assert_difference('@user.authentications.count', -1) do
@@ -76,8 +74,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
 
     should "successfully sign in and log" do
       add_authentication(@provider, @uid, @user)
-      stub_mixpanel
-      @tracker.expects(:logged_in).once.with do |user, custom_options|
+      Rails.application.config.event_tracker.any_instance.expects(:logged_in).once.with do |user, custom_options|
         user == @user && custom_options == { provider: @provider }
       end
       Authentication.any_instance.expects(:update_info)
@@ -92,14 +89,13 @@ class AuthenticationsControllerTest < ActionController::TestCase
 
     should "successfully create new authentication and log" do
       sign_in @user
-      stub_mixpanel
       Rails.application.config.expects(:perform_social_jobs).twice.returns(true)
       raw = OpenStruct.new(id: 'dnm', username: 'desksnearme', name: 'Desks Near Me', url: 'https://twitter.com/desksnearme')
       raw.stubs(:profile_image_url).returns(nil)
       Twitter::REST::Client.any_instance.stubs(:user).once.returns(raw)
       Twitter::REST::Client.any_instance.stubs(:friend_ids).once.returns(['1', '2'])
       Authentication.any_instance.stubs(:token_expired?).returns(false)
-      @tracker.expects(:connected_social_provider).once.with do |user, custom_options|
+      Rails.application.config.event_tracker.any_instance.expects(:connected_social_provider).once.with do |user, custom_options|
         user == @user && custom_options == { provider: @provider }
       end
       assert_no_difference('User.count') do
@@ -116,8 +112,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
     should "successfully create new authentication as alternative to setting password" do
       @user = FactoryGirl.create(:user_without_password)
       sign_in @user
-      stub_mixpanel
-      @tracker.expects(:connected_social_provider).once.with do |user, custom_options|
+      Rails.application.config.event_tracker.any_instance.expects(:connected_social_provider).once.with do |user, custom_options|
         user == @user && custom_options == { provider: @provider }
       end
       assert_no_difference('User.count') do
@@ -140,15 +135,12 @@ class AuthenticationsControllerTest < ActionController::TestCase
     end
 
     context "should successfully sign up and log"  do
-      setup do
-        stub_mixpanel
-      end
 
       should "is tracked via mixpanel" do
-        @tracker.expects(:signed_up).once.with do |user, custom_options|
+        Rails.application.config.event_tracker.any_instance.expects(:signed_up).once.with do |user, custom_options|
           user == assigns(:oauth).authenticated_user && custom_options == { signed_up_via: 'other', provider: @provider }
         end
-        @tracker.expects(:connected_social_provider).once.with do |user, custom_options|
+        Rails.application.config.event_tracker.any_instance.expects(:connected_social_provider).once.with do |user, custom_options|
           user == assigns(:oauth).authenticated_user && custom_options == {  provider: @provider }
         end
 
@@ -180,7 +172,6 @@ class AuthenticationsControllerTest < ActionController::TestCase
     context 'token params after login' do
       setup do
         add_authentication(@provider, @uid, @user)
-        stub_mixpanel
       end
 
       should 'change token_expires_at to date expires day' do

@@ -81,8 +81,8 @@ class UserTest < ActiveSupport::TestCase
         4.times { @me.add_friend(FactoryGirl.create(:user)) }
 
         friends_with_visit = @me.friends.first(2)
-        @me.friends.last.reservations << FactoryGirl.create(:future_reservation, state: 'confirmed', date: Date.tomorrow)
-        friends_with_visit.each {|f| FactoryGirl.create(:past_reservation, state: 'confirmed', listing: @listing, user:f)}
+        @me.friends.last.reservations << FactoryGirl.create(:future_confirmed_reservation, date: Date.tomorrow)
+        friends_with_visit.each {|f| FactoryGirl.create(:past_reservation, listing: @listing, user:f)}
 
         assert_equal friends_with_visit.sort, @me.friends.visited_listing(@listing).to_a.sort
       end
@@ -127,8 +127,8 @@ class UserTest < ActiveSupport::TestCase
         4.times { mutual_friends << FactoryGirl.create(:user); @friend.add_friend(mutual_friends.last) }
 
         mutual_friends_with_visit = @friend.friends.without(@me).first(2)
-        @friend.friends.last.reservations << FactoryGirl.create(:future_reservation, state: 'confirmed', date: Date.tomorrow)
-        mutual_friends_with_visit.each {|f| FactoryGirl.create(:past_reservation, state: 'confirmed', listing: @listing, user:f)}
+        @friend.friends.last.reservations << FactoryGirl.create(:future_confirmed_reservation, date: Date.tomorrow)
+        mutual_friends_with_visit.each {|f| FactoryGirl.create(:past_reservation, listing: @listing, user:f)}
 
         result = User.mutual_friends_of(@me).visited_listing(@listing)
         assert_equal mutual_friends_with_visit.sort, result.sort
@@ -579,7 +579,6 @@ class UserTest < ActiveSupport::TestCase
   context "notify about invalid mobile phone" do
 
     setup do
-      stub_mixpanel
       FactoryGirl.create(:instance)
       @user = FactoryGirl.create(:user)
       Utils::DefaultAlertsCreator::SignUpCreator.new.create_notify_of_wrong_phone_number_email!
@@ -638,13 +637,13 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should 'cancel any pending unconfirmed reservations' do
-        @reservation = FactoryGirl.create(:reservation, owner: @user)
+        @reservation = FactoryGirl.create(:authorized_reservation, owner: @user)
         @user.destroy
         assert @reservation.reload.cancelled_by_guest?
       end
 
       should 'cancel any pending reservations' do
-        @reservation = FactoryGirl.create(:reservation, owner: @user, state: 'confirmed')
+        @reservation = FactoryGirl.create(:confirmed_reservation, owner: @user)
         @user.destroy
         refute @reservation.reload.cancelled_by_guest?
         assert @reservation.confirmed?
@@ -727,7 +726,7 @@ class UserTest < ActiveSupport::TestCase
       @user.save!
       listing_first = FactoryGirl.create(:listing_in_auckland)
       listing_second = FactoryGirl.create(:listing_in_auckland)
-      reservation = FactoryGirl.create(:reservation, listing: listing_first, user: @user)
+      reservation = FactoryGirl.create(:authorized_reservation, listing: listing_first, user: @user)
       reservation.reject
       assert_equal [listing_second], @user.listings_in_near(3, 100, true)
     end

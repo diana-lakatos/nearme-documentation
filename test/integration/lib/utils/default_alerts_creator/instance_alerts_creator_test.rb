@@ -14,7 +14,6 @@ class Utils::DefaultAlertsCreator::InstanceAlertsCreatorTest < ActionDispatch::I
   context 'methods' do
 
     setup do
-      stub_mixpanel
       @instance = FactoryGirl.create(:domain, name: 'newinstance.com', target: FactoryGirl.create(:instance, name: 'Shiny Instance')).target
       PlatformContext.current = PlatformContext.new(@instance)
       @user = FactoryGirl.create(:user)

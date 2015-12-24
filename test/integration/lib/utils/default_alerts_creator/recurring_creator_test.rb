@@ -16,7 +16,6 @@ class Utils::DefaultAlertsCreator::RecurringCreatorTest < ActionDispatch::Integr
   context 'methods' do
 
     setup do
-      stub_mixpanel
       @company = FactoryGirl.create(:company)
       @platform_context = PlatformContext.current
       PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))

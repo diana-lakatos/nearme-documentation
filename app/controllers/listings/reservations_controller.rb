@@ -58,33 +58,17 @@ class Listings::ReservationsController < ApplicationController
   def create
     @reservation = @reservation_request.reservation
     if @reservation_request.process
-      if @reservation_request.confirm_reservations?
-        @reservation.schedule_expiry
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation, @reservation.id)
-        event_tracker.updated_profile_information(@reservation.owner)
-        event_tracker.updated_profile_information(@reservation.host)
-      else
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, @reservation.id)
-      end
-
-      pre_booking_sending_date = (@reservation.date - 1.day).in_time_zone + 17.hours # send day before at 5pm
-      if pre_booking_sending_date < Time.current.beginning_of_day
-        ReservationPreBookingJob.perform_later(pre_booking_sending_date, @reservation.id)
-      end
-
-      if current_user.reservations.count == 1
-        ReengagementOneBookingJob.perform_later(@reservation.last_date.in_time_zone + 7.days, @reservation.id)
-      end
-
-      event_tracker.requested_a_booking(@reservation)
-      card_message = @reservation.credit_card_payment? ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
-      flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
-
       if @reservation.remote_payment?
         redirect_to remote_payment_dashboard_user_reservation_path(@reservation, host: platform_context.decorate.host)
       elsif @reservation_request.express_checkout_payment?
         redirect_to @reservation_request.express_checkout_redirect_url
       else
+        event_tracker.updated_profile_information(@reservation.owner)
+        event_tracker.updated_profile_information(@reservation.host)
+        event_tracker.requested_a_booking(@reservation)
+
+        card_message = @reservation.credit_card_payment? ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
+        flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
         redirect_to booking_successful_dashboard_user_reservation_path(@reservation, host: platform_context.decorate.host)
       end
     else
@@ -96,6 +80,10 @@ class Listings::ReservationsController < ApplicationController
     reservation = Reservation.find_by_express_token!(params[:token])
     reservation.express_payer_id = params[:PayerID]
     if reservation.authorize
+      event_tracker.updated_profile_information(reservation.owner)
+      event_tracker.updated_profile_information(reservation.host)
+      event_tracker.requested_a_booking(reservation)
+
       redirect_to booking_successful_dashboard_user_reservation_path(reservation, host: platform_context.decorate.host)
     else
       redirect_to booking_failed_dashboard_user_reservation_path(reservation, host: platform_context.decorate.host)
@@ -104,7 +92,9 @@ class Listings::ReservationsController < ApplicationController
 
   def cancel_express_checkout
     reservation = Reservation.find_by_express_token!(params[:token])
-    redirect_to booking_failed_dashboard_user_reservation_path(reservation, host: platform_context.decorate.host)
+    reservation.mark_as_authorize_failed!
+    flash[:error] = t('flash_messages.reservations.booking_failed')
+    redirect_to location_listing_path(reservation.listing.location, reservation.listing), status: 301
   end
 
   # Renders remote payment form

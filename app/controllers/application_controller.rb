@@ -132,9 +132,7 @@ class ApplicationController < ActionController::Base
   # Use this for triggering predefined events from actions via
   # the application controllers.
   def event_tracker
-    @event_tracker ||= begin
-                         Analytics::EventTracker.new(mixpanel, google_analytics)
-                       end
+    @event_tracker ||= Rails.application.config.event_tracker.new(mixpanel, google_analytics)
   end
 
   def mixpanel
@@ -194,8 +192,7 @@ class ApplicationController < ActionController::Base
 
   def analytics_apply_user(user, with_alias = true)
     store_user_browser_details(user)
-    mixpanel.apply_user(user, :alias => with_alias)
-    google_analytics.apply_user(user)
+    event_tracker.apply_user(user, alias: with_alias)
   end
 
   def store_user_browser_details(user)
@@ -343,7 +340,7 @@ class ApplicationController < ActionController::Base
   helper_method :user_google_analytics_id
 
   def store_client_taggable_events
-    if @event_tracker
+    if @event_tracker.present?
       session[:triggered_client_taggable_events] ||= []
       session[:triggered_client_taggable_events] += @event_tracker.triggered_client_taggable_methods
     end

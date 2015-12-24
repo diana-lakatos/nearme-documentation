@@ -130,7 +130,9 @@ Spree::Order.class_eval do
   end
 
   def is_free?
-    self.total.zero?
+    # This takes into account the entire total including shipping, additional charge
+    # types (defined from Chargeable)
+    self.total_amount.zero?
   end
 
   def additional_charge_types
@@ -272,6 +274,21 @@ Spree::Order.class_eval do
     payment? || completed?
   end
 
+  # We always require payment even if free, will use the free method
+  def payment_required?
+    true
+  end
+
+  def update_additional_charges
+    # We want to delete existing additional charges before because maybe they are out of sync with
+    # the additional charge types, if the MPO has changed them during the lifespan of an order
+    self.additional_charges.delete_all
+
+    additional_charge_types.each do |act|
+      self.additional_charges.find_or_create_by(additional_charge_type_id: act.id, currency: currency)
+    end
+  end
+
   private
 
   def prepare_payments
@@ -280,11 +297,10 @@ Spree::Order.class_eval do
         service_fee_amount_guest_cents: service_fee_amount_guest_cents,
         service_fee_amount_host_cents: service_fee_amount_host_cents
       })
-      additional_charge_types.each do |act|
-        self.additional_charges.find_or_create_by(additional_charge_type_id: act.id, currency: currency)
-      end
+      update_additional_charges
     end
   end
+
 end
 
 

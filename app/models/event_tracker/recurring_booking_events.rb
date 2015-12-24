@@ -1,4 +1,4 @@
-module Analytics::RecurringBookingEvents
+module EventTracker::RecurringBookingEvents
 
   def reviewed_a_recurring_booking(recurring_booking, custom_options = {})
     track 'Reviewed a Recurring Booking', recurring_booking, custom_options

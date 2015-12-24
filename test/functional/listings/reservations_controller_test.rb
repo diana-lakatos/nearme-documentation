@@ -7,7 +7,6 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
     @user = FactoryGirl.create(:user, name: "Example LastName")
     sign_in @user
-    stub_mixpanel
     stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
 
     @payment_gateway = stub_billing_gateway(@listing.instance)
@@ -18,7 +17,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
   end
 
   should "track booking review open" do
-    @tracker.expects(:reviewed_a_booking).with do |reservation|
+    Rails.application.config.event_tracker.any_instance.expects(:reviewed_a_booking).with do |reservation|
       reservation == assigns(:reservation_request).reservation.decorate
     end
     post :review, booking_params_for(@listing)
@@ -85,13 +84,13 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       klass == WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation && assigns(:reservation_request).reservation.id
     end
 
-    @tracker.expects(:requested_a_booking).with do |reservation|
+    Rails.application.config.event_tracker.any_instance.expects(:requested_a_booking).with do |reservation|
       reservation == assigns(:reservation_request).reservation
     end
-    @tracker.expects(:updated_profile_information).with do |user|
+    Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
       user == assigns(:reservation_request).reservation.owner
     end
-    @tracker.expects(:updated_profile_information).with do |user|
+    Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
       user == assigns(:reservation_request).reservation.host
     end
 
@@ -106,8 +105,8 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
     should 'create a delayed_job task to run in 24 hours time when saved' do
       travel_to Time.zone.now do
-        ReservationExpiryJob.expects(:perform_later).with do |hours, id|
-          hours == 24.hours
+        ReservationExpiryJob.expects(:perform_later).with do |expires_at, id|
+          expires_at == 24.hours.from_now
         end
         post :create, booking_params_for(@listing)
       end

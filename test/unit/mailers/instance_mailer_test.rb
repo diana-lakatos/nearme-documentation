@@ -14,7 +14,6 @@ class InstanceMailerTest < ActiveSupport::TestCase
   end
 
   setup do
-    stub_mixpanel
     FactoryGirl.create(:instance_view_email_text, path: 'instance_mailer/test_mailer')
     FactoryGirl.create(:instance_view_email_html, path: 'instance_mailer/test_mailer')
   end
@@ -31,10 +30,10 @@ class InstanceMailerTest < ActiveSupport::TestCase
     end
 
     should "handle pixel based event tracking correctly" do
-      Analytics::EventTracker.any_instance.expects(:pixel_track_url).with do |event_name, custom_options|
+      Rails.application.config.event_tracker.any_instance.expects(:pixel_track_url).with do |event_name, custom_options|
         event_name == 'Email Opened' && custom_options[:campaign] == "Test mailer" && custom_options[:template] == 'test_mailer'
       end.returns('http://api.mixpanel.com/track/?data=emailopenedevent')
-      Analytics::EventTracker.any_instance.expects(:track).with('Email Sent',  { :template => 'test_mailer', :campaign => 'Test mailer'})
+      Rails.application.config.event_tracker.any_instance.expects(:track).with('Email Sent',  { :template => 'test_mailer', :campaign => 'Test mailer'})
       mail = InstanceMailer.test_mailer
       assert mail.html_part.body.include?("http://api.mixpanel.com/track/?data=emailopenedevent"), "Tracking code for Email Opened not included in #{mail.html_part.body}"
     end

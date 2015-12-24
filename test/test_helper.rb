@@ -105,20 +105,17 @@ ActiveSupport::TestCase.class_eval do
   end
 
   def assert_log_triggered(*args)
-    stub_mixpanel
-    @tracker.expects(event).with do
+    Rails.application.config.event_tracker.any_instance.expects(event).with do
       yield(*args)
     end
   end
 
   def assert_log_not_triggered(event)
-    stub_mixpanel
-    @tracker.expects(event).never
+    Rails.application.config.event_tracker.any_instance.expects(event).never
   end
 
   def stub_mixpanel
     stub_request(:get, /.*api\.mixpanel\.com.*/)
-    @tracker = Analytics::EventTracker.any_instance
   end
 
   def mailer_stub

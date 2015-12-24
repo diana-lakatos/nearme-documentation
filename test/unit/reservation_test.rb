@@ -4,6 +4,16 @@ require Rails.root.join('lib', 'dnm.rb')
 require Rails.root.join('app', 'serializers', 'reservation_serializer.rb')
 
 class ReservationTest < ActiveSupport::TestCase
+  PAYMENT_STATUSES = {
+    :pending => 'pending',
+    :authorized => 'authorized',
+    :auhtorize_failed => 'authorize_failed',
+    :paid => 'paid',
+    :payment_failed => 'payment_failed',
+    :refunded => 'refunded',
+    :refunde_failed => 'refunded_failed',
+  }.freeze
+
   include ReservationsHelper
 
   should belong_to(:listing)
@@ -12,7 +22,6 @@ class ReservationTest < ActiveSupport::TestCase
   should have_many(:additional_charges)
 
   setup do
-    stub_mixpanel
     @manual_payment_method = FactoryGirl.create(:manual_payment_gateway).payment_methods.first
   end
 
@@ -113,6 +122,7 @@ class ReservationTest < ActiveSupport::TestCase
       @reservation.listing = FactoryGirl.create(:always_open_listing)
       @reservation.owner = FactoryGirl.create(:user)
       @reservation.add_period(Time.zone.today.next_week+1)
+      @reservation.activate!
       @reservation.save!
     end
 
@@ -205,7 +215,7 @@ class ReservationTest < ActiveSupport::TestCase
       end
       @payment = @reservation.payments.last
       assert_equal false, @payment.paid?
-      assert_equal "failed", @reservation.reload.payment_status
+      assert_equal PAYMENT_STATUSES[:payment_failed], @reservation.reload.payment_status
       assert_equal false, @reservation.confirmed?
     end
 
@@ -217,8 +227,8 @@ class ReservationTest < ActiveSupport::TestCase
       @reservation = @charge.payment.payable
       @reservation.stubs(:attempt_payment_capture).returns(true)
       @reservation.stubs(:payment_capture).returns(true)
+      @reservation.mark_as_authorized!
       @reservation.confirm!
-      @reservation.update_column(:payment_status, Reservation::PAYMENT_STATUSES[:paid])
     end
 
     context 'when to trigger' do
@@ -295,60 +305,64 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
     end
+    context 'on paid reservation' do
 
-    should 'be able to schedule refund' do
-      travel_to Time.zone.now do
-        ReservationRefundJob.expects(:perform_later).with do |time, id, counter|
-          time.to_i == Time.zone.now.to_i && id == @reservation.id && counter == 0
-        end.once
+      setup do 
+        @reservation.update_column(:payment_method_id, FactoryGirl.create(:credit_card_payment_method).id)
+        @reservation.mark_as_paid!
       end
-      @reservation.send(:schedule_refund, nil)
-    end
 
-    should 'change payment status to refunded if successfully refunded' do
-      @reservation.update_column(:payment_method_id, FactoryGirl.create(:credit_card_payment_method).id)
-      Payment.any_instance.expects(:refund).returns(true)
-      @reservation.send(:attempt_payment_refund)
-      assert_equal Reservation::PAYMENT_STATUSES[:refunded], @reservation.reload.payment_status
-    end
-
-    should 'schedule next refund attempt on fail' do
-      @reservation.update_column(:payment_method_id, FactoryGirl.create(:credit_card_payment_method).id)
-      Payment.any_instance.expects(:refund).returns(false)
-      travel_to Time.zone.now do
-        ReservationRefundJob.expects(:perform_later).with do |time, id, counter|
-          time.to_i == (Time.zone.now + 12.hours).to_i && id == @reservation.id && counter == 2
-        end.once
+      should 'be able to schedule refund' do
+        travel_to Time.zone.now do
+          ReservationRefundJob.expects(:perform_later).with do |time, id, counter|
+            time.to_i == Time.zone.now.to_i && id == @reservation.id && counter == 0
+          end.once
+        end
+        @reservation.send(:schedule_refund, nil)
       end
-      @reservation.send(:attempt_payment_refund, 1)
-      assert_equal Reservation::PAYMENT_STATUSES[:paid], @reservation.reload.payment_status
-    end
 
-    should 'stop schedluing next refund attempt after 3 attempts' do
-      @reservation.update_column(:payment_method_id, FactoryGirl.create(:credit_card_payment_method).id)
-      Payment.any_instance.expects(:refund).returns(false)
-      ReservationRefundJob.expects(:perform_later).never
-      Rails.application.config.marketplace_error_logger.class.any_instance.stubs(:log_issue).with do |error_type, msg|
-        error_type == MarketplaceErrorLogger::BaseLogger::REFUND_ERROR && msg.include?("Refund for Reservation id=#{@reservation.id}")
+      should 'change payment status to refunded if successfully refunded' do
+        Payment.any_instance.expects(:refund).returns(true)
+        @reservation.send(:attempt_payment_refund)
+        assert_equal PAYMENT_STATUSES[:refunded], @reservation.reload.payment_status
       end
-      @reservation.send(:attempt_payment_refund, 2)
-      assert_equal Reservation::PAYMENT_STATUSES[:paid], @reservation.reload.payment_status
-    end
 
-    should 'abort attempt to refund if payment was manual' do
-      @reservation.update_column(:payment_method_id, @manual_payment_method.id)
-      Payment.any_instance.expects(:refund).never
-      @reservation.send(:attempt_payment_refund)
-      assert_equal Reservation::PAYMENT_STATUSES[:paid], @reservation.reload.payment_status
-    end
+      should 'schedule next refund attempt on fail' do
+        Payment.any_instance.expects(:refund).returns(false)
+        travel_to Time.zone.now do
+          ReservationRefundJob.expects(:perform_later).with do |time, id, counter|
+            time.to_i == (Time.zone.now + 12.hours).to_i && id == @reservation.id && counter == 2
+          end.once
+        end
+        @reservation.send(:attempt_payment_refund, 1)
+        assert_equal PAYMENT_STATUSES[:paid], @reservation.reload.payment_status
+      end
 
-    # TODO - think how to handle FREE - payment_method
-    # should 'abort attempt to refund if payment was free' do
-    #   @reservation.update_column(:payment_method_id, FactoryGirl.create(:credit_card_payment_method).id)
-    #   Payment.any_instance.expects(:refund).never
-    #   @reservation.host_cancel!
-    #   assert_equal Reservation::PAYMENT_STATUSES[:paid], @reservation.reload.payment_status
-    # end
+      should 'stop schedluing next refund attempt after 3 attempts' do
+        Payment.any_instance.expects(:refund).returns(false)
+        ReservationRefundJob.expects(:perform_later).never
+        Rails.application.config.marketplace_error_logger.class.any_instance.stubs(:log_issue).with do |error_type, msg|
+          error_type == MarketplaceErrorLogger::BaseLogger::REFUND_ERROR && msg.include?("Refund for Reservation id=#{@reservation.id}")
+        end
+        @reservation.send(:attempt_payment_refund, 2)
+        assert_equal PAYMENT_STATUSES[:paid], @reservation.reload.payment_status
+      end
+
+      should 'abort attempt to refund if payment was manual' do
+        @reservation.update_column(:payment_method_id, @manual_payment_method.id)
+        Payment.any_instance.expects(:refund).never
+        @reservation.send(:attempt_payment_refund)
+        assert_equal PAYMENT_STATUSES[:paid], @reservation.reload.payment_status
+      end
+
+      # TODO - think how to handle FREE - payment_method
+      # should 'abort attempt to refund if payment was free' do
+      #   @reservation.update_column(:payment_method_id, FactoryGirl.create(:credit_card_payment_method).id)
+      #   Payment.any_instance.expects(:refund).never
+      #   @reservation.host_cancel!
+      #   assert_equal PAYMENT_STATUSES[:paid], @reservation.reload.payment_status
+      # end
+    end
   end
 
   context 'expiration' do
@@ -375,27 +389,24 @@ class ReservationTest < ActiveSupport::TestCase
   end
 
   context 'expiration settings' do
-    setup do
-    end
-
     should 'set proper expiration time' do
       TransactableType.first.update_attribute(:hours_to_expiration, 45)
       @reservation = FactoryGirl.create(:reservation)
       travel_to Time.zone.now do
-        ReservationExpiryJob.expects(:perform_later).with do |hours, id|
-          hours == 45.hours && id == @reservation.id
+        ReservationExpiryJob.expects(:perform_later).with do |expire_at, id|
+          expire_at == @reservation.expire_at && id == @reservation.id
         end
-        @reservation.schedule_expiry
+        @reservation.activate!
+        @reservation.reload
+        assert_equal Time.now + 45.hours, @reservation.expire_at
       end
-      assert_equal 45, @reservation.hours_to_expiration
     end
 
     should 'not create expiry job if hours is 0' do
       TransactableType.first.update_attribute(:hours_to_expiration, 0)
       @reservation = FactoryGirl.create(:reservation)
+      @reservation.activate!
       ReservationExpiryJob.expects(:perform_later).never
-      @reservation.schedule_expiry
-      assert_equal 0, @reservation.hours_to_expiration
     end
 
   end
@@ -409,6 +420,7 @@ class ReservationTest < ActiveSupport::TestCase
       @reservation.service_fee_amount_host_cents = 10_00
       @payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
       @reservation.create_billing_authorization(token: "token", payment_gateway: @payment_gateway, payment_gateway_mode: "test")
+      @reservation.mark_as_authorized!
       @reservation.save!
     end
 
@@ -422,7 +434,7 @@ class ReservationTest < ActiveSupport::TestCase
 
   context "with serialization" do
     should "work even if the total amount is nil" do
-      reservation = Reservation.new
+      reservation = Reservation.new state: 'unconfirmed'
       reservation.listing = FactoryGirl.create(:transactable)
       reservation.subtotal_amount_cents = nil
       reservation.service_fee_amount_guest_cents = nil
@@ -569,16 +581,14 @@ class ReservationTest < ActiveSupport::TestCase
     should "set default payment status to pending" do
       reservation = FactoryGirl.build(:reservation)
       reservation.payment_status = nil
+      refute reservation.save
+
+      reservation = FactoryGirl.build(:reservation)
       reservation.save!
       assert reservation.pending?
 
       reservation = FactoryGirl.build(:reservation)
-      reservation.payment_status = Reservation::PAYMENT_STATUSES[:unknown]
-      reservation.save!
-      assert reservation.pending?
-
-      reservation = FactoryGirl.build(:reservation)
-      reservation.payment_status = Reservation::PAYMENT_STATUSES[:paid]
+      reservation.mark_as_paid!
       reservation.save!
       refute reservation.pending?
     end
@@ -588,7 +598,7 @@ class ReservationTest < ActiveSupport::TestCase
       reservation = FactoryGirl.build(:reservation)
       reservation.save!
       assert reservation.action_free_booking?
-      assert reservation.paid?
+      assert reservation.pending?
     end
   end
 
@@ -631,7 +641,8 @@ class ReservationTest < ActiveSupport::TestCase
         reservation = @listing.reservations.build(:user => @user, :quantity => 2, payment_method: @manual_payment_method)
         reservation.add_period(@monday)
         reservation.save!
-        reservation.confirm
+        reservation.activate!
+        reservation.confirm!
 
         @reservation.add_period(@monday)
         @reservation.validate_all_dates_available
@@ -679,11 +690,11 @@ class ReservationTest < ActiveSupport::TestCase
   end
 
   context '#reject' do
-    subject { FactoryGirl.create(:reservation) }
+    subject { FactoryGirl.create(:reservation, state: 'unconfirmed') }
     should 'set reason and update status' do
-      assert_equal subject.reject('Reason'), true
-      assert_equal subject.reload.rejection_reason, 'Reason'
-      assert_equal subject.state, 'rejected'
+      assert_equal true, subject.reject('Reason')
+      assert_equal 'Reason', subject.reload.rejection_reason
+      assert_equal 'rejected', subject.state
     end
   end
 

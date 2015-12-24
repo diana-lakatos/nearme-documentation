@@ -43,7 +43,6 @@ class LocalesUrlTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert :en, I18n.locale
 
-    stub_mixpanel
     post_via_redirect user_session_path, 'user[email]' => user.email, 'user[password]' => user.password
     assert_equal 'Signed in successfully.', flash[:notice]
 

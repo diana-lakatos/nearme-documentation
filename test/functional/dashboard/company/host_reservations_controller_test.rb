@@ -15,7 +15,8 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     end
 
     should 'show related guests and appropriate units' do
-      FactoryGirl.create(:future_reservation, owner: @user, listing: @related_listing)
+      @reservation = FactoryGirl.create(:future_reservation, owner: @user, listing: @related_listing)
+      @reservation.mark_as_authorized
       get :index
       assert_response :success
       assert_select ".order", 1
@@ -62,28 +63,28 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     should 'show reservation properly in correct time zones' do
       @user.update_attribute(:time_zone, 'Hawaii')
       Time.use_zone 'Hawaii' do
+        Reservation.destroy_all
         reservation = FactoryGirl.create(:reservation, owner: @user, listing: @related_listing)
         ReservationPeriod.destroy_all
+        reservation.reload
         reservation.add_period(Time.zone.tomorrow, 600, 720) # Tommorow form 10:00 - 12:00 AM
         reservation.save
+        reservation.mark_as_authorized
 
         # Current time is before the reservation
         get :index
-        @guest_list = assigns(:guest_list)
-        assert_equal [reservation], @guest_list.reservations
+        assert_equal [reservation], assigns(:guest_list).reservations
 
         # Travel to time in the middle of reservation
         travel_to Time.zone.tomorrow.at_beginning_of_day.advance(hours: 11) do
           get :index
-          @guest_list = assigns(:guest_list)
-          assert_equal [reservation], @guest_list.reservations
+          assert_equal [reservation], assigns(:guest_list).reservations
+        end
 
-          # Travel just after reservation is over
-          travel_to Time.zone.today.at_beginning_of_day.advance(hours: 13) do
-            get :index
-            @guest_list = assigns(:guest_list)
-            assert_equal [], @guest_list.reservations
-          end
+        # Travel just after reservation is over
+        travel_to Time.zone.tomorrow.at_beginning_of_day.advance(hours: 13) do
+          get :index
+          assert_equal [], assigns(:guest_list).reservations
         end
       end
     end
@@ -94,25 +95,24 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     setup do
       @reservation = FactoryGirl.create(:reservation_with_credit_card)
       @payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
-      @reservation.create_billing_authorization(token: "123", payment_gateway: @payment_gateway, payment_gateway_mode: "test")
       @user = @reservation.listing.creator
       sign_in @user
-      stub_mixpanel
       stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
       stub_billing_gateway(@reservation.instance)
       stub_active_merchant_interaction
+      @payment_gateway.authorize(@reservation)
     end
 
     should "track and redirect a host to the Manage Guests page when they confirm a booking" do
       WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::ManuallyConfirmed, @reservation.id)
 
-      @tracker.expects(:confirmed_a_booking).with do |reservation|
+      Rails.application.config.event_tracker.any_instance.expects(:confirmed_a_booking).with do |reservation|
         reservation == assigns(:reservation)
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).owner
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).host
       end
 
@@ -124,13 +124,13 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     should "track and redirect a host to the Manage Guests page when they reject a booking" do
       WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::Rejected, @reservation.id)
 
-      @tracker.expects(:rejected_a_booking).with do |reservation|
+      Rails.application.config.event_tracker.any_instance.expects(:rejected_a_booking).with do |reservation|
         reservation == assigns(:reservation)
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).owner
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).host
       end
       Reservation.any_instance.expects(:schedule_void_payment).once
@@ -143,13 +143,13 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
 
       @reservation.confirm # Must be confirmed before can be cancelled
 
-      @tracker.expects(:cancelled_a_booking).with do |reservation, custom_options|
+      Rails.application.config.event_tracker.any_instance.expects(:cancelled_a_booking).with do |reservation, custom_options|
         reservation == assigns(:reservation) && custom_options == { actor: 'host' }
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).owner
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).host
       end
       post :host_cancel, { id: @reservation.id }
@@ -159,7 +159,6 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     should "refund booking on cancel" do
       ActiveMerchant::Billing::Base.mode = :test
       @reservation.stubs(credit_card: credit_card, payment_method_nonce: nil )
-      @payment_gateway.authorize(@reservation)
       @reservation.confirm
 
       sign_in @reservation.listing.creator

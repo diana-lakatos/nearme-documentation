@@ -2,7 +2,6 @@ require 'test_helper'
 
 class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
   def setup
-    stub_mixpanel
     @user = FactoryGirl.create(:user)
     @verifier = User::TemporaryTokenVerifier.new(@user)
     @temporary_token_name = TemporaryTokenAuthenticatable::PARAMETER_NAME

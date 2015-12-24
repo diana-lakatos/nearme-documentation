@@ -3,7 +3,6 @@ require 'test_helper'
 class InstanceAdmin::Manage::AdminsControllerTest < ActionController::TestCase
 
   setup do
-    stub_mixpanel
     @user = FactoryGirl.create(:user)
     sign_in @user
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)

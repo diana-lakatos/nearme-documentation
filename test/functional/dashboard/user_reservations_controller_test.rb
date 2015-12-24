@@ -5,17 +5,17 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
   context '#event_tracker' do
     should "track and redirect a host to the My Bookings page when they cancel a booking" do
       @reservation = FactoryGirl.create(:future_reservation)
-      stub_mixpanel
+      @reservation.mark_as_authorized!
       sign_in @reservation.owner
       WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::GuestCancelled, @reservation.id)
 
-      @tracker.expects(:cancelled_a_booking).with do |reservation, custom_options|
+      Rails.application.config.event_tracker.any_instance.expects(:cancelled_a_booking).with do |reservation, custom_options|
         reservation == assigns(:reservation) && custom_options == { actor: 'guest' }
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).owner
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).host
       end
 
@@ -95,7 +95,6 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
       @location = FactoryGirl.create(:location_in_auckland)
       @listing = FactoryGirl.create(:transactable, location: @location)
       @company.locations << @location
-      stub_mixpanel
     end
 
     context 'render view' do
@@ -108,6 +107,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
 
       should 'if any upcoming bookings' do
         @reservation = FactoryGirl.create(:future_reservation, owner: @user)
+        @reservation.mark_as_authorized!
         get :upcoming
         assert_response :success
         assert_select ".order", 1
@@ -126,6 +126,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
 
         setup do
           @reservation = FactoryGirl.create(:future_reservation, owner: @user)
+          @reservation.mark_as_authorized!
           get :upcoming
           assert_response :success
           assert_select ".order", 1
@@ -150,7 +151,8 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
           @reservation = FactoryGirl.create(:future_reservation, owner: @user, cancellation_policy_hours_for_cancellation: 1)
           time = Time.now.in_time_zone(@reservation.time_zone).advance(minutes: 59)
           @reservation.add_period(time.to_date, time.to_minutes, time.to_minutes + 60)
-          @reservation.save
+          @reservation.mark_as_authorized!
+          @reservation.save!
 
           get :upcoming
           assert_response :success
@@ -163,6 +165,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
 
         should 'not allow to cancel when reservation already started' do
           @reservation = FactoryGirl.create(:lasting_reservation, owner: @user, cancellation_policy_hours_for_cancellation: nil)
+          @reservation.mark_as_authorized!
           get :upcoming
           assert_response :success
           assert_select ".order", 1
@@ -175,6 +178,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
         should 'not allow to cancel if cancelation policy does apply for user in different timezone' do
           @user.update_attributes(time_zone: "London")
           @reservation = FactoryGirl.create(:future_reservation, owner: @user, time_zone: "Tokelau Is.", cancellation_policy_hours_for_cancellation: 1 )
+          @reservation.mark_as_authorized!
           @reservation.periods.destroy_all
 
           # Adding new period form 13:15 to 14:00 2016-01-30 Tokelau Is. Timezone
@@ -202,8 +206,8 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
 
     should 'store new version after user cancel' do
       @reservation = FactoryGirl.create(:future_reservation)
+      @reservation.mark_as_authorized!
       sign_in @reservation.owner
-      stub_mixpanel
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
         with_versioning do
           post :user_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }

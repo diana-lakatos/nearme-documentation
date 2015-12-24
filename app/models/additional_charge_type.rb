@@ -13,7 +13,7 @@ class AdditionalChargeType < ActiveRecord::Base
   # - Instance
   # - ProductType/ServiceType
   # - Product/Service
-  belongs_to :additional_charge_type_target, polymorphic: true
+  belongs_to :additional_charge_type_target, polymorphic: true, touch: true
   has_many :additional_charges
 
   validates :name, :status, :amount, :currency, :commission_receiver, presence: true

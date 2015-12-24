@@ -65,7 +65,6 @@ class AnalyticWrapper::MixpanelApi
     # to the user user.
     if options[:alias] && anonymous_identity
       MixpanelApiJob.perform(@mixpanel, :alias, distinct_id, { :distinct_id => anonymous_identity })
-      Rails.logger.info "Aliased mixpanel user: #{anonymous_identity} is now #{distinct_id}"
     end
 
     @anonymous_identity = nil
@@ -100,7 +99,7 @@ class AnalyticWrapper::MixpanelApi
     properties.reverse_merge!(session_properties)
     properties.reverse_merge!(request_details)
 
-    
+
     Rails.logger.info "Pixel based tracking mixpanel event: #{event_name}, #{properties}, #{options}"
     "<img src='#{@mixpanel.tracking_pixel(event_name, properties, options)}' width='1' height='1'>"
   end

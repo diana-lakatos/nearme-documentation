@@ -31,7 +31,8 @@
     - if reservation.active_merchant_payment?
       - if reservation.billing_authorization.present?
         .alert.alert-warning= I18n.t('dashboard.host_reservations.money_info')
-        .alert.alert-warning= I18n.t('dashboard.host_reservations.next_payment_transfer', next_payment_transfer: reservation.next_payment_transfer)
+        - unless current_instance.manual_transfers?
+          .alert.alert-warning= I18n.t('dashboard.host_reservations.next_payment_transfer', next_payment_transfer: reservation.next_payment_transfer)
         - if reservation.company.possible_payout_not_configured?(reservation.billing_authorization.payment_gateway)
           .alert.alert-warning= I18n.t('dashboard.host_reservations.remember_to_setup_automated_payout', setup_link: edit_dashboard_company_payouts_path).html_safe
 

@@ -5,13 +5,12 @@ class RegistrationsControllerTest < ActionController::TestCase
   setup do
     @user = FactoryGirl.create(:user, default_profile_attributes: { properties: {company_name: "DesksNearMe", country_name: "United States" } })
     @request.env["devise.mapping"] = Devise.mappings[:user]
-    stub_mixpanel
   end
 
   context 'actions' do
 
     should 'successfully sign up and track' do
-      @tracker.expects(:signed_up).with do |user, custom_options|
+      Rails.application.config.event_tracker.any_instance.expects(:signed_up).with do |user, custom_options|
         user == assigns(:user) && custom_options == { referrer_id: PlatformContext.current.instance.id, referrer_type: 'Instance', signed_up_via: 'other', provider: 'native' }
       end
       assert_difference('User.count') do
@@ -44,7 +43,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       sign_in @user
       @industry = FactoryGirl.create(:industry)
       @industry2 = FactoryGirl.create(:industry)
-      @tracker.expects(:updated_profile_information).once
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).once
       put :update, :id => @user, user: { :industry_ids => [@industry.id, @industry2.id] }
       @user.reload
       assert_equal [@industry.id, @industry2.id], @user.industries.collect(&:id)

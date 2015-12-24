@@ -82,5 +82,8 @@ $('.control-group.boolean .controls label.checkbox').each(function() {
   }
 });
 
-
+// Make fa-icon submitting icons submit the form
+$('.fa-action-icon-submit').click(function() {
+  $(this).closest('form').submit();
+});
 

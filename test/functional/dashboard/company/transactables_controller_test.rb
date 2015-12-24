@@ -3,7 +3,6 @@ require 'test_helper'
 class Dashboard::Company::TransactablesControllerTest < ActionController::TestCase
 
   setup do
-    stub_mixpanel
     @user = FactoryGirl.create(:user)
     sign_in @user
     @company = FactoryGirl.create(:company, creator: @user)
@@ -45,10 +44,10 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
     end
 
     should 'log' do
-      @tracker.expects(:created_a_listing).with do |transactable, custom_options|
+      Rails.application.config.event_tracker.any_instance.expects(:created_a_listing).with do |transactable, custom_options|
         transactable == assigns(:transactable) && custom_options == { via: 'dashboard' }
       end
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == @user
       end
 
@@ -121,7 +120,6 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
 
     context 'CRUD' do
       setup do
-        stub_mixpanel
         @related_instance = FactoryGirl.create(:instance)
         PlatformContext.current = PlatformContext.new(@related_instance)
         @user = FactoryGirl.create(:user)
@@ -170,7 +168,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
 
       context "#destroy" do
         should 'allow destroy for related transactable' do
-          @tracker.expects(:deleted_a_listing).with do |transactable, custom_options|
+          Rails.application.config.event_tracker.any_instance.expects(:deleted_a_listing).with do |transactable, custom_options|
             transactable == assigns(:transactable)
           end
           assert_difference 'Transactable.count', -1 do
@@ -210,8 +208,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
     end
 
     should "destroy transactable" do
-      stub_mixpanel
-      @tracker.expects(:updated_profile_information).with do |user|
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == @user
       end
       assert_difference('@user.listings.count', -1) do
@@ -222,8 +219,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
     end
 
     should "track event from email" do
-      stub_mixpanel
-      @tracker.expects(:link_within_email_clicked).with do |user, custom_options|
+      Rails.application.config.event_tracker.any_instance.expects(:link_within_email_clicked).with do |user, custom_options|
         user == @user &&
           custom_options[:url] == '/dashboard/company/transactable_types/:transactable_type_id/transactables/:id/edit' &&
           custom_options[:mailer] == 'recurring_mailer/request_photos'
@@ -236,9 +232,10 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
 
     context 'with reservation' do
       setup do
-        stub_mixpanel
         @reservation1 = FactoryGirl.create(:reservation, listing: @transactable)
         @reservation2 = FactoryGirl.create(:reservation, listing: @transactable)
+        @reservation1.mark_as_authorized
+        @reservation2.mark_as_authorized
       end
 
       should 'notify guest about reservation expiration when listing is deleted' do
@@ -289,7 +286,6 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
     should 'track version change on create' do
       @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge({transactable_type_id: TransactableType.first.id, photos_attributes: [FactoryGirl.attributes_for(:photo)], properties: { listing_type: @listing_type }, daily_price: 10, description: "Aliquid eos ab quia officiis sequi.", name: "Listing #{Random.rand(1000)}" })
       @attributes.delete(:photo_not_required)
-      stub_mixpanel
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Transactable", "create").count') do
         with_versioning do
           post :create, { transactable: @attributes.merge(location_id: @location2.id), transactable_type_id: @transactable_type.id }
@@ -308,7 +304,6 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
     end
 
     should 'track version change on destroy' do
-      stub_mixpanel
       @transactable = FactoryGirl.create(:transactable, location: @location, quantity: 2)
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Transactable", "destroy").count') do
         with_versioning do
