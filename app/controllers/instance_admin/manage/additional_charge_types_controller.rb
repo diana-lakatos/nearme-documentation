@@ -2,7 +2,7 @@ class InstanceAdmin::Manage::AdditionalChargeTypesController < InstanceAdmin::Ma
   before_filter :set_breadcrumps, only: [:index, :new, :edit]
 
   def index
-    @additional_charge_types = AdditionalChargeType.order(:created_at)
+    @additional_charge_types = AdditionalChargeType.admin_charges.order(:created_at)
   end
 
   def new
@@ -21,11 +21,11 @@ class InstanceAdmin::Manage::AdditionalChargeTypesController < InstanceAdmin::Ma
   end
 
   def edit
-    @additional_charge_type = AdditionalChargeType.find(params[:id])
+    @additional_charge_type = AdditionalChargeType.admin_charges.find(params[:id])
   end
 
   def update
-    @additional_charge_type = AdditionalChargeType.find(params[:id])
+    @additional_charge_type = AdditionalChargeType.admin_charges.find(params[:id])
     if @additional_charge_type.update(additional_charge_params)
       flash[:success] = t 'flash_messages.instance_admin.manage.upsell_addons.updated'
       redirect_to instance_admin_manage_additional_charge_types_path
@@ -36,7 +36,7 @@ class InstanceAdmin::Manage::AdditionalChargeTypesController < InstanceAdmin::Ma
   end
 
   def destroy
-    @additional_charge_type = AdditionalChargeType.find(params[:id])
+    @additional_charge_type = AdditionalChargeType.admin_charges.find(params[:id])
     @additional_charge_type.destroy
     flash[:success] = t 'flash_messages.instance_admin.manage.upsell_addons.deleted'
     redirect_to instance_admin_manage_additional_charge_types_path
