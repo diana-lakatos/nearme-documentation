@@ -4,7 +4,7 @@ class PaymentAuthorizer::PaypalExpressPaymentAuthorizer < PaymentAuthorizer
     if @authorizable.express_payer_id.blank?
       setup_authorization
     else
-      @response = @payment_gateway.gateway(@authorizable.merchant_subject).authorize(@authorizable.total_amount_cents, @options)
+      @response = @payment_gateway.gateway(@authorizable.merchant_subject).authorize(@authorizable.total_amount.cents, @options)
       @response.success? ? handle_success : handle_failure
     end
   end
@@ -12,6 +12,7 @@ class PaymentAuthorizer::PaypalExpressPaymentAuthorizer < PaymentAuthorizer
   private
 
     def setup_authorization
+      @authorizable.try(:save)
       @payment_gateway.process_express_checkout(@authorizable, {
         return_url: @authorizable.express_return_url,
         cancel_return_url: @authorizable.express_cancel_return_url,

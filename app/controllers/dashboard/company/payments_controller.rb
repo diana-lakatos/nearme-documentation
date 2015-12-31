@@ -6,6 +6,7 @@ class Dashboard::Company::PaymentsController < Dashboard::Company::BaseControlle
     unless @order.paid?
       if @order.manual_payment?
         @order.payment_state = 'paid'
+        @order.save!
       else
         # TODO:
         # Right now we store subtotal_amount in payment as a product price with shipping cost and tax

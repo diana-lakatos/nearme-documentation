@@ -20,13 +20,12 @@
           %br
         = render 'above_cart_management', product: @product
         - if @product.total_on_hand > 0
-          - unless @product.action_free?
-            = form_tag cart_add_product_path, method: :get, class: 'inline' do
-              = hidden_field_tag 'product_id', @product.id
-              = label_tag 'quantity', t('buy_sell_market.products.labels.qty')
-              = select_tag 'quantity', options_for_select((1..@product.total_on_hand)), class: ''
-              %button.cta.btn.blue.padding11.add_to_cart
-                = t 'buy_sell_market.products.buttons.add_to_cart'
+          = form_tag cart_add_product_path, method: :get, class: 'inline' do
+            = hidden_field_tag 'product_id', @product.id
+            = label_tag 'quantity', t('buy_sell_market.products.labels.qty')
+            = select_tag 'quantity', options_for_select((1..@product.total_on_hand)), class: ''
+            %button.cta.btn.blue.padding11.add_to_cart
+              = t 'buy_sell_market.products.buttons.add_to_cart'
           - if @product.action_rfq?
             - rfq_label = (@product.action_free? ?  t('reservations.rfq') : t('reservations.offer'))
             = link_to rfq_label, '#', data: { modal: true, href: new_product_ticket_path(@product) }, class: 'btn gray', style: 'margin-top: 20px'
