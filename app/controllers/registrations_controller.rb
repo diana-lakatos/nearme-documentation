@@ -80,7 +80,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def show
     @theme_name = 'buy-sell-theme'
-    @user = User.find(params[:id])
+    @user = User.not_admin.find(params[:id])
 
     if platform_context.instance.is_community?
       @projects = IntelFakerService.projects(4)
