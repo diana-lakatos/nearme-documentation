@@ -1,21 +1,20 @@
 class RecurringBookingPeriod < ActiveRecord::Base
+
+  include Chargeable
+
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
 
-  has_many :payments, as: :payable, dependent: :destroy
+  has_many :additional_charges, as: :target
   has_many :billing_authorizations, as: :reference
+  has_many :payments, as: :payable, dependent: :destroy
   has_one :billing_authorization, -> { where(success: true) }, as: :reference
 
   belongs_to :recurring_booking
   belongs_to :credit_card
   delegate :payment_gateway, :company, :company_id, :user, :owner, to: :recurring_booking
-
-  monetize :total_amount_cents, with_model_currency: :currency
-  monetize :subtotal_amount_cents, with_model_currency: :currency
-  monetize :service_fee_amount_guest_cents, with_model_currency: :currency
-  monetize :service_fee_amount_host_cents, with_model_currency: :currency
 
   def generate_payment!
     payment = payments.create!(
@@ -35,13 +34,16 @@ class RecurringBookingPeriod < ActiveRecord::Base
     payment
   end
 
-  def total_amount_cents
-    subtotal_amount_cents + service_fee_amount_guest_cents
+  def fees_persisted?
+    persisted?
   end
 
-  def monetized_total_amount
-    subtotal_amount + service_fee_amount_guest
+  def tax_amount_cents
+    0
   end
 
+  def shipping_amount_cents
+    0
+  end
 end
 
