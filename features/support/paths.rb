@@ -58,7 +58,23 @@ module NavigationHelpers
     when /instance admin sign in page/
       instance_admin_login_path
 
-    when /^#{capture_model} page which belong to deleted location$/   # eg. deleted listing page
+    when /^(my|my archived|unconfirmed|confirmed|overdue|archived) subscriptions page$/
+      case $1
+      when 'my'
+        active_dashboard_user_recurring_bookings_path
+      when 'my archived'
+        archived_dashboard_user_recurring_bookings_path
+      when 'unconfirmed'
+        dashboard_company_host_recurring_bookings_path(state: 'unconfirmed')
+      when 'confirmed'
+        dashboard_company_host_recurring_bookings_path(state: 'confirmed')
+      when 'overdue'
+        dashboard_company_host_recurring_bookings_path(state: 'overdue')
+      when 'archived'
+        dashboard_company_host_recurring_bookings_path(state: 'archived')
+      end
+
+    when /^#{capture_model}(?:'s)? page which belong to deleted location$/   # eg. deleted listing page
       obj = model($1)
       deleted = obj.location.destroy
       raise "Destroy failed for #{$1}" unless deleted
