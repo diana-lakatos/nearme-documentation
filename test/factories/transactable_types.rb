@@ -97,6 +97,15 @@ FactoryGirl.define do
         ]
       end
     end
+
+    factory :transactable_type_subscription do
+      action_daily_booking false
+      action_weekly_booking false
+      action_monthly_booking false
+      action_free_booking false
+      action_hourly_booking false
+      action_monthly_subscription_booking true
+    end
   end
 
   factory :project_type, class: 'ProjectType' do
