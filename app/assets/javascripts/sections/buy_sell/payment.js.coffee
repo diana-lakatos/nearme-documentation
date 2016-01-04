@@ -7,10 +7,7 @@ class @PaymentController
     @cartPrice = $("[data-cart-total]")
     @deliveryPriceContainer = $('.summary-line-value.delivery-amount')
 
-    @serviceFeeRow = @container.find('[data-service-fee]').parents('tr')
-    @serviceFeeValue = parseFloat(@container.find('[data-service-fee]').html())
     @paymentOptions = @container.find(':radio')
-    @manualRadio = @container.find(":radio[value='manual']")
     @paypalButton = @container.find("#paypal-button")
     @creditCardInputs = @container.find("#credit-card input")
     @bindEvents()
@@ -30,12 +27,6 @@ class @PaymentController
       fileName = $(@).val().split(/(\\|\/)/g).pop()
       span.html(fileName)
 
-    @paymentOptions.on 'change', (e) =>
-      target = $(e.target)
-      @hideServiceFee(target)
-
-    @hideServiceFee(@manualRadio)
-
     @paypalButton.on "click", (e) =>
       @container.find('#order_payment_method_nonce').prop('checked',true)
 
@@ -45,6 +36,12 @@ class @PaymentController
     @container.find('[data-additional-charges]').on 'change', (e) =>
       @count_additional_charges_price()
 
+    @paypalButton.on "click", (e) =>
+      @container.find('#order_payment_method_nonce').prop('checked',true)
+
+    @creditCardInputs.on "focus", (e) =>
+      @container.find('#order_payment_method_credit_card').prop('checked',true)
+
     @count_additional_charges_price()
 
   count_additional_charges_price: () =>
@@ -53,23 +50,10 @@ class @PaymentController
       if $(this).find("input:checked").length == 0
         checked_charges.push(parseFloat($(this).find('[data-additional-charge-price]').html()))
 
-    charge_price = _.reduce(checked_charges, ((memo, num) -> memo + num), 0)
+    @charge_price = _.reduce(checked_charges, ((memo, num) -> memo + num), 0)
 
-    new_price = @totalPriceValue - charge_price
-    @totalPriceContainer.html(new_price.toFixed(2))
-    @cartPrice.html(new_price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');)
+    @new_price = @totalPriceValue - @charge_price
+    @totalPriceContainer.html(@new_price.toFixed(2))
+    @cartPrice.html(@new_price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');)
 
 
-  hideServiceFee: (target) =>
-    if target.is(':checked') && target.val() == 'manual'
-      @totalPriceContainer.html((@totalPriceValue - @serviceFeeValue).toFixed(2))
-      @serviceFeeRow.hide()
-    else
-      @serviceFeeRow.show()
-      @totalPriceContainer.html(@totalPriceValue.toFixed(2))
-
-    @paypalButton.on "click", (e) =>
-      @container.find('#order_payment_method_nonce').prop('checked',true)
-
-    @creditCardInputs.on "focus", (e) =>
-      @container.find('#order_payment_method_credit_card').prop('checked',true)
