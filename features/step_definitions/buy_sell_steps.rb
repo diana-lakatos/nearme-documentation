@@ -126,8 +126,8 @@ When /^I fill billing data$/ do
   fill_in 'order_card_holder_first_name', with: 'John'
   fill_in 'order_card_holder_last_name', with: 'Doe'
   fill_in 'order_card_number', with: '4111111111111111'
-  select 1.years.from_now.month.to_s, from: 'order_card_exp_month'
   select 1.years.from_now.year.to_s, from: 'order_card_exp_year'
+  select "01", from: 'order_card_exp_month'
   fill_in 'order_card_code', with: '111'
   click_button 'Complete Checkout'
 end
