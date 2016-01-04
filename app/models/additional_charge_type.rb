@@ -13,7 +13,7 @@ class AdditionalChargeType < ActiveRecord::Base
   # - Instance
   # - ProductType/ServiceType
   # - Product/Service
-  belongs_to :additional_charge_type_target, polymorphic: true
+  belongs_to :additional_charge_type_target, polymorphic: true, touch: true
   has_many :additional_charges
 
   validates :name, :status, :amount, :currency, :commission_receiver, presence: true
@@ -21,6 +21,9 @@ class AdditionalChargeType < ActiveRecord::Base
   validates :status, inclusion: { in: STATUSES }
   validates :commission_receiver, inclusion: { in: COMMISSION_TYPES }
 
+  scope :admin_charges, -> {
+    where(additional_charge_type_target_type: ['ServiceType', 'Spree::ProductType', 'Instance'])
+  }
   scope :mandatory_charges, -> { where(status: 'mandatory') }
   scope :optional_charges, -> { where(status: 'optional') }
   scope :service, -> { where(commission_receiver: 'mpo') }

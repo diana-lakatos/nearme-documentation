@@ -47,13 +47,14 @@ namespace :fix do
      Shipment, UserMessage, Support::Ticket, WaiverAgreement
     ].each do |klass|
       puts "Deleting: #{klass} for #{instance.name}"
-        puts "Before count: #{klass.count}"
+      puts "Before count: #{klass.count}"
       if klass.respond_to?(:with_deleted)
         klass = klass.with_deleted
       end
-        puts "Removed: #{klass.where(instance_id: instance.id).delete_all}"
-        puts "After count: #{klass.count}"
+      puts "Removed: #{klass.where(instance_id: instance.id).delete_all}"
+      puts "After count: #{klass.count}"
     end
+    User.with_deleted.not_admin.where('id NOT IN (SELECT DISTINCT(user_id) FROM instance_admins WHERE deleted_at IS NULL)').where(instance_id: instance.id).delete_all
     AvailabilityTemplate.create!(
       name: "Business Hours",
       parent: instance,

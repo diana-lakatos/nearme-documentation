@@ -985,6 +985,7 @@ en:
 
         payments:
           captured: 'Payment captured'
+          paid: 'Paid'
           refunded: 'Payment refunded'
           failed: 'Payment failed'
           details: 'Payment details'
@@ -1320,6 +1321,7 @@ en:
         decline: 'Decline'
       decline_reason_placeholder: 'Optionally, provide a reason.'
       paid_until: 'Paid until'
+      contact_subscriber: 'Contact %{name}'
 
 
     payments:
@@ -1394,6 +1396,7 @@ en:
       booked: 'booked'
       direct_link: 'Direct link'
       you_havent_added_anything_yet: "You haven't added anything yet!"
+      contact_subscriber: 'Contact %{name}'
 
     merchant_account:
       header: 'Merchant account details'
@@ -1776,6 +1779,8 @@ en:
     empty_list: "You don't have any orders yet"
     payment_state:
       paid: "Payment captured"
+      paid_offline: "Payment received"
+      pending_offline: "Offline payment not received"
       failed: "Payment failed"
       pending: "Payment not captured"
       refunded: "Payment refunded"

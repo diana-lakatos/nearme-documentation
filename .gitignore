@@ -40,3 +40,5 @@ dump.rdb
 work_files
 instances/
 instances
+app/assets/javascripts/*-bundle.js*
+app/assets/stylesheets/*.map

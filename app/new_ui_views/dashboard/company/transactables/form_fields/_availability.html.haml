@@ -29,7 +29,8 @@
           = t(:different_availability_info, scope: [:pricing, :availability])
 
         %p
-          = link_to_add_association t(:add_availability, scope: [:pricing, :availability]) , at, :availability_rules, partial: 'dashboard/company/transactables/form_fields/time_availability', class: 'btn btn-primary', data: { association_insertion_node: ".#{id_prefix} .nested-fields-set", association_insertion_method: :append }, render_options: { locals: { index: 2} }
+          - association_insertion_node_selector = id_prefix.empty? ? ".nested-fields-set" : ".#{id_prefix} .nested-fields-set"
+          = link_to_add_association t(:add_availability, scope: [:pricing, :availability]) , at, :availability_rules, partial: 'dashboard/company/transactables/form_fields/time_availability', class: 'btn btn-primary', data: { association_insertion_node: association_insertion_node_selector, association_insertion_method: :append }, render_options: { locals: { index: 2} }
       /
         %p
           = t(:preset_info, scope: [:pricing, :availability])

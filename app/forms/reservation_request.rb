@@ -17,7 +17,7 @@ class ReservationRequest < Form
     :additional_charges, :merchant_subject, :shipments,
     :shipments_attributes=, :payment_method=, :payment_method, :payment_method_id, :billing_authorization,
     :total_service_amount, :total_amount, :shipping_amount, :tax_amount, :mark_as_authorized!, :mark_as_authorize_failed!,
-    to: :@reservation
+    :mark_as_paid!, to: :@reservation
 
   before_validation :build_documents, :if => lambda { reservation.present? && documents.present? }
 
