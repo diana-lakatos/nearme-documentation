@@ -20,7 +20,7 @@ class AdditionalChargeType < ActiveRecord::Base
   validates :amount, numericality: { less_than: 100000 }
   validates :status, inclusion: { in: STATUSES }
   validates :commission_receiver, inclusion: { in: COMMISSION_TYPES }
-  validates :additional_charge_type_target, presence: true
+  validate :additional_charge_type_target_presence
 
   scope :admin_charges, -> {
     where(additional_charge_type_target_type: ['ServiceType', 'Spree::ProductType', 'Instance'])
@@ -51,6 +51,10 @@ class AdditionalChargeType < ActiveRecord::Base
   end
 
   private
+
+  def additional_charge_type_target_presence
+    errors.add(:additional_charge_type_target) if additional_charge_type_target_type.blank?
+  end
 
   def current_instance
     @current_instance ||= PlatformContext.current.instance
