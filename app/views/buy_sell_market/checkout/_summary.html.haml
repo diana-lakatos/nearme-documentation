@@ -39,9 +39,10 @@
       %tr
         %td= t 'buy_sell_market.checkout.labels.shipping'
         %td= humanized_money_with_cents_and_symbol @order.monetize(@order.shipment_total)
-      %tr
-        %td= t 'buy_sell_market.checkout.labels.tax'
-        %td= humanized_money_with_cents_and_symbol @order.monetize(@order.additional_tax_total)
+      - unless @order.tax_amount.zero?
+        %tr
+          %td= t 'buy_sell_market.checkout.labels.tax'
+          %td= humanized_money_with_cents_and_symbol @order.monetize(@order.tax_amount)
       %tr
         %td= t 'buy_sell_market.checkout.labels.service_fee'
         %td
