@@ -53,6 +53,15 @@ class @PaymentController
     @charge_price = _.reduce(checked_charges, ((memo, num) -> memo + num), 0)
 
     @new_price = @totalPriceValue - @charge_price
+
+    # When toggling optional upsells, or simply on page load, we want to hide the payments section if the new
+    # total price is zero because the payment methods in the form will be ignored anyway
+    # and instead the free method will be assigned always
+    if @new_price > 0
+      $('section.checkout-form#credit-card-select').show()
+    else
+      $('section.checkout-form#credit-card-select').hide()
+
     @totalPriceContainer.html(@new_price.toFixed(2))
     @cartPrice.html(@new_price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');)
 
