@@ -1,6 +1,6 @@
 Spree::OrderUpdater.class_eval do
   def update_payment_state
-    if order.has_successful_payments?
+    if order.has_successful_payments? || order.is_free?
       order.payment_state = 'paid'
     elsif order.has_refunded_payments?
       order.payment_state = 'refunded'

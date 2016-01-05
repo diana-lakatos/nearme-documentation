@@ -52,19 +52,15 @@ module Chargeable
   end
 
   def service_additional_charges_cents
-    if self.persisted?
-      additional_charges.service.map(&:amount_cents).sum
-    else
-      additional_charges.select{|a| a.commission_receiver == 'mpo'}.map(&:amount_cents).sum
-    end
+    # We reject additional charges marked for destruction because otherwise the total amount will not 
+    # reflect the unselected additional charges on the last post of the purchase
+    additional_charges.select{|a| a.commission_receiver == 'mpo' && !a.marked_for_destruction? }.map(&:amount_cents).sum
   end
 
   def host_additional_charges_cents
-    if self.persisted?
-      additional_charges.host.map(&:amount_cents).sum
-    else
-      additional_charges.select{|a| a.commission_receiver == 'host'}.map(&:amount_cents).sum
-    end
+    # We reject additional charges marked for destruction because otherwise the total amount will not 
+    # reflect the unselected additional charges on the last post of the purchase
+    additional_charges.select{|a| a.commission_receiver == 'host' && !a.marked_for_destruction? }.map(&:amount_cents).sum
   end
 
   def total_additional_charges_cents
