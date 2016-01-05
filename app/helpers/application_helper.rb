@@ -54,6 +54,11 @@ module ApplicationHelper
     content_for?(:meta_title) ? content_for(:meta_title) : platform_context.meta_title
   end
 
+  def canonical_prev_next(results)
+    content_for(:next_canonical) { results.next_page.present? ? url_for(params.merge(page: results.next_page)) : nil }
+    content_for(:prev_canonical) { results.previous_page.present? ? url_for(params.merge(page: results.previous_page)) : nil }
+  end
+
   def show_title?
     @show_title
   end

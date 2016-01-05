@@ -4,6 +4,13 @@
     = render 'layouts/content_holder_injector'
     - if content_for(:canonical_url)
       %link{rel:"canonical", href: yield(:canonical_url)}
+
+    - if content_for(:prev_canonical)
+      %link{rel: "prev", href: yield(:prev_canonical)}
+
+    - if content_for(:next_canonical)
+      %link{rel: "next", href: yield(:next_canonical)}
+
     - if ActionController::Base.asset_host
       %link{rel:"dns-prefetch", href: ActionController::Base.asset_host }
     %title= title_tag
