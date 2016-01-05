@@ -9,7 +9,7 @@ class RecurringBooking::AmountCalculatorFactory
   end
 
   def self.first_time_monthly_charge?(recurring_booking)
-    recurring_booking.next_charge_date.day != 1 && recurring_booking.interval == 'monthly'
+    recurring_booking.recurring_booking_periods.count == 0 && recurring_booking.interval == 'monthly'
   end
 
   class BaseAmountCalculator
@@ -54,7 +54,7 @@ class RecurringBooking::AmountCalculatorFactory
     end
 
     def pro_rata
-      @pro_rata ||= (@recurring_booking.next_charge_date.end_of_month.day - @recurring_booking.next_charge_date.day + 1) / @recurring_booking.next_charge_date.end_of_month.day.to_f
+      @pro_rata ||= (@recurring_booking.start_on.end_of_month.day - @recurring_booking.start_on.day + 1) / @recurring_booking.start_on.end_of_month.day.to_f
     end
   end
 
