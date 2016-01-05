@@ -46,5 +46,25 @@ class RecurringBookingPeriod < ActiveRecord::Base
   def shipping_amount_cents
     0
   end
+
+  def mark_as_authorized!
+    #TODO we can move payment_status to state machine soon
+  end
+
+  def mark_as_authorize_failed!
+    #TODO we can move payment_status to state machine soon
+  end
+
+  def mark_as_paid!
+    #TODO we can move payment_status to state machine soon
+  end
+
+  def mark_as_refunded
+    #TODO we can move payment_status to state machine soon
+  end
+
+  def mark_as_refund_failed
+    #TODO we can move payment_status to state machine soon
+  end
 end
 
