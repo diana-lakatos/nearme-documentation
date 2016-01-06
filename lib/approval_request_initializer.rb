@@ -1,7 +1,8 @@
 class ApprovalRequestInitializer
 
-  def initialize(object)
+  def initialize(object, user)
     @object = object
+    @user = user
   end
 
   def process
@@ -13,7 +14,7 @@ class ApprovalRequestInitializer
       end
       ar.required_written_verification = art.required_written_verification
       art.approval_request_attachment_templates.each do |arat|
-        if ara = current_user.approval_request_attachments.for_request_or_free(ar.id).for_attachment_template(arat.id).first
+        if ara = @user.approval_request_attachments.for_request_or_free(ar.id).for_attachment_template(arat.id).first
           ar.approval_request_attachments << ara
         end
       end

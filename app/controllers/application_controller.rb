@@ -486,7 +486,7 @@ class ApplicationController < ActionController::Base
   end
 
   def build_approval_request_for_object(object)
-    ApprovalRequestInitializer.new(object).process
+    ApprovalRequestInitializer.new(object, current_user).process
   end
 
   def ckeditor_toolbar_creator
