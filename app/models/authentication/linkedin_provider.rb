@@ -17,7 +17,7 @@ class Authentication::LinkedinProvider < Authentication::BaseProvider
   def friend_ids
     begin
       @friend_ids ||= connection.connections.all.collect(&:id)
-    rescue LinkedIn::InvalidRequest
+    rescue LinkedIn::InvalidRequest, Faraday::ClientError
       raise ::Authentication::InvalidToken
     end
   end

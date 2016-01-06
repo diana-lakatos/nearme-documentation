@@ -66,10 +66,10 @@ class RecurringBooking < ActiveRecord::Base
     before_transition unconfirmed: :rejected do |reservation, transition|
       reservation.rejection_reason = transition.args[0]
     end
-    after_transition confirmed: :overdued do |reservation, transition|
-      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::PaymentOverdue, self.id)
-    end
 
+    after_transition confirmed: :overdued do |reservation, transition|
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::PaymentOverdue, reservation.id)
+    end
 
     event :confirm do
       transition unconfirmed: :confirmed
@@ -220,7 +220,7 @@ class RecurringBooking < ActiveRecord::Base
     interval == 'weekly'
   end
 
-  def expiry_time
+  def expire_at
     created_at + listing.hours_to_expiration.to_i.hours
   end
 

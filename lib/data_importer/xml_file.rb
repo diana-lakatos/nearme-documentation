@@ -174,6 +174,7 @@ class DataImporter::XmlFile < DataImporter::File
         yield
         @listing.action_rfq = @enable_rfq
         @listing.skip_metadata = true
+        ApprovalRequestInitializer.new(@listing, @listing.creator).process if !@listing.is_trusted?
         @listing.save! if @listing.changed? || (@listing_photo_updated && @listing.new_record?)
         @listing.populate_photos_metadata! if @listing_photo_updated
         # We do this here, after the listing is saved and done because working on the categories association

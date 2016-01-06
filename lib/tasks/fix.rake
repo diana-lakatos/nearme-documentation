@@ -1,4 +1,53 @@
 namespace :fix do
+  desc "Fix first period pro-rata"
+  task :first_period_pro_rata => [:environment] do
+    Instance.find(130).set_context!
+    rbs = RecurringBooking.all.select { |rb| rb.total_amount_cents == rb.recurring_booking_periods.try(:first).try(:total_amount_cents) && rb.start_on.day != 1 }
+    rbs.each do |rb|
+      period = rb.recurring_booking_periods.first
+      p = period.payments.first
+      if period.paid_at.present?
+        puts "WARNING WARNING WARNING WARNING - PERIOD #{period.id} HAS BEEN ALREADY PAID!!!!!!!!!!"
+      elsif p.paid?
+        puts "WARNING WARNING WARNING WARNING - PAYMENT #{p.id} HAS BEEN ALREADY PAID!!!!!!!!!!"
+      else
+        puts "Processing rb #{rb.id}"
+        puts "\trb amounts: subtotal: #{rb.subtotal_amount_cents}, guest fee: #{rb.service_fee_amount_guest_cents}"
+        puts "\tPeriod details: from: #{period.period_start_date} - #{period.period_end_date}"
+        puts "\tPeriod #{period.id} amounts "
+        puts "\t\tbefore change: #{period.subtotal_amount_cents}, guest fee: #{period.service_fee_amount_guest_cents}, host fee: #{period.service_fee_amount_host_cents}"
+        pro_rata = (rb.start_on.end_of_month.day - rb.start_on.day + 1) / rb.start_on.end_of_month.day.to_f
+        period.subtotal_amount = Money.new((rb.subtotal_amount.cents * pro_rata).ceil, rb.currency)
+        period.service_fee_amount_guest = Money.new((rb.service_fee_amount_guest.cents * pro_rata).ceil, rb.currency)
+        period.service_fee_amount_host = Money.new((rb.service_fee_amount_host.cents * pro_rata).ceil, rb.currency)
+        puts "\t\tafter change: #{period.subtotal_amount_cents}, guest fee: #{period.service_fee_amount_guest_cents}, host fee: #{period.service_fee_amount_host_cents}"
+        period.save!
+        if p.present?
+          puts "\tPayment #{p.id} amounts "
+          puts "\t\tbefore change: #{p.subtotal_amount_cents}, guest fee: #{p.service_fee_amount_guest_cents}, host fee: #{p.service_fee_amount_host_cents}"
+          p.subtotal_amount = Money.new((rb.subtotal_amount.cents * pro_rata).ceil, rb.currency)
+          p.service_fee_amount_guest = Money.new((rb.service_fee_amount_guest.cents * pro_rata).ceil, rb.currency)
+          p.service_fee_amount_host = Money.new((rb.service_fee_amount_host.cents * pro_rata).ceil, rb.currency)
+          puts "\t\tafter change: #{p.subtotal_amount_cents}, guest fee: #{p.service_fee_amount_guest_cents}, host fee: #{p.service_fee_amount_host_cents}"
+          p.save!
+          p.capture
+          if p.paid?
+            puts "\t\tSuccessfully captured payment!"
+            period.update_attribute(:paid_at, Time.zone.now)
+            # if we end up doing something in wrong order, we want to have the maximum period_end_date which was paid.
+            # so if we pay for December, November and October, we want paid_until to be 31st of December
+            rb.update_attribute(:paid_until, period_end_date) unless rb.paid_until.present? && rb.paid_until > period_end_date
+          else
+            puts "\t\tEPIC FAIL - CAPTURE FAILED"
+            rb.overdue
+          end
+        else
+          puts "\t\tNo payment"
+        end
+      end
+    end && nil
+  end
+
   desc "Fix buy_sell"
   task :buy_sell_count_on_hand => [:environment] do
     Instance.find_each do |i|
@@ -47,13 +96,14 @@ namespace :fix do
      Shipment, UserMessage, Support::Ticket, WaiverAgreement
     ].each do |klass|
       puts "Deleting: #{klass} for #{instance.name}"
-        puts "Before count: #{klass.count}"
+      puts "Before count: #{klass.count}"
       if klass.respond_to?(:with_deleted)
         klass = klass.with_deleted
       end
-        puts "Removed: #{klass.where(instance_id: instance.id).delete_all}"
-        puts "After count: #{klass.count}"
+      puts "Removed: #{klass.where(instance_id: instance.id).delete_all}"
+      puts "After count: #{klass.count}"
     end
+    User.with_deleted.not_admin.where('id NOT IN (SELECT DISTINCT(user_id) FROM instance_admins WHERE deleted_at IS NULL)').where(instance_id: instance.id).delete_all
     AvailabilityTemplate.create!(
       name: "Business Hours",
       parent: instance,

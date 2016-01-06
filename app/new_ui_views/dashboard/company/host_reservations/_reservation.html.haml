@@ -6,7 +6,6 @@
         %h2
           - if reservation.owner.present?
             = link_to reservation.owner, profile_path(reservation.owner.slug)
-            = link_to '', new_reservation_user_message_path(reservation), data: { modal: true }, class: 'contact-owner'
           - else
             = "#{reservation.owner_including_deleted} (Deleted)"
 
@@ -15,6 +14,12 @@
           - listing_name = reservation.listing.try(:name)
           - listing_name = t('dashboard.host_reservations.show_listing_page') if listing_name.blank?
           = link_to listing_name, location_path(reservation.listing.location, reservation.listing)
+
+        - if reservation.owner.present?
+          %p
+            = link_to new_reservation_user_message_path(reservation), data: { modal: true } do
+              %span.fa.fa-envelope-o
+              = t('dashboard.host_reservations.contact_subscriber', name: reservation.owner)
 
       - else
         %h2= t('dashboard.host_reservations.listing_deleted')
@@ -31,7 +36,8 @@
     - if reservation.active_merchant_payment?
       - if reservation.billing_authorization.present?
         .alert.alert-warning= I18n.t('dashboard.host_reservations.money_info')
-        .alert.alert-warning= I18n.t('dashboard.host_reservations.next_payment_transfer', next_payment_transfer: reservation.next_payment_transfer)
+        - unless current_instance.manual_transfers?
+          .alert.alert-warning= I18n.t('dashboard.host_reservations.next_payment_transfer', next_payment_transfer: reservation.next_payment_transfer)
         - if reservation.company.possible_payout_not_configured?(reservation.billing_authorization.payment_gateway)
           .alert.alert-warning= I18n.t('dashboard.host_reservations.remember_to_setup_automated_payout', setup_link: edit_dashboard_company_payouts_path).html_safe
 

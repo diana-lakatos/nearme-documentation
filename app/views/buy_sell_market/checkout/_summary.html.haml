@@ -17,7 +17,7 @@
             %td= item.quantity
             %td= item.display_amount
 
-      - if @order.additional_charge_types.try(:optional_charges).present?
+      - if @order.additional_charges.optional.present?
         %thead
           %th#options= t 'buy_sell_market.checkout.labels.options'
         %tbody{:'data-additional-charges' => true }
@@ -25,8 +25,7 @@
             - unless ac.object.mandatory?
               %tr{:'data-additional-charge-wrapper' => true }
                 %td
-                  - if @order.express_payer_id.blank?
-                    = ac.check_box :_destroy, {checked: !ac.object.marked_for_destruction? }, '0', '1'
+                  = ac.check_box :_destroy, {checked: !ac.object.marked_for_destruction?, disabled: @order.express_payer_id.present? }, '0', '1'
                   = ac.object.name
                 %td= humanized_money_with_cents_and_symbol ac.object.amount
                 %td 1
@@ -40,9 +39,10 @@
       %tr
         %td= t 'buy_sell_market.checkout.labels.shipping'
         %td= humanized_money_with_cents_and_symbol @order.monetize(@order.shipment_total)
-      %tr
-        %td= t 'buy_sell_market.checkout.labels.tax'
-        %td= humanized_money_with_cents_and_symbol @order.monetize(@order.additional_tax_total)
+      - unless @order.tax_amount.zero?
+        %tr
+          %td= t 'buy_sell_market.checkout.labels.tax'
+          %td= humanized_money_with_cents_and_symbol @order.tax_amount
       %tr
         %td= t 'buy_sell_market.checkout.labels.service_fee'
         %td

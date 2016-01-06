@@ -239,12 +239,12 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
       r.add_period(@date_start + 2.days)
       r.save!
     end.user_cancel!
-    FactoryGirl.create(:future_reservation, listing: @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation).tap do |r|
+    FactoryGirl.create(:future_reservation, listing: @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation, state: 'unconfirmed').tap do |r|
       r.add_period(@date_start + 1.days)
       r.add_period(@date_start + 2.days)
       r.save!
     end.reject!
-    FactoryGirl.create(:future_reservation, listing: @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation).tap do |r|
+    FactoryGirl.create(:future_reservation, listing: @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation, state: 'unconfirmed').tap do |r|
       r.add_period(@date_start + 1.days)
       r.add_period(@date_start + 2.days)
       r.save!

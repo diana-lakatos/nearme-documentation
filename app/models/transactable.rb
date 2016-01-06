@@ -438,12 +438,7 @@ class Transactable < ActiveRecord::Base
     end
 
     reservation.save!
-
-    if reservation.listing.confirm_reservations?
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation, reservation.id)
-    else
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, reservation.id)
-    end
+    reservation.mark_as_paid!
     reservation
   end
 
@@ -625,7 +620,8 @@ class Transactable < ActiveRecord::Base
       name: 'Name', description: 'Description',
       external_id: 'External Id', enabled: 'Enabled',
       confirm_reservations: 'Confirm reservations', capacity: 'Capacity', quantity: 'Quantity',
-      listing_categories: 'Listing categories', rental_shipping_type: "Rental shipping type"
+      listing_categories: 'Listing categories', rental_shipping_type: "Rental shipping type",
+      currency: 'Currency'
     ).reverse_merge(
       transactable_type.custom_attributes.shared.pluck(:name, :label).inject({}) do |hash, arr|
         hash[arr[0].to_sym] = arr[1].presence || arr[0].humanize

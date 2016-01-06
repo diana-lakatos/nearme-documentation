@@ -10,7 +10,7 @@ Feature: User Cancels Reservation
         | transactable          | name               |
         | Joe's Codin Garage | Joe's Codin Garage |
         | WoughThorks        | WoughThorks        |
-      And the following reservations exist:
+      And the following authorized_reservations exist:
        | listing                           | date       | user     |
        | transactable "Joe's Codin Garage" | 2010-10-18 | the user |
        | transactable "WoughThorks"        | 2010-10-19 | the user |

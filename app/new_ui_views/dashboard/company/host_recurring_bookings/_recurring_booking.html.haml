@@ -6,13 +6,18 @@
           %h2
             - if recurring_booking.owner.present?
               = link_to recurring_booking.owner, profile_path(recurring_booking.owner.slug)
-              = link_to 'Contact', new_recurring_booking_user_message_path(recurring_booking), data: { modal: true }, class: 'contact-owner'
             - else
               = "#{recurring_booking.owner_including_deleted} (Deleted)"
 
             = t('dashboard.user_recurring_bookings.booked')
 
             = link_to recurring_booking.listing.try(:name), location_path(recurring_booking.listing.location, recurring_booking.listing)
+
+          - if recurring_booking.owner.present?
+            %p
+              = link_to new_recurring_booking_user_message_path(recurring_booking), data: { modal: true } do
+                %span.fa.fa-envelope-o
+                = t('dashboard.user_recurring_bookings.contact_subscriber', name: recurring_booking.owner)
 
         - else
           %h2= t('dashboard.user_recurring_bookings.listing_deleted')
