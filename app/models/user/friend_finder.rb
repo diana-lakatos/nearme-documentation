@@ -7,6 +7,8 @@ class User::FriendFinder
   end
 
   def find_friends!
+    return false if user.nil?
+
     authentications.each do |authentication|
       new_friends = []
       begin
