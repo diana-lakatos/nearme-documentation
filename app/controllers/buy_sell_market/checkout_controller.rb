@@ -66,6 +66,12 @@ class BuySellMarket::CheckoutController < ApplicationController
       jump_to next_step if spree_errors.blank? && @order.valid? && (@order.complete? || @order.next)
 
       flash.now[:error] = spree_errors if spree_errors.present?
+     
+      # We reload additional charges because some of them might have been marked for destruction
+      # and on page load we want total_amount to reflect all additional_charges without excluding
+      # those that have been marked for destruction on post
+      @order.additional_charges.reload
+
       render_wizard
     end
   end
@@ -85,6 +91,12 @@ class BuySellMarket::CheckoutController < ApplicationController
 
   def assign_order_attributes
     @order.assign_attributes(spree_order_params)
+
+    # We ignore the payment method we got from the form params if the order is free and
+    # always assign the free payment method to it
+    if spree_order_params.has_key?('payment_method_id') && @order.is_free?
+      @order.payment_method = @order.payment_methods.find { |pm| pm.payment_method_type == 'free' }
+    end
   end
 
   def set_theme
