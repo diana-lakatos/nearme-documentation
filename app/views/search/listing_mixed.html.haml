@@ -15,6 +15,7 @@
           = render partial: 'search/map/location_marker', locals: {location: listing}
           = render partial: 'search/mixed/individual_listing', locals: {listing: listing, transactable_type: @searcher.transactable_type, lgpricing_filters: @searcher.search.lgpricing_filters }
       = render 'search/mixed/pagination', locations: @searcher.results, result_count: @searcher.result_count
+      = render 'search/footer'
   - elsif !@searcher.located
     .locations
       .hidden-locations

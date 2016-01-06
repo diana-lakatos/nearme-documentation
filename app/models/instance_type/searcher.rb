@@ -94,4 +94,8 @@ module InstanceType::Searcher
     @transactable_type_decorator ||= @transactable_type.decorate
   end
 
+  def to_liquid
+    @searcher_drop ||= SearcherDrop.new(self)
+  end
+
 end
