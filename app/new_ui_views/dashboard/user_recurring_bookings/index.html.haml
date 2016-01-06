@@ -3,7 +3,7 @@
 - content_for :page_header do
   %h1= yield :title
 
-- actions = ['booking_successful', 'active', 'booking_failed']
+- actions = ['booking_successful', 'active', 'booking_failed', 'index']
 - tabs = []
 - tabs.push({ name: t('dashboard.user_recurring_bookings.active'), url: active_dashboard_user_recurring_bookings_path, active: actions.include?(params[:action]) })
 - tabs.push({ name: t('dashboard.user_recurring_bookings.archived'), url: archived_dashboard_user_recurring_bookings_path, active: params[:action] == 'archived' })
