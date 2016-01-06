@@ -10,7 +10,7 @@ class Company < ActiveRecord::Base
   notify_associations_about_column_update([:payment_transfers, :payments, :reservations, :listings, :locations], [:instance_id, :partner_id])
   notify_associations_about_column_update([:reservations, :listings, :locations], [:creator_id, :listings_public])
 
-  attr_accessor :created_payment_transfers, :bank_account_number, :bank_routing_number, :bank_owner_name, :verify_associated
+  attr_accessor :created_payment_transfers, :bank_account_number, :bank_routing_number, :bank_owner_name, :verify_associated, :skip_industries
 
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :company_industries, :dependent => :destroy
@@ -67,7 +67,7 @@ class Company < ActiveRecord::Base
   before_save :set_creator_address
 
   validates_presence_of :name
-  validates_presence_of :industries, :if => proc { |c| c.instance.present? && c.instance.has_industries? && !c.instance.skip_company? }
+  validates_presence_of :industries, :if => proc { |c| c.instance.present? && c.instance.has_industries? && !c.instance.skip_company? && !c.skip_industries }
   validates_length_of :description, :maximum => 250
   validates_length_of :name, :maximum => 50
   validates :email, email: true, allow_blank: true
@@ -203,7 +203,7 @@ class Company < ActiveRecord::Base
   end
 
   def self.csv_fields
-    { name: 'Company Name', url: 'Company Website', email: 'Company Email', external_id: 'Company External Id' }
+    { name: 'Company Name', url: 'Company Website', email: 'Company Email', external_id: 'Company External Id', company_industries_list: 'Company Industries' }
   end
 
   def approval_request_templates

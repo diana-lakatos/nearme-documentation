@@ -52,7 +52,10 @@ class DataImporter::XmlFile < DataImporter::File
       @synchronizer.company = @company
       @synchronizer.mark_all_object_to_delete!
       trigger_event('object_created', @company)
+      @company.skip_industries = true
       if !@company.changed? || @company.save
+        assign_company_industries(company_node, @company)
+
         parse_users(company_node)
         if @company.creator.present?
           @node = company_node
@@ -69,6 +72,18 @@ class DataImporter::XmlFile < DataImporter::File
         end
       else
         trigger_event('object_not_saved', @company, @company.external_id)
+      end
+    end
+  end
+
+  def assign_company_industries(company_node, company)
+    industries = company_node.xpath('company_industries_list').text
+    if industries.present?
+      # This will work always because @company.skip_industries was set earlier
+      company.industries = []
+      industries.split(/\s*,\s*/).each do |industry_name|
+        industry = Industry.find_by_name(industry_name)
+        company.industries << industry if industry.present?
       end
     end
   end
@@ -174,7 +189,7 @@ class DataImporter::XmlFile < DataImporter::File
         yield
         @listing.action_rfq = @enable_rfq
         @listing.skip_metadata = true
-        ApprovalRequestInitializer.new(@listing, @listing.creator).process if !@listing.is_trusted?
+        ApprovalRequestInitializer.new(@listing, @listing.try(:location).try(:company).try(:creator)).process if !@listing.is_trusted?
         @listing.save! if @listing.changed? || (@listing_photo_updated && @listing.new_record?)
         @listing.populate_photos_metadata! if @listing_photo_updated
         # We do this here, after the listing is saved and done because working on the categories association
@@ -251,7 +266,8 @@ class DataImporter::XmlFile < DataImporter::File
   def assign_attributes(object, node)
     xml_attributes = Transactable === object ? object.class.xml_attributes(@transactable_type) : object.class.xml_attributes
     object.attributes = xml_attributes.inject({}) do |attributes, attribute|
-      if object.respond_to?(:properties) && !object.respond_to?(attribute)
+      # Company's properties are something else entirely, we do not want to assign to that
+      if object.respond_to?(:properties) && !object.respond_to?(attribute) && !object.is_a?(Company)
         attributes[:properties] ||= {}
         attributes[:properties][attribute] = node.xpath(attribute.to_s).text
       else
