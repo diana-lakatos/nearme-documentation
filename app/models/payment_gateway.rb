@@ -71,7 +71,7 @@ class PaymentGateway < ActiveRecord::Base
     'Stripe' => 'PaymentGateway::StripePaymentGateway',
     'Stripe Connect' => 'PaymentGateway::StripeConnectPaymentGateway',
     'Worldpay' => 'PaymentGateway::WorldpayPaymentGateway',
-    'Offline Paymment' => 'PaymentGateway::ManualPaymentGateway',
+    'Offline Payment' => 'PaymentGateway::ManualPaymentGateway',
   }
 
   # supported/unsuppoted class method definition in config/initializers/act_as_supported.rb

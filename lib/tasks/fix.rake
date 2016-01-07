@@ -36,7 +36,7 @@ namespace :fix do
             period.update_attribute(:paid_at, Time.zone.now)
             # if we end up doing something in wrong order, we want to have the maximum period_end_date which was paid.
             # so if we pay for December, November and October, we want paid_until to be 31st of December
-            rb.update_attribute(:paid_until, period_end_date) unless rb.paid_until.present? && rb.paid_until > period_end_date
+            rb.update_attribute(:paid_until, period.period_end_date) unless rb.paid_until.present? && rb.paid_until > period.period_end_date
           else
             puts "\t\tEPIC FAIL - CAPTURE FAILED"
             rb.overdue
