@@ -35,6 +35,7 @@ DesksnearMe::Application.configure do
       :provider                   => 'AWS',
       :aws_access_key_id          => 'AKIAJYBWEGW4PEDEF5SQ',
       :aws_secret_access_key      => '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',
+      :region                     => 'us-west-1',
       :path_style                 => true
     }
     config.fog_directory        = 'near-me-production'
