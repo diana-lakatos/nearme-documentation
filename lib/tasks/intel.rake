@@ -59,7 +59,7 @@ namespace :intel do
         ca.attribute_type = 'text'
         ca.input_html_options = { cols: 40, rows: 8 }
         ca.label = 'About me'
-        ca.max_length = 500
+        ca.max_length = 5000
       end.save!
 
       ipt.custom_attributes.where(name: 'short_bio').first_or_initialize.tap do |ca|
