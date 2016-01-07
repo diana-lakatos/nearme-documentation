@@ -40,7 +40,7 @@ DesksnearMe::Application.configure do
       :region                     => 'us-west-1',
       :path_style                 => true
     }
-    config.fog_directory        = 'near-me.staging'
+    config.fog_directory        = 'near-me-staging'
     config.asset_host           = 'https://staging-uploads-nearme.netdna-ssl.com'
     config.storage              = :fog
   end

@@ -38,7 +38,7 @@ DesksnearMe::Application.configure do
       :region                     => 'us-west-1',
       :path_style                 => true
     }
-    config.fog_directory        = 'near-me.production'
+    config.fog_directory        = 'near-me-production'
     config.asset_host           = 'https://production-uploads-nearme.netdna-ssl.com'
     config.storage              = :fog
   end
