@@ -33,8 +33,9 @@ DesksnearMe::Application.configure do
   CarrierWave.configure do |config|
     config.fog_credentials = {
       :provider                   => 'AWS',
-      :aws_access_key_id          => 'AKIAI5EVP6HB47OZZXXA',
-      :aws_secret_access_key      => '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',
+      :aws_access_key_id          => 'AKIAJYBWEGW4PEDEF5SQ',
+      :aws_secret_access_key      => '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',
+      :region                     => 'us-west-1',
       :path_style                 => true
     }
     config.fog_directory        = 'near-me.production'
