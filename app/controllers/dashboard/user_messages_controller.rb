@@ -42,11 +42,7 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
 
     else
       if request.xhr?
-        if current_instance.new_ui?
-          render :partial => "dashboard_form"
-        else
-          render :partial => "form"
-        end
+        render :partial => "form"
       else
         @displayed_user_message = @user_message
         @user_messages = UserMessage.for_thread(@user_message.thread_owner_with_deleted, @user_message.thread_recipient_with_deleted, @user_message.thread_context_with_deleted).by_created.decorate
