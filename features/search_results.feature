@@ -42,3 +42,10 @@ Feature: A user can see search results
      Then I should see "$10 / day"
      Then I should not see "$60 / week"
      Then I should not see "$200 / month"
+
+  Scenario: Shows correct next/prev canonicals
+    Given enough listings in Auckland exists to paginate
+    When I search for "Auckland" with 2 per page
+    Then I should ensure "next" canonical exists
+    Then I click to go to next page
+    Then I should ensure "prev" canonical exists
