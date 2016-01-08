@@ -612,6 +612,8 @@ en:
         user_email_placeholder: 'example@gmail.com'
         roles: Roles
         role_name: Name
+        please_enter_valid_email_address: "Please enter a valid email address."
+        we_could_not_find_user_with_email_address: 'Unfortunately we could not find a user with email "%{email}"'
       partners:
         manage_partners: 'Manage Partners'
         add_partner: "Add Partner"

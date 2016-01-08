@@ -18,7 +18,12 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsController < InstanceAdmin::M
       end
       redirect_to instance_admin_manage_admins_path
     else
-      flash[:error] = "Unfortunately we could not find user with email \"#{params[:email]}\""
+      if params[:email].blank?
+        flash[:error] = t('instance_admin.manage.admins.please_enter_valid_email_address')
+      else
+        flash[:error] = t('instance_admin.manage.admins.we_could_not_find_user_with_email_address', email: params[:email])
+      end
+
       render "instance_admin/manage/admins/index"
     end
   end
