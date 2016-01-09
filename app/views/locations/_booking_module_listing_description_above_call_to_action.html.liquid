@@ -16,7 +16,7 @@
     <input type="text" data-guest-notes="true">
   </div>
 {% endif %}
-{% if listing.price_per_unit? %}
+{% if listing.schedule_booking? and listing.price_per_unit? %}
   <div class="number-of-units">
     <span>
       {{ 'reservations.booking_module.number_of_units' | translate }}
