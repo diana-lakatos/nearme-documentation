@@ -7,12 +7,10 @@ class CacheExpiration
   class << self
 
     def update_memory_cache
-      if RedisCache.client.exists('cache_expiration')
-        last_update = RedisCache.client.get("last_cache_update_#{current_worker_id}").to_f
-        RedisCache.client.zrangebyscore('cache_expiration', "(#{last_update}", '+inf', with_scores: true).each do |value, score|
-          handle_cache_expiration(value)
-          RedisCache.client.set("last_cache_update_#{current_worker_id}", score)
-        end
+      last_update = RedisCache.client.get("last_cache_update_#{current_worker_id}").to_f
+      RedisCache.client.zrangebyscore('cache_expiration', "(#{last_update}", '+inf', with_scores: true).each do |value, score|
+        handle_cache_expiration(value)
+        RedisCache.client.set("last_cache_update_#{current_worker_id}", score)
       end
     end
 
@@ -34,7 +32,7 @@ class CacheExpiration
     end
 
     def current_worker_id
-      "#{ENV['HOSTNAME']}_#{Process.pid}"
+      "#{ENV['HOSTNAME']}_#{Process.ppid}_#{Process.pid}"
     end
 
     def handle_cache_expiration(data)
