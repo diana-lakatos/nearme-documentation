@@ -17,5 +17,9 @@ class NullRedisCache
       nil
     end
 
+    def zrangebyscore(*args)
+      []
+    end
+
   end
 end
