@@ -1,8 +1,0 @@
-development:
-  mixpanel_token: 19ee79dd0a37d828e6cdbd7717b45761
-  google_analytics_token: UA-46288131-2
-  google_analytics_universal_token: UA-46288131-4
-production:
-  mixpanel_token: 1c4f189b5c03a1f895cd882c67d0fddd
-  google_analytics_token: UA-46288131-1
-  google_analytics_universal_token: UA-46288131-3

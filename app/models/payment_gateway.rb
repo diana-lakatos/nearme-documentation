@@ -1,4 +1,6 @@
 class PaymentGateway < ActiveRecord::Base
+  include Encryptable
+
   class PaymentGateway::PaymentAttemptError < StandardError; end
   class PaymentGateway::PaymentRefundError < StandardError; end
   class PaymentGateway::RefundNotSupportedError < StandardError; end
@@ -81,7 +83,7 @@ class PaymentGateway < ActiveRecord::Base
     :recurring_payment, :credit_card_payment, :manual_payment, :remote_payment, :free_payment, :immediate_payout, :free_payment,
     :partial_refunds
 
-  attr_encrypted :test_settings, :live_settings, key: DesksnearMe::Application.config.secret_token, marshal: true
+  attr_encrypted :test_settings, :live_settings, marshal: true
 
   attr_accessor :country
 

@@ -1,6 +1,7 @@
 require 'active_merchant/billing/gateways/paypal/paypal_express_response'
 
 class Payout < ActiveRecord::Base
+  include Encryptable
   auto_set_platform_context
   scoped_to_platform_context
   acts_as_paranoid
@@ -16,7 +17,7 @@ class Payout < ActiveRecord::Base
 
   monetize :amount, with_model_currency: :currency
 
-  attr_encrypted :response, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
+  attr_encrypted :response
 
   alias_method :decrypted_response, :response
 

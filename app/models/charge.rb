@@ -1,6 +1,7 @@
 require 'active_merchant/billing/gateways/paypal/paypal_express_response'
 
 class Charge < ActiveRecord::Base
+  include Encryptable
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
@@ -16,7 +17,7 @@ class Charge < ActiveRecord::Base
   monetize :amount, :as => :price, with_model_currency: :currency
   serialize :response, Hash
 
-  attr_encrypted :response, :key => DesksnearMe::Application.config.secret_token, marshal: true
+  attr_encrypted :response, marshal: true
 
   def charge_successful(response)
     self.success = true
