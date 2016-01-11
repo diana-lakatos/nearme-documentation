@@ -35,7 +35,7 @@ module InstanceAdminHelper
     when 'warning'
       "fa fa-exclamation-triangle"
     when 'deleted'
-      "fa fa-times"
+      "fa fa-trash-o"
     end
   end
 
