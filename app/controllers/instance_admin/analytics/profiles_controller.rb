@@ -1,7 +1,8 @@
 class InstanceAdmin::Analytics::ProfilesController < InstanceAdmin::Analytics::BaseController
 
   def show
-    users = User.unscoped.includes(:current_address).without(User.unscoped.admin).references(:addresses).
+    users = User.unscoped.where(instance: PlatformContext.current.instance).
+      includes(:current_address).without(User.unscoped.admin).references(:addresses).
       pluck('users.id, users.email, users.name, users.reservations_count, users.transactables_count, users.mobile_number, addresses.address, users.properties, users.created_at, users.deleted_at')
 
     csv = CSV.generate do |csv|
