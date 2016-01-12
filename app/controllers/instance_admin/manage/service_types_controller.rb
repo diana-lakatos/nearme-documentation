@@ -14,13 +14,8 @@ class InstanceAdmin::Manage::ServiceTypesController < InstanceAdmin::Manage::Bas
 
   def create
     @service_type = ServiceType.new(service_type_params.merge(
-      action_free_booking: true,
-      action_hourly_booking: true,
-      action_daily_booking: true,
-      action_weekly_booking: true,
-      action_monthly_booking: true,
-      availability_options: { "defer_availability_rules" => true, "confirm_reservations" => { "default_value" => true, "public" => true } },
-      buyable: false
+      buyable: false,
+      availability_options: { "defer_availability_rules" => true, "confirm_reservations" => { "default_value" => true, "public" => true } }
     ))
     if @service_type.save
       at = @service_type.availability_templates.build(name: "Working Week", description: "Mon - Fri, 9:00 AM - 5:00 PM")
