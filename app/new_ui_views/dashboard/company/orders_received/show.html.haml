@@ -120,13 +120,14 @@
             %table.payment-totals
               %tr
                 %th= t 'buy_sell_market.checkout.labels.subtotal'
-                %td= humanized_money_with_cents_and_symbol @order.monetize(@order.item_total)
+                %td= humanized_money_with_cents_and_symbol @order.item_total
               %tr
                 %th= t 'buy_sell_market.checkout.labels.shipping'
-                %td= humanized_money_with_cents_and_symbol @order.monetize(@order.shipment_total)
-              %tr
-                %th= t 'buy_sell_market.checkout.labels.tax'
-                %td= humanized_money_with_cents_and_symbol @order.monetize(@order.additional_tax_total)
+                %td= humanized_money_with_cents_and_symbol @order.shipment_total
+              - unless @order.tax_amount.zero?
+                %tr
+                  %th= t 'buy_sell_market.checkout.labels.tax'
+                  %td= humanized_money_with_cents_and_symbol @order.tax_amount
               %tr
                 %th= t 'buy_sell_market.checkout.labels.service_fee'
                 %td= humanized_money_with_cents_and_symbol @order.service_fee_amount_guest
