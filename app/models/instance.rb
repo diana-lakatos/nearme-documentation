@@ -100,12 +100,16 @@ class Instance < ActiveRecord::Base
   has_many :custom_validators
   serialize :pricing_options, Hash
 
-  validates :name, presence: true
-  validates :marketplace_password, presence: { if: :password_protected }
+  validates :name, presence: true, length: { maximum: 255 }
+  validates :marketplace_password, presence: { if: :password_protected }, length: { maximum: 255 }
   validates :password_protected, presence: { if: :test_mode, message: I18n.t("activerecord.errors.models.instance.test_mode_needs_password") }
   validates :olark_api_key, presence: { if: :olark_enabled }
   validates :payment_transfers_frequency, presence: true, inclusion: { in: PaymentTransfer::FREQUENCIES }
   validates :seller_attachments_access_level, inclusion: { in: SELLER_ATTACHMENTS_ACCESS_LEVELS + ['disabled'] }
+  validates :support_email, length: { maximum: 255 }
+  validates :support_imap_username, length: { maximum: 255 }
+  validates :support_imap_password, length: { maximum: 255 }
+  validates :support_imap_server, length: { maximum: 255 }
 
   accepts_nested_attributes_for :domains, allow_destroy: true, reject_if: proc { |params| params[:name].blank? && params.has_key?(:name) }
   accepts_nested_attributes_for :theme
