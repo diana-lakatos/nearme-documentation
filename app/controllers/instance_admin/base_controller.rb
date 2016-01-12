@@ -53,7 +53,7 @@ class InstanceAdmin::BaseController < ApplicationController
   }
 
   SETTINGS_CONTROLLERS = {
-    'configuration'        => { default_action: 'show' },
+    'configuration'        => { default_action: 'show', controller_class: 'InstanceAdmin::Settings::ConfigurationController' },
     'payments'             => { default_action: 'index' },
     'domains'              => { default_action: 'index' },
     'hidden_controls'      => { default_action: 'show' },
@@ -79,7 +79,7 @@ class InstanceAdmin::BaseController < ApplicationController
   }
 
   BUY_SELL_CONTROLLERS = {
-    'configuration'  => { default_action: 'show' },
+    'configuration'  => { default_action: 'show', controller_class: 'InstanceAdmin::BuySell::ConfigurationController' },
     'commissions'    => { default_action: 'show' },
     'tax_categories' => { default_action: 'index' },
     'tax_rates'      => { default_action: 'index' },

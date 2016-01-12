@@ -14,7 +14,7 @@
         %ul#analytics-sub.sub-nav.collapse{:class => ("in" if controller.class.to_s.split("::").first(2).join("::") == "InstanceAdmin::Analytics")}
           - InstanceAdmin::BaseController::ANALYTICS_CONTROLLERS.each do |controller_name, settings|
             %li
-              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/analytics/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
+              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/analytics/" + controller_name), action: settings[:default_action]}", :class => is_active_instance_admin_nav_link(controller_name, settings)}
                 %span= "#{controller_name.titleize}"
 
     - if @authorizer.authorized?('Reports')
@@ -26,7 +26,7 @@
         %ul#reports-sub.sub-nav.collapse{:class => ("in" if controller.class.to_s.split("::").first(2).join("::") == "InstanceAdmin::Reports")}
           - InstanceAdmin::BaseController::REPORTS_CONTROLLERS.each do |controller_name, settings|
             %li
-              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/reports/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
+              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/reports/" + controller_name), action: settings[:default_action]}", :class => is_active_instance_admin_nav_link(controller_name, settings)}
                 %span= "#{controller_name.titleize}"
 
 
@@ -38,7 +38,7 @@
         %ul#settings-sub.sub-nav.collapse{:class => ("in" if controller.class.to_s.split("::").first(2).join("::") == "InstanceAdmin::Settings")}
           - InstanceAdmin::BaseController::SETTINGS_CONTROLLERS.each do |controller_name, settings|
             %li
-              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/settings/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
+              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/settings/" + controller_name), action: settings[:default_action]}", :class => is_active_instance_admin_nav_link(controller_name, settings)}
                 %span= "#{controller_name.titleize}"
 
 
@@ -50,7 +50,7 @@
         %ul#theme-sub.sub-nav.collapse{:class => ("in" if controller.class.to_s.split("::").first(2).join("::") == "InstanceAdmin::Theme")}
           - InstanceAdmin::BaseController::THEME_CONTROLLERS.each do |controller_name, settings|
             %li
-              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/theme/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
+              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/theme/" + controller_name), action: settings[:default_action]}", :class => is_active_instance_admin_nav_link(controller_name, settings)}
                 %span= "#{controller_name.titleize}"
 
 
@@ -62,7 +62,7 @@
         %ul#manage-sub.sub-nav.collapse{:class => ("in" if controller.class.to_s.split("::").first(2).join("::") == "InstanceAdmin::Manage")}
           - InstanceAdmin::BaseController::MANAGE_CONTROLLERS.each do |controller_name, settings|
             %li
-              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/manage/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
+              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/manage/" + controller_name), action: settings[:default_action]}", :class => is_active_instance_admin_nav_link(controller_name, settings)}
                 %span= settings[:title] || controller_name.titleize
 
 
@@ -74,7 +74,7 @@
         %ul#blog-sub.sub-nav.collapse{:class => ("in" if controller.class.to_s.split("::").first(2).join("::") == "InstanceAdmin::ManageBlog")}
           - InstanceAdmin::BaseController::MANAGE_BLOG_CONTROLLERS.each do |controller_name, settings|
             %li
-              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/manage_blog/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
+              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/manage_blog/" + controller_name), action: settings[:default_action]}", :class => is_active_instance_admin_nav_link(controller_name, settings)}
                 %span= "#{controller_name.titleize}"
 
 
@@ -86,7 +86,7 @@
         %ul#buy-sell-sub.sub-nav.collapse{:class => ("in" if controller.class.to_s.split("::").first(2).join("::") == "InstanceAdmin::BuySell")}
           - InstanceAdmin::BaseController::BUY_SELL_CONTROLLERS.each do |controller_name, settings|
             %li
-              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/buy_sell/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
+              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/buy_sell/" + controller_name), action: settings[:default_action]}", :class => is_active_instance_admin_nav_link(controller_name, settings)}
                 %span= "#{controller_name.titleize}"
 
     - if @authorizer.authorized?('ShippingOptions')
@@ -97,7 +97,7 @@
         %ul#shipping-options-sub.sub-nav.collapse{:class => ("in" if controller.class.to_s.split("::").first(2).join("::") == "InstanceAdmin::ShippingOptions")}
           - InstanceAdmin::BaseController::SHIPPING_OPTIONS_CONTROLLERS.each do |controller_name, settings|
             %li
-              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/shipping_options/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
+              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/shipping_options/" + controller_name), action: settings[:default_action]}", :class => is_active_instance_admin_nav_link(controller_name, settings)}
                 %span= "#{controller_name.titleize}"
 
     - if @authorizer.authorized?('Projects') && current_instance.is_community?
@@ -108,5 +108,5 @@
         %ul#projects-sub.sub-nav.collapse{:class => ("in" if controller.class.to_s.split("::").first(2).join("::") == "InstanceAdmin::Projects")}
           - InstanceAdmin::BaseController::PROJECTS_CONTROLLERS.each do |controller_name, settings|
             %li
-              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/projects/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
+              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/projects/" + controller_name), action: settings[:default_action]}", :class => is_active_instance_admin_nav_link(controller_name, settings)}
                 %span= "#{controller_name.titleize}"
