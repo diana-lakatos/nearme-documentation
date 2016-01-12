@@ -14,7 +14,7 @@ module SearcherHelper
     end
     @transactable_type ||= TransactableType.searchable.by_position.first
     params[:transactable_type_id] ||= @transactable_type.try(:id)
-    lookup_context.transactable_type_id = params[:transactable_type_id]
+    lookup_context.try(:transactable_type_id=, params[:transactable_type_id])
 
     if @transactable_type.blank?
       flash[:error] = t('flash_messages.search.missing_transactable_type')
