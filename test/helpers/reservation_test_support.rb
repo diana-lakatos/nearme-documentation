@@ -19,19 +19,19 @@ module ReservationTestSupport
     date = Time.zone.now.advance(:weeks => 1).beginning_of_week.to_date
     reservations = []
     count.times do |i|
-      reservation_request_attributes = FactoryGirl.attributes_for(:reservation_request, payment_method: payment_method)
+      reservation_request_attributes = FactoryGirl.attributes_for(:reservation_request)
       reservation_request_attributes.merge!({ dates:[(date + i).to_s(:db)] })
 
-      reservation_request = ReservationRequest.new(listing, user, PlatformContext.current, reservation_request_attributes )
-      reservation_request.process
-
+      reservation_request = ReservationRequest.new(listing, user, reservation_request_attributes )
       if options.has_key?("reservation_#{i}".to_sym)
         reservation_request.reservation.update_attributes(options["reservation_#{i}".to_sym])
       end
+      reservation_request.process
+
 
       reservations << reservation_request.reservation
     end
 
-    reservations.each(&:confirm)
+    reservations.each(&:charge_and_confirm!)
   end
 end

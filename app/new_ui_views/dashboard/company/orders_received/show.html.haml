@@ -46,30 +46,31 @@
                 #{t('buy_sell_market.checkout.labels.ending_in')} #{@charge_info.response['card']['last4']}
                 #{@charge_info.response['card']['name']}
 
-              - @order.near_me_payments.each do |payment|
-                - if payment.paid? && !payment.refunded?
-                  %span.label.label-info
-                    = t('buy_sell_market.checkout.labels.payments.captured')
+              - if @order.payment.authorized?
+                %span.label.label-info
+                  = t('buy_sell_market.checkout.labels.payments.authorized')
+              - elsif @order.payment.paid?
+                %span.label.label-info
+                  = t('buy_sell_market.checkout.labels.payments.captured')
 
-                - elsif payment.paid? && payment.refunded?
-                  %span.label.label-warning
-                    = t('buy_sell_market.checkout.labels.payments.refunded')
+              - elsif @order.payment.refunded?
+                %span.label.label-warning
+                  = t('buy_sell_market.checkout.labels.payments.refunded')
 
-                - elsif payment.failed?
-                  %span.label.label-error
-                    = t('buy_sell_market.checkout.labels.payments.failed')
+              - elsif @order.payment.failed?
+                %span.label.label-error
+                  = t('buy_sell_market.checkout.labels.payments.failed')
 
-                %p= link_to t("buy_sell_market.checkout.labels.payments.details"), dashboard_company_orders_received_payment_path(@order.number, payment), class: "btn btn-primary"
+              %p= link_to t("buy_sell_market.checkout.labels.payments.details"), dashboard_company_orders_received_payment_path(@order.number, @order.payment), class: "btn btn-primary"
 
               - if @order.paid?
                 %span.label.label-info
                   = t('buy_sell_market.checkout.labels.payments.paid')
               - else
-                - if @order.near_me_payments.blank?
-                  - if @order.manual_payment?
-                    = link_to 'Mark As Paid', dashboard_company_orders_received_payments_path(@order.number), method: :post, data: { confirm: 'Are you sure you want to mark this order as paid?' }, class: 'btn btn-primary'
-                  - else
-                    = link_to 'Capture', dashboard_company_orders_received_payments_path(@order.number), method: :post, data: { confirm: 'Are you sure you want to capture payment for this order?' }, class: 'btn btn-primary'
+                - if @order.payment.manual_payment?
+                  = link_to 'Mark As Paid', capture_dashboard_company_orders_received_payment_path(@order.number, @order.payment.id), method: :post, data: { confirm: 'Are you sure you want to mark this order as paid?' }, class: 'btn btn-primary'
+                - else
+                  = link_to 'Capture', capture_dashboard_company_orders_received_payment_path(@order.number, @order.payment.id), method: :post, data: { confirm: 'Are you sure you want to capture payment for this order?' }, class: 'btn btn-primary'
 
         %h2= t("buy_sell_market.checkout.labels.shipping")
         - @order.shipments.each do |shipment|

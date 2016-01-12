@@ -4,6 +4,7 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
 
   setup do
     @paypal_express_chain_processor = FactoryGirl.build(:paypal_express_chain_payment_gateway)
+    @payment_method = @paypal_express_chain_processor.payment_methods.first
   end
 
   should "include test in settings" do
@@ -33,53 +34,63 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
   context "When making refund" do
     setup do
       ActiveMerchant::Billing::PaypalExpressGateway.any_instance.stubs(:refund).returns(OpenStruct.new(success: true, success?: true, refunded_ammount: 1000))
-
+      PaymentGateway::PaypalExpressChainPaymentGateway.any_instance.stubs(:refund_identification).returns('payout_identification')
       @paypal_express_chain_processor.save
-      @paypal_express_chain_processor.stubs(:refund_identification).returns('payout_identification')
     end
 
     should 'use test mode for test charge' do
-      payment = FactoryGirl.create(:test_charge).payment
-      refund_payment(payment)
-      assert_equal 'test', payment.refunds.last.payment_gateway_mode
+      payment = FactoryGirl.create(:paid_payment, payment_method: @payment_method, company: create(:company) )
+
+      # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
+      payment.company.payment_transfers.create!(payments: [payment.reload], payment_gateway_mode: 'test', payment_gateway: payment.payment_gateway )
+
+      refund_payment(payment.reload)
     end
 
     should 'use live mode for live charge' do
-      payment = FactoryGirl.create(:live_charge).payment
+      PaymentGateway::PaypalExpressChainPaymentGateway.any_instance.stubs(:mode).returns('live')
+      payment = FactoryGirl.create(:paid_payment, payment_method: @payment_method, company: create(:company))
+
+      # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
+      payment.company.payment_transfers.create!(payments: [payment.reload], payment_gateway_mode: 'live', payment_gateway: payment.payment_gateway )
       refund_payment(payment)
-      assert_equal 'live', payment.refunds.last.payment_gateway_mode
     end
 
     should 'refund full amount when host cancel' do
-      charge = FactoryGirl.create(:test_charge)
-      payment = charge.payment
-      payment.update_attributes(cancellation_policy_penalty_percentage: 50)
+      payment = FactoryGirl.create(:paid_payment, payment_method: @payment_method, company: create(:company) )
+
+      # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
+      payment.company.payment_transfers.create!(payments: [payment.reload], payment_gateway_mode: 'test', payment_gateway: payment.payment_gateway )
+
       refund_payment(payment)
-      assert_equal payment.payable.total_service_fee_amount_cents, payment.refunds.order(:id).last.amount
-      assert_equal charge.amount, payment.refunds.order(:id).first.amount
+
+      # We have 2 refunds first from MPO to seller (service_fee) second total amount from Seller to Guest
+      assert_equal payment.payment_transfer.total_service_fee + payment.amount, Money.new(payment.refunds.sum(:amount))
+      assert_equal payment.charges.last.amount, payment.refunds.order(:id).last.amount
     end
 
     should 'apply cancelation fee when guest cancel' do
-      charge = FactoryGirl.create(:test_charge)
-      payment = charge.payment
-      payment.update_attributes(cancellation_policy_penalty_percentage: 50)
+      payment = FactoryGirl.create(:paid_payment, payment_method: @payment_method, company: create(:company) , cancellation_policy_penalty_percentage: 50)
+
+      # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
+      payment.company.payment_transfers.create!(payments: [payment.reload], payment_gateway_mode: 'test', payment_gateway: payment.payment_gateway )
+
       refund_payment(payment, "user_cancel")
 
       # Service fee is refunded to Host. MPO doesn't get anything when guest cancel reservation
-      assert_equal payment.payable.total_service_fee_amount_cents, payment.refunds.order(:id).last.amount
+      assert_equal payment.payment_transfer.total_service_fee, Money.new(payment.refunds.order(:id).last.amount)
       # 50% cancellation policy apply + service fee is not refundable
       # 50% of 100$ subtotal should be refunded to guest, the rest 60$ is left on HOST account!
-      assert_equal 5000, payment.refunds.order(:id).first.amount
+      assert_equal payment.amount_to_be_refunded, payment.refunds.order(:id).first.amount
+      assert_equal 50_00, payment.amount_to_be_refunded
     end
   end
 
   def refund_payment(payment, refund_with="host_cancel")
-    payment.payable.mark_as_paid!
-    Reservation.any_instance.stubs(:payment_gateway).returns(@paypal_express_chain_processor)
-    Reservation.any_instance.stubs(:active_merchant_payment?).returns(true)
-
     assert payment.paid?
     payment.payable.send(refund_with)
     assert payment.reload.refunded?
+    assert_equal 2, payment.refunds.count
+    assert_equal payment.payment_gateway_mode, payment.refunds.last.payment_gateway_mode
   end
 end

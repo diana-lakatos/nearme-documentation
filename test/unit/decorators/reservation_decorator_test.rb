@@ -68,8 +68,9 @@ class ReservationDecoratorTest < ActionView::TestCase
 
     setup do
       ServiceType.first.update_columns(service_fee_guest_percent: 0)
-      @reservation = FactoryGirl.build(:reservation_with_credit_card, listing: create(:free_listing)).decorate
-      @reservation.mark_as_paid!
+      @payment = FactoryGirl.build(:manual_payment)
+      @reservation = FactoryGirl.build(:unconfirmed_reservation, listing: create(:free_listing), payment: @payment).decorate
+      @reservation.charge_and_confirm!
     end
 
     should 'return that its free' do
@@ -89,52 +90,49 @@ class ReservationDecoratorTest < ActionView::TestCase
     end
 
     should 'return right manage_guests_action_column_class' do
-      assert_equal 'split-2', @reservation.manage_guests_action_column_class
+      assert_equal 'split-1', @reservation.manage_guests_action_column_class
     end
   end
 
-  context 'A priced reservation' do
+  context 'A priced unconfirmed reservation' do
     setup do
-      @reservation = FactoryGirl.build(:reservation_with_credit_card,
+      @reservation = FactoryGirl.build(:reservation,
                                        subtotal_amount_cents: 50_00,
                                        service_fee_amount_guest_cents: 5_00).decorate
     end
 
-    should 'return that its pending' do
+    should 'return that its Pending' do
       assert_equal 'Pending', @reservation.paid
     end
+  end
 
-    context 'that was confirmed ( = paid)' do
-      setup do
-        payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
-        stub_active_merchant_interaction
-        @reservation.create_billing_authorization(token: "token", payment_gateway: payment_gateway, payment_gateway_mode: "test")
-        @reservation.save!
-        @reservation.mark_as_authorized!
-        @reservation.confirm!
-      end
-
-      should "return right paid amount" do
-        assert_equal '$55.00', @reservation.paid
-      end
-
-      should 'return its subtotal_price' do
-        assert_equal '$50.00', @reservation.subtotal_price
-      end
-
-      should 'return its service_fee' do
-        assert_equal '$5.00', @reservation.service_fee_guest
-      end
-
-      should 'return its total_price' do
-        assert_equal '$55.00', @reservation.total_price
-      end
-
-      should 'return right manage_guests_action_column_class' do
-        assert_equal 'split-1', @reservation.manage_guests_action_column_class
-      end
+  context 'that was confirmed ( = paid)' do
+    setup do
+      @payment = FactoryGirl.build(:paid_payment, subtotal_amount_cents: 50_00, service_fee_amount_guest_cents: 5_00)
+      @reservation = FactoryGirl.build(:confirmed_reservation,
+                                       subtotal_amount_cents: 50_00,
+                                       service_fee_amount_guest_cents: 5_00, payment: @payment).decorate
     end
 
+    should "return right paid amount" do
+      assert_equal '$55.00', @reservation.paid
+    end
+
+    should 'return its subtotal_price' do
+      assert_equal '$50.00', @reservation.subtotal_price
+    end
+
+    should 'return its service_fee' do
+      assert_equal '$5.00', @reservation.service_fee_guest
+    end
+
+    should 'return its total_price' do
+      assert_equal '$55.00', @reservation.total_price
+    end
+
+    should 'return right manage_guests_action_column_class' do
+      assert_equal 'split-1', @reservation.manage_guests_action_column_class
+    end
   end
 
   context 'A hourly reservation' do
@@ -145,6 +143,7 @@ class ReservationDecoratorTest < ActionView::TestCase
       @reservation = FactoryGirl.build(:reservation,
                                        subtotal_amount_cents: 500_00,
                                        service_fee_amount_guest_cents: 50_00,
+                                       date: @time.to_date,
                                        listing: listing).decorate
     end
 

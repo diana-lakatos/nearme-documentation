@@ -176,10 +176,13 @@ class ShippoTest < ActionView::TestCase
       response = @payment_gateway.authorize(@order.total_amount, 'USD', credit_card)
       assert !response[:error].present?
 
-      @order.create_billing_authorization(
-          token: response[:token],
-          payment_gateway: @payment_gateway,
-          payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live"
+      @payment = @order.create_payment(payment_method: @payment_gateway.payment_methods.first)
+
+      @payment.billing_authorizations.create(
+        token: response[:token],
+        success: true,
+        payment_gateway: @payment_gateway,
+        payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live"
       )
       p = @order.payments.create(amount: @order.total_amount, company_id: @order.company_id)
 
@@ -227,9 +230,9 @@ class ShippoTest < ActionView::TestCase
       assert_equal @order.company_id, payment.company_id
       assert_equal @order.instance_id, payment.instance_id
       assert_equal 'complete', @order.state
-      assert_not_nil @order.billing_authorization
-      assert_equal 'abc', @order.billing_authorization.token
-      assert_equal @payment_gateway.id, @order.billing_authorization.payment_gateway_id
+      assert_not_nil @order.payment.successful_billing_authorization
+      assert_equal 'abc', @order.payment.successful_billing_authorization.token
+      assert_equal @payment_gateway, @order.payment.payment_gateway
     end
   end
 end

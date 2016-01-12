@@ -461,11 +461,11 @@ class SecuredParams
       :card_holder_last_name,
       :express_token,
       :payment_method_id,
-      :payment_method_nonce,
       :start_express_checkout,
       :insurance_enabled,
       additional_charges_attributes: nested(self.additional_charge),
-      payment_documents_attributes: nested(self.payment_document)
+      payment_documents_attributes: nested(self.payment_document),
+      payment: nested(self.payment),
     ]
   end
 
@@ -1330,6 +1330,51 @@ class SecuredParams
       :text,
     ]
   end
+
+  def reservation_request
+    [
+      :quantity,
+      :book_it_out,
+      :exclusive_price,
+      :start_minute,
+      :end_minute,
+      :guest_notes,
+      :credit_card_form,
+      :payment_method_id,
+      :reservation_type,
+      :delivery_type,
+      :delivery_ids,
+      :shipments_attributes,
+      :dates,
+      dates: [],
+      additional_charge_ids: [],
+      waiver_agreement_templates: [],
+      payment: nested(self.payment),
+      documents: nested(self.payment_document),
+      documents_attributes: nested(self.payment_document),
+      reservation: { shipments_attributes: nested(self.shipment) }
+    ]
+  end
+
+  def payment
+    [
+      :payment_method_id,
+      :payment_method_nonce,
+      credit_card_form: nested(self.credit_card_form)
+    ]
+  end
+
+  def credit_card_form
+    [
+      :number,
+      :verification_value,
+      :month,
+      :year,
+      :first_name,
+      :last_name
+    ]
+  end
+
 
   def review
     [

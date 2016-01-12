@@ -10,6 +10,9 @@ class PaymentGateway < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
+  # TODO uncomment after migrations
+  # acts_as_paranoid
+
   scope :mode_scope, -> { test_mode? ? where(test_active: true) : where(live_active: true)}
   scope :payout_type, -> { where(type: PAYOUT_GATEWAYS.values + IMMEDIATE_PAYOUT_GATEWAYS.values) }
   scope :payment_type, -> { where.not(type: PAYOUT_GATEWAYS.values) }
@@ -17,31 +20,39 @@ class PaymentGateway < ActiveRecord::Base
   serialize :test_settings, Hash
   serialize :live_settings, Hash
 
+  validates_each :test_settings do |payment_gateway, attribute, value|
+    validate_settings(payment_gateway, attribute, value)
+  end
+
+  validates_each :live_settings do |payment_gateway, attribute, value|
+    validate_settings(payment_gateway, attribute, value)
+  end
+
   belongs_to :instance
   belongs_to :payment_gateway
 
-  has_many :charges
-  has_many :refunds
-  has_many :billing_authorizations
-  has_many :payouts
-  has_many :instance_clients
-  has_many :credit_cards
-  has_many :merchant_accounts
-
-  has_many :payment_gateways_countries
-  has_many :payment_countries, through: :payment_gateways_countries, source: 'country'
-
-  has_many :payment_gateways_currencies
-  has_many :payment_currencies, through: :payment_gateways_currencies, source: 'currency'
-
-  has_many :payment_methods
   has_many :active_payment_methods, -> (object) { active.except_free },  class_name: "PaymentMethod"
   has_many :active_free_payment_methods, -> (object) { active.free }, class_name: "PaymentMethod"
+  has_many :billing_authorizations
+  has_many :credit_cards
+  has_many :charges
+  has_many :payouts
+  has_many :instance_clients
+  has_many :merchant_accounts
+  has_many :payments, through: :billing_authorizations
+  has_many :payment_gateways_countries
+  has_many :payment_countries, through: :payment_gateways_countries, source: 'country'
+  has_many :payment_gateways_currencies
+  has_many :payment_currencies, through: :payment_gateways_currencies, source: 'currency'
+  has_many :payment_methods
+  has_many :refunds
 
   accepts_nested_attributes_for :payment_methods, :reject_if => :all_blank
 
-  validates :payment_countries, presence: true, if: Proc.new { |p| p.active? && !p.supports_payout? }
-  validates :payment_currencies, presence: true, if: Proc.new { |p| p.active? && !p.supports_payout? }
+  after_save :check_if_account_changed
+
+  validates :payment_countries, presence: true, if: Proc.new { |p| p.active? }
+  validates :payment_currencies, presence: true, if: Proc.new { |p| p.active? }
   validates :payment_methods, presence: true, if: Proc.new { |p| p.active? && !p.supports_payout?}
   validate do
     errors.add(:payment_methods, "At least one payment method must be selected") if active? && !supports_payout? && !payment_methods.any?{ |p| p.active? }
@@ -136,17 +147,17 @@ class PaymentGateway < ActiveRecord::Base
 
   #- END CLASS METHODS
 
-  def authorize(authoriazable, options = {})
+  def authorize(payment, options = {})
     options.merge!(custom_authorize_options)
-    PaymentAuthorizer.new(self, authoriazable, options).process!
+    PaymentAuthorizer.new(self, payment, options).process!
   end
 
   def editable?
-    true # TODO figure out if there is a case when we should block edition for payment_gateway
+    merchant_accounts.live.active.blank? && payments.live.active.blank?
   end
 
   def deletable?
-    true # TODO figure out if there is a case when we should block delete for payment_gateway
+    merchant_accounts.live.active.blank? && payments.live.active.blank?
   end
 
   def name
@@ -236,6 +247,7 @@ class PaymentGateway < ActiveRecord::Base
       response.success? ? charge_successful(response) : charge_failed(response)
       @charge
     rescue => e
+      @payment.update_column(:recurring_booking_error, e)
       raise PaymentGateway::PaymentAttemptError, e
     end
   end
@@ -244,14 +256,14 @@ class PaymentGateway < ActiveRecord::Base
     gateway.capture(amount, token, options)
   end
 
-  def void(billing_authorization)
-    force_mode(billing_authorization.payment_gateway_mode)
-    gateway.void(billing_authorization.token)
+  def gateway_void(payment)
+    force_mode(payment.payment_gateway_mode)
+    gateway.void(payment.authorization_token)
   end
 
-  def refund(amount, currency, payment, charge)
+  def refund(amount, currency, payment, successful_charge)
     @payment = payment
-    force_mode(charge.payment_gateway_mode)
+    force_mode(payment.payment_gateway_mode)
     @refund = refunds.create(
       amount: amount,
       currency: currency,
@@ -263,7 +275,7 @@ class PaymentGateway < ActiveRecord::Base
 
     begin
       options = custom_refund_options.merge(currency: currency)
-      response = gateway_refund(amount, charge, options.with_indifferent_access)
+      response = gateway_refund(amount, successful_charge, options.with_indifferent_access)
       response.success? ? refund_successful(response) : refund_failed(response)
       @refund
     rescue => e
@@ -271,8 +283,8 @@ class PaymentGateway < ActiveRecord::Base
     end
   end
 
-  def gateway_refund(amount, charge, options)
-    gateway.refund(amount, refund_identification(charge), options)
+  def gateway_refund(amount, successful_charge, options)
+    gateway.refund(amount, refund_identification(successful_charge), options)
   end
 
   def store_credit_card(client, credit_card)
@@ -336,6 +348,14 @@ class PaymentGateway < ActiveRecord::Base
 
   protected
 
+  def check_if_account_changed
+
+  end
+
+  def void_merchant_accounts
+    mearchant_accounts.each { |ma| ma.void! }
+  end
+
   # Callback invoked by processor when charge was successful
   def charge_successful(response)
     @charge.charge_successful(response)
@@ -383,5 +403,18 @@ class PaymentGateway < ActiveRecord::Base
     @payout.payout_pending(response)
   end
 
+  def self.validate_settings(payment_gateway, attribute, value)
+    if payment_gateway.send(attribute.to_s.gsub('settings', 'active?'))
+      value.each do |key, value|
+        next if payment_gateway.class.settings[key.to_sym].blank?
+        payment_gateway.class.settings[key.to_sym][:validate].each do |validation|
+          case validation
+          when :presence
+            payment_gateway.errors.add(attribute, ": #{key.capitalize.gsub('_id', '')} can't be blank!") if value.blank?
+          end
+        end
+      end if value.present?
+    end
+  end
 end
 

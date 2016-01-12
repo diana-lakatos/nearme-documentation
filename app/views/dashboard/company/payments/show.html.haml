@@ -19,19 +19,8 @@
     .col-md-3= t 'dashboard.payments.service_fee'
     .col-md-4= humanized_money_with_cents_and_symbol(@payment.total_service_fee)
 
-  - if @payment.paid?
-    .row
-      .col-md-3= t 'dashboard.payments.paid_at'
-      .col-md-4= l @payment.paid_at, format: :long
-
-  - if @payment.failed?
-    .row
-      .col-md-3= t 'dashboard.payments.failed_at'
-      .col-md-4= l @payment.failed_at, format: :long
-
-  - if @payment.refunded?
-    .row
-      .col-md-3= t 'dashboard.payments.refunded_at'
-      .col-md-4= l @payment.refunded_at, format: :long
+  .row
+    .col-md-3= t 'dashboard.payments.state'
+    .col-md-4= @payment.state.capitalize
 
   .clearfix

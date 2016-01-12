@@ -28,7 +28,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
   context 'export' do
     should 'be exportable to .ics format' do
       @listing = FactoryGirl.create(:transactable, :name => 'ICS Listing')
-      @reservation = FactoryGirl.build(:reservation_with_credit_card, :listing => @listing)
+      @reservation = FactoryGirl.build(:unconfirmed_reservation, :listing => @listing)
       @reservation.periods = []
       travel_to Time.zone.local(2013, 6, 28, 10, 5, 0) do
         @reservation.add_period(Time.zone.local(2013, 7, 1, 10, 5, 0).to_date)

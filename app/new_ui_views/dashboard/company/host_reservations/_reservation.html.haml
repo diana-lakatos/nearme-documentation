@@ -29,8 +29,6 @@
         %span{class: reservation.state }
           = t "reservations.states.#{reservation.state}"
 
-
-
   - if reservation.can_confirm?
     .alert.alert-warning= reservation.manage_booking_status_info_new
     - if reservation.active_merchant_payment?
@@ -113,8 +111,7 @@
       %h3
         = t("dashboard.host_reservations.payment_method")
     .col-md-3{class: reservation.paid? ? 'info' : "warn" }
-      - if reservation.payment_method
-        = t("dashboard.host_reservations.payment_methods." + reservation.payment_method.payment_method_type)
+      = t("dashboard.host_reservations.payment_methods." + reservation.payment.try(:payment_method).try(:payment_method_type).to_s)
 
   - if reservation.listing.possible_delivery?
     .row

@@ -21,11 +21,11 @@ class Listings::ReservationsService
     end
 
     if @reservation_request.listing.upload_obligation.blank? &&
-      @reservation_request.listing.document_requirements.blank? && 
+      @reservation_request.listing.document_requirements.blank? &&
       PlatformContext.current.instance.documents_upload_enabled? &&
       ( PlatformContext.current.instance.documents_upload.is_mandatory? ||
       PlatformContext.current.instance.documents_upload.is_optional? )
-      
+
       build_default_document_requirement
     end
   end

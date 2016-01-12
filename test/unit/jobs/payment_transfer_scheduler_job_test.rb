@@ -48,10 +48,20 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
 
         should "include refunded reservation charges" do
           rc = @company_1.payments.first
-          rc.touch(:refunded_at)
+          rc.mark_as_refuneded!
           assert rc.refunded?
           PaymentTransferSchedulerJob.perform
           assert @company_1.payment_transfers[0].payments.include?(rc)
+        end
+
+        should "not include manual payments" do
+          FactoryGirl.create(:manual_payment_gateway)
+          payment = @company_1.payments.first
+          payment.payment_method = PaymentMethod.manual.last
+          payment.save!
+          assert payment.offline?
+          PaymentTransferSchedulerJob.perform
+          refute @company_1.payment_transfers[0].payments.include?(payment)
         end
 
         should 'calculate payment transfer amount correctly for refunded charges' do
@@ -66,14 +76,13 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
         end
 
         should "only include successfully paid reservation charges" do
-          rc = @company_1.payments.first
-          rc.paid_at = nil
-          rc.save!
-          assert !rc.paid?
+          payment = @company_1.payments.first
+          payment.update_column(:state, 'authorized')
+          assert !payment.paid?
 
           PaymentTransferSchedulerJob.perform
 
-          assert_equal (@company_1.payments - [rc]).sort, @company_1.payment_transfers[0].payments.sort
+          assert_equal (@company_1.payments - [payment]).sort, @company_1.payment_transfers[0].payments.sort
         end
 
         should "not touch already included reservation charges" do
@@ -102,7 +111,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
 
           nzd_transfer = @company_1.payment_transfers.detect { |pt| pt.currency == 'NZD' }
           assert nzd_transfer, "Expected an NZD payment transfer"
-          assert_equal nzd_reservations.map(&:payments).flatten.sort,
+          assert_equal nzd_reservations.map(&:payment).flatten.sort,
             nzd_transfer.payments.sort
 
         end
@@ -135,20 +144,17 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
       setup do
         @order = FactoryGirl.create(:completed_order_with_totals)
         @company = @order.company
-        @payment = FactoryGirl.create(:order_charge, payable: @order, currency: 'USD')
         @company.instance.update_columns(payment_transfers_frequency: "daily")
+        @payment = FactoryGirl.create(:paid_product_payment, payable: @order, company: @company)
       end
 
       should "include order payments" do
-
         PaymentTransferSchedulerJob.perform
-
-        assert_equal @order.near_me_payments.sort, @company.payment_transfers[0].payments.sort
+        assert_equal @order.payment, @company.payment_transfers[0].payments.last
       end
 
       should "not touch already included order line items" do
         PaymentTransferSchedulerJob.perform
-
         assert_no_difference 'PaymentTransfer.count' do
           PaymentTransferSchedulerJob.perform
         end
@@ -156,12 +162,11 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
 
       should "schedule payment transfers with daily payment transfers frequency" do
         PaymentTransferSchedulerJob.perform
-
         assert_equal 1, @company.payment_transfers.count
-        assert_equal 5000, @company.payment_transfers.first.amount.cents
-        assert_equal 'USD', @company.payment_transfers.first.currency
-        assert_equal @order.near_me_payments.sort,
-          @company.payment_transfers[0].payments.sort
+        payment_transfer = @company.payment_transfers.first
+        assert_equal 5000, payment_transfer.amount.cents
+        assert_equal 'USD', payment_transfer.currency
+        assert_equal @order.payment, payment_transfer.payments.last
       end
 
     end

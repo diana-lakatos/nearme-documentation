@@ -18,11 +18,13 @@ class RecurringBookingPeriod < ActiveRecord::Base
     :service_fee_guest_percent, :service_fee_host_percent, to: :recurring_booking
 
   def generate_payment!
-    payment = payments.create!(
-      subtotal_amount: subtotal_amount,
-      service_fee_amount_guest: service_fee_amount_guest,
-      service_fee_amount_host: service_fee_amount_host,
+    payment = payments.build(
+      customer: credit_card.instance_client.customer_id,
+      payment_method: payment_method
     )
+
+    payment.authorize && payment.save! && payment.capture!
+
     if payment.paid?
       self.paid_at = Time.zone.now
       # if we end up doing something in wrong order, we want to have the maximum period_end_date which was paid.
@@ -33,6 +35,11 @@ class RecurringBookingPeriod < ActiveRecord::Base
     end
     save!
     payment
+  end
+
+  def payment_method
+    # TODO we should assign payment method to recurring booking as in normal payment
+    payment_gateway.payment_methods.where(payment_method_type: 'credit_card').first
   end
 
   def fees_persisted?

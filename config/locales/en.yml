@@ -998,6 +998,7 @@ en:
           captured: 'Payment captured'
           paid: 'Paid'
           refunded: 'Payment refunded'
+          authorized: 'Payment authorized'
           failed: 'Payment failed'
           details: 'Payment details'
 
@@ -1338,13 +1339,15 @@ en:
     payments:
       order: "Back to order"
       back_to_order_html: "Back <span class='hidden-xs'>to order</span>"
-      total: "Captured price"
-      service_fee: "Marketplace fee"
+      total: "Captured price:"
+      service_fee: "Marketplace fee:"
+      state: "Payment state:"
       payment_id: "Payment ID"
-      paid_at: "Paid at"
-      failed_at: "Failed at"
-      refunded_at: "Refunded at"
+      paid_at: "Paid at:"
+      failed_at: "Failed at:"
+      refunded_at: "Refunded at:"
       refund: 'Refund'
+      capture: 'Capture'
 
     host_reservations:
       booked: 'booked'
@@ -1797,6 +1800,7 @@ en:
       failed: "Payment failed"
       pending: "Payment not captured"
       refunded: "Payment refunded"
+      authorized: "Payment authorized"
 
     index:
       title: 'My orders'

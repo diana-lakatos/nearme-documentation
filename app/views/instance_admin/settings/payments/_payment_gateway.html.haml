@@ -5,16 +5,15 @@
   %td
     %span.glyphicon{"aria-hidden" => "true", class: "glyphicon-#{payment_gateway.test_active ? "ok" : "remove"}"}
   %td
-    %span.glyphicon{"aria-hidden" => "true", class: "glyphicon-#{payment_gateway.supports_payout? ? "ok" : "remove"}"}
+    %span.glyphicon{"aria-hidden" => "true", class: "glyphicon-#{payment_gateway.supports_payout? || payment_gateway.supports_immediate_payout? ? "ok" : "remove"}"}
   %td= payment_gateway.payment_countries.join(', ').truncate(30)
   %td= payment_gateway.payment_currencies.join(', ').truncate(30)
   %td
+    = link_to edit_instance_admin_settings_payment_gateway_path(payment_gateway), :title => 'Edit' do
+      .fa.fa-pencil.fa-2x.inline-form-icon.pull-right
     .pull-right
       - if payment_gateway.deletable?
         = link_to instance_admin_settings_payment_gateway_path(payment_gateway), :method => :delete,
             data: { confirm: 'Are you sure you want to delete this?' }, :title => 'Delete' do
           .fa.fa-trash-o.fa-2x.inline-form-icon
 
-    - if payment_gateway.editable?
-      = link_to edit_instance_admin_settings_payment_gateway_path(payment_gateway), :title => 'Edit' do
-        .fa.fa-pencil.fa-2x.inline-form-icon.pull-right

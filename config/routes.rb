@@ -668,7 +668,8 @@ DesksnearMe::Application.routes.draw do
 
         resources :payments do
           member do
-            get :refund
+            post :refund
+            post :capture
           end
         end
 

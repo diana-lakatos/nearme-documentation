@@ -31,4 +31,8 @@ Spree::LineItem.class_eval do
     monetize(price).cents
   end
 
+  def monetize(amount)
+    Money.new(amount*Money::Currency.new(self.currency).subunit_to_unit, currency)
+  end
+
 end

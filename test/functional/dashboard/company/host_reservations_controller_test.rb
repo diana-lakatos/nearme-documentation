@@ -15,8 +15,9 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     end
 
     should 'show related guests and appropriate units' do
-      @reservation = FactoryGirl.create(:future_reservation, owner: @user, listing: @related_listing)
-      @reservation.mark_as_authorized
+      @reservation = FactoryGirl.create(:unconfirmed_reservation, owner: @user, listing: @related_listing)
+      @reservation.send(:schedule_expiry)
+
       get :index
       assert_response :success
       assert_select ".order", 1
@@ -64,12 +65,13 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       @user.update_attribute(:time_zone, 'Hawaii')
       Time.use_zone 'Hawaii' do
         Reservation.destroy_all
-        reservation = FactoryGirl.create(:reservation, owner: @user, listing: @related_listing)
+        reservation = FactoryGirl.create(:unconfirmed_reservation, owner: @user, listing: @related_listing)
         ReservationPeriod.destroy_all
         reservation.reload
         reservation.add_period(Time.zone.tomorrow, 600, 720) # Tommorow form 10:00 - 12:00 AM
         reservation.save
-        reservation.mark_as_authorized
+        reservation.send(:schedule_expiry)
+
 
         # Current time is before the reservation
         get :index
@@ -93,14 +95,14 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
 
   context 'other actions' do
     setup do
-      @reservation = FactoryGirl.create(:reservation_with_credit_card)
+      @reservation = FactoryGirl.create(:unconfirmed_reservation)
       @payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
       @user = @reservation.listing.creator
       sign_in @user
       stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
       stub_billing_gateway(@reservation.instance)
       stub_active_merchant_interaction
-      @payment_gateway.authorize(@reservation)
+      # @payment_gateway.authorize(@reservation.payment)
     end
 
     should "track and redirect a host to the Manage Guests page when they confirm a booking" do
@@ -133,7 +135,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).host
       end
-      Reservation.any_instance.expects(:schedule_void_payment).once
+      Reservation.any_instance.expects(:schedule_void).once
       put :reject, { id: @reservation.id }
       assert_redirected_to dashboard_company_host_reservations_path
     end
@@ -157,8 +159,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     end
 
     should "refund booking on cancel" do
-      @reservation.stubs(credit_card: credit_card, payment_method_nonce: nil )
-      @reservation.confirm
+      @reservation = FactoryGirl.create(:confirmed_reservation)
 
       sign_in @reservation.listing.creator
       User.any_instance.stubs(:accepts_sms_with_type?)
@@ -170,12 +171,12 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       end
 
       assert_redirected_to dashboard_company_host_reservations_path
-      assert_equal 'refunded', @reservation.reload.payment_status
+      assert_equal 'refunded', @reservation.reload.payment.state
     end
 
     context 'PUT #reject' do
       should 'set rejection reason' do
-        Reservation.any_instance.expects(:schedule_void_payment).once
+        Reservation.any_instance.expects(:schedule_void).once
         put :reject, { id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
         assert_equal @reservation.reload.rejection_reason, 'Dont like him'
       end
@@ -193,7 +194,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       end
 
       should 'store new version after reject' do
-        Reservation.any_instance.expects(:schedule_void_payment).once
+        Reservation.any_instance.expects(:schedule_void).once
         assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
           with_versioning do
             put :reject, { id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
@@ -203,7 +204,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
 
       should 'store new version after cancel' do
         @reservation.confirm
-        assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count', 2) do
+        assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
           with_versioning do
             post :host_cancel, { id: @reservation.id }
           end
@@ -226,7 +227,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
   end
 
   def setup_refund_for_reservation(reservation)
-    reservation.payments.last.charges.successful.create(amount: reservation.total_amount_cents)
+    reservation.payment.charges.successful.create(amount: reservation.total_amount_cents)
     PaymentGateway::StripePaymentGateway.any_instance.stubs(:refund_identification)
       .returns({id: "123"}.to_json)
     ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:refund)

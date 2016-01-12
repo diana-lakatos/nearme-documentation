@@ -300,12 +300,12 @@ end
 
 When /^I provide reservation credit card details$/ do
   mock_billing_gateway
-  fill_in 'reservation_request_card_holder_first_name', with: 'FirstName'
-  fill_in 'reservation_request_card_holder_last_name', with: 'LastName'
-  fill_in 'reservation_request_card_number', :with => "4242424242424242"
-  select '12', from: 'reservation_request_card_exp_month', visible: false
-  select '2020', from: 'reservation_request_card_exp_year', visible: false
-  fill_in 'reservation_request_card_code', :with => '411'
+  fill_in 'reservation_request_payment_credit_card_form_first_name', with: 'FirstName'
+  fill_in 'reservation_request_payment_credit_card_form_last_name', with: 'LastName'
+  fill_in 'reservation_request_payment_credit_card_form_number', :with => "4242424242424242"
+  select '12', from: 'reservation_request_payment_credit_card_form_month', visible: false
+  select '2020', from: 'reservation_request_payment_credit_card_form_year', visible: false
+  fill_in 'reservation_request_payment_credit_card_form_verification_value', :with => '411'
   @credit_card_reservation = true
 end
 
