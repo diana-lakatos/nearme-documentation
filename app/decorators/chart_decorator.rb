@@ -19,9 +19,9 @@ class ChartDecorator < Draper::CollectionDecorator
   def dates
     @dates ||= case @show_period
     when :last_7_days
-      6.downto(0).map { |i| (Time.zone.now - i.day).strftime('%b %d') }
+      6.downto(0).map { |i| I18n.l((Time.zone.now - i.day).to_date, format: :day_and_month) }
     when :last_30_days
-      30.downto(0).map { |i| (Time.zone.now - i.day).strftime('%b %d') }
+      30.downto(0).map { |i| I18n.l((Time.zone.now - i.day).to_date, format: :day_and_month) }
     else
       grouped_by_date.keys.sort
     end

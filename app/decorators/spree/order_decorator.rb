@@ -42,7 +42,8 @@ class Spree::OrderDecorator < Draper::Decorator
 
       processing_time = shipment.shipping_method.processing_time.to_i
       if processing_time > 0
-        result = I18n.l(shipment.shipped_at + processing_time.days, format: :only_date)
+        date = (shipment.shipped_at + processing_time.days).to_date
+        result = I18n.l(date, format: :long)
         break
       end
     end
@@ -67,7 +68,7 @@ class Spree::OrderDecorator < Draper::Decorator
   end
 
   def display_completed_at
-    object.completed_at ? l(object.completed_at, format: :only_date) : ''
+    object.completed_at ? l(object.completed_at.to_date, format: :long) : ''
   end
 
   def display_total

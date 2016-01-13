@@ -57,7 +57,7 @@ module ListingsHelper
 
       # Initial hourly availability schedule data for hourly reservations
       hourly_availability = {
-        first_date.strftime("%Y-%m-%d") => listing.hourly_availability_schedule(first_date).as_json
+        I18n.l(first_date.to_date, format: :short) => listing.hourly_availability_schedule(first_date).as_json
       } if listing.action_hourly_booking?
 
       base_data.merge!({

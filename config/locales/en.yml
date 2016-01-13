@@ -258,6 +258,7 @@ en:
         custom_name: 'Custom name'
         default: 'Default'
         keys: 'Translation keys for %{language}'
+        dates: 'Date/Time formats for %{language}'
         new_key: 'Add Translation Key'
         example_key: 'Example: home.welcome.label'
         default_en_value: 'Default English text'
@@ -269,6 +270,7 @@ en:
         edit_keys: 'Edit keys'
         new_key: 'Add key'
         show_default: "Show Default"
+        date_time: 'Date / Time'
 
       confirmations:
         delete: 'Are you sure?'
@@ -1951,27 +1953,6 @@ en:
       title: 'Pricing Types'
     category:
       title: "Category"
-  time:
-    formats:
-      day_and_month: "%^b %-d"
-      day_month_year: "%m/%d/%Y"
-      full_day_month: "%A, %B %-e"
-      only_date: "%B %d, %-Y"
-      only_date_short: "%-e %b, %Y"
-      month_year: "%B %Y"
-      start_hours: "%-H:%M"
-      end_hours: "%-H:%M"
-      date_time: "%m/%d/%Y %I:%M %P"
-      full_date: "%a, %m/%d/%Y %H:%M"
-  date:
-    formats:
-      short: '%B %d, %-Y'
-      day_and_month: "%^b %-d"
-      full_day_month: "%A, %B %-e"
-      day_month_year: "%m/%d/%Y"
-      month_year: "%B %Y"
-      only_date_short: "%-e %b, %Y"
-      only_date: "%B %d, %-Y"
   user_messages:
     title: "Messages"
     archived: "Archived"

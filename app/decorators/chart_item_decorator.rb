@@ -33,7 +33,7 @@ class ChartItemDecorator < Draper::Decorator
     else
       object.created_at
     end
-    time.strftime('%b %d')
+    I18n.l(time.to_date, format: :day_and_month)
   end
 
 end

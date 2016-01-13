@@ -17,8 +17,8 @@ class HourlyPresenter
         start_minute_of_day_to_time.strftime("%l:%M").strip
       end
     else
-      start_time = I18n.l(start_minute_of_day_to_time, format: :start_hours).strip
-      end_time = I18n.l(end_minute_of_day_to_time, format: :end_hours).strip
+      start_time = I18n.l(start_minute_of_day_to_time, format: :short).strip
+      end_time = I18n.l(end_minute_of_day_to_time, format: :short).strip
 
       if show_date
         ('%s %s-%s (%0.2f %s)' % [I18n.l(date, format: :short), start_time, end_time, hours, 'hour'.pluralize(hours.to_i)]).html_safe
@@ -30,8 +30,8 @@ class HourlyPresenter
 
   def hourly_summary(show_date = false, options = {})
     options[:separator] ||= ' '
-    start_time = I18n.l(start_minute_of_day_to_time, format: :start_hours).strip
-    end_time = I18n.l(end_minute_of_day_to_time, format: :end_hours).strip
+    start_time = I18n.l(start_minute_of_day_to_time, format: :short).strip
+    end_time = I18n.l(end_minute_of_day_to_time, format: :short).strip
 
     if hours.zero?
       if show_date

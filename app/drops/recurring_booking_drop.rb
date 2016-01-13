@@ -77,7 +77,7 @@ class RecurringBookingDrop < BaseDrop
 
   # date at which the reservation was created formatted as a string
   def created_at
-    @recurring_booking.created_at.strftime("%A,%e %B")
+    @recurring_booking.created_at
   end
 
   # url for confirming the recurring booking
@@ -92,7 +92,7 @@ class RecurringBookingDrop < BaseDrop
 
   # reservation date (first date)
   def start_date
-    @recurring_booking.start_on.strftime('%b %e')
+    @recurring_booking.start_on
   end
 
   # string representing the plural of the item to be booked (e.g. desks, rooms etc.)

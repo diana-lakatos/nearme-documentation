@@ -87,8 +87,11 @@ module AvailabilityRulesHelper
 
       hour_part = []
       group[:times].each do |time|
-        hour, minutes, ordinal = (time[0] > 12 ? time[0] - 12 : time[0]), time[1].to_s.rjust(2, '0'), (time[0] > 12 ? 'pm' : 'am')
-        hour_part << "#{hour}:#{minutes}#{ordinal}"
+        hour = (time[0] > 12 ? time[0] - 12 : time[0])
+        minutes = time[1].to_s.rjust(2, '0')
+        ordinal = (time[0] > 12 ? 'pm' : 'am')
+
+        hour_part << I18n.l(DateTime.parse("#{hour}:#{minutes}#{ordinal}"), format: :short)
       end
 
       sentence.push("#{day_part.join(',')} #{hour_part.join("&ndash;")}")

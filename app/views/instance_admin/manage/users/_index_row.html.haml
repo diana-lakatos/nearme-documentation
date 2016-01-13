@@ -1,7 +1,7 @@
 %tr
   %td= link_to resource.name, profile_path(resource)
   %td= resource.email
-  %td= resource.created_at.strftime("%b %-d, %Y")
+  %td= I18n.l(resource.created_at, format: :long)
   - if PlatformContext.current.instance.is_community?
     %td= link_to t('general.edit'), edit_instance_admin_manage_user_path(resource)
 

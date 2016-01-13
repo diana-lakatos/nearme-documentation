@@ -21,7 +21,7 @@
         %tr.data-row
           %td{:'data-saved-search-title' => saved_search.id}= link_to saved_search.title, search_dashboard_saved_search_path(saved_search)
           %td= saved_search.unseen_results
-          %td= l(saved_search.last_viewed_at, format: :only_date)
+          %td= l(saved_search.last_viewed_at.to_date, format: :long)
           %td
             .controls
               %a{:'data-saved-search-edit-id' => saved_search.id, href: '#'}

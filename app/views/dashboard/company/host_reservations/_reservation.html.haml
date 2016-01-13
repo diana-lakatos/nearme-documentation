@@ -3,7 +3,7 @@
     .row
       .col-md-3
         %p Order placed
-        %p= l reservation.created_at, format: :only_date
+        %p= l reservation.created_at.to_date, format: :long
 
       .col-md-3
         %p Requested date

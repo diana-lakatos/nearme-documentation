@@ -10,7 +10,7 @@
 
   %footer
     %p.actions
-      %time{datetime: comment.created_at.strftime('%Y-%m-%d %H:%M')}= I18n.l(comment.created_at, format: :date_time)
+      %time{datetime: comment.created_at.strftime('%Y-%m-%d %H:%M')}= I18n.l(comment.created_at, format: :long)
 
       %span &bull;
       - if report = comment.reported_by(current_user, request.remote_ip)

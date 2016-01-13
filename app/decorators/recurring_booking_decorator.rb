@@ -103,13 +103,13 @@ class RecurringBookingDecorator < Draper::Decorator
 
   def dates
     periods.map do |period|
-      "#{period.date.strftime('%Y-%m-%d')} (#{'desk'.pluralize(quantity)})"
+      "#{I18n.l(period.date.to_date, format: :short)} (#{'desk'.pluralize(quantity)})"
     end.to_sentence
   end
 
   def dates_to_array(for_reservations = nil)
     for_reservations ||= reservations
-    for_reservations.map { |r| r.periods.map { |p| "#{p.date.strftime('%Y-%m-%d')}" } }.flatten
+    for_reservations.map { |r| r.periods.map { |p| "#{I18n.l(p.date.to_date, format: :short)}" } }.flatten
   end
 
   def manage_guests_action_column_class
@@ -118,26 +118,21 @@ class RecurringBookingDecorator < Draper::Decorator
   end
 
   def short_dates
-    first = start_on.strftime('%-e %b %Y')
-    last = end_on.strftime('%-e %b %Y')
+    first = I18n.l(start_on.to_date, format: :long)
+    last = I18n.l(end_on.to_date, format: :long)
 
     first == last ? first : "#{first} - #{last}"
   end
-
-  def long_dates
-    first = start_on.strftime('%-e %b, %Y')
-    last = end_on.try(:strftime, '%-e %b, %Y')
-
-    first == last ? first : "#{first} - #{last}"
-  end
+  alias_method :long_dates, :short_dates
 
   def format_reservation_periods
     periods.map do |period|
       period = period.decorate
-      date = period.date.strftime('%-e %b %Y')
+      date = I18n.l(period.date.to_date, format: :long)
+      
       if listing.action_hourly_booking?
-        start_time = period.start_minute_of_day_to_time.strftime("%l:%M%P").strip
-        end_time = period.end_minute_of_day_to_time.strftime("%l:%M%P").strip
+        start_time = I18n.l(period.start_minute_of_day_to_time, format: :short)
+        end_time = I18n.l(period.end_minute_of_day_to_time, format: :short)
         ('%s %s&ndash;%s' % [date, start_time, end_time]).html_safe
       else
         date
@@ -175,16 +170,12 @@ class RecurringBookingDecorator < Draper::Decorator
   end
 
   def hourly_summary(show_date = false)
-    start_time = start_minute_of_day_to_time.strftime("%l:%M").strip
-    end_time = end_minute_of_day_to_time.strftime("%l:%M%P").strip
-    start_time_suffix = start_minute_of_day_to_time.strftime("%P").strip
-    end_time_suffix = end_minute_of_day_to_time.strftime("%P").strip
-
-    start_time += start_time_suffix unless start_time_suffix == end_time_suffix
+    start_time = I18n.l(start_minute_of_day_to_time, format: :short)
+    end_time = I18n.l(end_minute_of_day_to_time, format: :short)
 
     if show_date
-      formatted_start_date = start_on.strftime("%B %-e %Y")
-      formatted_end_date = end_on.strftime("%B %-e %Y")
+      formatted_start_date = I18n.l(start_on.to_date, format: :long)
+      formatted_end_date = I18n.l(end_on.to_date, format: :long)
       ('%s&ndash;%s %s&ndash;%s (%0.2f hours)' % [formatted_start_date, formatted_end_date, start_time, end_time, hours]).html_safe
     else
       ('%s&ndash;%s<br />(%0.2f hours)' % [start_time, end_time, hours]).html_safe
@@ -245,7 +236,6 @@ class RecurringBookingDecorator < Draper::Decorator
   end
 
   def period_to_string(date)
-    date.strftime('%A, %B %-e')
+    I18n.l(date.to_date, format: :long)
   end
-
 end

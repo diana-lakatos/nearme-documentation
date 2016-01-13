@@ -30,7 +30,7 @@
                 = link_to saved_search.title, search_dashboard_saved_search_path(saved_search), data: { pk: saved_search.id, url: dashboard_saved_search_path(saved_search) }
 
               %td= saved_search.unseen_results
-              %td.hidden-xs= l(saved_search.last_viewed_at, format: :only_date)
+              %td.hidden-xs= l(saved_search.last_viewed_at.to_date, format: :long)
               %td.actions
                 %button.btn.btn-sm.btn-default{ :"data-edit-action" => true }
                   = t('general.edit')

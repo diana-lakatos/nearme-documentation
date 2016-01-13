@@ -224,7 +224,8 @@ DesksnearMe::Application.routes.draw do
 
       resources :locales, except: [:show], controller: 'locales' do
         member do
-          get 'edit_keys'
+          get :edit_keys
+          get :date_time_preferences
         end
 
         collection do

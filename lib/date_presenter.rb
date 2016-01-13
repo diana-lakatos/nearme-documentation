@@ -7,7 +7,7 @@ class DatePresenter
     @dates = dates.sort
   end
 
-  def selected_dates_summary_no_html(format = :full_day_month)
+  def selected_dates_summary_no_html(format = :long)
     items = dates_in_groups.map do |block|
       if block.size == 1
         period_to_string(block.first, format)
@@ -46,8 +46,8 @@ class DatePresenter
     }
   end
 
-  def period_to_string(date, format = :full_day_month)
-    I18n.l(date, format: format)
+  def period_to_string(date, format = :long)
+    I18n.l(date.to_date, format: format)
   end
 
   def days_in_words

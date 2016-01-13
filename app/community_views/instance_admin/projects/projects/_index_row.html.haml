@@ -1,7 +1,7 @@
 %tr
   %td= link_to resource.name, project_path(resource)
   %td= resource.featured? ? 'Yes' : 'No'
-  %td= resource.created_at.strftime("%b %-d, %Y")
+  %td= l(resource.created_at.to_date, format: :long)
   - if resource.deleted?
     %td= link_to "Restore", restore_instance_admin_projects_project_path(resource), method: :post, data: { confirm: 'Are you sure you want to restore this?' }
   - else

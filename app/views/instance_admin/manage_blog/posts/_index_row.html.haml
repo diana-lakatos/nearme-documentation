@@ -1,7 +1,7 @@
 %tr
   %td= link_to blog_post.title, edit_instance_admin_manage_blog_post_path(blog_post)
-  %td= l blog_post.created_at, format: :only_date
-  %td= l(blog_post.published_at, format: :only_date) if blog_post.published_at
+  %td= l blog_post.created_at.to_date, format: :long
+  %td= l(blog_post.published_at.to_date, format: :long) if blog_post.published_at
   %td
     .pull-right
       = link_to instance_admin_manage_blog_post_path(blog_post), :method => :delete,

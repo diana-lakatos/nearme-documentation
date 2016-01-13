@@ -44,7 +44,7 @@
           - else
             - resource.payout_attempts.each do |payout_attempt|
               .payout_attempt
-                = "#{Money.new(payout_attempt.amount, payout_attempt.currency).format with_currency: true} #{t('instance_admin.at')} #{payout_attempt.created_at.in_time_zone(current_user.time_zone).strftime('%Y-%m-%d %H:%M (%Z)')} - "
+                = "#{Money.new(payout_attempt.amount, payout_attempt.currency).format with_currency: true} #{t('instance_admin.at')} #{I18n.l(payout_attempt.created_at.in_time_zone(current_user.time_zone), format :with_time_zone)} - "
                 = t('instance_admin.succeeded') if payout_attempt.success
                 - if payout_attempt.failed?
                   = t('instance_admin.failed')

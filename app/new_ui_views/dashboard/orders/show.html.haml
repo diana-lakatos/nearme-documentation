@@ -94,4 +94,4 @@
 
         %br/
 
-        %small= t('orders.labels.order_placed_html', date: l(@order.completed_at, :format => :only_date))
+        %small= t('orders.labels.order_placed_html', date: l(@order.completed_at.to_date, format: :long))

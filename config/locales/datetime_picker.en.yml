@@ -1,8 +1,0 @@
-en:
-  datepicker: # datetime picker is using Moment.js format http://momentjs.com/docs/
-    dformat: '%d/%m/%Y'             # display format of the date (this is the default, can be ommited)
-    pformat: 'DD/MM/YYYY'           # picking format of the date (this is the default, can be ommited)
-  timepicker:
-    dformat: '%I:%M %p'                   # display format of the time (this is the default, can be ommited)
-    pformat: 'hh:mm a'                # picking format of the time (this is the default, can be ommited)
-  dayViewHeaderFormat: 'MMMM YYYY'  # picking format of the time (this is the default, can be ommited)
