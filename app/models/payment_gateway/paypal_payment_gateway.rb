@@ -46,11 +46,11 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
 
   def express_gateway
     if @express_gateway.nil?
-      ActiveMerchant::Billing::Base.mode = :test if test_mode?
       @express_gateway = ActiveMerchant::Billing::PaypalExpressGateway.new(
         login: settings[:login],
         password: settings[:password],
-        signature: settings[:signature]
+        signature: settings[:signature],
+        test: test_mode?
       )
     end
     @express_gateway
@@ -58,12 +58,12 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
 
   def gateway(subject=nil)
     if @gateway.nil? || subject.present?
-      ActiveMerchant::Billing::Base.mode = :test if test_mode?
       @gateway = self.class.active_merchant_class.new(
         login: settings[:login],
         password: settings[:password],
         signature: settings[:signature],
-        subject: subject
+        subject: subject,
+        test: test_mode?
       )
     end
     @gateway
