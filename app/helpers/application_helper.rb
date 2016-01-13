@@ -396,6 +396,7 @@ module ApplicationHelper
       window.I18n.t = #{js_translations};
       window.I18n.dateFormats = #{I18n.t('date.formats').to_json};
       window.I18n.timeFormats = #{I18n.t('time.formats').to_json};
+      window.I18n.abbrMonthNames = '#{Date::ABBR_MONTHNAMES.compact.join("|")}';
     }.html_safe
   end
 

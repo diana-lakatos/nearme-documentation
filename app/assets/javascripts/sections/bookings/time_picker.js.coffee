@@ -174,7 +174,6 @@ class @Bookings.TimePicker
     minutes = minute % 60
     date = new Date()
     date.setHours(hours, minutes)
-    console.log date
 
     date.strftime(I18n.timeFormats["short"].replace("-", ""))
 
