@@ -15,7 +15,7 @@ class InstanceAdmin::Manage::AdditionalChargeTypesController < InstanceAdmin::Ma
       flash[:success] = t 'flash_messages.instance_admin.manage.upsell_addons.created'
       redirect_to instance_admin_manage_additional_charge_types_path
     else
-      flash[:error] = @additional_charge_type.errors.full_messages.to_sentence
+      flash.now[:error] = @additional_charge_type.errors.full_messages.to_sentence
       render :new
     end
   end
@@ -30,7 +30,7 @@ class InstanceAdmin::Manage::AdditionalChargeTypesController < InstanceAdmin::Ma
       flash[:success] = t 'flash_messages.instance_admin.manage.upsell_addons.updated'
       redirect_to instance_admin_manage_additional_charge_types_path
     else
-      flash[:error] = @additional_charge_type.errors.full_messages.to_sentence
+      flash.now[:error] = @additional_charge_type.errors.full_messages.to_sentence
       render :edit
     end
   end

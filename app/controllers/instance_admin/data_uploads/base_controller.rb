@@ -18,7 +18,7 @@ class InstanceAdmin::DataUploads::BaseController < InstanceAdmin::BaseController
       flash[:success] = t 'flash_messages.instance_admin.data_uploads.created'
       redirect_to action: :show, id: @data_upload
     else
-      flash[:error] = @data_upload.errors.full_messages.to_sentence
+      flash.now[:error] = @data_upload.errors.full_messages.to_sentence
       render action: :new
     end
   end

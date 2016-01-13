@@ -21,7 +21,7 @@ class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceControll
       # the view renderable so tests can pass; can't use ||= because it may be a blank string
       @form_component.form_type = FormComponent::SPACE_WIZARD if @form_component.form_type.blank?
 
-      flash[:error] = @form_component.errors.full_messages.to_sentence
+      flash.now[:error] = @form_component.errors.full_messages.to_sentence
       render action: :new
     end
   end
@@ -40,7 +40,7 @@ class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceControll
       # the view renderable so tests can pass
       @form_component.form_type = FormComponent::SPACE_WIZARD if @form_component.form_type.blank?
 
-      flash[:error] = @form_component.errors.full_messages.to_sentence
+      flash.now[:error] = @form_component.errors.full_messages.to_sentence
       render action: :edit
     end
   end

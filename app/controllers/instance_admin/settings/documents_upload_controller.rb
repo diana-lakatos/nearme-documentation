@@ -14,7 +14,7 @@ class InstanceAdmin::Settings::DocumentsUploadController < InstanceAdmin::Settin
       flash[:success] = t('flash_messages.instance_admin.settings.settings_updated')
       redirect_to action: :edit
     else
-      flash[:error] = @documents_upload.errors.full_messages.to_sentence
+      flash.now[:error] = @documents_upload.errors.full_messages.to_sentence
       render :new
     end
   end
@@ -25,7 +25,7 @@ class InstanceAdmin::Settings::DocumentsUploadController < InstanceAdmin::Settin
       flash[:success] = t('flash_messages.instance_admin.settings.settings_updated')
       redirect_to action: :edit
     else
-      flash[:error] = @documents_upload.errors.full_messages.to_sentence
+      flash.now[:error] = @documents_upload.errors.full_messages.to_sentence
       render :edit
     end
   end
