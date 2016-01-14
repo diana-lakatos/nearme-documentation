@@ -562,7 +562,7 @@ class User < ActiveRecord::Base
 
   def email_verification_token
     Digest::SHA1.hexdigest(
-      "--dnm-token-#{self.id}-#{self.created_at}"
+      "--dnm-token-#{self.id}-#{self.created_at.utc.strftime('%Y-%m-%d %H:%M:%S')}"
     )
   end
 
