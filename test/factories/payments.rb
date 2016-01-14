@@ -10,6 +10,16 @@ FactoryGirl.define do
       paid_at nil
     end
 
+    factory :payment_paid do
+      paid_at Time.now
+      association(:payable, :factory => :confirmed_reservation)
+
+      after(:create) do |payment|
+        payment.company.schedule_payment_transfer
+        payment.reload
+      end
+    end
+
     factory :order_charge do
       subtotal_amount_cents { 50_00 }
       service_fee_amount_guest_cents { 5_00 }
@@ -18,7 +28,6 @@ FactoryGirl.define do
       factory :payment_order_unpaid do
         paid_at nil
       end
-
     end
   end
 end

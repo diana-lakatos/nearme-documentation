@@ -157,7 +157,6 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     end
 
     should "refund booking on cancel" do
-      ActiveMerchant::Billing::Base.mode = :test
       @reservation.stubs(credit_card: credit_card, payment_method_nonce: nil )
       @reservation.confirm
 

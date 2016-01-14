@@ -6,6 +6,9 @@ class PaymentGateway::StripePaymentGatewayTest < ActiveSupport::TestCase
     @stripe_processor = PaymentGateway::StripePaymentGateway.new
   end
 
+  should "include test in settings" do
+    assert @stripe_processor.settings[:test]
+  end
 
   should "#setup_api_on_initialize should return a ActiveMerchant StripeGateway object" do
     assert_equal ActiveMerchant::Billing::StripeGateway, @stripe_processor.class.active_merchant_class

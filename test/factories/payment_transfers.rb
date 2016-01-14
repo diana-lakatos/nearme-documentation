@@ -9,6 +9,10 @@ FactoryGirl.define do
     currency 'USD'
     transferred_at "2013-07-17 14:44:29"
 
+    after(:create) do |payment_transfer|
+      payment_transfer.payout_attempts = [FactoryGirl.create(:payout)]
+    end
+
     factory :payment_transfer_unpaid do
       transferred_at nil
     end
