@@ -1,6 +1,7 @@
 %hr/
 .form-inline
-  = f.input :enable_book_it_out_discount, as: :switch, label_html: { class: 'block-label' }, required: false, label: t(:enable, scope: [:pricing, :schedule, :book_it_out])
+  = f.input :enable_book_it_out_discount, as: :switch, label_html: { class: 'block-label' }, required: false,
+  label: t(:enable, scope: [:pricing, :schedule, :book_it_out]), input_html: { checked: f.object.book_it_out_discount.present? }
 
   = f.input :book_it_out_discount, as: :numeric, label_html: { class: 'block-label' }, required: false, label: t(:percent_discount, scope: [:pricing, :schedule, :book_it_out])
 

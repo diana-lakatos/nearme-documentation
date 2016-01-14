@@ -787,6 +787,8 @@ class Transactable < ActiveRecord::Base
 
   def nullify_not_needed_attributes
     if schedule_booking?
+      self.exclusive_price_cents = nil unless enable_exclusive_price == '1'
+      self.book_it_out_discount = self.book_it_out_minimum_qty = nil unless enable_book_it_out_discount == '1'
       self.hourly_price = self.daily_price = self.weekly_price = self.monthly_price = Money.new(nil, currency)
       self.action_hourly_booking = self.action_daily_booking = self.action_free_booking = nil
       self.action_schedule_booking = true

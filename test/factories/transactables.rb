@@ -53,11 +53,13 @@ FactoryGirl.define do
     end
 
     trait :with_book_it_out do
+      enable_book_it_out_discount '1'
       book_it_out_discount 20
       book_it_out_minimum_qty 8
     end
 
     trait :with_exclusive_price do
+      enable_exclusive_price '1'
       exclusive_price_cents 89900
     end
 
