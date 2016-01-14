@@ -12,6 +12,11 @@ FactoryGirl.define do
     currency 'USD'
     next_charge_date { Date.current }
 
+    factory :confirmed_recurring_booking do
+      after(:create) do |recurring_booking|
+        recurring_booking.confirm!
+      end
+    end
   end
 
 end

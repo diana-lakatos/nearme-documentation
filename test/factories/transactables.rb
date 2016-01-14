@@ -29,8 +29,9 @@ FactoryGirl.define do
 
     factory :subscription_transactable do
       action_subscription_booking true
-      weekly_subscription_price_cents 450
+      action_daily_booking false
       monthly_subscription_price_cents 1670
+      booking_type 'subscription'
     end
 
     factory :always_open_listing do

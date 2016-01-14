@@ -189,7 +189,6 @@ When /^I book space as new user for:$/ do |table|
   step "I select to book space for:", table
   step "I click to review the booking"
   step 'I sign up as a user in the modal'
-  store_model("user", "user", User.last)
   #select "New Zealand", :from => 'reservation_request_country_name'
   page.execute_script "$('select#reservation_request_country_name option[value=\"New Zealand\"]').prop('selected', true).trigger('change');"
   fill_in 'Mobile number', with: '8889983375'
@@ -197,6 +196,7 @@ When /^I book space as new user for:$/ do |table|
   fill_in 'reservation_request_checkout_extra_fields_user_last_name', with: 'Name'
   step "I provide reservation credit card details"
   step "I click to confirm the booking"
+  store_model("user", "user", User.last)
 end
 
 When /^(.*) books a space for that listing$/ do |person|

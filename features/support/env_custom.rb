@@ -8,7 +8,11 @@ require "json_spec/cucumber"
 require 'helpers/gmaps_fake'
 require_relative 'minitest_setup'
 
-DatabaseCleaner.strategy = :truncation
+Capybara::Webkit.configure do |config|
+  config.allow_url("http://maps.googleapis.com/*")
+  config.allow_url("http://csi.gstatic.com/*")
+  config.block_unknown_urls
+end
 
 Before do
   DatabaseCleaner.clean
@@ -19,6 +23,7 @@ Before do
   stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
   stub_request(:get, 'https://www.filepicker.io/api/file/-nBq2onTSemLBxlcBWn1').to_return(:status => 200,:body => File.read(Rails.root.join("test", "assets", "foobear.jpeg")), :headers => {'Content-Type' => 'image/jpeg'})
   stub_request(:get, 'http://static.ak.facebook.com')
+
   instance = FactoryGirl.create(:instance)
   FactoryGirl.create(:domain, target: instance, name: "127.0.0.1")
   FactoryGirl.create(:domain, target: instance, name: "example.org")
