@@ -987,6 +987,8 @@ class SecuredParams
       :weekly_subscription_price, :monthly_subscription_price,
       :book_it_out_discount,
       :book_it_out_minimum_qty,
+      :enable_exclusive_price,
+      :enable_book_it_out_discount,
       :exclusive_price,
       :action_rfq,
       :quantity, :currency,
