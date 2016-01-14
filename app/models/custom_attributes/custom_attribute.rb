@@ -21,7 +21,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   end
 
   def expire_cache_options
-    { target_type: self.target_type }
+    { target_type: self.target_type, target_id: self.target_id }
   end
 
   def to_liquid
