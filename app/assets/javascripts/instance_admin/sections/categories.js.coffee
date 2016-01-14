@@ -30,13 +30,13 @@ class @InstanceAdmin.CategoriesController
                   node = m.o
                   new_parent = m.np
 
-                  # # no parent or cant drag and drop
-                  # if !new_parent || node.prop("rel") == "root"
-                  #   return false
+                  # no parent or cant drag and drop
+                  if !new_parent || node.prop("rel") == "root"
+                    return false
 
-                  # # can't drop before root
-                  # if new_parent.prop("id") == "category_tree" && position == 0
-                  #   return false
+                  # can't drop before root
+                  if new_parent.prop("id") == "category_tree"
+                    return false
 
                   true
             contextmenu:

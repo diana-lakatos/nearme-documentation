@@ -5,7 +5,7 @@
     = t("dashboard.transactables.edit")
 
   .options
-    - if @transactable.persisted?
+    - if @transactable.persisted? && @transactable.location.try(:persisted?)
       = link_to t('dashboard.transactables.view_html'), transactable_type_location_listing_path(@transactable_type, @transactable.location, @transactable), rel: :external
 
 

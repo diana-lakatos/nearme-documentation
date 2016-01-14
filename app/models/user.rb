@@ -167,6 +167,10 @@ class User < ActiveRecord::Base
     where(:'users.instance_id' => instance.id)
   }
 
+  scope :feed_not_followed_by_user, -> (current_user) {
+    where.not(id: current_user.feed_followed_users.pluck(:id))
+  }
+
   scope :with_date, ->(date) { where(created_at: date) }
 
   scope :admin,     -> { where(admin: true) }

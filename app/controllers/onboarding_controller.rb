@@ -25,7 +25,7 @@ class OnboardingController < ApplicationController
       friends = @user.social_friends.not_admin.take(quantity)
       nearby =  @user.nearby_friends(100).not_admin.take(quantity - friends.count)
       featured = User.not_admin.featured.without(@user).take(quantity - friends.count - nearby.count)
-      @people = friends + nearby + featured
+      @people = (friends + nearby + featured).uniq
     when :finish
       @custom_attributes = @user.instance_profile_type.custom_attributes.includes(:target).where(public: true).all
     end
@@ -43,7 +43,7 @@ class OnboardingController < ApplicationController
     when :integrations
       render_wizard @user
     when :followings
-      @user.feed_followed_users << User.where(id: followed_params[:people]) if followed_params[:people]
+      @user.feed_followed_users << User.where(id: followed_params[:people]).feed_not_followed_by_user(@user) if followed_params[:people]
       @user.feed_followed_projects << Project.enabled.where(id: followed_params[:projects]) if followed_params[:projects]
       @user.feed_followed_topics << Topic.where(id: followed_params[:topics]) if followed_params[:topics]
       render_wizard @user

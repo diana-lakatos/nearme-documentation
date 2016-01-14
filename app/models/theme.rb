@@ -25,6 +25,7 @@ class Theme < ActiveRecord::Base
     end.flatten.all?{|f| !f}
   }
 
+  validates :tagline, length: { maximum: 255 }
   validates :contact_email, presence: true, email: true, if: lambda { |t| t.owner.try(:domains).try(:first).present? }
   validates :support_email, presence: true, email: true, if: lambda { |t| t.owner.try(:domains).try(:first).present? }
   validates_length_of :description, :maximum => 250

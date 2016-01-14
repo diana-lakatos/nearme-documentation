@@ -237,7 +237,7 @@ class Search.Controller
     elem = $('#price-slider')
     if elem.length > 0
       val = parseInt( $("input[name='price[max]']").val() )
-      if isNaN(val)
+      if isNaN(val) or val is 0
         val = parseInt( $('.search-max-price:first').attr('data-max-price') )
 
       start_val = parseInt( $("input[name='price[min]']").val() )

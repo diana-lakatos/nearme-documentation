@@ -24,7 +24,8 @@ class Bookings.Controller
 
     @updateSummary()
     @delayedUpdateBookingStatus()
-    @quantityField.customSelect()
+    if !@listing.isPerUnitBooking()
+      @quantityField.customSelect()
 
   # We need to set up delayed methods per each instance, not the prototype.
   # Otherwise, it will debounce for any instance calling the method.
@@ -153,14 +154,15 @@ class Bookings.Controller
       if @fixedPriceSelect.val()
         @listing.bookedDatesArray = [@fixedPriceSelect.val()]
         @listing.bookedDateAvailability = (@fixedPriceSelect.select2('data') || @fixedPriceSelectInit).availability
-        for option in @quantityField.find('option')
-          if parseInt(option.value) > @listing.fixedAvailability()
-            $(option).prop('disabled', true)
-          else
-            $(option).prop('disabled', false)
-        if parseInt(@quantityField.find('option:selected').val(), 10) > @listing.fixedAvailability()
-          @quantityField.val("#{@listing.fixedAvailability()}")
-          @quantityField.trigger('change')
+        if !@listing.isPerUnitBooking()
+          for option in @quantityField.find('option')
+            if parseInt(option.value) > @listing.fixedAvailability()
+              $(option).prop('disabled', true)
+            else
+              $(option).prop('disabled', false)
+          if parseInt(@quantityField.find('option:selected').val(), 10) > @listing.fixedAvailability()
+            @quantityField.val("#{@listing.fixedAvailability()}")
+            @quantityField.trigger('change')
       else
         @listing.bookedDatesArray = []
 
@@ -191,7 +193,9 @@ class Bookings.Controller
     @updateSummary()
 
   updateQuantityField: (qty = @listing.defaultQuantity) ->
-    @container.find('.customSelect.quantity .customSelectInner').text(qty)
+    if !@listing.isPerUnitBooking()
+      @container.find('.customSelect.quantity .customSelectInner').text(qty)
+
     @quantityField.val(qty)
     if qty > 1
       @quantityResourceElement.text(@quantityResourceElement.data('plural'))
