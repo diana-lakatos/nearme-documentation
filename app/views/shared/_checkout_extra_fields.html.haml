@@ -9,9 +9,9 @@
     - if uf.object.field_blank_or_changed?(:country_name)
       = uf.input :country_name, as: :select, collection: user_country_name_options, selected: user_country_default(@country), input_html: { class: "select2", data: { 'country-selector' => 1 } }
     - if uf.object.field_blank_or_changed?(:phone)
-      = uf.input :phone, required: true, wrapper: :bs_phone
+      = uf.input :phone, required: true, as: :string
     - if uf.object.field_blank_or_changed?(:mobile_number)
-      = uf.input :mobile_number, required: true, wrapper: :bs_phone
+      = uf.input :mobile_number, required: true, as: :string
 
     = uf.simple_fields_for :properties, uf.object.properties do |properties_form|
       - (uf.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
