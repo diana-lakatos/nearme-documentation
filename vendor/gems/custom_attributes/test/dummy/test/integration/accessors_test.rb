@@ -65,14 +65,14 @@ class AccessorsTest < ActionDispatch::IntegrationTest
         assert_equal 6, @sample_model.properties.destroy
         @custom_attribute3 = FactoryGirl.create(:custom_attribute, name: 'another_attr', target: @sample_model_type, default_value: 20)
 
-        SampleModel.clear_custom_attributes_cache
+        clear_all_cache!
         @sample_model = SampleModel.find(@sample_model.id)
         assert_equal 50, @sample_model.properties.attr
         assert_equal 6, @sample_model.properties.destroy
         assert_equal 20, @sample_model.properties.another_attr
         assert_equal({'attr' => '50', 'destroy' => '6', 'another_attr' => '20'}, @sample_model.properties.instance_variable_get('@hash'))
         @custom_attribute3.destroy
-        SampleModel.clear_custom_attributes_cache
+        clear_all_cache!
         @sample_model = SampleModel.find(@sample_model.id)
         assert_equal 50, @sample_model.properties.attr
         assert_equal 6, @sample_model.properties.destroy

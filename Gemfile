@@ -203,9 +203,9 @@ end
 group :test do
   gem 'rspec', '2.14.1'
   gem 'codeclimate-test-reporter', :require => false
-  gem 'capybara', '2.2.1'
+  gem 'capybara', '2.4.4'
   gem 'launchy'
-  gem 'capybara-webkit', '1.0.0'
+  gem 'capybara-webkit', '1.7.0'
   gem 'capybara-screenshot'
   gem 'cucumber-rails', '~> 1.4.0', :require => false
   gem 'cucumber', '~> 1.3.0'

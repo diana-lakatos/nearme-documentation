@@ -87,7 +87,7 @@ Feature: A user can book at a space
 
   Scenario: Not logged in user is prompted to log in during booking flow
     When I book space as new user for:
-      | Transactable     | Date         | Quantity  |
+      | Transactable     | Date              | Quantity  |
       | the transactable | next week Monday  | 1         |
       | the transactable | next week Tuesday | 1         |
     Then user should have the transactable reserved for 'next week Monday'

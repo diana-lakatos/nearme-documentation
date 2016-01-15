@@ -354,6 +354,7 @@ class Reservation < ActiveRecord::Base
 
   def attempt_payment_refund(counter = 0)
     return if !(active_merchant_payment? && paid?)
+
     payment = payments.paid.first
     if payment.nil?
       raise InvalidPaymentState.new("[Refund] Reservation id=#{self.id} is marked as paid but payment has not been created - invalid state")

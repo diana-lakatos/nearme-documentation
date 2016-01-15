@@ -22,7 +22,7 @@ class ReservationTest < ActiveSupport::TestCase
   should have_many(:additional_charges)
 
   setup do
-    @manual_payment_method = FactoryGirl.create(:manual_payment_gateway).payment_methods.first
+    @manual_payment_method = FactoryGirl.create(:manual_payment_gateway).payment_methods.manual.first
   end
 
   context 'scopes' do
@@ -227,8 +227,6 @@ class ReservationTest < ActiveSupport::TestCase
       @reservation = @charge.payment.payable
       @reservation.stubs(:attempt_payment_capture).returns(true)
       @reservation.stubs(:payment_capture).returns(true)
-      @reservation.mark_as_authorized!
-      @reservation.confirm!
     end
 
     context 'when to trigger' do

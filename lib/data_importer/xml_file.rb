@@ -270,7 +270,7 @@ class DataImporter::XmlFile < DataImporter::File
       if object.respond_to?(:properties) && !object.respond_to?(attribute) && !object.is_a?(Company)
         attributes[:properties] ||= {}
         attributes[:properties][attribute] = node.xpath(attribute.to_s).text
-      else
+      elsif object.respond_to?(attribute)
         attributes[attribute] = node.xpath(attribute.to_s).text unless :location_type == attribute.to_sym || node.xpath(attribute.to_s).text.blank?
       end
       attributes

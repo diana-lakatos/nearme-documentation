@@ -2,9 +2,9 @@ class @PaymentController
 
   constructor: (@container) ->
     @totalPriceContainer = @container.find('[data-total-price]')
-    @totalPriceValue = parseFloat(@totalPriceContainer.html())
     @totalAmount = $('.summary-line-value.total-amount')
     @cartPrice = $("[data-cart-total]")
+    @totalPriceValue = parseFloat(@totalPriceContainer.html() || @cartPrice.html())
     @deliveryPriceContainer = $('.summary-line-value.delivery-amount')
 
     @paymentOptions = @container.find(':radio')

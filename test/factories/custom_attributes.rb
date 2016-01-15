@@ -7,7 +7,7 @@ FactoryGirl.define do
     required 0
 
     after(:create) do |attribute|
-      CustomAttributes::CustomAttribute.clear_cache(attribute.target_type) if attribute.target_type
+      CustomAttributes::CustomAttribute.clear_cache(attribute.target_type, attribute.target_id) if attribute.target_type && attribute.target_id
       I18N_DNM_BACKEND.update_cache(PlatformContext.current.instance.id) if defined? I18N_DNM_BACKEND
     end
 
