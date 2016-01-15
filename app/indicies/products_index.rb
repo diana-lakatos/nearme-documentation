@@ -46,6 +46,7 @@ module ProductsIndex
 
         indexes :available_on, type: 'date'
         indexes :created_at, type: 'date'
+        indexes :draft, type: 'boolean'
 
         indexes :geo_location, type: 'geo_point'
         indexes :price, type: 'float'

@@ -20,8 +20,10 @@ class ProductTypes::ProductWizardController < ApplicationController
   def create
     @boarding_form = BoardingForm.new(current_user, @product_type)
     @boarding_form.product_form.product.attachment_ids = attachment_ids_for(@boarding_form.product_form.product)
+    form_params = boarding_form_params
+    @boarding_form.product_form.product.draft = (params[:draft] || form_params.delete(:draft)).present?
     @images = @boarding_form.product_form.product.images
-    if @boarding_form.submit(boarding_form_params)
+    if @boarding_form.submit(form_params)
       if @boarding_form.draft?
         redirect_to new_product_type_product_wizard_path(@product_type), notice: t('flash_messages.space_wizard.draft_saved', bookable_noun: @product_type.name)
       else
