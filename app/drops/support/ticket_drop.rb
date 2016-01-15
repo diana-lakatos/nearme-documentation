@@ -18,7 +18,9 @@ class Support::TicketDrop < BaseDrop
 
   # url to this user's requests for quotes
   def url
-    routes.dashboard_user_requests_for_quotes_path(ticket)
+    if @ticket.user && !@ticket.target.is_a?(Instance)
+      routes.dashboard_user_requests_for_quote_path(ticket)
+    end
   end
 
   # returns 'request' if free booking is enabled for the target listing
