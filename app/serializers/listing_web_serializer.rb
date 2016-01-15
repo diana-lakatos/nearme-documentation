@@ -32,9 +32,9 @@ class ListingWebSerializer < ApplicationSerializer
     object.availability_full_week.map do |d|
       {
           days: d[:days],
-          id: (d[:rule].target_type == 'Transactable' ? d[:rule].id : nil),
-          open_time: d[:rule].open_time,
-          close_time: d[:rule].close_time
+          id: d[:rules].map { |rule| rule.target_type == 'Transactable' ? rule.id : nil },
+          open_time: d[:rules].map(&:open_time).min,
+          close_time: d[:rules].map(&:close_time).max
        }
     end
 
