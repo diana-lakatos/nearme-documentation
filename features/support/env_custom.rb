@@ -57,9 +57,7 @@ Before do
 end
 
 After do
-  Transactable.clear_custom_attributes_cache
-  UserProfile.clear_custom_attributes_cache
-  Spree::Product.clear_custom_attributes_cache
+  ::CustomAttributes::CustomAttribute::CacheDataHolder.clear_all_cache!
 end
 
 def last_json

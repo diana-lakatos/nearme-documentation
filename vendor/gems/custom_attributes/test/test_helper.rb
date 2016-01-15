@@ -21,3 +21,7 @@ ActiveSupport::TestCase.class_eval do
 
 end
 
+def clear_all_cache!
+  ::CustomAttributes::CustomAttribute::CacheDataHolder.clear_all_cache!
+end
+

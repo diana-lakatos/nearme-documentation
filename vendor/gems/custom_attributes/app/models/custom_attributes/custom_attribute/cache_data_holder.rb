@@ -33,6 +33,10 @@ module CustomAttributes
         @custom_attributes_as_array[target_type][target_id] = nil
       end
 
+      def clear_all_cache!
+        @custom_attributes_as_array = {}
+      end
+
     end
   end
 end
