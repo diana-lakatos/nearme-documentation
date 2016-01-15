@@ -52,7 +52,7 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsControllerTest < ActionContro
         assert_no_difference "PlatformContext.current.instance.instance_admins.size" do
           post :create, { :email => email }
         end
-        assert_equal flash[:error], "Unfortunately we could not find user with email \"#{email}\""
+        assert_equal "Unfortunately we could not find a user with email \"#{email}\"", flash[:error]
       end
 
 
