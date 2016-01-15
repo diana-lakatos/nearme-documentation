@@ -17,7 +17,7 @@ class InstanceAdmin::BuySell::TaxRatesController < InstanceAdmin::BuySell::BaseC
       flash[:success] = t('flash_messages.buy_sell.tax_rate_added')
       redirect_to instance_admin_buy_sell_tax_rates_path
     else
-      flash[:error] = @tax_rate.errors.full_messages.join(', ')
+      flash.now[:error] = @tax_rate.errors.full_messages.join(', ')
       render :new
     end
   end

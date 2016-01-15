@@ -20,7 +20,7 @@ class InstanceAdmin::BuySell::ProductTypesController < InstanceAdmin::BuySell::B
       flash[:success] = t 'flash_messages.instance_admin.buy_sell.product_types.created'
       redirect_to instance_admin_buy_sell_product_types_path
     else
-      flash[:error] = @product_type.errors.full_messages.to_sentence
+      flash.now[:error] = @product_type.errors.full_messages.to_sentence
       render action: :new
     end
   end
@@ -30,7 +30,7 @@ class InstanceAdmin::BuySell::ProductTypesController < InstanceAdmin::BuySell::B
       flash[:success] = t 'flash_messages.instance_admin.buy_sell.product_types.updated'
       redirect_to instance_admin_buy_sell_product_types_path
     else
-      flash[:error] = @product_type.errors.full_messages.to_sentence
+      flash.now[:error] = @product_type.errors.full_messages.to_sentence
       render action: params[:action_name]
     end
   end

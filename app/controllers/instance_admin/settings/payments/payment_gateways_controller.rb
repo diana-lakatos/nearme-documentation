@@ -23,7 +23,7 @@ class InstanceAdmin::Settings::Payments::PaymentGatewaysController < InstanceAdm
     if @payment_gateway.update_attributes(payment_gateway_params)
       redirect_to redirect_url, notice: t('flash_messages.instance_admin.settings.payments.payment_gateways.updated')
     else
-      flash[:error] = @payment_gateway.errors.full_messages.join(", ")
+      flash.now[:error] = @payment_gateway.errors.full_messages.join(", ")
       render :edit
     end
   end

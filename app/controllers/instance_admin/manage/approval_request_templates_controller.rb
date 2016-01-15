@@ -36,7 +36,7 @@ class InstanceAdmin::Manage::ApprovalRequestTemplatesController < InstanceAdmin:
       flash[:success] = t('flash_messages.instance_admin.manage.approval_request_templates.updated')
       redirect_to instance_admin_manage_approval_request_templates_path
     else
-      flash[:error] = @approval_request_template.errors.full_messages.to_sentence
+      flash.now[:error] = @approval_request_template.errors.full_messages.to_sentence
       render action: :edit
     end
   end
