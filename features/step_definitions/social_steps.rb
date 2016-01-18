@@ -88,7 +88,8 @@ end
 When /I navigate away via Log In link and sign in$/ do
   click_link 'Log In'
   work_in_modal do
-    login_manually
+    fill_credentials
+    click_button "Log In"
   end
 end
 

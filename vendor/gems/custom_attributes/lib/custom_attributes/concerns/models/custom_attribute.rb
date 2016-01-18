@@ -42,29 +42,12 @@ module CustomAttributes
           before_save :normalize_name
           before_save :normalize_html_options
 
-          def self.clear_cache(target_type, instance_id = nil)
-            instance = Instance.find(instance_id) if instance_id
-            if defined?(PlatformContext)
-              instance ||= PlatformContext.current.try(:instance)
-              return unless instance
-            end
-            (instance.try(:send, target_type.demodulize.underscore.pluralize).try(:pluck, :id) || target_type.constantize.pluck(:id)).each do |target_id|
-              if (timestamp = ::CustomAttributes::CustomAttribute::CacheTimestampsHolder.get(target_id, target_type)).present?
-                if self.with_changed_attributes(target_id, target_type, timestamp).count > 0
-                  ::CustomAttributes::CustomAttribute::CacheDataHolder.destroy(target_id, target_type)
-                end
-              end
-              count = ::CustomAttributes::CustomAttribute::CacheCountHolder.get(target_id, target_type)
-              if self.where(target_id: target_id, target_type: target_type).count != count
-                ::CustomAttributes::CustomAttribute::CacheCountHolder.store(target_id, target_type, count)
-                ::CustomAttributes::CustomAttribute::CacheDataHolder.destroy(target_id, target_type)
-              end
-            end
+          def self.clear_cache(target_type, target_id)
+            ::CustomAttributes::CustomAttribute::CacheDataHolder.destroy(target_id, target_type)
           end
 
           def self.get_from_cache(target_id, target_type)
             ::CustomAttributes::CustomAttribute::CacheDataHolder.fetch(target_id, target_type) do
-              ::CustomAttributes::CustomAttribute::CacheTimestampsHolder.touch(target_id, target_type)
               self.find_as_array(target_id, target_type)
             end
           end

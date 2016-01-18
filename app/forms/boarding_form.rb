@@ -50,8 +50,6 @@ class BoardingForm < Form
   end
 
   def submit(params)
-    params[:product_form].merge!(draft: params.delete(:draft).nil? ? false : true)
-
     store_attributes(params)
     @user.assign_attributes(params[:user_attributes])
     @company.assign_attributes(params[:company_attributes])

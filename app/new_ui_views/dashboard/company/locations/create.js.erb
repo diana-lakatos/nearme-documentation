@@ -7,10 +7,10 @@
     select = $('[data-location-field]')[0].selectize,
     actionsContainer = $('[data-location-actions]');
 
-  select.addOption({ value: '<%= @location.id %>', text: '<%= @location.name %>' });
+  select.addOption({ value: '<%= @location.id %>', text: '<%= @location.name %>', $order: 0.9 });
   select.refreshOptions();
 
-  $('[data-location-actions] [data-location-id]').attr('hidden', true)
+  $('[data-location-actions] [data-location-id]').attr('hidden', true);
   actionsContainer.append('<%= escape_javascript( render @location ) %>');
   $('main').prepend('<%= escape_javascript( render "dashboard/shared/flash") %>');
 

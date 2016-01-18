@@ -12,6 +12,8 @@ class PlatformContext::RackSetter
 
   def call(env)
     return @app.call(env) if env['PATH_INFO'] =~ /^\/assets\//
+    return [ 200, {}, ['pong'] ] if env['PATH_INFO'] == '/ping'
+
     ::PlatformContext.clear_current
     request = ActionDispatch::Request.new(env)
     platform_context = ::PlatformContext.new(request.host)
@@ -20,8 +22,6 @@ class PlatformContext::RackSetter
       if I18n.backend.respond_to?(:backends)
         I18n.backend.backends.first.instance_id = ::PlatformContext.current.instance.id
       end
-      @app.call(env)
-    elsif request.path_info == '/ping'
       @app.call(env)
     else
       [

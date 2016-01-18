@@ -13,7 +13,6 @@ module Cacheable
       opts.merge!({ instance_id: PlatformContext.current.instance.id }) if PlatformContext.current
 
       RedisCache.client.zadd 'cache_expiration', Time.now.to_f, opts.to_json
-      RedisCache.client.zadd 'cache_expiration_persisted', Time.now.to_f, opts.to_json
     end
 
     def expire_cache_options

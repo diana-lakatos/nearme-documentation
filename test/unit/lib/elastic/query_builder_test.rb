@@ -10,7 +10,7 @@ class Elastic::QueryBuilderTest < ActiveSupport::TestCase
     context "initial_product_filters" do
       should "should use _terms_ query" do
         terms_filter = @qbuilder.initial_product_filters.last
-        assert_equal(terms_filter.keys.first, :terms)
+        assert_equal(terms_filter.keys.first, :term)
       end
     end
 

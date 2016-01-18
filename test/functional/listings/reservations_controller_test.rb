@@ -12,8 +12,6 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     @payment_gateway = stub_billing_gateway(@listing.instance)
     @payment_method = @payment_gateway.payment_methods.first
     stub_active_merchant_interaction
-
-    ActiveMerchant::Billing::Base.mode = :test
   end
 
   should "track booking review open" do

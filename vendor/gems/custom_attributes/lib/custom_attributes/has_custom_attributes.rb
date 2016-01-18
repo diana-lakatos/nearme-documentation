@@ -78,10 +78,6 @@ module CustomAttributes
             super(value)
           end
 
-          def self.clear_custom_attributes_cache
-            CustomAttributes::CustomAttribute.clear_cache("#{@options[:target_type]}")
-          end
-
           def self.public_custom_attributes_names(target_id)
             return [] if target_id.nil?
             CustomAttributes::CustomAttribute.get_from_cache(target_id, "#{@options[:target_type]}").map do |attr_array|

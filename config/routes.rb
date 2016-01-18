@@ -43,8 +43,6 @@ DesksnearMe::Application.routes.draw do
 
   mount CustomAttributes::Engine, at: '/custom_attributes'
 
-  get 'ping', to: 'ping#index'
-
   mount Ckeditor::Engine => '/ckeditor'
 
   constraints host: 'setup.near-me.com' do
