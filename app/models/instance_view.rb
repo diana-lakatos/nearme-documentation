@@ -149,6 +149,10 @@ class InstanceView < ActiveRecord::Base
     },
     'search/products_table/head' => {
     },
+    'search/footer' => {
+      transactable_type: 'ServiceTypeDrop or ProductTypeDrop',
+      searcher: 'The search results for this page'
+    },
     'search/products_table/product' => {
       product: 'Spree::ProductDrop'
     },
