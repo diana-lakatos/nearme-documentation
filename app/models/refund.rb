@@ -1,4 +1,5 @@
 class Refund < ActiveRecord::Base
+  include Encryptable
   acts_as_paranoid
   has_paper_trail
   auto_set_platform_context
@@ -11,7 +12,7 @@ class Refund < ActiveRecord::Base
   monetize :amount, with_model_currency: :currency
   serialize :response, Hash
 
-  attr_encrypted :response, :key => DesksnearMe::Application.config.secret_token, marshal: true
+  attr_encrypted :response, marshal: true
 
   def refund_successful(response)
     self.success = true

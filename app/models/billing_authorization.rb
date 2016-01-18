@@ -1,14 +1,14 @@
 require 'active_merchant/billing/gateways/paypal/paypal_express_response'
 
 class BillingAuthorization < ActiveRecord::Base
+  include Encryptable
   auto_set_platform_context
   scoped_to_platform_context
 
-  attr_encrypted :token, :payment_gateway_class, key: DesksnearMe::Application.config.secret_token
+  attr_encrypted :token, :payment_gateway_class
+  attr_encrypted :response, :void_response, marshal: true
 
   serialize :response, Hash
-
-  attr_encrypted :response, :void_response, key: DesksnearMe::Application.config.secret_token, marshal: true
 
   belongs_to :instance
   belongs_to :reference, polymorphic: true

@@ -146,7 +146,6 @@ module DesksnearMe
 
     config.mixpanel = (YAML.load_file(Rails.root.join("config", "mixpanel.yml"))[Rails.env] || {}).with_indifferent_access
     config.google_analytics = (YAML.load_file(Rails.root.join("config", "google_analytics.yml"))[Rails.env] || {}).with_indifferent_access
-    config.near_me_analytics = (YAML.load_file(Rails.root.join("config", "near_me_analytics.yml"))[Rails.env] || {}).with_indifferent_access
 
     config.perform_mixpanel_requests = true
     config.perform_google_analytics_requests = true
@@ -159,21 +158,9 @@ module DesksnearMe
     config.action_dispatch.rescue_responses.merge!('UserBlog::NotFound' => :not_found)
     config.action_dispatch.rescue_responses.merge!('Transactable::NotFound' => :not_found)
 
-    config.paypal_mode = 'sandbox'
     config.encrypt_sensitive_db_columns = true
 
     config.silence_raygun_notification = false
-
-    config.paypal_email = nil
-    config.paypal_username = nil
-    config.paypal_password = nil
-    config.paypal_signature = nil
-    config.paypal_client_id = nil
-    config.paypal_client_secret = nil
-    config.paypal_app_id = nil
-
-    config.stripe_api_key = nil
-    config.stripe_public_key = nil
 
     config.secure_app = true
     config.root_secured = true
