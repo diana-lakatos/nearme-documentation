@@ -19,7 +19,10 @@ class @DNM.RentalShippingTypesController
 
     @fields.toggleClass('form-section-disabled', !state)
     @dimensionTemplates.trigger('toggle.dimensiontemplates', [state])
-    @removeField.val(state ? '' : 1)
+    if state
+      @removeField.val('')
+    else
+      @removeField.val(1)
 
 
 $('.rental-shipping-type-section').each ->
