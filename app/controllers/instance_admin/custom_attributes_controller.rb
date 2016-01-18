@@ -29,7 +29,7 @@ class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceControl
       flash[:success] = t 'flash_messages.instance_admin.manage.custom_attributes.created'
       redirect_to redirection_path
     else
-      flash[:error] = @custom_attribute.errors.full_messages.to_sentence
+      flash.now[:error] = @custom_attribute.errors.full_messages.to_sentence
       render action: :new
     end
   end
@@ -42,7 +42,7 @@ class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceControl
       flash[:success] = t 'flash_messages.instance_admin.manage.custom_attributes.updated'
       redirect_to redirection_path
     else
-      flash[:error] = @custom_attribute.errors.full_messages.to_sentence
+      flash.now[:error] = @custom_attribute.errors.full_messages.to_sentence
       render :edit
     end
   end

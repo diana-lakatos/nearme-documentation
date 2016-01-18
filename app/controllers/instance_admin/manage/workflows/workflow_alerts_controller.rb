@@ -15,7 +15,7 @@ class InstanceAdmin::Manage::Workflows::WorkflowAlertsController < InstanceAdmin
       flash[:success] = t 'flash_messages.instance_admin.manage.workflow_alerts.created'
       redirect_to instance_admin_manage_workflow_workflow_step_path(@workflow_step.workflow, @workflow_step)
     else
-      flash[:error] = @workflow_alert.errors.full_messages.to_sentence
+      flash.now[:error] = @workflow_alert.errors.full_messages.to_sentence
       render action: :new
     end
   end
@@ -26,7 +26,7 @@ class InstanceAdmin::Manage::Workflows::WorkflowAlertsController < InstanceAdmin
       flash[:success] = t 'flash_messages.instance_admin.manage.workflow_alerts.updated'
       redirect_to instance_admin_manage_workflow_workflow_step_path(@workflow_step.workflow, @workflow_step)
     else
-      flash[:error] = @workflow_alert.errors.full_messages.to_sentence
+      flash.now[:error] = @workflow_alert.errors.full_messages.to_sentence
       render action: :edit
     end
   end

@@ -11,7 +11,7 @@ class MarketplaceSessionsController < ApplicationController
       session[:marketplace_return_to] = nil
       redirect_to redirect_url
     else
-      flash[:error] = t('flash_messages.marketplace_sessions.wrong_password')
+      flash.now[:error] = t('flash_messages.marketplace_sessions.wrong_password')
       render :new
     end
   end

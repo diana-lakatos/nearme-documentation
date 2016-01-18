@@ -44,7 +44,7 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
       flash[:success] = t 'flash_messages.instance_admin.manage.liquid_views.created'
       redirect_to action: :index
     else
-      flash[:error] = @liquid_view.errors.full_messages.to_sentence
+      flash.now[:error] = @liquid_view.errors.full_messages.to_sentence
       render action: :new
     end
   end
@@ -56,7 +56,7 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
       flash[:success] = t 'flash_messages.instance_admin.manage.liquid_views.updated'
       redirect_to action: :index
     else
-      flash[:error] = @liquid_view.errors.full_messages.to_sentence
+      flash.now[:error] = @liquid_view.errors.full_messages.to_sentence
       render :edit
     end
   end

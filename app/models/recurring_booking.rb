@@ -1,6 +1,6 @@
 class RecurringBooking < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
-
+  include Encryptable
   include Chargeable
 
   has_paper_trail
@@ -15,7 +15,7 @@ class RecurringBooking < ActiveRecord::Base
   delegate :location, to: :listing
   delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :listing, allow_nil: true
 
-  attr_encrypted :authorization_token, :payment_gateway_class, :key => DesksnearMe::Application.config.secret_token
+  attr_encrypted :authorization_token, :payment_gateway_class
 
   has_one :billing_authorization, as: :reference
   belongs_to :instance

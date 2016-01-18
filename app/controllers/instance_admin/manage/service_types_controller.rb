@@ -28,7 +28,7 @@ class InstanceAdmin::Manage::ServiceTypesController < InstanceAdmin::Manage::Bas
       flash[:success] = t 'flash_messages.instance_admin.manage.service_types.created'
       redirect_to instance_admin_manage_service_types_path
     else
-      flash[:error] = @service_type.errors.full_messages.to_sentence
+      flash.now[:error] = @service_type.errors.full_messages.to_sentence
       render action: :new
     end
   end
@@ -39,7 +39,7 @@ class InstanceAdmin::Manage::ServiceTypesController < InstanceAdmin::Manage::Bas
       flash[:success] = t 'flash_messages.instance_admin.manage.service_types.updated'
       redirect_to instance_admin_manage_service_types_path
     else
-      flash[:error] = @service_type.errors.full_messages.to_sentence
+      flash.now[:error] = @service_type.errors.full_messages.to_sentence
       render action: params[:action_name]
     end
   end

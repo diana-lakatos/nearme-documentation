@@ -19,7 +19,7 @@ class InstanceAdmin::Settings::DomainsController < InstanceAdmin::Settings::Base
       end
       redirect_to instance_admin_settings_domains_path
     else
-      flash[:error] = @domain.errors.full_messages.to_sentence
+      flash.now[:error] = @domain.errors.full_messages.to_sentence
       render :new
     end
   end
@@ -29,7 +29,7 @@ class InstanceAdmin::Settings::DomainsController < InstanceAdmin::Settings::Base
       flash[:success] = t('flash_messages.instance_admin.settings.settings_updated')
       redirect_to instance_admin_settings_domains_path
     else
-      flash[:error] = @domain.errors.full_messages.to_sentence
+      flash.now[:error] = @domain.errors.full_messages.to_sentence
       render :edit
     end
   end

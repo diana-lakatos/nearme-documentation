@@ -15,7 +15,7 @@ class InstanceAdmin::Projects::ProjectTypesController < InstanceAdmin::Manage::B
       flash[:success] = t 'flash_messages.instance_admin.projects.project_types.created'
       redirect_to instance_admin_projects_project_types_path
     else
-      flash[:error] = @project_type.errors.full_messages.to_sentence
+      flash.now[:error] = @project_type.errors.full_messages.to_sentence
       render action: :new
     end
   end
@@ -26,7 +26,7 @@ class InstanceAdmin::Projects::ProjectTypesController < InstanceAdmin::Manage::B
       flash[:success] = t 'flash_messages.instance_admin.projects.project_types.updated'
       redirect_to instance_admin_projects_project_types_path
     else
-      flash[:error] = @project_type.errors.full_messages.to_sentence
+      flash.now[:error] = @project_type.errors.full_messages.to_sentence
       render action: :edit
     end
   end

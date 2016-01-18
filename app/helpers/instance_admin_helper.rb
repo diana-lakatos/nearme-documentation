@@ -24,6 +24,14 @@ module InstanceAdminHelper
     "by #{author}".html_safe
   end
 
+  def is_active_instance_admin_nav_link(controller_name, settings)
+    if settings[:controller_class].present?
+      "active" if settings[:controller_class] == controller.class.to_s
+    else
+      "active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last
+    end
+  end
+
   def instance_admin_ico_for_flash(key)
     case key.to_s
     when 'notice'

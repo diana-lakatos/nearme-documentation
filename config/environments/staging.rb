@@ -14,7 +14,7 @@ DesksnearMe::Application.configure do
     :authentication => :plain,
     :enable_starttls_auto => true,
     :user_name      => "admin@desksnear.me",
-    :password       => "K6c#H3UWi}%DD6vUT$9W",
+    :password       => ENV['MAILER_SMTP_PASSWORD'],
     :domain         => 'desksnear.me'
   }
 
@@ -47,14 +47,6 @@ DesksnearMe::Application.configure do
 
   config.action_controller.asset_host = "https://staging-nearme.netdna-ssl.com"
   config.action_mailer.asset_host     = "https://staging-nearme.netdna-ssl.com"
-
-  config.paypal_email = "admin-facilitator@desksnear.me"
-  config.paypal_username = "admin-facilitator_api1.desksnear.me"
-  config.paypal_password = "1389316325"
-  config.paypal_signature = "AFcWxV21C7fd0v3bYYYRCpSSRl31AfwNFfSck.jyTHBGORF1UEKNUBhL"
-  config.paypal_client_id = "AecizhC4a7ZiGUA25DjOzYwDQSy_gVc7hOcf8zc40P27gZwwlqWTU6zU9Crs"
-  config.paypal_client_secret = "EKsS3BBF49ckwHJGhGwvj4p8QNfBbhWEqk9PdJI9tqo6SQkLGf9KBiMMOiGh"
-  config.paypal_app_id = "APP-80W284485P519543T"
 
   # Protect this environment with a simple Basic authentication dialog
   # config.middleware.insert_before(Rack::Sendfile, "Rack::Auth::Basic") do |username, password|

@@ -28,7 +28,7 @@ class InstanceAdmin::Manage::EmailTemplatesController < InstanceAdmin::Manage::B
       flash[:success] = t 'flash_messages.instance_admin.manage.email_templates.created'
       redirect_to action: :index
     else
-      flash[:error] = @email_template.errors.full_messages.to_sentence
+      flash.now[:error] = @email_template.errors.full_messages.to_sentence
       render action: :new
     end
   end
@@ -44,7 +44,7 @@ class InstanceAdmin::Manage::EmailTemplatesController < InstanceAdmin::Manage::B
       flash[:success] = t 'flash_messages.instance_admin.manage.email_templates.updated'
       redirect_to action: :index
     else
-      flash[:error] = @email_template.errors.full_messages.to_sentence
+      flash.now[:error] = @email_template.errors.full_messages.to_sentence
       render :edit
     end
   end
