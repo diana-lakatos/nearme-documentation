@@ -5,12 +5,13 @@
       = hidden_field_tag :lntype, @searcher.search.lntype
       = hidden_field_tag :category_ids, @searcher.search.category_ids
       = hidden_field_tag :lgpricing, @searcher.search.lgpricing
-      = hidden_field_tag :start_date, @searcher.search.display_dates[:start]
-      = hidden_field_tag :end_date, @searcher.search.display_dates[:end]
-      = hidden_field_tag 'availability[dates][start]', @searcher.search.start_date
-      = hidden_field_tag 'availability[dates][end]', @searcher.search.end_date
       - @searcher.filterable_custom_attributes.each do |ca|
         = hidden_field_tag "lg_custom_attributes[#{ca.name}]", @searcher.search.lg_custom_attributes[ca.name]
+      - if @transactable_type.show_date_pickers
+        = hidden_field_tag :start_date, @searcher.search.display_dates[:start]
+        = hidden_field_tag :end_date, @searcher.search.display_dates[:end]
+        = hidden_field_tag 'availability[dates][start]', @searcher.search.start_date
+        = hidden_field_tag 'availability[dates][end]', @searcher.search.end_date
 
       .row-fluid
         .span12
