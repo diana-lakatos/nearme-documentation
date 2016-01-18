@@ -4,9 +4,12 @@ class PaymentGateway
       base.extend(ClassMethods)
     end
 
+    def settings
+      super.merge({ test: test_mode? })
+    end
+
     def gateway
       if @gateway.nil?
-        ActiveMerchant::Billing::Base.mode = :test if test_mode?
         @gateway = self.class.active_merchant_class.new(settings)
       end
       @gateway

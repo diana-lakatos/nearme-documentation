@@ -1,8 +1,8 @@
 require 'test_helper'
 
-class PingControllerTest < ActionController::TestCase
+class PingTest < ActionDispatch::IntegrationTest
   should 'return 200' do
-    get :index
+    get '/ping'
 
     assert_response :success
   end

@@ -19,6 +19,7 @@ config/redis.yml
 config/application.yml
 config/database.yml
 config/elasticsearch.yml
+config/unicorn.conf
 log
 node_modules
 tmp

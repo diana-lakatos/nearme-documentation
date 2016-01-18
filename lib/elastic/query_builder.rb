@@ -89,7 +89,10 @@ module Elastic
         query: match_query,
         filter: {
           bool: {
-            must: @filters
+            must: @filters,
+            must_not: [
+              exists: { field: "draft" }
+            ]
           }
         }
       }
@@ -119,7 +122,10 @@ module Elastic
         sort: geo_sort,
         filter: {
           bool: {
-            must: @filters
+            must: @filters,
+            must_not: [
+              exists: { field: "draft" }
+            ]
           }
         }
       }
@@ -160,6 +166,11 @@ module Elastic
         {
           terms: {
             product_type_id: searchable_product_type_ids
+          }
+        },
+        {
+          term: {
+            draft: false
           }
         }
       ]

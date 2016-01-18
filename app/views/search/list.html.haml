@@ -23,6 +23,7 @@
               = category_tree(category, @category, 3, @searcher.category_ids)
   .span9
     = render 'search/list_results'
+    = render 'search/footer'
 
 - content_for :domready do
   new Search.SearchController($('#listing_search form'), $("section#content.search"));

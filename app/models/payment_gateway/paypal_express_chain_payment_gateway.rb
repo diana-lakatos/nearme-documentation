@@ -50,12 +50,12 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
 
   def gateway(subject=nil)
     if @gateway.nil? || subject.present?
-      ActiveMerchant::Billing::Base.mode = :test if test_mode?
       @gateway = self.class.active_merchant_class.new(
         login: settings[:login],
         password: settings[:password],
         signature: settings[:signature],
-        subject: subject
+        subject: subject,
+        test: test_mode?
       )
     end
     @gateway
@@ -97,11 +97,11 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
       amount: @payment_transfer.total_service_fee.cents,
       currency: @payment.currency,
       payment: @payment,
-      payment_gateway_mode: mode
+      payment_gateway_mode: mode,
+      payment_gateway: @payment_gateway,
     )
 
-    payment_transfer = @payment.payment_transfer
-    payout = payment_transfer.payout_attempts.successful.first
+    payout = @payment_transfer.payout_attempts.successful.first
     refund_response = if @payment_transfer.total_service_fee.cents > 0
       gateway.refund(@payment_transfer.total_service_fee.cents, refund_identification(payout), options)
     else
