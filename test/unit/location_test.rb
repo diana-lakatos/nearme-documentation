@@ -80,10 +80,10 @@ class LocationTest < ActiveSupport::TestCase
       )
         availability_all = location.availability.full_week
         assert availability_all.is_a?(Array)
-        assert_equal availability_all.count, 7
-        assert_equal availability_all[0][:day], 1
-        assert_equal availability_all[1][:day], 2
-        assert_equal availability_all[1][:rule].id, nil
+        assert_equal 7, availability_all.count
+        assert_equal 1, availability_all[0][:day]
+        assert_equal 2, availability_all[1][:day]
+        assert_equal [nil], availability_all[1][:rules].map(&:id)
     end
 
   end

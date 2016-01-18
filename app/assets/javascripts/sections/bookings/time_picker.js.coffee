@@ -111,12 +111,16 @@ class @Bookings.TimePicker
       @disabledStartTimes = []
       @disabledEndTimes = []
 
+      first = true
       for min in @allMinutes
         unless @listing.canBookDate(date, min)
           # If the minute is unbookable, can't start on that minute, and
           # therefore can't end STEP minutes after that.
           @disabledStartTimes.push(min)
           @disabledEndTimes.push(min+BOOKING_STEP)
+          if first
+            first = false
+            @disabledEndTimes.push(min)
 
       # Set the disabled start times
       @setDisabledTimesForSelect(@startTime, @disabledStartTimes)

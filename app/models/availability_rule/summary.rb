@@ -10,22 +10,22 @@ class AvailabilityRule::Summary
     days.push(days.shift) if monday_first
 
     days.each do |day|
-      yield(day, rule_for_day(day))
+      yield(day, rules_for_day(day))
     end
   end
 
   # Iterate over each day in the week if no rule is available for a day an new empty rule is created
   def full_week(monday_first = true)
     result = []
-    each_day do |day, rule|
-      result << { day: day, rule: (rule || AvailabilityRule.new(:days => [day]))}
+    each_day do |day, rules|
+      result << { day: day, rules: (rules || [AvailabilityRule.new(:days => [day])])}
     end
     result
   end
 
   # Return the availability rule (if any) for the given day of the week.
-  def rule_for_day(day)
-    @rules.detect { |rule| day.in? rule.days }
+  def rules_for_day(day)
+    @rules.select { |rule| day.in? rule.days }
   end
 
   # Return whether or not the target is open given options
@@ -43,19 +43,19 @@ class AvailabilityRule::Summary
     day ||= options[:date] && options[:date].wday
     raise ArgumentError.new("Must provide day of week") unless day
 
-    rule = rule_for_day(day)
-    return false unless rule
+    rules = rules_for_day(day)
+    return false if rules.empty?
 
     if options[:hour]
-      return false unless rule.open_at?(options[:hour], options[:minute] || 0)
+      return false unless rules.any? { |rule| rule.open_at?(options[:hour], options[:minute] || 0) }
     end
 
     if options[:start_minute]
-      return false unless rule.open_at?(options[:start_minute]/60, options[:start_minute]%60)
+      return false unless rules.any? { |rule| rule.open_at?(options[:start_minute]/60, options[:start_minute]%60) }
     end
 
     if options[:end_minute]
-      return false unless rule.open_at?(options[:end_minute]/60, options[:end_minute]%60)
+      return false unless rules.any? { |rule| rule.open_at?(options[:end_minute]/60, options[:end_minute]%60) }
     end
 
     true
@@ -77,12 +77,12 @@ class AvailabilityRule::Summary
 
   # Returns the minute of the day that the listing opens, or nil
   def open_minute_for(date)
-    rule_for_day(date.wday).try(:day_open_minute)
+    rules_for_day(date.wday).map(&:day_open_minute).min
   end
 
   # Returns the minute of the day that the listing closes, or nil
   def close_minute_for(date)
-    rule_for_day(date.wday).try(:day_close_minute)
+    rules_for_day(date.wday).map(&:day_close_minute).max
   end
 
   def earliest_open_minute
@@ -91,6 +91,10 @@ class AvailabilityRule::Summary
 
   def latest_close_minute
     @rules.map(&:day_close_minute).max
+  end
+
+  def rules
+    @rules
   end
 
 end

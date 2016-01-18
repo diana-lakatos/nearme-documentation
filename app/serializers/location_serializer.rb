@@ -16,9 +16,9 @@ class LocationSerializer < ActiveModel::Serializer
     object.availability_full_week.map do |d|
       {
         days: d[:days],
-        id: d[:rule].id,
-        open_time: d[:rule].open_time,
-        close_time: d[:rule].close_time
+        id: d[:rules].map(&:id),
+        open_time: d[:rules].map(&:open_time).min,
+        close_time: d[:rules].map(&:close_time).max
        }
     end
 
