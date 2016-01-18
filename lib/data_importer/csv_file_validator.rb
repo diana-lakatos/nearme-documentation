@@ -7,9 +7,9 @@ class DataImporter::CsvFileValidator
 
   def strip_invalid_rows
     if @mandatory_fields.blank?
-      [CSV.new(open(@csv_file_path), headers: true), []]
+      [csv_open_with_encoding_conversion(@csv_file_path, headers: true), []]
     else
-      csv_file = CSV.new(open(@csv_file_path), headers: true)
+      csv_file = csv_open_with_encoding_conversion(@csv_file_path, headers: true)
       row_num = 0
       invalid_rows = []
       valid_rows   = []
@@ -30,6 +30,24 @@ class DataImporter::CsvFileValidator
 
       [CSV.new(filtered_csv), invalid_rows]
     end
+  end
+
+  def csv_open_with_encoding_conversion(file_path, *options)
+    contents = File.read(file_path)
+    forced_contents = contents.encode('UTF-8', undef: :replace, replace: '')
+
+    detection = CharlockHolmes::EncodingDetector.detect(contents)
+    if detection.present?
+      begin
+        utf8_encoded_content = CharlockHolmes::Converter.convert contents, detection[:encoding], 'UTF-8'
+      rescue
+        utf8_encoded_content = forced_contents
+      end
+    else
+      utf8_encoded_content = forced_contents
+    end
+
+    CSV.new(utf8_encoded_content, *options)
   end
 
 end
