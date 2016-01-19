@@ -8,6 +8,7 @@ class @DNM.AddressField
     @inputWrapper = @input.closest('[data-address-field]')
     @autocomplete = new google.maps.places.Autocomplete(@input[0], {})
     @addressComponentParser = new DNM.AddressComponentParser(@inputWrapper)
+    @inputChanged = false
 
     google.maps.event.addListener @autocomplete, 'place_changed', =>
       place = Search.Geocoder.wrapResult @autocomplete.getPlace()
@@ -17,11 +18,18 @@ class @DNM.AddressField
 
     @input.focus =>
       @picked_result = false
+      @inputChanged = false
+
+    @input.change =>
+      @inputChanged = true
 
     @input.blur =>
       geocoder = new Search.Geocoder()
       setTimeout( =>
-        if !@picked_result
+        # If the blur ocurred without the selection of a result and the input changed then we want to 
+        # autocomplete to the first item in the autocomplete list if present and if the autocomplete
+        # list is not present we set the map to the default place
+        if !@picked_result && @inputChanged
           if $('.pac-container').find('.pac-item').length > 0 && @input.val() != ''
             geocoder = new Search.Geocoder()
             first_item = $('.pac-container').find('.pac-item').eq(0)
