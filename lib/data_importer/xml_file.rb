@@ -244,6 +244,10 @@ class DataImporter::XmlFile < DataImporter::File
           @photo = @listing.photos.create(image_original_url: photo_node.xpath('image_original_url').text, skip_metadata: true)
         else
           @photo = @listing.photos.build(image_original_url: photo_node.xpath('image_original_url').text, skip_metadata: true)
+          # We do this because of a bug in Rails (possibly) whereby if the @photo object is saved as a consequence of the saving
+          # of the parent association (i.e. @listing.save), @photo's previous_changes will be blank, thus not triggering the regeneration
+          # of the versions in lib/carrier_wave/delayed_versions.rb
+          @photo.force_regenerate_versions = true
         end
         trigger_event('object_created', @photo)
       end
