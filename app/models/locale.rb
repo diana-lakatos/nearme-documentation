@@ -6,6 +6,8 @@ class Locale < ActiveRecord::Base
   DOMAIN_PATTERN = %r(^/(#{I18nData.languages.map { |l| Regexp.escape(l[0].downcase) }.join('|')})(?=/|$))
 
   belongs_to :instance, touch: true
+  has_many :locale_instance_views, dependent: :destroy
+  has_many :instance_views, through: :locale_instance_views
 
   validates_presence_of :code, :instance_id
   validates_uniqueness_of :code, scope: :instance_id
@@ -76,11 +78,6 @@ class Locale < ActiveRecord::Base
   end
 
   def check_locale
-    if code == 'en'
-      errors[:base] << "You can't delete English locale"
-      return false
-    end
-
     if primary?
       errors[:base] << "You can't delete default locale"
       return false

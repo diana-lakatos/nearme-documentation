@@ -6,7 +6,8 @@
           %tr
             %th= t('instance_admin.manage.email_templates.template')
             %th= t('instance_admin.manage.email_templates.format')
-            %th
+            %th Transactable Types
+            %th Locales
             %th
             %th
 
@@ -14,7 +15,8 @@
             %tr
               %td= pretty_path email_template.path
               %td= email_template.format
-              %td= email_template.transactable_type.try(:name)
+              %td= email_template.transactable_types.pluck(:name).join(', ')
+              %td= email_template.locales.map(&:display_name).join(', ')
               %td
                 .pull-right
                   = link_to t('instance_admin.edit'), edit_instance_admin_manage_email_template_path(email_template)

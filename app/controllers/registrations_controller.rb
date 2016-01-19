@@ -40,7 +40,7 @@ class RegistrationsController < Devise::RegistrationsController
           referer: session[:referer],
           source: cookies.signed[:source],
           campaign: cookies.signed[:campaign],
-          language: platform_context.instance.primary_locale.to_s
+          language: I18n.locale
         })
         update_analytics_google_id(@user)
         analytics_apply_user(@user)

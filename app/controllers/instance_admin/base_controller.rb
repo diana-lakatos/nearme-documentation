@@ -66,11 +66,7 @@ class InstanceAdmin::BaseController < ApplicationController
   THEME_CONTROLLERS = {
     'info'             => { default_action: 'show' },
     'design'           => { default_action: 'show' },
-    'homepage'         => { controller: '/instance_admin/theme/homepage_template', default_action: 'show' },
-    'homepage content' => { controller: '/instance_admin/theme/homepage', default_action: 'show' },
     'pages'            => { default_action: 'index' },
-    'header'           => { default_action: 'show' },
-    'footer'           => { default_action: 'show' },
     'content_holders'  => { default_action: 'index' },
     'liquid views'     => { controller: '/instance_admin/theme/liquid_views', default_action: 'index' },
     'file upload'      => { controller: '/instance_admin/theme/file_uploads', default_action: 'index' }

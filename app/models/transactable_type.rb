@@ -22,6 +22,8 @@ class TransactableType < ActiveRecord::Base
   has_many :categories, through: :category_linkings
   has_many :custom_validators, as: :validatable
   has_many :additional_charge_types, as: :additional_charge_type_target
+  has_many :transactable_type_instance_views, dependent: :destroy
+  has_many :instance_views, through: :transactable_type_instance_views
 
   belongs_to :instance
 

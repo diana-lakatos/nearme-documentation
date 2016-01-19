@@ -42,8 +42,6 @@ module InstanceAdmin::Versionable
     case resource
     when Page
       %w(path content css_content)
-    when Theme
-      %w(homepage_content homepage_css)
     when InstanceView
       %w(body)
     end

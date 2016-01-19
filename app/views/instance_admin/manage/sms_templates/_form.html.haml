@@ -5,7 +5,10 @@
         = f.input :path, label: t('instance_admin.manage.sms_templates.template_name'), :placeholder => 'sms name', disabled: @sms_template.persisted? && WorkflowAlert.for_sms_path(@sms_template.path).count > 0, input_html: { class: 'form-control' }
     .row
       .input-container.col-xs-12
-        = f.association :transactable_type, label: t('instance_admin.manage.sms_templates.service_type')
+        = f.association :transactable_types, hint: 'Please note that for some templates this option is not relevant. For example, it does not make sense to create different templates for sign up workflow because user does not sign up to TransactableType. As a rule of thumb, Transactable Type is relevant if workflow concerns listing.'
+    .row
+      .input-container.col-xs-12
+        = f.association :locales
     .row
       .input-container.col-xs-12
         = f.input :body, as: :text, input_html: { class: 'form-control editor', :"data-editor" => 'liquid', rows: '5' }

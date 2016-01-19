@@ -6,10 +6,10 @@ class InstanceViewResolver < DbViewResolver
   def find_templates(name, prefix, partial, details)
     views = _find_templates name, prefix, partial, details
 
-    # Fallback to English
-    if views.count < 1 && normalize_array(details[:locale]).first != 'en'
-      details[:locale] = [:en]
-      views = _find_templates name, prefix, partial, details
+    # Fallback to primary
+    if views.count < 1 && PlatformContext.current.try(:instance).try(:primary_locale).present? &&  normalize_array(details[:locale]).first != PlatformContext.current.instance.primary_locale
+      # if we just modify details, we will be using primary locale not only for this path, but also for all others
+      views = _find_templates name, prefix, partial, details.dup.tap { |d| d[:locale] = [PlatformContext.current.instance.primary_locale] }
     end
 
     views
@@ -50,19 +50,14 @@ class InstanceViewResolver < DbViewResolver
   def get_templates(name, prefix, partial, details)
     conditions = {
       :path => normalize_path(name, prefix),
-      :locale => normalize_array(details[:locale]).first,
       :format => normalize_array(details[:formats]),
       :handler => normalize_array(details[:handlers]),
       :partial => partial || false
     }
-    scope = ::InstanceView.for_instance_id(details[:instance_id])
-    scope = if details[:transactable_type_id].present?
-              scope.for_transactable_type_id(details[:transactable_type_id]).order('instance_id, transactable_type_id')
-            else
-              scope.for_nil_transactable_type.order('instance_id')
-            end
-
-    scope.where(conditions)
+    locale = normalize_array(details[:locale]).first
+    scope = ::InstanceView.for_instance_id(details[:instance_id]).for_locale(locale)
+    scope = scope.for_transactable_type_id(details[:transactable_type_id]) if details[:transactable_type_id].present?
+    scope.where(conditions).order('instance_id')
   end
 end
 

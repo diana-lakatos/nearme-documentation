@@ -2,22 +2,16 @@ require 'test_helper'
 
 class LocaleTest < ActiveSupport::TestCase
   should 'prevent deleting default locale' do
-    default_locale = FactoryGirl.create(:primary_locale, code: 'cs')
-    refute default_locale.destroy
-    assert_equal ["You can't delete default locale"], default_locale.errors[:base]
+    primary_locale = Locale.first
+    refute primary_locale.destroy
+    assert_equal ["You can't delete default locale"], primary_locale.errors[:base]
   end
 
   should 'reset other default locales' do
-    default_locale = FactoryGirl.create(:primary_locale)
+    default_locale = Locale.first
     FactoryGirl.create(:primary_locale, code: 'cs')
     default_locale.reload
     refute default_locale.primary?
-  end
-
-  should 'prevent deleting English locale' do
-    locale = FactoryGirl.create(:locale)
-    refute locale.destroy
-    assert_equal ["You can't delete English locale"], locale.errors[:base]
   end
 
   should 'delete all instance keys for locale' do
@@ -28,7 +22,6 @@ class LocaleTest < ActiveSupport::TestCase
   end
 
   should 'set proper user language when deleted' do
-    FactoryGirl.create(:primary_locale, code: 'en')
     locale = FactoryGirl.create(:locale, code: 'cs')
     FactoryGirl.create(:user, language: 'cs')
 

@@ -13,6 +13,7 @@ class InstanceMailer < ActionMailer::Base
     template = options.delete(:template_name) || view_context.action_name
     layout_path = options.delete(:layout_path)
     lookup_context.transactable_type_id = options.delete(:transactable_type_id)
+
     to = options[:to]
     bcc = options.delete(:bcc)
     cc = options.delete(:cc)
@@ -27,9 +28,8 @@ class InstanceMailer < ActionMailer::Base
     @signature_for_tracking = "&email_signature=#{@mailer_signature}"
 
     track_sending_email(custom_tracking_options)
-    self.class.layout _layout, platform_context: @platform_context
-
-    render_options = { platform_context: @platform_context }
+    self.class.layout _layout, platform_context: @platform_context, locale: I18n.locale
+    render_options = { platform_context: @platform_context, locale: I18n.locale }
     render_options.merge!({layout: layout_path}) if layout_path.present?
 
     mixed = super(options.merge!(
@@ -57,7 +57,6 @@ class InstanceMailer < ActionMailer::Base
 
   def details_for_lookup
     {
-      instance_type_id: PlatformContext.current.try(:instance_type).try(:id),
       instance_id: PlatformContext.current.try(:instance).try(:id),
     }
   end

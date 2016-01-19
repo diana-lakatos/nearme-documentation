@@ -53,11 +53,7 @@ class InstanceAdmin::Manage::Workflows::WorkflowAlertsController < InstanceAdmin
   end
 
   def find_custom_emails
-    @custom_emails =  if @workflow_step.associated_class.constantize.belongs_to_transactable_type?
-      InstanceView.all_email_templates_paths
-    else
-      InstanceView.email_templates_paths_wo_transactable_type
-    end
+    @custom_emails = InstanceView.all_email_templates_paths
   end
 
   def find_custom_email_layouts
