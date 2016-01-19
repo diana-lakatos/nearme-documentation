@@ -166,6 +166,7 @@ class UserTest < ActiveSupport::TestCase
 
         should "be invalid with wrong mobile number" do
           @user.mobile_number = "3423jhjhg432"
+          @user.mobile_number_required = true
           refute @user.valid?
         end
 
