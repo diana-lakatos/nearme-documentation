@@ -37,7 +37,7 @@ module NearMe
         exit 6
       end
 
-      command = "ASSETS_PREFIX=#{@prefix} RAILS_ENV=#{@environment} bundle exec rake assets:precompile"
+      command = "ASSETS_PREFIX=#{@prefix} RAILS_ENV=#{@environment} RAILS_SECRET_TOKEN=whatever bundle exec rake assets:precompile"
       puts 'Compiling...'
       puts command
       if not Kernel.system command
@@ -45,7 +45,7 @@ module NearMe
         exit 6
       end
 
-      command = "ASSETS_PREFIX=#{@prefix} RAILS_ENV=#{@environment} bundle exec rake assets:move_manifest"
+      command = "ASSETS_PREFIX=#{@prefix} RAILS_ENV=#{@environment} RAILS_SECRET_TOKEN=whatever bundle exec rake assets:move_manifest"
       puts 'Moving manifest.json...'
       puts command
       if not Kernel.system command
@@ -53,7 +53,7 @@ module NearMe
         exit 6
       end
 
-      command = "ASSETS_PREFIX=#{@prefix} FOG_DIR=#{@bucket} bundle exec rake assets:sync"
+      command = "ASSETS_PREFIX=#{@prefix} FOG_DIR=#{@bucket} RAILS_SECRET_TOKEN=whatever bundle exec rake assets:sync"
       puts 'Sync...'
       puts command
       if not Kernel.system command
