@@ -18,7 +18,6 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location
     if postgres_filters?
       listings_scope = Transactable.where(id: locations.values.flatten)
       listings_scope = available_listings(listings_scope)
-      listings_scope = price_filter(listings_scope)
 
       order_ids = locations.keys[@offset..@to]
       filtered_listings = Transactable.where(id: listings_scope.pluck(:id))
@@ -40,10 +39,8 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location
 
   def max_price
     return 0 if !@transactable_type.show_price_slider || results.blank?
-    @max_fixed_price ||= results.map{|r|
-      r.listings.map(&:fixed_price_cents).compact.max.to_i
-    }.max / 100
-    @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
+    max = fetcher.response[:aggregations]["filtered_price_range"]["maximum_price"].try(:[],'value') || 0
+    max / 100
   end
 
   def filters
