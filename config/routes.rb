@@ -232,6 +232,7 @@ DesksnearMe::Application.routes.draw do
           get 'new_key'
           post 'create_key'
           delete 'destroy_key'
+          post 'locales_settings_update'
         end
       end
     end
