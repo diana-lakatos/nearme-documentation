@@ -115,6 +115,7 @@ en:
     browse: 'Browse'
     required: 'required'
     show: 'Show'
+    none: "None"
     day:
       one: "day"
       other: "days"
