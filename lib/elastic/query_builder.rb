@@ -95,7 +95,7 @@ module Elastic
             ]
           }
         }
-      }
+      }.merge(aggregations)
     end
 
     def geo_query
@@ -128,7 +128,7 @@ module Elastic
             ]
           }
         }
-      }
+      }.merge(aggregations)
     end
 
     def initial_service_filters
@@ -225,6 +225,32 @@ module Elastic
       ]
     end
 
+    def aggregations
+      {
+        aggs: {
+          filtered_price_range: {
+            filter: {
+              bool: {
+                must: @filters
+              }
+            },
+            aggs: {
+              maximum_price: {
+                max: {
+                  field: "all_prices"
+                }
+              },
+              minimum_price: {
+                min: {
+                  field: "all_prices"
+                }
+              }
+            }
+          }
+        }
+      }
+    end
+
     def match_query
       if @query[:query].blank?
         { match_all: { boost: QUERY_BOOST } }
@@ -296,6 +322,34 @@ module Elastic
     end
 
     def apply_geo_search_filters
+
+      if @transactable_type.show_price_slider && @query[:price] && @query[:price][:max].present?
+        price_min = @query[:price][:min].to_f * 100
+        price_max = @query[:price][:max].to_f * 100
+        price_filters = {
+            range: {
+              all_prices: {
+                gt: price_min,
+                lte: price_max
+              }
+            }
+        }
+        if price_min.zero?
+          @filters << {
+            or: [
+              price_filters,
+              {
+                term: {
+                  action_free_booking: true
+                }
+              }
+            ]
+          }
+        else
+          @filters << price_filters
+        end
+      end
+
       if @query[:location_types_ids] && @query[:location_types_ids].any?
         @filters << {
           terms: {
