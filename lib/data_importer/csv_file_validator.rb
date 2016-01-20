@@ -33,7 +33,10 @@ class DataImporter::CsvFileValidator
   end
 
   def csv_open_with_encoding_conversion(file_path, *options)
-    contents = File.read(file_path)
+    file = open(file_path)
+    contents = file.read
+    file.close
+
     forced_contents = contents.encode('UTF-8', undef: :replace, replace: '')
 
     detection = CharlockHolmes::EncodingDetector.detect(contents)
