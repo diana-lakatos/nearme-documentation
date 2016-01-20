@@ -293,6 +293,7 @@ en:
     downloads: 'Downloads'
     sales: 'Sales'
     save: "Save"
+    save_settings: "Save settings"
     delete: "Delete"
     destroy: "Destroy"
     versions: "Versions"
@@ -451,6 +452,8 @@ en:
           users: "Users"
           purchasers: "Purchasers"
           sellers_preference: "Sellers preference"
+      languages:
+        settings: "Settings"
     theme:
       info:
         title_and_description: "Title & Description"
