@@ -1,4 +1,7 @@
 %head
+  = render 'layouts/content_holder_injector'
+  = inject_content_holder('HEAD')
+  = yield(:meta)
   %meta{:charset => "utf-8"}/
   %title= title_tag
   %meta{:content => meta_description_content, :name => "description"}/

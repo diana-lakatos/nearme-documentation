@@ -4,6 +4,7 @@
   = render 'shared/head'
 
   %body{class: body_classes}
+    = yield(:body_top)
     .root-a
       .wrap
         %header#top.top-a
@@ -29,3 +30,4 @@
     = javascript_include_tag 'community'
     = render 'layouts/analytics'
     = yield :page_scripts
+    = yield(:body_bottom)
