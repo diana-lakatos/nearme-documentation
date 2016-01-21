@@ -498,6 +498,7 @@ en:
       search: "Search"
     manage:
       instance_profile_types:
+        instance_profile_types: 'User Profiles'
         manage: 'Manage User Profiles'
       admin_searchable:
         today: "Today"

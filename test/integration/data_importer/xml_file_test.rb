@@ -9,6 +9,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
     stub_image_url("http://www.example.com/photo.jpg")
     @instance = FactoryGirl.create(:instance)
     PlatformContext.current = PlatformContext.new(@instance)
+    FactoryGirl.create(:instance_profile_type)
     @location_type = FactoryGirl.create(:location_type, name: 'My Type')
   end
 

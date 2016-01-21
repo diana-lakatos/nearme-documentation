@@ -161,7 +161,7 @@ Then /^#{capture_model} should have availability:$/ do |model, table|
   availability = object.availability
   rules.each do |rule|
     rule[:days].each do |day|
-      availability_rule = availability.rule_for_day(day)
+      availability_rule = availability.rules_for_day(day).first
       assert availability_rule, "#{day} should have a rule"
       oh, om = rule[:open].split(':').map(&:to_i)
       ch, cm = rule[:close].split(':').map(&:to_i)
@@ -171,7 +171,7 @@ Then /^#{capture_model} should have availability:$/ do |model, table|
       assert_equal cm, availability_rule.close_minute, "#{day} should have close minute = #{cm}"
     end
     ((0..6).to_a - rule[:days]).each do |day|
-      refute availability.rule_for_day(day), "#{day} should not have a rule"
+      refute availability.rules_for_day(day).first, "#{day} should not have a rule"
     end
   end
 end

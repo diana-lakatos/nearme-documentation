@@ -90,7 +90,7 @@ class PlatformContext
         result = @instance.domains.secured.first
       end
 
-      if Rails.env.development?
+      if Rails.env.development? || Rails.env.test?
         result ||= @instance.domains.first
       end
 

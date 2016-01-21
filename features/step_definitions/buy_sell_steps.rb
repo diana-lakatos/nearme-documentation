@@ -103,6 +103,7 @@ Given /^Extra fields are prepared$/ do
   @user.update_column(:last_name, '')
   @user.update_column(:phone, '')
   @user.update_column(:company_name, '')
+  @user.default_profile.instance_profile_type.custom_validators.create(field_name: 'last_name', required: 1)
 
   @user = User.find(@user.id)
 end

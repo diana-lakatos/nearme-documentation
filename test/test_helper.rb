@@ -206,6 +206,7 @@ class TestDataSeeder
       FactoryGirl.create(:transactable_type_listing, generate_rating_systems: true)
       FactoryGirl.create(:country_us)
       FactoryGirl.create(:country_pl)
+      FactoryGirl.create(:instance_profile_type)
       FactoryGirl.create(:seller_profile_type)
       FactoryGirl.create(:buyer_profile_type)
     end

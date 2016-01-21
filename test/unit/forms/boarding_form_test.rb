@@ -3,7 +3,6 @@ require 'test_helper'
 class BoardingFormTest < ActiveSupport::TestCase
 
   setup do
-    PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
     @product_type = FactoryGirl.create(:product_type)
     @user = FactoryGirl.create(:user, name: "Firstname Lastname")
     @boarding_form = BoardingForm.new(@user, @product_type)
@@ -17,7 +16,7 @@ class BoardingFormTest < ActiveSupport::TestCase
   context "Boarding First Product" do
     should "submit params" do
       Address.any_instance.stubs(:country).returns('PL')
-      assert_equal @boarding_form.submit(boarding_attributes), true
+      assert_equal true, @boarding_form.submit(boarding_attributes)
 
       @company = Company.last
       @product = @company.products.first

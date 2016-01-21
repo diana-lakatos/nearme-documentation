@@ -1,8 +1,14 @@
 class User < ActiveRecord::Base
+
   include Spree::UserPaymentSource
   include CreationFilter
+  extend FriendlyId
+
 
   SORT_OPTIONS = ['All', 'Featured', 'People I know', 'Most Popular', 'Location', 'Number of Projects']
+  MAX_NAME_LENGTH = 30
+  SMS_PREFERENCES = %w(user_message reservation_state_changed new_reservation)
+
 
   has_paper_trail ignore: [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                            :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
@@ -14,13 +20,14 @@ class User < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context allow_admin: :admin
   acts_as_tagger
+  store :required_fields
+  mount_uploader :avatar, AvatarUploader
+  mount_uploader :cover_image, CoverImageUploader
 
-  extend FriendlyId
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable,
+    :user_validatable, :token_authenticatable, :temporary_token_authenticatable
   has_metadata accessors: [:support_metadata]
   friendly_id :name, use: [:slugged, :finders]
-
-  attr_readonly :following_count
-  attr_readonly :followers_count
 
   belongs_to :billing_address, class_name: 'Spree::Address'
   belongs_to :domain
@@ -96,20 +103,6 @@ class User < ActiveRecord::Base
   has_one :buyer_profile, -> { buyer }, class_name: 'UserProfile'
   has_one :default_profile, -> { default }, class_name: 'UserProfile'
 
-  after_create :create_blog
-  after_destroy :perform_cleanup
-  before_save :ensure_authentication_token
-  before_save :update_notified_mobile_number_flag
-  before_create :build_profile
-
-  before_create do
-    self.instance_profile_type_id ||= PlatformContext.current.present? ? InstanceProfileType.default.first.try(:id) : InstanceProfileType.default.where(instance_id: self.instance_id).try(:first).try(:id)
-  end
-
-  before_restore :recover_companies
-
-  store :required_fields
-
   accepts_nested_attributes_for :approval_requests
   accepts_nested_attributes_for :companies
   accepts_nested_attributes_for :projects
@@ -117,6 +110,28 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :seller_profile
   accepts_nested_attributes_for :buyer_profile
   accepts_nested_attributes_for :default_profile
+
+  attr_readonly :following_count, :followers_count
+  attr_accessor :skip_password, :verify_identity, :custom_validation, :accept_terms_of_service, :verify_associated
+
+  serialize :sms_preferences, Hash
+  serialize :instance_unread_messages_threads_count, Hash
+  serialize :avatar_transformation_data, Hash
+
+  delegate :to_s, to: :name
+
+  after_create :create_blog
+  after_destroy :perform_cleanup
+  before_save :ensure_authentication_token
+  before_save :update_notified_mobile_number_flag
+  before_validation :build_profile, on: :create
+  before_restore :recover_companies
+  skip_callback :commit, :after, :remove_avatar!
+  skip_callback :commit, :after, :remove_cover_image!
+
+  before_create do
+    self.instance_profile_type_id ||= PlatformContext.current.present? ? InstanceProfileType.default.first.try(:id) : InstanceProfileType.default.where(instance_id: self.instance_id).try(:first).try(:id)
+  end
 
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(reservations: { transactable_id: listing.id }).uniq
@@ -185,95 +200,145 @@ class User < ActiveRecord::Base
   end
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((user_profiles.properties->?), ',') && ARRAY[?]", property, values) if values.present? }
 
-  mount_uploader :avatar, AvatarUploader
-  mount_uploader :cover_image, CoverImageUploader
-  skip_callback :commit, :after, :remove_avatar!
-  skip_callback :commit, :after, :remove_cover_image!
 
-  MAX_NAME_LENGTH = 30
-
+  validates_with CustomValidators
   validates :name, :first_name, presence: true
   validate :validate_name_length_from_fullname
-  validates :first_name, :middle_name, :last_name, length: { maximum: MAX_NAME_LENGTH }
 
   # FIXME: This is an unideal coupling of 'required parameters' for specific forms
   #        to the general validations on the User model.
   #        A solution moving forward is to extract the relevant forms into
   #        a 'Form' object containing their own additional validations specific
   #        to their context.
-  validates :phone, phone_number: true, if: ->(u) {u.phone.present? || u.phone_required}
-  validates :mobile_number, phone_number: true, if: ->(u) { u.mobile_number.present? || u.mobile_number_required }
-  validates_presence_of :country_name, if: lambda { phone_required || country_name_required }
-  validates_presence_of :last_name, if: lambda { last_name_required }
-
-  validates :company_name, length: { maximum: 50 }
+  validates :phone, phone_number: true,
+    if: ->(u) {u.phone.present? || u.validation_for(:phone).try(:is_required?)}
+  validates :mobile_number, phone_number: true,
+    if: ->(u) {u.mobile_number.present? || u.validation_for(:mobile_number).try(:is_required?)}
+  validates_presence_of :country_name, :mobile_number, if:  ->(u)  { u.validation_for(:phone).try(:is_required?) }
 
   validates_inclusion_of :saved_searches_alerts_frequency, in: SavedSearch::ALERTS_FREQUENCIES
-
-  attr_accessor :custom_validation
-  attr_accessor :accept_terms_of_service
-  attr_accessor :verify_associated
 
   validates_associated :companies, if: :verify_associated
   validates_acceptance_of :accept_terms_of_service, on: :create, allow_nil: false, if: lambda { |u| PlatformContext.current.try(:instance).try(:force_accepting_tos) && u.custom_validation }
 
-  validate do |user|
-    if user.persisted? && PlatformContext.current.instance.user_info_in_onboarding_flow? && self.custom_validation
-      PlatformContext.current.instance.user_required_fields.each do |field|
-        if self.respond_to?(field)
-          user.errors.add(field, I18n.t('errors.messages.blank')) unless self.send(field).present?
-        else
-          user.properties.errors.add(field, I18n.t('errors.messages.blank')) unless self.properties[field].present?
-        end
+  class << self
+
+    def find_for_database_authentication(warden_conditions)
+      where(warden_conditions.to_h).order('external_id NULLS FIRST').first
+    end
+
+    # Build a new user, taking into account session information such as Provider
+    # authentication.
+    def new_with_session(attrs, session)
+      user = super
+      user.apply_omniauth(session[:omniauth]) if session[:omniauth]
+      user
+    end
+
+    # FIND undeleted users first (for example for find_by_email finds)
+    def with_deleted
+      super.order('deleted_at IS NOT NULL, deleted_at DESC')
+    end
+
+    def filtered_by_role(values)
+      if values.present? && 'Other'.in?(values)
+        role_attribute = PlatformContext.current.instance.default_profile_type.custom_attributes.find_by(name: 'role')
+        values += role_attribute.valid_values.reject { |val| val =~ /Featured|Innovator|Black Belt/i }
+      end
+
+      if values.present? && values.include?("Featured")
+        featured
+      else
+        filtered_by_custom_attribute('role', values)
       end
     end
-  end
 
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable,
-    :user_validatable, :token_authenticatable, :temporary_token_authenticatable
-
-  def self.find_for_database_authentication(warden_conditions)
-    where(warden_conditions.to_h).order('external_id NULLS FIRST').first
-  end
-
-  attr_accessor :phone_required, :country_name_required, :skip_password, :verify_identity, :mobile_number_required, :last_name_required
-
-  serialize :sms_preferences, Hash
-  serialize :instance_unread_messages_threads_count, Hash
-  serialize :avatar_transformation_data, Hash
-
-  delegate :to_s, to: :name
-
-  SMS_PREFERENCES = %w(user_message reservation_state_changed new_reservation)
-
-  # Build a new user, taking into account session information such as Provider
-  # authentication.
-  def self.new_with_session(attrs, session)
-    user = super
-    user.apply_omniauth(session[:omniauth]) if session[:omniauth]
-    user
-  end
-
-  # FIND undeleted users first (for example for find_by_email finds)
-  def self.with_deleted
-    super.order('deleted_at IS NOT NULL, deleted_at DESC')
-  end
-
-  def self.featured
-    where(featured: true)
-  end
-
-  def self.filtered_by_role(values)
-    if values.present? && 'Other'.in?(values)
-      role_attribute = PlatformContext.current.instance.default_profile_type.custom_attributes.find_by(name: 'role')
-      values += role_attribute.valid_values.reject { |val| val =~ /Featured|Innovator|Black Belt/i }
+    def xml_attributes
+      self.csv_fields.keys
     end
 
-    if values.present? && values.include?("Featured")
-      featured
-    else
-      filtered_by_custom_attribute('role', values)
+    def csv_fields
+      { email: 'User Email', name: 'User Name' }
     end
+
+    def reset_password_by_token(attributes={})
+      original_token       = attributes[:reset_password_token]
+      reset_password_token = Devise.token_generator.digest(self, :reset_password_token, original_token)
+
+      recoverable = find_or_initialize_with_error_by(:reset_password_token, reset_password_token)
+      recoverable.skip_custom_attribute_validation = true
+
+      if recoverable.persisted?
+        if recoverable.reset_password_period_valid?
+          recoverable.reset_password(attributes[:password], attributes[:password_confirmation])
+        else
+          recoverable.errors.add(:reset_password_token, :expired)
+        end
+      end
+
+      recoverable.reset_password_token = original_token if recoverable.reset_password_token.present?
+      recoverable
+    end
+
+    def search_by_query(attributes = [], query)
+      if query.present?
+        words = query.split.map.with_index{|w, i| ["word#{i}".to_sym, "%#{w}%"]}.to_h
+
+        sql = attributes.map do |attrib|
+          if self.columns_hash[attrib.to_s].type == :hstore
+            attrib = "CAST(avals(#{quoted_table_name}.\"#{attrib}\") AS text)"
+          else
+            attrib = "#{quoted_table_name}.\"#{attrib}\""
+          end
+          words.map do |word, value|
+            "#{attrib} ILIKE :#{word}"
+          end
+        end.flatten.join(' OR ')
+
+        where(ActiveRecord::Base.send(:sanitize_sql_array, [sql, words]))
+      else
+        all
+      end
+    end
+
+    def custom_order(order, user)
+      case order
+        when /featured/i
+          featured
+        when /people i know/i
+          friends_of(user)
+        when /most popular/i
+          order('followers_count DESC')
+        when /location/i
+          return all unless user
+          all.joins(:current_address).merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance')).select('users.*')
+        when /number of projects/i
+          order('projects_count + project_collborations_count DESC')
+        else
+          all
+      end
+    end
+
+  end
+
+  def get_seller_profile
+    seller_profile || self.build_seller_profile
+  end
+
+  def get_buyer_profile
+    buyer_profile || self.build_buyer_profile
+  end
+
+  def build_profile
+    default_profile || self.build_default_profile
+  end
+
+  def custom_validators
+    @custom_validators ||= all_profiles.map(&:custom_validators).flatten.compact
+  end
+
+  def validation_for(field_name)
+    custom_validators.detect{ |cv| cv.field_name == field_name.to_s }
   end
 
   def apply_omniauth(omniauth)
@@ -321,8 +386,10 @@ class User < ActiveRecord::Base
     end
   end
 
-  def build_profile
-    self.build_default_profile(instance_profile_type: instance.default_profile_type)
+  def all_profiles
+    UserProfile::PROFILE_TYPES.map do |profile_type|
+      send("#{profile_type}_profile")
+    end.compact
   end
 
   alias_method :properties, :default_properties
@@ -770,14 +837,6 @@ class User < ActiveRecord::Base
     banned_at.present?
   end
 
-  def self.xml_attributes
-    self.csv_fields.keys
-  end
-
-  def self.csv_fields
-    { email: 'User Email', name: 'User Name' }
-  end
-
   def published_blogs
     blog_posts.published
   end
@@ -895,64 +954,6 @@ class User < ActiveRecord::Base
   def ensure_authentication_token!
     ensure_authentication_token
     save(validate: false)
-  end
-
-  def self.reset_password_by_token(attributes={})
-    original_token       = attributes[:reset_password_token]
-    reset_password_token = Devise.token_generator.digest(self, :reset_password_token, original_token)
-
-    recoverable = find_or_initialize_with_error_by(:reset_password_token, reset_password_token)
-    recoverable.skip_custom_attribute_validation = true
-
-    if recoverable.persisted?
-      if recoverable.reset_password_period_valid?
-        recoverable.reset_password(attributes[:password], attributes[:password_confirmation])
-      else
-        recoverable.errors.add(:reset_password_token, :expired)
-      end
-    end
-
-    recoverable.reset_password_token = original_token if recoverable.reset_password_token.present?
-    recoverable
-  end
-
-  def self.search_by_query(attributes = [], query)
-    if query.present?
-      words = query.split.map.with_index{|w, i| ["word#{i}".to_sym, "%#{w}%"]}.to_h
-
-      sql = attributes.map do |attrib|
-        if self.columns_hash[attrib.to_s].type == :hstore
-          attrib = "CAST(avals(#{quoted_table_name}.\"#{attrib}\") AS text)"
-        else
-          attrib = "#{quoted_table_name}.\"#{attrib}\""
-        end
-        words.map do |word, value|
-          "#{attrib} ILIKE :#{word}"
-        end
-      end.flatten.join(' OR ')
-
-      where(ActiveRecord::Base.send(:sanitize_sql_array, [sql, words]))
-    else
-      all
-    end
-  end
-
-  def self.custom_order(order, user)
-    case order
-    when /featured/i
-      where(featured: true)
-    when /people i know/i
-      friends_of(user)
-    when /most popular/i
-      order('followers_count DESC')
-    when /location/i
-      return all unless user
-      all.joins(:current_address).merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance')).select('users.*')
-    when /number of projects/i
-      order('projects_count + project_collborations_count DESC')
-    else
-      all
-    end
   end
 
   def can_update_feed_status?(record)
