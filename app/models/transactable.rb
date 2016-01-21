@@ -363,6 +363,10 @@ class Transactable < ActiveRecord::Base
     PRICE_TYPES.map { |price| self.send("#{price}_price_cents") }.compact.any? { |price| !price.zero? }
   end
 
+  def all_prices
+    @all_prices ||= PRICE_TYPES.map { |price| self.send("#{price}_price_cents") }.compact
+  end
+
   def subscription_variants
     { weekly: weekly_subscription_price_cents, monthly: monthly_subscription_price_cents }.select{ |k,v| v.to_i > 0 }.with_indifferent_access
   end

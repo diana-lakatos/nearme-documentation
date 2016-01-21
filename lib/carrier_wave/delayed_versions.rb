@@ -27,7 +27,7 @@ module CarrierWave::DelayedVersions
       after_commit do
         processor = CarrierWave::SourceProcessing::Processor.new(self, column)
 
-        if previous_changes[column].present? && attributes[column.to_s]
+        if (previous_changes[column].present? || self.try(:force_regenerate_versions)) && attributes[column.to_s]
           if uploader.respond_to?(:delayed_versions)
             processor.enqueue_processing(false)
           else
