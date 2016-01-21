@@ -64,7 +64,7 @@ class Utils::DefaultAlertsCreator::RecurringCreatorTest < ActionDispatch::Integr
         WorkflowStepJob.perform(WorkflowStep::RecurringWorkflow::RequestPhotos, @listing.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_equal "Give the final touch to your #{PlatformContext.current.decorate.bookable_noun} with some photos!", mail.subject
+      assert_equal "Give the final touch to your listings with some photos!", mail.subject
       assert mail.html_part.body.include?(@user.first_name)
       assert_equal [@user.email], mail.to
       assert mail.html_part.body.include?("Listings with photos have 10x chances of getting booked.")

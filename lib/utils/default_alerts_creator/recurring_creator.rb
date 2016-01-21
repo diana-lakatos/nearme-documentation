@@ -15,7 +15,7 @@ class Utils::DefaultAlertsCreator::RecurringCreator < Utils::DefaultAlertsCreato
   end
 
   def create_request_photos_email!
-    create_alert!({associated_class: WorkflowStep::RecurringWorkflow::RequestPhotos, name: 'request photos email', path: 'recurring_mailer/request_photos', subject: "Give the final touch to your {{platform_context.bookable_noun}} with some photos!", alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::RecurringWorkflow::RequestPhotos, name: 'request photos email', path: 'recurring_mailer/request_photos', subject: "Give the final touch to your listings with some photos!", alert_type: 'email', recipient_type: 'lister'})
   end
 
   protected
