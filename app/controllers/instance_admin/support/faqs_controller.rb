@@ -1,4 +1,4 @@
-class InstanceAdmin::Manage::Support::FaqsController < InstanceAdmin::Manage::BaseController
+class InstanceAdmin::Support::FaqsController < InstanceAdmin::Manage::BaseController
   skip_before_filter :check_if_locked
   inherit_resources
   defaults :resource_class => ::Support::Faq

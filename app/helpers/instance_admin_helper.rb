@@ -14,7 +14,7 @@ module InstanceAdminHelper
       support_ticket_title(ticket),
       " (#{ticket.messages.count})",
       "<br />",
-      link_to(ticket.open_text, instance_admin_manage_support_ticket_path(ticket)).html_safe
+      link_to(ticket.open_text, instance_admin_support_ticket_path(ticket)).html_safe
     ].join.html_safe
   end
 
@@ -83,4 +83,3 @@ module InstanceAdminHelper
   end
 
 end
-

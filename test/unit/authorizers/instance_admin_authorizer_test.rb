@@ -94,6 +94,16 @@ class InstanceAdminAuthorizerTest < ActiveSupport::TestCase
       assert !@authorizer.authorized?('BuySell')
     end
 
+    should 'know if user has permission to support controller' do
+      @role.update_attribute(:permission_support, true)
+      assert @authorizer.authorized?('Support')
+    end
+
+    should 'know if user does not have permission to support controller' do
+      @role.update_attribute(:permission_support, false)
+      assert !@authorizer.authorized?('Support')
+    end
+
     should 'raise InstanceAdminAuthorizer::UnassignedInstanceAdminRoleError if instance_admin has no role' do
       @instance_admin.update_column(:instance_admin_role_id, nil)
       assert_raise InstanceAdminAuthorizer::UnassignedInstanceAdminRoleError do

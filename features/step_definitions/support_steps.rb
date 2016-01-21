@@ -50,7 +50,7 @@ end
 Then(/^I should see this support ticket$/) do
   InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
   InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
-  visit instance_admin_manage_support_root_path
+  visit instance_admin_support_root_path
   page.should have_content('View and resolve')
 end
 
@@ -58,7 +58,7 @@ Then(/^I should be able to answer and marked as resolved this support ticket$/) 
   InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
   InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
   user = Support::Ticket.first.try(:user)
-  visit instance_admin_manage_support_root_path
+  visit instance_admin_support_root_path
   click_link 'View and resolve'
   fill_in 'Message', with: 'That is ok.'
   click_button 'Update and Resolve'

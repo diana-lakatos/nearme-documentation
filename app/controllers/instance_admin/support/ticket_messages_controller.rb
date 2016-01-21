@@ -1,4 +1,4 @@
-class InstanceAdmin::Manage::Support::TicketMessagesController < InstanceAdmin::Manage::BaseController
+class InstanceAdmin::Support::TicketMessagesController < InstanceAdmin::Manage::BaseController
   skip_before_filter :check_if_locked
   def create
     message = Support::TicketMessage.new(support_ticket_message_params)
@@ -19,7 +19,7 @@ class InstanceAdmin::Manage::Support::TicketMessagesController < InstanceAdmin::
       end
     end
 
-    redirect_to instance_admin_manage_support_ticket_path(ticket)
+    redirect_to [:instance_admin,ticket]
   end
 
   private

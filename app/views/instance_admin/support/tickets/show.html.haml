@@ -15,7 +15,7 @@
 
         - if @ticket.open?
           .form.message-form
-            = simple_form_for(@message, url: instance_admin_manage_support_ticket_ticket_messages_path(@ticket)) do |f|
+            = simple_form_for(@message, url: [:instance_admin, @ticket, :ticket_messages]) do |f|
               = f.input :message, required: false, as: :text, class: 'textarea', :input_html => { class: 'form-control', rows: 10 }
               .attachments{:'data-attachment-list' => true }
                 = render partial: 'support/ticket_message_attachments/attachment', collection: @message.attachments, as: :ticket_message_attachment
@@ -26,7 +26,7 @@
                 = f.submit t('instance_admin.manage.support.update_and_resolve'), class: 'btn btn-light'
               .clearfix
 
-            = simple_form_for @ticket.attachments.build, url: support_ticket_ticket_message_attachments_path(@ticket), html: { class: 'hidden', :'data-attachment-form'=> true } do |f|
+            = simple_form_for @ticket.attachments.build, url: [@ticket, :ticket_message_attachments], html: { class: 'hidden', :'data-attachment-form'=> true } do |f|
               = f.input :file, as: :file, input_html: { data: { file: true } }
 
   .content-container

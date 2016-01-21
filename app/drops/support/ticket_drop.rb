@@ -44,7 +44,7 @@ class Support::TicketDrop < BaseDrop
     when Transactable, Spree::Product
       routes.dashboard_company_support_ticket_path(ticket)
     when Instance
-      routes.instance_admin_manage_support_ticket_path(ticket)
+      routes.instance_admin_support_ticket_path(ticket)
     else
       raise NotImplementedError.new("Unknown ticket target: #{ticket.target.class}")
     end
@@ -63,4 +63,3 @@ class Support::TicketDrop < BaseDrop
     end
   end
 end
-
