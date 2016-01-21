@@ -3,13 +3,6 @@ class UserDecorator < Draper::Decorator
 
   delegate_all
 
-  def current_location_and_industry
-    result = []
-    result << current_location if current_location.present?
-    result << industries.map(&:name).join(", ") if industries.present?
-    result.join(" | ")
-  end
-
   def unread_user_message_threads_for(instance)
     user_messages_decorator_for(instance).inbox.unread
   end
@@ -39,7 +32,7 @@ class UserDecorator < Draper::Decorator
   end
 
   def display_location
-    object.current_location ? object.country_name : object.current_location
+    object.current_address ? object.current_address.to_s : object.country_name
   end
 
   def display_address

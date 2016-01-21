@@ -21,7 +21,7 @@ class Authentication::InfoUpdater
     @authentication.save!
 
     @user.name ||= info_hash['name']
-    @user.current_location ||= info_hash['location']
+    @user.build_current_address(address: info_hash['location']) if info_hash['location'].present?
     @user.country_name ||= Geocoder.search(info_hash['location']).first.country rescue nil
 
     if !@user.attributes['avatar'] && info_hash['image'].present?
