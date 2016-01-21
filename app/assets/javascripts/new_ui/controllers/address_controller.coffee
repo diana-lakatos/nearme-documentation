@@ -17,8 +17,6 @@ class @DNM.AddressFieldController
     @address = new DNM.AddressField(@container.find('[data-behavior="address-autocomplete"]'))
     @disableEnterFor(@container.find('[data-behavior="address-autocomplete"]'))
 
-
-
     @address.onLocate (lat, lng) =>
       latlng = new google.maps.LatLng(lat, lng)
 

@@ -1163,7 +1163,6 @@ class SecuredParams
       :company_name,
       :country_name,
       :country_name_required,
-      :current_location,
       :drivers_licence_number,
       :email,
       :facebook_url,

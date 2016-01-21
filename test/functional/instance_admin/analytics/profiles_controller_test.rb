@@ -4,11 +4,13 @@ class InstanceAdmin::Analytics::ProfilesControllerTest < ActionController::TestC
 
   setup do
     @user = FactoryGirl.create(:user)
-    2.times { create(:user, deleted_at: DateTime.now) }
-    @with_deleted = User.with_deleted
-    @ids = []
-    2.times { @ids << create(:user, admin: false) }
-    @without = User.without(@ids)
+    2.times do
+      create(:user, deleted_at: DateTime.now)
+      create(:user, admin: true)
+    end
+
+    @admins = User.admin
+    @deleted_users = User.only_deleted
 
     sign_in @user
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
@@ -17,9 +19,12 @@ class InstanceAdmin::Analytics::ProfilesControllerTest < ActionController::TestC
 
   context 'GET #show' do
     should 'list all users, including deleted and without admins' do
-      User.expects(:without).once.returns(@without)
-      User.expects(:with_deleted).once.returns(@with_deleted)
       get :show, format: :csv
+
+      @deleted_users.each { |user| assert response.body.include?(user.email) }
+      @admins.each        { |user| assert !response.body.include?(user.email) }
+
+      assert response.body.include?(@user.email)
       assert_response :success
     end
   end

@@ -1,6 +1,4 @@
 class User < ActiveRecord::Base
-  geocoded_by :current_location, :latitude  => :last_geolocated_location_latitude, :longitude => :last_geolocated_location_longitude
-
   include Spree::UserPaymentSource
   include CreationFilter
 
@@ -211,7 +209,6 @@ class User < ActiveRecord::Base
   validates_presence_of :mobile_number, if: lambda { mobile_number_required }
   validates_presence_of :last_name, if: lambda { last_name_required }
 
-  validates :current_location, length: { maximum: 50 }
   validates :company_name, length: { maximum: 50 }
 
   validates_inclusion_of :saved_searches_alerts_frequency, in: SavedSearch::ALERTS_FREQUENCIES
@@ -646,13 +643,8 @@ class User < ActiveRecord::Base
 
   def listings_in_near(results_size = 3, radius_in_km = 100, without_listings_from_cancelled_reservations = false)
     return [] if PlatformContext.current.nil?
-    locations_in_near = nil
-    # we want allow greenwhich and friends, but probably 0 latitude and 0 longitude is not valid location :)
-    if last_geolocated_location_latitude.nil? || last_geolocated_location_longitude.nil? || (last_geolocated_location_latitude.to_f.zero? && last_geolocated_location_longitude.to_f.zero?)
-      locations_in_near = Location.includes(:location_address).near(current_location, radius_in_km, units: :km) # TODO, order: :distance)
-    else
-      locations_in_near = Location.includes(:location_address).near([last_geolocated_location_latitude, last_geolocated_location_longitude], radius_in_km, units: :km) # TODO , order: :distance)
-    end
+
+    locations_in_near = Location.includes(:location_address).near(current_address, radius_in_km, units: :km)
 
     listing_ids_of_cancelled_reservations = self.reservations.cancelled_or_expired_or_rejected.pluck(:transactable_id) if without_listings_from_cancelled_reservations
 
@@ -963,16 +955,6 @@ class User < ActiveRecord::Base
       order('projects_count + project_collborations_count DESC')
     else
       all
-    end
-  end
-
-  def current_geolocation
-    latitude = last_geolocated_location_latitude || current_address.try(:latitude)
-    longitude = last_geolocated_location_latitude || current_address.try(:longitude)
-    if latitude.to_f.zero? || longitude.to_f.zero?
-      current_location
-    else
-      [latitude, longitude]
     end
   end
 

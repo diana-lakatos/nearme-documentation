@@ -2,6 +2,19 @@
 # Migrate rake task to help with all kind of data migration
 
 namespace :migrate do
+
+  task :migrate_current_location_to_current_address do
+    Instance.all.each do |instance|
+      instance.set_context!
+      puts "Address migration for Instance: #{instance.name}"
+      i = 0
+      User.where.not(current_location: [nil, '']).includes(:current_address).where("addresses.id IS NULL").references(:addresses).limit(2000).find_each do |user|
+        sleep(1) if i.modulo(10).zero?
+        user.create_current_address(address: user.current_location)
+      end
+    end
+  end
+
   task :populate_reservation_start_and_end => :environment do
     Reservation.includes(:periods).find_each do |reservation|
       reservation.timezone = reservation.time_zone = reservation.listing.try(:timezone) || Time.zone.name

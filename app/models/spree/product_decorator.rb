@@ -129,7 +129,7 @@ Spree::Product.class_eval do
   end
 
   def administrator_location
-    administrator.current_location ? administrator.country_name : administrator.current_location
+    administrator.display_location
   end
 
   def has_photos?
