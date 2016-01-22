@@ -201,12 +201,9 @@ class User < ActiveRecord::Base
   #        A solution moving forward is to extract the relevant forms into
   #        a 'Form' object containing their own additional validations specific
   #        to their context.
-  validates :phone, phone_number: true,
-    if: ->(u) {u.phone.present? || u.phone_required}
-  validates :mobile_number, phone_number: true,
-    if: ->(u) {u.mobile_number.present?}
+  validates :phone, phone_number: true, if: ->(u) {u.phone.present? || u.phone_required}
+  validates :mobile_number, phone_number: true, if: ->(u) { u.mobile_number.present? || u.mobile_number_required }
   validates_presence_of :country_name, if: lambda { phone_required || country_name_required }
-  validates_presence_of :mobile_number, if: lambda { mobile_number_required }
   validates_presence_of :last_name, if: lambda { last_name_required }
 
   validates :company_name, length: { maximum: 50 }
