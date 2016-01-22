@@ -221,7 +221,7 @@ class ReservationRequest < Form
   end
 
   def build_or_attach_document(document_params)
-    attachable = Attachable::AttachableService.new(Attachable::PaymentDocument, document_params)
+    attachable = AttachableService.new(Attachable::PaymentDocument, document_params)
     if attachable.valid? && document = attachable.get_attachable
       reservation.payment_documents << document
     else
