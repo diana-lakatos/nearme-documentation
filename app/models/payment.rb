@@ -163,6 +163,12 @@ class Payment < ActiveRecord::Base
 
     successful_charge = charges.successful.first
     return if successful_charge.nil?
+
+    # Because Braintree Marketplace refund pull funds from MPO account
+    # we want to block it until the right approach is integrated.
+    # Here are several ideas how to deal with the problem:
+    # https://articles.braintreepayments.com/guides/marketplace/processing#collecting-funds-from-your-sub-merchants
+
     return if PaymentGateway::BraintreeMarketplacePaymentGateway === billing_gateway
 
     refund = billing_gateway.refund(amount_to_be_refunded, currency, self, successful_charge)
