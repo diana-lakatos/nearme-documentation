@@ -8,8 +8,11 @@
 
     = csrf_meta_tag
     = stylesheet_link_tag 'instance_wizard'
+    = javascript_include_tag 'instance_wizard'
 
   %body
     .wrapper
-
+      - flash.each do |type, message|
+        .alert.static{:class => "#{type}"}
+          %p= message
       = yield
