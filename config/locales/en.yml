@@ -122,6 +122,8 @@ en:
     night:
       one: "night"
       other: "nights"
+    generic_lessee_term: "guest"
+    generic_lessor_term: "host"
   transactable_types:
     locations:
       listings:
