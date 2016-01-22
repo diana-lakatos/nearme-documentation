@@ -35,7 +35,7 @@
 
   <div class='info row'>
     <div class='date col-sm-5'>
-      Published {{ @blog_post.published_at | localize: 'only_date' }}
+      Published {{ @blog_post.published_at | to_date | localize: 'long' }}
     </div>
     <div class='social col-sm-7 clearfix'>
       {% include 'blog/blog_posts/social_buttons.html' %}

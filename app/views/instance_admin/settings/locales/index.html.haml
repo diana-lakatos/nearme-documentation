@@ -24,8 +24,9 @@
               %td
                 = locale.primary ? t('instance_admin.locales.labels.primary.yes') : t('instance_admin.locales.labels.primary_no')
               %td
-                = link_to t('instance_admin.locales.buttons.edit_keys'),
-                    edit_keys_instance_admin_settings_locale_path(locale), class: 'btn btn-blue btn-small'
+                = link_to t('instance_admin.locales.buttons.edit_keys'), edit_keys_instance_admin_settings_locale_path(locale), class: 'btn btn-blue btn-small'
+              %td
+                = link_to t('instance_admin.locales.buttons.date_time'), date_time_preferences_instance_admin_settings_locale_path(locale), class: 'btn btn-blue btn-small'
               %td
                 - unless locale.code == 'en'
                   = link_to instance_admin_settings_locale_path(locale), method: :delete,

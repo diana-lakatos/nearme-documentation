@@ -19,7 +19,7 @@
       <tr>
         <td valign="top"><strong style='display: inline-block;'>Starting at</strong></td>
         <td style="text-align: right;">
-          {{ recurring_booking.start_date }}
+          {{ recurring_booking.start_date | to_date | localize: 'day_and_month' }}
         </td>
       </tr>
     </table>

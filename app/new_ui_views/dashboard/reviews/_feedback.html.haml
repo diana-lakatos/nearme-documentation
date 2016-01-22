@@ -25,7 +25,7 @@
       .order-info
         - created_at = is_completed ? feedback.reviewable.created_at : feedback.created_at
         %p
-          = t('dashboard.reviews.feedback.order_placed_with_date', date: I18n.l(created_at, format: :only_date))
+          = t('dashboard.reviews.feedback.order_placed_with_date', date: I18n.l(created_at.to_date, format: :long))
 
         %p
           = t('dashboard.reviews.feedback.order_id', id: (is_completed ? feedback.reviewable_id : feedback.id))

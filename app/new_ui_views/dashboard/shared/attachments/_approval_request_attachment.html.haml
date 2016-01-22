@@ -4,7 +4,7 @@
       = link_to attachment.file.file.filename, attachment.file.url, download: attachment.file.file.filename
     %span.meta
       %time{ datetime: attachment.created_at }
-        = l(attachment.created_at, format: :only_date)
+        = l(attachment.created_at.to_date, format: :long)
 
       - if attachment.file.size
         %span.size= number_to_human_size(attachment.file.size)

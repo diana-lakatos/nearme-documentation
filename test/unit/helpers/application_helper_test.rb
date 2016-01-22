@@ -24,7 +24,7 @@ class ApplicationHelperTest < ActionView::TestCase
     end
 
     should 'return hour and time' do
-      assert_equal '10:00am', distance_of_time_in_words_or_date(@datetime - 2.hours)
+      assert_equal '10:00', distance_of_time_in_words_or_date(@datetime - 2.hours)
     end
 
     should 'return Yesterday' do
@@ -32,11 +32,11 @@ class ApplicationHelperTest < ActionView::TestCase
     end
 
     should 'return week day' do
-      assert_equal 'Friday', distance_of_time_in_words_or_date(@datetime - 4.days)
+      assert_equal "12/28/2012", distance_of_time_in_words_or_date(@datetime - 4.days)
     end
 
     should 'return date' do
-      assert_equal '2012-12-18', distance_of_time_in_words_or_date(@datetime - 14.days)
+      assert_equal '12/18/2012', distance_of_time_in_words_or_date(@datetime - 14.days)
     end
 
     teardown do

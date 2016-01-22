@@ -8,7 +8,7 @@ class ReviewDecorator < Draper::Decorator
     if created_at.to_date == Time.zone.today
       I18n.t('decorators.review.today')
     else
-      I18n.l(created_at, format: :day_month_year)
+      I18n.l(created_at.to_date, format: :short)
     end
   end
 

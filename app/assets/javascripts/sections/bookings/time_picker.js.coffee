@@ -174,11 +174,12 @@ class @Bookings.TimePicker
 
   # Return a minute of the day formatted in h:mmpm
   formatMinute: (minute) ->
-    h = parseInt(minute / 60, 10) % 12
-    h = 12 if h == 0
-    m = minute % 60
-    ampm = if ((minute / 60) >= 12) then 'pm' else 'am'
-    "#{h}:#{if m < 10 then '0' else ''}#{m} #{ampm}"
+    hours = parseInt(minute / 60, 10) % 12
+    minutes = minute % 60
+    date = new Date()
+    date.setHours(hours, minutes)
+
+    date.strftime(I18n.timeFormats["short"].replace("-", ""))
 
   class View extends PositionedView
     viewTemplate: """

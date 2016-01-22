@@ -5,7 +5,7 @@ module SearchHelper
   end
 
   def search_availability_date(date)
-    date ? date.strftime('%b %e') : ''
+    date ? I18n.l(date.to_date, format: :day_and_month) : ''
   end
 
   def search_availability_quantity

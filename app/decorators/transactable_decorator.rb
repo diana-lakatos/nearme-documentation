@@ -53,7 +53,7 @@ class TransactableDecorator < Draper::Decorator
   end
 
   def listing_date
-    I18n.l(created_at, format: :day_month_year)
+    I18n.l(created_at.to_date, format: :short)
   end
 
 end

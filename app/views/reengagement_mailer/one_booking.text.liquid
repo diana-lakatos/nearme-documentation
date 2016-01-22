@@ -1,6 +1,6 @@
 Hey, {{ user.first_name }}!
 
-We hope you enjoyed your booking for '{{ listing.name }}' on {{ reservation.start_date }}.
+We hope you enjoyed your booking for '{{ listing.name }}' on {{ reservation.start_date | to_date | localize: 'date_and_month' }}.
 
 We thought you might be interested in some other {{ platform_context.bookable_noun_plural }} in your area. Come back to {{ platform_context.name }} and find a cool {{ platform_context.bookable_noun }}
 

@@ -32,7 +32,7 @@ class ReservationDrop < BaseDrop
   # guest_notes
   #   guest notes for this reservation as a string
   delegate :id, :quantity, :subtotal_price, :service_fee_guest, :total_price, :total_price_cents, :pending?, :listing, :state_to_string,
-  :credit_card_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, to: :reservation
+  :credit_card_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, :created_at, to: :reservation
 
   # bookable_noun
   #   string representing the object to be booked (e.g. desk, room etc.)
@@ -93,11 +93,6 @@ class ReservationDrop < BaseDrop
     routes.remote_payment_dashboard_user_reservation_path(@reservation, token_key => @reservation.owner.try(:temporary_token))
   end
 
-  # date at which the reservation was created formatted as a string
-  def created_at
-    @reservation.created_at.strftime("%A,%e %B")
-  end
-
   # url for confirming the recurring booking
   def reservation_confirm_url
     routes.confirm_dashboard_company_host_reservation_path(@reservation, token_key => @reservation.listing.administrator.try(:temporary_token))
@@ -110,7 +105,7 @@ class ReservationDrop < BaseDrop
 
   # reservation date (first date)
   def start_date
-    @reservation.date.strftime('%b %e')
+    @reservation.date.to_date
   end
 
   # url to the reviews section in the user's dashboard

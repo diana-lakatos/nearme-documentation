@@ -153,7 +153,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       @transactable = FactoryGirl.create(:transactable, :fixed_price, :with_book_it_out)
       @transactable.transactable_type.update_attributes! action_book_it_out: true
       @params = booking_params_for(@transactable)
-      next_available_occurrence = Time.parse(@transactable.next_available_occurrences.first[:id])
+      next_available_occurrence = DateTime.strptime(@transactable.next_available_occurrences.first[:id], I18n.t("time.formats.long"))
       @params[:reservation_request].merge!({book_it_out: "true", dates: next_available_occurrence, quantity: 10})
 
     end
@@ -188,7 +188,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       @transactable = FactoryGirl.create(:transactable, :fixed_price, :with_exclusive_price)
       @transactable.transactable_type.update_attributes! action_exclusive_price: true
       @params = booking_params_for(@transactable)
-      next_available_occurrence = Time.parse(@transactable.next_available_occurrences.first[:id])
+      next_available_occurrence = DateTime.strptime(@transactable.next_available_occurrences.first[:id], I18n.t("time.formats.long"))
       @params[:reservation_request].merge!({ dates: next_available_occurrence.to_date, quantity: 10, exclusive_price: "true" })
     end
 
@@ -215,7 +215,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       @transactable = FactoryGirl.create(:transactable, :fixed_price)
       @transactable.transactable_type.update_attributes! action_price_per_unit: true
       @params = booking_params_for(@transactable)
-      next_available_occurrence = Time.parse(@transactable.next_available_occurrences.first[:id])
+      next_available_occurrence = DateTime.strptime(@transactable.next_available_occurrences.first[:id], I18n.t("time.formats.long"))
       @params[:reservation_request].merge!({ dates: next_available_occurrence.to_date, quantity: 11.23 })
     end
 

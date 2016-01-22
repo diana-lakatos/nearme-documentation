@@ -182,7 +182,7 @@ class @Bookings.Datepicker
     @datesWereChanged()
 
   formatDateForLabel: (date) ->
-    "#{DNM.util.Date.monthName(date, 3)} #{date.getDate()}"
+    date.strftime I18n.dateFormats["day_and_month"].replace(/%(\^|-|_)/g, '%')
 
   # Sets up the time picker view controller which handles the user selecting the
   # start/end times for the reservation.
@@ -219,6 +219,7 @@ class @Bookings.Datepicker
   assignInitialDates: ->
     startDate = null
     endDate = null
+
     if DNM.util.Url.getParameterByName('start_date')
       startDate = new Date(DNM.util.Url.getParameterByName('start_date'))
       for i in [0..50]

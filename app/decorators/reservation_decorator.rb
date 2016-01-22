@@ -90,14 +90,14 @@ class ReservationDecorator < Draper::Decorator
   end
 
   def short_dates
-    first = date.strftime('%-e %b')
-    last = last_date.strftime('%-e %b')
+    first = I18n.l(date, format: :day_and_month)
+    last = I18n.l(date, format: :day_and_month)
 
     first == last ? first : "#{first} - #{last}"
   end
 
   def long_dates
-    date_presenter.selected_dates_summary_no_html(:only_date_short)
+    date_presenter.selected_dates_summary_no_html(:short)
   end
 
   def total_units_text
@@ -108,12 +108,12 @@ class ReservationDecorator < Draper::Decorator
   def format_reservation_periods
     periods.map do |period|
       period = period.decorate
-      date = period.date.strftime('%-e %b')
+      date = I18n.l(period.date.to_date, format: :day_and_month)
       if listing.schedule_booking?
         ('%s %s' % [date, start_time]).html_safe
       elsif listing.action_hourly_booking?
-        start_time = period.start_minute_of_day_to_time.strftime("%l:%M%P").strip
-        end_time = period.end_minute_of_day_to_time.strftime("%l:%M%P").strip
+        start_time = I18n.l(period.start_minute_of_day_to_time, format: :short)
+        end_time = I18n.l(period.end_minute_of_day_to_time, format: :short)
         ('%s %s&ndash;%s' % [date, start_time, end_time]).html_safe
       else
         date

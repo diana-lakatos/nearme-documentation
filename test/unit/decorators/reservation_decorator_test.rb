@@ -18,15 +18,15 @@ class ReservationDecoratorTest < ActionView::TestCase
     end
 
     should 'return selected_dates_summary' do
-      assert_equal "<p>Monday, January 6</p>", @reservation.selected_dates_summary
+      assert_equal "<p>January 06, 2014</p>", @reservation.selected_dates_summary
     end
 
     should 'return short_dates' do
-      assert_equal '6 Jan', @reservation.short_dates
+      assert_equal I18n.l(Date.new(2014, 1, 06), format: :day_and_month), @reservation.short_dates
     end
 
     should 'format_reservation_periods' do
-      assert_equal '6 Jan', @reservation.format_reservation_periods
+      assert_equal I18n.l(Date.new(2014, 1, 06), format: :day_and_month), @reservation.format_reservation_periods
     end
 
     should 'displays hours minutes and seconds left properly' do
@@ -49,12 +49,12 @@ class ReservationDecoratorTest < ActionView::TestCase
       end
 
       should 'return selected_dates_summary' do
-        expected = "<p>Monday, January 6</p><hr /><p>Monday, January 13 &ndash; Tuesday, January 14</p>"
+        expected = "<p>January 06, 2014</p><hr /><p>January 13, 2014 &ndash; January 14, 2014</p>"
         assert_equal expected, @reservation.selected_dates_summary(separator: :hr)
       end
 
       should 'return short_dates' do
-        assert_equal '6 Jan - 14 Jan', @reservation.short_dates
+        assert_equal I18n.l(Date.new(2014, 1, 06), format: :day_and_month), @reservation.short_dates
       end
 
     end
@@ -149,7 +149,7 @@ class ReservationDecoratorTest < ActionView::TestCase
     end
 
     should 'return hourly_summary_for_first_period with date and default hours' do
-      assert_equal 'January 01, 2014 9:00&ndash;17:00 (8.00 hours)', @reservation.hourly_summary_for_first_period(true)
+      assert_equal "01/01/2014 9:00&ndash;17:00 (8.00 hours)", @reservation.hourly_summary_for_first_period(true)
     end
 
     should 'return hourly_summary_for_first_period without date and with special hours' do
@@ -160,7 +160,7 @@ class ReservationDecoratorTest < ActionView::TestCase
     end
 
     should 'format_reservation_periods' do
-      assert_equal '1 Jan 9:00am&ndash;5:00pm', @reservation.format_reservation_periods
+      assert_equal "#{I18n.l(Date.new(2014, 1, 01), format: :day_and_month)} 9:00&ndash;17:00", @reservation.format_reservation_periods
     end
 
     teardown do

@@ -9,7 +9,7 @@
   %blockquote
     %p= readmore(comment.body)
   %p.meta
-    %time{datetime: comment.created_at.strftime('%Y-%m-%d %H:%M')}= I18n.l(comment.created_at, format: :full_date)
+    %time{datetime: comment.created_at.strftime('%Y-%m-%d %H:%M')}= I18n.l(comment.created_at, format: :long)
 
     - unless hide_comment_options
       - if comment.can_be_reported?

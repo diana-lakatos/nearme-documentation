@@ -56,7 +56,7 @@ class TransactableType < ActiveRecord::Base
   def slug_candidates
     [
       :name,
-      [:name, DateTime.now.strftime("%b %d %Y")]
+      [:name, I18n.l(Date.current, format: :long)]
     ]
   end
 

@@ -41,7 +41,7 @@ When(/^I cancel (.*) reservation$/) do |number|
   end
 end
 
-Then /^I should have a cancelled reservation on "([^"]*)"$/ do |date|
+Then(/^I should have a cancelled reservation on "([^"]*)"$/) do |date|
   user.cancelled_reservations.collect { |r| Chronic.parse(r.date) }.should include Chronic.parse(date)
 end
 

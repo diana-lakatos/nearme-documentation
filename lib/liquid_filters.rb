@@ -164,6 +164,10 @@ module LiquidFilters
     end
   end
 
+  def to_date(datetime)
+    datetime.to_date
+  end
+
   def custom_sanitize(html = '')
     return '' if html.blank?
     html.gsub!("\r\n", "<br />")

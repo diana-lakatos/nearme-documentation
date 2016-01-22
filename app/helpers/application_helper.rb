@@ -209,13 +209,11 @@ module ApplicationHelper
     case datetime
     when DateTime, ActiveSupport::TimeWithZone, Time
       if datetime.to_date == today
-        datetime.strftime("%l:%M%P")
+        I18n.l(datetime, format: :short)
       elsif datetime.to_date == today.yesterday
-        'Yesterday'
-      elsif datetime > (today - 7.days)
-        datetime.strftime("%A")
+        I18n.t('date.yesterday')
       else
-        datetime.strftime("%Y-%m-%d")
+        I18n.l(datetime.to_date, format: :short)
       end
     else
       ''
@@ -396,6 +394,9 @@ module ApplicationHelper
       window.I18n = {};
       window.I18n.locale = '#{I18n.locale.to_s}';
       window.I18n.t = #{js_translations};
+      window.I18n.dateFormats = #{I18n.t('date.formats').to_json};
+      window.I18n.timeFormats = #{I18n.t('time.formats').to_json};
+      window.I18n.abbrMonthNames = '#{Date::ABBR_MONTHNAMES.compact.join("|")}';
     }.html_safe
   end
 

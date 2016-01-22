@@ -21,10 +21,10 @@ Feature: User Cancels Reservation
     When I travel to time "17th October 2010"
     When I go to the bookings page
     Then I should see the following reservations in order:
-      |18 Oct, 2010|
-      |19 Oct, 2010|
-      |20 Oct, 2010|
-      |21 Oct, 2010|
+      |10/18/2010|
+      |10/19/2010|
+      |10/20/2010|
+      |10/21/2010|
     Then I travel back
 
   Scenario: A user can cancel a reservation
@@ -34,7 +34,7 @@ Feature: User Cancels Reservation
     Then I should have a cancelled reservation on "19th October 2010"
     When I go to the bookings page
     Then I should see the following reservations in order:
-      |18 Oct, 2010|
-      |20 Oct, 2010|
-      |21 Oct, 2010|
+      |10/18/2010|
+      |10/20/2010|
+      |10/21/2010|
     Then I travel back

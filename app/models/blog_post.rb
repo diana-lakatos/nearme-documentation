@@ -58,7 +58,7 @@ class BlogPost < ActiveRecord::Base
   def slug_candidates
     [
       :title,
-      [:title, published_at.strftime("%b %d %Y")]
+      [:title, I18n.l(published_at.to_date, format: :long)]
     ]
   end
 end

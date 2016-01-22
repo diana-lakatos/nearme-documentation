@@ -66,7 +66,7 @@ class Page < ActiveRecord::Base
     [
       :slug,
       :path,
-      [:path, DateTime.now.strftime("%b %d %Y")]
+      [:path, I18n.l(Date.current, format: :long)]
     ]
   end
 end

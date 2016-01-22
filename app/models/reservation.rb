@@ -346,8 +346,8 @@ class Reservation < ActiveRecord::Base
   end
 
   def name
-    date_first = date.strftime('%-e %b')
-    date_last = last_date.strftime('%-e %b')
+    date_first = I18n.l(date, format: :day_and_month)
+    date_last = I18n.l(last_date, format: :day_and_month)
     dates_description = date_first == date_last ? date_first : "#{date_first}-#{date_last}"
     "Reservation of #{listing.try(:name)}, user: #{owner.try(:name)}, #{dates_description}"
   end

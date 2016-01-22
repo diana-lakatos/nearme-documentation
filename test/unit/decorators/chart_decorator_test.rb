@@ -21,7 +21,10 @@ class ChartDecoratorTest < ActionView::TestCase
     end
 
     should 'display dates in label' do
-      expected_dates = ['Dec 26', 'Dec 27', 'Dec 28', 'Dec 29', 'Dec 30', 'Dec 31', 'Jan 01']
+      expected_dates = ["2014-12-26", "2014-12-27", "2014-12-28", "2014-12-29", "2014-12-30", "2014-12-31", "2015-01-01"].map do |date|
+        I18n.l(Date.strptime(date), format: :day_and_month)
+      end
+      
       assert_equal expected_dates, @chart.labels
     end
 
