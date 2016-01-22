@@ -14,6 +14,19 @@ module CategoriesHelper
     categories
   end
 
+  def build_formatted_categories(object)
+    if @formatted_categories.nil?
+      @formatted_categories = {}
+      parent_ids = object.categories.map(&:parent_id)
+      object.categories.reject{|c| c.id.in?(parent_ids)}.map do |category|
+        @formatted_categories[category.root.name] ||= {'name' => category.root.translated_name, 'children' => []}
+        @formatted_categories[category.root.name]['children'] << category.self_and_ancestors.reject{|c| c.root? }.map(&:translated_name).join(': ')
+      end
+      @formatted_categories.each_pair{|parent, values| @formatted_categories[parent]['children'] = values['children'].join(', ')}
+    end
+    @formatted_categories
+  end
+
   protected
 
   def build_value_for_category(category)

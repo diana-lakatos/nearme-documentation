@@ -22,7 +22,7 @@ class Spree::ProductDrop < BaseDrop
   #   administrator (user) of the product
   # administrator_location
   #   location of the administrator of the product
-  delegate :id, :name, :extra_properties, :total_on_hand, :product_type, :company, :updated_at, :attachments, 
+  delegate :id, :name, :extra_properties, :total_on_hand, :product_type, :company, :updated_at, :attachments,
     :administrator, :administrator_location, to: :product
 
   def initialize(product)
@@ -80,6 +80,11 @@ class Spree::ProductDrop < BaseDrop
       @categories = build_categories_hash_for_object(@product, @product.product_type.categories.roots.includes(:children))
     end
     @categories
+  end
+
+  # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => 'string with all children separated with comma' } }
+  def formatted_categories
+    build_formatted_categories(@product)
   end
 
   # path to the url for sending the product administrator a new message

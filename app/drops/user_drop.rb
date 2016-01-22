@@ -289,6 +289,11 @@ class UserDrop < BaseDrop
     @categories
   end
 
+  # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => 'string with all children separated with comma' } }
+  def formatted_categories
+    build_formatted_categories(@user)
+  end
+
   # User's current address
   def address
     @user.current_address.presence || @user.locations.first.try(:location_address)
