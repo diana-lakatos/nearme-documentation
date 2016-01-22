@@ -11,7 +11,7 @@
       </div>
     </div>
   </div>
-  
+
   {% if location.amenities.size > 0 %}
   <div class='amenities-block'>
     <div class='amenities-header'>
@@ -37,7 +37,7 @@
         <a href="{{ location.company.url }}" rel='nofollow', target='_blank'><span class='ico-open-link'></span></a>
       {% endif %}
     </h2>
-  
+
     <p> {{ location.company.description | filter_text | custom_sanitize }}</p>
     <div class='clearfix'></div>
   </article>

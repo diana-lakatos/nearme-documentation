@@ -1,11 +1,14 @@
 require 'rack-mini-profiler'
 
 DesksnearMe::Application.configure do
-  config.use_only_ssl = false
-  config.cache_classes = false
+  #true to turn on caching
   config.action_controller.perform_caching = false
+  #comment to turn on caching
+  config.cache_store = :null_store
 
+  config.cache_classes = false
   config.eager_load = false
+  config.use_only_ssl = false
 
   config.consider_all_requests_local       = true
   config.reload_classes_only_on_change = true
