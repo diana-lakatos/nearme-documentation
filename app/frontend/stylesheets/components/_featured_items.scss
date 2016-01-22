@@ -1,0 +1,33 @@
+.featured-items {
+	$default-spacing: 10px;
+
+	margin-bottom: $default-spacing*4;
+
+	.item {
+		background: #fff;
+		box-shadow: 1px 1px 1px rgba(0,0,0,.1);
+		padding: $default-spacing;
+
+		span {
+			display: block;
+		}
+	}
+
+	.item-title {
+		font-size: .9em;
+		line-height: 1.6em;
+		padding-bottom: $default-spacing/2;
+		font-weight: bold;
+		}
+
+	.item-description {
+		font-size: .8em;
+		line-height: 1.4em;
+	}
+
+	.item-price {
+		font-size: .7em;
+		color: #27ae60;
+		text-transform: uppercase;
+	}
+}
