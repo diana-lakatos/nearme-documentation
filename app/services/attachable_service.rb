@@ -1,4 +1,4 @@
-class Attachable::AttachableService
+class AttachableService
   def initialize(attachable_class, params)
     @attachable_class = attachable_class
     @params = params
