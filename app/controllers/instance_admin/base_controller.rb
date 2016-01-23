@@ -28,8 +28,6 @@ class InstanceAdmin::BaseController < ApplicationController
     'users'              => { controller: '/instance_admin/manage/users', default_action: 'index' },
     'admins'             => { controller: '/instance_admin/manage/admins', default_action: 'index' },
     'partners'           => { controller: '/instance_admin/manage/partners', default_action: 'index' },
-    'support'            => { controller: '/instance_admin/manage/support', default_action: 'index' },
-    'faq'                => { controller: '/instance_admin/manage/support/faqs', default_action: 'index' },
     'approval_requests'  => { controller: '/instance_admin/manage/approval_requests', default_action: 'index' },
     'waiver_agreements'  => { controller: '/instance_admin/manage/waiver_agreement_templates', default_action: 'index' },
     'email layouts'      => { controller: '/instance_admin/manage/email_layout_templates', default_action: 'index' },
@@ -91,6 +89,11 @@ class InstanceAdmin::BaseController < ApplicationController
     'dimensions_templates' => { default_action: 'index' },
     'providers' => { default_action: 'show' },
     'shipping_profiles' => { default_action: 'index' },
+  }
+
+  SUPPORT_CONTROLLERS = {
+    'tickets' => { controller: '/instance_admin/support/support', default_action: 'index' },
+    'faq'     => { controller: '/instance_admin/support/faqs', default_action: 'index' }
   }
 
   PROJECTS_CONTROLLERS = {

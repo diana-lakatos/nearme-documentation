@@ -100,6 +100,17 @@
               %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/shipping_options/" + controller_name), action: settings[:default_action]}", :class => is_active_instance_admin_nav_link(controller_name, settings)}
                 %span= "#{controller_name.titleize}"
 
+    - if @authorizer.authorized?('Support')
+      %li#manage
+        %a{"data-parent" => "#support", "data-toggle" => "collapse", :href => "#support-sub"}
+          %i.fa.fa-life-ring
+          %span Support
+        %ul#support-sub.sub-nav.collapse{:class => ("in" if controller.class.to_s.split("::").first(2).join("::") == "InstanceAdmin::Support")}
+          - InstanceAdmin::BaseController::SUPPORT_CONTROLLERS.each do |controller_name, settings|
+            %li
+              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/support/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
+                %span= settings[:title] || controller_name.titleize
+
     - if @authorizer.authorized?('Projects') && current_instance.is_community?
       %li#projects
         %a{"data-parent" => "#projects", "data-toggle" => "collapse", :href => "#projects-sub"}

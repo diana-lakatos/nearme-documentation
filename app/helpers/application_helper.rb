@@ -274,6 +274,7 @@ module ApplicationHelper
 
   def user_menu_instance_admin_path(users_instance_admin)
     users_instance_admin = 'manage_blog' if users_instance_admin == 'blog'
+    users_instance_admin = 'support_root' if users_instance_admin == 'support'
     main_app.send("instance_admin_#{users_instance_admin}_path")
   end
 

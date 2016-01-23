@@ -284,16 +284,8 @@ DesksnearMe::Application.routes.draw do
 
     namespace :manage do
       get '/', :to => 'base#index'
-      get 'support' => 'support#index', as: 'support_root'
 
       resources :additional_charge_types, except: [:show]
-      namespace :support do
-        resources :faqs, except: [:show]
-        resources :tickets, only: [:show, :update] do
-          resources :ticket_messages, only: [:create]
-        end
-      end
-
       resources :projects, only: [:edit, :update]
       resources :topics, only: [:edit, :update]
       resources :reviews, only: [:index]
@@ -459,6 +451,14 @@ DesksnearMe::Application.routes.draw do
           post :disable_category
           post :enable_category
         end
+      end
+    end
+
+    namespace :support do
+      root to: 'support#index'
+      resources :faqs, except: [:show]
+      resources :tickets, only: [:show, :update] do
+        resources :ticket_messages, only: [:create]
       end
     end
 
