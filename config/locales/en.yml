@@ -122,6 +122,9 @@ en:
     night:
       one: "night"
       other: "nights"
+    same_as_phone: "Same as phone"
+    change_password: "Change password"
+    password: "Password"
     generic_lessee_term: "guest"
     generic_lessor_term: "host"
   transactable_types:
@@ -1942,6 +1945,10 @@ en:
     reserve: 'reserve'
     price_from: 'From'
     free_listing: 'Free'
+    with: 'with'
+    results: 'results'
+    per_page: 'per page'
+    update_map: 'Update search when map moved'
 
     date_range:
       title: 'Date range'
@@ -2047,6 +2054,7 @@ en:
     log_in_to: 'Log in to %{marketplace_name}'
     confirm_tos: 'By signing up, you confirm that you accept the'
     tos: 'Terms of Service and Privacy Policy'
+    or: 'or'
 
     title: 'Sign in'
     buttons:
@@ -2130,6 +2138,8 @@ en:
     service_fee: 'Service fee'
     total: 'Total'
     contact_information: 'Contact information'
+    payment_information: 'Payment Information'
+    required_documents: 'Required Documents'
     select_payment_method: 'Select Payment Method'
     credit_card: 'Credit Card'
     paypal: 'PayPal'
@@ -2174,6 +2184,7 @@ en:
   payments:
     heading: 'Submit a secure payment.'
     cc_image_alt: 'Visa, Mastercard, American Express, Discover'
+    already_authorized: 'Payment has been already authorized. Please proceed.'
 
     cc_fields:
       first_name: 'First Name'
@@ -2183,7 +2194,9 @@ en:
       expiration_date_month: 'Expiration date: Month'
       expiration_date_year: 'Expiration date: Year'
       security_code: 'Security code'
+      ccv_hint: "The Card Security Code is usually a 3- or 4- digit number, typically printed on the back of a credit card (usually in the signature field)"
 
+      whats_this: "(What's this?)"
   shared:
     booking_types_tabs:
       booking_types: 'Booking types'
@@ -2351,4 +2364,12 @@ en:
   pagination:
     previous: 'Previous'
     next: 'Next'
+
+  ui:
+    header:
+      list_your: "List Your ..."
+      list_your_thing: "List Your %{thing}"
+      complete_your_thing: "Complete Your %{thing}"
+    photo_uploader:
+      caption: "Enter caption..."
 

@@ -1,8 +1,0 @@
-en:
-  ui:
-    header:
-      list_your: "List Your ..."
-      list_your_thing: "List Your %{thing}"
-      complete_your_thing: "Complete Your %{thing}"
-    photo_uploader:
-      caption: "Enter caption..."

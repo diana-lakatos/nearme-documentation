@@ -63,7 +63,7 @@
           = f.text_field :mobile_number, data: { 'mobile-number' => true }
         = label_tag do
           = check_box_tag "#{f.object.class.name.underscore}_mobile_same_as_phone", '1', (f.object.phone == f.object.mobile_number), data: { 'same-as-phone-checkbox' => true }
-          = "Same as phone"
+          =  t 'general.same_as_phone'
 
         - if f.object.errors[:mobile_number].present?
           .error-block= f.object.errors[:mobile_number].to_sentence
@@ -75,7 +75,7 @@
     = render :partial => 'addresses/column_form', :locals => { :f => address_form }
 = f.input :company_name, label: "Company name", as: :string if only_inputs.empty? || only_inputs.include?(:company_name)
 = f.association :industries, :blank => false, input_html: { class: 'selectpicker', "data-live-search" => "true" } if only_inputs.empty? || only_inputs.include?(:industries)
-= f.input :password, :label => (f.object.persisted? ? "Change password" : "Password" ) if only_inputs.empty? || only_inputs.include?(:password)
+= f.input :password, :label => (f.object.persisted? ? t('general.change_password') : t('general.password') ) if only_inputs.empty? || only_inputs.include?(:password)
 
 - if only_inputs.empty? || only_inputs.include?(:avatar)
   .row{:class => ('error' if f.object.errors[:avatar].present?)}

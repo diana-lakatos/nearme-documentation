@@ -396,6 +396,7 @@ class Instance < ActiveRecord::Base
       description: "Mon - Fri, 9:00 AM - 5:00 PM",
       availability_rules_attributes: [{
         days: (1..5).to_a,
+        instance: self,
         open_hour: 9, open_minute: 0,
         close_hour: 17, close_minute: 0
       }]
@@ -407,6 +408,7 @@ class Instance < ActiveRecord::Base
       description: "Sunday - Saturday, 12am-11:59pm",
       availability_rules_attributes: [{
         days: (0..6).to_a,
+        instance: self,
         open_hour: 0, open_minute: 0,
         close_hour: 23, close_minute: 59
       }]

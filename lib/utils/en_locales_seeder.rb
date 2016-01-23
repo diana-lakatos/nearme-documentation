@@ -4,7 +4,7 @@ module Utils
     def go!
       count = {existed: 0, created: 0, updated: 0}
 
-      Dir.glob(Rails.root.join('config', 'locales', '*.yml')).each do |yml_filename|
+      (Dir.glob(Rails.root.join('config', 'locales', '*.en.yml')) + Dir.glob(Rails.root.join('config', 'locales', 'en.yml'))).each do |yml_filename|
         print_out "File: #{yml_filename}"
         en_locales = YAML.load_file(yml_filename)
         en_locales_hash = convert_hash_to_dot_notation(en_locales['en'])

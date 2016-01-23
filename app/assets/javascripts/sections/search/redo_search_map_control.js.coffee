@@ -1,19 +1,19 @@
 class Search.RedoSearchMapControl
   asEvented.call(RedoSearchMapControl.prototype)
 
-  template: '''
+  template: (update_text) -> "
     <div>
       <label>
-        <input type="checkbox" />
-        Update search when map moved
+        <input type='checkbox' />
+        #{update_text}
       </label>
     </div>
-  '''
+  "
 
   constructor: (options = {}) ->
     @controlDiv = $('<div/>')
     @controlDiv.addClass('search-map-redo-search-control')
-    @controlDiv.html(@template)
+    @controlDiv.html(@template(options.update_text))
     @input = @controlDiv.find('input')
     @input.prop('checked', !!options.enabled)
     @bindEvents()

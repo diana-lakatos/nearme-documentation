@@ -1,6 +1,6 @@
 .row-fluid
   - if f.object.billing_authorization.present?
-    Payment has been already authorized. Please proceed.
+    = t 'payments.already_authorized'
   - else
     #credit-card
       = f.error :cc
@@ -8,7 +8,7 @@
       .padding-bottom
         .row-fluid
           .span5.text
-            .ico-lock Submit a secure payment.
+            .ico-lock= t 'payments.heading'
           .span7.credit-card-images
             = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
           .clearfix
@@ -18,7 +18,7 @@
         .span3
           = f.label :card_holder_first_name do
             %abbr{ title: "required" } *
-            First Name
+            = t 'payments.cc_fields.first_name'
         .span9
           = f.input_field :card_holder_first_name, class: 'sessioncamexclude', required: true, autocomplete: :off, value: (f.object.card_holder_first_name.presence || current_user.first_name)
 
@@ -26,7 +26,7 @@
         .span3
           = f.label :card_holder_last_name do
             %abbr{ title: "required" } *
-            Last Name
+            = t 'payments.cc_fields.last_name'
         .span9
           = f.input_field :card_holder_last_name, class: 'sessioncamexclude', required: true, autocomplete: :off, value: (f.object.card_holder_last_name.presence || current_user.last_name)
 
@@ -34,7 +34,7 @@
         .span3.card-info{class: "#{"error" if f.object.errors.include?(:number).present?}"}
           = f.label :card_number, class: 'control-label' do
             %abbr{ title: "required" } *
-            Card number
+            = t 'payments.cc_fields.card_number'
         .span9.input-icon-holder-right
           = f.input_field :card_number, required: true, placeholder: '●●●● ●●●● ●●●● ●●●●', class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off", 'data-card-number' => true
           %span.ico-credit-card
@@ -46,7 +46,7 @@
         .span3.card-info.expiry.column.left{class: "#{"error" if f.object.errors.include?(:card_exp_month).present? or f.object.errors.include?(:card_exp_year).present?}"}
           = f.label :card_exp_month, class: 'control-label' do
             %abbr{ title: "required" } *
-            Expiration date
+            = t 'payments.cc_fields.expiration_date'
         .span2{class: "#{"error" if f.object.errors.include?(:card_exp_month).present?}"}
           .controls.card-expires
             = f.input_field :card_exp_month, collection: credit_card_date[:month], prompt: false, class: 'checkout-select sessioncamexclude'
@@ -67,7 +67,7 @@
         .span3.card-info.security.column.right{class: "#{"error" if f.object.errors.include?(:cvc).present?}"}
           = f.label :card_code, class: 'control-label' do
             %abbr{ title: "required" } *
-            Security code
+            = t 'payments.cc_fields.security_code'
 
         .span2
           .controls.card-code
@@ -77,10 +77,10 @@
               = f.object.errors[:cvc].first
 
         .span2.whats-this
-          %p.whats-this-link{"data-target" => "#whats-this-target", "data-toggle" => "collapse", :style => "cursor: pointer;"} (What's this?)
+          %p.whats-this-link{"data-target" => "#whats-this-target", "data-toggle" => "collapse", :style => "cursor: pointer;"}= t 'payments.cc_fields.whats_this'
 
         .span5.whats-this.answer
-          %p#whats-this-target.collapse The Card Security Code is usually a 3- or 4- digit number, typically printed on the back of a credit card (usually in the signature field)
+          %p#whats-this-target.collapse= t 'payments.cc_fields.ccv_hint'
 
 = render 'listings/reservations/confirm_reservations', f: f
 

@@ -87,7 +87,7 @@ class Search.SearchMixedController extends Search.SearchController
     @map = new Search.MapMixed(mapContainer, this)
 
     # Add our map viewport search control, which enables/disables searching on map move
-    @redoSearchMapControl = new Search.RedoSearchMapControl(enabled: true)
+    @redoSearchMapControl = new Search.RedoSearchMapControl(enabled: true, update_text: $(mapContainer).data('update-text'))
     resizeMapThrottle = _.throttle((=> @map.resizeToFillViewport()), 200)
 
     $(window).resize resizeMapThrottle
