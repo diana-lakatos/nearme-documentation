@@ -50,11 +50,11 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreator < Utils::DefaultAlert
   end
 
   def notify_host_recurring_booking_created_and_confirmed_email!
-    create_alert!({associated_class: WorkflowStep::RecurringBookingWorkflow::CreatedWithAutoConfirmation, name: 'notify_host_without_confirmation', path: 'recurring_booking_mailer/notify_host_without_confirmation', subject: "[{{platform_context.name}}] {{recurring_booking.owner.first_name}} just booked your {{platform_context.bookable_noun}}!",  alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::RecurringBookingWorkflow::CreatedWithAutoConfirmation, name: 'notify_host_without_confirmation', path: 'recurring_booking_mailer/notify_host_without_confirmation', subject: "[{{platform_context.name}}] {{recurring_booking.owner.first_name}} just booked your {{listing.transactable_type.bookable_noun}}!",  alert_type: 'email', recipient_type: 'lister'})
   end
 
   def notify_host_recurring_booking_created_and_pending_confirmation_email!
-    create_alert!({associated_class: WorkflowStep::RecurringBookingWorkflow::CreatedWithoutAutoConfirmation, name: 'Ask host for confirmation email', path: 'recurring_booking_mailer/notify_host_with_confirmation', subject: "[{{platform_context.name}}] {{recurring_booking.owner.first_name}} just booked your {{platform_context.bookable_noun}}!", alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::RecurringBookingWorkflow::CreatedWithoutAutoConfirmation, name: 'Ask host for confirmation email', path: 'recurring_booking_mailer/notify_host_with_confirmation', subject: "[{{platform_context.name}}] {{recurring_booking.owner.first_name}} just booked your {{listing.transactable_type.bookable_noun}}!", alert_type: 'email', recipient_type: 'lister'})
   end
 
   def notify_host_recurring_booking_created_and_pending_confirmation_sms!

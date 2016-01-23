@@ -57,11 +57,11 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
   end
 
   def notify_host_reservation_created_and_confirmed_email!
-    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, name: 'notify_host_without_confirmation', path: 'reservation_mailer/notify_host_without_confirmation', subject: "[{{platform_context.name}}] {{reservation.owner.first_name}} just booked your {{platform_context.bookable_noun}}!",  alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, name: 'notify_host_without_confirmation', path: 'reservation_mailer/notify_host_without_confirmation', subject: "[{{platform_context.name}}] {{reservation.owner.first_name}} just booked your {{listing.transactable_type.bookable_noun}}!",  alert_type: 'email', recipient_type: 'lister'})
   end
 
   def notify_host_reservation_created_and_pending_confirmation_email!
-    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation, name: 'Ask host for confirmation email', path: 'reservation_mailer/notify_host_with_confirmation', subject: "[{{platform_context.name}}] {{reservation.owner.first_name}} just booked your {{platform_context.bookable_noun}}!", alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation, name: 'Ask host for confirmation email', path: 'reservation_mailer/notify_host_with_confirmation', subject: "[{{platform_context.name}}] {{reservation.owner.first_name}} just booked your {{listing.transactable_type.bookable_noun}}!", alert_type: 'email', recipient_type: 'lister'})
   end
 
   def notify_host_reservation_created_and_pending_confirmation_sms!
@@ -108,7 +108,7 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
   end
 
   def notify_guest_one_booking_suggestions_email!
-    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::OneBookingSuggestions, name: 'send user with one reservation some suggestions', path: 'reengagement_mailer/one_booking', subject: "[{{platform_context.name}}] Check out these new {{platform_context.bookable_noun_plural}} in your area!", alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::OneBookingSuggestions, name: 'send user with one reservation some suggestions', path: 'reengagement_mailer/one_booking', subject: "[{{platform_context.name}}] Check out these new {{listing.transactable_type.bookable_noun_plural}} in your area!", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def request_rating_of_guest_from_host_email!

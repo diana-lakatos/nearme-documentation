@@ -19,7 +19,7 @@ class Utils::DefaultAlertsCreator::ListingCreator < Utils::DefaultAlertsCreator:
   end
 
   def share_with_user_email!
-    create_alert!({associated_class: WorkflowStep::ListingWorkflow::Shared, name: 'share with user email', path: 'listing_mailer/share', subject: "{{sharer.name}} has shared a {{platform_context.bookable_noun}} with you on {{platform_context.name}}", alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::ListingWorkflow::Shared, name: 'share with user email', path: 'listing_mailer/share', subject: "{{sharer.name}} has shared a {{listing.transactable_type.bookable_noun}} with you on {{platform_context.name}}", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def create_listing_pending_approval_email!

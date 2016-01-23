@@ -64,7 +64,7 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
       mail = ActionMailer::Base.deliveries.last
       assert mail.html_part.body.include?(@user.first_name)
       assert_equal [@user.email], mail.to
-      assert_equal "[#{@platform_context.decorate.name}] Check out these new Desks in your area!", mail.subject
+      assert_equal "[#{@platform_context.decorate.name}] Check out these new listings in your area!", mail.subject
       assert_contains 'href="http://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="http://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
