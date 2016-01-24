@@ -331,6 +331,12 @@ class Instance < ActiveRecord::Base
     end
   end
 
+  def available_locales
+    Rails.cache.fetch("locale.available_#{cache_key}") do
+      locales.pluck(:code).map(&:to_sym)
+    end
+  end
+
   def default_currency
     read_attribute(:default_currency).presence || 'USD'
   end
@@ -431,4 +437,3 @@ class Instance < ActiveRecord::Base
   end
 
 end
-
