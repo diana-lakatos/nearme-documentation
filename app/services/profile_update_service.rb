@@ -44,7 +44,7 @@ class ProfileUpdateService
         attrs['user']['accept_emails'] = !ActiveRecord::Type::Boolean.new.type_cast_from_user(attributes[:is_do_not_contact])
       end
       if key == 'language'
-        attrs['user']['language'] = attributes[:language].split('-')[0] rescue 'en'
+        attrs['user']['language'] = attributes[:language].split('-')[0] rescue PlatformContext.current.instance.primary_locale
       end
       attrs
     end

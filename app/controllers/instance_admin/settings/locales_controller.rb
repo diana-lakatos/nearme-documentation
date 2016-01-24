@@ -60,7 +60,7 @@ class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::Base
   end
 
   def create_key
-    @translation = @instance.translations.new locale: 'en'
+    @translation = @instance.translations.new(locale: @instance.primary_locale)
     @translation.attributes = translation_params
 
     if @translation.valid?(:instance_admin)

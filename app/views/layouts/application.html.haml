@@ -43,8 +43,6 @@
     - if platform_context.compiled_stylesheet_url.present?
       = stylesheet_link_tag platform_context.compiled_stylesheet_url
 
-    = render 'layouts/homepage_css' if home_page?
-
     /[if lt IE 9]
       = javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'
       = stylesheet_link_tag 'browser_specific/ie8'

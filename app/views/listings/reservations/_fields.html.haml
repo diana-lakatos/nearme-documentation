@@ -1,7 +1,7 @@
 = f.input_field :quantity, as: :hidden
 
 - @reservation_request.reservation_periods.each do |period|
-  = hidden_field_tag "reservation_request[dates][]", I18n.l(period.date.to_date, format: :short)
+  = hidden_field_tag "reservation_request[dates][]", period.date.strftime('%Y-%m-%d')
 
 = f.input :start_minute, as: :hidden, input_html: {value: @reservation_request.reservation_periods.first.try(:start_minute)}
 = f.input :end_minute, as: :hidden, input_html: {value: @reservation_request.reservation_periods.first.try(:end_minute)}

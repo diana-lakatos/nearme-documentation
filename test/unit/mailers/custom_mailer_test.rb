@@ -36,17 +36,18 @@ class CustomMailerTest < ActiveSupport::TestCase
 
 
   setup do
+    @tt_ids = TransactableType.pluck(:id)
     @transactable_type = FactoryGirl.create(:transactable_type)
     @lister = FactoryGirl.create(:user, email: 'lister@example.com', accept_emails: true)
     @enquirer = FactoryGirl.create(:user, email: 'enquirer@example.com', accept_emails: true)
     @arg = stub(to_liquid: DummyArgDrop.new(stub(name: 'dummy name!')))
     @step = DummyWorkflow::DummyStep.new(@lister, @enquirer, @arg)
-    @email_template = FactoryGirl.create(:instance_view_email_text)
-    @email_template = FactoryGirl.create(:instance_view_email_html)
-    @email_template_for_tt = FactoryGirl.create(:instance_view_email_text, transactable_type_id: @transactable_type.id, body: "Hi TT {{dummy_arg.name}}")
-    @email_template_for_tt = FactoryGirl.create(:instance_view_email_html, transactable_type_id: @transactable_type.id, body: "Hi TT {{dummy_arg.name}}")
-    @layout_template = FactoryGirl.create(:instance_view_layout)
-    @layout_template_for_tt = FactoryGirl.create(:instance_view_layout, transactable_type_id: @transactable_type.id, body: "This is TTHeader {{ content_for_layout }} This is TTFooter")
+    @email_template = FactoryGirl.create(:instance_view_email_text, transactable_type_ids: @tt_ids)
+    @email_template = FactoryGirl.create(:instance_view_email_html, transactable_type_ids: @tt_ids)
+    @email_template_for_tt = FactoryGirl.create(:instance_view_email_text, transactable_type_ids: [@transactable_type.id], body: "Hi TT {{dummy_arg.name}}")
+    @email_template_for_tt = FactoryGirl.create(:instance_view_email_html, transactable_type_ids: [@transactable_type.id], body: "Hi TT {{dummy_arg.name}}")
+    @layout_template = FactoryGirl.create(:instance_view_layout, transactable_type_ids: @tt_ids)
+    @layout_template_for_tt = FactoryGirl.create(:instance_view_layout, transactable_type_ids: [@transactable_type.id], body: "This is TTHeader {{ content_for_layout }} This is TTFooter")
     FactoryGirl.create(:instance_admin)
   end
 
@@ -70,11 +71,6 @@ class CustomMailerTest < ActiveSupport::TestCase
     @step.stubs(:transactable_type_id).returns(@transactable_type.id)
     mail = CustomMailer.custom_mail(@step, 1)
     assert_contains 'This is TTHeader Hi TT dummy name! This is TTFooter', mail.html_part.body
-    @step.stubs(:transactable_type_id).returns(@transactable_type.id + 1)
-    mail = CustomMailer.custom_mail(@step, 1)
-    assert_contains 'Hello dummy name!', mail.html_part.body
-    assert_contains 'Hello dummy name!', mail.text_part.body
-    assert_not_contains 'This is TTHeader', mail.html_part.body
   end
 
   should "be able to set multiple recipients" do

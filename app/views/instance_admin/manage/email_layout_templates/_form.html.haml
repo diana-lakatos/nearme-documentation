@@ -6,7 +6,10 @@
         = f.input :path, label: t('instance_admin.manage.email_layouts.template_path'), :placeholder => 'layouts/path', disabled: @email_layout_template.persisted? && WorkflowAlert.for_email_layout_path(@email_layout_template.path).count > 0, input_html: { class: 'form-control' }, hint: t('instance_admin.manage.email_layouts.path_must_start_with_layouts')
     .row
       .input-container.col-xs-12
-        = f.association :transactable_type, label: t('instance_admin.manage.email_layouts.service_type')
+        = f.association :transactable_types, hint: 'Please note that for some templates this option is not relevant. For example, it does not make sense to create different templates for sign up workflow because user does not sign up to TransactableType. As a rule of thumb, Transactable Type is relevant if workflow concerns listing.'
+    .row
+      .input-container.col-xs-12
+        = f.association :locales
     .row
       .input-container.col-xs-12
         = f.input :format, collection: ['text', 'html'], input_html: { class: 'form-control' }
@@ -17,4 +20,4 @@
     = content_for :header_buttons do
       = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
       = link_to t('instance_admin.cancel'), instance_admin_manage_email_layout_templates_url , class: 'btn btn-light pull-right'
- 
+

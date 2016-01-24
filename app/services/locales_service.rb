@@ -15,9 +15,10 @@ class LocalesService
     date.formats.short
     date.formats.day_and_month
   ).freeze
-  
-  def initialize(platform_context = nil, locale = 'en', options = {})
+
+  def initialize(platform_context = nil, locale = nil, options = {})
     @platform_context = platform_context
+    locale ||= platform_context.instance.primary_locale
     @options = options
     @locale = locale
   end

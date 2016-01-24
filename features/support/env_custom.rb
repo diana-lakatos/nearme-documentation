@@ -33,6 +33,7 @@ Before do
   FactoryGirl.create(:instance_profile_type)
   FactoryGirl.create(:seller_profile_type)
   FactoryGirl.create(:buyer_profile_type)
+  FactoryGirl.create(:primary_locale)
   FactoryGirl.create(:instance)
 
   ActiveMerchant::Billing::Base.mode = :test

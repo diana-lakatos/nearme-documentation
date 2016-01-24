@@ -425,5 +425,9 @@ class Instance < ActiveRecord::Base
     priority_view_path == "new_ui"
   end
 
+  def available_locales
+    self.locales.pluck(:code)
+  end
+
 end
 

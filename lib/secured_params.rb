@@ -206,9 +206,9 @@ class SecuredParams
     [
       :body,
       :path,
-      :locale,
       :format,
-      :transactable_type_id
+      locale_ids: [],
+      transactable_type_ids: []
     ]
   end
 
@@ -216,9 +216,9 @@ class SecuredParams
     [
       :body,
       :path,
-      :locale,
       :partial,
-      :transactable_type_id
+      locale_ids: [],
+      transactable_type_ids: []
     ]
   end
 
@@ -226,9 +226,9 @@ class SecuredParams
     [
       :body,
       :path,
-      :locale,
       :format,
-      :transactable_type_id
+      locale_ids: [],
+      transactable_type_ids: []
     ]
   end
 
@@ -236,8 +236,8 @@ class SecuredParams
     [
       :body,
       :path,
-      :locale,
-      :transactable_type_id
+      locale_ids: [],
+      transactable_type_ids: []
     ]
   end
 
@@ -743,9 +743,9 @@ class SecuredParams
       :path,
       :format,
       :handler,
-      :transactable_type_id,
-      :locale,
-      :partial
+      :partial,
+      locale_ids: [],
+      transactable_type_ids: []
     ]
   end
 

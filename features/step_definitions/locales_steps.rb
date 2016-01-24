@@ -1,10 +1,6 @@
-And(/^default language exists$/) do
-  Locale.create instance_id: Instance.last.id, code: 'en', primary: true
-end
-
-And(/^another languages exists$/) do
-  Locale.create instance_id: Instance.last.id, code: 'cs'
-  Locale.create instance_id: Instance.last.id, code: 'pl'
+Given(/^another languages exists$/) do
+  Locale.create code: 'cs'
+  Locale.create code: 'pl'
 end
 
 Given(/^default language is not English$/) do
@@ -12,15 +8,14 @@ Given(/^default language is not English$/) do
 end
 
 And(/^we have translations in place$/) do
-  Utils::EnLocalesSeeder.new.go!
+  FactoryGirl.create(:translation, locale: 'en', key: 'top_navbar.log_in', value: 'Log In')
   FactoryGirl.create(:translation, locale: 'cs', key: 'top_navbar.log_in', value: 'Přihlásit se')
-  FactoryGirl.create(:translation, locale: 'pl', key: 'top_navbar.log_in', value: 'Zaloguj się',
-                     instance_id: Instance.first.id)
+  FactoryGirl.create(:translation, locale: 'pl', key: 'top_navbar.log_in', value: 'Zaloguj się')
 
+  FactoryGirl.create(:translation, locale: 'en', key: 'top_navbar.messages', value: 'Messages')
   FactoryGirl.create(:translation, locale: 'cs', key: 'top_navbar.messages', value: 'Zprávy')
-  FactoryGirl.create(:translation, locale: 'pl', key: 'top_navbar.messages', value: 'Wiadomości',
-                     instance_id: Instance.first.id)
-  I18N_DNM_BACKEND.update_cache(Instance.first.id)
+  FactoryGirl.create(:translation, locale: 'pl', key: 'top_navbar.messages', value: 'Wiadomości')
+  I18N_DNM_BACKEND.set_instance(PlatformContext.current.instance)
 end
 
 And /^(?:|I )change language to "([^"]*)"$/ do |language|

@@ -33,7 +33,7 @@ class TranslationManager
 
   def create_singular_translation(key, value)
     if value.present?
-      t = Translation.where(locale: 'en', key: singular_key_with_namespace(key), instance_id: @object.instance_id).first_or_initialize
+      t = Translation.where(locale: PlatformContext.current.instance.primary_locale, key: singular_key_with_namespace(key), instance_id: @object.instance_id).first_or_initialize
       t.value = value
       t.save!
     end
@@ -41,7 +41,7 @@ class TranslationManager
 
   def create_plural_translation(key, value)
     if value.present?
-      t = Translation.where(locale: 'en', key: plural_key_with_namespace(key), instance_id: @object.instance_id).first_or_initialize
+      t = Translation.where(locale: PlatformContext.current.instance.primary_locale, key: plural_key_with_namespace(key), instance_id: @object.instance_id).first_or_initialize
       t.value = value.pluralize
       t.save!
     end

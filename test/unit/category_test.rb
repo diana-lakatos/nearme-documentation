@@ -4,7 +4,7 @@ class CategoryTest < ActiveSupport::TestCase
 
   context 'should acts as nested set' do
     setup do
-      @locale = FactoryGirl.create(:locale, code: 'en')
+      @locale = Locale.first
 
       @category = FactoryGirl.create(:category)
       @category_child = FactoryGirl.create(:category, parent_id: @category.id)
