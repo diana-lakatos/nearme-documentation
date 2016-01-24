@@ -91,27 +91,6 @@ Feature: A user can login
      When I sign in with valid credentials
      Then I am correctly signed in
 
-  @javascript
-  Scenario: A user is redirected to the page accessed prior to login page after successful logging in
-    Given a user exists with email: "valid@example.com", password: "password", name: "I am user"
-      And a domain www.example.com exists
-      And a transactable_type_listing exists with name: "Listing"
-      And a listing in Auckland exists
-      And I performed search for "Auckland"
-     When I navigate away via Log In link and sign in
-     Then I should be redirected to the previous search page
-
-  @javascript
-  Scenario: A user is redirected to the page accessed prior to login page after failed first atttempt
-    Given a user exists with email: "valid@example.com", password: "password", name: "I am user"
-      And a domain www.example.com exists
-      And a transactable_type_listing exists with name: "Listing"
-      And a listing in Auckland exists
-      And I performed search for "Auckland"
-     When I sign in with invalid credentials
-      And I fill in valid credentials and click Log In button
-     Then I should be redirected to the previous search page
-
   Scenario: A user sign up with email and password
     Given There is no user with my email
      When I manually sign up with valid credentials
