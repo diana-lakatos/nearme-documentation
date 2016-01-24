@@ -313,6 +313,7 @@ DesksnearMe::Application.routes.draw do
         member do
           get :search_settings
         end
+        resources :custom_validators, controller: 'instance_profile_types/custom_validators'
         resources :custom_attributes, controller: 'instance_profile_types/custom_attributes'
         resources :form_components, controller: 'instance_profile_types/form_components', except: [:show] do
           member do

@@ -42,7 +42,7 @@ class BoardingForm < Form
 
   def initialize(user, product_type)
     @user = user
-    @seller_profile = @user.seller_profile || @user.build_seller_profile(instance_profile_type: PlatformContext.current.instance.seller_profile_type)
+    @seller_profile = @user.get_seller_profile
     @company = @user.companies.first || @user.companies.build(:creator_id => @user.id)
     @product = @company.products.where(product_type: product_type).first || @company.products.build(user_id: @user.id, product_type_id: product_type.id)
     @product.user = @user if @product.user.blank?

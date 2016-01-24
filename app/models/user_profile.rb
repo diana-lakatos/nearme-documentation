@@ -3,20 +3,19 @@ class UserProfile < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
-
-  belongs_to :user
-  belongs_to :instance_profile_type
-
   has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
-
-  scope :by_search_query, lambda { |query|
-    joins(:user).merge(User.by_search_query(query))
-  }
 
   SELLER  = 'seller'.freeze
   BUYER = 'buyer'.freeze
   DEFAULT = 'default'.freeze
   PROFILE_TYPES = [SELLER, BUYER, DEFAULT].freeze
+
+  belongs_to :user
+  belongs_to :instance_profile_type
+  has_many :categories_categorizables, as: :categorizable
+  has_many :categories, through: :categories_categorizables
+
+  before_validation :assign_defaults
 
   validates_inclusion_of :profile_type, in: PROFILE_TYPES
   validate :validate_mandatory_categories, unless: ->(record) { record.skip_custom_attribute_validation }
@@ -24,9 +23,13 @@ class UserProfile < ActiveRecord::Base
   scope :seller, -> { where(profile_type: SELLER) }
   scope :buyer, -> { where(profile_type: BUYER) }
   scope :default, -> { where(profile_type: DEFAULT) }
+  scope :by_search_query, lambda { |query|
+    joins(:user).merge(User.by_search_query(query))
+  }
 
-  has_many :categories_categorizables, as: :categorizable
-  has_many :categories, through: :categories_categorizables
+  def custom_validators
+    instance_profile_type.try(:custom_validators)
+  end
 
   def field_blank_or_changed?(field_name)
     return true unless self.persisted?
@@ -56,6 +59,12 @@ class UserProfile < ActiveRecord::Base
 
   def common_categories_json(category)
     JSON.generate(common_categories(category).map { |c| { id: c.id, name: c.translated_name }})
+  end
+
+  private
+
+  def assign_defaults
+    self.instance_profile_type ||= PlatformContext.current.instance.try("#{self.profile_type}_profile_type")
   end
 
 end

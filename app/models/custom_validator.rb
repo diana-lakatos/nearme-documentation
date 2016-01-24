@@ -9,9 +9,9 @@ class CustomValidator < ActiveRecord::Base
   serialize :valid_values, Array
   serialize :validation_rules, JSON
 
-  validates :field_name, presence: true
-
   before_validation :set_validation_rules
+
+  validates :field_name, presence: true
 
   attr_accessor :required, :min_length, :max_length
 

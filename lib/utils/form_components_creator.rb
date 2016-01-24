@@ -42,14 +42,6 @@ module Utils
       raise NotImplementedError
     end
 
-    def initial_components_with_user_required_fields
-      if @form_componentable.instance.user_info_in_onboarding_flow? && @form_componentable.instance.user_required_fields.count > 0
-
-      else
-        []
-      end
-    end
-
     def create_components!(components)
       raise AlreadyCreatedError.new("This #{@form_componentable.class} already has form components for #{@form_type_class} populated") if @form_componentable.form_components.where(form_type: @form_type_class).count > 0
       components.each do |component|

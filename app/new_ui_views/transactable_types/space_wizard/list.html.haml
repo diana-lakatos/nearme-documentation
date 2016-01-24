@@ -18,8 +18,8 @@
             = f.submit t('onboarding_wizard.save_draft.label'), :name => "save_as_draft", data: { disable_with: t('onboarding_wizard.save_draft.disable_with') }, :class => "saveasdraft btn-link"
 
 
-    = f.simple_fields_for :seller_profile, @user.seller_profile || @user.build_seller_profile(instance_profile_type: current_instance.seller_profile_type) do |seller_profile_form|
-      = seller_profile_form.simple_fields_for :properties, @user.seller_profile.properties do |seller_properties_form|
+    = f.simple_fields_for :seller_profile, @user.get_seller_profile do |seller_profile_form|
+      = seller_profile_form.simple_fields_for :properties, seller_profile_form.object.properties do |seller_properties_form|
         = f.simple_fields_for :companies, @user.companies.first do |companies_form|
           = companies_form.simple_fields_for :locations, @user.companies.first.locations.first do |locations_form|
             = locations_form.simple_fields_for :listings, @user.companies.first.locations.first.listings.first do |listings_form|

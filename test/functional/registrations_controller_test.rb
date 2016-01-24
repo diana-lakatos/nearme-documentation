@@ -278,6 +278,8 @@ class RegistrationsControllerTest < ActionController::TestCase
       PlatformContext.any_instance.stubs(:partner).returns(@partner)
       PlatformContext.any_instance.stubs(:domain).returns(@domain)
       PlatformContext.any_instance.stubs(:instance).returns(@instance)
+      Instance.any_instance.stubs(:default_profile_type).returns(FactoryGirl.create(:instance_profile_type))
+      User.any_instance.stubs(:custom_validators).returns([])
       post :create, user: user_attributes
       user = User.find_by_email('user@example.com')
       assert_equal @partner.id, user.partner_id

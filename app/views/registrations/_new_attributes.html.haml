@@ -39,7 +39,7 @@
     .row{:class => ('error' if f.object.errors[:phone].present?) }
       .col-md-3
         = f.label :phone, :class => 'control-label required' do
-          - if f.object.phone_required
+          - if f.object.validation_for(:phone).try(:is_required?)
             %abbr{:title => "required"} *
           = t('simple_form.labels.user.phone')
 

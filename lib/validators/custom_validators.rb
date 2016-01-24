@@ -1,6 +1,6 @@
 class CustomValidators < ActiveModel::Validator
   def validate(record)
-    return true if record.skip_custom_attribute_validation
+    return true if record.skip_custom_attribute_validation || record.custom_validators.blank?
     return true if record.try(:draft?)
 
     record.custom_validators.each do |validator|

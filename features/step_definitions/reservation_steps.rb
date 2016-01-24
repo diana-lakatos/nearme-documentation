@@ -54,6 +54,8 @@ Given /^Extra fields are prepared for booking$/ do
   User.last.update_column(:last_name, '')
   User.last.update_column(:phone, '')
   User.last.update_column(:company_name, '')
+  User.last.default_profile.instance_profile_type.custom_validators.create(field_name: 'last_name', required: 1)
+  User.last.default_profile.instance_profile_type.custom_validators.create(field_name: 'mobile_number', required: 1)
 end
 
 When /^I book space for:$/ do |table|

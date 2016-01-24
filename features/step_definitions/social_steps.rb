@@ -30,6 +30,7 @@ When /I sign up as (.*) in the modal/ do |model|
       click_on 'Sign up'
     end
   end
+  page.should_not have_css('[data-modal-class="sign-up-modal"]')
 end
 
 Given /I signed up with (.*) without password$/ do |social|
@@ -60,7 +61,6 @@ When /I disconnect (.*)/ do |social|
 end
 
 When /I want to disconnect/ do
-  FactoryGirl.create(:instance_profile_type)
   visit edit_user_registration_path
 end
 
