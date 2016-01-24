@@ -30,12 +30,6 @@ Feature: Buy Sell Marketplace
     Then I should see the checkout extra fields
     When I fill billing data
     And  I shouldn't see order placed confirmation
-
-  Scenario: A user can purchase if he filled in the extra checkout field
-    Given Extra fields are prepared
-    And  I choose shipping method
-    Then I should see order summary page
-    Then I should see the checkout extra fields
     Then I fill in the extra checkout field
     When I fill billing data
     And  I should see order placed confirmation
