@@ -19,7 +19,7 @@ class RecurringBooking < ActiveRecord::Base
 
   has_one :billing_authorization, as: :reference
   belongs_to :instance
-  belongs_to :listing, class_name: 'Transactable', foreign_key: 'transactable_id', inverse_of: :recurring_bookings
+  belongs_to :listing, -> { with_deleted}, class_name: 'Transactable', foreign_key: 'transactable_id', inverse_of: :recurring_bookings
   belongs_to :owner, :class_name => "User"
   belongs_to :creator, class_name: "User"
   belongs_to :administrator, class_name: "User"
@@ -84,7 +84,7 @@ class RecurringBooking < ActiveRecord::Base
     end
 
     event :host_cancel do
-      transition confirmed: :cancelled_by_host
+      transition all => :cancelled_by_host
     end
 
     event :guest_cancel do

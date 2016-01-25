@@ -812,6 +812,10 @@ class Transactable < ActiveRecord::Base
     reservations.unconfirmed.each do |r|
       r.reject!
     end
+
+    recurring_bookings.with_state(:unconfirmed, :confirmed, :overdued).each do |booking|
+      booking.host_cancel!
+    end
   end
 
   def document_requirement_hidden?(attributes)
