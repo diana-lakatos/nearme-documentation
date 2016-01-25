@@ -45,7 +45,11 @@ class Support::Tickets::TicketMessageAttachmentsController < Support::BaseContro
   private
 
   def find_ticket
-    @ticket = current_user.tickets.find_by_id(params[:ticket_id]) || current_user.assigned_tickets.find(params[:ticket_id])
+    @ticket = if current_user.instance_admin?
+                Support::Ticket.find(params[:ticket_id])
+              else
+                current_user.tickets.find_by_id(params[:ticket_id]) || current_user.assigned_tickets.find(params[:ticket_id])
+              end
   end
 
   def attachment_params

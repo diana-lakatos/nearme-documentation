@@ -7,6 +7,7 @@
         - cache i18n_cache_key('list', result, result.company, (current_user.try(:has_friends) ? current_user : nil)) do
           = render partial: 'search/list/listing', locals: { listing: result, current_user: current_user, user_has_firends: current_user.try(:has_friends) }
     = will_paginate @searcher.results
+    = render 'search/footer'
     = render 'shared/loading_spinner'
 - else
   %section#results.no_results

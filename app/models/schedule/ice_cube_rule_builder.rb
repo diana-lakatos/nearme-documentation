@@ -17,8 +17,8 @@ class Schedule::IceCubeRuleBuilder
     def get_array
       case @schedule_rule.run_hours_mode
       when ScheduleRule::RECURRING_MODE
-        if @schedule_rule.every_hours.to_i > 0
-          step = @schedule_rule.every_hours.hours
+        if @schedule_rule.every_hours.to_f > 0
+          step = @schedule_rule.every_hours * 60.minutes
           hour = @schedule_rule.time_start
           hours = []
           # add all hours after first event
@@ -28,6 +28,8 @@ class Schedule::IceCubeRuleBuilder
             break if hour > @schedule_rule.time_end
           end
           hours
+        else
+          []
         end
       when ScheduleRule::SPECIFIC_MODE
         @schedule_rule.times

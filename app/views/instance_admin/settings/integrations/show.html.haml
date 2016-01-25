@@ -14,7 +14,7 @@
       = t('instance_admin.settings.configuration.user_authorization')
     .row
       .input-container.col-xs-12
-        = f.input :default_oauth_signin_provider, collection: Authentication::ALLOWED_LOGIN_PROVIDERS.map(&:downcase), input_html: { class: 'form-control' }, required: false
+        = f.input :default_oauth_signin_provider, collection: Authentication::ALLOWED_LOGIN_PROVIDERS.map(&:downcase), input_html: { class: 'form-control' }, required: false, include_blank: t('general.none')
 
   .content-container
     %h4

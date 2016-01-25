@@ -29,12 +29,15 @@ module TransactablesIndex
 
         indexes :categories, type: 'integer'
 
+        indexes :booking_type, :type => 'string'
         indexes :enabled, :type => 'boolean'
         indexes :action_rfq, :type => 'boolean'
-        indexes :action_hourly_booking, :type => 'boolean'
-        indexes :action_free_booking, :type => 'boolean'
         indexes :action_recurring_booking, :type => 'boolean'
+        indexes :action_free_booking, :type => 'boolean'
+        indexes :action_hourly_booking, :type => 'boolean'
         indexes :action_daily_booking, :type => 'boolean'
+        indexes :action_weekly_booking, :type => 'boolean'
+        indexes :action_monthly_booking, :type => 'boolean'
         indexes :action_subscription_booking, :type => 'boolean'
 
         indexes :hourly_price_cents, :type => 'integer'
@@ -43,6 +46,11 @@ module TransactablesIndex
         indexes :monthly_price_cents, :type => 'integer'
         indexes :weekly_subscription_price_cents, :type => 'integer'
         indexes :monthly_subscription_price_cents, :type => 'integer'
+        indexes :fixed_price_cents, :type => 'integer'
+        indexes :exclusive_price_cents, :type => 'integer'
+        indexes :minimum_price_cents, :type => 'integer'
+        indexes :maximum_price_cents, :type => 'integer'
+        indexes :all_prices, :type => 'integer'
 
         indexes :location_type_id, type: 'integer'
 
@@ -73,7 +81,10 @@ module TransactablesIndex
         daily_price_cents: self.daily_price_cents.to_i,
         weekly_price_cents: self.weekly_price_cents.to_i,
         monthly_price_cents: self.monthly_price_cents.to_i,
-        categories: self.categories.pluck(:id)
+        categories: self.categories.pluck(:id),
+        action_monthly_booking: !self.monthly_price_cents.to_i.zero?,
+        action_weekly_booking: !self.weekly_price_cents.to_i.zero?,
+        all_prices: self.all_prices
       )
     end
 
