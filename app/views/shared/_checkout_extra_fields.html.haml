@@ -3,15 +3,16 @@
     - if uf.object.field_blank_or_changed?(:first_name)
       = uf.input :first_name, required: true
     - if uf.object.field_blank_or_changed?(:last_name)
-      = uf.input :last_name, required: true
+      = uf.input :last_name, required: is_required?(uf.object, :last_name)
     - if defined?(show_company_name) && show_company_name && uf.object.field_blank_or_changed?(:company_name)
-      = uf.input :company_name, as: :string
+      = uf.input :company_name, as: :string, required: is_required?(uf.object, :company_name)
     - if uf.object.field_blank_or_changed?(:country_name)
-      = uf.input :country_name, as: :select, collection: user_country_name_options, selected: user_country_default(@country), input_html: { class: "select2", data: { 'country-selector' => 1 } }
+      = uf.input :country_name, as: :select, required: is_required?(uf.object, [:country_name, :phone, :mobile_number]), collection: user_country_name_options, selected: user_country_default(@country), input_html: { class: "select2", data: { 'country-selector' => 1 } }
     - if uf.object.field_blank_or_changed?(:phone)
-      = uf.input :phone, required: true, as: :string
+      = uf.input :phone, wrapper: :bs_phone, required: is_required?(uf.object, :phone), input_html: { data: { phone: true } }
     - if uf.object.field_blank_or_changed?(:mobile_number)
-      = uf.input :mobile_number, required: true, as: :string
+      = uf.input :mobile_number, required: is_required?(uf.object, :mobile_number),wrapper: :bs_phone, input_html: { data: { mobile_number: true } }
+
 
     = uf.simple_fields_for :properties, uf.object.properties do |properties_form|
       - (uf.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|

@@ -452,4 +452,8 @@ module ApplicationHelper
   def current_url
     request.protocol + platform_context.host + request.fullpath
   end
+
+  def is_required?(object, fields)
+    object.try(:validation_for, fields).try(:any?, &:is_required?)
+  end
 end

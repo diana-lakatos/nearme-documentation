@@ -337,8 +337,9 @@ class User < ActiveRecord::Base
     @custom_validators ||= all_profiles.map(&:custom_validators).flatten.compact
   end
 
-  def validation_for(field_name)
-    custom_validators.detect{ |cv| cv.field_name == field_name.to_s }
+  def validation_for(field_names)
+    field_names = Array(field_names).map(&:to_s)
+    custom_validators.select{ |cv| cv.field_name.in?(field_names) }
   end
 
   def apply_omniauth(omniauth)
