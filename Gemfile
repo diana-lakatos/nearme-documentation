@@ -40,7 +40,7 @@ gem 'linkedin-oauth2', '~> 1.0'
 gem 'omniauth-linkedin-oauth2'
 gem 'twitter', '~> 5.5.1'
 # Installing instagram from the master branch will fix ruby 2.2 circular dependency warning
-gem 'instagram', github: '0tofu/instagram-ruby-gem', branch: 'master'
+gem 'instagram'
 gem 'github_api'
 gem 'google_plus'
 
