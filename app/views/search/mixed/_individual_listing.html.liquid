@@ -32,7 +32,7 @@
       <h2><a href="{{ listing.url }}">{{listing.name}}</a></h2>
       {% capture company_name_and_street %}{{listing.company.name}} @ {{listing.street}}{% endcapture %}
       {% if listing.name != company_name_and_street %}
-        <div class="subheader">with {{listing.company.name}} @ {{ listing.street }}</div>
+        <div class="subheader">{{ 'search.with' | translate }} {{listing.company.name}} @ {{ listing.street }}</div>
       {% endif %}
 
       <div class="price-and-types">

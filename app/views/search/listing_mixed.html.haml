@@ -43,7 +43,7 @@
     .map
       %section#map.google-map-wrapper
         .google-map
-          #listings_map.inner
+          #listings_map.inner{ 'data-update-text' => t('search.update_map')}
     .list{:'data-list' => true}
       .filters{:'data-search-filters-container' => true}
         - if current_instance.service_types.searchable.many?
@@ -82,9 +82,9 @@
         .results-count
           %h3#search_results_count
             = @searcher.result_count
-            results
+            = t 'search.results'
         .per-page
-          %span per page
+          %span= t 'search.per_page'
           = select_tag :per_page, options_for_select(['20', '50', '100'].map{|v| [v, v]}, params[:per_page])
         = render 'search/save'
 

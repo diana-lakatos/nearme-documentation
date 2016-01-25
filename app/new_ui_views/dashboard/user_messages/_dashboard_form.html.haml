@@ -1,4 +1,4 @@
 = dashboard_simple_form_for @user_message, url: @displayed_user_message.create_path(@user_message), remote: true do |f|
   = f.hidden_field :replying_to_id
   = f.input :body, required: false, label: false, input_html: { "data-message-body": true }
-  = f.submit "Send", class: 'btn btn-primary'
+  = f.submit t('user_messages.send_message'), class: 'btn btn-primary'

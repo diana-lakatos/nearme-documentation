@@ -139,7 +139,7 @@ class Search.SearchController extends Search.Controller
     @map = new Search.Map(mapContainer, this)
 
     # Add our map viewport search control, which enables/disables searching on map move
-    @redoSearchMapControl = new Search.RedoSearchMapControl(enabled: true)
+    @redoSearchMapControl = new Search.RedoSearchMapControl(enabled: true, update_text: $(mapContainer).data('update-text'))
     @map.addControl(@redoSearchMapControl)
 
     resizeMapThrottle = _.throttle((=> @map.resizeToFillViewport()), 200)

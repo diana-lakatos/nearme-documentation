@@ -3,7 +3,7 @@
     .padding-bottom
       .row-fluid
         .span5.text
-          .ico-lock Submit a secure payment.
+          .ico-lock= t 'payments.heading'
         .span7.credit-card-images
           = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
         .clearfix
@@ -11,7 +11,7 @@
     = f.error :cc
     #paypal-button
   - else
-    Payment has been already authorized. Please proceed.
+    = t 'payments.already_authorized'
 
 = render 'listings/reservations/confirm_reservations', f: f
 
