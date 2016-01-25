@@ -10,8 +10,7 @@ class CheckoutExtraFields < Form
     @secured_params = SecuredParams.new
     @all_attachments_present = true
     @all_approval_requests_messages_present = true
-    @buyer_profile = @user.try(:buyer_profile) || @user.try(:build_buyer_profile)
-    @buyer_profile.try(:instance_profile_type=, PlatformContext.current.instance.buyer_profile_type)
+    @buyer_profile = @user.try(:get_buyer_profile)
   end
 
   def are_fields_present?
@@ -72,11 +71,6 @@ class CheckoutExtraFields < Form
   end
 
   def valid?
-    @user.country_name_required = true
-    @user.mobile_number_required = true
-    @user.phone_required = true
-    @user.last_name_required = true
-
     @user.valid? && @all_attachments_present && @all_approval_requests_messages_present
   end
 

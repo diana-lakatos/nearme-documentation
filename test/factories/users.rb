@@ -7,7 +7,7 @@ FactoryGirl.define do
     country_name "United States"
     phone "18889983375"
     mobile_number "18889983375"
-    current_location "Prague"
+    association :current_address, factory: :address_czestochowa
     company_name "DesksNearMe"
     last_geolocated_location_longitude 14.437800
     last_geolocated_location_latitude 50.075538

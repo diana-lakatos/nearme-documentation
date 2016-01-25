@@ -132,5 +132,5 @@
         = render 'dashboard/company/host_reservations/owner_actions', reservation: reservation
 
     .col-sm-3.col-sm-pull-9
-      %small= t('dashboard.host_reservations.order_placed_html', date: l(reservation.created_at, format: :only_date))
+      %small= t('dashboard.host_reservations.order_placed_html', date: l(reservation.created_at.to_date, format: :long))
 

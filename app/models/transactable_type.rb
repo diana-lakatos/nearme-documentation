@@ -22,6 +22,8 @@ class TransactableType < ActiveRecord::Base
   has_many :categories, through: :category_linkings
   has_many :custom_validators, as: :validatable
   has_many :additional_charge_types, as: :additional_charge_type_target
+  has_many :transactable_type_instance_views, dependent: :destroy
+  has_many :instance_views, through: :transactable_type_instance_views
 
   belongs_to :instance
 
@@ -56,7 +58,7 @@ class TransactableType < ActiveRecord::Base
   def slug_candidates
     [
       :name,
-      [:name, DateTime.now.strftime("%b %d %Y")]
+      [:name, I18n.l(Date.current, format: :long)]
     ]
   end
 

@@ -224,7 +224,8 @@ DesksnearMe::Application.routes.draw do
 
       resources :locales, except: [:show], controller: 'locales' do
         member do
-          get 'edit_keys'
+          get :edit_keys
+          get :date_time_preferences
         end
 
         collection do
@@ -283,16 +284,8 @@ DesksnearMe::Application.routes.draw do
 
     namespace :manage do
       get '/', :to => 'base#index'
-      get 'support' => 'support#index', as: 'support_root'
 
       resources :additional_charge_types, except: [:show]
-      namespace :support do
-        resources :faqs, except: [:show]
-        resources :tickets, only: [:show, :update] do
-          resources :ticket_messages, only: [:create]
-        end
-      end
-
       resources :projects, only: [:edit, :update]
       resources :topics, only: [:edit, :update]
       resources :reviews, only: [:index]
@@ -320,6 +313,7 @@ DesksnearMe::Application.routes.draw do
         member do
           get :search_settings
         end
+        resources :custom_validators, controller: 'instance_profile_types/custom_validators'
         resources :custom_attributes, controller: 'instance_profile_types/custom_attributes'
         resources :form_components, controller: 'instance_profile_types/form_components', except: [:show] do
           member do
@@ -458,6 +452,14 @@ DesksnearMe::Application.routes.draw do
           post :disable_category
           post :enable_category
         end
+      end
+    end
+
+    namespace :support do
+      root to: 'support#index'
+      resources :faqs, except: [:show]
+      resources :tickets, only: [:show, :update] do
+        resources :ticket_messages, only: [:create]
       end
     end
 

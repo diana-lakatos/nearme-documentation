@@ -39,7 +39,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       @reservation.save!
       PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
       @platform_context = PlatformContext.current
-      @expected_dates = "Wednesday, December 12 &ndash; Thursday, December 13"
+      @expected_dates = "December 12, 2012 &ndash; December 13, 2012"
     end
 
     should "#notify_guest_of_cancellation_by_host" do

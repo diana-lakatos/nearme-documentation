@@ -26,17 +26,15 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     build_approval_requests
     @photos = (@user.first_listing.try(:photos) || []) + @user.photos.where(owner_id: nil)
     @attachments = (@user.first_listing.try(:attachments) || []) + @user.attachments.where(assetable_id: nil)
-    @user.phone_required = true
     event_tracker.viewed_list_your_bookable
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   def submit_listing
-    @user.phone_required = true
     params[:user][:companies_attributes]["0"][:name] = current_user.first_name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     set_proper_currency
-    @user.build_seller_profile(instance_profile_type: current_instance.seller_profile_type) if @user.seller_profile.blank?
+    @user.get_seller_profile
     @user.assign_attributes(wizard_params)
     # TODO: tmp hack, the way we use rails-money does not work if you pass currency and daily_price at the same time
     # We remove schedule attributes when assigning the attributes the second time so that we don't end up with duplicated schedule-related objects

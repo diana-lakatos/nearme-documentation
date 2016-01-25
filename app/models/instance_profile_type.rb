@@ -10,6 +10,7 @@ class InstanceProfileType < ActiveRecord::Base
   belongs_to :instance
   has_many :users, through: :user_profiles
   has_many :user_profiles
+  has_many :custom_validators, as: :validatable
 
   has_many :form_components, as: :form_componentable
   has_many :category_linkings, as: :category_linkable, dependent: :destroy

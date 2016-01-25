@@ -1,9 +1,7 @@
 Feature: Marketplace can be multi-lingual
 
   Background:
-    Given an instance exists
-    And default language exists
-    And another languages exists
+    Given another languages exists
     And we have translations in place
 
   Scenario: I change language

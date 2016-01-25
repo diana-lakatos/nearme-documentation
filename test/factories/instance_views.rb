@@ -2,11 +2,12 @@ FactoryGirl.define do
   factory :instance_view do
     body "%h1\n\tHello"
     path "public/index"
-    locale "en"
     format "html"
     handler "haml"
     partial false
     instance { PlatformContext.current.instance }
+    locale_ids { Locale.pluck(:id) }
+    transactable_type_ids { TransactableType.pluck(:id) }
 
     factory :instance_view_sms do
       body "Hello {{user.name}}"
@@ -35,7 +36,7 @@ FactoryGirl.define do
       format "html"
       handler "liquid"
     end
-    
+
     factory :instance_view_footer do
       body "This is footer"
       path "layouts/theme_footer"

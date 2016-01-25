@@ -31,6 +31,11 @@ class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::Base
                                                      .paginate(:page => params[:page], :per_page => 50)
   end
 
+  def date_time_preferences
+    @translations = @instance.translations.where(locale: @locale.code, key: LocalesService::DATETIME_TRANSLATIONS)
+    @default_and_custom_translations = Translation.default_and_custom_translations_for_instance(@instance.id, @locale).where(key: LocalesService::DATETIME_TRANSLATIONS)
+  end
+
   def update
     if @locale.update_attributes(locale_params)
       flash[:success] = t 'flash_messages.instance_admin.settings.locales.updated'
@@ -55,7 +60,7 @@ class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::Base
   end
 
   def create_key
-    @translation = @instance.translations.new locale: 'en'
+    @translation = @instance.translations.new(locale: @instance.primary_locale)
     @translation.attributes = translation_params
 
     if @translation.valid?(:instance_admin)

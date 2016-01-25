@@ -5,9 +5,11 @@ class AvailabilityRule::HourlyListingStatus
     @schedule = {}
 
     if @listing.availability.open_on?(:date => @date)
-      @rule = @listing.availability.rule_for_day(@date.wday)
-      (@rule.day_open_minute..@rule.day_close_minute).step(15) do |minute|
-        @schedule[minute] = @listing.quantity_for(date)
+      @rules = @listing.availability.rules_for_day(@date.wday)
+      @rules.each do |rule|
+        (rule.day_open_minute..rule.day_close_minute).step(15) do |minute|
+          @schedule[minute] = @listing.quantity_for(date)
+        end
       end
       build_time_quantities
     end
@@ -23,13 +25,10 @@ class AvailabilityRule::HourlyListingStatus
      select('reservations.quantity as quantity_booked, reservation_periods.start_minute, reservation_periods.end_minute').
      each do |period|
       if period.start_minute.present?
-        (period.start_minute.to_i..period.end_minute.to_i).step(15) do |minute|
-          @schedule[minute] -= period.quantity_booked.to_i
-        end
+        range = (period.start_minute.to_i..period.end_minute.to_i)
+        @schedule.keys.each { |k| @schedule[k] -= period.quantity_booked.to_i if range.include?(k.to_i)  }
       else
-        (@rule.day_open_minute..@rule.day_close_minute).step(15) do |minute|
-          @schedule[minute] -= period.quantity_booked.to_i
-        end
+        @schedule.keys.each { |k| @schedule[k] -= period.quantity_booked.to_i }
       end
     end
   end

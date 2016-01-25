@@ -360,10 +360,6 @@ GEM
       activemodel (>= 3.0)
       activesupport (>= 3.0)
       request_store (~> 1.0)
-    dropbox-api (0.4.2)
-      hashie
-      multi_json
-      oauth
     elasticsearch (1.0.8)
       elasticsearch-api (= 1.0.7)
       elasticsearch-transport (= 1.0.7)
@@ -1089,7 +1085,6 @@ DEPENDENCIES
   devise-token_authenticatable
   domainatrix
   draper
-  dropbox-api
   elasticsearch-model
   elasticsearch-persistence
   elasticsearch-rails

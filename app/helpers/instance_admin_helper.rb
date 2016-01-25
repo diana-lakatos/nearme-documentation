@@ -14,7 +14,7 @@ module InstanceAdminHelper
       support_ticket_title(ticket),
       " (#{ticket.messages.count})",
       "<br />",
-      link_to(ticket.open_text, instance_admin_manage_support_ticket_path(ticket)).html_safe
+      link_to(ticket.open_text, instance_admin_support_ticket_path(ticket)).html_safe
     ].join.html_safe
   end
 
@@ -22,6 +22,14 @@ module InstanceAdminHelper
     return "" unless message
     author = link_to_if message.user, message.full_name, message.user
     "by #{author}".html_safe
+  end
+
+  def is_active_instance_admin_nav_link(controller_name, settings)
+    if settings[:controller_class].present?
+      "active" if settings[:controller_class] == controller.class.to_s
+    else
+      "active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last
+    end
   end
 
   def instance_admin_ico_for_flash(key)
@@ -83,4 +91,3 @@ module InstanceAdminHelper
   end
 
 end
-

@@ -206,9 +206,9 @@ class SecuredParams
     [
       :body,
       :path,
-      :locale,
       :format,
-      :transactable_type_id
+      locale_ids: [],
+      transactable_type_ids: []
     ]
   end
 
@@ -216,9 +216,9 @@ class SecuredParams
     [
       :body,
       :path,
-      :locale,
       :partial,
-      :transactable_type_id
+      locale_ids: [],
+      transactable_type_ids: []
     ]
   end
 
@@ -226,9 +226,9 @@ class SecuredParams
     [
       :body,
       :path,
-      :locale,
       :format,
-      :transactable_type_id
+      locale_ids: [],
+      transactable_type_ids: []
     ]
   end
 
@@ -236,8 +236,8 @@ class SecuredParams
     [
       :body,
       :path,
-      :locale,
-      :transactable_type_id
+      locale_ids: [],
+      transactable_type_ids: []
     ]
   end
 
@@ -380,7 +380,6 @@ class SecuredParams
       :twitter_consumer_secret,
       :user_based_marketplace_views,
       :user_blogs_enabled,
-      :user_info_in_onboarding_flow,
       :webhook_token,
       :wish_lists_enabled,
       :wish_lists_icon_set,
@@ -390,7 +389,6 @@ class SecuredParams
       allowed_currencies: [],
       allowed_countries: [],
       custom_translations: [:'buy_sell_market.checkout.manual_payment', :'buy_sell_market.checkout.manual_payment_description'],
-      user_required_fields: [],
       domains_attributes: nested(self.domain),
       listing_amenity_types_attributes: nested(self.amenity_type),
       location_types_attributes: nested(self.location_type),
@@ -745,9 +743,9 @@ class SecuredParams
       :path,
       :format,
       :handler,
-      :transactable_type_id,
-      :locale,
-      :partial
+      :partial,
+      locale_ids: [],
+      transactable_type_ids: []
     ]
   end
 
@@ -1162,8 +1160,6 @@ class SecuredParams
       :biography,
       :company_name,
       :country_name,
-      :country_name_required,
-      :current_location,
       :drivers_licence_number,
       :email,
       :facebook_url,

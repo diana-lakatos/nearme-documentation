@@ -5,14 +5,16 @@
         %tbody
           %tr
             %th= t('instance_admin.manage.sms_templates.template')
-            %th
+            %th Transactable Types
+            %th Locales
             %th
             %th
 
           - @sms_templates.each do |sms_template|
             %tr
               %td= pretty_path sms_template.path
-              %td= sms_template.transactable_type.try(:name)
+              %td= sms_template.transactable_types.pluck(:name).join(', ')
+              %td= sms_template.locales.map(&:display_name).join(', ')
               %td
                 .pull-right
                   = link_to t('instance_admin.edit'), edit_instance_admin_manage_sms_template_path(sms_template)

@@ -175,19 +175,15 @@ class TransactableDrop < BaseDrop
     routes.transactable_type_space_wizard_list_path(transactable_type, token_key => @user.try(:temporary_token), track_email_event: true)
   end
 
+  # list of the names of the amenities defined for this listing
   def amenities
-    @amenities ||= @transactable.amenities.pluck(:name)
+    @amenities ||= @transactable.amenities.order('name ASC').pluck(:name)
   end
 
   # url to the section of the app for sending a message to the administrator
   # of this listing using the internal messaging platform
   def new_user_message_path
     routes.new_listing_user_message_path(@transactable)
-  end
-
-  # list of the names of the amenities defined for this listing
-  def amenities
-    @transactable.amenities.order('name ASC').pluck(:name)
   end
 
   # array of photo items; each photo item is a hash with the keys being:
@@ -225,6 +221,11 @@ class TransactableDrop < BaseDrop
       @categories = build_categories_hash_for_object(@transactable, @transactable.transactable_type.categories.roots.includes(:children))
     end
     @categories
+  end
+
+  # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => 'string with all children separated with comma' } }
+  def formatted_categories
+    build_formatted_categories(@transactable)
   end
 
   # returns whether or not the listing has seller attachments

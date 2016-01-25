@@ -9,7 +9,7 @@ class DnmKeyValueTest < ActiveSupport::TestCase
     @default_translation = FactoryGirl.create(:translation, :key => 'some_key_for_instance', :value => 'default value', instance_id: nil)
     @instance_translation = FactoryGirl.create(:translation, :key => 'some_key_for_instance', :value => 'instance value', instance_id: @instance.id)
     @backend = I18n::Backend::DNMKeyValue.new(nil)
-    @backend.set_instance_id(@instance.id)
+    @backend.set_instance(@instance)
     @backend.update_cache(@instance.id)
 
   end
@@ -37,16 +37,16 @@ class DnmKeyValueTest < ActiveSupport::TestCase
 
   should 'get translation from given instance' do
     assert_equal 'instance value', translate('some_key_for_instance')
-    @backend.set_instance_id(@instance.id + 1)
+    @backend.set_instance(FactoryGirl.create(:instance))
     assert_equal 'default value', translate('some_key_for_instance')
   end
 
   should 're-populate cache if it expired' do
     assert_equal 'instance value', translate('some_key_for_instance')
-    @backend.set_instance_id(FactoryGirl.create(:instance).id)
+    @backend.set_instance(FactoryGirl.create(:instance))
     @backend.update_cache(@instance.id)
     assert_equal 'default value', translate('some_key_for_instance')
-    @backend.set_instance_id(@instance.id)
+    @backend.set_instance(@instance)
     @backend.update_cache(@instance.id)
     assert_equal 'instance value', translate('some_key_for_instance')
   end

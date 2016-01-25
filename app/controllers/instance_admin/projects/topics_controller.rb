@@ -15,7 +15,7 @@ class InstanceAdmin::Projects::TopicsController < InstanceAdmin::Projects::BaseC
       flash[:success] = t 'flash_messages.instance_admin.projects.topics.created'
       redirect_to instance_admin_projects_topics_path
     else
-      flash[:error] = @topic.errors.full_messages.to_sentence
+      flash.now[:error] = @topic.errors.full_messages.to_sentence
       render :new
     end
   end
@@ -31,7 +31,7 @@ class InstanceAdmin::Projects::TopicsController < InstanceAdmin::Projects::BaseC
       flash[:success] = t 'flash_messages.instance_admin.projects.topics.updated'
       redirect_to instance_admin_projects_topics_path
     else
-      flash[:error] = @topic.errors.full_messages.to_sentence
+      flash.now[:error] = @topic.errors.full_messages.to_sentence
       render :edit
     end
   end

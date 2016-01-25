@@ -23,7 +23,7 @@
 
     = f.simple_fields_for :user, @boarding_form.user do |user_form|
       = f.simple_fields_for :seller_profile, @boarding_form.seller_profile do |seller_profile_form|
-        = f.simple_fields_for :seller_profile_properties, @boarding_form.seller_profile.properties do |seller_properties_form|
+        = f.simple_fields_for :seller_profile_properties, seller_profile_form.object.properties do |seller_properties_form|
           = f.simple_fields_for :company, @boarding_form.company do |companies_form|
             = f.simple_fields_for f.object.product_form do |product_form|
               = product_form.simple_fields_for :extra_properties, product_form.object.extra_properties do |properties_form|

@@ -3,7 +3,7 @@
     .row
       .col-md-3
         %p= t('dashboard.user_recurring_bookings.placed')
-        %p= l recurring_booking.created_at, format: :only_date
+        %p= l recurring_booking.created_at.to_date, format: :long
 
       .col-md-3
         %p= t('dashboard.user_recurring_bookings.starts_from')

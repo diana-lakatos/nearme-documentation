@@ -4,9 +4,7 @@
 
 = simple_form_for [:admin, resource], :html => { :multipart => true } do |f|
   = f.input :name
-  = f.input :user_info_in_onboarding_flow
   = f.input :user_based_marketplace_views
-  = f.input :user_required_fields, input_html: { value: f.object.user_required_fields.join(', ') }
 
   %p
     = f.button :submit, 'Save'

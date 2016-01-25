@@ -1,9 +1,10 @@
 class InstanceClient < ActiveRecord::Base
+  include Encryptable
   auto_set_platform_context
   scoped_to_platform_context
   acts_as_paranoid
 
-  attr_encrypted :response, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
+  attr_encrypted :response
 
   belongs_to :client, :polymorphic => true
   belongs_to :instance

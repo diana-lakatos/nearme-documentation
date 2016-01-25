@@ -46,7 +46,6 @@ class RecurringBookingRequest < Form
 
 
     if @user
-      @user.phone_required = true
       @user.phone = @user.mobile_number
       @card_holder_first_name ||= @user.first_name
       @card_holder_last_name ||= @user.last_name

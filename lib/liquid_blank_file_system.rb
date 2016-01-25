@@ -3,39 +3,19 @@ module Liquid
   class BlankFileSystem
     # Called by Liquid to retrieve a template file
     def read_template_file(template_path, context)
-      format = template_path.split('.').last.to_sym
-      details = {}
-
+      splitted_path = template_path.split('.')
+      path = splitted_path.first
+      format = splitted_path.last
+      details = {
+        handlers: [:liquid],
+        formats: [format],
+        locale: [::I18n.locale]
+      }.merge(context.registers[:controller].send(:details_for_lookup))
       begin
-        details = {
-          handlers: [:liquid],
-          formats: [format],
-          locale: [::I18n.locale]
-        }.merge(context.registers[:controller].send(:details_for_lookup))
-
-        template_body = InstanceViewResolver.instance.get_body(template_path.split('.').first, '', true, details)
+        context.registers[:controller].lookup_context.find_template(path, '', true, details).source
       rescue
-        Rails.logger.error "Liquid::BlankFileSystem #{$!}. Details: #{details}"
-      end
-
-      # Fallback to English
-      if template_body.nil? && details[:locale].first != :en
-        details[:locale] = [:en]
-        template_body = InstanceViewResolver.instance.get_body(template_path.split('.').first, '', true, details)
-      end
-
-      if template_body.nil?
-        template_path_splited = template_path.split('/')
-        template_path_splited[-1] = "_#{template_path_splited[-1]}"
-        context.registers[:controller].view_paths.each do |view_path|
-          if path = view_path.try(:to_path)
-            if File.exists?(File.join(path, "#{template_path_splited.join('/')}.liquid"))
-              return File.read(File.join(path, "#{template_path_splited.join('/')}.liquid"))
-            end
-          end
-        end
-      else
-        template_body
+        # our UI is not great, MPO might not check 'partial' - this is why this rescue
+        context.registers[:controller].lookup_context.find_template(path, '', false, details).source rescue "Liquid Error: can't find LiquidView with path #{path}. Make sure it has been added in Marketplace Admin"
       end
     end
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151216200556) do
+ActiveRecord::Schema.define(version: 20160121102659) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 20151216200556) do
     t.string   "additional_charge_type_target_type"
   end
 
+  add_index "additional_charge_types", ["additional_charge_type_target_id", "additional_charge_type_target_type"], name: "act_target", using: :btree
   add_index "additional_charge_types", ["instance_id"], name: "index_additional_charge_types_on_instance_id", using: :btree
 
   create_table "additional_charges", force: :cascade do |t|
@@ -105,7 +106,7 @@ ActiveRecord::Schema.define(version: 20151216200556) do
     t.string   "iso_country_code",   limit: 2
   end
 
-  add_index "addresses", ["entity_id", "entity_type", "address"], name: "index_addresses_on_entity_id_and_entity_type_and_address", unique: true, using: :btree
+  add_index "addresses", ["instance_id", "entity_id", "entity_type", "address"], name: "index_addresses_on_entity_id_and_entity_type_and_address", unique: true, using: :btree
 
   create_table "amenities", force: :cascade do |t|
     t.string   "name",            limit: 255
@@ -948,7 +949,7 @@ ActiveRecord::Schema.define(version: 20151216200556) do
     t.integer  "transactable_type_id"
   end
 
-  add_index "instance_views", ["instance_id", "transactable_type_id", "path", "locale", "format", "handler"], name: "instance_path_with_format_and_handler", unique: true, using: :btree
+  add_index "instance_views", ["instance_id", "path", "format", "handler"], name: "instance_path_with_format_and_handler", using: :btree
 
   create_table "instances", force: :cascade do |t|
     t.string   "name",                                  limit: 255
@@ -1055,7 +1056,6 @@ ActiveRecord::Schema.define(version: 20151216200556) do
     t.string   "time_zone"
     t.string   "seller_attachments_access_level",       limit: 255,                         default: "disabled",    null: false
     t.integer  "seller_attachments_documents_num",                                          default: 10,            null: false
-    t.boolean  "payout_information_required",                                               default: true
     t.string   "priority_view_path"
   end
 
@@ -1081,6 +1081,16 @@ ActiveRecord::Schema.define(version: 20151216200556) do
   end
 
   add_index "listing_types", ["instance_id"], name: "index_listing_types_on_instance_id", using: :btree
+
+  create_table "locale_instance_views", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "instance_view_id"
+    t.integer  "locale_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "locale_instance_views", ["instance_id", "instance_view_id", "locale_id"], name: "index_tt_instance_views_on_instance_id_locale_view_unique", unique: true, using: :btree
 
   create_table "locales", force: :cascade do |t|
     t.integer  "instance_id"
@@ -2175,7 +2185,6 @@ ActiveRecord::Schema.define(version: 20151216200556) do
     t.integer  "store_id"
     t.integer  "payment_method_id"
     t.boolean  "insurance_enabled",                                                   default: false,   null: false
-    t.boolean  "payout_available",                                                    default: false
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree
@@ -3130,23 +3139,6 @@ ActiveRecord::Schema.define(version: 20151216200556) do
   add_index "spree_zones", ["partner_id"], name: "index_spree_zones_on_partner_id", using: :btree
   add_index "spree_zones", ["user_id"], name: "index_spree_zones_on_user_id", using: :btree
 
-  create_table "states", force: :cascade do |t|
-    t.string   "name",        limit: 255
-    t.string   "abbr",        limit: 255
-    t.integer  "country_id"
-    t.datetime "updated_at"
-    t.integer  "instance_id"
-    t.integer  "company_id"
-    t.integer  "partner_id"
-    t.integer  "user_id"
-  end
-
-  add_index "states", ["company_id"], name: "index_states_on_company_id", using: :btree
-  add_index "states", ["country_id"], name: "index_states_on_country_id", using: :btree
-  add_index "states", ["instance_id"], name: "index_states_on_instance_id", using: :btree
-  add_index "states", ["partner_id"], name: "index_states_on_partner_id", using: :btree
-  add_index "states", ["user_id"], name: "index_states_on_user_id", using: :btree
-
   create_table "support_faqs", force: :cascade do |t|
     t.integer  "instance_id"
     t.text     "question",      null: false
@@ -3384,6 +3376,16 @@ ActiveRecord::Schema.define(version: 20151216200556) do
   add_index "topics_user_status_updates", ["topic_id", "user_status_update_id"], name: "topic_usu_id", using: :btree
   add_index "topics_user_status_updates", ["user_status_update_id", "topic_id"], name: "usu_topic_id", using: :btree
 
+  create_table "transactable_type_instance_views", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "instance_view_id"
+    t.integer  "transactable_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "transactable_type_instance_views", ["instance_id", "instance_view_id", "transactable_type_id"], name: "index_tt_instance_views_on_instance_id_tt_view_unique", unique: true, using: :btree
+
   create_table "transactable_types", force: :cascade do |t|
     t.string   "name",                                       limit: 255
     t.integer  "instance_id"
@@ -3527,7 +3529,6 @@ ActiveRecord::Schema.define(version: 20151216200556) do
     t.integer  "monthly_subscription_price_cents"
     t.string   "slug"
     t.integer  "availability_template_id"
-    t.boolean  "payout_available",                             default: false
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

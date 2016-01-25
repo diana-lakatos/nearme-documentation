@@ -28,8 +28,6 @@ class InstanceAdmin::BaseController < ApplicationController
     'users'              => { controller: '/instance_admin/manage/users', default_action: 'index' },
     'admins'             => { controller: '/instance_admin/manage/admins', default_action: 'index' },
     'partners'           => { controller: '/instance_admin/manage/partners', default_action: 'index' },
-    'support'            => { controller: '/instance_admin/manage/support', default_action: 'index' },
-    'faq'                => { controller: '/instance_admin/manage/support/faqs', default_action: 'index' },
     'approval_requests'  => { controller: '/instance_admin/manage/approval_requests', default_action: 'index' },
     'waiver_agreements'  => { controller: '/instance_admin/manage/waiver_agreement_templates', default_action: 'index' },
     'email layouts'      => { controller: '/instance_admin/manage/email_layout_templates', default_action: 'index' },
@@ -53,7 +51,7 @@ class InstanceAdmin::BaseController < ApplicationController
   }
 
   SETTINGS_CONTROLLERS = {
-    'configuration'        => { default_action: 'show' },
+    'configuration'        => { default_action: 'show', controller_class: 'InstanceAdmin::Settings::ConfigurationController' },
     'payments'             => { default_action: 'index' },
     'domains'              => { default_action: 'index' },
     'hidden_controls'      => { default_action: 'show' },
@@ -68,18 +66,14 @@ class InstanceAdmin::BaseController < ApplicationController
   THEME_CONTROLLERS = {
     'info'             => { default_action: 'show' },
     'design'           => { default_action: 'show' },
-    'homepage'         => { controller: '/instance_admin/theme/homepage_template', default_action: 'show' },
-    'homepage content' => { controller: '/instance_admin/theme/homepage', default_action: 'show' },
     'pages'            => { default_action: 'index' },
-    'header'           => { default_action: 'show' },
-    'footer'           => { default_action: 'show' },
     'content_holders'  => { default_action: 'index' },
     'liquid views'     => { controller: '/instance_admin/theme/liquid_views', default_action: 'index' },
     'file upload'      => { controller: '/instance_admin/theme/file_uploads', default_action: 'index' }
   }
 
   BUY_SELL_CONTROLLERS = {
-    'configuration'  => { default_action: 'show' },
+    'configuration'  => { default_action: 'show', controller_class: 'InstanceAdmin::BuySell::ConfigurationController' },
     'commissions'    => { default_action: 'show' },
     'tax_categories' => { default_action: 'index' },
     'tax_rates'      => { default_action: 'index' },
@@ -91,6 +85,11 @@ class InstanceAdmin::BaseController < ApplicationController
     'dimensions_templates' => { default_action: 'index' },
     'providers' => { default_action: 'show' },
     'shipping_profiles' => { default_action: 'index' },
+  }
+
+  SUPPORT_CONTROLLERS = {
+    'tickets' => { controller: '/instance_admin/support/support', default_action: 'index' },
+    'faq'     => { controller: '/instance_admin/support/faqs', default_action: 'index' }
   }
 
   PROJECTS_CONTROLLERS = {

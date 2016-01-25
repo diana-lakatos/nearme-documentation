@@ -39,7 +39,7 @@
     .row{:class => ('error' if f.object.errors[:phone].present?) }
       .col-md-3
         = f.label :phone, :class => 'control-label required' do
-          - if f.object.phone_required
+          - if f.object.validation_for(:phone).try(:is_required?)
             %abbr{:title => "required"} *
           = t('simple_form.labels.user.phone')
 
@@ -70,7 +70,6 @@
         - if is_i18n_set?('simple_form.hints.user.mobile_number')
           %p.help-block= t('simple_form.hints.user.mobile_number', default: '')
 
-= f.input :current_location, as: :string if only_inputs.empty? || only_inputs.include?(:current_location)
 - if only_inputs.empty? || only_inputs.include?(:current_address)
   = f.simple_fields_for :current_address, (f.object.current_address || f.object.build_current_address) do |address_form|
     = render :partial => 'addresses/column_form', :locals => { :f => address_form }

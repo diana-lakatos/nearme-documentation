@@ -2,9 +2,11 @@ class InstanceView < ActiveRecord::Base
   include Cacheable
 
   has_paper_trail
-  belongs_to :instance_type
   belongs_to :instance
-  belongs_to :transactable_type
+  has_many :transactable_type_instance_views, dependent: :destroy
+  has_many :transactable_types, through: :transactable_type_instance_views
+  has_many :locale_instance_views, dependent: :destroy
+  has_many :locales, through: :locale_instance_views
 
   VIEW_VIEW = 'view'
   EMAIL_VIEW = 'email'
@@ -335,22 +337,42 @@ class InstanceView < ActiveRecord::Base
     'buy_sell_market/products/administrator_badge' => {
       'product': 'Spree::ProductDrop',
     },
+    'home/index' => {
+      platform_context: 'PlatformContextDrop',
+    },
+    'home/search_box' => {
+      platform_context: 'PlatformContextDrop',
+    },
+    'home/search_button' => {
+      platform_context: 'PlatformContextDrop',
+    },
+    'home/search_box_inputs' => {
+      platform_context: 'PlatformContextDrop',
+    },
+    'home/homepage_content' => {
+      platform_context: 'PlatformContextDrop',
+    },
+    'shared/modules/latest_products' => {
+      platform_context: 'PlatformContextDrop',
+    },
+    'layouts/theme_footer' => {
+      platform_context: 'PlatformContextDrop',
+    },
+    'layouts/theme_header' => {
+      platform_context: 'PlatformContextDrop',
+    }
   }.freeze
 
-  scope :for_instance_type_id, ->(instance_type_id) {
-    where('instance_type_id IS NULL OR instance_type_id = ?', instance_type_id)
-  }
-
   scope :for_instance_id, ->(instance_id) {
-    where('instance_id IS NULL OR instance_id = ?', instance_id)
+    where('(instance_views.instance_id IS NULL OR instance_views.instance_id = ?)', instance_id)
   }
 
-  scope :for_nil_transactable_type, ->  { where(transactable_type_id: nil) }
-  scope :for_not_nil_transactable_type, ->  { where.not(transactable_type_id: nil) }
+  scope :for_transactable_type_id, -> (id) {
+    joins(:transactable_type_instance_views).where(transactable_type_instance_views: { transactable_type_id: id })
+  }
 
-
-  scope :for_transactable_type_id, -> (transactable_type_id) {
-    where('transactable_type_id IS NULL OR transactable_type_id = ?', transactable_type_id)
+  scope :for_locale, -> (locale) {
+    joins(locale_instance_views: :locale).where(locales: { code: locale })
   }
 
   scope :liquid_views, -> {
@@ -375,10 +397,6 @@ class InstanceView < ActiveRecord::Base
 
   def self.all_email_templates_paths
     (DEFAULT_EMAIL_TEMPLATES_PATHS + self.for_instance_id(PlatformContext.current.instance.id).custom_emails.pluck(:path)).uniq
-  end
-
-  def self.email_templates_paths_wo_transactable_type
-    all_email_templates_paths - self.for_instance_id(PlatformContext.current.instance.id).custom_emails.for_not_nil_transactable_type.pluck(:path)
   end
 
   def self.not_customized_sms_templates_paths
@@ -425,23 +443,18 @@ class InstanceView < ActiveRecord::Base
 
   validates_presence_of :body
   validates_presence_of :path
-  validates_inclusion_of :locale, in: I18n.available_locales.map(&:to_s)
+
+  validates :locales, length: { minimum: 1 }
   validates_inclusion_of :handler, in: ActionView::Template::Handlers.extensions.map(&:to_s)
   validates_inclusion_of :format, in: Mime::SET.symbols.map(&:to_s)
-  validates_uniqueness_of :path, { scope: [:instance_id, :transactable_type_id, :locale, :format, :handler, :partial] }
-  validate :template_path_is_accessible_for_all_alerts, if: lambda { |instance_view| instance_view.transactable_type_id.present? }
+  validate :does_not_duplicate_locale_and_transactable_type
 
-  before_validation do
-    self.locale ||= 'en'
-  end
-
-  def template_path_is_accessible_for_all_alerts
-    workflow_alerts_which_will_ignore_this_instance_view = WorkflowAlert.where(template_path: path).reject(&:makes_sense_to_associate_with_transactable_type?)
-    if workflow_alerts_which_will_ignore_this_instance_view.count > 0
-      self.errors.add(:transactable_type_id, I18n.t('activerecord.errors.models.instance_view.attributes.service_type.not_accessible', workflow_alerts: workflow_alerts_which_will_ignore_this_instance_view.map { |wa| "#{wa.workflow_step.workflow.name} > #{wa.workflow_step.workflow.name} > #{wa.name}" }.join('; ')))
-      false
-    else
-      true
+  def does_not_duplicate_locale_and_transactable_type
+    if (ids = InstanceView.distinct.where.not(id: id).where(path: path, partial: partial, view_type: view_type).for_locale(locales.pluck(:code)).for_transactable_type_id(transactable_types.pluck(:id)).pluck(:id)).present?
+      ids = ids.join(', ')
+      locales_names = Locale.distinct.where(id: locale_ids).joins(:locale_instance_views).where(locale_instance_views: { instance_view: ids }).map(&:name).join(', ')
+      transactable_type_names = TransactableType.distinct.where(id: transactable_type_ids).joins(:transactable_type_instance_views).where(transactable_type_instance_views: { instance_view_id: ids }).pluck(:name).join(', ')
+      self.errors.add(:locales, I18n.t('activerecord.errors.models.instance_view.attributes.locales_and_transactable_types.already_exists', ids: ids, locales: locales_names, transactable_types: transactable_type_names))
     end
   end
 

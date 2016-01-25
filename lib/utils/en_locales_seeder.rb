@@ -9,21 +9,43 @@ module Utils
         en_locales = YAML.load_file(yml_filename)
         en_locales_hash = convert_hash_to_dot_notation(en_locales['en'])
 
+        print_out "\tUpdating default instances"
         en_locales_hash.each_pair do |key, value|
           t = Translation.find_or_initialize_by(locale: 'en', key: key, instance_id: nil)
 
           if t.persisted? && t.value != value
             t.value = value
             t.save!
-            print_out "  Translation updated: key: #{key}, value: #{t.value} -> #{value}"
+            print_out "\t\tTranslation updated: key: #{key}, value: #{t.value} -> #{value}"
             count[:updated] += 1
           elsif t.persisted?
             count[:existed] += 1
           else
             t.value = value
             t.save!
-            print_out "  Translation created: key: #{key}, value: #{value}"
+            print_out "\t\tTranslation created: key: #{key}, value: #{value}"
             count[:created] += 1
+          end
+        end
+        Instance.find_each do |i|
+          i.set_context!
+          next if i.primary_locale.to_sym == :en
+          puts "\tInstance #{i.name} has primary locale #{i.primary_locale} different than english, making sure defaults are populated"
+          en_locales_hash.each_pair do |key, value|
+            t = Translation.find_or_initialize_by(locale: i.primary_locale, key: key, instance_id: i.id)
+            if t.new_record?
+              t.value = value
+              t.save!
+              print_out "\t\tTranslation created: key: #{key}, value: #{value}"
+            end
+          end
+          Translation.where(locale: :en, instance_id: i.id).find_each do |t|
+            translation = Translation.find_or_initialize_by(locale: i.primary_locale, key: t.key, instance_id: i.id)
+            if translation.new_record?
+              translation.value = t.value
+              translation.save!
+              print_out "\t\tEnglish version for #{t.key} exists but not for primary, creating"
+            end
           end
         end
       end

@@ -30,8 +30,10 @@ Before do
   store_model("instance", nil, instance)
   store_model("theme", nil, instance.theme)
   instance.set_context!
+  FactoryGirl.create(:instance_profile_type)
   FactoryGirl.create(:seller_profile_type)
   FactoryGirl.create(:buyer_profile_type)
+  FactoryGirl.create(:primary_locale)
   FactoryGirl.create(:instance)
 
   ActiveMerchant::Billing::Base.mode = :test

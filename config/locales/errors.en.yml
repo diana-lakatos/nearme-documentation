@@ -34,6 +34,10 @@ en:
           attributes:
             service_type:
               not_accessible: "can't associate Service Type with this template, because this template is used by the following workflow alerts, which are irrelevant to Service Type: %{workflow_alerts}"
+            locales_and_transactable_types:
+              already_exists: "there exist at least one object which duplicates locale/transactable type configuration. It means that language/transactable type pairs this view will be ignored. Please either change these other objects or remove from Locales: %{locales} or from Transactable Types: %{transactable_types}. The complete list of objects which collide: %{ids}"
+
+
         workflow_alert:
           attributes:
             template_path:

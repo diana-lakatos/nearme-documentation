@@ -14,7 +14,7 @@ class InstanceAdmin::BuySell::ShippingCategoriesController < InstanceAdmin::BuyS
       flash[:success] = t('flash_messages.buy_sell.shipping_category_added')
       redirect_to instance_admin_buy_sell_shipping_categories_path
     else
-      flash[:error] = @shipping_category.errors.full_messages.join(', ')
+      flash.now[:error] = @shipping_category.errors.full_messages.join(', ')
       render :new
     end
   end

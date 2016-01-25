@@ -55,6 +55,8 @@ en:
 
 
     labels:
+      user:
+        current_address: "Address"
       defaults:
         topic_ids: 'Topic'
         seek_collaborators: 'Seeking Collaborators'

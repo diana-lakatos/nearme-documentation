@@ -149,7 +149,9 @@ class UserTest < ActiveSupport::TestCase
 
       context "when country name required" do
         should "be invalid" do
-          user = FactoryGirl.build(:user_without_country_name, :country_name_required => true)
+          user = FactoryGirl.build(:user_without_country_name)
+          Instance.first.default_profile_type.custom_validators.create(field_name: 'country_name', required: 1)
+          user.build_profile
           refute user.valid?
         end
       end
@@ -157,6 +159,7 @@ class UserTest < ActiveSupport::TestCase
       context "when wrong phone numbers provided" do
         setup do
           @user = FactoryGirl.build(:user)
+          @user.build_profile
         end
 
         should "be invalid with wrong phone" do
@@ -176,7 +179,8 @@ class UserTest < ActiveSupport::TestCase
         end
 
         should "be invalid with empty number and phone required" do
-          @user.phone_required = true
+          @user.valid?
+          @user.custom_validators << @user.default_profile.instance_profile_type.custom_validators.build(field_name: 'phone', validation_rules:{presence: {}})
           @user.phone = nil
           refute @user.valid?
         end
@@ -245,11 +249,6 @@ class UserTest < ActiveSupport::TestCase
     end
 
     context 'when special requirements per instance' do
-      setup do
-        @instance = FactoryGirl.create(:instance, user_info_in_onboarding_flow: true)
-        @instance.user_required_fields = [:middle_name]
-        PlatformContext.current = PlatformContext.new(@instance)
-      end
 
       should 'be valid without middle_name if has not been peristed yet' do
         @user = FactoryGirl.build(:user, middle_name: nil)
@@ -257,31 +256,12 @@ class UserTest < ActiveSupport::TestCase
         assert @user.valid?
       end
 
-      should 'be valid without middle_name if user_info_in_onboarding_flow is set to false' do
-        @user = FactoryGirl.create(:user, middle_name: nil)
-        @user.custom_validation = true
-        refute @user.valid?
-        @instance.update_attribute(:user_info_in_onboarding_flow, false)
-        assert @user.valid?
-      end
-
       context 'user has been persisted' do
 
-        setup do
-          @user = FactoryGirl.create(:user, middle_name: nil)
-          @user.custom_validation = true
-        end
-
         should 'not be valid without middle_name' do
+          InstanceProfileType.default.first.custom_validators.create(field_name: 'middle_name', required: 1)
+          @user = FactoryGirl.build(:user, middle_name: nil)
           refute @user.valid?
-        end
-
-        should 'be valid even without middle_name if custom validation disabled' do
-          @user.custom_validation = nil
-          assert @user.valid?
-        end
-
-        should 'be valid with middle_name' do
           @user.middle_name = 'male'
           assert @user.valid?
         end
@@ -938,7 +918,7 @@ class UserTest < ActiveSupport::TestCase
   context 'custom attributes' do
 
     setup do
-      @type = FactoryGirl.create(:instance_profile_type)
+      @type = InstanceProfileType.default.first
       @custom_attribute = FactoryGirl.create(:custom_attribute, name: 'custom_profile_attr', label: 'Custom Profile Attr', target: @type, attribute_type: 'string')
       @user = FactoryGirl.create(:user, instance_profile_type: @type)
     end

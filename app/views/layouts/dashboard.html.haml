@@ -34,8 +34,6 @@
     - if platform_context.compiled_dashboard_stylesheet_url
       = stylesheet_link_tag platform_context.compiled_dashboard_stylesheet_url
 
-    = render 'layouts/homepage_css' if home_page?
-
     /[if lt IE 9]
       = stylesheet_link_tag 'browser_specific/ie8'
       = javascript_include_tag '//html5shim.googlecode.com/svn/trunk/html5.js'

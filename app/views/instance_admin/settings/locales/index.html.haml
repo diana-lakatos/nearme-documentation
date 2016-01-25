@@ -24,10 +24,11 @@
               %td
                 = locale.primary ? t('instance_admin.locales.labels.primary.yes') : t('instance_admin.locales.labels.primary_no')
               %td
-                = link_to t('instance_admin.locales.buttons.edit_keys'),
-                    edit_keys_instance_admin_settings_locale_path(locale), class: 'btn btn-blue btn-small'
+                = link_to t('instance_admin.locales.buttons.edit_keys'), edit_keys_instance_admin_settings_locale_path(locale), class: 'btn btn-blue btn-small'
               %td
-                - unless locale.code == 'en'
+                = link_to t('instance_admin.locales.buttons.date_time'), date_time_preferences_instance_admin_settings_locale_path(locale), class: 'btn btn-blue btn-small'
+              %td
+                - unless locale.primary?
                   = link_to instance_admin_settings_locale_path(locale), method: :delete,
                       data: { confirm: t('instance_admin.locales.confirmations.delete') } do
                     .fa.fa-trash-o.fa-2x.inline-form-icon.pull-right

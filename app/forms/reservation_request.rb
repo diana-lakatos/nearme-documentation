@@ -73,16 +73,20 @@ class ReservationRequest < Form
       end
 
       if listing.schedule_booking?
-        if @dates.is_a?(String)
+        if @dates.is_a?(String) || listing.schedule_booking?
           @start_minute = @dates.to_datetime.try(:min).to_i + (60 * @dates.to_datetime.try(:hour).to_i)
           @end_minute = @start_minute
           @dates = [@dates.try(:to_datetime).try(:to_date).try(:to_s)]
         end
       else
-        @dates = @dates.split(',') if @dates.is_a?(String)
+        @dates = @dates.split(',')
       end
+
+      @dates.flatten!
+
       @dates.reject(&:blank?).each do |date_string|
-        @reservation.add_period(Date.parse(date_string), start_minute, end_minute)
+        date = Date.parse(date_string) rescue Date.strptime(date_string, "%m/%d/%Y")
+        @reservation.add_period(date, start_minute, end_minute)
       end
     end
   end
@@ -221,7 +225,7 @@ class ReservationRequest < Form
   end
 
   def build_or_attach_document(document_params)
-    attachable = Attachable::AttachableService.new(Attachable::PaymentDocument, document_params)
+    attachable = AttachableService.new(Attachable::PaymentDocument, document_params)
     if attachable.valid? && document = attachable.get_attachable
       reservation.payment_documents << document
     else

@@ -178,5 +178,21 @@ namespace :fix do
     end
   end
 
+  task fix_wrong_mailers_subjects: :environment do
+    WorkflowAlert.where(template_path: 'reservation_mailer/notify_host_without_confirmation').update_all(subject: '[{{platform_context.name}}] {{reservation.owner.first_name}} just booked your {{listing.transactable_type.bookable_noun}}!')
+    WorkflowAlert.where(template_path: 'reservation_mailer/notify_host_with_confirmation').update_all(subject: '[{{platform_context.name}}] {{reservation.owner.first_name}} just booked your {{listing.transactable_type.bookable_noun}}!')
+    WorkflowAlert.where(template_path: 'reengagement_mailer/one_booking').update_all(subject: '[{{platform_context.name}}] Check out these new {{listing.transactable_type.bookable_noun_plural}} in your area!')
+
+
+    WorkflowAlert.where(template_path: 'recurring_booking_mailer/notify_host_without_confirmation').update_all(subject: '[{{platform_context.name}}] {{recurring_booking.owner.first_name}} just booked your {{listing.transactable_type.bookable_noun}}!')
+    WorkflowAlert.where(template_path: 'recurring_booking_mailer/notify_host_with_confirmation').update_all(subject: '[{{platform_context.name}}] {{recurring_booking.owner.first_name}} just booked your {{listing.transactable_type.bookable_noun}}!')
+
+    WorkflowAlert.where(template_path: 'listing_mailer/share').update_all(subject: '{{sharer.name}} has shared a {{listing.transactable_type.bookable_noun}} with you on {{platform_context.name}}')
+
+    WorkflowAlert.where(template_path: 'recurring_mailer/request_photos').update_all(subject: 'Give the final touch to your listings with some photos!')
+
+    WorkflowAlert.where(template_path: 'reengagement_mailer/no_bookings').update_all(subject: '[{{platform_context.name}}] Check out these new listings in your area!')
+  end
+
 end
 

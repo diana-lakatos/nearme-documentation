@@ -328,7 +328,7 @@ en:
         last_name: "Last name"
         language: "Language"
         time_zone: "Time zone"
-        current_location: "Current location"
+        current_address: "Address"
       product_type:
         searchable: 'Enable search'
         allow_save_search: 'Allow user to save search?'

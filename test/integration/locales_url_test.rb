@@ -5,7 +5,7 @@ class LocalesUrlTest < ActionDispatch::IntegrationTest
   setup do
     I18n.locale = :en
     RoutingFilter.active = true
-    @primary_locale = FactoryGirl.create(:primary_locale, code: 'en')
+    @primary_locale = Locale.first
   end
 
   should 'redirect to default language if locale does not exist' do

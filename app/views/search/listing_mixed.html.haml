@@ -3,9 +3,9 @@
 = render 'search/meta_tags'
 
 - content_for :mixed_locations do
-  .search-max-price{:'data-max-price' => @searcher.max_price, :'data-min-price' => @searcher.min_price}
   - if @searcher.results.present?
     .locations
+      .search-max-price{:'data-max-price' => @searcher.max_price, :'data-min-price' => @searcher.min_price}
       .hidden-locations
         %input{type: 'hidden', id: 'result_count', value: @searcher.result_count}
         %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, @searcher.search, @searcher.transactable_type.translated_bookable_noun)}

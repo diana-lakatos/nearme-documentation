@@ -102,7 +102,7 @@
 
 
     .col-sm-3.col-sm-pull-9
-      %small= t('dashboard.user_recurring_bookings.booking_placed_html', date: l(recurring_booking.created_at, format: :only_date))
+      %small= t('dashboard.user_recurring_bookings.booking_placed_html', date: l(recurring_booking.created_at.to_date, format: :long))
 
   - if recurring_booking.recurring_booking_periods.present?
     %h3= t('dashboard.user_recurring_bookings.periods.title')

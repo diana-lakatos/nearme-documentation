@@ -106,4 +106,4 @@
             = link_to t('dashboard.user_reservations.pay_now'), remote_payment_dashboard_user_reservation_path(reservation), class: 'btn btn-default'
 
     .col-sm-3.col-sm-pull-9
-      %small= t('dashboard.user_reservations.reservation_placed_html', date: l(reservation.created_at, format: :only_date_short))
+      %small= t('dashboard.user_reservations.reservation_placed_html', date: l(reservation.created_at.to_date, format: :long))

@@ -29,7 +29,7 @@ class InstanceAdmin::Manage::SmsTemplatesController < InstanceAdmin::Manage::Bas
       flash[:success] = t 'flash_messages.instance_admin.manage.sms_templates.created'
       redirect_to action: :index
     else
-      flash[:error] = @sms_template.errors.full_messages.to_sentence
+      flash.now[:error] = @sms_template.errors.full_messages.to_sentence
       render action: :new
     end
   end
@@ -45,7 +45,7 @@ class InstanceAdmin::Manage::SmsTemplatesController < InstanceAdmin::Manage::Bas
       flash[:success] = t 'flash_messages.instance_admin.manage.sms_templates.updated'
       redirect_to action: :index
     else
-      flash[:error] = @sms_template.errors.full_messages.to_sentence
+      flash.now[:error] = @sms_template.errors.full_messages.to_sentence
       render :edit
     end
   end

@@ -23,7 +23,7 @@
     
     <div class='info row-fluid'>
       <div class='date span5'>
-        Published {{ blog_post.published_at | localize: 'only_date' }}
+        Published {{ blog_post.published_at | to_date | localize: 'long' }}
       </div>
       <div class='social col-sm-7 clearfix'>
         {% include 'registrations/blog/social_buttons.html' %}

@@ -15,7 +15,7 @@ class InstanceAdmin::Manage::Workflows::WorkflowAlertsController < InstanceAdmin
       flash[:success] = t 'flash_messages.instance_admin.manage.workflow_alerts.created'
       redirect_to instance_admin_manage_workflow_workflow_step_path(@workflow_step.workflow, @workflow_step)
     else
-      flash[:error] = @workflow_alert.errors.full_messages.to_sentence
+      flash.now[:error] = @workflow_alert.errors.full_messages.to_sentence
       render action: :new
     end
   end
@@ -26,7 +26,7 @@ class InstanceAdmin::Manage::Workflows::WorkflowAlertsController < InstanceAdmin
       flash[:success] = t 'flash_messages.instance_admin.manage.workflow_alerts.updated'
       redirect_to instance_admin_manage_workflow_workflow_step_path(@workflow_step.workflow, @workflow_step)
     else
-      flash[:error] = @workflow_alert.errors.full_messages.to_sentence
+      flash.now[:error] = @workflow_alert.errors.full_messages.to_sentence
       render action: :edit
     end
   end
@@ -53,11 +53,7 @@ class InstanceAdmin::Manage::Workflows::WorkflowAlertsController < InstanceAdmin
   end
 
   def find_custom_emails
-    @custom_emails =  if @workflow_step.associated_class.constantize.belongs_to_transactable_type?
-      InstanceView.all_email_templates_paths
-    else
-      InstanceView.email_templates_paths_wo_transactable_type
-    end
+    @custom_emails = InstanceView.all_email_templates_paths
   end
 
   def find_custom_email_layouts

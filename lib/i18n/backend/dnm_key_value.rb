@@ -1,6 +1,6 @@
 class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
 
-  attr_accessor :instance_id
+  attr_accessor :instance_id, :default_locale
 
   def initialize(cache, subtrees=true)
     @cache, @subtrees = cache, subtrees
@@ -19,8 +19,9 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
     end
   end
 
-  def set_instance_id(instance_id)
-    self.instance_id = instance_id
+  def set_instance(instance)
+    self.instance_id = instance.id
+    self.default_locale = instance.primary_locale
   end
 
   def update_cache(_instance_id)
@@ -80,10 +81,10 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
 
     value = lookup_for_default_key locale, key if value.blank?
 
-    # Fallback to English
-    if value.blank? && locale != :en
-      value = lookup_for_en_instance_key(key)
-      value = lookup_for_en_default_key(key) if value.blank?
+    # Fallback to default locale
+    if value.blank? && locale != self.default_locale
+      value = lookup_for_primary_locale_instance_key(key)
+      value = lookup_for_primary_locale_default_key(key) if value.blank?
     end
 
     value.is_a?(Hash) ? value.deep_symbolize_keys : value
@@ -103,12 +104,12 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
     nil
   end
 
-  def lookup_for_en_instance_key(key)
-    lookup_for_instance_key(:en, key)
+  def lookup_for_primary_locale_instance_key(key)
+    lookup_for_instance_key(self.default_locale, key)
   end
 
-  def lookup_for_en_default_key(key)
-    lookup_for_default_key(:en, key)
+  def lookup_for_primary_locale_default_key(key)
+    lookup_for_default_key(self.default_locale, key)
   end
 
   # Note that we have to JSON.decode first, as 'empty' value is "\"\"" before that and blank? would return false instead of true

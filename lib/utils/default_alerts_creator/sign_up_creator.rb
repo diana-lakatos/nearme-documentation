@@ -19,7 +19,7 @@ class Utils::DefaultAlertsCreator::SignUpCreator < Utils::DefaultAlertsCreator::
   end
 
   def create_reengageemnt_email!
-    create_alert!({associated_class: WorkflowStep::SignUpWorkflow::NoReservations, name: 'Reengagement email', path: 'reengagement_mailer/no_bookings', subject: '[{{platform_context.name}}] Check out these new {{platform_context.bookable_noun_plural}} in your area!', alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::SignUpWorkflow::NoReservations, name: 'Reengagement email', path: 'reengagement_mailer/no_bookings', subject: '[{{platform_context.name}}] Check out these new listings in your area!', alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def create_create_user_by_admin_email!

@@ -4,7 +4,6 @@ Feature: A user can edit their settings
   I want to be able to change my email address
 
   Background:
-    Given a instance_profile_type exists
     Given a user exists
     And I am logged in as the user
     And a industry exists with name: "Computer Science"

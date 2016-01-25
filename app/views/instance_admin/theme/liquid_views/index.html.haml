@@ -6,7 +6,8 @@
           %tr
             %th
               = t('instance_admin.liquid_views.template')
-            %th
+            %th Transactable Types
+            %th Locales
             %th
             %th
             %th
@@ -14,7 +15,8 @@
           - @liquid_views.each do |liquid_view|
             %tr
               %td= pretty_path liquid_view.path
-              %td= liquid_view.transactable_type.try(:name)
+              %td= liquid_view.transactable_types.pluck(:name).join(', ')
+              %td= liquid_view.locales.map(&:display_name).join(', ')
               %td
                 .pull-right{style: 'margin-left: 10px'}
                   = link_to t('instance_admin.destroy'), instance_admin_theme_liquid_view_path(liquid_view), method: :delete,
@@ -22,7 +24,7 @@
                 .pull-right{style: 'margin-left: 10px'}
                   = link_to t('instance_admin.edit'), edit_instance_admin_theme_liquid_view_path(liquid_view)
                 .pull-right{style: 'margin-left: 10px'}
-                  = link_to t('instance_admin.liquid_views.duplicate_default'), new_instance_admin_theme_liquid_view_path(path: liquid_view.path)
+                  = link_to t('instance_admin.liquid_views.duplicate_default'), new_instance_admin_theme_liquid_view_path(liquid_view_id: liquid_view.id)
                 .pull-right{style: 'margin-left: 10px'}
                   = link_to t('instance_admin.versions'), versions_instance_admin_theme_liquid_view_path(liquid_view.id), title: 'Show previous versions'
 

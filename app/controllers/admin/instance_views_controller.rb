@@ -7,7 +7,7 @@ class Admin::InstanceViewsController < Admin::BaseController
   end
 
   def new
-    @instance_view = InstanceView.new({locale: 'en',
+    @instance_view = InstanceView.new({locale: PlatformContext.current.instance.primary_locale,
                                        handler: 'haml',
                                        view_type: InstanceView::VIEW_VIEW,
                                        format: 'html',

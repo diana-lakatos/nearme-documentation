@@ -111,7 +111,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
         get :upcoming
         assert_response :success
         assert_select ".order", 1
-        dates = @reservation.periods.map{|p| I18n.l(p.date, format: :only_date_short) }.join(' ; ')
+        dates = @reservation.periods.map{|p| I18n.l(p.date.to_date, format: :short) }.join(' ; ')
         assert_select ".order .dates", dates
       end
 
@@ -133,7 +133,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
         end
 
         should 'if any upcoming bookings' do
-          dates = @reservation.periods.map{|p| I18n.l(p.date, format: :only_date_short) }.join(' ; ')
+          dates = @reservation.periods.map{|p| I18n.l(p.date.to_date, format: :short) }.join(' ; ')
           assert_select ".order .dates", dates
         end
 

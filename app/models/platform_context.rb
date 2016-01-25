@@ -41,7 +41,7 @@ class PlatformContext
 
   def self.after_setting_current_callback(platform_context)
     ActiveRecord::Base.establish_connection(platform_context.instance.db_connection_string) if platform_context.instance.db_connection_string.present?
-    I18N_DNM_BACKEND.set_instance_id(platform_context.instance.id) if defined? I18N_DNM_BACKEND
+    I18N_DNM_BACKEND.set_instance(platform_context.instance) if defined? I18N_DNM_BACKEND
     I18n.locale = platform_context.instance.primary_locale
     CacheExpiration.update_memory_cache
   end
@@ -90,7 +90,7 @@ class PlatformContext
         result = @instance.domains.secured.first
       end
 
-      if Rails.env.development?
+      if Rails.env.development? || Rails.env.test?
         result ||= @instance.domains.first
       end
 

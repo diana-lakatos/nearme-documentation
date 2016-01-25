@@ -37,8 +37,8 @@ class UserDrop < BaseDrop
   #   user country name
   # phone
   #   user phone number including country code
-  # current_location
-  #   current location of the user
+  # current_address
+  #   current address of the user
   # has_published_posts?
   #   returns true if user has any published posts
   # seller_properties
@@ -48,7 +48,7 @@ class UserDrop < BaseDrop
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of,
     :with_mutual_friendship_source, :first_name, :middle_name, :last_name,
     :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
-    :country_name, :phone, :current_location, :is_trusted?, :reservations,
+    :country_name, :phone, :current_address, :is_trusted?, :reservations,
     :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation, to: :user
 
   def initialize(user)
@@ -287,6 +287,11 @@ class UserDrop < BaseDrop
       @categories = build_categories_hash_for_object(@user, Category.users.roots.includes(:children))
     end
     @categories
+  end
+
+  # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => 'string with all children separated with comma' } }
+  def formatted_categories
+    build_formatted_categories(@user)
   end
 
   # User's current address

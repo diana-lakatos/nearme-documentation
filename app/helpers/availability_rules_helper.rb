@@ -59,9 +59,13 @@ module AvailabilityRulesHelper
 
   # First revision of this method. Will be refined!
   def pretty_availability_sentence(availability)
-    days = availability.full_week.select { |d| availability.open_on?(day: d[:day]) }
-    hours = days.group_by { |day| rule = day[:rule]; [[rule.open_hour, rule.open_minute], [rule.close_hour, rule.close_minute]] }
-    hour_groups = hours.collect { |time, days| { times: time, days: days.map { |h| h.fetch(:day) }} }
+    rules = availability.rules
+    hour_groups =  rules.inject([]) do |hour_groups_arr, rule|
+      hour_groups_arr << {
+        times:  [[rule.open_hour, rule.open_minute], [rule.close_hour, rule.close_minute]],
+        days: rule.days
+      }
+    end
 
     sentence = []
 
@@ -69,7 +73,7 @@ module AvailabilityRulesHelper
       day_ranges, current_range, n = [], [], nil
 
       group[:days].each do |d|
-        if n.nil? or n + 1 == d
+        if n.nil? || (n + 1) % 7 == d
           current_range.push(d)
         else
           day_ranges.push(current_range)
@@ -87,8 +91,11 @@ module AvailabilityRulesHelper
 
       hour_part = []
       group[:times].each do |time|
-        hour, minutes, ordinal = (time[0] > 12 ? time[0] - 12 : time[0]), time[1].to_s.rjust(2, '0'), (time[0] > 12 ? 'pm' : 'am')
-        hour_part << "#{hour}:#{minutes}#{ordinal}"
+        hour = (time[0] > 12 ? time[0] - 12 : time[0])
+        minutes = time[1].to_s.rjust(2, '0')
+        ordinal = (time[0] > 12 ? 'pm' : 'am')
+
+        hour_part << I18n.l(DateTime.parse("#{hour}:#{minutes}#{ordinal}"), format: :short)
       end
 
       sentence.push("#{day_part.join(',')} #{hour_part.join("&ndash;")}")

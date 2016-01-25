@@ -14,7 +14,7 @@ DesksnearMe::Application.configure do
     :authentication => :plain,
     :enable_starttls_auto => true,
     :user_name      => "admin@desksnear.me",
-    :password       => "K6c#H3UWi}%DD6vUT$9W",
+    :password       => ENV['MAILER_SMTP_PASSWORD'],
     :domain         => 'desksnear.me'
   }
 
@@ -46,7 +46,6 @@ DesksnearMe::Application.configure do
   config.action_controller.asset_host = "https://production-nearme.netdna-ssl.com"
   config.action_mailer.asset_host     = "https://production-nearme.netdna-ssl.com"
 
-  config.paypal_mode = 'live'
   config.redis_settings = YAML.load_file(Rails.root.join("config", "redis.yml"))[Rails.env.to_s]
   config.redis_cache_client = Redis
   config.cache_store = :redis_store, {
@@ -57,10 +56,10 @@ DesksnearMe::Application.configure do
   config.send_real_sms = true
 
   # for ELB management
-  AWS.config(access_key_id: 'AKIAJYA2ZJ5BQTU5QBMA',
-             secret_access_key: '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',
+  AWS.config(access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+             secret_access_key: ENV['AWS_ACCESS_KEY_SECRET'],
              region: 'us-west-1')
 
   # Google link shortening service
-  config.googl_api_key = 'AIzaSyDQfdHdnh0u-0yRhqmSZchhkpFVIgXy2Jc'
+  config.googl_api_key = ENV['GOOGL_API_KEY']
 end

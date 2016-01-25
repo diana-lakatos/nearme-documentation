@@ -121,7 +121,6 @@ gem 'voight_kampff'
 gem 'rest-client'
 
 gem 'gibbon'
-gem 'dropbox-api'
 
 gem 'twilio-ruby'
 gem 'googl'

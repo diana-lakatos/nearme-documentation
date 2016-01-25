@@ -6,7 +6,7 @@ Who: {{ recurring_booking.owner.first_name }}
 
 What: {{ listing.name }} x {{ recurring_booking.quantity }}
 
-Starting at: {{ recurring_booking.start_date }}
+Starting at: {{ recurring_booking.start_date | to_date | localize: 'day_and_month' }}
 
 Total: {{ recurring_booking.subtotal_price }}
 

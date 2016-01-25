@@ -40,7 +40,7 @@ class RegistrationsController < Devise::RegistrationsController
           referer: session[:referer],
           source: cookies.signed[:source],
           campaign: cookies.signed[:campaign],
-          language: platform_context.instance.primary_locale.to_s
+          language: I18n.locale
         })
         update_analytics_google_id(@user)
         analytics_apply_user(@user)
@@ -114,7 +114,6 @@ class RegistrationsController < Devise::RegistrationsController
   def update
     # next line is there to prevent unwanted UI changes [i.e. the name in the navbar] (it's a bug in devise, resource === current_user)
     @user = User.find(resource.id) # maybe a little bit hackish way, but 'dup' or 'clone' doesn't work
-    resource.country_name_required = !PlatformContext.current.instance.is_community?
     resource.custom_validation = true
     resource.assign_attributes(user_params)
     build_approval_request_for_object(resource) unless resource.is_trusted?

@@ -13,7 +13,10 @@ DNM.util =
 
     idToDate: (dateId) ->
       return dateId if dateId instanceof Date
-      if matches = dateId.match(/^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})$/)
+      month_names = new RegExp(I18n.abbrMonthNames)
+      if dateId.match(month_names)
+        new Date(dateId)
+      else if matches = dateId.match(/^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})$/)
         new Date(parseInt(matches[1], 10), parseInt(matches[2], 10)-1, parseInt(matches[3], 10), 0, 0, 0, 0)
 
     suffix: (date) ->
