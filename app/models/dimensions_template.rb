@@ -20,6 +20,9 @@ class DimensionsTemplate < ActiveRecord::Base
   belongs_to :entity, polymorphic: true
 
   before_update :remove_shippo_id
+  before_save :update_default, if: :use_as_default
+
+  scope :defaults, -> { where(use_as_default: true) }
 
   validates_presence_of  :name, :weight, :height, :width, :depth
   validates_with UnitsOfMeasureValidator, :attributes => [:unit_of_measure, :weight_unit, :height_unit, :width_unit, :depth_unit]
@@ -47,6 +50,10 @@ class DimensionsTemplate < ActiveRecord::Base
     parcel = instance.shippo_api.create_parcel(self.to_shippo)
     update_column :shippo_id, parcel[:object_id]
     parcel
+  end
+
+  def update_default
+    DimensionsTemplate.defaults.where.not(id: self.id).update_all(use_as_default: false)
   end
 
   def to_shippo
