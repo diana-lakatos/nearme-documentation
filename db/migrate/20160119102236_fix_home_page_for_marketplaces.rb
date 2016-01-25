@@ -18,7 +18,9 @@ class FixHomePageForMarketplaces < ActiveRecord::Migration
       puts "Processing #{i.name}"
       if i.theme.present? && !i.theme.homepage_content.blank? && InstanceView.where(instance_id: i.id, path: 'home/index', format: 'html', handler: 'liquid', partial: false).count.zero?
         puts "\thempty homepage_content and no InstanceView for index/home - creating it"
-        homepage_template ||= InstanceView.first_or_initialize(instance_id: i.id, path: 'home/index', partial: false, format: 'html', handler: 'liquid', locale: 'en') do |view|
+        homepage_template ||= InstanceView.first_or_initialize(instance_id: i.id, path: 'home/index', partial: false, format: 'html', handler: 'liquid') do |view|
+          view.transactable_type_ids = TransactableType.pluck(:id)
+          view.locale_ids = Locale.pluck(:id)
           view.view_type = 'view'
           view.body = <<-SQL
 {% content_for 'hero' %}
@@ -47,7 +49,9 @@ class FixHomePageForMarketplaces < ActiveRecord::Migration
       end
       if i.theme.try(:homepage_content).present?
         puts "\tcreating homepage content liquid view based on theme.homepage_content column unless created"
-        InstanceView.first_or_initialize(instance_id: i.id, path: 'home/homepage_content', partial: true, format: 'html', handler: 'liquid', locale: 'en') do |view|
+        InstanceView.first_or_initialize(instance_id: i.id, path: 'home/homepage_content', partial: true, format: 'html', handler: 'liquid') do |view|
+          view.transactable_type_ids = TransactableType.pluck(:id)
+          view.locale_ids = Locale.pluck(:id)
           view.view_type = 'view'
           view.body = "<style>" + i.theme.homepage_css.html_safe + "</style>\n" + i.theme.homepage_content.html_safe
         end.save!
