@@ -20,7 +20,5 @@
   .div{:style => 'clear: both;'}
 
 :javascript
-  var profile_add_success = null;
-  #{defined?(is_success) ? "profile_add_success = 1;" : ''}
-  new ShippingProfiles(jQuery('.profiles_shipping_category_form'));
+  $(document).trigger('init.shippingprofiles', [#{defined?(is_success) ? "true" : 'false'}])
 

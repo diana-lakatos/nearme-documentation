@@ -1,20 +1,20 @@
 - if params[:action] == 'remote_payment'
   = content_for :domready do
-    Modal.load('#{remote_payment_modal_dashboard_user_reservation_path(@reservation, listing_id: @reservation.listing)}')
+    $(document).trigger('load.modal', ['#{remote_payment_modal_dashboard_user_reservation_path(@reservation, listing_id: @reservation.listing)}']);
 
 - if params[:reservation_id].present?
   = content_for :domready do
-    new Reservation.ListController($('section#reservations'), #{params[:reservation_id]});
+    $(document).trigger('init.reservationlistcontroller', [$('section#reservations'), #{params[:reservation_id]}]);
 
 - if params[:action] == 'booking_successful'
   = content_for :domready do
-    Modal.load('#{booking_successful_modal_dashboard_user_reservation_path(@reservation, listing_id: @reservation.listing)}')
+    $(document).trigger('load.modal', ['#{booking_successful_modal_dashboard_user_reservation_path(@reservation, listing_id: @reservation.listing)}']);
 
 - if params[:action] == 'booking_failed'
   = content_for :domready do
-    Modal.load('#{booking_failed_modal_dashboard_user_reservation_path(@reservation, listing_id: @reservation.listing)}')
+    $(document).trigger('load.modal', ['#{booking_failed_modal_dashboard_user_reservation_path(@reservation, listing_id: @reservation.listing)}']);
 
 - if params[:action] == 'recurring_booking_successful'
   = content_for :domready do
-    Modal.load('#{recurring_booking_successful_modal_dashboard_user_reservation_path(@recurring_booking, listing_id: @recurring_booking.listing)}')
+    $(document).trigger('load.modal', ['#{recurring_booking_successful_modal_dashboard_user_reservation_path(@recurring_booking, listing_id: @recurring_booking.listing)}']);
 

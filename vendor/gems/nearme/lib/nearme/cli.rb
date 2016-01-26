@@ -17,7 +17,7 @@ DESC
 
     def info
       puts "Retrieving opsworks stack info..."
-      result = NearMe::Info.new(options).status
+      NearMe::Info.new(options).status
     end
 
     desc "deploy", "deploy NearMe application to AWS OpsWorks"
@@ -38,10 +38,6 @@ DESC
                   aliases: :v, desc: "Rails environtment"
     method_option "migrate", required: false, type: :boolean,
                   default: true, desc: "Trigger migration"
-    method_option "assets", required: false, type: :boolean,
-                  default: true, desc: "Sync assets"
-    method_option "bucket", required: false, type: :string,
-                  aliases: :b, desc: "S3 bucket name"
     method_option "comment", required: false, type: :string,
                   desc: "deploy comment"
     method_option "watch", required: false, type: :boolean,
@@ -49,12 +45,6 @@ DESC
 
     def deploy
       deployment_check
-
-      if options[:assets]
-        puts "Assets sync..."
-        result = NearMe::SyncAssets.new(options).start!
-        puts "Assets sync done."
-      end
 
       puts "Deploying..."
       deploy = NearMe::Deploy.new(options)
@@ -65,33 +55,6 @@ DESC
         puts "Waiting until deploy is done."
         deploy.watch!(deployment_id)
       end
-    end
-
-    desc "sync_assets", "synchronize assets with S3 bucket"
-    long_desc <<DESC
-    sync NearMe application assets to S3
-    for example:
-
-    nearme sync_assets -r my-branch -b near-me-assets-staging-2
-    nearme sync_assets -r my-branch -e nm-staging-2
-
-    will compile assets and sync it to S3 bucket
-DESC
-    method_option "branch", required: true, type: :string,
-                  aliases: :r, desc: "git branch to synch"
-    method_option "bucket", required: false, type: :string,
-                  aliases: :b, desc: "S3 bucket name"
-    method_option "stack", required: true, type: :string,
-                  aliases: :e, desc: "AWS OpsWorks stack name"
-    method_option "environment", required: false, type: :string,
-                  aliases: :v, desc: "Rails environtment"
-
-    def sync_assets
-      deployment_check
-
-      puts "Assets sync..."
-      result = NearMe::SyncAssets.new(options).start!
-      puts "Assets sync done."
     end
 
     desc "capture", "capture db dump to S3"
@@ -112,7 +75,7 @@ DESC
 
     def capture
       puts "Capturing db to S3..."
-      result = NearMe::Backup.new(options).capture!
+      NearMe::Backup.new(options).capture!
       puts "Capture done."
     end
 
@@ -136,7 +99,7 @@ DESC
       deployment_check
 
       puts "Restoring db from S3..."
-      result = NearMe::Backup.new(options).restore!
+      NearMe::Backup.new(options).restore!
       puts "Restore done."
     end
 
@@ -169,8 +132,6 @@ BANNER
         info << "Branch: #{options[:branch]}\n" if options.has_key?('branch')
         info << "Environment: #{options[:environment]}\n" if options.has_key?('environment')
         info << "Migrate: #{options[:migrate]}\n" if options.has_key?('migrate')
-        info << "Assets: #{options[:assets]}\n" if options.has_key?('assets')
-        info << "Bucket: #{options[:bucket]}\n" if options.has_key?('bucket')
         info << "Watch: #{options[:watch]}\n" if options.has_key?('watch')
         info << "Host: #{options[:host]}\n" if options.has_key?('host')
         info << "Comment: #{options[:comment]}\n" if options.has_key?('comment')

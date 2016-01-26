@@ -7,17 +7,17 @@
       #w-ny.carousel.slide
         .carousel-inner
           .active.item
-            = image_tag "w-hotels/w-hotels+desks-near-me.jpg"  
+            = image_tag "w-hotels/w-hotels+desks-near-me.jpg"
           .item
-            = image_tag "w-hotels/w-downtown-living-room.jpg"             
+            = image_tag "w-hotels/w-downtown-living-room.jpg"
           .item
-            = image_tag "w-hotels/w-downtown-balcony.jpg"     
+            = image_tag "w-hotels/w-downtown-balcony.jpg"
           .item
             = image_tag "w-hotels/w-downtown-chairs.jpg"
           .item
             = image_tag "w-hotels/w-downtown-bar.jpg"
           .item
-            = image_tag "w-hotels/w-downtown-exterior.jpg"                        
+            = image_tag "w-hotels/w-downtown-exterior.jpg"
         / Carousel nav
         %a.carousel-control.left{"data-slide" => "prev", :href => "#w-ny"} ‹
         %a.carousel-control.right{"data-slide" => "next", :href => "#w-ny"} ›
@@ -29,12 +29,12 @@
 
     .row-fluid
       .span4
-        %p Now, working remotely can feel like home. Desks Near Me has partnered with W Hotels to offer chic, collaborative workspace options at Manhattan’s W New York Downtown.  
+        %p Now, working remotely can feel like home. Desks Near Me has partnered with W Hotels to offer chic, collaborative workspace options at Manhattan’s W New York Downtown.
       .span4
-        %p You’ll find amenities to fit every project, whether you’re working with a group or on your own. Host intimate meetings in the luxuriously appointed Living Room, or find focus in private work suites.  
+        %p You’ll find amenities to fit every project, whether you’re working with a group or on your own. Host intimate meetings in the luxuriously appointed Living Room, or find focus in private work suites.
       .span4
         %p Wireless high-speed Internet access, AV equipment, and video conferencing services are all on site, should you require them. Need to coordinate meetings with colleagues and clients? The hotel is conveniently located in Downtown Manhattan.
-    .row-fluid.padding-row.w-hotels-listing.quick-book.location-photos
+    .row-fluid.padding-row.w-hotels-listing.quick-book.location-photos{ data: { "listing-booking-data": listing_booking_data(@listing).to_json, 'show-review-booking-immediately': params[:restore_reservations].present?.to_json }}
       .span8.listing
         .carousel.slide
           .carousel-inner
@@ -56,17 +56,5 @@
       .span4.listing
         %h1 Private Office
         %p Close enough to rub shoulders with Financial District movers and shakers and surrounded by such inimitable icons as the Statue of Liberty and 1 World Trade Center, enjoy your own work space at W New York – Downtown. Power wheel and deal with a private office featuring an L shaped desk, seating, high speed internet access, plus hotel amenities at your fingertips.
-        
-        = render 'locations/booking_module', listing: @listing
-      
-- content_for :script do
-  :javascript
-    $(function() {
-      new Bookings.Controller($('#w-hotels .w-hotels-listing'),
-        #{raw listing_booking_data(@listing).to_json},
-        {
-          showReviewBookingImmediately: #{params[:restore_reservations].present?.to_json}
-        }
-      );
-    });
 
+        = render 'locations/booking_module', listing: @listing

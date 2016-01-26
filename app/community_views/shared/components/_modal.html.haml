@@ -4,8 +4,4 @@
   .modal-content
   .modal-loading
 
-= content_for :page_scripts do
-  = javascript_tag do
-    $(function(){ Modal.listen(); });
-
 = yield :modals

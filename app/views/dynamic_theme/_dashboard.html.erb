@@ -1,0 +1,288 @@
+<style id="dynamic-stylesheet" data-stylesheet="dashboard">
+<%
+  theme = current_instance.theme
+
+  # colors
+
+  theme_blue   = theme.hex_color(:blue) || '#5dbded'
+  theme_red    = theme.hex_color(:red) || '#e85c41'
+  theme_orange = theme.hex_color(:orange) || '#ffc840'
+  theme_green  = theme.hex_color(:green) || '#5dc988'
+  theme_gray   = theme.hex_color(:gray) || '#b6b6b6'
+  theme_black  = theme.hex_color(:black) || '#353535'
+  theme_white  = theme.hex_color(:white) || '#ffffff'
+
+  # logos
+
+  theme_logo_max_height = 30.0
+
+  theme_name = 'desksnearme'
+  theme_logo_width = 240
+  theme_logo_height = 30
+  theme_icon_width = 60
+  theme_icon_height = 30
+  theme_logo_retina_width = 240
+  theme_logo_retina_height = 30
+  theme_icon_retina_width = 60
+  theme_icon_retina_height = 30
+
+  theme_hero = theme.hero_image.url || image_url("theme/#{theme_name}/hero.jpg")
+  theme_icon = theme.icon_image.url || image_url("theme/#{theme_name}/logo/icon.png")
+  theme_icon2x = theme.icon_retina_image.url || image_url("theme/#{theme_name}/logo/icon@2x.png")
+  theme_logo = theme.logo_image.url || image_url("theme/#{theme_name}/logo/logo.png")
+  theme_logo2x = theme.logo_retina_image.url || image_url("theme/#{theme_name}/logo/logo@2x.png")
+
+  default_logo_height = 30.0
+  if theme.logo_image.present?
+    logo_dimensions = theme.logo_image.original_dimensions
+    if logo_dimensions.any? && logo_dimensions[1] > default_logo_height
+      theme_logo_height = default_logo_height.to_i
+      scale_factor = default_logo_height / logo_dimensions[1]
+      theme_logo_width = (scale_factor * logo_dimensions[0]).to_i
+    else
+      theme_logo_height = logo_dimensions[1]
+      theme_logo_width = logo_dimensions[0]
+    end
+  end
+
+  default_icon_height = default_logo_height
+  if theme.icon_image.present?
+    icon_dimensions = theme.icon_image.original_dimensions
+    if icon_dimensions.any? && icon_dimensions[1] > default_icon_height
+      theme_icon_height = default_icon_height.to_i
+      scale_factor = default_icon_height / icon_dimensions[1]
+      theme_icon_width = (scale_factor * icon_dimensions[0]).to_i
+    else
+      theme_icon_height = icon_dimensions[1]
+      theme_icon_width = icon_dimensions[0]
+    end
+  end
+
+  default_logo_retina_height = 30.0
+  if theme.logo_retina_image.present?
+    logo_dimensions = theme.logo_retina_image.original_dimensions.map{|d| d.to_i / 2}
+    if logo_dimensions.any? && logo_dimensions[1] > default_logo_retina_height
+      theme_logo_retina_height = default_logo_retina_height.to_i
+      scale_factor = default_logo_retina_height / logo_dimensions[1]
+      theme_logo_retina_width = (scale_factor * logo_dimensions[0]).to_i
+    else
+      theme_logo_retina_height = logo_dimensions[1]
+      theme_logo_retina_width = logo_dimensions[0]
+    end
+  end
+
+  default_icon_retina_height = default_logo_retina_height
+  if theme.icon_retina_image.present?
+    icon_dimensions = theme.icon_retina_image.original_dimensions.map{|d| d.to_i / 2}
+    if icon_dimensions.any? && icon_dimensions[1] > default_icon_retina_height
+      theme_icon_retina_height = default_icon_retina_height.to_i
+      scale_factor = default_icon_retina_height / icon_dimensions[1]
+      theme_icon_retina_width = (scale_factor * icon_dimensions[0]).to_i
+    else
+      theme_icon_retina_height = icon_dimensions[1]
+      theme_icon_retina_width = icon_dimensions[0]
+    end
+  end
+
+  theme_lighten_black = lighten_color(theme_black, 0.05)
+
+  font = Hash.new
+  font[:regular] = "'Futura-regular', sans-serif".html_safe
+  font[:medium] =  "'Futura-medium', sans-serif".html_safe
+  font[:bold] = "'Futura-bold', sans-serif".html_safe
+
+  if theme.theme_font.present?
+    ThemeFont::FONT_TYPES.map do |font_type|
+      %>
+        @font-face {
+          font-family: "font_<%= font_type %>";
+          src: url(<%= theme.theme_font.send("#{font_type}_eot") %>);
+          src: url(<%= theme.theme_font.send("#{font_type}_eot") %>?#iefix) format('eot'),
+               url(<%= theme.theme_font.send("#{font_type}_woff") %>) format('woff'),
+               url(<%= theme.theme_font.send("#{font_type}_ttf") %>) format('truetype'),
+               url(<%= theme.theme_font.send("#{font_type}_svg") %>) format('svg');
+        }
+      <%
+      font[font_type.to_sym] = "'font_#{font_type}', sans-serif".html_safe
+    end
+  end
+
+  font_stack = "#{font[:regular]}, helvetica, sans-serif".html_safe
+%>
+
+  .navbar .navbar-inner {
+    background: <%= theme_black %>;
+  }
+  .navbar .navbar-inner #header_links {
+    background-color: <%= theme_black %>;
+  }
+
+  .navbar .navbar-inner #logo {
+    width: <%= theme_logo_width %>px;
+    height: <%= theme_logo_height %>px;
+    margin-top: <%= theme_logo_max_height - theme_logo_height/2 %>px;
+    background: url(<%= theme_logo %>) no-repeat;
+    background-size: auto 100%;
+  }
+
+  @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
+    .navbar .navbar-inner #logo {
+      width: <%= theme_logo_retina_width %>px;
+      height: <%= theme_logo_retina_height %>px;
+      margin-top: <%= theme_logo_max_height - theme_logo_retina_height/2 %>px;
+      background: url(<%= theme_logo2x %>) no-repeat;
+      background-size: auto 100%;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .navbar .navbar-inner #logo {
+      width: <%= theme_icon_width %>px;
+      height: <%= theme_icon_height %>px;
+      margin-top: <%= theme_logo_max_height - theme_icon_height/2 %>px;
+      background: url(<%= theme_icon %>) no-repeat;
+      background-size: auto 100%;
+    }
+  }
+
+  @media (max-width: 767px) and (-webkit-min-device-pixel-ratio: 1.5), (max-width: 767px) and (min-resolution: 144dpi) {
+    .navbar .navbar-inner #logo {
+      width: <%= theme_icon_retina_width %>px;
+      height: <%= theme_icon_retina_height %>px;
+      margin-top: <%= theme_logo_max_height - theme_icon_retina_height/2 %>px;
+      background: url(<%= theme_icon2x %>) no-repeat;
+      background-size: auto 100%;
+    }
+  }
+
+  .navbar .divider-vertical {
+    background: <%= theme_lighten_black %>;
+  }
+
+  .navbar .nav-links li a.nav-link {
+    font:normal 16px/22px <%= font[:regular] %>, sans-serif;
+  }
+
+  .navbar .nav-links li a.nav-link span.count {
+    color: <%= theme_black %>;
+  }
+
+  .navbar .nav-links li a.nav-link.btn-blue:hover {
+    background: <%= lighten_color(theme_blue, 0.1) %>;
+  }
+
+  .navbar-inverse {
+    background: <%= theme_black %>;
+  }
+
+  .navbar-inverse .navbar-inner {
+    background: <%= theme_black %>;
+  }
+
+
+  .navbar-inverse ul.nav li ul.dropdown-menu {
+    background: <%= theme_black %>;
+    border-color: <%= theme_lighten_black %>;
+  }
+
+  .navbar-inverse ul.nav li ul.dropdown-menu li {
+    background:<%= theme_black %>;
+  }
+
+
+  .navbar-inverse ul.nav li ul.dropdown-menu li a:hover {
+    background:<%= theme_black %>;
+  }
+  .navbar-inverse ul.nav li ul.dropdown-menu::after  {
+    border-bottom-color:<%= theme_black %>;
+  }
+
+  .navbar-inverse ul.nav li.active {
+    background: <%= theme_black %>;
+  }
+
+  .navbar-inverse ul.nav li.active a {
+    color: <%= theme_white %>;
+  }
+
+  .navbar-inverse ul.nav li.dropdown.open {
+    background: <%= theme_black %>;
+  }
+
+  .navbar-inverse ul.nav li.dropdown.open .dropdown-toggle  {
+    background: <%= theme_black %>;
+  }
+
+
+  .modal-container.sign-up-modal .modal-content .pnotice a {
+    color: <%= theme_white %>;
+  }
+
+  .alert.success, .alert.notice {
+    background-color: <%= theme_green %>;
+  }
+
+  .alert.error {
+    background-color: <%= theme_red %>;
+  }
+
+  .alert.deleted {
+    background-color: <%= theme_red %>;
+  }
+
+  .alert.warning {
+    background-color: <%= theme_orange %>;
+  }
+
+
+  .photo-action {
+    background-color: <%= theme_blue %>;
+  }
+  .photo-action:hover {
+    background: <%= lighten_color(theme_blue, 0.1) %>;
+  }
+
+  .fileupload .photo-item {
+    border: 1px dashed <%= theme_black %>;
+  }
+
+  .fileupload .attachment  a {
+    color: <%= theme_blue %>;
+  }
+
+  * {
+    font-family: <%= font_stack %>;
+  }
+
+
+  .error .error-block, .error .help-inline {
+    font-family: <%= font_stack %>;
+  }
+
+  .footer-wrapper * {
+    font-family: <%= font_stack %>;
+  }
+
+  .footer-wrapper {
+    background: <%= theme_black %>;
+  }
+  .footer-wrapper .container-fluid {
+    background: <%= theme_black %>;
+  }
+
+  #habla_window_div #habla_oplink_a {
+    font-family: <%= font[:medium] %>;
+  }
+
+  #habla_window_div #habla_panel_div {
+    font-family: <%= font[:regular] %>;
+  }
+
+  footer .social-wrapper ul.social-icons li a .text {
+    font-family: <%= font[:medium] %>;
+  }
+
+  footer a, footer a:visited {
+    font-family: <%= font[:medium] %>;
+  }
+</style>

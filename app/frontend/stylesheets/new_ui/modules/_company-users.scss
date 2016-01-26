@@ -1,0 +1,9 @@
+.company-user {
+    & + & {
+        margin-top: 50px;
+    }
+
+    .actions {
+        text-align: right;
+    }
+}

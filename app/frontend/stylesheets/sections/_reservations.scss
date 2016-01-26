@@ -1,0 +1,476 @@
+section#reservations,
+section.reservations {
+
+  .price {
+      color: $green;
+  }
+
+  .reservation-dates{
+    cursor: pointer;
+    border-bottom: 1px dashed black;
+  }
+
+  .guest_filter{
+    margin-bottom: 30px;
+
+    .button-container{
+      padding: 5px 0px;
+    }
+
+    .btn-gray.inactive{
+      border: 2px solid $light-gray !important;
+      background-color: $dnm-white;
+      .guest-count{
+        color: $gray190;
+      }
+      &:hover {
+        background: $light-gray;
+        .guest-count{
+          color: black;
+        }
+      }
+    }
+  }
+
+  .actions .btn{
+    width: 49%;
+  }
+
+  .expiry-message{
+    font-size: 0.95em;
+  }
+
+  .reservation-emphasis{
+    margin: 0px 0px 20px 0px;
+    font-size: 20px;
+  }
+
+  p.no-data {
+    text-align: center;
+    margin: 40px 0 25px 0;
+  }
+
+  .other-reservation-separator {
+    margin: 20px 0px;
+    font-size: 20px;
+  }
+
+  .reservation-navigation {
+    margin-bottom: 30px;
+
+    a {
+      margin: 5px 0px;
+      border: 2px solid $gray220 !important;
+      background: $white;
+
+      span {
+        padding-right: 10px;
+        color: $gray210;
+      }
+
+      &.active {
+        background: $gray220;
+
+        span {
+          color: $black;
+        }
+      }
+    }
+
+    @media (max-width: 767px) {
+      margin-bottom: 15px;
+    }
+  }
+
+  .reservation-details {
+
+    h2 {
+      margin-top: 15px;
+
+      &:first-child {
+        margin-top: 0px;
+
+        @media (max-width: 767px) {
+          margin-top: 15px;
+        }
+      }
+
+      &.booking-header {
+        @media (max-width: 767px) {
+          margin-top: 0px;
+        }
+      }
+    }
+
+    form {
+      margin: 0px;
+    }
+
+    .actions .btn{
+      margin-top: 15px;
+      width: 140px;
+
+      @media (max-width: 767px) {
+        margin-bottom: 15px;
+      }
+    }
+
+    .add-calendar a{
+      color: $gray120;
+
+      span {
+        padding-left: 5px;
+      }
+    }
+
+    .reservation-status {
+
+      &.confirmed i {
+        color: $green;
+      }
+
+      &.unconfirmed i {
+        color: $orange;
+      }
+
+      &.cancelled i {
+        color: $red;
+      }
+    }
+
+    .map-wrapper,
+    .map-container {
+      width: 100%;
+      height: 100%;
+    }
+
+    .pending-confirmation {
+      color: $orange
+    }
+
+    .host-avatar {
+      margin-right: 10px;
+    }
+  }
+
+  #payment-options {
+    margin: 0px;
+
+    a {
+      color: $gray100;
+    }
+
+    &.active {
+      margin-bottom: -1px;
+    }
+  }
+}
+
+.modal-content {
+  .reservations-booking_successful, .reservations-booking_failed {
+    .icons {
+      padding: $padding-default;
+
+      h3 {
+        margin: $padding-default 0;
+        text-align: center;
+      }
+
+      ul {
+        width: 100%;
+        margin: 2 * $padding-default auto;
+        padding: 0;
+        text-align: center;
+
+        li {
+          display: inline;
+          margin: 0;
+          padding: 0 $padding-default;
+
+          a {
+            font-size: 34px;
+            color: $gray80;
+
+            &.ico-facebook-full:hover {
+              color: $facebook-blue;
+            }
+
+            &.ico-twitter:hover {
+              color: $twitter-blue;
+            }
+
+            &.ico-linkedin:hover {
+              color: $linkedin-blue;
+            }
+          }
+        }
+      }
+    }
+
+    .buttons {
+      a {
+        width: 48%;
+        text-align: center;
+        cursor: pointer;
+
+        &.btn-white {
+          border: 1px solid $gray220 !important;
+          color: $theme_gray;
+        }
+
+        &.btn-green {
+          margin-left: 3%;
+        }
+
+        @media (max-width: $booking-module-breakpoint) {
+          width: 100%;
+
+          &.btn-green {
+            margin-left: 0;
+            margin-top: 3%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.reservations-review, .reservations-create, .reservations-address {
+
+   #shipping-address {
+
+    .select2-container {
+      a.select2-choice {
+        background: #e6e6e6;
+        height: 45px;
+        border: none;
+
+        .select2-chosen {
+          line-height: 43px;
+        }
+        .select2-arrow {
+          width: 23px;
+
+          b {
+            background-size: 77px 73px !important;
+          }
+        }
+      }
+    }
+
+  .hide {
+    display: none;
+  }
+}
+
+  .radio_buttons .radio {
+    display: block;
+  }
+
+  .delivery-options {
+    .controls {
+      margin-left: 15px !important;
+    }
+  }
+
+  .header {
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    p {
+      &.location-name {
+        margin-bottom: 5px;
+      }
+
+      &.location-address {
+        color: $gray100;
+        margin-bottom: 25px;
+      }
+    }
+  }
+
+  .box {
+
+    h1 {
+      margin-bottom: $padding-small;
+    }
+
+    h2 {
+      margin-top: 2*$padding-default;
+      margin-bottom: $padding-default;
+    }
+
+    p {
+      color: $gray100;
+
+      &.error-block {
+        color: $red;
+      }
+    }
+
+    hr {
+      color: $gray230;
+      background-color: $gray230;
+      border-color: $gray230;
+    }
+
+    .selected-dates-summary {
+      margin: $padding-default 0;
+
+      p {
+        margin: $padding-default 0;
+        color: $gray120;
+      }
+    }
+
+    .order-summary {
+      border-bottom: 1px solid $gray230;
+
+      .summary-line {
+        border-color: $gray230;
+      }
+    }
+
+    .tabs {
+      width: auto;
+      float: none;
+      list-style: none;
+      position: relative;
+      margin: 10px 0px 0 0px;
+      text-align: left;
+      li {
+        float: left;
+      }
+      input[type="radio"] {
+        display:none;
+      }
+      label.tab {
+        display: inline-block;
+        padding: 13px 21px !important;
+        border-radius: 2px 2px 0 0;
+        font-size: 20px;
+        font-weight: normal;
+        cursor: pointer;
+        position: relative;
+        top: 4px;
+        white-space: nowrap;
+        transition: all 0.2s ease-in-out;
+      }
+
+      .tab2 label {
+        position: absolute;
+        left: 130px;
+        top: 0px;
+      }
+
+      .tab-content{
+        z-index: 2;
+        display: none;
+        overflow: hidden;
+        width: 100%;
+        font-size: 17px;
+        line-height: 25px;
+
+        .confirm-reservations {
+          background-color: $dnm_white;
+          color: $gray100;
+          margin-bottom: 0px;
+          margin-top: 0px;
+          padding: 5px 0 15px 0;
+        }
+        #braintree-paypal-loggedin {
+          max-width: 100% !important;
+          border-bottom: 1px solid $gray230 !important;
+          border-top: 0px !important;
+        }
+      }
+
+      [id^="tab"]:checked + label {
+        top: 1px;
+        padding-top: 17px;
+        border: 1px solid $gray230;
+        border-bottom: 0px;
+        background-color: $dnm_white;
+      }
+
+      [id^="tab"]:checked ~ [id^="tab-content"] {
+        display: block;
+      }
+    }
+
+    .contact-information-fields {
+      .controls {
+        margin-left: 0;
+        margin: 0px;
+      }
+
+      .phone-number-country-code-field input{
+        height: 49px;
+      }
+
+      input {
+        font-size: 18px;
+      }
+    }
+
+    .confirm-reservations {
+      margin: $padding-default 0 2*$padding-default 0;
+    }
+
+    .btn {
+      height: 60px;
+      font-size: 24px;
+    }
+
+    .flash {
+      &.error {
+
+        color: $red;
+        padding-bottom: 0.5em;
+
+        p {
+          text-align:center;
+          color: $red;
+          font-size: 1.1em;
+        }
+
+        ul li {
+          color: $red;
+          font-size: 1.1em;
+          margin: 20px 0px;
+        }
+      }
+    }
+  }
+}
+
+body.reservations-review, body.reservations-create {
+  .control-fileupload .btn-blue {
+    background: $blue none repeat scroll 0 0;
+    color: $white;
+  }
+  .control-fileupload .fileupload .fileinput-button {
+    cursor: pointer;
+    margin-bottom: 8px;
+    text-align: center;
+    height: 35px;
+  }
+  .control-fileupload .btn {
+    background-image: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857;
+    margin-bottom: 0;
+    padding: 6px 12px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    border-radius: 0;
+  }
+}
+

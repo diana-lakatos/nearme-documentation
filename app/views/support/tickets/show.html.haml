@@ -2,8 +2,3 @@
   = render 'support/tickets/rfq_show'
 - else
   = render 'support/tickets/show'
-
-
-- content_for :domready do
-  $('abbr.timeago').timeago();
-  new Support.TicketMessageController($('.message-form').eq(0))

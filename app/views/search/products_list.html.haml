@@ -38,4 +38,4 @@
                 = t('buy_sell_market.products.search_results.product_could_not_be_found')
 
 - content_for :domready do
-  new Search.ProductsListSearchController($('#listing_search form'), $("#content"));
+  $(document).trigger('initproductslist.searchresults');

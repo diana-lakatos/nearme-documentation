@@ -6,8 +6,8 @@ Given(/^saved search enabled$/) do
 end
 
 When(/^I click save search button$/) do
-  page.execute_script("$('#save-search-modal').show()")
-  page.execute_script("$('#save-search-status-modal').show()")
+  page.execute_script("$('#save-search-modal').show().addClass('in')")
+  page.execute_script("$('#save-search-status-modal').show().addClass('in')")
   find('a[data-save-search]').click
 end
 

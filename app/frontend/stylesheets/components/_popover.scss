@@ -1,0 +1,42 @@
+
+
+// Popover elements
+
+.popover {
+  position: absolute;
+  display: none;
+  margin-top: -4px;
+  padding: $padding-small;
+  border: 1px solid #939798;
+  background: #f5f5f5;
+  color: $gray230;
+  font-size: 10px;
+  border-radius: $border-radius-default;
+  box-shadow: 0 0 6px 0 rgba(0,0,0,0.25), inset 0 1px 0 0 $pure-white;
+
+  .title {
+
+  }
+
+  .content {
+
+  }
+
+  .arrow,
+  .top-arrow {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    margin: -$padding-small 0 0 -$padding-small;
+    width: 14px;
+    height: 8px;
+    background: url("/assets/components/popover/top-arrow.png") no-repeat;
+  }
+
+  hr {
+    margin: $padding-small -$padding-small;
+    color: #cbd1d3;
+    background: #cbd1d3;
+    border-bottom: 1px solid #fff;
+  }
+}

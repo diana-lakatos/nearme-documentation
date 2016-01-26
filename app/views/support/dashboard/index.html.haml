@@ -31,7 +31,7 @@
 
       .row-fluid
         .span8
-          .box
+          #support-faq.box
             = support_copy
 
             - @faqs.each do |faq|
@@ -42,7 +42,3 @@
                   = faq.answer.html_safe
         .span4
           = yield :tickets
-
-
-- content_for :domready do
-  $(document).ready(function() {new SupportFaq($('.box'));});

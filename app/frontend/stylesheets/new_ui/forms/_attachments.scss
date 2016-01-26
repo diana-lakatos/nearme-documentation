@@ -1,0 +1,111 @@
+.form-attachments {
+
+    .file-upload {
+        position: relative;
+        display: block;
+        margin: 0 auto 20px;
+        background: $form-photos-add-background;
+        border: 1px solid $form-photos-image-border;
+        font-size: 16px;
+        font-weight: normal;
+        color: $form-photos-add-color;
+        padding: 10px 20px 10px 55px;
+        cursor: pointer;
+        overflow: hidden;
+
+        &:before {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            @include fontello-icon($fontello-plus-circled);
+            color: $form-photos-add-color;
+            display: block;
+            font-size: 25px;
+        }
+
+        input {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            font-size: 10em;
+            opacity: 0;
+
+            &:hover, &:focus, &:active {
+                outline: none;
+            }
+        }
+    }
+
+    ul {
+        position: relative;
+        padding: 0;
+        list-style: none;
+    }
+
+    li {
+        position: relative;
+        margin: 0 0 20px;
+        padding: 20px;
+        border: 1px solid $seller-attachments-border;
+    }
+
+    .attachment-container {
+        position: relative;
+        padding-left: 45px;
+    }
+
+    .attachment-container + .form-inline {
+        margin-top: 20px;
+    }
+
+    .attachment-container:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        @include fa-icon();
+        content: $fa-var-file-o;
+        font-size: 38px;
+        vertical-align: top;
+        margin-right: 10px;
+        color: $gray-lighter;
+    }
+
+    .action--remove {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+
+    time {
+        margin-right: 30px;
+    }
+
+    .link {
+        display: block;
+    }
+
+    .action--remove {
+        vertical-align: top;
+    }
+
+
+    .type-css  .attachment-container:before { content: $fa-var-file-text-o; }
+    .type-doc  .attachment-container:before { content: $fa-var-file-word-o; }
+    .type-docx .attachment-container:before { content: $fa-var-file-word-o; }
+    .type-js   .attachment-container:before { content: $fa-var-file-text-o; }
+    .type-mp4  .attachment-container:before { content: $fa-var-file-video-o; }
+    .type-ods  .attachment-container:before { content: $fa-var-file-excel-o; }
+    .type-odt  .attachment-container:before { content: $fa-var-file-word-o; }
+    .type-pdf  .attachment-container:before { content: $fa-var-file-pdf-o; }
+    .type-rar  .attachment-container:before { content: $fa-var-file-archive-o; }
+    .type-swf  .attachment-container:before { content: $fa-var-file-o; }
+    .type-tar  .attachment-container:before { content: $fa-var-file-archive-o; }
+    .type-gz   .attachment-container:before { content: $fa-var-file-archive-o; }
+    .type-txt  .attachment-container:before { content: $fa-var-file-text-o; }
+    .type-xslx .attachment-container:before { content: $fa-var-file-excel-o; }
+    .type-zip  .attachment-container:before { content: $fa-var-file-zip-o; }
+
+}

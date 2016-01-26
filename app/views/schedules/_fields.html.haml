@@ -36,10 +36,3 @@
             = schedule_exception_rule_form.link_to_remove t('schedule.remove'), data: { confirm: (schedule_exception_rule_form.object.label.present? ? "Are you sure you want to delete #{schedule_exception_rule_form.object.label}?" : false) }
 
     -#= f.link_to_add t('schedule.add_exclude_rule'), :schedule_exception_rules
-
-- content_for :script do
-  :javascript
-    $(document).on('nested:fieldAdded', function(event){
-      var field = event.field;
-      field.find('.selectpicker').selectpicker({'iconShow': false});
-    });

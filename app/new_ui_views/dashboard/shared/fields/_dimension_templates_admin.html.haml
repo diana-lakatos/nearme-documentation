@@ -35,5 +35,5 @@
       = f.input :depth_unit, as: :select, include_blank: false, collection: size_units, required: true, input_html: { 'data-shipping-dimension-unit': 'depth' }
 
 :javascript
-  new DNM.DimensionTemplates('##{section_id}', #{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json});
+  $(document).trigger('dimensiontemplates.dnm','##{section_id}', #{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json});
 

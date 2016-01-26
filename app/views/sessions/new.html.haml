@@ -33,5 +33,5 @@
 
 - if request.xhr?
   :javascript
-    Modal.setClass('sign-up-modal')
-    $(function() { new SigninForm($('#signup')) });
+    $(document).trigger('setclass.modal', ['sign-up-modal']);
+    $(document).trigger('init.signinform');

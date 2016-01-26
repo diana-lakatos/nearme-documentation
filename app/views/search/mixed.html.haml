@@ -99,4 +99,4 @@
   = yield :mixed_locations
 
 - content_for :domready do
-  new Search.SearchMixedController($('#listing_search form'), $('section#results'));
+  $(document).trigger('initmixed.searchresults');

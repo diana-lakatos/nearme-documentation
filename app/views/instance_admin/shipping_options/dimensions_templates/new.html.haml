@@ -1,5 +1,1 @@
-= render partial: 'form', locals: { form_title: t('instance_admin.add'), form_method: 'post' }
-
-- content_for :domready do
-  new DimensionsTemplates(#{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json});
-
+= render partial: 'form', locals: { form_title: t('instance_admin.add'), form_method: 'post', units: DimensionsTemplate::UNITS_OF_MEASURE.to_json }

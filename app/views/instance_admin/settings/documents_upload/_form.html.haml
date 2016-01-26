@@ -5,7 +5,7 @@
   = simple_form_for @documents_upload, :url => instance_admin_settings_documents_upload_path(@documents_upload), :html => { method: @documents_upload.new_record? ? :post : :put, id: 'documents-upload-form' } do |f|
     = f.hidden_field :id
     = f.hidden_field :enabled
-  
+
     .row
       .input-container.col-xs-12
         .control-group
@@ -30,12 +30,9 @@
         .description-for-disabled{ class: "#{ !@documents_upload.is_enabled? ? '' : 'hide' }", "data-description-for-disabled" => true }
           .description
             = t('instance_admin.settings.documents_upload.safety_and_trust')
-  
+
         .options-wrapper{ class: "#{ @documents_upload.is_enabled? ? '' : 'hide' }", "data-options-wrapper" => true }
           = f.input :requirement, as: :radio_buttons, :collection => DocumentsUpload::REQUIREMENTS, label: false
-    
+
     = content_for :header_buttons do
       = f.submit t('instance_admin.save'), class: "btn btn-blue pull-right", data: { 'submit-form' => 1, 'form-selector' => 'form' }
-
-- content_for :domready do
-  new InstanceAdmin.DocumentsUploadController($('.documents_upload'))

@@ -9,14 +9,6 @@ GIT
       railties (>= 3.0)
 
 GIT
-  remote: git://github.com/bukalapak/jcrop-rails.git
-  revision: 77bce10f6d0a107f77d20597c7599eafac533a7d
-  specs:
-    jcrop-rails (1.0.3)
-      railties (>= 3.0)
-      thor (~> 0.14)
-
-GIT
   remote: git://github.com/galetahub/ckeditor.git
   revision: 1a19367413e703c71652f57128ed85079eeca605
   specs:
@@ -39,17 +31,6 @@ GIT
   specs:
     paranoia (2.1.3)
       activerecord (~> 4.0)
-
-GIT
-  remote: git://github.com/rails/sass-rails.git
-  revision: 8588b7b31d708a91516ae3bda0f57601a860ec28
-  branch: 4-0-stable
-  specs:
-    sass-rails (4.0.5)
-      railties (>= 4.0.0, < 5.0)
-      sass (~> 3.2.2)
-      sprockets (~> 2.8, < 3.0)
-      sprockets-rails (~> 2.0)
 
 GIT
   remote: git://github.com/spree/spree.git
@@ -178,21 +159,11 @@ GEM
     amatch (0.3.0)
       tins (~> 1.0)
     andand (1.3.3)
-    animate (0.1.0)
-      compass (>= 0.13.alpha.0)
-      sass (>= 3.2.0)
     ansi (1.5.0)
     arel (6.0.3)
-    asset_sync (1.1.0)
-      activemodel
-      fog (>= 1.8.0)
-      unf
     ast (2.0.0)
     attr_encrypted (1.3.3)
       encryptor (>= 1.3.0)
-    autoprefixer-rails (6.0.3)
-      execjs
-      json
     awesome_nested_set (3.0.2)
       activerecord (>= 4.0.0, < 5)
     awesome_print (1.6.1)
@@ -211,9 +182,6 @@ GEM
       rack (>= 0.9.0)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
-    bootstrap-sass (2.3.2.2)
-      sass (~> 3.2)
-    bootstrap-switch-rails (3.3.1)
     braintree (2.46.0)
       builder (>= 2.0.0)
     buftok (0.2.0)
@@ -250,13 +218,7 @@ GEM
     charlock_holmes (0.7.3)
     childprocess (0.5.6)
       ffi (~> 1.0, >= 1.0.11)
-    chosen-rails (1.2.0)
-      coffee-rails (>= 3.2)
-      compass-rails (>= 1.1.2)
-      railties (>= 3.0)
-      sass-rails (>= 3.2)
     chronic (0.9.1)
-    chunky_png (1.3.4)
     cldr-plurals-runtime-rb (1.0.0)
     climate_control (0.0.3)
       activesupport (>= 3.0)
@@ -278,12 +240,6 @@ GEM
     colored (1.2)
     colorize (0.7.7)
     columnize (0.9.0)
-    compass (0.13.alpha.0)
-      chunky_png (~> 1.2)
-      fssm (>= 0.2.7)
-      sass (~> 3.2.0.alpha.93)
-    compass-rails (2.0.0)
-      compass (>= 0.12.2)
     counter_culture (0.1.28)
       after_commit_action (~> 0.1.3)
     crack (0.4.2)
@@ -505,7 +461,6 @@ GEM
     formatador (0.2.5)
     friendly_id (5.1.0)
       activerecord (>= 4.0.0)
-    fssm (0.2.10)
     geocoder (1.2.6)
     get_process_mem (0.2.0)
     gherkin (2.12.2)
@@ -537,8 +492,6 @@ GEM
     hashie (3.4.3)
     highline (1.6.21)
     hike (1.2.3)
-    historyjs-rails (1.0.1)
-      railties (>= 3.0)
     hitimes (1.2.2)
     hpricot (0.8.6)
     htmlentities (4.3.4)
@@ -567,17 +520,10 @@ GEM
       hashie (>= 0.4.0)
       multi_json (~> 1.0, >= 1.0.3)
     ipaddress (0.8.0)
-    jquery-fileupload-rails (0.4.4)
-      actionpack (>= 3.1)
-      railties (>= 3.1)
-      sass (>= 3.2)
     jquery-rails (4.0.4)
       rails-dom-testing (~> 1.0)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
-    js-routes (1.0.1)
-      railties (>= 3.2)
-      sprockets-rails
     json (1.8.3)
     json_spec (1.1.4)
       multi_json (~> 1.0)
@@ -634,7 +580,7 @@ GEM
     mime-types (2.99)
     mini_magick (4.0.1)
     mini_portile2 (2.0.0)
-    minitest (5.8.1)
+    minitest (5.8.4)
     minitest-reporters (1.0.19)
       ansi
       builder
@@ -666,11 +612,10 @@ GEM
     net-ssh (3.0.1)
     netrc (0.10.3)
     newrelic_rpm (3.9.9.275)
-    nokogiri (1.6.7.1)
+    nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
     nokogumbo (1.2.0)
       nokogiri
-    non-stupid-digest-assets (1.0.4)
     oauth (0.4.7)
     oauth2 (1.0.0)
       faraday (>= 0.8, < 0.10)
@@ -799,7 +744,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     raindrops (0.13.0)
-    rake (10.4.2)
+    rake (10.5.0)
     rake-compiler (0.9.5)
       rake
     ranked-model (0.4.0)
@@ -871,9 +816,13 @@ GEM
       crass (~> 1.0.1)
       nokogiri (>= 1.4.4)
       nokogumbo (= 1.2.0)
-    sass (3.2.19)
-    select2-rails (3.5.9.1)
-      thor (~> 0.14)
+    sass (3.4.21)
+    sass-rails (5.0.4)
+      railties (>= 4.0.0, < 5.0)
+      sass (~> 3.1)
+      sprockets (>= 2.8, < 4.0)
+      sprockets-rails (>= 2.0, < 4.0)
+      tilt (>= 1.1, < 3)
     selenium-webdriver (2.47.1)
       childprocess (~> 0.5)
       multi_json (~> 1.0)
@@ -909,9 +858,7 @@ GEM
       eventmachine (~> 1.0.0)
       thin (~> 1.5.0)
     slop (3.6.0)
-    spectrum-rails (1.6.2)
-      railties (>= 3.1)
-    spring (1.4.0)
+    spring (1.6.2)
     spring-commands-cucumber (1.0.1)
       spring (>= 0.9.1)
     sprockets (2.11.0)
@@ -975,9 +922,6 @@ GEM
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     uber (0.0.15)
-    uglifier (2.1.2)
-      execjs (>= 0.3.0)
-      multi_json (~> 1.0, >= 1.0.2)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.6)
@@ -1027,7 +971,6 @@ GEM
     xpath (2.0.0)
       nokogiri (~> 1.3)
     yard (0.8.7.6)
-    yui-compressor (0.12.0)
 
 PLATFORMS
   ruby
@@ -1039,16 +982,11 @@ DEPENDENCIES
   acts-as-taggable-on (~> 3.4)
   addressable
   amatch
-  animate
-  asset_sync
   attr_encrypted
-  autoprefixer-rails
   awesome_print
   aws-sdk (= 1.27.0)
   better_errors
   binding_of_caller
-  bootstrap-sass (~> 2.3)
-  bootstrap-switch-rails
   braintree (= 2.46.0)
   bullet
   byebug
@@ -1058,13 +996,10 @@ DEPENDENCIES
   carmen
   carrierwave
   charlock_holmes (~> 0.7.3)
-  chosen-rails (~> 1.2.0)
   chronic (~> 0.9.1)
   ckeditor!
   cocoon
   codeclimate-test-reporter
-  coffee-rails
-  compass-rails
   counter_culture
   crummy
   cucumber (~> 1.3.0)
@@ -1096,17 +1031,12 @@ DEPENDENCIES
   googl
   google_plus
   haml
-  historyjs-rails
   hpricot
   i18n-active_record!
   i18n_data
   ice_cube
   inherited_resources (~> 1.6)
   instagram
-  jcrop-rails!
-  jquery-fileupload-rails
-  jquery-rails (~> 4.0)
-  js-routes
   json_spec
   koala
   launchy
@@ -1128,7 +1058,6 @@ DEPENDENCIES
   nested_form
   newrelic_rpm
   nokogiri (~> 1.6.0)
-  non-stupid-digest-assets
   omniauth
   omniauth-facebook
   omniauth-github
@@ -1174,9 +1103,6 @@ DEPENDENCIES
   rspec (= 2.14.1)
   ruby-prof
   sanitize
-  sass (~> 3.2.2)
-  sass-rails!
-  select2-rails
   selenium-webdriver
   shippo
   shoulda
@@ -1184,12 +1110,11 @@ DEPENDENCIES
   simple_form (~> 3.1)
   simplecov
   simplecov-rcov-text
-  spectrum-rails
   spree_core!
   spring
   spring-commands-cucumber
-  sprockets (= 2.11.0)
-  sprockets-rails (~> 2.1)
+  sprockets
+  sprockets-rails
   state_machine (~> 1.2.0)
   store_base_sti_class!
   stringex
@@ -1199,7 +1124,6 @@ DEPENDENCIES
   tilt
   twilio-ruby
   twitter (~> 5.5.1)
-  uglifier (~> 2.1.0)
   unicorn
   unicorn-worker-killer
   useragent
@@ -1211,7 +1135,6 @@ DEPENDENCIES
   webmock (= 1.17.4)
   wicked
   will_paginate
-  yui-compressor
 
 BUNDLED WITH
    1.11.2

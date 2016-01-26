@@ -25,7 +25,6 @@ DesksnearMe::Application.configure do
   config.active_support.deprecation = :notify
 
   config.assets.compile = false
-  config.assets.manifest = "#{Rails.root}/config/manifest.json"
 
   config.middleware.swap Rails::Rack::Logger, NullLogger, silence: %w('/ping')
 
@@ -62,4 +61,7 @@ DesksnearMe::Application.configure do
 
   # Google link shortening service
   config.googl_api_key = ENV['GOOGL_API_KEY']
+
+  config.webpack[:use_manifest] = true
+  config.assets.manifest = "#{Rails.root}/public/assets/manifest.json"
 end

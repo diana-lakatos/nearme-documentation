@@ -3,7 +3,3 @@
 = render 'instance_admin/manage/admins/new'
 = render 'instance_admin/manage/admins/instance_admin_roles/index'
 = render 'instance_admin/manage/admins/instance_admin_roles/new'
-
-- content_for :domready do
-  new Admins.InstanceAdmins.Controller($('#instance_admins_form'))
-  new Admins.InstanceAdminRoles.Controller($('#instance_admin_roles'))

@@ -1,7 +1,7 @@
 namespace :after_deploy do
   desc 'Runs required tasks after deployment'
   task :run => [:environment] do
-    ['after_deploy:clear_rails_cache', 'reprocess:css', 'locales:create_or_update_defaults', 'after_deploy:schedule_recurring_jobs'].each do |task_name|
+    ['after_deploy:clear_rails_cache', 'locales:create_or_update_defaults', 'after_deploy:schedule_recurring_jobs'].each do |task_name|
       p "[#{Time.now}]Invoking: #{task_name}"
       Rake::Task[task_name].invoke
     end

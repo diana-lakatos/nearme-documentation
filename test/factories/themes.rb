@@ -16,14 +16,10 @@ FactoryGirl.define do
     facebook_url 'https://www.facebook.com/DesksNearMe'
     owner_id { PlatformContext.current.instance.id }
     owner_type "Instance"
-    skip_compilation true
 
     factory :theme_with_logo_image do
       logo_image { fixture_file_upload(Rails.root.join('test', 'assets', 'foobear.jpeg'), 'image/jpeg') }
     end
 
-    factory :theme_with_compilation do
-      skip_compilation false
-    end
   end
 end

@@ -48,4 +48,4 @@
             = t('dimensions_templates.form.add_new_dimensions_template')
 
 - content_for :domready do
-  new RentalShippingTypeSelector($('select[data-rental-shipping-type'), $('div[data-dimensions-templates]'), #{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json});
+  $(document).trigger('init.rentalshippingtypeselector', [$('select[data-rental-shipping-type'), $('div[data-dimensions-templates]'), #{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json}]);

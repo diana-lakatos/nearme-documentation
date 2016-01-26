@@ -9,13 +9,9 @@
     .row
       .input-container.col-xs-6
         = f.label :listing_type_order
-        %ul.sortable{ data: { update_url: sort_transactable_types_instance_admin_manage_search_path}}
+        %ul#search-sortable.sortable{ data: { update_url: sort_transactable_types_instance_admin_manage_search_path}}
           - (@transactable_types + @instance_profile_types).sort_by(&:position).each do |tt|
             %li{id: (tt.is_a?(InstanceProfileType) ? "pt_#{tt.id}" : "tt_#{tt.id}")}= tt.name
 
     = content_for :header_buttons do
       = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
-
-= content_for :script do
-  :javascript
-    new InstanceAdmin.SearchSettings()

@@ -49,4 +49,4 @@
 = will_paginate_dashboard @payment_transfers
 
 - content_for :domready do
-  new ChartWrapper.Line($('#chart'), #{@chart.values.to_json.html_safe}, #{@chart.labels.to_json.html_safe})
+  $(document).trigger('linechart.dnm', ['#chart', #{@chart.values.to_json.html_safe}, #{@chart.labels.to_json.html_safe}]);

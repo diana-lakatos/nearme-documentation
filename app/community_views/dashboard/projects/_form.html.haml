@@ -1,4 +1,4 @@
-= simple_form_for [:dashboard, @transactable_type, @project], html: { class: 'form-a' } do |f|
+= simple_form_for [:dashboard, @transactable_type, @project], html: { class: 'form-a project-form-controller' } do |f|
   -# needed for photo uploader to work correctly
   = f.input :id, as: :hidden
   .fields
@@ -104,7 +104,3 @@
   %p.required-info
     %em *
     Required
-
-- content_for :page_scripts do
-  :javascript
-    new ProjectForm($('form.form-a'));

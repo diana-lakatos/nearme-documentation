@@ -1,0 +1,183 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0,0,0,0.9);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+
+  &.visible {
+    opacity: 1;
+  }
+
+  html.no-rgba & {
+    background: #000;
+    opacity: 0.6;
+  }
+
+  z-index: $modal-z-index - 1;
+}
+
+.modal-wrapper {
+  background: $gray240;
+  border-radius: $border-radius-default;
+}
+
+.modal-container {
+  z-index: $modal-z-index;
+  padding-bottom: 50px;
+  width: 600px;
+  transition: opacity 0.5s ease-in-out;
+  opacity: 0;
+
+  &.visible {
+    opacity: 1;
+  }
+
+  &.loading .modal-close {
+    display: none;
+  }
+
+  @media (max-width: $ipad-width) {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    left: 20px;
+    margin: 0;
+    width: 100%;
+    width: auto;
+  }
+
+  &.sign-up-modal {
+
+    .modal-close {
+      top: 12px;
+      right: 20px;
+    }
+
+    .modal-content {
+      background: transparent;
+
+      h2 {
+        margin-left: -10px;
+        color: $gray230;
+      }
+
+      .hr {
+        background: transparent;
+
+        span {
+          color: $gray220;
+        }
+      }
+
+      // fix for IE8 sign in/sign up modal opacity issues
+      header,
+      #service_buttons a,
+      .control-group,
+      .pnotice,
+      .actions {
+        opacity: 1;
+      }
+
+      .pnotice {
+        a {
+          color: $theme_white;
+          opacity: 0.7;
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+    .modal-loading {
+      background: transparent;
+    }
+  }
+}
+
+.modal-loading {
+  @extend .modal-wrapper;
+  height: 200px;
+  background: $gray220 url("/assets/components/modal/loader.gif") center center no-repeat;
+}
+
+.modal-content {
+  @extend .modal-wrapper;
+  padding: $padding-default;
+  z-index: $modal-z-index + 1;
+  transition: opacity .2s, transform .4s;
+  opacity: 0;
+  transform: translateY(-200px);
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  header {
+    display: block;
+    margin-top: -$padding-default;
+    margin-right: -$padding-default;
+    margin-bottom: $padding-default;
+    margin-left: -$padding-default;
+    padding: $padding-default;
+    background: $gray210;
+    color: $gray80;
+    border-top-left-radius: $border-radius-default;
+    border-top-right-radius: $border-radius-default;
+
+    h2 {
+      color: $gray80;
+    }
+  }
+
+  hr,
+  .hr {
+    border-bottom: 0;
+    margin-left: -$padding-default;
+    margin-right: -$padding-default;
+    margin-top: $padding-default;
+    margin-bottom: $padding-default;
+    text-align: center;
+  }
+
+  .hr span {
+    position: relative;
+    top: -10px;
+    display: inline-block;
+    padding: 0 8px;
+    background: transparent;
+    color: $gray120;
+    font-weight: bold;
+  }
+
+  .intro {
+    font-weight: bold;
+    color: $dnm_white;
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  z-index: $modal-z-index + 3;
+  width: 18px;
+  height: 18px;
+  color:$icon;
+  font-size: 18px;
+
+  &:hover {
+    color: $icon-hover;
+  }
+}
+
+.modal-body-wrapper {
+  position: fixed;
+  width: 100%;
+}
+

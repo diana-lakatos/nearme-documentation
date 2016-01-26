@@ -18,6 +18,3 @@
 = content_for :header_buttons do
   = link_to "#{t('instance_admin.add')} #{t('instance_admin.pages.page')}", new_instance_admin_theme_page_path, class: 'btn btn-blue pull-right'
   = link_to "#{t('instance_admin.add')} #{t('instance_admin.pages.redirect')}", new_instance_admin_theme_page_path(redirect: true), class: 'btn btn-blue pull-right'
-
-- content_for :domready do
-  $(function() { new InstanceAdmin.PagesController($('table#pages')); });

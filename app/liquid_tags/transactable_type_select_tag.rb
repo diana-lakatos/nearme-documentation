@@ -17,4 +17,3 @@ class TransactableTypeSelectTag < SelectTag
   end
 end
 
-Liquid::Template.register_tag('transactable_type_select', TransactableTypeSelectTag)

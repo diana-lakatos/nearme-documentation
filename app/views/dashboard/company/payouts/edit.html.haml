@@ -6,6 +6,3 @@
 .dash-body
   = simple_form_for @company, url: dashboard_company_payouts_path, wrapper: :bs3, html: { 'data-payouts-form' => 1 } do |f|
     = render partial: 'form', locals: { f: f }
-
-- content_for :domready do
-  new Dashboard.AddressController($('[data-payouts-form="1"]'));

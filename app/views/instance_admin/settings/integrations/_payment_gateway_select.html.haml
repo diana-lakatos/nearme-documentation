@@ -5,9 +5,3 @@
     = form_for("", url: payment_gateways_instance_admin_settings_integrations_path, remote: true) do
       = select_tag :payment_gateway, options_for_select(@payment_gateways), { prompt: "-- Select Gateway --", class: "payment-gateway-select" }
       = hidden_field_tag :country, country.alpha2
-
-  :javascript
-    $(".payment-gateway-select").on("change", function(){
-      $(".instance-payment-gateway-form").html("Loading...")
-      $(this).submit()
-    })

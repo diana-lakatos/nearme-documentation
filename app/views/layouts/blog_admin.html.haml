@@ -7,10 +7,12 @@
     %meta{content: "width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1", name: "viewport"}/
     = csrf_meta_tag
     = render 'layouts/favicon'
-    %link{ href: "//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css", rel: "stylesheet" }/
-    %link{ rel: "stylesheet", type: "text/css", href: "//cloud.typography.com/6219072/637722/css/fonts.css" }/
+    = stylesheet_link_tag 'blog_admin_vendor'
     = stylesheet_link_tag 'blog_admin'
-    = javascript_include_tag 'blog_admin'
+
+    / Head Javascript
+    = javascript_include_tag 'vendor/modernizr'
+    = render 'shared/ckeditor_basepath'
 
   %body{class: !user_signed_in? ? 'login' : ''}
     .container
@@ -40,5 +42,9 @@
       %footer
         %p
           &copy; #{platform_context.name} #{Date.current.year}
+
+    = webpack_manifest_script
+    = webpack_bundle_tag 'common'
+    = webpack_bundle_tag 'blogadmin'
 
     = yield :script

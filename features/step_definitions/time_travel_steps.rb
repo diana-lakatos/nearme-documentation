@@ -6,8 +6,4 @@ When /I travel to time (.*?)$/ do |time|
   travel_to Chronic.parse(time)
 end
 
-When /I travel back$/ do
-  travel_back
-end
-
 

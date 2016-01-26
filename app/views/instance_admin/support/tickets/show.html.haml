@@ -34,7 +34,3 @@
 
   = content_for :script do
     = render 'shared/modal'
-    :javascript
-      $('abbr.timeago').timeago();
-      new SupportAssigner($('#user_assigned_to_id'));
-      new Support.TicketMessageController($('.message-form').eq(0))

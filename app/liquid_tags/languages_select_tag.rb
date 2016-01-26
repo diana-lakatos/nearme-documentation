@@ -22,4 +22,3 @@ class LanguagesSelectTag < SelectTag
   end
 end
 
-Liquid::Template.register_tag('languages_select', LanguagesSelectTag)

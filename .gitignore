@@ -13,6 +13,10 @@ public/spree
 public/capybara.html
 public/staging*
 public/qa*
+public/javascripts
+public/images
+public/stylesheets
+public/fonts
 db/sphinx
 config/*.sphinx.conf
 config/redis.yml
@@ -25,7 +29,6 @@ node_modules
 tmp
 *.swo
 *.swp
-public/stylesheets/*.css
 coverage
 runner.html
 .jhw-cache
@@ -41,5 +44,4 @@ dump.rdb
 work_files
 instances/
 instances
-app/assets/javascripts/*-bundle.js*
-app/assets/stylesheets/*.map
+vendor/assets/bower_components

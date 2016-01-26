@@ -39,24 +39,15 @@
       = tag :meta, :name => "stripe-key", :content => platform_context.stripe_public_key
     = render 'layouts/favicon'
 
+    = stylesheet_link_tag 'application_vendor'
     = stylesheet_link_tag 'application'
-    - if platform_context.compiled_stylesheet_url.present?
-      = stylesheet_link_tag platform_context.compiled_stylesheet_url
+    = render "dynamic_theme/application"
 
-    /[if lt IE 9]
-      = javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'
-      = stylesheet_link_tag 'browser_specific/ie8'
-      = javascript_include_tag '//html5shim.googlecode.com/svn/trunk/html5.js'
-      = javascript_include_tag "//explorercanvas.googlecode.com/svn/trunk/excanvas.js"
-      = javascript_include_tag 'vendor/jquery.backgroundSize.min.js'
-      = javascript_include_tag 'vendor/respond.min.js'
-      - unless CarrierWave::Uploader::Base.asset_host.nil?
-        = tag('link', {href: "#{CarrierWave::Uploader::Base.asset_host}/respond-proxy/respond-proxy.html", id: 'respond-proxy', rel: 'respond-proxy'})
-        = tag('link', {href: image_path('respond.proxy.gif'), id: 'respond-redirect', rel: 'respond-redirect'})
-        = javascript_include_tag(javascript_path('vendor/respond.proxy.js'))
-    /[if lt IE 8]
-      = javascript_include_tag "//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"
-      = javascript_include_tag :chrome_frame
+    = javascript_include_tag 'vendor/modernizr'
+    = render "shared/javascript_assets"
+
+    /[if lt IE 10]
+      = javascript_include_tag 'vendor/placeholder'
 
   %body{class: theme_class(@theme_name)}
     = yield(:body_top)
@@ -82,7 +73,11 @@
           .footer-push{class: "footer_#{section_class(@section_name)}"}
 
     = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places&sensor=false"
-    = javascript_include_tag :application
+
+    = webpack_manifest_script
+    = webpack_bundle_tag 'common'
+    = webpack_bundle_tag 'application'
+
     = render 'layouts/initializers'
     = render 'layouts/scripts'
     = yield(:body_bottom)

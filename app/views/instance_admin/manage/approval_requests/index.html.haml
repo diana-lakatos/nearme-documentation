@@ -48,7 +48,7 @@
             %input{type: 'submit', name: 'commit', value:'submit', class: 'hidden_form_element2'}
             =fa_icon "search", class: 'fa-action-icon-submit'
         = hidden_field_tag :show, params[:show]
-  
+
   .row
     .table-container.col-xs-12
       %table.table.table-hover
@@ -84,7 +84,3 @@
 
 = content_for :header_buttons do
   = link_to t('instance_admin.manage.approval_requests.settings'), instance_admin_manage_approval_request_templates_path, class: 'btn btn-blue'
-
-- content_for :domready do
-  new InstanceAdmin.ApprovalRequestsController($('.approval_requests'))
-

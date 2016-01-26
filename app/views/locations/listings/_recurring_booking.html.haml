@@ -112,6 +112,3 @@
               = f.submit 'Book', :id =>"book-#{listing.id}", :class => "btn btn-green btn-large", :rel => "tooltip", :'data-original-title' => "Please select days first", :'data-behavior' => 'reviewBooking', :'data-listing-id' => listing.id, :'data-registration-url' => registration_url, :'data-store-reservation-request-url' => store_recurring_booking_request_url, :'data-user-signed-in' => user_signed_in?, :'data-secured' => (not secure_links?)
 
           .clearfix
-
-- content_for :domready do
-  $("##{listing.to_param} .quantity select").customSelect();

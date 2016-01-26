@@ -28,4 +28,8 @@ DesksnearMe::Application.configure do
   config.run_jobs_in_background = false
   config.allow_concurrency = false
 
+  config.webpack[:use_manifest] = true
+  config.assets.manifest = "#{Rails.root}/public/assets/manifest.json"
+
+  config.middleware.use Rack::NoAnimations
 end

@@ -1,6 +1,6 @@
 - @reservation = @reservation_request.reservation
 
-.row-fluid.reservation-wizard
+.row-fluid.reservation-wizard{ :"data-payment-controller" => true }
   .span8.offset2
     = render 'header', listing: @reservation_request.listing, location: @reservation_request.location
 
@@ -111,14 +111,9 @@
 
           = f.button :submit, t('reservations_review.buttons.request'), class: 'btn-green', data: { disable_with: t('reservations_review.disabled_buttons.request') }
 
-- content_for :domready do
-  new PaymentController($('.reservation-wizard'))
-
 - content_for :script do
   :javascript
     $(function() {
-      new PhoneNumbers.FieldsForm(
-        $('form.payment')
-      );
+      $(document).trigger('init.phonenumberfieldsform', 'form.payment');
       window.sessioncamConfiguration.customDataObjects.push( { key: "event", value: "booking_modal_opened" } );
     });

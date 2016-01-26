@@ -1676,9 +1676,11 @@ en:
       description: 'You can easily access your saved searches from the dashboard! Every time you select one of your saved searches, we will run your search again automatically and display the most up-to-date results.'
       search_saved: 'Your search has been successfully saved!'
       dashboard_link: 'Find all your saved searches in the %{link}.'
-      search_failed_to_save: 'Search faield to save'
+      search_failed_to_save: 'Search failed to save'
       dashboard: 'dashboard'
       title_placeholder: 'Name your search'
+    titles:
+      index: 'Saved Searches'
     nav:
       index: 'Saved Searches'
     headers:

@@ -18,9 +18,3 @@
 <img src='{{ "spinner.gif" | image_url }}' class='hidden-spinner hidden' alt='Spinner' />
 
 {{ @blog_posts | pagination_links }}
-
-<script>
-  $(function() {
-    new BlogPostsController();
-  });
-</script>

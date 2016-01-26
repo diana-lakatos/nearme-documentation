@@ -22,7 +22,3 @@
         - if @searcher.results.next_page
           %p.more-a{data: { next_page: @searcher.results.next_page }}
             = link_to t(:see_more), '#'
-
-- content_for :page_scripts do
-  :javascript
-    new Search($('#search_filter'));

@@ -8,7 +8,6 @@
 
     = csrf_meta_tag
     = stylesheet_link_tag 'instance_wizard'
-    = javascript_include_tag 'instance_wizard'
 
   %body
     .wrapper
@@ -16,3 +15,7 @@
         .alert.static{:class => "#{type}"}
           %p= message
       = yield
+
+    = webpack_manifest_script
+    = webpack_bundle_tag 'common'
+    = webpack_bundle_tag 'instancewizard'

@@ -1,0 +1,43 @@
+@import "common/common";
+
+// Font awesome section
+@import "font-awesome/scss/variables";
+$fa-font-path: '/assets/font-awesome/';
+
+@import "font-awesome/scss/mixins";
+@import "font-awesome/scss/path";
+@import "font-awesome/scss/core";
+@import "font-awesome/scss/larger";
+@import "font-awesome/scss/fixed-width";
+@import "font-awesome/scss/list";
+// @import "font-awesome/scss/bordered-pulled";
+// @import "font-awesome/scss/animated";
+// @import "font-awesome/scss/rotated-flipped";
+// @import "font-awesome/scss/stacked";
+@import "font-awesome/scss/icons";
+
+
+// Font awesome end
+
+@import "Jcrop/css/jquery.Jcrop";
+@import "chosen/chosen.min";
+@import "vendor/overrides/jcrop";
+@import "vendor/icui";
+
+
+@import "vendor/bootstrap";
+@import "vendor/bootstrap-theme";
+@import "vendor/bootstrap-select";
+@import "bootstrap-switch/dist/css/bootstrap3/bootstrap-switch";
+@import "bootstrap-select/sass/bootstrap-select";
+
+@import "vendor/jstree";
+@import "vendor/jstree_themes/apple/style";
+@import "vendor/jquery-ui-datepicker";
+
+@import "vendor/data_tables/dataTables.bootstrap";
+@import "vendor/bootstrap-colorpicker";
+
+@import "eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min";
+@import "select2/select2";
+
