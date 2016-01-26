@@ -1,0 +1,627 @@
+select {
+  margin: 16px 0;
+}
+
+.controls .switch{
+  margin-top: 9px;
+}
+
+.custom-availability-rules select{
+  margin: 16px 2px;
+}
+
+input[type=file] {
+  margin: 12px 0;
+}
+
+input[type=radio] {
+  vertical-align: inherit;
+  padding-right: 4px;
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  width: auto;
+}
+
+input[type=submit],
+input[type=text],
+input[type=email],
+input[type=password],
+input[type=url],
+input[type=tel] {
+   -webkit-appearance: none;
+   cursor: pointer;
+}
+
+body.home-index, body.search-index {
+  input.query {
+    cursor: text;
+  }
+}
+
+label.radio {
+  margin-right: 1em;
+}
+
+.radio_buttons.required {
+  margin-top: 17px;
+}
+
+#space_wizard {
+
+  .periodicity {
+    margin-right: 10px;
+  }
+
+  .chzn-container {
+    margin: 16px 0;
+  }
+}
+
+form:not(.no_inheritance) {
+
+  div.input,
+  div.field {
+    margin-bottom: 20px;
+  }
+
+  div.input.check_boxes,
+  div.field.check_boxes,
+  div.input.boolean,
+  div.input.radio_buttons {
+    overflow: hidden;
+
+    input {
+      float: left;
+    }
+
+    label {
+      margin-left: 24px;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .hint {
+      clear: left;
+    }
+  }
+
+  .control-group.check_boxes {
+    overflow: hidden;
+
+    .controls {
+      overflow: hidden;
+
+      label.checkbox {
+        padding-right: 10px;
+
+        &:last {
+          padding-right: 0px;
+        }
+      }
+    }
+  }
+
+  div.radio_buttons {
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .hint,
+  .help-block,
+  .preamble,
+  .error-block {
+    display: block;
+    margin-bottom: 0;
+    padding-bottom: 6px;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .preamble,
+  .error-block {
+    color: $red;
+  }
+
+  .hint,
+  .help-block,
+  .error-block {
+    padding-left: 20px;
+
+    &.no-icon {
+      background: none;
+      padding-left: 0;
+    }
+  }
+
+  .hint-block {
+    font-size: 12px;
+  }
+
+  .error-block {
+    color: $red;
+    text-align: left;
+    background: url("/assets/components/form/error.png") left top no-repeat;
+  }
+
+  .preamble {
+    color: #1e2222;
+  }
+
+  .hint,
+  .help-block {
+    background: url("/assets/components/form/hint.png") left top no-repeat;
+    margin-top: 8px;
+  }
+
+  .card-info.error, .row-fluid.error, .control-group.error {
+
+
+    // ul is for chosen
+    .controls {
+      input,
+      textarea,
+      ul,
+      select {
+        border-color: lighten($red, 10%);
+      }
+    }
+
+  }
+
+  label {
+
+    a[rel=tooltip] {
+      color: $theme_black;
+
+      &:hover {
+        color: $theme_gray;
+      }
+    }
+  }
+
+  label.control-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 18px;
+
+    &.inline {
+      display: inline-block;
+      margin-bottom: auto;
+      font-size: 14px;
+    }
+  }
+
+
+  fieldset,
+  .fieldset {
+
+    // Prevent additional padding at bottom of fieldset
+    .control-group:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="number"],
+  textarea {
+    @include form-field;
+
+    &.small {
+      padding: 6px 8px;
+    }
+
+
+    // A mini input field
+
+    &.mini {
+      width: 80px;
+    }
+
+    &.price-mini {
+      width: 100px;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+    }
+
+    &[readonly="readonly"], &[readonly] {
+      opacity: 0.5;
+    }
+  }
+
+  textarea {
+
+
+    // 4 lines
+
+    height: 88px;
+
+
+    // 2 lines
+
+    &.short {
+      height: 44px;
+    }
+
+
+    // 8 Lines
+
+    &.high {
+      height: 176px;
+    }
+  }
+
+  fieldset,
+  .fieldset {
+    position: relative;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    padding: 14px;
+    border: 1px solid #c6c6c6;
+    border-radius: $border-radius-default;
+
+    > legend,
+    > .legend {
+      @extend h2;
+      border-radius: $border-radius-default $border-radius-default 0 0;
+    }
+
+    > .border-legend {
+        position: absolute;
+        top: -14px;
+        background: #fafafa;
+        display: inline-block;
+        padding: 0px 10px;
+    }
+  }
+
+  // Wrapper element for input fields.
+  //
+  // Allows manipulation with respect to positioning elements relative
+  // to the input as a psudo-container.
+
+  .input-icon-wrapper {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+
+    input {
+      padding-left: 35px;
+      background-image:-webkit-linear-gradient(hsla(0,0%,100%,0), hsla(0,0%,100%,0));
+    }
+
+
+    // Icons
+
+    .icon {
+      position: absolute;
+      top: 50%;
+      left: 8px;
+    }
+
+    .icon.icon-loading {
+      margin-top: -12px;
+      width: 16px;
+      height: 16px;
+      background: url("/assets/components/form/input-loader.gif");
+    }
+
+    .icon.ico-crosshairs {
+      margin-top: -17px;
+      width: 22px;
+      height: 23px;
+      font-size: 26px;
+      opacity: .6;
+    }
+  }
+
+  input[type='submit'] {
+    @extend .btn;
+    @extend .btn-large;
+    @extend .btn-green;
+    width:100%;
+    border: none;
+    font-size: 18px;
+  }
+
+  h2.with-margin {
+    padding-bottom: 15px;
+  }
+}
+
+// Form with horizontal label alignment
+//
+// Usage:
+//   <form class="form-horizontal">
+//     <div class="control-group">
+//       <label>Label on left</label>
+//       <div class="controls">
+//         <!-- input elements right of label -->
+//       </div>
+//     </div>
+//     <div class="control-group indent">
+//       <label>Top label</label>
+//       <div class="controls">
+//         <!-- input elements under label -->
+//       </div>
+//     </div>
+//   </form>
+
+.form-horizontal {
+
+  .control-group {
+    clear: both;
+    margin-bottom: 10px;
+
+
+    // An indented control group
+
+    &.indent {
+      margin-left: 200px;
+
+
+      // Override the label so that it's not floating and doesn't float
+
+      .control-label {
+        display: block;
+        float: none;
+        margin: 0;
+        margin-bottom: 5px;
+        width: auto;
+        text-align: left;
+      }
+
+
+      // Controls don't need a margin as already indented
+
+      .controls {
+        margin-left: 0;
+      }
+    }
+
+    &.social-provider {
+      padding-bottom: 10px;
+
+      a.btn {
+        margin-left: 20px;
+
+        @media (max-width: 668px) {
+          margin-left: 0px;
+        }
+      }
+    }
+
+    .control-label {
+      float: left;
+      margin-top: 11px;
+      width: 180px;
+      color: $gray60;
+      text-align: right;
+
+      &.social-networks {
+        margin-top: 1px;
+        width: 110px;
+      }
+
+      &.flush-top,
+      &.boolean.optional {
+        margin: 0 0 20px;
+
+        @media (max-width: $iphone-landscape) {
+          margin: 7px 0 0;
+        }
+      }
+
+      &.check_boxes {
+        margin-top: 0px;
+      }
+    }
+
+    .controls {
+      margin-left: 200px;
+
+      input,
+      textarea {
+        font-size: 18px;
+        font-weight: normal;
+      }
+    }
+
+    .chosen-container {
+      width: 100% !important;
+    }
+  }
+}
+
+
+// Width overrides for restricted width forms
+
+.two-thirds.column form.form-horizontal,
+.eleven.columns form.form-horizontal {
+
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="url"],
+  input[type="tel"],
+  textarea {
+    width: 367px;
+  }
+
+  .input-icon-wrapper {
+    input[type="text"] {
+      width: 340px;
+    }
+  }
+
+  .controls {
+
+    &.two-up input {
+      width: 169px;
+
+      &:first-child {
+        margin-right: 4px;
+      }
+    }
+  }
+
+  .actions {
+    margin-left: 196px;
+    margin-bottom: 20px;
+  }
+
+
+  // Fieldsets require even further smaller width fields
+
+  .fieldset,
+  fieldset {
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="url"],
+    input[type="tel"],
+    textarea {
+      width: 328px;
+    }
+  }
+}
+
+@media screen and (max-width:959px) {
+
+  .two-thirds.column form.form-horizontal input[type="text"],
+  .two-thirds.column form.form-horizontal input[type="password"],
+  .two-thirds.column form.form-horizontal input[type="email"],
+  .two-thirds.column form.form-horizontal input[type="url"],
+  .two-thirds.column form.form-horizontal input[type="tel"],
+  .two-thirds.column form.form-horizontal textarea,
+  .two-thirds.column form.form-horizontal .controls.two-up input,
+  form .hint,
+  form .help-block,
+  .two-thirds.column form.form-horizontal .fieldset input[type="text"],
+  .two-thirds.column form.form-horizontal .fieldset textarea  {
+
+    box-sizing: border-box;
+    position:relative;
+    float: left;
+    clear: both;
+    width: 100%;
+  }
+
+  form .controls .input-icon-wrapper,
+  .two-thirds.column form.form-horizontal .input-icon-wrapper input[type="text"] {
+    display:block;
+    float:left;
+    width:100%;
+  }
+
+  .form-horizontal .control-group .control-label {
+    text-align: left;
+  }
+
+  .form-horizontal .control-group .controls {
+    margin:10px 0;
+    clear: both;
+  }
+
+  .two-thirds.column form.form-horizontal .actions,
+  .form-horizontal .control-group.indent {
+    margin-left:0;
+  }
+
+  .actions input[type='submit'] {
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: $iphone-landscape) {
+
+  select.currency {
+    width: 100%;
+  }
+}
+
+.input-icon-holder {
+  position: relative;
+  width: 100%;
+
+  input {
+    padding-left: 32px !important;
+
+    &:focus {
+
+      + span {
+        color: $icon-hover !important;
+      }
+    }
+  }
+
+  span {
+    position: absolute;
+    top: 11px;
+    left: 8px;
+    color: $icon;
+  }
+}
+
+.input-icon-holder-right {
+  position: relative;
+  width: 100%;
+
+  input {
+    padding-right: 32px !important;
+
+    &:focus {
+
+      + span {
+        color: $icon-hover !important;
+      }
+    }
+  }
+
+  span {
+    position: absolute;
+    top: 11px;
+    right: 8px;
+    color: $icon;
+  }
+}
+
+.mobile-fixed-position-fix {
+  .navbar, #space_wizard .actions {
+    position: absolute !important;
+  }
+
+  .navbar {
+    top: 0;
+  }
+}
+
+.select2-container {
+  width:100%;
+
+  input.select2-input:focus {
+    border: none !important;
+  }
+}
+
+
+.error {
+
+  .select2-container, .category_tree a {
+    border: solid #ec8473 1px !important; //TODO remove important here
+    input, textarea {
+      border: none !important;
+    }
+
+  }
+}

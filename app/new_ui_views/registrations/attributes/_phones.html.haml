@@ -10,4 +10,4 @@
 
     = label_tag do
       = check_box_tag "#{f.object.class.name.underscore}_mobile_same_as_phone", '1', (f.object.phone == f.object.mobile_number), data: { 'same-as-phone-checkbox' => true }
-      = "Same as phone"
+      = t 'general.same_as_phone'

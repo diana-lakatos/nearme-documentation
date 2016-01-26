@@ -1,0 +1,24 @@
+/* global require */
+require('./ace_editor_textarea_binding');
+require('./address_autocomplete');
+require('./availability_rules_controller');
+require('./chart_wrapper');
+require('./custom_inputs');
+require('./datepicker');
+require('./fileupload');
+require('./flash');
+require('./google_map_marker');
+require('./google_map_popover');
+require('./height_constrainer');
+require('./limiter');
+require('./modal');
+require('./modal_form');
+require('./multiselect');
+require('./price_fields');
+require('./price_range');
+require('./rental_shipping_type_selector');
+require('./route_link');
+require('./search_results_google_map_marker');
+require('./seller_attachment_access_level_selector');
+require('./smart_google_map');
+require('./tags');

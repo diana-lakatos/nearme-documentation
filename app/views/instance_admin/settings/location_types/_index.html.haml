@@ -13,6 +13,4 @@
               .input-container.col-xs-2
                 %a{"data-target" => "#instanceAdminModal", "href" => "#{destroy_modal_instance_admin_settings_location_type_path(f.object)}", "data-location-types-instance-admin-modal" => '1' }
                   .fa.fa-trash-o.fa-2x.inline-form-icon.pull-right
-    
-- content_for :domready do
-  new InstanceAdmin.LocationsController($('#edit-location-types-form'))
+

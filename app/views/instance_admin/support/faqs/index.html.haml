@@ -13,6 +13,3 @@
   .row
     .text-container.col-xs-12
       = link_to t('instance_admin.manage.faq.add_question'), new_instance_admin_support_faq_path, class: 'btn btn-blue pull-right'
-
-- content_for :domready do
-  $(function() { new InstanceAdmin.FaqsController($('table#faqs')); });

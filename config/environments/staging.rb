@@ -24,7 +24,6 @@ DesksnearMe::Application.configure do
   Rails.application.routes.default_url_options[:protocol] = 'https'
 
   config.assets.compile = false
-  config.assets.manifest = "#{Rails.root}/config/manifest.json"
 
   Rails.application.routes.default_url_options[:host] = 'staging.near-me.com'
   config.test_email = "notifications-staging@desksnear.me"
@@ -44,9 +43,10 @@ DesksnearMe::Application.configure do
     config.asset_host           = 'https://staging-uploads-nearme.netdna-ssl.com'
     config.storage              = :fog
   end
+  
+  config.action_controller.asset_host = ENV['ASSET_HOST'].presence || Proc.new { "https://#{PlatformContext.current.decorate.host}" }
+  config.action_mailer.asset_host     = ENV['ASSET_HOST'].presence || Proc.new { "https://#{PlatformContext.current.decorate.host}" }
 
-  config.action_controller.asset_host = "https://staging-nearme.netdna-ssl.com"
-  config.action_mailer.asset_host     = "https://staging-nearme.netdna-ssl.com"
 
   # Protect this environment with a simple Basic authentication dialog
   # config.middleware.insert_before(Rack::Sendfile, "Rack::Auth::Basic") do |username, password|
@@ -62,4 +62,7 @@ DesksnearMe::Application.configure do
   config.root_secured = false
   config.secure_app = true
   config.send_real_sms = true
+
+  config.webpack[:use_manifest] = true
+  config.assets.manifest = "#{Rails.root}/public/assets/manifest.json"
 end

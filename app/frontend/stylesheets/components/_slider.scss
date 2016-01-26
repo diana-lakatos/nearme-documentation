@@ -1,0 +1,27 @@
+.ui-slider {
+  position: relative;
+  margin-top: 6px;
+  height: 11px;
+  border-radius: $border-radius-default;
+  background: lighten($dark_gray, 30%);
+
+  .ui-slider-handle {
+    position: absolute;
+    display: block;
+    margin-top: -8px;
+    margin-left: -4px;
+    width: 24px;
+    height: 24px;
+    outline: none;
+    border: none !important;
+    border-radius: $border-radius-default;
+    background: url('https://s3.amazonaws.com/desksnearme.assets/img/ui/knob-green.png') center center no-repeat;
+    transition: all 0s false false;
+  }
+
+  .ui-slider-range {
+    position: absolute;
+    margin-top: -1px;
+    height: 12px;
+  }
+}

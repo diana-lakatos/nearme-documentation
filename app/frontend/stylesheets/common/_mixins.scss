@@ -1,0 +1,33 @@
+@mixin form-field {
+  margin: 0;
+  margin-bottom: 8px;
+  padding: 8px 8px 8px 8px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid $gray230;
+  border-radius: $border-radius-default;
+  background: $gray230;
+  color: $gray60;
+  font-size: 22px;
+  line-height: 29px;
+  transition: border .2s ease-in, opacity .2s ease-in, color .2s ease-in;
+
+  @media (max-width: $iphone-portrait) {
+   font-size: 16px;
+  }
+
+  &:focus {
+    @include form-field-focus;
+  }
+
+  @media (max-width: $iphone-landscape) {
+    font-size: 18px;
+  }
+}
+
+@mixin form-field-focus {
+  outline: none;
+  border: 2px solid $gray80;
+  background: $gray240;
+  color: $gray40;
+}

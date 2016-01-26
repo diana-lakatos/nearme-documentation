@@ -1,0 +1,206 @@
+section.home {
+
+  #hero {
+    position: relative;
+    margin-top: -32px;
+    width: auto;
+    height: 580px;
+    background-size: cover;
+    background-image: url($theme_hero);
+    background-position: center center;
+    background-repeat: no-repeat;
+
+    > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    // A gradient from left to right
+    > .hero-shadow {
+      position: absolute;
+      z-index: 1; // Behind non-positioned elements in this stacking context
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to left, rgba(30,30,34,0), rgba(30,30,34,0.4) 60%, rgba(30,30,34,0.6));
+    }
+
+    .call-to-action {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 5px;
+      text-align: center;
+
+      a {
+        display: inline-block;
+        color: $light-gray;
+        font:400 24px $font-regular, sans-serif;
+        line-height: 36px;
+        text-shadow: black 0 0 1px, black 0 0 1px, black 0 0 1px, black 0 0 1px, black 0 0 1px;
+
+        span.ico-chevron-down {
+          cursor: pointer;
+        }
+      }
+    }
+
+    @media (max-width: $ipad-width) {
+      height: 420px;
+    }
+
+    @media (max-width: $iphone-landscape) {
+      height: 380px;
+    }
+
+  }
+
+  .caption a {
+    position: absolute;
+    top: 580px;
+    right: 20px;
+    color: rgba(240,240,240,.7);
+
+    &:hover {
+      color: white;
+    }
+
+    @media (max-width: $ipad-width) {
+      top:430px;
+    }
+
+    @media (max-width: $iphone-landscape) {
+      display: none;
+    }
+  }
+
+  section#hero + .container {
+    width: 100%;
+    padding: 0;
+  }
+}
+
+#search_row {
+  margin-top: 180px;
+
+  @media (max-width: $ipad-width) {
+    margin-top: 100px;
+  }
+
+  @media (max-width: $iphone-landscape) {
+    margin-top: 70px;
+  }
+
+  h1 {
+    display: block;
+    float: left;
+    margin-bottom: 10px;
+    color: $light-gray;
+    font:400 48px/54px $font-regular, sans-serif;
+    text-shadow: black 0 0 5px, black 0 0 8px, black 0 0 10px, black 0 0 20px, black 0 0 30px;
+    filter: glow(color='#{ie-hex-str(#000000)}',strength=3);
+    -ms-filter: glow(color='#{ie-hex-str(#000000)}',strength=3);
+
+
+    @media (max-width: $iphone-portrait) {
+      font:normal 28px/32px $font-medium, sans-serif;
+    }
+  }
+
+  .black-box {
+    position: relative;
+    padding: 8px;
+    border-radius: $border-radius-default;
+    background: rgb(30,30,30);
+    box-sizing: border-box;
+  }
+
+  h2 {
+    float: left;
+    margin: 10px 0 10px 10px;
+    margin-top: 17px;
+    color: $gray120;
+    font-weight: normal;
+    font-size: 16px;
+    margin-left: 10px;
+
+    @media (max-width: $iphone-landscape) {
+      font:normal 16px/22px $font-medium, sans-serif;
+    }
+  }
+
+  form input[type="text"] {
+    margin-bottom: 0;
+  }
+
+  form {
+    clear: both;
+
+    label {
+      margin-bottom: 8px;
+    }
+  }
+
+  // @see listings/#listing_search
+
+  .price-range {
+    width: 370px;
+    margin-right: 0;
+    margin-left: 0px;
+  }
+}
+
+form.search-box-liquid-tag {
+  a.search-button {
+    background-color: #e6e6e6;
+    padding: 0 50px;
+  }
+}
+
+.main-page {
+  height: 100%;
+  min-height: 100%;
+
+  .content-wrapper {
+    height: 100%;
+    width: 100%;
+    min-height: 100%;
+  }
+
+  .dnm-page {
+    height: 100%;
+    min-height: 100%;
+    width: 100%;
+    padding-top: 0px;
+    box-sizing: border-box;
+
+    > .container-fluid:before, > .container-fluid:after {
+      display: block !important;
+    }
+
+    #content {
+      height: 100%;
+      min-height: 100%;
+      width: 100%;
+
+      #hero {
+        margin: 0px;
+        height: 100% !important;
+        width: 100%;
+
+      }
+    }
+  }
+
+  .footer-push {
+    display: none;
+  }
+
+  .footer-wrapper {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    margin-top: 0px;
+  }
+}

@@ -2,8 +2,6 @@
   - content_for :booking_type_regular_tab_content do
     .prices-container
 
-      %hr/
-
       - if f.object.transactable_type.action_free_booking
         = f.input :action_free_booking, as: :switch, label: t("simple_form.labels.transactable.price_free"), input_html: { 'data-action-free-booking' => true }
 
@@ -93,5 +91,3 @@
       - if form_fields.find{ |h| h['transactable'] == 'book_it_out' }
         = render 'dashboard/company/transactables/form_fields/book_it_out', f: f
 
-- content_for :domready do
-  new DNM.Listings.PriceFields($('.prices-container'))

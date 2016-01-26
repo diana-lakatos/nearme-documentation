@@ -1,9 +1,0 @@
-//= require jquery
-//= require jquery_ujs
-//= require ./vendor/jquery-ui-1.9.2.custom.min
-//= require bootstrap
-//= require bootstrap-switch
-//= require ./vendor/urlify
-//= require ./blog/admin/blog_posts_form
-//= require ckeditor/basepath
-//= require ckeditor/init

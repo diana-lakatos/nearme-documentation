@@ -27,7 +27,7 @@
     .col-xs-5
       .order-status
         %span{class: reservation.state }
-          = reservation.state.humanize.capitalize
+          = t "dashboard.host_reservations.#{reservation.state}"
 
 
 

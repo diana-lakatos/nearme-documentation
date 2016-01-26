@@ -1,0 +1,36 @@
+.browser-alert.chrome-frame {
+  background: $theme_blue;
+  position: fixed;
+  top: 60px;
+  left: 0px;
+  right: 0px;
+  z-index: $nav-z-index - 2;
+
+  .browser-alert-inner {
+    background: $theme_blue;
+    max-width: 1400px;
+    box-sizing: border-box;
+    padding: 0 0 0 20px;
+    height: 60px;
+    margin: 0 auto;
+    text-align: center;
+
+    p {
+      margin: 0;
+      line-height: 60px;
+      color: $theme_white;
+
+      a {
+        border-bottom: 1px dotted $theme_white;
+
+        &:link, &:visited {
+          color: $theme_white;
+        }
+
+        &:hover, &:visited:hover, &:active {
+          border-bottom-style: solid;
+        }
+      }
+    }
+  }
+}

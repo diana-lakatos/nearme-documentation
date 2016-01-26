@@ -1,7 +1,5 @@
 = simple_nested_form_for @instance, :url => instance_admin_settings_listings_path, :html => { :multipart => true } do |f|
   = render 'instance_admin/settings/shared/amenities', type: 'listing', f: f
 
-= render 'instance_admin/shared/modal', heading: "Delete type"
-
-- content_for :domready do
-  new InstanceAdmin.SettingsController($('#instanceAdminModal'))
+.settings-controller-modal
+  = render 'instance_admin/shared/modal', heading: "Delete type"

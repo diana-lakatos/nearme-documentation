@@ -2,7 +2,7 @@
   .span8.offset2
     %h1 Open a Support Ticket
     .box
-      .form.message-form
+      #support-ticket-message-controller.form.message-form
         = simple_form_for @ticket do |t|
           - t.simple_fields_for :messages do |f|
             .columns
@@ -25,7 +25,3 @@
                 =t.submit 'Create ticket', :class => 'btn btn-green'
         = simple_form_for @ticket.attachments.build, url: support_ticket_message_attachments_path, html: { class: 'hidden', :'data-attachment-form'=> true } do |f|
           = f.input :file, as: :file, input_html: { data: { file: true } }
-
-- content_for :script do
-  :javascript
-    new Support.TicketMessageController($('.message-form').eq(0))

@@ -111,7 +111,7 @@
                     = render 'dashboard/seller_attachments/attachment', attachment: attachment
 
           - content_for :domready do
-            new SellerAttachmentAccessLevelSelector();
+            $(document).trigger('init.sellerattachmentaccesslevelselector');
 
       - when 'waiver_agreement_templates'
         - if @company.waiver_agreement_templates.any?
@@ -142,8 +142,3 @@
     %span{:id => "currency_#{c[:iso_code]}"}
       = c[:symbol]
   %span{:id => "default_currency"}= @transactable_type.default_currency
-
-- content_for :domready do
-  $(function() { new Dashboard.ListingController($('#listing-form')) });
-
-  new CategoriesController($('#listing-form'));

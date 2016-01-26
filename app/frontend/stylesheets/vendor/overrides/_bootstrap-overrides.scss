@@ -1,0 +1,162 @@
+// Bootstrap Overrides - Do not edit the Vendor Bootstrap files, override them please!
+
+body {
+  padding: 90px 0 0;
+}
+
+.padding-row {
+  padding: 1.5em 0;
+}
+
+.padding-bottom {
+  padding: 0 0 1.5em;
+}
+
+.container-fluid {
+
+  @media (max-width: $ipad-width) {
+    padding: 0 20px;
+  }
+
+  &.flush {
+    @media (max-width: 1400px) {
+      margin: 0 -22px;
+    }
+  }
+
+  @media (max-width: $iphone-landscape) {
+    padding: 0 .75em;
+  }
+
+}
+
+.navbar-fixed-top,
+.navbar-inner {
+  border-width: 0 !important;
+}
+
+.navbar-fixed-top,
+.navbar-fixed-bottom {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: $nav-z-index;
+  margin:0 !important;
+
+}
+
+.navbar-inner,
+.navbar-fixed-top .navbar-inner,
+.navbar-static-top .navbar-inner {
+  border: 0 !important;
+  -webkit-box-shadow: 0 0 0 transparent !important;
+  -moz-box-shadow: 0 0 0 transparent !important;
+  box-shadow: 0 0 0 transparent !important;
+}
+
+a[rel="tooltip"] {
+  color: $theme_black;
+}
+
+.tooltip {
+  font-size: 16px;;
+  color: $gray220;
+}
+
+abbr[title] {
+  cursor: auto;
+  border: none;
+  color: $theme_red;
+}
+
+.accordion-group {
+
+	background: $theme_white;
+	border-radius: $border-radius-default;
+
+  a.accordion-toggle {
+  	background: url('https://s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png') right center no-repeat;
+  	background-origin: content-box;
+  	color: black;
+  	opacity: .8;
+    transition: opacity .1s ease-in;
+
+  	&:hover {
+  		opacity: 1;
+  	}
+  }
+}
+
+.accordion-inner {
+  border-top:none;
+}
+
+abbr[title],
+abbr[data-original-title] {
+  cursor: auto;
+  border:none;
+  color: $theme_red;
+}
+
+.btn {
+  text-shadow: none;
+  box-shadow: none;
+}
+
+.nav-tabs {
+  border: none;
+}
+
+.carousel-control {
+  background: none !important;
+  border: none !important;
+  text-shadow: black 0 0 5px;
+}
+
+.container-fluid {
+  @media (min-width: 1400px) {
+    max-width: 1360px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.tooltip-inner {
+  max-width: 140px;
+}
+
+.tooltip {
+  font-size: 16px;;
+}
+
+.nav-tabs > li > a {
+  border-top-left-radius: $border-radius-default / 2; border-top-right-radius: $border-radius-default / 2;
+
+}
+
+// Override bootstrap mixin that caused opacity to be reduced by 10x
+
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  filter: alpha(opacity=$opacity * 100);
+}
+
+@media (max-width: $ipad-width) {
+  // Make all grid-sized elements block level again
+  [class*="span"]:not(.nested),
+  .uneditable-input[class*="span"], // Makes uneditable inputs full-width when using grid sizing
+  .row-fluid [class*="span"]:not(.nested) {
+    float: none;
+    display: block;
+    width: 100%;
+    margin-left: 0;
+    box-sizing: border-box;
+  }
+}
+
+.hidden-iphone {
+
+  @media (max-width: $iphone-landscape) {
+    display: none !important;
+  }
+}

@@ -8,7 +8,4 @@
       .box
         .tickets.list
           = render @tickets
-        %a.load-links
-
-- content_for :domready do
-  new SupportTickets($('a.load-links'))
+        %a#support-tickets-link.load-links

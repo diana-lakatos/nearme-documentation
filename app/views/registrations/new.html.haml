@@ -11,4 +11,4 @@
 
 - if request.xhr?
   :javascript
-    Modal.setClass('sign-up-modal')
+    $(document).trigger('setclass.modal', ['sign-up-modal']);

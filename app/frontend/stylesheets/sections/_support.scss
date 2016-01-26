@@ -1,0 +1,272 @@
+.support {
+  hr {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}
+
+.support {
+  .message {
+    margin-top: 15px;
+    .profile {
+      max-width: 180px;
+    }
+  }
+}
+
+.support.detail {
+
+  h1 {
+    a {
+      color: $theme_blue;
+    }
+  }
+
+  .rfq-header {
+
+    padding-bottom: 15px;
+    border-bottom: 1px solid $gray204;
+    margin-bottom: 25px;
+
+    .header-wrapper {
+      @media (max-width: $ipad-width) {
+        margin-top: 10px;
+
+        &:first-child {
+          margin-top: 0px;
+        }
+      }
+    }
+
+    .rfq-header-label {
+      color: $gray160;
+      margin-bottom: 10px;
+    }
+
+    .rfq-header-data {
+
+      .status.open {
+        color: $dnm_green;
+      }
+    }
+
+    .status-wrapper,
+    .status-wrapper.status {
+      text-align: right;
+
+      @media (max-width: 768px) {
+        text-align: left;
+      }
+    }
+  }
+
+  .header {
+    margin: -15px -15px 30px -15px;
+    padding: 15px;
+    background-color: $gray160;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+
+  #more-reservations {
+    display: none;
+  }
+
+  .form {
+    margin-bottom: 30px;
+  }
+
+  .name {
+    color: #1e2222;
+  }
+
+  .time abbr{
+    color: $gray160;
+  }
+
+  .text {
+    color: $gray160;
+    p {
+      color: $gray160;
+    }
+  }
+}
+
+.support .list.tickets {
+  .text {
+    color: #1e2222;
+  }
+  .ticket {
+    padding-top: 0px;
+    padding-bottom: 5px
+  }
+  .box {
+    padding: 20px;
+  }
+
+  .link {
+    a {
+      display: inline-block;
+    }
+    display: inline-block;
+  }
+  .time {
+    display: inline-block;
+  }
+}
+
+.support .form {
+  color: #1e2222;
+
+  .columns {
+    .row-fluid {
+      margin-top: 10px;
+    }
+  }
+}
+
+.support {
+
+  .faq {
+    padding-bottom: 20px;
+    &.opened .question:before {
+      content:"\25BC";
+    }
+
+    &.closed .question:before {
+      content:"\25BA";
+    }
+
+    &.closed .answer {
+      display: none;
+    }
+
+    .question {
+      cursor: pointer;
+
+      color: #1e2222;
+    }
+
+    .answer {
+      padding-top: 10px;
+    }
+  }
+
+  .tickets {
+    font-size: 18px;;
+    color: $theme_gray;
+
+    .ticket {
+      padding-top: 15px;
+      .question {
+        color: #1e2222;
+        padding-bottom: 8px;
+      }
+
+      .time {
+        abbr {
+          color: $theme_gray;
+        }
+      }
+
+      .link {
+        a {
+          display: block;
+          color: $theme_gray;
+          text-decoration: underline !important;
+
+          &:hover {
+            text-decoration: none !important;
+          }
+        }
+      }
+
+    }
+  }
+
+  .view-all {
+    display: block;
+    padding-top: 15px;
+    padding-bottom: 25px;
+    color: #1e2222;
+    text-decoration: underline !important;
+  }
+
+  .btn.btn-green {
+    margin-top: 20px;
+  }
+
+  .upload-attachment {
+    border-radius: $border-radius-default;
+    padding: 0 20px;
+    margin-top: 20px;
+    font-size: 18px;
+    height: 50px;
+    width: 100%;
+    line-height: 50px;
+    text-align: center;
+
+  }
+
+  .attachments {
+    font-size: 16px;
+
+    .attachment {
+      .tag {
+        color: $gray204;
+        margin-left: 10px;
+      }
+
+      .destroy {
+        margin-left: 8px;
+      }
+
+      .edit a,
+      .destroy a {
+        font-size: 17px;
+        color: $gray120;
+      }
+
+    }
+  }
+
+  textarea {
+    font-size: 18px;
+  }
+
+  .time .timeago {
+    font-size: 15px;
+  }
+
+
+
+  .message,
+  .message-form{
+
+    @media (max-width: $ipad-width) {
+      .span1 {
+        float: left;
+        width: 12%;
+      }
+
+      .span11 {
+        float: left;
+        margin-left: 2%;
+        width: 86%;
+      }
+
+      input[type='submit'] {
+        margin-top: 0px;
+
+        &.resolve {
+          margin-top: 5px;
+        }
+      }
+    }
+
+    form {
+      margin-top: 0px;
+    }
+
+  }
+}

@@ -74,4 +74,4 @@
 
 
   - content_for :domready do
-    new Search.ProductsSearchController($('#search_form'), $('.search-view'))
+    $(document).trigger('initproducts.searchresults');

@@ -34,11 +34,6 @@ module DesksnearMe
         Rails.configuration.cache_classes ? require(c) : load(c)
       end
 
-      # Load liquid tags
-      Dir.glob(File.join(File.dirname(__FILE__), "../app/liquid_tags/*.rb")) do |c|
-        Rails.configuration.cache_classes ? require(c) : load(c)
-      end
-
       # Load Spree controllers's decorators
       Dir.glob(File.join(File.dirname(__FILE__), "../app/controllers/spree/**/*_decorator*.rb")) do |c|
         Rails.configuration.cache_classes ? require(c) : load(c)
@@ -49,30 +44,6 @@ module DesksnearMe
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
-    config.assets.paths           << %(#{Rails.root}/app/assets/fonts)
-    config.assets.paths           << %(#{Rails.root}/app/assets/swfs)
-    config.assets.paths           << %(#{Rails.root}/app/assets/videos)
-
-    config.assets.precompile += [
-      'ckeditor/*',
-      'jquery.js',
-      'select2.js'
-    ]
-    config.assets.precompile += [
-      "vendor/jquery.backgroundSize.min.js","vendor/respond.proxy.js", "vendor/respond.min.js",
-      "admin.js", "blog.js", "blog_admin.js", "chrome_frame.js", "instance_admin.js", "community.js", "instance_wizard.js",
-      "platform_home.js", "analytics/sessioncam.js", "blog/admin/*", 'dashboard.js', "new_ui.js", "new_ui/vendor/modernizr.js"
-    ]
-    config.assets.precompile += [
-      "browser_specific/ie8.css", "admin.css", "blog.css", "blog_admin.css", "errors.css",
-      "instance_admin.css", "platform_home.css", "instance_admin/shipping_profiles_includes.css",
-      "dashboard.css", 'vendor/powerange.css', 'instance_wizard.css', "community.css", "select2.css"
-    ]
-
-    config.assets.precompile += [
-      'glyphicons-halflings.png',
-      'glyphicons-halflings-white.png'
-    ]
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -175,5 +146,11 @@ module DesksnearMe
 
     config.attachment_upload_file_types = %w(doc docx xls odt ods pdf rar zip tar tar.gz swf mp4 css txt text js xlsx)
     config.private_upload_file_types = %w(jpg jpeg png pdf doc docx)
+
+    config.webpack = {
+      :use_manifest => false,
+      :asset_manifest => {},
+      :common_manifest => {},
+    }
   end
 end

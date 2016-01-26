@@ -17,7 +17,5 @@
         = f.submit 'Save', class: 'btn blue pull-right'
 
 :javascript
-  if (typeof CustomInputs !== 'undefined') {
-    CustomInputs.initialize();
-  }
-  new Support.AttachmentForm($('#attachment_form'));
+  $(document).trigger('init.custominputs')
+  $(document).trigger('init.supportattachmentform')

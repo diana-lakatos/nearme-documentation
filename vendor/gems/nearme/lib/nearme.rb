@@ -1,6 +1,5 @@
 require "nearme/version"
 require "nearme/deploy"
-require "nearme/sync_assets"
 require "nearme/balancer"
 require "nearme/backup"
 require "nearme/info"

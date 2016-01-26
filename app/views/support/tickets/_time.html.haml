@@ -4,6 +4,3 @@
     =ticket.updated_at
 .link
   = link_to ticket.open_text, support_ticket_path(ticket), :class => 'view'
-
-- content_for :domready do
-  $('abbr.timeago').timeago();

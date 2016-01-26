@@ -6,7 +6,3 @@
     %p.pull-right= link_to "View Profile", user_path(current_user)
   .dash-body
     = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name), :country => @country }
-
-- content_for :domready do
-  new CategoriesController($('#edit_user'));
-  new EditUserForm()

@@ -28,7 +28,8 @@
             %br/
             %h1.tk-adelle.fat= t 'buy_sell_market.products.search_results.no_results'
       = render 'shared/loading_spinner'
+
 - content_for :domready do
-  new Search.ProductsTableSearchController($('form.search_results'), $('.search-view'))
+  $(document).trigger('initproductstable.searchresults');
 
 

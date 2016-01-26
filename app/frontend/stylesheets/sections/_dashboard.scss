@@ -1,0 +1,434 @@
+div.availability-rules .custom-availability-rules .day .open-time,
+div.availability-rules .custom-availability-rules .day .close-time {
+  width: auto;
+}
+
+.dashboard-home-link {
+  &:hover {
+   opacity: .7;
+  }
+}
+
+.availability-rules {
+  padding-left: 2px;
+
+   .radio {
+
+     .icon,
+     .icon-to-fade {
+       margin-top: 4px;
+     }
+   }
+
+  .open-time,
+  .close-time {
+    margin-right: 10px;
+    padding-right: 0px;
+  }
+
+}
+
+.gallery {
+
+  li.photo-item {
+    margin-bottom: 20px;
+    clear: both;
+
+    img {
+      float: left;
+    }
+
+    .delete-photo {
+      float: left;
+      margin: 0px 0 0 -45px;
+      font-size: 24px;;
+      text-shadow: black 0 0 5px;
+      color: white;
+      opacity: .5;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    .caption-photo {
+      margin-top: 10px;
+    }
+
+    .loading {
+      background: url('/assets/ajax-loader.gif') no-repeat center;
+      min-width: 20px;
+      min-height: 24px;
+    }
+
+    &:last-child {
+     margin-bottom: 0;
+    }
+  }
+}
+
+.btn.facebook,
+.btn.linkedin,
+.btn.twitter,
+.btn.instagram {
+
+  @media (max-width: 668px) {
+    margin-bottom: .25em;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.avatar-container {
+  display: inline-block;
+
+  img {
+    margin-right: 1em;
+  }
+}
+
+section.dashboard {
+
+  ul {
+    list-style: none;
+
+    li {
+      list-style: none;
+      overflow: hidden;
+    }
+
+    &.sharelocation {
+      display: block;
+      margin: 0 0 20px 0;
+      overflow: auto;
+
+      li {
+        display: inline-block;
+        float: left;
+        margin: 0 1% 10px 0;
+      }
+    }
+
+  }
+
+  form {
+    margin-top: 30px;
+  }
+
+  p.no_data {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .limited_text {
+    .limiter {
+      margin-top: 0;
+    }
+  }
+
+  .help-block {
+    color: $dark-gray;
+    font-size: 12px;
+  }
+
+  .dashboard-save {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .loading {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    left: 0;
+    z-index: 160;
+    margin: 0 auto;
+    padding: 8px;
+    width: 300px;
+    height: 70px;
+    background: $gray230;
+    border-radius: $border-radius-default;
+    text-align: center;
+
+    .span {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+  }
+
+  .screen-locker {
+    position: fixed;
+    background-color: black;
+    opacity: 0.5;
+    width: 100%;
+    z-index: 150;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  ul.locations {
+
+    ul.location-and-listings {
+      margin: 0px;
+    }
+
+    & > li {
+      padding-bottom: 15px;
+    }
+
+    form {
+      .control-group {
+        margin-bottom: 25px;
+      }
+    }
+
+    li.location {
+      overflow: hidden;
+
+      font-size: 30px;
+      color: $gray80;
+
+      .name {
+        float: left;
+        margin-top: 5px;
+        padding-bottom: 5px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        a {
+          font-size: 18px;
+          color: $gray80;
+          position: relative;
+          top: -3px;
+        }
+      }
+
+      a {
+        overflow: auto;
+      }
+
+      .links {
+        float: right;
+        height: 38px;
+
+        span {
+          color: $pure-white;
+        }
+
+        a {
+          @extend .btn;
+          @extend .btn-blue;
+          @extend .btn-medium;
+          margin-right: 5px;
+          overflow: hidden;
+
+          &:last-child {
+            margin-right: 0px;
+          }
+        }
+      }
+
+      .links span.icon {
+        vertical-align: top;
+      }
+
+      @media (max-width: $ipad-width + 1) {
+        .links span.text {
+          display: none;
+        }
+      }
+
+      @media (min-width: $ipad-width) {
+        .links span.icon {
+          display: none;
+        }
+      }
+
+    }
+
+    li.listing{
+      font-size: 20px;
+      border-radius: $border-radius-default;
+      border: 1px solid $light-gray;
+      margin-top: 10px;
+      height: 38px;
+
+      &.edit-location {
+        border: none;
+      }
+
+      .name {
+        float: left;
+        color: $gray60;
+      }
+
+      a {
+        color: $gray60;
+        font-size: 18px;
+        display: block;
+        padding: 5px 15px 5px 20px;
+
+        .no-hide {
+          display: inline;
+        }
+
+        &:hover {
+          background-color: $light-gray;
+        }
+      }
+
+      .links {
+        float: right;
+        margin-left: 12px;
+      }
+
+      .bar-text {
+        float: left;
+        width: 70%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      @media (max-width: $ipad-width + 1) {
+        .links span.text {
+          display: none;
+        }
+      }
+
+      @media (min-width: $ipad-width) {
+        .links span.icon {
+          display: none;
+        }
+      }
+    }
+
+    li.new-location {
+      padding: 0px;
+      margin: 0 0 25px 0;
+      border: none;
+
+      .links .icon {
+        vertical-align: top;
+      }
+
+      a {
+        color: $pure-white;
+        padding: 0 10px;
+        background: $blue;
+
+        &:hover {
+          background: lighten($theme_blue, 10%);
+        }
+      }
+    }
+  }
+
+  .spacer {
+    margin-bottom: 20px;
+  }
+
+  .delete {
+    float: left;
+    padding-top: 10px;
+    color: $gray160;
+    font-size: 80%;
+
+    &:hover {
+      color: $gray80;
+    }
+  }
+
+  .actions {
+
+    a {
+      width: 100%;
+    }
+  }
+
+  .action-buttons {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid $light_gray;
+
+    .btn-white {
+      border-width: 1px !important;
+      margin-right: 10px;
+
+      &:last-child {
+        margin-right: 0px;
+      }
+    }
+  }
+
+}
+
+h1.manage-locations-home-link {
+  line-height: 1.7em;
+}
+
+.bank_account_fields {
+  .flash.error {
+    color: $red;
+    font-size: 1.1em;
+    margin: 20px 0px;
+
+    ul li {
+      color: $red;
+      font-size: 1.1em;
+      margin: 20px 0px;
+    }
+  }
+}
+
+ul.location-and-listings .filter span {
+    padding: 0px 10px;
+}
+
+#data-uploads {
+  .data-upload {
+
+    .span2 {
+      font-size: 0.90em;
+    }
+
+    .state {
+
+      .importing-text {
+        font-style: italic;
+        margin-right: 10px;
+        color: #0d90d1;
+      }
+
+      .progress {
+        height: 10px;
+        margin: 10px 0px 0px 0px;
+        padding: 0px;
+      }
+
+
+      &.waiting {
+        color: $dnm_orange;
+        font-style: italic;
+
+        a {
+          color: $dnm_orange;
+          font-style: italic;
+        }
+
+        .text {
+          padding-right: 5px;
+        }
+      }
+    }
+  }
+}
+
+.control-fileupload {
+  .btn-blue {
+    color: #fff;
+  }
+}

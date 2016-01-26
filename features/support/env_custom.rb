@@ -62,6 +62,10 @@ After do
   ::CustomAttributes::CustomAttribute::CacheDataHolder.clear_all_cache!
 end
 
+After do |scenario, block|
+  travel_back
+end
+
 def last_json
   last_response.body
 end

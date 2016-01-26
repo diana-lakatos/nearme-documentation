@@ -6,6 +6,7 @@ class AvailabilityRule < ActiveRecord::Base
 
   # === Associations
   belongs_to :target, :polymorphic => true, touch: true
+  belongs_to :instance
 
   # === Validations
   validates :open_hour, :inclusion => 0..23

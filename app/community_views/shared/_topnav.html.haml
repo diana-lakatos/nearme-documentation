@@ -1,11 +1,11 @@
 %nav.skips
   %ul
     %li
-      = link_to "#{t(:skip_to_navigation)} [n]", '#nav', accesskey: 'n'
+      = link_to "#{t(:skip_to_navigation)} [n]".html_safe, '#nav', accesskey: 'n'
     %li
-      = link_to "#{t(:skip_to_content)} [c]", '#content', accesskey: 'c'
+      = link_to "#{t(:skip_to_content)} [c]".html_safe, '#content', accesskey: 'c'
     %li
-      = link_to "#{t(:skip_to_footer)} [f]", '#footer', accesskey: 'f'
+      = link_to "#{t(:skip_to_footer)} [f]".html_safe, '#footer', accesskey: 'f'
 
 %h2.toggler{"data-nav" => true}
   %span Menu

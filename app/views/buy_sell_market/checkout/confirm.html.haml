@@ -1,4 +1,4 @@
-.checkout-wizard
+.checkout-wizard{ :"data-payment-controller" => true }
   .page-wrapper
     = render 'header'
 
@@ -57,6 +57,3 @@
                     = b.input :phone, as: :string, label: false
 
       = render partial: 'checkout_buttons', locals: { form: f, final: true }
-
-- content_for :domready do
-  new PaymentController($('.checkout-wizard'))

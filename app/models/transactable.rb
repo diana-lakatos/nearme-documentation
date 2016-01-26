@@ -246,6 +246,10 @@ class Transactable < ActiveRecord::Base
     service_type.try(:hide_location_availability)
   end
 
+  def validation_for(field_names)
+    custom_validators.where(field_name: field_names)
+  end
+
   def set_is_trusted
     self.enabled = self.enabled && is_trusted?
     true
@@ -807,6 +811,10 @@ class Transactable < ActiveRecord::Base
   def decline_reservations
     reservations.unconfirmed.each do |r|
       r.reject!
+    end
+
+    recurring_bookings.with_state(:unconfirmed, :confirmed, :overdued).each do |booking|
+      booking.host_cancel!
     end
   end
 

@@ -19,6 +19,3 @@
               .span6
                 = f.submit 'Close Ticket', class: 'btn btn-white'
       = render partial: 'support/ticket_messages/ticket_message', collection: @ticket.messages, spacer_template: 'support/ticket_messages/spacer'
-
-- content_for :domready do
-  $('abbr.timeago').timeago();

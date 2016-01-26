@@ -42,10 +42,3 @@
           .centerbuttons
             = f.submit t('general.submit'), :name => "commit", data: { disable_with: 'Creating...' }, :class => "listmydesk btn-medium"
             = f.submit t('general.submit_draft'), :name => "save_as_draft", data: { disable_with: 'Saving...' }, :class => "saveasdraft btn-gray btn-medium"
-
-- content_for :domready do
-  new SpaceWizardSpaceForm($('form.new_company'))
-  new Dashboard.LocationController($('#list-space-flow-form'))
-  new Dashboard.ListingController($('#list-space-flow-form'))
-  new CategoriesController($('#list-space-flow-form'));
-

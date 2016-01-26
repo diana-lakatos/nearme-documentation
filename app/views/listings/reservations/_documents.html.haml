@@ -1,6 +1,6 @@
 - if f.object.reservation.payment_documents.present?
   %section.checkout-form.documents
-    %h2 Required Documents
+    %h2= t 'reservations_review.required_documents'
 
     = f.simple_fields_for :reservation do |r|
       - f.object.reservation.payment_documents.each_with_index do |doc, index|

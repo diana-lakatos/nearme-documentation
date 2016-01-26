@@ -26,5 +26,5 @@
   - if request.xhr?
     :javascript
       $(function() {
-        new ModalForm($('#rfq'));
+        $(document).trigger('init.modalform', ['#rfq']);
       });

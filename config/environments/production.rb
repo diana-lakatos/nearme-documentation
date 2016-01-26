@@ -17,6 +17,10 @@ DesksnearMe::Application.configure do
     :password       => ENV['MAILER_SMTP_PASSWORD'],
     :domain         => 'desksnear.me'
   }
+  
+  config.action_controller.asset_host = ENV['ASSET_HOST'].presence || Proc.new { "https://#{PlatformContext.current.decorate.host}" }
+  config.action_mailer.asset_host     = ENV['ASSET_HOST'].presence || Proc.new { "https://#{PlatformContext.current.decorate.host}" }
+
 
   Rails.application.routes.default_url_options[:host] = 'desksnear.me'
   Rails.application.routes.default_url_options[:protocol] = 'https'
@@ -25,7 +29,6 @@ DesksnearMe::Application.configure do
   config.active_support.deprecation = :notify
 
   config.assets.compile = false
-  config.assets.manifest = "#{Rails.root}/config/manifest.json"
 
   config.middleware.swap Rails::Rack::Logger, NullLogger, silence: %w('/ping')
 
@@ -43,9 +46,6 @@ DesksnearMe::Application.configure do
     config.storage              = :fog
   end
 
-  config.action_controller.asset_host = "https://production-nearme.netdna-ssl.com"
-  config.action_mailer.asset_host     = "https://production-nearme.netdna-ssl.com"
-
   config.redis_settings = YAML.load_file(Rails.root.join("config", "redis.yml"))[Rails.env.to_s]
   config.redis_cache_client = Redis
   config.cache_store = :redis_store, {
@@ -62,4 +62,7 @@ DesksnearMe::Application.configure do
 
   # Google link shortening service
   config.googl_api_key = ENV['GOOGL_API_KEY']
+
+  config.webpack[:use_manifest] = true
+  config.assets.manifest = "#{Rails.root}/public/assets/manifest.json"
 end

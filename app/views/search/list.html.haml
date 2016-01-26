@@ -26,4 +26,4 @@
     = render 'search/footer'
 
 - content_for :domready do
-  new Search.SearchController($('#listing_search form'), $("section#content.search"));
+  $(document).trigger('init.searchresults');

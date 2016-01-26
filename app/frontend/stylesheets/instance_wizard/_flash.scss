@@ -1,0 +1,48 @@
+.alert {
+  cursor: pointer;
+  position: absolute;
+  z-index: 997;
+  border: none;
+  border-radius: 0px;
+  top: 110px;
+  text-align: center;
+  color: white;
+  text-shadow: none;
+  padding: 0px;
+  width: 100%;
+  opacity: .8;
+
+  &.static {
+    position: static;
+    float: left;
+  }
+
+  p {
+    margin: 0px;
+    padding: 0px 49px 0px 0px;
+    color: white;
+    font-size: 24px;
+    line-height: 60px;
+  }
+
+  &.success, &.notice {
+    background-color: #00693A;
+  }
+
+  &.error {
+    background-color: #e83d33;
+  }
+
+  &.deleted {
+    background-color: #e83d33;
+  }
+
+  &.warning {
+    background-color: #FF8D00;
+  }
+
+  &.timeout {
+    display: none !important;
+    z-index: 0;
+  }
+}

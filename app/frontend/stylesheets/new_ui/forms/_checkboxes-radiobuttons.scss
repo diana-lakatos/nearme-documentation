@@ -1,0 +1,89 @@
+
+.radio, .checkbox, .checkbox-standalone, .radio-standalone {
+    input {
+        position: absolute;
+        clip: rect(0,0,0,0);
+    }
+
+    label {
+        padding-left: 0;
+        font-size: 16px;
+    }
+
+    input + label:before {
+        @include fa-icon();
+        color: $form-radio-checkbox-color;
+        font-weight: normal;
+        margin-right: 10px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    label:hover:before {
+        color: $form-radio-checkbox-color-checked;
+    }
+
+    input:checked + label:before {
+        color: $form-radio-checkbox-color-checked;
+    }
+}
+
+.always-inline {
+    .radio, .checkbox {
+        display: inline-block;
+        margin: 10px 15px 0 0;
+    }
+}
+
+
+.radio, .radio-standalone {
+    input + label:before {
+        content: $fa-var-circle-o;
+    }
+
+    input:checked + label:before {
+        content: $fa-var-dot-circle-o;
+    }
+}
+
+.checkbox, .checkbox-standalone {
+    input + label:before {
+        content: $fa-var-square-o;
+    }
+
+    input:checked + label:before {
+        content: $fa-var-check-square;
+    }
+}
+
+.checkbox-standalone {
+    input + label {
+        font-size: 0;
+    }
+}
+
+.radio, .checkbox, .checkbox-standalone, .radio-standalone {
+    input + label:before,
+    input:checked + label:before {
+        font-size: 25px;
+        width: 25px;
+    }
+
+    @media (min-width: $screen-desktop) {
+        input + label:before,
+        input:checked + label:before {
+            font-size: 18px;
+            width: 18px;
+        }
+    }
+}
+
+.form-group.radio_buttons:not(.always-inline) > .radio , .form-group.check_boxes:not(.always-inline) > .checkbox {
+    margin-top: 15px;
+    margin-bottom: 15px;
+
+    @media (min-width: $screen-desktop) {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+}

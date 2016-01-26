@@ -1,0 +1,320 @@
+#location-tabs{
+  margin: 0px;
+}
+
+#address-popover{
+  font-size: 14px;;
+  padding: 6px;
+}
+
+#location-tabs > li > a {
+  border: none;
+  background-color: $gray160;
+  color: $gray230;
+  margin: 30px 0 0 0;
+}
+
+#location-tabs > li > a:hover {
+  background-color: $gray120;
+}
+
+#location-tabs > li.active > a {
+  background-color: $gray80;
+}
+
+.other-listing-separator {
+  margin: 40px 0px;
+}
+
+#space,
+.space {
+
+  .listing.box {
+    overflow: hidden;
+    height: $booking-module-height;
+
+    @media (min-width: $booking-module-breakpoint-desktop) {
+      height: $booking-module-height;
+    }
+
+    @media (max-width: $booking-module-breakpoint-desktop) {
+      height: auto;
+    }
+
+    @media (max-width: $booking-module-breakpoint) {
+      height: auto;
+    }
+
+    .bottom-fade {
+      position: absolute;
+      bottom: 0;
+      left: $listing-photo-width;
+      width: 100%;
+      height: 40px;
+      background-image: linear-gradient(rgba(250,250,250,0), $theme_white);
+
+      @media (max-width: $booking-module-breakpoint-desktop) {
+        display: none;
+      }
+    }
+
+    .booking-module-container {
+
+      @media (min-width: $booking-module-breakpoint) and (max-width: $booking-module-breakpoint-desktop) {
+        top: $listing-header-height;
+        float: right;
+        clear: both;
+        width: 50%;
+      }
+
+    }
+
+  }
+
+  .book .btn {
+    font-size: 40px;
+    height: 80px;
+    line-height: 80px;
+  }
+
+  header {
+    display: none;
+
+     @media (max-width: $booking-module-breakpoint-desktop) {
+      display: block;
+    }
+  }
+
+  .listing-photo-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    width: $listing-photo-width;
+    height: $listing-photo-height;
+    background: $gray190;
+
+    @media (min-width: $booking-module-breakpoint) and (max-width: $booking-module-breakpoint-desktop) {
+      position: relative;
+      float: left;
+      clear: both;
+      margin: -15px 0 0 -15px;
+      width: 55%;
+      height: $booking-module-height;
+
+      img {
+        margin: 0 auto;
+        max-width: $listing-photo-width;
+        width: $listing-photo-width;
+        height: $listing-photo-height;
+      }
+    }
+
+    @media (max-width: $booking-module-breakpoint) {
+      position: relative;
+      float: left;
+      clear: both;
+      margin: -15px 0 0 -15px;
+      width: 110%;
+      height: auto;
+    }
+  }
+
+  .listing-name, .listing-description {
+    float: left;
+    padding: 0 300px 0 420px;
+    width: 100%;
+    box-sizing: border-box;
+
+    @media  (max-width: $booking-module-breakpoint-desktop) {
+      display: none;
+    }
+  }
+
+  .listing-description {
+    margin: 15px 0 0;
+
+    @media (max-width: $booking-module-breakpoint-desktop) {
+      display: block;
+      float: left;
+      clear: both;
+      margin: 15px 0 0;
+      padding: 0;
+    }
+
+    @media (max-width: $booking-module-breakpoint) {
+      margin: 15px 0;
+    }
+
+    p {
+      overflow: auto;
+
+      @media (min-width: $booking-module-breakpoint) {
+        max-height: 160px;
+      }
+
+      @media (max-width: $booking-module-breakpoint-desktop) {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .description {
+
+    .price {
+      font-size: 22px;
+
+      .period {
+        font-size: 16px;
+        font-weight: normal;
+      }
+    }
+  }
+}
+
+.space-reservation-modal {
+
+
+  // Fix hr's existing modal
+
+  form {
+    overflow: visible;
+  }
+
+  .summary {
+    overflow: hidden;
+
+    .date,
+    .subtotal-label,
+    .service-fee-label,
+    .total-label {
+      float: left;
+      width: 30%;
+    }
+
+    .bookings,
+    .subtotal-amount,
+    .service-fee-amount,
+    .total-amount {
+      float: left;
+      width: 70%;
+      text-align: right;
+    }
+  }
+
+  .subtotal-label,
+  .subtotal-amount,
+  .service-fee-label,
+  .service-fee-amount,
+  .total-label,
+  .total-amount {
+    font-weight: bold;
+  }
+
+  p.notice {
+    font-size: 12px;
+    color: gray2;
+    margin: .5em 0;
+    font-weight: 600px;
+    opacity: .7;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .flash {
+    &.error {
+      p {
+        font-size: 1.1em;
+      }
+      color: $red;
+      padding-bottom: 0.5em;
+    }
+  }
+
+  form.payment {
+
+    .control-group {
+
+      .select {
+        .required {
+          display: none;
+        }
+      }
+
+      .control-label {
+        width: auto;
+      }
+
+      .controls {
+        margin-left: 30%;
+
+        &.card-number input {
+          width: 90%;
+        }
+
+        &.card-expires input, &.card-code input {
+          width: 80px;
+        }
+      }
+    }
+
+  }
+
+  #credit_card_fields, .phone_fields {
+    .column {
+      float: left;
+      width: 49%;
+
+      &.left {
+        margin-right: 1%;
+      }
+
+      &.right {
+        margin-left: 1%;
+      }
+    }
+
+  }
+
+  #credit_card_fields {
+    input#card_number {
+      padding-left: 50px;
+    }
+  }
+
+  .phone_fields {
+
+    .controls {
+      margin-left: 0 !important;
+    }
+
+  }
+
+}
+
+.quick-book {
+
+  .calendar-wrapper {
+    display: inline-block;
+    padding: 2px 8px;
+    border: 2px solid $gray220;
+    border-radius: $border-radius-default;
+    background: $pure-white;
+  }
+
+  .quantity {
+    display: inline-block;
+
+    select {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: 0;
+      vertical-align: middle;
+      z-index: $modal-z-index - 3;
+    }
+
+  }
+}
