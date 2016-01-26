@@ -5,7 +5,7 @@ DesksnearMe::Application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
   config.action_dispatch.x_sendfile_header = "X-Sendfile"
-  config.serve_static_files = false
+  config.serve_static_files = true
   config.static_cache_control = "public, max-age=7200"
 
   config.action_mailer.smtp_settings = {
@@ -24,6 +24,7 @@ DesksnearMe::Application.configure do
   Rails.application.routes.default_url_options[:protocol] = 'https'
 
   config.assets.compile = false
+  config.assets.prefix = '/assets'
 
   Rails.application.routes.default_url_options[:host] = 'staging.near-me.com'
   config.test_email = "notifications-staging@desksnear.me"
@@ -43,7 +44,7 @@ DesksnearMe::Application.configure do
     config.asset_host           = 'https://staging-uploads-nearme.netdna-ssl.com'
     config.storage              = :fog
   end
-  
+
   config.action_controller.asset_host = ENV['ASSET_HOST'].presence || Proc.new { "https://#{PlatformContext.current.decorate.host}" }
   config.action_mailer.asset_host     = ENV['ASSET_HOST'].presence || Proc.new { "https://#{PlatformContext.current.decorate.host}" }
 
