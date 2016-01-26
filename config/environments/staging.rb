@@ -43,9 +43,10 @@ DesksnearMe::Application.configure do
     config.asset_host           = 'https://staging-uploads-nearme.netdna-ssl.com'
     config.storage              = :fog
   end
+  
+  config.action_controller.asset_host = ENV['ASSET_HOST'].presence || Proc.new { "https://#{PlatformContext.current.decorate.host}" }
+  config.action_mailer.asset_host     = ENV['ASSET_HOST'].presence || Proc.new { "https://#{PlatformContext.current.decorate.host}" }
 
-  # config.action_controller.asset_host = "https://staging-nearme.netdna-ssl.com"
-  config.action_mailer.asset_host     = "https://staging-nearme.netdna-ssl.com"
 
   # Protect this environment with a simple Basic authentication dialog
   # config.middleware.insert_before(Rack::Sendfile, "Rack::Auth::Basic") do |username, password|
