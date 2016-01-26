@@ -4,3 +4,6 @@ Either the upload file was not correct CSV file or it includes unexpected conten
 
 {% if data_upload.parsing_result_log %}Encountered validation errors log:
 {{ data_upload.parsing_result_log }}{% endif %}
+
+{% if data_upload.sanitized_encountered_error != blank %}Encountered errors log:
+{{ data_upload.sanitized_encountered_error | make_html_safe }}{% endif %}
