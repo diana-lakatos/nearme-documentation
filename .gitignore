@@ -34,6 +34,8 @@ runner.html
 .jhw-cache
 bin/
 tags
+.tags
+.gemtags
 dump.rdb
 .eyrc
 .idea/*
@@ -45,3 +47,5 @@ work_files
 instances/
 instances
 vendor/assets/bower_components
+*.sublime-project
+*.sublime-workspace
