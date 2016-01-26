@@ -179,6 +179,8 @@ namespace :fix do
   end
 
   task fix_wrong_mailers_subjects: :environment do
+    puts "Fixing wrong mailers subjects..."
+
     WorkflowAlert.where(template_path: 'reservation_mailer/notify_host_without_confirmation').update_all(subject: '[{{platform_context.name}}] {{reservation.owner.first_name}} just booked your {{listing.transactable_type.bookable_noun}}!')
     WorkflowAlert.where(template_path: 'reservation_mailer/notify_host_with_confirmation').update_all(subject: '[{{platform_context.name}}] {{reservation.owner.first_name}} just booked your {{listing.transactable_type.bookable_noun}}!')
     WorkflowAlert.where(template_path: 'reengagement_mailer/one_booking').update_all(subject: '[{{platform_context.name}}] Check out these new {{listing.transactable_type.bookable_noun_plural}} in your area!')
@@ -192,6 +194,8 @@ namespace :fix do
     WorkflowAlert.where(template_path: 'recurring_mailer/request_photos').update_all(subject: 'Give the final touch to your listings with some photos!')
 
     WorkflowAlert.where(template_path: 'reengagement_mailer/no_bookings').update_all(subject: '[{{platform_context.name}}] Check out these new listings in your area!')
+
+    puts "[FIXED]"
   end
 
 end
