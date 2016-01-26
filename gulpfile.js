@@ -119,7 +119,7 @@ gulp.task('styles:other', function(){
 gulp.task('styles', ['styles:newui', 'styles:application', 'styles:instance_admin', 'styles:intel', 'styles:other']);
 
 gulp.task('styles:dist', function(){
-    return gulp.src([path.join(frontendCssPath, '*.scss'), path.join(frontendFontsPath, 'new_ui', '*.scss')])
+    return gulp.src([path.join(frontendCssPath, '*.scss'), path.join(frontendCssPath, 'new_ui', '*.scss')])
     .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(sass.sync(sassConfig).on('error', sass.logError))
