@@ -29,6 +29,7 @@ class User < ActiveRecord::Base
   has_metadata accessors: [:support_metadata]
   friendly_id :name, use: [:slugged, :finders]
 
+
   belongs_to :billing_address, class_name: 'Spree::Address'
   belongs_to :domain
   belongs_to :instance

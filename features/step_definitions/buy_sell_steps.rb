@@ -99,6 +99,7 @@ Given /^Extra fields are prepared$/ do
 
   @user.update_column(:instance_profile_type_id, InstanceProfileType.default.first.id)
   @user.update_column(:mobile_number, '')
+  @user.update_column(:name, '')
   @user.update_column(:first_name, '')
   @user.update_column(:last_name, '')
   @user.update_column(:phone, '')
