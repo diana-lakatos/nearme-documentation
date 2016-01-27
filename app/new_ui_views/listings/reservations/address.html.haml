@@ -45,7 +45,7 @@
     function toggleAddressForm(elem) {
       if(elem.val() == 'delivery'){
         $('#shipping-address').show();
-        DNM.initializeBootstrapSwitch();
+        $(document).trigger('init.bootstrapswitch');
       }else{
         $('#shipping-address').hide();
       }

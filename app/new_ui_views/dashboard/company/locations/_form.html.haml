@@ -17,7 +17,4 @@
     = f.submit t('locations.save_location')
 
 :javascript
-  $('[data-add-edit-location-form]').find('[data-counter-limit]').each(function(index, item) {
-    new DNM.Limiter(item)
-  });
-
+  $(document).trigger('init.limiter', ['[data-add-edit-location-form] [data-counter-limit]']);
