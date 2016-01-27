@@ -4,7 +4,6 @@ require('jquery-ujs/src/rails');
 require('jquery-timeago');
 require('../vendor/jquery-ui-1.10.4.custom.min');
 require('jqueryui-touch-punch');
-require('spectrum/spectrum');
 
 require('../vendor/bootstrap');
 require('../vendor/bootstrap-modal-fullscreen');

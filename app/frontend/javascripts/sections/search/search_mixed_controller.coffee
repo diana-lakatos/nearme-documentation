@@ -1,3 +1,4 @@
+require('history.js/scripts/bundled/html5/jquery.history.js')
 SearchSearchController = require('./search_controller')
 urlUtil = require('../../lib/utils/url')
 SearchMapMixed = require('./map_mixed')
@@ -114,7 +115,7 @@ module.exports = class SearchMixedController extends SearchSearchController
         @submit_form = false
         @form.submit()
       else
-        place = Search.Geocoder.wrapResult @autocomplete.getPlace()
+        place = SearchGeocoder.wrapResult @autocomplete.getPlace()
         place = null unless place.isValid()
         @setGeolocatedQuery(@queryField.val(), place)
 
