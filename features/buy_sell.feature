@@ -27,7 +27,6 @@ Feature: Buy Sell Marketplace
     Given Extra fields are prepared
     And  I choose shipping method
     Then I should see order summary page
-    Then I should see the checkout extra fields
     When I fill billing data
     And  I shouldn't see order placed confirmation
     Then I fill in the extra checkout field

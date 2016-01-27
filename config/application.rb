@@ -112,8 +112,8 @@ module DesksnearMe
     config.exceptions_app = self.routes
 
     # setting platform_context in app/models/platform_context/rack_setter.rb
-    config.middleware.use "PlatformContext::RackSetter"
     config.middleware.use Rack::Deflater
+    config.middleware.use "PlatformContext::RackSetter"
 
     config.mixpanel = (YAML.load_file(Rails.root.join("config", "mixpanel.yml"))[Rails.env] || {}).with_indifferent_access
     config.google_analytics = (YAML.load_file(Rails.root.join("config", "google_analytics.yml"))[Rails.env] || {}).with_indifferent_access
