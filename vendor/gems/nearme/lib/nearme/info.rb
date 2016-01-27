@@ -35,7 +35,7 @@ module NearMe
         info[stack[:name]][:instances] = instances(stack[:stack_id])
         results = opsworks_client.describe_instances(stack_id: stack[:stack_id]).data.fetch(:instances, {})
         results.each_with_index do |r, index|
-          quick_view << "alias ssh_#{stack[:name].sub(/nm-qa-\d/, '').sub('nm-', '')}#{r[:hostname].gsub('rails-qa-1', 'qa').gsub('rails-qa-', 'qa').gsub('rails-app1', '').gsub('rails-app-1', '').gsub('rails-app-', '').gsub('rails-app', '')}=ssh #{ENV['AWS_USER']}@#{r[:public_ip]}".gsub('productionutility1', 'utility') unless r[:public_ip].nil? || r[:public_ip].empty?
+          quick_view << "alias ssh_#{stack[:name].sub(/nm-qa-\d/, '').sub('nm-', '')}#{r[:hostname].gsub('rails-qa-1', 'qa').gsub('rails-qa-', 'qa').gsub('rails-app1', '').gsub('rails-app-1', '').gsub('rails-app-', '').gsub('rails-app', '')}='ssh #{ENV['AWS_USER']}@#{r[:public_ip]}'".gsub('productionutility1', 'utility') unless r[:public_ip].nil? || r[:public_ip].empty?
         end
       end
       pp info
