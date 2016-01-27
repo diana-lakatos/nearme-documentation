@@ -5,7 +5,7 @@ DesksnearMe::Application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
   config.action_dispatch.x_sendfile_header = "X-Sendfile"
-  config.serve_static_files = false
+  config.serve_static_files = true
   config.static_cache_control = "public, max-age=7200"
 
   config.action_mailer.smtp_settings = {
@@ -17,7 +17,7 @@ DesksnearMe::Application.configure do
     :password       => ENV['MAILER_SMTP_PASSWORD'],
     :domain         => 'desksnear.me'
   }
-  
+
   config.action_controller.asset_host = ENV['ASSET_HOST'].presence || Proc.new { "https://#{PlatformContext.current.decorate.host}" }
   config.action_mailer.asset_host     = ENV['ASSET_HOST'].presence || Proc.new { "https://#{PlatformContext.current.decorate.host}" }
 
@@ -29,6 +29,7 @@ DesksnearMe::Application.configure do
   config.active_support.deprecation = :notify
 
   config.assets.compile = false
+  config.assets.prefix = '/assets'
 
   config.middleware.swap Rails::Rack::Logger, NullLogger, silence: %w('/ping')
 

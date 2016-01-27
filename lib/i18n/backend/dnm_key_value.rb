@@ -13,7 +13,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   end
 
   def prepare_store
-    Translation.uniq.pluck(:instance_id).each do |instance_id|
+    Translation.select('DISTINCT(instance_id)').map(&:instance_id).each do |instance_id|
       _instance_key = instance_key(instance_id)
       populate(instance_id)
     end
