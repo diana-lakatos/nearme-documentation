@@ -49,7 +49,7 @@
   	top: 0;
   }
   .gal-holder .gal-item .gal-del:hover {
-  	-moz-opacity: 0.7; 
+  	-moz-opacity: 0.7;
   	-khtml-opacity: 0.7;
   	opacity: 0.7;
   }
@@ -79,7 +79,7 @@
   .gal-holder .gal-item .gal-upload-holder .add {
     display: block;
     color: #2e5aff;
-    background: url('ckeditor/filebrowser/images/gal_add.png') no-repeat left center;
+    background: url('/assets/filebrowser/gal_add.png') no-repeat left center;
     padding-left: 33px;
     line-height: 25px;
     text-decoration: none;
@@ -143,7 +143,7 @@
   }
   .gal-more a {
   	color: #2e5aff;
-  	background: url('ckeditor/filebrowser/images/gal_more.gif') no-repeat left center;
+  	background: url('/assets/filebrowser/gal_more.gif') no-repeat left center;
   	padding-left: 15px;
   	font-size: 14px;
   	text-decoration: none;
@@ -151,7 +151,7 @@
   .gal-more a:hover {
   	text-decoration: underline;
   }
-  
+
   .pagination, .pagination a {
       text-decoration: none;
   }
