@@ -1,4 +1,4 @@
-require 'bootstrap-select/js/bootstrap-select'
+require '../../vendor/bootstrap-select'
 
 module.exports = class SelectpickerInitializer
   constructor: ()->

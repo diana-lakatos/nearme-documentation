@@ -10,14 +10,7 @@ $fa-font-path: '/assets/font-awesome/';
 @import "font-awesome/scss/larger";
 @import "font-awesome/scss/fixed-width";
 @import "font-awesome/scss/list";
-// @import "font-awesome/scss/bordered-pulled";
-// @import "font-awesome/scss/animated";
-// @import "font-awesome/scss/rotated-flipped";
-// @import "font-awesome/scss/stacked";
 @import "font-awesome/scss/icons";
-
-
-// Font awesome end
 
 @import "Jcrop/css/jquery.Jcrop";
 @import "chosen/chosen.min";
@@ -26,7 +19,6 @@ $fa-font-path: '/assets/font-awesome/';
 
 @import "vendor/bootstrap-select";
 @import "bootstrap-switch/dist/css/bootstrap3/bootstrap-switch";
-@import "bootstrap-select/sass/bootstrap-select";
 
 @import "vendor/jstree";
 @import "vendor/jstree_themes/apple/style";
