@@ -335,19 +335,20 @@ module.exports = class SearchMixedController extends SearchSearchController
 
   bindLocationsEvents: ->
 
-    @resultsContainer().find('article.location').on 'mouseout', (event)=>
-
+    @resultsContainer().find('article.location').on 'mouseleave', (event)=>
+      location = $(event.target).closest('article.location')
       @unmarkAllLocations()
-      location_id = $(event.target).data('id')
+      location_id = location.data('id')
       marker = @map.markers[location_id]
       if marker
         marker.setIcon(SearchResultsGoogleMapMarker.getMarkerOptions().default.image)
         marker.setZIndex(google.maps.Marker.MAX_ZINDEX)
 
-    @resultsContainer().find('article.location').on 'mouseover',(event)=>
+    @resultsContainer().find('article.location').on 'mouseenter',(event)=>
+      location = $(event.target).closest('article.location')
       @unmarkAllLocations()
-      $(event.target).addClass('active')
-      location_id = $(event.target).data('id')
+      location.addClass('active')
+      location_id = location.data('id')
       marker = @map.markers[location_id]
       if marker
         marker.setIcon(SearchResultsGoogleMapMarker.getMarkerOptions().hover.image)
