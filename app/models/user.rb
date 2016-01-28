@@ -967,7 +967,7 @@ class User < ActiveRecord::Base
   end
 
   def nearby_friends(distance)
-    User.near([current_address.latitude, current_address.longitude], distance).where.not(id: id)
+    User.where.not(id: id).joins(:current_address).merge(Address.near(current_address, distance, units: :km, order: 'distance')).select('users.*')
   end
 
   def feed_subscribed_to?(object)
