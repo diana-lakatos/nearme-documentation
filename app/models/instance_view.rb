@@ -339,6 +339,7 @@ class InstanceView < ActiveRecord::Base
     },
     'home/index' => {
       platform_context: 'PlatformContextDrop',
+      is_partial: false
     },
     'home/search_box' => {
       platform_context: 'PlatformContextDrop',
