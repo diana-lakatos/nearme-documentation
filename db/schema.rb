@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160128133044) do
+ActiveRecord::Schema.define(version: 20160128181730) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1323,6 +1323,7 @@ ActiveRecord::Schema.define(version: 20160128133044) do
     t.boolean  "active",              default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   add_index "payment_methods", ["instance_id"], name: "index_payment_methods_on_instance_id", using: :btree
@@ -1351,7 +1352,7 @@ ActiveRecord::Schema.define(version: 20160128133044) do
 
   create_table "payments", force: :cascade do |t|
     t.integer  "reservation_id"
-    t.integer  "subtotal_amount_cents"
+    t.integer  "subtotal_amount_cents",                                                          default: 0
     t.decimal  "service_fee_amount_guest_cents",                         precision: 8, scale: 2, default: 0.0,   null: false
     t.datetime "paid_at"
     t.datetime "failed_at"
@@ -1665,7 +1666,7 @@ ActiveRecord::Schema.define(version: 20160128133044) do
     t.string   "old_payment_method",                            limit: 255,                         default: "manual",  null: false
     t.string   "payment_status",                                limit: 255,                         default: "unknown", null: false
     t.float    "quantity",                                                                          default: 1.0,       null: false
-    t.decimal  "service_fee_amount_guest_cents",                            precision: 8, scale: 2
+    t.decimal  "service_fee_amount_guest_cents",                            precision: 8, scale: 2, default: 0.0
     t.string   "rejection_reason",                              limit: 255
     t.decimal  "service_fee_amount_host_cents",                             precision: 8, scale: 2, default: 0.0,       null: false
     t.integer  "platform_context_detail_id"

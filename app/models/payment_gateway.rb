@@ -9,9 +9,7 @@ class PaymentGateway < ActiveRecord::Base
   self.inheritance_column = :type
   auto_set_platform_context
   scoped_to_platform_context
-
-  # TODO uncomment after migrations
-  # acts_as_paranoid
+  acts_as_paranoid
 
   scope :mode_scope, -> { test_mode? ? where(test_active: true) : where(live_active: true)}
   scope :payout_type, -> { where(type: PAYOUT_GATEWAYS.values + IMMEDIATE_PAYOUT_GATEWAYS.values) }
@@ -38,13 +36,13 @@ class PaymentGateway < ActiveRecord::Base
   has_many :charges
   has_many :payouts
   has_many :instance_clients
-  has_many :merchant_accounts
+  has_many :merchant_accounts, dependent: :destroy
   has_many :payments, through: :billing_authorizations
   has_many :payment_gateways_countries
   has_many :payment_countries, through: :payment_gateways_countries, source: 'country'
   has_many :payment_gateways_currencies
   has_many :payment_currencies, through: :payment_gateways_currencies, source: 'currency'
-  has_many :payment_methods
+  has_many :payment_methods, dependent: :destroy
   has_many :refunds
 
   accepts_nested_attributes_for :payment_methods, :reject_if => :all_blank

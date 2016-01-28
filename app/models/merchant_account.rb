@@ -3,9 +3,7 @@ class MerchantAccount < ActiveRecord::Base
 
   auto_set_platform_context
   scoped_to_platform_context
-
-  # TODO uncomment after migrations
-  # acts_as_paranoid
+  acts_as_paranoid
 
   SEPARATE_TEST_ACCOUNTS = false
 
@@ -14,7 +12,7 @@ class MerchantAccount < ActiveRecord::Base
   has_many :webhooks, as: :webhookable, dependent: :destroy
 
   # Relates with Company
-  belongs_to :merchantable, polymorphic: true, dependent: :destroy
+  belongs_to :merchantable, polymorphic: true
   belongs_to :instance
   belongs_to :payment_gateway
 

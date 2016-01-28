@@ -36,6 +36,8 @@ Given /^bookings for #{capture_model} do( not)? need to be confirmed$/ do |listi
 end
 
 When(/^I cancel (.*) reservation$/) do |number|
+  PaymentGateway.any_instance.stubs(:gateway_void).returns(OpenStruct.new({success?: true, authorization: "54533"}))
+
   within(:css, "#reservation_#{number}") do
     find(:css, "input[value='Cancel']").click
   end

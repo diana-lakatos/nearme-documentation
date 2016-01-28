@@ -14,13 +14,15 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   belongs_to :recurring_booking
   belongs_to :credit_card
-  delegate :payment_gateway, :company, :company_id, :user, :owner,
+
+  delegate :payment_gateway, :company, :company_id, :user, :owner, :currency,
     :service_fee_guest_percent, :service_fee_host_percent, to: :recurring_booking
 
   def generate_payment!
     payment = payments.build(
       customer: credit_card.instance_client.customer_id,
-      payment_method: payment_method
+      payment_method: payment_method,
+      currency: currency
     )
 
     payment.authorize && payment.save! && payment.capture!

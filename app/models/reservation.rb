@@ -22,7 +22,7 @@ class Reservation < ActiveRecord::Base
 
   has_one :billing_authorization, as: :reference
   has_one :dimensions_template, as: :entity
-  has_one :payment
+  has_one :payment, as: :payable
 
   has_many :user_messages, as: :thread_context
   has_many :waiver_agreements, as: :target
@@ -399,11 +399,11 @@ class Reservation < ActiveRecord::Base
         {
           company: company,
           currency: currency,
-          subtotal_amount_cents: subtotal_amount_cents,
-          service_fee_amount_guest_cents: service_fee_amount_guest_cents,
-          service_fee_amount_host_cents: service_fee_amount_host_cents,
-          service_additional_charges_cents: service_additional_charges_cents,
-          host_additional_charges_cents: host_additional_charges_cents,
+          subtotal_amount_cents: subtotal_amount.try(:cents) || 0,
+          service_fee_amount_guest_cents: service_fee_amount_guest.try(:cents) || 0,
+          service_fee_amount_host_cents: service_fee_amount_host.try(:cents) || 0,
+          service_additional_charges_cents: service_additional_charges.try(:cents) || 0,
+          host_additional_charges_cents: host_additional_charges.try(:cents) || 0,
           cancellation_policy_hours_for_cancellation: cancellation_policy_hours_for_cancellation,
           cancellation_policy_penalty_percentage: cancellation_policy_penalty_percentage,
           payable: self

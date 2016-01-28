@@ -76,9 +76,9 @@ class Payment < ActiveRecord::Base
 
   state_machine :state, initial: :pending do
     event :mark_as_authorized do transition pending: :authorized; end
-    event :mark_as_paid       do transition :authorized => :paid; end
-    event :mark_as_refuneded    do transition paid: :refunded; end
-    event :mark_as_voided     do transition [:pending, :authorized] => :voided; end
+    event :mark_as_paid       do transition authorized: :paid; end
+    event :mark_as_voided     do transition authorized: :voided; end
+    event :mark_as_refuneded  do transition paid: :refunded; end
   end
 
   def authorize
@@ -342,7 +342,7 @@ class Payment < ActiveRecord::Base
   end
 
   def valid_for_authorization?
-    if credit_card_payment? && !credit_card_form.valid?
+    if credit_card_payment? && !credit_card_form.valid? && auth_options[:customer].blank?
       errors.add(:cc, I18n.t('buy_sell_market.checkout.invalid_cc'))
       false
     else

@@ -26,6 +26,7 @@ class RecurringBooking < ActiveRecord::Base
   belongs_to :company
   belongs_to :platform_context_detail, :polymorphic => true
   belongs_to :payment_gateway
+  belongs_to :credit_card
 
   # Note: additional_charges are not yet implemented for RecurringBooking
   # Following line is added only for the purpouse of including Chargebale model

@@ -25,6 +25,7 @@ FactoryGirl.define do
     factory :unconfirmed_reservation do
       state 'unconfirmed'
       payment_status 'authorized'
+      expire_at { Time.zone.now.next_week.to_date }
       after(:build) do |reservation|
         reservation.payment ||= FactoryGirl.build(:authorized_payment, payable: reservation)
       end
