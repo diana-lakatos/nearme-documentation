@@ -1,5 +1,6 @@
 SearchController = require('./controller')
 SearchDatepickers = require('./datepickers')
+SearchGeocoder = require('./geocoder')
 
 # Controller for search form on the homepage
 module.exports = class HomeController extends SearchController

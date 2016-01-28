@@ -5,6 +5,7 @@ SearchMapMixed = require('./map_mixed')
 SearchRedoSearchMapControl = require('./redo_search_map_control')
 SearchResultsGoogleMapMarker = require('../../components/search_results_google_map_marker')
 CustomInputs = require('../../components/custom_inputs')
+SearchGeocoder = require('./geocoder')
 
 
 module.exports = class SearchMixedController extends SearchSearchController
