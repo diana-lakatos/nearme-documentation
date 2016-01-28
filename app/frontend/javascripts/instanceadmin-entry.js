@@ -25,7 +25,7 @@ require('jquery-timeago');
         require.ensure('./components/fileupload', function(require){
             var Fileupload = require('./components/fileupload');
             els.each(function(){
-                return new Fileupload.initialize(this);
+                return new Fileupload(this);
             })
         });
     });
@@ -505,15 +505,19 @@ require('jquery-timeago');
     });
 
     DNM.registerInitializer(function(){
-        var el = $('.modal-container');
-        if (el.length === 0) {
-            return;
+        var Modal = require('./components/modal');
+        Modal.listen();
 
-        }
+        $(document).on('close.modal', function(){
+            Modal.close();
+        });
 
-        require.ensure('./components/modal', function(require){
-            var Modal = require('./components/modal');
-            return Modal.listen();
+        $(document).on('load.modal', function(event, url){
+            Modal.load(url);
+        });
+
+        $(document).on('setclass.modal', function(event, klass){
+            Modal.setClass(klass);
         });
     });
 
