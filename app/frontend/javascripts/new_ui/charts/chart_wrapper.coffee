@@ -1,5 +1,3 @@
-Chart = require 'Chart.js/src/Chart.Core.js'
-
 module.exports = class ChartWrapper
   defaultColors: ->
     [

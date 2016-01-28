@@ -1,5 +1,6 @@
 ChartWrapper = require('../chart_wrapper')
-require 'Chart.js/src/Chart.Bar.js'
+require 'expose?Chart!Chart.js/src/Chart.Core.js'
+require 'imports?this=>window!Chart.js/src/Chart.Bar.js'
 
 module.exports = class Bar extends ChartWrapper
 
