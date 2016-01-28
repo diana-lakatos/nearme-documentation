@@ -17,5 +17,4 @@
     = submit_tag t('manage.buy_sell.shipping_profiles.save')
 
 :javascript
-  new DNM.ShippingProfilesController('form.profiles_shipping_category_form');
-
+  $(document).trigger('init.shippingprofilescontroller');

@@ -3,7 +3,7 @@ _ = require('underscore')
 
 # Handles the behaviour of entering country+mobile+phone fields
 # Used on the user account form, booking modal and the space setup wizard form.
-class PhoneNumbers
+module.exports = class PhoneNumbers
 
   constructor: (@container, {@countrySelector, @codeSelector, @mobileSelector, @phoneSelector, @sameAsSelector} = {}) ->
     _.defaults @,

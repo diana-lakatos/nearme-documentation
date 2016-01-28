@@ -11,9 +11,6 @@ require('jquery-timeago');
 
     var DNM = require('./dnm');
 
-    DNM.ShippingProfilesController = require('./new_ui/controllers/shipping_profiles_controller');
-    DNM.DimensionTemplates = require('./new_ui/modules/dimension_templates');
-
     DNM.registerInitializer(function(){
         var fields = $('[data-address-field]');
 
@@ -393,6 +390,17 @@ require('jquery-timeago');
     });
 
     DNM.registerInitializer(function(){
+
+        $(document).on('init.limiter', function(event, elements){
+            require.ensure('./new_ui/modules/limited_input', function(require){
+                var Limiter = require('./new_ui/modules/limited_input');
+                $(elements).each(function(){
+                    return new Limiter(this);
+                });
+            });
+        });
+
+
         var els = $('[data-counter-limit]');
         if (els.length === 0) {
             return;
@@ -458,6 +466,15 @@ require('jquery-timeago');
             require('jquery.payment');
             $('input[data-card-number]').eq(0).payment('formatCardNumber');
             $('input[data-card-code]').eq(0).payment('formatCardCVC');
+        });
+    });
+
+    DNM.registerInitializer(function(){
+        $(document).on('init.shippingprofilescontroller', function(){
+            require.ensure('./new_ui/controllers/shipping_profiles_controller', function(require){
+                var ShippingProfilesController = require('./new_ui/controllers/shipping_profiles_controller');
+                return new ShippingProfilesController('form.profiles_shipping_category_form');
+            });
         });
     });
 
