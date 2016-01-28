@@ -1928,6 +1928,7 @@ en:
       cancelled_by_host: "Cancelled by host"
       rejected: "Rejected"
       confirmed: "Confirmed"
+      inactive: "Inactive"
   search:
     pricing_types:
       daily: "Daily"
