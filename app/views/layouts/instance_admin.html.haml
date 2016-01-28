@@ -47,4 +47,6 @@
     = yield :script
     = javascript_tag do
       = javascript_i18n_include_tag
+      $(function(){
       = yield :domready
+      });
