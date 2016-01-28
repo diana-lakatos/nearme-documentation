@@ -535,5 +535,9 @@ class ApplicationController < ActionController::Base
       !Rails.env.test? &&
       !session[:instance_admin_as_user].present?
   end
+
+  def date_time_handler
+    @date_time_handler ||= DateTimeHandler.new
+  end
 end
 
