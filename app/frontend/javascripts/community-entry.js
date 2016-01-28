@@ -22,12 +22,12 @@ require('cocoon');
 
     DNM.registerInitializer(function(){
         var
-        Utils = require('./intel/utils'),
-        UI = require('./intel/ui'),
-        Onboarding = require('./intel/onboarding'),
-        Forms = require('./intel/forms'),
-        Fixes = require('./intel/fixes'),
-        SeeMore = require('./intel/see_more');
+            Utils = require('./intel/utils'),
+            UI = require('./intel/ui'),
+            Onboarding = require('./intel/onboarding'),
+            Forms = require('./intel/forms'),
+            Fixes = require('./intel/fixes'),
+            SeeMore = require('./intel/see_more');
 
         Utils.initialize();
         UI.initialize();
