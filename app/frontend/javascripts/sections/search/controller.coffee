@@ -2,7 +2,7 @@ SearchDatepickers = require('./datepickers')
 Geocoder = require('./geocoder')
 urlUtil = require('../../lib/utils/url');
 PriceRange = require('../../components/price_range')
-noUiSlider = require('nouislider/distribute/nouislider')
+require('nouislider/distribute/jquery.nouislider.all')
 
 # Base search controller
 # Extended by Search.HomeController and Search.SearchController
@@ -255,14 +255,13 @@ module.exports = class SearchController
       unless start_val >= 0 && val >= 0
         start_val = val = 0
 
-      noUiSlider.create elem, {
+      elem.noUiSlider
         start: [ start_val, val ],
         behaviour: 'drag',
         connect: true,
         range:
           min: 0,
           max: @unfilteredPrice
-      }
 
       elem.on 'change', =>
         $('.search-max-price:first').attr('data-max-price', elem.val()[1])

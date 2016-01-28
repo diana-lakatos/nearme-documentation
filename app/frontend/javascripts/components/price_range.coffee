@@ -1,4 +1,4 @@
-require('nouislider/distribute/nouislider');
+require('nouislider/distribute/jquery.nouislider.all')
 
 module.exports = class PriceRange
   constructor: (element, max, parent) ->
