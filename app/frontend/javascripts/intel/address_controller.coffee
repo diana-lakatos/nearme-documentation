@@ -1,4 +1,4 @@
-AddressField = require('./address_field_controller')
+AddressFieldController = require('./address_field_controller')
 
 module.exports = class AddressController
   constructor: (@container) ->
