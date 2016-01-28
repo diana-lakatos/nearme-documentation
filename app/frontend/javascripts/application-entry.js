@@ -3,12 +3,8 @@
 
 require('expose?$!expose?jQuery!jquery');
 require('../vendor/detect-mobile-browser');
-
-require('history.js/scripts/bundled/html5/jquery.history.js');
 require('../vendor/nested_form');
-
 require('cocoon');
-
 
 (function(){
 

@@ -50,7 +50,7 @@ module.exports = class HomeController extends SearchController
       e.preventDefault()
       if(@visibleQueryField().length > 0 && @visibleQueryField().val() != @cached_geolocate_me_city_address)
         if(@visibleQueryField().val())
-          @geocoder = new Search.Geocoder()
+          @geocoder = new SearchGeocoder()
           deferred = @geocoder.geocodeAddress(@visibleQueryField().val())
           deferred.always (resultset) =>
             if(resultset?)

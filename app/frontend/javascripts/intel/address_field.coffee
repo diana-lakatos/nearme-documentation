@@ -12,7 +12,7 @@ module.exports = class AddressField
     @addressComponentParser = new AddressComponentParser(@inputWrapper)
 
     google.maps.event.addListener @autocomplete, 'place_changed', =>
-      place = Search.Geocoder.wrapResult @autocomplete.getPlace()
+      place = SearchGeocoder.wrapResult @autocomplete.getPlace()
       place = null unless place.isValid()
       if place
         @pickSuggestion(place)
@@ -21,16 +21,16 @@ module.exports = class AddressField
       @picked_result = false
 
     @input.blur =>
-      geocoder = new Search.Geocoder()
+      geocoder = new SearchGeocoder()
       setTimeout( =>
         if !@picked_result
           if $('.pac-container').find('.pac-item').length > 0 && @input.val() != ''
-            geocoder = new Search.Geocoder()
+            geocoder = new SearchGeocoder()
             first_item = $('.pac-container').find('.pac-item').eq(0)
             query = "#{first_item.find('.pac-item-query').eq(0).text()}, #{first_item.find('> span').eq(-1).text()}"
             deferred = geocoder.geocodeAddress(query)
             deferred.done (resultset) =>
-                  result = Search.Geocoder.wrapResult resultset.getBestResult().result
+                  result = SearchGeocoder.wrapResult resultset.getBestResult().result
                   @input.val(query)
                   @pickSuggestion(result)
           else
@@ -43,10 +43,10 @@ module.exports = class AddressField
 
   markerMoved: (lat, lng) =>
     setTimeout( =>
-      geocoder = new Search.Geocoder()
+      geocoder = new SearchGeocoder()
       deferred = geocoder.reverseGeocodeLatLng(lat, lng)
       deferred.done (resultset) =>
-            result = Search.Geocoder.wrapResult resultset.getBestResult().result
+            result = SearchGeocoder.wrapResult resultset.getBestResult().result
             @input.val(result.formattedAddress())
             @pickSuggestion(result)
     , 200)

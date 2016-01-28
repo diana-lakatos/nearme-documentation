@@ -1,3 +1,4 @@
+require('history.js/scripts/bundled/html5/jquery.history.js')
 SearchController = require('./controller')
 urlUtil = require('../../lib/utils/url')
 SearchScreenLockLoader = require('./screen_lock_loader')
