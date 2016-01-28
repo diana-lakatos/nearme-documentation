@@ -7,8 +7,9 @@ module ThemeHelper
     Theme.unhexify(color)
   end
 
-  # Amount should be a decimal between 0 and 1. Lower means darker
+  # Amount should be a decimal between 0 and 1. Higher means darker
   def darken_color(hex_color, amount=0.4)
+    amount = 1 - amount
     hex_color = hex_color.gsub('#','')
     rgb = hex_color.scan(/../).map {|color| color.hex}
     rgb[0] = (rgb[0].to_i * amount).round
