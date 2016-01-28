@@ -1,8 +1,8 @@
 /* jsTree default theme */
 
-$jstree-image-32: ("/assets/new_ui/jstree/32px.png");
-$jstree-image-40: ("/assets/new_ui/jstree/40px.png");
-$jstree-image-throbber: ("/assets/new_ui/jstree/throbber.gif");
+$jstree-image-32: url("/assets/new_ui/jstree/32px.png");
+$jstree-image-40: url("/assets/new_ui/jstree/40px.png");
+$jstree-image-throbber: url("/assets/new_ui/jstree/throbber.gif");
 
 .jstree-node,
 .jstree-children,
