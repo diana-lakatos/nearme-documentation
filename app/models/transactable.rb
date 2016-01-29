@@ -806,6 +806,8 @@ class Transactable < ActiveRecord::Base
       self.action_schedule_booking = false
       self.schedule = nil
     end
+    self.action_free_booking = false if subscription_booking?
+
     true
   end
 

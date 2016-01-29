@@ -12,6 +12,9 @@ en:
       fixed:
         label: 'Fixed'
         description: 'Consumer pays one fixed price or a fixed price per unit'
+      subscription:
+        label: 'Subscription'
+        description: 'Customer is charged monthly or weekly'
     price: 'Price'
     required: 'required'
     price_unit:

@@ -66,7 +66,7 @@ class ReservationRequest < Form
         @end_minute   = nil
       end
 
-      if listing.schedule_booking?
+      if @listing.schedule_booking?
         if @dates.is_a?(String)
           timestamp = Time.at(@dates.to_i).in_time_zone(@listing.timezone)
           @start_minute = timestamp.try(:min).to_i + (60 * timestamp.try(:hour).to_i)
