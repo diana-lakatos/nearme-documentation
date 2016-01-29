@@ -1,3 +1,38 @@
+
+# Payment class helps interact with Active Merchant via different Payment Gateways.
+# It's now isolated from Reservation, Order etc. All you need to do to add payment
+# to new model is to build payment object (see build_payment method in Reservation class).
+# CreditCardForm object is required to process CC authorization.
+# To create valid Payment object it's necessary to pass PaymentMethod that describe payment type
+#
+# Manual and free payments are now created so it can be taken into statistics in the future.
+#
+# There are serveral flow methods that can be invoked on Payment object:
+#
+# - authorize:
+#     - validates CC/Token if needed
+#     - authorize via appropriate PaymentAuthorizer class, BillingAuthorization with
+#       token returned from Gateway call is saved. We do not persist failed authorizations.
+#     - store card token if PaymentGateway supports that option
+#
+# - void!:
+#     - release frozen money, and marks payment as "voided"
+#     - failed void does not block Reservation status change
+#
+# - capture!:
+#     - create Charge object with capture response. If successful moves money from buyer to
+#       primary receiver. In chained transactions, after successful capture, second trasaction
+#       is created with service fee for MPO
+#     - failed capture BLOCKS Reservation status chage, TODO we could add fallback: "We failed to
+#       capture payment, do you wish to confirm that resrevation anyway?" in modal box.
+#
+# - refund!
+#     - refund method is invoked by PaymentRefundJob that first call refund! method
+#       where 3 attempts are executed. Payment#amount_to_be_refunded method determines amount
+#       that is refunded.
+#     - failed refund does not block Reservation status chage
+
+
 class Payment < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
@@ -83,13 +118,6 @@ class Payment < ActiveRecord::Base
     !!(valid_for_authorization? && payment_gateway.authorize(self, auth_options) && store_card)
   end
 
-  def auth_options
-    {
-      customer: customer,
-      order_id: payable.id
-    }
-  end
-
   def capture!
     return true if manual_payment? || total_amount_cents == 0
     return false unless active_merchant_payment?
@@ -109,23 +137,11 @@ class Payment < ActiveRecord::Base
     end
   end
 
-  def attempt_payment_refund(counter = 0)
-    return false if !(active_merchant_payment? && paid?)
-    counter = counter + 1
-    if refund!
-      true
-    elsif counter < 3
-      PaymentRefundJob.perform_later(Time.zone.now + (counter * 6).hours, self.id, counter)
-    else
-      Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::REFUND_ERROR, "Refund for Reservation id=#{self.id} failed 3 times, manual intervation needed.")
-      false
-    end
-  end
-
   def refund!
     return false if refunded?
     return false if paid_at.nil? && !paid?
     return false if amount_to_be_refunded <= 0
+    return false if !active_merchant_payment?
 
     # Because Braintree Marketplace refund pull funds from MPO account
     # we want to block it until the right approach is integrated.
@@ -134,12 +150,23 @@ class Payment < ActiveRecord::Base
 
     return false if PaymentGateway::BraintreeMarketplacePaymentGateway === payment_gateway
 
+    # We need to abort payout in case seller was already paid out
+    # This should be resolved together with Braintree with CC subscription for sellers
+    return false if transferred_to_seller? && !immediate_payout?
+
     refund = payment_gateway.refund(amount_to_be_refunded, currency, self, successful_charge)
     if refund.success?
       mark_as_refuneded!
       true
     else
       touch(:failed_at)
+
+      if should_retry_refund?
+        PaymentRefundJob.perform_later(retry_refund_at, id)
+      else
+        Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::REFUND_ERROR, "Refund for Reservation id=#{self.id} failed #{refund_attempts} times, manual intervation needed.")
+      end
+
       false
     end
   end
@@ -149,7 +176,7 @@ class Payment < ActiveRecord::Base
     return false unless active_merchant_payment?
     return false if successful_billing_authorization.blank?
 
-    response = payment_gateway.gateway_void(self)
+    response = payment_gateway.void(self)
     successful_billing_authorization.void_response = response
 
     if response.success?
@@ -158,27 +185,6 @@ class Payment < ActiveRecord::Base
     else
       successful_billing_authorization.save!
     end
-  end
-
-  def store_card
-    return true unless payment_gateway.supports_recurring_payment?
-    return true unless payable.respond_to?("credit_card_id=")
-    return true unless credit_card_payment?
-
-    if payable.credit_card_id = payment_gateway.store_credit_card(payable.user, credit_card)
-      true
-    else
-      add_error(I18n.t('reservations_review.errors.internal_payment', :cc))
-      false
-    end
-  end
-
-  def billing_gateway
-    if @billing_gateway.nil?
-      @billing_gateway = payment_gateway
-      @billing_gateway.force_mode(payment_gateway_mode)
-    end
-    @billing_gateway
   end
 
   def credit_card_form=(credit_card_attributes)
@@ -309,10 +315,6 @@ class Payment < ActiveRecord::Base
     self.merchant_account = self.payment_gateway.merchant_account(company)
   end
 
-  def fees_persisted?
-    persisted?
-  end
-
   def authorization_token
     if self.persisted?
       successful_billing_authorization.try(:token)
@@ -321,22 +323,52 @@ class Payment < ActiveRecord::Base
     end
   end
 
+  def refund_attempts
+    refunds.failed.count
+  end
+
+  def should_retry_refund?
+    refund_attempts < payment_gateway.max_refund_attempts
+  end
+
+  def retry_refund_at
+    self.failed_at + (refund_attempts * 6).hours
+  end
+
   private
+
+  # TODO: move this flague to Payment from BillingAuthorization
+  def immediate_payout?
+    successful_billing_authorization.try(:immediate_payout?) == true
+  end
+
+  def auth_options
+    {
+      customer: customer,
+      order_id: payable.id
+    }
+  end
+
+  def store_card
+    return true unless payment_gateway.supports_recurring_payment?
+    return true unless payable.respond_to?("credit_card_id=")
+    return true unless credit_card_payment?
+
+    if payable.credit_card_id = payment_gateway.store_credit_card(payable.user, credit_card)
+      true
+    else
+      add_error(I18n.t('reservations_review.errors.internal_payment', :cc))
+      false
+    end
+  end
+
+  def transferred_to_seller?
+    payment_transfer.try(:transferred?)
+  end
 
   def set_offline
     self.offline = manual_payment?
     true
-  end
-
-  def inherit_data_from_payable
-    [
-      :company_id, :subtotal_amount_cents, :service_fee_amount_guest_cents,
-      :service_fee_amount_host_cents, :service_additional_charges_cents, :host_additional_charges_cents,
-      :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_percentage,
-      :currency
-    ].each do |column|
-     self.send("#{column}=", payable.send(column))
-    end
   end
 
   def valid_for_authorization?

@@ -71,6 +71,7 @@ class PaymentGateway::FetchPaymentGateway < PaymentGateway
   end
 
   def charge(user, amount, currency, payment, token)
+    @payment = payment
     @mns_params = payment.payment_response_params
 
     @charge = Charge.create(

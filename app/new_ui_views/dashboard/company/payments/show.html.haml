@@ -22,9 +22,15 @@
           %th= t('dashboard.payments.state')
           %td= t("dashboard.payments.states.#{@payment.state}")
 
+        - @payment.alerts.each do |alert|
+          %tr
+            %th= t 'dashboard.payments.alerts'
+            %td= alert
+
+
     - if @payment.authorized?
       %p= link_to t("dashboard.payments.capture"), capture_dashboard_company_orders_received_payment_path(@order, @payment), class: 'btn btn-warning', method: :post
 
-    - if @payment.paid?
+    - if @payment.paid? && @payment.refund_attempts.zero?
       %p= link_to t("dashboard.payments.refund"), refund_dashboard_company_orders_received_payment_path(@order, @payment), class: 'btn btn-warning', method: :post
 

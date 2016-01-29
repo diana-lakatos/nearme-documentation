@@ -39,6 +39,6 @@ class Dashboard::Company::PaymentsController < Dashboard::Company::BaseControlle
   end
 
   def find_payment
-    @payment = @order.payment
+    @payment = @order.payment.decorate
   end
 end

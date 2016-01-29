@@ -100,7 +100,8 @@ class Listings::RecurringBookingsController < ApplicationController
         country_name: attributes[:country_name],
         mobile_number: attributes[:mobile_number],
         additional_charge_ids: attributes[:additional_charge_ids],
-        guest_notes: attributes[:guest_notes]
+        guest_notes: attributes[:guest_notes],
+        total_amount_check: attributes[:total_amount_check]
       }
     )
   end

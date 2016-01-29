@@ -15,7 +15,17 @@ class PaymentGateway::BraintreePaymentGatewayTest < ActiveSupport::TestCase
   end
 
   should "have a refund identification based on its id key" do
-    charge = stub(payment: stub(payable: stub(billing_authorization: stub(token: '123'))))
+    charge = stub(payment: stub(authorization_token: '123'))
     assert_equal "123", @braintree_processor.refund_identification(charge)
+  end
+
+  should "retry refund 10 times" do
+    Braintree::Transaction.stubs(:find).returns(OpenStruct.new({status: 'settled'}))
+    stub_active_merchant_interaction({success?: false, message: "fail"})
+
+    @payment_gateway = FactoryGirl.create(:braintree_payment_gateway)
+    @payment = FactoryGirl.create(:paid_payment, payment_method: @payment_gateway.payment_methods.first)
+    @payment.refund!
+    assert_equal 10, @payment.refunds.count
   end
 end

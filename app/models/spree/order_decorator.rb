@@ -243,7 +243,7 @@ Spree::Order.class_eval do
 
   def after_cancel
     shipments.each(&:cancel!)
-    payment.attempt_payment_refund
+    payment.refund!
     WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::Cancelled, id)
     self.update!
   end

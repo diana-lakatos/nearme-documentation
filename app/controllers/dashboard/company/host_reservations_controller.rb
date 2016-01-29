@@ -20,8 +20,8 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
       else
         flash[:error] = [
           t('flash_messages.manage.reservations.reservation_not_confirmed'),
-          *@reservation.errors.full_messages
-        ].join(' ')
+          *@reservation.errors.full_messages, *@reservation.payment.errors.full_messages
+        ].join("\n")
       end
     end
 

@@ -2,10 +2,15 @@ en:
   activemodel:
     errors:
       models:
+        payment:
+          attributes:
+            base:
+              authorization_failed: "Authorization failed!"
         reservation_request:
           attributes:
             base:
               file_cannot_be_empty: "File cannot be empty"
+              total_amount_changed: "Looks like the total price of this reservation has changed. Please verify all prices."
         product_form:
           attributes:
             base:

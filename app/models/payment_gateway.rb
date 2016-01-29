@@ -83,6 +83,8 @@ class PaymentGateway < ActiveRecord::Base
     'Offline Payment' => 'PaymentGateway::ManualPaymentGateway',
   }
 
+  MAX_REFUND_ATTEMPTS = 3
+
   # supported/unsuppoted class method definition in config/initializers/act_as_supported.rb
 
   unsupported :payout, :recurring_payment, :any_country, :any_currency, :paypal_express_payment, :paypal_chain_payments,
@@ -251,24 +253,32 @@ class PaymentGateway < ActiveRecord::Base
       payment_gateway_mode: mode
     )
 
-    begin
       options = custom_capture_options.merge(currency: currency)
       response = gateway_capture(amount, token, options.with_indifferent_access)
       response.success? ? charge_successful(response) : charge_failed(response)
       @charge
-    rescue => e
-      @payment.update_column(:recurring_booking_error, e)
-      raise PaymentGateway::PaymentAttemptError, e
-    end
   end
 
   def gateway_capture(amount, token, options)
-    gateway.capture(amount, token, options)
+    begin
+      gateway.capture(amount, token, options)
+    rescue => e
+      @payment.update_column(:recurring_booking_error, e)
+      OpenStruct.new({ success?: false, message: e.to_s })
+    end
   end
 
-  def gateway_void(payment)
+  def void(payment)
     force_mode(payment.payment_gateway_mode)
-    gateway.void(payment.authorization_token)
+    gateway_void(payment.authorization_token)
+  end
+
+  def gateway_void(token)
+    begin
+      gateway.void(token)
+    rescue => e
+      OpenStruct.new({ success?: false, message: e.to_s })
+    end
   end
 
   def refund(amount, currency, payment, successful_charge)
@@ -283,18 +293,18 @@ class PaymentGateway < ActiveRecord::Base
 
     raise PaymentGateway::RefundNotSupportedError, "Refund isn't supported or is not implemented. Please refund this user directly on your gateway account." if !defined?(refund_identification)
 
-    begin
-      options = custom_refund_options.merge(currency: currency)
-      response = gateway_refund(amount, successful_charge, options.with_indifferent_access)
-      response.success? ? refund_successful(response) : refund_failed(response)
-      @refund
-    rescue => e
-      raise PaymentGateway::PaymentRefundError, e
-    end
+    options = custom_refund_options.merge(currency: currency)
+    response = gateway_refund(amount, refund_identification(successful_charge), options.with_indifferent_access)
+    response.success? ? refund_successful(response) : refund_failed(response)
+    @refund
   end
 
-  def gateway_refund(amount, successful_charge, options)
-    gateway.refund(amount, refund_identification(successful_charge), options)
+  def gateway_refund(amount, token, options)
+    begin
+      gateway.refund(amount, token, options)
+    rescue => e
+      OpenStruct.new({ success?: false, message: e.to_s })
+    end
   end
 
   def store_credit_card(client, credit_card)
@@ -356,6 +366,10 @@ class PaymentGateway < ActiveRecord::Base
     end
   end
 
+  def max_refund_attempts
+    3
+  end
+
   protected
 
   def void_merchant_accounts
@@ -370,6 +384,7 @@ class PaymentGateway < ActiveRecord::Base
   # Callback invoked by processor when charge failed
   def charge_failed(response)
     @charge.charge_failed(response)
+    @payment.errors.add(:base, response.message) if response.respond_to?(:message)
   end
 
   # Callback invoked by processor when refund was successful

@@ -1358,6 +1358,7 @@ en:
         paid: "Paid"
         voided: "Voided"
         refunded: "Refunded"
+      alerts: 'Alerts:'
 
     host_reservations:
       booked: 'booked'
@@ -2039,6 +2040,9 @@ en:
         errors: 'Data has not been imported due to error during processing.'
         header:  'Data import for %{csv_identifier}'
   decorators:
+    payment:
+      refund_failed: "Refund has failed"
+      refund_retry_at: "Looks like there was a problem with refund. We've scheduled next attempt at %{retry_at}."
     review:
       today: 'Today'
   helpers:

@@ -1347,6 +1347,7 @@ class SecuredParams
       :delivery_ids,
       :shipments_attributes,
       :dates,
+      :total_amount_check,
       dates: [],
       additional_charge_ids: [],
       waiver_agreement_templates: [],
