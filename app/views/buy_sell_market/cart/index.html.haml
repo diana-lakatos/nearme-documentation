@@ -22,9 +22,3 @@
         = form_tag cart_update_path, method: :patch, id: 'cart' do
           - @cart.orders.each do |order|
             = render partial: 'company_order', locals: { order: order }
-
-  -# TODO Refactor to asset pipeline
-  :javascript
-    $('select[name^=quantity]').on('change', function() {
-      $('#cart').submit();
-    });

@@ -537,6 +537,17 @@ require('cocoon');
         });
     });
 
+    DNM.registerInitializer(function(){
+        var form = $('#cart');
+        if (form.length === 0) {
+            return;
+        }
+
+        $('select[name^=quantity]').on('change', function() {
+            form.submit();
+        });
+    });
+
 
     DNM.run();
 
