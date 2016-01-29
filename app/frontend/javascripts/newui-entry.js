@@ -315,11 +315,9 @@ require('jquery-timeago');
         if (els.length === 0) {
             return;
         }
-        require.ensure('./new_ui/listings/enabled_field', function(require){
-            var EnabledField = require('./new_ui/listings/enabled_field');
-            els.each(function(){
-                return new EnabledField(this);
-            });
+        require.ensure('./new_ui/listings/sync_enabled_fields', function(require){
+            var SyncEnabledFields = require('./new_ui/listings/sync_enabled_fields');
+            return new SyncEnabledFields(els);
         });
     });
 
