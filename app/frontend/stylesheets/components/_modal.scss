@@ -105,7 +105,7 @@
   background: $gray220 url("/assets/components/modal/loader.gif") center center no-repeat;
 }
 
-.modal-content {
+.modal-content.visible {
   @extend .modal-wrapper;
   padding: $padding-default;
   z-index: $modal-z-index + 1;
@@ -129,9 +129,12 @@
     color: $gray80;
     border-top-left-radius: $border-radius-default;
     border-top-right-radius: $border-radius-default;
+    height: auto;
+    text-shadow: none;
 
     h2 {
       color: $gray80;
+      font-weight: 400;
     }
   }
 
@@ -180,4 +183,3 @@
   position: fixed;
   width: 100%;
 }
-
