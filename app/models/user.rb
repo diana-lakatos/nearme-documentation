@@ -113,7 +113,8 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :default_profile
 
   attr_readonly :following_count, :followers_count
-  attr_accessor :skip_password, :verify_identity, :custom_validation, :accept_terms_of_service, :verify_associated
+  attr_accessor :skip_password, :verify_identity, :custom_validation, :accept_terms_of_service, :verify_associated,
+                :skip_validations_for
 
   serialize :sms_preferences, Hash
   serialize :instance_unread_messages_threads_count, Hash
@@ -335,7 +336,10 @@ class User < ActiveRecord::Base
   end
 
   def custom_validators
-    @custom_validators ||= all_profiles.map(&:custom_validators).flatten.compact
+    profiles = (UserProfile::PROFILE_TYPES - Array(skip_validations_for).map(&:to_s)).map do |profile_type|
+      send("#{profile_type}_profile")
+    end.compact
+    @custom_validators ||= profiles.map(&:custom_validators).flatten.compact
   end
 
   def validation_for(field_names)
