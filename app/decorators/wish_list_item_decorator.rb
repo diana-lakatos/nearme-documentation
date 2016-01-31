@@ -7,7 +7,7 @@ class WishListItemDecorator < Draper::Decorator
     if wishlistable.try(:images)
       wishlistable.images.empty? ? no_image : asset_url(wishlistable.images.first.image_url)
     else
-      wishlistable.photos_metadata.any? ? wishlistable.photos_metadata[0][:golden] : no_image
+      wishlistable.has_photos? ? wishlistable.photos_metadata[0][:golden] : no_image
     end
   end
 
