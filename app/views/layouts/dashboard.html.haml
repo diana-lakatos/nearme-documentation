@@ -37,6 +37,7 @@
 
     = render 'shared/ckeditor_basepath'
     = render "shared/javascript_assets"
+    = yield(:head_bottom)
 
   %body
     = yield(:body_top)
