@@ -529,7 +529,7 @@ section#landing-page h3 {
     font-family: <%= font[:regular] %>
 }
 section.home #hero {
-    background-image: <%= image_url(theme_hero) %>;
+    background-image: url(<%= image_url(theme_hero) %>);
 }
 section.home #hero>.hero-shadow a {
     font: 400 24px <%= font[:regular] %>

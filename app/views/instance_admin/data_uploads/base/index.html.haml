@@ -19,7 +19,7 @@
               %td= resource.state
               - if params[:service_type_id].present?
                 %td= link_to resource.xml_file_identifier, resource.xml_file.try(:url), target: :blank if resource.xml_file.present?
-              %td= resource.imported_at
+              %td= l(resource.imported_at, format: :long)
               %td= resource.uploader.present? ? resource.uploader.email : ''
               %td= l(resource.created_at, format: :long)
   .row

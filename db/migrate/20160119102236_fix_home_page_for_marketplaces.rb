@@ -1,6 +1,5 @@
 class FixHomePageForMarketplaces < ActiveRecord::Migration
   def up
-    InstanceView.where(path: ['layouts/theme_footer', 'layouts/theme_header', 'home/homepage_content']).update_all(view_type: 'view')
     old_paths = ["include 'home/search_button'", "include 'home/search_box'", "include 'shared/modules/latest_products.html'"]
     new_paths = ["include 'home/search_button.html'", "include 'home/search_box.html'", "include 'shared/modules/latest_products.html'"]
     InstanceView.find_each do |iv|
@@ -37,28 +36,24 @@ class FixHomePageForMarketplaces < ActiveRecord::Migration
   {% include 'shared/modules/latest_products.html' %}
   {% include 'home/homepage_content.html' %}
 </section>
-
-{% content_for 'domready' %}
-  new Home.BackgroundController($('#hero'))
-  new Home.Controller($('body'))
-{% endcontent_for %}
           SQL
         end
         homepage_template.transactable_type_ids = TransactableType.pluck(:id)
         homepage_template.locale_ids = Locale.pluck(:id)
         homepage_template.save!
       end
-      if i.theme.try(:homepage_content).present?
+      if i.theme.try(:homepage_content).present? || i.theme.try(:homepage_css)
         puts "\tcreating homepage content liquid view based on theme.homepage_content column unless created"
         instance_view = InstanceView.where(instance_id: i.id, path: 'home/homepage_content', partial: true, format: 'html', handler: 'liquid').first_or_initialize do |view|
           view.view_type = 'view'
-          view.body = "<style>" + i.theme.homepage_css.html_safe + "</style>\n" + i.theme.homepage_content.html_safe
+          view.body = "<style>\n" + i.theme.homepage_css.try(:html_safe) + "\n</style>\n" + i.theme.homepage_content.try(:html_safe)
         end
         instance_view.transactable_type_ids = TransactableType.pluck(:id)
         instance_view.locale_ids = [Locale.find_by(code: i.primary_locale).id]
         instance_view.save!
       end
     end
+    InstanceView.where(path: ['layouts/theme_footer', 'layouts/theme_header', 'home/homepage_content', 'home/index']).update_all(view_type: 'view')
   end
 
   def down

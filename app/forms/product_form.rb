@@ -24,7 +24,6 @@ class ProductForm < Form
       end
     end
   end
-
   validate :label_and_description_cannot_be_empty
 
   def label_and_description_cannot_be_empty
@@ -39,7 +38,6 @@ class ProductForm < Form
       end
     end
   end
-
   validate :validate_mandatory_categories
 
   def validate_mandatory_categories

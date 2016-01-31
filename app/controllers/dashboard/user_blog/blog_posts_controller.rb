@@ -12,6 +12,7 @@ class Dashboard::UserBlog::BlogPostsController < Dashboard::UserBlog::BaseContro
   end
 
   def create
+    params[:user_blog_post][:published_at] = (date_time_handler.convert_to_datetime(params[:user_blog_post][:published_at]).presence || params[:user_blog_post][:published_at]) if params[:user_blog_post][:published_at] if params[:user_blog_post]
     @blog_post = current_user.blog_posts.build(user_blog_post_params)
     if @blog_post.save
       flash[:success] = t('flash_messages.blog_admin.blog_posts.blog_post_added')

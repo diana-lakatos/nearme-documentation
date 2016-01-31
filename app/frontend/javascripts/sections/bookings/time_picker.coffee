@@ -15,7 +15,10 @@ module.exports = class TimePicker
     @closeMinute = options.closeMinute or 18*60
     @minimumBookingMinutes = options.minimumBookingMinutes
     @initialStartMinute = options.startMinute if options.startMinute?
+    @initialStartMinute ||= @openMinute
     @initialEndMinute = options.endMinute if options.endMinute?
+    @initialEndMinute ||= @openMinute + @minimumBookingMinutes
+
 
     @view = new View(positionTarget: @container, @listing)
     @view.appendTo($('body'))
@@ -41,6 +44,7 @@ module.exports = class TimePicker
   bindEvents: ->
     @container.on 'click', (event) =>
       @view.toggle()
+      @loading.hide()
 
     @startTime.on 'change', =>
       @disableEndTimesFromStartTime()
@@ -84,6 +88,7 @@ module.exports = class TimePicker
     curr = @openMinute
     while curr <= @closeMinute
       @allMinutes.push(curr)
+
       options.push "<option value='#{curr}'>#{@formatMinute(curr)}</option>"
       curr += BOOKING_STEP
 
@@ -115,16 +120,13 @@ module.exports = class TimePicker
       @disabledStartTimes = []
       @disabledEndTimes = []
 
-      first = true
       for min in @allMinutes
         unless @listing.canBookDate(date, min)
           # If the minute is unbookable, can't start on that minute, and
           # therefore can't end STEP minutes after that.
           @disabledStartTimes.push(min)
           @disabledEndTimes.push(min+BOOKING_STEP)
-          if first
-            first = false
-            @disabledEndTimes.push(min)
+          @disabledEndTimes.push(min)
 
       # Set the disabled start times
       @setDisabledTimesForSelect(@startTime, @disabledStartTimes)
@@ -178,7 +180,7 @@ module.exports = class TimePicker
 
   # Return a minute of the day formatted in h:mmpm
   formatMinute: (minute) ->
-    hours = parseInt(minute / 60, 10) % 12
+    hours = parseInt(minute / 60, 10)
     minutes = minute % 60
     date = new Date()
     date.setHours(hours, minutes)

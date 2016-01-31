@@ -47,7 +47,6 @@
     "urlify": "https://raw.githubusercontent.com/django/django/master/django/contrib/admin/static/admin/js/urlify.js",
     "jquery-tokeninput": "~1.7.0",
     "bootstrap-colorpicker": "*",
-    "bootstrap-select": "~1.9.3",
     "jquery-timeago": "~1.4.3",
     "jquery-ias": "~2.2.1",
     "history.js": "~1.8.0",

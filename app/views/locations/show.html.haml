@@ -17,7 +17,7 @@
 
       .container-row
         .two-thirds.column.left
-          - cache(@location, expires_in: cache_expires_in_for(:location)) do
+          - cache i18n_cache_key(@location), expires_in: cache_expires_in_for(:location) do
             = render 'locations/location_photos', location: @location
 
           .padding-row
@@ -28,7 +28,7 @@
         .one-third.column.left
           .toggleable-booking-modules
             - @listings.each_with_index do |listing, index|
-              - cache([listing, user_signed_in?, listing.instance.context_cache_key.to_s, index]) do
+              - cache i18n_cache_key(listing, user_signed_in?, listing.instance.context_cache_key.to_s, index) do
                 = render 'locations/listings/booking', listing: listing, collapsed: index > 0
               .padding-row
 

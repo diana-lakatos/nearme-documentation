@@ -35,8 +35,8 @@
           - @user_blog_posts.each do |blog_post|
             %tr
               %td= blog_post.title_link
-              %td= blog_post.created_at
-              %td= blog_post.published_at
+              %td= I18n.l(blog_post.created_at, format: :long)
+              %td= I18n.l(blog_post.published_at, format: :long)
               %td
                 = link_to 'Edit', edit_dashboard_blog_post_path(blog_post)
                 = link_to 'Delete', dashboard_blog_post_path(blog_post.id), method: :delete,

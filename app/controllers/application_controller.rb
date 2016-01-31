@@ -54,13 +54,13 @@ class ApplicationController < ActionController::Base
     params_locale = params[:language].try(:to_sym)
     user_locale = current_user.try(:language).try(:to_sym)
 
-    locale_service = LocaleService.new(platform_context.instance, params_locale, user_locale, request.fullpath)
-    if locale_service.redirect? && request.get? && !request.xhr?
+    @locale_service = LocaleService.new(platform_context.instance, params_locale, user_locale, request.fullpath)
+    if @locale_service.redirect? && request.get? && !request.xhr?
       # Redirect -> This is necessary for proper functionality of the 'current_page?' method
-      redirect_to(locale_service.redirect_url, status: 301)
+      redirect_to(@locale_service.redirect_url, status: 301)
     end
 
-    I18n.locale = locale_service.locale
+    I18n.locale = @locale_service.locale
   end
 
   def set_time_zone(&block)
@@ -359,8 +359,8 @@ class ApplicationController < ActionController::Base
   end
 
   def register_platform_context_as_lookup_context_detail
-    register_lookup_context_detail(:instance_type_id)
     register_lookup_context_detail(:instance_id)
+    register_lookup_context_detail(:i18n_locale)
     register_lookup_context_detail(:transactable_type_id)
   end
 
@@ -443,15 +443,16 @@ class ApplicationController < ActionController::Base
   end
 
   def details_for_lookup
+    set_locale if @locale_service.nil?
     {
-      :instance_type_id => PlatformContext.current.try(:instance_type).try(:id),
       :instance_id => PlatformContext.current.try(:instance).try(:id),
+      :i18n_locale => I18n.locale,
       :transactable_type_id => params[:transactable_type_id].present? ? (TransactableType.find_by(slug: params[:transactable_type_id]).try(:id) || params[:transactable_type_id]).to_i : nil
     }
   rescue
     {
-      :instance_type_id => PlatformContext.current.try(:instance_type).try(:id),
       :instance_id => PlatformContext.current.try(:instance).try(:id),
+      :i18n_locale => I18n.locale
     }
   end
 
@@ -533,6 +534,10 @@ class ApplicationController < ActionController::Base
       !current_user.admin? &&
       !Rails.env.test? &&
       !session[:instance_admin_as_user].present?
+  end
+
+  def date_time_handler
+    @date_time_handler ||= DateTimeHandler.new
   end
 end
 

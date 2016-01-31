@@ -6,7 +6,7 @@
     = attachment.format_created_at
     = number_to_human_size(attachment.size) if attachment.size
 
-    = link_to image_tag('ckeditor/filebrowser/images/gal_del.png',
+    = link_to image_tag('filebrowser/gal_del.png',
       title: I18n.t('ckeditor.buttons.delete')),
       dashboard_seller_attachment_path(attachment),
       method: :delete,
