@@ -271,10 +271,11 @@ class Location < ActiveRecord::Base
 
   def build_availability_template
     if availability_template_attributes.present?
-      if availability_template_attributes["id"].present?
+      if availability_template_attributes['id'].present? && self.availability_template
         self.availability_template.attributes = availability_template_attributes
         self.availability_template.save
       else
+        availability_template_attributes.delete('id')
         availability_template_attributes.merge!({
           name: 'Custom location availability',
           parent: self
