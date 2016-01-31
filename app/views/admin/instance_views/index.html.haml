@@ -4,11 +4,14 @@
   %thead
     %tr
       %th Path
+      %th Transactable Types
+      %th Locales
   %tbody
     - @instance_views.each do |view|
       %tr
         %td= view.path
-        %td= view.transactable_type.try(:name)
+        %td= view.transactable_types.pluck(:name).join(', ')
+        %td= view.locales.map(&:name).join(', ')
         %td= link_to 'Versions', admin_instance_instance_view_versions_path(view.instance_id, view.id), class: 'btn'
         %td= link_to 'Edit', edit_admin_instance_instance_view_path(view.instance_id, view.id), class: 'btn'
         %td= button_to "Delete", admin_instance_instance_view_path(view.instance_id, view.id), :method => :delete, class: 'btn btn-danger'
