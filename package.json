@@ -46,7 +46,8 @@
     "jshint-stylish": "^2.1.0",
     "lodash": "^3.10.1",
     "node-sass": "^3.4.2",
-    "webpack": "^1.12.9"
+    "webpack": "^1.12.9",
+    "webpack-md5-hash": "0.0.4"
   },
   "dependencies": {
     "brace": "^0.7.0"
