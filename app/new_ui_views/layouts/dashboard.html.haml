@@ -70,6 +70,9 @@
 
       = yield
 
+    = javascript_tag do
+      = javascript_i18n_include_tag
+
     = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places&sensor=false"
 
     = webpack_manifest_script
@@ -82,10 +85,10 @@
 
     = yield :script
 
-    = javascript_tag do
-      = javascript_i18n_include_tag
-      $(function(){
-      = yield :domready
-      });
+    - if content_for?(:domready)
+      = javascript_tag do
+        $(function(){
+        = yield :domready
+        });
 
     = yield(:body_bottom)
