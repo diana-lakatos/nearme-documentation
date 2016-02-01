@@ -145,7 +145,7 @@
                 = f.input :interval, as: :hidden, input_html: { value: listing.subscription_variants.keys.first }
 
               - if listing.schedule_booking?
-                = f.input :dates, label: false, input_html: { value: listing.first_available_occurrence[:text], :'data-fixed-date-select' => true, 'data-init-value' => listing.first_available_occurrence.to_json }
+                = f.input :dates, label: false, input_html: { value: listing.first_available_occurrence[:id], :'data-fixed-date-select' => true, 'data-init-value' => listing.first_available_occurrence.to_json }
               - else
                 = f.hidden_field :dates
 
