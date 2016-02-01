@@ -15,7 +15,7 @@ class UserProfile < ActiveRecord::Base
   has_many :categories_categorizables, as: :categorizable
   has_many :categories, through: :categories_categorizables
 
-  before_validation :assign_defaults
+  before_create :assign_defaults
 
   validates_inclusion_of :profile_type, in: PROFILE_TYPES
   validate :validate_mandatory_categories, unless: ->(record) { record.skip_custom_attribute_validation }
