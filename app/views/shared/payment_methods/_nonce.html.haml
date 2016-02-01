@@ -6,6 +6,8 @@
           .ico-lock= t 'payments.heading'
         .span7.credit-card-images
           = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
+          // TODO: move that to payment scope after merge with payment refactor
+          = hidden_field_tag(:payment_method_nonce, nil, id: 'paypal-nonce')
         .clearfix
 
     = f.error :cc
@@ -23,7 +25,23 @@
       $(function() {
         if('braintree' in window) {
           braintree.setup("#{payment_method.payment_gateway.client_token}", 'paypal', {
-            container: 'paypal-button'
+            container: 'paypal-button',
+            paymentMethodNonceInputField: $("#paypal-nonce"),
+            onPaymentMethodReceived: function (payload) {
+              $(".submit-payment").show()
+            },
+            onCancelled: function (payload) {
+              $(".submit-payment").hide()
+            },
           });
+        }
+      });
+      $('.accordion').on('show.bs.collapse', function (e) {
+        if ($(e.target).find(".accordion-inner #paypal-button").length) {
+          if ($("#paypal-nonce").val().length == 0) {
+            $(".submit-payment").hide()
+          }
+        } else {
+          $(".submit-payment").show()
         }
       });
