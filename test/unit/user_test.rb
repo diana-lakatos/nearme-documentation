@@ -147,15 +147,6 @@ class UserTest < ActiveSupport::TestCase
         end
       end
 
-      context "when country name required" do
-        should "be invalid" do
-          user = FactoryGirl.build(:user_without_country_name)
-          Instance.first.default_profile_type.custom_validators.create(field_name: 'country_name', required: 1)
-          user.build_profile
-          refute user.valid?
-        end
-      end
-
       context "when wrong phone numbers provided" do
         setup do
           @user = FactoryGirl.build(:user)
@@ -178,12 +169,6 @@ class UserTest < ActiveSupport::TestCase
           assert @user.valid?
         end
 
-        should "be invalid with empty number and phone required" do
-          @user.valid?
-          @user.custom_validators << @user.default_profile.instance_profile_type.custom_validators.build(field_name: 'phone', validation_rules:{presence: {}})
-          @user.phone = nil
-          refute @user.valid?
-        end
       end
 
     end

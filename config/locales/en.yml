@@ -2188,7 +2188,10 @@ en:
     heading: 'Submit a secure payment.'
     cc_image_alt: 'Visa, Mastercard, American Express, Discover'
     already_authorized: 'Payment has been already authorized. Please proceed.'
-
+    credit_card: 'Credit Card Payment'
+    manual: 'Manual Payment'
+    nonce: 'PayPal Payment'
+    remote: 'Fetch Payment'
     cc_fields:
       first_name: 'First Name'
       last_name: 'Last Name'
@@ -2198,8 +2201,8 @@ en:
       expiration_date_year: 'Expiration date: Year'
       security_code: 'Security code'
       ccv_hint: "The Card Security Code is usually a 3- or 4- digit number, typically printed on the back of a credit card (usually in the signature field)"
-
       whats_this: "(What's this?)"
+
   shared:
     booking_types_tabs:
       booking_types: 'Booking types'
@@ -2213,12 +2216,6 @@ en:
     reviews_left_by_this_seller: "How %{first_name} rated others as a seller"
     reviews_about_this_buyer: "How others rated %{first_name} as an buyer"
     reviews_left_by_this_buyer: "How %{first_name} rated others as an buyer"
-
-  payments:
-    credit_card: 'Credit Card Payment'
-    manual: 'Manual Payment'
-    nonce: 'PayPal Payment'
-    remote: 'Fetch Payment'
 
   payouts:
     mailing_address: 'Address to send checks'
