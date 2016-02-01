@@ -256,18 +256,6 @@ class UserTest < ActiveSupport::TestCase
         assert @user.valid?
       end
 
-      context 'user has been persisted' do
-
-        should 'not be valid without middle_name' do
-          InstanceProfileType.default.first.custom_validators.create(field_name: 'middle_name', required: 1)
-          @user = FactoryGirl.build(:user, middle_name: nil)
-          refute @user.valid?
-          @user.middle_name = 'male'
-          assert @user.valid?
-        end
-
-      end
-
     end
   end
 
