@@ -114,12 +114,6 @@ Spree::Product.class_eval do
     company.creator_id
   end
 
-  def cross_sell_products
-    cross_sell_skus.map do |variant_sku|
-      Spree::Variant.where(sku: variant_sku).first.try(:product)
-    end.compact
-  end
-
   def to_liquid
     @spree_product_drop ||= Spree::ProductDrop.new(self)
   end
