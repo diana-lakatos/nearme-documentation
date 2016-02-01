@@ -476,6 +476,17 @@ require('jquery-timeago');
         });
     });
 
+    DNM.registerInitializer(function(){
+        var els = document.getElementById('load-sessioncam');
+        if (!els) {
+            return;
+        }
+
+        require.ensure('exports?ServiceTickDetection!./analytics/sessioncam', function(require){
+            window.ServiceTickDetection = require('exports?ServiceTickDetection!./analytics/sessioncam');
+        });
+    });
+
 
     $(function(){
         DNM.run();

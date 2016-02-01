@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
+var WebpackMd5Hash = require('webpack-md5-hash');
 var _ = require('lodash');
 var path = require('path');
 
@@ -13,9 +14,10 @@ config.output = _.merge(config.output, {
 
 config.plugins.push(
   new webpack.optimize.CommonsChunkPlugin('common', 'common-[chunkhash].js'),
+  new webpack.NamedModulesPlugin(),
   new ChunkManifestPlugin({
     filename: 'webpack-common-manifest.json',
     manifestVariable: 'webpackBundleManifest',
   }),
-  new webpack.optimize.OccurenceOrderPlugin()
+  new WebpackMd5Hash()
 );

@@ -3,8 +3,10 @@ module.exports = class HomeController
   constructor: (container) ->
     @container = $(container)
     @callToAction = @container.find('a[data-call-to-action]')
-    @howItWorks = @container.find('section.how-it-works')
-    @homepageContentTopOffset = 20
+    @howItWorks = $('section.how-it-works')
+    @homepageContentTopOffset = 90
+
+    return unless @callToAction.length isnt 0 and @howItWorks.length isnt 0
     @bindEvents()
 
 
