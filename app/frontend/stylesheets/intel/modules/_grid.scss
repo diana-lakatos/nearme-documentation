@@ -54,6 +54,8 @@
 
     > .wrap {
         margin: -30px -40px 0;
+        display: flex;
+        flex-wrap: wrap;
     }
 
     > .wrap > .cell {
@@ -61,6 +63,12 @@
         border-width: 30px 40px 0;
         padding: 5px;
         text-align: left;
+        display: inline-flex;
+        flex-direction: column;
+
+        .card-b {
+            flex-grow: 1;
+        }
     }
 }
 
