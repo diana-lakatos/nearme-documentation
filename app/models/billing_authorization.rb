@@ -13,23 +13,12 @@ class BillingAuthorization < ActiveRecord::Base
   belongs_to :instance
   belongs_to :reference, polymorphic: true
   belongs_to :payment_gateway
+  belongs_to :payment
+  belongs_to :user
 
   scope :success, -> { where(success: true) }
 
   validates_presence_of :token, if: lambda { |billing_authorization| billing_authorization.success? }
 
-  def void!
-    return if void_at.present?
-    self.void_response = billing_gateway.void(self)
-    touch(:void_at)
-  end
-
-  def billing_gateway
-    if @billing_gateway.nil?
-      @billing_gateway = payment_gateway
-      @billing_gateway.force_mode(payment_gateway_mode)
-    end
-    @billing_gateway
-  end
 end
 

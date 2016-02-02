@@ -62,7 +62,7 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
 
   def process_express_checkout(transactable, options)
     @transactable = transactable
-    @response = gateway(@transactable.merchant_subject).setup_authorization(@transactable.total_amount.cents , options.deep_merge(
+    @response = gateway(@transactable.merchant_subject).setup_authorization(@transactable.total_amount.cents, options.deep_merge(
       {
         currency: @transactable.currency,
         allow_guest_checkout: true,
@@ -73,6 +73,7 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
         tax: @transactable.tax_amount.cents
       })
     )
+    # TODO: store @response somewhere
   end
 
   def redirect_url

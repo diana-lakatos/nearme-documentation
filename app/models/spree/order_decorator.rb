@@ -7,13 +7,13 @@ Spree::Order.class_eval do
   )
 
   include Spree::Scoper
-  include Payable
   include Chargeable
 
-  attr_reader :card_number, :card_code, :card_exp_month, :card_exp_year, :card_holder_first_name, :card_holder_last_name
-  attr_accessor :payment_method_nonce, :start_express_checkout, :express_checkout_redirect_url
+  attr_accessor :start_express_checkout
+  attr_reader :credit_card
 
   delegate :service_fee_guest_percent, :service_fee_host_percent, to: :instance
+  delegate :payment_method, to: :payment, allow_nil: true
 
   scope :completed, -> { where(state: 'complete') }
   scope :approved, -> { where.not(approved_at: nil) }
@@ -26,11 +26,11 @@ Spree::Order.class_eval do
   belongs_to :instance
   belongs_to :partner
   belongs_to :platform_context_detail, polymorphic: true
-  belongs_to :payment_method
 
   has_one :billing_authorization, -> { where(success: true) }, as: :reference
+  has_one :payment, class_name: '::Payment', as: :payable
   has_many :billing_authorizations, as: :reference
-  has_many :near_me_payments, as: :payable, class_name: '::Payment'
+
   has_many :shipping_methods, class_name: 'Spree::ShippingMethod'
   has_many :additional_charges, as: :target
   has_many :payment_documents, as: :attachable, class_name: 'Attachable::PaymentDocument', dependent: :destroy
@@ -43,12 +43,6 @@ Spree::Order.class_eval do
   before_create :store_platform_context_detail
   before_update :reject_empty_documents
 
-  [:card_number, :card_code, :card_exp_month, :card_exp_year, :card_holder_first_name, :card_holder_last_name].each do |accessor|
-    define_method("#{accessor}=") do |attribute|
-      instance_variable_set("@#{accessor}", attribute.try(:to_s).try(:strip))
-    end
-  end
-
   self.per_page = 5
 
   # We do not need spree to verify customer email
@@ -57,32 +51,6 @@ Spree::Order.class_eval do
   _validate_callbacks.each do |callback|
     callback.raw_filter.attributes.delete(:email) if callback.raw_filter.is_a?(ActiveModel::Validations::PresenceValidator)
     callback.raw_filter.attributes.delete(:email) if callback.raw_filter.is_a?(EmailValidator)
-  end
-
-  validate :validate_credit_card, if: Proc.new {|o| o.payment? && o.credit_card_payment? }
-  validates_presence_of :payment_method_id, if: Proc.new {|o| o.completed? }
-
-  def payment_method
-    PaymentMethod.find_by_id(payment_method_id)
-  end
-
-  def validate_credit_card
-    errors.add(:cc, I18n.t('buy_sell_market.checkout.invalid_cc')) unless credit_card.valid?
-  end
-
-  def checkout_extra_fields(attributes = {})
-    @checkout_extra_fields ||= CheckoutExtraFields.new(self.user, attributes)
-  end
-
-  def credit_card
-    @credit_card ||= ActiveMerchant::Billing::CreditCard.new(
-      first_name: card_holder_first_name,
-      last_name: card_holder_last_name,
-      number: card_number,
-      month: card_exp_month.to_s,
-      year: card_exp_year.to_s,
-      verification_value: card_code
-    )
   end
 
   def create_pending_payment!
@@ -95,16 +63,16 @@ Spree::Order.class_eval do
     p.failure!
   end
 
-  def merchant_subject
-    company.paypal_express_chain_merchant_account.try(:subject)
+  def validate_credit_card
+    errors.add(:cc, I18n.t('buy_sell_market.checkout.invalid_cc')) unless credit_card.valid?
   end
 
-  def express_token=(token)
-    write_attribute(:express_token, token)
-    if !token.blank?
-      details = payment_gateway.gateway(merchant_subject).details_for(token)
-      self.express_payer_id = details.params["payer_id"]
-    end
+  def checkout_extra_fields(attributes = {})
+    @checkout_extra_fields ||= CheckoutExtraFields.new(self.user, attributes)
+  end
+
+  def merchant_subject
+    company.paypal_express_chain_merchant_account.try(:subject)
   end
 
   def express_return_url
@@ -113,16 +81,6 @@ Spree::Order.class_eval do
 
   def express_cancel_return_url
     PlatformContext.current.decorate.build_url_for_path("/orders/#{self.number}/checkout/cancel_express_checkout")
-  end
-
-  def set_credit_card(order_params)
-    # self.payment_method = PAYMENT_METHODS[:credit_card]
-    self.card_exp_month = order_params[:card_exp_month].try(:to_s).try(:strip)
-    self.card_exp_year = order_params[:card_exp_year].try(:to_s).try(:strip)
-    self.card_number = order_params[:card_number].try(:to_s).try(:strip)
-    self.card_code = order_params[:card_code].try(:to_s).try(:strip)
-    self.card_holder_first_name = order_params[:card_holder_first_name].try(:to_s).try(:strip)
-    self.card_holder_last_name = order_params[:card_holder_last_name].try(:to_s).try(:strip)
   end
 
   def payable?
@@ -165,15 +123,15 @@ Spree::Order.class_eval do
   end
 
   def has_successful_payments?
-    near_me_payments.paid.not_refunded.any?
+    payment.paid?
   end
 
   def has_refunded_payments?
-    near_me_payments.paid.refunded.any?
+    payment.refunded?
   end
 
   def has_any_payment?
-    near_me_payments.any?
+    payment.present?
   end
 
   def update_order
@@ -190,6 +148,34 @@ Spree::Order.class_eval do
     if self.completed?
       self.persist_totals
     end
+  end
+
+  def payment=(payment_attributes)
+    payment ||= build_payment
+    payment.assign_attributes(payment_attributes)
+  end
+
+  def create_payment(payment_attributes={})
+    super(payment_attributes.merge(payment_common_attributes))
+  end
+
+  def build_payment(payment_attributes={})
+    super(payment_attributes.merge(payment_common_attributes))
+  end
+
+  def payment_common_attributes
+    {
+      company: company,
+      currency: currency,
+      # This is a hack to include shipping price in subtotal amount
+      # We probably want to deal wiht shipping_amount cents separately somehow in the future
+      subtotal_amount_cents: subtotal_amount.cents + shipping_amount.cents,
+      service_fee_amount_guest_cents: service_fee_amount_guest.cents,
+      service_fee_amount_host_cents: service_fee_amount_host.cents,
+      service_additional_charges_cents: service_additional_charges.cents,
+      host_additional_charges_cents: host_additional_charges.cents,
+      payable: self
+    }
   end
 
   def reviewable?(current_user)
@@ -257,7 +243,7 @@ Spree::Order.class_eval do
 
   def after_cancel
     shipments.each(&:cancel!)
-    near_me_payments.paid.not_refunded.each(&:refund)
+    payment.attempt_payment_refund
     WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::Cancelled, id)
     self.update!
   end

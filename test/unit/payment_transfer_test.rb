@@ -11,9 +11,9 @@ class PaymentTransferTest < ActiveSupport::TestCase
     @reservation_2 = @company.reservations[1]
 
     @payments = [
-      @reservation_1.payments.to_a,
-      @reservation_2.payments.to_a
-    ].flatten
+      @reservation_1.payment,
+      @reservation_2.payment
+    ]
   end
 
   context "creating" do
@@ -22,8 +22,11 @@ class PaymentTransferTest < ActiveSupport::TestCase
     end
 
     should "only allow charges of the same currency" do
+      @reservations = prepare_charged_reservations_for_listing(@reservation_1.listing)
+
       rc = Payment.create!(
-        :payable => @reservation_1,
+        :payment_method => PaymentMethod.where(payment_method_type: 'credit_card').last,
+        :payable => @reservations.last,
         :subtotal_amount => 10,
         :service_fee_amount_guest => 1,
         :service_fee_amount_host => 2,
@@ -64,49 +67,54 @@ class PaymentTransferTest < ActiveSupport::TestCase
 
   context "correct amounts with advanced cancellation/refund policy" do
     setup do
-      listing = FactoryGirl.create(:transactable, { :daily_price => 10 })
-      prepare_charged_reservations_for_listing(listing, 2, {
-        :reservation_0 => {
-          :service_fee_amount_guest_cents => 150,
-          :service_fee_amount_host_cents => 100,
-          :cancellation_policy_penalty_percentage => 60
-        },
-        :reservation_1 => {
-          :service_fee_amount_guest_cents => 200,
-          :service_fee_amount_host_cents => 150,
-          :cancellation_policy_penalty_percentage => 50
-        }
-      })
+      @company = FactoryGirl.build(:company)
+      @payments = []
+      @payments << @payment_1 = FactoryGirl.create(:paid_payment, company: @company,
+        :subtotal_amount_cents => 1000,
+        :service_fee_amount_guest_cents => 150,
+        :service_fee_amount_host_cents => 100,
+        :cancellation_policy_penalty_percentage => 60
+      )
+      @payments << @payment_2 = FactoryGirl.create(:paid_payment, company: @company,
+        :subtotal_amount_cents => 1000,
+        :service_fee_amount_guest_cents => 200,
+        :service_fee_amount_host_cents => 150,
+        :cancellation_policy_penalty_percentage => 50
+      )
 
-      @refunds_company = listing.company
-
-      @refunds_payment_transfer = @refunds_company.payment_transfers.build
-
-      @refunds_payments = @refunds_company.reservations.order(:id).map { |r| r.payments.to_a }.flatten
+      @payment_transfer = @company.payment_transfers.build
     end
 
     should "calculate correctly the total sum for transfers without refunds" do
-      @refunds_payment_transfer.payments = @refunds_payments
-      @refunds_payment_transfer.save!
+      @payment_transfer.payments = @payments
+      @payment_transfer.save!
 
-      assert_equal 1000 + 1000 - 100 - 150, @refunds_payment_transfer.amount_cents # 1750
-      assert_equal 150 + 200, @refunds_payment_transfer.service_fee_amount_guest_cents
-      assert_equal 100 + 150, @refunds_payment_transfer.service_fee_amount_host_cents
+      assert_equal 1000 + 1000 - 100 - 150, @payment_transfer.amount_cents # 1750
+      assert_equal 150 + 200, @payment_transfer.service_fee_amount_guest_cents
+      assert_equal 100 + 150, @payment_transfer.service_fee_amount_host_cents
     end
 
     should "calculate correctly the total sum for transfers with refunds" do
-      @refunds_payments[0].payable.user_cancel!
-      @refunds_payments[1].payable.host_cancel!
+      @payment_1.payable.user_cancel!
+      @payment_2.payable.host_cancel!
 
-      assert_equal 400, @refunds_payments[0].amount_to_be_refunded
-      assert_equal 1000 + 200, @refunds_payments[1].amount_to_be_refunded
+      # Payment_1 was for $10, $1,5 guest fee, $1 host fee
+      # when cancelled by guest we should refund $4 - 60% of subtotal amount
+      # Fees are not refunded
+      assert_equal 400, @payment_1.amount_to_be_refunded
 
-      @refunds_payment_transfer.payments = @refunds_payments
-      @refunds_payment_transfer.save!
+      # Payment_2 was for $10, $2 guest fee, $1,5 host fee
+      # when cancelled by host we should refund $10 and host_service_fee $2
+      assert_equal 1000 + 200, @payment_2.amount_to_be_refunded
 
-      assert_equal 600 + 0, @refunds_payment_transfer.amount_cents
-      assert_equal 150 + 0, @refunds_payment_transfer.service_fee_amount_guest_cents
-      assert_equal 0, @refunds_payment_transfer.service_fee_amount_host_cents
+      @payment_transfer.payments = @payments
+      @payment_transfer.save!
+
+      # What we should transfer from cancelled reservation is:
+      # Payment one is 4$ is returned to guest, 1$ is host fee and $5 we should transfer
+      assert_equal 600 + 0, @payment_transfer.amount_cents
+      assert_equal 150 + 0, @payment_transfer.service_fee_amount_guest_cents
+      assert_equal 0   + 0, @payment_transfer.service_fee_amount_host_cents
     end
   end
 

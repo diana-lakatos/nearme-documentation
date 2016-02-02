@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class PaymentGatewayTest < ActiveSupport::TestCase
+
+  SUCCESS_RESPONSE = {"paid_amount"=>"10.00"}
+  FAILURE_RESPONSE = {"paid_amount"=>"10.00", "error"=>"fail"}
+
   validate_presence_of(:payment_gateway_id)
   validate_presence_of(:test_settings)
   validate_presence_of(:live_settings)
@@ -32,98 +36,10 @@ class PaymentGatewayTest < ActiveSupport::TestCase
     assert_nil @instance.payment_gateway('RU', 'USD')
   end
 
-  SUCCESS_RESPONSE = {"paid_amount"=>"10.00"}
-  FAILURE_RESPONSE = {"paid_amount"=>"10.00", "error"=>"fail"}
-
   context 'payments' do
     setup do
       @user = FactoryGirl.create(:user)
       @payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
-      @payment_method = @payment_gateway.payment_methods.first
-    end
-
-    context 'authorize' do
-      setup do
-        @transactable = FactoryGirl.create(:transactable)
-        @reservation_request = ReservationRequest.new(
-          @transactable,
-          @user,
-          PlatformContext.current,
-          FactoryGirl.attributes_for(:reservation_request, payment_method: @payment_method)
-        )
-      end
-
-      should "authorize when provided right details" do
-        assert_equal("54533", @payment_gateway.authorize(@reservation_request))
-        billing_authorization = BillingAuthorization.last
-        assert billing_authorization.success?
-        assert_equal @payment_gateway, billing_authorization.payment_gateway
-        assert_equal(OpenStruct.new(authorization: "54533", success?: true, params: {"paid_amount"=>"10.00"}), billing_authorization.response)
-      end
-
-      should "not authorize when authorization response is not success" do
-        stub_active_merchant_interaction({success?: false, message: "fail"})
-
-        assert_equal(false, @payment_gateway.authorize(@reservation_request))
-        billing_authorization = BillingAuthorization.last
-        assert_equal true, @reservation_request.errors.present?
-        assert_equal @payment_gateway, billing_authorization.payment_gateway
-        assert_equal billing_authorization, @transactable.billing_authorizations.last
-        assert_equal billing_authorization.success?, false
-        assert_equal(billing_authorization.response, OpenStruct.new(authorization: "54533", success?: false, message: 'fail'))
-      end
-    end
-
-
-    context 'authorize validation error' do
-      should "not authorize when provided the wrong details" do
-        @transactable = FactoryGirl.create(:transactable)
-        @reservation_request = ReservationRequest.new(
-          @transactable,
-          @user,
-          PlatformContext.current,
-          FactoryGirl.attributes_for(:reservation_request_with_not_valid_cc, payment_method: @payment_gateway.payment_methods.first)
-        )
-
-        assert_equal(false, @payment_gateway.authorize(@reservation_request, {error: true}))
-        assert_equal [I18n.t('buy_sell_market.checkout.invalid_cc')], @reservation_request.errors[:cc]
-      end
-    end
-
-    context '#capture/#charge' do
-      should 'create charge object when saving payment with successful billing_authorization' do
-
-        reservation = FactoryGirl.create(:reservation_with_credit_card, user: @user)
-        billing_authorization = FactoryGirl.create(:billing_authorization,
-          reference: reservation,
-          payment_gateway: @payment_gateway)
-
-        payment = FactoryGirl.create(:payment_unpaid, payable: reservation.reload)
-        charge = Charge.last
-        assert_equal @user.id, charge.user_id
-        assert_equal 110_00, charge.amount
-        assert_equal 'USD', charge.currency
-        assert_equal payment, charge.payment
-        assert_equal SUCCESS_RESPONSE, charge.response.params
-        assert_equal payment.paid?, true
-        assert charge.success?
-      end
-
-      should 'fail' do
-        stub_active_merchant_interaction({success?: false, params: FAILURE_RESPONSE })
-
-        reservation = FactoryGirl.create(:reservation_with_credit_card, user: @user)
-        billing_authorization = FactoryGirl.create(:billing_authorization,
-          reference: reservation,
-          payment_gateway: @payment_gateway,
-          token: '2')
-        payment = FactoryGirl.create(:payment_unpaid, payable: reservation.reload)
-
-        charge = Charge.last
-        assert_equal FAILURE_RESPONSE, charge.response.params
-        assert_equal payment.paid?, false
-        refute charge.success?
-      end
     end
 
     context 'refund' do

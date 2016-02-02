@@ -2,38 +2,28 @@ class Dashboard::Company::PaymentsController < Dashboard::Company::BaseControlle
   before_filter :find_order
   before_filter :find_payment, only: [:show, :refund]
 
-  def create
+  def capture
     unless @order.paid?
-      if @order.manual_payment?
+      payment = @order.payment
+      if payment.manual_payment?
         @order.payment_state = 'paid'
         @order.save!
       else
-        # TODO:
-        # Right now we store subtotal_amount in payment as a product price with shipping cost and tax
-        # We want to separate this in the future so it's possible to decide if shipping and tax are refundable
-        payment = @order.near_me_payments.create!(
-          subtotal_amount: @order.subtotal_amount + @order.tax_amount + @order.shipping_amount,
-          service_fee_amount_guest: @order.service_fee_amount_guest,
-          service_fee_amount_host: @order.service_fee_amount_host,
-          service_additional_charges_cents: @order.service_additional_charges_cents,
-          host_additional_charges_cents: @order.host_additional_charges_cents,
-        )
-
+        payment.capture!
         @order.update_order
         flash[payment.paid? ? :notice : :error] = t("flash_messages.payments.capture_#{payment.paid? ? 'success' : 'failed'}")
       end
     else
       flash[:error] = t('flash_messages.payments.paid')
     end
-
-    redirect_to dashboard_company_orders_received_path(@order)
+    redirect_to :back
   end
 
   def show
   end
 
   def refund
-    @payment.refund
+    @payment.refund!
     if @payment.refunded? && @order.update_order
       flash[:notice] = t('flash_messages.payments.refunded')
     else
@@ -49,6 +39,6 @@ class Dashboard::Company::PaymentsController < Dashboard::Company::BaseControlle
   end
 
   def find_payment
-    @payment = @order.near_me_payments.find(params[:id])
+    @payment = @order.payment
   end
 end

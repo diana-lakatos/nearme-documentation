@@ -58,16 +58,16 @@ class Listings::ReservationsController < ApplicationController
   def create
     @reservation = @reservation_request.reservation
     if @reservation_request.process
-      if @reservation.remote_payment?
+      if @reservation.payment.remote_payment?
         redirect_to remote_payment_dashboard_user_reservation_path(@reservation, host: platform_context.decorate.host)
-      elsif @reservation_request.express_checkout_payment?
-        redirect_to @reservation_request.express_checkout_redirect_url
+      elsif @reservation.payment.express_checkout_payment? && @reservation.payment.express_checkout_redirect_url
+        redirect_to @reservation.payment.express_checkout_redirect_url
       else
         event_tracker.updated_profile_information(@reservation.owner)
         event_tracker.updated_profile_information(@reservation.host)
         event_tracker.requested_a_booking(@reservation)
 
-        card_message = @reservation.credit_card_payment? ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
+        card_message = @reservation.payment.credit_card_payment? ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
         flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
         redirect_to booking_successful_dashboard_user_reservation_path(@reservation, host: platform_context.decorate.host)
       end
@@ -77,9 +77,10 @@ class Listings::ReservationsController < ApplicationController
   end
 
   def return_express_checkout
-    reservation = Reservation.find_by_express_token!(params[:token])
-    reservation.express_payer_id = params[:PayerID]
-    if reservation.authorize
+    payment = Payment.find_by_express_token!(params[:token])
+    payment.express_payer_id = params[:PayerID]
+    reservation = payment.payable
+    if payment.authorize
       event_tracker.updated_profile_information(reservation.owner)
       event_tracker.updated_profile_information(reservation.host)
       event_tracker.requested_a_booking(reservation)
@@ -168,38 +169,16 @@ class Listings::ReservationsController < ApplicationController
   end
 
   def build_reservation_request
-    attributes = params[:reservation_request] || {}
-    attributes[:waiver_agreement_templates] ||= {}
-    attributes[:waiver_agreement_templates] = attributes[:waiver_agreement_templates].select { |k, v| v == "1" }.keys
+    params[:reservation_request][:waiver_agreement_templates] ||= {}
+    params[:reservation_request][:waiver_agreement_templates] = params[:reservation_request][:waiver_agreement_templates].select { |k, v| v == "1" }.keys
+    params[:reservation_request][:payment][:payment_method_nonce] = params.delete(:payment_method_nonce) if params[:reservation_request][:payment]
+    params[:reservation_request][:documents] = params[:reservation_request][:documents_attributes]
+
     @reservation_request = ReservationRequest.new(
       @listing,
       current_user,
-      platform_context,
-      {
-        quantity: attributes[:quantity].presence || 1,
-        book_it_out: attributes[:book_it_out],
-        exclusive_price: attributes[:exclusive_price],
-        dates: attributes[:dates],
-        start_minute: attributes[:start_minute],
-        end_minute: attributes[:end_minute],
-        card_holder_first_name: attributes[:card_holder_first_name],
-        card_holder_last_name: attributes[:card_holder_last_name],
-        card_exp_month: attributes[:card_exp_month],
-        card_exp_year: attributes[:card_exp_year],
-        card_code: attributes[:card_code],
-        card_number: attributes[:card_number],
-        guest_notes: attributes[:guest_notes],
-        payment_method_id: attributes[:payment_method_id],
-        waiver_agreement_templates: attributes[:waiver_agreement_templates],
-        payment_method_nonce: params[:payment_method_nonce],
-        additional_charge_ids: attributes[:additional_charge_ids],
-        reservation_type: attributes[:reservation_type],
-        documents: params_documents[:documents_attributes],
-        delivery_type: attributes[:delivery_type],
-        delivery_ids: attributes[:delivery_ids],
-        shipments_attributes: params_shipment[:reservation].try(:[],:shipments_attributes)
-      },
-      attributes[:checkout_extra_fields]
+      reservation_request_params,
+      params[:reservation_request][:checkout_extra_fields]
     )
   end
 
@@ -223,12 +202,8 @@ class Listings::ReservationsController < ApplicationController
     @reservations_service ||= Listings::ReservationsService.new(current_user, @reservation_request, params)
   end
 
-  def params_documents
-    params.require(:reservation_request).permit(documents_attributes: [:id, :file, :user_id, payment_document_info_attributes: [:attachment_id, :document_requirement_id]])
-  end
-
-  def params_shipment
-    params.require(:reservation_request).permit(reservation: { shipments_attributes: secured_params.shipment })
+  def reservation_request_params
+     params.require(:reservation_request).permit(secured_params.reservation_request)
   end
 end
 

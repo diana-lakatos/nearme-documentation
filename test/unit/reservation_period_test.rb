@@ -5,8 +5,7 @@ class ReservationPeriodTest < ActiveSupport::TestCase
   setup do
     @listing = FactoryGirl.create(:transactable, quantity: 2)
     @user = FactoryGirl.create(:user)
-    @payment_method = FactoryGirl.create(:manual_payment_method)
-    @reservation = @listing.reservations.build(:user => @user, payment_method: @payment_method)
+    @reservation = FactoryGirl.build(:confirmed_reservation, listing: @listing, :user => @user)
     @next_monday = Time.zone.today.advance(:weeks => 1).beginning_of_week
   end
 
@@ -16,14 +15,12 @@ class ReservationPeriodTest < ActiveSupport::TestCase
         period = @reservation.periods.build(:date => @next_monday)
         assert period.bookable?
 
-        res = @listing.reservations.create(:quantity => 1, :date => @next_monday, :user => @user, payment_method: @payment_method)
-        res.mark_as_authorized!
-        res.confirm!
+        res = FactoryGirl.create(:confirmed_reservation, listing: @listing, :quantity => 1, :date => @next_monday, :user => @user)
+        period = @reservation.periods.build(:date => @next_monday)
         assert period.bookable?
 
-        res = @listing.reservations.create(:quantity => 1, :date => @next_monday, :user => @user, payment_method: @payment_method)
-        res.mark_as_authorized!
-        res.confirm!
+        res = FactoryGirl.create(:confirmed_reservation, listing: @listing, :quantity => 1, :date => @next_monday, :user => @user)
+        period = @reservation.periods.build(:date => @next_monday)
         assert !period.bookable?
       end
     end
@@ -38,18 +35,18 @@ class ReservationPeriodTest < ActiveSupport::TestCase
         period = @reservation.periods.build(:date => @next_monday, :start_minute => @nine, :end_minute => @one)
         assert period.bookable?
 
-        res = @listing.reservations.build(:quantity => 1, :user => @user, payment_method: @payment_method)
+        res = FactoryGirl.build(:confirmed_reservation, listing: @listing, :quantity => 1, :user => @user)
+        res.periods.destroy_all
         res.add_period(@next_monday, @nine, @one)
         res.save!
-        res.mark_as_authorized!
-        res.confirm!
+
         assert period.bookable?
 
-        res = @listing.reservations.build(:quantity => 1, :user => @user, payment_method: @payment_method)
+        res = FactoryGirl.build(:confirmed_reservation, listing: @listing, :quantity => 1, :user => @user)
+        res.periods.destroy_all
         res.add_period(@next_monday, @nine, @one)
         res.save!
-        res.mark_as_authorized!
-        res.confirm!
+
         assert !period.bookable?
       end
 

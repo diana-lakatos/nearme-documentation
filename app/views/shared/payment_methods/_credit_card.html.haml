@@ -1,89 +1,86 @@
 .row-fluid
-  - if f.object.billing_authorization.present?
+  - if f.object.authorized?
     = t 'payments.already_authorized'
   - else
-    #credit-card
-      = f.error :cc
+    = f.simple_fields_for f.object.credit_card_form do |form|
+      #credit-card
+        = form.error :cc
 
-      .padding-bottom
+        .padding-bottom
+          .row-fluid
+            .span5.text
+              .ico-lock= t 'payments.heading'
+            .span7.credit-card-images
+              = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
+            .clearfix
+
         .row-fluid
-          .span5.text
-            .ico-lock= t 'payments.heading'
-          .span7.credit-card-images
-            = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
-          .clearfix
+          .span3
+            = form.label :first_name do
+              %abbr{ title: "required" } *
+              = t 'payments.cc_fields.first_name'
+          .span9
+            = form.input_field :first_name, class: 'sessioncamexclude', required: true, autocomplete: :off, value: (form.object.first_name.presence || current_user.first_name)
+        .row-fluid
+          .span3
+            = form.label :last_name do
+              %abbr{ title: "required" } *
+              = t 'payments.cc_fields.last_name'
+          .span9
+            = form.input_field :last_name, class: 'sessioncamexclude', required: true, autocomplete: :off, value: (form.object.last_name.presence || current_user.last_name)
 
-
-      .row-fluid
-        .span3
-          = f.label :card_holder_first_name do
-            %abbr{ title: "required" } *
-            = t 'payments.cc_fields.first_name'
-        .span9
-          = f.input_field :card_holder_first_name, class: 'sessioncamexclude', required: true, autocomplete: :off, value: (f.object.card_holder_first_name.presence || current_user.first_name)
-
-      .row-fluid
-        .span3
-          = f.label :card_holder_last_name do
-            %abbr{ title: "required" } *
-            = t 'payments.cc_fields.last_name'
-        .span9
-          = f.input_field :card_holder_last_name, class: 'sessioncamexclude', required: true, autocomplete: :off, value: (f.object.card_holder_last_name.presence || current_user.last_name)
-
-      .row-fluid
-        .span3.card-info{class: "#{"error" if f.object.errors.include?(:number).present?}"}
-          = f.label :card_number, class: 'control-label' do
-            %abbr{ title: "required" } *
-            = t 'payments.cc_fields.card_number'
-        .span9.input-icon-holder-right
-          = f.input_field :card_number, required: true, placeholder: '●●●● ●●●● ●●●● ●●●●', class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off", 'data-card-number' => true
-          %span.ico-credit-card
-        - if f.object.errors[:number].present?
-          %p.error-block
-            = f.object.errors[:number].first
-
-      .row-fluid
-        .span3.card-info.expiry.column.left{class: "#{"error" if f.object.errors.include?(:card_exp_month).present? or f.object.errors.include?(:card_exp_year).present?}"}
-          = f.label :card_exp_month, class: 'control-label' do
-            %abbr{ title: "required" } *
-            = t 'payments.cc_fields.expiration_date'
-        .span2{class: "#{"error" if f.object.errors.include?(:card_exp_month).present?}"}
-          .controls.card-expires
-            = f.input_field :card_exp_month, collection: credit_card_date[:month], prompt: false, class: 'checkout-select sessioncamexclude'
-
-          - if f.object.errors[:card_exp_month].present?
+        .row-fluid
+          .span3.card-info{class: "#{"error" if form.object.errors.include?(:number).present?}"}
+            = form.label :number, class: 'control-label' do
+              %abbr{ title: "required" } *
+              = t 'payments.cc_fields.card_number'
+          .span9.input-icon-holder-right
+            = form.input_field :number, required: true, placeholder: '●●●● ●●●● ●●●● ●●●●', class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off", 'data-card-number' => true
+            %span.ico-credit-card
+          - if form.object.errors[:number].present?
             %p.error-block
-              = f.object.errors[:card_exp_month].first
+              = form.object.errors[:number].first
 
-        .span2{class: "#{"error" if f.object.errors.include?(:card_exp_year).present?}"}
-          .controls.card-expires
-            = f.input_field :card_exp_year, collection: credit_card_date[:year], prompt: false, class: 'checkout-select sessioncamexclude'
+        .row-fluid
+          .span3.card-info.expiry.column.left{class: "#{"error" if form.object.errors.include?(:month).present? or form.object.errors.include?(:year).present?}"}
+            = form.label :month, class: 'control-label' do
+              %abbr{ title: "required" } *
+              = t 'payments.cc_fields.expiration_date'
+          .span2{class: "#{"error" if form.object.errors.include?(:month).present?}"}
+            .controls.card-expires
+              = form.input_field :month, collection: credit_card_date[:month], prompt: false, class: 'checkout-select sessioncamexclude'
 
-          - if f.object.errors[:card_exp_year].present?
-            %p.error-block
-              = f.object.errors[:card_exp_year].first
+            - if form.object.errors[:month].present?
+              %p.error-block
+                = form.object.errors[:month].first
 
-      .row-fluid
-        .span3.card-info.security.column.right{class: "#{"error" if f.object.errors.include?(:cvc).present?}"}
-          = f.label :card_code, class: 'control-label' do
-            %abbr{ title: "required" } *
-            = t 'payments.cc_fields.security_code'
+          .span2{class: "#{"error" if form.object.errors.include?(:year).present?}"}
+            .controls.card-expires
+              = form.input_field :year, collection: credit_card_date[:year], prompt: false, class: 'checkout-select sessioncamexclude'
+            - if form.object.errors[:year].present?
+              %p.error-block
+                = form.object.errors[:year].first
 
-        .span2
-          .controls.card-code
-            = f.input_field :card_code, input_html: {size: 3}, placeholder: 'CCV', required: true, class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off", 'data-card-code' => true
-          - if f.object.errors[:cvc].present?
-            %p.error-block
-              = f.object.errors[:cvc].first
+        .row-fluid
+          .span3.card-info.security.column.right{class: "#{"error" if form.object.errors.include?(:cvc).present?}"}
+            = form.label :verification_value, class: 'control-label' do
+              %abbr{ title: "required" } *
+              = t 'payments.cc_fields.security_code'
 
-        .span2.whats-this
-          %p.whats-this-link{"data-target" => "#whats-this-target", "data-toggle" => "collapse", :style => "cursor: pointer;"}= t 'payments.cc_fields.whats_this'
+          .span2
+            .controls.card-code
+              = form.input_field :verification_value, input_html: {size: 3}, placeholder: 'CCV', required: true, class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off", 'data-card-code' => true
+            - if form.object.errors[:cvc].present?
+              %p.error-block
+                = form.object.errors[:cvc].first
 
-        .span5.whats-this.answer
-          %p#whats-this-target.collapse= t 'payments.cc_fields.ccv_hint'
+          .span2.whats-this
+            %p.whats-this-link{"data-target" => "#whats-this-target", "data-toggle" => "collapse", :style => "cursor: pointer;"}= t 'payments.cc_fields.whats_this'
+
+          .span5.whats-this.answer
+            %p#whats-this-target.collapse= t 'payments.cc_fields.ccv_hint'
 
 = render 'listings/reservations/confirm_reservations', f: f
-
 
 - content_for :script do
   = javascript_include_tag "https://js.stripe.com/v1/"

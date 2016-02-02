@@ -43,12 +43,12 @@ class ReservationDecorator < Draper::Decorator
   end
 
   def paid
-    if action_free_booking?
+    if is_free?
       humanized_money_with_cents_and_symbol(0.0)
     elsif paid?
       humanized_money_with_cents_and_symbol(successful_payment_amount)
     else
-      payment_status.titleize
+      payment.state.titleize
     end
   end
 

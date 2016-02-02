@@ -93,7 +93,7 @@
           %br
           = render 'shared/checkout_extra_fields', f: f, show_company_name: @reservation.show_company_name
 
-        - if f.object.payment_methods.blank?
+        - if f.object.payment.payment_methods.blank?
           %h2= t("reservations_review.missing_payment_method")
           %span= t("reservations_review.missing_payment_method_info")
         - else

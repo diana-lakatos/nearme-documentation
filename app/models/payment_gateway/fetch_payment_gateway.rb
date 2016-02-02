@@ -82,11 +82,10 @@ class PaymentGateway::FetchPaymentGateway < PaymentGateway
 
     if verify && mns_params["transaction_status"] == '2'
       charge_successful(mns_params)
-      @charge
     else
       charge_failed(mns_params)
-      raise Billing::Gateway::PaymentAttemptError, mns_params["response_text"]
     end
+    @charge
   end
 
   private

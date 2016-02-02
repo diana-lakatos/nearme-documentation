@@ -5,10 +5,8 @@ class ReservationChargeTrackerJobTest < ActiveSupport::TestCase
   setup do
     stub_active_merchant_interaction
     @listing = FactoryGirl.create(:transactable, :daily_price => 89.39)
-    @reservation = FactoryGirl.create(:reservation_with_credit_card, :listing => @listing)
-    @reservation.create_billing_authorization(token: "token", payment_gateway: FactoryGirl.create(:stripe_payment_gateway), payment_gateway_mode: "test")
-    @reservation.mark_as_authorized!
-    @reservation.confirm!
+    @reservation = FactoryGirl.create(:unconfirmed_reservation, :listing => @listing)
+    @reservation.charge_and_confirm!
   end
 
   should 'perform tracking of confirmed reservation' do

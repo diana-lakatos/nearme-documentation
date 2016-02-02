@@ -6,8 +6,8 @@ class PaymentGateway::ManualPaymentGateway < PaymentGateway
     {}
   end
 
-  def authorize(authoriazable, options = {})
-    PaymentAuthorizer::ManualPaymentAuthorizer.new(self, authoriazable, options).process!
+  def authorize(payment, options = {})
+    PaymentAuthorizer::ManualPaymentAuthorizer.new(self, payment, options).process!
   end
 
   def self.supported_countries
