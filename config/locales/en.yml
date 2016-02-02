@@ -1597,6 +1597,8 @@ en:
       edit: 'Edit'
       remove: 'Remove'
       add_new: 'Add new location'
+      availability:
+        title: 'Availability'
 
     users:
       title_html: '<span class="hidden-xs">Manage</span> Admins'
