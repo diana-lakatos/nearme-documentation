@@ -47,8 +47,6 @@ class PaymentGateway < ActiveRecord::Base
 
   accepts_nested_attributes_for :payment_methods, :reject_if => :all_blank
 
-  after_save :check_if_account_changed
-
   validates :payment_countries, presence: true, if: Proc.new { |p| p.active? }
   validates :payment_currencies, presence: true, if: Proc.new { |p| p.active? }
   validates :payment_methods, presence: true, if: Proc.new { |p| p.active? && !p.supports_payout?}
