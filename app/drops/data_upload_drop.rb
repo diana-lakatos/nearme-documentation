@@ -63,5 +63,16 @@ class DataUploadDrop < BaseDrop
     end
   end
 
+  # Encountered error (if present) for the upload
+  def sanitized_encountered_error
+    encountered_error = @data_upload.encountered_error.to_s
+    parts = encountered_error.split(/\n/)
+    if parts.length > 1
+      parts[0]
+    else
+      encountered_error
+    end
+  end
+
 end
 
