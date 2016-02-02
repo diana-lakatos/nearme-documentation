@@ -48,6 +48,7 @@
 
     /[if lt IE 10]
       = javascript_include_tag 'vendor/placeholder'
+    = yield(:head_bottom)
 
   %body{class: theme_class(@theme_name)}
     = yield(:body_top)
@@ -72,8 +73,10 @@
         - unless no_footer?
           .footer-push{class: "footer_#{section_class(@section_name)}"}
 
-    = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places&sensor=false"
+    = javascript_tag do
+      = javascript_i18n_include_tag
 
+    = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places&sensor=false"
     = webpack_manifest_script
     = webpack_bundle_tag 'common'
     = webpack_bundle_tag 'application'

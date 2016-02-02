@@ -109,7 +109,7 @@
               - if f.object.errors.include?(:"waiver_agreement_template_#{wat.id}")
                 %p.error-block= f.object.errors[:"waiver_agreement_template_#{wat.id}"].first
 
-          = f.button :submit, t('reservations_review.buttons.request'), class: 'btn-green', data: { disable_with: t('reservations_review.disabled_buttons.request') }
+          = f.button :submit, t('reservations_review.buttons.request'), class: 'btn-green submit-payment', data: { disable_with: t('reservations_review.disabled_buttons.request') }
 
 - content_for :script do
   :javascript

@@ -1059,6 +1059,7 @@ ActiveRecord::Schema.define(version: 20160128181730) do
     t.string   "seller_attachments_access_level",       limit: 255,                         default: "disabled",    null: false
     t.integer  "seller_attachments_documents_num",                                          default: 10,            null: false
     t.string   "priority_view_path"
+    t.boolean  "enable_language_selector",                                                  default: false,         null: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree

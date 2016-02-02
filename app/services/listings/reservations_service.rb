@@ -11,7 +11,7 @@ class Listings::ReservationsService
     end
 
     @reservation_request.listing.document_requirements.each do |req|
-      if !req.item.upload_obligation.not_required? && !requirement_ids.include?(req.id)
+      if !req.item.upload_obligation.not_required? && !requirement_ids.include?(req.id) && PlatformContext.current.instance.documents_upload_enabled?
         document = @reservation_request.reservation.payment_documents.build( user: @user )
         document.payment_document_info = Attachable::PaymentDocumentInfo.new(
           document_requirement: req,

@@ -51,8 +51,8 @@ class Location < ActiveRecord::Base
   validates :email, email: true, allow_nil: true
   validates_with CustomValidators
 
-  before_validation :build_availability_template, :assign_default_availability_rules
-  before_save :set_location_type, :set_time_zone
+  before_validation :build_availability_template, :assign_default_availability_rules, :set_location_type
+  before_save :set_time_zone
   after_save :set_external_id
   after_save :update_schedules_timezones
 
@@ -249,7 +249,7 @@ class Location < ActiveRecord::Base
   def set_location_type
     if transactable_type.try(:skip_location)
       self.location_type ||= instance.location_types.first
-      if company.company_address.present? && self.location_address.nil?
+      if company.company_address.present? && company.company_address.address.present? && self.location_address.nil?
         self.location_address = company.company_address.dup
         self.location_address.fetch_coordinates!
       end
@@ -271,10 +271,11 @@ class Location < ActiveRecord::Base
 
   def build_availability_template
     if availability_template_attributes.present?
-      if availability_template_attributes["id"].present?
+      if availability_template_attributes['id'].present? && self.availability_template
         self.availability_template.attributes = availability_template_attributes
         self.availability_template.save
       else
+        availability_template_attributes.delete('id')
         availability_template_attributes.merge!({
           name: 'Custom location availability',
           parent: self

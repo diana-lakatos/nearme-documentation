@@ -66,10 +66,11 @@ class ReservationRequest < Form
       end
 
       if listing.schedule_booking?
-        if @dates.is_a?(String) || listing.schedule_booking?
-          @start_minute = @dates.to_datetime.try(:min).to_i + (60 * @dates.to_datetime.try(:hour).to_i)
+        if @dates.is_a?(String)
+          timestamp = Time.at(@dates.to_i).in_time_zone(@listing.timezone)
+          @start_minute = timestamp.try(:min).to_i + (60 * timestamp.try(:hour).to_i)
           @end_minute = @start_minute
-          @dates = [@dates.try(:to_datetime).try(:to_date).try(:to_s)]
+          @dates = [timestamp.try(:to_date).try(:to_s)]
         end
       else
         @dates = @dates.split(',')

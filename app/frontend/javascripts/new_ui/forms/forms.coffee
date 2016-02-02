@@ -6,7 +6,7 @@ module.exports = class Forms
 
   bindEvents: ->
     @root.on 'loaded.dialog', =>
-      require.ensure ['./datepickers', './hints','./tooltips', './selects', './ckeditor'], (require)=>
+      require.ensure ['./datepickers', './hints','./tooltips', './selects'], (require)=>
         datepickers = require('./datepickers')
         datepickers('.dialog')
 
@@ -18,9 +18,6 @@ module.exports = class Forms
 
         selects = require('./selects')
         selects('.dialog')
-
-        ckeditor = require('./ckeditor')
-        ckeditor('.dialog')
 
     @root.on 'datepickers.init.forms', (event, context = 'body')=>
       require.ensure './datepickers', (require)->
@@ -41,11 +38,6 @@ module.exports = class Forms
       require.ensure './selects', (require)->
         selects = require('./selects')
         selects(context)
-
-    @root.on 'ckeditor.init.forms', (event, context = 'body')=>
-      require.ensure './ckeditor', (require)->
-        ckeditor = require('./ckeditor')
-        ckeditor(context)
 
   hints: (context = 'body')->
     els = $(context).find('.form-group .help-block.hint');
@@ -79,17 +71,8 @@ module.exports = class Forms
       datepickers = require('./datepickers')
       datepickers(context)
 
-  ckeditor: (context = 'body')->
-    els = $(context).find('.ckeditor');
-    return unless els.length > 0
-
-    require.ensure './ckeditor', (require)->
-      ckeditor = require('./ckeditor')
-      ckeditor(context)
-
   initialize: (context = 'body')->
     @hints(context)
     @tooltips(context)
     @datepickers(context)
     @selects(context)
-    @ckeditor(context)

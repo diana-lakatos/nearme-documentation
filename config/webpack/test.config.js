@@ -1,9 +1,11 @@
+var path = require('path');
 var webpack = require('webpack');
 var ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
 var _ = require('lodash');
-var path = require('path');
 
 var config = module.exports = require('./main.config.js');
+
+var WebpackMd5Hash = require(path.join(config.context, 'custom_node_modules', 'webpack_md5_hash'));
 
 config.output = _.merge(config.output, {
   path: path.join(config.context, 'public', 'assets'),
@@ -17,5 +19,6 @@ config.plugins.push(
     filename: 'webpack-common-manifest.json',
     manifestVariable: 'webpackBundleManifest',
   }),
-  new webpack.optimize.OccurenceOrderPlugin()
+  new webpack.optimize.OccurenceOrderPlugin(),
+  new WebpackMd5Hash()
 );

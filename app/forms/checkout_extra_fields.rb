@@ -6,6 +6,7 @@ class CheckoutExtraFields < Form
     # ugly fix for custom properties issue
     # otherwise it can't save the object
     @user = User.find(user.id) if user.present?
+    @user.try(:skip_validations_for=, [:seller])
     @attributes = attributes
     @secured_params = SecuredParams.new
     @all_attachments_present = true

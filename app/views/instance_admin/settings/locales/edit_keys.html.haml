@@ -39,7 +39,16 @@
                         .clear
                         .default-text
                           = "#{t('instance_admin.locales.labels.default_text')}:"
-                          = translation.value
+                          -# In this loop for default_and_custom_translations we get either 1. default translations for
+                          -# which there are no custom translations, 2. the default translation for which we have a custom translation
+                          -# - this is because we skip and never reach the actual custom translation which follows right after, or 3.
+                          -# custom translations. We get to have 3. because we're also searching for "values" and the default translation
+                          -# is never hit. In case we have a 3. we want to get the default translation right from the DB because the object
+                          -# obviously contains the custom translation
+                          - if translation.instance_id.blank?
+                            = translation.value
+                          - else
+                            = default_translation_for_key(translation.key)
 
             = content_for :header_buttons do
               = f.button :submit, t('instance_admin.locales.buttons.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }

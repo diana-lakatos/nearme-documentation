@@ -42,6 +42,7 @@ class BoardingForm < Form
 
   def initialize(user, product_type)
     @user = user
+    @user.skip_validations_for = [:buyer]
     @seller_profile = @user.get_seller_profile
     @company = @user.companies.first || @user.companies.build(:creator_id => @user.id)
     @product = @company.products.where(product_type: product_type).first || @company.products.build(user_id: @user.id, product_type_id: product_type.id)

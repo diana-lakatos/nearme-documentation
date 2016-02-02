@@ -184,7 +184,7 @@ en:
           title: "Product Images"
           new_title: "New Product Image"
       dimensions_templates:
-        select: 'Select dimensions template'
+        select: 'Populate dimensions from one of the templates'
         explanation1: 'This will provide a tracking code and a shipping label for your product sale.'
         explanation2: "Select your item's dimensions from the menu below or add your own measures."
       insurance_explanation: "The insurance covers up to $5,000.00 per package. Packages shipped via Canada Post, FedEx Smart Post, UPS Mail Innovations, and USPS First Class Mail are limited to $1,000.00, per package. Leave zero for no insurance."
@@ -223,6 +223,7 @@ en:
         you_dont_have_set_up: "You don't have any Dimensions Templates set up yet. Create one now by clicking below."
         name: "Name"
         details: "Details"
+        default: "Default"
     nav:
       brand:
         open_marketplace: 'Open Marketplace'
@@ -293,6 +294,7 @@ en:
     downloads: 'Downloads'
     sales: 'Sales'
     save: "Save"
+    save_settings: "Save settings"
     delete: "Delete"
     destroy: "Destroy"
     versions: "Versions"
@@ -451,6 +453,8 @@ en:
           users: "Users"
           purchasers: "Purchasers"
           sellers_preference: "Sellers preference"
+      languages:
+        settings: "Settings"
     theme:
       info:
         title_and_description: "Title & Description"
@@ -2198,7 +2202,10 @@ en:
     heading: 'Submit a secure payment.'
     cc_image_alt: 'Visa, Mastercard, American Express, Discover'
     already_authorized: 'Payment has been already authorized. Please proceed.'
-
+    credit_card: 'Credit Card Payment'
+    manual: 'Manual Payment'
+    nonce: 'PayPal Payment'
+    remote: 'Fetch Payment'
     cc_fields:
       first_name: 'First Name'
       last_name: 'Last Name'
@@ -2208,8 +2215,8 @@ en:
       expiration_date_year: 'Expiration date: Year'
       security_code: 'Security code'
       ccv_hint: "The Card Security Code is usually a 3- or 4- digit number, typically printed on the back of a credit card (usually in the signature field)"
-
       whats_this: "(What's this?)"
+
   shared:
     booking_types_tabs:
       booking_types: 'Booking types'
@@ -2223,12 +2230,6 @@ en:
     reviews_left_by_this_seller: "How %{first_name} rated others as a seller"
     reviews_about_this_buyer: "How others rated %{first_name} as an buyer"
     reviews_left_by_this_buyer: "How %{first_name} rated others as an buyer"
-
-  payments:
-    credit_card: 'Credit Card Payment'
-    manual: 'Manual Payment'
-    nonce: 'PayPal Payment'
-    remote: 'Fetch Payment'
 
   payouts:
     mailing_address: 'Address to send checks'

@@ -5,10 +5,6 @@
 {% if merchant_account.chain_payments? %}
   <input id="company_paypal_express_chain_merchant_account_attributes_merchant_token" name="company[paypal_express_chain_merchant_account_attributes][merchant_token]" type="hidden" value="{{ merchant_account.data['merchant_token']}}">
 
-  <p>
-    <button type="submit" class="btn btn-primary">{{ 'payouts.paypal.connect' | translate }}</button>
-  </p>
-
   {% if merchant_account.permissions_granted %}
     {% if merchant_account.chain_payment_set? %}
       <p><a class="btn btn-warning" href="/dashboard/company/paypal_agreements/{{ merchant_account.id }}" data-method="delete" data-confirm="{{ 'payouts.revoke_permission_confirmation' | translate }}">{{ 'payouts.revoke_permission' | translate }}</a></p>
@@ -18,6 +14,10 @@
         <a class="btn btn-primary" href="/dashboard/company/paypal_agreements/new">{{ 'payouts.grant_permission' | translate }}</a>
       </p>
     {% endif %}
+  {% else %}
+    <p>
+      <button type="submit" class="btn btn-primary">{{ 'payouts.paypal.connect' | translate }}</button>
+    </p>
   {% endif %}
 {% else %}
 

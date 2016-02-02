@@ -24,7 +24,7 @@
 
         .one-third.column.left
           .toggleable-booking-modules
-            - cache([@listing, user_signed_in?, @listing.instance.context_cache_key.to_s]) do
+            - cache i18n_cache_key(@listing, user_signed_in?, @listing.instance.context_cache_key.to_s) do
               = render 'locations/listings/booking', listing: @listing, collapsed: false
             .padding-row
 
@@ -40,8 +40,6 @@
 
           .padding-row
           = render 'locations/social_buttons', location: @location, url: location_listing_url(@location, @listing)
-  }
-  }
 
 .clearfix.padding-row
 

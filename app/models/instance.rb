@@ -44,7 +44,6 @@ class Instance < ActiveRecord::Base
     end
   end
 
-  belongs_to :instance_type
   has_one :theme, :as => :owner, dependent: :destroy
 
   has_many :companies, :inverse_of => :instance

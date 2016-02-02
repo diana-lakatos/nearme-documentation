@@ -315,11 +315,9 @@ require('jquery-timeago');
         if (els.length === 0) {
             return;
         }
-        require.ensure('./new_ui/listings/enabled_field', function(require){
-            var EnabledField = require('./new_ui/listings/enabled_field');
-            els.each(function(){
-                return new EnabledField(this);
-            });
+        require.ensure('./new_ui/listings/sync_enabled_fields', function(require){
+            var SyncEnabledFields = require('./new_ui/listings/sync_enabled_fields');
+            return new SyncEnabledFields(els);
         });
     });
 
@@ -475,6 +473,17 @@ require('jquery-timeago');
                 var ShippingProfilesController = require('./new_ui/controllers/shipping_profiles_controller');
                 return new ShippingProfilesController('form.profiles_shipping_category_form');
             });
+        });
+    });
+
+    DNM.registerInitializer(function(){
+        var els = document.getElementById('load-sessioncam');
+        if (!els) {
+            return;
+        }
+
+        require.ensure('exports?ServiceTickDetection!./analytics/sessioncam', function(require){
+            window.ServiceTickDetection = require('exports?ServiceTickDetection!./analytics/sessioncam');
         });
     });
 

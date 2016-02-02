@@ -297,7 +297,7 @@ class Transactable < ActiveRecord::Base
     if params[:page].to_i <= 1
       @start_date = params[:start_date].try(:to_date).try(:beginning_of_day)
     else
-      @start_date = params[:last_occurrence].in_time_zone
+      @start_date = Time.at(params[:last_occurrence].to_i)
     end
     time_now = Time.now.in_time_zone(timezone)
     @start_date = time_now if @start_date.nil? || @start_date < time_now
@@ -311,7 +311,7 @@ class Transactable < ActiveRecord::Base
           start_minute = occurrence.to_datetime.min.to_i + (60 * occurrence.to_datetime.hour.to_i)
           availability = self.quantity - desks_booked_on(occurrence.to_datetime, start_minute, start_minute)
           if availability > 0
-            occurrences << { id: I18n.l(occurrence.in_time_zone(timezone), format: :long), text: I18n.l(occurrence.in_time_zone(timezone), format: :long), availability: availability.to_i }
+            occurrences << { id: occurrence.to_i, text: I18n.l(occurrence.in_time_zone(timezone), format: :long), availability: availability.to_i }
           end
         end
         @start_date = occurrence

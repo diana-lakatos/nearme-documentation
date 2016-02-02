@@ -22,7 +22,7 @@ class PlatformContext
   NEAR_ME_REDIRECT_URL = 'http://near-me.com/?domain_not_valid=true'
   @@instance_view_cache_key = {}
 
-  attr_reader :domain, :platform_context_detail, :instance_type, :instance, :theme, :domain,
+  attr_reader :domain, :platform_context_detail, :instance, :theme, :domain,
     :white_label_company, :partner, :request_host, :blog_instance
 
   class_attribute :root_secured
@@ -149,7 +149,6 @@ class PlatformContext
     @partner = partner
     @platform_context_detail = @partner
     @instance = @partner.instance
-    @instance_type = @instance.instance_type
     @theme = @partner.theme.presence
     @domain ||= @partner.domain
     self
@@ -160,7 +159,6 @@ class PlatformContext
       @white_label_company = company
       @platform_context_detail = @white_label_company
       @instance = company.instance
-      @instance_type = @instance.instance_type
       @theme = company.theme
       @domain ||= company.domain
     else
@@ -175,7 +173,6 @@ class PlatformContext
 
   def initialize_with_instance(instance)
     @instance = instance
-    @instance_type = @instance.instance_type
     @platform_context_detail = @instance
     @theme = @instance.theme
     @domain ||= @instance.default_domain

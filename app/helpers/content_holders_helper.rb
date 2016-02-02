@@ -32,7 +32,7 @@ module ContentHoldersHelper
 
   def get_content_holder(name)
     Rails.cache.fetch content_holder_cache_key(name), expires_in: 12.hours do
-      if content_holder = platform_context.content_holders.enabled.find_by_name(name)
+      if content_holder = platform_context.content_holders.enabled.no_inject_pages.no_position(['meta', 'head_bottom']).find_by_name(name)
         content_holder.content
       end
     end

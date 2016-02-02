@@ -386,6 +386,7 @@ class SecuredParams
       :custom_waiver_agreements,
       :seller_attachments_access_level,
       :seller_attachments_enabled,
+      :enable_language_selector,
       allowed_currencies: [],
       allowed_countries: [],
       custom_translations: [:'buy_sell_market.checkout.manual_payment', :'buy_sell_market.checkout.manual_payment_description'],

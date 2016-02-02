@@ -145,6 +145,10 @@ class PlatformContextDrop < BaseDrop
     @instance.tt_select_type
   end
 
+  def is_footer_languages_select?
+    @instance.enable_language_selector?
+  end
+
   def project_space_wizard_path
     @project_type ||= ProjectType.first
     routes.new_project_type_project_wizard_path(@project_type) if @project_type

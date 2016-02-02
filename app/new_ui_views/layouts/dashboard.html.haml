@@ -49,6 +49,7 @@
     / Head Javascript
     = javascript_include_tag 'vendor/modernizr'
     = render 'shared/ckeditor_basepath'
+    = yield(:head_bottom)
 
   %body{class: (navigation_visible? ? 'navigation-visible' : nil ) }
 
@@ -70,6 +71,9 @@
 
       = yield
 
+    = javascript_tag do
+      = javascript_i18n_include_tag
+
     = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places&sensor=false"
 
     = webpack_manifest_script
@@ -82,10 +86,10 @@
 
     = yield :script
 
-    = javascript_tag do
-      = javascript_i18n_include_tag
-      $(function(){
-      = yield :domready
-      });
+    - if content_for?(:domready)
+      = javascript_tag do
+        $(function(){
+        = yield :domready
+        });
 
     = yield(:body_bottom)
