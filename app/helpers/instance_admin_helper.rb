@@ -90,4 +90,8 @@ module InstanceAdminHelper
     end
   end
 
+  def default_translation_for_key(key)
+    Translation.where('instance_id is null AND key = ?', key).first.try(:value)
+  end
+
 end
