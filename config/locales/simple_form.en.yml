@@ -524,6 +524,7 @@ en:
       instance:
         date_pickers: 'Enable date pickers'
         date_pickers_use_availability_rules: 'Use availability rules'
+        default_oauth_signin_provider: "Please leave this value set to 'None' unless otherwise told by Near Me support."
       user_blog_post:
         hero_image: 'Suggested image size is 850 x 262 pixels'
         author_avatar_img: 'Suggested image size is 144 x 144 pixels'
