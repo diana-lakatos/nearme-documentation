@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160128181730) do
+ActiveRecord::Schema.define(version: 20160202130705) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1354,7 +1354,7 @@ ActiveRecord::Schema.define(version: 20160128181730) do
   create_table "payments", force: :cascade do |t|
     t.integer  "reservation_id"
     t.integer  "subtotal_amount_cents",                                                          default: 0
-    t.decimal  "service_fee_amount_guest_cents",                         precision: 8, scale: 2, default: 0.0,   null: false
+    t.decimal  "service_fee_amount_guest_cents",                         precision: 8, scale: 2
     t.datetime "paid_at"
     t.datetime "failed_at"
     t.datetime "created_at",                                                                                     null: false
