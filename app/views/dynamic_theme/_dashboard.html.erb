@@ -40,8 +40,8 @@
       scale_factor = default_logo_height / logo_dimensions[1]
       theme_logo_width = (scale_factor * logo_dimensions[0]).to_i
     else
-      theme_logo_height = logo_dimensions[1]
-      theme_logo_width = logo_dimensions[0]
+      theme_logo_height = logo_dimensions[1] if logo_dimensions[1].present?
+      theme_logo_width = logo_dimensions[0] if logo_dimensions[0].present?
     end
   end
 
@@ -53,8 +53,8 @@
       scale_factor = default_icon_height / icon_dimensions[1]
       theme_icon_width = (scale_factor * icon_dimensions[0]).to_i
     else
-      theme_icon_height = icon_dimensions[1]
-      theme_icon_width = icon_dimensions[0]
+      theme_icon_height = icon_dimensions[1] if icon_dimensions[1].present?
+      theme_icon_width = icon_dimensions[0] if icon_dimensions[0].present?
     end
   end
 
@@ -66,8 +66,8 @@
       scale_factor = default_logo_retina_height / logo_dimensions[1]
       theme_logo_retina_width = (scale_factor * logo_dimensions[0]).to_i
     else
-      theme_logo_retina_height = logo_dimensions[1]
-      theme_logo_retina_width = logo_dimensions[0]
+      theme_logo_retina_height = logo_dimensions[1] if logo_dimensions[1].present?
+      theme_logo_retina_width = logo_dimensions[0] if logo_dimensions[0].present?
     end
   end
 
@@ -79,8 +79,8 @@
       scale_factor = default_icon_retina_height / icon_dimensions[1]
       theme_icon_retina_width = (scale_factor * icon_dimensions[0]).to_i
     else
-      theme_icon_retina_height = icon_dimensions[1]
-      theme_icon_retina_width = icon_dimensions[0]
+      theme_icon_retina_height = icon_dimensions[1] if icon_dimensions[1].present?
+      theme_icon_retina_width = icon_dimensions[0] if icon_dimensions[0].present?
     end
   end
 
