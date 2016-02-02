@@ -487,6 +487,17 @@ require('jquery-timeago');
         });
     });
 
+    DNM.registerInitializer(function(){
+        var els = $('input[type="color"]');
+        if (els.length === 0) {
+            return;
+        }
+
+        require.ensure('spectrum/spectrum', function(require){
+            require('spectrum/spectrum');
+        });
+    });
+
 
     $(function(){
         DNM.run();
