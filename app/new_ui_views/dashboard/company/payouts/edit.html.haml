@@ -8,6 +8,7 @@
     .panel-body
       = render partial: 'form', locals: { f: f }
 
-  .panel.form-actions
-    .panel-body
-      = f.submit t('payouts.buttons.save')
+  - unless @merchant_account.chain_payments?
+    .panel.form-actions
+      .panel-body
+        = f.submit t('payouts.buttons.save')

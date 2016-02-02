@@ -220,11 +220,11 @@ class SearchControllerTest < ActionController::TestCase
       context 'for fulltext golocation' do
 
         setup do
-           @adelaide = FactoryGirl.create(:listing_in_adelaide)
-           @adelaide_super = FactoryGirl.create(:listing_in_adelaide)
-           @adelaide_super.description = "super location"
-           @adelaide_super.save
-           @adelaide.transactable_type.update_attribute(:searcher_type, "fulltext_geo")
+          @adelaide = FactoryGirl.create(:listing_in_adelaide)
+          @adelaide_super = FactoryGirl.create(:listing_in_adelaide)
+          @adelaide_super.description = "super location"
+          @adelaide_super.save
+          @adelaide.transactable_type.update_attribute(:searcher_type, "fulltext_geo")
         end
 
         context 'on mixed results page' do
@@ -530,6 +530,23 @@ class SearchControllerTest < ActionController::TestCase
         get :index, { query: 'product_1', lg_custom_attributes: { attribute_filter: ['Lefthanded'] }, v: 'products' }
       end
     end
+  end
+
+  context 'for mixed individual settings' do
+
+    setup do
+      PlatformContext.current.instance.update_attributes({
+        default_search_view: 'listing_mixed'
+      })
+      3.times { FactoryGirl.create(:listing_in_adelaide) }
+    end
+
+    should 'properly render all liquid views' do
+      get :index
+      assert_select 'article.location', count: 3
+      assert_select 'article.location > .tabbable .title .listing', count: 3
+    end
+
   end
 
   protected

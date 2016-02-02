@@ -9,7 +9,8 @@ Feature: A user can search for a listing
     And a listing in Adelaide exists
     And I am on the home page
     When I search for "Adelaide"
-    And I make another search for "Auckland"
+    When I make another search for "Auckland"
+    Then I see a search result for the Auckland listing
     And I leave the page and hit back
     Then I see a search result for the Auckland listing
     And I do not see a search result for the Adelaide listing

@@ -8,6 +8,8 @@ class ContentHolder < ActiveRecord::Base
 
   scope :enabled, -> { where(enabled: true) }
   scope :by_inject_pages, -> (path_group) { where("(? = ANY (inject_pages)) OR (? = ANY (inject_pages))", path_group, ANY_PAGE) }
+  scope :no_inject_pages, -> { where("inject_pages = '{\"\"}' OR inject_pages = '{}'") }
+  scope :no_position, -> (positions) { where("position is NULL or position NOT IN (?)", positions)}
 
   belongs_to :theme
   belongs_to :instance
