@@ -37,6 +37,7 @@
 
     = render 'shared/ckeditor_basepath'
     = render "shared/javascript_assets"
+    = yield(:head_bottom)
 
   %body
     = yield(:body_top)
@@ -57,8 +58,10 @@
     - unless no_footer?
       = render 'layouts/footer'
 
-    = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places&sensor=false"
+    = javascript_tag do
+      = javascript_i18n_include_tag
 
+    = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places&sensor=false"
     = webpack_manifest_script
     = webpack_bundle_tag 'common'
     = webpack_bundle_tag 'dashboard'

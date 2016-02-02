@@ -126,7 +126,7 @@ class User < ActiveRecord::Base
   after_destroy :perform_cleanup
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
-  before_validation :build_profile, on: :create
+  before_create :build_profile
   before_restore :recover_companies
   skip_callback :commit, :after, :remove_avatar!
   skip_callback :commit, :after, :remove_cover_image!

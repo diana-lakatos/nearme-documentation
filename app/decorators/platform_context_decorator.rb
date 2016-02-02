@@ -1,6 +1,6 @@
 class PlatformContextDecorator
 
-  delegate :white_label_company, :instance, :instance_type, :theme, :partner, :domain, :white_label_company_user?,
+  delegate :white_label_company, :instance, :theme, :partner, :domain, :white_label_company_user?,
            :platform_context_detail, :secured_constraint, :latest_products, to: :platform_context
 
   delegate :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :address,
