@@ -27,8 +27,7 @@ class PaymentAuthorizer
 
   def process!
     return false unless @authorizable.valid?
-
-    @response = gateway_authorize(@payment.total_amount.cents, credit_card, @options)
+    @response = @payment_gateway.gateway_authorize(@payment.total_amount.cents, credit_card, @options)
     @response.success? ? handle_success : handle_failure
   end
 
@@ -36,14 +35,6 @@ class PaymentAuthorizer
 
   def credit_card
     @credit_card ||= @payment.credit_card.try(:to_active_merchant)
-  end
-
-  def gateway_authorize(amount, cc, options)
-    begin
-      @payment_gateway.gateway.authorize(amount, cc, options)
-    rescue => e
-      OpenStruct.new({ success?: false, message: e.to_s })
-    end
   end
 
   def handle_failure
@@ -62,16 +53,21 @@ class PaymentAuthorizer
         {
           success: true,
           immediate_payout: @payment_gateway.immediate_payout(@authorizable.company),
-          merchant_account_id: @payment_gateway.merchant_account(@authorizable.company).try(:id)
+          merchant_account_id: merchant_account.try(:id)
         }
       )
     )
     if @authorizable.instance_of?(Spree::Order)
       @authorizable.create_pending_payment!
     end
+    @payment.merchant_account_id = merchant_account.try(:id)
     @payment.credit_card = nil unless @payment.save_credit_card?
     @payment.mark_as_authorized!
     true
+  end
+
+  def merchant_account
+    @payment_gateway.merchant_account(@authorizable.company)
   end
 
   def billing_authoriazation_params
@@ -94,7 +90,7 @@ class PaymentAuthorizer
       customer: @payment.credit_card.try(:customer_id),
       company: @authorizable.company,
       currency: @authorizable.currency,
-      merchant_account: @payment_gateway.merchant_account(@authorizable.company),
+      merchant_account: merchant_account,
       payment_method_nonce: @payment.try(:payment_method_nonce),
       service_fee_host: @authorizable.total_service_amount.cents
     }).with_indifferent_access

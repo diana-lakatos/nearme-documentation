@@ -628,6 +628,7 @@ DesksnearMe::Application.routes.draw do
           end
         end
       end
+      resources :credit_cards, only: [:destroy]
       resource :seller, only: [:show, :edit, :update]
       resource :buyer, only: [:show, :edit, :update]
 

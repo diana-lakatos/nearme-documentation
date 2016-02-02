@@ -1,5 +1,8 @@
 - if @payment_gateway.present?
   = render @merchant_account_form_path, f: f, merchant_account: @merchant_account if @merchant_account_form_path
+  = f.simple_fields_for  @merchant_account.to_attr, @merchant_account do |form|
+    - unless @merchant_account.payment_subscription.blank?
+      = render 'shared/payment_subscription', f: form
 - else
   = f.simple_fields_for :payments_mailing_address, (f.object.payments_mailing_address.presence || f.object.build_payments_mailing_address) do |address_form|
 

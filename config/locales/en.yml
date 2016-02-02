@@ -2246,6 +2246,9 @@ en:
     nonce: 'PayPal Payment'
     remote: 'Fetch Payment'
     cc_fields:
+      cannot_delete: "You can't delete this card."
+      subscribed: "Your card ending with: %{last_4} is saved in the system."
+      unsubscribe: "Remove this card"
       first_name: 'First Name'
       last_name: 'Last Name'
       card_number: 'Card number'

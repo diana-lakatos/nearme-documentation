@@ -68,5 +68,8 @@
               Amount:
               = number_to_currency_symbol(refund.currency, Money.new(refund.amount))
             %p
+              Receiver:
+              = refund.receiver.try(:capitalize)
+            %p
               Response:
               = refund.response.to_yaml

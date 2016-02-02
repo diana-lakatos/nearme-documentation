@@ -11,7 +11,6 @@ module ContentHoldersHelper
     'search#index' =>'search_results'
   }
 
-
   def platform_context
     @platform_context_view ||= PlatformContext.current.decorate
   end

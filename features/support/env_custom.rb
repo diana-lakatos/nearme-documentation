@@ -39,7 +39,7 @@ Before do
   ActiveMerchant::Billing::Base.mode = :test
 
   response={success?: true}
-  PaymentAuthorizer.any_instance.stubs(:gateway_authorize).returns(OpenStruct.new(response.reverse_merge({authorization: "token "})))
+  PaymentGateway.any_instance.stubs(:gateway_authorize).returns(OpenStruct.new(response.reverse_merge({authorization: "token "})))
   PaymentGateway.any_instance.stubs(:gateway_void).returns(OpenStruct.new(response.reverse_merge({authorization: "54533"})))
   PaymentGateway.any_instance.stubs(:gateway_capture).returns(OpenStruct.new(response.reverse_merge({params: {"id" => '12345'}})))
   PaymentGateway.any_instance.stubs(:gateway_refund).returns(OpenStruct.new(response.reverse_merge({params: {"id" => '12345'}})))

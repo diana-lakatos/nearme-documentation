@@ -51,7 +51,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
   context 'billing authorization' do
     should 'should not save on authorization failure' do
       authorize_response = OpenStruct.new(success?: false, error: 'No $$$ on account')
-      PaymentAuthorizer.any_instance.expects(:gateway_authorize).returns(authorize_response)
+      PaymentGateway.any_instance.expects(:gateway_authorize).returns(authorize_response)
       assert_no_difference('BillingAuthorization.count') do
         post :create, booking_params_for(@listing)
       end
@@ -59,7 +59,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
     should 'store successful authorization' do
       authorize_response = OpenStruct.new(success?: true, authorization: 'abc')
-      PaymentAuthorizer.any_instance.expects(:gateway_authorize).returns(authorize_response)
+      PaymentGateway.any_instance.expects(:gateway_authorize).returns(authorize_response)
       post :create, booking_params_for(@listing)
       payment = Payment.last
       assert_equal 'abc', payment.authorization_token

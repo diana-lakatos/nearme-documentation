@@ -10,6 +10,7 @@ class PaymentGateway < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
   acts_as_paranoid
+  has_paper_trail
 
   scope :mode_scope, -> { test_mode? ? where(test_active: true) : where(live_active: true)}
   scope :payout_type, -> { where(type: PAYOUT_GATEWAYS.values + IMMEDIATE_PAYOUT_GATEWAYS.values) }
@@ -35,7 +36,7 @@ class PaymentGateway < ActiveRecord::Base
   has_many :credit_cards
   has_many :charges
   has_many :payouts
-  has_many :instance_clients
+  has_many :instance_clients, dependent: :destroy
   has_many :merchant_accounts, dependent: :destroy
   has_many :payments, through: :billing_authorizations
   has_many :payment_gateways_countries
@@ -90,11 +91,11 @@ class PaymentGateway < ActiveRecord::Base
   unsupported :payout, :any_country, :any_currency, :paypal_express_payment, :paypal_chain_payments,
     :multiple_currency, :express_checkout_payment, :nonce_payment, :company_onboarding, :remote_paymnt,
     :recurring_payment, :credit_card_payment, :manual_payment, :remote_payment, :free_payment, :immediate_payout, :free_payment,
-    :partial_refunds
+    :partial_refunds, :refund_from_host, :host_subscription
 
   attr_encrypted :test_settings, :live_settings, marshal: true
 
-  attr_accessor :country
+  attr_accessor :country, :subject
 
   #- CLASS METHODS STARTS HERE
 
@@ -257,17 +258,33 @@ class PaymentGateway < ActiveRecord::Base
       payment_gateway_mode: mode
     )
 
-      options = custom_capture_options.merge(currency: currency)
-      response = gateway_capture(amount, token, options.with_indifferent_access)
-      response.success? ? charge_successful(response) : charge_failed(response)
-      @charge
+    options = custom_capture_options.merge(currency: currency)
+    response = gateway_capture(amount, token, options.with_indifferent_access)
+    response.success? ? charge_successful(response) : charge_failed(response)
+    @charge
+  end
+
+  def gateway_authorize(amount, cc, options)
+    begin
+      gateway.authorize(amount, cc, options)
+    rescue => e
+      OpenStruct.new({ success?: false, message: e.to_s })
+    end
   end
 
   def gateway_capture(amount, token, options)
     begin
       gateway.capture(amount, token, options)
     rescue => e
-      @payment.update_column(:recurring_booking_error, e)
+      @payment.update_column(:recurring_booking_error, e) if @payment
+      OpenStruct.new({ success?: false, message: e.to_s })
+    end
+  end
+
+  def gateway_purchase(amount, credit_card_or_vault_id, options)
+    begin
+      gateway.purchase(amount, credit_card_or_vault_id, options)
+    rescue => e
       OpenStruct.new({ success?: false, message: e.to_s })
     end
   end
@@ -292,7 +309,8 @@ class PaymentGateway < ActiveRecord::Base
       amount: amount,
       currency: currency,
       payment: payment,
-      payment_gateway_mode: mode
+      payment_gateway_mode: mode,
+      receiver: 'guest'
     )
 
     raise PaymentGateway::RefundNotSupportedError, "Refund isn't supported or is not implemented. Please refund this user directly on your gateway account." if !defined?(refund_identification)
@@ -319,6 +337,14 @@ class PaymentGateway < ActiveRecord::Base
   def gateway_store(credit_card, options)
     begin
       gateway.store(credit_card, options)
+    rescue => e
+      OpenStruct.new({ success?: false, message: e.to_s })
+    end
+  end
+
+  def gateway_delete(instance_client, options)
+    begin
+      gateway.delete(instance_client, options)
     rescue => e
       OpenStruct.new({ success?: false, message: e.to_s })
     end
