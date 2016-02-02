@@ -352,6 +352,7 @@ en:
         name: "Name"
         description: "Description"
         properties: "Properties"
+        actions: "Actions"
       projects:
         community_reports: "Community reports"
         week_start: "Starting week"

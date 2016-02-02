@@ -204,6 +204,12 @@ en:
           created: "Successfully created project type"
           updated: "Successfully updated project type"
           deleted: "Successfully deleted project type"
+      reports:
+        listings:
+          successfully_updated: "The settings have been successfully updated."
+          successfully_deleted: "The listing has been successfully deleted."
+        products:
+          successfully_deleted: "The product has been successfully deleted."
     listings:
       listing_disabled: "This listing has been temporarily disabled by the owner. Displaying other listings in this location."
       listing_disabled_but_admin: "This listing has been temporarily disabled by the owner. Other users will not be able to browse it."
