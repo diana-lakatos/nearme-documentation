@@ -351,10 +351,6 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
         assert_difference('Location.count', 1) do
           post :submit_listing, @params_without_company_name
         end
-
-        location = Location.last
-        assert_equal 37.09024, location.latitude
-        assert_equal -95.712891, location.longitude
       end
     end
   end

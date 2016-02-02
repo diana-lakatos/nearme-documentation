@@ -1,13 +1,11 @@
 And('the instance is a community instance') do
-  @user = model('the user')
+  @user = model!('the user')
   @user.save
 
   User.any_instance.stubs(:can_update_feed_status?).returns(true)
 
-  @instance = model('the instance')
-  @instance.is_community = true
-  @instance.save
-  @instance.reload
+  @instance = PlatformContext.current.instance
+  @instance.update_attribute(:is_community, true)
 end
 
 And(/^a project with name: "(.*?)"$/) do |name|
