@@ -82,7 +82,7 @@ class ReservationRequestTest < ActiveSupport::TestCase
         end
 
         should 'set manual' do
-          attributes[:payment][:payment_method] = @manual_payment_gateway.payment_methods.first
+          attributes[:payment][:payment_method] = @manual_payment_gateway.payment_methods.manual.first
           @reservation_request = ReservationRequest.new(@listing, @user, attributes)
           @reservation_request.payment.valid?
           assert @reservation_request.payment.manual_payment?
@@ -96,6 +96,15 @@ class ReservationRequestTest < ActiveSupport::TestCase
         should "be valid" do
           assert @reservation_request.valid?
         end
+      end
+
+      should "raise error when total_price_check is incorrect" do
+        @reservation_request.total_amount_check = @reservation_request.reservation.total_amount.cents
+        assert @reservation_request.valid?
+        @reservation_request.total_amount_check = 1 + @reservation_request.reservation.total_amount.cents
+        refute @reservation_request.valid?
+        error = I18n.t("activemodel.errors.models.reservation_request.attributes.base.total_amount_changed")
+        assert_equal error, @reservation_request.errors.full_messages.to_sentence
       end
 
       context "invalid arguments" do

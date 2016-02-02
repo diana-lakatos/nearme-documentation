@@ -8,24 +8,24 @@ class PaymentTest < ActiveSupport::TestCase
     end
 
     should 'should not be refunded' do
-      Payment.any_instance.expects(:refund).never
-      @manual_payment.send(:attempt_payment_refund)
+      refute @manual_payment.send(:refund!)
       assert @manual_payment.paid?
     end
   end
 
   context "pending payment" do
     setup do
-      stub_active_merchant_interaction
       @payment = FactoryGirl.create(:pending_payment)
     end
 
     should 'raise validation errors on credit card on authorize' do
+      stub_active_merchant_interaction
       refute @payment.authorize
       assert_equal [I18n.t('buy_sell_market.checkout.invalid_cc')], @payment.errors[:cc]
     end
 
     should 'be authorized correctly when CC is valid' do
+      stub_active_merchant_interaction
       @payment.credit_card_form = FactoryGirl.attributes_for(:credit_card_form)
       assert @payment.authorize
       assert @payment.valid?
@@ -46,6 +46,14 @@ class PaymentTest < ActiveSupport::TestCase
       assert_equal billing_authorization.success?, false
       assert_equal(billing_authorization.response, OpenStruct.new(authorization: "54533", success?: false, message: 'fail'))
     end
+
+    should "display internal error message to gateway user" do
+      response = OpenStruct.new(code: '500', message: 'Internal server error')
+      @payment.payment_gateway.gateway.stubs(:authorize).raises(ResponseError.new(response))
+      @payment.credit_card_form = FactoryGirl.attributes_for(:credit_card_form)
+      refute @payment.authorize
+      assert @payment.errors[:base].include?("Failed with 500 Internal server error")
+    end
   end
 
   SUCCESS_RESPONSE = {"paid_amount"=>"10.00"}
@@ -53,7 +61,6 @@ class PaymentTest < ActiveSupport::TestCase
 
   context 'authorized payment' do
     setup do
-      stub_active_merchant_interaction({success?: true, params: SUCCESS_RESPONSE })
       @payment = FactoryGirl.create(:authorized_payment)
       @host = @payment.payable.owner
     end
@@ -66,6 +73,7 @@ class PaymentTest < ActiveSupport::TestCase
     end
 
     should 'track charge in mixpanel after successful creation' do
+      stub_active_merchant_interaction({success?: true, params: SUCCESS_RESPONSE })
       ReservationChargeTrackerJob.expects(:perform_later).with(@payment.payable.date.end_of_day, @payment.payable.id).once
       assert @payment.capture!
       assert_equal @payment.total_amount_cents, @payment.charges.last.amount
@@ -89,24 +97,44 @@ class PaymentTest < ActiveSupport::TestCase
       refute charge.success?
       assert_equal FAILURE_RESPONSE, charge.response.params
     end
+
+    should "not capture while Internal Gateway error is raised" do
+      response = OpenStruct.new(code: '500', message: 'Internal server error')
+      @payment.payment_gateway.gateway.stubs(:capture).raises(ResponseError.new(response))
+      @payment.credit_card_form = FactoryGirl.attributes_for(:credit_card_form)
+      refute @payment.capture!
+      refute @payment.paid?
+      assert @payment.errors[:base].include?("Failed with 500 Internal server error")
+    end
   end
 
   context 'paid payment' do
     setup do
-      stub_active_merchant_interaction
       @payment = FactoryGirl.create(:paid_payment)
     end
 
     should 'find the right charge if there were failing attempts' do
+      stub_active_merchant_interaction
       FactoryGirl.create(:charge, payment: @payment, success: false, response: { id: "id" })
       @payment.refund!
       assert @payment.reload.refunded?
     end
 
     should 'not be refunded if failed' do
-      PaymentGateway::StripePaymentGateway.any_instance.expects(:gateway_refund).returns(Refund.new(:success => false))
-      @payment.refund!
-      refute @payment.reload.refunded?
+      PaymentGateway::StripePaymentGateway.any_instance.expects(:gateway_refund).times(3).returns(Refund.new(:success => false))
+      refute @payment.refund!
+
+      stub_active_merchant_interaction
+      @payment.stubs(:immediate_payout?).returns(true)
+      assert @payment.refund!
+    end
+
+    should 'not be refunded if paid out' do
+      @payment.company = FactoryGirl.create(:company)
+      @payment.save!
+      @payment.company.schedule_payment_transfer
+      @payment.reload.payment_transfer.touch(:transferred_at)
+      refute @payment.refund!
     end
 
     context 'advanced cancellation policy penalty' do
@@ -118,6 +146,7 @@ class PaymentTest < ActiveSupport::TestCase
       end
 
       should 'refund proper amount when guest cancels' do
+        stub_active_merchant_interaction
         @payment.payable.update_column(:state, 'cancelled_by_guest')
         assert_equal 1000, @payment.subtotal_amount_cents
         assert_equal 400, @payment.amount_to_be_refunded
@@ -130,6 +159,7 @@ class PaymentTest < ActiveSupport::TestCase
       end
 
       should 'refund proper amount when host cancels' do
+        stub_active_merchant_interaction
         @payment.payable.update_column(:state, 'cancelled_by_host')
         assert_equal 1000, @payment.subtotal_amount_cents
         assert_equal 1100, @payment.amount_to_be_refunded
@@ -139,6 +169,18 @@ class PaymentTest < ActiveSupport::TestCase
         assert_equal 0, @payment.final_service_fee_amount_guest_cents
         assert_equal 0, @payment.subtotal_amount_cents_after_refund
         assert_equal 1100, @payment.refunds.last.amount
+      end
+
+
+      should "not refund while Internal Gateway error is raised" do
+        response = OpenStruct.new(code: '500', message: 'Internal server error')
+        ActiveMerchant::Billing::StripeCustomGateway.any_instance.stubs(:refund).raises(ResponseError.new(response))
+
+        refute @payment.refund!
+        assert @payment.paid?
+        assert_equal 3, @payment.refunds.where(:success => false).count
+        refund_response = OpenStruct.new({success?: false, message: "Failed with 500 Internal server error"})
+        assert_equal refund_response, @payment.refunds.last.response
       end
     end
 
@@ -233,5 +275,18 @@ class PaymentTest < ActiveSupport::TestCase
       end
 
     end
+  end
+end
+
+class ResponseError < StandardError # :nodoc:
+  attr_reader :response
+
+  def initialize(response, message = nil)
+    @response = response
+    @message  = message
+  end
+
+  def to_s
+    "Failed with #{response.code} #{response.message if response.respond_to?(:message)}"
   end
 end

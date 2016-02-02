@@ -1,6 +1,8 @@
 class PaymentGateway::BraintreePaymentGateway < PaymentGateway
   include PaymentGateway::ActiveMerchantGateway
 
+  MAX_REFUND_ATTEMPTS = 10
+
   supported :any_currency, :company_onboarding, :recurring_payment, :nonce_payment,
     :credit_card_payment, :partial_refunds
 
@@ -14,6 +16,20 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
 
   def self.active_merchant_class
     ActiveMerchant::Billing::BraintreeBlueGateway
+  end
+
+  def gateway_refund(amount, token, options)
+    configure_braintree_class
+    transaction = Braintree::Transaction.find(token)
+    if transaction.status == 'submitted_for_settlement' && (transaction.amount * 100).to_i == amount
+      gateway_void(token)
+    else
+      super
+    end
+  end
+
+  def max_refund_attempts
+    MAX_REFUND_ATTEMPTS
   end
 
   def settings
@@ -30,7 +46,7 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
   end
 
   def refund_identification(charge)
-    charge.payment.payable.billing_authorization.token
+    charge.payment.authorization_token
   end
 
   private

@@ -154,6 +154,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).host
       end
+      Reservation.any_instance.stubs(:schedule_refund).returns(true)
       post :host_cancel, { id: @reservation.id }
       assert_redirected_to dashboard_company_host_reservations_path
     end
@@ -203,6 +204,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       end
 
       should 'store new version after cancel' do
+        Reservation.any_instance.stubs(:schedule_refund).returns(true)
         @reservation.confirm
         assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
           with_versioning do

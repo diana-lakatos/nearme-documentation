@@ -121,7 +121,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
             }
           end
           order = assigns(:order)
-          assert_contains "No $$$ on account", order.payment.errors[:cc]
+          assert_contains "No $$$ on account", order.payment.errors[:base]
           assert_equal 'payment', order.state
           assert_nil order.billing_authorization
           assert_equal 'pending', order.payment.state

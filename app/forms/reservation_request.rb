@@ -2,7 +2,7 @@ class ReservationRequest < Form
 
   attr_accessor :dates, :start_minute, :end_minute, :book_it_out, :exclusive_price, :guest_notes,
     :waiver_agreement_templates, :documents, :checkout_extra_fields, :mobile_number, :delivery_ids,
-    :delivery_type
+    :delivery_type, :total_amount_check
   attr_reader   :reservation, :listing, :location, :user, :client_token, :payment
 
   delegate :confirm_reservations?, :location, :company, :timezone, to: :@listing
@@ -18,6 +18,7 @@ class ReservationRequest < Form
   validate :validate_acceptance_of_waiver_agreements
   validate :validate_reservation
   validate :validate_empty_files, if: lambda { reservation.present? }
+  validate :validate_total_amount
 
   def initialize(listing, user, attributes = {}, checkout_extra_fields = {})
     @listing = listing
@@ -262,6 +263,12 @@ class ReservationRequest < Form
 
   def validate_user
     errors.add(:user) if @user.blank? || !@user.valid?
+  end
+
+  def validate_total_amount
+    if @reservation.present? && self.total_amount_check.present? && @reservation.total_amount.cents != self.total_amount_check.to_i
+      errors.add(:base, I18n.t("activemodel.errors.models.reservation_request.attributes.base.total_amount_changed"))
+    end
   end
 
   def current_instance

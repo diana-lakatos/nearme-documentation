@@ -35,16 +35,20 @@ class PaymentAuthorizer
   private
 
   def gateway_authorize
-    @payment_gateway.gateway.authorize(@payment.total_amount.cents, credit_card_or_token, @options)
+    begin
+      @payment_gateway.gateway.authorize(@payment.total_amount.cents, credit_card_or_token, @options)
+    rescue => e
+      OpenStruct.new({ success?: false, message: e.to_s })
+    end
   end
 
   def handle_failure
-    @payment.errors.add(:cc, @response.message)
     @payment.billing_authorizations.build(billing_authoriazation_params.merge({ success: false })) if @authorizable.respond_to?(:billing_authorizations)
     if @authorizable.instance_of?(Spree::Order)
       @authorizable.create_failed_payment!
     end
-    @payment.errors.add(:base, "authorization failed")
+    @payment.errors.add(:base, @response.message)
+    @payment.errors.add(:base, I18n.t("activemodel.errors.models.payment.attributes.base.authorization_failed"))
     false
   end
 

@@ -492,8 +492,8 @@ class Reservation < ActiveRecord::Base
     ReservationExpiryJob.perform_later(self.reload.expire_at, self.id) if hours_to_expiration > 0
   end
 
-  def schedule_refund(transition, counter = 0, run_at = Time.zone.now)
-    PaymentRefundJob.perform_later(run_at, payment.id, counter)
+  def schedule_refund(transition, run_at = Time.zone.now)
+    PaymentRefundJob.perform_later(run_at, payment.id)
   end
 
   def schedule_void
