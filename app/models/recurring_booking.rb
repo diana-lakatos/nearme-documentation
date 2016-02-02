@@ -17,7 +17,8 @@ class RecurringBooking < ActiveRecord::Base
 
   attr_encrypted :authorization_token, :payment_gateway_class
 
-  has_one :billing_authorization, as: :reference
+  has_one :payment_subscription, as: :subscriber
+
   belongs_to :instance
   belongs_to :listing, -> { with_deleted}, class_name: 'Transactable', foreign_key: 'transactable_id', inverse_of: :recurring_bookings
   belongs_to :owner, :class_name => "User"
@@ -25,7 +26,6 @@ class RecurringBooking < ActiveRecord::Base
   belongs_to :administrator, class_name: "User"
   belongs_to :company
   belongs_to :platform_context_detail, :polymorphic => true
-  belongs_to :payment_gateway
   belongs_to :credit_card
 
   # Note: additional_charges are not yet implemented for RecurringBooking
@@ -219,6 +219,10 @@ class RecurringBooking < ActiveRecord::Base
 
   def weekly?
     interval == 'weekly'
+  end
+
+  def monthly?
+    interval == 'monthly'
   end
 
   def expire_at

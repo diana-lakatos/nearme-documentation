@@ -28,15 +28,19 @@ class PaymentAuthorizer
   def process!
     return false unless @authorizable.valid?
 
-    @response = gateway_authorize
+    @response = gateway_authorize(@payment.total_amount.cents, credit_card, @options)
     @response.success? ? handle_success : handle_failure
   end
 
   private
 
-  def gateway_authorize
+  def credit_card
+    @credit_card ||= @payment.credit_card.to_active_merchant
+  end
+
+  def gateway_authorize(amount, cc, options)
     begin
-      @payment_gateway.gateway.authorize(@payment.total_amount.cents, credit_card_or_token, @options)
+      @payment_gateway.gateway.authorize(amount, cc, options)
     rescue => e
       OpenStruct.new({ success?: false, message: e.to_s })
     end
@@ -67,9 +71,8 @@ class PaymentAuthorizer
     elsif @authorizable.instance_of?(Reservation)
       @authorizable.activate!
     end
+    @payment.credit_card = nil unless @payment.save_credit_card?
     @payment.mark_as_authorized!
-    @response.authorization
-
     true
   end
 
@@ -84,16 +87,13 @@ class PaymentAuthorizer
     }
   end
 
-  def credit_card_or_token
-    @authorizable.credit_card.try(:token) || @payment.credit_card
-  end
-
   def payment_record
     @authorizable.payments.build(amount: @authorizable.total_amount, company_id: @authorizable.company_id)
   end
 
   def prepare_options(options)
     options.merge({
+      customer: @payment.credit_card.try(:customer_id),
       company: @authorizable.company,
       currency: @authorizable.currency,
       merchant_account: @payment_gateway.merchant_account(@authorizable.company),

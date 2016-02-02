@@ -553,6 +553,7 @@ ActiveRecord::Schema.define(version: 20160215092513) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "payment_gateway_id"
+    t.boolean  "test_mode",                      default: true
   end
 
   add_index "credit_cards", ["instance_client_id"], name: "index_credit_cards_on_instance_client_id", using: :btree
@@ -1332,6 +1333,27 @@ ActiveRecord::Schema.define(version: 20160215092513) do
   add_index "payment_methods", ["instance_id"], name: "index_payment_methods_on_instance_id", using: :btree
   add_index "payment_methods", ["payment_gateway_id"], name: "index_payment_methods_on_payment_gateway_id", using: :btree
 
+  create_table "payment_subscriptions", force: :cascade do |t|
+    t.integer  "payment_method_id"
+    t.integer  "payment_gateway_id"
+    t.integer  "credit_card_id"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "subscriber_id"
+    t.boolean  "test_mode"
+    t.datetime "deleted_at"
+    t.string   "subscriber_type"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "payment_subscriptions", ["company_id"], name: "index_payment_subscriptions_on_company_id", using: :btree
+  add_index "payment_subscriptions", ["instance_id"], name: "index_payment_subscriptions_on_instance_id", using: :btree
+  add_index "payment_subscriptions", ["partner_id"], name: "index_payment_subscriptions_on_partner_id", using: :btree
+  add_index "payment_subscriptions", ["payment_method_id"], name: "index_payment_subscriptions_on_payment_method_id", using: :btree
+  add_index "payment_subscriptions", ["subscriber_id", "subscriber_type"], name: "subscriber_index", using: :btree
+
   create_table "payment_transfers", force: :cascade do |t|
     t.integer  "company_id"
     t.datetime "transferred_at"
@@ -1356,7 +1378,7 @@ ActiveRecord::Schema.define(version: 20160215092513) do
   create_table "payments", force: :cascade do |t|
     t.integer  "reservation_id"
     t.integer  "subtotal_amount_cents",                                                          default: 0
-    t.decimal  "service_fee_amount_guest_cents",                         precision: 8, scale: 2
+    t.decimal  "service_fee_amount_guest_cents",                         precision: 8, scale: 2, default: 0.0,   null: false
     t.datetime "paid_at"
     t.datetime "failed_at"
     t.datetime "created_at",                                                                                     null: false
@@ -1385,9 +1407,11 @@ ActiveRecord::Schema.define(version: 20160215092513) do
     t.string   "express_token"
     t.integer  "merchant_account_id"
     t.boolean  "offline",                                                                        default: false
+    t.integer  "credit_card_id"
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
+  add_index "payments", ["credit_card_id"], name: "index_payments_on_credit_card_id", using: :btree
   add_index "payments", ["instance_id"], name: "index_payments_on_instance_id", using: :btree
   add_index "payments", ["partner_id"], name: "index_payments_on_partner_id", using: :btree
   add_index "payments", ["payable_id", "payable_type"], name: "index_payments_on_payable_id_and_payable_type", using: :btree
@@ -3882,6 +3906,7 @@ ActiveRecord::Schema.define(version: 20160215092513) do
     t.text     "encrypted_response"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   add_index "webhooks", ["instance_id", "webhookable_id", "webhookable_type"], name: "index_webhooks_on_instance_id_and_webhookable", using: :btree

@@ -65,11 +65,8 @@ class ShippoTest < ActionView::TestCase
 
     order = FactoryGirl.create(:order_waiting_for_delivery, user: @user, service_fee_amount_guest_cents: 500, currency: 'USD')
 
-    order.line_items.map(&:variant).map(&:shipping_category).uniq.map(&:shipping_methods).flatten.compact.each { |shipping_method| shipping_method.destroy }
-
-    if no_categories
-      order.line_items.map(&:variant).map(&:shipping_category).uniq.each { |shipping_category| shipping_category.destroy }
-    end
+    Spree::ShippingMethod.destroy_all
+    Spree::ShippingCategory.destroy_all if no_categories
 
     package = Spree::Shipment.find_by(:order_id => order.id).to_package
 
@@ -159,31 +156,10 @@ class ShippoTest < ActionView::TestCase
 
       @order = FactoryGirl.create(:order_waiting_for_payment, user: @user, service_fee_amount_guest_cents: 500, currency: 'USD')
 
-      credit_card = stub('valid?' => true)
+      payment_mock = mock
+      payment_mock.expects(:paid?).returns(true)
+      Spree::Order.any_instance.stubs(:payment).returns(payment_mock)
 
-      @payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
-      authorize_response = { token: 'abc', payment_gateway: @payment_gateway }
-
-      ActiveMerchant::Billing::CreditCard.expects(:new).returns(credit_card)
-
-      PaymentGateway.any_instance.expects(:authorize).with do |amount, currency, credit_card|
-        amount == Money.new(155_00, 'USD') && credit_card == credit_card
-      end.returns(authorize_response)
-
-      credit_card = ActiveMerchant::Billing::CreditCard.new({})
-
-      assert credit_card.valid?
-      response = @payment_gateway.authorize(@order.total_amount, 'USD', credit_card)
-      assert !response[:error].present?
-
-      @payment = @order.create_payment(payment_method: @payment_gateway.payment_methods.first)
-
-      @payment.billing_authorizations.create(
-        token: response[:token],
-        success: true,
-        payment_gateway: @payment_gateway,
-        payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live"
-      )
       p = @order.payments.create(amount: @order.total_amount, company_id: @order.company_id)
 
       shipping_category = Spree::ShippingCategory.create!(
@@ -223,16 +199,6 @@ class ShippoTest < ActionView::TestCase
       assert_equal 'CG1234512345', shipping_method.order.shipments.first.shippo_tracking_number
       assert_equal 'http://usps.com/track?id=CG123123', shipping_method.order.shipments.first.shippo_label_url
 
-      payment = @order.reload.payments.first
-      assert_not_nil payment
-      assert_equal 155, payment.amount.to_i
-      assert_equal 'USD', payment.currency
-      assert_equal @order.company_id, payment.company_id
-      assert_equal @order.instance_id, payment.instance_id
-      assert_equal 'complete', @order.state
-      assert_not_nil @order.payment.successful_billing_authorization
-      assert_equal 'abc', @order.payment.successful_billing_authorization.token
-      assert_equal @payment_gateway, @order.payment.payment_gateway
     end
   end
 end

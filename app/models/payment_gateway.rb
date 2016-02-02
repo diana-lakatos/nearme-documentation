@@ -87,7 +87,7 @@ class PaymentGateway < ActiveRecord::Base
 
   # supported/unsuppoted class method definition in config/initializers/act_as_supported.rb
 
-  unsupported :payout, :recurring_payment, :any_country, :any_currency, :paypal_express_payment, :paypal_chain_payments,
+  unsupported :payout, :any_country, :any_currency, :paypal_express_payment, :paypal_chain_payments,
     :multiple_currency, :express_checkout_payment, :nonce_payment, :company_onboarding, :remote_paymnt,
     :recurring_payment, :credit_card_payment, :manual_payment, :remote_payment, :free_payment, :immediate_payout, :free_payment,
     :partial_refunds
@@ -311,6 +311,19 @@ class PaymentGateway < ActiveRecord::Base
     end
   end
 
+  def store(credit_card, instance_client)
+    options = { email: instance_client.client.email, default_card: true, customer: instance_client.customer_id }
+    gateway_store(credit_card, options)
+  end
+
+  def gateway_store(credit_card, options)
+    begin
+      gateway.store(credit_card, options)
+    rescue => e
+      OpenStruct.new({ success?: false, message: e.to_s })
+    end
+  end
+
   def store_credit_card(client, credit_card)
     return nil unless supports_recurring_payment?
 
@@ -405,7 +418,7 @@ class PaymentGateway < ActiveRecord::Base
     {}
   end
 
-  def custom_capture_options
+def custom_capture_options
     {}
   end
 

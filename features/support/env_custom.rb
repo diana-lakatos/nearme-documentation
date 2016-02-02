@@ -46,7 +46,7 @@ Before do
   PayPal::SDK::AdaptivePayments::API.any_instance.stubs(:pay).returns(OpenStruct.new(response.reverse_merge(paymentExecStatus: "COMPLETED")))
 
 
-  stub = OpenStruct.new(params: {
+  stub = OpenStruct.new(success?: true, params: {
     "object" => 'customer',
     "id" => 'customer_1',
     "cards" => {

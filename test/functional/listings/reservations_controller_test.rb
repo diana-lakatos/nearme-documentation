@@ -258,7 +258,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
         quantity: "1",
         payment_attributes: {
           payment_method_id: @payment_method.id,
-          credit_card_form: {
+          credit_card_attributes: {
             first_name: "Jan",
             last_name: "Kowalski",
             number: 4242424242424242,

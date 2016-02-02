@@ -12,8 +12,16 @@ class PaymentDecorator < Draper::Decorator
         alerts_container << I18n.t("decorators.payment.refund_failed")
       end
     end
+    alerts_container
+  end
 
-    alerts_container = []
+  def payment_methods
+    payment_gateways = PlatformContext.current.instance.payment_gateways(company.iso_country_code, currency)
+    if is_free?
+      payment_gateways.map(&:active_free_payment_methods)
+    else
+      payment_gateways.map(&:active_payment_methods)
+    end.flatten.uniq
   end
 
   def self.collection_decorator_class

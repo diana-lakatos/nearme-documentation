@@ -154,7 +154,7 @@ Spree::Order.class_eval do
     if self.payment
       self.payment.assign_attributes(payment_attributes)
     else
-      self.payment = build_payment(payment_attributes)
+      self.build_payment(payment_attributes)
     end
   end
 

@@ -11,7 +11,7 @@ FactoryGirl.define do
     payment_attributes {
       {
         payment_method: FactoryGirl.build(:credit_card_payment_method),
-        credit_card_form: FactoryGirl.attributes_for(:credit_card_form)
+        credit_card_attributes: FactoryGirl.attributes_for(:credit_card_attributes)
       }
     }
 
@@ -19,7 +19,7 @@ FactoryGirl.define do
        payment {
         {
           payment_method: FactoryGirl.build(:credit_card_payment_method),
-          credit_card_form: FactoryGirl.attributes_for(:failed_credit_card_form)
+          credit_card_attributes: FactoryGirl.attributes_for(:invalid_credit_card_attributes)
         }
       }
     end
