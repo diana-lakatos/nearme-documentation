@@ -850,10 +850,6 @@ en:
         currency_mark_and_separator: "Currency mark and separator"
         currency_decimal_mark: 'Currency decimal mark'
         currency_thousands_separator: 'Currency thousands separator'
-        displaying_modules_options: "Displaying modules options"
-        search_results_infinite_scroll: 'Search results infinite scroll'
-        random_suggested_products: 'Random suggested products'
-        search_results_table_layout: 'Search results table layout'
       commissions:
         commissions: "Commissions"
       tax_categories:

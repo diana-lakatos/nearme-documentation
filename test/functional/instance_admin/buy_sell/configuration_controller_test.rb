@@ -18,7 +18,6 @@ class InstanceAdmin::BuySell::ConfigurationControllerTest < ActionController::Te
       assert_select 'label', "Choose currency"
       assert_select 'h4', 'Currency symbol position'
       assert_select 'h4', 'Currency mark and separator'
-      assert_select 'h4', 'Displaying modules options'
     end
   end
 
@@ -27,9 +26,7 @@ class InstanceAdmin::BuySell::ConfigurationControllerTest < ActionController::Te
       update_hash = { "currency"=>"UYU",
                      "currency_symbol_position"=>"before",
                      "currency_decimal_mark"=>".",
-                     "currency_thousands_separator"=>",",
-                     "infinite_scroll"=>"false",
-                     "random_products_for_cross_sell"=>"true" }
+                     "currency_thousands_separator"=>"," }
       put :update, update_hash
       update_hash.each_pair do |k, v|
         assert_equal Spree::Config[k].to_s, v
