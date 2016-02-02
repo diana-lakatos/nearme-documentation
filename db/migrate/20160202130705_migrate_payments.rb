@@ -9,6 +9,7 @@ end
 class MigratePayments < ActiveRecord::Migration
 
   def up
+    Payment.reset_column_information
     Instance.all.each do |instance|
       instance.set_context!
 
