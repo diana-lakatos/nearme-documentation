@@ -179,7 +179,14 @@
       }
     }
   }
+}
 
+.customSelect {
+    position: relative;
+}
+
+.cart-item-list .customSelect i {
+    display: none;
 }
 
 .custom-select-dropdown-icon {

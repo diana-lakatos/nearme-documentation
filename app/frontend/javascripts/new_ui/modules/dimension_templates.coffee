@@ -39,6 +39,8 @@ module.exports = class DimensionTemplates
     return out
 
   initialize: ->
+    return unless @dimensions_templates_select.length > 0
+    @setDefaultOptionAsSelected()
     @updateDimensionsFieldsFromTemplates()
 
   toggle: (state)->
@@ -60,9 +62,14 @@ module.exports = class DimensionTemplates
 
       unit_selectize.setValue(new_elements[0])
 
-  updateDimensionsFieldsFromTemplates: ->
-    return unless @dimensions_templates_select.length > 0
+  setDefaultOptionAsSelected: ->
+    return unless $('form#product_form').data('new-record') && $('#product_errors_present').length == 0
+    for key in Object.keys(@dimensions_templates_select.get(0).selectize.options)
+      option = @dimensions_templates_select.get(0).selectize.options[key]
+      if option.template.use_as_default
+        @dimensions_templates_select.get(0).selectize.setValue(option.value)
 
+  updateDimensionsFieldsFromTemplates: ->
     current = @dimensions_templates_select.get(0).selectize.items[0]
     data_options = @dimensions_templates_select.get(0).selectize.options[current].template if current
 

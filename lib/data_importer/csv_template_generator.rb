@@ -22,7 +22,7 @@ class DataImporter::CsvTemplateGenerator < DataImporter::File
     (@include_user_fields ? static_fields(%i(user)) : []) + if @importable.custom_csv_fields.empty?
                                                               static_fields
     else
-      custom_fields(@importable.custom_csv_fields)
+      custom_fields(@importable.custom_csv_fields).compact
     end
   end
 

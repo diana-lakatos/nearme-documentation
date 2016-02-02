@@ -223,6 +223,7 @@ en:
         you_dont_have_set_up: "You don't have any Dimensions Templates set up yet. Create one now by clicking below."
         name: "Name"
         details: "Details"
+        default: "Default"
     nav:
       brand:
         open_marketplace: 'Open Marketplace'
@@ -293,6 +294,7 @@ en:
     downloads: 'Downloads'
     sales: 'Sales'
     save: "Save"
+    save_settings: "Save settings"
     delete: "Delete"
     destroy: "Destroy"
     versions: "Versions"
@@ -451,6 +453,8 @@ en:
           users: "Users"
           purchasers: "Purchasers"
           sellers_preference: "Sellers preference"
+      languages:
+        settings: "Settings"
     theme:
       info:
         title_and_description: "Title & Description"

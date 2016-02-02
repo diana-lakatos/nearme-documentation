@@ -49,6 +49,7 @@
     / Head Javascript
     = javascript_include_tag 'vendor/modernizr'
     = render 'shared/ckeditor_basepath'
+    = yield(:head_bottom)
 
   %body{class: (navigation_visible? ? 'navigation-visible' : nil ) }
 

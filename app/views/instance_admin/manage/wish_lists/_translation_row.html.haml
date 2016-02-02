@@ -3,7 +3,7 @@
 %input{type: 'hidden', name: "instance[translations_attributes][#{index}][instance_id]", value: @instance.id}
 %input{type: 'hidden', name: "instance[translations_attributes][#{index}][locale]", value: translation.locale}
 
-- if instance_translation = @instance.translations.find_by(key: translation.key)
+- if instance_translation = @instance.translations.find_by(key: translation.key, locale: 'en')
   %input.form-control{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: instance_translation.value, placeholder: translation.value}
   %input{type: 'hidden', name: "instance[translations_attributes][#{index}][_destroy]", value: 'false'}
   %input{type: 'hidden', name: "instance[translations_attributes][#{index}][id]", value: instance_translation.id}

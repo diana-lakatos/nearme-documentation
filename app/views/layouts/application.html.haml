@@ -48,6 +48,7 @@
 
     /[if lt IE 10]
       = javascript_include_tag 'vendor/placeholder'
+    = yield(:head_bottom)
 
   %body{class: theme_class(@theme_name)}
     = yield(:body_top)

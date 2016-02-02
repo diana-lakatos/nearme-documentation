@@ -10,4 +10,10 @@
   </p>
 {% endif %}
 
+{% if data_upload.sanitized_encountered_error != blank %}
+  <p>
+    Encountered errors log:
+    {{ data_upload.sanitized_encountered_error | raw_escape_string }}
+  </p>
+{% endif %}
 

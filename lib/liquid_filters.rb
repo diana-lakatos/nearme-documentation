@@ -276,4 +276,10 @@ module LiquidFilters
   def make_html_safe(html = '')
     html.html_safe
   end
+
+  # Escape html; this is useful if you want to skip
+  # using the CustomSanitizer that is applied normally
+  def raw_escape_string(value)
+    CGI::escapeHTML(value.to_s).html_safe
+  end
 end

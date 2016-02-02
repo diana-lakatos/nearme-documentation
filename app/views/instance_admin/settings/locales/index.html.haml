@@ -36,6 +36,17 @@
                 = link_to edit_instance_admin_settings_locale_path(locale) do
                   .fa.fa-edit.fa-2x.inline-form-icon.pull-right
 
+.content-container
+  %h4
+    = t('instance_admin.settings.languages.settings')
+  = simple_nested_form_for @instance, :url => locales_settings_update_instance_admin_settings_locales_path, :html => { :multipart => true, data: { 'data-edit-language-settings-form' => 1 }, method: :post } do |f|
+    .row
+      .input-container.col-xs-12
+        = f.input :enable_language_selector, as: :boolean, inline_label: true
+    .row
+      .input-container.col-xs-12
+        = f.submit t('instance_admin.save_settings'), class: 'btn btn-blue pull-right'
+
 = content_for :header_buttons do
   = link_to t('instance_admin.locales.buttons.new_key'), new_key_instance_admin_settings_locales_path,
       class: 'btn btn-blue pull-right'
