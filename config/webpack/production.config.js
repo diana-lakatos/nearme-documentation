@@ -21,7 +21,5 @@ config.plugins.push(
   }),
   new webpack.optimize.OccurenceOrderPlugin(),
   new WebpackMd5Hash(),
-  new webpack.optimize.UglifyJsPlugin({
-    sourceMap: false
-  })
+  new webpack.optimize.UglifyJsPlugin()
 );
