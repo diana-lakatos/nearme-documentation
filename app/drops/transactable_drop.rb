@@ -152,7 +152,7 @@ class TransactableDrop < BaseDrop
 
   # returns the url to the first image for this listing, or, if missing, the url to a placeholder image
   def photo_url
-    @transactable.photos.first.try(:image_url, :space_listing).presence || image_url(Placeholder.new(:width => 410, :height => 254).path).to_s
+    photos.try(:first).try(:[],:space_listing) || image_url(Placeholder.new(:width => 410, :height => 254).path).to_s
   end
 
   # returns a string of the type "From $currency_amount / period"

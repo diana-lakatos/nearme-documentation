@@ -28,7 +28,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location
       order_ids = location_ids
       filtered_listings = Transactable.where(id: locations.values.flatten)
     end
-    @results = ::Location.includes(:location_address, :company, listings: [:service_type, :photos]).
+    @results = ::Location.includes(:location_address, :company, listings: [:service_type]).
       where(id: location_ids).order_by_array_of_ids(order_ids).
       merge(filtered_listings)
   end
