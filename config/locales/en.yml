@@ -223,6 +223,7 @@ en:
         you_dont_have_set_up: "You don't have any Dimensions Templates set up yet. Create one now by clicking below."
         name: "Name"
         details: "Details"
+        default: "Default"
     nav:
       brand:
         open_marketplace: 'Open Marketplace'
