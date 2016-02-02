@@ -143,6 +143,20 @@ class PaymentGateway < ActiveRecord::Base
     ActiveModel::Name.new(PaymentGateway)
   end
 
+  def self.validate_settings(payment_gateway, attribute, value)
+    if payment_gateway.send(attribute.to_s.gsub('settings', 'active?'))
+      value.each do |key, value|
+        next if payment_gateway.class.settings[key.to_sym].blank?
+        payment_gateway.class.settings[key.to_sym][:validate].each do |validation|
+          case validation
+          when :presence
+            payment_gateway.errors.add(attribute, ": #{key.capitalize.gsub('_id', '')} can't be blank!") if value.blank?
+          end
+        end
+      end if value.present?
+    end
+  end
+
   #- END CLASS METHODS
 
   def authorize(payment, options = {})
@@ -346,10 +360,6 @@ class PaymentGateway < ActiveRecord::Base
 
   protected
 
-  def check_if_account_changed
-
-  end
-
   def void_merchant_accounts
     mearchant_accounts.each { |ma| ma.void! }
   end
@@ -399,20 +409,6 @@ class PaymentGateway < ActiveRecord::Base
   # Callback invoked by processor when payout is pending
   def payout_pending(response)
     @payout.payout_pending(response)
-  end
-
-  def self.validate_settings(payment_gateway, attribute, value)
-    if payment_gateway.send(attribute.to_s.gsub('settings', 'active?'))
-      value.each do |key, value|
-        next if payment_gateway.class.settings[key.to_sym].blank?
-        payment_gateway.class.settings[key.to_sym][:validate].each do |validation|
-          case validation
-          when :presence
-            payment_gateway.errors.add(attribute, ": #{key.capitalize.gsub('_id', '')} can't be blank!") if value.blank?
-          end
-        end
-      end if value.present?
-    end
   end
 end
 

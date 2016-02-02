@@ -11,16 +11,16 @@
     %table.payment-summary
       %tbody
         %tr
-          %th= t 'dashboard.payments.total'
+          %th= t('dashboard.payments.total')
           %td= humanized_money_with_cents_and_symbol(@payment.total_amount)
 
         %tr
-          %th= t 'dashboard.payments.service_fee'
+          %th= t('dashboard.payments.service_fee')
           %td= humanized_money_with_cents_and_symbol(@payment.total_service_fee)
 
         %tr
-          %th= t 'dashboard.payments.state'
-          %td= @payment.state.capitalize
+          %th= t('dashboard.payments.state')
+          %td= t("dashboard.payments.states.#{@payment.state}")
 
     - if @payment.authorized?
       %p= link_to t("dashboard.payments.capture"), capture_dashboard_company_orders_received_payment_path(@order, @payment), class: 'btn btn-warning', method: :post

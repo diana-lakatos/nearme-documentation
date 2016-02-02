@@ -151,11 +151,8 @@ Spree::Order.class_eval do
   end
 
   def payment=(payment_attributes)
-    if payment
-      payment.assign_attributes(payment_attributes)
-    else
-      build_payment(payment_attributes)
-    end
+    payment ||= build_payment
+    payment.assign_attributes(payment_attributes)
   end
 
   def create_payment(payment_attributes={})

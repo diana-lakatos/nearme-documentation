@@ -1348,6 +1348,12 @@ en:
       refunded_at: "Refunded at:"
       refund: 'Refund'
       capture: 'Capture'
+      states:
+        pending: "Pending"
+        authorized: "Authorized"
+        paid: "Paid"
+        voided: "Voided"
+        refunded: "Refunded"
 
     host_reservations:
       booked: 'booked'

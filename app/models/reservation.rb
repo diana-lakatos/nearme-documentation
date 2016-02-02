@@ -500,10 +500,6 @@ class Reservation < ActiveRecord::Base
     PaymentVoidJob.perform(payment.id)
   end
 
-  # def schedule_payment_capture
-  #   ReservationPaymentCaptureJob.perform_later(date + first_period.start_minute.minutes - recurring_booking.hours_before_reservation_to_charge.hours, self.id)
-  # end
-
   # ----- SETTERS ---------
   def set_currency
     self.currency ||= listing.try(:currency)

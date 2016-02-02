@@ -12,15 +12,15 @@
   .divider
 
   .row
-    .col-md-3= t 'dashboard.payments.total'
+    .col-md-3= t('dashboard.payments.total')
     .col-md-4= humanized_money_with_cents_and_symbol(@payment.total_amount)
 
   .row
-    .col-md-3= t 'dashboard.payments.service_fee'
+    .col-md-3= t('dashboard.payments.service_fee')
     .col-md-4= humanized_money_with_cents_and_symbol(@payment.total_service_fee)
 
   .row
-    .col-md-3= t 'dashboard.payments.state'
-    .col-md-4= @payment.state.capitalize
+    .col-md-3= t('dashboard.payments.state')
+    .col-md-4= t("dashboard.payments.states.#{@payment.state}")
 
   .clearfix

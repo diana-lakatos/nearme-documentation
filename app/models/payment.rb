@@ -4,8 +4,6 @@ class Payment < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  # include Chargeable
-
   attr_accessor :express_checkout_redirect_url, :payment_response_params, :payment_method_nonce, :customer
 
   # === Associations
