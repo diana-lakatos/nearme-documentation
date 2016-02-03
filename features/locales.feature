@@ -34,17 +34,4 @@ Feature: Marketplace can be multi-lingual
     Then I should see "Log In"
     And I reload page without language parameter
     Then I should see "Log In"
-
-  Scenario: User can set his own language
-    Given a user exists
-    And I am logged in as the user
-    And I am on the home page
-    And I should see "Messages"
-    Then the user sets his language preferences to "cs"
-    And I am on the home page
-    Then Language should be "cs"
-    And I should see "Zprávy"
-    Then the user sets his language preferences to "pl"
-    And I am on the home page
-    Then Language should be "pl"
-    Then I should see "Wiadomości"
+     

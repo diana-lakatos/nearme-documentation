@@ -14,5 +14,5 @@
       = render partial: 'support/ticket_messages/ticket_message', collection: @ticket.messages, spacer_template: 'support/ticket_messages/spacer'
 
       -if @ticket.open?
-        = render partial: 'support/ticket_messages/form', locals: { ticket: @ticket, message: @message, with_close: false, form_url: support_ticket_ticket_messages_path(@ticket, @message) }
+        = render partial: 'support/ticket_messages/form', locals: { ticket: @ticket, message: @message, with_close: false, form_url: support_ticket_ticket_messages_path(@ticket) }
 
