@@ -1,16 +1,4 @@
 namespace :reprocess do
-  desc "Reprocess all of the instance's themes"
-  task :css => :environment do
-    Theme.find_each do |i|
-      begin
-        i.recompile
-        puts "Reprocessed Instance Theme ##{i.id} CSS successfully"
-      rescue
-        puts "Reprocessing Instance Theme ##{i.id} CSS failed: #{$!.inspect}"
-      end
-    end
-  end
-
   desc "Reprocess all the photos"
   task :photos => :environment do
     Photo.find_each do |p|
