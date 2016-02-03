@@ -36,12 +36,14 @@ class MigratePayments < ActiveRecord::Migration
             payment_method: PaymentGateway::ManualPaymentGateway.first.payment_methods.manual.first,
             state: 'pending',
           )
+          payment.currency ||= 'USD'
           payment.save!
         elsif reservation.old_payment_method == 'remote' && PaymentGateway::FetchPaymentGateway.any? && PaymentGateway::FetchPaymentGateway.first.payment_methods.first
           payment = reservation.build_payment(
             payment_method: PaymentGateway::FetchPaymentGateway.first.payment_methods.first,
             state: 'pending',
           )
+          payment.currency ||= 'USD'
           payment.save!
         else
           payment = reservation.build_payment(state: 'pending')
