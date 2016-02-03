@@ -4,7 +4,6 @@
 require('expose?$!expose?jQuery!jquery');
 require('expose?_!underscore');
 require('jquery-ujs/src/rails');
-require('spectrum/spectrum');
 require('../vendor/jquery-ui-1.9.2.custom.min');
 require('../vendor/bootstrap-3.2.0');
 require('../vendor/nested_form');
@@ -557,6 +556,17 @@ require('jquery-timeago');
             './ckeditor/config'
         ], function(require){
             var CKEDITOR = require('./ckeditor/config');
+        });
+    });
+
+    DNM.registerInitializer(function(){
+        var els = $('input[type="color"]');
+        if (els.length === 0) {
+            return;
+        }
+
+        require.ensure('spectrum/spectrum', function(require){
+            require('spectrum/spectrum');
         });
     });
 

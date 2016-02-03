@@ -19,7 +19,7 @@
   %p.select-label
     = t('dashboard.reviews.feedback.see_reviews_from')
   .select-container
-    %select.reviews-select
+    %select.reviews-select.unstyled-select
       %option{value: Review::LAST_30_DAYS, selected: period_selected?(Review::LAST_30_DAYS)}
         = t('dashboard.reviews.feedback.last_30_days')
       %option{value: Review::LAST_6_MONTHS, selected: period_selected?(Review::LAST_6_MONTHS)}
