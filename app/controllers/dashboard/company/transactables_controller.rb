@@ -118,12 +118,8 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def destroy
-    @transactable.reservations.each do |r|
-      r.perform_expiry!
-    end
-    @transactable.destroy
-    event_tracker.updated_profile_information(current_user)
-    event_tracker.deleted_a_listing(@transactable)
+    TransactableDestroyerService.new(@transactable, event_tracker, current_user).destroy
+
     flash[:deleted] = t('flash_messages.manage.listings.listing_deleted')
     redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
   end

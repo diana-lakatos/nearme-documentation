@@ -15,24 +15,6 @@ Feature: A user can search for a listing
     Then I see a search result for the Auckland listing
     And I do not see a search result for the Adelaide listing
 
-  Scenario: Switching search engine type should not affect the search results
-    Given a listing in Auckland exists
-    And a listing in Adelaide exists
-    And I am on the home page
-    When I search for "Adelaide"
-    And I make another search for "Auckland"
-    And I leave the page and hit back
-    Then I see a search result for the Auckland listing
-    And I do not see a search result for the Adelaide listing
-    Given Elasticsearch is turned OFF
-    Given a listing in Auckland exists
-    And a listing in Adelaide exists
-    And I am on the home page
-    When I search for "Auckland"
-    And I make another search for "Auckland"
-    Then I see a search result for the Auckland listing
-    And I do not see a search result for the Adelaide listing
-
   Scenario: Displaying no results found when searching for nonexisting product.
     Given the user exists
     And the product_type exists
