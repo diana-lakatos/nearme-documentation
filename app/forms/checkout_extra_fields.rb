@@ -5,8 +5,10 @@ class CheckoutExtraFields < Form
   def initialize(user, attributes)
     # ugly fix for custom properties issue
     # otherwise it can't save the object
-    @user = User.find(user.id) if user.present?
-    @user.try(:skip_validations_for=, [:seller])
+    if user.present?
+      @user = User.find(user.id)
+      @user.try(:skip_validations_for=, [:seller])
+    end
     @attributes = attributes
     @secured_params = SecuredParams.new
     @all_attachments_present = true
