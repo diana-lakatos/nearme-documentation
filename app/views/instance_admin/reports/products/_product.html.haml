@@ -3,3 +3,5 @@
   %td= product.name
   %td= product.description.to_s.truncate(100)
   %td= product.extra_properties.to_h.to_s.truncate(100)
+  %td
+    = link_to t('instance_admin.delete'), instance_admin_reports_product_path(product.id), method: :delete, data: { confirm: t('instance_admin.are_you_sure') }
