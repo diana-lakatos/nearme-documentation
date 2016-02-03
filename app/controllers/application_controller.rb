@@ -469,7 +469,7 @@ class ApplicationController < ActionController::Base
   end
 
   def details_for_lookup
-    set_locale if session[:language]
+    set_locale if @locale_service.nil?
     {
       :instance_id => PlatformContext.current.try(:instance).try(:id),
       :i18n_locale => I18n.locale,
