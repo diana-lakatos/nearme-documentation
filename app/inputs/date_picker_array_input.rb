@@ -1,6 +1,6 @@
 class DatePickerArrayInput < SimpleForm::Inputs::TextInput
 
-  def input
+  def input(wrapper_options)
     Array(object.public_send(attribute_name)).map do |array_el|
       removable_field do
         object.date = array_el

@@ -29,6 +29,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     # to USD with currency rate 100 - 1. So we want to make sure that currency is assigned.
     @transactable.currency = transactable_params[:currency] if transactable_params[:currency].present?
     @transactable.assign_attributes(transactable_params)
+    @transactable.availability_template = @transactable_type.default_availability_template unless transactable_params.has_key? "availability_template_id"
     @transactable.company = @company
     @transactable.location ||= @company.locations.first if @transactable_type.skip_location?
     @transactable.attachment_ids = attachment_ids_for(@transactable)

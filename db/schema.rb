@@ -3482,6 +3482,7 @@ ActiveRecord::Schema.define(version: 20160202130705) do
     t.string   "timezone_rule",                                                                  default: "location"
     t.boolean  "action_weekly_subscription_booking"
     t.boolean  "action_monthly_subscription_booking"
+    t.integer  "default_availability_template_id"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

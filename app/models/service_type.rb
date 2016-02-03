@@ -2,13 +2,14 @@ class ServiceType < TransactableType
   acts_as_paranoid
 
   MAX_PRICE = 2147483647
-  BOOKING_TYPES = %w(regular overnight recurring schedule subscription).freeze
+  BOOKING_TYPES = %w(regular overnight schedule subscription recurring).freeze
   SEARCH_VIEWS = %w(mixed list listing_mixed)
 
   attr_accessor :enable_cancellation_policy
 
   has_many :transactables, dependent: :destroy, foreign_key: 'transactable_type_id'
   has_many :availability_templates, dependent: :destroy, foreign_key: 'transactable_type_id'
+  belongs_to :default_availability_template, class_name: 'AvailabilityTemplate'
 
   has_one :schedule, as: :scheduable, dependent: :destroy
   accepts_nested_attributes_for :schedule
