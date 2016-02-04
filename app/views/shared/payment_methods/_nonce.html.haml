@@ -31,7 +31,9 @@
               $(".submit-payment").show()
             },
             onCancelled: function (payload) {
-              $(".submit-payment").hide()
+              if ($('#paypal-button').parents('.accordion-body').hasClass('in')) {
+                $(".submit-payment").hide();
+              }
             },
           });
         }
