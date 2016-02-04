@@ -22,7 +22,7 @@ class PaymentGateway::FetchPaymentGatewayTest < ActiveSupport::TestCase
     end
     @reservation.reload
 
-    assert_equal "paid", @reservation.payment_status
+    assert @reservation.paid?
     assert_equal Payment.last, @reservation.payment
     assert_equal Charge.last, @charge = @reservation.payment.charges.last
     assert_equal true, @charge.success
@@ -39,7 +39,7 @@ class PaymentGateway::FetchPaymentGatewayTest < ActiveSupport::TestCase
       @reservation.charge_and_confirm!
     end
     @reservation.reload
-    assert_equal "authorized", @reservation.payment_status
+    assert @reservation.payment.authorized?
     @charge = @reservation.payment.charges.last
     refute @charge.success
     assert_equal FAILED_FETCH_RESPONSE, @charge.response

@@ -29,6 +29,18 @@ FactoryGirl.define do
       after(:build) do |reservation|
         reservation.payment ||= FactoryGirl.build(:authorized_payment, payable: reservation)
       end
+
+      factory :expired_reservation do
+        after(:create) do |reservation|
+          reservation.expire!
+          reservation.periods.reverse.each_with_index do |period, i|
+            period.date = Date.yesterday - i.days
+            period.save!
+          end
+          reservation.save!
+        end
+      end
+
     end
 
     factory :confirmed_reservation do
@@ -37,6 +49,16 @@ FactoryGirl.define do
 
       after(:build) do |reservation|
         reservation.payment ||= FactoryGirl.build(:paid_payment, payable: reservation)
+      end
+
+      factory :past_reservation do
+        after(:create) do |reservation|
+          reservation.periods.reverse.each_with_index do |period, i|
+            period.date = Date.yesterday - i.days
+            period.save!
+          end
+          reservation.save!
+        end
       end
     end
 
@@ -70,8 +92,11 @@ FactoryGirl.define do
         end
 
         factory :future_unconfirmed_reservation do
-          after(:create) do |reservation|
-            reservation.mark_as_authorized!
+          state 'unconfirmed'
+          payment_status 'authorized'
+          expire_at { Time.zone.now.next_week.to_date }
+          after(:build) do |reservation|
+            reservation.payment ||= FactoryGirl.build(:authorized_payment, payable: reservation)
           end
 
           factory :future_confirmed_reservation do
@@ -80,30 +105,6 @@ FactoryGirl.define do
             end
           end
 
-        end
-      end
-
-      factory :expired_reservation do
-        after(:create) do |reservation|
-          reservation.mark_as_authorized!
-          reservation.expire!
-          reservation.periods.reverse.each_with_index do |period, i|
-            period.date = Date.yesterday - i.days
-            period.save!
-          end
-          reservation.save!
-        end
-      end
-
-      factory :past_reservation do
-        after(:create) do |reservation|
-          reservation.mark_as_authorized!
-          reservation.confirm!
-          reservation.periods.reverse.each_with_index do |period, i|
-            period.date = Date.yesterday - i.days
-            period.save!
-          end
-          reservation.save!
         end
       end
 

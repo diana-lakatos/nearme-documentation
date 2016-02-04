@@ -64,7 +64,7 @@ class PaymentAuthorizer
     )
     if @authorizable.instance_of?(Spree::Order)
       @authorizable.create_pending_payment!
-    else
+    elsif @authorizable.instance_of?(Reservation)
       @authorizable.activate!
     end
     @payment.mark_as_authorized!

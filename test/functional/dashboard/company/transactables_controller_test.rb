@@ -234,8 +234,8 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
       setup do
         @reservation1 = FactoryGirl.create(:reservation, listing: @transactable)
         @reservation2 = FactoryGirl.create(:reservation, listing: @transactable)
-        @reservation1.mark_as_authorized
-        @reservation2.mark_as_authorized
+        @reservation1.activate
+        @reservation2.activate
       end
 
       should 'notify guest about reservation expiration when listing is deleted' do
