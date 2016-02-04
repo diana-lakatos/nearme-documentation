@@ -87,7 +87,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
       value = lookup_for_primary_locale_default_key(key) if value.blank?
       # Fallback to english as a last resort
       if value.blank? && locale != :en && self.default_locale != :en
-        value = lookup_for_key(:en, key)
+        value = lookup_for_instance_key(:en, key)
         value = lookup_for_default_key(:en, key) if value.blank?
       end
     end
