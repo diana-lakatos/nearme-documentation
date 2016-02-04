@@ -728,7 +728,7 @@ en:
         new_attribute: "New Attribute"
         edit_attribute: "Edit Attribute"
         add_attribute: 'Add Attribute'
-        valid_values_separate_with_comma: 'Valid values (separate with coma)'
+        valid_values_separate_with_comma: 'Valid values (separate with comma)'
         input_html_options: 'Input Html Options(key1 => value1, key2 => value2)'
         wrapper_html_options: 'Wrapper Html Options(key1 => value1, key2 => value2)'
       form_components:
@@ -790,6 +790,7 @@ en:
         inclusion: "Inclusion"
         numericality: "Numericality"
         add_validator: 'Add Validator'
+        valid_values_separate_with_comma: 'Valid values (separate with comma)'
       categories:
         right_click_a_child_in_the_tree: "Right click a child in the tree to access the menu for adding, deleting or sorting a child."
         categories: 'Categories'
