@@ -92,9 +92,9 @@ class Listings::ReservationsController < ApplicationController
   end
 
   def cancel_express_checkout
-    reservation = Reservation.find_by_express_token!(params[:token])
-    reservation.mark_as_authorize_failed!
+    payment = Payment.find_by_express_token!(params[:token])
     flash[:error] = t('flash_messages.reservations.booking_failed')
+    reservation = payment.payable
     redirect_to location_listing_path(reservation.listing.location, reservation.listing), status: 301
   end
 
