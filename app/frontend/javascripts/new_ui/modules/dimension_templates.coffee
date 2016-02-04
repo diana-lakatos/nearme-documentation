@@ -40,10 +40,10 @@ module.exports = class DimensionTemplates
 
   initialize: ->
     return unless @dimensions_templates_select.length > 0
-    @setDefaultOptionAsSelected()
     interval = window.setInterval(()=>
       if @dimensions_templates_select.get(0).selectize
         window.clearInterval(interval)
+        @setDefaultOptionAsSelected()
         @updateDimensionsFieldsFromTemplates()
     , 50)
 
@@ -67,7 +67,7 @@ module.exports = class DimensionTemplates
       unit_selectize.setValue(new_elements[0])
 
   setDefaultOptionAsSelected: ->
-    return unless $('form#product_form').data('new-record') && $('#product_errors_present').length == 0
+    return unless @container.parents('form').attr('method') == 'post' && $('#product_errors_present').length == 0
     for key in Object.keys(@dimensions_templates_select.get(0).selectize.options)
       option = @dimensions_templates_select.get(0).selectize.options[key]
       if option.template.use_as_default
