@@ -6,6 +6,7 @@ class Refund < ActiveRecord::Base
   scoped_to_platform_context
 
   scope :successful, -> { where(:success => true) }
+  scope :failed, -> { where(:success => false) }
   belongs_to :payment
   belongs_to :payment_gateway
 

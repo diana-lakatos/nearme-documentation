@@ -41,7 +41,7 @@ html, body {
 
 .footer-wrapper {
   margin-top: -$footer-height;
-  padding: 0;
+  box-sizing: border-box;
   min-height: $footer-height;
   position: absolute;
   bottom: 0;

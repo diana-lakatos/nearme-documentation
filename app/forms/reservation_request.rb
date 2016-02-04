@@ -1,25 +1,14 @@
 class ReservationRequest < Form
 
-  include Payable
-
   attr_accessor :dates, :start_minute, :end_minute, :book_it_out, :exclusive_price, :guest_notes,
-    :card_number, :card_exp_month, :card_exp_year, :card_code, :card_holder_first_name,
-    :card_holder_last_name, :payment_method_nonce, :waiver_agreement_templates, :documents,
-    :checkout_extra_fields, :express_checkout_redirect_url, :mobile_number, :delivery_ids,
-    :delivery_type
-  attr_reader   :reservation, :listing, :location, :user, :client_token, :payment_method_nonce
+    :waiver_agreement_templates, :documents, :checkout_extra_fields, :mobile_number, :delivery_ids,
+    :delivery_type, :total_amount_check
+  attr_reader   :reservation, :listing, :location, :user, :client_token, :payment
 
-  delegate :confirm_reservations?, :location, :billing_authorizations, :company, :timezone, to: :@listing
+  delegate :confirm_reservations?, :location, :company, :timezone, to: :@listing
   delegate :country_name, :country_name=, :country, to: :@user
-  delegate :guest_notes, :quantity, :quantity=, :action_hourly_booking?, :reservation_type=,
-    :credit_card_payment?, :manual_payment?, :remote_payment?, :nonce_payment?, :currency, :create_billing_authorization,
-    :express_token, :express_token=, :express_payer_id, :service_fee_amount_guest,
-    :additional_charges, :merchant_subject, :shipments,
-    :shipments_attributes=, :payment_method=, :payment_method, :payment_method_id, :billing_authorization,
-    :total_service_amount, :total_amount, :shipping_amount, :tax_amount, :mark_as_authorized!, :mark_as_authorize_failed!,
-    :mark_as_paid!, to: :@reservation
-
-  before_validation :build_documents, :if => lambda { reservation.present? && documents.present? }
+  delegate :guest_notes, :quantity, :action_hourly_booking?, :reservation_type=, :currency,
+    :service_fee_amount_guest, :additional_charges, :shipments, :shipments_attributes=, to: :@reservation
 
   validates :listing,      presence: true
   validates :reservation,  presence: true
@@ -28,17 +17,17 @@ class ReservationRequest < Form
 
   validate :validate_acceptance_of_waiver_agreements
   validate :validate_reservation
-  validate :validate_credit_card, if: lambda { reservation.present? && reservation.credit_card_payment? }
   validate :validate_empty_files, if: lambda { reservation.present? }
+  validate :validate_total_amount
 
-  def initialize(listing, user, platform_context, attributes = {}, checkout_extra_fields = {})
+  def initialize(listing, user, attributes = {}, checkout_extra_fields = {})
     @listing = listing
     @waiver_agreement_templates = []
     @checkout_extra_fields = CheckoutExtraFields.new(user, checkout_extra_fields)
     @user = @checkout_extra_fields.user
+
     if @listing
       @reservation = @listing.reservations.build
-      @instance = platform_context.instance
       @reservation.currency = @listing.currency
       @reservation.time_zone = timezone
       @reservation.company = @listing.company
@@ -48,21 +37,26 @@ class ReservationRequest < Form
         @reservation.exclusive_price_cents = @listing.exclusive_price_cents
         attributes[:quantity] = @listing.quantity # ignore user's input, exclusive is exclusive - full quantity
       end
-      @client_token = payment_gateway.try(:client_token)
+
       @reservation.user = user
       @reservation.build_additional_charges(attributes)
       @reservation = @reservation.decorate
       attributes = update_shipments(attributes)
+
+      build_return_shipment
+
+      if @user
+        @user.phone ||= @user.mobile_number
+      end
+
       store_attributes(attributes)
+      @reservation.calculate_prices
+      @payment ||= @reservation.build_payment
     end
-    build_return_shipment
+  end
 
-    if @user
-      @user.phone ||= @user.mobile_number
-      @card_holder_first_name ||= @user.first_name
-      @card_holder_last_name ||= @user.last_name
-    end
-
+  def dates=dates
+    @dates = dates
     if @listing
       if @reservation.action_hourly_booking? || @listing.schedule_booking?
         @start_minute = start_minute.try(:to_i)
@@ -72,7 +66,7 @@ class ReservationRequest < Form
         @end_minute   = nil
       end
 
-      if listing.schedule_booking?
+      if @listing.schedule_booking?
         if @dates.is_a?(String)
           timestamp = Time.at(@dates.to_i).in_time_zone(@listing.timezone)
           @start_minute = timestamp.try(:min).to_i + (60 * timestamp.try(:hour).to_i)
@@ -92,38 +86,15 @@ class ReservationRequest < Form
     end
   end
 
-  def express_return_url
-    PlatformContext.current.decorate.build_url_for_path("/listings/#{self.listing.to_param}/reservations/return_express_checkout")
-  end
-
-  def express_cancel_return_url
-    PlatformContext.current.decorate.build_url_for_path("/listings/#{self.listing.to_param}/reservations/cancel_express_checkout")
-  end
-
-  def credit_card
-    @credit_card ||= ActiveMerchant::Billing::CreditCard.new(
-      first_name: card_holder_first_name.to_s,
-      last_name: card_holder_last_name.to_s,
-      number: card_number.to_s,
-      month: card_exp_month.to_s,
-      year: card_exp_year.to_s,
-      verification_value: card_code.to_s
-    )
+  def quantity=(qty)
+    reservation.quantity = qty.presence || 1
   end
 
   def process
     @checkout_extra_fields.assign_attributes! if @checkout_extra_fields.are_fields_present?
     @checkout_extra_fields.valid?
     @checkout_extra_fields.errors.full_messages.each { |m| add_error(m, :base) }
-    clear_errors(:cc)
-    if @checkout_extra_fields.valid? && valid? && payment_gateway.authorize(self)
-      if !payment_gateway.supports_recurring_payment? || @reservation.credit_card_id = payment_gateway.store_credit_card(user, credit_card)
-        return save_reservation
-      else
-        add_error(I18n.t('reservations_review.errors.internal_payment', :cc))
-      end
-    end
-    false
+    !!(@checkout_extra_fields.valid? && valid? && @payment.authorize && save_reservation)
   end
 
   def reservation_periods
@@ -141,16 +112,8 @@ class ReservationRequest < Form
     attributes
   end
 
-  def is_free?
-    @listing.try(:action_free_booking?) && additional_charges.blank?
-  end
-
   def with_delivery?
-    PlatformContext.current.instance.shippo_enabled? && (@listing.rental_shipping_type == 'delivery' || (@listing.rental_shipping_type == 'both' && delivery_type == 'delivery'))
-  end
-
-  def line_items
-    [@reservation]
+    current_instance.shippo_enabled? && (@listing.rental_shipping_type == 'delivery' || (@listing.rental_shipping_type == 'both' && delivery_type == 'delivery'))
   end
 
   def get_shipping_rates
@@ -180,12 +143,6 @@ class ReservationRequest < Form
     @transactable_type ||= reservation.listing.transactable_type
   end
 
-  def payment_method_nonce=(token)
-    return false if token.blank?
-    @payment_method_nonce = token
-    @reservation.payment_method = payment_method
-  end
-
   def user_has_mobile_phone_and_country?
     user && user.country_name.present? && user.mobile_number.present?
   end
@@ -195,7 +152,7 @@ class ReservationRequest < Form
     User.transaction do
       checkout_extra_fields.save! if checkout_extra_fields.are_fields_present?
       set_cancellation_policy
-      reservation.save!
+      @reservation.save!
     end
   rescue ActiveRecord::RecordInvalid => error
     add_errors(error.record.errors.full_messages)
@@ -205,13 +162,13 @@ class ReservationRequest < Form
   def set_cancellation_policy
     if transactable_type.cancellation_policy_enabled.present?
       reservation.cancellation_policy_hours_for_cancellation = transactable_type.cancellation_policy_hours_for_cancellation
-      if payment_gateway.supports_partial_refunds?
+      if payment.payment_gateway.supports_partial_refunds?
         reservation.cancellation_policy_penalty_percentage = transactable_type.cancellation_policy_penalty_percentage
       end
     end
   end
 
-  def build_documents
+  def documents_attributes=(documents)
     documents.each do |document|
       document_requirement_id = document.try(:fetch, 'payment_document_info_attributes', nil).try(:fetch, 'document_requirement_id', nil)
       document_requirement = DocumentRequirement.find_by(id: document_requirement_id)
@@ -236,8 +193,8 @@ class ReservationRequest < Form
 
   def build_document document_params
     if reservation.listing.document_requirements.blank? &&
-        PlatformContext.current.instance.documents_upload_enabled? &&
-        !PlatformContext.current.instance.documents_upload.is_vendor_decides?
+        current_instance.documents_upload_enabled? &&
+        !current_instance.documents_upload.is_vendor_decides?
 
       document_params.delete :payment_document_info_attributes
       document_params[:user_id] = @user.id
@@ -270,6 +227,10 @@ class ReservationRequest < Form
     end
   end
 
+  def payment=(attributes)
+    @payment = @reservation.build_payment(attributes)
+  end
+
   def remove_empty_optional_documents
     if reservation.payment_documents.present?
       reservation.payment_documents.each do |document|
@@ -280,20 +241,12 @@ class ReservationRequest < Form
     end
   end
 
-  def active_merchant_payment?
-    reservation.credit_card_payment? || reservation.nonce_payment?
-  end
-
   def validate_acceptance_of_waiver_agreements
     return if @reservation.nil?
     @reservation.assigned_waiver_agreement_templates.each do |wat|
       wat_id = wat.id
       self.send(:add_error, I18n.t('errors.messages.accepted'), "waiver_agreement_template_#{wat_id}") unless @waiver_agreement_templates.include?("#{wat_id}")
     end
-  end
-
-  def validate_credit_card
-    errors.add(:cc, I18n.t('buy_sell_market.checkout.invalid_cc')) unless credit_card.valid?
   end
 
   def validate_reservation
@@ -310,6 +263,16 @@ class ReservationRequest < Form
 
   def validate_user
     errors.add(:user) if @user.blank? || !@user.valid?
+  end
+
+  def validate_total_amount
+    if @reservation.present? && self.total_amount_check.present? && @reservation.total_amount.cents != self.total_amount_check.to_i
+      errors.add(:base, I18n.t("activemodel.errors.models.reservation_request.attributes.base.total_amount_changed"))
+    end
+  end
+
+  def current_instance
+    @current_instance ||= PlatformContext.current.instance
   end
 
 end

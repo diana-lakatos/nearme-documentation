@@ -7,7 +7,7 @@ class DocumentsUpload < ActiveRecord::Base
 
   REQUIREMENTS = [:mandatory, :optional, :vendor_decides]
 
-  belongs_to :instance  
+  belongs_to :instance
 
   validates_presence_of :requirement
 

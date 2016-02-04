@@ -10,7 +10,7 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
     if @reservation.confirmed?
       flash[:warning] = t('flash_messages.manage.reservations.reservation_already_confirmed')
     else
-      @reservation.confirm
+      @reservation.charge_and_confirm!
       if @reservation.confirmed?
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ManuallyConfirmed, @reservation.id)
         event_tracker.confirmed_a_booking(@reservation)
@@ -20,8 +20,8 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
       else
         flash[:error] = [
           t('flash_messages.manage.reservations.reservation_not_confirmed'),
-          *@reservation.errors.full_messages
-        ].join(' ')
+          *@reservation.errors.full_messages, *@reservation.payment.errors.full_messages
+        ].join("\n")
       end
     end
 

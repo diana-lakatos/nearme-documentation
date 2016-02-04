@@ -49,30 +49,21 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
   end
 
   context 'billing authorization' do
-    should 'store failed authorization' do
+    should 'should not save on authorization failure' do
       authorize_response = OpenStruct.new(success?: false, error: 'No $$$ on account')
       PaymentAuthorizer.any_instance.expects(:gateway_authorize).returns(authorize_response)
-      post :create, booking_params_for(@listing)
-      billing_authorization = @listing.reload.billing_authorizations.first
-      assert_not_nil billing_authorization
-      refute billing_authorization.success?
-      assert_equal authorize_response, billing_authorization.response
-      assert_nil billing_authorization.token
-      assert_equal @user.id, billing_authorization.user_id
-      assert_not_equal @listing.creator_id, billing_authorization.user_id
+      assert_no_difference('BillingAuthorization.count') do
+        post :create, booking_params_for(@listing)
+      end
     end
 
     should 'store successful authorization' do
       authorize_response = OpenStruct.new(success?: true, authorization: 'abc')
       PaymentAuthorizer.any_instance.expects(:gateway_authorize).returns(authorize_response)
       post :create, booking_params_for(@listing)
-      assert_nil @listing.reload.billing_authorizations.first
-      billing_authorization = assigns(:reservation).billing_authorization
-      assert billing_authorization.success?
-      assert_equal authorize_response, billing_authorization.response
-      assert_equal 'abc', billing_authorization.token
-      assert_equal @user.id, billing_authorization.user_id
-      assert_not_equal @listing.creator_id, billing_authorization.user_id
+      payment = Payment.last
+      assert_equal 'abc', payment.authorization_token
+      assert payment.authorized?
     end
   end
 
@@ -237,11 +228,17 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       reservation_request: {
         dates: [Chronic.parse('Monday')],
         quantity: "1",
-        card_number: 4242424242424242,
-        card_exp_month: '05',
-        card_exp_year: '2020',
-        card_code: "411",
-        payment_method_id: @payment_method.id
+        payment: {
+          payment_method_id: @payment_method.id,
+          credit_card_form: {
+            first_name: "Jan",
+            last_name: "Kowalski",
+            number: 4242424242424242,
+            month: '05',
+            year: '2020',
+            verification_value: "411",
+          }
+        }
       }
     }
   end

@@ -28,6 +28,10 @@
             content: $fa-var-money;
         }
 
+        .pricing-model--subscription:before {
+            content: $fa-var-refresh;
+        }
+
         h5 {
             margin-bottom: 0;
             font-size: 14px;

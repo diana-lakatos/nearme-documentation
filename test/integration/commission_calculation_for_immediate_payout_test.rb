@@ -36,13 +36,17 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
       reservation_request: {
         dates: [Chronic.parse('Monday')],
         quantity: "1",
-        card_number: "4111 1111 1111 1111",
-        card_exp_month: 1.year.from_now.month.to_s,
-        card_exp_year: 1.year.from_now.year.to_s,
-        card_code: '411',
-        card_holder_first_name: 'Maciej',
-        card_holder_last_name: 'Krajowski',
-        payment_method_id: @payment_gateway.payment_methods.first.id
+        payment: {
+          payment_method_id: @payment_method.id,
+          credit_card_form: {
+            number: "4111 1111 1111 1111",
+            month: 1.year.from_now.month.to_s,
+            year: 1.year.from_now.year.to_s,
+            verification_value: '411',
+            first_name: 'Maciej',
+            last_name: 'Krajowski',
+          }
+        }
       }
     }
   end
@@ -61,6 +65,8 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
     @instance.update_attribute(:payment_transfers_frequency, 'daily')
 
     @payment_gateway = FactoryGirl.create(:braintree_marketplace_payment_gateway)
+    @payment_method = @payment_gateway.payment_methods.first
+
     ActiveMerchant::Billing::BraintreeMarketplacePayments.any_instance.stubs(:onboard!).returns(OpenStruct.new(success?: true))
     FactoryGirl.create(:braintree_marketplace_merchant_account, payment_gateway: @payment_gateway, merchantable: @listing.company)
     Instance.any_instance.stubs(:payment_gateway).returns(@payment_gateway)
@@ -106,13 +112,11 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
 
   def confirm_reservation!
     relog_to_host
-    assert_difference "@reservation.payments.count" do
-      assert_difference "Charge.count" do
-        post_via_redirect "/dashboard/company/host_reservations/#{@reservation.id}/confirm"
-      end
+    assert_difference "Charge.count" do
+      post_via_redirect "/dashboard/company/host_reservations/#{@reservation.id}/confirm"
     end
     assert @reservation.reload.confirmed?
-    @payment = @reservation.payments.last
+    @payment = @reservation.payment
     assert @payment.paid?
     relog_to_guest
     charge = @payment.charges.last

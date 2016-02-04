@@ -115,8 +115,9 @@ class Utils::DefaultAlertsCreator::OrderCreatorTest < ActionDispatch::Integratio
 
       should 'include buyer email if manual' do
         @order_creator.create_notify_seller_email!
-        @order = FactoryGirl.create(:completed_order_with_totals)
-        @order.update_attribute(:payment_method_id, FactoryGirl.create(:manual_payment_gateway).payment_methods.first.id)
+        @order = FactoryGirl.build(:completed_order_with_totals)
+        @order.build_payment(payment_method: FactoryGirl.create(:manual_payment_method))
+        @order.save!
         @user = @order.company.creator
         assert_difference 'ActionMailer::Base.deliveries.size' do
           WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::Finalized, @order.id)

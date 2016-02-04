@@ -1,19 +1,21 @@
 class PaymentMethod < ActiveRecord::Base
 
-  PAYMENT_METHOD_TYPES = %w{credit_card nonce express_checkout manual remote free }.freeze
+  PAYMENT_METHOD_TYPES = %w{credit_card nonce express_checkout manual remote free}.freeze
 
   auto_set_platform_context
   scoped_to_platform_context
+  acts_as_paranoid
 
   scope :active, -> { where(active: true) }
   scope :manual, -> { where(payment_method_type: 'manual') }
+  scope :remote, -> { where(payment_method_type: 'remote') }
   scope :free, -> { where(payment_method_type: 'free') }
   scope :except_free, -> { where.not(payment_method_type: 'free') }
 
   belongs_to :payment_gateway
 
   has_many :orders, class_name: "Spree::Order"
-  has_many :reservations
+  has_many :payments
 
   validates :payment_method_type, presence: true, inclusion: { in: PAYMENT_METHOD_TYPES }
 
@@ -26,7 +28,7 @@ class PaymentMethod < ActiveRecord::Base
   end
 
   def capturable?
-    [:credit_card, :nonce, :express_checkout].include?(self.payment_method_type.to_sym)
+    [:credit_card, :nonce, :express_checkout, :remote].include?(self.payment_method_type.to_sym)
   end
 
 end

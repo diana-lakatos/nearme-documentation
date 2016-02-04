@@ -1,5 +1,7 @@
 .row-fluid
-  - if f.object.billing_authorization.nil?
+  - if f.object.nonce_payment? && f.object.authorized?
+    = t 'payments.already_authorized'
+  - else
     .padding-bottom
       .row-fluid
         .span5.text
@@ -12,8 +14,6 @@
 
     = f.error :cc
     #paypal-button
-  - else
-    = t 'payments.already_authorized'
 
 = render 'listings/reservations/confirm_reservations', f: f
 

@@ -34,7 +34,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
   context 'methods' do
     setup do
       @user = FactoryGirl.create(:user)
-      @reservation = FactoryGirl.create(:authorized_reservation, user: @user)
+      @reservation = FactoryGirl.create(:unconfirmed_reservation, user: @user)
       @reservation.periods = [ReservationPeriod.new(:date => Date.parse("2012/12/12")), ReservationPeriod.new(:date => Date.parse("2012/12/13"))]
       @reservation.save!
       PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
@@ -433,6 +433,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
 
         should "render with the reservation" do
+          stub_active_merchant_interaction
           @reservation.reject!
           sms = WorkflowAlert::SmsInvoker.new(WorkflowAlert.where(alert_type: 'sms').last).invoke!(WorkflowStep::ReservationWorkflow::Rejected.new(@reservation.id))
           assert_equal "+1987654421", sms.to
@@ -456,6 +457,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         end
 
         should "render with the reservation" do
+          @reservation.stubs(:schedule_refund).returns(true)
           @reservation.confirm!
           @reservation.host_cancel!
           sms = WorkflowAlert::SmsInvoker.new(WorkflowAlert.where(alert_type: 'sms').last).invoke!(WorkflowStep::ReservationWorkflow::HostCancelled.new(@reservation.id))
@@ -467,8 +469,6 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         end
       end
     end
-
   end
-
 end
 

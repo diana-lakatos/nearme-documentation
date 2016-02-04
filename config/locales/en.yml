@@ -354,6 +354,7 @@ en:
         name: "Name"
         description: "Description"
         properties: "Properties"
+        actions: "Actions"
       projects:
         community_reports: "Community reports"
         week_start: "Starting week"
@@ -998,6 +999,7 @@ en:
           captured: 'Payment captured'
           paid: 'Paid'
           refunded: 'Payment refunded'
+          authorized: 'Payment authorized'
           failed: 'Payment failed'
           details: 'Payment details'
 
@@ -1338,13 +1340,22 @@ en:
     payments:
       order: "Back to order"
       back_to_order_html: "Back <span class='hidden-xs'>to order</span>"
-      total: "Captured price"
-      service_fee: "Marketplace fee"
+      total: "Captured price:"
+      service_fee: "Marketplace fee:"
+      state: "Payment state:"
       payment_id: "Payment ID"
-      paid_at: "Paid at"
-      failed_at: "Failed at"
-      refunded_at: "Refunded at"
+      paid_at: "Paid at:"
+      failed_at: "Failed at:"
+      refunded_at: "Refunded at:"
       refund: 'Refund'
+      capture: 'Capture'
+      states:
+        pending: "Pending"
+        authorized: "Authorized"
+        paid: "Paid"
+        voided: "Voided"
+        refunded: "Refunded"
+      alerts: 'Alerts:'
 
     host_reservations:
       booked: 'booked'
@@ -1799,6 +1810,7 @@ en:
       failed: "Payment failed"
       pending: "Payment not captured"
       refunded: "Payment refunded"
+      authorized: "Payment authorized"
 
     index:
       title: 'My orders'
@@ -2027,6 +2039,9 @@ en:
         errors: 'Data has not been imported due to error during processing.'
         header:  'Data import for %{csv_identifier}'
   decorators:
+    payment:
+      refund_failed: "Refund has failed"
+      refund_retry_at: "Looks like there was a problem with refund. We've scheduled next attempt at %{retry_at}."
     review:
       today: 'Today'
   helpers:

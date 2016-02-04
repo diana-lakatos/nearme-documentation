@@ -11,7 +11,7 @@ module LiquidFilters
     else
       Googl.shorten(url).short_url
     end
-  rescue e
+  rescue => e
     if Rails.env.production?
       raise e
     else

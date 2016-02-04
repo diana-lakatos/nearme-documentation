@@ -35,8 +35,7 @@ class OrderDecoratorTest < ActionView::TestCase
     context 'cancel order' do
       should 'cancel associated payments and do the refund' do
         @order = create(:order_ready_to_ship)
-        @order.payment_method = @payment_method
-        @order.create_pending_payment!
+        @order.build_payment
         @order.payments.each { |p| p.complete! }
         @order.finalize!
         # TODO find the pronblem in spree code and fix

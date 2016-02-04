@@ -17,13 +17,14 @@ class Spree::OrderDrop < BaseDrop
   #   returns an array of line item adjustment objects for this order's line items
   #   adjustments will either decrease an order's total (promotions) or will increase it
   #   (shipping, taxes etc.)
-  # manual_payment?
-  #   returns true if the payment method is "manual" i.e. the user will pay the seller
-  #   using offline means
-  delegate :id, :user, :company, :number, :line_items, :line_item_adjustments, :adjustment, :manual_payment?, to: :order
+  delegate :id, :user, :company, :number, :line_items, :line_item_adjustments, :adjustment, to: :order
 
   def initialize(order)
     @order = order.decorate
+  end
+
+  def manual_payment?
+    @order.payment.try(:manual_payment?)
   end
 
   # list of eligible adjustments for this order in the form of objects with the properties

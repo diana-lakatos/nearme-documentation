@@ -88,12 +88,13 @@
             .summary-line-label= t 'reservations_review.total'
             .summary-line-value.total-amount{data: {currency_symbol: @reservation.total_amount.currency.symbol, total_amount: @reservation.total_amount.to_f}}= @reservation.total_price
             .clearfix
+            = f.hidden_field :total_amount_check, value: @reservation.total_amount.cents
 
         - if should_display_checkout_extra_fields?(f.object.checkout_extra_fields.user, true)
           %br
           = render 'shared/checkout_extra_fields', f: f, show_company_name: @reservation.show_company_name
 
-        - if f.object.payment_methods.blank?
+        - if f.object.payment.payment_methods.blank?
           %h2= t("reservations_review.missing_payment_method")
           %span= t("reservations_review.missing_payment_method_info")
         - else

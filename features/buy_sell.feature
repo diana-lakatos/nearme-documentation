@@ -6,10 +6,10 @@ Feature: Buy Sell Marketplace
 
   Scenario: A user can't purchase without filling in the extra checkout field
     Given Current marketplace is buy_sell
-    And Extra fields are prepared
-    And a user exists
-    And I am logged in as the user
     And A buy sell product exist in current marketplace
+    And a user exists
+    And Extra fields are prepared
+    And I am logged in as the user
     
     When I search for buy sell "Product"
     Then I should see relevant buy sell products
@@ -23,7 +23,8 @@ Feature: Buy Sell Marketplace
     Then I should see order summary page
 
     When I fill billing data
-    And  I shouldn't see order placed confirmation
-    And  I fill in the extra checkout field
+   Then  I shouldn't see order placed confirmation
+   
+   When  I fill in the extra checkout field
     And  I fill billing data
    Then  I should see order placed confirmation

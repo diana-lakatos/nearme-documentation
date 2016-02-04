@@ -110,9 +110,7 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
         @listing.location.company.add_creator_to_company_users
       end
 
-
       context 'date' do
-
         setup do
           create_location_visit
         end
@@ -133,14 +131,12 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
   private
 
   def create_payment(options = {})
-    options.reverse_merge!({payable: FactoryGirl.create(:reservation, currency: 'USD', listing: @listing)})
+    options[:paid_at] ||= options[:created_at] || Time.zone.now
+    options[:company] ||= @listing.company
     if amount = options.delete(:amount)
       options[:subtotal_amount] = amount
     end
-
-    options[:paid_at] ||= options[:created_at] || Time.zone.now
-
-    FactoryGirl.create(:payment, options)
+    FactoryGirl.create(:confirmed_reservation, currency: 'USD', listing: @listing, payment: FactoryGirl.build(:paid_payment, options)).payment
   end
 
   def create_location_visit

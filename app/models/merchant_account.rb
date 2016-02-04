@@ -3,6 +3,7 @@ class MerchantAccount < ActiveRecord::Base
 
   auto_set_platform_context
   scoped_to_platform_context
+  acts_as_paranoid
 
   SEPARATE_TEST_ACCOUNTS = false
 
@@ -31,6 +32,9 @@ class MerchantAccount < ActiveRecord::Base
   scope :pending,  -> { where(state: 'pending') }
   scope :verified, -> { where(state: 'verified') }
   scope :failed,   -> { where(state: 'failed') }
+  scope :failed,   -> { where(state: 'voided') }
+  scope :live,   -> { where(test: false) }
+  scope :active,   -> { where(state: ['pending', 'verified']) }
 
   attr_accessor :skip_validation
 
@@ -49,6 +53,10 @@ class MerchantAccount < ActiveRecord::Base
 
     event :failure do
       transition [:pending, :verified] => :failed
+    end
+
+    event :void do
+      transition [:pending, :verified] => :voided
     end
   end
 

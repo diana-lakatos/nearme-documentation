@@ -439,14 +439,15 @@ class Transactable < ActiveRecord::Base
 
   def reserve!(reserving_user, dates, quantity)
     payment_method  = PaymentMethod.manual.first
-    reservation = reservations.build(:user => reserving_user, :quantity => quantity, :payment_method => payment_method)
+    reservation = reservations.build(:user => reserving_user, :quantity => quantity)
+    reservation.calculate_prices
+    reservation.build_payment({ payment_method: payment_method })
     dates.each do |date|
       raise ::DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
       reservation.add_period(date)
     end
-
     reservation.save!
-    reservation.mark_as_paid!
+    reservation.activate!
     reservation
   end
 
@@ -805,6 +806,8 @@ class Transactable < ActiveRecord::Base
       self.action_schedule_booking = false
       self.schedule = nil
     end
+    self.action_free_booking = false if subscription_booking?
+
     true
   end
 

@@ -4,8 +4,6 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
   include PaymentGateway::ActiveMerchantGateway
   include PaymentExtention::PaypalMerchantBoarding
 
-  has_many :merchant_accounts, class_name: 'MerchantAccount::PaypalExpressChainMerchantAccount', foreign_key: 'payment_gateway_id'
-
   # Global setting for all marketplaces
   # Send to paypal with every action as BN CODE
   ActiveMerchant::Billing::Gateway.application_id = Rails.configuration.active_merchant_billing_gateway_app_id
@@ -14,10 +12,10 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
 
   def self.settings
     {
-      login: "",
-      password: "",
-      signature: "",
-      partner_id: ""
+      login: { validate: [:presence], change: [:void_merchant_accounts] },
+      password: { validate: [:presence] },
+      signature: { validate: [:presence] },
+      partner_id: { validate: [:presence], change: [:void_merchant_accounts] }
     }
   end
 
@@ -33,8 +31,8 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
     ["CZK", "DKK", "HDK", "HUF", "ILS", "MYR", "MXN", "NOK", "NZD", "PHP", "RUB", "SGD", "SEK", "CHF", "TWD", "THB", "TRY",  "USD", "GBP", "EUR", "PLN"]
   end
 
-  def authorize(authoriazable, options = {})
-    PaymentAuthorizer::PaypalExpressPaymentAuthorizer.new(self, authoriazable, options).process!
+  def authorize(payment, options = {})
+    PaymentAuthorizer::PaypalExpressPaymentAuthorizer.new(self, payment, options).process!
   end
 
   def gateway_capture(amount, token, options)
@@ -92,7 +90,6 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
 
   def refund_service_fee(options)
     @payment_transfer = @payment.payment_transfer
-
     service_fee_refund = @payment.refunds.create(
       amount: @payment_transfer.total_service_fee.cents,
       currency: @payment.currency,

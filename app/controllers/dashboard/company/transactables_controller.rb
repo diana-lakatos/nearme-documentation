@@ -29,6 +29,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     # to USD with currency rate 100 - 1. So we want to make sure that currency is assigned.
     @transactable.currency = transactable_params[:currency] if transactable_params[:currency].present?
     @transactable.assign_attributes(transactable_params)
+    @transactable.availability_template = @transactable_type.default_availability_template unless transactable_params.has_key? "availability_template_id"
     @transactable.company = @company
     @transactable.location ||= @company.locations.first if @transactable_type.skip_location?
     @transactable.attachment_ids = attachment_ids_for(@transactable)
@@ -118,12 +119,8 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def destroy
-    @transactable.reservations.each do |r|
-      r.perform_expiry!
-    end
-    @transactable.destroy
-    event_tracker.updated_profile_information(current_user)
-    event_tracker.deleted_a_listing(@transactable)
+    TransactableDestroyerService.new(@transactable, event_tracker, current_user).destroy
+
     flash[:deleted] = t('flash_messages.manage.listings.listing_deleted')
     redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
   end

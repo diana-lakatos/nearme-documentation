@@ -43,6 +43,8 @@
             = t('instance_admin.reports.fields.description')
           %th
             = t('instance_admin.reports.fields.properties')
+          %th
+            = t('instance_admin.reports.fields.actions')
         - @products.each do |product|
           = render 'product', :product => product
 

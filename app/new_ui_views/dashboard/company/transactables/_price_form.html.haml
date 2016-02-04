@@ -2,6 +2,8 @@
   - content_for :booking_type_regular_tab_content do
     .prices-container
 
+      %hr/
+
       - if f.object.transactable_type.action_free_booking
         = f.input :action_free_booking, as: :switch, label: t("simple_form.labels.transactable.price_free"), input_html: { 'data-action-free-booking' => true }
 
@@ -52,32 +54,12 @@
               .form-unit
                 = t :person_month, scope: [:pricing, :price_unit]
 
-        - if f.object.transactable_type.action_subscription_booking
-          = f.input :action_subscription_booking, as: :hidden, label: false, input_html: { 'data-action-subscription-booking' => true }
-          - if f.object.transactable_type.action_weekly_subscription_booking
-            .row
-              .col-md-2
-                = f.input :enable_weekly_subscription, as: :boolean, label: t("simple_form.labels.transactable.price.weekly_subscription"), input_html: { 'data-action-subscription-booking-trigger' => 'subscription_weekly', checked: f.object.weekly_subscription_price.to_f > 0, 'data-booking-type-override' => 'subscription' }
-              .col-md-4.col-xs-7
-                = f.input :weekly_subscription_price, as: :numeric, label: false, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), input_html: { 'data-price-field' => true }
-              .col-md-6.col-xs-5
-                .form-unit
-                  = t :person_weekly, scope: [:pricing, :price_unit]
-          - if f.object.transactable_type.action_monthly_subscription_booking
-            .row
-              .col-md-2
-                = f.input :enable_monthly_subscription, as: :boolean, label: t("simple_form.labels.transactable.price.monthly_subscription"), input_html: { 'data-action-subscription-booking-trigger' => 'subscription_monthly', checked: f.object.monthly_subscription_price.to_f > 0, 'data-booking-type-override' => 'subscription' }
-              .col-md-4.col-xs-7
-                = f.input :monthly_subscription_price, as: :numeric, label: false, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), input_html: { 'data-price-field' => true }
-              .col-md-6.col-xs-5
-                .form-unit
-                  = t :person_monthly, scope: [:pricing, :price_unit]
-
       - if f.object.transactable_type.booking_choices.include?('regular') && f.object.transactable_type.booking_choices.include?('overnight')
         = render 'dashboard/company/transactables/form_fields/define_a_day', f: f
 
 - if f.object.transactable_type.schedule_booking_enabled?
   - content_for :booking_type_schedule_tab_content do
+    %hr/
     %div{:class => "#{"error" if f.object.errors.include?(:fixed_price).present? || f.object.errors.include?(:price_type)}"}
       .form-inline
         = f.input :fixed_price, as: :numeric, wrapper: :dashboard_addon, required: true, prefix: currency_symbol_from_code(@transactable.try(:currency) || PlatformContext.current.instance.default_currency), label_html: { class: "block-label" }
@@ -91,3 +73,27 @@
       - if form_fields.find{ |h| h['transactable'] == 'book_it_out' }
         = render 'dashboard/company/transactables/form_fields/book_it_out', f: f
 
+- if f.object.transactable_type.subscription_booking_enabled?
+  - content_for :booking_type_subscription_tab_content do
+    %hr/
+    = f.input :action_subscription_booking, as: :hidden, label: false, input_html: { 'data-action-subscription-booking' => true }
+    .prices-container
+      .price-options
+        - if f.object.transactable_type.action_weekly_subscription_booking
+          .row
+            .col-md-2
+              = f.input :enable_weekly_subscription, as: :boolean, label: t("simple_form.labels.transactable.price.weekly_subscription"), input_html: { 'data-action-subscription-booking-trigger' => 'subscription_weekly', checked: f.object.weekly_subscription_price.to_f > 0, 'data-booking-type-override' => 'subscription' }
+            .col-md-4.col-xs-7
+              = f.input :weekly_subscription_price, as: :numeric, label: false, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), input_html: { 'data-price-field' => true }
+            .col-md-6.col-xs-5
+              .form-unit
+                = t :person_weekly, scope: [:pricing, :price_unit]
+        - if f.object.transactable_type.action_monthly_subscription_booking
+          .row
+            .col-md-2
+              = f.input :enable_monthly_subscription, as: :boolean, label: t("simple_form.labels.transactable.price.monthly_subscription"), input_html: { 'data-action-subscription-booking-trigger' => 'subscription_monthly', checked: f.object.monthly_subscription_price.to_f > 0, 'data-booking-type-override' => 'subscription' }
+            .col-md-4.col-xs-7
+              = f.input :monthly_subscription_price, as: :numeric, label: false, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), input_html: { 'data-price-field' => true }
+            .col-md-6.col-xs-5
+              .form-unit
+                = t :person_monthly, scope: [:pricing, :price_unit]

@@ -44,10 +44,10 @@
           %p.order-tracking.warning= t('orders.tracking.not_approved')
 
         %p{class: "order-tracking #{order.paid? ? 'success' : 'warning'}"}<
-          - if order.manual_payment?
+          - if order.payment.manual_payment?
             = t("orders.payment_state.#{order.paid? ? 'paid' : 'pending'}_offline")
           - else
-            = t("orders.payment_state.#{order.payment_state}")
+            = t("orders.payment_state.#{order.payment.state}")
 
         - if order.shipped?
           %p.order-tracking.success= t('orders.tracking.shipped')

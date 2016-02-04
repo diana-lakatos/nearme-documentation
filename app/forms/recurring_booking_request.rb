@@ -3,7 +3,7 @@ class RecurringBookingRequest < Form
   attr_accessor :start_minute, :end_minute, :start_on, :end_on, :schedule_params, :quantity
   attr_accessor :card_number, :card_exp_month, :card_exp_year, :card_code, :card_holder_first_name,
                 :card_holder_last_name, :interval, :payment_method_nonce, :total_amount_cents,
-                :guest_notes
+                :guest_notes, :total_amount_check
   attr_reader   :recurring_booking, :listing, :location, :user
 
   delegate :credit_card_payment?, :manual_payment?, :reservation_type=, :currency,
@@ -15,6 +15,7 @@ class RecurringBookingRequest < Form
   validates :listing, :user, :recurring_booking, :card_number, :card_exp_month,
     :card_exp_year, :card_code, :card_holder_first_name, :card_holder_last_name, presence: true
   validate :validate_phone_and_country
+  validate :validate_total_amount
 
   def initialize(listing, user, platform_context, attributes = {})
     @user = user
@@ -159,5 +160,10 @@ class RecurringBookingRequest < Form
     true
   end
 
+  def validate_total_amount
+    if @recurring_booking.present? && self.total_amount_check.present? && @recurring_booking.total_amount.cents != self.total_amount_check.to_i
+      errors.add(:base, I18n.t("activemodel.errors.models.reservation_request.attributes.base.total_amount_changed"))
+    end
+  end
 end
 
