@@ -9,7 +9,7 @@ require 'test_helper'
 class RecurringBookingRequestTest < ActiveSupport::TestCase
 
   setup do
-    @listing = FactoryGirl.create(:transactable, :name => "blah", monthly_subscription_price: 99)
+    @listing = FactoryGirl.create(:transactable, :name => "blah", monthly_subscription_price: 99, booking_type: 'subscription')
     @instance = @listing.instance
     @user = FactoryGirl.create(:user, name: "Firstname Lastname")
 
