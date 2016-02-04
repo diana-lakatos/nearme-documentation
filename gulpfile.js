@@ -159,12 +159,15 @@ gulp.task('modernizr:dist', function(){
         .pipe(gulp.dest(path.join(tmpAssetsPath, 'vendor')));
 });
 
+
 /* Vendor scripts - CKEDITOR */
 gulp.task('ckeditor', function(){
-    gulp.src(path.join(bower_components, 'ckeditor', '**', '*'))
+    gulp.src([path.join(bower_components, 'ckeditor', '**', '*'), path.join('!', bower_components, 'ckeditor', 'config.js')])
         .pipe(gulp.dest(path.join(outputPath, 'ckeditor')));
-});
 
+    gulp.src(path.join(frontendJsPath, 'ckeditor','config.js'))
+        .pipe(gulp.dest(path.join(outputPath, 'ckeditor')));
+})
 
 
 /* browser sync */

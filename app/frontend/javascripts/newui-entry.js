@@ -449,9 +449,9 @@ require('jquery-timeago');
         }
 
         require.ensure([
-            './ckeditor/config'
+            './ckeditor/init'
         ], function(require){
-            var CKEDITOR = require('./ckeditor/config');
+            var CKEDITOR = require('./ckeditor/init');
         });
     });
 
