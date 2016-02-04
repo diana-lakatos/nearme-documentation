@@ -29,6 +29,6 @@
           %td= humanized_money_with_cents_and_symbol(payment.service_additional_charges)
           %td= humanized_money_with_cents_and_symbol(payment.host_additional_charges)
           %td= humanized_money_with_cents_and_symbol(payment.subtotal_amount)
-          %td= payment.payable.billing_authorization.payment_gateway.try(:name) if payment.payable
+          %td= payment.payment_gateway.try(:name) if payment
           %td= l(payment.created_at, format: :long)
           %td= link_to 'Details',  instance_admin_manage_payment_path(payment)

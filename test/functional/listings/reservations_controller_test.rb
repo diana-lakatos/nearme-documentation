@@ -220,6 +220,34 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
   end
 
+  context 'PayPal Express interaction' do
+    setup do
+      details = OpenStruct.new({params: {"payer_id": 'payer_identification'}})
+      ActiveMerchant::Billing::PaypalExpressGateway.any_instance.stubs(:details_for).returns(details)
+
+      @payment_method = FactoryGirl.create(:paypal_express_payment_method)
+      @payment = FactoryGirl.create(:pending_payment, express_token: 'token', payment_method: @payment_method)
+      @reservation = @payment.payable
+
+    end
+
+    should 'return to reservation after cancel' do
+      get :cancel_express_checkout, { listing_id: @reservation.listing.id, token: 'token'}
+      assert_redirected_to location_listing_path(@reservation.listing.location, @reservation.listing)
+      assert @reservation.reload.inactive?
+    end
+
+    should 'return to booking successful page after success' do
+      response = OpenStruct.new({success?: true, authorization: "54533"})
+      ActiveMerchant::Billing::PaypalExpressGateway.any_instance.stubs(:authorize).returns(response)
+
+      get :return_express_checkout, { listing_id: @reservation.listing.id, token: 'token', "PayerID": "payer_identification" }
+      assert_redirected_to booking_successful_dashboard_user_reservation_path(@reservation)
+      assert @reservation.reload.unconfirmed?
+    end
+
+  end
+
   private
 
   def booking_params_for(listing)
