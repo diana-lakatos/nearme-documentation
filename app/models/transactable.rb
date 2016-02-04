@@ -82,7 +82,7 @@ class Transactable < ActiveRecord::Base
   before_save :set_is_trusted
   before_validation :set_booking_type_for_free, :set_activated_at, :set_enabled, :nullify_not_needed_attributes,
     :set_confirm_reservations, :build_availability_template
-  after_save :set_external_id
+  after_create :set_external_id
   after_save do
     if availability.try(:days_open).present?
       self.update_column(:opened_on_days, availability.days_open.sort)
