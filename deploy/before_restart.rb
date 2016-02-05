@@ -1,5 +1,14 @@
 node[:deploy].each do |application, deploy|
 
+  execute "Create symbolic link to shared/node_modules" do
+    cwd         deploy[:current_path]
+    group       deploy[:group]
+    user        deploy[:user]
+    command     "ln -s #{::File.join(deploy[:deploy_to], 'shared', 'node_modules')} ."
+    action      :run
+    only_if     { node["opsworks"]["instance"]["layers"].include?('rails-app') }
+  end
+
   execute "Invoke npm install " do
     cwd         deploy[:current_path]
     user        deploy[:user]

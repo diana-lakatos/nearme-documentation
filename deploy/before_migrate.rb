@@ -15,15 +15,5 @@ node[:deploy].each do |app, deploy|
     owner deploy[:user]
   end
 
-  link 'Create symbolic link to shared/node_modules in current' do
-    group       deploy[:group]
-    owner       deploy[:user]
-    mode        "0770"
-    target_file "#{::File.join(deploy[:deploy_to], 'current', 'node_modules')}"
-    to          "#{::File.join(deploy[:deploy_to], 'shared', 'node_modules')}"
-  end
-
-
-
 end
 

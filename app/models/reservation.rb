@@ -63,7 +63,7 @@ class Reservation < ActiveRecord::Base
   delegate :location, :show_company_name, :transactable_type_id, :transactable_type, :billing_authorizations, to: :listing
   delegate :administrator=, to: :location
   delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :listing, allow_nil: true
-  delegate :remote_payment?, :manual_payment?, :active_merchant_payment?, to: :payment, allow_nil: true
+  delegate :remote_payment?, :manual_payment?, :active_merchant_payment?, :paid?, to: :payment, allow_nil: true
 
   monetize :successful_payment_amount_cents, with_model_currency: :currency
   monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true
@@ -81,17 +81,6 @@ class Reservation < ActiveRecord::Base
     event :host_cancel              do transition confirmed: :cancelled_by_host; end
     event :user_cancel              do transition [:unconfirmed, :confirmed] => :cancelled_by_guest; end
     event :expire                   do transition unconfirmed: :expired; end
-  end
-
-  state_machine :payment_status, initial: :pending do
-    event :mark_as_authorized       do transition pending: :authorized; end
-    event :mark_as_authorize_failed do transition pending: :authorize_failed; end
-    event :mark_as_paid             do transition [:pending, :authorized] => :paid; end
-    event :mark_as_payment_failed   do transition [:pending, :authorized] => :payment_failed; end
-    event :mark_as_refunded         do transition paid: :refunded; end
-    event :mark_as_refund_failed    do transition refunded: :refund_failed; end
-
-    after_transition pending: [:authorized, :paid], do: :activate!
   end
 
   scope :active, -> { without_state(:inactive) }
@@ -173,7 +162,6 @@ class Reservation < ActiveRecord::Base
     if self.errors.empty? && self.valid? && self.payment.capture!
       self.create_shipments!
       self.confirm!
-      self.mark_as_paid! if self.payment.paid?
     end
   end
 
@@ -480,8 +468,8 @@ class Reservation < ActiveRecord::Base
   end
 
   def verify_authorization!
-    if !authorized? && payment.authorized?
-      mark_as_authorized!
+    if inactive? && payment.authorized?
+      activate!
     end
   end
 

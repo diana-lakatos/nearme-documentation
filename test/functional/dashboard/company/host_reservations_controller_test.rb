@@ -186,8 +186,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     context 'versions' do
 
       should 'store new version after confirm' do
-        # 2 because attempt charge is triggered, which if successful generates second version
-        assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count', 2) do
+        assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count', 1) do
           with_versioning do
             post :confirm, { id: @reservation.id }
           end
