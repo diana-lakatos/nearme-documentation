@@ -65,7 +65,10 @@ module.exports = class HomeController extends SearchController
 
   initializeSearchForm: ->
     if @transactableTypePicker.length > 0
-      @toggleTransactableTypes(@transactableTypePicker.val())
+      if @transactableTypePicker.filter(':checked').length > 0
+        @toggleTransactableTypes(@transactableTypePicker.filter(':checked').val())
+      else
+        @toggleTransactableTypes(@transactableTypePicker.val())
       @transactableTypePicker.bind "change", (event) =>
         @toggleTransactableTypes($(event.target).val())
     else
