@@ -77,7 +77,7 @@
       <span style="float: right;">{{ reservation.balance }}</span>
     </div>
 
-    {% if reservation.pending? %}
+    {% if reservation.unconfirmed? %}
       <div class="row">
         <span style="float: right;">This reservation is currently pending confirmation, and will be charged when confirmed.</span>
       </div>
