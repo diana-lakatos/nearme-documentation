@@ -15,14 +15,5 @@ node[:deploy].each do |app, deploy|
     owner deploy[:user]
   end
 
-  execute "Create symbolic link to shared/node_modules" do
-    cwd         deploy[:current_path]
-    group       deploy[:group]
-    user        deploy[:user]
-    command     "ln -s #{::File.join(deploy[:deploy_to], 'shared', 'node_modules')} ."
-    action      :run
-    only_if     { node["opsworks"]["instance"]["layers"].include?('rails-app') }
-  end
-
 end
 
