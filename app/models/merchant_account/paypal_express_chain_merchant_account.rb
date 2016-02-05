@@ -37,10 +37,6 @@ class MerchantAccount::PaypalExpressChainMerchantAccount < MerchantAccount
     merchantable.try(:iso_country_code)
   end
 
-  def chain_payments?
-    payment_gateway.supports_paypal_chain_payments?
-  end
-
   def chain_payment_set?
     billing_agreement_id.present?
   end
