@@ -219,6 +219,10 @@ class Location < ActiveRecord::Base
     availability_template.try(:custom_for_location?)
   end
 
+  def has_photos?
+    photos_metadata.try(:count).to_i > 0
+  end
+
   private
 
   def company_and_city
