@@ -124,7 +124,7 @@ gulp.task('styles:dist', function(){
     .pipe(sourcemaps.init())
     .pipe(sass.sync(sassConfig).on('error', sass.logError))
     .pipe(postcss([ autoprefixer({ browsers: ['last 2 versions'] }) ]))
-    .pipe(cssnano())
+    .pipe(cssnano({ safe: true }))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(tmpAssetsPath));
 });
