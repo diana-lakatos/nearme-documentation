@@ -798,17 +798,26 @@ class Transactable < ActiveRecord::Base
     if schedule_booking?
       self.exclusive_price_cents = nil unless enable_exclusive_price == '1'
       self.book_it_out_discount = self.book_it_out_minimum_qty = nil unless enable_book_it_out_discount == '1'
-      self.hourly_price = self.daily_price = self.weekly_price = self.monthly_price = Money.new(nil, currency)
+      nullify_prices(exclude: [:fixed, :exclusive])
       self.action_hourly_booking = self.action_daily_booking = self.action_free_booking = nil
       self.action_schedule_booking = true
+    elsif subscription_booking?
+      self.action_schedule_booking = self.action_hourly_booking = self.action_daily_booking = self.action_free_booking = nil
+      nullify_prices(exclude: [:weekly_subscription, :monthly_subscription])
     else
-      self.fixed_price = Money.new(nil, currency)
+      nullify_prices(only: [:fixed, :exclusive, :weekly_subscription, :monthly_subscription])
       self.action_schedule_booking = false
       self.schedule = nil
     end
-    self.action_free_booking = false if subscription_booking?
 
     true
+  end
+
+  def nullify_prices(exclude: [], only: nil)
+    prices = only || (PRICE_TYPES - Array(exclude).map(&:to_sym))
+    prices.each do |price|
+      self.send("#{price}_price=", Money.new(nil, currency))
+    end
   end
 
   def decline_reservations
