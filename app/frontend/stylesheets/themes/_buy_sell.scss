@@ -1503,6 +1503,24 @@ body.buy-sell-theme {
     line-height: 50px;
     height: auto;
   }
+
+  .user-profile.container-fluid {
+    margin-bottom: 40px;
+
+    header {
+        background: none;
+        height: auto;
+        position: relative;
+    }
+    .user-profile__header {
+        background: #dfdfdf;
+        padding: 15px;
+    }
+
+    .tab-content article {
+        background: #efefef;
+    }
+  }
 }
 
 

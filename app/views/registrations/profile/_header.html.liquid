@@ -1,0 +1,60 @@
+<header class="user-profile__header">
+  <div class="row-fluid">
+    <div class="span3">
+      <figure class="portrait">
+        <img src="{{user.avatar_url_bigger}}" alt="{{user.name}}">
+      </figure>
+    </div>
+
+    <div class="span7">
+      <h1>{{user.first_name}} {% if user.public_profile? %}{{user.last_name}}{% endif %}</h1>
+      <div class="user-meta">
+        {% if user.properties['job_title'] != blank %}
+          <b>{{ user.properties['job_title'] | filter_text | custom_sanitize }}</b>
+        {% endif %}
+
+        {% if user.properties['job_title'] != blank and company %}
+          {{ 'user_profile.labels.position_company_junction' | translate }}
+        {% endif %}
+
+        {% if company.name != blank %}
+          <b>{{ company.name }}</b>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="span2">
+      <div class="social">
+        {% if user.properties.twitter_url != blank or user.properties.facebook_url != blank or user.properties.linkedin_url != blank or user.properties.google_plus_url != blank %}
+          <ul class="follow">
+            {% if user.properties.twitter_url != blank %}
+              <li class="twitter">
+                <a href="{{user.properties.twitter_url}}" rel="external"><span class="ico-twitter"> Twitter</span></a>
+              </li>
+            {% endif %}
+
+            {% if user.properties.facebook_url != blank %}
+              <li class="facebook">
+                <a href="{{user.properties.facebook_url}}" rel="external"><span class="ico-facebook"> Facebook</span></a>
+              </li>
+            {% endif %}
+
+            {% if user.properties.google_plus_url != blank %}
+              <li class="googleplus">
+                <a href="{{user.properties.google_plus_url}}" rel="external"><span class="ico-google-plus"> Google+</span></a>
+              </li>
+            {% endif %}
+
+            {% if user.properties.linkedin_url != blank %}
+              <li class="linkedin">
+                <a href="{{user.properties.linkedin_url}}" rel="external"><span class="ico-linkedin"> LinkedIn</span></a>
+              </li>
+            {% endif %}
+          </ul>
+        {% endif %}
+
+        <a href="{{user.user_message_path}}" class="btn green" rel="modal"><span class="ico-mail"></span> {{ 'buy_sell_market.products.buttons.contact_host' | translate }}</a>
+      </div>
+    </div>
+  </div>
+</header>
