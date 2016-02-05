@@ -1,5 +1,7 @@
 node[:deploy].each do |application, deploy|
 
+# comment for now because something is wrong when symlink is active
+=begin
   execute "Create symbolic link to shared/node_modules" do
     cwd         deploy[:current_path]
     group       deploy[:group]
@@ -8,6 +10,7 @@ node[:deploy].each do |application, deploy|
     action      :run
     only_if     { node["opsworks"]["instance"]["layers"].include?('rails-app') }
   end
+=end
 
   execute "Invoke npm install " do
     cwd         deploy[:current_path]
