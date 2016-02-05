@@ -53,7 +53,7 @@ class Location < ActiveRecord::Base
 
   before_validation :build_availability_template, :assign_default_availability_rules, :set_location_type
   before_save :set_time_zone
-  after_save :set_external_id
+  after_create :set_external_id
   after_save :update_schedules_timezones
 
   extend FriendlyId
