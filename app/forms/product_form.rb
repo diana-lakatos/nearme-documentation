@@ -196,6 +196,7 @@ class ProductForm < Form
 
   def save!(options={})
     User.transaction do
+      @user.skip_validations_for = 'buyer'
       @user.save!(validate: !draft?)
       @company.save!(validate: !draft?)
       @product.save!(validate: !draft?)
