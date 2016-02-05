@@ -73,6 +73,10 @@ class MerchantAccount < ActiveRecord::Base
   def update_onboard!(*args)
   end
 
+  def chain_payments?
+    payment_gateway.supports_paypal_chain_payments?
+  end
+
   private
 
   def set_test_mode_if_necessary
