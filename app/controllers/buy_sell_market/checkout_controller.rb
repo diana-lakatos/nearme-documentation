@@ -62,7 +62,7 @@ class BuySellMarket::CheckoutController < ApplicationController
     end
 
     if @order.payment.try(:redirect_to_paypal?)
-      redirect_to @payment.express_checkout_redirect_url
+      redirect_to @order.payment.express_checkout_redirect_url
     else
       # We don't want to override validation messages by calling next
       jump_to next_step if spree_errors.blank? && @order.valid? && (@order.complete? || @order.next)
