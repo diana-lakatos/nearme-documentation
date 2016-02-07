@@ -1,8 +1,7 @@
 require 'jquery-ui/ui/sortable'
 require 'swipebox/src/js/jquery.swipebox'
-
-require('imports?define=>false&exports=>false!blueimp-file-upload/js/jquery.iframe-transport.js');
-require('imports?define=>false&exports=>false!blueimp-file-upload/js/jquery.fileupload.js');
+require 'imports?define=>false&exports=>false!blueimp-file-upload/js/jquery.iframe-transport.js'
+require 'imports?define=>false&exports=>false!blueimp-file-upload/js/jquery.fileupload.js'
 
 require 'jquery-dragster/jquery.dragster'
 
