@@ -1,6 +1,6 @@
 require('expose?_!underscore');
 require('jquery-ujs/src/rails');
-
+require('jquery-ui/ui/widget');
 require('jquery-timeago');
 require('../vendor/jquery-ui-1.10.4.custom.min');
 require('jqueryui-touch-punch');
