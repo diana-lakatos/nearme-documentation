@@ -40,6 +40,7 @@ module.exports = class BookingsDatepicker
     if @listing.isReservedHourly()
       @initializeTimePicker()
 
+
   #TODO: replace these with JS i18n system
   start_text: ->
     if @listing.isOvernightBooking()
@@ -84,7 +85,8 @@ module.exports = class BookingsDatepicker
       # Custom view to handle bookings availability display
       view: new AvailabilityView(@listing,
         trigger: @startElement,
-        text: @start_text()
+        text: @start_text(),
+        isContinous: !!@listing.data.continuous_dates
       ),
 
       # Limit to a single date selected at a time
@@ -100,7 +102,8 @@ module.exports = class BookingsDatepicker
       # Custom view to handle bookings availability display
       view: new AvailabilityView(@listing,
         trigger: @endElement,
-        text: @TEXT_END_RANGE
+        text: @TEXT_END_RANGE,
+        isContinous: !!@listing.data.continuous_dates
       ),
 
       # Custom backing model to handle logic of range and constraints
