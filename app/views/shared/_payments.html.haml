@@ -1,5 +1,5 @@
 %h2= t 'reservations_review.payment_information'
-= f.simple_fields_for :payment, f.object.payment do |form|
+= f.simple_fields_for :payment_attributes, f.object.payment do |form|
   = form.error :base
 
   #accordion2.accordion

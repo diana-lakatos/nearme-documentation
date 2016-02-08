@@ -74,7 +74,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
           @credit_card = stub('valid?' => true)
           ActiveMerchant::Billing::CreditCard.expects(:new).returns(@credit_card)
           assert_difference 'BillingAuthorization.count' do
-            put :update, order_id: @order, id: 'payment', order: { payment: {
+            put :update, order_id: @order, id: 'payment', order: { payment_attributes: {
               payment_method_id: @payment_method.id, credit_card_form: {}}
             }
           end
@@ -93,7 +93,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
 
         should 'render error if CC is invalid' do
           assert_no_difference 'BillingAuthorization.count' do
-            put :update, order_id: @order, id: 'payment', order: { payment: {
+            put :update, order_id: @order, id: 'payment', order: { payment_attributes: {
               payment_method_id: @payment_method.id, credit_card_form: {} }
             }
           end
@@ -108,7 +108,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
           PaymentAuthorizer.any_instance.stubs(:gateway_authorize).returns(authorize_response)
 
           assert_no_difference 'BillingAuthorization.count' do
-            put :update, order_id: @order, id: 'payment', order: { payment: {
+            put :update, order_id: @order, id: 'payment', order: { payment_attributes: {
               payment_method_id: @payment_method.id, credit_card_form: {
                   number: "4111 1111 1111 1111",
                   month: 1.year.from_now.month.to_s,
@@ -169,7 +169,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
 
         should 'correct proceed to complete state if all is ok' do
           assert_difference 'BillingAuthorization.count' do
-            put :update, order_id: @order, id: 'payment', order: { payment: {
+            put :update, order_id: @order, id: 'payment', order: { payment_attributes: {
                 payment_method_id: @payment_method.id,
                 credit_card_form: {
                   number: "4111 1111 1111 1111",
