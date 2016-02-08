@@ -36,7 +36,7 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
       reservation_request: {
         dates: [Chronic.parse('Monday')],
         quantity: "1",
-        payment: {
+        payment_attributes: {
           payment_method_id: @payment_method.id,
           credit_card_form: {
             number: "4111 1111 1111 1111",

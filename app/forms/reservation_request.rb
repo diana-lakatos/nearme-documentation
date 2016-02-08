@@ -227,7 +227,7 @@ class ReservationRequest < Form
     end
   end
 
-  def payment=(attributes)
+  def payment_attributes=(attributes)
     @payment = @reservation.build_payment(attributes)
   end
 
