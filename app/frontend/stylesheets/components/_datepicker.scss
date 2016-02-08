@@ -136,7 +136,7 @@
         color: $gray;
       }
 
-      &.active {
+      &.active, &.datepicker-day-other-month.active {
         background: $green;
         color: $pure-white;
       }

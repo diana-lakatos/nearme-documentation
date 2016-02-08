@@ -1,4 +1,3 @@
-require 'jquery-ui/ui/widget'
 require('imports?define=>false&exports=>false!blueimp-file-upload/js/jquery.iframe-transport.js');
 require('imports?define=>false&exports=>false!blueimp-file-upload/js/jquery.fileupload.js');
 
