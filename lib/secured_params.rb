@@ -466,7 +466,7 @@ class SecuredParams
       :insurance_enabled,
       additional_charges_attributes: nested(self.additional_charge),
       payment_documents_attributes: nested(self.payment_document),
-      payment: nested(self.payment),
+      payment_attributes: nested(self.payment),
     ]
   end
 
@@ -1349,7 +1349,7 @@ class SecuredParams
       dates: [],
       additional_charge_ids: [],
       waiver_agreement_templates: [],
-      payment: nested(self.payment),
+      payment_attributes: nested(self.payment),
       documents: nested(self.payment_document),
       documents_attributes: nested(self.payment_document),
       reservation: { shipments_attributes: nested(self.shipment) }
