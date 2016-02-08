@@ -1,7 +1,7 @@
 %div{'data-address-field' => true, class: "form-group #{"has-error" if f.object.errors.any?}"}
 
 
-  = f.label :address, field_label, required: true, label_html: { class: 'control-label'}
+  = f.label :address, label: field_label, required: true
 
   = f.text_field :address, :'data-behavior' => 'address-autocomplete', placeholder: t('locations.address_placeholder'), 'data-address-input' => true, class: 'form-control'
 
