@@ -7,7 +7,7 @@
 - content_for :hero do
   // Have we returned from setting up a session. If there are bookings, the JS controller
   // will trigger showing the booking confirmation modal.
-  %article#space{ data: { listings: listing_json(@listing), "returned-from-session": (@initial_bookings.present? ? ("'#{@form_trigger}'") : 'false') }}
+  %article#space{ data: { listings: listing_json(@listing), "returned-from-session": (@initial_bookings.present? ? @form_trigger.to_s : 'false') }}
     .container-fluid
       .row-fluid.padding-row
         .span12.nested

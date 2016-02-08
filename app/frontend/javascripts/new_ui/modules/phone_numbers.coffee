@@ -18,9 +18,12 @@ module.exports = class PhoneNumbers
 
     @findFields()
     @bindEvents()
-
-    @updateCountryCallingCode()
-    @updatePhoneNumber()
+    interval = window.setInterval(()=>
+      if @countryNameField[0].selectize
+        window.clearInterval(interval)
+        @updateCountryCallingCode()
+        @updatePhoneNumber()
+    , 50)
 
   findFields: ->
     @countryNameField  = @container.find(@countrySelector)

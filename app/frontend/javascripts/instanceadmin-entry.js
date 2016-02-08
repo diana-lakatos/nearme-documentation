@@ -4,6 +4,7 @@
 require('expose?$!expose?jQuery!jquery');
 require('expose?_!underscore');
 require('jquery-ujs/src/rails');
+require('jquery-ui/ui/widget')
 require('../vendor/jquery-ui-1.9.2.custom.min');
 require('../vendor/bootstrap-3.2.0');
 require('../vendor/nested_form');
