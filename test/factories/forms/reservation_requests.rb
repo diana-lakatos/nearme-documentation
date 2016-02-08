@@ -8,7 +8,7 @@ FactoryGirl.define do
     mobile_number '666 666 666'
     reservation_type 'daily'
 
-    payment {
+    payment_attributes {
       {
         payment_method: FactoryGirl.build(:credit_card_payment_method),
         credit_card_form: FactoryGirl.attributes_for(:credit_card_form)

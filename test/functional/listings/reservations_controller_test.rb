@@ -256,7 +256,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       reservation_request: {
         dates: [Chronic.parse('Monday')],
         quantity: "1",
-        payment: {
+        payment_attributes: {
           payment_method_id: @payment_method.id,
           credit_card_form: {
             first_name: "Jan",

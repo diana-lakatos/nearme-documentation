@@ -14,7 +14,7 @@ class ReservationRequestTest < ActiveSupport::TestCase
         payment_method = payment_gateway.payment_methods.where(payment_method_type: payment_method_type).first
         attributes = {
           dates: [@listing.first_available_date.to_s(:db)],
-          payment: {
+          payment_attributes: {
             payment_method: payment_method
           }
         }
@@ -82,7 +82,7 @@ class ReservationRequestTest < ActiveSupport::TestCase
         end
 
         should 'set manual' do
-          attributes[:payment][:payment_method] = @manual_payment_gateway.payment_methods.manual.first
+          attributes[:payment_attributes][:payment_method] = @manual_payment_gateway.payment_methods.manual.first
           @reservation_request = ReservationRequest.new(@listing, @user, attributes)
           @reservation_request.payment.valid?
           assert @reservation_request.payment.manual_payment?
@@ -171,7 +171,7 @@ class ReservationRequestTest < ActiveSupport::TestCase
   def attributes
     @attributes ||= {
         dates: [@date.to_s(:db)],
-        payment: {
+        payment_attributes: {
           payment_method: @stripe_payment_gateway.payment_methods.first,
           credit_card_form: {
             first_name: "Albert",
