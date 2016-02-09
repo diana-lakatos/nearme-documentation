@@ -66,4 +66,8 @@ DesksnearMe::Application.configure do
 
   config.webpack[:use_manifest] = true
   config.assets.manifest = "#{Rails.root}/public/assets/manifest.json"
+
+  # Disabled temporarily until tested on staging
+  config.raygun_js_reporting = false
+  config.raygun_js_api_key = 'G/Y1+vaVvETUu7/5alKYZw=='
 end

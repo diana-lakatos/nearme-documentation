@@ -169,7 +169,7 @@ gulp.task('ckeditor', function(){
 
 /* browser sync */
 
-gulp.task('serve', ['styles', 'images', 'fonts', 'watch', 'modernizr', 'ckeditor'], function() {
+gulp.task('serve', ['styles', 'images', 'fonts', 'watch', 'modernizr', 'ckeditor', 'raygun'], function() {
 
     browserSync.init({
         proxy: 'localhost:3000'
@@ -269,13 +269,24 @@ gulp.task('images:dist', function(){
         .pipe(gulp.dest(tmpAssetsPath));
 });
 
+gulp.task('raygun', function() {
+    return gulp.src([path.join(bower_components, 'raygun4js','dist','raygun.min.js'), path.join(bower_components, 'raygun4js','dist','raygun.min.js.map')])
+        .pipe(gulp.dest(outputPath));
+});
+
+gulp.task('raygun:dist', function(){
+    return gulp.src([path.join(bower_components, 'raygun4js','dist','raygun.min.js'), path.join(bower_components, 'raygun4js','dist','raygun.min.js.map')])
+        .pipe(gulp.dest(tmpAssetsPath));
+});
+
+
 gulp.task('clean', del.bind(null, [path.join(__dirname, 'public', 'assets' ), path.join(__dirname,'tmp','assets')]));
 
 
 /* DEFAULT TASK */
 
 gulp.task('build', ['clean'], function(){
-    return gulp.start(['fonts', 'images', 'styles', 'webpack', 'modernizr', 'ckeditor']);
+    return gulp.start(['fonts', 'images', 'styles', 'webpack', 'modernizr', 'ckeditor', 'raygun']);
 });
 
 gulp.task('default', ['build']);
@@ -286,7 +297,7 @@ gulp.task('dist', ['clean'], function(){
     return gulp.start('manifest');
 });
 
-gulp.task('manifest', ['fonts:dist', 'images:dist', 'styles:dist', 'modernizr:dist'], function(){
+gulp.task('manifest', ['fonts:dist', 'images:dist', 'styles:dist', 'modernizr:dist', 'raygun:dist'], function(){
     gulp.src(path.join(tmpAssetsPath,'**','*'))
         .pipe(rev())
         .pipe(cssRevRewrite())
