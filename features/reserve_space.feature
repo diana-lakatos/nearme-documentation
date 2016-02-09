@@ -112,9 +112,11 @@ Feature: A user can book at a space
             | the transactable | next week Tuesday | 1         |
        Then I should be offered calendar and manage options
         And the user should have the transactable reserved for 'next week Monday'
+        And the user should have the transactable reserved for 'next week Tuesday'
        When I book space for:
-            | Transactable     | Date         | Quantity  |
-            | the transactable | next Wednesday  | 1      |   And the user should have the transactable reserved for 'next week Tuesday'
+            | Transactable     | Date         | Quantity       |
+            | the transactable | next week Wednesday  | 1      |
+       Then the user should have the transactable reserved for 'next week Wednesday'
        When I follow "Manage"
        Then I should be redirected to bookings page
         And The second booking should be highlighted
