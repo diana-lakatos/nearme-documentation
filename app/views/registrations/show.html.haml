@@ -2,6 +2,11 @@
 
 .profile
   .container.row-fluid.page-wrapper
+
+    - if current_user.try(:instance_admin?)
+      .admin-profile-notice
+        %p= t 'user_profile.labels.admin_profile'
+
     = render 'registrations/profile/user_badge', platform_context: platform_context, user: @user, is_current_user: (current_user && current_user.id == @user.try(:id)), company: @company
     .profile-content
       %ul.nav.nav-tabs

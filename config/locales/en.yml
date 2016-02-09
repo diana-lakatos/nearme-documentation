@@ -1719,6 +1719,8 @@ en:
 
   user_profile:
     labels:
+      admin_profile: This is an admin profile. It’s visible only to other admins while they are logged in and will not be visible to regular users at any time.
+
       visitor:
         no_products: '%{name} does not offer any products yet.'
         no_services: '%{name} does not offer any services yet.'
