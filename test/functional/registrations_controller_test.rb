@@ -55,9 +55,9 @@ class RegistrationsControllerTest < ActionController::TestCase
       get :show, :id => @user.slug
 
       assert_response 200
-      assert_select ".vendor-info h3", @user.first_name
-      assert_select ".vendor-info p", "United States"
-      assert_select ".vendor-profile a", "Contact Host"
+      assert_select ".user-profile__header h1", @user.first_name
+      assert_select ".profile-content dd", "United States"
+      assert_select ".user-profile__header a[rel='modal']", "Contact Host"
     end
 
     should 'show profile with verifications' do
@@ -71,10 +71,10 @@ class RegistrationsControllerTest < ActionController::TestCase
       get :show, :id => @user.slug
 
       assert_response 200
-      assert_select 'ul li', 'Email Address'
-      assert_select 'ul li', 'Facebook'
-      assert_select 'ul li', 'LinkedIn'
-      assert_select 'ul li', 'Twitter'
+      assert_select '#verifications dt', 'Email Address'
+      assert_select '#verifications dt', 'Facebook'
+      assert_select '#verifications dt', 'LinkedIn'
+      assert_select '#verifications dt', 'Twitter'
     end
 
     should 'not display company info on user profile when user does not have a company' do
@@ -88,7 +88,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       get :show, id: @user.id
 
       assert_response 200
-      assert_select 'div#shop-info p', 'COMPANY INFO'
+      assert_select '#shop-info h2', 'Company Info'
     end
 
     should 'display edit actions if user is logged in' do
@@ -97,8 +97,8 @@ class RegistrationsControllerTest < ActionController::TestCase
       get :show, id: @user.id
 
       assert_response 200
-      assert_select 'div#vendor-profile a', 'Edit'
-      assert_select 'div#shop-info a', 'Edit'
+      assert_select '#vendor-profile a', 'Edit'
+      assert_select '#shop-info a', 'Edit'
     end
   end
 
