@@ -233,7 +233,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
     should 'return to reservation after cancel' do
       get :cancel_express_checkout, { listing_id: @reservation.listing.id, token: 'token'}
-      assert_redirected_to location_listing_path(@reservation.listing.location, @reservation.listing)
+      assert_redirected_to @reservation.listing.decorate.show_path
       assert @reservation.reload.inactive?
     end
 

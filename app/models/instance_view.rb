@@ -80,28 +80,38 @@ class InstanceView < ActiveRecord::Base
   # Please keep it up-to-date when adding/modifying new liquid views to
   # this array.
   DEFAULT_LIQUID_VIEWS_PATHS = {
-    'locations/booking_module_listing_description' => {
+    'listings/show' => {
       listing: 'TransactableDrop'
     },
-    'locations/location_description' => {
+    'listings/booking_module_injection' => {
+      listing: 'TransactableDrop'
+    },
+    'listings/social_buttons' => {
+      listing: 'TransactableDrop'
+    },
+
+    'listings/booking_module_listing_description' => {
+      listing: 'TransactableDrop'
+    },
+    'listings/location_description' => {
       location: 'LocationDrop'
     },
-    'locations/listings/listing_description' => {
+    'listings/listing_description' => {
       listing: 'TransactableDrop'
     },
-    'locations/booking_module_call_to_actions' => {
+    'listings/booking_module_call_to_actions' => {
       listing: 'TransactableDrop',
       book_hash: 'booking information array',
       rfq_class: 'string',
       rfq_label: 'string'
     },
-    'locations/booking_module_listing_description_below_dates' => {
+    'listings/booking_module_listing_description_below_dates' => {
       listing: 'TransactableDrop'
     },
-    'locations/booking_module_listing_description_below_call_to_action' => {
+    'listings/booking_module_listing_description_below_call_to_action' => {
       listing: 'TransactableDrop'
     },
-    'locations/booking_module_listing_description_above_call_to_action' => {
+    'listings/booking_module_listing_description_above_call_to_action' => {
       listing: 'TransactableDrop'
     },
     'registrations/profile/user_badge' => {
@@ -110,10 +120,10 @@ class InstanceView < ActiveRecord::Base
       is_current_user: 'boolean; true if logged in user is viewing user',
       company: 'CompanyDrop'
     },
-    'locations/google_map' => {
+    'listings/google_map' => {
       location: 'LocationDrop'
     },
-    'locations/administrator' => {
+    'listings/administrator' => {
       administrator: 'UserDrop',
       listing: 'TransactableDrop'
     },
@@ -295,10 +305,6 @@ class InstanceView < ActiveRecord::Base
     },
     'listings/reservations/header' => {
       'listing': 'TransactableDrop',
-      'location': 'LocationDrop',
-      is_partial: true
-    },
-    'locations/twitter_social_button' => {
       'location': 'LocationDrop',
       is_partial: true
     },

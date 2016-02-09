@@ -4,6 +4,7 @@ module LiquidFilters
   include ActionView::Helpers::NumberHelper
   include WillPaginate::ViewHelpers
   include ActionView::Helpers::UrlHelper
+  include ActionView::RecordIdentifier
 
   def shorten_url(url)
     if DesksnearMe::Application.config.googl_api_key.present?
@@ -28,7 +29,7 @@ module LiquidFilters
   end
 
   def location_path(transactable_type, location)
-    Rails.application.routes.url_helpers.transactable_type_location_path(transactable_type.slug, location.slug)
+    location.listings.searchable.first.try(:decorate).try(:show_path)
   end
 
   def lowest_price_without_cents_with_currency(object, lgpricing_filters = [])
@@ -267,10 +268,10 @@ module LiquidFilters
 
   # Returns url for url helper name and arguments
   def generate_url(url_name, *args)
-    Rails.application.routes.url_helpers.try(url_name, args)
+    Rails.application.routes.url_helpers.try(url_name, *args)
   end
 
-  # Make the text html_safe; mainly used for testing the 
+  # Make the text html_safe; mainly used for testing the
   # sanitization in Liquid::Variable to make sure that
   # html_safe text is not escaped
   def make_html_safe(html = '')
@@ -282,4 +283,10 @@ module LiquidFilters
   def raw_escape_string(value)
     CGI::escapeHTML(value.to_s).html_safe
   end
+
+  def already_favorite(user, object)
+    return false unless user.present?
+    user.user.default_wish_list.items.where(wishlistable_id: object.id, wishlistable_type: object.class_name).exists?
+  end
+
 end

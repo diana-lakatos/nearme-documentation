@@ -46,7 +46,7 @@ class Utils::DefaultAlertsCreator::PaymentGatewayCreatorTest < ActionDispatch::I
       assert_equal [@merchant_account.merchantable.creator.email], mail.to
       assert_contains "We are sorry, #{@merchant_account.merchantable.creator.first_name}!", mail.html_part.body
       assert_contains "Reason: Epic fail", mail.html_part.body
-      assert_contains 'http://custom.domain.com/dashboard/company/payouts/edit', mail.html_part.body
+      assert_contains 'https://custom.domain.com/dashboard/company/payouts/edit', mail.html_part.body
       assert_not_contains 'Liquid error:', mail.html_part.body
       assert_equal "Your payout information has been declined", mail.subject
     end
@@ -72,9 +72,9 @@ class Utils::DefaultAlertsCreator::PaymentGatewayCreatorTest < ActionDispatch::I
         assert_contains "Unfortunately we were not able to deliver you automated payout, which was triggered on #{ I18n.l(@date, format: :long)} due to the following reason: Epic fail", mail.html_part.body
 
         assert_contains "The issue will not be resolved without your action", mail.html_part.body
-        assert_contains 'http://custom.domain.com/dashboard/company/payouts/edit', mail.html_part.body
+        assert_contains 'https://custom.domain.com/dashboard/company/payouts/edit', mail.html_part.body
         assert_equal [@merchant_account.merchantable.creator.email], mail.to
-        assert_not_contains 'href="http://example.com', mail.html_part.body
+        assert_not_contains 'href="https://example.com', mail.html_part.body
         assert_not_contains 'href="/', mail.html_part.body
         assert_equal "Automatic payout failed", mail.subject
       end
@@ -92,7 +92,7 @@ class Utils::DefaultAlertsCreator::PaymentGatewayCreatorTest < ActionDispatch::I
         mail = ActionMailer::Base.deliveries.last
         assert_contains "Suggested follow up action: Some other info", mail.html_part.body
         assert_not_contains "The issue will not be resolved without your action", mail.html_part.body
-        assert_not_contains 'http://custom.domain.com/dashboard/company/payouts/edit', mail.html_part.body
+        assert_not_contains 'https://custom.domain.com/dashboard/company/payouts/edit', mail.html_part.body
         assert_equal [@merchant_account.merchantable.creator.email], mail.to
       end
     end

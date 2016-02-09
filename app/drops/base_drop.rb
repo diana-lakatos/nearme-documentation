@@ -22,7 +22,7 @@ class BaseDrop < Liquid::Drop
   alias_method :image_url, :asset_url
 
   def urlify(path)
-    'http://' + platform_context_decorator.host + path
+    'https://' + platform_context_decorator.host + path
   end
 
   def platform_context_decorator

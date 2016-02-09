@@ -50,8 +50,8 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       mail = ActionMailer::Base.deliveries.last
       assert_contains @reservation.owner.first_name, mail.html_part.body
       assert_contains @reservation.listing.name, mail.html_part.body
-      assert_contains 'http://custom.domain.com/dashboard/notification_preferences/edit', mail.html_part.body
-      assert_contains 'http://custom.domain.com/dashboard/notification_preferences/edit', mail.text_part.body
+      assert_contains 'https://custom.domain.com/dashboard/notification_preferences/edit', mail.html_part.body
+      assert_contains 'https://custom.domain.com/dashboard/notification_preferences/edit', mail.text_part.body
       assert_contains @reservation.listing.transactable_type.bookable_noun.pluralize, mail.html_part.body
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] Your booking for '#{@reservation.listing.name}' at #{@reservation.location.street} was cancelled by the host", mail.subject
@@ -316,8 +316,8 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
       assert_equal [@user.email], mail.to
       assert_equal "[DesksNearMe] Check out these new Desks in your area!", mail.subject
-      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_contains @reservation.listing.name, mail.html_part.body
       assert_equal [@reservation.owner.email], mail.to
@@ -336,8 +336,8 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
       assert_equal [@reservation.host.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] How was your experience hosting #{@reservation.owner.first_name}?", mail.subject
-      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_not_contains 'Liquid error:', mail.html_part.body
       assert_not_contains "translation missing:", mail.html_part.body
@@ -355,8 +355,8 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] How was your experience at '#{@reservation.listing.name}'?", mail.subject
-      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_not_contains 'Liquid error:', mail.html_part.body
       assert_not_contains "translation missing:", mail.html_part.body

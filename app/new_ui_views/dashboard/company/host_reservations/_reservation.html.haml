@@ -13,7 +13,7 @@
 
           - listing_name = reservation.listing.try(:name)
           - listing_name = t('dashboard.host_reservations.show_listing_page') if listing_name.blank?
-          = link_to listing_name, location_path(reservation.listing.location, reservation.listing)
+          = link_to listing_name, reservation.listing.decorate.show_path
 
         - if reservation.owner.present?
           %p

@@ -23,7 +23,7 @@ When(/^I click to Delete$/) do
 end
 
 And(/^I have one favorite item$/) do
-  Location.last.wish_list_items.create wish_list_id: User.last.default_wish_list.id
+  Transactable.last.wish_list_items.create wish_list_id: User.last.default_wish_list.id
 end
 
 Then(/^I visit product page$/) do

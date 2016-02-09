@@ -69,7 +69,7 @@
                 = "#{reservation.owner_including_deleted} (Deleted)"
               %br
               - if reservation.listing.present?
-                %span.address= link_to reservation.listing.name, location_path(reservation.listing.location, reservation.listing)
+                %span.address= link_to reservation.listing.name, reservation.listing.decorate.show_path
               - else
                 %span.address [listing deleted]
               %p QTY: #{reservation.quantity}

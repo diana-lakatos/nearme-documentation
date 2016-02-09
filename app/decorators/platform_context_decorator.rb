@@ -8,7 +8,8 @@ class PlatformContextDecorator
            :favicon_image, :icon_image, :icon_retina_image, :call_to_action, :is_company_theme?, :content_holders, to: :theme
 
   delegate :bookable_noun, :lessor, :lessee, :name, :buyable?, :bookable?,
-           :transactable_types, :product_types, :project_types, :service_types, to: :instance
+           :transactable_types, :product_types, :project_types, :service_types, :wish_lists_icon_set,
+           :seller_attachments_enabled?, :wish_lists_enabled?, to: :instance
 
   liquid_methods :lessors
 
@@ -38,7 +39,7 @@ class PlatformContextDecorator
 
   def build_url_for_path(path)
     raise "Expected relative path, got #{path}" unless path[0] == '/'
-    "http://#{host}#{path}"
+    "https://#{host}#{path}"
   end
 
   def support_email_for(error_code)
@@ -82,6 +83,11 @@ class PlatformContextDecorator
   def homepage_content
     Liquid::Template.parse(theme.homepage_content).render(nil, filters: [LiquidFilters]).html_safe
   end
+
+  def facebook_key
+    Rails.env.development? || Rails.env.test? ? DesksnearMe::Application.config.facebook_key : instance.facebook_consumer_key
+  end
+
 
   private
 

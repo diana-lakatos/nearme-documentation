@@ -5,7 +5,7 @@ end
 Given /^I ask a question about a transactable$/ do
   @listing = model('transactable')
   @user = model('user')
-  visit location_path(@listing.location, @listing)
+  visit @listing.decorate.show_path
   click_link "Contact"
   work_in_modal do
     fill_in 'user_message_body', with: "Short one"

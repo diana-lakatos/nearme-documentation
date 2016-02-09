@@ -1,3 +1,3 @@
-$('#favorite-icon').addClass('selected');
-$('#text').html("<%= t('wish_lists.buttons.selected_state') %>");
-$('#action-link').attr('href', "<%= wish_list_remove_item_path(object_id: @item.id, wishlistable_type: @item.class.name) %>");
+$(".favorite#favorite-<%= dom_id(@item) %> [data-favorite-icon]").addClass('selected');
+$(".favorite#favorite-<%= dom_id(@item) %> [data-text]").html("<%= t('wish_lists.buttons.selected_state') %>");
+$(".favorite#favorite-<%= dom_id(@item) %> [data-action-link]").attr('href', "<%= wish_list_remove_item_path(object_id: @item.id, wishlistable_type: @item.class.name).html_safe %>");

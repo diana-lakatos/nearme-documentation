@@ -34,9 +34,7 @@ class ApprovalRequestDecorator < Draper::Decorator
 
     case owner
     when Transactable
-      link = transactable_type_location_listing_path(owner.transactable_type, owner.location, owner)
-    when Location
-      link = location_path(owner)
+      link = owner.decorate.show_path
     when Company
       if owner.creator.present?
         link = user_path(owner.creator)

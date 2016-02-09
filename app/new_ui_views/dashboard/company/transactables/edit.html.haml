@@ -6,7 +6,7 @@
 
   .options
     - if @transactable.persisted? && @transactable.location.try(:persisted?) && @transactable.errors[:location].empty?
-      = link_to t('dashboard.transactables.view_html'), transactable_type_location_listing_path(@transactable_type, @transactable.location, @transactable), rel: :external
+      = link_to t('dashboard.transactables.view_html'), @transactable.decorate.show_path, rel: :external
 
 
 = dashboard_simple_form_for @transactable, :url => dashboard_company_transactable_type_transactable_path(@transactable_type, @transactable), :html => { :multipart => true,  method: :put, id: 'listing-form' } do |f|

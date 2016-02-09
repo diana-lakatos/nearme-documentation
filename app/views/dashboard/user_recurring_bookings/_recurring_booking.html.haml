@@ -38,7 +38,7 @@
           .row
             .inline
               - if recurring_booking.listing.present? && !recurring_booking.listing.deleted?
-                = link_to recurring_booking.listing.try(:name), location_path(recurring_booking.listing.location, recurring_booking.listing)
+                = link_to recurring_booking.listing.try(:name), recurring_booking.listing.decorate.show_path
                 %br
                 %span.address
                   = link_to recurring_booking.listing.location.address,

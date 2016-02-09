@@ -22,9 +22,12 @@ module Metadata
 
       def to_listing_metadata
         {
-          space_listing: image_url(:space_listing),
-          golden:  image_url(:golden) ,
-          large: image_url(:large)
+          listing_name: listing.name,
+          original: image_url(:original),
+          space_listing: image.url(:space_listing),
+          golden:  image.url(:golden) ,
+          large: image.url(:large),
+          caption: caption
         }
       end
 
@@ -33,7 +36,7 @@ module Metadata
       end
 
       def to_location_metadata
-        to_listing_metadata.merge(listing_name: listing.name, caption: caption)
+        to_listing_metadata
       end
 
     end
