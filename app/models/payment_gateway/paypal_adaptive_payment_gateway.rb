@@ -25,6 +25,10 @@ class PaymentGateway::PaypalAdaptivePaymentGateway < PaymentGateway
     }
   end
 
+  def documentation_url
+    "https://developer.paypal.com/docs/classic/adaptive-payments/gs_AdaptivePayments/"
+  end
+
   def payout_gateway
     if @payout_gateway.nil?
       PayPal::SDK.configure(
