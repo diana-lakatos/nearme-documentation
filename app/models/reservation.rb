@@ -152,7 +152,7 @@ class Reservation < ActiveRecord::Base
   def build_additional_charges(attributes)
     act_ids = attributes.delete(:additional_charge_ids)
     additional_charge_types.get_mandatory_and_optional_charges(act_ids).uniq.map do |act|
-      self.additional_charges.build(additional_charge_type_id: act.id, currency: currency)
+      self.additional_charges.build(target: self, additional_charge_type_id: act.id, currency: currency)
     end
   end
 

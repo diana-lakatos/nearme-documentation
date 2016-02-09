@@ -39,7 +39,6 @@ class ReservationRequest < Form
       end
 
       @reservation.user = user
-      @reservation.build_additional_charges(attributes)
       @reservation = @reservation.decorate
       attributes = update_shipments(attributes)
 
@@ -51,8 +50,12 @@ class ReservationRequest < Form
 
       store_attributes(attributes)
       @reservation.calculate_prices
-      @payment ||= @reservation.build_payment
+      @reservation.build_additional_charges(attributes)
+      @payment = @reservation.build_payment(attributes.try(:[], :payment_attributes) || {})
     end
+  end
+
+  def additional_charge_ids=(additional_charge_ids)
   end
 
   def dates=dates
@@ -228,7 +231,6 @@ class ReservationRequest < Form
   end
 
   def payment_attributes=(attributes)
-    @payment = @reservation.build_payment(attributes)
   end
 
   def remove_empty_optional_documents

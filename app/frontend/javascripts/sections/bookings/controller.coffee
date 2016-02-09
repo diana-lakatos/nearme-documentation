@@ -83,7 +83,7 @@ module.exports = class BookingsController
       @listing.setSubscriptionPeriod(period)
       @updateBookingStatus()
 
-    @bookingTabs.on 'click', (event) =>
+    @bookingTabs.on 'shown.bs.tab', (event) =>
       if @listing.isRecurringBooking()
         period = $(event.target).parents('li').data('subscription')
         @container.find("input[data-subscription=#{period}]").click()

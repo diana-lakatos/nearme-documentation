@@ -7,7 +7,7 @@ module.exports = class HourlyPriceCalculator
   getPrice: ->
     bookedHours = (@listing.minutesBooked()/60)*@listing.bookedDates().length
     total = @listing.hourlyPrice*bookedHours*@listing.getQuantity()
-    total += @additionalCharges.getCharges()
+    total += @additionalCharges.getCharges(total)
 
 
 

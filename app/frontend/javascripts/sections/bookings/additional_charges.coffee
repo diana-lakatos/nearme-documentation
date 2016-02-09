@@ -7,7 +7,8 @@ module.exports = class AdditionalChargesCalculator
   getActiveOptionalCharges: ->
     @container.find('[data-optional-charge]')
 
-  getCharges: ->
+  getCharges: (reservation_price) ->
+    reservation_price ?= 0
     total = 0
     charges = []
     charges.push @getMandatoryCharges().get()
@@ -17,8 +18,17 @@ module.exports = class AdditionalChargesCalculator
     for charge in charges
       $charge = $(charge)
       if ($oc = $charge.find('[data-optional-charge-select]')).length > 0
+        if parseFloat($charge.data().chargePercent) > 0
+          charge_price = parseFloat(($charge.data().chargePercent/100 * reservation_price) / @subunit_to_unit_rate)
+          $charge.data().optionalCharge = charge_price
+          $charge.find(".pull-right").text($charge.data().currency + ' ' + charge_price.toFixed(2) )
         if $oc.is(':checked')
           total += parseFloat($charge.data().optionalCharge)
       else
-        total += parseFloat($charge.data().mandatoryCharge)
+        if parseFloat($charge.data().chargePercent) > 0
+          charge_price = parseFloat(($charge.data().chargePercent/100 * reservation_price) / @subunit_to_unit_rate)
+          total += charge_price
+          $charge.find(".pull-right").text($charge.data().currency + ' ' + charge_price.toFixed(2) )
+        else
+          total += parseFloat($charge.data().mandatoryCharge)
     total * @subunit_to_unit_rate
