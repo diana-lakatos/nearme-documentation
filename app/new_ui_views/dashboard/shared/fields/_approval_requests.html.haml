@@ -17,4 +17,4 @@
 
       - hint = attachment_template.hint.present? ? attachment_template.hint : nil
 
-      = f.input :file, as: :attachment, collection: collection, upload_url: approval_request_attachments_path(approval_request_attachment_template_id: attachment_template.id), label: attachment_template.label, hint: hint, required: attachment_template.required?, attachment_template: "dashboard/shared/attachments/approval_request_attachment", accept: PrivateFileUploader.new.extension_white_list, upload_name: 'file', multiple: true
+      = f.input :file, as: :attachment, collection: collection, upload_url: approval_request_attachments_path(approval_request_attachment_template_id: attachment_template.id), label: attachment_template.label, hint: hint, required: attachment_template.required?, attachment_template: "dashboard/shared/attachments/approval_request_attachment", accept: PrivateFileUploader.new.extension_white_list, upload_name: 'file', multiple: false
