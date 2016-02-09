@@ -37,7 +37,7 @@ class LiquidView
     assigns['platform_context'] = PlatformContext.current.decorate
     assigns['current_year'] = Date.current.year
     params = @view.try(:controller).try(:params) || {}
-    assigns['params'] = params.slice(:controller, :action)
+    assigns['params'] = params.except(*Rails.application.config.filter_parameters)
     assigns['current_url'] = @view.try(:controller).try(:request).try(:original_url)
     assigns['current_user'] = @view.try(:controller).try(:current_user)
 
