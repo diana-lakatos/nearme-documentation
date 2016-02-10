@@ -4,6 +4,7 @@ class LocalesService
     datepicker.pformat
     timepicker.dformat
     timepicker.pformat
+    timepicker.jsformat
     dayViewHeaderFormat
 
     time.formats.short

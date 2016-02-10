@@ -1,7 +1,7 @@
 require 'eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker'
 
 datepickers = (context = 'body')->
-  $(context).find('.datetimepicker').datetimepicker({
+  $(context).find('.datetimepicker:has(.date_picker)').datetimepicker({
     allowInputToggle: true,
     icons: {
       time: 'fa fa-clock-o',

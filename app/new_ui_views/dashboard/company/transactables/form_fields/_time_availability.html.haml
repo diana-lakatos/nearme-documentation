@@ -1,12 +1,12 @@
 .row.nested-fields{ :"data-junction-label" => t('pricing.availability.available_and')}
   .col-xs-11
     .form-inline
-      = f.input :open_time, label: false, input_html: { value: f.object.try(:open_time_with_default) }, wrapper_html: { class: 'form-control-sm' }
+      = f.input :open_time, as: :time_picker, label: false, input_html: { value: f.object.try(:open_time_with_default) }, wrapper_html: { class: 'form-control-sm' }
 
       .form-unit
         = t(:available_to, scope: [:pricing, :availability])
 
-      = f.input :close_time, label: false, input_html: { value: f.object.try(:close_time_with_default) }, wrapper_html: { class: 'form-control-sm' }
+      = f.input :close_time, as: :time_picker, label: false, input_html: { value: f.object.try(:close_time_with_default) }, wrapper_html: { class: 'form-control-sm' }
 
       .form-unit
         %b
