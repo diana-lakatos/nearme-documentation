@@ -38,6 +38,11 @@
           %p{:'data-follow-button' => true}
             = render partial: 'shared/follow_button', locals: { object: @user }
 
+- if current_user.try(:instance_admin?)
+  .contain
+    .admin-profile-notice
+      %p= t 'user_profile.labels.admin_profile'
+
 .tab-content
   #activity.tab-pane.fade{:role => "tabpanel"}
     = render 'show_activity', object: @user, feed: @feed
