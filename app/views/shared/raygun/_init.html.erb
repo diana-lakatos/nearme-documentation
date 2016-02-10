@@ -1,0 +1,17 @@
+<% if Rails.application.config.raygun_js_reporting %>
+<script type="text/javascript">
+  rg4js('apiKey', '<%= Rails.application.config.raygun_js_api_key %>');
+
+  rg4js('enableCrashReporting', true);
+
+  <% if current_user %>
+  rg4js('setUser', {
+    identifier: <%= current_user.id %>,
+    isAnonymous: false,
+    email: '<%= current_user.email %>',
+    firstName: '<%= current_user.first_name %>',
+    fullName: '<%= current_user.name %>'
+  });
+  <% end %>
+</script>
+<% end %>
