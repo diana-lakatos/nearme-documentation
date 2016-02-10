@@ -53,7 +53,10 @@
         - @order.additional_charge_types.mandatory_charges.each do |charge|
           %tr
             %td= charge.name
-            %td= humanized_money_with_cents_and_symbol charge.amount
+            - if charge.percent.blank?
+              %td= humanized_money_with_cents_and_symbol charge.amount
+            - else
+              %td= humanized_money_with_cents_and_symbol @order.item_total * charge.percent / 100
       %tr
         %td.total= t 'buy_sell_market.checkout.labels.total2'
         %td.total #{currency_content_tag(@order.currency, @order.total_amount, :span, { :rel => false }, { :'data-total-price' => true})}

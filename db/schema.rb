@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160206202224) do
+ActiveRecord::Schema.define(version: 20160209214833) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(version: 20160206202224) do
     t.datetime "updated_at"
     t.integer  "additional_charge_type_target_id"
     t.string   "additional_charge_type_target_type"
+    t.integer  "percent"
   end
 
   add_index "additional_charge_types", ["additional_charge_type_target_id", "additional_charge_type_target_type"], name: "act_target", using: :btree

@@ -11,7 +11,6 @@ class AdditionalChargeTypeTest < ActiveSupport::TestCase
     should validate_presence_of(:name)
     should validate_presence_of(:status)
     should validate_presence_of(:amount)
-    should validate_presence_of(:currency)
     should validate_presence_of(:commission_receiver)
     should_not allow_value('wrong').for(:status)
     should allow_value('mandatory').for(:status)

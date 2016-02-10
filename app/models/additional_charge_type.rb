@@ -7,7 +7,7 @@ class AdditionalChargeType < ActiveRecord::Base
   has_paper_trail
   auto_set_platform_context
   scoped_to_platform_context
-  monetize :amount_cents, with_model_currency: :currency
+  monetize :amount_cents, with_model_currency: :currency, allow_nil: true
 
   # additional_charge_type_target polymorphic relation can join AdditionalChargeType with:
   # - Instance
@@ -16,8 +16,10 @@ class AdditionalChargeType < ActiveRecord::Base
   belongs_to :additional_charge_type_target, polymorphic: true, touch: true
   has_many :additional_charges
 
-  validates :name, :status, :amount, :currency, :commission_receiver, presence: true
-  validates :amount, numericality: { less_than: 100000 }
+  validates :name, :status, :commission_receiver, presence: true
+  validates :amount, presence: true, numericality: { less_than: 100000 }, if: Proc.new {|a| a.percent.to_i.zero? }
+  validates :amount, absence: true, if: Proc.new {|a| !a.percent.to_i.zero? }
+  validates :percent, presence: true, numericality: { less_than: 100000 }, if: Proc.new {|a| a.amount.to_i.zero? && !a.percent.to_i.zero?}
   validates :status, inclusion: { in: STATUSES }
   validates :commission_receiver, inclusion: { in: COMMISSION_TYPES }
   validate :additional_charge_type_target_presence
