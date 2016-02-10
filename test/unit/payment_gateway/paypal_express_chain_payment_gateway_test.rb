@@ -70,15 +70,20 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
     end
 
     should 'apply cancelation fee when guest cancel' do
-      payment = FactoryGirl.create(:paid_payment, payment_method: @payment_method, company: create(:company) , cancellation_policy_penalty_percentage: 50)
+      payment = FactoryGirl.create(:paid_payment,
+        payment_method: @payment_method,
+        company: create(:company),
+        cancellation_policy_penalty_percentage: 50,
+        service_fee_amount_host_cents: 100)
 
       # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
       payment.company.payment_transfers.create!(payments: [payment.reload], payment_gateway_mode: 'test', payment_gateway: payment.payment_gateway )
 
       refund_payment(payment, "user_cancel")
 
-      # Service fee is refunded to Host. MPO doesn't get anything when guest cancel reservation
-      assert_equal payment.payment_transfer.total_service_fee, Money.new(payment.refunds.order(:id).last.amount)
+      # Host Service Fee is refunded to Host. MPO gets guest service fee
+      assert_equal payment.payment_transfer.service_fee_amount_host, Money.new(payment.refunds.order(:id).last.amount)
+      assert_equal 100, payment.payment_transfer.service_fee_amount_host_cents
       # 50% cancellation policy apply + service fee is not refundable
       # 50% of 100$ subtotal should be refunded to guest, the rest 60$ is left on HOST account!
       assert_equal payment.amount_to_be_refunded, payment.refunds.order(:id).first.amount

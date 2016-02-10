@@ -2,6 +2,7 @@
   %td= additional_charge_type.name
   %td= additional_charge_type.additional_charge_type_target.try(&:name)
   %td= additional_charge_type.amount
+  %td= additional_charge_type.percent.to_s + "%" if additional_charge_type.percent
   %td= additional_charge_type.status.capitalize
   %td= {"host" => "Host", "mpo" => "Service"}[additional_charge_type.commission_receiver]
   %td
