@@ -41,16 +41,12 @@ class Authentication::LinkedinProviderTest < ActiveSupport::TestCase
         @linkedin_provider.stubs(:connection).once.raises(LinkedIn::InvalidRequest.new(nil))
       end
 
-      should 'rescue and re-raise error when calling friend_ids' do
-        assert_raise Authentication::InvalidToken do
-          @linkedin_provider.friend_ids
-        end
+      should 'return empty array when calling friend_ids' do
+        assert_equal [], @linkedin_provider.friend_ids
       end
 
-      should 'rescue and re-raise error when calling info' do
-        assert_raise Authentication::InvalidToken do
-          @linkedin_provider.info
-        end
+      should 'return nil uid when calling info' do
+        assert_nil @linkedin_provider.info.uid
       end
     end
   end
