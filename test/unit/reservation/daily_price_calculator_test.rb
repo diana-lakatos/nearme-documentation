@@ -151,11 +151,11 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
           seed_reservation_dates(@dates)
 
           # The expectation is to have blocks:
-          # [today, today+1, today+2]
-          # [today+4]
+          # [today, today+1, today+2] = 2 nights
+          # [today+4] = 1 night
           #
           # If a 'week' pricing is applied on 3 consecutive nights, then the pricing should be
-          # 2d + 1d
+          # 2n(from pro-rated week price) + 1n(per night price)
           @listing.stubs(:prices_by_days).returns({
             1 => 100.to_money,
             3 => 400.to_money
@@ -163,7 +163,7 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
         end
 
         should "take into account open availability" do
-          assert_equal 100.to_money*3, @calculator.price
+          assert_equal (2 * 400.to_money / 3) + 100.to_money, @calculator.price
         end
       end
     end
@@ -231,6 +231,16 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
       dates = date_groups_of(4, 1)
       seed_reservation_dates(dates)
       assert_equal 400_00, @calculator.price.cents
+    end
+
+    should "be correct if only price for months is defined and I want to book more than 30 days" do
+      #pro rate even when favourable pricing is disabled to avoid error when only montly price is enabled
+      @listing.stubs(:prices_by_days).returns({
+            30 => 400.to_money
+          })
+      dates = date_groups_of(35, 1)
+      seed_reservation_dates(dates)
+      assert_equal (400_00 + ((5/30.to_f) * 400_00)).round, @calculator.price.cents
     end
 
   end
