@@ -45,7 +45,8 @@ require('jquery-timeago');
             return;
         }
 
-        require.ensure('bootstrap-switch/src/coffee/bootstrap-switch', function(){
+        require.ensure('bootstrap-switch/src/coffee/bootstrap-switch', function(require){
+            require('bootstrap-switch/src/coffee/bootstrap-switch');
             els.bootstrapSwitch();
         });
     });
