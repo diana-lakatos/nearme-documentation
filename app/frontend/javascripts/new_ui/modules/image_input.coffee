@@ -1,4 +1,3 @@
-require 'jquery-ui/ui/widget'
 require 'jquery-ui/ui/sortable'
 require 'swipebox/src/js/jquery.swipebox'
 
