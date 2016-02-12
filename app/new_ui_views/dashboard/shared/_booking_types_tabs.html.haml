@@ -12,6 +12,9 @@
             %p
               = t :description, scope: [:pricing, :mode, booking_type_scope]
 
+- if f.object.transactable_type.action_free_booking
+  = f.input :action_free_booking, as: :hidden
+
 .tab-content.control-group
   %div{id: 'booking-type-regular', class: "tab-pane #{booking_types_active_toggle(f.object, ['regular', 'overnight'], true)}"}
     = yield :booking_type_regular_tab_content

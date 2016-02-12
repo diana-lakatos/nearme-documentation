@@ -5,7 +5,7 @@
       %hr/
 
       - if f.object.transactable_type.action_free_booking
-        = f.input :action_free_booking, as: :switch, label: t("simple_form.labels.transactable.price_free"), input_html: { 'data-action-free-booking' => true }
+        = f.input :regular_action_free_booking, as: :switch, label: t("simple_form.labels.transactable.price_free"), input_html: { 'data-action-free-booking' => true }
 
       -# Price
 
@@ -60,18 +60,21 @@
 - if f.object.transactable_type.schedule_booking_enabled?
   - content_for :booking_type_schedule_tab_content do
     %hr/
-    %div{:class => "#{"error" if f.object.errors.include?(:fixed_price).present? || f.object.errors.include?(:price_type)}"}
-      .form-inline
-        = f.input :fixed_price, as: :numeric, wrapper: :dashboard_addon, required: true, prefix: currency_symbol_from_code(@transactable.try(:currency) || PlatformContext.current.instance.default_currency), label_html: { class: "block-label" }
-        .form-unit.label-offset
-          \/
-          = f.object.transactable_type.action_price_per_unit? ? t("simple_form.labels.transactable.price.per_unit") : t("simple_form.labels.transactable.price.fixed")
+    %div{:class => 'fixed-price-container'}
+      %div{:class => "#{"error" if f.object.errors.include?(:fixed_price).present? || f.object.errors.include?(:price_type)}"}
+        - if f.object.transactable_type.action_free_booking
+          = f.input :scheduled_action_free_booking, as: :switch, label: t("simple_form.labels.transactable.price_free"), input_html: { 'data-scheduled-action-free-booking' => true }
+        .form-inline
+          = f.input :fixed_price, as: :numeric, wrapper: :dashboard_addon, required: true, prefix: currency_symbol_from_code(@transactable.try(:currency) || PlatformContext.current.instance.default_currency), label_html: { class: "block-label" }
+          .form-unit.label-offset
+            \/
+            = f.object.transactable_type.action_price_per_unit? ? t("simple_form.labels.transactable.price.per_unit") : t("simple_form.labels.transactable.price.fixed")
 
-      - if form_fields.find{ |h| h['transactable'] == 'exclusive_price' }
-        = render 'dashboard/company/transactables/form_fields/exclusive_price', f: f
+        - if form_fields.find{ |h| h['transactable'] == 'exclusive_price' }
+          = render 'dashboard/company/transactables/form_fields/exclusive_price', f: f
 
-      - if form_fields.find{ |h| h['transactable'] == 'book_it_out' }
-        = render 'dashboard/company/transactables/form_fields/book_it_out', f: f
+        - if form_fields.find{ |h| h['transactable'] == 'book_it_out' }
+          = render 'dashboard/company/transactables/form_fields/book_it_out', f: f
 
 - if f.object.transactable_type.subscription_booking_enabled?
   - content_for :booking_type_subscription_tab_content do

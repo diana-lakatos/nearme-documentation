@@ -24,6 +24,8 @@ module.exports = class BookingType
     @input.val $(el).data('booking-type')
     if $(el).data('booking-type') == 'regular'
       $('.price-options input[type=checkbox]').trigger('change')
+    else if $(el).data('booking-type') == 'schedule'
+      $('input[data-scheduled-action-free-booking]').trigger('change')
     @input.trigger('change')
 
   initTabs: ->
@@ -31,3 +33,6 @@ module.exports = class BookingType
       @tabs.filter("[data-booking-type='regular']").tab('show')
     else
       @tabs.filter("[data-booking-type='#{@input.val()}']").tab('show')
+
+    if @input.val() == 'schedule'
+      $('input[data-scheduled-action-free-booking]').trigger('change')
