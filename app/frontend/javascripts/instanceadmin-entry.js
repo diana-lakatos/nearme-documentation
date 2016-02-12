@@ -7,6 +7,7 @@ require('jquery-ujs/src/rails');
 require('jquery-ui/ui/widget')
 require('../vendor/jquery-ui-1.9.2.custom.min');
 require('../vendor/bootstrap-3.2.0');
+require('bootstrap-switch/src/coffee/bootstrap-switch');
 require('../vendor/nested_form');
 require('cocoon');
 require('jquery-timeago');
@@ -40,15 +41,7 @@ require('jquery-timeago');
     });
 
     DNM.registerInitializer(function(){
-        var els = $('input.bootstrap_switch');
-        if (els.length === 0) {
-            return;
-        }
-
-        require.ensure('bootstrap-switch/src/coffee/bootstrap-switch', function(require){
-            require('bootstrap-switch/src/coffee/bootstrap-switch');
-            els.bootstrapSwitch();
-        });
+        $('input.bootstrap_switch').bootstrapSwitch();
     });
 
     DNM.registerInitializer(function(){
