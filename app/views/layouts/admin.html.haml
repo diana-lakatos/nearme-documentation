@@ -6,6 +6,8 @@
     = csrf_meta_tag
     %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}
     %link{:href => "/favicon.ico", :rel => "shortcut icon"}/
+
+    = render 'shared/raygun/libs'
     = javascript_include_tag 'vendor/modernizr'
 
     = stylesheet_link_tag 'admin_vendor'
@@ -60,3 +62,5 @@
     = webpack_manifest_script
     = webpack_bundle_tag 'common'
     = webpack_bundle_tag 'admin'
+
+    = render 'shared/raygun/init'

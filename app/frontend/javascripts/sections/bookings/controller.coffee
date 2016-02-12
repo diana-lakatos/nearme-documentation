@@ -84,15 +84,21 @@ module.exports = class BookingsController
       @updateBookingStatus()
 
     @bookingTabs.on 'click', (event) =>
-      if @listing.isRecurringBooking()
-        period = $(event.target).parents('li').data('subscription')
-        @container.find("input[data-subscription=#{period}]").click()
-        @listing.setSubscriptionPeriod(period)
-      else
-        @listing.setHourlyBooking(@hourlyBookingSelected())
-        @datepicker.setDates(@listing.bookedDatesArray)
-        @setReservationType()
-      @updateBookingStatus()
+      # This is to allow all classes on elements to settle
+      # because they are checked for determining the current
+      # state after click; specifically @hourlyBookingSelected
+      # would have returned an invalid value otherwise
+      setTimeout (=>
+        if @listing.isRecurringBooking()
+          period = $(event.target).parents('li').data('subscription')
+          @container.find("input[data-subscription=#{period}]").click()
+          @listing.setSubscriptionPeriod(period)
+        else
+          @listing.setHourlyBooking(@hourlyBookingSelected())
+          @datepicker.setDates(@listing.bookedDatesArray)
+          @setReservationType()
+        @updateBookingStatus()
+      ), 200
 
     @bookButton.on 'click', (event) =>
       @formTrigger = @bookButton

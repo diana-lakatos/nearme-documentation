@@ -1426,6 +1426,7 @@ class SecuredParams
       :name,
       :description,
       :amount,
+      :percent,
       :currency,
       :commission_receiver,
       :provider_commission_percentage,

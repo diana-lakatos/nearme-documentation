@@ -43,7 +43,6 @@ class Reservation::DailyPriceCalculator
   def price_for_days(days)
     prices = listing.try(:prices_by_days)
 
-    days -= 1 if listing.overnight_booking? && days > 1
     if prices
       # Determine the matching block size and price
       block_size = prices.keys.sort.inject { |largest_block, block_days|
@@ -53,9 +52,16 @@ class Reservation::DailyPriceCalculator
       price = prices[block_size]
 
       # Our pricing logic per block is the block price
-      # plus a pro-rated cost for each additional day used
-      if @reservation.favourable_pricing_rate
-        (((days/block_size.to_f) * price.cents).round / BigDecimal.new(price.currency.subunit_to_unit)).to_money(price.currency)
+      # plus a pro-rated cost for each additional day used.
+      # Pro rate even when favourable pricing is disabled to avoid error when
+      # only prices for longer period than days are enabled.
+      if @reservation.favourable_pricing_rate || days < block_size
+        if listing.overnight_booking? && days > 1
+          reduced_days = days - 1
+        else
+          reduced_days = days
+        end
+        (((reduced_days/block_size.to_f) * price.cents).round / BigDecimal.new(price.currency.subunit_to_unit)).to_money(price.currency)
       else
         priced_days = days/block_size
         left_days = days - priced_days*block_size
