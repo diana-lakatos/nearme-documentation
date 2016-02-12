@@ -17,11 +17,16 @@ module.exports = class ChartWrapper
     ]
 
   constructor: (canvas, data, labels, titles) ->
+
+    canvasSupported = ->
+      elem = createElement('canvas')
+      return !!(elem.getContext && elem.getContext('2d'))
+
     canvas = $(canvas)
     return if canvas.length == 0
     @canvas = canvas
     @globalGraphSettings = {
-      animation : Modernizr.canvas,
+      animation : canvasSupported(),
       scaleFontFamily : "'Futura-regular', sans-serif",
       scaleFontSize : 18
     }

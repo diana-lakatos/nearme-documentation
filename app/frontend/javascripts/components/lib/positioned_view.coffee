@@ -18,7 +18,7 @@ module.exports = class PositionedView
 
     @container = $(@containerTemplate).hide()
     @container.addClass(@options.containerClass) if @options.containerClass
-    @positionTarget = @options.positionTarget
+    @positionTarget = $(@options.positionTarget)
 
     @container.on 'click', (event) => event.stopPropagation()
 
@@ -53,18 +53,18 @@ module.exports = class PositionedView
     @container.is(':visible')
 
   reposition: ->
-    return unless @positionTarget
+    return unless @positionTarget.length > 0
 
     # Width/height of the datepicker container
     width = @container.width()
     height = @container.height()
 
     # Offset of the position target reletave to the page
-    tOffset = $(@positionTarget).offset()
+    tOffset = @positionTarget.offset()
 
     # Width/height of the position target
-    tWidth = $(@positionTarget).outerWidth()
-    tHeight = $(@positionTarget).outerHeight()
+    tWidth = @positionTarget.outerWidth()
+    tHeight = @positionTarget.outerHeight()
 
     # Window height and scroll position
     wHeight = $(window).height()
