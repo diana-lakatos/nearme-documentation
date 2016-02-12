@@ -482,6 +482,10 @@ class ApplicationController < ActionController::Base
     }
   end
 
+  def enable_ckeditor_for_field?(model, field)
+    FormAttributes::CKEFIELDS[model.to_sym].include?(field.to_sym)
+  end
+
   def ckeditor_pictures_scope(options = {})
     options[:assetable_id] = platform_context.instance.id
     options[:assetable_type] = "Instance"
@@ -522,7 +526,7 @@ class ApplicationController < ActionController::Base
     @ckeditor_toolbar_creator ||= CkeditorToolbarCreator.new(params)
   end
 
-  helper_method :ckeditor_toolbar_creator
+  helper_method :ckeditor_toolbar_creator, :enable_ckeditor_for_field?
 
   def prepend_view_paths
     # a quick and dirty hack for Chris D to let him start working
