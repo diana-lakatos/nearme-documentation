@@ -152,5 +152,8 @@ module DesksnearMe
       :asset_manifest => {},
       :common_manifest => {},
     }
+
+    config.raygun_js_reporting = false
+    config.raygun_js_api_key = 'sPKXvZDLo2v/E/p7VmIVQQ=='
   end
 end

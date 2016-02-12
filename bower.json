@@ -52,6 +52,7 @@
     "history.js": "~1.8.0",
     "jquery.payment": "1.0.2",
     "nouislider": "7.0.10",
-    "jt.timepicker": "timepicker#^1.8.9"
+    "jt.timepicker": "timepicker#^1.8.9",
+    "raygun4js": "^2.2.3"
   }
 }

@@ -26,7 +26,7 @@
   = f.input :confirm_reservations, as: :switch, required: f.object.required?(:confirm_reservations)
 
 - if only_inputs.empty? || only_inputs.include?(:capacity)
-  = f.input :capacity, as: :switch, required: f.object.required?(:capacity), wrapper_html: { class: 'form-control-xs' }
+  = f.input :capacity, required: f.object.required?(:capacity), wrapper_html: { class: 'form-control-xs' }
 
 - if only_inputs.empty? || only_inputs.include?(:amenities)
   = render 'dashboard/company/transactables/form_fields/amenity_types', f: f

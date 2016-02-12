@@ -505,7 +505,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def booking_nights_per_week
-    booking_days_per_week - 1
+    booking_days_per_week
   end
 
   def booking_units_per_week
