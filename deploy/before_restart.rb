@@ -22,22 +22,12 @@ node[:deploy].each do |application, deploy|
     only_if     { node["opsworks"]["instance"]["layers"].include?('rails-app') }
   end
 
-  execute "Invoke gulp dist" do
+  execute "Invoke gulp build" do
     cwd         deploy[:current_path]
     user        deploy[:user]
     group       deploy[:group]
     environment ({'HOME' => '/home/deploy', 'USER' => 'deploy', 'PATH' => '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:/home/deploy/.local/bin:/home/deploy/bin'})
-    command     "cd /srv/www/nearme/current/ && gulp dist"
-    action      :run
-    only_if     { node["opsworks"]["instance"]["layers"].include?('rails-app') }
-  end
-
-  execute "Invoke rake webpack" do
-    cwd         deploy[:current_path]
-    user        deploy[:user]
-    group       deploy[:group]
-    environment({ "RAILS_ENV" => node[:deploy][application][:rails_env] })
-    command     "bundle exec rake webpack:compile"
+    command     "cd /srv/www/nearme/current/ && gulp build:#{node[:deploy][application][:rails_env].downcase}"
     action      :run
     only_if     { node["opsworks"]["instance"]["layers"].include?('rails-app') }
   end
