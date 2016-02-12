@@ -90,8 +90,16 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
 
   def refund_service_fee(options)
     @payment_transfer = @payment.payment_transfer
+
+    # We only want to refund host service fee when guest cancel
+    mpo_refund_amount = if @payment.cancelled_by_guest?
+      @payment_transfer.service_fee_amount_host.cents
+    else
+      @payment_transfer.total_service_fee.cents
+    end
+
     service_fee_refund = @payment.refunds.create(
-      amount: @payment_transfer.total_service_fee.cents,
+      amount: mpo_refund_amount,
       currency: @payment.currency,
       payment: @payment,
       payment_gateway_mode: mode,
@@ -99,10 +107,10 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
     )
 
     payout = @payment_transfer.payout_attempts.successful.first
-    refund_response = if @payment_transfer.total_service_fee.cents > 0
-      gateway.refund(@payment_transfer.total_service_fee.cents, refund_identification(payout), options)
+    refund_response = if mpo_refund_amount > 0
+      gateway.refund(mpo_refund_amount, refund_identification(payout), options)
     else
-      OpenStruct.new(success: true, success?: true, refunded_ammount: @payment_transfer.total_service_fee.cents)
+      OpenStruct.new(success: true, success?: true, refunded_ammount: mpo_refund_amount)
     end
 
     if refund_response.success?

@@ -20,27 +20,27 @@ module.exports = class BookingsPriceCalculator
     total = _.inject(contiguousBlocks, (sum, block) =>
       sum + @priceForDays(block.length)*@listing.getQuantity()
     , 0)
-    total += @additionalCharges.getCharges()
+    total += @additionalCharges.getCharges(total)
     total
 
   priceForDays: (days) ->
-    if @listing.isOvernightBooking()
-      days -= 1 if days > 1
     prices = @listing.pricesByDays
     pricesDays = _.keys(prices)
 
     return 0 if pricesDays.length == 0
-
     block_size = _.inject pricesDays, (largestBlock, blockDays) ->
       largestBlock = blockDays if days >= blockDays
       largestBlock
 
     price = prices[block_size]
-    if @listing.hasFavourablePricingRate()
-      Math.round((days/block_size) * price)
+    if @listing.hasFavourablePricingRate() || days < block_size
+      if @listing.isOvernightBooking() && days > 1
+        Math.round(((days - 1)/block_size) * price)
+      else
+        Math.round((days/block_size) * price)
     else
       priced_days = Math.floor(days/block_size)
-      left_days = days - priced_days*block_size
+      left_days = days - priced_days*(block_size)
       calculated_price = Math.round(priced_days * price)
       if left_days == 0
         calculated_price

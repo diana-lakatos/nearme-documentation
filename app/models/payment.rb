@@ -248,11 +248,15 @@ class Payment < ActiveRecord::Base
   end
 
   def amount_to_be_refunded
-    if payable.respond_to?(:cancelled_by_guest?) && payable.cancelled_by_guest?
+    if cancelled_by_guest?
       (subtotal_amount.cents * (1 - self.cancellation_policy_penalty_percentage.to_f/BigDecimal(100))).to_i
     else
       total_amount.cents
     end
+  end
+
+  def cancelled_by_guest?
+    payable.respond_to?(:cancelled_by_guest?) && payable.cancelled_by_guest?
   end
 
   # TODO: now as we call that on Payment object there is no need to _payment?, instead payment.manual?
