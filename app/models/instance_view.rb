@@ -451,7 +451,7 @@ class InstanceView < ActiveRecord::Base
   validate :does_not_duplicate_locale_and_transactable_type
 
   def does_not_duplicate_locale_and_transactable_type
-    if (ids = InstanceView.distinct.where.not(id: id).where(path: path, partial: partial, view_type: view_type).for_locale(locales.pluck(:code)).for_transactable_type_id(transactable_types.pluck(:id)).pluck(:id)).present?
+    if (ids = InstanceView.distinct.where.not(id: id).where(path: path, partial: partial, view_type: view_type, format: format).for_locale(locales.pluck(:code)).for_transactable_type_id(transactable_types.pluck(:id)).pluck(:id)).present?
       ids = ids.join(', ')
       locales_names = Locale.distinct.where(id: locale_ids).joins(:locale_instance_views).where(locale_instance_views: { instance_view: ids }).map(&:name).join(', ')
       transactable_type_names = TransactableType.distinct.where(id: transactable_type_ids).joins(:transactable_type_instance_views).where(transactable_type_instance_views: { instance_view_id: ids }).pluck(:name).join(', ')
