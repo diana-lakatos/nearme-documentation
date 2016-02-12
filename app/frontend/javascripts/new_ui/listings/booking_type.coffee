@@ -15,10 +15,10 @@ module.exports = class BookingType
     @input.on 'change', (e) =>
       if @input.val() == 'schedule'
         @availability.addClass('form-section-disabled')
-        @availability.find('input').prop('disabled', true)
+        @availability.find('input:visible').prop('disabled', true)
       else
         @availability.removeClass('form-section-disabled')
-        @availability.find('input').prop('disabled', false)
+        @availability.find('input:visible').prop('disabled', false)
 
   changeBookingType: (el)->
     @input.val $(el).data('booking-type')
