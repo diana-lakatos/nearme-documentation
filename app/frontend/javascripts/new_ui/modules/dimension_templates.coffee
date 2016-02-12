@@ -67,7 +67,7 @@ module.exports = class DimensionTemplates
       unit_selectize.setValue(new_elements[0])
 
   setDefaultOptionAsSelected: ->
-    return unless @container.parents('form').attr('method') == 'post' && $('#product_errors_present').length == 0
+    return if @container.parents('form').find('input[name="_method"]').val() == 'put' || $('#product_errors_present').length > 0
     for key in Object.keys(@dimensions_templates_select.get(0).selectize.options)
       option = @dimensions_templates_select.get(0).selectize.options[key]
       if option.template.use_as_default
