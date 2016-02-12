@@ -50,10 +50,6 @@ module.exports = class PriceFields
       @dailyBookingField.val(@dailyFields().length > 0)
       @subscriptionBookingField.val(@subscriptionFields().length > 0)
       checkbox.parents(".row").find('input[data-price-field]').attr('readonly', !checkbox.is(':checked'))
-      if checkbox.data('booking-type-override') && checkbox.is(':checked')
-        @bookingTypeInput.val(checkbox.data('booking-type-override')).trigger('change')
-      else
-        @bookingTypeInput.val('regular').trigger('change')
 
       # Free enabled if all prices are disabled
       @freeCheckbox.prop('checked', !@enablingPriceCheckboxes.is(':checked'))
