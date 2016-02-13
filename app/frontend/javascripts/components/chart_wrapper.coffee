@@ -19,7 +19,7 @@ module.exports = class ChartWrapper
   constructor: (canvas, data, labels, titles) ->
 
     canvasSupported = ->
-      elem = createElement('canvas')
+      elem = document.createElement('canvas')
       return !!(elem.getContext && elem.getContext('2d'))
 
     canvas = $(canvas)
