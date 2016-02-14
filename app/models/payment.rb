@@ -248,7 +248,7 @@ class Payment < ActiveRecord::Base
   end
 
   def amount_to_be_refunded
-    if cancelled_by_guest?
+    if cancelled_by_guest? && payment_gateway.supports_partial_refunds?
       (subtotal_amount.cents * (1 - self.cancellation_policy_penalty_percentage.to_f/BigDecimal(100))).to_i
     else
       total_amount.cents

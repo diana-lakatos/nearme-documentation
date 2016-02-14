@@ -102,6 +102,10 @@ class PaymentGateway < ActiveRecord::Base
     raise NotImplementedError.new("#{self.name} has not implemented self.supported_countries")
   end
 
+  def documentation_url
+    nil
+  end
+
   def active?
     self.live_active? || self.test_active?
   end

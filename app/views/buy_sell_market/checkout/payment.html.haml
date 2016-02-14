@@ -16,6 +16,7 @@
                 %ul
                   - @order.errors[:checkout_fields].each do |error|
                     %li.error-block= error
+
       %section.checkout-form#credit-card-select
         .container-fluid
           = render 'shared/payments', f: f
