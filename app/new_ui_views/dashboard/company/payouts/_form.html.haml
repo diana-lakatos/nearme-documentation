@@ -5,3 +5,5 @@
 
     = render 'dashboard/shared/fields/address', :f => address_form, field_label: t('payouts.mailing_address')
 
+    = address_form.hidden_field :raw_address, value: true
+
