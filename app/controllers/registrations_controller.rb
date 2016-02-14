@@ -24,8 +24,8 @@ class RegistrationsController < Devise::RegistrationsController
   skip_before_filter :redirect_if_marketplace_password_protected, :only => [:store_geolocated_location, :store_google_analytics_id, :update_password, :set_password]
 
   def new
+    @legal_page_present = Page.exists?(slug: 'legal')
     super unless already_signed_in?
-
   end
 
   def create
