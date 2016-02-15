@@ -305,7 +305,7 @@ class Payment < ActiveRecord::Base
   end
 
   def payment_gateway
-    @payment_gateway ||= super || payable.billing_authorization.try(:payment_gateway)
+    @payment_gateway ||= super || payable.try(:billing_authorization).try(:payment_gateway)
   end
 
   def payment_method_id=(payment_method_id)
