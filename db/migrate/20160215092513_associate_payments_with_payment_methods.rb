@@ -3,7 +3,7 @@ class AssociatePaymentsWithPaymentMethods < ActiveRecord::Migration
     Instance.find_each do |i|
       i.set_context!
       puts "Processing payments for #{i.name}"
-      Payment.where(payment_method_id: nil).each do |p|
+      Payment.find_each do |p|
         begin
           if p.payable.try(:payment_method_id)
             puts "#{p.id} associating payment_method_id to the same that was used for payable"
