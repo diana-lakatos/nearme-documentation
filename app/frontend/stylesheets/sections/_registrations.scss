@@ -142,3 +142,17 @@
     }
   }
 }
+
+.admin-profile-notice {
+    background: #FEEFB3;
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+    border: 1px solid darken(#FEEFB3, 30%);
+
+    p {
+        font-size: 16px;
+        font-weight: normal;
+        color: #9F6000;
+    }
+}

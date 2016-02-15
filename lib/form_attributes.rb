@@ -1,5 +1,9 @@
 class FormAttributes
 
+  CKEFIELDS = {
+    transactable: [:description]
+  }
+
   def user
     [
       :email, :phone, :avatar, :name, :first_name, :middle_name, :last_name, :approval_requests, :current_address,

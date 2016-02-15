@@ -28,7 +28,8 @@
           - if f.object.errors.include?(:accept_terms_of_service)
             %p.error-block= f.object.errors[:accept_terms_of_service].first
       - else
-        %p.notice.text-center.legal #{t('sign_up_form.confirm_tos')} #{link_to t('sign_up_form.tos'), pages_path('legal'), :target => '_blank'}.
+        - if @legal_page_present
+          %p.notice.text-center.legal #{t('sign_up_form.confirm_tos')} #{link_to t('sign_up_form.tos'), pages_path('legal'), :target => '_blank'}.
     .actions
       = f.submit t('sign_up_form.buttons.sign_up'), :class => 'desksnearme submit btn btn-green', data: { disable_with: t('sign_up_form.disabled_buttons.sign_up') }, :tabindex => '4'
 

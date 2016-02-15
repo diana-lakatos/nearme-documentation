@@ -1,6 +1,11 @@
 - render_content_outside_container!
 - is_current_user = current_user && current_user.id == @user.try(:id)
 
+- if current_user.try(:instance_admin?)
+  .container-fluid
+    .admin-profile-notice
+      %p= t 'user_profile.labels.admin_profile'
+
 %article.user-profile.container-fluid
   = render 'registrations/profile/header', platform_context: platform_context, user: @user, is_current_user: is_current_user, company: @company
 
