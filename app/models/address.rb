@@ -15,10 +15,12 @@ class Address < ActiveRecord::Base
   belongs_to :instance
   belongs_to :entity, -> { with_deleted }, polymorphic: true
 
-  validates_presence_of :address, :latitude, :longitude
-  validate :check_address, if: lambda { |l| l.should_check_address == 'true' }
-  before_validation :update_address
-  before_validation :parse_address_components
+  validates_presence_of :address
+  validates_presence_of :latitude, :longitude, if: lambda { |l| !l.raw_address? }
+  validate :check_address, if: lambda { |l| l.should_check_address == 'true' && !l.raw_address? }
+  before_validation :update_address, if: lambda { |l| !l.raw_address? }
+  before_validation :parse_address_components, if: lambda { |l| !l.raw_address? }
+  before_validation :clear_fields, if: lambda { |l| l.raw_address? }
 
   scope :bounding_box, -> (box) {
     where('addresses.latitude > ? AND addresses.latitude < ?', box.last.first, box.first.first).
@@ -30,6 +32,12 @@ class Address < ActiveRecord::Base
       entity.listings.each do |l|
         ElasticIndexerJob.perform(:update, l.class.to_s, l.id)
       end
+    end
+  end
+
+  def clear_fields
+    [:street, :formatted_address, :suburb, :city, :country, :state, :postcode, :address_components, :latitude, :longitude, :iso_country_code].each do |field|
+      self.send("#{field}=", nil)
     end
   end
 
