@@ -1,0 +1,37 @@
+- title @listing.name
+- canonical_url @listing.show_path
+- meta_description "#{mask_phone_and_email_if_necessary(@listing.description).try(:truncate, 130)}"
+
+= transactable_structured_data
+
+- content_for :meta do
+  = render :partial => 'shared/og_meta', locals: { object: @listing, url: @listing.show_path }
+
+- content_for :hero do
+  - cache i18n_cache_key('listings_show', @listing, @listing.location, @listing.company, @listing.administrator) do
+    = render 'show'
+
+- content_for :domready do
+  - if @listing && params[:action] == 'ask_a_question'
+    $(document).trigger('load.modal', ['#{new_listing_user_message_path(@listing)}']);
+
+= content_for :script do
+  :javascript
+    $("[data-booking-module-container]").each(function(index, el) {
+      el = $(el)
+      path = el.data('path')
+      collapsed = el.data('collapsed')
+      restore_reservations = el.data('restore-reservations')
+      start_date = el.data('start-date')
+      $.get(
+        path,
+        {
+          collapsed: collapsed,
+          restore_reservations: restore_reservations,
+          start_date: start_date
+        },
+        function(data) {
+          el.html(data);
+        }
+      );
+    });

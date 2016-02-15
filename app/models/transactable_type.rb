@@ -6,7 +6,7 @@ class TransactableType < ActiveRecord::Base
   scoped_to_platform_context
   acts_as_custom_attributes_set
 
-  AVAILABLE_TYPES = ['Listing', 'Buy/Sell']
+  AVAILABLE_TYPES = ['Listing', 'Buy/Sell'].freeze
 
   INTERNAL_FIELDS = [
     :name, :description, :capacity, :quantity, :confirm_reservations,

@@ -11,16 +11,13 @@ class LiquidView
   PROTECTED_INSTANCE_VARIABLES = %w( @_request @controller @_first_render @_memoized__pick_template @view_paths
                                      @helpers @assigns_added @template @_render_stack @template_format @assigns )
 
-
-  Liquid::Template.register_tag('inject_content_holder', ContentHolderTag)
   Liquid::Template.register_tag('inject_content_holder_for_path', ContentHolderTagForPathTag)
+  Liquid::Template.register_tag('inject_content_holder', ContentHolderTag)
   Liquid::Template.register_tag('languages_select', LanguagesSelectTag)
   Liquid::Template.register_tag('product_type_select', ProductTypeSelectTag)
   Liquid::Template.register_tag('service_type_select', ServiceTypeSelectTag)
   Liquid::Template.register_tag('transactable_type_select', TransactableTypeSelectTag)
-
-
-
+  
   def self.call(template)
     "LiquidView.new(self).render(#{template.source.inspect}, local_assigns)"
   end

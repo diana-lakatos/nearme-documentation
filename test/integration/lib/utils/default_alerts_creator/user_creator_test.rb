@@ -29,8 +29,8 @@ class Utils::DefaultAlertsCreator::UserCreatorTest < ActionDispatch::Integration
       assert_equal "You have unread messages", mail.subject
       assert mail.html_part.body.include?('This is a notification to let you know you have unread messages waiting for you in your inbox')
       assert_equal [@user.email], mail.to
-      assert_contains 'href="http://custom.domain.com', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
     end
 
@@ -43,8 +43,8 @@ class Utils::DefaultAlertsCreator::UserCreatorTest < ActionDispatch::Integration
       assert_equal "You've become an Admin of #{PlatformContext.current.instance.name}", mail.subject
       assert mail.html_part.body.include?("You have been promoted to Admin by Super Admin")
       assert_equal [@user.email], mail.to
-      assert_contains 'href="http://custom.domain.com/instance_admin', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com/instance_admin', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
     end
   end

@@ -62,7 +62,8 @@ class TransactableDrop < BaseDrop
   delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :action_rfq?, :creator, :administrator, :last_booked_days,
     :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?,
     :action_free_booking?, :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at,
-    :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, :attachments, :confirm_reservations, :schedule_booking?, to: :transactable
+    :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, :attachments, :confirm_reservations,
+    :schedule_booking?, :to_key, :model_name, to: :transactable
 
   # action_price_per_unit
   #   returns true if there is a single unit available of the transactable item for a given time period
@@ -82,6 +83,10 @@ class TransactableDrop < BaseDrop
 
   def initialize(transactable)
     @transactable = transactable
+  end
+
+  def class_name
+    'Transactable'
   end
 
   #   name of representing the bookable object transactable on the marketplace as a string (e.g. desk, room etc.)
@@ -136,13 +141,17 @@ class TransactableDrop < BaseDrop
 
   # url to the listing page for this listing
   def url
-    routes.transactable_type_location_listing_path(@transactable.service_type, @transactable.location, @transactable)
+    @transactable.show_url
   end
   alias_method :listing_url, :url
 
-  # url to the listing page for this listing - location prefixed
+  def show_path
+    @transactable.show_path
+  end
+
+  # url to the listing page for this listing - location prefixed. Deprecated, pointing to url
   def location_prefixed_path
-    routes.location_listing_path(@transactable.location, @transactable)
+    url
   end
 
   # street name for the location of this listing
@@ -159,6 +168,11 @@ class TransactableDrop < BaseDrop
   def from_money_period
     price_information(@transactable)
   end
+
+  def space_placeholder
+    image_url(Placeholder.new(:width => 895, :height => 554).path).to_s
+  end
+
 
   # url to the section in the app for managing this listing, with tracking
   def manage_listing_url_with_tracking
@@ -231,6 +245,25 @@ class TransactableDrop < BaseDrop
   # returns whether or not the listing has seller attachments
   def has_seller_attachments?
     attachments.exists?
+  end
+
+  # url for sharing this location on Facebook
+  def facebook_social_share_url
+    routes.new_listing_social_share_path(@transactable, provider: 'facebook', track_email_event: true)
+  end
+
+  # url for sharing this location on Twitter
+  def twitter_social_share_url
+    routes.new_listing_social_share_path(@transactable, provider: 'twitter', track_email_event: true)
+  end
+
+  # url for sharing this location on LinkedIn
+  def linkedin_social_share_url
+    routes.new_listing_social_share_path(@transactable, provider: 'linkedin', track_email_event: true)
+  end
+
+  def booking_module_path
+    routes.booking_module_listing_path(@transactable)
   end
 
 end

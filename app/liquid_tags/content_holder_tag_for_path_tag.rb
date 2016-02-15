@@ -12,7 +12,7 @@ class ContentHolderTagForPathTag < Liquid::Tag
     action = context.registers[:action_view].action_name
 
     # This can be nil if the current page is not in that hash
-    group_name = ContentHolder::INJECT_PAGES[[controller, action].join('#')]
+    group_name = ContentHoldersHelper::INJECT_PAGES[[controller, action].join('#')]
     contents = get_content_holders_for_path(group_name).map(&:with_content_for).join
     @template = Liquid::Template.parse(contents)
     @template.render(context)

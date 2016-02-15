@@ -1,6 +1,6 @@
 <h2>Change of plans, {{ user.first_name }}!</h2>
 
-<p>The booking for '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>'has been cancelled by the {{listing.lessor}}.</p>
+<p>The booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>'has been cancelled by the {{listing.lessor}}.</p>
 
 <p>No worries! Here are some other {{ reservation.bookable_noun_plural }} you may be interested in:</p>
 

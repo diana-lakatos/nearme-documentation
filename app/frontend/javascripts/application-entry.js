@@ -86,7 +86,7 @@ require('cocoon');
 
     DNM.registerInitializer(function(){
         /* initializeWishList */
-        $('.favorite #action-link').on('click', function(e){
+        $('.favorite [data-action-link]').on('click', function(e){
             if ($(this).data('current-user')){
                 e.preventDefault();
                 $.getScript($(this).attr('href'));
@@ -160,12 +160,7 @@ require('cocoon');
 
         require.ensure('./sections/space/controller', function(require){
             var SpaceController = require('./sections/space/controller');
-            return new SpaceController(el, {
-                bookings: {
-                    listings: el.data('listings'),
-                    returnedFromSession: el.data('returned-from-session')
-                }
-            });
+            return new SpaceController(el);
         });
     });
 
@@ -184,15 +179,24 @@ require('cocoon');
     });
 
     DNM.registerInitializer(function(){
-        var els = $('#w-hotels .w-hotels-listing');
+        var els = $('[data-toggleable-booking-module]');
         if (els.length === 0) {
             return;
         }
 
         require.ensure('./sections/bookings/controller', function(require){
             var BookingsController = require('./sections/bookings/controller');
-            return new BookingsController(els, els.data('listing-booking-data'), {
-                showReviewBookingImmediately: els.data('show-review-booking-immediately')
+            els.each(function(){
+                return new BookingsController($(this));
+            });
+        });
+    });
+
+    DNM.registerInitializer(function(){
+        $(document).on('init.bookingscontroller', function(event, el){
+            require.ensure('./sections/bookings/controller', function(require){
+                var BookingsController = require('./sections/bookings/controller');
+                return new BookingsController(el);
             });
         });
     });
@@ -429,6 +433,20 @@ require('cocoon');
             var ReviewsController = require('./sections/reviews/controller');
             els.each(function(){
                 return new ReviewsController($(this), { path: $(this).data('path'), reviewables: $(this).data('reviewables') });
+            });
+        });
+    });
+
+    DNM.registerInitializer(function(){
+        var els = $('[data-seller-attachable]');
+        if (els.length === 0) {
+            return;
+        }
+
+        require.ensure(['./sections/seller_attachments_controller'], function(require){
+            var SellerAttachmentsController = require('./sections/seller_attachments_controller');
+            els.each(function(){
+                return new SellerAttachmentsController($(this), { path: $(this).data('seller-attachment-path'), seller_attachable: $(this).data('seller-attachable') });
             });
         });
     });

@@ -19,6 +19,8 @@ FactoryGirl.define do
     type 'ServiceType'
     searchable true
     enable_reviews true
+    show_path_format "/listings/:id"
+
 
     ignore do
       generate_rating_systems false

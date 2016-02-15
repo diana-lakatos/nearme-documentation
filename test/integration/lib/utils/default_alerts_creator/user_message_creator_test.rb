@@ -56,7 +56,7 @@ class Utils::DefaultAlertsCreator::UserMessageCreatorTest < ActionDispatch::Inte
                                            thread_recipient: @recipient,
                                            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.'
                                           )
-        Googl.stubs(:shorten).with("http://notifcations.com/users/#{@recipient.id}/user_messages/#{@user_message.id}?token=abc").returns(stub(:short_url => "http://goo.gl/abc324"))
+        Googl.stubs(:shorten).with("https://notifcations.com/users/#{@recipient.id}/user_messages/#{@user_message.id}?token=abc").returns(stub(:short_url => "http://goo.gl/abc324"))
         UserMessage.any_instance.stubs(:recipient).returns(@recipient)
       end
 

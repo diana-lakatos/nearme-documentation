@@ -53,7 +53,7 @@
           .row
             .inline
               - if reservation.listing.present? && !reservation.listing.deleted?
-                = link_to reservation.listing.try(:name), location_path(reservation.listing.location, reservation.listing)
+                = link_to reservation.listing.try(:name), reservation.listing.decorate.show_path
                 %br
                 %span.address
                   = link_to reservation.listing.location.address,

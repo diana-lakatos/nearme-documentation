@@ -1,6 +1,6 @@
 <h2>Can we help, {{ user.first_name }}?</h2>
 
-<p>We noticed that you didn't confirm {{ recurring_booking.owner.first_name.pluralize }} booking for '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>' within the required 24 hour period.</p>
+<p>We noticed that you didn't confirm {{ recurring_booking.owner.first_name.pluralize }} booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' within the required 24 hour period.</p>
 
 <p>That's one missed opportunity but we're here to help so you don’t miss any other bookings!</p>
 

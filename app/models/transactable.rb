@@ -550,7 +550,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def to_liquid
-    @transactable_drop ||= TransactableDrop.new(self)
+    @transactable_drop ||= TransactableDrop.new(self.decorate)
   end
 
   def self.xml_attributes(transactable_type = nil)

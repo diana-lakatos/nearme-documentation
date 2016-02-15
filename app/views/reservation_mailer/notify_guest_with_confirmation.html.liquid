@@ -1,7 +1,7 @@
 <h2>Almost there, {{ user.first_name }}!</h2>
 
 <p class="first-paragraph">
-Your booking for '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>' is waiting for confirmation from the {{ listing.lessor }}! We'll get back to you as soon as the {{ listing.lessor }} confirms the booking. {{ listing.lessors | capitalize }} have 24 hours to confirm, but most reply sooner.
+Your booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' is waiting for confirmation from the {{ listing.lessor }}! We'll get back to you as soon as the {{ listing.lessor }} confirms the booking. {{ listing.lessors | capitalize }} have 24 hours to confirm, but most reply sooner.
 </p>
 
 <a class="btn" href="{{ platform_context.host | append:user.bookings_dashboard_url_with_tracking_and_token | append:signature_for_tracking }}">View Your Booking</a>

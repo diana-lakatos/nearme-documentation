@@ -11,7 +11,7 @@
 
             = t('dashboard.user_recurring_bookings.booked')
 
-            = link_to recurring_booking.listing.try(:name), location_path(recurring_booking.listing.location, recurring_booking.listing)
+            = link_to recurring_booking.listing.try(:name), recurring_booking.listing.decorate.show_path
 
           - if recurring_booking.owner.present?
             %p

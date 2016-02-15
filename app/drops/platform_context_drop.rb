@@ -72,11 +72,20 @@ class PlatformContextDrop < BaseDrop
   #   text containing the bookable nouns as a sentence (e.g. "desks or tables or rooms")
   # search_input_name
   #   HTML name of the input element to be used in search pages
+  # facebook_key
+  #   Key needed to display Like button in social button
+  # wish_lists_icon_set
+  #   Icon for favorite button
+  # seller_attachments_enabled
+  #   Whether seller attachments are enabled or not
+  # wish_lists_enabled?
+  #   Whether wish lists is enabled or not
   delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :twitter_url, :lessor, :lessors, :lessee, :lessees,
     :search_by_keyword_placeholder, :facebook_url, :address, :phone_number, :gplus_url,
     :site_name, :support_url, :support_email, :logo_image, :hero_image, :tagline, :homepage_content,
     :is_company_theme?, :call_to_action, :latest_products, :buyable?, :bookable?, :transactable_types, :product_types,
-    :bookable_nouns, :bookable_nouns_plural, :search_input_name, :service_types, to: :platform_context_decorator
+    :bookable_nouns, :bookable_nouns_plural, :search_input_name, :service_types, :facebook_key,
+    :wish_lists_icon_set, :seller_attachments_enabled?, :wish_lists_enabled?, to: :platform_context_decorator
 
 
   def initialize(platform_context_decorator)
@@ -111,7 +120,7 @@ class PlatformContextDrop < BaseDrop
 
   # full url to the root of the marketplace
   def host
-    "http://#{platform_context_decorator.host}"
+    "https://#{platform_context_decorator.host}"
   end
 
   # full url to the root of the server hosting the assets (images, javascripts, stylesheets etc.)

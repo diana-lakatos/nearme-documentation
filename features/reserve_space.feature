@@ -13,7 +13,7 @@ Feature: A user can book at a space
   Scenario: Booking for a non-'automatically confirm' listing should show relevant details
     Given bookings for that transactable do need to be confirmed
     And I am logged in as the user
-    When I go to the location's page
+    When I go to the transactable's page
     And I select to book and review space for:
       | Transactable     | Date   | Quantity |
       | the transactable | Monday | 1        |
@@ -26,7 +26,7 @@ Feature: A user can book at a space
     Given a location exists with company: that company
     And a transactable exists with location: that location, quantity: 10, currency: "RUB"
     And I am logged in as the user
-    When I go to the location's page
+    When I go to the transactable's page
     And I select to book and review space for:
       | Transactable | Date | Quantity|
       | the transactable | Monday | 1 |
@@ -35,7 +35,7 @@ Feature: A user can book at a space
   Scenario: Free booking should show 'Free' in place of rates and $0.00 for the total
     Given I am logged in as the user
     And the transactable is free
-    When I go to the location's page
+    When I go to the transactable's page
     Then I should see a free booking module
 
   Scenario: Booking and paying by credit card via Stripe
@@ -83,7 +83,7 @@ Feature: A user can book at a space
     Given the transactable is reserved hourly
     And   the transactable has an hourly price of 100.00
     And I am logged in as the user
-    When I go to the location's page
+    When I go to the transactable's page
     And I select to book and review space for:
       | Transactable     | Date   | Quantity | Start | End   |
       | the transactable | Monday | 1        | 9:00  | 14:00 |
@@ -124,7 +124,7 @@ Feature: A user can book at a space
     Scenario: Booking for a 'automatically confirm' listing should show relevant details
       Given bookings for the transactable do not need to be confirmed
       And I am logged in as the user
-      When I go to the location's page
+      When I go to the transactable's page
       And I select to book and review space for:
         | Transactable     | Date             | Quantity |
         | the transactable | next week Monday | 1        |
