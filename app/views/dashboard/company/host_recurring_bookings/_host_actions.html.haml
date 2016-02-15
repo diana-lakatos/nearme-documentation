@@ -1,4 +1,4 @@
-- if recurring_booking.can_host_cancel?
+- if recurring_booking.can_host_cancel? && !recurring_booking.unconfirmed?
   = form_for recurring_booking, method: :post, url: host_cancel_dashboard_company_host_recurring_booking_path(recurring_booking, listing_id: recurring_booking.listing) do |f|
     = f.submit t('general.cancel'), data: { confirm: 'Do you really want to cancel subscription?' }, class: 'btn dark-gray full'
 
