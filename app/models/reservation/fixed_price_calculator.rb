@@ -9,7 +9,11 @@ class Reservation::FixedPriceCalculator
     elsif @reservation.exclusive_price_cents
       @reservation.exclusive_price
     else
-      (listing.fixed_price * (@reservation.quantity)).to_money
+      if listing.action_free_booking?
+        0.to_money
+      else
+        (listing.fixed_price.to_f * (@reservation.quantity)).to_money
+      end
     end
   end
 
