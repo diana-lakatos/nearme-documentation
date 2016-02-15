@@ -14,10 +14,10 @@ module.exports = class BookingType
 
     @input.on 'change', (e) =>
       if @input.val() == 'schedule'
-        @availability.addClass('form-section-disabled')
+        @availability.hide()
         @availability.find('input:visible').prop('disabled', true)
       else
-        @availability.removeClass('form-section-disabled')
+        @availability.show()
         @availability.find('input:visible').prop('disabled', false)
 
   changeBookingType: (el)->
