@@ -28,7 +28,7 @@ class Blog::BlogPostsController < Blog::ApplicationController
                    instance.user_blog_posts.find(params[:id])
                  end
     # a 301 redirect that uses the current friendly id.
-    if request.path != blog_post_path(@blog_post)
+    if ![blog_post_path(@blog_post), blog_post_path(@blog_post, language: I18n.locale)].include?(request.path)
       return redirect_to @blog_post, :status => :moved_permanently
     end if @blog_post.kind_of?(BlogPost)
   end
