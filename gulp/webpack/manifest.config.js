@@ -19,6 +19,6 @@ config.plugins.push(
     filename: 'webpack-common-manifest.json',
     manifestVariable: 'webpackBundleManifest',
   }),
-  new webpack.optimize.OccurenceOrderPlugin(),
+  new webpack.NamedModulesPlugin(),
   new WebpackMd5Hash()
 );
