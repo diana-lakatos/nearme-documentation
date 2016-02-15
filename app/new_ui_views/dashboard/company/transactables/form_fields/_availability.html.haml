@@ -1,5 +1,7 @@
 - id_prefix ||= ''
 %hr/
+%h3
+  = title ||= t(:title, scope: [:pricing, :availability])
 .listing-availability
   %h3
     = t(:title, scope: [:pricing, :availability])
