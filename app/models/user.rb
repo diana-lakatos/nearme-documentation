@@ -324,15 +324,15 @@ class User < ActiveRecord::Base
   end
 
   def get_seller_profile
-    seller_profile || self.build_seller_profile
+    seller_profile || self.build_seller_profile(instance_profile_type: PlatformContext.current.instance.try("seller_profile_type"))
   end
 
   def get_buyer_profile
-    buyer_profile || self.build_buyer_profile
+    buyer_profile || self.build_buyer_profile(instance_profile_type: PlatformContext.current.instance.try("buyer_profile_type"))
   end
 
   def build_profile
-    default_profile || self.build_default_profile
+    default_profile || self.build_default_profile(instance_profile_type: PlatformContext.current.instance.try("default_profile_type"))
   end
 
   def custom_validators

@@ -184,7 +184,7 @@ en:
           title: "Product Images"
           new_title: "New Product Image"
       dimensions_templates:
-        select: 'Select dimensions template'
+        select: 'Populate dimensions from one of the templates'
         explanation1: 'This will provide a tracking code and a shipping label for your product sale.'
         explanation2: "Select your item's dimensions from the menu below or add your own measures."
       insurance_explanation: "The insurance covers up to $5,000.00 per package. Packages shipped via Canada Post, FedEx Smart Post, UPS Mail Innovations, and USPS First Class Mail are limited to $1,000.00, per package. Leave zero for no insurance."
@@ -223,6 +223,7 @@ en:
         you_dont_have_set_up: "You don't have any Dimensions Templates set up yet. Create one now by clicking below."
         name: "Name"
         details: "Details"
+        default: "Default"
     nav:
       brand:
         open_marketplace: 'Open Marketplace'
@@ -293,6 +294,7 @@ en:
     downloads: 'Downloads'
     sales: 'Sales'
     save: "Save"
+    save_settings: "Save settings"
     delete: "Delete"
     destroy: "Destroy"
     versions: "Versions"
@@ -352,6 +354,7 @@ en:
         name: "Name"
         description: "Description"
         properties: "Properties"
+        actions: "Actions"
       projects:
         community_reports: "Community reports"
         week_start: "Starting week"
@@ -451,6 +454,8 @@ en:
           users: "Users"
           purchasers: "Purchasers"
           sellers_preference: "Sellers preference"
+      languages:
+        settings: "Settings"
     theme:
       info:
         title_and_description: "Title & Description"
@@ -998,6 +1003,7 @@ en:
           captured: 'Payment captured'
           paid: 'Paid'
           refunded: 'Payment refunded'
+          authorized: 'Payment authorized'
           failed: 'Payment failed'
           details: 'Payment details'
 
@@ -1338,13 +1344,22 @@ en:
     payments:
       order: "Back to order"
       back_to_order_html: "Back <span class='hidden-xs'>to order</span>"
-      total: "Captured price"
-      service_fee: "Marketplace fee"
+      total: "Captured price:"
+      service_fee: "Marketplace fee:"
+      state: "Payment state:"
       payment_id: "Payment ID"
-      paid_at: "Paid at"
-      failed_at: "Failed at"
-      refunded_at: "Refunded at"
+      paid_at: "Paid at:"
+      failed_at: "Failed at:"
+      refunded_at: "Refunded at:"
       refund: 'Refund'
+      capture: 'Capture'
+      states:
+        pending: "Pending"
+        authorized: "Authorized"
+        paid: "Paid"
+        voided: "Voided"
+        refunded: "Refunded"
+      alerts: 'Alerts:'
 
     host_reservations:
       booked: 'booked'
@@ -1797,6 +1812,7 @@ en:
       failed: "Payment failed"
       pending: "Payment not captured"
       refunded: "Payment refunded"
+      authorized: "Payment authorized"
 
     index:
       title: 'My orders'
@@ -2025,6 +2041,9 @@ en:
         errors: 'Data has not been imported due to error during processing.'
         header:  'Data import for %{csv_identifier}'
   decorators:
+    payment:
+      refund_failed: "Refund has failed"
+      refund_retry_at: "Looks like there was a problem with refund. We've scheduled next attempt at %{retry_at}."
     review:
       today: 'Today'
   helpers:

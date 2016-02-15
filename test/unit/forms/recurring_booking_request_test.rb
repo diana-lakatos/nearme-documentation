@@ -9,7 +9,7 @@ require 'test_helper'
 class RecurringBookingRequestTest < ActiveSupport::TestCase
 
   setup do
-    @listing = FactoryGirl.create(:transactable, :name => "blah", monthly_subscription_price: 99)
+    @listing = FactoryGirl.create(:transactable, :name => "blah", monthly_subscription_price: 99, booking_type: 'subscription')
     @instance = @listing.instance
     @user = FactoryGirl.create(:user, name: "Firstname Lastname")
 
@@ -54,6 +54,16 @@ class RecurringBookingRequestTest < ActiveSupport::TestCase
   end
 
   context "validations" do
+
+    should "raise error when total_price_check is incorrect" do
+      @recurring_booking_request.total_amount_check = @recurring_booking_request.recurring_booking.total_amount.cents
+      assert @recurring_booking_request.valid?
+      @recurring_booking_request.total_amount_check = 1 + @recurring_booking_request.recurring_booking.total_amount.cents
+      refute @recurring_booking_request.valid?
+      error = I18n.t("activemodel.errors.models.reservation_request.attributes.base.total_amount_changed")
+      assert_equal error, @recurring_booking_request.errors.full_messages.to_sentence
+    end
+
 
     context "invalid arguments" do
       context "no listing" do

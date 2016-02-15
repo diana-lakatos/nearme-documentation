@@ -2,7 +2,7 @@
   %h4
     = t('instance_admin.settings.documents_upload.documents_upload')
 
-  = simple_form_for @documents_upload, :url => instance_admin_settings_documents_upload_path(@documents_upload), :html => { method: @documents_upload.new_record? ? :post : :put, id: 'documents-upload-form' } do |f|
+  = simple_form_for @documents_upload, :url => instance_admin_settings_documents_upload_path, :html => {id: 'documents-upload-form' } do |f|
     = f.hidden_field :id
     = f.hidden_field :enabled
 

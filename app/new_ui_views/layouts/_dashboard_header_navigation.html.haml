@@ -1,26 +1,16 @@
 %ul.nav.navbar-nav.navbar-right
   - if (!no_listing_buttons? || platform_context.white_label_company_user?(current_user)) && HiddenUiControls.find('main_menu/cta').visible?
 
-    -# Single type platform
-    - if platform_context.single_type?
+    - if current_user && current_user.registration_in_progress?
+      - if current_user.has_draft_products
+        %li= link_to t('ui.header.complete_your_thing', thing: platform_context.product_types.first.translated_bookable_noun), main_app.new_product_type_product_wizard_path(platform_context.product_types.first)
+      - else
+        %li= link_to t('ui.header.complete_your_thing', thing: platform_context.transactable_types.first.translated_bookable_noun), main_app.transactable_type_new_space_wizard_path(platform_context.transactable_types.first)
 
-      - if current_user && current_user.registration_in_progress?
-        - if current_user.has_draft_products
-          %li= link_to t('ui.header.complete_your_thing', thing: platform_context.product_types.first.translated_bookable_noun), main_app.new_product_type_product_wizard_path(platform_context.product_types.first)
-
-        - else
-          %li= link_to t('ui.header.complete_your_thing', thing: platform_context.transactable_types.first.translated_bookable_noun), main_app.transactable_type_new_space_wizard_path(platform_context.transactable_types.first)
-
-      - elsif !current_user.try(:registration_completed?)
+    - elsif !current_user.try(:registration_completed?)
+      - if platform_context.single_type?
         = render partial: 'layouts/list_your_bookable', locals: { transactable_type: platform_context.transactable_types.first }
-
-    - else
-      - if current_user && current_user.registration_in_progress?
-        %li
-          - tt = current_user.first_listing.try(:transactable_type) || Spree::ProductType.first
-          = link_to t('ui.header.complete_your_thing', thing: tt.translated_bookable_noun), main_app.transactable_type_new_space_wizard_path(tt)
-
-      - elsif !current_user.try(:registration_completed?)
+      - else
         = dropdown_menu t('ui.header.list_your'), { wrapper_tag: :li } do
           - platform_context.transactable_types.each do |tt|
             = render partial: 'layouts/list_your_bookable', locals: { transactable_type: tt }

@@ -12,7 +12,8 @@ class ReservationsServiceTest < ActiveSupport::TestCase
       }
       FactoryGirl.create(:document_requirement, item: @listing)
       FactoryGirl.create(:upload_obligation, level: UploadObligation::LEVELS[0], item: @listing)
-      @reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.current, @attributes)
+      Instance.any_instance.stubs(:documents_upload_enabled?).returns(true)
+      @reservation_request = ReservationRequest.new(@listing, @user, @attributes)
       @reservation_service = Listings::ReservationsService.new(@user, @reservation_request)
     end
 

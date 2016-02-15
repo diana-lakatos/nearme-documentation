@@ -11,7 +11,7 @@ module LiquidFilters
     else
       Googl.shorten(url).short_url
     end
-  rescue e
+  rescue => e
     if Rails.env.production?
       raise e
     else
@@ -275,5 +275,11 @@ module LiquidFilters
   # html_safe text is not escaped
   def make_html_safe(html = '')
     html.html_safe
+  end
+
+  # Escape html; this is useful if you want to skip
+  # using the CustomSanitizer that is applied normally
+  def raw_escape_string(value)
+    CGI::escapeHTML(value.to_s).html_safe
   end
 end

@@ -1,7 +1,5 @@
 class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
 
-  has_many :merchant_accounts, class_name: 'MerchantAccount::BraintreeMarketplaceMerchantAccount'
-
   supported :any_currency, :company_onboarding, :immediate_payout, :credit_card_payment, :partial_refunds
 
   def self.supported_countries

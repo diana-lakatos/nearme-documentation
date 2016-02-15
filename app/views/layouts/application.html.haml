@@ -27,6 +27,9 @@
     %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
     %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
     %meta{:content => "chrome=IE7", "http-equiv" => "X-UA-Compatible"}/
+
+    = render 'shared/raygun/libs'
+
     -if platform_context.domain.near_me_domain?
       %meta{:name => "robots", "content" => "noindex, nofollow"}/
     = inject_content_holder('HEAD')
@@ -48,6 +51,7 @@
 
     /[if lt IE 10]
       = javascript_include_tag 'vendor/placeholder'
+    = yield(:head_bottom)
 
   %body{class: theme_class(@theme_name)}
     = yield(:body_top)
@@ -83,4 +87,6 @@
     = render 'layouts/initializers'
     = render 'layouts/scripts'
     = yield(:body_bottom)
+
+    = render 'shared/raygun/init'
 

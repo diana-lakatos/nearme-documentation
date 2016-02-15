@@ -205,7 +205,7 @@ class Transactable < ActiveRecord::Base
     :categories_not_required, :enable_weekly, :enable_daily, :enable_hourly,
     :enable_weekly_subscription,:enable_monthly_subscription,
     :availability_template_attributes, :enable_exclusive_price,
-    :enable_book_it_out_discount
+    :enable_book_it_out_discount, :scheduled_action_free_booking, :regular_action_free_booking
 
   monetize :daily_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :hourly_price_cents, with_model_currency: :currency, allow_nil: true
@@ -439,14 +439,15 @@ class Transactable < ActiveRecord::Base
 
   def reserve!(reserving_user, dates, quantity)
     payment_method  = PaymentMethod.manual.first
-    reservation = reservations.build(:user => reserving_user, :quantity => quantity, :payment_method => payment_method)
+    reservation = reservations.build(:user => reserving_user, :quantity => quantity)
+    reservation.calculate_prices
+    reservation.build_payment({ payment_method: payment_method })
     dates.each do |date|
       raise ::DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
       reservation.add_period(date)
     end
-
     reservation.save!
-    reservation.mark_as_paid!
+    reservation.activate!
     reservation
   end
 
@@ -768,6 +769,14 @@ class Transactable < ActiveRecord::Base
     availability_template.try(:custom_for_transactable?)
   end
 
+  def scheduled_action_free_booking
+    self.action_free_booking
+  end
+
+  def regular_action_free_booking
+    self.action_free_booking
+  end
+
   private
 
   def set_currency
@@ -797,15 +806,27 @@ class Transactable < ActiveRecord::Base
     if schedule_booking?
       self.exclusive_price_cents = nil unless enable_exclusive_price == '1'
       self.book_it_out_discount = self.book_it_out_minimum_qty = nil unless enable_book_it_out_discount == '1'
-      self.hourly_price = self.daily_price = self.weekly_price = self.monthly_price = Money.new(nil, currency)
-      self.action_hourly_booking = self.action_daily_booking = self.action_free_booking = nil
+      nullify_prices(exclude: [:fixed, :exclusive])
+      self.action_hourly_booking = self.action_daily_booking = nil
+      self.action_free_booking = nil if self.has_price?
       self.action_schedule_booking = true
+    elsif subscription_booking?
+      self.action_schedule_booking = self.action_hourly_booking = self.action_daily_booking = self.action_free_booking = nil
+      nullify_prices(exclude: [:weekly_subscription, :monthly_subscription])
     else
-      self.fixed_price = Money.new(nil, currency)
+      nullify_prices(only: [:fixed, :exclusive, :weekly_subscription, :monthly_subscription])
       self.action_schedule_booking = false
       self.schedule = nil
     end
+
     true
+  end
+
+  def nullify_prices(exclude: [], only: nil)
+    prices = only || (PRICE_TYPES - Array(exclude).map(&:to_sym))
+    prices.each do |price|
+      self.send("#{price}_price=", Money.new(nil, currency))
+    end
   end
 
   def decline_reservations

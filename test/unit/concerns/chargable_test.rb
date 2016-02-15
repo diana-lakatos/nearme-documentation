@@ -10,9 +10,12 @@ class ChargableTest < ActiveSupport::TestCase
       FactoryGirl.create(:transactable_additional_charge_type,
         additional_charge_type_target: [transactable.id, "Transactable"].join(",") )
 
-      reservation = FactoryGirl.create(:reservation, listing: transactable)
+      reservation = FactoryGirl.build(:inactive_reservation, listing: transactable)
       reservation.build_additional_charges []
-      reservation.save!
+      reservation.calculate_prices
+      reservation.build_payment
+      reservation.save
+
 
       assert_equal Money.new(50_00), reservation.subtotal_amount
       assert_equal Money.new(5_00), reservation.service_fee_amount_guest
@@ -28,12 +31,8 @@ class ChargableTest < ActiveSupport::TestCase
       # Total service cost 5 + 5 + 10 = 20
       assert_equal Money.new("20_00"), reservation.total_service_amount
 
-      Payment.any_instance.stubs(:capture).returns(true)
-      reservation.generate_payment
-      payment = reservation.payments.last
-
-      assert_equal 500, payment.final_service_fee_amount_host_cents
-      assert_equal 8500, payment.total_amount_cents
+      assert_equal 500, reservation.payment.final_service_fee_amount_host_cents
+      assert_equal 8500, reservation.payment.total_amount_cents
 
     end
   end

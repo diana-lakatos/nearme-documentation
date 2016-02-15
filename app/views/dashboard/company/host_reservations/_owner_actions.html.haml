@@ -9,7 +9,7 @@
 - if reservation.can_reject?
   = link_to 'Decline', '#', class: 'btn dark-gray full', data: { modal: true, href: rejection_form_dashboard_company_host_reservation_path(reservation, listing_id:reservation.listing) }
 
-- if reservation.pending? && (reservation.unconfirmed? || reservation.confirmed?)
+- if !reservation.paid? && (reservation.unconfirmed? || reservation.confirmed?)
   - if reservation.remote_payment?
     = link_to 'Request payment', request_payment_dashboard_company_host_reservation_path(reservation, listing_id: reservation.listing),
         class: 'btn red full', data: { confirm: 'Do you want to send payment request email for this guest?' }

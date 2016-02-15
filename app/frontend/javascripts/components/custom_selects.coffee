@@ -4,10 +4,11 @@ require('select2/select2');
 
 module.exports = class CustomSelects
   @initialize: (container = 'body')->
+
     container = $(container)
     # customSelect
-    container.find('select').not('.select2, .time-wrapper select, .custom-select, .recurring_select, .ordinary-select, .selectpicker').customSelect()
-    container.find('.customSelect').not('.checkout-select, .no-icon').append('<i class="custom-select-dropdown-icon ico-chevron-down"></i>').closest('.controls').css({'position': 'relative'})
+    container.find('select').not('.select2, .time-wrapper select, .custom-select, .recurring_select, .ordinary-select, .selectpicker, .locales_languages_select, .unstyled-select').customSelect()
+    container.not('.buy-sell-theme').find('.customSelect').not('.checkout-select, .no-icon').append('<i class="custom-select-dropdown-icon ico-chevron-down"></i>').closest('.controls').css({'position': 'relative'})
     container.find('.customSelect').siblings('select').css({'margin': '0px', 'z-index': 1 })
 
     # chosen

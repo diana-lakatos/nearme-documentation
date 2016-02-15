@@ -114,7 +114,7 @@ module.exports = class TimePicker
     @loading.show()
     @listing.availability.loadSchedule date, =>
       # Ignore callback if no longer selected this date
-      return unless date == @listing.bookedDates()[0]
+      return unless date.getTime() == @listing.bookedDates()[0].getTime()
 
       # Build up a new list of disabled start/end times
       @disabledStartTimes = []

@@ -7,7 +7,7 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
   # Send to paypal with every action as BN CODE
   ActiveMerchant::Billing::Gateway.application_id = Rails.configuration.active_merchant_billing_gateway_app_id
 
-  supported :multiple_currency, :credit_card_payment
+  supported :multiple_currency, :credit_card_payment, :partial_refunds
 
   def self.supported_countries
     ["US", "GB", "CA"]

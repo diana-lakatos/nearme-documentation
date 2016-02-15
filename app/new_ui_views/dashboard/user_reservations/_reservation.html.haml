@@ -21,8 +21,8 @@
     .alert.alert-warning
       #{t('dashboard.user_reservations.pending_confirmation')} <strong>#{reservation.time_to_expiry(reservation.expire_at)}</strong>.
 
-    - if reservation.active_merchant_payment?
-      - if reservation.billing_authorization.present?
+    - if reservation.payment.active_merchant_payment?
+      - if reservation.payment.billing_authorizations.present?
         .alert.alert-warning= I18n.t('dashboard.user_reservations.money_info')
 
 

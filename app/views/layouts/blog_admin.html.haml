@@ -7,6 +7,7 @@
     %meta{content: "width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1", name: "viewport"}/
     = csrf_meta_tag
     = render 'layouts/favicon'
+    = render 'shared/raygun/libs'
     = stylesheet_link_tag 'blog_admin_vendor'
     = stylesheet_link_tag 'blog_admin'
 
@@ -48,3 +49,4 @@
     = webpack_bundle_tag 'blogadmin'
 
     = yield :script
+    = render 'shared/raygun/init'

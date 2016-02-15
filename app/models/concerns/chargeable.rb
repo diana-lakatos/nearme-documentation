@@ -52,13 +52,13 @@ module Chargeable
   end
 
   def service_additional_charges_cents
-    # We reject additional charges marked for destruction because otherwise the total amount will not 
+    # We reject additional charges marked for destruction because otherwise the total amount will not
     # reflect the unselected additional charges on the last post of the purchase
     additional_charges.select{|a| a.commission_receiver == 'mpo' && !a.marked_for_destruction? }.map(&:amount_cents).sum
   end
 
   def host_additional_charges_cents
-    # We reject additional charges marked for destruction because otherwise the total amount will not 
+    # We reject additional charges marked for destruction because otherwise the total amount will not
     # reflect the unselected additional charges on the last post of the purchase
     additional_charges.select{|a| a.commission_receiver == 'host' && !a.marked_for_destruction? }.map(&:amount_cents).sum
   end

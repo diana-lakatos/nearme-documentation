@@ -34,7 +34,6 @@ class Company < ActiveRecord::Base
   end
   has_many :option_types, class_name: 'Spree::OptionType', dependent: :destroy
   has_many :orders, class_name: 'Spree::Order'
-  has_many :order_charges, through: :orders, source: :near_me_payments
   has_many :order_line_items, class_name: 'Spree::LineItem'
   has_many :payments
   has_many :payment_transfers, dependent: :destroy

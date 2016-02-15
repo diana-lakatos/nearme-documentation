@@ -4,7 +4,7 @@ module.exports = class BookingType
     @container = $(el)
     @input = $('input[data-booking-type]')
     @tabs = @container.find('[data-toggle="tab"]')
-    @defineDay = $('.define-a-day')
+    @availability = $('.listing-availability')
     @bindEvents()
     @initTabs()
 
@@ -13,21 +13,26 @@ module.exports = class BookingType
       @changeBookingType(e.target)
 
     @input.on 'change', (e) =>
-      if @defineDay.length > 0
-        if @input.val() == 'subscription'
-          @defineDay.addClass('form-section-disabled')
-          @defineDay.find('input').prop('disabled', true)
-        else if @input.val() == 'regular'
-          @defineDay.removeClass('form-section-disabled')
-          @defineDay.find('input').prop('disabled', false)
+      if @input.val() == 'schedule'
+        @availability.hide()
+        @availability.find('input:visible').prop('disabled', true)
+      else
+        @availability.show()
+        @availability.find('input:visible').prop('disabled', false)
 
   changeBookingType: (el)->
     @input.val $(el).data('booking-type')
     if $(el).data('booking-type') == 'regular'
       $('.price-options input[type=checkbox]').trigger('change')
+    else if $(el).data('booking-type') == 'schedule'
+      $('input[data-scheduled-action-free-booking]').trigger('change')
+    @input.trigger('change')
 
   initTabs: ->
-    if @input.val() != 'schedule'
+    if @input.val() != 'schedule' && @input.val() != 'subscription'
       @tabs.filter("[data-booking-type='regular']").tab('show')
     else
       @tabs.filter("[data-booking-type='#{@input.val()}']").tab('show')
+
+    if @input.val() == 'schedule'
+      $('input[data-scheduled-action-free-booking]').trigger('change')

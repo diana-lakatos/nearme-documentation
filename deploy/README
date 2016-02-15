@@ -1,0 +1,47 @@
+This directory contains hooks that are automagically invoked by opsworks.
+Feel free to take a look at official documentation -
+http://docs.aws.amazon.com/opsworks/latest/userguide/workingcookbook-extend-hooks.html.
+
+If you are in the need of extending the hooks, there is a great set of examples
+for almost any problem:
+http://docs.aws.amazon.com/opsworks/latest/userguide/gettingstarted-cookbooks-run-command.html
+
+If you feel like you need to pass some kind of variable via JSON, you can see
+how it is solved here:
+http://docs.aws.amazon.com/opsworks/latest/userguide/workingstacks-json.html
+
+Please note, that we already support custom ENV vars. If you don't want to add
+ENV for APP, you can include in custom JSON something like this:
+{
+    'deploy': {
+        'nearme': {
+            'custom_env': {
+                'YOUR_ENV': 'value'
+            }
+        }
+    }
+
+}
+
+and we will automatically dump this into application.yml [ powered by figaro
+gem ].
+
+To get overall understanding on when each callback is invoked, you can take a
+look at https://docs.chef.io/resource_deploy.html#deploy-phases
+
+Some additional help resources:
+
+List of built in attributes - http://docs.aws.amazon.com/opsworks/latest/userguide/attributes-json-linux.html
+[ ^ for example, you can see the first link is 'opsworks Attributes' - to
+access it in the recipe, you need to do node['opsworks'] . When you click the
+link and navigate to
+http://docs.aws.amazon.com/opsworks/latest/userguide/attributes-json-opsworks.html,
+you will see another list of attributes. The second link is 'instance'. To
+access it, you can do node['opsworks']['instance'], which will finally include
+some useful values, listed at
+http://docs.aws.amazon.com/opsworks/latest/userguide/attributes-json-opsworks-instance.html
+]
+Explaining deploy cookbook - http://docs.aws.amazon.com/opsworks/latest/userguide/create-custom-deploy.html
+Implementation of deploy cookbook - https://github.com/aws/opsworks-cookbooks/tree/release-chef-11.4/deploy
+How to override attributes - http://docs.aws.amazon.com/opsworks/latest/userguide/workingcookbook-attributes.html
+

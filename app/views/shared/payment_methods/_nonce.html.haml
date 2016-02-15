@@ -1,17 +1,19 @@
 .row-fluid
-  - if f.object.billing_authorization.nil?
+  - if f.object.nonce_payment? && f.object.authorized?
+    = t 'payments.already_authorized'
+  - else
     .padding-bottom
       .row-fluid
         .span5.text
           .ico-lock= t 'payments.heading'
         .span7.credit-card-images
           = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
+          // TODO: move that to payment scope after merge with payment refactor
+          = f.hidden_field(:payment_method_nonce, value: nil, id: 'paypal-nonce')
         .clearfix
 
     = f.error :cc
     #paypal-button
-  - else
-    = t 'payments.already_authorized'
 
 = render 'listings/reservations/confirm_reservations', f: f
 
@@ -23,7 +25,25 @@
       $(function() {
         if('braintree' in window) {
           braintree.setup("#{payment_method.payment_gateway.client_token}", 'paypal', {
-            container: 'paypal-button'
+            container: 'paypal-button',
+            paymentMethodNonceInputField: $("#paypal-nonce"),
+            onPaymentMethodReceived: function (payload) {
+              $(".submit-payment").show()
+            },
+            onCancelled: function (payload) {
+              if ($('#paypal-button').parents('.accordion-body').hasClass('in')) {
+                $(".submit-payment").hide();
+              }
+            },
           });
+        }
+      });
+      $('.accordion').on('show.bs.collapse', function (e) {
+        if ($(e.target).find(".accordion-inner #paypal-button").length) {
+          if ($("#paypal-nonce").val().length == 0) {
+            $(".submit-payment").hide()
+          }
+        } else {
+          $(".submit-payment").show()
         }
       });

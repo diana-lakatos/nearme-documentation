@@ -20,7 +20,7 @@ module.exports = class BookingsPriceCalculator
     total = _.inject(contiguousBlocks, (sum, block) =>
       sum + @priceForDays(block.length)*@listing.getQuantity()
     , 0)
-    total += @additionalCharges.getCharges()
+    total += @additionalCharges.getCharges(total)
     total
 
   priceForDays: (days) ->

@@ -16,6 +16,7 @@
     = stylesheet_link_tag 'application_vendor'
     = stylesheet_link_tag 'application'
     = render "dynamic_theme/application"
+    = render 'shared/raygun/libs'
 
   %body.blog
     = render 'blog/blog_posts/header'
@@ -30,3 +31,4 @@
 
     = render 'layouts/google_analytics'
     = render 'platform_home/shared/adroll' if @blog_instance.is_near_me? && Rails.env.production?
+    = render 'shared/raygun/init'

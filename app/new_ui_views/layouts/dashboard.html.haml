@@ -11,6 +11,9 @@
     %link{:href => "https://fonts.googleapis.com/css?family=Lato:300,400,400italic,700italic,700", :rel => "stylesheet"}/
     = stylesheet_link_tag 'new_ui_vendor'
     = stylesheet_link_tag 'new_ui'
+
+    = render 'shared/raygun/libs'
+
     = render "dynamic_theme/new_ui"
 
     / Prefetch
@@ -49,6 +52,7 @@
     / Head Javascript
     = javascript_include_tag 'vendor/modernizr'
     = render 'shared/ckeditor_basepath'
+    = yield(:head_bottom)
 
   %body{class: (navigation_visible? ? 'navigation-visible' : nil ) }
 
@@ -92,3 +96,5 @@
         });
 
     = yield(:body_bottom)
+
+    = render 'shared/raygun/init'

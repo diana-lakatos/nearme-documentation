@@ -18,8 +18,9 @@ class Dashboard::Company::PaymentsControllerTest < ActionController::TestCase
       stub_billing_gateway(@instance)
       stub_active_merchant_interaction
 
-      @order = FactoryGirl.create(:order_with_line_items, user: @user, state: 'complete', company: @company, payment_method: PaymentMethod.last )
-      @billing_authorization = FactoryGirl.create(:billing_authorization, reference: @order)
+      @order = FactoryGirl.create(:order_with_line_items, user: @user, state: 'complete', company: @company )
+      @order.build_payment(payment_method: FactoryGirl.create(:credit_card_payment_method), credit_card_form: FactoryGirl.attributes_for(:credit_card_form))
+      @order.payment.authorize
       @order.finalize!
 
       sign_in @user
@@ -27,7 +28,10 @@ class Dashboard::Company::PaymentsControllerTest < ActionController::TestCase
 
     should 'create correct payment and update order' do
       assert_not @order.reload.paid?
-      post :create, { orders_received_id: @order.number }
+      request.env["HTTP_REFERER"] = dashboard_company_orders_received_path(@order)
+      post :capture, { orders_received_id: @order.number, id: @order.payment }
+      assert_redirected_to dashboard_company_orders_received_path(@order)
+      assert @order.payment.reload.paid?
       assert @order.reload.paid?
     end
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160128133044) do
+ActiveRecord::Schema.define(version: 20160215092513) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(version: 20160128133044) do
     t.datetime "updated_at"
     t.integer  "additional_charge_type_target_id"
     t.string   "additional_charge_type_target_type"
+    t.integer  "percent"
   end
 
   add_index "additional_charge_types", ["additional_charge_type_target_id", "additional_charge_type_target_type"], name: "act_target", using: :btree
@@ -296,8 +297,10 @@ ActiveRecord::Schema.define(version: 20160128133044) do
     t.integer  "payment_gateway_id"
     t.boolean  "immediate_payout",                            default: false
     t.integer  "merchant_account_id"
+    t.integer  "payment_id"
   end
 
+  add_index "billing_authorizations", ["payment_id"], name: "index_billing_authorizations_on_payment_id", using: :btree
   add_index "billing_authorizations", ["reference_id", "reference_type"], name: "index_billing_authorizations_on_reference_id_and_reference_type", using: :btree
 
   create_table "blog_instances", force: :cascade do |t|
@@ -1057,6 +1060,7 @@ ActiveRecord::Schema.define(version: 20160128133044) do
     t.string   "seller_attachments_access_level",       limit: 255,                         default: "disabled",    null: false
     t.integer  "seller_attachments_documents_num",                                          default: 10,            null: false
     t.string   "priority_view_path"
+    t.boolean  "enable_language_selector",                                                  default: false,         null: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1212,6 +1216,7 @@ ActiveRecord::Schema.define(version: 20160128133044) do
     t.string   "state",                               limit: 255, default: "pending"
     t.string   "internal_payment_gateway_account_id", limit: 255
     t.boolean  "test",                                            default: false
+    t.datetime "deleted_at"
   end
 
   add_index "merchant_accounts", ["instance_id", "merchantable_id", "merchantable_type"], name: "index_on_merchant_accounts_on_merchant", using: :btree
@@ -1280,6 +1285,7 @@ ActiveRecord::Schema.define(version: 20160128133044) do
     t.string   "type",                    limit: 255
     t.boolean  "test_active"
     t.boolean  "live_active"
+    t.datetime "deleted_at"
   end
 
   create_table "payment_gateways_countries", force: :cascade do |t|
@@ -1319,6 +1325,7 @@ ActiveRecord::Schema.define(version: 20160128133044) do
     t.boolean  "active",              default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   add_index "payment_methods", ["instance_id"], name: "index_payment_methods_on_instance_id", using: :btree
@@ -1347,16 +1354,16 @@ ActiveRecord::Schema.define(version: 20160128133044) do
 
   create_table "payments", force: :cascade do |t|
     t.integer  "reservation_id"
-    t.integer  "subtotal_amount_cents"
+    t.integer  "subtotal_amount_cents",                                                          default: 0
     t.decimal  "service_fee_amount_guest_cents",                         precision: 8, scale: 2
     t.datetime "paid_at"
     t.datetime "failed_at"
-    t.datetime "created_at",                                                                                   null: false
-    t.datetime "updated_at",                                                                                   null: false
+    t.datetime "created_at",                                                                                     null: false
+    t.datetime "updated_at",                                                                                     null: false
     t.string   "currency",                                   limit: 255
     t.datetime "deleted_at"
     t.integer  "payment_transfer_id"
-    t.decimal  "service_fee_amount_host_cents",                          precision: 8, scale: 2, default: 0.0, null: false
+    t.decimal  "service_fee_amount_host_cents",                          precision: 8, scale: 2, default: 0.0,   null: false
     t.datetime "refunded_at"
     t.integer  "instance_id"
     t.integer  "company_id"
@@ -1369,12 +1376,22 @@ ActiveRecord::Schema.define(version: 20160128133044) do
     t.string   "external_transaction_id",                    limit: 255
     t.decimal  "service_additional_charges_cents",                                               default: 0.0
     t.decimal  "host_additional_charges_cents",                                                  default: 0.0
+    t.string   "state"
+    t.integer  "payment_gateway_id"
+    t.string   "payment_gateway_mode"
+    t.integer  "payment_method_id"
+    t.string   "express_payer_id"
+    t.string   "express_token"
+    t.integer  "merchant_account_id"
+    t.boolean  "offline",                                                                        default: false
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
   add_index "payments", ["instance_id"], name: "index_payments_on_instance_id", using: :btree
   add_index "payments", ["partner_id"], name: "index_payments_on_partner_id", using: :btree
   add_index "payments", ["payable_id", "payable_type"], name: "index_payments_on_payable_id_and_payable_type", using: :btree
+  add_index "payments", ["payment_gateway_id"], name: "index_payments_on_payment_gateway_id", using: :btree
+  add_index "payments", ["payment_method_id"], name: "index_payments_on_payment_method_id", using: :btree
   add_index "payments", ["payment_transfer_id"], name: "index_payments_on_payment_transfer_id", using: :btree
   add_index "payments", ["reservation_id"], name: "index_payments_on_reservation_id", using: :btree
 
@@ -1651,7 +1668,7 @@ ActiveRecord::Schema.define(version: 20160128133044) do
     t.string   "old_payment_method",                            limit: 255,                         default: "manual",  null: false
     t.string   "payment_status",                                limit: 255,                         default: "unknown", null: false
     t.float    "quantity",                                                                          default: 1.0,       null: false
-    t.decimal  "service_fee_amount_guest_cents",                            precision: 8, scale: 2
+    t.decimal  "service_fee_amount_guest_cents",                            precision: 8, scale: 2, default: 0.0
     t.string   "rejection_reason",                              limit: 255
     t.decimal  "service_fee_amount_host_cents",                             precision: 8, scale: 2, default: 0.0,       null: false
     t.integer  "platform_context_detail_id"
@@ -3466,6 +3483,8 @@ ActiveRecord::Schema.define(version: 20160128133044) do
     t.string   "timezone_rule",                                                                  default: "location"
     t.boolean  "action_weekly_subscription_booking"
     t.boolean  "action_monthly_subscription_booking"
+    t.integer  "default_availability_template_id"
+    t.string   "show_path_format"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

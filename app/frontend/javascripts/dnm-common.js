@@ -91,9 +91,8 @@ require('../vendor/bootstrap-modal-fullscreen');
         });
     });
 
-    var CustomInputs = require('./components/custom_inputs');
-
     DNM.registerInitializer(function(){
+        var CustomInputs = require('./components/custom_inputs');
         CustomInputs.initialize();
 
         $(document).on('init.custominputs', function(){
@@ -294,6 +293,17 @@ require('../vendor/bootstrap-modal-fullscreen');
 
         require.ensure('exports?ServiceTickDetection!./analytics/sessioncam', function(require){
             window.ServiceTickDetection = require('exports?ServiceTickDetection!./analytics/sessioncam');
+        });
+    });
+
+    DNM.registerInitializer(function(){
+        var els = $('input[type="color"]');
+        if (els.length === 0) {
+            return;
+        }
+
+        require.ensure('spectrum/spectrum', function(require){
+            require('spectrum/spectrum');
         });
     });
 

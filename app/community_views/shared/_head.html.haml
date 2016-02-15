@@ -18,7 +18,10 @@
 
   %link{:href => "#{platform_context.favicon_image.url}", :rel => "shortcut icon"}/
 
+  = render 'shared/raygun/libs'
+
   = render "shared/javascript_assets"
   = javascript_include_tag 'vendor/modernizr'
 
   = csrf_meta_tags
+  = yield(:head_bottom)

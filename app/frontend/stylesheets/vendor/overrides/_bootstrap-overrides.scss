@@ -63,10 +63,11 @@ a[rel="tooltip"] {
   color: $gray220;
 }
 
-abbr[title] {
+abbr[title], .required > abbr {
   cursor: auto;
   border: none;
   color: $theme_red;
+  text-decoration: none;
 }
 
 .accordion-group {

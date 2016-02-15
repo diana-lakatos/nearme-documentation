@@ -22,6 +22,8 @@
     %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
     %meta{:content => "chrome=IE7", "http-equiv" => "X-UA-Compatible"}/
 
+    = render 'shared/raygun/libs'
+
     = render 'social/social_meta_tags' rescue ''
 
     = yield(:meta)
@@ -37,6 +39,7 @@
 
     = render 'shared/ckeditor_basepath'
     = render "shared/javascript_assets"
+    = yield(:head_bottom)
 
   %body
     = yield(:body_top)
@@ -68,3 +71,5 @@
     = render 'layouts/initializers'
     = render 'layouts/scripts'
     = yield(:body_bottom)
+
+    = render 'shared/raygun/init'

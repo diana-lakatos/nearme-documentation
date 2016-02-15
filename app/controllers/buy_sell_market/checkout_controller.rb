@@ -29,7 +29,8 @@ class BuySellMarket::CheckoutController < ApplicationController
     when :payment
       build_approval_request_for_object(current_user)
       checkout_service.build_payment_documents
-      @order.express_token = params[:token] if params[:token].present?
+      @order.build_payment if @order.payment.blank?
+      @order.payment.update_attributes(express_token: params[:token]) if params[:token].present?
     when :complete
       @current_order = nil
       flash[:success] = t('buy_sell_market.checkout.notices.order_placed')
@@ -53,20 +54,21 @@ class BuySellMarket::CheckoutController < ApplicationController
       end
 
       checkout_service.update_payment_documents
-      @order.payment_method.payment_gateway.authorize(@order)
+      @order.payment.authorize
+
     elsif @order.save && @order.address?
       save_user_addresses
       update_blank_user_fields
     end
 
-    if @order.payment_method.try(:express_checkout?) && @order.express_checkout_redirect_url.present? && @order.save
-      redirect_to @order.express_checkout_redirect_url
+    if @order.payment.try(:redirect_to_paypal?)
+      redirect_to @order.payment.express_checkout_redirect_url
     else
       # We don't want to override validation messages by calling next
       jump_to next_step if spree_errors.blank? && @order.valid? && (@order.complete? || @order.next)
 
       flash.now[:error] = spree_errors if spree_errors.present?
-     
+
       # We reload additional charges because some of them might have been marked for destruction
       # and on page load we want total_amount to reflect all additional_charges without excluding
       # those that have been marked for destruction on post
@@ -81,7 +83,7 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   def cancel_express_checkout
-    @order.update_attribute(:express_token, nil)
+    @order.payment.update_attribute(:express_token, nil)
     flash[:notice] = I18n.t('flash_messages.buy_sell_market.checkout.cancel_paypal_express')
     jump_to :payment
     render_wizard
@@ -191,7 +193,9 @@ class BuySellMarket::CheckoutController < ApplicationController
 
   def spree_order_params
     params[:order] ||= {}
-    params[:order][:payment_method_nonce] = params[:payment_method_nonce] if params[:payment_method_nonce]
+    if params[:payment_method_nonce] && params[:order][:payment]
+      params[:order][:payment][:payment_method_nonce] = params.delete(:payment_method_nonce)
+    end
     params.require(:order).permit(secured_params.spree_order + permitted_checkout_attributes)
   end
 end

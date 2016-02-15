@@ -51,16 +51,42 @@ class ApplicationController < ActionController::Base
   protected
 
   def set_locale
-    params_locale = params[:language].try(:to_sym)
-    user_locale = current_user.try(:language).try(:to_sym)
+    I18n.locale = language_service.get_language
+    session[:language] = I18n.locale
 
-    @locale_service = LocaleService.new(platform_context.instance, params_locale, user_locale, request.fullpath)
-    if @locale_service.redirect? && request.get? && !request.xhr?
-      # Redirect -> This is necessary for proper functionality of the 'current_page?' method
-      redirect_to(@locale_service.redirect_url, status: 301)
+    if request.get? && !request.xhr? && language_router.redirect?
+      params_with_language = params.merge(language_router.url_params)
+      redirect_to url_for(params_with_language)
     end
+  end
 
-    I18n.locale = @locale_service.locale
+  def language_router
+    @language_router ||= if language_service.available_languages.many?
+      Language::MultiLanguageRouter.new(params[:language], I18n.locale)
+    else
+      Language::SingleLanguageRouter.new(params[:language])
+    end
+  end
+
+  def language_service
+    @language_service ||= Language::LanguageService.new(
+      language_params,
+      fallback_languages,
+      current_instance.available_locales
+    )
+  end
+
+  def language_params
+    [params[:language]]
+  end
+
+  def fallback_languages
+    [
+      session[:language],
+      current_user.try(:language),
+      current_instance.try(:primary_locale),
+      I18n.default_locale
+    ]
   end
 
   def set_time_zone(&block)
@@ -443,7 +469,7 @@ class ApplicationController < ActionController::Base
   end
 
   def details_for_lookup
-    set_locale if @locale_service.nil?
+    set_locale if @language_service.nil? && !Rails.env.test?
     {
       :instance_id => PlatformContext.current.try(:instance).try(:id),
       :i18n_locale => I18n.locale,
@@ -540,4 +566,3 @@ class ApplicationController < ActionController::Base
     @date_time_handler ||= DateTimeHandler.new
   end
 end
-

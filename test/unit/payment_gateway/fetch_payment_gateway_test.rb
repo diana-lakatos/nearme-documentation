@@ -16,17 +16,15 @@ class PaymentGateway::FetchPaymentGatewayTest < ActiveSupport::TestCase
       .to_return(:status => 200, :body => 'VERIFIED')
 
     @reservation = FactoryGirl.create(:reservation_with_remote_payment, currency: 'NZD')
-    @reservation.payment_response_params = SUCCESS_FETCH_RESPONSE
-    assert_difference 'Payment.count' do
-      assert_difference 'Charge.count' do
-        @reservation.charge
-      end
+    @reservation.payment.payment_response_params = SUCCESS_FETCH_RESPONSE
+    assert_difference 'Charge.count' do
+      @reservation.charge_and_confirm!
     end
     @reservation.reload
 
-    assert_equal "paid", @reservation.payment_status
-    assert_equal Payment.last, @reservation.payments.last
-    assert_equal Charge.last, @charge = @reservation.payments.last.charges.last
+    assert @reservation.paid?
+    assert_equal Payment.last, @reservation.payment
+    assert_equal Charge.last, @charge = @reservation.payment.charges.last
     assert_equal true, @charge.success
     assert_equal SUCCESS_FETCH_RESPONSE, @charge.response
   end
@@ -36,16 +34,13 @@ class PaymentGateway::FetchPaymentGatewayTest < ActiveSupport::TestCase
       .to_return(:status => 200, :body => 'DECLINED')
 
     @reservation = FactoryGirl.create(:reservation_with_remote_payment, currency: 'NZD')
-    @reservation.payment_response_params = FAILED_FETCH_RESPONSE
-    assert_difference 'Payment.count' do
-      assert_difference 'Charge.count' do
-        @reservation.charge
-      end
+    @reservation.payment.payment_response_params = FAILED_FETCH_RESPONSE
+    assert_difference 'Charge.count' do
+      @reservation.charge_and_confirm!
     end
     @reservation.reload
-    assert_equal "payment_failed", @reservation.payment_status
-    assert_equal 1, @reservation.payments.count
-    @charge = @reservation.payments.last.charges.last
+    assert @reservation.payment.authorized?
+    @charge = @reservation.payment.charges.last
     refute @charge.success
     assert_equal FAILED_FETCH_RESPONSE, @charge.response
   end

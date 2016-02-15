@@ -15,7 +15,7 @@ end
 
 Given /^A buy sell product exist in current marketplace$/ do
   @user = User.first
-  @user.update_column(:country_name, 'United States')
+  @user.try(:update_column, :country_name, 'United States')
   @shipping_category = Spree::ShippingCategory.first
   @stock_location = Spree::StockLocation.first
   @product = FactoryGirl.create(:base_product, shipping_category: @shipping_category)
@@ -97,6 +97,7 @@ end
 Given /^Extra fields are prepared$/ do
   ensure_required_custom_attribute_is_present
 
+  @user = model!('a user')
   @user.update_column(:instance_profile_type_id, InstanceProfileType.default.first.id)
   @user.update_column(:mobile_number, '')
   @user.update_column(:name, '')
@@ -125,20 +126,22 @@ Then /^I should see order summary page$/ do
 end
 
 When /^I fill billing data$/ do
-  fill_in 'order_card_holder_first_name', with: 'John'
-  fill_in 'order_card_holder_last_name', with: 'Doe'
-  fill_in 'order_card_number', with: '4111111111111111'
-  select 1.years.from_now.year.to_s, from: 'order_card_exp_year'
-  select "01", from: 'order_card_exp_month'
-  fill_in 'order_card_code', with: '111'
+  fill_in 'order_payment_attributes_credit_card_form_first_name', with: 'John'
+  fill_in 'order_payment_attributes_credit_card_form_last_name', with: 'Doe'
+  fill_in 'order_payment_attributes_credit_card_form_number', with: '4111111111111111'
+  select 1.years.from_now.year.to_s, from: 'order_payment_attributes_credit_card_form_year'
+  select "01", from: 'order_payment_attributes_credit_card_form_month'
+  fill_in 'order_payment_attributes_credit_card_form_verification_value', with: '111'
   click_button 'Complete Checkout'
 end
 
 When /^I fill in the extra checkout field$/ do
+  if page.has_css?('#order_checkout_extra_fields_user_first_name')
+    fill_in 'order_checkout_extra_fields_user_first_name', with: '123123412345'
+    fill_in 'order_checkout_extra_fields_user_last_name', with: '123123412345'
+  end
   fill_in 'order_checkout_extra_fields_user_properties_license_number', with: '123123412345'
   fill_in 'order_checkout_extra_fields_user_mobile_number', with: '123123412345'
-  fill_in 'order_checkout_extra_fields_user_first_name', with: '123123412345'
-  fill_in 'order_checkout_extra_fields_user_last_name', with: '123123412345'
 end
 
 When /^I fill in the extra checkout field without last name$/ do

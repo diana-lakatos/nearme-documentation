@@ -1,6 +1,6 @@
 = render 'dashboard/company/transactables/price_form', f: f, form_fields: form_fields
-- if overnight_or_regular_booking?(f.object.transactable_type) && form_fields.find { |ff| ff.keys.first == model && ff.values.first.in?(['schedule', 'availability_rules']) }
-  - content_for :booking_type_regular_tab_content do
+- if (f.object.transactable_type.booking_choices - %w(schedule)).any? && form_fields.find { |ff| ff.keys.first == model && ff.values.first.in?(['schedule', 'availability_rules']) }
+  - content_for :availability_templates_content do
     = render 'dashboard/company/transactables/form_fields/availability', f: f
 - if f.object.transactable_type.schedule_booking_enabled?
   = render 'dashboard/company/transactables/schedule_form', f: f

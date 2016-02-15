@@ -3,7 +3,7 @@
 
 var jQuery = require('expose?$!expose?jQuery!jquery');
 require('jquery-ujs/src/rails');
-require('jquery-ui/ui/widget')
+require('jquery-ui/ui/widget');
 require('bootstrap-sass/assets/javascripts/bootstrap');
 require('cocoon');
 require('jquery-timeago');
@@ -299,6 +299,19 @@ require('jquery-timeago');
     });
 
     DNM.registerInitializer(function(){
+        var els = $('.fixed-price-container');
+        if (els.length === 0) {
+            return;
+        }
+        require.ensure('./new_ui/listings/fixed_price', function(require){
+            var FixedPrice = require('./new_ui/listings/fixed_price');
+            els.each(function(){
+                return new FixedPrice(this);
+            });
+        });
+    });
+
+    DNM.registerInitializer(function(){
         var els = $('[data-booking-type-list]');
         if (els.length === 0) {
             return;
@@ -485,6 +498,17 @@ require('jquery-timeago');
 
         require.ensure('exports?ServiceTickDetection!./analytics/sessioncam', function(require){
             window.ServiceTickDetection = require('exports?ServiceTickDetection!./analytics/sessioncam');
+        });
+    });
+
+    DNM.registerInitializer(function(){
+        var els = $('input[type="color"]');
+        if (els.length === 0) {
+            return;
+        }
+
+        require.ensure('spectrum/spectrum', function(require){
+            require('spectrum/spectrum');
         });
     });
 

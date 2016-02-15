@@ -4,20 +4,20 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
   include PaymentGateway::ActiveMerchantGateway
   include PaymentExtention::PaypalMerchantBoarding
 
-  has_many :merchant_accounts, class_name: 'MerchantAccount::PaypalExpressChainMerchantAccount', foreign_key: 'payment_gateway_id'
+  MAX_REFUND_ATTEMPTS = 4
 
   # Global setting for all marketplaces
   # Send to paypal with every action as BN CODE
   ActiveMerchant::Billing::Gateway.application_id = Rails.configuration.active_merchant_billing_gateway_app_id
 
-  supported :paypal_chain_payments, :multiple_currency, :express_checkout_payment, :immediate_payout
+  supported :paypal_chain_payments, :multiple_currency, :express_checkout_payment, :immediate_payout, :partial_refunds
 
   def self.settings
     {
-      login: "",
-      password: "",
-      signature: "",
-      partner_id: ""
+      login: { validate: [:presence], change: [:void_merchant_accounts] },
+      password: { validate: [:presence] },
+      signature: { validate: [:presence] },
+      partner_id: { validate: [:presence], change: [:void_merchant_accounts] }
     }
   end
 
@@ -33,8 +33,12 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
     ["CZK", "DKK", "HDK", "HUF", "ILS", "MYR", "MXN", "NOK", "NZD", "PHP", "RUB", "SGD", "SEK", "CHF", "TWD", "THB", "TRY",  "USD", "GBP", "EUR", "PLN"]
   end
 
-  def authorize(authoriazable, options = {})
-    PaymentAuthorizer::PaypalExpressPaymentAuthorizer.new(self, authoriazable, options).process!
+  def documentation_url
+    "https://developer.paypal.com/docs/classic/express-checkout/integration-guide/ECGettingStarted/"
+  end
+
+  def authorize(payment, options = {})
+    PaymentAuthorizer::PaypalExpressPaymentAuthorizer.new(self, payment, options).process!
   end
 
   def gateway_capture(amount, token, options)
@@ -93,8 +97,15 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
   def refund_service_fee(options)
     @payment_transfer = @payment.payment_transfer
 
+    # We only want to refund host service fee when guest cancel
+    mpo_refund_amount = if @payment.cancelled_by_guest?
+      @payment_transfer.service_fee_amount_host.cents
+    else
+      @payment_transfer.total_service_fee.cents
+    end
+
     service_fee_refund = @payment.refunds.create(
-      amount: @payment_transfer.total_service_fee.cents,
+      amount: mpo_refund_amount,
       currency: @payment.currency,
       payment: @payment,
       payment_gateway_mode: mode,
@@ -102,10 +113,10 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
     )
 
     payout = @payment_transfer.payout_attempts.successful.first
-    refund_response = if @payment_transfer.total_service_fee.cents > 0
-      gateway.refund(@payment_transfer.total_service_fee.cents, refund_identification(payout), options)
+    refund_response = if mpo_refund_amount > 0
+      gateway.refund(mpo_refund_amount, refund_identification(payout), options)
     else
-      OpenStruct.new(success: true, success?: true, refunded_ammount: @payment_transfer.total_service_fee.cents)
+      OpenStruct.new(success: true, success?: true, refunded_ammount: mpo_refund_amount)
     end
 
     if refund_response.success?
@@ -153,6 +164,10 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
 
   def supports_paypal_chain_payments?
     settings[:partner_id].present?
+  end
+
+  def max_refund_attempts
+    MAX_REFUND_ATTEMPTS
   end
 
   private

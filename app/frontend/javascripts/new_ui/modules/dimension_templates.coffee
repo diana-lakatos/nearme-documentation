@@ -39,7 +39,13 @@ module.exports = class DimensionTemplates
     return out
 
   initialize: ->
-    @updateDimensionsFieldsFromTemplates()
+    return unless @dimensions_templates_select.length > 0
+    interval = window.setInterval(()=>
+      if @dimensions_templates_select.get(0).selectize
+        window.clearInterval(interval)
+        @setDefaultOptionAsSelected()
+        @updateDimensionsFieldsFromTemplates()
+    , 50)
 
   toggle: (state)->
     @state = state
@@ -60,13 +66,18 @@ module.exports = class DimensionTemplates
 
       unit_selectize.setValue(new_elements[0])
 
-  updateDimensionsFieldsFromTemplates: ->
-    return unless @dimensions_templates_select.length > 0
+  setDefaultOptionAsSelected: ->
+    return if @container.parents('form').find('input[name="_method"]').val() == 'put' || $('#product_errors_present').length > 0
+    for key in Object.keys(@dimensions_templates_select.get(0).selectize.options)
+      option = @dimensions_templates_select.get(0).selectize.options[key]
+      if option.template.use_as_default
+        @dimensions_templates_select.get(0).selectize.setValue(option.value)
 
+  updateDimensionsFieldsFromTemplates: ->
     current = @dimensions_templates_select.get(0).selectize.items[0]
     data_options = @dimensions_templates_select.get(0).selectize.options[current].template if current
 
-    return unless data_options
+    return @updateDimensionTemplateSelect() unless data_options
 
     @unit_of_measure.val(data_options['unit_of_measure'])
 
@@ -80,6 +91,19 @@ module.exports = class DimensionTemplates
       for new_element in new_elements
         unit_selectize.addOption({ value: new_element, text: new_element })
         unit_selectize.setValue(new_element) if data_options[item + '_unit'] == new_element
+
+  updateDimensionTemplateSelect: ->
+    current = null
+    $.each @dimensions_templates_select.get(0).selectize.options, (index, option)=>
+      template = option.template
+      return if @unit_of_measure.val() isnt template['unit_of_measure']
+
+      for item in ['weight', 'height', 'width', 'depth']
+        return if @dimension_fields[item].val() isnt template[item]
+
+      current = index
+
+    @dimensions_templates_select.get(0).selectize.setValue(current) if current isnt null
 
   getOptionsTextByUnitType: (unit_type, unit_name) ->
     result = []

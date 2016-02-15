@@ -1,23 +1,14 @@
 namespace :after_deploy do
   desc 'Runs required tasks after deployment'
   task :run => [:environment] do
-    ['after_deploy:clear_rails_cache', 'locales:create_or_update_defaults', 'after_deploy:schedule_recurring_jobs'].each do |task_name|
-      p "[#{Time.now}]Invoking: #{task_name}"
-      Rake::Task[task_name].invoke
-    end
-  end
-
-  desc "Clear Rails cache"
-  task :clear_rails_cache => [:environment] do
+    puts "Clearing cache"
     Rails.cache.clear
     RedisCache.clear
-  end
 
-  desc "Schedule Recurring Jobs"
-  task :schedule_recurring_jobs => [:environment] do
-    # removing all recurring jobs from previous deployment/application restart
+    puts "Removing all jobs from queue recurring-jobs"
     Delayed::Job.where(queue: "recurring-jobs").delete_all
 
+    puts "Re-creating jobs for queue recurring-jobs"
     # and queuing them again
     ScrapeSupportEmails.schedule!
     SendRatingReminders.schedule!
@@ -30,6 +21,10 @@ namespace :after_deploy do
     SendSpamReportsSummaryDaily.schedule!
     ScheduleChargeSubscriptions.schedule! if Rails.env.production?
     ScheduleCommunityAggregatesCreation.schedule!
+
+    puts "Creating default locales"
+    Utils::EnLocalesSeeder.new.go!
   end
+
 end
 

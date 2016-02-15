@@ -32,7 +32,7 @@ module.exports = class BookingsDatepicker
     @listingData = options.listingData
 
     @initializeStartDatepicker()
-    @initializeEndDatepicker()
+    @initializeEndDatepicker() if @endElement.length > 0
 
     @bindEvents()
     @assignInitialDates()
@@ -60,22 +60,24 @@ module.exports = class BookingsDatepicker
       @startDatepickerWasChanged()
       @timePicker.updateSelectableTimes() if @timePicker
 
-    @endDatepicker.on 'datesChanged', (dates) =>
-      @datesWereChanged()
+    if @endDatepicker
+      @endDatepicker.on 'datesChanged', (dates) =>
+        @datesWereChanged()
 
 
-    # The 'rangeApplied' event is fired by our custom endDatepicker model when a date
-    # is toggled with the 'range' mode on. We bind this to set the mode to the second
-    # mode, to add/remove dates.
-    @endDatepicker.getModel().on 'rangeApplied', =>
-      # For now, we only provide the add/remove pick mode for listings allowing
-      # individual day selection.
-      @setDatepickerToPickMode() unless @listing.data.continuous_dates
+    if @endDatepicker
+      # The 'rangeApplied' event is fired by our custom endDatepicker model when a date
+      # is toggled with the 'range' mode on. We bind this to set the mode to the second
+      # mode, to add/remove dates.
+      @endDatepicker.getModel().on 'rangeApplied', =>
+        # For now, we only provide the add/remove pick mode for listings allowing
+        # individual day selection.
+        @setDatepickerToPickMode() unless @listing.data.continuous_dates
 
-      # If the user selects the same start/end date, let's close the datepicker
-      # and assume they were only trying to select one day.
-      if @listing.minimumBookingDays > 1 or @endDatepicker.getDates().length <= 1
-        @endDatepicker.hide()
+        # If the user selects the same start/end date, let's close the datepicker
+        # and assume they were only trying to select one day.
+        if @listing.minimumBookingDays > 1 or @endDatepicker.getDates().length <= 1
+          @endDatepicker.hide()
 
   initializeStartDatepicker: ->
     @startDatepicker = new Datepicker(
@@ -110,15 +112,19 @@ module.exports = class BookingsDatepicker
   setDates: (dates) ->
     dates = dateUtil.sortDates(dates)
     @startDatepicker.setDates(dates.slice(0,1))
-    @endDatepicker.setDates(dates)
-    @endDatepicker.getModel().ensureDatesMeetConstraint()
+
+    if @endDatepicker
+      @endDatepicker.setDates(dates)
+      @endDatepicker.getModel().ensureDatesMeetConstraint()
 
     # If we're specifying more than just a start date, we need
     # to set the mode to Pick.
     if dates.length > 1 && !@listing.isOvernightBooking()
       @setDatepickerToPickMode()
     @updateElementText()
-    @trigger 'datesChanged', @endDatepicker.getDates()
+
+    if @endDatepicker
+      @trigger 'datesChanged', @endDatepicker.getDates()
 
   reset: ->
     @setDates([])
@@ -131,13 +137,14 @@ module.exports = class BookingsDatepicker
     if !startDate or startDate.getTime() > date.getTime()
       @startDatepicker.addDate(date)
 
-    @endDatepicker.addDate(date)
-    @endDatepicker.getModel().extendRangeToMeetConstraint(date)
+    if @endDatepicker
+      @endDatepicker.addDate(date)
+      @endDatepicker.getModel().extendRangeToMeetConstraint(date)
     @updateElementText()
 
   removeDate: (date) ->
     @startDatepicker.removeDate(date)
-    @endDatepicker.removeDate(date)
+    @endDatepicker.removeDate(date) if @endDatepicker
 
     if !@startDatepicker.getDates()[0]
       firstEndDate = @endDatepicker.getDates()[0]
@@ -145,30 +152,38 @@ module.exports = class BookingsDatepicker
     @updateElementText()
 
   getDates: ->
-    @endDatepicker.getDates()
+    if @endDatepicker
+      @endDatepicker.getDates()
+    else
+      @startDatepicker.getDates()
+
 
   updateElementText: ->
-    # Set the date on the element
-    startDate = _.first(@endDatepicker.getDates())
-    endDate = _.last(@endDatepicker.getDates())
+    startDate = _.first(@getDates())
     startText = if startDate then @formatDateForLabel(startDate) else 'Start'
-    endText = if endDate then @formatDateForLabel(endDate) else 'End'
-
     @startElement.find('.calendar-text').text(startText)
-    @endElement.find('.calendar-text').text(endText)
+
+    if @endDatepicker
+      endDate = _.last(@getDates())
+      endText = if endDate then @formatDateForLabel(endDate) else 'End'
+      @endElement.find('.calendar-text').text(endText)
 
   setDatepickerToPickMode: ->
     return if @listing.minimumBookingDays > 1
-    @endDatepicker.getModel().setMode(ModeAndConstraintModel.MODE_PICK)
-    @endDatepicker.getView().setText(@end_text())
+    if @endDatepicker
+      @endDatepicker.getModel().setMode(ModeAndConstraintModel.MODE_PICK)
+      @endDatepicker.getView().setText(@end_text())
 
   setDatepickerToRangeMode: ->
-    @endDatepicker.getModel().setMode(ModeAndConstraintModel.MODE_RANGE)
-    @endDatepicker.getView().setText(@TEXT_END_RANGE)
+    if @endDatepicker
+      @endDatepicker.getModel().setMode(ModeAndConstraintModel.MODE_RANGE)
+      @endDatepicker.getView().setText(@TEXT_END_RANGE)
 
   datesWereChanged: ->
     @updateElementText()
-    @trigger 'datesChanged', @endDatepicker.getDates()
+
+    if @endDatepicker
+      @trigger 'datesChanged', @endDatepicker.getDates()
 
   startDatepickerWasChanged: ->
     # We want to instantly hide the start datepicker on selection
@@ -181,7 +196,7 @@ module.exports = class BookingsDatepicker
     # Show the end datepicker instantly
     if @container.find("li[data-hourly]").hasClass('active')
       @timePicker.show()
-    else
+    else if @endDatepicker
       @endDatepicker.show()
 
     # Bubble event
@@ -228,7 +243,7 @@ module.exports = class BookingsDatepicker
     if urlUtil.getParameterByName('start_date')
       startDate = new Date(urlUtil.getParameterByName('start_date'))
       for i in [0..50]
-        if @endDatepicker.getModel().canSelectDate(dateUtil.nextDateIterator(startDate)())
+        if @endDatepicker and @endDatepicker.getModel().canSelectDate(dateUtil.nextDateIterator(startDate)())
           endDate = dateUtil.nextDateIterator(startDate)()
           break
 

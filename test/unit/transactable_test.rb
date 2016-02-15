@@ -508,6 +508,7 @@ class TransactableTest < ActiveSupport::TestCase
         @transactable.daily_price  = 20000
         @transactable.weekly_price = 30000
         @transactable.monthly_price = 30000
+        @transactable.fixed_price = Money.new(100, 'USD')
         @transactable.action_hourly_booking = @transactable.action_daily_booking = @transactable.action_free_booking = nil
         @transactable.booking_type = 'schedule'
         @transactable.save
@@ -529,6 +530,7 @@ class TransactableTest < ActiveSupport::TestCase
         assert_equal 'USD', @transactable.currency
         refute @transactable.action_schedule_booking
       end
+
     end
   end
 

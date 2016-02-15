@@ -61,26 +61,12 @@ Feature: A user can book at a space
        Then I should see "credit card will be charged when your reservation is confirmed"
        And reservation should have billing authorization token
 
-  Scenario: As an anonymous user I should be asked to sign up before booking
-    When I select to book and review space for:
-      | Transactable     | Date   | Quantity |
-      | the transactable | Monday | 2        |
-    Then I should be asked to sign up before making a booking
-
   Scenario: As an anonymous user I should return to my booking state after logging in
     When I select to book and review space for:
       | Transactable     | Date   | Quantity |
       | the transactable | Monday | 2        |
-    And I log in to continue booking
-    Then I should see the booking confirmation screen for:
-      | Transactable     | Date   | Quantity |
-      | the transactable | Monday | 2        |
-
-  Scenario: As an anonymous user I should return to my booking state after signing up
-    When I select to book and review space for:
-      | Transactable     | Date   | Quantity |
-      | the transactable | Monday | 2        |
-    And I sign up as a user in the modal
+    Then I should be asked to sign up before making a booking
+    When I log in to continue booking
     Then I should see the booking confirmation screen for:
       | Transactable     | Date   | Quantity |
       | the transactable | Monday | 2        |
@@ -113,113 +99,33 @@ Feature: A user can book at a space
       | Transactable     | Date   | Quantity | Start | End   |
       | the transactable | Monday | 1        | 9:00  | 14:00 |
 
-    Scenario: Hourly reserved listing can be booked for full day
-      Given the transactable is reserved hourly
-      And   the transactable has an hourly price of 100.00
-      And I am logged in as the user
-      When I go to the location's page
-      And I select to book and review space for:
-        | Transactable     | Date   | Quantity | Start | End   |
-        | the transactable | Monday | 1        | 9:00  | 17:00 |
-      And I provide reservation credit card details
-      And I click to confirm the booking
-      Then the user should have a reservation:
-        | Transactable     | Date   | Quantity | Start | End   |
-        | the transactable | Monday | 1        | 9:00  | 17:00 |
-
-    Scenario: User sees booking confirmation details after successful reservation
+    Scenario: User can properly book regular reservation
       Given I am logged in as the user
-       When I book space for:
+      Given Extra fields are prepared for booking
+       Then I fail to book space for without extra fields:
+            | Transactable     | Date         | Quantity  |
+            | the transactable | next week Monday  | 1         |
+            | the transactable | next week Tuesday | 1         |
+       When I book space for with extra fields:
             | Transactable     | Date         | Quantity  |
             | the transactable | next week Monday  | 1         |
             | the transactable | next week Tuesday | 1         |
        Then I should be offered calendar and manage options
-
-    Scenario: Last bookings is highlighted
-      Given I am logged in as the user
+        And the user should have the transactable reserved for 'next week Monday'
+        And the user should have the transactable reserved for 'next week Tuesday'
        When I book space for:
-            | Transactable     | Date         | Quantity  |
-            | the transactable | next week Monday  | 1         |
-            | the transactable | next week Tuesday | 1         |
-       When I book space for:
-            | Transactable     | Date         | Quantity  |
-            | the transactable | next Wednesday  | 1      |
-       Then I should be offered calendar and manage options
+            | Transactable     | Date         | Quantity       |
+            | the transactable | next week Wednesday  | 1      |
+       Then the user should have the transactable reserved for 'next week Wednesday'
        When I follow "Manage"
        Then I should be redirected to bookings page
-       Then The second booking should be highlighted
+        And The second booking should be highlighted
 
-    Scenario: A logged in user can book a transactable
-      Given I am logged in as the user
-        When I book space for:
-            | Transactable     | Date         | Quantity  |
-            | the transactable | next week Monday  | 1         |
-            | the transactable | next week Tuesday | 1         |
-       Then the user should have the transactable reserved for 'next week Monday'
-        And the user should have the transactable reserved for 'next week Tuesday'
-
-    Scenario: A logged in user can't book a transactable without filling in extra fields
-      Given I am logged in as the user
-      Given Extra fields are prepared for booking
-        Then I fail to book space for without extra fields:
-            | Transactable     | Date         | Quantity  |
-            | the transactable | next week Monday  | 1         |
-            | the transactable | next week Tuesday | 1         |
-
-    Scenario: A logged in user can book a transactable with filling in extra fields
-      Given I am logged in as the user
-      Given Extra fields are prepared for booking
-        Then I book space for with extra fields:
-            | Transactable     | Date         | Quantity  |
-            | the transactable | next week Monday  | 1         |
-            | the transactable | next week Tuesday | 1         |
-
-    Scenario: A logged in user can book a transactable with filling in extra fields without company name
-      Given I am logged in as the user
-      Given Extra fields are prepared for booking
-        Then I book space for with extra fields without company_name:
-            | Transactable     | Date         | Quantity  |
-            | the transactable | next week Monday  | 1         |
-            | the transactable | next week Tuesday | 1         |
-
-    Scenario: A logged in user can't book a transactable without filling in mobile number
-      Given I am logged in as the user
-      Given Extra fields are prepared for booking
-        Then I fail to book space for without extra fields mobile number:
-            | Transactable     | Date         | Quantity  |
-            | the transactable | next week Monday  | 1         |
-            | the transactable | next week Tuesday | 1         |
-
-    Scenario: A logged in user can't book a transactable without filling in last name
-      Given I am logged in as the user
-      Given Extra fields are prepared for booking
-        Then I fail to book space for without extra fields last name:
-            | Transactable     | Date         | Quantity  |
-            | the transactable | next week Monday  | 1         |
-            | the transactable | next week Tuesday | 1         |
-
-    Scenario: A logged in user can't book a transactable without filling in license number
-      Given I am logged in as the user
-      Given Extra fields are prepared for booking
-        Then I fail to book space for without extra fields license number:
-            | Transactable     | Date         | Quantity  |
-            | the transactable | next week Monday  | 1         |
-            | the transactable | next week Tuesday | 1         |
-
-    Scenario: A logged in user can't book a transactable without filling in first name
-      Given I am logged in as the user
-      Given Extra fields are prepared for booking
-        Then I fail to book space for without extra fields first name:
-            | Transactable     | Date         | Quantity  |
-            | the transactable | next week Monday  | 1         |
-            | the transactable | next week Tuesday | 1         |
-
-    @borked
     Scenario: Booking for a 'automatically confirm' listing should show relevant details
       Given bookings for the transactable do not need to be confirmed
       And I am logged in as the user
       When I go to the location's page
       And I select to book and review space for:
-        | Transactable | Date | Quantity|
-        | the transactable | Monday | 1 |
+        | Transactable     | Date             | Quantity |
+        | the transactable | next week Monday | 1        |
       Then I should not see "This host manually confirms all bookings before payment"

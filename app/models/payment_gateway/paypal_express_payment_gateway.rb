@@ -3,11 +3,13 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
   include ActionView::Helpers::SanitizeHelper
   include PaymentGateway::ActiveMerchantGateway
 
+  MAX_REFUND_ATTEMPTS = 4
+
   # Global setting for all marketplaces
   # Send to paypal with every action as BN CODE
   ActiveMerchant::Billing::Gateway.application_id = Rails.configuration.active_merchant_billing_gateway_app_id
 
-  supported :multiple_currency, :express_checkout_payment
+  supported :multiple_currency, :express_checkout_payment, :partial_refunds
 
   def self.settings
     {
@@ -62,7 +64,7 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
 
   def process_express_checkout(transactable, options)
     @transactable = transactable
-    @response = gateway(@transactable.merchant_subject).setup_authorization(@transactable.total_amount.cents , options.deep_merge(
+    @response = gateway(@transactable.merchant_subject).setup_authorization(@transactable.total_amount.cents, options.deep_merge(
       {
         currency: @transactable.currency,
         allow_guest_checkout: true,
@@ -73,6 +75,7 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
         tax: @transactable.tax_amount.cents
       })
     )
+    # TODO: store @response somewhere
   end
 
   def redirect_url
@@ -89,6 +92,14 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
 
   def supports_paypal_chain_payments?
     settings[:partner_id].present?
+  end
+
+  def documentation_url
+    "https://developer.paypal.com/docs/classic/express-checkout/integration-guide/ECGettingStarted/"
+  end
+
+  def max_refund_attempts
+    MAX_REFUND_ATTEMPTS
   end
 
   private

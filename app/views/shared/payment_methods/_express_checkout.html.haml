@@ -4,3 +4,5 @@
   - else
     = t('buy_sell_market.checkout.payment_authorized')
     = f.hidden_field :express_token
+
+= render 'listings/reservations/confirm_reservations', f: f

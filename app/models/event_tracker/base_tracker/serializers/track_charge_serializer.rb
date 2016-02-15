@@ -25,7 +25,7 @@ class EventTracker::BaseTracker::Serializers::TrackChargeSerializer
         host_fee: object.service_fee_amount_host.to_f,
         guest_id: object.owner_id,
         host_id: object.host.try(:id),
-        payment_id: object.payments.paid.first.id,
+        payment_id: object.payment.id,
         instance_name: object.instance.name,
         listing_name: object.listing.try(:name),
       }

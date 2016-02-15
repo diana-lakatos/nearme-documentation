@@ -228,6 +228,8 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
   end
 
   def create_transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation!
+    Reservation.any_instance.stubs(:schedule_refund).returns(true)
+
     @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation = FactoryGirl.create(:transactable, quantity: 1)
     FactoryGirl.create(:future_reservation, listing: @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation, state: 'confirmed').tap do |r|
       r.add_period(@date_start + 1.days)

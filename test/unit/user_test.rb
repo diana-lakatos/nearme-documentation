@@ -590,9 +590,13 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should 'cancel any pending unconfirmed reservations' do
-        @reservation = FactoryGirl.create(:authorized_reservation, owner: @user)
+        # We need to stub void request on reservation
+        stub_active_merchant_interaction
+
+        @reservation = FactoryGirl.create(:unconfirmed_reservation, owner: @user)
         @user.destroy
         assert @reservation.reload.cancelled_by_guest?
+        assert @reservation.payment.voided?
       end
 
       should 'cancel any pending reservations' do
@@ -679,8 +683,7 @@ class UserTest < ActiveSupport::TestCase
       @user.save!
       listing_first = FactoryGirl.create(:listing_in_auckland)
       listing_second = FactoryGirl.create(:listing_in_auckland)
-      reservation = FactoryGirl.create(:authorized_reservation, listing: listing_first, user: @user)
-      reservation.reject
+      reservation = FactoryGirl.create(:rejected_reservation, listing: listing_first, user: @user)
       assert_equal [listing_second], @user.listings_in_near(3, 100, true)
     end
   end
@@ -1020,7 +1023,7 @@ class UserTest < ActiveSupport::TestCase
     @photo  = FactoryGirl.create(:photo, :listing => @listing, :creator => @photo)
     @reservation = FactoryGirl.create(:reservation, :user => @user, :listing => @listing)
     @reservation_period = @reservation.periods.first
-    @payment = FactoryGirl.create(:payment, :payable => @reservation)
+    @payment = @reservation.payment
     @charge = FactoryGirl.create(:charge, :payment => @payment)
     @payment_transfer = FactoryGirl.create(:payment_transfer, :company_id => @company.id)
     FactoryGirl.build(:upload_obligation, level: UploadObligation::LEVELS[0], item: @listing)

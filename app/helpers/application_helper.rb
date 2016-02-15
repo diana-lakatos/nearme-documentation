@@ -336,12 +336,12 @@ module ApplicationHelper
     end
 
     (user.buyer_profile.try(:instance_profile_type).try(:custom_attributes) || []).each do |attribute|
-      if attribute.public? && user.buyer_profile.field_blank_or_changed?(attribute.name) && ::CustomAttributes::CustomAttribute::FormElementDecorator.new(attribute).options[:required]
+      if attribute.public? && user.buyer_profile.field_blank_or_changed?(attribute.name)
         return true
       end
     end
 
-    (user.buyer_profile.try(:instance_profile_type).try(:categories).try(:mandatory).try(:each) || []).each do |category|
+    (user.buyer_profile.try(:instance_profile_type).try(:categories).try(:each) || []).each do |category|
       return true if user.buyer_profile.category_blank_or_changed?(category)
     end
 
@@ -469,7 +469,7 @@ module ApplicationHelper
         "#{compute_asset_host}/assets/#{bundle}-bundle.js"
       end
 
-    javascript_include_tag(src)
+    javascript_include_tag(src, crossorigin: 'anonymous')
   end
 
   def webpack_manifest_script
