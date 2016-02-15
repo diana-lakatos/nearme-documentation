@@ -88,7 +88,7 @@
       .order-actions
         - if !recurring_booking.archived? and current_user == recurring_booking.host
 
-          - if recurring_booking.can_host_cancel?
+          - if recurring_booking.can_host_cancel? && !recurring_booking.unconfirmed?
             = form_for recurring_booking, method: :post, url: host_cancel_dashboard_company_host_recurring_booking_path(recurring_booking, listing_id: recurring_booking.listing) do |f|
               = f.submit t('dashboard.user_recurring_bookings.host_actions.cancel'), data: { confirm: t('dashboard.user_recurring_bookings.host_actions.confirmations.cancel') }, class: 'btn btn-warning'
 

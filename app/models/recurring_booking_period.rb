@@ -20,6 +20,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   def generate_payment!
     payment = payments.build(
+      company: company,
       service_fee_amount_guest_cents: service_fee_amount_guest_cents,
       service_fee_amount_host_cents: service_fee_amount_host_cents,
       subtotal_amount_cents: subtotal_amount_cents,

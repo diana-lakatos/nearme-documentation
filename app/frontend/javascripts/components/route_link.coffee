@@ -4,7 +4,7 @@ module.exports = class RouteLink
     @locate()
 
   locate: ->
-    return unless Modernizr.geolocation
+    return unless `'geolocation' in navigator`
     navigator.geolocation.getCurrentPosition((position) =>
       @latitude  = position.coords.latitude
       @longitude = position.coords.longitude

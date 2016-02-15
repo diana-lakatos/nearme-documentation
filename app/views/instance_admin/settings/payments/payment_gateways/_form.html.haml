@@ -1,4 +1,28 @@
 = simple_form_for [:instance_admin, :settings, @payment_gateway] do |f|
+  .row
+    %h4= @payment_gateway.name + " information:"
+    .row
+      %ul
+        - if @payment_gateway.supports_manual_payment?
+          %li All transactions are processed outside the system.
+          %li Free payment method is required to allow zero amount transactions.
+        - elsif @payment_gateway.supports_payout?
+          %li Designed for scheduled automated #{link_to 'payment transfers', '/instance_admin/manage/transfers'}.
+        - else
+          %li
+            - if @payment_gateway.supports_partial_refunds?
+              Partial refunds are supported. It's possible to configure cancelation policy rules per Service type.
+            - else
+              Cancellation policies are not included. When user cancel reservation total amount is always refunded.
+          %li
+            - if @payment_gateway.supports_immediate_payout?
+              Transaction happens between buyer and seller. Marketplace owner is not primary receiver in that case and only receive service fees if configured.
+            - else
+              Marketplace owner is primary receiver of every transaction. Automated payouts can be integrated when PayPal Adaptive Payment Gateway is properly configured
+        - if @payment_gateway.documentation_url
+          %li
+            You can find more information in the
+            = link_to " official documentation.", @payment_gateway.documentation_url, :target => '_blank'
   - if @payment_gateway.new_record?
     .row
       .input-container.col-xs-12

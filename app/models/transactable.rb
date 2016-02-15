@@ -205,7 +205,7 @@ class Transactable < ActiveRecord::Base
     :categories_not_required, :enable_weekly, :enable_daily, :enable_hourly,
     :enable_weekly_subscription,:enable_monthly_subscription,
     :availability_template_attributes, :enable_exclusive_price,
-    :enable_book_it_out_discount
+    :enable_book_it_out_discount, :scheduled_action_free_booking, :regular_action_free_booking
 
   monetize :daily_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :hourly_price_cents, with_model_currency: :currency, allow_nil: true
@@ -769,6 +769,14 @@ class Transactable < ActiveRecord::Base
     availability_template.try(:custom_for_transactable?)
   end
 
+  def scheduled_action_free_booking
+    self.action_free_booking
+  end
+
+  def regular_action_free_booking
+    self.action_free_booking
+  end
+
   private
 
   def set_currency
@@ -799,7 +807,8 @@ class Transactable < ActiveRecord::Base
       self.exclusive_price_cents = nil unless enable_exclusive_price == '1'
       self.book_it_out_discount = self.book_it_out_minimum_qty = nil unless enable_book_it_out_discount == '1'
       nullify_prices(exclude: [:fixed, :exclusive])
-      self.action_hourly_booking = self.action_daily_booking = self.action_free_booking = nil
+      self.action_hourly_booking = self.action_daily_booking = nil
+      self.action_free_booking = nil if self.has_price?
       self.action_schedule_booking = true
     elsif subscription_booking?
       self.action_schedule_booking = self.action_hourly_booking = self.action_daily_booking = self.action_free_booking = nil

@@ -83,7 +83,7 @@ module.exports = class BookingsController
       @listing.setSubscriptionPeriod(period)
       @updateBookingStatus()
 
-    @bookingTabs.on 'click', (event) =>
+    @bookingTabs.on 'shown.bs.tab', (event) =>
       # This is to allow all classes on elements to settle
       # because they are checked for determining the current
       # state after click; specifically @hourlyBookingSelected
