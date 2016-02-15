@@ -6,7 +6,7 @@ module.exports = class PriceFields
     @container = $(container)
     @enablingPriceCheckboxes = @container.find('.price-options input[type=checkbox]')
     @freeCheckbox = @container.find('input[data-action-free-booking]')
-    @globalFreeCheckbox = $($.find('input#transactable_action_free_booking'))
+    @globalFreeCheckbox = $($.find('input[data-global-action-free-booking]'))
     @inputWrapper = @container.find('.price-options')
     @bookingTypeInput = $('input[data-booking-type]')
     @priceFields  = @container.find('input[data-price-field]')
@@ -36,7 +36,7 @@ module.exports = class PriceFields
 
       @inputWrapper.find('input[readonly]').prop('disabled', true)
       if @bookingTypeInput.val() == 'regular'
-        if @container.find('input[name="define_day"]:checked').length > 0
+        if @container.find('input[name="define_day"]:checked').val().length > 0
           @bookingTypeInput.val(@container.find('input[name="define_day"]:checked').val())
 
     @enablingPriceCheckboxes.change (event) =>

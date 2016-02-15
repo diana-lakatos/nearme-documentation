@@ -65,7 +65,7 @@
         - if f.object.transactable_type.action_free_booking
           = f.input :scheduled_action_free_booking, as: :switch, label: t("simple_form.labels.transactable.price_free"), input_html: { 'data-scheduled-action-free-booking' => true }
         .form-inline
-          = f.input :fixed_price, as: :numeric, wrapper: :dashboard_addon, required: true, prefix: currency_symbol_from_code(@transactable.try(:currency) || PlatformContext.current.instance.default_currency), label_html: { class: "block-label" }
+          = f.input :fixed_price, as: :numeric, wrapper: :dashboard_addon, required: true, prefix: currency_symbol_from_code(@transactable.try(:currency) || PlatformContext.current.instance.default_currency), label_html: { class: "block-label" }, input_html: { 'data-scheduled-fixed-price' => true }
           .form-unit.label-offset
             \/
             = f.object.transactable_type.action_price_per_unit? ? t("simple_form.labels.transactable.price.per_unit") : t("simple_form.labels.transactable.price.fixed")
