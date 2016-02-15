@@ -123,8 +123,7 @@ module.exports = class BookingsDatepicker
       @setDatepickerToPickMode()
     @updateElementText()
 
-    if @endDatepicker
-      @trigger 'datesChanged', @endDatepicker.getDates()
+    @trigger 'datesChanged', @getDates()
 
   reset: ->
     @setDates([])
@@ -146,7 +145,7 @@ module.exports = class BookingsDatepicker
     @startDatepicker.removeDate(date)
     @endDatepicker.removeDate(date) if @endDatepicker
 
-    if !@startDatepicker.getDates()[0]
+    if !@startDatepicker.getDates()[0] and @endDatepicker
       firstEndDate = @endDatepicker.getDates()[0]
       @startDatepicker.addDate(firstEndDate) if firstEndDate
     @updateElementText()
@@ -182,8 +181,7 @@ module.exports = class BookingsDatepicker
   datesWereChanged: ->
     @updateElementText()
 
-    if @endDatepicker
-      @trigger 'datesChanged', @endDatepicker.getDates()
+    @trigger 'datesChanged', @getDates()
 
   startDatepickerWasChanged: ->
     # We want to instantly hide the start datepicker on selection
