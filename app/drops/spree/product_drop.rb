@@ -31,7 +31,9 @@ class Spree::ProductDrop < BaseDrop
 
   # sanitized product description (with things like disallowed HTML tags removed etc.)
   def sanitized_product_description
-    Sanitizer.sanitze(@product.description)
+    Sanitizer.sanitize_with_options(@product.description, 
+      :elements => Sanitize::Config::BASIC[:elements] + ['img'],
+      :attributes => Sanitize::Config::BASIC[:attributes].merge("img" => ['alt', 'src', 'title']))
   end
 
   # price for this product as a string including the currency symbol
