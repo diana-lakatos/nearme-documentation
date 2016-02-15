@@ -103,6 +103,7 @@ class Company < ActiveRecord::Base
 
   validates :paypal_email, email: true, allow_blank: true
 
+  after_create :set_external_id
   after_create :add_company_to_partially_created_shipping_categories
 
   def email
@@ -255,6 +256,10 @@ class Company < ActiveRecord::Base
     else
      creator.time_zone
     end
+  end
+
+  def set_external_id
+    self.update_column(:external_id, "manual-#{id}") if self.external_id.blank?
   end
 
 end

@@ -6,23 +6,17 @@ module.exports = class Forms
 
   bindEvents: ->
     @root.on 'loaded.dialog', =>
-      require.ensure ['./datepickers', './hints','./tooltips', './selects'], (require)=>
-        datepickers = require('./datepickers')
-        datepickers('.dialog')
-
-        hints = require('./hints')
-        hints('.dialog')
-
-        tooltips = require('./tooltips')
-        tooltips('.dialog')
-
-        selects = require('./selects')
-        selects('.dialog')
+      @initialize('.dialog')
 
     @root.on 'datepickers.init.forms', (event, context = 'body')=>
       require.ensure './datepickers', (require)->
         datepickers = require('./datepickers')
         datepickers(context)
+
+    @root.on 'timepickers.init.forms', (event, context = 'body')=>
+      require.ensure './timepickers', (require)->
+        timepickers = require('./timepickers')
+        timepickers(context)
 
     @root.on 'hints.init.forms', (event, context = 'body')=>
       require.ensure './hints', (require)->
@@ -71,8 +65,17 @@ module.exports = class Forms
       datepickers = require('./datepickers')
       datepickers(context)
 
+  timepickers: (context = 'body')->
+    els = $(context).find('.time_picker');
+    return unless els.length > 0
+
+    require.ensure './timepickers', (require)->
+      timepickers = require('./timepickers')
+      timepickers(context)
+
   initialize: (context = 'body')->
     @hints(context)
     @tooltips(context)
     @datepickers(context)
     @selects(context)
+    @timepickers(context)

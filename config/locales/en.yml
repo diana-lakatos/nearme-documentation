@@ -1287,6 +1287,7 @@ en:
       view_profile: 'View Profile'
       view_profile_html: 'View <span class="hidden-xs">Profile</span>'
       submit: 'Save'
+
       sections:
         default: 'Default'
         seller: 'Seller'
@@ -1735,11 +1736,31 @@ en:
         services: 'Services'
         reviews: 'Reviews (%{count})'
         blog_posts: 'Blog'
+        general: 'Profile'
 
-      owner: 'SHOP OWNER'
-      recent_activity: 'RECENT ACTIVITY'
-      shop_info: 'COMPANY INFO'
-      verifications: 'VERIFICATIONS'
+      owner: 'Shop Owner'
+      recent_activity: 'Recent Activity'
+      shop_info: 'Company Info'
+      verifications: 'Verifications'
+      general: 'General Information'
+
+      edit: 'Edit'
+      position_company_junction: 'at'
+
+      properties:
+        country: 'Country'
+        phone: 'Phone'
+        mobile_number: 'Mobile'
+        skills_and_interests: 'Skills and Interests'
+        biography: 'Biography'
+
+      company:
+        name: 'Company Name'
+        country: 'Country'
+        url: 'Website'
+        description: 'Description'
+
+      verified: 'Verified'
 
     buttons:
       cta: 'Add new'

@@ -35,10 +35,10 @@ module ApplicationHelper
     if home_page? && platform_context.theme.tagline.present?
       "#{platform_context.theme.meta_title} | #{platform_context.theme.tagline}"
     else
-      [
+      raw([
         (show_title? ? content_for(:title) : nil),
         (additional_meta_title.present? ? additional_meta_title : nil)
-      ].compact.join(" | ")
+      ].compact.join(" | "))
     end
   end
 
