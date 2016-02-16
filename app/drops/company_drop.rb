@@ -13,7 +13,9 @@ class CompanyDrop < BaseDrop
   #   company description as string
   # name
   #   company name as string
-  delegate :created_payment_transfers, :creator, :url, :description, :company_address, :name, to: :company
+  # payments_mailing_address
+  #   the payments mailing address as an Address drop
+  delegate :created_payment_transfers, :creator, :url, :description, :company_address, :name, :payments_mailing_address, to: :company
 
   def initialize(company)
     @company = company
