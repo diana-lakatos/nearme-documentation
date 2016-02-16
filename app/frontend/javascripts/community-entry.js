@@ -1,6 +1,5 @@
 'use strict';
 
-require('expose?$!expose?jQuery!jquery');
 require('jquery-ujs/src/rails');
 
 require('./intel/vendor/css_browser_selector.min');

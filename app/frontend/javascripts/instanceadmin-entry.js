@@ -1,7 +1,6 @@
 /* global require, $ */
 'use strict';
 
-require('expose?$!expose?jQuery!jquery');
 require('expose?_!underscore');
 require('jquery-ujs/src/rails');
 require('jquery-ui/ui/widget')
