@@ -28,12 +28,13 @@
 
     = render 'shared/components/modal'
 
-    = render 'layouts/analytics'
-    = yield :page_scripts
-    = yield(:body_bottom)
-
     = webpack_manifest_script
     = webpack_bundle_tag 'common'
     = webpack_bundle_tag 'community'
+
+    = yield :page_scripts
+    = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places"
+    = render 'layouts/analytics'
+    = yield(:body_bottom)
 
     = render 'shared/raygun/init'
