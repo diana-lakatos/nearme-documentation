@@ -12,14 +12,13 @@ module.exports = function(gulp, config) {
     /* Dev environment */
 
     gulp.task('build', ['clean'], function(){
-        return gulp.start(['fonts', 'images', 'styles', 'webpack', 'modernizr', 'ckeditor', 'raygun']);
+        return gulp.start(['fonts', 'images', 'styles', 'webpack', 'vendor']);
     });
 
     /* Alias for consistency */
     gulp.task('build:development', ['build']);
 
-
-    var distTasks = ['fonts:dist', 'images:dist', 'styles:dist', 'modernizr:dist', 'raygun:dist'];
+    var distTasks = ['fonts:dist', 'images:dist', 'styles:dist', 'vendor:dist'];
 
     function createManifest(){
         gulp.src(path.join(config.paths.tmp,'**','*'))
@@ -30,38 +29,20 @@ module.exports = function(gulp, config) {
             .pipe(gulp.dest(config.paths.output)); // write manifest to build dir
     }
 
-    /* Test environment */
+    function registerEnvironmentTasks(gulp, environment) {
+        gulp.task('build:' + environment, ['clean'], function(){
+            return gulp.start('manifest:' + environment);
+        });
 
-    gulp.task('build:test', ['clean'], function(){
-        return gulp.start('manifest:test');
-    });
+        gulp.task('manifest:' + environment, distTasks, function(){
+            createManifest();
+            return gulp.start('webpack:' + environment);
+        });
+    }
 
-    gulp.task('manifest:test', distTasks, function(){
-        createManifest();
-        return gulp.start(['ckeditor', 'webpack:test']);
-    });
-
-    /* Staging environment */
-
-    gulp.task('build:staging', ['clean'], function(){
-        return gulp.start('manifest:staging');
-    });
-
-    gulp.task('manifest:staging', distTasks, function(){
-        createManifest();
-        return gulp.start(['ckeditor', 'webpack:staging']);
-    });
-
-    /* Production environment */
-
-    gulp.task('build:production', ['clean'], function(){
-        return gulp.start('manifest:production');
-    });
-
-    gulp.task('manifest:production', distTasks, function(){
-        createManifest();
-        return gulp.start(['ckeditor', 'webpack:production']);
-    });
+    registerEnvironmentTasks(gulp, 'test');
+    registerEnvironmentTasks(gulp, 'staging');
+    registerEnvironmentTasks(gulp, 'production');
 
     // Aliases
     gulp.task('dist', ['build:production']);

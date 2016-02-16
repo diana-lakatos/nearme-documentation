@@ -469,7 +469,7 @@ module ApplicationHelper
         "#{compute_asset_host}/assets/#{bundle}-bundle.js"
       end
 
-    javascript_include_tag(src)
+    javascript_include_tag(src, crossorigin: 'anonymous')
   end
 
   def webpack_manifest_script

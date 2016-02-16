@@ -1,7 +1,6 @@
 /* global require */
 'use strict';
 
-var jQuery = require('expose?$!expose?jQuery!jquery');
 require('jquery-ujs/src/rails');
 require('jquery-ui/ui/widget');
 require('bootstrap-sass/assets/javascripts/bootstrap');
