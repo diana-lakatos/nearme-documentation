@@ -74,7 +74,7 @@
     .col-sm-1
       %h3= t('dashboard.user_reservations.total')
       %p
-        %b= reservation.total_price
+        %b= reservation.total_payable_to_host_formatted
   .row
     - if reservation.guest_notes.present?
       .col-sm-3

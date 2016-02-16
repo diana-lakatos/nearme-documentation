@@ -42,6 +42,10 @@ class ReservationDecorator < Draper::Decorator
     end
   end
 
+  def total_payable_to_host_formatted
+    humanized_money_with_cents_and_symbol(total_payable_to_host)
+  end
+
   def paid
     if is_free?
       humanized_money_with_cents_and_symbol(0.0)

@@ -73,7 +73,7 @@
 
     .col-md-1
       %h3= t("dashboard.user_recurring_bookings.#{recurring_booking.interval}_price")
-      %p= recurring_booking.total_price_for(current_user)
+      %p= recurring_booking.total_payable_to_host_formatted
 
 
 
