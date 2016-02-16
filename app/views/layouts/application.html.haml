@@ -29,6 +29,7 @@
     %meta{:content => "chrome=IE7", "http-equiv" => "X-UA-Compatible"}/
 
     = render 'shared/raygun/libs'
+    = javascript_include_tag 'jquery'
 
     -if platform_context.domain.near_me_domain?
       %meta{:name => "robots", "content" => "noindex, nofollow"}/
@@ -79,7 +80,7 @@
     = javascript_tag do
       = javascript_i18n_include_tag
 
-    = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places&sensor=false"
+    = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places"
     = webpack_manifest_script
     = webpack_bundle_tag 'common'
     = webpack_bundle_tag 'application'

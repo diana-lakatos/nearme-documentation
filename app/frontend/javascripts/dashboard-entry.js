@@ -1,7 +1,6 @@
 /* global require, $ */
 'use strict';
 
-require('expose?$!expose?jQuery!jquery');
 require('../vendor/bootstrap-sass-2.3.2.2/vendor/assets/javascripts/bootstrap')
 require('../vendor/detect-mobile-browser');
 require('../vendor/nested_form');

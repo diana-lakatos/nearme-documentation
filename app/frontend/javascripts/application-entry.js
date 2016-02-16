@@ -1,7 +1,6 @@
 /* global require, $ */
 'use strict';
 
-require('expose?$!expose?jQuery!jquery');
 require('../vendor/detect-mobile-browser');
 require('../vendor/nested_form');
 require('cocoon');
