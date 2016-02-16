@@ -54,7 +54,6 @@ en:
         address: "Location address"
       "user/companies":
         name: "Company name"
-        industries: "Company industry"
       "user/companies/company_address":
         address: "Company address"
       "companies/locations/listings":
@@ -2381,9 +2380,6 @@ en:
     buttons:
       view_profile: 'View profile'
       contact: 'Contact'
-
-    company:
-      industries: 'Industries'
 
     social_share:
       twitter: 'Check out @%{instance_name}'

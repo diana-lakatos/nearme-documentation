@@ -367,7 +367,6 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
     { :instance => Instance.count,
       :user => User.count,
       :company => Company.count,
-      :company_industries => CompanyIndustry.count,
       :location => Location.count,
       :address => Address.count,
       :location_availability_rules => AvailabilityRule.where(target_type: 'Location').count,

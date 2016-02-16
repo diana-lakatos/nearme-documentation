@@ -2,7 +2,7 @@ require 'csv'
 
 class DataImporter::Product::CsvFile
 
-  MODELS = %i(user company industry spree/product spree/variant spree/shipping_category spree/image).freeze
+  MODELS = %i(user company spree/product spree/variant spree/shipping_category spree/image).freeze
 
   def initialize(data_upload)
     @data_upload = data_upload

@@ -83,7 +83,6 @@ class Instance < ActiveRecord::Base
   has_one :seller_profile_type, -> { seller }, class_name: 'InstanceProfileType'
   has_one :buyer_profile_type, -> { buyer }, class_name: 'InstanceProfileType'
   has_many :data_uploads, as: :target
-  has_many :industries
   has_many :user_blog_posts
   has_many :instance_views
   has_many :rating_systems, dependent: :destroy
@@ -303,10 +302,6 @@ class Instance < ActiveRecord::Base
   end
 
   def onboarding_verification_required=(arg)
-  end
-
-  def has_industries?
-    industries.any?
   end
 
   def default_domain

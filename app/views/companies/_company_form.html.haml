@@ -10,9 +10,6 @@
   = f.simple_fields_for :company_address, (f.object.company_address.presence || f.object.build_company_address) do |address_form|
     = render 'dashboard/shared/fields/address', :f => address_form, field_label: t('simple_form.labels.companies.company_address.address')
 
-- if (platform_context.instance.has_industries? && (only_inputs.empty? || only_inputs.include?(:industries)))
-  = f.association :industries, :blank => false, :input_html => { 'data-placeholder' => t('simple_form.prompts.company.industries') }, :required => true
-
 - if (only_inputs.empty? || only_inputs.include?(:url) || only_inputs.include?(:email))
   .row
     - if (only_inputs.empty? || only_inputs.include?(:url))

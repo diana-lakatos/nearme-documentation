@@ -4,9 +4,6 @@
 
 = f.input :description, :as => :limited_text, :limit => 250
 
-- if platform_context.instance.id == Instance.first.id
-  = f.association :industries, :blank => false, :required => true, as: :select, input_html: { "data-live-search" => "true", multiple: true }
-
 = f.simple_fields_for :company_address, (f.object.company_address.presence || f.object.build_company_address) do |address_form|
 
   = render 'dashboard/shared/fields/address', :f => address_form, field_label: t('simple_form.labels.companies.company_address.address')

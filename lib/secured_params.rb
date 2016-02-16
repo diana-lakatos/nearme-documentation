@@ -937,8 +937,7 @@ class SecuredParams
       approval_requests_attributes: nested(self.approval_request),
       company_address_attributes: nested(self.address),
       payments_mailing_address_attributes: nested(self.address),
-      theme_attributes: self.theme,
-      industry_ids: []
+      theme_attributes: self.theme
     ] << {
       products_attributes: nested(self.spree_product),
       offers_attributes: nested(self.offer(offer_type)),
@@ -1290,7 +1289,6 @@ class SecuredParams
       :sms_notifications_enabled,
       :time_zone,
       :twitter_url,
-      industry_ids: [],
       category_ids: [],
       seller_profile_attributes: nested(self.seller_profile),
       buyer_profile_attributes: nested(self.buyer_profile),
