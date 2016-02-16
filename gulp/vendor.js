@@ -2,7 +2,10 @@ var path = require('path');
 
 module.exports = function(gulp, config){
     gulp.task('ckeditor', function(){
-        gulp.src(path.join(config.paths.bower_components, 'ckeditor', '**', '*'))
+        gulp.src([path.join(config.paths.bower_components, 'ckeditor', '**', '*'), path.join('!', config.paths.bower_components, 'ckeditor', 'config.js')])
+            .pipe(gulp.dest(path.join(config.paths.output, 'ckeditor')));
+
+        gulp.src(path.join(config.paths.javascripts, 'ckeditor','config.js'))
             .pipe(gulp.dest(path.join(config.paths.output, 'ckeditor')));
     });
 
