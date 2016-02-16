@@ -5,6 +5,7 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
   include SearchParamsTestHelper
 
   setup do
+    Draper::ViewContext.clear!
     @user = FactoryGirl.create(:user)
     @mixpanel = stub() # Represents our internal MixpanelApi instance
     @google_analytics = stub()
@@ -86,7 +87,8 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
 
   context 'Locations' do
     setup do
-      @location = FactoryGirl.create(:location)
+      @listing = FactoryGirl.create(:transactable)
+      @location = @listing.location
       @search = build_search_params(options_with_location)
       @category = "Location events"
     end
@@ -314,7 +316,7 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
       listing_weekly_price: @listing.weekly_price.try(:dollars),
       listing_monthly_price: @listing.monthly_price.try(:dollars),
       listing_currency: @listing.currency,
-      listing_url: "http://example.com/listings/#{@listing.to_param}"
+      listing_url: @listing.decorate.show_url
     }
   end
 
@@ -326,7 +328,7 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
       location_state: @location.state,
       location_country: @location.country,
       location_postcode: @location.postcode,
-      location_url: "http://example.com/locations/#{@location.slug}"
+      location_url: @location.listings.first.decorate.show_url
     }
   end
 

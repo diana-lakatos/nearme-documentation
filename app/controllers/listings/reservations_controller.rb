@@ -95,7 +95,7 @@ class Listings::ReservationsController < ApplicationController
     payment = Payment.find_by_express_token!(params[:token])
     flash[:error] = t('flash_messages.reservations.booking_failed')
     reservation = payment.payable
-    redirect_to location_listing_path(reservation.listing.location, reservation.listing), status: 301
+    redirect_to reservation.listing.decorate.show_path, status: 301
   end
 
   # Renders remote payment form
@@ -115,9 +115,9 @@ class Listings::ReservationsController < ApplicationController
 
   # Store the reservation request in the session so that it can be restored when returning to the listings controller.
   def store_reservation_request
-    session[:stored_reservation_location_id] = @listing.location.id
+    session[:stored_reservation_listing_id] = @listing.id
     session[:stored_reservation_trigger] ||= {}
-    session[:stored_reservation_trigger]["#{@listing.location.id}"] = params[:commit]
+    session[:stored_reservation_trigger]["#{@listing.id}"] = params[:commit]
 
     # Marshals the booking request parameters into a better structured hash format for transmission and
     # future assignment to the Bookings JS controller.
@@ -127,7 +127,7 @@ class Listings::ReservationsController < ApplicationController
     session[:stored_reservation_bookings] = {
       @listing.id => {
         quantity: @reservation_request.reservation.quantity,
-        dates: @reservation_request.reservation.periods.map(&:date_with_time),
+        dates: (@listing.schedule_booking? ? params[:reservation_request][:dates] : @reservation_request.reservation.periods.map(&:date_with_time)),
         start_minute: @reservation_request.start_minute,
         end_minute: @reservation_request.end_minute,
         book_it_out: @reservation_request.book_it_out,
@@ -156,7 +156,7 @@ class Listings::ReservationsController < ApplicationController
   def require_login_for_reservation
     unless user_signed_in?
       store_reservation_request
-      redirect_to new_user_registration_path(return_to: location_url(@listing.location, @listing, restore_reservations: true))
+      redirect_to new_user_registration_path(return_to: @listing.try(:decorate).try(:show_path, restore_reservations: @listing.id))
     end
   end
 

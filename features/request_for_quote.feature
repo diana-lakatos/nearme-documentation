@@ -12,7 +12,7 @@ Feature: A user can recurre book at a space
       And request for feature is enabled
 
   Scenario: As an anonymous user I should return to my request for quote after logging in
-    When I go to the location's page
+    When I go to the transactable's page
     When I select to request quote and review space for:
       | Transactable     | Date   | Quantity |
       | the transactable | Monday | 2        |
@@ -25,7 +25,7 @@ Feature: A user can recurre book at a space
     Given the transactable is reserved hourly
       And the transactable has an hourly price of 100.00
       And I am logged in as the user
-     When I go to the location's page
+     When I go to the transactable's page
      When I select to request quote and review space for:
         | Transactable     | Date   | Quantity | Start | End   |
         | the transactable | Monday | 1        | 9:00  | 14:00 |

@@ -56,9 +56,9 @@ class WishListItemDrop < BaseDrop
 
   def polymorphic_wishlistable_path(wishlistable)
     if @wishlistable.is_a?(Transactable)
-      routes.transactable_type_location_listing_path(@wishlistable.transactable_type, @wishlistable.location, @wishlistable)
+      @wishlistable.decorate.show_path
     elsif @wishlistable.is_a?(Location)
-      routes.location_path(@wishlistable)
+      @wishlistable.listings.searchable.first.try(:decorate).try(:show_path)
     elsif @wishlistable.is_a?(Spree::Product)
       routes.product_path(@wishlistable)
     end

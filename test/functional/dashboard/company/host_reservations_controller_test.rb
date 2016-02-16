@@ -28,13 +28,13 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       assert_select ".order .order-item .inline p:last-child", "1 night"
     end
 
-    should 'show related locations when no related guests' do
+    should 'show related listings when no related guests' do
       @reservation = FactoryGirl.create(:reservation, owner: @user, listing: @unrelated_listing)
       @reservation.update_attribute(:instance_id, @unrelated_listing.instance_id)
       get :index
       assert_response :success
       assert_select ".order", 0
-      assert_select "h2", @related_location.name
+      assert_select "h2", @related_listing.name
     end
 
     should 'not show unrelated guests' do
@@ -217,15 +217,6 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
   end
 
   protected
-
-  def credit_card
-    ActiveMerchant::Billing::CreditCard.new(
-      :number             => "4242424242424242",
-      :month              => "12",
-      :year               => "2020",
-      :verification_value => "411"
-    )
-  end
 
   def setup_refund_for_reservation(reservation)
     reservation.payment.charges.successful.create(amount: reservation.total_amount_cents)

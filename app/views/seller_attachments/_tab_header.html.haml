@@ -1,0 +1,2 @@
+- if @attachments.count > 0
+  %li= link_to t('seller_attachments.seller_attachments'), "#location-#{params[:seller_attachable_type].downcase}-documents", data: { toggle: 'tab'}, role: 'tab'

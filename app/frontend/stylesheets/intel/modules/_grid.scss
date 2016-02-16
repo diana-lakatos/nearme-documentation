@@ -27,12 +27,11 @@
 .grid-a-people-a {
 
     > .wrap {
-        text-align: center;
+        text-align: left;
     }
 
     > .wrap > .cell {
         width: 24.999%;
-        text-align: left;
     }
 }
 
@@ -40,12 +39,11 @@
 
     > .wrap {
         margin: -60px -30px 0;
-        text-align: center;
+        text-align: left;
     }
 
     > .wrap > .cell {
         border-width: 60px 30px 0;
-        text-align: left;
     }
 }
 

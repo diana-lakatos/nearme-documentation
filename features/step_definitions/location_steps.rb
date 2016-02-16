@@ -7,5 +7,5 @@ Then(/^I should be redirected to the first listing page$/) do
   current_path = URI.parse(current_url).path
   location = Location.last
   listing = location.listings.active.first
-  assert_equal location_listing_path(location, listing), current_path
+  assert_equal listing.decorate.show_path, current_path
 end

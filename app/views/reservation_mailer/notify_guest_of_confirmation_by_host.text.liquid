@@ -1,6 +1,6 @@
 You got it, {{ user.first_name }}!
 
-Your booking for {{ listing.name }} {{ platform_context.host | append:listing.listing_url }} has been confirmed! Here it is:
+Your booking for {{ listing.name }} {{ listing.listing_url }} has been confirmed! Here it is:
 
 {{ listing.lessor | capitalize }} {{ listing.administrator.first_name }} {{ platform_context.host | append:listing.administrator.user_profile_url }}
 

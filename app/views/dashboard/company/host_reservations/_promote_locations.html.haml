@@ -1,33 +1,35 @@
 .promote-location.text-center
   - if locations.present?
     - locations.each do |location|
-      %h2 #{location.name}
-      %p
-        = t('dashboard.host_reservations.no_reservations_promote_reservations')
+      - location.listings.searchable.find_each do |listing|
+        - listing = listing.decorate
+        %h2 #{listing.name}
+        %p
+          = t('dashboard.host_reservations.no_reservations_promote_reservations')
 
-      .text-center.sharelocation
-        %span
-          =link_to tweet_location_url(location_url(location)), :ref => "mg", :class => 'btn blue twitter submit', :onclick => 'return popitup(this.href)' do
-            %span.ico-twitter.padding="Twitter"
-        %span
-          =link_to "https://www.facebook.com/sharer/sharer.php?u=#{location_url(location)}", :ref => "mg", :class => 'btn blue facebook submit', :onclick => 'return popitup(this.href)' do
-            %span.ico-facebook.padding="Facebook"
-        %span
-          =link_to "http://www.linkedin.com/shareArticle?mini=true&url=#{location_url(location)}&title=#{location.name}&summary=#{location.description}&source=#{platform_context.instance.name}", :ref => "mg", :class => 'btn blue linkedin submit', :onclick => 'return popitup(this.href)' do
-            %span.ico-linkedin.padding="LinkedIn"
-        %span
-          = link_to location_url(location), :class => 'btn blue' do
-            %span.ico-link.padding= "#{location.name} Link"
+        .text-center.sharelocation
+          %span
+            =link_to tweet_listing_url(listing), :ref => "mg", :class => 'btn blue twitter submit', :onclick => 'return popitup(this.href)' do
+              %span.ico-twitter.padding="Twitter"
+          %span
+            =link_to "https://www.facebook.com/sharer/sharer.php?u=#{listing.show_url}", :ref => "mg", :class => 'btn blue facebook submit', :onclick => 'return popitup(this.href)' do
+              %span.ico-facebook.padding="Facebook"
+          %span
+            =link_to "http://www.linkedin.com/shareArticle?mini=true&url=#{listing.show_url}&title=#{listing.name}&summary=#{listing.description}&source=#{platform_context.instance.name}", :ref => "mg", :class => 'btn blue linkedin submit', :onclick => 'return popitup(this.href)' do
+              %span.ico-linkedin.padding="LinkedIn"
+          %span
+            = link_to listing.show_url, :class => 'btn blue' do
+              %span.ico-link.padding= "#{listing.name} Link"
 
-      %br
+        %br
 
-    - content_for :script do
-      :javascript
-        function popitup(url) {
-          newwindow=window.open(url,'name','height=440,width=600');
-          if (window.focus) {newwindow.focus()}
-          return false;
-        }
+      - content_for :script do
+        :javascript
+          function popitup(url) {
+            newwindow=window.open(url,'name','height=440,width=600');
+            if (window.focus) {newwindow.focus()}
+            return false;
+          }
 
   - else
     %p You haven't added anything yet!

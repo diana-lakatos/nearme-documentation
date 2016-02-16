@@ -1,0 +1,12 @@
+<div class="favorite" id="favorite-{{ object | dom_id }}">
+  {% assign is_favorite = current_user | already_favorite:object %}
+  {% if is_favorite %} 
+    {% assign path = 'wish_list_remove_item_path' | generate_url:object_id: object.id, wishlistable_type: object.class_name %}
+  {% else %}
+    {% assign path = 'wish_list_add_item_path' | generate_url:object_id: object.id, wishlistable_type: object.class_name %}
+  {% endif %}
+  <a href="{{ path }}" class="{{ link_to_class }}" data-action-link="true" data-current-user="{% if current_user != blank %}true{% else%}false{% endif %}">
+    <div data-favorite-icon="true" class="icon {{ platform_context.wish_lists_icon_set }} {% if is_favorite %}selected{% endif %}"></div>
+    <span data-text="true">{% if is_favorite %}{{ 'wish_lists.buttons.selected_state' | t}}{% else %}{{ 'wish_lists.buttons.unselected_state' | t }}{% endif %}</span>
+  </a>
+</div>

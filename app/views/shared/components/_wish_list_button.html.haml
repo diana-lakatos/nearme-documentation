@@ -1,8 +1,0 @@
-.favorite
-  - favorited = current_user && current_user.default_wish_list.items.find_by(wishlistable: object)
-  - path = favorited ? wish_list_remove_item_path(object_id: object.id, wishlistable_type: object.class.name) : wish_list_add_item_path(object_id: object.id, wishlistable_type: object.class.name)
-
-  = link_to path, class: link_to_class, id: 'action-link', data: { 'current-user' => current_user.present? } do
-    %div#favorite-icon{class: "icon #{platform_context.instance.wish_lists_icon_set} #{favorited ? 'selected' : ''}"}
-    %span#text
-      = favorited ? t('wish_lists.buttons.selected_state') : t('wish_lists.buttons.unselected_state')

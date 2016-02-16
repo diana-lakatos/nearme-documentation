@@ -29,9 +29,9 @@ class Utils::DefaultAlertsCreator::InstanceAlertsCreatorTest < ActionDispatch::I
       mail = ActionMailer::Base.deliveries.last
       assert_contains "Your marketplace, Shiny Instance, has been created", mail.html_part.body
       assert_contains "Password: secret_password", mail.html_part.body
-      assert_contains 'href="http://newinstance.com/', mail.html_part.body
+      assert_contains 'href="https://newinstance.com/', mail.html_part.body
       assert_equal [@user.email], mail.to
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_equal "Instance created", mail.subject
     end

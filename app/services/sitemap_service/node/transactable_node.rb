@@ -1,6 +1,7 @@
 class SitemapService::Node::TransactableNode < SitemapService::Node
+  
   def location
-    url_helpers.location_path(@object.try(:location).try(:slug), listing_id: @object.try(:slug))
+    @object.try(:decorate).try(:show_path)
   end
 
   def changefreq

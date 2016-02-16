@@ -1,7 +1,7 @@
 <h2>Good news, {{ user.first_name }}!</h2>
 
 <p>
-Your listing, '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>', was just subscribed!
+Your listing, '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>', was just subscribed!
 </p>
 
 <div class="booking-details">
@@ -13,7 +13,7 @@ Your listing, '<a href="{{ platform_context.host | append:listing.listing_url }}
 
   <div class="row">
     <strong style='display: inline-block;'>What</strong>
-    <span style="float: right;"><a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a> x {{ recurring_booking.quantity }}</span>
+    <span style="float: right;"><a href="{{ listing.listing_url }}">{{ listing.name }}</a> x {{ recurring_booking.quantity }}</span>
   </div>
 
   <div class="row">

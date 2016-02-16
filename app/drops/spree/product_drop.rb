@@ -23,15 +23,21 @@ class Spree::ProductDrop < BaseDrop
   # administrator_location
   #   location of the administrator of the product
   delegate :id, :name, :extra_properties, :total_on_hand, :product_type, :company, :updated_at, :attachments,
-    :administrator, :administrator_location, to: :product
+    :administrator, :administrator_location, :to_key, :model_name, to: :product
 
   def initialize(product)
     @product = product.decorate
   end
 
+  def class_name
+    'Spree::Product'
+  end
+
   # sanitized product description (with things like disallowed HTML tags removed etc.)
   def sanitized_product_description
-    Sanitizer.sanitze(@product.description)
+    Sanitizer.sanitize_with_options(@product.description,
+      :elements => Sanitize::Config::BASIC[:elements] + ['img'],
+      :attributes => Sanitize::Config::BASIC[:attributes].merge("img" => ['alt', 'src', 'title']))
   end
 
   # price for this product as a string including the currency symbol

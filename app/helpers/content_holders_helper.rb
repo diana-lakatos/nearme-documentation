@@ -1,11 +1,23 @@
 module ContentHoldersHelper
 
+  INJECT_PAGES = {
+    'listings/reservations#review' => 'checkout',
+    'buy_sell_market/checkout#show' => 'checkout',
+    'buy_sell_market/cart#index' => 'cart',
+    'dashboard/user_reservations#booking_successful' => 'checkout_success',
+    'dashboard/orders#success' => 'checkout_success',
+    'buy_sell_market/products#show' => 'service/product_page',
+    'listings#show' => 'service/product_page',
+    'search#index' =>'search_results'
+  }
+
+
   def platform_context
     @platform_context_view ||= PlatformContext.current.decorate
   end
 
   def inject_pages_collection
-    ContentHolder::INJECT_PAGES.values.uniq.map do |path|
+    INJECT_PAGES.values.uniq.map do |path|
       [path.humanize, path]
     end + [['Any page', 'any_page']]
   end

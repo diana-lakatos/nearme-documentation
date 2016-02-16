@@ -33,7 +33,14 @@ class WishListController < ApplicationController
   end
 
   def redirection_path(object)
-    Transactable === object ? transactable_type_location_listing_path(object.transactable_type, object.location, object) : polymorphic_path(object)
+    case object
+    when Transactable 
+      object.decorate.show_path
+    when Location
+      object.listings.searchable.first.try(:decorate).try(:show_path) || root_path
+    else
+       polymorphic_path(object)
+    end
   end
 
   def find_item

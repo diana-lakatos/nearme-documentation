@@ -31,6 +31,10 @@ config.output = {
   crossOriginLoading: 'anonymous'
 };
 
+config.externals = {
+    jquery: 'jQuery'
+};
+
 config.resolve = {
   // tell webpack which extensions to auto search when it resolves modules. With this,
   // you'll be able to do `require('./utils')` instead of `require('./utils.js')`

@@ -1,15 +1,135 @@
 class ListingsController < ApplicationController
-  before_filter :find_listing, only: :occurrences
+  before_filter :authenticate_user!, only: [:ask_a_question]
+  before_filter :find_listing, only: [:show, :ask_a_question, :occurrences, :booking_module]
+  before_filter :find_location, only: [:show, :ask_a_question]
+  before_filter :find_transactable_type, only: [:show, :ask_a_question]
+  before_filter :find_siblings, only: [:show, :ask_a_question]
+  before_filter :redirect_if_listing_inactive, only: [:show, :ask_a_question]
+  before_filter :redirect_if_non_canonical_url, only: [:show]
+
+  def show
+    @section_name = 'listings'
+
+    @listing.track_impression(request.remote_ip)
+    event_tracker.viewed_a_listing(@listing, { logged_in: user_signed_in? })
+    @reviews = @listing.reviews.paginate(page: params[:reviews_page])
+
+    @rating_questions = RatingSystem.active_with_subject(RatingConstants::TRANSACTABLE).try(:rating_questions)
+  end
+
+  def booking_module
+    restore_initial_bookings_from_stored_reservation
+    @collapsed = params[:collapsed] == 'true' ? true : false
+    @transactable_type = @listing.transactable_type
+  end
+
+  def ask_a_question
+    render :show
+  end
 
   def occurrences
     occurrences = @listing.next_available_occurrences(10, params)
     render json: occurrences, root: false
   end
 
-  protected
+  private
 
   def find_listing
-    @listing = Transactable.with_deleted.find(params[:id])
+    @listing = Transactable.with_deleted.friendly.find(params[:id]).decorate
+  rescue
+    # We used to use to_param set as $id-$name.parameterize, so
+    # we're assuming the first - will separate id from the parameterized name.
+    #
+    if params[:id].blank? && params[:location_id].present?
+      redirect_to Location.friendly.find(params[:location_id]).listings.searchable.first.try(:decorate).try(:show_path) || '/' and return
+    end
+    old_id = params[:id].split("-").first
+    old_slug = params[:id].split("-").try(:[], 1..-1).try(:join, "-")
+
+    @listing = Transactable.find_by(id: old_id).presence || Transactable.find_by(slug: old_slug)
+    if @listing.present?
+      redirect_to @listing.decorate.show_path, status: 301
+    else
+      redirect_to request.referer.presence || search_path, status: 301
+    end
   end
+
+  def find_location
+    @location = @listing.location
+    if params[:location_id].present? && params[:location_id] != @location.slug
+      redirect_to @listing.show_path, status: 301
+    end
+  end
+
+  def find_transactable_type
+    @transactable_type = @listing.transactable_type
+    if params[:transactable_type_id].present? && params[:transactable_type_id] != @transactable_type.slug
+      redirect_to @listing.show_path, status: 301
+    end
+  end
+
+  def find_siblings
+    @listing_siblings = @location.listings.includes(:transactable_type).where.not(id: @listing.id)
+    if @transactable_type.groupable_with_others?
+      @listing_siblings = @listing_siblings.for_groupable_transactable_types
+    else
+      @listing_siblings = @listing_siblings.for_transactable_type_id(@transactable_type.id)
+    end
+    if current_user_can_manage_location?
+      # We only show non-draft listings even to the admin because otherwise weird errors can occur
+      # when showing him incomplete listings, especially if he tries to book it
+      @listing_siblings = @listing_siblings.active
+
+      # If from among the non-draft listings remaining all are enabled=false (that is, visible.empty?)
+      # we show a warning to the admin
+      flash.now[:warning] = t('flash_messages.locations.browsing_no_listings') if @listing_siblings.visible.empty?
+    else
+      @listing_siblings = @listing_siblings.searchable
+    end
+  end
+
+  def redirect_if_listing_inactive
+    if @listing.deleted? || @listing.draft?
+      flash[:warning] = t('flash_messages.listings.listing_inactive', address: @listing.address)
+      if @listing_siblings.any?
+        redirect_to @listing_siblings.first.decorate.show_path
+      else
+        redirect_to search_path(loc: @listing.location.address, q: @listing.name)
+      end
+    elsif @listing.disabled?
+      if current_user_can_manage_listing?
+        flash.now[:warning] = t('flash_messages.listings.listing_disabled_but_admin')
+      else
+        if @listing_siblings.any?
+          flash[:warning] = t('flash_messages.listings.listing_disabled')
+          redirect_to @listing_siblings.first.decorate.show_path
+        else
+          redirect_to search_path(loc: @listing.location.address, q: @listing.name)
+        end
+      end
+    end
+  end
+
+  def current_user_can_manage_location?
+    user_signed_in? && (current_user.can_manage_location?(@location) || current_user.instance_admin?)
+  end
+
+  def current_user_can_manage_listing?
+    user_signed_in? && (current_user.can_manage_listing?(@listing) || current_user.instance_admin?)
+  end
+
+  def restore_initial_bookings_from_stored_reservation
+    if params[:restore_reservations ].to_i == @listing.id && session[:stored_reservation_listing_id]
+      @form_trigger = session[:stored_reservation_trigger]["#{@listing.id}"].presence || 'Book'
+      @initial_bookings = session[:stored_reservation_bookings][@listing.id]
+    else
+      @initial_bookings = {}
+    end
+  end
+
+  def redirect_if_non_canonical_url
+    redirect_to @listing.show_path(params.except(:format, :location_id, :controller, :action, :id, :transactable_type_id)), status: 301 unless [@listing.show_path, @listing.show_path(language: I18n.locale)].include?(request.path)
+  end
+
 
 end
