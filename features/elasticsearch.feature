@@ -47,5 +47,5 @@ Feature: A user can search for a listing
     Given a listing in Adelaide exists
     Given a listing in Wellington exists
     And I am on the home page
-    When I search for ""
+    When I go to the search page
     Then I should see filtering options

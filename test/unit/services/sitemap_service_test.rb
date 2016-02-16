@@ -161,7 +161,7 @@ class SitemapServiceTest < ActiveSupport::TestCase
       end
 
       should "#location" do
-        assert_equal url_helpers.location_path(@transactable.location.slug, listing_id: @transactable.slug), @transactable_node.location
+        assert_equal @transactable.decorate.show_path, @transactable_node.location
       end
 
       should "#lastmod" do

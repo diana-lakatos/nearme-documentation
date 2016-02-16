@@ -161,7 +161,7 @@ class RecurringBookingDecorator < Draper::Decorator
   end
 
   def user_message_summary(user_message)
-    link_to user_message.thread_context.listing.name, location_path(user_message.thread_context.location, user_message.thread_context.listing)
+    link_to user_message.thread_context.listing.name, user_message.thread_context.listing.decorate.show_path
   end
 
   def state_to_string

@@ -28,7 +28,7 @@ module NavigationHelpers
 
     when /the transactable's page/
       listing = model!('the transactable')
-      transactable_type_location_listing_path( listing.transactable_type, listing.location, listing )
+      listing.decorate.show_path
 
     when /the transactables page/
       listings_path

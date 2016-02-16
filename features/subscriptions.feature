@@ -13,7 +13,7 @@ Feature: A user can subscribe to a service
 
   Scenario: Subscribing to a service should succeed
     Given I am logged in as the user
-      And I go to location's page
+      And I go to the transactable's page
      When I subscribe to the service
      Then I am subscribed to the service
      Then I should see all text:

@@ -49,7 +49,7 @@
 
         .product-social-wrapper
           - if platform_context.instance.wish_lists_enabled?
-            = render 'shared/components/wish_list_button', object:  Draper.undecorate(@product), link_to_class: 'btn gray'
+            = render 'shared/components/wish_list_button', object: @product, link_to_class: 'btn gray'
 
           = render 'above_social_buttons', product: @product
 

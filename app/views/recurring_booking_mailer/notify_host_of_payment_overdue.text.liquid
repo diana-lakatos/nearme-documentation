@@ -1,6 +1,6 @@
 {{ user.first_name }},
 
-We were unable to charge {{ recurring_booking.owner.first_name }}'s credit card for subscription of '{{ listing.name }}' {{ platform_context.host | append:listing.listing_url }}
+We were unable to charge {{ recurring_booking.owner.first_name }}'s credit card for subscription of '{{ listing.name }}' {{ listing.listing_url }}
 
 {{ recurring_booking.owner.first_name }} has been notified and we'll retry operation tomorrow.
 

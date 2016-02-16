@@ -650,6 +650,7 @@ class SecuredParams
       :date_pickers_use_availability_rules,
       :date_pickers_mode,
       :default_availability_template_id,
+      :show_path_format,
       :availability_templates_attributes => nested(self.availability_template),
       :allowed_currencies => [],
       :action_type_ids => [],

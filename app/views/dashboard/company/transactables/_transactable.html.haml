@@ -1,10 +1,10 @@
 .listings
   .row
     .col-md-3.listing-img
-      = link_to transactable_type_location_listing_path(@transactable_type, transactable.location, transactable) do
+      = link_to transactable.decorate.show_path do
         = image_tag(transactable.photos.first.try(:image_url, :medium))
     .col-md-3.listing-attr
-      = link_to transactable.name, transactable_type_location_listing_path(@transactable_type, transactable.location, transactable)
+      = link_to transactable.name, transactable.decorate.show_path
     .col-md-3.listing-attr
       %p= @transactable_type.skip_location? ? transactable.quantity : transactable.location.try(&:name)
     .col-md-2.listing-attr

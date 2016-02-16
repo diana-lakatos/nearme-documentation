@@ -38,8 +38,8 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
         assert mail.html_part.body.include?(@transactable.creator.first_name)
         assert_equal [@transactable.creator.email], mail.to
         assert_contains "There are people looking for #{@transactable.transactable_type.bookable_noun.pluralize} in your area", mail.html_part.body
-        assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-        assert_not_contains 'href="http://example.com', mail.html_part.body
+        assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+        assert_not_contains 'href="https://example.com', mail.html_part.body
         assert_not_contains 'href="/', mail.html_part.body
         assert_not_contains 'Liquid error:', mail.html_part.body
       end
@@ -66,8 +66,8 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
       assert mail.html_part.body.include?(@user.first_name)
       assert_equal [@user.email], mail.to
       assert mail.html_part.body.include?("Your new listing rocks!")
-      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_not_contains 'Liquid error:', mail.html_part.body
     end
@@ -84,8 +84,8 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
       assert_contains "#{@sharer.name} has shared a #{@listing.name} with you!", mail.html_part.body
       assert_contains "View #{@listing.name} on #{PlatformContext.current.decorate.name}", mail.html_part.body
       assert_equal ['friend@example.com'], mail.to
-      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_contains 'Check it out', mail.html_part.body
       assert_not_contains 'Liquid error:', mail.html_part.body
@@ -106,8 +106,8 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
       assert mail.html_part.body.include?(@listing.name)
       assert_equal [@admin.email], mail.to
       assert mail.html_part.body.include?("You can decide whether to approve")
-      assert_contains 'href="http://custom.domain.com/instance_admin/', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com/instance_admin/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_not_contains 'Liquid error:', mail.html_part.body
     end
@@ -125,8 +125,8 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
       assert mail.html_part.body.include?(@user.first_name)
       assert_equal [@user.email], mail.to
       assert mail.html_part.body.include?("It will be accessible for")
-      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_not_contains 'Liquid error:', mail.html_part.body
     end

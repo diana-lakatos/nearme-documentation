@@ -68,7 +68,7 @@ class Listings::RecurringBookingsController < ApplicationController
 
   def require_login_for_recurring_booking
     unless user_signed_in?
-      redirect_to new_user_registration_path(return_to: location_url(@listing.location, @listing))
+      redirect_to new_user_registration_path(return_to: @listing.decorate.show_path)
     end
   end
 

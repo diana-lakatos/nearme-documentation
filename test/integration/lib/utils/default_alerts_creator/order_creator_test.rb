@@ -39,8 +39,8 @@ class Utils::DefaultAlertsCreator::OrderCreatorTest < ActionDispatch::Integratio
         assert_contains "#{item.variant.sku} #{item.variant.product.name} #{ item.variant.options_text } #{item.quantity} @ #{item.single_money} = #{item.display_amount}", mail.html_part.body
       end
       assert_not_contains 'Liquid error', mail.html_part.body
-      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
     end
 
@@ -60,8 +60,8 @@ class Utils::DefaultAlertsCreator::OrderCreatorTest < ActionDispatch::Integratio
         assert_contains "#{item.variant.sku} #{item.variant.product.name} #{ item.variant.options_text } #{item.quantity} @ #{item.single_money} = #{item.display_amount}", mail.html_part.body
       end
       assert_not_contains 'Liquid error', mail.html_part.body
-      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
     end
 
@@ -82,8 +82,8 @@ class Utils::DefaultAlertsCreator::OrderCreatorTest < ActionDispatch::Integratio
       end
       assert_not_contains 'Tracking Information', mail.html_part.body
       assert_not_contains 'Liquid error', mail.html_part.body
-      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
     end
 
@@ -108,8 +108,8 @@ class Utils::DefaultAlertsCreator::OrderCreatorTest < ActionDispatch::Integratio
         end
         assert_not_contains "Email to which invoice should be sent: #{@order.user.email}", mail.html_part.body
         assert_not_contains 'Liquid error', mail.html_part.body
-        assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-        assert_not_contains 'href="http://example.com', mail.html_part.body
+        assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+        assert_not_contains 'href="https://example.com', mail.html_part.body
         assert_not_contains 'href="/', mail.html_part.body
       end
 
@@ -144,8 +144,8 @@ class Utils::DefaultAlertsCreator::OrderCreatorTest < ActionDispatch::Integratio
         assert_contains "#{item.variant.sku} #{item.variant.product.name} #{ item.variant.options_text } #{item.quantity} @ #{item.single_money} = #{item.display_amount}", mail.html_part.body
       end
       assert_not_contains 'Liquid error', mail.html_part.body
-      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
     end
 

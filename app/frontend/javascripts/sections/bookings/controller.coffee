@@ -12,8 +12,15 @@ UtilUrl = require('../../lib/utils/url')
 
 module.exports = class BookingsController
 
-  constructor: (@container, @listingData, @options = {}) ->
+  constructor: (@container, @options = {}) ->
+    @container = $(@container)
+
+    @listingData = @container.data('listing')
+    if $.isEmptyObject(@listingData.initial_bookings)
+      @listingData.initial_bookings = null
+    @submitFormImmediately = @container.data('returned-from-session')
     @setupDelayedMethods()
+
     @listing = new BookingsListing(@listingData)
     @bindDomElements()
     if @listing.withCalendars()
@@ -24,8 +31,8 @@ module.exports = class BookingsController
       @initializeInfiniScroll()
     @updateQuantityField()
 
-    if @listingData.initial_bookings and @options.submitFormImmediately
-      if @options.submitFormImmediately == 'RFQ'
+    if @listingData.initial_bookings and @submitFormImmediately
+      if @submitFormImmediately == 'RFQ'
         @rfqBooking()
       else
         @reviewBooking()
@@ -236,7 +243,7 @@ module.exports = class BookingsController
     @setFormFields()
 
     if @userSignedIn
-       @bookForm.unbind('submit').submit()
+      @bookForm.unbind('submit').submit()
     else
       @storeFormFields()
 
