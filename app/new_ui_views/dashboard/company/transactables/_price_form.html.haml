@@ -79,6 +79,9 @@
 - if f.object.transactable_type.subscription_booking_enabled?
   - content_for :booking_type_subscription_tab_content do
     %hr/
+    = f.label :daily_price, :price, :class => 'string required control-label flush-top' do
+      %abbr{:title => "required"}= t('simple_form.required.mark')
+      =t('simple_form.labels.listings.price')
     = f.input :action_subscription_booking, as: :hidden, label: false, input_html: { 'data-action-subscription-booking' => true }
     .prices-container
       .price-options
