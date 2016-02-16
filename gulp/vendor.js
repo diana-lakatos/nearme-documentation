@@ -28,7 +28,7 @@ module.exports = function(gulp, config){
     });
 
     gulp.task('jquery', function() {
-        return gulp.src(path.join(config.paths.bower_components, 'jquery','dist','jquery.js'))
+        return gulp.src([path.join(config.paths.bower_components, 'jquery','dist','jquery.min.js'), path.join(config.paths.bower_components, 'jquery','dist','jquery.min.map')])
             .pipe(gulp.dest(config.paths.output));
     });
 
