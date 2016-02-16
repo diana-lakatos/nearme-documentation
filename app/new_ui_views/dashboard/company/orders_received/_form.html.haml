@@ -29,8 +29,6 @@
         = s.association :state, collection: Spree::State.all # TODO: Dynamic
         = s.input :phone, required: true
 
--# TODO Refactor to asset pipeline
-
 :javascript
   $('#order_use_billing').on('click', function() {
     if ($('#order_use_billing').prop('checked'))

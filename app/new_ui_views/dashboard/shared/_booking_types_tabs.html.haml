@@ -13,7 +13,7 @@
               = t :description, scope: [:pricing, :mode, booking_type_scope]
 
 - if f.object.transactable_type.action_free_booking
-  = f.input :action_free_booking, as: :hidden
+  = f.input :action_free_booking, as: :hidden, input_html: { 'data-global-action-free-booking' => true }
 
 .tab-content.control-group
   %div{id: 'booking-type-regular', class: "tab-pane #{booking_types_active_toggle(f.object, ['regular', 'overnight'], true)}"}
