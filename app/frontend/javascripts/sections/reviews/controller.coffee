@@ -6,7 +6,9 @@ module.exports = class ReviewsController
     for reviewable_parent in @review_options.reviewables
       $.get(@path, {reviewable_parent_type: reviewable_parent.type, reviewable_parent_id: reviewable_parent.id, subject: reviewable_parent.subject}).success( (response) =>
         if response.tab_header != ''
-          @tab_header.append(response.tab_header)
+          if @tab_header
+            @tab_header.append(response.tab_header)
+          @container.addClass('reviews-visible')
           tab_content = $(response.tab_content)
           @listenForPagination(tab_content)
           @tab_content.append(tab_content)
@@ -24,6 +26,3 @@ module.exports = class ReviewsController
           @listenForPagination(tab_content)
         )
     )
-
-
-

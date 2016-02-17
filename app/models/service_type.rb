@@ -117,14 +117,22 @@ class ServiceType < TransactableType
     @service_type_drop ||= ServiceTypeDrop.new(self)
   end
 
-  def wizard_path
-    "/transactable_types/#{id}/new"
+  def wizard_path(options = {})
+    Rails.application.routes.url_helpers.transactable_type_space_wizard_list_path(self, options)
   end
 
   def booking_choices
     BOOKING_TYPES.select do |booking_type|
       try("action_#{booking_type}_booking")
     end
+  end
+
+  def is_only_booking_option?(booking_type, booking_options)
+    available = booking_options.select do |booking_type|
+      try("action_#{booking_type}_booking")
+    end
+
+    available.length == 1 && available[0] == booking_type
   end
 
   def action_subscription_booking

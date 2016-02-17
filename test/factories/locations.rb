@@ -8,6 +8,10 @@ FactoryGirl.define do
     association :location_address, factory: :address
     time_zone 'UTC'
 
+    factory :always_open_location do
+      availability_template_id { (AvailabilityTemplate.find_by(name: '24/7') || FactoryGirl.create(:availability_template_always_open)).id }
+    end
+
     factory :location_in_auckland do
       association :location_address, factory: :address_in_auckland
       association(:company, factory: :company_in_auckland)

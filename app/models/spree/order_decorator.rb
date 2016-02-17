@@ -19,7 +19,7 @@ Spree::Order.class_eval do
   scope :approved, -> { where.not(approved_at: nil) }
   scope :paid, -> { where(payment_state: 'paid') }
   scope :shipped, -> { where(shipment_state: 'shipped') }
-  scope :reviewable, -> { completed.approved.paid.shipped }
+  scope :reviewable, -> { where.not(archived_at: nil) }
   scope :cart, -> { where(state: ['cart', 'address', 'delivery', 'payment']).order('created_at ASC') }
 
   belongs_to :company, -> { with_deleted }

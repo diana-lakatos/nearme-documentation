@@ -101,22 +101,13 @@ module Elastic
     def geo_query
       @filters = initial_service_filters + geo_filters
       apply_geo_search_filters
-      {
+      query = {
         size: query_limit,
         from: query_offset,
         fields: ["_id", "location_id"],
         query: {
           filtered: {
             query: match_query,
-            filter: {
-              not: {
-                filter: {
-                  bool:{
-                    must: @not_filters
-                  }
-                }
-              }
-            }
           }
         },
         sort: geo_sort,
@@ -129,11 +120,24 @@ module Elastic
           }
         }
       }.merge(aggregations)
+      query[:query][:filtered].merge(
+        {
+          filter: {
+            not: {
+              filter: {
+                bool:{
+                  must: @not_filters
+                }
+              }
+            }
+          }
+        }
+      ) if @not_filters.present?
+      query
     end
 
     def initial_service_filters
-      searchable_service_type_ids = [@query[:transactable_type_id].to_i]
-      searchable_service_type_ids = [0] if searchable_service_type_ids.empty?
+      searchable_service_type_ids = @query[:transactable_type_id].to_i
       [
       	initial_instance_filter,
         {
@@ -197,6 +201,11 @@ module Elastic
       else
         [
           {
+            script: {
+              script: "doc['service_radius'].empty || doc['geo_location'].distanceInKm(#{@query[:lat]},#{@query[:lon]}) <= doc['service_radius'].value"
+            }
+          },
+          {
             geo_distance: {
               distance: @query[:distance],
               geo_location: {
@@ -210,19 +219,23 @@ module Elastic
     end
 
     def geo_sort
-      [
-        {
-          _geo_distance: {
-            geo_location: {
-              lat: @query[:lat],
-              lon: @query[:lon]
-            },
-            order:         GEO_ORDER,
-            unit:          GEO_UNIT,
-            distance_type: GEO_DISTANCE
+      if @query[:lat] && @query[:lon]
+        [
+          {
+            _geo_distance: {
+              geo_location: {
+                lat: @query[:lat],
+                lon: @query[:lon]
+              },
+              order:         GEO_ORDER,
+              unit:          GEO_UNIT,
+              distance_type: GEO_DISTANCE
+            }
           }
-        }
-      ]
+        ]
+      else
+        ['_score']
+      end
     end
 
     def aggregations
@@ -323,17 +336,17 @@ module Elastic
 
     def apply_geo_search_filters
 
-      if @transactable_type.show_price_slider && @query[:price] && @query[:price][:max].present?
+      if @transactable_type.show_price_slider && @query[:price] && (@query[:price][:min].present? || @query[:price][:max].present?)
         price_min = @query[:price][:min].to_f * 100
         price_max = @query[:price][:max].to_f * 100
         price_filters = {
-            range: {
-              all_prices: {
-                gt: price_min,
-                lte: price_max
-              }
-            }
+          range: {
+            all_prices: {}
+          }
         }
+        price_filters[:range][:all_prices][:gt] = price_min if @query[:price][:min].to_f > 0
+        price_filters[:range][:all_prices][:lte] = price_max if @query[:price][:max].to_f > 0
+
         if price_min.zero?
           @filters << {
             or: [
@@ -363,6 +376,34 @@ module Elastic
           enabled: true
         }
       }
+      if @query[:date].present?
+        day = Date.parse(@query[:date]).wday + 1
+        from_hour = day * 100 + (@query[:time_from].presence || '0:00').split(':').first.to_i
+        to_hour = day * 100 + (@query[:time_to].presence || '23:00').split(':').first.to_i
+
+        @filters << {
+          range: {
+            open_hours: {
+              gte: from_hour,
+              lte: to_hour
+            }
+          }
+        }
+      end
+
+      if @query[:date].blank? && @query[:time_from].present? || @query[:time_to].present?
+        from_hour = (@query[:time_from].presence || '0:00').split(':').first.to_i
+        to_hour = (@query[:time_to].presence || '23:00').split(':').first.to_i
+
+        @filters << {
+          range: {
+            open_hours_during_week: {
+              gte: from_hour,
+              lte: to_hour
+            }
+          }
+        }
+      end
 
       if @query[:lg_custom_attributes]
         @query[:lg_custom_attributes].each do |key, value|
@@ -412,14 +453,35 @@ module Elastic
       end
 
       if @query[:date_range].any?
-          @filters <<  {
-            range: {
-              availability: {
-                gte: @query[:date_range].first,
-                lte: @query[:date_range].last
+        date_range = {
+          or: [
+            {
+              range: {
+                availability: {
+                  gte: @query[:date_range].first,
+                  lte: @query[:date_range].last
+                }
               }
             }
+          ]
+        }
+        if @transactable_type.date_pickers_relative_mode?
+          date_range[:or] << {
+            terms: {
+              opened_on_days: @query[:date_range].map(&:wday).uniq
+            }
           }
+        else
+          date_range[:or] << { bool: {} }
+          date_range[:or].last[:bool][:must] = @query[:date_range].map(&:wday).uniq.map  do |day|
+            {
+              term: {
+                opened_on_days: day
+              }
+            }
+          end
+        end
+        @filters << date_range
       end
     end
   end

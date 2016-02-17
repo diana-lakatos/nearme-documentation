@@ -7,7 +7,7 @@
 - if !@searcher.transactable_type.display_taxonomy_tree? ||  request.xhr?
   = render 'search/list_results'
 - else
-  .span3{"data-search-filters-container" => true}
+  .category-container.span3{"data-search-filters-container" => true}
     %section#category-tree.list-view-category-tree
       - cache i18n_cache_key(@searcher.transactable_type, @searcher.category_ids) do
         - @searcher.searchable_categories.each do |category|
@@ -21,7 +21,9 @@
                     = check_box_tag("parent_category_ids[]", category.id, @searcher.category_ids.include?(category.id.to_s), hidden: true, id: "category_#{category.id}")
                   = category.translated_name
               = category_tree(category, @category, 3, @searcher.category_ids)
-  .span9
+  = render 'search/list/search_filters_boxes'
+
+  .listing-container.span9
     = render 'search/list_results'
     = render 'search/footer'
 

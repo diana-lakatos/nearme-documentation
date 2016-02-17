@@ -42,7 +42,10 @@ SimpleNavigation::Configuration.run do |navigation|
 
     if bookable?
       primary.item :services_header, t('dashboard.nav.services_header'), nil do |sub_nav|
-        dashboard_nav_item sub_nav, 'dashboard/user_reservations', dashboard_user_reservations_path, highlights_on: /\/user_reservations\/*/, link_text: dashboard_nav_user_reservations_label
+
+        if !current_instance.split_registration || current_user.buyer_profile.present?
+          dashboard_nav_item sub_nav, 'dashboard/user_reservations', dashboard_user_reservations_path, highlights_on: /\/user_reservations\/*/, link_text: dashboard_nav_user_reservations_label
+        end
 
         if subscribable?
           dashboard_nav_item sub_nav, 'dashboard/user_recurring_bookings', active_dashboard_user_recurring_bookings_path, highlights_on: /\/user_recurring_bookings\/*/
@@ -93,6 +96,9 @@ SimpleNavigation::Configuration.run do |navigation|
 
     primary.item :account, t('dashboard.nav.account'), nil do |sub_nav|
       dashboard_nav_item sub_nav, 'registrations/edit', dashboard_profile_path, link_text: t('dashboard.nav.edit'), highlights_on: /(users\/edit|dashboard\/seller\/edit|dashboard\/buyer\/edit|dashboard\/edit_profile)/
+      if(payment_gateway = PaymentGateway.with_credit_card.first).present? && current_user.instance_clients.for_payment_gateway(payment_gateway).exists?
+        dashboard_nav_item sub_nav, 'dashboard/credit_cards', dashboard_payment_gateway_credit_cards_path(payment_gateway), highlights_on: /dashboard\/payment_gateways\/[0-9]+\/credit_card/
+      end
       dashboard_nav_item sub_nav, 'dashboard/notification_preferences', edit_dashboard_notification_preferences_path, link_text: t('dashboard.nav.notification_preferences'), highlights_on: /dashboard\/notification_preferences/
       dashboard_nav_item sub_nav, 'registrations/social_accounts', social_accounts_path, link_text: t('dashboard.nav.social_accounts'), highlights_on: /dashboard\/social_accounts/
       if HiddenUiControls.find('dashboard/saved_searches').visible?

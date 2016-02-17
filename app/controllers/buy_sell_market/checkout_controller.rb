@@ -29,7 +29,7 @@ class BuySellMarket::CheckoutController < ApplicationController
     when :payment
       build_approval_request_for_object(current_user)
       checkout_service.build_payment_documents
-      @order.build_payment if @order.payment.blank?
+      @order.build_payment(payer: current_user) if @order.payment.blank?
       @order.payment.update_attributes(express_token: params[:token]) if params[:token].present?
     when :complete
       @current_order = nil

@@ -39,11 +39,6 @@ class SearchControllerTest < ActionController::TestCase
       end
 
       context 'for invalid place' do
-        should 'find nothing for empty query' do
-          get :index, loc: ''
-          assert_nothing_found
-        end
-
         should 'find nothing for invalid query' do
           get :index, loc: 'bung'
           assert_nothing_found

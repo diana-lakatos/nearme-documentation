@@ -83,11 +83,6 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
           assert_equal [reservation], assigns(:guest_list).reservations
         end
 
-        # Travel just after reservation is over
-        travel_to Time.zone.tomorrow.at_beginning_of_day.advance(hours: 13) do
-          get :index
-          assert_equal [], assigns(:guest_list).reservations
-        end
       end
     end
 

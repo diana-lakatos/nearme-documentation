@@ -15,6 +15,7 @@ class PaymentGateway < ActiveRecord::Base
   scope :mode_scope, -> { test_mode? ? where(test_active: true) : where(live_active: true)}
   scope :payout_type, -> { where(type: PAYOUT_GATEWAYS.values + IMMEDIATE_PAYOUT_GATEWAYS.values) }
   scope :payment_type, -> { where.not(type: PAYOUT_GATEWAYS.values) }
+  scope :with_credit_card, -> { joins(:payment_methods).merge(PaymentMethod.active.credit_card) }
 
   serialize :test_settings, Hash
   serialize :live_settings, Hash

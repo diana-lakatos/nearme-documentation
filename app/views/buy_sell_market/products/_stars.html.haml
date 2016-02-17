@@ -1,7 +1,0 @@
-%span.star-container
-  - (1..stars).each do |i|
-    = image_tag 'raty/star-on.png'
-  - (stars...RatingConstants::MAX_RATING).each do |i|
-    = image_tag 'raty/star-off.png'
-- if defined?(count)
-  %a (#{count})

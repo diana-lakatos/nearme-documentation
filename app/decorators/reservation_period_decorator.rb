@@ -3,6 +3,10 @@ class ReservationPeriodDecorator < Draper::Decorator
 
   delegate :hourly_summary, :minute_of_day_to_time, :start_minute_of_day_to_time, :end_minute_of_day_to_time, to: :hourly_presenter
 
+  def sub_total
+    reservation.unit_price * hours
+  end
+
   private
 
   def hourly_presenter

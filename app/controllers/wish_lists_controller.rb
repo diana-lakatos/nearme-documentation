@@ -42,7 +42,13 @@ class WishListsController < ApplicationController
 
 
   def check_wish_lists_enabled
-    redirect_to(root_path, notice: t('wish_lists.notices.wish_lists_disabled')) unless platform_context.instance.wish_lists_enabled?
+    unless platform_context.instance.wish_lists_enabled?
+      if request.xhr?
+        render nothing: true
+      else
+        redirect_to(root_path, notice: t('wish_lists.notices.wish_lists_disabled'))
+      end
+    end
   end
 
   def redirection_path(object)

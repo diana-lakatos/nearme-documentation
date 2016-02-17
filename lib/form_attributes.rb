@@ -10,17 +10,20 @@ class FormAttributes
       :email, :phone, :avatar, :name, :first_name, :middle_name, :last_name, :approval_requests, :current_address,
       :password, :public_profile, :time_zone, :language
     ] + UserProfile.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
-    Category.users.roots.map { |k| ('Category - ' + k.name).to_sym }.flatten
+    extra_attributes(Category.users.roots, 'Category') +
+    extra_attributes(CustomModelType.users, 'Custom Model')
   end
 
   def seller
     UserProfile.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
-    Category.sellers.roots.map { |k| ('Category - ' + k.name).to_sym }.flatten
+    extra_attributes(Category.sellers.roots, 'Category') +
+    extra_attributes(CustomModelType.sellers, 'Custom Model')
   end
 
   def buyer
     UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
-    Category.buyers.roots.map { |k| ('Category - ' + k.name).to_sym }.flatten
+    extra_attributes(Category.buyers.roots, 'Category') +
+    extra_attributes(CustomModelType.buyers, 'Custom Model')
   end
 
   def company
@@ -51,7 +54,8 @@ class FormAttributes
       :additional_charges, :minimum_booking_minutes, :deposit_amount
     ] +
     Transactable.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
-    transactable_type.categories.roots.map { |k| ('Category - ' + k.name).to_sym }.flatten
+    extra_attributes(transactable_type.categories.roots, 'Category') +
+    extra_attributes(transactable_type.custom_model_types, 'Custom Model')
   end
 
   def dashboard_transactable(transactable_type = nil)
@@ -63,7 +67,8 @@ class FormAttributes
       :additional_charges, :minimum_booking_minutes, :deposit_amount
     ] +
     Transactable.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
-    transactable_type.categories.roots.map { |k| ('Category - ' + k.name).to_sym }.flatten
+    extra_attributes(transactable_type.categories.roots, 'Category') +
+    extra_attributes(transactable_type.custom_model_types, 'Custom Model')
   end
 
   def product(product_type = nil)
@@ -81,14 +86,17 @@ class FormAttributes
       :additional_charges
     ] +
     Spree::Product.public_custom_attributes_names(product_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
-    product_type.categories.roots.map { |k| ('Category - ' + k.name).to_sym }.flatten
+    extra_attributes(product_type.categories.roots, 'Category') +
+    extra_attributes(product_type.custom_model_types, 'Custom Model')
   end
 
   def project(transactable_type = nil)
     [
       :name, :description, :topics, :photos
     ] +
-    Project.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten
+    Project.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
+    extra_attributes(transactable_type.categories.roots, 'Category') +
+    extra_attributes(transactable_type.custom_model_types, 'Custom Model')
   end
 
   def offer(offer_type = nil)
@@ -96,11 +104,19 @@ class FormAttributes
       :name, :description, :summary, :photos, :price, :price_cents, :currency, :seller_attachments, :documents_upload
     ] +
     Offer.public_custom_attributes_names(offer_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
-    offer_type.categories.roots.map { |k| ('Category - ' + k.name).to_sym }.flatten
+    extra_attributes(offer_type.categories.roots, 'Category') +
+    extra_attributes(offer_type.custom_model_types, 'Custom Model')
   end
 
   def reservation(reservation_type = nil)
-    reservation_type.custom_attributes.public_display.pluck(:name)
+    [:address, :dates] +
+    extra_attributes(reservation_type.categories.roots, 'Category') +
+    reservation_type.custom_attributes.public_display.pluck(:name) +
+    extra_attributes(reservation_type.custom_model_types, 'Custom Model')
+  end
+
+  def extra_attributes(collection, prefix)
+    collection.map{ |k| ("#{prefix} - " + k.name).to_sym }.flatten
   end
 end
 

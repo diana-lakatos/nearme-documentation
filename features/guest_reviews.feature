@@ -2,7 +2,7 @@
 Feature: Guest can rate a reservation
   Background:
     Given Reservation alerts exist
-    And I am guest of a past reservation
+    And I am guest of a reviewable reservation
     And I log in as user
     And a company exists with creator: the user
     And a location exists with company: the company

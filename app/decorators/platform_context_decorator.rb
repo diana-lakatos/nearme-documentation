@@ -3,9 +3,10 @@ class PlatformContextDecorator
   delegate :white_label_company, :instance, :theme, :partner, :domain, :white_label_company_user?,
            :platform_context_detail, :secured_constraint, :latest_products, to: :platform_context
 
-  delegate :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :address,
-           :phone_number, :site_name, :description, :support_email, :meta_title, :pages, :hero_image, :logo_image,
-           :favicon_image, :icon_image, :icon_retina_image, :call_to_action, :is_company_theme?, :content_holders, to: :theme
+  delegate :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :instagram_url,
+           :youtube_url, :rss_url, :address, :phone_number, :site_name, :description, :support_email, :meta_title, :pages,
+           :hero_image, :logo_image, :favicon_image, :icon_image, :icon_retina_image, :call_to_action, :is_company_theme?,
+           :content_holders, to: :theme
 
   delegate :bookable_noun, :lessor, :lessee, :name, :buyable?, :bookable?, :biddable?,
            :transactable_types, :product_types, :project_types, :service_types, :wish_lists_icon_set,

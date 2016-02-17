@@ -87,6 +87,10 @@ Around('@elasticreindex') do |scenario, block|
   Spree::Product.__elasticsearch__.client.indices.delete index: Spree::Product.index_name
 end
 
+After('@new_ui') do
+  PlatformContext.current.instance.update! priority_view_path: ''
+end
+
 World(CarrierWave::Test::Matchers)
 
 def last_json

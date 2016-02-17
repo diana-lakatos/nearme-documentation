@@ -40,7 +40,7 @@ class Payment < ActiveRecord::Base
   scoped_to_platform_context
 
   attr_accessor :express_checkout_redirect_url, :payment_response_params, :payment_method_nonce, :customer,
-    :recurring
+    :recurring, :rejection_form, :chosen_credit_card_id
 
 
   # === Associations
@@ -48,12 +48,13 @@ class Payment < ActiveRecord::Base
   # Payable association connects Payment with Reservation and Spree::Order
   belongs_to :payable, polymorphic: true
   belongs_to :company, -> { with_deleted }
-  belongs_to :credit_card
+  belongs_to :credit_card, -> { with_deleted }
   belongs_to :instance
   belongs_to :payment_transfer
   belongs_to :payment_gateway
   belongs_to :payment_method
   belongs_to :merchant_account
+  belongs_to :payer, class_name: 'User'
 
   has_many :billing_authorizations
   has_many :charges, dependent: :destroy
@@ -94,8 +95,15 @@ class Payment < ActiveRecord::Base
 
   accepts_nested_attributes_for :credit_card
 
+  before_validation do |p|
+    self.payer ||= payable.try(:owner)
+    self.credit_card_id ||= payer.instance_clients.find_by(payment_gateway: payment_gateway.id).credit_cards.find(p.chosen_credit_card_id).try(:id) if p.chosen_credit_card_id.present? &&  p.chosen_credit_card_id != 'custom'
+    true
+  end
+
   validates :currency, presence: true
   validates :credit_card, presence: true, if: Proc.new { |p| p.credit_card_payment? && p.save_credit_card? && new_record? }
+  validates :payer, presence: true
   validates :payment_gateway, presence: true
   validates :payment_method, presence: true
   validates :payable_id, :uniqueness => { :scope => [:payable_type, :payable_id, :instance_id] }, if: Proc.new {|p| p.payable_id.present? }
@@ -115,10 +123,11 @@ class Payment < ActiveRecord::Base
   delegate :subject, to: :merchant_account, allow_nil: true
 
   state_machine :state, initial: :pending do
-  event :mark_as_authorized do transition pending: :authorized; end
+    event :mark_as_authorized do transition [:pending, :voided] => :authorized; end
     event :mark_as_paid       do transition authorized: :paid; end
     event :mark_as_voided     do transition authorized: :voided; end
     event :mark_as_refuneded  do transition paid: :refunded; end
+    event :mark_as_failed     do transition any => :refunded; end
   end
 
   def authorize

@@ -44,6 +44,7 @@ class InstanceView < ActiveRecord::Base
     'spree/order_mailer/approved_email', 'spree/order_mailer/cancel_email',
     'spree/order_mailer/confirm_email', 'spree/order_mailer/notify_seller_email',
     'spree/order_mailer/shipping_info_for_buyer', 'spree/order_mailer/shipping_info_for_seller',
+    'inappropriate_reports_mailer/inappropriate_report',
     'spree/shipment_mailer/shipped_email', 'support_mailer/rfq_request_received',
     'support_mailer/rfq_request_replied', 'support_mailer/rfq_request_updated',
     'support_mailer/rfq_support_received', 'support_mailer/rfq_support_updated',
@@ -153,6 +154,10 @@ class InstanceView < ActiveRecord::Base
       current_page_offset: 'integer, index of the first location on this page among the search results',
       lgpricing_filters: 'array of pricing type filters (e.g. daily, weekly, hourly etc.)'
     },
+    'search/list/search_filters_boxes' => {
+      listing: 'TransactableDrop',
+      current_user: 'UserDrop'
+    },
     'search/list/listing' => {
       listing: 'TransactableDrop',
       current_user: 'UserDrop'
@@ -220,6 +225,30 @@ class InstanceView < ActiveRecord::Base
     },
     'registrations/buyers/profile/user_badge' => {
       user: 'UserDrop',
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/tos_form' => {
+      user: 'UserDrop',
+      error: 'String',
+      checked: 'Boolean',
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/buyer_header' => {
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/seller_header' => {
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/default_header' => {
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/buyer_footer' => {
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/seller_footer' => {
+      platform_context: 'PlatformContextDrop'
+    },
+    'registrations/default_footer' => {
       platform_context: 'PlatformContextDrop'
     },
     'registrations/buyers/profile/tabs/blog_posts' => {
@@ -331,6 +360,10 @@ class InstanceView < ActiveRecord::Base
       'location': 'LocationDrop',
       is_partial: true
     },
+    'listings/reservations/summary' => {
+      reservation: 'ReservationDrop',
+      reservation_request: 'ReservationRequestDrop'
+    },
     'registrations/profile/tabs/transactable' => {
       'transactable': 'TransactableDrop',
       is_partial: true
@@ -390,6 +423,12 @@ class InstanceView < ActiveRecord::Base
     'layouts/theme_footer' => {
     },
     'layouts/theme_header' => {
+    },
+    'dashboard/company/host_reservations/reservation_completed' => {
+      is_partial: false
+    },
+    'dashboard/company/host_reservations/complete_reservation_top' => {
+      is_partial: false
     }
   }.freeze
 

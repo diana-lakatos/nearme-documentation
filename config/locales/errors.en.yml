@@ -12,6 +12,10 @@ en:
               file_cannot_be_empty: "File cannot be empty"
               payment_invalid: "Payment details are invalid!"
               total_amount_changed: "Looks like the total price of this reservation has changed. Please verify all prices."
+        reservation_checkout_form:
+          attributes:
+            sub_total:
+              must_be_positive: 'must be positive'
         product_form:
           attributes:
             base:
@@ -100,3 +104,7 @@ en:
         not_verified:
           current_user: 'Your phone number is not configured for making calls.'
           listing_owner: 'Listing aministator does not allow making calls.'
+
+  warnings:
+    reservations:
+      overlapping_reservations: "Please be advised that this Ninja currently has <strong>%{counter}</strong> other technical missions around the date and time you have selected.<br/> Submitting this request will be received by the Ninja, but you can try finding another profile that may be more available."

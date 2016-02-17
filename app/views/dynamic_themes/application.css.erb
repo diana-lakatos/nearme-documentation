@@ -403,7 +403,7 @@ strong {
     background-color: <%= theme_black %>
 }
 
-.navbar .navbar-inner #logo {
+.navbar .navbar-inner #logo, footer .logo {
   width: <%= theme_logo_width %>px;
   height: <%= theme_logo_height %>px;
   margin-top: <%= theme_logo_max_height - theme_logo_height/2 %>px;
@@ -412,7 +412,7 @@ strong {
 }
 
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
-  .navbar .navbar-inner #logo {
+  .navbar .navbar-inner #logo, footer .logo {
     width: <%= theme_logo_retina_width %>px;
     height: <%= theme_logo_retina_height %>px;
     margin-top: <%= theme_logo_max_height - theme_logo_retina_height/2 %>px;
@@ -421,8 +421,26 @@ strong {
   }
 }
 
+footer .logo-icon {
+  width: <%= theme_icon_width %>px;
+  height: <%= theme_icon_height %>px;
+  margin-top: <%= theme_logo_max_height - theme_logo_height/2 %>px;
+  background: url(<%= theme_icon %>) no-repeat;
+  background-size: auto 100%;
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
+  footer .logo-icon {
+    width: <%= theme_icon_retina_width %>px;
+    height: <%= theme_icon_retina_height %>px;
+    margin-top: <%= theme_logo_max_height - theme_icon_retina_height/2 %>px;
+    background: url(<%= theme_icon2x %>) no-repeat;
+    background-size: auto 100%;
+  }
+}
+
 @media (max-width: 767px) {
-  .navbar .navbar-inner #logo {
+  .navbar .navbar-inner #logo, footer .logo {
     width: <%= theme_icon_width %>px;
     height: <%= theme_icon_height %>px;
     margin-top: <%= theme_logo_max_height - theme_icon_height/2 %>px;
@@ -432,7 +450,7 @@ strong {
 }
 
 @media (max-width: 767px) and (-webkit-min-device-pixel-ratio: 1.5), (max-width: 767px) and (min-resolution: 144dpi) {
-  .navbar .navbar-inner #logo {
+  .navbar .navbar-inner #logo, footer .logo {
     width: <%= theme_icon_retina_width %>px;
     height: <%= theme_icon_retina_height %>px;
     margin-top: <%= theme_logo_max_height - theme_icon_retina_height/2 %>px;

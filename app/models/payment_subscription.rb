@@ -14,11 +14,18 @@ class PaymentSubscription < ActiveRecord::Base
   belongs_to :instance
   belongs_to :payment_method
   belongs_to :payment_gateway
-  belongs_to :credit_card
+  belongs_to :credit_card, -> { with_deleted }
+
+  attr_accessor :chosen_credit_card_id
 
   accepts_nested_attributes_for :credit_card
 
   validates_associated :credit_card
+
+  before_validation do |p|
+    self.credit_card_id ||= subscriber.instance_clients.find_by(payment_gateway: payment_gateway.id).credit_cards.find(p.chosen_credit_card_id).try(:id) if subscriber.respond_to?(:instance_clients) && p.chosen_credit_card_id.present? &&  p.chosen_credit_card_id != 'custom'
+    true
+  end
 
   def payment_methods
     if payment_method

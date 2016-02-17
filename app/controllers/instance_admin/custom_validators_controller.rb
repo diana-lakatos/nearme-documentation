@@ -25,30 +25,43 @@ class InstanceAdmin::CustomValidatorsController  < InstanceAdmin::ResourceContro
 
   private
 
-  def collection
-    @validators ||= @validatable.custom_validators
-  end
+def collection
+  @validators ||= @validatable.custom_validators
+end
 
-  def resource
-    @validator ||= params[:id] ? @validatable.custom_validators.find(params[:id]) : @validatable.custom_validators.new
-  end
+def resource
+  @validator ||= params[:id] ? @validatable.custom_validators.find(params[:id]) : @validatable.custom_validators.new
+end
 
-  def find_validatable
-    raise NotImplementedError
-  end
+def resource_class
+  raise NotImplementedError
+end
 
-  def permitting_controller_class
-    'manage'
-  end
+def find_validatable
+  @validatable = resource_class.find(params["#{translation_key.singularize}_id"])
+end
 
-  def custom_validator_params
-    params.require(:custom_validator).permit(secured_params.custom_validator)
-  end
+def translation_key
+  @translation_key ||= resource_class.name.demodulize.tableize
+end
 
-  def set_breadcrumbs
+def permitting_controller_class
+  @controller_scope ||='manage'
+end
+
+def redirect_path
+  polymorphic_url([:instance_admin, @controller_scope, @validatable, :custom_validators])
+end
+
+def custom_validator_params
+  params.require(:custom_validator).permit(secured_params.custom_validator)
+end
+
+def set_breadcrumbs
     @breadcrumbs_title = BreadcrumbsList.new(
-      { :url => instance_admin_manage_service_types_path, :title => t('instance_admin.manage.service_types.service_types') },
-      { :url => instance_admin_manage_service_type_custom_validators_path, :title => t('instance_admin.manage.service_types.custom_validators') }
+      { :url => polymorphic_url([:instance_admin, @controller_scope, resource_class]), :title => t('instance_admin.manage.service_types.service_types') },
+      { :title => @validatable.name.titleize },
+      { :url => redirect_path, :title => t('instance_admin.manage.service_types.custom_validators') }
     )
   end
 end

@@ -24,7 +24,7 @@ class ChartDecoratorTest < ActionView::TestCase
       expected_dates = ["2014-12-26", "2014-12-27", "2014-12-28", "2014-12-29", "2014-12-30", "2014-12-31", "2015-01-01"].map do |date|
         I18n.l(Date.strptime(date), format: :day_and_month)
       end
-      
+
       assert_equal expected_dates, @chart.labels
     end
 

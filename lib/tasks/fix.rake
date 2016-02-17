@@ -1,4 +1,14 @@
 namespace :fix do
+  task :payments_payer => [:environment] do
+    Instance.find_each do |i|
+      puts "Processing #{i.name}"
+      i.set_context!
+      Payment.find_each do |p|
+        p.update_column(:payer_id, p.payable.owner.id)
+      end
+    end
+  end
+
   desc "Fix first period pro-rata"
   task :first_period_pro_rata => [:environment] do
     Instance.find(130).set_context!

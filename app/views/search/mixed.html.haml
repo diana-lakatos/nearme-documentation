@@ -16,7 +16,7 @@
           = render partial: 'search/mixed/location', locals: {location: location, location_counter: location_counter, transactable_type: @searcher.transactable_type, lgpricing_filters: @searcher.search.lgpricing_filters }
 
       = render 'search/mixed/pagination', locations: @searcher.results, result_count: @searcher.result_count
-  - elsif !@searcher.located
+  - elsif @searcher.located
     .locations
       .hidden-locations
         %input{type: 'hidden', id: 'result_count', value: @searcher.result_count}

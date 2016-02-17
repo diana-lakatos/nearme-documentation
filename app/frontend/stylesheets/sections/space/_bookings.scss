@@ -318,3 +318,12 @@
 
   }
 }
+
+#new_reservation_request {
+  .small-inputs {
+    input, select, .customSelect {
+      width: 180px;
+    }
+  }
+
+}

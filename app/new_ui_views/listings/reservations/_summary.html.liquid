@@ -1,0 +1,48 @@
+<h2>{{ @reservation.total_units_text | titleize }}</h2>
+
+{% if @reservation_request.action_hourly_booking? %}
+  <p>{{ @reservation.hourly_summary }}</p>
+{% else %}
+  <div class='selected-dates-summary'>
+    <hr class='thin'>
+    {{ @reservation.dates_summary_with_hr }}
+  </div>
+{% endif %}
+
+<hr class='thin'>
+<h2>{{ 'reservations_review.summary' | translate }}</h2>
+<div class='order-summary'>
+  <div class='summary-line'>
+    <div class='summary-line-label'>{{ 'reservations_review.subtotal' | translate }}</div>
+    <div class='summary-line-value subtotal-amount'>{{ @reservation.subtotal_price }}</div>
+    <div class='clearfix'></div>
+  </div>
+  {% if @reservation_request.with_delivery? %}
+    <div class='summary-line'>
+      <div class='summary-line-label'>{{ 'reservations_review.delivery' | translate }}</div>
+      <div class='summary-line-value delivery-amount'>0.00</div>
+      <div class='clearfix'></div>
+    </div>
+  {% endif %}
+  {% if @reservation_request.has_service_fee? %}
+    <div class='summary-line'>
+      <div class='summary-line-label'>{{ 'reservations_review.service_fee' | translate }}</div>
+      <div class='summary-line-value service-fee-amount'>{{ @reservation.service_fee_guest }}</div>
+      <div class='clearfix'></div>
+    </div>
+  {% endif %}
+  {% if @reservation.additional_charges %}
+    {% for charge in @reservation.additional_charges %}
+      <div class='summary-line'>
+        <div class='summary-line-label'>{{ charge.name }}</div>
+        <div class='summary-line-value service-fee-amount'>{{ charge.amount_with_currency }}</div>
+        <input value="{{ charge.additional_charge_type_id }}" type="hidden" name="reservation_request[additional_charge_ids][]" />
+        <div class='clearfix'></div>
+      </div>
+    {% endfor %}
+  {% endif %}
+  <div class='summary-line'>
+    <div class='summary-line-label'>{{ 'reservations_review.total' | translate }}</div>
+  <div class='summary-line-value total-amount' data-currency-symbol='{{ @reservation.currency }}' data-total-amount='{{ @reservation.total_amount_float }}'>{{ @reservation.total_price }}</div>
+  <div class='clearfix'></div>
+</div>

@@ -427,11 +427,11 @@ class Instance < ActiveRecord::Base
   end
 
   def seller_profile_enabled?
-    PlatformContext.current.instance.seller_profile_type.custom_attributes.count > 0
+    seller_profile_type.custom_attributes.count > 0 || seller_profile_type.custom_model_types.count > 0
   end
 
   def buyer_profile_enabled?
-    PlatformContext.current.instance.buyer_profile_type.custom_attributes.count > 0
+    buyer_profile_type.custom_attributes.count > 0 || buyer_profile_type.custom_model_types.count > 0
   end
 
   def new_ui?

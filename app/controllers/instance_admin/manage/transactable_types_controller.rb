@@ -41,6 +41,11 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
   end
 
   def search_settings
+    @breadcrumbs_title = BreadcrumbsList.new(
+      { :url => polymorphic_url([:instance_admin, @controller_scope, resource_class]), :title => t("instance_admin.#{@controller_scope}.#{translation_key}.#{translation_key}") },
+      { :title => resource.name.titleize },
+      { :title => t('instance_admin.manage.transactable_types.search_settings') }
+    )
   end
 
   private

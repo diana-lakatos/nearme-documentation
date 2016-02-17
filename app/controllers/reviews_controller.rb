@@ -21,6 +21,7 @@ class ReviewsController < ApplicationController
         ]
       end
 
+      response.headers['Content-Type'] = 'application/json'
       render json: { tab_content: tab_content, tab_header: tab_header }
     end
   end
@@ -53,4 +54,3 @@ class ReviewsController < ApplicationController
     ![RatingConstants::TRANSACTABLE, RatingConstants::HOST].include?(params[:subject])
   end
 end
-

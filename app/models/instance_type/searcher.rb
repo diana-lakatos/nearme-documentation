@@ -15,6 +15,7 @@ module InstanceType::Searcher
   end
 
   def category_ids
+    return input_value(:category_ids) if input_value(:category_ids).is_a?(Array)
     input_value(:category_ids).try { |ids| ids.split(',') } || []
   end
 
@@ -39,11 +40,11 @@ module InstanceType::Searcher
   end
 
   def located
-    @params[:lat].present? and @params[:lng].present?
+    @params[:loc].present? || @params[:lat].present? && @params[:lng].present?
   end
 
   def adjust_to_map
-    @params[:loc].present? || @params[:nx].present? && @params[:sx].present?
+    @params[:map_moved] == "true"
   end
 
   def global_map

@@ -93,6 +93,8 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
       @return_path = new_listing_user_message_path(params[:listing_id], skip: true)
     elsif params[:user_id].present?
       @return_path = new_user_user_message_path(params[:user_id], skip: true)
+    elsif params[:reservation_id].present?
+      @return_path = new_reservation_user_message_path(params[:reservation_id], skip: true)
     end
 
     render :missing_phone_number

@@ -12,8 +12,6 @@ class RatingQuestion < ActiveRecord::Base
 
   default_scope { order('id ASC') }
 
-  validate :check_questions_quantity, on: :create
-
   after_create :create_empty_answers
 
   private
@@ -24,9 +22,4 @@ class RatingQuestion < ActiveRecord::Base
     end
   end
 
-  def check_questions_quantity
-    if rating_system && rating_system.rating_questions.count >= RatingConstants::MAX_QUESTIONS_QUANTITY
-      errors.add(:rating_system, I18n.t('rating_question.validation.question_quantity', number: RatingConstants::MAX_QUESTIONS_QUANTITY))
-    end
-  end
 end

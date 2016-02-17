@@ -127,8 +127,12 @@ module ApplicationHelper
     link_to('#', options, &block)
   end
 
-  def get_return_to_url
-    in_signed_in_or_sign_up? ? {} : {:return_to => "#{request.protocol}#{request.host_with_port}#{request.fullpath}"}
+  def get_return_to_url(default_url = nil, options = {})
+    return_path = url_for
+    if (return_path == "/" || in_signed_in_or_sign_up?) && default_url.present? && TransactableType.first.try(:single_transactable)
+      return_path = default_url
+    end
+    in_signed_in_or_sign_up? ? {return_to: default_url }.merge(options) : {return_to: return_path }.merge(options)
   end
 
   def in_signed_in_or_sign_up?

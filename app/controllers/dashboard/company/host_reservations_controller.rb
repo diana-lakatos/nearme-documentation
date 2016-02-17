@@ -1,5 +1,6 @@
 class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseController
   before_filter :find_reservation, except: [:index]
+  before_filter :check_if_pending_guest_confirmation, only: [:complete_reservation, :submit_complete_reservation]
 
   def index
     @guest_list = Controller::GuestList.new(current_user).filter(params[:state])
@@ -10,7 +11,11 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
     if @reservation.confirmed?
       flash[:warning] = t('flash_messages.manage.reservations.reservation_already_confirmed')
     else
-      @reservation.charge_and_confirm!
+      if @reservation.skip_payment_authorization?
+        @reservation.invoke_confirmation!
+      else
+        @reservation.charge_and_confirm!
+      end
       if @reservation.confirmed?
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ManuallyConfirmed, @reservation.id)
         event_tracker.confirmed_a_booking(@reservation)
@@ -76,6 +81,42 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
     redirect_to dashboard_company_host_reservations_url
   end
 
+  def complete_reservation
+    @reservation = @reservation.decorate
+    @reservation_form = CompleteReservationForm.new(@reservation)
+  end
+
+  def submit_complete_reservation
+    @reservation = @reservation.decorate
+    @reservation_form = CompleteReservationForm.new(@reservation)
+    if @reservation_form.validate(params[:reservation]) && @reservation_form.save
+      @reservation.force_recalculate_fees = true
+      @reservation.calculate_prices
+      @reservation.save!
+      @reservation.payment.update_attributes({
+        subtotal_amount_cents: @reservation.subtotal_amount.cents,
+        service_fee_amount_guest_cents: @reservation.service_fee_amount_guest.cents,
+        service_fee_amount_host_cents: @reservation.service_fee_amount_host.cents,
+        service_additional_charges_cents: @reservation.service_additional_charges.cents,
+        host_additional_charges_cents: @reservation.host_additional_charges.cents
+      })
+      if @reservation.payment.authorize
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::HostSubmittedCheckout, @reservation.id)
+        PaymentConfirmationExpiryJob.perform_later(@reservation.pending_guest_confirmation + @reservation.listing.hours_for_guest_to_confirm_payment.hours, @reservation.id) if @reservation.listing.hours_for_guest_to_confirm_payment.to_i > 0
+      else
+        flash[:warning] = t('flash_messages.dashboard.complete_reservation.failed_to_authorize_credit_card')
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::HostSubmittedCheckoutButAuthorizationFailed, @reservation.id)
+      end
+      redirect_to action: :reservation_completed
+    else
+      @reservation_form.sync
+      flash.now[:error] = t('flash_messages.dashboard.complete_reservation.unable_to_save')
+      render :complete_reservation
+    end
+  end
+
+  def reservation_completed; end
+
   private
 
   def find_reservation
@@ -89,6 +130,13 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
   def track_reservation_update_profile_informations
     event_tracker.updated_profile_information(@reservation.owner)
     event_tracker.updated_profile_information(@reservation.host)
+  end
+
+  def check_if_pending_guest_confirmation
+    unless @reservation.can_complete_checkout?
+      flash[:error] = t('flash_messages.dashboard.complete_reservation.pending_confirmation')
+      redirect_to dashboard_company_host_reservations_url
+    end
   end
 
 end

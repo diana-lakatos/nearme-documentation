@@ -36,6 +36,7 @@ class HiddenUiControls
   ]
 
   COMMON_KEYS = [
+      'dashboard/credit_cards',
       'dashboard/user_messages',
       'dashboard/companies',
       'dashboard/payouts',

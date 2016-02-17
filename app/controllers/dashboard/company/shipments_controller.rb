@@ -5,6 +5,7 @@ class Dashboard::Company::ShipmentsController < Dashboard::Company::BaseControll
 
     unless @shipment.shipped?
       @shipment.ship!
+      @order.touch(:archived_at)
     end
 
     redirect_to dashboard_company_orders_received_path(@order)

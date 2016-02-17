@@ -49,6 +49,19 @@ DNM.registerInitializer(function(){
     });
 });
 
+DNM.registerInitializer(function(){
+    var els = $('.document-requirements-container');
+    if (els.length === 0) {
+        return;
+    }
+    require.ensure('./new_ui/controllers/document_requirements_controller', function(require){
+        var DocumentRequirementsController = require('./new_ui/controllers/document_requirements_controller');
+        els.each(function(){
+            return new DocumentRequirementsController(this);
+        });
+    });
+});
+
 
 DNM.registerInitializer(function(){
     var els = $('#reviews');

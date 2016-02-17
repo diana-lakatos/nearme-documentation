@@ -19,6 +19,7 @@ class MerchantAccount < ActiveRecord::Base
   belongs_to :payment_gateway
 
   belongs_to :company, foreign_key: :merchantable_id
+  has_many :instance_clients, through: :company
 
   accepts_nested_attributes_for :payment_subscription, allow_destroy: true
 

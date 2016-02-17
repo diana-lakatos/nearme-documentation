@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160330121432) do
+ActiveRecord::Schema.define(version: 20160405181952) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -577,7 +577,7 @@ ActiveRecord::Schema.define(version: 20160330121432) do
 
   create_table "credit_cards", force: :cascade do |t|
     t.integer  "instance_client_id"
-    t.integer  "instance_id"
+    t.integer  "instance_id",                                   null: false
     t.datetime "deleted_at"
     t.string   "gateway_class",      limit: 255
     t.text     "encrypted_response"
@@ -922,10 +922,10 @@ ActiveRecord::Schema.define(version: 20160330121432) do
     t.string   "ip_address"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+    t.text     "reason"
   end
 
   add_index "inappropriate_reports", ["instance_id", "reportable_id", "reportable_type"], name: "inappropriate_reports_instance_reportable", using: :btree
-  add_index "inappropriate_reports", ["instance_id", "user_id", "reportable_id", "reportable_type"], name: "uniq_inappropriate_instance_user_reports_instance_reportable", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "inappropriate_reports", ["reportable_id"], name: "index_inappropriate_reports_on_reportable_id", using: :btree
   add_index "inappropriate_reports", ["user_id"], name: "index_inappropriate_reports_on_user_id", using: :btree
 
@@ -1164,6 +1164,7 @@ ActiveRecord::Schema.define(version: 20160330121432) do
     t.boolean  "enable_language_selector",                                                     default: false,         null: false
     t.boolean  "click_to_call",                                                                default: false
     t.boolean  "enable_reply_button_on_host_reservations",                                     default: false
+    t.boolean  "split_registration",                                                           default: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1537,6 +1538,7 @@ ActiveRecord::Schema.define(version: 20160330121432) do
     t.integer  "merchant_account_id"
     t.boolean  "offline",                                                                        default: false
     t.integer  "credit_card_id"
+    t.integer  "payer_id"
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
@@ -3541,6 +3543,8 @@ ActiveRecord::Schema.define(version: 20160330121432) do
     t.string   "theme_new_dashboard_digest"
     t.string   "instagram_url"
     t.integer  "instance_id"
+    t.string   "youtube_url"
+    t.string   "rss_url"
   end
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
@@ -3674,6 +3678,7 @@ ActiveRecord::Schema.define(version: 20160330121432) do
     t.integer  "reservation_type_id"
     t.boolean  "skip_payment_authorization",                                                     default: false
     t.integer  "hours_for_guest_to_confirm_payment",                                             default: 0
+    t.boolean  "single_transactable",                                                            default: false
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

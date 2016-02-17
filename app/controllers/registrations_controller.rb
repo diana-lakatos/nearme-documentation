@@ -1,5 +1,6 @@
 class RegistrationsController < Devise::RegistrationsController
 
+  before_action :set_role_if_blank
   before_action :configure_permitted_parameters, only: :create
   skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:update_password, :set_password]
   skip_before_filter :filter_out_token, :only => [:verify, :unsubscribe]
@@ -25,11 +26,14 @@ class RegistrationsController < Devise::RegistrationsController
 
   def new
     @legal_page_present = Page.exists?(slug: 'legal')
+    setup_form_component
     super unless already_signed_in?
   end
 
   def create
     params[:user][:custom_validation] = true
+    setup_form_component
+    params[:user][:force_profile] = @role
     begin
       super
 
@@ -51,7 +55,14 @@ class RegistrationsController < Devise::RegistrationsController
           provider: Auth::Omni.new(session[:omniauth]).provider
         })
         ReengagementNoBookingsJob.perform_later(72.hours.from_now, @user.id)
-        WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @user.id)
+        case @role
+        when 'default'
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @user.id)
+        when 'seller'
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::HostAccountCreated, @user.id)
+        when 'buyer'
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::GuestAccountCreated, @user.id)
+        end
       end
 
       # Clear out temporarily stored Provider authentication data if present
@@ -80,7 +91,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def show
     @theme_name = 'buy-sell-theme'
-    if current_user.try(:instance_admin?)
+    if current_user.try(:admin?)
       @user = User.find(params[:id])
     else
       @user = User.not_admin.find(params[:id])
@@ -121,13 +132,15 @@ class RegistrationsController < Devise::RegistrationsController
     resource.custom_validation = true
     resource.assign_attributes(user_params)
     build_approval_request_for_object(resource) unless resource.is_trusted?
+    all_params = user_params
+    all_params[:default_profile_attributes].try(:delete, :customizations_attributes)
 
     # We remove approval_requests_attributes from the params used to update the user
     # to avoid duplication, as the approval request is already set by assign_attributes
     # and build_approval_request_for_object
     if resource.update_with_password(user_params.except(:approval_requests_attributes))
-      if @user.try(:language).to_sym != I18n.locale
-        I18n.locale = @user.language.try(:to_sym) || :en
+      if @user.try(:language).try(:to_sym) != I18n.locale
+        I18n.locale = @user.try(:language).try(:to_sym) || :en
       end
 
       set_flash_message :success, :updated
@@ -244,7 +257,7 @@ class RegistrationsController < Devise::RegistrationsController
       sign_in(@user)
       event_tracker.track_event_within_email(@user, request) if params[:track_email_event]
       flash[:success] = t('flash_messages.registrations.address_verified')
-      redirect_to @user.listings.count > 0 ? dashboard_company_locations_path : edit_user_registration_path
+      redirect_to edit_user_registration_path
     else
       if @user.verified_at
         flash[:warning] = t('flash_messages.registrations.address_already_verified')
@@ -376,7 +389,16 @@ class RegistrationsController < Devise::RegistrationsController
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) {|u| u.permit(:name, :email, :accept_terms_of_service, :password, :password_confirmation, :custom_validation)}
+    arguments = [:name, :email, :accept_terms_of_service, :password, :password_confirmation, :custom_validation, :force_profile]
+    arguments += case params[:role]
+                           when 'buyer'
+                             secured_params.user
+                           when 'seller'
+                             secured_params.user
+                           else
+                             []
+                           end
+    devise_parameter_sanitizer.for(:sign_up) {|u| u.permit(*arguments)}
   end
 
   def user_params
@@ -391,5 +413,15 @@ class RegistrationsController < Devise::RegistrationsController
       page: 1,
       per_page: ActivityFeedService::Helpers::FOLLOWED_PER_PAGE
     }
+  end
+
+  def set_role_if_blank
+    params[:role] ||= 'buyer' if current_instance.split_registration?
+  end
+
+  def setup_form_component
+    @role = %w(seller buyer).detect { |r| r == params[:role] }
+    @role ||= "default"
+    @form_component = FormComponent.find_by(form_type: "FormComponent::#{@role.upcase}_REGISTRATION".constantize)
   end
 end

@@ -18,6 +18,14 @@ class Utils::DefaultAlertsCreator::SignUpCreator < Utils::DefaultAlertsCreator::
     create_alert!({associated_class: WorkflowStep::SignUpWorkflow::AccountCreated, name: 'Welcome email', path: 'post_action_mailer/sign_up_welcome', subject: '{{user.first_name}}, welcome to {{platform_context.name}}!', alert_type: 'email', recipient_type: 'enquirer', delay: 30})
   end
 
+  def create_guest_welcome_email!
+    create_alert!({associated_class: WorkflowStep::SignUpWorkflow::GuestAccountCreated, name: 'Welcome email', path: 'post_action_mailer/guest_sign_up_welcome', subject: '{{user.first_name}}, welcome to {{platform_context.name}}!', alert_type: 'email', recipient_type: 'enquirer', delay: 30})
+  end
+
+  def create_host_welcome_email!
+    create_alert!({associated_class: WorkflowStep::SignUpWorkflow::HostAccountCreated, name: 'Welcome email', path: 'post_action_mailer/host_sign_up_welcome', subject: '{{user.first_name}}, welcome to {{platform_context.name}}!', alert_type: 'email', recipient_type: 'enquirer', delay: 30})
+  end
+
   def create_reengageemnt_email!
     create_alert!({associated_class: WorkflowStep::SignUpWorkflow::NoReservations, name: 'Reengagement email', path: 'reengagement_mailer/no_bookings', subject: '[{{platform_context.name}}] Check out these new listings in your area!', alert_type: 'email', recipient_type: 'enquirer'})
   end

@@ -46,11 +46,14 @@ class UserDrop < BaseDrop
   #   returns an array of custom attributes values for seller profile
   # buyer_properties
   #   returns an array of custom attributes values for buyer profile
+  # seller_average_rating
+  #   average rating of this user as a seller
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of,
     :with_mutual_friendship_source, :first_name, :middle_name, :last_name,
     :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
     :country_name, :phone, :current_address, :is_trusted?, :reservations,
-    :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation, to: :user
+    :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
+    :seller_average_rating, to: :user
 
   def initialize(user)
     @user = user.decorate
@@ -357,6 +360,10 @@ class UserDrop < BaseDrop
 
   def member_since
     I18n.l(@user.created_at.to_date, format: :short)
+  end
+
+  def completed_host_reservations_count
+    @user.listing_reservations.reviewable.count
   end
 
   def click_to_call_button

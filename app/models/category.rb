@@ -12,6 +12,7 @@ class Category < ActiveRecord::Base
   has_many :categories_categorizables
   has_many :categorizable_products, through: :categories_categorizables, source: :product, foreign_key: :categorizable_id
   has_many :categorizable_transactables, through: :categories_categorizables, source: :transactable, foreign_key: :categorizable_id
+  has_many :categorizable_reservations, through: :categories_categorizables, source: :reservation, foreign_key: :categorizable_id
 
   belongs_to :instance
 
@@ -24,6 +25,7 @@ class Category < ActiveRecord::Base
   has_many :project_types, through: :category_linkings
   has_many :offer_types, through: :category_linkings
   has_many :instance_profile_types, through: :category_linkings
+  has_many :reservation_types, through: :category_linkings
 
   belongs_to :instance
 
@@ -43,6 +45,7 @@ class Category < ActiveRecord::Base
   scope :users, -> { joins(:category_linkings).where(category_linkings: { category_linkable: PlatformContext.current.instance.default_profile_type } ) }
   scope :sellers, -> { joins(:category_linkings).where(category_linkings: { category_linkable: PlatformContext.current.instance.seller_profile_type } ) }
   scope :buyers, -> { joins(:category_linkings).where(category_linkings: { category_linkable: PlatformContext.current.instance.buyer_profile_type } ) }
+  scope :reservations, -> { joins(:category_linkings).where(category_linkings: { category_linkable_type: 'ReservationType' } ) }
 
   def autocomplete?
     self.display_options == 'autocomplete'
