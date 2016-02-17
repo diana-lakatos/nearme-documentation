@@ -3,6 +3,7 @@
 
 var path = require('path');
 var webpack = require('webpack');
+var util = require('gulp-util');
 
 var config = module.exports = {
   // the base path which will be used to resolve entry points
@@ -21,13 +22,15 @@ config.entry = {
     community: path.join(config.context, 'app','frontend','javascripts','community-entry.js'),
 };
 
+var assetHost = util.env.asset_host ? '//' + util.env.asset_host : '';
+
 config.output = {
   // this is our app/assets/javascripts directory, which is part of the Sprockets pipeline
   path: path.join(config.context, 'public', 'assets'),
   // the filename of the compiled bundle, e.g. app/assets/javascripts/bundle.js
   filename: '[name]-bundle.js',
   // if the webpack code-splitting feature is enabled, this is the path it'll use to download bundles
-  publicPath: '/assets/',
+  publicPath: assetHost + '/assets/',
   crossOriginLoading: 'anonymous'
 };
 
