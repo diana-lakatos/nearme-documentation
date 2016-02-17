@@ -59,19 +59,6 @@ require('cocoon');
     });
 
     DNM.registerInitializer(function(){
-        /* initializeNoSelect */
-        $('.no-select').each(function(){
-            if($.browser.mozilla){
-                $(this).css('MozUserSelect','none');
-            }else if($.browser.msie){
-                $(this).bind('selectstart',function(){return false;});
-            }else{
-                $(this).mousedown(function(){return false;});
-            }
-        });
-    });
-
-    DNM.registerInitializer(function(){
         /* initializeModalClose */
         /* Re-enable form submit buttons on sign-in/sign-up modal close */
         $(document).on('click', '.sign-up-modal a.modal-close', function() {
