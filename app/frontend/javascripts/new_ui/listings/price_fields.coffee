@@ -36,7 +36,7 @@ module.exports = class PriceFields
 
       @inputWrapper.find('input[readonly]').prop('disabled', true)
       if @bookingTypeInput.val() == 'regular'
-        if @container.find('input[name="define_day"]:checked').val().length > 0
+        if @container.find('input[name="define_day"]:checked').length > 0
           @bookingTypeInput.val(@container.find('input[name="define_day"]:checked').val())
 
     @enablingPriceCheckboxes.change (event) =>

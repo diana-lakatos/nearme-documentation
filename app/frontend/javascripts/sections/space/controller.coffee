@@ -148,8 +148,9 @@ module.exports = class SpaceController
 
     @popover = new GoogleMapPopover({'boxStyle': { 'width': '190px' }, 'pixelOffset': new google.maps.Size(-95, -40) })
     @popover.setContent @mapContainer.find('address').html()
-    if ($.browser.msie && parseInt($.browser.version) > 9)
-      @popover.open(@map.map, marker)
+    # $.browser is no longer supported, removing as bug, but not sure about condition itself in IE10+ ?
+    # if ($.browser.msie && parseInt($.browser.version) > 9)
+    #   @popover.open(@map.map, marker)
 
     google.maps.event.addListener marker, 'click', =>
       @popover.open(@map.map, marker)
