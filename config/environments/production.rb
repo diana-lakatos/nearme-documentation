@@ -18,11 +18,10 @@ DesksnearMe::Application.configure do
     :domain         => 'desksnear.me'
   }
 
-  config.action_controller.asset_host = ENV['ASSET_HOST'].presence || Proc.new { "https://#{PlatformContext.current.decorate.host}" }
-  config.action_mailer.asset_host     = ENV['ASSET_HOST'].presence || Proc.new { "https://#{PlatformContext.current.decorate.host}" }
+  config.action_controller.asset_host = ENV['ASSET_HOST']
+  config.action_mailer.asset_host     = ENV['ASSET_HOST']
 
-
-  Rails.application.routes.default_url_options[:host] = 'desksnear.me'
+  Rails.application.routes.default_url_options[:host] = 'near-me.com'
   Rails.application.routes.default_url_options[:protocol] = 'https'
 
   config.i18n.fallbacks = true

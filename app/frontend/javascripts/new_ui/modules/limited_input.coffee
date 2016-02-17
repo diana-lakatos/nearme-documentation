@@ -4,9 +4,9 @@ module.exports = class Limiter
     @limit = @input.data('counter-limit')
     @info = @input.next('[data-counter-for]')
     @labels = {
-      few: @info.data('label-few')
-      one: @info.data('label-one')
-      zero: @info.data('label-zero')
+      few: @info.data('label-few') || "%{count} characters left"
+      one: @info.data('label-one') || "1 character left"
+      zero: @info.data('label-zero') || "0 characters left"
     }
 
     @bindEvents()
