@@ -22,7 +22,7 @@ config.entry = {
     community: path.join(config.context, 'app','frontend','javascripts','community-entry.js'),
 };
 
-var assetHost = util.env.asset_host ? '//' + util.env.asset_host : '';
+var assetHost = util.env.asset_host || '';
 
 config.output = {
   // this is our app/assets/javascripts directory, which is part of the Sprockets pipeline
