@@ -1,8 +1,10 @@
 <% if Rails.application.config.raygun_js_reporting %>
 <script type="text/javascript">
   rg4js('apiKey', '<%= Rails.application.config.raygun_js_api_key %>');
-
   rg4js('enableCrashReporting', true);
+  rg4js('options', {
+    ignoreAjaxAbort: true
+  });
 
   <% if current_user %>
   rg4js('setUser', {

@@ -32,7 +32,8 @@ config.output = {
 };
 
 config.externals = {
-    jquery: 'jQuery'
+    jquery: 'jQuery',
+    modernizr: 'Modernizr'
 };
 
 config.resolve = {
@@ -53,6 +54,7 @@ config.plugins = [
   new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
+      Modernizr: 'modernizr'
   })
 ];
 

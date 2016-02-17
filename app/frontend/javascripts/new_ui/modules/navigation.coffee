@@ -37,9 +37,9 @@ module.exports = class Navigation
     @body.addClass('navigation-visible')
     @saveState(true)
 
-    @main.on 'click.hidenavigation', (e)->
+    @main.on 'click.hidenavigation', (e)=>
       e.preventDefault()
-      hideNavigation()
+      @hideNavigation()
 
   hideNavigation: ()->
     @body.removeClass('navigation-visible')
