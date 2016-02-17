@@ -54,7 +54,7 @@ Feature: A user can edit their settings
     Then I should not see "Manage Desks"
 
   Scenario: A user with one inactive listing will not see settings
-    Given a company exists with creator: the user
+    Given a draft_company exists with creator: the user
       And a location exists with company: the company
       And a transactable exists with location: the location, draft: "#{Time.zone.now}"
       And I am on the home page

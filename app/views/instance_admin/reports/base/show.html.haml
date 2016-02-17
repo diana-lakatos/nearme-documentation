@@ -1,0 +1,19 @@
+.content-container
+  .row
+    .table-container
+      %table
+        %tr
+          %th
+            = t('instance_admin.reports.attribute')
+          %th
+            = t('instance_admin.reports.value')
+        - @resource.attribute_names.each do |attribute_name|
+          %tr
+            %td
+              = attribute_name
+            %td
+              - if attribute_name == 'properties'
+                = @resource.properties.to_h.to_s
+              - else
+                = @resource.send(attribute_name)
+

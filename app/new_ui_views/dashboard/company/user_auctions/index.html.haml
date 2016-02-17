@@ -1,0 +1,22 @@
+- title t('dashboard.user_auctions.title_count', count: @offers.count)
+
+- content_for :page_header do
+  %h1= yield :title
+
+- actions = ['auction_open', 'auction_finished', 'archived']
+- tabs = []
+- actions.each_with_index do |action, i|
+  - tabs.push({ name: t("dashboard.user_auctions.#{action}"), url: dashboard_company_user_auctions_path(state: action), active: (params[:state].nil? && i.zero?) || params[:state] == action })
+
+= dashboard_panel_multi_tabs(tabs)
+
+.panel
+  .panel-body
+    - if @offers.empty?
+      %p.empty-resultset
+        = t('reservations.no_bookings_html', {bookable_nouns: platform_context.bookable_nouns, type: booking_type_from_action(params[:action])})
+    - else
+
+      .orders-a
+        - @offers.each do |offer|
+          = render 'dashboard/company/user_auctions/offer', offer: offer, bids: offer.bids

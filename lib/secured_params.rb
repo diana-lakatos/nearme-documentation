@@ -198,6 +198,7 @@ class SecuredParams
       service_type_ids: [],
       project_type_ids: [],
       product_type_ids: [],
+      offer_type_ids: [],
       instance_profile_type_ids: []
     ]
   end
@@ -474,6 +475,7 @@ class SecuredParams
     [
       :type,
       :file,
+      :file_cache,
       :attachable_id,
       :attachable_type,
       :id,
@@ -887,7 +889,7 @@ class SecuredParams
     ]
   end
 
-  def company(transactable_type = nil)
+  def company(transactable_type: nil, offer_type: nil)
     [
       :name,
       :url,
@@ -908,6 +910,7 @@ class SecuredParams
       industry_ids: []
     ] << {
       products_attributes: nested(self.spree_product),
+      offers_attributes: nested(self.offer(offer_type)),
       shipping_categories_attributes: nested(self.spree_shipping_category),
       shipping_methods_attributes: nested(self.spree_shipping_method),
       stock_locations_attributes: nested(self.spree_stock_location),
@@ -1030,6 +1033,39 @@ class SecuredParams
     based_params
   end
 
+  def offer(offer_type)
+    [
+      :name,
+      :description,
+      :summary,
+      :price,
+      :price_cents,
+      :creator_id,
+      :transactable_type_id,
+      photos_attributes: nested(self.photo),
+      photo_ids: [],
+      category_ids: [],
+      attachment_ids: [],
+      document_requirements_attributes: nested(self.document_requirement),
+      upload_obligation_attributes: nested(self.upload_obligation),
+      approval_requests_attributes: nested(self.approval_request)
+    ] + Offer.public_custom_attributes_names((offer_type || PlatformContext.current.try(:instance).try(:offer_types).try(:first)).try(:id))
+  end
+
+  def reservation_type
+    [
+      :name,
+      transactable_type_ids: []
+    ]
+  end
+
+  def bid(reservation_type)
+    [
+      properties: Bid.public_custom_attributes_names(reservation_type),
+      payment_documents_attributes: nested(self.payment_document)
+    ]
+  end
+
   def project_collaborator
     [
       :approved,
@@ -1106,6 +1142,7 @@ class SecuredParams
   def approval_request
     [
       :message, :approval_request_template_id,
+      :draft_at,
       approval_request_attachments_attributes: nested(self.approval_request_attachment)
     ]
   end
@@ -1152,7 +1189,7 @@ class SecuredParams
     ]
   end
 
-  def user(transactable_type = nil)
+  def user(transactable_type: nil, reservation_type: nil, offer_type: nil)
     [
       :avatar,
       :avatar_transformation_data,
@@ -1186,11 +1223,11 @@ class SecuredParams
       :twitter_url,
       industry_ids: [],
       category_ids: [],
-      seller_profile_attributes: nested(self.seller),
-      buyer_profile_attributes: nested(self.buyer),
+      seller_profile_attributes: nested(self.seller_profile),
+      buyer_profile_attributes: nested(self.buyer_profile),
       default_profile_attributes: nested(self.default_profile),
       current_address_attributes: nested(self.address),
-      companies_attributes: nested(self.company(transactable_type)),
+      companies_attributes: nested(self.company(transactable_type: transactable_type)),
       approval_requests_attributes: nested(self.approval_request),
       projects_attributes: nested(self.project(transactable_type)),
     ]
@@ -1206,6 +1243,20 @@ class SecuredParams
   def default_profile
     [
       properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id)),
+      category_ids: []
+    ]
+  end
+
+  def seller_profile
+    [
+      properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id)),
+      category_ids: []
+    ]
+  end
+
+  def buyer_profile
+    [
+      properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id)),
       category_ids: []
     ]
   end
@@ -1340,7 +1391,7 @@ class SecuredParams
       :end_minute,
       :guest_notes,
       :payment_method_id,
-      :reservation_type,
+      :booking_type,
       :delivery_type,
       :delivery_ids,
       :shipments_attributes,

@@ -1,0 +1,20 @@
+- custom_attribute_names = @offer_type.custom_attributes.collect { |custom_attribute| custom_attribute.name }
+= f.hidden_field :transactable_type_id, value: @offer_type.id
+= f.input :id, as: :hidden
+
+= f.simple_fields_for :properties, f.object.properties do |properties_form|
+
+  - @form_components.each_with_index do |form_component, index|
+    - component_class = 'listing-form-component panel-tab-container'
+    - component_class = "#{component_class} active" if index == 0
+    %div{class: component_class, indexid: "form-component-#{form_component.id}"}
+
+      - form_component.form_fields.each do |form_field|
+        = render 'offer_fields', properties_form: properties_form, f: f, form_field: form_field, custom_attribute_names: custom_attribute_names
+
+.hidden
+  - Money::Currency.table.values.each do |c|
+    %span{:id => "currency_#{c[:iso_code]}"}
+      = c[:symbol]
+  %span{:id => "default_currency"}= @offer_type.default_currency
+

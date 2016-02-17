@@ -81,11 +81,3 @@ Feature: User can add secure files to order
     When User visits order payment page
     When I fill billing data
     Then I should see order placed confirmation
-
-  Scenario: User can buy product if document upload disabled and upload obligation is ex
-    Given Document upload is disabled
-    Given Upload obligation for product is exist
-    Given Document requirements for product is exist
-    When User visits order payment page
-    When I fill billing data
-    Then I should see order placed confirmation

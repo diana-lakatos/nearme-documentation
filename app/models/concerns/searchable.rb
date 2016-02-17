@@ -2,6 +2,7 @@ module Searchable
   extend ActiveSupport::Concern
 
   included do
+    include QuerySearchable
     include Elasticsearch::Model
 
     after_commit lambda { ElasticIndexerJob.perform(:index, self.class.to_s, self.id) }, on: :create

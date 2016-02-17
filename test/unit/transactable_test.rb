@@ -386,48 +386,6 @@ class TransactableTest < ActiveSupport::TestCase
 
     end
 
-    context 'should_populate_creator_listings_metadata?' do
-
-      setup do
-        @listing = FactoryGirl.create(:transactable)
-      end
-
-      should 'return true if new listing is created' do
-        assert @listing.creator.has_any_active_listings
-      end
-
-      should 'return true if listing is destroyed' do
-        @listing.destroy
-        refute @listing.creator.has_any_active_listings
-      end
-
-      should 'return true if draft changed' do
-        @listing.update_attribute(:draft, Time.zone.now)
-        assert @listing.should_populate_creator_listings_metadata?
-      end
-
-      should 'return false if name changed' do
-        @listing.update_attribute(:name, 'new name')
-        refute @listing.should_populate_creator_listings_metadata?
-      end
-
-      context 'triggering' do
-
-        should 'not trigger populate listings metadata on user if condition fails' do
-          User.any_instance.expects(:populate_listings_metadata!).never
-          Transactable.any_instance.expects(:should_populate_creator_listings_metadata?).returns(false)
-          FactoryGirl.create(:transactable)
-        end
-
-        should 'trigger populate listings metadata on user if condition succeeds' do
-          User.any_instance.expects(:populate_listings_metadata!).once
-          Transactable.any_instance.expects(:should_populate_creator_listings_metadata?).returns(true)
-          FactoryGirl.create(:transactable)
-        end
-
-      end
-    end
-
   end
 
   context 'foreign keys' do

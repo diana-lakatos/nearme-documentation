@@ -173,28 +173,12 @@ class Location < ActiveRecord::Base
     (listings.loaded? ? listings : listings.searchable).map{|l| l.lowest_full_price(available_price_types)}.compact.sort{|a, b| a[0].to_f <=> b[0].to_f}.first
   end
 
-  def approval_request_templates
-    @approval_request_templates ||= PlatformContext.current.instance.approval_request_templates.for("Location").older_than(created_at)
-  end
-
-  def current_approval_requests
-    self.approval_requests.to_a.reject { |ar| !self.approval_request_templates.pluck(:id).include?(ar.approval_request_template_id) }
-  end
-
   def approval_request_acceptance_cancelled!
     listings.find_each(&:approval_request_acceptance_cancelled!)
   end
 
   def approval_request_approved!
     listings.find_each(&:approval_request_approved!)
-  end
-
-  def is_trusted?
-    if approval_request_templates.count > 0
-      self.approval_requests.approved.count > 0
-    else
-      self.company.try(:is_trusted?)
-    end
   end
 
   def self.csv_fields

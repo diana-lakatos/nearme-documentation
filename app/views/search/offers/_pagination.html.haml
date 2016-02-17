@@ -1,0 +1,10 @@
+.search-pagination.with-left-margin
+  .page-entries-info
+    = products.offset + 1
+    = '-'
+    = [products.total_entries, products.per_page * products.current_page].min
+    of
+    = result_count
+    results
+  - if products.total_pages > 1
+    = will_paginate products, previous_label: '<', next_label: '>'

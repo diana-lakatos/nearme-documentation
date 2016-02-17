@@ -1,65 +1,33 @@
 module.exports = class DocumentRequirementsController
   constructor: (el) ->
     @container = $(el)
-    @removeLinks = @container.find(".remove-document-requirement:not(:first)")
-    @hiddenFields = @container.find(".document-hidden")
-    @removeFields = @container.find(".remove-document")
-    @requirementFields = @container.find('[data-requirement]')
-
-    @newLink = @container.find('[data-new-requirement]')
+    @selector = @container.find('input[type=radio][name*=upload_obligation_attributes]')
+    @documentFields = @container.find('.document-requirements-fields')
 
     @bindEvents()
-    @initialize()
+    @updateState()
 
   bindEvents: ->
+    @selector.on 'change', =>
+      @updateState()
 
-    @hiddenFields.on 'change', (e)=>
-      $(e.target).closest('[data-requirement]').toggle( !$(e.target).is(':checked') )
-      @toggleAddLink()
+    @documentFields.on 'cocoon:before-remove', (e,fields)->
+      parent = $(fields).closest('.nested-container')
+      parent.find('input[data-destroy-input]').val('true')
+      parent.hide()
+      parent.prependTo(parent.closest('form'))
 
-    @removeFields.on 'change', (e)=>
-      $(e.target).closest('[data-requirement]').hide() if $(e.target).is(':checked')
-      @toggleAddLink()
+  updateState: ->
+    if @selector.filter(':checked').val() == "Not Required"
+      @hideFields()
+    else
+      @showFields()
 
-    @newLink.on 'click', =>
-      @hiddenFields.filter(':checked').eq(0).prop('checked', false).trigger("change")
-      @toggleAddLink()
+  showFields: ->
+    @documentFields.find('input, textarea').prop('disabled', false)
+    @documentFields.find('.disabled').removeClass('disabled')
+    @documentFields.show()
 
-
-    @container.on 'change','.radio_buttons [type=radio]', (e) =>
-      if $(e.currentTarget).val() is 'Not Required'
-        @hideRequirementFields()
-      else
-        @showRequirementFields()
-
-  toggleAddLink: ->
-    @newLink.toggle(@hiddenFields.filter(':checked').length > 0)
-
-  hideRequirementFields: ->
-    @hiddenFields.each (index, item)->
-      return unless $(item).closest('[data-requirement]').is(':visible')
-      $(item).data('hide', true)
-      $(item).prop("checked", true)
-
-    @container.find('.document-requirements-fields').addClass('hidden')
-
-  showRequirementFields: ->
-    @hiddenFields.each (index, item)->
-      return unless $(item).data('hide')
-      $(item).removeData('hide')
-      $(item).prop("checked",false)
-
-    @container.find('.document-requirements-fields').removeClass('hidden')
-    @container.find('.document-requirements-fields input, textarea').prop("disabled",false)
-
-  initialize: ->
-    @removeLinks.removeClass('hidden');
-
-    @hiddenFields.filter(':checked').each ->
-      $(@).closest('[data-requirement]').hide()
-
-    @removeFields.filter(':checked').each ->
-      $(@).closest('[data-requirement]').hide()
-
-    unless @container.find('.radio_buttons [type=radio]:checked').val() is 'Not Required'
-      @container.find('.document-requirements-fields input, textarea').prop("disabled",false)
+  hideFields: ->
+    @documentFields.hide()
+    @documentFields.find('input, textarea').prop('disabled', true)

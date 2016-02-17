@@ -1,6 +1,5 @@
 class Spree::ProductType < TransactableType
 
-  has_many :form_components, as: :form_componentable
   has_many :products, dependent: :destroy, class_name: "Spree::Product", inverse_of: :product_type
 
   SEARCH_VIEWS = %w(products products_table products_list)

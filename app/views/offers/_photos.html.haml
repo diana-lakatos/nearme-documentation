@@ -1,0 +1,19 @@
+.product-img-large
+  = product.first_image
+  .thumbnail-row
+    - product.images.each_with_index do |image, index|
+      - next if index == 0
+      %a{style: 'cursor: pointer;'}
+        %img{alt: image.alt, src: image.image_url, onclick: 'change_image(this);'}
+
+
+:javascript
+  function change_image(e) {
+    var main_image = document.getElementById('product-first-image');
+    var previous_src = main_image.getAttribute('src');
+    var img_src = e.getAttribute('src');
+
+    e.src = previous_src;
+    main_image.src = img_src;
+    return false;
+  }

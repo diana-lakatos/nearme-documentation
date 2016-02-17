@@ -3,7 +3,7 @@ class ApprovalRequestTemplate < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
-  ApprovalRequestTemplate::OWNER_TYPES = %w(User Company Location Transactable)
+  ApprovalRequestTemplate::OWNER_TYPES = %w(User Company Transactable Offer)
   belongs_to :instance
   has_many :approval_request_attachment_templates, inverse_of: :approval_request_template
 

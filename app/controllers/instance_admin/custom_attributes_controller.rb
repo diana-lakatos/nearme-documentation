@@ -1,5 +1,4 @@
 class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceController
-
   before_filter :find_target
   before_filter :normalize_valid_values, only: [:create, :update]
   before_filter :set_breadcrumbs
@@ -56,20 +55,31 @@ class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceControl
 
   protected
 
+  def resource_class
+    raise NotImplementedError
+  end
+
   def set_breadcrumbs
-    @breadcrumbs_title = 'Manage Attributes'
+    @breadcrumbs_title = BreadcrumbsList.new(
+      { :url => polymorphic_url([:instance_admin, @controller_scope, resource_class]), :title => t("instance_admin.#{@controller_scope}.#{translation_key}.#{translation_key}") },
+      { :title => t('instance_admin.manage.transactable_types.custom_attributes') }
+    )
   end
 
   def redirection_path
-    raise NotImplementedError
+    [:instance_admin, @controller_scope, @target, :custom_attributes]
   end
 
   def find_target
-    raise NotImplementedError
+    @target ||= resource_class.find(params["#{translation_key.singularize}_id"])
+  end
+
+  def translation_key
+    @translation_key ||= resource_class.name.demodulize.tableize
   end
 
   def normalize_valid_values
-      params[:custom_attribute][:valid_values] = params[:custom_attribute][:valid_values].split(',').map(&:strip) if params[:custom_attribute] && params[:custom_attribute][:valid_values]
+    params[:custom_attribute][:valid_values] = params[:custom_attribute][:valid_values].split(',').map(&:strip) if params[:custom_attribute] && params[:custom_attribute][:valid_values]
   end
 
   def custom_attributes_params()

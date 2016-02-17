@@ -1,0 +1,52 @@
+- title t "dashboard.offers.manage"
+- content_for :page_header do
+  %h1
+    %span.hidden-xs= t('dashboard.offers.title.manage')
+    = t('dashboard.offers.title.listings')
+
+  .options.visible-sm.visible-xs
+    = link_to new_dashboard_company_offer_type_offer_path(@offer_type), class: "btn btn-primary" do
+      %span.fa.fa-plus
+      = t('dashboard.items.new_listing_short')
+
+
+- content_for :panel_navigation_links do
+  - OfferType.find_each do |offer_type|
+    %li{class: offer_type == @offer_type ? "active" : ""}
+      = link_to offer_type.translated_bookable_noun(10), dashboard_company_offer_type_offers_path(offer_type)
+
+
+- content_for :panel_options do
+  .pull-right.options
+    - if HiddenUiControls.find('dashboard/offers/bulk_upload').visible?
+      =# link_to t('data_upload.manage.bulk_upload'), new_dashboard_company_offer_type_data_upload_path(@offer_type), data: { modal: true }
+
+    = link_to new_dashboard_company_offer_type_offer_path(@offer_type), class: "btn btn-primary navbar-btn" do
+      %span.fa.fa-plus
+      = t('dashboard.items.new_listing_full', type: @offer_type.translated_bookable_noun(10))
+
+
+%nav.panel-nav-mobile.visible-sm.visible-xs{role: 'navigation'}
+  = dropdown_menu @offer_type.translated_bookable_noun(10), { wrapper_class: 'links' } do
+    = yield :panel_navigation_links
+
+- if OfferType.count > 3
+  .row
+    .col-md-3
+      %nav.hidden-xs.hidden-sm{role: 'navigation'}
+        %ul.nav.nav-pills.nav-stacked
+          = yield :panel_navigation_links
+
+    .col-md-9
+      %nav.panel-nav.hidden-xs.hidden-sm
+        = yield :panel_options
+      = render 'listing'
+
+- else
+  %nav.panel-nav.hidden-xs.hidden-sm
+    %ul.tabs.pull-left
+      = yield :panel_navigation_links
+    = yield :panel_options
+
+  = render 'listing'
+

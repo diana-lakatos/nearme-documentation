@@ -1,6 +1,7 @@
 class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceController
 
   before_filter :find_form_componentable
+  before_filter :set_breadcrumbs_title
 
   def index
     @form_components = @form_componentable.form_components.rank(:rank).order('form_type')
@@ -24,6 +25,15 @@ class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceControll
       flash.now[:error] = @form_component.errors.full_messages.to_sentence
       render action: :new
     end
+  end
+
+  def create_as_copy
+    transactable_type_id = params[:copy_template][:form_componentable_id]
+    form_type = params[:copy_template][:form_type]
+    resource_class.find(transactable_type_id).form_components.where(form_type: form_type).each do |form_component|
+      @form_componentable.form_components << form_component.dup
+    end
+    redirect_to redirect_path
   end
 
   def edit
@@ -63,12 +73,31 @@ class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceControll
 
   private
 
-  def find_form_componentable
+  def resource_class
     raise NotImplementedError
   end
 
+  def find_form_componentable
+    @form_componentable = resource_class.find(params["#{translation_key.singularize}_id"])
+  end
+
+  def translation_key
+    @translation_key ||= resource_class.name.demodulize.tableize
+  end
+
   def permitting_controller_class
-    'manage'
+    @controller_scope ||='manage'
+  end
+
+  def redirect_path
+    [:instance_admin, @controller_scope, @form_componentable, :form_components]
+  end
+
+  def set_breadcrumbs_title
+    @breadcrumbs_title = BreadcrumbsList.new(
+      { :url => polymorphic_url([:instance_admin, @controller_scope, resource_class]), :title => t("instance_admin.#{@controller_scope}.#{translation_key}.#{translation_key}") },
+      { :title => t('instance_admin.manage.transactable_types.form_components') }
+    )
   end
 
   def form_component_params

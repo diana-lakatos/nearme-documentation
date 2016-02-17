@@ -102,6 +102,12 @@ class EventTracker::BaseTracker::Serializers::TrackSerializer
         company_url: object.url,
         company_paypal_email: object.paypal_email
       }
+    when Offer
+      {
+        offer_name: object.name,
+        offer_summary: object.summary,
+        offer_url: Rails.application.routes.url_helpers.offer_url(object)
+      }
     when Hash
       object
     else

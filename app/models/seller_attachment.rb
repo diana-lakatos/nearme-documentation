@@ -12,6 +12,8 @@ class SellerAttachment < Ckeditor::Asset
 
   validate :max_attachments_num, on: :create
 
+  scope :for_user, -> (user) { where(user: user) }
+
   def access_level
     if instance.seller_attachments_enabled?
       instance.seller_attachments_access_sellers_preference? ? super : instance.seller_attachments_access_level

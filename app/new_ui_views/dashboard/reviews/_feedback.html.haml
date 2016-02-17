@@ -4,13 +4,13 @@
   - review_id = feedback.id
 - else
   - reviewable_id = feedback.id
-  - reviewable_type = feedback.class.name
+  - reviewable_type = feedback.object.class.name
   - review_id = nil
 
 
 = form_tag dashboard_reviews_path, class: 'review-form', data: { 'rating-system-id' => rating_system.id, 'review-id' => review_id, 'reviewable-id' => reviewable_id, 'reviewable-type' => reviewable_type, :'review-form' => (is_completed ? 'update' : 'create') } do
 
-  %h2.review-title= feedback.decorate.review_title
+  %h2.review-title= feedback.review_title
 
   = hidden_field_tag :rating_system_id, rating_system.id
   = hidden_field_tag :reviewable_id, reviewable_id
@@ -20,7 +20,7 @@
     .col-sm-3
 
       .order-image
-        = feedback.decorate.order_image
+        = feedback.order_image
 
       .order-info
         - created_at = is_completed ? feedback.reviewable.created_at : feedback.created_at
@@ -30,20 +30,25 @@
         %p
           = t('dashboard.reviews.feedback.order_id', id: (is_completed ? feedback.reviewable_id : feedback.id))
 
-        - if feedback.decorate.line_item?
+        - if feedback.line_item?
           %p
             = link_to t('dashboard.reviews.feedback.view_order_details'), dashboard_order_path(is_completed ? feedback.reviewable.order : feedback.order)
 
         - if is_completed
-          %p= feedback.decorate.link_to_user_profile
+          %p= feedback.link_to_user_profile
 
         - else
           %p
-            - if feedback.is_a?(Reservation)
+            - if feedback.reservation?
               - if rating_system.subject == RatingConstants::GUEST
                 = link_to t('dashboard.reviews.feedback.view_guest_profile'), user_path(feedback.owner)
               - else
                 = link_to t('dashboard.reviews.feedback.view_host_profile'), user_path(feedback.creator)
+            - elsif feedback.bid?
+              - if rating_system.subject == RatingConstants::GUEST
+                = link_to t('dashboard.reviews.feedback.view_bidder_profile'), user_path(feedback.user)
+              - else
+                = link_to t('dashboard.reviews.feedback.view_owner_profile'), user_path(feedback.offer_creator)
             - else
               - if rating_system.subject == RatingConstants::GUEST
                 = link_to t('dashboard.reviews.feedback.view_buyer_profile'), user_path(feedback.order.user)

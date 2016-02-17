@@ -1,0 +1,5 @@
+- input_class ||= nil
+- label ||= nil
+
+- if @form_components.find{ |fc| fc.form_fields.find{ |ff| ff.values.include?('enabled') } }
+  = f.input :enabled, as: :switch, label: label, disabled: !f.object.is_trusted?, wrapper_html: { class: input_class }, hint: (!f.object.is_trusted? ? t('manage.listings.no_trust_explanation') : nil), input_html: { "data-listing-enabled": true }

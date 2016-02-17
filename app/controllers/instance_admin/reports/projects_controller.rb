@@ -1,7 +1,5 @@
 class InstanceAdmin::Reports::ProjectsController < InstanceAdmin::Reports::BaseController
 
-  before_filter :set_breadcrumbs_title
-
   def index
   end
 
@@ -21,16 +19,11 @@ class InstanceAdmin::Reports::ProjectsController < InstanceAdmin::Reports::BaseC
     end
   end
 
-  def show
-    append_to_breadcrumbs(t('instance_admin.general.product'))
-    @product = Spree::Product.find(params[:id])
-  end
+  private
 
-  def set_breadcrumbs_title
-    @breadcrumbs_title = BreadcrumbsList.new(
-      { :title => t('instance_admin.general.reports') },
-      { :title => t('instance_admin.general.projects'), :url => instance_admin_reports_projects_path }
-    )
+  def set_scopes
+    @scope_type_class = ProjectType
+    @scope_class = Project
   end
 
 end

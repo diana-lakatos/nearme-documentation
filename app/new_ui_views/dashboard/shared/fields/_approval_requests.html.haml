@@ -5,6 +5,7 @@
       = approval_request_form.input :message, required: true
 
     = approval_request_form.input :approval_request_template_id, as: :hidden
+    = approval_request_form.input :draft_at, as: :hidden
 
     - approval_request_form.object.approval_request_template.approval_request_attachment_templates.each do |attachment_template|
       - next if defined?(only_required) && only_required && !attachment_template.required?

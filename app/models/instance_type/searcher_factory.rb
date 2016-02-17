@@ -23,6 +23,8 @@ class InstanceType::SearcherFactory
       user_searcher
     elsif @transactable_type.is_a? Spree::ProductType
       product_searcher
+    elsif @transactable_type.is_a? OfferType
+      offer_searcher
     elsif @result_view == 'mixed'
       location_searcher
     else
@@ -36,6 +38,10 @@ class InstanceType::SearcherFactory
 
   def product_searcher
     "InstanceType::Searcher#{search_module}::ProductsSearcher".constantize.new(@transactable_type, @params)
+  end
+
+  def offer_searcher
+    "InstanceType::Searcher#{search_module}::OffersSearcher".constantize.new(@transactable_type, @params)
   end
 
   def location_searcher
