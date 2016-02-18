@@ -461,7 +461,8 @@ class ApplicationController < ActionController::Base
         request_params: params,
         current_user_id: current_user.try(:id),
         process_pid: Process.pid,
-        process_ppid: Process.ppid
+        process_ppid: Process.ppid,
+        git_version: ENV['GIT_VERSION']
       }
     rescue => e
       Rails.logger.debug "Error when preparing Raygun custom_params: #{e}"

@@ -5,7 +5,7 @@ node[:deploy].each do |application, deploy|
     group   deploy[:group]
     owner   deploy[:user]
     mode    "0660"
-    content YAML.dump(deploy['environment'].to_hash.merge((deploy['custom_env'] || {}).to_hash))
+    content YAML.dump(deploy['environment'].to_hash.merge((deploy['custom_env'] || {}).to_hash.merge({'GIT_VERSION' => `cd #{deploy[:deploy_to]}; git describe`})))
   end
 
   directory "Create shared/node_modules" do
