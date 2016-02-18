@@ -180,8 +180,12 @@ require('cocoon');
 
     DNM.registerInitializer(function(){
         $(document).on('init.bookingscontroller', function(event, el){
-            require.ensure('./sections/bookings/controller', function(require){
-                var BookingsController = require('./sections/bookings/controller');
+            require.ensure(['./sections/bookings/controller', './components/custom_inputs'], function(require){
+                var
+                    BookingsController = require('./sections/bookings/controller'),
+                    CustomInputs = require('./components/custom_inputs');
+
+                CustomInputs.initialize(el);
                 return new BookingsController(el);
             });
         });
