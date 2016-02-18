@@ -89,6 +89,7 @@ class Transactable < ActiveRecord::Base
     end
     true
   end
+  after_destroy :close_request_for_quotes
 
   # == Scopes
   scope :featured, -> { where(%{ (select count(*) from "photos" where owner_type LIKE 'Transactable' AND owner_id = "listings".id) > 0  }).
@@ -778,6 +779,11 @@ class Transactable < ActiveRecord::Base
   end
 
   private
+
+  def close_request_for_quotes
+    self.transactable_tickets.each { |ticket| ticket.resolve! }
+    true
+  end
 
   def set_currency
     self.currency = currency
