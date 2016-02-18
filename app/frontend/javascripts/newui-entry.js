@@ -1,6 +1,6 @@
 /* global require */
 'use strict';
-
+window.$ = require('jquery');
 require('jquery-ujs/src/rails');
 require('jquery-ui/ui/widget');
 require('bootstrap-sass/assets/javascripts/bootstrap');

@@ -1,6 +1,5 @@
 /* global require, $ */
 'use strict';
-
 require('../vendor/detect-mobile-browser');
 require('../vendor/nested_form');
 require('cocoon');

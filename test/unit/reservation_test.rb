@@ -26,6 +26,15 @@ class ReservationTest < ActiveSupport::TestCase
         @reservation = FactoryGirl.build(:reservation)
       end
 
+      should 'confirm reservation on autoconfirm mode' do
+        Transactable.any_instance.stubs(:confirm_reservations?).returns(false)
+        @reservation.payment = FactoryGirl.build(:authorized_payment, payable: @reservation)
+        @reservation.save!
+
+        assert @reservation.confirmed?
+        assert @reservation.payment.paid?
+      end
+
       should 'assign correct cancellation policies' do
         @reservation.build_payment
         assert_equal 0, @reservation.payment.cancellation_policy_hours_for_cancellation

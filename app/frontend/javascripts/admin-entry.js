@@ -1,5 +1,5 @@
 'use strict';
-
+window.$ = require('jquery');
 require('jquery-ujs/src/rails');
 require('../vendor/bootstrap');
 

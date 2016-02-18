@@ -1,6 +1,5 @@
 /* global require, $ */
 'use strict';
-
 require('../vendor/bootstrap-sass-2.3.2.2/vendor/assets/javascripts/bootstrap')
 require('../vendor/detect-mobile-browser');
 require('../vendor/nested_form');
