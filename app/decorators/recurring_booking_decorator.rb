@@ -18,6 +18,10 @@ class RecurringBookingDecorator < Draper::Decorator
     end
   end
 
+  def total_payable_to_host_formatted
+    humanized_money_with_cents_and_symbol(total_payable_to_host)
+  end
+
   def subtotal_price_for_guest
     if subtotal_amount.to_f.zero?
       "Free!"
