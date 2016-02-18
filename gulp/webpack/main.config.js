@@ -59,5 +59,5 @@ config.plugins = [
 config.module = {
   loaders: [
     { test: /\.coffee$/, loader: 'coffee-loader' }
-  ],
+  ]
 };

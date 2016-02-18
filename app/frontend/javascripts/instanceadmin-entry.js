@@ -1,6 +1,6 @@
 /* global require, $ */
 'use strict';
-
+window.$ = require('jquery');
 require('expose?_!underscore');
 require('jquery-ujs/src/rails');
 require('jquery-ui/ui/widget')
@@ -224,6 +224,13 @@ require('jquery-timeago');
         }
 
         if (main.hasClass('projects')) {
+            require.ensure('./instance_admin/sections/projects', function(require){
+                var InstanceAdminProjectsController = require('./instance_admin/sections/projects');
+                new InstanceAdminProjectsController(main);
+            });
+        }
+
+        if (main.hasClass('advanced_projects')) {
             require.ensure('./instance_admin/sections/projects', function(require){
                 var InstanceAdminProjectsController = require('./instance_admin/sections/projects');
                 new InstanceAdminProjectsController(main);
