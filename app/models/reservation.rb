@@ -432,7 +432,7 @@ class Reservation < ActiveRecord::Base
     if listing.confirm_reservations?
       WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation, self.id)
     else
-      confirm!
+      charge_and_confirm!
       WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, self.id)
     end
   end
