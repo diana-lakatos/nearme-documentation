@@ -64,11 +64,12 @@ class PaymentAuthorizer
     )
     if @authorizable.instance_of?(Spree::Order)
       @authorizable.create_pending_payment!
-    elsif @authorizable.instance_of?(Reservation)
-      @authorizable.activate!
     end
+
+    # Automatically save @payment and @payment.payable objects
+    # if payable is reservation after create #verify_authorization! is fired
+    # and reservation activated.
     @payment.mark_as_authorized!
-    @response.authorization
 
     true
   end
