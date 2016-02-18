@@ -454,7 +454,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_raygun_custom_data
-    return if DesksnearMe::Application.config.silence_raygun_notification
+    return if Rails.application.config.silence_raygun_notification
     begin
       Raygun.configuration.custom_data = {
         platform_context: platform_context.to_h,
@@ -462,7 +462,7 @@ class ApplicationController < ActionController::Base
         current_user_id: current_user.try(:id),
         process_pid: Process.pid,
         process_ppid: Process.ppid,
-        git_version: ENV['GIT_VERSION']
+        git_version: Rails.application.config.git_version
       }
     rescue => e
       Rails.logger.debug "Error when preparing Raygun custom_params: #{e}"

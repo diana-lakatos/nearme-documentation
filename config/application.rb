@@ -155,5 +155,13 @@ module DesksnearMe
 
     config.raygun_js_reporting = false
     config.raygun_js_api_key = 'sPKXvZDLo2v/E/p7VmIVQQ=='
+
+    config.git_version = `git describe`.strip
+    config.app_version = '0.0.0.0'
+    version_parts = /^([0-9]+\.[0-9]+\.[0-9]+)-?([0-9]+)?(-[0-9a-z]+)?$/i.match(config.git_version)
+    if version_parts
+      config.app_version = "#{version_parts[1]}.#{(version_parts[2] || 0)}"
+    end
+
   end
 end

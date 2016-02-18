@@ -3,7 +3,7 @@
 
 var path = require('path');
 var webpack = require('webpack');
-var util = require('gulp-util');
+var gutil = require('gulp-util');
 
 var config = module.exports = {
   // the base path which will be used to resolve entry points
@@ -22,7 +22,7 @@ config.entry = {
     community: path.join(config.context, 'app','frontend','javascripts','community-entry.js'),
 };
 
-var assetHost = util.env.asset_host || '';
+var assetHost = gutil.env.asset_host || '';
 
 config.output = {
   // this is our app/assets/javascripts directory, which is part of the Sprockets pipeline
