@@ -4,6 +4,9 @@ Raygun.setup do |config|
   else
     config.api_key = '3VN6sPnvwRlTfwDmwhRFIA=='
   end
+
+  config.version = Rails.application.config.app_version
+
   Raygun.configuration.silence_reporting = DesksnearMe::Application.config.silence_raygun_notification
   config.filter_parameters = Rails.application.config.filter_parameters
 

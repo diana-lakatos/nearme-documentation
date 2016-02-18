@@ -31,7 +31,7 @@ module.exports = function(gulp, config) {
 
     function registerEnvironmentTasks(gulp, environment) {
         gulp.task('build:' + environment, ['clean'], function(){
-            return gulp.start('manifest:' + environment);
+            return gulp.start(['manifest:' + environment, 'version']);
         });
 
         gulp.task('manifest:' + environment, distTasks, function(){
