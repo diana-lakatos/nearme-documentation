@@ -1,6 +1,7 @@
 module.exports = class CustomInputs
 
-  @initialize: =>
+  @initialize: (context = 'body') =>
+    @context = $(context)
     @checkBox = ".checkbox"
     @checkBoxInput = @checkBox + " input[type='checkbox']"
     @checkBoxChecked = "checked"
@@ -10,39 +11,39 @@ module.exports = class CustomInputs
     @radioOn = "checked"
     @radioDisabled = "disabled"
 
-    $(@checkBox).each (index, element) =>
+    @context.find(@checkBox).each (index, element) =>
       try
         $(element).prepend("<span class='checkbox-icon-outer'><span class='checkbox-icon-inner'></span></span>")
       catch error
 
-    $(@radio).each (index, element) =>
+    @context.find(@radio).each (index, element) =>
       $(element).prepend("<span class='radio-icon-outer'><span class='radio-icon-inner'></span></span>")
 
-    $(@checkBox).change (index, element) =>
+    @context.find(@checkBox).change (index, element) =>
       @setupLabel()
 
-    $(@radio).change (index, element) =>
+    @context.find(@radio).change (index, element) =>
       @setupLabel()
 
     @setupLabel()
 
   @setupLabel: =>
-    if $(@checkBoxInput).length
-      $(@checkBox).each (index, element) =>
+    if @context.find(@checkBoxInput).length
+      @context.find(@checkBox).each (index, element) =>
         $(element).removeClass(@checkBoxChecked)
 
-      $(@checkBoxInput + ":checked").each (index, element) =>
+      @context.find(@checkBoxInput + ":checked").each (index, element) =>
         $(element).parents(@checkBox).addClass(@checkBoxChecked)
 
-      $(@checkBoxInput + ":disabled").each (index, element) =>
+      @context.find(@checkBoxInput + ":disabled").each (index, element) =>
         $(element).parents(@checkBox).addClass(@checkBoxDisabled)
 
-    if $(@radioInput).length
-      $(@radio).each (index, element) =>
+    if @context.find(@radioInput).length
+      @context.find(@radio).each (index, element) =>
         $(element).removeClass(@radioOn)
 
-      $(@radioInput + ":checked").each (index, element) =>
+      @context.find(@radioInput + ":checked").each (index, element) =>
         $(element).parents(@radio).addClass(@radioOn)
 
-      $(@radioInput + ":disabled").each (index, element) =>
+      @context.find(@radioInput + ":disabled").each (index, element) =>
         $(element).parents(@radio).addClass(@radioDisabled)
