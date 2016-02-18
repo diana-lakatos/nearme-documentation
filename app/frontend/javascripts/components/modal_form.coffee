@@ -3,17 +3,16 @@ Modal = require('./modal');
 module.exports = class ModalForm
 
   constructor: (@container, @form = @container) ->
-    if !$.browser.msie
-      @focusInput()
+    @focusInput()
     @bindEvents()
     if @insideModal()
       @updateModalOnSubmit()
 
   focusInput: =>
-      if @form.find('.error-block').length > 0
-        @form.find('.error-block').eq(0).siblings('input:visible').focus()
-      else
-        @form.find('input:visible').eq(0).focus()
+    if @form.find('.error-block').length > 0
+      @form.find('.error-block').eq(0).siblings('input:visible').focus()
+    else
+      @form.find('input:visible').eq(0).focus()
 
   bindEvents: ->
 

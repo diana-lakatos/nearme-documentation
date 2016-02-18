@@ -1,5 +1,4 @@
 require('history.js/scripts/bundled/html5/jquery.history.js')
-require('jquery-scrollto/scripts/jquery.scrollto')
 
 SearchController = require('./controller')
 SearchScreenLockLoader = require('./screen_lock_loader');

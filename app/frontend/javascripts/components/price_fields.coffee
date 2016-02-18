@@ -39,8 +39,7 @@ module.exports = class PriceFields
       checkbox.prop('checked', true)
       checkbox.trigger('change')
       # yeah well.. otherwise IE will think that input is readable, even though we have just changed this...
-      if $.browser.msie
-        $(event.target).select()
+      $(event.target).select()
 
     @priceFields.on 'blur', (event) =>
       if $(event.target).val()==''

@@ -7,5 +7,9 @@ config = _.merge(config, {
 });
 
 config.plugins.push(
-  new webpack.optimize.UglifyJsPlugin()
+  new webpack.optimize.UglifyJsPlugin({
+    mangle: {
+        except: ['Modernizr','jQuery','$', 'exports', 'require']
+    }
+  })
 );

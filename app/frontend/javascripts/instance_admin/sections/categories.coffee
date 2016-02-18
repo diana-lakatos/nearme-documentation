@@ -123,8 +123,8 @@ module.exports = class InstanceAdminCategoriesController
       url: url.toString(),
       data: {_method: "put", "category[name]": name },
       success: (data,result) ->
-        if data["message"].length > 0
-          alert(data["message"])
+        if data and data.message
+          alert(data.message)
       error: @handleAjaxError
 
 

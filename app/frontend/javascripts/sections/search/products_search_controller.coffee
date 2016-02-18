@@ -3,7 +3,6 @@ SearchController = require('./controller')
 urlUtil = require('../../lib/utils/url')
 SearchScreenLockLoader = require('./screen_lock_loader')
 
-require('jquery-scrollto/scripts/jquery.scrollto')
 window.IASCallbacks = require('exports?IASCallbacks!jquery-ias/src/callbacks')
 require('jquery-ias/src/jquery-ias')
 

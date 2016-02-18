@@ -81,7 +81,7 @@ module.exports = class SearchController
     @determineUserLocation()
 
   determineUserLocation: ->
-    return unless `'geolocation' in navigator`
+    return unless Modernizr.geolocation
     navigator.geolocation.getCurrentPosition (position) =>
       deferred = @geocoder.reverseGeocodeLatLng(position.coords.latitude, position.coords.longitude)
       deferred.done (resultset) =>

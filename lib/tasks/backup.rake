@@ -64,7 +64,7 @@ namespace :backup do
       Instance.find_each do |instance|
         instance.domains.find_or_create_by(name: "#{instance.name.to_url}.#{stack_name}.near-me.com")
       end
-      Instance.first.domains.find_or_create_by(name: "#{stack_name}.desksnear.me")
+      Instance.first.domains.find_or_create_by(name: "desks.#{stack_name}.near-me.me")
 
       puts "Stack domains created."
     end
