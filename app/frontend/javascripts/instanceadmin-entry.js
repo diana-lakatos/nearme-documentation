@@ -229,6 +229,13 @@ require('jquery-timeago');
                 new InstanceAdminProjectsController(main);
             });
         }
+
+        if (main.hasClass('advanced_projects')) {
+            require.ensure('./instance_admin/sections/projects', function(require){
+                var InstanceAdminProjectsController = require('./instance_admin/sections/projects');
+                new InstanceAdminProjectsController(main);
+            });
+        }
     });
 
     DNM.registerInitializer(function(){

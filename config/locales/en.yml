@@ -359,6 +359,10 @@ en:
         community_reports: "Community reports"
         week_start: "Starting week"
         week_end: "Ending week"
+      advanced_projects:
+        community_reports: "Advanced community reports"
+        day_start: "Starting day"
+        day_end: "Ending day"
 
     settings:
       configuration:
