@@ -1,6 +1,6 @@
 /* global require, $ */
 'use strict';
-
+window.$ = require('jquery');
 require('expose?_!underscore');
 require('jquery-ujs/src/rails');
 require('jquery-ui/ui/widget')

@@ -1,6 +1,6 @@
 /* global require, $ */
 'use strict';
-
+window.$ = require('jquery');
 require('jquery-ujs/src/rails');
 
 (function(){
