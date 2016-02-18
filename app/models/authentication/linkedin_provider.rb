@@ -18,7 +18,7 @@ class Authentication::LinkedinProvider < Authentication::BaseProvider
     begin
       @friend_ids ||= connection.connections.all.collect(&:id)
     rescue LinkedIn::InvalidRequest, Faraday::ClientError
-      raise ::Authentication::InvalidToken
+      []
     end
   end
 
@@ -26,7 +26,7 @@ class Authentication::LinkedinProvider < Authentication::BaseProvider
     begin
       @info ||= Info.new(connection.profile(fields: FIELDS))
     rescue LinkedIn::InvalidRequest
-      raise ::Authentication::InvalidToken
+      @info ||= Info.new(OpenStruct.new(id: nil, first_name: nil, last_name: nil, headline: nil, picture_url: nil, public_profile_url: nil, location: nil))
     end
   end
 
