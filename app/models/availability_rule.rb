@@ -9,16 +9,20 @@ class AvailabilityRule < ActiveRecord::Base
   belongs_to :instance
 
   # === Validations
-  validates :open_hour, :inclusion => 0..23
-  validates :close_hour, :inclusion => 0..23
-  validates :open_minute, :inclusion => 0..59
-  validates :close_minute, :inclusion => 0..59
+  validates :open_hour, :inclusion => 0..23, presence: true
+  validates :close_hour, :inclusion => 0..23, presence: true
+  validates :open_minute, :inclusion => 0..59, presence: true
+  validates :close_minute, :inclusion => 0..59, presence: true
   validate do |record|
     total_opening_time = record.floor_total_opening_time_in_hours
-    if total_opening_time < 0
-      record.errors["open_time"] << "The opening hour must occur before the closing hour."
-    elsif total_opening_time < record.minimum_booking_hours
-      record.errors["close_time"] << "must be opened for at least #{sprintf('%.2f', record.minimum_booking_hours)} #{'hour'.pluralize(record.minimum_booking_hours)}"
+    record.errors["open_time"] << I18n.t('errors.messages.blank') if day_open_minute.nil?
+    record.errors["close_time"] << I18n.t('errors.messages.blank') if day_close_minute.nil?
+    if total_opening_time.present?
+      if total_opening_time < 0
+        record.errors["open_time"] << "The opening hour must occur before the closing hour."
+      elsif total_opening_time < record.minimum_booking_hours
+        record.errors["close_time"] << "must be opened for at least #{sprintf('%.2f', record.minimum_booking_hours)} #{'hour'.pluralize(record.minimum_booking_hours)}"
+      end
     end
   end
 
@@ -51,7 +55,9 @@ class AvailabilityRule < ActiveRecord::Base
   end
 
   def open_time=(time)
-    self.open_hour, self.open_minute = date_time_handler.convert_to_time(time).strftime('%H:%M').split(':') rescue nil
+    self.open_hour, self.open_minute = date_time_handler.convert_to_time(time).strftime('%H:%M').split(':')
+  rescue
+    self.open_hour, self.open_minute = [nil, nil]
   end
 
   def close_time
@@ -59,7 +65,9 @@ class AvailabilityRule < ActiveRecord::Base
   end
 
   def close_time=(time)
-    self.close_hour, self.close_minute = date_time_handler.convert_to_time(time).strftime('%H:%M').split(':')  rescue nil
+    self.close_hour, self.close_minute = date_time_handler.convert_to_time(time).strftime('%H:%M').split(':')
+  rescue
+    self.close_hour, self.close_minute = [nil, nil]
   end
 
   # Returns whether or not this availability rule is 'open' at a given hour & minute
@@ -70,27 +78,27 @@ class AvailabilityRule < ActiveRecord::Base
   end
 
   def day_open_minute
-    open_hour * 60 + open_minute
+    open_hour * 60 + open_minute rescue nil
   end
 
   def day_close_minute
-    close_hour * 60 + close_minute
+    close_hour * 60 + close_minute rescue nil
   end
 
   def open_time_with_default
-    open_hour && open_minute ? open_time : "9:00"
+    open_hour && open_minute ? open_time : nil
   end
 
   def close_time_with_default
-    close_hour && close_minute ? close_time : "17:00"
+    close_hour && close_minute ? close_time : nil
   end
 
   def floor_total_opening_time_in_hours
-    (close_time_minus_open_time_in_minutes/60).floor
+    (close_time_minus_open_time_in_minutes/60).floor rescue nil
   end
 
   def close_time_minus_open_time_in_minutes
-    day_close_minute - day_open_minute
+    day_close_minute - day_open_minute rescue nil
   end
 
   def self.xml_attributes
