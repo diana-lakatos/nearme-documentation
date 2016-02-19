@@ -2,7 +2,6 @@
 
 var DNM = require('./app');
 
-require('expose?_!underscore');
 require('jquery-ui/ui/widget');
 require('jquery-timeago');
 require('../vendor/jquery-ui-1.10.4.custom.min');
@@ -236,10 +235,8 @@ DNM.registerInitializer(function(){
         return;
     }
 
-    require.ensure([
-        './ckeditor/config'
-    ], function(require){
-        var CKEDITOR = require('./ckeditor/config');
+    require.ensure('./ckeditor/init', function(require){
+        var CKEDITOR = require('./ckeditor/init');
     });
 });
 
