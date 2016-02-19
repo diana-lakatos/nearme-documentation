@@ -39,7 +39,7 @@ class Listings::RecurringBookingsController < ApplicationController
         event_tracker.updated_profile_information(@recurring_booking.owner)
         event_tracker.updated_profile_information(@recurring_booking.host)
       else
-        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithAutoConfirmation, @recurring_booking.id)
+        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithAutoConfirmation, @recurring_booking_request.recurring_booking.id)
       end
 
       event_tracker.requested_a_recurring_booking(@recurring_booking)
@@ -91,19 +91,20 @@ class Listings::RecurringBookingsController < ApplicationController
         interval: attributes[:interval],
         schedule_params: attributes[:schedule_params],
         start_on: attributes[:start_on].to_date || attributes[:dates].try(:to_date),
-        card_exp_month: attributes[:card_exp_month],
-        card_exp_year: attributes[:card_exp_year],
-        card_code: attributes[:card_code],
-        card_number: attributes[:card_number],
-        card_holder_first_name: attributes[:card_holder_first_name],
-        card_holder_last_name: attributes[:card_holder_last_name],
         country_name: attributes[:country_name],
         mobile_number: attributes[:mobile_number],
         additional_charge_ids: attributes[:additional_charge_ids],
         guest_notes: attributes[:guest_notes],
-        total_amount_check: attributes[:total_amount_check]
+        total_amount_check: attributes[:total_amount_check],
+        payment_subscription: payment_subscription_attributes
       }
     )
+  end
+
+  def payment_subscription_attributes
+    if params[:reservation_request].has_key?(:payment_subscription)
+      params[:reservation_request].require(:payment_subscription).permit(secured_params.payment_subscription)
+    end
   end
 
   def set_section_name

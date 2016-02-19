@@ -51,11 +51,8 @@
 
 
         %h2= t 'reservations_review.payment'
+        = render 'shared/payment_subscription', f: f
 
-        - unless @recurring_booking.weekly?
-          %p= t 'recurring_reservations_review.prorated_info'
-
-        = render 'credit_card_fields', :f => f
 
         = f.button :submit, t('reservations_review.buttons.request'), data: { disable_with: t('reservations_review.disabled_buttons.request') }
 

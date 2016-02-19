@@ -133,9 +133,10 @@ ActiveSupport::TestCase.class_eval do
     PaymentGateway.any_instance.stubs(:gateway_refund).returns(OpenStruct.new(response.reverse_merge({params: {"id" => '12345'}})))
     PayPal::SDK::AdaptivePayments::API.any_instance.stubs(:pay).returns(OpenStruct.new(response.reverse_merge(paymentExecStatus: "COMPLETED")))
 
-    stub = OpenStruct.new(params: {
+    stub = OpenStruct.new(success?: true, params: {
       "object" => 'customer',
       "id" => 'customer_1',
+      "default_source" => 'card_1',
       "cards" => {
         "data" => [
           { "id" => "card_1" }

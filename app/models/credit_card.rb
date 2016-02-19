@@ -1,5 +1,6 @@
 class CreditCard < ActiveRecord::Base
   include Encryptable
+
   auto_set_platform_context
   scoped_to_platform_context
   acts_as_paranoid
@@ -15,6 +16,23 @@ class CreditCard < ActiveRecord::Base
 
   scope :default, lambda { where(default_card: true).limit(1) }
 
+  validate :validate_card
+
+  delegate :customer_id, to: :instance_client, allow_nil: true
+
+  before_create :store!
+
+  [:number, :verification_value, :month, :year, :first_name, :last_name].each do |accessor|
+    define_method("#{accessor}=") do |attribute|
+      instance_variable_set("@#{accessor}", attribute.try(:to_s).try(:strip))
+      active_merchant_card.send("#{accessor}=", attribute.try(:to_s).try(:strip))
+    end
+
+    define_method("#{accessor}") do
+      active_merchant_card.send(accessor)
+    end
+  end
+
   def set_as_default
     self.default_card = true
   end
@@ -25,13 +43,74 @@ class CreditCard < ActiveRecord::Base
                      CreditCard::StripeDecorator.new(self)
                    when 'Braintree'
                      CreditCard::BraintreeDecorator.new(self)
-                   else
-                     raise NotImplementedError.new("Unknown gateway class: #{payment_gateway.name}")
                    end
   end
 
   def token
-    decorator.try(:token)
+    if success?
+      decorator.try(:token)
+    else
+      nil
+    end
+  end
+
+  def success?
+    if response
+      YAML.load(response).success?
+    else
+      false
+    end
+  end
+
+  def active_merchant_card
+    @active_merchant_card ||= ActiveMerchant::Billing::CreditCard.new
+  end
+
+  def to_active_merchant
+    token || active_merchant_card
+  end
+
+  private
+
+  def store!
+    return true  if success?
+    return false if payment_gateway.blank?
+    return false if instance_client.blank?
+
+    response_object = payment_gateway.store(active_merchant_card, instance_client)
+
+    if response_object.class == ActiveMerchant::Billing::MultiResponse
+      self.response = response_object.responses.select { |r| r.params['object'] == 'card'}.first.to_yaml
+      customer_response = response_object.responses.select { |r| r.params['object'] == 'customer'}.first
+      if customer_response.params['id'] != self.instance_client.customer_id
+        self.instance_client.response = customer_response.to_yaml
+      end
+    else
+      self.response = response_object.to_yaml
+      self.instance_client.response ||= response_object.to_yaml
+    end
+
+    if success?
+      self.instance_client.save!
+      true
+    else
+      errors.add(:base, I18n.t('reservations_review.errors.internal_payment'))
+      false
+    end
+  end
+
+  def validate_card
+    return true if success?
+
+    unless active_merchant_card.valid?
+      errors.add(:base, I18n.t('buy_sell_market.checkout.invalid_cc'))
+      active_merchant_card.errors.each do |key,value|
+        errors.add(key, value)
+      end
+      false
+    else
+      true
+    end
   end
 
 end

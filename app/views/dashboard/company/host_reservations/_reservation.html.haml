@@ -33,7 +33,7 @@
           %h4
             = t("dashboard.host_reservations.payment_state")
         .col-md-9{class: reservation.paid? ? 'info' : "warn" }
-          = reservation.payment_status.humanize.capitalize
+          = reservation.payment.state.humanize.capitalize
         .col-md-3
           %h4
             = t("dashboard.host_reservations.payment_method")

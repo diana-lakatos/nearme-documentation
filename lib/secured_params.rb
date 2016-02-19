@@ -1339,7 +1339,6 @@ class SecuredParams
       :start_minute,
       :end_minute,
       :guest_notes,
-      :credit_card_form,
       :payment_method_id,
       :reservation_type,
       :delivery_type,
@@ -1361,11 +1360,18 @@ class SecuredParams
     [
       :payment_method_id,
       :payment_method_nonce,
-      credit_card_form: nested(self.credit_card_form)
+      credit_card_attributes: nested(self.credit_card)
     ]
   end
 
-  def credit_card_form
+  def payment_subscription
+    [
+      :payment_method_id,
+      credit_card_attributes: nested(self.credit_card)
+    ]
+  end
+
+  def credit_card
     [
       :number,
       :verification_value,
@@ -1375,7 +1381,6 @@ class SecuredParams
       :last_name
     ]
   end
-
 
   def review
     [

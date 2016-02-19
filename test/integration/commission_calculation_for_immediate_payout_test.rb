@@ -38,7 +38,7 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
         quantity: "1",
         payment_attributes: {
           payment_method_id: @payment_method.id,
-          credit_card_form: {
+          credit_card_attributes: {
             number: "4111 1111 1111 1111",
             month: 1.year.from_now.month.to_s,
             year: 1.year.from_now.year.to_s,
@@ -83,9 +83,10 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
       authorize: OpenStruct.new(authorization: "54533", success?: true),
       capture: OpenStruct.new(success?: true),
       refund: OpenStruct.new(success?: true),
-      void: OpenStruct.new(success?: true)
+      void: OpenStruct.new(success?: true),
+      store: OpenStruct.new(success?: true)
     }
-    gateway = stub(capture: stubs[:capture], refund: stubs[:refund], void: stubs[:void], client_token: 'my_token')
+    gateway = stub(capture: stubs[:capture], refund: stubs[:refund], void: stubs[:void], client_token: 'my_token', store: stubs[:store])
     gateway.expects(:authorize).with do |total_amount_cents, credit_card_or_token, options|
       total_amount_cents == 43.75.to_money(@listing.currency).cents && options['service_fee_host'] == (18.75 + 2.5).to_money(@listing.currency).cents
     end.returns(stubs[:authorize])
