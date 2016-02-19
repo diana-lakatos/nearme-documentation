@@ -2,7 +2,6 @@
 
 var DNM = require('./app');
 
-require('expose?_!underscore');
 require('jquery-ui/ui/widget');
 require('jquery-timeago');
 require('../vendor/jquery-ui-1.10.4.custom.min');
