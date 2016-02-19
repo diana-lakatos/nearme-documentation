@@ -33,6 +33,8 @@ class InstanceWizardController < ActionController::Base
       user_password = @user.generate_random_password!
     end
 
+    @instance.priority_view_path = 'new_ui'
+
     begin
       Instance.transaction do
         @instance.save!
