@@ -54,12 +54,12 @@ module.exports = class PriceFields
 
       # Free enabled if all prices are disabled
       @freeCheckbox.prop('checked', !@enablingPriceCheckboxes.is(':checked'))
-      @updateGlobalFreeCheckbox()
+      @updateGlobalFreeCheckbox($('.price-options input[type=checkbox]:checked').length == 0)
 
     @freeCheckbox.click (event) =>
       @enablingPriceCheckboxes.prop('checked', !@freeCheckbox.is(':checked'))
       @enablingPriceCheckboxes.trigger('change')
-      @updateGlobalFreeCheckbox()
+      @updateGlobalFreeCheckbox(@freeCheckbox.is(':checked'))
 
     @priceFields.on 'click', (event) =>
       checkbox = $(event.target).parents(".row").find('input[type="checkbox"]')
@@ -79,8 +79,8 @@ module.exports = class PriceFields
     @defineDayRadios.on 'change', (event) =>
       @bookingTypeInput.val(event.target.value)
 
-  updateGlobalFreeCheckbox: ->
-    if @freeCheckbox.prop('checked')
+  updateGlobalFreeCheckbox: (value) ->
+    if value
       @globalFreeCheckbox.val('1')
     else
       @globalFreeCheckbox.val('0')

@@ -20,6 +20,7 @@ class InstanceAdmin::BaseController < ApplicationController
 
   COMMUNITY_REPORTS_CONTROLLERS = {
     'projects' => { default_action: 'index' },
+    'advanced_projects' => { default_action: 'index' },
   }
 
   MANAGE_CONTROLLERS = {

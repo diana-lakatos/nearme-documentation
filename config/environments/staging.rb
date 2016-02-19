@@ -66,5 +66,4 @@ DesksnearMe::Application.configure do
   config.webpack[:use_manifest] = true
   config.assets.manifest = "#{Rails.root}/public/assets/manifest.json"
 
-  config.raygun_js_reporting = true
 end

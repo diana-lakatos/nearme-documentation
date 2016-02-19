@@ -54,7 +54,7 @@ class Reservation < ActiveRecord::Base
   before_create :store_platform_context_detail
   after_create :create_waiver_agreements
   after_create :copy_dimensions_template
-  after_create :verify_authorization!
+  after_save :verify_authorization!
 
   alias_method :seller_type_review_receiver, :creator
   alias_method :buyer_type_review_receiver, :owner
@@ -431,7 +431,7 @@ class Reservation < ActiveRecord::Base
     if listing.confirm_reservations?
       WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation, self.id)
     else
-      confirm!
+      charge_and_confirm!
       WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, self.id)
     end
   end

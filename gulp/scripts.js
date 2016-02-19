@@ -1,6 +1,6 @@
 var
     webpack = require('webpack'),
-    util = require('gulp-util'),
+    gutil = require('gulp-util'),
     path = require('path'),
     fs = require('fs');
 
@@ -8,13 +8,24 @@ module.exports = function(gulp, config) {
     function onWebpackBuild(callback) {
         return function(err, stats) {
             if (err) {
-                throw new util.PluginError('webpack', err);
+                throw new gutil.PluginError('webpack', err);
             }
-            util.log('[webpack]', stats.toString());
 
-            var chunks = stats.toJson()['assetsByChunkName'];
+            var jsonStats = stats.toJson();
 
-            fs.writeFile(path.join(config.paths.output, 'webpack-asset-manifest.json'), JSON.stringify(chunks));
+            if (jsonStats['errors'].length > 0) {
+                jsonStats['errors'].forEach(function(message){
+                    gutil.log(gutil.colors.red('Error (webpack): ' + message));
+                });
+            }
+
+            if (jsonStats['warnings'].length > 0) {
+                jsonStats['warnings'].forEach(function(message){
+                    gutil.log(gutil.colors.yellow('Warning (webpack): ' + message));
+                });
+            }
+
+            fs.writeFile(path.join(config.paths.output, 'webpack-asset-manifest.json'), JSON.stringify(jsonStats['assetsByChunkName']));
 
             if (callback) {
                 callback();
