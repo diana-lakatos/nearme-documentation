@@ -175,13 +175,15 @@ DNM.registerInitializer(function(){
 
 DNM.registerInitializer(function(){
     $(document).on('init.bookingscontroller', function(event, el){
-        require.ensure(['./sections/bookings/controller', './components/custom_inputs'], function(require){
+        require.ensure(['./sections/bookings/controller', './components/custom_inputs', './components/custom_selects'], function(require){
             var
                 BookingsController = require('./sections/bookings/controller'),
-                CustomInputs = require('./components/custom_inputs');
+                CustomInputs = require('./components/custom_inputs'),
+                CustomSelects = require('./components/custom_selects');
 
+            new BookingsController(el);
             CustomInputs.initialize(el);
-            return new BookingsController(el);
+            CustomSelects.initialize(el);
         });
     });
 });
