@@ -1,5 +1,5 @@
 var
-    util = require('gulp-util'),
+    gutil = require('gulp-util'),
     path = require('path'),
     gulpIf = require('gulp-if'),
     cache = require('gulp-cache');
@@ -22,7 +22,7 @@ module.exports = function(gulp, config) {
                 svgoPlugins: [{cleanupIDs: false}]
             }))
             .on('error', function (err) {
-                throw new util.PluginError('images', err);
+                throw new gutil.PluginError('images', err);
             })))
             .pipe(gulp.dest(config.paths.tmp));
     });
