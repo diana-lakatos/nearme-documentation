@@ -109,7 +109,7 @@
               </ul>
               <div class="tab-content" data-tab-content="true">
                 <article id="location-details" class="location listing tab-pane active">
-                  {% if listing.transactable_type.show_page_enabled? }
+                  {% if listing.transactable_type.show_page_enabled? %}
                     {% include 'listings/listing_description.html' %}
                   {% else %}
                     {% include 'listings/location_description.html' %}
@@ -135,7 +135,6 @@
         {% endif %}
         {% if listing.administrator %}
           {% include 'listings/administrator.html', administrator: listing.administrator %}
-          <div class="padding-row"></div>
         {% endif %}
         {% include 'listings/google_map.html', location: listing.location %}
         <div class="padding-row"></div>

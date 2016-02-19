@@ -1,5 +1,8 @@
 'use strict';
 
+require('expose?jQuery|expose?$!jquery');
+require('jquery-ujs/src/rails');
+
 module.exports = {
     initializers: [],
     callbacks: {

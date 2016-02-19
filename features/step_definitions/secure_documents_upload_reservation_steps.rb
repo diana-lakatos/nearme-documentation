@@ -29,12 +29,12 @@ And (/^I make booking request$/) do
 end
 
 And (/^I enter data in the credit card form$/) do
-  fill_in 'reservation_request_payment_attributes_credit_card_form_first_name', with: 'FirstName'
-  fill_in 'reservation_request_payment_attributes_credit_card_form_last_name', with: 'LastName'
-  fill_in 'reservation_request_payment_attributes_credit_card_form_number', :with => "4242424242424242"
-  select '12', from: 'reservation_request_payment_attributes_credit_card_form_month', visible: false
-  select '2020', from: 'reservation_request_payment_attributes_credit_card_form_year', visible: false
-  fill_in 'reservation_request_payment_attributes_credit_card_form_verification_value', :with => '411'
+  fill_in 'reservation_request_payment_attributes_credit_card_attributes_first_name', with: 'FirstName'
+  fill_in 'reservation_request_payment_attributes_credit_card_attributes_last_name', with: 'LastName'
+  fill_in 'reservation_request_payment_attributes_credit_card_attributes_number', :with => "4242424242424242"
+  select '12', from: 'reservation_request_payment_attributes_credit_card_attributes_month', visible: false
+  select '2020', from: 'reservation_request_payment_attributes_credit_card_attributes_year', visible: false
+  fill_in 'reservation_request_payment_attributes_credit_card_attributes_verification_value', :with => '411'
 end
 
 And (/^I should see error file can't be blank$/) do

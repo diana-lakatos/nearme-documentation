@@ -10,6 +10,7 @@ en:
           attributes:
             base:
               file_cannot_be_empty: "File cannot be empty"
+              payment_invalid: "Payment details are invalid!"
               total_amount_changed: "Looks like the total price of this reservation has changed. Please verify all prices."
         product_form:
           attributes:

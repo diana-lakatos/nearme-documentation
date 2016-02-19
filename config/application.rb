@@ -131,7 +131,7 @@ module DesksnearMe
 
     config.encrypt_sensitive_db_columns = true
 
-    config.silence_raygun_notification = false
+
 
     config.secure_app = true
     config.root_secured = true
@@ -153,7 +153,19 @@ module DesksnearMe
       :common_manifest => {},
     }
 
-    config.raygun_js_reporting = false
-    config.raygun_js_api_key = 'sPKXvZDLo2v/E/p7VmIVQQ=='
+    config.git_version = `git describe`.strip
+    config.app_version = '0.0.0.0'
+
+    config.silence_raygun_notification = false
+    config.raygun_api_token = ENV['RAYGUN_API_TOKEN']
+    config.raygun_api_key = ENV['RAYGUN_API_KEY']
+    config.raygun_js_reporting = ENV['RAYGUN_JS_API_KEY'].present?
+    config.raygun_js_api_key = ENV['RAYGUN_JS_API_KEY']
+
+    version_parts = /^([0-9]+\.[0-9]+\.[0-9]+)-?([0-9]+)?(-[0-9a-z]+)?$/i.match(config.git_version)
+    if version_parts
+      config.app_version = "#{version_parts[1]}.#{(version_parts[2] || 0)}"
+    end
+
   end
 end

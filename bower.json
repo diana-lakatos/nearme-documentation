@@ -1,6 +1,6 @@
 {
   "name": "desksnearme",
-  "version": "8.0.2",
+  "version": "9.6.0-172",
   "homepage": "https://github.com/mdyd-dev/desksnearme",
   "private": true,
   "ignore": [
@@ -39,7 +39,6 @@
     "bootstrap-switch": "~3.3.2",
     "jqueryui-touch-punch": "*",
     "jquery.customSelect": "*",
-    "jquery-scrollto": "1.2.1",
     "jstimezonedetect": "https://bitbucket.org/pellepim/jstimezonedetect",
     "strftime": "https://raw.githubusercontent.com/gf3/JS-strftime/master/lib/strftime.js",
     "jquery.inview": "jquery.inview.zuk#*",

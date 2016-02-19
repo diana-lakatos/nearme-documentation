@@ -1,21 +1,18 @@
 class RecurringBookingRequest < Form
 
-  attr_accessor :start_minute, :end_minute, :start_on, :end_on, :schedule_params, :quantity
-  attr_accessor :card_number, :card_exp_month, :card_exp_year, :card_code, :card_holder_first_name,
-                :card_holder_last_name, :interval, :payment_method_nonce, :total_amount_cents,
-                :guest_notes, :total_amount_check
-  attr_reader   :recurring_booking, :listing, :location, :user
+  attr_accessor :start_minute, :end_minute, :start_on, :end_on, :schedule_params, :quantity,
+    :interval, :total_amount_cents, :guest_notes, :total_amount_check
+  attr_reader   :recurring_booking, :listing, :location, :user, :payment_subscription
 
-  delegate :credit_card_payment?, :manual_payment?, :reservation_type=, :currency,
-    :service_fee_amount_host_cents, :service_fee_amount_guest_cents, :billing_authorization,
+  delegate :reservation_type=, :currency, :service_fee_amount_host_cents, :service_fee_amount_guest_cents, :billing_authorization,
     :create_billing_authorization, :total_service_amount, :total_amount, to: :recurring_booking
   delegate :confirm_reservations?, :location, :company, to: :listing
   delegate :mobile_number, :mobile_number=, :country_name, :country_name=, :country, to: :user
 
-  validates :listing, :user, :recurring_booking, :card_number, :card_exp_month,
-    :card_exp_year, :card_code, :card_holder_first_name, :card_holder_last_name, presence: true
+  validates :listing, :user, :recurring_booking, presence: true
   validate :validate_phone_and_country
   validate :validate_total_amount
+  validate :validate_payment_subscription
 
   def initialize(listing, user, platform_context, attributes = {})
     @user = user
@@ -36,15 +33,20 @@ class RecurringBookingRequest < Form
       @recurring_booking.next_charge_date = @recurring_booking.start_on
       @recurring_booking.quantity = [1, quantity.to_i].max
       @recurring_booking.schedule_params = schedule_params
+      @recurring_booking.company = @listing.company
       @recurring_booking.currency = @listing.currency
-      @billing_gateway = @instance.payment_gateway(@listing.company.iso_country_code, @recurring_booking.currency)
-      @recurring_booking.payment_method = payment_method
       @recurring_booking.subtotal_amount = @recurring_booking.total_amount_calculator.subtotal_amount
       @recurring_booking.service_fee_amount_guest = @recurring_booking.service_fee_amount_guest
       @recurring_booking.service_fee_amount_host = @recurring_booking.service_fee_amount_host
       self.total_amount_cents = @recurring_booking.total_amount.cents
+      @payment_subscription ||= @recurring_booking.build_payment_subscription(payment_subscription_attributes)
+      @payment_subscription.subscriber = @recurring_booking
+      @payment_subscription.credit_card || @payment_subscription.build_credit_card
+      @payment_subscription.credit_card.assign_attributes(
+        payment_gateway: @payment_subscription.payment_gateway,
+        instance_client: @payment_subscription.payment_gateway.try {|p| p.instance_clients.where(client: user).first_or_initialize }
+      )
     end
-
 
     if @user
       @user.phone = @user.mobile_number
@@ -54,20 +56,8 @@ class RecurringBookingRequest < Form
 
   end
 
-  def mark_as_authorized!
-    #TODO we can move payment_status to state machine soon
-  end
-
-  def mark_as_authorize_failed!
-    #TODO we can move payment_status to state machine soon
-  end
-
-  def mark_as_paid!
-    #TODO we can move payment_status to state machine soon
-  end
-
   def process
-    valid? && check_overbooking && setup_credit_card_customer && errors.empty? && save_reservations
+    valid? && check_overbooking && errors.empty? && save_reservations
   end
 
   def check_overbooking
@@ -86,23 +76,16 @@ class RecurringBookingRequest < Form
     @recurring_booking.schedule.occurrences(@recurring_booking.end_on)[0..49]
   end
 
-  def payment_method
-    'credit_card'
-  end
-
-  def credit_card
-    ActiveMerchant::Billing::CreditCard.new(
-      first_name: card_holder_first_name.to_s,
-      last_name: card_holder_last_name.to_s,
-      number: card_number.to_s,
-      month: card_exp_month.to_s,
-      year: card_exp_year.to_s,
-      verification_value: card_code.to_s
-    )
-  end
-
   def action_hourly_booking?
     false
+  end
+
+  def payment_subscription=(attributes)
+    @payment_subscription_attributes = attributes
+  end
+
+  def payment_subscription_attributes
+    @payment_subscription_attributes || {}
   end
 
   private
@@ -127,9 +110,6 @@ class RecurringBookingRequest < Form
   def save_reservations
     User.transaction do
       user.save!
-      @recurring_booking.payment_gateway = @billing_gateway
-      @recurring_booking.payment_method = 'credit_card'
-      @recurring_booking.test_mode = @billing_gateway.test_mode?
       @recurring_booking.save!
     end
   rescue ActiveRecord::RecordInvalid => error
@@ -137,27 +117,10 @@ class RecurringBookingRequest < Form
     false
   end
 
-  def setup_credit_card_customer
-    clear_errors(:cc)
-    return true unless using_credit_card?
-
-    begin
-      if credit_card.valid?
-        if (credit_card_id = @billing_gateway.store_credit_card(@recurring_booking.owner, credit_card)).nil?
-          add_error(I18n.t('reservations_review.errors.internal_payment', :cc))
-        else
-          @recurring_booking.credit_card_id = credit_card_id
-        end
-      else
-        add_error("Those credit card details don't look valid", :cc)
-      end
-    rescue Billing::Error => e
-      add_error(e.message, :cc)
+  def validate_payment_subscription
+    if @payment_subscription.blank? || !@payment_subscription.valid?
+      errors.add(:base, I18n.t("activemodel.errors.models.reservation_request.attributes.base.payment_invalid"))
     end
-  end
-
-  def using_credit_card?
-    true
   end
 
   def validate_total_amount

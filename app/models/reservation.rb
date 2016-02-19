@@ -46,7 +46,6 @@ class Reservation < ActiveRecord::Base
   validate :validate_booking_selection, on: :create, :if => lambda { listing }
   validate :validate_book_it_out, on: :create, :if => lambda { listing && !book_it_out_discount.to_i.zero? }
   validate :validate_exclusive_price, on: :create, :if => lambda { listing && !exclusive_price_cents.to_i.zero? }
-  validates_presence_of :payment_status
 
   before_validation :set_minimum_booking_minutes, on: :create, if: lambda { listing }
   before_validation :set_currency, on: :create, if: lambda { listing }
@@ -55,7 +54,7 @@ class Reservation < ActiveRecord::Base
   before_create :store_platform_context_detail
   after_create :create_waiver_agreements
   after_create :copy_dimensions_template
-  after_create :verify_authorization!
+  after_save :verify_authorization!
 
   alias_method :seller_type_review_receiver, :creator
   alias_method :buyer_type_review_receiver, :owner
@@ -432,7 +431,7 @@ class Reservation < ActiveRecord::Base
     if listing.confirm_reservations?
       WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation, self.id)
     else
-      confirm!
+      charge_and_confirm!
       WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, self.id)
     end
   end

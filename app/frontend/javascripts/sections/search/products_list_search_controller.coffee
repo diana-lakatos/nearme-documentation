@@ -2,7 +2,6 @@ SearchController = require('./controller')
 SearchScreenLockLoader = require('./screen_lock_loader')
 window.IASCallbacks = require('exports?IASCallbacks!jquery-ias/src/callbacks')
 require('jquery-ias/src/jquery-ias')
-require('jquery-scrollto/scripts/jquery.scrollto')
 
 module.exports = class SearchProductsListSearchController extends SearchController
   constructor: (@form, @container) ->

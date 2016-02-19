@@ -26,6 +26,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
 
       rc = Payment.create!(
         :payment_method => PaymentMethod.where(payment_method_type: 'credit_card').last,
+        :credit_card => FactoryGirl.build(:credit_card),
         :payable => @reservations.last,
         :subtotal_amount => 10,
         :service_fee_amount_guest => 1,

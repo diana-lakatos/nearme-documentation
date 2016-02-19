@@ -15,8 +15,8 @@ Feature: A user can book at a space
     And I am logged in as the user
     When I go to the transactable's page
     And I select to book and review space for:
-      | Transactable     | Date   | Quantity |
-      | the transactable | Monday | 1        |
+      | Transactable     | Date             | Quantity |
+      | the transactable | next week Monday | 1        |
     Then I should see "This host manually confirms all bookings."
     And the reservation subtotal should show $50.00
     And the reservation service fee should show $5.00
@@ -28,8 +28,8 @@ Feature: A user can book at a space
     And I am logged in as the user
     When I go to the transactable's page
     And I select to book and review space for:
-      | Transactable | Date | Quantity|
-      | the transactable | Monday | 1 |
+      | Transactable     | Date             | Quantity |
+      | the transactable | next week Monday | 1        |
     Then the reservation total should show $50.00
 
   Scenario: Free booking should show 'Free' in place of rates and $0.00 for the total
@@ -41,8 +41,8 @@ Feature: A user can book at a space
   Scenario: Booking and paying by credit card via Stripe
      Given I am logged in as the user
        When I book space for:
-        | Transactable     | Date   | Quantity |
-        | the transactable | Monday | 1        |
+        | Transactable     | Date             | Quantity |
+        | the transactable | next week Monday | 1        |
        When I follow "Manage"
        Then I should be redirected to bookings page
        Then I should see "credit card will be charged when your reservation is confirmed"
@@ -54,8 +54,8 @@ Feature: A user can book at a space
        And a transactable exists with location: that location, quantity: 10, currency: "JPY"
        And a paypal_payment_gateway exists
        When I book space for:
-        | Transactable     | Date   | Quantity |
-        | the transactable | Monday | 1        |
+        | Transactable     | Date             | Quantity |
+        | the transactable | next week Monday | 1        |
        When I follow "Manage"
        Then I should be redirected to bookings page
        Then I should see "credit card will be charged when your reservation is confirmed"
@@ -63,13 +63,13 @@ Feature: A user can book at a space
 
   Scenario: As an anonymous user I should return to my booking state after logging in
     When I select to book and review space for:
-      | Transactable     | Date   | Quantity |
-      | the transactable | Monday | 2        |
+      | Transactable     | Date             | Quantity |
+      | the transactable | next week Monday | 2        |
     Then I should be asked to sign up before making a booking
     When I log in to continue booking
     Then I should see the booking confirmation screen for:
-      | Transactable     | Date   | Quantity |
-      | the transactable | Monday | 2        |
+      | Transactable     | Date             | Quantity |
+      | the transactable | next week Monday | 2        |
 
   Scenario: Not logged in user is prompted to log in during booking flow
     When I book space as new user for:
@@ -85,19 +85,19 @@ Feature: A user can book at a space
     And I am logged in as the user
     When I go to the transactable's page
     And I select to book and review space for:
-      | Transactable     | Date   | Quantity | Start | End   |
-      | the transactable | Monday | 1        | 9:00  | 14:00 |
+      | Transactable     | Date             | Quantity | Start | End   |
+      | the transactable | next week Monday | 1        | 9:00  | 14:00 |
     Then I should see the booking confirmation screen for:
-      | Transactable     | Date   | Quantity | Start | End   |
-      | the transactable | Monday | 1        | 9:00  | 14:00 |
+      | Transactable     | Date             | Quantity | Start | End   |
+      | the transactable | next week Monday | 1        | 9:00  | 14:00 |
     And the reservation subtotal should show $500.00
     And the reservation service fee should show $50.00
     And the reservation total should show $550.00
     And I provide reservation credit card details
     When I click to confirm the booking
     Then the user should have a reservation:
-      | Transactable     | Date   | Quantity | Start | End   |
-      | the transactable | Monday | 1        | 9:00  | 14:00 |
+      | Transactable     | Date             | Quantity | Start | End   |
+      | the transactable | next week Monday | 1        | 9:00  | 14:00 |
 
     Scenario: User can properly book regular reservation
       Given I am logged in as the user

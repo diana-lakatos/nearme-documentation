@@ -26,11 +26,11 @@
   theme_icon_retina_width = 60
   theme_icon_retina_height = 30
 
-  theme_hero = theme.hero_image.url || image_url("theme/#{theme_name}/hero.jpg")
-  theme_icon = theme.icon_image.url || image_url("theme/#{theme_name}/logo/icon.png")
-  theme_icon2x = theme.icon_retina_image.url || image_url("theme/#{theme_name}/logo/icon@2x.png")
-  theme_logo = theme.logo_image.url || image_url("theme/#{theme_name}/logo/logo.png")
-  theme_logo2x = theme.logo_retina_image.url || image_url("theme/#{theme_name}/logo/logo@2x.png")
+  theme_hero = theme.hero_image.url(:transformed) || image_url("theme/#{theme_name}/hero.jpg")
+  theme_icon = theme.icon_image.url(:transformed) || image_url("theme/#{theme_name}/logo/icon.png")
+  theme_icon2x = theme.icon_retina_image.url(:transformed) || image_url("theme/#{theme_name}/logo/icon@2x.png")
+  theme_logo = theme.logo_image.url(:transformed) || image_url("theme/#{theme_name}/logo/logo.png")
+  theme_logo2x = theme.logo_retina_image.url(:transformed) || image_url("theme/#{theme_name}/logo/logo@2x.png")
 
   default_logo_height = 30.0
   if theme.logo_image.present?

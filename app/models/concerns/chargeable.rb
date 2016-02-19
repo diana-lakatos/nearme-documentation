@@ -37,6 +37,7 @@ module Chargeable
     monetize :shipping_amount_cents, with_model_currency: :currency
     monetize :tax_amount_cents, with_model_currency: :currency
     monetize :total_service_amount_cents, with_model_currency: :currency
+    monetize :total_payable_to_host_cents, with_model_currency: :currency
   end
 
   def service_fee_amount_guest_cents
@@ -77,6 +78,10 @@ module Chargeable
 
   def total_service_amount_cents
     service_fee_amount_host_cents + service_fee_amount_guest_cents + service_additional_charges_cents
+  end
+
+  def total_payable_to_host_cents
+    total_amount_cents - total_service_amount_cents
   end
 
 end

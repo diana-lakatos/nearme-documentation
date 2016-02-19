@@ -135,6 +135,10 @@ class ReservationRequestTest < ActiveSupport::TestCase
 
     context "#process" do
       context "valid" do
+        setup do
+          Payment.any_instance.stubs(:save_credit_card?).returns(false)
+        end
+
         context "no problems with saving reservation" do
           should "return true" do
             assert @reservation_request.process, @reservation_request.reservation.errors.inspect
@@ -173,7 +177,7 @@ class ReservationRequestTest < ActiveSupport::TestCase
         dates: [@date.to_s(:db)],
         payment_attributes: {
           payment_method: @stripe_payment_gateway.payment_methods.first,
-          credit_card_form: {
+          credit_card_attributes: {
             first_name: "Albert",
             last_name: "Einstein",
             number: 4242424242424242,

@@ -61,7 +61,6 @@ module ActiveMerchant
       def update_onboard!(id, hash)
         Braintree::MerchantAccount.update(id, hash)
       end
-
     end
   end
 end

@@ -352,4 +352,5 @@ module.exports = class BookingsController
       escapeMarkup: (m) ->
         m
     @container.find(".select2-chosen").text(@fixedPriceSelectInit.text)
+    @fixedPriceSelect.val(@fixedPriceSelectInit.id)
     @fixedPriceSelect.trigger('change')

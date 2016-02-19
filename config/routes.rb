@@ -98,25 +98,6 @@ DesksnearMe::Application.routes.draw do
     end
 
     root :to => "home#index"
-    namespace :webhooks do
-      resource :'profile', only: [] do
-        collection do
-          match 'create_profile', via: [:get, :post], as: :create_profile, action: :create
-          match '', via: [:get, :post], as: :webhook, action: :webhook
-        end
-      end
-      resource :braintree_marketplace, only: [] do
-        collection do
-          match '', via: [:get, :post], as: :webhook, action: :webhook
-        end
-      end
-
-      resource :stripe_connect, only: [] do
-        collection do
-          match '', via: %i(get post), as: :webhook, action: :webhook
-        end
-      end
-    end
 
     get '/404', :to => 'errors#not_found'
     get '/422', :to => 'errors#server_error'
@@ -230,6 +211,13 @@ DesksnearMe::Application.routes.draw do
             get :download_report
           end
         end
+
+        resources :advanced_projects do
+          collection do
+            get :download_report
+          end
+        end
+
       end
 
       namespace :settings do
@@ -993,4 +981,25 @@ DesksnearMe::Application.routes.draw do
     get "/sitemap.xml", to: "seo#sitemap", format: "xml", as: :sitemap
     get "/robots.txt", to: "seo#robots", format: "txt", as: :robots
   end
+
+  namespace :webhooks do
+    resource :'profile', only: [] do
+      collection do
+        match 'create_profile', via: [:get, :post], as: :create_profile, action: :create
+        match '', via: [:get, :post], as: :webhook, action: :webhook
+      end
+    end
+    resource :braintree_marketplace, only: [] do
+      collection do
+        match '', via: [:get, :post], as: :webhook, action: :webhook
+      end
+    end
+
+    resource :stripe_connect, only: [] do
+      collection do
+        match '', via: %i(get post), as: :webhook, action: :webhook
+      end
+    end
+  end
+
 end

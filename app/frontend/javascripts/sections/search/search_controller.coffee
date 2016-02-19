@@ -1,5 +1,4 @@
 require('history.js/scripts/bundled/html5/jquery.history.js')
-require('jquery-scrollto/scripts/jquery.scrollto')
 
 SearchController = require('./controller')
 SearchScreenLockLoader = require('./screen_lock_loader');
@@ -54,8 +53,11 @@ module.exports = class SearchSearchController extends SearchController
       date_range = ''
       if @date_range.length > 0 && window.location.search.match('start_date')
         date_range = "&start_date=#{$('#fake_start_date').val()}&end_date=#{$('#fake_end_date').val()}&availability[dates][start]=#{$('#availability_dates_start').val()}&availability[dates][end]=#{$('#availability_dates_end').val()}"
+      list_view_param = ''
+      if $(event.target).attr('data-list-view')
+        list_view_param = '&v=list'
 
-      document.location = "#{document.location.protocol}//#{document.location.host}#{document.location.pathname}?loc=#{urlUtil.getParameterByName('loc')}&transactable_type_id=#{$(event.target).val()}" + date_range
+      document.location = "#{document.location.protocol}//#{document.location.host}#{document.location.pathname}?loc=#{urlUtil.getParameterByName('loc')}&transactable_type_id=#{$(event.target).val()}" + date_range + list_view_param
 
     @date_range_btn.on 'click', (event) =>
       @triggerSearchFromQuery()

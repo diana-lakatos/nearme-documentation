@@ -18,11 +18,10 @@ DesksnearMe::Application.configure do
     :domain         => 'desksnear.me'
   }
 
-  config.action_controller.asset_host = ENV['ASSET_HOST'].presence || Proc.new { "https://#{PlatformContext.current.decorate.host}" }
-  config.action_mailer.asset_host     = ENV['ASSET_HOST'].presence || Proc.new { "https://#{PlatformContext.current.decorate.host}" }
+  config.action_controller.asset_host = ENV['ASSET_HOST']
+  config.action_mailer.asset_host     = ENV['ASSET_HOST']
 
-
-  Rails.application.routes.default_url_options[:host] = 'desksnear.me'
+  Rails.application.routes.default_url_options[:host] = 'near-me.com'
   Rails.application.routes.default_url_options[:protocol] = 'https'
 
   config.i18n.fallbacks = true
@@ -67,6 +66,4 @@ DesksnearMe::Application.configure do
   config.webpack[:use_manifest] = true
   config.assets.manifest = "#{Rails.root}/public/assets/manifest.json"
 
-  config.raygun_js_reporting = true
-  config.raygun_js_api_key = 'G/Y1+vaVvETUu7/5alKYZw=='
 end

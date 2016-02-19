@@ -19,7 +19,7 @@ class Dashboard::Company::PaymentsControllerTest < ActionController::TestCase
       stub_active_merchant_interaction
 
       @order = FactoryGirl.create(:order_with_line_items, user: @user, state: 'complete', company: @company )
-      @order.build_payment(payment_method: FactoryGirl.create(:credit_card_payment_method), credit_card_form: FactoryGirl.attributes_for(:credit_card_form))
+      @order.build_payment(payment_method: FactoryGirl.create(:credit_card_payment_method), credit_card_attributes: FactoryGirl.attributes_for(:credit_card_attributes))
       @order.payment.authorize
       @order.finalize!
 

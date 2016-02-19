@@ -31,8 +31,11 @@ class ReservationDrop < BaseDrop
   #   returns true if hourly booking is available
   # guest_notes
   #   guest notes for this reservation as a string
+  # total_payable_to_host_formatted
+  #   total amount payable to host formatted as a string with currency symbol and cents
   delegate :id, :quantity, :subtotal_price, :service_fee_guest, :total_price, :total_price_cents, :pending?, :listing, :state_to_string,
-  :credit_card_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, :created_at, to: :reservation
+  :credit_card_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, :created_at, 
+  :total_payable_to_host_formatted, to: :reservation
 
   # bookable_noun
   #   string representing the object to be booked (e.g. desk, room etc.)

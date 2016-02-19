@@ -54,7 +54,9 @@ class ApplicationController < ActionController::Base
     I18n.locale = language_service.get_language
     session[:language] = I18n.locale
 
-    if request.get? && !request.xhr? && language_router.redirect?
+    # We don't redirect if the format is rss (i.e. blog) to avoid
+    # causing problems for newsreaders
+    if request.get? && !request.xhr? && language_router.redirect? && params[:format] != 'rss'
       params_with_language = params.merge(language_router.url_params)
       redirect_to url_for(params_with_language)
     end
@@ -454,14 +456,15 @@ class ApplicationController < ActionController::Base
   end
 
   def set_raygun_custom_data
-    return if DesksnearMe::Application.config.silence_raygun_notification
+    return if Rails.application.config.silence_raygun_notification
     begin
       Raygun.configuration.custom_data = {
         platform_context: platform_context.to_h,
         request_params: params,
         current_user_id: current_user.try(:id),
         process_pid: Process.pid,
-        process_ppid: Process.ppid
+        process_ppid: Process.ppid,
+        git_version: Rails.application.config.git_version
       }
     rescue => e
       Rails.logger.debug "Error when preparing Raygun custom_params: #{e}"
