@@ -131,7 +131,7 @@ module DesksnearMe
 
     config.encrypt_sensitive_db_columns = true
 
-    config.silence_raygun_notification = false
+
 
     config.secure_app = true
     config.root_secured = true
@@ -156,6 +156,9 @@ module DesksnearMe
     config.git_version = `git describe`.strip
     config.app_version = '0.0.0.0'
 
+    config.silence_raygun_notification = false
+    config.raygun_api_token = ENV['RAYGUN_API_TOKEN']
+    config.raygun_api_key = ENV['RAYGUN_API_KEY']
     config.raygun_js_reporting = ENV['RAYGUN_JS_API_KEY'].present?
     config.raygun_js_api_key = ENV['RAYGUN_JS_API_KEY']
 
