@@ -23,6 +23,11 @@
             %span.label{style: "#{'float: right;' if @listing.fixed_price.to_f > 0}"}
               = "#{@listing.price_with_currency(:exclusive_price)}"
               %span.period= t('simple_form.labels.transactable.price.exclusive_price')
+          - if @listing.action_free_booking?
+            %ul.pricing-tabs.nav.nav-tabs
+              %li
+                %span.label
+                  = t 'booking_module.free'
         - else
           %ul.pricing-tabs.nav.nav-tabs{:'data-pricing-tabs' => true}
             - if @listing.action_free_booking?
