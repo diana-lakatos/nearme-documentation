@@ -144,7 +144,8 @@ module.exports = class SearchController
 
       query
     else
-      $.trim(@form.find("input[name='loc']").val().replace(', United States', ''))
+      query = @form.find("input[name='loc']").val() || ''
+      $.trim(query.replace(', United States', ''))
 
 
   formatCoordinate: (coord) ->
