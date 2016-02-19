@@ -51,7 +51,7 @@ class AvailabilityRule < ActiveRecord::Base
   end
 
   def open_time=(time)
-    self.open_hour, self.open_minute = time.to_s.split(':')
+    self.open_hour, self.open_minute = date_time_handler.convert_to_time(time).strftime('%H:%M').split(':') rescue nil
   end
 
   def close_time
@@ -59,7 +59,7 @@ class AvailabilityRule < ActiveRecord::Base
   end
 
   def close_time=(time)
-    self.close_hour, self.close_minute = time.to_s.split(':')
+    self.close_hour, self.close_minute = date_time_handler.convert_to_time(time).strftime('%H:%M').split(':')  rescue nil
   end
 
   # Returns whether or not this availability rule is 'open' at a given hour & minute
@@ -102,5 +102,9 @@ class AvailabilityRule < ActiveRecord::Base
   def apply_default_minutes
     self.open_minute ||= 0
     self.close_minute ||= 0
+  end
+
+  def date_time_handler
+    @date_time_handler ||= DateTimeHandler.new
   end
 end
