@@ -21,6 +21,7 @@ class ListingsController < ApplicationController
     restore_initial_bookings_from_stored_reservation
     @collapsed = params[:collapsed] == 'true' ? true : false
     @transactable_type = @listing.transactable_type
+    @location = @listing.location
   end
 
   def ask_a_question

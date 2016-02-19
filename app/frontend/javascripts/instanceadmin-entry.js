@@ -2,7 +2,6 @@
 
 var DNM = require('./app');
 
-require('expose?_!underscore');
 require('jquery-ui/ui/widget')
 require('../vendor/jquery-ui-1.9.2.custom.min');
 require('../vendor/bootstrap-3.2.0');
