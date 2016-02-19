@@ -1,4 +1,3 @@
-_ = require('underscore')
 require 'jstree/dist/jstree.min.js'
 
 module.exports = class CategoryTreeInput

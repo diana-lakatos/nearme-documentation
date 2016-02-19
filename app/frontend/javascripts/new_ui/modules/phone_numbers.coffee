@@ -1,5 +1,4 @@
 require 'selectize/dist/js/selectize'
-_ = require('underscore')
 
 # Handles the behaviour of entering country+mobile+phone fields
 # Used on the user account form, booking modal and the space setup wizard form.

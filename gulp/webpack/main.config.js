@@ -35,7 +35,7 @@ config.output = {
 };
 
 config.externals = {
-    jquery: 'jQuery',
+    jquery: 'window.jQuery',
     modernizr: 'Modernizr'
 };
 
@@ -53,7 +53,14 @@ config.plugins = [
   // as these may not have a package.json file
   new webpack.ResolverPlugin([
     new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin('.bower.json', ['main'])
-  ])
+  ]),
+  new webpack.ProvidePlugin({
+    '$': 'jquery',
+    'jQuery': 'jquery',
+    'window.jQuery': 'jquery',
+    'Modernizr': 'modernizr',
+    '_': 'underscore'
+  })
 ];
 
 config.module = {
