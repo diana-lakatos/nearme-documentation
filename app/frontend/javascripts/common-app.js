@@ -236,10 +236,8 @@ DNM.registerInitializer(function(){
         return;
     }
 
-    require.ensure([
-        './ckeditor/config'
-    ], function(require){
-        var CKEDITOR = require('./ckeditor/config');
+    require.ensure('./ckeditor/init', function(require){
+        var CKEDITOR = require('./ckeditor/init');
     });
 });
 
