@@ -99,14 +99,16 @@ module.exports = class BookingsController
       setTimeout (=>
         if @listing.isRecurringBooking()
           period = $(event.target).parents('li').data('subscription')
-          @container.find("input[data-subscription=#{period}]").click()
+          radioSwitch = @container.find("input[data-subscription='#{period}']")
+          radioSwitch.get(0).click()
+          radioSwitch.triggerHandler('change')
           @listing.setSubscriptionPeriod(period)
         else
           @listing.setHourlyBooking(@hourlyBookingSelected())
           @datepicker.setDates(@listing.bookedDatesArray)
           @setReservationType()
         @updateBookingStatus()
-      ), 200
+      ), 50
 
     @bookButton.on 'click', (event) =>
       @formTrigger = @bookButton
