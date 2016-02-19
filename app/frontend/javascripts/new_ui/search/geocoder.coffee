@@ -1,5 +1,3 @@
-_ = require('underscore')
-
 module.exports = class Geocoder
   class ResultSet
     constructor: (results) ->

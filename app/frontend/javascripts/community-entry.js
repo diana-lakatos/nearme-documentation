@@ -5,14 +5,13 @@ var DNM = require('./app');
 require('./intel/vendor/css_browser_selector.min');
 require('./intel/vendor/placeholders.min');
 require('./intel/vendor/foreach.polyfill');
-require('expose?_!./intel/vendor/underscore');
 require('./intel/vendor/hrefid.jquery');
 require('./intel/vendor/selectize.mod');
 require('./intel/vendor/trueresize');
 require('./intel/vendor/geocomplete');
 require('./intel/vendor/bootstrap-tab');
 require('./intel/vendor/jquery-ui');
-require('./intel/vendor/jQueryRotate');
+require('jQueryRotate/index');
 require('cocoon');
 
 DNM.registerInitializer(function(){
