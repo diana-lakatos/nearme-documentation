@@ -32,7 +32,7 @@ module.exports = class PhotoManipulator
       trueSize: @image.data('original-dimensions')
       bgColor: 'none'
     , ->
-      DNM.PhotoCrop = this
+      window.DNMPhotoCrop = this
       self.form.find('.jcrop-holder img').rotate(self.angle)
       this.setSelect(self.imageCropCoords()) if self.imageCropped()
 
