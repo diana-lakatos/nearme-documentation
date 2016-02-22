@@ -3,7 +3,7 @@ module.exports = class SeeMore
     @events()
 
   events: ->
-    $buttons = $("[data-see-more]").find("a")
+    $buttons = $("[data-see-more] a")
 
     $('form.sort-form').on 'change', (e) ->
       $(e.target).submit()
@@ -28,10 +28,10 @@ module.exports = class SeeMore
 
         $button.attr("href", moreUrl)
     else
-      $buttons.on "click", ->
-        event.preventDefault()
-        $button.href("/users/sign_in")
-        $button.removeAttr("data-remote")
+      $buttons.each ->
+        button = $(@)
+        button.attr("href", "/users/sign_in")
+        button.removeAttr("data-remote")
 
   userSignedIn: ->
     $("body").hasClass("signed-in")

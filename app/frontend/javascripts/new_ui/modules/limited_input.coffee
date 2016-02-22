@@ -23,8 +23,8 @@ module.exports = class Limiter
     chars = text.replace(/\n/g, "aa").length
 
     if chars > @limit
-      @input.val text.substr(0, limit)
-      chars = limit
+      @input.val text.substr(0, @limit)
+      chars = @limit
 
     leftChars = @limit - chars
 
