@@ -16,20 +16,12 @@
     = stylesheet_link_tag 'application_vendor'
     = stylesheet_link_tag 'application'
     = render "dynamic_theme/application"
-    = render 'shared/raygun/libs'
-    = javascript_include_tag 'jquery.min'
+
+    = render 'shared/javascripts/header'
 
   %body.blog
     = render 'blog/blog_posts/header'
     .blog-container
       = yield
 
-    = webpack_manifest_script
-    = webpack_bundle_tag 'common'
-    = webpack_bundle_tag 'blog'
-
-    = yield :script
-
-    = render 'layouts/google_analytics'
-    = render 'platform_home/shared/adroll' if @blog_instance.is_near_me? && Rails.env.production?
-    = render 'shared/raygun/init'
+    = render 'shared/javascripts/footer', entry: 'blog', analytics: true

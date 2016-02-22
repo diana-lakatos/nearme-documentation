@@ -11,11 +11,7 @@
     = stylesheet_link_tag 'blog_admin_vendor'
     = stylesheet_link_tag 'blog_admin'
 
-    / Head Javascript
-    = render 'shared/raygun/libs'
-    = javascript_include_tag 'jquery.min'
-    = javascript_include_tag 'vendor/modernizr'
-    = render 'shared/ckeditor_basepath'
+    = render 'shared/javascripts/header'
 
   %body{class: !user_signed_in? ? 'login' : ''}
     .container
@@ -46,9 +42,5 @@
         %p
           &copy; #{platform_context.name} #{Date.current.year}
 
-    = webpack_manifest_script
-    = webpack_bundle_tag 'common'
-    = webpack_bundle_tag 'blogadmin'
 
-    = yield :script
-    = render 'shared/raygun/init'
+    = render 'shared/javascripts/footer', entry: 'blogadmin'
