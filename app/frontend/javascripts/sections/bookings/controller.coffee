@@ -100,8 +100,9 @@ module.exports = class BookingsController
         if @listing.isRecurringBooking()
           period = $(event.target).parents('li').data('subscription')
           radioSwitch = @container.find("input[data-subscription='#{period}']")
-          radioSwitch.get(0).click()
-          radioSwitch.triggerHandler('change')
+          if radioSwitch.length > 0
+            radioSwitch.get(0).click()
+            radioSwitch.triggerHandler('change')
           @listing.setSubscriptionPeriod(period)
         else
           @listing.setHourlyBooking(@hourlyBookingSelected())
