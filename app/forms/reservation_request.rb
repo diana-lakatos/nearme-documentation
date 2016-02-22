@@ -48,6 +48,10 @@ class ReservationRequest < Form
         @user.phone ||= @user.mobile_number
       end
 
+      if attributes.try(:[], 'reservation').present?
+        reservation_attributes = attributes.delete('reservation')
+        attributes.merge!(reservation_attributes)
+      end
       store_attributes(attributes)
       @reservation.calculate_prices
       @reservation.build_additional_charges(attributes)
