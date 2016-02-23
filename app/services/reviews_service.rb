@@ -13,19 +13,27 @@ class ReviewsService
   end
 
   def get_reviews_collection(completed_tab)
-    collections = {}
+    collections = {
+      seller_collection: [],
+      product_collection: [],
+      buyer_collection: []
+    }
     if PlatformContext.current.instance.buyable?
       line_items = get_line_items_for_owner_and_creator
-      orders_reviews = completed_tab ? get_orders_reviews(line_items) : get_orders(line_items)
+      orders_reviews = completed_tab ? get_reviews_by(line_items) : get_reviewables(line_items, Spree::ProductType)
     end
     if PlatformContext.current.instance.bookable?
       reservations_for_owner_and_creator = get_reservations_for_owner_and_creator
-      reservations_reviews = completed_tab ? get_reviews_by(reservations_for_owner_and_creator) : get_reservations(reservations_for_owner_and_creator)
+      reservations_reviews = completed_tab ? get_reviews_by(reservations_for_owner_and_creator) : get_reviewables(reservations_for_owner_and_creator, ServiceType)
     end
-    if orders_reviews && reservations_reviews
-      orders_reviews.map{|k,v| collections[k] = reservations_reviews[k] + v }
-    else
-      collections = orders_reviews.presence || reservations_reviews.presence
+    if PlatformContext.current.instance.biddable?
+      offers_for_owner_and_creator = get_offers_for_owner_and_creator
+      offer_reviews = completed_tab ? get_reviews_by(offers_for_owner_and_creator) : get_reviewables(offers_for_owner_and_creator, OfferType)
+    end
+    collections.keys.each do |key|
+      [orders_reviews, reservations_reviews, offer_reviews].compact.map do |reviews|
+        collections[key] += reviews[key]
+      end
     end
     collections
   end
@@ -56,6 +64,7 @@ class ReviewsService
     @rating_system_hash ||= {
       active_rating_systems_services: active_rating_systems.select{ |rs| rs.transactable_type.is_a?(ServiceType) }.inject({}){ |hash, rs| hash[rs.subject] ||= []; hash[rs.subject] << rs.transactable_type_id; hash },
       active_rating_systems_products: active_rating_systems.select{ |rs| rs.transactable_type.is_a?(Spree::ProductType) }.inject({}){ |hash, rs| hash[rs.subject] ||= []; hash[rs.subject] << rs.transactable_type_id; hash },
+      active_rating_systems_offers: active_rating_systems.select{ |rs| rs.transactable_type.is_a?(OfferType) }.inject({}){ |hash, rs| hash[rs.subject] ||= []; hash[rs.subject] << rs.transactable_type_id; hash },
       active_rating_systems: active_rating_systems.group_by { |rating_system| rating_system.transactable_type_id },
       buyer_rating_system: active_rating_systems.with_subject(RatingConstants::GUEST).group_by { |rating_system| rating_system.transactable_type_id },
       seller_rating_system: active_rating_systems.with_subject(RatingConstants::HOST).group_by { |rating_system| rating_system.transactable_type_id },
@@ -78,19 +87,11 @@ class ReviewsService
     }
   end
 
-  def get_orders_reviews(line_items)
+  def get_reviews_by(reviewables)
     {
-      seller_collection: Review.active_with_subject(RatingConstants::HOST).by_line_items(line_items[RatingConstants::HOST].try(:pluck, :id)),
-      product_collection: Review.active_with_subject(RatingConstants::TRANSACTABLE).by_line_items(line_items[RatingConstants::TRANSACTABLE].try(:pluck, :id)),
-      buyer_collection: Review.active_with_subject(RatingConstants::GUEST).by_line_items(line_items[RatingConstants::GUEST].try(:pluck, :id))
-    }
-  end
-
-  def get_orders(line_items)
-    {
-      seller_collection: exclude_line_items_by(line_items, RatingConstants::HOST),
-      product_collection: exclude_line_items_by(line_items, RatingConstants::TRANSACTABLE),
-      buyer_collection: exclude_line_items_by(line_items, RatingConstants::GUEST)
+      seller_collection: Review.active_with_subject(RatingConstants::HOST).where(reviewable: reviewables[RatingConstants::HOST].to_a).decorate,
+      product_collection: Review.active_with_subject(RatingConstants::TRANSACTABLE).where(reviewable: reviewables[RatingConstants::TRANSACTABLE].to_a).decorate,
+      buyer_collection: Review.active_with_subject(RatingConstants::GUEST).where(reviewable: reviewables[RatingConstants::GUEST].to_a).decorate
     }
   end
 
@@ -110,24 +111,37 @@ class ReviewsService
     end
   end
 
-  def get_reviews_by(reservations)
-    {
-      seller_collection: Review.active_with_subject(RatingConstants::HOST).by_reservations(reservations[RatingConstants::HOST].try(:pluck, :id)),
-      product_collection: Review.active_with_subject(RatingConstants::TRANSACTABLE).by_reservations(reservations[RatingConstants::TRANSACTABLE].try(:pluck, :id)),
-      buyer_collection: Review.active_with_subject(RatingConstants::GUEST).by_reservations(reservations[RatingConstants::GUEST].try(:pluck, :id))
-    }
+  def get_offers_for_owner_and_creator
+    if get_rating_systems[:active_rating_systems_offers].any?
+      active_systems_for_host = get_rating_systems[:active_rating_systems_offers][RatingConstants::HOST]
+      active_systems_for_guest = get_rating_systems[:active_rating_systems_offers][RatingConstants::GUEST]
+      active_systems_for_listing = get_rating_systems[:active_rating_systems_offers][RatingConstants::TRANSACTABLE]
+      # TODO: Add rest states after accepted
+      bids = Bid.with_state(:accepted).includes(offer: :offer_type)
+      {
+        RatingConstants::TRANSACTABLE => bids.where(user_id: @current_user.id,offers: { transactable_type_id: active_systems_for_listing }).where('bids.user_id != bids.offer_creator_id').by_period(*filter_period),
+        RatingConstants::HOST => bids.where(user_id: @current_user.id, offers: { transactable_type_id: active_systems_for_host }).where('bids.user_id != bids.offer_creator_id').by_period(*filter_period),
+        RatingConstants::GUEST => bids.where(offer_creator_id: @current_user.id, offers: { transactable_type_id: active_systems_for_guest }).where('bids.user_id != bids.offer_creator_id').by_period(*filter_period)
+      }
+    else
+      {}
+    end
   end
 
-  def get_reservations(reservations)
+
+
+  def get_reviewables(reviewables, transactable_type)
     {
-      seller_collection: exclude_reservations_by(reservations, RatingConstants::HOST),
-      product_collection: exclude_reservations_by(reservations, RatingConstants::TRANSACTABLE),
-      buyer_collection: exclude_reservations_by(reservations, RatingConstants::GUEST)
+      seller_collection: exclude_reviewables_by(reviewables, RatingConstants::HOST, transactable_type).map(&:decorate),
+      product_collection: exclude_reviewables_by(reviewables, RatingConstants::TRANSACTABLE, transactable_type).map(&:decorate),
+      buyer_collection: exclude_reviewables_by(reviewables, RatingConstants::GUEST, transactable_type).map(&:decorate)
     }
   end
 
   def get_transactable_type_id
-    @params[:review][:reviewable_type] == 'Reservation' ? Reservation.find(@params[:review][:reviewable_id]).listing.transactable_type_id : Spree::LineItem.find(@params[:review][:reviewable_id]).product.product_type_id
+    if @params[:review][:reviewable_type].in? %w(Reservation Bid Spree::LineItem)
+      @params[:review][:reviewable_type].constantize.find(@params[:review][:reviewable_id]).transactable_type_id
+    end
   end
 
   private
@@ -151,31 +165,17 @@ class ReviewsService
     start_date.beginning_of_day..end_date.end_of_day
   end
 
-  def exclude_reservations_by(reservations, subject)
+  def exclude_reviewables_by(reservations, subject, transactable_type)
     if collection = reservations[subject]
-      collection.where.not(id: reservation_ids_with_feedback[key_for_constant(subject)])
+      collection.where.not(id: reviewables_ids_with_feedback(transactable_type)[key_for_constant(subject)])
     else
       []
     end
   end
 
-  def exclude_line_items_by(line_items, subject)
-    if collection = line_items[subject]
-      collection.where.not(id: line_items_ids_with_feedback[key_for_constant(subject)])
-    else
-      []
-    end
-  end
-
-  def reservation_ids_with_feedback
-    @reservation_ids_with_feedback ||= RatingConstants::RATING_SYSTEM_SUBJECTS.each_with_object({}) do |subject, hash|
-      hash[key_for_constant(subject)] = Review.for_type_of_transactable_type(ServiceType).active_with_subject(subject).pluck(:reviewable_id)
-    end
-  end
-
-  def line_items_ids_with_feedback
-    @line_items_ids_with_feedback ||= RatingConstants::RATING_SYSTEM_SUBJECTS.each_with_object({}) do |subject, hash|
-      hash[key_for_constant(subject)] = Review.for_type_of_transactable_type(Spree::ProductType).active_with_subject(subject).pluck(:reviewable_id)
+  def reviewables_ids_with_feedback(tt_class)
+    @reservation_ids_with_feedback = RatingConstants::RATING_SYSTEM_SUBJECTS.each_with_object({}) do |subject, hash|
+      hash[key_for_constant(subject)] = Review.for_type_of_transactable_type(tt_class).active_with_subject(subject).pluck(:reviewable_id)
     end
   end
 

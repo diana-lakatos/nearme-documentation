@@ -14,8 +14,10 @@ class InstanceAdmin::BaseController < ApplicationController
   }
 
   REPORTS_CONTROLLERS = {
-    'listings' => { default_action: 'index' },
-    'products' => { default_action: 'index' },
+    'transactables' => { default_action: 'index', title: 'Listings' },
+    'products'      => { default_action: 'index' },
+    'offers'        => { default_action: 'index' },
+    'users'         => { default_action: 'index' },
   }
 
   COMMUNITY_REPORTS_CONTROLLERS = {
@@ -39,6 +41,8 @@ class InstanceAdmin::BaseController < ApplicationController
     'wish_lists'         => { controller: '/instance_admin/manage/wish_lists', default_action: 'show' },
     'user_profiles'      => { controller: '/instance_admin/manage/instance_profile_types', default_action: 'index' },
     'service_types'      => { controller: '/instance_admin/manage/service_types', default_action: 'index' },
+    'offer_types'        => { controller: '/instance_admin/manage/offer_types', default_action: 'index' },
+    'reservation_types'  => { controller: '/instance_admin/manage/reservation_types', default_action: 'index' },
     'custom_validators'  => { controller: '/instance_admin/manage/custom_validators', default_action: 'index', title: 'Custom Validators' },
     'categories'         => { controller: '/instance_admin/manage/categories', default_action: 'index', title: 'Categories' },
     'upsell_addons'      => { controller: '/instance_admin/manage/additional_charge_types', default_action: 'index', title: 'Upsell & Add-ons' },

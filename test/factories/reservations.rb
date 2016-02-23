@@ -122,7 +122,7 @@ FactoryGirl.define do
       end
 
       factory :reservation_hourly do
-        reservation_type 'hourly'
+        booking_type 'hourly'
       end
 
       factory :rejected_reservation do

@@ -1,12 +1,8 @@
 %ul.nav.navbar-nav.navbar-right
   - if (!no_listing_buttons? || platform_context.white_label_company_user?(current_user)) && HiddenUiControls.find('main_menu/cta').visible?
-
     - if current_user && current_user.registration_in_progress?
-      - if current_user.has_draft_products
-        %li= link_to t('ui.header.complete_your_thing', thing: platform_context.product_types.first.translated_bookable_noun), main_app.new_product_type_product_wizard_path(platform_context.product_types.first)
-      - else
-        %li= link_to t('ui.header.complete_your_thing', thing: platform_context.transactable_types.first.translated_bookable_noun), main_app.transactable_type_new_space_wizard_path(platform_context.transactable_types.first)
-
+      - tt = current_user.first_transactable.try(:transactable_type)
+      %li= link_to t('ui.header.complete_your_thing', thing: tt.translated_bookable_noun), tt.wizard_path
     - elsif !current_user.try(:registration_completed?)
       - if platform_context.single_type?
         = render partial: 'layouts/list_your_bookable', locals: { transactable_type: platform_context.transactable_types.first }
@@ -14,7 +10,6 @@
         = dropdown_menu t('ui.header.list_your'), { wrapper_tag: :li } do
           - platform_context.transactable_types.each do |tt|
             = render partial: 'layouts/list_your_bookable', locals: { transactable_type: tt }
-
   - if user_signed_in?
     - if buyable? && current_user.cart_orders.any? && HiddenUiControls.find('main_menu/cart').visible?
       %li
@@ -29,7 +24,7 @@
       - if current_user.instance_admins_metadata
         %li= link_to t('top_navbar.marketplace_admin'), user_menu_instance_admin_path(current_user.instance_admins_metadata), target: '_blank'
 
-      - if platform_context.white_label_company_user?(current_user) && (current_user.has_any_active_listings || current_user.has_any_active_products) && HiddenUiControls.find('main_menu/manage_items').visible?
+      - if platform_context.white_label_company_user?(current_user) && current_user.registration_completed? && HiddenUiControls.find('main_menu/manage_items').visible?
         - platform_context.service_types.each do |transactable_type|
           %li= link_to t('top_navbar.manage_bookable', bookable_noun: transactable_type.translated_bookable_noun(10)), main_app.dashboard_company_transactable_type_transactables_path(transactable_type)
 
@@ -74,5 +69,5 @@
       = link_to_registration get_return_to_url, platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal' } do
         = t('top_navbar.sign_up')
     %li
-      = link_to_login get_return_to_url, platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal' } do
+      = link_to_login url_options: get_return_to_url, data: { modal: true, 'modal-class' => 'sign-up-modal' } do
         = t('top_navbar.log_in')

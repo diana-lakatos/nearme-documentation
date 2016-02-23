@@ -2,7 +2,7 @@ class WishListItem < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  PERMITTED_CLASSES = %w(Spree::Product Location Transactable)
+  PERMITTED_CLASSES = %w(Spree::Product Location Transactable Offer)
 
   class NotPermitted < Exception
   end
@@ -24,10 +24,14 @@ class WishListItem < ActiveRecord::Base
   private
 
   def increment_counters
-    wishlistable.class.increment_counter 'wish_list_items_count', wishlistable_id
+    if wishlistable
+      wishlistable.class.increment_counter 'wish_list_items_count', wishlistable_id
+    end
   end
 
   def decrement_counters
-    wishlistable.class.decrement_counter 'wish_list_items_count', wishlistable_id
+    if wishlistable
+      wishlistable.class.decrement_counter 'wish_list_items_count', wishlistable_id
+    end
   end
 end

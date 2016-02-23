@@ -7,7 +7,7 @@ class ReservationRequest < Form
 
   delegate :confirm_reservations?, :location, :company, :timezone, to: :@listing
   delegate :country_name, :country_name=, :country, to: :@user
-  delegate :guest_notes, :quantity, :action_hourly_booking?, :reservation_type=, :currency,
+  delegate :guest_notes, :quantity, :action_hourly_booking?, :booking_type=, :currency,
     :service_fee_amount_guest, :additional_charges, :shipments, :shipments_attributes=, to: :@reservation
 
   validates :listing,      presence: true

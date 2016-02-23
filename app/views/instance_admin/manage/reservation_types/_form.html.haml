@@ -1,0 +1,12 @@
+= simple_nested_form_for [:instance_admin, :manage, resource], :html => { :multipart => true} do |f|
+  %input{ name: :action_name, type: :hidden, value: :edit }
+  .content-container
+    %h4= t('instance_admin.manage.offer_types.basic_configuration')
+    .row
+      .input-container.col-xs-12
+        = f.input :name, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-12
+        = f.association :transactable_types
+  = content_for :header_buttons do
+    = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }

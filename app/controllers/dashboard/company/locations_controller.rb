@@ -1,17 +1,14 @@
 class Dashboard::Company::LocationsController < Dashboard::Company::BaseController
-  before_filter :redirect_if_draft_listing
   before_filter :find_location, except: [:new, :create]
 
   def new
     @location = @company.locations.build
     @location.administrator_id = current_user.id if current_user.is_location_administrator?
-    build_approval_request_for_object(@location) unless @location.is_trusted?
     render partial: "form"
   end
 
   def create
     @location = @company.locations.build(location_params)
-    build_approval_request_for_object(@location) unless @location.is_trusted?
     if @location.save
       flash[:success] = t('flash_messages.manage.locations.space_added')
       event_tracker.created_a_location(@location , { via: 'dashboard' })
@@ -22,13 +19,11 @@ class Dashboard::Company::LocationsController < Dashboard::Company::BaseControll
   end
 
   def edit
-    build_approval_request_for_object(@location) unless @location.is_trusted?
     render partial: "form"
   end
 
   def update
     @location.assign_attributes(location_params)
-    build_approval_request_for_object(@location) unless @location.is_trusted?
     if @location.save
       flash[:success] = t('flash_messages.dashboard.locations.updated')
     else
@@ -48,10 +43,6 @@ class Dashboard::Company::LocationsController < Dashboard::Company::BaseControll
   end
 
   private
-
-  def redirect_if_draft_listing
-    redirect_to new_space_wizard_url if current_user.has_draft_listings
-  end
 
   def find_location
     begin

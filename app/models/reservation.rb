@@ -19,6 +19,7 @@ class Reservation < ActiveRecord::Base
   belongs_to :owner, -> { with_deleted }, :class_name => "User", counter_cache: true
   belongs_to :platform_context_detail, :polymorphic => true
   belongs_to :recurring_booking
+  belongs_to :reservation_type
 
   has_one :billing_authorization, as: :reference
   has_one :dimensions_template, as: :entity
@@ -358,11 +359,11 @@ class Reservation < ActiveRecord::Base
   end
 
   def action_hourly_booking?
-    reservation_type == 'hourly' || self.listing.schedule_booking?
+    booking_type == 'hourly' || self.listing.schedule_booking?
   end
 
   def action_daily_booking?
-    reservation_type == 'daily'
+    booking_type == 'daily'
   end
 
   def is_free?

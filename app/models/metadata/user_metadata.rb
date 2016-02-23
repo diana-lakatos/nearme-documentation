@@ -12,15 +12,6 @@ module Metadata
         self.tickets.unscoped.user_metadata.collect{|t| {t.instance_id => t.count.to_i }}
       end
 
-      def populate_listings_metadata!
-        update_instance_metadata({
-          has_draft_listings: listings.reload.draft.any?,
-          has_draft_products: products.reload.draft.any?,
-          has_any_active_listings: listings.reload.active.any?,
-          has_any_active_products: products.reload.not_draft.any?
-        }) if persisted?
-      end
-
       def populate_instance_admins_metadata!
         if(instance_admin = instance_admins.first).present?
           update_instance_metadata({
@@ -32,10 +23,6 @@ module Metadata
       def populate_companies_metadata!
         update_instance_metadata({
           companies_metadata: companies.reload.collect(&:id),
-          has_draft_listings: listings.reload.draft.any?,
-          has_draft_products: products.reload.draft.any?,
-          has_any_active_listings: listings.reload.active.any?,
-          has_any_active_products: products.reload.not_draft.any?
         })
       end
 

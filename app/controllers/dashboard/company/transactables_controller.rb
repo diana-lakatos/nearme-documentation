@@ -19,7 +19,6 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     @photos = current_user.photos.where(owner_id: nil)
     @attachments = current_user.attachments.where(assetable_id: nil)
-    build_document_requirements_and_obligation if platform_context.instance.documents_upload_enabled?
   end
 
   def create
@@ -49,7 +48,6 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
         flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@transactable.errors.full_messages)
       end
       @photos = @transactable.photos
-      build_document_requirements_and_obligation
       @attachments = @transactable.attachments
       render :new
     end
@@ -64,14 +62,12 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     @attachments = @transactable.attachments
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
-    build_document_requirements_and_obligation if platform_context.instance.documents_upload_enabled?
   end
 
   def update
     @transactable.currency = transactable_params[:currency] if transactable_params[:currency].present?
     @transactable.attachment_ids = attachment_ids_for(@transactable)
     @transactable.assign_attributes(transactable_params)
-    build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
 
     respond_to do |format|
       format.html {
@@ -87,7 +83,6 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
             flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@transactable.errors.full_messages)
           end
           @photos = @transactable.photos
-          build_document_requirements_and_obligation
           @attachments = @transactable.attachments
           render :edit
         end
@@ -152,7 +147,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def find_transactable_type
-    @transactable_type = ServiceType.find(params[:transactable_type_id])
+    @transactable_type = ServiceType.find(params[:transactable_type_id] || params[:service_type_id])
   end
 
   def transactable_params
@@ -162,12 +157,4 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
 
   end
 
-  def build_document_requirements_and_obligation
-    @transactable.build_upload_obligation(level: UploadObligation::LEVELS.first) unless @transactable.upload_obligation
-    DocumentRequirement::MAX_COUNT.times do
-      hidden = @transactable.document_requirements.blank? ? "0" : "1"
-      document_requirement = @transactable.document_requirements.build
-      document_requirement.hidden = hidden
-    end
-  end
 end

@@ -198,5 +198,21 @@ namespace :fix do
     puts "[FIXED]"
   end
 
+  desc 'Add metadata with completed_at and draft_at'
+  task companies_metadata: :environment do
+    Instance.find_each do |instance|
+      instance.set_context!
+      p "Fixing company's metadata for Instance ##{instance.id}"
+      instance.companies.find_each do |company|
+        all_transactables = [company.listings.with_deleted, company.products.with_deleted, company.offers.with_deleted].flatten.compact
+        completed = all_transactables.none? || all_transactables.any?{ |t| !(t.try(:draft_at) || t.try(:draft)) }
+        company.update_metadata({
+          draft_at: (completed ? nil : company.created_at),
+          completed_at: (completed ? company.created_at : nil)
+        })
+      end
+    end
+  end
+
 end
 

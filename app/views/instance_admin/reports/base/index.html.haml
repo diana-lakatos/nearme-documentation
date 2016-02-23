@@ -1,0 +1,57 @@
+.content-container.reports
+  .row
+    .text-container
+      = form_tag [:instance_admin, :reports, @scope_class], method: :get, enforce_utf8: :false do
+        .filters
+          .filter.transactable
+            .dropdown.item-type-dropdown
+              %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button"}
+                - if params[:item_type_id].present?
+                  %span.current= selected_transactable_type(params[:item_type_id], t("instance_admin.reports.all_#{@scope_type_class.name.tableize}"))
+                - else
+                  %span.current
+                    = t("instance_admin.reports.all_#{@scope_type_class.name.tableize}")
+                %span.caret
+                = hidden_field_tag 'item_type_id', params[:item_type_id]
+              %ul.dropdown-menu{"aria-labelledby" => "dLabel", :role => "menu"}
+                %li
+                  %a{data: {item_type_id: ''}}
+                    = t("instance_admin.reports.all_#{@scope_type_class.name.tableize}")
+                - @scope_type_class.all.each do |transactable_type|
+                  %li
+                    %a{data: { 'item-type-id' => transactable_type.id}}
+                      = transactable_type.translated_bookable_noun
+          .filter.period
+            = render :partial => 'instance_admin/shared/admin_searchable_dates'
+
+          .filter.search
+            %input{placeholder: t('instance_admin.manage.admin_searchable.search_by_keyword'), type: 'text', name: 'q', value: params[:q]}
+            %input{type: 'submit', name: 'commit', value:'submit', class: 'hidden_form_element2'}
+            =fa_icon "search", class: 'fa-action-icon-submit'
+
+          .filter.download-export
+            = link_to t('instance_admin.reports.download_report_as_csv'), '', data: { 'download-report' => 1, 'report-url' => polymorphic_path([:download_report, :instance_admin, :reports, @scope_class], format: 'csv') }
+
+  .row
+    .table-container.col-xs-12
+      %table.table
+        %tr
+          %th
+            = t('instance_admin.reports.fields.id')
+          %th
+            = t('instance_admin.reports.fields.name')
+          %th
+            = t('instance_admin.reports.fields.description')
+          %th
+            = t('instance_admin.reports.fields.properties')
+          %th
+            = t('instance_admin.reports.fields.actions')
+        - @resources.each do |transactable|
+          = render 'transactable', :transactable => transactable
+
+
+.row
+  .text-container
+    .pull-right
+      = will_paginate @resources
+

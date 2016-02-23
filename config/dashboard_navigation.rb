@@ -54,7 +54,18 @@ SimpleNavigation::Configuration.run do |navigation|
             dashboard_nav_item sub_nav, 'dashboard/host_recurring_bookings', dashboard_company_host_recurring_bookings_path, highlights_on: /\/host_recurring_bookings\/*/
           end
 
-          dashboard_nav_item sub_nav, 'dashboard/transactables', dashboard_company_transactable_type_transactables_path(TransactableType.first), highlights_on: /dashboard\/company\/transactable_types/
+          dashboard_nav_item sub_nav, 'dashboard/transactables', dashboard_company_transactable_type_transactables_path(TransactableType.first), highlights_on: /^\/dashboard\/company\/(service_types|transactable_types)/
+        end
+      end
+    end
+
+    if biddable?
+      primary.item :offers_header, t('dashboard.nav.offers_header'), nil do |sub_nav|
+        dashboard_nav_item sub_nav, 'dashboard/user_bids', dashboard_user_bids_path, highlights_on: /\/user_bids\/*/
+
+        if current_user.registration_completed?
+          dashboard_nav_item sub_nav, 'dashboard/user_auctions', dashboard_company_user_auctions_path, highlights_on: /\/(user_auctions)\/*/
+          dashboard_nav_item sub_nav, 'dashboard/offers', dashboard_company_offer_type_offers_path(OfferType.first), highlights_on: /^\/dashboard\/company\/offer_types/
         end
       end
     end

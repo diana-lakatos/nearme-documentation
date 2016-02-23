@@ -9,6 +9,7 @@ FactoryGirl.define do
 
     after(:build) do |company|
       company.industries = [FactoryGirl.build(:industry)] if company.industries.empty?
+      company.update_metadata({ completed_at: Time.now })
     end
 
     after(:create) do |company|
@@ -42,6 +43,12 @@ FactoryGirl.define do
 
     factory :white_label_company do
       white_label_enabled true
+    end
+
+    factory :draft_company do
+      after(:build) do |company|
+        company.update_metadata({ completed_at: nil, draft_at: Time.now })
+      end
     end
 
     factory :company_with_stock_location do

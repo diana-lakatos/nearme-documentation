@@ -1,31 +1,15 @@
 %h3= t('dashboard.document_requirements.upload_files')
 
-%div{:data => {:"document-requirements" => true }}
-
-  = f.simple_fields_for :upload_obligation do |f|
+%div.document-requirements-container
+  = f.simple_fields_for :upload_obligation, f.object.upload_obligation || f.object.build_upload_obligation(level: UploadObligation::LEVELS.first) do |f|
     = f.input :level, as: :radio_buttons, :collection => UploadObligation::LEVELS, label: false, wrapper_html: { "data-document-obligation": true }
 
-  .document-requirements-fields{class: "#{'hidden' if f.object.upload_obligation.not_required?}"}
+  .document-requirements-fields
     %p= t('dashboard.document_requirements.enter_your_documents')
+    .nested-fields-set
+      = f.simple_fields_for :document_requirements, f.object.document_requirements.presence || f.object.document_requirements.new do |dr|
+        .nested-container
+          = render 'dashboard/shared/fields/document_requirement', f: dr
 
-    = f.simple_fields_for :document_requirements do |dr|
-      %div.requirement{:data => {:requirement => true}}
-        = dr.input :label, input_html: { disabled: true}
-        = dr.input :description, input_html: { disabled: true}
+    = link_to_add_association t(:add_new_document_requirement, scope: [:dashboard, :document_requirements]) , f, :document_requirements, partial: 'dashboard/shared/fields/document_requirement', class: 'btn btn-primary', data: { association_insertion_node: ".document-requirements-fields .nested-fields-set", association_insertion_method: :append }
 
-        .remove-document-requirement.hidden.clearfix
-          = dr.check_box :hidden, class: "hidden document-hidden", disabled: true
-          - if dr.object.new_record?
-            = dr.label :hidden, class: 'pull-right' do
-              %span.btn.btn-xs.btn-warning{ type: :button }
-                = t('dashboard.document_requirements.remove')
-
-          - else
-            = dr.check_box :removed, class: "hidden remove-document"
-            = dr.label :removed, class: 'pull-right' do
-              %span.btn.btn-xs.btn-warning{ type: :button }
-                = t('dashboard.document_requirements.remove')
-
-    %p
-      %button.form-control-option-add.btn.btn-primary{type: :button, :"data-new-requirement" => true}
-        = t('dashboard.document_requirements.add_new_document_requirement')

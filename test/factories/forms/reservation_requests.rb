@@ -6,7 +6,7 @@ FactoryGirl.define do
     end_minute 900
     country_name "Great Britan"
     mobile_number '666 666 666'
-    reservation_type 'daily'
+    booking_type 'daily'
 
     payment_attributes {
       {

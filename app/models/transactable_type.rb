@@ -26,6 +26,7 @@ class TransactableType < ActiveRecord::Base
   has_many :instance_views, through: :transactable_type_instance_views
 
   belongs_to :instance
+  belongs_to :reservation_type
 
   serialize :custom_csv_fields, Array
   serialize :allowed_currencies, Array

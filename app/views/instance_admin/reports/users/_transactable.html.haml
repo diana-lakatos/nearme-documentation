@@ -1,0 +1,5 @@
+%tr
+  %td= link_to transactable.id, [:instance_admin, :reports, transactable]
+  %td= transactable.name
+  %td= transactable.email
+  %td= transactable.properties.to_h.to_s.truncate(100)

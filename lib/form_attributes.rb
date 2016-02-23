@@ -89,5 +89,17 @@ class FormAttributes
     ] +
     Project.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten
   end
+
+  def offer(offer_type = nil)
+    [
+      :name, :description, :summary, :photos, :price, :price_cents, :currency, :seller_attachments, :documents_upload
+    ] +
+    Offer.public_custom_attributes_names(offer_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
+    offer_type.categories.roots.map { |k| ('Category - ' + k.name).to_sym }.flatten
+  end
+
+  def reservation(reservation_type = nil)
+    reservation_type.custom_attributes.public_display.pluck(:name)
+  end
 end
 

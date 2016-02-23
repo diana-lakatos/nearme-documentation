@@ -7,11 +7,17 @@ class FormComponent < ActiveRecord::Base
   SPACE_WIZARD = 'space_wizard'
   PRODUCT_ATTRIBUTES = 'product_attributes'
   PROJECT_ATTRIBUTES = 'project_attributes'
+  OFFER_ATTRIBUTES = 'offer_attributes'
+  RESERVATION_ATTRIBUTES = 'reservation_attributes'
   TRANSACTABLE_ATTRIBUTES = 'transactable_attributes'
   INSTANCE_PROFILE_TYPES = 'instance_profile_types'
   SELLER_PROFILE_TYPES = 'seller_profile_types'
   BUYER_PROFILE_TYPES = 'buyer_profile_types'
-  FORM_TYPES = [SPACE_WIZARD, PRODUCT_ATTRIBUTES, TRANSACTABLE_ATTRIBUTES, INSTANCE_PROFILE_TYPES, PROJECT_ATTRIBUTES, BUYER_PROFILE_TYPES, SELLER_PROFILE_TYPES]
+  FORM_TYPES = [
+    SPACE_WIZARD, PRODUCT_ATTRIBUTES, TRANSACTABLE_ATTRIBUTES, INSTANCE_PROFILE_TYPES,
+    PROJECT_ATTRIBUTES, BUYER_PROFILE_TYPES, SELLER_PROFILE_TYPES, OFFER_ATTRIBUTES,
+    RESERVATION_ATTRIBUTES
+  ]
 
   include RankedModel
 
@@ -49,6 +55,10 @@ class FormComponent < ActiveRecord::Base
       [SPACE_WIZARD, PRODUCT_ATTRIBUTES]
     elsif form_componentable.instance_of?(ProjectType)
       [SPACE_WIZARD, PROJECT_ATTRIBUTES]
+    elsif form_componentable.instance_of?(OfferType)
+      [SPACE_WIZARD, OFFER_ATTRIBUTES]
+    elsif form_componentable.instance_of?(ReservationType)
+      [RESERVATION_ATTRIBUTES]
     else
       raise NotImplementedError
     end

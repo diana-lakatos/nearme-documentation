@@ -52,6 +52,8 @@ class Dashboard::SellerAttachmentsController < Dashboard::AssetsController
         @listing_params[:attachments_attributes]['0'][:data]
       elsif params.has_key?(:boarding_form)
         params[:boarding_form][:product_form][:attachments_attributes]['0']['data']
+      elsif params.has_key?(:offer)
+        params[:offer][:attachments_attributes]['0']['data']
       else
         params[:product_form][:attachments_attributes]['0']['data']
       end

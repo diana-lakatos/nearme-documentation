@@ -10,7 +10,7 @@ class Utils::FormComponentsCreatorTest < ActiveSupport::TestCase
 
     should 'create 4 sections by default' do
       @form_component_creator = Utils::FormComponentsCreator.new(@transactable_type)
-      assert_difference 'FormComponent.count', 6 do
+      assert_difference 'FormComponent.count', 7 do
         @form_component_creator.create!
       end
     end
@@ -18,7 +18,7 @@ class Utils::FormComponentsCreatorTest < ActiveSupport::TestCase
     should 'create 5 sections if user info is enabled' do
       @transactable_type.instance
       @form_component_creator = Utils::FormComponentsCreator.new(@transactable_type)
-      assert_difference 'FormComponent.count', 6 do
+      assert_difference 'FormComponent.count', 7 do
         @form_component_creator.create!
       end
     end
