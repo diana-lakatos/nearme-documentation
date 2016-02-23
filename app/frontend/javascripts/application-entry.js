@@ -3,13 +3,10 @@
 var DNM = require('./common-app');
 
 DNM.registerInitializer(function(){
-    var searchBox = $('form.search-box');
-    if (searchBox.length === 0) {
-        return;
-    }
-    require.ensure('./sections/search/home_controller', function(require){
-        var SearchHomeController = require('./sections/search/home_controller');
-        return new SearchHomeController(searchBox);
+    var SearchHomeController = require('./sections/search/home_controller');
+
+    $('form.search-box').each(function(){
+        return new SearchHomeController(this);
     });
 });
 
@@ -101,15 +98,14 @@ DNM.registerInitializer(function(){
 
 DNM.registerInitializer(function(){
     var els = $('#hero');
+    var HomeController = require('./sections/home/controller');
+
     if (els.length === 0) {
         return;
     }
 
-    require.ensure('./sections/home/controller', function(require){
-        var HomeController = require('./sections/home/controller');
-        els.each(function(){
-            return new HomeController(this);
-        });
+    els.each(function(){
+        return new HomeController(this);
     });
 });
 
