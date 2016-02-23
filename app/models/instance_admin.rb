@@ -19,6 +19,7 @@ class InstanceAdmin < ActiveRecord::Base
   delegate :first_permission_have_access_to, to: :instance_admin_role, allow_nil: true
 
   scope :for_user, ->(user) {
+    return self.none if user.nil?
     where('instance_admins.user_id = ?', user.id)
   }
 

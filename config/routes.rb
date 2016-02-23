@@ -88,8 +88,6 @@ DesksnearMe::Application.routes.draw do
 
     mount CustomAttributes::Engine, at: '/custom_attributes'
 
-    mount Ckeditor::Engine => '/ckeditor'
-
     constraints host: 'setup.near-me.com' do
       get '/', to: 'instance_wizard#index'
       get '/new', to: 'instance_wizard#new'
@@ -1001,5 +999,6 @@ DesksnearMe::Application.routes.draw do
       end
     end
   end
+  mount Ckeditor::Engine => '/ckeditor'
 
 end
