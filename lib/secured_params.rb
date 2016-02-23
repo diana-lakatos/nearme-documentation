@@ -999,6 +999,7 @@ class SecuredParams
       :transactable_type_id, :transactable_type, :booking_type,
       :insurance_value,
       :rental_shipping_type, :dimensions_template_id,
+      :minimum_booking_minutes,
       photos_attributes: nested(self.photo),
       approval_requests_attributes: nested(self.approval_request),
       photo_ids: [],
