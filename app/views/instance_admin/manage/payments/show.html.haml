@@ -17,6 +17,9 @@
       %li
         Host Usell & Addons:
         = humanized_money_with_cents_and_symbol @payment.host_additional_charges
+      %li
+        State:
+        = @payment.state
 
   %h4 Charge attempts:
 
