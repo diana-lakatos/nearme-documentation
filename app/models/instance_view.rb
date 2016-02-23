@@ -62,6 +62,7 @@ class InstanceView < ActiveRecord::Base
     'user_mailer/notify_about_wrong_phone_number',
     'user_mailer/notify_about_unread_messages',
 
+
   ].freeze
 
   DEFAULT_SMS_TEMPLATES_PATHS = [
@@ -115,7 +116,6 @@ class InstanceView < ActiveRecord::Base
       listing: 'TransactableDrop'
     },
     'registrations/profile/user_badge' => {
-      platform_context: 'PlatformContextDrop',
       user: 'UserDrop',
       is_current_user: 'boolean; true if logged in user is viewing user',
       company: 'CompanyDrop'
@@ -169,11 +169,9 @@ class InstanceView < ActiveRecord::Base
       product: 'Spree::ProductDrop'
     },
     'reservation_mailer/social_links' => {
-      platform_context: 'PlatformContextDrop',
       listing: 'TransactableDrop'
     },
     'support_mailer/rfq_review' => {
-      platform_context: 'PlatformContextDrop',
       ticket: 'Support::TicketDrop'
     },
     'support_mailer/rfq_message_history' => {
@@ -237,7 +235,6 @@ class InstanceView < ActiveRecord::Base
     },
     'registrations/buyers/show' => {
       user: 'UserDrop',
-      platform_context: 'PlatformContextDrop',
       is_partial: false
     },
     'registrations/sellers/profile/no_content' => {
@@ -266,7 +263,6 @@ class InstanceView < ActiveRecord::Base
     },
     'registrations/sellers/show' => {
       user: 'UserDrop',
-      platform_context: 'PlatformContextDrop',
       is_partial: false
     },
     'blog/blog_posts/header' => {
@@ -344,29 +340,23 @@ class InstanceView < ActiveRecord::Base
       'product': 'Spree::ProductDrop',
     },
     'home/index' => {
-      platform_context: 'PlatformContextDrop',
       is_partial: false
     },
     'home/search_box' => {
-      platform_context: 'PlatformContextDrop',
     },
     'home/search_button' => {
-      platform_context: 'PlatformContextDrop',
     },
     'home/search_box_inputs' => {
-      platform_context: 'PlatformContextDrop',
     },
     'home/homepage_content' => {
-      platform_context: 'PlatformContextDrop',
     },
     'shared/modules/latest_products' => {
-      platform_context: 'PlatformContextDrop',
+    },
+    'shared/components/wish_list_button' => {
     },
     'layouts/theme_footer' => {
-      platform_context: 'PlatformContextDrop',
     },
     'layouts/theme_header' => {
-      platform_context: 'PlatformContextDrop',
     }
   }.freeze
 
