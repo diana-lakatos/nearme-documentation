@@ -12,9 +12,6 @@
     = stylesheet_link_tag 'new_ui_vendor'
     = stylesheet_link_tag 'new_ui'
 
-    = render 'shared/raygun/libs'
-    = javascript_include_tag 'jquery.min'
-
     = render "dynamic_theme/new_ui"
 
     / Prefetch
@@ -48,11 +45,8 @@
     - if !platform_context.stripe_public_key.blank?
       = tag :meta, :name => "stripe-key", :content => platform_context.stripe_public_key
 
-    = render "shared/javascript_assets"
+    = render 'shared/javascripts/header'
 
-    / Head Javascript
-    = javascript_include_tag 'vendor/modernizr'
-    = render 'shared/ckeditor_basepath'
     = yield(:head_bottom)
 
   %body{class: (navigation_visible? ? 'navigation-visible' : nil ) }
@@ -75,27 +69,6 @@
 
       = yield
 
-    = javascript_tag do
-      = javascript_i18n_include_tag
-
-    = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places"
-
-    = webpack_manifest_script
-    = webpack_bundle_tag 'common'
-    = webpack_bundle_tag 'newui'
-
-    = render 'layouts/initializers'
-
-    = yield :modals
-
-    = yield :script
-
-    - if content_for?(:domready)
-      = javascript_tag do
-        $(function(){
-        = yield :domready
-        });
-
     = yield(:body_bottom)
 
-    = render 'shared/raygun/init'
+    = render 'shared/javascripts/footer', entry: 'newui', googlemaps: true, analytics: true

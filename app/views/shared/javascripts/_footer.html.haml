@@ -1,0 +1,29 @@
+= javascript_tag do
+  = javascript_i18n_include_tag
+
+- if defined? googlemaps
+  = javascript_include_tag '//maps.googleapis.com/maps/api/js?libraries=places'
+
+= webpack_manifest_script
+= webpack_bundle_tag 'common'
+= webpack_bundle_tag entry
+
+- if defined? analytics
+  = render 'shared/javascripts/olark/olark' if platform_context.instance.olark_enabled?
+  = render 'shared/javascripts/google_analytics'
+  = render 'shared/javascripts/sessioncam'
+
+- if defined? include_modal
+  = render 'shared/modal'
+  = yield :modals
+
+= yield :page_scripts
+= yield :script
+
+- if content_for?(:domready)
+  = javascript_tag do
+    $(function(){
+    = yield :domready
+    });
+
+= render 'shared/javascripts/raygun/init'

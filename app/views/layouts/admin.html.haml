@@ -7,12 +7,10 @@
     %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}
     %link{:href => "/favicon.ico", :rel => "shortcut icon"}/
 
-    = render 'shared/raygun/libs'
-    = javascript_include_tag 'vendor/modernizr'
-    = javascript_include_tag 'jquery.min'
-
     = stylesheet_link_tag 'admin_vendor'
     = stylesheet_link_tag 'admin'
+
+    = render 'shared/javascripts/header'
 
   %body
     .navbar
@@ -60,8 +58,4 @@
         %p
           &copy; Company #{Date.current.year}
 
-    = webpack_manifest_script
-    = webpack_bundle_tag 'common'
-    = webpack_bundle_tag 'admin'
-
-    = render 'shared/raygun/init'
+    = render 'shared/javascripts/footer', entry: 'admin'
