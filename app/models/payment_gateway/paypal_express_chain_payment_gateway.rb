@@ -86,15 +86,17 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
     end
   end
 
-  def gateway_refund(amount, charge, options)
+  def gateway_refund(amount, token, options)
     if refund_service_fee(options)
-      gateway(@payment.payable.merchant_subject).refund(amount, refund_identification(charge), options)
+      gateway(@payment.payable.merchant_subject).refund(amount, token, options)
     else
       OpenStruct.new(success: false, success?: false)
     end
   end
 
   def refund_service_fee(options)
+    return false if @payment.refunds.successful.any?
+
     @payment_transfer = @payment.payment_transfer
 
     # We only want to refund host service fee when guest cancel
