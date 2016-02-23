@@ -62,8 +62,9 @@ module.exports = class SpaceWizardSpaceForm
       $(fields).closest('.nested-container').find('.transactable_availability_template_availability_rules__destroy input').val('true')
 
     @container.find('.custom-availability-rules').on 'cocoon:after-insert', (e,fields)->
-      CustomInputs.initialize();
-      CustomSelects.initialize(fields);
+      $(fields).each ->
+        new CustomInputs(@);
+        new CustomSelects(@);
 
   successfulValidationHandler: (element) =>
     index = element.closest('.control-group').index()

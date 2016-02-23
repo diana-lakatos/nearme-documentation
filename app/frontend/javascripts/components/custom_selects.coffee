@@ -3,7 +3,7 @@ require('chosen/chosen.jquery.min');
 require('select2/select2');
 
 module.exports = class CustomSelects
-  @initialize: (container = 'body')->
+  constructor: (container = 'body')->
     container = $(container)
     # customSelect
     container.find('select').not('.select2, .time-wrapper select, .custom-select, .recurring_select, .ordinary-select, .selectpicker, .locales_languages_select, .unstyled-select').customSelect()

@@ -168,7 +168,7 @@ DNM.registerInitializer(function(){
     require.ensure('./sections/bookings/controller', function(require){
         var BookingsController = require('./sections/bookings/controller');
         els.each(function(){
-            return new BookingsController($(this));
+            return new BookingsController(this);
         });
     });
 });
@@ -182,8 +182,8 @@ DNM.registerInitializer(function(){
                 CustomSelects = require('./components/custom_selects');
 
             new BookingsController(el);
-            CustomInputs.initialize(el);
-            CustomSelects.initialize(el);
+            new CustomInputs(el);
+            new CustomSelects(el);
         });
     });
 });
