@@ -11,6 +11,10 @@
       = t('data_upload.manage.format_info_html', link: csv_link)
 
     %p
+      = t('data_upload.manage.download_current_data_hint')
+      = link_to t('data_upload.manage.download_current_data'), {action: :download_current_data_csv}
+
+    %p
       = t('data_upload.manage.new.sync_mode_hint_html')
 
     = f.simple_fields_for :options, OpenStruct.new(@data_upload.options) do |option|
