@@ -13,6 +13,7 @@ DesksnearMe::Application.routes.draw do
     get "/transactable_types/:transactable_type_id/locations/:location_id/listings/:id", to: 'listings#show', as: 'transactable_type_location_listing', constraints: Constraints::TransactableTypeConstraints.new
     get "/:transactable_type_id/locations/:location_id/listings/:id", to: 'listings#show', as: 'short_transactable_type_location_listing', constraints: Constraints::TransactableTypeConstraints.new
     get "/:transactable_type_id/:location_id/listings/:id", to: 'listings#show', as: 'short_transactable_type_short_location_listing', constraints: Constraints::TransactableTypeConstraints.new
+    get "/:transactable_type_id/:location_id/(:id)", to: 'listings#show', as: 'short_transactable_type_short_location', constraints: Constraints::TransactableTypeConstraints.new
     # making (:id) optional for now even though it's required for legacy urls in a format of locations/:location_id
     get "/locations/:location_id/(:id)", to: 'listings#show', as: 'location'
     get "/locations/:location_id/listings/:id", to: 'listings#show', as: 'location_listing'
@@ -173,8 +174,7 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :marketplace_sessions, only: [:new, :create]
-    get '/wish_list/add_item', to: 'wish_list#add_item'
-    get '/wish_list/remove_item', to: 'wish_list#remove_item'
+    resources :wish_lists, only: [:show, :create, :destroy]
 
     namespace :instance_admin do
       get '/', to: 'base#index'

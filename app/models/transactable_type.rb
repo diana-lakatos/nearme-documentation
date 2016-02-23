@@ -13,11 +13,10 @@ class TransactableType < ActiveRecord::Base
     :last_request_photos_sent_at, :capacity
   ]
 
-  has_many :form_components, as: :form_componentable
+  has_many :form_components, as: :form_componentable, dependent: :destroy
   has_many :data_uploads, as: :importable, dependent: :destroy
-  has_many :rating_systems
-  has_many :reviews
-  has_many :instance_views
+  has_many :rating_systems, dependent: :destroy
+  has_many :reviews, dependent: :destroy
   has_many :category_linkings, as: :category_linkable, dependent: :destroy
   has_many :categories, through: :category_linkings
   has_many :custom_validators, as: :validatable

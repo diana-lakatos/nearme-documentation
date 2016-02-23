@@ -217,7 +217,7 @@ module.exports = class SearchMixedController extends SearchSearchController
 
           subcategories_parents.push filter.get(0)
         @container.find('#categories-children').html('')
-        CustomInputs.initialize()
+        new CustomInputs()
     )
 
   updateResultsCount: ->

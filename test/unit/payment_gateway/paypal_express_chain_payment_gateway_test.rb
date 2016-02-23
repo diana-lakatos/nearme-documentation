@@ -5,6 +5,7 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
   setup do
     @paypal_express_chain_processor = FactoryGirl.build(:paypal_express_chain_payment_gateway)
     @payment_method = @paypal_express_chain_processor.payment_methods.first
+    Payment.any_instance.stubs(:immediate_payout?).returns(true)
   end
 
   should "include test in settings" do
@@ -34,7 +35,6 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
   context "When making refund" do
     setup do
       ActiveMerchant::Billing::PaypalExpressGateway.any_instance.stubs(:refund).returns(OpenStruct.new(success: true, success?: true, refunded_ammount: 1000))
-      PaymentGateway::PaypalExpressChainPaymentGateway.any_instance.stubs(:refund_identification).returns('payout_identification')
       @paypal_express_chain_processor.save
     end
 
@@ -42,9 +42,12 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
       payment = FactoryGirl.create(:paid_payment, payment_method: @payment_method, company: create(:company) )
 
       # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
-      payment.company.payment_transfers.create!(payments: [payment.reload], payment_gateway_mode: 'test', payment_gateway: payment.payment_gateway )
 
       refund_payment(payment.reload)
+
+      assert payment.reload.refunded?
+      assert_equal 2, payment.refunds.successful.count
+      assert_equal payment.payment_gateway_mode, payment.refunds.last.payment_gateway_mode
     end
 
     should 'use live mode for live charge' do
@@ -52,21 +55,44 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
       payment = FactoryGirl.create(:paid_payment, payment_method: @payment_method, company: create(:company))
 
       # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
-      payment.company.payment_transfers.create!(payments: [payment.reload], payment_gateway_mode: 'live', payment_gateway: payment.payment_gateway )
-      refund_payment(payment)
+
+      refund_payment(payment, "host_cancel", 'live')
+
+      assert payment.reload.refunded?
+      assert_equal 2, payment.refunds.successful.count
+      assert_equal payment.payment_gateway_mode, payment.refunds.last.payment_gateway_mode
     end
 
     should 'refund full amount when host cancel' do
       payment = FactoryGirl.create(:paid_payment, payment_method: @payment_method, company: create(:company) )
 
       # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
-      payment.company.payment_transfers.create!(payments: [payment.reload], payment_gateway_mode: 'test', payment_gateway: payment.payment_gateway )
-
       refund_payment(payment)
 
+      assert payment.reload.refunded?
+      assert_equal 2, payment.refunds.successful.count
+      assert_equal payment.payment_gateway_mode, payment.refunds.last.payment_gateway_mode
       # We have 2 refunds first from MPO to seller (service_fee) second total amount from Seller to Guest
       assert_equal payment.payment_transfer.total_service_fee + payment.amount, Money.new(payment.refunds.sum(:amount))
       assert_equal payment.charges.last.amount, payment.refunds.order(:id).last.amount
+    end
+
+    should 'should not refund service fee twice' do
+      ActiveMerchant::Billing::PaypalExpressGateway.any_instance.unstub(:refund)
+      success_response = OpenStruct.new(success: true, success?: true, refunded_ammount: 1000)
+      failed_response = OpenStruct.new(success: false, success?: false, refunded_ammount: 1000)
+
+      ActiveMerchant::Billing::PaypalExpressGateway.any_instance.stubs(:refund).returns(success_response).then.returns(failed_response).then.returns(success_response)
+
+      payment = FactoryGirl.create(:paid_payment, payment_method: @payment_method, company: create(:company) )
+
+      # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
+      refund_payment(payment)
+      assert_equal 1, payment.refunds.successful.count
+
+      refund_payment(payment)
+      assert_equal 1, payment.refunds.successful.count
+      refute payment.reload.refunded?
     end
 
     should 'apply cancelation fee when guest cancel' do
@@ -77,7 +103,6 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
         service_fee_amount_host_cents: 100)
 
       # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
-      payment.company.payment_transfers.create!(payments: [payment.reload], payment_gateway_mode: 'test', payment_gateway: payment.payment_gateway )
 
       refund_payment(payment, "user_cancel")
 
@@ -91,11 +116,14 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
     end
   end
 
-  def refund_payment(payment, refund_with="host_cancel")
+  def refund_payment(payment, refund_with="host_cancel", mode="test")
+    payout_response = ActiveMerchant::Billing::PaypalExpressResponse.new(true, 'OK', { "id" => "123", "message" => "message", "transaction_id" => 'payout_123' })
+
+    payment_transfer = payment.company.payment_transfers.create!(payments: [payment.reload], payment_gateway_mode: mode, payment_gateway: payment.payment_gateway)
+    payout = payment_transfer.payout_attempts.create(amount: payment_transfer.amount)
+    payout.payout_successful(payout_response)
+
     assert payment.paid?
     payment.payable.send(refund_with)
-    assert payment.reload.refunded?
-    assert_equal 2, payment.refunds.count
-    assert_equal payment.payment_gateway_mode, payment.refunds.last.payment_gateway_mode
   end
 end

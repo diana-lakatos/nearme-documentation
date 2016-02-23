@@ -71,8 +71,6 @@ module.exports = class HomeController extends SearchController
         @toggleTransactableTypes(@transactableTypePicker.val())
       @transactableTypePicker.bind "change", (event) =>
         @toggleTransactableTypes($(event.target).val())
-    else
-      @form.find('.transactable-type-search-box:first').show()
 
 
   toggleTransactableTypes: (tt_id) ->

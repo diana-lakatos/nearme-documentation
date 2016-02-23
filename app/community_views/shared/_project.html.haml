@@ -16,7 +16,7 @@
           %span= project.project_collaborators.approved.count
         %li
           = t :followers
-          %span= project.followers_count
+          %span= project.feed_followers.count
       %p.action
         %p{:'data-follow-button' => true}
           - if project.try(:pending_collaboration)

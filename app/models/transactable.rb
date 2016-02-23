@@ -81,7 +81,7 @@ class Transactable < ActiveRecord::Base
   before_save :set_currency
   before_save :set_is_trusted
   before_validation :set_booking_type_for_free, :set_activated_at, :set_enabled, :nullify_not_needed_attributes,
-    :set_confirm_reservations, :build_availability_template
+    :set_confirm_reservations, :build_availability_template, :set_minimum_booking_minutes
   after_create :set_external_id
   after_save do
     if availability.try(:days_open).present?
@@ -190,7 +190,7 @@ class Transactable < ActiveRecord::Base
   delegate :url, to: :company
   delegate :formatted_address, :local_geocoding, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration,
-    :minimum_booking_minutes, :custom_validators, :show_company_name, to: :transactable_type
+    :custom_validators, :show_company_name, to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, to: :transactable_type
@@ -587,7 +587,7 @@ class Transactable < ActiveRecord::Base
       external_id: 'External Id', enabled: 'Enabled',
       confirm_reservations: 'Confirm reservations', capacity: 'Capacity', quantity: 'Quantity',
       listing_categories: 'Listing categories', rental_shipping_type: "Rental shipping type",
-      currency: 'Currency'
+      currency: 'Currency', minimum_booking_minutes: 'Minimum booking minutes'
     ).reverse_merge(
       transactable_type.custom_attributes.shared.pluck(:name, :label).inject({}) do |hash, arr|
         hash[arr[0].to_sym] = arr[1].presence || arr[0].humanize
@@ -734,6 +734,10 @@ class Transactable < ActiveRecord::Base
   def set_enabled
     self.enabled = is_trusted? if self.enabled
     true
+  end
+
+  def set_minimum_booking_minutes
+    self.minimum_booking_minutes ||= transactable_type.minimum_booking_minutes
   end
 
   def set_confirm_reservations

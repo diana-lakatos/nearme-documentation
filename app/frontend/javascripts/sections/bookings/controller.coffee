@@ -42,6 +42,8 @@ module.exports = class BookingsController
     if !@listing.isPerUnitBooking()
       @quantityField.customSelect()
 
+    @activateFirstAvailableTab()
+
   # We need to set up delayed methods per each instance, not the prototype.
   # Otherwise, it will debounce for any instance calling the method.
   setupDelayedMethods: ->
@@ -96,12 +98,12 @@ module.exports = class BookingsController
       # state after click; specifically @hourlyBookingSelected
       # would have returned an invalid value otherwise
       setTimeout (=>
+
         if @listing.isRecurringBooking()
           period = $(event.target).parents('li').data('subscription')
           radioSwitch = @container.find("input[data-subscription='#{period}']")
-          if radioSwitch.length > 0
-            radioSwitch.get(0).click()
-            radioSwitch.triggerHandler('change')
+          radioSwitch.click()
+
           @listing.setSubscriptionPeriod(period)
         else
           @listing.setHourlyBooking(@hourlyBookingSelected())
@@ -149,6 +151,14 @@ module.exports = class BookingsController
         # do not allow to uncheck
         $(@).prop('checked', true)
       @exclusivePriceCheck.trigger('change')
+
+    @bookingTabs.on 'click', (e)->
+      e.preventDefault()
+      $(event.target).tab('show')
+
+
+  activateFirstAvailableTab: ->
+    @container.find(".pricing-tabs a.possible:first").tab('show')
 
   setReservationType: ->
     if @hourlyBookingSelected()
