@@ -5,9 +5,11 @@ PriceCalculator = require('./price_calculator')
 Availability = require('./availability/availability')
 HourlyAvailability = require('./availability/hourly_availability')
 dateUtil = require('../../lib/utils/date')
+asEvented = require('asEvented')
 
 # Each Listing has it's own object which keeps track of number booked, availability etc.
 module.exports = class BookingListing
+  asEvented.call @prototype
 
   defaultQuantity: 1
 
@@ -47,6 +49,7 @@ module.exports = class BookingListing
       @exclusivePrice = @data.exclusive_price_cents
 
   setDefaultQuantity: (qty) ->
+    @trigger 'quantityChanged'
     @defaultQuantity = qty if qty >= 0
 
   setHourlyBooking: (hourlyBooking) ->
