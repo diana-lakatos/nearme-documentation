@@ -130,7 +130,7 @@
           {% endunless %}
         </div>
         {% if platform_context.wish_lists_enabled? %}
-          {% include 'shared/components/wish_list_button.html', object: listing, link_to_class: 'btn btn-white btn-large ask' %}
+          {% include 'shared/components/wish_list_button_injection.html', object: listing, link_to_classes: 'btn btn-white btn-large ask' %}
           <div class="padding-row"></div>
         {% endif %}
         {% if listing.administrator %}

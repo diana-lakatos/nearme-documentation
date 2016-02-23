@@ -341,6 +341,19 @@ class ApplicationController < ActionController::Base
     )
   end
 
+  def render_redirect_as_script
+    unless response.location.present?
+      raise "No redirect url provided. Need to call redirect_to first."
+    end
+
+    redirect_script = "document.location = '#{response.location}'"
+    self.response_body = nil
+    render(
+      js: redirect_script,
+      status: 200
+    )
+  end
+
   def store_referal_info
     if first_time_visited?
       session[:referer] = request.referer

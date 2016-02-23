@@ -139,6 +139,11 @@ class TransactableDrop < BaseDrop
     routes.search_path(track_email_event: true)
   end
 
+  # url to display favorite button
+  def wish_list_path
+    routes.wish_list_path(@transactable.id)
+  end
+
   # url to the listing page for this listing
   def url
     @transactable.show_url
