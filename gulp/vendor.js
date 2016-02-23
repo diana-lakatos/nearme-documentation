@@ -1,4 +1,5 @@
 var path = require('path');
+var rename = require('gulp-rename');
 
 module.exports = function(gulp, config){
 
@@ -31,16 +32,39 @@ module.exports = function(gulp, config){
     });
 
     gulp.task('jquery', function() {
-        return gulp.src([path.join(config.paths.bower_components, 'jquery','dist','jquery.min.js'), path.join(config.paths.bower_components, 'jquery','dist','jquery.min.map')])
+        /* Modern browsers */
+        gulp.src([path.join(config.paths.bower_components, 'jquery','dist','jquery.min.js'), path.join(config.paths.bower_components, 'jquery','dist','jquery.min.map')])
+            .pipe(gulp.dest(config.paths.output));
+
+        /* Legacy IE */
+        gulp.src(path.join(config.paths.bower_components, 'jquery-legacy','dist','jquery.min.js'))
+            .pipe(rename('jquery-legacy.min.js'))
             .pipe(gulp.dest(config.paths.output));
     });
 
     gulp.task('jquery:dist', function(){
-        return gulp.src([path.join(config.paths.bower_components, 'jquery','dist','jquery.min.js'), path.join(config.paths.bower_components, 'jquery','dist','jquery.min.map')])
+        /* Modern browsers */
+        gulp.src([path.join(config.paths.bower_components, 'jquery','dist','jquery.min.js'), path.join(config.paths.bower_components, 'jquery','dist','jquery.min.map')])
+            .pipe(gulp.dest(config.paths.tmp));
+
+        /* Legacy IE */
+        gulp.src(path.join(config.paths.bower_components, 'jquery-legacy','dist','jquery.min.js'))
+            .pipe(rename('jquery-legacy.min.js'))
             .pipe(gulp.dest(config.paths.tmp));
     });
 
+    gulp.task('polyfills', function(){
+        gulp.src([path.join(config.paths.bower_components, 'respond','dest','respond.min.js'), path.join(config.paths.bower_components, 'placeholders','dist','placeholders.min.js')])
+            .pipe(gulp.dest(path.join(config.paths.output, 'vendor')));
+    });
+
+    gulp.task('polyfills:dist', function(){
+        gulp.src([path.join(config.paths.bower_components, 'respond','dest','respond.min.js'), path.join(config.paths.bower_components, 'placeholders','dist','placeholders.min.js')])
+            .pipe(gulp.dest(path.join(config.paths.tmp, 'vendor')));
+    });
+
+
     // Aggregate taks
-    gulp.task('vendor', ['modernizr', 'ckeditor', 'raygun', 'jquery']);
-    gulp.task('vendor:dist', ['modernizr:dist', 'ckeditor', 'raygun:dist', 'jquery:dist']);
+    gulp.task('vendor', ['modernizr', 'ckeditor', 'raygun', 'jquery', 'polyfills']);
+    gulp.task('vendor:dist', ['modernizr:dist', 'ckeditor', 'raygun:dist', 'jquery:dist', 'polyfills:dist']);
 }
