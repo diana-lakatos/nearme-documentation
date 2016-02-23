@@ -1,0 +1,20 @@
+= render 'shared/javascripts/raygun/libs'
+
+= render 'shared/javascripts/ckeditor_basepath'
+
+<!--[if !IE]> -->
+= javascript_include_tag 'jquery.min'
+<!-- <![endif]-->
+
+/[if IE]
+  = javascript_include_tag 'jquery-legacy.min'
+
+/[if lt IE 10]
+  = javascript_include_tag 'vendor/placeholders.min'
+
+/[if lt IE 9]
+  = javascript_include_tag 'vendor/respond.min'
+
+= javascript_include_tag 'vendor/modernizr'
+
+= render "shared/javascripts/javascript_assets"

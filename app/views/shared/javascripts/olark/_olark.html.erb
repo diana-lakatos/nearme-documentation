@@ -19,7 +19,7 @@ loader: "static.olark.com/jsclient/loader0.js",name:"olark",methods:["configure"
 /* custom configuration goes here (www.olark.com/documentation) */
 olark.identify('<%=platform_context.instance.olark_api_key.try(:strip)%>');
 <% if user_signed_in? %>
-	<%= render 'shared/olark_user_data' %>
+	<%= render 'shared/javascripts/olark/olark_user_data' %>
 <% end %>
 <% if not render_olark? %>
   olark('api.box.hide');

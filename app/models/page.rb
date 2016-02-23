@@ -53,7 +53,7 @@ class Page < ActiveRecord::Base
   private
 
   def convert_to_html
-    self.html_content = RDiscount.new(self.content).to_html
+    self.html_content = self.content.include?('<div') ? self.content : RDiscount.new(self.content).to_html
     rel_no_follow_adder = RelNoFollowAdder.new({:skip_domains => Domain.pluck(:name)})
     self.html_content = rel_no_follow_adder.modify(self.html_content)
   end

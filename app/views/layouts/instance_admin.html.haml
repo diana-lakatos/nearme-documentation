@@ -11,13 +11,9 @@
     = stylesheet_link_tag 'instance_admin'
     = yield :styles
 
-    = render 'shared/raygun/libs'
-    = javascript_include_tag 'jquery.min'
-    = render 'shared/ckeditor_basepath'
-    = render "shared/javascript_assets"
-
-    = javascript_include_tag 'vendor/modernizr'
     %link{:href => "//fonts.googleapis.com/css?family=Lato:100,300,400,700,900", :rel => "stylesheet"}
+
+    = render 'shared/javascripts/header'
     /[if IE 9] <style>#help-bar {display: none;}</style>
 
   %body{ class: !user_signed_in? ? 'login' : ''}
@@ -42,18 +38,4 @@
       = render 'instance_admin/shared/render_flash'
       = yield
 
-    = javascript_tag do
-      = javascript_i18n_include_tag
-
-    = webpack_manifest_script
-    = webpack_bundle_tag 'common'
-    = webpack_bundle_tag 'instanceadmin'
-
-    = yield :script
-    - if content_for?(:domready)
-      = javascript_tag do
-        $(function(){
-        = yield :domready
-        });
-
-    = render 'shared/raygun/init'
+    = render 'shared/javascripts/footer', entry: 'instanceadmin'
