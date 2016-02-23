@@ -8,7 +8,7 @@ FactoryGirl.define do
     amount 1000
     currency 'USD'
     payment_gateway_mode "test"
-    response { ActiveMerchant::Billing::Response.new true, 'OK', { "id" => "123", "message" => "message" } }
+    response { ActiveMerchant::Billing::Response.new true, 'OK', { "id" => "123", "message" => "message", "transaction_id" => '12345' } }
 
     factory :live_charge do
       payment_gateway_mode "live"

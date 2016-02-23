@@ -7,9 +7,9 @@ class WishListItem < ActiveRecord::Base
   class NotPermitted < Exception
   end
 
-  belongs_to :wishlistable, polymorphic: true
+  belongs_to :wishlistable, polymorphic: true, touch: true
 
-  belongs_to :wish_list
+  belongs_to :wish_list, touch: true
   has_one :user, through: :wish_list
 
   scope :by_date, -> { order 'created_at DESC' }

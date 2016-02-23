@@ -169,9 +169,4 @@
     .clearfix
 
 %script
-  $(document).trigger('init.bookingscontroller', $("#booking-module-#{@listing.id}"));
-  $("#booking-module-#{@listing.id} .pricing-tabs a").click(function (e) {
-  e.preventDefault();
-  $(this).tab('show');
-  });
-  $("#booking-module-#{@listing.id} .pricing-tabs a.possible:first").tab('show');
+  $(document).trigger('init.bookingscontroller', ["#booking-module-#{@listing.id}"]);

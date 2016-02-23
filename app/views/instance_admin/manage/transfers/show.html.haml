@@ -118,8 +118,8 @@
               %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.id')
               %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.lessor')
               %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.amount')
-              %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.refunded_amount')
-              %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.paid_at')
+              %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.payment_state')
+              %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.payment_details')
 
           %tbody
             - resource.payments.each do |payment|
@@ -128,7 +128,7 @@
                 %td= payment.payable_id
                 %td= payment.payable.try(:user).try(:name)
                 %td= number_to_currency_symbol(payment.currency, Money.new(payment.amount))
-                %td= number_to_currency_symbol(payment.currency, Money.new(payment.refunds.sum :amount))
+                %td= payment.state.capitalize
+                %td= link_to 'Payment',  instance_admin_manage_payment_path(payment)
 
-                %td= l(payment.created_at, format: :long)
 
