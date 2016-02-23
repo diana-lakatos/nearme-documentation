@@ -54,7 +54,7 @@ class ApplicationController < ActionController::Base
     I18n.locale = language_service.get_language
     session[:language] = I18n.locale
 
-    if request.get? && !request.xhr? && language_router.redirect?
+    if request.get? && !request.xhr? && language_router.redirect? && params[:controller] != 'authentications'
       params_with_language = params.merge(language_router.url_params)
       redirect_to url_for(params_with_language)
     end
