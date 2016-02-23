@@ -10,8 +10,8 @@ class Category < ActiveRecord::Base
   SEARCH_OPTIONS = [["Include in search", "include"], ["Exclude from search", "exclude"]].freeze
 
   has_many :categories_categorizables
-  has_many :categorizable_products, through: :categories_categorizables, source_type: "Spree::Product"
-  has_many :categorizable_transactables, through: :categories_categorizables, source_type: "Transactable"
+  has_many :categorizable_products, through: :categories_categorizables, source: :product, foreign_key: :categorizable_id
+  has_many :categorizable_transactables, through: :categories_categorizables, source: :transactable, foreign_key: :categorizable_id
 
   belongs_to :instance
 
@@ -142,7 +142,7 @@ class Category < ActiveRecord::Base
   end
 
   def touch_categories_categorizables
-    categorizable_transactables.update_all(:updated_at, Time.now)
+    categorizable_transactables.update_all(updated_at: Time.now)
   end
 
 end

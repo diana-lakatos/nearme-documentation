@@ -4,7 +4,6 @@ class CategoriesCategorizable < ActiveRecord::Base
 
   belongs_to :category, touch: true
   belongs_to :categorizable, polymorphic: true, touch: true
-  belongs_to :transactable_type, -> { where(category_linkable_type: ['TransactableType', 'Spree::Product', 'ProjectType', 'ServiceType']) }
-  belongs_to :instance_profile_type, -> { where(category_linkable_type: 'InstanceProfileType') }
+  belongs_to :transactable, -> { where(categories_categorizables: { categorizable_type: 'Transactable' } ) }, foreign_key: :categorizable_id
 
 end

@@ -1,0 +1,4 @@
+$(".favorite#favorite-<%= dom_id(@item) %> [data-favorite-icon]").removeClass('selected');
+$(".favorite#favorite-<%= dom_id(@item) %> [data-text]").html("<%= t('wish_lists.buttons.unselected_state') %>");
+$(".favorite#favorite-<%= dom_id(@item) %> [data-action-link]").attr('href', "<%= wish_lists_path(id: @item.id, wishlistable_type: @item.class.name, method: :post).html_safe %>");
+$(".favorite#favorite-<%= dom_id(@item) %> [data-action-link]").data('method', "post");
