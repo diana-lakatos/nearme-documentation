@@ -5,7 +5,7 @@ SearchGeocoder = require('./geocoder')
 # Controller for search form on the homepage
 module.exports = class HomeController extends SearchController
   constructor: (form, @container) ->
-    @form = form
+    @form = $(form)
     @transactableTypePicker = @form.find("[data-transactable-type-picker]")
     @transactableTypeClass = @form.find("[name='transactable_type_class']")
     @transactableTypeId = @form.find("[name='transactable_type_id']")

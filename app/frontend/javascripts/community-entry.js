@@ -53,7 +53,9 @@ DNM.registerInitializer(function(){
 
     require.ensure(['./intel/fileupload'], function(require){
         var Fileupload = require('./intel/fileupload');
-        return new Fileupload(els);
+        els.each(function(){
+            return new Fileupload(this);
+        });
     });
 });
 
@@ -108,11 +110,8 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    /* initializeModal */
-    require.ensure('./intel/modal', function(require){
-        var Modal = require('./intel/modal');
-        Modal.listen();
-    });
+    var Modal = require('./intel/modal');
+    Modal.listen();
 });
 
 DNM.registerInitializer(function(){

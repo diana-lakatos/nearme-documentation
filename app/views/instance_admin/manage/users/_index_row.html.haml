@@ -11,7 +11,7 @@
           data: { confirm: 'This will log you out and re-log you in as this user' }
   %td
     - if resource != current_user && !resource.deleted?
-      - if resource.banned?
+      - if resource.banned? && resource.user_bans.first.present?
         = link_to t('instance_admin.manage.users.account.unban'), instance_admin_manage_user_user_ban_path(resource, resource.user_bans.first), :method => :delete,
           data: { confirm:  'You will unban this user from your marketplace, do you want to continue?' }
       - else

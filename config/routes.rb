@@ -13,7 +13,6 @@ DesksnearMe::Application.routes.draw do
     get "/transactable_types/:transactable_type_id/locations/:location_id/listings/:id", to: 'listings#show', as: 'transactable_type_location_listing', constraints: Constraints::TransactableTypeConstraints.new
     get "/:transactable_type_id/locations/:location_id/listings/:id", to: 'listings#show', as: 'short_transactable_type_location_listing', constraints: Constraints::TransactableTypeConstraints.new
     get "/:transactable_type_id/:location_id/listings/:id", to: 'listings#show', as: 'short_transactable_type_short_location_listing', constraints: Constraints::TransactableTypeConstraints.new
-    get "/:transactable_type_id/:location_id/(:id)", to: 'listings#show', as: 'short_transactable_type_short_location', constraints: Constraints::TransactableTypeConstraints.new
     # making (:id) optional for now even though it's required for legacy urls in a format of locations/:location_id
     get "/locations/:location_id/(:id)", to: 'listings#show', as: 'location'
     get "/locations/:location_id/listings/:id", to: 'listings#show', as: 'location_listing'
