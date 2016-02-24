@@ -16,6 +16,7 @@ module.exports = function(gulp, config) {
             if (jsonStats['errors'].length > 0) {
                 jsonStats['errors'].forEach(function(message){
                     gutil.log(gutil.colors.red('Error (webpack): ' + message));
+                    gutil.beep();
                 });
             }
 
