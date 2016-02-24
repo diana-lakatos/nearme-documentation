@@ -5,7 +5,8 @@ var
     postcss = require('gulp-postcss'),
     autoprefixer = require('autoprefixer'),
     sourcemaps = require('gulp-sourcemaps'),
-    cssnano = require('gulp-cssnano');
+    cssnano = require('gulp-cssnano'),
+    gutil = require('gulp-util');
 
 
 module.exports = function(gulp, browserSync, config) {
@@ -20,7 +21,10 @@ module.exports = function(gulp, browserSync, config) {
         return gulp.src(files)
             .pipe(plumber())
             .pipe(sourcemaps.init())
-            .pipe(sass.sync(sassConfig).on('error', sass.logError))
+            .pipe(sass.sync(sassConfig).on('error', function(err){
+                gutil.log(gutil.colors.red('Error (sass): ' + err.formatted));
+                gutil.beep();
+            }))
             .pipe(postcss([ autoprefixer({ browsers: ['last 2 versions'] }) ]))
             .pipe(sourcemaps.write('.'))
             .pipe(gulp.dest(config.paths.output))

@@ -6,7 +6,8 @@ PhotoCollection = require('./photo/collection')
 module.exports = class Fileupload
 
 
-  constructor : (@fileInputWrapper) ->
+  constructor : (fileInputWrapper) ->
+    @fileInputWrapper = $(fileInputWrapper)
     @fileInput = @fileInputWrapper.find('input[type="file"]')
     @file_types = @fileInput.attr('data-file-types')
     @upload_type = @fileInput.attr('data-upload-type')
