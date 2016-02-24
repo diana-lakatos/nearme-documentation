@@ -68,7 +68,7 @@ class CustomMailerTest < ActiveSupport::TestCase
 
   should 'work with transactable type id views' do
     WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(layout_path: @layout_template.path)))
-    @step.stubs(:transactable_type_id).returns(@transactable_type.id)
+    @step.stubs(:transactable_type_id).returns(@transactable_type.id).once
     mail = CustomMailer.custom_mail(@step, 1)
     assert_contains 'This is TTHeader Hi TT dummy name! This is TTFooter', mail.html_part.body
   end

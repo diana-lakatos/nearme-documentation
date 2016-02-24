@@ -243,6 +243,8 @@ module.exports = class BookingsDatepicker
     endDate = null
     if urlUtil.getParameterByName('start_date')
       startDate = new Date(urlUtil.getParameterByName('start_date'))
+      if startDate < @listing.firstAvailableDate
+        startDate = @listing.firstAvailableDate
       for i in [0..50]
         if @endDatepicker and @endDatepicker.getModel().canSelectDate(dateUtil.nextDateIterator(startDate)())
           endDate = dateUtil.nextDateIterator(startDate)()
