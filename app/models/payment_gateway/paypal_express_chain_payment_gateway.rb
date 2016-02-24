@@ -96,6 +96,7 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
 
   def refund_service_fee(options)
     return false if @payment.refunds.successful.any?
+    return true if @payment.payment_transfer.blank?
 
     @payment_transfer = @payment.payment_transfer
 
@@ -111,7 +112,7 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
       currency: @payment.currency,
       payment: @payment,
       payment_gateway_mode: mode,
-      payment_gateway: @payment_gateway,
+      payment_gateway: @payment.payment_gateway,
     )
 
     payout = @payment_transfer.payout_attempts.successful.first
