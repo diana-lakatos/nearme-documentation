@@ -18,3 +18,5 @@
             - if f.object.send("remote_#{image_attr}_url")
               <br />Or copy from instance's theme:<br />
               = f.text_field "remote_#{image_attr}_url"
+            - if image_attr == 'icon_image'
+              = t('instance_admin.theme.design.images.icon_image_explanation')
