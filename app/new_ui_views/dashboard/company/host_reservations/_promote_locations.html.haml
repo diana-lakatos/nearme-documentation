@@ -8,15 +8,15 @@
 
         .share-location
           %span
-            =link_to tweet_listing_url(listing), :ref => "mg", :class => 'btn btn-primary twitter submit', :"data-popup" => '{ "width": 600, "height": 440 }' do
+            =link_to tweet_listing_url(listing), ref: "mg", class: 'btn btn-primary twitter submit', :"data-popup" => '{ "width": 600, "height": 440 }' do
               %span.fa.fa-twitter
               Twitter
           %span
-            =link_to "https://www.facebook.com/sharer/sharer.php?u=#{listing.show_url)}", :ref => "mg", :class => 'btn btn-primary facebook submit', :"data-popup" => '{ "width": 600, "height": 440 }' do
+            =link_to "https://www.facebook.com/sharer/sharer.php?u=#{listing.show_url}", ref: "mg", class: 'btn btn-primary facebook submit', :"data-popup" => '{ "width": 600, "height": 440 }' do
               %span.fa.fa-facebook
               Facebook
           %span
-            =link_to "http://www.linkedin.com/shareArticle?mini=true&url=#{listing.show_url}&title=#{listing.name}&summary=#{listing.description}&source=#{platform_context.instance.name}", :ref => "mg", :class => 'btn btn-primary linkedin submit', :"data-popup" => '{ "width": 600, "height": 440 }' do
+            =link_to "http://www.linkedin.com/shareArticle?mini=true&url=#{listing.show_url}&title=#{listing.name}&summary=#{listing.description}&source=#{platform_context.instance.name}", ref: "mg", class: 'btn btn-primary linkedin submit', :"data-popup" => '{ "width": 600, "height": 440 }' do
               %span.fa.fa-linkedin
               LinkedIn
           %span
