@@ -50,6 +50,8 @@ class ListingsController < ApplicationController
     @listing = Transactable.find_by(id: old_id).presence || Transactable.find_by(slug: old_slug)
     if @listing.present?
       redirect_to @listing.decorate.show_path, status: 301
+    elsif (location = Location.friendly.find(params[:id])).present?
+      redirect_to location.listings.searchable.first.try(:decorate).try(:show_path) || '/' and return
     else
       redirect_to request.referer.presence || search_path, status: 301
     end
