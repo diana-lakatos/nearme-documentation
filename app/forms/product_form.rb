@@ -18,9 +18,8 @@ class ProductForm < Form
   validates_presence_of :shipping_category_id, :unless => :shippo_enabled
   validate do
     unless product.valid?
-      self.errors.add(:product)
       product.errors.each do |key, values|
-        self.errors.add(key, values)
+        self.errors.add(key, values) if ![:name, :shipping_category_id].include?(key)
       end
     end
   end
