@@ -6,12 +6,12 @@
   {% endif %}
   <div class="row-fluid booking-submit-row">
     {% if listing.action_free_booking? %}
-      <div class="hiden"><input type="submit" data-disable-with="{{ 'general.processing' | translate }}" value="{{ 'reservations.book' | translate }}" {% for prop in book_hash %}{{prop[0]}}="{{prop[1]}}"{% endfor %}></div>
+      <div class="hiden"><input type="submit" data-disable-with="{{ 'general.processing' | translate }}" value="{{ 'reservations.book' | translate }}" {% for prop in book_hash %} {{prop[0]}}="{{prop[1]}}"{% endfor %}></div>
     {% else %}
-      <input type="submit" data-disable-with="{{ 'general.processing' | translate }}" value="{{ 'reservations.book' | translate }}" {% for prop in book_hash %}{{prop[0]}}="{{prop[1]}}"{% endfor %}>
+      <input type="submit" data-disable-with="{{ 'general.processing' | translate }}" value="{{ 'reservations.book' | translate }}" {% for prop in book_hash %} {{prop[0]}}="{{prop[1]}}"{% endfor %}>
     {% endif %}
     <input type="submit" data-disable-with="{{ 'general.processing' | translate }}" id="rfq-{{listing.id}}" class="{{rfq_class}}" data-behavior="RFQ" data-modal-method="GET" data-modal-url="{{listing.new_ticket_url}}" value="{{ rfq_label }}">
   </div>
 {% else %}
-  <input type="submit" data-disable-with="{{ 'general.processing' | translate }}" value="{{ 'reservations.book' | translate }}" {% for prop in book_hash %}{{prop[0]}}="{{prop[1]}}"{% endfor %}>
+  <input type="submit" data-disable-with="{{ 'general.processing' | translate }}" value="{{ 'reservations.book' | translate }}" {% for prop in book_hash %} {{prop[0]}}="{{prop[1]}}"{% endfor %}>
 {% endif %}
