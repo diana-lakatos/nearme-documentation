@@ -287,6 +287,7 @@ en:
       transactable_type:
         action_book_it_out: 'Enable Book it Out option'
       service_type:
+        favourable_pricing_rate: "Favorable pricing rate"
         action_continuous_dates_booking: 'Action continuous dates booking'
         service_fee_guest_percent: 'Guest Service Fee Percent'
         service_fee_host_percent: 'Host Service Fee Percent'

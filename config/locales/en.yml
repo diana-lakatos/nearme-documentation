@@ -481,6 +481,8 @@ en:
           medium_font: "Medium font"
           bold_font: "Bold font"
         call_to_action: "Call to action"
+        images:
+          icon_image_explanation: "Logo images will be displayed in the mobile view in the top left corner."
     homepage:
       homepage: "Homepage"
     homepage_template:
