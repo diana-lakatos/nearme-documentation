@@ -453,7 +453,7 @@ class Transactable < ActiveRecord::Base
 
     closed_at = self.availability.close_minute_for(date)
 
-    if closed_at && (closed_at < (time.hour * 60 + time.min))
+    if closed_at && (closed_at < (time.hour * 60 + time.min + minimum_booking_minutes))
       date = date + 1.day
     end
 

@@ -19,7 +19,6 @@ module.exports = class TimePicker
     @initialEndMinute = options.endMinute if options.endMinute?
     @initialEndMinute ||= @openMinute + @minimumBookingMinutes
 
-
     @view = new View(positionTarget: @container, @listing)
     @view.appendTo($('body'))
     @view.closeIfClickedOutside(@container)
@@ -127,6 +126,12 @@ module.exports = class TimePicker
           @disabledStartTimes.push(min)
           @disabledEndTimes.push(min+BOOKING_STEP)
           @disabledEndTimes.push(min)
+
+      @minutesWhichCantBeBooked = @closeMinute - @minimumBookingMinutes + BOOKING_STEP
+      while @minutesWhichCantBeBooked <= @closeMinute
+        @disabledStartTimes.push(@minutesWhichCantBeBooked)
+        @minutesWhichCantBeBooked += BOOKING_STEP
+
 
       # Set the disabled start times
       @setDisabledTimesForSelect(@startTime, @disabledStartTimes)

@@ -43,7 +43,7 @@
     .map
       %section#map.google-map-wrapper
         .google-map
-          #listings_map.inner
+          #listings_map.inner{ 'data-update-text' => t('search.update_map')}
     .list{:'data-list' => true}
       .filters{:'data-search-filters-container' => true}
         -if current_instance.service_types.searchable.many?

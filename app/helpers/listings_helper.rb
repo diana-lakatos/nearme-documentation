@@ -49,7 +49,7 @@ module ListingsHelper
       minimum_date = time_now.to_date
 
       close_minute = listing.availability.close_minute_for(minimum_date)
-      if close_minute.present? && (close_minute < (time_now.hour * 60 + time_now.min))
+      if close_minute.present? && (close_minute < (time_now.hour * 60 + time_now.min + listing.minimum_booking_minutes))
         minimum_date = time_now.tomorrow.to_date
       end
 

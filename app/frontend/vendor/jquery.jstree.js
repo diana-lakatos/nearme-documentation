@@ -650,7 +650,7 @@
 					if(s) { obj.children("ul").stop(true, true).slideDown(s, function () { this.style.display = ""; t.after_open(obj); }); }
 					else { t.after_open(obj); }
 					this.__callback({ "obj" : obj });
-					if(callback) { callback.call(); }
+					if(typeof callback === 'function') { callback.call(); }
 				}
 			},
 			after_open	: function (obj) { this.__callback({ "obj" : obj }); },

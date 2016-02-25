@@ -1,4 +1,5 @@
 require('../../vendor/bootstrap-modal-fullscreen');
+CustomInputs = require('../components/custom_inputs')
 
 # A simple modal implementation
 #
@@ -127,6 +128,8 @@ module.exports = class Modal
     @content.show()
     if content
       @content.html(content)
+
+    new CustomInputs(@container)
 
     # We need to ensure there has been a reflow displaying the target element
     # before applying the class with the animation transitions
