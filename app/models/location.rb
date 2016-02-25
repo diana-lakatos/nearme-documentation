@@ -92,7 +92,8 @@ class Location < ActiveRecord::Base
   }
   # Useful for storing the full geo info for an address, like time zone
 
-  accepts_nested_attributes_for :availability_templates
+  accepts_nested_attributes_for :availability_templates, reject_if: proc { |params| binding.pry; params[:availability_rules_attributes] && params[:availability_rules_attributes].all? { |ar| ar[:open_time].blank? && ar[:close_time] } }
+
   accepts_nested_attributes_for :listings, :location_address
   accepts_nested_attributes_for :waiver_agreement_templates, :allow_destroy => true
   accepts_nested_attributes_for :approval_requests
