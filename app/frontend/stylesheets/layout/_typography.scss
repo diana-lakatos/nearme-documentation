@@ -11,7 +11,8 @@ p,
 ul,
 ol,
 em {
-  font:400 18px/28px $font-regular, sans-serif;
+  font-size: 18px;
+  line-height: 28px;
   color: $gray120;
 
   @media (max-width: $iphone-landscape) {
@@ -30,8 +31,7 @@ h4 a,
 h5,
 h5 a {
   color: $gray80;
-  font-family: $font-medium, sans-serif;
-  font-weight: normal;
+  font-weight: 600;
 
   &:hover {
     color: $gray80;
@@ -74,7 +74,6 @@ p {
 }
 
 strong {
-  font-family: $font-bold, sans-serif;
   font-weight: bold;
 }
 

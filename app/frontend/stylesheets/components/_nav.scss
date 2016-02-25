@@ -75,7 +75,8 @@
         display: inline-block;
         padding: 18px 20px;
         color: $gray160;
-        font:normal 16px/22px $font-regular, sans-serif;
+        font-size: 16px;
+        line-height: 22px;
         font-size: 20px;
 
         span.icon {

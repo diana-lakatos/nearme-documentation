@@ -11,7 +11,7 @@
     = stylesheet_link_tag 'instance_admin'
     = yield :styles
 
-    %link{:href => "//fonts.googleapis.com/css?family=Lato:100,300,400,700,900", :rel => "stylesheet"}
+    = render 'shared/head/fonts'
 
     = render 'shared/javascripts/header'
     /[if IE 9] <style>#help-bar {display: none;}</style>

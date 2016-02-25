@@ -62,7 +62,7 @@ section#reservations {
         border: 1px solid $light-gray;
         margin-top: 10px;
         color: $gray80;
-        font-family: $font-medium;
+        font-weight: 600;
 
         a {
           text-decoration: underline !important;
@@ -173,7 +173,6 @@ section#reservations {
 
           .dates {
             color: $gray160;
-            font-family: $font-regular;
 
             a.hours {
               &:hover {
@@ -187,7 +186,6 @@ section#reservations {
             display: block;
             color: $gray160;
             overflow: hidden;
-            font-family: $font-regular;
             font-size: 14px;
             text-overflow: ellipsis;
             white-space: nowrap;

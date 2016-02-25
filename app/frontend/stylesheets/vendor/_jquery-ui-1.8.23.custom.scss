@@ -53,12 +53,12 @@
 
 /* Component containers
 ----------------------------------*/
-.jquery-ui-theme .ui-widget { font-family: $font-medium, Verdana,Arial,sans-serif; font-size: 1.1em; }
+.jquery-ui-theme .ui-widget { font-weight: 600; font-size: 1.1em; }
 .jquery-ui-theme .ui-widget .ui-widget { font-size: 1em; }
-.jquery-ui-theme .ui-widget input, .jquery-ui-theme .ui-widget select, .jquery-ui-theme .ui-widget textarea, .jquery-ui-theme .ui-widget button { font-family: $font-medium, Verdana,Arial,sans-serif; font-size: 1em; }
+.jquery-ui-theme .ui-widget input, .jquery-ui-theme .ui-widget select, .jquery-ui-theme .ui-widget textarea, .jquery-ui-theme .ui-widget button { font-weight: 600; font-size: 1em; }
 .jquery-ui-theme .ui-widget-content { border: 1px solid #e0cfc2; background: #f4f0ec url("/assets/jqueryui/ui-bg_inset-soft_100_f4f0ec_1x100.png") 50% bottom repeat-x; color: #1e1b1d; }
 .jquery-ui-theme .ui-widget-content a { color: #1e1b1d; }
-.jquery-ui-theme .ui-widget-header { color: black; font-family: $font-regular; letter-spacing: 1px; text-transform: none; font-size: 20px; }
+.jquery-ui-theme .ui-widget-header { color: black; letter-spacing: 1px; text-transform: none; font-size: 20px; }
 .jquery-ui-theme .ui-widget-header a { color: #ffffff; }
 
 /* Interaction states

@@ -8,9 +8,9 @@
     %meta{:content => meta_description_content, :name => "description"}/
 
     / Styles
-    %link{:href => "https://fonts.googleapis.com/css?family=Lato:300,400,400italic,700italic,700", :rel => "stylesheet"}/
     = stylesheet_link_tag 'new_ui_vendor'
     = stylesheet_link_tag 'new_ui'
+    = render 'shared/head/fonts'
 
     = render "dynamic_theme/new_ui"
 
