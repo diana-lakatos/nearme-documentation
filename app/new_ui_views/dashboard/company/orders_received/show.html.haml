@@ -69,7 +69,7 @@
               - else
                 - if @order.payment.manual_payment?
                   = link_to 'Mark As Paid', capture_dashboard_company_orders_received_payment_path(@order.number, @order.payment.id), method: :post, data: { confirm: 'Are you sure you want to mark this order as paid?' }, class: 'btn btn-primary'
-                - else
+                - elsif @order.payment.try(:authorized?)
                   = link_to 'Capture', capture_dashboard_company_orders_received_payment_path(@order.number, @order.payment.id), method: :post, data: { confirm: 'Are you sure you want to capture payment for this order?' }, class: 'btn btn-primary'
 
         %h2= t("buy_sell_market.checkout.labels.shipping")
