@@ -1,52 +1,68 @@
 - render_content_outside_container!
+- is_current_user = current_user && current_user.id == @user.try(:id)
 
-.profile
-  .container.row-fluid.page-wrapper
-    = render 'registrations/profile/user_badge', platform_context: platform_context, user: @user, is_current_user: (current_user && current_user.id == @user.try(:id)), company: @company
-    .profile-content
-      %ul.nav.nav-tabs
-        - unless hide_tab?('products') || @products.nil?
-          %li
-            %a{href: '#products', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.products'
-        - unless hide_tab?('services') || @listings.nil?
-          %li
-            %a{href: '#services', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.services'
-        - if RatingSystem.active.any?
-          %li
-            %a{href: '#reviews', 'data-toggle' => 'tab', class: 'reviews-tab'}= t 'user_profile.labels.tabs.reviews', count: @total_reviews_count
-        - if platform_context.instance.user_blogs_enabled? && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
-          %li
-            %a{href: '#blog_posts', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.blog_posts'
+- if current_user.try(:instance_admin?)
+  .container-fluid
+    .admin-profile-notice
+      %p= t 'user_profile.labels.admin_profile'
 
-      .profile-listings.tab-content
-        - unless hide_tab?('products') || @products.nil?
-          #products.tab-pane
-            - if @company.present? && @products.count > 0
-              = render 'registrations/profile/tabs/products'
-            - else
-              = render 'registrations/profile/no_content', tab: :products
-        - unless hide_tab?('services') || @listings.nil?
-          #services.tab-pane
-            - if @company.present? && @listings.count > 0
-              = render 'registrations/profile/tabs/services'
-            - else
-              = render 'registrations/profile/no_content', tab: :services
+%article.user-profile.container-fluid
+  = render 'registrations/profile/header', platform_context: platform_context, user: @user, is_current_user: is_current_user, company: @company
 
-        - if RatingSystem.active.any?
-          #reviews.tab-pane
-            - if @total_reviews_count > 0
-              = render 'registrations/profile/tabs/reviews'
-            - else
-              = render 'registrations/profile/no_content', tab: :reviews
+  .profile-content
+    .row-fluid
+      .span3
+        %nav
+          %ul.nav.nav-pills.nav-stacked
+            %li.active
+              %a{:href => "#general", 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.general'
 
-        - if platform_context.instance.user_blogs_enabled? && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
-          - unless hide_tab?('blog_posts')
-            #blog_posts.tab-pane
-              - if @user.blog.present? && @user.has_published_posts?
-                = render 'registrations/profile/tabs/blog_posts'
+            - unless hide_tab?('products') || @products.nil?
+              %li
+                %a{href: '#products', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.products'
+
+            - unless hide_tab?('services') || @listings.nil?
+              %li
+                %a{href: '#services', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.services'
+
+            - if RatingSystem.active.any?
+              %li
+                %a{href: '#reviews', 'data-toggle' => 'tab', class: 'reviews-tab'}= t 'user_profile.labels.tabs.reviews', count: @total_reviews_count
+
+            - if platform_context.instance.user_blogs_enabled? && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
+              %li
+                %a{href: '#blog_posts', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.blog_posts'
+
+      .span9
+        .tab-content
+          #general.tab-pane.active
+            = render 'registrations/profile/tabs/general', platform_context: platform_context, user: @user, is_current_user: is_current_user, company: @company
+
+          - unless hide_tab?('products') || @products.nil?
+            #products.tab-pane
+              - if @company.present? && @products.count > 0
+                = render 'registrations/profile/tabs/products'
               - else
-                = render 'registrations/profile/no_content', tab: :blog_posts
+                = render 'registrations/profile/no_content', tab: :products
 
-- content_for :domready do
-  $('ul.nav-tabs li:first').addClass('active');
-  $('.tab-content .tab-pane:first').addClass('active');
+          - unless hide_tab?('services') || @listings.nil?
+            #services.tab-pane
+              - if @company.present? && @listings.count > 0
+                = render 'registrations/profile/tabs/services'
+              - else
+                = render 'registrations/profile/no_content', tab: :services
+
+          - if RatingSystem.active.any?
+            #reviews.tab-pane
+              - if @total_reviews_count > 0
+                = render 'registrations/profile/tabs/reviews'
+              - else
+                = render 'registrations/profile/no_content', tab: :reviews
+
+          - if platform_context.instance.user_blogs_enabled? && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
+            - unless hide_tab?('blog_posts')
+              #blog_posts.tab-pane
+                - if @user.blog.present? && @user.has_published_posts?
+                  = render 'registrations/profile/tabs/blog_posts'
+                - else
+                  = render 'registrations/profile/no_content', tab: :blog_posts

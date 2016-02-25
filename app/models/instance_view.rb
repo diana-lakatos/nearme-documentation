@@ -62,6 +62,7 @@ class InstanceView < ActiveRecord::Base
     'user_mailer/notify_about_wrong_phone_number',
     'user_mailer/notify_about_unread_messages',
 
+
   ].freeze
 
   DEFAULT_SMS_TEMPLATES_PATHS = [
@@ -80,40 +81,49 @@ class InstanceView < ActiveRecord::Base
   # Please keep it up-to-date when adding/modifying new liquid views to
   # this array.
   DEFAULT_LIQUID_VIEWS_PATHS = {
-    'locations/booking_module_listing_description' => {
+    'listings/show' => {
       listing: 'TransactableDrop'
     },
-    'locations/location_description' => {
+    'listings/booking_module_injection' => {
+      listing: 'TransactableDrop'
+    },
+    'listings/social_buttons' => {
+      listing: 'TransactableDrop'
+    },
+
+    'listings/booking_module_listing_description' => {
+      listing: 'TransactableDrop'
+    },
+    'listings/location_description' => {
       location: 'LocationDrop'
     },
-    'locations/listings/listing_description' => {
+    'listings/listing_description' => {
       listing: 'TransactableDrop'
     },
-    'locations/booking_module_call_to_actions' => {
+    'listings/booking_module_call_to_actions' => {
       listing: 'TransactableDrop',
       book_hash: 'booking information array',
       rfq_class: 'string',
       rfq_label: 'string'
     },
-    'locations/booking_module_listing_description_below_dates' => {
+    'listings/booking_module_listing_description_below_dates' => {
       listing: 'TransactableDrop'
     },
-    'locations/booking_module_listing_description_below_call_to_action' => {
+    'listings/booking_module_listing_description_below_call_to_action' => {
       listing: 'TransactableDrop'
     },
-    'locations/booking_module_listing_description_above_call_to_action' => {
+    'listings/booking_module_listing_description_above_call_to_action' => {
       listing: 'TransactableDrop'
     },
     'registrations/profile/user_badge' => {
-      platform_context: 'PlatformContextDrop',
       user: 'UserDrop',
       is_current_user: 'boolean; true if logged in user is viewing user',
       company: 'CompanyDrop'
     },
-    'locations/google_map' => {
+    'listings/google_map' => {
       location: 'LocationDrop'
     },
-    'locations/administrator' => {
+    'listings/administrator' => {
       administrator: 'UserDrop',
       listing: 'TransactableDrop'
     },
@@ -159,11 +169,9 @@ class InstanceView < ActiveRecord::Base
       product: 'Spree::ProductDrop'
     },
     'reservation_mailer/social_links' => {
-      platform_context: 'PlatformContextDrop',
       listing: 'TransactableDrop'
     },
     'support_mailer/rfq_review' => {
-      platform_context: 'PlatformContextDrop',
       ticket: 'Support::TicketDrop'
     },
     'support_mailer/rfq_message_history' => {
@@ -227,7 +235,6 @@ class InstanceView < ActiveRecord::Base
     },
     'registrations/buyers/show' => {
       user: 'UserDrop',
-      platform_context: 'PlatformContextDrop',
       is_partial: false
     },
     'registrations/sellers/profile/no_content' => {
@@ -256,7 +263,6 @@ class InstanceView < ActiveRecord::Base
     },
     'registrations/sellers/show' => {
       user: 'UserDrop',
-      platform_context: 'PlatformContextDrop',
       is_partial: false
     },
     'blog/blog_posts/header' => {
@@ -298,10 +304,6 @@ class InstanceView < ActiveRecord::Base
       'location': 'LocationDrop',
       is_partial: true
     },
-    'locations/twitter_social_button' => {
-      'location': 'LocationDrop',
-      is_partial: true
-    },
     'registrations/profile/tabs/transactable' => {
       'transactable': 'TransactableDrop',
       is_partial: true
@@ -338,29 +340,23 @@ class InstanceView < ActiveRecord::Base
       'product': 'Spree::ProductDrop',
     },
     'home/index' => {
-      platform_context: 'PlatformContextDrop',
       is_partial: false
     },
     'home/search_box' => {
-      platform_context: 'PlatformContextDrop',
     },
     'home/search_button' => {
-      platform_context: 'PlatformContextDrop',
     },
     'home/search_box_inputs' => {
-      platform_context: 'PlatformContextDrop',
     },
     'home/homepage_content' => {
-      platform_context: 'PlatformContextDrop',
     },
     'shared/modules/latest_products' => {
-      platform_context: 'PlatformContextDrop',
+    },
+    'shared/components/wish_list_button' => {
     },
     'layouts/theme_footer' => {
-      platform_context: 'PlatformContextDrop',
     },
     'layouts/theme_header' => {
-      platform_context: 'PlatformContextDrop',
     }
   }.freeze
 

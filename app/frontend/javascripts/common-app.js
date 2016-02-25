@@ -91,10 +91,10 @@ DNM.registerInitializer(function(){
 
 DNM.registerInitializer(function(){
     var CustomInputs = require('./components/custom_inputs');
-    CustomInputs.initialize();
+    new CustomInputs();
 
     $(document).on('init.custominputs', function(){
-        CustomInputs.initialize();
+        return new CustomInputs();
     });
 });
 
@@ -153,7 +153,7 @@ DNM.registerInitializer(function(){
 
 DNM.registerInitializer(function(){
     var CustomSelects = require('./components/custom_selects');
-    CustomSelects.initialize();
+    new CustomSelects();
 });
 
 DNM.registerInitializer(function(){
@@ -235,10 +235,8 @@ DNM.registerInitializer(function(){
         return;
     }
 
-    require.ensure([
-        './ckeditor/config'
-    ], function(require){
-        var CKEDITOR = require('./ckeditor/config');
+    require.ensure('./ckeditor/init', function(require){
+        var CKEDITOR = require('./ckeditor/init');
     });
 });
 

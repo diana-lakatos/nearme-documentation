@@ -3,13 +3,10 @@
 var DNM = require('./common-app');
 
 DNM.registerInitializer(function(){
-    var searchBox = $('form.search-box');
-    if (searchBox.length === 0) {
-        return;
-    }
-    require.ensure('./sections/search/home_controller', function(require){
-        var SearchHomeController = require('./sections/search/home_controller');
-        return new SearchHomeController(searchBox);
+    var SearchHomeController = require('./sections/search/home_controller');
+
+    $('form.search-box').each(function(){
+        return new SearchHomeController(this);
     });
 });
 
@@ -65,11 +62,29 @@ DNM.registerInitializer(function(){
 
 DNM.registerInitializer(function(){
     /* initializeWishList */
-    $('.favorite #action-link').on('click', function(e){
-        if ($(this).data('current-user')){
+    $('[data-add-favorite-button]').each(function() {
+        var container = $(this);
+        var data = {
+            'object_type': container.data('object-type'),
+            'link_to_classes': container.data('link-to-classes')
+        };
+        $.get(container.data('path'), data, function(response){
+            $(container).html(response);
+        });
+    });
+});
+
+DNM.registerInitializer(function(){
+    $(document).on('init.favoritebutton', function(event, el){
+        $(el).find('[data-action-link]').on('click', function(e){
+            $.ajax({
+              url: $(this).attr('href'),
+              method: $(this).data('method'),
+              dataType: "script"
+            });
             e.preventDefault();
-            $.getScript($(this).attr('href'));
-        }
+            return false;
+        });
     });
 });
 
@@ -100,15 +115,14 @@ DNM.registerInitializer(function(){
 
 DNM.registerInitializer(function(){
     var els = $('#hero');
+    var HomeController = require('./sections/home/controller');
+
     if (els.length === 0) {
         return;
     }
 
-    require.ensure('./sections/home/controller', function(require){
-        var HomeController = require('./sections/home/controller');
-        els.each(function(){
-            return new HomeController(this);
-        });
+    els.each(function(){
+        return new HomeController(this);
     });
 });
 
@@ -139,12 +153,7 @@ DNM.registerInitializer(function(){
 
     require.ensure('./sections/space/controller', function(require){
         var SpaceController = require('./sections/space/controller');
-        return new SpaceController(el, {
-            bookings: {
-                listings: el.data('listings'),
-                returnedFromSession: el.data('returned-from-session')
-            }
-        });
+        return new SpaceController(el);
     });
 });
 
@@ -162,16 +171,32 @@ DNM.registerInitializer(function(){
     });
 });
 
+
 DNM.registerInitializer(function(){
-    var els = $('#w-hotels .w-hotels-listing');
+    var els = $('[data-toggleable-booking-module]');
     if (els.length === 0) {
         return;
     }
 
     require.ensure('./sections/bookings/controller', function(require){
         var BookingsController = require('./sections/bookings/controller');
-        return new BookingsController(els, els.data('listing-booking-data'), {
-            showReviewBookingImmediately: els.data('show-review-booking-immediately')
+        els.each(function(){
+            return new BookingsController(this);
+        });
+    });
+});
+
+DNM.registerInitializer(function(){
+    $(document).on('init.bookingscontroller', function(event, el){
+        require.ensure(['./sections/bookings/controller', './components/custom_inputs', './components/custom_selects'], function(require){
+            var
+                BookingsController = require('./sections/bookings/controller'),
+                CustomInputs = require('./components/custom_inputs'),
+                CustomSelects = require('./components/custom_selects');
+
+            new BookingsController(el);
+            new CustomInputs(el);
+            new CustomSelects(el);
         });
     });
 });
@@ -379,6 +404,21 @@ DNM.registerInitializer(function(){
                 container = $('.search-view');
 
             return new ProductsTableSearchController(form, container);
+        });
+    });
+});
+
+
+DNM.registerInitializer(function(){
+    var els = $('[data-seller-attachable]');
+    if (els.length === 0) {
+        return;
+    }
+
+    require.ensure(['./sections/seller_attachments_controller'], function(require){
+        var SellerAttachmentsController = require('./sections/seller_attachments_controller');
+        els.each(function(){
+            return new SellerAttachmentsController($(this), { path: $(this).data('seller-attachment-path'), seller_attachable: $(this).data('seller-attachable') });
         });
     });
 });

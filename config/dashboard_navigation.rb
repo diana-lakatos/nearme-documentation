@@ -54,7 +54,7 @@ SimpleNavigation::Configuration.run do |navigation|
             dashboard_nav_item sub_nav, 'dashboard/host_recurring_bookings', dashboard_company_host_recurring_bookings_path, highlights_on: /\/host_recurring_bookings\/*/
           end
 
-          dashboard_nav_item sub_nav, 'dashboard/transactables', dashboard_company_transactable_type_transactables_path(TransactableType.first), highlights_on: /^\/dashboard\/company\/transactable_types/
+          dashboard_nav_item sub_nav, 'dashboard/transactables', dashboard_company_transactable_type_transactables_path(TransactableType.first), highlights_on: /dashboard\/company\/transactable_types/
         end
       end
     end
@@ -68,8 +68,8 @@ SimpleNavigation::Configuration.run do |navigation|
         dashboard_nav_item sub_nav, 'dashboard/users', dashboard_company_users_path, highlights_on: /dashboard\/company\/users/
         dashboard_nav_item sub_nav, 'dashboard/waiver_agreement_templates', dashboard_company_waiver_agreement_templates_path, highlights_on: /dashboard\/company\/waiver_agreement_templates/
         dashboard_nav_item sub_nav, 'dashboard/white_labels', edit_dashboard_company_white_label_path(current_user.companies.first), highlights_on: /dashboard\/company\/white_labels/
-        dashboard_nav_item sub_nav, 'dashboard/tickets', dashboard_company_support_tickets_path, if: platform_context.instance.action_rfq?, highlights_on: /^\/dashboard\/company\/support\/tickets(\/[0-9]+)?/
-        dashboard_nav_item sub_nav, 'dashboard/payment_documents/sent_to_me', sent_to_me_dashboard_company_payment_documents_path, if: platform_context.instance.documents_upload_enabled?, highlights_on: /^\/dashboard\/company\/payment_documents/
+        dashboard_nav_item sub_nav, 'dashboard/tickets', dashboard_company_support_tickets_path, if: platform_context.instance.action_rfq?, highlights_on: /dashboard\/company\/support\/tickets(\/[0-9]+)?/
+        dashboard_nav_item sub_nav, 'dashboard/payment_documents/sent_to_me', sent_to_me_dashboard_company_payment_documents_path, if: platform_context.instance.documents_upload_enabled?, highlights_on: /dashboard\/company\/payment_documents/
       end
     end
 
@@ -81,7 +81,7 @@ SimpleNavigation::Configuration.run do |navigation|
     end
 
     primary.item :account, t('dashboard.nav.account'), nil do |sub_nav|
-      dashboard_nav_item sub_nav, 'registrations/edit', dashboard_profile_path, link_text: t('dashboard.nav.edit'), highlights_on: /^\/(users\/edit|dashboard\/seller\/edit|dashboard\/buyer\/edit|dashboard\/edit_profile)/
+      dashboard_nav_item sub_nav, 'registrations/edit', dashboard_profile_path, link_text: t('dashboard.nav.edit'), highlights_on: /(users\/edit|dashboard\/seller\/edit|dashboard\/buyer\/edit|dashboard\/edit_profile)/
       dashboard_nav_item sub_nav, 'dashboard/notification_preferences', edit_dashboard_notification_preferences_path, link_text: t('dashboard.nav.notification_preferences'), highlights_on: /dashboard\/notification_preferences/
       dashboard_nav_item sub_nav, 'registrations/social_accounts', social_accounts_path, link_text: t('dashboard.nav.social_accounts'), highlights_on: /dashboard\/social_accounts/
       if HiddenUiControls.find('dashboard/saved_searches').visible?

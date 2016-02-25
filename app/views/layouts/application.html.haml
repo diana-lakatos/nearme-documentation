@@ -28,9 +28,6 @@
     %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
     %meta{:content => "chrome=IE7", "http-equiv" => "X-UA-Compatible"}/
 
-    = render 'shared/raygun/libs'
-    = javascript_include_tag 'jquery.min'
-
     -if platform_context.domain.near_me_domain?
       %meta{:name => "robots", "content" => "noindex, nofollow"}/
     = inject_content_holder('HEAD')
@@ -41,17 +38,16 @@
     = csrf_meta_tag
     - if !platform_context.stripe_public_key.blank?
       = tag :meta, :name => "stripe-key", :content => platform_context.stripe_public_key
+
     = render 'layouts/favicon'
 
     = stylesheet_link_tag 'application_vendor'
     = stylesheet_link_tag 'application'
+
     = render "dynamic_theme/application"
 
-    = javascript_include_tag 'vendor/modernizr'
-    = render "shared/javascript_assets"
+    = render 'shared/javascripts/header'
 
-    /[if lt IE 10]
-      = javascript_include_tag 'vendor/placeholder'
     = yield(:head_bottom)
 
   %body{class: theme_class(@theme_name)}
@@ -77,17 +73,7 @@
         - unless no_footer?
           .footer-push{class: "footer_#{section_class(@section_name)}"}
 
-    = javascript_tag do
-      = javascript_i18n_include_tag
-
-    = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places"
-    = webpack_manifest_script
-    = webpack_bundle_tag 'common'
-    = webpack_bundle_tag 'application'
-
-    = render 'layouts/initializers'
-    = render 'layouts/scripts'
     = yield(:body_bottom)
 
-    = render 'shared/raygun/init'
+    = render 'shared/javascripts/footer', entry: 'application', googlemaps: true, include_modal: true, analytics: true
 

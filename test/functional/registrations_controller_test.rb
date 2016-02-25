@@ -55,9 +55,9 @@ class RegistrationsControllerTest < ActionController::TestCase
       get :show, :id => @user.slug
 
       assert_response 200
-      assert_select ".vendor-info h3", @user.first_name
-      assert_select ".vendor-info p", "United States"
-      assert_select ".vendor-profile a", "Contact Host"
+      assert_select ".user-profile__header h1", @user.first_name
+      assert_select ".profile-content dd", "United States"
+      assert_select ".user-profile__header a[rel='modal']", "Contact Host"
     end
 
     should 'show profile with verifications' do
@@ -71,10 +71,10 @@ class RegistrationsControllerTest < ActionController::TestCase
       get :show, :id => @user.slug
 
       assert_response 200
-      assert_select 'ul li', 'Email Address'
-      assert_select 'ul li', 'Facebook'
-      assert_select 'ul li', 'LinkedIn'
-      assert_select 'ul li', 'Twitter'
+      assert_select '#verifications dt', 'Email Address'
+      assert_select '#verifications dt', 'Facebook'
+      assert_select '#verifications dt', 'LinkedIn'
+      assert_select '#verifications dt', 'Twitter'
     end
 
     should 'not display company info on user profile when user does not have a company' do
@@ -88,7 +88,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       get :show, id: @user.id
 
       assert_response 200
-      assert_select 'div#shop-info p', 'COMPANY INFO'
+      assert_select '#shop-info h2', 'Company Info'
     end
 
     should 'display edit actions if user is logged in' do
@@ -97,8 +97,8 @@ class RegistrationsControllerTest < ActionController::TestCase
       get :show, id: @user.id
 
       assert_response 200
-      assert_select 'div#vendor-profile a', 'Edit'
-      assert_select 'div#shop-info a', 'Edit'
+      assert_select '#vendor-profile a', 'Edit'
+      assert_select '#shop-info a', 'Edit'
     end
   end
 
@@ -159,39 +159,39 @@ class RegistrationsControllerTest < ActionController::TestCase
 
     context 'on first visit' do
       should 'be stored in both cookie and db' do
-        @request.env['HTTP_REFERER'] = 'http://example.com/'
+        @request.env['HTTP_REFERER'] = 'https://example.com/'
         get :new, source: 'xxx', campaign: 'yyy'
         assert_equal 'xxx', cookies.signed[:source]
         assert_equal 'yyy', cookies.signed[:campaign]
-        assert_equal 'http://example.com/', session[:referer]
+        assert_equal 'https://example.com/', session[:referer]
 
         post :create, user: user_attributes
         user = User.find_by_email('user@example.com')
         assert_equal 'xxx', user.source
         assert_equal 'yyy', user.campaign
-        assert_equal 'http://example.com/', user.referer
+        assert_equal 'https://example.com/', user.referer
       end
     end
 
     context 'on repeated visits' do
       should 'be stored only on first visit' do
-        @request.env['HTTP_REFERER'] = 'http://example.com/'
+        @request.env['HTTP_REFERER'] = 'https://example.com/'
         get :new
         assert_nil cookies.signed[:source]
         assert_nil cookies.signed[:campaign]
-        assert_equal 'http://example.com/', session[:referer]
+        assert_equal 'https://example.com/', session[:referer]
 
         @request.env['HTTP_REFERER'] = 'http://homepage.com/'
         get :new, source: 'xxx', campaign: 'yyy'
         assert_nil cookies.signed[:source]
         assert_nil cookies.signed[:campaign]
-        assert_equal 'http://example.com/', session[:referer]
+        assert_equal 'https://example.com/', session[:referer]
 
         post :create, user: user_attributes
         user = User.find_by_email('user@example.com')
         assert_nil user.source
         assert_nil user.campaign
-        assert_equal 'http://example.com/', user.referer
+        assert_equal 'https://example.com/', user.referer
       end
     end
 

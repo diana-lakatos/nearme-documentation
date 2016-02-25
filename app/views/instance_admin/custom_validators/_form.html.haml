@@ -4,7 +4,7 @@
       .input-container.col-xs-6
         = f.input :field_name, collection: @attributes
       .input-container.col-xs-6
-        = f.input :valid_values, label: 'Valid values (separate with coma)', wrapper_html_options: { class: 'for-select-tag' }, input_html: { value: f.object.valid_values.join(', '), style: "width: 100%;" }
+        = f.input :valid_values, label: t('instance_admin.manage.custom_validators.valid_values_separate_with_comma'), wrapper_html_options: { class: 'for-select-tag' }, input_html: { value: f.object.valid_values.join(', '), style: "width: 100%;" }
     .row
       .input-container.col-xs-4
         = f.input :required, as: :boolean

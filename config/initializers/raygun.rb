@@ -1,5 +1,4 @@
 Raygun.setup do |config|
-
   config.api_key = Rails.application.config.raygun_api_key
   config.version = Rails.application.config.app_version
 

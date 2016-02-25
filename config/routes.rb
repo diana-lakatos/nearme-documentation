@@ -9,7 +9,53 @@ DesksnearMe::Application.routes.draw do
 
     # Legacy pages redirect. Can be removed in Feb 16th. The redirect matches the route below.
     get "/pages/:slug(.:format)", to: 'pages#redirect'
-    get "/transactable_types/:id/locations/:location_id/listings/:listing_id", to: 'locations#redirect'
+
+    get "/transactable_types/:transactable_type_id/locations/:location_id/listings/:id", to: 'listings#show', as: 'transactable_type_location_listing', constraints: Constraints::TransactableTypeConstraints.new
+    get "/:transactable_type_id/locations/:location_id/listings/:id", to: 'listings#show', as: 'short_transactable_type_location_listing', constraints: Constraints::TransactableTypeConstraints.new
+    get "/:transactable_type_id/:location_id/listings/:id", to: 'listings#show', as: 'short_transactable_type_short_location_listing', constraints: Constraints::TransactableTypeConstraints.new
+    # making (:id) optional for now even though it's required for legacy urls in a format of locations/:location_id
+    get "/locations/:location_id/(:id)", to: 'listings#show', as: 'location'
+    get "/locations/:location_id/listings/:id", to: 'listings#show', as: 'location_listing'
+
+    resources :listings, :only => [:show] do
+      member do
+        get :ask_a_question
+        get :occurrences
+        get :booking_module
+      end
+
+      resource :social_share, :only => [:new], :controller => 'locations/social_share'
+
+      resources :recurring_bookings, :only => [:create, :update], :controller => "listings/recurring_bookings" do
+        collection do
+          post :review
+          post :store_recurring_booking_request
+        end
+
+        member do
+          get :booking_successful
+        end
+      end
+
+      resources :tickets, only: [:new, :create], :controller => 'listings/support/tickets'
+
+      resources :reservations, :only => [:create, :update], :controller => 'listings/reservations' do
+        collection do
+          post :review
+          post :address
+          post :store_reservation_request
+          get :return_express_checkout
+          get :cancel_express_checkout
+        end
+
+        member do
+          get :remote_payment
+        end
+
+        get :hourly_availability_schedule, :on => :collection
+      end
+    end
+    get "/:transactable_type_id/:id", to: 'listings#show', as: 'short_transactable_type_listing', constraints: Constraints::TransactableTypeConstraints.new
 
     get 'comments/index'
     get 'comments/create'
@@ -42,8 +88,6 @@ DesksnearMe::Application.routes.draw do
 
     mount CustomAttributes::Engine, at: '/custom_attributes'
 
-    mount Ckeditor::Engine => '/ckeditor'
-
     constraints host: 'setup.near-me.com' do
       get '/', to: 'instance_wizard#index'
       get '/new', to: 'instance_wizard#new'
@@ -52,25 +96,6 @@ DesksnearMe::Application.routes.draw do
     end
 
     root :to => "home#index"
-    namespace :webhooks do
-      resource :'profile', only: [] do
-        collection do
-          match 'create_profile', via: [:get, :post], as: :create_profile, action: :create
-          match '', via: [:get, :post], as: :webhook, action: :webhook
-        end
-      end
-      resource :braintree_marketplace, only: [] do
-        collection do
-          match '', via: [:get, :post], as: :webhook, action: :webhook
-        end
-      end
-
-      resource :stripe_connect, only: [] do
-        collection do
-          match '', via: %i(get post), as: :webhook, action: :webhook
-        end
-      end
-    end
 
     get '/404', :to => 'errors#not_found'
     get '/422', :to => 'errors#server_error'
@@ -148,8 +173,7 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :marketplace_sessions, only: [:new, :create]
-    get '/wish_list/add_item', to: 'wish_list#add_item'
-    get '/wish_list/remove_item', to: 'wish_list#remove_item'
+    resources :wish_lists, only: [:show, :create, :destroy]
 
     namespace :instance_admin do
       get '/', to: 'base#index'
@@ -184,6 +208,13 @@ DesksnearMe::Application.routes.draw do
             get :download_report
           end
         end
+
+        resources :advanced_projects do
+          collection do
+            get :download_report
+          end
+        end
+
       end
 
       namespace :settings do
@@ -500,24 +531,6 @@ DesksnearMe::Application.routes.draw do
     resources :blog_posts, path: 'blog', only: [:index, :show], controller: 'blog/blog_posts'
 
     resources :reviews, only: [:index]
-    resources :locations, only: [] do
-      member do
-        get "(:listing_id)", :to => "locations#show", :as => ''
-      end
-
-      resources :listings, :controller => 'locations/listings', :only => [:show] do
-        member do
-          get :ask_a_question
-        end
-      end
-
-      resource :social_share, :only => [:new], :controller => 'locations/social_share'
-
-      collection do
-        get :populate_address_components_form
-        post :populate_address_components
-      end
-    end
 
     resources :topics, only: [:show]
     resources :projects, only: [:show] do
@@ -533,38 +546,6 @@ DesksnearMe::Application.routes.draw do
 
     resources :listings, only: [] do
 
-      member do
-        get :occurrences
-      end
-
-      resources :recurring_bookings, :only => [:create, :update], :controller => "listings/recurring_bookings" do
-        collection do
-          post :review
-          post :store_recurring_booking_request
-        end
-
-        member do
-          get :booking_successful
-        end
-      end
-
-      resources :tickets, only: [:new, :create], :controller => 'listings/support/tickets'
-
-      resources :reservations, :only => [:create, :update], :controller => 'listings/reservations' do
-        collection do
-          post :review
-          post :address
-          post :store_reservation_request
-          get :return_express_checkout
-          get :cancel_express_checkout
-        end
-
-        member do
-          get :remote_payment
-        end
-
-        get :hourly_availability_schedule, :on => :collection
-      end
 
     end
 
@@ -618,7 +599,7 @@ DesksnearMe::Application.routes.draw do
 
     resources :approval_request_attachments, only: %i(create destroy)
 
-    resources :seller_attachments, only: :show
+    resources :seller_attachments, only: [:show, :index]
 
     namespace :dashboard do
       namespace :api do
@@ -979,22 +960,6 @@ DesksnearMe::Application.routes.draw do
       get 'organizations', to: 'organizations#index'
     end
 
-    resources :transactable_types, only: [], path: "/", constraints: Constraints::TransactableTypeConstraints.new do
-      resources :locations, :only => [], path: "/" do
-        member do
-          get "(:listing_id)", :to => "locations#show", :as => ''
-        end
-
-        resources :listings, controller: 'locations/listings', only: [:show] do
-          member do
-            get :ask_a_question
-          end
-        end
-
-        resource :social_share, :only => [:new], :controller => 'locations/social_share'
-      end
-    end
-
     get "/:slug(.:format)", to: 'pages#show', as: :pages, constraints: Constraints::PageConstraints.new
 
     # delayed_job web gui
@@ -1013,4 +978,26 @@ DesksnearMe::Application.routes.draw do
     get "/sitemap.xml", to: "seo#sitemap", format: "xml", as: :sitemap
     get "/robots.txt", to: "seo#robots", format: "txt", as: :robots
   end
+
+  namespace :webhooks do
+    resource :'profile', only: [] do
+      collection do
+        match 'create_profile', via: [:get, :post], as: :create_profile, action: :create
+        match '', via: [:get, :post], as: :webhook, action: :webhook
+      end
+    end
+    resource :braintree_marketplace, only: [] do
+      collection do
+        match '', via: [:get, :post], as: :webhook, action: :webhook
+      end
+    end
+
+    resource :stripe_connect, only: [] do
+      collection do
+        match '', via: %i(get post), as: :webhook, action: :webhook
+      end
+    end
+  end
+  mount Ckeditor::Engine => '/ckeditor'
+
 end

@@ -217,7 +217,7 @@ DNM.registerInitializer(function(){
         });
     }
 
-    if (main.hasClass('projects')) {
+    if (main.hasClass('projects') || main.hasClass('advanced_projects')) {
         require.ensure('./instance_admin/sections/projects', function(require){
             var InstanceAdminProjectsController = require('./instance_admin/sections/projects');
             new InstanceAdminProjectsController(main);
@@ -528,22 +528,20 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    // Make fa-icon submitting icons submit the form
-    $('.fa-action-icon-submit').click(function() {
-      $(this).closest('form').submit();
-    });
-});
-
-DNM.registerInitializer(function(){
     var els = $('div.ckeditor');
     if (els.length === 0) {
         return;
     }
 
-    require.ensure([
-        './ckeditor/config'
-    ], function(require){
-        var CKEDITOR = require('./ckeditor/config');
+    require.ensure('./ckeditor/init', function(require){
+        var CKEDITOR = require('./ckeditor/init');
+    });
+});
+
+DNM.registerInitializer(function(){
+    // Make fa-icon submitting icons submit the form
+    $('.fa-action-icon-submit').click(function() {
+      $(this).closest('form').submit();
     });
 });
 

@@ -53,7 +53,7 @@ class Location < ActiveRecord::Base
 
   before_validation :build_availability_template, :assign_default_availability_rules, :set_location_type
   before_save :set_time_zone
-  after_save :set_external_id
+  after_create :set_external_id
   after_save :update_schedules_timezones
 
   extend FriendlyId
@@ -92,7 +92,8 @@ class Location < ActiveRecord::Base
   }
   # Useful for storing the full geo info for an address, like time zone
 
-  accepts_nested_attributes_for :availability_templates
+  accepts_nested_attributes_for :availability_templates, reject_if: proc { |params| binding.pry; params[:availability_rules_attributes] && params[:availability_rules_attributes].all? { |ar| ar[:open_time].blank? && ar[:close_time] } }
+
   accepts_nested_attributes_for :listings, :location_address
   accepts_nested_attributes_for :waiver_agreement_templates, :allow_destroy => true
   accepts_nested_attributes_for :approval_requests

@@ -1,6 +1,6 @@
 <h2>You got it, {{ user.first_name }}!</h2>
 
-<p>Your booking for '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>' has been confirmed! Here it is:</p>
+<p>Your booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' has been confirmed! Here it is:</p>
 
 <div class="booking-details">
 
@@ -11,7 +11,7 @@
 
   <div class="row">
     <strong style='display: inline-block;'>What</strong>
-    <span style="float: right;"><a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a> x {{ reservation.quantity }}</span>
+    <span style="float: right;"><a href="{{ listing.listing_url }}">{{ listing.name }}</a> x {{ reservation.quantity }}</span>
   </div>
 
   {% if reservation.guest_notes != blank %}

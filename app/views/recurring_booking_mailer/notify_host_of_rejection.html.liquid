@@ -1,6 +1,6 @@
 <h2>Can we help, {{ user.first_name }}?</h2>
 
-<p>We noticed that you declined {{ recurring_booking.owner.first_name }}'s booking for '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>'.</p>
+<p>We noticed that you declined {{ recurring_booking.owner.first_name }}'s booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>'.</p>
 
 <p>We'd love to know the reasons so we can provide a better service in the future for you and your potential {{ listing.lessees }}.</p>
 

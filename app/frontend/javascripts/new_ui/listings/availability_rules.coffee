@@ -37,3 +37,6 @@ module.exports = class AvailabilityRules
       parent.find('.transactable_availability_template_availability_rules__destroy input').val('true')
       parent.hide()
       parent.prependTo(parent.closest('form'))
+
+    @customFields.on 'cocoon:after-insert', (e, insertedItem)=>
+      $('html').trigger('timepickers.init.forms', [insertedItem]);

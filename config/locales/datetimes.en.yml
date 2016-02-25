@@ -5,6 +5,7 @@ en:
   timepicker:
     dformat: '%I:%M %p'             # display format of the time (this is the default, can be ommited)
     pformat: 'hh:mm a'              # picking format of the time (this is the default, can be ommited)
+    jsformat: 'h:i a'               # picking format of the time (this is the default, can be ommited)
   dayViewHeaderFormat: 'MMMM YYYY'  # picking format of the time (this is the default, can be ommited)
 
   time:

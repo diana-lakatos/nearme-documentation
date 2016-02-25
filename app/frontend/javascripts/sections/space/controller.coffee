@@ -2,11 +2,10 @@ SpacePhotosController = require('./photos_controller')
 SmartGoogleMap = require('../../components/smart_google_map')
 GoogleMapMarker = require('../../components/google_map_marker')
 GoogleMapPopover = require('../../components/google_map_popover')
-BookingsController = require('../bookings/controller')
 
 module.exports = class SpaceController
 
-  constructor: (@container, @options = {}) ->
+  constructor: (@container) ->
     @mapAndPhotosContainer = $('.location-photos')
     @photosContainer = $('.photos-container')
     @mapContainer    = $('.map')
@@ -20,7 +19,6 @@ module.exports = class SpaceController
     @setupCarousel()
     @setupMap()
     @setupPhotos()
-    @setupBookings()
     @_bindEvents()
     @adjustBookingModulePosition()
     @adjustFullGalleryHeight()
@@ -102,15 +100,6 @@ module.exports = class SpaceController
 
   setupPhotos: ->
     @photos = new SpacePhotosController($('.space-hero-photos'))
-
-  setupBookings: ->
-    # For each listing on the page, initialize a controller for handling booking
-    # selection.
-    for listingData in @options.bookings.listings
-      listingController = new BookingsController(@container.find("div[data-listing-id=#{listingData.id}]"),
-        listingData,
-        submitFormImmediately: @options.bookings.returnedFromSession
-      )
 
   setupMap: ->
     return unless @mapContainer.length > 0

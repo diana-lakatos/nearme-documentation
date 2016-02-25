@@ -17,7 +17,7 @@ class DataUploadDrop < BaseDrop
 
   # date and time at which the upload started as string
   def import_started_at
-    I18n.l(@data_upload.imported_at, format: :long)
+    @data_upload.imported_at.present? ? I18n.l(@data_upload.imported_at, format: :long) : ''
   end
 
   # date and time at which the upload finished as string

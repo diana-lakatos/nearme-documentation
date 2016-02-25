@@ -1,0 +1,6 @@
+<%
+  base_path = ''
+  base_path << Rails.application.config.assets.prefix if Rails.application.config.assets.prefix
+  base_path << '/ckeditor/'
+%>
+<script>(function(){ window.CKEDITOR_BASEPATH = '<%= base_path %>'; }());</script>

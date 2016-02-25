@@ -5,7 +5,7 @@ end
 Given /^I ask a question about a transactable$/ do
   @listing = model('transactable')
   @user = model('user')
-  visit location_path(@listing.location, @listing)
+  visit @listing.decorate.show_path
   click_link "Contact"
   work_in_modal do
     fill_in 'user_message_body', with: "Short one"
@@ -78,7 +78,7 @@ Given /^I send a message to another user on his profile page$/ do
   @user = model('user')
   @another_user = FactoryGirl.create(:user)
   visit profile_path(@another_user)
-  find("div#vendor-profile").find('a').click
+  find('header.user-profile__header').find("[rel='modal']").click
   work_in_modal do
     fill_in 'user_message_body', with: "Short one"
     click_button 'Send'

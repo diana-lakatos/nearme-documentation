@@ -35,10 +35,10 @@ module ApplicationHelper
     if home_page? && platform_context.theme.tagline.present?
       "#{platform_context.theme.meta_title} | #{platform_context.theme.tagline}"
     else
-      [
+      raw([
         (show_title? ? content_for(:title) : nil),
         (additional_meta_title.present? ? additional_meta_title : nil)
-      ].compact.join(" | ")
+      ].compact.join(" | "))
     end
   end
 
@@ -390,13 +390,20 @@ module ApplicationHelper
 
   def javascript_i18n_include_tag
     js_translations = I18n.t("js").to_json
-
+    date_formats = %w(default day_month_year month_year short day_and_month only_date_short only_date full_day_month long).inject({}) do |hash, key|
+      hash[key] = I18n.t("date.formats.#{key}")
+      hash
+    end
+    time_formats = %w(default short long with_time_zone day_and_month).inject({}) do |hash, key|
+      hash[key] = I18n.t("time.formats.#{key}")
+      hash
+    end
     %Q{
       window.I18n = {};
       window.I18n.locale = '#{I18n.locale.to_s}';
       window.I18n.t = #{js_translations};
-      window.I18n.dateFormats = #{I18n.t('date.formats').to_json};
-      window.I18n.timeFormats = #{I18n.t('time.formats').to_json};
+      window.I18n.dateFormats = #{date_formats.to_json};
+      window.I18n.timeFormats = #{time_formats.to_json};
       window.I18n.abbrMonthNames = '#{Date::ABBR_MONTHNAMES.compact.join("|")}';
     }.html_safe
   end

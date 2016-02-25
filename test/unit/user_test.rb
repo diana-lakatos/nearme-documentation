@@ -544,7 +544,7 @@ class UserTest < ActiveSupport::TestCase
       assert_equal [@user.email], sent_mail.to
 
       assert sent_mail.html_part.body.encoded.include?('1.888.998.3375'), "Body did not include expected phone number 1.888.998.3375"
-      assert sent_mail.html_part.body.encoded =~ /<a class="btn" href="http:\/\/custom.domain.com\/users\/edit\?#{TemporaryTokenAuthenticatable::PARAMETER_NAME}=.+" style=".+">Go to My account<\/a>/, "Body did not include expected link to edit profile in #{sent_mail.html_part.body}"
+      assert sent_mail.html_part.body.encoded =~ /<a class="btn" href="https:\/\/custom.domain.com\/users\/edit\?#{TemporaryTokenAuthenticatable::PARAMETER_NAME}=.+" style=".+">Go to My account<\/a>/, "Body did not include expected link to edit profile in #{sent_mail.html_part.body}"
     end
 
     should 'not spam user' do

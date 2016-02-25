@@ -338,9 +338,12 @@ class TransactableTest < ActiveSupport::TestCase
 
       should 'initialize metadata' do
         @listing.expects(:update_metadata).with(:photos_metadata => [{
+          listing_name: @photo.listing.name,
+          :original => @photo.image_url(:original),
           :space_listing => @photo.image_url(:space_listing),
           :golden => @photo.image_url(:golden),
           :large => @photo.image_url(:large),
+          :caption => @photo.caption
         }])
         @listing.populate_photos_metadata!
       end
@@ -361,14 +364,20 @@ class TransactableTest < ActiveSupport::TestCase
         should 'update existing metadata' do
           @listing.expects(:update_metadata).with(:photos_metadata => [
             {
+              listing_name: @photo.listing.name,
+              :original => @photo.image_url(:original),
               :space_listing => @photo.image_url(:space_listing),
               :golden => @photo.image_url(:golden),
               :large => @photo.image_url(:large),
+              :caption => @photo.caption
             },
             {
+              listing_name: @photo2.listing.name,
+              :original => @photo2.image_url(:original),
               :space_listing => @photo2.image_url(:space_listing),
               :golden => @photo2.image_url(:golden),
               :large => @photo2.image_url(:large),
+              :caption => @photo2.caption
             }
           ])
           @listing.populate_photos_metadata!

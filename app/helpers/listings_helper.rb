@@ -21,7 +21,7 @@ module ListingsHelper
       review_url: review_listing_reservations_url(listing),
       subunit_to_unit_rate: Money::Currency.new(listing.currency).subunit_to_unit,
       quantity: listing.quantity,
-      initial_bookings: @initial_bookings ? @initial_bookings[listing.id] : {},
+      initial_bookings: @initial_bookings,
       booking_type: listing.booking_type,
       continuous_dates: listing.transactable_type.action_continuous_dates_booking,
       subscription_prices: listing.subscription_variants,
@@ -49,7 +49,7 @@ module ListingsHelper
       minimum_date = time_now.to_date
 
       close_minute = listing.availability.close_minute_for(minimum_date)
-      if close_minute.present? && (close_minute < (time_now.hour * 60 + time_now.min))
+      if close_minute.present? && (close_minute < (time_now.hour * 60 + time_now.min + listing.minimum_booking_minutes))
         minimum_date = time_now.tomorrow.to_date
       end
 

@@ -359,6 +359,10 @@ en:
         community_reports: "Community reports"
         week_start: "Starting week"
         week_end: "Ending week"
+      advanced_projects:
+        community_reports: "Advanced community reports"
+        day_start: "Starting day"
+        day_end: "Ending day"
 
     settings:
       configuration:
@@ -728,7 +732,7 @@ en:
         new_attribute: "New Attribute"
         edit_attribute: "Edit Attribute"
         add_attribute: 'Add Attribute'
-        valid_values_separate_with_comma: 'Valid values (separate with coma)'
+        valid_values_separate_with_comma: 'Valid values (separate with comma)'
         input_html_options: 'Input Html Options(key1 => value1, key2 => value2)'
         wrapper_html_options: 'Wrapper Html Options(key1 => value1, key2 => value2)'
       form_components:
@@ -790,6 +794,7 @@ en:
         inclusion: "Inclusion"
         numericality: "Numericality"
         add_validator: 'Add Validator'
+        valid_values_separate_with_comma: 'Valid values (separate with comma)'
       categories:
         right_click_a_child_in_the_tree: "Right click a child in the tree to access the menu for adding, deleting or sorting a child."
         categories: 'Categories'
@@ -851,10 +856,6 @@ en:
         currency_mark_and_separator: "Currency mark and separator"
         currency_decimal_mark: 'Currency decimal mark'
         currency_thousands_separator: 'Currency thousands separator'
-        displaying_modules_options: "Displaying modules options"
-        search_results_infinite_scroll: 'Search results infinite scroll'
-        random_suggested_products: 'Random suggested products'
-        search_results_table_layout: 'Search results table layout'
       commissions:
         commissions: "Commissions"
       tax_categories:
@@ -1291,6 +1292,7 @@ en:
       view_profile: 'View Profile'
       view_profile_html: 'View <span class="hidden-xs">Profile</span>'
       submit: 'Save'
+
       sections:
         default: 'Default'
         seller: 'Seller'
@@ -1608,6 +1610,8 @@ en:
       edit: 'Edit'
       remove: 'Remove'
       add_new: 'Add new location'
+      availability:
+        title: 'Availability'
 
     users:
       title_html: '<span class="hidden-xs">Manage</span> Admins'
@@ -1720,6 +1724,8 @@ en:
 
   user_profile:
     labels:
+      admin_profile: This is an admin profile. It’s visible only to other admins while they are logged in and will not be visible to regular users at any time.
+
       visitor:
         no_products: '%{name} does not offer any products yet.'
         no_services: '%{name} does not offer any services yet.'
@@ -1737,11 +1743,31 @@ en:
         services: 'Services'
         reviews: 'Reviews (%{count})'
         blog_posts: 'Blog'
+        general: 'Profile'
 
-      owner: 'SHOP OWNER'
-      recent_activity: 'RECENT ACTIVITY'
-      shop_info: 'COMPANY INFO'
-      verifications: 'VERIFICATIONS'
+      owner: 'Shop Owner'
+      recent_activity: 'Recent Activity'
+      shop_info: 'Company Info'
+      verifications: 'Verifications'
+      general: 'General Information'
+
+      edit: 'Edit'
+      position_company_junction: 'at'
+
+      properties:
+        country: 'Country'
+        phone: 'Phone'
+        mobile_number: 'Mobile'
+        skills_and_interests: 'Skills and Interests'
+        biography: 'Biography'
+
+      company:
+        name: 'Company Name'
+        country: 'Country'
+        url: 'Website'
+        description: 'Description'
+
+      verified: 'Verified'
 
     buttons:
       cta: 'Add new'

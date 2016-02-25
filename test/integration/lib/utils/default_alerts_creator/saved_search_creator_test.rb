@@ -38,8 +38,8 @@ class Utils::DefaultAlertsCreator::SavedSearchCreatorTest < ActionDispatch::Inte
       %w(html text).each do |format|
         assert_contains '31337', mail.send("#{format}_part").body
         assert_contains 'new search results for', mail.send("#{format}_part").body
-        assert_contains 'http://custom.domain.com/', mail.send("#{format}_part").body
-        assert_not_contains 'http://example.com/', mail.send("#{format}_part").body
+        assert_contains 'https://custom.domain.com/', mail.send("#{format}_part").body
+        assert_not_contains 'https://example.com/', mail.send("#{format}_part").body
         assert_not_contains 'http://localhost:3000', mail.send("#{format}_part").body
       end
     end

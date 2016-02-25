@@ -1,3 +1,0 @@
-$('#favorite-icon').removeClass('selected');
-$('#text').html("<%= t('wish_lists.buttons.unselected_state') %>");
-$('#action-link').attr('href', "<%= wish_list_add_item_path(object_id: @item.id, wishlistable_type: @item.class.name) %>");

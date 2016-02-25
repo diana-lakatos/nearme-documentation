@@ -28,26 +28,6 @@
         = label_tag :currency_thousands_separator, t('instance_admin.buy_sell.configuration.currency_thousands_separator')
         = text_field_tag :currency_thousands_separator, Spree::Config[:currency_thousands_separator], placeholder: 'Enter currency thousands separator', class: 'form-control'
 
-  .content-container
-    %h4= t('instance_admin.buy_sell.configuration.displaying_modules_options')
-    .row
-      .input-container.col-xs-6
-        = label_tag do
-          = hidden_field_tag 'infinite_scroll', '0'
-          = check_box_tag 'infinite_scroll', '1', Spree::Config[:infinite_scroll]
-          = t('instance_admin.buy_sell.configuration.search_results_infinite_scroll')
-      .input-container.col-xs-6
-        = label_tag do
-          = hidden_field_tag 'random_products_for_cross_sell', '0'
-          = check_box_tag 'random_products_for_cross_sell', '1', Spree::Config[:random_products_for_cross_sell]
-          = t('instance_admin.buy_sell.configuration.random_suggested_products')
-    .row
-      .input-container.col-xs-6
-        = label_tag do
-          = hidden_field_tag 'products_table', '0'
-          = check_box_tag 'products_table', '1', Spree::Config[:products_table]
-          = t('instance_admin.buy_sell.configuration.search_results_table_layout')
-
 = content_for :header_buttons do
   = submit_tag t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
 

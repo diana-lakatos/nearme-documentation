@@ -5,9 +5,14 @@ module.exports = class Forms
 
   bindEvents: ->
     $('html').on 'datepickers.init.forms', (event, context = 'body')=>
-      require.ensure './datepickers', (require)->
-        DatepickersInitializer = require('./datepickers')
+      require.ensure '../../new_ui/forms/datepickers', (require)->
+        DatepickersInitializer = require('../../new_ui/forms/datepickers')
         new DatepickersInitializer(context)
+
+    $('html').on 'timepickers.init.forms', (event, context = 'body')=>
+      require.ensure '../../new_ui/forms/timepickers', (require)->
+        timepickers = require('../../new_ui/forms/timepickers')
+        timepickers(context)
 
     $('html').on 'selects.init.forms', (event, context = 'body')=>
       require.ensure './chosen', (require)->
@@ -16,8 +21,8 @@ module.exports = class Forms
 
   initialize: ()->
     if $('.datetimepicker').length > 0
-      require.ensure './datepickers', (require)->
-        DatepickersInitializer = require('./datepickers')
+      require.ensure '../../new_ui/forms/datepickers', (require)->
+        DatepickersInitializer = require('../../new_ui/forms/datepickers')
         new DatepickersInitializer()
 
     if $('select.chosen, select.select').length > 0
@@ -29,3 +34,8 @@ module.exports = class Forms
       require.ensure './selectpicker', (require)->
         SelectpickerInitializer = require('./selectpicker')
         new SelectpickerInitializer()
+
+    if $('.time_picker').length > 0
+      require.ensure '../../new_ui/forms/timepickers', (require)->
+        timepickers = require('../../new_ui/forms/timepickers')
+        timepickers()

@@ -109,7 +109,7 @@ module Metadata::Base
               end
             end
             tmp_#{metadata_column} = #{metadata_column}
-            update_column(:#{metadata_column}, self.#{metadata_column})
+            update_columns(#{metadata_column}: self.#{metadata_column}, updated_at: Time.now)
             self.touch unless new_record?
             self.#{metadata_column} = tmp_#{metadata_column}
           end
@@ -117,7 +117,7 @@ module Metadata::Base
           def update_instance_#{metadata_column}(*args)
             # We do this to allow changes in admin to users
             # where we don't have an instance_id; that's mostly
-            # deleting objects; for super admins data may not be set 
+            # deleting objects; for super admins data may not be set
             # for the right instance under certain complex operations
             # but that's OK as for now we're mostly using the workaround
             # for allowing the deletion of objects
@@ -133,7 +133,7 @@ module Metadata::Base
             end
 
             tmp_#{metadata_column} = #{metadata_column}
-            update_column(:#{metadata_column}, self.#{metadata_column})
+            update_columns(#{metadata_column}: self.#{metadata_column}, updated_at: Time.zone.now)
             self.touch unless new_record?
             self.#{metadata_column} = tmp_#{metadata_column}
           end

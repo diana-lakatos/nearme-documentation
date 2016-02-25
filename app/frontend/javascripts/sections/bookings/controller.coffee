@@ -12,8 +12,15 @@ UtilUrl = require('../../lib/utils/url')
 
 module.exports = class BookingsController
 
-  constructor: (@container, @listingData, @options = {}) ->
+  constructor: (@container, @options = {}) ->
+    @container = $(@container)
+
+    @listingData = @container.data('listing')
+    if $.isEmptyObject(@listingData.initial_bookings)
+      @listingData.initial_bookings = null
+    @submitFormImmediately = @container.data('returned-from-session')
     @setupDelayedMethods()
+
     @listing = new BookingsListing(@listingData)
     @bindDomElements()
     if @listing.withCalendars()
@@ -24,8 +31,8 @@ module.exports = class BookingsController
       @initializeInfiniScroll()
     @updateQuantityField()
 
-    if @listingData.initial_bookings and @options.submitFormImmediately
-      if @options.submitFormImmediately == 'RFQ'
+    if @listingData.initial_bookings and @submitFormImmediately
+      if @submitFormImmediately == 'RFQ'
         @rfqBooking()
       else
         @reviewBooking()
@@ -34,6 +41,8 @@ module.exports = class BookingsController
     @delayedUpdateBookingStatus()
     if !@listing.isPerUnitBooking()
       @quantityField.customSelect()
+
+    @activateFirstAvailableTab()
 
   # We need to set up delayed methods per each instance, not the prototype.
   # Otherwise, it will debounce for any instance calling the method.
@@ -84,21 +93,25 @@ module.exports = class BookingsController
       @updateBookingStatus()
 
     @bookingTabs.on 'shown.bs.tab', (event) =>
+
       # This is to allow all classes on elements to settle
       # because they are checked for determining the current
       # state after click; specifically @hourlyBookingSelected
       # would have returned an invalid value otherwise
       setTimeout (=>
+
         if @listing.isRecurringBooking()
           period = $(event.target).parents('li').data('subscription')
-          @container.find("input[data-subscription=#{period}]").click()
+          radioSwitch = @container.find("input[data-subscription='#{period}']")
+          radioSwitch.click()
+
           @listing.setSubscriptionPeriod(period)
         else
           @listing.setHourlyBooking(@hourlyBookingSelected())
           @datepicker.setDates(@listing.bookedDatesArray)
           @setReservationType()
         @updateBookingStatus()
-      ), 200
+      ), 50
 
     @bookButton.on 'click', (event) =>
       @formTrigger = @bookButton
@@ -139,6 +152,14 @@ module.exports = class BookingsController
         # do not allow to uncheck
         $(@).prop('checked', true)
       @exclusivePriceCheck.trigger('change')
+
+    @bookingTabs.on 'click', (e)->
+      e.preventDefault()
+      $(event.target).tab('show')
+
+
+  activateFirstAvailableTab: ->
+    @container.find(".pricing-tabs a.possible:first").tab('show')
 
   setReservationType: ->
     if @hourlyBookingSelected()
@@ -235,7 +256,7 @@ module.exports = class BookingsController
     @setFormFields()
 
     if @userSignedIn
-       @bookForm.unbind('submit').submit()
+      @bookForm.unbind('submit').submit()
     else
       @storeFormFields()
 

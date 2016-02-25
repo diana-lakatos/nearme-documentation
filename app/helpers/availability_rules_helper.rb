@@ -59,6 +59,7 @@ module AvailabilityRulesHelper
 
   # First revision of this method. Will be refined!
   def pretty_availability_sentence(availability)
+    return '' unless availability.present?
     rules = availability.rules
     hour_groups =  rules.inject([]) do |hour_groups_arr, rule|
       hour_groups_arr << {

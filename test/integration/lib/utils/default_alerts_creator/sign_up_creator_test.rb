@@ -34,8 +34,8 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
       end
       mail = ActionMailer::Base.deliveries.last
       assert mail.html_part.body.include?("/verify/#{@user.id}/#{@user.email_verification_token}")
-      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert mail.subject.include?(@platform_context.decorate.name), "#{@platform_context.decorate.name} not included in:\n#{mail.subject}"
     end
@@ -50,8 +50,8 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
 
       assert mail.html_part.body.include?(@user.first_name)
       assert mail.html_part.body.include?("We are excited to welcome you to #{@platform_context.decorate.name}")
-      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_equal subject, mail.subject
     end
@@ -65,8 +65,8 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
       assert mail.html_part.body.include?(@user.first_name)
       assert_equal [@user.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] Check out these new listings in your area!", mail.subject
-      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
     end
 
@@ -88,8 +88,8 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
         assert_equal "#{@user.first_name}, you were invited to #{@platform_context.decorate.name} by #{@creator.name}!", mail.subject
         assert_contains "Welcome, #{@user.first_name }!", mail.html_part.body
         assert_contains "You have been invited by #{ @creator.name } to join #{ @platform_context.decorate.name }!", mail.html_part.body
-        assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-        assert_not_contains 'href="http://example.com', mail.html_part.body
+        assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+        assert_not_contains 'href="https://example.com', mail.html_part.body
         assert_not_contains 'href="/', mail.html_part.body
         assert_contains @new_user_token, mail.html_part.body, "Could not find User's authentication token in the email: #{mail.html_part.body}"
         assert_not_contains @creator_token, mail.html_part.body, "Authentication token is included in the email, which is sent the new user - new user should not have access to creator's account!"
@@ -106,8 +106,8 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
       assert_equal [@user.email], mail.to
       assert_equal "#{@user.first_name}, we can't reach you!", mail.subject
       assert_contains "We tried to send you a text message, but it looks like your mobile number isn’t valid.", mail.html_part.body
-      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
     end
 
@@ -123,8 +123,8 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
       assert_contains "Hi #{@user.first_name }", mail.html_part.body
       assert_contains "We'd like to invite you to participate in our #{@platform_context.decorate.name} marketplace", mail.html_part.body
       assert_contains "Password: cool_password", mail.html_part.body
-      assert_contains 'href="http://custom.domain.com', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
     end
 
@@ -140,8 +140,8 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
       assert mail.html_part.body.include?(@user.first_name)
       assert_equal [@user.email], mail.to
       assert mail.html_part.body.include?("You have been approved")
-      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
     end
 

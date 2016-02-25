@@ -24,8 +24,8 @@ class RegistrationsController < Devise::RegistrationsController
   skip_before_filter :redirect_if_marketplace_password_protected, :only => [:store_geolocated_location, :store_google_analytics_id, :update_password, :set_password]
 
   def new
+    @legal_page_present = Page.exists?(slug: 'legal')
     super unless already_signed_in?
-
   end
 
   def create
@@ -80,7 +80,11 @@ class RegistrationsController < Devise::RegistrationsController
 
   def show
     @theme_name = 'buy-sell-theme'
-    @user = User.not_admin.find(params[:id])
+    if current_user.try(:instance_admin?)
+      @user = User.find(params[:id])
+    else
+      @user = User.not_admin.find(params[:id])
+    end
 
     if platform_context.instance.is_community?
       @projects = IntelFakerService.projects(4)

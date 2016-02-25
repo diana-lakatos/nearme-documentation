@@ -341,6 +341,19 @@ class ApplicationController < ActionController::Base
     )
   end
 
+  def render_redirect_as_script
+    unless response.location.present?
+      raise "No redirect url provided. Need to call redirect_to first."
+    end
+
+    redirect_script = "document.location = '#{response.location}'"
+    self.response_body = nil
+    render(
+      js: redirect_script,
+      status: 200
+    )
+  end
+
   def store_referal_info
     if first_time_visited?
       session[:referer] = request.referer
@@ -483,6 +496,10 @@ class ApplicationController < ActionController::Base
     }
   end
 
+  def enable_ckeditor_for_field?(model, field)
+    FormAttributes::CKEFIELDS[model.to_sym].include?(field.to_sym)
+  end
+
   def ckeditor_pictures_scope(options = {})
     options[:assetable_id] = platform_context.instance.id
     options[:assetable_type] = "Instance"
@@ -500,21 +517,6 @@ class ApplicationController < ActionController::Base
     return true
   end
 
-  # Assigns the initial bookings to send to the JS controller from stored reservation request prior
-  # to initiating a user session. See Locations::ReservationsController for more details
-  def restore_initial_bookings_from_stored_reservation
-    if params[:restore_reservations ]&& session[:stored_reservation_location_id]
-      @form_trigger = session[:stored_reservation_trigger]["#{@location.id}"].presence || 'Book'
-      if session[:stored_reservation_location_id] == @location.id
-        @initial_bookings = session[:stored_reservation_bookings]
-      elsif session[:stored_recurring_booking_location_id] == @location.id
-        @initial_bookings = session[:stored_recurring_booking_bookings]
-      end
-    else
-      @initial_bookings = {}
-    end
-  end
-
   def build_approval_request_for_object(object)
     ApprovalRequestInitializer.new(object, current_user).process
   end
@@ -523,7 +525,7 @@ class ApplicationController < ActionController::Base
     @ckeditor_toolbar_creator ||= CkeditorToolbarCreator.new(params)
   end
 
-  helper_method :ckeditor_toolbar_creator
+  helper_method :ckeditor_toolbar_creator, :enable_ckeditor_for_field?
 
   def prepend_view_paths
     # a quick and dirty hack for Chris D to let him start working

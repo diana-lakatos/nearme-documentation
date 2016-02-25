@@ -1,0 +1,100 @@
+<section id="vendor-profile">
+  <header class="section-header">
+    <h2>{{ 'user_profile.labels.general' | translate }}</h2>
+    {% if is_current_user %}
+      <a href="{{ user.edit_profile_path }}" class="edit-link">{{ 'user_profile.labels.edit' | translate }}</a>
+    {% endif %}
+  </header>
+
+  <dl>
+    {% if user.country_name != blank %}
+      <dt>{{ 'user_profile.labels.properties.country' | translate }}</dt>
+      <dd>{{ user.country_name }}</dd>
+    {% endif %}
+
+    {% if user.public_profile? %}
+      {% if user.phone != blank and user.phone != user.mobile_number %}
+        <dt>{{ 'user_profile.labels.properties.phone' | translate }}</dt>
+        <dd>{{ user.phone }}</dd>
+      {% endif %}
+      {% if user.mobile_number != blank %}
+        <dt>{{ 'user_profile.labels.properties.mobile_number' | translate }}</dt>
+        <dd>{{ user.mobile_number }}</dd>
+      {% endif %}
+    {% endif %}
+
+    {% if user.properties.skills_and_interests != blank %}
+      <dt>{{ 'user_profile.labels.properties.skills_and_interests' | translate }}</dt>
+      <dd>{{ user.properties.skills_and_interests }}</dd>
+    {% endif %}
+
+    {% if user.properties.biography != blank %}
+      <dt>{{ 'user_profile.labels.properties.biography' | translate }}</dt>
+      <dd>{{ user.properties.biography }}</dd>
+    {% endif %}
+  </dl>
+</section>
+
+{% if company %}
+  <section id="shop-info">
+    <header class="section-header">
+      <h2>{{ 'user_profile.labels.shop_info' | translate }}</h2>
+      {% if is_current_user %}
+        <a href="{{ company.edit_path }}" class="edit-link">{{ 'user_profile.labels.edit' | translate }}</a>
+      {% endif %}
+    </header>
+
+    <dl>
+      <dt>{{ 'user_profile.labels.company.name' | translate }}</dt>
+      <dd>{{ company.name }}</dd>
+
+      {% if company.country != blank %}
+        <dt>{{ 'user_profile.labels.company.country' | translate }}</dt>
+        <dd>{{ company.country }}</dd>
+      {% endif %}
+
+      {% if company.url != blank %}
+        <dt>{{ 'user_profile.labels.company.url' | translate }}</dt>
+        <dd><a href="{{ company.url }}" rel="external">{{ company.url }}</a></dd>
+      {% endif %}
+
+      {% if company.description != blank %}
+        <dt>{{ 'user_profile.labels.company.description' | translate }}</dt>
+        <dd>{{ company.description }}</dd>
+      {% endif %}
+    </dl>
+  </section>
+{% endif %}
+
+<section id="verifications">
+  <header class="section-header">
+    <h2>{{ 'user_profile.labels.verifications' | translate }}</h2>
+  </header>
+
+  <dl class="verifications">
+    {% if user.email != blank %}
+      <dt>{{ 'buy_sell_market.products.labels.email_address' | translate }}</dt>
+      <dd><span class="ico-check">{{ 'user_profile.labels.verified' | translate }}</span></dd>
+    {% endif %}
+
+    {% if user.phone != blank %}
+      <dt>{{ 'buy_sell_market.products.labels.phone_number' | translate }}</dt>
+      <dd><span class="ico-check">{{ 'user_profile.labels.verified' | translate }}</span></dd>
+    {% endif %}
+
+    {% if user.facebook_connections %}
+      <dt>Facebook</dt>
+      <dd><span class="ico-check">{{ 'user_profile.labels.verified' | translate }}</span></dd>
+    {% endif %}
+
+    {% if user.twitter_connections %}
+      <dt>Twitter</dt>
+      <dd><span class="ico-check">{{ 'user_profile.labels.verified' | translate }}</span></dd>
+    {% endif %}
+
+    {% if user.linkedin_connections %}
+      <dt>LinkedIn</dt>
+      <dd><span class="ico-check">{{ 'user_profile.labels.verified' | translate }}</span></dd>
+    {% endif %}
+  </dl>
+</section>

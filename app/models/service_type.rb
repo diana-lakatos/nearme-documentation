@@ -4,6 +4,15 @@ class ServiceType < TransactableType
   MAX_PRICE = 2147483647
   BOOKING_TYPES = %w(regular overnight schedule subscription recurring).freeze
   SEARCH_VIEWS = %w(mixed list listing_mixed)
+  AVAILABLE_SHOW_PATH_FORMATS = [
+    "/transactable_types/:transactable_type_id/locations/:location_id/listings/:id",
+    "/:transactable_type_id/locations/:location_id/listings/:id",
+    "/:transactable_type_id/:location_id/listings/:id",
+    "/locations/:location_id/:id",
+    "/locations/:location_id/listings/:id",
+    "/:transactable_type_id/:id",
+    "/listings/:id"
+  ].freeze
 
   attr_accessor :enable_cancellation_policy
 
@@ -26,6 +35,7 @@ class ServiceType < TransactableType
   validate :check_booking_options
   validates_presence_of :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_percentage, if: lambda { |transactable_type| transactable_type.enable_cancellation_policy }
   validates_inclusion_of :cancellation_policy_penalty_percentage, in: 0..100, allow_nil: true, message: 'must be between 0 and 100', if: lambda { |transactable_type| transactable_type.enable_cancellation_policy }
+  validates_inclusion_of :show_path_format, in: AVAILABLE_SHOW_PATH_FORMATS, allow_nil: true
 
   accepts_nested_attributes_for :availability_templates
 

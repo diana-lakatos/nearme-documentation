@@ -11,6 +11,9 @@
       .input-container.col-xs-6
         = f.input :show_page_enabled, as: :boolean, :inline_label => true
     .row
+      .input-container.col-xs-12
+        = f.input :show_path_format, collection: ServiceType::AVAILABLE_SHOW_PATH_FORMATS
+    .row
       .input-container.col-xs-6
         = f.input :skip_location, inline_label: true
       .input-container.col-xs-6

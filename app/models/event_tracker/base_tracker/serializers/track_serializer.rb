@@ -26,7 +26,7 @@ class EventTracker::BaseTracker::Serializers::TrackSerializer
         location_state: object.state,
         location_country: object.country,
         location_postcode: object.postcode,
-        location_url: Rails.application.routes.url_helpers.location_url(object)
+        location_url: object.listings.first.try(:decorate).try(:show_url)
       }
     when Transactable
       {
@@ -37,7 +37,7 @@ class EventTracker::BaseTracker::Serializers::TrackSerializer
         listing_weekly_price: safe_get(object, 'weekly_price').try(:dollars),
         listing_monthly_price: safe_get(object, 'monthly_price').try(:dollars),
         listing_currency: safe_get(object, 'currency'),
-        listing_url: Rails.application.routes.url_helpers.listing_url(object)
+        listing_url: object.try(:decorate).try(:show_url)
       }
     when RecurringBooking
       {

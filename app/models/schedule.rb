@@ -5,7 +5,7 @@ class Schedule < ActiveRecord::Base
   scoped_to_platform_context
 
   belongs_to :instance
-  belongs_to :scheduable, polymorphic: true
+  belongs_to :scheduable, polymorphic: true, touch: true
 
   has_many :schedule_exception_rules, dependent: :destroy
   has_many :schedule_rules, dependent: :destroy

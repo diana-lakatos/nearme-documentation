@@ -4,6 +4,7 @@ DatepickerView = require('../../../components/datepicker/view')
 
 module.exports = class AvailabilityView extends DatepickerView
   constructor: (@listing, options = {}) ->
+    @isContinous = options.isContinous || false
     super(options)
 
   show: ->
@@ -28,7 +29,10 @@ module.exports = class AvailabilityView extends DatepickerView
     # Our custom model keeps track of whether dates were added via the range
     # selection.
     if @model.isRangeDate and @model.isRangeDate(date)
-      klass.push 'implicit'
+      if @isContinous
+        klass.push 'implicit'
+      else
+        klass.push 'active'
 
     klass.join ' '
 

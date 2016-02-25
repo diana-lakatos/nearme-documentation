@@ -11,7 +11,7 @@ module FeedbackDecoratorHelper
     version = PlatformContext.current.instance.new_ui? ? :space_listing : :medium
 
     if reservation? && feedback_object.listing && feedback_object.listing.has_photos?
-      h.link_to(h.image_tag(feedback_object.listing.photos.rank(:position).first.image_url(version)), h.transactable_type_location_listing_path(feedback_object.listing.transactable_type, feedback_object.listing.location, feedback_object.listing))
+      h.link_to(h.image_tag(feedback_object.listing.photos.rank(:position).first.image_url(version)), feedback_object.listing.decorate.show_path)
     elsif line_item? && feedback_object.product && feedback_object.product.variant_images.present?
       h.image_tag feedback_object.product.variant_images.first.image_url(version)
     else

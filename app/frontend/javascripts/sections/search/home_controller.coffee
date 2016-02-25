@@ -5,7 +5,7 @@ SearchGeocoder = require('./geocoder')
 # Controller for search form on the homepage
 module.exports = class HomeController extends SearchController
   constructor: (form, @container) ->
-    @form = form
+    @form = $(form)
     @transactableTypePicker = @form.find("[data-transactable-type-picker]")
     @transactableTypeClass = @form.find("[name='transactable_type_class']")
     @transactableTypeId = @form.find("[name='transactable_type_id']")
@@ -65,7 +65,10 @@ module.exports = class HomeController extends SearchController
 
   initializeSearchForm: ->
     if @transactableTypePicker.length > 0
-      @toggleTransactableTypes(@transactableTypePicker.val())
+      if @transactableTypePicker.filter(':checked').length > 0
+        @toggleTransactableTypes(@transactableTypePicker.filter(':checked').val())
+      else
+        @toggleTransactableTypes(@transactableTypePicker.val())
       @transactableTypePicker.bind "change", (event) =>
         @toggleTransactableTypes($(event.target).val())
     else

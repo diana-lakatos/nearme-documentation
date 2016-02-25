@@ -451,16 +451,15 @@ DNM.registerInitializer(function(){
     $('abbr.timeago').timeago();
 });
 
+
 DNM.registerInitializer(function(){
     var els = $('div.ckeditor');
     if (els.length === 0) {
         return;
     }
 
-    require.ensure([
-        './ckeditor/config'
-    ], function(require){
-        var CKEDITOR = require('./ckeditor/config');
+    require.ensure('./ckeditor/init', function(require){
+        var CKEDITOR = require('./ckeditor/init');
     });
 });
 

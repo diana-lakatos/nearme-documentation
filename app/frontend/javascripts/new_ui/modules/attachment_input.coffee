@@ -63,6 +63,9 @@ module.exports = class AttachmentInput
         params.find("input[name=_method]").remove()
         params.serializeArray()
       add: (e, data) =>
+        if @isMultiple == false
+          @collection.find('[data-attachment]').each (index, item)=>
+            @removeItem(item)
         @processing += 1
         @updateLabel()
         data.submit()
@@ -76,24 +79,30 @@ module.exports = class AttachmentInput
     @collection.append(item)
     $('html').trigger('selects.init.forms', [item])
 
+  removeItem: (item)->
+    item = $(item)
+    trigger = item.find('[data-delete]')
+    url = trigger.data('url')
+    item.addClass('deleting')
+
+    @processingFiles += 1
+
+    $.ajax
+      url: url,
+      method: 'post'
+      data: { _method: 'delete' },
+      success: =>
+        item.remove()
+        @processingFiles -= 1
+
   listenToDeleteFile: ->
     @collection.on 'click', '[data-delete]', (e) =>
       e.preventDefault()
-      @processingFiles += 1
       trigger = $(e.target).closest('[data-delete]')
-      url = trigger.data("url")
       labelConfirm = trigger.data('label-confirm')
       return unless confirm(labelConfirm)
 
-      item = trigger.closest("[data-attachment]").addClass('deleting')
-
-      $.ajax
-        url: url,
-        method: 'post'
-        data: { _method: 'delete' },
-        success: =>
-          item.remove()
-          @processingFiles -= 1
+      @removeItem(trigger.closest('[data-attachment]'));
 
   listenToFormSubmit: ->
     @container.parents('form').on 'submit', (e)=>

@@ -1,0 +1,178 @@
+.user-profile {
+    margin-bottom: 40px;
+    background: #fff;
+
+    * {
+        box-sizing: border-box;
+    }
+
+    header {
+        background: none;
+        height: auto;
+        position: relative;
+    }
+
+    .user-profile__header {
+        background: #dfdfdf;
+        padding: 15px;
+    }
+
+    .profile-content {
+        padding: 15px;
+    }
+
+    .portrait {
+        position: relative;
+        display: block;
+
+        img {
+            margin: 0 auto 20px;
+            max-width: 200px;
+            display: block;
+            background: #fff;
+            padding: 2px;
+            border: 1px solid rgba(0,0,0,0.3);
+        }
+    }
+
+
+    @media (min-width: 769px) {
+        .portrait {
+            img {
+                position: absolute;
+                margin: 0;
+                max-width: 100%;
+                left: 0;
+                right: 0;
+                top: 0;
+            }
+        }
+
+        .profile-content > .row-fluid > .span3 {
+            &:before {
+                display: block;
+                content: "";
+                width: 100%;
+                padding-top: calc(75% - 10px);
+            }
+        }
+    }
+
+    .user-meta {
+        margin-bottom: 10px;
+
+        b {
+            font-weight: bold;
+        }
+    }
+
+    .follow {
+        padding: 0;
+        list-style: none;
+        margin-bottom: 10px;
+        text-align: center;
+
+        @media (min-width: 769px) {
+            text-align: right;
+        }
+
+        li {
+            display: inline-block;
+            margin-left: 8px;
+        }
+
+        span {
+            font-size: 0;
+
+            &:before {
+                font-size: 25px;
+            }
+        }
+
+        .twitter a {
+            color: #55acee;
+        }
+
+        .facebook a {
+            color: #3b5998;
+        }
+
+        .linkedin a {
+            color: #0077b5;
+        }
+
+        .googleplus a {
+            color: #dc4e41;
+        }
+    }
+
+    .tab-content {
+        padding: 15px 0 0;
+    }
+
+    .section-header {
+        position: relative;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+
+        h2 {
+            font-size: 20px;
+        }
+
+        .edit-link {
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+
+    dl {
+        &:after {
+            display: table;
+            clear: both;
+            width: 100%;
+            content: "";
+        }
+    }
+
+    dt {
+        font-weight: bold;
+        color: #2a2a2a;
+    }
+
+    dd {
+        margin-bottom: 1em;
+    }
+
+    @media (min-width: 769px) {
+        dt {
+            clear: left;
+            float: left;
+            width: 20%;
+            margin-bottom: 1em;
+            text-align: right;
+        }
+
+        dd {
+            float: right;
+            width: 75%;
+        }
+    }
+
+    .verifications {
+        .ico-check {
+            color: #5dc998;
+
+            &:before {
+                vertical-align: middle;
+                margin-right: 10px;
+            }
+        }
+    }
+}

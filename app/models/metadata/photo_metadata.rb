@@ -7,6 +7,8 @@ module Metadata
       attr_accessor :skip_metadata
       after_commit :listing_populate_photos_metadata!, :if => lambda { |p| !p.skip_metadata && p.should_populate_metadata? }
       after_update :listing_populate_photos_metadata!, :if => lambda { |p| !p.skip_metadata && p.should_populate_metadata? }
+      # We need this because on restore the other callbacks are not called and metadata is not restored
+      after_restore :listing_populate_photos_metadata!, :if => lambda { |p| !p.skip_metadata }
 
       def should_populate_metadata?
         deleted? || (listing.present? && relevant_attribute_changed?)
@@ -20,9 +22,12 @@ module Metadata
 
       def to_listing_metadata
         {
-          space_listing: image_url(:space_listing),
-          golden:  image_url(:golden) ,
-          large: image_url(:large)
+          listing_name: listing.name,
+          original: image_url(:original),
+          space_listing: image.url(:space_listing),
+          golden:  image.url(:golden) ,
+          large: image.url(:large),
+          caption: caption
         }
       end
 
@@ -31,7 +36,7 @@ module Metadata
       end
 
       def to_location_metadata
-        to_listing_metadata.merge(listing_name: listing.name, caption: caption)
+        to_listing_metadata
       end
 
     end

@@ -48,6 +48,7 @@ module.exports = class Schedule
     input.attr('name', anchor.data('input-name'))
     anchor.before(field)
     $('html').trigger('datepickers.init.forms', [field])
+    $('html').trigger('timepickers.init.forms', [field])
 
   removeTime: (field)=>
     # control-group selector is a legacy selector for UI prior to 2015-12.
@@ -60,4 +61,5 @@ module.exports = class Schedule
   initializeNewRow: (insertedItem) =>
     @initModeContainers(insertedItem)
     $('html').trigger('datepickers.init.forms', [insertedItem])
+    $('html').trigger('timepickers.init.forms', [insertedItem])
     $('html').trigger('selects.init.forms', [insertedItem])

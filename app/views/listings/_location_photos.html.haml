@@ -1,0 +1,14 @@
+%article.photos
+  = render :layout => 'listings/photos_gallery', :locals =>  {:location => location, :gallery_id => 'photos-container', :photo_size => 'golden', :fullscreen => false} do
+    %button.enlarge.btn{:type => "button", :'data-gallery-enlarge' => true, :'data-toggle' => "modal", :'data-target' => "#fullscreen-gallery"}
+      %span.ico-enlarge
+
+
+#fullscreen-gallery.modal.hide.fade.modal-fullscreen{"aria-hidden" => "true", "aria-labelledby" => "fullscreen-gallery-label", :role => "dialog", :tabindex => "-1"}
+  .loading
+    = image_tag 'components/modal/loader.gif'
+
+  #fullscreen-gallery-content.modal-body
+    = render :layout => 'listings/photos_gallery_full_screen', :locals =>  {:location => location, :gallery_id => 'photos-container-enlarged'} do
+      %button.btn.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"}
+        %span.ico-close

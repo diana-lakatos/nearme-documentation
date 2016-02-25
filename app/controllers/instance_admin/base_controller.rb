@@ -20,6 +20,7 @@ class InstanceAdmin::BaseController < ApplicationController
 
   COMMUNITY_REPORTS_CONTROLLERS = {
     'projects' => { default_action: 'index' },
+    'advanced_projects' => { default_action: 'index' },
   }
 
   MANAGE_CONTROLLERS = {
@@ -99,8 +100,22 @@ class InstanceAdmin::BaseController < ApplicationController
     'spam_reports'  => { default_action: 'index' }
   }
 
+  PERMISSIONS_CONTROLLERS = {
+    blog: 'manage_blog',
+    support: 'support_root',
+    buysell: 'buy_sell',
+    shippingoptions: ['shipping_options', 'shipping_profiles'],
+    reports: ['reports', 'listings'],
+  }.with_indifferent_access
+
   def index
-    redirect_to url_for([:instance_admin, @authorizer.first_permission_have_access_to])
+    first_permission = @authorizer.first_permission_have_access_to
+
+    if PERMISSIONS_CONTROLLERS.has_key?(first_permission)
+      redirect_to url_for([:instance_admin, PERMISSIONS_CONTROLLERS[first_permission]].flatten)
+    else
+      redirect_to url_for([:instance_admin, first_permission])
+    end
   end
 
   private

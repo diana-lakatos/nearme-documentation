@@ -17,6 +17,7 @@ module.exports = class PhoneNumbers
 
     @findFields()
     @bindEvents()
+
     interval = window.setInterval(()=>
       if @countryNameField[0].selectize
         window.clearInterval(interval)

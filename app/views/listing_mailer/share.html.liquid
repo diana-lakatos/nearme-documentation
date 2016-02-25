@@ -2,7 +2,7 @@
 
 <p>{{ sharer.name }} has shared a {{ listing.name }} with you!</p>
 
-<p><a href="{{ platform_context.host | append:listing.listing_url }}">View {{ listing.name }} on {{ platform_context.name }}</a></p>
+<p><a href="{{ listing.listing_url }}">View {{ listing.name }} on {{ platform_context.name }}</a></p>
 
 {% if message %}
   <p>They also wanted to say:</p>

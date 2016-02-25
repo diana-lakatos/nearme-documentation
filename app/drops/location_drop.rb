@@ -51,10 +51,14 @@ class LocationDrop < BaseDrop
   # state
   #   state for this location
   delegate :id, :slug, :listings, :lowest_price, :name, :description, :phone, :street, :city, :suburb, :company, :address, :latitude, :longitude, :creator, :administrator, :updated_at, :postcode,
-    :country, :state, :lowest_full_price, to: :location
+    :country, :state, :lowest_full_price, :to_key, :model_name, to: :location
 
   def initialize(location)
     @location = location
+  end
+
+  def class_name
+    'Location'
   end
 
   # When the location is available for booking as a string
@@ -64,19 +68,11 @@ class LocationDrop < BaseDrop
 
   # Url for the location in the application
   def url
-    routes.location_path(@location, @location.listings.first)
+    @location.listings.first.try(:decorate).try(:show_path)
   end
 
   # fully qualified url
   def full_url
-    routes.location_url(@location, @location.listings.first)
-  end
-
-  def tweet_url
-    tweet_location_path(routes.location_url(@location))
-  end
-
-  def tweet_button_url
     urlify(url)
   end
 
@@ -159,21 +155,6 @@ class LocationDrop < BaseDrop
   # url to a linkedin icon image for sharing
   def linkedin_img_url
     image_url('mailers/linkedin.png')
-  end
-
-  # url for sharing this location on Facebook
-  def facebook_social_share_url
-    routes.new_location_social_share_path(@location, provider: 'facebook', track_email_event: true)
-  end
-
-  # url for sharing this location on Twitter
-  def twitter_social_share_url
-    routes.new_location_social_share_path(@location, provider: 'twitter', track_email_event: true)
-  end
-
-  # url for sharing this location on LinkedIn
-  def linkedin_social_share_url
-    routes.new_location_social_share_path(@location, provider: 'linkedin', track_email_event: true)
   end
 
   # formatted string containing the company name and parts of the location

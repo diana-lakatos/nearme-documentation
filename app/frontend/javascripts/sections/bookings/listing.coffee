@@ -95,9 +95,17 @@ module.exports = class BookingListing
     true
 
   canBookDate: (date, min) ->
-    if date.setHours(0,0,0,0) == (new Date()).setHours(0,0,0,0)
-      if ((new Date().getUTCHours() + @data.zone_offset) * 60) + (new Date).getMinutes() > min
-        return false
+    # clt = current location zone time
+    clt = new Date()
+    clt.setHours(clt.getHours() + @data.zone_offset)
+    clt.setHours(clt.getHours() + (clt.getTimezoneOffset() / 60))
+
+    period_starts = new Date(date)
+    period_starts.setMinutes(min % 60)
+    period_starts.setHours(parseInt(min / 60))
+
+    if (period_starts.getTime() < clt.getTime())
+      return false
 
     @availabilityFor(date, min) >= @defaultQuantity
 

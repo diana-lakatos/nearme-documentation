@@ -1,6 +1,6 @@
 {
   "name": "desksnearme",
-  "version": "9.6.0-54",
+  "version": "9.6.2-148",
   "description": "All documentation is set out on the [GitHub Wiki](https://near-me.atlassian.net/wiki/).",
   "private": true,
   "directories": {},
@@ -36,6 +36,7 @@
     "gulp-jshint": "^2.0.0",
     "gulp-plumber": "^1.0.1",
     "gulp-postcss": "^6.0.1",
+    "gulp-rename": "^1.2.2",
     "gulp-rev": "^6.0.1",
     "gulp-rev-css-url": "^0.1.0",
     "gulp-rev-manifest-rails": "0.0.1",
