@@ -1,0 +1,13 @@
+%header.dialog__header
+  %h2#dialog__title
+    = t('phone_calls.headers.call_is_over')
+
+= form_tag '/', name: 'call-over' do
+  .dialog__actions
+    = submit_tag t('phone_calls.buttons.close'), class: 'btn btn-grey'
+
+:javascript
+  $('[name=call-over]').on('submit', function(event) {
+    event.preventDefault();
+    $('a.modal-close').click();
+  });

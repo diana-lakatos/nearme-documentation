@@ -1731,6 +1731,19 @@ en:
     dashboard:
       wish_list_items: 'Dashboard > Wish list'
 
+  phone_calls:
+    headers:
+      make_a_call_to: 'Make a call to %{name}'
+      call_is_over: 'Call is over'
+    buttons:
+      click_to_call: 'Call me'
+      call: 'Call'
+      hang_up: 'Hang up'
+      close: 'Close'
+    status:
+      calling: 'Calling...'
+    error: 'Error'
+
   wish_lists:
     name: 'Favorites'
     empty_list: "You don't have any items yet"
@@ -1951,6 +1964,9 @@ en:
       github_info: "Connect with your GitHub account."
       connect: 'Connect'
       disconnect: 'Disconnect'
+    phone_calls:
+      twilio: 'Twilio'
+      twilio_info: "Connect with your Twilio account."
 
     accept_terms_of_service: 'confirm that you accept the <a href="/pages/legal" target="_blank">Terms of Service and Privacy Policy</a>'
   recurring_bookings:

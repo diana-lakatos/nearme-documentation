@@ -5,6 +5,7 @@
 = simple_form_for [:admin, resource], :html => { :multipart => true } do |f|
   = f.input :name
   = f.input :user_based_marketplace_views
+  = f.input :click_to_call
 
   %p
     = f.button :submit, 'Save'

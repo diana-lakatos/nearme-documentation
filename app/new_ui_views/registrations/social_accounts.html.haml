@@ -5,7 +5,13 @@
 
 .panel.verification
   .panel-body.notifications
+
     - if @supported_providers.any?
       = render "registrations/networks", supported_providers: @supported_providers
-    - else
+
+    - if HiddenUiControls.find('dashboard/notification_preferences/click_to_call').visible?
+      = render "registrations/communications"
+
+    - if @supported_providers.empty? && HiddenUiControls.find('dashboard/notification_preferences/click_to_call').hidden?
       %p.empty-resultset= t('registrations.social_accounts.no_social_providers', marketplace_name: platform_context.name).html_safe
+

@@ -50,6 +50,7 @@ class HiddenUiControls
       'dashboard/notification_preferences',
       'dashboard/notification_preferences/emails',
       'dashboard/notification_preferences/sms',
+      'dashboard/notification_preferences/click_to_call',
       'registrations/social_accounts',
       'dashboard/blog',
       'registrations/show#reviews',
@@ -80,9 +81,13 @@ class HiddenUiControls
       'dashboard/offers/search'
   ]
 
+  OPTIONAL_KEYS = {
+    'dashboard/notification_preferences/click_to_call' => :click_to_call?
+  }
+
   def self.find(key)
-    index = all_keys.find_index(key)
-    index ? to_obj(all_keys[index]) : raise(KeyNotFound, "Unable to find key #{key}")
+    index = keys(:auto).find_index(key)
+    index ? to_obj(keys(:auto)[index]) : OpenStruct.new(visible?: false, hidden?: true)
   end
 
   def self.all(type=:auto)
@@ -91,7 +96,7 @@ class HiddenUiControls
   end
 
   def self.keys(type=:auto)
-    case type
+    selected_keys = case type
     when :auto
       # We now return all keys on auto
       # as the instance is actually both especially
@@ -105,9 +110,19 @@ class HiddenUiControls
     else
       all_keys
     end
+
+    hide_disabled_ui_controls(selected_keys.clone)
   end
 
   private
+
+  def self.hide_disabled_ui_controls(keys)
+    OPTIONAL_KEYS.each do |key, mth|
+      keys.delete(key) unless PlatformContext.current.instance.send(mth)
+    end
+
+    keys
+  end
 
   def self.is_key_hidden?(key)
     PlatformContext.current.instance.hidden_ui_controls.key? key
