@@ -20,13 +20,14 @@ class PaymentTest < ActiveSupport::TestCase
 
     should 'raise validation errors on credit card on authorize' do
       stub_active_merchant_interaction
+      @payment.credit_card = FactoryGirl.build(:invalid_credit_card_attributes)
       refute @payment.authorize
-      assert_equal [I18n.t('buy_sell_market.checkout.invalid_cc')], @payment.errors[:cc]
+      assert_equal [I18n.t('buy_sell_market.checkout.invalid_cc')], @payment.credit_card.errors[:base]
     end
 
     should 'be authorized correctly when CC is valid' do
       stub_active_merchant_interaction
-      @payment.credit_card_form = FactoryGirl.attributes_for(:credit_card_form)
+      @payment.credit_card = FactoryGirl.build(:credit_card_attributes)
       assert @payment.authorize
       assert @payment.valid?
       assert @payment.successful_billing_authorization.present?
@@ -38,7 +39,7 @@ class PaymentTest < ActiveSupport::TestCase
 
     should "not authorize when authorization response is not success" do
       stub_active_merchant_interaction({success?: false, message: "fail"})
-      @payment.credit_card_form = FactoryGirl.attributes_for(:credit_card_form)
+      @payment.credit_card_attributes = FactoryGirl.attributes_for(:credit_card_attributes)
       refute @payment.authorize
       billing_authorization = @payment.billing_authorizations.last
       assert_equal true, @payment.errors.present?
@@ -50,7 +51,7 @@ class PaymentTest < ActiveSupport::TestCase
     should "display internal error message to gateway user" do
       response = OpenStruct.new(code: '500', message: 'Internal server error')
       @payment.payment_gateway.gateway.stubs(:authorize).raises(ResponseError.new(response))
-      @payment.credit_card_form = FactoryGirl.attributes_for(:credit_card_form)
+      @payment.credit_card_attributes = FactoryGirl.attributes_for(:credit_card_attributes)
       refute @payment.authorize
       assert @payment.errors[:base].include?("Failed with 500 Internal server error")
     end
@@ -101,7 +102,7 @@ class PaymentTest < ActiveSupport::TestCase
     should "not capture while Internal Gateway error is raised" do
       response = OpenStruct.new(code: '500', message: 'Internal server error')
       @payment.payment_gateway.gateway.stubs(:capture).raises(ResponseError.new(response))
-      @payment.credit_card_form = FactoryGirl.attributes_for(:credit_card_form)
+      @payment.credit_card_attributes = FactoryGirl.attributes_for(:credit_card_attributes)
       refute @payment.capture!
       refute @payment.paid?
       assert @payment.errors[:base].include?("Failed with 500 Internal server error")
@@ -246,7 +247,10 @@ class PaymentTest < ActiveSupport::TestCase
     setup do
       @reservation = FactoryGirl.create(:reservation)
       @reservation.payment.destroy
-      @payment = @reservation.build_payment({payment_method: FactoryGirl.build(:credit_card_payment_method)})
+      @payment = @reservation.build_payment({
+        payment_method: FactoryGirl.build(:credit_card_payment_method),
+        credit_card_attributes: FactoryGirl.attributes_for(:credit_card_attributes),
+        })
       @payment.save!
     end
 

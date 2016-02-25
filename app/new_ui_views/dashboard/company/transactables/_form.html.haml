@@ -73,9 +73,9 @@
             = draw_attribute_for_form(@transactable_type.custom_attributes.find_by(name: field), properties_form)
           -elsif f.object.attributes.include?(field)
             - if enable_ckeditor_for_field?(model, field)
-              = f.input field, :as => :ckeditor, :input_html => { :ckeditor => { :toolbar => ckeditor_toolbar_creator.toolbar } }
+              = f.input field, :as => :ckeditor, :input_html => { :ckeditor => { :toolbar => ckeditor_toolbar_creator.toolbar } }, required: f.object.required?(field)
             - else
-              = f.input field
+              = f.input field, required: f.object.required?(field)
 .hidden
   - Money::Currency.table.values.each do |c|
     %span{:id => "currency_#{c[:iso_code]}"}

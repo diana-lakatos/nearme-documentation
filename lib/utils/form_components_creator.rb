@@ -42,11 +42,15 @@ module Utils
       raise NotImplementedError
     end
 
-    def create_components!(components)
+    def create_components!(components, ui_version = nil)
       raise AlreadyCreatedError.new("This #{@form_componentable.class} already has form components for #{@form_type_class} populated") if @form_componentable.form_components.where(form_type: @form_type_class).count > 0
       components.each do |component|
         next if component[:fields].nil?
-        @form_componentable.form_components.create!(name: component[:name], form_type: @form_type_class, form_fields: component[:fields])
+
+        options = { name: component[:name], form_type: @form_type_class, form_fields: component[:fields] }
+        options[:ui_version] = ui_version if ui_version.present?
+
+        @form_componentable.form_components.create!(options)
       end
     end
 
@@ -87,7 +91,15 @@ module Utils
 
     def create_dashboard_form!
       @form_type_class = FormComponent::TRANSACTABLE_ATTRIBUTES
-      create_components!([{name: 'Main', fields: [{'transactable' => 'location_id'}, {'transactable' => 'approval_requests'}, {'transactable' => 'enabled'}, {'transactable' => 'amenity_types'}, {'transactable' => 'price'}, { 'transactable' => 'currency' }, {'transactable' => 'schedule'}, {'transactable' => 'photos'}, {'transactable' => 'waiver_agreement_templates'}, {'transactable' => 'documents_upload'}, {'transactable' => 'capacity'}, {'transactable' => 'name'}, {'transactable' => 'description'}, {'transactable' => 'quantity'}, { 'transactable' => 'book_it_out' }, { 'transactable' => 'exclusive_price' }, { 'transactable' => 'action_rfq' }, {'transactable' => 'confirm_reservations'}, {'transactable' => 'listing_type'}] }])
+      create_components!(
+                    [
+                      {
+                        name: 'Details', fields: %w( name listing_type description amenity_types photos location_id waiver_agreement_templates documents_upload approval_requests ).map {|field| { 'transactable' => field } } 
+                      },
+                      { name: 'Pricing & Availability', fields: %w( confirm_reservations enabled price schedule currency quantity book_it_out exclusive_price, action_rfq capacity ).map {|field| { 'transactable' => field } } 
+                      }
+                    ], 
+                    'new_dashboard')
     end
   end
 

@@ -3,7 +3,7 @@
 
     <div class="row-fluid">
       {% for transactable_type in transactable_types %}
-        <div class="transactable-type-search-box" data-transactable-type-id="{{ transactable_type.select_id }}" style="display: none;">
+        <div class="transactable-type-search-box" data-transactable-type-id="{{ transactable_type.select_id }}" {% if forloop.first != true %} style=" display: none;" {% endif%}>
 
           {% for input in transactable_type.search_inputs %}
             {% assign input_path = input | prepend: 'home/search/' %}

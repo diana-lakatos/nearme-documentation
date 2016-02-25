@@ -1,17 +1,47 @@
 class InstanceAdmin::Analytics::ProfilesController < InstanceAdmin::Analytics::BaseController
 
   def show
-    users = User.unscoped.where(instance: PlatformContext.current.instance).
-      includes(:current_address).without(User.unscoped.admin).references(:addresses).
-      pluck('users.id, users.email, users.name, users.reservations_count, users.transactables_count, users.mobile_number, addresses.address, users.properties, users.created_at, users.deleted_at')
+    columns = ['id',
+               'email',
+               'name',
+               'sign_in_count',
+               'current_sign_in_at',
+               'last_sign_in_at',
+               'current_sign_in_ip',
+               'last_sign_in_ip',
+               'reservations_count',
+               'transactables_count',
+               'phone',
+               'browser',
+               'browser_version',
+               'platform',
+               'last_geolocated_location_longitude',
+               'last_geolocated_location_latitude',
+               'time_zone',
+               'twitter_url',
+               'linkedin_url',
+               'facebook_url',
+               'google_plus_url',
+               'language',
+               'mobile_number',
+               'created_at',
+               'deleted_at']
+
+    columns_str = columns.collect { |column| "users.#{column}" }.join(', ')
+
+    sql = "SELECT #{columns_str}, addresses.formatted_address, hstore_to_json(default_up.properties) AS default_user_properties, hstore_to_json(buyer_up.properties) AS buyer_user_properties, hstore_to_json(seller_up.properties) AS seller_user_properties FROM users "\
+      "LEFT JOIN addresses on addresses.entity_id = users.id and addresses.entity_type = 'User' AND addresses.instance_id = #{platform_context.instance.id} "\
+      "LEFT JOIN user_profiles default_up on default_up.user_id = users.id AND default_up.profile_type = 'default' AND default_up.instance_id = #{platform_context.instance.id} "\
+      "LEFT JOIN user_profiles buyer_up on buyer_up.user_id = users.id AND buyer_up.profile_type = 'buyer' AND buyer_up.instance_id = #{platform_context.instance.id} "\
+      "LEFT JOIN user_profiles seller_up on seller_up.user_id = users.id AND seller_up.profile_type = 'seller' AND seller_up.instance_id = #{platform_context.instance.id} "\
+      "WHERE users.instance_id = #{platform_context.instance.id} AND (users.admin = false OR users.admin IS NULL) "
+
+    records_array = ActiveRecord::Base.connection.execute(sql)
 
     csv = CSV.generate do |csv|
-      csv.add_row %w(id email name bookings_count listings_count phone current_address user_properties created_at deleted_at)
-      users.each do |profile|
-        profile[-1] = value_to_utc(profile[-1])
-        profile[-2] = value_to_utc(profile[-2])
-
-        csv.add_row profile
+      csv.add_row columns + ['address', 'default_properties', 'buyer_properties', 'seller_properties']
+      records_array.each do |profile|
+        csv.add_row profile.values
       end
     end
 
@@ -19,16 +49,6 @@ class InstanceAdmin::Analytics::ProfilesController < InstanceAdmin::Analytics::B
       format.csv { send_data csv }
     end
 
-  end
-
-  protected
-
-  def value_to_utc(value)
-    if value.present?
-      return value.utc
-    end
-
-    value
   end
 
 end

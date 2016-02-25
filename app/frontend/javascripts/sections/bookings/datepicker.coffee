@@ -57,6 +57,12 @@ module.exports = class BookingsDatepicker
       '<div class="datepicker-text-fadein">Select an end date</div>'
 
   bindEvents: ->
+    @listing.on 'quantityChanged', () =>
+      if @timePicker
+        setTimeout (=>
+          @timePicker.updateSelectableTimes()
+        ), 100
+
     @startDatepicker.on 'datesChanged', (dates) =>
       @startDatepickerWasChanged()
       @timePicker.updateSelectableTimes() if @timePicker

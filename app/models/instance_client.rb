@@ -27,8 +27,6 @@ class InstanceClient < ActiveRecord::Base
                      InstanceClient::BraintreeDecorator.new(self)
                    when nil
                      nil
-                   else
-                     raise NotImplementedError.new("Unknown gateway class: #{payment_gateway.name}")
                    end
   end
 

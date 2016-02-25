@@ -12,17 +12,24 @@ class RecurringBookingRequestTest < ActiveSupport::TestCase
     @listing = FactoryGirl.create(:transactable, :name => "blah", monthly_subscription_price: 99, booking_type: 'subscription')
     @instance = @listing.instance
     @user = FactoryGirl.create(:user, name: "Firstname Lastname")
-
+    @payment_method = FactoryGirl.create(:credit_card_payment_method)
     @attributes = {
       schedule_params: "{\"validations\":{\"day\":[1, 5]}, \"rule_type\":\"IceCube::WeeklyRule\", \"interval\":1, \"week_start\":0}",
       start_on: @first_monday,
       end_on: @last_thursday,
       interval: 'monthly',
       quantity: 1,
-      card_number: 4242424242424242,
-      card_exp_month: '05',
-      card_exp_year: '2020',
-      card_code: "411"
+      payment_subscription: {
+        payment_method: @payment_method,
+        credit_card_attributes: {
+          first_name: "Charles",
+          last_name: "Darwin",
+          number: 4242424242424242,
+          month: '05',
+          year: '2020',
+          verification_value: "411"
+        }
+      }
     }
     stub_billing_gateway(@instance)
     stub_active_merchant_interaction
@@ -43,12 +50,12 @@ class RecurringBookingRequestTest < ActiveSupport::TestCase
 
       should 'set credit card' do
         Instance.any_instance.stubs(:payment_gateway).returns(FactoryGirl.build(:stripe_payment_gateway))
-        assert_equal 'credit_card', RecurringBookingRequest.new(@listing, @user, PlatformContext.new(@instance), @attributes).payment_method
+        assert_equal @payment_method, RecurringBookingRequest.new(@listing, @user, PlatformContext.new(@instance), @attributes).payment_subscription.payment_method
       end
 
       should 'set manual' do
         Instance.any_instance.stubs(:payment_gateway).returns(nil)
-        assert_equal 'credit_card', RecurringBookingRequest.new(@listing, @user, PlatformContext.new(@instance), @attributes).payment_method
+        assert_equal @payment_method, RecurringBookingRequest.new(@listing, @user, PlatformContext.new(@instance), @attributes).payment_subscription.payment_method
       end
     end
   end

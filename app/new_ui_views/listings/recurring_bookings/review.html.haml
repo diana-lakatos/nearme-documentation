@@ -50,18 +50,10 @@
 
           = render 'contact_information_fields', :f => f
 
-
-        %h2= t 'reservations_review.payment'
-
-        - unless @recurring_booking.weekly?
-          %p= t 'recurring_reservations_review.prorated_info'
-
-        = render 'credit_card_fields', :f => f
-
+        = render 'shared/payment_subscription', f: f
         = f.button :submit, t('reservations_review.buttons.request'), data: { disable_with: t('reservations_review.disabled_buttons.request') }
 
 - content_for :script do
-  = javascript_include_tag "https://js.stripe.com/v1/"
   :javascript
     $(function() {
       $(document).trigger('init.phonenumberfieldsform', 'form.payment', {

@@ -19,6 +19,7 @@ class ReservationRequest < Form
   validate :validate_reservation
   validate :validate_empty_files, if: lambda { reservation.present? }
   validate :validate_total_amount
+  validate :validate_payment
 
   def initialize(listing, user, attributes = {}, checkout_extra_fields = {})
     @listing = listing
@@ -54,8 +55,9 @@ class ReservationRequest < Form
       end
       store_attributes(attributes)
       @reservation.calculate_prices
+
       @reservation.build_additional_charges(attributes)
-      @payment = @reservation.build_payment(attributes.try(:[], :payment_attributes) || {})
+      @payment = @reservation.build_payment(attributes.try(:[], :payment_attributes) || {}).decorate
     end
   end
 
@@ -269,6 +271,10 @@ class ReservationRequest < Form
 
   def validate_user
     errors.add(:user) if @user.blank? || !@user.valid?
+  end
+
+  def validate_payment
+    errors.add(:payment) if @payment.blank? || !payment.valid?
   end
 
   def validate_total_amount

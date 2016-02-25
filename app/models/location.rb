@@ -118,7 +118,7 @@ class Location < ActiveRecord::Base
   end
 
   def minimum_booking_minutes
-    listings.joins(:transactable_type).pluck(:minimum_booking_minutes).max || 60
+    listings.active.pluck(:minimum_booking_minutes).max || 60
   end
 
   def assign_default_availability_rules

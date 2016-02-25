@@ -302,12 +302,12 @@ end
 
 When /^I provide reservation credit card details$/ do
   mock_billing_gateway
-  fill_in 'reservation_request_payment_attributes_credit_card_form_first_name', with: 'FirstName'
-  fill_in 'reservation_request_payment_attributes_credit_card_form_last_name', with: 'LastName'
-  fill_in 'reservation_request_payment_attributes_credit_card_form_number', :with => "4242424242424242"
-  select '12', from: 'reservation_request_payment_attributes_credit_card_form_month', visible: false
-  select '2020', from: 'reservation_request_payment_attributes_credit_card_form_year', visible: false
-  fill_in 'reservation_request_payment_attributes_credit_card_form_verification_value', :with => '411'
+  fill_in 'reservation_request_payment_attributes_credit_card_attributes_first_name', with: 'FirstName'
+  fill_in 'reservation_request_payment_attributes_credit_card_attributes_last_name', with: 'LastName'
+  fill_in 'reservation_request_payment_attributes_credit_card_attributes_number', :with => "4242424242424242"
+  select '12', from: 'reservation_request_payment_attributes_credit_card_attributes_month', visible: false
+  select '2020', from: 'reservation_request_payment_attributes_credit_card_attributes_year', visible: false
+  fill_in 'reservation_request_payment_attributes_credit_card_attributes_verification_value', :with => '411'
   @credit_card_reservation = true
 end
 
@@ -330,9 +330,9 @@ Then(/^I should see the booking confirmation screen for:$/) do |table|
     date = I18n.l(reservation[:date], format: :short)
     start_time = reservation[:start_at].strftime("%-H:%M")
     end_time   = reservation[:end_at].strftime("%-H:%M")
-    assert page.has_content?(date), "Expected to see: #{date}"
     assert page.has_content?(start_time), "Expected to see: #{start_time}"
     assert page.has_content?(end_time), "Expected to see: #{end_time}"
+    assert page.has_content?(date), "Expected to see: #{date}"
   else
     # Daily booking
     assert page.has_content?("#{reservation[:listing].name}")

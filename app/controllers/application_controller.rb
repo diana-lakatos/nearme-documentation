@@ -54,7 +54,9 @@ class ApplicationController < ActionController::Base
     I18n.locale = language_service.get_language
     session[:language] = I18n.locale
 
-    if request.get? && !request.xhr? && language_router.redirect? && params[:controller] != 'authentications'
+    # We don't redirect if the format is rss (i.e. blog) to avoid
+    # causing problems for newsreaders
+    if request.get? && !request.xhr? && language_router.redirect? && params[:controller] != 'authentications' && params[:format] != 'rss'
       params_with_language = params.merge(language_router.url_params)
       redirect_to url_for(params_with_language)
     end

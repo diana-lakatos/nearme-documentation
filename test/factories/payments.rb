@@ -8,6 +8,7 @@ FactoryGirl.define do
     state 'pending'
     currency 'USD'
     association(:payment_method, factory: :credit_card_payment_method)
+    association(:credit_card, factory: :credit_card_attributes)
 
     factory :manual_payment do
       association(:payment_method, factory: :manual_payment_method)

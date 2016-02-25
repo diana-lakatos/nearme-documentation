@@ -2,7 +2,7 @@
 # Payment class helps interact with Active Merchant via different Payment Gateways.
 # It's now isolated from Reservation, Order etc. All you need to do to add payment
 # to new model is to build payment object (see build_payment method in Reservation class).
-# CreditCardForm object is required to process CC authorization.
+# CreditCard object is required to process CC authorization.
 # To create valid Payment object it's necessary to pass PaymentMethod that describe payment type
 #
 # Manual and free payments are now created so it can be taken into statistics in the future.
@@ -39,18 +39,21 @@ class Payment < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  attr_accessor :express_checkout_redirect_url, :payment_response_params, :payment_method_nonce, :customer
+  attr_accessor :express_checkout_redirect_url, :payment_response_params, :payment_method_nonce, :customer,
+    :recurring
+
 
   # === Associations
 
+  # Payable association connects Payment with Reservation and Spree::Order
+  belongs_to :payable, polymorphic: true
   belongs_to :company, -> { with_deleted }
+  belongs_to :credit_card
   belongs_to :instance
   belongs_to :payment_transfer
   belongs_to :payment_gateway
   belongs_to :payment_method
   belongs_to :merchant_account
-  # Payable association connects Payment with Reservation and Spree::Order
-  belongs_to :payable, polymorphic: true
 
   has_many :billing_authorizations
   has_many :charges, dependent: :destroy
@@ -89,11 +92,15 @@ class Payment < ActiveRecord::Base
            ')
   }
 
+  accepts_nested_attributes_for :credit_card
 
   validates :currency, presence: true
+  validates :credit_card, presence: true, if: Proc.new { |p| p.credit_card_payment? && p.save_credit_card? }
   validates :payment_gateway, presence: true
   validates :payment_method, presence: true
   validates :payable_id, :uniqueness => { :scope => [:payable_type, :payable_id, :instance_id] }, if: Proc.new {|p| p.payable_id.present? }
+
+  validates_associated :credit_card
 
   # === Helpers
   monetize :subtotal_amount_cents, with_model_currency: :currency
@@ -115,7 +122,7 @@ class Payment < ActiveRecord::Base
   end
 
   def authorize
-    !!(valid_for_authorization? && payment_gateway.authorize(self, auth_options) && store_card)
+    !!(valid? && payment_gateway.authorize(self))
   end
 
   def capture!
@@ -187,16 +194,21 @@ class Payment < ActiveRecord::Base
     end
   end
 
-  def credit_card_form=(credit_card_attributes)
-    @credit_card_form = CreditCardForm.new(credit_card_attributes)
+  def test_mode?
+    payment_gateway_mode == 'test'
   end
 
-  def credit_card_form
-    @credit_card_form ||= CreditCardForm.new
+  def credit_card_attributes=(cc_attributes)
+    super(cc_attributes.merge({
+      payment_gateway: payment_gateway,
+      instance_client: payment_gateway.try {|p| p.instance_clients.where(client: payable.owner).first_or_initialize }
+    }))
   end
 
-  def credit_card
-    @credit_card_form.try(:to_active_merchant)
+  # Currently we store all CC if PamentGateway allows us to do so.
+  # We should change that to let MPO decide if it's mandatory or optional
+  def save_credit_card?
+    payment_gateway.supports_recurring_payment?
   end
 
   def total_amount_cents
@@ -264,17 +276,12 @@ class Payment < ActiveRecord::Base
     define_method("#{pmt}_payment?") { self.payment_method.try(:payment_method_type) == pmt.to_s }
   end
 
-  def payment_methods
-    payment_gateways = PlatformContext.current.instance.payment_gateways(company.iso_country_code, currency)
-    if is_free?
-      payment_gateways.map(&:active_free_payment_methods)
-    else
-      payment_gateways.map(&:active_payment_methods)
-    end.flatten.uniq
-  end
-
   def is_free?
     total_amount.zero?
+  end
+
+  def is_recurring?
+    @recurring == true
   end
 
   def active_merchant_payment?
@@ -346,26 +353,6 @@ class Payment < ActiveRecord::Base
     successful_billing_authorization.try(:immediate_payout?) == true
   end
 
-  def auth_options
-    {
-      customer: customer,
-      order_id: payable.id
-    }
-  end
-
-  def store_card
-    return true unless payment_gateway.supports_recurring_payment?
-    return true unless payable.respond_to?("credit_card_id=")
-    return true unless credit_card_payment?
-
-    if payable.credit_card_id = payment_gateway.store_credit_card(payable.user, credit_card)
-      true
-    else
-      add_error(I18n.t('reservations_review.errors.internal_payment', :cc))
-      false
-    end
-  end
-
   def transferred_to_seller?
     payment_transfer.try(:transferred?)
   end
@@ -373,14 +360,5 @@ class Payment < ActiveRecord::Base
   def set_offline
     self.offline = manual_payment?
     true
-  end
-
-  def valid_for_authorization?
-    if credit_card_payment? && !credit_card_form.valid? && auth_options[:customer].blank?
-      errors.add(:cc, I18n.t('buy_sell_market.checkout.invalid_cc'))
-      false
-    else
-      true
-    end
   end
 end

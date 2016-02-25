@@ -75,7 +75,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
           ActiveMerchant::Billing::CreditCard.expects(:new).returns(@credit_card)
           assert_difference 'BillingAuthorization.count' do
             put :update, order_id: @order, id: 'payment', order: { payment_attributes: {
-              payment_method_id: @payment_method.id, credit_card_form: {}}
+              payment_method_id: @payment_method.id, credit_card_attributes: {}}
             }
           end
           payment = @order.reload.payments.first
@@ -94,11 +94,11 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
         should 'render error if CC is invalid' do
           assert_no_difference 'BillingAuthorization.count' do
             put :update, order_id: @order, id: 'payment', order: { payment_attributes: {
-              payment_method_id: @payment_method.id, credit_card_form: {} }
+              payment_method_id: @payment_method.id, credit_card_attributes: {} }
             }
           end
           order = assigns(:order)
-          assert_contains "Those credit card details don't look valid", order.payment.errors[:cc].first
+          assert_contains "Those credit card details don't look valid", order.payment.credit_card.errors[:base].first
           assert_equal 'payment', order.state
           assert_nil order.billing_authorization
         end
@@ -109,7 +109,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
 
           assert_no_difference 'BillingAuthorization.count' do
             put :update, order_id: @order, id: 'payment', order: { payment_attributes: {
-              payment_method_id: @payment_method.id, credit_card_form: {
+              payment_method_id: @payment_method.id, credit_card_attributes: {
                   number: "4111 1111 1111 1111",
                   month: 1.year.from_now.month.to_s,
                   year: 1.year.from_now.year.to_s,
@@ -171,7 +171,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
           assert_difference 'BillingAuthorization.count' do
             put :update, order_id: @order, id: 'payment', order: { payment_attributes: {
                 payment_method_id: @payment_method.id,
-                credit_card_form: {
+                credit_card_attributes: {
                   number: "4111 1111 1111 1111",
                   month: 1.year.from_now.month.to_s,
                   year: 1.year.from_now.year.to_s,

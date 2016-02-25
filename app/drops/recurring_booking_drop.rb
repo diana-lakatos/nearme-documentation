@@ -22,9 +22,11 @@ class RecurringBookingDrop < BaseDrop
   #   user object containing the person who made the booking
   # last_unpaid_amount
   #   Last amount we weren't able to charge
+  # total_payable_to_host_formatted
+  #   total amount payable to host formatted as a string with currency symbol and cents
   delegate :quantity, :subtotal_price, :guest_service_fee, :total_price, :pending?,
     :credit_card_payment?, :rejection_reason, :owner, :interval, :has_service_fee?,
-    :last_unpaid_amount, to: :recurring_booking
+    :last_unpaid_amount, :total_payable_to_host_formatted, to: :recurring_booking
 
   # transactable_type
   #   the object describing the type of item to be booked (e.g. desk, room etc.)

@@ -80,7 +80,7 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
         quantity: "1",
         payment_attributes: {
           payment_method_id: @payment_method.id,
-          credit_card_form: {
+          credit_card_attributes: {
             number: "4111 1111 1111 1111",
             month: 1.year.from_now.month.to_s,
             year: 1.year.from_now.year.to_s,
@@ -134,7 +134,19 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
     gateway.expects(:authorize).with do |total_amount_cents, credit_card_or_token, options|
       total_amount_cents == 43.75.to_money(@listing.currency).cents
     end.returns(stubs[:authorize])
-    gateway.expects(:store).returns(1)
+
+    card_stub = OpenStruct.new(success?: true, params: {
+      "object" => 'customer',
+      "id" => 'customer_1',
+      "default_source" => 'card_1',
+      "cards" => {
+        "data" => [
+          { "id" => "card_1" }
+        ]
+      }
+    })
+
+    PaymentGateway::StripePaymentGateway.any_instance.stubs(:store).returns(card_stub)
     PaymentGateway::StripePaymentGateway.any_instance.stubs(:gateway).returns(gateway).at_least(0)
     PaymentGateway::PaypalPaymentGateway.any_instance.stubs(:gateway).returns(gateway).at_least(0)
     PaymentGateway::StripePaymentGateway.any_instance.stubs(:credit_card_payment?).returns(true)

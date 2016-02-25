@@ -14,6 +14,7 @@ class FactoriesTest < ActiveSupport::TestCase
         stub_us_geolocation
         resource = FactoryGirl.build(factory.name)
         assert resource.valid?, "Resource (#{factory.name}) invalid because of: #{resource.errors.full_messages.join(", ")}" if resource.respond_to?(:valid)
+        puts(" - #{factory.name}")
       end
     end
   end

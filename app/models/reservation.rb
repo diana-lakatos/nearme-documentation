@@ -46,7 +46,6 @@ class Reservation < ActiveRecord::Base
   validate :validate_booking_selection, on: :create, :if => lambda { listing }
   validate :validate_book_it_out, on: :create, :if => lambda { listing && !book_it_out_discount.to_i.zero? }
   validate :validate_exclusive_price, on: :create, :if => lambda { listing && !exclusive_price_cents.to_i.zero? }
-  validates_presence_of :payment_status
 
   before_validation :set_minimum_booking_minutes, on: :create, if: lambda { listing }
   before_validation :set_currency, on: :create, if: lambda { listing }

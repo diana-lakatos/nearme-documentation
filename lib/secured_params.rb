@@ -999,6 +999,7 @@ class SecuredParams
       :transactable_type_id, :transactable_type, :booking_type,
       :insurance_value,
       :rental_shipping_type, :dimensions_template_id,
+      :minimum_booking_minutes,
       photos_attributes: nested(self.photo),
       approval_requests_attributes: nested(self.approval_request),
       photo_ids: [],
@@ -1339,7 +1340,6 @@ class SecuredParams
       :start_minute,
       :end_minute,
       :guest_notes,
-      :credit_card_form,
       :payment_method_id,
       :reservation_type,
       :delivery_type,
@@ -1361,11 +1361,18 @@ class SecuredParams
     [
       :payment_method_id,
       :payment_method_nonce,
-      credit_card_form: nested(self.credit_card_form)
+      credit_card_attributes: nested(self.credit_card)
     ]
   end
 
-  def credit_card_form
+  def payment_subscription
+    [
+      :payment_method_id,
+      credit_card_attributes: nested(self.credit_card)
+    ]
+  end
+
+  def credit_card
     [
       :number,
       :verification_value,
@@ -1375,7 +1382,6 @@ class SecuredParams
       :last_name
     ]
   end
-
 
   def review
     [

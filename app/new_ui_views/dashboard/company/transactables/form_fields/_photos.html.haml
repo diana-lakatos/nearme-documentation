@@ -1,5 +1,6 @@
 %h2
-  %abbr{ title: "required"} *
+  - if f.object.transactable_type.enable_photo_required?
+    %abbr{ title: "required"} *
   = t('dashboard.photos.title')
 %p= t('dashboard.photos.requirement')
 
