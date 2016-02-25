@@ -11,7 +11,7 @@ class AvailabilityTemplate < ActiveRecord::Base
 
   # attr_accessible :transactable_type, :name, :description, :availability_rules, :availability_rules_attributes
 
-  accepts_nested_attributes_for :availability_rules, allow_destroy: true, reject_if: proc { |params| params[:open_time].blank? && params[:close_time].blank? }
+  accepts_nested_attributes_for :availability_rules, allow_destroy: true
 
   # AR can't handle parent: [different_objects] condition.
   scope :for_parents, -> (parents) {
