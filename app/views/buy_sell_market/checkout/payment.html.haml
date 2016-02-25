@@ -22,7 +22,7 @@
           = render 'shared/payments', f: f
 
 
-      - if @payment_methods.count == 1 && @payment_methods.any?{ |p| p.express_checkout? } && @order.express_token.blank?
+      - if @payment_methods.count == 1 && @payment_methods.any?{ |p| p.express_checkout? } && @order.payment.express_token.blank?
         = render partial: 'checkout_buttons'
       - else
         = render partial: 'checkout_buttons', locals: { form: f, final: true }
