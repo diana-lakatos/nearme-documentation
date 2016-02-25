@@ -1,0 +1,15 @@
+-# TODO: Obsolete?
+- cross_sell_products = product.cross_sell_products([product.id])
+- unless cross_sell_products.empty?
+  .span7.product-might-like
+    .white-box
+      %h4 Products you might like
+      - cross_sell_products.in_groups_of(3).each do |products|
+        .row-fluid
+          - products.compact.each do |product|
+            .span4
+              = link_to product_path(product), title: product.name do
+                - if product.images.count > 0
+                  = image_tag product.images.first.image.url(:space_listing), alt: product.name
+                - else
+                  = image_tag space_listing_placeholder_path(height: 254, width: 410), title: product.name, alt: product.name

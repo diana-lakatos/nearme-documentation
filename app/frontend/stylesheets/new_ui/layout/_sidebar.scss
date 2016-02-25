@@ -118,6 +118,7 @@
 #dashboard-nav-user_messages   { > a, > span { &::before { content: $fa-var-envelope-o; } } }
 #dashboard-nav-wish_list_items { > a, > span { &::before { content: $fa-var-heart-o; } } }
 #dashboard-nav-reviews         { > a, > span { &::before { content: $fa-var-newspaper-o; } } }
+#dashboard-nav-offers_header   { > a, > span { &::before { content: $fa-var-shopping-cart; } } }
 #dashboard-nav-services_header { > a, > span { &::before { content: $fa-var-shopping-cart; } } }
 #dashboard-nav-products_header { > a, > span { &::before { content: $fa-var-shopping-cart; } } }
 #dashboard-nav-projects_header { > a, > span { &::before { content: $fa-var-shopping-cart; } } }

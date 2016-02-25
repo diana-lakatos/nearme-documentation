@@ -1,13 +1,17 @@
-.row.document-requirements
+.row.document-requirements-container
   .col-md-3
     %label= t('dashboard.document_requirements.upload_files')
   .col-md-9
-    = f.simple_fields_for :upload_obligation do |f|
-      = f.input :level, as: :radio_buttons, :collection => UploadObligation::LEVELS, label: false, wrapper: :bs3_simple
-    .fields.document-requirements-fields{class: "#{'hidden' if f.object.upload_obligation.not_required?}"}
+    = f.simple_fields_for :upload_obligation, f.object.upload_obligation || f.object.build_upload_obligation(level: UploadObligation::LEVELS.first) do |f|
+      = f.input :level, as: :radio_buttons, :collection => UploadObligation::LEVELS, label: false, wrapper_html: { "data-document-obligation": true }
+    .fields.document-requirements-fields
       .note= t('dashboard.document_requirements.enter_your_documents')
-      = f.simple_fields_for :document_requirements do |document_requirement|
-        = render "forms/document_requirement_form", f: document_requirement
-      %a.add-new
-        = image_tag("themes/buy_sell/icon-cross.png")
-        = t('dashboard.document_requirements.add_new_document_requirement')
+      .nested-fields-set
+        = f.simple_fields_for :document_requirements, f.object.document_requirements.presence || f.object.document_requirements.new do |dr|
+          .nested-container
+            = render 'forms/document_requirement_form', f: dr
+      = link_to_add_association t(:add_new_document_requirement, scope: [:dashboard, :document_requirements]) , f, :document_requirements, partial: 'forms/document_requirement_form', class: 'btn btn-primary', data: { association_insertion_node: ".document-requirements-fields .nested-fields-set", association_insertion_method: :append }
+      /
+        %a.add-new
+          = image_tag("themes/buy_sell/icon-cross.png")
+          = t('dashboard.document_requirements.add_new_document_requirement')

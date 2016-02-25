@@ -1,0 +1,24 @@
+- url ||= product_url(product)
+
+- content_for :meta do
+  = render partial: 'shared/og_meta', locals: { object: product, url: url }
+  - if product.images.count > 0
+    %meta{property: 'og:image', content: product.first_image_url }
+
+- # Facebook
+= link_to "https://www.facebook.com/sharer/sharer.php?u=#{u url}", target: '_blank' do
+  = image_tag 'themes/buy_sell/facebook.png', class: 'social-icon'
+
+- # Twitter
+= link_to 'https://twitter.com/share', 'data-text' => product.name, 'data-url' => url, target: '_blank' do
+  = image_tag 'themes/buy_sell/twitter.png', class: 'social-icon'
+  :javascript
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+
+-# Pinterest
+= link_to "//www.pinterest.com/pin/create/button/?url=#{u url}&media=#{product.first_image_url}&description=#{product.short_description}", target: '_blank' do
+  = image_tag 'themes/buy_sell/pintrest.png', class: 'social-icon'
+
+-# Tumblr
+= link_to "http://www.tumblr.com/share/link?url=#{u url}&name=#{product.name}&description=#{product.short_description}", target: '_blank' do
+  = image_tag 'themes/buy_sell/tumblr.png', class: 'social-icon'

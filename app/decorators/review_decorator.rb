@@ -45,6 +45,8 @@ class ReviewDecorator < Draper::Decorator
   def link_to_buyer_profile
     if reservation?
       h.link_to t('dashboard.reviews.feedback.view_guest_profile'), user_path(reviewable.owner)
+    elsif bid?
+      h.link_to t('dashboard.reviews.feedback.view_bidder_profile'), user_path(reviewable.user)
     else
       h.link_to t('dashboard.reviews.feedback.view_buyer_profile'), user_path(reviewable.order.user)
     end
@@ -54,6 +56,8 @@ class ReviewDecorator < Draper::Decorator
   def link_to_seller_profile
     if reservation?
       h.link_to t('dashboard.reviews.feedback.view_host_profile'), user_path(reviewable.creator)
+    elsif bid?
+      h.link_to t('dashboard.reviews.feedback.view_owner_profile'), user_path(reviewable.offer_creator)
     else
       h.link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(reviewable.product.administrator)
     end
@@ -92,28 +96,16 @@ class ReviewDecorator < Draper::Decorator
   end
 
   def user_info_for(target_user)
-    {photo: target_user.avatar_url, name: target_user.first_name}
+    { photo: target_user.avatar_url, name: target_user.first_name }
   end
 
-  def info_for_reservation
-    {photo: reservation_photo, name: reviewable.listing.try(:name)}
-  end
-
-  def info_for_line_item
-    {photo: line_item_photo, name: reviewable.product.try(:name)}
-  end
-
-  def reservation_photo
-    if reviewable.listing && reviewable.listing.has_photos?
+  def object_photo
+    if reservation? && reviewable.listing && reviewable.listing.has_photos?
       reviewable.listing.photos.first.image_url(:medium)
-    else
-      default_item_photo
-    end
-  end
-
-  def line_item_photo
-    if reviewable.product && reviewable.product.images.first.present?
+    elsif line_item? && reviewable.product && reviewable.product.images.first.present?
       reviewable.product.images.first.image_url(:medium)
+    elsif bid? && reviewable.offer  && reviewable.offer.photos.any?
+      reviewable.offer.photos.rank(:position).first.image_url(:medium)
     else
       default_item_photo
     end
@@ -124,6 +116,6 @@ class ReviewDecorator < Draper::Decorator
   end
 
   def get_product_info
-    reservation? ? info_for_reservation : info_for_line_item
+    { photo: object_photo, name: review_title }
   end
 end

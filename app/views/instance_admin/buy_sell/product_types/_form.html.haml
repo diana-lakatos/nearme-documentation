@@ -1,19 +1,20 @@
-= simple_form_for [:instance_admin, :buy_sell, @product_type], :html => { :multipart => true} do |f|
+= simple_form_for [:instance_admin, :buy_sell, resource], :html => { :multipart => true} do |f|
   %input{ name: :action_name, type: :hidden, value: :edit }
-  %h4 Basic Configuration
-  .row
-    .input-container.col-xs-12
-      = f.input :name, input_html: { class: 'form-control' }
-  .row
-    .input-container.col-xs-12
-      = f.input :action_rfq, inline_label: true
-
-  - if @product_type.persisted?
-    %h4 Bulk Upload CSV Fields
+  .content-container
+    %h4= t('instance_admin.manage.offer_types.basic_configuration')
     .row
-      .text-container-full
-        = render partial: "instance_admin/data_uploads/custom_csv_fields", locals: { f: f }
+      .input-container.col-xs-12
+        = f.input :name, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-12
+        = f.input :action_rfq, inline_label: true
 
-  = content_for :header_buttons do
-    = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+    - if resource.persisted?
+      %h4 Bulk Upload CSV Fields
+      .row
+        .text-container-full
+          = render partial: "instance_admin/data_uploads/custom_csv_fields", locals: { f: f }
+
+    = content_for :header_buttons do
+      = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
 

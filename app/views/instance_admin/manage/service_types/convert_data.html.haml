@@ -1,8 +1,0 @@
-= simple_form_for resource, url: upload_data_instance_admin_manage_service_type_path(resource), method: :post, :html => { :multipart => true} do |f|
-  .row-fluid
-    .controls.controls-row
-      = f.input :temporary_csv_file, as: :file, label: 'CSV File', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-  .row-fluid
-    .controls.controls-row
-      = f.input :send_invitational_email, required: false, as: :boolean, label: false, inline_label: "Send invitational email", wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-  = f.button :submit, 'Upload', class: 'btn btn-blue'

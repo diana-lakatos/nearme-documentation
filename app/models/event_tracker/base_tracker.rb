@@ -40,6 +40,7 @@ class EventTracker::BaseTracker
 
   include EventTracker::CompanyEvents
   include EventTracker::ListingEvents
+  include EventTracker::OfferEvents
   include EventTracker::LocationEvents
   include EventTracker::MailerEvents
   include EventTracker::RecurringBookingEvents

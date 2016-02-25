@@ -147,6 +147,18 @@ en:
           deleted: 'Upsell charge has been deleted'
         rating_systems:
           updated: 'Rating systems were successfully updated.'
+        offer_types:
+          created: 'Offer Type created'
+          updated: 'Offer Type updated'
+          deleted: 'Offer Type deleted'
+        offers:
+          created: 'Offer created'
+          updated: 'Offer updated'
+          deleted: 'Offer deleted'
+        reservation_types:
+          created: 'Reservation Type created'
+          updated: 'Reservation Type updated'
+          deleted: 'Reservation Type deleted'
 
       settings:
         listing_type_added: 'New listing type added.'
@@ -320,6 +332,12 @@ en:
         reservation_not_confirmed: "Your reservation could not be confirmed."
         reservation_rejected: "You have rejected the reservation. Maybe next time!"
         payment_requested: "Your request has been sent"
+      bids:
+        rejected: "You have rejected the offer."
+        cant_reject: "The offer can't be rejected."
+        already_confirmed: "This offer has already been confirmed."
+        confirmed: "You have confirmed the offer!"
+        not_confirmed: "The offer could not be confirmed."
       data_upload:
         created: "Import has been scheduled. You'll receive an email when it's done."
         scheduled: 'Data has been scheduled to be imported.'
@@ -511,6 +529,8 @@ en:
       space_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and listing from this page."
       item_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and listing from this page."
       finish_other_first: "Please complete %{already_started_noun} before trying to create %{wanted_create_noun}."
+    offer:
+      draft: 'This offer has been temporarily disabled by the owner.'
     support:
       ticket:
         created: 'Ticket has been created.'

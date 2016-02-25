@@ -1,28 +1,14 @@
 %ul.nav.main-menu
   - if (!no_listing_buttons? || platform_context.white_label_company_user?(current_user)) && HiddenUiControls.find('main_menu/cta').visible?
-    - if platform_context.single_type?
-      - if current_user && current_user.registration_in_progress?
-        - if current_user.has_draft_products
-          %li
-            = link_to main_app.new_product_type_product_wizard_path(platform_context.product_types.first), :class => "nav-link btn btn-blue btn-medium" do
-              %span.text= t('ui.header.complete_your_thing', thing: platform_context.product_types.first.translated_bookable_noun)
-              %span.icon.ico-plus
-        - else
-          %li
-            = link_to main_app.transactable_type_new_space_wizard_path(platform_context.transactable_types.first), :class => "nav-link btn btn-blue btn-medium" do
-              %span.text= t('ui.header.complete_your_thing', thing: platform_context.transactable_types.first.translated_bookable_noun)
-              %span.icon.ico-plus
-
-      - elsif !current_user.try(:registration_completed?)
+    - if current_user && current_user.registration_in_progress?
+      - tt = current_user.first_transactable.try(:transactable_type)
+      = link_to tt.wizard_path, :class => "nav-link btn btn-blue btn-medium" do
+        %span.text= t('ui.header.complete_your_thing', thing: tt.translated_bookable_noun)
+        %span.icon.ico-plus
+    - elsif !current_user.try(:registration_completed?)
+      - if platform_context.single_type?
         = render partial: 'layouts/list_your_bookable', locals: { transactable_type: platform_context.transactable_types.first }
-    - else
-      - if current_user && current_user.registration_in_progress?
-        %li
-          - tt = current_user.first_listing.try(:transactable_type) || Spree::ProductType.first
-          = link_to main_app.transactable_type_new_space_wizard_path(tt), :class => "nav-link btn btn-blue btn-medium" do
-            %span.text= t('ui.header.complete_your_thing', thing: tt.translated_bookable_noun)
-            %span.icon.ico-plus
-      - elsif !current_user.try(:registration_completed?)
+      - else
         %li.dropdown
           %a.nav-link.dropdown-toggle.btn.btn-blue.btn-medium{"data-toggle" => "dropdown", href: "#"}
             %span.text= t('ui.header.list_your')
@@ -52,19 +38,11 @@
             = link_to user_menu_instance_admin_path(current_user.instance_admins_metadata), class: 'nav-link dropdown-toggle', target: '_blank' do
               %span= t 'top_navbar.marketplace_admin'
 
-        - if platform_context.white_label_company_user?(current_user) && (current_user.has_any_active_listings || current_user.has_any_active_products) && HiddenUiControls.find('main_menu/manage_items').visible?
-          - platform_context.service_types.each do |transactable_type|
+        - if HiddenUiControls.find('main_menu/manage_items').visible? && platform_context.white_label_company_user?(current_user) && current_user.registration_completed?
+          - platform_context.transactable_types.decorate.each do |transactable_type|
             %li
-              = link_to main_app.dashboard_company_transactable_type_transactables_path(transactable_type), class: 'nav-link dropdown-toggle' do
+              = link_to transactable_type.manage_transactables_path, class: 'nav-link dropdown-toggle' do
                 %div.truncate= t 'top_navbar.manage_bookable', bookable_noun: transactable_type.translated_bookable_noun(10)
-          - platform_context.product_types.each do |product_type|
-            %li
-              = link_to main_app.dashboard_company_product_type_products_path(product_type), class: 'nav-link dropdown-toggle' do
-                %div.truncate= t('top_navbar.manage_bookable', bookable_noun: product_type.translated_bookable_noun(10))
-          - platform_context.project_types.each do |project_type|
-            %li
-              = link_to main_app.dashboard_project_type_projects_path(project_type), class: 'nav-link dropdown-toggle' do
-                %div.truncate My #{project_type.translated_bookable_noun(10)}
 
         - if platform_context.bookable? && HiddenUiControls.find('main_menu/my_bookings').visible?
           %li
@@ -78,6 +56,10 @@
           %li
             = link_to main_app.dashboard_orders_path, class: 'nav-link dropdown-toggle' do
               %span= t 'top_navbar.my_orders'
+        - if HiddenUiControls.find('main_menu/my_bids').visible? && platform_context.biddable?
+          %li
+            = link_to main_app.dashboard_user_bids_path, class: 'nav-link dropdown-toggle' do
+              %span= t 'top_navbar.user_bids'
 
         - if platform_context.instance.wish_lists_enabled? && HiddenUiControls.find('main_menu/wish_list').visible?
           %li
@@ -124,5 +106,5 @@
         %span= t 'top_navbar.sign_up'
     %li.divider-vertical
     %li
-      = link_to_login get_return_to_url, platform_context.secured_constraint, secure_links?, :class => "nav-link header-second", data: { modal: true, 'modal-class' => 'sign-up-modal' } do
+      = link_to_login url_options: get_return_to_url, class: "nav-link header-second", data: { modal: true, 'modal-class' => 'sign-up-modal' } do
         %span= t 'top_navbar.log_in'

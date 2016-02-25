@@ -1,0 +1,7 @@
+.content-container
+  = simple_form_for resource, url: [:instance_admin, @controller_scope, resource] do |f|
+    %input{ name: :action_name, type: :hidden, value: :search_settings }
+
+    = render partial: 'instance_admin/manage/search/common', locals: {f: f}
+
+    = render partial: 'instance_admin/manage/search/custom_attributes', locals: {f: f}

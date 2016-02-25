@@ -46,25 +46,30 @@ class Review < ActiveRecord::Base
   after_commit :expire_cache
 
   def recalculate_reviewable_average_rating
-    if self.reviewable_type == "Spree::LineItem"
+    if reviewable_type == "Spree::LineItem"
       recalculate_by_type(-> { self.reviewable.product.recalculate_average_rating! })
-
+    elsif reviewable_type == "Bid"
+      recalculate_by_type(-> { self.reviewable.offer.recalculate_average_rating! })
     else
       recalculate_by_type(-> { self.reviewable.listing.recalculate_average_rating! })
     end
   end
 
   def expire_cache
-    Rails.cache.delete_matched("reviews_view/#{(reviewable.try(:product) || reviewable.listing).cache_key}/*")
+    Rails.cache.delete_matched("reviews_view/#{reviewable_object.cache_key}/*")
     Rails.cache.delete_matched("reviews_view/#{seller.cache_key}/*")
     Rails.cache.delete_matched("reviews_view/#{buyer.cache_key}/*")
+  end
+
+  def reviewable_object
+    reviewable.try(:product) || reviewable.try(:listing) || reviewable.try(:offer)
   end
 
   protected
 
   def set_foreign_keys_and_subject
-    self.buyer_id = reviewable.owner_id
-    self.seller_id = reviewable.creator_id
+    self.buyer_id = reviewable.try(:owner_id) || reviewable.try(:user_id)
+    self.seller_id = reviewable.try(:creator_id) || reviewable.try(:offer_creator_id)
     self.subject = rating_system.subject
   end
 

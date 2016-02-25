@@ -1,11 +1,9 @@
-.document-requirement
-  .remove-document-requirement.hidden
-    = f.check_box :hidden, class: "hidden document-hidden"
-    - if f.object.new_record?
-      = f.label :hidden, "Remove document requirement"
-    - else
-      = f.check_box :removed, class: "hidden remove-document red"
-      = f.label :removed, "Remove document requirement"
-  .row
-    = f.input :label, wrapper: :bs3_simple, wrapper_html: { class: 'col-md-5' }
-    = f.input :description, wrapper: :bs3_simple, wrapper_html: { class: 'col-md-7' }
+%div.requirement.nested-fields.row
+  = f.input :_destroy, as: :hidden, input_html: { 'data-destroy-input' => true }
+
+  = f.input :label
+  = f.input :description
+
+  = f.label :removed, class: 'pull-right' do
+    %span.btn.btn-xs.btn-warning.remove_fields.dynamic{ type: :button }
+      = t('dashboard.document_requirements.remove_old')

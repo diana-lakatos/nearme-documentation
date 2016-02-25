@@ -153,7 +153,11 @@ class ApplicationController < ActionController::Base
     @projectable ||= platform_context.instance.projectable?
   end
 
-  helper_method :buyable?, :bookable?, :projectable?, :subscribable?
+  def biddable?
+    @biddable ||= platform_context.instance.biddable?
+  end
+
+  helper_method :buyable?, :bookable?, :projectable?, :subscribable?, :biddable?
 
   # Provides an EventTracker instance for the current request.
   #

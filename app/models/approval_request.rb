@@ -15,7 +15,7 @@ class ApprovalRequest < ActiveRecord::Base
   scope :approved, lambda { with_state(:approved) }
   scope :rejected, lambda { with_state(:rejected) }
   scope :questioned, lambda { with_state(:questionable) }
-  scope :for_non_drafts, lambda { joins("left join transactables trdrafts on trdrafts.id = approval_requests.owner_id and approval_requests.owner_type = 'Transactable'").where('trdrafts.draft is null') }
+  scope :for_non_drafts, lambda { where(draft_at: nil) }
 
   scope :with_date, ->(date) { where(created_at: date) }
 
@@ -23,11 +23,13 @@ class ApprovalRequest < ActiveRecord::Base
     joins("LEFT join locations on locations.id = owner_id AND owner_type = 'Location'").
     joins("LEFT join users on users.id = owner_id AND owner_type = 'User'").
     joins("LEFT join transactables on transactables.id = owner_id AND owner_type = 'Transactable'").
+    joins("LEFT join offers on offers.id = owner_id AND owner_type = 'Offer'").
     joins("LEFT join companies on companies.id = owner_id AND owner_type = 'Company'").
-    where("locations.name ilike ? or users.name ilike ? or transactables.name ilike ? or companies.name ilike ?", q, q, q, q)
+    where("locations.name ilike ? or users.name ilike ? or transactables.name ilike ? or companies.name ilike ? or offers.name ilike ?", q, q, q, q, q)
   }
 
   before_create :set_defaults
+  before_save :set_draft
 
   has_many :approval_request_attachments, inverse_of: :approval_request
   accepts_nested_attributes_for :approval_request_attachments, reject_if: lambda { |params| params[:file].nil? && params[:file_cache].nil? }
@@ -36,6 +38,10 @@ class ApprovalRequest < ActiveRecord::Base
 
   def set_defaults
     self.state = 'pending'
+  end
+
+  def set_draft
+    self.draft_at = owner.try(:draft) || owner.try(:draft_at)
   end
 
   state_machine :state, :initial => :pending do

@@ -1,5 +1,5 @@
 .content-container
-  = simple_form_for @service_type, url: [:instance_admin, :manage, @service_type] do |f|
+  = simple_form_for resource, url: [:instance_admin, :manage, resource] do |f|
     %input{ name: :action_name, type: :hidden, value: :search_settings }
 
     = render partial: 'instance_admin/manage/search/common', locals: {f: f}

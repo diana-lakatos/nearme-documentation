@@ -136,7 +136,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
     end
 
     should 'return seller line items' do
-      result = @reviews_service.get_orders(@line_items)
+      result = @reviews_service.get_reviewables(@line_items, Spree::ProductType)
       assert_equal @order.line_items.count - 1, result[:seller_collection].count
     end
   end
@@ -179,7 +179,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
     end
 
     should 'return reservations' do
-      result = @reviews_service.get_reservations(@reservations_hash)
+      result = @reviews_service.get_reviewables(@reservations_hash, ServiceType)
       assert_equal 1, result[:seller_collection].count
       assert_equal @reservations.last, result[:seller_collection].first
     end

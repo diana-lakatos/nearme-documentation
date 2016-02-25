@@ -37,7 +37,7 @@
             .hidden-phone
               = form.label :month, t('payments.cc_fields.expiration_date'), class: 'control-label'
             .controls.card-expires
-              = form.input_field :month, collection: credit_card_date[:month], prompt: false, class: 'sessioncamexclude no-icon select2'
+              = form.input_field :month, collection: credit_card_date[:month], prompt: false, class: 'sessioncamexclude no-icon select2', selected: form.object.month || Time.zone.now.month.to_s.rjust(2, "0")
 
             - if form.object.errors[:month].present?
               %p.error-block

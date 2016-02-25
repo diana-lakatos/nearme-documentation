@@ -1,9 +1,6 @@
 - only_inputs = [] if only_inputs.nil?
 - instance = platform_context.instance
 
-- if only_inputs.empty? || only_inputs.include?(:approval_requests)
-  = render 'dashboard/shared/fields/approval_requests', f: f
-
 - if only_inputs.empty? || only_inputs.include?(:name)
   = f.input :name, :as => :limited_string, :hint => t('simple_form.hints.location.name'), required: f.object.validation_for(:name).try(:is_required?)
 

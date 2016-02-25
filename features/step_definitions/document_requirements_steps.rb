@@ -1,22 +1,22 @@
 And /^Fill in document requirement fields$/ do
-  fill_in_document_requirement_form("transactable", "0")
+  fill_in_document_requirement_form("transactable", "first")
 end
 
 And /^Fill in form for another document requirement$/ do
-  fill_in_document_requirement_form("transactable", "1")
+  fill_in_document_requirement_form("transactable", "last")
 end
 
 And /^Show form for another document requirement$/ do
-  find('.document-requirements .add-new').click
-  page.should have_css('.remove-document-requirement')
+  find('.document-requirements-fields .add_fields').click
+  page.should have_css('.document-requirements-fields .remove_fields')
 end
 
 And /^Fill in document requirement fields for product$/ do
-  fill_in_document_requirement_form("product_form", "0")
+  fill_in_document_requirement_form("product_form", "first")
 end
 
 And /^Fill in form for another document requirement for product$/ do
-  fill_in_document_requirement_form("product_form", "1")
+  fill_in_document_requirement_form("product_form", "last")
 end
 
 And /^Document requirement for transactable exists$/ do
@@ -41,7 +41,7 @@ And /^Updated document requirement should be present in product form$/ do
 end
 
 And /^Two document requirements should be present in form$/ do
-  page.should have_css('.document-requirement', count: 2)
+  page.should have_css('.document-requirements-fields .nested-fields', count: 2)
 end
 
 Given /^Product and document requirement for it exist$/ do
@@ -59,12 +59,12 @@ And /^document upload enabled$/ do
 end
 
 def fill_in_document_requirement_form(form, number)
-  fill_in "#{form}_document_requirements_attributes_#{number}_label", with: "ID"
-  fill_in "#{form}_document_requirements_attributes_#{number}_description", with: "Add your ID"
+  page.execute_script("$('.document-requirements-fields .nested-fields:#{number} input').val('ID')")
+  page.execute_script("$('.document-requirements-fields .nested-fields:#{number} textarea').val('Add your ID')")
 end
 
 def assert_document_requirement_data(form)
   @document_requirement.reload
-  find_field("#{form}_document_requirements_attributes_0_label").value.should eq @document_requirement.label
-  find_field("#{form}_document_requirements_attributes_0_description").value.should eq @document_requirement.description
+  first(".document-requirements-fields .nested-fields input").value.should eq @document_requirement.label
+  first(".document-requirements-fields .nested-fields textarea").value.should eq @document_requirement.description
 end

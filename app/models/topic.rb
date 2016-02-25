@@ -8,6 +8,7 @@ class Topic < ActiveRecord::Base
   attr_readonly :followers_count
 
   include CreationFilter
+  include QuerySearchable
 
   has_many :activity_feed_events, as: :event_source, dependent: :destroy
   has_many :activity_feed_subscriptions, as: :followed, dependent: :destroy
@@ -41,23 +42,6 @@ class Topic < ActiveRecord::Base
 
   def all_projects
     projects
-  end
-
-  def self.search_by_query(attributes = [], query)
-    if query.present?
-      words = query.split.map.with_index{|w, i| ["word#{i}".to_sym, "%#{w}%"]}.to_h
-
-      sql = attributes.map do |attrib|
-        attrib = "#{quoted_table_name}.\"#{attrib}\""
-        words.map do |word, value|
-          "#{attrib} ILIKE :#{word}"
-        end
-      end.flatten.join(' OR ')
-
-      where(ActiveRecord::Base.send(:sanitize_sql_array, [sql, words]))
-    else
-      all
-    end
   end
 
   def to_liquid

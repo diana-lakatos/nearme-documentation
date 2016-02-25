@@ -11,6 +11,8 @@ class Transactable < ActiveRecord::Base
     # == Helpers
   include Listing::Search
   include AvailabilityRule::TargetHelper
+  include Categorizable
+  include Approvable
 
   DEFAULT_ATTRIBUTES = %w(name description capacity)
 
@@ -31,8 +33,6 @@ class Transactable < ActiveRecord::Base
   has_many :amenities, through: :amenity_holders, inverse_of: :listings
   has_many :assigned_waiver_agreement_templates, as: :target
   has_many :billing_authorizations, as: :reference
-  has_many :categories_categorizables, as: :categorizable
-  has_many :categories, through: :categories_categorizables
   has_many :company_industries, through: :location
   has_many :document_requirements, as: :item, dependent: :destroy, inverse_of: :item
   has_many :inquiries, inverse_of: :listing
@@ -113,7 +113,7 @@ class Transactable < ActiveRecord::Base
          INNER JOIN "reservation_periods" ON "reservation_periods"."reservation_id" = "reservations"."id"
          WHERE
           "reservations"."instance_id" = ? AND
-          COALESCE("reservations"."reservation_type", \'daily\') != \'hourly\' AND
+          COALESCE("reservations"."booking_type", \'daily\') != \'hourly\' AND
           "reservations"."deleted_at" IS NULL AND
           "reservations"."state" NOT IN (\'cancelled_by_guest\',\'cancelled_by_host\',\'rejected\',\'expired\') AND
           "reservation_periods"."date" BETWEEN ? AND ?
@@ -182,14 +182,7 @@ class Transactable < ActiveRecord::Base
   validates_presence_of :dimensions_template, if: lambda { |record| ['delivery', 'both'].include?(record.rental_shipping_type) }
 
   validate :check_book_it_out_minimum_qty, if: ->(record) { record.book_it_out_minimum_qty.present? }
-  validate :validate_mandatory_categories, unless: ->(record) { record.categories_not_required}
   validate :booking_availability, if: ->(record) { record.overnight_booking? }
-
-  def validate_mandatory_categories
-    transactable_type.categories.mandatory.each do |mandatory_category|
-      errors.add(mandatory_category.name, I18n.t('errors.messages.blank')) if common_categories(mandatory_category).blank?
-    end
-  end
 
   delegate :latitude, :longitude, to: :location_address, allow_nil: true
 
@@ -203,7 +196,7 @@ class Transactable < ActiveRecord::Base
   delegate :favourable_pricing_rate, to: :transactable_type
 
   attr_accessor :distance_from_search_query, :photo_not_required, :enable_monthly,
-    :categories_not_required, :enable_weekly, :enable_daily, :enable_hourly,
+    :enable_weekly, :enable_daily, :enable_hourly,
     :enable_weekly_subscription,:enable_monthly_subscription,
     :availability_template_attributes, :enable_exclusive_price,
     :enable_book_it_out_discount, :scheduled_action_free_booking, :regular_action_free_booking
@@ -229,18 +222,6 @@ class Transactable < ActiveRecord::Base
 
   def availability_template
     super || location.try(:availability_template)
-  end
-
-  def category_ids=ids
-    super(ids.map {|e| e.gsub(/\[|\]/, '').split(',')}.flatten.compact.map(&:to_i))
-  end
-
-  def common_categories(category)
-    categories & category.descendants
-  end
-
-  def common_categories_json(category)
-    JSON.generate(common_categories(category).map { |c| { id: c.id, name: c.translated_name }})
   end
 
   def hide_defered_availability_rules?
@@ -581,31 +562,6 @@ class Transactable < ActiveRecord::Base
     self.save(validate: false)
   end
 
-  def approval_request_templates
-    @approval_request_templates ||= PlatformContext.current.instance.approval_request_templates.for("Transactable").older_than(created_at)
-  end
-
-  def current_approval_requests
-    self.approval_requests.to_a.reject { |ar| !self.approval_request_templates.pluck(:id).include?(ar.approval_request_template_id) }
-  end
-
-  def is_trusted?
-    if approval_request_templates.count > 0
-      self.approval_requests.approved.count > 0
-    else
-      if self.location.present?
-        self.location.is_trusted?
-      elsif self.company.present?
-        self.company.is_trusted?
-      elsif self.creator.present?
-        self.creator.is_trusted?
-      else
-        # Not tied to anything, so it's trusted
-        true
-      end
-    end
-  end
-
   def approval_request_acceptance_cancelled!
     update_attribute(:enabled, false) unless is_trusted?
   end
@@ -713,27 +669,6 @@ class Transactable < ActiveRecord::Base
 
   def currency
     read_attribute(:currency).presence || transactable_type.try(:default_currency)
-  end
-
-  def self.search_by_query(attributes = [], query)
-    if query.present?
-      words = query.split.map.with_index{|w, i| ["word#{i}".to_sym, "%#{w}%"]}.to_h
-
-      sql = attributes.map do |attrib|
-        if self.columns_hash[attrib.to_s].type == :hstore
-          attrib = "CAST(avals(#{quoted_table_name}.\"#{attrib}\") AS text)"
-        else
-          attrib = "#{quoted_table_name}.\"#{attrib}\""
-        end
-        words.map do |word, value|
-          "#{attrib} ILIKE :#{word}"
-        end
-      end.flatten.join(' OR ')
-
-      where(ActiveRecord::Base.send(:sanitize_sql_array, [sql, words]))
-    else
-      all
-    end
   end
 
   def translation_namespace

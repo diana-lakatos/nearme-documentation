@@ -175,8 +175,3 @@ Then /^#{capture_model} should have availability:$/ do |model, table|
     end
   end
 end
-
-And /^I populate listing metadata for all users$/ do
-  User.all.each { |u| u.populate_listings_metadata! }
-end
-

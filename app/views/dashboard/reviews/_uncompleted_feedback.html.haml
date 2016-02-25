@@ -1,7 +1,7 @@
 = form_tag dashboard_reviews_path, class: 'create-form' do
-  .review{'data-rating-system-id' => rating_system.id, 'data-reviewable-id' => feedback.id, 'data-reviewable-type' => feedback.class.name}
+  .review{'data-rating-system-id' => rating_system.id, 'data-reviewable-id' => feedback.id, 'data-reviewable-type' => feedback.object.class.name}
     = hidden_field_tag :reviewable_id, feedback.id
-    = hidden_field_tag :reviewable_type, feedback.class.name
+    = hidden_field_tag :reviewable_type, feedback.object.class.name
     = hidden_field_tag :rating_system_id, rating_system.id
     .row-fluid.clearfix
       .span8

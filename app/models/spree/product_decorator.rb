@@ -4,6 +4,7 @@ Spree::Product.class_eval do
   include Searchable
   include SitemapService::Callbacks
   include SellerAttachments
+  include Categorizable
 
   attr_accessor :validate_exisiting
 
@@ -12,11 +13,10 @@ Spree::Product.class_eval do
   belongs_to :company, -> { with_deleted }
   belongs_to :administrator, -> { with_deleted }, class_name: 'User'
   belongs_to :product_type, class_name: "Spree::ProductType", foreign_key: :product_type_id
+  belongs_to :transactable_type, class_name: "Spree::ProductType", foreign_key: :product_type_id
 
   has_many :additional_charge_types, as: :additional_charge_type_target
   has_many :attachments, -> { order(:id) }, class_name: 'SellerAttachment', as: :assetable
-  has_many :categories_categorizables, as: :categorizable
-  has_many :categories, through: :categories_categorizables
   has_many :document_requirements, as: :item, dependent: :destroy
   has_many :impressions, as: :impressionable, dependent: :destroy
   has_many :line_items, through: :variants
@@ -33,7 +33,6 @@ Spree::Product.class_eval do
 
   has_custom_attributes target_type: 'Spree::ProductType', target_id: :product_type_id, store_accessor_name: :extra_properties
   delegate :custom_validators, to: :product_type
-  delegate :populate_listings_metadata!, to: :user, prefix: true, allow_nil: true
 
   scope :approved, -> { where(approved: true) }
   scope :draft, -> { where(draft: true) }
@@ -66,11 +65,11 @@ Spree::Product.class_eval do
   validates_with CustomValidators
 
   after_save :set_external_id
-  after_commit :user_populate_listings_metadata!, if: :should_populate_user_listings_metadata?
 
   store_accessor :status, [:current_status]
 
   accepts_nested_attributes_for :additional_charge_types, reject_if: :all_blank, allow_destroy: true
+  accepts_nested_attributes_for :document_requirements, allow_destroy: true, reject_if: :document_requirement_hidden?
   accepts_nested_attributes_for :shipping_category
   accepts_nested_attributes_for :attachments, allow_destroy: true
 
@@ -87,27 +86,6 @@ Spree::Product.class_eval do
         hash
       end
     )
-  end
-
-  def self.search_by_query(attributes = [], query)
-    if query.present?
-      words = query.split.map.with_index{|w, i| ["word#{i}".to_sym, "%#{w}%"]}.to_h
-
-      sql = attributes.map do |attrib|
-        if self.columns_hash[attrib.to_s].type == :hstore
-          attrib = "CAST(avals(#{quoted_table_name}.\"#{attrib}\") AS text)"
-        else
-          attrib = "#{quoted_table_name}.\"#{attrib}\""
-        end
-        words.map do |word, value|
-          "#{attrib} ILIKE :#{word}"
-        end
-      end.flatten.join(' OR ')
-
-      where(ActiveRecord::Base.send(:sanitize_sql_array, [sql, words]))
-    else
-      all
-    end
   end
 
   def creator_id
@@ -200,6 +178,11 @@ Spree::Product.class_eval do
 
   def should_update_sitemap_node?
     !draft? && approved?
+  end
+
+  def document_requirement_hidden?(attributes)
+    attributes.merge!(_destroy: '1') if attributes['removed'] == '1'
+    attributes['hidden'] == '1'
   end
 
   # We override this method because when many records are deleted at once

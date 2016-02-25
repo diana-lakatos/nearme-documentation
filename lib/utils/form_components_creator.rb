@@ -9,6 +9,10 @@ module Utils
                    ProductComponentCreator
                  when ProjectType
                    ProjectComponentCreator
+                 when OfferType
+                   OfferComponentCreator
+                 when ReservationType
+                   ReservationComponentCreator
                  when InstanceProfileType
                    case form_componentable.profile_type
                    when InstanceProfileType::SELLER
@@ -54,6 +58,57 @@ module Utils
       end
     end
 
+  end
+
+  class OfferComponentCreator < BaseComponentCreator
+
+    def create!
+      create_space_wizard!
+      create_dashboard_form!
+    end
+
+    def create_space_wizard!
+      @form_type_class = FormComponent::SPACE_WIZARD
+      create_components!([
+        {
+          name: I18n.t('registrations.tell_us'),
+          fields: @form_componentable.instance.user_required_fields.map { |f| { 'user' => f.to_s } }
+        },
+        {
+          name: "#{@form_componentable.name.try(:pluralize)} Details",
+          fields: [{ 'offer' => 'name'}, { 'offer' => 'description'}]
+        },
+      ])
+    end
+
+    def create_dashboard_form!
+      @form_type_class = FormComponent::OFFER_ATTRIBUTES
+
+      create_components!([
+        {
+          name: "Main",
+          fields: [{ 'offer' => 'name'}, { 'offer' => 'description'}]
+        }
+      ])
+    end
+  end
+
+  class ReservationComponentCreator < BaseComponentCreator
+
+    def create!
+      create_dashboard_form!
+    end
+
+    def create_dashboard_form!
+      @form_type_class = FormComponent::RESERVATION_ATTRIBUTES
+
+      create_components!([
+        {
+          name: "Review",
+          fields: []
+        }
+      ])
+    end
   end
 
   class ServiceComponentCreator < BaseComponentCreator

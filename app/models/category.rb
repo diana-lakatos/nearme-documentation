@@ -22,6 +22,7 @@ class Category < ActiveRecord::Base
   has_many :service_types, through: :category_linkings
   has_many :product_types, through: :category_linkings, class_name: 'Spree::ProductType'
   has_many :project_types, through: :category_linkings
+  has_many :offer_types, through: :category_linkings
   has_many :instance_profile_types, through: :category_linkings
 
   belongs_to :instance

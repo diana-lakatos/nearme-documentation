@@ -1,0 +1,14 @@
+- content_for :page_header do
+  %h1
+    = link_to t("dashboard.transactables.manage"), dashboard_company_transactable_type_transactables_path(@transactable_type), class: 'hidden-xs hidden-sm'
+    %span.hidden-xs.hidden-sm >
+    = t("dashboard.transactables.edit")
+
+  .options
+    .info.hidden-sm.hidden-xs
+      = t ('dashboard.items.unsaved_listing_changes')
+
+    %button.btn-lg.submit-main-form.hidden-sm.hidden-xs{:type => "button"}
+      = t ('dashboard.items.save')
+
+    = link_to t(:view_listing, scope: [:listings]), listings_url, class: 'hidden-md hidden-lg'

@@ -93,7 +93,6 @@ module.exports = class BookingsController
       @updateBookingStatus()
 
     @bookingTabs.on 'shown.bs.tab', (event) =>
-
       # This is to allow all classes on elements to settle
       # because they are checked for determining the current
       # state after click; specifically @hourlyBookingSelected

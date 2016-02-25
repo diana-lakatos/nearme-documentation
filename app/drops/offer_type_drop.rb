@@ -1,0 +1,3 @@
+class OfferTypeDrop < TransactableTypeDrop
+end
+
