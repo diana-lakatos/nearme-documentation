@@ -1344,7 +1344,6 @@ class SecuredParams
       :reservation_type,
       :delivery_type,
       :delivery_ids,
-      :shipments_attributes,
       :dates,
       :total_amount_check,
       dates: [],
@@ -1353,7 +1352,7 @@ class SecuredParams
       payment_attributes: nested(self.payment),
       documents: nested(self.payment_document),
       documents_attributes: nested(self.payment_document),
-      reservation: { shipments_attributes: nested(self.shipment) }
+      shipments_attributes: nested(self.shipment)
     ]
   end
 
