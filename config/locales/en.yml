@@ -2353,6 +2353,7 @@ en:
       wrong_file_message: 'does not have an accepted extension. Please select a document or an image.'
   approval_request_attachments:
     please_upload_document: 'Please upload document'
+    attachments_are_missing: 'are missing'
     please_fill_in_message: "Please fill in message"
     wrong_file_message: 'does not have an accepted extension. Please select a pdf document or an image.'
   schedule:
