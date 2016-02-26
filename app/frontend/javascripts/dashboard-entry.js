@@ -17,7 +17,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.dashboardcontroller', function(){
+    $(document).on('init:dashboardcontroller.nearme', function(){
         require.ensure('./sections/dashboard/dashboard_controller', function(require){
             var DashboardController = require('./sections/dashboard/dashboard_controller');
             return new DashboardController($('section.dashboard'));
@@ -26,7 +26,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.photomanipulator', function(event, container, options){
+    $(document).on('init:photomanipulator.nearme', function(event, container, options){
         options = options || {};
         require.ensure('./components/photo/manipulator', function(require){
             var PhotoManipulator = require('./components/photo/manipulator');
@@ -61,7 +61,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.sellerattachmentaccesslevelselector', function(event, el){
+    $(document).on('init:sellerattachmentaccesslevelselector.nearme', function(event, el){
         el = el || document;
         require.ensure('./components/seller_attachment_access_level_selector', function(require){
             var SellerAttachmentAccessLevelSelector = require('./components/seller_attachment_access_level_selector');
@@ -71,7 +71,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.shippingprofiles', function(event, profile_add_success){
+    $(document).on('init:shippingprofiles.nearme', function(event, profile_add_success){
         require.ensure('./sections/dashboard/shipping_profiles', function(require){
             var ShippingProfiles = require('./sections/dashboard/shipping_profiles');
             return new ShippingProfiles('.profiles_shipping_category_form', profile_add_success);
@@ -80,7 +80,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.reservationlistcontroller', function(event, container, reservation_id){
+    $(document).on('init:reservationlistcontroller.nearme', function(event, container, reservation_id){
         require.ensure('./sections/reservations/list_controller', function(require){
             var ReservationsListController = require('./sections/reservations/list_controller');
             return new ReservationsListController(container, reservation_id);
@@ -101,7 +101,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('linechart.dnm', function(event, el, values, labels){
+    $(document).on('line:chart.nearme', function(event, el, values, labels){
         require.ensure('./components/chart/line', function(require){
             var LineChart = require('./components/chart/line');
             new LineChart(el, values, labels);
@@ -122,7 +122,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.userdimensionstemplates', function(event, units){
+    $(document).on('init:userdimensionstemplates.nearme', function(event, units){
         require.ensure('./sections/dashboard/user_dimensions_templates', function(require){
             var UserDimensionsTemplates = require('./sections/dashboard/user_dimensions_templates');
             new UserDimensionsTemplates(units);
@@ -132,7 +132,7 @@ DNM.registerInitializer(function(){
 
 DNM.registerInitializer(function(){
 
-    $(document).on('init.locationform', function(){
+    $(document).on('init:locationform.nearme', function(){
         var form = $('#location-form');
         if (form.length === 0) {
             return;
@@ -172,7 +172,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.stripeconnectcontroller', function(){
+    $(document).on('init:stripeconnectcontroller.nearme', function(){
         require.ensure('./sections/dashboard/stripe_connect_controller', function(require){
             var DashboardStripeConnectController = require('./sections/dashboard/stripe_connect_controller');
             new DashboardStripeConnectController($('form[data-payouts-form]'));

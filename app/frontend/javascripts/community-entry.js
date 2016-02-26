@@ -115,7 +115,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.photomanipulator', function(event, container, options){
+    $(document).on('init:photomanipulator.nearme', function(event, container, options){
         options = options || {};
         require.ensure('./intel/photo/manipulator', function(require){
             var PhotoManipulator = require('./intel/photo/manipulator');

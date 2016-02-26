@@ -1,7 +1,7 @@
 (function($){
   'use strict';
 
-  $('html').trigger('hide.dialog');
+  $(document).trigger('hide:dialog.nearme');
 
   var
     select = $('[data-location-field]')[0].selectize,

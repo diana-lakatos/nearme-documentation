@@ -51,8 +51,8 @@
         = link_to t('instance_admin.analytics.marketplace_users'), instance_admin_analytics_profiles_path(format: :csv)
 
 - content_for :domready do
-  $(document).trigger('linechart.dnm', ['#revenue_chart', #{@revenue_chart.values.to_json.html_safe}, #{@revenue_chart.labels.to_json.html_safe}]);
+  $(document).trigger('line:chart.nearme', ['#revenue_chart', #{@revenue_chart.values.to_json.html_safe}, #{@revenue_chart.labels.to_json.html_safe}]);
 
-  $(document).trigger('linechart.dnm', ['#bookings_chart', #{@bookings_chart.values.to_json.html_safe}, #{@bookings_chart.labels.to_json.html_safe}]);
+  $(document).trigger('line:chart.nearme', ['#bookings_chart', #{@bookings_chart.values.to_json.html_safe}, #{@bookings_chart.labels.to_json.html_safe}]);
 
-  $(document).trigger('linechart.dnm', ['#listings_chart', #{@listings_chart.values.to_json.html_safe}, #{@listings_chart.labels.to_json.html_safe}]);
+  $(document).trigger('line:chart.nearme', ['#listings_chart', #{@listings_chart.values.to_json.html_safe}, #{@listings_chart.labels.to_json.html_safe}]);

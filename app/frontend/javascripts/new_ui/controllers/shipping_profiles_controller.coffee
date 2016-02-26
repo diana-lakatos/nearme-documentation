@@ -37,7 +37,7 @@ module.exports = class ShippingProfilesController
   modalSuccessActions: =>
     return unless @form.data('profile-add-success')
 
-    $('html').trigger('hide.dialog')
+    $(document).trigger('hide:dialog.nearme')
 
     $.ajax
       type: 'get'

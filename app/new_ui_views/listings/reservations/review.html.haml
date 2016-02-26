@@ -115,6 +115,6 @@
 - content_for :script do
   :javascript
     $(function() {
-      $(document).trigger('init.phonenumberfieldsform', 'form.payment');
+      $(document).trigger('init:phonenumberfieldsform.nearme', 'form.payment');
       window.sessioncamConfiguration.customDataObjects.push( { key: "event", value: "booking_modal_opened" } );
     });

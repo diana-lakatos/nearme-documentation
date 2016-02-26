@@ -40,8 +40,8 @@
           %canvas#products_chart{ "data-line-chart": true }
 
 - content_for :domready do
-  $(document).trigger('linechart.dnm', ['#revenue_chart', #{@revenue_chart.values.to_json.html_safe}, #{@revenue_chart.labels.to_json.html_safe}]);
+  $(document).trigger('line:chart.nearme', ['#revenue_chart', #{@revenue_chart.values.to_json.html_safe}, #{@revenue_chart.labels.to_json.html_safe}]);
 
-  $(document).trigger('linechart.dnm', ['#sales_chart', #{@sales_chart.values.to_json.html_safe}, #{@sales_chart.labels.to_json.html_safe}]);
+  $(document).trigger('line:chart.nearme', ['#sales_chart', #{@sales_chart.values.to_json.html_safe}, #{@sales_chart.labels.to_json.html_safe}]);
 
-  $(document).trigger('linechart.dnm', ['#products_chart', #{@products_chart.values.to_json.html_safe}, #{@products_chart.labels.to_json.html_safe}]);
+  $(document).trigger('line:chart.nearme', ['#products_chart', #{@products_chart.values.to_json.html_safe}, #{@products_chart.labels.to_json.html_safe}]);

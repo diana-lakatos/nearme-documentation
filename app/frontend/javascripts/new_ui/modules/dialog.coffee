@@ -17,7 +17,7 @@ module.exports = class Dialog
 
     # Click on modal button trigger
 
-    $('body').on 'click', 'a[data-modal]', (e) =>
+    $('body').on 'click.nearme', 'a[data-modal]', (e) =>
       e.preventDefault()
       e.stopPropagation()
       target = $(e.currentTarget)
@@ -25,16 +25,16 @@ module.exports = class Dialog
       @load(ajaxOptions, target.attr('data-modal-class'))
 
     # submit form via button
-    $('body').on 'submit', 'form[data-modal]', (e) =>
+    $('body').on 'submit.nearme', 'form[data-modal]', (e) =>
       e.preventDefault()
       form = $(e.currentTarget)
       ajaxOptions = { type: form.attr('method'), url: form.attr("action"), data: form.serialize()}
       @load(ajaxOptions, form.attr('data-modal-class'))
 
-    $('html').on 'hide.dialog', =>
+    $(document).on 'hide:dialog.nearme', =>
       @hide()
 
-    $('html').on 'load.dialog', (event, ajaxOptions = {}, klass = null)=>
+    $(document).on 'load:dialog.nearme', (event, ajaxOptions = {}, klass = null)=>
       @load(ajaxOptions, klass)
 
     @overlay.on 'click', =>
@@ -66,7 +66,7 @@ module.exports = class Dialog
   showContent: (content)=>
     @contentHolder.html(content)
     @dialog.addClass('dialog--loaded')
-    $('html').trigger('loaded.dialog')
+    $('html').trigger('loaded:dialog.nearme')
 
   hide: =>
     @dialog.attr('aria-hidden', true)
