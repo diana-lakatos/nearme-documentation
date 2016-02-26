@@ -37,4 +37,4 @@
 
 
 - content_for :domready do
-  $(document).trigger('dimensiontemplates.dnm', ['##{section_id}', #{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json}])
+  $(document).trigger('init:dimensiontemplates.nearme', ['##{section_id}', #{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json}])

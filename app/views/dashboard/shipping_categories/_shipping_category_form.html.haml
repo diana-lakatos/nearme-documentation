@@ -20,5 +20,5 @@
   .div{:style => 'clear: both;'}
 
 :javascript
-  $(document).trigger('init.shippingprofiles', [#{defined?(is_success) ? "true" : 'false'}])
+  $(document).trigger('init:shippingprofiles.nearme', [#{defined?(is_success) ? "true" : 'false'}])
 

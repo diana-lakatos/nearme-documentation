@@ -1,12 +1,6 @@
 /*===== SASS VARIABLES =====*/
 $color-brand: #1a7fbb;
 
-$font-heading-bold: 'Brandon Bold', Helvetica, Arial, sans-serif;
-
-$font-heading-regular: 'Brandon Medium', Helvetica, Arial, sans-serif;
-
-$font-heading-light: 'Brandon Light', Helvetica, Arial, sans-serif;
-
 /*===== GENERAL STYLES =====*/
 html body {
   background: #ebedef;
@@ -53,7 +47,7 @@ p {
 .breadcrumbs {
   float: left;
   font-size: 22px;
-  font-family: $font-heading-light;
+  font-weight: 300;
   letter-spacing: 1.8;
 }
 
@@ -1041,7 +1035,6 @@ body.login {
     }
 
     input {
-      font-family: 'Gotham A', 'Gotham B';
       padding-left: 26px;
       display: block;
       width: 100%;

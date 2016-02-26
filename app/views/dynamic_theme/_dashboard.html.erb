@@ -87,9 +87,9 @@
   theme_lighten_black = lighten_color(theme_black, 0.05)
 
   font = Hash.new
-  font[:regular] = "'Futura-regular', sans-serif".html_safe
-  font[:medium] =  "'Futura-medium', sans-serif".html_safe
-  font[:bold] = "'Futura-bold', sans-serif".html_safe
+  font[:regular] = "'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif".html_safe
+  font[:medium] =  "'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif".html_safe
+  font[:bold] = "'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif".html_safe
 
   if theme.theme_font.present?
     ThemeFont::FONT_TYPES.map do |font_type|
@@ -101,13 +101,22 @@
                url(<%= theme.theme_font.send("#{font_type}_woff") %>) format('woff'),
                url(<%= theme.theme_font.send("#{font_type}_ttf") %>) format('truetype'),
                url(<%= theme.theme_font.send("#{font_type}_svg") %>) format('svg');
+
+
+          <% if font_type == 'regular' %>
+          font-weight: normal;
+          <% elsif font_type == 'medium' %>
+          font-weight: 600;
+          <% elsif font_type == 'bold' %>
+          font-weight: bold;
+          <% end %>
         }
       <%
       font[font_type.to_sym] = "'font_#{font_type}', sans-serif".html_safe
     end
   end
 
-  font_stack = "#{font[:regular]}, helvetica, sans-serif".html_safe
+  font_stack = "#{font[:regular]}".html_safe
 %>
 
   .navbar .navbar-inner {
@@ -160,7 +169,7 @@
   }
 
   .navbar .nav-links li a.nav-link {
-    font:normal 16px/22px <%= font[:regular] %>, sans-serif;
+    font: 16px/22px <%= font[:regular] %>, sans-serif;
   }
 
   .navbar .nav-links li a.nav-link span.count {
@@ -272,6 +281,7 @@
 
   #habla_window_div #habla_oplink_a {
     font-family: <%= font[:medium] %>;
+    font-weight: 600;
   }
 
   #habla_window_div #habla_panel_div {
@@ -280,9 +290,11 @@
 
   footer .social-wrapper ul.social-icons li a .text {
     font-family: <%= font[:medium] %>;
+    font-weight: 600;
   }
 
   footer a, footer a:visited {
     font-family: <%= font[:medium] %>;
+    font-weight: 600;
   }
 </style>

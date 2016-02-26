@@ -44,7 +44,7 @@ DNM.registerCallback('beforeInit', function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.bootstrapswitch', function(){
+    $(document).on('init:bootstrapswitch.nearme', function(){
         require.ensure('./components/forms/bootstrap_switch_initializer', function(require){
             var BootstrapSwitchInitializer = require('./components/forms/bootstrap_switch_initializer');
             return new BootstrapSwitchInitializer('.switch input:visible');
@@ -64,7 +64,7 @@ DNM.registerInitializer(function(){
 
 DNM.registerInitializer(function(){
 
-    $(document).on('init.selectpicker', function(){
+    $(document).on('init:selectpicker.nearme', function(){
         require.ensure('./components/forms/bootstrap_select_initializer', function(require){
             var BootstrapSelectInitializer = require('./components/forms/bootstrap_select_initializer');
             return new BootstrapSelectInitializer($('.selectpicker'), { iconShow: false });
@@ -93,7 +93,7 @@ DNM.registerInitializer(function(){
     var CustomInputs = require('./components/custom_inputs');
     new CustomInputs();
 
-    $(document).on('init.custominputs', function(){
+    $(document).on('init:custominputs.nearme', function(){
         return new CustomInputs();
     });
 });
@@ -195,7 +195,7 @@ DNM.registerInitializer(function(){
 
 DNM.registerInitializer(function(){
     /* initializeLinkSubmit */
-    $(document).on('click', 'a[rel=submit]', function(e) {
+    $(document).on('click.nearme', 'a[rel=submit]', function(e) {
         var form = $(this).closest('form');
         if (form.length > 0) {
             e.preventDefault();
@@ -211,7 +211,7 @@ DNM.registerInitializer(function(){
 
 DNM.registerInitializer(function(){
 
-    $(document).on('init.supportattachmentform', function(){
+    $(document).on('init:supportattachmentform.nearme', function(){
         require.ensure(['./sections/support/attachment_form'], function(require){
             var SupportAttachmentForm = require('./sections/support/attachment_form');
             return new SupportAttachmentForm($('#attachment_form'));
@@ -245,15 +245,15 @@ DNM.registerInitializer(function(){
     var Modal = require('./components/modal');
     Modal.listen();
 
-    $(document).on('close.modal', function(){
+    $(document).on('close:modal.nearme', function(){
         Modal.close();
     });
 
-    $(document).on('load.modal', function(event, url){
+    $(document).on('load:modal.nearme', function(event, url){
         Modal.load(url);
     });
 
-    $(document).on('setclass.modal', function(event, klass){
+    $(document).on('setclass:modal.nearme', function(event, klass){
         Modal.setClass(klass);
     });
 });

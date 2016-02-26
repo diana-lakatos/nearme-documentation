@@ -56,7 +56,7 @@
 - content_for :script do
   :javascript
     $(function() {
-      $(document).trigger('init.phonenumberfieldsform', 'form.payment', {
+      $(document).trigger('init:phonenumberfieldsform.nearme', 'form.payment', {
           countrySelector : '#reservation_request_country_name',
           mobileSelector  : '#reservation_request_mobile_number',
           phoneSelector   : '#reservation_request_phone',

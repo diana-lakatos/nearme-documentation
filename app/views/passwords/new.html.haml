@@ -17,8 +17,8 @@
 
 - if request.xhr?
   :javascript
-    $(document).trigger('setclass.modal', ['sign-up-modal']);
+    $(document).trigger('setclass:modal.nearme', ['sign-up-modal']);
 
 - content_for :domready do
-  $(function() { $(document).trigger('init.signinform'); });
+  $(function() { $(document).trigger('init:signinform.nearme'); });
 

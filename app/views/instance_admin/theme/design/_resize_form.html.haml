@@ -13,5 +13,5 @@
 
 :javascript
   $(function() {
-    $(document).trigger('init.photomanipulator', ['#crop-form', { old: true, aspectRatio: #{object.model.send("#{object.mounted_as}_dimensions")[:width].to_f/object.model.send("#{object.mounted_as}_dimensions")[:height].to_f} }]);
+    $(document).trigger('init:photomanipulator.nearme', ['#crop-form', { old: true, aspectRatio: #{object.model.send("#{object.mounted_as}_dimensions")[:width].to_f/object.model.send("#{object.mounted_as}_dimensions")[:height].to_f} }]);
   });

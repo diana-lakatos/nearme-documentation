@@ -101,4 +101,4 @@
 = f.input :public_profile if only_inputs.empty? || only_inputs.include?(:public_profile)
 - if only_inputs.empty? || only_inputs.include?(:phone)
   - content_for :domready do
-    $(document).trigger('init.phonenumberfieldsform');
+    $(document).trigger('init:phonenumberfieldsform.nearme');

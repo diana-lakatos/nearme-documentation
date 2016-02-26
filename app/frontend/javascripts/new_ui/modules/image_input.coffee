@@ -256,7 +256,7 @@ module.exports = class ImageInput
       e.preventDefault()
       trigger = $(e.target).closest('[data-edit]')
       url = trigger.data("url")
-      $('html').trigger('load.dialog', [{ url: url }])
+      $(document).trigger('load:dialog.nearme', [{ url: url }])
 
   updateLabel: ->
     switch @processing

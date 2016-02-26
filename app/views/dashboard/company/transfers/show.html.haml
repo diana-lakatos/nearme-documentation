@@ -48,4 +48,4 @@
       = will_paginate_styled @payment_transfers
 
 - content_for :domready do
-  $(document).trigger('linechart.dnm', [$('#chart'), #{@chart.values.to_json.html_safe}, #{@chart.labels.to_json.html_safe}]);
+  $(document).trigger('line:chart.nearme', [$('#chart'), #{@chart.values.to_json.html_safe}, #{@chart.labels.to_json.html_safe}]);

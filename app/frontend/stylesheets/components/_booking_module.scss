@@ -89,15 +89,18 @@
     padding: ($padding-default + 7);
     background: $gray60;
     color: $gray210;
-    font: normal 32px/36px $font-regular, sans-serif;
+    font-size: 32px;
+    line-height: 36px;
 
     @media (max-width: $booking-module-breakpoint-size) {
       padding: ($padding-default - 3);
-      font: normal 26px/30px $font-regular, sans-serif;
+      font-size: 26px;
+      line-height: 30px;
     }
 
     @media (max-width: $iphone-portrait - 1) {
-      font: normal 22px/28px $font-regular, sans-serif;
+        font-size: 22px;
+        line-height: 28px;
     }
 
     .booking-header {
@@ -212,7 +215,7 @@
         clear: both;
         margin-top: 4px;
         color: $gray160;
-        font-family: $font-bold;
+        font-weight: bold;
         font-size: 40%;
         text-transform: uppercase;
         letter-spacing: 1px;
@@ -236,10 +239,6 @@
       @media (max-width: $iphone-portrait - 1) {
         padding: 0;
         margin: 0;
-
-        .period {
-          font-family: $font-regular;
-        }
       }
     }
 

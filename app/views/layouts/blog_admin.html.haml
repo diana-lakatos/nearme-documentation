@@ -11,6 +11,8 @@
     = stylesheet_link_tag 'blog_admin_vendor'
     = stylesheet_link_tag 'blog_admin'
 
+    = render 'shared/head/fonts'
+
     = render 'shared/javascripts/header'
 
   %body{class: !user_signed_in? ? 'login' : ''}
