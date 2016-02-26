@@ -57,7 +57,7 @@ body.buy-sell-theme {
   }
 
   p, h1, h2, h3, h4, h5, a, label, td {
-    font-family: $font-medium;
+    font-weight: 600;
     margin: 0;
   }
 
@@ -141,7 +141,6 @@ body.buy-sell-theme {
   .customSelect {
     background: #fff url('/assets/themes/buy_sell/arrow.png') right no-repeat;
     border: solid #D4D4D4 1px;
-    font-family: $font-regular;
     font-size: 14px;
     padding: 0 5px;
     width: 60px;
@@ -928,14 +927,12 @@ body.buy-sell-theme {
       background: #fff url('/assets/themes/buy_sell/arrow.png') right no-repeat;
       width: 100%;
       padding: 5px 0 5px 5px;
-      font-family: $font-regular;
       font-size: 14px;
     }
 
     .hasCustomSelect {
       background: #fff url('/assets/themes/buy_sell/arrow-down.png') right no-repeat;
       border: solid #D4D4D4 1px;
-      font-family: $font-regular;
       font-size: 14px;
       padding: 0 5px;
       width: 60px;
@@ -949,7 +946,7 @@ body.buy-sell-theme {
 
     label {
       vertical-align: top;
-      font-family: $font-medium;
+      font-weight: 600;
       color: #555555;
       font-size: 16px;
     }
@@ -964,7 +961,6 @@ body.buy-sell-theme {
       border-radius: 0;
       width: 100%;
       padding: 5px 10px;
-      font-family: $font-regular;
       font-size: 14px;
     }
 

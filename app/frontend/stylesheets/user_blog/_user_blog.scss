@@ -1,5 +1,4 @@
 @import "../blog/common/variables";
-@import "../blog/common/fonts";
 
 body.user-blog {
   background-color: $white;
@@ -66,7 +65,7 @@ body.user-blog {
 
       a {
         color: $white;
-        font-family: 'ArcherBold';
+        font-weight: bold;
         font-size: 24px;
 
         &:hover {
@@ -178,13 +177,12 @@ body.user-blog {
       font-size: 28px;
 
       a {
-        font-family: 'MontserratBold';
+        font-weight: bold;
         color: $dark-gray;
       }
     }
 
     p {
-      font-family: 'PTSans-Regular';
       font-size: 14px;
       color: $gray;
       line-height: 28px;
@@ -211,7 +209,6 @@ body.user-blog {
     .date {
       margin-top: 5px;
       margin-bottom: 20px;
-      font-family: 'OratorStd';
       font-size: 16px;
       color: $light-gray;
       text-align: right;
@@ -259,7 +256,7 @@ body.user-blog {
 
       h1 {
         margin: 40px 0 10px 0;
-        font-family: 'MontserratBold';
+        font-weight: bold;
         font-size: 30px;
       }
 
@@ -327,7 +324,6 @@ body.user-blog {
 
       .content {
         margin-bottom: 20px;
-        font-family: 'BookAntiqua';
         font-size: 17px;
         color: $dark-gray;
 
@@ -420,12 +416,8 @@ body.user-blog {
         .biography {
           h3 {
             margin-top: 10px;
-            font-family: 'MontserratBold';
+            font-weight: bold;
             font-size: 20px;
-          }
-
-          p {
-            font-family: 'OratorStd';
           }
         }
       }
@@ -441,7 +433,7 @@ body.user-blog {
           height: 35px;
           background: #1e2222;
           color: $white;
-          font-family: 'GothamBold';
+          font-weight: bold;
           line-height: 35px;
           font-size: 12px;
           text-align: center;
@@ -520,7 +512,6 @@ body.user-blog {
 
         .author-name {
           display: inline-block;
-          font-family: 'OratorStd';
           padding-top: 17px;
           color: $light-gray;
         }

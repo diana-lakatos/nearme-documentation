@@ -20,7 +20,6 @@
     %meta{:content => meta_description_content, :name => "description"}/
     %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
     %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
-    %meta{:content => "chrome=IE7", "http-equiv" => "X-UA-Compatible"}/
 
     = render 'social/social_meta_tags' rescue ''
 
@@ -32,6 +31,7 @@
 
     = stylesheet_link_tag 'dashboard'
     = render "dynamic_theme/dashboard"
+    = render 'shared/head/fonts'
 
     = render 'layouts/homepage_css' if home_page?
 

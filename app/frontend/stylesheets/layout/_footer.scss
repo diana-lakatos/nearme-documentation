@@ -19,12 +19,9 @@
   display: block;
   font-size: 18px;
   text-align: center;
-  font-family: $font-medium;
+  font-weight: 600;
 }
 
-#habla_window_div #habla_panel_div {
-  font-family: $font-regular;
-}
 
 footer {
 
@@ -61,7 +58,7 @@ footer {
     }
     ul.social-icons li a {
       .text {
-        font-family: $font-medium;
+        font-weight: 600;
       }
       .image {
         &.ico-twitter {
@@ -85,7 +82,7 @@ footer {
     color: $gray120;
     text-decoration: none;
     text-align: center;
-    font-family: $font-medium;
+    font-weight: 600;
 
     &:hover {
       color: $gray210;

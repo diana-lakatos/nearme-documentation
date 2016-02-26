@@ -1,27 +1,7 @@
 /* ==========================================================================
   #Fonts
 ========================================================================== */
-@font-face {
-    font-family: 'avenir_next_rgmedium';
-    src: url('/assets/avenir_next_rg-webfont.eot');
-    src: url('/assets/avenir_next_rg-webfont.eot?#iefix') format('embedded-opentype'),
-         url('/assets/avenir_next_rg-webfont.woff') format('woff'),
-         url('/assets/avenir_next_rg-webfont.ttf') format('truetype'),
-         url('/assets/avenir_next_rg-webfont.svg#avenir_next_rgmedium') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
 
-@font-face {
-    font-family: 'brandon_bldmedium';
-    src: url('/assets/brandon_bld-webfont.eot');
-    src: url('/assets/brandon_bld-webfont.eot?#iefix') format('embedded-opentype'),
-         url('/assets/brandon_bld-webfont.woff') format('woff'),
-         url('/assets/brandon_bld-webfont.ttf') format('truetype'),
-         url('/assets/brandon_bld-webfont.svg#brandon_bldmedium') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
 
 @font-face {
     font-family: 'glyphicons-halflings-regular';
@@ -32,18 +12,4 @@
          url('/assets/glyphicons-halflings-regular.svg#glyphicons-halflings-regular') format('svg');
     font-weight: normal;
     font-style: normal;
-}
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-    @font-face {
-        font-family: 'avenir_next_rgmedium';
-        src: url('/assets/avenir_next_rg-webfont.svg#avenir_next_rgmedium') format('svg');
-    }
-    @font-face {
-        font-family: 'brandon_bldmedium';
-        src: url('/assets/brandon_bld-webfont.svg#brandon_bldmedium') format('svg');
-    }
-    @font-face {
-        font-family: 'glyphicons-halflings-regular';
-        src: url('/assets/glyphicons-halflings-regular.svg#glyphicons-halflings-regular') format('svg');
-    }
 }

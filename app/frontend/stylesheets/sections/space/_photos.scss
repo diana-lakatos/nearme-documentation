@@ -54,7 +54,7 @@
       }
 
       strong {
-        font-family: $font-medium;
+        font-weight: 600;
       }
 
       @media (max-width: 768px) {
@@ -95,7 +95,7 @@
       height: 6px;
       background: rgba(0,0,0,0);
       color: white;
-      font-family: $font-medium;
+      font-weight: 600;
       white-space:nowrap;
       opacity: .5;
       transition: opacity .2s ease-in, text-shadow .1s ease-in;

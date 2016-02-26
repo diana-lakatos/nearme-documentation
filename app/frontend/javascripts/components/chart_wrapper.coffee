@@ -27,7 +27,7 @@ module.exports = class ChartWrapper
     @canvas = canvas
     @globalGraphSettings = {
       animation : canvasSupported(),
-      scaleFontFamily : "'Futura-regular', sans-serif",
+      scaleFontFamily : "'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif",
       scaleFontSize : 18
     }
     @titles = titles

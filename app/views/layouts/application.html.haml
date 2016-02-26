@@ -26,7 +26,6 @@
     %meta{:content => meta_description_content, :name => "description"}/
     %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
     %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
-    %meta{:content => "chrome=IE7", "http-equiv" => "X-UA-Compatible"}/
 
     -if platform_context.domain.near_me_domain?
       %meta{:name => "robots", "content" => "noindex, nofollow"}/
@@ -43,6 +42,7 @@
 
     = stylesheet_link_tag 'application_vendor'
     = stylesheet_link_tag 'application'
+    = render 'shared/head/fonts'
 
     = render "dynamic_theme/application"
 
