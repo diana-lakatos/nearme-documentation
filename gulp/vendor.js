@@ -15,8 +15,7 @@ module.exports = function(gulp, config){
         jqueryMap: path.join(config.paths.bower_components, 'jquery','dist','jquery.min.map'),
         jqueryLegacy: path.join(config.paths.bower_components, 'jquery-legacy','dist','jquery.min.js'),
         respond: path.join(config.paths.bower_components, 'respond','dest','respond.min.js'),
-        placeholders: path.join(config.paths.bower_components, 'placeholders','dist','placeholders.min.js'),
-        notfound: path.join(config.paths.bower_components, 'it-should-break-execution-as-it-doesnt-exist-file.txt'),
+        placeholders: path.join(config.paths.bower_components, 'placeholders','dist','placeholders.min.js')
     };
 
     for (var file in files) {
