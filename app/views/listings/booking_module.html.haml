@@ -29,15 +29,15 @@
                 %span.label
                   = t 'booking_module.free'
         - else
-          %ul.pricing-tabs.nav.nav-tabs{:'data-pricing-tabs' => true}
+          %ul.pricing-tabs.nav.nav-tabs{:'data-pricing-tabs' => true, role: "tablist" }
             - if @listing.action_free_booking?
               = content_tag :li, data: { daily: true } do
-                = link_to "#daily-booking-#{@listing.id}", class: "#{'possible' if @listing.action_free_booking? }" do
+                = link_to "#daily-booking-#{@listing.id}", class: "#{'possible' if @listing.action_free_booking? }", role: "tab", :'data-toggle' => "tab" do
                   %span.label
                     = t 'booking_module.free'
             - if @listing.action_hourly_booking?
               = content_tag :li, data: { hourly: true } do
-                = link_to "#hourly-booking-#{@listing.id}", class: "#{'possible' unless @listing.hourly_price.to_f.zero? }" do
+                = link_to "#hourly-booking-#{@listing.id}", class: "#{'possible' unless @listing.hourly_price.to_f.zero? }", role: "tab", :'data-toggle' => "tab" do
                   %span.label
                     - unless @listing.hourly_price.to_f.zero?
                       = "#{@listing.price_with_currency(:hourly_price)}"
@@ -47,7 +47,7 @@
             - if @listing.action_daily_booking?
               - if @listing.transactable_type.action_daily_booking
                 = content_tag :li, data: { daily: true } do
-                  = link_to "#daily-booking-#{@listing.id}", class: "#{'possible' unless @listing.daily_price.to_f.zero? }" do
+                  = link_to "#daily-booking-#{@listing.id}", class: "#{'possible' unless @listing.daily_price.to_f.zero? }", role: "tab", :'data-toggle' => "tab" do
                     %span.label
                       - unless @listing.daily_price.to_f.zero?
                         = "#{@listing.price_with_currency(:daily_price)}"
@@ -57,7 +57,7 @@
 
               - if @listing.transactable_type.action_weekly_booking
                 %li
-                  = link_to "#daily-booking-#{@listing.id}", class: "#{'possible' unless @listing.weekly_price.to_f.zero? }" do
+                  = link_to "#daily-booking-#{@listing.id}", class: "#{'possible' unless @listing.weekly_price.to_f.zero? }", role: "tab", :'data-toggle' => "tab" do
                     %span.label
                       - unless @listing.weekly_price.to_f.zero?
                         = "#{@listing.price_with_currency(:weekly_price)}"
@@ -67,7 +67,7 @@
 
               - if @listing.transactable_type.action_monthly_booking
                 %li
-                  = link_to "#daily-booking-#{@listing.id}", class: "#{'possible' unless @listing.monthly_price.to_f.zero? }" do
+                  = link_to "#daily-booking-#{@listing.id}", class: "#{'possible' unless @listing.monthly_price.to_f.zero? }", role: "tab", :'data-toggle' => "tab" do
                     %span.label
                       - unless @listing.monthly_price.to_f.zero?
                         = "#{@listing.price_with_currency(:monthly_price)}"
@@ -76,14 +76,14 @@
                       %span.period= t('reservations.per_month')
             - unless @listing.weekly_subscription_price.to_f.zero?
               %li{ data: { subscription: 'weekly' } }
-                = link_to "#recurring-booking-#{@listing.id}", class: "possible" do
+                = link_to "#recurring-booking-#{@listing.id}", class: "possible", role: "tab", :'data-toggle' => "tab" do
                   %span.label
                     = "#{@listing.price_with_currency(:weekly_subscription_price)}"
                     %span.period= t('reservations.per_week')
 
             - unless @listing.monthly_subscription_price.to_f.zero?
               %li{ data: { subscription: 'monthly' } }
-                = link_to "#recurring-booking-#{@listing.id}", class: 'possible' do
+                = link_to "#recurring-booking-#{@listing.id}", class: 'possible', role: "tab", :'data-toggle' => "tab" do
                   %span.label
                     = "#{@listing.price_with_currency(:monthly_subscription_price)}"
                     %span.period= t('reservations.per_month')
