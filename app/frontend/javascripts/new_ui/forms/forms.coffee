@@ -5,7 +5,7 @@ module.exports = class Forms
     @initialize()
 
   bindEvents: ->
-    @root.on 'loaded.dialog', =>
+    @root.on 'loaded:dialog.nearme', =>
       @initialize('.dialog')
 
     @root.on 'datepickers.init.forms', (event, context = 'body')=>

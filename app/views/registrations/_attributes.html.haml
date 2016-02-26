@@ -43,7 +43,7 @@
 
 - if only_inputs.empty? || only_inputs.include?(:phone)
   - content_for :domready do
-    $(document).trigger('init.phonenumberfieldsform');
+    $(document).trigger('init:phonenumberfieldsform.nearme');
 
 - if only_inputs.empty? || Category.users.roots.map { |c| "Category - #{c.name}".to_sym }.include?(only_inputs.first)
   - category_name = only_inputs.first.to_s.split(" - ")[1]

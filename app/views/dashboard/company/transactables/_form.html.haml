@@ -111,7 +111,7 @@
                     = render 'dashboard/seller_attachments/attachment', attachment: attachment
 
           - content_for :domready do
-            $(document).trigger('init.sellerattachmentaccesslevelselector');
+            $(document).trigger('init:sellerattachmentaccesslevelselector.nearme');
 
       - when 'waiver_agreement_templates'
         - if @company.waiver_agreement_templates.any?

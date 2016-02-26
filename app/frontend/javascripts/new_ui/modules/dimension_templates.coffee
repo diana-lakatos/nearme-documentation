@@ -28,7 +28,7 @@ module.exports = class DimensionTemplates
       return false unless @state
 
       ajaxOptions = { url: $(e.target).attr('href') }
-      $('html').trigger('load.dialog', [ajaxOptions])
+      $(document).trigger('load:dialog.nearme', [ajaxOptions])
 
 
   prepareFields: (attr) ->

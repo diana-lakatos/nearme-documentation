@@ -1,4 +1,4 @@
-$(document).trigger('close.modal');
+$(document).trigger('close:modal.nearme');
 $("#location-list .row[data-location-id=#{@location.id}]").replaceWith('#{escape_javascript( render @location )}');
 $(".alert").remove()
 $("body").prepend('#{escape_javascript( render 'shared/render_flash')}');

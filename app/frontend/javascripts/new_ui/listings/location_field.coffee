@@ -13,7 +13,7 @@ module.exports = class LocationField
     @field.on 'change', =>
       @locationChanged()
 
-    $('html').on 'loaded.dialog', ->
+    $('html').on 'loaded:dialog.nearme', ->
       $('.dialog--loaded [data-counter-limit]').each (index, item)=>
         new Limiter(item)
       new AvailabilityRules('.dialog .listing-availability')

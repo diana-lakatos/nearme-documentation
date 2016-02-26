@@ -33,7 +33,7 @@ DNM.registerInitializer(function(){
         $('#search_row').css('margin-top', (image_height)/2 - search_height/2 + navbar_height/2 - wood_box_height/2 + 'px');
     }
 
-    $(window).on('resize', centerSearchBox);
+    $(window).on('resize.nearme', centerSearchBox);
     centerSearchBox();
 });
 
@@ -51,7 +51,7 @@ DNM.registerInitializer(function(){
 DNM.registerInitializer(function(){
     /* initializeModalClose */
     /* Re-enable form submit buttons on sign-in/sign-up modal close */
-    $(document).on('click', '.sign-up-modal a.modal-close', function() {
+    $(document).on('click.nearme', '.sign-up-modal a.modal-close', function() {
         var reservation_request_form = $('form.reservation_request');
         if(reservation_request_form.length > 0) {
             $.rails.enableFormElements(reservation_request_form);
@@ -75,7 +75,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.favoritebutton', function(event, el){
+    $(document).on('init:favoritebutton.nearme', function(event, el){
         $(el).find('[data-action-link]').on('click', function(e){
             $.ajax({
               url: $(this).attr('href'),
@@ -97,7 +97,7 @@ DNM.registerInitializer(function(){
         return;
     }
 
-    $(window).on('scroll', function(){
+    $(window).on('scroll.nearme', function(){
       var next_page_path = $('.pagination .next_page').attr('href');
       if (next_page_path && $(window).scrollTop() > $(document).height() - $(window).height() - 60){
           $('.pagination').html('<img id="spinner" src="' + urlUtil.assetUrl('spinner.gif') + '" alt="Loading ..." title="Loading ..." />');
@@ -127,7 +127,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.phonenumberfieldsform', function(event, context, options){
+    $(document).on('init:phonenumberfieldsform.nearme', function(event, context, options){
         options = options || {};
         require.ensure('./components/phone_numbers/phone_number_fields_form', function(require){
             var PhoneNumberFieldsForm = require('./components/phone_numbers/phone_number_fields_form');
@@ -137,7 +137,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.modalform', function(event, context){
+    $(document).on('init:modalform.nearme', function(event, context){
         require.ensure('./components/modal_form', function(require){
             var ModalForm = require('./components/modal_form');
             return new ModalForm($(context));
@@ -187,7 +187,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.bookingscontroller', function(event, el){
+    $(document).on('init:bookingscontroller.nearme', function(event, el){
         require.ensure(['./sections/bookings/controller', './components/custom_inputs', './components/custom_selects'], function(require){
             var
                 BookingsController = require('./sections/bookings/controller'),
@@ -226,7 +226,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.signinform', function(){
+    $(document).on('init:signinform.nearme', function(){
         require.ensure('./sections/signin_form', function(require){
             var SigninForm = require('./sections/signin_form');
             return new SigninForm($('#signup'));
@@ -235,7 +235,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.signupform', function(){
+    $(document).on('init:signupform.nearme', function(){
         require.ensure('./sections/signup_form', function(require){
             var SignupForm = require('./sections/signup_form');
             return new SignupForm($('#signup'));
@@ -355,7 +355,7 @@ DNM.registerInitializer(function(){
 
 /* Search result pages */
 DNM.registerInitializer(function(){
-    $(document).on('init.searchresults', function(){
+    $(document).on('init:searchresults.nearme', function(){
         require.ensure(['./sections/search/search_controller'], function(require){
             var
                 SearchController = require('./sections/search/search_controller'),
@@ -365,7 +365,7 @@ DNM.registerInitializer(function(){
         });
     });
 
-    $(document).on('initmixed.searchresults', function(){
+    $(document).on('init:mixed:searchresults.nearme', function(){
         require.ensure(['./sections/search/search_mixed_controller'], function(require){
             var
                 SearchMixedController = require('./sections/search/search_mixed_controller'),
@@ -375,7 +375,7 @@ DNM.registerInitializer(function(){
         });
     });
 
-    $(document).on('initproducts.searchresults', function(){
+    $(document).on('init:products:searchresults.nearme', function(){
         require.ensure(['./sections/search/products_search_controller'], function(require){
             var
                 ProductsSearchController = require('./sections/search/products_search_controller'),
@@ -385,7 +385,7 @@ DNM.registerInitializer(function(){
         });
     });
 
-    $(document).on('initproductslist.searchresults', function(){
+    $(document).on('init:productslist:searchresults.nearme', function(){
         require.ensure(['./sections/search/products_list_search_controller'], function(require){
             var
                 ProductsListSearchController = require('./sections/search/products_list_search_controller'),
@@ -396,7 +396,7 @@ DNM.registerInitializer(function(){
         });
     });
 
-    $(document).on('initproductstable.searchresults', function(){
+    $(document).on('init:productstable:searchresults.nearme', function(){
         require.ensure(['./sections/search/products_table_search_controller'], function(require){
             var
                 ProductsTableSearchController = require('./sections/search/products_table_search_controller'),
@@ -535,7 +535,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.sellerattachmentaccesslevelselector', function(event, el){
+    $(document).on('init:sellerattachmentaccesslevelselector.nearme', function(event, el){
         el = el || document;
         require.ensure('./components/seller_attachment_access_level_selector', function(require){
             var SellerAttachmentAccessLevelSelector = require('./components/seller_attachment_access_level_selector');

@@ -24,7 +24,7 @@ module.exports = class PhotoManipulator
           rotate: @angle
         }
       }
-      $('html').trigger('load.dialog', [ ajaxOptions ])
+      $(document).trigger('load:dialog.nearme', [ ajaxOptions ])
 
   bindCropHandler: =>
     options = {

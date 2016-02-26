@@ -2,4 +2,4 @@
 
 :javascript
   $('li[data-seller-attachment="#{attachment.id}"] select[data-seller-attachment-access-level]').customSelect();
-  $(document).trigger('init.sellerattachmentaccesslevelselector', [$('li[data-seller-attachment="#{attachment.id}"]')]);
+  $(document).trigger('init:sellerattachmentaccesslevelselector.nearme', [$('li[data-seller-attachment="#{attachment.id}"]')]);

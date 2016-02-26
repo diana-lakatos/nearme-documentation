@@ -17,7 +17,7 @@ DNM.registerInitializer(function(){
         });
     }
 
-    $('html').on('loaded.dialog', function(){
+    $('html').on('loaded:dialog.nearme', function(){
         require.ensure('./new_ui/address_field/address_controller', function(require){
             var AddressController = require('./new_ui/address_field/address_controller');
             return new AddressController('.dialog');
@@ -398,7 +398,7 @@ DNM.registerInitializer(function(){
 
 DNM.registerInitializer(function(){
 
-    $(document).on('init.limiter', function(event, elements){
+    $(document).on('init:limiter.nearme', function(event, elements){
         require.ensure('./new_ui/modules/limited_input', function(require){
             var Limiter = require('./new_ui/modules/limited_input');
             $(elements).each(function(){
@@ -421,7 +421,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('linechart.dnm', function(event, el, values, labels){
+    $(document).on('line:chart.nearme', function(event, el, values, labels){
         require.ensure('./new_ui/charts/chart_wrappers/line', function(require){
             var LineChart = require('./new_ui/charts/chart_wrappers/line');
             new LineChart(el, values, labels);
@@ -430,7 +430,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('dimensiontemplates.dnm', function(event, el, units){
+    $(document).on('init:dimensiontemplates.nearme', function(event, el, units){
         require.ensure('./new_ui/modules/dimension_templates', function(require){
             var DimensionTemplates = require('./new_ui/modules/dimension_templates');
             new DimensionTemplates(el, units);
@@ -439,7 +439,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('photomanipulator.dnm', function(event, el){
+    $(document).on('init:photomanipulator.nearme', function(event, el){
         require.ensure('./new_ui/modules/photo_manipulator', function(require){
             var PhotoManipulator = require('./new_ui/modules/photo_manipulator');
             new PhotoManipulator(el);
@@ -476,7 +476,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.shippingprofilescontroller', function(){
+    $(document).on('init:shippingprofilescontroller.nearme', function(){
         require.ensure('./new_ui/controllers/shipping_profiles_controller', function(require){
             var ShippingProfilesController = require('./new_ui/controllers/shipping_profiles_controller');
             return new ShippingProfilesController('form.profiles_shipping_category_form');

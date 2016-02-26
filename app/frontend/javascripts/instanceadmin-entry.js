@@ -150,7 +150,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('linechart.dnm', function(event, el, values, labels){
+    $(document).on('line:chart.nearme', function(event, el, values, labels){
         require.ensure('./components/chart/line', function(require){
             var LineChart = require('./components/chart/line');
             new LineChart(el, values, labels);
@@ -495,21 +495,21 @@ DNM.registerInitializer(function(){
     var Modal = require('./components/modal');
     Modal.listen();
 
-    $(document).on('close.modal', function(){
+    $(document).on('close:modal.nearme', function(){
         Modal.close();
     });
 
-    $(document).on('load.modal', function(event, url){
+    $(document).on('load:modal.nearme', function(event, url){
         Modal.load(url);
     });
 
-    $(document).on('setclass.modal', function(event, klass){
+    $(document).on('setclass:modal.nearme', function(event, klass){
         Modal.setClass(klass);
     });
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.shippingprofiles', function(event, profile_add_success){
+    $(document).on('init:shippingprofiles.nearme', function(event, profile_add_success){
         require.ensure('./sections/dashboard/shipping_profiles', function(require){
             var ShippingProfiles = require('./sections/dashboard/shipping_profiles');
             return new ShippingProfiles('.profiles_shipping_category_form', profile_add_success);
@@ -518,7 +518,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    $(document).on('init.photomanipulator', function(event, container, options){
+    $(document).on('init:photomanipulator.nearme', function(event, container, options){
         options = options || {};
         require.ensure('./components/photo/manipulator', function(require){
             var PhotoManipulator = require('./components/photo/manipulator');
