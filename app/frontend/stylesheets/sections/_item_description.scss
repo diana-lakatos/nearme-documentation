@@ -1,0 +1,59 @@
+.product-details article,
+.listing-details article,
+.booking-module .booking-description {
+    p, li {
+        font-size: 16px;
+
+        * {
+            font-size: 1em;
+        }
+    }
+
+    p {
+        margin: 0 0 .5em;
+    }
+
+    strong {
+        font-weight: bold;
+    }
+
+    em {
+        font-style: italic;
+    }
+
+    u {
+        text-decoration: underline;
+    }
+
+    s {
+        text-decoration: line-through;
+    }
+
+    ol, ul {
+        margin: 0 0 1em 22px;
+
+        ol, ul {
+            margin-bottom: 0;
+        }
+    }
+
+    ul {
+        list-style-type: disc;
+    }
+
+    ol {
+        list-style-type: decimal;
+    }
+
+    blockquote {
+        margin: 0 20px 1em;
+        border-left: 5px solid #aaa;
+        padding: 10px 20px;
+
+        p {
+            font-style: italic;
+            font-size: 1.2em !important;
+            margin: 0 !important;
+        }
+    }
+}
