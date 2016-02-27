@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160225150613) do
+ActiveRecord::Schema.define(version: 20160226110713) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -3565,8 +3565,8 @@ ActiveRecord::Schema.define(version: 20160225150613) do
     t.boolean  "action_weekly_subscription_booking"
     t.boolean  "action_monthly_subscription_booking"
     t.integer  "default_availability_template_id"
-    t.integer  "reservation_type_id"
     t.string   "show_path_format"
+    t.integer  "reservation_type_id"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -4014,6 +4014,7 @@ ActiveRecord::Schema.define(version: 20160225150613) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "api_call_count"
   end
 
   add_index "workflow_alert_monthly_aggregated_logs", ["instance_id", "year", "month"], name: "wamal_instance_id_year_month_index", unique: true, using: :btree
@@ -4022,12 +4023,13 @@ ActiveRecord::Schema.define(version: 20160225150613) do
     t.integer  "instance_id"
     t.integer  "year"
     t.integer  "week_number"
-    t.integer  "email_count", default: 0, null: false
-    t.integer  "integer",     default: 0, null: false
-    t.integer  "sms_count",   default: 0, null: false
+    t.integer  "email_count",    default: 0, null: false
+    t.integer  "integer",        default: 0, null: false
+    t.integer  "sms_count",      default: 0, null: false
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "api_call_count"
   end
 
   add_index "workflow_alert_weekly_aggregated_logs", ["instance_id", "year", "week_number"], name: "wamal_instance_id_year_week_number_index", unique: true, using: :btree
@@ -4054,6 +4056,11 @@ ActiveRecord::Schema.define(version: 20160225150613) do
     t.string   "recipient",        limit: 255
     t.string   "from_type",        limit: 255
     t.string   "reply_to_type",    limit: 255
+    t.text     "endpoint"
+    t.string   "request_type"
+    t.boolean  "use_ssl"
+    t.text     "payload_data",                 default: "{}"
+    t.text     "headers",                      default: "{}"
   end
 
   add_index "workflow_alerts", ["instance_id", "workflow_step_id"], name: "index_workflow_alerts_on_instance_id_and_workflow_step_id", using: :btree

@@ -93,7 +93,8 @@ namespace :fix do
      InstanceClient, MerchantAccount, Photo, RatingAnswer,
      RecurringBookingPeriod, Refund, Review, SavedSearch,
      SavedSearchAlertLog, ScheduleExceptionRule, ScheduleRule,
-     Shipment, UserMessage, Support::Ticket, WaiverAgreement
+     Shipment, UserMessage, Support::Ticket, WaiverAgreement,
+     Authentication, UserRelationship
     ].each do |klass|
       puts "Deleting: #{klass} for #{instance.name}"
       puts "Before count: #{klass.count}"

@@ -44,8 +44,7 @@ class Instance < ActiveRecord::Base
     end
   end
 
-  has_one :theme, :as => :owner, dependent: :destroy
-
+  has_one :theme, :as => :owner
   has_many :companies, :inverse_of => :instance
   has_many :locations, :inverse_of => :instance
   has_many :locations_impressions, :through => :locations, :inverse_of => :instance

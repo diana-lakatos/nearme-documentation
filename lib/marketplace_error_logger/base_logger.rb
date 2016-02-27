@@ -13,6 +13,7 @@ module MarketplaceErrorLogger
     IMAP_ERROR = 'Email receiver failed'
     MAILER_ERROR = 'Mailer Not Sent'
     SELLER_ATTACHMENTS_ERROR = 'Seller Attachments Error'
+    API_CALL_ERROR = 'Api Call failed'
 
     def log_issue(error_type, message, options = {})
       raise NotImplementedError
