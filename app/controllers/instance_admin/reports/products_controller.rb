@@ -21,7 +21,7 @@ class InstanceAdmin::Reports::ProductsController < InstanceAdmin::Reports::BaseC
   def download_report
     @product_search_form = InstanceAdmin::ProductSearchForm.new
     @product_search_form.validate(params)
-    @products = SearchService.new(Spree::Product.order('created_at DESC')).search(@product_search_form.to_search_params).paginate(page: params[:page])
+    @products = SearchService.new(Spree::Product.order('created_at DESC')).search(@product_search_form.to_search_params)
     @product_type = Spree::ProductType.find_by_id(params[:item_type_id])
 
     csv = export_data_to_csv_for_products(@products, @product_type)
