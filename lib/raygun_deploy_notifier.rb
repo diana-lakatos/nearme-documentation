@@ -16,12 +16,15 @@ class RaygunDeployNotifier
     request = Net::HTTP::Post.new(uri)
     request.content_type = 'application/json'
 
+    comment = `git log -1 --pretty=%B`.strip
+    comment = "#{comment}\n#{ENV['opsworks_instance']}"
+
     request.body = {
       'version': Rails.application.config.app_version,
       'ownerName': `git --no-pager show -s --format='%an' HEAD`.strip,
       'emailAddress': `git --no-pager show -s --format='%ae' HEAD`.strip,
-      'comment': `git log -1 --pretty=%B`.strip,
-      'scmIdentifier': `git rev-parse --verify HEAD`.strip,
+      'comment': comment,
+      'scmIdentifier': `git rev-parse --verify --short HEAD`.strip,
       'apiKey': apiKey
     }.to_json
 
