@@ -43,17 +43,13 @@ class ReservationRequest < Form
       @reservation = @reservation.decorate
       attributes = update_shipments(attributes)
 
-      build_return_shipment
 
       if @user
         @user.phone ||= @user.mobile_number
       end
 
-      if attributes.try(:[], 'reservation').present?
-        reservation_attributes = attributes.delete('reservation')
-        attributes.merge!(reservation_attributes)
-      end
       store_attributes(attributes)
+      build_return_shipment
       @reservation.calculate_prices
 
       @reservation.build_additional_charges(attributes)
