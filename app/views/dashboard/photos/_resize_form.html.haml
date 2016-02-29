@@ -11,6 +11,4 @@
       = submit_tag "Process", class: "btn medium blue pull-right"
 
   :javascript
-    $(function() {
-      $(document).trigger('init:photomanipulator.nearme', ['#crop-form', { aspectRatio: #{defined?(object.class::ASPECT_RATIO) ? (object.model.try(:owner_type) == 'Project' ? object.class::ASPECT_RATIO_PROJECT : object.class::ASPECT_RATIO) : object.model.send("#{object.mounted_as}_dimensions")[:width].to_f/object.model.send("#{object.mounted_as}_dimensions")[:height].to_f} }) }]);
-    });
+    $(document).trigger('init:photomanipulator.nearme', ['#crop-form', { aspectRatio: #{defined?(object.class::ASPECT_RATIO) ? (object.model.try(:owner_type) == 'Project' ? object.class::ASPECT_RATIO_PROJECT : object.class::ASPECT_RATIO) : object.model.send("#{object.mounted_as}_dimensions")[:width].to_f/object.model.send("#{object.mounted_as}_dimensions")[:height].to_f} }]);
