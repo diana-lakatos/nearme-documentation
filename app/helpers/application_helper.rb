@@ -19,7 +19,7 @@ module ApplicationHelper
   end
 
   def title(page_title, show_title = true)
-    content_for(:title) { h(page_title.to_s) }
+    content_for(:title) { meta_attr(page_title.to_s) }
     @show_title = show_title
   end
 
@@ -28,7 +28,7 @@ module ApplicationHelper
   end
 
   def meta_title(name)
-    content_for(:meta_title) { h(name.to_s) }
+    content_for(:meta_title) { meta_attr(name.to_s) }
   end
 
   def title_tag
@@ -42,16 +42,20 @@ module ApplicationHelper
     end
   end
 
+  def meta_attr(content)
+    Sanitize.clean(content).gsub(/\s+/,' ').strip
+  end
+
   def meta_description(description)
-    content_for(:meta_description) { h(description.to_s) }
+    content_for(:meta_description) { meta_attr(description.to_s) }
   end
 
   def meta_description_content
-    content_for?(:meta_description) ? content_for(:meta_description) : (platform_context.description || platform_context.name)
+    content_for?(:meta_description) ? meta_attr(content_for(:meta_description)) : meta_attr(platform_context.description || platform_context.name)
   end
 
   def additional_meta_title
-    content_for?(:meta_title) ? content_for(:meta_title) : platform_context.meta_title
+    content_for?(:meta_title) ? meta_attr(content_for(:meta_title)) : meta_attr(platform_context.meta_title)
   end
 
   def canonical_prev_next(results)

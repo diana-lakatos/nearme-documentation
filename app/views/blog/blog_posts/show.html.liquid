@@ -1,8 +1,8 @@
 {% content_for meta %}
-  <meta property="og:title" content='{{ @blog_post.title }}' />
-  <meta property="og:description" content='{{ @blog_post.excerpt }}' />
+  <meta property="og:title" content='{{ @blog_post.title | meta_attr }}' />
+  <meta property="og:description" content='{{ @blog_post.excerpt | meta_attr }}' />
   <meta property="og:type" content="website"  />
-  <meta property="og:site_name" content='{{ platform_context.name }}' />
+  <meta property="og:site_name" content='{{ platform_context.name | meta_attr }}' />
   <meta property="og:url" content='{{ "original_url" | request_parameter }}' />
 {% endcontent_for %}
 
