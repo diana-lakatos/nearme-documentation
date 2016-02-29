@@ -16,5 +16,16 @@ class CreditCard::BraintreeDecorator
   def response
     @response ||= YAML.load(credit_card.response)
   end
+
+  def response=(response_object)
+    # When adding second CC to the same Merchant as a response
+    # we expect MultiResponse object
+    if response_object.class == ActiveMerchant::Billing::MultiResponse
+      @credit_card.response = response_object.responses.select { |r| r.params["customer_vault_id"].present? }.first.to_yaml
+    else
+      @credit_card.response = response_object.to_yaml
+      @credit_card.instance_client.response ||= response_object.to_yaml
+    end
+  end
 end
 
