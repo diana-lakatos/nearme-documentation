@@ -13,12 +13,12 @@ namespace :migrate do
 
       CreditCard.all.find_each do |card|
         if card.decorator && card.decorator.response.class == ActiveMerchant::Billing::MultiResponse
-          card_response = card.decorator.response.responses.select { |r| r.params['object'] == 'card'}.first.to_yaml
-          customer_response = card.decorator.response.responses.select { |r| r.params['object'] == 'customer'}.first.to_yaml
-          card.response = card_response
+          card_response = card.decorator.response.responses.select { |r| r.params['object'] == 'card'}.first
+          customer_response = card.decorator.response.responses.select { |r| r.params['object'] == 'customer'}.first
+          card.response = card_response.to_yaml
           card.save
           if card.instance_client.customer_id != customer_response.params["id"]
-            card.instance_client.response = customer_response
+            card.instance_client.response = customer_response.to_yaml
             card.save
           end
         end
