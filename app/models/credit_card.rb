@@ -77,10 +77,10 @@ class CreditCard < ActiveRecord::Base
     return false if payment_gateway.blank?
     return false if instance_client.blank?
 
-    # We need to parse response respectively for each PaymentGateway
-    decorator.response = payment_gateway.store(active_merchant_card, instance_client)
+    self.response = payment_gateway.store(active_merchant_card, instance_client).to_yaml
 
     if success?
+      self.instance_client.response ||= self.response
       self.instance_client.save!
       true
     else
