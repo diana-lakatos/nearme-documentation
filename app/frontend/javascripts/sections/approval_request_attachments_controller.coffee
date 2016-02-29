@@ -1,6 +1,7 @@
 module.exports = class ApprovalRequestAttachmentsController
 
-  constructor: (@container) ->
+  constructor: (container) ->
+    @container = $(container)
     @bindEvents()
 
   bindEvents: =>
