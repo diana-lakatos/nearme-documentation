@@ -312,6 +312,7 @@ en:
         show_categories: "Show categories?"
         date_pickers_use_availability_rules: 'Use availability rules'
       user:
+        password_confirmation: "Confirm Password"
         biography: 'About me'
         sms_notifications_enabled: 'Enable Text Message Notifications'
         accept_emails: 'Accept emails'
