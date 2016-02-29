@@ -100,7 +100,7 @@ class Payment < ActiveRecord::Base
   validates :payment_method, presence: true
   validates :payable_id, :uniqueness => { :scope => [:payable_type, :payable_id, :instance_id] }, if: Proc.new {|p| p.payable_id.present? }
 
-  validates_associated :credit_card
+  validates_associated :credit_card, if: Proc.new { |p| p.credit_card_payment? && p.save_credit_card? }
 
   # === Helpers
   monetize :subtotal_amount_cents, with_model_currency: :currency
@@ -199,6 +199,8 @@ class Payment < ActiveRecord::Base
   end
 
   def credit_card_attributes=(cc_attributes)
+    return unless credit_card_payment?
+
     super(cc_attributes.merge({
       payment_gateway: payment_gateway,
       instance_client: payment_gateway.try {|p| p.instance_clients.where(client: payable.owner).first_or_initialize }
