@@ -3,7 +3,7 @@
 
 namespace :migrate do
 
-  task :create_payment_subscriptions_for_existing_subscriptions do
+  task :create_payment_subscriptions_for_existing_subscriptions => :environment do
     Instance.all.each do |instance|
       instance.set_context!
       next unless RecurringBooking.any?
