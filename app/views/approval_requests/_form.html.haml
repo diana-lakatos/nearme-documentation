@@ -1,11 +1,9 @@
 - if !f.object.is_trusted? && f.object.current_approval_requests.first
 
   - unless @approval_request_attachments_js
-    - content_for :script do
-      :javascript
-        $(function() {
-          new ApprovalRequestAttachmentsController($('.fileupload'));
-        });
+    - content_for :domready do
+      $(document).trigger('init:approvalrequestattachmentscontroller.nearme', ['.fileupload']);
+
     - @approval_request_attachments_js = true
 
   = f.simple_fields_for :approval_requests, f.object.current_approval_requests.first do |approval_request_form|
