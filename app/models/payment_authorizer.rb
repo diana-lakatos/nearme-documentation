@@ -35,7 +35,7 @@ class PaymentAuthorizer
   private
 
   def credit_card
-    @credit_card ||= @payment.credit_card.to_active_merchant
+    @credit_card ||= @payment.credit_card.try(:to_active_merchant)
   end
 
   def gateway_authorize(amount, cc, options)

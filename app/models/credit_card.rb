@@ -77,18 +77,8 @@ class CreditCard < ActiveRecord::Base
     return false if payment_gateway.blank?
     return false if instance_client.blank?
 
-    response_object = payment_gateway.store(active_merchant_card, instance_client)
-
-    if response_object.class == ActiveMerchant::Billing::MultiResponse
-      self.response = response_object.responses.select { |r| r.params['object'] == 'card'}.first.to_yaml
-      customer_response = response_object.responses.select { |r| r.params['object'] == 'customer'}.first
-      if customer_response.params['id'] != self.instance_client.customer_id
-        self.instance_client.response = customer_response.to_yaml
-      end
-    else
-      self.response = response_object.to_yaml
-      self.instance_client.response ||= response_object.to_yaml
-    end
+    # We need to parse response respectively for each PaymentGateway
+    decorator.response = payment_gateway.store(active_merchant_card, instance_client)
 
     if success?
       self.instance_client.save!
