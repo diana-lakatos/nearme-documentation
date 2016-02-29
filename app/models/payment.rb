@@ -100,7 +100,7 @@ class Payment < ActiveRecord::Base
   validates :payment_method, presence: true
   validates :payable_id, :uniqueness => { :scope => [:payable_type, :payable_id, :instance_id] }, if: Proc.new {|p| p.payable_id.present? }
 
-  validates_associated :credit_card, if: Proc.new { |p| p.credit_card_payment? && p.save_credit_card? }
+  validates_associated :credit_card
 
   # === Helpers
   monetize :subtotal_amount_cents, with_model_currency: :currency

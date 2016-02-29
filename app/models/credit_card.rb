@@ -56,7 +56,7 @@ class CreditCard < ActiveRecord::Base
 
   def success?
     if response
-      !!YAML.load(response).try(:success?)
+      !!YAML.load(response).try(&:success?)
     else
       false
     end
