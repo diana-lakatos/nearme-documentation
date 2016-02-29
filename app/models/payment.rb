@@ -284,6 +284,10 @@ class Payment < ActiveRecord::Base
     @recurring == true
   end
 
+  def failed?
+    !!failed_at
+  end
+
   def active_merchant_payment?
     self.payment_method.try(:capturable?)
   end
