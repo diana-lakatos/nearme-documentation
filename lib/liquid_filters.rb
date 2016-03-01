@@ -171,13 +171,23 @@ module LiquidFilters
 
   def custom_sanitize(html = '')
     return '' if html.blank?
-    html.gsub!("\r\n", "<br />")
     if PlatformContext.current.instance.custom_sanitize_config.present?
       @custom_sanitizer ||= CustomSanitizer.new(PlatformContext.current.instance.custom_sanitize_config)
       @custom_sanitizer.sanitize(html).html_safe
     else
       html
     end
+  end
+
+  def strip_tags(html = '')
+    return '' if html.blank?
+    @custom_sanitizer ||= CustomSanitizer.new()
+    @custom_sanitizer.strip_tags(html).html_safe
+  end
+
+  def nl2br(html = '')
+    return '' if html.blank?
+    html.gsub!("\r\n", "<br />")
   end
 
   def pagination_links(collection, options = {})
