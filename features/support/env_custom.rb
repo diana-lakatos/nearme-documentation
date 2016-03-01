@@ -25,8 +25,8 @@ Before do
   stub_request(:get, 'http://static.ak.facebook.com')
 
   instance = FactoryGirl.create(:instance)
-  FactoryGirl.create(:domain, target: instance, name: "127.0.0.1")
-  FactoryGirl.create(:domain, target: instance, name: "example.org")
+  FactoryGirl.create(:domain, target: instance, instance_id: instance.id, name: "127.0.0.1")
+  FactoryGirl.create(:domain, target: instance, instance_id: instance.id, name: "example.org")
   store_model("instance", nil, instance)
   store_model("theme", nil, instance.theme)
   instance.set_context!
