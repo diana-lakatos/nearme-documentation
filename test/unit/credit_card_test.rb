@@ -3,6 +3,10 @@ require 'test_helper'
 class CreditCardTest < ActiveSupport::TestCase
 
   context 'save' do
+    setup do
+      @instance_client = FactoryGirl.build(:instance_client, response: nil)
+    end
+
     should 'not persist card if not valid' do
       card = FactoryGirl.build(:invalid_credit_card_attributes, response: nil)
       refute card.save
@@ -12,7 +16,7 @@ class CreditCardTest < ActiveSupport::TestCase
 
     should 'persist card if valid and successful response' do
       ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(am_success_response(customer_params))
-      card = FactoryGirl.build(:credit_card_attributes, response: nil)
+      card = FactoryGirl.build(:credit_card_attributes, response: nil, instance_client: @instance_client)
       assert card.save
       assert card.success?
       assert_equal customer_params["default_source"], card.token
@@ -20,10 +24,10 @@ class CreditCardTest < ActiveSupport::TestCase
 
     should 'persist card if valid and successful multi response' do
       ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(am_success_multi_response)
-      card = FactoryGirl.build(:credit_card_attributes, response: nil)
+      card = FactoryGirl.build(:credit_card_attributes, response: nil, instance_client: @instance_client)
       assert card.save
       assert card.success?
-      assert_equal card_params["id"], card.token
+      assert_equal customer_params["default_source"], card.token
       assert_equal customer_params["id"], card.instance_client.customer_id
     end
   end
@@ -35,10 +39,9 @@ class CreditCardTest < ActiveSupport::TestCase
   end
 
   def am_success_multi_response
-    multi_response = ActiveMerchant::Billing::MultiResponse.new()
-    multi_response.responses << am_success_response(card_params)
-    multi_response.responses << am_success_response(customer_params)
-    multi_response
+    multi_response = ActiveMerchant::Billing::MultiResponse.new.tap do |r|
+      r.process {am_success_response(customer_params)}
+    end
   end
 
   def card_params

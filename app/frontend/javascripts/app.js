@@ -12,15 +12,15 @@ module.exports = {
 
     run: function(){
 
-        this.callbacks.beforeInit.forEach(function(callback){
+        $.each(this.callbacks.beforeInit, function(index, callback){
             callback();
         });
 
-        this.initializers.forEach(function(callback){
+        $.each(this.initializers, function(index, callback){
             callback();
         });
 
-        this.callbacks.afterInit.forEach(function(callback){
+        $.each(this.callbacks.afterInit, function(index, callback){
             callback();
         });
     },

@@ -94,9 +94,9 @@ class SessionsController < Devise::SessionsController
     self.response_body = nil
     self.resource.email = params[:user][:email]
     if User.find_by_email(params[:user][:email])
-      self.resource.errors.add(:password, 'incorrect password')
+      self.resource.errors.add(:password, t('sign_up_form.incorrect_password'))
     else
-      self.resource.errors.add(:email, 'incorrect email')
+      self.resource.errors.add(:email, t('sign_up_form.incorrect_email'))
     end
     render :template => login_from_instance_admin? ? "instance_admin/sessions/new" : "sessions/new"
   end
