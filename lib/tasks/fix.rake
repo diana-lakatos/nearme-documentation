@@ -103,7 +103,19 @@ namespace :fix do
       puts "Removed: #{klass.where(instance_id: instance.id).delete_all}"
       puts "After count: #{klass.count}"
     end
-    User.with_deleted.not_admin.where(instance_id: instance.id).delete_all
+    User.with_deleted.not_admin.where('id NOT IN (SELECT DISTINCT(user_id) FROM instance_admins WHERE deleted_at IS NULL)').where(instance_id: instance.id).delete_all
+    AvailabilityTemplate.create!(
+      name: "Business Hours",
+      parent: instance,
+      description: "Monday - Friday, 9am-5pm",
+      availability_rules_attributes: [{ open_hour: 9, open_minute: 0, close_hour: 17, close_minute: 0, days: (0..5).to_a }]
+    )
+    AvailabilityTemplate.create!(
+      name: "24/7",
+      parent: instance,
+      description: "Sunday - Saturday, 12am-11:59pm",
+      availability_rules_attributes: [{ open_hour: 0, open_minute: 0, close_hour: 23, close_minute: 59, days: (0..6).to_a }]
+    )
   end
 
 
