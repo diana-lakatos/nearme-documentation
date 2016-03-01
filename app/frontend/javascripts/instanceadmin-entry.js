@@ -139,14 +139,16 @@ DNM.registerInitializer(function(){
 
 DNM.registerInitializer(function(){
     $('[data-submit-form]').on('click', function() {
-      $($(this).attr('data-form-selector')).submit();
-  });
+        $($(this).data('form-selector')).each(function(){
+            this.submit();
+        });
+    });
 });
 
 DNM.registerInitializer(function(){
     $('.translation-default-button').on('click', function() {
-      $(this).closest('.translations-input-container').find('.default-text').toggle();
-  });
+        $(this).closest('.translations-input-container').find('.default-text').toggle();
+    });
 });
 
 DNM.registerInitializer(function(){
