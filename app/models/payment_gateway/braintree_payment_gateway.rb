@@ -18,6 +18,9 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
     ActiveMerchant::Billing::BraintreeBlueGateway
   end
 
+  # This is work around for errors send from Braintree
+  # while refunding transaction that wasn't settled yet
+
   def gateway_refund(amount, token, options)
     configure_braintree_class
     transaction = Braintree::Transaction.find(token)

@@ -10,7 +10,7 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
   # Send to paypal with every action as BN CODE
   ActiveMerchant::Billing::Gateway.application_id = Rails.configuration.active_merchant_billing_gateway_app_id
 
-  supported :paypal_chain_payments, :multiple_currency, :express_checkout_payment, :immediate_payout, :partial_refunds
+  supported :paypal_chain_payments, :multiple_currency, :express_checkout_payment, :immediate_payout, :partial_refunds, :refund_from_host
 
   def self.settings
     {
@@ -52,6 +52,10 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
     }
   end
 
+  def settings
+    super.merge({ subject: subject, test: test_mode? })
+  end
+
   def gateway(subject=nil)
     if @gateway.nil? || subject.present?
       @gateway = self.class.active_merchant_class.new(
@@ -87,47 +91,10 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
   end
 
   def gateway_refund(amount, token, options)
-    if refund_service_fee(options)
+    begin
       gateway(@payment.payable.merchant_subject).refund(amount, token, options)
-    else
-      OpenStruct.new(success: false, success?: false)
-    end
-  end
-
-  def refund_service_fee(options)
-    return false if @payment.refunds.successful.any?
-    return true if @payment.payment_transfer.blank?
-
-    @payment_transfer = @payment.payment_transfer
-
-    # We only want to refund host service fee when guest cancel
-    mpo_refund_amount = if @payment.cancelled_by_guest?
-      @payment_transfer.service_fee_amount_host.cents
-    else
-      @payment_transfer.total_service_fee.cents
-    end
-
-    service_fee_refund = @payment.refunds.create(
-      amount: mpo_refund_amount,
-      currency: @payment.currency,
-      payment: @payment,
-      payment_gateway_mode: mode,
-      payment_gateway: @payment.payment_gateway,
-    )
-
-    payout = @payment_transfer.payout_attempts.successful.first
-    refund_response = if mpo_refund_amount > 0
-      gateway.refund(mpo_refund_amount, refund_identification(payout), options)
-    else
-      OpenStruct.new(success: true, success?: true, refunded_ammount: mpo_refund_amount)
-    end
-
-    if refund_response.success?
-      service_fee_refund.refund_successful(refund_response)
-      true
-    else
-      service_fee_refund.refund_failed(refund_response)
-      false
+    rescue => e
+      OpenStruct.new({ success?: false, message: e.to_s })
     end
   end
 
@@ -181,11 +148,6 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
       @payment.company.payment_transfers.create!(payments: [@payment.reload], payment_gateway_mode: mode, payment_gateway_id: self.id)
     end
     @charge.charge_successful(response)
-  end
-
-
-  def merchant_subject
-    @merchant_account.subject
   end
 
   def line_items

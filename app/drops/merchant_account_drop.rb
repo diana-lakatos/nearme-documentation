@@ -9,7 +9,11 @@ class MerchantAccountDrop < BaseDrop
   end
 
   def errors
-    merchant_account.errors.map { |k, v| (k == :data ? '' : "#{k.to_s.humanize} ") + v }.join(', ')
+    if merchant_account.errors.any?
+      "<li>" +  merchant_account.errors.full_messages.join("</ li><li>") + "</li>"
+    else
+      nil
+    end
   end
 
   def data

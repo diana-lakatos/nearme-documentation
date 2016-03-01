@@ -8,10 +8,10 @@
 
 <h3>{{ 'dashboard.merchant_account.header' | translate }}</h3>
 
-{% if merchant_account.errors != blank %}
+{% if merchant_account.errors %}
 <div class="errors-global">
   <ul>
-    <li>{{ merchant_account.errors }}</li>
+    {{ merchant_account.errors }}
   </ul>
 </div>
 {% endif %}

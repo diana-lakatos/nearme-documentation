@@ -9,7 +9,7 @@
     .errors-global
       %ul
         - merchant_account.errors.messages.values.each do |err|
-          %li= err
+          %li= err.first
 
   .form-group.string.optional
     = maf.label :account_type, t('dashboard.merchant_account.account_type'), class: 'string optional control-label'

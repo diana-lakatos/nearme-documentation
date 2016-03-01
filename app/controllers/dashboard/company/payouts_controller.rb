@@ -9,7 +9,6 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
   end
 
   def update
-    @merchant_account = @company.send("#{@payment_gateway_type}_merchant_account") if @payment_gateway_type
     if @company.update_attributes(company_params)
       flash[:success] = t('flash_messages.manage.payouts.updated')
       redirect_to @merchant_account.try(:redirect_url) || {action: :edit}
@@ -43,6 +42,13 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
     if @payment_gateway.present?
       @merchant_account = @company.send("#{@payment_gateway_type}_merchant_account") \
         || @company.send("build_#{@payment_gateway_type}_merchant_account", payment_gateway_id: @payment_gateway.id)
+
+      if @payment_gateway.supports_host_subscription? && @merchant_account.payment_subscription.blank?
+        @merchant_account.build_payment_subscription(
+          subscriber: @merchant_account,
+          payment_method_id: @payment_gateway.payment_methods.credit_card.first.id
+        )
+      end
     end
   end
 end

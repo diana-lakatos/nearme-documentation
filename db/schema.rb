@@ -1650,6 +1650,8 @@ ActiveRecord::Schema.define(version: 20160225150613) do
     t.integer  "instance_id"
     t.integer  "payment_gateway_id"
     t.string   "payment_gateway_mode", limit: 4
+    t.string   "receiver"
+    t.integer  "credit_card_id"
   end
 
   create_table "reservation_periods", force: :cascade do |t|

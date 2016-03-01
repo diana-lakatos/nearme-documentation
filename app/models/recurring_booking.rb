@@ -52,7 +52,6 @@ class RecurringBooking < ActiveRecord::Base
   validates :transactable_id, :interval, :presence => true
   validates :owner_id, presence: true, unless: -> { owner.present? }
 
-
   state_machine :state, initial: :unconfirmed do
     before_transition unconfirmed: :confirmed do |reservation, transaction|
       if reservation.check_overbooking && reservation.errors.empty? && period = reservation.generate_next_period!
@@ -135,6 +134,10 @@ class RecurringBooking < ActiveRecord::Base
 
   def user
     @user ||= owner
+  end
+
+  def client
+    user
   end
 
   def host

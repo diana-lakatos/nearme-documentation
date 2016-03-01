@@ -6,6 +6,7 @@ class InstanceClient < ActiveRecord::Base
 
   attr_encrypted :response
 
+  # Company or User
   belongs_to :client, :polymorphic => true
   belongs_to :instance
   belongs_to :payment_gateway
@@ -24,6 +25,8 @@ class InstanceClient < ActiveRecord::Base
                    when 'Stripe'
                      InstanceClient::StripeDecorator.new(self)
                    when 'Braintree'
+                     InstanceClient::BraintreeDecorator.new(self)
+                   when 'Braintree Marketplace'
                      InstanceClient::BraintreeDecorator.new(self)
                    when nil
                      nil

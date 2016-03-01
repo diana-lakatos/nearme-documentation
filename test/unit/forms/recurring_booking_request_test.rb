@@ -19,7 +19,7 @@ class RecurringBookingRequestTest < ActiveSupport::TestCase
       end_on: @last_thursday,
       interval: 'monthly',
       quantity: 1,
-      payment_subscription: {
+      payment_subscription_attributes: {
         payment_method: @payment_method,
         credit_card_attributes: {
           first_name: "Charles",

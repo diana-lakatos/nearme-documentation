@@ -96,14 +96,14 @@ class Listings::RecurringBookingsController < ApplicationController
         additional_charge_ids: attributes[:additional_charge_ids],
         guest_notes: attributes[:guest_notes],
         total_amount_check: attributes[:total_amount_check],
-        payment_subscription: payment_subscription_attributes
+        payment_subscription_attributes: payment_subscription_attributes
       }
     )
   end
 
   def payment_subscription_attributes
-    if params[:reservation_request].has_key?(:payment_subscription)
-      params[:reservation_request].require(:payment_subscription).permit(secured_params.payment_subscription)
+    if params[:reservation_request].has_key?(:payment_subscription_attributes)
+      params[:reservation_request].require(:payment_subscription_attributes).permit(secured_params.payment_subscription)
     end
   end
 
