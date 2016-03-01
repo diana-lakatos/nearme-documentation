@@ -127,6 +127,7 @@ en:
     password: "Password"
     generic_lessee_term: "guest"
     generic_lessor_term: "host"
+    default: "Default"
   transactable_types:
     locations:
       listings:
