@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160225150613) do
+ActiveRecord::Schema.define(version: 20160301151257) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -759,6 +759,7 @@ ActiveRecord::Schema.define(version: 20160225150613) do
     t.string   "generated_sitemap",              limit: 255
     t.string   "uploaded_sitemap",               limit: 255
     t.string   "uploaded_robots_txt",            limit: 255
+    t.integer  "instance_id"
   end
 
   add_index "domains", ["deleted_at"], name: "index_domains_on_deleted_at", using: :btree
@@ -3382,6 +3383,7 @@ ActiveRecord::Schema.define(version: 20160225150613) do
     t.string   "compiled_new_dashboard_stylesheet"
     t.string   "theme_new_dashboard_digest"
     t.string   "instagram_url"
+    t.integer  "instance_id"
   end
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
@@ -3718,6 +3720,7 @@ ActiveRecord::Schema.define(version: 20160225150613) do
     t.datetime "updated_at",        null: false
     t.datetime "deleted_at"
     t.integer  "authentication_id"
+    t.integer  "instance_id"
   end
 
   add_index "user_relationships", ["authentication_id"], name: "index_user_relationships_on_authentication_id", using: :btree
@@ -3908,6 +3911,7 @@ ActiveRecord::Schema.define(version: 20160225150613) do
     t.text     "encrypted_response"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   add_index "webhooks", ["instance_id", "webhookable_id", "webhookable_type"], name: "index_webhooks_on_instance_id_and_webhookable", using: :btree
