@@ -3,6 +3,7 @@ require Rails.root.join('app', 'controllers', 'registrations_controller.rb') if 
 
 DesksnearMe::Application.routes.draw do
 
+  get '/test_endpoint', to: 'webhooks/base#test'
   match '/auth/:provider/callback' => 'authentications#create', via: [:get, :post]
 
   scope '(:language)', language: /[a-z]{2}/, defaults: { language: nil } do
