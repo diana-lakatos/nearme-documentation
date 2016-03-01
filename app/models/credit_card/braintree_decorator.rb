@@ -8,24 +8,20 @@ class CreditCard::BraintreeDecorator
 
   # Braintree accepts customer_vault_id as second parameter token is irrelevat
   def token
-    @token ||=  response.params["customer_vault_id"]
+    @token ||= primary_response.params["customer_vault_id"]
   rescue
     nil
   end
 
-  def response
-    @response ||= YAML.load(credit_card.response)
+  # priamry_response is work around for ActiveMerchant MultiResponse that
+  # is send back when second CreditCard is subscribed to existing Customer.
+
+  def primary_response
+    response.respond_to?(:primary_response) ? response.primary_response : response
   end
 
-  def response=(response_object)
-    # When adding second CC to the same Merchant as a response
-    # we expect MultiResponse object
-    if response_object.class == ActiveMerchant::Billing::MultiResponse
-      @credit_card.response = response_object.responses.select { |r| r.params["customer_vault_id"].present? }.first.to_yaml
-    else
-      @credit_card.response = response_object.to_yaml
-      @credit_card.instance_client.response ||= response_object.to_yaml
-    end
+  def response
+    @response ||= YAML.load(credit_card.response)
   end
 end
 
