@@ -36,13 +36,13 @@ DesksnearMe::Application.configure do
   CarrierWave.configure do |config|
     config.fog_credentials = {
       :provider                   => 'AWS',
-      :aws_access_key_id          => 'AKIAJYBWEGW4PEDEF5SQ',
-      :aws_secret_access_key      => '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',
-      :region                     => 'us-west-1',
+      :aws_access_key_id          => ENV['FOG_AWS_ACCESS_KEY_ID'],
+      :aws_secret_access_key      => ENV['FOG_AWS_ACCESS_KEY_SECRET'],
+      :region                     => ENV['ELB_REGION'],
       :path_style                 => true
     }
-    config.fog_directory        = 'near-me-production'
-    config.asset_host           = 'https://production-uploads-nearme.netdna-ssl.com'
+    config.fog_directory        = ENV['FOG_DIRECTORY']
+    config.asset_host           = ENV['ASSET_HOST_UPLOAD']
     config.storage              = :fog
   end
 
