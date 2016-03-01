@@ -25,8 +25,8 @@ Before do
   stub_request(:get, 'http://static.ak.facebook.com')
 
   instance = FactoryGirl.create(:instance)
-  FactoryGirl.create(:domain, target: instance, name: "127.0.0.1")
-  FactoryGirl.create(:domain, target: instance, name: "example.org")
+  FactoryGirl.create(:domain, target: instance, instance_id: instance.id, name: "127.0.0.1")
+  FactoryGirl.create(:domain, target: instance, instance_id: instance.id, name: "example.org")
   store_model("instance", nil, instance)
   store_model("theme", nil, instance.theme)
   instance.set_context!
@@ -39,7 +39,7 @@ Before do
   ActiveMerchant::Billing::Base.mode = :test
 
   response={success?: true}
-  PaymentAuthorizer.any_instance.stubs(:gateway_authorize).returns(OpenStruct.new(response.reverse_merge({authorization: "token "})))
+  PaymentGateway.any_instance.stubs(:gateway_authorize).returns(OpenStruct.new(response.reverse_merge({authorization: "token "})))
   PaymentGateway.any_instance.stubs(:gateway_void).returns(OpenStruct.new(response.reverse_merge({authorization: "54533"})))
   PaymentGateway.any_instance.stubs(:gateway_capture).returns(OpenStruct.new(response.reverse_merge({params: {"id" => '12345'}})))
   PaymentGateway.any_instance.stubs(:gateway_refund).returns(OpenStruct.new(response.reverse_merge({params: {"id" => '12345'}})))

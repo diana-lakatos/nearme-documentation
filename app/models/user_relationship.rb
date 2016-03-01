@@ -1,5 +1,6 @@
 class UserRelationship < ActiveRecord::Base
-  # acts_as_paranoid
+  auto_set_platform_context
+  scoped_to_platform_context
 
   # User being followed
   # attr_accessible :followed_id, :authentication_id

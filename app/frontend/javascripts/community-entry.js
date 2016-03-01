@@ -135,4 +135,14 @@ DNM.registerInitializer(function(){
     });
 });
 
+DNM.registerInitializer(function(){
+    var el = $('#intro-video');
+    if (el.length === 0) {
+        return;
+    }
+
+    var IntroVideo = require('./intel/intro_video');
+    return new IntroVideo(el);
+});
+
 DNM.run();

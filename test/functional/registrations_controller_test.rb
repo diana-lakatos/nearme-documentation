@@ -46,7 +46,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).once
       put :update, :id => @user, user: { :industry_ids => [@industry.id, @industry2.id] }
       @user.reload
-      assert_equal [@industry.id, @industry2.id], @user.industries.collect(&:id)
+      assert_equal [@industry.id, @industry2.id].sort, @user.industries.collect(&:id).sort
     end
 
     should 'show profile' do

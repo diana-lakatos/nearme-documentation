@@ -21,7 +21,7 @@ class RaygunDeployNotifier
       'ownerName': `git --no-pager show -s --format='%an' HEAD`.strip,
       'emailAddress': `git --no-pager show -s --format='%ae' HEAD`.strip,
       'comment': `git log -1 --pretty=%B`.strip,
-      'scmIdentifier': `git rev-parse --verify HEAD`.strip,
+      'scmIdentifier': `git rev-parse --verify --short HEAD`.strip,
       'apiKey': apiKey
     }.to_json
 

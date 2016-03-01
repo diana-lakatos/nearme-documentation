@@ -5,6 +5,11 @@
     <p class="action"><a href="https://software.intel.com/registration/dev-mesh/" class="button-a large orange">{{ 'join_now' | translate }}</a></p>
   </div>
 </div>
+<div class="intro-video-alt">
+  <div class="intro-video-alt-wrapper">
+    <iframe width="1280" height="720" src="https://www.youtube.com/embed/W3d4gNLUJzE?rel=0" frameborder="0" allowfullscreen></iframe>
+  </div>
+</div>
 <div class="wrap-a">
   <div class="contain">
     <div class="header-a">
@@ -24,13 +29,21 @@
               <h3 class="hx">
                 <a href="{{ project.show_path}}">{{ project.name }}</a>
               </h3>
-              <p class="user"><a href="{{ project.creator.profile_path}}"><img src="{{ project.creator.avatar_url_thumb }}" width="30" height="30" />{{ project.creator.name_with_affiliation }}</a></p>
+              <p class="user"><a href="{{ project.creator.profile_path }}"><img src="{{ project.creator.avatar_url_thumb }}" width="30" height="30" />{{ project.creator.name_with_affiliation }}</a></p>
               <p>{{ project.summary }}</p>
             </article>
           </div>
         {% endfor %}
       </div>
     </div>
+  </div>
+</div>
+
+<div id="intro-video"{% if hide_intro_video %} class="inactive"{% endif %}>
+  <div class="intro-video-overlay"></div>
+  <div class="intro-video-wrapper">
+    <div id="intro-player"></div>
+    <button type="button" class="intro-video-close">Close</button>
   </div>
 </div>
 

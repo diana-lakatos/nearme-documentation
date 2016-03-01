@@ -237,7 +237,7 @@ section.reservations {
 
 .reservations-review, .reservations-create, .reservations-address {
 
-   #shipping-address {
+  #shipping-address {
 
     .select2-container {
       a.select2-choice {
@@ -258,10 +258,10 @@ section.reservations {
       }
     }
 
-  .hide {
-    display: none;
+    .hide {
+      display: none;
+    }
   }
-}
 
   .radio_buttons .radio {
     display: block;

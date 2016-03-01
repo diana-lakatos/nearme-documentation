@@ -7,7 +7,6 @@ class MerchantAccount::PaypalExpressChainMerchantAccount < MerchantAccount
   include MerchantAccount::Concerns::DataAttributes
 
   after_initialize :generate_merchant_token!
-  after_save :verify_unless_paypal_express
 
   def create_billing_agreement(token)
     response = payment_gateway.express_gateway.store(token)
@@ -83,12 +82,6 @@ class MerchantAccount::PaypalExpressChainMerchantAccount < MerchantAccount
   end
 
   private
-
-  def verify_unless_paypal_express
-    if self.payment_gateway.class == PaymentGateway::PaypalPaymentGateway
-      self.verify
-    end
-  end
 
   def generate_merchant_token!
     self.merchant_token ||= "#{self.id}#{rand(2**32..2**64-1)}"

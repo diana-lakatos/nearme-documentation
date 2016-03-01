@@ -20,6 +20,5 @@ class PaymentGateway
         active_merchant_class.supported_countries
       end
     end
-
   end
 end

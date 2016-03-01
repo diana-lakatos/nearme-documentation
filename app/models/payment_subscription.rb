@@ -21,6 +21,14 @@ class PaymentSubscription < ActiveRecord::Base
   validates_associated :credit_card
 
   def payment_methods
+    if payment_method
+      [payment_method]
+    else
+      fetch_payment_methods
+    end
+  end
+
+  def fetch_payment_methods
     payment_gateways = PlatformContext.current.instance.payment_gateways(subscriber.company.iso_country_code, subscriber.currency)
     PaymentMethod.active.credit_card.where(payment_gateway_id: payment_gateways.select {|p| p.supports_recurring_payment? }.map(&:id) )
   end
@@ -33,6 +41,13 @@ class PaymentSubscription < ActiveRecord::Base
     super(payment_method)
     self.payment_gateway = self.payment_method.payment_gateway
     self.test_mode = self.payment_gateway.test_mode?
-    # self.merchant_account = self.payment_gateway.merchant_account(company)
+  end
+
+  def credit_card_attributes=(cc_attrs)
+    super(cc_attrs.merge(
+        payment_gateway: self.payment_gateway,
+        client: self.subscriber.client
+      )
+    )
   end
 end

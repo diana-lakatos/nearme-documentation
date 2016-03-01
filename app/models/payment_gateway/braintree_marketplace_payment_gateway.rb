@@ -1,6 +1,6 @@
 class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
 
-  supported :any_currency, :company_onboarding, :immediate_payout, :credit_card_payment, :partial_refunds
+  supported :any_currency, :company_onboarding, :immediate_payout, :credit_card_payment, :partial_refunds, :host_subscription
 
   def self.supported_countries
     ['US']
@@ -27,12 +27,29 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
     @gateway ||= ActiveMerchant::Billing::BraintreeMarketplacePayments.new(settings)
   end
 
+  # This is work around for errors send from Braintree
+  # while refunding transaction that wasn't settled yet
+
+  def gateway_refund(amount, token, options)
+    configure_braintree_class
+    transaction = Braintree::Transaction.find(token)
+    if transaction.status == 'submitted_for_settlement' && (transaction.amount * 100).to_i == amount
+      gateway_void(token)
+    else
+      super
+    end
+  end
+
   def verify_webhook(*args)
     gateway.verify(*args)
   end
 
   def parse_webhook(*args)
     gateway.parse_webhook(*args)
+  end
+
+  def find(*args)
+    gateway.find(*args)
   end
 
   def onboard!(*args)
@@ -83,5 +100,13 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
     true
   end
 
+  private
+
+  def configure_braintree_class
+    Braintree::Configuration.environment = settings["environment"]
+    Braintree::Configuration.merchant_id = settings["merchant_id"]
+    Braintree::Configuration.public_key  = settings["public_key"]
+    Braintree::Configuration.private_key = settings["private_key"]
+  end
 end
 

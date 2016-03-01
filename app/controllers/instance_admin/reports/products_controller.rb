@@ -21,4 +21,3 @@ class InstanceAdmin::Reports::ProductsController < InstanceAdmin::Reports::BaseC
     @search_form = InstanceAdmin::ProductSearchForm
   end
 end
-

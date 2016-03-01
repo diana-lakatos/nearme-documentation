@@ -1,6 +1,6 @@
 node[:deploy].each do |application, deploy|
 
-  execute "Invoke rake tasks #{application} [#{node[:deploy][application][:rails_env]} | #{node["opsworks"]["instance"]["layers"]}]" do
+  execute "Invoke rake tasks #{node["opsworks"]["instance"]["layers"]}.include?('utility') && #{node[:deploy][application][:rails_env]} == 'production' => #{(node["opsworks"]["instance"]["layers"].include?('rails-app') && node[:deploy][application][:rails_env] == 'staging') || (node["opsworks"]["instance"]["layers"].include?('utility') && node[:deploy][application][:rails_env] == 'production')}]" do
     cwd         deploy[:current_path]
     environment({ "RAILS_ENV" => node[:deploy][application][:rails_env] })
     command     "bundle exec rake after_deploy:run"

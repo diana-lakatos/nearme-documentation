@@ -1,6 +1,9 @@
 module.exports = class InstanceAdminPagesController
 
   constructor: (@container) ->
+    # For now we do not want to allow pages sorting
+    return
+
     @bindEvents()
 
   bindEvents: =>

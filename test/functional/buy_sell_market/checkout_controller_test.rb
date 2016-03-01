@@ -105,7 +105,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
 
         should 'render error if authorization failed' do
           authorize_response = OpenStruct.new(success?: false, message: 'No $$$ on account')
-          PaymentAuthorizer.any_instance.stubs(:gateway_authorize).returns(authorize_response)
+          PaymentGateway.any_instance.stubs(:gateway_authorize).returns(authorize_response)
 
           assert_no_difference 'BillingAuthorization.count' do
             put :update, order_id: @order, id: 'payment', order: { payment_attributes: {

@@ -1,6 +1,7 @@
 class Theme < ActiveRecord::Base
   include DomainsCacheable
   has_paper_trail :ignore => [:updated_at]
+  auto_set_platform_context
   acts_as_paranoid
   DEFAULT_EMAIL = 'support@desksnear.me'
   DEFAULT_PHONE_NUMBER = '1.888.998.3375'

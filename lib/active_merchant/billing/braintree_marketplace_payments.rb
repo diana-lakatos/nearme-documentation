@@ -31,6 +31,10 @@ module ActiveMerchant
         Braintree::MerchantAccount.create(hash)
       end
 
+      def find(merchant_id)
+        Braintree::MerchantAccount.find(merchant_id)
+      end
+
       def authorize(amount, credit_card, options)
         # Braintree does not support all options, so we extend it
         transaction_params = @helper_gateway.send(:create_transaction_parameters, amount, credit_card, options)
@@ -56,6 +60,18 @@ module ActiveMerchant
 
       def capture(*args)
         @helper_gateway.capture(*args)
+      end
+
+      def purchase(*args)
+        @helper_gateway.purchase(*args)
+      end
+
+      def store(*args)
+        @helper_gateway.store(*args)
+      end
+
+      def delete(*args)
+        @helper_gateway.store(*args)
       end
 
       def update_onboard!(id, hash)

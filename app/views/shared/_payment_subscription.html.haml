@@ -1,17 +1,17 @@
-= f.simple_fields_for :payment_subscription, f.object.payment_subscription do |form|
+= f.simple_fields_for :payment_subscription_attributes, f.object.payment_subscription do |form|
   - if form.object.payment_methods.blank?
     %h2= t("reservations_review.missing_payment_method")
     %span= t("reservations_review.missing_payment_method_info")
   - else
     %h2= t 'reservations_review.payment_information'
-    - if form.object.subscriber.monthly?
+    - if form.object.subscriber.respond_to?(:monthly?) && form.object.subscriber.monthly?
       %p= t 'recurring_reservations_review.prorated_info'
 
     = form.error :base
 
     #accordion2.accordion
       - form.object.payment_methods.each_with_index do |payment_method, index|
-        - selected_payment_method = form.object.payment_method_id == payment_method.id || (index.zero? && form.object.payment_method_id.blank?)
+        - selected_payment_method = form.object.payment_method_id == payment_method.id|| (index.zero? && form.object.payment_method_id.blank?)
         .accordion-group
           .accordion-heading
             %a.accordion-toggle{"data-parent" => "#accordion2", "data-toggle" => "collapse", :href => "#collapse_#{payment_method.id}", "onclick" => "$(this).next().click();"}

@@ -1946,6 +1946,8 @@ en:
       instagram_info: "Connect your Instagram account and link your visual content."
       google_info: "Connect with your Google account."
       github_info: "Connect with your GitHub account."
+      connect: 'Connect'
+      disconnect: 'Disconnect'
 
     accept_terms_of_service: 'confirm that you accept the <a href="/pages/legal" target="_blank">Terms of Service and Privacy Policy</a>'
   recurring_bookings:
@@ -2164,6 +2166,8 @@ en:
     confirm_tos: 'By signing up, you confirm that you accept the'
     tos: 'Terms of Service and Privacy Policy'
     or: 'or'
+    incorrect_password: 'Incorrect password'
+    incorrect_email: 'Incorrect email'
 
     title: 'Sign in'
     buttons:
@@ -2299,6 +2303,9 @@ en:
     nonce: 'PayPal Payment'
     remote: 'Fetch Payment'
     cc_fields:
+      cannot_delete: "You can't delete this card."
+      subscribed: "Your card ending with: %{last_4} is saved in the system."
+      unsubscribe: "Remove this card"
       first_name: 'First Name'
       last_name: 'Last Name'
       card_number: 'Card number'

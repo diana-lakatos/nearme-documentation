@@ -18,6 +18,10 @@
       - (uf.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
         - if attribute.public? && ::CustomAttributes::CustomAttribute::FormElementDecorator.new(attribute).options[:required] && uf.object.field_blank_or_changed?(attribute.name)
           = draw_attribute_for_form(attribute, properties_form)
+    - uf.object.default_profile.instance_profile_type.try(:categories).try(:roots).try(:find_each) do |category|
+      - if uf.object.default_profile.category_blank_or_changed?(category)
+        %div{"data-categories-controller": true}
+        = render partial: 'shared/category_old_bootstrap', locals: { category: category, f: uf, categorizable: uf.object.default_profile.instance_profile_type }
 
     = uf.simple_fields_for :buyer_profile, uf.object.buyer_profile  do |buyer_profile_form|
       = buyer_profile_form.simple_fields_for :properties, buyer_profile_form.object.properties do |properties_form|

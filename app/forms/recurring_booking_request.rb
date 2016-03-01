@@ -40,12 +40,7 @@ class RecurringBookingRequest < Form
       @recurring_booking.service_fee_amount_host = @recurring_booking.service_fee_amount_host
       self.total_amount_cents = @recurring_booking.total_amount.cents
       @payment_subscription ||= @recurring_booking.build_payment_subscription(payment_subscription_attributes)
-      @payment_subscription.subscriber = @recurring_booking
       @payment_subscription.credit_card || @payment_subscription.build_credit_card
-      @payment_subscription.credit_card.assign_attributes(
-        payment_gateway: @payment_subscription.payment_gateway,
-        instance_client: @payment_subscription.payment_gateway.try {|p| p.instance_clients.where(client: user).first_or_initialize }
-      )
     end
 
     if @user
@@ -80,12 +75,12 @@ class RecurringBookingRequest < Form
     false
   end
 
-  def payment_subscription=(attributes)
-    @payment_subscription_attributes = attributes
+  def payment_subscription_attributes=(psa_attributes)
+    @payment_subscription_attributes = psa_attributes
   end
 
   def payment_subscription_attributes
-    @payment_subscription_attributes || {}
+    (@payment_subscription_attributes || {}).merge(subscriber: @recurring_booking)
   end
 
   private

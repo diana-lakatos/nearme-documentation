@@ -25,7 +25,7 @@ class Listings::ReservationsController < ApplicationController
 
     # We call shippo_api_token_present before checking shipping_address.valid? because that method may fail with an error if shippo settings are not correct and we
     # want the user to know that instead of throwing an error page
-    if @reservation_request.delivery_type == 'pick_up' || ((shippo_settings_valid = ShippoApi::ShippoApi.shippo_api_token_present?) && @reservation_request.reservation.shipments.first.shipping_address.valid? && (company_address_valid = @reservation_request.reservation.shipments.first.valid_sending_company_address?(@reservation_request.reservation)))
+    if @reservation_request.delivery_type == 'pick_up' || ((shippo_settings_valid = current_instance.shippo_api.shippo_api_token_present?) && @reservation_request.reservation.shipments.first.shipping_address.valid? && (company_address_valid = @reservation_request.reservation.shipments.first.valid_sending_company_address?(@reservation_request.reservation)))
       render :review and return
     end
 

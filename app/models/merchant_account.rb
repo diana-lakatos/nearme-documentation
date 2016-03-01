@@ -10,11 +10,17 @@ class MerchantAccount < ActiveRecord::Base
   attr_encrypted :response, marshal: true
 
   has_many :webhooks, as: :webhookable, dependent: :destroy
+  has_many :payments
+  has_one :payment_subscription, dependent: :destroy, as: :subscriber
 
   # Relates with Company
   belongs_to :merchantable, polymorphic: true
   belongs_to :instance
   belongs_to :payment_gateway
+
+  belongs_to :company, foreign_key: :merchantable_id
+
+  accepts_nested_attributes_for :payment_subscription, allow_destroy: true
 
   # need to mention specific merchant accounts after associations
   MERCHANT_ACCOUNTS = {
@@ -73,8 +79,20 @@ class MerchantAccount < ActiveRecord::Base
   def update_onboard!(*args)
   end
 
+  def client
+    merchantable
+  end
+
   def chain_payments?
     payment_gateway.supports_paypal_chain_payments?
+  end
+
+  def to_attr
+    self.class.name.underscore.gsub("merchant_account/", '') + "_attributes"
+  end
+
+  def payment_subscription_attributes=(payment_subscription_attributes)
+    super(payment_subscription_attributes.merge(subscriber: self))
   end
 
   private

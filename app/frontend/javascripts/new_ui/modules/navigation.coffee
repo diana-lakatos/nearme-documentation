@@ -1,4 +1,4 @@
-_ = require('jquery.cookie/jquery.cookie')
+require('jquery.cookie/jquery.cookie')
 
 module.exports = class Navigation
   cookie_name: 'navigation_visible'

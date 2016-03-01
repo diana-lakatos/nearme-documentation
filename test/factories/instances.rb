@@ -30,12 +30,12 @@ FactoryGirl.define do
     seller_attachments_access_level 'all'
 
     after(:create) do |instance, evaluator|
-      instance.theme = FactoryGirl.create(:theme, owner: instance) unless instance.theme
+      instance.theme = FactoryGirl.create(:theme, owner: instance, instance_id: instance.id) unless instance.theme
     end
 
     after(:create) do |instance|
       unless Domain.find_by_name('example.com').present?
-        instance.domains = [FactoryGirl.create(:test_domain, target: instance)]
+        instance.domains = [FactoryGirl.create(:test_domain, target: instance, instance_id: instance.id)]
       end
     end
 

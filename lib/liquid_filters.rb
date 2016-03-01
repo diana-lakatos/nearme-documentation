@@ -198,6 +198,10 @@ module LiquidFilters
     will_paginate collection, opts
   end
 
+  def meta_attr(content)
+    Sanitize.clean(content).gsub(/\s+/,' ').strip
+  end
+
   def request_parameter(method)
     if @context.registers[:controller].request.respond_to?(method)
       @context.registers[:controller].request.send(method.to_sym)
