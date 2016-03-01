@@ -159,6 +159,11 @@ class UserDrop < BaseDrop
     routes.edit_user_registration_path(token_key => @user.try(:temporary_token), :track_email_event => true)
   end
 
+  # url to reset password
+  def reset_password_url
+    routes.edit_user_password_url(:reset_password_token => @user.try(:reset_password_token))
+  end
+
   # url to a user's public profile
   def user_profile_url
     routes.profile_path(@user.slug)

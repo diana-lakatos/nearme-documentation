@@ -1890,6 +1890,8 @@ en:
       instagram_info: "Connect your Instagram account and link your visual content."
       google_info: "Connect with your Google account."
       github_info: "Connect with your GitHub account."
+      connect: 'Connect'
+      disconnect: 'Disconnect'
 
     accept_terms_of_service: 'confirm that you accept the <a href="/pages/legal" target="_blank">Terms of Service and Privacy Policy</a>'
   recurring_bookings:
@@ -2107,6 +2109,8 @@ en:
     confirm_tos: 'By signing up, you confirm that you accept the'
     tos: 'Terms of Service and Privacy Policy'
     or: 'or'
+    incorrect_password: 'Incorrect password'
+    incorrect_email: 'Incorrect email'
 
     title: 'Sign in'
     buttons:
