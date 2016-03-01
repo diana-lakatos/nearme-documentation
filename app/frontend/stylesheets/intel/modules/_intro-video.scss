@@ -81,3 +81,54 @@
         transform: rotate(45deg) translate(-35%, 100%) scale(0.75);
     }
 }
+
+
+.intro-video-alt {
+    padding: 50px 0;
+    background: #fff;
+
+    .intro-video-alt-wrapper {
+        position: relative;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 1024px;
+
+        &:before {
+            display: block;
+            width: 100%;
+            content: "";
+            padding-top: 56.25%;
+        }
+    }
+
+    iframe {
+        display: block;
+        width: 100%;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 100%;
+        margin: 0;
+    }
+}
+
+
+/* hero */
+
+.hero-a {
+    padding: 50px 0;
+
+    @include bp($screen-lg) {
+        padding: 50px 0;
+    }
+
+    @include bp($screen-tablet) {
+        padding: 50px 0;
+    }
+
+    @include bp($screen-mobile) {
+        padding: 50px 0;
+    }
+}
+
