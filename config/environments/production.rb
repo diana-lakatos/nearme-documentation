@@ -58,7 +58,7 @@ DesksnearMe::Application.configure do
   # for ELB management
   AWS.config(access_key_id: ENV['AWS_ACCESS_KEY_ID'],
              secret_access_key: ENV['AWS_ACCESS_KEY_SECRET'],
-             region: 'us-west-1')
+             region: ENV['ELB_REGION'])
 
   # Google link shortening service
   config.googl_api_key = ENV['GOOGL_API_KEY']
