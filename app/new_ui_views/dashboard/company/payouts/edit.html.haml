@@ -3,6 +3,8 @@
 - content_for :page_header do
   %h1= yield :title
 
+- yield :payout_errors
+
 = dashboard_simple_form_for @company, url: dashboard_company_payouts_path, html: { 'data-payouts-form' => true, :'data-includes-address-field' => true } do |f|
   .panel
     .panel-body

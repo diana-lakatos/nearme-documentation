@@ -1,0 +1,24 @@
+= f.simple_fields_for :payment_subscription_attributes, f.object.payment_subscription do |form|
+  - if form.object.payment_methods.blank?
+    .alert.warning
+      %b= t("reservations_review.missing_payment_method")
+      %br/
+      %span= t("reservations_review.missing_payment_method_info")
+  - else
+    %h2= t 'reservations_review.payment_information'
+    - if form.object.subscriber.respond_to?(:monthly?) && form.object.subscriber.monthly?
+      %p= t 'recurring_reservations_review.prorated_info'
+
+    - if form.object.errors.any?
+      - content_for :payout_errors do
+        .errors-global
+          %ul
+            - f.object.errors.full_messages.each do |msg|
+              %li= msg
+
+    - form.object.payment_methods.each_with_index do |payment_method, index|
+      - selected_payment_method = form.object.payment_method_id == payment_method.id|| (index.zero? && form.object.payment_method_id.blank?)
+
+      %h3= payment_method.name
+      = form.radio_button :payment_method_id, payment_method.id, hidden: true, checked: selected_payment_method
+      = render partial: "dashboard/shared/fields/payment_methods/" + payment_method.payment_method_type, locals: {f: form, payment_method: payment_method}
