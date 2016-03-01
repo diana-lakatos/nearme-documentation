@@ -31,6 +31,10 @@ class TransactableTypeDecorator < Draper::Decorator
     fulltext_search? ? "query" : "loc"
   end
 
+  def other_search_view
+    default_search_view == 'list' ? 'listing_mixed' : default_search_view
+  end
+
   def geolocation_placeholder
     I18n.t "#{translation_namespace}.search_field_placeholder.location" , default: I18n.t('homepage.search_field_placeholder.location')
   end
