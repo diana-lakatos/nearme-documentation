@@ -75,7 +75,7 @@ module.exports = class IntroVideo
 
   showVideo: ->
     @container.removeClass('inactive')
-    @player.playVideo()
+    @player.playVideo() if @player.playVideo
     @bindOnShow()
 
 
