@@ -7,6 +7,8 @@ module.exports = class IntroVideo
 
     @container = $(container)
     @videoWrap = @container.find('.intro-video-wrap')
+    @overlay = @container.find('.intro-video-overlay')
+    @closeButton = @container.find('.intro-video-close')
     @cookieName = 'hide_intro_video'
 
     @initStructure()
@@ -29,6 +31,12 @@ module.exports = class IntroVideo
 
       @showVideo()
 
+    @overlay.on 'click.introvideo', (e)=>
+      @hideVideo()
+
+    @closeButton.on 'click.introvideo', (e)=>
+      @hideVideo()
+
     window.onYouTubeIframeAPIReady = =>
       @player = new YT.Player 'intro-player', {
         height: 1280
@@ -43,12 +51,6 @@ module.exports = class IntroVideo
       }
 
   bindOnShow: ->
-    $('body').on 'click.introvideo', (e)=>
-      if $(e.target).closest('.intro-video-wrap').length == 0
-        e.preventDefault()
-        e.stopPropagation()
-        @hideVideo()
-
     $('body').on 'keydown.introvideo', (e)=>
       if e.which == 27 # Hitting escape
         @hideVideo()
