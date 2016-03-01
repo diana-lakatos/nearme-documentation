@@ -93,7 +93,8 @@ namespace :fix do
      SavedSearchAlertLog, ScheduleExceptionRule, ScheduleRule,
      Shipment, UserMessage, Support::Ticket, WaiverAgreement,
      Spree::StockLocation, Spree::StockItem, Spree::Product,
-     Spree::Variant, Spree::StockItem
+     Spree::Variant, Spree::StockItem, Authentication,
+     UserRelationship
     ].each do |klass|
       puts "Deleting: #{klass} for #{instance.name}"
       puts "Before count: #{klass.count}"
@@ -134,7 +135,8 @@ namespace :fix do
      Shipment, UserMessage, Support::Ticket, WaiverAgreement,
      Spree::StockLocation, Spree::StockItem, Spree::Product,
      Spree::Variant, Spree::StockItem, Locale, Translation,
-     BillingAuthorization, PaymentGateway
+     BillingAuthorization, PaymentGateway, Authentication,
+     UserRelationship
     ].each do |klass|
       puts "Deleting: #{klass} for #{instance.name}"
       puts "Before count: #{klass.count}"
