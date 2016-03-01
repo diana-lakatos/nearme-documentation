@@ -6,7 +6,7 @@ window.CKEDITOR.editorConfig = function(config) {
     ['Bold','Italic','Underline','Strike'],
     ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
     ['Link','Unlink'],
-    ['Image']
+    ['Image', 'Iframe']
   ];
 
   config.filebrowserBrowseUrl = "/ckeditor/attachment_files";

@@ -28,7 +28,7 @@ module.exports = function(gulp, config){
     }
 
     gulp.task('ckeditor', function(){
-        gulp.src([path.join(files.ckeditor, '**', '*'), path.join('!', files.ckeditorConfig)])
+        gulp.src([path.join(files.ckeditor, '**', '*'), path.join('!', files.ckeditor, 'config.js')])
             .pipe(gulp.dest(path.join(config.paths.output, 'ckeditor')));
 
         gulp.src(files.ckeditorConfig)
