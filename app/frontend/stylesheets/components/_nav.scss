@@ -158,6 +158,7 @@
         }
 
         .truncate {
+          display: block;
           width: 200px;
           white-space: nowrap;
           overflow: hidden;
