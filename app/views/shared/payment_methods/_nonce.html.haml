@@ -9,7 +9,7 @@
         .span7.credit-card-images
           = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
           // TODO: move that to payment scope after merge with payment refactor
-          = f.hidden_field(:payment_method_nonce, value: nil, id: 'paypal-nonce')
+          = f.hidden_field(:payment_method_nonce, id: 'paypal-nonce')
         .clearfix
 
     = f.error :cc
