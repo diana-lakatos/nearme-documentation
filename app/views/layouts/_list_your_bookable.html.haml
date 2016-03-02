@@ -11,8 +11,8 @@
   - else
     - if current_user.nil?
       = link_to_registration({return_to: transactable_type.wizard_path}, platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal' }, class: 'nav-link dropdown-toggle') do
-        %span= transactable_type.translated_bookable_noun
+        %span.truncate= transactable_type.translated_bookable_noun
     - else
       - if transactable_type.respond_to?(:wizard_path)
         = link_to transactable_type.wizard_path, :class => "nav-link dropdown-toggle" do
-          %span= transactable_type.translated_bookable_noun
+          %span.truncate= transactable_type.translated_bookable_noun
