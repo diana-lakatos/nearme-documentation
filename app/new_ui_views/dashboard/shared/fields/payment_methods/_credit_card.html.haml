@@ -30,7 +30,7 @@
             = form.input :first_name, required: true, label: t('payments.cc_fields.first_name'), input_html: { value: (form.object.first_name.presence || current_user.first_name), autocomplete: :off, class: 'sessioncamexclude' }
 
           .col-sm-6
-            = form.input :first_name, required: true, label: t('payments.cc_fields.last_name'), input_html: { value: (form.object.last_name.presence || current_user.last_name), autocomplete: :off, class: 'sessioncamexclude' }
+            = form.input :last_name, required: true, label: t('payments.cc_fields.last_name'), input_html: { value: (form.object.last_name.presence || current_user.last_name), autocomplete: :off, class: 'sessioncamexclude' }
 
         = form.input :number, required: true, label:  t('payments.cc_fields.card_number'), input_html: { placeholder: '•••• •••• •••• ••••', class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: :off, 'data-card-number' => true }
 
