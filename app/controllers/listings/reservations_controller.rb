@@ -80,7 +80,8 @@ class Listings::ReservationsController < ApplicationController
     payment = Payment.find_by_express_token!(params[:token])
     payment.express_payer_id = params[:PayerID]
     reservation = payment.payable
-    if payment.authorize && reservation.save
+
+    if payment.authorize && reservation.reload.save
       event_tracker.updated_profile_information(reservation.owner)
       event_tracker.updated_profile_information(reservation.host)
       event_tracker.requested_a_booking(reservation)
