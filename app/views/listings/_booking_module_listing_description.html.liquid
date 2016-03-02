@@ -7,5 +7,24 @@
     {% endif %}
   {% endfor %}
   <h3>{{ 'booking_module.hours' | translate }}</h3>
-  <span>{{ listing.availability }}</span>
+
+  <div class="availability-week-container">
+    {% for day in listing.available_days %}
+      <span class="day-of-week {% if day[1] %}enabled{% else %}disabled{% endif %}">{{ day[0] }}</span>
+    {% endfor %}
+  </div>
+
+  <div class="availability-detailed-container">
+    {% for day in listing.availability_by_days %}
+      <div class="day-of-week">
+        {{ day[0] }}
+      </div>
+      <div class="times-in-day">
+        {% for time in day[1] %}
+          <span>{{ time[2] }}</span>
+        {% endfor %}
+      </div>
+      <div style="clear:both;"></div>
+    {% endfor %}
+  </div>
 </div>
