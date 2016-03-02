@@ -1,6 +1,7 @@
 class Domain < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
+  auto_set_platform_context
 
   REDIRECT_CODES = [301, 302]
 

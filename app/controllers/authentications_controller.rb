@@ -31,7 +31,7 @@ class AuthenticationsController < ApplicationController
       if @oauth.create_user(cookies[:google_analytics_id])
         if PlatformContext.current.instance.is_community?
           user = @oauth.authenticated_user
-          raise 'External id is nil' if user.external_id.blank?
+          fail 'External id is nil' if user.external_id.blank?
           uri = URI.parse("https://idz-profile-rest-prod.wdg.infra-host.com")
           http = Net::HTTP.new(uri.host, uri.port)
           http.use_ssl = true

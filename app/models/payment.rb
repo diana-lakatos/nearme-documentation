@@ -115,7 +115,7 @@ class Payment < ActiveRecord::Base
   delegate :subject, to: :merchant_account, allow_nil: true
 
   state_machine :state, initial: :pending do
-    event :mark_as_authorized do transition pending: :authorized; end
+  event :mark_as_authorized do transition pending: :authorized; end
     event :mark_as_paid       do transition authorized: :paid; end
     event :mark_as_voided     do transition authorized: :voided; end
     event :mark_as_refuneded  do transition paid: :refunded; end
@@ -150,18 +150,12 @@ class Payment < ActiveRecord::Base
     return false if amount_to_be_refunded <= 0
     return false if !active_merchant_payment?
 
-    # Because Braintree Marketplace refund pull funds from MPO account
-    # we want to block it until the right approach is integrated.
-    # Here are several ideas how to deal with the problem:
-    # https://articles.braintreepayments.com/guides/marketplace/processing#collecting-funds-from-your-sub-merchants
-
-    return false if PaymentGateway::BraintreeMarketplacePaymentGateway === payment_gateway
-
-    # We need to abort payout in case seller was already paid out
-    # This should be resolved together with Braintree with CC subscription for sellers
-    return false if transferred_to_seller? && !immediate_payout?
+    # Refund payout takes back money from seller, break if failed.
+    return false unless refund_payout!
+    return false unless refund_service_fee!
 
     refund = payment_gateway.refund(amount_to_be_refunded, currency, self, successful_charge)
+
     if refund.success?
       mark_as_refuneded!
       true
@@ -176,6 +170,87 @@ class Payment < ActiveRecord::Base
 
       false
     end
+  end
+
+  # Payment#refund_payout! moves money from host credit_card
+  # to MPO so it can be later refunded to guest. This is the case
+  # of all payout via BraintreeMarketplace and PayPal Adaptive Payments.
+  # In case of PayPal Adaptive Payments we can alternatively ask host to grant
+  # permissions to transfers from his PayPal account - future enhancement.
+
+  def refund_payout!
+    return true unless transferred_to_seller?
+    return true if payment_gateway.supports_refund_from_host?
+    return true if refunds.mpo.successful.any?
+    return false if host_cc_token.blank?
+
+    refund = refunds.create(
+      receiver: 'mpo',
+      amount: host_refund_amount_cents,
+      currency: currency,
+      payment_gateway: payment_gateway,
+      payment_gateway_mode: payment_gateway_mode,
+      credit_card_id: credit_card_id
+    )
+
+    options = { currency: currency, customer_id: host_customer_id }
+    response = payment_gateway.gateway_purchase(host_refund_amount_cents, host_customer_id, options)
+
+    if response.success?
+      refund.refund_successful(response)
+      true
+    else
+      refund.refund_failed(response)
+      false
+    end
+  end
+
+  # Payment#refund_service_fee!
+  # When refund happens from Host account we need to first
+  # refund service fee. It's the case of PayPal Express in Chained Payments.
+
+  def refund_service_fee!
+    return true unless transferred_to_seller?
+    return true unless payment_gateway.supports_refund_from_host?
+    return true if service_fee_refund_amount_cents.zero?
+    return false if refunds.successful.any?
+
+    refund = refunds.create(
+      receiver: 'host',
+      amount: service_fee_refund_amount_cents,
+      currency: currency,
+      payment_gateway_mode: payment_gateway_mode,
+      payment_gateway: payment_gateway,
+    )
+
+    token = payment_transfer.payout_attempts.successful.first.response.params["transaction_id"]
+
+    response = payment_gateway.gateway.refund(service_fee_refund_amount_cents, token)
+
+    if response.success?
+      refund.refund_successful(response)
+      true
+    else
+      service_fee_refund.refund_failed(response)
+      false
+    end
+  end
+
+  def service_fee_refund_amount_cents
+    # We only want to refund host service fee when guest cancel
+    if cancelled_by_guest?
+      payment_transfer.service_fee_amount_host.cents
+    else
+      payment_transfer.total_service_fee.cents
+    end
+  end
+
+  def host_cc_token
+    merchant_account.try(:payment_subscription).try(:credit_card).try(:token)
+  end
+
+  def host_customer_id
+    merchant_account.try(:payment_subscription).try(:credit_card).try(:customer_id)
   end
 
   def void!
@@ -199,6 +274,8 @@ class Payment < ActiveRecord::Base
   end
 
   def credit_card_attributes=(cc_attributes)
+    return unless credit_card_payment?
+
     super(cc_attributes.merge({
       payment_gateway: payment_gateway,
       instance_client: payment_gateway.try {|p| p.instance_clients.where(client: payable.owner).first_or_initialize }
@@ -225,7 +302,7 @@ class Payment < ActiveRecord::Base
     if self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?
       result = 0
     else
-      result = subtotal_amount.cents + host_additional_charges.cents - refunds.successful.sum(:amount)
+      result = subtotal_amount.cents + host_additional_charges.cents - refunds.guest.successful.sum(:amount)
     end
 
     result
@@ -267,6 +344,10 @@ class Payment < ActiveRecord::Base
     end
   end
 
+  def host_refund_amount_cents
+    amount_to_be_refunded - service_fee_amount_host.cents
+  end
+
   def cancelled_by_guest?
     payable.respond_to?(:cancelled_by_guest?) && payable.cancelled_by_guest?
   end
@@ -282,6 +363,10 @@ class Payment < ActiveRecord::Base
 
   def is_recurring?
     @recurring == true
+  end
+
+  def failed?
+    !!failed_at
   end
 
   def active_merchant_payment?

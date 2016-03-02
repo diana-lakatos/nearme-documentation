@@ -194,7 +194,7 @@ module ShippoApi
       end
     end
 
-    def self.shippo_api_token_present?
+    def shippo_api_token_present?
       Shippo::api_token.present?
     end
 

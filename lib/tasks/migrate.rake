@@ -3,32 +3,25 @@
 
 namespace :migrate do
 
-  task :create_payment_subscriptions_for_existing_subscriptions do
+  task :create_payment_subscriptions_for_existing_subscriptions => :environment do
     Instance.all.each do |instance|
       instance.set_context!
-      next unless RecurringBooking.any?
-      puts "Create PaymentSubscription for Instance: #{instance.name} #{instance.id}"
+      if RecurringBooking.any?
+        puts "Create PaymentSubscription for Instance: #{instance.name} #{instance.id}"
 
-      payment_method = PaymentGateway::StripePaymentGateway.last.payment_methods.credit_card.first
+        stripe = PaymentGateway::StripePaymentGateway.last
+        unless stripe.nil?
+          payment_method = stripe.payment_methods.credit_card.first
 
-      CreditCard.all.find_each do |card|
-        if card.decorator.response.class == ActiveMerchant::Billing::MultiResponse
-          card_response = card.decorator.response.responses.select { |r| r.params['object'] == 'card'}.first
-          customer_response = card.decorator.response.responses.select { |r| r.params['object'] == 'customer'}.first
-          self.response = card_response
-          self.save
-          if self.instance_client.customer_id != customer_response.params["id"]
-            self.instance_client.response = customer_response
-            self.save
+          RecurringBooking.all.find_each do |recurring_booking|
+            if recurring_booking.payment_subscription.blank?
+              payment_subscription = recurring_booking.build_payment_subscription(payment_method: payment_method)
+              payment_subscription.subscriber = recurring_booking
+              payment_subscription.credit_card_id = recurring_booking.credit_card_id
+              payment_subscription.save(validate: false)
+            end
           end
         end
-      end
-
-      RecurringBooking.all.find_each do |recurring_booking|
-        payment_subscription = recurring_booking.build_payment_subscription(payment_method: payment_method)
-        payment_subscription.subscriber = recurring_booking
-        payment_subscription.credit_card_id = recurring_booking.credit_card_id
-        payment_subscription.save!
       end
     end
   end

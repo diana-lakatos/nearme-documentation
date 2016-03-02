@@ -50,7 +50,7 @@ module.exports = class InstanceAdminLocationsController
 
   blinkImage: (entry, success) ->
     image = if success then 'green-check' else 'x-red'
-    img = $('<img>').attr('src', urlUtil("dashboard/#{image}.png")).hide()
+    img = $('<img>').attr('src', urlUtil.assetUrl("dashboard/#{image}.png")).hide()
     entry.append(img)
     img.fadeIn('slow', -> img.fadeOut('slow', -> img.remove()))
 

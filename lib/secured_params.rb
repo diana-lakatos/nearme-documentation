@@ -916,6 +916,7 @@ class SecuredParams
       stock_locations_attributes: nested(self.spree_stock_location),
     }.merge(MerchantAccount::MERCHANT_ACCOUNTS.inject({}) do |hsh, (name, klass)|
       attributes = nested(klass::ATTRIBUTES)
+      attributes << {payment_subscription_attributes: nested(self.payment_subscription) }
       owner_klass = "MerchantAccountOwner::#{name.classify}MerchantAccountOwner".safe_constantize
       attributes << {owners_attributes: nested([:document] + owner_klass::ATTRIBUTES)} if owner_klass
       hsh[:"#{name}_merchant_account_attributes"] = attributes
@@ -1323,6 +1324,11 @@ class SecuredParams
       :from_type,
       :reply_to,
       :replt_to_type,
+      :use_ssl,
+      :request_type,
+      :endpoint,
+      :headers,
+      :payload_data,
       :cc,
       :bcc,
       :subject,
@@ -1395,7 +1401,6 @@ class SecuredParams
       :booking_type,
       :delivery_type,
       :delivery_ids,
-      :shipments_attributes,
       :dates,
       :total_amount_check,
       dates: [],
@@ -1404,7 +1409,7 @@ class SecuredParams
       payment_attributes: nested(self.payment),
       documents: nested(self.payment_document),
       documents_attributes: nested(self.payment_document),
-      reservation: { shipments_attributes: nested(self.shipment) }
+      shipments_attributes: nested(self.shipment)
     ]
   end
 
@@ -1419,6 +1424,7 @@ class SecuredParams
   def payment_subscription
     [
       :payment_method_id,
+      :credit_card_id,
       credit_card_attributes: nested(self.credit_card)
     ]
   end

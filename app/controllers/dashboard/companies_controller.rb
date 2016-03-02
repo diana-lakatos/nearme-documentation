@@ -17,7 +17,7 @@ class Dashboard::CompaniesController < Dashboard::BaseController
       begin
         @company.update_attributes!(company_params)
         flash[:success] = t('flash_messages.manage.companies.company_updated')
-        redirect_to edit_dashboard_company_path(@company.id)
+        redirect_to edit_dashboard_company_path(@company.id) and return
       rescue
         raise ActiveRecord::Rollback
       end

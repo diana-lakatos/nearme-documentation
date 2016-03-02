@@ -494,8 +494,11 @@ class Reservation < ActiveRecord::Base
   end
 
   def set_start_and_end
-    self.starts_at = first_period.starts_at
-    self.ends_at = last_period.ends_at
+    if last_period
+      self.starts_at = first_period.starts_at
+      self.ends_at = last_period.ends_at
+    end
+    true
   end
 
   def set_minimum_booking_minutes

@@ -7,8 +7,11 @@ class HomeController < ApplicationController
     @transactable_types +=  current_instance.instance_profile_types.searchable
     @transactable_types.sort_by!(&:position)
     @transactable_type = @transactable_types.first
+
     if current_instance.is_community?
       order = ["Networking", "Dual Screen", "Big Data", "Open Source", "Android", "Real Sense"]
+
+      @hide_intro_video = !!cookies['hide_intro_video']
 
       if current_user.nil?
         @projects = Project.featured.take(3)

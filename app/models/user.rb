@@ -416,6 +416,10 @@ class User < ActiveRecord::Base
     default_profile.category_ids = ids
   end
 
+  def category_ids
+    default_profile.category_ids
+  end
+
   def categories
     default_profile.categories
   end

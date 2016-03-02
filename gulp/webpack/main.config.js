@@ -36,6 +36,7 @@ config.output = {
 
 config.externals = {
     jquery: 'window.jQuery',
+    'expose?jQuery|expose?$!jquery': 'window.jQuery',
     modernizr: 'Modernizr'
 };
 

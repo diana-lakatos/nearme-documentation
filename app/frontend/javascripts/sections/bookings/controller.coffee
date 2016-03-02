@@ -26,7 +26,9 @@ module.exports = class BookingsController
     if @listing.withCalendars()
       @initializeDatepicker()
       @listing.setDates(@datepicker.getDates())
+
     @bindEvents()
+
     if !@listing.withCalendars() && @fixedPriceSelect.length > 0
       @initializeInfiniScroll()
     @updateQuantityField()
@@ -93,24 +95,18 @@ module.exports = class BookingsController
       @updateBookingStatus()
 
     @bookingTabs.on 'shown.bs.tab', (event) =>
-      # This is to allow all classes on elements to settle
-      # because they are checked for determining the current
-      # state after click; specifically @hourlyBookingSelected
-      # would have returned an invalid value otherwise
-      setTimeout (=>
+      if @listing.isRecurringBooking()
+        period = $(event.target).parents('li').data('subscription')
+        radioSwitch = @container.find("input[data-subscription='#{period}']")
+        radioSwitch.click()
 
-        if @listing.isRecurringBooking()
-          period = $(event.target).parents('li').data('subscription')
-          radioSwitch = @container.find("input[data-subscription='#{period}']")
-          radioSwitch.click()
+        @listing.setSubscriptionPeriod(period)
+      else
+        @listing.setHourlyBooking(@hourlyBookingSelected())
+        @datepicker.setDates(@listing.bookedDatesArray)
+        @setReservationType()
 
-          @listing.setSubscriptionPeriod(period)
-        else
-          @listing.setHourlyBooking(@hourlyBookingSelected())
-          @datepicker.setDates(@listing.bookedDatesArray)
-          @setReservationType()
-        @updateBookingStatus()
-      ), 50
+      @updateBookingStatus()
 
     @bookButton.on 'click', (event) =>
       @formTrigger = @bookButton
@@ -151,11 +147,6 @@ module.exports = class BookingsController
         # do not allow to uncheck
         $(@).prop('checked', true)
       @exclusivePriceCheck.trigger('change')
-
-    @bookingTabs.on 'click', (e)->
-      e.preventDefault()
-      $(event.target).tab('show')
-
 
   activateFirstAvailableTab: ->
     @container.find(".pricing-tabs a.possible:first").tab('show')

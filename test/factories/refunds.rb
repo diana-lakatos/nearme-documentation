@@ -6,5 +6,6 @@ FactoryGirl.define do
     success true
     amount 1000
     currency 'USD'
+    receiver 'guest'
   end
 end

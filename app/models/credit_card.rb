@@ -1,6 +1,8 @@
 class CreditCard < ActiveRecord::Base
   include Encryptable
 
+  attr_accessor :client
+
   auto_set_platform_context
   scoped_to_platform_context
   acts_as_paranoid
@@ -12,15 +14,20 @@ class CreditCard < ActiveRecord::Base
   belongs_to :payment_gateway
   has_many :reservations
 
+  before_validation :set_instance_client
   before_create :set_as_default
+  before_create :store!
+  before_destroy :delete!
 
   scope :default, lambda { where(default_card: true).limit(1) }
 
   validate :validate_card
 
-  delegate :customer_id, to: :instance_client, allow_nil: true
+  validates :instance_client, presence: true
 
-  before_create :store!
+  delegate :customer_id, to: :instance_client, allow_nil: true
+  delegate :expires_at, :last_4, to: :decorator, allow_nil: true
+
 
   [:number, :verification_value, :month, :year, :first_name, :last_name].each do |accessor|
     define_method("#{accessor}=") do |attribute|
@@ -38,10 +45,14 @@ class CreditCard < ActiveRecord::Base
   end
 
   def decorator
+    return nil if payment_gateway.nil?
     @decorator ||= case payment_gateway.name
                    when 'Stripe'
                      CreditCard::StripeDecorator.new(self)
                    when 'Braintree'
+                     CreditCard::BraintreeDecorator.new(self)
+
+                   when 'Braintree Marketplace'
                      CreditCard::BraintreeDecorator.new(self)
                    end
   end
@@ -56,7 +67,7 @@ class CreditCard < ActiveRecord::Base
 
   def success?
     if response
-      YAML.load(response).success?
+      !!YAML.load(response).try(&:success?)
     else
       false
     end
@@ -70,33 +81,39 @@ class CreditCard < ActiveRecord::Base
     token || active_merchant_card
   end
 
+  def active?
+    available? && !expired?
+  end
+
   private
+
+  def available?
+    success?
+  end
+
+  def expired?
+    !!expires_at && expires_at < Time.now
+  end
 
   def store!
     return true  if success?
     return false if payment_gateway.blank?
-    return false if instance_client.blank?
 
-    response_object = payment_gateway.store(active_merchant_card, instance_client)
-
-    if response_object.class == ActiveMerchant::Billing::MultiResponse
-      self.response = response_object.responses.select { |r| r.params['object'] == 'card'}.first.to_yaml
-      customer_response = response_object.responses.select { |r| r.params['object'] == 'customer'}.first
-      if customer_response.params['id'] != self.instance_client.customer_id
-        self.instance_client.response = customer_response.to_yaml
-      end
-    else
-      self.response = response_object.to_yaml
-      self.instance_client.response ||= response_object.to_yaml
-    end
+    self.response = payment_gateway.store(active_merchant_card, instance_client).to_yaml
 
     if success?
+      self.instance_client.response ||= self.response
       self.instance_client.save!
       true
     else
       errors.add(:base, I18n.t('reservations_review.errors.internal_payment'))
       false
     end
+  end
+
+  def delete!
+    payment_gateway.gateway_delete(instance_client, options)
+    true
   end
 
   def validate_card
@@ -111,6 +128,14 @@ class CreditCard < ActiveRecord::Base
     else
       true
     end
+  end
+
+  def options
+    { credit_card_token: token }
+  end
+
+  def set_instance_client
+    self.instance_client ||= payment_gateway.instance_clients.where(client: client).first_or_initialize
   end
 
 end
