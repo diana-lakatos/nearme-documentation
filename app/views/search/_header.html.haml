@@ -25,7 +25,7 @@
               - unless @transactable_type.is_a?(InstanceProfileType)
                 %a.list{ href: search_path(params.merge(v: 'list')), class: active_class(result_view, 'list'), title: t('search.header.list'), data: { view: 'list' } }
                   = t('search.header.list')
-                %a.map{ href: search_path(params.merge(v: @transactable_type.default_search_view)), class: active_class(result_view, @transactable_type.default_search_view), title: t('search.header.map'), data: { view: @transactable_type.default_search_view } }
+                %a.map{ href: search_path(params.merge(v: @searcher.transactable_type.other_search_view)), class: active_class(result_view, @searcher.transactable_type.other_search_view), title: t('search.header.map'), data: { view: @searcher.transactable_type.other_search_view } }
                   = t('search.header.map')
             .geolocation-input{ :class => (@searcher.transactable_type.fulltext_geo_search? ? 'span3' : 'span6')}
               .geolocation

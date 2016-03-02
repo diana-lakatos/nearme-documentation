@@ -5,7 +5,7 @@ class Authentication::GoogleProvider < Authentication::BaseProvider
              auth: "OAuth 2" }
 
   def friend_ids
-    @friend_ids ||= GooglePlus::Person.list('me', 'visible', max_results: 100, access_token: token).items.map(&:id)
+    @friend_ids ||= GooglePlus::Person.list('me', 'visible', max_results: 100, access_token: token).items.try(:map, &:id) || []
   end
 
   def info

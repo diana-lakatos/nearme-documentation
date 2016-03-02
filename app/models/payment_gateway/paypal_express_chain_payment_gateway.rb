@@ -45,13 +45,6 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
     gateway(@payable.merchant_subject).capture(amount, token, options)
   end
 
-  def custom_capture_options
-    {
-      token: @payable.express_token,
-      payer_id: @payable.express_payer_id
-    }
-  end
-
   def settings
     super.merge({ subject: subject, test: test_mode? })
   end

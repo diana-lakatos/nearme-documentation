@@ -61,7 +61,7 @@ class BuySellMarket::CheckoutController < ApplicationController
       update_blank_user_fields
     end
 
-    if @order.payment.try(:redirect_to_paypal?)
+    if @order.payment.try(:redirect_to_paypal?) && @order.save
       redirect_to @order.payment.express_checkout_redirect_url
     else
       # We don't want to override validation messages by calling next
