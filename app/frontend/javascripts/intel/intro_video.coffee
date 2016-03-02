@@ -46,7 +46,6 @@ module.exports = class IntroVideo
           onReady: @onPlayerReady
           onStateChange: @onPlayerStateChange
         playerVars:
-          controls: 0
           rel: 0
       }
 
@@ -63,7 +62,9 @@ module.exports = class IntroVideo
   onPlayerReady: (event) =>
     return if @container.hasClass 'inactive'
 
-    event.target.playVideo()
+    unless Modernizr.touchevents
+      event.target.mute()
+      event.target.playVideo()
     @bindOnShow()
 
   hideVideo: ->
@@ -75,7 +76,9 @@ module.exports = class IntroVideo
 
   showVideo: ->
     @container.removeClass('inactive')
-    @player.playVideo() if @player.playVideo
+
+    unless Modernizr.touchevents
+      @player.playVideo() if @player.playVideo
     @bindOnShow()
 
 

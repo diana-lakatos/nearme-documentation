@@ -22,7 +22,7 @@ class Dashboard::ProjectCollaboratorsController < Dashboard::BaseController
     else
       WorkflowStepJob.perform(WorkflowStep::ProjectWorkflow::CollaboratorDeclined, @project_collaborator.project_id, @project_collaborator.user_id)
     end
-    render nothing: true
+    render json: { result: 'OK' }
   end
 
   private
