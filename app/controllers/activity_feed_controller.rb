@@ -125,7 +125,7 @@ class ActivityFeedController < ApplicationController
   private
 
   def set_object(whitelist)
-    @id, @type = params[:id], params[:type].gsub("Decorator", "")
+    @id, @type = params[:id], params[:type].try(:gsub, "Decorator", "")
     render json: {}, status: 422 && return if !@id.present? && !@type.present?
 
     if whitelist.include?(@type)

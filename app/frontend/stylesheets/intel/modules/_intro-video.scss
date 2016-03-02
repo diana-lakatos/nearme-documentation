@@ -35,7 +35,7 @@
         left: 50%;
         top: 50%;
         width: 100%;
-        max-width: 1024px;
+        max-width: 1280px;
         transform: translate(-50%, -50%);
         z-index: 1120;
         margin: 0;
@@ -49,12 +49,12 @@
 
         iframe {
             display: block;
-            width: 100%;
             position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            height: 100%;
+            width: calc(100% - 40px);
+            left: 20px;
+            right: 20px;
+            top: 20px;
+            height: calc(100% - 22px);
             margin: 0;
         }
     }
@@ -62,7 +62,7 @@
     .intro-video-close {
         left: 50%;
         position: absolute;
-        margin-top: 50px;
+        margin-top: 30px;
         transform: translateX(-50%);
     }
 }
@@ -88,54 +88,3 @@
         transform: rotate(45deg) translate(-35%, 100%) scale(0.75);
     }
 }
-
-
-.intro-video-alt {
-    padding: 50px 0;
-    background: #fff;
-
-    .intro-video-alt-wrapper {
-        position: relative;
-        margin: 0 auto;
-        width: 100%;
-        max-width: 1024px;
-
-        &:before {
-            display: block;
-            width: 100%;
-            content: "";
-            padding-top: 56.25%;
-        }
-    }
-
-    iframe {
-        display: block;
-        width: 100%;
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        height: 100%;
-        margin: 0;
-    }
-}
-
-
-/* hero */
-
-.hero-a {
-    padding: 50px 0;
-
-    @include bp($screen-lg) {
-        padding: 50px 0;
-    }
-
-    @include bp($screen-tablet) {
-        padding: 50px 0;
-    }
-
-    @include bp($screen-mobile) {
-        padding: 50px 0;
-    }
-}
-
