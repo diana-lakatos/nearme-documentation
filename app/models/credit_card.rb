@@ -122,7 +122,11 @@ class CreditCard < ActiveRecord::Base
     unless active_merchant_card.valid?
       errors.add(:base, I18n.t('buy_sell_market.checkout.invalid_cc'))
       active_merchant_card.errors.each do |key,value|
-        errors.add(key, value)
+        if value.kind_of?(Array)
+          errors.add(key, value.flatten.first)
+        else
+          errors.add(key, value)
+        end
       end
       false
     else
