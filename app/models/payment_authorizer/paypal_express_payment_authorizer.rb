@@ -1,6 +1,7 @@
 class PaymentAuthorizer::PaypalExpressPaymentAuthorizer < PaymentAuthorizer
 
   def process!
+    return false unless @authorizable.valid?
     if @payment.express_payer_id.blank?
       setup_authorization
     else
