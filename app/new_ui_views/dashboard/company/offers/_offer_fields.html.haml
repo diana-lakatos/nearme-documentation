@@ -49,4 +49,4 @@
   - if custom_attribute_names.include?(field)
     = draw_attribute_for_form(@offer_type.custom_attributes.find_by(name: field), properties_form)
   -elsif f.object.attributes.include?(field)
-    = f.input field
+    = f.input field, {}.merge(cke_attrs(model, field))

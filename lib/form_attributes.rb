@@ -1,7 +1,8 @@
 class FormAttributes
 
   CKEFIELDS = {
-    transactable: [:description]
+    transactable: [:description],
+    offer: [:description]
   }
 
   def user

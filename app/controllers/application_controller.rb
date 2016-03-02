@@ -503,7 +503,7 @@ class ApplicationController < ActionController::Base
   end
 
   def enable_ckeditor_for_field?(model, field)
-    FormAttributes::CKEFIELDS[model.to_sym].include?(field.to_sym)
+    FormAttributes::CKEFIELDS.fetch(model.to_sym, []).include?(field.to_sym)
   end
 
   def ckeditor_pictures_scope(options = {})
