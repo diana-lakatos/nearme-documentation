@@ -42,7 +42,6 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
         login: settings[:login],
         password: settings[:password],
         signature: settings[:signature],
-        subject: subject,
         test: test_mode?
       )
     end
@@ -52,19 +51,12 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
   alias_method :express_gateway, :gateway
 
   def gateway_capture(amount, token, options)
-    gateway(@payable.merchant_subject).capture(amount, token, options)
-  end
-
-  def custom_capture_options
-    {
-      token: @payable.express_token,
-      payer_id: @payable.express_payer_id
-    }
+    gateway.capture(amount, token, options)
   end
 
   def process_express_checkout(transactable, options)
     @transactable = transactable
-    @response = gateway(@transactable.merchant_subject).setup_authorization(@transactable.total_amount.cents, options.deep_merge(
+    @response = gateway.setup_authorization(@transactable.total_amount.cents, options.deep_merge(
       {
         currency: @transactable.currency,
         allow_guest_checkout: true,

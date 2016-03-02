@@ -444,7 +444,7 @@ class PaymentGateway < ActiveRecord::Base
     {}
   end
 
-def custom_capture_options
+  def custom_capture_options
     {}
   end
 
