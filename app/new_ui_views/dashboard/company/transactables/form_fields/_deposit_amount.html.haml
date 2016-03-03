@@ -1,0 +1,7 @@
+%hr/
+
+.form-inline
+  = f.input :enable_deposit_amount, as: :switch, label_html: { class: 'block-label' }, required: false,
+  label: t(:enable, scope: [:pricing, :deposit]), input_html: { checked: f.object.deposit_amount.present? }
+
+  = f.input :deposit_amount, as: :numeric, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), label_html: { class: 'block-label' }, required: false, label: t(:deposit_amount, scope: [:pricing, :deposit])

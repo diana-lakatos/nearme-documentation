@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160301151257) do
+ActiveRecord::Schema.define(version: 20160302171433) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -708,6 +708,21 @@ ActiveRecord::Schema.define(version: 20160301151257) do
 
   add_index "delayed_jobs", ["platform_context_detail_id", "platform_context_detail_type"], name: "index_delayed_jobs_on_platform_context_detail", using: :btree
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+
+  create_table "deposits", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.string   "target_type"
+    t.integer  "target_id"
+    t.integer  "deposit_amount_cents"
+    t.datetime "authorized_at"
+    t.datetime "voided_at"
+    t.datetime "deleted_at"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "deposits", ["instance_id"], name: "index_deposits_on_instance_id", using: :btree
+  add_index "deposits", ["instance_id" ,"target_id", "target_type"], name: "index_deposits_on_instance_id_and_target_id_and_target_type", using: :btree
 
   create_table "dimensions_templates", force: :cascade do |t|
     t.string   "name",            limit: 255
@@ -3634,6 +3649,7 @@ ActiveRecord::Schema.define(version: 20160301151257) do
     t.integer  "monthly_subscription_price_cents"
     t.string   "slug"
     t.integer  "availability_template_id"
+    t.integer  "deposit_amount_cents"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

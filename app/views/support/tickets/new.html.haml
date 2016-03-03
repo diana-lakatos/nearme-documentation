@@ -1,6 +1,6 @@
 .row-fluid.support
   .span8.offset2
-    %h1 Open a Support Ticket
+    %h1= t 'support.ticket.open_ticket_header'
     .box
       #support-ticket-message-controller.form.message-form
         = simple_form_for @ticket do |t|
@@ -22,6 +22,6 @@
                 .span4.offset4
                   = render partial: 'support/ticket_message_attachments/form', locals: { f: f }
               .span4
-                =t.submit 'Create ticket', :class => 'btn btn-green'
+                =t.submit t('support.ticket.submit_button'), :class => 'btn btn-green'
         = simple_form_for @ticket.attachments.build, url: support_ticket_message_attachments_path, html: { class: 'hidden', :'data-attachment-form'=> true } do |f|
           = f.input :file, as: :file, input_html: { data: { file: true } }

@@ -48,7 +48,7 @@ class FormAttributes
       :name, :description, :availability_rules, :price, :currency, :photos,
       :approval_requests, :quantity, :book_it_out, :exclusive_price, :action_rfq,
       :confirm_reservations, :capacity, :rental_shipping_type, :seller_attachments,
-      :additional_charges, :minimum_booking_minutes
+      :additional_charges, :minimum_booking_minutes, :deposit_amount
     ] +
     Transactable.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
     transactable_type.categories.roots.map { |k| ('Category - ' + k.name).to_sym }.flatten
@@ -60,7 +60,7 @@ class FormAttributes
       :enabled, :amenity_types, :price, :currency, :schedule, :photos,
       :waiver_agreement_templates, :documents_upload, :quantity, :book_it_out,
       :exclusive_price, :action_rfq, :capacity, :rental_shipping_type, :seller_attachments,
-      :additional_charges, :minimum_booking_minutes
+      :additional_charges, :minimum_booking_minutes, :deposit_amount
     ] +
     Transactable.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
     transactable_type.categories.roots.map { |k| ('Category - ' + k.name).to_sym }.flatten
