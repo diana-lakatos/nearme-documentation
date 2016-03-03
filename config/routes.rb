@@ -1075,4 +1075,6 @@ DesksnearMe::Application.routes.draw do
   end
   mount Ckeditor::Engine => '/ckeditor'
 
+  get '/dynamic_theme/:theme_id/:stylesheet/:updated_at', to: 'dynamic_themes#show', as: :dynamic_theme, defaults: { format: 'css' }, constraints: { stylesheet: /(new_ui|application|dashboard)/ }
+
 end

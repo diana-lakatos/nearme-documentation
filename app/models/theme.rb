@@ -146,6 +146,10 @@ class Theme < ActiveRecord::Base
     { :width => 250, :height => 202}
   end
 
+  def self.refresh_all!
+    Theme.update_all(updated_at: Time.now)
+  end
+
   private
 
   def unhexify_colors
