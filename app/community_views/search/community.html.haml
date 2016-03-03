@@ -21,4 +21,4 @@
       .pagination-more-a
         - if @searcher.results.next_page
           %p.more-a{data: { next_page: @searcher.results.next_page }}
-            = link_to t(:see_more), '#'
+            %button= t(:see_more)
