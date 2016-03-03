@@ -1,5 +1,6 @@
 class AuthenticationsController < ApplicationController
 
+  skip_before_filter :set_locale
   skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:create, :setup]
   skip_before_filter :verify_authenticity_token
 

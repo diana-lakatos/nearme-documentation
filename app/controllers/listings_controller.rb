@@ -1,11 +1,12 @@
 class ListingsController < ApplicationController
-  before_filter :authenticate_user!, only: [:ask_a_question]
-  before_filter :find_listing, only: [:show, :ask_a_question, :occurrences, :booking_module]
-  before_filter :find_location, only: [:show, :ask_a_question]
-  before_filter :find_transactable_type, only: [:show, :ask_a_question]
-  before_filter :find_siblings, only: [:show, :ask_a_question]
-  before_filter :redirect_if_listing_inactive, only: [:show, :ask_a_question]
-  before_filter :redirect_if_non_canonical_url, only: [:show]
+  before_action :authenticate_user!, only: [:ask_a_question]
+  before_action :find_listing, only: [:show, :ask_a_question, :occurrences, :booking_module]
+  before_action :find_location, only: [:show, :ask_a_question]
+  before_action :find_transactable_type, only: [:show, :booking_module, :ask_a_question]
+  before_action :find_siblings, only: [:show, :ask_a_question]
+  before_action :redirect_if_listing_inactive, only: [:show, :ask_a_question]
+  before_action :redirect_if_non_canonical_url, only: [:show]
+  before_action :assign_transactable_type_id_to_lookup_context
 
   def show
     @section_name = 'listings'
@@ -20,7 +21,6 @@ class ListingsController < ApplicationController
   def booking_module
     restore_initial_bookings_from_stored_reservation
     @collapsed = params[:collapsed] == 'true' ? true : false
-    @transactable_type = @listing.transactable_type
     @location = @listing.location
   end
 
@@ -66,7 +66,7 @@ class ListingsController < ApplicationController
 
   def find_transactable_type
     @transactable_type = @listing.transactable_type
-    if params[:transactable_type_id].present? && params[:transactable_type_id] != @transactable_type.slug
+    if params[:transactable_type_id].present? && (params[:transactable_type_id] != @transactable_type.slug || params[:transactable_type_id].to_i != @transactable_type.id)
       redirect_to @listing.show_path, status: 301
     end
   end

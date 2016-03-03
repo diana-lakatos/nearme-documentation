@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  before_filter :prepend_view_paths
+  before_action :prepend_view_paths
 
   force_ssl if: :require_ssl?
 
@@ -7,18 +7,19 @@ class ApplicationController < ActionController::Base
   layout :layout_for_request_type
 
 
-  before_filter :set_locale
-  before_filter :log_out_if_token_exists
-  before_filter :log_out_if_sso_logout
-  before_filter :redirect_to_set_password_unless_unnecessary
-  before_filter :first_time_visited?
-  before_filter :store_referal_info
-  before_filter :platform_context
-  before_filter :register_platform_context_as_lookup_context_detail
-  before_filter :redirect_if_marketplace_password_protected
-  before_filter :set_raygun_custom_data
-  before_filter :filter_out_token
-  before_filter :sign_out_if_signed_out_from_intel_sso, if: -> { should_log_out_from_intel? }
+  before_action :set_i18n_locale
+  before_action :set_locale
+  before_action :log_out_if_token_exists
+  before_action :log_out_if_sso_logout
+  before_action :redirect_to_set_password_unless_unnecessary
+  before_action :first_time_visited?
+  before_action :store_referal_info
+  before_action :platform_context
+  before_action :register_platform_context_as_lookup_context_detail
+  before_action :redirect_if_marketplace_password_protected
+  before_action :set_raygun_custom_data
+  before_action :filter_out_token
+  before_action :sign_out_if_signed_out_from_intel_sso, if: -> { should_log_out_from_intel? }
 
   around_filter :set_time_zone
 
@@ -51,15 +52,15 @@ class ApplicationController < ActionController::Base
   protected
 
   def set_locale
-    I18n.locale = language_service.get_language
-    session[:language] = I18n.locale
-
-    # We don't redirect if the format is rss (i.e. blog) to avoid
-    # causing problems for newsreaders
-    if request.get? && !request.xhr? && language_router.redirect? && params[:controller] != 'authentications' && params[:format] != 'rss'
+    if request.get? && !request.xhr? && language_router.redirect? && params[:format] != 'rss'
       params_with_language = params.merge(language_router.url_params)
       redirect_to url_for(params_with_language)
     end
+  end
+
+  def set_i18n_locale
+    I18n.locale = language_service.get_language
+    session[:language] = I18n.locale
   end
 
   def language_router
@@ -94,6 +95,10 @@ class ApplicationController < ActionController::Base
   def set_time_zone(&block)
     time_zone = current_user.try(:time_zone).presence || current_instance.try(:timze_zone).presence || 'UTC'
     Time.use_zone(time_zone, &block)
+  end
+
+  def assign_transactable_type_id_to_lookup_context(&block)
+    lookup_context.transactable_type_id ||= @transactable_type.try(:id)
   end
 
   # Returns the layout to use for the current request.
@@ -489,11 +494,11 @@ class ApplicationController < ActionController::Base
   end
 
   def details_for_lookup
-    set_locale if @language_service.nil? && !Rails.env.test?
+    set_i18n_locale if @language_service.nil? && !Rails.env.test?
     {
       :instance_id => PlatformContext.current.try(:instance).try(:id),
       :i18n_locale => I18n.locale,
-      :transactable_type_id => params[:transactable_type_id].present? ? (TransactableType.find_by(slug: params[:transactable_type_id]).try(:id) || params[:transactable_type_id]).to_i : nil
+      :transactable_type_id => @transactable_type.try(:id) || (params[:transactable_type_id].present? ? (TransactableType.find_by(slug: params[:transactable_type_id]).try(:id) || params[:transactable_type_id]).to_i : nil)
     }
   rescue
     {

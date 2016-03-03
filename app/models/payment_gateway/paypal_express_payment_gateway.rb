@@ -9,7 +9,7 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
   # Send to paypal with every action as BN CODE
   ActiveMerchant::Billing::Gateway.application_id = Rails.configuration.active_merchant_billing_gateway_app_id
 
-  supported :multiple_currency, :express_checkout_payment, :partial_refunds, :refund_from_host
+  supported :multiple_currency, :express_checkout_payment, :partial_refunds
 
   def self.settings
     {

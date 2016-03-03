@@ -7,6 +7,7 @@ class SearchController < ApplicationController
   before_filter :ensure_valid_params
   before_filter :find_transactable_type
   before_filter :theme_name
+  before_action :assign_transactable_type_id_to_lookup_context
 
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
 
