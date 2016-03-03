@@ -146,7 +146,7 @@ class TransactableDrop < BaseDrop
 
   # url to the listing page for this listing
   def url
-    @transactable.show_url
+    urlify(@transactable.show_path)
   end
   alias_method :listing_url, :url
 

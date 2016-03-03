@@ -1,11 +1,12 @@
 class ListingsController < ApplicationController
-  before_filter :authenticate_user!, only: [:ask_a_question]
-  before_filter :find_listing, only: [:show, :ask_a_question, :occurrences, :booking_module]
-  before_filter :find_location, only: [:show, :ask_a_question]
-  before_filter :find_transactable_type, only: [:show, :ask_a_question]
-  before_filter :find_siblings, only: [:show, :ask_a_question]
-  before_filter :redirect_if_listing_inactive, only: [:show, :ask_a_question]
-  before_filter :redirect_if_non_canonical_url, only: [:show]
+  before_action :authenticate_user!, only: [:ask_a_question]
+  before_action :find_listing, only: [:show, :ask_a_question, :occurrences, :booking_module]
+  before_action :find_location, only: [:show, :ask_a_question]
+  before_action :find_transactable_type, only: [:show, :ask_a_question]
+  before_action :find_siblings, only: [:show, :ask_a_question]
+  before_action :redirect_if_listing_inactive, only: [:show, :ask_a_question]
+  before_action :redirect_if_non_canonical_url, only: [:show]
+  before_action :assign_transactable_type_id_to_lookup_context
 
   def show
     @section_name = 'listings'
