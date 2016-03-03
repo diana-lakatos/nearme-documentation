@@ -62,6 +62,11 @@ $switch-toggler-background: #fff;
         border-style: solid;
         border-color: $switch-border-color;
     }
+
+    &.disabled .onoffswitch-label {
+        cursor: not-allowed;
+    }
+
     .onoffswitch-inner {
         display: block;
         width: 200%;
