@@ -1,7 +1,5 @@
 class BidPayment < Form
 
-  include Payable
-
   attr_accessor :card_number, :card_exp_month, :card_exp_year, :card_code, :card_holder_first_name,
     :card_holder_last_name, :payment_method_nonce, :express_checkout_redirect_url
   attr_reader   :bid, :offer, :user, :client_token, :payment_method_nonce
