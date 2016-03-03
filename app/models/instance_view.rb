@@ -308,6 +308,11 @@ class InstanceView < ActiveRecord::Base
       'transactable': 'TransactableDrop',
       is_partial: true
     },
+    'registrations/profile/tabs/general' => {
+      'user': 'UserDrop',
+      'company': 'CompanyDrop',
+      is_partial: true
+    },
     'buy_sell_market/products/above_cart_management' => {
       'product': 'Spree::ProductDrop',
     },

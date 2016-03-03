@@ -2,8 +2,8 @@ module.exports = class SearchGeocoder
 
   class ResultSet
     constructor: (results) ->
-      @results = []
-      @results.push(new Result(result)) for result in results
+      @results = _.map results, (result)->
+        new Result(result)
 
     getBestResult: ->
       @results[0]
@@ -15,7 +15,7 @@ module.exports = class SearchGeocoder
     constructor: (@result) ->
 
     isValid: ->
-      @result.geometry
+      @result.hasOwnProperty('geometry')
 
     postcode: ->
       @_addressComponentOfType('postal_code', 'political')?.long_name

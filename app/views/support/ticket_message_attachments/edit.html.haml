@@ -1,7 +1,7 @@
 = render 'shared/render_flash'
 
 %p
-%div File Name
+%div=t 'support.attachment.file_name'
 %div= link_to @ticket_message_attachment.read_attribute(:file), @ticket_message_attachment.file.url, target: '_blank'
 
 %p
@@ -9,14 +9,14 @@
 %p
 - url = @ticket.present? ? support_ticket_ticket_message_attachment_path(@ticket, @ticket_message_attachment) : support_ticket_message_attachment_path(@ticket_message_attachment)
 = simple_form_for @ticket_message_attachment, url: url, html: { id: 'attachment_form', method: :put } do |f|
-  = f.input :tag, as: :radio_buttons, collection: Support::TicketMessageAttachment::TAGS
+  = f.input :tag, as: :radio_buttons, collection: Support::TicketMessageAttachment::TAGS.map{|tag| [t("support.attachment.#{tag.downcase.parameterize('_')}"), tag]}
   %input{type: 'hidden', name: 'form_name', value: @form_name}
   %p
   %p
   %p
   .row-fluid
     .span5.offset7
-      = f.submit 'Save', class: 'btn btn-grey pull-right'
+      = f.submit t('general.save'), class: 'btn btn-grey pull-right'
 .clearfix
 
 :javascript

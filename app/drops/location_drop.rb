@@ -142,21 +142,6 @@ class LocationDrop < BaseDrop
     phone.present?
   end
 
-  # url to a facebook icon image for sharing
-  def facebook_img_url
-    image_url('mailers/facebook.png')
-  end
-
-  # url to a twitter icon image for sharing
-  def twitter_img_url
-    image_url('mailers/twitter.png')
-  end
-
-  # url to a linkedin icon image for sharing
-  def linkedin_img_url
-    image_url('mailers/linkedin.png')
-  end
-
   # formatted string containing the company name and parts of the location
   def default_title
     location.name

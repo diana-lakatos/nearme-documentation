@@ -10,7 +10,7 @@ $moreButton = $container.find(".more-a")
 
 <% if @collection.next_page %>
   $moreButton.show()
-  $moreButton.find('a').data('next-page', '<%= @collection.next_page %>')
+  $moreButton.find('button').data('next-page', '<%= @collection.next_page %>')
 <% elsif %>
   $moreButton.hide()
 <%  end %>

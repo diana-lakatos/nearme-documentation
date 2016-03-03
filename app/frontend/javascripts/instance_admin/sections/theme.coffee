@@ -16,7 +16,8 @@ module.exports = class InstanceAdminThemeController
   bindEvents: ->
     @resetLinks.on 'click', (event) =>
       input = @form.find("input[data-color-name=#{$(event.target).data('reset')}]")
-      if !input.prop('disabled')
-        input.val(input.data('default'))
-        $(input).colorpicker('setValue', input.data('default'))
+      defaultColor = input.data('default')
+      if !input.prop('disabled') and defaultColor
+        input.val(defaultColor)
+        $(input).colorpicker('setValue', defaultColor)
       event.preventDefault()
