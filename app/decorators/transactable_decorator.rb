@@ -68,6 +68,7 @@ class TransactableDecorator < Draper::Decorator
 
   def build_link(suffix = 'path', options = {})
     options.merge!(language: I18n.locale) if PlatformContext.current.try(:instance).try(:available_locales).try(:many?)
+    options.merge!(host: PlatformContext.current.decorate.host) if suffix == 'url'
     if transactable_type.show_path_format
       case transactable_type.show_path_format
       when "/:transactable_type_id/:id"
