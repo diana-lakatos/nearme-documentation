@@ -10,12 +10,8 @@ DNM.registerInitializer(function(){
         return;
     }
 
-    require.ensure('./blog/blog_posts_controller', function(require){
-        var BlogPostsController = require('./blog/blog_posts_controller');
-        els.each(function(){
-            return new BlogPostsController($(this));
-        });
-    });
+    var BlogPostsController = require('./blog/blog_posts_controller');
+    return new BlogPostsController();
 });
 
 DNM.run();
