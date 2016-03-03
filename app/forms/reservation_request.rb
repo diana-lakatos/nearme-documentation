@@ -54,6 +54,7 @@ class ReservationRequest < Form
 
       @reservation.build_additional_charges(attributes)
       @payment = @reservation.build_payment(attributes.try(:[], :payment_attributes) || {}).decorate
+      @deposit = @reservation.build_deposit(attributes.try(:[], :payment_attributes) || {})
     end
   end
 
@@ -99,7 +100,11 @@ class ReservationRequest < Form
     @checkout_extra_fields.assign_attributes! if @checkout_extra_fields.are_fields_present?
     @checkout_extra_fields.valid?
     @checkout_extra_fields.errors.full_messages.each { |m| add_error(m, :base) }
-    !!(@checkout_extra_fields.valid? && valid? && @payment.authorize && save_reservation)
+    !!(@checkout_extra_fields.valid? && valid? && @payment.authorize && authorize_deposit && save_reservation)
+  end
+
+  def authorize_deposit
+    !@deposit || @deposit.try(:authorize)
   end
 
   def reservation_periods

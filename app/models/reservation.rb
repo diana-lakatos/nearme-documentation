@@ -24,6 +24,7 @@ class Reservation < ActiveRecord::Base
   has_one :billing_authorization, as: :reference
   has_one :dimensions_template, as: :entity
   has_one :payment, as: :payable
+  has_one :deposit, as: :target
 
   has_many :user_messages, as: :thread_context
   has_many :waiver_agreements, as: :target
@@ -381,6 +382,14 @@ class Reservation < ActiveRecord::Base
     end
   end
 
+  def build_deposit(payment_attributes={})
+    if listing.deposit_amount.to_i > 0
+      deposit = super(target: self, deposit_amount_cents: listing.deposit_amount.cents)
+      deposit.build_payment(payment_attributes)
+      deposit
+    end
+  end
+
   def build_payment(payment_attributes={})
     super(
       payment_attributes.merge(
@@ -486,6 +495,7 @@ class Reservation < ActiveRecord::Base
 
   def schedule_void
     PaymentVoidJob.perform(payment.id)
+    DepositVoidJob.perform(deposit.payment.id) if deposit
   end
 
   # ----- SETTERS ---------

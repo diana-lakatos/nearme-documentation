@@ -198,7 +198,7 @@ class Transactable < ActiveRecord::Base
   attr_accessor :distance_from_search_query, :photo_not_required, :enable_monthly,
     :enable_weekly, :enable_daily, :enable_hourly,
     :enable_weekly_subscription,:enable_monthly_subscription,
-    :availability_template_attributes, :enable_exclusive_price,
+    :availability_template_attributes, :enable_exclusive_price, :enable_deposit_amount,
     :enable_book_it_out_discount, :scheduled_action_free_booking, :regular_action_free_booking
 
   monetize :daily_price_cents, with_model_currency: :currency, allow_nil: true
@@ -210,6 +210,7 @@ class Transactable < ActiveRecord::Base
   monetize :insurance_value_cents, with_model_currency: :currency, allow_nil: true
   monetize :weekly_subscription_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :monthly_subscription_price_cents, with_model_currency: :currency, allow_nil: true
+  monetize :deposit_amount_cents, with_model_currency: :currency, allow_nil: true
 
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :finders, :scoped], scope: :instance
@@ -748,6 +749,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def nullify_not_needed_attributes
+    self.deposit_amount_cents = nil unless enable_deposit_amount == '1'
     if schedule_booking?
       self.exclusive_price_cents = nil unless enable_exclusive_price == '1'
       self.book_it_out_discount = self.book_it_out_minimum_qty = nil unless enable_book_it_out_discount == '1'
