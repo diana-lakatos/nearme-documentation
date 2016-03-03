@@ -627,6 +627,7 @@ DesksnearMe::Application.routes.draw do
       get "users/unsubscribe/:signature", :to => "registrations#unsubscribe", :as => "unsubscribe"
       get "dashboard/edit_profile", :to => "registrations#edit", :as => "dashboard_profile"
       get "dashboard/social_accounts", :to => "registrations#social_accounts", :as => "social_accounts"
+      patch "users/:user_id/mobile_number", :to => "registrations#mobile_number", :as => "mobile_number_user"
 
       match "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip", via: [:patch, :put]
 

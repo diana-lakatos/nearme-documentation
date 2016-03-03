@@ -2088,6 +2088,14 @@ en:
     read_more_html: 'more&hellip;'
     thread_locked: 'You can no longer send messages regarding this context, as it has been deleted.'
 
+    mobile_number:
+      headers:
+        missing: 'Missing mobile number'
+        updated: 'Mobile successfully number updated'
+      buttons:
+        skip: 'Skip'
+        continue: 'Continue'
+        save_changes: 'Save changes'
 
   validation_messages:
     price_too_high: '%{price} is too high'

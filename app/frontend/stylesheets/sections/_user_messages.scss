@@ -149,6 +149,49 @@ section.user_messages {
 
 }
 
+#missing-mobile-number {
+
+  .input-group {
+    display: table;
+  }
+
+  .input-group-addon {
+      display: table-cell;
+      padding: 6px 12px;
+      background-color: #eeeeee;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 1%;
+      white-space: nowrap;
+      vertical-align: middle;
+  }
+
+  .selectize-input {
+    input {
+      font-size: 16px;
+    }
+  }
+
+  [data-mobile-number] {
+    margin: 0 !important;
+  }
+
+  input[type=submit], a {
+    height: 50px;
+    line-height: 50px;
+    margin: 10px 0 0;
+  }
+
+  a {
+    text-align: center;
+    display: inline-block;
+
+    &.btn-grey {
+      background-color: #C0C0C0;
+    }
+  }
+}
+
 @media (max-width: $ipad-width) {
   .user_messages {
     .listing-message {
