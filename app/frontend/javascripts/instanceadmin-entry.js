@@ -140,7 +140,7 @@ DNM.registerInitializer(function(){
 DNM.registerInitializer(function(){
     $('[data-submit-form]').on('click', function() {
         $($(this).data('form-selector')).each(function(){
-            this.submit();
+            $(this).submit();
         });
     });
 });
