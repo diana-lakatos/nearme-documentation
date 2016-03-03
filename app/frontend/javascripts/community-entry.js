@@ -20,15 +20,13 @@ DNM.registerInitializer(function(){
         UI = require('./intel/ui'),
         Onboarding = require('./intel/onboarding'),
         Forms = require('./intel/forms'),
-        Fixes = require('./intel/fixes'),
-        SeeMore = require('./intel/see_more');
+        Fixes = require('./intel/fixes');
 
     Utils.initialize();
     UI.initialize();
     Onboarding.initialize();
     Forms.initialize();
     Fixes.initialize();
-    SeeMore.initialize();
 });
 
 DNM.registerInitializer(function(){
@@ -43,6 +41,11 @@ DNM.registerInitializer(function(){
             return new Tutorial(this);
         });
     });
+});
+
+DNM.registerInitializer(function(){
+    var SeeMore = require('./intel/see_more');
+    return new SeeMore();
 });
 
 DNM.registerInitializer(function(){

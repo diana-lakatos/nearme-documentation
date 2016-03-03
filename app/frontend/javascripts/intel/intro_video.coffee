@@ -70,7 +70,7 @@ module.exports = class IntroVideo
   hideVideo: ->
     @container.addClass('inactive')
     $.cookie(@cookieName, 1, { expires: 28, path: '/' })
-    @player.stopVideo()
+    @player.stopVideo() if @player.stopVideo
 
     $('body').off('*.introvideo')
 
