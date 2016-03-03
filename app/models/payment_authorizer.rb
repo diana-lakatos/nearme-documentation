@@ -88,11 +88,11 @@ class PaymentAuthorizer
   def prepare_options(options)
     options.merge({
       customer: @payment.credit_card.try(:customer_id),
-      company: @authorizable.company,
-      currency: @authorizable.currency,
+      company: @payment.company,
+      currency: @payment.currency,
       merchant_account: merchant_account,
       payment_method_nonce: @payment.try(:payment_method_nonce),
-      service_fee_host: @authorizable.total_service_amount.cents
+      service_fee_host: @payment.total_service_amount_cents
     }).with_indifferent_access
   end
 

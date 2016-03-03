@@ -1,6 +1,5 @@
 - submit_label ||= 'Send'
 - submit_and_resolve_label ||= 'Send and Resolve'
-- message_label ||= false
 - with_close ||= false
 #support-ticket-message-controller.row-fluid.message-form
   .profile.span1
@@ -8,7 +7,7 @@
       = image_tag current_user.avatar.url(:medium)
   .form.span11
     = simple_form_for message, url: form_url do |f|
-      = f.input :message, as: :text, label: message_label, placeholder: 'Please, enter message'
+      = f.input :message, as: :text, label: false
       .attachments{:'data-attachment-list' => true }
         = render partial: 'support/ticket_message_attachments/attachment', collection: message.attachments, as: :ticket_message_attachment
       .row-fluid

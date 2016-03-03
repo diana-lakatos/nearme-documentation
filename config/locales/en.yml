@@ -102,6 +102,7 @@ en:
     remove: "Remove"
     processing: 'Processing ...'
     submit: 'Submit'
+    send: 'Send'
     cancel: 'Cancel'
     submit_draft: 'Save as draft'
     or_spaced: ' or '

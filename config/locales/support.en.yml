@@ -8,8 +8,19 @@ en:
       open_text:
         open: 'View and resolve'
         resolved: 'View'
+      request_header: "Request #%{ticket_id}"
+      messages: 'Messages'
+      open_ticket_header: 'Open a Support Ticket'
+      submit_button: 'Create ticket'
+      state:
+        open: 'Open'
+        resolved: 'Resolved'
+        support:
     attachment:
       uploading: 'Uploading... please wait.'
       error: 'Something went wrong. Please try again. If the error persists, please submit a support ticket.'
       destroy_error: 'Something went wrong. Maybe this attachment has already been deleted? Please wait a moment and see if everything is fine. Otherwise, please try to refresh the page.'
       add: 'Add Attachment'
+      file_name: 'File name'
+      informational: 'Informational'
+      purchase_order: 'Purchase Order'
