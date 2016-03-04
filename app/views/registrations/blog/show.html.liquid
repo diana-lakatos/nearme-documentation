@@ -8,7 +8,7 @@
   <div class='blog-post-detail'>
     <div class='hero-image'>
       {% if blog_post.hero_image_present? %}
-        <img src={{ blog_post.hero_image_url }} />
+        <img src='{{ blog_post.hero_image_url }}' />
       {% endif %}
     </div>
 
@@ -20,7 +20,7 @@
       <p> Tagged as: {{ tags | join:", " }}.</p>
       {{ blog_post.content }}
     </div>
-    
+
     <div class='info row-fluid'>
       <div class='date span5'>
         Published {{ blog_post.published_at | to_date | localize: 'long' }}

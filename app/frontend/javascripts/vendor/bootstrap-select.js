@@ -332,7 +332,7 @@
             if (this.options.size == 'auto') {
                 var getSize = function() {
                     var minHeight,
-                        lisVis = that.$lis.not('.hide');
+                        lisVis = that.$lis ? that.$lis.not('.hide') : null;
 
                     posVert();
                     menuHeight = selectOffsetBot - menuExtras;
@@ -344,7 +344,7 @@
                         menuHeight = selectOffsetTop - menuExtras;
                     }
 
-                    if ((lisVis.length + lisVis.find('dt').length) > 3) {
+                    if (lisVis && (lisVis.length + lisVis.find('dt').length) > 3) {
                         minHeight = liHeight*3 + menuExtras - 2;
                     } else {
                         minHeight = 0;

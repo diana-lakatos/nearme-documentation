@@ -8,19 +8,20 @@ module.exports = class InstanceAdminCategoriesController
 
     @categories_path = @container.data('category-path')
     @setupCategoriesTree()
+    @last_rollback = null
 
   getCategoriesPath: ->
     return @categories_path
 
   setupCategoriesTree: =>
     if @container.find('#category_tree').length > 0
-      that = this
       categories_path = @getCategoriesPath()
+      that = @
 
       $.ajax
         url: (categories_path + '/' + @category_id + '/jstree?root=true').toString()
-        success: (category) ->
-          last_rollback = null
+        success: (category) =>
+          @last_rollback = null
 
           conf =
             json_data:
@@ -56,10 +57,10 @@ module.exports = class InstanceAdminCategoriesController
             plugins: ["themes", "json_data", "dnd", "crrm", "contextmenu"]
 
           $("#category_tree").jstree(conf)
-            .bind("move_node.jstree", $.proxy(that.handleMove, that))
-            .bind("remove.jstree", $.proxy(that.handleDelete, that))
-            .bind("create.jstree", $.proxy(that.handleCreate, that))
-            .bind("rename.jstree", $.proxy(that.handleRename, that))
+            .bind("move_node.jstree", @handleMove)
+            .bind("remove.jstree", @handleDelete)
+            .bind("create.jstree", @handleCreate)
+            .bind("rename.jstree", @handleRename)
             .bind "loaded.jstree", ->
               $(this).jstree("core").toggle_node($('.jstree-icon').first())
 
@@ -72,12 +73,13 @@ module.exports = class InstanceAdminCategoriesController
           e.preventDefault()
 
 
-  handleAjaxError: (XMLHttpRequest, textStatus, errorThrown) ->
-    $.jstree.rollback(last_rollback)
+  handleAjaxError: (XMLHttpRequest, textStatus, errorThrown) =>
+    $.jstree.rollback(@last_rollback)
     $("#ajax_error").show().html("<strong>The server returned an error</strong><br />The requested change has not been accepted and the tree has been returned to its previous state, please try again")
+    window.Raygun.send(errorThrown, textStatus) if window.Raygun
 
-  handleMove: (e, data) ->
-    last_rollback = data.rlbk
+  handleMove: (e, data) =>
+    @last_rollback = data.rlbk
     position = data.rslt.cp
     node = data.rslt.o
     new_parent = data.rslt.np
@@ -93,8 +95,8 @@ module.exports = class InstanceAdminCategoriesController
     true
 
 
-  handleCreate: (e, data) ->
-    last_rollback = data.rlbk
+  handleCreate: (e, data) =>
+    @last_rollback = data.rlbk
     node = data.rslt.obj
     name = data.rslt.name
     position = data.rslt.position
@@ -110,8 +112,8 @@ module.exports = class InstanceAdminCategoriesController
         node.prop('id', data.id)
 
 
-  handleRename: (e, data) ->
-    last_rollback = data.rlbk
+  handleRename: (e, data) =>
+    @last_rollback = data.rlbk
     node = data.rslt.obj
     name = data.rslt.new_name
 
@@ -128,11 +130,11 @@ module.exports = class InstanceAdminCategoriesController
       error: @handleAjaxError
 
 
-  handleDelete: (e, data) ->
-    last_rollback = data.rlbk
+  handleDelete: (e, data) =>
+    @last_rollback = data.rlbk
     node = data.rslt.obj
     delete_url = @getCategoriesPath() + '/' + node.prop("id")
-    if confirm('Are you sure ?')
+    if confirm('Are you sure you want to remove this category?')
       $.ajax
         type: "POST",
         dataType: "json",
@@ -140,8 +142,8 @@ module.exports = class InstanceAdminCategoriesController
         data: {_method: "delete"},
         error: @handleAjaxError
     else
-      $.jstree.rollback(last_rollback)
-      last_rollback = null
+      $.jstree.rollback(@last_rollback)
+      @last_rollback = null
 
 
   categoryTreeMenu: (obj, context) ->

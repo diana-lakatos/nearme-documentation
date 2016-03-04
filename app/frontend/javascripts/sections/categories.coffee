@@ -6,6 +6,7 @@ module.exports = class CategoriesController
   constructor: (@container) ->
     @setupCategoriesTrees()
     @autocomplete()
+    @last_rollback = null
 
   setupCategoriesTrees: =>
     if @container.find('.tree_container').length > 0
@@ -25,7 +26,7 @@ module.exports = class CategoriesController
           category_ids: selected_categories,
           category_id: category_id
         success: (category) ->
-          last_rollback = null
+          that.last_rollback = null
 
           conf =
             json_data:
@@ -93,9 +94,10 @@ module.exports = class CategoriesController
       else
         category_tree.jstree("check_node", this)
 
-  handleAjaxError: (XMLHttpRequest, textStatus, errorThrown) ->
-    $.jstree.rollback(last_rollback)
+  handleAjaxError: (XMLHttpRequest, textStatus, errorThrown) =>
+    $.jstree.rollback(@last_rollback)
     $("#ajax_error").show().html("<strong>The server returned an error</strong><br />The requested change has not been accepted and the tree has been returned to its previous state, please try again")
+    window.Raygun.send(errorThrown, textStatus) if window.Raygun
 
   setChecboxesValues: (tree_container) ->
     category_tree = tree_container.find('.category_tree')

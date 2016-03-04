@@ -158,8 +158,6 @@ module.exports = class ImageInput
           alert("#{file.name} seems to not be an image - please select gif, jpg, jpeg or png file")
 
       done: (e, data) =>
-        @updateProcessing(-1)
-        @updateLabel()
         if @isMultiple
           @collection.append @createCollectionItem(data.result)
           @reorderSortableList()
@@ -167,6 +165,14 @@ module.exports = class ImageInput
           @updatePreview(data.result)
 
         @rebindEvents()
+
+      fail: (e, data) =>
+        window.alert('Unable to process this request, please try again.')
+        window.Raygun.send(data.errorThrown, data.textStatus) if window.Raygun
+
+      always: (e, data)=>
+        @updateProcessing(-1)
+        @updateLabel()
 
   updatePreview: (data)->
     preview = @fieldWrapper.find('.preview').empty()
