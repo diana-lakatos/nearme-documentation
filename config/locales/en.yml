@@ -2032,7 +2032,7 @@ en:
       cancelled_by_host: "Cancelled by host"
       rejected: "Rejected"
       confirmed: "Confirmed"
-      inactive: "Inactive"
+      inactive: "Payment failed"
   search:
     pricing_types:
       daily: "Daily"
