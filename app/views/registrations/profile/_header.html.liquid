@@ -7,7 +7,7 @@
     </div>
 
     <div class="span7">
-      <h1>{{user.first_name}} {% if user.public_profile? %}{{user.last_name}}{% endif %}</h1>
+      <h1>{{user.first_name | filter_text | custom_sanitize}} {% if user.public_profile? %}{{user.last_name | filter_text | custom_sanitize}}{% endif %}</h1>
       <div class="user-meta">
         {% if user.properties['job_title'] != blank %}
           <b>{{ user.properties['job_title'] | filter_text | custom_sanitize }}</b>
@@ -18,7 +18,7 @@
         {% endif %}
 
         {% if company.name != blank %}
-          <b>{{ company.name }}</b>
+          <b>{{ company.name | filter_text | custom_sanitize}}</b>
         {% endif %}
       </div>
     </div>
@@ -29,25 +29,25 @@
           <ul class="follow">
             {% if user.properties.twitter_url != blank %}
               <li class="twitter">
-                <a href="{{user.properties.twitter_url}}" rel="external"><span class="ico-twitter"> Twitter</span></a>
+                <a href="{{user.properties.twitter_url | filter_text | custom_sanitize}}" rel="external"><span class="ico-twitter"> Twitter</span></a>
               </li>
             {% endif %}
 
             {% if user.properties.facebook_url != blank %}
               <li class="facebook">
-                <a href="{{user.properties.facebook_url}}" rel="external"><span class="ico-facebook"> Facebook</span></a>
+                <a href="{{user.properties.facebook_url | filter_text | custom_sanitize}}" rel="external"><span class="ico-facebook"> Facebook</span></a>
               </li>
             {% endif %}
 
             {% if user.properties.google_plus_url != blank %}
               <li class="googleplus">
-                <a href="{{user.properties.google_plus_url}}" rel="external"><span class="ico-google-plus"> Google+</span></a>
+                <a href="{{user.properties.google_plus_url | filter_text | custom_sanitize}}" rel="external"><span class="ico-google-plus"> Google+</span></a>
               </li>
             {% endif %}
 
             {% if user.properties.linkedin_url != blank %}
               <li class="linkedin">
-                <a href="{{user.properties.linkedin_url}}" rel="external"><span class="ico-linkedin"> LinkedIn</span></a>
+                <a href="{{user.properties.linkedin_url | filter_text | custom_sanitize}}" rel="external"><span class="ico-linkedin"> LinkedIn</span></a>
               </li>
             {% endif %}
           </ul>
