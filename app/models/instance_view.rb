@@ -120,6 +120,11 @@ class InstanceView < ActiveRecord::Base
       is_current_user: 'boolean; true if logged in user is viewing user',
       company: 'CompanyDrop'
     },
+    'registrations/profile/header' => {
+      user: 'UserDrop',
+      is_current_user: 'boolean; true if logged in user is viewing user',
+      company: 'CompanyDrop'
+    },
     'listings/google_map' => {
       location: 'LocationDrop'
     },
@@ -306,6 +311,12 @@ class InstanceView < ActiveRecord::Base
     },
     'registrations/profile/tabs/transactable' => {
       'transactable': 'TransactableDrop',
+      is_partial: true
+    },
+    'registrations/profile/tabs/general' => {
+      user: 'UserDrop',
+      is_current_user: 'boolean; true if logged in user is viewing user',
+      company: 'CompanyDrop',
       is_partial: true
     },
     'buy_sell_market/products/above_cart_management' => {
