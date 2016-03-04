@@ -53,12 +53,15 @@ class DataUploadImportJobTest < ActiveSupport::TestCase
                    failure: true,
                    sync_mode: false,
                    succeeded?: true,
-                   touch: true
+                   touch: true,
+                   send_invitational_email: false
                   )
       DataUpload.stubs(:find).returns(@stub)
 
       @synchronizer = stub()
       DataImporter::NullSynchronizer.expects(:new).returns(@synchronizer)
+      @inviter = stub()
+      DataImporter::NullInviter.expects(:new).returns(@inviter)
       @validation_errors_tracker = stub(to_s: 'hello')
       DataImporter::Tracker::ValidationErrors.expects(:new).returns(@validation_errors_tracker)
       @summary_tracker = stub(new_entities: {company: 1}, updated_entities: {company: 2}, deleted_entities: {company: 3})
@@ -69,7 +72,7 @@ class DataUploadImportJobTest < ActiveSupport::TestCase
       @xml_file_stub = stub()
       @counter_stub = stub(all_objects_count: 100)
       DataImporter::XmlEntityCounter.stubs(:new).returns(@counter_stub)
-      DataImporter::XmlFile.expects(:new).with('/some/path', @transactable_type, {synchronizer: @synchronizer, trackers: @trackers }).returns(@xml_file_stub)
+      DataImporter::XmlFile.expects(:new).with('/some/path', @transactable_type, {synchronizer: @synchronizer, trackers: @trackers, inviter: @inviter }).returns(@xml_file_stub)
     end
 
     should 'store exception which has been raised' do

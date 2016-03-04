@@ -44,7 +44,7 @@
         = f.input :minimum_booking_minutes, required: false, input_html: { class: 'form-control' }
     .row
       .input-container.col-xs-12
-        = f.input :timezone_rule, collection: {'Location' => 'location', "Buyer Time Zone" => 'buyer', 'Seller Time Zone' => 'seller', 'Dafault Time Zone' => 'instance'}, required: false, input_html: { class: 'form-control' }, include_blank: false
+        = f.input :timezone_rule, collection: {'Location' => 'location', "Buyer Time Zone" => 'buyer', 'Seller Time Zone' => 'seller', 'Default Time Zone' => 'instance'}, required: false, input_html: { class: 'form-control' }, include_blank: false
 
   .content-container
     %h4= t('instance_admin.manage.offer_types.terminology')

@@ -567,4 +567,18 @@ DNM.registerInitializer(function(){
     });
 });
 
+DNM.registerInitializer(function(){
+    $(document).on('init:mobileNumberForm.nearme', function() {
+        var container = $('div[data-phone-fields-container]');
+
+        require.ensure(['./new_ui/modules/phone_numbers', './new_ui/forms/selects'], function(require){
+            var PhoneNumbers = require('./new_ui/modules/phone_numbers'),
+                customSelects = require('./new_ui/forms/selects');
+
+            customSelects(container);
+            return new PhoneNumbers(container);
+        });
+    })
+});
+
 DNM.run();

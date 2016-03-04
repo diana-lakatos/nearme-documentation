@@ -9,13 +9,13 @@
   <dl>
     {% if user.country_name != blank %}
       <dt>{{ 'user_profile.labels.properties.country' | translate }}</dt>
-      <dd>{{ user.country_name }}</dd>
+      <dd>{{ user.country_name | filter_text | custom_sanitize }}</dd>
     {% endif %}
 
     {% if user.public_profile? %}
       {% if user.phone != blank and user.phone != user.mobile_number %}
         <dt>{{ 'user_profile.labels.properties.phone' | translate }}</dt>
-        <dd>{{ user.phone }}</dd>
+        <dd>{{ user.phone | filter_text | custom_sanitize  }}</dd>
       {% endif %}
       {% if user.mobile_number != blank %}
         <dt>{{ 'user_profile.labels.properties.mobile_number' | translate }}</dt>
@@ -25,12 +25,12 @@
 
     {% if user.properties.skills_and_interests != blank %}
       <dt>{{ 'user_profile.labels.properties.skills_and_interests' | translate }}</dt>
-      <dd>{{ user.properties.skills_and_interests }}</dd>
+      <dd>{{ user.properties.skills_and_interests | filter_text | custom_sanitize }}</dd>
     {% endif %}
 
     {% if user.properties.biography != blank %}
       <dt>{{ 'user_profile.labels.properties.biography' | translate }}</dt>
-      <dd>{{ user.properties.biography }}</dd>
+      <dd>{{ user.properties.biography | filter_text | custom_sanitize  }}</dd>
     {% endif %}
   </dl>
 </section>
@@ -46,21 +46,21 @@
 
     <dl>
       <dt>{{ 'user_profile.labels.company.name' | translate }}</dt>
-      <dd>{{ company.name }}</dd>
+      <dd>{{ company.name | filter_text | custom_sanitize }}</dd>
 
       {% if company.country != blank %}
         <dt>{{ 'user_profile.labels.company.country' | translate }}</dt>
-        <dd>{{ company.country }}</dd>
+        <dd>{{ company.country | filter_text | custom_sanitize }}</dd>
       {% endif %}
 
       {% if company.url != blank %}
         <dt>{{ 'user_profile.labels.company.url' | translate }}</dt>
-        <dd><a href="{{ company.url }}" rel="external">{{ company.url }}</a></dd>
+        <dd><a href="{{ company.url | filter_text | custom_sanitize }}" rel="external">{{ company.url | filter_text | custom_sanitize }}</a></dd>
       {% endif %}
 
       {% if company.description != blank %}
         <dt>{{ 'user_profile.labels.company.description' | translate }}</dt>
-        <dd>{{ company.description }}</dd>
+        <dd>{{ company.description | filter_text | custom_sanitize }}</dd>
       {% endif %}
     </dl>
   </section>

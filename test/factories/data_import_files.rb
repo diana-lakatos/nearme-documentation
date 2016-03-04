@@ -43,7 +43,7 @@ FactoryGirl.define do
 
     factory :xml_template_file_send_invitations  do
       initialize_with do
-        new(Rails.root.join('test', 'assets', 'data_importer', 'xml', 'xml_template_file.xml'), FactoryGirl.create(:transactable_type_csv_template), { send_invitational_email: true })
+        new(Rails.root.join('test', 'assets', 'data_importer', 'xml', 'xml_template_file.xml'), FactoryGirl.create(:transactable_type_csv_template), { inviter: DataImporter::Inviter.new })
       end
     end
 

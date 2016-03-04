@@ -9,7 +9,7 @@ class DataImporter::XmlFile < DataImporter::File
     @new_users_emails = {}
     @location_types = {}
     @synchronizer = options.fetch(:synchronizer, DataImporter::NullSynchronizer.new)
-    @send_invitations = options.fetch(:send_invitational_email, false)
+    @inviter = options.fetch(:inviter, DataImporter::NullInviter.new)
     @enable_rfq = options.fetch(:enable_rfq, false)
     @trackers = options.fetch(:trackers, [])
   end
@@ -29,7 +29,7 @@ class DataImporter::XmlFile < DataImporter::File
         end
       end
     end
-    send_invitation_emails if @send_invitations
+    @inviter.send_invitation_emails(@new_users_emails)
   end
 
   def parse_instance
@@ -278,12 +278,6 @@ class DataImporter::XmlFile < DataImporter::File
         attributes[attribute] = node.xpath(attribute.to_s).text unless :location_type == attribute.to_sym || node.xpath(attribute.to_s).text.blank?
       end
       attributes
-    end
-  end
-
-  def send_invitation_emails
-    @new_users_emails.each do |email, password|
-      WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::CreatedViaBulkUploader, User.find_by_email(email).id, password)
     end
   end
 

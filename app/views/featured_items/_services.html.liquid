@@ -1,0 +1,15 @@
+<div class="item span3">
+	<div class="item-image">
+		<img src="{{ item.photo_url }}" />
+	</div>
+	<span class="item-title">{{ item.name }}</span>
+	{% if item.name.size < 200 %}
+		<span class="item-description">{{ item.description | truncate:200 }}</span>
+	{% endif %}
+
+	<span class="item-price">{{ item.from_money_period }}</span>
+
+	<a href="{{ item.url }}" class="btn btn-blue">
+		{{ "featured_items.view_item" | translate: item_type_name: item.transactable_type.name }}
+	</a>
+</div>
