@@ -36,7 +36,13 @@ class Schedule < ActiveRecord::Base
         super
       else
         IceCube::Schedule.from_hash(JSON.parse(super || '{}'))
-      end.tap { |s| s.start_time = Time.zone.now if self.schedule_rules.count > 0 }
+      end.tap do |s|
+        if self.schedule_rules.count > 0
+          s.start_time = Time.zone.now
+          # We add the start time as an exception otherwise we'd always get the start time
+          s.add_exception_time(s.start_time)
+        end
+      end
     end
   end
 
