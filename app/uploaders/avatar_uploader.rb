@@ -65,9 +65,7 @@ class AvatarUploader < BaseUploader
 
 
   def default_url(*args)
-    current_version = (version_name && self.dimensions[version_name]) ? version_name : :big
-    Placeholder.new(height: self.dimensions[current_version][:height],
-                    width:  self.dimensions[current_version][:width]).path
+    ActionController::Base.helpers.image_url('default-user-avatar.svg')
   end
 
   def clean_model
