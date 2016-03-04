@@ -48,6 +48,7 @@ class PaymentGateway < ActiveRecord::Base
 
   accepts_nested_attributes_for :payment_methods, :reject_if => :all_blank
 
+  validates :type, presence: true
   validates :payment_countries, presence: true, if: Proc.new { |p| p.active? }
   validates :payment_currencies, presence: true, if: Proc.new { |p| p.active? }
   validates :payment_methods, presence: true, if: Proc.new { |p| p.active? && !p.supports_payout?}
@@ -137,7 +138,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def self.settings
-    raise NotImplementedError.new("#{self.name} settings not implemented")
+    {}
   end
 
   def self.active_merchant_class
