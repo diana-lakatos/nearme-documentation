@@ -2,6 +2,8 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
   before_filter :redirect_to_login, only: [:new]
   skip_before_filter :authenticate_user!, only: [:new]
 
+  before_filter :missing_phone_number, only: [:new], unless: Proc.new { params[:skip] || current_user.mobile_number.present? }
+
   helper_method :user_messages_decorator
 
   def index
@@ -83,5 +85,12 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
 
   def message_params
     params.require(:user_message).permit(secured_params.user_message)
+  end
+
+  def missing_phone_number
+    @country = current_user.country_name
+    @return_path = new_listing_user_message_path(params[:listing_id], skip: true)
+
+    render :missing_phone_number
   end
 end
