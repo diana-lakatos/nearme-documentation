@@ -1,7 +1,7 @@
 class InstanceAdmin::Manage::ServiceTypesController < InstanceAdmin::Manage::TransactableTypesController
 
   def create
-    @service_type = ServiceType.new(service_type_params.merge(
+    @service_type = ServiceType.new(transactable_type_params.merge(
       buyable: false,
       availability_options: { "defer_availability_rules" => true, "confirm_reservations" => { "default_value" => true, "public" => true } }
     ))
