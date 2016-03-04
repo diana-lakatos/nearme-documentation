@@ -721,8 +721,8 @@ ActiveRecord::Schema.define(version: 20160302171433) do
     t.datetime "updated_at",           null: false
   end
 
+  add_index "deposits", ["instance_id", "target_id", "target_type"], name: "index_deposits_on_instance_id_and_target_id_and_target_type", using: :btree
   add_index "deposits", ["instance_id"], name: "index_deposits_on_instance_id", using: :btree
-  add_index "deposits", ["instance_id" ,"target_id", "target_type"], name: "index_deposits_on_instance_id_and_target_id_and_target_type", using: :btree
 
   create_table "dimensions_templates", force: :cascade do |t|
     t.string   "name",            limit: 255

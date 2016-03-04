@@ -66,7 +66,7 @@ class ListingsController < ApplicationController
 
   def find_transactable_type
     @transactable_type = @listing.transactable_type
-    if params[:transactable_type_id].present? && (params[:transactable_type_id] != @transactable_type.slug || params[:transactable_type_id].to_i != @transactable_type.id)
+    if params[:transactable_type_id].present? && !(params[:transactable_type_id] == @transactable_type.slug || params[:transactable_type_id].to_i == @transactable_type.id)
       redirect_to @listing.show_path, status: 301
     end
   end
