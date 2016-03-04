@@ -92,8 +92,7 @@ class Transactable < ActiveRecord::Base
   after_destroy :close_request_for_quotes
 
   # == Scopes
-  scope :featured, -> { where(%{ (select count(*) from "photos" where owner_type LIKE 'Transactable' AND owner_id = "listings".id) > 0  }).
-                        includes(:photos).order(%{ random() }).limit(5) }
+  scope :featured, -> { where(featured: true) }
   scope :draft, -> { where('transactables.draft IS NOT NULL') }
   scope :active, -> { where('transactables.draft IS NULL') }
   scope :latest, -> { order("transactables.created_at DESC") }

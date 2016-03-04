@@ -465,7 +465,6 @@ module ApplicationHelper
     request.protocol + platform_context.host + request.fullpath
   end
 
-
   def is_required?(object, fields)
     object.try(:validation_for, fields).try(:any?, &:is_required?)
   end
@@ -487,5 +486,9 @@ module ApplicationHelper
   def webpack_manifest_script
     return '' unless Rails.configuration.webpack[:use_manifest]
     javascript_tag "(function(){ window.webpackBundleManifest = #{Rails.configuration.webpack[:common_manifest].to_json}; }());"
+  end
+  
+  def render_featured_items
+    render(partial: @partial_name, collection: @collection, as: :item)
   end
 end

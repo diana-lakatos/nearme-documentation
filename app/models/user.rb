@@ -204,6 +204,7 @@ class User < ActiveRecord::Base
   scope :not_admin, -> { where("admin iS NULL") }
   scope :with_joined_project_collaborations, -> { joins("LEFT OUTER JOIN project_collaborators pc ON users.id = pc.user_id AND (pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)")}
   scope :created_projects, -> { joins('LEFT OUTER JOIN projects p ON users.id = p.creator_id') }
+  scope :featured, -> { where(featured: true) }
 
   scope :by_topic, -> (topic_ids) do
     if topic_ids.present?
@@ -252,19 +253,6 @@ class User < ActiveRecord::Base
     # FIND undeleted users first (for example for find_by_email finds)
     def with_deleted
       super.order('deleted_at IS NOT NULL, deleted_at DESC')
-    end
-
-    def filtered_by_role(values)
-      if values.present? && 'Other'.in?(values)
-        role_attribute = PlatformContext.current.instance.default_profile_type.custom_attributes.find_by(name: 'role')
-        values += role_attribute.valid_values.reject { |val| val =~ /Featured|Innovator|Black Belt/i }
-      end
-
-      if values.present? && values.include?("Featured")
-        featured
-      else
-        filtered_by_custom_attribute('role', values)
-      end
     end
 
     def xml_attributes
@@ -332,7 +320,6 @@ class User < ActiveRecord::Base
           all
       end
     end
-
   end
 
   def get_seller_profile

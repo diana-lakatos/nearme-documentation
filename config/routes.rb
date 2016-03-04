@@ -901,6 +901,7 @@ DesksnearMe::Application.routes.draw do
 
     end #end /dashboard namespace
 
+    resources :featured_items, only: :index
     resources :tags, only: :index
 
     resources :reservations do

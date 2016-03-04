@@ -2488,3 +2488,7 @@ en:
     photo_uploader:
       caption: "Enter caption..."
 
+  featured_items:
+    member_since: 'Member since %{date}'
+    view_item: 'View %{item_type_name}'
+

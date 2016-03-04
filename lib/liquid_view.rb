@@ -17,7 +17,9 @@ class LiquidView
   Liquid::Template.register_tag('product_type_select', ProductTypeSelectTag)
   Liquid::Template.register_tag('service_type_select', ServiceTypeSelectTag)
   Liquid::Template.register_tag('transactable_type_select', TransactableTypeSelectTag)
-  
+  Liquid::Template.register_tag('featured_items', FeaturedItemsTag)
+  Liquid::Template.register_tag('render_featured_items', RenderFeaturedItemsTag)
+
   def self.call(template)
     "LiquidView.new(self).render(#{template.source.inspect}, local_assigns)"
   end

@@ -354,10 +354,13 @@ class UserDrop < BaseDrop
     social_connections.where(provider: 'linkedin').exists?
   end
 
-  private
-
-  def social_connections
-    @social_connections_cache ||= @user.social_connections
+  def member_since
+    I18n.l(@user.created_at.to_date, format: :short)
   end
+
+  private
+    def social_connections
+      @social_connections_cache ||= @user.social_connections
+    end
 
 end

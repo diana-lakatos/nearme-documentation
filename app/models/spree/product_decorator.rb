@@ -35,6 +35,7 @@ Spree::Product.class_eval do
   delegate :custom_validators, to: :product_type
 
   scope :approved, -> { where(approved: true) }
+  scope :featured, -> { where(featured: true) }
   scope :draft, -> { where(draft: true) }
   scope :not_draft, -> { where(draft: false) }
   scope :currently_available, -> { not_draft.where("(#{Spree::Product.quoted_table_name}.available_on <= ? OR #{Spree::Product.quoted_table_name}.available_on IS NULL)", Time.zone.now) }
