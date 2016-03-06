@@ -62,7 +62,11 @@ class InstanceAdmin::Manage::CategoriesController < InstanceAdmin::Manage::BaseC
     @category = Category.find(params[:id])
     @category.destroy
     flash[:success] = t 'flash_messages.instance_admin.manage.category.deleted'
-    redirect_to instance_admin_manage_categories_path
+    if request.xhr?
+      render json: { success: true }
+    else
+      redirect_to instance_admin_manage_categories_path
+    end
   end
 
   private

@@ -66,7 +66,9 @@ class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceControll
     @form_component = @form_componentable.form_components.find(params[:id])
     @form_component.update_attribute(:rank_position, params[:rank_position])
     respond_to do |format|
-      format.json { head :ok }
+      format.json {
+        render :json => { :success => true }
+      }
     end
 
   end

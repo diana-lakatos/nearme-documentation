@@ -47,8 +47,11 @@ class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin
   def destroy
     @shipping_category = Spree::ShippingCategory.system_profiles.find(params[:id])
     @shipping_category.destroy
-
-    redirect_to instance_admin_shipping_options_shipping_profiles_path
+    if request.xhr?
+      render json: { success: true }
+    else
+      redirect_to instance_admin_shipping_options_shipping_profiles_path
+    end
   end
 
   def get_shipping_categories_list
