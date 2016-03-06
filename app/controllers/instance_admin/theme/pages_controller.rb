@@ -26,7 +26,6 @@ class InstanceAdmin::Theme::PagesController < InstanceAdmin::Theme::BaseControll
   end
 
   def update
-    @page = Page.find_by(slug: Page.possible_slugs(params[:id], params[:format]))
     update! do |format|
       format.html do
         redirect_to action: 'index'
