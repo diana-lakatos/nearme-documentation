@@ -1,16 +1,13 @@
-<style id="dynamic-stylesheet" data-stylesheet="application">
 <%
-  theme = PlatformContext.current.theme
-
   # colors
 
-  theme_blue   = theme.hex_color(:blue) || '#5dbded'
-  theme_red    = theme.hex_color(:red) || '#e85c41'
-  theme_orange = theme.hex_color(:orange) || '#ffc840'
-  theme_green  = theme.hex_color(:green) || '#5dc988'
-  theme_gray   = theme.hex_color(:gray) || '#b6b6b6'
-  theme_black  = theme.hex_color(:black) || '#353535'
-  theme_white  = theme.hex_color(:white) || '#ffffff'
+  theme_blue   = @theme.hex_color(:blue) || '#5dbded'
+  theme_red    = @theme.hex_color(:red) || '#e85c41'
+  theme_orange = @theme.hex_color(:orange) || '#ffc840'
+  theme_green  = @theme.hex_color(:green) || '#5dc988'
+  theme_gray   = @theme.hex_color(:gray) || '#b6b6b6'
+  theme_black  = @theme.hex_color(:black) || '#353535'
+  theme_white  = @theme.hex_color(:white) || '#ffffff'
 
   # logos
 
@@ -26,15 +23,15 @@
   theme_icon_retina_width = 60
   theme_icon_retina_height = 30
 
-  theme_hero = theme.hero_image.url(:transformed) || image_url("theme/#{theme_name}/hero.jpg")
-  theme_icon = theme.icon_image.url(:transformed) || image_url("theme/#{theme_name}/logo/icon.png")
-  theme_icon2x = theme.icon_retina_image.url(:transformed) || image_url("theme/#{theme_name}/logo/icon@2x.png")
-  theme_logo = theme.logo_image.url(:transformed) || image_url("theme/#{theme_name}/logo/logo.png")
-  theme_logo2x = theme.logo_retina_image.url(:transformed) || image_url("theme/#{theme_name}/logo/logo@2x.png")
+  theme_hero = @theme.hero_image.url(:transformed) || image_url("theme/#{theme_name}/hero.jpg")
+  theme_icon = @theme.icon_image.url(:transformed) || image_url("theme/#{theme_name}/logo/icon.png")
+  theme_icon2x = @theme.icon_retina_image.url(:transformed) || image_url("theme/#{theme_name}/logo/icon@2x.png")
+  theme_logo = @theme.logo_image.url(:transformed) || image_url("theme/#{theme_name}/logo/logo.png")
+  theme_logo2x = @theme.logo_retina_image.url(:transformed) || image_url("theme/#{theme_name}/logo/logo@2x.png")
 
   default_logo_height = 30.0
-  if theme.logo_image.present?
-    logo_dimensions = theme.logo_image.original_dimensions
+  if @theme.logo_image.present?
+    logo_dimensions = @theme.logo_image.original_dimensions
     if logo_dimensions.any? && logo_dimensions[1] > default_logo_height
       theme_logo_height = default_logo_height.to_i
       scale_factor = default_logo_height / logo_dimensions[1]
@@ -46,8 +43,8 @@
   end
 
   default_icon_height = default_logo_height
-  if theme.icon_image.present?
-    icon_dimensions = theme.icon_image.original_dimensions
+  if @theme.icon_image.present?
+    icon_dimensions = @theme.icon_image.original_dimensions
     if icon_dimensions.any? && icon_dimensions[1] > default_icon_height
       theme_icon_height = default_icon_height.to_i
       scale_factor = default_icon_height / icon_dimensions[1]
@@ -59,8 +56,8 @@
   end
 
   default_logo_retina_height = 30.0
-  if theme.logo_retina_image.present?
-    logo_dimensions = theme.logo_retina_image.original_dimensions.map{|d| d.to_i / 2}
+  if @theme.logo_retina_image.present?
+    logo_dimensions = @theme.logo_retina_image.original_dimensions.map{|d| d.to_i / 2}
     if logo_dimensions.any? && logo_dimensions[1] > default_logo_retina_height
       theme_logo_retina_height = default_logo_retina_height.to_i
       scale_factor = default_logo_retina_height / logo_dimensions[1]
@@ -72,8 +69,8 @@
   end
 
   default_icon_retina_height = default_logo_retina_height
-  if theme.icon_retina_image.present?
-    icon_dimensions = theme.icon_retina_image.original_dimensions.map{|d| d.to_i / 2}
+  if @theme.icon_retina_image.present?
+    icon_dimensions = @theme.icon_retina_image.original_dimensions.map{|d| d.to_i / 2}
     if icon_dimensions.any? && icon_dimensions[1] > default_icon_retina_height
       theme_icon_retina_height = default_icon_retina_height.to_i
       scale_factor = default_icon_retina_height / icon_dimensions[1]
@@ -91,16 +88,16 @@
   font[:medium] =  "'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif".html_safe
   font[:bold] = "'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif".html_safe
 
-  if theme.theme_font.present?
+  if @theme.theme_font.present?
     ThemeFont::FONT_TYPES.map do |font_type|
       %>
         @font-face {
           font-family: "font_<%= font_type %>";
-          src: url(<%= theme.theme_font.send("#{font_type}_eot") %>);
-          src: url(<%= theme.theme_font.send("#{font_type}_eot") %>?#iefix) format('eot'),
-               url(<%= theme.theme_font.send("#{font_type}_woff") %>) format('woff'),
-               url(<%= theme.theme_font.send("#{font_type}_ttf") %>) format('truetype'),
-               url(<%= theme.theme_font.send("#{font_type}_svg") %>) format('svg');
+          src: url(<%= @theme.theme_font.send("#{font_type}_eot") %>);
+          src: url(<%= @theme.theme_font.send("#{font_type}_eot") %>?#iefix) format('eot'),
+               url(<%= @theme.theme_font.send("#{font_type}_woff") %>) format('woff'),
+               url(<%= @theme.theme_font.send("#{font_type}_ttf") %>) format('truetype'),
+               url(<%= @theme.theme_font.send("#{font_type}_svg") %>) format('svg');
 
           <% if font_type == 'regular' %>
           font-weight: normal;
@@ -769,4 +766,3 @@ body.user-blog .container-fluid.header-container span.blog-header {
 .user-blog .blog-container .blog-post-detail .links .next-blog-post {
     color: <%= theme_white %>
 }
-</style>

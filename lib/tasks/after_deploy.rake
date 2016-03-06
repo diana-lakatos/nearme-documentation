@@ -27,6 +27,9 @@ namespace :after_deploy do
 
     puts "Notifying Raygun about deployment"
     RaygunDeployNotifier.send!
+
+    puts "Refreshing themes"
+    Theme.refresh_all!
   end
 
 end
