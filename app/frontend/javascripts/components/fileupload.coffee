@@ -59,13 +59,19 @@ module.exports = class Fileupload
           progress = parseInt(data.loaded / data.total * 100, 10)
           data.progressBar.find('div[data-progress-bar]').css('width', progress + '%')
       done: (e, data) =>
-        @processing -= 1
-        data.progressBar.remove()
         if @upload_type == 'attachment'
           @fileInputWrapper.parent().find('[data-uploaded]').html(data.result)
         else
           fileIndex = @fileCollection.add()
           @fileCollection.update(fileIndex, data.result, @append_result)
+
+      fail: (e, data) =>
+        window.alert('Unable to process this request, please try again.')
+        window.Raygun.send(data.errorThrown, data.textStatus) if window.Raygun
+
+      always: (e, data)=>
+        @processing -= 1
+        data.progressBar.remove()
 
   preventEarlySubmission: ->
     @fileInputWrapper.parents('form').on 'submit', =>

@@ -632,7 +632,7 @@
 			open_node	: function (obj, callback, skip_animation) {
 				obj = this._get_node(obj);
 				if(!obj.length) { return false; }
-				if(!obj.hasClass("jstree-closed")) { if(callback) { callback.call(); } return false; }
+				if(!obj.hasClass("jstree-closed")) { if(typeof callback === 'function') { callback.call(); } return false; }
 				var s = skip_animation || is_ie6 ? 0 : this._get_settings().core.animation,
 					t = this;
 				if(!this._is_loaded(obj)) {
@@ -1737,7 +1737,8 @@
 							else {
 								if(t === "success" && s.correct_state) { this.get_container().children("ul").empty(); }
 							}
-							if(e_call) { e_call.call(this); }
+
+							if(typeof e_call === 'function') { e_call.call(this); }
 						};
 						success_func = function (d, t, x) {
 							var sf = this.get_settings().json_data.ajax.success;

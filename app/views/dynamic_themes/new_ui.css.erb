@@ -1,13 +1,10 @@
-<style id="dynamic-stylesheet" data-stylesheet="newui">
 <%
-  theme = PlatformContext.current.theme
-
   # colors
 
-  theme_blue   = theme.hex_color(:blue) || '#239ed9'
-  theme_orange = theme.hex_color(:orange) || '#e45d51'
-  theme_red    = theme.hex_color(:red) || '#e45d51'
-  theme_green  = theme.hex_color(:green) || '#157a49'
+  theme_blue   = @theme.hex_color(:blue) || '#239ed9'
+  theme_orange = @theme.hex_color(:orange) || '#e45d51'
+  theme_red    = @theme.hex_color(:red) || '#e45d51'
+  theme_green  = @theme.hex_color(:green) || '#157a49'
 
 %>
 
@@ -590,4 +587,3 @@ fieldset:first-child > legend { border: none; }
 .rfq-status-a .resolved:before { color: #5cb85c; }
 .rfq-attachment-trigger.uploading { background: <%= theme_blue %>; }
 .rfq-attachment-trigger.uploading span { color: #fff; }
-</style>
