@@ -11,6 +11,7 @@ class Theme < ActiveRecord::Base
   # TODO: We may want the ability to have multiple themes, and draft states,
   #       etc.
   belongs_to :owner, :polymorphic => true
+  belongs_to :instance
   has_many :pages, :dependent => :destroy
   has_many :content_holders, :dependent => :destroy
   has_one :theme_font, :dependent => :destroy
@@ -64,21 +65,6 @@ class Theme < ActiveRecord::Base
 
   def to_liquid
     @theme_drop ||= ThemeDrop.new(self)
-  end
-
-  def instance
-    @instance ||= begin
-      case owner_type
-      when "Instance"
-        owner
-      when "Company"
-        (owner || Company.with_deleted.where(id: owner_id).first).try(:instance)
-      when "Partner"
-        owner.try(:instance)
-      else
-        raise "Unknown owner #{owner_type}"
-      end
-    end
   end
 
   def is_company_theme?
