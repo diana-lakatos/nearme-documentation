@@ -35,6 +35,7 @@ class ApprovalRequest < ActiveRecord::Base
   accepts_nested_attributes_for :approval_request_attachments, reject_if: lambda { |params| params[:file].nil? && params[:file_cache].nil? }
 
   validates_presence_of :message, if: lambda { |ar| ar.required_written_verification }
+  validate :validate_presence_of_attachments
 
   def set_defaults
     self.state = 'pending'
@@ -91,5 +92,21 @@ class ApprovalRequest < ActiveRecord::Base
   def notify_owner_of_question
     owner.approval_request_questioned!(self.id) if owner.respond_to?(:approval_request_questioned!)
   end
+
+  private
+
+  def validate_presence_of_attachments
+    if self.approval_request_template.present?
+      self.approval_request_template.approval_request_attachment_templates.each do |arat|
+        if arat.required?
+          ara = self.approval_request_attachments.find { |ara| ara.approval_request_attachment_template_id == arat.id }
+          if ara.blank?
+            self.errors.add(:attachments, I18n.t('approval_request_attachments.attachments_are_missing'))
+          end
+        end
+      end
+    end
+  end
+
 end
 
