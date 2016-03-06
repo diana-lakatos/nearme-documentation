@@ -70,9 +70,15 @@ module.exports = class AttachmentInput
         @updateLabel()
         data.submit()
       done: (e, data) =>
+        @createItem(data.result)
+
+      fail: (e, data) =>
+        window.alert('Unable to process this request, please try again.')
+        window.Raygun.send(data.errorThrown, data.textStatus) if window.Raygun
+
+      always: (e, data)=>
         @processing -= 1
         @updateLabel()
-        @createItem(data.result)
 
   createItem: (html)->
     item = $(html)

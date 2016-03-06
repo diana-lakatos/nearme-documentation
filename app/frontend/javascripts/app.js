@@ -3,6 +3,12 @@
 require('expose?jQuery|expose?$!jquery');
 require('jquery-ujs/src/rails');
 
+$( document ).ajaxError(function( event, jqxhr, settings, errorThrown ) {
+    if (window.Raygun) {
+        window.Raygun.send(jqxhr.statusText, "Data: " + settings.data + "\n\n" + jqxhr.responseText);
+    }
+});
+
 module.exports = {
     initializers: [],
     callbacks: {

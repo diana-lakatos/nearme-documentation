@@ -36,7 +36,11 @@ class InstanceAdmin::BuySell::TaxCategoriesController < InstanceAdmin::BuySell::
     @tax_category = tax_category_scope.find(params[:id])
     @tax_category.destroy
     flash[:success] = t('flash_messages.buy_sell.tax_category_deleted')
-    redirect_to instance_admin_buy_sell_tax_categories_path
+    if request.xhr?
+      render json: { success: true }
+    else
+      redirect_to instance_admin_buy_sell_tax_categories_path
+    end
   end
 
   private

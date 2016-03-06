@@ -45,13 +45,20 @@ module.exports = class Fileupload
           else
             alert("#{file.name} seems to not be an image - please select gif, jpg, jpeg or png file")
       done: (e, data) =>
-        @processing -= 1
-        @updateLabel()
         if @upload_type == 'attachment'
           @fileInputWrapper.parent().find('[data-uploaded]').html(data.result)
         else
           fileIndex = @fileCollection.add()
           @fileCollection.update(fileIndex, data.result)
+
+      fail: (e, data) =>
+        window.alert('Unable to process this request, please try again.')
+        window.Raygun.send(data.errorThrown, data.textStatus) if window.Raygun
+
+      always: (e, data)=>
+        @processing -= 1
+        @updateLabel()
+
 
   updateLabel: ->
     defaultLabel = if @fileInput.is('[multiple]') then 'Add photo' else 'Upload photo'

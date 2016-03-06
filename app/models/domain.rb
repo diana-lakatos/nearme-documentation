@@ -34,6 +34,7 @@ class Domain < ActiveRecord::Base
   end
 
   belongs_to :target, polymorphic: true, touch: true
+  belongs_to :instance
 
   before_validation lambda { self.name = self.name.try(:strip) }
 
