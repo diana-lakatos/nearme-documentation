@@ -44,7 +44,8 @@
     = stylesheet_link_tag 'application'
     = render 'shared/head/fonts'
 
-    = stylesheet_link_tag dynamic_theme_url('application')
+    %style
+      = render 'dynamic_themes/application'
 
     = render 'shared/javascripts/header'
 
