@@ -967,6 +967,14 @@ class User < ActiveRecord::Base
     activity_feed_subscriptions.where(followed: object).destroy_all
   end
 
+  def payout_payment_gateway
+    if @payment_gateway.nil?
+      currency = self.listings.first.try(:currency).presence || 'USD'
+      @payment_gateway = instance.payout_gateway(self.country.try(:iso), currency)
+    end
+    @payment_gateway
+  end
+
 private
 
   def get_first_name_from_name
