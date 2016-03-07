@@ -384,3 +384,7 @@ ul.expandables { margin-bottom: 0px; min-height: 330px; }
     .slide-content h1 { font-size:30px; }
 }
 
+abbr[title], abbr[data-original-title] {
+  border-bottom: 0 none !important;
+}
+

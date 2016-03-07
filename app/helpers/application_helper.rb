@@ -488,13 +488,13 @@ module ApplicationHelper
     javascript_tag "(function(){ window.webpackBundleManifest = #{Rails.configuration.webpack[:common_manifest].to_json}; }());"
   end
 
+  def render_featured_items
+    render(partial: @partial_name, collection: @collection, as: :item)
+  end
+
   def dynamic_theme_url(stylesheet)
     theme = PlatformContext.current.theme
     "#{Rails.application.config.asset_host}#{dynamic_theme_path(theme_id: theme.id, updated_at: theme.updated_at.to_formatted_s(:number), stylesheet: stylesheet)}"
-  end
-
-  def render_featured_items
-    render(partial: @partial_name, collection: @collection, as: :item)
   end
 
 end
