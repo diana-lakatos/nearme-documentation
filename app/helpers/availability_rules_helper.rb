@@ -105,4 +105,15 @@ module AvailabilityRulesHelper
     sentence.to_sentence.html_safe
   end
 
+  def pretty_time_from_hour_and_minute(hour_part, minute_part)
+    hour = (hour_part > 12 ? hour_part - 12 : hour_part)
+    minutes = minute_part.to_s.rjust(2, '0')
+    ordinal = (hour_part > 12 ? 'pm' : 'am')
+    I18n.l(DateTime.parse("#{hour}:#{minutes}#{ordinal}"), format: :short)
+  end
+
+  def pretty_availability_rule_time(rule)
+    "#{pretty_time_from_hour_and_minute(rule.open_hour, rule.open_minute)}&ndash;#{pretty_time_from_hour_and_minute(rule.close_hour, rule.close_minute)}"
+  end
+
 end

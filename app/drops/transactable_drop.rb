@@ -126,6 +126,63 @@ class TransactableDrop < BaseDrop
     pretty_availability_sentence(@transactable.availability).to_s
   end
 
+  # availability by days
+  def availability_by_days
+    days = {}
+
+    if @transactable.availability.present?
+      @transactable.availability.rules.each do |rule|
+        rule.days.each do |day|
+          days[day] ||= []
+
+          days[day] << [rule.open_hour, rule.close_hour, pretty_availability_rule_time(rule)]
+        end
+      end
+    end
+
+    days.each do |day, value|
+      days[day].sort! { |time1, time2| time1[0] <=> time2[0] }
+    end
+
+    sorted_days = days.sort do |d1,d2|
+      if d1[0] != 0 && d2[0] != 0
+        d1[0] <=> d2[0]
+      elsif d1[0] == 0
+        +1
+      else
+        -1
+      end
+    end
+
+    sorted_days.map { |day| [Date::ABBR_DAYNAMES[day[0]], day[1]] }
+  end
+
+  # available days
+  def available_days
+    days = {}
+    (0..6).each { |day| days[day] = false }
+
+    if @transactable.availability.present?
+      @transactable.availability.rules.each do |rule|
+        rule.days.each do |day|
+          days[day] = true
+        end
+      end
+    end
+
+    sorted_days = days.sort do |d1,d2|
+      if d1[0] != 0 && d2[0] != 0
+        d1[0] <=> d2[0]
+      elsif d1[0] == 0
+        +1
+      else
+        -1
+      end
+    end
+
+    sorted_days.map { |day| [Date::ABBR_DAYNAMES[day[0]], day[1]] }
+  end
+
   # url to the dashboard area for managing received bookings
   def manage_guests_dashboard_url
     routes.dashboard_company_host_reservations_path(token_key => @transactable.administrator.try(:temporary_token))
