@@ -492,7 +492,7 @@ module ApplicationHelper
     render(partial: @partial_name, collection: @collection, as: :item)
   end
 
-  def dynamic_theme_url(stylesheet)
+  def dynamic_theme_path_for_current_theme(stylesheet)
     theme = PlatformContext.current.theme
     dynamic_theme_path(theme_id: theme.id, updated_at: theme.updated_at.to_formatted_s(:number), stylesheet: stylesheet)
   end
