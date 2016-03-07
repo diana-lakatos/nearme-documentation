@@ -12,7 +12,8 @@
     = stylesheet_link_tag 'new_ui'
     = render 'shared/head/fonts'
 
-    = stylesheet_link_tag dynamic_theme_url('new_ui')
+    %style
+      = render 'dynamic_themes/new_ui'
 
     / Prefetch
     = render 'layouts/content_holder_injector'
