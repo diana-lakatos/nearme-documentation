@@ -2,7 +2,7 @@
   .panel
     .panel-body
       = f.input :enabled, as: :switch
-      = f.input :name
+      = f.input :name, required: true
       .row
         .col-md-6
           = f.input :header_logo, as: :image, delete_url: delete_image_dashboard_blog_path(:image_type => :header_logo)
