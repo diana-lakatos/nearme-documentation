@@ -191,6 +191,13 @@ DNM.registerInitializer(function(){
         });
     }
 
+    if (main.find('.content-container.reports').length > 0) {
+        require.ensure('./instance_admin/sections/listings', function(require){
+            var InstanceAdminListingsController = require('./instance_admin/sections/listings');
+            new InstanceAdminListingsController(main);
+        });
+    }
+
     if (main.hasClass('users') || main.hasClass('projects')) {
         require.ensure('./instance_admin/sections/users', function(require){
             var InstanceAdminUsersController = require('./instance_admin/sections/users');

@@ -1,4 +1,4 @@
-= simple_form_for resource, url: upload_data_instance_admin_manage_product_type_path(resource), method: :post, :html => { :multipart => true} do |f|
+= simple_form_for resource, url: [:upload_data, :instance_admin, @controller_namespace, resource], method: :post, :html => { :multipart => true} do |f|
   .row-fluid
     .controls.controls-row
       = f.input :temporary_csv_file, as: :file, label: 'CSV File', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }

@@ -25,6 +25,10 @@
       .row
         .input-container.col-xs-12
           = f.association :project_types
+    - if OfferType.count > 0
+      .row
+        .input-container.col-xs-12
+          = f.association :offer_types
     .row
       .input-container.col-xs-12
         = f.association :instance_profile_types

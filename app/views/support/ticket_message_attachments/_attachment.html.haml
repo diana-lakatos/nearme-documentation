@@ -4,13 +4,13 @@
     .name.pull-left
       = link_to ticket_message_attachment.read_attribute(:file), ticket_message_attachment.file.url, target: '_blank'
     .tag.pull-left
-      = ticket_message_attachment.tag
+      = t("support.attachment.#{ticket_message_attachment.tag.downcase.parameterize('_')}")
   - if ticket_message_attachment.ticket_message.nil?
     .span1
       - delete_url = ticket_message_attachment.ticket.try(:persisted?) ? support_ticket_ticket_message_attachment_path(ticket_message_attachment.ticket, ticket_message_attachment) : support_ticket_message_attachment_path(ticket_message_attachment)
       - edit_url = ticket_message_attachment.ticket.try(:persisted?) ? edit_support_ticket_ticket_message_attachment_path(ticket_message_attachment.ticket, ticket_message_attachment) : edit_support_ticket_message_attachment_path(ticket_message_attachment)
       .destroy.pull-right
-        = link_to delete_url, :'data-delete' => 'Are you sure?' do
+        = link_to delete_url, :'data-delete' => t('confirmations.are_you_sure') do
           %span.ico-trash
       .edit.pull-right
         = link_to '#', data: { modal: true, href: edit_url, 'ajax-options' => { form_name: form_name } } do

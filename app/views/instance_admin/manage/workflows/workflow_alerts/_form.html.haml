@@ -1,4 +1,4 @@
-= simple_form_for [:instance_admin, :manage, @workflow_step, resource], :html => { :multipart => true, id: 'workflow_form'} do |f|
+= simple_form_for [:instance_admin, :manage, @workflow_step, resource], html: { id: 'workflow_form'} do |f|
   .content-container
     %h4 Main settings
     .row
@@ -6,16 +6,31 @@
         = f.input :name, required: true, input_html: { class: 'form-control' }
     .row
       .input-container.col-xs-6
-        = f.input :recipient, input_html: { class: 'form-control' }
-      .input-container.col-xs-6
-        = f.input :recipient_type, collection: f.object.recipient_types, include_blank: true, input_html: { class: 'form-control' }
-    .row
-      .input-container.col-xs-6
         = f.input :alert_type, collection: WorkflowAlert::ALERT_TYPES, include_blank: false, input_html: { class: 'form-control', :'data-alert-type' => true }
       .input-container.col-xs-6
         = f.input :delay, label: 'Delay (minutes)', input_html: { class: 'form-control' }
+    %div{:'data-optional-settings-api_call' => true, :'data-optional-settings' => true}
+      %h4 Api Call Settings
+      .row
+        .input-container.col-xs-2
+          = f.input :use_ssl, input_html: { class: 'checkbox' }
+        .input-container.col-xs-2
+          = f.input :request_type, collection: WorkflowAlert::REQUEST_TYPE, include_blank: false, input_html: { class: 'form-control' }
+        .input-container.col-xs-8
+          = f.input :endpoint, input_html: { class: 'form-control' }, as: :string
+      .row
+        .input-container.col-xs-6
+          = f.input :payload_data, input_html: { class: 'form-control' }
+        .input-container.col-xs-6
+          = f.input :headers, input_html: { class: 'form-control' }
+
     %div{:'data-optional-settings-email' => true, :'data-optional-settings' => true}
       %h4 Email Settings
+      .row
+        .input-container.col-xs-6
+          = f.input :recipient, input_html: { class: 'form-control' }
+        .input-container.col-xs-6
+          = f.input :recipient_type, collection: f.object.recipient_types, include_blank: true, input_html: { class: 'form-control' }
       .row
         .input-container.col-xs-6
           = f.input :template_path, collection: @custom_emails, required: true, input_html: { class: 'form-control' }, hint: "You can add custom emails in Manage -> Emails"
@@ -46,6 +61,11 @@
 
     %div{:'data-optional-settings-sms' => true, :'data-optional-settings' => true}
       %h4 Sms Settings
+      .row
+        .input-container.col-xs-6
+          = f.input :recipient, input_html: { class: 'form-control' }
+        .input-container.col-xs-6
+          = f.input :recipient_type, collection: f.object.recipient_types, include_blank: true, input_html: { class: 'form-control' }
       .row
         .input-container.col-xs-6
           = f.input :template_path, collection: @custom_smses, required: true, input_html: { class: 'form-control' }, hint: "You can add custom sms template in Manage -> Smses"

@@ -19,10 +19,12 @@ class Reservation < ActiveRecord::Base
   belongs_to :owner, -> { with_deleted }, :class_name => "User", counter_cache: true
   belongs_to :platform_context_detail, :polymorphic => true
   belongs_to :recurring_booking
+  belongs_to :reservation_type
 
   has_one :billing_authorization, as: :reference
   has_one :dimensions_template, as: :entity
   has_one :payment, as: :payable
+  has_one :deposit, as: :target
 
   has_many :user_messages, as: :thread_context
   has_many :waiver_agreements, as: :target
@@ -358,11 +360,11 @@ class Reservation < ActiveRecord::Base
   end
 
   def action_hourly_booking?
-    reservation_type == 'hourly' || self.listing.schedule_booking?
+    booking_type == 'hourly' || self.listing.schedule_booking?
   end
 
   def action_daily_booking?
-    reservation_type == 'daily'
+    booking_type == 'daily'
   end
 
   def is_free?
@@ -377,6 +379,14 @@ class Reservation < ActiveRecord::Base
     invalid_dates = periods.reject(&:bookable?)
     if invalid_dates.any?
       errors.add(:base, "Unfortunately the following bookings are no longer available: #{invalid_dates.map(&:as_formatted_string).join(', ')}")
+    end
+  end
+
+  def build_deposit(payment_attributes={})
+    if listing.deposit_amount.to_i > 0
+      deposit = super(target: self, deposit_amount_cents: listing.deposit_amount.cents)
+      deposit.build_payment(payment_attributes)
+      deposit
     end
   end
 
@@ -485,6 +495,7 @@ class Reservation < ActiveRecord::Base
 
   def schedule_void
     PaymentVoidJob.perform(payment.id)
+    DepositVoidJob.perform(deposit.payment.id) if deposit
   end
 
   # ----- SETTERS ---------
@@ -493,8 +504,11 @@ class Reservation < ActiveRecord::Base
   end
 
   def set_start_and_end
-    self.starts_at = first_period.starts_at
-    self.ends_at = last_period.ends_at
+    if last_period
+      self.starts_at = first_period.starts_at
+      self.ends_at = last_period.ends_at
+    end
+    true
   end
 
   def set_minimum_booking_minutes

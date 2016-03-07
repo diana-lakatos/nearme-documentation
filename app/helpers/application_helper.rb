@@ -118,9 +118,10 @@ module ApplicationHelper
     link_to('#', options, &block)
   end
 
-  def link_to_login(constraint, secured_constraint, secure_links, options = {}, &block)
-    options[:rel] = nil if secure_links
-    constraint.merge!(secured_constraint) if secure_links
+  def link_to_login(options = {}, &block)
+    constraint = options[:url_options]
+    options[:rel] = nil if secure_links?
+    constraint.merge!(platform_context.secured_constraint) if secure_links?
     options[:data] ||= {}
     options[:data].merge!({ href: new_user_session_url(constraint) })
     link_to('#', options, &block)
@@ -135,11 +136,11 @@ module ApplicationHelper
   end
 
   def in_signed_in?
-    params[:controller]=='sessions'
+    params[:controller] == 'sessions'
   end
 
   def in_sign_up?
-    params[:controller]=='registrations'
+    params[:controller] == 'registrations' && params[:action] == 'new'
   end
 
   def link_to_once(*args, &block)
@@ -486,5 +487,10 @@ module ApplicationHelper
   def webpack_manifest_script
     return '' unless Rails.configuration.webpack[:use_manifest]
     javascript_tag "(function(){ window.webpackBundleManifest = #{Rails.configuration.webpack[:common_manifest].to_json}; }());"
+  end
+
+  def dynamic_theme_url(stylesheet)
+    theme = PlatformContext.current.theme
+    "#{Rails.application.config.asset_host}#{dynamic_theme_path(theme_id: theme.id, updated_at: theme.updated_at.to_formatted_s(:number), stylesheet: stylesheet)}"
   end
 end

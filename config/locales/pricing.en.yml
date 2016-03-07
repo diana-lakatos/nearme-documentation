@@ -15,6 +15,9 @@ en:
       subscription:
         label: 'Subscription'
         description: 'Customer is charged monthly or weekly'
+    deposit:
+      deposit_amount: 'Deposit amount'
+      enable: 'Enable deposits'
     price: 'Price'
     required: 'required'
     price_unit:

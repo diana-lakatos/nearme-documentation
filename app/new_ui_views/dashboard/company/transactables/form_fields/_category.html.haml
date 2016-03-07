@@ -1,4 +1,4 @@
 - category_name = field.split(" - ")[1]
-- category = @transactable_type.categories.roots.where(name: category_name).first
+- category = f.object.transactable_type.categories.roots.where(name: category_name).first
 - if category.present?
-  = render partial: 'dashboard/shared/fields/category', locals: { category: category, f: f, categorizable: @transactable_type }
+  = render partial: 'dashboard/shared/fields/category', locals: { category: category, f: f, categorizable: f.object.transactable_type }

@@ -10,4 +10,8 @@ class CustomSanitizer
     Sanitize.fragment(html, @config)
   end
 
+  def strip_tags(html)
+    Sanitize.fragment(html)
+  end
+
 end

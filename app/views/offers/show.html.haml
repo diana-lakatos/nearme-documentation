@@ -1,0 +1,98 @@
+- render_content_outside_container!
+
+- title @offer.name
+- meta_description @offer.try(:description).to_s.truncate(130, separator: ' ')
+=# product_structured_data
+
+%section.product-head
+  .container-fluid
+    .row-fluid
+      .span8
+        =# render partial: 'photos', locals: { product: @offer }
+      .span4
+        %h1= @offer.name
+        - if @offer.price.to_f > 0
+          %h1= @offer.humanized_price
+        - if false #@offer.has_reviews?
+          .rating.product-rating
+            %p= t 'buy_sell_market.products.labels.rating'
+            = render partial: 'stars', locals: { stars: @offer.try(:average_rating).try(:round), count: @offer.reviews_count }
+        - if user_signed_in?
+          = link_to 'Bid on Case', new_offer_bid_path(@offer)
+        - else
+          = link_to_login class: "nav-link header-second", url_options: { return_to: new_offer_bid_path(@offer) }, data: { modal: true, modal_class: 'sign-up-modal' } do
+            = 'Bid on Case'
+
+        -#- if false #@offer.action_rfq?
+        -#  - rfq_label = (@offer.action_free? ?  t('reservations.rfq') : t('reservations.offer'))
+        -#  = link_to rfq_label, '#', data: { modal: true, href: new_product_ticket_path(@offer) }, class: 'btn gray', style: 'margin-top: 20px'
+        -#- else
+        -#  .btn.disabled= t('buy_sell_market.products.buttons.out_of_stock')
+
+        .product-social-wrapper
+          - if platform_context.instance.wish_lists_enabled?
+            = render 'shared/components/wish_list_button', object:  Draper.undecorate(@offer), link_to_class: 'btn gray'
+
+          =# render partial: 'social_buttons', locals: { product: @offer }
+
+%section.product-details
+  .container-fluid
+    .tab-content-container
+      %ul.nav.nav-tabs.page-tabs{role: 'tablist'}
+        %li{ class: "#{ 'active' if !param_reviews_page_present? }" }
+          %a{'data-toggle' => 'tab', href: '#product-details', role: 'tab'}
+            = t 'buy_sell_market.products.labels.item_details'
+        - if @platform_context.instance.seller_attachments_enabled? && (attachments = @offer.attachments.for_user(current_user)) && attachments.present?
+          %li
+            %a{'data-toggle' => 'tab', href: '#product-attachments', role: 'tab'}
+              = t 'buy_sell_market.products.labels.documents'
+        - if false #@offer.has_reviews?
+          %li{ class: "#{ 'active' if param_reviews_page_present? }" }
+            %a{'data-toggle' => 'tab', href: '#product-reviews', role: 'tab'}
+              #{t('buy_sell_market.products.labels.reviews')}
+              = "(#{@offer.reviews_count})"
+        - if @offer.properties.entries.present?
+          %li
+            %a{'data-toggle' => 'tab', href: '#product-properties', role: 'tab'}
+              = t 'buy_sell_market.products.labels.properties'
+
+      .tab-content
+        - if @offer.description.present?
+          %article#product-details.tab-pane{ class: "#{ 'active' if !param_reviews_page_present? }" }
+            %p= @offer.description.html_safe
+
+        - if @platform_context.instance.seller_attachments_enabled? && (attachments = @offer.attachments.for_user(current_user)) && attachments.present?
+          %article#product-attachments.tab-pane{ class: "#{ 'active' if param_reviews_page_present? }" }
+            %h3= t 'buy_sell_market.products.labels.documents'
+            %ul
+              - attachments.each do |attachment|
+                %li= link_to attachment.decorate.title, seller_attachment_path(attachment), target: '_blank'
+
+        - if false #@offer.has_reviews?
+          %article#product-reviews.tab-pane{ class: "#{ 'active' if param_reviews_page_present? }" }
+            .rating-averages
+              .row-fluid.reviews-summary
+                .span8
+                  %p= t 'buy_sell_market.products.labels.summary'
+                .span3
+                  .rating
+                    = render partial: 'stars', locals: { stars: @offer.try(:average_rating).try(:round) }
+              - if @rating_questions.present?
+                .row-fluid
+                  - @rating_questions.each do |rating_question|
+                    .row-fluid
+                      .span8
+                        %p= rating_question.text
+                      .span3
+                        .rating
+                          = render partial: 'stars', locals: { stars:  (@offer.question_average_rating[rating_question.id] || 0).round }
+            = render partial: 'reviews/review', collection: @reviews
+            = will_paginate_styled @reviews, param_name: 'reviews_page'
+
+        - if @offer.properties.entries.present?
+          %article#product-properties.tab-pane
+            = render partial: 'extra_properties', locals: { product: @offer }
+
+    .product-profile-badge
+      .vendor-profile
+        =# render partial: 'administrator', locals: { product: @offer, hidden: hidden}

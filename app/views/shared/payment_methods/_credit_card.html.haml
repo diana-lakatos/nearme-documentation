@@ -6,7 +6,6 @@
     - if credit_card.try(:active?)
       = t('payments.cc_fields.subscribed', last_4: credit_card.last_4)
       = f.hidden_field :credit_card_id, value: credit_card.id
-      =# link_to(t('payments.cc_fields.unsubscribe'), dashboard_credit_card_path(form.object), method: :delete)
     - else
       = f.simple_fields_for :credit_card_attributes, credit_card do |form|
         = form.error :base

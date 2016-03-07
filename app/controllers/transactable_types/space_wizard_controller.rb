@@ -50,14 +50,13 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     end
     @user.companies.first.creator = current_user
     build_objects
-    build_approval_requests
     @user.first_listing.creator = @user
     if wizard_params[:companies_attributes]["0"][:locations_attributes] && !wizard_params[:companies_attributes]["0"][:locations_attributes]["0"].has_key?("availability_template_id") && !wizard_params_listing.has_key?("availability_template_id")
       @user.first_listing.availability_template = @transactable_type.default_availability_template
     end
     if params[:save_as_draft]
-      remove_approval_requests
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
+      @user.companies.first.update_metadata({draft_at: Time.now, completed_at: nil})
       if @user.first_listing.new_record?
         @user.save(validate: false)
         track_saved_draft_event
@@ -69,6 +68,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       redirect_to transactable_type_space_wizard_list_path(@transactable_type)
     elsif @user.save
       @user.listings.first.schedule.try(:create_schedule_from_schedule_rules) if PlatformContext.current.instance.priority_view_path == 'new_ui'
+      @user.companies.first.update_metadata({draft_at: nil, completed_at: Time.now})
       track_new_space_event
       track_new_company_event
 
@@ -193,7 +193,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def wizard_params
-    params.require(:user).permit(secured_params.user(@transactable_type)).tap do |whitelisted|
+    params.require(:user).permit(secured_params.user(transactable_type: @transactable_type)).tap do |whitelisted|
       (whitelisted[:seller_profile_attributes][:properties] = params[:user][:seller_profile_attributes][:properties]) rescue {}
       (whitelisted[:properties] = params[:user][:properties]) rescue {}
       (whitelisted[:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:properties] = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:properties]) rescue {}
@@ -203,7 +203,6 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   def build_approval_requests
     build_approval_request_for_object(@user)
     build_approval_request_for_object(@user.companies.first)
-    build_approval_request_for_object(@user.companies.first.locations.first)
     build_approval_request_for_object(@user.companies.first.locations.first.listings.first)
   end
 
@@ -215,13 +214,6 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   def set_theme
     @theme_name = 'product-theme'
-  end
-
-  def remove_approval_requests
-    @user.approval_requests = []
-    @user.companies.first.approval_requests = []
-    @user.companies.first.locations.first.approval_requests = []
-    @user.companies.first.locations.first.listings.first.approval_requests = []
   end
 
   def redirect_to_dashboard_if_started_other_listing

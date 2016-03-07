@@ -1,0 +1,14 @@
+{% for property in product.extra_properties %}
+  <div class="row-fluid">
+    <div class="span3">
+      <h5>
+        {{ property.first | translate_property:product.product_type }}
+      </h5>
+    </div>
+    <div class="span9">
+      <p>
+        {{ property.last }}
+      </p>
+    </div>
+  </div>
+{% endfor %}

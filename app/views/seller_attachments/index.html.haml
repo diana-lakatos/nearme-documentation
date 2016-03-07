@@ -1,4 +1,4 @@
 - if @attachments.count > 0
   %article{id: "location-#{params[:seller_attachable_type].downcase}-documents", class: "location listing tab-pane"}
     - @attachments.each do |attachment|
-      %p= link_to attachment.title, seller_attachment_path(attachment)
+      %p= link_to (attachment.title.presence || attachment.data_file_name), seller_attachment_path(attachment)

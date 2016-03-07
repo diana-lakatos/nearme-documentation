@@ -1,0 +1,9 @@
+%div.requirement.nested-fields
+  = f.input :_destroy, as: :hidden, input_html: { 'data-destroy-input' => true }
+
+  = f.input :label
+  = f.input :description
+
+  = f.label :removed, class: 'pull-right' do
+    %span.btn.btn-xs.btn-warning.remove_fields.dynamic{ type: :button }
+      = t('dashboard.document_requirements.remove')

@@ -226,15 +226,8 @@ gem 'routing-filter', '~> 0.5.0'
 
 gem 'simple-navigation'
 
-# Gems below should be eventually replaced with bower / gulp completely.
-# For now they are here for backwards compatibility until we fully migrate
-# to new workflow.
-
 gem 'sprockets'
 gem 'sprockets-rails'
-# gem 'sass-rails'
-# gem 'coffee-rails'
 gem 'cocoon'
-# gem 'yui-compressor'
 
-# gem 'js-routes'
+gem 'actionpack-action_caching'

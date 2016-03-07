@@ -2,8 +2,8 @@ class User < ActiveRecord::Base
 
   include Spree::UserPaymentSource
   include CreationFilter
-  extend FriendlyId
-
+  include QuerySearchable
+  include Approvable
 
   SORT_OPTIONS = ['All', 'Featured', 'People I know', 'Most Popular', 'Location', 'Number of Projects']
   MAX_NAME_LENGTH = 30
@@ -20,15 +20,32 @@ class User < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context allow_admin: :admin
   acts_as_tagger
-  store :required_fields
+
+  extend FriendlyId
+  has_metadata accessors: [:support_metadata]
+  friendly_id :name, use: [:slugged, :finders]
+
   mount_uploader :avatar, AvatarUploader
   mount_uploader :cover_image, CoverImageUploader
 
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable,
-    :user_validatable, :token_authenticatable, :temporary_token_authenticatable
-  has_metadata accessors: [:support_metadata]
-  friendly_id :name, use: [:slugged, :finders]
+   :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
+  skip_callback :commit, :after, :remove_avatar!
+  skip_callback :commit, :after, :remove_cover_image!
+
+  attr_readonly :following_count, :followers_count
+  attr_accessor :custom_validation
+  attr_accessor :accept_terms_of_service
+  attr_accessor :verify_associated
+  attr_accessor :skip_password, :verify_identity, :custom_validation, :accept_terms_of_service, :verify_associated,
+                :skip_validations_for
+
+  serialize :sms_preferences, Hash
+  serialize :instance_unread_messages_threads_count, Hash
+  serialize :avatar_transformation_data, Hash
+
+  delegate :to_s, to: :name
 
   belongs_to :billing_address, class_name: 'Spree::Address'
   belongs_to :domain
@@ -76,6 +93,9 @@ class User < ActiveRecord::Base
   has_many :products_images, foreign_key: 'uploader_id', class_name: 'Spree::Image'
   has_many :products, foreign_key: 'user_id', class_name: 'Spree::Product'
   has_many :projects, foreign_key: 'creator_id', inverse_of: :creator
+  has_many :offers, foreign_key: 'creator_id', inverse_of: :creator
+  has_many :bids
+  has_many :offer_bids, class_name: 'Bid', through: :offers, source: :bids
   has_many :projects_collaborated, through: :project_collaborators, source: :project
   has_many :project_collaborators
   has_many :approved_project_collaborations, -> { approved }, class_name: 'ProjectCollaborator'
@@ -104,6 +124,20 @@ class User < ActiveRecord::Base
   has_one :buyer_profile, -> { buyer }, class_name: 'UserProfile'
   has_one :default_profile, -> { default }, class_name: 'UserProfile'
 
+  after_create :create_blog
+  after_destroy :perform_cleanup
+  before_save :ensure_authentication_token
+  before_save :update_notified_mobile_number_flag
+  before_create :build_profile
+
+  before_create do
+    self.instance_profile_type_id ||= PlatformContext.current.present? ? InstanceProfileType.default.first.try(:id) : InstanceProfileType.default.where(instance_id: self.instance_id).try(:first).try(:id)
+  end
+
+  before_restore :recover_companies
+
+  store :required_fields
+
   accepts_nested_attributes_for :approval_requests
   accepts_nested_attributes_for :companies
   accepts_nested_attributes_for :projects
@@ -111,36 +145,14 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :seller_profile
   accepts_nested_attributes_for :buyer_profile
   accepts_nested_attributes_for :default_profile
-
-  attr_readonly :following_count, :followers_count
-  attr_accessor :skip_password, :verify_identity, :custom_validation, :accept_terms_of_service, :verify_associated,
-                :skip_validations_for
-
-  serialize :sms_preferences, Hash
-  serialize :instance_unread_messages_threads_count, Hash
-  serialize :avatar_transformation_data, Hash
-
-  delegate :to_s, to: :name
-
-  after_create :create_blog
-  after_destroy :perform_cleanup
-  before_save :ensure_authentication_token
-  before_save :update_notified_mobile_number_flag
-  before_create :build_profile
-  before_restore :recover_companies
-  skip_callback :commit, :after, :remove_avatar!
-  skip_callback :commit, :after, :remove_cover_image!
-
-  before_create do
-    self.instance_profile_type_id ||= PlatformContext.current.present? ? InstanceProfileType.default.first.try(:id) : InstanceProfileType.default.where(instance_id: self.instance_id).try(:first).try(:id)
-  end
+  accepts_nested_attributes_for :bids
 
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(reservations: { transactable_id: listing.id }).uniq
   }
 
   scope :by_search_query, lambda { |query|
-    where("name ilike ? or email ilike ? or id = ?", query, query, query.remove('%').to_i)
+    where("users.name ilike ? or users.email ilike ? or users.id = ?", query, query, query.remove('%').to_i)
   }
 
   scope :featured, -> { where(featured: true) }
@@ -201,7 +213,7 @@ class User < ActiveRecord::Base
     end
   end
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((user_profiles.properties->?), ',') && ARRAY[?]", property, values) if values.present? }
-
+  scope :by_profile_type, -> (ipt_id) { includes(:user_profiles).where(user_profiles: { instance_profile_type_id: ipt_id }) if ipt_id.present? }
 
   validates_with CustomValidators
   validates :name, :first_name, presence: true
@@ -617,9 +629,19 @@ class User < ActiveRecord::Base
     self.companies.first
   end
 
+  def all_transactables
+    if company = default_company
+      [company.listings.first, company.products.first, company.offers.first].compact
+    end
+  end
+
+  def first_transactable
+    all_transactables.try(:first)
+  end
+
   def first_listing
-    if companies.first && companies.first.locations.first
-      companies.first.locations.first.listings.first
+    if default_company && default_company.locations.first
+      default_company.locations.first.listings.first
     end
   end
 
@@ -819,26 +841,6 @@ class User < ActiveRecord::Base
       order('created_at asc').last.try(:profile_url)
   end
 
-  def approval_request_templates
-    @approval_request_templates ||= PlatformContext.current.instance.approval_request_templates.for("User").older_than(created_at)
-  end
-
-  def is_trusted?
-    approval_request_templates.any? ? (self.approval_requests.approved.count > 0) : true
-  end
-
-  def approval_request_acceptance_cancelled!
-    listings.find_each(&:approval_request_acceptance_cancelled!)
-  end
-
-  def approval_request_approved!
-    listings.find_each(&:approval_request_approved!)
-  end
-
-  def current_approval_requests
-    self.approval_requests.to_a.reject { |ar| !self.approval_request_templates.pluck(:id).include?(ar.approval_request_template_id) }
-  end
-
   def active_for_authentication?
     super && !banned?
   end
@@ -860,11 +862,11 @@ class User < ActiveRecord::Base
   end
 
   def registration_in_progress?
-    has_draft_listings || has_draft_products
+    companies.first.try(:draft_at)
   end
 
   def registration_completed?
-    (companies.first.try(:valid?) || projects.first.present?) && !(has_draft_listings || has_draft_products)
+    companies.first.try(:completed_at)
   end
 
   def has_any_active_products
@@ -874,18 +876,6 @@ class User < ActiveRecord::Base
   # get_instance_metadata method comes from Metadata::Base
   # you can add metadata attributes to class via: has_metadata accessors: [:support_metadata]
   # please check Metadata::Base for further reference
-
-  def has_draft_listings
-    get_instance_metadata("has_draft_listings")
-  end
-
-  def has_draft_products
-    get_instance_metadata("has_draft_products")
-  end
-
-  def has_any_active_listings
-    get_instance_metadata("has_any_active_listings")
-  end
 
   def companies_metadata
     get_instance_metadata("companies_metadata")

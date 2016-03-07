@@ -65,6 +65,9 @@
         - when 'capacity'
           = render "dashboard/company/transactables/form_fields/capacity", f: f
 
+        - when 'deposit_amount'
+          = render "dashboard/company/transactables/form_fields/deposit_amount", f: f
+
         - when *@transactable_type.categories.roots.map { |c| "Category - #{c.name}" }
           = render "dashboard/company/transactables/form_fields/category", f: f, field: field
 
@@ -72,10 +75,7 @@
           - if custom_attribute_names.include?(field)
             = draw_attribute_for_form(@transactable_type.custom_attributes.find_by(name: field), properties_form)
           -elsif f.object.attributes.include?(field)
-            - if enable_ckeditor_for_field?(model, field)
-              = f.input field, :as => :ckeditor, :input_html => { :ckeditor => { :toolbar => ckeditor_toolbar_creator.toolbar } }, required: f.object.required?(field)
-            - else
-              = f.input field, required: f.object.required?(field)
+            = f.input field, {required: f.object.required?(field)}.merge(cke_attrs(model, field))
 .hidden
   - Money::Currency.table.values.each do |c|
     %span{:id => "currency_#{c[:iso_code]}"}

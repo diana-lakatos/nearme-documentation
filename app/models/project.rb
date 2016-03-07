@@ -6,6 +6,7 @@ class Project < ActiveRecord::Base
   has_custom_attributes target_type: 'ProjectType', target_id: :transactable_type_id
 
   include CreationFilter
+  include QuerySearchable
 
   attr_reader :collaborator_email
   attr_readonly :followers_count
@@ -104,23 +105,6 @@ class Project < ActiveRecord::Base
 
   def to_liquid
     @project_drop ||= ProjectDrop.new(self)
-  end
-
-  def self.search_by_query(attributes = [], query)
-    if query.present?
-      words = query.split.map.with_index{|w, i| ["word#{i}".to_sym, "%#{w}%"]}.to_h
-
-      sql = attributes.map do |attrib|
-        attrib = "#{quoted_table_name}.\"#{attrib}\""
-        words.map do |word, value|
-          "#{attrib} ILIKE :#{word}"
-        end
-      end.flatten.join(' OR ')
-
-      where(ActiveRecord::Base.send(:sanitize_sql_array, [sql, words]))
-    else
-      all
-    end
   end
 
   def draft?

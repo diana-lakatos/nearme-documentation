@@ -102,6 +102,7 @@ en:
     remove: "Remove"
     processing: 'Processing ...'
     submit: 'Submit'
+    send: 'Send'
     cancel: 'Cancel'
     submit_draft: 'Save as draft'
     or_spaced: ' or '
@@ -127,6 +128,7 @@ en:
     password: "Password"
     generic_lessee_term: "guest"
     generic_lessor_term: "host"
+    default: "Default"
   transactable_types:
     locations:
       listings:
@@ -146,6 +148,8 @@ en:
     save_location: "Save Location"
     does_not_exist: "does not exist"
     address_placeholder: 'Enter location address'
+  bid:
+    heading: 'Make an offer'
 
   manage:
     companies:
@@ -321,11 +325,15 @@ en:
 
     general:
       product: "Product"
-      products: "Products"
+      spree/products: "Products"
       listing: "Listing"
       listings: "Listings"
       reports: "Reports"
       projects: "Projects"
+      offers: 'Offers'
+      offer: 'Offer'
+      user: 'User'
+      users: 'Users'
 
     analytics:
       no_revenue_yet: 'No revenue yet.'
@@ -344,8 +352,10 @@ en:
         delete: 'Delete'
 
     reports:
+      all_instance_profile_types: 'All User types'
       all_service_types: "All service types"
-      all_product_types: "All product types"
+      all_spree/product_types: "All product types"
+      all_offer_types: "All offer types"
       download_report_as_csv: "Download report as CSV"
       attribute: "Attribute"
       value: "Value"
@@ -744,6 +754,19 @@ en:
         fields_in_this_component: "Fields in this component"
         copy_from_template: "Copy From Template"
         template: "Template"
+      transactable_types:
+        form_components: "Form Components"
+        data_upload: "Data Upload"
+        custom_attributes: "Custom Attributes"
+        custom_validators: "Custom Validators"
+        categories: "Categories"
+        new: 'New Type'
+      offer_types:
+        offer_types: 'Offer Types'
+        new: 'New Offer Type'
+      reservation_types:
+        reservation_types: 'Reservation Types'
+        new: 'New Reservation Type'
       service_types:
         service_types: "Service Types"
         form_components: "Form Components"
@@ -751,7 +774,7 @@ en:
         custom_attributes: "Custom Attributes"
         custom_validators: "Custom Validators"
         categories: "Categories"
-        new_service_type: 'New Service Type'
+        new: 'New Service Type'
         basic_configuration: "Basic Configuration"
         cancellation_policy: "Cancellation Policy"
         booking_settings: "Booking settings"
@@ -1250,6 +1273,10 @@ en:
       products_header: 'Products'
       services_header: 'Services'
       reviews_header: 'Reviews'
+      offers_header: 'Offers'
+      offers: Offers
+      user_auctions: 'My Auctions'
+      user_bids: 'My Bids'
 
     white_labels:
       save: 'Save'
@@ -1507,6 +1534,34 @@ en:
       transactable_not_saved: 'Listing not saved.'
       address_errors_html: 'Please address the following <b>%{count}</b> errors in order to save your listing.'
 
+    offers:
+      title:
+        manage: 'Manage'
+        listings: 'Offers'
+      list_new_item: 'List New Item'
+      manage: 'Manage Offers'
+      edit: 'Edit Item'
+      view: 'View Offer'
+      view_html: 'View <span class="hidden-xs">Offer</span>'
+      list_new_item: 'List New Offer'
+      transactable_not_saved: 'Offer not saved.'
+      address_errors_html: 'Please address the following <b>%{count}</b> errors in order to save your offer.'
+    user_bids:
+      unconfirmed: 'In progress'
+      accepted: 'Won Cases'
+      archived: 'Archived'
+    user_auctions:
+      bid_documents: 'Documents'
+      auction_open: 'Active'
+      auction_finished: 'Finished'
+      archived: 'Archived'
+      title_count: 'Auctions (%{count})'
+      actions:
+        approve: 'Approve'
+        reject: 'Reject'
+        confirmations:
+          approve: 'Are you sure you want to approve this offer?'
+          reject: 'Are you sure you want to reject this offer?'
     reviews:
       templates:
         comments: "Comments"
@@ -1532,6 +1587,8 @@ en:
         view_order_details: "View Order Details"
         comments: "Comments"
         view_seller_profile: "View Seller's Profile"
+        view_bidder_profile: "View Bidder's Profile"
+        view_owner_profile: "View Owner's Profile"
         view_host_profile: "View Host's Profile"
         view_guest_profile: "View Guest's Profile"
         view_buyer_profile: "View Buyer's Profile"
@@ -1547,6 +1604,7 @@ en:
           buyer: "buyer"
           host: "host"
           guest: "guest"
+        view_bidder_profile: "View Bidder profile"
       index:
         title: "Reviews"
         rate_your_experience: "Rate Your Experience"
@@ -2102,6 +2160,7 @@ en:
     cart: 'Cart %{cart}'
     cart_dashboard: 'Cart'
     my_subscriptions: 'My Subscriptions'
+    user_bids: 'My Bids'
 
   sign_up_form:
     sign_up_to: 'Sign up to %{marketplace_name}'

@@ -30,7 +30,7 @@ class Instance < ActiveRecord::Base
   SEARCH_ENGINES = %w(postgresql elasticsearch)
   SEARCH_MODULES = { 'elasticsearch' => 'Elastic' }
   PRICING_OPTIONS = %w(free hourly daily weekly monthly fixed)
-  SEARCHABLE_CLASSES = ['TransactableType', 'ServiceType', 'Spree::ProductType', 'InstanceProfileType']
+  SEARCHABLE_CLASSES = ['TransactableType', 'ServiceType', 'Spree::ProductType', 'InstanceProfileType', 'OfferType']
 
   API_KEYS.each do |meth|
     define_method(meth) do
@@ -44,8 +44,7 @@ class Instance < ActiveRecord::Base
     end
   end
 
-  has_one :theme, :as => :owner, dependent: :destroy
-
+  has_one :theme, :as => :owner
   has_many :companies, :inverse_of => :instance
   has_many :locations, :inverse_of => :instance
   has_many :locations_impressions, :through => :locations, :inverse_of => :instance
@@ -58,6 +57,7 @@ class Instance < ActiveRecord::Base
   has_many :instance_admins, :inverse_of => :instance
   has_many :instance_admin_roles, :inverse_of => :instance
   has_many :reservations, :as => :platform_context_detail
+  has_many :reservation_types, inverse_of: :instance
   has_many :orders, :as => :platform_context_detail
   has_many :payments, :through => :reservations, :inverse_of => :instance
   has_many :instance_clients, :dependent => :destroy, :inverse_of => :instance
@@ -71,6 +71,8 @@ class Instance < ActiveRecord::Base
   has_many :service_types
   has_many :product_types, class_name: "Spree::ProductType"
   has_many :project_types, class_name: "ProjectType"
+  has_many :offer_types
+  has_many :offers
   has_many :all_payment_gateways, class_name: "PaymentGateway"
   has_many :users, inverse_of: :instance
   has_many :text_filters, inverse_of: :instance
@@ -269,6 +271,10 @@ class Instance < ActiveRecord::Base
 
   def projectable?
     @projectable ||= project_types.any?
+  end
+
+  def biddable?
+    @biddable ||= offer_types.any?
   end
 
   def subscribable?

@@ -3,6 +3,7 @@ require Rails.root.join('app', 'controllers', 'registrations_controller.rb') if 
 
 DesksnearMe::Application.routes.draw do
 
+  get '/test_endpoint', to: 'webhooks/base#test'
   match '/auth/:provider/callback' => 'authentications#create', via: [:get, :post]
 
   scope '(:language)', language: /[a-z]{2}/, defaults: { language: nil } do
@@ -191,7 +192,7 @@ DesksnearMe::Application.routes.draw do
       end
 
       namespace :reports do
-        resources :listings do
+        resources :transactables do
           collection do
             get :download_report
           end
@@ -215,6 +216,17 @@ DesksnearMe::Application.routes.draw do
           end
         end
 
+        resources :users do
+          collection do
+            get :download_report
+          end
+        end
+
+        resources :offers do
+          collection do
+            get :download_report
+          end
+        end
       end
 
       namespace :settings do
@@ -355,6 +367,38 @@ DesksnearMe::Application.routes.draw do
             end
           end
         end
+
+      resources :offer_types do
+        get :search_settings, on: :member
+        resources :custom_attributes, controller: 'offer_types/custom_attributes'
+        resources :custom_validators, controller: 'offer_types/custom_validators'
+        resources :data_uploads, only: %i(new index create show), controller: 'service_types/data_uploads' do
+          collection do
+            get :download_csv_template
+            get :download_current_data
+          end
+        end
+        resources :form_components, controller: 'offer_types/form_components' do
+          member do
+            patch :update_rank
+          end
+          collection do
+            post :create_as_copy
+          end
+        end
+      end
+
+      resources :reservation_types do
+        resources :custom_attributes, controller: 'reservation_types/custom_attributes'
+        resources :form_components, controller: 'reservation_types/form_components' do
+          member do
+            patch :update_rank
+          end
+          collection do
+            post :create_as_copy
+          end
+        end
+      end
 
         resources :service_types do
           get :search_settings, on: :member
@@ -532,6 +576,9 @@ DesksnearMe::Application.routes.draw do
 
     resources :reviews, only: [:index]
 
+    resources :offers, only: [:show] do
+      resources :bids, only: [:new, :create]
+    end
     resources :topics, only: [:show]
     resources :projects, only: [:show] do
       resources :project_collaborators, only: [:create, :destroy] do
@@ -685,6 +732,14 @@ DesksnearMe::Application.routes.draw do
           end
         end
 
+        resources :user_auctions do
+          member do
+            get :reject
+            get :approve
+            get :details
+          end
+        end
+
         resources :locations
         resources :dimensions_templates
         resources :payment_documents do
@@ -710,6 +765,19 @@ DesksnearMe::Application.routes.draw do
               get :download_current_data_csv
             end
           end
+        end
+
+        resources :offer_types do
+          resources :offers do
+            member do
+              get :enable
+              get :disable
+            end
+          end
+        end
+
+        resources :service_types, controller: 'transactable_types' do
+          resources :services, controller: 'transactables'
         end
 
         resources :transactable_types do
@@ -784,6 +852,7 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
+      resources :user_bids, :except => [:update, :destroy]
       resources :user_requests_for_quotes, only: [:index, :show]
       resources :user_reservations, :except => [:update, :destroy, :show] do
         member do
@@ -895,6 +964,11 @@ DesksnearMe::Application.routes.draw do
       resources :categories, only: [:index, :show], :controller => 'transactable_types/categories'
     end
 
+    resources :offer_types do
+      resources :offer_wizard, only: [:new, :create], controller: 'offer_types/offer_wizard'
+      resources :categories, only: [:index, :show], :controller => 'transactable_types/categories'
+    end
+
     scope '/space' do
       get '/new' => 'space_wizard#new', :as => "new_space_wizard"
       get "/list" => "space_wizard#list", :as => "space_wizard_list"
@@ -1000,5 +1074,7 @@ DesksnearMe::Application.routes.draw do
     end
   end
   mount Ckeditor::Engine => '/ckeditor'
+
+  get '/dynamic_theme/:theme_id/:stylesheet/:updated_at', to: 'dynamic_themes#show', as: :dynamic_theme, defaults: { format: 'css' }, constraints: { stylesheet: /(new_ui|application|dashboard)/ }
 
 end

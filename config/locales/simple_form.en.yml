@@ -32,6 +32,9 @@ en:
         country: 'Country'
         street1: 'Address'
         street2: 'Address'
+      support_ticket:
+        messages:
+          message: 'Message'
       support_ticket_message:
         message: "Message"
       user_message:
@@ -368,6 +371,8 @@ en:
         depth_unit: "Type of Unit"
 
     placeholders:
+      support_ticket_message:
+        message: 'Please, enter message'
       user_message:
         body: "Leave a message..."
       boarding_form:

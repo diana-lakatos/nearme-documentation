@@ -1,1 +1,1 @@
-BetterErrors.editor = ENV['BETTER_ERRORS_EDITOR'] || :sublime if defined? BetterErrors
+BetterErrors.editor = (ENV['BETTER_ERRORS_EDITOR'].presence || :sublime) if defined? BetterErrors

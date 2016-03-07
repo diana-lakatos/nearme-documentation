@@ -1,0 +1,56 @@
+- render_without_left_menu!
+- title "#{t('onboarding_wizard.list_your', name: @offer_type.translated_bookable_noun)}"
+- custom_attribute_names = @offer_type.custom_attributes.collect { |custom_attribute| custom_attribute.name }
+
+- content_for :page_header do
+  %h1= yield :title
+
+#space-wizad
+  = dashboard_simple_form_for @user, url: offer_type_offer_wizard_index_url(@offer_type), html: { class: "new_company", multipart: true, id: 'list-space-flow-form', :"data-includes-address-field" => true }, method: :post do |f|
+
+    = render "errors", f: f
+
+    .row
+      .col-md-4.col-md-offset-8.hidden-sm
+        %p.listing-draft-cta
+          %i<
+            = t('onboarding_wizard.finish_later')
+
+            = f.submit t('onboarding_wizard.save_draft.label'), :name => "save_as_draft", data: { disable_with: t('onboarding_wizard.save_draft.disable_with') }, :class => "saveasdraft btn-link"
+
+
+    = f.simple_fields_for :seller_profile, @user.seller_profile || @user.build_seller_profile(instance_profile_type: current_instance.seller_profile_type) do |seller_profile_form|
+      = seller_profile_form.simple_fields_for :properties, @user.seller_profile.properties do |seller_properties_form|
+        = f.simple_fields_for :companies, @user.companies.first do |companies_form|
+          = companies_form.simple_fields_for :offers, companies_form.object.offers.first do |offers_form|
+            = offers_form.hidden_field :transactable_type_id, value: @offer_type.id
+            = offers_form.input :id, as: :hidden
+            = offers_form.simple_fields_for :properties, offers_form.object.properties do |properties_form|
+
+              - @form_components.each do |form_component|
+                .panel
+                  .panel-body
+
+                    %h2= form_component.name
+
+                    - form_component.form_fields.each do |form_field|
+                      - model = form_field.keys.first
+                      - field = form_field[model]
+                      - if model == 'user'
+                        = render :partial => 'registrations/new_attributes', :locals => { f: f, only_inputs: [field.to_sym], country: @country }
+                      - if model == 'seller'
+                        = render 'sellers/seller_form', f: seller_profile_form, properties_form: seller_properties_form, only_inputs: [ field.to_sym ]
+                      - elsif model == 'company'
+                        = render :partial => 'companies/company_form', :locals => { :f => companies_form, :company => companies_form.object, :only_inputs => [ field.to_sym ] }
+                      - elsif model == 'offer'
+                        = render 'dashboard/company/offers/offer_fields', properties_form: properties_form, f: offers_form, form_field: form_field, custom_attribute_names: custom_attribute_names
+
+            .hidden
+              - Money::Currency.table.values.each do |c|
+                %span{:id => "currency_#{c[:iso_code]}"}
+                  = c[:symbol]
+              %span{:id => "default_currency"}= @offer_type.default_currency
+
+    .panel.form-actions
+      .panel-body
+        = f.submit t('general.submit'), :name => "commit", data: { disable_with: 'Creating...' }, :class => "listmydesk"

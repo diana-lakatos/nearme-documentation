@@ -6,10 +6,12 @@ class DocumentRequirement < ActiveRecord::Base
 
   MAX_COUNT = 5
 
-  attr_accessor :hidden, :removed
-
   belongs_to :item, -> { with_deleted }, polymorphic: true, inverse_of: :document_requirements
   belongs_to :instance
 
   validates_presence_of :label, :description, :item
+
+  def is_file_required?
+    item.try(:upload_obligation).try(:required?).presence || false
+  end
 end

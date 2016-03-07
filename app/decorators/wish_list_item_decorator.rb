@@ -4,10 +4,14 @@ class WishListItemDecorator < Draper::Decorator
   delegate_all
 
   def image_url
-    if wishlistable.try(:images)
-      wishlistable.images.empty? ? no_image : asset_url(wishlistable.images.first.image_url)
+    if wishlistable.try(:images).present?
+      asset_url(wishlistable.images.first.image_url)
+    elsif wishlistable.try(:has_photos?)
+      wishlistable.photos_metadata[0][:golden]
+    elsif wishlistable.try(:photos).present?
+      wishlistable.photos.first.image.url(:golden)
     else
-      wishlistable.has_photos? ? wishlistable.photos_metadata[0][:golden] : no_image
+      no_image
     end
   end
 
@@ -15,21 +19,19 @@ class WishListItemDecorator < Draper::Decorator
     if wishlistable.try(:price)
       number_to_currency_symbol wishlistable.currency, wishlistable.price
     else
-      wishlistable.address
+      wishlistable.try(:address)
     end
   end
 
   def company_name
-    object.wishlistable.company.name
+    object.wishlistable.company.try(:name)
   end
 
   def polymorphic_wishlistable_path
     if wishlistable.is_a?(Transactable)
       wishlistable.decorate.show_path
-    elsif wishlistable.is_a?(Location)
-      wishlistable.listings.searchable.first.try(:decorate).try(:show_path)
-    elsif wishlistable.is_a?(Spree::Product)
-      product_path(wishlistable)
+    else
+      wishlistable
     end
   end
 

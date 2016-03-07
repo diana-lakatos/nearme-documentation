@@ -127,7 +127,15 @@ module.exports = class Modal
     @content.html("") if content
     @content.show()
     if content
-      @content.html(content)
+      if window.Raygun
+        try
+          @content.html(content)
+        catch error
+          Raygun.send error, content
+          throw error
+      else
+        @content.html(content)
+
 
     new CustomInputs(@container)
 

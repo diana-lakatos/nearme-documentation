@@ -158,7 +158,11 @@ class ApplicationController < ActionController::Base
     @projectable ||= platform_context.instance.projectable?
   end
 
-  helper_method :buyable?, :bookable?, :projectable?, :subscribable?
+  def biddable?
+    @biddable ||= platform_context.instance.biddable?
+  end
+
+  helper_method :buyable?, :bookable?, :projectable?, :subscribable?, :biddable?
 
   # Provides an EventTracker instance for the current request.
   #
@@ -504,7 +508,7 @@ class ApplicationController < ActionController::Base
   end
 
   def enable_ckeditor_for_field?(model, field)
-    FormAttributes::CKEFIELDS[model.to_sym].include?(field.to_sym)
+    FormAttributes::CKEFIELDS.fetch(model.to_sym, []).include?(field.to_sym)
   end
 
   def ckeditor_pictures_scope(options = {})

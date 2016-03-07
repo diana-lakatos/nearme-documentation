@@ -45,7 +45,7 @@ class CustomValidator < ActiveRecord::Base
 
   def valid_values=(values)
     if values.is_a? String
-      self[:valid_values] = values.split(',')
+      self[:valid_values] = values.split(/\s*,\s*/)
     else
       super
     end

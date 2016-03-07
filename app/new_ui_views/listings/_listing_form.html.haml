@@ -20,7 +20,7 @@
   = f.input :name, required: f.object.required?(:name)
 
 - if only_inputs.empty? || only_inputs.include?(:description)
-  = f.input :description, required: f.object.required?(:description)
+  = f.input :description, { required: f.object.required?(:description) }.merge(cke_attrs(model, :description))
 
 - if only_inputs.empty? || only_inputs.include?(:confirm_reservations)
   = f.input :confirm_reservations, as: :switch, required: f.object.required?(:confirm_reservations)

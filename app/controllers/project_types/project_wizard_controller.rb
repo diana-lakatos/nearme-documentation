@@ -55,7 +55,7 @@ class ProjectTypes::ProjectWizardController < ApplicationController
   end
 
   def wizard_params
-    params.require(:user).permit(secured_params.user(@transactable_type))
+    params.require(:user).permit(secured_params.user(transactable_type: @transactable_type))
   end
 
   def can_delete_photo?(photo, user)

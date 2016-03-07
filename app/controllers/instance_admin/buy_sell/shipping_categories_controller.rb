@@ -37,7 +37,11 @@ class InstanceAdmin::BuySell::ShippingCategoriesController < InstanceAdmin::BuyS
     @shipping_category = shipping_category_scope.find(params[:id])
     @shipping_category.destroy
     flash[:success] = t('flash_messages.buy_sell.shipping_category_deleted')
-    redirect_to instance_admin_buy_sell_shipping_categories_path
+    if request.xhr?
+      render json: { success: true }
+    else
+      redirect_to instance_admin_buy_sell_shipping_categories_path
+    end
   end
 
   private

@@ -70,8 +70,14 @@ class HiddenUiControls
       'main_menu/account',
       'main_menu/view_profile',
       'main_menu/messages',
+      'main_menu/my_bids',
       'dashboard/payment_documents/sent_to_me',
-      'dashboard/saved_searches'
+      'dashboard/saved_searches',
+      'dashboard/user_bids',
+      'dashboard/user_auctions',
+      'dashboard/offers',
+      'dashboard/offers/bulk_upload',
+      'dashboard/offers/search'
   ]
 
   def self.find(key)

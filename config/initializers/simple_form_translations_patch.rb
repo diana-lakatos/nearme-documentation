@@ -11,7 +11,6 @@ module SimpleForm
         if translation_namespace = @builder.object.try(:translation_namespace)
           lookups << :"#{translation_namespace}.#{namespace}.#{reflection_or_attribute_name}"
         end
-
         while !model_names.empty?
           joined_model_names = model_names.join(".")
           model_names.shift

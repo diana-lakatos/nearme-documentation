@@ -108,7 +108,6 @@ module.exports = class BookingsController
 
       @updateBookingStatus()
 
-
     @bookButton.on 'click', (event) =>
       @formTrigger = @bookButton
 

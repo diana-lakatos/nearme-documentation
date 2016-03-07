@@ -47,5 +47,9 @@ class TransactableTypeDecorator < Draper::Decorator
     searcher_type == 'fulltext' ? fulltext_placeholder : geolocation_placeholder
   end
 
+  def manage_transactables_path
+    [:dashboard, :company, object, object.class.name.demodulize.tableize.split('_').first.pluralize]
+  end
+
 end
 

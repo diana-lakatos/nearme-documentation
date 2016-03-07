@@ -1,11 +1,13 @@
 class Company < ActiveRecord::Base
   include DomainsCacheable
+  include Approvable
+
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
   URL_REGEXP = URI::regexp(%w(http https))
-  has_metadata :accessors => [:industries_metadata]
+  has_metadata :accessors => [:industries_metadata, :draft_at, :completed_at]
 
   notify_associations_about_column_update([:payment_transfers, :payments, :reservations, :listings, :locations], [:instance_id, :partner_id])
   notify_associations_about_column_update([:reservations, :listings, :locations], [:creator_id, :listings_public])
@@ -19,6 +21,7 @@ class Company < ActiveRecord::Base
   has_many :industries, through: :company_industries
   has_many :instance_clients, as: :client, dependent: :destroy
   has_many :listings, class_name: 'Transactable', inverse_of: :company
+  has_many :offers, inverse_of: :company, dependent: :destroy
   has_many :locations, dependent: :destroy, inverse_of: :company
   has_many :locations_impressions, source: :impressions, through: :locations
   has_many :merchant_accounts, as: :merchantable, dependent: :nullify
@@ -91,7 +94,7 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :company_address
   accepts_nested_attributes_for :payments_mailing_address
   accepts_nested_attributes_for :approval_requests
-  accepts_nested_attributes_for :products, :shipping_methods, :shipping_categories, :stock_locations
+  accepts_nested_attributes_for :products, :shipping_methods, :shipping_categories, :stock_locations, :offers
   MerchantAccount::MERCHANT_ACCOUNTS.each do |name, _|
     accepts_nested_attributes_for "#{name}_merchant_account".to_sym, allow_destroy: true, update_only: true
   end
@@ -204,30 +207,6 @@ class Company < ActiveRecord::Base
 
   def self.csv_fields
     { name: 'Company Name', url: 'Company Website', email: 'Company Email', external_id: 'Company External Id', company_industries_list: 'Company Industries' }
-  end
-
-  def approval_request_templates
-      @approval_request_templates ||= PlatformContext.current.instance.approval_request_templates.for("Company").older_than(created_at)
-  end
-
-  def current_approval_requests
-    self.approval_requests.to_a.reject { |ar| !self.approval_request_templates.pluck(:id).include?(ar.approval_request_template_id) }
-  end
-
-  def is_trusted?
-    if approval_request_templates.count > 0
-      self.approval_requests.approved.count > 0
-    else
-      self.creator.try(:is_trusted?)
-    end
-  end
-
-  def approval_request_acceptance_cancelled!
-    listings.find_each(&:approval_request_acceptance_cancelled!)
-  end
-
-  def approval_request_approved!
-    listings.find_each(&:approval_request_approved!)
   end
 
   def rfq_count

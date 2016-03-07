@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160301145706) do
+ActiveRecord::Schema.define(version: 20160306163829) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -193,6 +193,7 @@ ActiveRecord::Schema.define(version: 20160301145706) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "draft_at"
   end
 
   add_index "approval_requests", ["owner_id", "owner_type"], name: "index_approval_requests_on_owner_id_and_owner_type", using: :btree
@@ -279,6 +280,23 @@ ActiveRecord::Schema.define(version: 20160301145706) do
 
   add_index "availability_templates", ["instance_id", "transactable_type_id"], name: "availability_templates_on_instance_id_and_tt_id", using: :btree
   add_index "availability_templates", ["parent_type", "parent_id"], name: "index_availability_templates_on_parent_type_and_parent_id", using: :btree
+
+  create_table "bids", force: :cascade do |t|
+    t.integer  "offer_id"
+    t.integer  "user_id"
+    t.integer  "instance_id"
+    t.string   "state"
+    t.hstore   "properties"
+    t.datetime "deleted_at"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.integer  "reservation_type_id"
+    t.integer  "offer_creator_id"
+  end
+
+  add_index "bids", ["instance_id"], name: "index_bids_on_instance_id", using: :btree
+  add_index "bids", ["offer_id"], name: "index_bids_on_offer_id", using: :btree
+  add_index "bids", ["user_id"], name: "index_bids_on_user_id", using: :btree
 
   create_table "billing_authorizations", force: :cascade do |t|
     t.integer  "instance_id"
@@ -690,6 +708,21 @@ ActiveRecord::Schema.define(version: 20160301145706) do
 
   add_index "delayed_jobs", ["platform_context_detail_id", "platform_context_detail_type"], name: "index_delayed_jobs_on_platform_context_detail", using: :btree
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+
+  create_table "deposits", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.string   "target_type"
+    t.integer  "target_id"
+    t.integer  "deposit_amount_cents"
+    t.datetime "authorized_at"
+    t.datetime "voided_at"
+    t.datetime "deleted_at"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "deposits", ["instance_id", "target_id", "target_type"], name: "index_deposits_on_instance_id_and_target_id_and_target_type", using: :btree
+  add_index "deposits", ["instance_id"], name: "index_deposits_on_instance_id", using: :btree
 
   create_table "dimensions_templates", force: :cascade do |t|
     t.string   "name",            limit: 255
@@ -1224,6 +1257,33 @@ ActiveRecord::Schema.define(version: 20160301145706) do
 
   add_index "merchant_accounts", ["instance_id", "merchantable_id", "merchantable_type"], name: "index_on_merchant_accounts_on_merchant", using: :btree
 
+  create_table "offers", force: :cascade do |t|
+    t.string   "name"
+    t.text     "summary"
+    t.text     "description"
+    t.integer  "price_cents"
+    t.hstore   "properties"
+    t.string   "currency"
+    t.string   "slug"
+    t.integer  "instance_id"
+    t.integer  "transactable_type_id"
+    t.integer  "company_id"
+    t.integer  "creator_id"
+    t.datetime "draft_at"
+    t.datetime "deleted_at"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.integer  "wish_list_items_count", default: 0
+    t.string   "state"
+    t.decimal  "average_rating"
+  end
+
+  add_index "offers", ["company_id"], name: "index_offers_on_company_id", using: :btree
+  add_index "offers", ["creator_id"], name: "index_offers_on_creator_id", using: :btree
+  add_index "offers", ["instance_id"], name: "index_offers_on_instance_id", using: :btree
+  add_index "offers", ["slug"], name: "index_offers_on_slug", using: :btree
+  add_index "offers", ["transactable_type_id"], name: "index_offers_on_transactable_type_id", using: :btree
+
   create_table "pages", force: :cascade do |t|
     t.string   "path",                      limit: 255,                 null: false
     t.text     "content"
@@ -1681,6 +1741,16 @@ ActiveRecord::Schema.define(version: 20160301145706) do
   add_index "reservation_seats", ["reservation_period_id"], name: "index_reservation_seats_on_reservation_period_id", using: :btree
   add_index "reservation_seats", ["user_id"], name: "index_reservation_seats_on_user_id", using: :btree
 
+  create_table "reservation_types", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "reservation_types", ["instance_id"], name: "index_reservation_types_on_instance_id", using: :btree
+
   create_table "reservations", force: :cascade do |t|
     t.integer  "transactable_id"
     t.integer  "owner_id"
@@ -1716,7 +1786,7 @@ ActiveRecord::Schema.define(version: 20160301145706) do
     t.datetime "request_guest_rating_email_sent_at"
     t.datetime "request_host_and_product_rating_email_sent_at"
     t.string   "type",                                          limit: 255
-    t.string   "reservation_type",                              limit: 255
+    t.string   "booking_type",                                  limit: 255
     t.integer  "hours_to_expiration",                                                               default: 24,        null: false
     t.integer  "minimum_booking_minutes",                                                           default: 60
     t.integer  "book_it_out_discount"
@@ -1729,6 +1799,7 @@ ActiveRecord::Schema.define(version: 20160301145706) do
     t.datetime "ends_at"
     t.string   "time_zone"
     t.datetime "expire_at"
+    t.integer  "reservation_type_id"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -3514,6 +3585,7 @@ ActiveRecord::Schema.define(version: 20160301145706) do
     t.boolean  "action_monthly_subscription_booking"
     t.integer  "default_availability_template_id"
     t.string   "show_path_format"
+    t.integer  "reservation_type_id"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -3577,6 +3649,7 @@ ActiveRecord::Schema.define(version: 20160301145706) do
     t.integer  "monthly_subscription_price_cents"
     t.string   "slug"
     t.integer  "availability_template_id"
+    t.integer  "deposit_amount_cents"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
@@ -3963,6 +4036,7 @@ ActiveRecord::Schema.define(version: 20160301145706) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "api_call_count"
   end
 
   add_index "workflow_alert_monthly_aggregated_logs", ["instance_id", "year", "month"], name: "wamal_instance_id_year_month_index", unique: true, using: :btree
@@ -3971,12 +4045,13 @@ ActiveRecord::Schema.define(version: 20160301145706) do
     t.integer  "instance_id"
     t.integer  "year"
     t.integer  "week_number"
-    t.integer  "email_count", default: 0, null: false
-    t.integer  "integer",     default: 0, null: false
-    t.integer  "sms_count",   default: 0, null: false
+    t.integer  "email_count",    default: 0, null: false
+    t.integer  "integer",        default: 0, null: false
+    t.integer  "sms_count",      default: 0, null: false
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "api_call_count"
   end
 
   add_index "workflow_alert_weekly_aggregated_logs", ["instance_id", "year", "week_number"], name: "wamal_instance_id_year_week_number_index", unique: true, using: :btree
@@ -4003,6 +4078,11 @@ ActiveRecord::Schema.define(version: 20160301145706) do
     t.string   "recipient",        limit: 255
     t.string   "from_type",        limit: 255
     t.string   "reply_to_type",    limit: 255
+    t.text     "endpoint"
+    t.string   "request_type"
+    t.boolean  "use_ssl"
+    t.text     "payload_data",                 default: "{}"
+    t.text     "headers",                      default: "{}"
   end
 
   add_index "workflow_alerts", ["instance_id", "workflow_step_id"], name: "index_workflow_alerts_on_instance_id_and_workflow_step_id", using: :btree

@@ -2,7 +2,7 @@ class ProductForm < Form
 
   # ACCESSORS
 
-  attr_accessor :all_shipping_categories, :document_requirements, :upload_obligation
+  attr_accessor :all_shipping_categories, :upload_obligation
   attr_reader :product
 
   # VALIDATIONS
@@ -23,20 +23,7 @@ class ProductForm < Form
       end
     end
   end
-  validate :label_and_description_cannot_be_empty
 
-  def label_and_description_cannot_be_empty
-    if @document_requirements.present?
-      @document_requirements.each do |document_requirement|
-        [:label, :description].each do |field|
-          if document_requirement.try(field).empty?
-            self.errors.add(:base, "#{field}_empty".to_sym)
-            document_requirement.errors.add(field.to_sym, :empty)
-          end
-        end
-      end
-    end
-  end
   validate :validate_mandatory_categories
 
   def validate_mandatory_categories
@@ -47,7 +34,8 @@ class ProductForm < Form
 
   # DELEGATORS
 
-  delegate :id, :price, :categories, :category_ids, :price=,
+  delegate :id, :price, :categories, :category_ids, :price=, :document_requirements,
+    :document_requirements_attributes, :document_requirements_attributes=,
     :name, :name=, :description, :id=, :description=, :shippo_enabled=, :shippo_enabled, :action_rfq, :action_rfq=,
     :draft?, :draft=, :draft, :extra_properties, :extra_properties=, :custom_validators,
     :translation_namespace, :master, :insurance_amount, :insurance_amount=,
@@ -173,7 +161,6 @@ class ProductForm < Form
     @stock_item = @stock_location.stock_items.where(variant_id: @product.master.id).first || @stock_location.stock_items.build(backorderable: false)
     @stock_item.variant = @product.master
     @stock_movement = @stock_item.stock_movements.build stock_item: @stock_item
-    @document_requirements ||= []
   end
 
   def submit(params)
@@ -183,6 +170,8 @@ class ProductForm < Form
       self.product.shipping_category = get_or_create_default_category_for_company(@company)
       @shipping_category = self.product.shipping_category
     end
+
+    document_requirements.each{|dr| dr.item = self.product}
 
     if valid?
       save!
@@ -202,7 +191,6 @@ class ProductForm < Form
       @product.images.each { |i| i.save!(validate: false) }
       @product.classifications.each { |x| x.save!(validate: !draft?) }
       @upload_obligation.save!
-      @document_requirements.each { |x| x.save! }
       @stock_location.save!(validate: !draft?)
       @stock_item.save!(validate: !draft?)
       @shipping_category.try(:save!, validate: !draft?)
@@ -216,29 +204,12 @@ class ProductForm < Form
     end
   end
 
-  def document_requirements_attributes=(attributes)
-    @document_requirements = []
-    attributes.each do |key, document_requirements_attributes|
-      next if document_requirements_attributes["hidden"] == "1"
-      document_requirement = @product.document_requirements.where(id: document_requirements_attributes["id"]).first
-      if document_requirements_attributes["removed"] == "1"
-        document_requirement.try(:destroy)
-      else
-        document_requirement ||= @product.document_requirements.build
-        document_requirement.assign_attributes(document_requirements_attributes)
-        document_requirement.item = @product
-        @document_requirements << document_requirement
-      end
-    end
-  end
-
   def upload_obligation_attributes=(attributes)
     @upload_obligation.assign_attributes(attributes)
   end
 
   def assign_all_attributes
     @price = @product.price
-    build_document_requirements if PlatformContext.current.instance.documents_upload_enabled?
   end
 
   def required_field_missing?
@@ -259,16 +230,6 @@ class ProductForm < Form
     end
 
     default_category
-  end
-
-  def build_document_requirements
-    @document_requirements = @product.document_requirements.to_a
-    DocumentRequirement::MAX_COUNT.times do
-      hidden = @document_requirements.blank? ? "0" : "1"
-      document_requirement = @product.document_requirements.build
-      document_requirement.hidden = hidden
-      @document_requirements << document_requirement
-    end
   end
 
 end

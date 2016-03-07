@@ -1,6 +1,6 @@
 .row-fluid.support.detail
   .span8.offset2
-    %h1 Request ##{@ticket.id}
+    %h1= t('support.ticket.request_header', ticket_id: @ticket.id)
     .box
       .header.clearfix
         .left
@@ -8,9 +8,9 @@
             =@ticket.subject
         .right
           %h2
-            =@ticket.state.titleize
+            =t("support.ticket.state.#{@ticket.state}")
 
-      %h3.messages Messages
+      %h3.messages=t('support.ticket.messages')
       = render partial: 'support/ticket_messages/ticket_message', collection: @ticket.messages, spacer_template: 'support/ticket_messages/spacer'
 
       -if @ticket.open?

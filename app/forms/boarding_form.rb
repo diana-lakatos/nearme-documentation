@@ -54,13 +54,13 @@ class BoardingForm < Form
     store_attributes(params)
     @user.assign_attributes(params[:user_attributes])
     @company.assign_attributes(params[:company_attributes])
-
+    @product_form.document_requirements.each{|dr| dr.item = @product_form.product}
     if draft? || valid?
       @user.save!(validate: !draft?)
       @seller_profile.save!(validate: !draft?)
+      @company.update_metadata({draft_at: (draft? ? Time.now : nil), completed_at: (draft? ? nil : Time.now)})
       @company.save!(validate: !draft?)
       @product_form.save!(validate: !draft?)
-
       true
     else
       assign_all_attributes
