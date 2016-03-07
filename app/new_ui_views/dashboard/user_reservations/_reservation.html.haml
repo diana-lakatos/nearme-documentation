@@ -14,7 +14,7 @@
       .col-sm-5
         .order-status
           %span{class: reservation.state }
-            = reservation.state.humanize.capitalize
+            = t "reservations.states.#{reservation.state}"
 
 
   - if reservation.state == 'unconfirmed'
