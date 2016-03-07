@@ -10,9 +10,10 @@
       - csv_link = link_to t('data_upload.manage.download_csv_template'), {action: :download_csv_template, importable: @importable}
       = t('data_upload.manage.format_info_html', link: csv_link)
 
-    %p
-      = t('data_upload.manage.download_current_data_hint')
-      = link_to t('data_upload.manage.download_current_data'), {action: :download_current_data_csv}
+    -if !@importable.is_a?(Spree::ProductType)
+      %p
+        = t('data_upload.manage.download_current_data_hint')
+        = link_to t('data_upload.manage.download_current_data'), {action: :download_current_data_csv}
 
     %p
       = t('data_upload.manage.new.sync_mode_hint_html')
