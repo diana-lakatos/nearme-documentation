@@ -24,7 +24,7 @@ class PaymentGateway::StripePaymentGateway < PaymentGateway
   end
 
   def supported_currencies
-    ["AUD", "CAD", "USD", "DKK", "NOK", "SEK", "EUR", "GBP"]
+    ["AUD", "CAD", "USD", "DKK", "NOK", "SEK", "EUR", "GBP", "ILS"]
   end
 
   def gateway
