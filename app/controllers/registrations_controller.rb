@@ -302,6 +302,17 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def mobile_number
+    current_user.update user_params
+
+    @country = current_user.country_name
+    @return_path = params[:return_path]
+
+    if current_user.invalid?
+      render('dashboard/user_messages/missing_phone_number')
+    end
+  end
+
   protected
 
   def is_navigational_format?

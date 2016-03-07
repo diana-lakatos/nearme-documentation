@@ -35,6 +35,5 @@ class SpaceWizardController < ApplicationController
     return true if user.present? && user.companies.any? { |c| c.listings.include?(photo.listing) } # if the photo content is a listing and belongs to one of the companies of the user
     false
   end
-
 end
 

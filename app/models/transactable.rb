@@ -92,8 +92,7 @@ class Transactable < ActiveRecord::Base
   after_destroy :close_request_for_quotes
 
   # == Scopes
-  scope :featured, -> { where(%{ (select count(*) from "photos" where owner_type LIKE 'Transactable' AND owner_id = "listings".id) > 0  }).
-                        includes(:photos).order(%{ random() }).limit(5) }
+  scope :featured, -> { where(featured: true) }
   scope :draft, -> { where('transactables.draft IS NOT NULL') }
   scope :active, -> { where('transactables.draft IS NULL') }
   scope :latest, -> { order("transactables.created_at DESC") }
@@ -180,6 +179,7 @@ class Transactable < ActiveRecord::Base
   validates :quantity, presence: true, numericality: {greater_than: 0}
   validates :rental_shipping_type, inclusion: { in: RENTAL_SHIPPING_TYPES }
   validates_presence_of :dimensions_template, if: lambda { |record| ['delivery', 'both'].include?(record.rental_shipping_type) }
+  validates_associated :approval_requests
 
   validate :check_book_it_out_minimum_qty, if: ->(record) { record.book_it_out_minimum_qty.present? }
   validate :booking_availability, if: ->(record) { record.overnight_booking? }

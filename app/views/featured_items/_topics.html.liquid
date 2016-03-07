@@ -1,0 +1,10 @@
+<div class="item span3">
+	<div class="item-image">
+		<img src="{{ item.cover_image }}" />
+	</div>
+	<span class="item-title">{{ item.name }}</span>
+
+	<a href="{{ item.show_path }}" class="btn btn-blue">
+		{{ "featured_items.view_item" | translate: item_type_name: 'Topic' }}
+	</a>
+</div>

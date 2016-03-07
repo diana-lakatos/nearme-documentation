@@ -2088,6 +2088,14 @@ en:
     read_more_html: 'more&hellip;'
     thread_locked: 'You can no longer send messages regarding this context, as it has been deleted.'
 
+    mobile_number:
+      headers:
+        missing: 'Missing mobile number'
+        updated: 'Mobile successfully number updated'
+      buttons:
+        skip: 'Skip'
+        continue: 'Continue'
+        save_changes: 'Save changes'
 
   validation_messages:
     price_too_high: '%{price} is too high'
@@ -2362,6 +2370,7 @@ en:
       wrong_file_message: 'does not have an accepted extension. Please select a document or an image.'
   approval_request_attachments:
     please_upload_document: 'Please upload document'
+    attachments_are_missing: 'are missing'
     please_fill_in_message: "Please fill in message"
     wrong_file_message: 'does not have an accepted extension. Please select a pdf document or an image.'
   schedule:
@@ -2487,4 +2496,8 @@ en:
       complete_your_thing: "Complete Your %{thing}"
     photo_uploader:
       caption: "Enter caption..."
+
+  featured_items:
+    member_since: 'Member since %{date}'
+    view_item: 'View %{item_type_name}'
 

@@ -465,7 +465,6 @@ module ApplicationHelper
     request.protocol + platform_context.host + request.fullpath
   end
 
-
   def is_required?(object, fields)
     object.try(:validation_for, fields).try(:any?, &:is_required?)
   end
@@ -493,4 +492,10 @@ module ApplicationHelper
     theme = PlatformContext.current.theme
     "#{Rails.application.config.asset_host}#{dynamic_theme_path(theme_id: theme.id, updated_at: theme.updated_at.to_formatted_s(:number), stylesheet: stylesheet)}"
   end
+
+  def render_featured_items
+    render(partial: @partial_name, collection: @collection, as: :item)
+  end
+
 end
+
