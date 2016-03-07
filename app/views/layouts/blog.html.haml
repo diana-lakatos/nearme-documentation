@@ -17,8 +17,7 @@
     = stylesheet_link_tag 'application'
     = render 'shared/head/fonts'
 
-    %style
-      = render 'dynamic_themes/application'
+    = stylesheet_link_tag dynamic_theme_path_for_current_theme(:application)
 
     = render 'shared/javascripts/header'
 
