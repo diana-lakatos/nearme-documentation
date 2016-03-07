@@ -13,15 +13,17 @@ class DynamicThemesController < ApplicationController
     expire_date = base_date + 1.year
 
     request.session_options[:skip] = true
+
     expires_in 1.year, :public => true
-    headers['Access-Control-Allow-Origin'] = '*'
-    headers['Access-Control-Request-Method'] = '*'
-    headers['Expires'] = expire_date.httpdate
-    headers['x-frame-options'] = nil
-    headers['Last-Modified'] = expire_date.httpdate
-    headers['Date'] = base_date.httpdate
-    headers['Content-Type'] = 'text/css'
-    headers['X-Content-Type-Options'] = nil
+
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Request-Method'] = '*'
+    response.headers['Expires'] = expire_date.httpdate
+    response.headers['x-frame-options'] = nil
+    response.headers['Last-Modified'] = expire_date.httpdate
+    response.headers['Date'] = base_date.httpdate
+    response.headers['Content-Type'] = 'text/css'
+    response.headers['X-Content-Type-Options'] = nil
 
     render stylesheet.to_s, layout: false
   end
