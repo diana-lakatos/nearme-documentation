@@ -491,6 +491,6 @@ module ApplicationHelper
 
   def dynamic_theme_url(stylesheet)
     theme = PlatformContext.current.theme
-    "#{Rails.application.config.asset_host}#{dynamic_theme_path(theme_id: theme.id, updated_at: theme.updated_at.to_formatted_s(:number), stylesheet: stylesheet)}"
+    dynamic_theme_path(theme_id: theme.id, updated_at: theme.updated_at.to_formatted_s(:number), stylesheet: stylesheet)
   end
 end
