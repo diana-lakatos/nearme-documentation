@@ -8,7 +8,8 @@ class Translation < ActiveRecord::Base
   scope :updated_after, lambda { |updated_at| where('updated_at > ?', updated_at.to_time) }
   # Ordering by instance_id DESC is important for when iterating the list because we want the first
   # one in the list to be the default
-  scope :default_and_custom_translations_for_instance, -> (instance_id, locale) { where(locale: [PlatformContext.current.instance.primary_locale, locale]).where('instance_id IS NULL OR instance_id = ?', instance_id).order('key ASC, instance_id DESC') }
+  # We use where(locale: ['en', locale]) because we only create the default ones for en
+  scope :default_and_custom_translations_for_instance, -> (instance_id, locale) { where(locale: ['en', locale]).where('instance_id IS NULL OR instance_id = ?', instance_id).order('key ASC, instance_id DESC') }
 
   validates :key, presence: true,
     uniqueness: { scope: [:instance_id, :locale], case_sensitive: false},
