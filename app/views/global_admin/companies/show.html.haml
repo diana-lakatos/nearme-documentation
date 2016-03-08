@@ -1,0 +1,18 @@
+%h1= resource.name
+
+%ul.nav.nav-tabs
+  %li.active= link_to "Attributes", "#attributes", :'data-toggle' => "tab"
+  %li= link_to "Payouts", "#payouts", :'data-toggle' => "tab"
+  %li= link_to "Reservations", "#reservations", :'data-toggle' => "tab"
+
+.tab-content
+  .tab-pane.active#attributes
+    = render 'attributes_table'
+
+  .tab-pane#payouts
+    = render 'global_admin/payment_transfers/list_table',
+        :collection => resource.payment_transfers.order('created_at desc')
+
+  .tab-pane#reservations
+    = render 'global_admin/reservations/list_table',
+        :collection => resource.reservations

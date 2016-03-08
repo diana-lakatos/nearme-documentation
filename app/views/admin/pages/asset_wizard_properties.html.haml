@@ -1,0 +1,41 @@
+- admin_help_area('asset-custom-properties')
+
+- asset_type_name = 'Event'
+
+= admin_side_navigation(:asset)
+
+= admin_simple_form_for :admin_config, url: admin_path(page: 'asset_wizard_categories') do |f|
+
+  %h1= "#{asset_type_name} properties"
+
+  %p
+    Check all that apply to
+    %i #{asset_type_name}
+
+  .table-container.properties-table.actions-table
+    %table
+      %thead
+        %tr
+          %th Name
+          %th.type Type
+          %th.actions Options
+      %tbody
+        - for type in ['category', 'text', 'number', 'collection', 'datetime', 'boolean'] do
+          %tr
+            %td
+              .checkbox
+                %input{type: "checkbox", id: "property-#{type}"}
+                %label{:for => "property-#{type}"}= "property_#{type}"
+            %td.type
+              %span{class: "property-type-#{type}"}= type.capitalize
+
+            %td.actions
+              = link_to 'Edit', admin_dialog_path(id: "property_type"), class: 'action-edit', data: { modal: "" }
+
+  %p.hint All properties can be shared with your other asset types.
+
+  %p
+    %button.btn.btn-sm{type: 'button', data: { toggle: 'modal', target: '#categories-modal' } } Add new property
+
+
+  = render 'admin/shared/navigation_nextprev', f: f

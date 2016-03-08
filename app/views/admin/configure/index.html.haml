@@ -1,0 +1,27 @@
+- active = nil
+
+%nav.nav-config-main
+  %h1 Configure
+
+  .row
+    .col-md-3
+      %h2 Assets
+      %ul
+        - @transactable_types.each do |tt|
+          %li= link_to tt.name, admin_assets_general_settings_path(tt)
+
+        %li= link_to 'Create a new asset type', admin_assets_new_path, class: 'create-asset'
+
+      %h2 Marketplace
+      = render_navigation(:marketplace)
+
+    .col-md-3
+      %h2 Integrations
+      = render_navigation(:integrations)
+
+    .col-md-6.nav-config-main-advanced
+      %h2 Design and layout
+      = render_navigation(:design)
+
+      %h2 Advanced settings
+      = render_navigation(:advanced)

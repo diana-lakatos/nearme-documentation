@@ -1,0 +1,31 @@
+- admin_help_area('themes')
+
+= admin_side_navigation(:design)
+
+.go-back-link
+  = link_to t('admin.themes.actions.return_to_themes'), admin_design_themes_path
+
+%h1= t('admin.liquid_views.title_theme_html', theme: @custom_theme.name)
+
+- if @instance_views.size > 0
+  .table-container
+    %table
+      %thead
+        %tr
+          %th= t('admin.liquid_views.template')
+          %th= t('admin.liquid_views.transactable_types')
+          %th= t('admin.liquid_views.locales')
+      %tbody
+        - @instance_views.each do |instance_view|
+          %tr
+            %td= link_to pretty_path(instance_view.path), edit_admin_design_theme_instance_view_path(@custom_theme, instance_view)
+            %td= instance_view.transactable_types.pluck(:name).join(', ')
+            %td= instance_view.locales.map(&:display_name).join(', ')
+
+- else
+  .empty-listing= t('admin.liquid_views.empty_listing')
+
+
+.listing-actions
+  = link_to t('admin.liquid_views.action.create'), new_admin_design_theme_instance_view_path(@custom_theme), class: 'action--create'
+

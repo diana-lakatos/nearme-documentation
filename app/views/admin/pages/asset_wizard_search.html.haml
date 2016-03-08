@@ -1,0 +1,208 @@
+#rootwizard.m-t-50.bg-white
+  = render 'admin/pages/asset_wizard/nav', active: 'search'
+
+  .tab-content
+    = render 'admin/pages/asset_wizard/next_prev', previous_link: admin_path(page: 'asset_wizard_file_uploads'), next_link: admin_path(page: 'asset_wizard_custom_attributes')
+
+    .tab-pane.padding-20.slide-left.active
+      .row.row-same-height
+        .col-md-5.b-r.b-dashed.b-grey.sm-b-b
+          .padding-30
+            %h2 Search
+
+            %p
+              %span.label.label-warning WARNING
+
+              Search is the primary way of browsing the marketplace. You can choose to disable it though, but please remember you will have to provide an alternative to discovering your products.
+
+            %p
+              %span.label.label-danger Should we even give this option?
+
+            %p
+              %label
+                %input{type:"checkbox", "data-init-plugin" => "switchery", "data-toggle" => 'collapse', "data-target" => '#search-props', checked: 'checked'  }
+                %b Make this asset searchable
+
+
+        .col-md-7
+          .padding-30
+            #search-props.collapse.in
+              %form{:role => "form"}
+
+                %h5.m-t-50 Search view template
+
+                %p
+                  %span.label.label-danger CHRISD
+                  We should create one awesome search template, and make rest available via liquid, rather than having 5 mediocree templates.
+
+                .form-group.form-group-default.required
+                  %label Default search view
+                  %select.form-control
+                    %option{:value => ""} - select template -
+                    %option{:value => "1"} mixed
+                    %option{:value => "2"} table
+                    %option{:value => "3"} other
+
+
+                %h5.m-t-50
+                  Location based search
+                  %span.label.label-danger OPTIONAL SECTION
+
+                %p Since assets are location based you can define the default search radius. All listings within range from resulting search location will be included in search results.
+
+                .row
+                  .col-sm-6
+                    .form-group.form-group-default.required
+                      %label{:for => ""} Search radius
+                      %input.form-control{:type => "number", minimum: 1, value: 20, placeholder: 'Enter radius' }/
+
+                  .col-sm-6
+                    .radio.radio-success
+                      %input#radius-unit-miles{:name => "radius-unit", :type => "radio", :value => "1", checked: true }/
+                      %label{:for => "radius-unit-miles"} Miles
+
+                      %input#radius-unit-kms{:name => "radius-unit", :type => "radio", :value => "2"}/
+                      %label{:for => "radius-unit-kms"} Kilometers
+
+
+                %h5.m-t-50 Saved Searches
+                %p Saved searches offer a very useful functionality to the users. They can define a custom search filter. Each time a new listing is added that matches their filter, they will be notified via email.
+
+                %p.checkbox.check-success
+                  %input#saved-searches{type:"checkbox", checked: 'checked'  }
+                  %label{:for => "saved-searches"} Enable saved searches
+
+                %h5.m-t-50
+                  Filters
+                  %span.label.label-danger OPTIONAL SECTION
+
+                %h6.m-t-20
+                  %b Price slider
+
+                %p Price slider will allow you to filter results based on maximum and minimum price of asset.
+
+                .bg-warning.padding-20
+                  %p
+                    Price sliders make no sense without context.
+                    %code $100 / hour
+                    will be almost 8 times more than
+                    %code $105 / day
+                    and yet it would show on the same scale in reverse order.
+
+                  %p To put items on the same scale you would need to get them to the same baseline, and that's way too complicated. I suggest we git rid of
+                  price sliders altogether or rethink their implementation. As of now they are more harmful than useful.
+
+                %p.checkbox.check-success
+                  %input#enable-price-slider{type:"checkbox", checked: 'checked'  }
+                  %label{:for => "enable-price-slider"} Enable price slider
+
+                %h6.m-t-40
+                  %b Pricing type filters
+                  %span.label.label-danger OPTIONAL FILTER BASED ON PRICING TYPE
+
+                %p Depending on your settings for asset pricing you can enable additional options that will allow you to filter search results based on hourly, daily, monthly, etc. pricing type.
+
+
+                %p.checkbox.check-success
+                  %input#enable-price-filters{type:"checkbox", checked: 'checked'  }
+                  %label{:for => "enable-price-filters"} Enable pricing type filters
+
+                %h6.m-t-40
+                  %b Date pickers
+                  %span.label.label-danger OPTIONAL FILTER BASED ON PRICING
+
+                %p You can allow filtering search results limiting them to certain date ranges only.
+
+                %p.checkbox.check-success
+                  %input#enable-datepickers{type:"checkbox", checked: 'checked'  }
+                  %label{:for => "enable-datepickers"} Enable date pickers
+
+                %p.m-t-40
+                  %span.label.label-danger WHAT DOES THIS SETTING DO?
+
+                .radio.radio-success
+                  %input#datepicker-mode-relative{:name => "datepicker-mode", :type => "radio", :value => "1", checked: 'checked'}/
+                  %label{:for => "datepicker-mode-relative"} Relative
+
+                  %input#date-picker-mode-absolute{:name => "datepicker-mode", :type => "radio", :value => "2"}/
+                  %label{:for => "date-picker-mode-absolute"} Absolute
+
+                %p.m-t-40
+                  %span.label.label-danger WHAT DOES THIS SETTING DO?
+
+                %p.checkbox.check-success
+                  %input#use-availability-rules{type:"checkbox", checked: 'checked'  }
+                  %label{:for => "use-availability-rules"} Use availability rules
+
+                %h6.m-t-40
+                  %b Categories
+                  %span.label.label-danger OPTIONAL FILTER BASED ON CATEGORIES
+
+                %p You have granular control over which categories should be used as a filter.
+
+                %ul.checkbox.check-success.p-l-20
+                  %li
+                    %input#category-1{type:"checkbox", checked: 'checked'  }
+                    %label{:for => "category-1"} Category 1
+                  %li
+                    %input#category-2{type:"checkbox", checked: 'checked'  }
+                    %label{:for => "category-2"} Category 2
+
+                %p.m-t-40 There are two types of filtering modes when it comes to categories
+
+                %p
+                  %b Asset must have
+                .radio.radio-success
+                  %input#category-filter-all{:name => "category-filter", :type => "radio", :value => "1", checked: 'checked'}/
+                  %label{:for => "category-filter-all"} ALL of selected categories
+
+                  %input#category-filter-or{:name => "category-filter", :type => "radio", :value => "2"}/
+                  %label{:for => "category-filter-or"} AT LEAST ONE selected category
+
+                %h6.m-t-40
+                  %b Custom Attributes
+                  %span.label.label-danger OPTIONAL FILTER BASED ON AVAILABLE ATTRS
+
+                %p You can enable filtering search results by custom attributes as well.
+
+                %ul.checkbox.check-success.p-l-20
+                  %li
+                    %input#custom-attribute-1{type:"checkbox", checked: 'checked'  }
+                    %label{:for => "custom-attribute-1"} Custom Attribute 1
+                  %li
+                    %input#custom-attribute-2{type:"checkbox", checked: 'checked'  }
+                    %label{:for => "custom-attribute-2"} Custom Attribute 2
+
+                %h5.m-t-50
+                  Advanced options
+                  %strong.label.label-danger DO WE NEED THIS HERE?
+
+                %p
+                  %strong.label.label-danger WARNING
+                  Do not make changes here unless you are absolutely sure you know what will happen.
+
+                %h6.m-t-20
+                  %b Searcher Engine
+
+                .radio.radio-success
+                  %input#searcher-engine-postgres{:name => "searcher-engine", :type => "radio", :value => "1", checked: 'checked'}/
+                  %label{:for => "searcher-engine-postgres"} PostgreSQL
+
+                  %input#searcher-engine-elastic{:name => "searcher-engine", :type => "radio", :value => "2"}/
+                  %label{:for => "searcher-engine-elastic"} ElasticSearch
+
+                %h6.m-t-20
+                  %b Searcher Type
+
+                .form-group.form-group-default.required
+                  %label Searcher Type
+                  %select.form-control
+                    %option{:value => "1"} Geo
+                    %option{:value => "2"} other options
+
+
+
+
+    = render 'admin/pages/asset_wizard/next_prev', previous_link: admin_path(page: 'asset_wizard_file_uploads'), next_link: admin_path(page: 'asset_wizard_custom_attributes')
+
+  .clearfix

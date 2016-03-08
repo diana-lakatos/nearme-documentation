@@ -1,0 +1,52 @@
+- admin_help_area('liquid-views')
+
+= admin_side_navigation(:design)
+
+.go-back-link
+  = link_to t('admin.liquid_views.action.return_to_themes'), [:admin, :design, :custom_themes]
+
+%h1= t('admin.liquid_views.title')
+
+- if @instance_views_tree.size > 0
+  %ul.templates-list
+    - @instance_views_tree.each_pair do |path, group|
+
+      %li{class: "level-#{path.count('/') + 1}"}
+        .template-name= pretty_path(path.split('/').last)
+
+        - if group.size > 0
+          %ul.versions
+            - group.each do |instance_view|
+              %li
+                = link_to [:edit, :admin, :design, instance_view] do
+                  %h4 Version:
+                  %dl
+                    %dt Languages:
+                    %dd= instance_view.locales.map(&:display_name).join(', ')
+                  %dl
+                    %dt Asset types:
+                    - at = instance_view.transactable_types.pluck(:name).join(', ')
+                    %dd= at.empty? ? '-' : at
+
+- else
+  .empty-listing= t('admin.liquid_views.empty_listing')
+
+%hr/
+
+%h2= t('admin.liquid_views.default_views')
+%p Click on any of the templates below to create a customized version.
+
+- if @not_customized_instance_views_paths_tree.size > 0
+  %ul.templates-list
+    - @not_customized_instance_views_paths_tree.each_pair do |path, instance_view_path|
+
+      %li{class: "level-#{path.count('/') + 1}"}
+        .template-name
+          - if instance_view_path
+            = link_to pretty_path(path.split('/').last), new_admin_design_instance_view_path(path: instance_view_path)
+          - else
+            = pretty_path(path.split('/').last)
+
+
+- else
+  .empty-listing= t('admin.liquid_views.empty_listing')

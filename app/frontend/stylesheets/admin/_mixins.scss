@@ -1,0 +1,94 @@
+// Mixins
+
+@mixin triangle($direction, $color, $size: 0.5em, $spread: null) {
+    content: "";
+    display: inline-block;
+    border-style: solid;
+    border-color: transparent;
+    vertical-align: middle;
+
+    @if $spread == null {
+        $spread: $size;
+    }
+
+    @if $direction == up {
+        border-bottom-color: $color;
+        border-bottom-width: $size;
+        border-top-width: 0;
+        border-left-width: $spread;
+        border-right-width: $spread;
+    }
+
+    @else if $direction == right {
+        border-left-color: $color;
+        border-left-width: $size;
+        border-right-width: 0;
+        border-top-width: $spread;
+        border-bottom-width: $spread;
+    }
+
+    @else if $direction == down {
+        border-top-color: $color;
+        border-top-width: $size;
+        border-bottom-width: 0;
+        border-left-width: $spread;
+        border-right-width: $spread;
+    }
+
+    @else if $direction == left {
+        border-right-color: $color;
+        border-right-width: $size;
+        border-left-width: 0;
+        border-top-width: $spread;
+        border-bottom-width: $spread;
+    }
+}
+
+@mixin sr-only {
+    position: absolute;
+    left: -2000px;
+}
+
+@mixin transition-color {
+    transition: color $transition-timing-default ease;
+}
+
+@mixin transition-background {
+    transition: background-color $transition-timing-default ease;
+}
+
+@mixin transition-all {
+    transition: all $transition-timing-default ease;
+}
+
+@mixin clear {
+    &:after {
+        display: table;
+        width: 100%;
+        clear: both;
+        content: "";
+    }
+}
+
+@mixin section($message) {
+    /* #{$message} ============================================= */
+}
+
+@mixin progressbar($background: $brand-primary, $position: relative) {
+    position: $position;
+    background: $background;
+
+    &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
+        z-index: 1;
+        background-size: 50px 50px;
+        animation: progressbar 2s linear infinite;
+        overflow: hidden;
+    }
+}

@@ -1,0 +1,14 @@
+- admin_help_area('themes')
+
+= admin_side_navigation(:design)
+
+.go-back-link
+  = link_to t('admin.themes.actions.return_to_themes'), admin_design_themes_path
+
+%h1= t('admin.themes.title.edit_html', name: @custom_theme.name)
+
+= render partial: "form"
+
+.form-delete-action
+  = admin_delete_action [:admin, :design, @custom_theme], object_name: 'theme' do
+    = t('admin.themes.actions.delete')

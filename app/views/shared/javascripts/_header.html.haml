@@ -1,12 +1,12 @@
+= javascript_include_tag 'vendor/modernizr'
+
 = render "shared/javascripts/javascript_assets"
 
 = render 'shared/javascripts/raygun/libs'
 
 = render 'shared/javascripts/ckeditor_basepath'
 
-= javascript_include_tag 'vendor/jquery.min'
+- unless defined? no_jquery
+  = javascript_include_tag 'vendor/jquery.min'
 
-/[if lt IE 10]
-  = javascript_include_tag 'vendor/placeholders.min'
 
-= javascript_include_tag 'vendor/modernizr'

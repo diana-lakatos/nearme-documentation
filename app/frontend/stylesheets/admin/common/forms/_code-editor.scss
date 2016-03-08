@@ -1,0 +1,51 @@
+.form-group.code_editor textarea {
+    height: 500px;
+}
+
+.js {
+    .form-group.code_editor {
+        position: relative;
+    }
+
+    .code-editor-fullscreen-toggle {
+        position: absolute;
+        z-index: 20;
+        right: 20px;
+        bottom: 20px;
+        font-size: 0;
+        padding: 10px 15px;
+
+        &:before {
+            @include fa-icon;
+
+            font-size: 20px;
+            content: $fa-var-arrows-alt;
+            line-height: 1;
+        }
+    }
+
+    .form-group.code_editor > .CodeMirror {
+        z-index: 100;
+        -webkit-font-smoothing: subpixel-antialiased;
+        -moz-osx-font-smoothing: auto;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        height: 500px;
+
+        &.CodeMirror-fullscreen {
+            position: fixed;
+            z-index: 2000;
+            left: 20px;
+            right: 20px;
+            top: 20px;
+            bottom: 20px;
+            background: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+
+            .code-editor-fullscreen-toggle {
+                background: #eee;
+                color: $color-primary;
+            }
+        }
+    }
+}

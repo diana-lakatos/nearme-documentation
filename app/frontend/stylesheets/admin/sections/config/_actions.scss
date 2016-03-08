@@ -1,0 +1,134 @@
+[class^="action--"], [class^="btn-action--"], [class*=" action--"], [class*=" btn-action--"] {
+    box-sizing: border-box;
+    padding: 10px 15px;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 400;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    font-family: $font-stack-alt;
+    transition: all .3s ease;
+    font-size: 12 / 16 * 1rem;
+    line-height: 1em;
+
+    &:before {
+        @include fa-icon;
+
+        margin-right: 5px;
+    }
+
+    & + &, form + &, & + form {
+        margin-left: 10px;
+    }
+
+    &[class*="--icon-only"] {
+        font-size: 0;
+
+        &:before {
+            font-size: 12px;
+            margin-right: 0;
+        }
+    }
+
+    @include breakpoint(600px) {
+        display: inline-block;
+    }
+}
+
+[class^="action--"] {
+    border: 1px solid;
+    background: none;
+    color: $color-primary;
+
+    &:hover, &:focus, &:active {
+        color: $color-active;
+    }
+}
+
+[class^="btn-action--"] {
+    border: none;
+    color: #fff;
+    background: $color-primary;
+
+    &:hover, &:focus, &:active {
+        color: #fff;
+        background: darken($color-primary, 10%);
+    }
+}
+
+[class*="action--edit"]:before {
+    content: $fa-var-pencil;
+}
+
+[class*="action--create"]:before {
+    content: $fa-var-plus;
+}
+
+[class^="action--remove"], [class*=" action--remove"] {
+    color: $color-danger;
+
+    &:before {
+        content: $fa-var-ban;
+    }
+
+    &:hover, &:focus, &:active {
+        color: lighten($color-danger, 20);
+    }
+}
+
+[class^="btn-action--remove"], [class*=" btn-action--remove"] {
+    background: $color-danger;
+    border: 1px solid $color-danger;
+
+    &:before {
+        content: $fa-var-ban;
+    }
+
+    &:hover, &:focus, &:active {
+        background: lighten($color-danger, 10%);
+    }
+}
+
+[class*="action--visit"]:before {
+    content: $fa-var-arrow-up;
+    transform: rotate(45deg);
+}
+
+[class*="action--liquid-views"]:before {
+    content: $fa-var-code;
+}
+
+[class*="action--assets"]:before {
+    content: $fa-var-file-o;
+}
+
+[class*="action--download"]:before {
+    content: $fa-var-download;
+}
+
+[class*="action--link"]:before {
+    content: $fa-var-link;
+}
+
+.listing-actions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid $color-separator;
+}
+
+.table-container .actions {
+    text-align: right;
+
+    form {
+        display: inline-block;
+    }
+
+    [class^="action--"], [class^="btn-action--"], [class*=" action--"], [class*=" btn-action--"], form .btn {
+        padding: 5px 10px;
+
+        & + & {
+            margin-left: 5px;
+        }
+    }
+}

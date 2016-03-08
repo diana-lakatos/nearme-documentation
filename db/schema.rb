@@ -1062,6 +1062,15 @@ ActiveRecord::Schema.define(version: 20161222235051) do
 
   add_index "groups", ["instance_id", "creator_id"], name: "index_groups_on_instance_id_and_creator_id", using: :btree
 
+  create_table "help_contents", force: :cascade do |t|
+    t.string   "slug",       null: false
+    t.text     "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "help_contents", ["slug"], name: "index_help_contents_on_slug", unique: true, using: :btree
+
   create_table "host_fee_line_items", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "line_item_source_id"
@@ -3148,6 +3157,7 @@ ActiveRecord::Schema.define(version: 20161222235051) do
     t.integer  "transactable_collaborators_count",                   default: 0,                                                                                   null: false
     t.integer  "wish_list_items_count",                              default: 0
     t.float    "product_average_rating",                             default: 0.0
+    t.text     "ui_settings",                                        default: "{}"
     t.datetime "expires_at"
   end
 
@@ -3374,4 +3384,5 @@ ActiveRecord::Schema.define(version: 20161222235051) do
     t.string   "workflow_type",   limit: 255
   end
 
+  add_foreign_key "graph_queries", "instances"
 end

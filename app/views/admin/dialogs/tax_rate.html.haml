@@ -1,0 +1,19 @@
+- content_for :dialog_title do
+  Create Tax Rate
+
+= admin_simple_form_for :admin_tax_rate, url: admin_dialog_path(id: 'tax_rate'), html: { id: 'tax-rate-form', class: 'tax-rate-form' } do |f|
+
+  .dialog-body
+
+    = f.input :category, collection: ['VAT', 'Sales Tax'], prompt: t('simple_form.prompts.admin_tax_rate.category')
+
+    = f.input :zone, collection: ['Within EU', 'Poland', 'Outside of EU'], prompt: t('simple_form.prompts.admin_tax_rate.zone')
+
+    = f.input :name
+
+    = f.input :rate, as: :float, input_html: { min: 0, size: 4 }, wrapper: :admin_addon, suffix: '%'
+
+    = f.input :included, as: :switch
+
+  .dialog-actions
+    = f.button :submit, t('simple_form.labels.admin_tax_rate.save')

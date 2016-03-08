@@ -9,8 +9,7 @@ module.exports = function(gulp, browserSync, config) {
     context: config.paths.stylesheets
   });
 
-    /* New UI */
-
+  /* Dashboard */
   gulp.task('styles:dashboard:app', function(){
     return processor.run('dashboard.scss');
   });
@@ -21,7 +20,8 @@ module.exports = function(gulp, browserSync, config) {
 
   gulp.task('styles:dashboard', ['styles:dashboard:app','styles:dashboard:vendor']);
 
-  /* Dashboard */
+  /* Instance Admin */
+
   gulp.task('styles:instance_admin:app', function(){
     return processor.run('instance_admin.scss');
   });
@@ -43,21 +43,28 @@ module.exports = function(gulp, browserSync, config) {
 
   gulp.task('styles:application', ['styles:application:app','styles:application:vendor']);
 
-    /* Community */
+  /* Community */
   gulp.task('styles:community', function(){
     return processor.run('community.scss');
   });
 
   /* Other */
+
   gulp.task('styles:other', function(){
-    var files = ['admin', 'blog', 'errors','instance_wizard'];
+    var files = ['global-admin', 'blog', 'errors','instance_wizard'];
     files.forEach(function(val){
       processor.run(`${val}.scss`);
     });
   });
 
+  gulp.task('styles:admin', function(){
+    return processStyles([
+      path.join(config.paths.stylesheets, 'admin.scss')
+    ]);
+  });
+
   /* Global task for all styles */
-  gulp.task('styles', ['styles:dashboard', 'styles:application', 'styles:instance_admin', 'styles:community', 'styles:other' ]);
+  gulp.task('styles', ['styles:dashboard', 'styles:application', 'styles:instance_admin', 'styles:community', 'styles:other', 'styles:admin']);
 
   gulp.task('styles:dist', function(){
     return processor.run('*.scss', true);

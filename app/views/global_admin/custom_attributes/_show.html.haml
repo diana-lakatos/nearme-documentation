@@ -1,0 +1,15 @@
+%tr
+  %td= resource.name
+  %td= resource.label
+  %td= resource.attribute_type
+  %td= resource.html_tag
+  %td= resource.placeholder
+  %td= resource.prompt
+  %td= resource.default_value
+  %td= resource.public
+  %td= resource.validation_rules
+  %td= resource.valid_values
+  %td= resource.input_html_options
+  %td= resource.wrapper_html_options
+  %td= resource.hint
+  %td= link_to 'Edit', edit_global_admin_transactable_type_custom_attribute_path(transactable_type, resource), class: 'btn'

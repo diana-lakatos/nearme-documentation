@@ -1,9 +1,0 @@
-%h1 Transactable Types
-
-%table.table.table-striped
-  %thead
-    %tr
-      %th Name
-  %tbody
-    - instance.transactable_types.each do |resource|
-      = render 'admin/transactable_types/index_row', :resource => resource

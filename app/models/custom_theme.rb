@@ -17,12 +17,16 @@ class CustomTheme < ActiveRecord::Base
 
   before_create { self.overwrite_existing = '1' }
 
-  after_save :mark_as_in_use, if: -> (ct) { ct.in_use_changed? && ct.in_use? }
-  after_save :mark_as_in_use_for_instance_admins, if: -> (ct) { ct.in_use_for_instance_admins_changed? && ct.in_use_for_instance_admins? }
-  after_save :recalculate_instance_cache_key, if: -> (ct) { (ct.in_use_changed? && ct.in_use?) || (ct.in_use_for_instance_admins_changed? && ct.in_use_for_instance_admins?) }
-  after_save :copy_default_template_files, if: -> (ct) { ct.copy_from_template.present? && AVAILABLE_DEFAULT_TEMPLATES.map(&:last).include?(ct.copy_from_template) && ct.overwrite_existing == '1' }
+  after_save :mark_as_in_use, if: ->(ct) { ct.in_use_changed? && ct.in_use? }
+  after_save :mark_as_in_use_for_instance_admins, if: ->(ct) { ct.in_use_for_instance_admins_changed? && ct.in_use_for_instance_admins? }
+  after_save :recalculate_instance_cache_key, if: ->(ct) { (ct.in_use_changed? && ct.in_use?) || (ct.in_use_for_instance_admins_changed? && ct.in_use_for_instance_admins?) }
+  after_save :copy_default_template_files, if: ->(ct) { ct.copy_from_template.present? && AVAILABLE_DEFAULT_TEMPLATES.map(&:last).include?(ct.copy_from_template) && ct.overwrite_existing == '1' }
 
   AVAILABLE_DEFAULT_TEMPLATES = [['NearMe -> Raw', 'nearme/raw']].freeze
+
+  def jsonapi_serializer_class_name
+    'CustomThemeJsonSerializer'
+  end
 
   protected
 

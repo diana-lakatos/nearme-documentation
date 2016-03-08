@@ -1,0 +1,17 @@
+- admin_help_area('asset-general')
+
+= admin_side_navigation(:asset)
+
+= admin_simple_form_for :admin_config, url: admin_path(page: 'asset_wizard_location') do |f|
+
+  %h1 Asset general properties
+
+  = f.input :asset_name, as: :string, required: true
+
+  %h2 Parties
+  %p
+    Each transaction has two parties. It could be buyer and seller, guest and host, project owner and project contributor. What is the best description for parties related to your asset?
+  = f.input :lessor, as: :string, required: true
+  = f.input :lessee, as: :string, required: true
+
+  = render 'admin/shared/navigation_nextprev', f: f

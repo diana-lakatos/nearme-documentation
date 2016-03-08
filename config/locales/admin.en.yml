@@ -1,0 +1,162 @@
+en:
+  admin:
+    sidenav:
+      heading:
+        advanced: 'Advanced settings'
+        asset: 'Asset settings'
+        marketplace: 'Marketplace settings'
+        integrations: 'Integrations'
+        design: 'Design & Layout'
+    site_header:
+      primary_navigation: 'Primary Navigation'
+      configure: 'Configure'
+      dashboard: 'Dashboard'
+      knowledge_base: 'Knowledge Base'
+      user_navigation: 'User Navigation'
+      your_profile: 'Your Profile'
+      log_out: 'Log out'
+
+    versions:
+      trigger:
+        label: 'Versions'
+        title: 'Show previous versions'
+
+    register:
+      title: Create a new marketplace
+      intro_html: 'In order to create a new marketplace you first have to <a href="mailto:%{support_email}">contact our staff</a> to whitelist your email address. You can create only one marketplace per email address.'
+      help_link: 'Help? Contact Support'
+      submit: 'Create a new marketplace'
+
+    login:
+      forgot_password: 'Forgot your password?'
+      submit: 'Sign In'
+
+    help:
+      edit: 'Edit'
+
+    liquid_views:
+      title: 'Templates'
+      template: Template
+      duplicate: "Duplicate"
+      default_views: "Default templates"
+      add_liquid_view: "Add Template"
+      transactable_types: 'Transactable types'
+      locales: 'Locales'
+      empty_listing: 'There are no templates to show at the moment'
+      title_theme_html: 'Templates in <em>%{theme}</em>'
+      action:
+        edit_html: 'Editing template <em>%{template}</em>'
+        create: 'Create a new template'
+        modify_html: 'Modify default template <em>%{template}</em>'
+        delete: 'Delete this template'
+        return_to_themes: 'Return to themes'
+        return_to_templates: 'Return to Templates'
+      confirm_delete:
+        prompt: "Are you sure you want to remove this template?"
+        "yes": 'Yes, delete it'
+        "no": 'Cancel'
+      columns:
+      flash:
+        created: 'New template has been created'
+        updated: 'Template details have been updated'
+
+    transactable_type:
+      flash_message:
+        updated: 'Asset type have been updated'
+
+    actions:
+      cancel: 'Cancel'
+      save: 'Save'
+      save_and_continue: 'Save & Continue'
+
+    themes:
+      title:
+        index: Themes
+        new: 'Creating a new theme'
+        edit_html: 'Editing theme <em>%{name}</em>'
+      columns:
+        name: 'Name'
+        in_use: 'Active?'
+        actions: 'Actions'
+      state:
+        active: 'Active'
+        preview: 'Preview Enabled'
+      liquid_views: 'Liquid Views'
+      assets: 'Assets'
+      actions:
+        edit: 'Edit'
+        create: Create a new theme
+        save: Save theme
+        return_to_themes: 'Return to Themes'
+        return_to_templates: 'Return to Templates'
+        delete: Delete this theme
+      classic:
+        name: 'Classic theme'
+        not_available: 'Not available'
+      flash:
+        created: 'New theme has been created'
+        updated: 'Theme details have been updated'
+        destroyed: 'Theme has been deleted'
+      confirm_delete:
+        prompt: "Are you sure you want to remove this theme?"
+        "yes": 'Yes, delete it'
+        "no": 'Cancel'
+
+    media_library:
+      title: 'Media Library'
+
+    pages:
+      title: Pages
+      columns:
+        name: Name
+        path: Path
+      actions:
+        visit: Visit
+        add_new_page: 'Add a new page'
+        add_new_redirect: 'Add a new redirect'
+        return_to_pages: 'Return to Pages'
+        delete: 'Delete Page'
+      confirm_delete:
+        prompt: "Are you sure you want to remove this page?"
+        "yes": 'Yes, delete it'
+        "no": 'Cancel'
+      meta:
+        title: 'Meta data'
+        description_html: 'Values entered below will be placed in <code>&lt;head&gt;</code> section of the page as <code>&lt;meta&gt;</code> tags.'
+
+    domains:
+      title: Domains
+      actions:
+        new_domain: 'Add new domain'
+        new_csr: 'Add new CSR'
+      columns:
+        domain: Domain
+        status: Status
+        dns_name: DNS Name
+        redirects_to: Redirects to
+        default: Default
+        sitemap: sitemap.xml
+        robots: robots.txt
+
+    assets:
+      title_theme_html: 'File assets for <em>%{theme}</em> theme'
+      actions:
+        return_to_themes: 'Return to themes'
+        create: 'Create a new file'
+        link: Link
+        download: Download
+
+    general:
+      actions:
+        delete: Delete
+      confirm_delete:
+        prompt: 'Are you sure you want to delete this item?'
+        prompt_object: 'Are you sure you want to delete this %{object_name}?'
+        "yes": 'Yes, delete it'
+        "no": 'No'
+
+
+
+  form:
+    inputs:
+      toggle_password: Toggle password

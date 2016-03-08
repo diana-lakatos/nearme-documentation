@@ -1,0 +1,7 @@
+= simple_form_for [:global_admin, resource], :html => { :multipart => true, :class => "form-vertical" } do |f|
+  - admin_resource_form_attributes(resource).each do |attr|
+    = f.input attr, admin_resource_field_options(resource, attr)
+
+  .form-actions
+    = f.button :submit
+

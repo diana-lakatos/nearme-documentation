@@ -1,0 +1,23 @@
+-# we want to be able to set to false, so not using ||=
+- @admin_limit_content_width = defined?(@admin_limit_content_width) ? @admin_limit_content_width : true
+
+- content_for :content do
+  .layout-sidenav
+    = yield(:section_navigation)
+
+    - klass = 'main-content config-section'
+    - klass += ' has-detached-help' if current_user.get_ui_setting('help-is-detached')
+    - klass += ' has-visible-help' if current_user.get_ui_setting('help-is-visible')
+
+    %section{class: klass}
+      = yield :help
+
+      .config-section-fields
+
+        - if admin_limit_content_width?
+          .config-section-fields-wrapper
+            = yield
+        - else
+          = yield
+
+= render template: "layouts/admin/default"

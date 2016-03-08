@@ -1,0 +1,74 @@
+.file-manager {
+  .file-listing {
+    width: 100%;
+    layout: fixed;
+
+    td, th {
+      padding: 5px;
+    }
+
+    td:first-child, th:first-child {
+      padding-left: 0;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    thead {
+      th {
+        text-align: left;
+        font-size: 0.75em;
+        padding-bottom: 0;
+      }
+
+      a {
+        color: #000;
+      }
+
+      th:nth-child(2) {
+        width: 100px;
+      }
+
+      th:nth-child(3) {
+        width: 100px;
+      }
+    }
+
+    td {}
+
+    .file-type-dir {
+      a {
+        font-weight: bold;
+
+        &::before {
+          display: inline-block;
+          width: 15px;
+          font-weight: normal;
+          font-family: FontAwesome;
+          content: $fa-var-folder-o;
+          margin-right: 5px;
+        }
+
+        &:hover::before {
+          content: $fa-var-folder-open-o;
+        }
+      }
+    }
+
+    .js & {
+      tbody tr:hover {
+        background: rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+      }
+
+      tr.selected {
+        background: rgba(0, 125, 255, 0.1);
+      }
+
+      tbody .file-type-dir:hover a::before {
+        content: $fa-var-folder-open-o;
+      }
+    }
+  }
+}

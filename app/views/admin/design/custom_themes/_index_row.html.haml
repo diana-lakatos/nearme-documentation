@@ -1,0 +1,13 @@
+%tr
+  %td
+    = link_to custom_theme.name, admin_design_theme_instance_views_path(custom_theme)
+
+    - if custom_theme.in_use
+      %span.label.label-active= t('admin.themes.state.active')
+    - if custom_theme.in_use_for_instance_admins
+      %span.label.label-notice= t('admin.themes.state.preview')
+
+
+  %td.actions
+    = link_to t('admin.themes.assets'), admin_design_theme_assets_path(custom_theme), class: 'action--assets'
+    = link_to t('admin.themes.actions.edit'), edit_admin_design_theme_path(custom_theme), class: 'action--edit'

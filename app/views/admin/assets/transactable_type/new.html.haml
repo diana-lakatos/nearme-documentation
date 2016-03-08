@@ -1,0 +1,10 @@
+.form-featured
+  %h1 Create a new asset type
+
+  = admin_simple_form_for @transactable_type, url: admin_assets_path, method: :post, html: { class: 'nm-form' } do |f|
+
+    = f.input :name
+
+    .form-actions
+      = link_to t('admin.actions.cancel'), admin_configure_path, class: 'btn btn-flat'
+      = f.button :submit, t('admin.actions.save'), class: 'btn'

@@ -1,0 +1,80 @@
+- # this should be changed to variable based on enabled_location value e.g.
+- # is_collapsed = @asset_type.enable_location
+- is_collapsed = false
+- # Same goes for asset type name, it should be dynamic e.g
+- # asset_type_name = @asset_type.name
+- asset_type_name = 'Event'
+
+= admin_side_navigation(:asset)
+
+= admin_simple_form_for :admin_config, url: admin_path(page: 'asset_wizard_shipping') do |f|
+
+  .config-section-description
+    %h1 Shipping
+
+    %p As long as your marketplace deals with selling physical goods over the Internet it will probably need shipping them to customers.
+
+
+    %p.hint Shipping profiles and dimension templates are shared across all of your asset types.
+
+
+  .config-section-fields
+    %h2 General
+    = f.input :enable_shipping, as: :switch, input_html: { "aria-controls" => 'shipping-props', checked: !is_collapsed }, label: t('simple_form.labels.admin_config.enable_shipping', name: asset_type_name.downcase.pluralize)
+
+    - section_class = 'collapsible'
+    - section_class += ' active' unless is_collapsed
+
+    #shipping-props{"aria-expanded" => is_collapsed, class: section_class }
+
+      %h3 Profiles
+
+      %p Shipping costs vary based on many factors. You can create predefined profiles that will allow your hosts/sellers to easily pick one of the predefined options.
+
+      .table-container
+        %table.actions-table
+          %thead
+            %tr
+              %th Name
+              %th.actions Options
+          %tbody
+            %tr
+              %td International shipping
+              %td.actions
+                = link_to 'Edit', admin_dialog_path(id: "shipping_profile"), class: 'action-edit', data: { modal: "" }
+
+            %tr
+              %td Domestic shipping
+              %td.actions
+                = link_to 'Edit', admin_dialog_path(id: "shipping_profile"), class: 'action-edit', data: { modal: "" }
+      %p
+        = link_to 'Create new profile', admin_dialog_path(id: "shipping_profile"), class: 'btn btn-sm'
+
+      %hr/
+
+      %h3 Dimension templates
+
+      %p Cost of shipping is usualy related to the size of shipped items. You can provide predefined templates for common package dimensions used in shipping assets in your marketplace.
+
+      .table-container
+        %table.actions-table
+          %thead
+            %tr
+              %th Name
+              %th.actions Options
+          %tbody
+            %tr
+              %td Small package
+              %td.actions
+                = link_to 'Edit', admin_dialog_path(id: "dimensions_template"), class: 'action-edit', data: { modal: "" }
+
+            %tr
+              %td
+                %p A4 envelope
+              %td.actions
+                = link_to 'Edit', admin_dialog_path(id: "dimensions_template"), class: 'action-edit', data: { modal: "" }
+      %p
+        = link_to 'Create new dimensions template', admin_dialog_path(id: "shipping_profile"), class: 'btn btn-sm'
+
+
+    = render 'admin/shared/navigation_nextprev', f: f

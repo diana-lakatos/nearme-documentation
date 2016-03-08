@@ -1,0 +1,94 @@
+- admin_help_area('general-settings')
+
+= admin_side_navigation(:marketplace)
+
+%h1 General settings
+
+%h2 Name and description
+%p Marketplace name is used throught the site as your main branding, keep it short.
+
+.form-group.form-group-default.required
+  %label Marketplace Name
+  %input.form-control{:required => "", :type => "text", value: 'DesksNear.Me', placeholder: 'Awesome Marketplace &trade;'.html_safe }/
+
+%p.m-t-20 Description will appear in places like Google Search results. Try to keep it under that limit
+
+.form-group.form-group-default.required
+  %label Marketplace Description
+  %textarea.form-control{:required => "", placeholder: 'Best marketplace around ever'.html_safe, style: 'height: 50px;' }
+
+%h5.m-t-50 Domain
+%p Provide main domain you want your marketplace to be available at.
+
+.form-group.form-group-default.required
+  %label Domain
+  %input.form-control{:required => "", :type => "url", value: 'desksnear.me', placeholder: 'mymarketplace.com'.html_safe }/
+
+%p
+  %span.label.label-warning Notice
+  Please remember to update your NS records to point to following entries:
+  %code NS1.near-me.com
+  ,
+  %code NS2.near-me.com
+
+%p
+  %small.hint-text
+    Your marketplace will always be available at
+    %a{:href => "http://desks.near-me.com"} desks.near-me.com
+    \.
+    You can add more domains in
+    %a{:href => "#"} advanced domain settings.
+
+%h5.m-t-50 Support
+%p You should provide a default email your users will be able to use for support requests. It will be displayed on each page to help users contact you.
+
+.form-group.form-group-default.required
+  %label Support email
+  %input.form-control{:required => "", :type => "email", value: 'supportteam@desksnear.me', placeholder: 'Your support email'.html_safe }/
+
+%p
+  %a{:href => "#"} Advanced settings for support email
+
+%h5.m-t-50 Default time zone
+
+%p Default time zone will be used whenever you are not setting custom time zone for specific marketplace sections, like asset types.
+
+.form-group.form-group-default.required
+  %label Default time zone
+  %select.form-control
+    %option{:value => ""} - select time zone -
+    %option{:value => "1"} GMT +1
+    %option{:value => "2"} GMT +2
+
+
+%h5.m-t-50 Allowed and default markets
+
+%p You may want to open up your marketplace to be available everywhere around the globe, or just limit it to particular countries.
+
+.row
+  .col-md-6
+    .form-group.form-group-default.form-group-default-select2.required
+      %label Allowed countries
+      %select.full-width{multiple: true, :"data-init-plugin" => "select2", :"data-placeholder" => 'Allow all countries'}
+        %option{:value => "1"} United States
+        %option{:value => "2"} Poland
+  .col-md-6
+    .form-group.form-group-default.form-group-default-select2
+      %label Default country
+      %select.full-width{ :"data-init-plugin" => "select2" }
+        %option{:value => "1", selected: true } United States
+        %option{:value => "2"} Poland
+
+.row
+  .col-md-6
+    .form-group.form-group-default.form-group-default-select2.required
+      %label Allowed currencies
+      %select.full-width{multiple: true, :"data-init-plugin" => "select2", :"data-placeholder" => 'Allow all currencies'}
+        %option{:value => "1"} USD - United States Dollar
+        %option{:value => "2"} PLN - Polish Zloty
+  .col-md-6
+    .form-group.form-group-default.form-group-default-select2
+      %label Default currency
+      %select.full-width{ :"data-init-plugin" => "select2" }
+        %option{:value => "1", selected: true } USD - United States Dollar
+        %option{:value => "2"} PLN - Polish Zloty

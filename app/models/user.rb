@@ -1132,6 +1132,47 @@ class User < ActiveRecord::Base
 
   private
 
+  def get_ui_setting(key)
+    populate_ui_settings
+    @ui_settings_hash[key]
+  end
+
+  def set_ui_setting(key, value)
+    populate_ui_settings
+    @ui_settings_hash[key] = UiSettings.parse(key, value)
+    update_attribute(:ui_settings, JSON.generate(@ui_settings_hash))
+  end
+
+  def get_all_ui_settings
+    populate_ui_settings
+    @ui_settings_hash
+  end
+
+  def populate_ui_settings
+    @ui_settings_hash ||= JSON.parse ui_settings
+  end
+
+  def get_first_name_from_name
+    name(true).split[0...1].join(' ')
+  end
+
+  def get_middle_name_from_name
+    name(true).split.length > 2 ? name(true).split[1] : ''
+  end
+
+  def get_last_name_from_name
+    name(true).split.length > 1 ? name(true).split.last : ''
+  end
+
+  # This validation is necessary due to the inconsistency of the name inputs in the app
+  def validate_name_length_from_fullname
+    errors.add(:name, :first_name_too_long, count: User::MAX_NAME_LENGTH) if get_first_name_from_name.length > MAX_NAME_LENGTH
+
+    errors.add(:name, :middle_name_too_long, count: User::MAX_NAME_LENGTH) if get_middle_name_from_name.length > MAX_NAME_LENGTH
+
+    errors.add(:name, :last_name_too_long, count: User::MAX_NAME_LENGTH) if get_last_name_from_name.length > MAX_NAME_LENGTH
+  end
+
   def current_instance
     PlatformContext.current.instance
   end

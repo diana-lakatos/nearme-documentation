@@ -1,0 +1,118 @@
+/ START OVERLAY
+.overlay{"data-pages" => "search", :style => "display: none"}
+  / BEGIN Overlay Content !
+  .overlay-content.has-results.m-t-20
+    / BEGIN Overlay Header !
+    .container-fluid
+      / BEGIN Overlay Logo !
+      = image_tag 'admin/logo-black.svg', class: 'overlay-brand', width: 78, height: 22
+      / END Overlay Logo !
+      / BEGIN Overlay Close !
+      %a.close-icon-light.overlay-close.text-black.fs-16{:href => "#"}
+        %i.pg-close
+      / END Overlay Close !
+    / END Overlay Header !
+    .container-fluid
+      / BEGIN Overlay Controls !
+      %input#overlay-search.no-border.overlay-search.bg-transparent{:autocomplete => "off", :placeholder => "Search...", :spellcheck => "false"}
+        %br
+          .inline-block
+            .checkbox.right
+              %input#checkboxn{:checked => "checked", :type => "checkbox", :value => "1"}
+                %label{:for => "checkboxn"}
+                  %i.fa.fa-search
+                  Search within page
+          .inline-block.m-l-10
+            %p.fs-13 Press enter to search
+          / END Overlay Controls !
+    / BEGIN Overlay Search Results, This part is for demo purpose, you can add anything you like !
+    .container-fluid
+      %span
+        %strong suggestions :
+      %span#overlay-suggestions
+      %br
+        .search-results.m-t-40
+          %p.bold Pages Search Results
+          .row
+            .col-md-6
+              / BEGIN Search Result Item !
+              %div
+                / BEGIN Search Result Item Thumbnail !
+                .thumbnail-wrapper.d48.circular.bg-success.text-white.inline.m-t-10
+                  %div
+                    = image_tag current_user.avatar_url, alt: current_user.name, width: 50, height: 50
+                / END Search Result Item Thumbnail !
+                .p-l-10.inline.p-t-5
+                  %h5.m-b-5
+                    %span.semi-bold.result-name ice cream
+                    on pages
+                  %p.hint-text via john smith
+              / END Search Result Item !
+              / BEGIN Search Result Item !
+              %div
+                / BEGIN Search Result Item Thumbnail !
+                .thumbnail-wrapper.d48.circular.bg-success.text-white.inline.m-t-10
+                  %div T
+                / END Search Result Item Thumbnail !
+                .p-l-10.inline.p-t-5
+                  %h5.m-b-5
+                    %span.semi-bold.result-name ice cream
+                    related topics
+                  %p.hint-text via pages
+              / END Search Result Item !
+              / BEGIN Search Result Item !
+              %div
+                / BEGIN Search Result Item Thumbnail !
+                .thumbnail-wrapper.d48.circular.bg-success.text-white.inline.m-t-10
+                  %div
+                    %i.fa.fa-headphones.large-text
+                / END Search Result Item Thumbnail !
+                .p-l-10.inline.p-t-5
+                  %h5.m-b-5
+                    %span.semi-bold.result-name ice cream
+                    music
+                  %p.hint-text via pagesmix
+              / END Search Result Item !
+            .col-md-6
+              / BEGIN Search Result Item !
+              %div
+                / BEGIN Search Result Item Thumbnail !
+                .thumbnail-wrapper.d48.circular.bg-info.text-white.inline.m-t-10
+                  %div
+                    %i.fa.fa-facebook.large-text
+                / END Search Result Item Thumbnail !
+                .p-l-10.inline.p-t-5
+                  %h5.m-b-5
+                    %span.semi-bold.result-name ice cream
+                    on facebook
+                  %p.hint-text via facebook
+              / END Search Result Item !
+              / BEGIN Search Result Item !
+              %div
+                / BEGIN Search Result Item Thumbnail !
+                .thumbnail-wrapper.d48.circular.bg-complete.text-white.inline.m-t-10
+                  %div
+                    %i.fa.fa-twitter.large-text
+                / END Search Result Item Thumbnail !
+                .p-l-10.inline.p-t-5
+                  %h5.m-b-5
+                    Tweats on
+                    %span.semi-bold.result-name ice cream
+                  %p.hint-text via twitter
+              / END Search Result Item !
+              / BEGIN Search Result Item !
+              %div
+                / BEGIN Search Result Item Thumbnail !
+                .thumbnail-wrapper.d48.circular.text-white.bg-danger.inline.m-t-10
+                  %div
+                    %i.fa.fa-google-plus.large-text
+                / END Search Result Item Thumbnail !
+                .p-l-10.inline.p-t-5
+                  %h5.m-b-5
+                    Circles on
+                    %span.semi-bold.result-name ice cream
+                  %p.hint-text via google plus
+              / END Search Result Item !
+    / END Overlay Search Results !
+  / END Overlay Content !
+/ END OVERLAY

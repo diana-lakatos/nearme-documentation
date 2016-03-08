@@ -1,0 +1,25 @@
+= admin_side_navigation(:asset)
+
+= admin_simple_form_for :admin_config, url: admin_path(page: 'asset_wizard_attributes') do |f|
+
+  .config-section-description
+    %h1 Asset Type
+    %p Assets are the cornerstone of your marketplace. Regardless of what you are planning to be dealing with - lending books, selling merchandise, marketing projects, offering specialised services - we refer to all of these as assets (TBD).
+
+    %p You can define basic properties of a new asset type on the right. These will be used to create specific products, projects, services etc. later on.
+
+    %p.hint You will be able to create as many different asset types as necessary.
+
+
+  .config-section-fields
+    %h2 General properties
+
+    = f.input :asset_name, as: :string, required: true
+
+    %h3 Parties
+    %p
+      Each transaction has two parties. It could be buyer and seller, guest and host, project owner and project contributor. What is the best description for parties related to your asset?
+    = f.input :lessor, as: :string, required: true
+    = f.input :lessee, as: :string, required: true
+
+    = render 'admin/shared/navigation_nextprev', f: f

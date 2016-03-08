@@ -1,0 +1,15 @@
+%h1= resource_class.name.underscore.humanize.pluralize
+
+.pull-left
+  = render 'search_form'
+
+.pull-right
+  = link_to "New #{admin_resource_class_title}", [:new, :global_admin, resource_class.name.underscore], :class => "btn btn-default"
+
+
+%table.table.table-striped
+  - collection.each do |resource|
+    = render 'index_row', :resource => resource
+
+= will_paginate collection
+

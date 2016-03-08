@@ -1,13 +1,60 @@
-%h1= resource_class.name.underscore.humanize.pluralize
+%h1 Getting started
+%h2 Welcome to NearMe platform!
 
-= link_to 'New Page', new_admin_page_path, class: 'btn'
+.welcome-intro
+  .col
+    %p
+      It looks like you are here for the first time. Right now your marketplace is protected with a password
+      %code nearme
+      (you can
+      %a{:href => "#"}change default marketplace password over here)
+      and is awaiting configuration.
 
-%table.table.table-striped
-  %thead
-    %tr
-      %th Path
-  %tbody
-    - collection.each do |resource|
-      = render 'index_row', :resource => resource
+    %p
+      We will be guiding you through the configurtion process, but you can
+      %em stop at any time and get back to it later.
 
-= will_paginate collection
+  .col
+    %p
+      In case you have any questions please do not hesitate to:
+      %ul
+        %li
+          call us at
+          %a{:href => "tel:123456"}>
+            +1 234 567 890
+          ,
+        %li
+          %a{:href => "mailto:support@near-me.com"}>
+            email support@near-me.com
+          ,
+        %li
+          or
+          %a{:href => "#"}
+            consult our knowledge base
+          \.
+
+%section.setup-sections
+  %article
+    = link_to admin_path(page: 'asset_wizard_asset_type') do
+      %h3 Set up your first asset type
+
+      %p Asset types define your marketplace - may them be events, products, spaces for rent - configuring them is the most important part of gettings started process.
+
+      %p
+        %span.btn Let’s create your first asset type
+
+
+  %article.inactive
+    = link_to admin_path(page: 'marketplace_wizard_general') do
+      %h3 Configure marketplace
+
+      %p Before you are ready there are a few more general settings that need to be set or confirmed like languages, domains and integrations with external services.
+      %p
+        %span.btn Let’s adjust marketplace settings
+
+  %article.inactive
+    = link_to admin_path(page: 'advanced_wizard_general') do
+      %h3 Fine tune with advanced settings
+      %p You are all ready to go, but before you open marketplace to the public, there are a few more settings you might want to adjust.
+      %p
+        %span.btn Take me to advanced settings

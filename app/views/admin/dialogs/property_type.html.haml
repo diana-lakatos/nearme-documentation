@@ -1,0 +1,103 @@
+- content_for :dialog_title do
+  New property
+
+= admin_simple_form_for :admin_property, url: admin_dialog_path(id: 'property_type'), html: { id: 'property-form' } do |f|
+  .dialog-body
+    .row
+      .col-sm-5
+        = f.input :name
+        = f.input :type, collection: options_for_property_type, prompt: :translate,input_html: { :"data-type-select" => '' }
+
+      .col-sm-7
+        = f.input :label
+        = f.input :hint, as: :text
+
+    .property-form-options
+      %fieldset.options-category{data: { type: "category" }}
+        %legend Category
+
+      %fieldset.options-text{data: { type: "text" }}
+        %legend Text
+
+        = f.input :text_type, collection: ['string', 'textarea'], prompt: :translate
+
+        .row
+          .col-sm-5
+            = f.input :text_placeholder
+            .row
+              .col-sm-6
+                = f.input :text_min_length, as: :integer
+              .col-sm-6
+                = f.input :text_max_length, as: :integer
+          .col-sm-7
+            = f.input :text_default_value, as: :text
+
+
+      %fieldset.options-number{data: { type: "number" }}
+        %legend Number
+        = f.input :number_type, collection: ['integer', 'float', 'decimal'], prompt: :translate
+
+        .row
+          .col-sm-4
+            = f.input :number_min, as: :float
+            = f.input :number_max, as: :float
+          .col-sm-8
+            = f.input :number_default_value, as: :float
+            = f.input :number_placeholder
+
+      %fieldset.options-select-one{data: { type: "select_one" }}
+        %legend Select One
+        = f.input :select_one_type, collection: ['select', 'radio buttons'], prompt: :translate
+        .row
+          .col-sm-4
+            = f.input :select_one_default_value
+          .col-sm-8
+            = f.input :select_one_values, as: :text, input_html: { "data-csv-input" => ''}
+
+
+      %fieldset.options-select-many{data: { type: "select_many" }}
+        %legend Select many
+        = f.input :select_many_type, collection: ['multi select', 'checkboxes'], prompt: :translate
+        .row
+          .col-sm-6
+            = f.input :select_many_values, as: :text, input_html: { "data-csv-input" => ''}
+          .col-sm-6
+            = f.input :select_many_default_value, as: :text, input_html: { "data-csv-input" => ''}
+
+      %fieldset.options-datetime{data: { type: "datetime" }}
+        %legend Date and time
+        = f.input :datetime_type, collection: ['date', 'time', 'date and time'], prompt: :translate
+
+      %fieldset.options-boolean{data: { type: "boolean" }}
+        %legend Yes / No
+        = f.input :boolean_type, collection: ['switch', 'radio buttons', 'checkbox'], prompt: :translate
+        = f.input :boolean_default_value, as: :switch
+
+    %hr/
+
+    .row
+      .col-sm-4
+        = f.input :public, as: :switch, input_html: { checked: 'checked' }
+      .col-sm-4
+        = f.input :searchable, as: :switch
+      .col-sm-4
+        = f.input :required, as: :switch
+
+    %hr/
+
+    %h3 Additional HTML options
+    .row
+      .col-sm-6
+        = f.input :input_html_options, input_html: { "data-html-options" =>  "", :value => "key=>value, key2=>value2" }
+      .col-sm-6
+        = f.input :wrapper_html_options, input_html: { "data-html-options" =>  "" }
+
+  .dialog-actions
+    = f.button :submit, 'Save property'
+
+:javascript
+  document.dispatchEvent(new CustomEvent('initialize:property_form.nearme'));
+
+.dialog-actions.dialog-actions-alt
+  = button_to admin_dialog_path(id: 'property_type'), method: 'delete', form: { "data-confirm" => 'Are you sure you want to remove this property?', "data-confirm-label-yes" => 'Yes, delete it', 'data-confirm-label-no' => 'Cancel' }, class: 'btn btn-delete' do
+    Delete this property

@@ -1,0 +1,15 @@
+.login-form
+  %h3 Sign into your NearMe account
+
+  = admin_simple_form_for :admin_login, url: admin_path(page: 'login') do |f|
+    = f.input :username
+
+    = f.input :password
+
+    = f.input :remember, as: :boolean
+
+    .actions
+      = f.submit t('admin.login.submit'), class: 'btn'
+
+      .forgot-password
+        = link_to t('admin.login.forgot_password'), admin_path(page: 'login')

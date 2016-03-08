@@ -1,0 +1,17 @@
+%h3= "#{@instance.name} custom views"
+= link_to 'Add custom view', new_global_admin_instance_instance_view_path, class: "btn btn-primary"
+%table.table.table-striped
+  %thead
+    %tr
+      %th Path
+      %th Transactable Types
+      %th Locales
+  %tbody
+    - @instance_views.each do |view|
+      %tr
+        %td= view.path
+        %td= view.transactable_types.pluck(:name).join(', ')
+        %td= view.locales.map(&:name).join(', ')
+        %td= link_to 'Versions', global_admin_instance_instance_view_versions_path(view.instance_id, view.id), class: 'btn'
+        %td= link_to 'Edit', edit_global_admin_instance_instance_view_path(view.instance_id, view.id), class: 'btn'
+        %td= button_to "Delete", global_admin_instance_instance_view_path(view.instance_id, view.id), :method => :delete, class: 'btn btn-danger'

@@ -1,0 +1,31 @@
+.table-container {
+    > table {
+        width: 100%;
+    }
+
+    td, th {
+        padding: 5px 10px;
+        vertical-align: top;
+        text-align: left;
+    }
+
+    td:first-child, th:first-child {
+        padding-left: 0;
+    }
+
+    td:last-child, th:last-child {
+        padding-right: 0;
+    }
+
+    thead th {
+        font-weight: normal;
+        color: #000;
+        text-align: left;
+        border-bottom: 1px solid $color-separator;
+        padding-bottom: 10px;
+    }
+
+    tbody tr:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+}

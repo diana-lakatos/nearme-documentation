@@ -1,0 +1,41 @@
+.page-sidebar{"data-pages" => "sidebar"}
+  #appMenu.sidebar-overlay-slide.from-top
+
+  .sidebar-header
+    = image_tag "admin/logo-white.svg", :alt => "logo", :height => "25", :width => "94", class: 'brand'
+    .sidebar-header-controls
+      %button.btn.btn-xs.sidebar-slide-toggle.btn-link.m-l-20{"data-pages-toggle" => "#appMenu", :type => "button"}
+        %i.fa.fa-angle-down.fs-16
+      %button.btn.btn-link.visible-lg-inline{"data-toggle-pin" => "sidebar", :type => "button"}
+        %i.fa.fs-12
+
+  .sidebar-menu
+    %ul.menu-items
+      %li.m-t-30
+        %a.detailed{:href => "#"}
+          %span.title Page 1
+          %span.details 234 notifications
+        %span.icon-thumbnail
+          %i.pg-mail
+      %li
+        %a{:href => "#"}
+          %span.title Page 2
+        %span.icon-thumbnail
+          %i.pg-social
+      %li
+        %a{:href => "javascript:;"}
+          %span.title Page 3
+          %span.arrow
+        %span.icon-thumbnail
+          %i.pg-grid
+        %ul.sub-menu
+          %li
+            %a{:href => "#"} Sub Page 1
+            %span.icon-thumbnail sp
+          %li
+            %a{:href => "#"} Sub Page 2
+            %span.icon-thumbnail sp
+          %li
+            %a{:href => "#"} Sub Page 3
+            %span.icon-thumbnail sp
+    .clearfix
