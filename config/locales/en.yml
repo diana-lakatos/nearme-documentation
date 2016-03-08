@@ -2104,7 +2104,7 @@ en:
     manage:
       bulk_upload: 'Bulk upload'
       format_info_html: 'In order for data to be properly imported, you must use a specific format: %{link}'
-      download_current_data_hint: "You can also download you current data:"
+      download_current_data_hint: "You can also download your current data:"
       download_current_data: "Download current data"
       download_csv_template: 'Download CSV template'
       csv_file: 'CSV File'
