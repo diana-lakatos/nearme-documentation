@@ -1,8 +1,9 @@
-class DynamicThemesController < ApplicationController
+# Class is skipping ApplicationController in inheritance tree to avoid unsetting all of the filters
+class DynamicThemesController < ActionController::Base
 
   caches_action :show
-  skip_filter :apply_persisted_mixpanel_attributes
-  skip_filter :set_locale
+
+  layout false
 
   def show
     @theme = Theme.find(params[:theme_id])
@@ -25,6 +26,6 @@ class DynamicThemesController < ApplicationController
     response.headers['Content-Type'] = 'text/css'
     response.headers['X-Content-Type-Options'] = nil
 
-    render stylesheet.to_s, layout: false
+    render stylesheet.to_s
   end
 end
