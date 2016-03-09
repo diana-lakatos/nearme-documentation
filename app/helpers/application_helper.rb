@@ -43,7 +43,7 @@ module ApplicationHelper
   end
 
   def meta_attr(content)
-    Sanitize.clean(content).gsub(/\s+/,' ').strip
+    Sanitize.fragment(content).gsub(/\s+/,' ').strip.html_safe
   end
 
   def meta_description(description)
