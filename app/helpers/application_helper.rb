@@ -494,7 +494,10 @@ module ApplicationHelper
 
   def dynamic_theme_path_for_current_theme(stylesheet)
     theme = PlatformContext.current.theme
-    dynamic_theme_path(theme_id: theme.id, updated_at: theme.updated_at.to_formatted_s(:number), stylesheet: stylesheet)
+
+    # It's important that we use _url and not _path as we won't current domain
+    # instead of a link using ASSET_HOST / CDN, due to platform context issues
+    dynamic_theme_url(theme_id: theme.id, updated_at: theme.updated_at.to_formatted_s(:number), stylesheet: stylesheet)
   end
 
 end
