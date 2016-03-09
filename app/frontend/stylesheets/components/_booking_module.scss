@@ -71,11 +71,7 @@
       font-size: 0.7em;
 
       &.booking-listing-name {
-
-        width: 90%;
-        display: inline-block;
         overflow: hidden;
-        font-size: 1em;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
@@ -118,10 +114,10 @@
         font-size: 0.7em;
 
         &.booking-listing-name {
-          width: 90%;
-          display: inline-block;
-          overflow: hidden;
-          font-size: 1em;
+            width: 90%;
+            display: block;
+            font-size: 1em;
+            line-height: 1.4em;
         }
       }
     }
