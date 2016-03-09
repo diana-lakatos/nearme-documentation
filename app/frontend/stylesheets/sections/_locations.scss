@@ -387,6 +387,10 @@ section.listings {
   .favorite {
     margin-left: 15px;
 
+    @media (max-width: $booking-module-breakpoint) {
+        margin-left: 0;
+    }
+
     a {
       text-align: center;
       width: 100%;
@@ -666,8 +670,6 @@ section.listings {
   .btn {
     @media (max-width: $booking-module-breakpoint) {
       font-size: 15px;
-      height: 30px;
-      line-height: 30px;
     }
   }
 
