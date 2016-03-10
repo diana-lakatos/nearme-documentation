@@ -57,7 +57,6 @@ class SmsNotifier < AbstractController::Base
 
   def initialize(message_name, *args)
     super()
-    prepend_view_path 'app/views'
     @message_name = message_name
     process(@message_name, *args)
   end

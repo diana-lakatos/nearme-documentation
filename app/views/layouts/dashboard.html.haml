@@ -30,7 +30,8 @@
     = render 'layouts/favicon'
 
     = stylesheet_link_tag 'dashboard'
-    = stylesheet_link_tag dynamic_theme_url('dashboard')
+    = stylesheet_link_tag dynamic_theme_path_for_current_theme(:dashboard)
+
     = render 'shared/head/fonts'
 
     = render 'layouts/homepage_css' if home_page?
