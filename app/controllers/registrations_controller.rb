@@ -126,8 +126,8 @@ class RegistrationsController < Devise::RegistrationsController
     # to avoid duplication, as the approval request is already set by assign_attributes
     # and build_approval_request_for_object
     if resource.update_with_password(user_params.except(:approval_requests_attributes))
-      if @user.language.to_sym != I18n.locale
-        I18n.locale = @user.language.to_sym
+      if @user.try(:language).to_sym != I18n.locale
+        I18n.locale = @user.language.try(:to_sym) || :en
       end
 
       set_flash_message :success, :updated
