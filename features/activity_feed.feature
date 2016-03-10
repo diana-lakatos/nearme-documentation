@@ -11,38 +11,47 @@ Feature: A user can interact with activity feeds
     When I visit another user page
     Then I can see and press "Follow" button
     Then I should be following it
-    And I should see the event on the user's Activity Feed
-    And I should see the event on my Activity Feed
     Then I can see and press "Unfollow" button
     And I shouldn't be following it anymore
-
+  
   Scenario: A user can follow a project
     When I visit project page
     Then I can see and press "Follow" button
     Then I should be following it
-    And I should see the event on the followed project's Activity Feed
-    And I should see the event on my Activity Feed
     Then I can see and press "Unfollow" button
     And I shouldn't be following it anymore
-
+  
   Scenario: A user can follow a topic
     When I visit topic page
     Then I can see and press "Follow" button
     Then I should be following it
-    And I should see the event on the followed topic's Activity Feed
-    And I should see the event on my Activity Feed
     Then I can see and press "Unfollow" button
     And I shouldn't be following it anymore
-
+  
+  Scenario: A user can't report a follow event
+    When I visit another user page
+    Then I can see and press "Follow" button
+    Then I should be following it
+    And I shouldn't see report as spam button
+  
   Scenario: A user can update his status
     When I visit my page
     Then I can fill status update and submit it
     And I can see the event on the Activity Feed
 
-  Scenario: A user can't report a follow event
-    When I visit another user page
-    Then I can see and press "Follow" button
-    Then I should be following it
-    And I should see the event on the user's Activity Feed
-    And I shouldn't see report as spam button
+  Scenario: User created project event exists
+    When I visit project page
+    Then I can see user created project event
+
+  Scenario: User updated user status event exists
+    When I visit another user page with status updates
+    Then I should see the user status update This is the status update XYZ
+
+  Scenario: User updated project status event exists
+    When I visit project page with status
+    Then I should see the project status update This is the project status XYZZ
+
+  Scenario: Created topic status event exists
+    When I visit topic page
+    Then I should see the topic created event
 

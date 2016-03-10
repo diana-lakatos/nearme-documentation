@@ -37,6 +37,10 @@ class ActivityFeedEvent < ActiveRecord::Base
   validates_inclusion_of :followed_type, in: ActivityFeedService::Helpers::FOLLOWED_WHITELIST
   validates_inclusion_of :event, in: EVENT_WHITELIST
 
+  scope :exclude_events, lambda {
+    where("event NOT IN (?)", ['user_followed_user', 'user_followed_project', 'user_followed_topic'])
+  }
+
   before_create :update_affected_objects
   def update_affected_objects
     if self.affected_objects.present?
