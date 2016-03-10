@@ -6,10 +6,12 @@ module.exports = class IntroVideo
     @loadApi()
 
     @container = $(container)
-    @videoWrap = @container.find('.intro-video-wrap')
+    @videoWrap = @container.find('.intro-video-wrapper')
+    @iframe = @videoWrap.find('iframe')
     @overlay = @container.find('.intro-video-overlay')
     @closeButton = @container.find('.intro-video-close')
     @cookieName = 'hide_intro_video'
+    @videoAspectRatio = 1280/720;
 
     @initStructure()
     @bindEvents()
@@ -36,6 +38,9 @@ module.exports = class IntroVideo
 
     @closeButton.on 'click.introvideo', (e)=>
       @hideVideo()
+
+    $(window).on 'resize', =>
+      @resizePlayer()
 
     window.onYouTubeIframeAPIReady = =>
       @player = new YT.Player 'intro-player', {
@@ -65,7 +70,9 @@ module.exports = class IntroVideo
     unless Modernizr.touchevents
       event.target.mute()
       event.target.playVideo()
+
     @bindOnShow()
+    @resizePlayer()
 
   hideVideo: ->
     @container.addClass('inactive')
@@ -74,8 +81,28 @@ module.exports = class IntroVideo
 
     $('body').off('*.introvideo')
 
+  resizePlayer: ->
+    x = @videoWrap.width() - 40
+    y = @videoWrap.height() - 40
+    wrapperAspectRatio = x / y
+
+    @iframe = @videoWrap.find('iframe') unless @iframe.length > 0
+
+    return if @iframe.length == 0
+
+    if wrapperAspectRatio > @videoAspectRatio
+      x = y * @videoAspectRatio
+    else if wrapperAspectRatio < @videoAspectRatio
+      y = x / @videoAspectRatio
+
+    x = Math.round(x)
+    y = Math.round(y)
+
+    @iframe.css(width: x, height: y)
+
   showVideo: ->
     @container.removeClass('inactive')
+    @resizePlayer()
 
     unless Modernizr.touchevents
       @player.playVideo() if @player.playVideo
