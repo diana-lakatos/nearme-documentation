@@ -72,7 +72,7 @@
                     {% assign index = 0 %}
                     {% for photo in photos %}
                       <div class="item {%if index == 0 %}active{%endif%}" data-modalize="true">
-                        <img src="{{ photo.original }}" alt="{{photo.listing_name}}" title="{{ photo.listing_name }}" />
+                        <img data-src="{{ photo.fullscreen }}" alt="{{photo.listing_name}}" title="{{ photo.listing_name }}" />
                         <div class="info">
                           <div class="caption">{{ photo.caption }} #{{ photo.listing_name }}</div>
                         </div>

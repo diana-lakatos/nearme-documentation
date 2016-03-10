@@ -24,8 +24,9 @@ module Metadata
         {
           listing_name: listing.name,
           original: image_url(:original),
+          fullscreen: image.url(:fullscreen),
           space_listing: image.url(:space_listing),
-          golden:  image.url(:golden) ,
+          golden:  image.url(:golden),
           large: image.url(:large),
           caption: caption
         }
