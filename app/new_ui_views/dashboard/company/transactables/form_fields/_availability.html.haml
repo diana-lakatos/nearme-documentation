@@ -1,8 +1,9 @@
 - id_prefix ||= ''
-%hr/
-%h3
-  = title ||= t(:title, scope: [:pricing, :availability])
 .listing-availability
+  %hr/
+  %h3
+    = title ||= t(:title, scope: [:pricing, :availability])
+
   = f.input :availability_template_id, label: false do
     %ul.box-options
       - availability_choices(f.object, id_prefix).each do |template_id, label_text, options|
