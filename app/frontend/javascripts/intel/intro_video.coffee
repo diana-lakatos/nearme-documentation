@@ -33,10 +33,7 @@ module.exports = class IntroVideo
 
       @showVideo()
 
-    @overlay.on 'click.introvideo', (e)=>
-      @hideVideo()
-
-    @closeButton.on 'click.introvideo', (e)=>
+    @overlay.add(@closeButton).add(@videoWrap).on 'click.introvideo', (e)=>
       @hideVideo()
 
     $(window).on 'resize', =>
@@ -52,6 +49,7 @@ module.exports = class IntroVideo
           onStateChange: @onPlayerStateChange
         playerVars:
           rel: 0
+          fs: 0
       }
 
   bindOnShow: ->
