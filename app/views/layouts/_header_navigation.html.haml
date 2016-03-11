@@ -2,9 +2,10 @@
   - if (!no_listing_buttons? || platform_context.white_label_company_user?(current_user)) && HiddenUiControls.find('main_menu/cta').visible?
     - if current_user && current_user.registration_in_progress?
       - tt = current_user.first_transactable.try(:transactable_type)
-      = link_to tt.wizard_path, :class => "nav-link btn btn-blue btn-medium" do
-        %span.text= t('ui.header.complete_your_thing', thing: tt.translated_bookable_noun)
-        %span.icon.ico-plus
+      %li
+        = link_to tt.wizard_path, :class => "nav-link" do
+          %span.text= t('ui.header.complete_your_thing', thing: tt.translated_bookable_noun)
+          %span.icon.ico-plus
     - elsif !current_user.try(:registration_completed?)
       - if platform_context.single_type?
         = render partial: 'layouts/list_your_bookable', locals: { transactable_type: platform_context.transactable_types.first }
