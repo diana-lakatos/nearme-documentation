@@ -53,7 +53,11 @@ class DataImporter::Host::CsvCurrentDataGenerator < DataImporter::File
                 end
         data_row << begin
                       if (object == 'transactable' && model.present? && !model.respond_to?(field))
-                        model.try(:properties).try(:send, field)
+                        if field == 'listing_categories'
+                          model.categories.map { |c| c.permalink }.join(',')
+                        else
+                          model.try(:properties).try(:send, field)
+                        end
                       else
                         model.try(:send, field)
                       end
