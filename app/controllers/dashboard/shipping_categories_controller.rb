@@ -31,9 +31,9 @@ class Dashboard::ShippingCategoriesController < Dashboard::BaseController
     @shipping_category = @company.shipping_categories.find(params[:id])
     @shipping_category_form = ShippingCategoryForm.new(@shipping_category)
     if @shipping_category_form.submit(shipping_category_form_params)
-      render :partial => 'shipping_category_form', :locals => { :form_url => dashboard_shipping_categories_path, :form_method => :post, :is_success => true }
+      render :partial => 'shipping_category_form', :locals => { :form_url => dashboard_shipping_category_path(@shipping_category), :form_method => :put, :is_success => true }
     else
-      render :partial => 'shipping_category_form', :locals => { :form_url => dashboard_shipping_categories_path, :form_method => :post }
+      render :partial => 'shipping_category_form', :locals => { :form_url => dashboard_shipping_category_path(@shipping_category), :form_method => :put }
     end
   end
 
