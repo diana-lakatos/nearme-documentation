@@ -21,7 +21,7 @@
           %h3.hx
             = link_to @project.creator.decorate.name_with_affiliation, user_path(@project.creator)
           %p.location= "#{@project.creator.current_address.try(:city)}, #{@project.creator.current_address.try(:state)}"
-        %p.tx-a= @project.summary
+        %p.tx-a= nl2br(@project.summary)
         %p.topics
           = @project.topics.map { |t| link_to(t.name, topic_path(t)) }.join(', ').html_safe
       .bignums-a

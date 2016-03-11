@@ -1,7 +1,7 @@
 - if @project.description.present?
   %h4
     = t :description
-  %p= @project.description
+  = simple_format auto_link(@project.description)
 
 - if @project.photos.except_cover.any?
   %h4= t :gallery
