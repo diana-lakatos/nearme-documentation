@@ -17,11 +17,11 @@ class DataImporter::Host::CsvCurrentDataGenerator < DataImporter::File
   end
 
   def get_data(csv)
-    @company.locations.order('instance_id, external_id').each do |location|
+    @company.locations.order('instance_id, external_id').find_each do |location|
       if location.listings.any?
-        location.listings.order('instance_id, external_id').each do |listing|
+        location.listings.for_transactable_type_id(@transactable_type.id).order('instance_id, external_id').find_each do |listing|
           if listing.photos.any?
-            listing.photos.each do |photo|
+            listing.photos.find_each do |photo|
               csv << get_data_row(location, location.location_address, listing, photo)
             end
           else

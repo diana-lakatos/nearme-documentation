@@ -28,5 +28,11 @@ class InstanceAdmin::Reports::AdvancedProjectsController < InstanceAdmin::Report
     )
   end
 
+  private
+
+  def set_scopes
+    # Not employed here
+  end
+
 end
 

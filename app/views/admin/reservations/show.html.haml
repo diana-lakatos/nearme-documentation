@@ -50,16 +50,16 @@
 %h2 Charges
 
 %table.table.table-striped
-  - resource.payments.each do |charge|
-    %tr
+  - charge = resource.payment
+  %tr
 
-      %td
-        %span.label{:class => "label=#{charge.paid? ? 'success' : 'danger'}"}
-          = charge.paid? ? 'successful' : 'failed'
-      %td= charge.amount
-      %td= charge.created_at
-      %td
-        - unless charge.paid?
-          - charge.charges.each do |charge_attempt|
-            %pre
-              = charge_attempt.inspect
+    %td
+      %span.label{:class => "label=#{charge.paid? ? 'success' : 'danger'}"}
+        = charge.paid? ? 'successful' : 'failed'
+    %td= charge.amount
+    %td= charge.created_at
+    %td
+      - unless charge.paid?
+        - charge.charges.each do |charge_attempt|
+          %pre
+            = charge_attempt.inspect
