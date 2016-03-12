@@ -95,7 +95,7 @@ class Payment < ActiveRecord::Base
   accepts_nested_attributes_for :credit_card
 
   validates :currency, presence: true
-  validates :credit_card, presence: true, if: Proc.new { |p| p.credit_card_payment? && p.save_credit_card? }
+  validates :credit_card, presence: true, if: Proc.new { |p| p.credit_card_payment? && p.save_credit_card? && new_record? }
   validates :payment_gateway, presence: true
   validates :payment_method, presence: true
   validates :payable_id, :uniqueness => { :scope => [:payable_type, :payable_id, :instance_id] }, if: Proc.new {|p| p.payable_id.present? }
