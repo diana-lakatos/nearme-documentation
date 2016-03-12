@@ -1,4 +1,5 @@
 class InstanceSmsNotifier < SmsNotifier
+  prepend_view_path 'app/views'
   prepend_view_path InstanceViewResolver.instance
 
   def details_for_lookup

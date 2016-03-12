@@ -67,7 +67,7 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
 
   def mark_as_paid
     if @reservation.manual_payment? && !@reservation.paid?
-      @reservation.mark_as_paid!
+      @reservation.payment.mark_as_paid!
       flash[:deleted] = t('flash_messages.manage.reservations.payment_confirmed')
     else
       flash[:error] = t('flash_messages.manage.reservations.payment_failed')

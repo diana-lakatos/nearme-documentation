@@ -43,7 +43,7 @@ module ApplicationHelper
   end
 
   def meta_attr(content)
-    Sanitize.clean(content).gsub(/\s+/,' ').strip
+    Sanitize.fragment(content).gsub(/\s+/,' ').strip.html_safe
   end
 
   def meta_description(description)
@@ -492,9 +492,12 @@ module ApplicationHelper
     render(partial: @partial_name, collection: @collection, as: :item)
   end
 
-  def dynamic_theme_url(stylesheet)
+  def dynamic_theme_path_for_current_theme(stylesheet)
     theme = PlatformContext.current.theme
-    dynamic_theme_path(theme_id: theme.id, updated_at: theme.updated_at.to_formatted_s(:number), stylesheet: stylesheet)
+
+    # It's important that we use _url and not _path as we won't current domain
+    # instead of a link using ASSET_HOST / CDN, due to platform context issues
+    dynamic_theme_url(theme_id: theme.id, updated_at: theme.updated_at.to_formatted_s(:number), stylesheet: stylesheet)
   end
 
   def remote_storage_file_name(file_object)

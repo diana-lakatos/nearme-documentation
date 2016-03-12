@@ -1316,6 +1316,7 @@ en:
       payment_documents: 'Payment documents'
       address: 'Address'
       user_note: 'User note: '
+      booking_successful: 'Your booking was requested successfully!'
 
     user_profile:
       view_profile: 'View Profile'

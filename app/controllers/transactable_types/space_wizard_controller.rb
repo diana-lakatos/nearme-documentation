@@ -50,6 +50,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     end
     @user.companies.first.creator = current_user
     build_objects
+    build_approval_requests
     @user.first_listing.creator = @user
     if wizard_params[:companies_attributes]["0"][:locations_attributes] && !wizard_params[:companies_attributes]["0"][:locations_attributes]["0"].has_key?("availability_template_id") && !wizard_params_listing.has_key?("availability_template_id")
       @user.first_listing.availability_template = @transactable_type.default_availability_template
