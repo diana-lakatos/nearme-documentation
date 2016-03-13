@@ -255,6 +255,21 @@ class User < ActiveRecord::Base
       super.order('deleted_at IS NOT NULL, deleted_at DESC')
     end
 
+    # Added back method removed by Diego without which it wouldn't work (throws error)
+    # This needs to be checked, why did he remove it?
+    def filtered_by_role(values)
+      if values.present? && 'Other'.in?(values)
+        role_attribute = PlatformContext.current.instance.default_profile_type.custom_attributes.find_by(name: 'role')
+        values += role_attribute.valid_values.reject { |val| val =~ /Featured|Innovator|Black Belt/i }
+      end
+
+      if values.present? && values.include?("Featured")
+        featured
+      else
+        filtered_by_custom_attribute('role', values)
+      end
+    end
+
     def xml_attributes
       self.csv_fields.keys
     end
@@ -317,7 +332,11 @@ class User < ActiveRecord::Base
         when /number_of_projects/i
           order('projects_count + project_collborations_count DESC')
         else
-          all
+          if PlatformContext.current.instance.is_community?
+            order('projects_count DESC, followers_count DESC')
+          else
+            all
+          end
       end
     end
   end
