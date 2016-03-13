@@ -22,7 +22,6 @@ class DynamicThemesController < ActionController::Base
     response.headers['Expires'] = expire_date.httpdate
     response.headers['x-frame-options'] = nil
     response.headers['Last-Modified'] = expire_date.httpdate
-    response.headers['Date'] = base_date.httpdate
     response.headers['Content-Type'] = 'text/css'
     response.headers['X-Content-Type-Options'] = nil
 

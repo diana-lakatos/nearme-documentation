@@ -145,6 +145,7 @@ class LocationTest < ActiveSupport::TestCase
           space_listing: @photo.image_url(:space_listing),
           golden: @photo.image_url(:golden),
           large: @photo.image_url(:large),
+          fullscreen: @photo.image_url(:fullscreen),
           listing_name: @photo.listing.name,
           caption:@photo.caption
         }])
@@ -167,6 +168,7 @@ class LocationTest < ActiveSupport::TestCase
               space_listing:  @photo.image_url(:space_listing),
               golden:  @photo.image_url(:golden),
               large:  @photo.image_url(:large),
+              fullscreen:  @photo.image_url(:fullscreen),
               listing_name:  @photo.listing.name,
               caption:  @photo.caption
             },
@@ -175,6 +177,7 @@ class LocationTest < ActiveSupport::TestCase
               space_listing:  photo2.image_url(:space_listing),
               golden:  photo2.image_url(:golden),
               large:  photo2.image_url(:large),
+              fullscreen:  photo2.image_url(:fullscreen),
               listing_name:  photo2.listing.name,
               caption:  photo2.caption
             }
