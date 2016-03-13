@@ -18,4 +18,18 @@ module RegistrationsHelper
     end
   end
 
+  def active_profile_tab_class(name)
+    default = ''
+    name = name.to_sym
+    active_class = 'active'
+
+    if (params[:services_page].present? && name == :services) || (params[:products_page].present? && name == :products) ||
+      (name == :general && params[:services_page].blank? && params[:products_page].blank?)
+
+      return active_class
+    end
+
+    default
+  end
+
 end

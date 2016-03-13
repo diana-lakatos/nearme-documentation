@@ -14,15 +14,15 @@
       .span3
         %nav
           %ul.nav.nav-pills.nav-stacked
-            %li.active
+            %li{ class: active_profile_tab_class(:general) }
               %a{:href => "#general", 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.general'
 
             - unless hide_tab?('products') || @products.nil?
-              %li
+              %li{ class: active_profile_tab_class(:products) }
                 %a{href: '#products', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.products'
 
             - unless hide_tab?('services') || @listings.nil?
-              %li
+              %li{ class: active_profile_tab_class(:services) }
                 %a{href: '#services', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.services'
 
             - if RatingSystem.active.any?
@@ -35,18 +35,18 @@
 
       .span9
         .tab-content
-          #general.tab-pane.active
+          #general.tab-pane{ class: active_profile_tab_class(:general) }
             = render 'registrations/profile/tabs/general', platform_context: platform_context, user: @user, is_current_user: is_current_user, company: @company
 
           - unless hide_tab?('products') || @products.nil?
-            #products.tab-pane
+            #products.tab-pane{ class: active_profile_tab_class(:products) }
               - if @company.present? && @products.count > 0
                 = render 'registrations/profile/tabs/products'
               - else
                 = render 'registrations/profile/no_content', tab: :products
 
           - unless hide_tab?('services') || @listings.nil?
-            #services.tab-pane
+            #services.tab-pane{ class: active_profile_tab_class(:services) }
               - if @company.present? && @listings.count > 0
                 = render 'registrations/profile/tabs/services'
               - else
