@@ -501,5 +501,13 @@ module ApplicationHelper
     dynamic_theme_url(theme_id: theme.id, updated_at: theme.updated_at.to_formatted_s(:number), stylesheet: stylesheet)
   end
 
+  def remote_storage_file_name(file_object)
+    # We use file_object (most often CarrierWave::Storage::Fog::File) basename(path)
+    # first, as filename may not be correct due to the presence of
+    # extra slashes in the URL; file_object.path will represent the local path
+    # to the file
+    File.basename(file_object.path.to_s).presence || file_object.filename
+  end
+
 end
 
