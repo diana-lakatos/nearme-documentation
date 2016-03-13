@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   include QuerySearchable
   include Approvable
 
-  SORT_OPTIONS = ['All', 'Featured', 'People I know', 'Most Popular', 'Location', 'Number of Projects']
+  SORT_OPTIONS = [:all, :featured, :people_i_know, :most_popular, :location, :number_of_projects]
   MAX_NAME_LENGTH = 30
   SMS_PREFERENCES = %w(user_message reservation_state_changed new_reservation)
 
@@ -307,14 +307,14 @@ class User < ActiveRecord::Base
       case order
         when /featured/i
           featured
-        when /people i know/i
+        when /people_i_know/i
           friends_of(user)
-        when /most popular/i
+        when /most_popular/i
           order('followers_count DESC')
         when /location/i
           return all unless user
           all.joins(:current_address).merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance')).select('users.*')
-        when /number of projects/i
+        when /number_of_projects/i
           order('projects_count + project_collborations_count DESC')
         else
           all

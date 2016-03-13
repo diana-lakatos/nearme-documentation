@@ -247,5 +247,80 @@ namespace :fix do
     end
   end
 
+  task payment_gateway_association: :environment do
+    Instance.find_each do |i|
+      i.set_context!;
+      ps = Payment.all.select { |p| !p.valid? && p.errors.full_messages.join(', ').include?("Payment gateway can't be blank, Payment method can't be blank") } and nil
+      if ps.count > 0
+        puts "Found #{ps.count} invalid payments for #{i.name}: #{ps.map(&:errors).map(&:full_messages).flatten.uniq.inspect}"
+        payment_gateway_missing = ps.select { |p| p.errors.full_messages.join(', ').include?("Payment gateway can't be blank, Payment method can't be blank") }
+        puts "\t#{payment_gateway_missing.count} missing payment gateway"
+        ps.each do |p|
+          if p.payable.nil?
+            puts "payable is nil for #{p.id}"
+            next
+          end
+          if p.payable.billing_authorization.present?
+            pg_id = p.payable.billing_authorization.payment_gateway_id
+            pg = PaymentGateway.unscoped.find_by(id: pg_id)
+            if pg.nil?
+              puts "epic fail, payment gateway does not exist, removing payment: #{p.id}, #{p.created_at}"
+              next
+            end
+            payment_methods = PaymentMethod.unscoped.where(payment_gateway_id: pg_id)
+            pm ||= payment_methods.detect { |pm| pm.payment_method_type == 'free' } if p.is_free?
+            pm ||= payment_methods.detect { |pm| pm.payment_method_type == 'manual' } if p.offline? || pg.type = 'PaymentGateway::ManualPaymentGateway'
+            pm ||= payment_methods.detect { |pm| !%w(free manual).include?(pm.payment_method_type) }
+            puts "Billing authorization present, need to rewrite payment_gateway: #{pg_id} and type #{pm.payment_method_type}"
+            p.update_columns(payment_gateway_id: pg.id, payment_method_id: pm.id)
+          elsif p.payable.billing_authorizations.count > 0
+            pg_id = p.payable.billing_authorizations.last.payment_gateway_id
+            pg = PaymentGateway.unscoped.find_by(id: pg_id)
+            if pg.nil?
+              puts "epic fail, payment gateway does not exist, removing payment: #{p.id}, #{p.created_at}"
+              next
+            end
+            payment_methods = PaymentMethod.unscoped.where(payment_gateway_id: pg_id)
+            pm ||= payment_methods.detect { |pm| pm.payment_method_type == 'free' } if p.is_free?
+            pm ||= payment_methods.detect { |pm| pm.payment_method_type == 'manual' } if p.offline? || pg.type = 'PaymentGateway::ManualPaymentGateway'
+            pm ||= payment_methods.detect { |pm| !%w(free manual).include?(pm.payment_method_type) }
+            puts "Billing authorization present, need to rewrite payment_gateway: #{pg_id} and type #{pm.payment_method_type}"
+            p.update_columns(payment_gateway_id: pg.id, payment_method_id: pm.id)
+          else
+            puts "\t\t#{p.id}: #{p.external_transaction_id}, offline: #{p.offline}, first_charge: #{p.charges.first.try(:id)}, possible payment gateway: #{p.instance.payment_gateways(p.payable.company.iso_country_code, p.currency).map(&:type)}"
+            if p.external_transaction_id.present? || p.charges.first.present?
+              pg = p.instance.payment_gateways(p.payable.company.iso_country_code, p.currency).detect { |p| p.type != 'PaymentGateway::ManualPaymentGateway' }
+              if pg
+                pm = nil
+                pm ||= pg.payment_methods.detect { |pm| pm.payment_method_type == 'free' } if p.is_free?
+                pm ||= pg.payment_methods.detect { |pm| pm.payment_method_type == 'manual' } if p.offline?
+                pm ||= pg.payment_methods.detect { |pm| !%w(free manual).include?(pm.payment_method_type) }
+                puts "\t\t\tTransaction id is present or charge is present, assigning non manual payment gateway: #{pg.type} with type #{pm.payment_method_type} (#{pg.payment_methods.pluck(:payment_method_type)})"
+                p.update_columns(payment_gateway_id: pg.id, payment_method_id: pm.id)
+                if p.external_transaction_id.blank?
+                  puts "\t\t\t\tTransaction id should be additionally populated: #{p.successful_billing_authorization.try(:response).try(:authorization)}"
+                end
+              else
+                puts "epic fail, payment gateway does not exist, removing payment: #{p.id}, #{p.created_at}"
+                next
+              end
+            else
+              pg = p.instance.payment_gateways(p.payable.company.iso_country_code, p.currency).detect { |p| p.type == 'PaymentGateway::ManualPaymentGateway' }
+              if pg
+                pm = pg.payment_methods.detect { |pm| pm.payment_method_type == 'manual' }
+                puts "\t\t\tAssigning manual payment gateway: #{pg.type}, type: #{pm.payment_method_type}"
+                p.update_columns(payment_gateway_id: pg.id, payment_method_id: pm.id)
+              else
+                puts "\t\t\tERROR ERROR - no payment gateway (#{p.payment_gateway_mode})"
+              end
+            end
+          end
+        end
+      else
+        puts "#{i.name} is all good!"
+      end
+    end
+  end
+
 end
 

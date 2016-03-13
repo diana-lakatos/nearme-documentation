@@ -19,7 +19,7 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
       flash[:success] = t "flash_messages.instance_admin.#{controller_scope}.#{translation_key}.created"
       redirect_to [:instance_admin, controller_scope, resource_class]
     else
-      flash[:error] = @offer_type.errors.full_messages.to_sentence
+      flash[:error] = @transactable_type.errors.full_messages.to_sentence
       render action: :new
     end
   end

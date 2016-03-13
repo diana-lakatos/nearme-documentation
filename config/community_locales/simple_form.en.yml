@@ -66,6 +66,13 @@ en:
       search_filter:
         sort: 'Sort by:'
         collaborators: 'Seeking Collaborators'
+        options:
+          all: "All"
+          featured: "Featured"
+          people_i_know: "People I Know"
+          most_popular: "Most Popular"
+          location: "Near Me"
+          number_of_projects: "Number of Projects"
 
       onboarding:
         location: 'Location'

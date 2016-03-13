@@ -87,6 +87,7 @@ class Location < ActiveRecord::Base
   scope :with_searchable_listings, -> { where(%{ (select count(*) from "transactables" where location_id = locations.id and transactables.draft IS NULL and enabled = 't' and transactables.deleted_at is null) > 0 }) }
 
   scope :order_by_array_of_ids, -> (location_ids) {
+    location_ids ||= []
     location_ids_decorated = location_ids.each_with_index.map {|lid, i| "WHEN locations.id=#{lid} THEN #{i}" }
     order("CASE #{location_ids_decorated.join(' ')} END") if location_ids.present?
   }
