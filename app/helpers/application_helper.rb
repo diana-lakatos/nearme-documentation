@@ -416,10 +416,11 @@ module ApplicationHelper
   # Styled only for comunity layout
   def readmore(text, limit=255)
     if text.size < limit
-      auto_link(text, html: { target: '_blank', ref: 'nofollow' })
+      simple_format auto_link(text, html: { target: '_blank', ref: 'nofollow' })
     else
-      auto_link(text[0..limit], html: { target: '_blank', ref: 'nofollow' }) +
+      content = auto_link(text[0..limit], html: { target: '_blank', ref: 'nofollow' }) +
         content_tag(:span, content_tag(:span, auto_link(text[limit + 1..-1], html: { target: '_blank', ref: 'nofollow' })), class: 'readmore-a', data: {label: t(:read_more)})
+      simple_format content
     end
   end
 
@@ -498,6 +499,14 @@ module ApplicationHelper
     # It's important that we use _url and not _path as we won't current domain
     # instead of a link using ASSET_HOST / CDN, due to platform context issues
     dynamic_theme_url(theme_id: theme.id, updated_at: theme.updated_at.to_formatted_s(:number), stylesheet: stylesheet)
+  end
+
+  def remote_storage_file_name(file_object)
+    # We use file_object (most often CarrierWave::Storage::Fog::File) basename(path)
+    # first, as filename may not be correct due to the presence of
+    # extra slashes in the URL; file_object.path will represent the local path
+    # to the file
+    File.basename(file_object.path.to_s).presence || file_object.filename
   end
 
 end

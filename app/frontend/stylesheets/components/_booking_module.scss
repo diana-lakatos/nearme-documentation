@@ -163,6 +163,28 @@
       @media (max-width: $booking-module-breakpoint-size) {
         font-size: 0.6em;
       }
+
+    }
+
+    .availability-week-container {
+      .enabled {
+        color: #d2d2d2 !important;
+      }
+    }
+
+    .availability-detailed-container {
+      .day-of-week {
+        float: left;
+        width: 45px;
+      }
+
+      .times-in-day {
+        float: left;
+
+        span {
+          display: block;
+        }
+      }
     }
 
     .seller-attachments {

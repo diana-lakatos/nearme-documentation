@@ -31,7 +31,11 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
   end
 
   def get_payment_gateway_data
-    @payment_gateway = @company.payout_payment_gateway
+    if current_instance.skip_company?
+      @payment_gateway = current_user.payout_payment_gateway
+    else
+      @payment_gateway = @company.payout_payment_gateway
+    end
     if @payment_gateway.present?
       @payment_gateway_type = @payment_gateway.type_name
       @merchant_account_form_path = "dashboard/company/merchant_accounts/#{@payment_gateway_type}"

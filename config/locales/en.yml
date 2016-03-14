@@ -1243,7 +1243,7 @@ en:
       companies: 'Shop Details'
       products: 'My Products'
       transactables: 'My Listings'
-      payouts: 'Payout'
+      payouts: 'Payments'
       orders_received: 'Orders Received'
       host_reservations: 'Bookings Received'
       transfers: 'Payment Transfers'
@@ -2035,7 +2035,7 @@ en:
       cancelled_by_host: "Cancelled by host"
       rejected: "Rejected"
       confirmed: "Confirmed"
-      inactive: "Inactive"
+      inactive: "Payment failed"
   search:
     pricing_types:
       daily: "Daily"

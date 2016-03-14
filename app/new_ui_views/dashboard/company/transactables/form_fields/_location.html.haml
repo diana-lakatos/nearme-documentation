@@ -4,7 +4,7 @@
 
 
 %p.form-control-option{ :"data-location-actions" => true }
-  = link_to t('locations.add_new_location'), new_dashboard_company_location_path, data: { modal: true }
+  = link_to t('locations.add_new_location'), new_dashboard_company_location_path(with_deleted_link: true), data: { modal: true }
 
   = render @locations, f: f
 

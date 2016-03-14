@@ -1,7 +1,7 @@
 %li{ class: "type-#{File.extname(attachment.file.file.filename).gsub('.','')}", data: {'attachment' => attachment.id } }
   .attachment-container
     %span.link
-      = link_to attachment.file.file.filename, attachment.file.url, download: attachment.file.file.filename
+      = link_to remote_storage_file_name(attachment.file.file), attachment.file.url, download: attachment.file.file.filename
     %span.meta
       %time{ datetime: attachment.created_at }
         = l(attachment.created_at.to_date, format: :long)
