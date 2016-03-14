@@ -89,7 +89,11 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
 
   def missing_phone_number
     @country = current_user.country_name
-    @return_path = new_listing_user_message_path(params[:listing_id], skip: true)
+    if params[:listing_id].present?
+      @return_path = new_listing_user_message_path(params[:listing_id], skip: true)
+    elsif params[:user_id].present?
+      @return_path = new_user_user_message_path(params[:user_id], skip: true)
+    end
 
     render :missing_phone_number
   end
