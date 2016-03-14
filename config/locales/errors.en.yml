@@ -96,3 +96,7 @@ en:
       not_in_past: 'must be not in past'
       range_too_wide: "can 't be later than 1 year from starting date"
 
+      communications:
+        not_verified:
+          current_user: 'Your phone number is not configured for making calls.'
+          listing_owner: 'Listing aministator does not allow making calls.'

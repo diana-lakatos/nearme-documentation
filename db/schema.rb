@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 20160306163829) do
     t.integer  "percent"
   end
 
+  add_index "additional_charge_types", ["additional_charge_type_target_id", "additional_charge_type_target_type"], name: "act_target", using: :btree
   add_index "additional_charge_types", ["instance_id"], name: "index_additional_charge_types_on_instance_id", using: :btree
 
   create_table "additional_charges", force: :cascade do |t|
@@ -461,6 +462,18 @@ ActiveRecord::Schema.define(version: 20160306163829) do
 
   add_index "comments", ["creator_id"], name: "index_comments_on_creator_id", using: :btree
   add_index "comments", ["instance_id", "commentable_id", "commentable_type"], name: "index_on_commentable", using: :btree
+
+  create_table "communications", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "provider"
+    t.string   "provider_key"
+    t.string   "phone_number"
+    t.string   "phone_number_key"
+    t.string   "request_key"
+    t.boolean  "verified",         default: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+  end
 
   create_table "community_reporting_aggregates", force: :cascade do |t|
     t.datetime "start_date",               null: false
@@ -1094,9 +1107,9 @@ ActiveRecord::Schema.define(version: 20160306163829) do
     t.string   "time_zone"
     t.string   "seller_attachments_access_level",       limit: 255,                         default: "disabled",    null: false
     t.integer  "seller_attachments_documents_num",                                          default: 10,            null: false
-    t.boolean  "payout_information_required",                                               default: true
     t.string   "priority_view_path"
     t.boolean  "enable_language_selector",                                                  default: false,         null: false
+    t.boolean  "click_to_call",                                                             default: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1191,7 +1204,6 @@ ActiveRecord::Schema.define(version: 20160306163829) do
     t.integer  "opened_on_days",                             default: [],                 array: true
     t.string   "time_zone",                      limit: 255
     t.integer  "availability_template_id"
-    t.boolean  "featured",                                   default: false
   end
 
   add_index "locations", ["address_id"], name: "index_locations_on_address_id", using: :btree
@@ -1499,6 +1511,16 @@ ActiveRecord::Schema.define(version: 20160306163829) do
   end
 
   add_index "payouts", ["instance_id", "payment_gateway_id"], name: "index_payouts_on_instance_id_and_payment_gateway_id", using: :btree
+
+  create_table "phone_calls", force: :cascade do |t|
+    t.integer  "caller_id"
+    t.string   "from"
+    t.integer  "receiver_id"
+    t.string   "to"
+    t.string   "phone_call_key"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
 
   create_table "photos", force: :cascade do |t|
     t.datetime "created_at"
@@ -2302,7 +2324,6 @@ ActiveRecord::Schema.define(version: 20160306163829) do
     t.integer  "store_id"
     t.integer  "payment_method_id"
     t.boolean  "insurance_enabled",                                                   default: false,   null: false
-    t.boolean  "payout_available",                                                    default: false
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree
@@ -3258,23 +3279,6 @@ ActiveRecord::Schema.define(version: 20160306163829) do
   add_index "spree_zones", ["partner_id"], name: "index_spree_zones_on_partner_id", using: :btree
   add_index "spree_zones", ["user_id"], name: "index_spree_zones_on_user_id", using: :btree
 
-  create_table "states", force: :cascade do |t|
-    t.string   "name",        limit: 255
-    t.string   "abbr",        limit: 255
-    t.integer  "country_id"
-    t.datetime "updated_at"
-    t.integer  "instance_id"
-    t.integer  "company_id"
-    t.integer  "partner_id"
-    t.integer  "user_id"
-  end
-
-  add_index "states", ["company_id"], name: "index_states_on_company_id", using: :btree
-  add_index "states", ["country_id"], name: "index_states_on_country_id", using: :btree
-  add_index "states", ["instance_id"], name: "index_states_on_instance_id", using: :btree
-  add_index "states", ["partner_id"], name: "index_states_on_partner_id", using: :btree
-  add_index "states", ["user_id"], name: "index_states_on_user_id", using: :btree
-
   create_table "support_faqs", force: :cascade do |t|
     t.integer  "instance_id"
     t.text     "question",      null: false
@@ -3669,9 +3673,8 @@ ActiveRecord::Schema.define(version: 20160306163829) do
     t.integer  "monthly_subscription_price_cents"
     t.string   "slug"
     t.integer  "availability_template_id"
-    t.boolean  "payout_available",                             default: false
-    t.boolean  "featured",                                     default: false
     t.integer  "deposit_amount_cents"
+    t.boolean  "featured",                                     default: false
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
@@ -3945,6 +3948,7 @@ ActiveRecord::Schema.define(version: 20160306163829) do
     t.string   "external_id"
     t.integer  "projects_count",                                     default: 0,                                                                                   null: false
     t.integer  "project_collborations_count",                        default: 0,                                                                                   null: false
+    t.boolean  "click_to_call",                                      default: false
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

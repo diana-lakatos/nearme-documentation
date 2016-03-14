@@ -1,0 +1,8 @@
+%header.dialog__header
+  %h2#dialog__title
+    = t('phone_calls.status.calling')
+
+= form_tag user_phone_call_path(@user, @call.sid), method: :delete, data: {modal: true} do
+
+  .dialog__actions
+    = submit_tag t('phone_calls.buttons.hang_up'), class: 'btn btn-green'

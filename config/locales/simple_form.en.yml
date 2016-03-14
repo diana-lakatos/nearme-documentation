@@ -320,6 +320,7 @@ en:
         biography: 'About me'
         sms_notifications_enabled: 'Enable Text Message Notifications'
         accept_emails: 'Accept emails'
+        click_to_call: 'Enable click to call'
         public_profile: "Public profile"
         industries: "Industries"
         email: "Email"

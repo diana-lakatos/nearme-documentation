@@ -53,6 +53,10 @@ FactoryGirl.define do
       end
 
     end
+
+    factory :user_with_verified_phone_number do
+      communication
+    end
   end
 
 

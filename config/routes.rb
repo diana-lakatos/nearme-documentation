@@ -1037,6 +1037,19 @@ DesksnearMe::Application.routes.draw do
       get 'organizations', to: 'organizations#index'
     end
 
+    resources :communications, only: [:create, :destroy, :status] do
+      post :status, on: :collection
+    end
+
+    resources :phone_calls, only: [:status, :connect] do
+      post :status, on: :collection
+      get :connect, on: :collection
+    end
+
+    resources :users do
+      resources :phone_calls, only: [:new, :create, :destroy]
+    end
+
     get "/:slug(.:format)", to: 'pages#show', as: :pages, constraints: Constraints::PageConstraints.new
 
     # delayed_job web gui

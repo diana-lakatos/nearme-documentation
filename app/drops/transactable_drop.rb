@@ -4,6 +4,7 @@ class TransactableDrop < BaseDrop
   include SearchHelper
   include MoneyRails::ActionViewExtension
   include CategoriesHelper
+  include ClickToCallButtonHelper
 
   attr_reader :transactable
 
@@ -328,6 +329,11 @@ class TransactableDrop < BaseDrop
 
   def booking_module_path
     routes.booking_module_listing_path(@transactable)
+  end
+
+  def click_to_call_button
+    path_to_call = routes.new_user_phone_call_path(administrator.id)
+    build_click_to_call_button(path_to_call)
   end
 
 end
