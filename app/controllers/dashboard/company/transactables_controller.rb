@@ -68,6 +68,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     @transactable.currency = transactable_params[:currency] if transactable_params[:currency].present?
     @transactable.attachment_ids = attachment_ids_for(@transactable)
     @transactable.assign_attributes(transactable_params)
+    build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
 
     respond_to do |format|
       format.html {
