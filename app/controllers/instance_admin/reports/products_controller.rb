@@ -7,7 +7,7 @@ class InstanceAdmin::Reports::ProductsController < InstanceAdmin::Reports::BaseC
   def index
     @product_search_form = InstanceAdmin::ProductSearchForm.new
     @product_search_form.validate(params)
-    @products = SearchService.new(Spree::Product.order('created_at DESC')).search(@product_search_form.to_search_params).paginate(page: params[:page])
+    @resources = SearchService.new(Spree::Product.order('created_at DESC')).search(@product_search_form.to_search_params).paginate(page: params[:page])
   end
 
   def show
@@ -62,19 +62,18 @@ class InstanceAdmin::Reports::ProductsController < InstanceAdmin::Reports::BaseC
     @search_form = InstanceAdmin::ProductSearchForm
   end
 
-  private
-    def set_breadcrumbs_title
-      @breadcrumbs_title = BreadcrumbsList.new(
-        { :title => t('instance_admin.general.reports') },
-        { :title => t('instance_admin.general.products'), :url => instance_admin_reports_products_path }
-      )
-    end
+  def set_breadcrumbs_title
+    @breadcrumbs_title = BreadcrumbsList.new(
+      { :title => t('instance_admin.general.reports') },
+      { :title => t('instance_admin.general.products'), :url => instance_admin_reports_products_path }
+    )
+  end
 
-    def find_product
-      @product = Spree::Product.where("id = :slug OR slug = :slug", slug: params[:id]).first!
-    end
+  def find_product
+    @product = Spree::Product.where("id = :slug OR slug = :slug", slug: params[:id]).first!
+  end
 
-    def product_params
-      params.require(:product).permit(secured_params.spree_product)
-    end
+  def product_params
+    params.require(:product).permit(secured_params.spree_product)
+  end
 end

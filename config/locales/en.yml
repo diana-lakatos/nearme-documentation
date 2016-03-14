@@ -326,6 +326,8 @@ en:
     general:
       product: "Product"
       spree/products: "Products"
+      transactable: "Transactable"
+      transactables: "Transactables"
       listing: "Listing"
       listings: "Listings"
       reports: "Reports"
