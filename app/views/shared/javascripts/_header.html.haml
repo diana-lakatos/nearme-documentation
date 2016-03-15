@@ -2,18 +2,10 @@
 
 = render 'shared/javascripts/ckeditor_basepath'
 
-<!--[if !IE]> -->
-= javascript_include_tag 'jquery.min'
-<!-- <![endif]-->
-
-/[if IE]
-  = javascript_include_tag 'jquery-legacy.min'
+= javascript_include_tag 'vendor/jquery.min'
 
 /[if lt IE 10]
   = javascript_include_tag 'vendor/placeholders.min'
-
-/[if lt IE 9]
-  = javascript_include_tag 'vendor/respond.min'
 
 = javascript_include_tag 'vendor/modernizr'
 

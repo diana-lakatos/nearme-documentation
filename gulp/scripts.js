@@ -5,7 +5,10 @@ var
     fs = require('fs');
 
 module.exports = function(gulp, config) {
-    function onWebpackBuild(callback) {
+    function onWebpackBuild(callback, output) {
+
+        output = output || config.paths.output;
+
         return function(err, stats) {
             if (err) {
                 throw new gutil.PluginError('webpack', err);
@@ -26,7 +29,7 @@ module.exports = function(gulp, config) {
                 });
             }
 
-            fs.writeFile(path.join(config.paths.output, 'webpack-asset-manifest.json'), JSON.stringify(jsonStats['assetsByChunkName']));
+            fs.writeFile(path.join(output, 'webpack-asset-manifest.json'), JSON.stringify(jsonStats['assetsByChunkName']));
 
             if (callback) {
                 callback();
@@ -36,7 +39,7 @@ module.exports = function(gulp, config) {
 
     gulp.task('webpack', function(callback) {
         var webpackConfig = require('./webpack/development.config');
-        var output = webpack(webpackConfig).run(onWebpackBuild(callback));
+        var output = webpack(webpackConfig).run(onWebpackBuild(callback, config.paths.tmp));
     });
 
     gulp.task('watch:webpack', function() {
@@ -46,16 +49,16 @@ module.exports = function(gulp, config) {
 
     gulp.task('webpack:test', function(callback) {
         var webpackConfig = require('./webpack/test.config');
-        webpack(webpackConfig).run(onWebpackBuild(callback));
+        webpack(webpackConfig).run(onWebpackBuild(callback, config.paths.tmp));
     });
 
     gulp.task('webpack:staging', function(callback) {
         var webpackConfig = require('./webpack/staging.config');
-        webpack(webpackConfig).run(onWebpackBuild(callback));
+        webpack(webpackConfig).run(onWebpackBuild(callback, config.paths.tmp));
     });
 
     gulp.task('webpack:production', function(callback) {
         var webpackConfig = require('./webpack/production.config');
-        webpack(webpackConfig).run(onWebpackBuild(callback));
+        webpack(webpackConfig).run(onWebpackBuild(callback, config.paths.tmp));
     });
 };
