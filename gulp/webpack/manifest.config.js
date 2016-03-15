@@ -5,20 +5,15 @@ var _ = require('lodash');
 
 var config = module.exports = require('./main.config.js');
 
-var WebpackMd5Hash = require(path.join(config.context, 'custom_node_modules', 'webpack_md5_hash'));
-
 config.output = _.merge(config.output, {
-  path: path.join(config.context, 'public', 'assets'),
-  filename: '[name]-bundle-[chunkhash].js',
-  chunkFilename: '[id]-bundle-[chunkhash].js',
+  path: path.join(config.context, 'tmp', 'assets'),
+  chunkFilename: '[id]-bundle.js'
 });
 
 config.plugins.push(
-  new webpack.optimize.CommonsChunkPlugin('common', 'common-[chunkhash].js'),
+  new webpack.optimize.CommonsChunkPlugin('common', 'common.js'),
   new ChunkManifestPlugin({
     filename: 'webpack-common-manifest.json',
     manifestVariable: 'webpackBundleManifest',
-  }),
-  new webpack.NamedModulesPlugin(),
-  new WebpackMd5Hash()
+  })
 );
