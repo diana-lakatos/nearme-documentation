@@ -47,8 +47,7 @@ class InstanceAdmin::Reports::ProductsController < InstanceAdmin::Reports::BaseC
   end
 
   def destroy
-    @resource = Spree::Product.find(params[:id])
-    @resource.destroy
+    @product.destroy
     flash[:deleted] = t('flash_messages.instance_admin.reports.listings.successfully_deleted')
 
     redirect_to instance_admin_reports_products_path
@@ -70,7 +69,11 @@ class InstanceAdmin::Reports::ProductsController < InstanceAdmin::Reports::BaseC
   end
 
   def find_product
-    @product = Spree::Product.where("id = :slug OR slug = :slug", slug: params[:id]).first!
+    if params[:id].to_s.match(/^\d+$/)
+      @product = Spree::Product.find(params[:id])
+    else
+      @product = Spree::Product.find_by_slug(params[:id])
+    end
   end
 
   def product_params
