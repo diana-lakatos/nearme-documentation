@@ -9,9 +9,7 @@ module.exports = UtilUrl = {
       decodeURIComponent(results[1].replace(/\+/g, " "))
 
   assetUrl: (path) ->
-    assets = window.DNMAssets || {}
-    return assets[path] if assets.hasOwnProperty(path)
-    return path
+    return  "#{window.NM_ASSET_HOST}/assets/#{path}"
 }
 
 
