@@ -61,7 +61,8 @@ config.plugins = [
     'window.jQuery': 'jquery',
     'Modernizr': 'modernizr',
     '_': 'underscore'
-  })
+  }),
+  new webpack.optimize.DedupePlugin()
 ];
 
 config.module = {
