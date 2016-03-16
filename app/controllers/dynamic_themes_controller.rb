@@ -5,26 +5,24 @@ class DynamicThemesController < ActionController::Base
 
   layout false
 
+  before_action :set_cors_headers
+
   def show
     @theme = Theme.find(params[:theme_id])
-    stylesheet =  params[:stylesheet]
+    @stylesheet =  params[:stylesheet]
 
-    # Remove session cookies from response
-    base_date = @theme.updated_at
-    expire_date = base_date + 1.year
+    expires_in 1.year, public: true
+    fresh_when(@theme, public: true)
+  end
 
-    request.session_options[:skip] = true
+  private
 
-    expires_in 1.year, :public => true
-
+  def set_cors_headers
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Request-Method'] = '*'
-    response.headers['Expires'] = expire_date.httpdate
-    response.headers['x-frame-options'] = nil
-    response.headers['Last-Modified'] = expire_date.httpdate
-    response.headers['Content-Type'] = 'text/css'
-    response.headers['X-Content-Type-Options'] = nil
 
-    render stylesheet.to_s
+    response.headers['x-frame-options'] = nil
+    response.headers['X-Content-Type-Options'] = nil
+    request.session_options[:skip] = true
   end
 end
