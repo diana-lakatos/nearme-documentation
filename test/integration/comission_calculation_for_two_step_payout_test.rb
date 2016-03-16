@@ -76,7 +76,7 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
   def booking_params
     {
       reservation_request: {
-        dates: [Chronic.parse('Monday')],
+        dates: @listing.booking_type == 'overnight' ? [Chronic.parse('Monday'), Chronic.parse('Tuesday')] : [Chronic.parse('Monday')],
         quantity: "1",
         payment_attributes: {
           payment_method_id: @payment_method.id,
@@ -148,9 +148,7 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
 
     PaymentGateway::StripePaymentGateway.any_instance.stubs(:store).returns(card_stub)
     PaymentGateway::StripePaymentGateway.any_instance.stubs(:gateway).returns(gateway).at_least(0)
-    PaymentGateway::PaypalPaymentGateway.any_instance.stubs(:gateway).returns(gateway).at_least(0)
     PaymentGateway::StripePaymentGateway.any_instance.stubs(:credit_card_payment?).returns(true)
-    PaymentGateway::PaypalPaymentGateway.any_instance.stubs(:credit_card_payment?).returns(true)
     assert_difference "@listing.reservations.count" do
       post_via_redirect "/listings/#{@listing.id}/reservations", booking_params
     end
