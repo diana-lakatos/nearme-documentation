@@ -55,6 +55,11 @@ class InstanceWizardController < ActionController::Base
     ipt = @instance.instance_profile_types.create!(name: 'Default', profile_type: InstanceProfileType::DEFAULT)
     Utils::FormComponentsCreator.new(ipt).create!
 
+    # We remove the profile created on before_create as it's attached to the wrong instance
+    @user.default_profile.destroy
+    @user.build_default_profile(instance_profile_type: ipt)
+    @user.save!
+
     User.admin.find_each do |user|
       if user.default_profile.blank?
         user.create_default_profile!(
