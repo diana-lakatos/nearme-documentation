@@ -62,7 +62,7 @@ module.exports = class SearchProductsSearchController extends SearchController
       @form.submit()
 
   rebindForm: ->
-    $('select').select2({ allowClear: true })
+    @container.find('select').select2({ allowClear: true })
     @form = $('#search_form')
     @performEndlessScrolling = @form.data('endless-scrolling')
     @form.bind 'submit', (event) =>
