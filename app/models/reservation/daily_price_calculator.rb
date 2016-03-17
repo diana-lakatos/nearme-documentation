@@ -19,7 +19,7 @@ class Reservation::DailyPriceCalculator
   def price
     blocks = listing.overnight_booking? ? real_contiguous_blocks : contiguous_blocks
     blocks.map do |block|
-      price_for_days(block.size) * @reservation.quantity rescue 0.0
+      price_for_days((listing.overnight_booking? ? (block.size - 1) : block.size) ) * @reservation.quantity rescue 0.0
     end.sum.to_money
   end
 
@@ -56,12 +56,7 @@ class Reservation::DailyPriceCalculator
       # Pro rate even when favourable pricing is disabled to avoid error when
       # only prices for longer period than days are enabled.
       if @reservation.favourable_pricing_rate || days < block_size
-        if listing.overnight_booking? && days > 1
-          reduced_days = days - 1
-        else
-          reduced_days = days
-        end
-        (((reduced_days/block_size.to_f) * price.cents).round / BigDecimal.new(price.currency.subunit_to_unit)).to_money(price.currency)
+        (((days/block_size.to_f) * price.cents).round / BigDecimal.new(price.currency.subunit_to_unit)).to_money(price.currency)
       else
         priced_days = days/block_size
         left_days = days - priced_days*block_size
