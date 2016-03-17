@@ -1234,6 +1234,11 @@ body.buy-sell-theme {
       padding: initial;
     }
 
+    &.search-view-listing .btn.search {
+        padding: 0;
+        width: 36px;
+    }
+
     .search-bar.mobile form input {
       width: 70%;
       margin-bottom: 20px;
