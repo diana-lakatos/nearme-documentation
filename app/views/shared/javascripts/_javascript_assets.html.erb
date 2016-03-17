@@ -1,14 +1,1 @@
-<%
-  assets = [
-    'google-maps/marker-images/hover-2x.png',
-    'google-maps/marker-images/default-2x.png',
-    'spinner.gif',
-    'markers/marker-hover.png',
-    'markers/marker-default.png',
-    'dashboard/green-check.png',
-    'dashboard/x-red.png',
-    'raty/star-on-big.png',
-    'raty/star-off-big.png',
-  ]
-%>
-<script>(function(window){var a = {};<% assets.each do |key| %>a["<%= key %>"]="<%= image_url key %>";<% end %>window.DNMAssets = a;}(this));</script>
+<script>window.NM_ASSET_HOST='<%= compute_asset_host %>';</script>

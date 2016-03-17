@@ -4,4 +4,3 @@ var _ = require('lodash');
 config = _.merge(config, {
   devtool: 'source-map'
 });
-

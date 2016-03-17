@@ -1,4 +1,4 @@
-require('expose?URLify!urlify');
+URLify = require('imports?window=>{}!exports?window.URLify!urlify');
 
 module.exports = class BlogPostsForm
 
