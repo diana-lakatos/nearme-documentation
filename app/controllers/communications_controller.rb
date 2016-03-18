@@ -7,7 +7,7 @@ class CommunicationsController < ApplicationController
     caller = client.verify_number(
       current_user.name,
       current_user.full_mobile_number,
-      status_communications_url
+      status_webhooks_communications_url
     )
 
     current_user.communication = current_user.build_communication(
@@ -30,23 +30,6 @@ class CommunicationsController < ApplicationController
 
     flash[:notice] = I18n.t("flash_messages.communications.phone_number_disconnected")
     redirect_to social_accounts_path
-  end
-
-  # Twilio HTTP async callbacks
-
-  def status
-    if params[:VerificationStatus].eql?('success')
-      communication = Communication.find_by(request_key: params[:CallSid])
-
-      if communication.present?
-        communication.update_columns(
-          phone_number_key: params[:OutgoingCallerIdSid],
-          verified: true
-        )
-      end
-    end
-
-    head :ok
   end
 
   private
