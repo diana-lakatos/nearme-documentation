@@ -40,7 +40,7 @@ class RecurringBookingRequest < Form
       @recurring_booking.service_fee_amount_host = @recurring_booking.service_fee_amount_host
       self.total_amount_cents = @recurring_booking.total_amount.cents
       @payment_subscription ||= @recurring_booking.build_payment_subscription(payment_subscription_attributes)
-      @payment_subscription.credit_card || @payment_subscription.build_credit_card
+      @credit_card ||= @payment_subscription.credit_card || @payment_subscription.build_credit_card
     end
 
     if @user
@@ -106,8 +106,10 @@ class RecurringBookingRequest < Form
     User.transaction do
       user.save!
       @recurring_booking.save!
+      @payment_subscription.save
+      @credit_card.save!
     end
-  rescue ActiveRecord::RecordInvalid => error
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => error
     add_errors(error.record.errors.full_messages)
     false
   end
