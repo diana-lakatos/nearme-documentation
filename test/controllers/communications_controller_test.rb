@@ -15,10 +15,10 @@ class CommunicationsControllerTest < ActionController::TestCase
 
   test "#create verifies user's number" do
     @provider.expects(:verify_number)
-      .with(@user.name, @user.full_mobile_number, 'http://example.com/communications/status')
+      .with(@user.name, @user.full_mobile_number, 'http://example.com/webhooks/communications/status')
       .returns(@caller)
 
-    post :create
+    post :create, user_id: @user.id
   end
 
   test '#create creates unverified communication' do
@@ -34,28 +34,16 @@ class CommunicationsControllerTest < ActionController::TestCase
       verified: false
     })
 
-    post :create
+    post :create, user_id: @user.id
   end
 
   test "#create redirects to 'Trust & Verification' with validation code" do
     @caller.stubs(account_sid: 'abc', phone_number: '+00000000000', call_sid: '123', validation_code: 'xyz')
     @provider.stubs(:verify_number).returns(@caller)
-    post :create
+    post :create, user_id: @user.id
 
     assert_equal flash[:notice], I18n.t('flash_messages.communications.validation_code', validation_code: @caller.validation_code)
     assert_redirected_to social_accounts_path
-  end
-
-  test '#status marks communication as verified when verification is successfull' do
-    communication = Struct.new(:update_columns).new
-    Communication.stubs(:find_by).with(request_key: 'abc').returns(communication)
-
-    communication.expects(:update_columns).with({
-      phone_number_key: '123',
-      verified: true
-    })
-
-    post :status, VerificationStatus: 'success', CallSid: 'abc', OutgoingCallerIdSid: '123'
   end
 
   test '#destroy disconnects verified number' do
@@ -65,7 +53,7 @@ class CommunicationsControllerTest < ActionController::TestCase
 
     @provider.expects(:disconnect_number).with('+00000000000')
 
-    delete :destroy, id: @user.id
+    delete :destroy, user_id: @user.id, id: @user.id
   end
 
   test '#destroy destroyes verified communication' do
@@ -75,14 +63,14 @@ class CommunicationsControllerTest < ActionController::TestCase
 
     communication.expects(:destroy)
 
-    delete :destroy, id: @user.id
+    delete :destroy, user_id: @user.id, id: @user.id
   end
 
   test "#destroy redirects to 'Trust & Verification'" do
     communication = Struct.new(:destroy, :phone_number_key).new
     @user.stubs(:communication).returns(communication)
     @provider.stubs(:disconnect_number)
-    delete :destroy, id: @user.id
+    delete :destroy, user_id: @user.id, id: @user.id
 
     assert_redirected_to social_accounts_path
   end

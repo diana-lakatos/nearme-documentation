@@ -1037,16 +1037,8 @@ DesksnearMe::Application.routes.draw do
       get 'organizations', to: 'organizations#index'
     end
 
-    resources :communications, only: [:create, :destroy, :status] do
-      post :status, on: :collection
-    end
-
-    resources :phone_calls, only: [:status, :connect] do
-      post :status, on: :collection
-      get :connect, on: :collection
-    end
-
     resources :users do
+      resources :communications, only: [:create, :destroy]
       resources :phone_calls, only: [:new, :create, :destroy]
     end
 
@@ -1087,7 +1079,17 @@ DesksnearMe::Application.routes.draw do
         match '', via: %i(get post), as: :webhook, action: :webhook
       end
     end
+
+    resource :communications, only: [:status] do
+      post :status, on: :collection
+    end
+
+    resources :phone_calls, only: [:status, :connect] do
+      post :status, on: :collection
+      get :connect, on: :collection
+    end
   end
+
   mount Ckeditor::Engine => '/ckeditor'
 
   get '/dynamic_theme/:stylesheet-:theme_id-:updated_at.css', to: 'dynamic_themes#show', as: :dynamic_theme, format: 'css', constraints: { stylesheet: /(new_ui|application|dashboard)/ }

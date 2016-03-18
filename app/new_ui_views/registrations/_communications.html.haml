@@ -9,7 +9,6 @@
 
   .col-md-5
     - if current_user.communication.try(:verified?)
-      = button_to t('registrations.social_accounts.disconnect'), communication_path(current_user), method: :delete, class: 'btn btn-primary'
+      = button_to t('registrations.social_accounts.disconnect'), user_communication_path(current_user, 'delete'), method: :delete, class: 'btn btn-primary'
     - else
-      = button_to t('registrations.social_accounts.connect'), communications_path, class: 'btn btn-primary'
-
+      = button_to t('registrations.social_accounts.connect'), user_communications_path(current_user), class: 'btn btn-primary'

@@ -25,8 +25,8 @@ class PhoneCallsControllerTest < ActionController::TestCase
     @provider.expects(:call).with(
       to: @current_user.communication.phone_number,
       from: @current_instance.twilio_from_number,
-      url: connect_phone_calls_url,
-      status_callback: status_phone_calls_url
+      url: connect_webhooks_phone_calls_url,
+      status_callback: status_webhooks_phone_calls_url
     ).returns(@caller)
 
     xhr :post, :create, user_id: @current_user.id
