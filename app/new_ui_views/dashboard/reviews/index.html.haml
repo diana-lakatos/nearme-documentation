@@ -15,7 +15,7 @@
     .form-inline
       .form-group
         = label_tag :"reviews-period", t('dashboard.reviews.feedback.see_reviews_from'), class: 'control-label'
-        %select.form-control#reviews-period{:'data-period-selection' => true}
+        %select.form-control.reviews-period#reviews-period{:'data-period-selection' => true}
           %option{value: Review::LAST_30_DAYS, selected: period_selected?(Review::LAST_30_DAYS)}
             = t('dashboard.reviews.feedback.last_30_days')
           %option{value: Review::LAST_6_MONTHS, selected: period_selected?(Review::LAST_6_MONTHS)}
