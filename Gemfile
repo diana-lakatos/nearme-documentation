@@ -229,5 +229,3 @@ gem 'simple-navigation'
 gem 'sprockets'
 gem 'sprockets-rails'
 gem 'cocoon'
-
-gem 'actionpack-action_caching'
