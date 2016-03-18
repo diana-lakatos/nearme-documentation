@@ -73,8 +73,11 @@ class BaseUploader < CarrierWave::Uploader::Base
 
   def url(*args)
     super_url = super
-    if versions_generated? && super_url !~ /\?\d+$/
-      "#{super_url}?#{model["#{mounted_as}_versions_generated_at"].to_i}"
+    if versions_generated? && super_url !~ /\?v=\d+$/
+      # We use v=number to trigger CloudFront cache invalidation
+      # We add 10 minutes because versions_generated_at is slightly in the past as to
+      # our requirements
+      "#{super_url}?v=#{model["#{mounted_as}_versions_generated_at"].to_i + 10.minutes.to_i}"
     else
       super_url
     end
