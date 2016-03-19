@@ -2,6 +2,7 @@ class UserDrop < BaseDrop
 
   include ActionView::Helpers::AssetUrlHelper
   include CategoriesHelper
+  include ClickToCallButtonHelper
 
   attr_reader :user
 
@@ -356,6 +357,12 @@ class UserDrop < BaseDrop
 
   def member_since
     I18n.l(@user.created_at.to_date, format: :short)
+  end
+
+  def click_to_call_button
+    return unless @user.click_to_call?
+    path_to_call = routes.new_user_phone_call_path(@user)
+    build_click_to_call_button(path_to_call)
   end
 
   private
