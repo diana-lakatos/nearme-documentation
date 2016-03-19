@@ -333,7 +333,7 @@ class TransactableDrop < BaseDrop
 
   def click_to_call_button
     return unless administrator.click_to_call?
-    path_to_call = routes.new_user_phone_call_path(administrator.id)
+    path_to_call = routes.new_user_phone_call_path(administrator)
     build_click_to_call_button(path_to_call)
   end
 
