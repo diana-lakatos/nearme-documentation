@@ -24,6 +24,8 @@ module.exports = class SearchProductsSearchController extends SearchController
     @responsiveCategoryTree()
     @initializePriceSlider()
 
+    @autocompleteCategories()
+
   bindEvents: ->
     @filters_container.on 'click', 'input[type=checkbox]', =>
       @triggerSearchFromQuery()
@@ -145,11 +147,15 @@ module.exports = class SearchProductsSearchController extends SearchController
   # Trigger the search from manipulating the query.
   # Note that the behaviour semantics are different to manually moving the map.
   triggerSearchFromQuery: (page = false) ->
+
+    category_ids = _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val()))
+    category_ids = category_ids.concat(@container.find('input[data-category-autocomplete]').val().split(','))
+
     # we want to log any new search query
     @assignFormParams(
       ignore_search_event: 0
       per_page: @container.find('select#per_page').val()
-      category_ids: _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val())).join(',')
+      category_ids: category_ids.join(',')
       loc: @form.find("input#search").val()
       page: page || 1
     )
@@ -213,3 +219,40 @@ module.exports = class SearchProductsSearchController extends SearchController
     for k, param of form_params
       params.push(param)
     params
+
+  autocompleteCategories: ->
+    self = this
+    return unless @container.find("input[data-category-autocomplete]").length > 0
+
+    $.each @container.find("input[data-category-autocomplete]"), (index, select) ->
+
+      selected = JSON.parse($(select).attr("data-selected-categories"))
+      apiUrl = $(select).attr('data-api-category-path')
+
+      $(select).select2(
+        multiple: true
+        initSelection: (element, callback) ->
+          url = apiUrl
+          $.getJSON url, { init_selection: 'true', ids: selected }, (data) ->
+            callback data
+
+        ajax:
+          url: apiUrl
+          datatype: "json"
+          data: (term, page) ->
+            per_page: 50
+            page: page
+            q:
+              name_cont: term
+
+          results: (data, page) ->
+            results: data
+
+        formatResult: (category) ->
+          category.translated_name
+
+        formatSelection: (category) ->
+          category.translated_name
+      ).on('change', (e) ->
+        self.triggerSearchFromQuery()
+      ).select2('val', selected.join(','))
