@@ -12,7 +12,7 @@ module.exports = class PhotoManipulator
 
   bindEvents: ->
     @bindRotationHandler()
-    @bindCropHandler()
+    @setOriginalParameters()
     @form.on 'submit', (e) =>
       e.preventDefault()
       ajaxOptions = {
@@ -26,13 +26,24 @@ module.exports = class PhotoManipulator
       }
       $(document).trigger('load:dialog.nearme', [ ajaxOptions ])
 
-  bindCropHandler: =>
+  setOriginalParameters: =>
     options = {
       aspectRatio: @aspectRatio
       cropend: @onCropEnd
       scalable: false
     }
-    options.data = @imageCropCoords() if @imageCropped()
+
+    if @imageCropped() or @originalRotate != 0
+      options.data = {}
+
+      if @originalRotate != 0
+        options.data['rotate'] = @originalRotate
+
+      if @imageCropped
+        options.data['x'] = parseInt(@originalCrop['x'], 10)
+        options.data['y'] = parseInt(@originalCrop['y'], 10)
+        options.data['width'] = parseInt(@originalCrop['w'], 10)
+        options.data['height'] = parseInt(@originalCrop['h'], 10)
 
     setTimeout =>
       @image.cropper(options)
@@ -55,15 +66,10 @@ module.exports = class PhotoManipulator
       @angle = (@angle + 90)
       @angle = 0 if @angle is 360
       @image.cropper('rotate', 90)
-
-  imageCropCoords: ->
-    {
-      x: parseInt(@originalCrop['x'], 10)
-      y: parseInt(@originalCrop['y'], 10)
-      width: parseInt(@originalCrop['w'], 10)
-      height: parseInt(@originalCrop['h'], 10)
-      rotate: @originalRotate
-    }
+      # We do this because after a rotate the cropping area is cropping something else
+      setTimeout =>
+        @onCropEnd()
+      , 100
 
   imageCropped: ->
     @originalCrop['x2']? and @originalCrop['y2']? and @originalCrop['x']? and @originalCrop['y']?

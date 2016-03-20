@@ -17,25 +17,6 @@ module CarrierWave::TransformableImage
       crop = transformation_crop
 
       manipulate! do |img|
-        factor_x = factor_y = 0
-        begin
-          img_height, img_width = img.dimensions
-          size_difference = (img_width - img_height).abs
-          if transformation_rotate.present? && (transformation_rotate == 90 || transformation_rotate == 270)
-            if img_width < img_height
-              factor_y = -(size_difference / 2)
-              factor_x = +(size_difference / 2)
-            else
-              factor_x = -(size_difference / 2)
-              factor_y = +(size_difference / 2)
-            end
-          end
-        rescue
-          factor_x = factor_y = 0
-        end
-
-        crop[:x] = crop[:x].to_f + factor_x
-        crop[:y] = crop[:y].to_f + factor_y
         img.crop "#{crop[:w]}x#{crop[:h]}+#{crop[:x]}+#{crop[:y]}"
         img
       end
