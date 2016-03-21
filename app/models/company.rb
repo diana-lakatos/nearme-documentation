@@ -114,7 +114,8 @@ class Company < ActiveRecord::Base
   end
 
   def iso_country_code
-    company_address.try(:iso_country_code) || instance.default_country_code
+    iso_country_code = PlatformContext.current.instance.skip_company? ? creator.try(:iso_country_code) : company_address.try(:iso_country_code)
+    iso_country_code.presence || instance.default_country_code
   end
 
   def add_company_to_partially_created_shipping_categories

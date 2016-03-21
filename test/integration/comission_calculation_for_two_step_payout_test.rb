@@ -76,7 +76,7 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
   def booking_params
     {
       reservation_request: {
-        dates: @listing.booking_type == 'overnight' ? [Chronic.parse('Monday'), Chronic.parse('Tuesday')] : [Chronic.parse('Monday')],
+        dates: @listing.booking_type == 'overnight' ? [Chronic.parse('next week Monday'), Chronic.parse('next week Tuesday')] : [Chronic.parse('Monday')],
         quantity: "1",
         payment_attributes: {
           payment_method_id: @payment_method.id,

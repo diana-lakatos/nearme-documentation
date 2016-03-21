@@ -1846,3 +1846,20 @@ div.search-view-listing {
     }
   }
 }
+
+.autocomplete-categories {
+    margin: 20px 0;
+
+    label {
+        font-weight: bold;
+        color: #000;
+    }
+
+    .select2-search-choice > div {
+        line-height: 28px;
+    }
+
+    .select2-search-choice-close {
+        top: 13px;
+    }
+}

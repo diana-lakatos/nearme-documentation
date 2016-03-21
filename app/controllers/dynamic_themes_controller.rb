@@ -1,8 +1,5 @@
 # Class is skipping ApplicationController in inheritance tree to avoid unsetting all of the filters
 class DynamicThemesController < ActionController::Base
-
-  caches_action :show
-
   layout false
 
   before_action :set_cors_headers
@@ -12,7 +9,7 @@ class DynamicThemesController < ActionController::Base
     @stylesheet =  params[:stylesheet]
 
     expires_in 1.year, public: true
-    fresh_when(@theme, public: true)
+    fresh_when(@theme, public: true, template: "dynamic_themes/#{@stylesheet}") or render(@stylesheet.to_s)
   end
 
   private
@@ -21,8 +18,9 @@ class DynamicThemesController < ActionController::Base
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Request-Method'] = '*'
 
-    response.headers['x-frame-options'] = nil
-    response.headers['X-Content-Type-Options'] = nil
+    remove_keys = %w(X-Frame-Options X-Content-Type-Options)
+    response.headers.delete_if{|key| remove_keys.include? key}
+
     request.session_options[:skip] = true
   end
 end

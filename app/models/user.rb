@@ -403,6 +403,11 @@ class User < ActiveRecord::Base
     projects
   end
 
+  def iso_country_code
+    iso_country_code = PlatformContext.current.instance.skip_company? ? current_address.try(:iso_country_code) : default_company.try(:iso_country_code)
+    iso_country_code.presence || instance.default_country_code
+  end
+
   def all_projects_count
     projects_count + project_collborations_count
   end
@@ -734,10 +739,6 @@ class User < ActiveRecord::Base
     administered_locations.size > 0
   end
 
-  def iso_country_code
-    default_company.try(:iso_country_code)
-  end
-
   def user_messages
     UserMessage.for_user(self)
   end
@@ -992,7 +993,7 @@ class User < ActiveRecord::Base
   def payout_payment_gateway
     if @payment_gateway.nil?
       currency = self.listings.first.try(:currency).presence || 'USD'
-      @payment_gateway = instance.payout_gateway(self.country.try(:iso), currency)
+      @payment_gateway = instance.payout_gateway(self.iso_country_code, currency)
     end
     @payment_gateway
   end

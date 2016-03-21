@@ -8,6 +8,8 @@ class ActivityFeedServiceTest < ActiveSupport::TestCase
 
   context "instance methods" do
     should "#events" do
+      # The number of events on follow returned by the ActivityFeedService should stay 0
+      # as those events are hidden by default
       followed1 = create(:user)
       followed2 = create(:user)
       follower1 = create(:user)
@@ -18,16 +20,16 @@ class ActivityFeedServiceTest < ActiveSupport::TestCase
       # Following actions
       #
       @user.feed_follow!(followed1)
-      assert_equal 1, @feed.events.count
+      assert_equal 0, @feed.events.count
 
       @user.feed_follow!(followed2)
-      assert_equal 2, @feed.events.count
+      assert_equal 0, @feed.events.count
 
       # Even if someone follows an user, we don't want to
       # display on user's feed.
       #
       follower1.feed_follow!(@user)
-      assert_equal 3, @feed.events.count
+      assert_equal 0, @feed.events.count
 
       # User can also follow projects here we jump to five
       # because there's the project creation event and the action of
@@ -41,18 +43,17 @@ class ActivityFeedServiceTest < ActiveSupport::TestCase
       #
 
       @user.feed_follow!(project1)
-      assert @feed.events.first.event.to_sym  == :user_followed_project
 
-      assert_equal 4, @feed.events.count
+      assert_equal 0, @feed.events.count
 
       # You can unfollow users - and events are deleted from your
       # timeline.
       #
       @user.feed_unfollow!(followed1)
-      assert_equal 3, @feed.events.count
+      assert_equal 0, @feed.events.count
 
       @user.feed_unfollow!(followed2)
-      assert_equal 2, @feed.events.count
+      assert_equal 0, @feed.events.count
     end
 
     should "#owner_id" do

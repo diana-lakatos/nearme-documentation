@@ -14,7 +14,7 @@ class ActivityFeedService
     followed_identifiers.push(itself_identifier)
 
     sql_array = "{#{followed_identifiers.join(',')}}"
-    @events = ActivityFeedEvent.with_identifiers(sql_array).includes(:event_source, :followed).paginate(page: @page, per_page: per)
+    @events = ActivityFeedEvent.with_identifiers(sql_array).includes(:event_source, :followed).exclude_events.paginate(page: @page, per_page: per)
   end
 
   def owner_id

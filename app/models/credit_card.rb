@@ -99,14 +99,15 @@ class CreditCard < ActiveRecord::Base
     return true  if success?
     return false if payment_gateway.blank?
 
-    self.response = payment_gateway.store(active_merchant_card, instance_client).to_yaml
+    original_response = payment_gateway.store(active_merchant_card, instance_client)
+    self.response = original_response.to_yaml
 
     if success?
       self.instance_client.response ||= self.response
       self.instance_client.save!
       true
     else
-      errors.add(:base, I18n.t('reservations_review.errors.internal_payment'))
+      errors.add(:base, original_response.params['error']['message'])
       false
     end
   end
