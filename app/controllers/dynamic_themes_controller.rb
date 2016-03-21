@@ -9,7 +9,7 @@ class DynamicThemesController < ActionController::Base
     @stylesheet =  params[:stylesheet]
 
     expires_in 1.year, public: true
-    fresh_when(@theme, public: true)
+    fresh_when(@theme, public: true, template: "dynamic_themes/#{@stylesheet}") or render(@stylesheet.to_s)
   end
 
   private
