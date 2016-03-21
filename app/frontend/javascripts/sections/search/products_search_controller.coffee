@@ -149,7 +149,8 @@ module.exports = class SearchProductsSearchController extends SearchController
   triggerSearchFromQuery: (page = false) ->
 
     category_ids = _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val()))
-    category_ids = category_ids.concat(@container.find('input[data-category-autocomplete]').val().split(','))
+    @container.find('input[data-category-autocomplete]').each ->
+      category_ids = category_ids.concat($(this).val().split(','))
 
     # we want to log any new search query
     @assignFormParams(
