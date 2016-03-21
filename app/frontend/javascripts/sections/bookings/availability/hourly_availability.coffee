@@ -35,7 +35,7 @@ module.exports = class HourlyAvailability extends Availability
     @schedule[dateUtil.toId(date)]
 
   _value: (date, minute) ->
-    if minute
+    if minute?
       if hours = @_schedule(date)
         hours[minute.toString()] or null
       else

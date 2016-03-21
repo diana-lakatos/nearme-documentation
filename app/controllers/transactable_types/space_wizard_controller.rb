@@ -56,6 +56,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       @user.first_listing.availability_template = @transactable_type.default_availability_template
     end
     if params[:save_as_draft]
+      remove_approval_requests
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
       @user.companies.first.update_metadata({draft_at: Time.now, completed_at: nil})
       if @user.first_listing.new_record?
@@ -91,6 +92,12 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   private
+
+  def remove_approval_requests
+    @user.approval_requests = []
+    @user.companies.first.approval_requests = []
+    @user.companies.first.locations.first.listings.first.approval_requests = []
+  end
 
   def filter_error_messages(messages)
     pattern_listings_photos = /^Companies locations listings photos /
