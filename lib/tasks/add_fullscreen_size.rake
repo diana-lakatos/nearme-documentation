@@ -13,8 +13,8 @@ task add_fullscreen_size: :environment do
         transactable.skip_metadata = true
         transactable.photos.find_each do |photo|
           photo.skip_metadata = true
-          photo.image.recreate_versions! rescue nil
-          photo.save(validate: false)
+          photo.force_regenerate_versions = true
+          photo.save(validate: false) rescue nil
         end
         transactable.update_metadata({ photos_metadata: transactable.build_photos_metadata_array })
       end
