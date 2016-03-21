@@ -336,7 +336,7 @@ class User < ActiveRecord::Base
           order('projects_count + project_collborations_count DESC')
         else
           if PlatformContext.current.instance.is_community?
-            order('projects_count DESC, followers_count DESC')
+            order('projects_count + project_collborations_count DESC, followers_count DESC')
           else
             all
           end
