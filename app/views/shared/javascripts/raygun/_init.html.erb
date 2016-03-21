@@ -2,7 +2,6 @@
 <script>
   rg4js('apiKey', '<%= Rails.application.config.raygun_js_api_key %>');
   rg4js('enableCrashReporting', true);
-  rg4js('enablePulse', true);
   rg4js('setVersion', '<%= Rails.application.config.app_version %>');
   rg4js('options', { ignoreAjaxAbort: true, ignore3rdPartyErrors: true, allowInsecureSubmissions: true });
   <% if ENV['ASSET_HOST'].present? %>
