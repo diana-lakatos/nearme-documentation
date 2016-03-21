@@ -29,7 +29,17 @@ module.exports = function(gulp, config) {
                 });
             }
 
-            fs.writeFile(path.join(output, 'webpack-asset-manifest.json'), JSON.stringify(jsonStats['assetsByChunkName']));
+            fs.lstat(output, function(err, stats){
+                if (err && err.code == 'ENOENT') {
+                    fs.mkdirSync(output);
+                }
+
+                fs.writeFile(path.join(output, 'webpack-asset-manifest.json'), JSON.stringify(jsonStats['assetsByChunkName']), function(err){
+                    if (err) {
+                        throw new gutil.PluginError('webpack', err);
+                    }
+                });
+            });
 
             if (callback) {
                 callback();
