@@ -7,7 +7,7 @@ class ApiCallerJob < Job
 
   def perform
     raise "Unknown PlatformContext" if PlatformContext.current.nil?
-    @caller_class.send(@caller_method, *@args).deliver
+    @caller_class.send(@caller_method, *@args).try(:deliver)
   end
 
   def self.priority
