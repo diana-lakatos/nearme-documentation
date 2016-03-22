@@ -61,7 +61,8 @@
                 %span.label.label-error
                   = t('buy_sell_market.checkout.labels.payments.failed')
 
-              %p= link_to t("buy_sell_market.checkout.labels.payments.details"), dashboard_company_orders_received_payment_path(@order.number, @order.payment), class: "btn btn-primary"
+              - if !@order.is_free?
+                %p= link_to t("buy_sell_market.checkout.labels.payments.details"), dashboard_company_orders_received_payment_path(@order.number, @order.payment), class: "btn btn-primary"
 
               - if @order.paid?
                 %span.label.label-info
