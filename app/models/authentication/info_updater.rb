@@ -29,7 +29,7 @@ class Authentication::InfoUpdater
       @user.remote_avatar_url = info_hash['image']
     end
     @user_changes = @user.changes.inspect
-    @user.save!
+    @user.save
     @authentication.touch(:information_fetched)
 
     self
