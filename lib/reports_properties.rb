@@ -14,7 +14,7 @@ module ReportsProperties
 
   def export_data_to_csv_for(transactables)
     properties_columns = get_hstore_columns(transactables)
-    csv = export_data_to_csv(transactables, transactables.first.try(:attribute_names), properties_columns)
+    csv = export_data_to_csv(transactables, transactables.first.try(:attributes).try(:keys), properties_columns)
 
     csv
   end
