@@ -18,6 +18,7 @@ class Reservation::DailyPriceCalculator
   # periods. Returns nil if the selection is unbookable
   def price
     blocks = listing.overnight_booking? ? real_contiguous_blocks : contiguous_blocks
+
     blocks.map do |block|
       price_for_days((listing.overnight_booking? ? (block.size - 1) : block.size) ) * @reservation.quantity rescue 0.0
     end.sum.to_money
@@ -29,7 +30,11 @@ class Reservation::DailyPriceCalculator
   # minimum of 5 days).
   def valid?
     listing && !contiguous_blocks.empty? && contiguous_blocks.all? { |block|
-      block.length >= listing.minimum_booking_days
+      if listing.overnight_booking?
+        block.length >= 2
+      else
+        block.length >= listing.minimum_booking_days
+      end
     }
   end
 

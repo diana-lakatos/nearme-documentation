@@ -38,6 +38,11 @@ module.exports = class BookingListing
         @availability = new Availability(@data.availability)
 
       @minimumBookingDays = @data.minimum_booking_days
+
+      # If the listing is an overnight booking we only want to let the user
+      # select contiguous blocks of 2 days
+      @minimumBookingDays = 2 if @isOvernightBooking()
+
       @minimumDate = dateUtil.idToDate(@data.minimum_date)
       @maximumDate = dateUtil.idToDate(@data.maximum_date)
       @favourablePricingRate = @data.favourable_pricing_rate
