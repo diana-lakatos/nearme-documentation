@@ -1,5 +1,5 @@
 %tr
-  %td= link_to transactable.id, instance_admin_reports_products_path(id: transactable.id)
+  %td= link_to transactable.id, instance_admin_reports_product_path(id: transactable.id)
   %td= transactable.name
   %td= transactable.description.to_s.truncate(100)
   %td= transactable.extra_properties.to_h.to_s.truncate(100)
