@@ -173,7 +173,13 @@ module.exports = class BookingsDatepicker
 
     if @endDatepicker
       endDate = _.last(@getDates())
-      endText = if endDate then @formatDateForLabel(endDate) else 'End'
+
+      if endDate
+        endText = @formatDateForLabel(endDate)
+        @endDatepicker.getModel().setCurrentMonth(endDate)
+      else
+        endText = 'End'
+
       @endElement.find('.calendar-text').text(endText)
 
   setDatepickerToPickMode: ->
