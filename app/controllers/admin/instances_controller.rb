@@ -4,7 +4,7 @@ class Admin::InstancesController < Admin::ResourceController
   def update
     @instance = Instance.find(params[:id])
     if @instance.update_attributes(instance_params)
-      flash[:success] = "Instance updated successfully"
+      flash[:success] = "Instance was successfully updated."
       redirect_to admin_instance_path(@instance)
     else
       flash.now[:error] = @instance.errors.full_messages.to_sentence
