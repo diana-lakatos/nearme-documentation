@@ -92,7 +92,7 @@ class Project < ActiveRecord::Base
       where("(SELECT pc.id from project_collaborators pc WHERE pc.project_id = projects.id AND pc.user_id = 6520 AND ( approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) IS NOT NULL")
     else
       if PlatformContext.current.instance.is_community?
-        order('followers_count DESC')
+        order('projects.followers_count DESC')
       else
         all
       end
