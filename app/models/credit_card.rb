@@ -49,9 +49,10 @@ class CreditCard < ActiveRecord::Base
     @decorator ||= case payment_gateway.name
                    when 'Stripe'
                      CreditCard::StripeDecorator.new(self)
+                   when 'Stripe Connect'
+                     CreditCard::StripeDecorator.new(self)
                    when 'Braintree'
                      CreditCard::BraintreeDecorator.new(self)
-
                    when 'Braintree Marketplace'
                      CreditCard::BraintreeDecorator.new(self)
                    end

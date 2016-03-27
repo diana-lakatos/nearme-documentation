@@ -17,6 +17,8 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   has_many :owners, -> { order(:id) }, class_name: 'MerchantAccountOwner::StripeConnectMerchantAccountOwner', foreign_key: 'merchant_account_id', dependent: :destroy
 
+  has_one :current_address, class_name: 'Address', as: :entity
+
   validates_presence_of   :bank_routing_number, message: "Bank routing number can't be be blank"
   validates_presence_of   :bank_account_number, message: "Bank account number can't be blank"
   validates_presence_of   :last_name, message: "First name can't be blank"
@@ -25,6 +27,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   validates_acceptance_of :tos, message: 'Terms of Services must be accepted'
 
   accepts_nested_attributes_for :owners, allow_destroy: true
+  accepts_nested_attributes_for :current_address
 
   def onboard!
     result = payment_gateway.onboard!(create_params)
@@ -67,6 +70,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
         date: Time.now.to_i
       },
       legal_entity: {
+        address: address_hash,
         first_name: first_name,
         last_name: last_name
       },
@@ -79,17 +83,6 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   def update_params
     owner = owners.first
     dob_components = owner.dob.split('-')
-
-    address_hash = {
-      country: merchantable.iso_country_code,
-      state: merchantable.state,
-      city: merchantable.city,
-      postal_code: merchantable.postcode,
-      # Address line 1 (Street address/PO Box/Company name).
-      line1: merchantable.address,
-      # Address line 2 (Apartment/Suite/Unit/Building).
-      line2: merchantable.address2
-    }
 
     legal_entity_hash = {
       type: account_type,
@@ -144,6 +137,19 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
         routing_number: bank_routing_number
       }
     }.merge(legal_entity: legal_entity_hash)
+  end
+
+  def address_hash
+    address = current_address || merchantable.company_address
+
+    {
+      country: address.iso_country_code,
+      state: address.state,
+      city: address.city,
+      postal_code: address.postcode,
+      line1: address.address,
+      line2: address.address2
+    }
   end
 
   def change_state_if_needed(stripe_account, &block)

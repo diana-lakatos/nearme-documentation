@@ -246,7 +246,7 @@ class Payment < ActiveRecord::Base
   end
 
   def total_service_amount_cents
-    service_fee_amount_host_cents + service_fee_amount_guest_cents + service_additional_charges_cents
+    service_fee_amount_host.cents + service_fee_amount_guest.cents + service_additional_charges.cents
   end
 
   def host_cc_token

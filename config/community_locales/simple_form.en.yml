@@ -52,9 +52,9 @@ en:
         about: 'Tell us all about yourself project'
         location: 'Enter your city'
 
-
-
     labels:
+      merchant_account:
+        current_address: "Address"
       user:
         current_address: "Address"
       defaults:
