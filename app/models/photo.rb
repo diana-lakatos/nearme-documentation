@@ -39,7 +39,7 @@ class Photo < ActiveRecord::Base
   def user_added_photos_to_project_event
     if owner_type == "Project" && owner.present?
       event = :user_added_photos_to_project
-      ActivityFeedService.create_event(event, self.owner, [self.owner.creator], self.owner)
+      ActivityFeedService.create_event(event, self.owner, [self.owner.creator], self.owner) unless ActivityFeedEvent.where(followed: owner, event_source: owner, event: event).where('created_at > ?', Time.now - 1.minute).count > 0
     end
   end
 
