@@ -17,7 +17,7 @@ class InstanceType::SearcherFactory
   end
 
   def get_searcher
-    if @params[:search_type].in?(%w(topics projects people)) || (PlatformContext.current.instance.is_community? && @params[:search_type].nil?)
+    if @params[:search_type].in?(%w(topics projects people))
       community_searcher
     elsif @transactable_type.is_a? InstanceProfileType
       user_searcher
