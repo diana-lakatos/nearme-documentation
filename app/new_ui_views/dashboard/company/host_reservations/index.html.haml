@@ -1,5 +1,5 @@
 -# We are using generic_lessee_term here because the list may include reservations for multiple types of services
-- title "#{t('general.generic_lessee_term').capitalize.pluralize} (#{@guest_list.reservations.size + @guest_list.recurring_bookings.size})"
+- title "#{t('general.generic_lessee_term').capitalize.pluralize} (#{@guest_list.reservations.size})"
 
 - content_for :page_header do
   %h1= yield :title
