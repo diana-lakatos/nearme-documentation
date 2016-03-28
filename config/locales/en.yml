@@ -1034,6 +1034,7 @@ en:
           authorized: 'Payment authorized'
           failed: 'Payment failed'
           details: 'Payment details'
+          mark_as_paid: "Mark as Paid"
 
       credit_card: 'Credit Card'
       nonce: 'PayPal Payment'

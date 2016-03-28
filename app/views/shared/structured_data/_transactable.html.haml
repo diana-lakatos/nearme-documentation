@@ -1,6 +1,6 @@
 %div{class: 'hidden', itemscope: true, itemtype: 'http://schema.org/Product'}
   %span{itemprop: 'name'}= transactable.name
-  %img{itemprop: 'image', src: transactable.photos.first.try(:image).try(:url), alt: transactable.name}
+  %img{itemprop: 'image', src: transactable.photos.first.try(:image).try(:golden), alt: transactable.name}
 
   %span{itemprop: 'description'}= transactable.description.present? ? transactable.description : transactable.name
 
