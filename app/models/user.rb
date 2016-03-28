@@ -385,10 +385,14 @@ class User < ActiveRecord::Base
   end
 
   def all_projects(with_pending = false)
+    # If with_pending is true we want all projects including those to which this user is an unapproved collaborator (added by owner but not approved by this user or added by user but not approved by owner)
+    # Projects with pending should only be visible on the users's own profile page
     projects = Project.where("
      creator_id = ? OR
-     EXISTS (SELECT 1 from project_collaborators pc WHERE pc.project_id = projects.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NOT NULL OR approved_by_owner_at IS NOT NULL) AND deleted_at IS NULL)
+     EXISTS (SELECT 1 from project_collaborators pc WHERE pc.project_id = projects.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NOT NULL #{with_pending ? "OR" : "AND"} approved_by_owner_at IS NOT NULL) AND deleted_at IS NULL)
                              ",id, id, email)
+
+    # If the project is pending we add .pending_collaboration to the object (if we requested pending objects as well)
     if with_pending
       projects = projects.select(
         ActiveRecord::Base.send(:sanitize_sql_array,
