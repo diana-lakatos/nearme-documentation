@@ -924,6 +924,7 @@ class SecuredParams
       attributes << {payment_subscription_attributes: nested(self.payment_subscription) }
       owner_klass = "MerchantAccountOwner::#{name.classify}MerchantAccountOwner".safe_constantize
       attributes << {owners_attributes: nested([:document] + owner_klass::ATTRIBUTES)} if owner_klass
+      attributes << {current_address_attributes: nested([:address]) }
       hsh[:"#{name}_merchant_account_attributes"] = attributes
       hsh
     end)

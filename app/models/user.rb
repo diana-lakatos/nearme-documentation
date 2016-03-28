@@ -405,7 +405,7 @@ class User < ActiveRecord::Base
 
   def iso_country_code
     iso_country_code = PlatformContext.current.instance.skip_company? ? current_address.try(:iso_country_code) : default_company.try(:iso_country_code)
-    iso_country_code.presence || instance.default_country_code
+    iso_country_code.presence || PlatformContext.current.instance.default_country_code
   end
 
   def all_projects_count

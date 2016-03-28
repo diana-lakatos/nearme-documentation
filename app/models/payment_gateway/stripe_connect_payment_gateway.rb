@@ -2,7 +2,7 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
 
   belongs_to :instance
 
-  supported :immediate_payout, :credit_card_payment, :multiple_currency, :partial_refunds
+  supported :immediate_payout, :credit_card_payment, :multiple_currency, :partial_refunds, :recurring_payment
 
   # def self.supported_countries
   #   %w(AT AU BE CA CH DE DK ES FI FR GB IE IT JP LU MX NL NO SE US)

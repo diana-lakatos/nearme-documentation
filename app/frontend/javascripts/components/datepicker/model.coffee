@@ -32,6 +32,10 @@ module.exports = class DatepickerModel
     @currentMonth = new Date(@currentMonth.getFullYear(), @currentMonth.getMonth()+incr, 1, 0, 0, 0, 0)
     @trigger('monthChanged', @currentMonth)
 
+  setCurrentMonth: (newMonth) ->
+    @currentMonth = new Date(newMonth.getFullYear(), newMonth.getMonth(), 1, 0, 0, 0, 0)
+    @trigger('monthChanged', @currentMonth)
+
   getCurrentMonth: ->
     @currentMonth ||= _.last(@getDates()) or new Date()
 

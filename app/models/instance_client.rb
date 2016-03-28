@@ -24,6 +24,8 @@ class InstanceClient < ActiveRecord::Base
     @decorator ||= case payment_gateway.name
                    when 'Stripe'
                      InstanceClient::StripeDecorator.new(self)
+                   when 'Stripe Connect'
+                     InstanceClient::StripeDecorator.new(self)
                    when 'Braintree'
                      InstanceClient::BraintreeDecorator.new(self)
                    when 'Braintree Marketplace'

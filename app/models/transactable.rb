@@ -180,6 +180,7 @@ class Transactable < ActiveRecord::Base
   validates :rental_shipping_type, inclusion: { in: RENTAL_SHIPPING_TYPES }
   validates_presence_of :dimensions_template, if: lambda { |record| ['delivery', 'both'].include?(record.rental_shipping_type) }
   validates_associated :approval_requests
+  validates :name, length: { maximum: 255 }, allow_blank: true
 
   validate :check_book_it_out_minimum_qty, if: ->(record) { record.book_it_out_minimum_qty.present? }
   validate :booking_availability, if: ->(record) { record.overnight_booking? }

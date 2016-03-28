@@ -19,6 +19,8 @@ en:
     error_notification:
       default_message: "Some errors were found, please take a look:"
     labels:
+      merchant_account:
+        current_address: "Address"
       shipment:
         is_insured: 'Insure parcel'
       shipping_address:
