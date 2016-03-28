@@ -51,6 +51,10 @@ class Location < ActiveRecord::Base
   validates :email, email: true, allow_nil: true
   validates_with CustomValidators
 
+  # We validate the associated availability_template to avoid having locations saved with a blank
+  # availability template (when the availability template is invalid with the params the user entered)
+  validates_associated :availability_template
+
   before_validation :build_availability_template, :assign_default_availability_rules, :set_location_type
   before_save :set_time_zone
   after_create :set_external_id
