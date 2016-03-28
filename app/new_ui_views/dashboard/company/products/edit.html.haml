@@ -13,4 +13,4 @@
 = render 'form'
 
 .form-actions
-  = link_to t('dashboard.items.delete_listing'), dashboard_company_product_type_product_path(@product_form.product.product_type, @product_form.product), method: :delete, data: { confirm: t('confirmations.are_you_sure_you_want_to_delete_this_item') }
+  = link_to t('dashboard.items.delete_product'), dashboard_company_product_type_product_path(@product_form.product.product_type, @product_form.product), method: :delete, data: { confirm: t('confirmations.are_you_sure_you_want_to_delete_this_item') }
