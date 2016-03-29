@@ -93,9 +93,9 @@
         - if reservation.confirmed?
           = link_to t('dashboard.user_reservations.add_to_ical'), export_dashboard_user_reservation_path(reservation, format: :ics), class: 'btn btn-default'
 
-          - if reservation.shipments.inbound.first
+          - if reservation.shipments.inbound.first.try(:label_url).present?
             = link_to t('dashboard.user_reservations.return_label'), reservation.shipments.inbound.first.try(:label_url), class: 'btn btn-default'
-          - if reservation.shipments.outbound.first
+          - if reservation.shipments.outbound.first.try(:tracking_url_provider).present?
             = link_to t('dashboard.user_reservations.track_package'), reservation.shipments.outbound.first.try(:tracking_url_provider), class: 'btn btn-default'
 
         - unless reservation.archived?
