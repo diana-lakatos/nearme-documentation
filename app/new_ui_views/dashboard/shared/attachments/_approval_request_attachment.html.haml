@@ -6,7 +6,7 @@
       %time{ datetime: attachment.created_at }
         = l(attachment.created_at.to_date, format: :long)
 
-      - if attachment.file.try(:size)
+      - if (attachment.file.try(:size) rescue nil)
         %span.size= number_to_human_size(attachment.file.size)
 
   %button.action--remove{ type: :button, data: { delete: true, url: approval_request_attachment_path(attachment), "label-confirm": t('attachment_upload.are_you_sure_you_want_to_delete_this_attachment') }}
