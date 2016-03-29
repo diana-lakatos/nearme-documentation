@@ -289,6 +289,7 @@ en:
         book_it_out_discount: "Book It Out discount"
         amenities: "Amenities"
         fixed_price: "Fixed price"
+        location: "Location"
       transactable_type:
         action_book_it_out: 'Enable Book it Out option'
       service_type:

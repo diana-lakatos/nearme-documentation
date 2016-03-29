@@ -144,10 +144,12 @@ en:
       both: 'Delivery or pick up'
   locations:
     add_new_location: "Add New Location"
+    show_more_locations: "Show more locations"
     edit_location: "Edit Location"
     save_location: "Save Location"
     does_not_exist: "does not exist"
     address_placeholder: 'Enter location address'
+    you_need_to_pick_up_location: "You need to pick up location"
   bid:
     heading: 'Make an offer'
 
