@@ -315,18 +315,18 @@ module ShippoApi
       transaction
     end
 
+    # Removed exception catching code for better error tracking in RayGun
     def purchase_rate(shippo_rate_id)
-      default_result_purchase = nil
-      result_purchase = default_result_purchase
+      result_purchase = nil
 
       transaction = create_transaction(shippo_rate_id)
       if transaction.object_status != "ERROR"
         result_purchase = ShippoTransactionResultInfo.new(:label_url => transaction.label_url, :tracking_number => transaction.tracking_number)
+      else
+        raise "Error creating Shippo transaction: #{shippo_rate_id}"
       end
 
       result_purchase
-    rescue
-      return default_result_purchase
     end
 
   end
