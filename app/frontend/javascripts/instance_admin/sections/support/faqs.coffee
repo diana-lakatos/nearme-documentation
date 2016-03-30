@@ -13,7 +13,7 @@ module.exports = class InstanceAdminFaqsController
       type: 'PUT'
       url: ui.item.find('td a').last().attr('href')
       dataType: 'JSON'
-      data: { support_faq: { position_position: @container.find('tbody tr').index(ui.item) } }
+      data: { support_faq: { position: @container.find('tbody tr').index(ui.item) } }
 
   fixTableRowWidths: (e, tr) ->
     originals = tr.children()

@@ -837,7 +837,8 @@ class SecuredParams
   def support_faq
     [
       :question,
-      :answer
+      :answer,
+      :position
     ]
   end
 
