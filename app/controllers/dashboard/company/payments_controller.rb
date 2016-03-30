@@ -8,6 +8,8 @@ class Dashboard::Company::PaymentsController < Dashboard::Company::BaseControlle
       if payment.manual_payment?
         @order.payment_state = 'paid'
         @order.save!
+
+        @order.shipments.each { |shipment| shipment.ready! }
       else
         payment.capture!
         @order.update_order
