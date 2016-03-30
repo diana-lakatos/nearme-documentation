@@ -101,7 +101,7 @@
         <div class="padding-row"></div>
         <section class="listing-details">
           <div class="container-fluid">
-            <div class="tab-content-container" id="navigation-tabs" data-reviews-controller="true" data-path="{{ 'reviews_path' | generate_url }}" data-reviewables="[{&quot;id&quot;:{{listing.id}},&quot;type&quot;:&quot;Transactable&quot;,&quot;subject&quot;:&quot;transactable&quot;},{&quot;id&quot;:{{listing.creator.id}},&quot;type&quot;:&quot;User&quot;,&quot;subject&quot;:&quot;host&quot;}]" {%if platform_context.seller_attachments_enabled? %}data-seller-attachment-path="{{ 'seller_attachments_path' | generate_url }}" data-seller-attachable="{&quot;id&quot;:{{listing.id}},&quot;type&quot;:&quot;Transactable&quot;}"{%endif%}>
+            <div class="tab-content-container" id="navigation-tabs" data-reviews-controller="true" data-path="{{ 'reviews_path' | generate_url }}" data-reviewables="[{&quot;id&quot;:{{listing.id}},&quot;type&quot;:&quot;Transactable&quot;,&quot;subject&quot;:&quot;transactable&quot;},{&quot;id&quot;:{{listing.creator.idsa | default: "-1"}},&quot;type&quot;:&quot;User&quot;,&quot;subject&quot;:&quot;host&quot;}]" {%if platform_context.seller_attachments_enabled? %}data-seller-attachment-path="{{ 'seller_attachments_path' | generate_url }}" data-seller-attachable="{&quot;id&quot;:{{listing.id}},&quot;type&quot;:&quot;Transactable&quot;}"{%endif%}>
               <ul class="nav nav-tabs page-tabs" role= 'tablist' data-tab-header="true">
                 <li class="{%if params.reviews_page == blank %}active{%endif%}">
                   <a data-toggle='tab' href='#location-details' role='tab'>{{ 'buy_sell_market.products.labels.item_details' | translate }}</a>
