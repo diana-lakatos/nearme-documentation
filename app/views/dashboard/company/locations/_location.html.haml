@@ -9,7 +9,7 @@
       = label_tag "transactable_location_id_#{location.id}", location.name
   .col-md-5.col-xs-5
     %span.location-options
-      =link_to "Edit", '#', data: { modal: true, href: edit_dashboard_company_location_path(location, should_check_address: @transactable_type.try(:rental_shipping)) }
+      =link_to t('general.edit'), '#', data: { modal: true, href: edit_dashboard_company_location_path(location, should_check_address: @transactable_type.try(:rental_shipping)) }
       %span.blue |
-      =link_to "Remove", dashboard_company_location_path(location), remote: true, method: :delete,
+      =link_to t('general.remove'), dashboard_company_location_path(location), remote: true, method: :delete,
           data: { confirm: location.listings.count.size > 0 ? I18n.t('dashboard.location.are_you_sure', listings_count: location.listings.count) : I18n.t('confirmations.are_you_sure') }

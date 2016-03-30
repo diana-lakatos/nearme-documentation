@@ -21,16 +21,18 @@
           .col-md-3.add-new
             = link_to '#', data: { modal: true, href: new_dashboard_company_location_path } do
               = image_tag 'themes/buy_sell/icon-cross.png'
-              %span.blue Add New Location
+              %span.blue
+                = t('locations.add_new_location')
           .col-md-3
             %label{:for => ""}
               - if !f.object.transactable_type.skip_location?
                 %abbr{:title => "required"} *
-              Location
+              = t('simple_form.labels.transactable.location')
           #location-list.col-md-6
             = render @locations, form: f
             .show-more
-              %a{"data-target" => ".hidden-location", "data-toggle" => "collapse", :href => "#"} Show more locations
+              %a{"data-target" => ".hidden-location", "data-toggle" => "collapse", :href => "#"}
+                = t('locations.show_more_locations')
 
             - if is_i18n_set?('simple_form.hints.transactable.locations')
               = t('simple_form.hints.transactable.locations')
@@ -38,7 +40,7 @@
           - if f.object.errors.messages[:location]
             .col-md-12.error
               .error-block
-                You need to pick up location
+                = t('locations.you_need_to_pick_up_location')
 
       - when 'rental_shipping_type'
         - if @transactable_type.rental_shipping
