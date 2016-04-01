@@ -270,6 +270,28 @@ class InstanceView < ActiveRecord::Base
       user: 'UserDrop',
       is_partial: false
     },
+    'registrations/profile/no_content' => {
+      tab: 'String',
+      user: 'UserDrop',
+      is_partial: true,
+    },
+    'registrations/profile/tabs/blog_posts' => {
+      post: 'UserBlogPostDrop',
+      user: 'UserDrop',
+      is_partial: true,
+    },
+    'registrations/profile/tabs/products' => {
+      is_partial: true,
+      products: 'Array',
+    },
+    'registrations/profile/tabs/reviews' => {
+      is_partial: true,
+      user: 'UserDrop',
+    },
+    'registrations/profile/tabs/services' => {
+      listings: 'Array',
+      is_partial: true
+    },
     'blog/blog_posts/header' => {
       blog_post: 'BlogPostDrop',
       blog_instance: 'BlogInstanceDrop',
