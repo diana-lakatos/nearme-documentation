@@ -1,0 +1,32 @@
+- @marketplace_errors.each do |log|
+
+  .content-container
+    .table-responsive
+      %table.table.table-simple
+        %tbody
+          %tr
+            %td= t('instance_admin.analytics.logs.occurences')
+            %td= will_paginate @marketplace_errors
+          %tr
+            %td= t('instance_admin.analytics.logs.id')
+            %td= log.id
+          %tr
+            %td= t('instance_admin.analytics.logs.error_type')
+            %td= log.error_type
+          %tr
+            %td= t('instance_admin.analytics.logs.message')
+            %td= log.message
+          %tr
+            %td= t('instance_admin.analytics.logs.created_at')
+            %td= l(log.created_at, format: :long)
+          - if log.url
+            %tr
+              %td= t('instance_admin.analytics.logs.url')
+              %td= link_to log.url
+          %tr
+            %td= t('instance_admin.analytics.logs.count')
+            %td= @marketplace_errors.count
+          - if log.stacktrace
+            %tr
+              %td= t('instance_admin.analytics.logs.stacktrace')
+              %td= log.stacktrace

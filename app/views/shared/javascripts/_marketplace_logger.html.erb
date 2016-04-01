@@ -1,0 +1,15 @@
+<% unless Rails.env.test? %>
+  <script type="text/javascript">
+    window.addEventListener('error', function(e) {
+      console.log(e)
+      var xhttp = new XMLHttpRequest();
+      var params = JSON.stringify({ message: e.message, url: e.filename });
+      xhttp.open("POST", "/marketplace_logger", true);
+      xhttp.setRequestHeader("Content-type", "application/json; charset=utf-8");
+      xhttp.setRequestHeader("Content-length", params.length);
+      xhttp.setRequestHeader("Connection", "close");
+      xhttp.send(params);
+
+    }, false);
+  </script>
+<% end %>

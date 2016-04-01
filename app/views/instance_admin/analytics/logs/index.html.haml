@@ -13,8 +13,9 @@
           %thead
             %tr
               %th= t('instance_admin.analytics.logs.error_type')
-              %th= t('instance_admin.analytics.logs.message')
-              %th= t('instance_admin.analytics.logs.created_at')
+              %th{style: "width: 40%"}= t('instance_admin.analytics.logs.message')
+              %th= t('instance_admin.analytics.logs.count')
+              %th= t('instance_admin.analytics.logs.last_occurence')
               %th
 
           - @logs.each do |log|
@@ -22,8 +23,12 @@
               %td= log.error_type
               %td
                 %p= log.message
-              %td= l(log.created_at, format: :long)
-              %td= link_to t('instance_admin.analytics.logs.delete'), instance_admin_analytics_log_path(log), method: :delete, data: { confirm: 'Are you sure?' }
+              %td= log.count
+              %td= l(log.last_occurence, format: :long)
+              %td
+                = link_to t('instance_admin.analytics.logs.show'), instance_admin_analytics_log_path(log)
+                |
+                = link_to t('instance_admin.analytics.logs.delete'), instance_admin_analytics_log_path(log), method: :delete, data: { confirm: 'Are you sure?' }
 
     .row
       .text-container
