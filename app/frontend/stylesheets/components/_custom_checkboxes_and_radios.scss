@@ -8,6 +8,10 @@
 
   &:hover {
     color: $checkbox-radio-color;
+
+    a {
+      color: $checkbox-radio-color;
+    }
   }
 
   input {
