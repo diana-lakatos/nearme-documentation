@@ -41,28 +41,28 @@
           - unless hide_tab?('products') || @products.nil?
             #products.tab-pane{ class: active_profile_tab_class(:products) }
               - if @company.present? && @products.count > 0
-                = render 'registrations/profile/tabs/products'
+                = render 'registrations/profile/tabs/products', products: @products
               - else
-                = render 'registrations/profile/no_content', tab: :products
+                = render 'registrations/profile/no_content', tab: 'products', user: @user
 
           - unless hide_tab?('services') || @listings.nil?
             #services.tab-pane{ class: active_profile_tab_class(:services) }
               - if @company.present? && @listings.count > 0
-                = render 'registrations/profile/tabs/services'
+                = render 'registrations/profile/tabs/services', listings: @listings
               - else
-                = render 'registrations/profile/no_content', tab: :services
+                = render 'registrations/profile/no_content', tab: 'services', user: @user
 
           - if RatingSystem.active.any?
             #reviews.tab-pane
               - if @total_reviews_count > 0
                 = render 'registrations/profile/tabs/reviews'
               - else
-                = render 'registrations/profile/no_content', tab: :reviews
+                = render 'registrations/profile/no_content', tab: 'reviews', user: @user
 
           - if platform_context.instance.user_blogs_enabled? && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
             - unless hide_tab?('blog_posts')
               #blog_posts.tab-pane
                 - if @user.blog.present? && @user.has_published_posts?
-                  = render 'registrations/profile/tabs/blog_posts'
+                  = render 'registrations/profile/tabs/blog_posts', user: @user
                 - else
-                  = render 'registrations/profile/no_content', tab: :blog_posts
+                  = render 'registrations/profile/no_content', tab: 'blog_posts', user: @user

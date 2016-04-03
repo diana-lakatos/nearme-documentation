@@ -1,8 +1,0 @@
-- @listings.decorate.in_groups_of(2) do |line|
-  .row-fluid
-    - line.each do |transactable|
-      .span6
-        - if transactable
-          = render 'registrations/profile/tabs/transactable', transactable: transactable
-
-= will_paginate_styled @listings, param_name: 'services_page'
