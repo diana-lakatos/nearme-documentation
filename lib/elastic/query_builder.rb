@@ -410,7 +410,17 @@ module Elastic
           } unless lp == 'free'
         end
       end
-    end
 
+      if @query[:date_range].any?
+          @filters <<  {
+            range: {
+              availability: {
+                gte: @query[:date_range].first,
+                lte: @query[:date_range].last
+              }
+            }
+          }
+      end
+    end
   end
 end
