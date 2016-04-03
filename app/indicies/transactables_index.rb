@@ -56,6 +56,7 @@ module TransactablesIndex
 
         indexes :geo_location, type: 'geo_point'
 
+        indexes :availability, type: 'date'
         indexes :draft, type: 'date'
         indexes :created_at, type: 'date'
       end
@@ -82,6 +83,7 @@ module TransactablesIndex
         weekly_price_cents: self.weekly_price_cents.to_i,
         monthly_price_cents: self.monthly_price_cents.to_i,
         categories: self.categories.pluck(:id),
+        availability: self.schedule_availability,
         action_monthly_booking: !self.monthly_price_cents.to_i.zero?,
         action_weekly_booking: !self.weekly_price_cents.to_i.zero?,
         all_prices: self.all_prices

@@ -163,6 +163,8 @@ class Reservation < ActiveRecord::Base
     if self.errors.empty? && self.valid? && self.payment.capture!
       self.create_shipments!
       self.confirm!
+      # We need to touch listing so it's reindexed by ElasticSearch
+      self.listing.touch
     end
   end
 

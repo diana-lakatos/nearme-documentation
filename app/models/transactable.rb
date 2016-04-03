@@ -295,7 +295,7 @@ class Transactable < ActiveRecord::Base
           start_minute = occurrence.to_datetime.min.to_i + (60 * occurrence.to_datetime.hour.to_i)
           availability = self.quantity - desks_booked_on(occurrence.to_datetime, start_minute, start_minute)
           if availability > 0
-            occurrences << { id: occurrence.to_i, text: I18n.l(occurrence.in_time_zone(timezone), format: :long), availability: availability.to_i }
+            occurrences << { id: occurrence.to_i, text: I18n.l(occurrence.in_time_zone(timezone), format: :long), availability: availability.to_i, occures_at: occurrence }
           end
         end
         @start_date = occurrence
@@ -355,6 +355,14 @@ class Transactable < ActiveRecord::Base
     @all_prices ||= PRICE_TYPES.map { |price| self.send("#{price}_price_cents") }.compact
   end
 
+  def schedule_availability
+    if schedule_booking?
+      self.next_available_occurrences(500, {end_date: 6.months.from_now}).map{|o| o[:occures_at]} || []
+    else
+      []
+    end
+  end
+
   def subscription_variants
     { weekly: weekly_subscription_price_cents, monthly: monthly_subscription_price_cents }.select{ |k,v| v.to_i > 0 }.with_indifferent_access
   end
@@ -400,10 +408,6 @@ class Transactable < ActiveRecord::Base
 
   def price_for_subscription(period)
     subscription_variants[period]
-  end
-
-  def desks_available?(date)
-    quantity > reservations.on(date).count
   end
 
   def created_by?(user)
