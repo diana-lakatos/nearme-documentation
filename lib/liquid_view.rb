@@ -5,6 +5,7 @@
 #
 #   ActionView::Base::register_template_handler :liquid, LiquidView
 class LiquidView
+  LIQUID_ERROR = "Liquid Error"
   PROTECTED_ASSIGNS = %w( template_root response _session template_class action_name request_origin session template
                           _response url _request _cookies variables_added _flash params _headers request cookies
                           ignore_missing_templates flash _params logger before_filter_chain_aborted headers )
@@ -52,7 +53,12 @@ class LiquidView
     tags = tags_from_controller(controller)
     register_tags(tags)
 
-    liquid = Liquid::Template.parse(source)
+    begin
+      liquid = Liquid::Template.parse(source)
+    rescue => e
+      MarketplaceLogger.error(LIQUID_ERROR, e.to_s, raise: false, stacktrace: e.backtrace)
+      raise
+    end
 
     filters = filters_from_controller(controller) + [LiquidFilters]
 

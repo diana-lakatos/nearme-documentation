@@ -56,6 +56,14 @@ class PaymentGateway < ActiveRecord::Base
     errors.add(:payment_methods, "At least one payment method must be selected") if active? && !supports_payout? && !payment_methods.any?{ |p| p.active? }
   end
 
+  AUTH_ERROR = "Payment Gateway authorization error"
+  CAPTURE_ERROR = "Payment Gateway capture error"
+  VOID_ERROR = "Payment Gateway void error"
+  REFUND_ERROR = "Payment Gateway refund error"
+  STORE_ERROR = "Payment Gateway credit card store error"
+  UNSTORE_ERROR = "Payment Gateway credit card delete error"
+  PURCHASE_ERROR = "Payment Gateway purchase error"
+
   PAYOUT_GATEWAYS = {
     'PayPal Adpative Payments (Payouts)' => 'PaymentGateway::PaypalAdaptivePaymentGateway',
   }
@@ -269,6 +277,7 @@ class PaymentGateway < ActiveRecord::Base
     begin
       gateway.authorize(amount, cc, options)
     rescue => e
+      MarketplaceLogger.error(AUTH_ERROR, e.to_s, raise: false)
       OpenStruct.new({ success?: false, message: e.to_s })
     end
   end
@@ -277,6 +286,7 @@ class PaymentGateway < ActiveRecord::Base
     begin
       gateway.capture(amount, token, options)
     rescue => e
+      MarketplaceLogger.error(CAPTURE_ERROR, e.to_s, raise: false)
       @payment.update_column(:recurring_booking_error, e) if @payment
       OpenStruct.new({ success?: false, message: e.to_s })
     end
@@ -286,6 +296,7 @@ class PaymentGateway < ActiveRecord::Base
     begin
       gateway.purchase(amount, credit_card_or_vault_id, options)
     rescue => e
+      MarketplaceLogger.error(PURCHASE_ERROR, e.to_s, raise: false)
       OpenStruct.new({ success?: false, message: e.to_s })
     end
   end
@@ -299,6 +310,7 @@ class PaymentGateway < ActiveRecord::Base
     begin
       gateway.void(token)
     rescue => e
+      MarketplaceLogger.error(VOID_ERROR, e.to_s, raise: false)
       OpenStruct.new({ success?: false, message: e.to_s })
     end
   end
@@ -326,6 +338,7 @@ class PaymentGateway < ActiveRecord::Base
     begin
       gateway.refund(amount, token, options)
     rescue => e
+      MarketplaceLogger.error(REFUND_ERROR, e.to_s, raise: false)
       OpenStruct.new({ success?: false, message: e.to_s })
     end
   end
@@ -339,6 +352,7 @@ class PaymentGateway < ActiveRecord::Base
     begin
       gateway.store(credit_card, options)
     rescue => e
+      MarketplaceLogger.error(STORE_ERROR, e.to_s, raise: false)
       OpenStruct.new({ success?: false, message: e.to_s, params: { 'error' => { 'message' => e.to_s }} })
     end
   end
@@ -347,6 +361,7 @@ class PaymentGateway < ActiveRecord::Base
     begin
       gateway.delete(instance_client, options)
     rescue => e
+      MarketplaceLogger.error(UNSTORE_ERROR, e.to_s, raise: false)
       OpenStruct.new({ success?: false, message: e.to_s })
     end
   end

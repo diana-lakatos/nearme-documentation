@@ -36,14 +36,15 @@ footer {
     width: 100px;
     height: 100px;
     float: right;
-    @media (max-width:$ipad-width) {
-      position: relative;
-      top: -100px;
-    }
-    @media (max-width:$iphone-portrait) {
+
+    @media (max-width: $ipad-width) {
       position: static;
-      width: 100%;
-      margin-bottom: 50px;
+      margin: 20px auto;
+      float: none;
+      top: 0;
+      width: 80px;
+      height: 80px;
+      background-size: cover;
     }
   }
 

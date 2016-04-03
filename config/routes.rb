@@ -188,7 +188,7 @@ DesksnearMe::Application.routes.draw do
         end
         resource :sales, only: [:show]
         resource :profiles, only: [:show]
-        resources :logs, only: [:index, :destroy]
+        resources :logs, only: [:index, :destroy, :show]
       end
 
       namespace :reports do
@@ -904,6 +904,7 @@ DesksnearMe::Application.routes.draw do
 
     resources :featured_items, only: :index
     resources :tags, only: :index
+    resources :marketplace_logger
 
     resources :reservations do
       resources :payment_notifications, controller: 'reservations/payment_notifications'
