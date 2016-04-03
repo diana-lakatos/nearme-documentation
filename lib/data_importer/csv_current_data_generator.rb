@@ -59,6 +59,8 @@ class DataImporter::CsvCurrentDataGenerator < DataImporter::File
         data_row << begin
                       if (object == 'transactable' && model.present? && !model.respond_to?(field))
                         model.try(:properties).try(:send, field)
+                      elsif object == 'company' && model.present? && field == 'company_industries_list'
+                        model.industries.map { |c| c.name }.join(',')
                       else
                         model.try(:send, field)
                       end
