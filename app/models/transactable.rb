@@ -593,7 +593,10 @@ class Transactable < ActiveRecord::Base
       external_id: 'External Id', enabled: 'Enabled',
       confirm_reservations: 'Confirm reservations', capacity: 'Capacity', quantity: 'Quantity',
       listing_categories: 'Listing categories', rental_shipping_type: "Rental shipping type",
-      currency: 'Currency', minimum_booking_minutes: 'Minimum booking minutes'
+      currency: 'Currency', minimum_booking_minutes: 'Minimum booking minutes',
+      weekly_subscription_price_cents: 'Weekly subscription price cents',
+      monthly_subscription_price_cents: 'Monthly subscription price cents',
+      booking_type: "Booking type",
     ).reverse_merge(
       transactable_type.custom_attributes.shared.pluck(:name, :label).inject({}) do |hash, arr|
         hash[arr[0].to_sym] = arr[1].presence || arr[0].humanize
