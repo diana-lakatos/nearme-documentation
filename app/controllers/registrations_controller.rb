@@ -80,7 +80,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def show
     @theme_name = 'buy-sell-theme'
-    if current_user.try(:instance_admin?)
+    if current_user.try(:admin?)
       @user = User.find(params[:id])
     else
       @user = User.not_admin.find(params[:id])

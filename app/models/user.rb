@@ -204,7 +204,7 @@ class User < ActiveRecord::Base
   scope :with_date, ->(date) { where(created_at: date) }
 
   scope :admin,     -> { where(admin: true) }
-  scope :not_admin, -> { where("admin iS NULL") }
+  scope :not_admin, -> { where("admin is NULL or admin is false") }
   scope :with_joined_project_collaborations, -> { joins("LEFT OUTER JOIN project_collaborators pc ON users.id = pc.user_id AND (pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)")}
   scope :created_projects, -> { joins('LEFT OUTER JOIN projects p ON users.id = p.creator_id') }
   scope :featured, -> { where(featured: true) }

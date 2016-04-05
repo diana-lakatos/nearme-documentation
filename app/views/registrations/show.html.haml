@@ -1,7 +1,7 @@
 - render_content_outside_container!
 - is_current_user = current_user && current_user.id == @user.try(:id)
 
-- if @user.instance_admin?
+- if @user.admin?
   .container-fluid
     .admin-profile-notice
       %p= t 'user_profile.labels.admin_profile'
