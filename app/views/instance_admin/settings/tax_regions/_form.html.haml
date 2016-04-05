@@ -1,0 +1,14 @@
+= simple_form_for [:instance_admin, :settings, @tax_region] do |f|
+  - if @tax_region.persisted?
+    %h3 Edit tax rates for #{@tax_region.country}
+
+  = f.simple_fields_for :tax_rates do |tax_rate|
+    = render 'tax_rate_fields', f: tax_rate, region_form: f
+  - if f.object.persisted?
+    .row
+      = link_to_add_association f, :tax_rates, class: 'button-a small' do
+        %button.btn.btn-primary{:type => "button"}
+          = t(:add_another)
+
+  = content_for :header_buttons do
+    = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }

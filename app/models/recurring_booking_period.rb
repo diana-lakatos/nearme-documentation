@@ -68,6 +68,10 @@ class RecurringBookingPeriod < ActiveRecord::Base
     0
   end
 
+  def total_tax_amount_cents
+    0
+  end
+
   def shipping_amount_cents
     0
   end

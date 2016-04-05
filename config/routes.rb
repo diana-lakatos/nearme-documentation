@@ -252,13 +252,17 @@ DesksnearMe::Application.routes.draw do
         resources :location_types, only: [:index, :create, :update, :destroy_modal, :destroy] do
           get 'destroy_modal', on: :member
         end
-        resource :listings, :only => [:show, :update], :controller => 'listings'
         resources :listing_types, only: [:index, :create, :destroy_modal, :destroy] do
           get 'destroy_modal', on: :member
         end
+        resource :listings, :only => [:show, :update], :controller => 'listings'
         resources :payments
         resources :payment_gateways, controller: 'payments/payment_gateways', except: [:show]
-
+        resources :tax_regions do
+          collection do
+            put :update_settings
+          end
+        end
         resource :translations, :only => [:show, :update], :controller => 'translations'
         resource :cancellation_policy, :only => [:show, :update], :controller => 'cancellation_policy'
         resource :documents_upload, except: [:index, :destroy], :controller => 'documents_upload'

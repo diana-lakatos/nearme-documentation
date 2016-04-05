@@ -71,6 +71,10 @@ en:
         could_not_validate: 'Your IMAP settings appear to be invalid'
         validation_successful: 'Your IMAP settings are valid'
       manage:
+        tax_region:
+          created: 'Tax region has been created.'
+          deleted: 'Tax region has been deleted.'
+          updated: 'Tax region has been updated.'
         approval_request_templates:
           created: 'Approval request template has been created.'
           deleted: 'Approval request template has been deleted.'

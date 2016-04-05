@@ -5,6 +5,7 @@ class ReservationRequestDrop < BaseDrop
   #   returns true if reservation is with delivery
   # action_hourly_booking?
   #   returns true if reservation is per hour
+
   delegate :with_delivery?, :action_hourly_booking?,
     :has_service_fee?, to: :reservation_request
 
