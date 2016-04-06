@@ -613,30 +613,4 @@ DNM.registerInitializer(function(){
     })
 });
 
-DNM.registerInitializer(function(){
-  $(function() {
-    $('a[href^="#"][scroll-to-section]').on('click',function (e) {
-      e.preventDefault();
-
-      var target = this.hash;
-      var $target = $(target);
-
-      $('html, body').stop().animate({
-          'scrollTop': $target.offset().top
-      }, 900, 'swing', function () {
-          window.location.hash = target;
-      });
-    });
-  })
-});
-
-DNM.registerInitializer(function(){
-  $(function() {
-    $('[data-location-href]').on('click',function (e) {
-        window.location = $(this).data('location-href');
-    });
-
-  })
-});
-
 DNM.run();
