@@ -9,7 +9,7 @@ class ActivityFeedService
     @page = params[:page].present? ? params[:page].to_i : 1
     per = ActivityFeedService::Helpers::EVENTS_PER_PAGE
 
-    followed_identifiers = ActivityFeedSubscription.where(followed: @object).pluck(:followed_identifier)
+    followed_identifiers = ActivityFeedSubscription.where(follower: @object).pluck(:followed_identifier)
     itself_identifier = ActivityFeedService::Helpers.object_identifier_for(@object)
     followed_identifiers.push(itself_identifier)
 
