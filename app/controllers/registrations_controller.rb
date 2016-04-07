@@ -244,7 +244,7 @@ class RegistrationsController < Devise::RegistrationsController
       sign_in(@user)
       event_tracker.track_event_within_email(@user, request) if params[:track_email_event]
       flash[:success] = t('flash_messages.registrations.address_verified')
-      redirect_to @user.listings.count > 0 ? dashboard_company_locations_path : edit_user_registration_path
+      redirect_to @user.listings.count > 0 ? dashboard_path : edit_user_registration_path
     else
       if @user.verified_at
         flash[:warning] = t('flash_messages.registrations.address_already_verified')
