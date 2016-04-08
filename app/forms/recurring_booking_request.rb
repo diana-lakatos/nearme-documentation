@@ -4,7 +4,7 @@ class RecurringBookingRequest < Form
     :interval, :total_amount_cents, :guest_notes, :total_amount_check
   attr_reader   :recurring_booking, :listing, :location, :user, :payment_subscription
 
-  delegate :reservation_type=, :currency, :service_fee_amount_host_cents, :service_fee_amount_guest_cents, :billing_authorization,
+  delegate :currency, :service_fee_amount_host_cents, :service_fee_amount_guest_cents, :billing_authorization,
     :create_billing_authorization, :total_service_amount, :total_amount, to: :recurring_booking
   delegate :confirm_reservations?, :location, :company, to: :listing
   delegate :mobile_number, :mobile_number=, :country_name, :country_name=, :country, to: :user

@@ -1,0 +1,15 @@
+- content_for :page_header do
+  %h1
+    = link_to t("dashboard.credit_cards.manage"), dashboard_payment_gateway_credit_cards_path(@payment_gateway), class: 'hidden-xs hidden-sm'
+    %span.hidden-xs.hidden-sm >
+    = t("dashboard.credit_cards.new")
+
+= dashboard_simple_form_for [:dashboard, @payment_gateway, @credit_card], html: { id: 'credit-card-form', class: 'payment' } do |f|
+  .panel
+    .panel-body
+      #credit_card_fields
+        = render 'credit_cards/credit_card_fields', form: f
+
+  .panel.form-actions
+    .panel-body
+      = f.button :submit, t('dashboard.items.save')

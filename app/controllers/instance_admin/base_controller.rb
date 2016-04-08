@@ -45,6 +45,7 @@ class InstanceAdmin::BaseController < ApplicationController
     'reservation_types'  => { controller: '/instance_admin/manage/reservation_types', default_action: 'index' },
     'custom_validators'  => { controller: '/instance_admin/manage/custom_validators', default_action: 'index', title: 'Custom Validators' },
     'categories'         => { controller: '/instance_admin/manage/categories', default_action: 'index', title: 'Categories' },
+    'custom_models'      => { controller: '/instance_admin/manage/custom_model_types', default_action: 'index', title: 'Custom Models' },
     'upsell_addons'      => { controller: '/instance_admin/manage/additional_charge_types', default_action: 'index', title: 'Upsell & Add-ons' },
     'search'             => { controller: '/instance_admin/manage/search', default_action: 'show', title: 'Search' }
   }

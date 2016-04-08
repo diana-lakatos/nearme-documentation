@@ -1,5 +1,5 @@
 .content-container
-  = simple_form_for @instance_profile_type, url: [:instance_admin, :manage, @instance_profile_type] do |f|
+  = simple_form_for resource, url: [:instance_admin, :manage, resource] do |f|
     %input{ name: :action_name, type: :hidden, value: :search_settings }
 
     %h4.control-label

@@ -12,8 +12,7 @@ Feature: A user can reset their password
     Given the transactable_type_listing exists
     When I performed search for "Auckland"
      And I begin to reset the password for that user
-    Then I should be redirected to the previous search page
-    And a password reset email should be sent to that user
+    Then a password reset email should be sent to that user
 
   Scenario: User resets password from password reset link
     When I fill in the password reset form with a new password

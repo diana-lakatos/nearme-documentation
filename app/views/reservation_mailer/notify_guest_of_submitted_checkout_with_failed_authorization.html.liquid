@@ -1,0 +1,46 @@
+<h2>Hello, {{ user.first_name }}!</h2>
+
+<p>
+{{ listing.name }} has submitted invoice. Unfortunately we had an issue with authorizing your credit card. Please update your payment information to be able to pay.
+</p>
+<p>
+  <a class="btn" href="{{ reservation.guest_show_url }}">Update payment information</a>
+</p>
+
+{% if reservation.comment != blank %}
+  <p>
+  Additional comment: {{ reservation.comment }}
+  </p>
+{% endif %}
+
+<div class="booking-details">
+
+  <h2>Invoice Details</h2>
+
+  {% for period in reservation.periods %}
+    <div class="row">
+      <strong style='display: inline-block;'>{{ period.description }}</strong>
+      <span style="float: right;">{{ period.hours }} x {{ reservation.formatted_unit_price }}</span>
+    </div>
+  {% endfor %}
+
+  {% for additional_charge in reservation.additional_charges %}
+    <div class="row">
+      <strong style='display: inline-block;'>{{ additional_charge.name }}</strong>
+      <span style="float: right;">{{ additional_charge.formatted_amount }}</span>
+    </div>
+  {% endfor %}
+
+  {% if reservation.has_service_fee? %}
+    <div class="row">
+      <strong style='display: inline-block;'>Service fee</strong>
+      <span style="float: right;">{{ reservation.service_fee }}</span>
+    </div>
+  {% endif %}
+
+  <div class="row">
+    <strong style='display: inline-block;'>Total</strong>
+    <span style="float: right;">{{ reservation.total_price }}</span>
+  </div>
+
+</div>

@@ -19,5 +19,5 @@
 {% endfor %}
 
 <div class="pagination">
-  {{ products | pagination_links: param_name: 'products_page' }}
+  {{ products | pagination_links: param_name: 'products_page', renderer: 'LiquidLinkRendererForUserPage'  }}
 </div>

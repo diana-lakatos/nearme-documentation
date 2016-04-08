@@ -14,4 +14,8 @@ class DocumentRequirement < ActiveRecord::Base
   def is_file_required?
     item.try(:upload_obligation).try(:required?).presence || false
   end
+
+  def should_show_file?
+    item.try(:upload_obligation).try(:required?) || item.try(:upload_obligation).try(:optional?)
+  end
 end

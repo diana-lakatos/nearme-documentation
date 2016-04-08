@@ -41,7 +41,7 @@ gem 'instagram'
 gem 'github_api'
 gem 'google_plus'
 
-gem 'reform', '~> 2.0.4'
+gem 'reform', '~> 2.1.0'
 gem 'tilt'
 
 

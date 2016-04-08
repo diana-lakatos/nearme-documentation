@@ -1,0 +1,25 @@
+-charge ||= f.object
+
+.row.nested-fields
+  .col-xs-8
+    = f.input :name, required: true
+  .col-xs-2{class: f.object.errors[:amount].present? ? 'has-error' : ''}
+    %label.control-label
+      %abbr{ title: "required" } *
+      = t('dashboard.host_reservations.complete_reservation.cost')
+    .input-group
+      %span.input-group-addon.currency_addon= @reservation.unit_price.symbol
+      = f.number_field :amount, as: :decimal, required: true, class: 'form-control price-input', :'data-type' => 'price-input', :'data-hours-input' => true
+    - if f.object.errors[:amount].present?
+      %span.help-block
+        = f.object.errors[:amount].try(:first)
+  .col-xs-2
+    .row
+      .col-xs-6.no-gutter
+        %label.control-label= t('dashboard.host_reservations.complete_reservation.subtotal')
+        .sub-total{ data: { subtotal: true, currency: @reservation.unit_price.symbol, amount: charge.amount || 0.0 } }
+          = charge.decorate.amount_with_currency
+      .col-xs-6
+        = link_to_remove_association f, class: 'remove_fields' do
+          %button.action--remove
+

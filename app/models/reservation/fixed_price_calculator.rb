@@ -21,6 +21,10 @@ class Reservation::FixedPriceCalculator
     true
   end
 
+  def unit_price
+    listing.fixed_price
+  end
+
   private
 
   def listing

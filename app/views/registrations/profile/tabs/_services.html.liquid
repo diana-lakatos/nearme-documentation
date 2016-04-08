@@ -22,5 +22,5 @@
 {% endfor %}
 
 <div class="pagination">
-  {{ listings | pagination_links: param_name: 'services_page' }}
+  {{ listings | pagination_links: param_name: 'services_page', renderer: 'LiquidLinkRendererForUserPage' }}
 </div>

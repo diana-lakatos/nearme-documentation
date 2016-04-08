@@ -139,6 +139,16 @@ class Listings::ReservationsController < ApplicationController
     head 200 if params[:action] == 'store_reservation_request'
   end
 
+  def detect_overlapping
+    service = Listings::OverlapingReservationsService.new(@listing, params.slice(:date))
+
+    if service.valid?
+      head 200
+    else
+      render json: { warnings: service.warnings }
+    end
+  end
+
   private
 
   def initialize_shipping_address
@@ -170,6 +180,7 @@ class Listings::ReservationsController < ApplicationController
   end
 
   def build_reservation_request
+    params[:reservation_request] ||= {}
     params[:reservation_request][:waiver_agreement_templates] ||= {}
     params[:reservation_request][:waiver_agreement_templates] = params[:reservation_request][:waiver_agreement_templates].select { |k, v| v == "1" }.keys
     params[:reservation_request][:payment][:payment_method_nonce] = params.delete(:payment_method_nonce) if params[:reservation_request][:payment]
@@ -179,7 +190,8 @@ class Listings::ReservationsController < ApplicationController
       @listing,
       current_user,
       reservation_request_params,
-      params[:reservation_request][:checkout_extra_fields]
+      params[:reservation_request][:checkout_extra_fields],
+      cookies[:last_search]
     )
   end
 
@@ -204,7 +216,6 @@ class Listings::ReservationsController < ApplicationController
   end
 
   def reservation_request_params
-     params.require(:reservation_request).permit(secured_params.reservation_request)
+     params.require(:reservation_request).permit(secured_params.reservation_request(@listing.transactable_type.reservation_type))
   end
 end
-

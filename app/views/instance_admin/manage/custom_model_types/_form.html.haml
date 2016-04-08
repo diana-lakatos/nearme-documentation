@@ -1,0 +1,30 @@
+= simple_nested_form_for [:instance_admin, @controller_scope, resource] do |f|
+  %input{ name: :action_name, type: :hidden, value: :edit }
+  .content-container
+    %h4= t('instance_admin.manage.offer_types.basic_configuration')
+    .row
+      .input-container.col-xs-12
+        = f.input :name, input_html: { class: 'form-control' }
+    - if ServiceType.count > 0
+      .row
+        .input-container.col-xs-12
+          = f.association :service_types
+    - if Spree::ProductType.count > 0
+      .row
+        .input-container.col-xs-12
+          = f.association :product_types
+    - if ProjectType.count > 0
+      .row
+        .input-container.col-xs-12
+          = f.association :project_types
+    - if OfferType.count > 0
+      .row
+        .input-container.col-xs-12
+          = f.association :offer_types
+    .row
+      .input-container.col-xs-12
+        = f.association :instance_profile_types
+
+
+  = content_for :header_buttons do
+    = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }

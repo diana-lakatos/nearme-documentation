@@ -5,6 +5,7 @@ FactoryGirl.define do
     subtotal_amount_cents { 100_00 }
     service_fee_amount_guest_cents { 10_00 }
     payment_gateway_mode :test
+    payer { User.first || FactoryGirl.create(:user) }
     state 'pending'
     currency 'USD'
     association(:payment_method, factory: :credit_card_payment_method)

@@ -16,6 +16,15 @@ FactoryGirl.define do
       make_valid_period(reservation) unless reservation.valid?
     end
 
+    factory :confirmed_hour_reservation do
+      state 'confirmed'
+      booking_type 'hourly'
+      after(:build) do |reservation|
+        make_valid_period(reservation, Time.zone.now.next_week.to_date + 1.day, 600, 660)
+        reservation.payment ||= FactoryGirl.build(:pending_payment, payable: reservation)
+      end
+    end
+
     factory :inactive_reservation do
       after(:build) do |reservation|
         reservation.payment ||= FactoryGirl.build(:pending_payment, payable: reservation)
@@ -58,6 +67,17 @@ FactoryGirl.define do
             period.save!
           end
           reservation.save!
+        end
+        factory :reviewable_reservation do
+          archived_at { Time.zone.now }
+        end
+      end
+
+      factory :reservation_with_invoice do
+        state 'confirmed'
+        after(:build) do |reservation|
+          reservation.payment ||= FactoryGirl.build(:authorized_payment, payable: reservation)
+          reservation.additional_charges = [FactoryGirl.build(:additional_charge)]
         end
       end
     end
@@ -143,7 +163,7 @@ end
 
 private
 
-def make_valid_period(reservation, date=Time.zone.now.next_week.to_date, start_minute = nil, end_minute = nil)
+def make_valid_period(reservation, date=Time.zone.now.next_week.to_date, start_minute = nil, end_minute = nil, options = {})
   reservation.periods = []
   reservation.add_period(date, start_minute, end_minute)
   reservation

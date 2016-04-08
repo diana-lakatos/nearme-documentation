@@ -9,7 +9,7 @@ Feature: User can add locations to wish list
     And wish lists are enabled for the instance
     And I am logged in as the user
 
-  Scenario: User can add and remove location to wish list after logging in
+  Scenario: User can add and remove transactable to wish list after logging in
     Given I go to the transactable's page
     When I click to Add to Favorites
     Then I should see "Remove from Favorites"

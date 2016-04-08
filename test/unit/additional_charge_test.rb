@@ -6,8 +6,6 @@ class AdditionalChargeTest < ActiveSupport::TestCase
   should belong_to(:additional_charge_type)
   should belong_to(:target)
 
-  should validate_presence_of :additional_charge_type_id
-
   should 'populate all the required data from' do
     act = FactoryGirl.create(:additional_charge_type)
     ac = AdditionalCharge.create(additional_charge_type_id: act.id)

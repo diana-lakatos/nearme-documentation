@@ -9,6 +9,7 @@ FactoryGirl.define do
 
       after(:build) do |instance_profile_type|
         instance_profile_type.form_components << FactoryGirl.build(:form_component_instance_profile_type_seller, form_componentable: instance_profile_type)
+        instance_profile_type.form_components << FactoryGirl.build(:form_component_seller_registration, form_componentable: instance_profile_type)
       end
     end
 
@@ -17,6 +18,7 @@ FactoryGirl.define do
 
       after(:build) do |instance_profile_type|
         instance_profile_type.form_components << FactoryGirl.build(:form_component_instance_profile_type_buyer, form_componentable: instance_profile_type)
+        instance_profile_type.form_components << FactoryGirl.build(:form_component_buyer_registration, form_componentable: instance_profile_type)
       end
 
     end
@@ -24,6 +26,7 @@ FactoryGirl.define do
     after(:build) do |instance_profile_type|
       InstanceProfileType.transaction do
         instance_profile_type.form_components << FactoryGirl.build(:form_component_instance_profile_type, form_componentable: instance_profile_type) if instance_profile_type.form_components.blank?
+        instance_profile_type.form_components << FactoryGirl.build(:form_component_default_registration, form_componentable: instance_profile_type)
       end
     end
   end

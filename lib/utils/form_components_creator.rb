@@ -147,14 +147,14 @@ module Utils
     def create_dashboard_form!
       @form_type_class = FormComponent::TRANSACTABLE_ATTRIBUTES
       create_components!(
-                    [
-                      {
-                        name: 'Details', fields: %w( name listing_type description amenity_types photos location_id waiver_agreement_templates documents_upload approval_requests ).map {|field| { 'transactable' => field } } 
-                      },
-                      { name: 'Pricing & Availability', fields: %w( confirm_reservations enabled price schedule currency quantity book_it_out exclusive_price, action_rfq capacity ).map {|field| { 'transactable' => field } } 
-                      }
-                    ], 
-                    'new_dashboard')
+        [
+          {
+            name: 'Details', fields: %w( name listing_type description amenity_types photos location_id waiver_agreement_templates documents_upload approval_requests ).map {|field| { 'transactable' => field } }
+          },
+          { name: 'Pricing & Availability', fields: %w( confirm_reservations enabled price schedule currency quantity book_it_out exclusive_price, action_rfq capacity ).map {|field| { 'transactable' => field } }
+          }
+        ],
+        'new_dashboard')
     end
   end
 
@@ -239,6 +239,7 @@ module Utils
 
     def create!
       create_dashboard_form!
+      create_default_registration!
     end
 
     def create_dashboard_form!
@@ -250,12 +251,23 @@ module Utils
         }
       ])
     end
+
+    def create_default_registration!
+      @form_type_class = FormComponent::DEFAULT_REGISTRATION
+      create_components!([
+        {
+          name: 'Registration',
+          fields: [{ "user" => "name" }, { "user" => "email" }, { "user" => "password" } ]
+        }
+      ])
+    end
   end
 
   class InstanceSellerProfileCreator < BaseComponentCreator
 
     def create!
       create_dashboard_form!
+      create_seller_registration!
     end
 
     def create_dashboard_form!
@@ -267,12 +279,23 @@ module Utils
         }
       ])
     end
+
+    def create_seller_registration!
+      @form_type_class = FormComponent::SELLER_REGISTRATION
+      create_components!([
+        {
+          name: 'Registration',
+          fields: [{ "user" => "name" }, { "user" => "email" }, { "user" => "password" } ]
+        }
+      ])
+    end
   end
 
   class InstanceBuyerProfileCreator < BaseComponentCreator
 
     def create!
       create_dashboard_form!
+      create_buyer_registration!
     end
 
     def create_dashboard_form!
@@ -281,6 +304,16 @@ module Utils
         {
           name: 'Buyer',
           fields: []
+        }
+      ])
+    end
+
+    def create_buyer_registration!
+      @form_type_class = FormComponent::BUYER_REGISTRATION
+      create_components!([
+        {
+          name: 'Registration',
+          fields: [{ "user" => "name" }, { "user" => "email" }, { "user" => "password" } ]
         }
       ])
     end

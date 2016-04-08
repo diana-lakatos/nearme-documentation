@@ -28,9 +28,7 @@ class Dashboard::BuyersController < Dashboard::BaseController
   end
 
   def buyer_profile_params
-    params.require(:buyer_profile).permit(secured_params.user).tap do |whitelisted|
-      whitelisted[:properties] = params[:buyer_profile][:properties] if params[:buyer_profile][:properties]
-    end
+    params.require(:buyer_profile).permit(secured_params.buyer_profile)
   end
 
 end

@@ -21,6 +21,7 @@ class Bid < ActiveRecord::Base
 
   validates :user, :offer, presence: true
 
+  scope :reviewable, -> { where.not(archived_at: nil) }
   scope :by_user, -> (user) { where(user: user) }
   scope :by_period, -> (start_date, end_date = Time.zone.today.end_of_day) {
     where(created_at: start_date..end_date)

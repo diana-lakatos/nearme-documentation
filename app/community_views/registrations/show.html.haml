@@ -38,7 +38,7 @@
           %p{:'data-follow-button' => true}
             = render partial: 'shared/follow_button', locals: { object: @user }
 
-- if current_user.try(:instance_admin?)
+- if current_user.try(:admin?)
   .contain
     .admin-profile-notice
       %p= t 'user_profile.labels.admin_profile'

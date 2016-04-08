@@ -1,0 +1,8 @@
+- custom_model = @transactable_type.custom_model_types.find_by(name: field.split(" - ")[1])
+%h1= custom_model.translated_bookable_noun(2)
+.customizations.nested-fields-set
+  = f.simple_fields_for :customizations, f.object.decorate.customizations_for(custom_model) do |customization_form|
+    .nested-container
+    = render 'dashboard/company/transactables/form_fields/customization', f: customization_form, custom_model: custom_model
+  .add-link
+    = link_to_add_association t('dashboard.transactables.add_new_item') , f, :customizations, partial: 'dashboard/company/transactables/form_fields/customization', render_options: { locals: { custom_model: custom_model, show_hr: true } }, class: 'btn btn-primary'

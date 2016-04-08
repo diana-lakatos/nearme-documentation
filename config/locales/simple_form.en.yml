@@ -154,6 +154,9 @@ en:
         facebook_url: "Facebook URL"
         twitter_url: "Twitter URL"
         gplus_url: "Goggle+ URL"
+        instagram_url: "Instagram URL"
+        youtube_url: "Youtube URL"
+        rss_url: "RSS URL"
         favicon_image: 'Favicon (16px x 16px or 32px x 32px)'
         favicon_image_html: 'Favicon (16px &times; 16px or 32px &times; 32px)'
         hero_image: 'Hero image'
@@ -318,6 +321,8 @@ en:
         show_date_pickers: "Show date pickers?"
         show_categories: "Show categories?"
         date_pickers_use_availability_rules: 'Use availability rules'
+      reservations:
+        address: 'Address'
       user:
         password_confirmation: "Confirm Password"
         biography: 'About me'

@@ -18,6 +18,13 @@ class ReservationPeriod < ActiveRecord::Base
     minutes / 60.0
   end
 
+  def hours=(number)
+    if read_attribute(:start_minute).nil? || hours != number.to_f
+      self.start_minute = 0 if read_attribute(:start_minute).blank?
+      self.end_minute = read_attribute(:start_minute).to_i + number.to_f * 60
+    end
+  end
+
   def minutes
     (end_minute || start_minute).to_i - start_minute.to_i
   end
@@ -52,6 +59,10 @@ class ReservationPeriod < ActiveRecord::Base
 
   def ends_at
     Minute.new(end_minute || 1439, date).to_time_in_timezone(time_zone)
+  end
+
+  def to_liquid
+    @reservation_period_drop ||= ReservationPeriodDrop.new(self.decorate)
   end
 
   private

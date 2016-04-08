@@ -12,6 +12,7 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
     @listing_creator.expects(:share_with_user_email!).once
     @listing_creator.expects(:create_listing_pending_approval_email!).once
     @listing_creator.expects(:create_approved_email!).once
+    @listing_creator.expects(:create_inappropriated_email!).once
     @listing_creator.create_all!
   end
 

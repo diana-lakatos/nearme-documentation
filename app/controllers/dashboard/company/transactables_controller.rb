@@ -2,11 +2,13 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
 
   include AttachmentsHelper
 
-  before_filter :find_transactable_type
-  before_filter :find_transactable, :except => [:index, :new, :create]
-  before_filter :find_locations
-  before_filter :disable_unchecked_prices, :only => :update
-  before_filter :set_form_components
+  before_action :find_transactable_type
+  before_action :find_transactable, except: [:index, :new, :create]
+  before_action :find_locations
+  before_action :disable_unchecked_prices, only: :update
+  before_action :set_form_components
+  before_action :redirect_to_edit_if_single_transactable, only: [:index, :new, :create]
+  before_action :redirect_to_new_if_single_transactable, only: [:index, :edit, :update]
 
   def index
     @transactables = @transactable_type.transactables.where(company_id: @company).
@@ -155,7 +157,18 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     params.require(:transactable).permit(secured_params.transactable(@transactable_type)).tap do |whitelisted|
       whitelisted[:properties] = params[:transactable][:properties] rescue {}
     end
+  end
 
+  def redirect_to_edit_if_single_transactable
+    if @transactable_type.single_transactable && @transactable_type.transactables.where(company_id: @company).count > 0
+      redirect_to edit_dashboard_company_transactable_type_transactable_path(@transactable_type, @transactable_type.transactables.where(company_id: @company).first)
+    end
+  end
+
+  def redirect_to_new_if_single_transactable
+    if @transactable_type.single_transactable && @transactable_type.transactables.where(company_id: @company).count.zero?
+      redirect_to new_dashboard_company_transactable_type_transactable_path(@transactable_type)
+    end
   end
 
 end

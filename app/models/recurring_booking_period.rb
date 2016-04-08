@@ -13,7 +13,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
   has_one :billing_authorization, -> { where(success: true) }, as: :reference
 
   belongs_to :recurring_booking
-  belongs_to :credit_card
+  belongs_to :credit_card, -> { with_deleted }
 
   delegate :payment_gateway, :company, :company_id, :user, :owner, :currency,
     :service_fee_guest_percent, :service_fee_host_percent, :payment_subscription, to: :recurring_booking

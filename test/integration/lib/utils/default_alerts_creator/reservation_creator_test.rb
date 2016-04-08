@@ -28,6 +28,10 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
     @reservation_creator.expects(:notify_guest_one_booking_suggestions_email!).once
     @reservation_creator.expects(:request_rating_of_guest_from_host_email!).once
     @reservation_creator.expects(:request_rating_of_host_from_guest_email!).once
+    @reservation_creator.expects(:notify_host_of_approved_payment!).once
+    @reservation_creator.expects(:notify_host_of_declined_payment!).once
+    @reservation_creator.expects(:notify_guest_of_submitted_checkout!).once
+    @reservation_creator.expects(:notify_guest_of_submitted_checkout_with_failed_authorization!).once
     @reservation_creator.create_all!
   end
 
@@ -325,6 +329,43 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_not_contains "translation missing:", mail.html_part.body
     end
 
+    should 'notify host of approved payment' do
+      @reservation_creator.notify_host_of_approved_payment!
+      assert_difference 'ActionMailer::Base.deliveries.size' do
+        WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::GuestApprovedPayment, @reservation.id)
+      end
+      mail = ActionMailer::Base.deliveries.last
+
+      assert mail.html_part.body.include?(@user.first_name)
+
+      assert_equal [@reservation.listing.creator.email], mail.to
+      assert_equal "[DesksNearMe] #{@reservation.owner.first_name} confirmed payment!", mail.subject
+      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
+      assert_not_contains 'href="/', mail.html_part.body
+      assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
+    end
+
+    should 'notify host of declined payment' do
+      @reservation.update_attribute(:rejection_reason, 'You stinks.')
+      @reservation_creator.notify_host_of_declined_payment!
+      assert_difference 'ActionMailer::Base.deliveries.size' do
+        WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::GuestDeclinedPayment, @reservation.id)
+      end
+      mail = ActionMailer::Base.deliveries.last
+
+      assert mail.html_part.body.include?(@user.first_name)
+      assert_equal [@reservation.listing.creator.email], mail.to
+      assert_equal "[DesksNearMe] #{@reservation.owner.first_name} declined payment!", mail.subject
+      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="https://example.com', mail.html_part.body
+      assert_not_contains 'href="/', mail.html_part.body
+      assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
+      assert_contains "dashboard/company/host_reservations?state=unconfirmed", mail.html_part.body
+    end
+
     should 'request_rating_of_guest_from_host_email' do
       @reservation_creator.request_rating_of_guest_from_host_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
@@ -341,6 +382,54 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_not_contains 'href="/', mail.html_part.body
       assert_not_contains 'Liquid error:', mail.html_part.body
       assert_not_contains "translation missing:", mail.html_part.body
+    end
+
+    context 'skip payment authorization' do
+
+      setup do
+        TransactableType.update_all(skip_payment_authorization: true, hours_for_guest_to_confirm_payment: 24)
+        @reservation = FactoryGirl.create(:reservation_with_invoice, user: @user)
+        @reservation.periods.update_all(description: 'my period')
+      end
+
+      should 'notify_guest_of_submitted_checkout' do
+        @reservation_creator.notify_guest_of_submitted_checkout!
+        assert_difference 'ActionMailer::Base.deliveries.size' do
+          WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::HostSubmittedCheckout, @reservation.id)
+        end
+        mail = ActionMailer::Base.deliveries.last
+
+        assert_contains "Please review it and approve or decline in your dashboard", mail.html_part.body
+        assert_equal [@reservation.owner.email], mail.to
+        assert_equal "[#{@platform_context.decorate.name}] #{@reservation.listing.name} submitted invoice", mail.subject
+        assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+        assert_not_contains 'href="https://example.com', mail.html_part.body
+        assert_not_contains 'href="/', mail.html_part.body
+        assert_not_contains 'Liquid error:', mail.html_part.body
+        assert_not_contains "translation missing:", mail.html_part.body
+        assert_contains "Something cool", mail.html_part.body
+        assert_contains "my period", mail.html_part.body
+      end
+
+      should 'notify_guest_of_submitted_checkout_with_failed_authorization' do
+        @reservation_creator.notify_guest_of_submitted_checkout_with_failed_authorization!
+        assert_difference 'ActionMailer::Base.deliveries.size' do
+          WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::HostSubmittedCheckoutButAuthorizationFailed, @reservation.id)
+        end
+        mail = ActionMailer::Base.deliveries.last
+
+        assert_contains "Unfortunately we had an issue with authorizing your credit card. Please update your payment information to be able to pay.", mail.html_part.body
+        assert_equal [@reservation.owner.email], mail.to
+        assert_equal "[#{@platform_context.decorate.name}] #{@reservation.listing.name} submitted invoice", mail.subject
+        assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+        assert_not_contains 'href="https://example.com', mail.html_part.body
+        assert_not_contains 'href="/', mail.html_part.body
+        assert_not_contains 'Liquid error:', mail.html_part.body
+        assert_not_contains "translation missing:", mail.html_part.body
+        assert_contains "my period", mail.html_part.body
+        assert_contains "Something cool", mail.html_part.body
+      end
+
     end
 
     should 'request_rating_of_host_from_guest_email!' do

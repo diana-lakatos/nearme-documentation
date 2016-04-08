@@ -1,0 +1,12 @@
+<span class='star-container'>
+  {% for i in (1..stars) %}
+    <img src='/assets/raty/star-on.png' />
+  {% endfor %}
+  {% for i in (stars...max_rating) %}
+    <img src='/assets/raty/star-off.png' />
+  {% endfor %}
+</span>
+
+{% if count != blank %}
+  <a>{{count}})</a>
+{% endif %}

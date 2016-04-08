@@ -39,6 +39,9 @@ module NavigationHelpers
     when /manage guests/
       dashboard_company_host_reservations_path
 
+    when /confirmed reservations/
+      dashboard_company_host_reservations_path(state: 'confirmed')
+
     when /the bookings/
       dashboard_user_reservations_path
 

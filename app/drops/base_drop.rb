@@ -1,4 +1,5 @@
 class BaseDrop < Liquid::Drop
+  include MoneyRails::ActionViewExtension
 
   private
 

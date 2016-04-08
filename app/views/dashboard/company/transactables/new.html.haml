@@ -1,13 +1,14 @@
-.dash-head.clearfix
-  = link_to t('dashboard.transactables.manage'), dashboard_company_transactable_type_transactables_path(@transactable_type)
-  &gt;
-  %p= t('dashboard.items.list_new_item')
-.dash-body
-  = simple_nested_form_for [:dashboard, :company, @transactable_type.becomes(TransactableType), @transactable], wrapper: :bs3, :html => { :multipart => true, id: 'listing-form' } do |f|
+.dash-page
+  .dash-head.clearfix
+    = link_to t('dashboard.transactables.manage'), dashboard_company_transactable_type_transactables_path(@transactable_type)
+    &gt;
+    %p= t('dashboard.items.list_new_item')
+  .dash-body
+    = simple_nested_form_for [:dashboard, :company, @transactable_type.becomes(TransactableType), @transactable], wrapper: :bs3, :html => { :multipart => true, id: 'listing-form' } do |f|
 
-    = render 'form', f: f
+      = render 'form', f: f
 
-    .submit-bar
-      = link_to dashboard_company_transactable_type_transactables_path(@transactable_type) do
-        .btn.gray= t('general.cancel')
-      = f.submit t('general.save'), class: "btn medium blue"
+      .submit-bar
+        = link_to dashboard_company_transactable_type_transactables_path(@transactable_type) do
+          .btn.gray= t('general.cancel')
+        = f.submit t('general.save'), class: "btn medium blue"

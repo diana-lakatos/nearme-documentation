@@ -114,7 +114,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
       end
 
       should 'if any archived bookings' do
-        FactoryGirl.create(:past_reservation, owner: @user)
+        FactoryGirl.create(:reservation, archived_at: Time.zone.now, owner: @user)
         get :archived
         assert_response :success
         assert_select ".order", 1

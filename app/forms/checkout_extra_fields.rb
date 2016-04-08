@@ -53,24 +53,6 @@ class CheckoutExtraFields < Form
       @user.phone = @user_attributes['mobile_number']
     end
 
-    #TODO code related to approval_request does not make any sense, to be removed
-    @all_attachments_present = true
-    @all_approval_requests_messages_present = true
-    if approval_request = @user.current_approval_requests.first
-      if approval_request.approval_request_template.required_written_verification && approval_request.message.blank?
-        @all_approval_requests_messages_present = false
-      end
-
-      approval_request.approval_request_template.approval_request_attachment_templates.each do |attachment_template|
-        next if !attachment_template.required?
-        attachment = @user.approval_request_attachments.for_request_or_free(approval_request.id).for_attachment_template(attachment_template.id).first
-        if !attachment
-          @all_attachments_present = false
-          break
-        end
-      end
-    end
-
   end
 
   def valid?
