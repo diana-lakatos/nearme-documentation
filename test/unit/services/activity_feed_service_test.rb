@@ -44,7 +44,7 @@ class ActivityFeedServiceTest < ActiveSupport::TestCase
 
       @user.feed_follow!(project1)
 
-      assert_equal 0, @feed.events.count
+      assert_equal 2, @feed.events.count
 
       # You can unfollow users - and events are deleted from your
       # timeline.
