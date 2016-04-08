@@ -11,7 +11,7 @@
 = f.input :guest_notes, as: :hidden, input_html: {value: @reservation_request.guest_notes}
 = f.input :delivery_type, as: :hidden
 - if @reservation_request.with_delivery?
-  = r.simple_fields_for :shipments do |s|
+  = f.simple_fields_for :shipments do |s|
     = s.simple_fields_for :shipping_address do |a|
       = a.input :user_id, as: :hidden, value: current_user.id
       = a.input :shippo_id, as: :hidden
