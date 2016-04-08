@@ -102,10 +102,13 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   def filter_error_messages(messages)
     pattern_listings_photos = /^Companies locations listings photos /
+    pattern_listings = /^Companies locations listings/
     # Transformation
     messages = messages.collect do |message|
       if message.to_s.match(pattern_listings_photos)
         message.to_s.gsub(pattern_listings_photos, '')
+      elsif message.to_s.match(pattern_listings)
+        message.to_s.gsub(pattern_listings, @transactable_type.translated_bookable_noun)
       else
         message
       end

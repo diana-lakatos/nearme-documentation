@@ -44,6 +44,9 @@ namespace :just_hala do
         show_categories: true,
         category_search_type: 'AND',
         bookable_noun: 'Ninja',
+        enable_photo_required: true,
+        min_hourly_price_cents: 50_00,
+        max_hourly_price_cents: 150_00,
         lessor: 'Ninja',
         lessee: 'Client',
         enable_reviews: true
@@ -52,7 +55,10 @@ namespace :just_hala do
       @service_type = @instance.service_types.create(
         name: 'Ninja',
         slug: 'ninja',
+        min_hourly_price_cents: 50_00,
+        max_hourly_price_cents: 150_00,
         action_free_booking: false,
+        enable_photo_required: true,
         show_path_format: '/:transactable_type_id/:id',
         action_hourly_booking: "1",
         action_daily_booking: false,
@@ -77,6 +83,7 @@ namespace :just_hala do
     reservation_components = @reservation_type.form_components.first || (Utils::FormComponentsCreator.new(@reservation_type).create! && @reservation_type.form_components.first)
     root_category = Category.where(name: 'Services').first_or_create!
     root_category.service_types = ServiceType.all
+    root_category.mandatory = true
     root_category.multiple_root_categories = true
     root_category.search_options = 'include'
     root_category.save!
@@ -214,7 +221,6 @@ namespace :just_hala do
      { "transactable" => "service_radius" },
      { "transactable" => "schedule" },
      { "transactable" => "price" },
-     { "transactable" => "currency" },
      { "transactable" => "photos" },
      { "transactable" => "Category - Services" },
      { "transactable" => "education" },
@@ -397,15 +403,6 @@ namespace :just_hala do
           <input {% if params['price']['max'] == '' %}checked{% endif %} data-list-view="1" name="price[max]" type="radio" value="">
           <span class="filter-label-text">
             Any rate
-          </span>
-        </label>
-      </li>
-      <li>
-        <label class="radio small-radio checked">
-          <span class="radio-icon-outer"><span class="radio-icon-inner"></span></span>
-          <input {% if params['price']['max'] == '30' %}checked{% endif %} data-list-view="1" name="price[max]" type="radio" value="30">
-          <span class="filter-label-text">
-            Below $30/hr
           </span>
         </label>
       </li>
@@ -1169,6 +1166,8 @@ namespace :just_hala do
     create_translation!('wish_lists.buttons.unselected_state', "Favorite")
 
     create_translation!('flash_messages.reservations.credit_card_will_be_charged', "Your credit card will be charged when mission is completed.")
+    create_translation!('flash_messages.space_wizard.space_listed', "Your ninja profile has been submitted to the marketplace for approval. Please watch for a message indicating that your profile has been approved, at which time you’ll be ready for Ninjunu tech missions!")
+
 
   end
 
@@ -1210,7 +1209,7 @@ namespace :just_hala do
 
                   <li>
                     <a href='/?section=how-it-works' class='nav-link' scroll-to-section>
-                      <span class='text'>How it works</span>
+                      <span class='text'>How It Works</span>
                     </a>
                   </li>
                 </ul>
@@ -1469,7 +1468,7 @@ namespace :just_hala do
 <section id='how-it-works' class='how-it-works'>
   <div class='container-fluid'>
     <div class='row-fluid'>
-      <h2>How it works</h2>
+      <h2>How It Works</h2>
     </div>
 
     <div class='row-fluid table-row'>
@@ -1525,7 +1524,7 @@ namespace :just_hala do
 <section class='what-is-ninjunu'>
   <div class='container-fluid'>
     <div class='row-fluid'>
-      <h2>What is Ninjunu</h2>
+      <h2>What is Ninjunu?</h2>
     </div>
 
     <div class='row-fluid'>
@@ -1552,7 +1551,7 @@ namespace :just_hala do
           <div class='image'><img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2207/training.png' /></div>
           <h3>Training</h3>
           <p>
-            You too can be a tech ninja!
+            You, too, can be a tech ninja!
           </p>
         </div>
       </div>
@@ -1571,7 +1570,7 @@ namespace :just_hala do
       <div class='span4 teaser'>
         <div class='teaser-content'>
           <div class='image'><img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2209/reviews.png' /></div>
-          <h3>Hosted Helpful Reviews</h3>
+          <h3>Helpful Reviews</h3>
           <p>
             Read reviews from your local community about ninjas serving your area
           </p>
@@ -1706,7 +1705,7 @@ namespace :just_hala do
       <div class="span2 contact">
         <h5>Contact</h5>
         <div class='phone'>TELEPHONE</div>
-        <span>1-888-NINJUNU<br>{{ platform_context.phone_number }}</span>
+        <span>{{ platform_context.phone_number }}</span>
         <div class='support'>SUPPORT</div>
         <a href='mailto:{{ platform_context.support_email }}'>{{ platform_context.support_email }}</a><br />
       </div>
