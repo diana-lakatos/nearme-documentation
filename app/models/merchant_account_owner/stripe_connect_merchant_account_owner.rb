@@ -11,8 +11,11 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
 
   def upload_document(stripe_account_id)
     if attributes['document'] || document.file.try(:path)
+      # If it's a SanitizedFile it's local, most likely not yet uploaded, and we use SanitizedFile#path instead
+      file_path = document.file.is_a?(CarrierWave::SanitizedFile) ? document.file.path : document.proper_file_path
+
       Stripe::FileUpload.create(
-        {purpose: 'identity_document', file: File.new(open(document.proper_file_path))},
+        {purpose: 'identity_document', file: File.new(open(file_path))},
         {stripe_account: stripe_account_id}
       )
     end
