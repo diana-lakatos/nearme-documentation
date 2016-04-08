@@ -15,6 +15,7 @@ class PaymentSubscription < ActiveRecord::Base
   belongs_to :payment_method
   belongs_to :payment_gateway
   belongs_to :credit_card, -> { with_deleted }
+  belongs_to :payer, class_name: 'User'
 
   attr_accessor :chosen_credit_card_id
 
@@ -22,8 +23,11 @@ class PaymentSubscription < ActiveRecord::Base
 
   validates_associated :credit_card
 
+  validates :payer, presence: true
+
   before_validation do |p|
-    self.credit_card_id ||= subscriber.instance_clients.find_by(payment_gateway: payment_gateway.id).credit_cards.find(p.chosen_credit_card_id).try(:id) if subscriber.respond_to?(:instance_clients) && p.chosen_credit_card_id.present? &&  p.chosen_credit_card_id != 'custom'
+    self.payer ||= subscriber.try(:owner)
+    self.credit_card_id ||= payer.instance_clients.find_by(payment_gateway: payment_gateway.id).try(:credit_cards).try(:find, p.chosen_credit_card_id).try(:id) if p.payment_method.try(:payment_method_type) == 'credit_card' && payer.respond_to?(:instance_clients) && p.chosen_credit_card_id.present? &&  p.chosen_credit_card_id != 'custom'
     true
   end
 
