@@ -457,7 +457,8 @@ module ApplicationHelper
     body_classes.join(" ")
   end
 
-  def image_for_followed(followed)
+  def image_for_event(event)
+    followed = event.event_source.is_a?(Photo) ? event.event_source : event.followed
     image = (followed.try(:image).presence || followed.try(:avatar)).try(:url, :medium)
     image.present? ? image : followed.try(:cover_photo).try(:image).try(:url, :medium)
   end
