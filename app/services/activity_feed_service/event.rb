@@ -59,9 +59,8 @@ class ActivityFeedService::Event
   end
 
   def user_added_photos_to_project
-    project = @event.event_source
-    whodunnit_id = project.try(:versions).try(:last).try(:whodunnit_id)
-    user_record = User.find(whodunnit_id) rescue project.creator
+    project = @event.followed
+    user_record = @event.event_source.creator rescue project.creator
     user = link_if_not_deleted(user_record, :secret_name)
     self.image = image_or_placeholder(user_record.avatar)
     self.text = I18n.t(@event.i18n_key, user: user, project: link_if_not_deleted(project, :name)).html_safe
