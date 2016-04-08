@@ -70,7 +70,7 @@
       %h3
         = t("dashboard.host_reservations.payment_state")
     .col-md-9{class: reservation.paid? ? 'info' : "warn" }
-      = reservation.payment.state.humanize.capitalize
+      = reservation.payment.try(:state).try(:humanize).try(:capitalize)
 
   .row
     .col-md-3

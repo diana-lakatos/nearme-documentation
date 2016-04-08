@@ -243,7 +243,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def date=(value)
-    periods.build :date => value
+    periods.build date: value
   end
 
   def first_period
@@ -547,7 +547,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def schedule_void
-    if payment.authorized?
+    if payment.try(:authorized?)
       PaymentVoidJob.perform(payment.id)
       DepositVoidJob.perform(deposit.payment.id) if deposit
     end

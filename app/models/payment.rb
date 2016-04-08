@@ -97,7 +97,7 @@ class Payment < ActiveRecord::Base
 
   before_validation do |p|
     self.payer ||= payable.try(:owner)
-    self.credit_card_id ||= payer.instance_clients.find_by(payment_gateway: payment_gateway.id).credit_cards.find(p.chosen_credit_card_id).try(:id) if p.chosen_credit_card_id.present? &&  p.chosen_credit_card_id != 'custom'
+    self.credit_card_id ||= payer.instance_clients.find_by(payment_gateway: payment_gateway.id).try(:credit_cards).try(:find, p.chosen_credit_card_id).try(:id) if p.payment_method.try(:payment_method_type) == 'credit_card' && p.chosen_credit_card_id.present? &&  p.chosen_credit_card_id != 'custom'
     true
   end
 

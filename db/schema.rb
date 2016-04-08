@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160405181952) do
+ActiveRecord::Schema.define(version: 20160408133906) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1162,8 +1162,8 @@ ActiveRecord::Schema.define(version: 20160405181952) do
     t.integer  "seller_attachments_documents_num",                                             default: 10,            null: false
     t.string   "priority_view_path"
     t.boolean  "enable_language_selector",                                                     default: false,         null: false
-    t.boolean  "click_to_call",                                                                default: false
     t.boolean  "enable_reply_button_on_host_reservations",                                     default: false
+    t.boolean  "click_to_call",                                                                default: false
     t.boolean  "split_registration",                                                           default: false
   end
 
@@ -1476,6 +1476,7 @@ ActiveRecord::Schema.define(version: 20160405181952) do
     t.string   "subscriber_type"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.integer  "payer_id"
   end
 
   add_index "payment_subscriptions", ["company_id"], name: "index_payment_subscriptions_on_company_id", using: :btree

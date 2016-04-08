@@ -1489,6 +1489,7 @@ class SecuredParams
     [
       :payment_method_id,
       :credit_card_id,
+      :chosen_credit_card_id,
       credit_card_attributes: nested(self.credit_card)
     ]
   end

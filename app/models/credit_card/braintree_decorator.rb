@@ -28,6 +28,10 @@ class CreditCard::BraintreeDecorator
     card.last_4
   end
 
+  def name
+    [response.params["braintree_customer"]["first_name"], response.params["braintree_customer"]["last_name"]].join(' ') rescue nil
+  end
+
   def card
     OpenStruct.new(response.params["braintree_customer"]["credit_cards"].first)
   end
