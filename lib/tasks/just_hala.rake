@@ -436,7 +436,7 @@ namespace :just_hala do
     <h3>
       Date
     </h3>
-    <input name="date_fake" type="text" data-jquery-datepicker value="{{ params['date'] | localize: 'day_month_year' }}" >
+    <input name="date_fake" type="text" data-jquery-datepicker value="{{ params['date'] | localize: 'day_month_year' }}" placeholder="Select date">
   </div>
 </div>
 
@@ -688,26 +688,6 @@ namespace :just_hala do
     </div>
   </article>
 </div>
-
-<script>
-  jQuery(function($)\{
-    var
-      el = $('#testimonials'),
-      wrap = $('#testimonials .carousel-inner');
-
-    el.carousel(\{
-      interval: false
-    \});
-
-    el.on('slide.bs.carousel', function(event)\{
-      wrap.animate(\{'height': $(event.relatedTarget).outerHeight() \}, 1000);
-    \});
-
-    el.on('slid.bs.carousel', function(event)\{
-      wrap.css(\{'height': 'auto'\});
-    \});
-  \});
-</script>
 },
       format: 'html',
       handler: 'liquid',
@@ -791,242 +771,24 @@ namespace :just_hala do
     ).first_or_initialize
 
     ch.update!({
-      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2297/just_hala_20160406a.css'>",
+      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2333/just_hala.css'>",
       inject_pages: ['any_page'],
       position: 'head_bottom'
     })
 
     ch = @instance.theme.content_holders.where(
-      name: 'just_hala_temp'
+      name: 'Just Hala JS'
     ).first_or_initialize
 
     ch.update!({
-      content: %Q(
-<style>
-.navbar-fixed-top, .sidebar, .navbar-primary .navbar-nav .open .dropdown-menu {
-  background-color: #1e2222;
-}
-.navbar-primary .navbar-nav > li {
-  border: none;
-
-}
-
-.navbar-default .navbar-nav > li > a, .navbar-default .navbar-nav .open .dropdown-menu > li > a {
-  color: #fff;
-  font-size: 16px;
-}
-
-.navbar-default .navbar-nav .open .dropdown-menu {
-  border: none;
-}
-
-.navbar-default .navbar-nav .dropdown-menu > li > a {
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
-.navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
-.navbar-default .navbar-nav .open .dropdown-menu > li > a:focus,
-.navbar-default .navbar-nav .open .dropdown-menu > li > a:active {
-  background: none;
-  color: #dadada;
-}
-
-.search #listing_search.list .list-map-toggle {
-  display: none;
-}
-.search #listing_search.list .geolocation-input {
-  width: 80%;
-  padding-left: 0;
-}
-
-@media \(max-width: 767px\) {
-  .search #listing_search.list .geolocation-input {
-    width: auto;
-  }
-}
-
-.testimonials .carousel-inner .item {
-  height: auto;
-}
-
-.listings-show #space header .data h1 {
-  margin: 0;
-  line-height: 1;
-}
-
-form:not\(.no_inheritance\) .control-group.check_boxes.reservation_request_properties_service_category {
-  overflow: visible;
-}
-
-form:not\(.no_inheritance\) .control-group.check_boxes.reservation_request_properties_service_category .controls {
-  overflow: visible;
-}
-
-form:not\(.no_inheritance\) .control-group.check_boxes.reservation_request_properties_service_category .tooltip {
-  min-width: 200px;
-}
-
-form:not\(.no_inheritance\) .control-group.check_boxes.reservation_request_properties_service_category .tooltip .tooltip-inner {
-  width: 100%;
-  max-width: none;
-}
-
-.support {
-  margin-top: 100px;
-  margin-bottom: 50px;
-}
-
-.support h2 {
-  margin: 0 0 20px;
-  font-size: 30px;
-  line-height: 1.4;
-}
-
-.support.detail .box .header h2 {
-  font-size: 20px;
-  margin-bottom: 0;
-}
-
-.support .tickets .ticket .question {
-  font-style: italic;
-  border-bottom: 1px solid #dadada;
-}
-
-.support .tickets .ticket .time {
-  font-size: 12px;
-  color: #ababab;
-}
-
-.support .tickets .ticket .time abbr {
-  font-size: 12px;
-  color: inherit;
-}
-
-.support .tickets .ticket .link .view,
-.support .view-all  {
-  font-size: 14px;
-  color: #fff;
-  background: #41bf8b;
-  border-radius: 5px;
-  padding: 3px 10px;
-  text-decoration: none !important;
-  display: inline-block;
-}
-
-.support .tickets .ticket .link .view:hover,
-.support .tickets .ticket .link .view:focus,
-.support .tickets .ticket .link .view:active,
-.support .view-all:hover,
-.support .view-all:focus,
-.support .view-all:active {
-  opacity: 0.9;
-}
-
-
-
-.support .view-all {
-  margin-top: 30px;
-  font-size: 22px;
-  line-height: 2.27em;
-  padding: 0 20px;
-}
-
-.support .view-all:hover,
-.support .view-all:focus,
-.support .view-all:active {
-  opacity: 0.9;
-}
-
-
-
-
-.support.detail .btn.upload-attachment {
-  background: #41bf8b  !important;
-}
-
-.support.detail .form {
-  margin-bottom: 0;
-}
-
-.category-multiple-choice {
-  overflow: visible;
-  margin-top: 30px;
-}
-
-.category-multiple-choice:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.category-multiple-choice label {
-  display: block;
-  width: 100%;
-  overflow: visible;
-}
-
-.category-multiple-choice .icon {
-  display: block;
-  position: relative;
-  width: 100%;
-  padding-top: 100%;
-  background: #fff;
-  border-radius: 100%;
-}
-
-.category-multiple-choice svg {
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-}
-
-.category-multiple-choice path {
-  fill: #3a3a3c;
-}
-
-
-
-@media \(min-width: 960px\) {
-  .category-multiple-choice input + label:hover path {
-    fill: #e54a3b;
-  }
-}
-
-.category-multiple-choice input:checked + label path,
-.category-multiple-choice input:checked + label:hover path {
-  fill: #23b6b0;
-}
-
-.category-multiple-choice input:checked + label .icon:before {
-  position: absolute;
-  right: 0;
-  top: -20.5%;
-  width: 41%;
-  height: 41%;
-  content: "";
-  background: #23b6b0 url\(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+IDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0zMi43LDE0LjhjLTAuNC0wLjQtMC44LTAuNi0xLjQtMC42Yy0wLjUsMC0xLDAuMi0xLjQsMC42bC05LjgsOS44bC00LjMtNC4zYy0wLjQtMC40LTAuOC0wLjYtMS40LTAuNiBjLTAuNSwwLTEsMC4yLTEuNCwwLjZMMTEuNiwyMmMtMC43LDAuNy0wLjcsMiwwLDIuN2w3LjIsNy4yYzAuNCwwLjQsMC44LDAuNiwxLjQsMC42YzAuNSwwLDEtMC4yLDEuNC0wLjZsMTIuOC0xMi44IGMwLjQtMC40LDAuNi0wLjgsMC42LTEuNGMwLTAuNS0wLjItMS0wLjYtMS40TDMyLjcsMTQuOHoiLz4gPC9zdmc+\) 50% 50% no-repeat;
-  background-size: 100%;
-  border-radius: 100%;
-}
-
-@media \(max-width: 767px\) {
-  .category-multiple-choice {
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-  .category-multiple-choice .category-name {
-    display: none;
-  }
-}
-
-</style>
-      ),
+      content: "<script src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2330/just_hala.js'></script>",
       inject_pages: ['any_page'],
-      position: 'head_bottom'
+      position: 'body_bottom'
     })
+
+    @instance.theme.content_holders.where(
+      name: 'just_hala_temp'
+    ).first.try(:destroy)
   end
 
   def set_theme_options
@@ -1062,7 +824,7 @@ form:not\(.no_inheritance\) .control-group.check_boxes.reservation_request_prope
 </ul>
 <p>Lorem ipsum dolor sit amet enim. Etiam ullamcorper. Suspendisse a pellentesque dui, non felis. Maecenas malesuada elit lectus felis, malesuada ultricies. Curabitur et ligula. Ut molestie a, ultricies porta urna. Vestibulum commodo volutpat a, convallis ac, laoreet enim. Phasellus fermentum in, dolor. <strong>Pellentesque facilisis. Nulla imperdiet sit amet magna.</strong> Vestibulum dapibus, mauris nec malesuada fames ac turpis velit, rhoncus eu, luctus et interdum adipiscing wisi. </p>
 }
-      page.remote_hero_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2294/header_slide2.png'
+      page.remote_hero_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2307/home_slide2.jpg'
       page.save!
     end
 
@@ -1447,7 +1209,7 @@ form:not\(.no_inheritance\) .control-group.check_boxes.reservation_request_prope
                   </li>
 
                   <li>
-                    <a href='#how-it-works' class='nav-link' scroll-to-section>
+                    <a href='/?section=how-it-works' class='nav-link' scroll-to-section>
                       <span class='text'>How it works</span>
                     </a>
                   </li>
@@ -1477,35 +1239,14 @@ form:not\(.no_inheritance\) .control-group.check_boxes.reservation_request_prope
     iv.update!({
       transactable_types: ServiceType.all,
       body: %Q{
-<div class='carousel slide'>
+<div class='homepage-carousel carousel slide'>
   <div class='carousel-inner' role='listbox'>
-    <div class='item active' data-slogan='Tech-savvy, anywhere, anytime' style='background-image: url(https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2293/header_slide1.png)'>
-    </div>
-    <div class='item' data-slogan='IT support for small business' style='background-image: url(https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2294/header_slide2.png)'>
-    </div>
-    <div class='item' data-slogan='Technology for all generations' style='background-image: url(https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2295/header_slide3.png)'>
-    </div>
-    <div class='item' data-slogan='Technology for the people' style='background-image: url(https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2296/header_slide4.png)'>
-    </div>
+    <div class='item active slide-01' data-slogan='Tech-savvy, anywhere, anytime'></div>
+    <div class='item slide-02' data-slogan='IT support for small business'></div>
+    <div class='item slide-03' data-slogan='Technology for all generations'></div>
+    <div class='item slide-04' data-slogan='Technology for the people'></div>
   </div>
 </div>
-
-<script>
-  $(function() {
-    var $carousel = $('.carousel'),
-        $slogan = $('.slogan');
-
-    $carousel
-      .carousel({ interval: 6000 })
-      .on('slid', function(a, b,c) {
-        var currentSlide = $('.active', $carousel);
-
-        $slogan.fadeOut(function() {
-          $slogan.text(currentSlide.data('slogan')).fadeIn();
-        })
-      })
-  })
-</script>
       },
       format: 'html',
       handler: 'liquid',
@@ -1734,7 +1475,7 @@ form:not\(.no_inheritance\) .control-group.check_boxes.reservation_request_prope
     <div class='row-fluid table-row'>
       <div class='teaser-wrapper table-cell'>
         <div class='span4 teaser'>
-          <img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2201/meet_local_tech_ninjas.png' />
+          <img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2322/callout-01.jpg' />
 
           <div class='teaser-content'>
             <div class='image'><img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2211/icon_ninjas.png' /></div>
@@ -1748,7 +1489,7 @@ form:not\(.no_inheritance\) .control-group.check_boxes.reservation_request_prope
 
       <div class='teaser-wrapper table-cell'>
         <div class='span4 teaser'>
-          <img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2202/tech_experts_find_works.png' />
+          <img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2323/callout-02.jpg' />
           <div class='teaser-content'>
             <div class='image'><img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2212/icon_work.png' /></div>
             <h3>Tech Experts Find Work</h3>
@@ -1761,7 +1502,7 @@ form:not\(.no_inheritance\) .control-group.check_boxes.reservation_request_prope
 
       <div class='teaser-wrapper table-cell'>
         <div class='span4 teaser'>
-          <img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2203/expert_solutions.png' />
+          <img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2324/callout-03.jpg' />
           <div class='teaser-content'>
             <div class='image'><img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2214/icon_solutions.png' /></div>
             <h3>Expert Solutions</h3>
@@ -1865,7 +1606,7 @@ form:not\(.no_inheritance\) .control-group.check_boxes.reservation_request_prope
         <div class='teaser'>
 
           <div class='teaser-content'>
-            <img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2215/sam_benning.png' />
+            <img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2332/sam-benning.jpg' alt="Sam Benning">
             <p>
               A a small business owner, Ninjunu was able to provide me quick tech solutions to keep my business running. Quick and convenient!!!
             </p>
@@ -1879,7 +1620,7 @@ form:not\(.no_inheritance\) .control-group.check_boxes.reservation_request_prope
       <div class='teaser-wrapper table-cell'>
         <div class='teaser'>
           <div class='teaser-content'>
-            <img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2216/kara_jones.png' />
+            <img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2331/kara-jones.jpg' alt="Kara Jones">
             <p>
               I'm great at running my Cafe, but when it comes to internet, networking and computers, I need help. Ninjunu saved the day!
             </p>
@@ -1893,7 +1634,7 @@ form:not\(.no_inheritance\) .control-group.check_boxes.reservation_request_prope
       <div class='teaser-wrapper table-cell'>
         <div class='teaser'>
           <div class='teaser-content'>
-            <img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2217/chris_ronell.png' />
+            <img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2327/chris-ronell.jpg' alt="Chris Ronell">
             <p>
               I use my mobile phone for everything I do. I found a ninja online and they fixed and backed up my phone right away. This service is priceless :)
             </p>
@@ -2165,7 +1906,7 @@ form:not\(.no_inheritance\) .control-group.check_boxes.reservation_request_prope
   {% for i in (1..stars) %}
     <img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2277/star_on.png' />
   {% endfor %}
-  {% for i in (stars...max_rating) %}
+  {% for i in (stars..4) %}
     <img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2278/star_off.png' />
   {% endfor %}
 </span>
