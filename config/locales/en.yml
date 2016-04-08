@@ -2079,6 +2079,8 @@ en:
     results: 'results'
     per_page: 'per page'
     update_map: 'Update search when map moved'
+    service_type: "Service Type"
+    service_types: "Service Types"
 
     date_range:
       title: 'Date range'
