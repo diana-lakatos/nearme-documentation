@@ -8,7 +8,9 @@
 {% if listing.exclusive_price_available? %}
   <div class="exclusive-price {% if listing.only_exclusive_price_available? %}hidden{%endif %}">
     {{ 'reservations.booking_module.exclusive_price' | translate }}
-    <input class="pull-right" name="exclusive_price" type="checkbox" value="1" data-force-check="{% if listing.only_exclusive_price_available? %}1{% else %}0{% endif %}">
+    <span class="checkbox pull-right">
+      <input class="pull-right" name="exclusive_price" type="checkbox" value="1" data-force-check="{% if listing.only_exclusive_price_available? %}1{% else %}0{% endif %}">
+    </span>
     <div class="price"><span>{{ listing.currency | currency_content_tag: listing.exclusive_price, 'span',rel: false }}</span></div>
   </div>
   <div data-exclusive-price-content="true" style="display: none;">
