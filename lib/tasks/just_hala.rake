@@ -1168,7 +1168,8 @@ namespace :just_hala do
     create_translation!('flash_messages.reservations.credit_card_will_be_charged', "Your credit card will be charged when mission is completed.")
     create_translation!('flash_messages.space_wizard.space_listed', "Your ninja profile has been submitted to the marketplace for approval. Please watch for a message indicating that your profile has been approved, at which time you’ll be ready for Ninjunu tech missions!")
 
-
+    create_translation!('flash_messages.dashboard.locations.add_your_company', "Please complete your Ninja Profile first.")
+    create_translation!('flash_messages.dashboard.add_your_company', "Please complete your Ninja Profile first.")
   end
 
   # Liquid view: Layouts > Theme Header
