@@ -2,7 +2,9 @@
 
 <p>We were unable to charge your credit card for subscription of '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>'</p>
 
-<p>Please check your credit card we'll retry operation tomorrow.</p>
+<p>Please update your payment information.</p>
+
+<a class="btn" href="{{ recurring_booking.guest_show_url }}">Update payment information</a>
 
 <p>Amount: {{ recurring_booking.last_unpaid_amount }}</p>
 

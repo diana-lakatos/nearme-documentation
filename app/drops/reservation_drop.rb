@@ -116,7 +116,7 @@ class ReservationDrop < BaseDrop
     else
       'upcoming_dashboard_user_reservations_url'
     end
-    routes.send(path, anchor: "reservation_#{@reservation.id}", host: PlatformContext.current.decorate.host, token_key => @reservation.listing.creator.temporary_token )
+    routes.send(path, anchor: "reservation_#{@reservation.id}", host: PlatformContext.current.decorate.host, token_key => @reservation.owner.temporary_token )
   end
 
   # url to the dashboard area for managing own reservations
