@@ -658,6 +658,27 @@ namespace :just_hala do
               </div>
             {% endfor %}
           </div>
+
+          <br />
+
+          {% if listing.availability_exceptions != blank %}
+            <h2>Except:</h2>
+
+            <div class="availability-detailed-container">
+              {% for exception in listing.availability_exceptions %}
+                <div class='week-day'>
+                  <strong>
+                    {{ exception.label }}:
+                  </strong>
+
+                   <span>
+                    <span>{{ exception.period }}</span>
+                  </span>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
         </div>
 
         {% if listing.properties.education != blank %}

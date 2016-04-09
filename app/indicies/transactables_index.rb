@@ -61,6 +61,7 @@ module TransactablesIndex
         indexes :opened_on_days, type: 'integer'
 
         indexes :availability, type: 'date'
+        indexes :availability_exceptions, type: 'date'
         indexes :draft, type: 'date'
         indexes :created_at, type: 'date'
       end
@@ -88,6 +89,7 @@ module TransactablesIndex
         monthly_price_cents: self.monthly_price_cents.to_i,
         categories: self.categories.pluck(:id),
         availability: self.schedule_availability,
+        availability_exceptions: self.availability_exceptions.map(&:all_dates).flatten,
         action_monthly_booking: !self.monthly_price_cents.to_i.zero?,
         action_weekly_booking: !self.weekly_price_cents.to_i.zero?,
         all_prices: self.all_prices,

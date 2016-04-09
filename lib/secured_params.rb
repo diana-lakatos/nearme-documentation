@@ -583,7 +583,9 @@ class SecuredParams
       :transactable_type,
       :name, :description,
       :availability_rules,
-      :availability_rules_attributes => nested(self.availability_rule)
+      availability_rules_attributes: nested(self.availability_rule),
+      schedule_exception_rules_attributes: nested(self.schedule_exception_rule)
+
     ]
   end
 
