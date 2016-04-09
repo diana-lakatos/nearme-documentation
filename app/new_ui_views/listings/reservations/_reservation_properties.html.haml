@@ -1,0 +1,42 @@
+= f.simple_fields_for :owner, f.object.owner do |user|
+  = f.simple_fields_for :properties, f.object.properties do |properties_form|
+    - if f.object.reservation_type
+      - custom_attribute_names = f.object.reservation_type.custom_attributes.collect { |custom_attribute| custom_attribute.name }
+      - f.object.reservation_type.form_components.each_with_index do |form_component, index|
+        - form_component.form_fields.each do |form_field|
+
+          - model = form_field.keys.first
+          - field = form_field[model]
+          - if model == 'user'
+            - if user.object.field_blank_or_changed?(field)
+              = render :partial => 'registrations/attributes', :locals => { f: user, only_inputs: [field.to_sym], country: @country}
+          - if model == 'buyer'
+            = user.simple_fields_for :buyer_profile, user.object.get_buyer_profile do |buyer_profile_form|
+              = buyer_profile_form.simple_fields_for :properties, user.object.buyer_profile.properties do |buyer_properties_form|
+                - if (category = buyer_profile_form.object.instance_profile_type.try(:categories).try(:roots).try(:detect) { |c| "Category - #{c.name}".to_sym == field.to_sym}).present?
+                  - if buyer_profile_form.object.category_blank_or_changed?(category)
+                    %div{"data-categories-controller": true}
+                      = render partial: 'shared/category_old_bootstrap', locals: { category: category, f: buyer_profile_form, categorizable: buyer_profile_form.object.instance_profile_type }
+                - else
+                  - if buyer_profile_form.object.field_blank_or_changed?(field)
+                    - buyer_profile_form.object.instance_profile_type.try(:custom_attributes).try(:each) do |attribute|
+                      = draw_attribute_for_form(attribute, buyer_properties_form) if field.to_sym == attribute.name.to_sym
+          - if model == 'reservation'
+            - if (category = f.object.reservation_type.try(:categories).try(:roots).try(:detect) { |c| "Category - #{c.name}".to_sym == field.to_sym}).present?
+              %div{"data-categories-controller": true}
+                = render partial: 'shared/category_old_bootstrap', locals: { category: category, f: f, categorizable: f.object.reservation_type }
+            - if field.to_sym == :address
+              = f.simple_fields_for :address, f.object.form_address(cookies[:last_search]) do |address_form|
+                = render :partial => 'addresses/form', :locals => { :f => address_form, label: t('simple_form.labels.reservations.address') }
+            - if field.to_sym == :dates
+              .small-inputs{data: {'reservation-dates-controller' => @reservation.listing.skip_payment_authorization?, 'validator-url': detect_overlapping_listing_reservations_path(@listing) }}
+                = f.input :dates_fake, input_html: {class: 'jquery-datepicker', data: { open_on_days: f.object.listing.opened_on_days, days_with_ranges: f.object.listing.availability.days_with_ranges }}, required: true, label: t('simple_form.labels.reservations.dates')
+                = f.input :dates, as: :hidden
+                = f.input :start_time, as: :select, collection: availability_time_options, required: true,  label: t('simple_form.labels.reservations.start_time')
+            - elsif custom_attribute_names.include?(field)
+              - if field == 'service_category'
+                = draw_attribute_for_form(f.object.reservation_type.custom_attributes.find_by(name: field), properties_form, false, disabled: get_disabled_categories(f.object.listing) , checked: f.object.properties[:service_category].presence || get_categories_from_search)
+              - else
+                = draw_attribute_for_form(f.object.reservation_type.custom_attributes.find_by(name: field), properties_form, false)
+            - elsif f.object.reservation.attributes.include?(field)
+              = f.input field

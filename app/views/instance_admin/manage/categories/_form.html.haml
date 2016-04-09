@@ -29,6 +29,10 @@
       .row
         .input-container.col-xs-12
           = f.association :offer_types
+    - if ReservationType.count > 0
+      .row
+        .input-container.col-xs-12
+          = f.association :reservation_types
     .row
       .input-container.col-xs-12
         = f.association :instance_profile_types

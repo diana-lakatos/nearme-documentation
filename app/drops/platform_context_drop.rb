@@ -8,10 +8,6 @@ class PlatformContextDrop < BaseDrop
   #   name of representing the bookable object transactable on the marketplace as a string
   # pages
   #   array of pages created for this marketplace by the marketplace admin
-  # blog_url
-  #   url to the blog for this marketplace
-  # twitter_url
-  #   the twitter address for this marketplace
   # lessor
   #   name of the person which offers the service
   # lessors
@@ -24,14 +20,24 @@ class PlatformContextDrop < BaseDrop
   #   type of search for this marketplace as set by the marketplace admin from the marketplace administration interface
   # search_by_keyword_placeholder
   #   placeholder text for searching by keyword; usually is "Search by keyword" unless a translation key has been added for this string by the marketplace admin
-  # facebook_url
-  #   url for the Facebook page of this marketplace
   # address
   #   address of the company operating the marketplace as a string
   # phone_number
   #   phone_number of the company operating the marketplace as a string
+  # blog_url
+  #   url to the blog for this marketplace
+  # facebook_url
+  #   url for the Facebook page of this marketplace
+  # twitter_url
+  #   the twitter address for this marketplace
   # gplus_url
   #   url to the Google Plus page of the marketplace
+  # instagram_url
+  #   url for the Instagram page of this marketplace
+  # youtube_url
+  #   url for the Youtube page of this marketplace
+  # rss_url
+  #   url for the RSS page of this marketplace
   # site_name
   #   name of the marketplace
   # support_url
@@ -80,8 +86,9 @@ class PlatformContextDrop < BaseDrop
   #   Whether seller attachments are enabled or not
   # wish_lists_enabled?
   #   Whether wish lists is enabled or not
-  delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :twitter_url, :lessor, :lessors, :lessee, :lessees,
-    :search_by_keyword_placeholder, :facebook_url, :address, :phone_number, :gplus_url,
+  delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :facebook_url, :twitter_url, :gplus_url,
+    :instagram_url, :youtube_url, :rss_url, :lessor, :lessors,
+    :lessee, :lessees, :search_by_keyword_placeholder, :address, :phone_number,
     :site_name, :support_url, :support_email, :logo_image, :hero_image, :tagline, :homepage_content,
     :is_company_theme?, :call_to_action, :latest_products, :buyable?, :bookable?, :transactable_types, :product_types,
     :bookable_nouns, :bookable_nouns_plural, :search_input_name, :service_types, :facebook_key,

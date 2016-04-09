@@ -11,7 +11,7 @@
     %li.panel.panel-info
       %div.panel-heading
         = fields_builder.get_label(object_field_pair)
-        %span= check_box_tag "#{f.object_name}[form_fields][]", "#{object}=>#{field}", fields_builder.object_field_pairs.include?(object_field_pair)
+        %span= check_box_tag "#{f.object_name}[form_fields][]", "#{object}=>#{field}", f.object.form_fields.include?(object_field_pair)
         - if field == 'price' && all_fields.find { |pair| pair.keys.first == object && pair[pair.keys.first] == 'schedule' }
           \/
           = fields_builder.get_label(object => 'schedule')

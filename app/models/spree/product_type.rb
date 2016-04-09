@@ -6,7 +6,7 @@ class Spree::ProductType < TransactableType
 
   belongs_to :user
 
-  def wizard_path
+  def wizard_path(options = {})
     "/product_types/#{id}/product_wizard/new"
   end
 

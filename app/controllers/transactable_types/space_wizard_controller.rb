@@ -44,6 +44,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       wizard_params_listing = wizard_params[:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]
       wizard_params_listing.delete(:schedule_attributes)
       wizard_params_listing.delete(:approval_requests_attributes)
+      wizard_params_listing.delete(:customizations_attributes)
       @user.companies.first.try(:locations).try(:first).try(:listings).try(:first).try(:assign_attributes, wizard_params_listing)
     rescue
       # listing attributes not present in the form, we ignore the error
@@ -69,7 +70,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       flash[:success] = t('flash_messages.space_wizard.draft_saved')
       redirect_to transactable_type_space_wizard_list_path(@transactable_type)
     elsif @user.save
-      @user.listings.first.schedule.try(:create_schedule_from_schedule_rules) if PlatformContext.current.instance.priority_view_path == 'new_ui'
+      @user.listings.first.schedule.try(:create_schedule_from_schedule_rules) if current_instance.new_ui?
       @user.companies.first.update_metadata({draft_at: nil, completed_at: Time.now})
       track_new_space_event
       track_new_company_event
@@ -101,10 +102,13 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   def filter_error_messages(messages)
     pattern_listings_photos = /^Companies locations listings photos /
+    pattern_listings = /^Companies locations listings/
     # Transformation
     messages = messages.collect do |message|
       if message.to_s.match(pattern_listings_photos)
         message.to_s.gsub(pattern_listings_photos, '')
+      elsif message.to_s.match(pattern_listings)
+        message.to_s.gsub(pattern_listings, @transactable_type.translated_bookable_noun)
       else
         message
       end

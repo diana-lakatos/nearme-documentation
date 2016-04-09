@@ -1,5 +1,5 @@
 - if @searcher.result_count > 0
-  %section#results.list
+  %section#results.list.clearfix
     - @searcher.results.each do |result|
       - if result.is_a?(User)
         = render partial: 'search/list/user', locals: { user: result, current_user: current_user, user_has_firends: current_user.try(:has_friends) }

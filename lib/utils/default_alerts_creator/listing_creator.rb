@@ -8,6 +8,7 @@ class Utils::DefaultAlertsCreator::ListingCreator < Utils::DefaultAlertsCreator:
     create_approved_email!
     create_rejected_email!
     create_questioned_email!
+    create_inappropriated_email!
   end
 
   def create_listing_created_email!
@@ -36,6 +37,10 @@ class Utils::DefaultAlertsCreator::ListingCreator < Utils::DefaultAlertsCreator:
 
   def create_questioned_email!
     create_alert!({associated_class: WorkflowStep::ListingWorkflow::Questioned, name: 'listing_questioned_email', path: 'vendor_approval_mailer/notify_host_of_listing_questioned', subject: "{{ listing.name }} is being reviewed!", alert_type: 'email', recipient_type: 'lister', delay: 0})
+  end
+
+  def create_inappropriated_email!
+    create_alert!({associated_class: WorkflowStep::ListingWorkflow::InappropriateReported, name: 'listing_inappropriate_reported_email', path: 'inappropriate_reports_mailer/inappropriate_report', subject: "{{ listing.name }} has been flagged as inappropriate!", alert_type: 'email', recipient_type: 'Administrator', delay: 0})
   end
 
   protected

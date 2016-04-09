@@ -12,12 +12,12 @@ class GuestListTest < ActiveSupport::TestCase
       @confirmed_reservation =  create(:future_reservation, listing: @listings, state: :confirmed)
 
       @archived_reservations = []
-      travel_to(7.days.ago) { @archived_reservations << create(:reservation, listing: @listings, state: :cancelled_by_guest) }
-      travel_to(8.days.ago) { @archived_reservations << create(:reservation, listing: @listings, state: :cancelled_by_host) }
-      travel_to(9.days.ago) { @archived_reservations << create(:reservation, listing: @listings, state: :rejected) }
+      travel_to(7.days.ago) { @archived_reservations << create(:reservation, listing: @listings, archived_at: Time.zone.now, state: :cancelled_by_guest) }
+      travel_to(8.days.ago) { @archived_reservations << create(:reservation, listing: @listings, archived_at: Time.zone.now, state: :cancelled_by_host) }
+      travel_to(9.days.ago) { @archived_reservations << create(:reservation, listing: @listings, archived_at: Time.zone.now, state: :rejected) }
 
       (10..12).each do |i|
-        travel_to(i.days.ago) { @archived_reservations << create(:reservation, listing: @listings, state: :confirmed) }
+        travel_to(i.days.ago) { @archived_reservations << create(:reservation, listing: @listings, archived_at: Time.zone.now, state: :confirmed) }
       end
 
       @guest_list = Controller::GuestList.new(@user)

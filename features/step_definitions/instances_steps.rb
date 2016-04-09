@@ -29,3 +29,7 @@ end
 Then(/^I should have blog instance created$/) do
   BlogInstance.last.name.should == 'Test instance Blog'
 end
+
+When /^new ui is turned on$/ do
+  PlatformContext.current.instance.update! priority_view_path: 'new_ui'
+end

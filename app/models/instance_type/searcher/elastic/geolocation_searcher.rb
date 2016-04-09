@@ -28,13 +28,14 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
 
         geo_searcher_params = initialize_search_params
         if located || adjust_to_map
-          radius = @transactable_type.search_radius.to_i
-          radius = search.radius.to_i if radius.zero?
-          lat, lng = search.midpoint.nil? ? [0.0, 0.0] : search.midpoint.map(&:to_s)
-          if search.country.present? && search.city.blank? || global_map
+          if adjust_to_map || search.country.present? && search.city.blank?
             @search_params.merge!({
-              bounding_box: search.bounding_box
-            })
+                bounding_box: search.bounding_box
+              })
+          elsif located
+            radius = @transactable_type.search_radius.to_i
+            radius = search.radius.to_i if radius.zero?
+            lat, lng = search.midpoint.nil? ? [0.0, 0.0] : search.midpoint.map(&:to_s)
           end
           Transactable.geo_search(geo_searcher_params.merge(@search_params).merge({distance: "#{radius}km", lat: lat, lon: lng}), @transactable_type)
         else
@@ -78,7 +79,7 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
   end
 
   def availability_filter?
-    @filters[:availability] && @filters[:availability][:dates] && @filters[:availability][:dates][:start].present? && @filters[:availability][:dates][:end].present? && @filters[:date_range].first && @filters[:date_range].last
+    (@filters[:availability] && @filters[:availability][:dates] && @filters[:availability][:dates][:start].present? && @filters[:availability][:dates][:end].present?) || @filters[:date_range].first && @filters[:date_range].last
   end
 
   def relative_availability?
@@ -89,29 +90,15 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
     if availability_filter?
       if relative_availability?
         listings_scope = listings_scope.not_booked_relative(@filters[:date_range].first, @filters[:date_range].last)
-        listings_scope = listings_scope.only_opened_on_at_least_one_of(date_range_to_days)
       else
         listings_scope = listings_scope.not_booked_absolute(@filters[:date_range].first, @filters[:date_range].last)
-        listings_scope = listings_scope.only_opened_on_all_of(date_range_to_days)
       end
-      listings_scope = listings_scope.overlaps_schedule_start_date(@filters[:date_range].first)
     end
     listings_scope
   end
 
   def postgres_filters?
-    availability_filter? || price_filter?
-  end
-
-  def price_filter?
-    @params[:price] && !@params[:price][:max].to_i.zero?
-  end
-
-  def price_filter(listings_scope)
-    if price_filter?
-      listings_scope = listings_scope.where('transactables.fixed_price_cents >= ? AND transactables.fixed_price_cents <= ?', @params[:price][:min].to_i * 100, @params[:price][:max].to_i * 100)
-    end
-    listings_scope
+    availability_filter?
   end
 
   def paginated_results(page, per_page)

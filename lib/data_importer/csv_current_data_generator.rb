@@ -62,7 +62,7 @@ class DataImporter::CsvCurrentDataGenerator < DataImporter::File
                       elsif object == 'company' && model.present? && field == 'company_industries_list'
                         model.industries.map { |c| c.name }.join(',')
                       else
-                        model.try(:send, field)
+                        model.try(:send, field) if model.respond_to?(field)
                       end
         end
       end

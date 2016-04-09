@@ -96,11 +96,16 @@ p.notice,
 div.pnotice {
   margin: .5em 0;
   color: #505050;
-  font-weight: 600px;
+  font-weight: 600;
   font-size: 12px;
   filter: inherit;
   opacity: .7;
   transition: all .1s ease-in;
+
+  label {
+    display: block;
+    line-height: 1.6;
+  }
 
   &:hover {
     opacity: 1;

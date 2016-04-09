@@ -86,9 +86,7 @@ FactoryGirl.define do
         end
 
         factory :reviewable_order do
-          after(:create) do |order|
-            order.update_columns(shipment_state: 'shipped', payment_state: 'paid', approved_at: Time.zone.now)
-          end
+          archived_at { Time.zone.now }
         end
       end
     end

@@ -1,6 +1,7 @@
 class Reservation < ActiveRecord::Base
 
   include Chargeable
+  include Categorizable
 
   class NotFound < ActiveRecord::RecordNotFound; end
   class InvalidPaymentState < StandardError; end
@@ -10,10 +11,14 @@ class Reservation < ActiveRecord::Base
   scoped_to_platform_context
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id], :listing)
 
+  has_custom_attributes target_type: 'ReservationType', target_id: :reservation_type_id
+
+  attr_accessor :force_recalculate_fees
+
   belongs_to :administrator, -> { with_deleted }, class_name: "User"
   belongs_to :company, -> { with_deleted }
   belongs_to :creator, -> { with_deleted }, class_name: "User"
-  belongs_to :credit_card
+  belongs_to :credit_card, -> { with_deleted }
   belongs_to :instance
   belongs_to :listing, -> { with_deleted }, class_name: 'Transactable', foreign_key: 'transactable_id'
   belongs_to :owner, -> { with_deleted }, :class_name => "User", counter_cache: true
@@ -24,6 +29,7 @@ class Reservation < ActiveRecord::Base
   has_one :billing_authorization, as: :reference
   has_one :dimensions_template, as: :entity
   has_one :payment, as: :payable
+  has_one :address, class_name: 'Address', as: :entity
   has_one :deposit, as: :target
 
   has_many :user_messages, as: :thread_context
@@ -35,8 +41,11 @@ class Reservation < ActiveRecord::Base
   has_many :reviews, as: :reviewable
 
   accepts_nested_attributes_for :payment_documents
-  accepts_nested_attributes_for :additional_charges
+  accepts_nested_attributes_for :additional_charges, allow_destroy: true
   accepts_nested_attributes_for :shipments
+  accepts_nested_attributes_for :owner
+  accepts_nested_attributes_for :address
+  accepts_nested_attributes_for :periods, allow_destroy: true
 
   validates :listing, :presence => true
   # the if statement for periods is needed to make .recover work - otherwise reservation would be considered not valid even though it is
@@ -51,30 +60,33 @@ class Reservation < ActiveRecord::Base
 
   before_validation :set_minimum_booking_minutes, on: :create, if: lambda { listing }
   before_validation :set_currency, on: :create, if: lambda { listing }
+  before_create :set_unit_price, if: lambda { listing }
   before_save :set_start_and_end
 
   before_create :store_platform_context_detail
   after_create :create_waiver_agreements
   after_create :copy_dimensions_template
-  after_save :verify_authorization!
+  after_save :try_to_activate!
 
   alias_method :seller_type_review_receiver, :creator
   alias_method :buyer_type_review_receiver, :owner
 
-  delegate :location, :show_company_name, :transactable_type_id, :transactable_type, :billing_authorizations, to: :listing
+  delegate :location, :skip_payment_authorization?, :show_company_name, :transactable_type_id, :transactable_type, :billing_authorizations, to: :listing
   delegate :administrator=, to: :location
   delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :listing, allow_nil: true
   delegate :remote_payment?, :manual_payment?, :active_merchant_payment?, :paid?, to: :payment, allow_nil: true
 
   monetize :successful_payment_amount_cents, with_model_currency: :currency
   monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true
+  monetize :unit_price_cents, with_model_currency: :currency, allow_nil: true
 
   state_machine :state, initial: :inactive do
 
     after_transition inactive: :unconfirmed, do: :activate_reservation!
     after_transition unconfirmed: :confirmed, do: :set_confirmed_at
-    after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:set_cancelled_at, :schedule_refund]
-    after_transition unconfirmed: [:cancelled_by_guest, :expired, :rejected], do: [:schedule_void], if: lambda { |r| r.payment.authorized? }
+    after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:mark_as_archived!, :set_cancelled_at, :schedule_refund]
+    after_transition unconfirmed: [:cancelled_by_host], do: [:mark_as_archived!]
+    after_transition unconfirmed: [:cancelled_by_guest, :expired, :rejected], do: [:mark_as_archived!, :schedule_void]
 
     event :activate                 do transition inactive: :unconfirmed; end
     event :confirm                  do transition unconfirmed: :confirmed; end
@@ -84,6 +96,7 @@ class Reservation < ActiveRecord::Base
     event :expire                   do transition unconfirmed: :expired; end
   end
 
+  scope :reviewable, -> { where.not(archived_at: nil).confirmed }
   scope :active, -> { without_state(:inactive) }
   scope :cancelled, -> { with_state(:cancelled_by_guest, :cancelled_by_host) }
   scope :confirmed, -> { with_state(:confirmed)}
@@ -96,7 +109,7 @@ class Reservation < ActiveRecord::Base
   scope :past, -> { where("ends_at < ?", Time.current)}
   scope :rejected, -> { with_state(:rejected) }
   scope :unconfirmed, -> { with_state(:unconfirmed) }
-  scope :upcoming, -> { where("ends_at >= ?", Time.current)}
+  scope :upcoming, -> { not_archived }
   scope :visible, -> { without_state(:cancelled_by_guest, :cancelled_by_host, :inactive).upcoming }
   scope :with_listing, -> { where.not(transactable_id: nil) }
 
@@ -107,24 +120,20 @@ class Reservation < ActiveRecord::Base
     uniq
   }
 
-  scope :not_archived, -> {
-    upcoming.without_state(:cancelled_by_guest, :cancelled_by_host, :rejected, :expired, :inactive).uniq
-  }
+  scope :not_archived, -> { where(archived_at: nil) }
 
   scope :cancelled_or_expired_or_rejected, -> {
     with_state(:cancelled_by_guest, :cancelled_by_host, :rejected, :expired)
   }
 
-  scope :archived, -> {
-    where('reservations.ends_at < ? OR reservations.state IN (?)', Time.current, ['rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest'])
-  }
+  scope :archived, -> { where('archived_at IS NOT NULL') }
 
   scope :by_period, -> (start_date, end_date = Time.zone.today.end_of_day) {
     where(created_at: start_date..end_date)
   }
 
   def archived?
-    rejected? || cancelled? || (periods.all? {|p| p.date < Time.zone.today} || expired?)
+    archived_at.present?
   end
 
   def cancelled?
@@ -132,6 +141,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def cancelable?
+    return false if can_approve_or_decline_checkout? || has_to_update_credit_card? || archived_at.present?
     case
     when confirmed?, unconfirmed?
       # A reservation can be canceled if not already canceled and all of the dates are in the future
@@ -157,14 +167,25 @@ class Reservation < ActiveRecord::Base
     end
   end
 
-  def charge_and_confirm!
+  def invoke_confirmation!(&block)
     self.errors.clear
-    self.validate_all_dates_available
-    if self.errors.empty? && self.valid? && self.payment.capture!
-      self.create_shipments!
-      self.confirm!
-      # We need to touch listing so it's reindexed by ElasticSearch
-      self.listing.touch
+    unless listing.skip_payment_authorization?
+      self.validate_all_dates_available
+    end
+    if self.errors.empty? and self.valid?
+      if block_given? ? yield : true
+        self.create_shipments!
+        self.confirm!
+        # We need to touch listing so it's reindexed by ElasticSearch
+        self.listing.touch
+      end
+    end
+
+  end
+
+  def charge_and_confirm!
+    invoke_confirmation! do
+      self.payment.capture!
     end
   end
 
@@ -197,6 +218,13 @@ class Reservation < ActiveRecord::Base
     touch(:confirmed_at)
   end
 
+  def mark_as_archived!
+    if archived_at.nil?
+      touch(:archived_at)
+    end
+    true
+  end
+
   def set_cancelled_at
     touch(:cancelled_at)
   end
@@ -215,7 +243,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def date=(value)
-    periods.build :date => value
+    periods.build date: value
   end
 
   def first_period
@@ -248,7 +276,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def add_period(date, start_minute = nil, end_minute = nil)
-    periods.build :date => date, :start_minute => start_minute, :end_minute => end_minute
+    periods.build(date: date, start_minute: start_minute, end_minute: end_minute)
   end
 
   def booked_on?(date)
@@ -378,9 +406,15 @@ class Reservation < ActiveRecord::Base
   end
 
   def validate_all_dates_available
-    invalid_dates = periods.reject(&:bookable?)
-    if invalid_dates.any?
-      errors.add(:base, "Unfortunately the following bookings are no longer available: #{invalid_dates.map(&:as_formatted_string).join(', ')}")
+    if listing.skip_payment_authorization?
+      unless listing.open_on?(date, first_period.start_minute, first_period.end_minute)
+        errors.add(:base, I18n.t('reservations_review.errors.does_not_work_on_date'))
+      end
+    else
+      invalid_dates = periods.reject(&:bookable?)
+      if invalid_dates.any?
+        errors.add(:base, "Unfortunately the following bookings are no longer available: #{invalid_dates.map(&:as_formatted_string).join(', ')}")
+      end
     end
   end
 
@@ -396,6 +430,7 @@ class Reservation < ActiveRecord::Base
     super(
       payment_attributes.merge(
         {
+          payer: owner,
           company: company,
           currency: currency,
           subtotal_amount_cents: subtotal_amount.try(:cents) || 0,
@@ -415,6 +450,22 @@ class Reservation < ActiveRecord::Base
     self.subtotal_amount_cents = price_calculator.price.try(:cents)
     self.service_fee_amount_guest_cents = service_fee_amount_guest.try(:cents)
     self.service_fee_amount_host_cents = service_fee_amount_host.try(:cents)
+  end
+
+  def can_complete_checkout?
+    archived_at.nil? && skip_payment_authorization? && (payment.pending? || payment.voided?) && pending_guest_confirmation.nil?
+  end
+
+  def can_approve_or_decline_checkout?
+    archived_at.nil? && skip_payment_authorization? && pending_guest_confirmation.present? && payment.authorized?
+  end
+
+  def has_to_update_credit_card?
+    archived_at.nil? && skip_payment_authorization? && (payment.pending? || payment.voided?) && pending_guest_confirmation.present?
+  end
+
+  def can_confirm?
+    super && archived_at.nil?
   end
 
   private
@@ -475,11 +526,11 @@ class Reservation < ActiveRecord::Base
   end
 
   def fees_persisted?
-    persisted?
+    persisted? && !force_recalculate_fees
   end
 
-  def verify_authorization!
-    if inactive? && payment.authorized?
+  def try_to_activate!
+    if inactive? && (skip_payment_authorization? || payment.authorized?)
       activate!
     end
   end
@@ -496,13 +547,20 @@ class Reservation < ActiveRecord::Base
   end
 
   def schedule_void
-    PaymentVoidJob.perform(payment.id)
-    DepositVoidJob.perform(deposit.payment.id) if deposit
+    if payment.try(:authorized?)
+      PaymentVoidJob.perform(payment.id)
+      DepositVoidJob.perform(deposit.payment.id) if deposit
+    end
+    true
   end
 
   # ----- SETTERS ---------
   def set_currency
     self.currency ||= listing.try(:currency)
+  end
+
+  def set_unit_price
+    self.unit_price ||= price_calculator.unit_price
   end
 
   def set_start_and_end
@@ -524,7 +582,7 @@ class Reservation < ActiveRecord::Base
       if HourlyPriceCalculator === price_calculator
         errors.add(:base, "Booking selection does not meet requirements. A minimum of #{sprintf('%.2f', minimum_booking_minutes/60.0)} hours are required.")
       else
-      errors.add(:base, "Booking selection does not meet requirements. A minimum of #{listing.minimum_booking_days} consecutive bookable days are required.")
+        errors.add(:base, "Booking selection does not meet requirements. A minimum of #{listing.minimum_booking_days} consecutive bookable days are required.")
       end
     end
   end

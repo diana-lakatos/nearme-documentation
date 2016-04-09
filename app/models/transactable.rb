@@ -26,6 +26,7 @@ class Transactable < ActiveRecord::Base
   has_metadata accessors: [:photos_metadata]
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
 
+  has_many :customizations, as: :customizable
   has_many :additional_charge_types, as: :additional_charge_type_target
   has_many :availability_templates, as: :parent
   has_many :approval_requests, as: :owner, dependent: :destroy
@@ -50,6 +51,7 @@ class Transactable < ActiveRecord::Base
   has_many :waiver_agreement_templates, through: :assigned_waiver_agreement_templates
   has_many :wish_list_items, as: :wishlistable
   has_many :billing_authorizations, as: :reference
+  has_many :inappropriate_reports, as: :reportable, dependent: :destroy
   belongs_to :transactable_type, -> { with_deleted }
   belongs_to :service_type, -> { with_deleted }, foreign_key: 'transactable_type_id'
   belongs_to :company, -> { with_deleted }, inverse_of: :listings
@@ -74,6 +76,7 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :schedule, allow_destroy: true
   accepts_nested_attributes_for :upload_obligation
   accepts_nested_attributes_for :waiver_agreement_templates, allow_destroy: true
+  accepts_nested_attributes_for :customizations, allow_destroy: true
 
   # == Callbacks
   before_destroy :decline_reservations
@@ -190,8 +193,8 @@ class Transactable < ActiveRecord::Base
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
   delegate :formatted_address, :local_geocoding, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
-  delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration,
-    :custom_validators, :show_company_name, to: :transactable_type
+  delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration, :hours_for_guest_to_confirm_payment,
+    :custom_validators, :show_company_name, :skip_payment_authorization?, to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, to: :transactable_type
@@ -352,7 +355,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def all_prices
-    @all_prices ||= PRICE_TYPES.map { |price| self.send("#{price}_price_cents") }.compact
+    @all_prices ||= PRICE_TYPES.map { |price| self.send("#{price}_price_cents") }.compact.reject(&:zero?)
   end
 
   def schedule_availability

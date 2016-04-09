@@ -15,8 +15,6 @@ class AdditionalCharge < ActiveRecord::Base
   # Target is Spree::Order or Reservation
   belongs_to :target, polymorphic: true
 
-  validates :additional_charge_type_id, presence: true
-
   monetize :amount_cents, with_model_currency: :currency
 
   scope :mandatory, -> { where(status: 'mandatory') }
@@ -30,6 +28,10 @@ class AdditionalCharge < ActiveRecord::Base
 
   def optional?
     status == 'optional'
+  end
+
+  def to_liquid
+    @additional_charge_drop ||= AdditionalChargeDrop.new(self)
   end
 
   private

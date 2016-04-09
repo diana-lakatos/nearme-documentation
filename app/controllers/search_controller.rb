@@ -8,6 +8,7 @@ class SearchController < ApplicationController
   before_filter :find_transactable_type
   before_filter :theme_name
   before_action :assign_transactable_type_id_to_lookup_context
+  before_action :store_search
 
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
 
@@ -93,6 +94,13 @@ class SearchController < ApplicationController
 
   def theme_name
     @theme_name = 'buy-sell-theme' if @transactable_type.buyable?
+  end
+
+  def store_search
+    cookies[:last_search] = {
+      value: params.except(:controller, :action).select{ |k,v| v.present? }.to_json,
+      expires: 30.minutes.from_now,
+    }
   end
 
 end

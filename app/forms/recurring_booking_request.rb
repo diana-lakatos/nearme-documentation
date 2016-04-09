@@ -4,7 +4,7 @@ class RecurringBookingRequest < Form
     :interval, :total_amount_cents, :guest_notes, :total_amount_check
   attr_reader   :recurring_booking, :listing, :location, :user, :payment_subscription
 
-  delegate :reservation_type=, :currency, :service_fee_amount_host_cents, :service_fee_amount_guest_cents, :billing_authorization,
+  delegate :currency, :service_fee_amount_host_cents, :service_fee_amount_guest_cents, :billing_authorization,
     :create_billing_authorization, :total_service_amount, :total_amount, to: :recurring_booking
   delegate :confirm_reservations?, :location, :company, to: :listing
   delegate :mobile_number, :mobile_number=, :country_name, :country_name=, :country, to: :user
@@ -40,7 +40,6 @@ class RecurringBookingRequest < Form
       @recurring_booking.service_fee_amount_host = @recurring_booking.service_fee_amount_host
       self.total_amount_cents = @recurring_booking.total_amount.cents
       @payment_subscription ||= @recurring_booking.build_payment_subscription(payment_subscription_attributes)
-      @credit_card ||= @payment_subscription.credit_card || @payment_subscription.build_credit_card
     end
 
     if @user
@@ -67,10 +66,6 @@ class RecurringBookingRequest < Form
     !user.has_phone_and_country? || user.phone_or_country_was_changed?
   end
 
-  def reservation_periods
-    @recurring_booking.schedule.occurrences(@recurring_booking.end_on)[0..49]
-  end
-
   def action_hourly_booking?
     false
   end
@@ -80,7 +75,7 @@ class RecurringBookingRequest < Form
   end
 
   def payment_subscription_attributes
-    (@payment_subscription_attributes || {}).merge(subscriber: @recurring_booking)
+    (@payment_subscription_attributes || {}).merge(subscriber: @recurring_booking, payer: @user)
   end
 
   private
@@ -105,9 +100,9 @@ class RecurringBookingRequest < Form
   def save_reservations
     User.transaction do
       user.save!
-      @recurring_booking.save!
       @payment_subscription.save
-      @credit_card.save!
+      @payment_subscription.credit_card.save!
+      @recurring_booking.save!
     end
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => error
     add_errors(error.record.errors.full_messages)

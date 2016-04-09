@@ -10,7 +10,7 @@ class ProjectType < TransactableType
     ProjectTypeDrop.new(self)
   end
 
-  def wizard_path
+  def wizard_path(options = {})
     "/project_types/#{id}/project_wizard/new"
   end
 

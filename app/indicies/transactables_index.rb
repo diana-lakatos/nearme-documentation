@@ -55,6 +55,10 @@ module TransactablesIndex
         indexes :location_type_id, type: 'integer'
 
         indexes :geo_location, type: 'geo_point'
+        indexes :service_radius, type: 'integer'
+        indexes :open_hours, type: 'integer'
+        indexes :open_hours_during_week, type: 'integer'
+        indexes :opened_on_days, type: 'integer'
 
         indexes :availability, type: 'date'
         indexes :draft, type: 'date'
@@ -86,7 +90,10 @@ module TransactablesIndex
         availability: self.schedule_availability,
         action_monthly_booking: !self.monthly_price_cents.to_i.zero?,
         action_weekly_booking: !self.weekly_price_cents.to_i.zero?,
-        all_prices: self.all_prices
+        all_prices: self.all_prices,
+        service_radius: self.properties.try(:service_radius),
+        open_hours: self.availability.try(:days_with_hours),
+        open_hours_during_week: self.availability.try(:open_hours_during_week)
       )
     end
 
@@ -96,7 +103,6 @@ module TransactablesIndex
 
     def self.regular_search(query, service_type = nil)
       query_builder = Elastic::QueryBuilder.new(query.with_indifferent_access, searchable_custom_attributes(service_type), service_type)
-
       __elasticsearch__.search(query_builder.geo_regular_query)
     end
 

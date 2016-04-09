@@ -40,4 +40,22 @@ module ReservationsHelper
     booking_type
   end
 
+  def get_disabled_categories(listing)
+    if listing.categories.any?
+      (listing.categories.first.root.children - listing.categories).map(&:name)
+    end
+  end
+
+  def last_search
+    @last_search ||= JSON.parse(cookies[:last_search], symbolize_names: true) rescue {}
+  end
+
+  def get_categories_from_search
+    if last_search[:category_ids]
+      Category.where(id: last_search[:category_ids]).pluck(:name)
+    else
+      []
+    end
+  end
+
 end

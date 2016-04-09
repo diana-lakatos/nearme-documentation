@@ -22,14 +22,5 @@ class InstanceAdmin::Manage::RatingSystemsControllerTest < ActionController::Tes
     end
   end
 
-  context 'update_systems' do
-    setup do
-      RatingSystem.stubs(:all).returns([])
-      post :update_systems
-    end
-
-    should 'redirect to index page' do
-      assert_redirected_to instance_admin_manage_rating_systems_path
-    end
-  end
 end
+

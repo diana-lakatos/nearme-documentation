@@ -40,6 +40,7 @@ class LiquidView
     assigns['params'] = params.except(*Rails.application.config.filter_parameters)
     assigns['current_url'] = @view.try(:controller).try(:request).try(:original_url)
     assigns['current_user'] = @view.try(:controller).try(:current_user)
+    assigns['form_authenticity_token'] = @view.try(:controller).try(:form_authenticity_token)
 
     if content_for_layout = @view.instance_variable_get("@content_for_layout")
       assigns['content_for_layout'] = content_for_layout

@@ -15,6 +15,8 @@ class InstanceProfileType < ActiveRecord::Base
   has_many :form_components, as: :form_componentable
   has_many :category_linkings, as: :category_linkable, dependent: :destroy
   has_many :categories, through: :category_linkings
+  has_many :custom_model_type_linkings, as: :linkable
+  has_many :custom_model_types, through: :custom_model_type_linkings
 
   delegate :translated_bookable_noun, :create_translations!, :translation_namespace, :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
     :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager

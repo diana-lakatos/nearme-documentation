@@ -25,7 +25,7 @@ module PlatformContext::ForeignKeysAssigner
           #{"validates_presence_of :instance_id" if !options[:allow_nil].try(:include?, :instance_id) && self.column_names.include?('instance_id')}
 
           before_validation do
-            if !self.persisted? && !PlatformContext.current.nil?
+            if !self.persisted? && !self.marked_for_destruction? && !PlatformContext.current.nil?
               #{"self.instance_id = PlatformContext.current.instance.id" if self.column_names.include?('instance_id') && !options[:allow_nil].try(:include?, :instance_id)}
               #{"self.domain_id = PlatformContext.current.domain.try(:id)" if self.column_names.include?('domain_id')}
               #{"self.partner_id = PlatformContext.current.partner.try(:id)" if self.column_names.include?('partner_id')}

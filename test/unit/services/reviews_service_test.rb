@@ -143,7 +143,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
 
   context '#get_reservations_for_owner_and_creator' do
     setup do
-      @reservation = FactoryGirl.create(:past_reservation)
+      @reservation = FactoryGirl.create(:reviewable_reservation)
       user = @reservation.creator
       @reviews_service = ReviewsService.new(user)
     end
@@ -157,7 +157,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
   context '#get_reviews_by' do
     setup do
       user = FactoryGirl.create(:user)
-      @reservation = FactoryGirl.create(:past_reservation, user: user)
+      @reservation = FactoryGirl.create(:reviewable_reservation, user: user)
       @reservations = { RatingConstants::HOST => user.reservations, RatingConstants::GUEST => user.reservations }
       @review = create(:review, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::HOST), reviewable: @reservation, user: user)
       @reviews_service = ReviewsService.new(user)
@@ -172,7 +172,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
   context '#get_reservations' do
     setup do
       user = FactoryGirl.create(:user)
-      @reservations = FactoryGirl.create_list(:past_reservation, 2, user: user)
+      @reservations = FactoryGirl.create_list(:reviewable_reservation, 2, user: user)
       @reservations_hash = { RatingConstants::HOST => user.reservations, RatingConstants::GUEST => user.reservations }
       @review = create(:review, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::HOST), reviewable: @reservations.first, user: user)
       @reviews_service = ReviewsService.new(user)
@@ -187,7 +187,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
 
   context '#get_transactable_type_id' do
     should 'return transactable type. reservation' do
-      reservation = FactoryGirl.create(:past_reservation)
+      reservation = FactoryGirl.create(:reviewable_reservation)
       user = reservation.owner
       review = create(:review, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::HOST), reviewable: reservation, user: user)
       params = { review: { reviewable_id: reservation.id, reviewable_type: reservation.class.name } }

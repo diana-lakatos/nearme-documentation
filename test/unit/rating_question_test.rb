@@ -12,19 +12,6 @@ class RatingQuestionTest < ActiveSupport::TestCase
     @rating_system = FactoryGirl.create(:rating_system)
   end
 
-  context 'validate' do
-    setup do
-      FactoryGirl.create_list(:rating_question, 5, rating_system: @rating_system)
-    end
-
-    context 'check_questions_quantity' do
-      should 'have error message' do
-        question = FactoryGirl.build(:rating_question, rating_system: @rating_system)
-        refute question.valid?
-      end
-    end
-  end
-
   context 'after_create' do
     context '#create_empty_answers' do
       setup do

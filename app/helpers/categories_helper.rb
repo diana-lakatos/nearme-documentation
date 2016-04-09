@@ -14,6 +14,15 @@ module CategoriesHelper
     categories
   end
 
+  def build_categories_hash(root_categories)
+    categories = {}
+    root_categories.find_each do |category|
+      children = category.children.map { |child| build_all_values_for_category(child) }.compact
+      categories[category.name] = { 'name' => category.translated_name, 'children' => children }
+    end
+    categories
+  end
+
   def build_formatted_categories(object)
     if @formatted_categories.nil?
       @formatted_categories = {}
@@ -36,6 +45,14 @@ module CategoriesHelper
       else
         { category.translated_name => category.children.map { |child| build_value_for_category(child) }.compact }
       end
+    end
+  end
+
+  def build_all_values_for_category(category)
+    if category.leaf?
+      category.translated_name
+    else
+      { category.translated_name => category.children.map { |child| build_all_values_for_category(child) }.compact }
     end
   end
 end

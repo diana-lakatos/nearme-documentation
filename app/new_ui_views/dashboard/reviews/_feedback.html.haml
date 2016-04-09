@@ -92,7 +92,7 @@
                 .rating{'data-question-id' => q.id, 'data-hints' => rating_system.rating_hints.map(&:description_or_value).reverse}
 
       .comment
-        %blockquote=feedback.try(:comment)
+        %blockquote= feedback.try(:comment) if !feedback.reservation? || is_completed
 
         .form-group
           = label_tag "#{subject}-#{feedback.id}-comments".to_sym, t('dashboard.reviews.feedback.comments'), class: 'form-label'

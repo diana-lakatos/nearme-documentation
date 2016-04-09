@@ -3,15 +3,18 @@ Given /^a documents upload with requirement mandatory exists$/ do
 end
 
 Given (/^a documents upload is mandatory$/) do
-  @documents_upload.update(requirement: DocumentsUpload::REQUIREMENTS[0])
+  DocumentsUpload.update_all(requirement: DocumentsUpload::REQUIREMENTS[0])
+  UploadObligation.update_all(level: UploadObligation::LEVELS[0])
 end
 
 Given (/^a documents upload is optional$/) do
-  @documents_upload.update(requirement: DocumentsUpload::REQUIREMENTS[1])
+  DocumentsUpload.update_all(requirement: DocumentsUpload::REQUIREMENTS[1])
+  UploadObligation.update_all(level: UploadObligation::LEVELS[1])
 end
 
 Given (/^a documents upload is vendor decides$/) do
-  @documents_upload.update(requirement: DocumentsUpload::REQUIREMENTS[2])
+  DocumentsUpload.update_all(requirement: DocumentsUpload::REQUIREMENTS[2])
+  UploadObligation.update_all(level: UploadObligation::LEVELS[2])
 end
 
 And (/^I visit the listing page$/) do
@@ -42,8 +45,8 @@ And (/^I should see error file can't be blank$/) do
 end
 
 And (/^I choose file$/) do
-  page.execute_script('$("#reservation_request_reservation_payment_documents_file").show();')
-  attach_file('reservation_request_reservation_payment_documents_file', "#{Rails.root}/features/fixtures/photos/boss's desk.jpg")
+  page.execute_script('$("#reservation_request_payment_documents_attributes_0_file").show();')
+  attach_file('reservation_request_payment_documents_attributes_0_file', "#{Rails.root}/features/fixtures/photos/boss's desk.jpg")
 end
 
 Then (/^I should see page with booking requests without files$/) do
@@ -75,14 +78,14 @@ Given (/^a document_requirements exist for listing$/) do
 end
 
 Given (/^a upload_obligation exists as required$/) do
-  Location.first.listings.first.upload_obligation.update(level: UploadObligation::LEVELS[0])
+  UploadObligation.update_all(level: UploadObligation::LEVELS[0])
 end
 
 Given (/^a document requirement exists as optional$/) do
-  Location.first.listings.first.upload_obligation.update(level: UploadObligation::LEVELS[1])
+  UploadObligation.update_all(level: UploadObligation::LEVELS[1])
 end
 
 Given (/^a document requirement exists as not required$/) do
-  Location.first.listings.first.upload_obligation.update(level: UploadObligation::LEVELS[2])
+  UploadObligation.update_all(level: UploadObligation::LEVELS[2])
 end
 

@@ -100,6 +100,7 @@ en:
       question_quantity: "Only %{number} questions or less for one rating system"
   general:
     remove: "Remove"
+    reply: 'Reply'
     processing: 'Processing ...'
     submit: 'Submit'
     send: 'Send'
@@ -129,6 +130,8 @@ en:
     generic_lessee_term: "guest"
     generic_lessor_term: "host"
     default: "Default"
+    approve: 'Approve'
+    reject: 'Reject'
   transactable_types:
     locations:
       listings:
@@ -245,6 +248,8 @@ en:
         save: "Save"
         only_if_both_completed_services: "Only display reviews if both Guest and Host have completed"
         only_if_both_completed_products: "Only display reviews if both buyer and seller have completed"
+        question_label: 'Question'
+        add_new_question: 'Add question'
       rate_subject:
         guest: 'Host/Seller rates Guest/Buyer'
         host: 'Guest/Buyer rates Host/Seller'
@@ -764,10 +769,14 @@ en:
         custom_attributes: "Custom Attributes"
         custom_validators: "Custom Validators"
         categories: "Categories"
+        search_settings: 'Search settings'
         new: 'New Type'
       offer_types:
         offer_types: 'Offer Types'
         new: 'New Offer Type'
+      custom_model_types:
+        custom_model_types: 'Custom Models'
+        new: 'New Custom Model'
       reservation_types:
         reservation_types: 'Reservation Types'
         new: 'New Reservation Type'
@@ -1191,6 +1200,11 @@ en:
   dashboard:
     additional_charge_type:
       new: "New Upsell & Add-ons"
+    credit_cards:
+      manage: 'Manage'
+      credit_cards: 'Credit Cards'
+      new: 'New Credit Card'
+      delete_warning: 'You are about to remove credit card. Please note that it still will be charged if used for any past and unpaid reservations you have made. Please make sure to cancel all transations separately.'
     items:
       list_new_item: "List New Item"
       edit_item: "Edit Item"
@@ -1206,6 +1220,7 @@ en:
         delete: 'Delete'
 
       columns:
+        last4: 'Number'
         photo: 'Photo'
         name: 'Name'
         price: 'Price'
@@ -1213,6 +1228,7 @@ en:
         added: 'Added'
         location: 'Location'
         quantity: 'Quantity'
+        authorized_payments: 'Payments pending capture'
       edit_listing: 'Edit Listing'
       unsaved_listing_changes: 'You have unsaved changes to this listing'
       save: 'Save'
@@ -1237,6 +1253,7 @@ en:
 
     nav:
       orders: 'My Orders'
+      credit_cards: 'My Credit cards'
       user_reservations: 'My Bookings'
       user_reservations_count_html: 'My Bookings <span>%{count}</span>'
       user_messages: 'Messages'
@@ -1292,6 +1309,7 @@ en:
         colors: 'Colors'
 
     user_reservations:
+      total_amount_to_be_determined: 'N/A'
       title_count: "Bookings (%{count})"
       penalty_info: "The penalty fee for cancelling the reservation is %{penalty}% of the reservation price."
       cancel: 'Do you really want to cancel this reservation? %{penalty}'
@@ -1299,6 +1317,8 @@ en:
       money_info: "Payment has been authorized but it will be captured only upon confirmation."
       exclusive_price_guests_notes: 'Exclusive booking instructions:'
       additional_charges: 'Upsell & Add-ons:'
+      must_change_credit_card: 'It was not possible to charge your credit card'
+      update_credit_card: 'Update your credit card'
       upcoming: "Upcoming"
       archived: "Archived"
       track_package: 'Track Package'
@@ -1380,6 +1400,9 @@ en:
 
 
     payments:
+      reject: "What's wrong?"
+      change_credit_card: 'Change credit card'
+      reject_placeholder: 'Please let us know what is the reason of declining payment'
       order: "Back to order"
       back_to_order_html: "Back <span class='hidden-xs'>to order</span>"
       total: "Captured price:"
@@ -1452,6 +1475,25 @@ en:
         decline: 'Decline'
         request_payment: 'Request payment'
         mark_as_paid: 'Mark as paid'
+        complete_reservation: 'Complete reservation'
+      reservation_completed:
+        title: 'Mission Accomplished'
+      complete_reservation:
+        title: 'Complete reservation'
+        services: 'Services'
+        rejection_reason: 'Rejection reason'
+        client: 'Client'
+        date_and_time: 'Date and Time'
+        add_new_period: 'Add item'
+        remove_period: 'Remove'
+        total_cost: 'Total cost:'
+        add_new_charge: 'Add item'
+        expenses: 'Reimbursable expenses'
+        time_log: 'Time log'
+        cost: 'Cost'
+        subtotal: 'Sub total'
+        comment: 'Send optional invoice details to Client'
+        submit: 'Submit invoice'
       confirmations:
         cancel: 'Do you really want to cancel this reservation?'
         confirm: 'Do you want to confirm this reservation?'
@@ -1521,6 +1563,7 @@ en:
       address_errors_html: 'Please address the following <b>%{count}</b> errors in order to save your listing.'
 
     transactables:
+      add_new_item: 'Add item'
       title:
         manage: 'Manage'
         listings: 'Listings'
@@ -1749,6 +1792,14 @@ en:
     status:
       calling: 'Calling...'
     error: 'Error'
+
+  inappropriate_reports:
+    flag_as_inappropriate: "Flag as inappropriate"
+    unflag_as_inappropriate: "Unflag as inappropriate"
+    flagged_as_inappropriate: "Flagged as inappropriate"
+    send: "Send"
+    report_has_been_sent: "Your report has been sent. Thank you!"
+    redirecting_to_log_in_page: "Redirecting to log in page..."
 
   wish_lists:
     name: 'Favorites'
@@ -2187,6 +2238,7 @@ en:
     messages: 'Messages'
     log_out: 'Log Out'
     my_bookings: 'My Bookings'
+    bookings_received: 'Bookings Received'
     my_orders: 'My Orders'
     manage_bookable: 'Manage %{bookable_noun}'
     marketplace_admin: 'Marketplace Admin'
@@ -2198,6 +2250,10 @@ en:
   sign_up_form:
     sign_up_to: 'Sign up to %{marketplace_name}'
     log_in_to: 'Log in to %{marketplace_name}'
+    link_to_buyer: 'Become a guest here'
+    link_to_seller: 'Become a host here'
+    buyer_sign_up_to: 'Sign up to %{marketplace_name}'
+    seller_sign_up_to: 'Sign up to %{marketplace_name}'
     confirm_tos: 'By signing up, you confirm that you accept the'
     tos: 'Terms of Service and Privacy Policy'
     or: 'or'
@@ -2299,6 +2355,7 @@ en:
     pick_up: 'Pick Up'
     delivery: 'Delivery'
     delivery_hint: 'Prices include return delivery'
+    select_dates: 'Select the date and time'
     buttons:
       request: 'Request Booking'
       continue: 'Continue'
@@ -2315,6 +2372,9 @@ en:
       exclusive_price_not_available: 'Exclusive Price option is no longer available'
       no_delivery_options: 'There are no delivery options available.'
       internal_payment: 'Unfortunately we have some internal issues with processing your credit card. Please try again later.'
+      date_in_past: 'You cannot book a date in past.'
+      invalid_date: 'Invalid date.'
+      does_not_work_on_date: "Unfortunately the following Ninja doesn't work on requested time"
     payments:
       submit: "Submit a secure payment."
 
@@ -2338,6 +2398,7 @@ en:
     nonce: 'PayPal Payment'
     remote: 'Fetch Payment'
     cc_fields:
+      add_new: 'Add new credit card'
       cannot_delete: "You can't delete this card."
       subscribed: "Your card ending with: %{last_4} is saved in the system."
       unsubscribe: "Remove this card"
@@ -2525,4 +2586,6 @@ en:
   featured_items:
     member_since: 'Member since %{date}'
     view_item: 'View %{item_type_name}'
+  credit_cards:
+    masked_number: '**** **** **** %{last4}'
 

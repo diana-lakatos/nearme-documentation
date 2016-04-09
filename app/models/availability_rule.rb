@@ -9,10 +9,6 @@ class AvailabilityRule < ActiveRecord::Base
   belongs_to :instance
 
   # === Validations
-  validates :open_hour, :inclusion => 0..23, presence: true
-  validates :close_hour, :inclusion => 0..23, presence: true
-  validates :open_minute, :inclusion => 0..59, presence: true
-  validates :close_minute, :inclusion => 0..59, presence: true
   validate do |record|
     total_opening_time = record.floor_total_opening_time_in_hours
     record.errors["open_time"] << I18n.t('errors.messages.blank') if day_open_minute.nil?
@@ -28,6 +24,7 @@ class AvailabilityRule < ActiveRecord::Base
 
   # === Callbacks
   before_validation :apply_default_minutes
+  after_save :update_location
 
   # Return a list of predefined availability rule templates
   def self.templates
@@ -106,6 +103,12 @@ class AvailabilityRule < ActiveRecord::Base
   end
 
   private
+
+  def update_location
+    if changed? && target.try(:parent_type) == 'Location'
+      target.parent.update_open_hours
+    end
+  end
 
   def apply_default_minutes
     self.open_minute ||= 0

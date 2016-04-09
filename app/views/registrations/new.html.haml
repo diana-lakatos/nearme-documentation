@@ -5,9 +5,19 @@
     .span8.offset2
       .box
         %header
-          %h2= t 'sign_up_form.sign_up_to', marketplace_name: platform_context.name
+          - link_to_other = nil
+          - if @role == "buyer"
+            - options = { role: :seller }
+            - link_to_other = link_to_registration(get_return_to_url(platform_context.transactable_types.first.wizard_path, options), platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal' }) { I18n.t("sign_up_form.link_to_seller") }
+          - else
+            - options = { role: :buyer }
+            - link_to_other = link_to_registration(get_return_to_url(dashboard_user_reservations_path, options), platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal' }) { I18n.t("sign_up_form.link_to_buyer") }
+
+          = render "registrations/#{@role}_header", link_to_other: link_to_other
 
         = render 'registrations/signup_form'
+
+        = render "registrations/#{@role}_footer", link_to_other: link_to_other
 
 - if request.xhr?
   :javascript

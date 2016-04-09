@@ -66,7 +66,7 @@ class TransactableDrop < BaseDrop
     :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?,
     :action_free_booking?, :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at,
     :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, :attachments, :confirm_reservations,
-    :schedule_booking?, :to_key, :model_name, :deposit_amount_cents, to: :transactable
+    :schedule_booking?, :to_key, :model_name, :deposit_amount_cents, :customizations, :to_param, :hours_for_guest_to_confirm_payment, to: :transactable
 
   # action_price_per_unit
   #   returns true if there is a single unit available of the transactable item for a given time period
@@ -204,9 +204,14 @@ class TransactableDrop < BaseDrop
     routes.wish_list_path(@transactable.id)
   end
 
+  # has inappropriate report for user
+  def inappropriate_report_path
+    routes.inappropriate_report_path(id: @transactable.id, reportable_type: "Transactable")
+  end
+
   # url to the listing page for this listing
   def url
-    urlify(@transactable.show_path)
+    @transactable.show_url
   end
   alias_method :listing_url, :url
 
@@ -335,6 +340,10 @@ class TransactableDrop < BaseDrop
     return unless administrator.click_to_call?
     path_to_call = routes.new_user_phone_call_path(administrator)
     build_click_to_call_button(path_to_call)
+  end
+
+  def last_search
+    @last_search ||= JSON.parse(@context.registers[:action_view].cookies['last_search']) rescue {}
   end
 
 end

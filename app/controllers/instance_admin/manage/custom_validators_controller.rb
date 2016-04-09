@@ -2,6 +2,10 @@ class InstanceAdmin::Manage::CustomValidatorsController < InstanceAdmin::CustomV
 
   protected
 
+  def resource_class
+    Instance
+  end
+
   def collection
     @validators ||= @validatable.custom_validators.where(validatable_id: nil)
   end
@@ -12,14 +16,6 @@ class InstanceAdmin::Manage::CustomValidatorsController < InstanceAdmin::CustomV
 
   def find_validatable
     @validatable ||= current_instance
-  end
-
-  def permitting_controller_class
-    @controller_scope ||= 'manage'
-  end
-
-  def custom_validator_params
-    params.require(:custom_validator).permit(secured_params.custom_validator)
   end
 
   def available_attributes

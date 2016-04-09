@@ -100,7 +100,7 @@ class ReviewsService
       active_systems_for_host = get_rating_systems[:active_rating_systems_services][RatingConstants::HOST]
       active_systems_for_guest = get_rating_systems[:active_rating_systems_services][RatingConstants::GUEST]
       active_systems_for_listing = get_rating_systems[:active_rating_systems_services][RatingConstants::TRANSACTABLE]
-      reservations = Reservation.with_listing.past.confirmed.includes(listing: :transactable_type)
+      reservations = Reservation.with_listing.reviewable.includes(listing: :transactable_type)
       {
         RatingConstants::TRANSACTABLE => reservations.where(owner_id: @current_user.id, transactables: {transactable_type_id: active_systems_for_listing}).where('reservations.owner_id != reservations.creator_id').by_period(*filter_period),
         RatingConstants::HOST => reservations.where(owner_id: @current_user.id, transactables: {transactable_type_id: active_systems_for_host}).where('reservations.owner_id != reservations.creator_id').by_period(*filter_period),

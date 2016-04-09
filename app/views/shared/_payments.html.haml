@@ -1,5 +1,4 @@
 = f.simple_fields_for :payment_attributes, f.object.payment do |form|
-
   %h2= t 'reservations_review.payment_information'
   - if form.object.payable.respond_to?(:monthly?) && form.object.payable.monthly?
     %p= t 'recurring_reservations_review.prorated_info'

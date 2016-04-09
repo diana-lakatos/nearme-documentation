@@ -1,35 +1,32 @@
-- if f.object.reservation.payment_documents.present?
+- if f.object.listing.document_requirements.select(&:should_show_file?).present?
   %section.checkout-form.documents
-    %h2 Required Documents
+    %h2= t 'reservations_review.required_documents'
+    = f.simple_fields_for :payment_documents do |document|
+      .row-fluid
+        .span3
+          %label
+            - if @listing.upload_obligation.try(:required?)
+              %abbr{ title: "required" } *
+            = document.object.document_requirement.label
+        .span9.upload{ 'data-upload' => true }
+          %button{ type: 'button', class: 'btn-upload-payment-document', 'data-upload-document' => true }
+            = t 'buy_sell_market.checkout.labels.choose_file'
+          - if document.object.file.present?
+            %span{ "data-file-name" => true }
+              = document.object.file.file_name
+          - else
+            %span{ "data-file-name" => true }
+              = t 'buy_sell_market.checkout.labels.no_file_chosen'
 
-    = f.simple_fields_for :reservation do |r|
-      - f.object.reservation.payment_documents.each_with_index do |doc, index|        
-        = r.simple_fields_for :payment_documents do |document|
-          .row-fluid
-            .span3
-              %label
-                - if doc.is_file_required?
-                  %abbr{ title: "required" } *
-                = f.object.listing.document_requirements[index].label
-            .span9.upload{ 'data-upload' => true }
-              %button{ type: 'button', class: 'btn-upload-payment-document', 'data-upload-document' => true }
-                = t 'buy_sell_market.checkout.labels.choose_file'
-              - if doc.file.present?
-                %span{ "data-file-name" => true }
-                  = doc.file.file_name
-              - else
-                %span{ "data-file-name" => true }
-                  = t 'buy_sell_market.checkout.labels.no_file_chosen'
+          %ul
+            - document.object.errors[:file].each do |error|
+              %li.flash.error
+                = error
 
-              %ul
-                - doc.errors[:file].each do |error|
-                  %li.flash.error
-                    = error
+          = document.input :file, as: :file, label: false, input_html: { class: 'hidden-field' }
+          = document.input :file_cache, as: :hidden
+          = document.input :user_id, as: :hidden
 
-              = document.hidden_field :id, name: "reservation_request[documents_attributes][][id]", value: doc.id, "data-document-id" => true
-              = document.input_field :file, as: :file, name: "reservation_request[documents_attributes][][file]", "data-document-#{index}" => true, class: 'hidden-field'
-              = document.hidden_field :user_id, name: "reservation_request[documents_attributes][][user_id]", value: doc.user_id
-
-              = document.simple_fields_for(doc.payment_document_info) do |pdi|
-                = pdi.hidden_field :attachment_id, name: "reservation_request[documents_attributes][][payment_document_info_attributes][attachment_id]"
-                = pdi.hidden_field :document_requirement_id, name: "reservation_request[documents_attributes][][payment_document_info_attributes][document_requirement_id]"
+          = document.simple_fields_for :payment_document_info, document.object.payment_document_info do |pdi|
+            = pdi.input :attachment_id, as: :hidden
+            = pdi.input :document_requirement_id, as: :hidden

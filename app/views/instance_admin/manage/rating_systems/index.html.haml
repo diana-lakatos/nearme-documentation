@@ -27,40 +27,33 @@
               %label= t("instance_admin.rating_systems.index.only_if_both_completed_#{transactable_type.buyable? ? 'products' : 'services'}")
 
         .ratings-content-container{class: "#{'hidden' unless transactable_type.enable_reviews?}"}
-          = form_tag update_systems_instance_admin_manage_rating_systems_path, method: :put do
-            - transactable_type.rating_systems.each_with_index do |rating_system, index|
-              = hidden_field_tag "rating_systems[#{rating_system.id}][transactable_type_id]", transactable_type.id
+          = simple_form_for transactable_type.becomes(TransactableType), url: update_systems_instance_admin_manage_rating_systems_path(transactable_type_id: transactable_type.id), method: :put do |f|
+            = f.simple_fields_for :rating_systems do |rating_form|
+              = rating_form.hidden_field :id
+              = rating_form.hidden_field :transactable_type_id
               .rating-system
-                = hidden_field_tag "rating_systems[#{rating_system.id}][subject]", rating_system.subject
+                = rating_form.hidden_field :subject
                 .header
-                  = hidden_field_tag "rating_systems[#{rating_system.id}][active]", false
-                  = check_box_tag "rating_systems[#{rating_system.id}][active]", true, rating_system.active?, id: "active", 'data-subject' => rating_system.subject
-                  %label.title{for: "seller"}= t("instance_admin.rating_systems.rate_subject.#{rating_system.subject}")
-                .table-container.col-xs-12{class: "#{'hidden' unless rating_system.active?}"}
+                  = rating_form.check_box :active, id: "active", 'data-subject' => rating_form.object.subject
+                  %label.title{for: "seller"}= t("instance_admin.rating_systems.rate_subject.#{rating_form.object.subject}")
+                .table-container.col-xs-12{class: "#{'hidden' unless rating_form.object.active?}"}
                   .stars-description
                     .title
                       = t('instance_admin.rating_systems.index.stars_description')
-                    - rating_system.rating_hints.each_with_index do |rating_hint, hint_index|
+                    = rating_form.simple_fields_for :rating_hints, rating_form.object.rating_hints do |hints_form|
                       .line
-                        = hidden_field_tag "rating_systems[#{rating_system.id}][rating_hints_attributes][#{hint_index}][id]", rating_hint.id
-                        .img=image_tag "instance_admin/rating/#{rating_hint.value}_stars.png"
+                        .img=image_tag "instance_admin/rating/#{hints_form.object.value}_stars.png"
                         .input
-                          = text_field_tag "rating_systems[#{rating_system.id}][rating_hints_attributes][#{hint_index}][description]", rating_hint.description, placeholder: t('instance_admin.rating_systems.index.enter_description')
-                  .questions
+                          = hints_form.input :description, label: false, placeholder: t('instance_admin.rating_systems.index.enter_description')
+                  .questions.nested-fields-set
                     .title
                       = t('instance_admin.rating_systems.index.define_question')
-                    .subtitle
-                      = t('instance_admin.rating_systems.index.add_up_to_questions', number: RatingConstants::MAX_QUESTIONS_QUANTITY)
-                    - rating_system.rating_questions.each_with_index do |rating_question, question_index|
-                      .line.question
-                        %span.number= "#{question_index + 1}."
-                        = hidden_field_tag "rating_systems[#{rating_system.id}][rating_questions_attributes][#{question_index}][id]", rating_question.id, class: 'question-id'
-                        = text_field_tag "rating_systems[#{rating_system.id}][rating_questions_attributes][#{question_index}][text]", rating_question.text, class: 'question-input'
-                        = check_box_tag "rating_systems[#{rating_system.id}][rating_questions_attributes][#{question_index}][_destroy]"
-                        - if rating_question.text.present?
-                          %span.remove-question.enabled=fa_icon 'times'
-                        - else
-                          %span.remove-question=fa_icon 'times'
+                    = rating_form.simple_fields_for :rating_questions  do |questions_form|
+                      .nested-container
+                        = render 'rating_question', f: questions_form
+                    .add-link.clearfix
+                      = link_to_add_association t('instance_admin.rating_systems.index.add_new_question') , rating_form, :rating_questions, partial: 'rating_question', class: 'btn btn-primary'
+
               .row
                 .input-container.col-xs-12
-                  %input.save-btn.btn.btn-blue.pull-right{type: 'submit', value: t('instance_admin.rating_systems.index.save')}
+                  = f.submit t('instance_admin.rating_systems.index.save'), class: 'save-btn btn btn-blue pull-right'

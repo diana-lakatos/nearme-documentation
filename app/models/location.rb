@@ -59,6 +59,7 @@ class Location < ActiveRecord::Base
   before_save :set_time_zone
   after_create :set_external_id
   after_save :update_schedules_timezones
+  after_save :update_open_hours, if: "availability_template_id_changed?"
 
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :history, :finders, :scoped], scope: :instance
@@ -103,15 +104,13 @@ class Location < ActiveRecord::Base
   accepts_nested_attributes_for :waiver_agreement_templates, :allow_destroy => true
   accepts_nested_attributes_for :approval_requests
 
-  after_save do
+  def update_open_hours
     days_open = availability.try(:days_open)
-    if days_open.present? && opened_on_days & days_open != opened_on_days
-      self.update_column(:opened_on_days, days_open)
-      self.listings.where(availability_template_id: nil).update_all(opened_on_days: days_open)
-      self.listings.where(availability_template_id: nil).pluck(:id).each do |t_id|
-        ElasticIndexerJob.perform(:update, 'Transactable', t_id)
-      end
+    self.listings.where(availability_template_id: nil).update_all(opened_on_days: days_open)
+    self.listings.where(availability_template_id: nil).pluck(:id).each do |t_id|
+      ElasticIndexerJob.perform(:update, 'Transactable', t_id)
     end
+    self.update_column(:opened_on_days, days_open)
   end
 
   def custom_validators
