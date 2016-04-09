@@ -475,6 +475,7 @@ en:
         reservation_already_confirmed: "This reservation has already been confirmed."
         reservation_cancelled: "You have cancelled this reservation."
         reservation_confirmed: "You have confirmed the reservation!"
+        reservation_confirmed_but_not_charged: "You have confirmed the reservation, however we were not able to capture payment. We have reached out to guest to notify him about the issue."
         reservation_not_confirmed: "Your reservation could not be confirmed."
         reservation_rejected: "You have rejected the reservation. Maybe next time!"
         payment_requested: "Your request has been sent"
