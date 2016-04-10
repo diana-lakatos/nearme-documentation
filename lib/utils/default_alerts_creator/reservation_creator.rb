@@ -30,6 +30,8 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
     notify_host_of_declined_payment!
     notify_guest_of_submitted_checkout!
     notify_guest_of_submitted_checkout_with_failed_authorization!
+    notify_guest_of_penalty_charge_failed!
+    notify_guest_of_penalty_charge_succeeded!
   end
 
   def notify_guest_of_expiration_email!
@@ -149,6 +151,14 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
 
   def notify_guest_of_submitted_checkout_with_failed_authorization!
     create_alert!({associated_class: WorkflowStep::ReservationWorkflow::HostSubmittedCheckoutButAuthorizationFailed, name: 'notify_guest_of_submitted_checkout_with_failed_authorization', path: 'reservation_mailer/notify_guest_of_submitted_checkout_with_failed_authorization', subject: "[{{platform_context.name}}] {{reservation.listing.name}} submitted invoice",  alert_type: 'email', recipient_type: 'enquirer'})
+  end
+
+  def notify_guest_of_penalty_charge_failed!
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::PenaltyChargeFailed, name: 'notify_guest_of_penalty_charge_failed', path: 'reservation_mailer/notify_guest_of_penalty_charge_failed', subject: "[{{platform_context.name}}] Cancelation fee",  alert_type: 'email', recipient_type: 'enquirer'})
+  end
+
+  def notify_guest_of_penalty_charge_succeeded!
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::PenaltyChargeSucceeded, name: 'notify_guest_of_penalty_charge_succeeded', path: 'reservation_mailer/notify_guest_of_penalty_charge_succeeded', subject: "[{{platform_context.name}}] Cancelation fee",  alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   protected
