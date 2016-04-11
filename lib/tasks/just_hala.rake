@@ -780,7 +780,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     ch.update!({
-      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2335/just_hala.css'>",
+      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2336/just_hala.css'>",
       inject_pages: ['any_page'],
       position: 'head_bottom'
     })
@@ -819,7 +819,7 @@ namespace :just_hala do
     theme.youtube_url = 'https://www.youtube.com'
     theme.rss_url = 'rss'
 
-    ['About', 'Terms of Use', 'User Agreement', 'Privacy Policy', 'FAQ'].each do |name|
+    ['About', 'Terms of Use', 'User Agreement', 'Privacy Policy', 'FAQ', 'How It Works'].each do |name|
       slug = name.parameterize
       page = theme.pages.where(slug: slug).first_or_initialize
       page.path = name
@@ -1221,7 +1221,7 @@ namespace :just_hala do
                   </li>
 
                   <li>
-                    <a href='/?section=how-it-works' class='nav-link' scroll-to-section>
+                    <a href='/how-it-works' class='nav-link'>
                       <span class='text'>How It Works</span>
                     </a>
                   </li>
@@ -1525,6 +1525,8 @@ namespace :just_hala do
         </div>
       </div>
     </div>
+
+    <div class="how-it-works-cta"><a href="/how-it-works" class="btn btn-green btn-large">Learn More</a></div>
 
     <div class='row-fluid'>
       <div class='video-wrapper'>
