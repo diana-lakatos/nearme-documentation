@@ -51,8 +51,8 @@ class Payment < ActiveRecord::Base
   belongs_to :credit_card, -> { with_deleted }
   belongs_to :instance
   belongs_to :payment_transfer
-  belongs_to :payment_gateway
-  belongs_to :payment_method
+  belongs_to :payment_gateway, -> { with_deleted }
+  belongs_to :payment_method, -> { with_deleted }
   belongs_to :merchant_account
   belongs_to :payer, class_name: 'User'
 
@@ -63,7 +63,7 @@ class Payment < ActiveRecord::Base
   has_one :successful_billing_authorization, -> { where(success: true) }, class_name: BillingAuthorization
   has_one :successful_charge, -> { where(success: true) }, class_name: Charge
 
-  before_validation :set_offline
+  before_validation :set_offline, on: :create
 
   # === Scopes
 
@@ -128,6 +128,11 @@ class Payment < ActiveRecord::Base
     event :mark_as_voided     do transition [:authorized, :paid] => :voided; end
     event :mark_as_refuneded  do transition paid: :refunded; end
     event :mark_as_failed     do transition any => :refunded; end
+  end
+
+  # TODO: now as we call that on Payment object there is no need to _payment?, instead payment.manual?
+  PaymentMethod::PAYMENT_METHOD_TYPES.each do |pmt|
+    define_method("#{pmt}_payment?") { self.payment_method.try(:payment_method_type) == pmt.to_s }
   end
 
   def authorize
@@ -387,11 +392,6 @@ class Payment < ActiveRecord::Base
     amount_to_be_refunded == total_amount.cents
   end
 
-  # TODO: now as we call that on Payment object there is no need to _payment?, instead payment.manual?
-  PaymentMethod::PAYMENT_METHOD_TYPES.each do |pmt|
-    define_method("#{pmt}_payment?") { self.payment_method.try(:payment_method_type) == pmt.to_s }
-  end
-
   def is_free?
     total_amount.zero?
   end
@@ -478,7 +478,7 @@ class Payment < ActiveRecord::Base
   end
 
   def set_offline
-    self.offline = manual_payment?
+    self.offline ||= manual_payment? || free_payment?
     true
   end
 end
