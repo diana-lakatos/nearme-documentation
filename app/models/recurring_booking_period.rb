@@ -19,6 +19,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
     :service_fee_guest_percent, :service_fee_host_percent, :payment_subscription, to: :recurring_booking
 
   scope :unpaid, -> { where(paid_at: nil) }
+  scope :paid, -> { where.not(paid_at: nil) }
 
   def generate_payment!
     payment = payments.build(
@@ -57,9 +58,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   def mark_recurring_booking_as_paid!
     self.paid_at = Time.zone.now
-    # if we end up doing something in wrong order, we want to have the maximum period_end_date which was paid.
-    # so if we pay for December, November and October, we want paid_until to be 31st of December
-    recurring_booking.update_attribute(:paid_until, period_end_date) unless recurring_booking.paid_until.present? && recurring_booking.paid_until > period_end_date
+    recurring_booking.bump_paid_until_date!
   end
 
   def fees_persisted?
