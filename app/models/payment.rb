@@ -125,7 +125,7 @@ class Payment < ActiveRecord::Base
   state_machine :state, initial: :pending do
     event :mark_as_authorized do transition [:pending, :voided] => :authorized; end
     event :mark_as_paid       do transition authorized: :paid; end
-    event :mark_as_voided     do transition authorized: :voided; end
+    event :mark_as_voided     do transition [:authorized, :paid] => :voided; end
     event :mark_as_refuneded  do transition paid: :refunded; end
     event :mark_as_failed     do transition any => :refunded; end
   end
@@ -158,6 +158,10 @@ class Payment < ActiveRecord::Base
     return false if paid_at.nil? && !paid?
     return false if amount_to_be_refunded <= 0
     return false if !active_merchant_payment?
+
+    # This is special Braintree case, when transaction can't be refunded before
+    # settlment, we use void instead
+    return void! if !settled? && full_refund?
 
     # Refund payout takes back money from seller, break if failed.
     return false unless refund_payout!
@@ -267,7 +271,7 @@ class Payment < ActiveRecord::Base
   end
 
   def void!
-    return false unless authorized?
+    return false unless authorized? || paid?
     return false unless active_merchant_payment?
     return false if successful_billing_authorization.blank?
 
@@ -277,13 +281,23 @@ class Payment < ActiveRecord::Base
     if response.success?
       mark_as_voided!
       successful_billing_authorization.touch(:void_at)
+      true
     else
       successful_billing_authorization.save!
+      false
     end
   end
 
   def test_mode?
     payment_gateway_mode == 'test'
+  end
+
+  def settled?
+    if payment_gateway.respond_to?(:payment_settled?)
+      payment_gateway.payment_settled?(authorization_token)
+    else
+      true
+    end
   end
 
   def credit_card_attributes=(cc_attributes)
@@ -312,7 +326,7 @@ class Payment < ActiveRecord::Base
   def subtotal_amount_cents_after_refund
     result = nil
 
-    if self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?
+    if cancelled_by_host?
       result = 0
     else
       result = subtotal_amount.cents + host_additional_charges.cents - refunds.guest.successful.sum(:amount)
@@ -324,7 +338,7 @@ class Payment < ActiveRecord::Base
   def final_service_fee_amount_host_cents
     result = self.service_fee_amount_host.cents
 
-    if (self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?) || (self.payable.respond_to?(:cancelled_by_guest?) && self.payable.cancelled_by_guest?)
+    if cancelled_by_host? || cancelled_by_guest?
       result = 0
     end
 
@@ -334,7 +348,7 @@ class Payment < ActiveRecord::Base
   def final_service_fee_amount_guest_cents
     result = self.service_fee_amount_guest.cents + self.service_additional_charges.cents
 
-    if self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?
+    if cancelled_by_host?
       result = 0
     end
 
@@ -363,6 +377,14 @@ class Payment < ActiveRecord::Base
 
   def cancelled_by_guest?
     payable.respond_to?(:cancelled_by_guest?) && payable.cancelled_by_guest?
+  end
+
+  def cancelled_by_host?
+    self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?
+  end
+
+  def full_refund?
+    amount_to_be_refunded == total_amount.cents
   end
 
   # TODO: now as we call that on Payment object there is no need to _payment?, instead payment.manual?
