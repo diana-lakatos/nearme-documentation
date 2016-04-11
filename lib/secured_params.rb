@@ -630,6 +630,7 @@ class SecuredParams
       :cancellation_policy_enabled,
       :cancellation_policy_penalty_percentage,
       :cancellation_policy_hours_for_cancellation,
+      :cancellation_policy_penalty_hours,
       :category_search_type,
       :default_search_view,
       :date_pickers_use_availability_rules,

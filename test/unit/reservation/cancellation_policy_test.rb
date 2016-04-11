@@ -6,6 +6,7 @@ class Reservation::CancellationPolicyTest < ActiveSupport::TestCase
 
     setup do
       @reservation = stub(
+        skip_payment_authorization?: false,
         cancellation_policy_hours_for_cancellation: 24,
         starts_at: Date.tomorrow.beginning_of_day.advance(hours: 9)
       )

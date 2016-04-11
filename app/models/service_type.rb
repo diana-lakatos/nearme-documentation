@@ -29,7 +29,7 @@ class ServiceType < TransactableType
   before_save :normalize_cancellation_policy_enabled
 
   validates_numericality_of :hours_to_expiration, :minimum_booking_minutes, :cancellation_policy_hours_for_cancellation,
-    :cancellation_policy_penalty_percentage, greater_than_or_equal_to: 0
+    :cancellation_policy_penalty_percentage, :cancellation_policy_penalty_hours, greater_than_or_equal_to: 0
   validate :min_max_prices_are_correct
   validate :availability_options_are_correct
   validate :check_booking_options

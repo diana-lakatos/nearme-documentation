@@ -42,7 +42,7 @@ class ReservationDrop < BaseDrop
   delegate :id, :quantity, :subtotal_price, :service_fee_guest, :total_price, :total_price_cents, :pending?, :listing, :state_to_string,
     :credit_card_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, :created_at,
     :total_payable_to_host_formatted, :total_units_text, :additional_charges, :unit_price,
-    :starts_at, :properties, :long_dates, :address, :periods, :comment, to: :reservation
+    :starts_at, :properties, :long_dates, :address, :periods, :comment, :cancellation_policy_penalty_hours, to: :reservation
 
   # bookable_noun
   #   string representing the object to be booked (e.g. desk, room etc.)
@@ -181,6 +181,10 @@ class ReservationDrop < BaseDrop
     else
       "<strong>#{@reservation.total_price}</strong>"
     end
+  end
+
+  def formatted_total_amount
+    humanized_money_with_symbol(@reservation.total_price)
   end
 
   def total_amount_for_host_if_payment_at_least_authorized
