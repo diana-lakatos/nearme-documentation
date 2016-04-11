@@ -153,14 +153,16 @@ namespace :just_hala do
       'Where is your Expert located?',
       'What is your location?'
     ])
-    component.name = 'What is your location?'
-    component.form_fields = [
-       { "location" => "name" },
-       { "location" => "address" },
-       { "user" => "phone" },
-       { "transactable" => "service_radius" },
-    ]
-    component.save!
+    if component
+      component.name = 'What is your location?'
+      component.form_fields = [
+         { "location" => "name" },
+         { "location" => "address" },
+         { "user" => "phone" },
+         { "transactable" => "service_radius" },
+      ]
+      component.save!
+    end
 
     component = @service_type.form_components.find_by(name: [
       "Please tell us about the Expert you're listing",
