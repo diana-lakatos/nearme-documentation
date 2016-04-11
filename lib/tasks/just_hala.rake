@@ -780,7 +780,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     ch.update!({
-      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2336/just_hala.css'>",
+      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2338/just_hala.css'>",
       inject_pages: ['any_page'],
       position: 'head_bottom'
     })
@@ -807,9 +807,9 @@ namespace :just_hala do
     theme.color_red = '#E44A3B'
 
     theme.call_to_action = 'Learn more'
-    theme.phone_number = '1-888-998-3375'
-    theme.contact_email = 'support@ninjuno.com'
-    theme.support_email = 'support@ninjuno.com'
+    theme.phone_number = '1-888-646-5868'
+    theme.contact_email = 'support@ninjunu.com'
+    theme.support_email = 'support@ninjunu.com'
 
     theme.blog_url = nil
     theme.facebook_url = 'https://facebook.com'
@@ -819,7 +819,7 @@ namespace :just_hala do
     theme.youtube_url = 'https://www.youtube.com'
     theme.rss_url = 'rss'
 
-    ['About', 'Terms of Use', 'User Agreement', 'Privacy Policy', 'FAQ', 'How It Works'].each do |name|
+    ['About', 'Careers', 'Terms of Use', 'User Agreement', 'Privacy Policy', 'FAQ', 'How It Works'].each do |name|
       slug = name.parameterize
       page = theme.pages.where(slug: slug).first_or_initialize
       page.path = name
@@ -833,7 +833,7 @@ namespace :just_hala do
 </ul>
 <p>Lorem ipsum dolor sit amet enim. Etiam ullamcorper. Suspendisse a pellentesque dui, non felis. Maecenas malesuada elit lectus felis, malesuada ultricies. Curabitur et ligula. Ut molestie a, ultricies porta urna. Vestibulum commodo volutpat a, convallis ac, laoreet enim. Phasellus fermentum in, dolor. <strong>Pellentesque facilisis. Nulla imperdiet sit amet magna.</strong> Vestibulum dapibus, mauris nec malesuada fames ac turpis velit, rhoncus eu, luctus et interdum adipiscing wisi. </p>
 }
-      page.remote_hero_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2307/home_slide2.jpg'
+      page.remote_hero_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2337/page-header.jpg'
       page.save!
     end
 
@@ -1720,7 +1720,7 @@ namespace :just_hala do
       <div class="span2 contact">
         <h5>Contact</h5>
         <div class='phone'>TELEPHONE</div>
-        <span>{{ platform_context.phone_number }}</span>
+        <span>1-888-NINJUNU<br>{{ platform_context.phone_number }}</span>
         <div class='support'>SUPPORT</div>
         <a href='mailto:{{ platform_context.support_email }}'>{{ platform_context.support_email }}</a><br />
       </div>

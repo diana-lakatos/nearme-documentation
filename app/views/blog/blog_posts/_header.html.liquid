@@ -11,45 +11,35 @@
   </div>
 </div>
 
+{% if @blog_post != nil and @blog_post.header_present? %}
+  {% assign header_url = @blog_post.header_url %}
+{% else %}
+  {% assign header_url = @blog_instance.header_url %}
+{% endif %}
+
 <div class="header">
-  <div class='header-text-and-logo'>
-    <div class='v-wrap'>
-      <div class='v-box'>
-        {% if @blog_instance.header_logo_present? %}
+  <a href='{{ @blog_instance.blog_posts_path }}'>
+    <div class='header-text-and-logo' style='background-image: url({{ header_url }});'>
+      <div class='v-wrap'>
+        <div class='v-box'>
+          {% if @blog_instance.header_logo_present? %}
           <img src='{{ @blog_instance.header_logo_url }}' class='blog-logo' />
-        {% endif %}
-        {% if @blog_instance.header_icon_present? %}
+          {% endif %}
+          {% if @blog_instance.header_icon_present? %}
           <img src='{{ @blog_instance.header_icon_url }}' class='blog-icon' />
-        {% endif %}
-        {% if @blog_instance.header_text_present? %}
+          {% endif %}
+          {% if @blog_instance.header_text_present? %}
           <span class='header-text {% if @blog_instance.header_logo_present? %} with-border {% endif %}'>
             {{ @blog_instance.header_text }}
           </span>
-        {% endif %}
-        {% if @blog_instance.header_motto_present? %}
+          {% endif %}
+          {% if @blog_instance.header_motto_present? %}
           <p class='header-motto'>
             {{ @blog_instance.header_motto }}
           </p>
-        {% endif %}
+          {% endif %}
+        </div>
       </div>
     </div>
-  </div>
-
-  {% if @blog_post != nil and @blog_post.header_present? %}
-    {% assign header_url = @blog_post.header_url %}
-  {% else %}
-    {% assign header_url = @blog_instance.header_url %}
-  {% endif %}
-
-  {% if header_url != nil %}
-    <div class="header-image">
-      <a href='{{ @blog_instance.blog_posts_path }}'>
-        <img src='{{ header_url }}' title='{{ @blog_instance.name }}' />
-      </a>
-    </div>
-  {% else %}
-    <div class="heading">
-      <a href='{{ @blog_instance.blog_posts_path }}'>{{ @blog_instance.name }}</a>
-    </div>
-  {% endif %}
+  </a>
 </div>
