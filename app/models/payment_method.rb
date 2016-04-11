@@ -13,7 +13,7 @@ class PaymentMethod < ActiveRecord::Base
   scope :free, -> { where(payment_method_type: 'free') }
   scope :except_free, -> { where.not(payment_method_type: 'free') }
 
-  belongs_to :payment_gateway
+  belongs_to :payment_gateway, -> { with_deleted }
 
   has_many :orders, class_name: "Spree::Order"
   has_many :payments
