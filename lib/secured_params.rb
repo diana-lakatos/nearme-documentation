@@ -1267,6 +1267,7 @@ class SecuredParams
       :mobile_phone,
       :name,
       :password,
+      :password_confirmation,
       :phone,
       :public_profile,
       :skills_and_interests,

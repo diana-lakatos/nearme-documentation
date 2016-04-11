@@ -126,6 +126,7 @@ en:
       other: "nights"
     same_as_phone: "Same as phone"
     change_password: "Change password"
+    password_confirmation: "Password confirmation"
     password: "Password"
     generic_lessee_term: "guest"
     generic_lessor_term: "host"
