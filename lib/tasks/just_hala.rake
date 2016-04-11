@@ -780,7 +780,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     ch.update!({
-      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2340/just_hala.css'>",
+      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2341/just_hala.css'>",
       inject_pages: ['any_page'],
       position: 'head_bottom'
     })
@@ -910,7 +910,7 @@ namespace :just_hala do
     @instance.translations.where(
       locale: 'en',
       key: 'registrations.accept_terms_of_service'
-    ).first_or_initialize.update!(value: 'Yes, I understand and agree to <a href="/pages/term-of-use" target="_blank">Terms of Service</a> including the <a href="/pages/user-agreement" target="_blank">User Agreement</a> and <a href="/pages/privacy-policy" target="_blank">Privacy Policy</a>')
+    ).first_or_initialize.update!(value: 'Yes, I understand and agree to <a href="/terms-of-use" target="_blank">Terms of Service</a> including the <a href="/user-agreement" target="_blank">User Agreement</a> and <a href="/privacy-policy" target="_blank">Privacy Policy</a>')
 
     @instance.translations.where(
       locale: 'en',
