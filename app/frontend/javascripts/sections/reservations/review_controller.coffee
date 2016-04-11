@@ -26,11 +26,14 @@ module.exports = class ReservationReviewController
   disableHours: (date_string)->
     date = new Date(date_string)
     ranges = @dateInput.data('days-with-ranges')[date.getDay()]
-    if $('#reservation_request_start_time option').length > 0
-      $('#reservation_request_start_time option').attr 'disabled', 'disabled'
-      $('#reservation_request_start_time option').each (i, option) ->
-        $.each ranges, (i, val) ->
-          time = parseInt($(option).data('time'))
-          if time >= val[0] and time <= val[1]
-            $(option).attr 'disabled', false
+
+    opts = $('#reservation_request_start_time option')
+    return if opts.length is 0
+
+    opts.attr 'disabled', 'disabled'
+    opts.each (i, option) ->
+      $.each ranges, (i, val) ->
+        time = parseInt($(option).data('time'))
+        if time >= val[0] and time <= val[1]
+          $(option).attr 'disabled', false
 
