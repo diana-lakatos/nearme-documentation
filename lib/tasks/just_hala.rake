@@ -775,7 +775,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     ch.update!({
-      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2341/just_hala.css'>",
+      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2343/just_hala.css'>",
       inject_pages: ['any_page'],
       position: 'head_bottom'
     })
