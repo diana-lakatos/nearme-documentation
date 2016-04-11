@@ -4,8 +4,9 @@
   #signup
     .span8.offset2
       .box
-        %h2= t 'reset_password_form.heading'
-        %p.intro= t 'reset_password_form.instructions_email'
+        %header
+          %h2= t 'reset_password_form.heading'
+          %p= t 'reset_password_form.instructions_email'
 
         = simple_form_for(resource, :as => resource_name, :url => password_path(resource_name)) do |f|
           .email-holder.input-icon-holder
