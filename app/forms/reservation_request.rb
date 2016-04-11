@@ -241,6 +241,7 @@ class ReservationRequest < Form
   def set_cancellation_policy
     if transactable_type.cancellation_policy_enabled.present?
       reservation.cancellation_policy_hours_for_cancellation = transactable_type.cancellation_policy_hours_for_cancellation
+      reservation.cancellation_policy_penalty_hours = transactable_type.cancellation_policy_penalty_hours
       if payment.payment_gateway.supports_partial_refunds?
         reservation.cancellation_policy_penalty_percentage = transactable_type.cancellation_policy_penalty_percentage
       end

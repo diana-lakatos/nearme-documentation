@@ -87,6 +87,7 @@ class Reservation < ActiveRecord::Base
     after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:mark_as_archived!, :set_cancelled_at, :schedule_refund]
     after_transition unconfirmed: [:cancelled_by_host], do: [:mark_as_archived!]
     after_transition unconfirmed: [:cancelled_by_guest, :expired, :rejected], do: [:mark_as_archived!, :schedule_void]
+    after_transition confirmed: [:cancelled_by_guest], do: [:charge_penalty!]
 
     event :activate                 do transition inactive: :unconfirmed; end
     event :confirm                  do transition unconfirmed: :confirmed; end
@@ -187,6 +188,55 @@ class Reservation < ActiveRecord::Base
     invoke_confirmation! do
       self.payment.capture!
     end
+  end
+
+  def penalty_charge_apply?
+    if skip_payment_authorization? && (confirmed? || cancelled_by_guest?) && cancellation_policy_penalty_hours > 0 && time_to_cancelation_has_expired?
+      true
+    else
+      false
+    end
+  end
+
+  def time_to_cancelation_has_expired?
+    latest_time_to_cancel_without_fee = starts_at - cancellation_policy_hours_for_cancellation.to_i.hours
+    if Time.zone.now > latest_time_to_cancel_without_fee
+      true
+    else
+      false
+    end
+  end
+
+  def charge_penalty!
+    if penalty_charge_apply?
+      fail('Charging penalty when there exist already authorized/paid payment!') if payment.present? && (payment.paid? || payment.authorized?)
+      self.update_column(:subtotal_amount_cents, penalty_fee_subtotal.cents)
+      self.force_recalculate_fees = true
+      self.calculate_prices
+      # note: this might not work with shipment?
+      self.save!
+      self.payment.update_attributes({
+        subtotal_amount_cents: self.subtotal_amount.cents,
+        service_fee_amount_guest_cents: self.service_fee_amount_guest.cents,
+        service_fee_amount_host_cents: self.service_fee_amount_host.cents,
+        service_additional_charges_cents: self.service_additional_charges.cents,
+        host_additional_charges_cents: self.host_additional_charges.cents
+      })
+      if self.payment.authorize && self.payment.capture!
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::PenaltyChargeSucceeded, self.id)
+      else
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::PenaltyChargeFailed, self.id)
+      end
+    end
+    true
+  end
+
+  def penalty_fee_subtotal
+    unit_price * cancellation_policy_penalty_hours
+  end
+
+  def penalty_fee
+    penalty_fee_subtotal + (penalty_fee_subtotal * service_fee_guest_percent.to_f / BigDecimal(100))
   end
 
   def perform_expiry!
@@ -543,7 +593,10 @@ class Reservation < ActiveRecord::Base
   end
 
   def schedule_refund(transition, run_at = Time.zone.now)
-    PaymentRefundJob.perform_later(run_at, payment.id)
+    unless skip_payment_authorization?
+      PaymentRefundJob.perform_later(run_at, payment.id)
+    end
+    true
   end
 
   def schedule_void
@@ -576,6 +629,14 @@ class Reservation < ActiveRecord::Base
   end
 
   # ----- VALIDATIONS ------
+
+
+  def validate_mandatory_categories
+    return true if reservation_type.nil?
+    reservation_type.categories.mandatory.each do |mandatory_category|
+      errors.add(mandatory_category.name, I18n.t('errors.messages.blank')) if properties.send(mandatory_category.name).blank?
+    end
+  end
 
   def validate_booking_selection
     unless price_calculator.valid?

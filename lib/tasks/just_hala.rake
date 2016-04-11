@@ -22,7 +22,6 @@ namespace :just_hala do
       "dashboard/transactables/bulk_upload" => "1",
       "main_menu/view_profile" => "1"
       }
-
     )
 
     if @service_type = @instance.service_types.first
@@ -35,11 +34,16 @@ namespace :just_hala do
         action_monthly_booking: false,
         action_regular_booking: true,
         show_path_format: '/:transactable_type_id/:id',
+        cancellation_policy_enabled: "1",
+        cancellation_policy_hours_for_cancellation: 24,
+        cancellation_policy_penalty_hours: 1.5,
         default_search_view: 'list',
         skip_payment_authorization: true,
         hours_for_guest_to_confirm_payment: 24,
         single_transactable: true,
         show_price_slider: true,
+        service_fee_guest_percent: 0,
+        service_fee_host_percent: 30,
         skip_location: true,
         show_categories: true,
         category_search_type: 'AND',
@@ -51,6 +55,7 @@ namespace :just_hala do
         lessee: 'Client',
         enable_reviews: true
       })
+      @service_type.update_column(:cancellation_policy_enabled, Time.zone.now)
     else
       @service_type = @instance.service_types.create(
         name: 'Ninja',
@@ -60,6 +65,11 @@ namespace :just_hala do
         action_free_booking: false,
         enable_photo_required: true,
         show_path_format: '/:transactable_type_id/:id',
+        cancellation_policy_enabled: "1",
+        service_fee_guest_percent: 0,
+        service_fee_host_percent: 30,
+        cancellation_policy_hours_for_cancellation: 24,
+        cancellation_policy_penalty_hours: 1.5,
         action_hourly_booking: "1",
         action_daily_booking: false,
         action_weekly_booking: false,
@@ -143,14 +153,16 @@ namespace :just_hala do
       'Where is your Expert located?',
       'What is your location?'
     ])
-    component.name = 'What is your location?'
-    component.form_fields = [
-       { "location" => "name" },
-       { "location" => "address" },
-       { "user" => "phone" },
-       { "transactable" => "service_radius" },
-    ]
-    component.save!
+    if component
+      component.name = 'What is your location?'
+      component.form_fields = [
+         { "location" => "name" },
+         { "location" => "address" },
+         { "user" => "phone" },
+         { "transactable" => "service_radius" },
+      ]
+      component.save!
+    end
 
     component = @service_type.form_components.find_by(name: [
       "Please tell us about the Expert you're listing",
@@ -2261,6 +2273,32 @@ You have received a mission request on {{ platform_context.name | truncate: 50 }
 
     WorkflowAlert.where(template_path: 'company_sms_notifier/notify_host_of_no_payout_option').destroy_all
 
+    create_email('reservation_mailer/notify_guest_of_penalty_charge_succeeded', %Q{
+<h2>Hello, {{ user.first_name }}?</h2>
+
+<p>We have noticed you have just canceled your mission.</p>
+
+<p>The cancelation policy you agreed to is that you can cancel without any fees up to {{ reservation.cancellation_policy_hours_for_cancellation }} hours before the mission starts. Unfortunately, you have canceled it after this period, therefore we have charged you for {{ reservation.cancellation_policy_penalty_hours }} hours.</p>
+
+<p>The total cancelation fee is {{ reservation.formatted_total_amount }}</p>
+
+<p>We're always happy to help! If you have any questions about your booking or cancelation, please send an email to <a href="{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> or contact us at {{ platform_context.phone_number }}.</p>
+                 })
+
+
+    create_email('reservation_mailer/notify_guest_of_penalty_charge_failed', %Q{
+<h2>Hello, {{ user.first_name }}?</h2>
+
+<p>We have noticed you have just canceled your mission.</p>
+
+<p>The cancelation policy you agreed to is that you can cancel without any fees up to {{ reservation.cancellation_policy_hours_for_cancellation }} hours before the mission starts. Unfortunately, you have canceled it after this period, therefore we have to charge you for {{ reservation.cancellation_policy_penalty_hours }} hours.</p>
+
+<p>The total cancelation fee is {{ reservation.formatted_total_amount }}. Since we're not able to capture payment using the payment information you provided during mission creation, please update your payment information in the dashboard. Until you update your payment information, you will no longer be able to create future missions.</p>
+
+<p><a class="btn" href="{{ reservation.guest_show_url }}">Update payment information</a></p>
+
+<p>We're always happy to help! If you have any questions about your booking, please send an email to <a href="{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> or contact us at {{ platform_context.phone_number }}.</p>
+                 })
   end
 
 
