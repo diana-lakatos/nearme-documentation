@@ -370,23 +370,18 @@ namespace :just_hala do
     iv.update!({
       transactable_types: ServiceType.all,
       body: "
-<div class='row'>
-  <h1>{{ 'dashboard.host_reservations.complete_reservation.client' | translate}}</h1>
-  <p><a href='{{ reservation.owner.user_profile_url }}'>{{ @reservation.owner.name }}</a></p>
-</div>
-<div class='row'>
-  <h1>{{ 'dashboard.host_reservations.complete_reservation.services' | translate }}</h1>
-  <p>{{ @reservation['properties']['service_category'] | split: ',' | compact | join: ', ' }}</p>
-</div>
-<div class='row'>
-  <h1>{{ 'dashboard.host_reservations.complete_reservation.date_and_time' | translate }}</h1>
-  <p>{{ @reservation.starts_at | localize }}</p>
-</div>
+<h2>{{ 'dashboard.host_reservations.complete_reservation.client' | translate}}</h2>
+<p><a href='{{ reservation.owner.user_profile_url }}'>{{ @reservation.owner.name }}</a></p>
+
+<h2>{{ 'dashboard.host_reservations.complete_reservation.services' | translate }}</h2>
+<p>{{ @reservation['properties']['service_category'] | split: ',' | compact | join: ', ' }}</p>
+
+<h2>{{ 'dashboard.host_reservations.complete_reservation.date_and_time' | translate }}</h2>
+<p>{{ @reservation.starts_at | localize }}</p>
+
 {% if reservation.rejection_reason != blank %}
-  <div class='row'>
-    <h1>{{ 'dashboard.host_reservations.complete_reservation.rejection_reason' | translate }}</h1>
-    <p>{{ reservation.rejection_reason }}</p>
-  </div>
+  <h2>{{ 'dashboard.host_reservations.complete_reservation.rejection_reason' | translate }}</h2>
+  <p>{{ reservation.rejection_reason }}</p>
 {% endif %}
 <hr>",
       format: 'html',
