@@ -780,7 +780,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     ch.update!({
-      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2338/just_hala.css'>",
+      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2340/just_hala.css'>",
       inject_pages: ['any_page'],
       position: 'head_bottom'
     })
@@ -1196,18 +1196,6 @@ namespace :just_hala do
       transactable_types: ServiceType.all,
       body: %Q{
 <div class='navbar navbar-inverse navbar-fixed-top'>
-    <div class='navbar-inner nav-links social-links'>
-      <div class="container-fluid">
-        {% if platform_context.facebook_url != blank %}<a href="{{ platform_context.facebook_url }}"  ref="nofollow" target="_blank"><span class="image icon-facebook"></span></a>{% endif %}
-        {% if platform_context.twitter_url != blank %}<a href="{{ platform_context.twitter_url }}" ref="nofollow"  target="_blank"> <span class="image icon-twitter"></span></a>{% endif %}
-        {% if platform_context.youtube_url != blank %}<a href="{{ platform_context.youtube_url }}" ref="nofollow"  target="_blank"> <span class="image icon-youtube"></span></a>{% endif %}
-        {% if platform_context.gplus_url != blank %}<a href="{{ platform_context.gplus_url }}" rel="publisher nofollow" target="_blank"><span class="image icon-gplus"></span></a>{% endif %}
-        {% if platform_context.instagram_url != blank %}<a href="{{ platform_context.instagram_url }}" ref="nofollow"  target="_blank"> <span class="image icon-instagram"></span></a>{% endif %}
-        {% if platform_context.rss_url != blank %}<a href="{{ platform_context.rss_url }}" rel="nofollow" target="_blank"><span class="image icon-rss"></span></a>{% endif %}
-        {% if platform_context.blog_url != blank %}<a href="{{ platform_context.blog_url }}" rel="nofollow" target="_blank"><span class="image ico-blog"></span></a>{% endif %}
-      </div>
-    </div>
-
     <div class='navbar-inner nav-links'>
       <div class='container-fluid'>
           <a href='{{ platform_context.root_path }}' id="logo">{{ platform_context.name }}</a>
