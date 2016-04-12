@@ -119,9 +119,9 @@ en:
       user_blog:
         enabled: 'Enable Blog'
         name: 'Name / Title'
-        header_image: 'HEADER'
-        header_text: 'HEADER TEXT'
-        header_motto: 'HEADER MOTTO'
+        header_image: 'Header Image'
+        header_text: 'Header Text'
+        header_motto: 'Header Motto'
         header_logo: 'Header Logo'
         header_icon: 'Header Icon'
         facebook_app_id: 'Facebook app ID'
