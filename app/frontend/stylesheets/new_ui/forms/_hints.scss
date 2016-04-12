@@ -10,6 +10,8 @@
     background: none;
     padding: 5px;
     font-size: 0;
+    width: 10px;
+    height: 10px;
 
     &:before {
         @include fa-icon();
