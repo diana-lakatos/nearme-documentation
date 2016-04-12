@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160411145112) do
+ActiveRecord::Schema.define(version: 20160412111128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1162,8 +1162,8 @@ ActiveRecord::Schema.define(version: 20160411145112) do
     t.integer  "seller_attachments_documents_num",                                             default: 10,            null: false
     t.string   "priority_view_path"
     t.boolean  "enable_language_selector",                                                     default: false,         null: false
-    t.boolean  "enable_reply_button_on_host_reservations",                                     default: false
     t.boolean  "click_to_call",                                                                default: false
+    t.boolean  "enable_reply_button_on_host_reservations",                                     default: false
     t.boolean  "split_registration",                                                           default: false
   end
 
@@ -1882,11 +1882,11 @@ ActiveRecord::Schema.define(version: 20160411145112) do
     t.datetime "ends_at"
     t.string   "time_zone"
     t.datetime "expire_at"
-    t.integer  "reservation_type_id"
     t.hstore   "properties"
     t.integer  "unit_price_cents"
     t.datetime "pending_guest_confirmation"
     t.datetime "archived_at"
+    t.integer  "reservation_type_id"
     t.decimal  "cancellation_policy_penalty_hours",                         precision: 8, scale: 2, default: 0.0
   end
 
@@ -3745,8 +3745,8 @@ ActiveRecord::Schema.define(version: 20160411145112) do
     t.integer  "monthly_subscription_price_cents"
     t.string   "slug"
     t.integer  "availability_template_id"
-    t.integer  "deposit_amount_cents"
     t.boolean  "featured",                                                              default: false
+    t.integer  "deposit_amount_cents"
     t.decimal  "cancellation_policy_penalty_hours",             precision: 8, scale: 2, default: 0.0
   end
 
@@ -3822,13 +3822,14 @@ ActiveRecord::Schema.define(version: 20160411145112) do
 
   create_table "user_blogs", force: :cascade do |t|
     t.integer  "user_id"
-    t.boolean  "enabled",                 default: false
-    t.string   "name",        limit: 255
-    t.string   "header_logo", limit: 255
-    t.string   "header_icon", limit: 255
+    t.boolean  "enabled",                  default: false
+    t.string   "name",         limit: 255
+    t.string   "header_logo",  limit: 255
+    t.string   "header_icon",  limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "instance_id"
+    t.string   "header_image", limit: 255
   end
 
   create_table "user_industries", force: :cascade do |t|

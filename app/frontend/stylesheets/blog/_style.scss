@@ -290,13 +290,18 @@ body.blog {
 
                 .social-buttons {
                     height: 25px;
-                    overflow: hidden;
+
+                    &:after {
+                        content: "";
+                        display: table;
+                        clear: both;
+                    }
 
                     > div {
                         float: left;
                         margin-right: 10px;
                         margin-top: 5px;
-                        height: 20px;
+                        height: 22px;
 
                         &:last-child {
                             margin-right: 0px;

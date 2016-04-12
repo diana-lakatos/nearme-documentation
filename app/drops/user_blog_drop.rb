@@ -29,4 +29,14 @@ class UserBlogDrop < BaseDrop
     @blog.header_logo.url
   end
 
+  # check if header image is present
+  def header_image_present?
+    @blog.header_image.present?
+  end
+
+  # url for header image
+  def header_image_url
+    @blog.header_image.url
+  end
+
 end
