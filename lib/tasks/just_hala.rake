@@ -755,6 +755,76 @@ namespace :just_hala do
       locales: Locale.all
     })
 
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'registrations/buyer_header',
+      partial: true
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: ServiceType.all,
+      body: %Q{
+<h2>{{ 'sign_up_form.buyer_sign_up_to' | translate: marketplace_name: platform_context.name }}</h2>
+<p class="transaction-side-switcher">Hire your own personal Ninja.</p>
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'registrations/seller_header',
+      partial: true
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: ServiceType.all,
+      body: %Q{
+<h2>{{ 'sign_up_form.seller_sign_up_to' | translate: marketplace_name: platform_context.name }}</h2>
+<p class="transaction-side-switcher">Looking to get technical help? {{ link_to_other }}</p>
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'registrations/buyer_footer',
+      partial: true
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: ServiceType.all,
+      body: %Q{
+<p class="signup-help-note">Need help signing up? Call Member Services at <a href="tel:+18886465868">1-888-NINJUNU</a> (<a href="tel:+18886465868">1-888-646-5868</a>)</p>
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'registrations/seller_footer',
+      partial: true
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: ServiceType.all,
+      body: %Q{
+<p class="signup-help-note">Need help signing up? Call Member Services at <a href="tel:+18886465868">1-888-NINJUNU</a> (<a href="tel:+18886465868">1-888-646-5868</a>)</p>
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+
     theme_header
     home_carousel
     home_index
@@ -775,7 +845,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     ch.update!({
-      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2343/just_hala.css'>",
+      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2353/just_hala.css'>",
       inject_pages: ['any_page'],
       position: 'head_bottom'
     })
@@ -890,12 +960,12 @@ namespace :just_hala do
     @instance.translations.where(
       locale: 'en',
       key: 'sign_up_form.buyer_sign_up_to'
-    ).first_or_initialize.update!(value: 'Create a Ninjunu Client Account')
+    ).first_or_initialize.update!(value: 'Sign Up for Ninjunu')
 
     @instance.translations.where(
       locale: 'en',
       key: 'sign_up_form.seller_sign_up_to'
-    ).first_or_initialize.update!(value: 'Create a Ninjunu Ninja Account')
+    ).first_or_initialize.update!(value: 'Create a Ninja Account')
 
     @instance.translations.where(
       locale: 'en',
@@ -1164,7 +1234,7 @@ namespace :just_hala do
     create_translation!('buy_sell_market.products.labels.summary', "Overall Rating:")
     create_translation!('dashboard.items.delete_listing', "Delete Ninja Profile")
 
-    create_translation!('sign_up_form.link_to_buyer', "Become a client here")
+    create_translation!('sign_up_form.link_to_buyer', "Become a member here")
     create_translation!('sign_up_form.link_to_seller', "Become a ninja here")
 
     create_translation!('time.formats.short', "%l:%M %p")
