@@ -1254,7 +1254,7 @@ en:
 
     nav:
       orders: 'My Orders'
-      credit_cards: 'My Credit cards'
+      credit_cards: 'My Credit Cards'
       user_reservations: 'My Bookings'
       user_reservations_count_html: 'My Bookings <span>%{count}</span>'
       user_messages: 'Messages'
