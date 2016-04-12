@@ -21,7 +21,7 @@ class CreditCard::BraintreeDecorator
   end
 
   def expires_at
-    card.expiration_date.to_datetime
+    card.expiration_date.try(:to_datetime)
   end
 
   def last_4
@@ -29,11 +29,11 @@ class CreditCard::BraintreeDecorator
   end
 
   def name
-    [response.params["braintree_customer"]["first_name"], response.params["braintree_customer"]["last_name"]].join(' ') rescue nil
+    [response.params["braintree_customer"]["first_name"], response.params["braintree_customer"]["last_name"]].join(' ') rescue 'Unknown'
   end
 
   def card
-    OpenStruct.new(response.params["braintree_customer"]["credit_cards"].first)
+    OpenStruct.new(response.params["braintree_customer"]["credit_cards"].first) rescue OpenStruct.new(last_4: '????', expiration_date: nil)
   end
 
   def response
