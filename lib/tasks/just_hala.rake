@@ -370,23 +370,18 @@ namespace :just_hala do
     iv.update!({
       transactable_types: ServiceType.all,
       body: "
-<div class='row'>
-  <h1>{{ 'dashboard.host_reservations.complete_reservation.client' | translate}}</h1>
-  <p><a href='{{ reservation.owner.user_profile_url }}'>{{ @reservation.owner.name }}</a></p>
-</div>
-<div class='row'>
-  <h1>{{ 'dashboard.host_reservations.complete_reservation.services' | translate }}</h1>
-  <p>{{ @reservation['properties']['service_category'] | split: ',' | compact | join: ', ' }}</p>
-</div>
-<div class='row'>
-  <h1>{{ 'dashboard.host_reservations.complete_reservation.date_and_time' | translate }}</h1>
-  <p>{{ @reservation.starts_at | localize }}</p>
-</div>
+<h2>{{ 'dashboard.host_reservations.complete_reservation.client' | translate}}</h2>
+<p><a href='{{ reservation.owner.user_profile_url }}'>{{ @reservation.owner.name }}</a></p>
+
+<h2>{{ 'dashboard.host_reservations.complete_reservation.services' | translate }}</h2>
+<p>{{ @reservation['properties']['service_category'] | split: ',' | compact | join: ', ' }}</p>
+
+<h2>{{ 'dashboard.host_reservations.complete_reservation.date_and_time' | translate }}</h2>
+<p>{{ @reservation.starts_at | localize }}</p>
+
 {% if reservation.rejection_reason != blank %}
-  <div class='row'>
-    <h1>{{ 'dashboard.host_reservations.complete_reservation.rejection_reason' | translate }}</h1>
-    <p>{{ reservation.rejection_reason }}</p>
-  </div>
+  <h2>{{ 'dashboard.host_reservations.complete_reservation.rejection_reason' | translate }}</h2>
+  <p>{{ reservation.rejection_reason }}</p>
 {% endif %}
 <hr>",
       format: 'html',
@@ -760,6 +755,76 @@ namespace :just_hala do
       locales: Locale.all
     })
 
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'registrations/buyer_header',
+      partial: true
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: ServiceType.all,
+      body: %Q{
+<h2>{{ 'sign_up_form.buyer_sign_up_to' | translate: marketplace_name: platform_context.name }}</h2>
+<p class="transaction-side-switcher">Hire your own personal Ninja.</p>
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'registrations/seller_header',
+      partial: true
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: ServiceType.all,
+      body: %Q{
+<h2>{{ 'sign_up_form.seller_sign_up_to' | translate: marketplace_name: platform_context.name }}</h2>
+<p class="transaction-side-switcher">Looking to get technical help? {{ link_to_other }}</p>
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'registrations/buyer_footer',
+      partial: true
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: ServiceType.all,
+      body: %Q{
+<p class="signup-help-note">Need help signing up? Call Member Services at <a href="tel:+18886465868">1-888-NINJUNU</a> (<a href="tel:+18886465868">1-888-646-5868</a>)</p>
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'registrations/seller_footer',
+      partial: true
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: ServiceType.all,
+      body: %Q{
+<p class="signup-help-note">Need help signing up? Call Member Services at <a href="tel:+18886465868">1-888-NINJUNU</a> (<a href="tel:+18886465868">1-888-646-5868</a>)</p>
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+
     theme_header
     home_carousel
     home_index
@@ -780,7 +845,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     ch.update!({
-      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2336/just_hala.css'>",
+      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2353/just_hala.css'>",
       inject_pages: ['any_page'],
       position: 'head_bottom'
     })
@@ -807,9 +872,9 @@ namespace :just_hala do
     theme.color_red = '#E44A3B'
 
     theme.call_to_action = 'Learn more'
-    theme.phone_number = '1-888-998-3375'
-    theme.contact_email = 'support@ninjuno.com'
-    theme.support_email = 'support@ninjuno.com'
+    theme.phone_number = '1-888-646-5868'
+    theme.contact_email = 'support@ninjunu.com'
+    theme.support_email = 'support@ninjunu.com'
 
     theme.blog_url = nil
     theme.facebook_url = 'https://facebook.com'
@@ -819,7 +884,7 @@ namespace :just_hala do
     theme.youtube_url = 'https://www.youtube.com'
     theme.rss_url = 'rss'
 
-    ['About', 'Terms of Use', 'User Agreement', 'Privacy Policy', 'FAQ', 'How It Works'].each do |name|
+    ['About', 'Careers', 'Terms of Use', 'User Agreement', 'Privacy Policy', 'FAQ', 'How It Works'].each do |name|
       slug = name.parameterize
       page = theme.pages.where(slug: slug).first_or_initialize
       page.path = name
@@ -833,7 +898,7 @@ namespace :just_hala do
 </ul>
 <p>Lorem ipsum dolor sit amet enim. Etiam ullamcorper. Suspendisse a pellentesque dui, non felis. Maecenas malesuada elit lectus felis, malesuada ultricies. Curabitur et ligula. Ut molestie a, ultricies porta urna. Vestibulum commodo volutpat a, convallis ac, laoreet enim. Phasellus fermentum in, dolor. <strong>Pellentesque facilisis. Nulla imperdiet sit amet magna.</strong> Vestibulum dapibus, mauris nec malesuada fames ac turpis velit, rhoncus eu, luctus et interdum adipiscing wisi. </p>
 }
-      page.remote_hero_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2307/home_slide2.jpg'
+      page.remote_hero_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2337/page-header.jpg'
       page.save!
     end
 
@@ -895,12 +960,12 @@ namespace :just_hala do
     @instance.translations.where(
       locale: 'en',
       key: 'sign_up_form.buyer_sign_up_to'
-    ).first_or_initialize.update!(value: 'Create a Ninjunu Client Account')
+    ).first_or_initialize.update!(value: 'Sign Up for Ninjunu')
 
     @instance.translations.where(
       locale: 'en',
       key: 'sign_up_form.seller_sign_up_to'
-    ).first_or_initialize.update!(value: 'Create a Ninjunu Ninja Account')
+    ).first_or_initialize.update!(value: 'Create a Ninja Account')
 
     @instance.translations.where(
       locale: 'en',
@@ -910,7 +975,7 @@ namespace :just_hala do
     @instance.translations.where(
       locale: 'en',
       key: 'registrations.accept_terms_of_service'
-    ).first_or_initialize.update!(value: 'Yes, I understand and agree to <a href="/pages/term-of-use" target="_blank">Terms of Service</a> including the <a href="/pages/user-agreement" target="_blank">User Agreement</a> and <a href="/pages/privacy-policy" target="_blank">Privacy Policy</a>')
+    ).first_or_initialize.update!(value: 'Yes, I understand and agree to <a href="/terms-of-use" target="_blank">Terms of Service</a> including the <a href="/user-agreement" target="_blank">User Agreement</a> and <a href="/privacy-policy" target="_blank">Privacy Policy</a>')
 
     @instance.translations.where(
       locale: 'en',
@@ -1169,7 +1234,7 @@ namespace :just_hala do
     create_translation!('buy_sell_market.products.labels.summary', "Overall Rating:")
     create_translation!('dashboard.items.delete_listing', "Delete Ninja Profile")
 
-    create_translation!('sign_up_form.link_to_buyer', "Become a client here")
+    create_translation!('sign_up_form.link_to_buyer', "Become a member here")
     create_translation!('sign_up_form.link_to_seller', "Become a ninja here")
 
     create_translation!('time.formats.short', "%l:%M %p")
@@ -1196,18 +1261,6 @@ namespace :just_hala do
       transactable_types: ServiceType.all,
       body: %Q{
 <div class='navbar navbar-inverse navbar-fixed-top'>
-    <div class='navbar-inner nav-links social-links'>
-      <div class="container-fluid">
-        {% if platform_context.facebook_url != blank %}<a href="{{ platform_context.facebook_url }}"  ref="nofollow" target="_blank"><span class="image icon-facebook"></span></a>{% endif %}
-        {% if platform_context.twitter_url != blank %}<a href="{{ platform_context.twitter_url }}" ref="nofollow"  target="_blank"> <span class="image icon-twitter"></span></a>{% endif %}
-        {% if platform_context.youtube_url != blank %}<a href="{{ platform_context.youtube_url }}" ref="nofollow"  target="_blank"> <span class="image icon-youtube"></span></a>{% endif %}
-        {% if platform_context.gplus_url != blank %}<a href="{{ platform_context.gplus_url }}" rel="publisher nofollow" target="_blank"><span class="image icon-gplus"></span></a>{% endif %}
-        {% if platform_context.instagram_url != blank %}<a href="{{ platform_context.instagram_url }}" ref="nofollow"  target="_blank"> <span class="image icon-instagram"></span></a>{% endif %}
-        {% if platform_context.rss_url != blank %}<a href="{{ platform_context.rss_url }}" rel="nofollow" target="_blank"><span class="image icon-rss"></span></a>{% endif %}
-        {% if platform_context.blog_url != blank %}<a href="{{ platform_context.blog_url }}" rel="nofollow" target="_blank"><span class="image ico-blog"></span></a>{% endif %}
-      </div>
-    </div>
-
     <div class='navbar-inner nav-links'>
       <div class='container-fluid'>
           <a href='{{ platform_context.root_path }}' id="logo">{{ platform_context.name }}</a>
@@ -1720,7 +1773,7 @@ namespace :just_hala do
       <div class="span2 contact">
         <h5>Contact</h5>
         <div class='phone'>TELEPHONE</div>
-        <span>{{ platform_context.phone_number }}</span>
+        <span>1-888-NINJUNU<br>{{ platform_context.phone_number }}</span>
         <div class='support'>SUPPORT</div>
         <a href='mailto:{{ platform_context.support_email }}'>{{ platform_context.support_email }}</a><br />
       </div>
