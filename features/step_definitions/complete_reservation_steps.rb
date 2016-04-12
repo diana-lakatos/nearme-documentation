@@ -19,7 +19,7 @@ When /^I fill in a additional charge fields$/ do
 end
 
 Then /^I should see correct Total cost of "([^"]*)"$/ do |amount|
-  assert_equal amount, page.find(".total h1.amount").text
+  assert_equal amount, page.find(".total .amount").text
 end
 
 And /^I delete last additional charge$/ do
