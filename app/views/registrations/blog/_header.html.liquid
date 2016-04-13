@@ -1,3 +1,4 @@
+{% assign displayed_title = false %}
 <div class="header">
   <div class='header-text-and-logo' style='background-image: url({{ @user.blog.header_image_url }});'>
     <div class="v-wrap">
@@ -7,15 +8,18 @@
             {% if @user.blog.header_icon_present? %}
               <img src='{{ @user.blog.header_icon_url }}' />
             {% else %}
+              {% assign displayed_title = true %}
               {{ @user.blog.name }}
             {% endif %}
           </span>
           {% if @user.blog.header_logo_present? %}
             <img src='{{@user.blog.header_logo_url}}' />
           {% else %}
-            <span class="header-text">
-              {{ @user.blog.name }}
-            </span>
+            {% if displayed_title == false %}
+              <span class="header-text">
+                {{ @user.blog.name }}
+              </span>
+            {% endif %}
           {% endif %}
         </a>
       </div>
