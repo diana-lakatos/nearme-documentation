@@ -72,4 +72,17 @@
               = refund.receiver.try(:capitalize)
             %p
               Response:
-              = refund.response.to_yaml
+              = refund.response
+
+- if @payment.voided?
+  .content-container
+    %h4 Payment void
+    .content-container
+      .row
+        .text-container{class: @payment.successful_billing_authorization.success? ? 'text-success' : 'text-danger' }
+          %p
+            Voided at:
+            = @payment.successful_billing_authorization.void_at
+          %p
+            Void Response:
+            = @payment.successful_billing_authorization.void_response

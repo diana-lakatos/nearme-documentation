@@ -1043,6 +1043,7 @@ en:
           captured: 'Payment captured'
           paid: 'Paid'
           refunded: 'Payment refunded'
+          voided: 'Payment voided'
           authorized: 'Payment authorized'
           failed: 'Payment failed'
           details: 'Payment details'
