@@ -24,7 +24,7 @@
         .add-link
           = link_to_add_association t('dashboard.host_reservations.complete_reservation.add_new_charge') , f, :additional_charges, partial: 'additional_charge', id: "add_new_additional_charge", class: 'btn btn-primary', force_non_association_create: true
       %hr
-      .row-fluid
+      .row-fluid.total
         - if @reservation_form.errors[:sub_total].present?
           .col-xs-6.col-sm-2.col-sm-offset-8.text-right.has-error
             .help-block= t('dashboard.host_reservations.complete_reservation.total_cost')

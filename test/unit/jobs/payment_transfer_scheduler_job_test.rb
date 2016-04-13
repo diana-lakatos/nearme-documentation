@@ -56,9 +56,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
 
         should "not include manual payments" do
           FactoryGirl.create(:manual_payment_gateway)
-          payment = @company_1.payments.first
-          payment.payment_method = PaymentMethod.manual.last
-          payment.save!
+          payment = FactoryGirl.create(:manual_payment, company: @company_1)
           assert payment.offline?
           PaymentTransferSchedulerJob.perform
           refute @company_1.payment_transfers[0].payments.include?(payment)

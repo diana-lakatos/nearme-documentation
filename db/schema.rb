@@ -1950,15 +1950,17 @@ ActiveRecord::Schema.define(version: 20160412111128) do
   add_index "saved_searches", ["title", "user_id"], name: "index_saved_searches_on_title_and_user_id", unique: true, using: :btree
 
   create_table "schedule_exception_rules", force: :cascade do |t|
-    t.string   "label",                limit: 255
+    t.string   "label",                    limit: 255
     t.datetime "duration_range_start"
     t.datetime "duration_range_end"
     t.integer  "schedule_id"
     t.integer  "instance_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "availability_template_id"
   end
 
+  add_index "schedule_exception_rules", ["availability_template_id"], name: "index_schedule_exception_rules_on_availability_template_id", using: :btree
   add_index "schedule_exception_rules", ["instance_id", "schedule_id"], name: "index_schedule_exception_rules_on_instance_id_and_schedule_id", using: :btree
 
   create_table "schedule_rules", force: :cascade do |t|

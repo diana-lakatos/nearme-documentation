@@ -43,6 +43,8 @@ class AvailabilityRule::Summary
     day ||= options[:date] && options[:date].wday
     raise ArgumentError.new("Must provide day of week") unless day
 
+    return false if unavailable_for?(options[:date])
+
     rules = rules_for_day(day)
     return false if rules.empty?
 
@@ -60,6 +62,11 @@ class AvailabilityRule::Summary
 
     true
   end
+
+  def unavailable_for?(date)
+    @rules.first.target.schedule_exception_rules.at(date).any?
+  end
+
 
   # Returns an array of days that the listing is open for
   # Days are 0..6, where 0 is Sunday and 6 is Saturday

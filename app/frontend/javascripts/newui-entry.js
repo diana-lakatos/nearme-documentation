@@ -535,4 +535,11 @@ DNM.registerInitializer(function(){
     });
 });
 
+DNM.registerInitializer(function(){
+    var datepickers = require('./new_ui/forms/datepickers');
+    $('.unavailability').on('cocoon:after-insert', function(e, insertedItem) {
+        datepickers(insertedItem);
+    });
+});
+
 DNM.run();

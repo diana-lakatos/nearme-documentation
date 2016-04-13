@@ -18,6 +18,11 @@ module.exports = class ReservationReviewController
       dateFormat: window.I18n.dateFormats['day_month_year'].replace('%d', 'dd').replace('%m', 'mm').replace('%Y', 'yy')
       beforeShowDay: (date) ->
         opened_days = $(@).data('open-on-days')
+        except_periods = $(@).data('except-periods')
+
+        for period in except_periods
+          return false if new Date(period.from) <= date && date <= new Date(period.to)
+
         [ opened_days.indexOf(date.getDay()) > -1 ]
       onSelect: (date_string) =>
         @disableHours(date_string)
