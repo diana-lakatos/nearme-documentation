@@ -4,7 +4,7 @@
       %p= t 'buy_sell_market.products.labels.summary'
     .span3
       .rating
-        = render partial: 'buy_sell_market/products/stars', locals: { stars: @average_rating.to_i }
+        = render partial: 'buy_sell_market/products/stars', locals: { stars: @average_rating.to_i, max_rating: RatingConstants::MAX_RATING }
 .reviews
   = render partial: 'reviews/review', collection: @reviews
 
