@@ -1223,9 +1223,13 @@ namespace :just_hala do
 
     create_translation!('top_navbar.manage_bookable', "My Ninja Profile")
     create_translation!('top_navbar.bookings_received', "My Missions")
-    create_translation!('reservations_review.heading', "Create a Mission")
+    create_translation!('reservations_review.heading', "Book a Mission")
 
-    create_translation!('activemodel.errors.models.reservation_request.attributes.base.total_amount_changed', "Create a Mission")
+    create_translation!('reservations_review.errors.whoops', "Whoops! We couldn't book that mission.")
+
+    create_translation!('reservations_review.errors.does_not_work_on_date', "Unfortunately, this ninja doesn't offer services during the time you requested.")
+
+    create_translation!('activemodel.errors.models.reservation_request.attributes.base.total_amount_changed', "Book a Mission")
     create_translation!('dashboard.items.new_listing_full', "Create Ninja Profile")
 
     create_translation!('reservations_review.disabled_buttons.request', "Hiring...")
@@ -1942,7 +1946,7 @@ namespace :just_hala do
     </div>
 
     <div class='step'>
-      3. Your credit card will be charged.
+      3. Your credit card will be charged after the mission is completed.
     </div>
 
     <div class='need-help step'>
