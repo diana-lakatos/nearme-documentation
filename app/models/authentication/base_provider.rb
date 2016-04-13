@@ -40,6 +40,8 @@ class Authentication::BaseProvider
 
   def connections
     @connections = User.joins(:authentications).where(authentications: {uid: self.friend_ids, provider: provider})
+  rescue
+    []
   end
 
   def new_connections
