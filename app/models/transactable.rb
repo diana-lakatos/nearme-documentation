@@ -318,6 +318,10 @@ class Transactable < ActiveRecord::Base
     end
   end
 
+  def availability_exceptions
+    availability_templates.map(&:future_availability_exceptions).flatten
+  end
+
   # Maximum quantity available for a given date
   def quantity_for(date)
     self.quantity
