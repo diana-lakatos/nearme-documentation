@@ -73,7 +73,7 @@
           placeholder: t('simple_form.placeholders.registration.we_can_contact_you')
 
       - if platform_context.instance.force_accepting_tos
-        = render 'registrations/tos_form', user: user, error: f.object.errors[:accept_terms_of_service].join(', '), checked: !f.object.errors[:accept_terms_of_service].present?
+        = render 'registrations/tos_form', user: f.object, error: f.object.errors[:accept_terms_of_service].join(', '), checked: !f.object.errors[:accept_terms_of_service].present?
       - else
         %p.notice.text-center.legal #{t('sign_up_form.confirm_tos')} #{link_to t('sign_up_form.tos'), pages_path('legal'), :target => '_blank'}.
       .actions
