@@ -16,7 +16,7 @@
         - if false #@offer.has_reviews?
           .rating.product-rating
             %p= t 'buy_sell_market.products.labels.rating'
-            = render partial: 'stars', locals: { stars: @offer.try(:average_rating).try(:round), count: @offer.reviews_count }
+            = render partial: 'stars', locals: { stars: @offer.try(:average_rating).try(:round), count: @offer.reviews_count, max_rating: RatingConstants::MAX_RATING }
         - if user_signed_in?
           = link_to 'Bid on Case', new_offer_bid_path(@offer)
         - else
