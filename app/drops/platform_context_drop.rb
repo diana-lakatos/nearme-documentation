@@ -107,7 +107,7 @@ class PlatformContextDrop < BaseDrop
 
   # url to the logo image
   def logo_url
-    @platform_context_decorator.logo_image.url || image_url("assets/platform_home/logo-01-dark.png").to_s
+    @platform_context_decorator.logo_image.url
   end
 
   # url to the hero image

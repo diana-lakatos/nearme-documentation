@@ -1473,7 +1473,6 @@ class SecuredParams
       payment_attributes: nested(self.payment),
       documents: nested(self.payment_document),
       documents_attributes: nested(self.payment_document),
-      shipments_attributes: nested(self.shipment),
       payment_documents_attributes: nested(self.payment_document),
       owner_attributes: nested(self.user),
       address_attributes: nested(self.address)
