@@ -19,6 +19,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreator < Utils::DefaultAlert
     notify_host_recurring_booking_rejected_email!
     notify_host_recurring_booking_payment_overdue_email!
     notify_guest_recurring_booking_payment_overdue_email!
+    notify_host_recurring_booking_payment_information_updated_email!
   end
 
   def notify_guest_of_expiration_email!
@@ -87,6 +88,10 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreator < Utils::DefaultAlert
 
   def notify_host_recurring_booking_payment_overdue_email!
     create_alert!({associated_class: WorkflowStep::RecurringBookingWorkflow::PaymentOverdue, name: 'notify_host_of_payment_overdue', path: 'recurring_booking_mailer/notify_host_of_payment_overdue', subject: "[{{platform_context.name}}] Payment overdue", alert_type: 'email', recipient_type: 'lister'})
+  end
+
+  def notify_host_recurring_booking_payment_information_updated_email!
+    create_alert!({associated_class: WorkflowStep::RecurringBookingWorkflow::PaymentInformationUpdated, name: 'notify_host_of_payment_information_updated', path: 'recurring_booking_mailer/notify_host_of_payment_information_updated', subject: "[{{platform_context.name}}] {{ recurring_booking.owner.first_name }} updated payment information", alert_type: 'email', recipient_type: 'lister'})
   end
 
   def notify_guest_recurring_booking_payment_overdue_email!

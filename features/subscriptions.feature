@@ -35,7 +35,7 @@ Feature: A user can subscribe to a service
      When I confirm the subscription
      Then I should see all text:
         |You have no unconfirmed reservations.|
-        |You have confirmed the reservation!  |
+        |You have confirmed the reservation  |
      When I go to confirmed subscriptions page
      Then I should see all text:
         |booked     |

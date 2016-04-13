@@ -71,6 +71,7 @@ class Payment < ActiveRecord::Base
   scope :live, -> { where(payment_gateway_mode: 'live')}
   scope :authorized, -> { where(state: 'authorized') }
   scope :paid, -> { where("#{table_name}.state = 'paid'") }
+  scope :unapid, -> { where(paid_at: nil) }
   scope :paid_or_refunded, -> { where(state: ['paid', 'refunded']) }
   scope :refunded, -> { where("#{table_name}.state = 'refunded'") }
   scope :not_refunded, -> { where("#{table_name}.state IS NOT 'refunded'") }

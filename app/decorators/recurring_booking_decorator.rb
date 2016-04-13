@@ -55,7 +55,7 @@ class RecurringBookingDecorator < Draper::Decorator
   end
 
   def last_unpaid_amount
-    humanized_money_with_cents_and_symbol recurring_booking_periods.where(paid_at: nil).last.try(:monetized_total_amount)
+    humanized_money_with_cents_and_symbol(recurring_booking_periods.unpaid.last.try(:total_amount))
   end
 
   def selected_dates_summary(options = {})
