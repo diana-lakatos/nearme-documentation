@@ -56,6 +56,10 @@ class UserBlogPost < ActiveRecord::Base
   end
 
   def slug_candidates
-    [:title]
+    [
+      :title,
+      [:title, self.class.last.try(:id).to_i + 1],
+      [:title, rand(1000000)]
+    ]
   end
 end

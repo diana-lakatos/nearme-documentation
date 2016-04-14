@@ -231,7 +231,9 @@ class Location < ActiveRecord::Base
     [
       :company_and_city,
       [:company_and_city, :street],
-      [:company_and_city, :formatted_address]
+      [:company_and_city, :formatted_address],
+      [:company_and_city, :formatted_address, self.class.last.try(:id).to_i + 1],
+      [:company_and_city, :formatted_address, rand(1000000)]
     ]
   end
 
