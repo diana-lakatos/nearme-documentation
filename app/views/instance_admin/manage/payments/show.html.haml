@@ -34,9 +34,10 @@
           %p
             Created at:
             = l charge.created_at, format: :long
-          %p
-            Payment Gateway:
-            = link_to charge.payment_gateway.try(:name), edit_instance_admin_settings_payment_gateway_path(charge.payment_gateway)
+          - if charge.payment_gateway.present?
+            %p
+              Payment Gateway:
+              = link_to charge.payment_gateway.try(:name), edit_instance_admin_settings_payment_gateway_path(charge.payment_gateway)
           %p
             Amount:
             = humanized_money_with_cents_and_symbol charge.price
@@ -61,9 +62,10 @@
             %p
               Created at:
               = l refund.created_at, format: :long
-            %p
-              Payment Gateway:
-              = link_to refund.payment_gateway.try(:name), edit_instance_admin_settings_payment_gateway_path(refund.payment_gateway)
+            - if refund.payment_gateway.present?
+              %p
+                Payment Gateway:
+                = link_to refund.payment_gateway.try(:name), edit_instance_admin_settings_payment_gateway_path(refund.payment_gateway)
             %p
               Amount:
               = number_to_currency_symbol(refund.currency, Money.new(refund.amount))
