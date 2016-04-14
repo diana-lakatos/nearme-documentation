@@ -17,6 +17,7 @@
         = hidden_field_tag :date
         = hidden_field_tag :time_from
         = hidden_field_tag :time_to
+        = hidden_field_tag :sort
         - if @transactable_type.show_date_pickers?
           = hidden_field_tag :start_date, @searcher.search.display_dates[:start]
           = hidden_field_tag :end_date, @searcher.search.display_dates[:end]

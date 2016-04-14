@@ -64,6 +64,8 @@ module TransactablesIndex
         indexes :availability_exceptions, type: 'date'
         indexes :draft, type: 'date'
         indexes :created_at, type: 'date'
+        indexes :completed_reservations, type: 'integer'
+        indexes :seller_average_rating, type: 'float'
       end
     end
 
@@ -95,7 +97,9 @@ module TransactablesIndex
         all_prices: self.all_prices,
         service_radius: self.properties.try(:service_radius),
         open_hours: self.availability.try(:days_with_hours),
-        open_hours_during_week: self.availability.try(:open_hours_during_week)
+        open_hours_during_week: self.availability.try(:open_hours_during_week),
+        completed_reservations: self.reservations.reviewable.count,
+        seller_average_rating: self.creator.seller_average_rating
       )
     end
 

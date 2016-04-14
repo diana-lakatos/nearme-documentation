@@ -950,6 +950,7 @@ class User < ActiveRecord::Base
   def recalculate_seller_average_rating!
     seller_average_rating = reviews_about_seller.average(:rating) || 0.0
     self.update_column(:seller_average_rating, seller_average_rating)
+    ElasticBulkUpdateJob.perform Transactable, listings.searchable.map{ |listing| [listing.id, { seller_average_rating: seller_average_rating }]}
     touch
   end
 

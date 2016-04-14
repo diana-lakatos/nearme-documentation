@@ -477,6 +477,18 @@ namespace :just_hala do
     </select>
   </div>
 </div>
+
+<div class='search-filter-box-wrapper sort-box'>
+  <div class="search-filter-box" data-filter data-search-filters-container>
+    <select class="select optional hasCustomSelect" name="sort">
+      <option>Sort by</option>
+      <option {% if params['sort'] == 'seller_average_rating_desc' %} selected {% endif %}value="seller_average_rating_desc">Highest rating</option>
+      <option {% if params['sort'] == 'completed_reservations_desc' %} selected {% endif %}value="completed_reservations_desc">Number of missions</option>
+      <option {% if params['sort'] == 'hourly_price_cents_asc' %} selected {% endif %}value="hourly_price_cents_asc">Hourly rate ascending</option>
+      <option {% if params['sort'] == 'hourly_price_cents_desc' %} selected {% endif %}value="hourly_price_cents_desc">Hourly rate descending</option>
+    </select>
+  </div>
+</div>
 },
       format: 'html',
       handler: 'liquid',
@@ -866,7 +878,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     ch.update!({
-      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2355/just_hala.css'>",
+      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2369/just_hala.css'>",
       inject_pages: ['any_page'],
       position: 'head_bottom'
     })

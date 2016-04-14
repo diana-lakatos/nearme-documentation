@@ -270,6 +270,7 @@ class Reservation < ActiveRecord::Base
   def mark_as_archived!
     if archived_at.nil?
       touch(:archived_at)
+      listing.__elasticsearch__.update_document_attributes(completed_reservations: listing.reservations.reviewable.count)
     end
     true
   end

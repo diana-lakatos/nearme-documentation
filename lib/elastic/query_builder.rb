@@ -47,7 +47,7 @@ module Elastic
         size: query_per_page,
         from: query_offset,
         fields: [],
-        sort: ['_score'],
+        sort: sorting_options,
         query: products_match_query,
         filter: {
           bool: {
@@ -85,7 +85,7 @@ module Elastic
         size: query_limit,
         from: query_offset,
         fields: ["_id", "location_id"],
-        sort: ['_score'],
+        sort: sorting_options,
         query: match_query,
         filter: {
           bool: {
@@ -110,7 +110,7 @@ module Elastic
             query: match_query,
           }
         },
-        sort: geo_sort,
+        sort: sorting_options,
         filter: {
           bool: {
             must: @filters,
@@ -218,8 +218,12 @@ module Elastic
       end
     end
 
-    def geo_sort
-      if @query[:lat] && @query[:lon]
+    def sorting_options
+      if @query[:sort] && sort = @query[:sort].match(/(\w*)_(asc|desc)/)
+        [
+          { sort[1] => { order: sort[2] } }
+        ]
+      elsif @query[:lat] && @query[:lon]
         [
           {
             _geo_distance: {
