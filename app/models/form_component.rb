@@ -46,9 +46,9 @@ class FormComponent < ActiveRecord::Base
       when InstanceProfileType::DEFAULT
         [INSTANCE_PROFILE_TYPES]
       when InstanceProfileType::SELLER
-        [SELLER_PROFILE_TYPES]
+        [SELLER_PROFILE_TYPES, SELLER_REGISTRATION]
       when InstanceProfileType::BUYER
-        [BUYER_PROFILE_TYPES]
+        [BUYER_PROFILE_TYPES, BUYER_REGISTRATION]
       else
         raise NotImplementedError
       end
