@@ -1974,6 +1974,7 @@ en:
       pending: "Payment not captured"
       refunded: "Payment refunded"
       authorized: "Payment authorized"
+      voided: "Payment voided"
 
     index:
       title: 'My orders'
