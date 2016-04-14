@@ -587,13 +587,9 @@ DNM.registerInitializer(function(){
         return;
     }
 
-    require.ensure(['./../vendor/jquery-ui-datepicker', './new_ui/forms/timepickers'], function(require){
-        require('./../vendor/jquery-ui-datepicker');
-        dateInput.datepicker({
-            altField: "input[name='date']",
-            altFormat: "yy-mm-dd",
-            dateFormat: window.I18n.dateFormats["day_month_year"].replace('%d', 'dd').replace('%m', 'mm').replace('%Y', 'yy'),
-        });
+    require.ensure(['./sections/search/time_and_datepickers', './new_ui/forms/timepickers'], function(require){
+        var SearchTimeAndDatepickers = require('./sections/search/time_and_datepickers');
+        return new SearchTimeAndDatepickers(dateInput);
     })
 
 });
