@@ -987,6 +987,7 @@ DEPENDENCIES
   acts-as-taggable-on (~> 3.4)
   addressable
   amatch
+  ansi
   attr_encrypted
   awesome_print
   aws-sdk (= 1.27.0)
