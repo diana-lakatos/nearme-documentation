@@ -42,8 +42,12 @@
         - if HiddenUiControls.find('main_menu/manage_items').visible? && platform_context.white_label_company_user?(current_user) && current_user.registration_completed?
           - platform_context.transactable_types.decorate.each do |transactable_type|
             %li
+              - if is_i18n_set?("top_navbar.manage_bookable.#{transactable_type.name}")
+                - title = t("top_navbar.manage_bookable.#{transactable_type.name}")
+              - else
+                - title = t('top_navbar.manage_bookable', bookable_noun: transactable_type.translated_bookable_noun(10))
               = link_to transactable_type.manage_transactables_path, class: 'nav-link dropdown-toggle' do
-                %div.truncate= t 'top_navbar.manage_bookable', bookable_noun: transactable_type.translated_bookable_noun(10)
+                %div.truncate= title
 
         - if platform_context.bookable? && current_instance.split_registration && current_user.seller_profile.present?
           %li
