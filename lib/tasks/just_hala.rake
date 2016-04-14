@@ -449,7 +449,7 @@ namespace :just_hala do
     <h3>
       Time
     </h3>
-    <select class="select optional hasCustomSelect" name="time_from">
+    <select class="select optional hasCustomSelect time-select" name="time_from">
       <option value="">From</option>
       <option {% if params['time_from'] == '0:00' %} selected {% endif %} value="0:00">12:00 AM</option>
       {% for i in (1..11) %}
@@ -462,7 +462,7 @@ namespace :just_hala do
         <option {% if params['time_from'] == hour %} selected {% endif %} value="{{ hour }}">{{ i | minus: 12 }}:00 PM</option>
       {% endfor %}
     </select>
-    <select class="select optional hasCustomSelect" name="time_to">
+    <select class="select optional hasCustomSelect time-select" name="time_to">
       <option value="">To</option>
       <option {% if params['time_to'] == '0:00' %} selected {% endif %} value="0:00">12:00 AM</option>
       {% for i in (1..11) %}

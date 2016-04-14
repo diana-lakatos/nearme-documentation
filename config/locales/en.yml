@@ -133,6 +133,7 @@ en:
     default: "Default"
     approve: 'Approve'
     reject: 'Reject'
+    no_options: 'No options'
   transactable_types:
     locations:
       listings:
