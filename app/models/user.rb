@@ -604,7 +604,14 @@ class User < ActiveRecord::Base
   end
 
   def social_friends_ids
-    authentications.collect{|a| a.social_connection.connections rescue nil}.flatten.compact
+    authentications.collect do |a|
+      begin
+        a.social_connection.try(:connections)
+      # We need Exception => e as Authentication::InvalidToken inherits directly from Exception not StandardError
+      rescue Exception => e
+        nil
+      end
+    end.flatten.compact
   end
 
   def friends_know_host_of(listing)

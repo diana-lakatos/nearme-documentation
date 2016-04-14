@@ -52,19 +52,30 @@ class RecurringBookingDrop < BaseDrop
     @location_drop ||= recurring_booking.location.to_liquid
   end
 
-  # returns true if there is a rejection reason for this reservation
+  # returns true if there is a rejection reason for this recurring_booking
   def has_rejection_reason
     !rejection_reason.to_s.empty?
   end
 
-  # returns the search query URL for the same type of service as this reservation and for this location
+  # returns the search query URL for the same type of service as this recurring_booking and for this location
   def search_url
     routes.search_path(q: location_query_string(@recurring_booking.listing.location), transactable_type_id: @recurring_booking.listing.transactable_type.id)
   end
 
-  # url to the dashboard area for managing own reservations
+  # url to the dashboard area for managing own recurring_bookings
   def bookings_dashboard_url
     routes.dashboard_user_recurring_bookings_path(token_key => @recurring_booking.owner.temporary_token)
+  end
+
+
+  def guest_show_url
+    path = case @recurring_booking.state
+           when 'confirmed', 'unconfirmed', 'overdued'
+            'active_dashboard_user_recurring_bookings_url'
+           else
+             'archived_dashboard_user_recurring_bookings_url'
+           end
+    routes.send(path, anchor: "recurring_booking_#{@recurring_booking.id}", host: PlatformContext.current.decorate.host, token_key => @recurring_booking.owner.temporary_token )
   end
 
   # url to the dashboard area for managing own reservations with tracking

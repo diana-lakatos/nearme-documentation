@@ -2,7 +2,7 @@
   = link_to '#', 'data-search-filter' => true do
     %h3
       %span.ico-chevron-down
-      Service Types
+      = t('search.service_types')
   %ul
     - current_instance.service_types.searchable.each do |transactable_type|
       %li.filter-option

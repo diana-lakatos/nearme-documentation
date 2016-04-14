@@ -1043,6 +1043,7 @@ en:
           captured: 'Payment captured'
           paid: 'Paid'
           refunded: 'Payment refunded'
+          voided: 'Payment voided'
           authorized: 'Payment authorized'
           failed: 'Payment failed'
           details: 'Payment details'
@@ -1404,6 +1405,7 @@ en:
     payments:
       reject: "What's wrong?"
       change_credit_card: 'Change credit card'
+      periods_affected: 'Periods affected'
       reject_placeholder: 'Please let us know what is the reason of declining payment'
       order: "Back to order"
       back_to_order_html: "Back <span class='hidden-xs'>to order</span>"
@@ -2133,6 +2135,8 @@ en:
     results: 'results'
     per_page: 'per page'
     update_map: 'Update search when map moved'
+    service_type: "Service Type"
+    service_types: "Service Types"
 
     date_range:
       title: 'Date range'
