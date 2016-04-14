@@ -58,7 +58,8 @@ class BlogPost < ActiveRecord::Base
   def slug_candidates
     [
       :title,
-      [:title, I18n.l(published_at.to_date, format: :long)]
+      [:title, self.class.last.try(:id).to_i + 1],
+      [:title, rand(1000000)]
     ]
   end
 end
