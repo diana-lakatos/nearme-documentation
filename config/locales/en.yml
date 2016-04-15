@@ -1270,6 +1270,7 @@ en:
       payouts: 'Payments'
       orders_received: 'Orders Received'
       host_reservations: 'Bookings Received'
+      host_reservations_count_html: 'Bookings Received <span>%{count}</span>'
       transfers: 'Payment Transfers'
       analytics: 'Analytics'
       users: 'Manage Admins'

@@ -1,3 +1,4 @@
+
 // Specifies owner specific CSS rules.
 //
 // We will iterate on this approach over time, and the longer term plan is to
@@ -892,6 +893,7 @@ $header-tagline-color: #fff;
 
 
 // Sidebar
+$sidebar-width: 220px;
 $sidebar-background: $gray-dark;
 $sidebar-links-color: #fff;
 $sidebar-links-color-selected: $brand-primary;

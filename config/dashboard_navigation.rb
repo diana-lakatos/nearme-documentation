@@ -41,7 +41,7 @@ SimpleNavigation::Configuration.run do |navigation|
     end
 
     if bookable?
-      primary.item :services_header, t('dashboard.nav.services_header'), nil do |sub_nav|
+      primary.item :services_header, "#{t('dashboard.nav.services_header')} #{current_user_open_all_reservations_count_formatted}", nil do |sub_nav|
 
         if !current_instance.split_registration || current_user.buyer_profile.present?
           dashboard_nav_item sub_nav, 'dashboard/user_reservations', dashboard_user_reservations_path, highlights_on: /\/user_reservations\/*/, link_text: dashboard_nav_user_reservations_label
@@ -52,7 +52,7 @@ SimpleNavigation::Configuration.run do |navigation|
         end
 
         if current_user.registration_completed?
-          dashboard_nav_item sub_nav, 'dashboard/host_reservations', dashboard_company_host_reservations_path, highlights_on: /\/(host_reservations)\/*/
+          dashboard_nav_item sub_nav, 'dashboard/host_reservations', dashboard_company_host_reservations_path, highlights_on: /\/(host_reservations)\/*/, link_text: dashboard_nav_host_reservations_label
           if subscribable?
             dashboard_nav_item sub_nav, 'dashboard/host_recurring_bookings', dashboard_company_host_recurring_bookings_path, highlights_on: /\/host_recurring_bookings\/*/
           end

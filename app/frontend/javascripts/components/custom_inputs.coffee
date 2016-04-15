@@ -25,7 +25,7 @@ module.exports = class CustomInputs
     body.on 'change.customInputs.nearme', ".checkbox, .radio, .checkbox input, .radio input", @updateControls
 
     body.on 'click.customInputs.nearme', '.checkbox-icon-outer, .radio-icon-outer', (e)=>
-      input = $(e.target).closest('.checkbox, .radio').find('input[type="checkbox"], input[type="radio"]')
+      input = $(e.target).closest('.checkbox, .radio').find('input[type="checkbox"]:not(:disabled), input[type="radio"]:not(:disabled)')
       input.prop('checked', !input.prop('checked'))
       input.triggerHandler('change')
       @updateControls()
