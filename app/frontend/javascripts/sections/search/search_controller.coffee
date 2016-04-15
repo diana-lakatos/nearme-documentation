@@ -271,6 +271,7 @@ module.exports = class SearchSearchController extends SearchController
       'price[max]': price_max,
       time_from: @container.find('select[name="time_from"]').val(),
       time_to: @container.find('select[name="time_to"]').val(),
+      sort: @container.find('select[name="sort"]').val(),
       ignore_search_event: 0
       category_ids: all_categories.join(',')
       lntype: _.toArray($('input[name="location_types_ids[]"]:checked').map(-> $(this).val())).join(',')

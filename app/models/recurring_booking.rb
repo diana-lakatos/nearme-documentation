@@ -46,15 +46,15 @@ class RecurringBooking < ActiveRecord::Base
   scope :expired, lambda { with_state(:expired) }
   scope :cancelled_or_expired_or_rejected, lambda { with_state(:cancelled_by_guest, :cancelled_by_host, :rejected, :expired) }
   scope :archived, lambda { where('end_on < ? OR state IN (?)', Time.zone.today, ['rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest']).uniq }
-  scope :needs_charge, -> (date) { confirmed.where('next_charge_date <= ?', date) }
+  scope :needs_charge, -> (date) { with_state(:confirmed, :overdued).where('next_charge_date <= ?', date) }
 
 
   validates :transactable_id, :interval, :presence => true
   validates :owner_id, presence: true, unless: -> { owner.present? }
 
   state_machine :state, initial: :unconfirmed do
-    before_transition unconfirmed: :confirmed do |reservation, transaction|
-      if reservation.check_overbooking && reservation.errors.empty? && period = reservation.generate_next_period!
+    before_transition unconfirmed: :confirmed do |recurring_booking, transaction|
+      if recurring_booking.check_overbooking && recurring_booking.errors.empty? && period = recurring_booking.generate_next_period!
         period.generate_payment!
         true
       else
@@ -63,12 +63,16 @@ class RecurringBooking < ActiveRecord::Base
     end
     after_transition [:unconfirmed, :confirmed] => :cancelled_by_guest, do: :cancel
     after_transition confirmed: :cancelled_by_host, do: :cancel
-    before_transition unconfirmed: :rejected do |reservation, transition|
-      reservation.rejection_reason = transition.args[0]
+    before_transition unconfirmed: :rejected do |recurring_booking, transition|
+      recurring_booking.rejection_reason = transition.args[0]
     end
 
-    after_transition confirmed: :overdued do |reservation, transition|
-      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::PaymentOverdue, reservation.id)
+    after_transition confirmed: :overdued do |recurring_booking, transition|
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::PaymentOverdue, recurring_booking.id)
+    end
+
+    after_transition overdued: :confirmed do |recurring_booking, transition|
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::PaymentInformationUpdated, recurring_booking.id)
     end
 
     event :confirm do
@@ -198,6 +202,12 @@ class RecurringBooking < ActiveRecord::Base
         self.amount_calculator = nil
       end
     end
+  end
+
+  def bump_paid_until_date!
+    # if someone skips payment for October, but will pay for November, we do not want to set paid_until date to November. We will set it to November after
+    # he pays for October.
+    update_attribute(:paid_until, recurring_booking_periods.paid.maximum(:period_end_date)) unless recurring_booking_periods.unpaid.count > 0
   end
 
   def total_amount

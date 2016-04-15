@@ -8,6 +8,10 @@ section.search#content {
     margin-top: -55px;
   }
 
+  .search-filter-box select.time-select option[disabled]{
+    display: none;
+  }
+
   .loading {
     position: fixed;
     top: 50%;

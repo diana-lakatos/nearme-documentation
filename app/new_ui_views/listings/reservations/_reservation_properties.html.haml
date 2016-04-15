@@ -32,7 +32,7 @@
               .small-inputs{data: {'reservation-dates-controller' => @reservation.listing.skip_payment_authorization?, 'validator-url': detect_overlapping_listing_reservations_path(@listing) }}
                 = f.input :dates_fake, input_html: {class: 'jquery-datepicker', data: { except_periods: f.object.listing.availability_exceptions.map(&:range), open_on_days: f.object.listing.opened_on_days, days_with_ranges: f.object.listing.availability.days_with_ranges }}, required: true, label: t('simple_form.labels.reservations.dates')
                 = f.input :dates, as: :hidden
-                = f.input :start_time, as: :select, collection: availability_time_options, required: true,  label: t('simple_form.labels.reservations.start_time')
+                = f.input :start_time, as: :select, collection: availability_time_options, required: true,  label: t('simple_form.labels.reservations.start_time'), input_html: { data: { no_options: t('general.no_options') } }
             - elsif custom_attribute_names.include?(field)
               - if field == 'service_category'
                 = draw_attribute_for_form(f.object.reservation_type.custom_attributes.find_by(name: field), properties_form, false, disabled: get_disabled_categories(f.object.listing) , checked: f.object.properties[:service_category].presence || get_categories_from_search)

@@ -48,7 +48,7 @@ class Schedule < ActiveRecord::Base
 
   def set_timezone
     schedule.start_time = start_datetime_with_timezone
-    self.schedule = schedule.to_hash.to_json
+    self.schedule = schedule.to_hash.except(:start_date).to_json
   end
 
   def create_schedule_from_simple_settings

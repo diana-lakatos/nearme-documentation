@@ -903,6 +903,8 @@ DesksnearMe::Application.routes.draw do
           get :active
           get :archived
         end
+
+        resources :payment_subscriptions, only: [:edit, :update], controller: 'user_recurring_bookings/payment_subscriptions'
       end
 
       resources :wish_list_items, only: [:index, :destroy], path: 'favorites' do

@@ -27,8 +27,7 @@ class Dashboard::Company::PaymentsController < Dashboard::Company::BaseControlle
   end
 
   def refund
-    @payment.refund!
-    if @payment.refunded? && @order.update_order
+    if @payment.refund! && @order.update_order
       flash[:notice] = t('flash_messages.payments.refunded')
     else
       flash[:error] = t('flash_messages.payments.refund_failed')

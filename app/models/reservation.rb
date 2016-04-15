@@ -270,6 +270,7 @@ class Reservation < ActiveRecord::Base
   def mark_as_archived!
     if archived_at.nil?
       touch(:archived_at)
+      listing.__elasticsearch__.update_document_attributes(completed_reservations: listing.reservations.reviewable.count)
     end
     true
   end
@@ -456,7 +457,7 @@ class Reservation < ActiveRecord::Base
 
   def validate_all_dates_available
     if listing.skip_payment_authorization?
-      unless listing.open_on?(date, first_period.start_minute, first_period.end_minute)
+      unless listing.open_on?(date, first_period.start_minute)
         errors.add(:base, I18n.t('reservations_review.errors.does_not_work_on_date'))
       end
     else

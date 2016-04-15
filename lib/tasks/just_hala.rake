@@ -449,7 +449,7 @@ namespace :just_hala do
     <h3>
       Time
     </h3>
-    <select class="select optional hasCustomSelect" name="time_from">
+    <select class="select optional hasCustomSelect time-select" name="time_from">
       <option value="">From</option>
       <option {% if params['time_from'] == '0:00' %} selected {% endif %} value="0:00">12:00 AM</option>
       {% for i in (1..11) %}
@@ -462,7 +462,7 @@ namespace :just_hala do
         <option {% if params['time_from'] == hour %} selected {% endif %} value="{{ hour }}">{{ i | minus: 12 }}:00 PM</option>
       {% endfor %}
     </select>
-    <select class="select optional hasCustomSelect" name="time_to">
+    <select class="select optional hasCustomSelect time-select" name="time_to">
       <option value="">To</option>
       <option {% if params['time_to'] == '0:00' %} selected {% endif %} value="0:00">12:00 AM</option>
       {% for i in (1..11) %}
@@ -474,6 +474,18 @@ namespace :just_hala do
       {% assign hour = i | append: ':00' %}
         <option {% if params['time_to'] == hour %} selected {% endif %} value="{{ hour }}">{{ i | minus: 12 }}:00 PM</option>
       {% endfor %}
+    </select>
+  </div>
+</div>
+
+<div class='search-filter-box-wrapper sort-box'>
+  <div class="search-filter-box" data-filter data-search-filters-container>
+    <select class="select optional hasCustomSelect" name="sort">
+      <option>Sort by</option>
+      <option {% if params['sort'] == 'seller_average_rating_desc' %} selected {% endif %}value="seller_average_rating_desc">Highest rating</option>
+      <option {% if params['sort'] == 'completed_reservations_desc' %} selected {% endif %}value="completed_reservations_desc">Number of missions</option>
+      <option {% if params['sort'] == 'hourly_price_cents_asc' %} selected {% endif %}value="hourly_price_cents_asc">Hourly rate ascending</option>
+      <option {% if params['sort'] == 'hourly_price_cents_desc' %} selected {% endif %}value="hourly_price_cents_desc">Hourly rate descending</option>
     </select>
   </div>
 </div>
@@ -866,7 +878,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     ch.update!({
-      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2355/just_hala.css'>",
+      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2369/just_hala.css'>",
       inject_pages: ['any_page'],
       position: 'head_bottom'
     })
@@ -1244,9 +1256,13 @@ namespace :just_hala do
 
     create_translation!('top_navbar.manage_bookable', "My Ninja Profile")
     create_translation!('top_navbar.bookings_received', "My Missions")
-    create_translation!('reservations_review.heading', "Create a Mission")
+    create_translation!('reservations_review.heading', "Book a Mission")
 
-    create_translation!('activemodel.errors.models.reservation_request.attributes.base.total_amount_changed', "Create a Mission")
+    create_translation!('reservations_review.errors.whoops', "Whoops! We couldn't book that mission.")
+
+    create_translation!('reservations_review.errors.does_not_work_on_date', "Unfortunately, this ninja doesn't offer services during the time you requested.")
+
+    create_translation!('activemodel.errors.models.reservation_request.attributes.base.total_amount_changed', "Book a Mission")
     create_translation!('dashboard.items.new_listing_full', "Create Ninja Profile")
 
     create_translation!('reservations_review.disabled_buttons.request', "Hiring...")
@@ -1963,7 +1979,7 @@ namespace :just_hala do
     </div>
 
     <div class='step'>
-      3. Your credit card will be charged.
+      3. Your credit card will be charged after the mission is completed.
     </div>
 
     <div class='need-help step'>

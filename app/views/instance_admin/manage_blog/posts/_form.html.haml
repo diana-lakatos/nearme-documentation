@@ -1,43 +1,44 @@
-= simple_form_for [:instance_admin, :manage, @blog_post], :html => { :multipart => true } do |f|
+= simple_form_for [:instance_admin, :manage, @blog_post], html: { multipart: true } do |f|
   .row
     .input-container.col-xs-12
-      = f.input :title, required: false, :input_html => { class: 'form-control', :data => { :slug_changed => @blog_post.slug_changed?, :slug_source => true }}
+      = f.input :title, require: true, input_html: { class: 'form-control', data: { slug_changed: @blog_post.slug_changed?, slug_source: true }}
   .row
     .input-container.col-xs-12
-      = f.input :content, required: false, :as => :ckeditor, :input_html => { :ckeditor => { :toolbar => ckeditor_toolbar_creator.toolbar } }
+      = f.input :content, required: true, as: :ckeditor, input_html: { ckeditor: { toolbar: ckeditor_toolbar_creator.toolbar } }
   .row
     .input-container.col-xs-12
-      = f.input :excerpt, :as => :ckeditor, :input_html => { :ckeditor => { :toolbar => ckeditor_toolbar_creator.toolbar } }
+      = f.input :excerpt, as: :ckeditor, input_html: { ckeditor: { toolbar: ckeditor_toolbar_creator.toolbar } }
   .row
     .input-container.col-xs-12
-      = f.input :published_at, required: false, as: :date, include_blank: true, :input_html => { class: 'form-control' }
+      = f.input :published_at, required: true, as: :date, include_blank: true, input_html: { class: 'form-control' }
   .row
     .input-container.col-xs-12
-      = f.input :slug, :data => {:slug => true}, :input_html => { class: 'form-control' }
+      = f.input :slug, data: {slug: true}, input_html: { class: 'form-control' }
   .row
     .input-container.col-xs-12
-      = f.input :tag_list, :input_html => { class: 'form-control', data: data_tags_options(f.object) }
+      = f.input :tag_list, input_html: { class: 'form-control', data: data_tags_options(f.object) }
 
   .row
     .input-container.col-xs-12
       = f.input :header
       - if @blog_post.header.present?
         = link_to(@blog_post.header.filename, @blog_post.header.url)
-        = link_to 'Delete', delete_image_instance_admin_manage_blog_post_path(:image_type => 'header'), data: { confirm: t('confirmations.are_you_sure') }, method: :delete
+        = link_to 'Delete', delete_image_instance_admin_manage_blog_post_path(image_type: 'header'), data: { confirm: t('confirmations.are_you_sure') }, method: :delete
 
   %h4 Author
   .row
     .input-container.col-xs-12
-      = f.input :author_name, :input_html => { class: 'form-control'}
+      = f.input :author_name, input_html: { class: 'form-control'}
   .row
     .input-container.col-xs-12
-      = f.input :author_avatar, :input_html => { class: 'form-control'}
+      = f.input :author_avatar, input_html: { class: 'form-control'}
       - if @blog_post.author_avatar.present?
-        = link_to(@blog_post.author_avatar.filename, @blog_post.author_avatar.url)
-        = link_to 'Delete', delete_image_instance_admin_manage_blog_post_path(:image_type => 'author_avatar'), data: { confirm: t('confirmations.are_you_sure') }, method: :delete
+        - if f.object.persisted?
+          = link_to(@blog_post.author_avatar.filename, @blog_post.author_avatar.url)
+          = link_to 'Delete', delete_image_instance_admin_manage_blog_post_path(image_type: 'author_avatar'), data: { confirm: t('confirmations.are_you_sure') }, method: :delete
   .row
     .input-container.col-xs-12
-      = f.input :author_biography, :input_html => { class: 'form-control'}
+      = f.input :author_biography, input_html: { class: 'form-control'}
       = f.submit t('instance_admin.save'), class: 'hidden_form_element'
 
   = content_for :header_buttons do

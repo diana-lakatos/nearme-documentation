@@ -9,6 +9,7 @@ groups[:profiling] =  [Rails.env.to_s] if ENV['PERF']
 Bundler.require(*Rails.groups(groups)) if defined?(Bundler)
 
 require File.dirname(__FILE__) + '/../lib/null_redis_cache.rb'
+require 'elasticsearch/rails/instrumentation'
 
 module DesksnearMe
   class Application < Rails::Application
