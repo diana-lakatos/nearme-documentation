@@ -15,6 +15,7 @@ module.exports = class SearchTimeAndDatepickers
       onSelect: (date_string) =>
         if @timeFromInput.length > 0 && @timeToInput.length > 0
           @disableHours(date_string)
+        @dateInput.trigger('change')
 
   disableHours: (date_string)->
     date = new Date(date_string)
