@@ -7,7 +7,7 @@
       %p= t('payments.cc_fields.subscribed', last_4: credit_card.last_4)
       = f.hidden_field :credit_card_id, value: credit_card.id
     - else
-      = f.simple_fields_for :crdit_card_attributes, credit_card do |form|
+      = f.simple_fields_for :credit_card_attributes, credit_card do |form|
         = render 'credit_cards/credit_card_fields', form: form
 
 = render 'listings/reservations/confirm_reservations', f: f
