@@ -62,6 +62,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       @user.companies.first.update_metadata({draft_at: Time.now, completed_at: nil})
       if @user.first_listing.new_record?
         @user.save(validate: false)
+        fix_availability_templates
         track_saved_draft_event
         WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::DraftCreated, @user.first_listing.id)
       else
@@ -93,6 +94,16 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   private
+
+  # When saving drafts we end up with parent_type = nil for custom availability templates causing problems down the line
+  def fix_availability_templates
+    listing = @user.companies.first.locations.first.listings.first
+    availability_template = listing.availability_template
+    if availability_template.try(:parent_type) == 'Transactable' && availability_template.try(:parent_id).nil?
+      availability_template.parent = listing
+      availability_template.save(validate: false)
+    end
+  end
 
   def remove_approval_requests
     @user.approval_requests = []
