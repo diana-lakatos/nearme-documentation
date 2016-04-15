@@ -216,7 +216,20 @@ module DashboardHelper
 
   def dashboard_nav_user_reservations_label
     reservations_count = current_user.reservations.no_recurring.not_archived.count
-    reservations_count > 0 ? t('dashboard.nav.user_reservations_count_html', count: reservations_count) : t('dashboard.nav.user_reservations')
+    out = t('dashboard.nav.user_reservations')
+    if reservations_count > 0
+      out = "#{out} <span>#{reservations_count}</span>".html_safe
+    end
+    out
+  end
+
+  def dashboard_nav_host_reservations_label
+    reservations_count = Controller::GuestList.new(current_user).filter('unconfirmed').reservations.size
+    out = t('dashboard.nav.host_reservations')
+    if reservations_count > 0
+      out = "#{out} <span>#{reservations_count}</span>".html_safe
+    end
+    out
   end
 
   def dashboard_transactable_photos_to_image_input_collection(photos)

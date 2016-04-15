@@ -20,7 +20,8 @@
           = "(#{cart.line_items_count})"
           %span.hidden-xs= cart.total_display.html_safe
 
-    = dropdown_menu current_user.first_name, { wrapper_tag: :li } do
+    = dropdown_menu "#{current_user.first_name} #{current_user_open_all_reservations_count_formatted}", { wrapper_tag: :li } do
+
       - if current_user.instance_admins_metadata
         %li= link_to t('top_navbar.marketplace_admin'), user_menu_instance_admin_path(current_user.instance_admins_metadata), target: '_blank'
 
@@ -34,10 +35,16 @@
           %li= link_to "My #{project_type.translated_bookable_noun(10)}", main_app.dashboard_project_type_projects_path(project_type)
 
       - if platform_context.bookable? && HiddenUiControls.find('main_menu/my_bookings').visible? && (!current_instance.split_registration || current_user.buyer_profile.present?)
-        %li= link_to t('top_navbar.my_bookings'), main_app.dashboard_user_reservations_path
+        %li
+          = link_to main_app.dashboard_user_reservations_path do
+            = t('top_navbar.my_bookings')
+            = current_user_open_all_reservations_count_formatted
 
       - if platform_context.bookable? && current_instance.split_registration && current_user.seller_profile.present?
-        %li= link_to t('top_navbar.bookings_received'), main_app.dashboard_company_host_reservations_path
+        %li
+          = link_to main_app.dashboard_company_host_reservations_path do
+            = t('top_navbar.bookings_received')
+            = current_user_open_all_reservations_count_formatted
 
       - if (subscribable? && HiddenUiControls.find('main_menu/my_subscriptions').visible?) && (!current_instance.split_registration || current_user.buyer_profile.present?)
         %li= link_to t('top_navbar.my_subscriptions'), main_app.active_dashboard_user_recurring_bookings_path
@@ -70,7 +77,7 @@
         = link_to main_app.dashboard_user_messages_path, class: 'nav-link' do
           = t('top_navbar.messages')
           - if current_user.unread_user_message_threads_count_for(platform_context.instance) > 0
-            %span.count= "(#{current_user.unread_user_message_threads_count_for(platform_context.instance)})"
+            %span.count= "#{current_user.unread_user_message_threads_count_for(platform_context.instance)}"
 
   - else
     %li

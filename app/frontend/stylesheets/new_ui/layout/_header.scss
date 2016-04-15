@@ -67,6 +67,20 @@ $navbar-padding-vertical-desktop: (($navbar-desktop-height - $line-height-comput
             box-shadow: none;
         }
     }
+
+    .count {
+        display: inline-block;
+        background: $sidebar-counter-background;
+        color: $sidebar-counter-color !important;
+        padding: 0 10px;
+        border-radius: 10px;
+        line-height: 21px;
+        margin-left: 10px;
+        font-size: 10px;
+        font-weight: normal;
+        vertical-align: top;
+    }
+
 }
 
 
