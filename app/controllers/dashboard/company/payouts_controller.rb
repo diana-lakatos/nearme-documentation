@@ -49,6 +49,7 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
 
       if @payment_gateway.supports_host_subscription? && @merchant_account.payment_subscription.blank?
         @merchant_account.build_payment_subscription(
+          payer: current_user,
           subscriber: @merchant_account,
           payment_method_id: @payment_gateway.payment_methods.credit_card.first.id
         )
