@@ -58,6 +58,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   def mark_recurring_booking_as_paid!
     self.paid_at = Time.zone.now
+    self.save!
     recurring_booking.bump_paid_until_date!
   end
 
