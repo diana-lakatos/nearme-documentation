@@ -2,7 +2,6 @@
     <a href="{{ listing.url }}">
       <div class="heading">
         <h3 class="name">{{ listing.name | filter_text | custom_sanitize }}</h3>
-        {% include 'shared/components/wish_list_button_injection.html', object: listing, link_to_classes: 'btn btn-white btn-large ask' %}
         <div class="company row-fluid">
           <div class="span10">
             {{ listing.company.name | filter_text | custom_sanitize }}
