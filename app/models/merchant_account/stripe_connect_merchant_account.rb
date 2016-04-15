@@ -60,8 +60,6 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       if result.keys.is_a?(Stripe::StripeObject)
         self.data[:secret_key] = result.keys.secret
       end
-      self.skip_validation = true
-      self.save
       change_state_if_needed(result)
       true
     elsif result.error
@@ -75,7 +73,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   def create_params
     update_params.deep_merge(
       managed: true,
-      country: merchantable.iso_country_code,
+      country: address.iso_country_code,
       email: merchantable.creator.email,
       tos_acceptance: {
         ip: merchantable.creator.current_sign_in_ip,
@@ -143,7 +141,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
     {
       bank_account: {
-        country: merchantable.iso_country_code,
+        country: address.iso_country_code,
         currency: get_currency,
         account_number: bank_account_number,
         routing_number: bank_routing_number
@@ -152,9 +150,6 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   end
 
   def address_hash
-    address = current_address || merchantable.company_address
-    return {} if address.nil?
-
     {
       country: address.iso_country_code,
       state: address.state,
@@ -163,6 +158,10 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       line1: address.address,
       line2: address.address2
     }
+  end
+
+  def address
+    current_address || merchantable.company_address || merchantable.creator.try(:current_address) || Address.new
   end
 
   def change_state_if_needed(stripe_account, &block)
@@ -181,7 +180,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   end
 
   def get_currency
-    case merchantable.iso_country_code
+    case address.iso_country_code
     when 'US'
       'USD'
     when 'AU'
@@ -193,8 +192,14 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     end
   end
 
+  def has_valid_address?
+    address.parse_address_components!
+    address.errors.clear
+    address.check_address.blank?
+  end
+
   def location
-    country = merchantable.iso_country_code.downcase
+    country = address.iso_country_code.try(:downcase)
     country.in?(%w(us ca au jp)) ? country : 'euuk'
   end
 

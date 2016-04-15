@@ -1,5 +1,3 @@
-
-
 = f.fields_for :stripe_connect_merchant_account do |maf|
   - if merchant_account.persisted?
     = maf.hidden_field :id
@@ -75,7 +73,8 @@
     - else
       %h2= t('dashboard.merchant_account.header')
 
-      %h3= t("dashboard.merchant_account.#{merchant_account.state}")
+      - if merchant_account.persisted?
+        %h3= t("dashboard.merchant_account.#{merchant_account.state}")
 
       .form-group.string.optional{class: maf.error(:account_type) ? 'has-error' : ''}
         = maf.label :account_type, t('dashboard.merchant_account.account_type'), class: 'string optional control-label'
@@ -93,6 +92,12 @@
             = maf.text_field field_name, class: 'string optional form-control'
             %span.help-block= maf.error field_name
 
+        - unless merchant_account.has_valid_address?
+          .form-group.string.optional
+            = maf.simple_fields_for :current_address, maf.object.address do |address_form|
+              .fields.location
+                = render 'dashboard/shared/fields/address', f: address_form, field_label: t('simple_form.labels.merchant_account.current_address')
+
 
         = maf.fields_for :owners do |maof|
           = render 'dashboard/company/merchant_accounts/stripe_connect_owner_fields', f: maof, merchant_account: merchant_account
@@ -103,8 +108,6 @@
               = link_to_add_association t('dashboard.merchant_account.add_owner'), maf, :owners,
                 partial: 'dashboard/company/merchant_accounts/stripe_connect_owner_fields', render_options: {locals: {merchant_account: merchant_account}}
               %br
-
-
         %div{class: maf.error(:tos) ? 'has-error' : ''}
           %label
             = maf.check_box :tos
