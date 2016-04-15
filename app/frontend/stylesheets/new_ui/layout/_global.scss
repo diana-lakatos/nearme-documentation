@@ -15,12 +15,12 @@ main {
     }
 
     .sidebar ~ & {
-        margin-left: 200px;
+        margin-left: $sidebar-width;
     }
 }
 
 .sidebar ~ .page-header {
-    left: 200px;
+    left: $sidebar-width;
 }
 
 %sidebar-transition {
@@ -42,15 +42,15 @@ main {
     }
     .sidebar {
         @extend %sidebar-transition;
-        transform: translateX(-200px);
+        transform: translateX(-$sidebar-width);
     }
 
     .navigation-visible {
         .sidebar ~ main {
-            transform: translateX(200px);
+            transform: translateX($sidebar-width);
         }
         .sidebar ~ .page-header {
-            transform: translateX(200px);
+            transform: translateX($sidebar-width);
         }
 
         .sidebar {
@@ -61,10 +61,10 @@ main {
     @media (min-width: $screen-lg) {
         .sidebar ~ main, .navigation-visible .sidebar ~ main {
             transform: translateX(0);
-            margin-left: 200px;
+            margin-left: $sidebar-width;
         }
         .sidebar ~ .page-header, .navigation-visible .sidebar ~ .page-header {
-            left: 200px;
+            left: $sidebar-width;
             transform: translateX(0);
         }
 

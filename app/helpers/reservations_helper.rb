@@ -58,4 +58,36 @@ module ReservationsHelper
     end
   end
 
+  def current_user_open_host_reservations_count
+    Controller::GuestList.new(current_user).filter('unconfirmed').reservations.size
+  end
+
+  def current_user_open_user_reservations_count
+    current_user.reservations.no_recurring.not_archived.count
+  end
+
+  def current_user_open_all_reservations_count
+    current_user_open_host_reservations_count + current_user_open_user_reservations_count
+  end
+
+  def current_user_open_host_reservations_count_formatted
+    reservations_count_formatted(current_user_open_host_reservations_count)
+  end
+
+  def current_user_open_user_reservations_count_formatted
+    reservations_count_formatted(current_user_open_user_reservations_count)
+  end
+
+  def current_user_open_all_reservations_count_formatted
+    reservations_count_formatted(current_user_open_all_reservations_count)
+  end
+
+  private
+
+    def reservations_count_formatted(count)
+      if count > 0
+        "<span class='count'>#{count}</span>".html_safe
+      end
+    end
+
 end
