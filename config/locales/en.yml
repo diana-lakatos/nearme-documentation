@@ -1511,6 +1511,9 @@ en:
       contact_subscriber: 'Contact %{name}'
 
     merchant_account:
+      almost_there: "You are almost there!"
+      needed_fields_1: "Stripe is asking for just a few more informations!"
+      needed_fields_2: " Please fill out all the flields below. We will send you an email when Stripe verify your account."
       header: 'Merchant account details'
       pending: 'Your merchant account is pending verification.'
       verified: 'Your merchant account has been verified.'
@@ -1527,6 +1530,7 @@ en:
         ca: 'Bank Account Number'
         au: 'Bank Account Number'
         euuk: 'Bank Account Number'
+      bank_account_number_last_4: "Bank account last four digits"
       dob: 'Date of Birth'
       account_type: 'Account Type'
       select_account_type: '- Select Account Type -'

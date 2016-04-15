@@ -27,8 +27,24 @@ en:
         name: "Listing type"
       location_type:
         name: "Location type"
+      merchant_account:
+        bank_routing_number: "Bank Routing Number"
+        tos: "Terms Of service"
+        first_name: "First Name"
+        last_name: "Last Name"
+        current_address: Address
+        account_type: Account Type
+      owners:
+        dob: Date Of Birth
     errors:
       models:
+        merchant_account:
+          attributes:
+            account_type:
+              inclusion: 'Account type should be selected'
+            current_address:
+              inacurate: "must be accurate. Street, number and postcode should be included."
+
         recurring_booking:
           one_valid_reservation: 'The selected dates are not available, please choose different dates.'
         instance:

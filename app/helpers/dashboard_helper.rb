@@ -189,7 +189,7 @@ module DashboardHelper
 
   def dashboard_simple_form_for(resource, options = {}, &block)
     options[:wrapper] = :dashboard_form
-
+    options[:error_class] = :field_with_errors
 
     options[:wrapper_mappings] = {
       check_boxes: :dashboard_radio_and_checkboxes,
