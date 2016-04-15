@@ -38,13 +38,13 @@
         %li
           = link_to main_app.dashboard_user_reservations_path do
             = t('top_navbar.my_bookings')
-            = current_user_open_all_reservations_count_formatted
+            = current_user_open_user_reservations_count_formatted
 
       - if platform_context.bookable? && current_instance.split_registration && current_user.seller_profile.present?
         %li
           = link_to main_app.dashboard_company_host_reservations_path do
             = t('top_navbar.bookings_received')
-            = current_user_open_all_reservations_count_formatted
+            = current_user_open_host_reservations_count_formatted
 
       - if (subscribable? && HiddenUiControls.find('main_menu/my_subscriptions').visible?) && (!current_instance.split_registration || current_user.buyer_profile.present?)
         %li= link_to t('top_navbar.my_subscriptions'), main_app.active_dashboard_user_recurring_bookings_path
