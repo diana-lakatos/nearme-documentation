@@ -508,7 +508,7 @@ en:
       inquiry_added: "Thanks, we'll be in touch!"
       inquiry_not_added: "Please provide a name, company and valid email address."
     payments:
-      authorization_failed_anyway: 'Were not able to charge this credit card. Please make sure there are sufficient funds and try again.'
+      authorization_failed_anyway: 'We were not able to charge this credit card. Please make sure there are sufficient funds and try again.'
       updated: 'Your payment information has been updated.'
       not_updated: 'Your payment information has not been updated.'
       successful_rejection: 'Rejection successful. Please wait for corrected invoice.'

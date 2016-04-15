@@ -1,17 +1,18 @@
 %header.dialog__header
   %h2#dialog__title= t('dashboard.payments.change_credit_card')
 
-%div= t('dashboard.payments.periods_affected')
-%table.table
-  %thead
-    %tr
-      %th= t('dashboard.user_recurring_bookings.periods.start_end')
-      %th= t('dashboard.user_recurring_bookings.periods.total_amount')
-  %tbody
-    - @unpaid_recurring_booking_periods.each do |period|
+- if @unpaid_recurring_booking_periods.any?
+  %div= t('dashboard.payments.periods_affected')
+  %table.table
+    %thead
       %tr
-        %td= "#{I18n.l(period.period_start_date, format: :short)} - #{I18n.l(period.period_end_date, format: :short)}"
-        %td= humanized_money_with_cents_and_symbol(period.total_amount)
+        %th= t('dashboard.user_recurring_bookings.periods.start_end')
+        %th= t('dashboard.user_recurring_bookings.periods.total_amount')
+    %tbody
+      - @unpaid_recurring_booking_periods.each do |period|
+        %tr
+          %td= "#{I18n.l(period.period_start_date, format: :short)} - #{I18n.l(period.period_end_date, format: :short)}"
+          %td= humanized_money_with_cents_and_symbol(period.total_amount)
 
 = dashboard_simple_form_for @payment_subscription, url: dashboard_user_recurring_booking_payment_subscription_path(@recurring_booking, @payment_subscription), method: :put, data: { modal: true } do |f|
   .dialog__body

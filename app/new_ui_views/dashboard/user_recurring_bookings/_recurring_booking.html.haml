@@ -64,8 +64,8 @@
     .col-sm-9.col-sm-push-3
       .order-actions
         - if !recurring_booking.archived? and current_user == recurring_booking.owner
+          %span= link_to t('dashboard.user_reservations.update_credit_card'), edit_dashboard_user_recurring_booking_payment_subscription_path(recurring_booking, recurring_booking.payment_subscription), class: "btn btn-warning", data: { modal: "true"}
           - if recurring_booking.overdued?
-            %span= link_to t('dashboard.user_reservations.update_credit_card'), edit_dashboard_user_recurring_booking_payment_subscription_path(recurring_booking, recurring_booking.payment_subscription), class: "btn btn-warning", data: { modal: "true"}
             .cc-error= t('dashboard.user_reservations.must_change_credit_card')
           - else
             = form_for recurring_booking, method: :post, url: user_cancel_dashboard_user_recurring_booking_path(recurring_booking) do |f|
