@@ -4,7 +4,7 @@
     %h4= t('instance_admin.manage.service_types.basic_configuration')
     .row
       .input-container.col-xs-12
-        = f.input :name, input_html: { class: 'form-control' }
+        = f.input :name, hint: '', placeholder: '', input_html: { class: 'form-control' }
     .row
       .input-container.col-xs-6
         = f.input :favourable_pricing_rate, :inline_label => true#, hint: 'In case of multiple pricing schemas, like daily/weekly/monthly, if favourable pricing rate is checked, we will use only one price. If it is unchecked, we will use more favourable pricing only for periods that satisfies condition. For example, if weekly pricing is for 7 days, and someone books 8, with favourable pricing we will calculate it as 8/7 * weekly rate. If favourable pricing is not checked, we will calculate it as 1 * weekly rate + 1 * daily rate'
