@@ -24,12 +24,11 @@ class InstanceAdmin::ManageBlog::PostsController < InstanceAdmin::ManageBlog::Ba
   end
 
   def edit
-    @blog_post = @blog_instance.blog_posts.find(params[:id])
+    respond_with resource
   end
 
   def update
-    @blog_post = @blog_instance.blog_posts.find(params[:id])
-    if @blog_post.update_attributes(post_params)
+    if resource.update_attributes(post_params)
       flash[:success] = t('flash_messages.blog_admin.blog_posts.blog_post_updated')
       redirect_to instance_admin_manage_blog_posts_path
     else
@@ -40,23 +39,25 @@ class InstanceAdmin::ManageBlog::PostsController < InstanceAdmin::ManageBlog::Ba
   def delete_image
     case params[:image_type]
     when 'header'
-      @blog_post = @blog_instance.blog_posts.find(params[:id])
-      @blog_post.remove_header!
-      @blog_post.save!
+      resource.remove_header!
     when 'author_avatar'
-      @blog_post = @blog_instance.blog_posts.find(params[:id])
-      @blog_post.remove_author_avatar!
-      @blog_post.save!
+      resource.remove_author_avatar!
     end
+    resource.save!
 
-    redirect_to :action => :edit
+    redirect_to action: :edit
   end
 
   def destroy
-    @blog_post = @blog_instance.blog_posts.find(params[:id])
-    @blog_post.destroy
+    resource.destroy
     flash[:success] = t('flash_messages.blog_admin.blog_posts.blog_post_deleted')
     redirect_to instance_admin_manage_blog_posts_path
+  end
+
+  protected
+
+  def resource
+    @blog_post ||= @blog_instance.blog_posts.find(params[:id])
   end
 
   private
@@ -79,5 +80,4 @@ class InstanceAdmin::ManageBlog::PostsController < InstanceAdmin::ManageBlog::Ba
       redirect_to instance_admin_manage_blog_posts_path
     end
   end
-
 end
