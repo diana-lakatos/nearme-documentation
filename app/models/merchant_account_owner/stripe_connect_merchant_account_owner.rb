@@ -8,6 +8,8 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
   belongs_to :merchant_account, class_name: 'MerchantAccount::StripeConnectMerchantAccount'
 
   validates_format_of :dob, with: /\d{4}-\d{2}-\d{2}/, message: 'Date of Birth has wrong format', allow_blank: true
+  validates_presence_of :dob
+
 
   def upload_document(stripe_account_id)
     if attributes['document'] || document.file.try(:path)
