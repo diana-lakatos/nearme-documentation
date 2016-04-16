@@ -10,7 +10,7 @@
     .panel-body
       = render partial: 'form', locals: { f: f }
 
-  - unless @merchant_account.try(:chain_payments?) || (@merchant_account.verified? && @merchant_account.type == "MerchantAccount::StripeConnectMerchantAccount")
+  - unless @merchant_account.try(:chain_payments?) || (@merchant_account.try(:verified?) && @merchant_account.try(:type) == "MerchantAccount::StripeConnectMerchantAccount")
     .panel.form-actions
       .panel-body
         = f.submit t('payouts.buttons.save')
