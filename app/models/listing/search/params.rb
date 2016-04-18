@@ -71,7 +71,7 @@ class Listing::Search::Params
     @bounding_box ||= begin
       if @options[:boundingbox].present?
         box = @options[:boundingbox]
-        [[box[:start][:lat], box[:start][:lon]], [box[:end][:lat], box[:end][:lon]]]
+        [[box[:start][:lat], box[:end][:lon]], [box[:end][:lat], box[:start][:lon]]]
       end
     end
   end

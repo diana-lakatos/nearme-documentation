@@ -2,6 +2,7 @@
 class AvailabilityRule::Summary
   def initialize(rules)
     @rules = rules
+    @unavailable_periods = @rules.first.target.schedule_exception_rules.future.map(&:time_range).flatten
   end
 
   # Iterate over each day in the week and yield the day of week and the availability rule (if any) for that day.
@@ -43,7 +44,6 @@ class AvailabilityRule::Summary
     day ||= options[:date] && options[:date].wday
     raise ArgumentError.new("Must provide day of week") unless day
 
-    return false if unavailable_for?(options[:date])
 
     rules = rules_for_day(day)
     return false if rules.empty?
@@ -60,11 +60,13 @@ class AvailabilityRule::Summary
       return false unless rules.any? { |rule| rule.open_at?(options[:end_minute]/60, options[:end_minute]%60) }
     end
 
+    return false if options[:date] && unavailable_for?(options[:date].in_time_zone)
+
     true
   end
 
   def unavailable_for?(date)
-    @rules.first.target.schedule_exception_rules.at(date).any?
+    @unavailable_periods.any?{ |range| range.cover?(date) }
   end
 
 

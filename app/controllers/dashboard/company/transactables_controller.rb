@@ -18,7 +18,8 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def new
-    @transactable = @transactable_type.transactables.build company: @company, booking_type: @transactable_type.booking_choices.first
+    @transactable = @transactable_type.transactables.build company: @company
+    @transactable.initialize_action_types
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     @photos = current_user.photos.where(owner_id: nil)
     @attachments = current_user.attachments.where(assetable_id: nil)
@@ -26,20 +27,16 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
 
   def create
     @transactable = @transactable_type.transactables.build(creator: current_user)
-    # Some currencies have different subunit to unit converion rate. If you do Transactable.new(daily_price: 8, currency: 'JPY') it will
-    # incorrectly make daily_price_cents = 8 despite 1 - 1 conversiton rate, because currency at the time of doing this is nil, fallbacking
-    # to USD with currency rate 100 - 1. So we want to make sure that currency is assigned.
-    @transactable.currency = transactable_params[:currency] if transactable_params[:currency].present?
     @transactable.assign_attributes(transactable_params)
-    @transactable.availability_template = @transactable_type.default_availability_template unless transactable_params.has_key? "availability_template_id"
+    # TODO: fix default availability template
+    # @transactable.availability_template = @transactable_type.default_availability_template unless transactable_params.has_key? "availability_template_id"
     @transactable.company = @company
     @transactable.location ||= @company.locations.first if @transactable_type.skip_location?
     @transactable.attachment_ids = attachment_ids_for(@transactable)
-
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
 
     if @transactable.save
-      @transactable.schedule.try(:create_schedule_from_schedule_rules)
+      @transactable.action_type.try(:schedule).try(:create_schedule_from_schedule_rules)
       WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @transactable.id) unless @transactable.is_trusted?
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.translated_bookable_noun)
       flash[:error] = t('manage.listings.no_trust_explanation') if !@transactable.is_trusted?
@@ -59,6 +56,11 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def edit
+    @transactable_type.action_types.bookable.each do |tt_action_type|
+      @transactable.action_types.where(transactable_type_action_type: tt_action_type).first_or_initialize(
+        type: "Transactable::#{tt_action_type.class.name.demodulize}"
+      )
+    end
     @photos = @transactable.photos
     @attachments = @transactable.attachments
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
@@ -69,12 +71,13 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     @transactable.currency = transactable_params[:currency] if transactable_params[:currency].present?
     @transactable.attachment_ids = attachment_ids_for(@transactable)
     @transactable.assign_attributes(transactable_params)
+    @transactable.action_type = @transactable.action_types.find(&:enabled)
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
 
     respond_to do |format|
       format.html {
         if @transactable.save
-          @transactable.schedule.try(:create_schedule_from_schedule_rules)
+          @transactable.action_type.try(:schedule).try(:create_schedule_from_schedule_rules)
           flash[:success] = t('flash_messages.manage.listings.listing_updated')
           unless @transactable.is_trusted?
             flash[:error] = t('manage.listings.no_trust_explanation')
@@ -147,7 +150,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def find_transactable_type
-    @transactable_type = ServiceType.find(params[:transactable_type_id] || params[:service_type_id])
+    @transactable_type = TransactableType.find(params[:transactable_type_id] || params[:service_type_id])
   end
 
   def transactable_params

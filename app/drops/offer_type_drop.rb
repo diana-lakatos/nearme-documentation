@@ -1,3 +1,0 @@
-class OfferTypeDrop < TransactableTypeDrop
-end
-

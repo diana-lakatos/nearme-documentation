@@ -4,7 +4,7 @@ FactoryGirl.define do
     association(:payment)
     created_at { Time.zone.now }
     success true
-    amount 1000
+    amount_cents 1000
     currency 'USD'
     receiver 'guest'
   end

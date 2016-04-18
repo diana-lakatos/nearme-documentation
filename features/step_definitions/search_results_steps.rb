@@ -1,10 +1,13 @@
 Given /^Auckland listing has prices: (.*), (.*), (.*)$/ do |daily_price, weekly_price, monthly_price|
   listing = Transactable.last
-  listing.daily_price = (daily_price=='nil' ? nil : daily_price)
-  listing.weekly_price = (weekly_price=='nil' ? nil : weekly_price)
-  listing.monthly_price = (monthly_price=='nil' ? nil : monthly_price)
-  listing.action_free_booking = true if !listing.has_price?
-  listing.save!
+  daily_price.in?(['nil', '0']) ? listing.action_type.pricing_for('1_day').destroy : listing.action_type.pricing_for('1_day').price = daily_price
+  weekly_price.in?(['nil', '0']) ? listing.action_type.pricing_for('7_day').destroy : listing.action_type.pricing_for('7_day').price = weekly_price
+  monthly_price.in?(['nil', '0']) ? listing.action_type.pricing_for('30_day').destroy : listing.action_type.pricing_for('30_day').price = monthly_price
+  if !listing.has_price?
+    listing.action_type.pricings.with_deleted.first.restore if listing.action_type.pricings.blank?
+    listing.action_type.pricings.with_deleted.first.is_free_booking = true
+  end
+  listing.action_type.save!
 end
 
 When(/^I search for "(.*?)" with (\d+) per page$/) do |q, per_page|

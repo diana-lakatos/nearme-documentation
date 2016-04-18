@@ -36,6 +36,7 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
       reservation_request: {
         dates: [Chronic.parse('Monday')],
         quantity: "1",
+        transactable_pricing_id: @listing.action_type.pricings.first.id,
         payment_attributes: {
           payment_method_id: @payment_method.id,
           credit_card_attributes: {
@@ -54,14 +55,12 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
   def mockup_database_with_currency(currency = 'USD')
     stub_what_has_to_be_stubbed
     @instance = PlatformContext.current.instance
-    @instance.update_attribute(:service_fee_host_percent, 10)
-    @instance.update_attribute(:service_fee_guest_percent, 15)
     @instance.update_attribute(:payment_transfers_frequency, 'daily')
     FactoryGirl.create(:additional_charge_type, currency: 'USD', amount: 15)
-    @listing = FactoryGirl.create(:transactable, currency: currency, :daily_price => 25.00)
-
-    @listing.transactable_type.update_attribute(:service_fee_host_percent, 10)
-    @listing.transactable_type.update_attribute(:service_fee_guest_percent, 15)
+    @listing = FactoryGirl.create(:transactable, currency: currency)
+    @listing.action_type.pricings.by_unit('day').update_all(price_cents: 2500)
+    @listing.action_type.transactable_type_action_type.update_attribute(:service_fee_host_percent, 10)
+    @listing.action_type.transactable_type_action_type.update_attribute(:service_fee_guest_percent, 15)
     @instance.update_attribute(:payment_transfers_frequency, 'daily')
 
     @payment_gateway = FactoryGirl.create(:braintree_marketplace_payment_gateway)

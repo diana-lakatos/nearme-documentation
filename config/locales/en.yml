@@ -58,6 +58,9 @@ en:
         address: "Company address"
       "companies/locations/listings":
         properties: "Property"
+      transactable/action_type:
+        action_rfq: 'Request for Quote'
+        no_action: 'No Action'
   connections:
     facebook:
       count:
@@ -887,7 +890,7 @@ en:
         no_addons_yet: "You don't have any add-ons yet. Click on the link below and start upselling now"
         add_new_upsell: '+ Add new Upsell'
         name: "Name"
-        service: "ServiceType/ProductType"
+        service: "TransactableType/ProductType"
         amount: "Amount"
         status: "Status"
         add_upsell: '+ Add Upsell'
@@ -1234,6 +1237,8 @@ en:
       intro: 'Please provide the following information to become an approved seller for this service. Your listing will be published when the Marketplace Owner approves your status.'
 
   support:
+    new:
+      subscription: '%{period} based subscription from %{from}'
     dashboard:
       support: "Support"
       tickets: "Tickets"
@@ -1428,6 +1433,9 @@ en:
       archived: "Archived"
       monthly_price: 'Monthly price'
       weekly_price: 'Weekly price'
+      every_unit_price:
+        one: 'Every %{unit} price'
+        other: 'Every %{no_of_units} %{unit} price'
       starts_from: 'Starts from'
       placed: 'Reservation placed'
       next_payment_at: 'Next payment'
@@ -1514,7 +1522,7 @@ en:
       money_info: "Payment has been authorized but it will be captured only upon confirmation."
       next_payment_transfer: "The next automated payout occurs at %{next_payment_transfer}."
       remember_to_setup_automated_payout: "To receive automated payout please <a href='%{setup_link}'>setup payouts</a>."
-      exclusive_price_guests_notes: 'Exclusive booking instructions from guest: %{guest_notes}'
+      exclusive_price_guests_notes: 'Exclusive booking instructions from guest:'
       payment_documents: 'Payment documents:'
       additional_charges: 'Upsell & Add-ons:'
       track_package: 'Track package'
@@ -2176,16 +2184,40 @@ en:
     per_day: 'PER DAY'
     per_week: 'PER WEEK'
     per_month: 'PER MONTH'
+    day:
+      one: 'day'
+      other: 'days'
+    hour:
+      one: 'hour'
+      other: 'hours'
+    night:
+      one: 'night'
+      other: 'nights'
+    subscription_month:
+      one: 'calendar month'
+      other: 'calendar months'
+    subscription_day:
+      one: 'day'
+      other: 'days'
+    event:
+      one: 'event'
+      other: 'events'
+    per_unit_price:
+      one: "PER %{unit}"
+      other: "PER %{no_of_units} %{unit}"
     slash_per_hour: '/ hour'
     slash_per_night: '/ night'
     slash_per_day: '/ day'
     slash_per_week: '/ week'
     slash_per_month: '/ month'
+    slash_per_event: '/ event'
+    slash_per_subscription_month: '/ month'
+    slash_per_subscription_day: '/ day'
     from_price: "From"
     first_day: 'Select a start date'
     last_day: 'Select an end date'
     booking_module:
-      fixed: 'Fixed Price'
+      event: 'Fixed Price'
       book_it_out: 'Book It Out'
       exclusive_price: 'Exclusive Price'
       exclusive_price_content: ''
@@ -2225,12 +2257,27 @@ en:
       inactive: "Payment failed"
       completed: "Completed"
   search:
-    pricing_types:
-      daily: "Daily"
-      weekly: "Weekly"
-      monthly: "Monthly"
-      hourly: "Hourly"
-      free: "Free"
+    day:
+      one: 'day'
+      other: 'days'
+    hour:
+      one: 'hour'
+      other: 'hours'
+    night:
+      one: 'night'
+      other: 'nights'
+    subscription_month:
+      one: 'calendar month'
+      other: 'calendar months'
+    subscription_day:
+      one: 'day'
+      other: 'days'
+    event:
+      one: 'event'
+      other: 'events'
+    per_unit_price:
+      one: "%{unit}"
+      other: "%{no_of_units} %{unit}"
     header:
       list: "List"
       map: "Map"
@@ -2497,12 +2544,17 @@ en:
       date_in_past: 'You cannot book a date in past.'
       invalid_date: 'Invalid date.'
       does_not_work_on_date: "Unfortunately the following Ninja doesn't work on requested time"
+      no_minimum_days: "Booking selection does not meet requirements. A minimum of %{minimum_days} consecutive bookable days are required."
+      no_minimum_minutes: "Booking selection does not meet requirements. A minimum of %{minimum_minutes} hours are required."
+      dates_not_available: "Unfortunately the following bookings are no longer available: %{dates}"
     payments:
       submit: "Submit a secure payment."
 
   recurring_reservations_review:
     total: 'Total per reservation'
-    total_per_interval: 'Total %{interval} payment'
+    total_per_unit:
+      one: 'Total every %{unit} payment'
+      other: 'Total every %{no_of_units} %{unit} payment'
     starts_from: 'Subscription from'
     weekly: 'weekly'
     monthly: 'monthly'

@@ -1,4 +1,4 @@
-@javascript
+@javascript @elasticsearch
 Feature: A user can save a search
   In order to be able to use saved searches
   As a user
@@ -41,6 +41,5 @@ Feature: A user can save a search
   Scenario: User uses the saved search name
     Given there is existing saved search
     And I am on the dashboard saved searches page
-    And a listing in Auckland exists
     When I click on search title
     Then I see a search result for the Auckland listing

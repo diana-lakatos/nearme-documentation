@@ -1,14 +1,15 @@
 class AvailabilityRule::HourlyListingStatus
-  def initialize(listing, date)
-    @listing = listing
+  def initialize(action, date)
+    @action = action
+    @transactable = action.transactable
     @date = date
     @schedule = {}
 
-    if @listing.availability.open_on?(:date => @date)
-      @rules = @listing.availability.rules_for_day(@date.wday)
+    if @action.availability.open_on?(date: @date)
+      @rules = @action.availability.rules_for_day(@date.wday)
       @rules.each do |rule|
         (rule.day_open_minute..rule.day_close_minute).step(15) do |minute|
-          @schedule[minute] = @listing.quantity_for(date)
+          @schedule[minute] = @transactable.quantity_for(date)
         end
       end
       build_time_quantities
@@ -20,7 +21,7 @@ class AvailabilityRule::HourlyListingStatus
   end
 
   def build_time_quantities
-    @listing.reservations.confirmed.joins(:periods).
+    @transactable.reservations.confirmed.joins(:periods).
      where(:reservation_periods => { :date => @date }).
      select('reservations.quantity as quantity_booked, reservation_periods.start_minute, reservation_periods.end_minute').
      each do |period|

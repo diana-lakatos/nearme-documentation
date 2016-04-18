@@ -17,7 +17,7 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
 
   context 'track_charge' do
     setup do
-      @listing = FactoryGirl.create(:transactable, :daily_price => 89.39)
+      @listing = FactoryGirl.create(:transactable)
       @reservation = FactoryGirl.create(:unconfirmed_reservation, :listing => @listing)
       @reservation.payment = FactoryGirl.create(:payment)
       @reservation.save!
@@ -88,7 +88,7 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
   context 'Locations' do
     setup do
       @listing = FactoryGirl.create(:transactable)
-      @location = @listing.location
+      @location = @listing.location.reload
       @search = build_search_params(options_with_location)
       @category = "Location events"
     end
@@ -312,9 +312,7 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
       listing_name: @listing.name,
       listing_quantity: @listing.quantity,
       listing_confirm: @listing.confirm_reservations,
-      listing_daily_price: @listing.daily_price.try(:dollars),
-      listing_weekly_price: @listing.weekly_price.try(:dollars),
-      listing_monthly_price: @listing.monthly_price.try(:dollars),
+      listing_pricings: @listing.action_type.pricings.map{|p| p.price_information.merge({ price: p.price.to_f })},
       listing_currency: @listing.currency,
       listing_url: @listing.decorate.show_url
     }

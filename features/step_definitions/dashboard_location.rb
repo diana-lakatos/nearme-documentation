@@ -62,9 +62,12 @@ end
 When /^I (disable|enable) (.*) pricing$/ do |action, period|
   click_link 'Pricing & Availability'
   if action=='enable'
-    page.execute_script("$(\".transactable_enable_#{period} input\").prop('checked', true)")
-    page.execute_script("$(\".transactable_enable_#{period} input\").trigger('change')")
-    page.find("#transactable_#{period}_price").set(15.50)
+    page.execute_script("$(\"[data-pricing-for='#{period}'] input[name*='enabled'][type=checkbox]\").prop('checked', true)")
+    page.execute_script("$(\"[data-pricing-for='#{period}'] input[name*='enabled'][type=checkbox]\").trigger('change')")
+    page.find("[data-pricing-for='#{period}'] input[name*='price'][type=number]").set(15.50)
+  else
+    page.execute_script("$(\"[data-pricing-for='#{period}'] input[name*='enabled'][type=checkbox]\").prop('checked', false)")
+    page.execute_script("$(\"[data-pricing-for='#{period}'] input[name*='enabled'][type=checkbox]\").trigger('change')")
   end
 end
 
@@ -109,38 +112,38 @@ end
 
 Then /^Listing (.*) pricing should be (disabled|enabled)$/ do |period, state|
   click_link 'Pricing & Availability'
-  enable_period_checkbox = page.find(".transactable_enable_#{period} input")
+  enable_period_checkbox = page.find("[data-pricing-for='#{period}'] input[name*='enabled'][type=checkbox]")
   if state=='enabled'
     assert enable_period_checkbox.checked?
-    assert_equal "15.50", page.find("#transactable_#{period}_price").value
+    assert_equal "15.50", page.find("[data-pricing-for='#{period}'] input[name*='price'][type=number]").value
   else
     assert !enable_period_checkbox.checked?
   end
 end
 
-When /^I mark transactable as free$/ do
-  page.execute_script('$("input[data-action-free-booking]").trigger("click")')
+When /^I mark (.*) price as free$/ do |period|
+  page.execute_script("$(\"[data-pricing-for='#{period}'] input[name*='is_free_booking'][type=checkbox]\").click()")
 end
 
-Then /^pricing should be free$/ do
+Then /^pricing for (.*) should be free$/ do |period|
   click_link 'Pricing & Availability'
-  page.find("#transactable_regular_action_free_booking", visible: false).checked?
+  page.find("[data-pricing-for='#{period}'] input[name*='is_free_booking'][type=checkbox]", visible: false).checked?
 end
 
 When /^I select custom availability:$/ do |table|
   click_link 'Pricing & Availability'
-  first('.transactable_availability_template_id li:last-child').click
+  first('.transactable_action_types_availability_template_id li:last-child').click
   (0..6).each do |day|
-    page.execute_script("$(\"#transactable_availability_template_attributes_availability_rules_attributes_0_days_#{day}\").prop('checked', false)")
-    page.execute_script("$(\"#transactable_availability_template_attributes_availability_rules_attributes_0_days_#{day}\").trigger('change')")
+    page.execute_script("$(\"#transactable_action_types_attributes_1_availability_template_attributes_availability_rules_attributes_0_days_#{day}\").prop('checked', false)")
+    page.execute_script("$(\"#transactable_action_types_attributes_1_availability_template_attributes_availability_rules_attributes_0_days_#{day}\").trigger('change')")
   end
   rules = availability_data_from_table(table)
   rules.each do |rule|
-    fill_in "transactable_availability_template_attributes_availability_rules_attributes_0_open_time", with: rule[:open]
-    fill_in "transactable_availability_template_attributes_availability_rules_attributes_0_close_time", with: rule[:close]
+    fill_in "transactable_action_types_attributes_1_availability_template_attributes_availability_rules_attributes_0_open_time", with: rule[:open]
+    fill_in "transactable_action_types_attributes_1_availability_template_attributes_availability_rules_attributes_0_close_time", with: rule[:close]
     rule[:days].each do |day|
-      page.execute_script("$(\"#transactable_availability_template_attributes_availability_rules_attributes_0_days_#{day}\").prop('checked', true)")
-      page.execute_script("$(\"#transactable_availability_template_attributes_availability_rules_attributes_0_days_#{day}\").trigger('change')")
+      page.execute_script("$(\"#transactable_action_types_attributes_1_availability_template_attributes_availability_rules_attributes_0_days_#{day}\").prop('checked', true)")
+      page.execute_script("$(\"#transactable_action_types_attributes_1_availability_template_attributes_availability_rules_attributes_0_days_#{day}\").trigger('change')")
     end
   end
 end

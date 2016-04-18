@@ -19,7 +19,6 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
       @xml_file.parse
     end
 
-
     should 'counts should not change after second parse' do
       expected_counts = get_counts_of_all_relevant_objects
       @xml_file.parse
@@ -98,10 +97,10 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
               should 'have the right details (listing1)' do
                 @listing = @location.listings.find_by_external_id('1')
                 assert_equal true, @listing.confirm_reservations
-                assert_equal 4, @listing.hourly_price_cents
-                assert_equal 10, @listing.daily_price_cents
-                assert_equal 15, @listing.weekly_price_cents
-                assert_equal 30, @listing.monthly_price_cents
+                assert_equal 4, @listing.action_type.price_cents_for('1_hour')
+                assert_equal 10, @listing.action_type.price_cents_for('1_day')
+                assert_equal 15, @listing.action_type.price_cents_for('7_day')
+                assert_equal 30, @listing.action_type.price_cents_for('30_day')
                 assert_equal true, @listing.enabled
                 assert_equal 'my attrs! 1', @listing.properties.my_attribute
               end
@@ -109,10 +108,10 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
               should 'have the right details (listing2)' do
                 @listing = @location.listings.find_by_external_id('2')
                 assert_equal true, @listing.confirm_reservations
-                assert_equal 4, @listing.hourly_price_cents
-                assert_equal 10, @listing.daily_price_cents
-                assert_equal 15, @listing.weekly_price_cents
-                assert_equal 30, @listing.monthly_price_cents
+                assert_equal 4, @listing.action_type.price_cents_for('1_hour')
+                assert_equal 10, @listing.action_type.price_cents_for('1_day')
+                assert_equal 15, @listing.action_type.price_cents_for('7_day')
+                assert_equal 30, @listing.action_type.price_cents_for('30_day')
                 assert_equal true, @listing.enabled
                 assert_equal 'my attrs! 2', @listing.properties.my_attribute
               end
@@ -156,10 +155,10 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
               should 'have the right details (listing3)' do
                 @listing = @location.listings.find_by_external_id('3')
                 assert_equal true, @listing.confirm_reservations
-                assert_equal 4, @listing.hourly_price_cents
-                assert_equal 10, @listing.daily_price_cents
-                assert_equal 15, @listing.weekly_price_cents
-                assert_equal 30, @listing.monthly_price_cents
+                assert_equal 4, @listing.action_type.price_cents_for('1_hour')
+                assert_equal 10, @listing.action_type.price_cents_for('1_day')
+                assert_equal 15, @listing.action_type.price_cents_for('7_day')
+                assert_equal 30, @listing.action_type.price_cents_for('30_day')
                 assert_equal true, @listing.enabled
                 assert_equal 'my attrs! 3', @listing.properties.my_attribute
               end
@@ -269,10 +268,10 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                 should 'have the right details (listing1)' do
                   @listing = @location.listings.find_by_external_id('1')
                   assert_equal true, @listing.confirm_reservations
-                  assert_equal 4, @listing.hourly_price_cents
-                  assert_equal 10, @listing.daily_price_cents
-                  assert_equal 15, @listing.weekly_price_cents
-                  assert_equal 30, @listing.monthly_price_cents
+                  assert_equal 4, @listing.action_type.price_cents_for('1_hour')
+                  assert_equal 10, @listing.action_type.price_cents_for('1_day')
+                  assert_equal 15, @listing.action_type.price_cents_for('7_day')
+                  assert_equal 30, @listing.action_type.price_cents_for('30_day')
                   assert_equal true, @listing.enabled
                   assert_equal 'my attrs! 1', @listing.properties.my_attribute
                 end
@@ -280,10 +279,10 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                 should 'have the right details (listing2)' do
                   @listing = @location.listings.find_by_external_id('2')
                   assert_equal true, @listing.confirm_reservations
-                  assert_equal 4, @listing.hourly_price_cents
-                  assert_equal 10, @listing.daily_price_cents
-                  assert_equal 15, @listing.weekly_price_cents
-                  assert_equal 30, @listing.monthly_price_cents
+                  assert_equal 4, @listing.action_type.price_cents_for('1_hour')
+                  assert_equal 10, @listing.action_type.price_cents_for('1_day')
+                  assert_equal 15, @listing.action_type.price_cents_for('7_day')
+                  assert_equal 30, @listing.action_type.price_cents_for('30_day')
                   assert_equal true, @listing.enabled
                   assert_equal 'my attrs! 2', @listing.properties.my_attribute
                 end
@@ -327,10 +326,10 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                 should 'have the right details (listing3)' do
                   @listing = @location.listings.find_by_external_id('3')
                   assert_equal true, @listing.confirm_reservations
-                  assert_equal 4, @listing.hourly_price_cents
-                  assert_equal 10, @listing.daily_price_cents
-                  assert_equal 15, @listing.weekly_price_cents
-                  assert_equal 30, @listing.monthly_price_cents
+                  assert_equal 4, @listing.action_type.price_cents_for('1_hour')
+                  assert_equal 10, @listing.action_type.price_cents_for('1_day')
+                  assert_equal 15, @listing.action_type.price_cents_for('7_day')
+                  assert_equal 30, @listing.action_type.price_cents_for('30_day')
                   assert_equal true, @listing.enabled
                   assert_equal 'my attrs! 3', @listing.properties.my_attribute
                 end
@@ -342,10 +341,10 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                 should 'have the right details (listing4)' do
                   @listing = @location.listings.find_by_external_id('4')
                   assert_equal true, @listing.confirm_reservations
-                  assert_equal 4, @listing.hourly_price_cents
-                  assert_equal 10, @listing.daily_price_cents
-                  assert_equal 15, @listing.weekly_price_cents
-                  assert_equal 30, @listing.monthly_price_cents
+                  assert_equal 4, @listing.action_type.price_cents_for('1_hour')
+                  assert_equal 10, @listing.action_type.price_cents_for('1_day')
+                  assert_equal 15, @listing.action_type.price_cents_for('7_day')
+                  assert_equal 30, @listing.action_type.price_cents_for('30_day')
                   assert_equal true, @listing.enabled
                   assert_equal 'my attrs! 4', @listing.properties.my_attribute
                 end

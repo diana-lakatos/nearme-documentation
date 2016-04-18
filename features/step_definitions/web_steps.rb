@@ -214,6 +214,7 @@ end
 
 Then /^show me the page$/ do
   save_and_open_page
+  screenshot_and_open_image
 end
 
 Then /^launch me the page$/ do

@@ -18,7 +18,6 @@ module.exports = class ModeAndConstraintModel extends DatepickerModel
     super
 
     @listing = listing
-    @minDays = listing.minimumBookingDays or 1
 
     # "Range dates" are dates which haven't been explicitly added,
     # but are implicitly added through range selection or as a requirement
@@ -28,6 +27,9 @@ module.exports = class ModeAndConstraintModel extends DatepickerModel
 
   setMode: (mode) ->
     @mode = mode
+
+  minDays: ->
+    @listing.minimumBookingDays() or 1
 
   toggleDate: (date) ->
     return unless @canSelectDate(date)
@@ -43,7 +45,7 @@ module.exports = class ModeAndConstraintModel extends DatepickerModel
 
         # Don't allow making a range selection that doesn't meet
         # the consecutive days constraint
-        if @minDays > 1 and @consecutiveDaysBetween(startDate, date) < @minDays
+        if @minDays() > 1 and @consecutiveDaysBetween(startDate, date) < @minDays()
           return
 
         # Reset the range
@@ -118,7 +120,7 @@ module.exports = class ModeAndConstraintModel extends DatepickerModel
   # Returns whether or not there are minDays available days booked around
   # the specified date.
   meetsConstraint: (date) ->
-    @consecutiveDays(date) >= @minDays
+    @consecutiveDays(date) >= @minDays()
 
   # Starting at a given date, scan dates validate that it meets the consecutive bookings
   # constraint. If it doesn't, add next available dates until it does.
@@ -137,12 +139,14 @@ module.exports = class ModeAndConstraintModel extends DatepickerModel
         # If we can select this date, we add it.
         if @canSelectDate(currentDate)
           @addRangeDate(currentDate)
+        else if @listing.isOvernightBooking()
+          break
 
     # Try to extend forward first, then work backwards.
     # We go backwards due to an edge case at the end of the bookable range,
     # where we need to add dates in the past to constraint the selection.
     bookingExtensionAlgorithm(dateUtil.nextDateIterator(date))
-    bookingExtensionAlgorithm(dateUtil.previousDateIterator(date))
+    bookingExtensionAlgorithm(dateUtil.previousDateIterator(date)) unless @listing.isOvernightBooking()
 
   # Starting from a given date, scan the dates around it to ensure that the act of removing that
   # date hasn't invalidated the minimum date selection constraints. If it has, remove relevant
@@ -184,7 +188,7 @@ module.exports = class ModeAndConstraintModel extends DatepickerModel
       # We're trying to count the "consecutive days" total for the target date.
       # That is the number of connected days before or after the current date,
       # ignoring dates that aren't available for booking.
-      while consecutiveDaysCount < @minDays
+      while consecutiveDaysCount < @minDays()
         currentDate = dateIterator()
         break unless @listing.dateWithinBounds(currentDate)
 
@@ -208,7 +212,7 @@ module.exports = class ModeAndConstraintModel extends DatepickerModel
     return 0 if endDate.getTime() < startDate.getTime()
     count = 0
     current = startDate
-    while count < @minDays and current.getTime() <= endDate.getTime()
+    while count < @minDays() and current.getTime() <= endDate.getTime()
       count += 1 if @canSelectDate(current)
       current = dateUtil.next(current)
     count

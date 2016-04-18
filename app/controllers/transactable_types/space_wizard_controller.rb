@@ -25,6 +25,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   def list
     build_objects
+    @transactable.initialize_action_types
     build_approval_requests
     @photos = (@user.first_listing.try(:photos) || []) + @user.photos.where(owner_id: nil)
     @attachments = (@user.first_listing.try(:attachments) || []) + @user.attachments.where(assetable_id: nil)
@@ -35,30 +36,15 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   def submit_listing
     params[:user][:companies_attributes]["0"][:name] = current_user.first_name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
-    set_proper_currency
     @user.get_seller_profile
     @user.skip_validations_for = [:buyer]
     @user.must_have_verified_phone_number = true if @user.requires_mobile_number_verifications?
     @user.assign_attributes(wizard_params)
-    # TODO: tmp hack, the way we use rails-money does not work if you pass currency and daily_price at the same time
-    # We remove schedule attributes when assigning the attributes the second time so that we don't end up with duplicated schedule-related objects
-    # We also remove approval requests attributes
-    begin
-      wizard_params_listing = wizard_params[:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]
-      wizard_params_listing.delete(:schedule_attributes)
-      wizard_params_listing.delete(:approval_requests_attributes)
-      wizard_params_listing.delete(:customizations_attributes)
-      @user.companies.first.try(:locations).try(:first).try(:listings).try(:first).try(:assign_attributes, wizard_params_listing)
-    rescue
-      # listing attributes not present in the form, we ignore the error
-    end
+
     @user.companies.first.creator = current_user
     build_objects
     build_approval_requests
     @user.first_listing.creator = @user
-    if wizard_params[:companies_attributes]["0"][:locations_attributes] && !wizard_params[:companies_attributes]["0"][:locations_attributes]["0"].has_key?("availability_template_id") && !wizard_params_listing.has_key?("availability_template_id")
-      @user.first_listing.availability_template = @transactable_type.default_availability_template
-    end
     if params[:save_as_draft]
       remove_approval_requests
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
@@ -74,7 +60,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       flash[:success] = t('flash_messages.space_wizard.draft_saved')
       redirect_to transactable_type_space_wizard_list_path(@transactable_type)
     elsif @user.save
-      @user.listings.first.schedule.try(:create_schedule_from_schedule_rules)
+      @user.listings.first.action_type.try(:schedule).try(:create_schedule_from_schedule_rules) if current_instance.new_ui?
       @user.companies.first.update_metadata({draft_at: nil, completed_at: Time.now})
       track_new_space_event
       track_new_company_event
@@ -97,10 +83,15 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   # When saving drafts we end up with parent_type = nil for custom availability templates causing problems down the line
   def fix_availability_templates
     listing = @user.companies.first.locations.first.listings.first
-    availability_template = listing.availability_template
-    if availability_template.try(:parent_type) == 'Transactable' && availability_template.try(:parent_id).nil?
-      availability_template.parent = listing
-      availability_template.save(validate: false)
+    return unless listing.time_based_booking
+    availability_template = listing.time_based_booking.availability_template
+    if availability_template
+      if availability_template.try(:parent_type) == 'Transactable::TimeBasedBooking' && availability_template.try(:parent_id).nil?
+        availability_template.parent = listing.time_based_booking
+        availability_template.save(validate: false)
+      end
+    else
+      listing.time_based_booking.update(availability_template: @transactable_type.default_availability_template)
     end
   end
 
@@ -132,7 +123,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def find_transactable_type
-    @transactable_type = ServiceType.includes(:custom_attributes).friendly.find(params[:transactable_type_id])
+    @transactable_type = TransactableType.includes(:custom_attributes).friendly.find(params[:transactable_type_id])
   end
 
   def set_form_components
@@ -158,7 +149,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     @user.companies.build if @user.companies.first.nil?
     @user.companies.first.locations.build if @user.companies.first.locations.first.nil?
     @user.companies.first.locations.first.transactable_type = @transactable_type
-    @transactable = @user.companies.first.locations.first.listings.first || @user.companies.first.locations.first.listings.build({transactable_type_id: @transactable_type.id, booking_type: @transactable_type.booking_choices.first})
+    @transactable = @user.companies.first.locations.first.listings.first || @user.companies.first.locations.first.listings.build({transactable_type_id: @transactable_type.id})
     @transactable.attachment_ids = attachment_ids_for(@transactable) if params.has_key?(:attachment_ids)
   end
 
@@ -187,12 +178,6 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   def set_transactable_type_id
     params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:transactable_type_id] = @transactable_type.id
-  end
-
-  def set_proper_currency
-    params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:currency] = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:currency].presence || PlatformContext.current.instance.default_currency
-  rescue
-    nil
   end
 
   def set_listing_draft_timestamp(timestamp)

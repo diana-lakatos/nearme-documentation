@@ -15,7 +15,7 @@ class InstanceAdmin::Reports::TransactablesController < InstanceAdmin::Reports::
   end
 
   def set_scopes
-    @scope_type_class = ServiceType
+    @scope_type_class = TransactableType
     @scope_class = Transactable
     @search_form = InstanceAdmin::TransactableSearchForm
   end

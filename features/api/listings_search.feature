@@ -1,10 +1,10 @@
-
+@elasticsearch
 Feature: User Searches Listings
 
   Scenario: Searching for a listing with a bounding box
     Given a listing in San Francisco exists
     And a listing in Cleveland exists
-    And a listing in Auckland exists
+    And a indexed listing in Auckland exists
     When I send a search request with a bounding box around New Zealand
     Then the response does include the listing in Auckland
     And the response does not include the listing in San Francisco

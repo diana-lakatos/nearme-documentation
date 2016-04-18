@@ -25,6 +25,7 @@ class Reservation < ActiveRecord::Base
   belongs_to :platform_context_detail, :polymorphic => true
   belongs_to :recurring_booking
   belongs_to :reservation_type
+  belongs_to :transactable_pricing, class_name: 'Transactable::Pricing'
 
   has_one :billing_authorization, as: :reference
   has_one :dimensions_template, as: :entity
@@ -47,17 +48,14 @@ class Reservation < ActiveRecord::Base
   accepts_nested_attributes_for :address
   accepts_nested_attributes_for :periods, allow_destroy: true
 
-  validates :listing, :presence => true
+  validates :listing, :transactable_pricing, :presence => true
   # the if statement for periods is needed to make .recover work - otherwise reservation would be considered not valid even though it is
   validates :periods, :length => { :minimum => 1 }, :if => lambda { self.deleted_at_changed? && self.periods.with_deleted.count.zero? }
-  validates :quantity, :numericality => { :greater_than_or_equal_to => 1 }
+  validates :quantity, :numericality => { :greater_than_or_equal_to => 1, less_than_or_equal_to: :listing_quantity }
   validates :owner_id, :presence => true, :unless => lambda { owner.present? }
   validates :rejection_reason, length: { maximum: 255 }
-  validate :validate_all_dates_available, on: :create, :if => lambda { listing }
-  validate :validate_booking_selection, on: :create, :if => lambda { listing }
-  validate :validate_book_it_out, on: :create, :if => lambda { listing && !book_it_out_discount.to_i.zero? }
-  validate :validate_exclusive_price, on: :create, :if => lambda { listing && !exclusive_price_cents.to_i.zero? }
   validate :address_in_radius?, :if => lambda { address_in_radius }
+  validate :validate_order_for_action, on: :create, :if => lambda { listing }
 
   before_validation :set_minimum_booking_minutes, on: :create, if: lambda { listing }
   before_validation :set_currency, on: :create, if: lambda { listing }
@@ -73,8 +71,11 @@ class Reservation < ActiveRecord::Base
   alias_method :buyer_type_review_receiver, :owner
 
   delegate :location, :skip_payment_authorization?, :show_company_name, :transactable_type_id, :transactable_type, :billing_authorizations, to: :listing
+  delegate :quantity, to: :listing, prefix: true
   delegate :administrator=, to: :location
-  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, :display_additional_charges?, to: :listing, allow_nil: true
+  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :action, allow_nil: true
+  delegate :action, to: :transactable_pricing
+  delegate :display_additional_charges?, to: :listing, allow_nil: true
   delegate :remote_payment?, :manual_payment?, :active_merchant_payment?, :paid?, to: :payment, allow_nil: true
   delegate :address_in_radius, to: :reservation_type, allow_nil: true
 
@@ -174,7 +175,7 @@ class Reservation < ActiveRecord::Base
   def invoke_confirmation!(&block)
     self.errors.clear
     unless listing.skip_payment_authorization?
-      self.validate_all_dates_available
+      action.try(:validate_all_dates_available, self)
     end
     if self.errors.empty? and self.valid?
       if block_given? ? yield : true
@@ -341,10 +342,6 @@ class Reservation < ActiveRecord::Base
     periods.sort_by(&:date).last.date
   end
 
-  def max_availability_for_booking_day
-    listing.availability_for(date, first_period.start_minute, first_period.end_minute)
-  end
-
   def owner_including_deleted
     User.unscoped { owner }
   end
@@ -417,26 +414,20 @@ class Reservation < ActiveRecord::Base
     [self]
   end
 
-
-
   #----- PRICE METHODS ENDS -----#
 
   def total_days
     periods.size
   end
 
+  #TODO: is it required?
   def total_nights
     price_calculator.number_of_nights
   end
 
+  #TODO: move overnight
   def total_units
-    listing.overnight_booking? ? total_nights : total_days
-  end
-
-  # Number of desks booked accross all days
-  def desk_days
-    # NB: use of 'size' not 'count' here is deliberate - seats/periods may not be persisted at this point!
-    (quantity || 0) * periods.size
+    transactable_pricing.night_booking? ? total_nights : total_days
   end
 
   def merchant_subject
@@ -473,11 +464,15 @@ class Reservation < ActiveRecord::Base
   end
 
   def action_hourly_booking?
-    booking_type == 'hourly' || self.listing.schedule_booking?
+    !transactable_pricing.is_free_booking? && transactable_pricing.hour_booking?
   end
 
   def action_daily_booking?
-    booking_type == 'daily'
+    !transactable_pricing.is_free_booking? && transactable_pricing.day_booking?
+  end
+
+  def event_booking?
+    !transactable_pricing.is_free_booking? && transactable_pricing.event_booking?
   end
 
   def is_free?
@@ -488,19 +483,7 @@ class Reservation < ActiveRecord::Base
     CreateShippoShipmentsJob.perform(self.id) if shipments.any?
   end
 
-  def validate_all_dates_available
-    if listing.skip_payment_authorization?
-      unless listing.open_on?(date, first_period.start_minute)
-        errors.add(:base, I18n.t('reservations_review.errors.does_not_work_on_date'))
-      end
-    else
-      invalid_dates = periods.reject(&:bookable?)
-      if invalid_dates.any?
-        errors.add(:base, "Unfortunately the following bookings are no longer available: #{invalid_dates.map(&:as_formatted_string).join(', ')}")
-      end
-    end
-  end
-
+  #TODO deposits
   def build_deposit(payment_attributes={})
     if listing.deposit_amount.to_i > 0
       deposit = super(target: self, deposit_amount_cents: listing.deposit_amount.cents)
@@ -554,6 +537,10 @@ class Reservation < ActiveRecord::Base
     super && archived_at.nil?
   end
 
+  def max_availability_for_booking_day
+    listing.availability_for(date, first_period.start_minute, first_period.end_minute)
+  end
+
   private
 
   def activate_reservation!
@@ -586,13 +573,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def price_calculator
-    if listing.schedule_booking?
-      FixedPriceCalculator.new(self)
-    elsif action_hourly_booking?
-      HourlyPriceCalculator.new(self)
-    else
-      DailyPriceCalculator.new(self)
-    end
+    @price_calculator ||= transactable_pricing.price_calculator(self)
   end
 
   def tax_calculator
@@ -665,10 +646,14 @@ class Reservation < ActiveRecord::Base
   end
 
   def set_minimum_booking_minutes
-    self.minimum_booking_minutes = listing.minimum_booking_minutes
+    self.minimum_booking_minutes = action.minimum_booking_minutes
   end
 
   # ----- VALIDATIONS ------
+
+  def validate_order_for_action
+    transactable_pricing.validate_order(self)
+  end
 
 
   def validate_mandatory_categories
@@ -678,31 +663,7 @@ class Reservation < ActiveRecord::Base
     end
   end
 
-  def validate_booking_selection
-    unless price_calculator.valid?
-      if HourlyPriceCalculator === price_calculator
-        errors.add(:base, "Booking selection does not meet requirements. A minimum of #{sprintf('%.2f', minimum_booking_minutes/60.0)} hours are required.")
-      else
-        errors.add(:base, "Booking selection does not meet requirements. A minimum of #{listing.minimum_booking_days} consecutive bookable days are required.")
-      end
-    end
-  end
-
-  def validate_book_it_out
-    if max_availability_for_booking_day != quantity
-      errors.add(:base, I18n.t('reservations_review.errors.book_it_out_quantity'))
-    end
-    unless listing.book_it_out_available? || quantity < listing.book_it_out_minimum_qty
-      errors.add(:base, I18n.t('reservations_review.errors.book_it_out_not_available'))
-    end
-  end
-
-  def validate_exclusive_price
-    unless listing.exclusive_price_available?
-      errors.add(:base, I18n.t('reservations_review.errors.exclusive_price_not_available'))
-    end
-  end
-
+  #TODO: move to action
   def address_in_radius?
     distance = listing.location_address.distance_from(address.latitude, address.longitude)
     if distance > listing.properties[:service_radius].to_i
@@ -712,5 +673,4 @@ class Reservation < ActiveRecord::Base
   rescue
     false
   end
-
 end

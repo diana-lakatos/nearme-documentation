@@ -4,20 +4,12 @@ module.exports = class PriceFields
 
   constructor: (container) ->
     @container = $(container)
-    @enablingPriceCheckboxes = @container.find('.price-options input[type=checkbox]')
-    @freeCheckbox = @container.find('input[data-action-free-booking]')
-    @globalFreeCheckbox = $($.find('input[data-global-action-free-booking]'))
+    @enablingPriceCheckboxes = @container.find('.price-options input[data-price-enabler]')
+    @freeCheckboxes = @container.find('input[data-free-booking]')
     @inputWrapper = @container.find('.price-options')
-    @bookingTypeInput = $('input[data-booking-type]')
     @priceFields  = @container.find('input[data-price-field]')
-    @dailyBookingField = @container.find('[data-action-daily-booking]')
-    @subscriptionBookingField = @container.find('[data-action-subscription-booking]')
-    @hourlyField = @container.find('[data-action-hourly-booking]')
-    @dailyFields ||= => @container.find('.price-options input[data-action-daily-booking-trigger]:checked')
-    @subscriptionFields ||= => @container.find('.price-options input[data-action-subscription-booking-trigger]:checked')
-    @defineDayRadios = @container.find('input[name="define_day"]')
     @bindEvents()
-    @enablingPriceCheckboxes.trigger('change') if @bookingTypeInput.val() != 'schedule'
+    @enablingPriceCheckboxes.trigger('change')
 
   show: ->
     @inputWrapper.show()
@@ -34,54 +26,38 @@ module.exports = class PriceFields
       # it should probably by tied in into client validation if we ever get to implement it
       return if $(event.target).data('processing')
 
-      @inputWrapper.find('input[readonly]').prop('disabled', true)
-      if @bookingTypeInput.val() == 'regular'
-        if @container.find('input[name="define_day"]:checked').length > 0
-          @bookingTypeInput.val(@container.find('input[name="define_day"]:checked').val())
-
     @enablingPriceCheckboxes.change (event) =>
       checkbox = $(event.target)
+      free_booking_switch = $(event.target).parents(".row").find('input[data-free-booking]')
+      $(event.target).parents(".row").find('input[id$=_destroy]').val(!checkbox.is(':checked'))
+      if free_booking_switch.is(':checked')
+        @changePriceState(checkbox, true)
+      else
+        @changePriceState(checkbox, !checkbox.is(':checked'))
+      if !checkbox.is(':checked')
+        free_booking_switch.prop('checked', false)
+
+    @freeCheckboxes.click (event) =>
+      checkbox = $(event.target)
+      @changePriceState(checkbox, checkbox.is(':checked'))
       if checkbox.is(':checked')
-        if checkbox.data('action-subscription-booking-trigger')
-          @dailyFields().prop('checked', false).trigger('change')
-          @hourlyField.prop('checked', false).trigger('change') if @hourlyField.is(':checked')
-        else
-          @subscriptionFields().prop('checked', false).trigger('change')
-
-      @dailyBookingField.val(@dailyFields().length > 0)
-      @subscriptionBookingField.val(@subscriptionFields().length > 0)
-      checkbox.parents(".row").find('input[data-price-field]').attr('readonly', !checkbox.is(':checked'))
-
-      # Free enabled if all prices are disabled
-      @freeCheckbox.prop('checked', !@enablingPriceCheckboxes.is(':checked'))
-      @updateGlobalFreeCheckbox($('.price-options input[type=checkbox]:checked').length == 0)
-
-    @freeCheckbox.click (event) =>
-      @enablingPriceCheckboxes.prop('checked', !@freeCheckbox.is(':checked'))
-      @enablingPriceCheckboxes.trigger('change')
-      @updateGlobalFreeCheckbox(@freeCheckbox.is(':checked'))
+        $(event.target).parents(".row").find('input[data-price-enabler]').prop('checked', true).trigger('change')
 
     @priceFields.on 'click', (event) =>
-      checkbox = $(event.target).parents(".row").find('input[type="checkbox"]')
-      checkbox.prop('checked', true)
-      checkbox.trigger('change')
+      $(event.target).parents(".row").find('input[data-free-booking]').prop('checked', false)
+      $(event.target).parents(".row").find('input[data-price-enabler]').prop('checked', true).trigger('change')
 
     @priceFields.on 'blur', (event) =>
-      if $(event.target).val()==''
-        checkbox = $(event.target).parents(".row").find('input[type="checkbox"]')
-        checkbox.prop('checked', false)
-        checkbox.trigger('change')
+      if $(event.target).val() == '' || $(event.target).val()=='0.00'
+        price_enabler = $(event.target).parents(".row").find('input[data-price-enabler]')
+        if price_enabler.length > 0
+          price_enabler.prop('checked', false).trigger('change')
+          
 
     @priceFields.on 'change', (event) =>
       price = $(event.target)
       price.val(price.val().replace(/[^0-9\.]/, ""))
 
-    @defineDayRadios.on 'change', (event) =>
-      @bookingTypeInput.val(event.target.value)
-
-  updateGlobalFreeCheckbox: (value) ->
-    if value
-      @globalFreeCheckbox.val('1')
-    else
-      @globalFreeCheckbox.val('0')
+  changePriceState: (target, state) =>
+    target.parents(".row").find('input[data-price-field]').attr('readonly', state)
 

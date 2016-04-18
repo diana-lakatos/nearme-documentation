@@ -27,19 +27,19 @@ class TransactableSerializer < ApplicationSerializer
 
   # Serialize price
   def price
-    label = if object.action_free_booking?
+    label = if object.action_type.is_free_booking?
               'Free'
-            elsif object.daily_price.nil?
+            elsif object.action_type.price_for('1_day').nil?
               'Call'
             else
-              object.daily_price.format
+              object.action_type.price_for('1_day').format
             end
 
     {
-      amount:        object.daily_price.try(:to_f) || 0.0,
+      amount:        object.action_type.price_for('1_day').try(:to_f) || 0.0,
       period:        price_period,
       label:         label,
-      currency_code: object.daily_price.try(:currency).try(:iso_code) || 'USD'
+      currency_code: object.action_type.price_for('1_day').try(:currency).try(:iso_code) || 'USD'
     }
   end
 

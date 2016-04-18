@@ -9,8 +9,7 @@ Feature: A user can reset their password
 
   @javascript
   Scenario: User requests password reset using modal
-    Given the transactable_type_listing exists
-    When I performed search for "Auckland"
+    When I go to the homepage
      And I begin to reset the password for that user
     Then a password reset email should be sent to that user
 

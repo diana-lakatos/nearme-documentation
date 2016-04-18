@@ -25,8 +25,6 @@ class Api::V2::SpaceWizardsControllerTest < ActionController::TestCase
   private
 
   def get_params(options = {})
-    free = options[:daily_price].to_f + options[:weekly_price].to_f + options[:monthly_price].to_f == 0
-    options.reverse_merge!(daily_price: nil, weekly_price: nil, monthly_price: nil, free: free, currency: 'USD')
     {"user" =>
      {"companies_attributes"=>
       {"0" =>
@@ -56,21 +54,15 @@ class Api::V2::SpaceWizardsControllerTest < ActionController::TestCase
                "transactable_type_id" => TransactableType.first.id,
                "name"=>"Desk",
                "description"=>"We have a group of several shared desks available.",
-               "action_hourly_booking" => false,
                "quantity"=>"1",
                "booking_type" => options[:booking_type] || 'regular',
-               "daily_price"=>options[:daily_price],
-               "fixed_price"=>options[:fixed_price],
-               "weekly_price"=>options[:weekly_price],
-               "monthly_price"=> options[:monthly_price],
-               "action_free_booking"=>options[:free],
                "confirm_reservations"=>"0",
                "photos_attributes" => [FactoryGirl.attributes_for(:photo)],
                "currency"=>options[:currency],
                "properties" => {
                  "listing_type"=>"Desk",
                }
-             }
+             }.merge(action_type_attibutes(options))
             },
           }
          }

@@ -4,7 +4,7 @@ FactoryGirl.define do
     description "Mon - Fri, 9:00 AM - 5:00 PM"
 
     after(:build) do |availability_template|
-      availability_template.availability_rules << FactoryGirl.build(:availability_rule, :target => availability_template, days: (0..5).to_a)
+      availability_template.availability_rules << FactoryGirl.build(:availability_rule, :target => availability_template, days: (1..5).to_a)
     end
 
     factory :availability_template_always_open do

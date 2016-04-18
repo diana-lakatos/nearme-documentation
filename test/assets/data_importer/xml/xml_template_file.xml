@@ -33,14 +33,36 @@
         <listings>
           <listing id="1">
             <confirm_reservations><![CDATA[true]]></confirm_reservations>
-            <daily_price_cents><![CDATA[10]]></daily_price_cents>
             <enabled><![CDATA[true]]></enabled>
             <external_id><![CDATA[1]]></external_id>
-            <hourly_price_cents><![CDATA[4]]></hourly_price_cents>
-            <monthly_price_cents><![CDATA[30]]></monthly_price_cents>
             <my_attribute><![CDATA[my attrs! 1]]></my_attribute>
             <name><![CDATA[my name! 1]]></name>
-            <weekly_price_cents><![CDATA[15]]></weekly_price_cents>
+            <action_type>
+              <type><![CDATA[Transactable::TimeBasedBooking]]></type>
+              <availability_rules/>
+              <pricings>
+                <pricing>
+                  <number_of_units><![CDATA[1]]></number_of_units>
+                  <unit><![CDATA[day]]></unit>
+                  <price_cents><![CDATA[10]]></price_cents>
+                </pricing>
+                <pricing>
+                  <number_of_units><![CDATA[1]]></number_of_units>
+                  <unit><![CDATA[hour]]></unit>
+                  <price_cents><![CDATA[4]]></price_cents>
+                </pricing>
+                <pricing>
+                  <number_of_units><![CDATA[7]]></number_of_units>
+                  <unit><![CDATA[day]]></unit>
+                  <price_cents><![CDATA[15]]></price_cents>
+                </pricing>
+                <pricing>
+                  <number_of_units><![CDATA[30]]></number_of_units>
+                  <unit><![CDATA[day]]></unit>
+                  <price_cents><![CDATA[30]]></price_cents>
+                </pricing>
+              </pricings>
+            </action_type>
             <photos>
               <photo>
                 <image_original_url><![CDATA[http://www.example.com/image.jpg]]></image_original_url>
@@ -53,14 +75,36 @@
           </listing>
           <listing id="2">
             <confirm_reservations><![CDATA[true]]></confirm_reservations>
-            <daily_price_cents><![CDATA[10]]></daily_price_cents>
             <enabled><![CDATA[true]]></enabled>
             <external_id><![CDATA[2]]></external_id>
-            <hourly_price_cents><![CDATA[4]]></hourly_price_cents>
-            <monthly_price_cents><![CDATA[30]]></monthly_price_cents>
             <my_attribute><![CDATA[my attrs! 2]]></my_attribute>
             <name><![CDATA[my name! 2]]></name>
-            <weekly_price_cents><![CDATA[15]]></weekly_price_cents>
+            <action_type>
+              <type><![CDATA[Transactable::TimeBasedBooking]]></type>
+              <availability_rules/>
+              <pricings>
+                <pricing>
+                  <number_of_units><![CDATA[1]]></number_of_units>
+                  <unit><![CDATA[day]]></unit>
+                  <price_cents><![CDATA[10]]></price_cents>
+                </pricing>
+                <pricing>
+                  <number_of_units><![CDATA[1]]></number_of_units>
+                  <unit><![CDATA[hour]]></unit>
+                  <price_cents><![CDATA[4]]></price_cents>
+                </pricing>
+                <pricing>
+                  <number_of_units><![CDATA[7]]></number_of_units>
+                  <unit><![CDATA[day]]></unit>
+                  <price_cents><![CDATA[15]]></price_cents>
+                </pricing>
+                <pricing>
+                  <number_of_units><![CDATA[30]]></number_of_units>
+                  <unit><![CDATA[day]]></unit>
+                  <price_cents><![CDATA[30]]></price_cents>
+                </pricing>
+              </pricings>
+            </action_type>
             <photos>
               <photo>
                 <image_original_url><![CDATA[http://www.example.com/photo.jpg]]></image_original_url>
@@ -89,14 +133,36 @@
         <listings>
           <listing id="3">
             <confirm_reservations><![CDATA[true]]></confirm_reservations>
-            <daily_price_cents><![CDATA[10]]></daily_price_cents>
             <enabled><![CDATA[true]]></enabled>
             <external_id><![CDATA[3]]></external_id>
-            <hourly_price_cents><![CDATA[4]]></hourly_price_cents>
-            <monthly_price_cents><![CDATA[30]]></monthly_price_cents>
             <my_attribute><![CDATA[my attrs! 3]]></my_attribute>
             <name><![CDATA[my name! 3]]></name>
-            <weekly_price_cents><![CDATA[15]]></weekly_price_cents>
+            <action_type>
+              <type><![CDATA[Transactable::TimeBasedBooking]]></type>
+              <availability_rules/>
+              <pricings>
+                <pricing>
+                  <number_of_units><![CDATA[1]]></number_of_units>
+                  <unit><![CDATA[day]]></unit>
+                  <price_cents><![CDATA[10]]></price_cents>
+                </pricing>
+                <pricing>
+                  <number_of_units><![CDATA[1]]></number_of_units>
+                  <unit><![CDATA[hour]]></unit>
+                  <price_cents><![CDATA[4]]></price_cents>
+                </pricing>
+                <pricing>
+                  <number_of_units><![CDATA[7]]></number_of_units>
+                  <unit><![CDATA[day]]></unit>
+                  <price_cents><![CDATA[15]]></price_cents>
+                </pricing>
+                <pricing>
+                  <number_of_units><![CDATA[30]]></number_of_units>
+                  <unit><![CDATA[day]]></unit>
+                  <price_cents><![CDATA[30]]></price_cents>
+                </pricing>
+              </pricings>
+            </action_type>
             <photos>
               <photo>
                 <image_original_url><![CDATA[http://www.example.com/photo.jpg]]></image_original_url>
@@ -142,14 +208,36 @@
         <listings>
           <listing id="4">
             <confirm_reservations><![CDATA[true]]></confirm_reservations>
-            <daily_price_cents><![CDATA[10]]></daily_price_cents>
             <enabled><![CDATA[true]]></enabled>
             <external_id><![CDATA[4]]></external_id>
-            <hourly_price_cents><![CDATA[4]]></hourly_price_cents>
-            <monthly_price_cents><![CDATA[30]]></monthly_price_cents>
             <my_attribute><![CDATA[my attrs! 4]]></my_attribute>
             <name><![CDATA[my name! 4]]></name>
-            <weekly_price_cents><![CDATA[15]]></weekly_price_cents>
+            <action_type>
+              <type><![CDATA[Transactable::TimeBasedBooking]]></type>
+              <availability_rules/>
+              <pricings>
+                <pricing>
+                  <number_of_units><![CDATA[1]]></number_of_units>
+                  <unit><![CDATA[day]]></unit>
+                  <price_cents><![CDATA[10]]></price_cents>
+                </pricing>
+                <pricing>
+                  <number_of_units><![CDATA[1]]></number_of_units>
+                  <unit><![CDATA[hour]]></unit>
+                  <price_cents><![CDATA[4]]></price_cents>
+                </pricing>
+                <pricing>
+                  <number_of_units><![CDATA[7]]></number_of_units>
+                  <unit><![CDATA[day]]></unit>
+                  <price_cents><![CDATA[15]]></price_cents>
+                </pricing>
+                <pricing>
+                  <number_of_units><![CDATA[30]]></number_of_units>
+                  <unit><![CDATA[day]]></unit>
+                  <price_cents><![CDATA[30]]></price_cents>
+                </pricing>
+              </pricings>
+            </action_type>
             <photos/>
             <availability_rules/>
           </listing>

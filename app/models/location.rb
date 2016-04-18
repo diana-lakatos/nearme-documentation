@@ -59,6 +59,7 @@ class Location < ActiveRecord::Base
   after_create :set_external_id
   after_save :update_schedules_timezones
   after_save :update_open_hours, if: "availability_template_id_changed?"
+  after_save :update_location_type, if: :location_type_id_changed?
 
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :history, :finders, :scoped], scope: :instance
@@ -111,6 +112,10 @@ class Location < ActiveRecord::Base
     self.update_column(:opened_on_days, days_open)
   end
 
+  def update_location_type
+    ElasticBulkUpdateJob.perform Transactable, listings.searchable.pluck(:id).map{ |listing_id| [listing_id, { location_type_id: location_type_id }]}
+  end
+
   def custom_validators
     CustomValidator.where(validatable_type: 'Location')
   end
@@ -120,7 +125,7 @@ class Location < ActiveRecord::Base
   end
 
   def minimum_booking_minutes
-    listings.active.pluck(:minimum_booking_minutes).max || 60
+    listings.active.map(&:minimum_booking_minutes).compact.max || 60
   end
 
   def assign_default_availability_rules
@@ -128,7 +133,7 @@ class Location < ActiveRecord::Base
   end
 
   def name
-    if validation_for(:name)
+    @name ||= if validation_for(:name)
       read_attribute(:name)
     else
       read_attribute(:name).presence || [company.name, street].compact.join(" @ ")
@@ -173,11 +178,11 @@ class Location < ActiveRecord::Base
   end
 
   def lowest_price(available_price_types = [])
-    (listings.loaded? ? listings : listings.searchable).map{|l| l.lowest_price_with_type(available_price_types)}.compact.sort{|a, b| a[0].to_f <=> b[0].to_f}.first
+    (listings.loaded? ? listings : listings.searchable).map{|l| l.lowest_price_with_type(available_price_types)}.compact.sort_by(&:price).first
   end
 
   def lowest_full_price(available_price_types = [])
-    (listings.loaded? ? listings : listings.searchable).map{|l| l.lowest_full_price(available_price_types)}.compact.sort{|a, b| a[0].to_f <=> b[0].to_f}.first
+    (listings.loaded? ? listings : listings.searchable).map{|l| l.lowest_full_price(available_price_types)}.compact.sort_by(&:price).first
   end
 
   def approval_request_acceptance_cancelled!
@@ -194,7 +199,10 @@ class Location < ActiveRecord::Base
 
   def update_schedules_timezones(force = false)
     if force || self.time_zone_changed?
-      Schedule.where(scheduable_type: 'Transactable', scheduable_id: listings).find_each(&:save!)
+      Schedule.where(
+        scheduable_type: 'Transactable::EventBooking',
+        scheduable_id: listings.map{ |l| l.event_booking.try(:id) }.compact
+      ).find_each(&:save!)
     end
   end
 

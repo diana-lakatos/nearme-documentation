@@ -4,10 +4,10 @@
 #  models B, we might want to have in model B duplicated column. This might be the case for foreign keys for example,
 #  if model A has creator_id and model B does not have it, then to get all models B that belong to user, we will have
 #  to use JOIN model A to get this info. If we just made creator_id redundant, meaning model B would have not only a_id
-#  but also creator_id, we can make just a simple query without JOIN. 
+#  but also creator_id, we can make just a simple query without JOIN.
 #
-#  Model provides two methods: inherits_columns_from_association() for inheriting values from parent when they are created, 
-#  and notify_associations_about_column_update() to make sure that our data is consistent, so when parent's values are 
+#  Model provides two methods: inherits_columns_from_association() for inheriting values from parent when they are created,
+#  and notify_associations_about_column_update() to make sure that our data is consistent, so when parent's values are
 #  updated, all children will also be updated.
 #
 #  Usage:
@@ -29,7 +29,7 @@
 #     this will add before_create filters that will populate creator_id and instance_id with
 #     values from company.creator_id and company.instance_id
 #
-#     note: 
+#     note:
 #     There is a know caveat that if filter returns false, then transaction will be rollback. Sometimes this
 #     can happen unintentionally, for example if we want to inherit boolean column which has value false. This
 #     module takes care of this, and explicitly returns nil.
@@ -58,13 +58,13 @@ module ColumnsObserver
 
   included do
 
-    def self.inherits_columns_from_association(columns, associations)
+    def self.inherits_columns_from_association(columns, associations, callback_name = 'before_create')
       return unless self.table_exists?
-      inherits_columns_from_association_string = "before_create do \n"
+      inherits_columns_from_association_string = "#{callback_name}(on: :create) do \n"
       [columns].flatten.each do |column|
-        raise ColumnsObserver::InvalidArgumentError.new("Invalid argument, #{self.name} does not contain column #{column}") unless self.column_names.include?(column.to_s) 
+        raise ColumnsObserver::InvalidArgumentError.new("Invalid argument, #{self.name} does not contain column #{column}") unless self.column_names.include?(column.to_s)
         [associations].flatten.each do |association|
-          inherits_columns_from_association_string += "self.#{column} = #{association}.#{column}\n"
+          inherits_columns_from_association_string += "self.#{column} = #{association}.#{column} if #{association}\n"
         end
       end
       class_eval %Q{ #{inherits_columns_from_association_string + "nil\nend"} }

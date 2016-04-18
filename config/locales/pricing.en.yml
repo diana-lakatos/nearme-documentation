@@ -2,24 +2,50 @@ en:
   pricing:
     how_is_the_service_priced: 'How is the service priced?'
     title: 'Pricing'
+    add_new: 'Add new price'
     mode:
-      regular:
+      time_based_booking:
         label: 'Time-Based'
         description: 'Customer is charged per hour, day, week or month'
-      schedule:
+      event_booking:
         label: 'Event'
         description: 'Customer attends and pays for a scheduled event'
       fixed:
         label: 'Fixed'
         description: 'Consumer pays one fixed price or a fixed price per unit'
-      subscription:
+      subscription_booking:
         label: 'Subscription'
         description: 'Customer is charged monthly or weekly'
+      no_action_booking:
+        label: 'No Action'
+        description: 'No transaction is made between customer and seller'
     deposit:
       deposit_amount: 'Deposit amount'
       enable: 'Enable deposits'
     price: 'Price'
     required: 'required'
+    event:
+      one: 'event'
+      other: 'events'
+    day:
+      one: 'day'
+      other: 'days'
+    hour:
+      one: 'hour'
+      other: 'hours'
+    night:
+      one: 'night'
+      other: 'nights'
+    subscription_month:
+      one: 'calendar month'
+      other: 'calendar months'
+    subscription_day:
+      one: 'day'
+      other: 'days'
+    unit_price:
+      one: '%{unit}'
+      other: '%{no_of_units} %{unit}'
+
     price_unit:
       person: '/ person'
       person_hour: '/ person / hour'
@@ -28,6 +54,7 @@ en:
       person_month: '/ person / month'
       person_weekly: '/ person / weekly'
       person_monthly: '/ person / monthly'
+      person_unit: '/ person / %{unit}'
     daily_rate:
       title: 'For daily rates, what defines one day?'
       hint: 'List a price hint text'

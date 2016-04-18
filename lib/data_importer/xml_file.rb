@@ -23,7 +23,9 @@ class DataImporter::XmlFile < DataImporter::File
           parse_availabilities
           parse_amenities
           parse_listings do
-            parse_availabilities
+            parse_action do
+              parse_availabilities
+            end
             parse_photos
           end
         end
@@ -170,9 +172,9 @@ class DataImporter::XmlFile < DataImporter::File
         Impression.with_deleted.where(impressionable: @listing).update_all(deleted_at: nil)
       end
 
+      yield
       if @listing.valid?
         trigger_event('object_valid', @listing)
-        yield
         @listing.action_rfq = @enable_rfq
         @listing.skip_metadata = true
         ApprovalRequestInitializer.new(@listing, @listing.try(:location).try(:company).try(:creator)).process if !@listing.is_trusted?
@@ -210,6 +212,31 @@ class DataImporter::XmlFile < DataImporter::File
         @object.availability_rules.build { |a| assign_attributes(a, availability_node) }
       end
     end
+  end
+
+  def parse_action
+    return if @node.xpath('action_type/type').text.blank?
+    @action_type = Transactable::ActionType.where(
+      transactable: @listing,
+      enabled: true,
+      type: @node.xpath('action_type/type').text
+    ).first_or_initialize.becomes(@node.xpath('action_type/type').text.constantize)
+    @object = @action_type
+    yield
+    @action_type.transactable_type_action_type ||= @transactable_type.action_types.where("type ilike ?", "%#{@action_type.type.demodulize}%").first
+    @node.xpath('action_type/pricings/pricing').map do |pricing_attrs|
+      pricing = @action_type.pricings.where(
+        number_of_units: pricing_attrs.xpath('number_of_units').text,
+        unit: pricing_attrs.xpath('unit').text,
+      ).first_or_initialize
+      pricing.price_cents = pricing_attrs.xpath('price_cents').text.to_i if pricing_attrs.xpath('price_cents').text.to_i > 0
+      pricing.is_free_booking = false if pricing_attrs.xpath('price_cents').text.to_i > 0
+      pricing.transactable_type_pricing ||= @action_type.transactable_type_action_type && @action_type.transactable_type_action_type.pricings.where(pricing.slice(:number_of_units, :unit)).first
+      pricing.save if @listing.persisted?
+    end
+    @listing.action_type = @action_type
+    @action_type.transactable = @listing
+    @action_type.save if @listing.persisted?
   end
 
   def parse_photos

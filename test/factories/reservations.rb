@@ -13,13 +13,16 @@ FactoryGirl.define do
     service_fee_amount_guest_cents 0
 
     after(:build) do |reservation|
+      reservation.transactable_pricing ||= reservation.listing.action_type.pricings.first
       make_valid_period(reservation) unless reservation.valid?
     end
 
     factory :confirmed_hour_reservation do
       state 'confirmed'
-      booking_type 'hourly'
+
       after(:build) do |reservation|
+        reservation.transactable_pricing = reservation.listing.action_type.hour_pricings.first
+        reservation.instance_variable_set('@price_calculator', nil)
         make_valid_period(reservation, Time.zone.now.next_week.to_date + 1.day, 600, 660)
         reservation.payment ||= FactoryGirl.build(:pending_payment, payable: reservation)
       end
@@ -141,10 +144,6 @@ FactoryGirl.define do
           )
           reservation.save!
         end
-      end
-
-      factory :reservation_hourly do
-        booking_type 'hourly'
       end
 
       factory :rejected_reservation do

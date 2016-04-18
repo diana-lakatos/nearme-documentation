@@ -1,11 +1,9 @@
 # coding: utf-8
-Given /^a( disabled)? listing( with nil prices)? in (.*) exists( with that amenity)?$/ do |disabled, nil_prices, city, amenity|
+Given /^a( disabled)?( indexed)? listing( with nil prices)? in (.*) exists( with that amenity)?$/ do |disabled, indexed, nil_prices, city, amenity|
   listing = create_listing_in(city)
   if nil_prices
-    listing.daily_price = nil
-    listing.weekly_price = nil
-    listing.monthly_price = nil
-    listing.action_free_booking = true if !listing.has_price?
+    listing.action_type.pricings[1..-1].delete_all
+    listing.action_type.pricings.first.is_free_booking = true
     listing.save!
   end
   if disabled
@@ -13,14 +11,15 @@ Given /^a( disabled)? listing( with nil prices)? in (.*) exists( with that ameni
     listing.save!
   end
   listing.location.amenities << model!("amenity") if amenity
+  Transactable.__elasticsearch__.refresh_index! if indexed
 end
 
 Given /^a listed location( without (amenities))?$/ do |_,_|
-  @listing = FactoryGirl.create(:transactable)
+  @listing = FactoryGirl.create(:transactable, :with_time_based_booking)
 end
 
 Given /^a listed location with a creator whose email is (.*)?$/ do |email|
-  @listing = FactoryGirl.create(:transactable)
+  @listing = FactoryGirl.create(:transactable, :with_time_based_booking)
   @listing.creator.email = email
   @listing.creator.save
 end

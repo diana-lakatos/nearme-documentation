@@ -307,19 +307,6 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    var els = $('.fixed-price-container');
-    if (els.length === 0) {
-        return;
-    }
-    require.ensure('./new_ui/listings/fixed_price', function(require){
-        var FixedPrice = require('./new_ui/listings/fixed_price');
-        els.each(function(){
-            return new FixedPrice(this);
-        });
-    });
-});
-
-DNM.registerInitializer(function(){
     var els = $('[data-booking-type-list]');
     if (els.length === 0) {
         return;

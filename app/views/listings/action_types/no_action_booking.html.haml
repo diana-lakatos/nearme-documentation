@@ -1,0 +1,29 @@
+.booking-module-container{:class => "#{@collapsed ? " collapsed" : ""}", id: "booking-module-#{@listing.id}", data: { :'toggleable-booking-module' => true, listing: listing_booking_data(@listing).to_json, :'returned-from-session' => (@initial_bookings.present? ? @form_trigger : false) } }
+  .booking-module
+    .booking-header
+      %a.toggleable-booking-trigger{:href => @listing.show_path, :'data-booking-trigger' => true}
+        %span.pull-right
+          %i.ico-chevron-down
+          %i.ico-chevron-right
+        %span.booking-listing-name= mask_phone_and_email_if_necessary(@listing.name)
+
+      .clearfix
+      = render 'listings/booking_module_listing_description', listing: @listing
+      - unless @action_type.no_action?
+        - rfq_class = nil
+        - rfq_label = nil
+        - book_hash = { id: "book-#{@listing.id}", class: "btn btn-green btn-large ", rel: "tooltip",
+          :'data-original-title' => t('booking_module.notices.days_first'), :'data-listing-id' => @listing.id,
+          :'data-user-signed-in' => true, :'data-behavior' => 'reviewBooking'}
+        - if @action_type.action_rfq?
+          - book_hash[:class] += (@action_type.is_free_booking? ? 'hidden' : 'span6')
+          - rfq_class = (@action_type.is_free_booking? ? 'btn btn-green btn-large' :  'btn btn-gray-light btn-large offer-button span6' )
+          - rfq_label = (@action_type.is_free_booking? ?  t('reservations.rfq') : t('reservations.offer'))
+        .book
+          = simple_form_for :reservation_request, url: review_listing_recurring_bookings_path(@listing), html: { id: "reservation_request_form_#{@listing.id}" } do |f|
+            = f.hidden_field :listing_id, value: @listing.id
+            = render 'listings/booking_module_call_to_actions', listing: @listing, book_hash: book_hash.stringify_keys, rfq_class: rfq_class, rfq_label: rfq_label
+    .clearfix
+
+%script
+  $(document).trigger('init:bookingscontroller.nearme', ["#booking-module-#{@listing.id}"]);

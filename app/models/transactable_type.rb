@@ -7,11 +7,30 @@ class TransactableType < ActiveRecord::Base
   acts_as_custom_attributes_set
 
   AVAILABLE_TYPES = ['Listing', 'Buy/Sell'].freeze
+  AVAILABLE_ACTION_TYPES = [NoActionBooking, SubscriptionBooking, EventBooking, TimeBasedBooking]
+  SEARCH_VIEWS = %w(mixed list listing_mixed)
+  AVAILABLE_SHOW_PATH_FORMATS = [
+    "/transactable_types/:transactable_type_id/locations/:location_id/listings/:id",
+    "/:transactable_type_id/locations/:location_id/listings/:id",
+    "/:transactable_type_id/:location_id/listings/:id",
+    "/locations/:location_id/:id",
+    "/locations/:location_id/listings/:id",
+    "/:transactable_type_id/:id",
+    "/listings/:id"
+  ].freeze
 
   INTERNAL_FIELDS = [
     :name, :description, :capacity, :quantity, :confirm_reservations,
     :last_request_photos_sent_at, :capacity
   ]
+
+  has_many :action_types, -> { enabled }, dependent: :destroy
+  has_many :all_action_types, dependent: :destroy, class_name: 'TransactableType::ActionType'
+
+  has_one :event_booking
+  has_one :time_based_booking
+  has_one :subscription_booking
+  has_one :no_action_booking
 
   has_many :form_components, as: :form_componentable, dependent: :destroy
   has_many :data_uploads, as: :importable, dependent: :destroy
@@ -25,6 +44,9 @@ class TransactableType < ActiveRecord::Base
   has_many :additional_charge_types, as: :additional_charge_type_target
   has_many :transactable_type_instance_views, dependent: :destroy
   has_many :instance_views, through: :transactable_type_instance_views
+  has_many :transactables, dependent: :destroy, foreign_key: 'transactable_type_id'
+  has_many :availability_templates, dependent: :destroy, foreign_key: 'transactable_type_id'
+  belongs_to :default_availability_template, class_name: 'AvailabilityTemplate'
 
   belongs_to :instance
   belongs_to :reservation_type
@@ -49,9 +71,14 @@ class TransactableType < ActiveRecord::Base
 
   validates :name, :default_search_view, :searcher_type, presence: true
   validates :category_search_type, presence: true, if: -> (transactable_type){ transactable_type.show_categories }
+  validates_inclusion_of :show_path_format, in: AVAILABLE_SHOW_PATH_FORMATS, allow_nil: true
+  validates_associated :action_types
 
   accepts_nested_attributes_for :custom_attributes, update_only: true
   accepts_nested_attributes_for :rating_systems, update_only: true
+  accepts_nested_attributes_for :availability_templates
+  accepts_nested_attributes_for :action_types
+  accepts_nested_attributes_for :all_action_types
 
   delegate :translated_bookable_noun, :translation_namespace, :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
     :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
@@ -64,6 +91,33 @@ class TransactableType < ActiveRecord::Base
       [:name, self.class.last.try(:id).to_i + 1],
       [:name, rand(1000000)]
     ]
+  end
+
+  #TODO to remove
+  def daily_options_names
+    pricing_options = []
+    # pricing_options << "daily" if action_daily_booking
+    # pricing_options << "weekly" if action_weekly_booking
+    # pricing_options << "monthly" if action_monthly_booking
+    pricing_options
+  end
+
+  #TODO to remove
+  def pricing_options_long_period_names
+    pricing_options = []
+    # pricing_options << "hourly" if action_hourly_booking
+    # pricing_options << "daily" if action_daily_booking
+    # pricing_options << "weekly" if action_weekly_booking
+    # pricing_options << "monthly" if action_monthly_booking
+    pricing_options
+  end
+
+  #TODO to remove
+  def subscription_options_names
+    pricing_options = []
+    # pricing_options << "weekly_subscription" if action_weekly_subscription_booking
+    # pricing_options << "monthly_subscription" if action_monthly_subscription_booking
+    pricing_options
   end
 
   def any_rating_system_active?
@@ -108,7 +162,7 @@ class TransactableType < ActiveRecord::Base
   end
 
   def to_liquid
-    raise NotImplementedError.new('Abstract method')
+    @transactable_type_drop ||= TransactableTypeDrop.new(self)
   end
 
   def has_action?(name)
@@ -142,11 +196,34 @@ class TransactableType < ActiveRecord::Base
     [id, type].join(",")
   end
 
+  def available_search_views
+    SEARCH_VIEWS
+  end
+
+  def wizard_path(options = {})
+    Rails.application.routes.url_helpers.transactable_type_space_wizard_list_path(self, options)
+  end
+
+  def hide_location_availability
+    skip_location? || !availability_options["defer_availability_rules"]
+  end
+
+  def initialize_action_types
+    AVAILABLE_ACTION_TYPES.each do |action_type_class|
+      action = action_type_class.where(transactable_type: self).first_or_initialize do |at|
+        at.enabled = false
+      end
+      action.pricings.first_or_initialize
+      self.association(:all_action_types).add_to_target(action)
+    end
+  end
+
   private
 
   def set_default_options
     self.default_search_view ||=  available_search_views.first
-    self.search_engine ||= Instance::SEARCH_ENGINES.first
+    self.search_engine ||= 'elasticsearch'
+    self.searcher_type ||= 'geo'
   end
 
 end

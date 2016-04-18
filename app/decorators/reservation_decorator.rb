@@ -15,7 +15,7 @@ class ReservationDecorator < Draper::Decorator
 
   def hourly_summary_for_first_period(show_date = true)
     reservation_period = periods.first.decorate
-    reservation_period.hourly_summary(show_date, { schedule_booking: listing.schedule_booking? })
+    reservation_period.hourly_summary(show_date, { event_booking: listing.event_booking? })
   end
 
   def total_cost
@@ -129,7 +129,7 @@ class ReservationDecorator < Draper::Decorator
   end
 
   def total_units_text
-    unit = listing.overnight_booking? ? 'general.night' : 'general.day'
+    unit = transactable_pricing.night_booking? ? 'general.night' : 'general.day'
     [total_units, I18n.t(unit, count: reservation.total_units)].join(' ')
   end
 
@@ -137,9 +137,9 @@ class ReservationDecorator < Draper::Decorator
     periods.map do |period|
       period = period.decorate
       date = I18n.l(period.date.to_date, format: :day_and_month)
-      if listing.schedule_booking?
+      if listing.event_booking?
         ('%s %s' % [date, start_time]).html_safe
-      elsif listing.action_hourly_booking?
+      elsif transactable_pricing.hour_booking?
         start_time = I18n.l(period.start_minute_of_day_to_time, format: :short)
         end_time = I18n.l(period.end_minute_of_day_to_time, format: :short)
         ('%s %s&ndash;%s' % [date, start_time, end_time]).html_safe

@@ -49,6 +49,44 @@ class DataImporter::CsvToXmlConverter
     end if @hash[scope][:availability_rule_attributes]
   end
 
+  def add_action_type(builder, scope)
+    return unless builder.parent.search('pricings').blank?
+    pricings = []
+    @hash[scope].select{|k,v| k =~ /_price_cents/ && v.to_i > 0}.each do |pricing|
+      number_of_units, unit = pricing.first.to_s.match(/for_(\d*)_(\w*)_price_cents/)[1..2]
+      pricings << {
+        enabled: true,
+        number_of_units: number_of_units,
+        unit: unit,
+        price_cents: pricing.last
+      }
+    end
+
+    if pricings.any?
+      type = case pricings.last[:unit]
+        when 'event'
+          'Transactable::EventBooking'
+        when /subscription/
+          'Transactable::SubscriptionBooking'
+        else
+          'Transactable::TimeBasedBooking'
+        end
+      insert_to_xml([:type], { type: type }, builder)
+
+      builder.availability_rules do |availabilities|
+        @availability_builder = Nokogiri::XML::Builder.new({}, availabilities.parent)
+      end
+
+      builder.pricings do
+        pricings.each do |price|
+          builder.pricing do
+            insert_to_xml(price.keys, price, builder)
+          end
+        end
+      end
+    end
+  end
+
   def add_amenities(builder, scope)
     @hash[scope][:amenities].each do |amenity|
       unless amenity_already_added?(amenity)
@@ -78,7 +116,9 @@ class DataImporter::CsvToXmlConverter
             build_amenities
             build_listing do
               build_photos
-              build_availabilities
+              build_action_type do
+                build_availabilities
+              end
             end
             store_last_location
           end
@@ -119,6 +159,10 @@ class DataImporter::CsvToXmlConverter
       end
     end
     yield if @hash[:location][:external_id].present?
+  end
+
+  def build_action_type
+    add_action_type(@action_type_builder, @scope)
   end
 
   def build_address
@@ -202,6 +246,9 @@ class DataImporter::CsvToXmlConverter
     @scope = :listing
     if new_listing? && @hash[:listing][:external_id].present?
       add_object(Transactable, @listing_builder, { klass_symbol: :listing }) do
+        @listing_builder.action_type do |action|
+          @action_type_builder = Nokogiri::XML::Builder.new({}, action.parent)
+        end
         @listing_builder.photos do |photos|
           @photo_builder = Nokogiri::XML::Builder.new({}, photos.parent)
         end

@@ -9,8 +9,8 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       sign_in @user
       @related_company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id)
       @related_location = FactoryGirl.create(:location_in_auckland, company: @related_company)
-      @related_listing = FactoryGirl.create(:transactable, location: @related_location)
-      @unrelated_listing = FactoryGirl.create(:transactable)
+      @related_listing = FactoryGirl.create(:transactable, :with_time_based_booking, location: @related_location)
+      @unrelated_listing = FactoryGirl.create(:transactable, :with_time_based_booking)
       @unrelated_listing.update_attribute(:instance_id, FactoryGirl.create(:instance).id)
     end
 
@@ -22,7 +22,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       assert_response :success
       assert_select ".order", 1
       assert_select ".order .total-units p:last-child", "1 day"
-      @related_listing.update!({booking_type: 'overnight'})
+      @reservation.transactable_pricing.update(unit: 'night')
       get :index
       assert_response :success
       assert_select ".order .total-units p:last-child", "1 night"

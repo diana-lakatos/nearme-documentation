@@ -9,7 +9,7 @@ require 'test_helper'
 class RecurringBookingRequestTest < ActiveSupport::TestCase
 
   setup do
-    @listing = FactoryGirl.create(:transactable, :name => "blah", monthly_subscription_price: 99, booking_type: 'subscription')
+    @listing = FactoryGirl.create(:subscription_transactable)
     @instance = @listing.instance
     @user = FactoryGirl.create(:user, name: "Firstname Lastname")
     @payment_method = FactoryGirl.create(:credit_card_payment_method)
@@ -17,8 +17,8 @@ class RecurringBookingRequestTest < ActiveSupport::TestCase
       schedule_params: "{\"validations\":{\"day\":[1, 5]}, \"rule_type\":\"IceCube::WeeklyRule\", \"interval\":1, \"week_start\":0}",
       start_on: @first_monday,
       end_on: @last_thursday,
-      interval: 'monthly',
       quantity: 1,
+      transactable_pricing_id: @listing.action_type.pricings.first.id,
       payment_subscription_attributes: {
         payment_method: @payment_method,
         credit_card_attributes: {

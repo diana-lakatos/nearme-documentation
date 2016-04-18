@@ -18,18 +18,19 @@ class ReviewsService
       product_collection: [],
       buyer_collection: []
     }
-    if PlatformContext.current.instance.buyable?
+    # the commented ifs will be removed and replaced with proper Order::LineItem
+    #if PlatformContext.current.instance.buyable?
       line_items = get_line_items_for_owner_and_creator
       orders_reviews = completed_tab ? get_reviews_by(line_items) : get_reviewables(line_items, Spree::ProductType)
-    end
-    if PlatformContext.current.instance.bookable?
+    #end
+    #if PlatformContext.current.instance.bookable?
       reservations_for_owner_and_creator = get_reservations_for_owner_and_creator
       reservations_reviews = completed_tab ? get_reviews_by(reservations_for_owner_and_creator) : get_reviewables(reservations_for_owner_and_creator, ServiceType)
-    end
-    if PlatformContext.current.instance.biddable?
+    #end
+    #if PlatformContext.current.instance.biddable?
       offers_for_owner_and_creator = get_offers_for_owner_and_creator
       offer_reviews = completed_tab ? get_reviews_by(offers_for_owner_and_creator) : get_reviewables(offers_for_owner_and_creator, OfferType)
-    end
+    #end
     collections.keys.each do |key|
       [orders_reviews, reservations_reviews, offer_reviews].compact.map do |reviews|
         collections[key] += reviews[key]

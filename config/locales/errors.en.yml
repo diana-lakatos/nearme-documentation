@@ -121,6 +121,9 @@ en:
       has_an_invalid_format: "has an invalid format"
       not_verified_phone: 'must be verified'
       open_time_before_close_time: "The opening hour must occur before the closing hour."
+      transactable_type_actions_blank: 'At least one action must be enabled.'
+      price_type_exists: "You can't define two prices with the same unit and number of units."
+      price_defined: "This price is already defined."
       minimum_open_time:
         one: "must be opened for at least %{minimum_hours} hour"
         other: "must be opened for at least %{minimum_hours} hours"

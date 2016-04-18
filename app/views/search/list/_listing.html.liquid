@@ -9,7 +9,7 @@
           {% if user_has_firends %}
             {% assign connections = listing | connections_for: current_user %}
             {% if connections.size > 0 %}
-              <div class="span2 connections" rel='tooltip' title="{{ connections | connections _tooltip: 5 }}">
+              <div class="span2 connections" rel='tooltip' title="{{ connections | connections_tooltip: 5 }}">
                 <span class="ico-group">{{ connections.size }}</span>
               </div>
             {% endif %}

@@ -3,7 +3,16 @@ require "test_helper"
 class AvailabilitySearchTest < ActionDispatch::IntegrationTest
 
   setup do
+    Rails.application.config.use_elastic_search = true
+    Transactable.__elasticsearch__.index_name = 'transactables_test'
+    Transactable.__elasticsearch__.create_index!(force: true)
+    Transactable.__elasticsearch__.refresh_index!
     @date_start = Time.zone.now.next_week.to_date + 7.days
+  end
+
+  teardown do
+    Transactable.__elasticsearch__.client.indices.delete index: Transactable.index_name
+    Rails.application.config.use_elastic_search = false
   end
 
   context 'availability rules' do
@@ -54,15 +63,16 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
 
     end
 
-    context 'relative mode' do
+    context 'relative modexxx' do
       setup do
         TransactableType.first.update_attribute(:date_pickers_mode, 'relative')
+        Transactable.__elasticsearch__.refresh_index!
       end
 
       should 'get all listings if search for more than week' do
         @date_end = @date_start + 14.days
         @params = { availability: { dates: { start: @date_start.to_s, end: @date_end.to_s } } }
-        @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
+        @searcher = InstanceType::Searcher::Elastic::GeolocationSearcher::Listing.new(TransactableType.first, @params)
         @searcher.invoke
         assert_equal([
           @transactable_in_location_opened_from_mon_to_friday,
@@ -74,11 +84,12 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
         @date_start = @date_start + 4.days
         @date_end = @date_start + 1.days
         @params = { availability: { dates: { start: @date_start.to_s, end: @date_end.to_s } } }
-        @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
+        @searcher = InstanceType::Searcher::Elastic::GeolocationSearcher::Listing.new(TransactableType.first, @params)
         @searcher.invoke
         assert_equal([
           @transactable_opened_whole_week,
-          @transactable_in_location_opened_from_mon_to_friday ].map(&:id).sort, @searcher.results.map(&:id).sort)
+          @transactable_in_location_opened_from_mon_to_friday,
+          @transactable_with_own_availability_rules_for_tuesday ].map(&:id).sort, @searcher.results.map(&:id).sort)
       end
 
     end
@@ -102,7 +113,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
 
     context 'listings' do
 
-      should 'return correct transactables for searching the same day' do
+      should 'return correct transactables' do
         TransactableType.first.update_attribute(:date_pickers_mode, 'relative')
         @params = { availability: { dates: { start: @date_start.to_s, end: @date_start.to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
@@ -113,10 +124,8 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
           @transactable_without_reservations,
           @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation
         ].map(&:id).sort, @searcher.results.map(&:id).sort)
-      end
 
-      should 'return correct transactables for searching for 1 day difference' do
-        TransactableType.first.update_attribute(:date_pickers_mode, 'relative')
+        #return correct transactables for searching for 1 day difference
         @params = { availability: { dates: { start: @date_start.to_s, end: (@date_start + 1.day).to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
         @searcher.invoke
@@ -127,10 +136,9 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
           @transactable_without_reservations,
           @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation
         ].map(&:id).sort, @searcher.results.map(&:id).sort)
-      end
 
-      should 'return correct transactables for relative mode' do
-        TransactableType.first.update_attribute(:date_pickers_mode, 'relative')
+        #return correct transactables for relative mode
+        @params = { availability: { dates: { start: @date_start.to_s, end: @date_end.to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
         @searcher.invoke
         assert_equal([
@@ -140,10 +148,10 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
           @transactable_without_reservations,
           @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation
         ].map(&:id).sort, @searcher.results.map(&:id).sort)
-      end
 
-      should 'return correct transactables for strict mode' do
+        #return correct transactables for strict mode
         TransactableType.first.update_attribute(:date_pickers_mode, 'strict')
+        @params = { availability: { dates: { start: @date_start.to_s, end: @date_end.to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
         @searcher.invoke
         assert_equal([
@@ -151,11 +159,9 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
           @transactable_without_reservations,
           @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation
         ].map(&:id).sort, @searcher.results.map(&:id).sort)
-      end
-    end
 
-    context 'locations' do
-      should 'return correct transactables for relative mode' do
+        # 'locations' should 'return correct transactables for relative mode'
+        @params = { availability: { dates: { start: @date_start.to_s, end: @date_end.to_s } } }
         TransactableType.first.update_attribute(:date_pickers_mode, 'relative')
         @searcher = InstanceType::Searcher::GeolocationSearcher::Location.new(TransactableType.first, @params)
         assert_equal([
@@ -165,9 +171,8 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
           @transactable_without_reservations,
           @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation
         ].map(&:location_id).sort, @searcher.results.map(&:id).sort)
-      end
 
-      should 'return correct transactables for strict mode' do
+        #'locations' should return correct transactables for strict mode
         TransactableType.first.update_attribute(:date_pickers_mode, 'strict')
         @searcher = InstanceType::Searcher::GeolocationSearcher::Location.new(TransactableType.first, @params)
         assert_equal([

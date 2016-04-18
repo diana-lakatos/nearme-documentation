@@ -11,16 +11,17 @@ class Reservation::DailyPriceCalculator
 
   def initialize(reservation)
     @reservation = reservation
+    @pricing = @reservation.transactable_pricing
     @contiguous_block_finder = Reservation::ContiguousBlockFinder.new(reservation)
   end
 
   # Returns the total price for the listing and it's chosen
   # periods. Returns nil if the selection is unbookable
   def price
-    blocks = listing.overnight_booking? ? real_contiguous_blocks : contiguous_blocks
+    blocks = @pricing.overnight_booking? ? real_contiguous_blocks : contiguous_blocks
 
     blocks.map do |block|
-      price_for_days((listing.overnight_booking? ? (block.size - 1) : block.size) ) * @reservation.quantity rescue 0.0
+      price_for_days((@pricing.overnight_booking? && block.size > 1 ? (block.size - 1) : block.size) ) * @reservation.quantity rescue 0.0
     end.sum.to_money
   end
 
@@ -30,11 +31,7 @@ class Reservation::DailyPriceCalculator
   # minimum of 5 days).
   def valid?
     listing && !contiguous_blocks.empty? && contiguous_blocks.all? { |block|
-      if listing.overnight_booking?
-        block.length >= 2
-      else
-        block.length >= listing.minimum_booking_days
-      end
+      block.length >= @pricing.action.minimum_booking_days
     }
   end
 
@@ -43,14 +40,14 @@ class Reservation::DailyPriceCalculator
   end
 
   def unit_price
-    listing.try(:prices_by_days).values.first if listing.try(:prices_by_days)
+    @pricing.action.price_for_lowest_no_of_day
   end
 
   private
 
   # Price for contiguous days in as a Money object
   def price_for_days(days)
-    prices = listing.try(:prices_by_days)
+    prices = @pricing.try(:all_prices_for_unit)
 
     if prices
       # Determine the matching block size and price
@@ -58,8 +55,8 @@ class Reservation::DailyPriceCalculator
         largest_block = block_days if days >= block_days
         largest_block
       }
-      price = prices[block_size]
-
+      pricing = prices[block_size]
+      price = pricing[:price]
       # Our pricing logic per block is the block price
       # plus a pro-rated cost for each additional day used.
       # Pro rate even when favourable pricing is disabled to avoid error when

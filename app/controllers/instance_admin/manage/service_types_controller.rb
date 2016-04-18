@@ -23,7 +23,7 @@ class InstanceAdmin::Manage::ServiceTypesController < InstanceAdmin::Manage::Tra
 
   def update
     if resource.update_attributes(transactable_type_params)
-      resource.schedule.try(:create_schedule_from_schedule_rules)
+      resource.event_booking.try(:schedule).try(:create_schedule_from_schedule_rules)
       flash.now[:success] = t 'flash_messages.instance_admin.manage.service_types.updated'
       redirect_to instance_admin_manage_service_types_path
     else
@@ -42,6 +42,10 @@ class InstanceAdmin::Manage::ServiceTypesController < InstanceAdmin::Manage::Tra
 
   def resource_class
     ServiceType
+  end
+
+  def translation_key
+    @translation_key ||= resource_class.name.demodulize.tableize
   end
 
   def service_type_state_params

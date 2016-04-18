@@ -4,7 +4,7 @@ task check_template_generator: :environment do
   Instance.find_each do |instance|
     PlatformContext.current = PlatformContext.new(instance)
 
-    ServiceType.find_each do |service_type|
+    TransactableType.find_each do |service_type|
       fails << check_custom_attributes(service_type)
     end
   end

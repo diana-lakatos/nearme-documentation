@@ -1,7 +1,8 @@
-%hr/
+- if f.object.allow_book_it_out_discount
+  %hr/
 
-.form-inline
-  = f.input :enable_exclusive_price, as: :switch, label_html: { class: 'block-label' }, required: false,
-  label: t(:enable, scope: [:pricing, :schedule, :exclusive_price]), input_html: { checked: f.object.exclusive_price.present? }
+  .form-inline
+    = f.input :has_exclusive_price, as: :switch, label_html: { class: 'block-label' }, required: false,
+    label: t(:enable, scope: [:pricing, :schedule, :exclusive_price])
 
-  = f.input :exclusive_price, as: :numeric, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), label_html: { class: 'block-label' }, required: false, label: t(:exclusive_price, scope: [:pricing, :schedule, :exclusive_price])
+    = f.input :exclusive_price, as: :numeric, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), label_html: { class: 'block-label' }, required: false, label: t(:exclusive_price, scope: [:pricing, :schedule, :exclusive_price])

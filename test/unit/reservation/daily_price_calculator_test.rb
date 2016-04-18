@@ -6,17 +6,25 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
     @reservation = Reservation.new
 
     @listing = stub()
-    @listing.stubs(:prices_by_days).returns({
-      1 => 100.to_money,
-      5 => 400.to_money,
-      20 => 1000.to_money
-    })
+    @listing.stubs(:action_type).returns({})
     @listing.stubs(:open_on?).returns(true)
     @listing.stubs(:availability_for).returns(10)
-    @listing.stubs(:minimum_booking_days).returns(1)
+    @listing.action_type.stubs(:minimum_booking_days).returns(1)
     @listing.stubs(:overnight_booking?).returns(false)
 
     @reservation.stubs(:listing).returns(@listing)
+    @transactable_pricing = stub({
+        action: stub({
+          minimum_booking_days: 1
+        }),
+        overnight_booking?: false,
+        all_prices_for_unit: {
+          1 => {price: 100.to_money},
+          5 => {price: 400.to_money},
+          20 => {price: 1000.to_money},
+        }
+    })
+    @reservation.stubs(:transactable_pricing).returns(@transactable_pricing)
 
     @calculator = Reservation::DailyPriceCalculator.new(@reservation)
   end
@@ -76,8 +84,8 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
 
       context "free booking" do
         setup do
-          @listing.stubs(:prices_by_days).returns({
-            1 => 0.to_money
+          @transactable_pricing.stubs(:all_prices_for_unit).returns({
+            1 => { price: 0.to_money }
           }
                                                  )
         end
@@ -123,9 +131,9 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
           #
           # If a 'week' pricing is applied on 3 consecutive days, then the pricing should be
           # 1w + 1d
-          @listing.stubs(:prices_by_days).returns({
-            1 => 100.to_money,
-            3 => 400.to_money
+          @transactable_pricing.stubs(:all_prices_for_unit).returns({
+            1 => { price: 100.to_money },
+            3 => { price: 400.to_money }
           })
         end
 
@@ -136,7 +144,7 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
 
       context "semantics with availability for overnight" do
         setup do
-          @listing.stubs(:overnight_booking?).returns(true)
+          @transactable_pricing.stubs(:overnight_booking?).returns(true)
 
           # We set up a set of dates with gaps that are deemed "contiguous" by our
           # custom definition.
@@ -156,9 +164,9 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
           #
           # If a 'week' pricing is applied on 2 consecutive nights, then the pricing should be
           # 1n(from pro-rated week price) + 1n(per night price)
-          @listing.stubs(:prices_by_days).returns({
-            1 => 100.to_money,
-            2 => 400.to_money
+          @transactable_pricing.stubs(:all_prices_for_unit).returns({
+            1 => { price: 100.to_money },
+            2 => { price: 400.to_money }
           })
         end
 
@@ -170,7 +178,7 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
 
     context '#valid?' do
       setup do
-        @listing.stubs(:minimum_booking_days).returns(5)
+        @transactable_pricing.action.stubs(:minimum_booking_days).returns(5)
       end
 
       should "return false if any blocks don't meet minimum date requrement" do
@@ -235,9 +243,9 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
 
     should "be correct if only price for months is defined and I want to book more than 30 days" do
       #pro rate even when favourable pricing is disabled to avoid error when only montly price is enabled
-      @listing.stubs(:prices_by_days).returns({
-            30 => 400.to_money
-          })
+      @transactable_pricing.stubs(:all_prices_for_unit).returns({
+        30 => { price: 400.to_money }
+      })
       dates = date_groups_of(35, 1)
       seed_reservation_dates(dates)
       assert_equal (400_00 + ((5/30.to_f) * 400_00)).round, @calculator.price.cents

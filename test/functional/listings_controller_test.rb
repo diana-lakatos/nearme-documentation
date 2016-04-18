@@ -3,7 +3,7 @@ require 'test_helper'
 class ListingsControllerTest < ActionController::TestCase
 
     setup do
-      @listing = FactoryGirl.create(:transactable)
+      @listing = FactoryGirl.create(:transactable,:fixed_price)
       @transactable_type = @listing.transactable_type
     end
 
@@ -15,7 +15,6 @@ class ListingsControllerTest < ActionController::TestCase
     end
 
     should 'have occurrences' do
-      11.times { FactoryGirl.create(:transactable) }
       get :occurrences, id: @listing.id
       assert 10, JSON.parse(response.body).length
     end

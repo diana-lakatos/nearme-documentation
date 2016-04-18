@@ -3,29 +3,16 @@ require "test_helper"
 class Listing::SerializationTest < ActiveSupport::TestCase
   context "a free listing" do
     setup do
-      @listing = FactoryGirl.create(:free_listing)
+      @listing = FactoryGirl.build(:transactable)
       @serializer = ListingSerializer.new(@listing)
     end
 
-    should "return valid price fields" do
+    should "have pricings" do
       json = @serializer.as_json[:listing]
-      assert_equal 0, json[:price][:amount]
-      assert_equal ListingSerializer::PRICE_PERIODS[:free], json[:price][:period]
-      assert_equal "Free", json[:price][:label]
-    end
-  end
-
-  context "a non-free daily listing" do
-    setup do
-      @listing = FactoryGirl.create(:hundred_dollar_listing)
-      @serializer = ListingSerializer.new(@listing)
-    end
-
-    should "return valid price fields" do
-      json = @serializer.as_json[:listing]
-      assert_equal 100.0, json[:price][:amount]
-      assert_equal ListingSerializer::PRICE_PERIODS[:day], json[:price][:period]
-      assert_equal "$100.00", json[:price][:label]
+      assert json[:prices].present?
+      assert json[:prices].many?
+      assert_equal @listing.action_type.pricings.size, json[:prices].count
+      assert_equal @listing.action_type.hour_pricings[0].price_cents, json[:prices].find{|p| p[:unit] == 'hour'}[:price_cents]
     end
   end
 end

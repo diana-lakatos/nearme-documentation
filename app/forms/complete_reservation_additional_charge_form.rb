@@ -4,7 +4,7 @@ class CompleteReservationAdditionalChargeForm < Reform::Form
   include Coercion
 
   property :name, validates: { presence: true }
-  property :amount, type: Float, validates: { presence: true, numericality: { only_integer: false } }
+  property :amount, validates: { presence: true, numericality: { only_integer: false } }
   property :status
   property :_destroy, writeable: false
 

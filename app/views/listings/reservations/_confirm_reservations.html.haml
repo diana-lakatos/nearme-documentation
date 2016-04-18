@@ -8,17 +8,17 @@
 
 - if @reservation_request
   %p.cancellation-info
-    - transactable_type = @reservation_request.listing.transactable_type
-    - if !transactable_type.cancellation_policy_enabled? || transactable_type.cancellation_policy_hours_for_cancellation.zero?
+    - action_type = @reservation_request.reservation.transactable_pricing.action
+    - if !action_type.cancellation_policy_enabled || action_type.cancellation_policy_hours_for_cancellation.zero?
       = t('reservations.no_cancellation_time')
     - else
       %span.cancellation-time
-        = t('reservations.cancellation_time', time: @reservation_request.listing.transactable_type.cancellation_policy_hours_for_cancellation)
+        = t('reservations.cancellation_time', time: action_type.cancellation_policy_hours_for_cancellation)
 
-    - if !transactable_type.cancellation_policy_enabled? || (transactable_type.cancellation_policy_penalty_percentage.zero? && transactable_type.cancellation_policy_penalty_hours.zero?)
+    - if !action_type.cancellation_policy_enabled || (action_type.cancellation_policy_penalty_percentage.zero? && action_type.cancellation_policy_penalty_hours.zero?)
       = t('reservations.no_cancellation_fee')
-    - elsif transactable_type.cancellation_policy_penalty_hours > 0
-      = t('reservations.hours_cancellation_fee', fee: @reservation_request.listing.transactable_type.cancellation_policy_penalty_hours)
+    - elsif action_type.cancellation_policy_penalty_hours > 0
+      = t('reservations.hours_cancellation_fee', fee: action_type.cancellation_policy_penalty_hours)
     - else
       %span.cancellation-fee
-        = t('reservations.cancellation_fee', fee: @reservation_request.listing.transactable_type.cancellation_policy_penalty_percentage)
+        = t('reservations.cancellation_fee', fee: action_type.cancellation_policy_penalty_percentage)

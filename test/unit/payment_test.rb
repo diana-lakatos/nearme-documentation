@@ -156,7 +156,7 @@ class PaymentTest < ActiveSupport::TestCase
         assert_equal 0, @payment.final_service_fee_amount_host_cents
         assert_equal 100, @payment.final_service_fee_amount_guest_cents
         assert_equal 600, @payment.subtotal_amount_cents_after_refund
-        assert_equal 400, @payment.refunds.last.amount
+        assert_equal 400, @payment.refunds.last.amount_cents
       end
 
       should 'refund proper amount when host cancels' do
@@ -169,7 +169,7 @@ class PaymentTest < ActiveSupport::TestCase
         assert_equal 0, @payment.final_service_fee_amount_host_cents
         assert_equal 0, @payment.final_service_fee_amount_guest_cents
         assert_equal 0, @payment.subtotal_amount_cents_after_refund
-        assert_equal 1100, @payment.refunds.last.amount
+        assert_equal 1100, @payment.refunds.last.amount_cents
       end
 
 
@@ -224,7 +224,7 @@ class PaymentTest < ActiveSupport::TestCase
       end
 
       should 'calculate proper subtotal amount cents after refund once refund has been issued' do
-        @refund = FactoryGirl.create(:refund, payment: @payment, amount: 3000)
+        @refund = FactoryGirl.create(:refund, payment: @payment, amount_cents: 3000)
         assert_equal @payment.subtotal_amount_cents - 3000, @payment.subtotal_amount_cents_after_refund
       end
 

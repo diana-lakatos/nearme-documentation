@@ -108,7 +108,7 @@ class Listings::ReservationsController < ApplicationController
   def hourly_availability_schedule
     schedule = if params[:date].present?
       date = Date.parse(params[:date])
-      @listing.hourly_availability_schedule(date).as_json
+      @listing.action_type.hourly_availability_schedule(date).as_json
     end
 
     render :json => schedule.presence || {}
@@ -128,7 +128,7 @@ class Listings::ReservationsController < ApplicationController
     session[:stored_reservation_bookings] = {
       @listing.id => {
         quantity: @reservation_request.reservation.quantity,
-        dates: (@listing.schedule_booking? ? params[:reservation_request][:dates] : @reservation_request.reservation.periods.map(&:date_with_time)),
+        dates: (@listing.event_booking? ? params[:reservation_request][:dates] : @reservation_request.reservation.periods.map(&:date_with_time)),
         start_minute: @reservation_request.start_minute,
         end_minute: @reservation_request.end_minute,
         book_it_out: @reservation_request.book_it_out,

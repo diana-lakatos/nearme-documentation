@@ -3,6 +3,7 @@ FixedPriceCalculator = require('./price_calculator/fixed_price_calculator')
 PerUnitPriceCalculator = require('./price_calculator/per_unit_price_calculator')
 PriceCalculator = require('./price_calculator')
 Availability = require('./availability/availability')
+ScheduleAvailability = require('./availability/schedule_availability')
 HourlyAvailability = require('./availability/hourly_availability')
 dateUtil = require('../../lib/utils/date')
 asEvented = require('asEvented')
@@ -19,36 +20,34 @@ module.exports = class BookingListing
     @bookedDateAvailability = 0
     @maxQuantity = @data.quantity
     @initial_bookings = @data.initial_bookings || {}
-
-    if @data.subscription_prices
-      @subscriptionPeriod = Object.keys(@data.subscription_prices)[0]
-    else
-      @subscriptionPeriod = {}
+    @possibleUnits = @data.possible_units
+    @pricings = @data.pricings
 
     if @withCalendars()
-      @firstAvailableDate = dateUtil.idToDate(@data.first_available_date)
-      @secondAvailableDate = dateUtil.idToDate(@data.second_available_date)
-      if @isReservedHourly()
-        @availability = new HourlyAvailability(
-          @data.availability,
-          @data.hourly_availability_schedule,
-          @data.hourly_availability_schedule_url
-        )
+      if @canBeSubscribed()
+        @firstAvailableDate = @minimumDate = dateUtil.idToDate(@data.minimum_date)
+        @maximumDate = dateUtil.idToDate(@data.maximum_date)
+        @availability = new ScheduleAvailability(@data.availability)
       else
-        @availability = new Availability(@data.availability)
+        @firstAvailableDate = dateUtil.idToDate(@data.first_available_date)
+        @secondAvailableDate = dateUtil.idToDate(@data.second_available_date)
+        if @canReserveHourly()
+          @availability = new HourlyAvailability(
+            @data.availability,
+            @data.hourly_availability_schedule,
+            @data.hourly_availability_schedule_url
+          )
+        else
+          @availability = new Availability(@data.availability)
 
-      @minimumBookingDays = @data.minimum_booking_days
-
-      # If the listing is an overnight booking we only want to let the user
-      # select contiguous blocks of 2 days
-      @minimumBookingDays = 2 if @isOvernightBooking()
-
-      @minimumDate = dateUtil.idToDate(@data.minimum_date)
-      @maximumDate = dateUtil.idToDate(@data.maximum_date)
-      @favourablePricingRate = @data.favourable_pricing_rate
-      @pricesByDays = @data.prices_by_days
-      @hourlyPrice = @data.hourly_price_cents
-      @minimumBookingMinutes = @data.minimum_booking_minutes
+        @minimumDate = dateUtil.idToDate(@data.minimum_date)
+        @maximumDate = dateUtil.idToDate(@data.maximum_date)
+        @favourablePricingRate = @data.favourable_pricing_rate
+        @pricesByHours = @data.prices_by_hours
+        @pricesByDays = @data.prices_by_days
+        @pricesByNights = @data.prices_by_nights
+        @hourlyPrice = @data.hourly_price_cents
+        @minimumBookingMinutes = @data.minimum_booking_minutes
     else
       @fixedPrice = @data.fixed_price_cents
       @exclusivePrice = @data.exclusive_price_cents
@@ -74,26 +73,46 @@ module.exports = class BookingListing
   hasFavourablePricingRate: ->
     @favourablePricingRate
 
-  isReservedHourly: ->
-    @data.action_hourly_booking
+  # If the listing is an overnight booking we only want to let the user
+  # select contiguous blocks of 2 days
+  minimumBookingDays: ->
+   if @isOvernightBooking() && @data.minimum_booking_days <=1 then 2 else @data.minimum_booking_days
 
-  isRecurringBooking: ->
-    @data.booking_type == 'subscription'
+  onlyRfqAction: ->
+    @possibleUnits.length == 0 && @data.action_rfq
+
+  canReserveHourly: ->
+    'hour' in @possibleUnits
+
+  canReserveDaily: ->
+    'day' in @possibleUnits || 'night' in @possibleUnits
+
+  canBeSubscribed: ->
+    'subscription_day' in @possibleUnits || 'subscription_month' in @possibleUnits
+
+  isReservedHourly: ->
+    $('.pricing-tabs li.active').data('unit') == 'hour'
+
+  isSubscriptionBooking: ->
+    $('.pricing-tabs li.active').data('unit') && $('.pricing-tabs li.active').data('unit').indexOf('subscription') > -1
 
   isOvernightBooking: ->
-    @data.booking_type == 'overnight'
+    $('.pricing-tabs li.active').data('unit') == 'night'
 
   isFixedBooking: ->
     @data.booking_type == 'schedule'
 
   withCalendars: ->
-    !@isFixedBooking()
+    @canBeSubscribed() || @canReserveHourly() || @canReserveDaily()
 
   isReservedDaily: ->
-    @data.action_daily_booking
+    $('.pricing-tabs li.active').data('unit') == 'day'
 
   isPerUnitBooking: ->
     @data.action_price_per_unit
+
+  currentUnit: ->
+    $('.pricing-tabs li.active').data('unit')
 
   # Returns whether the date is within the bounds available for booking
   dateWithinBounds: (date) ->
@@ -119,6 +138,12 @@ module.exports = class BookingListing
 
   availabilityFor: (date, minute = null) ->
     @availability.availableFor(date, minute)
+
+  bookItOutMin: ->
+    @data.book_it_out_minimum_qty
+
+  bookItOutDiscount: ->
+    @data.book_it_out_discount
 
   bookItOutAvailable: ->
     @isFixedBooking() && @data.book_it_out_discount > 0
@@ -158,16 +183,10 @@ module.exports = class BookingListing
       @priceCalculator().getPriceForBookItOut()
     else if exclusive_price
       @exclusivePrice
-    else if @isRecurringBooking()
-      @subscriptionPeriodPrice() * @getQuantity()
+    else if @isSubscriptionBooking()
+      @pricings[@currentPricingId].price * @getQuantity()
     else
       @priceCalculator().getPrice()
-
-  subscriptionPeriodPrice: ->
-    @data.subscription_prices[@subscriptionPeriod]
-
-  setSubscriptionPeriod: (period) ->
-    @subscriptionPeriod = period
 
   bookItOutSubtotal: ->
     @priceCalculator().getPriceForBookItOut()
@@ -223,7 +242,7 @@ module.exports = class BookingListing
       if @isReservedHourly()
         options.start_minute = @initial_bookings.start_minute || @startMinute
         options.end_minute   = @initial_bookings.end_minute || @endMinute
-      if @isRecurringBooking()
+      if @isSubscriptionBooking()
         options.start_on = @initial_bookings.start_on || @startOn
         options.end_on   = @initial_bookings.end_on || @endOn
 

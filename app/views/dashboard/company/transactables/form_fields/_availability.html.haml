@@ -23,7 +23,6 @@
         .nested-fields-set
           = at.simple_fields_for(:availability_rules) do |af|
             .nested-container
-              = af.input :_destroy, as: :hidden
               = render 'dashboard/company/transactables/form_fields/time_availability', f: af, index: 1
 
         %p

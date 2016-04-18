@@ -6,7 +6,7 @@ class UpdateInstanceViewsToNotUseOldSyntaxForAccessingCustomAttributes < ActiveR
       i.set_context!
       gsub_rules = [[".job_title_and_company_name", ".job_title"]]
       names = []
-      ServiceType.find_each do |st|
+      TransactableType.find_each do |st|
         names << st.custom_attributes.pluck(:name)
       end
       names.flatten!

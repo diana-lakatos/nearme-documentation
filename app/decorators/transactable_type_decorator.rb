@@ -43,12 +43,17 @@ class TransactableTypeDecorator < Draper::Decorator
     I18n.t "#{translation_namespace}.search_field_placeholder.full_text" , default: I18n.t('homepage.search_field_placeholder.full_text')
   end
 
-  def search_field_placeholder
-    searcher_type == 'fulltext' ? fulltext_placeholder : geolocation_placeholder
+  def display_location_type_filter?
+    search_location_type_filter && PlatformContext.current.instance.location_types.count > 1
   end
 
+  def search_field_placeholder
+    searcher_type == 'fulltext' ? I18n.t('homepage.search_field_placeholder.full_text') : I18n.t('homepage.search_field_placeholder.location')
+  end
+
+  #TODO: to refactor
   def manage_transactables_path
-    [:dashboard, :company, object, object.class.name.demodulize.tableize.split('_').first.pluralize]
+    [:dashboard, :company, object.becomes(TransactableType), object.becomes(TransactableType).class.name.demodulize.tableize.split('_').first.pluralize]
   end
 
 end

@@ -22,6 +22,10 @@ class ListingsController < ApplicationController
     restore_initial_bookings_from_stored_reservation
     @collapsed = params[:collapsed] == 'true' ? true : false
     @location = @listing.location
+    if @listing.action_type
+      @action_type = @listing.action_type.decorate
+      render template: "listings/action_types/#{@action_type.object.class.name.demodulize.underscore}"
+    end
   end
 
   def ask_a_question

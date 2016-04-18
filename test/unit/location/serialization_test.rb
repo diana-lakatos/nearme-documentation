@@ -93,7 +93,7 @@ class Location::SerializationTest < ActiveSupport::TestCase
   end
 
   def setup_listing_with listing_number
-    FactoryGirl.create_list(:hundred_dollar_listing, listing_number, location: @location)
+    FactoryGirl.create_list(:transactable, listing_number, :with_time_based_booking, location: @location)
     @location.reload
   end
 

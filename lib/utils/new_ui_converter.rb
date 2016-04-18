@@ -6,7 +6,7 @@ class NewUiConverter
 
   def convert_to_new_ui
     @instance.priority_view_path = "new_ui"
-    @instance.service_types.find_each do |service_type|
+    @instance.transactable_types.find_each do |service_type|
       if service_type.form_components.where(form_type: FormComponent::TRANSACTABLE_ATTRIBUTES).where("ui_version is NULL or ui_version = 'old_dashboard'").any?
         @old_forms = service_type.form_components.where(form_type: FormComponent::TRANSACTABLE_ATTRIBUTES).where("ui_version is NULL or ui_version = 'old_dashboard'")
         create_form_component! service_type, 'Details', %w( name listing_type description amenity_types photos location_id waiver_agreement_templates documents_upload approval_requests other_custom_attributes)
@@ -34,7 +34,7 @@ class NewUiConverter
   def revert_to_old_ui
     @instance.priority_view_path = nil
     @instance.save!
-    @instance.service_types.find_each do |service_type|
+    @instance.transactable_types.find_each do |service_type|
       old_forms = service_type.form_components.only_deleted.where(form_type: FormComponent::TRANSACTABLE_ATTRIBUTES, ui_version: 'old_dashboard')
       if old_forms.any?
         old_forms.each do |old_form|

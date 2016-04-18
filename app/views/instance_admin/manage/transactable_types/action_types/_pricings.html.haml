@@ -1,0 +1,7 @@
+%h4= t('instance_admin.manage.service_types.pricing')
+.nested-fields-set
+  = f.simple_fields_for :pricings do |pricing|
+    .nested-container
+      = render 'instance_admin/manage/transactable_types/action_types/pricing', f: pricing
+  .add-link
+    = link_to_add_association t('pricing.add_new') , f, :pricings, partial: 'instance_admin/manage/transactable_types/action_types/pricing', class: 'btn btn-primary'

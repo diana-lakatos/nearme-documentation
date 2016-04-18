@@ -54,14 +54,12 @@ class FormComponent < ActiveRecord::Base
       else
         raise NotImplementedError
       end
-    elsif form_componentable.instance_of?(ServiceType)
+    elsif form_componentable.instance_of?(TransactableType) || form_componentable.instance_of?(ServiceType)
       [SPACE_WIZARD, TRANSACTABLE_ATTRIBUTES]
     elsif form_componentable.instance_of?(Spree::ProductType)
       [SPACE_WIZARD, PRODUCT_ATTRIBUTES]
     elsif form_componentable.instance_of?(ProjectType)
       [SPACE_WIZARD, PROJECT_ATTRIBUTES]
-    elsif form_componentable.instance_of?(OfferType)
-      [SPACE_WIZARD, OFFER_ATTRIBUTES]
     elsif form_componentable.instance_of?(ReservationType)
       [RESERVATION_ATTRIBUTES]
     elsif form_componentable.instance_of?(Instance)
