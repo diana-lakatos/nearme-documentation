@@ -13,6 +13,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
     if postgres_filters?
       listings_scope = available_listings(listings_scope)
       order_ids = listing_ids[@offset..(@to + 5)]
+      order_ids = listing_ids if order_ids.blank?
     else
       @search_results_count = fetcher.response[:hits][:total]
       order_ids = listing_ids
