@@ -1,5 +1,4 @@
 class ReengagementNoBookingsJob < Job
-
   def after_initialize(user_id)
     @user_id = user_id
   end
@@ -10,5 +9,4 @@ class ReengagementNoBookingsJob < Job
       WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::NoReservations, @user.id) if @user.reservations.empty? && @user.listings_in_near.size > 0
     end
   end
-
 end

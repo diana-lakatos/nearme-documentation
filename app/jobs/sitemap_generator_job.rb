@@ -9,5 +9,4 @@ class SitemapGeneratorJob < Job
       end
     end
   end
-
 end

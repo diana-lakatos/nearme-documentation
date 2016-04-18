@@ -36,8 +36,8 @@ namespace :reprocess do
   desc "Regenerate all relationships"
   task :relationships => :environment do
     UserRelationship.with_deleted.delete_all
-    Authentication.find_each do |auth|
-      FindFriendsJob.perform(auth)
+    Authentication.select(:id).find_each do |authentication|
+      FindFriendsJob.perform(authentication.id)
     end
   end
 
