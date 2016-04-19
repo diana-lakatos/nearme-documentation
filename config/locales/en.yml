@@ -2119,6 +2119,7 @@ en:
       rejected: "Rejected"
       confirmed: "Confirmed"
       inactive: "Payment failed"
+      completed: "Completed"
   search:
     pricing_types:
       daily: "Daily"
