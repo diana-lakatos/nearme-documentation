@@ -81,7 +81,7 @@
 
   - else
     %li
-      = link_to_registration get_return_to_url, platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal' } do
+      = link_to_registration get_return_to_url, platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } do
         = t('top_navbar.sign_up')
     %li
       = link_to_login url_options: get_return_to_url, data: { modal: true, 'modal-class' => 'sign-up-modal' } do

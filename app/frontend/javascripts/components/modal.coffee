@@ -38,10 +38,12 @@ module.exports = class Modal
       form = $(e.currentTarget)
 
       modalClass = null
+      overlayCloseDisabled = form.data('modal-overlay-close') == 'disabled'
+
       if form.is('form[data-modal-class]')
         modalClass = form.attr('data-modal-class')
 
-      Modal.load({ type: "POST", url: form.attr("action"), data: form.serialize()}, modalClass)
+      Modal.load({ type: "POST", url: form.attr("action"), data: form.serialize()}, modalClass, overlayCloseDisabled)
       false
 
 
@@ -63,10 +65,11 @@ module.exports = class Modal
     e.preventDefault()
     target = $(e.currentTarget)
     modalClass = null
+    overlayCloseDisabled = target.data('modal-overlay-close') == 'disabled'
     if target.is('a[data-modal-class]')
       modalClass = target.attr('data-modal-class')
     ajaxOptions = { url: target.attr("data-href"), data: target.attr('data-ajax-options') }
-    @load(ajaxOptions, modalClass)
+    @load(ajaxOptions, modalClass, overlayCloseDisabled)
 
   # Show the loading status on the modal
   @showLoading : ->
@@ -77,12 +80,14 @@ module.exports = class Modal
     @instance().showContent(content)
 
   # Trigger laoding of the URL within the modal via AJAX
-  @load : (ajaxOptions, modalClass = null) ->
+  @load : (ajaxOptions, modalClass = null, overlayCloseDisabled = false) ->
     @instance().setClass(modalClass)
+    @instance().setOverlayCloseDisabled(overlayCloseDisabled)
     @instance().load(ajaxOptions)
 
-  @load : (ajaxOptions, modalClass = null, callback = null) ->
+  @load : (ajaxOptions, modalClass = null, overlayCloseDisabled = false, callback = null) ->
     @instance().setClass(modalClass)
+    @instance().setOverlayCloseDisabled(overlayCloseDisabled)
     @instance().load(ajaxOptions)
     @instance().setCallback(callback)
 
@@ -101,6 +106,7 @@ module.exports = class Modal
     @loading = @container.find('.modal-loading')
     @bodyContainer = $('.dnm-page-body')
     @overlay = $('.modal-overlay')
+    @overlayCloseDisabled = false
 
     # Bind to any element with "close" class to trigger close on the modal
     @container.delegate ".close-modal, .modal-close, .modal-close-manually", 'click', (e) =>
@@ -109,10 +115,13 @@ module.exports = class Modal
 
     # Bind to the overlay to close the modal
     @overlay.bind 'click', (e) =>
-      @hide()
+      @hide() unless @overlayCloseDisabled
 
   setCallback : (callback) ->
     @callback = callback
+
+  setOverlayCloseDisabled : (overlayCloseDisabled) ->
+    @overlayCloseDisabled = overlayCloseDisabled
 
   setClass : (klass) ->
     @container.removeClass(@customClass) if @customClass
@@ -163,10 +172,13 @@ module.exports = class Modal
 
       # Clear any assigned modal class
       @setClass(null)
+      @setOverlayCloseDisabled(false)
 
       @_unfixBody()
       @callback() if @callback
     , 200
+
+    $('body').off 'keydown.modalclose'
 
     # Redirect if bound
     if Modal._reloadOnClose
@@ -185,6 +197,11 @@ module.exports = class Modal
       @overlay.addClass('visible')
       @container.addClass('visible')
     , 20
+
+    # start listening to ESC keypress
+    $('body').on 'keydown.modalclose', (e)=>
+      if e.which is 27
+        @hide()
 
   # Load the given URL in the modal
   # Displays the modal, shows the loading status, fires an AJAX request and
@@ -207,9 +224,9 @@ module.exports = class Modal
 
   # Position the modal on the page.
   positionModal: ->
-    height = @container.height()
+    height = @container.outerHeight()
     windowHeight = $(window).height()
-    width = @container.width()
+    width = @container.outerWidth()
 
     # FIXME: Pass these in as configuration options to the modal
     @container.css(position: 'absolute', top: '50px', left: '50%', 'margin-left': "-#{parseInt(width/2)}px")

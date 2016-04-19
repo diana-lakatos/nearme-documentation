@@ -50,7 +50,7 @@
       = f.submit t('sign_up_form.buttons.sign_up'), :class => 'desksnearme submit btn btn-green', data: { disable_with: t('sign_up_form.disabled_buttons.sign_up') }, :tabindex => '4'
 
 - if !user_auth_provider
-  .text-center.already-a-user= link_to(t('sign_up_form.buttons.already_user'), '#', data: { modal: true, href: new_user_session_path(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal' } )
+  .text-center.already-a-user= link_to(t('sign_up_form.buttons.already_user'), '#', data: { modal: true, href: new_user_session_path(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } )
 
 - if user_auth_provider
   .signup-provider
