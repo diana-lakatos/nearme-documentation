@@ -537,9 +537,13 @@ DNM.registerInitializer(function(){
 
 DNM.registerInitializer(function(){
     var datepickers = require('./new_ui/forms/datepickers');
-    $('.unavailability').on('cocoon:after-insert', function(e, insertedItem) {
-        datepickers(insertedItem);
-    });
+    function run(){
+        $('.unavailability').on('cocoon:after-insert', function(e, insertedItem) {
+            datepickers(insertedItem);
+        });
+    }
+    $(document).on('init:unavailability.nearme', run);
+    run();
 });
 
 DNM.run();
