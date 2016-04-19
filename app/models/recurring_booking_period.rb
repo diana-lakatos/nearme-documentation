@@ -31,16 +31,17 @@ class RecurringBookingPeriod < ActiveRecord::Base
       payment_method: payment_subscription.payment_method,
       currency: currency
     )
-
     payment.authorize && payment.capture!
     payment.save!
+    self.paid_at = Time.zone.now
+    save!
 
     if payment.paid?
       mark_recurring_booking_as_paid!
     else
       recurring_booking.overdue
     end
-    save!
+
     payment
   end
 
@@ -57,8 +58,6 @@ class RecurringBookingPeriod < ActiveRecord::Base
   end
 
   def mark_recurring_booking_as_paid!
-    self.paid_at = Time.zone.now
-    self.save!
     recurring_booking.bump_paid_until_date!
   end
 
