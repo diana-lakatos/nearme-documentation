@@ -8,7 +8,7 @@ class FormAttributes
   def user
     [
       :email, :phone, :avatar, :name, :first_name, :middle_name, :last_name, :approval_requests, :current_address,
-      :password, :public_profile, :time_zone, :language
+      :password, :public_profile, :time_zone, :language, :mobile_phone
     ] + UserProfile.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
     extra_attributes(Category.users.roots, 'Category') +
     extra_attributes(CustomModelType.users, 'Custom Model')
