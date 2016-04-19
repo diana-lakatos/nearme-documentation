@@ -8,13 +8,13 @@
     margin-left: 5px;
     border: none;
     background: none;
-    padding: 5px;
+    padding: 0;
     font-size: 0;
-    width: 10px;
-    height: 10px;
+    height: 20px;
 
     &:before {
-        @include fa-icon();
+        @include fa-icon;
+
         font-size: 16px;
         font-weight: normal;
         content: $fa-var-question-circle;
