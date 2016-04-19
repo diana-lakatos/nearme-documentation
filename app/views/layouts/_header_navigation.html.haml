@@ -116,9 +116,9 @@
     %li
       - options = {}
       - options[:role] = :buyer if current_instance.split_registration?
-      = link_to_registration get_return_to_url(dashboard_user_reservations_path, options), platform_context.secured_constraint, secure_links?, :class => "nav-link header-first", data: { modal: true, 'modal-class' => 'sign-up-modal' } do
+      = link_to_registration get_return_to_url(dashboard_user_reservations_path, options), platform_context.secured_constraint, secure_links?, :class => "nav-link header-first", data: { modal: true, 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } do
         %span= t 'top_navbar.sign_up'
     %li.divider-vertical
     %li
-      = link_to_login url_options: get_return_to_url, class: "nav-link header-second", data: { modal: true, 'modal-class' => 'sign-up-modal' } do
+      = link_to_login url_options: get_return_to_url, class: "nav-link header-second", data: { modal: true, 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } do
         %span= t 'top_navbar.log_in'
