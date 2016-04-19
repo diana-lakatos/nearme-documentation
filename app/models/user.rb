@@ -121,6 +121,7 @@ class User < ActiveRecord::Base
   has_many :inappropriate_reports, dependent: :destroy
   has_many :outgoing_phone_calls, foreign_key: :caller_id, class_name: 'PhoneCall'
   has_many :incoming_phone_calls, foreign_key: :receiver_id, class_name: 'PhoneCall'
+  has_many :spam_reports
 
   has_one :blog, class_name: 'UserBlog'
   has_one :current_address, class_name: 'Address', as: :entity
