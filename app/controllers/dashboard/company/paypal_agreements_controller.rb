@@ -3,13 +3,18 @@ class Dashboard::Company::PaypalAgreementsController < Dashboard::Company::BaseC
   before_action :get_merchant_account
 
   def new
-    @payment_gateway.set_billing_agreement({
+    response = @payment_gateway.set_billing_agreement({
       ip: request.remote_ip,
       return_url: dashboard_company_paypal_agreement_create_url(@merchant_account.id, host: request.host_with_port),
       cancel_return_url: redirect_url
     })
 
-    redirect_to @payment_gateway.redirect_url
+    if response.success?
+      redirect_to @payment_gateway.redirect_url
+    else
+      flash[:error] = response.params["Errors"]["LongMessage"] + ". Error Code: #{response.params["Errors"]["ErrorCode"]}"
+      redirect_to redirect_url
+    end
   end
 
   def create

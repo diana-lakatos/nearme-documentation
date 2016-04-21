@@ -79,12 +79,13 @@
 - if @payment.voided?
   .content-container
     %h4 Payment void
-    .content-container
-      .row
-        .text-container{class: @payment.successful_billing_authorization.success? ? 'text-success' : 'text-danger' }
-          %p
-            Voided at:
-            = @payment.successful_billing_authorization.void_at
-          %p
-            Void Response:
-            = @payment.successful_billing_authorization.void_response
+    - if @payment.successful_billing_authorization
+      .content-container
+        .row
+          .text-container{class: @payment.successful_billing_authorization.success? ? 'text-success' : 'text-danger' }
+            %p
+              Voided at:
+              = @payment.successful_billing_authorization.void_at
+            %p
+              Void Response:
+              = @payment.successful_billing_authorization.void_response

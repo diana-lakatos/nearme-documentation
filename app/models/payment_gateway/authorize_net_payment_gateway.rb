@@ -3,8 +3,8 @@ class PaymentGateway::AuthorizeNetPaymentGateway < PaymentGateway
 
   def self.settings
     {
-      login: "",
-      password: ""
+      login: { validate: [:presence] },
+      password: { validate: [:presence] }
     }
   end
 

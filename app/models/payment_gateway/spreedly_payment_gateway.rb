@@ -5,9 +5,9 @@ class PaymentGateway::SpreedlyPaymentGateway < PaymentGateway
 
   def self.settings
     {
-      login: "",
-      password: "",
-      gateway_token: ""
+      login: { validate: [:presence] },
+      password: { validate: [:presence] },
+      gateway_token: { validate: [:presence] }
     }
   end
 

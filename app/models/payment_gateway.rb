@@ -40,9 +40,9 @@ class PaymentGateway < ActiveRecord::Base
   has_many :instance_clients, dependent: :destroy
   has_many :merchant_accounts, dependent: :destroy
   has_many :payments, through: :billing_authorizations
-  has_many :payment_gateways_countries
+  has_many :payment_gateways_countries, dependent: :destroy
   has_many :payment_countries, through: :payment_gateways_countries, source: 'country'
-  has_many :payment_gateways_currencies
+  has_many :payment_gateways_currencies, dependent: :destroy
   has_many :payment_currencies, through: :payment_gateways_currencies, source: 'currency'
   has_many :payment_methods, dependent: :destroy
   has_many :refunds
@@ -185,6 +185,10 @@ class PaymentGateway < ActiveRecord::Base
 
   def deletable?
     merchant_accounts.live.active.blank? && payments.live.active.blank?
+  end
+
+  def payout_gateway?
+    PAYOUT_GATEWAYS.values.include?(self.class)
   end
 
   def name

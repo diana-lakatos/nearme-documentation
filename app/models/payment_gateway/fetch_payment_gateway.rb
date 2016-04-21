@@ -4,8 +4,8 @@ class PaymentGateway::FetchPaymentGateway < PaymentGateway
 
   def self.settings
     {
-      account_id: "",
-      secret_key: ""
+      account_id: { validate: [:presence] },
+      secret_key: { validate: [:presence] }
     }
   end
 

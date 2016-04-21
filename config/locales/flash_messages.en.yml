@@ -197,6 +197,8 @@ en:
             created: "Payment gateway has been successfully created. Please add the proper configuration/settings to start using it in your Marketplace."
             updated: 'Payment gateway has been successfully updated'
             deleted: 'Payment gateway has been successfully deleted'
+            can_not_be_deleted: "This Payment Gateway can not be deleted! Removing it could cause problems with associated Payments or Merchant Accounts."
+            can_not_be_edited: "This Payment Gateway can not be edited/deleted! Removing it could cause problems with associated Payments or Merchant Accounts."
 
 
       theme:
