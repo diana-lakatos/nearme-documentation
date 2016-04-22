@@ -14,6 +14,7 @@
         else {
             comments.prepend('<%= escape_javascript( render @comment ) %>');
         }
+        comments.find('[data-remove-comment]:first').show()
     <% end %>
 
 }());

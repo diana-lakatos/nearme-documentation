@@ -6,4 +6,4 @@
 
     = link_to current_user.feed_follow_term(object), current_user.feed_follow_url(object), options
   - else
-    = link_to I18n.t('activity_feed.verbs.follow'), new_user_session_path, global_options
+    = link_to I18n.t('activity_feed.verbs.follow'), new_user_session_path(return_to: request.path), global_options
