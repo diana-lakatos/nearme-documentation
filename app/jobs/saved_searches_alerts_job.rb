@@ -1,5 +1,4 @@
 class SavedSearchesAlertsJob < Job
-
   def after_initialize(period)
     @period = period
   end
@@ -37,5 +36,4 @@ class SavedSearchesAlertsJob < Job
     end
     PlatformContext.current = nil
   end
-
 end

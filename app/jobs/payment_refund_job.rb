@@ -4,12 +4,8 @@ class PaymentRefundJob < Job
   end
 
   def perform
-    @payment = Payment.find_by_id(@payment_id)
-    if @payment
-      @payment.refund!
-    else
-      false
-    end
+    Payment.find(@payment_id).refund!
+  rescue ActiveRecord::RecordNotFound
+    false
   end
 end
-

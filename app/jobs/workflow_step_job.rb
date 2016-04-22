@@ -1,5 +1,4 @@
 class WorkflowStepJob < Job
-
   include Job::HighPriority
 
   def after_initialize(step_class, *args)
@@ -11,4 +10,3 @@ class WorkflowStepJob < Job
     @step_class.new(*@args).invoke!
   end
 end
-
