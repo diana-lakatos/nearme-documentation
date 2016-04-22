@@ -25,7 +25,7 @@ class CompleteReservationForm < Reform::Form
   protected
 
   def total_is_positive
-    self.errors.add(:sub_total, I18n.t('activemodel.errors.models.reservation_checkout_form.attributes.sub_total.must_be_positive')) if (valid_additional_charges.sum(&:amount) + valid_periods.sum { |p| p.sub_total(model.unit_price) }.to_f) <= 0
+    self.errors.add(:sub_total, I18n.t('activemodel.errors.models.reservation_checkout_form.attributes.sub_total.must_be_positive')) if (valid_additional_charges.sum { |ac| ac.amount.to_f } + valid_periods.sum { |p| p.sub_total(model.unit_price) }.to_f) <= 0
   end
 
   def valid_additional_charges

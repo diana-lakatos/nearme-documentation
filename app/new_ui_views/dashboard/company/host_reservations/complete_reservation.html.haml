@@ -17,13 +17,14 @@
           = link_to_add_association t('dashboard.host_reservations.complete_reservation.add_new_period') , f, :periods, partial: 'reservation_period', id: "add_new_period", class: 'btn btn-primary', force_non_association_create: true
       %hr
 
-      %h2= t('dashboard.host_reservations.complete_reservation.expenses')
-      .additional-charges.nested-fields-set
-        = f.simple_fields_for :additional_charges do |charge_form|
-          = render 'additional_charge', charge: charge_form.object, f: charge_form
-        .add-link
-          = link_to_add_association t('dashboard.host_reservations.complete_reservation.add_new_charge') , f, :additional_charges, partial: 'additional_charge', id: "add_new_additional_charge", class: 'btn btn-primary', force_non_association_create: true
-      %hr
+      - if @reservation.display_additional_charges?
+        %h2= t('dashboard.host_reservations.complete_reservation.expenses')
+        .additional-charges.nested-fields-set
+          = f.simple_fields_for :additional_charges do |charge_form|
+            = render 'additional_charge', charge: charge_form.object, f: charge_form
+          .add-link
+            = link_to_add_association t('dashboard.host_reservations.complete_reservation.add_new_charge') , f, :additional_charges, partial: 'additional_charge', id: "add_new_additional_charge", class: 'btn btn-primary', force_non_association_create: true
+        %hr
       .row-fluid.total
         - if @reservation_form.errors[:sub_total].present?
           .col-xs-6.col-sm-2.col-sm-offset-8.text-right.has-error
