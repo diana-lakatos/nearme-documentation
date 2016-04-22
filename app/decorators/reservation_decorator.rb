@@ -18,6 +18,22 @@ class ReservationDecorator < Draper::Decorator
     reservation_period.hourly_summary(show_date, { schedule_booking: listing.schedule_booking? })
   end
 
+  def total_cost
+    humanized_money_with_cents_and_symbol(periods_cost + additional_charges_cost)
+  end
+
+  def periods_cost
+    periods.map{|p| p.hours * unit_price }.sum
+  end
+
+  def additional_charges_cost
+    additional_charges.map(&:amount).sum
+  end
+
+  def unit_price_with_currency
+    humanized_money_with_cents_and_symbol(unit_price)
+  end
+
   def subtotal_price
     if subtotal_amount.to_f.zero?
       "Free!"

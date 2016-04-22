@@ -5,7 +5,6 @@ module.exports = class CustomInputs
 
     @buildElements()
     @bindEvents()
-
     @updateControls()
 
   buildElements: ->
@@ -18,7 +17,18 @@ module.exports = class CustomInputs
       $(element).prepend("<span class='radio-icon-outer'><span class='radio-icon-inner'></span></span>")
 
   bindEvents: ->
-    @context.on 'change', ".checkbox, .radio, .checkbox input, .radio input", @updateControls
+    body = $(document.body);
+
+    return if body.data('customInputsInitialized')
+
+    body.data('customInputsInitialized', true)
+    body.on 'change.customInputs.nearme', ".checkbox, .radio, .checkbox input, .radio input", @updateControls
+
+    body.on 'click.customInputs.nearme', '.checkbox-icon-outer, .radio-icon-outer', (e)=>
+      input = $(e.target).closest('.checkbox, .radio').find('input[type="checkbox"]:not(:disabled), input[type="radio"]:not(:disabled)')
+      input.prop('checked', !input.prop('checked'))
+      input.triggerHandler('change')
+      @updateControls()
 
   updateControls: =>
     @context.find('.checkbox input[type="checkbox"], .radio input[type="radio"]').each (index, el)->

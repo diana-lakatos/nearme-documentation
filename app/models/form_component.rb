@@ -13,10 +13,13 @@ class FormComponent < ActiveRecord::Base
   INSTANCE_PROFILE_TYPES = 'instance_profile_types'
   SELLER_PROFILE_TYPES = 'seller_profile_types'
   BUYER_PROFILE_TYPES = 'buyer_profile_types'
+  DEFAULT_REGISTRATION = 'default_registration'
+  SELLER_REGISTRATION = 'seller_registration'
+  BUYER_REGISTRATION = 'buyer_registration'
   FORM_TYPES = [
     SPACE_WIZARD, PRODUCT_ATTRIBUTES, TRANSACTABLE_ATTRIBUTES, INSTANCE_PROFILE_TYPES,
     PROJECT_ATTRIBUTES, BUYER_PROFILE_TYPES, SELLER_PROFILE_TYPES, OFFER_ATTRIBUTES,
-    RESERVATION_ATTRIBUTES
+    RESERVATION_ATTRIBUTES, DEFAULT_REGISTRATION, BUYER_REGISTRATION, SELLER_REGISTRATION
   ]
 
   include RankedModel
@@ -43,9 +46,9 @@ class FormComponent < ActiveRecord::Base
       when InstanceProfileType::DEFAULT
         [INSTANCE_PROFILE_TYPES]
       when InstanceProfileType::SELLER
-        [SELLER_PROFILE_TYPES]
+        [SELLER_PROFILE_TYPES, SELLER_REGISTRATION]
       when InstanceProfileType::BUYER
-        [BUYER_PROFILE_TYPES]
+        [BUYER_PROFILE_TYPES, BUYER_REGISTRATION]
       else
         raise NotImplementedError
       end

@@ -49,6 +49,33 @@ FactoryGirl.define do
       form_type { FormComponent::BUYER_PROFILE_TYPES }
       form_fields { []}
     end
+
+    factory :form_component_buyer_registration do
+      form_type { FormComponent::BUYER_PROFILE_TYPES }
+      form_fields { [
+        { "user" => "name" },
+        { "user" => "email" },
+        { "user" => "password" },
+      ] }
+    end
+
+    factory :form_component_seller_registration do
+      form_type { FormComponent::SELLER_REGISTRATION }
+      form_fields { [
+        { "user" => "name" },
+        { "user" => "email" },
+        { "user" => "password" },
+      ]}
+    end
+
+    factory :form_component_default_registration do
+      form_type { FormComponent::DEFAULT_REGISTRATION }
+      form_fields { [
+        { "user" => "name" },
+        { "user" => "email" },
+        { "user" => "password" },
+      ]}
+    end
   end
 end
 

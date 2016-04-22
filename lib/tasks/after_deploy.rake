@@ -5,6 +5,13 @@ namespace :after_deploy do
     Rails.cache.clear
     RedisCache.clear
 
+    puts 'Updating ES Transactables index mappings'
+    Transactable.__elasticsearch__.client.indices.put_mapping index: 'transactables', type: 'transactable', body: Transactable.mappings
+    puts 'Updating ES Products index mappings'
+    Spree::Product.__elasticsearch__.client.indices.put_mapping index: 'spree-products', type: 'product', body: Spree::Product.mappings
+    job_id = ElasticInstanceIndexerJob.perform.id
+    puts "Updating ES documents id DJ ##{job_id}"
+
     puts "Removing all jobs from queue recurring-jobs"
     Delayed::Job.where(queue: "recurring-jobs").delete_all
 

@@ -26,8 +26,12 @@
 
     .col-xs-5
       .order-status
-        %span{class: reservation.state }
-          = t "reservations.states.#{reservation.state}"
+        - if reservation.archived_at.present? && reservation.state == 'confirmed'
+          %span{class: 'confirmed' }
+            = t("reservations.states.completed")
+        - else
+          %span{class: reservation.state }
+            = t("reservations.states.#{reservation.state}")
 
   - if reservation.can_confirm?
     .alert.alert-warning= reservation.manage_booking_status_info_new
@@ -39,42 +43,8 @@
         - if reservation.company.possible_payout_not_configured?(reservation.billing_authorization.payment_gateway)
           .alert.alert-warning= I18n.t('dashboard.host_reservations.remember_to_setup_automated_payout', setup_link: edit_dashboard_company_payouts_path).html_safe
 
-  .row
-    .col-sm-3
-      - if reservation.listing.present?
-        %h3= t('dashboard.host_reservations.address')
+  = render 'dashboard/user_reservations/reservation_details', reservation: reservation, for_host: true
 
-        %p
-          = reservation.listing.location.address.gsub(', ', '<br>').html_safe
-
-      - else
-        %h3 [#{t('dashboard.host_reservations.listing_deleted')}]
-
-    .col-sm-3
-      - requested_dates = reservation.long_dates.split(' ; ')
-      %h3= t('dashboard.host_reservations.requested_dates', count: requested_dates.count)
-      %ul.dates
-        - requested_dates.each do |s|
-          %li= s
-
-    .col-sm-3
-      %h3= t('dashboard.host_reservations.requested_time')
-
-      %p.times
-        - if reservation.action_hourly_booking?
-          = reservation.hourly_summary_for_first_period(false)
-        - else
-          = t('dashboard.host_reservations.not_available_na')
-
-    .col-sm-2
-      %h3= t('dashboard.user_reservations.quantity')
-      %p= reservation.quantity
-      %p= reservation.total_units_text
-
-    .col-sm-1
-      %h3= t('dashboard.user_reservations.total')
-      %p
-        %b= reservation.total_payable_to_host_formatted
   .row
     - if reservation.guest_notes.present?
       .col-sm-3
@@ -104,7 +74,7 @@
       %h3
         = t("dashboard.host_reservations.payment_state")
     .col-md-9{class: reservation.paid? ? 'info' : "warn" }
-      = reservation.payment.state.humanize.capitalize
+      = reservation.payment.try(:state).try(:humanize).try(:capitalize)
 
   .row
     .col-md-3

@@ -113,13 +113,8 @@ Feature: A user can book at a space
        Then I should be offered calendar and manage options
         And the user should have the transactable reserved for 'next week Monday'
         And the user should have the transactable reserved for 'next week Tuesday'
-       When I book space for:
-            | Transactable     | Date         | Quantity       |
-            | the transactable | next week Wednesday  | 1      |
-       Then the user should have the transactable reserved for 'next week Wednesday'
        When I follow "Manage"
        Then I should be redirected to bookings page
-        And The second booking should be highlighted
 
     Scenario: Booking for a 'automatically confirm' listing should show relevant details
       Given bookings for the transactable do not need to be confirmed

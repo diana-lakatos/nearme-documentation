@@ -98,6 +98,7 @@ class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceControll
   def set_breadcrumbs_title
     @breadcrumbs_title = BreadcrumbsList.new(
       { :url => polymorphic_url([:instance_admin, @controller_scope, resource_class]), :title => t("instance_admin.#{@controller_scope}.#{translation_key}.#{translation_key}") },
+      { :title => @form_componentable.name.titleize },
       { :title => t('instance_admin.manage.transactable_types.form_components') }
     )
   end

@@ -1,5 +1,4 @@
 class CommunityAggregatesCreationJob < Job
-
   include Job::LongRunning
 
   def after_initialize
@@ -9,4 +8,3 @@ class CommunityAggregatesCreationJob < Job
     CommunityAggregatesCreationService.new.create_aggregates
   end
 end
-

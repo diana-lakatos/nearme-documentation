@@ -154,6 +154,10 @@ en:
           created: 'Offer Type created'
           updated: 'Offer Type updated'
           deleted: 'Offer Type deleted'
+        custom_model_types:
+          created: 'Custom Model created'
+          updated: 'Custom Model updated'
+          deleted: 'Custom Model deleted'
         offers:
           created: 'Offer created'
           updated: 'Offer updated'
@@ -238,6 +242,10 @@ en:
       add_your_company: "Please add your company first"
       company_not_valid: "Please add necessary details to your company first."
       no_bookings: "You haven't made any bookings yet!"
+      complete_reservation:
+        unable_to_save: "Your invoice details couldn't be saved."
+        pending_confirmation: "For security reasons, you are not able to make any changes unless Client rejects your request"
+        failed_to_authorize_credit_card: "Your payment might be delivered later than expected due to potential problem with Client's credit card."
       seller:
         updated: 'Seller profile has been updated'
       buyer:
@@ -372,6 +380,11 @@ en:
       missing_transactable_type: 'There is nothing to search yet!'
 
     manage:
+      credit_cards:
+        added: 'Credit card has been added'
+        not_configured: "You have not made any transaction for this payment gateway. You can add your first credit card during your first transaction."
+        deleted: 'Credit card has been removed. Please not that it still will be used to capture all authorized payments unless you cancel all transactions for which this credit card was used.'
+        not_added: 'Unfortunately there were validation issues and your credit card has not been added.'
       category:
         created: 'Category has been created.'
       order:
@@ -462,6 +475,7 @@ en:
         reservation_already_confirmed: "This reservation has already been confirmed."
         reservation_cancelled: "You have cancelled this reservation."
         reservation_confirmed: "You have confirmed the reservation!"
+        reservation_confirmed_but_not_charged: "You have confirmed the reservation, however we were not able to capture payment. We have reached out to guest to notify him about the issue."
         reservation_not_confirmed: "Your reservation could not be confirmed."
         reservation_rejected: "You have rejected the reservation. Maybe next time!"
         payment_requested: "Your request has been sent"
@@ -494,7 +508,16 @@ en:
       inquiry_added: "Thanks, we'll be in touch!"
       inquiry_not_added: "Please provide a name, company and valid email address."
     payments:
+      authorization_failed_anyway: 'We were not able to charge this credit card. Please make sure there are sufficient funds and try again.'
+      updated: 'Your payment information has been updated.'
+      not_updated: 'Your payment information has not been updated.'
+      successful_rejection: 'Rejection successful. Please wait for corrected invoice.'
+      cannot_edit: 'You cannot do any updates at this time.'
+      failed_to_void: 'The invoice was rejected, however we were not able to void credit card authorization. It will auto expire within couple of days, apologizes for problems. If you believe it is an error on our side, please let us know'
+      successful_approval: 'All done, thank you!'
+      failed_to_approve: 'There was an unexpected problem with processing your credit card.'
       refund_failed: "Refund failed. Contact marketplace owner for more information."
+      cannot_take_action: 'You cannot take any action for this payment.'
       refunded: "Refund captured"
       marked_transferred: "Marked payment transfer as transferred"
       marked_as_not_failed: "Marked payment transfer as not failed"

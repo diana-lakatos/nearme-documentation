@@ -1,6 +1,5 @@
 # Sends share emails
 class RecurringMailerShareJob < Job
-
   def after_initialize
     @sent_to_users = []
   end
@@ -19,5 +18,4 @@ class RecurringMailerShareJob < Job
       end
     end
   end
-
 end

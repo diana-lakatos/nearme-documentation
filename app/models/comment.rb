@@ -7,7 +7,7 @@ class Comment < ActiveRecord::Base
 
   include CreationFilter
 
-  belongs_to :commentable, polymorphic: true
+  belongs_to :commentable, polymorphic: true, touch: true
   belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :comments
 
   has_many :spam_reports, as: :spamable, dependent: :destroy
@@ -43,9 +43,9 @@ class Comment < ActiveRecord::Base
     !spam_ignored
   end
 
-  def can_remove?(current_user)
+  def can_remove?(current_user, passed_commentable = commentable)
     return unless current_user
-    [creator, commentable.creator].include?(current_user)
+    [creator, passed_commentable.creator].include?(current_user)
   end
 
   def event

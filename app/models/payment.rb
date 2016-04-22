@@ -40,7 +40,7 @@ class Payment < ActiveRecord::Base
   scoped_to_platform_context
 
   attr_accessor :express_checkout_redirect_url, :payment_response_params, :payment_method_nonce, :customer,
-    :recurring
+    :recurring, :rejection_form, :chosen_credit_card_id
 
 
   # === Associations
@@ -48,12 +48,13 @@ class Payment < ActiveRecord::Base
   # Payable association connects Payment with Reservation and Spree::Order
   belongs_to :payable, polymorphic: true
   belongs_to :company, -> { with_deleted }
-  belongs_to :credit_card
+  belongs_to :credit_card, -> { with_deleted }
   belongs_to :instance
   belongs_to :payment_transfer
-  belongs_to :payment_gateway
-  belongs_to :payment_method
+  belongs_to :payment_gateway, -> { with_deleted }
+  belongs_to :payment_method, -> { with_deleted }
   belongs_to :merchant_account
+  belongs_to :payer, class_name: 'User'
 
   has_many :billing_authorizations
   has_many :charges, dependent: :destroy
@@ -62,7 +63,7 @@ class Payment < ActiveRecord::Base
   has_one :successful_billing_authorization, -> { where(success: true) }, class_name: BillingAuthorization
   has_one :successful_charge, -> { where(success: true) }, class_name: Charge
 
-  before_validation :set_offline
+  before_validation :set_offline, on: :create
 
   # === Scopes
 
@@ -70,6 +71,7 @@ class Payment < ActiveRecord::Base
   scope :live, -> { where(payment_gateway_mode: 'live')}
   scope :authorized, -> { where(state: 'authorized') }
   scope :paid, -> { where("#{table_name}.state = 'paid'") }
+  scope :unapid, -> { where(paid_at: nil) }
   scope :paid_or_refunded, -> { where(state: ['paid', 'refunded']) }
   scope :refunded, -> { where("#{table_name}.state = 'refunded'") }
   scope :not_refunded, -> { where("#{table_name}.state IS NOT 'refunded'") }
@@ -94,8 +96,15 @@ class Payment < ActiveRecord::Base
 
   accepts_nested_attributes_for :credit_card
 
+  before_validation do |p|
+    self.payer ||= payable.try(:owner)
+    self.credit_card_id ||= payer.instance_clients.find_by(payment_gateway: payment_gateway.id).try(:credit_cards).try(:find, p.chosen_credit_card_id).try(:id) if p.payment_method.try(:payment_method_type) == 'credit_card' && p.chosen_credit_card_id.present? &&  p.chosen_credit_card_id != 'custom'
+    true
+  end
+
   validates :currency, presence: true
   validates :credit_card, presence: true, if: Proc.new { |p| p.credit_card_payment? && p.save_credit_card? && new_record? }
+  validates :payer, presence: true
   validates :payment_gateway, presence: true
   validates :payment_method, presence: true
   validates :payable_id, :uniqueness => { :scope => [:payable_type, :payable_id, :instance_id] }, if: Proc.new {|p| p.payable_id.present? }
@@ -115,10 +124,16 @@ class Payment < ActiveRecord::Base
   delegate :subject, to: :merchant_account, allow_nil: true
 
   state_machine :state, initial: :pending do
-  event :mark_as_authorized do transition pending: :authorized; end
+    event :mark_as_authorized do transition [:pending, :voided] => :authorized; end
     event :mark_as_paid       do transition authorized: :paid; end
-    event :mark_as_voided     do transition authorized: :voided; end
+    event :mark_as_voided     do transition [:authorized, :paid] => :voided; end
     event :mark_as_refuneded  do transition paid: :refunded; end
+    event :mark_as_failed     do transition any => :refunded; end
+  end
+
+  # TODO: now as we call that on Payment object there is no need to _payment?, instead payment.manual?
+  PaymentMethod::PAYMENT_METHOD_TYPES.each do |pmt|
+    define_method("#{pmt}_payment?") { self.payment_method.try(:payment_method_type) == pmt.to_s }
   end
 
   def authorize
@@ -149,6 +164,10 @@ class Payment < ActiveRecord::Base
     return false if paid_at.nil? && !paid?
     return false if amount_to_be_refunded <= 0
     return false if !active_merchant_payment?
+
+    # This is special Braintree case, when transaction can't be refunded before
+    # settlment, we use void instead
+    return void! if !settled? && full_refund?
 
     # Refund payout takes back money from seller, break if failed.
     return false unless refund_payout!
@@ -258,7 +277,7 @@ class Payment < ActiveRecord::Base
   end
 
   def void!
-    return false unless authorized?
+    return false unless authorized? || paid?
     return false unless active_merchant_payment?
     return false if successful_billing_authorization.blank?
 
@@ -268,13 +287,23 @@ class Payment < ActiveRecord::Base
     if response.success?
       mark_as_voided!
       successful_billing_authorization.touch(:void_at)
+      true
     else
       successful_billing_authorization.save!
+      false
     end
   end
 
   def test_mode?
     payment_gateway_mode == 'test'
+  end
+
+  def settled?
+    if payment_gateway.respond_to?(:payment_settled?)
+      payment_gateway.payment_settled?(authorization_token)
+    else
+      true
+    end
   end
 
   def credit_card_attributes=(cc_attributes)
@@ -303,7 +332,7 @@ class Payment < ActiveRecord::Base
   def subtotal_amount_cents_after_refund
     result = nil
 
-    if self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?
+    if cancelled_by_host?
       result = 0
     else
       result = subtotal_amount.cents + host_additional_charges.cents - refunds.guest.successful.sum(:amount)
@@ -315,7 +344,7 @@ class Payment < ActiveRecord::Base
   def final_service_fee_amount_host_cents
     result = self.service_fee_amount_host.cents
 
-    if (self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?) || (self.payable.respond_to?(:cancelled_by_guest?) && self.payable.cancelled_by_guest?)
+    if cancelled_by_host? || cancelled_by_guest?
       result = 0
     end
 
@@ -325,7 +354,7 @@ class Payment < ActiveRecord::Base
   def final_service_fee_amount_guest_cents
     result = self.service_fee_amount_guest.cents + self.service_additional_charges.cents
 
-    if self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?
+    if cancelled_by_host?
       result = 0
     end
 
@@ -356,9 +385,12 @@ class Payment < ActiveRecord::Base
     payable.respond_to?(:cancelled_by_guest?) && payable.cancelled_by_guest?
   end
 
-  # TODO: now as we call that on Payment object there is no need to _payment?, instead payment.manual?
-  PaymentMethod::PAYMENT_METHOD_TYPES.each do |pmt|
-    define_method("#{pmt}_payment?") { self.payment_method.try(:payment_method_type) == pmt.to_s }
+  def cancelled_by_host?
+    self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?
+  end
+
+  def full_refund?
+    amount_to_be_refunded == total_amount.cents
   end
 
   def is_free?
@@ -447,7 +479,7 @@ class Payment < ActiveRecord::Base
   end
 
   def set_offline
-    self.offline = manual_payment?
+    self.offline ||= manual_payment? || free_payment?
     true
   end
 end

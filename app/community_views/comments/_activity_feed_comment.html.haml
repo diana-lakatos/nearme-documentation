@@ -1,9 +1,9 @@
 - hide_comment_options = local_assigns[:hide_comment_options].presence || false
 - target = local_assigns[:target].presence || "_self"
 
-.comment-a{"data-comment-id": comment.id}
+.comment-a{ data: { comment_id: comment.id, creator_id: comment.creator_id, commentable_creator_id: comment.commentable.try(:creator_id) } }
   %figure
-    = image_tag comment.creator.avatar.url(:thumb), width: 50
+    = image_tag comment.creator.avatar.url(:thumb)
   %p.author
     = link_to comment.creator.decorate.secret_name, profile_path(comment.creator), target: target
   %blockquote
@@ -14,11 +14,11 @@
     - unless hide_comment_options
       - if comment.can_be_reported?
         %span &bull;
-        - if report = comment.reported_by(current_user, request.remote_ip)
-          = link_to t(:cancel_spam_report), url_for([comment.commentable, comment, report]), remote: true, method: :delete
+        - if user_signed_in?
+          = link_to t(:report_as_spam), url_for([comment.commentable, comment, comment.spam_reports.build]), remote: true, method: :post, 'data-report-spam': true
+          = link_to t(:cancel_spam_report), url_for([:cancel, comment.commentable, comment, comment.spam_reports.build]), remote: true, method: :delete, 'data-cancel-report': true, style: "display: none"
         - else
-          = link_to t(:report_as_spam), url_for([comment.commentable, comment, comment.spam_reports.build]), remote: true, method: :post
-
-      - if comment.can_remove?(current_user)
+          = link_to t(:report_as_spam), new_user_session_path(return_to: request.path)
+      %span.remove-link{ 'data-remove-comment': true, style: comment.can_remove?(current_user) ? '' : 'display: none' }
         %span &bull;
         = link_to t(:remove_comment), url_for([comment.commentable, comment]), remote: true, method: :delete

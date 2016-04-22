@@ -1,169 +1,181 @@
 #signup {
+    .box {
+        max-width: 570px;
+        margin: 0px auto 60px;
+    }
 
-  .box {
-    max-width: 570px;
-    margin: 0px auto 60px;
-  }
+    #service_buttons {
+        .btn {
+            border-radius: 0;
+            margin: 0;
+            width: 33.3%;
+            font-size: 22px;
+            text-align: center;
 
-  #service_buttons {
-
-    .btn {
-      // $service-icons: sprite-map("sections/space-wizard/signup/service-icons/*.png");
-      border-radius: 0;
-      margin: 0;
-      width: 33.3%;
-      font-size: 22px;
-      text-align: center;
-
-      @each $service in (twitter, facebook, linkedin) {
-
-        i.icon-#{$service} {
-          display: inline-block;
-          vertical-align: text-top;
-          // background: $service-icons;
-          // @include sprite($service-icons, $service, true);
+            @each $service in twitter, facebook, linkedin {
+                i.icon-#{$service} {
+                    display: inline-block;
+                    vertical-align: text-top;
+                }
+            }
         }
-      }
     }
-  }
 
-  .already-a-user {
-    position: absolute;
-    width: 100%;
+    .already-a-user {
+        position: absolute;
+        width: 100%;
 
-    a {
-      display: block;
-      margin: 30px auto;
-      font-size: 22px;
-      color: $gray80;
-      opacity: .7;
-      transition: opacity, ease-in, .1s;
+        a {
+            display: block;
+            margin: 30px auto;
+            font-size: 22px;
+            color: $gray80;
+            opacity: .7;
+            transition: opacity, ease-in, .1s;
 
-      &:hover {
-        opacity: 1;
-      }
+            &:hover {
+                opacity: 1;
+            }
+        }
     }
-  }
 
-  #space_wizard {
-    .already-a-user a {
-      display: none;
+    #space_wizard {
+        .already-a-user a {
+            display: none;
+        }
     }
-  }
 
-  h3.legal {
-    margin: 10px 0 0 0;
-    color: $gray220;
-    text-align: center;
-  }
-
-  h3.twitter-login {
-    float:left;
-    width: 180px;
-    text-align: right;
-    margin: 8px 20px 0 0;
-
-    @media (max-width: 1080px) {
-      display: block;
-      text-align: left;
-      margin-bottom: 8px;
-      width: 100%;
-      clear: both;
+    h3.legal {
+        margin: 10px 0 0 0;
+        color: $gray220;
+        text-align: center;
     }
-  }
 
-  .btn.facebook,
-  .btn.linkedin {
+    h3.twitter-login {
+        float: left;
+        width: 180px;
+        text-align: right;
+        margin: 8px 20px 0 0;
 
-    @media (min-width: $ipad-width) {
-      margin-right: 2%;
+        @media (max-width: 1080px) {
+            display: block;
+            text-align: left;
+            margin-bottom: 8px;
+            width: 100%;
+            clear: both;
+        }
     }
-  }
 
-  .btn.linkedin {
-
-    &:hover {
-      background: darken(#4875B4, 15%);
+    .btn.facebook,
+    .btn.linkedin {
+        @media (min-width: $ipad-width) {
+            margin-right: 2%;
+        }
     }
-  }
 
-  .btn.twitter {
-
-    &:hover {
-      background: darken(#33CCFF, 15%);
+    .btn.linkedin {
+        &:hover {
+            background: darken(#4875B4, 15%);
+        }
     }
-  }
 
-  .btn.facebook {
-
-    &:hover {
-      background: darken(#3B5998, 15%);
+    .btn.twitter {
+        &:hover {
+            background: darken(#33CCFF, 15%);
+        }
     }
-  }
 
-  &.decline {
-	margin: 100px 0 0 0;
+    .btn.facebook {
+        &:hover {
+            background: darken(#3B5998, 15%);
+        }
+    }
 
-	.box {
+    &.decline {
+        margin: 100px 0 0 0;
 
-      h2 {
-        margin: 0 0 20px 0;
-      }
+        .box {
+            h2 {
+                margin: 0 0 20px 0;
+            }
+        }
+    }
 
-	}
-
-  }
-
-  #tos-error {
-    margin-left: 200px;
-  }
-
+    #tos-error {
+        margin-left: 200px;
+    }
 }
 
 .modal-content {
-  #signup {
-    .already-a-user {
-      a {
-        color: $theme_white;
-      }
+    #signup {
+        .already-a-user {
+            a {
+                color: $theme_white;
+            }
+        }
     }
-  }
 }
 
 .sign-up-modal {
-
-
-  // Fix hr's existing modal
-
-  form {
-    overflow: visible;
-  }
-
-  #signup {
-    margin: 0;
-
-    .span8.offset2 {
-      margin: 0;
-      width: 100%;
-
-      .box {
-        margin: 0;
-        padding: 0;
-        background: transparent;
-      }
-
-      .box header {
-        background: transparent;
-        padding: 10px 30px;
-      }
+    form {
+        overflow: visible;
     }
-  }
 
-  p.notice {
-    font-size: 12px;
-    color: gray2;
-    margin: .5em 0;
-    font-weight: 600px;
-  }
+    #signup {
+        margin: 0;
+
+        .span8.offset2 {
+            margin: 0;
+            width: 100%;
+
+            .box {
+                margin: 0;
+                padding: 0;
+                background: transparent;
+            }
+
+            .box header {
+                background: transparent;
+                padding: 10px 30px;
+
+                p {
+                    margin: 10px -10px 0;
+                }
+            }
+        }
+    }
+
+    p.notice {
+        font-size: 12px;
+        color: #fff;
+        margin: .5em 0;
+        font-weight: 600;
+    }
+
+    .transaction-side-switcher {
+        margin: 10px -10px 0;
+    }
 }
 
+.mobile-holder {
+    .country-calling-code {
+        position: absolute;
+        top: 0;
+        left: 30px;
+        line-height: 48px;
+        color: #a0a0a0;
+        font-size: 22px;
+
+        @media (max-width: 480px) {
+            font-size: 18px;
+        }
+    }
+
+    input[type="text"] {
+        padding-left: 60px !important;
+
+        @media (max-width: 480px) {
+            padding-left: 55px !important;
+        }
+    }
+}

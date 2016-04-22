@@ -1,16 +1,19 @@
 %li
   - if platform_context.single_type?
     - if current_user.nil?
-      = link_to_registration({return_to: transactable_type.wizard_path}, platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal' }, class: 'nav-link btn btn-blue btn-medium') do
+      - options = {}
+      - options[:role] = :seller if current_instance.split_registration?
+      = link_to_registration({return_to: transactable_type.wizard_path}.merge(options), platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' }, class: 'nav-link btn btn-blue btn-medium') do
         %span.text= t('ui.header.list_your_thing', thing: transactable_type.translated_bookable_noun)
         %span.icon.ico-plus
     - else
-      = link_to transactable_type.wizard_path, :class => "nav-link btn btn-blue btn-medium" do
-        %span.text= t('ui.header.list_your_thing', thing: transactable_type.translated_bookable_noun)
-        %span.icon.ico-plus
+      - if !current_instance.split_registration || current_user.seller_profile.present?
+        = link_to transactable_type.wizard_path, :class => "nav-link btn btn-blue btn-medium" do
+          %span.text= t('ui.header.list_your_thing', thing: transactable_type.translated_bookable_noun)
+          %span.icon.ico-plus
   - else
     - if current_user.nil?
-      = link_to_registration({return_to: transactable_type.wizard_path}, platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal' }, class: 'nav-link dropdown-toggle') do
+      = link_to_registration({return_to: transactable_type.wizard_path}, platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' }, class: 'nav-link dropdown-toggle') do
         %span.truncate= transactable_type.translated_bookable_noun
     - else
       - if transactable_type.respond_to?(:wizard_path)

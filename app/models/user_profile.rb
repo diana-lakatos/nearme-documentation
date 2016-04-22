@@ -8,6 +8,9 @@ class UserProfile < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :instance_profile_type
+  has_many :customizations, as: :customizable
+
+  accepts_nested_attributes_for :customizations, allow_destroy: true
 
   has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
 

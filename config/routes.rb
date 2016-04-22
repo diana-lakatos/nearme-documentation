@@ -47,13 +47,13 @@ DesksnearMe::Application.routes.draw do
           post :store_reservation_request
           get :return_express_checkout
           get :cancel_express_checkout
+          get :hourly_availability_schedule
+          get :detect_overlapping
         end
 
         member do
           get :remote_payment
         end
-
-        get :hourly_availability_schedule, :on => :collection
       end
     end
     get "/:transactable_type_id/:id", to: 'listings#show', as: 'short_transactable_type_listing', constraints: Constraints::TransactableTypeConstraints.new
@@ -368,6 +368,10 @@ DesksnearMe::Application.routes.draw do
           end
         end
 
+      resources :custom_model_types do
+        resources :custom_attributes, controller: 'custom_model_types/custom_attributes'
+      end
+
       resources :offer_types do
         get :search_settings, on: :member
         resources :custom_attributes, controller: 'offer_types/custom_attributes'
@@ -563,6 +567,9 @@ DesksnearMe::Application.routes.draw do
           member do
             post :ignore
           end
+          collection do
+            delete :cancel
+          end
         end
 
         resources :projects, only: [:index, :destroy, :edit, :update] do
@@ -571,6 +578,8 @@ DesksnearMe::Application.routes.draw do
       end
 
     end
+
+    resources :inappropriate_reports
 
     resources :blog_posts, path: 'blog', only: [:index, :show], controller: 'blog/blog_posts'
 
@@ -587,7 +596,11 @@ DesksnearMe::Application.routes.draw do
         end
       end
       resources :comments, only: [:update, :create, :index, :destroy] do
-        resources :spam_reports,  only: [:create, :destroy]
+        resources :spam_reports,  only: [:create, :destroy] do
+          collection do
+            delete :cancel
+          end
+        end
       end
     end
 
@@ -676,7 +689,6 @@ DesksnearMe::Application.routes.draw do
           end
         end
       end
-      resources :credit_cards, only: [:destroy]
       resource :seller, only: [:show, :edit, :update]
       resource :buyer, only: [:show, :edit, :update]
 
@@ -684,6 +696,10 @@ DesksnearMe::Application.routes.draw do
         resources :projects do
           resources :project_collaborators, only: [:create, :update, :destroy]
         end
+      end
+
+      resources :payment_gateways, only: [] do
+        resources :credit_cards, only: [:new, :create, :index, :destroy], controller: 'payment_gateways/credit_cards'
       end
 
       namespace :company do
@@ -719,6 +735,9 @@ DesksnearMe::Application.routes.draw do
             post :host_cancel
             post :mark_as_paid
             get :request_payment
+            get :complete_reservation
+            patch :submit_complete_reservation
+            get :reservation_completed
           end
         end
 
@@ -870,6 +889,14 @@ DesksnearMe::Application.routes.draw do
           get :upcoming
           get :archived
         end
+
+        resources :payments, only: [:edit, :update], controller: 'user_reservations/payments' do
+          member do
+            post :approve
+            put :reject
+            get :rejection_form
+          end
+        end
       end
 
       resources :user_recurring_bookings, :except => [:destroy] do
@@ -883,6 +910,8 @@ DesksnearMe::Application.routes.draw do
           get :active
           get :archived
         end
+
+        resources :payment_subscriptions, only: [:edit, :update], controller: 'user_recurring_bookings/payment_subscriptions'
       end
 
       resources :wish_list_items, only: [:index, :destroy], path: 'favorites' do
@@ -937,10 +966,18 @@ DesksnearMe::Application.routes.draw do
     resources :user_status_updates, only: [ :create ]
 
     resources :activity_feed_event do
-      resources :spam_reports,  only: [:create, :destroy]
+      resources :spam_reports,  only: [:create, :destroy] do
+        collection do
+          delete :cancel
+        end
+      end
 
       resources :comments, only: [:update, :create, :index, :destroy] do
-        resources :spam_reports,  only: [:create, :destroy]
+        resources :spam_reports,  only: [:create, :destroy] do
+          collection do
+            delete :cancel
+          end
+        end
       end
     end
 

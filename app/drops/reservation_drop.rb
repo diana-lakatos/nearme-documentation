@@ -33,9 +33,16 @@ class ReservationDrop < BaseDrop
   #   guest notes for this reservation as a string
   # total_payable_to_host_formatted
   #   total amount payable to host formatted as a string with currency symbol and cents
+  # total_units_text
+  #   Returns number of days/nights
+  # additional_charges
+  #   Returns array with additional charges
+  # address
+  #   Returns address associated with this reservation
   delegate :id, :quantity, :subtotal_price, :service_fee_guest, :total_price, :total_price_cents, :pending?, :listing, :state_to_string,
-  :credit_card_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, :created_at, 
-  :total_payable_to_host_formatted, to: :reservation
+    :credit_card_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, :created_at,
+    :total_payable_to_host_formatted, :total_units_text, :additional_charges, :unit_price,
+    :starts_at, :properties, :long_dates, :address, :periods, :comment, :cancellation_policy_penalty_hours, to: :reservation
 
   # bookable_noun
   #   string representing the object to be booked (e.g. desk, room etc.)
@@ -52,6 +59,10 @@ class ReservationDrop < BaseDrop
     @transactable_type ||= (@reservation.listing || Transactable.with_deleted.find(@reservation.transactable_id)).transactable_type
   end
 
+  def formatted_unit_price
+    humanized_money_with_symbol(unit_price)
+  end
+
   # Hourly summary as string for the first booked period
   def hourly_summary
     @reservation.hourly_summary_for_first_period
@@ -60,6 +71,16 @@ class ReservationDrop < BaseDrop
   # Summary as a string for the selected (booked) dates
   def dates_summary
     @reservation.selected_dates_summary(wrapper: :span)
+  end
+
+  # reservation dates separated with <hr>
+  def dates_summary_with_hr
+    @reservation.selected_dates_summary(separator: "<hr class='thin' />")
+  end
+
+  # total amount of reservation
+  def total_amount_float
+    @reservation.total_amount.to_f
   end
 
   # returns the difference between the paid sum and the total sum
@@ -78,9 +99,29 @@ class ReservationDrop < BaseDrop
     routes.search_path(q: location_query_string(@reservation.listing.location), transactable_type_id: @reservation.transactable_type.id)
   end
 
+  def host_show_url
+    state = if @reservation.archived_at.present?
+              'archived'
+            elsif @reservation.confirmed?
+              'confirmed'
+            elsif @reservation.unconfirmed?
+              'unconfirmed'
+            end
+    routes.dashboard_company_host_reservations_url(state: state, anchor: "reservation_#{@reservation.id}", host: PlatformContext.current.decorate.host, token_key => @reservation.listing.creator.temporary_token)
+  end
+
+  def guest_show_url
+    path = if @reservation.archived_at.present?
+      'archived_dashboard_user_reservations_url'
+    else
+      'upcoming_dashboard_user_reservations_url'
+    end
+    routes.send(path, anchor: "reservation_#{@reservation.id}", host: PlatformContext.current.decorate.host, token_key => @reservation.owner.temporary_token )
+  end
+
   # url to the dashboard area for managing own reservations
   def bookings_dashboard_url
-    routes.dashboard_user_reservations_path(:reservation_id => @reservation, token_key => @reservation.owner.temporary_token)
+    routes.dashboard_user_reservations_path(reservation_id: @reservation, token_key => @reservation.owner.temporary_token)
   end
 
   # url to the dashboard area for managing received bookings
@@ -106,11 +147,6 @@ class ReservationDrop < BaseDrop
     routes.confirm_dashboard_company_host_reservation_path(@reservation, token_key => @reservation.listing.administrator.try(:temporary_token), track_email_event: true)
   end
 
-  # reservation date (first date)
-  def start_date
-    @reservation.date.to_date
-  end
-
   # url to the reviews section in the user's dashboard
   def reviews_reservation_url
     routes.dashboard_reviews_path
@@ -118,5 +154,44 @@ class ReservationDrop < BaseDrop
 
   def transactable_type_drop
     transactable_type.to_liquid
+  end
+
+  # reservations currency
+  def currency
+    @reservation.total_amount.currency.symbol
+  end
+
+  def hourly_summary_if_available
+    if @reservation.periods.first.read_attribute(:start_minute).present?
+      reservation_period = @reservation.periods.first.decorate
+      reservation_period.hourly_summary(false).html_safe
+    else
+      I18n.t('dashboard.user_reservations.not_available_na')
+    end
+  end
+
+  # reservation date (first date)
+  def start_date
+    @reservation.starts_at
+  end
+
+  def total_amount_if_payment_at_least_authorized
+    if @reservation.payment.pending? && !@reservation.has_to_update_credit_card?
+      I18n.t('dashboard.user_reservations.total_amount_to_be_determined')
+    else
+      "<strong>#{@reservation.total_price}</strong>"
+    end
+  end
+
+  def formatted_total_amount
+    humanized_money_with_symbol(@reservation.total_price)
+  end
+
+  def total_amount_for_host_if_payment_at_least_authorized
+    if @reservation.payment.pending? && !@reservation.has_to_update_credit_card?
+      I18n.t('dashboard.user_reservations.total_amount_to_be_determined')
+    else
+      "<strong>#{@reservation.total_payable_to_host_formatted}</strong>"
+    end
   end
 end

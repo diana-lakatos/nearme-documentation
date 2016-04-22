@@ -35,5 +35,3 @@ module.exports = class SearchDatepickers
           newStartDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() - 1)
           @container.find('[name="start_date"], [name="fake_start_date"]').datepicker('setDate', newStartDate)
     }));
-    @start_date.datepicker('setDate', new Date());
-    @end_date.datepicker('setDate', 1);

@@ -1,8 +1,12 @@
 - content_for :page_header do
-  %h1
-    = link_to t("dashboard.transactables.manage"), dashboard_company_transactable_type_transactables_path(@transactable_type), class: 'hidden-xs hidden-sm'
-    %span.hidden-xs.hidden-sm >
-    = t("dashboard.transactables.edit")
+  - if @transactable_type.single_transactable
+    %h1= t("dashboard.nav.transactables")
+  - else
+    %h1
+      = link_to t("dashboard.transactables.manage"), dashboard_company_transactable_type_transactables_path(@transactable_type), class: 'hidden-xs hidden-sm'
+      %span.hidden-xs.hidden-sm >
+      = t("dashboard.transactables.edit")
+
 
   .options
     - if @transactable.persisted? && @transactable.location.try(:persisted?) && @transactable.errors[:location].empty?

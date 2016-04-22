@@ -55,10 +55,17 @@ module TransactablesIndex
         indexes :location_type_id, type: 'integer'
 
         indexes :geo_location, type: 'geo_point'
+        indexes :service_radius, type: 'integer'
+        indexes :open_hours, type: 'integer'
+        indexes :open_hours_during_week, type: 'integer'
+        indexes :opened_on_days, type: 'integer'
 
         indexes :availability, type: 'date'
+        indexes :availability_exceptions, type: 'date'
         indexes :draft, type: 'date'
         indexes :created_at, type: 'date'
+        indexes :completed_reservations, type: 'integer'
+        indexes :seller_average_rating, type: 'float'
       end
     end
 
@@ -84,9 +91,15 @@ module TransactablesIndex
         monthly_price_cents: self.monthly_price_cents.to_i,
         categories: self.categories.pluck(:id),
         availability: self.schedule_availability,
+        availability_exceptions: self.availability_exceptions.map(&:all_dates).flatten,
         action_monthly_booking: !self.monthly_price_cents.to_i.zero?,
         action_weekly_booking: !self.weekly_price_cents.to_i.zero?,
-        all_prices: self.all_prices
+        all_prices: self.all_prices,
+        service_radius: self.properties.try(:service_radius),
+        open_hours: self.availability.try(:days_with_hours),
+        open_hours_during_week: self.availability.try(:open_hours_during_week),
+        completed_reservations: self.reservations.reviewable.count,
+        seller_average_rating: self.creator.seller_average_rating
       )
     end
 
@@ -96,7 +109,6 @@ module TransactablesIndex
 
     def self.regular_search(query, service_type = nil)
       query_builder = Elastic::QueryBuilder.new(query.with_indifferent_access, searchable_custom_attributes(service_type), service_type)
-
       __elasticsearch__.search(query_builder.geo_regular_query)
     end
 

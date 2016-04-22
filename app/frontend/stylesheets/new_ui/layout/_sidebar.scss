@@ -4,7 +4,7 @@
     top: 40px;
     left: 0;
     bottom: 0;
-    width: 200px;
+    width: $sidebar-width;
     background: $sidebar-background;
 
     @media (min-width: $grid-float-breakpoint) {

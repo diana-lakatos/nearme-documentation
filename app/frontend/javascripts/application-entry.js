@@ -3,6 +3,12 @@
 var DNM = require('./common-app');
 
 DNM.registerInitializer(function(){
+    $( document ).ready(function(){
+        $("input[data-authenticity-token]").val($('meta[name="authenticity_token"]').attr('content'));
+    });
+});
+
+DNM.registerInitializer(function(){
     var SearchHomeController = require('./sections/search/home_controller');
 
     $('form.search-box').each(function(){
@@ -62,29 +68,15 @@ DNM.registerInitializer(function(){
 
 DNM.registerInitializer(function(){
     /* initializeWishList */
-    $('[data-add-favorite-button]').each(function() {
-        var container = $(this);
-        var data = {
-            'object_type': container.data('object-type'),
-            'link_to_classes': container.data('link-to-classes')
-        };
-        $.get(container.data('path'), data, function(response){
-            $(container).html(response);
-        });
-    });
-});
+    var addToFavoriteButton = require('./components/add_to_favorite_button');
+    addToFavoriteButton.load();
 
-DNM.registerInitializer(function(){
-    $(document).on('init:favoritebutton.nearme', function(event, el){
-        $(el).find('[data-action-link]').on('click', function(e){
-            $.ajax({
-              url: $(this).attr('href'),
-              method: $(this).data('method'),
-              dataType: "script"
-            });
-            e.preventDefault();
-            return false;
-        });
+    $(document).on('init:favoritebutton.nearme', function(event, element){
+      addToFavoriteButton.init(element, event)
+    });
+
+    $(document).on('load:favoritebutton.nearme', function(event, element){
+      addToFavoriteButton.load(element, event)
     });
 });
 
@@ -101,8 +93,8 @@ DNM.registerInitializer(function(){
       var next_page_path = $('.pagination .next_page').attr('href');
       if (next_page_path && $(window).scrollTop() > $(document).height() - $(window).height() - 60){
           $('.pagination').html('<img id="spinner" src="' + urlUtil.assetUrl('spinner.gif') + '" alt="Loading ..." title="Loading ..." />');
+          $.getScript(next_page_path);
       }
-      $.getScript(next_page_path);
   });
 });
 
@@ -250,17 +242,14 @@ DNM.registerInitializer(function(){
     }
 
     require.ensure([
-        './sections/dashboard/address_controller',
         './sections/buy_sell/boarding_form',
         './sections/buy_sell/shippo_fields_manager',
         './sections/categories'], function(require){
         var
-            AddressController = require('./sections/dashboard/address_controller'),
             BoardingForm = require('./sections/buy_sell/boarding_form'),
             ShippoFieldsManager = require('./sections/buy_sell/shippo_fields_manager'),
             CategoriesController = require('./sections/categories');
 
-        new AddressController(form);
         new BoardingForm(form);
         new CategoriesController(form);
         new ShippoFieldsManager(form.data('dimensions-template'));
@@ -288,6 +277,18 @@ DNM.registerInitializer(function(){
         new DashboardListingController(form);
         new SpaceWizardSpaceForm(form);
         new CategoriesController(form);
+    });
+});
+
+DNM.registerInitializer(function(){
+    var els = $('[data-behavior=address-autocomplete]');
+    if (els.length === 0) {
+        return;
+    }
+
+    require.ensure(['./sections/dashboard/address_controller'], function(require){
+        var AddressController = require('./sections/dashboard/address_controller');
+        return new AddressController(els.closest('form'));
     });
 });
 
@@ -557,6 +558,18 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
+    var el = $('#new_reservation_request');
+    if (el.length === 0) {
+        return;
+    }
+
+    require.ensure('./sections/reservations/review_controller', function(require){
+        var ReservationReviewController = require('./sections/reservations/review_controller');
+        return new ReservationReviewController(el);
+    });
+});
+
+DNM.registerInitializer(function(){
     var form = $('#cart');
     if (form.length === 0) {
         return;
@@ -566,6 +579,21 @@ DNM.registerInitializer(function(){
         form.submit();
     });
 });
+
+
+DNM.registerInitializer(function(){
+    var dateInput = $('[data-jquery-datepicker]');
+    if (dateInput.length === 0) {
+        return;
+    }
+
+    require.ensure(['./sections/search/time_and_datepickers', './new_ui/forms/timepickers'], function(require){
+        var SearchTimeAndDatepickers = require('./sections/search/time_and_datepickers');
+        return new SearchTimeAndDatepickers(dateInput);
+    })
+
+});
+
 
 DNM.registerInitializer(function(){
     $(document).on('init:mobileNumberForm.nearme', function() {
@@ -578,6 +606,13 @@ DNM.registerInitializer(function(){
             customSelects(container);
             return new PhoneNumbers(container);
         });
+    })
+});
+
+DNM.registerInitializer(function(){
+    $(document).on('init:homepageranges.nearme', function() {
+      $('[name="start_date"]').each(function(index, element) { if($(element).datepicker) $(element).datepicker('setDate', new Date()) });
+      $('[name="end_date"]').each(function(index, element) { if($(element).datepicker) $(element).datepicker('setDate', 1) });
     })
 });
 

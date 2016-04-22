@@ -74,7 +74,10 @@ module.exports = class SearchSearchController extends SearchController
         $(event.target).closest('.search-filter').toggleClass('active')
       false
 
-    @filters_container.on 'click', 'input[type=checkbox]', =>
+    @filters_container.on 'click', 'input[type=checkbox], input[type=radio]', =>
+      @fieldChanged()
+
+    @filters_container.on 'change', 'input[type=text], select', =>
       @fieldChanged()
 
     @searchField = @form.find('#search')
@@ -166,6 +169,7 @@ module.exports = class SearchSearchController extends SearchController
 
   showResults: (html) ->
     @resultsContainer().replaceWith(html)
+    @resultsContainer().find("input[data-authenticity-token]").val($('meta[name="authenticity_token"]').attr('content'));
     $('.pagination').hide()
 
   updateResultsCount: ->
@@ -186,6 +190,7 @@ module.exports = class SearchSearchController extends SearchController
       # Only show bounds of new results
       bounds = new google.maps.LatLngBounds()
       bounds.extend(listing.latLng()) for listing in listings
+      bounds.extend(new google.maps.LatLng(@form.find('input[name=lat]').val(), @form.find('input[name=lng]').val()))
       _.defer => @map.fitBounds(bounds)
 
       @map.show()
@@ -240,6 +245,7 @@ module.exports = class SearchSearchController extends SearchController
       @assignFormParams(
         ignore_search_event: 1
       )
+    , true
 
   # Provide a debounced method to trigger the search after a period of constant state
   triggerSearchWithBoundsAfterDelay: _.debounce(->
@@ -260,7 +266,12 @@ module.exports = class SearchSearchController extends SearchController
 
     all_categories = categories_selects.concat(categories_checkboxes)
 
+    price_max = if @container.find('input[name="price[max]"]:checked').length > 0 then @container.find('input[name="price[max]"]:checked').val() else $('input[name="price[max]"]').val()
     @assignFormParams(
+      'price[max]': price_max,
+      time_from: @container.find('select[name="time_from"]').val(),
+      time_to: @container.find('select[name="time_to"]').val(),
+      sort: @container.find('select[name="sort"]').val(),
       ignore_search_event: 0
       category_ids: all_categories.join(',')
       lntype: _.toArray($('input[name="location_types_ids[]"]:checked').map(-> $(this).val())).join(',')
@@ -290,9 +301,9 @@ module.exports = class SearchSearchController extends SearchController
   , 500)
 
   # Triggers a search with default UX behaviour and semantics.
-  triggerSearchAndHandleResults: (callback) ->
+  triggerSearchAndHandleResults: (callback, mapTrigger) ->
     @loader.showWithoutLocker()
-    @triggerSearchRequest().success (html) =>
+    @triggerSearchRequest(mapTrigger).success (html) =>
       @processingResults = true
       @showResults(html)
       @updateUrlForSearchQuery()
@@ -307,11 +318,13 @@ module.exports = class SearchSearchController extends SearchController
   # Trigger the API request for search
   #
   # Returns a jQuery Promise object which can be bound to execute response semantics.
-  triggerSearchRequest: ->
+  triggerSearchRequest: (mapTrigger)->
+    data = @form.serializeArray()
+    data.push({"name": "map_moved", "value": mapTrigger})
     $.ajax(
       url  : @form.attr("action")
       type : 'GET',
-      data : @form.serialize()
+      data : $.param(data)
     )
 
   updateListings: (listings, callback, error_callback = ->) ->

@@ -1,0 +1,4 @@
+.line.question.nested-fields.row
+  = f.input :text, as: :string, label: t('instance_admin.rating_systems.index.question_label'), required: false
+  = link_to_remove_association f, class: 'remove_fields remove-question enabled' do
+    =fa_icon 'times'

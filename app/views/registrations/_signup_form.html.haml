@@ -4,37 +4,53 @@
 
   = simple_form_for resource, :as => :user, :url => registration_path(resource_name) do |f|
     = hidden_field_tag 'wizard', params[:wizard] if params[:wizard]
+    = hidden_field_tag 'role', @role
 
-    .name-holder.input-icon-holder
-      = f.input :name, :label => false, placeholder: t('simple_form.placeholders.registration.name'), :input_html => { :tabindex => '1' }
-      %span.ico-user
+    - @form_component.form_fields.each do |form_field|
+      - model = form_field.keys.first
+      - field = form_field[model]
+      - if model == 'user'
+        - if field == "name"
+          .name-holder.input-icon-holder
+            = f.input :name, :label => false, placeholder: t('simple_form.placeholders.registration.name'), :input_html => { :tabindex => '1' }
+            %span.ico-user
+        - elsif field == "email"
+          .email-holder.input-icon-holder
+            = f.input :email, :label => false, placeholder:  t('simple_form.placeholders.registration.email'),
+              :input_html => { :tabindex => '2' }
+            %span.ico-mail
+        - elsif field == "password"
+          .password-holder.input-icon-holder
+            = f.input :password, :label => false, placeholder: t('simple_form.placeholders.registration.password'),
+              :input_html => { :tabindex => '3' }
+            %span.ico-lock
+        - elsif field == "phone"
+          %div{'data-phone-fields-container' => true}
+            = f.input :country_name, as: :hidden, input_html: { value: user_country_default(@country) }
+            - calling_code = '&nbsp;'
+            - calling_code = "+#{Country.find_by(name: user_country_default(@country)).calling_code}" if user_country_default(@country)
+            .mobile-holder.input-icon-holder
+              .country-calling-code
+                = calling_code
+              = f.input :mobile_number, placeholder: t('simple_form.labels.user.mobile_number', default: 'Mobile number'), label: false
+              %span.ico-phone
 
-    .email-holder.input-icon-holder
-      = f.input :email, :label => false, placeholder:  t('simple_form.placeholders.registration.email'),
-        :input_html => { :tabindex => '2' }
-      %span.ico-mail
+              / - if f.object.errors[:mobile_number].present?
+              /   .error-block= f.object.errors[:mobile_number].to_sentence
+              / - if is_i18n_set?('simple_form.hints.user.mobile_number')
+              /   %p.help-block= t('simple_form.hints.user.mobile_number', default: '')
 
-    .password-holder.input-icon-holder
-      = f.input :password, :label => false, placeholder: t('simple_form.placeholders.registration.password'),
-        :input_html => { :tabindex => '3' }
-      %span.ico-lock
 
-      - if platform_context.instance.force_accepting_tos
-
-        %p.notice.legal.control-group{class: "#{"error" if f.object.errors.include?(:accept_terms_of_service)}"}
-          %label.checkbox.controls{for: "user_accept_terms_of_service"}
-            = check_box_tag "user[accept_terms_of_service]", "1", f.object.send(:accept_terms_of_service).present?, { class: 'input-block-level', tabindex: '4' }
-            = t('registrations.accept_terms_of_service').html_safe
-          - if f.object.errors.include?(:accept_terms_of_service)
-            %p.error-block= f.object.errors[:accept_terms_of_service].first
-      - else
-        - if @legal_page_present
-          %p.notice.text-center.legal #{t('sign_up_form.confirm_tos')} #{link_to t('sign_up_form.tos'), pages_path('legal'), :target => '_blank'}.
+    - if platform_context.instance.force_accepting_tos
+      = render 'registrations/tos_form', user: f.object, error: f.object.errors[:accept_terms_of_service].join(', '), checked: !f.object.errors[:accept_terms_of_service].present?
+    - else
+      - if @legal_page_present
+        %p.notice.text-center.legal #{t('sign_up_form.confirm_tos')} #{link_to t('sign_up_form.tos'), pages_path('legal'), :target => '_blank'}.
     .actions
       = f.submit t('sign_up_form.buttons.sign_up'), :class => 'desksnearme submit btn btn-green', data: { disable_with: t('sign_up_form.disabled_buttons.sign_up') }, :tabindex => '4'
 
 - if !user_auth_provider
-  .text-center.already-a-user= link_to(t('sign_up_form.buttons.already_user'), '#', data: { modal: true, href: new_user_session_path(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal' } )
+  .text-center.already-a-user= link_to(t('sign_up_form.buttons.already_user'), '#', data: { modal: true, href: new_user_session_path(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } )
 
 - if user_auth_provider
   .signup-provider
@@ -57,12 +73,7 @@
           placeholder: t('simple_form.placeholders.registration.we_can_contact_you')
 
       - if platform_context.instance.force_accepting_tos
-        %p.notice.legal.control-group{class: "#{"error" if f.object.errors.include?(:accept_terms_of_service)}"}
-          %label.checkbox.controls{for: "user_accept_terms_of_service"}
-            = check_box_tag "user[accept_terms_of_service]", "1", f.object.send(:accept_terms_of_service).present?, { class: 'input-block-level', tabindex: '4' }
-            = t('registrations.accept_terms_of_service').html_safe
-            - if f.object.errors.include?(:accept_terms_of_service)
-              #tos-error.error-block= f.object.errors[:accept_terms_of_service].first
+        = render 'registrations/tos_form', user: f.object, error: f.object.errors[:accept_terms_of_service].join(', '), checked: !f.object.errors[:accept_terms_of_service].present?
       - else
         %p.notice.text-center.legal #{t('sign_up_form.confirm_tos')} #{link_to t('sign_up_form.tos'), pages_path('legal'), :target => '_blank'}.
       .actions

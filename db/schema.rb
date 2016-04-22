@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160330121432) do
+ActiveRecord::Schema.define(version: 20160413143930) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -577,7 +577,7 @@ ActiveRecord::Schema.define(version: 20160330121432) do
 
   create_table "credit_cards", force: :cascade do |t|
     t.integer  "instance_client_id"
-    t.integer  "instance_id"
+    t.integer  "instance_id",                                   null: false
     t.datetime "deleted_at"
     t.string   "gateway_class",      limit: 255
     t.text     "encrypted_response"
@@ -922,10 +922,10 @@ ActiveRecord::Schema.define(version: 20160330121432) do
     t.string   "ip_address"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+    t.text     "reason"
   end
 
   add_index "inappropriate_reports", ["instance_id", "reportable_id", "reportable_type"], name: "inappropriate_reports_instance_reportable", using: :btree
-  add_index "inappropriate_reports", ["instance_id", "user_id", "reportable_id", "reportable_type"], name: "uniq_inappropriate_instance_user_reports_instance_reportable", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "inappropriate_reports", ["reportable_id"], name: "index_inappropriate_reports_on_reportable_id", using: :btree
   add_index "inappropriate_reports", ["user_id"], name: "index_inappropriate_reports_on_user_id", using: :btree
 
@@ -1162,8 +1162,9 @@ ActiveRecord::Schema.define(version: 20160330121432) do
     t.integer  "seller_attachments_documents_num",                                             default: 10,            null: false
     t.string   "priority_view_path"
     t.boolean  "enable_language_selector",                                                     default: false,         null: false
-    t.boolean  "click_to_call",                                                                default: false
     t.boolean  "enable_reply_button_on_host_reservations",                                     default: false
+    t.boolean  "click_to_call",                                                                default: false
+    t.boolean  "split_registration",                                                           default: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1475,6 +1476,7 @@ ActiveRecord::Schema.define(version: 20160330121432) do
     t.string   "subscriber_type"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.integer  "payer_id"
   end
 
   add_index "payment_subscriptions", ["company_id"], name: "index_payment_subscriptions_on_company_id", using: :btree
@@ -1537,6 +1539,7 @@ ActiveRecord::Schema.define(version: 20160330121432) do
     t.integer  "merchant_account_id"
     t.boolean  "offline",                                                                        default: false
     t.integer  "credit_card_id"
+    t.integer  "payer_id"
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
@@ -1884,6 +1887,7 @@ ActiveRecord::Schema.define(version: 20160330121432) do
     t.integer  "unit_price_cents"
     t.datetime "pending_guest_confirmation"
     t.datetime "archived_at"
+    t.decimal  "cancellation_policy_penalty_hours",                         precision: 8, scale: 2, default: 0.0
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -1946,15 +1950,17 @@ ActiveRecord::Schema.define(version: 20160330121432) do
   add_index "saved_searches", ["title", "user_id"], name: "index_saved_searches_on_title_and_user_id", unique: true, using: :btree
 
   create_table "schedule_exception_rules", force: :cascade do |t|
-    t.string   "label",                limit: 255
+    t.string   "label",                    limit: 255
     t.datetime "duration_range_start"
     t.datetime "duration_range_end"
     t.integer  "schedule_id"
     t.integer  "instance_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "availability_template_id"
   end
 
+  add_index "schedule_exception_rules", ["availability_template_id"], name: "index_schedule_exception_rules_on_availability_template_id", using: :btree
   add_index "schedule_exception_rules", ["instance_id", "schedule_id"], name: "index_schedule_exception_rules_on_instance_id_and_schedule_id", using: :btree
 
   create_table "schedule_rules", force: :cascade do |t|
@@ -3541,6 +3547,8 @@ ActiveRecord::Schema.define(version: 20160330121432) do
     t.string   "theme_new_dashboard_digest"
     t.string   "instagram_url"
     t.integer  "instance_id"
+    t.string   "youtube_url"
+    t.string   "rss_url"
   end
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
@@ -3674,6 +3682,8 @@ ActiveRecord::Schema.define(version: 20160330121432) do
     t.integer  "reservation_type_id"
     t.boolean  "skip_payment_authorization",                                                     default: false
     t.integer  "hours_for_guest_to_confirm_payment",                                             default: 0
+    t.boolean  "single_transactable",                                                            default: false
+    t.decimal  "cancellation_policy_penalty_hours",                      precision: 8, scale: 2, default: 0.0
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -3693,43 +3703,43 @@ ActiveRecord::Schema.define(version: 20160330121432) do
     t.datetime "draft"
     t.datetime "activated_at"
     t.boolean  "listings_public"
-    t.boolean  "enabled",                                      default: true
+    t.boolean  "enabled",                                                               default: true
     t.text     "metadata"
-    t.datetime "created_at",                                                       null: false
-    t.datetime "updated_at",                                                       null: false
+    t.datetime "created_at",                                                                                null: false
+    t.datetime "updated_at",                                                                                null: false
     t.integer  "transactable_type_id"
     t.integer  "parent_transactable_id"
-    t.string   "external_id",                      limit: 255
-    t.boolean  "mark_to_be_bulk_update_deleted",               default: false
-    t.boolean  "action_rfq",                                   default: false
-    t.boolean  "action_hourly_booking",                        default: false
-    t.boolean  "action_free_booking",                          default: false
-    t.boolean  "action_recurring_booking",                     default: false
-    t.boolean  "action_daily_booking",                         default: false
-    t.integer  "hourly_price_cents",                           default: 0
-    t.integer  "daily_price_cents",                            default: 0
-    t.integer  "weekly_price_cents",                           default: 0
-    t.integer  "monthly_price_cents",                          default: 0
+    t.string   "external_id",                       limit: 255
+    t.boolean  "mark_to_be_bulk_update_deleted",                                        default: false
+    t.boolean  "action_rfq",                                                            default: false
+    t.boolean  "action_hourly_booking",                                                 default: false
+    t.boolean  "action_free_booking",                                                   default: false
+    t.boolean  "action_recurring_booking",                                              default: false
+    t.boolean  "action_daily_booking",                                                  default: false
+    t.integer  "hourly_price_cents",                                                    default: 0
+    t.integer  "daily_price_cents",                                                     default: 0
+    t.integer  "weekly_price_cents",                                                    default: 0
+    t.integer  "monthly_price_cents",                                                   default: 0
     t.boolean  "action_schedule_booking"
     t.integer  "fixed_price_cents"
     t.integer  "min_fixed_price_cents"
     t.integer  "max_fixed_price_cents"
-    t.float    "average_rating",                               default: 0.0,       null: false
-    t.string   "booking_type",                     limit: 255, default: "regular"
-    t.boolean  "manual_payment",                               default: false
-    t.integer  "wish_list_items_count",                        default: 0
-    t.integer  "quantity",                                     default: 1
-    t.integer  "opened_on_days",                               default: [],                     array: true
-    t.integer  "minimum_booking_minutes",                      default: 60
+    t.float    "average_rating",                                                        default: 0.0,       null: false
+    t.string   "booking_type",                      limit: 255,                         default: "regular"
+    t.boolean  "manual_payment",                                                        default: false
+    t.integer  "wish_list_items_count",                                                 default: 0
+    t.integer  "quantity",                                                              default: 1
+    t.integer  "opened_on_days",                                                        default: [],                     array: true
+    t.integer  "minimum_booking_minutes",                                               default: 60
     t.integer  "book_it_out_discount"
     t.integer  "book_it_out_minimum_qty"
-    t.integer  "exclusive_price_cents",                        default: 0
-    t.string   "currency",                         limit: 255
-    t.string   "name",                             limit: 255
+    t.integer  "exclusive_price_cents",                                                 default: 0
+    t.string   "currency",                          limit: 255
+    t.string   "name",                              limit: 255
     t.text     "description"
-    t.boolean  "confirm_reservations",                         default: true
+    t.boolean  "confirm_reservations",                                                  default: true
     t.datetime "last_request_photos_sent_at"
-    t.string   "capacity",                         limit: 255
+    t.string   "capacity",                          limit: 255
     t.string   "rental_shipping_type"
     t.integer  "insurance_value_cents"
     t.boolean  "action_subscription_booking"
@@ -3738,7 +3748,8 @@ ActiveRecord::Schema.define(version: 20160330121432) do
     t.string   "slug"
     t.integer  "availability_template_id"
     t.integer  "deposit_amount_cents"
-    t.boolean  "featured",                                     default: false
+    t.boolean  "featured",                                                              default: false
+    t.decimal  "cancellation_policy_penalty_hours",             precision: 8, scale: 2, default: 0.0
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
@@ -3813,13 +3824,14 @@ ActiveRecord::Schema.define(version: 20160330121432) do
 
   create_table "user_blogs", force: :cascade do |t|
     t.integer  "user_id"
-    t.boolean  "enabled",                 default: false
-    t.string   "name",        limit: 255
-    t.string   "header_logo", limit: 255
-    t.string   "header_icon", limit: 255
+    t.boolean  "enabled",                  default: false
+    t.string   "name",         limit: 255
+    t.string   "header_logo",  limit: 255
+    t.string   "header_icon",  limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "instance_id"
+    t.string   "header_image", limit: 255
   end
 
   create_table "user_industries", force: :cascade do |t|

@@ -1,6 +1,6 @@
 module CustomAttributes
   module CustomAttributesHelper
-    def draw_attribute_for_form(attribute, form, with_private = false)
+    def draw_attribute_for_form(attribute, form, with_private = false, extra_options = {})
       return nil unless (attribute.public || with_private) && attribute.html_tag.present?
       form_element = ::CustomAttributes::CustomAttribute::FormElementDecorator.new(attribute)
       case attribute.html_tag.to_sym
@@ -9,7 +9,7 @@ module CustomAttributes
       when :check_box
         render partial: "custom_attributes/check_box", locals: { attribute: form_element, f: form }
       when :check_box_list
-        render partial: "custom_attributes/check_box_list", locals: { attribute: form_element, f: form }
+        render partial: "custom_attributes/check_box_list", locals: { attribute: form_element, f: form, extra_options: extra_options }
       when :switch
         render partial: "custom_attributes/switch", locals: { attribute: form_element, f: form }
       else

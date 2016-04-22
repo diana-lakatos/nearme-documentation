@@ -27,6 +27,14 @@ FactoryGirl.define do
       end
     end
 
+    factory :transactable_with_doc_requirements do
+      after(:build) do |transactable|
+        transactable.create_upload_obligation({level: UploadObligation::LEVELS[0]})
+        transactable.document_requirements << FactoryGirl.create(:document_requirement, item: transactable)
+      end
+    end
+
+
     factory :subscription_transactable do
       action_subscription_booking true
       action_daily_booking false
@@ -89,6 +97,19 @@ FactoryGirl.define do
       after(:build) do |listing|
         listing.hourly_price_cents = 10_00
         listing.action_hourly_booking = true
+      end
+
+      factory :listing_with_10_dollars_per_hour_and_24h do
+        after(:build) do |listing|
+          listing.daily_price_cents = nil
+          listing.action_hourly_booking = true
+          listing.action_daily_booking = false
+        end
+
+        after(:create) do |listing|
+          listing.availability_template = AvailabilityTemplate.find_by(name: '24/7')
+          listing.save!
+        end
       end
     end
 

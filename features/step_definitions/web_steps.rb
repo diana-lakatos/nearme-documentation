@@ -55,6 +55,10 @@ When /^(?:|I )press "([^"]*)"$/ do |button|
   click_button(button)
 end
 
+When /^(?:|I )click element with selector "([^"]*)"$/ do |selector|
+  page.find(selector).click
+end
+
 When /^(?:|I )follow "([^"]*)"$/ do |link|
   click_link(link)
 end

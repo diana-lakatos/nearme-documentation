@@ -40,6 +40,19 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
+    var els = $('[data-complete-reservation]');
+    if (els.length === 0) {
+        return;
+    }
+    require.ensure('./new_ui/controllers/complete_reservation_controller', function(require){
+        var CompleteReservationController = require('./new_ui/controllers/complete_reservation_controller');
+        els.each(function(){
+            return new CompleteReservationController(this);
+        });
+    });
+});
+
+DNM.registerInitializer(function(){
     var els = $('[data-category-autocomplete]');
     if (els.length === 0) {
         return;
@@ -476,15 +489,19 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    var els = $('input[data-card-number], input[data-card-code]');
-    if (els.length === 0) {
-        return;
+    var run = function() {
+        require.ensure('jquery.payment', function(require){
+            require('jquery.payment');
+            $('input[data-card-number]').eq(0).payment('formatCardNumber');
+            $('input[data-card-code]').eq(0).payment('formatCardCVC');
+        });
+    };
+
+    $(document).on('init:creditcardform.nearme', run)
+
+    if ($('input[data-card-number], input[data-card-code]').length > 0) {
+        run();
     }
-    require.ensure('jquery.payment', function(require){
-        require('jquery.payment');
-        $('input[data-card-number]').eq(0).payment('formatCardNumber');
-        $('input[data-card-code]').eq(0).payment('formatCardCVC');
-    });
 });
 
 DNM.registerInitializer(function(){
@@ -516,6 +533,17 @@ DNM.registerInitializer(function(){
     require.ensure('spectrum/spectrum', function(require){
         require('spectrum/spectrum');
     });
+});
+
+DNM.registerInitializer(function(){
+    var datepickers = require('./new_ui/forms/datepickers');
+    function run(){
+        $('.unavailability').on('cocoon:after-insert', function(e, insertedItem) {
+            datepickers(insertedItem);
+        });
+    }
+    $(document).on('init:unavailability.nearme', run);
+    run();
 });
 
 DNM.run();

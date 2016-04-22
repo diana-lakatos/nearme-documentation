@@ -1,0 +1,12 @@
+<span class='star-container' title="{{stars}} out of {{max_rating}} stars rating">
+  {% for i in (1..stars) %}
+    <img src='{{ "raty/star-on.png" | image_url }}' aria-hidden>
+  {% endfor %}
+  {% for i in (1..max_rating) offset: stars %}
+    <img src='{{ "raty/star-off.png" | image_url }}' aria-hidden>
+  {% endfor %}
+</span>
+
+{% if count != blank %}
+  <a>{{count}})</a>
+{% endif %}

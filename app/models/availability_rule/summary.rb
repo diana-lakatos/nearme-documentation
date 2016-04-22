@@ -43,6 +43,8 @@ class AvailabilityRule::Summary
     day ||= options[:date] && options[:date].wday
     raise ArgumentError.new("Must provide day of week") unless day
 
+    return false if unavailable_for?(options[:date])
+
     rules = rules_for_day(day)
     return false if rules.empty?
 
@@ -61,6 +63,11 @@ class AvailabilityRule::Summary
     true
   end
 
+  def unavailable_for?(date)
+    @rules.first.target.schedule_exception_rules.at(date).any?
+  end
+
+
   # Returns an array of days that the listing is open for
   # Days are 0..6, where 0 is Sunday and 6 is Saturday
   def days_open
@@ -73,6 +80,33 @@ class AvailabilityRule::Summary
       return true if day + 1 == days_open[i + 1]
     end
     false
+  end
+
+  def hours_open_for(day)
+    rules_for_day(day).map do |rule|
+      (rule.open_hour..rule.close_hour).to_a
+    end.flatten.uniq
+  end
+
+  def days_with_hours
+    days_open.map do |day|
+      hours_open_for(day).map{ |hour| hour + (day + 1) * 100}
+    end.flatten
+  end
+
+  def days_with_ranges
+    days_open.inject({}) do |results, day|
+      results[day] = rules_for_day(day).map do |rule|
+        ["#{rule.open_hour}%.2d" % rule.open_minute, "#{rule.close_hour}%.2d" % rule.close_minute]
+      end
+      results
+    end
+  end
+
+  def open_hours_during_week
+    @rules.map do |rule|
+      (rule.open_hour..rule.close_hour).to_a
+    end.flatten.uniq.sort
   end
 
   # Returns the minute of the day that the listing opens, or nil

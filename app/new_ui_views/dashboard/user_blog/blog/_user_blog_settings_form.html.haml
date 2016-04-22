@@ -4,10 +4,12 @@
       = f.input :enabled, as: :switch
       = f.input :name, required: true
       .row
-        .col-md-6
+        .col-md-4
           = f.input :header_logo, as: :image, delete_url: delete_image_dashboard_blog_path(:image_type => :header_logo)
-        .col-md-6
+        .col-md-4
           = f.input :header_icon, as: :image, delete_url: delete_image_dashboard_blog_path(:image_type => :header_icon)
+        .col-md-4
+          = f.input :header_image, as: :image, delete_url: delete_image_dashboard_blog_path(:image_type => :header_image)
 
   .panel.form-actions
     .panel-body

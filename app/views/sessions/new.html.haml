@@ -1,7 +1,7 @@
 - title t('sign_up_form.title')
 
 .row-fluid
-  #signup
+  #signup.signin-form
     .span8.offset2
       .box
         %header
@@ -24,12 +24,12 @@
           %div.pnotice
             =raw "#{t('sign_up_form.forgot')} #{link_to(t('sign_up_form.buttons.reset_password'), '#',
               data: { modal:true, href: new_user_password_url(return_to: params[:return_to]),
-              'modal-class' => 'sign-up-modal' } )}"
+              'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } )}"
 
           .actions
             = f.submit t('sign_up_form.buttons.log_in'), :tabindex => '3', class: 'btn btn-green'
 
-        .text-center.already-a-user= link_to(t('sign_up_form.buttons.new_user'), '#', data: { modal: true, href: new_user_registration_path(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal' })
+        .text-center.already-a-user= link_to(t('sign_up_form.buttons.new_user'), '#', data: { modal: true, href: new_user_registration_path(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' })
 
 - if request.xhr?
   :javascript

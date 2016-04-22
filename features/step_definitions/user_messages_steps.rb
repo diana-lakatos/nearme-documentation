@@ -89,7 +89,8 @@ end
 
 Then /^I should see this( reservation)? message in my inbox marked as read$/ do |reservation_message|
   visit dashboard_user_messages_path
-  page.should_not have_css('.count')
+
+  page.should have_no_selector(:xpath, "//a[@href='/dashboard/user_messages']/span[@class='count']")
   page.should_not have_content('Inbox (1)')
   page.should have_content('Messages')
   page.should have_content('Inbox')
@@ -111,7 +112,8 @@ end
 
 Then /^I should see this( reservation)? message in my inbox marked as unread$/ do |reservation_message|
   visit dashboard_user_messages_path
-  find('.count').should have_content('1')
+  page.should have_xpath("//a[@href='/dashboard/user_messages']/span[@class='count']", text: 1)
+
   page.should have_content('Inbox (1)')
   if reservation_message
     page.should have_content @reservation.listing.administrator.first_name

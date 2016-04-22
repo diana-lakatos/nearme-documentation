@@ -2,13 +2,15 @@ class ReservationRequest < Form
 
   attr_accessor :dates, :start_minute, :end_minute, :book_it_out, :exclusive_price, :guest_notes,
     :waiver_agreement_templates, :documents, :checkout_extra_fields, :mobile_number, :delivery_ids,
-    :delivery_type, :total_amount_check
+    :delivery_type, :total_amount_check, :start_time, :dates_fake
   attr_reader   :reservation, :listing, :location, :user, :client_token, :payment
 
   delegate :confirm_reservations?, :location, :company, :timezone, to: :@listing
   delegate :country_name, :country_name=, :country, to: :@user
-  delegate :guest_notes, :quantity, :action_hourly_booking?, :booking_type=, :currency,
-    :service_fee_amount_guest, :additional_charges, :shipments, :shipments_attributes=, to: :@reservation
+  delegate :id, :guest_notes, :quantity, :action_hourly_booking?, :booking_type=, :currency,
+    :service_fee_amount_guest, :additional_charges, :shipments, :shipments_attributes=, :category_ids, :category_ids=,
+    :properties, :properties=, :creator_attributes=, :payment_documents, :payment_documents_attributes=,
+    :reservation_type, :owner, :owner_attributes=, :address, :build_address, :address_attributes=, to: :@reservation
 
   validates :listing,      presence: true
   validates :reservation,  presence: true
@@ -21,14 +23,17 @@ class ReservationRequest < Form
   validate :validate_total_amount
   validate :validate_payment
 
-  def initialize(listing, user, attributes = {}, checkout_extra_fields = {})
+  def initialize(listing, user, attributes = {}, checkout_extra_fields = {}, last_search_json = {})
     @listing = listing
     @waiver_agreement_templates = []
+    # remove with old ui
     @checkout_extra_fields = CheckoutExtraFields.new(user, checkout_extra_fields)
     @user = @checkout_extra_fields.user
+    @last_search_json = last_search_json
 
     if @listing
       @reservation = @listing.reservations.build
+      @reservation.reservation_type = @listing.service_type.reservation_type
       @reservation.currency = @listing.currency
       @reservation.time_zone = timezone
       @reservation.company = @listing.company
@@ -50,6 +55,8 @@ class ReservationRequest < Form
 
       store_attributes(attributes)
       build_return_shipment
+      build_payment_documents
+      set_dates
       @reservation.calculate_prices
 
       @reservation.build_additional_charges(attributes)
@@ -61,10 +68,13 @@ class ReservationRequest < Form
   def additional_charge_ids=(additional_charge_ids)
   end
 
-  def dates=dates
+  def set_dates
+    set_dates_from_search
     @dates = dates
+
     if @listing
       if @reservation.action_hourly_booking? || @listing.schedule_booking?
+        set_start_minute
         @start_minute = start_minute.try(:to_i)
         @end_minute = end_minute.try(:to_i)
       else
@@ -84,27 +94,80 @@ class ReservationRequest < Form
       end
 
       @dates.flatten!
-
       @dates.reject(&:blank?).each do |date_string|
-        date = Date.parse(date_string) rescue Date.strptime(date_string, "%m/%d/%Y")
+        begin
+          date = Date.parse(date_string)
+        rescue
+          errors.add(:base, I18n.t('reservations_review.errors.invalid_date'))
+          return
+        end
         @reservation.add_period(date, start_minute, end_minute)
       end
     end
+  end
+
+  def last_search
+    @last_search ||= JSON.parse(@last_search_json) rescue {}
+  end
+
+  def booking_date_from_search
+    last_search['date'].presence || Date.current.to_s
+  end
+
+  def booking_time_start_from_search
+    last_search['time_from'].presence || 1.hour.from_now.strftime("%k:00").strip
+  end
+
+  def set_dates_from_search
+    if listing.skip_payment_authorization?
+      if dates.blank? && start_time.blank?
+        self.dates = booking_date_from_search
+        self.start_time = booking_time_start_from_search
+      end
+      self.dates_fake = I18n.l(Date.parse(dates), format: :day_month_year)
+    end
+  end
+
+  def set_start_minute
+    return unless start_time && start_time.split(':').any?
+    hours, minutes = start_time.split(':')
+    self.start_minute = hours.to_i * 60 + minutes.to_i
+    self.end_minute = start_minute + 90
   end
 
   def quantity=(qty)
     reservation.quantity = qty.presence || 1
   end
 
+  def form_address(last_search_json)
+    return address if address.present?
+    if last_search_json
+      last_search = JSON.parse(last_search_json, symbolize_names: true) rescue {}
+      self.build_address(address: last_search[:loc], longitude: last_search[:lng], latitude: last_search[:lat])
+    else
+      self.build_address
+    end
+  end
+
   def process
-    @checkout_extra_fields.assign_attributes! if @checkout_extra_fields.are_fields_present?
-    @checkout_extra_fields.valid?
-    @checkout_extra_fields.errors.full_messages.each { |m| add_error(m, :base) }
-    !!(@checkout_extra_fields.valid? && valid? && @payment.authorize && authorize_deposit && save_reservation)
+    # remove with old ui
+    if @checkout_extra_fields.are_fields_present?
+      @checkout_extra_fields.assign_attributes!
+      reservation.owner = @checkout_extra_fields.user
+      @checkout_extra_fields.valid?
+      @checkout_extra_fields.errors.full_messages.each { |m| add_error(m, :base) }
+    end
+
+    remove_empty_documents
+    !!(@checkout_extra_fields.errors.empty? && valid? && authorize_payment && authorize_deposit && save_reservation)
   end
 
   def authorize_deposit
     !@deposit || @deposit.try(:authorize)
+  end
+
+  def authorize_payment
+    @listing.skip_payment_authorization? || @payment.try(:authorize)
   end
 
   def reservation_periods
@@ -147,6 +210,10 @@ class ReservationRequest < Form
     end.compact
   end
 
+  def to_liquid
+    @reservation_request_drop ||= ReservationRequestDrop.new(self)
+  end
+
   private
 
   def transactable_type
@@ -158,11 +225,13 @@ class ReservationRequest < Form
   end
 
   def save_reservation
-    remove_empty_optional_documents
     User.transaction do
+      # remove with old ui
       checkout_extra_fields.save! if checkout_extra_fields.are_fields_present?
       set_cancellation_policy
       @reservation.save!
+      ReservationMarkAsArchivedJob.perform_later(@reservation.ends_at, @reservation.id) unless @reservation.skip_payment_authorization?
+      true
     end
   rescue ActiveRecord::RecordInvalid => error
     add_errors(error.record.errors.full_messages)
@@ -172,57 +241,31 @@ class ReservationRequest < Form
   def set_cancellation_policy
     if transactable_type.cancellation_policy_enabled.present?
       reservation.cancellation_policy_hours_for_cancellation = transactable_type.cancellation_policy_hours_for_cancellation
+      reservation.cancellation_policy_penalty_hours = transactable_type.cancellation_policy_penalty_hours
       if payment.payment_gateway.supports_partial_refunds?
         reservation.cancellation_policy_penalty_percentage = transactable_type.cancellation_policy_penalty_percentage
       end
     end
   end
 
-  def documents_attributes=(documents)
-    documents.each do |document|
-      document_requirement_id = document.try(:fetch, 'payment_document_info_attributes', nil).try(:fetch, 'document_requirement_id', nil)
-      document_requirement = DocumentRequirement.find_by(id: document_requirement_id)
-      upload_obligation = document_requirement.try(:item).try(:upload_obligation)
-      if upload_obligation && !upload_obligation.not_required?
-        build_or_attach_document document
-      else
-        build_document(document)
+  def build_payment_documents
+    if payment_documents.empty?
+      listing.document_requirements.select(&:should_show_file?).each_with_index do |doc, index|
+        payment_documents.new(
+          user: @user,
+          attachable: reservation,
+          payment_document_info_attributes: {
+            attachment_id: reservation.id,
+            document_requirement_id: doc.id
+          }
+        )
       end
-      documents.delete(document)
     end
   end
 
-  def build_or_attach_document(document_params)
-    attachable = AttachableService.new(Attachable::PaymentDocument, document_params)
-    if attachable.valid? && document = attachable.get_attachable
-      reservation.payment_documents << document
-    else
-      reservation.payment_documents.build(document_params)
-    end
-  end
-
-  def build_document document_params
-    if reservation.listing.document_requirements.blank? &&
-        current_instance.documents_upload_enabled? &&
-        !current_instance.documents_upload.is_vendor_decides?
-
-      document_params.delete :payment_document_info_attributes
-      document_params[:user_id] = @user.id
-      document = reservation.payment_documents.build(document_params)
-      document_requirement = reservation.listing.document_requirements.build({
-        label: I18n.t("upload_documents.file.default.label"),
-        description: I18n.t("upload_documents.file.default.description"),
-        item: reservation.listing
-      })
-
-      reservation.listing.build_upload_obligation(level: UploadObligation.default_level)
-
-      document.build_payment_document_info(
-        document_requirement: document_requirement,
-        payment_document: document
-      )
-
-      reservation.listing.upload_obligation.save
+  def remove_empty_documents
+    payment_documents.each do |document|
+      payment_documents.delete(document) if document.file.blank? && !document.is_file_required?
     end
   end
 
@@ -240,16 +283,6 @@ class ReservationRequest < Form
   def payment_attributes=(attributes)
   end
 
-  def remove_empty_optional_documents
-    if reservation.payment_documents.present?
-      reservation.payment_documents.each do |document|
-        if document.file.blank? && document.payment_document_info.document_requirement.item.upload_obligation.optional?
-          reservation.payment_documents.delete(document)
-        end
-      end
-    end
-  end
-
   def validate_acceptance_of_waiver_agreements
     return if @reservation.nil?
     @reservation.assigned_waiver_agreement_templates.each do |wat|
@@ -259,7 +292,10 @@ class ReservationRequest < Form
   end
 
   def validate_reservation
-    errors.add(:base, reservation.errors.full_messages.join("\n")) if reservation && !reservation.valid?
+    if reservation
+      errors.add(:dates, I18n.t('reservations_review.errors.date_in_past')) if reservation.periods.any?{ |p| p.date < Date.current }
+      errors.add(:base, reservation.errors.full_messages.join("\n")) if !reservation.valid?
+    end
   end
 
   def validate_empty_files

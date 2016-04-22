@@ -12,12 +12,15 @@ class CreditCard < ActiveRecord::Base
   belongs_to :instance_client
   belongs_to :instance
   belongs_to :payment_gateway
+  has_many :payments
+  has_many :authorized_payments, -> { authorized }, class_name: 'Payment'
   has_many :reservations
 
   before_validation :set_instance_client
   before_create :set_as_default
   before_create :store!
-  before_destroy :delete!
+  # we do not want to do this
+  #before_destroy :delete!
 
   scope :default, lambda { where(default_card: true).limit(1) }
 
@@ -26,7 +29,7 @@ class CreditCard < ActiveRecord::Base
   validates :instance_client, presence: true
 
   delegate :customer_id, to: :instance_client, allow_nil: true
-  delegate :expires_at, :last_4, to: :decorator, allow_nil: true
+  delegate :expires_at, :last_4, :name, to: :decorator, allow_nil: true
 
 
   [:number, :verification_value, :month, :year, :first_name, :last_name].each do |accessor|
@@ -83,7 +86,7 @@ class CreditCard < ActiveRecord::Base
   end
 
   def active?
-    available? && !expired?
+    available? && !expired? && (decorator.respond_to?(:active?) ? decorator.active? : true)
   end
 
   private
@@ -104,8 +107,10 @@ class CreditCard < ActiveRecord::Base
     self.response = original_response.to_yaml
 
     if success?
-      self.instance_client.response ||= self.response
-      self.instance_client.save!
+      if self.instance_client.response.blank?
+        self.instance_client.response ||= self.response
+        self.instance_client.save!
+      end
       true
     else
       errors.add(:base, original_response.params['error']['message'])

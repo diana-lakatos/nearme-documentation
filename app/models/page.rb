@@ -66,7 +66,8 @@ class Page < ActiveRecord::Base
     [
       :slug,
       :path,
-      [:path, I18n.l(Date.current, format: :long)]
+      [:path, self.class.last.try(:id).to_i + 1],
+      [:path, rand(1000000)]
     ]
   end
 end

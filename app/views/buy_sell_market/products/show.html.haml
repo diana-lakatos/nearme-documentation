@@ -15,7 +15,7 @@
         - if @product.has_reviews?
           .rating.product-rating
             %p= t 'buy_sell_market.products.labels.rating'
-            = render partial: 'stars', locals: { stars: @product.try(:average_rating).try(:round), count: @product.reviews_count }
+            = render partial: 'stars', locals: { stars: @product.try(:average_rating).try(:round), count: @product.reviews_count, max_rating: RatingConstants::MAX_RATING }
         - else
           %br
         = render 'above_cart_management', product: @product
@@ -101,7 +101,7 @@
                   %p= t 'buy_sell_market.products.labels.summary'
                 .span3
                   .rating
-                    = render partial: 'stars', locals: { stars: @product.try(:average_rating).try(:round) }
+                    = render partial: 'stars', locals: { stars: @product.try(:average_rating).try(:round), max_rating: RatingConstants::MAX_RATING }
               - if @rating_questions.present?
                 .row-fluid
                   - @rating_questions.each do |rating_question|
@@ -110,7 +110,7 @@
                         %p= rating_question.text
                       .span3
                         .rating
-                          = render partial: 'stars', locals: { stars:  (@product.question_average_rating[rating_question.id] || 0).round }
+                          = render partial: 'stars', locals: { stars:  (@product.question_average_rating[rating_question.id] || 0).round, max_rating: RatingConstants::MAX_RATING }
             = render partial: 'reviews/review', collection: @reviews
             = will_paginate_styled @reviews, param_name: 'reviews_page'
 

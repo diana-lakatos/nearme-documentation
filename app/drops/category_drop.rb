@@ -5,7 +5,11 @@ class CategoryDrop < BaseDrop
   #   id of category as integer
   # name
   #   name of category as string
-  delegate :id, :name, to: :category
+  #
+  # children
+  #   collection of subcategories
+
+  delegate :id, :name, :children, to: :category
 
   def initialize(category)
     @category = category

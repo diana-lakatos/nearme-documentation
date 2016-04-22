@@ -40,4 +40,54 @@ module ReservationsHelper
     booking_type
   end
 
+  def get_disabled_categories(listing)
+    if listing.categories.any?
+      (listing.categories.first.root.children - listing.categories).map(&:name)
+    end
+  end
+
+  def last_search
+    @last_search ||= JSON.parse(cookies[:last_search], symbolize_names: true) rescue {}
+  end
+
+  def get_categories_from_search
+    if last_search[:category_ids]
+      Category.where(id: last_search[:category_ids]).pluck(:name)
+    else
+      []
+    end
+  end
+
+  def current_user_open_host_reservations_count
+    Controller::GuestList.new(current_user).filter('unconfirmed').reservations.size
+  end
+
+  def current_user_open_user_reservations_count
+    current_user.reservations.no_recurring.not_archived.count
+  end
+
+  def current_user_open_all_reservations_count
+    current_user_open_host_reservations_count + current_user_open_user_reservations_count
+  end
+
+  def current_user_open_host_reservations_count_formatted
+    reservations_count_formatted(current_user_open_host_reservations_count)
+  end
+
+  def current_user_open_user_reservations_count_formatted
+    reservations_count_formatted(current_user_open_user_reservations_count)
+  end
+
+  def current_user_open_all_reservations_count_formatted
+    reservations_count_formatted(current_user_open_all_reservations_count)
+  end
+
+  private
+
+    def reservations_count_formatted(count)
+      if count > 0
+        "<span class='count'>#{count}</span>".html_safe
+      end
+    end
+
 end

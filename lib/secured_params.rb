@@ -184,6 +184,18 @@ class SecuredParams
     ]
   end
 
+  def custom_model_type
+    [
+      :name,
+      service_type_ids: [],
+      project_type_ids: [],
+      product_type_ids: [],
+      offer_type_ids: [],
+      reservation_type_ids: [],
+      instance_profile_type_ids: []
+    ]
+  end
+
   def category
     [
       :name,
@@ -199,7 +211,8 @@ class SecuredParams
       project_type_ids: [],
       product_type_ids: [],
       offer_type_ids: [],
-      instance_profile_type_ids: []
+      instance_profile_type_ids: [],
+      reservation_type_ids: []
     ]
   end
 
@@ -570,7 +583,9 @@ class SecuredParams
       :transactable_type,
       :name, :description,
       :availability_rules,
-      :availability_rules_attributes => nested(self.availability_rule)
+      availability_rules_attributes: nested(self.availability_rule),
+      schedule_exception_rules_attributes: nested(self.schedule_exception_rule)
+
     ]
   end
 
@@ -617,6 +632,7 @@ class SecuredParams
       :cancellation_policy_enabled,
       :cancellation_policy_penalty_percentage,
       :cancellation_policy_hours_for_cancellation,
+      :cancellation_policy_penalty_hours,
       :category_search_type,
       :default_search_view,
       :date_pickers_use_availability_rules,
@@ -810,6 +826,9 @@ class SecuredParams
       :facebook_url,
       :twitter_url,
       :gplus_url,
+      :instagram_url,
+      :youtube_url,
+      :rss_url,
       :color_blue,
       :color_red,
       :color_orange,
@@ -925,7 +944,7 @@ class SecuredParams
       attributes << {payment_subscription_attributes: nested(self.payment_subscription) }
       owner_klass = "MerchantAccountOwner::#{name.classify}MerchantAccountOwner".safe_constantize
       attributes << {owners_attributes: nested([:document] + owner_klass::ATTRIBUTES)} if owner_klass
-      attributes << {current_address_attributes: nested([:address]) }
+      attributes << {current_address_attributes: nested(self.address) }
       hsh[:"#{name}_merchant_account_attributes"] = attributes
       hsh
     end)
@@ -1027,8 +1046,16 @@ class SecuredParams
       upload_obligation_attributes: nested(self.upload_obligation),
       availability_template_attributes: nested(self.availability_template),
       additional_charge_types_attributes: nested(self.additional_charge_type),
+      customizations_attributes: nested(self.customization(transactable_type))
     ] +
-    Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
+    Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:service_types).try(:first)).try(:id))
+  end
+
+  def customization(transactable_type)
+    [
+      :custom_model_type_id,
+      properties: transactable_type ? transactable_type.custom_model_types.map{|cmt| Customization.public_custom_attributes_names(cmt)}.flatten : []
+    ]
   end
 
   def project(transactable_type, is_project_owner = false)
@@ -1062,6 +1089,22 @@ class SecuredParams
       upload_obligation_attributes: nested(self.upload_obligation),
       approval_requests_attributes: nested(self.approval_request)
     ] + Offer.public_custom_attributes_names((offer_type || PlatformContext.current.try(:instance).try(:offer_types).try(:first)).try(:id))
+  end
+
+  def reservation
+    [
+      :comment,
+      periods_attributes: nested(self.period),
+      additional_charges_attributes: nested(self.additional_charge)
+    ]
+  end
+
+  def period
+    [
+      :date,
+      :hours,
+      :description
+    ]
   end
 
   def reservation_type
@@ -1226,6 +1269,7 @@ class SecuredParams
       :mobile_phone,
       :name,
       :password,
+      :password_confirmation,
       :phone,
       :public_profile,
       :skills_and_interests,
@@ -1255,21 +1299,24 @@ class SecuredParams
   def default_profile
     [
       properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id)),
-      category_ids: []
+      category_ids: [],
+      customizations_attributes: nested(self.customization(PlatformContext.current.instance.default_profile_type))
     ]
   end
 
   def seller_profile
     [
       properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id)),
-      category_ids: []
+      category_ids: [],
+      customizations_attributes: nested(self.customization(PlatformContext.current.instance.seller_profile_type))
     ]
   end
 
   def buyer_profile
     [
       properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id)),
-      category_ids: []
+      category_ids: [],
+      customizations_attributes: nested(self.customization(PlatformContext.current.instance.buyer_profile_type))
     ]
   end
 
@@ -1373,16 +1420,17 @@ class SecuredParams
 
   def rating_systems
     [
-      rating_systems: self.rating_system
+      rating_systems_attributes: self.rating_system
     ]
   end
 
   def rating_system
     [
+      :id,
       :subject,
       :active,
       :transactable_type_id,
-      rating_hints_attributes: self.rating_hint,
+      rating_hints_attributes: self.nested(self.rating_hint),
       rating_questions_attributes: self.nested(rating_question)
     ]
   end
@@ -1396,16 +1444,18 @@ class SecuredParams
 
   def rating_question
     [
+      :id,
       :text,
     ]
   end
 
-  def reservation_request
+  def reservation_request(reservation_type)
     [
       :quantity,
       :book_it_out,
       :exclusive_price,
       :start_minute,
+      :start_time,
       :end_minute,
       :guest_notes,
       :payment_method_id,
@@ -1414,13 +1464,18 @@ class SecuredParams
       :delivery_ids,
       :dates,
       :total_amount_check,
+      properties: Reservation.public_custom_attributes_names(reservation_type),
       dates: [],
+      category_ids: [],
       additional_charge_ids: [],
       waiver_agreement_templates: [],
+      shipments_attributes: nested(self.shipment),
       payment_attributes: nested(self.payment),
       documents: nested(self.payment_document),
       documents_attributes: nested(self.payment_document),
-      shipments_attributes: nested(self.shipment)
+      payment_documents_attributes: nested(self.payment_document),
+      owner_attributes: nested(self.user),
+      address_attributes: nested(self.address)
     ]
   end
 
@@ -1428,6 +1483,7 @@ class SecuredParams
     [
       :payment_method_id,
       :payment_method_nonce,
+      :chosen_credit_card_id,
       credit_card_attributes: nested(self.credit_card)
     ]
   end
@@ -1436,6 +1492,7 @@ class SecuredParams
     [
       :payment_method_id,
       :credit_card_id,
+      :chosen_credit_card_id,
       credit_card_attributes: nested(self.credit_card)
     ]
   end

@@ -1,4 +1,5 @@
 class TransactableTypeDrop < BaseDrop
+  include CategoriesHelper
 
   attr_reader :transactable_type
 
@@ -142,6 +143,14 @@ class TransactableTypeDrop < BaseDrop
   # array of category objects for this marketplace's service types
   def searchable_categories
     @transactable_type.categories.searchable.roots
+  end
+
+  # returns hash of categories { "<name>" => { "name" => '<translated_name', "children" => [<collection of chosen values] } }
+  def categories
+    if @categories.nil?
+      @categories = build_categories_hash(@transactable_type.categories.roots)
+    end
+    @categories
   end
 
   def class_name

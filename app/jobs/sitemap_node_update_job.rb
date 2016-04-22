@@ -23,14 +23,14 @@ class SitemapNodeUpdateJob < Job
 
   def update(domain)
     sitemap_xml = get_sitemap_xml(domain)
-    
+
     outdated_node = sitemap_xml.at(find_node_by_loc(node(domain).location)).parent
     previous_node = outdated_node.previous_element
 
     outdated_node.remove
     previous_node.add_next_sibling(node(domain).to_xml.squish)
 
-    save_changes!(domain, sitemap_xml)   
+    save_changes!(domain, sitemap_xml)
   end
 
   def destroy(domain)

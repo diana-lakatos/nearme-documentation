@@ -7,12 +7,14 @@ class Dashboard::Company::PaymentsController < Dashboard::Company::BaseControlle
       payment = @order.payment
       if payment.manual_payment?
         @order.payment_state = 'paid'
+        @order.touch(:archived_at)
         @order.save!
 
         @order.shipments.each { |shipment| shipment.ready! }
       else
         payment.capture!
         @order.update_order
+        @order.touch(:archived_at)
         flash[payment.paid? ? :notice : :error] = t("flash_messages.payments.capture_#{payment.paid? ? 'success' : 'failed'}")
       end
     else
@@ -25,8 +27,7 @@ class Dashboard::Company::PaymentsController < Dashboard::Company::BaseControlle
   end
 
   def refund
-    @payment.refund!
-    if @payment.refunded? && @order.update_order
+    if @payment.refund! && @order.update_order
       flash[:notice] = t('flash_messages.payments.refunded')
     else
       flash[:error] = t('flash_messages.payments.refund_failed')

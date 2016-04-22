@@ -474,3 +474,6 @@ body.reservations-review, body.reservations-create {
   }
 }
 
+.reservation-wizard select option[disabled] {
+    display: none;
+}

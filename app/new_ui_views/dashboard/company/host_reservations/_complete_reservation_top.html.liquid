@@ -1,0 +1,11 @@
+<h2>{{ 'dashboard.host_reservations.complete_reservation.client' | translate}}</h2>
+<p><a href='{{ reservation.owner.user_profile_url }}'>{{ reservation.owner.name }}</a></p>
+
+<h2>{{ 'dashboard.host_reservations.complete_reservation.date_and_time' | translate }}</h2>
+<p>{{ reservation.starts_at | localize }}</p>
+
+{% if reservation.rejection_reason != blank %}
+  <h2>{{ 'dashboard.host_reservations.complete_reservation.rejection_reason' | translate }}</h2>
+  <p>{{ reservation.rejection_reason }}</p>
+{% endif %}
+<hr>

@@ -2,7 +2,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   SEPARATE_TEST_ACCOUNTS = true
 
-  ATTRIBUTES = %w(currency bank_routing_number bank_account_number tos account_type business_tax_id business_vat_id ssn_last_4 personal_id_number first_name last_name)
+  ATTRIBUTES = %w(account_type first_name last_name currency bank_routing_number bank_account_number tos  business_tax_id business_vat_id ssn_last_4 personal_id_number )
   ACCOUNT_TYPES = %w(individual company)
 
   SUPPORTED_CURRENCIES = {
@@ -19,12 +19,22 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   has_one :current_address, class_name: 'Address', as: :entity
 
-  validates_presence_of   :bank_routing_number, message: "Bank routing number can't be be blank"
-  validates_presence_of   :bank_account_number, message: "Bank account number can't be blank"
-  validates_presence_of   :last_name, message: "First name can't be blank"
-  validates_presence_of   :first_name, message: "Last name can't be blank"
-  validates_inclusion_of  :account_type, in: ACCOUNT_TYPES, message: 'Account type should be selected'
-  validates_acceptance_of :tos, message: 'Terms of Services must be accepted'
+  validates_presence_of   :bank_routing_number, :bank_account_number, :last_name, :first_name
+  validates_inclusion_of  :account_type, in: ACCOUNT_TYPES
+  validates_acceptance_of :tos
+  validates_associated :owners
+  validate  :check_address_current_address
+
+  def check_address_current_address
+    return if current_address.blank?
+
+    current_address.parse_address_components!
+    current_address.errors.clear
+
+    if current_address.check_address && current_address.errors.any?
+      errors.add(:current_address, :inacurate)
+    end
+  end
 
   accepts_nested_attributes_for :owners, allow_destroy: true
   accepts_nested_attributes_for :current_address
@@ -63,7 +73,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   def create_params
     update_params.deep_merge(
       managed: true,
-      country: merchantable.iso_country_code,
+      country: address.iso_country_code,
       email: merchantable.creator.email,
       tos_acceptance: {
         ip: merchantable.creator.current_sign_in_ip,
@@ -131,7 +141,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
     {
       bank_account: {
-        country: merchantable.iso_country_code,
+        country: address.iso_country_code,
         currency: get_currency,
         account_number: bank_account_number,
         routing_number: bank_routing_number
@@ -140,8 +150,6 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   end
 
   def address_hash
-    address = current_address || merchantable.company_address
-
     {
       country: address.iso_country_code,
       state: address.state,
@@ -150,6 +158,10 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       line1: address.address,
       line2: address.address2
     }
+  end
+
+  def address
+    current_address || merchantable.company_address || merchantable.creator.try(:current_address) || Address.new
   end
 
   def change_state_if_needed(stripe_account, &block)
@@ -168,7 +180,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   end
 
   def get_currency
-    case merchantable.iso_country_code
+    case address.iso_country_code
     when 'US'
       'USD'
     when 'AU'
@@ -180,20 +192,30 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     end
   end
 
+  def has_valid_address?
+    address.parse_address_components!
+    address.errors.clear
+    address.check_address.blank?
+  end
+
   def location
-    country = merchantable.iso_country_code.downcase
+    country = address.iso_country_code.try(:downcase)
     country.in?(%w(us ca au jp)) ? country : 'euuk'
   end
 
   def needs?(attribute)
-    self.data[:fields_needed].try(:include?, attribute)
+    fields_needed.try(:include?, attribute)
+  end
+
+  def fields_needed
+    self.data[:fields_needed] || []
   end
 
   private
 
   def upload_documents(stripe_account)
     files_data = owners.map { |owner| owner.upload_document(stripe_account.id) }
-    if files_data.compact!.present?
+    if files_data.compact.present?
       stripe_account.legal_entity.verification.document = files_data[0].id
       if stripe_account.legal_entity.additional_owners
         files_data[1..-1].each_with_index do |file_data, index|

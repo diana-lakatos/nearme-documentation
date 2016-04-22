@@ -1,7 +1,6 @@
 module RatingConstants
-  MAX_QUESTIONS_QUANTITY = 5
   MAX_RATING = 5
-  VALID_VALUES = (1..MAX_QUESTIONS_QUANTITY).freeze
+  VALID_VALUES = (1..MAX_RATING).freeze
 
   # guest rates host
   HOST = 'host'.freeze

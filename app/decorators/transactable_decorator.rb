@@ -61,14 +61,18 @@ class TransactableDecorator < Draper::Decorator
   end
 
   def show_url(options = {})
+    options.reverse_merge!(host: PlatformContext.current.decorate.host)
     build_link('url', options)
+  end
+
+  def customizations_for(custom_model)
+    customizations.select{|c| c.custom_model_type == custom_model}.sort_by{ |c| c.created_at || 1.day.from_now }
   end
 
   protected
 
   def build_link(suffix = 'path', options = {})
     options.merge!(language: I18n.locale) if PlatformContext.current.try(:instance).try(:available_locales).try(:many?)
-    options.merge!(host: PlatformContext.current.decorate.host) if suffix == 'url'
     if transactable_type.show_path_format
       case transactable_type.show_path_format
       when "/:transactable_type_id/:id"

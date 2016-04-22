@@ -1,0 +1,9 @@
+Hello, {{ user.first_name }}?
+
+We have noticed you have just canceled your reservation.
+
+The cancelation policy you agreed to is that you can cancel without fee up to {{ reservation.cancellation_policy_hours_for_cancellation }} hours before reservation starts. You have canceled it after this period, hence we have charged you for {{ reservation.cancellation_policy_penalty_hours }} hours plus service fee.
+
+The total cancelation fee is {{ reservation.formatted_total_amount }}
+
+We're always happy to help! If you have any questions about your booking, please send an email to {{ platform_context.support_email }} or contact us at {{ platform_context.phone_number }}.

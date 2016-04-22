@@ -1,0 +1,15 @@
+<h1>Tech-savvy, anywhere, anytime</h1>
+<h2><span>Hire your own local tech ninja</span></h2>
+<p>select help category:</p>
+
+<div class='category-multiple-choice'>
+  {% for root_category in transactable_type.searchable_categories %}
+    {% for category in root_category.children %}
+      <div class='category'>
+        <input type='checkbox' value="{{ category.id }}" name='category_ids[]' id='{{ category.name }}' />
+        <label for='{{ category.name}}'></label>
+        <div>{{ category.name }}</div>
+      </div>
+    {% endfor %}
+  {% endfor %}
+</div>

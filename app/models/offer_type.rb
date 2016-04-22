@@ -12,7 +12,7 @@ class OfferType < TransactableType
     @offer_type_drop ||= OfferTypeDrop.new(self)
   end
 
-  def wizard_path
+  def wizard_path(options = {})
     "/offer_types/#{id}/offer_wizard/new"
   end
 

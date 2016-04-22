@@ -31,6 +31,7 @@
       %a.nav-link.dropdown-toggle.user-dropdown{"data-toggle" => "dropdown", href: "#"}
         %span.text= current_user.first_name
         %span.icon.ico-user
+        = current_user_open_all_reservations_count_formatted
         %span.ico-chevron-down
       .clearfix
       %ul.dropdown-menu
@@ -42,22 +43,36 @@
         - if HiddenUiControls.find('main_menu/manage_items').visible? && platform_context.white_label_company_user?(current_user) && current_user.registration_completed?
           - platform_context.transactable_types.decorate.each do |transactable_type|
             %li
+              - if is_i18n_set?("top_navbar.manage_bookable.#{transactable_type.name}")
+                - title = t("top_navbar.manage_bookable.#{transactable_type.name}")
+              - else
+                - title = t('top_navbar.manage_bookable', bookable_noun: transactable_type.translated_bookable_noun(10))
               = link_to transactable_type.manage_transactables_path, class: 'nav-link dropdown-toggle' do
-                %div.truncate= t 'top_navbar.manage_bookable', bookable_noun: transactable_type.translated_bookable_noun(10)
+                %div.truncate= title
 
-        - if platform_context.bookable? && HiddenUiControls.find('main_menu/my_bookings').visible?
+        - if platform_context.bookable? && current_instance.split_registration && current_user.seller_profile.present?
+          %li
+            = link_to main_app.dashboard_company_host_reservations_path, class: 'nav-link dropdown-toggle' do
+              %span= t 'top_navbar.bookings_received'
+              = current_user_open_host_reservations_count_formatted
+
+        - if (platform_context.bookable? && HiddenUiControls.find('main_menu/my_bookings').visible?) && (!current_instance.split_registration || current_user.buyer_profile.present?)
           %li
             = link_to main_app.dashboard_user_reservations_path, class: 'nav-link dropdown-toggle' do
               %span= t 'top_navbar.my_bookings'
-        - if subscribable? && HiddenUiControls.find('main_menu/my_subscriptions').visible?
+              = current_user_open_user_reservations_count_formatted
+
+        - if subscribable? && HiddenUiControls.find('main_menu/my_subscriptions').visible? && (!current_instance.split_registration || current_user.buyer_profile.present?)
           %li
             = link_to main_app.active_dashboard_user_recurring_bookings_path, class: 'nav-link dropdown-toggle' do
               %span= t 'top_navbar.my_subscriptions'
-        - if platform_context.buyable? && HiddenUiControls.find('main_menu/my_orders').visible?
+
+        - if platform_context.buyable? && HiddenUiControls.find('main_menu/my_orders').visible? && (!current_instance.split_registration || current_user.buyer_profile.present?)
           %li
             = link_to main_app.dashboard_orders_path, class: 'nav-link dropdown-toggle' do
               %span= t 'top_navbar.my_orders'
-        - if HiddenUiControls.find('main_menu/my_bids').visible? && platform_context.biddable?
+
+        - if HiddenUiControls.find('main_menu/my_bids').visible? && platform_context.biddable? && (!current_instance.split_registration || current_user.buyer_profile.present?)
           %li
             = link_to main_app.dashboard_user_bids_path, class: 'nav-link dropdown-toggle' do
               %span= t 'top_navbar.user_bids'
@@ -103,9 +118,11 @@
   - else
     %li.divider-vertical
     %li
-      = link_to_registration get_return_to_url, platform_context.secured_constraint, secure_links?, :class => "nav-link header-first", data: { modal: true, 'modal-class' => 'sign-up-modal' } do
+      - options = {}
+      - options[:role] = :buyer if current_instance.split_registration?
+      = link_to_registration get_return_to_url(dashboard_user_reservations_path, options), platform_context.secured_constraint, secure_links?, :class => "nav-link header-first", data: { modal: true, 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } do
         %span= t 'top_navbar.sign_up'
     %li.divider-vertical
     %li
-      = link_to_login url_options: get_return_to_url, class: "nav-link header-second", data: { modal: true, 'modal-class' => 'sign-up-modal' } do
+      = link_to_login url_options: get_return_to_url, class: "nav-link header-second", data: { modal: true, 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } do
         %span= t 'top_navbar.log_in'

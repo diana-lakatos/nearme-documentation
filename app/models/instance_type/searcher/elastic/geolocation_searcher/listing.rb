@@ -12,8 +12,8 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
 
     if postgres_filters?
       listings_scope = available_listings(listings_scope)
-      listings_scope = price_filter(listings_scope)
       order_ids = listing_ids[@offset..(@to + 5)]
+      order_ids = listing_ids if order_ids.blank?
     else
       @search_results_count = fetcher.response[:hits][:total]
       order_ids = listing_ids
@@ -34,8 +34,8 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
 
   def max_price
     return 0 if !@transactable_type.show_price_slider || results.blank?
-    @max_fixed_price ||= (results.map(&:fixed_price_cents).compact.max || 0).to_f / 100
-    @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
+    max = fetcher.response[:aggregations]["filtered_price_range"]["maximum_price"].try(:[],'value') || 0
+    max / 100
   end
 
   private

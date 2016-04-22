@@ -72,7 +72,8 @@ class Offer < ActiveRecord::Base
   def slug_candidates
     [
       :name,
-      [:name, DateTime.now.strftime("%b %d %Y")]
+      [:name, self.class.last.try(:id).to_i + 1],
+      [:name, rand(1000000)]
     ]
   end
 

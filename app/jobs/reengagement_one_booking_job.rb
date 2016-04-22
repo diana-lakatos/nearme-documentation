@@ -13,5 +13,4 @@ class ReengagementOneBookingJob < Job
       end
     end
   end
-
 end

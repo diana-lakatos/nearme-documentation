@@ -42,6 +42,10 @@ class Reservation::DailyPriceCalculator
     real_contiguous_blocks.map{|group| group.many? ? group.size - 1 : group.size }.sum
   end
 
+  def unit_price
+    listing.try(:prices_by_days).values.first if listing.try(:prices_by_days)
+  end
+
   private
 
   # Price for contiguous days in as a Money object

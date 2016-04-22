@@ -24,11 +24,16 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
       flash[:warning] = t('flash_messages.manage.reservations.reservation_already_confirmed')
     else
       if @recurring_booking.confirm
-        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::ManuallyConfirmed, @recurring_booking.id)
         event_tracker.confirmed_a_recurring_booking(@recurring_booking)
+        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::ManuallyConfirmed, @recurring_booking.id)
         track_recurring_booking_update_profile_informations
         event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
-        flash[:success] = t('flash_messages.manage.reservations.reservation_confirmed')
+        if @recurring_booking.paid_until.present?
+          flash[:success] = t('flash_messages.manage.reservations.reservation_confirmed')
+        else
+          @recurring_booking.overdue!
+          flash[:warning] = t('flash_messages.manage.reservations.reservation_confirmed_but_not_charged')
+        end
       else
          flash[:error] = [
           t('flash_messages.manage.reservations.reservation_not_confirmed'),

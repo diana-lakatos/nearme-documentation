@@ -13,57 +13,24 @@
 
       .col-sm-5
         .order-status
-          %span{class: reservation.state }
-            = t("reservations.states.#{reservation.state}")
+          - if reservation.archived_at.present? && reservation.state == 'confirmed'
+            %span{class: 'confirmed' }
+              = t("reservations.states.completed")
+          - else
+            %span{class: reservation.state }
+              = t("reservations.states.#{reservation.state}")
 
 
-  - if reservation.state == 'unconfirmed'
+  - if reservation.state == 'unconfirmed' && !reservation.archived?
     .alert.alert-warning
       #{t('dashboard.user_reservations.pending_confirmation')} <strong>#{reservation.time_to_expiry(reservation.expire_at)}</strong>.
 
-    - if reservation.payment.active_merchant_payment?
+    - if reservation.payment.try(:active_merchant_payment?)
       - if reservation.payment.billing_authorizations.present?
         .alert.alert-warning= I18n.t('dashboard.user_reservations.money_info')
 
 
-  .row
-    .col-sm-3
-      - if reservation.listing.present?
-        %h3= t('dashboard.user_reservations.address')
-
-        %p
-          = reservation.listing.location.address.gsub(', ', '<br>').html_safe
-          %br/
-          [
-          = link_to t('dashboard.user_reservations.show_on_map'), "http://maps.apple.com/?q=#{reservation.listing.location.address}", target: '_blank'
-          ]
-      - else
-        %h3= t('dashboard.user_reservations.listing_deleted')
-
-    .col-sm-2
-      %h3= t('dashboard.user_reservations.quantity')
-      %p= reservation.quantity
-
-    .col-sm-3
-      - requested_dates = reservation.long_dates.split(' ; ')
-      %h3= t('dashboard.user_reservations.requested_dates', count: requested_dates.count)
-      %ul.dates
-        - requested_dates.each do |s|
-          %li= s
-
-    .col-sm-3
-      %h3= t('dashboard.user_reservations.requested_time')
-      %p.times
-        - if reservation.periods.first.read_attribute(:start_minute).present?
-          - reservation_period = reservation.periods.first.decorate
-          = reservation_period.hourly_summary(false).html_safe
-        - else
-          = t('dashboard.user_reservations.not_available_na')
-
-    .col-sm-1
-      %h3= t('dashboard.user_reservations.total')
-      %p
-        %b= reservation.total_price
+  = render 'reservation_details', reservation: reservation, for_host: false
 
 
   .row
@@ -98,9 +65,23 @@
           - if reservation.shipments.outbound.first.try(:tracking_url_provider).present?
             = link_to t('dashboard.user_reservations.track_package'), reservation.shipments.outbound.first.try(:tracking_url_provider), class: 'btn btn-default'
 
+
+        - if reservation.can_approve_or_decline_checkout?
+          = form_for reservation.payment, method: :post, url: approve_dashboard_user_reservation_payment_path(reservation, reservation.payment) do |f|
+            = f.submit I18n.t('general.approve'), data: { confirm: t('confirmations.are_you_sure') }, class: 'btn btn-success'
+
+
+          = link_to t('general.reject'), rejection_form_dashboard_user_reservation_payment_path(reservation, reservation.payment), class: "btn btn-warning", data: { modal: "true"}
+        - if reservation.has_to_update_credit_card?
+          %span= link_to t('dashboard.user_reservations.update_credit_card'), edit_dashboard_user_reservation_payment_path(reservation, reservation.payment), class: "btn btn-warning", data: { modal: "true"}
+          .cc-error= t('dashboard.user_reservations.must_change_credit_card')
+
         - unless reservation.archived?
-          = form_for reservation, method: :post, url: user_cancel_dashboard_user_reservation_path(reservation) do |f|
-            = f.submit I18n.t('general.cancel'), data: { confirm: t('dashboard.user_reservations.cancel_confirmation') }, class: 'btn btn-warning'
+          - if reservation.cancelable?
+            = form_for reservation, method: :post, url: user_cancel_dashboard_user_reservation_path(reservation) do |f|
+              = f.submit I18n.t('general.cancel'), data: { confirm: t('dashboard.user_reservations.cancel_confirmation') }, class: 'btn btn-warning'
+            - if reservation.penalty_charge_apply?
+              .cc-error= t('dashboard.user_reservations.penalty_charge_will_apply', penalty_hours: reservation.cancellation_policy_penalty_hours, penalty_fee: humanized_money_with_cents_and_symbol(reservation.penalty_fee), hours_for_cancellation: reservation.cancellation_policy_hours_for_cancellation)
 
           - if reservation.remote_payment? && !reservation.paid? && !reservation.archived?
             = link_to t('dashboard.user_reservations.pay_now'), remote_payment_dashboard_user_reservation_path(reservation), class: 'btn btn-default'

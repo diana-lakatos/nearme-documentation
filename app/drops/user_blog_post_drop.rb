@@ -39,7 +39,7 @@ class UserBlogPostDrop < BaseDrop
 
   # check if author's avatar can be displayed
   def show_author_avatar?
-    @blog_post.author_avatar.present? && @blog_post.author_name.strip.downcase == @blog_post.user.name.strip.downcase
+    @blog_post.author_avatar.present?
   end
 
   # url for hero image

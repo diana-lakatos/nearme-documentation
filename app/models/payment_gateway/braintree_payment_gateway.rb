@@ -18,17 +18,10 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
     ActiveMerchant::Billing::BraintreeBlueGateway
   end
 
-  # This is work around for errors send from Braintree
-  # while refunding transaction that wasn't settled yet
-
-  def gateway_refund(amount, token, options)
+  def payment_settled?(token)
     configure_braintree_class
     transaction = Braintree::Transaction.find(token)
-    if transaction.status == 'submitted_for_settlement' && (transaction.amount * 100).to_i == amount
-      gateway_void(token)
-    else
-      super
-    end
+    transaction.status == 'settled'
   end
 
   def max_refund_attempts

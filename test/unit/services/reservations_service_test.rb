@@ -18,12 +18,7 @@ class ReservationsServiceTest < ActiveSupport::TestCase
     end
 
     should 'documents are built' do
-      @reservation_service.build_documents
       assert @reservation_request.reservation.payment_documents.present?
-    end
-
-    should 'documents are not built' do
-      assert @reservation_request.reservation.payment_documents.empty?
     end
 
   end

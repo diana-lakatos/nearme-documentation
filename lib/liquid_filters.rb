@@ -20,12 +20,20 @@ module LiquidFilters
     end
   end
 
+  def is_included_in_array(array, el)
+    array.include?(el)
+  end
+
   def in_groups_of(array, integer)
     array.in_groups_of(integer)
   end
 
   def pluralize(string)
     string.try(:pluralize)
+  end
+
+  def compact(array)
+    array.compact
   end
 
   def location_path(transactable_type, location)
@@ -121,10 +129,6 @@ module LiquidFilters
     money_without_cents_and_with_symbol(money)
   end
 
-  def price_with_cents_with_currency(money)
-    humanized_money_with_symbol(money)
-  end
-
   def space_listing_placeholder_path(height, width)
     ActionController::Base.helpers.asset_url(Placeholder.new(height: height.to_i, width: width.to_i).path)
   end
@@ -149,8 +153,10 @@ module LiquidFilters
   alias_method :t, :translate
 
   def localize(datetime, format = 'long')
-    datetime = datetime.to_date if datetime.is_a?(String)
-    I18n.l(datetime, format: format.to_sym)
+    if datetime
+      datetime = datetime.to_date if datetime.is_a?(String)
+      I18n.l(datetime, format: format.to_sym)
+    end
   end
   alias_method :l, :localize
 
@@ -165,8 +171,15 @@ module LiquidFilters
     end
   end
 
+  def parse_to_minute(string)
+    time = parse_time(string)
+    hour = time.strftime('%H')
+    minute = time.strftime('%M')
+    hour.to_i * 60 + minute.to_i
+  end
+
   def to_date(datetime)
-    datetime.to_date
+    datetime.try(:to_date)
   end
 
   def custom_sanitize(html = '')
@@ -289,6 +302,11 @@ module LiquidFilters
     Rails.application.routes.url_helpers.try(url_name, *args)
   end
 
+  # Changes text into datetime, for example today, 3 days ago etc.
+  def parse_time(time)
+    Chronic.parse(time)
+  end
+
   # Make the text html_safe; mainly used for testing the
   # sanitization in Liquid::Variable to make sure that
   # html_safe text is not escaped
@@ -305,6 +323,14 @@ module LiquidFilters
   def already_favorite(user, object)
     return false unless user.present?
     user.user.default_wish_list.items.where(wishlistable_id: object.id, wishlistable_type: object.class_name).exists?
+  end
+
+  def titleize(text)
+    text.titleize
+  end
+
+  def querify(hash)
+    hash.to_query
   end
 
 end

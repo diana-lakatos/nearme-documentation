@@ -40,7 +40,7 @@ class MailerJob < Job
   def perform
     raise "Unknown PlatformContext" if PlatformContext.current.nil?
     begin
-    @mailer_class.send(@mailer_method, *@args).deliver
+      @mailer_class.send(@mailer_method, *@args).deliver
     rescue Net::SMTPSyntaxError
     end
   end
@@ -48,5 +48,4 @@ class MailerJob < Job
   def self.priority
     0
   end
-
 end

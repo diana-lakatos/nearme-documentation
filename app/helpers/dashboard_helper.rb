@@ -12,7 +12,11 @@ module DashboardHelper
     if PlatformContext.current.instance.buyable?
       [[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.orders'), 'orders'], [t('dashboard.analytics.product_views'), 'product_views']]
     else
-      [[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.bookings'), 'bookings'], [t('dashboard.analytics.location_views'), 'location_views']]
+      if ServiceType.where(skip_location: false).count.zero?
+        [[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.bookings'), 'bookings']]
+      else
+        [[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.bookings'), 'bookings'], [t('dashboard.analytics.location_views'), 'location_views']]
+      end
     end
   end
 
@@ -185,7 +189,7 @@ module DashboardHelper
 
   def dashboard_simple_form_for(resource, options = {}, &block)
     options[:wrapper] = :dashboard_form
-
+    options[:error_class] = :field_with_errors
 
     options[:wrapper_mappings] = {
       check_boxes: :dashboard_radio_and_checkboxes,
@@ -212,7 +216,20 @@ module DashboardHelper
 
   def dashboard_nav_user_reservations_label
     reservations_count = current_user.reservations.no_recurring.not_archived.count
-    reservations_count > 0 ? t('dashboard.nav.user_reservations_count_html', count: reservations_count) : t('dashboard.nav.user_reservations')
+    out = t('dashboard.nav.user_reservations')
+    if reservations_count > 0
+      out = "#{out} <span>#{reservations_count}</span>".html_safe
+    end
+    out
+  end
+
+  def dashboard_nav_host_reservations_label
+    reservations_count = Controller::GuestList.new(current_user).filter('unconfirmed').reservations.size
+    out = t('dashboard.nav.host_reservations')
+    if reservations_count > 0
+      out = "#{out} <span>#{reservations_count}</span>".html_safe
+    end
+    out
   end
 
   def dashboard_transactable_photos_to_image_input_collection(photos)

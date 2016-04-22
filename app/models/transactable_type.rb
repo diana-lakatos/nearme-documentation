@@ -19,6 +19,8 @@ class TransactableType < ActiveRecord::Base
   has_many :reviews, dependent: :destroy
   has_many :category_linkings, as: :category_linkable, dependent: :destroy
   has_many :categories, through: :category_linkings
+  has_many :custom_model_type_linkings, as: :linkable
+  has_many :custom_model_types, through: :custom_model_type_linkings
   has_many :custom_validators, as: :validatable
   has_many :additional_charge_types, as: :additional_charge_type_target
   has_many :transactable_type_instance_views, dependent: :destroy
@@ -49,6 +51,7 @@ class TransactableType < ActiveRecord::Base
   validates :category_search_type, presence: true, if: -> (transactable_type){ transactable_type.show_categories }
 
   accepts_nested_attributes_for :custom_attributes, update_only: true
+  accepts_nested_attributes_for :rating_systems, update_only: true
 
   delegate :translated_bookable_noun, :translation_namespace, :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
     :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
@@ -58,7 +61,8 @@ class TransactableType < ActiveRecord::Base
   def slug_candidates
     [
       :name,
-      [:name, I18n.l(Date.current, format: :long, default: '%Y-%m-%d')]
+      [:name, self.class.last.try(:id).to_i + 1],
+      [:name, rand(1000000)]
     ]
   end
 

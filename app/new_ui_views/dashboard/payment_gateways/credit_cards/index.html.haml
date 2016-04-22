@@ -1,0 +1,48 @@
+- title t "dashboard.credit_cards.manage"
+- content_for :page_header do
+  %h1
+    %span.hidden-xs= t('dashboard.credit_cards.manage')
+    = t('dashboard.credit_cards.credit_cards')
+
+  .options.visible-sm.visible-xs
+    = link_to new_dashboard_payment_gateway_credit_card_path(@payment_gateway), class: "btn btn-primary" do
+      %span.fa.fa-plus
+      = t('dashboard.items.new_listing_short')
+
+
+- content_for :panel_navigation_links do
+  - @payment_gateways.find_each do |payment_gateway|
+    %li{class: payment_gateway == @payment_gateway ? "active" : ""}
+      = link_to payment_gateway.name, dashboard_payment_gateway_credit_cards_path(payment_gateway)
+
+
+- content_for :panel_options do
+  .pull-right.options
+
+    = link_to new_dashboard_payment_gateway_credit_card_path(@payment_gateway), class: "btn btn-primary navbar-btn" do
+      %span.fa.fa-plus
+      = t('dashboard.credit_cards.new')
+
+
+%nav.panel-nav-mobile.visible-sm.visible-xs{role: 'navigation'}
+  = dropdown_menu @payment_gateway.name, { wrapper_class: 'links' } do
+    = yield :panel_navigation_links
+
+- if @payment_gateways.size > 3
+  .row
+    .col-md-3
+      %nav.hidden-xs.hidden-sm{role: 'navigation'}
+        %ul.nav.nav-pills.nav-stacked
+          = yield :panel_navigation_links
+
+    .col-md-9
+      %nav.panel-nav.hidden-xs.hidden-sm
+        = yield :panel_options
+      = render 'credit_card'
+
+- else
+  %nav.panel-nav.hidden-xs.hidden-sm
+    %ul.tabs.pull-left
+      = yield :panel_navigation_links
+    = yield :panel_options
+  = render 'credit_card'

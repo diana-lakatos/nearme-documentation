@@ -40,6 +40,7 @@ class User < ActiveRecord::Base
   attr_accessor :verify_associated
   attr_accessor :skip_password, :verify_identity, :custom_validation, :accept_terms_of_service, :verify_associated,
                 :skip_validations_for
+  attr_accessor :force_profile
 
   serialize :sms_preferences, Hash
   serialize :instance_unread_messages_threads_count, Hash
@@ -81,6 +82,7 @@ class User < ActiveRecord::Base
   has_many :followers, through: :reverse_relationships, source: :follower
   has_many :instance_clients, as: :client, dependent: :destroy
   has_many :industries, through: :user_industries
+  has_many :payments, foreign_key: 'payer_id'
   has_many :instance_admins, foreign_key: 'user_id', dependent: :destroy
   has_many :listings, through: :locations, class_name: 'Transactable', inverse_of: :creator
   has_many :listing_reservations, class_name: 'Reservation', through: :listings, source: :reservations, inverse_of: :creator
@@ -116,8 +118,10 @@ class User < ActiveRecord::Base
   has_many :wish_lists, dependent: :destroy
   has_many :dimensions_templates, as: :entity
   has_many :user_profiles
+  has_many :inappropriate_reports, dependent: :destroy
   has_many :outgoing_phone_calls, foreign_key: :caller_id, class_name: 'PhoneCall'
   has_many :incoming_phone_calls, foreign_key: :receiver_id, class_name: 'PhoneCall'
+  has_many :spam_reports
 
   has_one :blog, class_name: 'UserBlog'
   has_one :current_address, class_name: 'Address', as: :entity
@@ -204,7 +208,7 @@ class User < ActiveRecord::Base
   scope :with_date, ->(date) { where(created_at: date) }
 
   scope :admin,     -> { where(admin: true) }
-  scope :not_admin, -> { where("admin iS NULL") }
+  scope :not_admin, -> { where("admin is NULL or admin is false") }
   scope :with_joined_project_collaborations, -> { joins("LEFT OUTER JOIN project_collaborators pc ON users.id = pc.user_id AND (pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)")}
   scope :created_projects, -> { joins('LEFT OUTER JOIN projects p ON users.id = p.creator_id') }
   scope :featured, -> { where(featured: true) }
@@ -357,6 +361,13 @@ class User < ActiveRecord::Base
   end
 
   def custom_validators
+    case force_profile
+    when 'buyer'
+      get_buyer_profile
+    when 'seller'
+      get_seller_profile
+    end
+    self.force_profile = nil
     profiles = (UserProfile::PROFILE_TYPES - Array(skip_validations_for).map(&:to_s)).map do |profile_type|
       send("#{profile_type}_profile")
     end.compact
@@ -594,7 +605,14 @@ class User < ActiveRecord::Base
   end
 
   def social_friends_ids
-    authentications.collect{|a| a.social_connection.connections rescue nil}.flatten.compact
+    authentications.collect do |a|
+      begin
+        a.social_connection.try(:connections)
+      # We need Exception => e as Authentication::InvalidToken inherits directly from Exception not StandardError
+      rescue Exception => e
+        nil
+      end
+    end.flatten.compact
   end
 
   def friends_know_host_of(listing)
@@ -933,6 +951,7 @@ class User < ActiveRecord::Base
   def recalculate_seller_average_rating!
     seller_average_rating = reviews_about_seller.average(:rating) || 0.0
     self.update_column(:seller_average_rating, seller_average_rating)
+    ElasticBulkUpdateJob.perform Transactable, listings.searchable.map{ |listing| [listing.id, { seller_average_rating: seller_average_rating }]}
     touch
   end
 

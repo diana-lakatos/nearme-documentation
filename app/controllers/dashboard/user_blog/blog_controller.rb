@@ -27,6 +27,9 @@ class Dashboard::UserBlog::BlogController < Dashboard::UserBlog::BaseController
     when 'header_logo'
       @blog.remove_header_logo!
       @blog.save!
+    when 'header_image'
+      @blog.remove_header_image!
+      @blog.save!
     when 'header_icon'
       @blog.remove_header_icon!
       @blog.save!
