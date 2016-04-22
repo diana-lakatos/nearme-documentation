@@ -36,8 +36,8 @@ module PaymentExtention::PaypalMerchantBoarding
       "merchantID" => @merchant.merchant_token
     }
 
-    # Work around for AU merchant boarding
-    if @merchant.iso_country_code != 'AU'
+    # Work around for MPO PayPal based in Australia. Can be removed when PP deal with it on their side.
+    if PlatformContext.current.instance.default_country != "Australia"
       boarding_params.merge!({"countryCode" => @merchant.iso_country_code})
     end
 
