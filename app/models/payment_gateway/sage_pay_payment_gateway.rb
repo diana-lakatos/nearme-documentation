@@ -2,7 +2,11 @@ class PaymentGateway::SagePayPaymentGateway < PaymentGateway
   include PaymentGateway::ActiveMerchantGateway
 
   def self.settings
-    { login: "" }
+    { login: { validate: [:presence] } }
+  end
+
+  def supported_currencies
+    ["GBP", "EUR"]
   end
 
   def self.active_merchant_class

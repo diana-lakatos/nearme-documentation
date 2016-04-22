@@ -1201,6 +1201,8 @@ en:
         open: "Opened"
         resolved: "Resolved"
   dashboard:
+    payouts:
+      merchant_boarding_missing_gateway: "Looks like this marketplace doesn't support %{currency} currency for your country (%{country_code}). Please contact marketplace owner if you are missing some payouts."
     additional_charge_type:
       new: "New Upsell & Add-ons"
     credit_cards:

@@ -5,8 +5,8 @@ class PaymentGateway::PaystationPaymentGateway < PaymentGateway
 
   def self.settings
     {
-      paystation_id: "",
-      gateway_id: ""
+      paystation_id: { validate: [:presence] },
+      gateway_id: { validate: [:presence] }
     }
   end
 

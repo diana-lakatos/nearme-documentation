@@ -1,0 +1,109 @@
+.content-container
+  %h4 Merchant Account
+  .row
+    %ul
+      %li
+        Type:
+        = @merchant_account.type
+      %li
+        Test:
+        = @merchant_account.test ? "Yes" : "No"
+      %li
+        State:
+        = @merchant_account.state.try(:capitalize)
+      %li
+        Transfers:
+        = @merchant_account.state.try(:capitalize)
+      %li
+        - if @merchant_account.payment_gateway.blank?
+          Deleted
+        - else
+          Payment Gateway:
+          = link_to @merchant_account.payment_gateway.try(:name), edit_instance_admin_settings_payment_gateway_path(@merchant_account.payment_gateway.try(:id))
+      %li
+        Data:
+        = @merchant_account.data
+- if false
+  %li
+    Subtotal:
+    = humanized_money_with_cents_and_symbol @merchant_account.subtotal_amount
+  %li
+    Service Fee:
+    = humanized_money_with_cents_and_symbol @merchant_account.service_fee_amount_guest
+  %li
+    Service Usell & Addons:
+    = humanized_money_with_cents_and_symbol @merchant_account.service_additional_charges
+  %li
+    Host Usell & Addons:
+    = humanized_money_with_cents_and_symbol @merchant_account.host_additional_charges
+  %li
+    State:
+    = @merchant_account.state
+
+  %h4 Charge attempts:
+
+  - @merchant_account.charges.each do |charge|
+    .content-container
+
+      .row
+        .text-container{class: charge.success? ? 'text-success' : 'text-danger' }
+          %p
+            Success:
+            = charge.success
+          %p
+            Created at:
+            = l charge.created_at, format: :long
+          - if charge.payment_gateway.present?
+            %p
+              Payment Gateway:
+              = link_to charge.payment_gateway.try(:name), edit_instance_admin_settings_payment_gateway_path(charge.payment_gateway)
+          %p
+            Amount:
+            = humanized_money_with_cents_and_symbol charge.price
+
+          %p
+            Response:
+            = charge.response.to_yaml
+
+  - if @merchant_account.payments.any?
+    .content-container
+
+      %h4 Payments
+
+      - @merchant_account.payments.each do |refund|
+        .content-container
+
+          .row
+            .text-container{class: refund.success? ? 'text-success' : 'text-danger' }
+              %p
+                Success:
+                = refund.success
+              %p
+                Created at:
+                = l refund.created_at, format: :long
+              - if refund.payment_gateway.present?
+                %p
+                  Payment Gateway:
+                  = link_to refund.payment_gateway.try(:name), edit_instance_admin_settings_payment_gateway_path(refund.payment_gateway)
+              %p
+                Amount:
+                = number_to_currency_symbol(refund.currency, Money.new(refund.amount))
+              %p
+                Receiver:
+                = refund.receiver.try(:capitalize)
+              %p
+                Response:
+                = refund.response
+
+  - if @merchant_account.voided?
+    .content-container
+      %h4 Payment void
+      .content-container
+        .row
+          .text-container{class: @merchant_account.successful_billing_authorization.success? ? 'text-success' : 'text-danger' }
+            %p
+              Voided at:
+              = @merchant_account.successful_billing_authorization.void_at
+            %p
+              Void Response:
+              = @merchant_account.successful_billing_authorization.void_response

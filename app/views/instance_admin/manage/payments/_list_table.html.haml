@@ -1,18 +1,29 @@
 .row
+  = form_tag '', :method => 'get', enforce_utf8: :false do
+    .row
+      .col-xs-3
+        = select_tag :payment_gateway_id, options_from_collection_for_select(@payment_gateways, "id", "name", params[:payment_gateway_id]), include_blank: "All Payment Gateways", class: "selectpicker"
+
+      .col-xs-2
+        = select_tag :transferred, options_for_select([ ["Awaiting for transfer", :awaiting], ["With transfer attempt", 'transferred'], ["All", :all] ], params[:transferred]), class: "selectpicker"
+      .col-xs-2
+        = select_tag :state, options_for_select(Payment.state_machine.states.map{|s| [s.name.capitalize, s.name] } , params[:state]), include_blank: "In all states", class: "selectpicker"
+      .col-xs-1
+        = select_tag :mode, options_for_select([["Live", 'live'], ["Test", 'test']], params[:mode]), class: "selectpicker"
+      .col-xs-2
+        = submit_tag "Search", :name => nil, class: 'btn btn-light'
   .table-container.col-xs-12
     %table.table
       %thead
         %tr
           %th= t('instance_admin.manage.payments.company')
           %th= t('instance_admin.manage.payments.lessor')
+          %th= t('instance_admin.manage.payments.payer')
           %th= t('instance_admin.manage.payments.state')
-          %th= t('instance_admin.manage.payments.lessor_service_fees')
-          %th= t('instance_admin.manage.payments.lessee_service_fees')
-          %th= t('instance_admin.manage.payments.service_addons')
-          %th= t('instance_admin.manage.payments.host_addons')
-          %th= t('instance_admin.manage.payments.payment_amount')
           %th= t('instance_admin.manage.payments.payment_gateway')
           %th= t('instance_admin.manage.payments.created_at')
+          %th
+            %b= t('instance_admin.manage.payments.payment_amount')
           %th= t('instance_admin.manage.payments.details')
 
       - @payments.each do |payment|
@@ -23,12 +34,10 @@
             - else
               = "(#{t('instance_admin.deleted')})"
           %td= payment.payable.user.try(:name) if payment.payable
-          %td= payment.state
-          %td= humanized_money_with_cents_and_symbol(payment.service_fee_amount_guest)
-          %td= humanized_money_with_cents_and_symbol(payment.service_fee_amount_host)
-          %td= humanized_money_with_cents_and_symbol(payment.service_additional_charges)
-          %td= humanized_money_with_cents_and_symbol(payment.host_additional_charges)
-          %td= humanized_money_with_cents_and_symbol(payment.subtotal_amount)
+          %td= payment.payer ? link_to(payment.payer.name, profile_path(payment.payer)) : "-  "
+          %td= payment.state.try(:capitalize)
           %td= payment.payment_gateway.try(:name)
           %td= l(payment.created_at, format: :long)
+          %td
+            %b= humanized_money_with_cents_and_symbol(payment.total_amount)
           %td= link_to 'Details',  instance_admin_manage_payment_path(payment)

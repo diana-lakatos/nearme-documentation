@@ -3,9 +3,9 @@ class PaymentGateway::OgonePaymentGateway < PaymentGateway
 
   def self.settings
     {
-      login: "",
-      user: "",
-      password: ""
+      login: { validate: [:presence] },
+      user: { validate: [:presence] },
+      password: { validate: [:presence] }
     }
   end
 

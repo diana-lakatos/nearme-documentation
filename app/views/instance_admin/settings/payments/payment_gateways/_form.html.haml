@@ -1,68 +1,124 @@
 = simple_form_for [:instance_admin, :settings, @payment_gateway] do |f|
   - if @payment_gateway.new_record?
-    .row
-      .input-container.col-xs-12
-        = f.input :type, collection: PaymentGateway::PAYMENT_GATEWAYS, :input_html => {data: { "payment-gateway": true }}
+    .content-container
+      .row
+        .input-container.col-xs-12
+          = f.input :type, collection: PaymentGateway::PAYMENT_GATEWAYS, :input_html => {data: { "payment-gateway": true }}
+      .row
+        .input-container.col-xs-12
+          = button_tag t('instance_admin.save'), class: "btn btn-blue pull-right", data: { disable_with: "Please wait..." }
+          = link_to t('instance_admin.cancel'), instance_admin_settings_payments_url , class: 'btn btn-light pull-right'
+
   - else
-    = f.hidden_field :type
-    .row
-      %h4= @payment_gateway.name + " information:"
+    .content-container
       .row
-        %ul
-          - if @payment_gateway.supports_manual_payment?
-            %li All transactions are processed outside the system.
-            %li Free payment method is required to allow zero amount transactions.
-          - elsif @payment_gateway.supports_payout?
-            %li Designed for scheduled automated #{link_to 'payment transfers', '/instance_admin/manage/transfers'}.
+        .input-container.col-xs-6
+          %h4= @payment_gateway.name.to_s + " " + t('instance_admin.settings.payments.payment_gateways.edit')
+        .input-container.col-xs-6
+          .pull-right
+            %h2 TURNED ON/OFF
+            - if current_instance.test_mode?
+              = f.input :test_active, as: :bootstrap_switch, label: false
+              %span.fa.fa-info-circle Marketplace operates in test mode
+            - else
+              = f.input :live_active, as: :bootstrap_switch, label: false
+              %span.fa.fa-info-circle Marketplace operates in live mode
+      %br
+
+    .content-container
+      .row
+        .input-container.col-xs-6
+          = f.hidden_field :type
+          .row
+            %h4= "Usefull information:"
+          .row
+            %ul
+              - if @payment_gateway.supports_manual_payment?
+                %li All transactions are processed outside the system.
+                %li Free payment method is required to allow zero amount transactions.
+              - elsif @payment_gateway.supports_payout?
+                %li Designed for scheduled automated #{link_to 'payment transfers', '/instance_admin/manage/transfers'}.
+              - else
+                %li
+                  - if @payment_gateway.supports_partial_refunds?
+                    Partial refunds are supported. It's possible to configure cancelation policy rules per Service type.
+                  - else
+                    Cancellation policies are not included. When user cancel reservation total amount is always refunded.
+                %li
+                  - if @payment_gateway.supports_immediate_payout?
+                    Transaction happens between buyer and seller. Marketplace owner is not primary receiver in that case and only receive service fees if configured.
+                  - else
+                    Marketplace owner is primary receiver of every transaction. Automated payouts can be integrated when PayPal Adaptive Payment Gateway is properly configured
+              - if @payment_gateway.documentation_url
+                %li
+                  You can find more information in the
+                  = link_to " official documentation.", @payment_gateway.documentation_url, :target => '_blank'
+
+        .input-container.col-xs-6
+          - if @payment_gateway.payment_methods.size > 1
+            .row
+              %h4 Payment Methods:
+          .row
+            = f.simple_fields_for :payment_methods do |p|
+              .input-container.col-xs-6
+                = p.input :payment_method_type, as: :hidden
+                - if @payment_gateway.payment_methods.size > 1
+                  = p.input :active, as: :boolean, inline_label: p.object.name, :input_html => { :checked => p.object.active? }
+                - else
+                  = p.input :active, as: :hidden, :input_html => { :value => true }
+
+          - if current_instance.test_mode?
+            %h4 Sandbox settings:
+            .row
+              .input-container.col-xs-12
+                = f.fields_for :test_settings, OpenStruct.new(@payment_gateway.test_settings) do |test|
+                  - f.object.class.settings.keys.each do |setting|
+                    = test.input setting, as: :string, input_html: { class: 'form-control', required: false }
           - else
-            %li
-              - if @payment_gateway.supports_partial_refunds?
-                Partial refunds are supported. It's possible to configure cancelation policy rules per Service type.
-              - else
-                Cancellation policies are not included. When user cancel reservation total amount is always refunded.
-            %li
-              - if @payment_gateway.supports_immediate_payout?
-                Transaction happens between buyer and seller. Marketplace owner is not primary receiver in that case and only receive service fees if configured.
-              - else
-                Marketplace owner is primary receiver of every transaction. Automated payouts can be integrated when PayPal Adaptive Payment Gateway is properly configured
-          - if @payment_gateway.documentation_url
-            %li
-              You can find more information in the
-              = link_to " official documentation.", @payment_gateway.documentation_url, :target => '_blank'
-    .row
-      %h4= @payment_gateway.name.to_s + " " + t('instance_admin.settings.payments.payment_gateways.edit') + ":"
-    .row
-      .input-container.col-xs-6
-        = f.association :payment_countries, label_method: :full_name, collection: @payment_gateway.available_payment_countries, input_html: { "data-live-search" => "true", multiple: true }
-      .input-container.col-xs-6
-        = f.association :payment_currencies, label_method: :full_name, collection: @payment_gateway.available_currencies, input_html: { "data-live-search" => "true", multiple: @payment_gateway.supports_multiple_currency? }
+            %h4 Live settings:
+            - if @payment_gateway.editable?
+              .row
+                .input-container.col-xs-12
+                  = f.fields_for :live_settings, OpenStruct.new(@payment_gateway.live_settings) do |live|
+                    - f.object.class.settings.keys.each do |setting|
+                      = live.input setting, as: :string, input_html: { class: 'form-control', required: false, disabled: !@payment_gateway.editable? }
+            - else
+              .row
+                .input-container.col-xs-12
+                  .text-info.bg-info
+                    %p
+                      %span.fa.fa-info-circle
+                      = t('flash_messages.instance_admin.settings.payments.payment_gateways.can_not_be_edited')
+                      Use ON/OFF switch to prevent users from using it. Payment Gateway will move into editable state when there are no refundable or pending Payments, all Merchant Accounts should be removed.
 
-    - if @payment_gateway.payment_methods.any?
-      .row
-        %h4 Payment Methods:
-      .row
-        = f.simple_fields_for :payment_methods do |p|
-          .input-container.col-xs-3
-            = p.input :payment_method_type, as: :hidden
-            = p.input :active, as: :boolean, inline_label: p.object.name
-    %br
-      %h4 Available in mode:
-    .row
-      .input-container.col-xs-6
-        = f.input :live_active, as: :bootstrap_switch, label: "Live mode"
-      .input-container.col-xs-6
-        = f.input :test_active, as: :bootstrap_switch, label: "Test mode"
-    .row
-      .input-container.col-xs-6
-        = f.fields_for :live_settings, OpenStruct.new(@payment_gateway.live_settings) do |live|
-          - f.object.class.settings.keys.each do |setting|
-            = live.input setting, as: :string, input_html: { class: 'form-control', required: false, disabled: !@payment_gateway.editable? }
 
-      .input-container.col-xs-6
-        = f.fields_for :test_settings, OpenStruct.new(@payment_gateway.test_settings) do |test|
-          - f.object.class.settings.keys.each do |setting|
-            = test.input setting, as: :string, input_html: { class: 'form-control', required: false }
 
-  = content_for :header_buttons do
-    = f.button :submit, t('instance_admin.save'), class: "btn btn-blue pull-right", data: { 'submit-form' => 1, 'form-selector' => 'form' }
-    = link_to t('instance_admin.cancel'), instance_admin_settings_payments_url , class: 'btn btn-light pull-right'
+      %br
+
+
+    - unless @payment_gateway.new_record?
+      .content-container
+        .row
+          .input-container.col-xs-6
+
+            Links:
+            %ul
+              %li=link_to "Associated Payments ", instance_admin_manage_payments_path(payment_gateway_id: @payment_gateway.id, transferred: "all", mode: "live")
+              - if @payment_gateway.payout_gateway?
+                %li=link_to "Associated Merchant Accounts", instance_admin_manage_merchant_accounts_path(payment_gateway_id: @payment_gateway.id, mode: "live")
+      .content-container
+        %h4
+          By default Payment Gateway works for all supported countries.
+          If you want to exclude any country/currency simply remove it with x near the name.
+        .input-container.col-xs-12
+          %br
+
+          .row
+            .input-container.col-xs-6
+              = f.association :payment_countries, label_method: :full_name, collection: @payment_gateway.available_payment_countries, input_html: { "data-live-search" => "true", multiple: true }
+            .input-container.col-xs-6
+              = f.association :payment_currencies, label_method: :full_name, collection: @payment_gateway.available_currencies, input_html: { "data-live-search" => "true", multiple: @payment_gateway.supports_multiple_currency? }
+
+    = content_for :header_buttons do
+      = button_tag t('instance_admin.save'), class: "btn btn-blue pull-right", data: { 'submit-form' => 1, 'form-selector' => 'form',  disable_with: "Please wait..."}
+      = link_to t('instance_admin.cancel'), instance_admin_settings_payments_url , class: 'btn btn-light pull-right'

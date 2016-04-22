@@ -85,6 +85,8 @@ module DesksnearMe
     # Access the DB or load models when precompiling assets
     config.assets.initialize_on_precompile = true
 
+    config.use_elastic_search = ENV['USE_ELASTIC_SEARCH']
+
     config.assets.prefix = ENV['ASSETS_PREFIX'].presence || config.assets.prefix
 
     # Enable the asset pipeline

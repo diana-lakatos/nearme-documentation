@@ -8,9 +8,9 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
 
   def self.settings
     {
-      merchant_id: "",
-      public_key: "",
-      private_key: "",
+      merchant_id: { validate: [:presence] },
+      public_key: { validate: [:presence] },
+      private_key: { validate: [:presence] },
     }
   end
 
