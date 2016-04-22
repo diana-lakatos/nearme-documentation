@@ -4,6 +4,11 @@ class UserTest < ActiveSupport::TestCase
 
   include ApplicationHelper
 
+  def after_teardown
+    CacheExpiration.rebuild_cache_for_custom_attributes
+    super
+  end
+
   should have_many(:industries)
 
   context "instance owner method" do

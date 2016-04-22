@@ -1,6 +1,8 @@
 module CustomAttributes
   class CustomValidator
 
+    include ::CustomAttributes::Concerns::Models::Castable
+
     def initialize(store_accessor_name)
       @store_accessor_name = store_accessor_name
     end
@@ -33,12 +35,18 @@ module CustomAttributes
             klass.new(options).validate(record.send(:"#{@store_accessor_name}"))
           end
         end
-        if valid_values.present? && type.to_sym != :array && record.send(:"#{@store_accessor_name}").send(name).present?
-          unless valid_values.map { |s| s.mb_chars.downcase }.include?(record.send(:"#{@store_accessor_name}").send(name).try(:mb_chars).try(:downcase))
-            record.send(:"#{@store_accessor_name}").errors.add(name, :inclusion, value: record.send(:"#{@store_accessor_name}").send(name))
+        value = record.send(:"#{@store_accessor_name}").send(name)
+        if valid_values.present? && type.to_sym != :array && value.present?
+          unless cast_valid_values(valid_values, type).include?(type == 'string' ? value.try(:downcase) : value)
+            record.send(:"#{@store_accessor_name}").errors.add(name, :inclusion, value: value)
           end
         end
       end
+    end
+
+    def cast_valid_values(values, type)
+      vals = values.map { |value| custom_property_type_cast(value, type.to_sym) }
+      type == 'string' ? vals.map(&:downcase) : vals
     end
 
   end
