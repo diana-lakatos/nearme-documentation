@@ -99,6 +99,16 @@ class Schedule < ActiveRecord::Base
     save!
   end
 
+  def excluded_ranges_for(start_date, end_date=nil)
+    return [] unless unavailable_period_enabled?
+
+    ser = schedule_exception_rules.where('duration_range_end > ?', start_date )
+    ser = ser.where('duration_range_start < ?', end_date ) if end_date
+    ser.select('duration_range_start, duration_range_end').map do |ser|
+      ser.duration_range_start..ser.duration_range_end.end_of_day
+    end
+  end
+
   def validate_schedule_rules
     Time.use_zone(timezone) do
       schedule_rules.each { |sr| sr.parse_user_input }
