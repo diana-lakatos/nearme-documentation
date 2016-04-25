@@ -986,6 +986,7 @@ DEPENDENCIES
   activemerchant
   acts-as-taggable-on (~> 3.4)
   addressable
+  after_commit_action
   amatch
   ansi
   attr_encrypted

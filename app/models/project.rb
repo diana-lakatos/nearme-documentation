@@ -69,6 +69,9 @@ class Project < ActiveRecord::Base
   # TODO: move to form object
   after_save :trigger_workflow_alert_for_added_collaborators, unless: ->(record) { record.draft? }
 
+  after_destroy :fix_counter_caches
+  after_destroy :fix_counter_caches_after_commit
+
   before_restore :restore_photos
   before_restore :restore_links
   before_restore :restore_project_collaborators
@@ -176,6 +179,20 @@ class Project < ActiveRecord::Base
       rescue
       end
     end
+  end
+
+  # Counter culture does not play along well (on destroy) with acts_as_paranoid
+  def fix_counter_caches
+    if self.creator && !self.creator.destroyed?
+      self.creator.update_column(:projects_count, self.creator.projects.where(draft_at: nil).count)
+    end
+    true
+  end
+
+  # Counter culture does not play along well (on destroy) with acts_as_paranoid
+  def fix_counter_caches_after_commit
+    execute_after_commit { fix_counter_caches }
+    true
   end
 
   class NotFound < ActiveRecord::RecordNotFound; end
