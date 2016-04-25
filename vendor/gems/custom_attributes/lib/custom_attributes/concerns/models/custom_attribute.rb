@@ -83,6 +83,7 @@ module CustomAttributes
           end
 
           def valid_values_casted
+            return valid_values if attribute_type.to_sym == :array
             valid_values.map{ |value| custom_property_type_cast(value, attribute_type.to_sym) }
           end
 
