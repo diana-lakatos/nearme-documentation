@@ -224,7 +224,7 @@ class Reservation < ActiveRecord::Base
         service_additional_charges_cents: self.service_additional_charges.cents,
         host_additional_charges_cents: self.host_additional_charges.cents
       })
-      self.payment.payment_transfery.try(:send, :assign_amounts_and_currency)
+      self.payment.payment_transfer.try(:send, :assign_amounts_and_currency)
       if self.payment.authorize && self.payment.capture!
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::PenaltyChargeSucceeded, self.id)
       else
