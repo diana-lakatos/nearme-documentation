@@ -212,8 +212,11 @@ class Reservation < ActiveRecord::Base
       fail('Charging penalty when there exist already authorized/paid payment!') if payment.present? && (payment.paid? || payment.authorized?)
       self.update_column(:subtotal_amount_cents, penalty_fee_subtotal.cents)
       self.force_recalculate_fees = true
+      self.update_columns({
+        service_fee_amount_guest_cents: self.service_fee_amount_guest.cents,
+        service_fee_amount_host_cents: self.service_fee_amount_host.cents
+      })
       # note: this might not work with shipment?
-      self.save!
       self.payment.update_attributes({
         subtotal_amount_cents: self.subtotal_amount.cents,
         service_fee_amount_guest_cents: self.service_fee_amount_guest.cents,
