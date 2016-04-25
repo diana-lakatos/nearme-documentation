@@ -3,7 +3,7 @@ class PaymentGateway::WorldpayPaymentGateway < PaymentGateway
 
   supported :any_currency, :credit_card_payment, :multiple_currency
   def self.settings
-    { login: "" }
+    { login: { validate: [:presence] } }
   end
 
   def self.active_merchant_class

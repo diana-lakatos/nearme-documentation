@@ -20,7 +20,7 @@ class User::FriendFinderTest < ActiveSupport::TestCase
       should 'call authentications and add_friend' do
         friend = stub
 
-        @authentication.expects(:new_connections).returns([friend])
+        @authentication.expects(:new_connections).returns([friend]).at_least_once
         @authentication.expects(:friend_ids).returns([])
         @authentication.expects(:update_attribute).with(:total_social_connections, 0).returns(true)
         @ff.user.expects(:add_friend).with(friend, @authentication)

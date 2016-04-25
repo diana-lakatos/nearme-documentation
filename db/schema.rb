@@ -1162,8 +1162,8 @@ ActiveRecord::Schema.define(version: 20160413143930) do
     t.integer  "seller_attachments_documents_num",                                             default: 10,            null: false
     t.string   "priority_view_path"
     t.boolean  "enable_language_selector",                                                     default: false,         null: false
-    t.boolean  "click_to_call",                                                                default: false
     t.boolean  "enable_reply_button_on_host_reservations",                                     default: false
+    t.boolean  "click_to_call",                                                                default: false
     t.boolean  "split_registration",                                                           default: false
   end
 
@@ -1882,11 +1882,11 @@ ActiveRecord::Schema.define(version: 20160413143930) do
     t.datetime "ends_at"
     t.string   "time_zone"
     t.datetime "expire_at"
+    t.integer  "reservation_type_id"
     t.hstore   "properties"
     t.integer  "unit_price_cents"
     t.datetime "pending_guest_confirmation"
     t.datetime "archived_at"
-    t.integer  "reservation_type_id"
     t.decimal  "cancellation_policy_penalty_hours",                         precision: 8, scale: 2, default: 0.0
   end
 
@@ -3747,8 +3747,8 @@ ActiveRecord::Schema.define(version: 20160413143930) do
     t.integer  "monthly_subscription_price_cents"
     t.string   "slug"
     t.integer  "availability_template_id"
-    t.boolean  "featured",                                                              default: false
     t.integer  "deposit_amount_cents"
+    t.boolean  "featured",                                                              default: false
     t.decimal  "cancellation_policy_penalty_hours",             precision: 8, scale: 2, default: 0.0
   end
 

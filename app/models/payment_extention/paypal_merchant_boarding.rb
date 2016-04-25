@@ -23,10 +23,9 @@ module PaymentExtention::PaypalMerchantBoarding
   end
 
   def boarding_url_params
-    {
+    boarding_params = {
       "partnerId" => settings["partner_id"],
       "productIntentID" => available_products,
-      "countryCode" => @merchant.iso_country_code,
       "displayMode" => "regular",
       "integrationType" => "T",
       "permissionNeeded" => merchant_permissions,
@@ -35,7 +34,14 @@ module PaymentExtention::PaypalMerchantBoarding
       "showPermissions" => "TRUE",
       "productSelectionNeeded" => "FALSE",
       "merchantID" => @merchant.merchant_token
-    }.map { |k,v| "#{k}=#{v}" }.join('&')
+    }
+
+    # Work around for MPO PayPal based in Australia. Can be removed when PP deal with it on their side.
+    if PlatformContext.current.instance.default_country != "Australia"
+      boarding_params.merge!({"countryCode" => @merchant.iso_country_code})
+    end
+
+    boarding_params.map { |k,v| "#{k}=#{v}" }.join('&')
   end
 
   def merchant_permissions

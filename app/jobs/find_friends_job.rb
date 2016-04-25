@@ -8,7 +8,9 @@ class FindFriendsJob < Job
   def perform
     if DesksnearMe::Application.config.perform_social_jobs
       PlatformContext.current ||= PlatformContext.new(@authentication.instance)
-      User::FriendFinder.new(@user, @authentication).find_friends! unless @user.nil?
+      # We check with reload after setting the platform context as in rare circumstances the user is not
+      # retrievable
+      User::FriendFinder.new(@user, @authentication).find_friends! if !@authentication.reload.user.nil?
     end
   end
 end

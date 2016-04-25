@@ -19,9 +19,9 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
 
   def self.settings
     {
-      login: "",
-      password: "",
-      signature: "",
+      login: { validate: [:presence] },
+      password: { validate: [:presence] },
+      signature: { validate: [:presence] },
     }
   end
 

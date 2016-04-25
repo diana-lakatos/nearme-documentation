@@ -4,7 +4,7 @@ class PaymentGateway::StripePaymentGateway < PaymentGateway
   supported :multiple_currency, :recurring_payment, :credit_card_payment, :partial_refunds
 
   def self.settings
-    { login: "" }
+    { login: { validate: [:presence] } }
   end
 
   def self.active_merchant_class
