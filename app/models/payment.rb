@@ -307,6 +307,7 @@ class Payment < ActiveRecord::Base
 
     super(cc_attributes.merge({
       payment_gateway: payment_gateway,
+      test_mode: instance.test_mode?,
       instance_client: payment_gateway.try {|p| p.instance_clients.where(client: payable.owner).first_or_initialize }
     }))
   end
