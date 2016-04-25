@@ -68,7 +68,7 @@ module DesksnearMe
       :password, :bank_account_number, :response,
       :marketplace_password, :olark_api_key, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key,
       :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret,
-      :live_settings, :test_settings, :card_number, :card_exp_month, :card_exp_year, :card_code
+      :live_settings, :test_settings, :verification_value, :number, :credit_card_attributes
     ]
 
     config.generators do |g|
