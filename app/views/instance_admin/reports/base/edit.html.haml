@@ -3,6 +3,13 @@
     .row
       .input-container.col-xs-12
         = f.input :enabled, as: :boolean, inline_label: true
+    .row
+      .input-container.col-xs-12
         = f.input :featured, as: :boolean, inline_label: true
+    = f.simple_fields_for :properties, f.object.properties do |properties_form|
+      - (f.object.transactable_type.try(:custom_attributes).try(:where, public: false) || []).each do |attribute|
+        .row
+          .input-container.col-xs-12
+            = draw_attribute_for_form(attribute, properties_form, true)
       .input-container.col-xs-12
         = f.submit t('instance_admin.save'), class: 'btn btn-blue pull-right'
