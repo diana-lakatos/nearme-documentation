@@ -569,6 +569,9 @@ DesksnearMe::Application.routes.draw do
           member do
             post :ignore
           end
+          collection do
+            delete :cancel
+          end
         end
 
         resources :projects, only: [:index, :destroy, :edit, :update] do
@@ -595,7 +598,11 @@ DesksnearMe::Application.routes.draw do
         end
       end
       resources :comments, only: [:update, :create, :index, :destroy] do
-        resources :spam_reports,  only: [:create, :destroy]
+        resources :spam_reports,  only: [:create, :destroy] do
+          collection do
+            delete :cancel
+          end
+        end
       end
     end
 
@@ -961,10 +968,18 @@ DesksnearMe::Application.routes.draw do
     resources :user_status_updates, only: [ :create ]
 
     resources :activity_feed_event do
-      resources :spam_reports,  only: [:create, :destroy]
+      resources :spam_reports,  only: [:create, :destroy] do
+        collection do
+          delete :cancel
+        end
+      end
 
       resources :comments, only: [:update, :create, :index, :destroy] do
-        resources :spam_reports,  only: [:create, :destroy]
+        resources :spam_reports,  only: [:create, :destroy] do
+          collection do
+            delete :cancel
+          end
+        end
       end
     end
 

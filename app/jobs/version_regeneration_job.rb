@@ -1,6 +1,5 @@
 # Image delayed versions generated
 class VersionRegenerationJob < Job
-
   include Job::HighPriority
 
   def self.priority

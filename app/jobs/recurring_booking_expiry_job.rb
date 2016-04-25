@@ -7,4 +7,3 @@ class RecurringBookingExpiryJob < Job
     @recurring_booking.try(:perform_expiry!)
   end
 end
-

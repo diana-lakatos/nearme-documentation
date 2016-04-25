@@ -218,7 +218,6 @@ module.exports = class SearchController
       $(".nav-heading input:checked").parents('.nav-heading').next().show()
       $(".nav-heading input").on 'change', (event) ->
         $(".nav-heading input:not(:checked)").parents('.nav-heading').next().hide('slow')
-        $(".nav-heading input:not(:checked)").parents('.nav-heading').next().find('input:checkbox').prop('checked', false);
         $(".nav-heading input:checked").parents('.nav-heading').next().show('slow')
     else
       $(".nav-heading input").parents('.nav-heading').next().show()

@@ -23,8 +23,8 @@ class Authentication < ActiveRecord::Base
     where(token_expired: false)
   }
 
-  after_create :find_friends
-  after_create :update_info
+  after_commit :find_friends, on: :create
+  after_commit :update_info, on: :create
 
   PROVIDERS = ["Facebook", "LinkedIn", "Twitter", "Instagram", "Google", "GitHub"]
   ALLOWED_LOGIN_PROVIDERS = PROVIDERS + ["SAML"] - ["Instagram"]
@@ -68,13 +68,12 @@ class Authentication < ActiveRecord::Base
   end
 
   def update_info
-    UpdateInfoJob.perform(self) unless self.information_fetched
+    UpdateInfoJob.perform(id) unless information_fetched
   end
 
   private
 
   def find_friends
-    FindFriendsJob.perform(self)
+    FindFriendsJob.perform(id)
   end
-
 end

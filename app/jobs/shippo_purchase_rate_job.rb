@@ -1,6 +1,5 @@
 # Purchase shippo rate
 class ShippoPurchaseRateJob < Job
-
   def after_initialize(shipping_method)
     @shipping_method = shipping_method
   end
@@ -22,5 +21,4 @@ class ShippoPurchaseRateJob < Job
       raise ShippoExtensions::ShippoApiMethodCallingError.new 'Error purchasing rate from Shippo.'
     end
   end
-
 end

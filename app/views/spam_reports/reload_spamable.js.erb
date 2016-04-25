@@ -1,5 +1,6 @@
-<% if @spamable.class == ActivityFeedEvent %>
-  $("[data-event=<%= @spamable.id %>]").html('<%= escape_javascript( render partial: "shared/activity_status", locals: {event: @spamable} ) %>')
-<% else %>
-  $("[data-<%= @spamable.class.name.downcase %>-id=<%= @spamable.id %>]").html('<%= escape_javascript( render @spamable ) %>')
-<% end %>
+  var container = $("[data-<%= @spamable.class.name.underscore.dasherize %>-id=<%= @spamable.id %>]");
+  container.html('<%= escape_javascript( render partial: @partial_name, locals: {event: @spamable, comment: @spamable} ) %>')
+  <% unless @spam_report.deleted? %>
+    container.find("[data-cancel-report]").show()
+    container.find("[data-report-spam]").hide()
+  <% end %>

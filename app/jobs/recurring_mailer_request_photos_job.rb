@@ -26,11 +26,9 @@ class RecurringMailerRequestPhotosJob < Job
     end
   end
 
-
   private
 
   def days_from(date)
     date ? ((Time.current.to_f - date.to_f) / 1.day.to_f).round : nil
   end
-
 end

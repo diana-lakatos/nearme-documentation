@@ -74,6 +74,9 @@
         - when *@transactable_type.custom_model_types.map { |c| "Custom Model - #{c.name}" }
           = render "dashboard/company/transactables/form_fields/custom_model", f: f, field: field
 
+        - when 'minimum_booking_minutes'
+          = render 'dashboard/company/transactables/form_fields/minimum_booking_minutes', f: f
+
         - else
           - if custom_attribute_names.include?(field)
             = draw_attribute_for_form(@transactable_type.custom_attributes.find_by(name: field), properties_form)

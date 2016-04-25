@@ -88,7 +88,7 @@ class Transactable < ActiveRecord::Base
   after_create :set_external_id
   after_save do
     if availability.try(:days_open).present?
-      self.update_column(:opened_on_days, availability.days_open.sort)
+      self.update_column(:opened_on_days, schedule_booking? ? nil : availability.days_open.sort)
     end
     true
   end
@@ -194,7 +194,7 @@ class Transactable < ActiveRecord::Base
   delegate :url, to: :company
   delegate :formatted_address, :local_geocoding, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration, :hours_for_guest_to_confirm_payment,
-    :custom_validators, :show_company_name, :skip_payment_authorization?, to: :transactable_type
+    :custom_validators, :show_company_name, :skip_payment_authorization?, :display_additional_charges?, to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, to: :transactable_type
@@ -289,8 +289,9 @@ class Transactable < ActiveRecord::Base
     end
     time_now = Time.now.in_time_zone(timezone)
     @start_date = time_now if @start_date.nil? || @start_date < time_now
+
     end_date = params[:end_date].try(:to_date).try(:end_of_day)
-    excluded_ranges = schedule.unavailable_period_enabled ? schedule.schedule_exception_rules.where('duration_range_end > ?', end_date || Time.zone.now).select('duration_range_start, duration_range_end').map { |ser| ser.duration_range_start..ser.duration_range_end.end_of_day } : []
+    excluded_ranges = schedule.excluded_ranges_for(@start_date, end_date)
     loop do
       checks_to_be_performed -= 1
       next_occurrences = schedule.schedule.next_occurrences(number_of_occurrences, @start_date).uniq

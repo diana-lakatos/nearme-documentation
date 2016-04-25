@@ -27,9 +27,17 @@
 
       - if platform_context.white_label_company_user?(current_user) && current_user.registration_completed? && HiddenUiControls.find('main_menu/manage_items').visible?
         - platform_context.service_types.each do |transactable_type|
-          %li= link_to t('top_navbar.manage_bookable', bookable_noun: transactable_type.translated_bookable_noun(10)), main_app.dashboard_company_transactable_type_transactables_path(transactable_type)
+          - if is_i18n_set?("top_navbar.manage_bookable.#{transactable_type.name}")
+            - title = t("top_navbar.manage_bookable.#{transactable_type.name}")
+          - else
+            - title = t('top_navbar.manage_bookable', bookable_noun: transactable_type.translated_bookable_noun(10))
+          %li= link_to title, main_app.dashboard_company_transactable_type_transactables_path(transactable_type)
         - platform_context.product_types.each do |product_type|
-          %li= link_to t('top_navbar.manage_bookable', bookable_noun: product_type.translated_bookable_noun(10)), main_app.dashboard_company_product_type_products_path(product_type)
+          - if is_i18n_set?("top_navbar.manage_bookable.#{product_type.name}")
+            - title = t("top_navbar.manage_bookable.#{product_type.name}")
+          - else
+            - title = t('top_navbar.manage_bookable', bookable_noun: product_type.translated_bookable_noun(10))
+          %li= link_to title, main_app.dashboard_company_product_type_products_path(product_type)
 
         - platform_context.project_types.each do |project_type|
           %li= link_to "My #{project_type.translated_bookable_noun(10)}", main_app.dashboard_project_type_projects_path(project_type)

@@ -16,7 +16,7 @@ module NearMe
 
     def create!
       begin
-        iam.client.delete_server_certificate(server_certificate_name: self.name)
+        iam.client.delete_server_certificate(server_certificate_name: name)
       rescue AWS::ELB::Errors::CertificateNotFound
       rescue AWS::IAM::Errors::NoSuchEntity
       end
@@ -27,10 +27,10 @@ module NearMe
         balancer = create_balancer(certificate.arn)
         self.dns_name = balancer.dns_name
         # configure health check
-        elb.configure_health_check(load_balancer_name: self.name,
+        elb.configure_health_check(load_balancer_name: name,
                                    health_check: health_check_params)
         # attach instances
-        register = elb.register_instances_with_load_balancer(load_balancer_name: self.name, instances: instances)
+        elb.register_instances_with_load_balancer(load_balancer_name: name, instances: instances)
       rescue Exception => e
         delete!
         raise e
@@ -39,31 +39,27 @@ module NearMe
 
     def delete!
       begin
-        iam.client.delete_server_certificate(server_certificate_name: self.name)
+        iam.client.delete_server_certificate(server_certificate_name: name)
       rescue AWS::ELB::Errors::CertificateNotFound
       rescue AWS::IAM::Errors::NoSuchEntity
       end
 
-      elb.delete_load_balancer(load_balancer_name: self.name)
+      elb.delete_load_balancer(load_balancer_name: name)
     end
 
     def update_certificates!
       begin
-        begin
-          iam.client.delete_server_certificate(server_certificate_name: self.name)
-        rescue AWS::ELB::Errors::CertificateNotFound
-        rescue AWS::IAM::Errors::NoSuchEntity
-        end
-
-        sleep 2
-        certificate = create_certificate
-        sleep 12 # give time for the cert to instantiate on the aws side (i.e. win the race condition)
-                 # a proper fix for this and the above is in the next release (NM-)2152.
-
-        elb.set_load_balancer_listener_ssl_certificate(load_balancer_name: self.name, load_balancer_port: 443, ssl_certificate_id: certificate.arn)
-      rescue Exception => e
-        raise e
+        iam.client.delete_server_certificate(server_certificate_name: name)
+      rescue AWS::ELB::Errors::CertificateNotFound
+      rescue AWS::IAM::Errors::NoSuchEntity
       end
+
+      sleep 2
+      certificate = create_certificate
+      sleep 12 # give time for the cert to instantiate on the aws side (i.e. win the race condition)
+      # a proper fix for this and the above is in the next release (NM-)2152.
+
+      elb.set_load_balancer_listener_ssl_certificate(load_balancer_name: name, load_balancer_port: 443, ssl_certificate_id: certificate.arn)
     end
 
 
@@ -105,7 +101,7 @@ module NearMe
 
     def create_balancer(certificate_arn)
 
-      load_balancer = elb.create_load_balancer(load_balancer_name: self.name,
+      load_balancer = elb.create_load_balancer(load_balancer_name: name,
                                                 :availability_zones => availability_zones,
                                                 :security_groups => security_groups,
                                                 :listeners => [http_listener, https_listener(certificate_arn)])
@@ -113,17 +109,17 @@ module NearMe
 
     def create_certificate
       params = {
-        name: self.name,
-        certificate_body: self.certificate_body,
-        certificate_chain: self.certificate_chain,
-        private_key: self.private_key
+        name: name,
+        certificate_body: certificate_body,
+        certificate_chain: certificate_chain,
+        private_key: private_key
       }.select{|k,v| !v.to_s.empty?}
 
       certificates.create(params)
     end
 
     def template_balancer
-      @template_balancer ||= elb.describe_load_balancers(load_balancer_names: [self.template_name]).data[:load_balancer_descriptions][0]
+      @template_balancer ||= elb.describe_load_balancers(load_balancer_names: [template_name]).data[:load_balancer_descriptions][0]
     end
   end
 end

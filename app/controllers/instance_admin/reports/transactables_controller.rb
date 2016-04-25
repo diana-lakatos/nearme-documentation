@@ -11,7 +11,7 @@ class InstanceAdmin::Reports::TransactablesController < InstanceAdmin::Reports::
   private
 
   def transactable_params
-    params.require(:transactable).permit(secured_params.transactable(@transactable_type))
+    params.require(:transactable).permit(secured_params.transactable_for_instance_admin(@resource.transactable_type))
   end
 
   def set_scopes
