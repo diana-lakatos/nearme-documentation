@@ -73,7 +73,7 @@ class Reservation < ActiveRecord::Base
 
   delegate :location, :skip_payment_authorization?, :show_company_name, :transactable_type_id, :transactable_type, :billing_authorizations, to: :listing
   delegate :administrator=, to: :location
-  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :listing, allow_nil: true
+  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, :display_additional_charges?, to: :listing, allow_nil: true
   delegate :remote_payment?, :manual_payment?, :active_merchant_payment?, :paid?, to: :payment, allow_nil: true
 
   monetize :successful_payment_amount_cents, with_model_currency: :currency
