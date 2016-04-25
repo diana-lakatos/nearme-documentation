@@ -213,7 +213,7 @@ class Reservation < ActiveRecord::Base
       self.update_column(:subtotal_amount_cents, penalty_fee_subtotal.cents)
       self.force_recalculate_fees = true
       self.update_columns({
-        service_fee_amount_guest_cents: self.service_fee_amount_guest.cents,
+       service_fee_amount_guest_cents: self.service_fee_amount_guest.cents,
         service_fee_amount_host_cents: self.service_fee_amount_host.cents
       })
       # note: this might not work with shipment?
@@ -224,6 +224,7 @@ class Reservation < ActiveRecord::Base
         service_additional_charges_cents: self.service_additional_charges.cents,
         host_additional_charges_cents: self.host_additional_charges.cents
       })
+      self.payment.payment_transfery.try(:send, :assign_amounts_and_currency)
       if self.payment.authorize && self.payment.capture!
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::PenaltyChargeSucceeded, self.id)
       else
