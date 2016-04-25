@@ -12,7 +12,6 @@
   ],
   "dependencies": {
     "jquery": "git@github.com:jquery/jquery-dist.git#~2.2.0",
-    "jquery.cookie": "~1.4.1",
     "eonasdan-bootstrap-datetimepicker": "~4.17.37",
     "font-awesome": "~4.4.0",
     "bootstrap-sass": "~3.3.6",

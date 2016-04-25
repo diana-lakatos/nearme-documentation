@@ -422,7 +422,7 @@ module Elastic
           unless value.blank?
             @filters << {
               terms: {
-                "custom_attributes.#{key}" => value.to_s.downcase.scan(/\w+/).map(&:strip).map(&:downcase)
+                "custom_attributes.#{key}" => value.to_s.split(',').map{ |val| val.downcase.strip }
               }
             }
           end
