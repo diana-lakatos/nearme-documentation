@@ -674,6 +674,7 @@ class SecuredParams
       :date_pickers_mode,
       :default_availability_template_id,
       :show_path_format,
+      :hide_additional_charges_on_listing_page,
       :availability_templates_attributes => nested(self.availability_template),
       :allowed_currencies => [],
       :action_type_ids => [],
