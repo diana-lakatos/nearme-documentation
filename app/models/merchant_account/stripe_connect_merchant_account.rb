@@ -63,7 +63,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       change_state_if_needed(result)
       true
     elsif result.error
-      errors.add(:data, result.error)
+      errors.add(:base, result.error)
       false
     else
       false
