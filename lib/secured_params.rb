@@ -668,6 +668,7 @@ class SecuredParams
       :timezone_rule,
       :show_price_slider,
       :search_price_types_filter,
+      :search_location_type_filter,
       :show_date_pickers,
       :date_pickers_use_availability_rules,
       :date_pickers_mode,

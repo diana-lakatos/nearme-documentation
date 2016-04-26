@@ -317,6 +317,7 @@ en:
         searchable: 'Enable search'
         allow_save_search: 'Allow user to save search?'
         search_price_types_filter: "Show price filters?"
+        search_location_type_filter: "Show location types filter?"
         show_price_slider: "Show price slider?"
         show_date_pickers: "Show date pickers?"
         show_categories: "Show categories?"
