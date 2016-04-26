@@ -3,7 +3,7 @@
 
 = dashboard_simple_form_for @payment, url: dashboard_user_reservation_payment_path(@reservation, @payment), method: :put, data: { modal: true } do |f|
   .dialog__body
-    - based_collection = current_user.instance_clients.for_payment_gateway(@payment.payment_gateway_id).first.try(:credit_cards).try(:select, &:active?).try(:map) { |cc| [I18n.t('credit_cards.masked_number', last4: cc.last_4), cc.id] } || []
+    - based_collection = current_user.instance_clients.for_payment_gateway(@payment.payment_gateway_id, @payment.test_mode?).first.try(:credit_cards).try(:select, &:active?).try(:map) { |cc| [I18n.t('credit_cards.masked_number', last4: cc.last_4), cc.id] } || []
     - default_option = based_collection.first.present? ? based_collection.first[1] : 'custom'
     - selected_option = f.object.chosen_credit_card_id.presence || default_option
 

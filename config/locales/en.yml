@@ -1210,6 +1210,9 @@ en:
       credit_cards: 'Credit Cards'
       new: 'New Credit Card'
       delete_warning: 'You are about to remove credit card. Please note that it still will be charged if used for any past and unpaid reservations you have made. Please make sure to cancel all transations separately.'
+      delete_warning: 'You are about to remove credit card. Please note that it still will be charged if used for any past and unpaid reservations you have made. Please make sure to cancel all transations separately.'
+      stripe: 'Credit Cards'
+      in_gateway: '%{payment_gateway} Credit Cards'
     items:
       list_new_item: "List New Item"
       edit_item: "Edit Item"
@@ -1252,13 +1255,14 @@ en:
       add_document: 'add another document requirement'
       required_documents: 'Please enter the documents your customers will need to provide before booking this service.'
       empty: 'There are no %{name} to show.'
+      empty_credit_cards: 'There are no credit cards to show.'
 
     modal:
       close: 'Close modal'
 
     nav:
       orders: 'My Orders'
-      credit_cards: 'My Credit Cards'
+      credit_cards: 'Credit Cards'
       user_reservations: 'My Bookings'
       user_reservations_count_html: 'My Bookings <span>%{count}</span>'
       user_messages: 'Messages'
@@ -1315,6 +1319,7 @@ en:
         colors: 'Colors'
 
     user_reservations:
+      test_mode: 'This reservation was made in Test Mode. No money was actually transferred'
       total_amount_to_be_determined: 'N/A'
       title_count: "Bookings (%{count})"
       penalty_info: "The penalty fee for cancelling the reservation is %{penalty}% of the reservation price."

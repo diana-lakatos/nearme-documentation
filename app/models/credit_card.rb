@@ -18,6 +18,7 @@ class CreditCard < ActiveRecord::Base
 
   before_validation :set_instance_client
   before_create :set_as_default
+  before_create :set_mode
   before_create :store!
   # we do not want to do this
   #before_destroy :delete!
@@ -147,7 +148,12 @@ class CreditCard < ActiveRecord::Base
 
   def set_instance_client
     self.instance_client ||= payment_gateway.instance_clients.where(client: client).first_or_initialize
+    true
   end
 
+  def set_mode
+    self.test_mode = instance.test_mode?
+    true
+  end
 end
 
