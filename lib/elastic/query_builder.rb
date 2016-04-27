@@ -202,7 +202,7 @@ module Elastic
         [
           {
             script: {
-              script: "doc['service_radius'].empty || doc['geo_location'].distanceInKm(#{@query[:lat]},#{@query[:lon]}) <= doc['service_radius'].value"
+              script: "doc['service_radius'].empty || doc['geo_location'].distanceInMiles(#{@query[:lat]},#{@query[:lon]}) <= doc['service_radius'].value"
             }
           },
           {

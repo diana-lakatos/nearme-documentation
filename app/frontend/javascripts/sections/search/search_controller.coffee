@@ -50,14 +50,9 @@ module.exports = class SearchSearchController extends SearchController
       @triggerSearchFromQuery()
 
     @transactable_types.on 'change', (event) =>
-      date_range = ''
-      if @date_range.length > 0 && window.location.search.match('start_date')
-        date_range = "&start_date=#{$('#fake_start_date').val()}&end_date=#{$('#fake_end_date').val()}&availability[dates][start]=#{$('#availability_dates_start').val()}&availability[dates][end]=#{$('#availability_dates_end').val()}"
-      list_view_param = ''
-      if $(event.target).attr('data-list-view')
-        list_view_param = '&v=list'
-
-      document.location = "#{document.location.protocol}//#{document.location.host}#{document.location.pathname}?loc=#{urlUtil.getParameterByName('loc')}&transactable_type_id=#{$(event.target).val()}" + date_range + list_view_param
+      @form.find('input[name="transactable_type_id"]').val($(event.target).val())
+      params = decodeURIComponent("?#{$.param(@getSearchParams())}")
+      document.location = window.location.href = "#{document.location.protocol}//#{document.location.host}#{document.location.pathname}#{params}"
 
     @date_range_btn.on 'click', (event) =>
       @triggerSearchFromQuery()
@@ -268,10 +263,11 @@ module.exports = class SearchSearchController extends SearchController
 
     price_max = if @container.find('input[name="price[max]"]:checked').length > 0 then @container.find('input[name="price[max]"]:checked').val() else $('input[name="price[max]"]').val()
     @assignFormParams(
-      'price[max]': price_max,
-      time_from: @container.find('select[name="time_from"]').val(),
-      time_to: @container.find('select[name="time_to"]').val(),
-      sort: @container.find('select[name="sort"]').val(),
+      'price[max]': price_max
+      time_from: @container.find('select[name="time_from"]').val()
+      time_to: @container.find('select[name="time_to"]').val()
+      sort: @container.find('select[name="sort"]').val()
+      transactable_type_id = @container.find('input[name="transactable_type_id"]:checked').val()
       ignore_search_event: 0
       category_ids: all_categories.join(',')
       lntype: _.toArray($('input[name="location_types_ids[]"]:checked').map(-> $(this).val())).join(',')
