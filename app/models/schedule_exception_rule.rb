@@ -16,7 +16,7 @@ class ScheduleExceptionRule < ActiveRecord::Base
 
   default_scope { order('created_at DESC') }
 
-  scope :at, -> (date) { where("duration_range_start <= ? AND duration_range_end >= ?", date, date) }
+  scope :at, -> (date) { where("date(duration_range_start) <= ? AND date(duration_range_end) >= ?", date, date) }
   scope :future, -> { where("duration_range_end >= ?", Date.current) }
 
   def parse_user_input
