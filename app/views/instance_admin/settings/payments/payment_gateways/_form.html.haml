@@ -1,3 +1,13 @@
+- unless @payment_gateway.can_disable?
+  .row-fluid
+    .span12
+      %div{class: "alert error", 'data-flash-message' => true}
+        %a.close{"data-dismiss" => "alert", href: "#"} &nbsp;
+        %p
+          %i{ :class => instance_admin_ico_for_flash(:error)}
+          This Payment Gateway has live Merchant Accounts asscociated. If you want to disable it please first void all
+          = link_to "Merchant Accounts", "/instance_admin/manage/merchant_accounts?payment_gateway_id=#{@payment_gateway.id}&state=verified&mode=live"
+
 = simple_form_for [:instance_admin, :settings, @payment_gateway] do |f|
   - if @payment_gateway.new_record?
     .content-container
@@ -21,7 +31,7 @@
               = f.input :test_active, as: :bootstrap_switch, label: false
               %span.fa.fa-info-circle Marketplace operates in test mode
             - else
-              = f.input :live_active, as: :bootstrap_switch, label: false
+              = f.input :live_active, as: :bootstrap_switch, label: false, disabled: !@payment_gateway.can_disable?
               %span.fa.fa-info-circle Marketplace operates in live mode
       %br
 

@@ -24,7 +24,9 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
 
   should "build correct boarding_url" do
     @company = create(:company)
-    @merchant = @company.create_paypal_express_chain_merchant_account
+    @merchant =  MerchantAccount::PaypalExpressChainMerchantAccount.new(
+      { merchantable: @company, payment_gateway: @paypal_express_chain_processor}
+    )
     assert boarding_url, @paypal_express_chain_processor.boarding_url(@merchant)
   end
 
@@ -104,7 +106,6 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
         service_fee_amount_host_cents: 100)
 
       # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
-
       refund_payment(payment, "user_cancel")
 
       # Host Service Fee is refunded to Host. MPO gets guest service fee

@@ -22,6 +22,10 @@ module Elastic
       @not_filters = []
     end
 
+    def current_instance
+      @current_instance ||= PlatformContext.current.instance
+    end
+
     def query_limit
       @query[:limit] || MAX_RESULTS
     end
@@ -380,6 +384,15 @@ module Elastic
           enabled: true
         }
       }
+
+      if current_instance.require_payout_information && !current_instance.test_mode?
+        @filters << {
+          term: {
+            possible_payout: true
+          }
+        }
+      end
+
       if @query[:date].present?
         date = Date.parse(@query[:date])
         day = date.wday + 1

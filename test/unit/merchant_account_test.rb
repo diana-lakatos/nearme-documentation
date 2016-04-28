@@ -10,31 +10,19 @@ class MerchantAccountTest < ActiveSupport::TestCase
     should 'have separate test account for test mode' do
       Instance.any_instance.stubs(test_mode?: true)
       merchant_account = FactoryGirl.create(:stripe_connect_merchant_account)
-      assert_equal merchant_account, merchant_account.merchantable.reload.stripe_connect_merchant_account
+      assert_equal merchant_account, merchant_account.merchantable.reload.merchant_accounts.mode_scope.first
       Instance.any_instance.stubs(test_mode?: false)
-      assert_nil merchant_account.merchantable.reload.stripe_connect_merchant_account
+      assert_nil merchant_account.merchantable.reload.merchant_accounts.mode_scope.first
       Instance.any_instance.stubs(test_mode?: true)
-      assert_equal merchant_account, merchant_account.merchantable.reload.stripe_connect_merchant_account
+      assert_equal merchant_account, merchant_account.merchantable.reload.merchant_accounts.mode_scope.first
     end
 
     should 'have separate account for live mode' do
       Instance.any_instance.stubs(test_mode?: false)
       merchant_account = FactoryGirl.create(:stripe_connect_merchant_account)
-      assert_equal merchant_account, merchant_account.merchantable.reload.stripe_connect_merchant_account
+      assert_equal merchant_account, merchant_account.merchantable.reload.merchant_accounts.mode_scope.first
       Instance.any_instance.stubs(test_mode?: true)
-      assert_nil merchant_account.merchantable.reload.stripe_connect_merchant_account
-    end
-
-    should 'change account when force_mode applied' do
-      Instance.any_instance.stubs(test_mode?: true)
-      test_merchant_account = FactoryGirl.create(:stripe_connect_merchant_account)
-
-      Instance.any_instance.stubs(test_mode?: false)
-      live_merchant_account = FactoryGirl.create(:stripe_connect_merchant_account)
-
-      PaymentGateway::StripeConnectPaymentGateway.any_instance.stubs(test_mode?: true)
-      assert_equal test_merchant_account, test_merchant_account.merchantable.reload.stripe_connect_merchant_account
-      assert_not Instance.find(test_merchant_account.instance_id).test_mode?
+      assert_nil merchant_account.merchantable.reload.merchant_accounts.mode_scope.first
     end
   end
 end

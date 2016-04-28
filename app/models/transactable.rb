@@ -84,7 +84,7 @@ class Transactable < ActiveRecord::Base
   before_save :set_currency
   before_save :set_is_trusted
   before_validation :set_booking_type_for_free, :set_activated_at, :set_enabled, :nullify_not_needed_attributes,
-    :set_confirm_reservations, :build_availability_template, :set_minimum_booking_minutes
+    :set_confirm_reservations, :build_availability_template, :set_minimum_booking_minutes, :set_possible_payout
   after_create :set_external_id
   after_save do
     if availability.try(:days_open).present?
@@ -100,7 +100,9 @@ class Transactable < ActiveRecord::Base
   scope :active, -> { where('transactables.draft IS NULL') }
   scope :latest, -> { order("transactables.created_at DESC") }
   scope :visible, -> { where(:enabled => true) }
-  scope :searchable, -> { active.visible }
+  scope :searchable, -> { require_payout? ? active.visible.with_possible_payout : active.visible }
+  scope :with_possible_payout, -> { where(possible_payout: true)}
+  scope :without_possible_payout, -> { where(possible_payout: false) }
   scope :for_transactable_type_id, -> transactable_type_id { where(transactable_type_id: transactable_type_id) }
   scope :for_groupable_transactable_types, -> { joins(:transactable_type).where('transactable_types.groupable_with_others = ?', true) }
   scope :filtered_by_price_types, -> price_types { where([(price_types - ['free']).map { |pt| "#{pt}_price_cents IS NOT NULL" }.join(' OR '),
@@ -226,6 +228,14 @@ class Transactable < ActiveRecord::Base
     ]
   end
 
+  def self.require_payout?
+    !current_instance.test_mode? && current_instance.require_payout_information?
+  end
+
+  def self.current_instance
+    @current_instance ||= PlatformContext.current.instance
+  end
+
   def availability_template
     super || location.try(:availability_template)
   end
@@ -236,11 +246,6 @@ class Transactable < ActiveRecord::Base
 
   def validation_for(field_names)
     custom_validators.where(field_name: field_names)
-  end
-
-  def set_is_trusted
-    self.enabled = self.enabled && is_trusted?
-    true
   end
 
   def set_booking_type_for_free
@@ -569,7 +574,11 @@ class Transactable < ActiveRecord::Base
   end
 
   def disabled?
-    !enabled?
+    !(enabled? && !payout_information_missing?)
+  end
+
+  def payout_information_missing?
+    self.class.require_payout? && !self.possible_payout?
   end
 
   def enable!
@@ -738,8 +747,16 @@ class Transactable < ActiveRecord::Base
     true
   end
 
+  def set_possible_payout
+    self.possible_payout = self.company.present? && self.company.merchant_accounts.verified.any? do |merchant_account| 
+      merchant_account.supports_currency?(currency) && merchant_account.payment_gateway.active_in_current_mode? 
+    end
+    true
+  end
+
   def set_currency
     self.currency = currency
+    true
   end
 
   def set_activated_at
@@ -753,6 +770,12 @@ class Transactable < ActiveRecord::Base
     self.enabled = is_trusted? if self.enabled
     true
   end
+
+  def set_is_trusted
+    self.enabled = self.enabled && is_trusted?
+    true
+  end
+
 
   def set_minimum_booking_minutes
     self.minimum_booking_minutes ||= transactable_type.minimum_booking_minutes
@@ -810,6 +833,7 @@ class Transactable < ActiveRecord::Base
 
   def pass_timezone_to_schedule
     schedule.try(:timezone=, timezone)
+    true
   end
 
   def should_create_sitemap_node?
