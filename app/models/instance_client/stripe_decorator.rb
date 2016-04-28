@@ -17,5 +17,11 @@ class InstanceClient::StripeDecorator
   rescue
     nil
   end
+
+  def test_mode?
+    !response.params["livemode"]
+  rescue
+    true
+  end
 end
 

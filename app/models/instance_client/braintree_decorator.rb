@@ -18,5 +18,9 @@ class InstanceClient::BraintreeDecorator
   rescue
     nil
   end
+
+  def test_mode?
+    !!response.try(:test)
+  end
 end
 

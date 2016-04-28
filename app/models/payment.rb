@@ -94,7 +94,9 @@ class Payment < ActiveRecord::Base
 
   before_validation do |p|
     self.payer ||= payable.try(:owner)
-    self.credit_card_id ||= payer.instance_clients.find_by(payment_gateway: payment_gateway.id).try(:credit_cards).try(:find, p.chosen_credit_card_id).try(:id) if p.payment_method.try(:payment_method_type) == 'credit_card' && p.chosen_credit_card_id.present? &&  p.chosen_credit_card_id != 'custom'
+    if p.payment_method.try(:payment_method_type) == 'credit_card' && p.chosen_credit_card_id.present? &&  p.chosen_credit_card_id != 'custom'
+      self.credit_card_id ||= payer.instance_clients.find_by(payment_gateway: payment_gateway.id, test_mode: test_mode?).try(:credit_cards).try(:find, p.chosen_credit_card_id).try(:id)
+    end
     true
   end
 
@@ -304,11 +306,10 @@ class Payment < ActiveRecord::Base
 
   def credit_card_attributes=(cc_attributes)
     return unless credit_card_payment?
-
     super(cc_attributes.merge({
       payment_gateway: payment_gateway,
-      test_mode: instance.test_mode?,
-      instance_client: payment_gateway.try {|p| p.instance_clients.where(client: payable.owner).first_or_initialize }
+      test_mode: test_mode?,
+      instance_client: payment_gateway.try {|p| p.instance_clients.where(client: payable.owner, test_mode: test_mode?).first_or_initialize }
     }))
   end
 

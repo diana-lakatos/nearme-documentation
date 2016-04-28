@@ -21,7 +21,7 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
   end
 
   def settings
-    super.merge({environment: test_mode? ? :sandbox : :production})
+    super.merge({environment: test_mode? ? :sandbox : :production, test: test_mode? })
   end
 
   def gateway

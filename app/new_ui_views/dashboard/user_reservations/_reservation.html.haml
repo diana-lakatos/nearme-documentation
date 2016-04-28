@@ -29,6 +29,9 @@
       - if reservation.payment.billing_authorizations.present?
         .alert.alert-warning= I18n.t('dashboard.user_reservations.money_info')
 
+  - if reservation.payment.test_mode?
+    .alert.alert-warning= I18n.t('dashboard.user_reservations.test_mode')
+
 
   = render 'reservation_details', reservation: reservation, for_host: false
 
