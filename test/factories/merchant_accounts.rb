@@ -7,13 +7,17 @@ FactoryGirl.define do
 
     factory :paypal_merchant_account, class: MerchantAccount::PaypalMerchantAccount do
       payment_gateway { FactoryGirl.create(:paypal_payment_gateway) }
-      data { {email: 'receiver@example.com'} }
+      data { {"email" => 'receiver@example.com'} }
 
     end
 
     factory :paypal_adaptive_merchant_account, class: MerchantAccount::PaypalAdaptiveMerchantAccount do
       payment_gateway { FactoryGirl.create(:paypal_adaptive_payment_gateway) }
-      data { {email: 'receiver@example.com'} }
+      data { {"email" => 'receiver@example.com'} }
+    end
+
+    factory :paypal_express_chain_merchant_account, class: MerchantAccount::PaypalExpressChainMerchantAccount do
+      payment_gateway { FactoryGirl.create(:paypal_express_chain_payment_gateway) }
     end
 
 

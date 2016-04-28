@@ -10,7 +10,13 @@
         = f.button :submit, t('instance_admin.save'), class: 'btn btn-light pull-right'
   .content-container
     %h4
-      = t('instance_admin.settings.configuration.payment_transfers')
+      = t('instance_admin.settings.configuration.payout_settings')
+    - unless @instance.test_mode?
+      .row
+        .input-container.col-xs-12
+          = f.input :require_payout_information, as: :boolean, inline_label: "Force payout details collected before selling in Live Payment Mode."
+          When checked only listings with verified merchants are displayed.
+    .row
     .row
       .input-container.col-xs-6
         = f.input :payment_transfers_frequency, collection: PaymentTransfer::FREQUENCIES.collect { |f| [t(".#{f}"), f] }, input_html: { class: 'form-control' }, prompt: true

@@ -25,16 +25,6 @@ class Company < ActiveRecord::Base
   has_many :locations, dependent: :destroy, inverse_of: :company
   has_many :locations_impressions, source: :impressions, through: :locations
   has_many :merchant_accounts, as: :merchantable, dependent: :nullify
-  MerchantAccount::MERCHANT_ACCOUNTS.each do |name, klass|
-    # also include owners if association exist
-    has_one :"#{name}_merchant_account",
-      ->(record) {
-        assoc = klass.reflections.keys.include?(:owners) ? includes(:owners) : self
-        pg = klass::SEPARATE_TEST_ACCOUNTS && "PaymentGateway::#{name.classify}PaymentGateway".constantize.find_by(instance_id: (PlatformContext.current.try(:instance).try(:id) || record.instance_id))
-        pg ? assoc.where(test: pg.test_mode?) : assoc
-      },
-      class_name: klass.to_s, as: :merchantable, dependent: :nullify
-  end
   has_many :option_types, class_name: 'Spree::OptionType', dependent: :destroy
   has_many :orders, class_name: 'Spree::Order'
   has_many :order_line_items, class_name: 'Spree::LineItem'
@@ -59,6 +49,22 @@ class Company < ActiveRecord::Base
   has_one :company_address, class_name: 'Address', as: :entity
   has_one :domain, :as => :target, foreign_key: 'target_id', :dependent => :destroy
   has_one :theme, as: :owner, foreign_key: 'owner_id', dependent: :destroy
+
+  # Note
+  # This association might not be accurate when having mutiple PG of the same class
+  # working in the same mode within one Marketplace. It's not case for now so
+  # let's comeback to it if we ever need to.
+  MerchantAccount::MERCHANT_ACCOUNTS.each do |name, klass|
+    # also include owners if association exist
+    has_one :"#{name}_merchant_account",
+      ->(record) {
+        assoc = klass.reflections.keys.include?(:owners) ? includes(:owners) : self
+        pg = "PaymentGateway::#{name.classify}PaymentGateway".constantize.find_by(instance_id: (PlatformContext.current.try(:instance).try(:id) || record.instance_id))
+        pg ? assoc.where(test: pg.test_mode?) : assoc
+      },
+      class_name: klass.to_s, as: :merchantable, dependent: :nullify
+  end
+
 
   belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :created_companies
   belongs_to :instance
@@ -95,9 +101,8 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :payments_mailing_address
   accepts_nested_attributes_for :approval_requests
   accepts_nested_attributes_for :products, :shipping_methods, :shipping_categories, :stock_locations, :offers
-  MerchantAccount::MERCHANT_ACCOUNTS.each do |name, _|
-    accepts_nested_attributes_for "#{name}_merchant_account".to_sym, allow_destroy: true, update_only: true
-  end
+  accepts_nested_attributes_for :merchant_accounts, allow_destroy: true, update_only: true
+
 
   validates_associated :shipping_methods, if: :verify_associated
   validates_associated :shipping_categories, if: :verify_associated
@@ -166,6 +171,10 @@ class Company < ActiveRecord::Base
     @payment_gateway
   end
 
+  def payout_payment_gateways
+    instance.payout_gateways(iso_country_code, all_currencies)
+  end
+
   def boarding_payment_gateway
     @boarding_payment_gateway ||= PaymentGateway.where(instance: instance).all.find do |pg|
       pg.supports_currency?(currency) && pg.payout_supports_country?(iso_country_code) && pg.supports_paypal_chain_payments?
@@ -173,7 +182,11 @@ class Company < ActiveRecord::Base
   end
 
   def currency
-    @currency ||= locations.first.try(:listings).try(:first).try(:currency).presence || instance.default_currency || 'USD'
+    @currency ||= all_currencies.first
+  end
+
+  def all_currencies
+    self.listings.select('DISTINCT currency').map(&:currency).presence || [instance.default_currency || 'USD']
   end
 
   def possible_payout_not_configured?(payment_gateway)
@@ -222,6 +235,11 @@ class Company < ActiveRecord::Base
     else
       read_attribute(:mailing_address)
     end
+  end
+
+  def missing_payout_information?
+    return false if instance.test_mode?
+    listings.without_possible_payout.any?
   end
 
   def set_creator_address

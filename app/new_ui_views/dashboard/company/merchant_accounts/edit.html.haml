@@ -1,0 +1,8 @@
+- title t('dashboard.nav.payouts')
+
+- content_for :page_header do
+  %h1= yield :title
+
+- yield :payout_errors
+
+= render partial: 'dashboard/company/merchant_accounts/form', locals: {merchant_account: @merchant_account}

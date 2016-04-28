@@ -1532,6 +1532,7 @@ en:
       header: 'Merchant account details'
       pending: 'Your merchant account is pending verification.'
       verified: 'Your merchant account has been verified.'
+      void: 'Your merchant account has been voided.'
       failed: 'Verification of your merchant account failed.'
       currency: 'Currency'
       select_currency: '- Select Currency -'
@@ -2472,6 +2473,7 @@ en:
     reviews_left_by_this_buyer: "How %{first_name} rated others as an buyer"
 
   payouts:
+    email_not_correct: "This email is not correct."
     mailing_address: 'Address to send checks'
     paypal_chain_payment_set: "Thank you for granting permissions. Use the same button to change permissions if needed."
     grant_permission: "Grant permission"

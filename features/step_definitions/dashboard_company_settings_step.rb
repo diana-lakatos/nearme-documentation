@@ -39,7 +39,7 @@ end
 
 When /^I update payouts settings$/ do
   if @paypal_gateway.present?
-    fill_in "company_paypal_adaptive_merchant_account_attributes_email", with: "paypal-update@example.com"
+    fill_in "merchant_account_email", with: "paypal-update@example.com"
   else
     fill_in "company_payments_mailing_address_attributes_address", with: "Adelaide, South Australia, Australia"
   end
@@ -57,7 +57,7 @@ end
 Then /^The company payouts settings should be updated$/ do
   company = model!("the company")
   if @paypal_gateway.blank?
-    assert_equal "Adelaide SA, Australia", company.mailing_address
+    assert_equal "Adelaide, South Australia, Australia", company.mailing_address
   else
     assert_equal 1, company.reload.merchant_accounts.count
     assert_equal @paypal_gateway.id, company.reload.merchant_accounts.last.payment_gateway_id

@@ -24,7 +24,7 @@
 
 .row
   .col-sm-4
-    = form.input :month, as: :select, label: t('payments.cc_fields.expiration_date_month'), collection: credit_card_date[:month], input_html: { prompt: false, class: 'sessioncamexclude', placeholder: 'Select month' }
+    = form.input :month, as: :select, label: t('payments.cc_fields.expiration_date_month'), collection: credit_card_date[:month], input_html: { prompt: false, class: 'sessioncamexclude', placeholder: 'Select month'}
   .col-sm-4
     = form.input :year, as: :select, label: t('payments.cc_fields.expiration_date_year'), collection: credit_card_date[:year], input_html: { prompt: false, class: 'sessioncamexclude', placeholder: 'Select year' }
 

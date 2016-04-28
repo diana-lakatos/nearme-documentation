@@ -1168,6 +1168,7 @@ ActiveRecord::Schema.define(version: 20160505114035) do
     t.boolean  "click_to_call",                                                                default: false
     t.boolean  "enable_reply_button_on_host_reservations",                                     default: false
     t.boolean  "split_registration",                                                           default: false
+    t.boolean  "require_payout_information",                                                   default: false
     t.boolean  "precise_search",                                                               default: false,         null: false
   end
 
@@ -3758,6 +3759,7 @@ ActiveRecord::Schema.define(version: 20160505114035) do
     t.integer  "deposit_amount_cents"
     t.boolean  "featured",                                                              default: false
     t.decimal  "cancellation_policy_penalty_hours",             precision: 8, scale: 2, default: 0.0
+    t.boolean  "possible_payout",                                                       default: false
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

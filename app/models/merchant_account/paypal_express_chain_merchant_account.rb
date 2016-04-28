@@ -1,7 +1,5 @@
 class MerchantAccount::PaypalExpressChainMerchantAccount < MerchantAccount
 
-  SEPARATE_TEST_ACCOUNTS = true
-
   ATTRIBUTES = %w(email merchant_token permissions_granted consent_status
     account_status product_intent_id return_message is_email_confirmed billing_agreement_id payer_id)
   include MerchantAccount::Concerns::DataAttributes

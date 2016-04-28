@@ -9,7 +9,7 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
   # end
 
   def self.supported_countries
-    ["AU", "DK", "FI", "IE", 'NO', 'SE', "US", "GB", "CA"]
+    ["AU", "AT", "BE", "BR", "CA", "DK", "FI", "FR", "DE", "HK", "IE", "IT", "JP", "LU", "MX", "NL", "NZ", "NO", "PT", "SG", "ES", "SE", "CH", "GB", "US"]
   end
 
   def supported_currencies
