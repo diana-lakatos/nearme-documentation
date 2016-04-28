@@ -21,7 +21,7 @@
   .content-container
     %h4
       = t('instance_admin.manage.form_components.copy_from_template')
-    = simple_form_for :copy_template, {:url => [:create_as_copy, :instance_admin, @controller_scope, @form_componentable, resource]} do |f|
+    = simple_form_for :copy_template, {:url => [:create_as_copy, :instance_admin, @controller_scope, @form_componentable, :form_components]} do |f|
       .row
         .input-container.col-xs-6
           = f.input :form_type, as: :hidden, input_html: { value: @form_type }

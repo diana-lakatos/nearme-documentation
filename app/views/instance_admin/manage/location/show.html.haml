@@ -1,0 +1,9 @@
+.content-container
+  .row
+    .table-container.col-xs-12
+      %table.table
+        %tbody
+          %tr.instance-admins-table
+            %td
+              = link_to t('instance_admin.manage.instance_properties.form_components'), instance_admin_manage_instance_form_components_path(PlatformContext.current.instance), class: 'pull-left btn btn-blue btn-bottom-margin'
+

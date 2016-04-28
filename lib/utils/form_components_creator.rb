@@ -1,7 +1,7 @@
 module Utils
   class FormComponentsCreator
 
-    def initialize(form_componentable)
+    def initialize(form_componentable, options = {})
       @creator = case form_componentable
                  when ServiceType
                    ServiceComponentCreator
@@ -21,6 +21,13 @@ module Utils
                      InstanceBuyerProfileCreator
                    when InstanceProfileType::DEFAULT
                      InstanceProfileCreator
+                   else
+                     raise NotImplementedError
+                   end
+                 when Instance
+                   case options[:type]
+                   when FormComponent::LOCATION_ATTRIBUTES
+                     LocationFormComponentsCreator
                    else
                      raise NotImplementedError
                    end
@@ -91,6 +98,38 @@ module Utils
         }
       ])
     end
+  end
+
+  class LocationFormComponentsCreator < BaseComponentCreator
+
+    def create!
+      create_location_form_components!
+    end
+
+    def create_location_form_components!
+      @form_type_class = FormComponent::LOCATION_ATTRIBUTES
+
+      create_components!(
+        [
+          { name: 'Location',
+            fields: [
+              { 'location' => 'name' },
+              { 'location' => 'address' },
+              { 'location' => 'time_zone' },
+              { 'location' => 'description' },
+              { 'location' => 'location_type' },
+              { 'location' => 'email' },
+              { 'location' => 'administrator' },
+              { 'location' => 'special_notes' },
+              { 'location' => 'availability_rules' },
+              { 'location' => 'amenities' },
+              { 'location' => 'assigned_waiver_agreement_templates' },
+            ]
+          }
+        ]
+      )
+    end
+
   end
 
   class ReservationComponentCreator < BaseComponentCreator

@@ -368,6 +368,20 @@ DesksnearMe::Application.routes.draw do
           end
         end
 
+        resource :location, only: 'show', controller: 'location' do
+        end
+
+        resources :instances do
+          resources :form_components, controller: 'instances/form_components' do
+            member do
+              patch :update_rank
+            end
+            collection do
+              post :create_as_copy
+            end
+          end
+        end
+
         resources :custom_model_types do
           resources :custom_attributes, controller: 'custom_model_types/custom_attributes'
         end

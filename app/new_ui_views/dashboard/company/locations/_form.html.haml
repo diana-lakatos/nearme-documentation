@@ -11,7 +11,12 @@
     = render 'dashboard/shared/flash'
 
     %input{name: 'with_deleted_link', type: 'hidden', value: params[:with_deleted_link]}
-    = render :partial => 'location_form', :locals => { :f => f, :location => @location }
+    - current_instance.form_components.where(form_type: FormComponent::LOCATION_ATTRIBUTES).rank(:rank).each do |form_component|
+      - form_component.form_fields.each do |form_field|
+        - model = form_field.keys.first
+        - field = form_field[model]
+        - if model == 'location'
+          = render :partial => 'location_form', :locals => { :f => f, :location => @location, only_inputs: [field.to_sym] }
 
   .dialog__actions
     = f.submit t('locations.save_location')
