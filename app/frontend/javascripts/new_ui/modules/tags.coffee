@@ -12,7 +12,7 @@ module.exports = class Tags
       valueField: 'name',
       labelField: 'name',
       searchField: 'name',
-      create: @atInstanceAdmin(),
+      create: true,
       load: (query, callback)=>
         return callback() unless query
 

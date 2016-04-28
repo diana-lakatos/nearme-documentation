@@ -4,7 +4,7 @@ FactoryGirl.define do
     title { Faker::Lorem.words(4).join(' ').titleize }
     content { Faker::Lorem.paragraphs(3).join('<br/><br/>') }
     excerpt { Faker::Lorem.paragraph(2) }
-    published_at { DateTime.now }
+    published_at_str { DateTime.now.strftime(I18n.t('datepicker.dformat')) }
     user
     author_name { Faker::Name.name }
 

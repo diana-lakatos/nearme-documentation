@@ -301,7 +301,7 @@ class SecuredParams
   def user_blog_post
     [
       :title,
-      :published_at,
+      :published_at_str,
       :slug,
       :hero_image,
       :content,

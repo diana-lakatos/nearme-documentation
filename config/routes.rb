@@ -934,7 +934,11 @@ DesksnearMe::Application.routes.draw do
     end #end /dashboard namespace
 
     resources :featured_items, only: :index
-    resources :tags, only: :index
+
+    resources :users do
+      resources :tags, only: :index
+    end
+
     resources :marketplace_logger
 
     resources :reservations do

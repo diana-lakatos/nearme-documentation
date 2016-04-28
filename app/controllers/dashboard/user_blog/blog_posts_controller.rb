@@ -7,12 +7,14 @@ class Dashboard::UserBlog::BlogPostsController < Dashboard::UserBlog::BaseContro
   end
 
   def new
-    @blog_post = current_user.blog_posts.new author_name: current_user.name, author_biography: current_user.properties.try(:biography),
-                                             published_at: Time.zone.now.to_date
+    @blog_post = current_user.blog_posts.new(
+      author_name: current_user.name,
+      author_biography: current_user.properties.try(:biography),
+      published_at_str: Time.zone.now.strftime(I18n.t('datepicker.dformat'))
+    )
   end
 
   def create
-    params[:user_blog_post][:published_at] = (date_time_handler.convert_to_datetime(params[:user_blog_post][:published_at]).presence || params[:user_blog_post][:published_at]) if params[:user_blog_post][:published_at] if params[:user_blog_post]
     @blog_post = current_user.blog_posts.build(user_blog_post_params)
     if @blog_post.save
       flash[:success] = t('flash_messages.blog_admin.blog_posts.blog_post_added')
@@ -23,11 +25,9 @@ class Dashboard::UserBlog::BlogPostsController < Dashboard::UserBlog::BaseContro
   end
 
   def edit
-    @blog_post.published_at = @blog_post.published_at.to_date
   end
 
   def update
-    params[:user_blog_post][:published_at] = (date_time_handler.convert_to_datetime(params[:user_blog_post][:published_at]).presence || params[:user_blog_post][:published_at]) if params[:user_blog_post][:published_at] if params[:user_blog_post]
     if @blog_post.update_attributes(user_blog_post_params)
       flash[:success] = t('flash_messages.blog_admin.blog_posts.blog_post_updated')
       redirect_to dashboard_blog_path

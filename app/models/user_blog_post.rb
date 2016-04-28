@@ -49,6 +49,15 @@ class UserBlogPost < ActiveRecord::Base
     published_at <= Time.zone.now
   end
 
+  def published_at_str
+    self.published_at.try(:strftime, I18n.t('datepicker.dformat'))
+  end
+
+  def published_at_str=(value)
+    value = Date.strptime(value, I18n.t('datepicker.dformat'))
+    write_attribute(:published_at, value)
+  end
+
   private
 
   def should_generate_new_friendly_id?

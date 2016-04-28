@@ -3,7 +3,7 @@
 = f.input :content, as: :ckeditor, input_html: { ckeditor: { toolbar: 'simple' } }
 = f.input :excerpt, as: :ckeditor, input_html: { ckeditor: { toolbar: 'simple' } }
 
-= f.input :published_at, as: :string, readonly: true
+= f.input :published_at_str, as: :string, readonly: true
 = f.input :slug
 = f.input :tag_list, input_html: { data: data_tags_options(f.object) }
 
