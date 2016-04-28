@@ -14,7 +14,10 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
   end
 
   def supported_currencies
-    ["AUD", "BRL", "CZK", "DKK", "HDK", "HUF", "ILS", "MYR", "MXN", "NOK", "NZD", "PHP", "RUB", "SGD", "SEK", "CHF", "TWD", "THB", "TRY",  "USD", "GBP", "EUR", "JPY", "CAD", "PLN"]
+   [
+      "AUD", "BRL", "CAD", "CHF", "CZK", "DKK", "EUR", "GBP", "HDK", "HUF", "HKD", "ILS", "JPY", "MXN",
+      "MYR", "NOK", "NZD", "PHP", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD", "USD"
+    ]
   end
 
   def self.settings
