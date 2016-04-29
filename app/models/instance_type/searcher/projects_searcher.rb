@@ -13,7 +13,10 @@ class InstanceType::Searcher::ProjectsSearcher
     @fetcher  = Project.enabled.search_by_query([:name, :description, :summary], @params[:query])
     @fetcher = @fetcher.by_topic(selected_topic_ids).custom_order(@params[:sort])
     @fetcher = @fetcher.seek_collaborators if @params[:seek_collaborators] == "1"
-    @fetcher.includes(:topics, :creator)
+    if @params[:sort] =~ /collaborators/i && selected_topic_ids.present?
+      @fetcher = @fetcher.group('project_topics.id')
+    end
+    @fetcher
   end
 
   def topics_for_filter

@@ -335,7 +335,8 @@ class User < ActiveRecord::Base
           order('followers_count DESC')
         when /location/i
           return all unless user
-          all.joins(:current_address).merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance')).select('users.*')
+          group('addresses.id, users.id').joins(:current_address).select('users.*')
+          .merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance'))
         when /number_of_projects/i
           order('projects_count + project_collborations_count DESC')
         else
