@@ -6,7 +6,13 @@ class InstanceAdmin::Settings::Payments::PaymentGatewaysController < InstanceAdm
 
   def create
     @payment_gateway = payment_gateway_class.new(payment_gateway_params)
-    if @payment_gateway.save
+
+    if @payment_gateway.valid?
+      @payment_gateway.payment_country_ids = @payment_gateway.available_payment_countries.map(&:id)
+      if @payment_gateway.supports_multiple_currency?
+        @payment_gateway.payment_currency_ids = @payment_gateway.available_currencies.map(&:id)
+      end
+      @payment_gateway.save
       redirect_to redirect_url(@payment_gateway), notice: t('flash_messages.instance_admin.settings.payments.payment_gateways.created')
     else
       render :new
@@ -15,7 +21,7 @@ class InstanceAdmin::Settings::Payments::PaymentGatewaysController < InstanceAdm
 
   def edit
     @payment_gateway = payment_gateway_class.find(params[:id])
-    @payment_gateway.build_payment_methods
+    @payment_gateway.build_payment_methods(active: true)
   end
 
   def update
@@ -30,8 +36,13 @@ class InstanceAdmin::Settings::Payments::PaymentGatewaysController < InstanceAdm
 
   def destroy
     @payment_gateway = payment_gateway_class.find(params[:id])
-    @payment_gateway.destroy
-    redirect_to redirect_url, notice: t('flash_messages.instance_admin.settings.payments.payment_gateways.deleted')
+    if @payment_gateway.deletable?
+      @payment_gateway.destroy
+      flash[:notice] = t('flash_messages.instance_admin.settings.payments.payment_gateways.deleted')
+    else
+      flash[:error] = t('flash_messages.instance_admin.settings.payments.payment_gateways.can_not_be_deleted')
+    end
+    redirect_to redirect_url
   end
 
   private

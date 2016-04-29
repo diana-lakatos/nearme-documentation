@@ -68,7 +68,7 @@ module DesksnearMe
       :password, :bank_account_number, :response,
       :marketplace_password, :olark_api_key, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key,
       :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret,
-      :live_settings, :test_settings, :card_number, :card_exp_month, :card_exp_year, :card_code
+      :live_settings, :test_settings, :verification_value, :number, :credit_card_attributes
     ]
 
     config.generators do |g|
@@ -84,6 +84,8 @@ module DesksnearMe
 
     # Access the DB or load models when precompiling assets
     config.assets.initialize_on_precompile = true
+
+    config.use_elastic_search = ENV['USE_ELASTIC_SEARCH']
 
     config.assets.prefix = ENV['ASSETS_PREFIX'].presence || config.assets.prefix
 

@@ -27,6 +27,7 @@ class Dashboard::UserBlog::BlogPostsController < Dashboard::UserBlog::BaseContro
   end
 
   def update
+    params[:user_blog_post][:published_at] = (date_time_handler.convert_to_datetime(params[:user_blog_post][:published_at]).presence || params[:user_blog_post][:published_at]) if params[:user_blog_post][:published_at] if params[:user_blog_post]
     if @blog_post.update_attributes(user_blog_post_params)
       flash[:success] = t('flash_messages.blog_admin.blog_posts.blog_post_updated')
       redirect_to dashboard_blog_path

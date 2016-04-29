@@ -28,7 +28,7 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
 
         geo_searcher_params = initialize_search_params
         if located || adjust_to_map
-          if adjust_to_map || search.country.present? && search.city.blank?
+          if adjust_to_map || search.country.present? && search.city.blank? && search.bounding_box
             @search_params.merge!({
                 bounding_box: search.bounding_box
               })

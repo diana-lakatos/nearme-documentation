@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :custom_attribute, class: 'CustomAttributes::CustomAttribute' do
     sequence(:name) { |n| "Attribute #{n}" }
-    attribute_type "integer"
+    attribute_type "string"
     label 'My Label'
     hint 'this is my hint'
     required 0

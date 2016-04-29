@@ -34,7 +34,7 @@ class Dashboard::PaymentGateways::CreditCardsController < Dashboard::BaseControl
   private
 
   def find_payment_gateways
-    @payment_gateways = PaymentGateway.with_credit_card
+    @payment_gateways = PaymentGateway.with_credit_card.mode_scope
   end
 
   def find_payment_gateway
@@ -42,7 +42,7 @@ class Dashboard::PaymentGateways::CreditCardsController < Dashboard::BaseControl
   end
 
   def find_instance_client
-    @instance_client = current_user.instance_clients.for_payment_gateway(@payment_gateway.id).first
+    @instance_client = current_user.instance_clients.for_payment_gateway(@payment_gateway.id, current_instance.test_mode?).first
     if @instance_client.nil?
       flash[:deleted] = t('flash_messages.manage.credit_cards.not_configured')
       redirect_to request.referer.presence || root_path

@@ -75,13 +75,9 @@ class Payment < ActiveRecord::Base
   scope :paid_or_refunded, -> { where(state: ['paid', 'refunded']) }
   scope :refunded, -> { where("#{table_name}.state = 'refunded'") }
   scope :not_refunded, -> { where("#{table_name}.state IS NOT 'refunded'") }
-  scope :last_x_days, lambda { |days_in_past|
-    where('DATE(payments.created_at) >= ? ', days_in_past.days.ago)
-  }
-
-  scope :needs_payment_transfer, -> {
-    paid_or_refunded.where(payment_transfer_id: nil, offline: false)
-  }
+  scope :last_x_days, lambda { |days_in_past| where('DATE(payments.created_at) >= ? ', days_in_past.days.ago) }
+  scope :needs_payment_transfer, -> { paid_or_refunded.where(payment_transfer_id: nil, offline: false) }
+  scope :transferred, -> { where.not(payment_transfer_id: nil)}
 
   scope :total_by_currency, -> {
     paid.group('payments.currency').
@@ -98,7 +94,9 @@ class Payment < ActiveRecord::Base
 
   before_validation do |p|
     self.payer ||= payable.try(:owner)
-    self.credit_card_id ||= payer.instance_clients.find_by(payment_gateway: payment_gateway.id).try(:credit_cards).try(:find, p.chosen_credit_card_id).try(:id) if p.payment_method.try(:payment_method_type) == 'credit_card' && p.chosen_credit_card_id.present? &&  p.chosen_credit_card_id != 'custom'
+    if p.payment_method.try(:payment_method_type) == 'credit_card' && p.chosen_credit_card_id.present? &&  p.chosen_credit_card_id != 'custom'
+      self.credit_card_id ||= payer.instance_clients.find_by(payment_gateway: payment_gateway.id, test_mode: test_mode?).try(:credit_cards).try(:find, p.chosen_credit_card_id).try(:id)
+    end
     true
   end
 
@@ -308,10 +306,10 @@ class Payment < ActiveRecord::Base
 
   def credit_card_attributes=(cc_attributes)
     return unless credit_card_payment?
-
     super(cc_attributes.merge({
       payment_gateway: payment_gateway,
-      instance_client: payment_gateway.try {|p| p.instance_clients.where(client: payable.owner).first_or_initialize }
+      test_mode: test_mode?,
+      instance_client: payment_gateway.try {|p| p.instance_clients.where(client: payable.owner, test_mode: test_mode?).first_or_initialize }
     }))
   end
 

@@ -36,11 +36,11 @@ class PaymentGateway::PaypalAdaptivePaymentGateway < PaymentGateway
 
   def self.settings
     {
-      email: "",
-      login: "",
-      password: "",
-      signature: "",
-      app_id: "",
+      email: { validate: [:presence] },
+      login: { validate: [:presence] },
+      password: { validate: [:presence] },
+      signature: { validate: [:presence] },
+      app_id: { validate: [:presence] },
     }
   end
 

@@ -82,6 +82,7 @@ module CustomAttributes
     end
 
     def translations_for_valid_values!
+      return if @custom_attribute.attribute_type != 'string'
       @custom_attribute.valid_values ||= []
       @custom_attribute.valid_values.each do |valid_value|
         @key_value_translations[@custom_attribute.valid_value_translation_key(valid_value)] = valid_value

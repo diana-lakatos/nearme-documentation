@@ -4,7 +4,8 @@ class InstanceAdmin::Manage::TransfersController < InstanceAdmin::Manage::BaseCo
   defaults :resource_class => PaymentTransfer, :collection_name => 'transfers', :instance_name => 'transfer'
 
   def index
-    @payment_transfers = PaymentTransferDecorator.decorate_collection(PaymentTransfer.includes(:payout_attempts).order('created_at DESC').paginate(:page => params[:page]))
+    transfers_scope = PaymentTransfer.includes(:payout_attempts).order('created_at DESC')
+    @payment_transfers = PaymentTransferDecorator.decorate_collection(transfers_scope.paginate(:page => params[:page]))
   end
 
   def not_failed

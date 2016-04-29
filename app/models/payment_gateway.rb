@@ -40,9 +40,9 @@ class PaymentGateway < ActiveRecord::Base
   has_many :instance_clients, dependent: :destroy
   has_many :merchant_accounts, dependent: :destroy
   has_many :payments, through: :billing_authorizations
-  has_many :payment_gateways_countries
+  has_many :payment_gateways_countries, dependent: :destroy
   has_many :payment_countries, through: :payment_gateways_countries, source: 'country'
-  has_many :payment_gateways_currencies
+  has_many :payment_gateways_currencies, dependent: :destroy
   has_many :payment_currencies, through: :payment_gateways_currencies, source: 'currency'
   has_many :payment_methods, dependent: :destroy
   has_many :refunds
@@ -175,6 +175,8 @@ class PaymentGateway < ActiveRecord::Base
   #- END CLASS METHODS
 
   def authorize(payment, options = {})
+    force_mode(payment.payment_gateway_mode)
+
     options.merge!(custom_authorize_options)
     PaymentAuthorizer.new(self, payment, options).process!
   end
@@ -185,6 +187,10 @@ class PaymentGateway < ActiveRecord::Base
 
   def deletable?
     merchant_accounts.live.active.blank? && payments.live.active.blank?
+  end
+
+  def payout_gateway?
+    PAYOUT_GATEWAYS.values.include?(self.class)
   end
 
   def name
@@ -258,6 +264,8 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def charge(user, amount, currency, payment, token)
+    force_mode(payment.payment_gateway_mode)
+
     @payment = payment
     @payable = @payment.payable
     @charge = charges.create(
@@ -345,6 +353,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def store(credit_card, instance_client)
+    force_mode(instance_client.test_mode? ? 'test' : 'live')
     options = { email: instance_client.client.email, default_card: true, customer: instance_client.customer_id }
     gateway_store(credit_card, options)
   end

@@ -13,10 +13,10 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
 
   def self.settings
     {
-      login: "",
-      password: "",
-      signature: "",
-      partner_id: ""
+      login: { validate: [:presence] },
+      password: { validate: [:presence] },
+      signature: { validate: [:presence] },
+      partner_id: { validate: [:presence] }
     }
   end
 

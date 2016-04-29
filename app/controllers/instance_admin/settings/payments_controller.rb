@@ -8,7 +8,7 @@ class InstanceAdmin::Settings::PaymentsController < InstanceAdmin::Settings::Bas
   private
 
   def find_payment_gateways
-    @payment_gateways = PaymentGateway.all
+    @payment_gateways = PaymentGateway.order(:created_at)
   end
 
   def default_action

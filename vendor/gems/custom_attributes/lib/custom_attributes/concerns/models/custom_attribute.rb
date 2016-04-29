@@ -3,6 +3,7 @@ module CustomAttributes
     module Models
       module CustomAttribute
         extend ActiveSupport::Concern
+        include ::CustomAttributes::Concerns::Models::Castable
 
         included do
           attr_accessor :required, :max_length, :min_length
@@ -81,9 +82,18 @@ module CustomAttributes
             self.where(target_id: target_id, target_type: target_type).pluck(:name, :attribute_type, :default_value, :public, :validation_rules, :valid_values, :html_tag, :searchable)
           end
 
+          def valid_values_casted
+            return valid_values if attribute_type.to_sym == :array
+            valid_values.map{ |value| custom_property_type_cast(value, attribute_type.to_sym) }
+          end
+
           def valid_values_translated
-            valid_values.map do |valid_value|
-              [I18n.translate(valid_value_translation_key(valid_value), default: valid_value), valid_value]
+            if attribute_type == 'string'
+              valid_values.map do |valid_value|
+                [I18n.translate(valid_value_translation_key(valid_value), default: valid_value), valid_value]
+              end
+            else
+              valid_values_casted.map{ |val| [val, val] }
             end
           end
 

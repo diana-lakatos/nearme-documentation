@@ -92,7 +92,9 @@ class Reservation < ActiveRecord::Base
     event :activate                 do transition inactive: :unconfirmed; end
     event :confirm                  do transition unconfirmed: :confirmed; end
     event :reject                   do transition unconfirmed: :rejected; end
-    event :host_cancel              do transition confirmed: :cancelled_by_host; end
+    event :host_cancel              do
+      transition confirmed: :cancelled_by_host, :if => lambda {|reservation| !reservation.skip_payment_authorization?}
+    end
     event :user_cancel              do transition [:unconfirmed, :confirmed] => :cancelled_by_guest; end
     event :expire                   do transition unconfirmed: :expired; end
   end
@@ -212,8 +214,11 @@ class Reservation < ActiveRecord::Base
       fail('Charging penalty when there exist already authorized/paid payment!') if payment.present? && (payment.paid? || payment.authorized?)
       self.update_column(:subtotal_amount_cents, penalty_fee_subtotal.cents)
       self.force_recalculate_fees = true
+      self.update_columns({
+       service_fee_amount_guest_cents: self.service_fee_amount_guest.cents,
+        service_fee_amount_host_cents: self.service_fee_amount_host.cents
+      })
       # note: this might not work with shipment?
-      self.save!
       self.payment.update_attributes({
         subtotal_amount_cents: self.subtotal_amount.cents,
         service_fee_amount_guest_cents: self.service_fee_amount_guest.cents,
@@ -221,6 +226,7 @@ class Reservation < ActiveRecord::Base
         service_additional_charges_cents: self.service_additional_charges.cents,
         host_additional_charges_cents: self.host_additional_charges.cents
       })
+      self.payment.payment_transfer.try(:send, :assign_amounts_and_currency)
       if self.payment.authorize && self.payment.capture!
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::PenaltyChargeSucceeded, self.id)
       else
@@ -271,7 +277,10 @@ class Reservation < ActiveRecord::Base
     if archived_at.nil?
       touch(:archived_at)
       unless Rails.env.test?
-        listing.__elasticsearch__.update_document_attributes(completed_reservations: listing.reservations.reviewable.count)
+        begin
+          listing.__elasticsearch__.update_document_attributes(completed_reservations: listing.reservations.reviewable.count)
+        rescue Elasticsearch::Transport::Transport::Errors::NotFound => e
+        end
       end
     end
     true

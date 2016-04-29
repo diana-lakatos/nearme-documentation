@@ -257,7 +257,7 @@ DesksnearMe::Application.routes.draw do
           get 'destroy_modal', on: :member
         end
         resources :payments
-        resources :payment_gateways, controller: 'payments/payment_gateways'
+        resources :payment_gateways, controller: 'payments/payment_gateways', except: [:show]
 
         resource :translations, :only => [:show, :update], :controller => 'translations'
         resource :cancellation_policy, :only => [:show, :update], :controller => 'cancellation_policy'
@@ -368,41 +368,41 @@ DesksnearMe::Application.routes.draw do
           end
         end
 
-      resources :custom_model_types do
-        resources :custom_attributes, controller: 'custom_model_types/custom_attributes'
-      end
+        resources :custom_model_types do
+          resources :custom_attributes, controller: 'custom_model_types/custom_attributes'
+        end
 
-      resources :offer_types do
-        get :search_settings, on: :member
-        resources :custom_attributes, controller: 'offer_types/custom_attributes'
-        resources :custom_validators, controller: 'offer_types/custom_validators'
-        resources :data_uploads, only: %i(new index create show), controller: 'service_types/data_uploads' do
-          collection do
-            get :download_csv_template
-            get :download_current_data
+        resources :offer_types do
+          get :search_settings, on: :member
+          resources :custom_attributes, controller: 'offer_types/custom_attributes'
+          resources :custom_validators, controller: 'offer_types/custom_validators'
+          resources :data_uploads, only: %i(new index create show), controller: 'service_types/data_uploads' do
+            collection do
+              get :download_csv_template
+              get :download_current_data
+            end
+          end
+          resources :form_components, controller: 'offer_types/form_components' do
+            member do
+              patch :update_rank
+            end
+            collection do
+              post :create_as_copy
+            end
           end
         end
-        resources :form_components, controller: 'offer_types/form_components' do
-          member do
-            patch :update_rank
-          end
-          collection do
-            post :create_as_copy
-          end
-        end
-      end
 
-      resources :reservation_types do
-        resources :custom_attributes, controller: 'reservation_types/custom_attributes'
-        resources :form_components, controller: 'reservation_types/form_components' do
-          member do
-            patch :update_rank
-          end
-          collection do
-            post :create_as_copy
+        resources :reservation_types do
+          resources :custom_attributes, controller: 'reservation_types/custom_attributes'
+          resources :form_components, controller: 'reservation_types/form_components' do
+            member do
+              patch :update_rank
+            end
+            collection do
+              post :create_as_copy
+            end
           end
         end
-      end
 
         resources :service_types do
           get :search_settings, on: :member
@@ -433,6 +433,8 @@ DesksnearMe::Application.routes.draw do
           post :restore_session, on: :collection
           resources :user_bans, only: [:create, :index, :destroy], controller: 'users/user_bans'
         end
+
+        resources :merchant_accounts
 
         resources :transfers do
           member do

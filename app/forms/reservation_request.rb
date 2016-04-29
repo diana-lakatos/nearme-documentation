@@ -229,11 +229,12 @@ class ReservationRequest < Form
       # remove with old ui
       checkout_extra_fields.save! if checkout_extra_fields.are_fields_present?
       set_cancellation_policy
+      @payment.save! if @reservation.skip_payment_authorization?
       @reservation.save!
       ReservationMarkAsArchivedJob.perform_later(@reservation.ends_at, @reservation.id) unless @reservation.skip_payment_authorization?
       true
     end
-  rescue ActiveRecord::RecordInvalid => error
+  rescue => error
     add_errors(error.record.errors.full_messages)
     false
   end

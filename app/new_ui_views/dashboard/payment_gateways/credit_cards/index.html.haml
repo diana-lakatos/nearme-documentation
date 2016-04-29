@@ -13,7 +13,7 @@
 - content_for :panel_navigation_links do
   - @payment_gateways.find_each do |payment_gateway|
     %li{class: payment_gateway == @payment_gateway ? "active" : ""}
-      = link_to payment_gateway.name, dashboard_payment_gateway_credit_cards_path(payment_gateway)
+      = link_to t("dashboard.credit_cards.in_gateway", payment_gateway: payment_gateway.name), dashboard_payment_gateway_credit_cards_path(payment_gateway)
 
 
 - content_for :panel_options do

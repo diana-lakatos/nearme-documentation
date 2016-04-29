@@ -161,17 +161,19 @@ class Company < ActiveRecord::Base
 
   def payout_payment_gateway
     if @payment_gateway.nil?
-      currency = locations.first.try(:listings).try(:first).try(:currency).presence || 'USD'
       @payment_gateway = instance.payout_gateway(iso_country_code, currency)
     end
     @payment_gateway
   end
 
   def boarding_payment_gateway
-    currency = locations.first.try(:listings).try(:first).try(:currency).presence || 'USD'
     @boarding_payment_gateway ||= PaymentGateway.where(instance: instance).all.find do |pg|
       pg.supports_currency?(currency) && pg.payout_supports_country?(iso_country_code) && pg.supports_paypal_chain_payments?
     end
+  end
+
+  def currency
+    @currency ||= locations.first.try(:listings).try(:first).try(:currency).presence || instance.default_currency || 'USD'
   end
 
   def possible_payout_not_configured?(payment_gateway)

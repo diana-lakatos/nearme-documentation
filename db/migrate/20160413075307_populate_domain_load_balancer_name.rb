@@ -80,6 +80,7 @@ class PopulateDomainLoadBalancerName < ActiveRecord::Migration
   def update_domain(domain_name, load_balancer_name)
     Domain
       .find_by(name: domain_name)
-      .update_attributes(load_balancer_name: load_balancer_name)
+      .update_attributes(load_balancer_name: load_balancer_name) if Domain
+      .find_by(name: domain_name)
   end
 end

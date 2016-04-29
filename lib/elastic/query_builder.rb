@@ -202,7 +202,7 @@ module Elastic
         [
           {
             script: {
-              script: "doc['service_radius'].empty || doc['geo_location'].distanceInKm(#{@query[:lat]},#{@query[:lon]}) <= doc['service_radius'].value"
+              script: "doc['service_radius'].empty || doc['geo_location'].distanceInMiles(#{@query[:lat]},#{@query[:lon]}) <= doc['service_radius'].value"
             }
           },
           {
@@ -422,7 +422,7 @@ module Elastic
           unless value.blank?
             @filters << {
               terms: {
-                "custom_attributes.#{key}" => value.to_s.downcase.scan(/\w+/).map(&:strip).map(&:downcase)
+                "custom_attributes.#{key}" => value.to_s.split(',').map{ |val| val.downcase.strip }
               }
             }
           end

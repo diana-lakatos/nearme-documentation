@@ -63,7 +63,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       change_state_if_needed(result)
       true
     elsif result.error
-      errors.add(:data, result.error)
+      errors.add(:base, result.error)
       false
     else
       false
@@ -161,7 +161,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   end
 
   def address
-    current_address || merchantable.company_address || merchantable.creator.try(:current_address) || Address.new
+    current_address || merchantable.company_address.try(:dup) || merchantable.creator.try(:current_address).try(:dup) || Address.new
   end
 
   def change_state_if_needed(stripe_account, &block)
