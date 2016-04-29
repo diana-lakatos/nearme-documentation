@@ -6,23 +6,21 @@
     = hidden_field_tag 'wizard', params[:wizard] if params[:wizard]
     = hidden_field_tag 'role', @role
 
-    - @form_component.form_fields.each do |form_field|
+    - @form_component.form_fields.each_with_index do |form_field, index|
       - model = form_field.keys.first
       - field = form_field[model]
       - if model == 'user'
         - if field == "name"
           .name-holder.input-icon-holder
-            = f.input :name, :label => false, placeholder: t('simple_form.placeholders.registration.name'), :input_html => { :tabindex => '1' }
+            = f.input :name, label: false, placeholder: t('simple_form.placeholders.registration.name'), input_html: { tabindex: index }
             %span.ico-user
         - elsif field == "email"
           .email-holder.input-icon-holder
-            = f.input :email, :label => false, placeholder:  t('simple_form.placeholders.registration.email'),
-              :input_html => { :tabindex => '2' }
+            = f.input :email, label: false, placeholder:  t('simple_form.placeholders.registration.email'), input_html: { tabindex: index }
             %span.ico-mail
         - elsif field == "password"
           .password-holder.input-icon-holder
-            = f.input :password, :label => false, placeholder: t('simple_form.placeholders.registration.password'),
-              :input_html => { :tabindex => '3' }
+            = f.input :password, label: false, placeholder: t('simple_form.placeholders.registration.password'), input_html: { tabindex: index }
             %span.ico-lock
         - elsif field == "phone"
           %div{'data-phone-fields-container' => true}
@@ -32,7 +30,7 @@
             .mobile-holder.input-icon-holder
               .country-calling-code
                 = calling_code
-              = f.input :mobile_number, placeholder: t('simple_form.labels.user.mobile_number', default: 'Mobile number'), label: false
+              = f.input :mobile_number, placeholder: t('simple_form.labels.user.mobile_number', default: 'Mobile number'), label: false, input_html: { tabindex: index }
               %span.ico-phone
 
               / - if f.object.errors[:mobile_number].present?
