@@ -7,11 +7,11 @@ class Dashboard::BuyersController < Dashboard::BaseController
   end
 
   def update
-    @buyer_profile.assign_attributes(buyer_profile_params)
-    if @buyer_profile.save
+    current_user.assign_attributes(user_params)
+    if current_user.save
       flash.now[:success] = t('flash_messages.dashboard.buyer.updated')
     else
-      flash.now[:error] = @buyer_profile.errors.full_messages.join("\n")
+      flash.now[:error] = current_user.errors.full_messages.join("\n")
     end
     render :edit
   end
@@ -27,8 +27,8 @@ class Dashboard::BuyersController < Dashboard::BaseController
     @form_components = PlatformContext.current.instance.buyer_profile_type.form_components.where(form_type: FormComponent::BUYER_PROFILE_TYPES).rank(:rank)
   end
 
-  def buyer_profile_params
-    params.require(:buyer_profile).permit(secured_params.buyer_profile)
+  def user_params
+    params.require(:user).permit(secured_params.user)
   end
 
 end

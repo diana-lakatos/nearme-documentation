@@ -7,11 +7,11 @@ class Dashboard::SellersController < Dashboard::BaseController
   end
 
   def update
-    @seller_profile.assign_attributes(seller_profile_params)
-    if @seller_profile.save
+    current_user.assign_attributes(user_params)
+    if current_user.save
       flash.now[:success] = t('flash_messages.dashboard.seller.updated')
     else
-      flash.now[:error] = @seller_profile.errors.full_messages.join("\n")
+      flash.now[:error] = current_user.errors.full_messages.join("\n")
     end
     render :edit
   end
@@ -27,8 +27,8 @@ class Dashboard::SellersController < Dashboard::BaseController
     @form_components = PlatformContext.current.instance.seller_profile_type.form_components.where(form_type: FormComponent::SELLER_PROFILE_TYPES).rank(:rank)
   end
 
-  def seller_profile_params
-    params.require(:seller_profile).permit(secured_params.seller_profile)
+  def user_params
+    params.require(:user).permit(secured_params.user)
   end
 
 end
