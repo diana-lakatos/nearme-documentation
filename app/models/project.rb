@@ -44,7 +44,7 @@ class Project < ActiveRecord::Base
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :wish_list_items, as: :wishlistable
 
-  scope :by_topic, -> (topic_ids) { includes(:topics).where(topics: {id: topic_ids}) if topic_ids.present?}
+  scope :by_topic, -> (topic_ids) { includes(:project_topics).where(project_topics: {topic_id: topic_ids}) if topic_ids.present?}
   scope :seek_collaborators, -> { where(seek_collaborators: true) }
   scope :featured, -> { enabled.where(featured: true) }
   scope :by_search_query, lambda { |query|
