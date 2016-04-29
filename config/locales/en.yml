@@ -562,6 +562,10 @@ en:
           object: "Object"
           user: "User"
           date: "Date"
+      instance_properties:
+        form_components: "Form Components"
+      instances:
+        instances: 'Manage Instance'
 
       transfers:
         pending: "Pending"

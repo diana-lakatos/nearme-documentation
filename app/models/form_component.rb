@@ -16,10 +16,12 @@ class FormComponent < ActiveRecord::Base
   DEFAULT_REGISTRATION = 'default_registration'
   SELLER_REGISTRATION = 'seller_registration'
   BUYER_REGISTRATION = 'buyer_registration'
+  LOCATION_ATTRIBUTES = 'location_attributes'
   FORM_TYPES = [
     SPACE_WIZARD, PRODUCT_ATTRIBUTES, TRANSACTABLE_ATTRIBUTES, INSTANCE_PROFILE_TYPES,
     PROJECT_ATTRIBUTES, BUYER_PROFILE_TYPES, SELLER_PROFILE_TYPES, OFFER_ATTRIBUTES,
-    RESERVATION_ATTRIBUTES, DEFAULT_REGISTRATION, BUYER_REGISTRATION, SELLER_REGISTRATION
+    RESERVATION_ATTRIBUTES, DEFAULT_REGISTRATION, BUYER_REGISTRATION, SELLER_REGISTRATION,
+    LOCATION_ATTRIBUTES
   ]
 
   include RankedModel
@@ -62,6 +64,8 @@ class FormComponent < ActiveRecord::Base
       [SPACE_WIZARD, OFFER_ATTRIBUTES]
     elsif form_componentable.instance_of?(ReservationType)
       [RESERVATION_ATTRIBUTES]
+    elsif form_componentable.instance_of?(Instance)
+      [LOCATION_ATTRIBUTES]
     else
       raise NotImplementedError
     end

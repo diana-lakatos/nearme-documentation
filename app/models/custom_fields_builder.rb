@@ -60,6 +60,8 @@ class CustomFieldsBuilder
           to_object_field_notation(seller_fields, 'buyer')
     when FormComponent::DEFAULT_REGISTRATION
         to_object_field_notation(user_fields, 'user')
+    when FormComponent::LOCATION_ATTRIBUTES
+        to_object_field_notation(location_fields, 'location')
     else
       raise NotImplementedError
     end

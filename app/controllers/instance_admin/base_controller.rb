@@ -41,6 +41,7 @@ class InstanceAdmin::BaseController < ApplicationController
     'reviews'            => { controller: '/instance_admin/manage/reviews', default_action: 'index' },
     'wish_lists'         => { controller: '/instance_admin/manage/wish_lists', default_action: 'show' },
     'user_profiles'      => { controller: '/instance_admin/manage/instance_profile_types', default_action: 'index' },
+    'location'           => { controller: '/instance_admin/manage/location', default_action: 'show' },
     'service_types'      => { controller: '/instance_admin/manage/service_types', default_action: 'index' },
     'offer_types'        => { controller: '/instance_admin/manage/offer_types', default_action: 'index' },
     'reservation_types'  => { controller: '/instance_admin/manage/reservation_types', default_action: 'index' },

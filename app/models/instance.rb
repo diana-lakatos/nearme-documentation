@@ -98,6 +98,7 @@ class Instance < ActiveRecord::Base
   has_many :seller_attachments
   has_many :availability_templates, as: :parent
   has_many :custom_validators
+  has_many :form_components, as: :form_componentable, dependent: :destroy
   serialize :pricing_options, Hash
 
   validates :name, presence: true, length: { maximum: 255 }
