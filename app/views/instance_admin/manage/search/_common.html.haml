@@ -45,6 +45,14 @@
       = f.input :allow_save_search, as: :boolean, inline_label: true
 
 %hr
+%h4= t('instance_admin.manage.search.location_filters')
+
+.row
+  .input-container.col-xs-6
+    .input-col-clearfix
+      = f.input :search_location_type_filter, as: :boolean, inline_label: true
+
+%hr
 %h4= t('instance_admin.manage.search.price_filters')
 
 .row
