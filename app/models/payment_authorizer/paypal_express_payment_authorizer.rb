@@ -5,7 +5,13 @@ class PaymentAuthorizer::PaypalExpressPaymentAuthorizer < PaymentAuthorizer
     if @payment.express_payer_id.blank?
       setup_authorization
     else
-      @response = @payment_gateway.gateway(@payment.subject).authorize(@authorizable.total_amount.cents, @options)
+      @response = begin
+        @payment_gateway.gateway(@payment.subject).authorize(@authorizable.total_amount.cents, @options)
+      rescue Exception => e
+        MarketplaceLogger.error(PaymentGateway::AUTH_ERROR, e.to_s, raise: false)
+        OpenStruct.new({ success?: false, message: e.to_s })
+      end
+
       @response.success? ? handle_success : handle_failure
     end
   end
