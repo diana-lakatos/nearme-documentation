@@ -6,7 +6,9 @@
     = hidden_field_tag 'wizard', params[:wizard] if params[:wizard]
     = hidden_field_tag 'role', @role
 
+    - submit_index ||= 1
     - @form_component.form_fields.each_with_index do |form_field, index|
+      - submit_index = index + 1
       - model = form_field.keys.first
       - field = form_field[model]
       - if model == 'user'
@@ -45,7 +47,7 @@
       - if @legal_page_present
         %p.notice.text-center.legal #{t('sign_up_form.confirm_tos')} #{link_to t('sign_up_form.tos'), pages_path('legal'), :target => '_blank'}.
     .actions
-      = f.submit t('sign_up_form.buttons.sign_up'), :class => 'desksnearme submit btn btn-green', data: { disable_with: t('sign_up_form.disabled_buttons.sign_up') }, :tabindex => '4'
+      = f.submit t('sign_up_form.buttons.sign_up'), class: 'desksnearme submit btn btn-green', data: { disable_with: t('sign_up_form.disabled_buttons.sign_up') }, tabindex: submit_index
 
 - if !user_auth_provider
   .text-center.already-a-user= link_to(t('sign_up_form.buttons.already_user'), '#', data: { modal: true, href: new_user_session_path(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } )
