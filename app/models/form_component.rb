@@ -44,7 +44,7 @@ class FormComponent < ActiveRecord::Base
     if form_componentable.instance_of?(InstanceProfileType)
       case form_componentable.profile_type
       when InstanceProfileType::DEFAULT
-        [INSTANCE_PROFILE_TYPES]
+        [INSTANCE_PROFILE_TYPES, DEFAULT_REGISTRATION]
       when InstanceProfileType::SELLER
         [SELLER_PROFILE_TYPES, SELLER_REGISTRATION]
       when InstanceProfileType::BUYER
