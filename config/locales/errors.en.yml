@@ -112,6 +112,7 @@ en:
       cant_review_own_product: "can't review own product"
       onboard_issue: "Onboarding failed, the error message was: %{error}"
       inaccurate_address: 'Please provide a more accurate address'
+      not_in_radius: 'Address is not in radius of listing'
       must_be_later: 'must occur after beginning'
       not_in_past: 'must be not in past'
       range_too_wide: "can 't be later than 1 year from starting date"

@@ -194,6 +194,10 @@ class ReservationDecorator < Draper::Decorator
     object
   end
 
+  def precise_search?
+    precise_search.eql?('true')
+  end
+
   private
 
   def status_info(text)

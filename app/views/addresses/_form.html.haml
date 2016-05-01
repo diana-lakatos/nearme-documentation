@@ -3,7 +3,7 @@
 %div{'data-address-field' => true, class: "control-group #{"error" if f.object.errors.any?}"}
   = f.label :address, label: label, class: "control-label", required: true
   .controls
-    = f.text_field :address, :'data-behavior' => 'address-autocomplete', :'data-address-input' => true, placeholder: placeholder
+    = f.text_field :address, :'data-behavior' => 'address-autocomplete', :'data-address-input' => true, :'data-precise-search' => @reservation.try(:precise_search?), placeholder: placeholder
     - if f.object.errors.include?(:address) || f.object.errors.include?(:latitude)
       %p.error-block
         - if f.object.errors[:address].present?
@@ -14,7 +14,7 @@
     .map{style: "display: none", :'data-marker' => image_path("components/map-pin.png")}
       .map-container{:style => "height: 240px; width: 100%;"}
 
-    = f.hidden_field :should_check_address, value: (@transactable_type.try(:rental_shipping) || params[:should_check_address])
+    = f.hidden_field :should_check_address, value: (@transactable_type.try(:rental_shipping) || @reservation.try(:precise_search?) || params[:should_check_address])
     = f.hidden_field :local_geocoding, 'data-local-geocoding' => true
     = f.hidden_field :latitude, 'data-latitude' => true
     = f.hidden_field :longitude, 'data-longitude' => true
@@ -42,5 +42,3 @@
     - if is_i18n_set?('simple_form.hints.location.address')
       %p.help-block
         = t('simple_form.hints.location.address')
-
-
