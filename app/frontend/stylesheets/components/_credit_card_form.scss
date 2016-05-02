@@ -21,6 +21,13 @@
 }
 
 .credit-card-fields {
+
+    .control-group {
+        .controls {
+            margin-left: 0;
+        }
+    }
+
     input {
         font-size: 18px;
         height: 49px;

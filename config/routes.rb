@@ -294,8 +294,6 @@ DesksnearMe::Application.routes.draw do
         resource :design, :only => [:show, :update], :controller => 'design' do
           member do
             delete 'delete_font'
-            get :revert_to_old_ui
-            get :convert_to_new_ui
           end
         end
 
@@ -948,7 +946,11 @@ DesksnearMe::Application.routes.draw do
     end #end /dashboard namespace
 
     resources :featured_items, only: :index
-    resources :tags, only: :index
+
+    resources :users do
+      resources :tags, only: :index
+    end
+
     resources :marketplace_logger
 
     resources :reservations do

@@ -122,7 +122,7 @@ gem 'inherited_resources', '~> 1.6'
 
 gem 'ranked-model'
 
-
+gem 'after_commit_action'
 
 gem 'premailer-rails'
 gem 'addressable'
