@@ -40,7 +40,7 @@ module.exports = class Fileupload
         if @file_types && @file_types != ''
           types = new RegExp(@file_types, 'i');
         else
-          types = /(\.|\/)(gif|jpe?g|png)$/i
+          types = /(\.|\/)(gif|jpe?g|png|ico)$/i
         file = data.files[0]
         if types.test(file.type) || types.test(file.name)
           progressBar = @fileInputWrapper.find('div[data-progress-container]:first').clone()
