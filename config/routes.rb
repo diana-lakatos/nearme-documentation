@@ -294,8 +294,6 @@ DesksnearMe::Application.routes.draw do
         resource :design, :only => [:show, :update], :controller => 'design' do
           member do
             delete 'delete_font'
-            get :revert_to_old_ui
-            get :convert_to_new_ui
           end
         end
 

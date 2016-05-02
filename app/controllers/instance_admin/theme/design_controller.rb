@@ -22,27 +22,5 @@ class InstanceAdmin::Theme::DesignController < InstanceAdmin::Theme::BaseControl
     redirect_to :action => :show
   end
 
-  def convert_to_new_ui
-    unless current_instance.new_ui?
-      if NewUiConverter.new(current_instance.id).convert_to_new_ui
-        flash[:success] = "Sucessfully switched to new UI for dashboard"
-      else
-        flash[:notice] = "Unable to switch to new UI for dashboard"
-      end
-      redirect_to action: :show
-    end
-  end
-
-  def revert_to_old_ui
-    if current_instance.new_ui?
-      if NewUiConverter.new(current_instance.id).revert_to_old_ui
-        flash[:success] = "Sucessfully switched to old UI for dashboard"
-      else
-        flash[:notice] = "Unable to switch to new old for dashboard"
-      end
-    end
-    redirect_to action: :show
-  end
-
 end
 
