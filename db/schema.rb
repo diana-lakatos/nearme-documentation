@@ -3686,6 +3686,7 @@ ActiveRecord::Schema.define(version: 20160426111043) do
     t.boolean  "single_transactable",                                                            default: false
     t.decimal  "cancellation_policy_penalty_hours",                      precision: 8, scale: 2, default: 0.0
     t.boolean  "display_additional_charges",                                                     default: true
+    t.boolean  "hide_additional_charges_on_listing_page",                                        default: false,      null: false
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
