@@ -134,6 +134,7 @@ en:
     approve: 'Approve'
     reject: 'Reject'
     no_options: 'No options'
+    unexpected_error_occurred: "An unexpected error occurred."
   transactable_types:
     locations:
       listings:
