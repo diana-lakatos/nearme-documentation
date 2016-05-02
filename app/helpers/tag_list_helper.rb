@@ -1,8 +1,8 @@
 module TagListHelper
   def data_tags_options(object)
-    { 
+    {
       "tags": {
-        url: tags_url,
+        url: user_tags_url(current_user),
         prepopulate: object.tags.as_json
       }
     }
