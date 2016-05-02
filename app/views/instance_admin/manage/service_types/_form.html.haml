@@ -104,6 +104,9 @@
         = f.input :action_exclusive_price, as: :boolean, :inline_label => true
       .input-container.col-xs-4
         = f.input :action_price_per_unit, as: :boolean, :inline_label => true
+    .row
+      .input-container.col-xs-4
+        = f.input :hide_additional_charges_on_listing_page, as: :boolean, :inline_label => true
 
   .content-container
     %h4= t('instance_admin.manage.service_types.calendar')

@@ -1,4 +1,4 @@
-- if listing.all_additional_charge_types.any?
+- if listing.all_additional_charge_types.any? && !listing.transactable_type.hide_additional_charges_on_listing_page?
   .additional-charges{id: "additional-charges-#{listing.id}", :'data-additional-charges' => true}
     %h4=  t('dashboard.user_reservations.additional_charges')
     - listing.all_additional_charge_types.each do |ac|
