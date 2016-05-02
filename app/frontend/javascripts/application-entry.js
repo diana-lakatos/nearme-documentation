@@ -609,4 +609,11 @@ DNM.registerInitializer(function(){
     })
 });
 
+DNM.registerInitializer(function(){
+    $(document).on('init:homepageranges.nearme', function() {
+      $('[name="start_date"]').each(function(index, element) { if($(element).datepicker) $(element).datepicker('setDate', new Date()) });
+      $('[name="end_date"]').each(function(index, element) { if($(element).datepicker) $(element).datepicker('setDate', 1) });
+    })
+});
+
 DNM.run();

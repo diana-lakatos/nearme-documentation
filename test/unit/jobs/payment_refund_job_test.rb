@@ -2,7 +2,6 @@ require 'test_helper'
 require 'marketplace_error_logger'
 
 class PaymentRefundJobTest < ActiveSupport::TestCase
-
   should 'run the right method' do
     payment = FactoryGirl.create(:paid_payment)
     PaymentGateway.any_instance.expects(:gateway_refund).returns(OpenStruct.new(success?: false)).times(3)

@@ -1,5 +1,4 @@
 class UnreadMessagesRemindersJob < Job
-
   def perform
     Instance.find_each do |i|
       i.set_context!
@@ -10,5 +9,4 @@ class UnreadMessagesRemindersJob < Job
       end
     end
   end
-
 end

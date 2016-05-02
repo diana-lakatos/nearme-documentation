@@ -953,6 +953,7 @@ namespace :just_hala do
     theme.remote_icon_retina_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/images/theme/icon_image/413/transformed_ninjunu_icon.png'
 
     theme.save!
+  rescue
   end
 
   def create_translations

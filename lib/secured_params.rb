@@ -668,6 +668,7 @@ class SecuredParams
       :timezone_rule,
       :show_price_slider,
       :search_price_types_filter,
+      :search_location_type_filter,
       :show_date_pickers,
       :date_pickers_use_availability_rules,
       :date_pickers_mode,
@@ -1020,7 +1021,6 @@ class SecuredParams
       :enable_deposit_amount,
       :enable_book_it_out_discount,
       :exclusive_price,
-      :featured,
       :action_rfq,
       :quantity, :currency,
       :action_recurring_booking,
@@ -1049,6 +1049,13 @@ class SecuredParams
       customizations_attributes: nested(self.customization(transactable_type))
     ] +
     Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:service_types).try(:first)).try(:id))
+  end
+
+  def transactable_for_instance_admin(transactable_type)
+    transactable(transactable_type) + [
+      :featured,
+      properties: transactable_type.custom_attributes.pluck(&:name)
+    ]
   end
 
   def customization(transactable_type)

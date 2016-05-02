@@ -1,6 +1,5 @@
 # Sends analytics emails
 class RecurringMailerAnalyticsJob < Job
-
   def perform
     Company.includes(company_users: :user).each do |company|
       PlatformContext.current = PlatformContext.new(company)
@@ -12,5 +11,4 @@ class RecurringMailerAnalyticsJob < Job
       end
     end
   end
-
 end

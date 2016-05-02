@@ -12,5 +12,4 @@ class ReservationChargeTrackerJob < Job
       Rails.logger.info "Reservation with id '#{@reservation.try(:id)}' has been cancelled (or deleted), charge not tracked at all"
     end
   end
-
 end

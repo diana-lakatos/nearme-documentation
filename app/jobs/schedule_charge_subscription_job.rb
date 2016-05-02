@@ -1,6 +1,4 @@
 class ScheduleChargeSubscriptionJob < Job
-
-
   def after_initialize(recurring_booking_id)
     @recurring_booking_id = recurring_booking_id
   end
@@ -23,6 +21,4 @@ class ScheduleChargeSubscriptionJob < Job
       raise 'Invalid state, next charge date has not moved forward! Infinite loop would occur.' if recurring_booking.next_charge_date.nil? || (recurring_booking.next_charge_date <= current_charge_date)
     end
   end
-
 end
-

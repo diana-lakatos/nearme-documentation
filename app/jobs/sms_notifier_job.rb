@@ -31,7 +31,6 @@
 #   Please note that using Time.now instead of Time.zone.now will raise error
 
 class SmsNotifierJob < Job
-
   include Job::HighPriority
 
   def after_initialize(sms_notifier_class, sms_notifier_method, *args)
@@ -52,6 +51,4 @@ class SmsNotifierJob < Job
   def self.priority
     0
   end
-
 end
-

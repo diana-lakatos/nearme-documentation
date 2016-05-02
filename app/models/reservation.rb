@@ -73,7 +73,7 @@ class Reservation < ActiveRecord::Base
 
   delegate :location, :skip_payment_authorization?, :show_company_name, :transactable_type_id, :transactable_type, :billing_authorizations, to: :listing
   delegate :administrator=, to: :location
-  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :listing, allow_nil: true
+  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, :display_additional_charges?, to: :listing, allow_nil: true
   delegate :remote_payment?, :manual_payment?, :active_merchant_payment?, :paid?, to: :payment, allow_nil: true
 
   monetize :successful_payment_amount_cents, with_model_currency: :currency
@@ -92,7 +92,9 @@ class Reservation < ActiveRecord::Base
     event :activate                 do transition inactive: :unconfirmed; end
     event :confirm                  do transition unconfirmed: :confirmed; end
     event :reject                   do transition unconfirmed: :rejected; end
-    event :host_cancel              do transition confirmed: :cancelled_by_host; end
+    event :host_cancel              do
+      transition confirmed: :cancelled_by_host, :if => lambda {|reservation| !reservation.skip_payment_authorization?}
+    end
     event :user_cancel              do transition [:unconfirmed, :confirmed] => :cancelled_by_guest; end
     event :expire                   do transition unconfirmed: :expired; end
   end
@@ -275,7 +277,10 @@ class Reservation < ActiveRecord::Base
     if archived_at.nil?
       touch(:archived_at)
       unless Rails.env.test?
-        listing.__elasticsearch__.update_document_attributes(completed_reservations: listing.reservations.reviewable.count)
+        begin
+          listing.__elasticsearch__.update_document_attributes(completed_reservations: listing.reservations.reviewable.count)
+        rescue Elasticsearch::Transport::Transport::Errors::NotFound => e
+        end
       end
     end
     true

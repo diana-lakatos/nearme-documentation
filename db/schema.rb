@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160413143930) do
+ActiveRecord::Schema.define(version: 20160427142023) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -998,13 +998,14 @@ ActiveRecord::Schema.define(version: 20160413143930) do
     t.integer  "instance_id"
     t.string   "bank_account_last_four_digits", limit: 255
     t.datetime "deleted_at"
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
+    t.datetime "created_at",                                               null: false
+    t.datetime "updated_at",                                               null: false
     t.string   "gateway_class",                 limit: 255
     t.text     "encrypted_response"
     t.integer  "payment_gateway_id"
     t.integer  "merchant_account_id"
     t.integer  "user_id"
+    t.boolean  "test_mode",                                 default: true
   end
 
   create_table "instance_creators", force: :cascade do |t|
@@ -1162,8 +1163,8 @@ ActiveRecord::Schema.define(version: 20160413143930) do
     t.integer  "seller_attachments_documents_num",                                             default: 10,            null: false
     t.string   "priority_view_path"
     t.boolean  "enable_language_selector",                                                     default: false,         null: false
-    t.boolean  "enable_reply_button_on_host_reservations",                                     default: false
     t.boolean  "click_to_call",                                                                default: false
+    t.boolean  "enable_reply_button_on_host_reservations",                                     default: false
     t.boolean  "split_registration",                                                           default: false
   end
 
@@ -3684,6 +3685,7 @@ ActiveRecord::Schema.define(version: 20160413143930) do
     t.integer  "hours_for_guest_to_confirm_payment",                                             default: 0
     t.boolean  "single_transactable",                                                            default: false
     t.decimal  "cancellation_policy_penalty_hours",                      precision: 8, scale: 2, default: 0.0
+    t.boolean  "display_additional_charges",                                                     default: true
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

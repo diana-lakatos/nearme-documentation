@@ -47,8 +47,10 @@ class CustomFieldsBuilder
     when FormComponent::INSTANCE_PROFILE_TYPES
       to_object_field_notation(user_fields, 'user')
     when FormComponent::SELLER_PROFILE_TYPES
+      to_object_field_notation(user_fields, 'user') +
       to_object_field_notation(seller_fields, 'seller')
     when FormComponent::BUYER_PROFILE_TYPES
+      to_object_field_notation(user_fields, 'user') +
       to_object_field_notation(buyer_fields, 'buyer')
     when FormComponent::SELLER_REGISTRATION
         to_object_field_notation(user_fields, 'user') +
@@ -58,6 +60,8 @@ class CustomFieldsBuilder
           to_object_field_notation(seller_fields, 'buyer')
     when FormComponent::DEFAULT_REGISTRATION
         to_object_field_notation(user_fields, 'user')
+    when FormComponent::LOCATION_ATTRIBUTES
+        to_object_field_notation(location_fields, 'location')
     else
       raise NotImplementedError
     end

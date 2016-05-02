@@ -50,6 +50,7 @@ class Domain < ActiveRecord::Base
 
   before_destroy :prevent_destroy_if_only_child
   before_destroy :delete_elb, if: :elb_secured?
+  before_save :ensure_load_balancer_name
   after_save :create_or_update_elb
 
   after_save :mark_as_default
@@ -84,13 +85,17 @@ class Domain < ActiveRecord::Base
     [hostname, without_subdomains, www_hostname]
   end
 
+  def ensure_load_balancer_name
+    self.load_balancer_name = to_dns_name if load_balancer_name.nil?
+  end
+
   def prepared_for_elb?
     # marked as secured but in unsecured state
-    self.secured? && self.unsecured? && !near_me_domain?
+    secured? && unsecured? && !near_me_domain?
   end
 
   def delete_elb
-    DeleteElbJob.perform(self.to_dns_name)
+    DeleteElbJob.perform(load_balancer_name)
   end
 
   def create_or_update_elb
@@ -190,5 +195,4 @@ class Domain < ActiveRecord::Base
     errors.add(:name, "You won't be able to access admin if you delete your only domain") if near_me_domain?
     errors.blank?
   end
-
 end

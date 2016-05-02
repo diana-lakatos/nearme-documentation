@@ -42,7 +42,8 @@ class FormAttributes
     [
       :description, :email, :info, :time_zone,
       :phone, :availability_rules, :special_notes,
-      :location_type, :photos, :name, :address,
+      :location_type, :photos, :name, :address, :administrator,
+      :amenities, :assigned_waiver_agreement_templates
     ]
   end
 

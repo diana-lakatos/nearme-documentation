@@ -14,21 +14,24 @@ class CreditCardTest < ActiveSupport::TestCase
       assert_equal card.errors[:base][0], I18n.t('buy_sell_market.checkout.invalid_cc')
     end
 
-    should 'persist card if valid and successful response' do
+    should 'persist card if valid and successful response with correct mode' do
       ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(am_success_response(customer_params))
+      Instance.any_instance.stubs(:test_mode?).returns(false)
       card = FactoryGirl.build(:credit_card_attributes, response: nil, instance_client: @instance_client)
       assert card.save
       assert card.success?
       assert_equal customer_params["default_source"], card.token
+      assert_equal false, card.test_mode
     end
 
-    should 'persist card if valid and successful multi response' do
+    should 'persist card if valid and successful multi response with correct mode' do
       ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(am_success_multi_response)
       card = FactoryGirl.build(:credit_card_attributes, response: nil, instance_client: @instance_client)
       assert card.save
       assert card.success?
       assert_equal customer_params["default_source"], card.token
       assert_equal customer_params["id"], card.instance_client.customer_id
+      assert_equal true, card.test_mode
     end
   end
 

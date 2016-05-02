@@ -34,7 +34,8 @@
               .col-md-2
                 = f.input :enable_daily, as: :boolean, label: t("simple_form.labels.transactable.price.daily"), input_html: { 'data-action-daily-booking-trigger' => 'daily', checked: f.object.daily_price.to_f > 0 }
             - else
-              = f.input :enable_daily, as: :hidden, input_html: { 'data-action-daily-booking-trigger' => 'daily', value: 1 }
+              .hidden
+                = f.input :enable_daily, as: :boolean, input_html: { 'data-action-daily-booking-trigger' => 'daily', checked: true }
             .col-md-4.col-xs-7
               = f.input :daily_price, as: :numeric, label: false, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), input_html: { 'data-action-daily-booking-input' => 'daily', 'data-price-field' => true }
             .col-md-6.col-xs-5
@@ -46,7 +47,8 @@
               .col-md-2
                 = f.input :enable_weekly, as: :boolean, label: t("simple_form.labels.transactable.price.weekly"), input_html: { 'data-action-daily-booking-trigger' => 'weekly', checked: f.object.weekly_price.to_f > 0 }
             - else
-              = f.input :enable_weekly, as: :hidden, input_html: { 'data-action-daily-booking-trigger' => 'weekly', value: 1 }
+              .hidden
+                = f.input :enable_weekly, as: :boolean, input_html: { 'data-action-daily-booking-trigger' => 'weekly', checked: true }
             .col-md-4.col-xs-7
               = f.input :weekly_price, as: :numeric, label: false, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), input_html: { 'data-action-daily-booking-input' => 'weekly', 'data-price-field' => true }
             .col-md-6.col-xs-5
@@ -59,7 +61,8 @@
               .col-md-2
                 = f.input :enable_monthly, as: :boolean, label: t("simple_form.labels.transactable.price.monthly"), input_html: { 'data-action-daily-booking-trigger' => 'monthly', checked: f.object.monthly_price.to_f > 0 }
             - else
-              = f.input :enable_monthly, as: :hidden, input_html: { 'data-action-daily-booking-trigger' => 'monthly', value: 1 }
+              .hidden
+                = f.input :enable_monthly, as: :boolean, input_html: { 'data-action-daily-booking-trigger' => 'monthly', checked: true }
             .col-md-4.col-xs-7
               = f.input :monthly_price, as: :numeric, label: false, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), input_html: { 'data-action-daily-booking-input' => 'monthly', 'data-price-field' => true }
             .col-md-6.col-xs-5

@@ -8,11 +8,30 @@ class PaymentGateway::PaypalAdaptivePaymentGateway < PaymentGateway
   supported :payout, :multiple_currency
 
   def supported_currencies
-    ["AUD", "BRL", "CZK", "DKK", "HDK", "HUF", "ILS", "MYR", "MXN", "NOK", "NZD", "PHP", "RUB", "SGD", "SEK", "CHF", "TWD", "THB", "TRY",  "USD", "GBP", "EUR", "JPY", "CAD", "PLN"]
+   [
+      "AUD", "BRL", "CAD", "CHF", "CZK", "DKK", "EUR", "GBP", "HDK", "HUF", "HKD", "ILS", "JPY", "MXN",
+      "MYR", "NOK", "NZD", "PHP", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD", "USD"
+    ]
   end
 
   def self.supported_countries
-    %w{ AL DZ AD AO AI AG AR AM AW AU AT BS BH BB BY BE BZ BJ BM BT BA BW BR BG BF BI KH CM CA CV KY TD CL CN CO KM CK CR HR CY CZ DK DJ DM DO EC EG SV ER EE ET FO FJ FI FR GF PF GM GE DE GI GR GL GD GP GT GN GW GY HN HK HU IS IN ID IE IL IT JM JP JO KZ KE KI KW KG LV LS LI LT LU MG MW MY MV ML MT MH MQ MR MU YT MX MC MN ME MS MA MZ NA NR NP NL NC NZ NI NE NG NU NF NO OM PW PA PG PY PE PH PL PT QA RO RW KN LC PM VC WS SM ST SA SN RS SC SL SG SK SI SB SO ZA ES LK SR SJ SZ SE CH TW TJ TH TG TO TT TN TR TM TV UG UA AE GB US UY VU WF YE ZM ZW}
+    [
+      "AL", "DZ", "AD", "AO", "AI", "AG", "AR", "AM", "AW", "AU", "AT", "AZ", "BS",
+      "BH", "BB", "BE", "BZ", "BJ", "BM", "BT", "BO", "BA", "BW", "BR", "BN", "BG",
+      "BF", "BI", "KH", "CA", "CV", "KY", "TD", "CL", "CN", "CO", "KM", "CD", "CG",
+      "CK", "CR", "HR", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG", "SV", "ER",
+      "EE", "ET", "FK", "FJ", "FI", "FR", "GF", "PF", "GA", "GM", "GE", "DE", "GI",
+      "GR", "GL", "GD", "GP", "GU", "GT", "GN", "GW", "GY", "VA", "HN", "HK", "HU",
+      "IS", "IN", "ID", "IE", "IL", "IT", "JM", "JP", "JO", "KZ", "KE", "KI", "KR",
+      "KW", "KG", "LA", "LV", "LS", "LI", "LT", "LU", "MG", "MW", "MY", "MV", "ML",
+      "MT", "MH", "MQ", "MR", "MU", "YT", "MX", "FM", "MN", "MS", "MA", "MZ", "NA",
+      "NR", "NP", "NL", "NC", "NZ", "NI", "NE", "NU", "NF", "NO", "OM", "PW", "PA",
+      "PG", "PE", "PH", "PN", "PL", "PT", "QA", "RE", "RO", "RU", "RW", "SH", "KN",
+      "LC", "PM", "VC", "WS", "SM", "ST", "SA", "SN", "RS", "SC", "SL", "SG", "SK",
+      "SI", "SB", "SO", "ZA", "KR", "ES", "LK", "SR", "SJ", "SZ", "SE", "CH", "TW",
+      "TJ", "TZ", "TH", "TG", "TO", "TT", "TN", "TR", "TM", "TC", "TV", "UG", "UA",
+      "AE", "GB", "US", "UY", "VU", "VE", "VN", "VG", "WF", "YE", "ZM", "BY", "CM",
+      "FO", "MK", "MD", "MC", "ME", "MM", "AN", "NG", "PY", "ZW"]
   end
 
   def self.settings

@@ -1,5 +1,4 @@
 class SchedulePaymentTransferJob < Job
-
   def after_initialize(company_id)
     @company = Company.with_deleted.find(company_id)
   end
@@ -8,6 +7,4 @@ class SchedulePaymentTransferJob < Job
     PlatformContext.current = PlatformContext.new(@company.instance)
     @company.schedule_payment_transfer
   end
-
 end
-

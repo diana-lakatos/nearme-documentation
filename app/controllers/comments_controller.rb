@@ -14,7 +14,9 @@ class CommentsController < ApplicationController
 
   def destroy
     @comment = @commentable.comments.find(params[:id])
-    @comment.destroy if @comment.can_remove?(current_user)
+    unless @comment.can_remove?(current_user, @commentable) && @comment.destroy
+      return render nothing: true
+    end
   end
 
   private

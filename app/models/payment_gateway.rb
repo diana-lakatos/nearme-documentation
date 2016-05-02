@@ -175,6 +175,8 @@ class PaymentGateway < ActiveRecord::Base
   #- END CLASS METHODS
 
   def authorize(payment, options = {})
+    force_mode(payment.payment_gateway_mode)
+
     options.merge!(custom_authorize_options)
     PaymentAuthorizer.new(self, payment, options).process!
   end
@@ -262,6 +264,8 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def charge(user, amount, currency, payment, token)
+    force_mode(payment.payment_gateway_mode)
+
     @payment = payment
     @payable = @payment.payable
     @charge = charges.create(
@@ -349,6 +353,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def store(credit_card, instance_client)
+    force_mode(instance_client.test_mode? ? 'test' : 'live')
     options = { email: instance_client.client.email, default_card: true, customer: instance_client.customer_id }
     gateway_store(credit_card, options)
   end
