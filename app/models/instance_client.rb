@@ -17,6 +17,7 @@ class InstanceClient < ActiveRecord::Base
   validates_presence_of :client_id, :client_type, :unless => lambda { |ic| ic.client.present? }
 
   scope :for_payment_gateway, -> (payment_gateway, test_mode) { where(payment_gateway: payment_gateway, test_mode: test_mode) }
+  scope :mode_scope, -> { PlatformContext.current.instance.test_mode? ? where(test_mode: true) : where(test_mode: false)}
 
   def credit_card
     credit_cards.default

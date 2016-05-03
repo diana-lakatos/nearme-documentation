@@ -526,7 +526,7 @@ class User < ActiveRecord::Base
   end
 
   def has_active_credit_cards?
-    self.instance_clients(test_mode: PlatformContext.current.instance.test_mode?).any? do |i|
+    self.instance_clients.mode_scope.any? do |i|
       i.payment_gateway.active_in_current_mode?
     end
   end
