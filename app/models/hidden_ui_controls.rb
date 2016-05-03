@@ -51,7 +51,7 @@ class HiddenUiControls
       'dashboard/notification_preferences',
       'dashboard/notification_preferences/emails',
       'dashboard/notification_preferences/sms',
-      'dashboard/notification_preferences/click_to_call',
+      'dashboard/click_to_call_preferences',
       'registrations/social_accounts',
       'dashboard/blog',
       'registrations/show#reviews',
@@ -83,7 +83,7 @@ class HiddenUiControls
   ]
 
   OPTIONAL_KEYS = {
-    'dashboard/notification_preferences/click_to_call' => :click_to_call?
+    'dashboard/click_to_call' => :click_to_call?
   }
 
   def self.find(key)

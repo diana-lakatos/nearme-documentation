@@ -15,7 +15,8 @@ en:
       not_authorized: "Sorry, you do not have permission to view that page."
     communications:
       validation_code: "Validation code: %{validation_code}"
-      phone_number_disconnected: "Phone number successfully disconnectd"
+      phone_number_disconnected: "Phone number successfully disconnected."
+      successfully_connected: "Phone number successfully connected."
     shipping_options:
       dimensions_templates:
         template_added: 'Successfully added a new dimensions template.'
@@ -328,6 +329,8 @@ en:
         white_label_updated: "Great, white-label details have been updated."
       notification_preferences:
         updated: "Notification preferences have been updated."
+      click_to_call_preferences:
+        updated: "Click to Call preferences have been updated."
       listings:
         desk_added: "Great, your new %{bookable_noun} has been added!"
         listing_deleted: "That listing has been deleted."
