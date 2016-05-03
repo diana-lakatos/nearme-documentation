@@ -1,12 +1,12 @@
 class CommunicationsController < ApplicationController
   rescue_from Twilio::REST::RequestError, with: :request_error
 
-  before_action :authenticate_user!, only: [:create, :destroy]
+  before_action :authenticate_user!, only: [:create, :destroy, :verified]
 
   def create
     caller = client.verify_number(
       current_user.name,
-      current_user.full_mobile_number,
+      params[:phone] || current_user.full_mobile_number,
       status_webhooks_communications_url
     )
 
@@ -19,8 +19,14 @@ class CommunicationsController < ApplicationController
       verified: false
     )
 
-    flash[:notice] = I18n.t('flash_messages.communications.validation_code', validation_code: caller.validation_code)
-    redirect_to social_accounts_path
+    message = I18n.t('flash_messages.communications.validation_code', validation_code: caller.validation_code)
+
+    if request.xhr?
+      render json: { status: true, message: caller.validation_code, poll_url: verified_user_communications_path(current_user) }
+    else
+      flash[:notice] = message
+      redirect_to edit_dashboard_click_to_call_preferences_path
+    end
   end
 
   def destroy
@@ -29,7 +35,20 @@ class CommunicationsController < ApplicationController
     communication.destroy
 
     flash[:notice] = I18n.t("flash_messages.communications.phone_number_disconnected")
-    redirect_to social_accounts_path
+    redirect_to edit_dashboard_click_to_call_preferences_path
+  end
+
+  def verified
+    if current_user.communication.try(:verified?)
+      render json: { status: true, phone: current_user.full_mobile_number }
+    else
+      render json: { status: false }
+    end
+  end
+
+  def verified_success
+    flash[:notice] = I18n.t("flash_messages.communications.successfully_connected")
+    redirect_to edit_dashboard_click_to_call_preferences_path
   end
 
   private
@@ -42,7 +61,11 @@ class CommunicationsController < ApplicationController
   end
 
   def request_error(exception)
-    redirect_to social_accounts_path, flash: {error: exception.message}
+    if request.xhr?
+      render json: { status: false, message: exception.message }
+    else
+      redirect_to edit_dashboard_click_to_call_preferences_path, flash: { error: exception.message }
+    end
   end
 
 end

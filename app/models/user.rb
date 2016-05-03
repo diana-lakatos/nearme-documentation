@@ -1028,6 +1028,16 @@ class User < ActiveRecord::Base
     @payment_gateway
   end
 
+  def is_available_now?
+    is_available_now = false
+    Time.use_zone(time_zone) do
+      date = Time.now.to_date
+      start_min = Time.now.hour() * 60 + Time.now.min()
+      is_available_now = true if listings.find { |listing| listing.open_on?(date, start_min, start_min) }.present?
+    end
+    is_available_now
+  end
+
 private
 
   def get_first_name_from_name
