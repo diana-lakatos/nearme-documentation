@@ -90,6 +90,12 @@ namespace :just_hala do
       )
     end
     @reservation_type = ReservationType.first || ReservationType.create!(name: 'Mission', transactable_types: ServiceType.all)
+    @reservation_type.update!({
+      settings: {
+        precise_search: true,
+        address_in_radius: true
+      }
+    })
     reservation_components = @reservation_type.form_components.first || (Utils::FormComponentsCreator.new(@reservation_type).create! && @reservation_type.form_components.first)
     root_category = Category.where(name: 'Services').first_or_create!
     root_category.service_types = ServiceType.all

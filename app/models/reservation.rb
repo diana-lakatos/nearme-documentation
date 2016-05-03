@@ -57,6 +57,7 @@ class Reservation < ActiveRecord::Base
   validate :validate_booking_selection, on: :create, :if => lambda { listing }
   validate :validate_book_it_out, on: :create, :if => lambda { listing && !book_it_out_discount.to_i.zero? }
   validate :validate_exclusive_price, on: :create, :if => lambda { listing && !exclusive_price_cents.to_i.zero? }
+  validate :address_in_radius?, :if => lambda { address_in_radius }
 
   before_validation :set_minimum_booking_minutes, on: :create, if: lambda { listing }
   before_validation :set_currency, on: :create, if: lambda { listing }
@@ -75,6 +76,7 @@ class Reservation < ActiveRecord::Base
   delegate :administrator=, to: :location
   delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, :display_additional_charges?, to: :listing, allow_nil: true
   delegate :remote_payment?, :manual_payment?, :active_merchant_payment?, :paid?, to: :payment, allow_nil: true
+  delegate :precise_search, :address_in_radius, to: :reservation_type, allow_nil: true
 
   monetize :successful_payment_amount_cents, with_model_currency: :currency
   monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true
@@ -671,6 +673,13 @@ class Reservation < ActiveRecord::Base
   def validate_exclusive_price
     unless listing.exclusive_price_available?
       errors.add(:base, I18n.t('reservations_review.errors.exclusive_price_not_available'))
+    end
+  end
+
+  def address_in_radius?
+    unless listing.location_address.distance_from(address.latitude, address.longitude) <= transactable_type.search_radius
+      errors.add(:base, I18n.t('errors.messages.not_in_radius'))
+      address.errors.add(:address, I18n.t('errors.messages.not_in_radius'))
     end
   end
 
