@@ -12,6 +12,8 @@
       %h3.control-label
         %abbr{:title => t('form.required')} *
         = t('pricing.price')
+        - if is_i18n_set?('pricing.hint.price')
+          = hint_button t('pricing.hint.price')
 
       .price-options
         - if f.object.transactable_type.action_hourly_booking
