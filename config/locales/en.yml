@@ -1888,6 +1888,10 @@ en:
 
   user_profile:
     labels:
+      contact_user: "Contact"
+      contact_buyer: "Contact Buyer"
+      contact_seller: "Contact Seller"
+
       admin_profile: This is an admin profile. It’s visible only to other admins while they are logged in and will not be visible to regular users at any time.
 
       visitor:

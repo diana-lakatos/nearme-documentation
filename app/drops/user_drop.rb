@@ -372,6 +372,30 @@ class UserDrop < BaseDrop
     build_click_to_call_button(path_to_call)
   end
 
+  # whether or not the user has a buyer profile set up
+  def has_buyer_profile?
+    @user.buyer_profile.present?
+  end
+
+  # whether or not the user has a seller profile set up
+  def has_seller_profile?
+    @user.seller_profile.present?
+  end
+
+  # whether the user only has a buyer profile
+  # implemented to make things easier as Liquid does not
+  # have a not operator
+  def only_buyer_profile?
+    self.has_buyer_profile? && !self.has_seller_profile?
+  end
+
+  # whether the user only has a seller profile
+  # implemented to make things easier as Liquid does not
+  # have a not operator
+  def only_seller_profile?
+    !self.has_buyer_profile? && self.has_seller_profile?
+  end
+
   private
     def social_connections
       @social_connections_cache ||= @user.social_connections
