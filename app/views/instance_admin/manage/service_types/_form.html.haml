@@ -21,6 +21,8 @@
     .row
       .input-container.col-xs-6
         = f.input :show_company_name, as: :boolean, inline_label: true
+      .input-container.col-xs-6
+        = f.input :single_location, as: :boolean, inline_label: true
     .row
       - if false # commented out until we have decision how to deal with company/location address
         .input-container.col-xs-6
