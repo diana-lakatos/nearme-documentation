@@ -222,7 +222,7 @@ class Instance < ActiveRecord::Base
   end
 
   def test_mode?
-    read_attribute(:test_mode) #|| (!Rails.env.staging? && !Rails.env.production?)
+    read_attribute(:test_mode) || (!Rails.env.staging? && !Rails.env.production?)
   end
 
   def default_twilio_config

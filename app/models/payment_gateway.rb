@@ -121,6 +121,10 @@ class PaymentGateway < ActiveRecord::Base
     self.live_active? || self.test_active?
   end
 
+  def active_in_current_mode?
+    test_mode? ? self.test_active? : self.live_active?
+  end
+
   def client_token
     nil
   end
