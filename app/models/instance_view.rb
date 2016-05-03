@@ -429,6 +429,11 @@ class InstanceView < ActiveRecord::Base
     },
     'dashboard/company/host_reservations/complete_reservation_top' => {
       is_partial: false
+    },
+    'dashboard/user_messages/form' => {
+      is_partial: true,
+      '@user_message' => 'UserMessageDrop',
+      '@error' => 'string'
     }
   }.freeze
 
