@@ -6,7 +6,7 @@
 
 = f.input :unavailable_period_enabled, as: :switch if f.object.respond_to?(:uavailable_period_enabled)
 
-%div
+%div.schedule-exception-rules-container
   = f.simple_fields_for :schedule_exception_rules do |schedule_exception_rule_form|
     = render 'schedules/schedule_exception_rule_fields', f: schedule_exception_rule_form
 
