@@ -39,7 +39,7 @@ class ScheduleRule < ActiveRecord::Base
   def parse_user_input
     self.week_days = week_days.reject(&:blank?).map(&:to_i)
     self.times = (user_times || []).reject(&:blank?).map { |t| date_time_handler.convert_to_time(t) }
-    self.dates = (user_dates || []).reject { |d| d.blank? }.map { |d| date_time_handler.convert_to_datetime(d) }.reject { |d| (d.past? && !d.today?) }
+    self.dates = (user_dates || []).reject { |d| d.blank? }.map { |d| date_time_handler.convert_to_datetime(d) }.reject { |d| (d.blank? || (d.past? && !d.today?)) }
     self.time_start = date_time_handler.convert_to_time(user_time_start) if user_time_start.present?
     self.time_end = date_time_handler.convert_to_time(user_time_end) if user_time_end.present?
     self.date_start = date_time_handler.convert_to_datetime(user_date_start).try(:beginning_of_day) if user_date_start.present?

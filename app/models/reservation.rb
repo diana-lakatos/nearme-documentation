@@ -217,7 +217,7 @@ class Reservation < ActiveRecord::Base
       self.update_column(:subtotal_amount_cents, penalty_fee_subtotal.cents)
       self.force_recalculate_fees = true
       self.update_columns({
-       service_fee_amount_guest_cents: self.service_fee_amount_guest.cents,
+        service_fee_amount_guest_cents: self.service_fee_amount_guest.cents,
         service_fee_amount_host_cents: self.service_fee_amount_host.cents
       })
       # note: this might not work with shipment?
@@ -677,7 +677,8 @@ class Reservation < ActiveRecord::Base
   end
 
   def address_in_radius?
-    unless listing.location_address.distance_from(address.latitude, address.longitude) <= transactable_type.search_radius
+    distance = listing.location_address.distance_from(address.latitude, address.longitude)
+    if distance.nil? || distance > transactable_type.search_radius
       errors.add(:base, I18n.t('errors.messages.not_in_radius'))
       address.errors.add(:address, I18n.t('errors.messages.not_in_radius'))
     end
