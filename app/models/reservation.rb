@@ -680,6 +680,8 @@ class Reservation < ActiveRecord::Base
       errors.add(:base, I18n.t('errors.messages.not_in_radius'))
       address.errors.add(:address, I18n.t('errors.messages.not_in_radius'))
     end
+  rescue
+    false
   end
 
 end
