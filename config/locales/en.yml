@@ -1314,6 +1314,7 @@ en:
       offers: Offers
       user_auctions: 'My Auctions'
       user_bids: 'My Bids'
+      click_to_call_preferences: 'Click to Call'
 
     white_labels:
       save: 'Save'
@@ -1785,6 +1786,17 @@ en:
       add: 'Add Photo'
       drag_info: 'or drag photo here to upload'
 
+    click_to_call:
+      intro_html: '<h3>What is Click to Call?</h3> <p>We give you an easy to way to make calls between buyers and sellers while keeping phone numbers of both parties private. Thanks to <a href="http://twilio.com" rel="external">Twilio</a> integration, you will be able to make and receive calls to other users who verified their number on our website.</p> <p>When setting up a call with Twilio the other party will receive a phone call on their verified number first. When they answer, Twilio will call you back on your phone registered in the system.</p>'
+      mobile_number_error: 'Mobile number %{error}'
+      verified_phone_number_html: 'Your verified phone number: <b>%{phone}</b>'
+      connect_intro_html: '<p>In order to verify your number with Twilio <b>you will need your phone ready</b>. Once you click on <i>Connect</i> we will display a six digit code.</p> <p>Twilio’s automated service will call your number and ask to enter the code that was just displayed. After that you will receive confirmation and your number will be verified.</p>'
+      mobile_number_html: 'Your mobile number: <b>%{phone}</b>'
+      profile_link_label: 'Edit your profile to update mobile number'
+      validation_code_message_html: 'Your validation code: <b><%= code %></b> Calling now&hellip;'
+      success_message_html: 'You’ve successfully verified phone number <b><%= phone %></b>'
+      error_message_html: 'Unable to connect, please try again'
+
   hidden_items:
     registrations:
       show:
@@ -1806,7 +1818,7 @@ en:
       make_a_call_to: 'Make a call to %{name}'
       call_is_over: 'Call is over'
     buttons:
-      click_to_call: 'Call me'
+      click_to_call: 'Call Me'
       call: 'Call'
       hang_up: 'Hang up'
       close: 'Close'

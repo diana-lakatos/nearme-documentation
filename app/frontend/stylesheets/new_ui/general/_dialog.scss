@@ -61,7 +61,6 @@
         min-height: 200px;
         width: $screen-sm;
         max-height: 98vh;
-
         transform: translate(-50%, -100%);
 
         .dialog--visible & {
@@ -83,12 +82,13 @@
     &:before {
         text-align: center;
         color: $brand-primary;
-        @include fa-icon();
+
+        @include fa-icon;
+
         content: $fa-var-close;
         font-size: 15px;
         line-height: 30px;
     }
-
 }
 
 .dialog__content {
@@ -96,7 +96,6 @@
 }
 
 .dialog.dialog--loaded {
-
     .dialog__container:after {
         opacity: 0;
     }
@@ -114,16 +113,24 @@
     }
 }
 
-.dialog__body {
+.dialog__content {
+    .panel {
+        margin-bottom: 0;
+        box-shadow: none;
+    }
 
+    .panel-body {
+        padding: 10px;
+    }
 }
 
 .dialog__actions {
     margin-top: 30px;
     text-align: right;
 
-    a, [type=button],  [type=submit] {
+    a, [type=button], [type=submit] {
         @extend .btn;
+
         @extend .btn-primary;
     }
 }

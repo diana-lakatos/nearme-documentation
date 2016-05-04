@@ -21,7 +21,7 @@ module.exports = class Dialog
       e.preventDefault()
       e.stopPropagation()
       target = $(e.currentTarget)
-      ajaxOptions = { url: target.attr("href"), data: target.attr('data-ajax-options') }
+      ajaxOptions = { url: target.attr("href"), data: target.data('ajax-options') }
       @load(ajaxOptions, target.attr('data-modal-class'))
 
     # submit form via button
@@ -29,7 +29,7 @@ module.exports = class Dialog
       e.preventDefault()
       form = $(e.currentTarget)
       ajaxOptions = { type: form.attr('method'), url: form.attr("action"), data: form.serialize()}
-      @load(ajaxOptions, form.attr('data-modal-class'))
+      @load(ajaxOptions, form.data('modal-class'))
 
     $(document).on 'hide:dialog.nearme', =>
       @hide()

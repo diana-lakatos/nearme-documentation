@@ -37,13 +37,13 @@ class CommunicationsControllerTest < ActionController::TestCase
     post :create, user_id: @user.id
   end
 
-  test "#create redirects to 'Trust & Verification' with validation code" do
+  test "#create redirects to 'Click to Call' with validation code" do
     @caller.stubs(account_sid: 'abc', phone_number: '+00000000000', call_sid: '123', validation_code: 'xyz')
     @provider.stubs(:verify_number).returns(@caller)
     post :create, user_id: @user.id
 
     assert_equal flash[:notice], I18n.t('flash_messages.communications.validation_code', validation_code: @caller.validation_code)
-    assert_redirected_to social_accounts_path
+    assert_redirected_to edit_dashboard_click_to_call_preferences_path
   end
 
   test '#destroy disconnects verified number' do
@@ -66,13 +66,13 @@ class CommunicationsControllerTest < ActionController::TestCase
     delete :destroy, user_id: @user.id, id: @user.id
   end
 
-  test "#destroy redirects to 'Trust & Verification'" do
+  test "#destroy redirects to 'Click to Call'" do
     communication = Struct.new(:destroy, :phone_number_key).new
     @user.stubs(:communication).returns(communication)
     @provider.stubs(:disconnect_number)
     delete :destroy, user_id: @user.id, id: @user.id
 
-    assert_redirected_to social_accounts_path
+    assert_redirected_to edit_dashboard_click_to_call_preferences_path
   end
 
 end
