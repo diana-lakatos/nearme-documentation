@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160501140842) do
+ActiveRecord::Schema.define(version: 20160504113947) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -668,6 +668,8 @@ ActiveRecord::Schema.define(version: 20160501140842) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "regex_validation",             default: false, null: false
+    t.string   "regex_expression"
   end
 
   add_index "custom_validators", ["instance_id", "validatable_type", "validatable_id"], name: "index_custom_validators_on_i_id_and_v_type_and_v_id", using: :btree

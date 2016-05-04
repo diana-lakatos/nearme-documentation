@@ -1,8 +1,20 @@
 class AuthenticationsController < ApplicationController
+  include LoginLinksHelper
 
   skip_before_filter :set_locale
   skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:create, :setup]
   skip_before_filter :verify_authenticity_token
+  before_action :set_role
+
+  def set_role
+    if current_instance.split_registration?
+      @role ||= 'buyer'
+      if env["omniauth.params"].present?
+        @role = %w(seller buyer).detect { |r| r == env["omniauth.params"]["role"] }
+      end
+    end
+    @role ||= "default"
+  end
 
   def create
     @omniauth = request.env["omniauth.auth"]
@@ -11,11 +23,11 @@ class AuthenticationsController < ApplicationController
     if @oauth.already_connected?(current_user)
       update_profile
       already_connected_to_other_user
-    # Usual scenario - user already used social provider to log in to our system, everything in db is already set up
+      # Usual scenario - user already used social provider to log in to our system, everything in db is already set up
     elsif !current_user && @oauth.authentication && @oauth.authenticated_user && @oauth.authenticated_user.active_for_authentication?
       update_profile
       signed_in_successfully
-    # Banned user already used social provider to log in to our system, everything in db is already set up
+      # Banned user already used social provider to log in to our system, everything in db is already set up
     elsif !current_user && @oauth.authentication && @oauth.authenticated_user && !@oauth.authenticated_user.active_for_authentication?
       user_is_inactive_for_authentication(@oauth.authenticated_user)
       # Email is already taken - don't allow to steal account
@@ -29,7 +41,15 @@ class AuthenticationsController < ApplicationController
       same_user_already_logged_in
       # There is no authentication in our system, and the user is not logged in. Hence, we create a new user and then new authentication
     else
-      if @oauth.create_user(cookies[:google_analytics_id])
+      if @oauth.create_user(cookies[:google_analytics_id], @role)
+        case @role
+        when 'default'
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @oauth.authentication.user.id)
+        when 'seller'
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::HostAccountCreated, @oauth.authentication.user.id)
+        when 'buyer'
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::GuestAccountCreated, @oauth.authentication.user.id)
+        end
         if PlatformContext.current.instance.is_community?
           user = @oauth.authenticated_user
           fail 'External id is nil' if user.external_id.blank?
@@ -149,7 +169,7 @@ class AuthenticationsController < ApplicationController
 
   def failed_to_create_new_user
     session[:omniauth] = @omniauth.try(:except, 'extra')
-    redirect_to new_user_registration_url(:wizard => wizard_id)
+    redirect_to new_user_registration_url(:wizard => wizard_id, role: @role)
   end
 
   def log_sign_up

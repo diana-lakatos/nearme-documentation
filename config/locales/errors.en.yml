@@ -116,6 +116,7 @@ en:
       must_be_later: 'must occur after beginning'
       not_in_past: 'must be not in past'
       range_too_wide: "can 't be later than 1 year from starting date"
+      has_an_invalid_format: "has an invalid format"
 
       communications:
         not_verified:

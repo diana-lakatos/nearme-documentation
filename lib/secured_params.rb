@@ -101,7 +101,9 @@ class SecuredParams
       :min_length,
       :max_length,
       :valid_values,
-      :validatable_type
+      :validatable_type,
+      :regex_validation,
+      :regex_expression
     ]
   end
 

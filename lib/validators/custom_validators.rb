@@ -30,6 +30,11 @@ class CustomValidators < ActiveModel::Validator
           record.errors.add(validator.field_name, :inclusion, value: record[validator.field_name])
         end
       end
+      if validator.regex_validation? && validator.regex_expression.present?
+        unless /#{validator.regex_expression}/.match(record[validator.field_name])
+          record.errors.add(validator.field_name, I18n.t('errors.messages.has_an_invalid_format'))
+        end
+      end
     end
   end
 
