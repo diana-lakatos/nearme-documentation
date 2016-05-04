@@ -676,7 +676,7 @@ class Reservation < ActiveRecord::Base
 
   def address_in_radius?
     distance = listing.location_address.distance_from(address.latitude, address.longitude)
-    if distance > transactable_type.search_radius.to_i
+    if distance > listing.properties[:service_radius].to_i
       errors.add(:base, I18n.t('errors.messages.not_in_radius'))
       address.errors.add(:address, I18n.t('errors.messages.not_in_radius'))
     end
