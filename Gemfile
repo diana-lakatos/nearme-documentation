@@ -21,7 +21,7 @@ gem 'devise-token_authenticatable'
 
 gem 'charlock_holmes', '~> 0.7.3'
 
-gem 'aws-sdk', '1.27.0'
+gem 'aws-sdk'
 
 gem 'omniauth'
 gem 'omniauth-twitter'

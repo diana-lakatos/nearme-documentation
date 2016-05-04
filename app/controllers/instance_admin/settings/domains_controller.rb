@@ -1,8 +1,14 @@
+require 'nearme/r53'
+
 class InstanceAdmin::Settings::DomainsController < InstanceAdmin::Settings::BaseController
   before_action :find_domain, only: [:edit, :update, :destroy]
 
   def index
-    @domains = domains
+    @domains = DomainDecorator.decorate_collection(domains)
+  end
+
+  def show
+    @domain = DomainDecorator.decorate(find_domain)
   end
 
   def new

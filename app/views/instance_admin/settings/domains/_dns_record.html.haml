@@ -1,0 +1,9 @@
+%tr
+  %td= record.name
+  %td= record.type
+  %td
+    %pre
+      = record.alias_target && record.alias_target.dns_name
+      = record.resource_records.map(&:value).join("\n")
+    - if record.type == 'NS'
+      .small= t('instance_admin.settings.domains.hosted_zones.note')
