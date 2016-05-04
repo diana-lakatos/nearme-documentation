@@ -94,10 +94,8 @@ class Reservation < ActiveRecord::Base
     event :activate                 do transition inactive: :unconfirmed; end
     event :confirm                  do transition unconfirmed: :confirmed; end
     event :reject                   do transition unconfirmed: :rejected; end
-    event :host_cancel              do
-      transition confirmed: :cancelled_by_host, :if => lambda {|reservation| !reservation.skip_payment_authorization?}
-    end
-    event :user_cancel              do transition [:unconfirmed, :confirmed] => :cancelled_by_guest; end
+    event :host_cancel              do transition confirmed: :cancelled_by_host, if: lambda {|reservation| reservation.archived_at.nil? }; end
+    event :user_cancel              do transition [:unconfirmed, :confirmed] => :cancelled_by_guest, if: lambda {|reservation| reservation.archived_at.nil? }; end
     event :expire                   do transition unconfirmed: :expired; end
   end
 
