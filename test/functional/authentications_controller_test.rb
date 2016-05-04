@@ -166,7 +166,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
           post :create
         end
       end
-      assert_redirected_to new_user_registration_url
+      assert_redirected_to new_user_registration_url(role: 'default')
     end
 
     context 'token params after login' do

@@ -83,7 +83,9 @@ module AuthenticationsHelper
 
   def provider_auth_url(provider)
     url = "/auth/#{provider}"
-    url += "?wizard=#{params[:wizard]}" if params[:wizard]
+    options = [params[:wizard] ? "wizard=#{params[:wizard]}" : nil, params[:role] ? "role=#{params[:role]}" : nil].compact
+    url += '?' if options.any?
+    url += options.join('&')
     url
   end
 end
