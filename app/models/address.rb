@@ -15,9 +15,10 @@ class Address < ActiveRecord::Base
   belongs_to :instance
   belongs_to :entity, -> { with_deleted }, polymorphic: true
 
-  validates_presence_of :address
+  validates_presence_of :address, unless: :accurate_address_required
+  validate :check_address, if: :accurate_address_required
   validates_presence_of :latitude, :longitude, if: lambda { |l| !l.raw_address? }
-  validate :check_address, if: lambda { |l| l.should_check_address == 'true' && !l.raw_address? }
+
   before_validation :update_address, if: lambda { |l| !l.raw_address? }
   before_validation :parse_address_components, if: lambda { |l| !l.raw_address? }
   before_validation :clear_fields, if: lambda { |l| l.raw_address? }
@@ -190,6 +191,12 @@ class Address < ActiveRecord::Base
         element.to_f
       end
     end
+  end
+
+  private
+
+  def accurate_address_required
+    should_check_address == 'true' && !raw_address?
   end
 
 end
