@@ -8,11 +8,11 @@ module Auth
       @auth_params['credentials'] ||= {}
     end
 
-    def create_user(google_analytics_id)
+    def create_user(google_analytics_id, role)
       user = User.new
+      user.force_profile = role
       user.apply_omniauth(@auth_params)
       user.google_analytics_id = google_analytics_id
-      user.instance_profile_type_id = InstanceProfileType.default.first.try(:id)
       user.save
     end
 

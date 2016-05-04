@@ -27,7 +27,9 @@ class PaymentSubscription < ActiveRecord::Base
 
   before_validation do |p|
     self.payer ||= subscriber.try(:owner)
-    self.credit_card_id ||= payer.instance_clients.find_by(payment_gateway: payment_gateway.id).try(:credit_cards).try(:find, p.chosen_credit_card_id).try(:id) if p.payment_method.try(:payment_method_type) == 'credit_card' && payer.respond_to?(:instance_clients) && p.chosen_credit_card_id.present? &&  p.chosen_credit_card_id != 'custom'
+    if p.payment_method.try(:payment_method_type) == 'credit_card' && payer.respond_to?(:instance_clients) && p.chosen_credit_card_id.present? &&  p.chosen_credit_card_id != 'custom'
+      self.credit_card_id ||= payer.instance_clients.find_by(payment_gateway: payment_gateway.id, test_mode: test_mode?).try(:credit_cards).try(:find, p.chosen_credit_card_id).try(:id)
+    end
     true
   end
 
@@ -57,6 +59,7 @@ class PaymentSubscription < ActiveRecord::Base
   def credit_card_attributes=(cc_attrs)
     super(cc_attrs.merge(
         payment_gateway: self.payment_gateway,
+        test_mode: test_mode?,
         client: self.subscriber.client
       )
     )

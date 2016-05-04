@@ -525,6 +525,12 @@ class User < ActiveRecord::Base
     !password.blank? || (new_record? && authentications.empty?)
   end
 
+  def has_active_credit_cards?
+    self.instance_clients.mode_scope.any? do |i|
+      i.payment_gateway.active_in_current_mode?
+    end
+  end
+
   # Whether the user has - or should have - a password.
   def has_password?
     encrypted_password.present? || password_required?

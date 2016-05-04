@@ -96,7 +96,7 @@ SimpleNavigation::Configuration.run do |navigation|
 
     primary.item :account, t('dashboard.nav.account'), nil do |sub_nav|
       dashboard_nav_item sub_nav, 'registrations/edit', dashboard_profile_path, link_text: t('dashboard.nav.edit'), highlights_on: /(users\/edit|dashboard\/seller\/edit|dashboard\/buyer\/edit|dashboard\/edit_profile)/
-      if(payment_gateway = PaymentGateway.with_credit_card.first).present? && current_user.instance_clients.for_payment_gateway(payment_gateway, PlatformContext.current.instance.test_mode?).exists?
+      if(payment_gateway = PaymentGateway.with_credit_card.mode_scope.first).present? && current_user.has_active_credit_cards?
         dashboard_nav_item sub_nav, 'dashboard/credit_cards', dashboard_payment_gateway_credit_cards_path(payment_gateway), highlights_on: /dashboard\/payment_gateways\/[0-9]+\/credit_card/
       end
       dashboard_nav_item sub_nav, 'dashboard/notification_preferences', edit_dashboard_notification_preferences_path, link_text: t('dashboard.nav.notification_preferences'), highlights_on: /dashboard\/notification_preferences/

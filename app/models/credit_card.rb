@@ -147,7 +147,7 @@ class CreditCard < ActiveRecord::Base
   end
 
   def set_instance_client
-    self.instance_client ||= payment_gateway.instance_clients.where(client: client).first_or_initialize
+    self.instance_client ||= payment_gateway.instance_clients.where(client: client,  test_mode: test_mode?).first_or_initialize
     true
   end
 

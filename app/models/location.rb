@@ -130,7 +130,11 @@ class Location < ActiveRecord::Base
   end
 
   def name
-    read_attribute(:name).presence || [company.name, street].compact.join(" @ ")
+    if validation_for(:name)
+      read_attribute(:name)
+    else
+      read_attribute(:name).presence || [company.name, street].compact.join(" @ ")
+    end
   end
 
   def admin?(user)
