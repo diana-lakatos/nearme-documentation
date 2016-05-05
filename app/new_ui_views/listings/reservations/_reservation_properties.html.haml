@@ -35,7 +35,7 @@
                 = f.input :start_time, as: :select, collection: availability_time_options, required: true,  label: t('simple_form.labels.reservations.start_time'), input_html: { data: { no_options: t('general.no_options') } }
             - elsif custom_attribute_names.include?(field)
               - if field == 'service_category'
-                = draw_attribute_for_form(f.object.reservation_type.custom_attributes.find_by(name: field), properties_form, false, disabled: get_disabled_categories(f.object.listing) , checked: f.object.properties[:service_category].presence || get_categories_from_search)
+                = draw_attribute_for_form(f.object.reservation_type.custom_attributes.find_by(name: field), properties_form, false, disabled: get_disabled_categories(f.object.listing) , checked: (f.object.properties[:service_category].presence || get_categories_from_search) - get_disabled_categories(f.object.listing))
               - else
                 = draw_attribute_for_form(f.object.reservation_type.custom_attributes.find_by(name: field), properties_form, false)
             - elsif f.object.reservation.attributes.include?(field)
