@@ -1349,7 +1349,12 @@ class SecuredParams
   def notification_preferences
     [
       :accept_emails,
-      :sms_notifications_enabled,
+      :sms_notifications_enabled
+    ]
+  end
+
+  def click_to_call_preferences
+    [
       :click_to_call
     ]
   end

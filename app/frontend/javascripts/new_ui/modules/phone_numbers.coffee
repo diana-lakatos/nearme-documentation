@@ -6,12 +6,13 @@ module.exports = class PhoneNumbers
 
   constructor: (@container, {@countrySelector, @codeSelector, @mobileSelector, @phoneSelector, @sameAsSelector} = {}) ->
     _.defaults @,
-      container       : $('div[data-phone-fields-container]')
-      countrySelector : 'select[data-country-selector]'
-      codeSelector    : '.input-group-addon'
-      mobileSelector  : 'input[data-mobile-number]'
-      phoneSelector   : 'input[data-phone]'
-      sameAsSelector  : 'input[data-same-as-phone-checkbox]'
+      container          : $('div[data-phone-fields-container]')
+      countrySelector    : 'select[data-country-selector]'
+      codeSelector       : '.input-group-addon'
+      mobileSelector     : 'input[data-mobile-number]'
+      phoneSelector      : 'input[data-phone]'
+      sameAsSelector     : 'input[data-same-as-phone-checkbox]'
+      ctcTriggerSelector : 'a[data-ctc-trigger]'
 
     return unless @container.length > 0
 
@@ -23,6 +24,7 @@ module.exports = class PhoneNumbers
         window.clearInterval(interval)
         @updateCountryCallingCode()
         @updatePhoneNumber()
+        @updateCtcTrigger()
     , 50)
 
   findFields: ->
@@ -31,6 +33,7 @@ module.exports = class PhoneNumbers
     @mobileNumberField = @container.find(@mobileSelector)
     @phoneNumberField  = @container.find(@phoneSelector)
     @sameAsPhoneField  = @container.find(@sameAsSelector)
+    @ctcTrigger        = @container.find(@ctcTriggerSelector)
 
   bindEvents: ->
     @container.on 'change', @countrySelector, ()=>
@@ -45,13 +48,18 @@ module.exports = class PhoneNumbers
   updatePhoneNumber: ->
     @mobileNumberField.prop('readonly', !!@isMobileSameAsPhone())
     @mobileNumberField.val(@phoneNumberField.val()) if @isMobileSameAsPhone()
+    @updateCtcTrigger()
 
   isMobileSameAsPhone: ->
     @sameAsPhoneField.is(':checked')
 
-  updateCountryCallingCode: ->
+  getCountryCode: ->
     current = @countryNameField[0].selectize.items[0]
-    code = @countryNameField[0].selectize.options[current].callingCode if current
+    return @countryNameField[0].selectize.options[current].callingCode if current
+
+  updateCountryCallingCode: ->
+
+    code = @getCountryCode()
 
     code = if code
       "+#{code}"
@@ -63,3 +71,8 @@ module.exports = class PhoneNumbers
 
     @mobileNumberField.prop('disabled', isDisabled).closest('.form-group').toggleClass('disabled', isDisabled)
     @phoneNumberField.prop('disabled', isDisabled).closest('.form-group').toggleClass('disabled', isDisabled)
+
+    @updateCtcTrigger()
+
+  updateCtcTrigger: ->
+    @ctcTrigger.data('ajax-options', { phone: @mobileNumberField.val(), country_name: @countryNameField[0].selectize.items[0] })

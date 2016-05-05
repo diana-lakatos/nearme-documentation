@@ -8,7 +8,7 @@
     - if defined?(field_hint)
       = hint_button field_hint
 
-  = f.text_field :address, :'data-behavior' => 'address-autocomplete', placeholder: t('locations.address_placeholder'), 'data-address-input' => true, class: 'form-control'
+  = f.text_field :address, :'data-behavior' => 'address-autocomplete', placeholder: t('locations.address_placeholder'), 'data-address-input' => true, class: 'form-control', :'data-precise-search' => current_instance.precise_search?
 
   - if f.object.errors.include?(:address) || f.object.errors.include?(:latitude)
     %span.help-block
@@ -21,6 +21,7 @@
     .map-container
 
 
+  = f.hidden_field :should_check_address, value: current_instance.precise_search? || params[:should_check_address]
   = f.hidden_field :local_geocoding, 'data-local-geocoding' => true
   = f.hidden_field :latitude, 'data-latitude' => true
   = f.hidden_field :longitude, 'data-longitude' => true

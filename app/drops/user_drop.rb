@@ -367,7 +367,7 @@ class UserDrop < BaseDrop
   end
 
   def click_to_call_button
-    return unless @user.click_to_call?
+    return unless @user.click_to_call? && @user.is_available_now?
     path_to_call = routes.new_user_phone_call_path(@user)
     build_click_to_call_button(path_to_call)
   end

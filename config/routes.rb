@@ -858,6 +858,8 @@ DesksnearMe::Application.routes.draw do
 
       resource :notification_preferences, only: [:edit, :update]
 
+      resource :click_to_call_preferences, only: [:edit, :update]
+
       resources :companies, only: [:edit, :update, :show]
 
       resources :images
@@ -1094,7 +1096,12 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :users do
-      resources :communications, only: [:create, :destroy]
+      resources :communications, only: [:create, :destroy] do
+        collection do
+          get 'verified'
+          get 'verified_success'
+        end
+      end
       resources :phone_calls, only: [:new, :create, :destroy]
     end
 

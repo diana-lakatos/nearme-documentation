@@ -24,7 +24,6 @@ main {
 }
 
 %sidebar-transition {
-
     .navigation-toggle-initialized & {
         transition: transform .3s ease;
     }
@@ -33,15 +32,20 @@ main {
 .js {
     .sidebar ~ main {
         @extend %sidebar-transition;
+
         margin-left: 0;
         transform: translateX(0);
     }
+
     .sidebar ~ .page-header {
         @extend %sidebar-transition;
+
         left: 0;
     }
+
     .sidebar {
         @extend %sidebar-transition;
+
         transform: translateX(-$sidebar-width);
     }
 
@@ -49,6 +53,7 @@ main {
         .sidebar ~ main {
             transform: translateX($sidebar-width);
         }
+
         .sidebar ~ .page-header {
             transform: translateX($sidebar-width);
         }
@@ -63,6 +68,7 @@ main {
             transform: translateX(0);
             margin-left: $sidebar-width;
         }
+
         .sidebar ~ .page-header, .navigation-visible .sidebar ~ .page-header {
             left: $sidebar-width;
             transform: translateX(0);
@@ -76,4 +82,10 @@ main {
             display: none;
         }
     }
+}
+
+.panel, .panel-nav {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1200px;
 }

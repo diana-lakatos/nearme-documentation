@@ -557,4 +557,25 @@ DNM.registerInitializer(function() {
   });
 });
 
+DNM.registerInitializer(function(){
+
+    function run(context) {
+        var el = context.querySelector('.click-to-call-preferences');
+        if (!el) {
+            return;
+        }
+
+        require.ensure('./new_ui/modules/click_to_call_preferences', function(require){
+            var ClickToCallPreferences = require('./new_ui/modules/click_to_call_preferences');
+            return new ClickToCallPreferences(el);
+        });
+    }
+
+    run(document);
+
+    $('html').on('loaded:dialog.nearme', function(){
+        run(document.querySelector('.dialog'));
+    });
+});
+
 DNM.run();

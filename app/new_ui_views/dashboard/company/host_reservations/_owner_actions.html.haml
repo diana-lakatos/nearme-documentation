@@ -27,6 +27,11 @@
   -#TODO add check if this is a mission
   - if reservation.can_complete_checkout?
     = link_to t('dashboard.host_reservations.actions.complete_reservation'), complete_reservation_dashboard_company_host_reservation_path(reservation), class: 'btn btn-success'
+  - if reservation.can_approve_or_decline_checkout?
+    .pending-approval= t('dashboard.host_reservations.pending_approval')
+  - if reservation.has_to_update_credit_card?
+    .cc-error= t('dashboard.host_reservations.must_change_credit_card')
+
   - if reservation.shipments.outbound.first
     = link_to t('dashboard.host_reservations.shipping_label'), reservation.shipments.outbound.first.try(:label_url), class: 'btn btn-primary'
     = link_to t('dashboard.host_reservations.track_package'), reservation.shipments.outbound.first.try(:tracking_url_provider), class: 'btn btn-primary'

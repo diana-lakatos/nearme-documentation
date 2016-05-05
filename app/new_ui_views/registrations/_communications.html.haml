@@ -3,6 +3,11 @@
     %h3= t('registrations.phone_calls.twilio')
     %p= t('registrations.phone_calls.twilio_info')
 
+    - if current_user.communication.try(:verified?)
+      = current_user.communication.try(:phone_number)
+    - else
+      = current_user.full_mobile_number
+
     .form-group
       .input-group
         = text_field_tag :phone_number, nil, value: (current_user.communication.try(:phone_number) || current_user.full_mobile_number), disabled: true, class: 'string tel optional form-control', maxlength: 1

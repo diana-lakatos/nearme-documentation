@@ -19,7 +19,7 @@ class ReservationType < ActiveRecord::Base
     :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
     :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
 
-  store_accessor :settings, :precise_search, :address_in_radius
+  store_accessor :settings, :address_in_radius
 
   def translation_manager
     @translation_manager ||= InstanceProfileType::InstanceProfileTypeTranslationManager.new(self)

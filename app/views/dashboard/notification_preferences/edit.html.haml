@@ -9,8 +9,6 @@
         = f.input :accept_emails, as: :bootstrap_switch
       - if HiddenUiControls.find('dashboard/notification_preferences/sms').visible?
         = f.input :sms_notifications_enabled, as: :bootstrap_switch
-      - if HiddenUiControls.find('dashboard/notification_preferences/click_to_call').visible?
-        = f.input :click_to_call, as: :bootstrap_switch
 
       .submit-bar
         = f.submit "Save", class: "btn medium blue"
