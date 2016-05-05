@@ -57,7 +57,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       assert_response 200
       assert_select ".user-profile__header h1", @user.first_name
       assert_select ".profile-content dd", "United States"
-      assert_select ".user-profile__header a[rel='modal']", "Contact Host"
+      assert_select ".user-profile__header a[rel='modal']", "Contact"
     end
 
     should 'show profile with verifications' do
