@@ -76,7 +76,7 @@ class Reservation < ActiveRecord::Base
   delegate :administrator=, to: :location
   delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, :display_additional_charges?, to: :listing, allow_nil: true
   delegate :remote_payment?, :manual_payment?, :active_merchant_payment?, :paid?, to: :payment, allow_nil: true
-  delegate :precise_search, :address_in_radius, to: :reservation_type, allow_nil: true
+  delegate :address_in_radius, to: :reservation_type, allow_nil: true
 
   monetize :successful_payment_amount_cents, with_model_currency: :currency
   monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true
