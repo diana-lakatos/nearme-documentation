@@ -9,7 +9,7 @@ class ProductForm < Form
 
   validates :name, presence: true, length: {minimum: 3}
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
-  validates :quantity, numericality: { only_integer: true, :less_than => 2147483647 }, presence: true
+  validates :quantity, numericality: { only_integer: true, :less_than => 2147483647, :greater_than_or_equal_to => 0 }, presence: true
   validate :validate_images
   validates_presence_of :weight, :if => :shippo_enabled
   validates_presence_of :depth, :if => :shippo_enabled
