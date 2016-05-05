@@ -1,15 +1,28 @@
 class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountOwner
 
   ADDRESS_ATTRIBUTES = %w(address_country address_state address_city address_postal_code address_line1 address_line2)
-  ATTRIBUTES = %w(dob first_name last_name) + ADDRESS_ATTRIBUTES
+  ATTRIBUTES = %w(dob_formated dob first_name last_name) + ADDRESS_ATTRIBUTES
 
   include MerchantAccount::Concerns::DataAttributes
 
   belongs_to :merchant_account, class_name: 'MerchantAccount::StripeConnectMerchantAccount'
 
-  validates_format_of :dob, with: /\d{4}-\d{2}-\d{2}/, message: 'Date of Birth has wrong format', allow_blank: true
-  validates_presence_of :dob
+  # validates_format_of :dob, with: /\d{4}-\d{2}-\d{2}/, if:  Proc.new {|s| !s.us_localization }
+  # validates_format_of :dob, with: /\d{2}-\d{2}-\d{4}/, if: Proc.new {|s| s.us_localization }
+  validate :validate_dob_formated
 
+  def validate_dob_formated
+    if dob_formated.blank?
+      errors.add :dob, :blank
+    else
+      begin
+        self.dob = Date.strptime(dob_formated, date_format).strftime(default_date_format).to_s
+        dob_formated = dob.to_date.strftime(date_format).to_s
+      rescue
+        errors.add :dob, :invalid
+      end
+    end
+  end
 
   def upload_document(stripe_account_id)
     if attributes['document'] || document.file.try(:path)
@@ -23,4 +36,31 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
     end
   end
 
+  def dob_date
+    Date.strptime(dob, default_date_format)
+  end
+
+  def default_date_format
+    "%Y-%m-%d"
+  end
+
+  def date_format
+    case I18n.locale
+    when 'us' then "%m-%d-%Y"
+    else
+      default_date_format
+    end
+  end
+
+  def date_format
+    case I18n.locale
+    when :en then "%m-%d-%Y"
+    else
+      default_date_format
+    end
+  end
+
+  def date_format_readable
+    date_format.gsub("%Y", "YYYY").gsub("%m", "MM").gsub("%d", "DD")
+  end
 end
