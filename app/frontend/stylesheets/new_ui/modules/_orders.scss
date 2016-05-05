@@ -86,6 +86,17 @@
         }
     }
 
+    .pending-approval {
+        font-style: italic;
+        color: $errors-global-emf;
+
+        &:before {
+            @include fa-icon();
+            content: $fa-var-question-circle;
+            margin-right: 5px;
+        }
+    }
+
     .order-tracking {
         &:before {
             display: inline-block;

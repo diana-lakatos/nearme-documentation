@@ -1455,6 +1455,8 @@ en:
       no_archived_reservations: "You don't have any archived reservations."
       no_overdue_reservations: "You don't have any overdue reservations."
       no_reservations_promote_reservations: "You currently have no reservations. Promote your locations by tweeting or sharing a direct link!"
+      pending_approval: "Waiting for Client to approve or decline payment."
+      must_change_credit_card: 'Waiting for credit card to be updated by Client.'
       pending_confirmation: 'You must confirm this booking within <strong>%{time_to_expiry}</strong> or it will expire.'
       money_info: "Payment has been authorized but it will be captured only upon confirmation."
       next_payment_transfer: "The next automated payout occurs at %{next_payment_transfer}."
