@@ -76,7 +76,7 @@ class Reservation < ActiveRecord::Base
   delegate :administrator=, to: :location
   delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, :display_additional_charges?, to: :listing, allow_nil: true
   delegate :remote_payment?, :manual_payment?, :active_merchant_payment?, :paid?, to: :payment, allow_nil: true
-  delegate :precise_search, :address_in_radius, to: :reservation_type, allow_nil: true
+  delegate :address_in_radius, to: :reservation_type, allow_nil: true
 
   monetize :successful_payment_amount_cents, with_model_currency: :currency
   monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true
@@ -94,7 +94,7 @@ class Reservation < ActiveRecord::Base
     event :activate                 do transition inactive: :unconfirmed; end
     event :confirm                  do transition unconfirmed: :confirmed; end
     event :reject                   do transition unconfirmed: :rejected; end
-    event :host_cancel              do transition confirmed: :cancelled_by_host, if: lambda {|reservation| reservation.archived_at.nil? }; end
+    event :host_cancel              do transition confirmed: :cancelled_by_host, unless: lambda {|reservation| reservation.can_approve_or_decline_checkout? || reservation.has_to_update_credit_card? || reservation.archived_at.present? }; end
     event :user_cancel              do transition [:unconfirmed, :confirmed] => :cancelled_by_guest, if: lambda {|reservation| reservation.archived_at.nil? }; end
     event :expire                   do transition unconfirmed: :expired; end
   end

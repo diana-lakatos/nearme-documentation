@@ -45,7 +45,7 @@ class Authentication::BaseProvider
   end
 
   def new_connections
-    @new_connections = connections.without(user.friends)
+    @new_connections = connections.try(:without, user.friends) || []
   end
 
   def revoke
