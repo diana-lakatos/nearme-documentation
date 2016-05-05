@@ -27,6 +27,10 @@ class Topic < ActiveRecord::Base
 
   scope :featured, -> { where(featured: true) }
 
+  scope :feed_not_followed_by_user, -> (current_user) {
+    where.not(id: current_user.feed_followed_topics.pluck(:id))
+  }
+
   after_commit :create_activity_feed_event, on: :create
 
   mount_uploader :image, TopicImageUploader
