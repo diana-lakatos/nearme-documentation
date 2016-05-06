@@ -578,4 +578,15 @@ DNM.registerInitializer(function(){
     });
 });
 
+DNM.registerInitializer(function() {
+  $(document).ready(function() {
+    $('.schedule-exception-rules-container').on('cocoon:after-insert', function(e, insertedElement) {
+      require.ensure('./new_ui/forms/hints', function(require) {
+        var hints = require('./new_ui/forms/hints');
+        hints(insertedElement);
+      });
+    });
+  });
+});
+
 DNM.run();

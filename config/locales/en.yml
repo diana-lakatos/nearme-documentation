@@ -1526,9 +1526,9 @@ en:
       contact_subscriber: 'Contact %{name}'
 
     merchant_account:
-      almost_there: "You are almost there!"
-      needed_fields_1: "Stripe is asking for just a few more informations!"
-      needed_fields_2: " Please fill out all the flields below. We will send you an email when Stripe verify your account."
+      you_almost_there: "You're almost there!"
+      stripe_needed_fields_1: "Stripe is asking for a few more details."
+      stripe_needed_fields_2: " Please fill out all the flields below. An email will be sent to you when Stripe verifies your account."
       header: 'Merchant account details'
       pending: 'Your merchant account is pending verification.'
       verified: 'Your merchant account has been verified.'
@@ -1547,6 +1547,7 @@ en:
         euuk: 'Bank Account Number'
       bank_account_number_last_4: "Bank account last four digits"
       dob: 'Date of Birth'
+      correct_dob: "Correct format is: %{dob_format}"
       account_type: 'Account Type'
       select_account_type: '- Select Account Type -'
       company: 'Company'
@@ -1564,6 +1565,7 @@ en:
       document: 'Government ID or Passport'
       add_owner: 'Add owner'
       remove_owner: 'Remove owner'
+      first_name: 'First Name'
       first_name: 'First Name'
       last_name: 'Last Name'
       address_country: 'Country'
@@ -1891,6 +1893,10 @@ en:
 
   user_profile:
     labels:
+      contact_user: "Contact"
+      contact_buyer: "Contact Buyer"
+      contact_seller: "Contact Seller"
+
       admin_profile: This is an admin profile. It’s visible only to other admins while they are logged in and will not be visible to regular users at any time.
 
       visitor:

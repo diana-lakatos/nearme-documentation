@@ -53,7 +53,15 @@
           </ul>
         {% endif %}
 
-        <a href="{{user.user_message_path}}" class="btn green" rel="modal"><span class="ico-mail"></span> {{ 'buy_sell_market.products.buttons.contact_host' | translate }}</a>
+        {% assign contact_translation = 'user_profile.labels.contact_user' %}
+        {% if platform_context.split_registration? %}
+          {% if user.only_buyer_profile? %}
+            {% assign contact_translation = 'user_profile.labels.contact_buyer' %}
+          {% elsif user.only_seller_profile? %}
+            {% assign contact_translation = 'user_profile.labels.contact_seller' %}
+          {% endif %}
+        {% endif %}
+        <a href="{{user.user_message_path}}" class="btn green" rel="modal"><span class="ico-mail"></span> {{ contact_translation | translate }}</a>
       </div>
     </div>
   </div>

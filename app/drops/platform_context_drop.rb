@@ -182,6 +182,11 @@ class PlatformContextDrop < BaseDrop
     RatingSystem.active.any?
   end
 
+  # whether split registration is enabled for the instance
+  def split_registration?
+    @instance.split_registration?
+  end
+
   private
 
   def theme_color(color)

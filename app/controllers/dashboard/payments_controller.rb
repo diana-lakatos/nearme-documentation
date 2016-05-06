@@ -14,8 +14,7 @@ class Dashboard::UserReservations::PaymentsController <  Dashboard::BaseControll
   private
 
   def find_reservation
-    binding.pry
-    @reservation = current_user.reservations.find(params[:user_reservation_id])
+    reservation = current_user.reservations.find(params[:user_reservation_id])
   end
 
   def find_payment

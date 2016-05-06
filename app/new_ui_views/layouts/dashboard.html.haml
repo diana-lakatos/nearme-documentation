@@ -65,9 +65,10 @@
       = yield :page_header
 
     %main{:role => "main"}
-      = render 'dashboard/shared/flash'
+      .main-wrapper
+        = render 'dashboard/shared/flash'
 
-      = yield
+        = yield
 
     = yield(:body_bottom)
 

@@ -20,21 +20,13 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   has_one :current_address, class_name: 'Address', as: :entity
 
   validates_presence_of   :bank_routing_number, :bank_account_number, :last_name, :first_name
+  validates_presence_of   :personal_id_number, if: Proc.new {|m| m.iso_country_code == 'US'}
+  validates_presence_of   :business_tax_id, if: Proc.new {|m| m.iso_country_code == 'US' && m.account_type == 'company'}
   validates_inclusion_of  :account_type, in: ACCOUNT_TYPES
   validates_acceptance_of :tos
   validates_associated :owners
-  validate  :check_address_current_address
-
-  def check_address_current_address
-    return if current_address.blank?
-
-    current_address.parse_address_components!
-    current_address.errors.clear
-
-    if current_address.check_address && current_address.errors.any?
-      errors.add(:current_address, :inacurate)
-    end
-  end
+  validate  :validate_current_address
+  validate  :validate_owners_documents
 
   accepts_nested_attributes_for :owners, allow_destroy: true
   accepts_nested_attributes_for :current_address
@@ -73,7 +65,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   def create_params
     update_params.deep_merge(
       managed: true,
-      country: address.iso_country_code,
+      country: iso_country_code,
       email: merchantable.creator.email,
       tos_acceptance: {
         ip: merchantable.creator.current_sign_in_ip,
@@ -92,7 +84,8 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   def update_params
     owner = owners.first
-    dob_components = owner.dob.split('-')
+
+    dob = owner.dob_date
 
     legal_entity_hash = {
       type: account_type,
@@ -100,9 +93,9 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       address: address_hash,
       personal_address: address_hash,
       dob: {
-        day:   dob_components[2],
-        month: dob_components[1],
-        year:  dob_components[0]
+        day:   dob.day,
+        month: dob.month,
+        year:  dob.year
       },
       ssn_last_4:         ssn_last_4,
       business_tax_id:    business_tax_id,
@@ -118,7 +111,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       legal_entity_hash.merge!(additional_owners: [])
       owners[1..-1].each do |owner|
 
-        dob_components = owner.dob.split('-')
+        dob = owner.dob_date
         legal_entity_hash[:additional_owners] << {
           first_name: owner.first_name,
           last_name:  owner.last_name,
@@ -131,9 +124,9 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
             line2:       owner.address_line2,
           },
           dob: {
-            day:   dob_components[2],
-            month: dob_components[1],
-            year:  dob_components[0]
+            day:   dob.day,
+            month: dob.month,
+            year:  dob.year
           }
         }
       end
@@ -141,7 +134,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
     {
       bank_account: {
-        country: address.iso_country_code,
+        country: iso_country_code,
         currency: get_currency,
         account_number: bank_account_number,
         routing_number: bank_routing_number
@@ -151,7 +144,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   def address_hash
     {
-      country: address.iso_country_code,
+      country: iso_country_code,
       state: address.state,
       city: address.city,
       postal_code: address.postcode,
@@ -161,7 +154,9 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   end
 
   def address
-    current_address || merchantable.company_address.try(:dup) || merchantable.creator.try(:current_address).try(:dup) || Address.new
+    @address = current_address || merchantable.company_address.try(:dup) || merchantable.creator.try(:current_address).try(:dup) || Address.new
+    @address.parse_address_components!
+    @address
   end
 
   def change_state_if_needed(stripe_account, &block)
@@ -180,7 +175,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   end
 
   def get_currency
-    case address.iso_country_code
+    case iso_country_code
     when 'US'
       'USD'
     when 'AU'
@@ -193,14 +188,13 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   end
 
   def has_valid_address?
-    address.parse_address_components!
+    address = merchantable.company_address || merchantable.creator.try(:current_address) || Address.new
     address.errors.clear
     address.check_address.blank?
   end
 
   def location
-    country = address.iso_country_code.try(:downcase)
-    country.in?(%w(us ca au jp)) ? country : 'euuk'
+    iso_country_code.in?(%w(US CA AU JP)) ? iso_country_code.downcase : 'euuk'
   end
 
   def needs?(attribute)
@@ -209,6 +203,10 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   def fields_needed
     self.data[:fields_needed] || []
+  end
+
+  def iso_country_code
+    @iso_country_code ||= address.iso_country_code
   end
 
   private
@@ -225,6 +223,29 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
         end
       end
       stripe_account.save
+    end
+  end
+
+
+  def validate_current_address
+    return if current_address.blank?
+
+    current_address.parse_address_components!
+    current_address.errors.clear
+
+    if current_address.check_address && current_address.errors.any?
+      errors.add(:current_address, :inacurate)
+    end
+  end
+
+  def validate_owners_documents
+    if iso_country_code == 'US'
+      owners.each do |o|
+        if (o.attributes['document'] || o.document.file.try(:path)).blank?
+          o.errors.add(:document, :blank)
+          errors.add(:base, I18n.t('dashboard.merchant_account.document') + " " + I18n.t('errors.messages.blank'))
+        end
+      end
     end
   end
 
