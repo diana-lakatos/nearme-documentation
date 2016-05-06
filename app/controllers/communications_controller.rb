@@ -19,7 +19,7 @@ class CommunicationsController < ApplicationController
 
   def destroy
     communication = current_user.communication
-    caller = client.disconnect_number(communication.phone_number_key)
+    client.disconnect_number(communication.phone_number_key)
     communication.destroy
 
     flash[:notice] = I18n.t("flash_messages.communications.phone_number_disconnected")
