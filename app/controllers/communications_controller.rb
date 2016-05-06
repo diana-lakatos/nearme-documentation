@@ -4,28 +4,16 @@ class CommunicationsController < ApplicationController
   before_action :authenticate_user!, only: [:create, :destroy, :verified]
 
   def create
-    caller = client.verify_number(
-      current_user.name,
-      params[:phone] || current_user.full_mobile_number,
-      status_webhooks_communications_url
-    )
 
-    current_user.communication = current_user.build_communication(
-      provider: 'twilio',
-      provider_key: caller.account_sid,
-      phone_number: caller.phone_number,
-      phone_number_key: nil,
-      request_key: caller.call_sid,
-      verified: false
-    )
+    phone = params[:phone] || current_user.full_mobile_number
 
-    message = I18n.t('flash_messages.communications.validation_code', validation_code: caller.validation_code)
+    # Check if caller is already verfied on the provider server
+    caller = client.get_by_phone_number(phone)
 
-    if request.xhr?
-      render json: { status: true, message: caller.validation_code, poll_url: verified_user_communications_path(current_user) }
+    if caller
+      add_validated_caller(caller)
     else
-      flash[:notice] = message
-      redirect_to edit_dashboard_click_to_call_preferences_path
+      verify_new_caller(phone)
     end
   end
 
@@ -61,10 +49,60 @@ class CommunicationsController < ApplicationController
   end
 
   def request_error(exception)
+
+    if exception.code() == 21450
+      # phone already verified
+
+    end
+
     if request.xhr?
-      render json: { status: false, message: exception.message }
+      render json: { status: 'error', message: exception.message }
     else
       redirect_to edit_dashboard_click_to_call_preferences_path, flash: { error: exception.message }
+    end
+  end
+
+  def add_validated_caller(caller)
+    current_user.communication = current_user.build_communication(
+        provider: 'twilio',
+        provider_key: caller.account_sid,
+        phone_number: caller.phone_number,
+        phone_number_key: caller.sid,
+        request_key: nil,
+        verified: true
+      )
+
+      if request.xhr?
+        render json: { status: 'verified', phone: caller.phone_number }
+      else
+        flash[:notice] = I18n.t("flash_messages.communications.successfully_connected")
+        redirect_to edit_dashboard_click_to_call_preferences_path
+      end
+  end
+
+  def verify_new_caller(phone)
+    caller = client.verify_number(
+      current_user.name,
+      phone,
+      status_webhooks_communications_url
+      )
+
+    current_user.communication = current_user.build_communication(
+      provider: 'twilio',
+      provider_key: caller.account_sid,
+      phone_number: caller.phone_number,
+      phone_number_key: nil,
+      request_key: caller.call_sid,
+      verified: false
+      )
+
+    message = I18n.t('flash_messages.communications.validation_code', validation_code: caller.validation_code)
+
+    if request.xhr?
+      render json: { status: 'new', message: caller.validation_code, poll_url: verified_user_communications_path(current_user) }
+    else
+      flash[:notice] = message
+      redirect_to edit_dashboard_click_to_call_preferences_path
     end
   end
 

@@ -19,6 +19,10 @@ class Communication::TwilioProvider
     caller.delete
   end
 
+  def get_by_phone_number(phone_number)
+    client.account.outgoing_caller_ids.list(phone_number: phone_number).first
+  end
+
   def call(options = {})
     client.account.calls.create(
       from: options[:from],
