@@ -27,7 +27,7 @@
           %td= merchant_account.bank_account_number
         %tr
           %td= t('dashboard.merchant_account.dob')
-          %td= merchant_account.owners.first.dob
+          %td= l(merchant_account.owners.first.dob_date, format: :short)
 
   - else
     - if merchant_account.fields_needed.any?
