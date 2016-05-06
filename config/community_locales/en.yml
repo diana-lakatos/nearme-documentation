@@ -157,6 +157,7 @@ en:
 
     more_info: 'You can add more information and complete your profile in your personal account'
     step_x_of_total: 'Step %{step} of %{total}'
+    no_suggestions_at_this_time: "No suggestions at this time."
 
   continue: 'Continue'
   connect_with_service: 'Connect with %{service}'
