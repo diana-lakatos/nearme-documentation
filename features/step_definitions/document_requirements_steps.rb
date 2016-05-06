@@ -7,6 +7,12 @@ And /^Fill in form for another document requirement$/ do
 end
 
 And /^Show form for another document requirement$/ do
+  begin
+    click_link 'Details'
+  rescue
+    # not to worry
+  end
+
   find('.document-requirements-fields .add_fields').click
   page.should have_css('.document-requirements-fields .remove_fields')
 end

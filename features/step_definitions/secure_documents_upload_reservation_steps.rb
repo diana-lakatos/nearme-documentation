@@ -50,12 +50,12 @@ And (/^I choose file$/) do
 end
 
 Then (/^I should see page with booking requests without files$/) do
-  page.should_not have_selector(".payment-document")
+  page.should_not have_selector(".payment-documents")
   page.should have_content("Your booking was requested successfully!")
 end
 
 Then (/^I should see page with booking requests with files$/) do
-  page.should have_selector(".payment-document")
+  page.should have_selector(".payment-documents li")
   page.should have_content("Your booking was requested successfully!")
 end
 

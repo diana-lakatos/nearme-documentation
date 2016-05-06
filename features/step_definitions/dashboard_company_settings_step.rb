@@ -1,6 +1,6 @@
 When /^I upload avatar$/ do
   avatar = File.join(Rails.root, *%w[features fixtures photos], "intern chair.jpg")
-  attach_file('avatar', avatar)
+  attach_file('user_avatar', avatar)
 end
 
 When /^I select industries for #{capture_model}$/ do |model|

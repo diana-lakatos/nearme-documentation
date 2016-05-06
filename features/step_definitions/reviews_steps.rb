@@ -29,13 +29,10 @@ end
 When(/^I submit rating with (valid|invalid) values$/) do |valid|
   RatingSystem.update_all(transactable_type_id: @reservation.listing.transactable_type_id)
   visit dashboard_reviews_path
-  page.should have_css('.box.reviews .tab-pane.active')
-  page.should have_css('.rating img')
+  page.should have_css('.rating i')
 
   if valid == 'valid'
-    first('.rating').first('img').click
-  else
-    first('.show-details').click
+    page.execute_script "$('.rating i:first-child').click();"
   end
 
   click_button 'Submit Review'
@@ -47,14 +44,14 @@ When(/^I edit (host|transactable|guest) rating with (valid|invalid) values$/) do
   rating_system ||= RatingSystem.where.not(subject: ['host', 'guest']).first
   FactoryGirl.create(:review, rating_system_id: rating_system.id, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s, user: @user, rating: 5)
 
-  visit dashboard_reviews_path(tab: 'completed')
+  visit completed_dashboard_reviews_path
 
-  page.should have_css('.box.reviews .tab-pane.active')
-  page.should have_css('.rating img')
-  first('.review-actions .edit').click
-  page.should have_css('.rating.editable')
+  within('.review-actions') do
+    click_button 'Edit'
+  end
+
   if valid == 'valid'
-    first('.rating').first('img').click
+    page.execute_script "$('.rating i:first-child').click();"
   end
   click_button 'Submit Review'
   wait_for_ajax
@@ -62,12 +59,14 @@ end
 
 When(/^I remove review$/) do
   RatingSystem.update_all(transactable_type_id: @reservation.listing.transactable_type_id)
-  review = FactoryGirl.create(:review, rating_system_id: RatingSystem.for_hosts.first.id, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s, user: @user, rating: 5)
-  visit dashboard_reviews_path(tab: 'completed')
+  FactoryGirl.create(:review, rating_system_id: RatingSystem.for_hosts.first.id, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s, user: @user, rating: 5)
+  visit completed_dashboard_reviews_path
   page.driver.accept_js_confirms!
 
-  page.should have_css('.box.reviews .tab-pane.active')
-  first('.review-actions .remove').trigger(:click)
+  within('.review-actions') do
+    click_link 'Delete'
+  end
+
 end
 
 Then(/^I should see error message$/) do
@@ -81,15 +80,12 @@ Then(/^I should see success message and no errors$/) do
 end
 
 Then(/^I should see updated feedback$/) do
-  visit dashboard_reviews_path(tab: 'completed')
-  page.should have_css('.box.reviews .tab-pane.active')
-  page.should have_css('.rating img')
-  page.should have_css('.rating.non-editable[data-score="1"]')
+  visit completed_dashboard_reviews_path
+  page.should have_css('.rating i')
+  page.should have_css('.rating[data-score="1"]')
 end
 
 Then(/^I should see review in uncompleted feedback$/) do
-  page.should have_css('.box.reviews .tab-pane.active')
-  page.should have_css('.rating img')
-  page.should have_css('#uncompleted-seller-feedback.active')
+  visit dashboard_reviews_path
   page.should have_content(@reservation.listing.name)
 end

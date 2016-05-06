@@ -1,3 +1,7 @@
 = render "dashboard/company/payment_documents/header"
-.dash-body
-  = render "dashboard/company/payment_documents/table", collection: @files_sent_to_me
+.panel
+  .panel-body
+    = render "dashboard/company/payment_documents/table", collection: @files_sent_to_me
+
+= will_paginate_dashboard @files_sent_to_me
+

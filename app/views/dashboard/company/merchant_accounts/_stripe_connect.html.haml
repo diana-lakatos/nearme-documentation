@@ -26,14 +26,13 @@
         %td= merchant_account.bank_account_number
       %tr
         %td= t('dashboard.merchant_account.dob')
-        %td= merchant_account.owners.first.dob
+        %td= l(merchant_account.owners.first.dob_date, format: :short)
 
 - else
   - if merchant_account.fields_needed.any?
-
-    %h3= t('dashboard.merchant_account.almost_there')
-    %p= t('dashboard.merchant_account.needed_fields_1')
-    %p= t('dashboard.merchant_account.needed_fields_2')
+    %h3= t('dashboard.merchant_account.you_almost_there')
+    %p= t('dashboard.merchant_account.stripe_needed_fields_1')
+    %p= t('dashboard.merchant_account.stripe_needed_fields_2')
 
     %br
 
@@ -61,14 +60,17 @@
         = f.simple_fields_for :current_address, f.object.current_address || Address.new do |address_form|
           .fields.location
             = render 'dashboard/shared/fields/address', f: address_form, field_label: t('simple_form.labels.merchant_account.current_address')
-    - if (@owners_counter == 0 && merchant_account.needs?('legal_entity.verification.document')) || @owners_counter != 0
+
+    - if merchant_account.needs?('legal_entity.verification.document')
       = f.fields_for :owners do |maof|
-        .string.optional
+        .form-group.string.optional{class: maof.error(:document) ? 'has-error' : ''}
           .row
-            .col-md-3
-              = maof.label :document, t('dashboard.merchant_account.document'), class: 'string optional control-label'
-            .col-md-9.input-container
-              = maof.file_field :document
+            .col-md-12
+              = maof.label :document, t('dashboard.merchant_account.document'), class: 'string required control-label'
+            .col-md-12.input-container
+        = maof.file_field :document
+        %span.help-block= maof.error :document
+
   - else
     %h2= t('dashboard.merchant_account.header')
 
@@ -87,9 +89,33 @@
 
       - [:bank_routing_number, :bank_account_number, :first_name, :last_name].each do |field_name|
         .form-group.string.optional{class: f.error(field_name) ? 'has-error' : ''}
-          = f.label field_name, t("dashboard.merchant_account.#{field_name}"), class: 'string optional control-label'
+          = f.label field_name, class: 'string optional control-label' do
+            %abbr{title: "required"} *
+            - if [:first_name, :last_name].include?(field_name)
+              = t("dashboard.merchant_account.#{field_name}")
+            - else
+              = t("dashboard.merchant_account.#{field_name}.#{merchant_account.location}")
           = f.text_field field_name, class: 'string optional form-control'
           %span.help-block= f.error field_name
+
+      - if merchant_account.iso_country_code == 'US'
+        .form-group.string.optional{class: f.error(:personal_id_number) ? 'has-error' : ''}
+          = f.label :personal_id_number, class: 'string optional control-label' do
+            %abbr{title: "required"} *
+            = t("dashboard.merchant_account.personal_id_number.us")
+          = f.text_field :personal_id_number, class: 'string optional form-control'
+          %span.help-block= f.error :personal_id_number
+
+        .form-group.string.optional{"data-account-type" => "company", class: f.error(:business_tax_id) ? 'has-error' : ''}
+          = f.label :business_tax_id, class: 'string optional control-label' do
+            %abbr{title: "required"} *
+            = t("dashboard.merchant_account.business_tax_id.#{merchant_account.location}")
+          = f.text_field :business_tax_id, class: 'string optional form-control'
+          %span.help-block= f.error :business_tax_id
+
+
+      = f.fields_for :owners do |maof|
+        = render 'dashboard/company/merchant_accounts/stripe_connect_owner_fields', f: maof, merchant_account: merchant_account
 
       - unless merchant_account.has_valid_address?
         .form-group.string.optional
@@ -97,14 +123,10 @@
             .fields.location
               = render 'dashboard/shared/fields/address', f: address_form, field_label: t('simple_form.labels.merchant_account.current_address')
 
-
-      = f.fields_for :owners do |maof|
-        = render 'dashboard/company/merchant_accounts/stripe_connect_owner_fields', f: maof, merchant_account: merchant_account
-
       - if merchant_account.data[:fields_needed] && merchant_account.data[:fields_needed].join.index('additional_owners')
         #owners
           .links
-            = link_to_add_association t('dashboard.merchant_account.add_owner'), maf, :owners,
+            = link_to_add_association t('dashboard.merchant_account.add_owner'), f, :owners,
               partial: 'dashboard/company/merchant_accounts/stripe_connect_owner_fields', render_options: {locals: {merchant_account: merchant_account}}
             %br
       %div{class: f.error(:tos) ? 'has-error' : ''}

@@ -25,14 +25,9 @@ module Utils
                      raise NotImplementedError
                    end
                  when Instance
-                   case options[:type]
-                   when FormComponent::LOCATION_ATTRIBUTES
-                     LocationFormComponentsCreator
-                   else
-                     raise NotImplementedError
-                   end
+                   LocationFormComponentsCreator
                  else
-                   raise NotImplementedError
+                   raise NotImplementedError.new("Invalid form componentable: #{form_componentable.class}")
                  end.new(form_componentable)
     end
 

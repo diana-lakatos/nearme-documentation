@@ -1,14 +1,18 @@
-.listings
-  .row
-    .col-md-3.listing-img
-      = link_to product_path(product) do
-        = image_tag product.images.first.try(:image_url, :medium)
-    .col-md-3.listing-attr
-      = link_to product.name, product_path(product)
-    .col-md-3.listing-attr
-      %p= product.total_on_hand
-    .col-md-2.listing-attr
-      %p= number_to_currency_symbol product.currency, product.price
-    .col-md-1.listing-attr
-      = link_to t('general.edit'), edit_dashboard_company_product_type_product_path(@product_type, product)
-      = link_to t('general.delete'), dashboard_company_product_type_product_path(@product_type, product), :method => :delete, data: { confirm: t('confirmations.are_you_sure_you_want_to_delete_this_item') }, style: 'margin-top:0px;'
+%tr
+  %td.thumb
+    = link_to product_path(product), class: 'hidden-xs' do
+      = product.first_image
+
+    = link_to edit_dashboard_company_product_type_product_path(@product_type, product), class: 'visible-xs' do
+      = product.first_image
+  %td.name
+    = link_to product.name, product_path(product), class: 'hidden-xs'
+
+    = link_to product.name, edit_dashboard_company_product_type_product_path(@product_type, product), class: 'visible-xs'
+
+  %td.quantity.hidden-sm.hidden-xs
+    = product.total_on_hand
+  %td.price.hidden-sm.hidden-xs
+    = number_to_currency_symbol product.currency, product.price
+  %td.actions.hidden-sm.hidden-xs
+    = link_to t('general.edit'), edit_dashboard_company_product_type_product_path(@product_type, product)

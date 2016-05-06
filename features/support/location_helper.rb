@@ -3,7 +3,6 @@ module LocationHelper
     visit new_location_path
     @company = model!('company')
     select @company.name, from: 'Company'
-    select "USD - United States Dollar", from: "Currency"
     yield if block_given?
     fill_in "Name", with: @location_name = 'Location'
     fill_in "Address", with: '1 Market Street, San Francisco, USA'
@@ -16,7 +15,7 @@ module LocationHelper
     within '#location-form' do
       fill_in "location_location_address_attributes_address", with: "Auckland"
       fill_in "location_description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
-      page.execute_script "$('select#location_location_type_id option[value=\"#{LocationType.find_by_name('Co-working').id}\"]').prop('selected', true).trigger('change');"
+      choose_selectize '.location_location_type', 'Co-working'
       fill_in "location_email", with: "location@example.com"
       fill_in "location_special_notes", with: "Special terms are here"
     end

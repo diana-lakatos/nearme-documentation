@@ -37,13 +37,12 @@ module DashboardHelper
   end
 
   def analytics_active_nav_tab
-    tab = analytics_options.find { |tab| tab[1] == @analytics_mode }
+    tab = analytics_options.find { |t| t[1] == @analytics_mode }
     if tab.blank?
+      analytics_options.first[0]
+    else
       tab[0]
     end
-
-    analytics_options.first[0]
-
   end
 
   def no_purchases_yet_text
