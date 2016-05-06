@@ -129,7 +129,7 @@ class User < ActiveRecord::Base
   has_one :seller_profile, -> { seller }, class_name: 'UserProfile'
   has_one :buyer_profile, -> { buyer }, class_name: 'UserProfile'
   has_one :default_profile, -> { default }, class_name: 'UserProfile'
-  has_one :communication, ->(user) { where(provider_key: user.instance.twilio_config[:key]) }, dependent: :destroy
+  has_one :communication, ->(user) { where(provider_key: PlatformContext.current.instance.twilio_config[:key]) }, dependent: :destroy
 
   after_create :create_blog
   after_destroy :perform_cleanup

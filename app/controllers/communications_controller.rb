@@ -49,12 +49,6 @@ class CommunicationsController < ApplicationController
   end
 
   def request_error(exception)
-
-    if exception.code() == 21450
-      # phone already verified
-
-    end
-
     if request.xhr?
       render json: { status: 'error', message: exception.message }
     else
@@ -63,21 +57,22 @@ class CommunicationsController < ApplicationController
   end
 
   def add_validated_caller(caller)
-    current_user.communication = current_user.build_communication(
-        provider: 'twilio',
-        provider_key: caller.account_sid,
-        phone_number: caller.phone_number,
-        phone_number_key: caller.sid,
-        request_key: nil,
-        verified: true
-      )
 
-      if request.xhr?
-        render json: { status: 'verified', phone: caller.phone_number }
-      else
-        flash[:notice] = I18n.t("flash_messages.communications.successfully_connected")
-        redirect_to edit_dashboard_click_to_call_preferences_path
-      end
+    current_user.communication = current_user.build_communication(
+      provider: 'twilio',
+      provider_key: caller.account_sid,
+      phone_number: caller.phone_number,
+      phone_number_key: caller.sid,
+      request_key: nil,
+      verified: true
+    )
+
+    if request.xhr?
+      render json: { status: 'verified', phone: caller.phone_number }
+    else
+      flash[:notice] = I18n.t("flash_messages.communications.successfully_connected")
+      redirect_to edit_dashboard_click_to_call_preferences_path
+    end
   end
 
   def verify_new_caller(phone)
