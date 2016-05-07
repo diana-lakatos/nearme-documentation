@@ -8,6 +8,7 @@ FactoryGirl.define do
     location
     daily_price_cents 5000
     action_daily_booking true
+    possible_payout true
 
     photo_not_required true
     initialize_with do

@@ -1023,12 +1023,15 @@ class User < ActiveRecord::Base
     activity_feed_subscriptions.where(followed: object).destroy_all
   end
 
-  def payout_payment_gateway
-    if @payment_gateway.nil?
-      currency = self.listings.first.try(:currency).presence || 'USD'
-      @payment_gateway = instance.payout_gateway(self.iso_country_code, currency)
+  def payout_payment_gateways
+    if @payment_gateways.nil?
+      @payment_gateways = instance.payout_gateway(self.iso_country_code, all_currencies)
     end
-    @payment_gateway
+    @payment_gateways
+  end
+
+  def all_currencies
+    listings.map(&:currency).presence || [instance.default_currency || 'USD']
   end
 
   def is_available_now?

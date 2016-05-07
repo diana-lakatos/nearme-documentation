@@ -13,6 +13,7 @@ class PaymentGateway < ActiveRecord::Base
   has_paper_trail
 
   scope :mode_scope, -> { test_mode? ? where(test_active: true) : where(live_active: true)}
+  scope :live, -> { where(live_active: true) }
   scope :payout_type, -> { where(type: PAYOUT_GATEWAYS.values + IMMEDIATE_PAYOUT_GATEWAYS.values) }
   scope :payment_type, -> { where.not(type: PAYOUT_GATEWAYS.values) }
   scope :with_credit_card, -> { joins(:payment_methods).merge(PaymentMethod.active.credit_card) }
@@ -193,8 +194,12 @@ class PaymentGateway < ActiveRecord::Base
     merchant_accounts.live.active.blank? && payments.live.active.blank?
   end
 
+  def can_disable?
+    test_mode? || merchant_accounts.live.verified.blank?
+  end
+
   def payout_gateway?
-    PAYOUT_GATEWAYS.values.include?(self.class)
+    PAYOUT_GATEWAYS.values.include?(self.class.to_s)
   end
 
   def name
@@ -331,6 +336,7 @@ class PaymentGateway < ActiveRecord::Base
   def refund(amount, currency, payment, successful_charge)
     @payment = payment
     force_mode(payment.payment_gateway_mode)
+
     @refund = refunds.create(
       amount: amount,
       currency: currency,
@@ -426,10 +432,17 @@ class PaymentGateway < ActiveRecord::Base
 
     merchant_account_class = self.class.name.gsub('PaymentGateway', 'MerchantAccount').safe_constantize
     if merchant_account_class
-      merchant_account_class.where(merchantable: company, test: merchant_account_class::SEPARATE_TEST_ACCOUNTS && test_mode?).where(state: 'verified').first
+      merchant_account_class.where(merchantable: company, test: test_mode?).where(state: 'verified').first
     end
   end
 
+  def underscored_name
+    self.class.name.gsub("PaymentGateway::", '').underscore.gsub("_payment_gateway", '')
+  end
+
+  def merchant_account_type
+    MerchantAccount::MERCHANT_ACCOUNTS[underscored_name]
+  end
 
   def build_payment_methods(active = false)
     PaymentMethod::PAYMENT_METHOD_TYPES.each do |payment_method|

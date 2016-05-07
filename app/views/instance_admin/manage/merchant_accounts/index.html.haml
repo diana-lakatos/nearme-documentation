@@ -9,7 +9,7 @@
           = select_tag :payment_gateway_id, options_from_collection_for_select(@payment_gateways, "id", "name", params[:payment_gateway_id]), include_blank: "All Payment Gateways", class: "selectpicker"
 
         .col-xs-2
-          = select_tag :state, options_for_select(Payment.state_machine.states.map{|s| [s.name.capitalize, s.name] } , params[:state]), include_blank: "In all states", class: "selectpicker"
+          = select_tag :state, options_for_select(MerchantAccount.state_machine.states.map{|s| [s.name.capitalize, s.name] } , params[:state]), include_blank: "In all states", class: "selectpicker"
         .col-xs-1
           = select_tag :mode, options_for_select([["Live", 'live'], ["Test", 'test']], params[:mode]), class: "selectpicker"
         .col-xs-2
@@ -22,6 +22,7 @@
             %th= t('instance_admin.manage.merchant_account.state')
             %th= t('instance_admin.manage.merchant_account.payment_gateway')
             %th= t('instance_admin.manage.merchant_account.created_at')
+            %th= t('instance_admin.manage.merchant_account.void')
             %th= t('instance_admin.manage.merchant_account.details')
 
         - @merchant_accounts.each do |merchant_account|
@@ -35,6 +36,12 @@
             %td= merchant_account.state.try(:capitalize)
             %td= merchant_account.payment_gateway.try(:name)
             %td= l(merchant_account.created_at, format: :long)
+            %td
+              - if merchant_account.verified?
+                = link_to 'Void', void_instance_admin_manage_merchant_account_path(merchant_account), data: { confirm: "Are you sure you want to void this Merchant?"}
+              - else
+                \------
+
             %td= link_to 'Details',  instance_admin_manage_merchant_account_path(merchant_account)
 
 .row

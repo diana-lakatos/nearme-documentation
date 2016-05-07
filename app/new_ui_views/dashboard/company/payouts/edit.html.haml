@@ -5,17 +5,19 @@
 
 - yield :payout_errors
 
-- if @payment_gateway.nil?
+- if @merchant_accounts.blank?
   .panel
     .panel-body
       %p.info= t('dashboard.payouts.merchant_boarding_missing_gateway', country_code: @company.iso_country_code, currency: @company.currency )
 
-= dashboard_simple_form_for @company, url: dashboard_company_payouts_path, html: { 'data-payouts-form' => true, :'data-includes-address-field' => true } do |f|
-  .panel
-    .panel-body
-      = render partial: 'form', locals: { f: f }
-
-  - unless @merchant_account.try(:chain_payments?) || (@merchant_account.try(:verified?) && @merchant_account.try(:type) == "MerchantAccount::StripeConnectMerchantAccount")
+  = dashboard_simple_form_for @company, url: dashboard_company_payouts_path, html: { 'data-payouts-form' => true, :'data-includes-address-field' => true} do |f|
+    .panel
+      .panel-body
+        = render partial: 'form', locals: { f: f }
     .panel.form-actions
       .panel-body
         = f.submit t('payouts.buttons.save')
+
+- else
+  - @merchant_accounts.each do |merchant_account|
+    = render partial: 'dashboard/company/merchant_accounts/form', locals: {merchant_account: merchant_account}
