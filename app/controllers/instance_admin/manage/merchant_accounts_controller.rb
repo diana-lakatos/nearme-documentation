@@ -14,5 +14,19 @@ class InstanceAdmin::Manage::MerchantAccountsController < InstanceAdmin::Manage:
     @merchant_accounts = merchant_account_scope.paginate(per_page: 20, :page => params[:page])
   end
 
+  def void
+    @merchant_account = MerchantAccount.find(params[:id])
+    if @merchant_account.verified?
+      if @merchant_account.void!
+        flash[:success] = 'Merchant voided successfuly!'
+      else
+        flash[:warning] = 'This Merchant can not be voided.'
+      end
+    else
+      flash[:warning] = 'This Merchant is not verified.'
+    end
+    redirect_to :back
+  end
+
 end
 

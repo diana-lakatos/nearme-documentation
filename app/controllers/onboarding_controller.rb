@@ -16,15 +16,17 @@ class OnboardingController < ApplicationController
       @supported_providers = Authentication.available_providers
     when :followings
       quantity = 6
-      @topics = Topic.featured.take(quantity)
+      @topics = Topic.featured.feed_not_followed_by_user(@user).take(quantity)
 
-      friends_projects = Project.enabled.where(creator_id: @user.social_friends_ids).take(quantity)
-      featured_projects = Project.featured.take(quantity - friends_projects.count)
+      friends_projects = Project.enabled.where(creator_id: @user.social_friends_ids).feed_not_followed_by_user(@user).take(quantity)
+      featured_projects = Project.featured.feed_not_followed_by_user(@user).take(quantity - friends_projects.count)
       @projects = friends_projects + featured_projects
 
-      friends = @user.social_friends.not_admin.take(quantity)
-      nearby =  @user.nearby_friends(100).not_admin.take(quantity - friends.count)
-      featured = User.not_admin.featured.without(@user).take(quantity - friends.count - nearby.count)
+      friends = @user.social_friends.not_admin.feed_not_followed_by_user(@user).take(quantity)
+      # We do not use the feed_not_followed_by_user scope because it doesn't play well
+      # with the nearby_friends filter
+      nearby =  @user.nearby_friends(100, @user.feed_followed_users.pluck(:id)).not_admin.take(quantity - friends.count)
+      featured = User.not_admin.featured.without(@user).feed_not_followed_by_user(@user).take(quantity - friends.count - nearby.count)
       @people = (friends + nearby + featured).uniq
     when :finish
       @custom_attributes = @user.instance_profile_type.custom_attributes.includes(:target).where(public: true).all
@@ -44,8 +46,8 @@ class OnboardingController < ApplicationController
       render_wizard @user
     when :followings
       @user.feed_followed_users << User.where(id: followed_params[:people]).feed_not_followed_by_user(@user) if followed_params[:people]
-      @user.feed_followed_projects << Project.enabled.where(id: followed_params[:projects]) if followed_params[:projects]
-      @user.feed_followed_topics << Topic.where(id: followed_params[:topics]) if followed_params[:topics]
+      @user.feed_followed_projects << Project.enabled.where(id: followed_params[:projects]).feed_not_followed_by_user(@user) if followed_params[:projects]
+      @user.feed_followed_topics << Topic.where(id: followed_params[:topics]).feed_not_followed_by_user(@user) if followed_params[:topics]
       render_wizard @user
     when :finish
       @user.update_attributes(user_params)

@@ -29,7 +29,7 @@ module PaymentExtention::PaypalMerchantBoarding
       "displayMode" => "regular",
       "integrationType" => "T",
       "permissionNeeded" => merchant_permissions,
-      "returnToPartnerUrl" => host + '/dashboard/company/payouts/boarding_complete',
+      "returnToPartnerUrl" => host + "/dashboard/company/merchant_accounts/#{@merchant.id}/boarding_complete",
       "receiveCredentials" => "FALSE",
       "showPermissions" => "TRUE",
       "productSelectionNeeded" => "FALSE",

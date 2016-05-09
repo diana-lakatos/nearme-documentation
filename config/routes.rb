@@ -446,7 +446,11 @@ DesksnearMe::Application.routes.draw do
           resources :user_bans, only: [:create, :index, :destroy], controller: 'users/user_bans'
         end
 
-        resources :merchant_accounts
+        resources :merchant_accounts do
+          member do
+            get :void
+          end
+        end
 
         resources :transfers do
           member do
@@ -782,11 +786,13 @@ DesksnearMe::Application.routes.draw do
             get :uploaded_by_me
           end
         end
-        resource :payouts, except: [:index, :show, :new, :create, :destroy] do
-          collection do
+        resource :payouts, except: [:index, :show, :new, :create, :destroy] 
+        resources :merchant_accounts do
+          member do
             get :boarding_complete
           end
         end
+
         resources :paypal_agreements do
           get :create
         end

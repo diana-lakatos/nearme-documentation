@@ -69,7 +69,6 @@ class PaymentTransfer < ActiveRecord::Base
 
   # Attempt to payout through the billing gateway
   def payout
-
     return if !payout_gateway.present?
     return if transferred?
     return if amount <= 0

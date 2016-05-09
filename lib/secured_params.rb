@@ -361,6 +361,7 @@ class SecuredParams
       :password_protected,
       :payment_transfers_frequency,
       :paypal_email,
+      :require_payout_information,
       :search_settings,
       :service_fee_guest_percent,
       :service_fee_host_percent,
@@ -944,15 +945,15 @@ class SecuredParams
       shipping_categories_attributes: nested(self.spree_shipping_category),
       shipping_methods_attributes: nested(self.spree_shipping_method),
       stock_locations_attributes: nested(self.spree_stock_location),
-    }.merge(MerchantAccount::MERCHANT_ACCOUNTS.inject({}) do |hsh, (name, klass)|
-      attributes = nested(klass::ATTRIBUTES)
-      attributes << {payment_subscription_attributes: nested(self.payment_subscription) }
-      owner_klass = "MerchantAccountOwner::#{name.classify}MerchantAccountOwner".safe_constantize
-      attributes << {owners_attributes: nested([:document] + owner_klass::ATTRIBUTES)} if owner_klass
-      attributes << {current_address_attributes: nested(self.address) }
-      hsh[:"#{name}_merchant_account_attributes"] = attributes
-      hsh
-    end)
+    }
+  end
+
+  def merchant_account(merchant_account)
+    attributes = merchant_account.class::ATTRIBUTES
+    attributes << [:id]
+    attributes << {payment_subscription_attributes: nested(self.payment_subscription) }
+    attributes << {owners_attributes: nested([:document]) + MerchantAccountOwner::StripeConnectMerchantAccountOwner::ATTRIBUTES}
+    attributes
   end
 
   def domain
@@ -1506,6 +1507,7 @@ class SecuredParams
 
   def payment_subscription
     [
+      :payer_id,
       :payment_method_id,
       :credit_card_id,
       :chosen_credit_card_id,

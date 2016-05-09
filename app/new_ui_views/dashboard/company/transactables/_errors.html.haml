@@ -5,5 +5,5 @@
       = t('dashboard.transactables.address_errors_html', count: f.object.errors.count)
 
     %ul
-      - f.object.errors.full_messages.each do |msg|
-        %li= msg
+      - f.object.get_error_messages.each do |err|
+        %li= err
