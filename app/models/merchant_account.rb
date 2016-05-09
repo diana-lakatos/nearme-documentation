@@ -113,7 +113,7 @@ class MerchantAccount < ActiveRecord::Base
   end
 
   def supports_currency?(currency)
-    supported_currencies.include?(currency)
+    payment_gateway.payment_currencies.map(&:iso_code).include?(currency)
   end
 
   def set_possible_payout!
