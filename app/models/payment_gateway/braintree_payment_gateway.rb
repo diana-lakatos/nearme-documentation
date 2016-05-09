@@ -3,8 +3,8 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
 
   MAX_REFUND_ATTEMPTS = 10
 
-  supported :any_currency, :company_onboarding, :recurring_payment, :nonce_payment,
-    :credit_card_payment, :partial_refunds
+  supported :company_onboarding, :recurring_payment, :nonce_payment,
+    :credit_card_payment, :partial_refunds, :multiple_currency
 
   def self.settings
     {
@@ -38,7 +38,18 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
   end
 
   def supported_currencies
-    @supported_currencies ||= Array.wrap(settings[:supported_currency])
+    [
+      "AED", "ALL", "AMD", "ANG", "AOA", "ARS", "AUD", "AWG", "AZN", "BAM", "BBD", "BDT", "BGN", "BHD", "BIF",
+      "BMD", "BND", "BOB", "BRL", "BSD", "BWP", "BYR", "BZD", "CAD", "CHF", "CLP", "CNY", "COP", "CRC", "CVE",
+      "CZK", "DJF", "DKK", "DOP", "DZD", "EEK", "EGP", "ERN", "ETB", "EUR", "FJD", "FKP", "GBP", "GEL", "GHS",
+      "GIP", "GMD", "GNF", "GTQ", "GYD", "HKD", "HNL", "HRK", "HTG", "HUF", "IDR", "ILS", "INR", "IRR", "ISK",
+      "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRW", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD",
+      "LSL", "LTL", "LVL", "MAD", "MDL", "MKD", "MMK", "MNT", "MOP", "MUR", "MVR", "MWK", "MXN", "MYR", "NAD",
+      "NGN", "NIO", "NOK", "NPR", "NZD", "PAB", "PEN", "PGK", "PHP", "PKR", "PLN", "PYG", "QAR", "RON", "RSD",
+      "RUB", "RWF", "SAR", "SBD", "SCR", "SEK", "SGD", "SHP", "SKK", "SLL", "SOS", "STD", "SVC", "SYP", "SZL",
+      "THB", "TOP", "TRY", "TTD", "TWD", "TZS", "UAH", "UGX", "USD", "UYU", "UZS", "VEF", "VND", "VUV", "WST",
+      "XAF", "XCD", "XOF", "XPF", "YER", "ZAR", "ZMK", "ZWD"
+    ]
   end
 
   def refund_identification(charge)

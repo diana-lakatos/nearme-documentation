@@ -1,18 +1,27 @@
-<input class="string optional" id="company_paypal_adaptive_merchant_account_attributes_email" name="company[paypal_adaptive_merchant_account_attributes][id]" placeholder="" type="hidden" value="{{ merchant_account.id}}">
+<h2>{{ 'simple_form.labels.company.payout.via_paypal' | translate }}</h2>
+{{ }}
 
-<h3>{{ 'simple_form.labels.company.payout.via_paypal' | translate }}</h3>
+{% if merchant_account.state != 'pending' %}
+  <p><h3>{{ merchant_account.state_info }}</h3></p>
+{% endif %}
 
-<div class="string optional company_paypal_adaptive_merchant_account_attributes_email">
-  <div class="row">
-    <div class="col-md-3">
-      <label class="string optional control-label" for="company_paypal_adaptive_merchant_account_attributes_email">Paypal Email</label>
-    </div>
-    <div class="col-md-9 input-container">
-      <input class="string optional" id="company_paypal_adaptive_merchant_account_attributes_email" name="company[paypal_adaptive_merchant_account_attributes][email]" placeholder="" type="text" value="{{ merchant_account.data['email']}}">
-    </div>
+{% if merchant_account.errors != blank %}
+  <div class="errors-global">
+    <ul>
+      {{ merchant_account.errors }}
+    </ul>
   </div>
-</div>
-<div class="submit-bar">
-  <input class="btn medium blue" type="submit" value="Save">
+{% endif %}
+
+<input class="numeric integer optional form-control" type="hidden" step="1" value="{{ merchant_account.id}}" name="merchant_account[id]" id="merchant_account_{{index}}_id">
+
+<div class="form-group string optional merchant_account_email">
+  <label class="control-label" for="merchant_account_email">{{ 'payouts.paypal.email' | translate }}</label>
+  <input class="form-control string" id="merchant_account_email" name="merchant_account[email]" type="text" value="{{ merchant_account.data['email']}}">
 </div>
 
+<div class="panel form-actions">
+<div class="panel-body">
+<input type="submit" name="commit" value="{{ 'payouts.buttons.save' | translate }}">
+</div>
+</div>

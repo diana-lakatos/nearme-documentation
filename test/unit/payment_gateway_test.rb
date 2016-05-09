@@ -103,7 +103,12 @@ class PaymentGatewayTest < ActiveSupport::TestCase
       @payout_gateway.payment_currencies << (Currency.find_by_iso_code("JPY") || FactoryGirl.create(:currency, iso_code: "JPY"))
       @payment_transfer = FactoryGirl.create(:payment_transfer_unpaid)
       @amount = Money.new(1234, 'JPY')
-      @merchant_account = MerchantAccount::PaypalAdaptiveMerchantAccount.create(payment_gateway: @payout_gateway, merchantable: @payment_transfer.company, state: 'verified')
+      @merchant_account = MerchantAccount::PaypalAdaptiveMerchantAccount.create(
+        payment_gateway: @payout_gateway,
+        merchantable: @payment_transfer.company,
+        state: 'verified',
+        email: 'email@example.com'
+      )
     end
 
     should 'create payout object when succeeded' do

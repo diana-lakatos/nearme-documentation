@@ -53,6 +53,10 @@ class Project < ActiveRecord::Base
   scope :with_date, ->(date) { where(created_at: date) }
   scope :enabled, -> { where(draft_at: nil) }
 
+  scope :feed_not_followed_by_user, -> (current_user) {
+    where.not(id: current_user.feed_followed_projects.pluck(:id))
+  }
+
   accepts_nested_attributes_for :photos, allow_destroy: true
   accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
 

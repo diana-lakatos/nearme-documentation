@@ -1,0 +1,5 @@
+- if @company && @company.missing_payout_information?
+  %div{class: "alert error", :'data-flash-message' => true}
+    = (t('flash_messages.dashboard.missing_payout_information', link: link_to("Admin/Payments", edit_dashboard_company_payouts_path )) ).html_safe
+
+    %button.close{ type: 'button', "data-close": true }= t('flash_messages.close_label')

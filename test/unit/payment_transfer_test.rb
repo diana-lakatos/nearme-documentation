@@ -147,7 +147,11 @@ class PaymentTransferTest < ActiveSupport::TestCase
       @payment_transfer = @company.payment_transfers.build(currency: 'USD')
       @payment_transfer.payments = @payments
       @payout_gateway = FactoryGirl.create(:paypal_adaptive_payment_gateway)
-      @merchant_account = MerchantAccount::PaypalAdaptiveMerchantAccount.create(payment_gateway: @payout_gateway, merchantable: @payment_transfer.company, state: 'verified')
+      @merchant_account = MerchantAccount::PaypalAdaptiveMerchantAccount.create(
+        payment_gateway: @payout_gateway,
+        merchantable: @payment_transfer.company,
+        state: 'verified',
+        email: 'tomek@near-me.com')
     end
 
     should 'be not paid if attempt to payout failed' do

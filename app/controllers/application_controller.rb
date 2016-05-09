@@ -579,4 +579,5 @@ class ApplicationController < ActionController::Base
   def date_time_handler
     @date_time_handler ||= DateTimeHandler.new
   end
+
 end

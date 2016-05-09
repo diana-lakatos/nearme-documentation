@@ -15,8 +15,16 @@ class Communication::TwilioProvider
   end
 
   def disconnect_number(phone_number_key)
-    caller = client.account.outgoing_caller_ids.get(phone_number_key)
-    caller.delete
+    begin
+      caller = client.account.outgoing_caller_ids.get(phone_number_key)
+      caller.delete
+    rescue Twilio::REST::RequestError => exception
+      raise exception unless exception.code === 20404 # thrown when caller ID has already been disconnected on another account
+    end
+  end
+
+  def get_by_phone_number(phone_number)
+    client.account.outgoing_caller_ids.list(phone_number: phone_number).first
   end
 
   def call(options = {})

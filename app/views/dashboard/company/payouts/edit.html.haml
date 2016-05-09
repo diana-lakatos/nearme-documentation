@@ -1,8 +1,23 @@
 - title t('dashboard.nav.payouts')
 
-.dash-head.clearfix
-  %p= t('dashboard.nav.payouts')
+- content_for :page_header do
+  %h1= yield :title
 
-.dash-body
-  = simple_form_for @company, url: dashboard_company_payouts_path, wrapper: :bs3, html: { 'data-payouts-form' => 1 } do |f|
-    = render partial: 'form', locals: { f: f }
+- yield :payout_errors
+
+- if @merchant_accounts.blank?
+  .panel
+    .panel-body
+      %p.info= t('dashboard.payouts.merchant_boarding_missing_gateway', country_code: @company.iso_country_code, currency: @company.currency )
+
+  = dashboard_simple_form_for @company, url: dashboard_company_payouts_path, html: { 'data-payouts-form' => true, :'data-includes-address-field' => true} do |f|
+    .panel
+      .panel-body
+        = render partial: 'form', locals: { f: f }
+    .panel.form-actions
+      .panel-body
+        = f.submit t('payouts.buttons.save')
+
+- else
+  - @merchant_accounts.each do |merchant_account|
+    = render partial: 'dashboard/company/merchant_accounts/form', locals: {merchant_account: merchant_account}

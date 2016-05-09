@@ -129,7 +129,7 @@ class User < ActiveRecord::Base
   has_one :seller_profile, -> { seller }, class_name: 'UserProfile'
   has_one :buyer_profile, -> { buyer }, class_name: 'UserProfile'
   has_one :default_profile, -> { default }, class_name: 'UserProfile'
-  has_one :communication, ->(user) { where(provider_key: user.instance.twilio_config[:key]) }, dependent: :destroy
+  has_one :communication, ->(user) { where(provider_key: PlatformContext.current.instance.twilio_config[:key]) }, dependent: :destroy
 
   after_create :create_blog
   after_destroy :perform_cleanup
@@ -1004,8 +1004,11 @@ class User < ActiveRecord::Base
     User.where(id: social_friends_ids)
   end
 
-  def nearby_friends(distance)
-    User.where.not(id: id).joins(:current_address).merge(Address.near(current_address, distance, units: :km, order: 'distance')).select('users.*')
+  def nearby_friends(distance, excluded_ids = [])
+    excluded_ids << id
+    excluded_ids = excluded_ids.uniq
+
+    User.where.not(id: excluded_ids).joins(:current_address).merge(Address.near(current_address, distance, units: :km, order: 'distance')).select('users.*')
   end
 
   def feed_subscribed_to?(object)
@@ -1020,12 +1023,15 @@ class User < ActiveRecord::Base
     activity_feed_subscriptions.where(followed: object).destroy_all
   end
 
-  def payout_payment_gateway
-    if @payment_gateway.nil?
-      currency = self.listings.first.try(:currency).presence || 'USD'
-      @payment_gateway = instance.payout_gateway(self.iso_country_code, currency)
+  def payout_payment_gateways
+    if @payment_gateways.nil?
+      @payment_gateways = instance.payout_gateway(self.iso_country_code, all_currencies)
     end
-    @payment_gateway
+    @payment_gateways
+  end
+
+  def all_currencies
+    listings.map(&:currency).presence || [instance.default_currency || 'USD']
   end
 
   def is_available_now?

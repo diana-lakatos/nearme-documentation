@@ -130,7 +130,7 @@ When /^I fill billing data$/ do
   fill_in 'order_payment_attributes_credit_card_attributes_last_name', with: 'Doe'
   fill_in 'order_payment_attributes_credit_card_attributes_number', with: '4111111111111111'
   select 1.years.from_now.year.to_s, from: 'order_payment_attributes_credit_card_attributes_year', :visible => false
-  select "01", from: 'order_payment_attributes_credit_card_attributes_month', :visible => false
+  select "12", from: 'order_payment_attributes_credit_card_attributes_month', :visible => false
   fill_in 'order_payment_attributes_credit_card_attributes_verification_value', with: '111'
   click_button 'Complete Checkout'
 end

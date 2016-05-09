@@ -83,7 +83,7 @@ class HiddenUiControls
   ]
 
   OPTIONAL_KEYS = {
-    'dashboard/click_to_call' => :click_to_call?
+    'dashboard/click_to_call_preferences' => :click_to_call?
   }
 
   def self.find(key)

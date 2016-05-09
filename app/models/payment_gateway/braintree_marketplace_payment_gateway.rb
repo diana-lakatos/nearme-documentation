@@ -1,6 +1,7 @@
 class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
 
-  supported :any_currency, :company_onboarding, :immediate_payout, :credit_card_payment, :partial_refunds, :host_subscription
+  supported :company_onboarding, :immediate_payout, :credit_card_payment,
+    :partial_refunds, :host_subscription, :multiple_currency
 
   def self.supported_countries
     ['US']
@@ -77,7 +78,18 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
   end
 
   def supported_currencies
-    settings[:supported_currency]
+    [
+      "AED", "ALL", "AMD", "ANG", "AOA", "ARS", "AUD", "AWG", "AZN", "BAM", "BBD", "BDT", "BGN", "BHD", "BIF",
+      "BMD", "BND", "BOB", "BRL", "BSD", "BWP", "BYR", "BZD", "CAD", "CHF", "CLP", "CNY", "COP", "CRC", "CVE",
+      "CZK", "DJF", "DKK", "DOP", "DZD", "EEK", "EGP", "ERN", "ETB", "EUR", "FJD", "FKP", "GBP", "GEL", "GHS",
+      "GIP", "GMD", "GNF", "GTQ", "GYD", "HKD", "HNL", "HRK", "HTG", "HUF", "IDR", "ILS", "INR", "IRR", "ISK",
+      "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRW", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD",
+      "LSL", "LTL", "LVL", "MAD", "MDL", "MKD", "MMK", "MNT", "MOP", "MUR", "MVR", "MWK", "MXN", "MYR", "NAD",
+      "NGN", "NIO", "NOK", "NPR", "NZD", "PAB", "PEN", "PGK", "PHP", "PKR", "PLN", "PYG", "QAR", "RON", "RSD",
+      "RUB", "RWF", "SAR", "SBD", "SCR", "SEK", "SGD", "SHP", "SKK", "SLL", "SOS", "STD", "SVC", "SYP", "SZL",
+      "THB", "TOP", "TRY", "TTD", "TWD", "TZS", "UAH", "UGX", "USD", "UYU", "UZS", "VEF", "VND", "VUV", "WST",
+      "XAF", "XCD", "XOF", "XPF", "YER", "ZAR", "ZMK", "ZWD"
+    ]
   end
 
 

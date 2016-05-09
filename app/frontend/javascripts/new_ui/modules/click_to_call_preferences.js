@@ -52,23 +52,31 @@ ClickToCallPreferences.prototype.disableConnectForm = function(){
 };
 
 ClickToCallPreferences.prototype.processConnectResult = function(data) {
-    if (!data.status) {
+    if (!data.status || data.status === 'error') {
         this.showConnectionError(data.message);
         return this.enableConnectForm();
     }
 
-    this.infobox = document.createElement('div');
-    this.infobox.classList.add('validation-code-info');
-    this.infobox.innerHTML = this.labels.validationCode({ code: data.message });
-    this.wrapper.appendChild(this.infobox);
+    else if (data.status === 'new') {
+        this.infobox = document.createElement('div');
+        this.infobox.classList.add('validation-code-info');
+        this.infobox.innerHTML = this.labels.validationCode({ code: data.message });
+        this.wrapper.appendChild(this.infobox);
 
-    this.connectForm.parentNode.removeChild(this.connectForm);
+        this.connectForm.parentNode.removeChild(this.connectForm);
 
-    /* Start polling for response from Twilio */
+        /* Start polling for response from Twilio */
 
-    this.verifiedPollUrl = data.poll_url;
+        this.verifiedPollUrl = data.poll_url;
 
-    this.startPolling();
+        this.startPolling();
+    }
+    else if (data.status === 'verified') {
+        this.connectForm.parentNode.removeChild(this.connectForm);
+        this.connectionSuccess(data.phone);
+    }
+
+    throw new Error('Invalid connection response.');
 };
 
 ClickToCallPreferences.prototype.startPolling = function(){
@@ -86,13 +94,19 @@ ClickToCallPreferences.prototype.pollVerifiedStatus = function(data){
         return;
     }
 
+    this.infobox.parentNode.removeChild(this.infobox);
+
+    this.connectionSuccess(data.phone);
+};
+
+ClickToCallPreferences.prototype.connectionSuccess = function(phone){
+
     var successMessage = document.createElement('p');
     successMessage.classList.add('alert','alert-success');
-    successMessage.innerHTML = this.labels.successMessage({ phone: data.phone })
+    successMessage.innerHTML = this.labels.successMessage({ phone: phone })
 
-    this.infobox.parentNode.insertBefore(successMessage, this.infobox);
-    this.infobox.parentNode.removeChild(this.infobox);
-};
+    this.wrapper.appendChild(successMessage);
+}
 
 ClickToCallPreferences.prototype.processConnectError = function() {
     this.showConnectionError(this.labels.errorMessage());

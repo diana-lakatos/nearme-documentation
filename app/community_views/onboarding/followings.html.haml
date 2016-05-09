@@ -25,6 +25,9 @@
                     = link_to person.decorate.name_with_affiliation, user_path(person)
                   %p= person.properties.about_me rescue ""
                   %p.location= "#{person.current_address.city}, #{person.current_address.state}" rescue ""
+          - if @people.blank?
+            .cell
+              = t('onboarding.no_suggestions_at_this_time')
 
       %h2
         = t :projects_to_follow
@@ -43,6 +46,9 @@
 
                   %h3.hx= project.name
                   %p= project.summary
+          - if @projects.blank?
+            .cell
+              = t('onboarding.no_suggestions_at_this_time')
 
       %h2
         = t :topics_to_follow
@@ -60,6 +66,9 @@
                   = f.input 'topics][', as: :boolean, checked_value: topic.id, input_html: { checked: "checked", class: 'tick-a', id: "follow-topic-#{topic.id}" }, wrapper_html: { class: 'check' }, wrapper: :inline_checkbox, label_html: { id: "follow-topic-#{topic.id}", class: 'no-label' }
                   %h3.hx= topic.name
                   %p= topic.description
+          - if @topics.blank?
+            .cell
+              = t('onboarding.no_suggestions_at_this_time')
 
       %p.action
         %button.button-a{:type => "submit"}
