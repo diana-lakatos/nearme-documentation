@@ -440,7 +440,13 @@ class InstanceView < ActiveRecord::Base
       is_partial: true,
       '@user_message' => 'UserMessageDrop',
       '@error' => 'string'
-    }
+    },
+    'dashboard/reviews/order_info' => {
+      is_partial: true,
+      feedback: 'Polymorphic object',
+      view_order_link: 'string',
+      'link_to_user_profile': 'string',
+    },
   }.freeze
 
   scope :for_instance_id, ->(instance_id) {

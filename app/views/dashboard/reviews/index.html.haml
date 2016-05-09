@@ -49,19 +49,19 @@
           .panel-tab-container{id: "seller-feedback"}
             - seller_collection.each do |feedback|
               - if @rating_systems[:seller_rating_system][feedback.transactable_type_id].try(:first)
-                = render "dashboard/reviews/feedback", feedback: feedback, subject: RatingConstants::HOST, rating_system: @rating_systems[:seller_rating_system][feedback.transactable_type_id].first, is_completed: @status == 'completed'
+                = render "dashboard/reviews/feedback", feedback: feedback, subject: RatingConstants::HOST, rating_system: @rating_systems[:seller_rating_system][feedback.transactable_type_id].first, is_completed: @status == 'completed', feedback_type: 'seller'
 
         - if @rating_systems[:product_rating_system].try(:values).try(:present?) && product_collection.present?
           .panel-tab-container{id: "product-reviews"}
             - product_collection.each do |feedback|
               - if @rating_systems[:product_rating_system][feedback.transactable_type_id].try(:first)
-                = render "dashboard/reviews/feedback", feedback: feedback, subject: RatingConstants::TRANSACTABLE, rating_system: @rating_systems[:product_rating_system][feedback.transactable_type_id].first, is_completed: @status == 'completed'
+                = render "dashboard/reviews/feedback", feedback: feedback, subject: RatingConstants::TRANSACTABLE, rating_system: @rating_systems[:product_rating_system][feedback.transactable_type_id].first, is_completed: @status == 'completed', feedback_type: 'product'
 
         - if @rating_systems[:buyer_rating_system].try(:values).try(:present?) && buyer_collection.present?
           .panel-tab-container{id: "guest-reviews"}
             - buyer_collection.each do |feedback|
               - if @rating_systems[:buyer_rating_system][feedback.transactable_type_id].try(:first)
-                = render "dashboard/reviews/feedback", feedback: feedback, subject: RatingConstants::GUEST, rating_system: @rating_systems[:buyer_rating_system][feedback.transactable_type_id].first, is_completed: @status == 'completed'
+                = render "dashboard/reviews/feedback", feedback: feedback, subject: RatingConstants::GUEST, rating_system: @rating_systems[:buyer_rating_system][feedback.transactable_type_id].first, is_completed: @status == 'completed', feedback_type: 'buyer'
   - else
     .panel
       .panel-body

@@ -21,42 +21,33 @@
       .order-image
         = feedback.order_image
 
-      .order-info
-        - created_at = is_completed ? feedback.reviewable.created_at : feedback.created_at
-        %p
-          = t('dashboard.reviews.feedback.order_placed_with_date', date: I18n.l(created_at.to_date, format: :long))
+      - created_at = is_completed ? feedback.reviewable.created_at : feedback.created_at
+      - order_id = (is_completed ? feedback.reviewable_id : feedback.id)
 
-        %p
-          = t('dashboard.reviews.feedback.order_id', id: (is_completed ? feedback.reviewable_id : feedback.id))
+      - view_order_link = nil
+      - if feedback.line_item?
+        - view_order_link = link_to t('dashboard.reviews.feedback.view_order_details'), dashboard_order_path(is_completed ? feedback.reviewable.order : feedback.order)
 
-        - if feedback.line_item?
-          %p
-            = link_to t('dashboard.reviews.feedback.view_order_details'), dashboard_order_path(is_completed ? feedback.reviewable.order : feedback.order)
-
-        - if is_completed
-          %p= feedback.link_to_user_profile
-
+      - if is_completed
+        - link_to_user_profile = feedback.link_to_user_profile
+      - else
+        - if feedback.reservation?
+          - if rating_system.subject == RatingConstants::GUEST
+            - link_to_user_profile = link_to t('dashboard.reviews.feedback.view_guest_profile'), user_path(feedback.try(:reviewable) ? feedback.reviewable.owner : feedback.owner)
+          - else
+            - link_to_user_profile = link_to t('dashboard.reviews.feedback.view_host_profile'), user_path(feedback.try(:reviewable) ? feedback.reviewable.creator : feedback.creator)
+        - elsif feedback.bid?
+          - if rating_system.subject == RatingConstants::GUEST
+            - link_to_user_profile = link_to t('dashboard.reviews.feedback.view_bidder_profile'), user_path(feedback.user)
+          - else
+            - link_to_user_profile = link_to t('dashboard.reviews.feedback.view_owner_profile'), user_path(feedback.offer_creator)
         - else
-          %p
-            - if feedback.reservation?
-              - if rating_system.subject == RatingConstants::GUEST
-                = link_to t('dashboard.reviews.feedback.view_guest_profile'), user_path(feedback.try(:reviewable) ? feedback.reviewable.owner : feedback.owner)
-              - else
-                = link_to t('dashboard.reviews.feedback.view_host_profile'), user_path(feedback.try(:reviewable) ? feedback.reviewable.creator : feedback.creator)
-            - elsif feedback.bid?
-              - if rating_system.subject == RatingConstants::GUEST
-                = link_to t('dashboard.reviews.feedback.view_bidder_profile'), user_path(feedback.user)
-              - else
-                = link_to t('dashboard.reviews.feedback.view_owner_profile'), user_path(feedback.offer_creator)
-            - else
-              - if rating_system.subject == RatingConstants::GUEST
-                = link_to t('dashboard.reviews.feedback.view_buyer_profile'), user_path(feedback.order.user)
-              - else
-                = link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(feedback.order.company.creator)
+          - if rating_system.subject == RatingConstants::GUEST
+            - link_to_user_profile = link_to t('dashboard.reviews.feedback.view_buyer_profile'), user_path(feedback.order.user)
+          - else
+            - link_to_user_profile = link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(feedback.order.company.creator)
 
-        - if platform_context.support_email
-          %p
-            = mail_to platform_context.support_email, t('dashboard.reviews.feedback.contact_name_support', name: PlatformContext.current.instance.name)
+      = render 'dashboard/reviews/order_info', created_at: I18n.l(created_at.to_date, format: :long), order_id: order_id, feedback: feedback, link_to_user_profile: link_to_user_profile, view_order_link: view_order_link, feedback_type: feedback_type
 
     .col-sm-9
       - if is_completed
