@@ -41,6 +41,11 @@ class WishListItemDrop < BaseDrop
     end
   end
 
+  # Location of the wishlistable
+  def wishlistable_location
+    @wishlistable.try(:location)
+  end
+
   def dashboard_wish_list_item_path
     routes.dashboard_wish_list_item_path(@wish_list_item)
   end
