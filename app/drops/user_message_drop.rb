@@ -6,7 +6,9 @@ class UserMessageDrop < BaseDrop
   #   contents of the message
   # thread_context
   #  conversation context: a listing, a reservation, a user
-  delegate :body, :thread_context, to: :user_message
+  # recipient_name
+  #   first name of the recipient
+  delegate :body, :thread_context, :recipient_name, :create_path, to: :user_message
 
   def initialize(user_message)
     @user_message = user_message.decorate
