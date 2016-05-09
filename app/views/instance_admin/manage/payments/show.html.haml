@@ -39,6 +39,9 @@
               Payment Gateway:
               = link_to charge.payment_gateway.try(:name), edit_instance_admin_settings_payment_gateway_path(charge.payment_gateway)
           %p
+            Mode:
+            = charge.payment_gateway_mode
+          %p
             Amount:
             = humanized_money_with_cents_and_symbol charge.price
 
