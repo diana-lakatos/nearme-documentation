@@ -100,7 +100,7 @@ class RegistrationsController < Devise::RegistrationsController
     if platform_context.instance.is_community?
       @projects = IntelFakerService.projects(4)
 
-      @feed = ActivityFeedService.new(@user)
+      @feed = ActivityFeedService.new(@user, user_feed: true)
       @events = @feed.events(params)
 
       @projects_followed = @user.feed_followed_projects.enabled.paginate(pagination_params)

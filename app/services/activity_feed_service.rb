@@ -1,20 +1,32 @@
 class ActivityFeedService
   attr_accessor :next_page
 
-  def initialize(object)
+  def initialize(object, options = {})
     @object = object
+    @options = options
   end
 
   def events(params={})
     @page = params[:page].present? ? params[:page].to_i : 1
     per = ActivityFeedService::Helpers::EVENTS_PER_PAGE
 
-    followed_identifiers = ActivityFeedSubscription.where(follower: @object).pluck(:followed_identifier)
-    itself_identifier = ActivityFeedService::Helpers.object_identifier_for(@object)
-    followed_identifiers.push(itself_identifier)
+    if @options[:user_feed].blank?
+      followed_identifiers = ActivityFeedSubscription.where(follower: @object).pluck(:followed_identifier)
+      itself_identifier = ActivityFeedService::Helpers.object_identifier_for(@object)
+      followed_identifiers.push(itself_identifier)
 
-    sql_array = "{#{followed_identifiers.join(',')}}"
-    @events = ActivityFeedEvent.with_identifiers(sql_array).includes(:event_source, :followed).exclude_events.paginate(page: @page, per_page: per)
+      sql_array = "{#{followed_identifiers.join(',')}}"
+      @events = ActivityFeedEvent.with_identifiers(sql_array).includes(:event_source, :followed).exclude_events.paginate(page: @page, per_page: per)
+    else
+      followed_identifiers = [ActivityFeedService::Helpers.object_identifier_for(@object)]
+
+      sql_array = "{#{followed_identifiers.join(',')}}"
+
+      # We filter out user_commented events except for those where this user
+      # commented something on another object (we filter out comments on his own
+      # wall, that is, where followed = him)
+      @events = ActivityFeedEvent.with_identifiers(sql_array).includes(:event_source, :followed).exclude_events.where('event != ? OR (event = ? AND (followed_id != ? OR followed_type != ?))', 'user_commented', 'user_commented', @object.id, 'User').paginate(page: @page, per_page: per)
+    end
   end
 
   def owner_id

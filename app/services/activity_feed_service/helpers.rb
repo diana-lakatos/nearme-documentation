@@ -6,6 +6,8 @@ module ActivityFeedService::Helpers
   FOLLOWED_PER_PAGE = 15
 
   def object_identifier_for(object)
-    "#{object.class.name}_#{object.id}"
+    class_name = object.class.name
+    class_name.gsub!(/Decorator$/, '')
+    "#{class_name}_#{object.id}"
   end
 end
