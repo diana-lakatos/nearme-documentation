@@ -22,7 +22,7 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
 
   def get_payment_gateway_data
     @payment_gateways = if current_instance.skip_company?
-       current_user.payout_payment_gateway
+       current_user.payout_payment_gateways
     else
       @company.payout_payment_gateways
     end.uniq
