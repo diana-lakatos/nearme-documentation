@@ -25,7 +25,7 @@ DesksnearMe::Application.routes.draw do
         get :booking_module
       end
 
-      resource :social_share, :only => [:new], :controller => 'locations/social_share'
+      resource :social_share, :only => [:new], :controller => 'listings/social_share'
 
       resources :recurring_bookings, :only => [:create, :update], :controller => "listings/recurring_bookings" do
         collection do
