@@ -786,16 +786,14 @@ DesksnearMe::Application.routes.draw do
             get :uploaded_by_me
           end
         end
-        resource :payouts, except: [:index, :show, :new, :create, :destroy] 
+        resource :payouts, except: [:index, :show, :new, :create, :destroy]
         resources :merchant_accounts do
+          resources :paypal_agreements
           member do
             get :boarding_complete
           end
         end
 
-        resources :paypal_agreements do
-          get :create
-        end
         resources :products
         resources :product_type do
           resources :products
