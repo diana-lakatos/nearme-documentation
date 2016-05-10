@@ -384,7 +384,7 @@ module ApplicationHelper
       hash[key] = I18n.t("date.formats.#{key}")
       hash
     end
-    time_formats = %w(default short long with_time_zone day_and_month).inject({}) do |hash, key|
+    time_formats = %w(default short long with_time_zone day_and_month short_with_time_zone).inject({}) do |hash, key|
       hash[key] = I18n.t("time.formats.#{key}")
       hash
     end

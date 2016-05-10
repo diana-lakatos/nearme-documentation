@@ -4,8 +4,11 @@
     text-align: center;
     line-height: 2;
 }
+
 .tooltip-inner {
-    padding: 20px $padding-base-horizontal;
-    min-width: 200px;
-    font-style: italic;
+    padding: 10px 20px;
+    max-width: 300px;
+    min-width: 250px;
+    text-align: left;
+    white-space: pre-wrap;
 }

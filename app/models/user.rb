@@ -1035,15 +1035,26 @@ class User < ActiveRecord::Base
   end
 
   def is_available_now?
-    available = listings.find do |listing|
-      Time.use_zone(listing.location.time_zone) do
-        date = Time.now.to_date
-        start_min = Time.now.hour() * 60 + Time.now.min()
-        listing.open_on?(date, start_min, start_min)
+    if seller_profile.present?
+      listings.find { |listing| listing.open_now? }.present?
+    else
+      # right now there is no way to determine buyer availability, so we assume he
+      # is available at all times and are displaying
+      true
+    end
+  end
+
+  def get_error_messages
+    msgs = []
+
+    errors.each do |field|
+      if field =~ /\.properties/
+        msgs += errors.get(field)
+      else
+        msgs += errors.full_messages_for(field)
       end
     end
-
-    available.present?
+    msgs
   end
 
 private

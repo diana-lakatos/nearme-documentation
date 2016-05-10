@@ -5,3 +5,4 @@
   - calling_code = "+#{f.object.country.calling_code}" if f.object.country
 
   = f.input :mobile_number, as: :tel, required: (f.object.validation_for(:phone).try(:is_required?) || f.object.validation_for(:mobile_number).try(:is_required?)), input_html: { data: { 'mobile-number': true }}, prefix: calling_code
+

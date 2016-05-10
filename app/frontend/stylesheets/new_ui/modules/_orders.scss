@@ -4,7 +4,6 @@
         border: 1px solid $reservation-border;
     }
 
-
     .order + .order {
         margin-top: 30px;
     }
@@ -30,9 +29,8 @@
     .order-status {
         font-size: 18px;
 
-
         span:before {
-            @include fa-icon();
+            @include fa-icon;
         }
 
         .confirmed:before, .completed:before {
@@ -45,7 +43,6 @@
             color: $brand-success;
         }
 
-
         .unconfirmed:before {
             content: $fa-var-exclamation;
             color: $brand-warning;
@@ -57,7 +54,6 @@
     }
 
     .order-actions {
-
         form, .btn {
             display: block;
             width: 100%;
@@ -65,7 +61,6 @@
         }
 
         @media (min-width: $screen-sm) {
-
             text-align: right;
 
             form, .btn {
@@ -80,7 +75,8 @@
         color: $errors-global-emf;
 
         &:before {
-            @include fa-icon();
+            @include fa-icon;
+
             content: $fa-var-exclamation-circle;
             margin-right: 5px;
         }
@@ -91,7 +87,8 @@
         color: $errors-global-emf;
 
         &:before {
-            @include fa-icon();
+            @include fa-icon;
+
             content: $fa-var-question-circle;
             margin-right: 5px;
         }
@@ -100,7 +97,9 @@
     .order-tracking {
         &:before {
             display: inline-block;
-            @include fa-icon();
+
+            @include fa-icon;
+
             width: 15px;
             text-align: center;
             margin-right: 5px;
@@ -119,6 +118,7 @@
 
     .order-item {
         margin: 20px 0;
+
         img {
             width: 100%;
         }
@@ -165,6 +165,13 @@
     @media (max-width: $screen-sm-min) {
         h3, h4 {
             margin-top: 1em;
+        }
+    }
+
+    @media (min-width: $screen-sm) {
+        .click-to-call {
+            display: inline-block;
+            margin-left: 10px;
         }
     }
 }

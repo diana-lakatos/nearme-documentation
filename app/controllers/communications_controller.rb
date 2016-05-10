@@ -4,7 +4,6 @@ class CommunicationsController < ApplicationController
   before_action :authenticate_user!, only: [:create, :destroy, :verified]
 
   def create
-
     phone = params[:phone] || current_user.full_mobile_number
 
     # Check if caller is already verfied on the provider server
@@ -22,8 +21,12 @@ class CommunicationsController < ApplicationController
     client.disconnect_number(communication.phone_number_key)
     communication.destroy
 
-    flash[:notice] = I18n.t("flash_messages.communications.phone_number_disconnected")
-    redirect_to edit_dashboard_click_to_call_preferences_path
+    if request.xhr?
+      render json: { status: true }
+    else
+      flash[:notice] = I18n.t("flash_messages.communications.phone_number_disconnected")
+      redirect_to social_accounts_path
+    end
   end
 
   def verified
@@ -36,7 +39,7 @@ class CommunicationsController < ApplicationController
 
   def verified_success
     flash[:notice] = I18n.t("flash_messages.communications.successfully_connected")
-    redirect_to edit_dashboard_click_to_call_preferences_path
+    redirect_to social_accounts_path
   end
 
   private
@@ -71,7 +74,7 @@ class CommunicationsController < ApplicationController
       render json: { status: 'verified', phone: caller.phone_number }
     else
       flash[:notice] = I18n.t("flash_messages.communications.successfully_connected")
-      redirect_to edit_dashboard_click_to_call_preferences_path
+      redirect_to social_accounts_path
     end
   end
 
@@ -100,5 +103,4 @@ class CommunicationsController < ApplicationController
       redirect_to edit_dashboard_click_to_call_preferences_path
     end
   end
-
 end

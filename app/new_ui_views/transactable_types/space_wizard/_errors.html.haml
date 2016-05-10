@@ -1,7 +1,6 @@
 - if @global_errors.present?
   .errors-global
     %h3= t('flash_messages.space_wizard.complete_fields')
-
     %ul
-      - @global_errors.each do |msg|
+      - @user.get_error_messages.each do |msg|
         %li= msg

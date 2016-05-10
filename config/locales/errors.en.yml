@@ -121,7 +121,7 @@ en:
       communications:
         not_verified:
           current_user: 'Your phone number is not configured for making calls.'
-          listing_owner: 'Listing aministator does not allow making calls.'
+          listing_owner: 'Listing administator does not allow making calls.'
 
   warnings:
     reservations:

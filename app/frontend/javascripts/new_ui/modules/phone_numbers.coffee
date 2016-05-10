@@ -45,6 +45,12 @@ module.exports = class PhoneNumbers
     @container.on 'change', @sameAsSelector, ()=>
       @updatePhoneNumber()
 
+    @ctcTrigger.on 'click', (e)=>
+      e.preventDefault()
+      $(document).trigger 'load:dialog.nearme', [{ url: @ctcTrigger.attr('href'), data: @ctcTrigger.data('ajax-options') }, null, {
+        onHide: @updateCtcTriggerState
+      }]
+
   updatePhoneNumber: ->
     @mobileNumberField.prop('readonly', !!@isMobileSameAsPhone())
     @mobileNumberField.val(@phoneNumberField.val()) if @isMobileSameAsPhone()
@@ -76,3 +82,10 @@ module.exports = class PhoneNumbers
 
   updateCtcTrigger: ->
     @ctcTrigger.data('ajax-options', { phone: @mobileNumberField.val(), country_name: @countryNameField[0].selectize.items[0] })
+
+  updateCtcTriggerState: =>
+    $.get @ctcTrigger.data('verify-url'), (data)=>
+      if data.status
+        @ctcTrigger.html('Number verified!')
+      else
+        @ctcTrigger.html('Verify')
