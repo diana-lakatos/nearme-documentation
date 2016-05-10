@@ -1,11 +1,10 @@
 class Dashboard::Company::PaypalAgreementsController < Dashboard::Company::BaseController
-  before_action :get_payment_gateway_data
   before_action :get_merchant_account
 
   def new
     response = @payment_gateway.set_billing_agreement({
       ip: request.remote_ip,
-      return_url: dashboard_company_paypal_agreement_create_url(@merchant_account.id, host: request.host_with_port),
+      return_url: dashboard_company_merchant_account_paypal_agreements_url(@merchant_account.id, host: request.host_with_port),
       cancel_return_url: redirect_url
     })
 
@@ -17,7 +16,7 @@ class Dashboard::Company::PaypalAgreementsController < Dashboard::Company::BaseC
     end
   end
 
-  def create
+  def index
     if @merchant_account.create_billing_agreement(params[:token])
       flash[:success] = 'Permission granted!'
     else
@@ -37,14 +36,12 @@ class Dashboard::Company::PaypalAgreementsController < Dashboard::Company::BaseC
 
   private
 
-  def get_payment_gateway_data
-    @payment_gateway = @company.payout_payment_gateway
-    redirect_to redirect_url if @payment_gateway.blank? || !@payment_gateway.supports_paypal_chain_payments?
-  end
-
   def get_merchant_account
-    @merchant_account = @company.send("paypal_express_chain_merchant_account")
-    redirect_to redirect_url if @merchant_account.blank?
+    @merchant_account = @company.merchant_accounts.find(params[:merchant_account_id])
+    @payment_gateway = @merchant_account.payment_gateway
+    if @payment_gateway.blank? || !@payment_gateway.active_in_current_mode? || !@payment_gateway.supports_paypal_chain_payments?
+      redirect_to redirect_url
+    end
   end
 
   def redirect_url
