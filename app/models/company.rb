@@ -238,7 +238,7 @@ class Company < ActiveRecord::Base
   end
 
   def missing_payout_information?
-    return false if instance.test_mode?
+    return false unless instance.require_payout?
     listings.without_possible_payout.any?
   end
 

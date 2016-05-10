@@ -578,7 +578,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def payout_information_missing?
-    self.class.require_payout? && !self.possible_payout?
+    self.instance.require_payout? && !self.possible_payout?
   end
 
   def enable!

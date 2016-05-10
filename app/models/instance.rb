@@ -368,6 +368,10 @@ class Instance < ActiveRecord::Base
     update_column(:context_cache_key, [Digest::SHA1.hexdigest(custom_sanitize_config.to_s + text_filters.pluck(:id, :updated_at).to_s), Time.now.to_s].join('timestamp'))
   end
 
+  def require_payout?
+    !test_mode? && self.require_payout_information?
+  end
+
   def fast_recalculate_cache_key!
     # this is needed, otherwise it won't matter that we update context_cache - we will use cached, old one due to domain
     domains.pluck(:name).each { |name| Rails.cache.delete("domains_cache_#{name}") }
