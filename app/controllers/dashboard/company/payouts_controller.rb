@@ -25,7 +25,7 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
        current_user.payout_payment_gateways
     else
       @company.payout_payment_gateways
-    end.uniq
+    end
   end
 
   def build_merchant_account
