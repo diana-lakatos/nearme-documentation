@@ -58,7 +58,7 @@
         - if platform_context.instance.documents_upload_enabled?
           = dashboard_menu_item 'dashboard/payment_documents/sent_to_me', sent_to_me_dashboard_company_payment_documents_path
 
-    - if platform_context.instance.user_blogs_enabled?
+    - if platform_context.instance.blogging_enabled?(current_user)
       %ul
         %li.nav-head
           = t('dashboard.nav.blog')

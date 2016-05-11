@@ -194,7 +194,7 @@ class UserDrop < BaseDrop
   end
 
   def show_blog_tab?
-    PlatformContext.current.instance.user_blogs_enabled? && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
+    PlatformContext.current.instance.blogging_enabled?(@user) && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
   end
 
   def published_posts

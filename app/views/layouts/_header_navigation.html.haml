@@ -87,7 +87,7 @@
             = link_to main_app.dashboard_user_requests_for_quotes_path, class: 'nav-link dropdown-toggle' do
               %span= "#{t('reservations.rfq_menu_text')}"
 
-        - if platform_context.instance.user_blogs_enabled? && HiddenUiControls.find('main_menu/manage_blog').visible?
+        - if platform_context.instance.blogging_enabled?(current_user) && HiddenUiControls.find('main_menu/manage_blog').visible?
           %li
             = link_to main_app.dashboard_blog_path, class: 'nav-link dropdown-toggle' do
               %span= t 'top_navbar.manage_blog'

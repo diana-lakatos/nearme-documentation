@@ -37,7 +37,7 @@
       - if platform_context.instance.action_rfq?
         = dashboard_menu_item 'dashboard/tickets', dashboard_company_support_tickets_path
 
-    - if platform_context.instance.user_blogs_enabled?
+    - if platform_context.instance.blogging_enabled?(current_user)
       = dashboard_menu_item 'dashboard/blog', dashboard_blog_path, link_text: t('dashboard.nav.blog_posts'),
           active: (params[:controller].include?('user_blog') && params[:action] == 'show') || (params[:controller].include?('blog_posts'))
       = dashboard_menu_item 'dashboard/blog', edit_dashboard_blog_path, link_text: t('dashboard.nav.blog_settings'),
