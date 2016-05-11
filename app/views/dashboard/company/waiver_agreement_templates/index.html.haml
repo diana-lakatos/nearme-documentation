@@ -1,17 +1,15 @@
-- title t('dashboard.nav.waiver_agreement_templates')
+- title t('dashboard.waiver_agreements.title')
 
-.dash-page
-  .dash-head.clearfix
-    %p= t('dashboard.nav.waiver_agreement_templates')
-    = link_to '#', class: "dash-head-btn", data: { modal: true, href: new_dashboard_company_waiver_agreement_template_path } do
-      .btn.blue{:role => "button"} Add Waiver Agreement
+- content_for :page_header do
+  %h1= t('dashboard.waiver_agreements.title_html')
 
-  .dash-body
-    #waiver-agreement-template-list.table-responsive
-      %table.table
-        %thead
-          %tr
-            %th Agreement
-            %th Actions
-        %tbody
-          = render @waiver_agreement_templates
+  .options
+    = link_to t('dashboard.waiver_agreements.add_html'), new_dashboard_company_waiver_agreement_template_path, data: { modal: true }
+
+.panel
+  .panel-body
+    - if @waiver_agreement_templates.empty?
+      %p.empty-resultset= t('dashboard.waiver_agreements.no_entries')
+    - else
+      = render @waiver_agreement_templates
+

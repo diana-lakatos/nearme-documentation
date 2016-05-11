@@ -18,7 +18,8 @@ module ListingsHelpers
     fill_in "Name", with: name
     fill_in "Description", with: "Nulla rutrum neque eu enim eleifend bibendum."
     fill_in "Quantity", with: "2"
-    check "listing_confirm_reservations_true"
+    check "transactable_confirm_reservations_true"
+
     select "Desk"
     yield if block_given?
     click_link_or_button("Create Listing")
@@ -75,39 +76,18 @@ module ListingsHelpers
 
   def fill_listing_form
     attach_file_via_uploader
-    if page.has_selector?('#listing_name')
-      fill_in "listing_name", with: "My Name"
-      fill_in "listing_description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
-      select "Meeting Room", from: "listing_listing_type"
-      fill_in "listing_quantity", with: "5"
+    fill_in "transactable_name", with: "My Name"
+    fill_in "transactable_description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
 
-      check "Daily, Weekly or Monthly"
+    click_link 'Pricing & Availability'
+    fill_in "transactable_quantity", with: "5"
 
-      check "enable_daily"
-      fill_in "listing_daily_price", with: "10"
-
-      check "enable_weekly"
-      fill_in "listing_weekly_price", with: "60"
-
-      page.find("#enable_weekly").set(true)
-    else
-      page.first('#location-list .locations label').click
-      fill_in "transactable_name", with: "My Name"
-      fill_in "transactable_description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
-
-      page.execute_script "$('select#transactable_listing_type option[value=\"Meeting Room\"]').prop('selected', true).trigger('change');"
-      fill_in "transactable_quantity", with: "5"
-
-      check "transactable_action_daily_booking"
-
-      check "enable_daily"
-      fill_in "transactable_daily_price", with: "10"
-
-      check "enable_weekly"
-      fill_in "transactable_weekly_price", with: "60"
-
-      page.find("#enable_weekly").set(true)
-    end
+    page.execute_script("$('.transactable_enable_daily input').prop('checked', true)")
+    page.execute_script("$('.transactable_enable_daily input').trigger('change')")
+    fill_in "transactable_daily_price", with: "10"
+    page.execute_script("$('.transactable_enable_weekly input').prop('checked', true)")
+    page.execute_script("$('.transactable_enable_weekly input').trigger('change')")
+    fill_in "transactable_weekly_price", with: "60"
   end
 
   def assert_listing_data(listing, update = false)

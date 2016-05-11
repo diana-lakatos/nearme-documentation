@@ -41,6 +41,7 @@
           .summary-line
             .summary-line-label= t 'recurring_reservations_review.total_per_interval', interval: t("recurring_reservations_review.#{@recurring_booking.interval}")
             .summary-line-value.total-amount= @recurring_booking.total_price
+            = f.hidden_field :total_amount_check, value: @recurring_booking.total_amount.cents
             .clearfix
 
         - if @recurring_booking_request.display_phone_and_country_block?
@@ -48,23 +49,22 @@
           %h2= t 'reservations_review.contact_information'
 
           = render 'contact_information_fields', :f => f
-
-
-        %h2= t 'reservations_review.payment'
-        = render 'shared/payment_subscription', f: f
-
-
-        = f.button :submit, t('reservations_review.buttons.request'), data: { disable_with: t('reservations_review.disabled_buttons.request') }
+        - if f.object.payment_subscription.present? && f.object.payment_subscription.payment_methods.any?
+          = render 'shared/payment_subscription', f: f
+          = f.button :submit, t('reservations_review.buttons.request'), data: { disable_with: t('reservations_review.disabled_buttons.request') }
+        - else
+          %h2= t("reservations_review.missing_payment_method")
+          %span= t("reservations_review.missing_payment_method_info")
 
 - content_for :script do
-  = javascript_include_tag "https://js.stripe.com/v1/"
   :javascript
     $(function() {
       $(document).trigger('init:phonenumberfieldsform.nearme', 'form.payment', {
-        countrySelector : '#reservation_request_country_name',
-        mobileSelector  : '#reservation_request_mobile_number',
-        phoneSelector   : '#reservation_request_phone',
-        sameAsSelector  : '#reservation_request_mobile_same_as_phone'
+          countrySelector : '#reservation_request_country_name',
+          mobileSelector  : '#reservation_request_mobile_number',
+          phoneSelector   : '#reservation_request_phone',
+          sameAsSelector  : '#reservation_request_mobile_same_as_phone'
       });
+
       window.sessioncamConfiguration.customDataObjects.push( { key: "event", value: "booking_modal_opened" } );
     });

@@ -1,6 +1,0 @@
-= render "dashboard/company/payment_documents/header"
-.panel
-  .panel-body
-    = render "dashboard/company/payment_documents/table", collection: @files_uploaded_by_me
-
-= will_paginate_dashboard @files_uploaded_by_me

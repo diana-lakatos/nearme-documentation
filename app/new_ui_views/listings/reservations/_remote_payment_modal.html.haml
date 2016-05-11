@@ -1,3 +1,0 @@
-- content_for :domready do
-  - if params[:action] == 'remote_payment'
-    $(document).trigger('load:modal.nearme', ['#{remote_payment_listing_reservation_path(@reservation.listing, @reservation)}']);

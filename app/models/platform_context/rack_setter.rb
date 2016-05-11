@@ -20,7 +20,7 @@ class PlatformContext::RackSetter
     if !platform_context.should_redirect?
       ::PlatformContext.current = platform_context
       if I18n.backend.respond_to?(:backends)
-        I18n.backend.backends.first.instance_id = ::PlatformContext.current.instance.id
+        I18n.backend.backends.first.instance_id = ::PlatformContext.current.instance.try(:id)
       end
       @app.call(env)
     else

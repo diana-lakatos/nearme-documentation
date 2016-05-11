@@ -1,19 +1,15 @@
-.dash-head.clearfix
-  %p
-    = image_tag "wish_lists/#{platform_context.instance.wish_lists_icon_set}/selected.png", class: 'wish-list-image'
-    = t 'wish_lists.name'
+- content_for :page_header do
+  %h1= t 'wish_lists.name'
 
-  = link_to clear_dashboard_wish_list_items_path, method: :delete, class: 'dash-head-btn',
-      data: { confirm: t('wish_lists.confirmations.clear') } do
+.panel
+  .panel-body
+    - if @items.any?
+      .wish-list
+        = render @items
+    - else
+      %p.empty-resultset= t 'wish_lists.empty_list'
 
-    .btn.red{class: @items.any? ? '' : 'disabled'}
-      = t 'wish_lists.buttons.clear'
-
-.dash-body
-  - if @items.any?
-    = render @items
-  - else
-    .dash-body-container
-      = image_tag 'dashboard/exclamation.png'
-      %p.inline= t 'wish_lists.empty_list'
+- if @items.any?
+  .form-actions
+    = link_to t('wish_lists.buttons.clear'), clear_dashboard_wish_list_items_path, method: :delete, data: { confirm: t('wish_lists.confirmations.clear') }
 

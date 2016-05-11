@@ -1,24 +1,20 @@
 {% if wish_list_item.wishlistable_present? %}
-  <div class="listings">
-    <div class="row">
-      <div class="col-md-3 listing-img">
-        <a href="{{ wish_list_item.wishlistable_path }}" target="_blank">
-          <img src="{{ wish_list_item.image_url | image_url }}" />
-        </a>
+  <article class="wish-list__item" style="background-image: url({{ wish_list_item.image_url }});">
+    <a href="{{ wish_list_item.wishlistable_path }}" rel="external" class="link">
+      <div class="name">
+        {{ wish_list_item.wishlistable_name }}
       </div>
-      <div class="col-md-6">
-        <a href="{{ wish_list_item.wishlistable_path }}" target="_blank">{{ wish_list_item.wishlistable_name }}</a>
-        <br />
-        <span style="color: gray;">
-          {{ wish_list_item.company_name }}
-        </span>
-        <br/>
+      <div class="company">
+        {{ wish_list_item.company_name }}
+      </div>
+
+      <div class="address">
         {{ wish_list_item.price }}
       </div>
-      <div class="col-md-3 listing-attr">
-        <a href="{{ wish_list_item.dashboard_wish_list_item_path }}" data-method="delete" class="btn gray">{{ 'wish_lists.buttons.delete' | translate }}</a>
-      </div>
-    </div>  
-  </div>
-{% endif %}
+    </a>
 
+    <div class="actions">
+      <a href="{{ wish_list_item.dashboard_wish_list_item_path }}" rel="nofollow" data-method="delete" class="action--delete">{{ 'wish_lists.buttons.delete' | translate }}</a>
+    </div>
+  </article>
+{% endif %}

@@ -11,6 +11,8 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   before_filter :sanitize_price_parameters, :only => [:submit_listing]
   before_filter :set_theme, :only => [:list, :submit_item]
 
+  layout :dashboard_or_community_layout
+
   def new
     flash.keep(:warning)
     event_tracker.clicked_list_your_bookable({source: request.referer ? URI(request.referer).path : "direct"})

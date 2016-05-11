@@ -1,5 +1,4 @@
 <h2>{{ 'simple_form.labels.company.payout.via_paypal' | translate }}</h2>
-{{ }}
 
 {% if merchant_account.state != 'pending' %}
   <p><h3>{{ merchant_account.state_info }}</h3></p>
@@ -21,7 +20,8 @@
 </div>
 
 <div class="panel form-actions">
-<div class="panel-body">
-<input type="submit" name="commit" value="{{ 'payouts.buttons.save' | translate }}">
+  <div class="panel-body">
+    <input type="submit" name="commit" value="{{ 'payouts.buttons.save' | translate }}">
+  </div>
 </div>
-</div>
+

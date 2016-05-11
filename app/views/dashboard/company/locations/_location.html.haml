@@ -1,15 +1,12 @@
-.locations.row{data: {:location_id => location.id}, class: (defined?(location_counter) && location_counter > 3) ? 'hidden-location collapse' : '' }
-  .location-select.col-md-7.col-xs-7
-    - if defined?(form)
-      = form.radio_button :location_id, location.id
-      = form.label "location_id_#{location.id}", location.name
+- single_location = defined?(transactable_type) ? transactable_type.single_location : location.listings.first.try(:transactable_type).try(:single_location)
 
-    -else
-      = radio_button_tag "transactable[location_id]", location.id
-      = label_tag "transactable_location_id_#{location.id}", location.name
-  .col-md-5.col-xs-5
-    %span.location-options
-      =link_to t('general.edit'), '#', data: { modal: true, href: edit_dashboard_company_location_path(location, should_check_address: @transactable_type.try(:rental_shipping)) }
-      %span.blue |
-      =link_to t('general.remove'), dashboard_company_location_path(location), remote: true, method: :delete,
-          data: { confirm: location.listings.count.size > 0 ? I18n.t('dashboard.location.are_you_sure', listings_count: location.listings.count) : I18n.t('confirmations.are_you_sure') }
+- is_hidden = defined?(f) && f.object.location_id != location.id
+- with_deleted_link = params[:controller] == 'dashboard/company/locations' ? ActiveRecord::Type::Boolean.new.type_cast_from_database(params[:with_deleted_link]) : !defined?(f) || f.object.location_id != location.id
+%span{data: { "location-id" => location.id, availability: pretty_availability_sentence(location.availability).to_s }, hidden: defined?(f) ? is_hidden : false }
+  - if !single_location
+    |
+  = link_to t('dashboard.location.edit'), edit_dashboard_company_location_path(location, with_deleted_link: with_deleted_link, should_check_address: @transactable_type.try(:rental_shipping)), data: { modal: true }
+  - if !single_location && with_deleted_link
+    |
+    = link_to t('dashboard.location.remove'), dashboard_company_location_path(location), remote: true, method: :delete,
+        data: { confirm: location.listings.count > 0 ? I18n.t('dashboard.location.are_you_sure', listings_count: location.listings.count) : I18n.t('confirmations.are_you_sure') }

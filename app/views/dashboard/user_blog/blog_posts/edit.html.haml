@@ -1,10 +1,13 @@
 - title t('user_blog.titles.settings')
 
-.dash-head.clearfix
-  %p= t 'user_blog.nav.edit'
+- content_for :page_header do
+  %h1= t 'user_blog.nav.edit'
 
-.dash-body
-  = simple_form_for @blog_post, url: dashboard_blog_post_path(@blog_post), wrapper: :bs3, html: { multipart: true } do |f|
-    = render 'user_blog_post_form', f: f
-    .submit-bar
-      = f.submit t('user_blog.buttons.save'), class: 'btn medium blue'
+= dashboard_simple_form_for @blog_post, url: dashboard_blog_post_path(@blog_post), html: { multipart: true } do |f|
+  .panel
+    .panel-body
+      = render 'user_blog_post_form', f: f
+
+  .panel.form-actions
+    .panel-body
+      = f.submit t('user_blog.buttons.save')
