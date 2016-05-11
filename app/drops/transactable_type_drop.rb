@@ -1,8 +1,6 @@
 class TransactableTypeDrop < BaseDrop
   include CategoriesHelper
 
-  attr_reader :transactable_type
-
   # id
   #   numeric identifier for this transactable type
   # show_page_enabled?
@@ -16,16 +14,11 @@ class TransactableTypeDrop < BaseDrop
   #   translated name of this transactable type, based on current language
   delegate :id, :buyable?, :action_price_per_unit, :show_page_enabled?, :translated_bookable_noun,
     :translation_key_suffix, :translation_namespace, :show_date_pickers, :searcher_type, :slug,
-    :search_input_name, :search_field_placeholder, to: :transactable_type
-
-  def initialize(transactable_type)
-    @transactable_type = transactable_type
-    @decorated = @transactable_type.decorate
-  end
+    :search_input_name, :search_field_placeholder, to: :source
 
   # name for the bookable item this transactable type represents (e.g. desk, room etc.)
   def name
-    @transactable_type.translated_bookable_noun
+    @source.translated_bookable_noun
   end
 
   # name for the bookable item this transactable type represents (e.g. desk, room etc.)
@@ -35,32 +28,32 @@ class TransactableTypeDrop < BaseDrop
 
   # name (plural) for the bookable item this transactable type represents (e.g. desks, rooms etc.)
   def bookable_noun_plural
-    @transactable_type.translated_bookable_noun(10)
+    @source.translated_bookable_noun(10)
   end
 
   # search field placeholder as a string
   def search_field_placeholder
-    @decorated.search_field_placeholder
+    @source.decorate.search_field_placeholder
   end
 
   # search geolocation field placeholder as a string
   def geolocation_placeholder
-    @decorated.geolocation_placeholder
+    @source.decorate.geolocation_placeholder
   end
 
   # search full text field placeholder as a string
   def fulltext_placeholder
-    @decorated.fulltext_placeholder
+    @source.decorate.fulltext_placeholder
   end
 
   # returns true if searcher_type is "fulltext_category"
   def fulltext_category_search?
-    @transactable_type.searcher_type == 'fulltext_category'
+    @source.searcher_type == 'fulltext_category'
   end
 
   # returns true if searcher_type is "geo_category"
   def geo_category_search?
-    @transactable_type.searcher_type == 'geo_category'
+    @source.searcher_type == 'geo_category'
   end
 
   # returns true if searcher_type has been set to either
@@ -71,34 +64,34 @@ class TransactableTypeDrop < BaseDrop
 
   def to_json
     {
-      id: @transactable_type.id,
-      name: @transactable_type.name
+      id: @source.id,
+      name: @source.name
     }.to_json
   end
 
   def lessor
-    @transactable_type.translated_lessor
+    @source.translated_lessor
   end
 
   def lessee
-    @transactable_type.translated_lessee
+    @source.translated_lessee
   end
 
   def lessors
-    @transactable_type.translated_lessor(10)
+    @source.translated_lessor(10)
   end
 
   def lessees
-    @transactable_type.translated_lessee(10)
+    @source.translated_lessee(10)
   end
 
   def search_inputs
     return custom_search_inputs if custom_search_inputs.present?
     inputs = []
-    inputs << 'geolocation' if @transactable_type.searcher_type =~ /geo/
-    inputs << 'fulltext' if @transactable_type.searcher_type =~ /fulltext/
+    inputs << 'geolocation' if @source.searcher_type =~ /geo/
+    inputs << 'fulltext' if @source.searcher_type =~ /fulltext/
     inputs << 'categories' if category_search?
-    inputs << 'datepickers' if @transactable_type.show_date_pickers
+    inputs << 'datepickers' if @source.show_date_pickers
     inputs
   end
 
@@ -143,19 +136,19 @@ class TransactableTypeDrop < BaseDrop
 
   # array of category objects for this marketplace's service types
   def searchable_categories
-    @transactable_type.categories.searchable.roots
+    @source.categories.searchable.roots
   end
 
   # returns hash of categories { "<name>" => { "name" => '<translated_name', "children" => [<collection of chosen values] } }
   def categories
     if @categories.nil?
-      @categories = build_categories_hash(@transactable_type.categories.roots)
+      @categories = build_categories_hash(@source.categories.roots)
     end
     @categories
   end
 
   def class_name
-    @transactable_type.class.name
+    @source.class.name
   end
 
   def select_id

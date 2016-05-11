@@ -4,7 +4,7 @@ class SitemapServiceTest < ActiveSupport::TestCase
   setup do
     @page = create(:page)
     @transactable = create(:transactable)
-    @product = create(:product)
+    @product = create(:transactable)
     @domain = PlatformContext.current.domain
     SitemapService.stubs(:update_on_search_engines).returns(nil)
   end

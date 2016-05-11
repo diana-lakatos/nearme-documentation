@@ -1,14 +1,14 @@
-- if @reservation_request && @reservation_request.confirm_reservations?
+- if @order && @order.confirm_reservations?
   %p.confirm-reservations
-    = t('reservations.manually_confirm', lessor: @reservation_request.listing.transactable_type.lessor)
-    - if @reservation_request.payment.nonce_payment?
+    = t('reservations.manually_confirm', lessor: @order.transactable.transactable_type.lessor)
+    - if @order.payment.nonce_payment?
       = t('reservations.paypal_and_cc_charge_after_confirmation')
     - else
       = t('reservations.charge_after_confirmation')
 
-- if @reservation_request
+- if @order
   %p.cancellation-info
-    - action_type = @reservation_request.reservation.transactable_pricing.action
+    - action_type = @order.transactable_pricing.action
     - if !action_type.cancellation_policy_enabled || action_type.cancellation_policy_hours_for_cancellation.zero?
       = t('reservations.no_cancellation_time')
     - else

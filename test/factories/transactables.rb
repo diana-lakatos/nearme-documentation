@@ -30,13 +30,13 @@ FactoryGirl.define do
     factory :transactable do
 
       after(:build) do |listing, evaluator|
-        listing.action_type = FactoryGirl.build(:time_based_booking, :with_prices, transactable: listing, transactable_type_action_type: listing.transactable_type.action_types.first)
+        listing.action_type = FactoryGirl.build(:time_based_booking, :with_prices, transactable: listing, transactable_type_action_type: listing.transactable_type.time_based_booking)
       end
 
       trait :with_time_based_booking do
         after(:build) do |listing|
           listing.action_types.destroy_all
-          listing.action_type = FactoryGirl.build(:time_based_booking, :with_prices, transactable: listing, transactable_type_action_type: listing.transactable_type.action_types.first)
+          listing.action_type = FactoryGirl.build(:time_based_booking, :with_prices, transactable: listing, transactable_type_action_type: listing.transactable_type.time_based_booking)
         end
       end
 
@@ -51,6 +51,14 @@ FactoryGirl.define do
             listing.action_type.availability_template = AvailabilityTemplate.find_by(name: '24/7')
             listing.save!
           end
+        end
+      end
+
+      factory :transactable_purchase do
+        after(:build) do |listing|
+          listing.action_types.destroy_all
+          listing.transactable_type.purchase_action ||= FactoryGirl.create(:transactable_type_purchase_action, transactable_type: listing.transactable_type)
+          listing.action_type = FactoryGirl.build(:purchase_action, transactable: listing, transactable_type_action_type: listing.transactable_type.purchase_action)
         end
       end
 
@@ -88,6 +96,7 @@ FactoryGirl.define do
         after(:build) do |listing|
           listing.action_types.destroy_all
           listing.action_type = FactoryGirl.build(:event_booking, transactable: listing)
+          listing.transactable_type.event_booking ||= FactoryGirl.build(:transactable_type_event_action, transactable_type: listing.transactable_type)
         end
         quantity 10
       end

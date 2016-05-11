@@ -38,7 +38,7 @@ class Transactable::ActionTypeDecorator < Draper::Decorator
   def pricings_for_form
     all_pricings = []
     transactable_type_action_type.pricings.ordered_by_unit.each do |tt_pricing|
-      all_pricings << (pricings.find{|p| p.transactable_type_pricing == tt_pricing}.presence || tt_pricing.build_transactable_pricing(object))
+      all_pricings << (pricings.find{|p| p.transactable_type_pricing_id == tt_pricing.id}.presence || tt_pricing.build_transactable_pricing(object))
     end
     all_pricings << pricings.select{ |p| p.transactable_type_pricing_id.nil? && p.persisted? }
     all_pricings = all_pricings.flatten.compact.sort { |a, b| [a.unit, a.number_of_units] <=> [b.unit, b.number_of_units] }

@@ -38,7 +38,7 @@ class Utils::DefaultAlertsCreator::RecurringCreatorTest < ActionDispatch::Integr
 
     should 'create_share_email' do
       @reservation = FactoryGirl.create(:past_reservation)
-      @listing = @reservation.listing
+      @listing = @reservation.transactable
       @user = @listing.administrator
       @recurring_creator.create_share_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do

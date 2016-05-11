@@ -6,7 +6,6 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
     @user = FactoryGirl.create(:user)
     sign_in @user
     @company = FactoryGirl.create(:company, creator: @user)
-    @company.products << FactoryGirl.create(:product)
     @location = FactoryGirl.create(:location, company: @company)
     @location2 = FactoryGirl.create(:location, company: @company)
     @listing_type = "Desk"
@@ -219,10 +218,9 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
 
     context 'with reservation' do
       setup do
-        @reservation1 = FactoryGirl.create(:reservation, listing: @transactable)
-        @reservation2 = FactoryGirl.create(:reservation, listing: @transactable)
-        @reservation1.activate
-        @reservation2.activate
+        stub_active_merchant_interaction
+        @reservation1 = FactoryGirl.create(:future_unconfirmed_reservation, transactable: @transactable)
+        @reservation2 = FactoryGirl.create(:future_unconfirmed_reservation, transactable: @transactable)
       end
 
       should 'notify guest about reservation expiration when listing is deleted' do
@@ -243,7 +241,6 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
       setup do
         @other_user = FactoryGirl.create(:user)
         @other_company = FactoryGirl.create(:company, creator: @other_user)
-        @other_company.products << FactoryGirl.create(:product)
         @other_location = FactoryGirl.create(:location, company: @company)
         sign_in @other_user
       end

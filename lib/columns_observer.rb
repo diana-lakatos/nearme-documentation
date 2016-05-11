@@ -64,7 +64,7 @@ module ColumnsObserver
       [columns].flatten.each do |column|
         raise ColumnsObserver::InvalidArgumentError.new("Invalid argument, #{self.name} does not contain column #{column}") unless self.column_names.include?(column.to_s)
         [associations].flatten.each do |association|
-          inherits_columns_from_association_string += "self.#{column} = #{association}.#{column} if #{association}\n"
+          inherits_columns_from_association_string += "self.#{column} ||= #{association}.#{column} if #{association}\n"
         end
       end
       class_eval %Q{ #{inherits_columns_from_association_string + "nil\nend"} }

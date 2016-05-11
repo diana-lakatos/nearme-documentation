@@ -12,25 +12,25 @@
     .col-xs-8
       = dt.input :weight, as: :decimal, input_html: { :class => 'shippo_decimal_field', 'data-shipping-dimension': 'weight' }
     .col-xs-4
-      = dt.input :weight_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[dt.object.unit_of_measure]['weight'], label: Spree::Variant.human_attribute_name(:weight_unit), input_html: { 'data-shipping-dimension-unit': 'weight' }
+      = dt.input :weight_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[dt.object.unit_of_measure]['weight'], input_html: { 'data-shipping-dimension-unit': 'weight' }
 
   .dimensions_element_container.row
     .col-xs-8
       = dt.input :depth, as: :decimal, input_html: { :class => 'shippo_decimal_field', 'data-shipping-dimension': 'depth' }
     .col-xs-4
-      = dt.input :depth_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[dt.object.unit_of_measure]['length'], label: Spree::Variant.human_attribute_name(:depth_unit), as: :select, input_html: { 'data-shipping-dimension-unit': 'depth' }
+      = dt.input :depth_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[dt.object.unit_of_measure]['length'], as: :select, input_html: { 'data-shipping-dimension-unit': 'depth' }
 
   .dimensions_element_container.row
     .col-xs-8
       = dt.input :width, as: :decimal, input_html: { :class => 'shippo_decimal_field', 'data-shipping-dimension': 'width' }
     .col-xs-4
-      = dt.input :width_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[dt.object.unit_of_measure]['length'], label: Spree::Variant.human_attribute_name(:width_unit), as: :select, input_html: { 'data-shipping-dimension-unit': 'width' }
+      = dt.input :width_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[dt.object.unit_of_measure]['length'], as: :select, input_html: { 'data-shipping-dimension-unit': 'width' }
 
   .dimensions_element_container.row
     .col-xs-8
       = dt.input :height, as: :decimal, input_html: { :class => 'shippo_decimal_field', 'data-shipping-dimension': 'height' }
     .col-xs-4
-      = dt.input :height_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[dt.object.unit_of_measure]['length'], label: Spree::Variant.human_attribute_name(:height_unit), as: :select, input_html: { 'data-shipping-dimension-unit': 'height' }
+      = dt.input :height_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[dt.object.unit_of_measure]['length'], as: :select, input_html: { 'data-shipping-dimension-unit': 'height' }
 
   - if defined?create_dimensions_template_url
     %p= link_to t('dimensions_templates.form.add_new_dimensions_template'), create_dimensions_template_url, data: { :'add-template-trigger' => true }, class: 'btn btn-primary'

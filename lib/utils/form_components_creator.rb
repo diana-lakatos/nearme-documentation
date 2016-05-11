@@ -3,16 +3,12 @@ module Utils
 
     def initialize(form_componentable, options = {})
       @creator = case form_componentable
-                 when ServiceType
-                   ServiceComponentCreator
-                 when Spree::ProductType
-                   ProductComponentCreator
                  when ProjectType
                    ProjectComponentCreator
-                 when OfferType
-                   OfferComponentCreator
                  when ReservationType
                    ReservationComponentCreator
+                 when TransactableType
+                   TransactableComponentCreator
                  when InstanceProfileType
                    case form_componentable.profile_type
                    when InstanceProfileType::SELLER
@@ -62,39 +58,6 @@ module Utils
 
   end
 
-  class OfferComponentCreator < BaseComponentCreator
-
-    def create!
-      create_space_wizard!
-      create_dashboard_form!
-    end
-
-    def create_space_wizard!
-      @form_type_class = FormComponent::SPACE_WIZARD
-      create_components!([
-        {
-          name: I18n.t('registrations.tell_us'),
-          fields: @form_componentable.instance.user_required_fields.map { |f| { 'user' => f.to_s } }
-        },
-        {
-          name: "#{@form_componentable.name.try(:pluralize)} Details",
-          fields: [{ 'offer' => 'name'}, { 'offer' => 'description'}]
-        },
-      ])
-    end
-
-    def create_dashboard_form!
-      @form_type_class = FormComponent::OFFER_ATTRIBUTES
-
-      create_components!([
-        {
-          name: "Main",
-          fields: [{ 'offer' => 'name'}, { 'offer' => 'description'}]
-        }
-      ])
-    end
-  end
-
   class LocationFormComponentsCreator < BaseComponentCreator
 
     def create!
@@ -139,13 +102,15 @@ module Utils
       create_components!([
         {
           name: "Review",
-          fields: []
+          fields: [
+            { 'reservation' => 'payments' },
+          ]
         }
       ])
     end
   end
 
-  class ServiceComponentCreator < BaseComponentCreator
+  class TransactableComponentCreator < BaseComponentCreator
 
     def create!
       create_space_wizard!
@@ -189,52 +154,6 @@ module Utils
           }
         ],
         'new_dashboard')
-    end
-  end
-
-  class ProductComponentCreator < BaseComponentCreator
-
-    def create!
-      create_space_wizard!
-      create_dashboard_form!
-    end
-
-    protected
-
-    def create_space_wizard!
-      @form_type_class = FormComponent::SPACE_WIZARD
-      create_components!([
-        {
-          name: I18n.t('registrations.tell_us'),
-          fields: @form_componentable.instance.user_required_fields.map { |f| { 'user' => f.to_s } }
-        },
-        {
-          name: 'Seller Info',
-          fields: [{'company' => 'name'}, {'company' => 'address'}]
-        },
-        {
-          name: "List New #{@form_componentable.name}",
-          fields: [ { 'product' => 'name'}, { 'product' => 'description'}, { 'product' => 'photos'}, { 'product' => 'action_rfq' }, { 'product' => 'price'}, { 'product' => 'quantity'}, { 'product' => 'integrated_shipping'}, { 'product' => 'documents_upload'} ]
-        },
-        {
-          name: "#{@form_componentable.name} Specifics",
-          fields: @form_componentable.categories.map {|c| {'product' => "Category - #{c.name}"} }
-        },
-        {
-          name: "Shipping Info",
-          fields: [{'product' => 'shipping_info'}]
-        }
-      ])
-    end
-
-    def create_dashboard_form!
-      @form_type_class = FormComponent::PRODUCT_ATTRIBUTES
-      create_components!([
-        {
-          name: "Main",
-          fields: [ { 'product' => 'name'}, { 'product' => 'description'}, { 'product' => 'photos'}, { 'product' => 'action_rfq' }, { 'product' => 'price'}, { 'product' => 'quantity'}, { 'product' => 'integrated_shipping'}, { 'product' => 'documents_upload'}, {'product' => 'shipping_info'} ] + @form_componentable.categories.map {|c| {'product' => "Category - #{c.name}"} }
-        }
-      ])
     end
   end
 

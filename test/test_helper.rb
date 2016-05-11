@@ -11,8 +11,6 @@ require 'backtrace_filter'
 
 require Rails.root.join('test', 'helpers', 'stub_helper.rb')
 
-require 'spree/testing_support/factories'
-
 reporter_options = { color: true, slow_count: 5 }
 Minitest.backtrace_filter = BacktraceFilter.new
 Minitest::Reporters.use!(Minitest::Reporters::DefaultReporter.new(reporter_options), ENV, Minitest.backtrace_filter)
@@ -178,6 +176,10 @@ ActiveSupport::TestCase.class_eval do
     PaymentGateway.any_instance.stubs(:gateway_refund).returns(OpenStruct.new(response.reverse_merge({params: {"id" => '12345'}})))
     PayPal::SDK::AdaptivePayments::API.any_instance.stubs(:pay).returns(OpenStruct.new(response.reverse_merge(paymentExecStatus: "COMPLETED")))
 
+    stub_store_card
+  end
+
+  def stub_store_card
     stub = OpenStruct.new(success?: true, params: {
       "object" => 'customer',
       "id" => 'customer_1',

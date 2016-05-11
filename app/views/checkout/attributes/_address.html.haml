@@ -1,0 +1,3 @@
+- if only_inputs.empty? || only_inputs.include?(:address)
+  = f.simple_fields_for :address, f.object.form_address(cookies[:last_search]) do |address_form|
+    = render :partial => 'addresses/form', :locals => { :f => address_form, label: t('simple_form.labels.reservations.address') }

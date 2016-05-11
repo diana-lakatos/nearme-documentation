@@ -189,7 +189,8 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
   def create_transactable_with_all_days_booked_for_three_days!
     @transactable_with_all_days_booked = FactoryGirl.create(:transactable, quantity: 2)
     2.times do
-      reservation = FactoryGirl.create(:future_reservation, listing: @transactable_with_all_days_booked)
+      reservation = FactoryGirl.build(:future_reservation, transactable: @transactable_with_all_days_booked)
+      reservation.payment = FactoryGirl.build(:authorized_payment, payable: reservation)
       reservation.periods = []
       reservation.add_period(@date_start)
       reservation.add_period(@date_start + 1.days)
@@ -200,7 +201,8 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
 
   def create_transactable_with_some_days_fully_booked_via_one_reservation!
     @transactable_with_some_days_fully_booked_via_one_reservation = FactoryGirl.create(:transactable, quantity: 5)
-    reservation = FactoryGirl.create(:future_reservation, listing: @transactable_with_some_days_fully_booked_via_one_reservation, quantity: 5)
+    reservation = FactoryGirl.build(:future_reservation, transactable: @transactable_with_some_days_fully_booked_via_one_reservation, quantity: 5)
+    reservation.payment = FactoryGirl.build(:authorized_payment, payable: reservation)
     reservation.periods = []
     reservation.add_period(@date_start)
     reservation.save!
@@ -208,12 +210,14 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
 
   def create_transactable_with_some_days_fully_booked_via_multiple_reservations!
     @transactable_with_some_days_fully_booked_via_multiple_reservations = FactoryGirl.create(:transactable, quantity: 5)
-    reservation = FactoryGirl.create(:future_reservation, listing: @transactable_with_some_days_fully_booked_via_multiple_reservations, quantity: 3)
+    reservation = FactoryGirl.build(:future_reservation, transactable: @transactable_with_some_days_fully_booked_via_multiple_reservations, quantity: 3)
+    reservation.payment = FactoryGirl.build(:authorized_payment, payable: reservation)
     reservation.periods = []
     reservation.add_period(@date_start)
     reservation.add_period(@date_start + 2.days)
     reservation.save!
-    reservation = FactoryGirl.create(:future_reservation, listing: @transactable_with_some_days_fully_booked_via_multiple_reservations, quantity: 2)
+    reservation = FactoryGirl.build(:future_reservation, transactable: @transactable_with_some_days_fully_booked_via_multiple_reservations, quantity: 2)
+    reservation.payment = FactoryGirl.build(:authorized_payment, payable: reservation)
     reservation.periods = []
     reservation.add_period(@date_start + 2.days)
     reservation.add_period(@date_start + 1.days)
@@ -222,12 +226,14 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
 
   def create_transactable_with_some_days_fully_booked_on_other_days!
     @transactable_with_some_days_fully_booked_on_other_days = FactoryGirl.create(:transactable, quantity: 5)
-    reservation = FactoryGirl.create(:future_reservation, listing: @transactable_with_some_days_fully_booked_on_other_days, quantity: 5)
+    reservation = FactoryGirl.build(:future_reservation, transactable: @transactable_with_some_days_fully_booked_on_other_days, quantity: 5)
+    reservation.payment = FactoryGirl.build(:authorized_payment, payable: reservation)
     reservation.periods = []
     reservation.add_period(@date_start - 1.day)
     reservation.add_period(@date_end + 1.day)
     reservation.save!
-    reservation = FactoryGirl.create(:future_reservation, listing: @transactable_with_some_days_fully_booked_on_other_days, quantity: 2)
+    reservation = FactoryGirl.build(:future_reservation, transactable: @transactable_with_some_days_fully_booked_on_other_days, quantity: 2)
+    reservation.payment = FactoryGirl.build(:authorized_payment, payable: reservation)
     reservation.periods = []
     reservation.add_period(@date_start + 1.day)
     reservation.save!
@@ -243,24 +249,29 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
 
   def create_transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation!
     Reservation.any_instance.stubs(:schedule_refund).returns(true)
+    stub_active_merchant_interaction
 
     @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation = FactoryGirl.create(:transactable, quantity: 1)
-    FactoryGirl.create(:future_reservation, listing: @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation, state: 'confirmed').tap do |r|
+    FactoryGirl.build(:future_reservation, transactable: @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation, state: 'confirmed').tap do |r|
+      r.payment = FactoryGirl.build(:authorized_payment, payable: r)
       r.add_period(@date_start + 1.days)
       r.add_period(@date_start + 2.days)
       r.save!
     end.host_cancel!
-    FactoryGirl.create(:future_reservation, listing: @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation, state: 'confirmed').tap do |r|
+    FactoryGirl.build(:future_reservation, transactable: @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation, state: 'confirmed').tap do |r|
+      r.payment = FactoryGirl.build(:authorized_payment, payable: r)
       r.add_period(@date_start + 1.days)
       r.add_period(@date_start + 2.days)
       r.save!
     end.user_cancel!
-    FactoryGirl.create(:future_reservation, listing: @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation, state: 'unconfirmed').tap do |r|
+    FactoryGirl.build(:future_reservation, transactable: @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation, state: 'unconfirmed').tap do |r|
+      r.payment = FactoryGirl.build(:authorized_payment, payable: r)
       r.add_period(@date_start + 1.days)
       r.add_period(@date_start + 2.days)
       r.save!
     end.reject!
-    FactoryGirl.create(:future_reservation, listing: @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation, state: 'unconfirmed').tap do |r|
+    FactoryGirl.build(:future_reservation, transactable: @transactable_with_all_days_booked_via_cancelled_rejected_expired_reservation, state: 'unconfirmed').tap do |r|
+      r.payment = FactoryGirl.build(:authorized_payment, payable: r)
       r.add_period(@date_start + 1.days)
       r.add_period(@date_start + 2.days)
       r.save!

@@ -47,7 +47,7 @@ class Listings::Support::TicketsController < ApplicationController
   end
 
   def set_presenters
-    @details = params[:reservation_request].presence || params[:details].presence || {}
+    @details = params[:order].presence || params[:details].presence || {}
     @pricing = @listing.action_type.pricings.find(@details[:transactable_pricing_id]).decorate if @details[:transactable_pricing_id]
     if @listing.event_booking?
       datetime = if !params[:details]
@@ -58,9 +58,9 @@ class Listings::Support::TicketsController < ApplicationController
       @schedule_presenter = SchedulePresenter.new(datetime)
       @details[:dates] = datetime.to_s
       if datetime
-        params[:reservation_request] ||= {}
-        params[:reservation_request][:start_minute] = datetime.min.to_i + (60 * datetime.hour.to_i)
-        params[:reservation_request][:end_minute] = params[:reservation_request][:start_minute]
+        params[:order] ||= {}
+        params[:order][:start_minute] = datetime.min.to_i + (60 * datetime.hour.to_i)
+        params[:order][:end_minute] = params[:order][:start_minute]
       end
     else
       dates = @details[:dates].try(:split, ',') || []

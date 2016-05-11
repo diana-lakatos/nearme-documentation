@@ -6,6 +6,12 @@ en:
           attributes:
             base:
               authorization_failed: "Authorization failed!"
+        reservation:
+          attributes:
+            base:
+              file_cannot_be_empty: "File cannot be empty"
+              payment_invalid: "Payment details are invalid!"
+              total_amount_changed: "Looks like the total price of this reservation has changed. Please verify all prices."
         reservation_request:
           attributes:
             base:
@@ -40,6 +46,14 @@ en:
         cover_photo: 'Main Image'
     errors:
       models:
+        reservation:
+          attributes:
+            base:
+              file_cannot_be_empty: "File cannot be empty"
+              payment_invalid: "Payment details are invalid!"
+              total_amount_changed: "Looks like the total price of this reservation has changed. Please verify all prices."
+        order:
+          transactable_quantity: "Exceeded quantity for %{transactable_name}, please adjust listing quantity to confirm that order."
         merchant_account:
           attributes:
             account_type:
@@ -60,7 +74,7 @@ en:
               taken: "already exists."
         instance_view:
           attributes:
-            service_type:
+            transactable_type:
               not_accessible: "can't associate Service Type with this template, because this template is used by the following workflow alerts, which are irrelevant to Service Type: %{workflow_alerts}"
             locales_and_transactable_types:
               already_exists: "there exist at least one object which duplicates locale/transactable type configuration. It means that language/transactable type pairs this view will be ignored. Please either change these other objects or remove from Locales: %{locales} or from Transactable Types: %{transactable_types}. The complete list of objects which collide: %{ids}"

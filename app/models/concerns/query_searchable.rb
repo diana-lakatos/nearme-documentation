@@ -10,6 +10,8 @@ module QuerySearchable
         sql = attributes.map do |attrib|
           if self.columns_hash[attrib.to_s].type == :hstore
             attrib = "CAST(avals(#{quoted_table_name}.\"#{attrib}\") AS text)"
+          elsif self.columns_hash[attrib.to_s].type == :integer
+            attrib = "CAST(#{quoted_table_name}.\"#{attrib}\" AS text)"
           else
             attrib = "#{quoted_table_name}.\"#{attrib}\""
           end

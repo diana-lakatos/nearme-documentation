@@ -34,6 +34,12 @@ module CustomAttributes
             self.errors.add(:#{@options[:store_accessor_name]}, self.#{@options[:store_accessor_name]}.errors.full_messages.join(', ')) if self.#{@options[:store_accessor_name]}.errors.any?
           end
 
+          def #{@options[:store_accessor_name]}_attributes=(attrs)
+            attrs.each do |key, value|
+              properties[key] = value
+            end
+          end
+
           def custom_attributes
             target_id = #{@options[:target_id]} || #{@options[:target_id].to_s.gsub('_id', '')}.try(:id)
             return [] if target_id.nil?

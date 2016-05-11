@@ -14,6 +14,17 @@ class DateTimeHandler
     end
   end
 
+  def convert_to_date(object)
+    case object
+    when String
+      DateTime.strptime(object, I18n.t('datepicker.dformat')) rescue nil
+    when Date, DateTime, ActiveSupport::TimeWithZone, nil
+      object
+    else
+      raise NotImplementedError.new("Can't convert #{object.inspect} to datetime")
+    end
+  end
+
   def convert_to_time(object)
     case object
     when String

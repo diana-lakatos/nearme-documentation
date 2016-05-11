@@ -53,12 +53,12 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       end
       mail = ActionMailer::Base.deliveries.last
       assert_contains @reservation.owner.first_name, mail.html_part.body
-      assert_contains @reservation.listing.name, mail.html_part.body
+      assert_contains @reservation.transactable.name, mail.html_part.body
       assert_contains 'https://custom.domain.com/dashboard/notification_preferences/edit', mail.html_part.body
       assert_contains 'https://custom.domain.com/dashboard/notification_preferences/edit', mail.text_part.body
-      assert_contains @reservation.listing.transactable_type.bookable_noun.pluralize, mail.html_part.body
+      assert_contains @reservation.transactable.transactable_type.bookable_noun.pluralize, mail.html_part.body
       assert_equal [@reservation.owner.email], mail.to
-      assert_equal "[#{@platform_context.decorate.name}] Your booking for '#{@reservation.listing.name}' at #{@reservation.location.street} was cancelled by the host", mail.subject
+      assert_equal "[#{@platform_context.decorate.name}] Your booking for '#{@reservation.transactable.name}' at #{@reservation.location.street} was cancelled by the host", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
       assert_not_contains "translation missing:", mail.html_part.body
     end
@@ -69,8 +69,8 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::HostCancelled, @reservation.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains @reservation.listing.administrator.first_name, mail.html_part.body
-      assert_equal [@reservation.listing.administrator.email], mail.to
+      assert_contains @reservation.transactable.administrator.first_name, mail.html_part.body
+      assert_equal [@reservation.transactable.administrator.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] You just declined a booking", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
       assert_not_contains "translation missing:", mail.html_part.body
@@ -96,9 +96,9 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       end
       mail = ActionMailer::Base.deliveries.last
 
-      assert_contains @reservation.listing.creator.first_name, mail.html_part.body
-      assert_equal [@reservation.listing.creator.email], mail.to
-      assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name} cancelled a booking for '#{@reservation.listing.name}' at #{@reservation.location.street}", mail.subject
+      assert_contains @reservation.transactable.creator.first_name, mail.html_part.body
+      assert_equal [@reservation.transactable.creator.email], mail.to
+      assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name} cancelled a booking for '#{@reservation.transactable.name}' at #{@reservation.location.street}", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
       assert_not_contains "translation missing:", mail.html_part.body
     end
@@ -111,10 +111,10 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       mail = ActionMailer::Base.deliveries.last
 
       assert_contains @reservation.owner.first_name, mail.html_part.body
-      assert_contains @reservation.listing.name, mail.html_part.body
+      assert_contains @reservation.transactable.name, mail.html_part.body
 
       assert_equal [@reservation.owner.email], mail.to
-      assert_equal "[#{@platform_context.decorate.name}] Your booking for '#{@reservation.listing.name}' at #{@reservation.location.street} has expired", mail.subject
+      assert_equal "[#{@platform_context.decorate.name}] Your booking for '#{@reservation.transactable.name}' at #{@reservation.location.street} has expired", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
       assert_not_contains "translation missing:", mail.html_part.body
     end
@@ -125,7 +125,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, @reservation.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains @reservation.listing.creator.first_name, mail.html_part.body
+      assert_contains @reservation.transactable.creator.first_name, mail.html_part.body
       assert_contains @expected_dates, mail.html_part.body
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name}, your booking has been confirmed", mail.subject
@@ -139,7 +139,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, @reservation.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains @reservation.listing.creator.first_name, mail.html_part.body
+      assert_contains @reservation.transactable.creator.first_name, mail.html_part.body
       assert_contains @expected_dates, mail.html_part.body
       assert_equal [@reservation.host.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name} just booked your #{@platform_context.decorate.bookable_noun}!", mail.subject
@@ -153,8 +153,8 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation, @reservation.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains @reservation.listing.creator.first_name, mail.html_part.body
-      assert_equal [@reservation.listing.creator.email], mail.to
+      assert_contains @reservation.transactable.creator.first_name, mail.html_part.body
+      assert_equal [@reservation.transactable.creator.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name} just booked your #{@platform_context.decorate.bookable_noun}!", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
       assert_not_contains "translation missing:", mail.html_part.body
@@ -167,7 +167,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       end
       mail = ActionMailer::Base.deliveries.last
 
-      assert_contains @reservation.listing.name, mail.html_part.body
+      assert_contains @reservation.transactable.name, mail.html_part.body
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name}, your booking is pending confirmation", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
@@ -180,7 +180,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ManuallyConfirmed, @reservation.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains @reservation.listing.creator.first_name, mail.html_part.body
+      assert_contains @reservation.transactable.creator.first_name, mail.html_part.body
       assert_contains @expected_dates, mail.html_part.body
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name}, your booking has been confirmed", mail.subject
@@ -195,8 +195,8 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       end
       mail = ActionMailer::Base.deliveries.last
 
-      assert_contains @reservation.listing.creator.first_name, mail.html_part.body
-      assert_equal [@reservation.listing.creator.email], mail.to
+      assert_contains @reservation.transactable.creator.first_name, mail.html_part.body
+      assert_equal [@reservation.transactable.creator.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] Thanks for confirming!", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
       assert_not_contains "translation missing:", mail.html_part.body
@@ -215,7 +215,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         end
         mail = ActionMailer::Base.deliveries.last
 
-        assert_contains @reservation.listing.name, mail.html_part.body
+        assert_contains @reservation.transactable.name, mail.html_part.body
         assert_contains 'They said:', mail.html_part.body
         assert_contains @reservation.rejection_reason, mail.html_part.body
 
@@ -231,7 +231,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         end
         mail = ActionMailer::Base.deliveries.last
 
-        assert_contains @reservation.listing.name, mail.html_part.body
+        assert_contains @reservation.transactable.name, mail.html_part.body
         assert_does_not_contain 'They said:', mail.html_part.body
         assert_does_not_contain @reservation.rejection_reason, mail.html_part.body
 
@@ -272,10 +272,10 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::Rejected, @reservation.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains @reservation.listing.name, mail.html_part.body
+      assert_contains @reservation.transactable.name, mail.html_part.body
 
-      assert_equal [@reservation.listing.administrator.email], mail.to
-      assert_equal "[#{@platform_context.decorate.name}] Can we help, #{@reservation.listing.administrator.first_name}?", mail.subject
+      assert_equal [@reservation.transactable.administrator.email], mail.to
+      assert_equal "[#{@platform_context.decorate.name}] Can we help, #{@reservation.transactable.administrator.first_name}?", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
       assert_not_contains "translation missing:", mail.html_part.body
     end
@@ -286,10 +286,10 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::PaymentRequest, @reservation.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains @reservation.listing.name, mail.html_part.body
+      assert_contains @reservation.transactable.name, mail.html_part.body
 
       assert_equal [@reservation.owner.email], mail.to
-      assert_equal "[#{@platform_context.decorate.name}] Your booking for '#{@reservation.listing.name}' at #{@reservation.location.street} requires payment", mail.subject
+      assert_equal "[#{@platform_context.decorate.name}] Your booking for '#{@reservation.transactable.name}' at #{@reservation.location.street} requires payment", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
       assert_not_contains "translation missing:", mail.html_part.body
     end
@@ -300,7 +300,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::OneDayToBooking, @reservation.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains @reservation.listing.name, mail.html_part.body
+      assert_contains @reservation.transactable.name, mail.html_part.body
 
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name}, your booking is tomorrow!", mail.subject
@@ -316,14 +316,14 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       mail = ActionMailer::Base.deliveries.last
 
       assert mail.html_part.body.include?(@user.first_name)
-      assert mail.html_part.body.include?(@reservation.listing.name)
+      assert mail.html_part.body.include?(@reservation.transactable.name)
 
       assert_equal [@user.email], mail.to
       assert_equal "[DesksNearMe] Check out these new Desks in your area!", mail.subject
       assert_contains 'href="https://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
-      assert_contains @reservation.listing.name, mail.html_part.body
+      assert_contains @reservation.transactable.name, mail.html_part.body
       assert_equal [@reservation.owner.email], mail.to
       assert_not_contains 'Liquid error:', mail.html_part.body
       assert_not_contains "translation missing:", mail.html_part.body
@@ -338,7 +338,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
       assert mail.html_part.body.include?(@user.first_name)
 
-      assert_equal [@reservation.listing.creator.email], mail.to
+      assert_equal [@reservation.transactable.creator.email], mail.to
       assert_equal "[DesksNearMe] #{@reservation.owner.first_name} confirmed payment!", mail.subject
       assert_contains 'href="https://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
@@ -356,7 +356,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       mail = ActionMailer::Base.deliveries.last
 
       assert mail.html_part.body.include?(@user.first_name)
-      assert_equal [@reservation.listing.creator.email], mail.to
+      assert_equal [@reservation.transactable.creator.email], mail.to
       assert_equal "[DesksNearMe] #{@reservation.owner.first_name} declined payment!", mail.subject
       assert_contains 'href="https://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
@@ -401,7 +401,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
         assert_contains "Please review it and approve or decline in your dashboard", mail.html_part.body
         assert_equal [@reservation.owner.email], mail.to
-        assert_equal "[#{@platform_context.decorate.name}] #{@reservation.listing.name} submitted invoice", mail.subject
+        assert_equal "[#{@platform_context.decorate.name}] #{@reservation.transactable.name} submitted invoice", mail.subject
         assert_contains 'href="https://custom.domain.com/', mail.html_part.body
         assert_not_contains 'href="https://example.com', mail.html_part.body
         assert_not_contains 'href="/', mail.html_part.body
@@ -420,7 +420,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
         assert_contains "Unfortunately we had an issue with authorizing your credit card. Please update your payment information to be able to pay.", mail.html_part.body
         assert_equal [@reservation.owner.email], mail.to
-        assert_equal "[#{@platform_context.decorate.name}] #{@reservation.listing.name} submitted invoice", mail.subject
+        assert_equal "[#{@platform_context.decorate.name}] #{@reservation.transactable.name} submitted invoice", mail.subject
         assert_contains 'href="https://custom.domain.com/', mail.html_part.body
         assert_not_contains 'href="https://example.com', mail.html_part.body
         assert_not_contains 'href="/', mail.html_part.body
@@ -440,10 +440,10 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       mail = ActionMailer::Base.deliveries.last
 
       assert_contains "How was it, #{@reservation.owner.first_name}?", mail.html_part.body
-      assert_contains @reservation.listing.name, mail.html_part.body
+      assert_contains @reservation.transactable.name, mail.html_part.body
 
       assert_equal [@reservation.owner.email], mail.to
-      assert_equal "[#{@platform_context.decorate.name}] How was your experience at '#{@reservation.listing.name}'?", mail.subject
+      assert_equal "[#{@platform_context.decorate.name}] How was your experience at '#{@reservation.transactable.name}'?", mail.subject
       assert_contains 'href="https://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
@@ -501,7 +501,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
           @reservation.confirm!
           sms = WorkflowAlert::SmsInvoker.new(WorkflowAlert.where(alert_type: 'sms').last).invoke!(WorkflowStep::ReservationWorkflow::ManuallyConfirmed.new(@reservation.id))
           assert_equal "+1987654421", sms.to
-          assert sms.body =~ Regexp.new("Your booking for #{@reservation.listing.name} was confirmed. View booking:"), "wrong body: #{sms.body}"
+          assert sms.body =~ Regexp.new("Your booking for #{@reservation.transactable.name} was confirmed. View booking:"), "wrong body: #{sms.body}"
           assert sms.body =~ /http:\/\/goo.gl/, "Sms body does not include http://goo.gl: #{sms.body}"
           assert_not_contains 'Liquid error:', sms.body
           assert_not_contains "translation missing:", sms.body
@@ -526,7 +526,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
           @reservation.reject!
           sms = WorkflowAlert::SmsInvoker.new(WorkflowAlert.where(alert_type: 'sms').last).invoke!(WorkflowStep::ReservationWorkflow::Rejected.new(@reservation.id))
           assert_equal "+1987654421", sms.to
-          assert sms.body =~ Regexp.new("Your booking for #{@reservation.listing.name} was declined. View booking:"), "wrong body: #{sms.body}"
+          assert sms.body =~ Regexp.new("Your booking for #{@reservation.transactable.name} was declined. View booking:"), "wrong body: #{sms.body}"
           assert sms.body =~ /http:\/\/goo.gl/, "Sms body does not include http://goo.gl: #{sms.body}"
           assert_not_contains 'Liquid error:', sms.body
           assert_not_contains "translation missing:", sms.body
@@ -547,11 +547,12 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
         should "render with the reservation" do
           @reservation.stubs(:schedule_refund).returns(true)
+          @reservation.stubs(:cancelable?).returns(true)
           @reservation.confirm!
           @reservation.host_cancel!
           sms = WorkflowAlert::SmsInvoker.new(WorkflowAlert.where(alert_type: 'sms').last).invoke!(WorkflowStep::ReservationWorkflow::HostCancelled.new(@reservation.id))
           assert_equal "+1987654421", sms.to
-          assert sms.body =~ Regexp.new("Your booking for #{@reservation.listing.name} was cancelled. View booking:"), "wrong body: #{sms.body}"
+          assert sms.body =~ Regexp.new("Your booking for #{@reservation.transactable.name} was cancelled. View booking:"), "wrong body: #{sms.body}"
           assert sms.body =~ /http:\/\/goo.gl/, "Sms body does not include http://goo.gl: #{sms.body}"
           assert_not_contains 'Liquid error:', sms.body
           assert_not_contains "translation missing:", sms.body

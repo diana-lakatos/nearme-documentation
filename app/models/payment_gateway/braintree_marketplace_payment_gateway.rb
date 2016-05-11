@@ -58,7 +58,7 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
     charge_record = super(user, amount, currency, payment, token)
     if charge_record.try(:success?)
       payment_transfer = payment.company.payment_transfers.create!(payments: [payment.reload], payment_gateway_mode: mode, payment_gateway_id: self.id)
-      unless payment.payable.billing_authorization.immediate_payout?
+      unless payment.successful_billing_authorization.immediate_payout?
         payment_transfer.update_attribute(:transferred_at, nil)
       end
     end

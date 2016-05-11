@@ -7,7 +7,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   before_action :find_transactable, except: [:index, :new, :create]
   before_action :find_locations
   before_action :disable_unchecked_prices, only: :update
-  before_action :set_form_components
+  before_action :set_form_components, except: [:index, :enable, :disable, :destroy]
   before_action :redirect_to_edit_if_single_transactable, only: [:index, :new, :create]
   before_action :redirect_to_new_if_single_transactable, only: [:index, :edit, :update]
 
@@ -153,7 +153,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def find_transactable_type
-    @transactable_type = TransactableType.find(params[:transactable_type_id] || params[:service_type_id])
+    @transactable_type = TransactableType.find(params[:transactable_type_id])
   end
 
   def transactable_params

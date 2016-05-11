@@ -15,6 +15,11 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
   def create
     @transactable_type = resource_class.new(transactable_type_params)
     if @transactable_type.save
+      at = @transactable_type.availability_templates.build(name: "Working Week", description: "Mon - Fri, 9:00 AM - 5:00 PM")
+      (1..5).each do |i|
+        at.availability_rules.build(day: i, open_hour: 9, open_minute: 0,close_hour: 17, close_minute: 0)
+      end
+      at.save!
       Utils::FormComponentsCreator.new(@transactable_type).create!
       @transactable_type.create_rating_systems
       flash[:success] = t "flash_messages.instance_admin.#{controller_scope}.#{translation_key}.created"
@@ -51,6 +56,12 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
       { :title => resource.name.titleize },
       { :title => t('instance_admin.manage.transactable_types.search_settings') }
     )
+  end
+
+  def change_state
+    @transactable_type = TransactableType.find(params[:id])
+    @transactable_type.update(transactable_type_params)
+    render nothing: true, status: 200
   end
 
   private

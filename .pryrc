@@ -24,6 +24,10 @@ if defined?(Rails) && Rails.env
     reload!
   end
 
+  def saop
+    save_and_open_page
+  end
+
   puts "lc(instance) - to load instance context"
   puts "dc to drop current instance context"
   puts "Default methods loaded from ./pryrc"

@@ -1,0 +1,22 @@
+.cart-item-list
+  .list-head.clearfix
+    = link_to cart_clear_all_path(order.id), method: :delete, class: 'clear-all' do
+      %p= t 'buy_sell_market.cart.buttons.clear_all'
+      = image_tag 'themes/buy_sell/x.png'
+
+    %p
+      = t('buy_sell_market.cart.labels.order_from')
+      = order.company.name
+
+  .list-body
+    - order.line_items.sort_by { |l| l.cart_position }.each_with_index do |item, index|
+      = render partial: 'cart_item', locals: { item: item.decorate, index: index }
+
+  .list-footer
+    %h3 #{t('orders.labels.total')} #{order.total_amount}
+
+.checkout
+  = link_to order_checkout_path(order.id) do
+    .btn.blue
+      = image_tag 'themes/buy_sell/arrow-right.png'
+      = t('buy_sell_market.cart.buttons.checkout')

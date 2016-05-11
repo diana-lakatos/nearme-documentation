@@ -6,9 +6,9 @@
       <span>{{ listing[property] | filter_text | custom_sanitize }}</span>
     {% endif %}
   {% endfor %}
-  <h3>{{ 'booking_module.hours' | translate }}</h3>
 
-  {% if listing.schedule_booking? == false %}
+  {% if listing.time_based_booking? %}
+    <h3>{{ 'booking_module.hours' | translate }}</h3>
     <div class="availability-week-container">
       {% for day in listing.available_days %}
         <span class="day-of-week {% if day[1] %}enabled{% else %}disabled{% endif %}">{{ day[0] }}</span>

@@ -9,7 +9,7 @@ class InstanceAdmin::Analytics::ProfilesController < InstanceAdmin::Analytics::B
                'last_sign_in_at',
                'current_sign_in_ip',
                'last_sign_in_ip',
-               'reservations_count',
+               'orders_count',
                'transactables_count',
                'phone',
                'browser',

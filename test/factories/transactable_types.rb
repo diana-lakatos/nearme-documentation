@@ -1,18 +1,18 @@
 FactoryGirl.define do
-  factory :transactable_type, class: 'ServiceType' do
+  factory :transactable_type, class: 'TransactableType' do
 
     sequence(:name) { |n| "Transactable Type #{n}" }
 
-    availability_options { { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } } }
     bookable_noun 'Desk'
     lessor 'host'
     lessee 'guest'
-    type 'ServiceType'
+    type 'TransactableType'
     searchable true
     enable_reviews true
     show_path_format "/listings/:id"
     searcher_type 'geo'
     search_engine 'elasticsearch'
+    reservation_type
 
     ignore do
       generate_rating_systems false
@@ -35,7 +35,6 @@ FactoryGirl.define do
       sequence(:name) do |n|
         "Listing #{n}"
       end
-      type 'ServiceType'
 
       after(:build) do |transactable_type|
         TransactableType.transaction do
@@ -79,7 +78,6 @@ FactoryGirl.define do
 
     factory :transactable_type_current_data do
 
-      availability_options { { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => false } } }
       custom_csv_fields { [{'location' => 'name'}, {'location' => 'email'}, {'location' => 'external_id'}, {'location' => 'location_type'}, {'location' => 'description'}, { 'location' => 'special_notes'}, { 'address' => 'address'}, {'address' => 'city'}, { 'address' => 'street' }, { 'address' => 'suburb' }, { 'address' => 'state' }, { 'address' => 'postcode' }, { 'transactable' => 'for_1_hour_price_cents' }, { 'transactable' => 'for_1_day_price_cents' }, { 'transactable' => 'name' }, { 'transactable' => 'my_attribute' }, { 'transactable' => 'external_id' }, { 'transactable' => 'enabled' }, { 'photo' => 'image_original_url' }] }
 
       after(:build) do |transactable_type|

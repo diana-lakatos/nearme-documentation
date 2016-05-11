@@ -15,12 +15,15 @@ class LiquidView
   Liquid::Template.register_tag('inject_content_holder_for_path', ContentHolderTagForPathTag)
   Liquid::Template.register_tag('inject_content_holder', ContentHolderTag)
   Liquid::Template.register_tag('languages_select', LanguagesSelectTag)
-  Liquid::Template.register_tag('product_type_select', ProductTypeSelectTag)
-  Liquid::Template.register_tag('service_type_select', TransactableTypeSelectTag)
   Liquid::Template.register_tag('transactable_type_select', TransactableTypeSelectTag)
   Liquid::Template.register_tag('featured_items', FeaturedItemsTag)
   Liquid::Template.register_tag('render_featured_items', RenderFeaturedItemsTag)
   Liquid::Template.register_tag('yield', YieldTag)
+  Liquid::Template.register_tag('form_for', FormForTag)
+  Liquid::Template.register_tag('input', InputTag)
+  Liquid::Template.register_tag('submit', SubmitTag)
+  Liquid::Template.register_tag('fields_for', FieldsForTag)
+
 
   def self.call(template)
     "LiquidView.new(self).render(#{template.source.inspect}, local_assigns)"
@@ -42,6 +45,7 @@ class LiquidView
     assigns['current_url'] = @view.try(:controller).try(:request).try(:original_url)
     assigns['current_path'] = @view.try(:controller).try(:request).try(:path)
     assigns['current_user'] = @view.try(:controller).try(:current_user)
+    assigns['build_new_user'] = User.new.to_liquid
     assigns['flash'] = @view.try(:flash).try(:to_hash) if ApplicationController === @view.try(:controller)
     assigns['form_authenticity_token'] = @view.try(:controller).try(:form_authenticity_token)
     # this will need to be cached for performance reason

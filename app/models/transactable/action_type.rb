@@ -82,7 +82,6 @@ class Transactable::ActionType < ActiveRecord::Base
 
   def open_now?
     now = Time.now.in_time_zone(timezone)
-    date = now.to_date
     start_min = now.hour * 60 + now.min
     open_on?(now.to_date, start_min, start_min)
   end
@@ -99,6 +98,10 @@ class Transactable::ActionType < ActiveRecord::Base
     'ActionTypeJsonSerializer'
   end
 
+  def to_liquid
+    @action_type_drop ||= Transactable::ActionTypeDrop.new(self)
+  end
+
   protected
 
   def check_price_attributes(attribs)
@@ -106,3 +109,4 @@ class Transactable::ActionType < ActiveRecord::Base
   end
 
 end
+

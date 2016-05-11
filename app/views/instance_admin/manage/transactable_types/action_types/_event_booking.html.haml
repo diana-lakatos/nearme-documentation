@@ -1,4 +1,4 @@
-%h4= t('instance_admin.manage.service_types.pricing')
+%h4= t('instance_admin.manage.transactable_types.pricing')
 .nested-fields-set
   = f.simple_fields_for :pricings do |pricing|
     .nested-container
@@ -22,3 +22,4 @@
         .col-md-1
           = pricing.input :allow_exclusive_price, as: :boolean, :inline_label => true
 = render 'dashboard/company/transactables/schedule_form', f: f, schedule: f.object.schedule || f.object.build_schedule
+= render "instance_admin/manage/transactable_types/common_settings", f: f

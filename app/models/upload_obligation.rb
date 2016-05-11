@@ -28,7 +28,7 @@ class UploadObligation < ActiveRecord::Base
     if PlatformContext.current.instance.documents_upload.present? &&
       PlatformContext.current.instance.documents_upload.is_mandatory?
       LEVELS[0]
-    elsif PlatformContext.current.instance.documents_upload.present? && 
+    elsif PlatformContext.current.instance.documents_upload.present? &&
       PlatformContext.current.instance.documents_upload.is_optional?
       LEVELS[1]
     else

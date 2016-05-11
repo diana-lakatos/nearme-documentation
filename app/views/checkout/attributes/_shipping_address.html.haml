@@ -1,0 +1,21 @@
+%div{data: {shipping_address: 'true'}}
+  - if @order.billing_address.valid?
+    = f.input :use_billing, as: :boolean, inline_label: t('buy_sell_market.checkout.labels.billing_address_shipping'), label: false
+    = shipment.input :is_insured, as: :bootstrap_switch, label: t('simple_form.labels.shipment.is_insured')
+    = shipment.input :direction, as: :hidden
+
+  #shipping-address
+    = f.simple_fields_for :shipping_address, f.object.shipping_address || current_user.shipping_addresses.first.dup do |s|
+      = s.input :firstname, placeholder: t('buy_sell_market.checkout.placeholders.first_name')
+      = s.input :lastname, placeholder: t('buy_sell_market.checkout.placeholders.last_name')
+      = s.input :street1, placeholder: t('buy_sell_market.checkout.placeholders.street1')
+      = s.input :street2, placeholder: t('buy_sell_market.checkout.placeholders.street1')
+      = s.input :city, placeholder: t('buy_sell_market.checkout.placeholders.city')
+      = s.input :zip, required: true, placeholder: t('buy_sell_market.checkout.placeholders.zip')
+      = s.input :company
+      = s.association :country, collection: @countries, input_html: { class: 'checkout-select', data: { get_states_url: get_states_order_checkout_url(@order, format: :js)} }
+      = s.association :state, collection: @shipping_states, include_blank: false, input_html: { class: 'checkout-select' }
+      = s.input :phone, as: :string
+      = s.input :email, as: :string
+      = s.input :shippo_id, as: :hidden
+      = s.input :user_id, as: :hidden, input_html: { value: current_user.id }

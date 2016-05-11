@@ -4,41 +4,41 @@
   %h1= yield :title
 
 
-= dashboard_simple_form_for @reservation_form, url: submit_complete_reservation_dashboard_company_host_reservation_path(@reservation) do |f|
+= dashboard_simple_form_for @reservation, url: submit_complete_reservation_dashboard_company_host_reservation_path(@reservation) do |f|
   .panel{ 'data-complete-reservation' => true }
     .panel-body
       = render 'dashboard/company/host_reservations/complete_reservation_top'
 
       %h2= t('dashboard.host_reservations.complete_reservation.time_log')
-      .periods.nested-fields-set
-        = f.simple_fields_for :periods do |period_form|
-          = render 'reservation_period', f: period_form
+      .transactable-line-items.nested-fields-set
+        = f.simple_fields_for :transactable_line_items do |transactable_line_item_form|
+          = render 'transactable_line_item', f: transactable_line_item_form
         .add-link
-          = link_to_add_association t('dashboard.host_reservations.complete_reservation.add_new_period') , f, :periods, partial: 'reservation_period', id: "add_new_period", class: 'btn btn-primary', force_non_association_create: true
+          = link_to_add_association t('dashboard.host_reservations.complete_reservation.add_new_period') , f, :transactable_line_items, partial: 'transactable_line_item', id: "add_new_transactable_line_item", class: 'btn btn-primary'
       %hr
 
-      - if @reservation.display_additional_charges?
+      - if true#@reservation.display_additional_charges?
         %h2= t('dashboard.host_reservations.complete_reservation.expenses')
-        .additional-charges.nested-fields-set
-          = f.simple_fields_for :additional_charges do |charge_form|
-            = render 'additional_charge', charge: charge_form.object, f: charge_form
+        .additional-line-items.nested-fields-set
+          = f.simple_fields_for :additional_line_items do |additional_line_item_form|
+            = render 'additional_line_item', f: additional_line_item_form
           .add-link
-            = link_to_add_association t('dashboard.host_reservations.complete_reservation.add_new_charge') , f, :additional_charges, partial: 'additional_charge', id: "add_new_additional_charge", class: 'btn btn-primary', force_non_association_create: true
+            = link_to_add_association t('dashboard.host_reservations.complete_reservation.add_new_charge') , f, :additional_line_items, partial: 'additional_line_item', id: "add_new_additional_charge", class: 'btn btn-primary'
         %hr
       .row-fluid.total
-        - if @reservation_form.errors[:sub_total].present?
+        - if @reservation.errors[:total_cost].present?
           .col-xs-6.col-sm-2.col-sm-offset-8.text-right.has-error
             .help-block= t('dashboard.host_reservations.complete_reservation.total_cost')
           .col-xs-6.col-sm-2.has-error
             .amount.help-block{ data: { currency: @reservation.unit_price.symbol } }
               = @reservation.total_cost
-            %small.help-block= @reservation_form.errors[:sub_total].join(', ')
+            %small.help-block= @reservation.errors[:total_cost].join(', ')
         - else
           .col-xs-6.col-sm-2.col-sm-offset-8.text-right
             = t('dashboard.host_reservations.complete_reservation.total_cost')
           .col-xs-6.col-sm-2
             .amount{ data: { currency: @reservation.unit_price.symbol } }
-              = @reservation.total_cost
+              = humanized_money_with_cents_and_symbol(@reservation.unit_price)
 
       %hr
 

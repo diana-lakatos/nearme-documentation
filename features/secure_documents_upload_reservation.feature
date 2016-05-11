@@ -7,9 +7,9 @@ Feature: Secure documents upload
     Given a user exists
       And a company exists with creator: the user
       And a transactable_type_listing exists with name: "Listing"
+      And a payment_documents are turned on for reservation_type
       And a location exists with company: the company
       And the transactable_with_doc_requirements exists with location: the location
-      And product exists with name: "Awesome product"
 
   Scenario: User can make reservation and attach mandatory document
     Given a documents upload is mandatory

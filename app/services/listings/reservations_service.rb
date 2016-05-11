@@ -32,7 +32,7 @@ class Listings::ReservationsService
 
   def build_default_document_requirement
     document = @reservation_request.reservation.payment_documents.build
-    document_requirement = @reservation_request.reservation.listing.document_requirements.build({
+    document_requirement = @reservation_request.reservation.transactable.document_requirements.build({
       label: I18n.t("upload_documents.file.default.label"),
       description: I18n.t("upload_documents.file.default.description")
     })

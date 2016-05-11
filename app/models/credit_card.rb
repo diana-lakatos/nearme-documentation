@@ -1,11 +1,8 @@
 class CreditCard < ActiveRecord::Base
   include Encryptable
+  include Modelable
 
   attr_accessor :client
-
-  auto_set_platform_context
-  scoped_to_platform_context
-  acts_as_paranoid
 
   attr_encrypted :response
 
@@ -44,6 +41,25 @@ class CreditCard < ActiveRecord::Base
     end
   end
 
+  def store!
+    return true  if success?
+    return false if payment_gateway.blank?
+
+    original_response = payment_gateway.store(active_merchant_card, instance_client)
+    self.response = original_response.to_yaml
+
+    if success?
+      if self.instance_client.response.blank?
+        self.instance_client.response ||= self.response
+        self.instance_client.save!
+      end
+      true
+    else
+      errors.add(:base, original_response.params['error']['message'])
+      false
+    end
+  end
+
   def set_as_default
     self.default_card = true
   end
@@ -71,7 +87,8 @@ class CreditCard < ActiveRecord::Base
   end
 
   def success?
-    if response.present?
+    has_response = response.present? rescue false
+    if has_response
       !!YAML.load(response).try(&:success?)
     else
       false
@@ -98,25 +115,6 @@ class CreditCard < ActiveRecord::Base
 
   def expired?
     !!expires_at && expires_at < Time.now
-  end
-
-  def store!
-    return true  if success?
-    return false if payment_gateway.blank?
-
-    original_response = payment_gateway.store(active_merchant_card, instance_client)
-    self.response = original_response.to_yaml
-
-    if success?
-      if self.instance_client.response.blank?
-        self.instance_client.response ||= self.response
-        self.instance_client.save!
-      end
-      true
-    else
-      errors.add(:base, original_response.params['error']['message'])
-      false
-    end
   end
 
   def delete!
@@ -147,7 +145,11 @@ class CreditCard < ActiveRecord::Base
   end
 
   def set_instance_client
-    self.instance_client ||= payment_gateway.instance_clients.where(client: client,  test_mode: test_mode?).first_or_initialize
+    return false if payment_gateway.blank?
+
+    self.instance_client ||= payment_gateway.instance_clients.where(
+      client: client,  test_mode: test_mode?).first_or_initialize(
+      client: client,  test_mode: test_mode?)
     true
   end
 

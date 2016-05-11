@@ -13,7 +13,7 @@ class WorkflowStep::ReservationWorkflow::ShippingDetails < WorkflowStep::Reserva
   # outbound_shipping_details:
   #   Shipping details for the rented item
   def data
-    { reservation: @reservation, user: lister, host: enquirer, listing: @reservation.listing, inbound_shipping: @reservation.shipments.inbound.first, outbound_shipping: @reservation.shipments.outbound.first }
+    { reservation: @reservation, user: lister, host: enquirer, listing: @reservation.transactable, inbound_shipping: @reservation.shipments.inbound.first, outbound_shipping: @reservation.shipments.outbound.first }
   end
 
 end

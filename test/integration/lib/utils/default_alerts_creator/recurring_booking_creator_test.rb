@@ -41,9 +41,9 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
       end
       mail = ActionMailer::Base.deliveries.last
       assert_contains @recurring_booking.owner.first_name, mail.html_part.body
-      assert_contains @recurring_booking.listing.name, mail.html_part.body
+      assert_contains @recurring_booking.transactable.name, mail.html_part.body
       assert_equal [@recurring_booking.owner.email], mail.to
-      assert_equal "[#{@platform_context.decorate.name}] Your recurring booking for '#{@recurring_booking.listing.name}' at #{@recurring_booking.location.street} was cancelled by the host", mail.subject
+      assert_equal "[#{@platform_context.decorate.name}] Your recurring booking for '#{@recurring_booking.transactable.name}' at #{@recurring_booking.location.street} was cancelled by the host", mail.subject
     end
 
     should "#notify_host_of_cancellation_by_host" do
@@ -52,8 +52,8 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
         WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::HostCancelled, @recurring_booking.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains @recurring_booking.listing.administrator.first_name, mail.html_part.body
-      assert_equal [@recurring_booking.listing.administrator.email], mail.to
+      assert_contains @recurring_booking.transactable.administrator.first_name, mail.html_part.body
+      assert_equal [@recurring_booking.transactable.administrator.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] You just declined a recurring booking", mail.subject
     end
 
@@ -75,9 +75,9 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
       end
       mail = ActionMailer::Base.deliveries.last
 
-      assert_contains @recurring_booking.listing.creator.first_name, mail.html_part.body
-      assert_equal [@recurring_booking.listing.creator.email], mail.to
-      assert_equal "[#{@platform_context.decorate.name}] #{@recurring_booking.owner.first_name} cancelled a recurring booking for '#{@recurring_booking.listing.name}' at #{@recurring_booking.location.street}", mail.subject
+      assert_contains @recurring_booking.transactable.creator.first_name, mail.html_part.body
+      assert_equal [@recurring_booking.transactable.creator.email], mail.to
+      assert_equal "[#{@platform_context.decorate.name}] #{@recurring_booking.owner.first_name} cancelled a recurring booking for '#{@recurring_booking.transactable.name}' at #{@recurring_booking.location.street}", mail.subject
     end
 
     should "#notify_guest_of_expiration" do
@@ -88,10 +88,10 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
       mail = ActionMailer::Base.deliveries.last
 
       assert_contains @recurring_booking.owner.first_name, mail.html_part.body
-      assert_contains @recurring_booking.listing.name, mail.html_part.body
+      assert_contains @recurring_booking.transactable.name, mail.html_part.body
 
       assert_equal [@recurring_booking.owner.email], mail.to
-      assert_equal "[#{@platform_context.decorate.name}] Your recurring booking for '#{@recurring_booking.listing.name}' at #{@recurring_booking.location.street} has expired", mail.subject
+      assert_equal "[#{@platform_context.decorate.name}] Your recurring booking for '#{@recurring_booking.transactable.name}' at #{@recurring_booking.location.street} has expired", mail.subject
     end
 
     should 'notify_guest_recurring_booking_created_and_confirmed_email!' do
@@ -110,7 +110,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
         WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithAutoConfirmation, @recurring_booking.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains @recurring_booking.listing.creator.first_name, mail.html_part.body
+      assert_contains @recurring_booking.transactable.creator.first_name, mail.html_part.body
       assert_equal [@recurring_booking.host.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@recurring_booking.owner.first_name} just booked your #{@platform_context.decorate.bookable_noun}!", mail.subject
     end
@@ -121,8 +121,8 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
         WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithoutAutoConfirmation, @recurring_booking.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains @recurring_booking.listing.creator.first_name, mail.html_part.body
-      assert_equal [@recurring_booking.listing.creator.email], mail.to
+      assert_contains @recurring_booking.transactable.creator.first_name, mail.html_part.body
+      assert_equal [@recurring_booking.transactable.creator.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@recurring_booking.owner.first_name} just booked your #{@platform_context.decorate.bookable_noun}!", mail.subject
     end
 
@@ -133,7 +133,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
       end
       mail = ActionMailer::Base.deliveries.last
 
-      assert_contains @recurring_booking.listing.name, mail.html_part.body
+      assert_contains @recurring_booking.transactable.name, mail.html_part.body
       assert_equal [@recurring_booking.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@recurring_booking.owner.first_name}, your recurring booking is pending confirmation", mail.subject
     end
@@ -155,8 +155,8 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
       end
       mail = ActionMailer::Base.deliveries.last
 
-      assert_contains @recurring_booking.listing.creator.first_name, mail.html_part.body
-      assert_equal [@recurring_booking.listing.creator.email], mail.to
+      assert_contains @recurring_booking.transactable.creator.first_name, mail.html_part.body
+      assert_equal [@recurring_booking.transactable.creator.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] Thanks for confirming!", mail.subject
     end
 
@@ -173,7 +173,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
         end
         mail = ActionMailer::Base.deliveries.last
 
-        assert_contains @recurring_booking.listing.name, mail.html_part.body
+        assert_contains @recurring_booking.transactable.name, mail.html_part.body
         assert_contains 'They said:', mail.html_part.body
         assert_contains @recurring_booking.rejection_reason, mail.html_part.body
 
@@ -188,7 +188,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
         end
         mail = ActionMailer::Base.deliveries.last
 
-        assert_contains @recurring_booking.listing.name, mail.html_part.body
+        assert_contains @recurring_booking.transactable.name, mail.html_part.body
         assert_does_not_contain 'They said:', mail.html_part.body
         assert_does_not_contain @recurring_booking.rejection_reason, mail.html_part.body
 
@@ -196,19 +196,19 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
         assert_equal "[#{@platform_context.decorate.name}] Can we help, #{@recurring_booking.owner.first_name}?", mail.subject
       end
 
-      should 'include nearme listings when it is present' do
-        @listing = FactoryGirl.create(:transactable)
-        User.any_instance.stubs(:listings_in_near).returns([@listing])
+      should 'include nearme transactables when it is present' do
+        @transactable = FactoryGirl.create(:transactable)
+        User.any_instance.stubs(:listings_in_near).returns([@transactable])
 
         assert_difference 'ActionMailer::Base.deliveries.size' do
           WorkflowStepJob.perform(::WorkflowStep::RecurringBookingWorkflow::Rejected, @recurring_booking.id)
         end
         mail = ActionMailer::Base.deliveries.last
 
-        assert_contains @listing.name, mail.html_part.body
+        assert_contains @transactable.name, mail.html_part.body
       end
 
-      should 'not include nearme listings when it is not present' do
+      should 'not include nearme transactables when it is not present' do
         @recurring_booking.owner.stubs(listings_in_near: [])
         assert_difference 'ActionMailer::Base.deliveries.size' do
           WorkflowStepJob.perform(::WorkflowStep::RecurringBookingWorkflow::Rejected, @recurring_booking.id)
@@ -225,10 +225,10 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
         WorkflowStepJob.perform(::WorkflowStep::RecurringBookingWorkflow::Rejected, @recurring_booking.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains @recurring_booking.listing.name, mail.html_part.body
+      assert_contains @recurring_booking.transactable.name, mail.html_part.body
 
-      assert_equal [@recurring_booking.listing.administrator.email], mail.to
-      assert_equal "[#{@platform_context.decorate.name}] Can we help, #{@recurring_booking.listing.administrator.first_name}?", mail.subject
+      assert_equal [@recurring_booking.transactable.administrator.email], mail.to
+      assert_equal "[#{@platform_context.decorate.name}] Can we help, #{@recurring_booking.transactable.administrator.first_name}?", mail.subject
     end
 
     context 'sms' do
@@ -263,8 +263,8 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
           WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithoutAutoConfirmation, @recurring_booking.id)
         end
       end
-      context '#notify_guest_of_manual_confirmation_sms' do
 
+      context '#notify_guest_of_manual_confirmation_sms' do
         setup do
           @recurring_booking_creator.notify_guest_recurring_booking_confirmed_sms!
         end
@@ -279,7 +279,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
           @recurring_booking.update_column(:state, 'confirmed')
           sms = WorkflowAlert::SmsInvoker.new(WorkflowAlert.where(alert_type: 'sms').last).invoke!(WorkflowStep::RecurringBookingWorkflow::ManuallyConfirmed.new(@recurring_booking.id))
           assert_equal "+1987654421", sms.to
-          assert sms.body =~ Regexp.new("Your recurring booking for #{@recurring_booking.listing.name} was Confirmed. View booking:"), "wrong body: #{sms.body}"
+          assert sms.body =~ Regexp.new("Your recurring booking for #{@recurring_booking.transactable.name} was Confirmed. View booking:"), "wrong body: #{sms.body}"
           assert sms.body =~ /http:\/\/goo.gl/, "Sms body does not include http://goo.gl: #{sms.body}"
         end
 

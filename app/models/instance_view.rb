@@ -96,7 +96,6 @@ class InstanceView < ActiveRecord::Base
     'listings/social_buttons' => {
       listing: 'TransactableDrop'
     },
-
     'listings/booking_module_listing_description' => {
       listing: 'TransactableDrop'
     },
@@ -137,9 +136,6 @@ class InstanceView < ActiveRecord::Base
     'listings/administrator' => {
       administrator: 'UserDrop',
       listing: 'TransactableDrop'
-    },
-    'buy_sell_market/products/extra_properties' => {
-      product: 'Spree::ProductDrop'
     },
     'search/mixed/location' => {
       location: 'LocationDrop',
@@ -378,37 +374,6 @@ class InstanceView < ActiveRecord::Base
       is_current_user: 'boolean; true if logged in user is viewing user',
       company: 'CompanyDrop',
       is_partial: true
-    },
-    'buy_sell_market/products/above_cart_management' => {
-      'product': 'Spree::ProductDrop',
-    },
-    'buy_sell_market/products/above_social_buttons' => {
-      'product': 'Spree::ProductDrop',
-    },
-    'buy_sell_market/products/above_wish_lists' => {
-      'product': 'Spree::ProductDrop',
-    },
-    'buy_sell_market/products/below_cart_module' => {
-      'product': 'Spree::ProductDrop',
-    },
-    'buy_sell_market/products/extra_tab_panes' => {
-      'product': 'Spree::ProductDrop',
-    },
-    'buy_sell_market/products/extra_tab_titles' => {
-      'product': 'Spree::ProductDrop',
-    },
-    'buy_sell_market/products/name_and_price' => {
-      'product': 'Spree::ProductDrop',
-    },
-    'buy_sell_market/products/product_description' => {
-      'product': 'Spree::ProductDrop',
-    },
-    'buy_sell_market/products/seller_attachments' => {
-      'product': 'Spree::ProductDrop',
-      'attachments': 'list of seller attachments',
-    },
-    'buy_sell_market/products/administrator_badge' => {
-      'product': 'Spree::ProductDrop',
     },
     'home/index' => {
       is_partial: false

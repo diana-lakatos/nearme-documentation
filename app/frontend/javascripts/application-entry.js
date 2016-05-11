@@ -235,23 +235,26 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    var form = $('#boarding_form');
-    if (form.length === 0) {
+    var els = $('.order_shipments_shipping_rule_id');
+    if (els.length === 0) {
         return;
     }
+    require.ensure('./sections/checkout/delivery_controller', function(require){
+        var DeliveryController = require('./sections/checkout/delivery_controller');
+        els.closest('section[data-form-component-name]').each(function(){
+            return new DeliveryController(this);
+        });
+    });
+});
 
-    require.ensure([
-        './sections/buy_sell/boarding_form',
-        './sections/buy_sell/shippo_fields_manager',
-        './sections/categories'], function(require){
-        var
-            BoardingForm = require('./sections/buy_sell/boarding_form'),
-            ShippoFieldsManager = require('./sections/buy_sell/shippo_fields_manager'),
-            CategoriesController = require('./sections/categories');
-
-        new BoardingForm(form);
-        new CategoriesController(form);
-        new ShippoFieldsManager(form.data('dimensions-template'));
+DNM.registerInitializer(function(){
+    var els = $('#checkout-form .document-requirements');
+    if (els.length === 0) {
+        return;
+    }
+    require.ensure('./sections/checkout/payment_documents_controller', function(require){
+        var PaymentDocumentsController = require('./sections/checkout/payment_documents_controller');
+        return new PaymentDocumentsController(els);
     });
 });
 
@@ -519,16 +522,16 @@ DNM.registerInitializer(function(){
         toggleShippingAddress();
     });
 
-    function loadStatesForCountry(country_id, bill_address) {
-        $.get('get_states.js', { country_id: country_id, bill_address: bill_address });
+    function loadStatesForCountry(country_id, url, bill_address) {
+        $.get(url, { country_id: country_id, bill_address: bill_address });
     }
 
-    $('#order_bill_address_attributes_country_id').on('change', function() {
-        loadStatesForCountry($(this).val(), 1);
+    $('#order_billing_address_attributes_country_id').on('change', function() {
+        loadStatesForCountry($(this).val(), $(this).data('get-states-url'),1);
     });
 
-    $('#order_ship_address_attributes_country_id').on('change', function() {
-        loadStatesForCountry($(this).val(), 0);
+    $('#order_shipping_address_attributes_country_id').on('change', function() {
+        loadStatesForCountry($(this).val(), $(this).data('get-states-url'), 0);
     });
 
     toggleShippingAddress();
@@ -557,7 +560,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    var el = $('#new_reservation_request');
+    var el = $('#checkout-form');
     if (el.length === 0) {
         return;
     }

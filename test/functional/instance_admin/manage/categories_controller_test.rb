@@ -11,7 +11,7 @@ class InstanceAdmin::Manage::CategoriesControllerTest < ActionController::TestCa
   end
 
   should '#index' do
-    @category = FactoryGirl.create(:category, service_type_ids: [@categorizable.id])
+    @category = FactoryGirl.create(:category, transactable_type_ids: [@categorizable.id])
     get :index
     assert_response :success
     assert_equal [@category], assigns(:categories)
@@ -20,7 +20,7 @@ class InstanceAdmin::Manage::CategoriesControllerTest < ActionController::TestCa
   context 'create' do
     should 'create new category' do
       assert_difference 'Category.count' do
-        post :create, category: { name: 'Desks', service_type_ids: [@categorizable.id] }
+        post :create, category: { name: 'Desks', transactable_type_ids: [@categorizable.id] }
       end
       category = assigns(:category)
       assert_equal 'Desks', category.name
@@ -39,7 +39,7 @@ class InstanceAdmin::Manage::CategoriesControllerTest < ActionController::TestCa
 
   context 'existing category' do
     setup do
-      @category = FactoryGirl.create(:category, service_type_ids: [@categorizable.id])
+      @category = FactoryGirl.create(:category, transactable_type_ids: [@categorizable.id])
     end
 
     should 'edit' do

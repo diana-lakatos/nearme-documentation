@@ -220,30 +220,6 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    var form = $('#product_form, #boarding_form');
-    if (form.length === 0) {
-        return;
-    }
-
-    require.ensure([
-        './sections/dashboard/address_controller',
-        './sections/buy_sell/boarding_form',
-        './sections/buy_sell/shippo_fields_manager',
-        './sections/categories'], function(require){
-        var
-            AddressController = require('./sections/dashboard/address_controller'),
-            BoardingForm = require('./sections/buy_sell/boarding_form'),
-            ShippoFieldsManager = require('./sections/buy_sell/shippo_fields_manager'),
-            CategoriesController = require('./sections/categories');
-
-        new AddressController(form);
-        new BoardingForm(form);
-        new CategoriesController(form);
-        new ShippoFieldsManager(form.data('dimensions-template'));
-    });
-});
-
-DNM.registerInitializer(function(){
     var el = $('input[data-tags]');
     if (el.length === 0) {
         return;

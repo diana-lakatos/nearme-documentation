@@ -1,1 +1,1 @@
-[{{ platform_context.name }}] Your recurring booking for {{ recurring_booking.listing.name }} was {{ recurring_booking.state_to_string }}. View booking: {{ platform_context.host | append:recurring_booking.bookings_dashboard_url | shorten_url}}
+[{{ platform_context.name }}] Your recurring booking for {{ recurring_booking.transactable.name }} was {{ recurring_booking.state_to_string }}. View booking: {{ platform_context.host | append:recurring_booking.bookings_dashboard_url | shorten_url}}

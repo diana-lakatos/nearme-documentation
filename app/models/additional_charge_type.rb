@@ -11,8 +11,7 @@ class AdditionalChargeType < ActiveRecord::Base
 
   # additional_charge_type_target polymorphic relation can join AdditionalChargeType with:
   # - Instance
-  # - ProductType/TransactableType
-  # - Product/Service
+  # - TransactableType
   belongs_to :additional_charge_type_target, polymorphic: true, touch: true
   has_many :additional_charges
 
@@ -25,7 +24,7 @@ class AdditionalChargeType < ActiveRecord::Base
   validate :additional_charge_type_target_presence
 
   scope :admin_charges, -> {
-    where(additional_charge_type_target_type: ['TransactableType', 'ServiceType', 'Spree::ProductType', 'Instance'])
+    where(additional_charge_type_target_type: ['TransactableType', 'Instance'])
   }
   scope :mandatory_charges, -> { where(status: 'mandatory') }
   scope :optional_charges, -> { where(status: 'optional') }

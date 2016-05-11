@@ -7,7 +7,7 @@ class TransactableDestroyerService
   end
 
   def destroy
-    @transactable.reservations.each do |r|
+    @transactable.orders.reservations.each do |r|
       r.perform_expiry!
     end
     @transactable.destroy

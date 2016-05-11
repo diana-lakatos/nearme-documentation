@@ -20,8 +20,7 @@ class Category < ActiveRecord::Base
   validates :name, presence: true
 
   has_many :category_linkings
-  has_many :service_types, through: :category_linkings
-  has_many :product_types, through: :category_linkings, class_name: 'Spree::ProductType'
+  has_many :transactable_types, through: :category_linkings
   has_many :project_types, through: :category_linkings
   has_many :offer_types, through: :category_linkings
   has_many :instance_profile_types, through: :category_linkings
@@ -39,9 +38,8 @@ class Category < ActiveRecord::Base
   # Scopes
 
   scope :mandatory, -> { where(mandatory: true) }
-  scope :products, -> { joins(:category_linkings).where(category_linkings: { category_linkable_type: 'Spree::ProductType' } ) }
   scope :searchable, -> { where(search_options: 'include') }
-  scope :services, -> { joins(:category_linkings).where(category_linkings: { category_linkable_type: 'ServiceType' } ) }
+  scope :transactables, -> { joins(:category_linkings).where(category_linkings: { category_linkable_type: 'TransactableType' } ) }
   scope :users, -> { joins(:category_linkings).where(category_linkings: { category_linkable: PlatformContext.current.instance.default_profile_type } ) }
   scope :sellers, -> { joins(:category_linkings).where(category_linkings: { category_linkable: PlatformContext.current.instance.seller_profile_type } ) }
   scope :buyers, -> { joins(:category_linkings).where(category_linkings: { category_linkable: PlatformContext.current.instance.buyer_profile_type } ) }

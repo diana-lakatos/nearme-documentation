@@ -29,7 +29,7 @@ class Instance < ActiveRecord::Base
   SEARCH_TYPES = %w(geo fulltext fulltext_geo fulltext_category geo_category)
   SEARCH_ENGINES = %w(postgresql elasticsearch)
   SEARCH_MODULES = { 'elasticsearch' => 'Elastic' }
-  SEARCHABLE_CLASSES = ['TransactableType', 'ServiceType', 'Spree::ProductType', 'InstanceProfileType', 'OfferType']
+  SEARCHABLE_CLASSES = ['TransactableType', 'InstanceProfileType']
 
   API_KEYS.each do |meth|
     define_method(meth) do
@@ -61,7 +61,7 @@ class Instance < ActiveRecord::Base
   has_many :instance_admin_roles, :inverse_of => :instance
   has_many :reservations, :as => :platform_context_detail
   has_many :reservation_types, inverse_of: :instance
-  has_many :orders, :as => :platform_context_detail
+  # has_many :orders, :as => :platform_context_detail
   has_many :payments, :through => :reservations, :inverse_of => :instance
   has_many :instance_clients, :dependent => :destroy, :inverse_of => :instance
   has_many :translations, :dependent => :destroy, :inverse_of => :instance
@@ -71,9 +71,7 @@ class Instance < ActiveRecord::Base
   has_many :faqs, class_name: 'Support::Faq'
   has_many :tickets, -> { where(target_type: 'Instance').order('created_at DESC') }, class_name: 'Support::Ticket'
   has_many :transactable_types
-  has_many :service_types
   has_many :action_types, class_name: 'TransactableType::ActionType'
-  has_many :product_types, class_name: "Spree::ProductType"
   has_many :project_types, class_name: "ProjectType"
   has_many :offer_types
   has_many :offers
@@ -125,6 +123,8 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :all_payment_gateways, allow_destroy: true
   accepts_nested_attributes_for :transactable_types
   accepts_nested_attributes_for :text_filters, allow_destroy: true
+
+  delegate :force_file_upload?, to: :documents_upload, allow_nil: true
 
   scope :with_support_imap, -> {  where("support_imap_username <> '' AND encrypted_support_imap_password  <> '' AND support_imap_server  <> '' AND support_imap_port IS NOT NULL") }
 
@@ -258,11 +258,11 @@ class Instance < ActiveRecord::Base
 
   #TODO remove buyable biddable etc.
   def buyable?
-    @buyable ||= product_types.any?
+    false
   end
 
   def bookable?
-    @bookable ||= action_types.bookable.any?
+    @bookable ||= action_types.any?
   end
 
   def projectable?
@@ -309,7 +309,7 @@ class Instance < ActiveRecord::Base
   end
 
   def action_rfq?
-    (product_types.pluck(:action_rfq) + action_types.enabled.pluck(:allow_action_rfq)).any?
+    action_types.enabled.where(allow_action_rfq: true).any?
   end
 
   def custom_translations=(translations)

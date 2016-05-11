@@ -8,7 +8,7 @@ class FormAttributes
   def user
     [
       :email, :phone, :avatar, :name, :first_name, :middle_name, :last_name, :approval_requests, :current_address,
-      :password, :public_profile, :time_zone, :language, :mobile_phone
+      :password, :public_profile, :time_zone, :language, :mobile_number, :company_name
     ] + UserProfile.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
     extra_attributes(Category.users.roots, 'Category') +
     extra_attributes(CustomModelType.users, 'Custom Model')
@@ -51,7 +51,7 @@ class FormAttributes
       :name, :description, :availability_rules, :price, :currency, :photos,
       :approval_requests, :quantity, :book_it_out, :exclusive_price, :action_rfq,
       :confirm_reservations, :capacity, :rental_shipping_type, :seller_attachments,
-      :additional_charges, :minimum_booking_minutes, :deposit_amount
+      :additional_charges, :minimum_booking_minutes, :deposit_amount, :shipping_info
     ] +
     Transactable.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
     extra_attributes(transactable_type.categories.roots, 'Category') +
@@ -63,31 +63,12 @@ class FormAttributes
       :confirm_reservations, :name, :description, :location_id, :approval_requests,
       :enabled, :amenity_types, :price, :currency, :schedule, :photos,
       :waiver_agreement_templates, :documents_upload, :quantity, :book_it_out,
-      :exclusive_price, :action_rfq, :capacity, :rental_shipping_type, :seller_attachments,
-      :additional_charges, :minimum_booking_minutes, :deposit_amount
+      :exclusive_price, :action_rfq, :capacity, :seller_attachments,
+      :additional_charges, :minimum_booking_minutes, :deposit_amount, :shipping_info
     ] +
     Transactable.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
     extra_attributes(transactable_type.categories.roots, 'Category') +
     extra_attributes(transactable_type.custom_model_types, 'Custom Model')
-  end
-
-  def product(product_type = nil)
-    [
-      :name,
-      :description,
-      :photos,
-      :price,
-      :quantity,
-      :integrated_shipping,
-      :shipping_info,
-      :action_rfq,
-      :documents_upload,
-      :seller_attachments,
-      :additional_charges
-    ] +
-    Spree::Product.public_custom_attributes_names(product_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
-    extra_attributes(product_type.categories.roots, 'Category') +
-    extra_attributes(product_type.custom_model_types, 'Custom Model')
   end
 
   def project(transactable_type = nil)
@@ -99,17 +80,9 @@ class FormAttributes
     extra_attributes(transactable_type.custom_model_types, 'Custom Model')
   end
 
-  def offer(offer_type = nil)
-    [
-      :name, :description, :summary, :photos, :price, :price_cents, :currency, :seller_attachments, :documents_upload
-    ] +
-    Offer.public_custom_attributes_names(offer_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
-    extra_attributes(offer_type.categories.roots, 'Category') +
-    extra_attributes(offer_type.custom_model_types, 'Custom Model')
-  end
-
   def reservation(reservation_type = nil)
-    [:address, :dates, :guest_notes] +
+    [:address, :dates, :guest_notes, :waiver_agreements, :payments, :payment_documents,
+      :billing_address, :shipping, :shipping_options] +
     extra_attributes(reservation_type.categories.roots, 'Category') +
     reservation_type.custom_attributes.public_display.pluck(:name) +
     extra_attributes(reservation_type.custom_model_types, 'Custom Model')

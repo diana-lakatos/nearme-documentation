@@ -7,11 +7,11 @@ module Controller
     def initialize(user, recurring_booking = nil)
       @user = user
       if recurring_booking
-        @reservations_scope = recurring_booking.reservations.includes(:listing => :location)
+        @reservations_scope = recurring_booking.reservations.includes(:transactable => :location)
       else
-        reservations = @user.listing_reservations.order('reservations.updated_at DESC')
-        @reservations_scope = reservations.includes(:listing => :location).no_recurring
-        @recurring_bookings_scope = @user.listing_recurring_bookings.includes(:listing => :location)
+        reservations = @user.listing_orders.reservations.order('orders.updated_at DESC')
+        @reservations_scope = reservations.includes(:transactable => :location)
+        @recurring_bookings_scope = @user.listing_recurring_bookings.includes(:transactable => :location).order('orders.created_at DESC')
       end
     end
 
@@ -37,14 +37,14 @@ module Controller
     def confirmed
       {
         reservations: @reservations_scope.upcoming.with_state(:confirmed),
-        recurring_bookings: @recurring_bookings_scope ? @recurring_bookings_scope.with_state(:confirmed).order('start_on ASC').decorate : []
+        recurring_bookings: @recurring_bookings_scope ? @recurring_bookings_scope.with_state(:confirmed).order('starts_at ASC').decorate : []
       }
     end
 
     def archived
       {
         reservations: @reservations_scope.archived,
-        recurring_bookings: @recurring_bookings_scope ? @recurring_bookings_scope.with_state(:rejected, :cancelled_by_host, :expired, :cancelled_by_guest).order('end_on DESC').decorate : []
+        recurring_bookings: @recurring_bookings_scope ? @recurring_bookings_scope.with_state(:rejected, :cancelled_by_host, :expired, :cancelled_by_guest).order('ends_at DESC').decorate : []
       }
     end
 

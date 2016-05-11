@@ -15,7 +15,6 @@ class InstanceAdmin::BaseController < ApplicationController
 
   REPORTS_CONTROLLERS = {
     'transactables' => { default_action: 'index', title: 'Listings' },
-    'products'      => { default_action: 'index' },
     'users'         => { default_action: 'index' },
   }
 
@@ -41,7 +40,7 @@ class InstanceAdmin::BaseController < ApplicationController
     'wish_lists'         => { controller: '/instance_admin/manage/wish_lists', default_action: 'show' },
     'user_profiles'      => { controller: '/instance_admin/manage/instance_profile_types', default_action: 'index' },
     'location'           => { controller: '/instance_admin/manage/location', default_action: 'show' },
-    'service_types'      => { controller: '/instance_admin/manage/service_types', default_action: 'index' },
+    'transactable_types' => { controller: '/instance_admin/manage/transactable_types', default_action: 'index' },
     'reservation_types'  => { controller: '/instance_admin/manage/reservation_types', default_action: 'index' },
     'custom_validators'  => { controller: '/instance_admin/manage/custom_validators', default_action: 'index', title: 'Custom Validators' },
     'categories'         => { controller: '/instance_admin/manage/categories', default_action: 'index', title: 'Categories' },
@@ -79,15 +78,6 @@ class InstanceAdmin::BaseController < ApplicationController
     'liquid views'           => { controller: '/instance_admin/theme/liquid_views', default_action: 'index' },
     'file upload'            => { controller: '/instance_admin/theme/file_uploads', default_action: 'index' },
     'photo_uploads'  => { controller: '/instance_admin/theme/photo_upload_versions', default_action: 'index', title: 'Photo Uploads' }
-  }
-
-  BUY_SELL_CONTROLLERS = {
-    'configuration'  => { default_action: 'show', controller_class: 'InstanceAdmin::BuySell::ConfigurationController' },
-    'commissions'    => { default_action: 'show' },
-    'tax_categories' => { default_action: 'index' },
-    'tax_rates'      => { default_action: 'index' },
-    'zones'          => { default_action: 'index' },
-    'product_types'  => { default_action: 'index' }
   }
 
   SHIPPING_OPTIONS_CONTROLLERS = {

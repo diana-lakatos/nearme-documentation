@@ -1,5 +1,6 @@
 class TransactableType < ActiveRecord::Base
   self.inheritance_column = :type
+  default_scope { where("transactable_types.type !='Spree::ProductType' or transactable_types.type is NULL") }
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
@@ -7,7 +8,7 @@ class TransactableType < ActiveRecord::Base
   acts_as_custom_attributes_set
 
   AVAILABLE_TYPES = ['Listing', 'Buy/Sell'].freeze
-  AVAILABLE_ACTION_TYPES = [NoActionBooking, SubscriptionBooking, EventBooking, TimeBasedBooking]
+  AVAILABLE_ACTION_TYPES = [NoActionBooking, SubscriptionBooking, EventBooking, TimeBasedBooking, PurchaseAction]
   SEARCH_VIEWS = %w(mixed list listing_mixed)
   AVAILABLE_SHOW_PATH_FORMATS = [
     "/transactable_types/:transactable_type_id/locations/:location_id/listings/:id",
@@ -31,6 +32,7 @@ class TransactableType < ActiveRecord::Base
   has_one :time_based_booking
   has_one :subscription_booking
   has_one :no_action_booking
+  has_one :purchase_action
 
   has_many :form_components, as: :form_componentable, dependent: :destroy
   has_many :data_uploads, as: :importable, dependent: :destroy
@@ -41,7 +43,7 @@ class TransactableType < ActiveRecord::Base
   has_many :custom_model_type_linkings, as: :linkable
   has_many :custom_model_types, through: :custom_model_type_linkings
   has_many :custom_validators, as: :validatable
-  has_many :additional_charge_types, as: :additional_charge_type_target
+  has_many :additional_charge_types, -> { where(additional_charge_type_target_type: "TransactableType")  }, foreign_key: :additional_charge_type_target_id
   has_many :transactable_type_instance_views, dependent: :destroy
   has_many :instance_views, through: :transactable_type_instance_views
   has_many :transactables, dependent: :destroy, foreign_key: 'transactable_type_id'
@@ -59,8 +61,6 @@ class TransactableType < ActiveRecord::Base
   before_validation :set_default_options
   after_create :create_translations!
 
-  scope :products, -> { where(type: 'Spree::ProductType') }
-  scope :services, -> { where(type: 'ServiceType') }
   scope :searchable, -> { where(searchable: true) }
   scope :by_position, -> { order('position ASC') }
   scope :order_by_array_of_names, -> (names) {
@@ -82,6 +82,12 @@ class TransactableType < ActiveRecord::Base
 
   delegate :translated_bookable_noun, :translation_namespace, :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
     :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
+
+  validate do
+    if type == 'TransactableType' && !(all_action_types.any?(&:enabled) || action_types.any?(&:enabled))
+      errors.add(:base, I18n.t('errors.messages.transactable_type_actions_blank'))
+    end
+  end
 
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :finders, :scoped], scope: :instance
@@ -150,7 +156,7 @@ class TransactableType < ActiveRecord::Base
   end
 
   def destroy_translations!
-    translation_manager.destroy_translations!
+    translation_manager.try(:destroy_translations!)
   end
 
   def self.mandatory_boolean_validation_rules
@@ -193,7 +199,7 @@ class TransactableType < ActiveRecord::Base
   end
 
   def signature
-    [id, type].join(",")
+    [id, "TransactableType"].join(",")
   end
 
   def available_search_views
@@ -205,7 +211,7 @@ class TransactableType < ActiveRecord::Base
   end
 
   def hide_location_availability?
-    skip_location? || !availability_options["defer_availability_rules"]
+    skip_location?
   end
 
   def initialize_action_types

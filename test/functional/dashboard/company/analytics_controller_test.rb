@@ -76,7 +76,7 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
       context 'assigned variables' do
 
         setup do
-          @reservation = FactoryGirl.create(:reservation, :currency => 'USD', :listing => @listing)
+          @reservation = FactoryGirl.create(:reservation, :currency => 'USD', :transactable => @listing)
         end
 
         should '@last_week_reservations includes user company reservations' do
@@ -89,7 +89,7 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
       context 'date' do
 
         setup do
-          @reservation_created_6_days_ago = FactoryGirl.create(:reservation, :currency => 'USD', :listing => @listing, :created_at => Time.zone.now - 6.day)
+          @reservation_created_6_days_ago = FactoryGirl.create(:reservation, :currency => 'USD', :transactable => @listing, :created_at => Time.zone.now - 6.day)
         end
 
         should '@last_week_reservations includes only reservations not older than 6 days' do
@@ -136,7 +136,7 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
     if amount = options.delete(:amount)
       options[:subtotal_amount] = amount
     end
-    FactoryGirl.create(:confirmed_reservation, currency: 'USD', listing: @listing, payment: FactoryGirl.build(:paid_payment, options)).payment
+    FactoryGirl.create(:confirmed_reservation, currency: 'USD', transactable: @listing, payment: FactoryGirl.build(:paid_payment, options)).payment
   end
 
   def create_location_visit

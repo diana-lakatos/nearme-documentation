@@ -1,1 +1,1 @@
-Your booking for {{ reservation.listing.name | truncate: 90 }} was {{ reservation.state_to_string }}. View booking: {{ platform_context.host | append:reservation.bookings_dashboard_url | shorten_url}}
+Your booking for {{ reservation.transactable.name | truncate: 90 }} was {{ reservation.state_to_string }}. View booking: {{ platform_context.host | append:reservation.bookings_dashboard_url | shorten_url}}

@@ -10,7 +10,7 @@
 #       @reservation = reservation
 #
 #       sms(
-#         :to => reservation.listing_owner.formatted_mobile_number
+#         :to => reservation.transactable_owner.formatted_mobile_number
 #       )
 #     end
 #   end

@@ -39,7 +39,7 @@ class EventTracker::BaseTracker::Serializers::TrackSerializer
       }
     when RecurringBooking
       {
-        booking_desks: object.quantity,
+        booking_ndesks: object.quantity,
         location_address: object.location.address,
         location_suburb: object.location.suburb,
         location_city: object.location.city,
@@ -51,7 +51,7 @@ class EventTracker::BaseTracker::Serializers::TrackSerializer
       {
         booking_desks: object.quantity,
         booking_days: object.total_days,
-        booking_total: object.total_amount_dollars,
+        booking_total: object.total_amount.try(:dollars),
         booking_currency: object.currency,
         location_address: object.location.address,
         location_suburb: object.location.suburb,
@@ -59,6 +59,12 @@ class EventTracker::BaseTracker::Serializers::TrackSerializer
         location_state: object.location.state,
         location_country: object.location.country,
         location_postcode: object.location.postcode
+      }
+    when Purchase
+      {
+        booking_desks: object.quantity,
+        booking_total: object.total_amount.try(:dollars),
+        booking_currency: object.currency,
       }
     when User
       {
@@ -69,7 +75,7 @@ class EventTracker::BaseTracker::Serializers::TrackSerializer
         created: object.created_at,
         location_number: object.locations.count,
         listing_number: object.listings.count,
-        bookings_total: object.reservations.count,
+        bookings_total: object.orders.reservations.count,
         bookings_confirmed: object.confirmed_reservations.count,
         bookings_rejected: object.rejected_reservations.count,
         bookings_expired: object.expired_reservations.count,

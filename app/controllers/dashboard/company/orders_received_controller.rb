@@ -1,15 +1,14 @@
 class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseController
   include Spree::Core::ControllerHelpers::StrongParameters
 
-  before_filter :find_order, only: [:show, :update, :destroy, :cancel, :resume, :approve]
+  before_filter :find_order, except: :index
 
   def index
-    @orders = @company.orders.complete.paginate(page: params[:page]).order('created_at DESC').decorate
+    @order_search_service = OrderSearchService.new(order_scope, params)
     render 'dashboard/orders/index'
   end
 
   def show
-
   end
 
   def edit
@@ -32,32 +31,75 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   end
 
   def cancel
-    @order.cancel!
+    @order.host_cancel!
     flash[:success] = t('flash_messages.manage.order.canceled')
-    redirect_to :back
+    redirect_to location_after_save
   end
 
-  def resume
-    @order.resume!
-    flash[:success] = t('flash_messages.manage.order.resumed')
-    redirect_to :back
-  end
-
-  def approve
-    @order.approved_by(current_user)
-    WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::Approved, @order.id)
+  def complete
+    @order.complete!
     flash[:success] = t('flash_messages.manage.order.approved')
-    redirect_to :back
+    redirect_to location_after_save
+  end
+
+
+  # TODO this is only used for Purchase but should confirm Reservation and ReservationRequest correctly
+  # The idea is to move all host action for all Order types here
+  def confirm
+    if @order.confirmed?
+      flash[:warning] = t('flash_messages.manage.reservations.reservation_already_confirmed')
+    elsif @order.unconfirmed?
+      if @order.skip_payment_authorization?
+        @order.invoke_confirmation!
+      else
+        @order.charge_and_confirm!
+      end
+
+      if @order.confirmed?
+        event_tracker.confirmed_a_recurring_booking(@order)
+        WorkflowStepJob.perform("WorkflowStep::#{@order.object.class.name}Workflow::ManuallyConfirmed".constantize, @order.id)
+
+        track_order_update_profile_informations
+        event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
+        event_tracker.confirmed_a_booking(@order)
+
+        if @order.reload.paid_until.present? ||  !@order.instance_of?(RecurringBooking)
+          flash[:success] = t('flash_messages.manage.reservations.reservation_confirmed')
+        else
+          @order.overdue!
+          flash[:warning] = t('flash_messages.manage.reservations.reservation_confirmed_but_not_charged')
+        end
+
+      else
+         flash[:error] = [
+          t('flash_messages.manage.reservations.reservation_not_confirmed'),
+          *@order.errors.full_messages, *@order.payment.errors.full_messages
+        ].join("\n")
+      end
+     else
+      flash[:error] = t('dashboard.host_reservations.reservation_is_expired') if @reservation.expired?
+    end
+
+    redirect_to location_after_save
   end
 
   private
+
+  def order_scope
+    @order_scope ||=  @company.orders.active
+  end
+
+  def track_order_update_profile_informations
+    event_tracker.updated_profile_information(@order.owner)
+    event_tracker.updated_profile_information(@order.host)
+  end
 
   def location_after_save
     dashboard_orders_path
   end
 
   def find_order
-    @order = @company.orders.find_by_number(params[:id]).try(:decorate)
+    @order = @company.orders.find(params[:id]).try(:decorate)
   end
 
   #TODO move params for checkout to secure params

@@ -1,3 +1,0 @@
-class ProjectTypeDrop < TransactableTypeDrop
-end
-

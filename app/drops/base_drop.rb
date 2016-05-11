@@ -1,8 +1,18 @@
 class BaseDrop < Liquid::Drop
   include MoneyRails::ActionViewExtension
 
+  attr_reader :source
+
   def drop_class
     self.class.to_s
+  end
+
+  def initialize(source)
+    @source = source.respond_to?(:decorate) ? source.decorate : source
+  end
+
+  def errors
+    @source.errors
   end
 
   private

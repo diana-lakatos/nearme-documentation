@@ -10,23 +10,22 @@ module BuySellMarket::ProductsHelper
     raw result_text
   end
 
-  def collection_for_shipping_profiles_radio_buttons(object)
-    collection = object.respond_to?(:each) ? object : object.all_shipping_categories
-    collection.collect do |sc|
-      [
-       sc.id,
-       raw("#{h(sc.name)} #{link_to("Edit", '#', data: { href: edit_dashboard_shipping_category_path(sc), modal: true, 'modal-class' => 'shipping_profiles_modal' }, class: 'shipping_profiles_modal_edit_link')}")
-      ]
-    end
-  end
-
   def dashboard_collection_for_shipping_profiles_radio_buttons(object)
-    collection = object.respond_to?(:each) ? object : object.all_shipping_categories
-    collection.collect do |sc|
+    collection = object.respond_to?(:each) ? object : ShippingProfile.where("global = true OR user_id IN (?)", current_user.id)
+    options = collection.collect do |sc|
+      links = ['']
+      links << [link_to(t('general.edit'), edit_dashboard_shipping_profile_path(sc), data: { modal: true, 'modal-class' => 'shipping_profiles_modal' }, class: 'shipping_profiles_modal_edit_link')]
+      links << link_to(t('general.delete'), dashboard_shipping_profile_path(sc), remote: true, method: :delete, class: 'shipping_profiles_modal_edit_link') if sc.user_id == current_user.id && !sc.global?
       [
+       raw("#{h(sc.name)} #{links.join(' | ')}"),
        sc.id,
-       raw("#{h(sc.name)} #{link_to("Edit", edit_dashboard_shipping_category_path(sc), data: { modal: true, 'modal-class' => 'shipping_profiles_modal' }, class: 'shipping_profiles_modal_edit_link')}")
+       { data: { shipping_type: sc.shipping_type } }
       ]
     end
+    options << [
+      t('transactables.disable_shipping'),
+      'disabled',
+      { data: { shipping_type: 'predefined' } }
+    ]
   end
 end

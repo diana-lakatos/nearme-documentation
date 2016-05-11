@@ -147,7 +147,7 @@ class ReviewTest < ActiveSupport::TestCase
 
     context '.by_line_items' do
       setup do
-        @line_items = FactoryGirl.create_list(:line_item, 2)
+        @line_items = FactoryGirl.create_list(:transactable_line_item, 2)
         FactoryGirl.create(:review, reviewable: @line_items.last)
         @first_review = FactoryGirl.create(:review, reviewable: @line_items.first)
       end

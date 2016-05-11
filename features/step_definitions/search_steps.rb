@@ -29,18 +29,16 @@ Given /^Elasticsearch is turned (.*)$/ do |switch|
   end
 end
 
+And /^I refresh index$/ do
+  Transactable.__elasticsearch__.refresh_index!
+end
+
 Then /^Elasticsearch (.*) index should be (.*)$/ do |index_name, action_name|
   if index_name == 'transactables'
     if action_name == 'created'
       Transactable.searchable.import force: true
     else
       Transactable.__elasticsearch__.client.indices.delete index: Transactable.index_name
-    end
-  elsif index_name == 'products'
-    if action_name == 'created'
-      Spree::Product.searchable.import force: true
-    else
-      Spree::Product.__elasticsearch__.client.indices.delete index: Spree::Product.index_name
     end
   end
 end
@@ -95,12 +93,16 @@ Then /^I should see a notification for my subscription$/ do
   page.find('.alert').should have_content("You will be notified when this location will be added.")
 end
 
+And /^search type is set to (.*)$/ do |search_type|
+  TransactableType.update_all(searcher_type: search_type)
+end
+
 Then /^I (do not )?see a search results for the ([^\$].*)$/ do |negative, product|
   product = model!(product)
   if negative
-    page.should have_no_selector('.result-item[data-product-id="' + product.id.to_s + '"]')
+    page.should have_no_selector(".listing[data-id='#{product.id}']")
   else
-    page.should have_selector('.result-item[data-product-id="' + product.id.to_s + '"]')
+    page.should have_selector(".listing[data-id='#{product.id}']")
   end
 end
 

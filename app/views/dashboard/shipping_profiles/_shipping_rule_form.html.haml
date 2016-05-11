@@ -1,0 +1,28 @@
+.shipping-method.nested-fields
+  .row
+    .col-md-3
+      %h4= t('manage.buy_sell.shipping_profiles.shipping_rule')
+    .col-md-9
+      .remove_shipping_profile.clearfix.pull-right
+        = link_to_remove_association f, class: 'remove_fields' do
+          %span.btn.btn-xs.btn-warning{ type: :button } X
+
+      .shipping-form
+        = f.input :name
+
+        .row
+          .col-md-6
+            = f.input :is_pickup
+          .col-md-6
+            = f.input :processing_time
+        .row
+          .col-md-6
+            - if current_instance.shippo_enabled?
+              = f.input :use_shippo_for_price, input_html: { data: { shippo_for_price: true }}
+          .col-md-6
+            = f.input :price, as: :numeric, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(current_instance.default_currency), input_html: { 'data-price-field' => true, disabled: f.object.use_shippo_for_price}
+        .row
+          .col-md-6
+            = f.input :is_worldwide, input_html: { data: { worldwide: true }}
+          .col-md-6
+            = f.association :countries, input_html: { disabled: f.object.is_worldwide? }

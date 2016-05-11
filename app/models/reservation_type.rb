@@ -19,10 +19,20 @@ class ReservationType < ActiveRecord::Base
     :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
     :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
 
-  store_accessor :settings, :address_in_radius
+  store_accessor :settings, :address_in_radius, :validate_on_adding_to_cart, :skip_payment_authorization
 
   def translation_manager
     @translation_manager ||= InstanceProfileType::InstanceProfileTypeTranslationManager.new(self)
   end
+
+  def validate_on_adding_to_cart
+    super == "true"
+  end
+  alias :validate_on_adding_to_cart? :validate_on_adding_to_cart
+
+  def skip_payment_authorization
+    super == "true"
+  end
+  alias :skip_payment_authorization? :skip_payment_authorization
 
 end

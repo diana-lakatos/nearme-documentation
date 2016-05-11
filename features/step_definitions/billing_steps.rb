@@ -1,6 +1,6 @@
 Then /^reservation should have billing authorization token$/ do
   reservation = Reservation.last
-  assert reservation.billing_authorization.token.present?
+  assert reservation.payment.successful_billing_authorization.token.present?
 end
 
 Then /^#{capture_model} should have a billing profile$/ do |user|

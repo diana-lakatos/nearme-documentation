@@ -229,7 +229,7 @@ class PlatformContext
   end
 
   def latest_products(number = 6)
-    Spree::Product.searchable.order('created_at desc').limit(number).all
+    Transactable.purchasable.order('created_at desc').limit(number).all
   end
 
   def is_root_domain?

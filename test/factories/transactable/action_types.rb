@@ -28,14 +28,28 @@ FactoryGirl.define do
           at.pricings << FactoryGirl.build(
             :transactable_pricing,
             action: at,
-            transactable_type_pricing: at.transactable_type_action_type.pricings.first
+            transactable_type_pricing: at.transactable_type_action_type.pricing_for('1_day')
           )
           at.pricings << FactoryGirl.build(
             :hour_pricing,
             action: at,
-            transactable_type_pricing: at.transactable_type_action_type.pricings.last
+            transactable_type_pricing: at.transactable_type_action_type.pricing_for('1_hour')
           )
         end
+      end
+    end
+
+    factory :purchase_action, class: Transactable::PurchaseAction do
+      association :transactable, strategy: :build
+      type 'Transactable::PurchaseAction'
+
+      after(:build) do |at|
+        at.transactable_type_action_type ||= FactoryGirl.build(:transactable_type_purchase_action, transactable_type: at.transactable.transactable_type)
+        at.pricings << FactoryGirl.build(
+          :purchase_pricing,
+          action: at,
+          transactable_type_pricing: at.transactable_type_action_type.pricing_for('1_item')
+        )
       end
     end
 
@@ -44,12 +58,12 @@ FactoryGirl.define do
       type 'Transactable::EventBooking'
 
       after(:build) do |at|
-        at.transactable_type_action_type = FactoryGirl.build(:transactable_type_event_action, transactable_type: at.transactable.transactable_type)
+        at.transactable_type_action_type ||= FactoryGirl.build(:transactable_type_event_action, transactable_type: at.transactable.transactable_type)
         at.schedule = FactoryGirl.build(:schedule, scheduable: at)
         at.pricings << FactoryGirl.build(
           :event_pricing, :with_exclusive_price, :with_book_it_out,
           action: at,
-          transactable_type_pricing: at.transactable_type_action_type.pricings.first
+          transactable_type_pricing: at.transactable_type_action_type.pricing_for('1_event')
         )
       end
     end
@@ -63,7 +77,7 @@ FactoryGirl.define do
         at.pricings = [FactoryGirl.build(
           :subscription_pricing,
           action: at,
-          transactable_type_pricing: at.transactable_type_action_type.pricings.first
+          transactable_type_pricing: at.transactable_type_action_type.pricing_for('1_subscription_month')
         )]
       end
     end

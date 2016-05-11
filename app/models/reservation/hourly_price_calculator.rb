@@ -1,22 +1,18 @@
 class Reservation::HourlyPriceCalculator
-  def initialize(reservation)
-    @reservation = reservation
-    @pricing = @reservation.transactable_pricing
+  def initialize(order)
+    @order = order
+    @pricing = @order.transactable_pricing
   end
 
   def price
-    # Price is for each day, hours reserved in day * hourly price * quantity
-    @reservation.periods.map { |period|
-      price_for_hours(period.hours) * @reservation.quantity
+    # Price is for each day, hours reserved in day * hourly price
+    @order.periods.map { |period|
+      price_for_hours(period.hours)
     }.sum.to_money
   end
 
   def valid?
-    !@reservation.periods.empty? && @reservation.periods.all? { |p| p.hours > 0 && @reservation.minimum_booking_minutes <= p.minutes }
-  end
-
-  def unit_price
-    @pricing.price
+    !@order.periods.empty? && @order.periods.all? { |p| p.hours > 0 && @order.minimum_booking_minutes <= p.minutes }
   end
 
   def price_for_hours(hours)
@@ -29,7 +25,7 @@ class Reservation::HourlyPriceCalculator
       pricing = prices[block_size]
       price = pricing[:price]
 
-      if @reservation.favourable_pricing_rate || hours < block_size
+      if @order.favourable_pricing_rate || hours < block_size
         (((hours/block_size.to_f) * price.cents).round / BigDecimal.new(price.currency.subunit_to_unit)).to_money(price.currency)
       else
         priced_hours = hours/block_size
@@ -47,7 +43,7 @@ class Reservation::HourlyPriceCalculator
   private
 
   def listing
-    @reservation.listing
+    @order.transactable
   end
 
 end

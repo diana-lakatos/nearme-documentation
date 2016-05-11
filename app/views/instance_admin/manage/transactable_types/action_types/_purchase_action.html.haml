@@ -1,0 +1,30 @@
+%h4= t('instance_admin.manage.transactable_types.pricing')
+.nested-fields-set
+  = f.simple_fields_for :pricings do |pricing|
+    .nested-container
+      .row.nested-fields
+        .col-md-2
+          = pricing.label :number_of_units
+          %input{ disabled: true, value: 1}
+          = pricing.input :number_of_units, as: :hidden, input_html: { value: 1}
+        .col-md-2
+          = pricing.label :unit
+          %input{ value: 'item', disabled: true}
+          = pricing.input :unit, as: :hidden, input_html: { value: 'item'}
+        .col-md-2
+          = pricing.input :min_price, as: :numeric
+        .col-md-2
+          = pricing.input :max_price, as: :numeric
+%h4= t('instance_admin.manage.transactable_types.purchase_settings')
+.row
+  .input-container.col-xs-12
+    = f.input :allow_action_rfq, as: :boolean, :inline_label => true
+    = f.input :allow_no_action, as: :boolean, :inline_label => true
+    = f.input :confirm_reservations, as: :boolean, :inline_label => true, label: t('instance_admin.manage.transactable_types.confirm_purchases')
+.row
+  .input-container.col-xs-6
+    = f.input :service_fee_guest_percent do
+      = f.input_field :service_fee_guest_percent, type: 'tel', class: 'form-control'
+  .input-container.col-xs-6
+    = f.input :service_fee_host_percent do
+      = f.input_field :service_fee_host_percent, type: 'tel', class: 'form-control'

@@ -70,7 +70,7 @@ class Reservation::HourlyPriceCalculatorTest < ActiveSupport::TestCase
       add_date(Time.zone.today, 9*60, 12*60)
       add_date(Time.zone.today, 13*60, 16*60)
       @reservation.quantity = 3
-      assert_equal 1800_00, @calculator.price.cents
+      assert_equal 600_00, @calculator.price.cents
     end
   end
 

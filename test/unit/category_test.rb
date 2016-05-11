@@ -46,23 +46,23 @@ class CategoryTest < ActiveSupport::TestCase
     end
 
     should 'remove category linkings when service is removed' do
-      @service_type = FactoryGirl.create(:transactable_type)
+      @transactable_type = FactoryGirl.create(:transactable_type)
       assert_difference 'CategoryLinking.count', 4 do
-        @service_type.categories << Category.all
+        @transactable_type.categories << Category.all
       end
-      assert_equal 4, @service_type.categories.count
+      assert_equal 4, @transactable_type.categories.count
       assert_difference 'CategoryLinking.count', -4 do
-        @service_type.destroy
+        @transactable_type.destroy
       end
       assert_equal 4, Category.count
     end
 
-    should 'remove categories when product is removed' do
-      @product_type = FactoryGirl.create(:product_type)
-      @product_type.categories << Category.all
-      assert_equal 4, @product_type.categories.count
+    should 'remove categories when transactable_type is removed' do
+      @transactable_type = FactoryGirl.create(:transactable_type)
+      @transactable_type.categories << Category.all
+      assert_equal 4, @transactable_type.categories.count
       assert_difference 'CategoryLinking.count', -4 do
-        @product_type.destroy
+        @transactable_type.destroy
       end
     end
 

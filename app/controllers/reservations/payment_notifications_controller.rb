@@ -3,7 +3,7 @@ class Reservations::PaymentNotificationsController < ApplicationController
   skip_before_filter :redirect_if_marketplace_password_protected
 
   def create
-    @reservation = Reservation.find(params[:reservation_id])
+    @reservation = Order.find(params[:reservation_id])
     if params.has_key?("payment_provider_verifier") && params["txn_status"] == '2'
       redirect_to booking_successful_dashboard_user_reservation_path(@reservation)
     elsif params.has_key?("verifier")

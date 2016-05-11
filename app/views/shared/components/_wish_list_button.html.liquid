@@ -1,5 +1,5 @@
 <div class="favorite favorite-toggler" id="favorite-{{ object | dom_id }}" data-favorite-id="{{ object.id }}">
-  {% assign is_favorite = current_user | already_favorite:object %}
+  {% assign is_favorite = current_user | already_favorite: object %}
   {% if is_favorite %}
     {% assign path = 'wish_list_path' | generate_url: id: object.id, wishlistable_type: object.class_name %}
     {% assign method = 'delete' %}

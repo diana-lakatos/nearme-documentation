@@ -16,7 +16,7 @@ class ReviewDecorator < Draper::Decorator
     if reviewable.respond_to?(:transactable_id)
       listing_path(reviewable.transactable_id)
     else
-      product_path(reviewable.product)
+      listing_path(reviewable.line_item_source)
     end
   end
 
@@ -59,7 +59,7 @@ class ReviewDecorator < Draper::Decorator
     elsif bid?
       h.link_to t('dashboard.reviews.feedback.view_owner_profile'), user_path(reviewable.offer_creator)
     else
-      h.link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(reviewable.product.administrator)
+      h.link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(reviewable.transactable.administrator)
     end
   end
 

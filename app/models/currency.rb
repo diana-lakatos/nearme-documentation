@@ -1,6 +1,9 @@
 class Currency < ActiveRecord::Base
   default_scope { order(:iso_code) }
 
+  has_many :orders, primary_key: :iso_code
+
+
   has_many :payment_gateways_currencies
   has_many :payout_gateways_currencies,  -> { where(payout: true) }, class_name: 'PaymentGatewaysCurrency'
 

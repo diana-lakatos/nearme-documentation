@@ -259,17 +259,6 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    var els = $('[data-payment-controller]');
-    if (els.length === 0) {
-        return;
-    }
-    require.ensure('./sections/buy_sell/payment', function(require){
-        var PaymentController = require('./sections/buy_sell/payment');
-        return new PaymentController(els);
-    });
-});
-
-DNM.registerInitializer(function(){
     var els = $('input[data-card-number], input[data-card-code]');
     if (els.length === 0) {
         return;
@@ -311,6 +300,5 @@ DNM.registerInitializer(function(){
         });
     });
 });
-
 
 module.exports = DNM;

@@ -12,7 +12,7 @@ class DocumentRequirement < ActiveRecord::Base
   validates_presence_of :label, :description, :item
 
   def is_file_required?
-    item.try(:upload_obligation).try(:required?).presence || false
+    item.try(:upload_obligation) && item.upload_obligation.required? || false
   end
 
   def should_show_file?

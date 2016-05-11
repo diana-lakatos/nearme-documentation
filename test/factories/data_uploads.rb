@@ -57,14 +57,4 @@ FactoryGirl.define do
     end
   end
 
-  factory :products_data_upload, parent: :data_upload do
-    csv_file { fixture_file_upload(Rails.root.join('test', 'assets', 'data_importer', 'products', 'full_data.csv'), 'text/csv') }
-    importable { Spree::ProductType.first || FactoryGirl.create(:product_type) }
-
-    factory :products_data_upload_from_dashboard do
-      csv_file { fixture_file_upload(Rails.root.join('test', 'assets', 'data_importer', 'products', 'current_data.csv'), 'text/csv') }
-    end
-  end
-
 end
-

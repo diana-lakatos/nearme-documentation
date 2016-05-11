@@ -1,0 +1,12 @@
+<h2>{{ @order.total_units_text | titleize }}</h2>
+
+{% if @order.action_hourly_booking? %}
+  <p>{{ @order.hourly_summary }}</p>
+{% else %}
+  <div class='selected-dates-summary'>
+    <hr class='thin'>
+    {{ @order.dates_summary_with_hr }}
+  </div>
+{% endif %}
+
+<hr class='thin'>

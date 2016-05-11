@@ -1,0 +1,16 @@
+- if only_inputs.empty? || only_inputs.include?(:billing_address)
+  %h3= t 'buy_sell_market.checkout.labels.billing_address'
+  = f.simple_fields_for :billing_address do |b|
+    = b.input :firstname, placeholder: t('buy_sell_market.checkout.placeholders.first_name')
+    = b.input :lastname, placeholder: t('buy_sell_market.checkout.placeholders.last_name')
+    = b.input :street1, placeholder: t('buy_sell_market.checkout.placeholders.street1')
+    = b.input :street2, placeholder: t('buy_sell_market.checkout.placeholders.street1')
+    = b.input :city, placeholder: t('buy_sell_market.checkout.placeholders.city')
+    = b.input :zip, required: true, placeholder: t('buy_sell_market.checkout.placeholders.zip')
+    = b.input :company
+    = b.association :country, collection: @countries, input_html: { class: 'checkout-select',  data: { get_states_url: get_states_order_checkout_url(@order, format: :js)} }
+    = b.association :state, collection: @billing_states, include_blank: false, input_html: { class: 'checkout-select' }
+    = b.input :phone, as: :string
+    = b.input :email, as: :string
+    = b.input :user_id, as: :hidden, input_html: { value: current_user.id }
+

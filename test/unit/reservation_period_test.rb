@@ -3,29 +3,29 @@ require 'test_helper'
 class ReservationPeriodTest < ActiveSupport::TestCase
 
   setup do
-    @listing = FactoryGirl.create(:transactable, quantity: 2)
+    @transactable = FactoryGirl.create(:transactable, quantity: 2)
     @user = FactoryGirl.create(:user)
-    @reservation = FactoryGirl.build(:confirmed_reservation, listing: @listing, :user => @user)
+    @reservation = FactoryGirl.build(:confirmed_reservation, transactable: @transactable, :user => @user)
     @next_monday = Time.zone.today.advance(:weeks => 1).beginning_of_week
   end
 
   context "#bookable?" do
-    context "daily listings" do
+    context "daily transactables" do
       should "determine status correctly" do
         period = @reservation.periods.build(:date => @next_monday)
         assert period.bookable?
 
-        res = FactoryGirl.create(:confirmed_reservation, listing: @listing, :quantity => 1, :date => @next_monday, :user => @user)
+        res = FactoryGirl.create(:confirmed_reservation, transactable: @transactable, :quantity => 1, :date => @next_monday, :user => @user)
         period = @reservation.periods.build(:date => @next_monday)
         assert period.bookable?
 
-        res = FactoryGirl.create(:confirmed_reservation, listing: @listing, :quantity => 1, :date => @next_monday, :user => @user)
+        res = FactoryGirl.create(:confirmed_reservation, transactable: @transactable, :quantity => 1, :date => @next_monday, :user => @user)
         period = @reservation.periods.build(:date => @next_monday)
         assert !period.bookable?
       end
     end
 
-    context "hourly listings" do
+    context "hourly transactables" do
       setup do
         @nine = 9*60
         @one  = 13*60
@@ -35,14 +35,14 @@ class ReservationPeriodTest < ActiveSupport::TestCase
         period = @reservation.periods.build(:date => @next_monday, :start_minute => @nine, :end_minute => @one)
         assert period.bookable?
 
-        res = FactoryGirl.build(:confirmed_reservation, listing: @listing, :quantity => 1, :user => @user)
+        res = FactoryGirl.build(:confirmed_reservation, transactable: @transactable, :quantity => 1, :user => @user)
         res.periods.destroy_all
         res.add_period(@next_monday, @nine, @one)
         res.save!
 
         assert period.bookable?
 
-        res = FactoryGirl.build(:confirmed_reservation, listing: @listing, :quantity => 1, :user => @user)
+        res = FactoryGirl.build(:confirmed_reservation, transactable: @transactable, :quantity => 1, :user => @user)
         res.periods.destroy_all
         res.add_period(@next_monday, @nine, @one)
         res.save!

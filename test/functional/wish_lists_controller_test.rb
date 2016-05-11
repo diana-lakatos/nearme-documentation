@@ -6,7 +6,6 @@ class WishListsControllerTest < ActionController::TestCase
     @location = FactoryGirl.create(:location_in_auckland)
     @transactable = FactoryGirl.create(:transactable, location: @location)
     @wish_list = FactoryGirl.create(:default_wish_list, user: @user)
-    @product = FactoryGirl.create(:base_product)
     sign_in @user
   end
 
@@ -21,18 +20,7 @@ class WishListsControllerTest < ActionController::TestCase
       assert flash[:notice].include?('Item has been added to the list.')
     end
 
-    should 'add product' do
-      post :create, id: @product.id, wishlistable_type: @product.class.name
-      assert_response :redirect
-      assert flash[:notice].include?('Item has been added to the list.')
-    end
-
     should 'add different items' do
-      assert_difference 'WishListItem.count' do
-        post :create, id: @product.id, wishlistable_type: @product.class.name
-      end
-      assert_response :redirect
-
       assert_difference 'WishListItem.count' do
         post :create, id: @transactable.id, wishlistable_type: @transactable.class.name
       end

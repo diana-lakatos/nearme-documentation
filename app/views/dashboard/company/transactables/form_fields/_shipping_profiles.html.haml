@@ -1,0 +1,24 @@
+%hr/
+
+%div{:data => {:"shipping-methods-list" => true}}
+  = render 'dashboard/base/shipping_profiles_list', f: f
+
+%p
+  = link_to new_dashboard_shipping_profile_path, class: 'btn btn-primary add_shipping_profile', data: { modal: true, "modal-class": 'shipping_profiles_modal' } do
+    %span.fa.fa-plus
+    = t('manage.buy_sell.shipping_profiles.add_new_shipping_profile')
+
+%hr/
+
+- if current_instance.shippo_enabled?
+  .dimensions_template{class: f.object.shipping_profile.try(:predefined?) ? 'hidden' : ''}
+    %p= t('manage.buy_sell.dimensions_templates.explanation1')
+    - if f.object.errors.present?
+      = hidden_field_tag 'product_errors_present'
+    = f.simple_fields_for :dimensions_template, f.object.dimensions_template || f.object.build_dimensions_template do |dt|
+      = render 'dashboard/shared/fields/dimension_templates', dt: dt, templates: platform_context.instance.dimensions_templates, label: t('manage.buy_sell.dimensions_templates.explanation2'), section_id: 'shippo-dimension-templates'
+
+    .explanation
+      %p= t('manage.buy_sell.insurance_explanation')
+
+    = f.input :insurance_value, as: :price, input_html: { currency: currency_symbol_from_code(Spree::Config[:currency] ) }, wrapper_html: { class: 'form-control-sm' }

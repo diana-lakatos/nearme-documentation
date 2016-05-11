@@ -50,7 +50,7 @@ module.exports = class InstanceAdminRatingSystemsController
           method: 'post'
           data:
             _method: 'put'
-            service_type:
+            transactable_type:
               params
 
   removeQuestionEvents: ->

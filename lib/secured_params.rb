@@ -1,52 +1,9 @@
 class SecuredParams
 
-  def boarding_form(product_type=nil)
-    [
-      :draft,
-      user_attributes: nested(self.user),
-      seller_profile_properties: nested(self.seller),
-      company_attributes: nested(self.company),
-      product_form: nested(self.product_form(product_type))
-    ]
-  end
-
-  def shipping_category_form
+  def shipping_profile
     [
       :name,
-      shipping_methods_attributes: nested(self.spree_shipping_method)
-    ]
-  end
-
-  def product_form(product_type=nil)
-    [
-      :draft,
-      :name,
-      :description,
-      :price,
-      :quantity,
-      :shippo_enabled,
-      :insurance_amount,
-      :weight,
-      :depth,
-      :width,
-      :height,
-      :weight_unit,
-      :depth_unit,
-      :width_unit,
-      :height_unit,
-      :shipping_category_id,
-      :unit_of_measure,
-      :action_rfq,
-      image_ids: [],
-      attachment_ids: [],
-      category_ids: [],
-      company_address_attributes: nested(self.address),
-      images_attributes: nested(self.spree_image),
-      document_requirements_attributes: nested(self.document_requirement),
-      upload_obligation_attributes: nested(self.upload_obligation),
-      shipping_methods_attributes: nested(self.spree_shipping_method),
-      additional_charge_types_attributes: nested(self.additional_charge_type),
-      extra_properties:  Spree::Product.public_custom_attributes_names((product_type.presence || PlatformContext.current.try(:instance).try(:product_types).try(:first)).try(:id)),
+      shipping_rules_attributes: nested(self.shipping_rule)
     ]
   end
 
@@ -204,11 +161,8 @@ class SecuredParams
   def custom_model_type
     [
       :name,
-      service_type_ids: [],
       transactable_type_ids: [],
       project_type_ids: [],
-      product_type_ids: [],
-      offer_type_ids: [],
       reservation_type_ids: [],
       instance_profile_type_ids: []
     ]
@@ -225,10 +179,8 @@ class SecuredParams
       :search_options,
       :display_options,
       :mandatory,
-      service_type_ids: [],
+      transactable_type_ids: [],
       project_type_ids: [],
-      product_type_ids: [],
-      offer_type_ids: [],
       instance_profile_type_ids: [],
       reservation_type_ids: []
     ]
@@ -346,6 +298,7 @@ class SecuredParams
       :default_currency,
       :default_oauth_signin_provider,
       :default_products_search_view,
+      :expand_orders_list,
       :facebook_consumer_key,
       :facebook_consumer_secret,
       :google_consumer_key,
@@ -413,6 +366,7 @@ class SecuredParams
       :twilio_from_number,
       :twitter_consumer_key,
       :twitter_consumer_secret,
+      :use_cart,
       :user_based_marketplace_views,
       :user_blogs_enabled,
       :webhook_token,
@@ -449,65 +403,6 @@ class SecuredParams
     ]
   end
 
-  def spree_image
-    [
-      :position
-    ]
-  end
-
-  def spree_option_type
-    [
-      :name,
-      :presentation,
-      :position,
-      option_values_attributes: nested(self.spree_option_value),
-
-    ]
-  end
-
-  def spree_option_value
-    [
-      :name,
-      :presentation,
-      :position
-    ]
-  end
-
-  def spree_property
-    [
-      :name,
-      :presentation,
-      :position
-    ]
-  end
-
-  def spree_product_property
-    [
-      :id,
-      :property_name,
-      :value,
-      :company_id
-    ]
-  end
-
-  def spree_order
-    [
-      :card_number,
-      :card_code,
-      :card_exp_month,
-      :card_exp_year,
-      :card_holder_first_name,
-      :card_holder_last_name,
-      :express_token,
-      :payment_method_id,
-      :start_express_checkout,
-      :insurance_enabled,
-      additional_charges_attributes: nested(self.additional_charge),
-      payment_documents_attributes: nested(self.payment_document),
-      payment_attributes: nested(self.payment),
-    ]
-  end
-
   def payment_document
     [
       :type,
@@ -528,76 +423,15 @@ class SecuredParams
     ]
   end
 
-  def spree_variant
-    [
-      :sku,
-      :price,
-      :cost_price,
-      :weight,
-      :height,
-      :depth,
-      :tax_category_id,
-      option_value_ids: []
-    ]
-  end
-
-  def spree_prototype
+  def shipping_rule
     [
       :name,
-      property_ids: [],
-      option_type_ids: []
-    ]
-  end
-
-  def spree_shipping_method
-    [
-      :name,
-      :hidden,
-      :removed,
-      :admin_name,
-      :display_on,
-      :deleted_at,
-      :tracking_url,
-      :tax_category_id,
       :processing_time,
-      calculator_attributes: nested(self.calculator),
-      zones_attributes: nested(self.zone),
-      shipping_category_ids: [],
-      zone_ids: []
-    ]
-  end
-
-  def spree_stock_location
-    [
-      :name,
-      :admin_name,
-      :address1,
-      :address2,
-      :city,
-      :state_id,
-      :state_name,
-      :country_id,
-      :zipcode,
-      :phone,
-      :active,
-      :backorderable_default,
-      :propagate_all_variants,
-      stock_items_attributes: nested(self.spree_stock_item)
-    ]
-  end
-
-  def spree_stock_item
-    [
-      :variant,
-      :backorderable,
-      stock_movements_attributes: nested(self.spree_stock_movement)
-
-    ]
-  end
-
-  def spree_stock_movement
-    [
-      :quantity
+      :price,
+      :is_worldwide,
+      :is_pickup,
+      :use_shippo_for_price,
+      country_ids: []
     ]
   end
 
@@ -621,14 +455,6 @@ class SecuredParams
     ]
   end
 
-  def product_type
-    [
-      :name,
-      :action_rfq,
-      :searchable
-    ]
-  end
-
   def transactable_type
     [
       :allow_save_search,
@@ -641,6 +467,7 @@ class SecuredParams
       :default_currency,
       :default_availability_template_id,
       :enable_photo_required,
+      :enable_reviews,
       :name,
       :show_page_enabled,
       :groupable_with_others,
@@ -808,37 +635,6 @@ class SecuredParams
     ]
   end
 
-  def spree_product
-    [
-      :name,
-      :sku,
-      :slug,
-      :description,
-      :price,
-      :cost_price,
-      :cost_currency,
-      :available_on,
-      :featured,
-      :user_id,
-      :weight,
-      :height,
-      :width,
-      :depth,
-      :shipping_category_id,
-      :tax_category_id,
-      :meta_keywords,
-      :meta_description,
-      :shipping_category_attributes => nested(self.spree_shipping_category),
-      option_type_ids: []
-    ]
-  end
-
-  def spree_shipping_category
-    [
-      :name
-    ]
-  end
-
   def custom_theme
     [
       :name,
@@ -962,7 +758,7 @@ class SecuredParams
     ]
   end
 
-  def company(transactable_type: nil, offer_type: nil)
+  def company(transactable_type: nil)
     [
       :name,
       :url,
@@ -981,11 +777,7 @@ class SecuredParams
       payments_mailing_address_attributes: nested(self.address),
       theme_attributes: self.theme
     ] << {
-      products_attributes: nested(self.spree_product),
-      offers_attributes: nested(self.offer(offer_type)),
-      shipping_categories_attributes: nested(self.spree_shipping_category),
-      shipping_methods_attributes: nested(self.spree_shipping_method),
-      stock_locations_attributes: nested(self.spree_stock_location),
+      shipping_profiles_attributes: nested(self.shipping_profile),
     }
   end
 
@@ -1063,6 +855,7 @@ class SecuredParams
       :transactable_type_id, :transactable_type,
       :insurance_value,
       :rental_shipping_type, :dimensions_template_id,
+      :shipping_profile_id,
       :minimum_booking_minutes,
       photos_attributes: nested(self.photo),
       approval_requests_attributes: nested(self.approval_request),
@@ -1073,12 +866,11 @@ class SecuredParams
       attachment_ids: [],
       waiver_agreement_template_ids: [],
       action_types_attributes: nested(self.transactable_action_type),
-      # schedule_attributes: nested(self.schedule),
       document_requirements_attributes: nested(self.document_requirement),
       upload_obligation_attributes: nested(self.upload_obligation),
-      # availability_template_attributes: nested(self.availability_template),
       additional_charge_types_attributes: nested(self.additional_charge_type),
-      customizations_attributes: nested(self.customization(transactable_type))
+      customizations_attributes: nested(self.customization(transactable_type)),
+      properties_attributes: Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
     ] +
     Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
   end
@@ -1127,7 +919,8 @@ class SecuredParams
   def customization(transactable_type)
     [
       :custom_model_type_id,
-      properties: transactable_type ? transactable_type.custom_model_types.map{|cmt| Customization.public_custom_attributes_names(cmt)}.flatten : []
+      properties: transactable_type ? transactable_type.custom_model_types.map{|cmt| Customization.public_custom_attributes_names(cmt)}.flatten : [],
+      properties_attributes: transactable_type ? transactable_type.custom_model_types.map{|cmt| Customization.public_custom_attributes_names(cmt)}.flatten : [],
     ]
   end
 
@@ -1164,25 +957,6 @@ class SecuredParams
     ]
   end
 
-  def offer(offer_type)
-    [
-      :name,
-      :description,
-      :summary,
-      :price,
-      :price_cents,
-      :creator_id,
-      :transactable_type_id,
-      photos_attributes: nested(self.photo),
-      photo_ids: [],
-      category_ids: [],
-      attachment_ids: [],
-      document_requirements_attributes: nested(self.document_requirement),
-      upload_obligation_attributes: nested(self.upload_obligation),
-      approval_requests_attributes: nested(self.approval_request)
-    ] + Offer.public_custom_attributes_names((offer_type || PlatformContext.current.try(:instance).try(:offer_types).try(:first)).try(:id))
-  end
-
   def reservation
     [
       :comment,
@@ -1202,14 +976,10 @@ class SecuredParams
   def reservation_type
     [
       :name,
+      :step_checkout,
+      :validate_on_adding_to_cart,
+      :skip_payment_authorization,
       transactable_type_ids: []
-    ]
-  end
-
-  def bid(reservation_type)
-    [
-      properties: Bid.public_custom_attributes_names(reservation_type),
-      payment_documents_attributes: nested(self.payment_document)
     ]
   end
 
@@ -1345,7 +1115,7 @@ class SecuredParams
     ]
   end
 
-  def user(transactable_type: nil, reservation_type: nil, offer_type: nil)
+  def user(transactable_type: nil, reservation_type: nil)
     [
       :avatar,
       :avatar_transformation_data,
@@ -1400,6 +1170,7 @@ class SecuredParams
   def default_profile
     [
       properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id)),
+      properties_attributes: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id)),
       category_ids: [],
       customizations_attributes: nested(self.customization(PlatformContext.current.instance.default_profile_type))
     ]
@@ -1408,6 +1179,7 @@ class SecuredParams
   def seller_profile
     [
       properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id)),
+      properties_attributes: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id)),
       category_ids: [],
       customizations_attributes: nested(self.customization(PlatformContext.current.instance.seller_profile_type))
     ]
@@ -1416,6 +1188,7 @@ class SecuredParams
   def buyer_profile
     [
       properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id)),
+      properties_attributes: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id)),
       category_ids: [],
       customizations_attributes: nested(self.customization(PlatformContext.current.instance.buyer_profile_type))
     ]
@@ -1424,6 +1197,7 @@ class SecuredParams
   def default_profile_with_private_attribs
     [
       properties: PlatformContext.current.instance.default_profile_type.custom_attributes.pluck(&:name),
+      properties_attributes: PlatformContext.current.instance.default_profile_type.custom_attributes.pluck(&:name),
       category_ids: []
     ]
   end
@@ -1573,6 +1347,7 @@ class SecuredParams
       :total_amount_check,
       :transactable_pricing_id,
       properties: Reservation.public_custom_attributes_names(reservation_type),
+      properties_attributes: Reservation.public_custom_attributes_names(reservation_type),
       dates: [],
       category_ids: [],
       additional_charge_ids: [],
@@ -1588,31 +1363,65 @@ class SecuredParams
     ]
   end
 
-  def recurring_booking_request(reservation_type)
+  def complete_reservation
     [
-      :transactable_pricing_id,
+      :comment,
+      transactable_line_items_attributes: nested(self.line_item),
+      additional_line_items_attributes: nested(self.line_item)
+    ]
+  end
+
+  def line_item
+    [
       :quantity,
+      :unit_price,
+      :receiver,
+      :name
+    ]
+  end
+
+  def order(reservation_type=nil)
+    [
+      :dates_fake,
       :interval,
       :start_on,
-      :guest_notes,
-      :payment_method_id,
-      :total_amount_check,
       :country_name,
       :mobile_number,
-      properties: Reservation.public_custom_attributes_names(reservation_type),
+      :quantity,
+      :book_it_out,
+      :exclusive_price,
+      :start_minute,
+      :start_time,
+      :end_minute,
+      :guest_notes,
+      :payment_method_id,
+      :booking_type,
+      :delivery_type,
+      :delivery_ids,
+      :dates,
+      :total_amount_check,
+      :transactable_pricing_id,
+      :transactable_id,
+      :use_billing,
       dates: [],
       category_ids: [],
       additional_charge_ids: [],
-      waiver_agreement_templates: [],
+      waiver_agreement_templates: nested(self.waiver_agreement_templates),
       shipments_attributes: nested(self.shipment),
-      payment_attributes: nested(self.payment),
       documents: nested(self.payment_document),
       documents_attributes: nested(self.payment_document),
       payment_subscription_attributes: nested(self.payment_subscription),
+      user_attributes: nested(self.user),
+      address_attributes: nested(self.address),
+      shipping_address_attributes: nested(self.order_address),
+      billing_address_attributes: nested(self.order_address),
       payment_documents_attributes: nested(self.payment_document),
-      owner_attributes: nested(self.user),
-      address_attributes: nested(self.address)
-    ]
+      payment_attributes: nested(self.payment)
+    ] + (reservation_type.present? ? [properties: Reservation.public_custom_attributes_names(reservation_type), properties_attributes: Reservation.public_custom_attributes_names(reservation_type)] : [])
+  end
+
+  def waiver_agreement_templates
+    WaiverAgreementTemplate.all.map{|w| w.id.to_s}
   end
 
   def payment
@@ -1755,16 +1564,21 @@ class SecuredParams
       :is_insured,
       :direction,
       :shippo_rate_id,
-      shipping_address_attributes: self.shipping_address
+      :shipping_rule_id,
+      shipping_address_attributes: self.order_address
     ]
   end
 
-  def shipping_address
+  def order_address
     [
       :user_id,
+      :user_id,
       :shippo_id,
-      :name,
+      :firstname,
+      :lastname,
       :company,
+      :state_id,
+      :country_id,
       :street1,
       :street2,
       :city,

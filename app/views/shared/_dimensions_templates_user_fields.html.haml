@@ -3,22 +3,22 @@
   .first
     = dt.input :weight, as: :decimal, input_html: { :class => 'shippo_decimal_field', 'data-js-element-identifier' => 'product_form_input_weight' }
   .last
-    = dt.input :weight_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[dt.object.unit_of_measure]['weight'], label: Spree::Variant.human_attribute_name(:weight_unit), input_html: { 'data-js-element-identifier' => 'product_form_input_weight_unit' }
+    = dt.input :weight_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[dt.object.unit_of_measure]['weight'], input_html: { 'data-js-element-identifier' => 'product_form_input_weight_unit' }
 
 .dimensions_element_container
   .first
     = dt.input :depth, as: :decimal, input_html: { :class => 'shippo_decimal_field', 'data-js-element-identifier' => 'product_form_input_depth' }
   .last
-    = dt.input :depth_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[dt.object.unit_of_measure]['length'], label: Spree::Variant.human_attribute_name(:depth_unit), as: :select, input_html: { 'data-js-element-identifier' => 'product_form_input_depth_unit' }
+    = dt.input :depth_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[dt.object.unit_of_measure]['length'], as: :select, input_html: { 'data-js-element-identifier' => 'product_form_input_depth_unit' }
 
 .dimensions_element_container
   .first
     = dt.input :width, as: :decimal, input_html: { :class => 'shippo_decimal_field', 'data-js-element-identifier' => 'product_form_input_width' }
   .last
-    = dt.input :width_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[dt.object.unit_of_measure]['length'], label: Spree::Variant.human_attribute_name(:width_unit), as: :select, input_html: { 'data-js-element-identifier' => 'product_form_input_width_unit' }
+    = dt.input :width_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[dt.object.unit_of_measure]['length'], as: :select, input_html: { 'data-js-element-identifier' => 'product_form_input_width_unit' }
 
 .dimensions_element_container
   .first
     = dt.input :height, as: :decimal, input_html: { :class => 'shippo_decimal_field', 'data-js-element-identifier' => 'product_form_input_height' }
   .last
-    = dt.input :height_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[dt.object.unit_of_measure]['length'], label: Spree::Variant.human_attribute_name(:height_unit), as: :select, input_html: { 'data-js-element-identifier' => 'product_form_input_height_unit' }
+    = dt.input :height_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[dt.object.unit_of_measure]['length'], as: :select, input_html: { 'data-js-element-identifier' => 'product_form_input_height_unit' }

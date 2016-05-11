@@ -1,0 +1,25 @@
+{% if current_user != blank %}
+  <h1>This is form to edit user</h1>
+  {% form_for current_user, url: '/users' %}
+    <input type="text" name="{{ form_object.object_name }}_email" value=" {{ form_object.object.email }}" >
+    {% input first_name, input_html_data-custom-email: true, wrapper_html_data-is-for: "label", hint: 'hey hey this is a hint', label: 'I can overwrite First Name, hooray!', required: false  %}
+    {% input last_name, input_html_data-custom-email: true, label_html_data-is-for: "label", required: false  %}
+    {% fields_for default_profile %}
+      {% fields_for properties, form: default_profile  %}
+        {% input drivers_licence_number, form: properties %}
+      {% endfields_for %}
+    {% endfields_for %}
+
+    {% input avatar %}
+    {% submit Save  %}
+
+  {% endform_for %}
+
+{% else %}
+  <h1>This is form to log in as a user</h1>
+  {% form_for build_new_user, url: '/users/sign_in' %}
+    {% input email %}
+    {% input password %}
+    {% submit 'Log in', class: active  %}
+  {% endform_for %}
+{% endif %}

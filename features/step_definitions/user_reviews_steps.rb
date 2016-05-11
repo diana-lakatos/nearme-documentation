@@ -23,21 +23,15 @@ end
 Given /^Reviews about the seller exist$/ do
 
   @listing = FactoryGirl.create(:transactable)
-  @reservation = FactoryGirl.create(:reservation, listing: @listing)
+  @reservation = FactoryGirl.create(:reservation, transactable: @listing)
   @user = @listing.creator
 
-  @order = FactoryGirl.create(:order_with_line_items, line_items_count: 1, company: @listing.company)
-  line_item = @order.line_items.first
-
   FactoryGirl.create(:review, rating_system: @rs_for_seller, user: @reservation.owner, reviewable: @reservation)
-  FactoryGirl.create(:review, rating_system: @rs_for_seller, user: @order.user, reviewable: line_item)
-
   FactoryGirl.create(:review, rating_system: @rs_for_buyer, user: @reservation.creator, reviewable: @reservation)
-  FactoryGirl.create(:review, rating_system: @rs_for_buyer, user: @order.company.creator, reviewable: line_item)
 end
 
-Then /^Sees two seller reviews$/ do
-  page.should have_css('.review', count: 2)
+Then /^Sees one seller reviews$/ do
+  page.should have_css('.review', count: 1)
   page.should have_content(@user.first_name)
 end
 

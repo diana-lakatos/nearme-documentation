@@ -9,10 +9,10 @@ Feature: User can complete reservation and provide time log and additional charg
       And transactable type skips payment authorization initially
 
   Scenario: User adds 2 time logs and one additional charge
-    Given a confirmed_hour_reservation exists with listing: the listing_with_10_dollars_per_hour_and_24h
+    Given a confirmed_delayed_hour_reservation exists with transactable: the listing_with_10_dollars_per_hour_and_24h
     Given I am on the confirmed reservations
     And I follow "Complete reservation"
-    And I follow "add_new_period"
+    And I follow "add_new_transactable_line_item"
     And I fill in a time log fields
     And I follow "add_new_additional_charge"
     And I follow "add_new_additional_charge"
@@ -24,13 +24,13 @@ Feature: User can complete reservation and provide time log and additional charg
     And reservation should have all data stored
 
   Scenario: User can't save the reservation if don't fill all fields
-    Given a confirmed_hour_reservation exists with listing: the listing_with_10_dollars_per_hour_and_24h
+    Given a confirmed_delayed_hour_reservation exists with transactable: the listing_with_10_dollars_per_hour_and_24h
     Given I am on the confirmed reservations
     And I follow "Complete reservation"
-    And I follow "add_new_period"
+    And I follow "add_new_transactable_line_item"
     And I follow "add_new_additional_charge"
     And I fill in a additional charge fields
-    Then I should see correct Total cost of "$120.00"
+    Then I should see correct Total cost of "$110.00"
     When I press "Submit invoice"
     Then I should see "Your invoice details couldn't be saved"
     And I fill in a time log fields

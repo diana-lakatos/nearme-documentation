@@ -28,7 +28,7 @@
             %td= alert
 
 
-    - if @payment.authorized?
+    - if @payment.authorized? && @payment.payable.confirmed?
       %p= link_to t("dashboard.payments.capture"), capture_dashboard_company_orders_received_payment_path(@order, @payment), class: 'btn btn-warning', method: :post
 
     - if @payment.paid? && @payment.refund_attempts.zero?

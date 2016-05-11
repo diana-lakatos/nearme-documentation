@@ -13,30 +13,7 @@ class ReviewsService
   end
 
   def get_reviews_collection(completed_tab)
-    collections = {
-      seller_collection: [],
-      product_collection: [],
-      buyer_collection: []
-    }
-    # the commented ifs will be removed and replaced with proper Order::LineItem
-    #if PlatformContext.current.instance.buyable?
-      line_items = get_line_items_for_owner_and_creator
-      orders_reviews = completed_tab ? get_reviews_by(line_items) : get_reviewables(line_items, Spree::ProductType)
-    #end
-    #if PlatformContext.current.instance.bookable?
-      reservations_for_owner_and_creator = get_reservations_for_owner_and_creator
-      reservations_reviews = completed_tab ? get_reviews_by(reservations_for_owner_and_creator) : get_reviewables(reservations_for_owner_and_creator, ServiceType)
-    #end
-    #if PlatformContext.current.instance.biddable?
-      offers_for_owner_and_creator = get_offers_for_owner_and_creator
-      offer_reviews = completed_tab ? get_reviews_by(offers_for_owner_and_creator) : get_reviewables(offers_for_owner_and_creator, OfferType)
-    #end
-    collections.keys.each do |key|
-      [orders_reviews, reservations_reviews, offer_reviews].compact.map do |reviews|
-        collections[key] += reviews[key]
-      end
-    end
-    collections
+    completed_tab ? get_reviews_by(get_line_items_for_owner_and_creator) : get_reviewables(get_line_items_for_owner_and_creator, TransactableType)
   end
 
   def self.generate_csv_for(reviews)
@@ -63,9 +40,7 @@ class ReviewsService
     return @rating_system_hash if @rating_system_hash.present?
     active_rating_systems = RatingSystem.includes(:rating_hints, :rating_questions, :transactable_type).active
     @rating_system_hash ||= {
-      active_rating_systems_services: active_rating_systems.select{ |rs| rs.transactable_type.is_a?(ServiceType) }.inject({}){ |hash, rs| hash[rs.subject] ||= []; hash[rs.subject] << rs.transactable_type_id; hash },
-      active_rating_systems_products: active_rating_systems.select{ |rs| rs.transactable_type.is_a?(Spree::ProductType) }.inject({}){ |hash, rs| hash[rs.subject] ||= []; hash[rs.subject] << rs.transactable_type_id; hash },
-      active_rating_systems_offers: active_rating_systems.select{ |rs| rs.transactable_type.is_a?(OfferType) }.inject({}){ |hash, rs| hash[rs.subject] ||= []; hash[rs.subject] << rs.transactable_type_id; hash },
+      transactable_type_id_per_subject: active_rating_systems.select{ |rs| rs.transactable_type.is_a?(TransactableType) }.inject({}){ |hash, rs| hash[rs.subject] ||= []; hash[rs.subject] << rs.transactable_type_id; hash },
       active_rating_systems: active_rating_systems.group_by { |rating_system| rating_system.transactable_type_id },
       buyer_rating_system: active_rating_systems.with_subject(RatingConstants::GUEST).group_by { |rating_system| rating_system.transactable_type_id },
       seller_rating_system: active_rating_systems.with_subject(RatingConstants::HOST).group_by { |rating_system| rating_system.transactable_type_id },
@@ -73,63 +48,37 @@ class ReviewsService
     }
   end
 
-  def get_line_items_for_owner_and_creator
-    active_systems_for_host = get_rating_systems[:active_rating_systems_products][RatingConstants::HOST]
-    active_systems_for_guest = get_rating_systems[:active_rating_systems_products][RatingConstants::GUEST]
-    active_systems_for_listing = get_rating_systems[:active_rating_systems_products][RatingConstants::TRANSACTABLE]
-    orders_ids = @current_user.orders.reviewable.pluck(:id)
-    creator_products = Spree::Product.where(administrator_id: @current_user.id, product_type_id: active_systems_for_host)
-    creator_line_items_ids = []
-    creator_products.each {|p| creator_line_items_ids << p.line_items.pluck(:id) }
-    {
-      RatingConstants::TRANSACTABLE => Spree::LineItem.where(order_id: orders_ids).joins(:product).where('spree_products.user_id != ?', @current_user.id).where(spree_products: { product_type_id: active_systems_for_listing}),
-      RatingConstants::HOST => Spree::LineItem.where(order_id: orders_ids).joins(:product).where('spree_products.user_id != ?', @current_user.id).where(spree_products: { product_type_id: active_systems_for_host}),
-      RatingConstants::GUEST => Spree::LineItem.where(id: creator_line_items_ids.uniq).joins(:product).joins(:order).where('spree_orders.user_id != ?', @current_user.id).where(spree_products: { product_type_id: active_systems_for_guest})
-    }
-  end
 
   def get_reviews_by(reviewables)
     {
-      seller_collection: Review.active_with_subject(RatingConstants::HOST).where(reviewable: reviewables[RatingConstants::HOST].to_a).decorate,
-      product_collection: Review.active_with_subject(RatingConstants::TRANSACTABLE).where(reviewable: reviewables[RatingConstants::TRANSACTABLE].to_a).decorate,
-      buyer_collection: Review.active_with_subject(RatingConstants::GUEST).where(reviewable: reviewables[RatingConstants::GUEST].to_a).decorate
+      seller_collection: Review.active_with_subject(RatingConstants::HOST).where(reviewable_id: reviewables[RatingConstants::HOST].to_a.map(&:id)).decorate,
+      product_collection: Review.active_with_subject(RatingConstants::TRANSACTABLE).where(reviewable_id: reviewables[RatingConstants::TRANSACTABLE].to_a.map(&:id) ).decorate,
+      buyer_collection: Review.active_with_subject(RatingConstants::GUEST).where(reviewable_id: reviewables[RatingConstants::GUEST].to_a.map(&:id)).decorate
     }
   end
 
-  def get_reservations_for_owner_and_creator
-    if get_rating_systems[:active_rating_systems_services].any?
-      active_systems_for_host = get_rating_systems[:active_rating_systems_services][RatingConstants::HOST]
-      active_systems_for_guest = get_rating_systems[:active_rating_systems_services][RatingConstants::GUEST]
-      active_systems_for_listing = get_rating_systems[:active_rating_systems_services][RatingConstants::TRANSACTABLE]
-      reservations = Reservation.with_listing.reviewable.includes(listing: :transactable_type)
+
+  def get_line_items_for_owner_and_creator
+    if get_rating_systems[:transactable_type_id_per_subject].any?
+      active_systems_for_host = get_rating_systems[:transactable_type_id_per_subject][RatingConstants::HOST]
+      active_systems_for_guest = get_rating_systems[:transactable_type_id_per_subject][RatingConstants::GUEST]
+      active_systems_for_listing = get_rating_systems[:transactable_type_id_per_subject][RatingConstants::TRANSACTABLE]
+
+      host_line_item_scope = LineItem::Transactable.join_transactables.of_order_owner(@current_user).
+        merge(Order.reviewable).where('transactables.creator_id != ?', @current_user.id)
+      guest_line_item_scope = LineItem::Transactable.join_transactables.join_orders.of_lister(@current_user).
+        where("transactables.transactable_type_id IN (?)", active_systems_for_guest).merge(Order.reviewable).
+        where('orders.user_id != ?', @current_user.id)
+
       {
-        RatingConstants::TRANSACTABLE => reservations.where(owner_id: @current_user.id, transactables: {transactable_type_id: active_systems_for_listing}).where('reservations.owner_id != reservations.creator_id').by_period(*filter_period),
-        RatingConstants::HOST => reservations.where(owner_id: @current_user.id, transactables: {transactable_type_id: active_systems_for_host}).where('reservations.owner_id != reservations.creator_id').by_period(*filter_period),
-        RatingConstants::GUEST => reservations.where(creator_id: @current_user.id, transactables: {transactable_type_id: active_systems_for_guest}).where('reservations.owner_id != reservations.creator_id').by_period(*filter_period)
+        RatingConstants::TRANSACTABLE => host_line_item_scope.where("transactables.transactable_type_id IN (?)", active_systems_for_listing).by_period(*filter_period),
+        RatingConstants::HOST => host_line_item_scope.where("transactables.transactable_type_id IN (?)", active_systems_for_host).by_period(*filter_period),
+        RatingConstants::GUEST => guest_line_item_scope.by_period(*filter_period)
       }
     else
       {}
     end
   end
-
-  def get_offers_for_owner_and_creator
-    if get_rating_systems[:active_rating_systems_offers].any?
-      active_systems_for_host = get_rating_systems[:active_rating_systems_offers][RatingConstants::HOST]
-      active_systems_for_guest = get_rating_systems[:active_rating_systems_offers][RatingConstants::GUEST]
-      active_systems_for_listing = get_rating_systems[:active_rating_systems_offers][RatingConstants::TRANSACTABLE]
-      # TODO: Add rest states after accepted
-      bids = Bid.with_state(:accepted).includes(offer: :offer_type)
-      {
-        RatingConstants::TRANSACTABLE => bids.where(user_id: @current_user.id,offers: { transactable_type_id: active_systems_for_listing }).where('bids.user_id != bids.offer_creator_id').by_period(*filter_period),
-        RatingConstants::HOST => bids.where(user_id: @current_user.id, offers: { transactable_type_id: active_systems_for_host }).where('bids.user_id != bids.offer_creator_id').by_period(*filter_period),
-        RatingConstants::GUEST => bids.where(offer_creator_id: @current_user.id, offers: { transactable_type_id: active_systems_for_guest }).where('bids.user_id != bids.offer_creator_id').by_period(*filter_period)
-      }
-    else
-      {}
-    end
-  end
-
-
 
   def get_reviewables(reviewables, transactable_type)
     {
@@ -140,7 +89,7 @@ class ReviewsService
   end
 
   def get_transactable_type_id
-    if @params[:review][:reviewable_type].in? %w(Reservation Bid Spree::LineItem)
+    if @params[:review][:reviewable_type].in? %w(Reservation Bid LineItem::Transactable )
       @params[:review][:reviewable_type].constantize.find(@params[:review][:reviewable_id]).transactable_type_id
     end
   end

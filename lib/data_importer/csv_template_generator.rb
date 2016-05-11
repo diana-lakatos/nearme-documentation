@@ -51,7 +51,7 @@ class DataImporter::CsvTemplateGenerator < DataImporter::File
   end
 
   def import_model
-    @import_model ||= @importable.class.name.sub('ServiceType', 'TransactableType').sub('Type', '').underscore.to_sym
+    @import_model ||= @importable.class.name.sub('Type', '').underscore.to_sym
   end
 
 end

@@ -208,7 +208,7 @@ module DashboardHelper
   end
 
   def dashboard_nav_user_reservations_label
-    reservations_count = current_user.reservations.no_recurring.not_archived.count
+    reservations_count = current_user.orders.reservations.not_archived.count
     out = t('dashboard.nav.user_reservations')
     if reservations_count > 0
       out = "#{out} <span>#{reservations_count}</span>".html_safe

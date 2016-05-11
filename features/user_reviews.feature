@@ -12,5 +12,5 @@ Feature: Reviews for user are shown on user page
     Given Reviews about the seller exist
     Given Visitor goes to the user page
     When Goes to reviews tab
-    Then Sees two seller reviews
+    Then Sees one seller reviews
 

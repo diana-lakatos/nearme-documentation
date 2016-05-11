@@ -1,0 +1,61 @@
+- first_item = index == 0
+.row-fluid{class: first_item ? 'list-item' : 'list-item additional-item'}
+  .span6.item
+    - if first_item
+      %p ITEM
+    = item.image
+
+    .item-description
+      %p= item.name_with_link
+      %p= sanitize item.short_description
+
+
+  - unless item.included_tax_total_rate.zero?
+    .span1{class: first_item ? '' : 'price'}
+      - if first_item
+        %p NET
+      %p.value= item.net_price
+    .span1{class: first_item ? '' : 'price'}
+      - if first_item
+        %p TAX
+      %p.value= item.included_tax_total_rate.to_s + "%"
+
+
+  .span1{class: first_item ? '' : 'price'}
+    - if first_item
+      %p PRICE
+    %p.value= item.unit_price
+
+  - unless item.additional_tax_total_rate.zero?
+    .span1{class: first_item ? '' : 'price'}
+      - if first_item
+        %p TAX
+      %p.value= item.additional_tax_total_rate.to_s + "%"
+
+    .span1{class: first_item ? '' : 'price'}
+      - if first_item
+        %p GROSS
+      %p.value= item.gross_price
+
+  .span1{class: first_item ? '' : 'quantity'}
+    - if first_item
+      %p QTY
+    %p.value
+      - if item.editable?
+        = item.quantity_form
+      - else
+        = item.quantity.to_i
+
+
+  .span1{class: first_item ? '' : 'total'}
+    - if first_item
+      %p TOTAL
+    %p.value= item.total_price
+
+  .span1
+    - if first_item
+      %p &nbsp;
+    - if item.deletable?
+      .value
+        = link_to cart_remove_product_path(item.id), method: :delete do
+          = image_tag 'themes/buy_sell/x-red_cart.png'

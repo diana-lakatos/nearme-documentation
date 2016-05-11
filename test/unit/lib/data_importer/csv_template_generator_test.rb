@@ -46,42 +46,4 @@ class DataImporter::CsvTemplateGeneratorTest < ActiveSupport::TestCase
     end
   end
 
-  context 'products' do
-    setup do
-      @product_type = FactoryGirl.create(:product_type)
-      CustomAttributes::CustomAttribute.destroy_all
-      @public_attribute = FactoryGirl.create(:custom_attribute, target: @product_type, name: 'public_attribute', label: 'My Public Attribute', public: true)
-      @private_attribute = FactoryGirl.create(:custom_attribute, target: @product_type, name: 'private_attribute', label: 'My Private Attribute', public: false)
-    end
-
-    context 'template for MPO' do
-      should 'contain only public attributes' do
-        result_csv = DataImporter::CsvTemplateGenerator.new(@product_type, true).generate
-        assert result_csv.include?('User Email'), "User email not included in: #{result_csv}"
-        assert result_csv.include?('Product Name'), "Product Name not included in: #{result_csv}"
-        assert result_csv.include?('My Public Attribute'), "Public attribute not included in: #{result_csv}"
-        refute result_csv.include?('My Private Attribute'), "Private attribute included in: #{result_csv}"
-      end
-
-      should 'allow to include custom fields in template' do
-        @product_type.update_attribute(:custom_csv_fields, [ {'spree/product' => 'public_attribute'}, {'spree/variant' => 'width_user'} ])
-        result_csv = DataImporter::CsvTemplateGenerator.new(@product_type).generate
-        assert_equal "My Public Attribute,Width\n", result_csv
-      end
-
-      context 'host' do
-        should 'do not contain fields for company and user' do
-          result_csv = DataImporter::Host::CsvTemplateGenerator.new(@product_type).generate
-          refute result_csv.include?('User Email'), "User email included in: #{result_csv}"
-          refute result_csv.include?('Company Name'), "Company Name included in: #{result_csv}"
-          assert result_csv.include?('Product Name'), "Product Name not included in: #{result_csv}"
-          assert result_csv.include?('My Public Attribute'), "Public attribute not included in: #{result_csv}"
-          refute result_csv.include?('My Private Attribute'), "Private attribute included in: #{result_csv}"
-        end
-      end
-
-    end
-
-  end
-
 end

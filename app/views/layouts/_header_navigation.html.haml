@@ -19,7 +19,7 @@
             - platform_context.transactable_types.each do |tt|
               = render partial: 'layouts/list_your_bookable', locals: { transactable_type: tt }
   - if user_signed_in?
-    - if buyable? && current_user.cart_orders.any? && HiddenUiControls.find('main_menu/cart').visible?
+    - if current_user.cart_orders.any? && HiddenUiControls.find('main_menu/cart').visible? && current_instance.use_cart?
       %li.divider-vertical
       %li
         = link_to cart_index_path, class: 'nav-link' do
@@ -52,22 +52,22 @@
 
         - if platform_context.bookable? && current_instance.split_registration && current_user.seller_profile.present?
           %li
-            = link_to main_app.dashboard_company_host_reservations_path, class: 'nav-link dropdown-toggle' do
+            = link_to main_app.dashboard_company_orders_received_index_path, class: 'nav-link dropdown-toggle' do
               %span= t 'top_navbar.bookings_received'
               = current_user_open_host_reservations_count_formatted
 
         - if (platform_context.bookable? && HiddenUiControls.find('main_menu/my_bookings').visible?) && (!current_instance.split_registration || current_user.buyer_profile.present?)
           %li
-            = link_to main_app.dashboard_user_reservations_path, class: 'nav-link dropdown-toggle' do
-              %span= t 'top_navbar.my_bookings'
-              = current_user_open_user_reservations_count_formatted
+            = link_to main_app.dashboard_orders_path, class: 'nav-link dropdown-toggle' do
+              %span= t 'top_navbar.my_orders'
+              = current_user_orders_count_formatted
 
-        - if subscribable? && HiddenUiControls.find('main_menu/my_subscriptions').visible? && (!current_instance.split_registration || current_user.buyer_profile.present?)
+        - if false #subscribable? && HiddenUiControls.find('main_menu/my_subscriptions').visible? && (!current_instance.split_registration || current_user.buyer_profile.present?)
           %li
             = link_to main_app.active_dashboard_user_recurring_bookings_path, class: 'nav-link dropdown-toggle' do
               %span= t 'top_navbar.my_subscriptions'
 
-        - if platform_context.buyable? && HiddenUiControls.find('main_menu/my_orders').visible? && (!current_instance.split_registration || current_user.buyer_profile.present?)
+        - if false #platform_context.buyable? && HiddenUiControls.find('main_menu/my_orders').visible? && (!current_instance.split_registration || current_user.buyer_profile.present?)
           %li
             = link_to main_app.dashboard_orders_path, class: 'nav-link dropdown-toggle' do
               %span= t 'top_navbar.my_orders'
@@ -120,7 +120,7 @@
     %li
       - options = {}
       - options[:role] = :buyer if current_instance.split_registration?
-      = link_to_registration get_return_to_url(dashboard_user_reservations_path, options), platform_context.secured_constraint, secure_links?, :class => "nav-link header-first", data: { modal: true, 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } do
+      = link_to_registration get_return_to_url(dashboard_orders_path, options), platform_context.secured_constraint, secure_links?, :class => "nav-link header-first", data: { modal: true, 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } do
         %span= t 'top_navbar.sign_up'
     %li.divider-vertical
     %li

@@ -82,17 +82,6 @@
                 %span= "#{controller_name.titleize}"
 
 
-    - if @authorizer.authorized?('BuySell') && false
-      %li#buy_sell
-        %a{"data-parent" => "#buy_sell", "data-toggle" => "collapse", :href => "#buy-sell-sub"}
-          %i.fa.fa-shopping-cart
-          %span Buy/Sell
-        %ul#buy-sell-sub.sub-nav.collapse{:class => ("in" if controller.class.to_s.split("::").first(2).join("::") == "InstanceAdmin::BuySell")}
-          - InstanceAdmin::BaseController::BUY_SELL_CONTROLLERS.each do |controller_name, settings|
-            %li
-              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/buy_sell/" + controller_name), action: settings[:default_action]}", :class => is_active_instance_admin_nav_link(controller_name, settings)}
-                %span= "#{controller_name.titleize}"
-
     - if @authorizer.authorized?('ShippingOptions') && false
       %li#shipping_options
         %a{"data-parent" => "#shipping_options", "data-toggle" => "collapse", :href => "#shipping-options-sub"}

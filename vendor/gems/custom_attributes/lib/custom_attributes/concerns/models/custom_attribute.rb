@@ -30,7 +30,7 @@ module CustomAttributes
           validates_uniqueness_of :name, :scope => [:target_id, :target_type, :deleted_at]
           validates_inclusion_of :html_tag, in: HTML_TAGS, allow_blank: true
 
-          belongs_to :target, polymorphic: true, touch: true
+          belongs_to :target, -> { with_deleted }, polymorphic: true, touch: true
           belongs_to :instance
 
           serialize :valid_values, Array

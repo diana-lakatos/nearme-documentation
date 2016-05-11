@@ -4,15 +4,19 @@ module ReservationTestSupport
   def prepare_company_with_charged_reservations(options = {})
     options.reverse_merge!(:reservation_count => 1)
 
-    listing = FactoryGirl.create(:transactable)
-    listing.action_type.day_pricings.first.update(price_cents: 5000)
+    transactable = FactoryGirl.create(:transactable)
+    transactable.action_type.transactable_type_action_type.update(
+      service_fee_guest_percent: 0,
+      service_fee_host_percent: 0
+    )
+    transactable.action_type.day_pricings.first.update(price_cents: 4500)
 
-    prepare_charged_reservations_for_listing(listing, options[:reservation_count])
-    listing.company
+    prepare_charged_reservations_for_transactable(transactable, options[:reservation_count])
+    transactable.company
   end
 
-  # Prepares some charged reservations for a listing
-  def prepare_charged_reservations_for_listing(listing, count = 1, options = {})
+  # Prepares some charged reservations for a transactable
+  def prepare_charged_reservations_for_transactable(transactable, count = 1, options = {})
     user = FactoryGirl.create(:user)
     payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
     payment_method = payment_gateway.payment_methods.first
@@ -21,22 +25,12 @@ module ReservationTestSupport
     date = Time.zone.now.advance(:weeks => 1).beginning_of_week.to_date
     reservations = []
     count.times do |i|
-      reservation_request_attributes = FactoryGirl.attributes_for(:reservation_request)
-      reservation_request_attributes.merge!({
-        dates:[(date + i).to_s(:db)],
-        transactable_pricing_id: listing.action_type.day_pricings.first.id
-      })
-
-      reservation_request = ReservationRequest.new(listing, user, reservation_request_attributes )
-      if options.has_key?("reservation_#{i}".to_sym)
-        reservation_request.reservation.update_attributes(options["reservation_#{i}".to_sym])
-      end
-      reservation_request.process
-
-
-      reservations << reservation_request.reservation
+      reservation = FactoryGirl.create(:confirmed_reservation, transactable: transactable, company: transactable.company, currency: transactable.currency )
+      reservation.payment.destroy
+      reservation.payment_attributes = {state: "paid", payment_method: payment_method, credit_card_attributes: FactoryGirl.attributes_for(:credit_card_attributes)}
+      reservation.save
+      reservations << reservation
     end
-
-    reservations.each(&:charge_and_confirm!)
+    reservations
   end
 end

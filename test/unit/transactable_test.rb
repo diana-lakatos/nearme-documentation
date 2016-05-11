@@ -7,6 +7,7 @@ class TransactableTest < ActiveSupport::TestCase
 
     should belong_to(:location)
     should have_many(:reservations)
+    should have_many(:orders)
 
     should validate_presence_of(:location)
     should validate_presence_of(:name)

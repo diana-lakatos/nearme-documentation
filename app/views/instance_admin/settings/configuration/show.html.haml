@@ -42,6 +42,8 @@
       - if Rails.env.staging?
         .input-container.col-xs-6
           = f.input :enable_sms_and_api_workflow_alerts_on_staging, as: :boolean, inline_label: true
+      .input-container.col-xs-6
+        = f.input :expand_orders_list, as: :boolean, inline_label: true
 
     - if Rails.env.staging? # it's relevant only for staging -> staging_email.rb initializer
       .row
@@ -64,6 +66,9 @@
             = t('instance_admin.settings.configuration.checkout_section.description_translation')
           .controls
             %input{name: 'instance[custom_translations][buy_sell_market.checkout.manual_payment_description]', class: 'form-control', value: t('buy_sell_market.checkout.manual_payment_description') }
+    .row
+      .input-container.col-xs-6
+        = f.input :use_cart, as: :boolean, inline_label: true
 
   .content-container
     %h4

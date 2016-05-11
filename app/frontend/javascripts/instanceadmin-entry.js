@@ -464,18 +464,6 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    var el = $('#zone_form, #taxonomy_form');
-    if (el.length === 0) {
-        return;
-    }
-
-    require.ensure('./instance_admin/sections/buy_sell', function(require){
-        var InstanceAdminBuySellController = require('./instance_admin/sections/buy_sell');
-        return new InstanceAdminBuySellController(el);
-    });
-});
-
-DNM.registerInitializer(function(){
     var el = $('#form-components-manager');
     if (el.length === 0) {
         return;

@@ -3,16 +3,16 @@ require 'test_helper'
 class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
 
   setup do
-    @reservation = Reservation.new
+    @reservation = Reservation.new(quantity: 1)
 
-    @listing = stub()
-    @listing.stubs(:action_type).returns({})
-    @listing.stubs(:open_on?).returns(true)
-    @listing.stubs(:availability_for).returns(10)
-    @listing.action_type.stubs(:minimum_booking_days).returns(1)
-    @listing.stubs(:overnight_booking?).returns(false)
+    @transactable = stub()
+    @transactable.stubs(:action_type).returns({})
+    @transactable.stubs(:open_on?).returns(true)
+    @transactable.stubs(:availability_for).returns(10)
+    @transactable.action_type.stubs(:minimum_booking_days).returns(1)
+    @transactable.stubs(:overnight_booking?).returns(false)
 
-    @reservation.stubs(:listing).returns(@listing)
+    @reservation.stubs(:transactable).returns(@transactable)
     @transactable_pricing = stub({
         action: stub({
           minimum_booking_days: 1
@@ -75,7 +75,7 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
         @reservation.quantity = 3
         seed_reservation_dates date_groups_of(45, 3)
 
-        assert_equal 3*6750_00, @calculator.price.cents
+        assert_equal 6750_00, @calculator.price.cents
       end
 
       should "return 0 for empty booking" do
@@ -106,22 +106,22 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
           # custom definition.
           @dates = [Time.zone.today, Time.zone.today + 2.days, Time.zone.today + 4.days, Time.zone.today + 8.days]
           @dates.each do |date|
-            @listing.stubs(:availability_for).with(date).returns(2)
-            @listing.stubs(:open_on?).with(date).returns(true)
+            @transactable.stubs(:availability_for).with(date).returns(2)
+            @transactable.stubs(:open_on?).with(date).returns(true)
           end
 
           @closed = [Time.zone.today + 1.day]
           @closed.each do |date|
-            @listing.stubs(:open_on?).with(date).returns(false)
+            @transactable.stubs(:open_on?).with(date).returns(false)
           end
 
           @unavailable = [Time.zone.today + 3.days]
           @unavailable.each do |date|
-            @listing.stubs(:open_on?).with(date).returns(true)
-            @listing.stubs(:availability_for).with(date).returns(1)
+            @transactable.stubs(:open_on?).with(date).returns(true)
+            @transactable.stubs(:availability_for).with(date).returns(1)
           end
 
-          @listing.stubs(:open_on?).with(Time.zone.today + 5.days).returns(false)
+          @transactable.stubs(:open_on?).with(Time.zone.today + 5.days).returns(false)
 
           seed_reservation_dates(@dates)
 
@@ -138,7 +138,7 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
         end
 
         should "take into account listing availability" do
-          assert_equal 500.to_money*2, @calculator.price
+          assert_equal 500.to_money, @calculator.price
         end
       end
 
@@ -150,11 +150,11 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
           # custom definition.
           @dates = [Time.zone.today, Time.zone.today + 1.days, Time.zone.today + 2.days, Time.zone.today + 3.days, Time.zone.today + 5.days, Time.zone.today + 6.days]
           @dates.each do |date|
-            @listing.stubs(:availability_for).with(date).returns(1)
-            @listing.stubs(:open_on?).with(date).returns(true)
+            @transactable.stubs(:availability_for).with(date).returns(1)
+            @transactable.stubs(:open_on?).with(date).returns(true)
           end
 
-          @listing.stubs(:open_on?).with(Time.zone.today + 4.days).returns(false)
+          @transactable.stubs(:open_on?).with(Time.zone.today + 4.days).returns(false)
 
           seed_reservation_dates(@dates)
 

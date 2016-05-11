@@ -58,7 +58,7 @@ class PaymentGateway::FetchPaymentGateway < PaymentGateway
 
     @payment_data.merge!({
       cmd: "_xclick",
-      item_name: ERB::Util.url_encode(reservation.listing.name).truncate(40),
+      item_name: ERB::Util.url_encode(reservation.transactable.name).truncate(40),
       store_card: "0"
     })
   end

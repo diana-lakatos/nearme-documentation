@@ -111,7 +111,7 @@ class V1::ListingsController < V1::BaseController
   def connections
     listing = Transactable.find(params[:id])
     users = current_user.followed_users.patron_of(listing)
-    patrons = User.joins(:reservations).where(:reservations => { :transactable_id => listing.id }).where(:id => users.pluck('users.id')).uniq
+    patrons = User.joins(:orders).where(:orders => { :transactable_id => listing.id }).where(:id => users.pluck('users.id')).uniq
     render json: formatted_patrons(listing, patrons)
   end
 

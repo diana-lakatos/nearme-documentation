@@ -7,47 +7,52 @@ class Reservation::TaxCalculatorTest < ActiveSupport::TestCase
     # tax rate 23%, included
     @tax_rate = FactoryGirl.create(:_tax_rate, tax_region: @tax_region)
     @reservation = FactoryGirl.build(:reservation_without_payment)
+    @tli = FactoryGirl.build(:transactable_line_item, line_itemable: @reservation)
+    FactoryGirl.create(:california_state_tax_rate, tax_region: @tax_region)
   end
 
   should "calculate included tax for country" do
-    @reservation.send :calculate_prices
-    @reservation.total_tax_amount_cents == tax_included_in(@reservation.total_amount_cents, 23)
+    check_tax(23, 0)
   end
 
   should 'calculate included tax for state' do
-    FactoryGirl.create(:california_state_tax_rate, tax_region: @tax_region)
-    @reservation.send :calculate_prices
-    @reservation.total_tax_amount_cents == tax_included_in(@reservation.total_amount_cents, 13)
+    Address.any_instance.stubs(:state_object).returns(State.find_by_abbr("CA"))
+    check_tax(13, 0)
   end
 
-  context 'tax not included in price' do
+  context 'tax added' do
 
     setup do
-      @tax_rate.update_attributes included_in_price: false
+      TaxRate.update_all included_in_price: false
     end
 
     should "calculate not included tax for country" do
-      @reservation.send :calculate_prices
-      @reservation.total_tax_amount_cents == 0
-      @reservation.additional_charges.last.amount_cents == tax_added(@reservation.total_amount_cents, 23)
+      check_tax(0, 23)
     end
 
     should 'calculate not included tax for state' do
-      FactoryGirl.create(:california_state_tax_rate, tax_region: @tax_region, included_in_price: false)
-      @reservation.send :calculate_prices
-      @reservation.total_tax_amount_cents == 0
-      @reservation.additional_charges.last.amount_cents == tax_added(@reservation.total_amount_cents, 13)
+      Address.any_instance.stubs(:state_object).returns(State.find_by_abbr("CA"))
+      check_tax(0, 13)
     end
+  end
+
+  def check_tax(included_rate, additional_rate)
+    @tli.send(:calculate_tax)
+    assert_equal included_rate, @tli.included_tax_total_rate
+    assert_equal tax_included_in(@tli.unit_price_cents, included_rate), @tli.included_tax_price_cents.round(2)
+
+    assert_equal additional_rate, @tli.additional_tax_total_rate
+    assert_equal tax_additional_in(@tli.unit_price_cents, additional_rate), @tli.additional_tax_price_cents.round(2)
   end
 
 
   def tax_included_in(amount, percent)
-    ((0.01 * percent * amount) / (1 + 0.01 * percent)).to_i
+    ((0.01 * percent * amount) / (1 + 0.01 * percent)).round(2)
   end
 
 
-  def tax_added(amount, percent)
-    (0.01 * percent * amount).to_i
+  def tax_additional_in(amount, percent)
+    (0.01 * percent * amount).round(2)
   end
 
 end

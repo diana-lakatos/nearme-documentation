@@ -33,7 +33,7 @@ class Review < ActiveRecord::Base
   scope :with_date, ->(date) { where(created_at: date) }
   scope :with_transactable_type, ->(transactable_type_id) { where(transactable_type_id: transactable_type_id) }
   scope :by_reservations, ->(id) { where(reviewable_id: id, reviewable_type: 'Reservation').includes(rating_answers: [:rating_question]) }
-  scope :by_line_items, ->(id) { where(reviewable_id: id, reviewable_type: 'Spree::LineItem').includes(rating_answers: [:rating_question]) }
+  scope :by_line_items, ->(id) { where(reviewable_id: id, reviewable_type: ['LineItem::Transactable', 'LineItem']).includes(rating_answers: [:rating_question]) }
   scope :by_search_query, -> (query) { joins(:user).where("users.name ILIKE ?", query) }
   scope :displayable, -> { where(displayable: true).joins(:rating_system).where('rating_systems.active = ?', true) }
   scope :about_seller , -> (user) { displayable.where(seller_id: user.id, subject: RatingConstants::HOST).where.not(user_id: user.id) }
@@ -52,7 +52,7 @@ class Review < ActiveRecord::Base
     elsif reviewable_type == "Bid"
       recalculate_by_type(-> { self.reviewable.offer.recalculate_average_rating! })
     else
-      recalculate_by_type(-> { self.reviewable.listing.recalculate_average_rating! })
+      recalculate_by_type(-> { self.reviewable.transactable.recalculate_average_rating! })
     end
   end
 
@@ -63,7 +63,7 @@ class Review < ActiveRecord::Base
   end
 
   def reviewable_object
-    reviewable.try(:product) || reviewable.try(:listing) || reviewable.try(:offer)
+    reviewable.try(:line_item_source) || reviewable.try(:transactable) || reviewable.try(:offer)
   end
 
   protected

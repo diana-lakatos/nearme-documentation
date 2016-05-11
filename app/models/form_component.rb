@@ -5,7 +5,6 @@ class FormComponent < ActiveRecord::Base
   scoped_to_platform_context
 
   SPACE_WIZARD = 'space_wizard'
-  PRODUCT_ATTRIBUTES = 'product_attributes'
   PROJECT_ATTRIBUTES = 'project_attributes'
   OFFER_ATTRIBUTES = 'offer_attributes'
   RESERVATION_ATTRIBUTES = 'reservation_attributes'
@@ -18,7 +17,7 @@ class FormComponent < ActiveRecord::Base
   BUYER_REGISTRATION = 'buyer_registration'
   LOCATION_ATTRIBUTES = 'location_attributes'
   FORM_TYPES = [
-    SPACE_WIZARD, PRODUCT_ATTRIBUTES, TRANSACTABLE_ATTRIBUTES, INSTANCE_PROFILE_TYPES,
+    SPACE_WIZARD, TRANSACTABLE_ATTRIBUTES, INSTANCE_PROFILE_TYPES,
     PROJECT_ATTRIBUTES, BUYER_PROFILE_TYPES, SELLER_PROFILE_TYPES, OFFER_ATTRIBUTES,
     RESERVATION_ATTRIBUTES, DEFAULT_REGISTRATION, BUYER_REGISTRATION, SELLER_REGISTRATION,
     LOCATION_ATTRIBUTES
@@ -35,10 +34,22 @@ class FormComponent < ActiveRecord::Base
 
   ranks :rank, with_same: [:form_componentable_id, :form_type]
 
+  def name_to_id
+    name.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
+  end
+
   def fields_names
     form_fields.inject([]) do |all_fields_names, field|
       all_fields_names << field[field.keys.first]
       all_fields_names
+    end
+  end
+
+  def form_fields_except(types)
+    if types.present?
+      form_fields.select{ |ff| (ff.values.first =~ /#{types}/).nil? }
+    else
+      form_fields
     end
   end
 
@@ -54,10 +65,8 @@ class FormComponent < ActiveRecord::Base
       else
         raise NotImplementedError
       end
-    elsif form_componentable.instance_of?(TransactableType) || form_componentable.instance_of?(ServiceType)
+    elsif form_componentable.instance_of?(TransactableType)
       [SPACE_WIZARD, TRANSACTABLE_ATTRIBUTES]
-    elsif form_componentable.instance_of?(Spree::ProductType)
-      [SPACE_WIZARD, PRODUCT_ATTRIBUTES]
     elsif form_componentable.instance_of?(ProjectType)
       [SPACE_WIZARD, PROJECT_ATTRIBUTES]
     elsif form_componentable.instance_of?(ReservationType)

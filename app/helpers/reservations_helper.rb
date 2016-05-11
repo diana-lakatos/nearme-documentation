@@ -17,11 +17,11 @@ module ReservationsHelper
   end
 
   def upcoming_reservation_count
-    @upcoming_reservation_count ||= current_user.reservations.not_archived.count
+    @upcoming_reservation_count ||= current_user.orders.reservations.not_archived.count
   end
 
   def archived_reservation_count
-    @archived_reservation_count ||= current_user.reservations.archived.count
+    @archived_reservation_count ||= current_user.orders.reservations.archived.count
   end
 
   def secure_listing_url(listing, options = {})
@@ -58,13 +58,6 @@ module ReservationsHelper
     end
   end
 
-  def current_user_open_host_reservations_count
-    Controller::GuestList.new(current_user).filter('unconfirmed').reservations.size
-  end
-
-  def current_user_open_user_reservations_count
-    current_user.reservations.no_recurring.not_archived.count
-  end
 
   def current_user_open_all_reservations_count
     current_user_open_host_reservations_count + current_user_open_user_reservations_count
@@ -74,8 +67,18 @@ module ReservationsHelper
     reservations_count_formatted(current_user_open_host_reservations_count)
   end
 
-  def current_user_open_user_reservations_count_formatted
-    reservations_count_formatted(current_user_open_user_reservations_count)
+  def current_user_open_host_reservations_count
+    return 0 if current_user.default_company.blank?
+  
+    current_user.default_company.orders.active.unconfirmed.count
+  end
+
+  def current_user_open_user_reservations_count
+    current_user.orders.not_archived.count
+  end
+
+  def current_user_orders_count_formatted
+    reservations_count_formatted(current_user.orders.not_archived.count)
   end
 
   def current_user_open_all_reservations_count_formatted

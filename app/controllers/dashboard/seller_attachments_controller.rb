@@ -36,15 +36,7 @@ class Dashboard::SellerAttachmentsController < Dashboard::AssetsController
   end
 
   def get_file
-    @file = if @listing_params
-        @listing_params[:attachments_attributes]['0'][:data]
-      elsif params.has_key?(:boarding_form)
-        params[:boarding_form][:product_form][:attachments_attributes]['0']['data']
-      elsif params.has_key?(:offer)
-        params[:offer][:attachments_attributes]['0']['data']
-      else
-        params[:product_form][:attachments_attributes]['0']['data']
-      end
+    @file = @listing_params[:attachments_attributes]['0'][:data]
   end
 
 end

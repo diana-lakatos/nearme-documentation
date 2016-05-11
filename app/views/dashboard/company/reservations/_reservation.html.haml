@@ -1,0 +1,88 @@
+%header
+.row
+  .col-xs-7
+    = render 'dashboard/company/host_reservations/client_info_area', reservation: reservation
+
+  .col-xs-5
+    .order-status
+      - if reservation.archived_at.present? && reservation.state == 'confirmed'
+        %span{class: 'confirmed' }
+          = t("reservations.states.completed")
+      - else
+        %span{class: reservation.state }
+          = t("reservations.states.#{reservation.state}")
+
+- if reservation.can_confirm?
+  .alert.alert-warning= reservation.manage_booking_status_info_new
+  - if reservation.active_merchant_payment?
+    - if reservation.payment.successful_billing_authorization.present?
+      .alert.alert-warning= I18n.t('dashboard.host_reservations.money_info')
+      - unless current_instance.manual_transfers?
+        .alert.alert-warning= I18n.t('dashboard.host_reservations.next_payment_transfer', next_payment_transfer: reservation.next_payment_transfer)
+      - if reservation.company.possible_payout_not_configured?(reservation.payment.payment_gateway)
+        .alert.alert-warning= I18n.t('dashboard.host_reservations.remember_to_setup_automated_payout', setup_link: edit_dashboard_company_payouts_path).html_safe
+
+- if show_not_verified_host_alert?(reservation)
+  .alert.alert-warning
+    = I18n.t('dashboard.click_to_call.not_verified_self_warning', link: link_to(t('dashboard.nav.social_accounts'), social_accounts_path).html_safe).html_safe
+
+= render 'dashboard/user_reservations/reservation_details', reservation: reservation, for_host: true
+
+.row
+  - if reservation.guest_notes.present?
+    .col-sm-3
+      %h3= t('dashboard.host_reservations.exclusive_price_guests_notes')
+      %blockquote= reservation.guest_notes
+
+  - if reservation.payment_documents.present?
+    .col-sm-3
+      %h3=  t('dashboard.host_reservations.payment_documents')
+      %ul.payment-documents
+        - reservation.payment_documents.each do |pd|
+          %li
+            %a{:href => pd.file.url, download: true}= pd.file.file_name
+  - if reservation.additional_line_items.present?
+    .col-sm-3.right
+      %h3=  t('dashboard.host_reservations.additional_charges')
+      %ul.payment-documents
+        - reservation.additional_line_items.each do |ac|
+          %li
+            =ac.name + ' - ' + humanized_money_with_cents_and_symbol(ac.total_price)
+
+%hr/
+
+.row
+  .col-md-3
+    %h3
+      = t("dashboard.host_reservations.payment_state")
+  .col-md-9{class: reservation.paid? ? 'info' : "warn" }
+    = reservation.payment.try(:state).try(:humanize).try(:capitalize)
+
+.row
+  .col-md-3
+    %h3
+      = t("dashboard.host_reservations.payment_method")
+  .col-md-3{class: reservation.paid? ? 'info' : "warn" }
+    = t("dashboard.host_reservations.payment_methods." + reservation.payment.try(:payment_method).try(:payment_method_type).to_s)
+
+- if reservation.transactable.possible_delivery?
+  .row
+    .col-md-3
+      %h3
+        = t("dashboard.host_reservations.delivery_type")
+    .col-md-9
+      = reservation.shipments.any? ? t("dashboard.host_reservations.delivery.delivery") : t("dashboard.host_reservations.delivery.pick_up")
+
+%hr/
+
+.row
+  .col-sm-9.col-sm-push-3
+    .order-actions
+      = render 'dashboard/company/host_reservations/owner_actions', reservation: reservation
+
+  .col-sm-3.col-sm-pull-9
+    %small= t('dashboard.host_reservations.order_placed_html', date: l(reservation.created_at.to_date, format: :long))
+
+  .col-sm-3.col-sm-pull-9
+    %small= t('dashboard.host_reservations.order_number', number: reservation.id)
+

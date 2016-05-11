@@ -68,8 +68,11 @@ class ReservationDecoratorTest < ActionView::TestCase
     setup do
       TransactableType.first.update_columns(service_fee_guest_percent: 0)
       @payment = FactoryGirl.build(:manual_payment)
-      listing = FactoryGirl.create(:transactable, :free_listing)
-      @reservation = FactoryGirl.build(:unconfirmed_reservation, listing: listing, transactable_pricing: listing.action_type.pricings.first, payment: @payment).decorate
+      transactable = FactoryGirl.create(:transactable, :free_listing)
+      @reservation = FactoryGirl.build(:unconfirmed_reservation,
+        transactable: transactable,
+        transactable_pricing: transactable.action_type.pricings.first,
+        payment: @payment).decorate
       @reservation.charge_and_confirm!
     end
 
@@ -96,9 +99,9 @@ class ReservationDecoratorTest < ActionView::TestCase
 
   context 'A priced unconfirmed reservation' do
     setup do
-      @reservation = FactoryGirl.build(:reservation,
-                                       subtotal_amount_cents: 50_00,
-                                       service_fee_amount_guest_cents: 5_00).decorate
+      @reservation = FactoryGirl.create(:reservation).decorate
+                                       # subtotal_amount_cents: 50_00,
+                                       # service_fee_amount_guest_cents: 5_00).decorate
     end
 
     should 'return that its Pending' do
@@ -108,10 +111,8 @@ class ReservationDecoratorTest < ActionView::TestCase
 
   context 'that was confirmed ( = paid)' do
     setup do
-      @payment = FactoryGirl.build(:paid_payment, subtotal_amount_cents: 50_00, service_fee_amount_guest_cents: 5_00)
-      @reservation = FactoryGirl.build(:confirmed_reservation,
-                                       subtotal_amount_cents: 50_00,
-                                       service_fee_amount_guest_cents: 5_00, payment: @payment).decorate
+      @reservation = FactoryGirl.create(:reservation_without_payment, state: 'confirmed').decorate
+      @reservation.stubs(:paid?).returns(true)
     end
 
     should "return right paid amount" do
@@ -139,13 +140,11 @@ class ReservationDecoratorTest < ActionView::TestCase
     setup do
       @time = DateTime.new(2014, 1, 1).in_time_zone
       travel_to(@time)
-      listing = FactoryGirl.create(:transactable, :with_time_based_booking)
+      transactable = FactoryGirl.create(:transactable, :with_time_based_booking)
       @reservation = FactoryGirl.build(:reservation,
-                                       subtotal_amount_cents: 500_00,
-                                       service_fee_amount_guest_cents: 50_00,
                                        date: @time.to_date,
-                                       transactable_pricing: listing.action_type.hour_pricings.first,
-                                       listing: listing).decorate
+                                       transactable_pricing: transactable.action_type.hour_pricings.first,
+                                       transactable: transactable).decorate
     end
 
     should 'return hourly_summary_for_first_period with date and default hours' do

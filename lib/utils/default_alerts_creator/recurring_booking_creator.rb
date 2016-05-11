@@ -23,7 +23,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreator < Utils::DefaultAlert
   end
 
   def notify_guest_of_expiration_email!
-    create_alert!({associated_class: WorkflowStep::RecurringBookingWorkflow::Expired, name: 'notify_guest_of_expiration', path: 'recurring_booking_mailer/notify_guest_of_expiration', subject: "[{{platform_context.name}}] Your recurring booking for '{{recurring_booking.listing.name}}' at {{recurring_booking.location.street}} has expired", alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::RecurringBookingWorkflow::Expired, name: 'notify_guest_of_expiration', path: 'recurring_booking_mailer/notify_guest_of_expiration', subject: "[{{platform_context.name}}] Your recurring booking for '{{recurring_booking.transactable.name}}' at {{recurring_booking.location.street}} has expired", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def notify_host_of_expiration_email!
@@ -35,11 +35,11 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreator < Utils::DefaultAlert
   end
 
   def notify_host_of_cancellation_by_guest_email!
-    create_alert!({associated_class: WorkflowStep::RecurringBookingWorkflow::GuestCancelled, name: 'Notify host of guest cancellation', path: 'recurring_booking_mailer/notify_host_of_cancellation_by_guest', subject: "[{{platform_context.name}}] {{recurring_booking.owner.first_name }} cancelled a recurring booking for '{{recurring_booking.listing.name}}' at {{recurring_booking.location.street}}", alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::RecurringBookingWorkflow::GuestCancelled, name: 'Notify host of guest cancellation', path: 'recurring_booking_mailer/notify_host_of_cancellation_by_guest', subject: "[{{platform_context.name}}] {{recurring_booking.owner.first_name }} cancelled a recurring booking for '{{recurring_booking.transactable.name}}' at {{recurring_booking.location.street}}", alert_type: 'email', recipient_type: 'lister'})
   end
 
   def notify_guest_of_cancellation_by_host_email!
-    create_alert!({associated_class: WorkflowStep::RecurringBookingWorkflow::HostCancelled, name: 'Notify guest of host cancellation', path: 'recurring_booking_mailer/notify_guest_of_cancellation_by_host', subject: "[{{platform_context.name}}] Your recurring booking for '{{recurring_booking.listing.name}}' at {{recurring_booking.location.street}} was cancelled by the host", alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::RecurringBookingWorkflow::HostCancelled, name: 'Notify guest of host cancellation', path: 'recurring_booking_mailer/notify_guest_of_cancellation_by_host', subject: "[{{platform_context.name}}] Your recurring booking for '{{recurring_booking.transactable.name}}' at {{recurring_booking.location.street}} was cancelled by the host", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def notify_host_of_cancellation_by_host_email!

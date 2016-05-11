@@ -19,6 +19,10 @@ FactoryGirl.define do
       unit 'hour'
     end
 
+    factory :purchase_pricing do
+      unit 'item'
+    end
+
     factory :event_pricing do
       unit 'event'
       trait :with_book_it_out do

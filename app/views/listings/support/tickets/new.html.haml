@@ -10,12 +10,14 @@
             = @schedule_presenter.selected_date_summary
           - elsif @listing.subscription_booking
             = t('support.new.subscription', period: @pricing.units_translation('search.per_unit_price').titleize, from: @date_presenter.get_date)
-          -elsif params[:reservation_request][:quantity]
-            = "#{params[:reservation_request][:quantity]} x #{@hourly_presenter.present? ? "#{@hourly_presenter.hours} #{'hour'.pluralize(@hourly_presenter.hours.to_i)}" : @date_presenter.days_in_words}"
+          -elsif params[:order][:quantity] && @listing.purchase_action?
+            = "#{params[:order][:quantity]} #{@pricing.units_translation('search.per_unit_price').titleize}"
+          -elsif params[:order][:quantity]
+            = "#{params[:order][:quantity]} x #{@hourly_presenter.present? ? "#{@hourly_presenter.hours} #{'hour'.pluralize(@hourly_presenter.hours.to_i)}" : @date_presenter.days_in_words}"
 
         .form
           = simple_form_for @ticket, url: listing_tickets_path(@listing), html: { id: 'rfq' }, method: :post do |t|
-            - params[:reservation_request].each do |k, v|
+            - params[:order].each do |k, v|
               = hidden_field_tag "details[#{k}]", v
 
             = t.simple_fields_for :messages do |f|

@@ -1,8 +1,12 @@
 %h3= t('dashboard.document_requirements.upload_files')
 
 %div.document-requirements-container
-  = f.simple_fields_for :upload_obligation, f.object.upload_obligation || f.object.build_upload_obligation(level: UploadObligation::LEVELS.first) do |f|
-    = f.input :level, as: :radio_buttons, :collection => UploadObligation::LEVELS, label: false, wrapper_html: { "data-document-obligation": true }
+  - if current_instance.documents_upload.try(:is_vendor_decides?)
+    = f.simple_fields_for :upload_obligation, f.object.upload_obligation || f.object.build_upload_obligation(level: UploadObligation::LEVELS.first) do |f|
+      = f.input :level, as: :radio_buttons, :collection => UploadObligation::LEVELS, label: false, wrapper_html: { "data-document-obligation": true }
+  - else
+    = f.simple_fields_for :upload_obligation, f.object.upload_obligation || f.object.build_upload_obligation(level: current_instance.documents_upload.try(:to_obligation)) do |f|
+      = f.input :level, as: :hidden
 
   .document-requirements-fields
     %p= t('dashboard.document_requirements.enter_your_documents')

@@ -5,8 +5,8 @@
 {% if order.has_seller_attachments? %}
   <p>{{ 'seller_attachments.associated_with_order' | translate }}:</p>
   <ul>
-    {% for item in order.line_items %}
-      {% for attachment in item.product.attachments %}
+    {% for item in order.transactable_line_items %}
+      {% for attachment in item.line_item_source.attachments %}
         <li>
           <a href="{{ attachment.attachment_url }}">{{ attachment.title }}</a>
         </li>

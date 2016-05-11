@@ -22,12 +22,14 @@ class PaymentTransferTest < ActiveSupport::TestCase
     end
 
     should "only allow charges of the same currency" do
-      @reservations = prepare_charged_reservations_for_listing(@reservation_1.listing)
+      @reservations = prepare_charged_reservations_for_transactable(@reservation_1.transactable)
+      reservation = @reservations.last
+      reservation.payment.destroy
 
       rc = Payment.create!(
         :payment_method => PaymentMethod.where(payment_method_type: 'credit_card').last,
         :credit_card => FactoryGirl.build(:credit_card),
-        :payable => @reservations.last,
+        :payable => reservation,
         :subtotal_amount => 10,
         :service_fee_amount_guest => 1,
         :service_fee_amount_host => 2,
@@ -71,12 +73,14 @@ class PaymentTransferTest < ActiveSupport::TestCase
       @company = FactoryGirl.build(:company)
       @payments = []
       @payments << @payment_1 = FactoryGirl.create(:paid_payment, company: @company,
+        :total_amount_cents => 1150,
         :subtotal_amount_cents => 1000,
         :service_fee_amount_guest_cents => 150,
         :service_fee_amount_host_cents => 100,
         :cancellation_policy_penalty_percentage => 60
       )
       @payments << @payment_2 = FactoryGirl.create(:paid_payment, company: @company,
+        :total_amount_cents => 1200,
         :subtotal_amount_cents => 1000,
         :service_fee_amount_guest_cents => 200,
         :service_fee_amount_host_cents => 150,

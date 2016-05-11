@@ -15,21 +15,15 @@ Feature: A user can search for a listing
     Then I see a search result for the Auckland listing
     And I do not see a search result for the Adelaide listing
 
-  #TODO: enable after spree removal
-  # Scenario: Displaying no results found when searching for nonexisting product.
-  #   Given the user exists
-  #   And the product_type exists
-  #   And I log in as a user
-  #   When I search for product "TV"
-  #   Then I should see "No results found"
-
-  # Scenario: Displaying search results for a product.
-  #   Given the user exists
-  #   And the product_type exists
-  #   And I log in as a user
-  #   And product exists with name: "Awesome product"
-  #   When I search for product "product"
-  #   Then I see a search results for the product
+  Scenario: Displaying search results for a product.
+    Given the user exists
+    And I log in as a user
+    And the transactable_purchase exists with name: "Awesome product"
+    Given search type is set to fulltext
+    And I am on the home page
+    And I refresh index
+    When I search for product "product"
+    Then I see a search results for the transactable_purchase
 
   Scenario: Wrong Price Range
     Given a listing in Auckland_fixed exists

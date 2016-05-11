@@ -1,0 +1,21 @@
+- render_content_outside_container!
+
+- if @cart.empty?
+  .container-fluid
+    .text-center
+      %h3= t('buy_sell_market.cart.labels.x_items_in_cart', nr: @cart.line_items_count)
+
+- else
+  .cart-view
+    .container-fluid
+      .cart-head
+        %h3= t('buy_sell_market.cart.labels.x_items_in_cart', nr: @cart.line_items_count)
+        .button-row
+          = link_to cart_empty_path, method: :delete do
+            .btn.gray= t 'buy_sell_market.cart.buttons.empty_cart'
+          = link_to root_path(anchor: 'products') do
+            .btn.green= t 'buy_sell_market.cart.buttons.continue'
+
+        = form_tag cart_update_path, method: :patch, id: 'cart' do
+          - @cart.orders.each do |order|
+            = render partial: 'company_order', locals: { order: order }

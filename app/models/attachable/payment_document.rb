@@ -7,7 +7,7 @@ class Attachable::PaymentDocument < Attachable::Attachment
 
   accepts_nested_attributes_for :payment_document_info
 
-  validates_presence_of :file, if: :is_file_required?
+  validates_presence_of :file
 
   self.per_page = 20
 

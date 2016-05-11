@@ -13,4 +13,9 @@ class RecurringBooking::SubscriptionPriceCalculator
   def total_amount
     subtotal_amount + @subscription.service_fee_amount_guest + @subscription.service_additional_charges
   end
+
+  def price
+    @pricing.price || 0
+  end
+
 end

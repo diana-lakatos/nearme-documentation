@@ -1,9 +1,0 @@
-- if f.object.errors.any?
-  .errors-global
-    %h3
-      %b= t('dashboard.products.product_not_saved')
-      = t('dashboard.products.address_errors_html', count: f.object.errors.count)
-
-    %ul
-      - f.object.errors.full_messages.each do |msg|
-        %li= msg

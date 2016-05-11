@@ -3,12 +3,12 @@ require 'test_helper'
 class Reservation::ContiguousBlockFinderTest < ActiveSupport::TestCase
 
   setup do
-    @reservation = Reservation.new
+    @reservation = Reservation.new(quantity: 1)
 
-    @listing = stub()
-    @listing.stubs(:open_on?).returns(true)
-    @listing.stubs(:availability_for).returns(10)
-    @reservation.stubs(:listing).returns(@listing)
+    @transactable = stub()
+    @transactable.stubs(:open_on?).returns(true)
+    @transactable.stubs(:availability_for).returns(10)
+    @reservation.stubs(:transactable).returns(@transactable)
 
     @contiguous_block_finder = Reservation::ContiguousBlockFinder.new(@reservation)
   end
@@ -50,22 +50,22 @@ class Reservation::ContiguousBlockFinderTest < ActiveSupport::TestCase
         # custom definition.
         @dates = [Time.zone.today, Time.zone.today + 2.days, Time.zone.today + 4.days, Time.zone.today + 5.days, Time.zone.today + 8.days]
         @dates.each do |date|
-          @listing.stubs(:availability_for).with(date).returns(2)
-          @listing.stubs(:open_on?).with(date).returns(true)
+          @transactable.stubs(:availability_for).with(date).returns(2)
+          @transactable.stubs(:open_on?).with(date).returns(true)
         end
 
         @closed = [Time.zone.today + 1.day]
         @closed.each do |date|
-          @listing.stubs(:open_on?).with(date).returns(false)
+          @transactable.stubs(:open_on?).with(date).returns(false)
         end
 
         @unavailable = [Time.zone.today + 3.days]
         @unavailable.each do |date|
-          @listing.stubs(:open_on?).with(date).returns(true)
-          @listing.stubs(:availability_for).with(date).returns(1)
+          @transactable.stubs(:open_on?).with(date).returns(true)
+          @transactable.stubs(:availability_for).with(date).returns(1)
         end
 
-        @listing.stubs(:open_on?).with(Time.zone.today + 5.days).returns(false)
+        @transactable.stubs(:open_on?).with(Time.zone.today + 5.days).returns(false)
 
         seed_reservation_dates(@dates)
       end

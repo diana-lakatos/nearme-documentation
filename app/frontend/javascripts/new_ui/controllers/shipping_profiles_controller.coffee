@@ -3,36 +3,31 @@ require 'selectize/dist/js/selectize'
 module.exports = class ShippingProfilesController
   constructor: (el) ->
     @form = $(el)
-    @zoneWrappers = @form.find('[data-ships-to]')
-    @zoneKindSelects = @form.find("[data-zone-kind-select]")
-    @addRuleButton = @form.find("[data-add-rule]")
-    @hiddenInputs = @form.find('.shipping-hidden')
-    @removedInputs = @form.find('.shipping-removed')
+    @countriesInput = @form.find('select')
+    @worldwideCheckbox = @form.find('[data-worldwide]')
     @bindEvents()
-    @initialize()
+    @initializeSelectize()
+    @modalSuccessActions()
 
   bindEvents: ->
-    @zoneKindSelects.on 'change', (e) =>
-      @enableZoneSelect($(e.target).closest('.shipping-method'), $(e.target).val())
 
-    @hiddenInputs.on 'change', ->
-      $(this).parents(".shipping-method").toggle !$(this).is(':checked')
+    @form.on 'change', '[data-shippo-for-price]', (e) =>
+      if $(e.target).is(':checked')
+        $(e.target).closest('.shipping-form').find('[data-price-field]').prop('disabled', true)
+      else
+        $(e.target).closest('.shipping-form').find('[data-price-field]').prop('disabled', false)
 
-    @removedInputs.on 'change', ->
-      $(this).parents(".shipping-method").hide() if $(this).is(":checked")
+    @form.on 'change', '[data-worldwide]', (e) =>
+      if $(e.target).is(':checked')
+        $(e.target).closest('.shipping-form').find('select')[0].selectize.disable()
+      else
+        $(e.target).closest('.shipping-form').find('select')[0].selectize.enable()
 
-    @addRuleButton.on 'click', =>
-      @hiddenInputs.filter(':checked').eq(0).prop('checked', false).trigger("change")
-      @addRuleButton.hide() if @hiddenInputs.filter(':checked').length == 0
+    $(document).on 'cocoon:after-insert', (e,insertedItem) =>
+      @initializeSelectize(insertedItem);
 
-  initialize: ->
-    @zoneKindSelects.each (index, item)=>
-      @enableZoneSelect($(item).closest('.shipping-method'), $(item).val())
-
-    @setupZoneInputs()
-    @setupShippingMethods()
-
-    @modalSuccessActions()
+  initializeSelectize: (container) ->
+    $(container).find('select[multiple=multiple]').selectize()
 
   modalSuccessActions: =>
     return unless @form.data('profile-add-success')
@@ -41,61 +36,7 @@ module.exports = class ShippingProfilesController
 
     $.ajax
       type: 'get'
-      url: '/dashboard/shipping_categories/get_shipping_categories_list'
-      data: { form: 'products' }
+      url: '/dashboard/shipping_profiles/get_shipping_profiles_list'
+      data: { form: 'transactables' }
       success: (data) ->
         $('[data-shipping-methods-list]').html(data)
-
-
-  setupZoneInputs: =>
-
-    @zoneWrappers.each (index, item)=>
-      wrapper = $(item)
-      input = $(item).find('[data-api]')
-
-      input.selectize
-        create: false,
-        valueField: 'id',
-        labelField: 'name',
-        searchField: 'name',
-        options: input.data('items'),
-        load: (query, callback)->
-          return callback() unless query.length
-
-          $.ajax
-            url: '/dashboard/api/' + input.data('api'),
-            type: 'GET',
-            dataType: 'json',
-            data:
-              q:
-                name_cont: query
-            error: ->
-              callback()
-
-            success: (res)->
-              callback(res)
-
-  enableZoneSelect: (parent, method) ->
-    @toggleZoneSelect parent.find('[data-ships-to="countries"]'), (method == 'country')
-    @toggleZoneSelect parent.find('[data-ships-to="states"]'), (method == 'state_based')
-
-  toggleZoneSelect: (wrapper, state)->
-    wrapper.toggle(state)
-    input = wrapper.find('input')
-    selectize = input.get(0).selectize
-
-    if state
-      input.removeAttr('disabled')
-      if selectize
-        selectize.enable()
-    else
-      input.attr('disabled', 'disabled')
-      if selectize
-        selectize.disable()
-
-
-  setupShippingMethods: ->
-    @form.find(".remove_shipping_profile:not(:first)").removeClass('hidden');
-
-    @hiddenInputs.filter(':checked').closest(".shipping-method").hide()
-    @removedInputs.filter(':checked').closest(".shipping-method").hide()

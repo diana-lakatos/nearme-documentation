@@ -1,0 +1,19 @@
+var bill_address = $('#order_billing_address_attributes_state_id');
+var ship_address = $('#order_shipping_address_attributes_state_id');
+
+var states = "<%= escape_javascript(options_from_collection_for_select(@states, 'id', 'name')) %>";
+
+
+<% if @states.count < 1 %>
+bill_address.find('option').remove().end().val(null);
+ship_address.find('option').remove().end().val(null);
+<% else %>
+<% if params[:bill_address].to_i == 1 %>
+bill_address.find('option').remove().end().append(states).val('<%= @states.first.id %>');
+<% else %>
+ship_address.find('option').remove().end().append(states).val('<%= @states.first.id %>')
+<% end %>
+<% end %>
+
+bill_address.trigger('render');
+ship_address.trigger('render');

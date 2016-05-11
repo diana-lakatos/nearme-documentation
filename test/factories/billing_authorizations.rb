@@ -7,9 +7,5 @@ FactoryGirl.define do
     factory :failed_billing_authorization do
       success false
     end
-
-    factory :order_billing_authorization do
-      association(:reference, :factory => :order)
-    end
   end
 end

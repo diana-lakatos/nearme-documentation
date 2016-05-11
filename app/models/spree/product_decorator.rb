@@ -1,7 +1,8 @@
+#TODO to be removed
 Spree::Product.class_eval do
   include Spree::Scoper
   include Impressionable
-  include Searchable
+  # include Searchable
   # FIXME disabled Sitemap updates. Needs to be optimized.
   # include SitemapService::Callbacks
   include SellerAttachments
@@ -13,17 +14,17 @@ Spree::Product.class_eval do
   belongs_to :user, -> { with_deleted }
   belongs_to :company, -> { with_deleted }
   belongs_to :administrator, -> { with_deleted }, class_name: 'User'
-  belongs_to :product_type, class_name: "Spree::ProductType", foreign_key: :product_type_id
-  belongs_to :transactable_type, class_name: "Spree::ProductType", foreign_key: :product_type_id
+  belongs_to :transactable_type, foreign_key: :product_type_id
 
   has_many :additional_charge_types, as: :additional_charge_type_target
   has_many :attachments, -> { order(:id) }, class_name: 'SellerAttachment', as: :assetable
   has_many :document_requirements, as: :item, dependent: :destroy
   has_many :impressions, as: :impressionable, dependent: :destroy
   has_many :line_items, through: :variants
-  has_many :orders, through: :line_items
+  # has_many :orders, through: :line_items
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :wish_list_items, as: :wishlistable
+  has_one :transactable, foreign_key: 'spree_product_id'
 
   has_one :master,
     -> { where("is_master = ?", true) },
@@ -32,8 +33,8 @@ Spree::Product.class_eval do
 
   has_one :upload_obligation, as: :item, dependent: :destroy
 
-  has_custom_attributes target_type: 'Spree::ProductType', target_id: :product_type_id, store_accessor_name: :extra_properties
-  delegate :custom_validators, to: :product_type
+  has_custom_attributes target_type: 'TransactableType', target_id: :product_type_id, store_accessor_name: :extra_properties
+  delegate :custom_validators, to: :transactable_type
 
   scope :approved, -> { where(approved: true) }
   scope :featured, -> { where(featured: true) }

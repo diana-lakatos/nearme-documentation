@@ -19,12 +19,18 @@ en:
       no_action_booking:
         label: 'No Action'
         description: 'No transaction is made between customer and seller'
+      purchase_action:
+        label: 'Purchase'
+        description: 'Customer can buy items.'
     deposit:
       deposit_amount: 'Deposit amount'
       enable: 'Enable deposits'
     price: 'Price'
     free: 'Free'
     required: 'required'
+    item:
+      one: 'item'
+      other: 'items'
     event:
       one: 'event'
       other: 'events'

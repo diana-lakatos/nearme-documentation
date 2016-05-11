@@ -1,0 +1,146 @@
+%header
+  %h2= t('buy_sell_market.checkout.labels.order_no', number: purchase.number)
+
+
+.row
+  .col-sm-3
+    %h4= t 'buy_sell_market.checkout.labels.billing_address'
+    %p
+      = render 'dashboard/orders/address', address: purchase.billing_address
+      %br/
+      = mail_to(purchase.try(:user).try(:email))
+
+
+  .col-sm-3
+    %h4= t 'buy_sell_market.checkout.labels.shipping_address'
+    %p= render 'dashboard/orders/address', address: purchase.shipping_address
+
+  .col-sm-3
+    %h4= t 'buy_sell_market.checkout.labels.shipping_method'
+    - purchase.shipments.each do |shipment|
+      %p
+        = t('buy_sell_market.products.shipping.from')
+        %strong= purchase.location.name
+        = t('buy_sell_market.products.shipping.via')
+        %br
+        /%strong=shipment.selected_shipping_rate.name
+
+  .col-sm-3
+    %h4= t 'buy_sell_market.checkout.labels.payment'
+
+    %p
+      - if @charge_info && @charge_info.response['card']
+        #{t('buy_sell_market.checkout.labels.ending_in')} #{@charge_info.response['card']['last4']}
+        #{@charge_info.response['card']['name']}
+
+      - if purchase.payment.authorized?
+        %span.label.label-info
+          = t('buy_sell_market.checkout.labels.payments.authorized')
+      - elsif purchase.payment.paid?
+        %span.label.label-info
+          = t('buy_sell_market.checkout.labels.payments.captured')
+
+      - elsif purchase.payment.refunded?
+        %span.label.label-warning
+          = t('buy_sell_market.checkout.labels.payments.refunded')
+
+      - elsif purchase.payment.failed?
+        %span.label.label-error
+          = t('buy_sell_market.checkout.labels.payments.failed')
+
+      - if !purchase.is_free?
+        %p= link_to t("buy_sell_market.checkout.labels.payments.details"), dashboard_company_orders_received_payment_path(purchase, purchase.payment), class: "btn btn-primary"
+
+      - if purchase.paid?
+        %span.label.label-info
+          = t('buy_sell_market.checkout.labels.payments.paid')
+      - elsif purchase.payment.manual_payment?
+        = link_to t('buy_sell_market.checkout.labels.payments.mark_as_paid'), capture_dashboard_company_orders_received_payment_path(purchase, purchase.payment.id), method: :post, data: { confirm: 'Are you sure you want to mark this order as paid?' }, class: 'btn btn-primary'
+      - elsif purchase.payment.authorized?
+        - if purchase.payment.manual_payment?
+          = link_to 'Mark As Paid', capture_dashboard_company_orders_received_payment_path(purchase, purchase.payment.id), method: :post, data: { confirm: 'Are you sure you want to mark this order as paid?' }, class: 'btn btn-primary'
+        -# elsif purchase.payment.try(:authorized?)
+          = link_to 'Capture', capture_dashboard_company_orders_received_payment_path(purchase, purchase.payment.id), method: :post, data: { confirm: 'Are you sure you want to capture payment for this order?' }, class: 'btn btn-primary'
+
+%h2= t("buy_sell_market.checkout.labels.shipping")
+- purchase.shipments.each do |shipment|
+  %table.shipment-summary
+    %tbody
+      %tr
+        %th= t("buy_sell_market.products.shipping.number")
+        %td= #shipment.number
+      %tr
+        %th= t("buy_sell_market.products.shipping.state")
+        %td= #shipment.state
+      %tr
+        %th= t("buy_sell_market.products.shipping.stock_location")
+        %td= purchase.location.name
+      - if shipment.label_url.present?
+        %tr
+          %th= t("buy_sell_market.products.shipping.label_url")
+          %td= shipment.label_url
+      - if shipment.tracking_number.present?
+        %tr
+          %td= t("buy_sell_market.products.shipping.tracking_number")
+          %td= shipment.tracking_number
+
+  - if shipment.ready?
+    %p
+      = link_to t("buy_sell_market.products.shipping.mark_as_shipped"),ship_dashboard_company_orders_received_shipment_path(purchase, shipment), data: { confirm: t("buy_sell_market.products.shipping.confirm") }, class: 'btn btn-primary'
+
+%h2= t 'buy_sell_market.checkout.labels.order_summary'
+- item = purchase.transactable_line_items.first
+.table-responsive
+  %table.table
+    %thead
+      %th= t 'buy_sell_market.checkout.labels.item'
+      - unless item.included_tax_total_rate.zero?
+        %th= t 'buy_sell_market.checkout.labels.net'
+        %th= t 'buy_sell_market.checkout.labels.tax'
+      %th= t 'buy_sell_market.checkout.labels.price'
+      - unless item.additional_tax_total_rate.zero?
+        %th= t 'buy_sell_market.checkout.labels.tax'
+        %th= t 'buy_sell_market.checkout.labels.gross'
+      %th= t 'buy_sell_market.checkout.labels.qty'
+      %th= t 'buy_sell_market.checkout.labels.total'
+
+    %tbody
+      - purchase.line_items.decorate.each do |item|
+        %tr
+          %td= item.name_with_link
+          - unless item.included_tax_total_rate.zero?
+            %td= item.net_price
+            %td= item.included_tax_total_rate.to_s + "%"
+          %td= item.unit_price
+          - unless item.additional_tax_total_rate.zero?
+            %td= item.additional_tax_total_rate.to_s + "%"
+            %td= item.gross_price
+          %td= item.quantity
+          %td= item.total_price
+
+  .row
+    .col-sm-4.col-sm-push-8
+      %table.payment-totals
+        %th.total= t 'buy_sell_market.checkout.labels.total2'
+        %td.total= humanized_money_with_cents_and_symbol purchase.total_amount
+
+%br/
+
+.row
+  .col-sm-9.col-sm-push-3
+    .order-actions
+      - if !purchase.completed?
+        - if !purchase.confirmed? && !purchase.cancelled?
+          = link_to t('buy_sell_market.checkout.labels.actions.confirm'), confirm_dashboard_company_orders_received_path(purchase), data: { confirm: t('buy_sell_market.checkout.labels.actions.confirm_approve') }, class: 'btn btn-primary', method: :post
+
+        - if purchase.paid? && !purchase.completed?
+          = link_to t('buy_sell_market.checkout.labels.actions.complete'), complete_dashboard_company_orders_received_path(purchase), data: { confirm: t('buy_sell_market.checkout.labels.actions.complete_approve') }, class: 'btn btn-primary', method: :post
+
+        - if purchase.cancelable? #&& !purchase.paid?
+          = link_to t('buy_sell_market.checkout.labels.actions.cancel'), cancel_dashboard_company_orders_received_path(purchase), data: { confirm: t('buy_sell_market.checkout.labels.actions.confirm_cancel') }, class: 'btn btn-warning', method: :post
+
+        - if false #purchase.cancelled?
+          = link_to t('buy_sell_market.checkout.labels.actions.resume'),resume_dashboard_company_orders_received_path(purchase), data: { confirm: t('buy_sell_market.checkout.labels.actions.confirm_resume') }, class: 'btn btn-primary'
+
+  .col-sm-3.col-sm-pull-9
+    %small= t('orders.labels.order_placed_html', date: purchase.display_completed_at)

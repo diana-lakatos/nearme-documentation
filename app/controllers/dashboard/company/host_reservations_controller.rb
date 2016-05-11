@@ -36,7 +36,7 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
       end
     end
 
-    redirect_to dashboard_company_host_reservations_url
+    redirect_to redirection_path
   end
 
   def rejection_form
@@ -53,14 +53,14 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
       flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
     end
 
-    redirect_to dashboard_company_host_reservations_url
+    redirect_to redirection_path
     render_redirect_url_as_json if request.xhr?
   end
 
   def request_payment
     WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::PaymentRequest, @reservation.id)
     flash[:success] = t('flash_messages.manage.reservations.payment_requested')
-    redirect_to dashboard_company_host_reservations_url
+    redirect_to redirection_path
   end
 
   def host_cancel
@@ -73,7 +73,7 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
       flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
     end
 
-    redirect_to dashboard_company_host_reservations_url
+    redirect_to redirection_path
   end
 
   def mark_as_paid
@@ -84,38 +84,42 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
       flash[:error] = t('flash_messages.manage.reservations.payment_failed')
     end
 
-    redirect_to dashboard_company_host_reservations_url
+    redirect_to :back
   end
 
   def complete_reservation
     @reservation = @reservation.decorate
-    @reservation_form = CompleteReservationForm.new(@reservation)
   end
 
   def submit_complete_reservation
     @reservation = @reservation.decorate
-    @reservation_form = CompleteReservationForm.new(@reservation)
-    if @reservation_form.validate(params[:reservation]) && @reservation_form.save
-      @reservation.force_recalculate_fees = true
-      @reservation.calculate_prices
+
+    # this hack is needed because I do not know any other way of getting access to unit price which was used
+    # at a time of making reservation
+    unit_price = @reservation.transactable_line_items.detect { |li| li.unit_price > 0 }.unit_price
+
+    @reservation.pending_guest_confirmation = Time.zone.now
+    if @reservation.update_attributes(complete_reservation_params)
+      @reservation.transactable_line_items.find_each { |li| li.update_attribute(:unit_price, unit_price) }
+      @reservation = @reservation.reload
+      @reservation.service_fee_line_items.destroy_all
+      @reservation.host_fee_line_items.destroy_all
+      @reservation.transactable_line_items.find_each do |li|
+        li.build_service_fee.try(:save!)
+        li.build_host_fee.try(:save!)
+      end
+      @reservation = @reservation.reload
+      @reservation.update_payment_attributes
       @reservation.save!
-      @reservation.payment.update_attributes({
-        subtotal_amount_cents: @reservation.subtotal_amount.cents,
-        service_fee_amount_guest_cents: @reservation.service_fee_amount_guest.cents,
-        service_fee_amount_host_cents: @reservation.service_fee_amount_host.cents,
-        service_additional_charges_cents: @reservation.service_additional_charges.cents,
-        host_additional_charges_cents: @reservation.host_additional_charges.cents
-      })
       if @reservation.payment.authorize
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::HostSubmittedCheckout, @reservation.id)
-        PaymentConfirmationExpiryJob.perform_later(@reservation.pending_guest_confirmation + @reservation.listing.hours_for_guest_to_confirm_payment.hours, @reservation.id) if @reservation.listing.hours_for_guest_to_confirm_payment.to_i > 0
+        PaymentConfirmationExpiryJob.perform_later(@reservation.pending_guest_confirmation + @reservation.transactable.hours_for_guest_to_confirm_payment.hours, @reservation.id) if @reservation.transactable.hours_for_guest_to_confirm_payment.to_i > 0
       else
         flash[:warning] = t('flash_messages.dashboard.complete_reservation.failed_to_authorize_credit_card')
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::HostSubmittedCheckoutButAuthorizationFailed, @reservation.id)
       end
       redirect_to action: :reservation_completed
     else
-      @reservation_form.sync
       flash.now[:error] = t('flash_messages.dashboard.complete_reservation.unable_to_save')
       render :complete_reservation
     end
@@ -125,8 +129,24 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
 
   private
 
+  def redirection_path
+    if @reservation.owner.id == current_user.id
+      dashboard_orders_path
+    else
+      dashboard_company_orders_received_index_path
+    end
+  end
+
+  def complete_reservation_params
+    if params[:reservation] && !params[:reservation].blank?
+      params.require(:reservation).permit(secured_params.complete_reservation)
+    else
+      {}
+    end
+  end
+
   def find_reservation
-    @reservation = @company.reservations.includes(:owner).find(params[:id])
+    @reservation = @company.orders.reservations.includes(:owner).find(params[:id])
   end
 
   def rejection_reason

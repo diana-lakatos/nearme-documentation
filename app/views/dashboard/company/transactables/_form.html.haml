@@ -64,6 +64,9 @@
         - when 'deposit_amount'
           = render "dashboard/company/transactables/form_fields/deposit_amount", f: f
 
+        - when 'shipping_info'
+          = render "dashboard/company/transactables/form_fields/shipping_profiles", f: f
+
         - when *@transactable_type.categories.roots.map { |c| "Category - #{c.name}" }
           = render "dashboard/company/transactables/form_fields/category", f: f, field: field
 

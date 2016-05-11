@@ -50,6 +50,8 @@ DesksnearMe::Application.configure do
   config.middleware.swap Rails::Rack::Logger, NullLogger, silence: %w(mini-profiler better_errors)
   config.middleware.insert_after(ActionDispatch::Static, SilentMissedImages)
 
+  Liquid.cache_classes = false
+
   if defined?(Bullet)
     config.after_initialize do
       Bullet.enable = true

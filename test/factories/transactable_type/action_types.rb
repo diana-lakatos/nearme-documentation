@@ -21,6 +21,18 @@ FactoryGirl.define do
       end
     end
 
+
+    factory :transactable_type_purchase_action, class: TransactableType::PurchaseAction do
+      type 'TransactableType::PurchaseAction'
+
+      after(:build) do |at|
+        at.pricings << FactoryGirl.build(
+          :transactable_type_purchase_pricing,
+          action: at
+        )
+      end
+    end
+
     factory :transactable_type_event_action, class: TransactableType::EventBooking do
       type 'TransactableType::EventBooking'
 

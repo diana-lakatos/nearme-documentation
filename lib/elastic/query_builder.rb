@@ -44,44 +44,6 @@ module Elastic
       (query_page - 1) * query_per_page
     end
 
-    def product_query
-      @filters = initial_product_filters
-      apply_product_search_filters
-      {
-        size: query_per_page,
-        from: query_offset,
-        fields: [],
-        sort: sorting_options,
-        query: products_match_query,
-        filter: {
-          bool: {
-            must: @filters
-          }
-        },
-        aggs: {
-          filtered_price_range: {
-            filter: {
-              bool: {
-                must: @filters
-              }
-            },
-            aggs: {
-              max_price: {
-                max: {
-                  field: "price"
-                }
-              },
-              min_price: {
-                min: {
-                  field: "price"
-                }
-              }
-            }
-          }
-        }
-      }
-    end
-
     def geo_regular_query
       @filters = initial_service_filters
       apply_geo_search_filters
@@ -141,12 +103,12 @@ module Elastic
     end
 
     def initial_service_filters
-      searchable_service_type_ids = @query[:transactable_type_id].to_i
+      searchable_transactable_type_ids = @query[:transactable_type_id].to_i
       [
       	initial_instance_filter,
         {
           term: {
-            transactable_type_id: searchable_service_type_ids
+            transactable_type_id: searchable_transactable_type_ids
           }
         }
       ]
@@ -158,30 +120,6 @@ module Elastic
           instance_id: @query[:instance_id]
         }
       }
-    end
-
-    def initial_product_filters
-      product_type_id = @query[:product_type_id].to_i
-      searchable_product_types = Spree::ProductType.where(searchable: true).map(&:id)
-      searchable_product_type_ids = if product_type_id
-        [product_type_id] & searchable_product_types
-      else
-        searchable_product_types = [0] if searchable_product_types.empty?
-        searchable_product_types
-      end
-      [
-        initial_instance_filter,
-        {
-          terms: {
-            product_type_id: searchable_product_type_ids
-          }
-        },
-        {
-          term: {
-            draft: false
-          }
-        }
-      ]
     end
 
     def geo_filters
@@ -305,48 +243,6 @@ module Elastic
       multi_match
     end
 
-    def products_match_query
-      if @query[:name].blank?
-        { match_all: { boost: QUERY_BOOST } }
-      else
-        query = @query[:name]
-        { multi_match: build_multi_match(query, @searchable_custom_attributes + ['name^2', 'description']) }
-      end
-    end
-
-    def apply_product_search_filters
-      category_search_type = @transactable_type.category_search_type
-
-      if @transactable_type.show_price_slider && @query[:price] && @query[:price][:max].present?
-        @filters << {
-          range: {
-            price: {
-              gte: @query[:price][:min] || 0,
-              lte: @query[:price][:max]
-            }
-          }
-        }
-      end
-
-      if @query[:category_ids] && @query[:category_ids].any?
-        if category_search_type == 'OR'
-          @filters << {
-            terms: {
-              categories: @query[:category_ids].map(&:to_i)
-            }
-          }
-        elsif category_search_type == 'AND'
-          @query[:category_ids].each do |category|
-            @filters << {
-              terms: {
-                categories: [category.to_i]
-              }
-            }
-          end
-        end
-      end
-    end
-
     def apply_geo_search_filters
 
       if @transactable_type.show_price_slider && @query[:price] && (@query[:price][:min].present? || @query[:price][:max].present?)
@@ -430,7 +326,7 @@ module Elastic
           unless value.blank?
             @filters << {
               terms: {
-                "custom_attributes.#{key}" => value.to_s.split(',').map{ |val| val.downcase.strip }
+                "custom_attributes.#{key}" => value.to_s.split(',').map{ |val| val }
               }
             }
           end

@@ -5,7 +5,7 @@
   .row
     .text-container
       .shipping_method_block.shipping_method_list
-        = render partial: 'categories_list', locals: { shipping_categories: @shipping_categories }
+        = render partial: 'categories_list'
 
       %a.shipping-profile-top.add_shipping_profile{ :href => '#', :data => { :modal => true, 'href' => new_instance_admin_shipping_options_shipping_profile_path, 'modal-class' => 'shipping_profiles_modal' } }
         =image_tag("themes/buy_sell/icon-cross.png")

@@ -24,7 +24,7 @@ class ListingsController < ApplicationController
     @location = @listing.location
     if @listing.action_type
       @action_type = @listing.action_type.decorate
-      render template: "listings/action_types/#{@action_type.object.class.name.demodulize.underscore}"
+      render template: "listings/action_types/#{@action_type.object.class.name.demodulize.underscore}", layout: false
     end
   end
 
@@ -122,9 +122,9 @@ class ListingsController < ApplicationController
   end
 
   def restore_initial_bookings_from_stored_reservation
-    if params[:restore_reservations ].to_i == @listing.id && session[:stored_reservation_listing_id]
-      @form_trigger = session[:stored_reservation_trigger]["#{@listing.id}"].presence || 'Book'
-      @initial_bookings = session[:stored_reservation_bookings][@listing.id]
+    if params[:restore_reservations].to_i == @listing.id && session[:stored_order_transactable_id]
+      @form_trigger = session[:stored_order_trigger]["#{@listing.id}"].presence || 'Book'
+      @initial_bookings = session[:stored_order_bookings][@listing.id]
     else
       @initial_bookings = {}
     end

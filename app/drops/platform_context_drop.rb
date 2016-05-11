@@ -90,7 +90,7 @@ class PlatformContextDrop < BaseDrop
     :instagram_url, :youtube_url, :rss_url, :lessor, :lessors,
     :lessee, :lessees, :search_by_keyword_placeholder, :address, :phone_number,
     :site_name, :support_url, :support_email, :logo_image, :hero_image, :tagline, :homepage_content,
-    :is_company_theme?, :call_to_action, :latest_products, :buyable?, :bookable?, :transactable_types, :product_types,
+    :is_company_theme?, :call_to_action, :latest_products, :buyable?, :bookable?, :transactable_types,
     :bookable_nouns, :bookable_nouns_plural, :search_input_name, :facebook_key, :service_types,
     :wish_lists_icon_set, :seller_attachments_enabled?, :wish_lists_enabled?, :webhook_token, to: :platform_context_decorator
 
