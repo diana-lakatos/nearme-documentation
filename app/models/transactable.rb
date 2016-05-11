@@ -233,7 +233,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def self.current_instance
-    @current_instance ||= PlatformContext.current.instance
+    PlatformContext.current.instance
   end
 
   def availability_template
