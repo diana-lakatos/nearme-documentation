@@ -1025,7 +1025,7 @@ class User < ActiveRecord::Base
 
   def payout_payment_gateways
     if @payment_gateways.nil?
-      @payment_gateways = instance.payout_gateway(self.iso_country_code, all_currencies)
+      @payment_gateways = instance.payout_gateways(self.iso_country_code, all_currencies)
     end
     @payment_gateways
   end
