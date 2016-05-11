@@ -1,4 +1,6 @@
 class ApiCallerJob < Job
+  include Job::HighPriority
+
   def after_initialize(caller_class, caller_method, *args)
     @caller_class = caller_class
     @caller_method = caller_method

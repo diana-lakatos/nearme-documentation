@@ -9,4 +9,8 @@ class WorkflowStepJob < Job
   def perform
     @step_class.new(*@args).invoke!
   end
+
+  def self.priority
+    0
+  end
 end
