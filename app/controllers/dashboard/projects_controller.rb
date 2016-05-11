@@ -4,8 +4,8 @@ class Dashboard::ProjectsController < Dashboard::BaseController
   before_filter :set_form_components, only: [:new, :create, :edit, :update]
 
   def index
-    @projects = @transactable_type.projects.joins('LEFT JOIN project_collaborators pc ON pc.project_id = projects.id').where('projects.creator_id = ? OR pc.user_id = ?', current_user.id, current_user.id).
-      where('pc.id IS NULL OR (pc.id IS NOT NULL AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)').
+    @projects = @transactable_type.projects.joins('LEFT JOIN project_collaborators pc ON pc.project_id = projects.id').
+      where('projects.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)', current_user.id, current_user.id).
       search_by_query([:name, :description, :summary], params[:query]).
       group('projects.id').order('created_at DESC').paginate(page: params[:page], per_page: 20)
   end
