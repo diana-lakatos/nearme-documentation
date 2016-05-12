@@ -10,6 +10,8 @@ class FindFriendsJob < Job
     return unless @user
 
     PlatformContext.current ||= PlatformContext.new(@authentication.instance)
+    return if @user.instance_id != PlatformContext.current.instance.id
+
     User::FriendFinder.new(@user, @authentication).find_friends!
   end
 end
