@@ -2,7 +2,7 @@ require Rails.root.join 'test/helpers/stub_helper'
 include StubHelper
 
 Given /^I am (host|guest) of a reviewable reservation$/ do |kind|
-  @reservation = FactoryGirl.create(:reviewable_reservation)
+  @reservation = FactoryGirl.create(:past_reservation)
   %w(transactable guest host).each { |subject| FactoryGirl.create(:rating_system, subject: subject, active: true, transactable_type: @reservation.listing.transactable_type) }
   @user = if kind == 'guest'
             @reservation.owner
@@ -10,13 +10,10 @@ Given /^I am (host|guest) of a reviewable reservation$/ do |kind|
             @reservation.creator
           end
   store_model('user', 'user', @user)
-
-  instance = @reservation.instance
+  @reservation.mark_as_archived!
 end
 
 Given(/^I receive an email request for (host and listing|guest) rating$/) do |kind|
-  stub_local_time_to_return_hour(Location.any_instance, 12)
-  RatingReminderJob.perform(Date.current.to_s)
   assert_equal 2, ActionMailer::Base.deliveries.size
   @request_email = ActionMailer::Base.deliveries.detect { |e| e.to == [@user.email] }
   if kind=='host and listing'

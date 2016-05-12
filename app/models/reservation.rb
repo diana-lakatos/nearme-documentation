@@ -276,6 +276,9 @@ class Reservation < ActiveRecord::Base
   def mark_as_archived!
     if archived_at.nil?
       touch(:archived_at)
+
+      trigger_rating_workflow!
+
       unless Rails.env.test?
         begin
           listing.__elasticsearch__.update_document_attributes(completed_reservations: listing.reservations.reviewable.count)
@@ -284,6 +287,20 @@ class Reservation < ActiveRecord::Base
       end
     end
     true
+  end
+
+  def trigger_rating_workflow!
+    if archived? && confirmed?
+      if request_guest_rating_email_sent_at.blank? && RatingSystem.active_with_subject(RatingConstants::GUEST).where(transactable_type_id: transactable_type_id).exists?
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestRatingRequested, id)
+        update_column(:request_guest_rating_email_sent_at, Time.zone.now)
+      end
+
+      if request_host_and_product_rating_email_sent_at.blank? && RatingSystem.active_with_subject([RatingConstants::HOST, RatingConstants::TRANSACTABLE]).where(transactable_type_id: transactable_type_id).exists?
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::HostRatingRequested, id)
+        update_column(:request_host_and_product_rating_email_sent_at, Time.zone.now)
+      end
+    end
   end
 
   def set_cancelled_at
