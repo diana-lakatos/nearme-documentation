@@ -1524,6 +1524,7 @@ en:
       direct_link: 'Direct link'
       you_havent_added_anything_yet: "You haven't added anything yet!"
       contact_subscriber: 'Contact %{name}'
+      reservation_is_expired: "Reservation is expired!"
 
     merchant_account:
       you_almost_there: "You're almost there!"
