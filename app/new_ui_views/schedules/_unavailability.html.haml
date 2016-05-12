@@ -8,7 +8,8 @@
 
 %div.schedule-exception-rules-container
   = f.simple_fields_for :schedule_exception_rules do |schedule_exception_rule_form|
-    = render 'schedules/schedule_exception_rule_fields', f: schedule_exception_rule_form
+    - Time.use_zone(f.object.parent.timezone) do
+      = render 'schedules/schedule_exception_rule_fields', f: schedule_exception_rule_form
 
   = link_to_add_association f, :schedule_exception_rules, partial: 'schedules/schedule_exception_rule_fields', class: 'button-a small' do
     %button.btn.btn-primary{:type => "button"}
