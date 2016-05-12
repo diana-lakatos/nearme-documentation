@@ -29,7 +29,7 @@
               %li
                 %a{href: '#reviews', 'data-toggle' => 'tab', class: 'reviews-tab'}= t 'user_profile.labels.tabs.reviews', count: @total_reviews_count
 
-            - if platform_context.instance.user_blogs_enabled? && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
+            - if platform_context.instance.blogging_enabled?(@user) && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
               %li
                 %a{href: '#blog_posts', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.blog_posts'
 
@@ -59,7 +59,7 @@
               - else
                 = render 'registrations/profile/no_content', tab: 'reviews', user: @user
 
-          - if platform_context.instance.user_blogs_enabled? && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
+          - if platform_context.instance.blogging_enabled?(@user) && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
             - unless hide_tab?('blog_posts')
               #blog_posts.tab-pane
                 - if @user.blog.present? && @user.has_published_posts?

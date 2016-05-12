@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160505114035) do
+ActiveRecord::Schema.define(version: 20160511143409) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1168,8 +1168,10 @@ ActiveRecord::Schema.define(version: 20160505114035) do
     t.boolean  "click_to_call",                                                                default: false
     t.boolean  "enable_reply_button_on_host_reservations",                                     default: false
     t.boolean  "split_registration",                                                           default: false
-    t.boolean  "require_payout_information",                                                   default: false
     t.boolean  "precise_search",                                                               default: false,         null: false
+    t.boolean  "require_payout_information",                                                   default: false
+    t.boolean  "enquirer_blogs_enabled",                                                       default: false
+    t.boolean  "lister_blogs_enabled",                                                         default: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
