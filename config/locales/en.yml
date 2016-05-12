@@ -1374,6 +1374,12 @@ en:
 
 
     user_recurring_bookings:
+      states:
+        pending: "Pending"
+        authorized: "Authorized"
+        paid: "Paid"
+        voided: "Voided"
+        refunded: "Refunded"
       title: "Subscriptions (%{count})"
       active: "Active"
       archived: "Archived"
@@ -1402,6 +1408,7 @@ en:
         start_end: 'Start - End'
         total_amount: 'Total Amount'
         paid_at: 'Paid at'
+        payment_state: 'Payment State'
       not_paid: 'Not Paid'
       booked: 'booked'
       host_actions:
