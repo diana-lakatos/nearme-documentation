@@ -31,6 +31,8 @@
 #   Please note that using Time.now instead of Time.zone.now will raise error
 
 class MailerJob < Job
+  include Job::HighPriority
+
   def after_initialize(mailer_class, mailer_method, *args)
     @mailer_class = mailer_class
     @mailer_method = mailer_method

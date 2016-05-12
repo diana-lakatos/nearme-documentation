@@ -1,7 +1,5 @@
 class ElasticBulkUpdateJob < Job
 
-  include Job::HighPriority
-
   def after_initialize(klass, updates_hash)
     @klass = klass
     @updates_hash = updates_hash

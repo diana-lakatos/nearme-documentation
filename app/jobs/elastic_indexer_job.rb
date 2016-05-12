@@ -1,7 +1,5 @@
 class ElasticIndexerJob < Job
 
-  include Job::HighPriority
-
   def after_initialize(operation, klass, record_id, options = {})
     @operation = operation
     @klass = klass
