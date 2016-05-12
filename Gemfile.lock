@@ -523,6 +523,9 @@ GEM
       hashie (>= 0.4.0)
       multi_json (~> 1.0, >= 1.0.3)
     ipaddress (0.8.0)
+    jira-ruby (0.1.18)
+      activesupport
+      oauth (~> 0.4.7)
     jquery-rails (4.0.4)
       rails-dom-testing (~> 1.0)
       railties (>= 4.2.0)
@@ -1044,6 +1047,7 @@ DEPENDENCIES
   ice_cube
   inherited_resources (~> 1.6)
   instagram
+  jira-ruby
   json_spec
   koala
   launchy
