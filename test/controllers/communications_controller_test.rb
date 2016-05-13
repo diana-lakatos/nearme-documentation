@@ -152,14 +152,15 @@ class CommunicationsControllerTest < ActionController::TestCase
   end
 
   test "#verified should return correct JSON for verified user" do
-    communication = Struct.new(:verified?).new
+    communication = Struct.new(:verified?, :phone_number).new
+    communication.stubs(:phone_number).returns('+1111')
     communication.stubs(:verified?).returns(true)
     @user.stubs(:communication).returns(communication)
 
     get :verified, user_id: @user.id
 
     assert_equal true, json_response['status']
-    assert_equal @user.full_mobile_number, json_response['phone']
+    assert_equal '+1111', json_response['phone']
   end
 
   test "#verified should return correct JSON for unverified user" do

@@ -1,10 +1,10 @@
 - supported_providers.each do |provider|
   .panel.verification
-    .panel-body.notifications.intergration-service
+    .panel-body.notifications.integration-service
       .row
         .col-sm-10
           %h3= provider.camelize
           %p= t("registrations.social_accounts.#{provider.downcase}_info")
         .col-sm-2
-          %p= build_link_for(provider, "btn btn-primary #{provider.downcase} pull-right provider_#{provider.downcase}").html_safe
+          %p= build_link_for(provider, "btn btn-primary #{provider.downcase} provider_#{provider.downcase} action-trigger").html_safe
 - end unless supported_providers.nil?
