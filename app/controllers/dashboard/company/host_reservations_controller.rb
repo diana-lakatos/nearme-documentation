@@ -1,6 +1,7 @@
 class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseController
   before_filter :find_reservation, except: [:index]
   before_filter :check_if_pending_guest_confirmation, only: [:complete_reservation, :submit_complete_reservation]
+  before_filter :redirect_to_account_if_verification_required
 
   def index
     @guest_list = Controller::GuestList.new(current_user).filter(params[:state])
@@ -136,6 +137,13 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
     unless @reservation.can_complete_checkout?
       flash[:error] = t('flash_messages.dashboard.complete_reservation.pending_confirmation')
       redirect_to dashboard_company_host_reservations_url
+    end
+  end
+
+  def redirect_to_account_if_verification_required
+    if current_user.host_requires_mobile_number_verifications? && !current_user.has_verified_number?
+      flash[:warning] = t('flash_messages.manage.reservations.phone_number_verification_needed')
+      redirect_to edit_registration_path(current_user)
     end
   end
 

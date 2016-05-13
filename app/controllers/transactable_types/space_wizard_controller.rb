@@ -36,6 +36,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     set_proper_currency
     @user.get_seller_profile
     @user.skip_validations_for = [:buyer]
+    @user.must_have_verified_phone_number = true if @user.requires_mobile_number_verifications?
     @user.assign_attributes(wizard_params)
     # TODO: tmp hack, the way we use rails-money does not work if you pass currency and daily_price at the same time
     # We remove schedule attributes when assigning the attributes the second time so that we don't end up with duplicated schedule-related objects

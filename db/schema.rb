@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160511143409) do
+ActiveRecord::Schema.define(version: 20160513125138) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1021,14 +1021,15 @@ ActiveRecord::Schema.define(version: 20160511143409) do
   add_index "instance_creators", ["email"], name: "index_instance_creators_on_email", using: :btree
 
   create_table "instance_profile_types", force: :cascade do |t|
-    t.string   "name",                 limit: 255
+    t.string   "name",                            limit: 255
     t.integer  "instance_id"
     t.datetime "deleted_at"
     t.string   "profile_type"
     t.boolean  "searchable"
     t.boolean  "show_categories"
     t.string   "category_search_type"
-    t.integer  "position",                         default: 0
+    t.integer  "position",                                    default: 0
+    t.boolean  "must_have_verified_phone_number",             default: false
   end
 
   add_index "instance_profile_types", ["instance_id", "profile_type"], name: "index_instance_profile_types_on_instance_id_and_profile_type", unique: true, using: :btree
@@ -3693,8 +3694,8 @@ ActiveRecord::Schema.define(version: 20160511143409) do
     t.boolean  "single_transactable",                                                            default: false
     t.decimal  "cancellation_policy_penalty_hours",                      precision: 8, scale: 2, default: 0.0
     t.boolean  "display_additional_charges",                                                     default: true
-    t.boolean  "single_location",                                                                default: false,      null: false
     t.boolean  "hide_additional_charges_on_listing_page",                                        default: false,      null: false
+    t.boolean  "single_location",                                                                default: false,      null: false
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

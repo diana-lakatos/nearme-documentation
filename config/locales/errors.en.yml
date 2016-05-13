@@ -117,6 +117,7 @@ en:
       not_in_past: 'must be not in past'
       range_too_wide: "can 't be later than 1 year from starting date"
       has_an_invalid_format: "has an invalid format"
+      not_verified_phone: 'must be verified'
 
       communications:
         not_verified:

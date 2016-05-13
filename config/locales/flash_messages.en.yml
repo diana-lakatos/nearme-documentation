@@ -471,6 +471,7 @@ en:
         desk_added: "Great, your new %{bookable_noun} has been added!"
         listing_deleted: "That listing has been deleted."
         listing_updated: "Great, your listing's details have been updated."
+        phone_number_verification_needed: 'Please verify your mobile number first'
       locations:
         add_your_company: "Please add your company first"
         space_added: "Great, your new location has been added!"
@@ -484,6 +485,7 @@ en:
         reservation_confirmed_but_not_charged: "You have confirmed the reservation, however we were not able to capture payment. We have reached out to guest to notify him about the issue."
         reservation_not_confirmed: "Your reservation could not be confirmed."
         reservation_rejected: "You have rejected the reservation. Maybe next time!"
+        phone_number_verification_needed: 'Please verify your mobile number first'
         payment_requested: "Your request has been sent"
         payment_confirmed: "Payment status has been successfully updated."
         payment_failed: "Payment status can not be change"

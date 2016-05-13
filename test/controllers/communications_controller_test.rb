@@ -148,7 +148,7 @@ class CommunicationsControllerTest < ActionController::TestCase
     @provider.stubs(:disconnect_number)
     delete :destroy, user_id: @user.id, id: @user.id
 
-    assert_redirected_to edit_dashboard_click_to_call_preferences_path
+    assert_redirected_to social_accounts_path
   end
 
   test "#verified should return correct JSON for verified user" do
