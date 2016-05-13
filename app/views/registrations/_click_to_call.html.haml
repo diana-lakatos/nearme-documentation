@@ -1,5 +1,5 @@
 .panel.verification
-  .panel-body.notifications.intergration-service
+  .panel-body.notifications.integration-service
     .row
       .col-sm-10
         %h3= t('dashboard.click_to_call.title')
@@ -9,7 +9,7 @@
 
       .col-sm-2
         - if current_user.communication.try(:verified?)
-          = button_to t('dashboard.click_to_call.disconnect'), user_communication_path(current_user, 'delete'), method: :delete, class: 'btn btn-primary'
+          = button_to t('dashboard.click_to_call.disconnect'), user_communication_path(current_user, 'delete'), method: :delete, class: 'btn btn-primary pull-right action-trigger'
 
         - else
-          = link_to t('dashboard.click_to_call.verify'),edit_dashboard_click_to_call_preferences_path, class: 'btn btm-sm btn-primary', :"data-modal" => ''
+          = link_to t('dashboard.click_to_call.verify'),edit_dashboard_click_to_call_preferences_path, class: 'btn btn-primary action-trigger', :"data-modal" => ''

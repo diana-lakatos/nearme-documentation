@@ -1,9 +1,18 @@
-.intergration-service {
+.integration-service {
     h3 {
         font-weight: bold;
     }
 
     p {
         margin-top: 0;
+    }
+
+    @media (min-width: $screen-sm) {
+        .action-trigger {
+            display: block;
+            width: 100%;
+            padding-left: 0;
+            padding-right: 0;
+        }
     }
 }

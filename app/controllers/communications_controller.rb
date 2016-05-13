@@ -31,7 +31,7 @@ class CommunicationsController < ApplicationController
 
   def verified
     if current_user.communication.try(:verified?)
-      render json: { status: true, phone: current_user.full_mobile_number }
+      render json: { status: true, phone: current_user.communication.phone_number }
     else
       render json: { status: false }
     end
