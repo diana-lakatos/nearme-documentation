@@ -116,4 +116,8 @@ module AvailabilityRulesHelper
     "#{pretty_time_from_hour_and_minute(rule.open_hour, rule.open_minute)}&ndash;#{pretty_time_from_hour_and_minute(rule.close_hour, rule.close_minute)}"
   end
 
+  def pretty_availability_rule_time_with_time_zone(rule, time_zone)
+    "#{pretty_availability_rule_time(rule)} #{I18n.l(Time.now.in_time_zone(time_zone), format: '(%Z)')}"
+  end
+
 end

@@ -5,7 +5,7 @@
 
 .panel
   .panel-body
-    .click-to-call-preferences{ data: { label: { "validation-code": t('dashboard.click_to_call.validation_code_message_html'), "success-message": t('dashboard.click_to_call.success_message_html'), "error-message": t('dashboard.click_to_call.error_message_html')}}}
+    .click-to-call-preferences{ data: { label: click_to_call_labels }}
       = t('dashboard.click_to_call.intro_html')
 
       = dashboard_simple_form_for @user, url: dashboard_click_to_call_preferences_path, method: :put, html: { multipart: true, id: 'edit_click_to_call_preferences', data: { :"click-to-call-preferences" => true } } do |f|
@@ -25,7 +25,7 @@
           - if current_user.communication.try(:verified?)
             %p= t('dashboard.click_to_call.verified_phone_number_html', phone: current_user.communication.try(:phone_number))
 
-            = button_to t('registrations.social_accounts.disconnect'), user_communication_path(current_user, 'delete'), method: :delete, class: 'btn btn-primary'
+            = button_to t('registrations.social_accounts.disconnect'), user_communication_path(current_user, 'delete'), method: :delete, class: 'btn btn-primary', form: { "data-disconnect": '' }
           - else
             = t('dashboard.click_to_call.connect_intro_html')
 
@@ -36,4 +36,4 @@
                 [
                 = link_to t('dashboard.click_to_call.profile_link_label'), dashboard_profile_path
                 ]
-            = button_to t('registrations.social_accounts.connect'), user_communications_path(current_user), class: 'btn btn-primary', form_class: 'twilio-connect-form', params: { phone: current_user.full_mobile_number }
+            = button_to t('dashboard.click_to_call.verify'), user_communications_path(current_user), class: 'btn btn-primary', form_class: 'twilio-connect-form', params: { phone: current_user.full_mobile_number }

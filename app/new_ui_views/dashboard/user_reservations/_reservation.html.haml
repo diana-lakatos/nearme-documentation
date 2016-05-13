@@ -8,6 +8,8 @@
             - listing_name = t('dashboard.host_reservations.show_listing_page') if listing_name.blank?
             = link_to listing_name, reservation.listing.decorate.show_path
 
+            = build_click_to_call_button_for_transactable(reservation.listing)
+
         - else
           %h2= "#{reservation.listing.try(:name)} [#{t('dashboard.user_reservations.listing_deleted')}]"
 
@@ -31,6 +33,11 @@
 
   - if reservation.payment.test_mode?
     .alert.alert-warning= I18n.t('dashboard.user_reservations.test_mode')
+
+  - if reservation.listing.present? && reservation.listing.administrator.communication.try(:verified) && !current_user.communication.try(:verified)
+    .alert.alert-warning
+      = I18n.t('dashboard.click_to_call.not_verified_self_warning', link: link_to(t('dashboard.nav.social_accounts'), social_accounts_path).html_safe).html_safe
+
 
 
   = render 'reservation_details', reservation: reservation, for_host: false

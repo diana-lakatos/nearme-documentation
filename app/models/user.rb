@@ -36,6 +36,7 @@ class User < ActiveRecord::Base
 
   attr_readonly :following_count, :followers_count
   attr_accessor :custom_validation
+  attr_accessor :must_have_verified_phone_number
   attr_accessor :accept_terms_of_service
   attr_accessor :verify_associated
   attr_accessor :skip_password, :verify_identity, :custom_validation, :accept_terms_of_service, :verify_associated,
@@ -226,6 +227,7 @@ class User < ActiveRecord::Base
   validates_with CustomValidators
   validates :name, :first_name, presence: true
   validate :validate_name_length_from_fullname
+  validate :has_verified_phone_number, if: lambda { |u| u.must_have_verified_phone_number }
 
   # FIXME: This is an unideal coupling of 'required parameters' for specific forms
   #        to the general validations on the User model.
@@ -1035,15 +1037,44 @@ class User < ActiveRecord::Base
   end
 
   def is_available_now?
-    available = listings.find do |listing|
-      Time.use_zone(listing.location.time_zone) do
-        date = Time.now.to_date
-        start_min = Time.now.hour() * 60 + Time.now.min()
-        listing.open_on?(date, start_min, start_min)
+    if seller_profile.present?
+      listings.find { |listing| listing.open_now? }.present?
+    else
+      # right now there is no way to determine buyer availability, so we assume he
+      # is available at all times and are displaying
+      true
+    end
+  end
+
+  def get_error_messages
+    msgs = []
+
+    errors.each do |field|
+      if field =~ /\.properties/
+        msgs += errors.get(field)
+      else
+        msgs += errors.full_messages_for(field)
       end
     end
+    msgs
+  end
 
-    available.present?
+  def has_verified_number?
+    communication.try(:verified?)
+  end
+
+  def requires_mobile_number_verifications?
+    [default_profile, seller_profile, buyer_profile].map { |p| p.try(:instance_profile_type) }.any? { |ipt| ipt.try(:must_have_verified_phone_number) }
+  end
+
+  def host_requires_mobile_number_verifications?
+    [default_profile, seller_profile].map { |p| p.try(:instance_profile_type) }.any? { |ipt| ipt.try(:must_have_verified_phone_number) }
+  end
+
+  def has_verified_phone_number
+    unless has_verified_number?
+      errors.add(:mobile_number, I18n.t('errors.messages.not_verified_phone'))
+    end
   end
 
 private

@@ -1,0 +1,17 @@
+%header.dialog__header
+  %h2#dialog__title
+    = t('phone_calls.verify_title')
+
+= form_tag '/', name: 'call-over' do
+  .dialog__body.error
+    %p= @exception.message
+    %p= t('phone_calls.verify_info', link: link_to(t('dashboard.nav.social_accounts'), social_accounts_path)).html_safe
+
+  .dialog__actions
+    = submit_tag t('phone_calls.buttons.close'), class: 'btn btn-grey btn-primary', 'data-modal-close' => ''
+
+:javascript
+  $('[name=call-over]').on('submit', function(event) {
+    event.preventDefault();
+    $('a.modal-close').click();
+  });

@@ -2,6 +2,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
 
   include AttachmentsHelper
 
+  before_action :redirect_to_account_if_verification_required
   before_action :find_transactable_type
   before_action :find_transactable, except: [:index, :new, :create]
   before_action :find_locations
@@ -168,6 +169,13 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   def redirect_to_new_if_single_transactable
     if @transactable_type.single_transactable && @transactable_type.transactables.where(company_id: @company).count.zero?
       redirect_to new_dashboard_company_transactable_type_transactable_path(@transactable_type)
+    end
+  end
+
+  def redirect_to_account_if_verification_required
+    if current_user.host_requires_mobile_number_verifications? && !current_user.has_verified_number?
+      flash[:warning] = t('flash_messages.manage.listings.phone_number_verification_needed')
+      redirect_to edit_registration_path(current_user)
     end
   end
 

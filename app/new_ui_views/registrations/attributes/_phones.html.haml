@@ -12,8 +12,6 @@
       = check_box_tag "#{f.object.class.name.underscore}_mobile_same_as_phone", '1', (f.object.phone == f.object.mobile_number), data: { 'same-as-phone-checkbox' => true }
       = t 'general.same_as_phone'
 
-    - if HiddenUiControls.find('dashboard/saved_searches').visible?
+    - if HiddenUiControls.find('registrations/click_to_call').visible?
       %p
-        = link_to edit_dashboard_click_to_call_preferences_path, class: 'btn btm-sm btn-primary', :"data-modal" => '', :'data-ctc-trigger' => '', :'data-ajax-options' => { phone: f.object.mobile_number, code: f.object.country.try(:calling_code) }.to_json do
-          %span.fa.fa-phone
-          = t('dashboard.nav.click_to_call_preferences')
+        = build_click_to_call_verify_button(f.object.mobile_number, f.object.country.try(:name))

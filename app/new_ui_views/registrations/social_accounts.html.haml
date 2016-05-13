@@ -6,8 +6,11 @@
 - if @supported_providers.any?
   = render "registrations/networks", supported_providers: @supported_providers
 
-- if @supported_providers.empty?
+- if HiddenUiControls.find('registrations/click_to_call').visible?
+  = render "registrations/click_to_call"
+
+
+- if @supported_providers.empty? && HiddenUiControls.find('registrations/click_to_call').visible? == false
   .panel.verification
     .panel-body.notifications
       %p.empty-resultset= t('registrations.social_accounts.no_social_providers', marketplace_name: platform_context.name).html_safe
-
