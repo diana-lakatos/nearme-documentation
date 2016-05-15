@@ -1,7 +1,9 @@
 module.exports = {
-    load: function(element, event) {
-        $('[data-add-favorite-button]').each(function() {
-            var container = $(this);
+    load: function(element) {
+        element = element || '[data-add-favorite-button]';
+
+        $(element).each(function(index, item){
+            var container = $(item);
             var data = {
                 'object_type': container.data('object-type'),
                 'link_to_classes': container.data('link-to-classes')
