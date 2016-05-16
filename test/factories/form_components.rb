@@ -18,6 +18,12 @@ FactoryGirl.define do
       form_fields { [{'product' => 'additional_charges'}, { 'product' => 'name'}, { 'product' => 'description'}, { 'product' => 'photos'}, { 'product' => 'action_rfq' }, { 'product' => 'price'}, { 'product' => 'quantity'}, { 'product' => 'integrated_shipping'}, { 'product' => 'documents_upload'}, {'product' => 'shipping_info'}] + form_componentable.categories.map {|c| [ {'product' => "Category - #{c.name}"} ] }}
     end
 
+    factory :form_component_location do
+      form_type { FormComponent::LOCATION_ATTRIBUTES }
+      form_componentable { PlatformContext.current.instance || Instance.first }
+      form_fields { [ { 'location' => 'name' }, { 'location' => 'address' }, { 'location' => 'time_zone' }, { 'location' => 'description' }, { 'location' => 'location_type' }, { 'location' => 'email' }, { 'location' => 'administrator' }, { 'location' => 'special_notes' }, { 'location' => 'availability_rules' }, { 'location' => 'amenities' }, { 'location' => 'assigned_waiver_agreement_templates' }, ]}
+    end
+
     factory :form_component_transactable do
       form_type { FormComponent::TRANSACTABLE_ATTRIBUTES }
 

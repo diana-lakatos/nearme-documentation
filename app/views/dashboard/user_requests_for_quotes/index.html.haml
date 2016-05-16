@@ -1,34 +1,34 @@
 - title t('reservations.rfq_long')
 
-.dash-page
-  .dash-head.clearfix
-    %ul
-      %li
-        = support_link_to_filter(@filter, 'open')
-      %li
-        = support_link_to_filter(@filter, 'resolved')
-      %li
-        = support_link_to_filter(@filter, 'all')
-  .dash-body
-    .table-responsive
-      %table.table
-        %thead
-          %tr
-            %th Ticket #
-            %th Details
-            %th Target
-            %th Last updated
-            %th Status
-        %tbody
+- content_for :page_header do
+  %h1= yield :title
 
-          = render partial: 'dashboard/user_requests_for_quotes/ticket', collection: @tickets
-    = will_paginate_styled @tickets
+%nav.panel-nav
+  %ul.tabs.pull-left
+    - actions = ['open', 'resolved', 'all']
+    %li{class: @filter == 'open' ? 'active' : ''}
+      = link_to t('reservations.filters.open'), url_for(:filter => 'open')
+    %li{class: @filter == 'resolved' ? 'active' : ''}
+      = link_to t('reservations.filters.resolved'), url_for(:filter => 'resolved')
+    %li{class: @filter == 'all' ? 'active' : ''}
+      = link_to t('reservations.filters.all'), url_for(:filter => 'all')
 
-- content_for :script do
-  :javascript
-    jQuery.timeago.settings.strings.minutes = "%d min"
-    jQuery.timeago.settings.strings.minute = jQuery.timeago.settings.strings.minutes
-    jQuery.timeago.settings.strings.seconds = jQuery.timeago.settings.strings.seconds;
-    jQuery.timeago.settings.strings.hours = "about %d h"
-    jQuery.timeago.settings.strings.hours = jQuery.timeago.settings.strings.hours
+.panel
+  .panel-body
+    - if @tickets.empty?
+      %p.empty-resultset
+        = t('reservations.no_tickets')
+    - else
+      .table-responsive
+        %table.table
+          %thead
+            %tr
+              %th= t('reservations.tickets.ticket_no')
+              %th.hidden-xs= t('reservations.tickets.details')
+              %th.hidden-xs= t('reservations.tickets.target')
+              %th.hidden-xs= t('reservations.tickets.last_updated')
+              %th= t('reservations.tickets.status')
+          %tbody
+            = render partial: 'dashboard/user_requests_for_quotes/ticket', collection: @tickets
 
+= will_paginate_dashboard @tickets

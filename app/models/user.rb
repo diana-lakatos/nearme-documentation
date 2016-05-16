@@ -1077,6 +1077,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def required?(attribute)
+    RequiredFieldChecker.new(self, attribute).required?
+  end
+
 private
 
   def get_first_name_from_name

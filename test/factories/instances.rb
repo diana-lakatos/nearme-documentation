@@ -31,9 +31,6 @@ FactoryGirl.define do
 
     after(:create) do |instance, evaluator|
       instance.theme = FactoryGirl.create(:theme, owner: instance, instance_id: instance.id) unless instance.theme
-    end
-
-    after(:create) do |instance|
       unless Domain.find_by_name('example.com').present?
         instance.domains = [FactoryGirl.create(:test_domain, target: instance, instance_id: instance.id)]
       end

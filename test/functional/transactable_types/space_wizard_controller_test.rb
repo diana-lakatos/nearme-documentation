@@ -114,7 +114,6 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     setup do
       @user.country_name = nil
       @user.save!
-      FactoryGirl.create(:form_component, form_componentable: @transactable_type)
     end
 
     should "be set to Greece" do

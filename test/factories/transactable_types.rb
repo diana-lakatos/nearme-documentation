@@ -35,6 +35,7 @@ FactoryGirl.define do
         transactable_type.create_rating_systems
         transactable_type.rating_systems.update_all(active: true)
       end
+      Utils::FormComponentsCreator.new(transactable_type).create!
     end
 
     factory :transactable_type_listing do
@@ -46,7 +47,6 @@ FactoryGirl.define do
       after(:build) do |transactable_type|
         TransactableType.transaction do
           transactable_type.availability_templates << FactoryGirl.build(:availability_template, transactable_type: transactable_type)
-          transactable_type.form_components << FactoryGirl.build(:form_component_transactable, form_componentable: transactable_type)
           transactable_type.custom_attributes << FactoryGirl.build(:custom_attribute, :listing_types)
         end
       end

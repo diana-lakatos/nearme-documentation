@@ -32,25 +32,36 @@ class InstanceMailer < ActionMailer::Base
     render_options = { platform_context: @platform_context, locale: I18n.locale }
     render_options.merge!({layout: layout_path}) if layout_path.present?
 
-    mixed = super(options.merge!(
+    options.merge!(
       subject: subject,
       bcc: bcc,
       cc: cc,
       from: from,
-      reply_to: reply_to)) do |format|
-        format.html { render(template, render_options) + get_tracking_code(custom_tracking_options).html_safe }
-        format.text { render(template, render_options) rescue '' }
-      end
+      reply_to: reply_to
+    )
 
-      mixed.add_part(
-        Mail::Part.new do
-          content_type 'multipart/alternative'
-          mixed.parts.reverse!.delete_if {|p| add_part p }
-        end
-      )
+    message = super(options) do |format|
+      format.html { render(template, render_options) + get_tracking_code(custom_tracking_options).html_safe }
+      format.text { render(template, render_options) rescue '' }
+    end
 
-      mixed.content_type 'multipart/mixed'
-      mixed.header['content-type'].parameters[:boundary] = mixed.body.boundary
+    attachment_parts = []
+    message.parts.each do |part|
+      attachment_parts << message.parts.delete(part) if part.attachment? && !part.inline?
+    end
+
+    content_part = Mail::Part.new do
+      content_type 'multipart/alternative'
+      message.parts.delete_if { |part| add_part(part) }
+    end
+
+    message.content_type('multipart/mixed')
+    message.header['content-type'].parameters[:boundary] = message.body.boundary
+
+    message.add_part(content_part)
+    attachment_parts.each { |part| message.add_part(part) }
+
+    message
   end
 
   private

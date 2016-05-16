@@ -60,11 +60,3 @@ Feature: A user can edit their settings
       And I am on the home page
     Then I should not see "Manage Desks"
 
-  @javascript
-  Scenario: A user can update white label settings
-    Given a company exists with creator: the user
-     And I go to the white label settings page
-    When I enable white label settings
-    When I update company white label settings
-    Then I should see "Great, white-label details have been updated"
-     And The company white label settings should be updated

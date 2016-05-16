@@ -410,6 +410,7 @@ class Instance < ActiveRecord::Base
   end
 
   def build_availability_templates
+    unless self.availability_templates.any?
     self.availability_templates.build(
       name: "Working Week",
       instance: self,
@@ -433,6 +434,7 @@ class Instance < ActiveRecord::Base
         close_hour: 23, close_minute: 59
       }]
     )
+    end
   end
 
   def seller_profile_enabled?

@@ -1,11 +1,10 @@
 - title t('user_blog.titles.edit')
 
-.dash-head.clearfix
-  %p= t 'user_blog.nav.settings'
+- content_for :page_header do
+  %h1= t 'user_blog.nav.settings'
 
-  = link_to user_blog_posts_list_path(current_user), class: 'dash-head-btn', target: '_blank' do
-    .btn.dark-gray
-      = t 'user_blog.buttons.visit_blog'
+  .options
+    = link_to t('user_blog.buttons.visit_blog_html'), user_blog_posts_list_path(current_user), rel: 'external'
 
-.dash-body
-  = render partial: 'user_blog_settings_form'
+
+= render partial: 'user_blog_settings_form'

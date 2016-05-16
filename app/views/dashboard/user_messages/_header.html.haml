@@ -1,5 +1,12 @@
-.dash-head.clearfix
-  %form.pull-left{:action => ""}
-    %select.messages{:name => "messages", onchange:"this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"}
-      %option{:value => dashboard_user_messages_path } Inbox (#{ current_user.unread_user_message_threads_count_for(platform_context.instance) })
-      %option{:value => archived_dashboard_user_messages_path, selected: params[:action] == 'archived'} Archived
+- content_for :page_header do
+  %h1= t('user_messages.title')
+
+%nav.panel-nav
+  %ul.tabs.pull-left
+    %li{:class => params[:action] != 'archived' ? 'active' : nil}
+      = link_to dashboard_user_messages_path do
+        = t('user_messages.inbox', count: current_user.unread_user_message_threads_count_for(platform_context.instance))
+
+    %li{:class => params[:action] == 'archived' ? 'active' : nil}
+      = link_to archived_dashboard_user_messages_path do
+        = t('user_messages.archived')

@@ -1,27 +1,41 @@
 - only_inputs = [] if only_inputs.nil?
-= f.input :name, :as => :limited_string, :limit => 50, required: !current_instance.skip_company  if (only_inputs.empty? || only_inputs.include?(:name))
+
+- if (only_inputs.empty? || only_inputs.include?(:name))
+  = f.input :name, :as => :limited_string, :limit => 50, required: !current_instance.skip_company
 
 - if only_inputs.empty? || only_inputs.include?(:approval_requests)
-  = render :partial => 'approval_requests/form', :locals => { f: f }
+  = render 'dashboard/shared/fields/approval_requests', f: f
 
 - if only_inputs.empty? || only_inputs.include?(:address)
   = f.simple_fields_for :company_address, (f.object.company_address.presence || f.object.build_company_address) do |address_form|
-    = render :partial => 'addresses/form', :locals => { :f => address_form, label: t('simple_form.labels.companies.company_address.address') }
-= f.association :industries, :blank => false, :input_html => { 'data-placeholder' => t('simple_form.prompts.company.industries'), :class => 'custom-select' }, :required => true if (platform_context.instance.has_industries? && (only_inputs.empty? || only_inputs.include?(:industries)))
-= f.input :url if (only_inputs.empty? || only_inputs.include?(:url))
-= f.input :email if (only_inputs.empty? || only_inputs.include?(:email))
-= f.input :description, :as => :limited_text, :limit => 250, :input_html => { :maxlength => 250} if (only_inputs.empty? || only_inputs.include?(:description))
+    = render 'dashboard/shared/fields/address', :f => address_form, field_label: t('simple_form.labels.companies.company_address.address')
+
+- if (platform_context.instance.has_industries? && (only_inputs.empty? || only_inputs.include?(:industries)))
+  = f.association :industries, :blank => false, :input_html => { 'data-placeholder' => t('simple_form.prompts.company.industries') }, :required => true
+
+- if (only_inputs.empty? || only_inputs.include?(:url) || only_inputs.include?(:email))
+  .row
+    - if (only_inputs.empty? || only_inputs.include?(:url))
+      .col-md-8
+        = f.input :url
+    - if (only_inputs.empty? || only_inputs.include?(:email))
+      .col-md-4
+        = f.input :email
+
+- if (only_inputs.empty? || only_inputs.include?(:description))
+  = f.input :description, :as => :limited_text, :limit => 250
+
 - if (only_inputs.empty? || only_inputs.include?(:payments_mailing_address))
   = f.simple_fields_for :payments_mailing_address, (f.object.payments_mailing_address.presence || f.object.build_payments_mailing_address) do |address_form|
-    = render :partial => 'addresses/form', :locals => { :f => address_form, label: t('payouts.mailing_address') }
+    = render 'dashboard/shared/fields/address', f: address_form, field_label: t('payouts.mailing_address')
 
 - if (only_inputs.empty? || only_inputs.include?(:paypal))
-  %h2.with-margin Payouts via Paypal
+  %h3 Payouts via Paypal
   = f.input :paypal_email, :label => tooltip(t("simple_form.hints.company.paypal_email"), t('simple_form.labels.company.paypal_email')), hint: false
 
 - if (only_inputs.empty? || only_inputs.include?(:ach))
   - if platform_context.supported_payout_via_ach?
-    %h2.with-margin Payouts via ACH (US only)
+    %h3 Payouts via ACH (US only)
     - if f.object.errors[:bank_account_form].present?
       .bank_account_fields
         .flash.error
