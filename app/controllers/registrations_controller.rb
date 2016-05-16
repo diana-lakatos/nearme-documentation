@@ -129,6 +129,8 @@ class RegistrationsController < Devise::RegistrationsController
   def update
     # next line is there to prevent unwanted UI changes [i.e. the name in the navbar] (it's a bug in devise, resource === current_user)
     @user = User.find(resource.id) # maybe a little bit hackish way, but 'dup' or 'clone' doesn't work
+
+    resource.must_have_verified_phone_number = true if resource.requires_mobile_number_verifications?
     resource.custom_validation = true
     resource.assign_attributes(user_params)
     build_approval_request_for_object(resource) unless resource.is_trusted?

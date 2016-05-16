@@ -4,7 +4,7 @@
 
 = form_tag '/', name: 'call-over' do
   .dialog__actions
-    = submit_tag t('phone_calls.buttons.close'), class: 'btn btn-grey'
+    = submit_tag t('phone_calls.buttons.close'), class: 'btn btn-grey', :'data-modal-close' => ''
 
 :javascript
   $('[name=call-over]').on('submit', function(event) {

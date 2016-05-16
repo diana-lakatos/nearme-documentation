@@ -136,7 +136,7 @@ class TransactableDrop < BaseDrop
         rule.days.each do |day|
           days[day] ||= []
 
-          days[day] << [rule.open_hour, rule.close_hour, pretty_availability_rule_time(rule)]
+          days[day] << [rule.open_hour, rule.close_hour, pretty_availability_rule_time_with_time_zone(rule, @transactable.timezone)]
         end
       end
     end
@@ -337,9 +337,7 @@ class TransactableDrop < BaseDrop
   end
 
   def click_to_call_button
-    return unless administrator.click_to_call? && administrator.is_available_now?
-    path_to_call = routes.new_user_phone_call_path(administrator)
-    build_click_to_call_button(path_to_call)
+    build_click_to_call_button_for_transactable(@transactable)
   end
 
   def last_search

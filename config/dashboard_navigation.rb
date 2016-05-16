@@ -101,9 +101,6 @@ SimpleNavigation::Configuration.run do |navigation|
       end
       dashboard_nav_item sub_nav, 'dashboard/notification_preferences', edit_dashboard_notification_preferences_path, link_text: t('dashboard.nav.notification_preferences'), highlights_on: /dashboard\/notification_preferences/
       dashboard_nav_item sub_nav, 'registrations/social_accounts', social_accounts_path, link_text: t('dashboard.nav.social_accounts'), highlights_on: /dashboard\/social_accounts/
-      if HiddenUiControls.find('dashboard/click_to_call_preferences').visible?
-        dashboard_nav_item sub_nav, 'dashboard/click_to_call_preferences', edit_dashboard_click_to_call_preferences_path, link_text: t('dashboard.nav.click_to_call_preferences'), highlights_on: /dashboard\/click_to_call/
-      end
       if HiddenUiControls.find('dashboard/saved_searches').visible?
         dashboard_nav_item sub_nav, 'dashboard/saved_searches', dashboard_saved_searches_path, link_text: t('dashboard.nav.saved_searches'), highlights_on: /dashboard\/saved_searches/
       end

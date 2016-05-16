@@ -6,39 +6,48 @@ var ClickToCallPreferences = function(el){
 
     this.connectForm = el.querySelector('.twilio-connect-form');
     this.connectFormSubmit = el.querySelector('.twilio-connect-form [type="submit"]');
+    this.disconnectForm = el.querySelector('form[data-disconnect]')
+    this.disconnectFormSubmit = el.querySelector('form[data-disconnect] [type="submit"]');
     this.labels = {
         validationCode: _.template(el.dataset.labelValidationCode),
-        successMessage: _.template(el.dataset.labelSuccessMessage),
-        errorMessage: _.template(el.dataset.labelErrorMessage)
-    }
+        connectSuccessMessage: _.template(el.dataset.labelConnectSuccessMessage),
+        connectErrorMessage: _.template(el.dataset.labelConnectErrorMessage),
+        disconnectSuccessMessage: _.template(el.dataset.labelDisconnectSuccessMessage),
+        disconnectErrorMessage: _.template(el.dataset.labelDisconnectErrorMessage)
+    };
 
     this.bindEvents();
 };
 
 ClickToCallPreferences.prototype.bindEvents = function(){
+    var initializeConnectBound, initializeDisconnectBound;
+
     this.toggler.addEventListener('change', this.toggleOptions.bind(this));
 
-    var initBound = this.initializeConnect.bind(this);
     if (this.connectForm) {
+        initializeConnectBound = this.initializeConnect.bind(this);
         this.connectForm.addEventListener('submit', function(e){
             e.preventDefault();
-            initBound();
+            initializeConnectBound();
         });
+    }
+
+    if (this.disconnectForm) {
+        initializeDisconnectBound = this.initializeDisconnect.bind(this);
+        this.disconnectForm.addEventListener('submit', function(e){
+            e.preventDefault();
+            initializeDisconnectBound();
+        })
     }
 };
 
 ClickToCallPreferences.prototype.initializeConnect = function(){
     this.disableConnectForm();
-    this.cleanupConnectionForm();
+    this.cleanupAlerts();
 
-    $.ajax({
-        url: this.connectForm.action,
-        method: this.connectForm.method,
-        dataType: 'json',
-        data: $(this.connectForm).serialize()
-    })
-    .done(this.processConnectResult.bind(this))
-    .fail(this.processConnectError.bind(this));
+    this.xhrFormSubmit(this.connectForm)
+        .done(this.processConnectResult.bind(this))
+        .fail(this.processConnectError.bind(this));
 };
 
 ClickToCallPreferences.prototype.enableConnectForm = function(){
@@ -53,7 +62,7 @@ ClickToCallPreferences.prototype.disableConnectForm = function(){
 
 ClickToCallPreferences.prototype.processConnectResult = function(data) {
     if (!data.status || data.status === 'error') {
-        this.showConnectionError(data.message);
+        this.showError(data.message);
         return this.enableConnectForm();
     }
 
@@ -73,10 +82,12 @@ ClickToCallPreferences.prototype.processConnectResult = function(data) {
     }
     else if (data.status === 'verified') {
         this.connectForm.parentNode.removeChild(this.connectForm);
-        this.connectionSuccess(data.phone);
+        this.showSuccess(this.labels.connectSuccessMessage({ phone: data.phone }));
     }
 
-    throw new Error('Invalid connection response.');
+    else {
+        throw new Error('Invalid connection response.');
+    }
 };
 
 ClickToCallPreferences.prototype.startPolling = function(){
@@ -96,34 +107,12 @@ ClickToCallPreferences.prototype.pollVerifiedStatus = function(data){
 
     this.infobox.parentNode.removeChild(this.infobox);
 
-    this.connectionSuccess(data.phone);
+    this.showSuccess(this.labels.connectSuccessMessage({ phone: data.phone }));
 };
-
-ClickToCallPreferences.prototype.connectionSuccess = function(phone){
-
-    var successMessage = document.createElement('p');
-    successMessage.classList.add('alert','alert-success');
-    successMessage.innerHTML = this.labels.successMessage({ phone: phone })
-
-    this.wrapper.appendChild(successMessage);
-}
 
 ClickToCallPreferences.prototype.processConnectError = function() {
-    this.showConnectionError(this.labels.errorMessage());
+    this.showError(this.labels.connectErrorMessage());
     this.enableConnectForm();
-};
-
-ClickToCallPreferences.prototype.showConnectionError = function(message){
-    var notice = document.createElement('div');
-    notice.classList.add('label','label-danger');
-    notice.innerHTML = message;
-    this.wrapper.appendChild(notice);
-};
-
-ClickToCallPreferences.prototype.cleanupConnectionForm = function(message){
-    Array.prototype.forEach.call(this.wrapper.querySelectorAll('.label'), function(el){
-        el.parentNode.removeChild(el);
-    });
 };
 
 ClickToCallPreferences.prototype.toggleOptions = function(){
@@ -134,12 +123,61 @@ ClickToCallPreferences.prototype.toggleOptions = function(){
         this.connectDetails.classList.remove('active');
     }
 
-    $.ajax({
-        url: this.toggleForm.action,
-        method: this.toggleForm.method,
-        dataType: 'json',
-        data: $(this.toggleForm).serialize()
+    this.xhrFormSubmit(this.toggleForm);
+};
+
+ClickToCallPreferences.prototype.initializeDisconnect = function(){
+
+    this.disconnectFormSubmit.disabled = true;
+    this.cleanupAlerts();
+
+    var processDisconnectResult = function(){
+        this.showSuccess(this.labels.disconnectSuccessMessage())
+        this.disconnectForm.parentNode.remove(this.disconnectForm);
+    };
+
+    var processDisconnectError = function(){
+        this.showError(this.labels.disconnectErrorMessage());
+        this.disconnectFormSubmit.disabled = false;
+    };
+
+
+    this.xhrFormSubmit(this.disconnectForm)
+        .done(processDisconnectResult.bind(this))
+        .fail(processDisconnectError.bind(this));
+};
+
+ClickToCallPreferences.prototype.showError = function(message){
+    var el = document.createElement('p');
+    el.classList.add('alert','alert-danger');
+    el.innerHTML = message;
+    this.wrapper.appendChild(el);
+};
+
+ClickToCallPreferences.prototype.showSuccess = function(message){
+    var el = document.createElement('p');
+    el.classList.add('alert','alert-success');
+    el.innerHTML = message
+    this.wrapper.appendChild(el);
+};
+
+ClickToCallPreferences.prototype.cleanupAlerts = function(message){
+    Array.prototype.forEach.call(this.wrapper.querySelectorAll('.alert'), function(el){
+        el.parentNode.removeChild(el);
     });
+};
+
+ClickToCallPreferences.prototype.xhrFormSubmit = function(form, options) {
+
+    var defaults = {
+        url: form.action,
+        method: form.method,
+        dataType: 'json',
+        data: $(form).serialize()
+    }
+    options = options || {};
+    options = $.extend({}, defaults, options);
+    return $.ajax(options);
 };
 
 module.exports = ClickToCallPreferences;

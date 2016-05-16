@@ -10,6 +10,7 @@ class LocalesService
     time.formats.short
     time.formats.long
     time.formats.with_time_zone
+    time.formats.short_with_time_zone
 
     date.yesterday
     date.formats.long

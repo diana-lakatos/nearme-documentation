@@ -11,6 +11,9 @@ module.exports = class Dialog
     $('body').append(@dialog)
 
   bindEvents: ->
+
+    @resetCallbacks()
+
     @dialog.on 'click', '[data-modal-close]', (e)=>
       e.preventDefault()
       @hide()
@@ -22,7 +25,7 @@ module.exports = class Dialog
       e.stopPropagation()
       target = $(e.currentTarget)
       ajaxOptions = { url: target.attr("href"), data: target.data('ajax-options') }
-      @load(ajaxOptions, target.attr('data-modal-class'))
+      @load(ajaxOptions, target.data('modal-class'))
 
     # submit form via button
     $('body').on 'submit.nearme', 'form[data-modal]', (e) =>
@@ -34,13 +37,21 @@ module.exports = class Dialog
     $(document).on 'hide:dialog.nearme', =>
       @hide()
 
-    $(document).on 'load:dialog.nearme', (event, ajaxOptions = {}, klass = null)=>
-      @load(ajaxOptions, klass)
+    $(document).on 'load:dialog.nearme', (event, ajaxOptions = {}, klass = null, callbacks = {})=>
+      @load(ajaxOptions, klass, callbacks)
 
     @overlay.on 'click', =>
       @hide()
 
-  load: (ajaxOptions, klass)=>
+  resetCallbacks: ->
+    @callbacks = {
+      onShow: (->)
+      onHide: (->)
+    }
+
+  load: (ajaxOptions, klass, callbacks = {})=>
+    @resetCallbacks()
+    @callbacks = $.extend({}, @callbacks, callbacks)
     @setClass(klass)
     @showLoading()
     @show()
@@ -67,11 +78,14 @@ module.exports = class Dialog
     @contentHolder.html(content)
     @dialog.addClass('dialog--loaded')
     $('html').trigger('loaded:dialog.nearme')
+    @callbacks.onShow()
 
   hide: =>
     @dialog.attr('aria-hidden', true)
     $('body').removeClass('dialog--visible')
     $('body').off('keydown.dialog')
+    @callbacks.onHide()
+
 
   bindEscapeKey: =>
     $('body').on 'keydown.dialog', (e)=>
@@ -82,4 +96,4 @@ module.exports = class Dialog
     return unless klass
     @dialog.removeClass(@customClass) if @customClass
     @customClass = klass
-    @dialog.add(@customClass)
+    @dialog.addClass(@customClass)

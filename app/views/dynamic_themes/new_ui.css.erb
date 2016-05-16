@@ -125,20 +125,24 @@ output { color: #555; }
 .btn-default .badge, .form-actions [type=submit] .badge { color: #fff; background-color: <%= theme_blue %>; }
 
 .btn-primary,
+.dialog__actions [type=submit],
 .page-header .options > a,
 .page-header .options > button { color: #fff; background-color: <%= theme_blue %>; border-color: <%= darken_color(theme_blue, 0.05) %>; }
 
 .btn-primary:focus,
 .btn-primary.focus,
+.dialog__actions [type=submit]:focus,
 .page-header .options > a:focus,
 .page-header .options > button:focus { color: #fff; background-color: <%= darken_color(theme_blue, 0.1) %>; border-color: <%= darken_color(theme_blue, 0.25) %>; }
 
 .btn-primary:hover,
+.dialog__actions [type=submit]:hover,
 .page-header .options > a:hover,
 .page-header .options > button:hover { color: #fff; background-color: <%= darken_color(theme_blue, 0.1) %>; border-color: <%= darken_color(theme_blue, 0.12) %>; }
 
 .btn-primary:active,
 .btn-primary.active,
+.dialog__actions [type=submit]:active,
 .open > .btn-primary.dropdown-toggle,
 .page-header .options > a:active,
 .page-header .options > button:active { color: #fff; background-color: <%= darken_color(theme_blue, 0.1) %>; border-color: <%= darken_color(theme_blue, 0.12) %>; }
@@ -153,6 +157,8 @@ output { color: #555; }
 .page-header .options > a:active:focus,
 .page-header .options > button:active:hover,
 .page-header .options > button:active:focus,
+.dialog__actions [type=submit]:active:hover,
+.dialog__actions [type=submit]:active:focus,
 .open > .btn-primary.dropdown-toggle:hover,
 .open > .btn-primary.dropdown-toggle:focus,
 .open > .btn-primary.dropdown-toggle.focus { color: #fff; background-color: <%= darken_color(theme_blue, 0.17) %>; border-color: <%= darken_color(theme_blue, 0.25) %>; }
@@ -171,6 +177,8 @@ output { color: #555; }
 .page-header .options > button.disabled:focus,
 .page-header .options > button[disabled]:hover,
 .page-header .options > button[disabled]:focus,
+.dialog__actions [type=submit][disabled]:hover,
+.dialog__actions [type=submit][disabled]:focus,
 fieldset[disabled] .btn-primary:hover,
 fieldset[disabled] .btn-primary:focus,
 fieldset[disabled] .btn-primary.focus { background-color: <%= theme_blue %>; border-color: <%= darken_color(theme_blue, 0.05) %>; }

@@ -76,7 +76,7 @@ DNM.registerInitializer(function(){
     });
 
     $(document).on('load:favoritebutton.nearme', function(event, element){
-      addToFavoriteButton.load(element, event)
+      addToFavoriteButton.load(element)
     });
 });
 

@@ -6,6 +6,8 @@ module.exports = class SearchTimeAndDatepickers
     @timeToInput = $("select[name='time_to']")
     @initialize()
 
+    @disableHours(@dateInput.val()) if @dateInput.val()
+
   initialize: ->
     @dateInput.datepicker
       altField: "input[name='date']",
@@ -21,15 +23,20 @@ module.exports = class SearchTimeAndDatepickers
     date = new Date(date_string)
 
     opts = $.merge(@timeFromInput.find('option'), @timeToInput.find('option'))
-
     current_date = new Date()
+
     if date.toDateString() == current_date.toDateString()
       current_hour = parseInt("#{current_date.getHours()}#{('0' + current_date.getMinutes()).substr(-2)}")
+
       opts.each (i, option) ->
         time = parseInt($(option).val().replace(':',''))
+        return if isNaN(time)
         if (time > current_hour)
           $(option).attr 'disabled', false
+          $(option).css 'display', 'block'
         else
           $(option).attr 'disabled', 'disabled'
+          $(option).css 'display', 'none'
     else
       opts.attr('disabled', false)
+      opts.css 'display', 'block'

@@ -7,3 +7,5 @@
 
     = f.input :mobile_number, as: :tel, required: (f.object.validation_for(:phone).any?(&:is_required?) || f.object.validation_for(:mobile_number).any?(&:is_required?)), input_html: { data: { 'mobile-number': true }}, prefix: calling_code
 
+    - if HiddenUiControls.find('registrations/click_to_call').visible?
+      = build_click_to_call_verify_button(f.object.mobile_number, f.object.country.try(:name))

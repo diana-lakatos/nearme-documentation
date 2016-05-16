@@ -2,7 +2,7 @@ class PhoneCallsController < ApplicationController
   class NoVerifiedPhoneNumber < Exception; end
 
   rescue_from Twilio::REST::RequestError, with: :request_error
-  rescue_from NoVerifiedPhoneNumber, with: :request_error
+  rescue_from NoVerifiedPhoneNumber, with: :unverified_error
 
   skip_before_filter :set_locale
   before_action :authenticate_user!, only: [:new, :create, :destroy]
@@ -64,6 +64,11 @@ class PhoneCallsController < ApplicationController
   def request_error(exception)
     @exception = exception
     render action: :error
+  end
+
+  def unverified_error(exception)
+    @exception = exception
+    render action: :unverified
   end
 
 end
