@@ -345,7 +345,6 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
     {
       first_name: @user.first_name,
       last_name: @user.last_name,
-      industries: @user.industries.map(&:name),
       email: @user.email,
       phone: @user.phone,
       created: @user.created_at,

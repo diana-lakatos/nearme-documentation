@@ -51,8 +51,7 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
   def search_query_values
     {
       :loc => @params[:loc],
-      :query => @params[:query],
-      :industries_ids => @params[:industries_ids]
+      :query => @params[:query]
     }.merge(filters)
   end
 

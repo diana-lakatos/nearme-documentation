@@ -158,7 +158,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       should 'set rejection reason' do
         Reservation.any_instance.expects(:schedule_void).once
         put :reject, { id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
-        assert_equal @reservation.reload.rejection_reason, 'Dont like him'
+        assert_equal 'Dont like him', @reservation.reload.rejection_reason
       end
     end
 

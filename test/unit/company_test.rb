@@ -4,7 +4,6 @@ class CompanyTest < ActiveSupport::TestCase
 
   should belong_to(:creator)
   should have_many(:locations)
-  should have_many(:industries)
   should validate_presence_of(:name)
   should_not allow_value('not_an_email').for(:email)
   should allow_value('an_email@domain.com').for(:email)
@@ -79,28 +78,11 @@ class CompanyTest < ActiveSupport::TestCase
 
   end
 
-  context 'metadata' do
-    context 'populate_industries_metadata!' do
-      setup do
-        @company = FactoryGirl.create(:company)
-        @industry = FactoryGirl.create(:industry, :name => 'test')
-        @company.industries = [@industry]
-        @company.save!
-      end
-
-      should 'populate correct instance_admin hash' do
-        @company.expects(:update_metadata).with({
-          :industries_metadata => ['test']
-        })
-        @company.populate_industries_metadata!
-      end
-    end
-  end
-
   context 'iso_country_code' do
 
     setup do
       Address.destroy_all
+      @company.reload
     end
 
     context 'without default on instance' do

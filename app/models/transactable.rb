@@ -34,7 +34,6 @@ class Transactable < ActiveRecord::Base
   has_many :amenities, through: :amenity_holders, inverse_of: :listings
   has_many :assigned_waiver_agreement_templates, as: :target
   has_many :billing_authorizations, as: :reference
-  has_many :company_industries, through: :location
   has_many :document_requirements, as: :item, dependent: :destroy, inverse_of: :item
   has_many :inquiries, inverse_of: :listing
   has_many :impressions, :as => :impressionable, :dependent => :destroy

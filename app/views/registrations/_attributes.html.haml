@@ -24,7 +24,6 @@
     = render :partial => 'addresses/column_form', :locals => { :f => address_form }
 
 = f.input :company_name, label: "Company name", as: :string if only_inputs.empty? || only_inputs.include?(:company_name)
-= f.association :industries, :blank => false, :input_html => { :class => 'custom-select' } if only_inputs.empty? || only_inputs.include?(:industries)
 = f.input :password, :label => (f.object.persisted? ? t('general.change_password') : t('general.password') ) if only_inputs.empty? || only_inputs.include?(:password)
 - if only_inputs.empty? || only_inputs.include?(:avatar)
   .single-photo
