@@ -115,7 +115,7 @@ class User < ActiveRecord::Base
   has_many :tickets, -> { order 'updated_at DESC' }, class_name: 'Support::Ticket'
   has_many :user_industries, dependent: :destroy
   has_many :user_bans
-  has_many :user_status_updates
+  has_many :user_status_updates, class_name: 'UserStatusUpdate'
   has_many :wish_lists, dependent: :destroy
   has_many :dimensions_templates, as: :entity
   has_many :user_profiles
