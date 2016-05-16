@@ -27,7 +27,7 @@ module.exports = class SearchProductsSearchController extends SearchController
     @autocompleteCategories()
 
   bindEvents: ->
-    @filters_container.on 'click', 'input[type=checkbox]', =>
+    @filters_container.on 'click', 'input[type=checkbox]:not(.nav-heading > label > input)', =>
       @triggerSearchFromQuery()
 
     $(document).on 'change', '.search-attribute-filter select', (e) =>

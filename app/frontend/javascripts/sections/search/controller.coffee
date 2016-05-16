@@ -209,22 +209,12 @@ module.exports = class SearchController
   categoryTreeInit: (windowResized)->
     unless windowResized
       $('.nav-categories  > ul > .categories-list > .nav-item ').find('.categories-list').hide()
-      # Mobile mode, we hide parent categories children lists
-      # They will be shown with below code if they are checked
-      if $(window).width() < 767
-        $('.nav-categories  > ul > .categories-list').hide()
 
     for target in $(".nav-item input[type='checkbox']:checked")
       $(target).parents('.nav-item:first').find('ul.categories-list:first').show()
 
-    if ($(window).width() < 767)
-      $(".nav-heading input:checked").parents('.nav-heading').next().show()
-      $(".nav-heading input").on 'change', (event) ->
-        $(".nav-heading input:not(:checked)").parents('.nav-heading').next().hide('slow')
-        $(".nav-heading input:checked").parents('.nav-heading').next().show('slow')
-    else
-      $(".nav-heading input").parents('.nav-heading').next().show()
-      $(".nav-heading input").unbind 'change'
+    $(".nav-heading input").parents('.nav-heading').next().show()
+    $(".nav-heading input").unbind 'change'
 
     $(".nav-item input[type='checkbox']").on 'change', (event) ->
       if $(event.target).prop('checked')
