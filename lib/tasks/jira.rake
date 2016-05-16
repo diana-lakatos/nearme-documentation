@@ -68,7 +68,7 @@ namespace :jira do
     next_tag = @jira_helper.next_tag(1)
     (@cards_to_be_added_to_sprint + cards_in_commits).each do |card_in_sprint|
       @client.Issue.find(card_in_sprint).save({ fields: { fixVersions: [{ name: next_tag }] } })
-      @client.Issue.find(card_in_sprint).save({ fields: { customfield_10007: args[:sprint_number] }})
+      @client.Issue.find(card_in_sprint).save({ fields: { customfield_10007: args[:sprint_number].to_i }})
     end
 
     puts ""
@@ -122,6 +122,9 @@ class JiraHelper
   def next_tag(number_position)
     arr = last_tag.split('.')
     arr[number_position] = arr[number_position].to_i + 1
+    if number_position == 1
+      arr[2] = 0
+    end
     @next_tag = arr.join('.')
   end
 
