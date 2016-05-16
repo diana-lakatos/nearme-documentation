@@ -740,6 +740,19 @@ class Transactable < ActiveRecord::Base
     self.action_free_booking
   end
 
+  def get_error_messages
+    msgs = []
+
+    errors.each do |field|
+      if field =~ /\.properties/
+        msgs += errors.get(field)
+      else
+        msgs += errors.full_messages_for(field)
+      end
+    end
+    msgs
+  end
+
   private
 
   def close_request_for_quotes
@@ -748,8 +761,8 @@ class Transactable < ActiveRecord::Base
   end
 
   def set_possible_payout
-    self.possible_payout = self.company.present? && self.company.merchant_accounts.verified.any? do |merchant_account| 
-      merchant_account.supports_currency?(currency) && merchant_account.payment_gateway.active_in_current_mode? 
+    self.possible_payout = self.company.present? && self.company.merchant_accounts.verified.any? do |merchant_account|
+      merchant_account.supports_currency?(currency) && merchant_account.payment_gateway.active_in_current_mode?
     end
     true
   end

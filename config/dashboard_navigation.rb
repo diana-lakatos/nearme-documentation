@@ -87,7 +87,7 @@ SimpleNavigation::Configuration.run do |navigation|
       end
     end
 
-    if platform_context.instance.user_blogs_enabled?
+    if platform_context.instance.blogging_enabled?(current_user)
       primary.item :blog, t('dashboard.nav.blog'), nil do |sub_nav|
         dashboard_nav_item sub_nav, 'dashboard/blog', dashboard_blog_path, link_text: t('dashboard.nav.blog_posts'), highlights_on: Proc.new { (params[:controller].include?('user_blog') && params[:action] == 'show') || (params[:controller].include?('blog_posts')) }
         dashboard_nav_item sub_nav, 'dashboard/blog', edit_dashboard_blog_path, link_text: t('dashboard.nav.blog_settings'), highlights_on: Proc.new { params[:controller].include?('user_blog') && (params[:action] == 'edit' || params[:action] == 'update') && !params[:controller].include?('blog_posts') }

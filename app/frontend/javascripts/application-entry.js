@@ -616,4 +616,10 @@ DNM.registerInitializer(function(){
     })
 });
 
+DNM.registerInitializer(function(){
+    $( document ).on('modal-shown.nearme', function(e, containerElement) {
+        $(containerElement).find("input[data-authenticity-token]").val($('meta[name="authenticity_token"]').attr('content'));
+    });
+});
+
 DNM.run();

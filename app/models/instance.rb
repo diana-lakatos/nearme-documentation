@@ -205,6 +205,10 @@ class Instance < ActiveRecord::Base
     password == marketplace_password
   end
 
+  def blogging_enabled?(user)
+    user_blogs_enabled? || (user.buyer_profile.present? && enquirer_blogs_enabled?) || (user.seller_profile.present? && lister_blogs_enabled?)
+  end
+
   def twilio_config
     if (!self.test_mode? && Rails.env.production?)
       if twilio_consumer_key.present? && twilio_consumer_secret.present? && twilio_from_number.present?

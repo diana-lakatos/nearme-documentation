@@ -69,7 +69,7 @@
       - if !current_user.requests_for_quotes.empty? && HiddenUiControls.find('main_menu/rfq').visible?
         %li= link_to t('reservations.rfq_menu_text'), main_app.dashboard_user_requests_for_quotes_path
 
-      - if platform_context.instance.user_blogs_enabled? && HiddenUiControls.find('main_menu/manage_blog').visible?
+      - if platform_context.instance.blogging_enabled?(current_user) && HiddenUiControls.find('main_menu/manage_blog').visible?
         %li= link_to t('top_navbar.manage_blog'), main_app.dashboard_blog_path
 
       - if HiddenUiControls.find('main_menu/account').visible?

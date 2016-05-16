@@ -17,7 +17,7 @@ class PhoneCallsController < ApplicationController
   def create
     @call = client.call(
       to: current_user.communication.phone_number,
-      from: current_instance.twilio_from_number,
+      from: current_instance.twilio_config[:from],
       url: connect_webhooks_phone_calls_url,
       status_callback: status_webhooks_phone_calls_url
     )

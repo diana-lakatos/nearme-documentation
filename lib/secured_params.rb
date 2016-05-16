@@ -268,7 +268,7 @@ class SecuredParams
       :header_motto,
       :header_logo,
       :header_icon,
-      owner_attributes: nested([:user_blogs_enabled])
+      owner_attributes: nested([:user_blogs_enabled, :enquirer_blogs_enabled, :lister_blogs_enabled])
     ]
   end
 

@@ -10,7 +10,7 @@ class Dashboard::UserBlog::BaseController < Dashboard::BaseController
   end
 
   def user_blog_enabled?
-    unless platform_context.instance.user_blogs_enabled?
+    unless platform_context.instance.blogging_enabled?(current_user)
       flash[:error] = t 'user_blog.errors.blogs_disabled'
       redirect_to dashboard_path
     end
