@@ -8,10 +8,9 @@ module ClickToCallButtonHelper
 
     closest_availability = transactable.first_available_date.to_datetime.in_time_zone(transactable.timezone)
 
-
     if closest_availability
       open_minute = transactable.availability.open_minute_for(closest_availability)
-      closest_availability = closest_availability.change({ min: open_minute.modulo(60), hour: (open_minute / 60).floor })
+      closest_availability = open_minute.present? ? closest_availability.change({ min: open_minute.modulo(60), hour: (open_minute / 60).floor }) : nil
     end
 
     build_click_to_call_button(path_to_call, I18n.t('phone_calls.buttons.click_to_call'), transactable.open_now?, transactable.timezone, closest_availability)
