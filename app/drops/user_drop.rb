@@ -290,6 +290,10 @@ class UserDrop < BaseDrop
     routes.user_blog_posts_list_path(@user)
   end
 
+  def has_active_blog?
+    PlatformContext.current.instance.blogging_enabled?(@user) && @user.blog.present? && @user.blog.enabled?
+  end
+
   # returns hash of categories { "<name>" => { "name" => '<translated_name', "children" => [<collection of chosen values] } }
   def categories
     if @categories.nil?
