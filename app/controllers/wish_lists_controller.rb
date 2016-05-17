@@ -1,7 +1,22 @@
 class WishListsController < ApplicationController
   before_filter :check_wish_lists_enabled
-  before_filter :find_item
-  before_filter :redirect_unless_authenticated, except: [:show]
+  before_filter :find_item, except: [:bulk_show]
+  before_filter :find_items, only: [:bulk_show]
+  before_filter :redirect_unless_authenticated, except: [:show, :bulk_show]
+
+  def bulk_show
+    @items.map! do |item|
+      @object = item
+      content = render_to_string partial: 'shared/components/wish_list_button', handlers: [:liquid], formats: [:html]
+      {
+        id: item.id,
+        wishlistable_type: item.class.name,
+        content: content
+      }
+    end
+
+    render json: @items
+  end
 
   def show
     @object = @item
@@ -63,11 +78,24 @@ class WishListsController < ApplicationController
   end
 
   def find_item
-    klass_name = params[:wishlistable_type].presence || params[:object_type]
+    klass_name = params[:wishlistable_type].presence
+    check_permitted_object_type(klass_name)
+
+    @item = klass_name.constantize.find(params[:object_id].presence || params[:id])
+  end
+
+  def check_permitted_object_type(klass_name)
     unless WishListItem::PERMITTED_CLASSES.include?(klass_name)
       raise WishListItem::NotPermitted, "Class #{klass_name} is not permitted as wish list item. You have to add it to WishListItem::PERMITTED_CLASSES"
     end
+  end
 
-    @item = klass_name.constantize.find(params[:object_id].presence || params[:id])
+  def find_items
+    items = JSON.parse(params[:items])
+    @items = items.map do |item|
+      klass_name = item["wishlistable_type"]
+      check_permitted_object_type(klass_name)
+      klass_name.constantize.find(item["object_id"])
+    end
   end
 end

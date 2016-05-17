@@ -174,7 +174,11 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :marketplace_sessions, only: [:new, :create]
-    resources :wish_lists, only: [:show, :create, :destroy]
+    resources :wish_lists, only: [:show, :create, :destroy] do
+      collection do
+        get :bulk_show
+      end
+    end
 
     namespace :instance_admin do
       get '/', to: 'base#index'

@@ -68,7 +68,7 @@ class TransactableDrop < BaseDrop
     :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?,
     :action_free_booking?, :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at,
     :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, :attachments, :confirm_reservations,
-    :schedule_booking?, :to_key, :model_name, :deposit_amount_cents, :customizations, :to_param, :hours_for_guest_to_confirm_payment, :availability_exceptions, 
+    :schedule_booking?, :to_key, :model_name, :deposit_amount_cents, :customizations, :to_param, :hours_for_guest_to_confirm_payment, :availability_exceptions,
     :average_rating, to: :transactable
 
   # action_price_per_unit
@@ -205,6 +205,10 @@ class TransactableDrop < BaseDrop
   # url to display favorite button
   def wish_list_path
     routes.wish_list_path(@transactable.id)
+  end
+
+  def wish_list_bulk_path
+    routes.bulk_show_wish_lists_path
   end
 
   # has inappropriate report for user
