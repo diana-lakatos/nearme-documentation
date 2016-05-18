@@ -1,0 +1,49 @@
+.content-container
+  - if false
+    = simple_form_for @instance, :url => update_settings_instance_admin_settings_tax_regions_path, method: :put, :html => { :multipart => true } do |f|
+      .content-container
+        %h4
+          = t('instance_admin.settings.configuration.tax_included_in_price')
+        .row
+          .input-container.col-xs-9
+            = f.input :tax_included_in_price, as: :boolean, input_html: { checked: f.object.tax_included_in_price? }, inline_label: true
+          .input-container.col-xs-3
+            = f.button :submit, t('instance_admin.settings.configuration.update_tax'), class: 'btn btn-light pull-right'
+
+.content-container
+  - if @tax_regions.blank?
+    %h4 Please add your first tax region.
+    .row
+  - else
+    %h4= t 'instance_admin.taxes.labels.title'
+    .row
+      .table-container.col-xs-12
+        %table.table
+          %thead
+            %tr
+              %th= t 'instance_admin.taxes.labels.region'
+              %th= t 'instance_admin.taxes.labels.name'
+              %th= t 'instance_admin.taxes.labels.rate'
+              %th
+              %th
+
+          %tbody
+            - @tax_regions.each do |tax_region|
+              %tr
+                %td
+                  = tax_region.country
+                %td
+                  = tax_region.name
+                %td
+                  = tax_region.value
+                %td
+                  = link_to instance_admin_settings_tax_region_path(tax_region), method: :delete, data: { confirm: t('instance_admin.settings.tax_regions.confirmations.delete') } do
+                    .fa.fa-trash-o.fa-2x.inline-form-icon.pull-right
+
+                  = link_to edit_instance_admin_settings_tax_region_path(tax_region) do
+                    .fa.fa-edit.fa-2x.inline-form-icon.pull-right
+
+= content_for :header_buttons do
+  = link_to t('instance_admin.settings.tax_regions.buttons.new_region'), new_instance_admin_settings_tax_region_path,
+      class: 'btn btn-blue pull-right'
+

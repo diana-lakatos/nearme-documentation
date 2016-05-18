@@ -69,6 +69,7 @@ class InstanceAdmin::BaseController < ApplicationController
     'languages'            => { default_action: 'index', controller: '/instance_admin/settings/locales' },
     'documents_upload'     => { default_action: 'show' },
     'seller_attachments'   => { default_action: 'show'},
+    'taxes'                => { default_action: 'index', controller: '/instance_admin/settings/tax_regions'},
   }
 
   THEME_CONTROLLERS = {

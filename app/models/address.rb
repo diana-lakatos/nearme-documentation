@@ -76,6 +76,14 @@ class Address < ActiveRecord::Base
     super.presence
   end
 
+  def country_object
+    Country.find_by_iso(iso_country_code)
+  end
+
+  def state_object
+    country_object.states.where(abbr: state_code).first
+  end
+
   def postcode
     super.presence
   end

@@ -41,6 +41,7 @@ FactoryGirl.define do
       address "125 Ellis St, San Francisco, CA 94102"
       latitude "37.819959"
       longitude "-122.478696"
+      state "California"
     end
 
     factory :address_in_wellington do
