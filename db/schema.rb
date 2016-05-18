@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160513125138) do
+ActiveRecord::Schema.define(version: 20160518165926) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1781,6 +1781,7 @@ ActiveRecord::Schema.define(version: 20160513125138) do
     t.string   "test_mode"
     t.text     "guest_notes"
     t.hstore   "properties"
+    t.integer  "reservation_type_id"
   end
 
   add_index "recurring_bookings", ["administrator_id"], name: "index_recurring_bookings_on_administrator_id", using: :btree

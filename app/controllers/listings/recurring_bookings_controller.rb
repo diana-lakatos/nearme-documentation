@@ -86,25 +86,12 @@ class Listings::RecurringBookingsController < ApplicationController
       @listing,
       current_user,
       platform_context,
-      {
-        quantity: attributes[:quantity],
-        interval: attributes[:interval],
-        schedule_params: attributes[:schedule_params],
-        start_on: attributes[:start_on].to_date || attributes[:dates].try(:to_date),
-        country_name: attributes[:country_name],
-        mobile_number: attributes[:mobile_number],
-        additional_charge_ids: attributes[:additional_charge_ids],
-        guest_notes: attributes[:guest_notes],
-        total_amount_check: attributes[:total_amount_check],
-        payment_subscription_attributes: payment_subscription_attributes
-      }
+      recurring_booking_request_params.merge({ start_on: attributes[:start_on].to_date || attributes[:dates].try(:to_date) })
     )
   end
 
-  def payment_subscription_attributes
-    if params[:reservation_request].has_key?(:payment_subscription_attributes)
-      params[:reservation_request].require(:payment_subscription_attributes).permit(secured_params.payment_subscription)
-    end
+  def recurring_booking_request_params
+     params.require(:reservation_request).permit(secured_params.recurring_booking_request(@listing.transactable_type.reservation_type))
   end
 
   def set_section_name

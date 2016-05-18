@@ -1511,6 +1511,32 @@ class SecuredParams
     ]
   end
 
+  def recurring_booking_request(reservation_type)
+    [
+      :quantity,
+      :interval,
+      :start_on,
+      :guest_notes,
+      :payment_method_id,
+      :total_amount_check,
+      :country_name,
+      :mobile_number,
+      properties: Reservation.public_custom_attributes_names(reservation_type),
+      dates: [],
+      category_ids: [],
+      additional_charge_ids: [],
+      waiver_agreement_templates: [],
+      shipments_attributes: nested(self.shipment),
+      payment_attributes: nested(self.payment),
+      documents: nested(self.payment_document),
+      documents_attributes: nested(self.payment_document),
+      payment_subscription_attributes: nested(self.payment_subscription),
+      payment_documents_attributes: nested(self.payment_document),
+      owner_attributes: nested(self.user),
+      address_attributes: nested(self.address)
+    ]
+  end
+
   def payment
     [
       :payment_method_id,

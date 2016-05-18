@@ -2,6 +2,7 @@ class RecurringBooking < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
   include Encryptable
   include Chargeable
+  include Categorizable
 
   has_paper_trail
   acts_as_paranoid
@@ -11,6 +12,8 @@ class RecurringBooking < ActiveRecord::Base
 
   before_create :store_platform_context_detail
   after_create :auto_confirm_reservation
+
+  has_custom_attributes target_type: 'ReservationType', target_id: :reservation_type_id
 
   delegate :location, to: :listing
   delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :listing, allow_nil: true
@@ -27,6 +30,7 @@ class RecurringBooking < ActiveRecord::Base
   belongs_to :company
   belongs_to :platform_context_detail, :polymorphic => true
   belongs_to :credit_card
+  belongs_to :reservation_type
 
   # Note: additional_charges are not yet implemented for RecurringBooking
   # Following line is added only for the purpouse of including Chargebale model
@@ -35,6 +39,7 @@ class RecurringBooking < ActiveRecord::Base
   has_many :user_messages, as: :thread_context
 
   accepts_nested_attributes_for :additional_charges
+  accepts_nested_attributes_for :owner
 
   scope :upcoming, lambda { where('end_on > ?', Time.zone.now) }
   scope :not_archived, lambda { without_state(:cancelled_by_guest, :cancelled_by_host, :rejected, :expired).uniq }
@@ -251,5 +256,10 @@ class RecurringBooking < ActiveRecord::Base
     persisted?
   end
 
+  def validate_mandatory_categories
+    reservation_type && reservation_type.categories.mandatory.each do |mandatory_category|
+      errors.add(mandatory_category.name, I18n.t('errors.messages.blank')) if common_categories(mandatory_category).blank?
+    end
+  end
 end
 
