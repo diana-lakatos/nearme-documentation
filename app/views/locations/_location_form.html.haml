@@ -6,7 +6,7 @@
 
 - if only_inputs.empty? || only_inputs.include?(:address)
   = f.simple_fields_for :location_address, (f.object.location_address.presence || f.object.build_location_address) do |address_form|
-    = render 'dashboard/shared/fields/address', :f => address_form, field_label: t('simple_form.labels.locations.location_address.address'), field_hint: t('simple_form.hints.locations.location_address.address')
+    = render 'dashboard/shared/fields/address', :f => address_form, field_label: t('simple_form.labels.locations.location_address.address'), field_hint: t('simple_form.hints.locations.location_address.address', default: '')
 
 - if only_inputs.empty? || only_inputs.include?(:time_zone)
   = f.input :time_zone
