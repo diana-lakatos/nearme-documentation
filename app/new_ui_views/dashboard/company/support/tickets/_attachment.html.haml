@@ -1,5 +1,0 @@
-- form_name ||= 'support_ticket_message'
-.attachment{id: dom_id(ticket_message_attachment)}
-  = link_to ticket_message_attachment.read_attribute(:file), ticket_message_attachment.file.url, download: ticket_message_attachment.read_attribute(:file)
-  .label.label-info= ticket_message_attachment.tag
-

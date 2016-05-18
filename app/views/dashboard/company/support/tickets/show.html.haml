@@ -1,52 +1,51 @@
 - title t('reservations.rfq_long')
 
-.dash-page
-  .dash-head.clearfix
-    - if @ticket.target.action_free_booking?
-      %p="#{t('reservations.rfq_short')} ##{@ticket.id}: "
-    - else
-      %p="#{t('reservations.offer')} ##{@ticket.id}: "
-    - if @ticket.reservation_details && @ticket.reservation_details['quantity'].present?
-      %p
-        Quantity: #{@ticket.reservation_details['quantity']}
-      - if @ticket.target.try(:schedule_booking?) && @ticket.reservation_date.present?
-        = "x #{I18n.l(@ticket.reservation_date, format: :long)}"
-      - elsif @ticket.reservation_dates.any?
-        - if @ticket.reservation_details['start_minute'].present? && @ticket.reservation_details['end_minute'].present?
-          - @hourly_presenter = HourlyPresenter.new(@ticket.reservation_dates.first, @ticket.reservation_details['start_minute'].to_i, @ticket.reservation_details['end_minute'].to_i)
-          = " x #{I18n.l(@ticket.reservation_dates.first, format: :long)} #{@hourly_presenter.hours} #{'hour'.pluralize(@hourly_presenter.hours.to_i)}"
-        - else
-          - @date_presenter = DatePresenter.new(@ticket.reservation_dates)
-          = " x #{@date_presenter.days_in_words}"
+- content_for :page_header do
+  %h1
+    = link_to t('reservations.rfq_long'), dashboard_company_support_tickets_path, class: 'hidden-xs hidden-sm'
+    %span.hidden-xs.hidden-sm >
+
     - if @ticket.target.present?
-      = link_to @ticket.target.name, @ticket.show_target_path
+      - if @ticket.target.action_free_booking?
+        = "#{t('reservations.rfq_short')} ##{@ticket.id}"
+      - else
+        = "#{t('reservations.offer')} ##{@ticket.id}"
     - else
-      Deleted
-    %p.pull-right
-      Status:
-      %span{class: "#{@ticket.state}"}= @ticket.state.titleize
-  .dash-body.thread
-    = render partial: 'dashboard/company/support/tickets/ticket_message', collection: @ticket.messages, spacer_template: 'dashboard/company/support/tickets/spacer'
+      = t('reservations.tickets.deleted')
 
-    - if @ticket.open?
-      = render partial: 'dashboard/company/support/tickets/form', locals: { ticket: @ticket, message: @message, with_close: true, form_url: dashboard_company_support_ticket_ticket_messages_path(@ticket) }
 
-= content_for :script do
-  :javascript
-    jQuery.timeago.settings.strings.minutes = "%d min"
-    jQuery.timeago.settings.strings.minute = jQuery.timeago.settings.strings.minutes
-    jQuery.timeago.settings.strings.seconds = jQuery.timeago.settings.strings.seconds;
-    jQuery.timeago.settings.strings.hours = "about %d h"
-    jQuery.timeago.settings.strings.hours = jQuery.timeago.settings.strings.hours
+.content-box-a
+  .row
+    .col-xs-7
+      %h2
+        - if @ticket.target.present?
+          - if @ticket.reservation_details && @ticket.reservation_details['quantity'].present?
+            = t('reservations.tickets.quantity')
+            = @ticket.reservation_details['quantity']
 
-    $('#toggle-more-reservations').click(function(e){
-      e.preventDefault()
-      $('#more-reservations').hide();
-      $('#toggle-more-reservations').hide()
-    });
+          - if @ticket.target.try(:schedule_booking?) && @ticket.reservation_date.present?
+            = "; #{l(@ticket.reservation_date, format: :long)}"
+          - elsif @ticket.reservation_dates.any?
+            - if @ticket.reservation_details['start_minute'].present? && @ticket.reservation_details['end_minute'].present?
+              - @hourly_presenter = HourlyPresenter.new(@ticket.reservation_dates.first, @ticket.reservation_details['start_minute'].to_i, @ticket.reservation_details['end_minute'].to_i)
+              = "; #{I18n.l(@ticket.reservation_dates.first, format: :long)} #{@hourly_presenter.hours} #{'hour'.pluralize(@hourly_presenter.hours.to_i)}"
+            - else
+              - @date_presenter = DatePresenter.new(@ticket.reservation_dates)
+              = " &times; #{@date_presenter.days_in_words}"
 
-    $('#toggle-less-reservations').click(function(e){
-      e.preventDefault()
-      $('#more-reservations').show();
-      $('#toggle-more-reservations').show()
-    });
+          = link_to @ticket.target.name, @ticket.show_target_path
+        - else
+          = t('reservations.tickets.deleted')
+
+    .col-xs-5
+      .rfq-status-a
+        %span{class: @ticket.state }
+          = @ticket.state.titleize
+
+.inbox-thread
+  = render partial: 'dashboard/company/support/tickets/ticket_message', collection: @ticket.messages.reverse
+
+- if @ticket.open?
+  .panel
+    .panel-body
+      = render partial: 'dashboard/company/support/tickets/dashboard_form', locals: { ticket: @ticket, message: @message, with_close: true, form_url: dashboard_company_support_ticket_ticket_messages_path(@ticket) }

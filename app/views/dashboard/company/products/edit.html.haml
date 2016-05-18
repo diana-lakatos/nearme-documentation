@@ -1,7 +1,16 @@
-.dash-page
-  .dash-head.clearfix
-    = link_to 'MANAGE LISTINGS', dashboard_company_product_type_products_path(@product_type)
-    &gt;
-    %p EDIT ITEM
-  .dash-body
-    = render 'form'
+- title t "dashboard.products.manage"
+
+- content_for :page_header do
+  %h1
+    = link_to t("dashboard.products.manage"), dashboard_company_product_type_products_path(@product_type), class: 'hidden-xs hidden-sm'
+    %span.hidden-xs.hidden-sm >
+    = t("dashboard.products.edit")
+
+  .options
+    - if @product_form.product.persisted?
+      = link_to t('dashboard.products.view_html'), product_path(@product_form.product), rel: :external
+
+= render 'form'
+
+.form-actions
+  = link_to t('dashboard.items.delete_product'), dashboard_company_product_type_product_path(@product_form.product.product_type, @product_form.product), method: :delete, data: { confirm: t('confirmations.are_you_sure_you_want_to_delete_this_item') }

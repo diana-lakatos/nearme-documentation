@@ -9,7 +9,7 @@ class ReservationRequest < Form
   delegate :country_name, :country_name=, :country, to: :@user
   delegate :id, :guest_notes, :quantity, :action_hourly_booking?, :booking_type=, :currency,
     :service_fee_amount_guest, :additional_charges, :shipments, :shipments_attributes=, :category_ids, :category_ids=,
-    :properties, :properties=, :creator_attributes=, :payment_documents, :payment_documents_attributes=,
+    :properties, :properties=, :creator_attributes=, :payment_documents, :payment_documents_attributes=, :has_service_fee?,
     :reservation_type, :owner, :owner_attributes=, :address, :build_address, :address_attributes=, to: :@reservation
 
   validates :listing,      presence: true

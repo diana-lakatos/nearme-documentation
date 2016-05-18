@@ -1,6 +1,9 @@
-.dash-head.clearfix
-  = link_to 'MANAGE LISTINGS', dashboard_company_product_type_products_path(@product_type)
-  &gt;
-  %p LIST NEW ITEM
-.dash-body
-  = render 'form'
+- title t "dashboard.products.manage"
+
+- content_for :page_header do
+  %h1
+    = link_to t("dashboard.products.manage"), dashboard_company_product_type_products_path(@product_type), class: 'hidden-xs hidden-sm'
+    %span.hidden-xs.hidden-sm >
+    = t("dashboard.products.new")
+
+= render 'form'

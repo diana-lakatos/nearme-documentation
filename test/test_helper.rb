@@ -205,6 +205,8 @@ class TestDataSeeder
       instance.set_context!
       instance.build_availability_templates
       instance.save!
+      Utils::FormComponentsCreator.new(instance).create!
+
       FactoryGirl.create(:transactable_type_listing, generate_rating_systems: true)
       FactoryGirl.create(:country_us)
       FactoryGirl.create(:country_pl)

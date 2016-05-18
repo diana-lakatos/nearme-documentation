@@ -39,6 +39,7 @@ module UserHelper
     fill_in 'user_name', with: options[:name] if options[:name]
     fill_in 'user_email', with: options[:email] if options[:email]
     fill_in 'user_password', with: options[:password] if options[:password]
+    fill_in 'user_password_confirmation', with: options[:password] if options[:password]
     click_button "Save"
   end
 

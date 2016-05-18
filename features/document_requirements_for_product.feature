@@ -4,7 +4,6 @@ Feature: User can add document requirements during product form submission
     Given a user exists
       And I am logged in as the user
       And Current marketplace is buy_sell
-      And a form component product exists
       And a company exists with creator: the user
       And a shipping profile exists
       And document upload enabled

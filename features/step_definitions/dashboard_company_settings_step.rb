@@ -1,30 +1,6 @@
 When /^I upload avatar$/ do
   avatar = File.join(Rails.root, *%w[features fixtures photos], "intern chair.jpg")
-  attach_file('avatar', avatar)
-end
-
-When /^I select industries for #{capture_model}$/ do |model|
-  object = model!(model)
-  if(User === object)
-    within('select[@id="user_industry_ids"]') do
-      select "Computer Science"
-      select "Telecommunication"
-    end
-  elsif(Company === object)
-    within('select[@id="company_industry_ids"]') do
-      select "IT"
-      select "Telecommunication"
-    end
-  end
-  within('form[@id="edit_'+object.class.to_s.downcase+'"]') do
-    find('input[@type="submit"]').click
-  end
-end
-
-Then /^#{capture_model} should be connected to selected industries$/ do |model|
-  object = model!(model)
-  expected_industries = (User === object) ? ["Computer Science", "Telecommunication"] : ["IT", "Telecommunication"]
-  assert_equal expected_industries, object.industries.pluck(:name).reject { |name| name.include?('Industry ') }
+  attach_file('user_avatar', avatar)
 end
 
 When /^I update company settings$/ do

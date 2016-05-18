@@ -59,28 +59,6 @@ class SearchControllerTest < ActionController::TestCase
       end
 
       context 'for existing location' do
-        context 'with industry filter' do
-          should 'filter only filtered locations' do
-            filtered_industry = FactoryGirl.create(:industry)
-            another_industry = FactoryGirl.create(:industry)
-            filtered_auckland = FactoryGirl.create(:company, industries: [filtered_industry], locations: [FactoryGirl.create(:location_in_auckland)]).locations.first
-            another_auckland = FactoryGirl.create(:company, industries: [another_industry], locations: [FactoryGirl.create(:location_in_auckland)]).locations.first
-            draft_auckland = FactoryGirl.create(:company, industries: [filtered_industry], locations: [FactoryGirl.create(:location_in_auckland)]).locations.first.tap do |location|
-              location.listings.update_all(draft: Time.zone.now)
-            end
-            disabled_auckland = FactoryGirl.create(:company, industries: [filtered_industry], locations: [FactoryGirl.create(:location_in_auckland)]).locations.first.tap do |location|
-              location.listings.update_all(enabled: false)
-            end
-
-            get :index, { loc: 'Auckland', industries_ids: [filtered_industry.id], v: 'list' }
-
-            assert_location_in_result(filtered_auckland)
-            refute_location_in_result(another_auckland)
-            refute_location_in_result(draft_auckland)
-            refute_location_in_result(disabled_auckland)
-          end
-        end
-
         context 'with location type filter' do
           should 'filter only filtered locations' do
             filtered_location_type = FactoryGirl.create(:location_type)
@@ -297,19 +275,17 @@ class SearchControllerTest < ActionController::TestCase
       should 'log filters in mixpanel along with other arguments for list result type' do
         @listing_type = "Meeting Room"
         @location_type = FactoryGirl.create(:location_type)
-        @industry = FactoryGirl.create(:industry)
         expected_custom_options = {
           search_query: 'adelaide',
           result_view: 'list',
           result_count: 0,
           custom_attributes: { 'listing_type' => [@listing_type] },
-          location_type_filter: [@location_type.name],
-          industry_filter: [@industry.name],
+          location_type_filter: [@location_type.name]
         }
         Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).with do |search, custom_options|
           expected_custom_options == custom_options
         end
-        get :index, { loc: 'adelaide', lg_custom_attributes: { listing_type: [@listing_type] }, location_types_ids: [@location_type.id], industries_ids: [@industry.id], v: 'list' }
+        get :index, { loc: 'adelaide', lg_custom_attributes: { listing_type: [@listing_type] }, location_types_ids: [@location_type.id], v: 'list' }
       end
 
       should 'log filters in mixpanel along with other arguments for mixed result type' do
@@ -359,10 +335,6 @@ class SearchControllerTest < ActionController::TestCase
 
         should 'track search if location filter has been modified' do
           get :index, loc: 'adelaide', lntype: FactoryGirl.create(:location_type).name.downcase
-        end
-
-        should 'track search if industry filter has been modified' do
-          get :index, loc: 'adelaide', industries_ids: [FactoryGirl.create(:industry).id], v: 'list'
         end
 
         should 'track search if listing pricing filter has been modified' do
@@ -544,6 +516,29 @@ class SearchControllerTest < ActionController::TestCase
 
   end
 
+  context 'community' do
+
+    setup do
+      PlatformContext.current.instance.stubs(:is_community?).returns(true)
+    end
+
+    should 'prepare view variables when param is known' do
+      get :index, { search_type: 'people'}
+      assert_equal assigns(:search_type), 'people'
+    end
+
+    should 'fallback to "projects" when param is unknown' do
+      get :index, { search_type: 'something'}
+      assert_equal assigns(:search_type), 'projects'
+    end
+
+    should 'fallback to "projects" when no param' do
+      get :index
+      assert_equal assigns(:search_type), 'projects'
+    end
+
+  end
+
   protected
 
   def assert_nothing_found
@@ -604,4 +599,3 @@ class SearchControllerTest < ActionController::TestCase
 
 
 end
-

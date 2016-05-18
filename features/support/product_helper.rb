@@ -13,7 +13,7 @@ module ProductHelper
     fill_in 'product_form_price', with: '100'
     fill_in 'product_form_quantity', with: '100'
 
-    find('.shipping_method_block.shipping_method_list input').click
+    page.execute_script("$('[data-shipping-methods-list] span.radio input').attr('checked', true)")
   end
 
   def assert_product_data(product)
@@ -33,14 +33,10 @@ module ProductHelper
     fill_in 'shipping_category_form_shipping_methods_attributes_0_name', with: 'DHL'
     fill_in 'shipping_category_form_shipping_methods_attributes_0_processing_time', with: '1'
     fill_in 'shipping_category_form_shipping_methods_attributes_0_calculator_attributes_preferred_amount', with: '1'
-    find('.zone_kind_select').select('Country')
-    first('.country_based_select').click
-    page.should have_css('.select2-result-label')
-    first(".select2-result-label").click
+    choose_selectize '.country-based', 'United'
     click_button('Save')
-
     wait_for_ajax
-    first('.shipping_method_list input').click
+    page.execute_script("$('[data-shipping-methods-list] span.radio input').attr('checked', true)")
   end
 
   def fill_product_fields
@@ -55,7 +51,7 @@ module ProductHelper
   end
 
   def add_new_integrated_shipping_method
-    check('boarding_form_product_form_shippo_enabled')
+    page.execute_script("$('#boarding_form_product_form_shippo_enabled').click()")
     fill_in 'boarding_form_product_form_weight', with: '10'
     fill_in 'boarding_form_product_form_depth', with: '10'
     fill_in 'boarding_form_product_form_width', with: '10'

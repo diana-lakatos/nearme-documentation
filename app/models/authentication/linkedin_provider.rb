@@ -3,7 +3,7 @@ class Authentication::LinkedinProvider < Authentication::BaseProvider
   META   = { name: "LinkedIn",
              url: "http://linkedin.com/",
              auth: "OAuth 2.0" }
-  FIELDS = ["id", "first-name", "last-name", "headline", "industry", "picture-url", "public-profile-url", "location"]
+  FIELDS = ["id", "first-name", "last-name", "headline", "picture-url", "public-profile-url", "location"]
 
   def self.setup_proc
     lambda do |env|

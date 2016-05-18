@@ -52,9 +52,7 @@ class DataImporter::XmlFile < DataImporter::File
       @synchronizer.company = @company
       @synchronizer.mark_all_object_to_delete!
       trigger_event('object_created', @company)
-      @company.skip_industries = true
       if !@company.changed? || @company.save
-        assign_company_industries(company_node, @company)
 
         parse_users(company_node)
         if @company.creator.present?
@@ -72,18 +70,6 @@ class DataImporter::XmlFile < DataImporter::File
         end
       else
         trigger_event('object_not_saved', @company, @company.external_id)
-      end
-    end
-  end
-
-  def assign_company_industries(company_node, company)
-    industries = company_node.xpath('company_industries_list').text
-    if industries.present?
-      # This will work always because @company.skip_industries was set earlier
-      company.industries = []
-      industries.split(/\s*,\s*/).each do |industry_name|
-        industry = Industry.find_by_name(industry_name)
-        company.industries << industry if industry.present?
       end
     end
   end

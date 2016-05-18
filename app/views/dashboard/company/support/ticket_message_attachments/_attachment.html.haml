@@ -1,16 +1,18 @@
-- form_name ||= 'support_ticket_message'
-.attachment.row{id: dom_id(ticket_message_attachment)}
-  .col-md-6
-    = link_to ticket_message_attachment.read_attribute(:file), ticket_message_attachment.file.url, target: '_blank'
-  .col-md-5
-    = ticket_message_attachment.tag
-  - if ticket_message_attachment.ticket_message.nil?
-    .col-md-1
-      .destroy.pull-right
-        = link_to dashboard_company_support_ticket_ticket_message_attachment_path(ticket_message_attachment.ticket, ticket_message_attachment), :'data-delete' => 'Are you sure?' do
-          %span.ico-trash
-      .edit.pull-right
-        = link_to '#', data: { modal: true, href: edit_dashboard_company_support_ticket_ticket_message_attachment_path(ticket_message_attachment.ticket, ticket_message_attachment), 'ajax-options' => { form_name: form_name } } do
-          %span.icon.ico-edit
+- form_name = 'support_ticket_message'
+
+- url = @ticket.present? ? dashboard_company_support_ticket_ticket_message_attachment_path(@ticket, ticket_message_attachment) : dashboard_company_support_ticket_ticket_message_attachment_path(params[:ticket_id], ticket_message_attachment)
+
+%li.attachment{id: dom_id(ticket_message_attachment), :"data-update-url" => url }
+  .form-inline
+    .form-unit
+      = link_to ticket_message_attachment.read_attribute(:file), ticket_message_attachment.file.url, download: ticket_message_attachment.read_attribute(:file)
+
+    .form-group
+      = select_tag :tag, options_for_select(Support::TicketMessageAttachment::TAGS, ticket_message_attachment.tag), class: 'form-control', :"data-tag-selection" => true
+
+    - if ticket_message_attachment.ticket_message.nil?
+      .form-unit
+        = link_to 'Remove', dashboard_company_support_ticket_ticket_message_attachment_path(ticket_message_attachment.ticket, ticket_message_attachment), :'data-delete' => 'Are you sure you want to remove this attachment?', class: 'action--remove'
+
   %input{name: "#{form_name}[attachment_ids][]", value: ticket_message_attachment.id, type: 'hidden' }
 

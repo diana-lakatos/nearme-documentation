@@ -440,7 +440,28 @@ class InstanceView < ActiveRecord::Base
       is_partial: true,
       '@user_message' => 'UserMessageDrop',
       '@error' => 'string'
-    }
+    },
+    'dashboard/reviews/order_info' => {
+      is_partial: true,
+      feedback: 'Polymorphic object',
+      view_order_link: 'string',
+      'link_to_user_profile': 'string',
+      feedback_type: "string",
+    },
+    'dashboard/reviews/review_image' => {
+      is_partial: true,
+      order_image: 'string',
+      review_target_image: 'string',
+      feedback: 'Polymorphic object',
+      feedback_type: "string",
+    },
+    'dashboard/reviews/review_title' => {
+      is_partial: true,
+      review_title: 'string',
+      review_target_title: 'string',
+      feedback: 'Polymorphic object',
+      feedback_type: "string",
+    },
   }.freeze
 
   scope :for_instance_id, ->(instance_id) {

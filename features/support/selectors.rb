@@ -1,4 +1,11 @@
 module HtmlSelectorsHelpers
+
+  def choose_selectize(key, value)
+    first("#{key} .selectize-input input").set value
+    page.should have_css('.selectize-dropdown-content')
+    page.execute_script("$('.selectize-dropdown-content > div:contains(\"#{value}\")').click()")
+  end
+
   # Maps a name to a selector. Used primarily by the
   #
   #   When /^(.+) within (.+)$/ do |step, scope|

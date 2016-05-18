@@ -25,7 +25,6 @@ class Location < ActiveRecord::Base
   has_many :assigned_waiver_agreement_templates, as: :target
   has_many :availability_templates, as: :parent
   has_many :approval_requests, as: :owner, dependent: :destroy
-  has_many :company_industries, through: :company
   has_many :impressions, :as => :impressionable, :dependent => :destroy
   has_many :listings, dependent:  :destroy, inverse_of: :location, class_name: 'Transactable'
   has_many :payments, :through => :reservations
@@ -85,7 +84,6 @@ class Location < ActiveRecord::Base
   }
 
   scope :filtered_by_location_types_ids,  lambda { |location_types_ids| where(location_type_id: location_types_ids) }
-  scope :filtered_by_industries_ids,  lambda { |industry_ids| joins(:company_industries).where('company_industries.industry_id IN (?)', industry_ids) }
   scope :no_id, -> { where :id => nil }
   scope :near, lambda { |*args| all.merge(Address.near(*args).select('locations.*')) }
   scope :bounding_box, lambda { |box, midpoint| all.merge(Address.within_bounding_box(Address.sanitize_bounding_box(box.reverse)).select('locations.*')) }

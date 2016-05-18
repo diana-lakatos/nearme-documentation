@@ -1,23 +1,25 @@
 - thread_context = user_message.thread_context
 - author = user_message.author_with_deleted
+- message_with_user = user_message.thread_owner == current_user ? user_message.thread_recipient : user_message.thread_owner
 
 .message{ class: user_message.css_class(current_user) }
-  .row
-    .col-md-1
-      .circular-image=image_tag(author.avatar.url(:thumb)) if author && !author.deleted?
-    .col-md-2
-      %span.inline
-        - if author
-          - if author.deleted?
-            %p= "#{author.first_name} (Deleted)"
-          - else
-            %p= link_to author.first_name, profile_path(author.slug)
-        %p= distance_of_time_in_words_or_date_in_time_zone(user_message.created_at, current_user.time_zone)
-    .col-md-6
-      %p.message-title= user_messages_decorator.user_message_context_link(user_message)
-      %p= truncate(user_message.body, length: 60)
+  = link_to user_message.show_path do
+    .avatar
+      = image_tag(message_with_user.avatar.url(:thumb)) if message_with_user && !message_with_user.deleted?
+    .author
+      - if message_with_user
+        - if message_with_user.deleted?
+          = t('user_messages.author_deleted', author: message_with_user.first_name)
+        - else
+          = message_with_user.first_name
+    .summary
+      = truncate(user_message.body, length: 60)
 
-    .col-md-1.message-action
-      = link_to "Read", user_message.show_path, class: 'btn btn-green'
-    .col-md-1.message-action
-      = link_to "Archive", user_message.archive_path, class: "btn btn-gray", method: :put
+    .date
+      %time{datetime: user_message.created_at}= distance_of_time_in_words_or_date_in_time_zone(user_message.created_at, current_user.time_zone)
+
+    .actions
+      - if user_message.unread_for? current_user
+        %span.fa.fa-circle{title: 'Unread'}
+
+      %span.fa.fa-chevron-right

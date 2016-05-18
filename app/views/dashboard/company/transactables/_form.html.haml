@@ -5,142 +5,86 @@
 
 = f.simple_fields_for :properties, f.object.properties do |properties_form|
 
-  - @form_components.each do |form_component|
-    %h4
-      = form_component.name
-    - form_component.form_fields.each do |form_field|
+  - @form_components.each_with_index do |form_component, index|
+    - component_class = 'listing-form-component panel-tab-container'
+    - component_class = "#{component_class} active" if index == 0
+    %div{class: component_class, indexid: "form-component-#{form_component.id}"}
 
-      - model = form_field.keys.first
-      - field = form_field[model]
+      - form_component.form_fields.each do |form_field|
 
-      - next if field == 'schedule'
+        - model = form_field.keys.first
+        - field = form_field[model]
 
-      - case field
-      - when 'location_id'
-        .row.edit-locations
-          .col-md-3.add-new
-            = link_to '#', data: { modal: true, href: new_dashboard_company_location_path } do
-              = image_tag 'themes/buy_sell/icon-cross.png'
-              %span.blue
-                = t('locations.add_new_location')
-          .col-md-3
-            %label{:for => ""}
-              - if !f.object.transactable_type.skip_location?
-                %abbr{:title => "required"} *
-              = t('simple_form.labels.transactable.location')
-          #location-list.col-md-6
-            = render @locations, form: f
-            .show-more
-              %a{"data-target" => ".hidden-location", "data-toggle" => "collapse", :href => "#"}
-                = t('locations.show_more_locations')
+        - next if field == 'schedule'
+        - next if field == 'enabled'
 
-            - if is_i18n_set?('simple_form.hints.transactable.locations')
-              = t('simple_form.hints.transactable.locations')
+        - case field
 
-          - if f.object.errors.messages[:location]
-            .col-md-12.error
-              .error-block
-                = t('locations.you_need_to_pick_up_location')
+        - when 'location_id'
+          = render "dashboard/company/transactables/form_fields/location", f: f
 
-      - when 'rental_shipping_type'
-        - if @transactable_type.rental_shipping
-          = render 'shared/rental_shipping_type', f: f
+        - when 'rental_shipping_type'
+          = render "dashboard/company/transactables/form_fields/rental_shipping_type", f: f
 
-      - when 'approval_requests'
-        = render :partial => 'approval_requests/form', :locals => { f: f }
-      - when 'enabled'
-        .switch_meta_container{ class: (!f.object.is_trusted? ? "no_trust_explanation_needed" : ""), data: { explanation: t('manage.listings.no_trust_explanation') } }
-          = f.input :enabled, as: :bootstrap_switch, disabled: !f.object.is_trusted?
-      - when 'amenity_types'
-        - unless platform_context.instance.listing_amenity_types.count.zero?
-          = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'selectpicker', :multiple => true }
+        - when 'approval_requests'
+          = render 'dashboard/shared/fields/approval_requests', f: f
 
-      - when 'action_rfq'
-        - if f.object.transactable_type.action_rfq?
-          = f.input :action_rfq, as: :boolean
-      - when 'price'
-        = render 'price_form', f: f, form_fields: form_component.form_fields
-        - if form_component.form_fields.find { |ff| ff.keys.first == model && ff.values.first == 'schedule' }
-          - if overnight_or_regular_booking?(f.object.transactable_type)
-            = render 'availability_rules_form', f: f
-        - if f.object.transactable_type.schedule_booking_enabled?
-          = render 'schedule_form', f: f
-        = render 'shared/booking_types_tabs', f: f
-      - when 'photos'
-        .row
-          .col-md-3
-            = f.label :photos, t('simple_form.labels.listing.photos')
-          .col-md-9
-            - if is_i18n_set?('forms.hints.transactable_form.photos')
-              %p.photo-uploader-hint
-                = t('forms.hints.transactable_form.photos')
-            .loading{:style => "display: none"}
-              = image_tag "spinner.gif"
-              %br/
-              .span= t('manage.listings.photos.waiting_for_photo_processing')
-            = new_file_upload_input("#{f.object_name}[photos_attributes][0][image]",
-                                            dashboard_photos_path,
-                                            Photo.new.image.thumbnail_dimensions[:medium],
-                                            t('simple_form.labels.listing.add_photo'),
-                                            :required => true,
-                                            :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
-              - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
-              .hidden.thumbnail-processing
-                .loading-icon
-              = hidden_field_tag "#{f.object_name}", nil, placeholder: t('ui.photo_uploader.caption'), id: 'photo-item-input-template', disabled: true, 'data-number' => 0, 'data-no-caption' => true
-              - unless @photos.nil?
-                - @photos.each_with_index do |photo|
-                  - next unless photo.persisted?
-                  = get_fileupload_photo_html(photo.image_url(:medium),
-                                              destroy_space_wizard_photo_path(:id => photo.id),
-                                              edit_dashboard_photo_path(photo),
-                                              :div,
-                                              id: photo.id) do
-                    -# text_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][caption]", photo.caption, :placeholder => t('ui.photo_uploader.caption')
-                    = hidden_field_tag "#{f.object_name}[photo_ids][]", photo.id
-                    = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][id]", photo.id
-                    = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
+        - when 'amenity_types'
+          = render "dashboard/company/transactables/form_fields/amenity_types", f: f
 
-      - when 'seller_attachments'
-        .row
-          .col-md-3
-            = f.label :attachments
-          .col-md-9.with-upload-button
-            = file_upload_input("#{f.object_name}[attachments_attributes][0][data]", dashboard_seller_attachments_path, nil, t('seller_attachments.upload_attachments'), "no-multiple" => true, file_types: '(\.|\/)(' + Ckeditor.attachment_file_types.join('|') + ')$', upload_type: 'ckfile', files_container: 'ul[data-attachments-container]', append_result: '1', wrong_file_message: t('seller_attachments.wrong_file_message', formats: Ckeditor.attachment_file_types.join(', '))) do
-              %ul.seller-attachments{data: {'attachments-container' => true}}
-                - if @attachments.present?
-                  - @attachments.each do |attachment|
-                    = render 'dashboard/seller_attachments/attachment', attachment: attachment
+        - when 'action_rfq'
+          = render "dashboard/company/transactables/form_fields/action_rfq", f: f
 
-          - content_for :domready do
-            $(document).trigger('init:sellerattachmentaccesslevelselector.nearme');
+        - when 'price'
+          = render "dashboard/company/transactables/form_fields/price", f: f, form_fields: form_component.form_fields, model: model
 
-      - when 'waiver_agreement_templates'
-        - if @company.waiver_agreement_templates.any?
-          = f.association :waiver_agreement_templates, collection: @company.waiver_agreement_templates.order(:name).pluck(:name, :id), as: :check_boxes
-      - when 'documents_upload'
-        - if platform_context.instance.documents_upload_enabled?
-          = render "forms/document_requirements", f: f
-      - when 'quantity'
-        -if @transactable_type.action_price_per_unit?
-          = f.input :quantity, as: :hidden, value: 1
-        -else
-          = f.input :quantity
-      - when 'currency'
-        = f.input :currency, :as => :currency, allowed_currencies: @transactable_type.allowed_currencies, default: @transactable_type.default_currency, :input_html => { "data-live-search" => "true", :class => 'selectpicker', :id => 'currency-select' }
-      - when *@transactable_type.categories.roots.map { |c| "Category - #{c.name}" }
-        - category_name = field.split(" - ")[1]
-        - category = @transactable_type.categories.roots.where(name: category_name).first
-        = render partial: 'shared/category', locals: { category: category, f: f, categorizable: @transactable_type }
-      - when 'confirm_reservations'
-        = f.input :confirm_reservations, as: :bootstrap_switch, required: f.object.required?(:confirm_reservations)
-      - else
-        - if custom_attribute_names.include?(field)
-          = draw_attribute_for_form(@transactable_type.custom_attributes.find_by(name: field), properties_form)
-        -elsif f.object.attributes.include?(field)
-          = f.input field, required: f.object.required?(field)
+        - when 'additional_charges'
+          = render "dashboard/company/transactables/form_fields/additional_charges", f: f
+
+        - when 'photos'
+          = render "dashboard/company/transactables/form_fields/photos", f: f
+
+        - when 'waiver_agreement_templates'
+          = render "dashboard/company/transactables/form_fields/waiver_agreement_templates", f: f
+
+        - when 'seller_attachments'
+          = render "dashboard/company/transactables/form_fields/seller_attachments", f: f
+
+        - when 'documents_upload'
+          = render "dashboard/company/transactables/form_fields/documents_upload", f: f
+
+        - when 'quantity'
+          = render "dashboard/company/transactables/form_fields/quantity", f: f
+
+        - when 'currency'
+          = render "dashboard/company/transactables/form_fields/currency", f: f
+
+        - when 'confirm_reservations'
+          = render "dashboard/company/transactables/form_fields/confirm_reservations", f: f
+
+        - when 'capacity'
+          = render "dashboard/company/transactables/form_fields/capacity", f: f
+
+        - when 'deposit_amount'
+          = render "dashboard/company/transactables/form_fields/deposit_amount", f: f
+
+        - when *@transactable_type.categories.roots.map { |c| "Category - #{c.name}" }
+          = render "dashboard/company/transactables/form_fields/category", f: f, field: field
+
+        - when *@transactable_type.custom_model_types.map { |c| "Custom Model - #{c.name}" }
+          = render "dashboard/company/transactables/form_fields/custom_model", f: f, field: field
+
+        - when 'minimum_booking_minutes'
+          = render 'dashboard/company/transactables/form_fields/minimum_booking_minutes', f: f
+
+        - else
+          - if custom_attribute_names.include?(field)
+            = draw_attribute_for_form(@transactable_type.custom_attributes.find_by(name: field), properties_form)
+          -elsif f.object.attributes.include?(field)
+            = f.input field, {required: f.object.required?(field)}.merge(cke_attrs(model, field))
 .hidden
   - Money::Currency.table.values.each do |c|
     %span{:id => "currency_#{c[:iso_code]}"}
       = c[:symbol]
   %span{:id => "default_currency"}= @transactable_type.default_currency
+

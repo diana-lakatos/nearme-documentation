@@ -1,22 +1,30 @@
-.modal-header
-  .modal-title= "Bulk Upload"
-.modal-body
-  %p= t('data_upload.manage.new.external_id_hint')
-  %br
-  %p
-    In order for data to be properly imported, you must use a specific format:
-    = link_to 'Download CSV template', {action: :download_csv_template, importable: @importable}
-  %br
-  = simple_form_for @data_upload, url: {action: :create}, wrapper: :bs3, html: { multipart: true } do |f|
+%header.dialog__header
+  %h2#dialog__title= t('data_upload.manage.bulk_upload')
+
+= dashboard_simple_form_for @data_upload, url: {action: :create}, html: { multipart: true } do |f|
+  .dialog__body
+
+    %p= t('data_upload.manage.new.external_id_hint')
+
     %p
-      = t('data_upload.manage.new.sync_mode_hint')
-      = f.simple_fields_for :options, OpenStruct.new(@data_upload.options) do |option|
-        = option.input :sync_mode, wrapper: :bs3_simple, required: false, as: :boolean, inline_label: t('data_upload.manage.new.sync_mode'), label: false, input_html: {class: "margin-right"}
-        = option.input :enable_rfq, wrapper: :bs3_simple, required: false, as: :boolean, inline_label: t('data_upload.manage.new.enable_rfq'), label: false, input_html: {class: "margin-right"}
-        - if @importable.is_a?(Spree::ProductType)
-          %br
-          = option.input :default_shipping_category_id, wrapper: :bs3_simple, required: true, include_blank: false, as: :select, collection: Spree::ShippingCategory.system_profiles.map { |c| [c.name, c.id] }, label: t('data_upload.manage.new.default_shipping_category_id'), input_html: {class: "margin-right"}
-    %br
+      - csv_link = link_to t('data_upload.manage.download_csv_template'), {action: :download_csv_template, importable: @importable}
+      = t('data_upload.manage.format_info_html', link: csv_link)
+
+    -if !@importable.is_a?(Spree::ProductType)
+      %p
+        = t('data_upload.manage.download_current_data_hint')
+        = link_to t('data_upload.manage.download_current_data'), {action: :download_current_data_csv}
+
+    %p
+      = t('data_upload.manage.new.sync_mode_hint_html')
+
+    = f.simple_fields_for :options, OpenStruct.new(@data_upload.options) do |option|
+      = option.input :sync_mode, required: false, as: :boolean, label: t('data_upload.manage.new.sync_mode')
+      = option.input :enable_rfq, required: false, as: :boolean, label: t('data_upload.manage.new.enable_rfq')
+      - if @importable.is_a?(Spree::ProductType)
+        = option.input :default_shipping_category_id, required: true, include_blank: false, as: :select, collection: Spree::ShippingCategory.system_profiles.map { |c| [c.name, c.id] }, label: t('data_upload.manage.new.default_shipping_category_id')
+
     = f.input :csv_file, as: :file
-    .btn-toolbar
-      = f.button :submit, 'Import', class: 'btn blue pull-right'
+
+  .dialog__actions
+    = f.submit t('data_upload.manage.import')
