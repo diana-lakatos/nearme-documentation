@@ -1,31 +1,13 @@
-- content_for :page_header do
-  - if @transactable_type.single_transactable
-    %h1= t("dashboard.nav.transactables")
-  - else
-    %h1
-      = link_to t("dashboard.transactables.manage"), dashboard_company_transactable_type_transactables_path(@transactable_type), class: 'hidden-xs hidden-sm'
-      %span.hidden-xs.hidden-sm >
-      = t("dashboard.transactables.edit")
-
-
-  .options
-    - if @transactable.persisted? && @transactable.location.try(:persisted?) && @transactable.errors[:location].empty?
-      = link_to t('dashboard.transactables.view_html'), @transactable.decorate.show_path, rel: :external
-
-
-= dashboard_simple_form_for @transactable, :url => dashboard_company_transactable_type_transactable_path(@transactable_type, @transactable), :html => { :multipart => true,  method: :put, id: 'listing-form' } do |f|
-
-  = render "dashboard/company/transactables/errors", f: f
-
-  = render "dashboard/company/transactables/form_panels_nav", f: f
-
-  .panel
-    .panel-body
+.dash-page
+  .dash-head.clearfix
+    = link_to t('dashboard.transactables.manage'), dashboard_company_transactable_type_transactables_path(@transactable_type)
+    &gt;
+    %p= t('dashboard.items.edit_item')
+  .dash-body
+    = simple_nested_form_for @transactable, wrapper: :bs3, :url => dashboard_company_transactable_type_transactable_path(@transactable_type, @transactable), :html => { :multipart => true,  method: :put, id: 'listing-form' } do |f|
       = render 'form', f: f
 
-  .panel.form-actions
-    .panel-body
-      = f.button :submit, t('dashboard.items.save')
-
-  .form-actions
-    = link_to t('dashboard.items.delete_listing'), dashboard_company_transactable_type_transactable_path(@transactable_type, @transactable), method: :delete, data: { confirm: t('dashboard.items.confirm_delete') }
+      .submit-bar
+        = link_to dashboard_company_transactable_type_transactables_path(@transactable_type) do
+          .btn.gray=t('general.cancel')
+        = f.submit t('general.save'), class: "btn medium blue"

@@ -1,33 +1,34 @@
-%div{'data-address-field' => true, class: "form-group #{"error" if f.object.errors.any?}"}
-  = f.label :address, required: true, label_html: { class: 'control-label'}
+%div{'data-address-field' => true, class: "row #{"error" if f.object.errors.any?}"}
+  .col-md-3
+    = f.label :address, required: true
+  .col-md-9.input-container
+    = f.text_field :address, :'data-behavior' => 'address-autocomplete',
+        placeholder: t('simple_form.placeholders.company.company_address.address'), 'data-address-input' => true
 
-  = f.text_field :address, :'data-behavior' => 'address-autocomplete', placeholder: t('simple_form.placeholders.company.company_address.address'), 'data-address-input' => true, class: 'form-control'
+    .map{:style => "display: none", :'data-marker' => image_path("components/map-pin.png")}
+      .map-container{:style => "height: 240px; width: 100%;"}
 
-  .map
-    .map-container
+    = f.hidden_field :local_geocoding, 'data-local-geocoding' => true
+    = f.hidden_field :latitude, 'data-latitude' => true
+    = f.hidden_field :longitude, 'data-longitude' => true
+    = f.hidden_field :formatted_address, 'data-formatted-address' => true
+    = f.hidden_field :street, 'data-street' => true
+    = f.hidden_field :suburb, 'data-suburb' => true
+    = f.hidden_field :city, 'data-city' => true
+    = f.hidden_field :state, 'data-state' => true
+    = f.hidden_field :country, 'data-country' => true
+    = f.hidden_field :postcode, 'data-postcode' => true
 
-
-  = f.hidden_field :local_geocoding, 'data-local-geocoding' => true
-  = f.hidden_field :latitude, 'data-latitude' => true
-  = f.hidden_field :longitude, 'data-longitude' => true
-  = f.hidden_field :formatted_address, 'data-formatted-address' => true
-  = f.hidden_field :street, 'data-street' => true
-  = f.hidden_field :suburb, 'data-suburb' => true
-  = f.hidden_field :city, 'data-city' => true
-  = f.hidden_field :state, 'data-state' => true
-  = f.hidden_field :country, 'data-country' => true
-  = f.hidden_field :postcode, 'data-postcode' => true
-
-  .address-component-wrapper.hidden
-    .address-component-template
-      - # we need this input to avoid hardcoding 'name' parameter for dynamically inserted inputs for address_components
-      - # i.e. in dashboard we use location[address_component], but in list your space it is user[company_attribues]... etc
-      - # must be disabled, otherwise update action could overwrite existing information with empty strings!
-      = f.input :address_components, as: :string, :input_html => { 'data-address-components-input' => true }, disabled: true
-    - if f.object.address_components.try(:any?)
-      - f.object.address_components.each do |arr|
-        - index = arr[0]
-        - address_component = arr[1]
-        - address_component.each do |key, value|
-          %input{name: "#{f.object_name}[address_components][#{index}][#{key}]", value: value, class: 'address_components_input'}
+    .address-component-wrapper.hidden
+      .address-component-template
+        - # we need this input to avoid hardcoding 'name' parameter for dynamically inserted inputs for address_components
+        - # i.e. in dashboard we use location[address_component], but in list your space it is user[company_attribues]... etc
+        - # must be disabled, otherwise update action could overwrite existing information with empty strings!
+        = f.input :address_components, as: :string, :input_html => { 'data-address-components-input' => true }, disabled: true
+      - if f.object.address_components.try(:any?)
+        - f.object.address_components.each do |arr|
+          - index = arr[0]
+          - address_component = arr[1]
+          - address_component.each do |key, value|
+            %input{name: "#{f.object_name}[address_components][#{index}][#{key}]", value: value, class: 'address_components_input'}
 

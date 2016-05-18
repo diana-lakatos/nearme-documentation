@@ -29,13 +29,14 @@ end
 
 When /^I upload csv file with products$/ do
   Utils::DefaultAlertsCreator::DataUploadCreator.new.notify_uploader_of_finished_import_email!
-  click_link 'Bulk upload'
+  find(:css, 'a.bulk-upload').click
   stub_image_url('http://www.example.com/image1.jpg')
   stub_image_url('http://www.example.com/image2.jpg')
   work_in_modal do
     page.should have_css('#new_data_upload')
+    check('data_upload_options_sync_mode')
     attach_file('data_upload_csv_file', File.join(Rails.root, *%w[test assets data_importer products current_data.csv]))
-    click_button 'Import'
+    find('.btn-toolbar input[type=submit]').click
   end
   page.should_not have_css('#new_data_upload')
 end

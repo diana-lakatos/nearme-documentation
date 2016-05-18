@@ -1,0 +1,29 @@
+#open_graph_content.hidden
+  = render :partial => 'shared/og_meta', :locals => { :object => @recurring_booking.listing, :url => @recurring_booking.listing.decorate.show_url) }
+%div{class: section_class}
+  %header
+    %h2
+      %span.padding
+        = t('dashboard.reservations.purchase_was_successful')
+
+  / TODO: make the wording here generic, or settable per instance or transactable?
+  / .icons
+  /   %h3 Share your travel plans
+  /   %ul.no-bullets
+  /     - url = location_url(@listing.location, @listing)
+  /     - text = "I just booked a #workspace at #{@listing.name} via @DesksNearMe. Find a desk near you!"
+  /     %li= share_to_facebook(url, icon: 'facebook-full')
+  /     %li= share_to_twitter(url, text: text)
+  /     %li= share_to_linkedin(url, text: text)
+
+  .buttons
+    =# link_to "Add to Calendar", export_reservation_path(@reservation, :format => :ics), class: "btn btn-large btn-white"
+    = link_to "Manage", "#", class: "btn btn-large btn-green modal-close-manually"
+
+- content_for :script do
+  :javascript
+    $(function() {
+      $('.modal-close').hide();
+      $('head').eq(0).append($('#open_graph_content').html());
+      $('#open_graph_content').remove();
+    });

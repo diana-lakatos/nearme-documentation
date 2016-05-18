@@ -52,8 +52,6 @@ class InstanceWizardController < ActionController::Base
     @instance_creator.update_attribute(:created_instance, true)
     @instance.set_context!
 
-    Utils::FormComponentsCreator.new(@instance).create!
-
     ipt = @instance.instance_profile_types.create!(name: 'Default', profile_type: InstanceProfileType::DEFAULT)
     Utils::FormComponentsCreator.new(ipt).create!
 

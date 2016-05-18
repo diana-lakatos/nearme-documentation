@@ -1,8 +1,7 @@
 - only_inputs ||= []
-- photo_input_name_prefix = f.object_name if local_assigns[:photo_input_name_prefix].nil?
 
 - if only_inputs.empty? || only_inputs.include?(:approval_requests)
-  = render 'dashboard/shared/fields/approval_requests', f: f
+  = render :partial => 'approval_requests/form', :locals => { f: f }
 
 - if only_inputs.empty? || only_inputs.include?(:transactable_type_id)
   = f.hidden_field :transactable_type_id, value: @transactable_type.id
@@ -11,54 +10,105 @@
   = f.hidden_field :booking_type, value: f.object.transactable_type.booking_choices.size == 1 ? f.object.transactable_type.booking_choices.first : f.object.booking_type, 'data-booking-type' => true
 
 - if only_inputs.empty? || only_inputs.include?(:enabled)
-  = f.input :enabled, as: :switch, input_html: { disabled: !f.object.is_trusted? }
+  .control-group
+    = f.label :enabled, t('simple_form.switch.enabled'), :class => 'control-label'
+    .controls
+      .switch{'data-on-label' => "", 'data-off-label' => "", 'data-ajax-updateable' => f.object.persisted?}
+        = f.check_box :enabled, disabled: !f.object.is_trusted?
 
 - @transactable_type.custom_attributes.each do |attribute|
   = draw_attribute_for_form(attribute, properties_form) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
 
-- if only_inputs.empty? || only_inputs.include?(:name)
-  = f.input :name, required: f.object.required?(:name)
+- [:name, :description, :confirm_reservations, :capacity].each do |attrib|
+  - if only_inputs.empty? || only_inputs.include?(attrib)
+    = f.input attrib, required: f.object.required?(attrib)
 
-- if only_inputs.empty? || only_inputs.include?(:description)
-  = f.input :description, { required: f.object.required?(:description) }.merge(cke_attrs(model, :description))
-
-- if only_inputs.empty? || only_inputs.include?(:confirm_reservations)
-  = f.input :confirm_reservations, as: :switch, required: f.object.required?(:confirm_reservations)
-
-- if only_inputs.empty? || only_inputs.include?(:capacity)
-  = f.input :capacity, required: f.object.required?(:capacity), wrapper_html: { class: 'form-control-xs' }
-
-- if only_inputs.empty? || only_inputs.include?(:amenities)
-  = render 'dashboard/company/transactables/form_fields/amenity_types', f: f
+- unless platform_context.instance.listing_amenity_types.count.zero?
+  = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true } if only_inputs.empty? || only_inputs.include?(:amenities)
 
 - if only_inputs.empty? || only_inputs.include?(:price)
-  = render "dashboard/company/transactables/form_fields/price", f: f, form_fields: form_fields, model: model
+  - # always display calendar for fixed price, but make availability rules optional
+  - if @transactable_type.schedule_booking_enabled?
+    - content_for :booking_type_schedule_tab_content do
+      .control-group
+        %label.control-label.flush-top= t('simple_form.schedule.schedule')
+        .controls
+          = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule).try(:to_hash).try(:to_json)) do |schedule_form|
+            = render 'schedules/fields', f: schedule_form
+  - if form_fields.find { |ff| ff.keys.first == model && ff.values.first == 'availability_rules' }
+    - if overnight_or_regular_booking?(@transactable_type)
+      - content_for :booking_type_regular_tab_content do
+        .control-group
+          = render :partial => 'availability_rules/form', :locals => { :f => f }
+  = render partial: "listings/price", locals: { f: f, form_fields: form_fields }
+  = render partial: 'shared/booking_types_tabs', locals: { f: f }
 
 - if only_inputs.empty? || only_inputs.include?(:action_rfq)
-  = render 'dashboard/company/transactables/form_fields/action_rfq', f: f
+  - if f.object.transactable_type.action_rfq?
+    = f.input :action_rfq, as: :boolean
 
 - if only_inputs.empty? || only_inputs.include?(:photos)
-  = render 'dashboard/company/transactables/form_fields/photos', f: f
+  .loading{:style => "display: none"}
+    = image_tag "spinner.gif"
+    %br/
+    .span= t('manage.listings.photos.waiting_for_photo_processing')
+  = file_upload_input_with_label(t('simple_form.labels.listing.photos'),
+                                  "#{f.object_name}[photos_attributes][0][image]",
+                                  dashboard_photos_path,
+                                  Photo.new.image.thumbnail_dimensions[:medium],
+                                  t('simple_form.labels.listing.upload_photos'),
+                                  :required => true,
+                                  :error => f.object.errors.include?(:photos).present? ? t('forms.errors.user_form.avatar') : nil,
+                                  :hint => I18n.t('forms.hints.space_wizard.photos', :default => '')) do
+    - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
+    .hidden.thumbnail-processing
+      .loading-icon
+    = hidden_field_tag "#{f.object_name}", nil, :placeholder => t('ui.photo_uploader.caption'), :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
+    - unless @photos.nil?
+      - @photos.each_with_index do |photo|
+        - next unless photo.persisted?
+        = get_fileupload_photo_html(photo.image_url(:medium),
+                                    destroy_space_wizard_photo_path(:id => photo.id),
+                                    edit_dashboard_photo_path(photo),
+                                    :div,
+                                    id: photo.id) do
+          = text_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][caption]", photo.caption, :placeholder => t('ui.photo_uploader.caption')
+          = hidden_field_tag "#{f.object_name}[photo_ids][]", photo.id
+          = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][id]", photo.id
+          = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
+
+- if @platform_context.instance.seller_attachments_enabled? && (only_inputs.empty? || only_inputs.include?(:seller_attachments))
+  .with-upload-button
+    = file_upload_input_with_label('Attachments', "#{f.object_name}[attachments_attributes][0][data]", dashboard_seller_attachments_path, nil, t('seller_attachments.upload_attachments'), "no-multiple" => true, file_types: '(\.|\/)(' + Ckeditor.attachment_file_types.join('|') + ')$', upload_type: 'ckfile', files_container: 'ul[data-attachments-container]', append_result: '1', wrong_file_message: t('seller_attachments.wrong_file_message', formats: Ckeditor.attachment_file_types.join(', '))) do
+      %ul.seller-attachments{data: {'attachments-container' => true}}
+        - if @attachments.present?
+          - @attachments.each do |attachment|
+            = render 'dashboard/seller_attachments/attachment', attachment: attachment
+
+    - content_for :domready do
+      $(document).trigger('init:sellerattachmentaccesslevelselector.nearme');
+
 
 - if only_inputs.empty? || only_inputs.include?(:quantity)
-  = render 'dashboard/company/transactables/form_fields/quantity', f: f
+  -if @transactable_type.action_price_per_unit?
+    = f.input :quantity, as: :hidden, value: 1
+  -else
+    = f.input :quantity
 
 - if (only_inputs.empty? || only_inputs.include?(:assigned_waiver_agreement_templates)) && f.object.location.company.waiver_agreement_templates.count > 0
+  %h2.with-margin Waiver Agreement Templates
   = f.association :waiver_agreement_templates, collection: f.object.location.company.waiver_agreement_templates.order(:name).pluck(:name, :id), as: :check_boxes
 
 - if only_inputs.empty? || @transactable_type.categories.roots.map { |c| "Category - #{c.name}".to_sym }.include?(only_inputs.first)
-  = render 'dashboard/company/transactables/form_fields/category', f: f, field: only_inputs.first.to_s
+  - category_name = only_inputs.first.to_s.split(" - ")[1]
+  - category = @transactable_type.categories.roots.where(name: category_name).first
+  -if category.present?
+    = render partial: 'shared/category_old_bootstrap', locals: { category: category, f: f, categorizable: @transactable_type }
 
 
 - if only_inputs.empty? || only_inputs.include?(:currency)
-  = render 'dashboard/company/transactables/form_fields/currency', f: f
+  = f.input :currency, :as => :currency, allowed_currencies: @transactable_type.allowed_currencies, default: @transactable_type.default_currency, :input_html => { :class => 'custom-select', :id => 'currency-select' }
 
 - if @transactable_type.rental_shipping && (only_inputs.empty? || only_inputs.include?(:rental_shipping_type))
-  = render 'dashboard/company/transactables/form_fields/rental_shipping_type', { f: f, space_wizard: true }
-
-- if only_inputs.empty? || @transactable_type.custom_model_types.map { |c| "Custom Model - #{c.name}".to_sym }.include?(only_inputs.first)
-  = render "dashboard/company/transactables/form_fields/custom_model", f: f, field: only_inputs.first.to_s
-
-- if only_inputs.empty? || only_inputs.include?(:minimum_booking_minutes)
-  = f.input :minimum_booking_minutes, required: f.object.required?(:minimum_booking_minutes)
+  = render 'shared/rental_shipping_type', { f: f, space_wizard: true }
 

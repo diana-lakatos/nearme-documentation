@@ -22,6 +22,7 @@ namespace :after_deploy do
     puts "Re-creating jobs for queue recurring-jobs"
     # and queuing them again
     ScrapeSupportEmails.schedule!
+    SendRatingReminders.schedule!
     SchedulePaymentTransfers.schedule!
     SendSearchesDailyAlerts.schedule!
     PrepareFriendFinders.schedule!

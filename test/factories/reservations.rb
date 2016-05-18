@@ -68,11 +68,9 @@ FactoryGirl.define do
           end
           reservation.save!
         end
-
         factory :reviewable_reservation do
-          archived_at { Time.zone.now - 1.minute }
+          archived_at { Time.zone.now }
         end
-
       end
 
       factory :reservation_with_invoice do

@@ -18,7 +18,6 @@ class ProductTypes::ProductWizardController < ApplicationController
   end
 
   def create
-    params[:boarding_form][:product_form].deep_merge!(params[:product_form]) rescue nil
     @boarding_form = BoardingForm.new(current_user, @product_type)
     @boarding_form.product_form.product.attachment_ids = attachment_ids_for(@boarding_form.product_form.product)
     form_params = boarding_form_params

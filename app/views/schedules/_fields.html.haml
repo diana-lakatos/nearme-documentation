@@ -1,23 +1,38 @@
-%hr/
+%div{:'data-schedule-wrapper' => true}
+  .simple-schedule-form{ :'data-simple-schedule' => "true", style: "#{'display: none;' if !f.object.use_simple_schedule}" }
+    = f.input :sr_start_datetime, ampm: true, label: I18n.t('schedule.sr_start_datetime'), input_html: { class: 'selectpicker' }
+    = f.input :sr_every_hours, label: I18n.t('schedule.sr_every_hours') do
+      .every_hours
+        = f.text_field :sr_every_hours, size: 4, type: :number, min: 1, data: { hours: true }
+        = "&nbsp; #{t('schedule.hours')}".html_safe
+    = f.input :sr_from_hour, as: :time, label: I18n.t('schedule.sr_from_hour'), wrapper_html: { data: { :'between-hours' => true } } do
+      .between_hours
+        = f.time_select :sr_from_hour, { ampm: true}, { class: 'selectpicker' }
+        = t('schedule.and')
+        = f.time_select :sr_to_hour, { ampm: true}, { class: 'selectpicker' }
+    = f.input :sr_days_of_week, collection: (Date::DAYNAMES.each_with_index.map { |day, index| [day, f.object.persisted? ? index.to_s : index] }), as: :check_boxes, label: I18n.t('schedule.sr_days_of_week')
+    .hidden
+      %input{type: 'radio', name: "#{f.object_name}[use_simple_schedule]", value: "1", checked: f.object.use_simple_schedule, 'data-simple-schedule-radio' => true}
+    = link_to '#', {:'data-toggler' => true} do
+      = t('schedule.switch_to_advanced')
 
-.transactable-schedule-container
+  %div{ :'data-advanced-schedule' => "true", style: "#{'display: none;' if f.object.use_simple_schedule}"}
+    = f.hidden_field :schedule, class: 'icui', data: data_fields_for_schedule, value: f.object.schedule.try(:to_hash).try(:to_json)
+    .hidden
+      %input{type: 'radio', name: "#{f.object_name}[use_simple_schedule]", value: "0", checked: !f.object.use_simple_schedule, 'data-simple-schedule-radio' => true}
+    = link_to '#', {:'data-toggler' => true} do
+      = t('schedule.switch_to_simple')
 
-  %h4.control-label
-    = t :event_runs, scope: [:pricing, :schedule]
+  %div{ :'data-exclude-dates' => "true" }
+    %h3= I18n.t('schedule.duration_range')
+    = f.simple_fields_for :schedule_exception_rules do |schedule_exception_rule_form|
+      .exclude-rules-fields
+        .exclude-rule-fields
+          = schedule_exception_rule_form.input :label
+          = schedule_exception_rule_form.input :duration_range_start, label: t('schedule.duration_range') do
+            = schedule_exception_rule_form.datetime_select :duration_range_start, { ampm: true, :default => { :minute => 00 } }, class: 'selectpicker'
+            = t('schedule.and')
+            = schedule_exception_rule_form.datetime_select :duration_range_end, { ampm: true, :default => { :minute => 00 } }, { class: 'selectpicker' }
+            = schedule_exception_rule_form.link_to_remove t('schedule.remove'), data: { confirm: (schedule_exception_rule_form.object.label.present? ? "Are you sure you want to delete #{schedule_exception_rule_form.object.label}?" : false) }
 
-  - f.object.schedule_rules.build if f.object.schedule_rules.blank?
-  = f.simple_fields_for :schedule_rules  do |schedule_rule_form|
-    - Time.use_zone(f.object.scheduable.try(:timezone).presence || f.object.timezone) do
-      = render 'schedules/schedule_rule_fields', f: schedule_rule_form
-
-  %p.sep.add-availability-wrapper
-    %span
-      = t :different_event_availability_info, scope: [:pricing, :availability]
-
-    = link_to_add_association f, :schedule_rules, partial: 'schedules/schedule_rule_fields', class: 'button-a small' do
-      %button.btn.btn-primary{:type => "button"}
-        = t :add_availability, scope: [:pricing, :availability]
-
-  %hr/
-
-  = render 'schedules/unavailability', f: f
+    -#= f.link_to_add t('schedule.add_exclude_rule'), :schedule_exception_rules

@@ -1,0 +1,28 @@
+- title t('user_messages.title')
+- user_message = @user_messages.last.decorate
+- thread_recipient = user_message.thread_owner == current_user ? user_message.thread_recipient : user_message.thread_owner
+
+- content_for :page_header do
+  %h1
+    = link_to t('user_messages.title'), dashboard_user_messages_path
+    >
+    = link_to(thread_recipient.first_name, thread_recipient)
+
+
+.content-box-a
+
+
+.inbox-thread
+  - @user_messages.reverse.each do |user_message|
+    = render "user_message_for_show", user_message: user_message
+
+- if @displayed_user_message.available_for_reply?
+  .panel
+    .panel-body
+      %div{ "data-messages-form": true }
+        = render "dashboard_form"
+- else
+  %p.thread-locked= t('user_messages.thread_locked')
+
+.form-actions
+  = link_to t('user_messages.archive_html'), user_message.archive_path, method: :put

@@ -12,7 +12,7 @@ class Link < ActiveRecord::Base
 
   after_commit :user_added_links_to_project_event, on: [:create, :update]
   def user_added_links_to_project_event
-    if linkable.present? && linkable_type == "Project" && !linkable.draft?
+    if linkable.present? && linkable_type == "Project"
       event = :user_added_links_to_project
       ActivityFeedService.create_event(event, self.linkable, [self.linkable.creator], self.linkable)
     end

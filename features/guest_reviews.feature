@@ -22,9 +22,17 @@ Feature: Guest can rate a reservation
     When I edit host rating with valid values
     Then I should see updated feedback
 
+  Scenario: A guest updates a review with unselected rating
+    When I edit host rating with invalid values
+    Then I should see error message
+
   Scenario: A guest updates a review with selected rating
     When I edit transactable rating with valid values
     Then I should see updated feedback
+
+  Scenario: A guest updates a review with unselected rating
+    When I edit transactable rating with invalid values
+    Then I should see error message
 
   Scenario: A guest updates a review with selected rating
     When I edit transactable rating with valid values

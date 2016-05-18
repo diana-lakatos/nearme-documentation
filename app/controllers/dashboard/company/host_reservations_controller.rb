@@ -11,8 +11,7 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
   def confirm
     if @reservation.confirmed?
       flash[:warning] = t('flash_messages.manage.reservations.reservation_already_confirmed')
-    # We may end up here if for example the user clicks an old link in an activation email
-    elsif @reservation.unconfirmed?
+    else
       if @reservation.skip_payment_authorization?
         @reservation.invoke_confirmation!
       else
@@ -29,10 +28,6 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
           t('flash_messages.manage.reservations.reservation_not_confirmed'),
           *@reservation.errors.full_messages, *@reservation.payment.errors.full_messages
         ].join("\n")
-      end
-    else
-      if @reservation.expired?
-        flash[:error] = t('dashboard.host_reservations.reservation_is_expired')
       end
     end
 

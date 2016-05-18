@@ -1,0 +1,51 @@
+- title t "dashboard.products.manage"
+- content_for :page_header do
+  %h1
+    %span.hidden-xs= t('dashboard.products.title.manage')
+    = t('dashboard.products.title.products')
+
+  .options.visible-sm.visible-xs
+    = link_to new_dashboard_company_product_type_product_path(@product_type), class: "btn btn-primary" do
+      %span.fa.fa-plus
+      = t('dashboard.items.new_listing_short')
+
+
+- content_for :panel_navigation_links do
+  - Spree::ProductType.all.each do |product_type|
+    %li{class: product_type == @product_type ? "active" : ""}
+      = link_to product_type.name.pluralize, dashboard_company_product_type_products_path(product_type)
+
+
+- content_for :panel_options do
+  .pull-right.options
+    - if HiddenUiControls.find('dashboard/products/bulk_upload').visible?
+      = link_to t('data_upload.manage.bulk_upload'), new_dashboard_company_product_type_data_upload_path(@product_type), data: { modal: true }
+
+    = link_to new_dashboard_company_product_type_product_path(@product_type), class: "btn btn-primary navbar-btn" do
+      %span.fa.fa-plus
+      = t('dashboard.items.list_new_item')
+
+
+%nav.panel-nav-mobile.visible-sm.visible-xs
+  = dropdown_menu @product_type.name.pluralize, { wrapper_class: 'links' } do
+    = yield :panel_navigation_links
+
+- if Spree::ProductType.all.size > 3
+  .row
+    .col-md-3
+      %nav.hidden-xs.hidden-sm{role: 'navigation'}
+        %ul.nav.nav-pills.nav-stacked
+          = yield :panel_navigation_links
+
+    .col-md-9
+      %nav.panel-nav.hidden-xs.hidden-sm
+        = yield :panel_options
+      = render 'listing'
+
+- else
+  %nav.panel-nav.hidden-xs.hidden-sm
+    %ul.tabs.pull-left
+      = yield :panel_navigation_links
+    = yield :panel_options
+
+  = render 'listing'

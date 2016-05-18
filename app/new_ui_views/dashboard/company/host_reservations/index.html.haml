@@ -1,0 +1,24 @@
+-# We are using generic_lessee_term here because the list may include reservations for multiple types of services
+- title t('dashboard.nav.host_reservations')
+
+- content_for :page_header do
+  %h1= yield :title
+
+- active_state = params[:state] || 'unconfirmed'
+
+- tabs = ['unconfirmed', 'confirmed', 'archived'].map { |state| { name: "#{t(state.to_sym, scope: [:dashboard, :host_reservations])} (#{Controller::GuestList.new(current_user).filter(state).reservations.size})", url:  dashboard_company_host_reservations_path(state: state), active: (params[:action] == 'index' && active_state == state) }}
+
+= dashboard_panel_multi_tabs(tabs)
+
+.panel
+  .panel-body
+    .orders-a
+      - if @guest_list.reservations_scope.empty?
+        = render 'promote_locations', locations: @company.locations
+      - else
+        - if @guest_list.reservations.empty?
+          %p.empty-resultset
+            = no_reservations_info_for_state(@guest_list.state)
+        - else
+          - @guest_list.reservations.each do |reservation|
+            = render 'reservation', reservation: reservation

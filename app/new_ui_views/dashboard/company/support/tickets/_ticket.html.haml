@@ -1,0 +1,13 @@
+%tr
+  %td= link_to "#{t('reservations.rfq_short')} ##{ticket.id}", dashboard_company_support_ticket_path(ticket)
+  %td.hidden-xs= link_to support_ticket_title(ticket), dashboard_company_support_ticket_path(ticket)
+  %td.hidden-xs
+    - if ticket.target.present?
+      = link_to ticket.target.name, ticket.show_target_path
+    - else
+      = t('reservations.tickets.deleted')
+  %td.hidden-xs= support_author(ticket.first_message)
+  %td.hidden-xs
+    %time{datetime: ticket.updated_at}= distance_of_time_in_words_or_date_in_time_zone(ticket.updated_at, current_user.time_zone)
+
+  %td= ticket.state.titleize

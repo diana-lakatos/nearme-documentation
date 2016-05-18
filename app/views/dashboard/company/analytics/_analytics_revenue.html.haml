@@ -1,35 +1,34 @@
-- if @payments.empty?
-  %p.empty-resultset
-    = t('dashboard.analytics.no_payments_received_last_7_days')
-- else
-  %figure.chart-a
-    %figcaption
-      - @chart.totals_by_currency.each do |currency, sum|
-        = "#{currency_content_tag(currency, sum, :span, { :rel => false })}".html_safe
-        |
-      = t('dashboard.analytics.7_days_total')
+.box
+  - if @payments.empty?
+    %p.no_data
+      = t('dashboard.analytics.no_payments_received_last_7_days')
+  - else
+    .chart
+      .total.right
+        - @chart.totals_by_currency.each do |currency, sum|
+          .total-number.left
+            = "#{currency_content_tag(currency, sum, :span, { :rel => false })}".html_safe
+        %span{class: 'total-text'} 7 day total
+      %canvas#chart
 
-    %canvas#chart
-
-  %table.table.table-simple
-    %thead
-      %tr
-        %th= t('dashboard.analytics.columns.amount')
-        %th= ServiceType.where(skip_location: false).count.zero? ? t('dashboard.analytics.columns.object', default: TransactableType.first.translated_bookable_noun) : t('dashboard.analytics.columns.location')
-        %th= t('dashboard.analytics.columns.date')
-    %tbody
-      - @payments.each do |payment|
+    %table.table.table-simple
+      %thead
         %tr
-          %td= currency_content_tag(payment.currency, payment.total_amount, :span, { :rel => false }).html_safe
-          %td= (ServiceType.where(skip_location: false).count.zero? ? payment.payable.try(:listing).try(:name) : payment.payable.try(:listing).try(:location).try(:name)).presence || payment.payable.try(:number).presence || t('dashboard.analytics.deleted')
-          %td= I18n.l(payment.created_at, format: :short)
+          %th Amount
+          %th Location
+          %th Date
+      %tbody
+        - @payments.each do |payment|
+          %tr
+            %td= currency_content_tag(payment.currency, payment.total_amount, :span, { :rel => false }).html_safe
+            %td= payment.payable.try(:listing).try(:location).try(:name).presence || payment.payable.try(:number).presence || '<Deleted>'
+            %td= I18n.l(payment.created_at, format: :short)
 
-      - @all_time_totals.each do |total|
-        - total = Money.new(total[:sum], total[:currency])
-        %tr.total-row
-          %td= currency_content_tag(total.currency, total.amount, :span, { :rel => false }).html_safe
-          %td= t('dashboard.analytics.total.all_time')
-          %td
+        - @all_time_totals.each do |total|
+          - total = Money.new(total[:sum], total[:currency])
+          %tr.total-row
+            %td= currency_content_tag(total.currency, total.amount, :span, { :rel => false }).html_safe
+            %td all time total
+            %td
 
-- content_for :analytics_pagination do
-  = will_paginate_dashboard @payments
+      = will_paginate_styled @payments

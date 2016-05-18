@@ -10,7 +10,7 @@ end
 Then(/^I should be able to enable my blog$/) do
   @user.instance.user_blogs_enabled.should be_true
   visit edit_dashboard_blog_path
-  page.execute_script "$('#user_blog_enabled').click();"
+  find_by_id('user_blog_enabled').set true
   find_by_id('user_blog_name').set 'Super cool blog'
   click_button 'Save'
   page.should have_content('Blog settings have been saved.')

@@ -1,0 +1,76 @@
+!!!
+%html.no-js
+  %head
+    / Content
+    %meta{:charset => "UTF-8"}/
+    %title
+      = title_tag
+    %meta{:content => meta_description_content, :name => "description"}/
+
+    / Styles
+    = stylesheet_link_tag 'new_ui_vendor'
+    = stylesheet_link_tag 'new_ui'
+    = render 'shared/head/fonts'
+
+    = stylesheet_link_tag dynamic_theme_path_for_current_theme(:new_ui)
+
+    / Prefetch
+    = render 'layouts/content_holder_injector'
+
+    - if content_for(:canonical_url)
+      %link{rel:"canonical", href: yield(:canonical_url)}
+
+    - if ActionController::Base.asset_host
+      %link{rel:"dns-prefetch", href:"//#{ActionController::Base.asset_host}"}
+
+    %meta{:'http-equiv' => "x-dns-prefetch-control", content: "off"}
+    %link{rel:"dns-prefetch", href:"//s3.amazonaws.com"}
+    %link{rel:"dns-prefetch", href:"//maps.googleapis.com"}
+    %link{rel:"dns-prefetch", href:"//static.olark.com"}
+    %link{rel:"dns-prefetch", href:"//cdn.mxpnl.com"}
+    %link{rel:"dns-prefetch", href:"//google-analytics.com"}
+
+    / Mobile
+
+    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1"}
+    %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
+    %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
+    %meta{:content => "IE=edge", "http-equiv" => "X-UA-Compatible"}/
+
+    / Favicon
+    = render 'layouts/favicon'
+
+    = csrf_meta_tag
+    = yield(:meta)
+    - if !platform_context.stripe_public_key.blank?
+      = tag :meta, :name => "stripe-key", :content => platform_context.stripe_public_key
+
+    = render 'shared/javascripts/header'
+
+    = yield(:head_bottom)
+
+  %body{class: (navigation_visible? ? 'navigation-visible' : nil ) }
+
+    = yield(:body_top)
+
+    = render 'layouts/navbar_dashboard'
+
+    - unless render_without_left_menu?
+      = render 'dashboard/layout/left_navigation'
+
+    %header.page-header
+      - unless render_without_left_menu?
+        %button.nav-toggler
+          = t :toggle_navigation, scope: [:navigation]
+      = yield :page_header
+
+    %main{:role => "main"}
+      .main-wrapper
+        = render 'dashboard/shared/flash'
+        = render 'dashboard/shared/dashboard_messages'
+
+        = yield
+
+    = yield(:body_bottom)
+
+    = render 'shared/javascripts/footer', entry: 'newui', googlemaps: true, analytics: true

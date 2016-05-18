@@ -1,14 +1,11 @@
 class PaymentGateway::StripePaymentGateway < PaymentGateway
+  include PaymentGateway::ActiveMerchantGateway
+
   supported :multiple_currency, :recurring_payment, :credit_card_payment, :partial_refunds
 
   def self.settings
     { login: { validate: [:presence] } }
   end
-
-  def settings
-    super.merge({environment: test_mode? ? :sandbox : :production, test: test_mode? })
-  end
-
 
   def self.active_merchant_class
     ActiveMerchant::Billing::StripeGateway

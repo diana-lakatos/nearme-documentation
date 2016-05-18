@@ -1,6 +1,6 @@
 - if @reservation_request && @reservation_request.confirm_reservations?
   %p.confirm-reservations
-    = t('reservations.manually_confirm', lessor: @reservation_request.listing.transactable_type.lessor)
+    = t('reservations.manually_confirm', lessor: platform_context.lessor)
     - if @reservation_request.payment.nonce_payment?
       = t('reservations.paypal_and_cc_charge_after_confirmation')
     - else
@@ -11,10 +11,8 @@
     - else
       %span.cancellation-time
         = t('reservations.cancellation_time', time: @reservation_request.listing.transactable_type.cancellation_policy_hours_for_cancellation)
-    - if @reservation_request.listing.transactable_type.cancellation_policy_penalty_percentage.zero? && @reservation_request.listing.transactable_type.cancellation_policy_penalty_hours.zero?
+    - if @reservation_request.listing.transactable_type.cancellation_policy_penalty_percentage.zero?
       = t('reservations.no_cancellation_fee')
-    - elsif @reservation_request.listing.transactable_type.cancellation_policy_penalty_hours > 0
-      = t('reservations.hours_cancellation_fee', fee: @reservation_request.listing.transactable_type.cancellation_policy_penalty_hours)
     - else
       %span.cancellation-fee
         = t('reservations.cancellation_fee', fee: @reservation_request.listing.transactable_type.cancellation_policy_penalty_percentage)

@@ -1,19 +1,14 @@
-%header.dialog__header
-  %h2#dialog__title= t('manage.photos.crop_and_rotate')
-
-= form_tag form_url, :method => :put, :id => 'crop-form', 'data-id' => object.model.id do
-  .dialog__body
+.modal-header
+  .modal-title= t('manage.photos.crop_and_rotate')
+.modal-body
+  = form_tag form_url, :method => :put, :id => 'crop-form', 'data-id' => object.model.id do
     -if @user.try(:errors).try(:any?)
-      .error-block= t('manage.photos.edit.error')
-    %p
-      %button.btn.btn-primary.btn-xs{:type => "button", :data => {:"rotate-photo" => true}}= t('manage.photos.edit.rotate')
-
-    .resize-container
-      = image_tag object_url, 'data-image' => true, data: { rotate: object.transformation_rotate, crop: object.transformation_crop, original_dimensions: object.original_dimensions, :"aspect-ratio" => object_aspect_ratio(object) }
-
-  .dialog__actions
-    = submit_tag t('manage.photos.edit.process'), class: "button-a"
-
+      .error Unable to save image
+    %a.badge.rotate-photo.photo-action{href: '#'}
+      Rotate
+    = image_tag object_url, 'data-image' => true, data: { rotate: object.transformation_rotate, crop: object.transformation_crop, original_dimensions: object.original_dimensions}
+    .btn-toolbar
+      = submit_tag "Process", class: "btn medium blue pull-right"
 
   :javascript
-    $(document).trigger('init:photomanipulator.nearme', ['#crop-form'])
+    $(document).trigger('init:photomanipulator.nearme', ['#crop-form', { aspectRatio: #{defined?(object.class::ASPECT_RATIO) ? (object.model.try(:owner_type) == 'Project' ? object.class::ASPECT_RATIO_PROJECT : object.class::ASPECT_RATIO) : object.model.send("#{object.mounted_as}_dimensions")[:width].to_f/object.model.send("#{object.mounted_as}_dimensions")[:height].to_f} }]);

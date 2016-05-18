@@ -21,22 +21,20 @@
         .col-md-9.input-container
           = f.text_field :last_name, class: 'string optional'
 
+  .string.optional
+    .row
+      .col-md-3
+        = f.label :dob, t('dashboard.merchant_account.dob'), class: 'string optional control-label'
+      .col-md-9.input-container
+        = f.text_field :dob, placeholder: 'YYYY-MM-DD', class: 'string optional'
 
-  .form-group.string.optional{class: f.error(:dob) ? 'has-error' : ''}
-    = f.label :dob, class: 'string optional control-label' do
-      %abbr{title: "required"} *
-      =  t('dashboard.merchant_account.dob')
-    = f.text_field :dob_formated, placeholder: f.object.date_format_readable, class: 'string optional form-control'
-    %span.help-block= f.error :dob
-
-  - if (@owners_counter == 0 && (merchant_account.iso_country_code == 'US' || merchant_account.needs?('legal_entity.verification.document'))) || @owners_counter != 0
-    .form-group.string.optional{class: f.error(:document) ? 'has-error' : ''}
+  - if (@owners_counter == 0 && merchant_account.needs?('legal_entity.verification.document')) || @owners_counter != 0
+    .string.optional
       .row
-        .col-md-12
-          = f.label :document, t('dashboard.merchant_account.document'), class: 'string required control-label'
-        .col-md-12.input-container
+        .col-md-3
+          = f.label :document, t('dashboard.merchant_account.document'), class: 'string optional control-label'
+        .col-md-9.input-container
           = f.file_field :document
-      %span.help-block= f.error :document
 
   - if @owners_counter != 0
     - MerchantAccountOwner::StripeConnectMerchantAccountOwner::ADDRESS_ATTRIBUTES.each do |address_attr|

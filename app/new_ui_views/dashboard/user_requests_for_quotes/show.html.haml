@@ -1,0 +1,53 @@
+- title t('reservations.rfq_long')
+
+- content_for :page_header do
+  %h1
+    = link_to t('reservations.rfq_long'), dashboard_user_requests_for_quotes_path, class: 'hidden-xs hidden-sm'
+    %span.hidden-xs.hidden-sm >
+
+    - if @ticket.target.present?
+
+      - if @ticket.target.action_free_booking?
+        = "#{t('reservations.rfq_short')} ##{@ticket.id}"
+      - else
+        = "#{t('reservations.offer')} ##{@ticket.id}"
+    - else
+      = t('reservations.tickets.deleted')
+
+
+.row
+  .col-xs-7
+    %h2
+      - if @ticket.target.present?
+        - if @ticket.reservation_details && @ticket.reservation_details['quantity'].present?
+          = @ticket.reservation_details['quantity']
+
+        - if @ticket.target.try(:schedule_booking?) && @ticket.reservation_date.present?
+          &times;
+          = l(@ticket.reservation_date, format: :long)
+        - elsif @ticket.reservation_dates.any?
+          - if @ticket.reservation_details['start_minute'].present? && @ticket.reservation_details['end_minute'].present?
+            - @hourly_presenter = HourlyPresenter.new(@ticket.reservation_dates.first, @ticket.reservation_details['start_minute'].to_i, @ticket.reservation_details['end_minute'].to_i)
+            &times;
+            = "#{I18n.l(@ticket.reservation_dates.first, format: :long)} #{@hourly_presenter.hours} #{'hour'.pluralize(@hourly_presenter.hours.to_i)}"
+          - else
+            - @date_presenter = DatePresenter.new(@ticket.reservation_dates)
+            &times;
+            = @date_presenter.days_in_words
+
+        = link_to @ticket.target.name, @ticket.show_target_path
+      - else
+        = t('reservations.tickets.deleted')
+
+  .col-xs-5
+    .rfq-status-a
+      %span{class: @ticket.state }
+        = @ticket.state.titleize
+
+.inbox-thread
+  = render partial: 'dashboard/company/support/tickets/ticket_message', collection: @ticket.messages
+
+- if @ticket.open?
+  .panel
+    .panel-body
+      = render partial: 'dashboard/company/support/tickets/dashboard_form', locals: { ticket: @ticket, message: @message, with_close: false, form_url: support_ticket_ticket_messages_path(@ticket) }

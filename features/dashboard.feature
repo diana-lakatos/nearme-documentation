@@ -16,7 +16,6 @@ Feature: As a user of the site
       And a amenity exists with amenity_type: the amenity_type, name: "Amenity2"
       And a amenity exists with amenity_type: the amenity_type, name: "Amenity3"
       And the transactable_type_listing exists
-      And instance has default availability templates
 
   Scenario: A user can add new location
     Given a location exists with company: the company
@@ -40,6 +39,7 @@ Feature: As a user of the site
       And the location should be updated
       And I remove all locations
       And I should see "You've deleted"
+     Then the location should not be pickable
 
   Scenario: A user can add new listing
     Given the location exists with company: the company
@@ -83,7 +83,7 @@ Feature: As a user of the site
       And I am browsing transactables
      When I edit first transactable
       And I disable daily pricing
-      And I mark transactable as free
+      And I check "transactable_action_free_booking"
       And I submit the transactable form
       And I edit first transactable
      Then pricing should be free

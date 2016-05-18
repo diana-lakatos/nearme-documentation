@@ -1,162 +1,180 @@
-- title t('buy_sell_market.checkout.labels.order_details')
+.dash-head.clearfix
+  %p #{t('buy_sell_market.checkout.labels.order_details')} - #{@order.number}
 
-- content_for :page_header do
-  %h1
-    = link_to t('orders.title.orders_received'), dashboard_company_orders_received_index_path, class: 'hidden-xs hidden-sm'
-    %span.hidden-xs.hidden-sm >
-    = t('buy_sell_market.checkout.labels.order_details')
+.dash-body
+  .action-row
+    - if !@order.approved? && !@order.canceled?
+      = link_to approve_dashboard_company_orders_received_path(@order),
+          data: { confirm: 'Are you sure you want to approve this order?' } do
+        .btn.blue Approve Order
 
+    - if @order.allow_cancel? && @order.payment_state != 'paid'
+      = link_to cancel_dashboard_company_orders_received_path(@order),
+          data: { confirm: 'Are you sure you want to cancel this order?' } do
+        .btn.red Cancel Order
 
-.panel
-  .panel-body
-    .orders-a
-      %article.order
-        %header
-          %h2= t('buy_sell_market.checkout.labels.order_no', number: @order.number)
+    - if @order.canceled?
+      = link_to resume_dashboard_company_orders_received_path(@order),
+          data: { confirm: 'Are you sure you want to resume this order?' } do
+        .btn.blue Resume Order
 
+  .divider
 
-        .row
-          .col-sm-3
-            %h4= t 'buy_sell_market.checkout.labels.billing_address'
-            %p
-              = render 'dashboard/orders/address', address: @order.bill_address
-              %br/
-              = mail_to(@order.try(:user).try(:email))
+  %table.order-header
+    %thead
+      %th= t 'buy_sell_market.checkout.labels.billing_address'
+      %th= t 'buy_sell_market.checkout.labels.shipping_address'
+      %th= t 'buy_sell_market.checkout.labels.email_address'
+      %th= t 'buy_sell_market.checkout.labels.shipping_method'
+      %th= t 'buy_sell_market.checkout.labels.payment'
 
+    %tbody
+      %tr
+        %td= @order.bill_address.full_name
+        %td= @order.ship_address.full_name
+        %td= @order.try(:user).try(:email)
+        %td{rowspan: 6}
+          - @order.shipments.each do |shipment|
+            - if shipment.selected_shipping_rate.present?
+              From
+              %strong= shipment.stock_location.name
+              via
+              %br
+              %strong=shipment.selected_shipping_rate.name
+              %br
 
-          .col-sm-3
-            %h4= t 'buy_sell_market.checkout.labels.shipping_address'
-            %p= render 'dashboard/orders/address', address: @order.shipping_address
+        %td
+          - if @charge_info && @charge_info.response['card']
+            #{t('buy_sell_market.checkout.labels.ending_in')} #{@charge_info.response['card']['last4']}
+            #{@charge_info.response['card']['name']}
 
-          .col-sm-3
-            %h4= t 'buy_sell_market.checkout.labels.shipping_method'
-            - @order.shipments.each do |shipment|
-              %p
-                = t('buy_sell_market.products.shipping.from')
-                %strong= shipment.stock_location.name
-                = t('buy_sell_market.products.shipping.via')
-                %br
-                %strong=shipment.selected_shipping_rate.name
+          - payment = @order.payment
+          - if payment.paid? && !payment.refunded?
+            .btn.gray.disabled Payment captured
+          - elsif payment.paid? && payment.refunded?
+            .btn.red.disabled Payment refunded
+          - elsif payment.failed?
+            %p Payment failed
+          = link_to t("buy_sell_market.checkout.labels.payment_details"), dashboard_company_orders_received_payment_path(@order.number, payment), class: "btn blue"
+        - if @order.payment.authorized?
+          = link_to dashboard_company_orders_received_payments_path(@order.number), method: :post,
+              data: { confirm: 'Are you sure you want to capture payment for this order?' } do
+            .btn.blue Capture
 
-          .col-sm-3
-            %h4= t 'buy_sell_market.checkout.labels.payment'
+      - if @order.bill_address.company.present? || @order.ship_address.company.present?
+        %tr
+          %td= @order.bill_address.company
+          %td= @order.ship_address.company
+          %td
+          %td
+          %td
 
-            %p
-              - if @charge_info && @charge_info.response['card']
-                #{t('buy_sell_market.checkout.labels.ending_in')} #{@charge_info.response['card']['last4']}
-                #{@charge_info.response['card']['name']}
+      %tr
+        %td= @order.bill_address.address1
+        %td= @order.ship_address.address1
+        %td
+        %td
+        %td
 
-              - if @order.payment.authorized?
-                %span.label.label-info
-                  = t('buy_sell_market.checkout.labels.payments.authorized')
-              - elsif @order.payment.paid?
-                %span.label.label-info
-                  = t('buy_sell_market.checkout.labels.payments.captured')
+      %tr
+        %td= @order.bill_address.address2
+        %td= @order.ship_address.address2
+        %td
+        %td
+        %td
 
-              - elsif @order.payment.refunded?
-                %span.label.label-warning
-                  = t('buy_sell_market.checkout.labels.payments.refunded')
+      %tr
+        %td= @order.bill_address.city
+        %td= @order.ship_address.city
+        %td
+        %td
+        %td
 
-              - elsif @order.payment.failed?
-                %span.label.label-error
-                  = t('buy_sell_market.checkout.labels.payments.failed')
+      %tr
+        %td= @order.bill_address.country.name
+        %td= @order.ship_address.country.name
+        %td
+        %td
+        %td
 
-              - if !@order.is_free?
-                %p= link_to t("buy_sell_market.checkout.labels.payments.details"), dashboard_company_orders_received_payment_path(@order.number, @order.payment), class: "btn btn-primary"
+      %tr
+        %td= @order.bill_address.state.abbr
+        %td= @order.ship_address.state.abbr
+        %td
+        %td
+        %td
 
-              - if @order.paid?
-                %span.label.label-info
-                  = t('buy_sell_market.checkout.labels.payments.paid')
-              - elsif @order.payment.manual_payment?
-                = link_to t('buy_sell_market.checkout.labels.payments.mark_as_paid'), capture_dashboard_company_orders_received_payment_path(@order.number, @order.payment.id), method: :post, data: { confirm: 'Are you sure you want to mark this order as paid?' }, class: 'btn btn-primary'
-              - elsif @order.payment.authorized?
-                - if @order.payment.manual_payment?
-                  = link_to 'Mark As Paid', capture_dashboard_company_orders_received_payment_path(@order.number, @order.payment.id), method: :post, data: { confirm: 'Are you sure you want to mark this order as paid?' }, class: 'btn btn-primary'
-                - elsif @order.payment.try(:authorized?)
-                  = link_to 'Capture', capture_dashboard_company_orders_received_payment_path(@order.number, @order.payment.id), method: :post, data: { confirm: 'Are you sure you want to capture payment for this order?' }, class: 'btn btn-primary'
+      %tr
+        %td= @order.bill_address.zipcode
+        %td= @order.ship_address.zipcode
+        %td
+        %td
+        %td
 
-        %h2= t("buy_sell_market.checkout.labels.shipping")
-        - @order.shipments.each do |shipment|
-          %table.shipment-summary
-            %tbody
-              %tr
-                %th= t("buy_sell_market.products.shipping.number")
-                %td= shipment.number
-              %tr
-                %th= t("buy_sell_market.products.shipping.state")
-                %td= shipment.state
-              %tr
-                %th= t("buy_sell_market.products.shipping.stock_location")
-                %td= shipment.stock_location.name
-              - if shipment.shippo_label_url.present?
-                %tr
-                  %th= t("buy_sell_market.products.shipping.label_url")
-                  %td= shipment.shippo_label_url
-              - if shipment.shippo_tracking_number.present?
-                %tr
-                  %td= t("buy_sell_market.products.shipping.tracking_number")
-                  %td= shipment.shippo_tracking_number
+  .divider
 
-          - if shipment.ready?
-            %p
-              = link_to t("buy_sell_market.products.shipping.mark_as_shipped"),ship_dashboard_company_orders_received_shipment_path(@order.number, shipment), data: { confirm: t("buy_sell_market.products.shipping.confirm") }, class: 'btn btn-primary'
+  %h2 Shipping
+  - @order.shipments.each do |shipment|
+    %table.payment-summary
+      %thead
+      %tbody
+        %tr
+          %td NUMBER
+          %td= shipment.number
+        %tr
+          %td STATE
+          %td= shipment.state
+        %tr
+          %td STOCK LOCATION
+          %td= shipment.stock_location.name
+        %tr
+          %td LABEL URL
+          %td= shipment.shippo_label_url
+        %tr
+          %td TRACKING NUMBER
+          %td= shipment.shippo_tracking_number
+        %tr
+          %td
+            - if shipment.ready?
+              = link_to ship_dashboard_company_orders_received_shipment_path(@order.number, shipment),
+                  data: { confirm: 'Are you sure you want to ship this package?' } do
+                .btn.blue Mark as Shipped
 
-        %h2= t 'buy_sell_market.checkout.labels.order_summary'
-        .table-responsive
-          %table.table
-            %thead
-              %th= t 'buy_sell_market.checkout.labels.item'
-              %th= t 'buy_sell_market.checkout.labels.price'
-              %th= t 'buy_sell_market.checkout.labels.qty'
-              %th= t 'buy_sell_market.checkout.labels.total'
+  .divider
 
-            %tbody
-              - @order.line_items.each do |item|
-                %tr
-                  %td= item.name_with_link
-                  %td= item.price
-                  %td= item.quantity
-                  %td= item.display_amount
+  %h2= t 'buy_sell_market.checkout.labels.order_summary'
+  %table.payment-summary
+    %thead
+      %th= t 'buy_sell_market.checkout.labels.item'
+      %th= t 'buy_sell_market.checkout.labels.price'
+      %th= t 'buy_sell_market.checkout.labels.qty'
+      %th= t 'buy_sell_market.checkout.labels.total'
 
-        .row
-          .col-sm-4.col-sm-push-8
+    %tbody
+      - @order.line_items.each do |item|
+        %tr
+          %td= item.name_with_link
+          %td= item.price
+          %td= item.quantity
+          %td= item.display_amount
 
-            %table.payment-totals
-              %tr
-                %th= t 'buy_sell_market.checkout.labels.subtotal'
-                %td= humanized_money_with_cents_and_symbol @order.item_total
-              %tr
-                %th= t 'buy_sell_market.checkout.labels.shipping'
-                %td= humanized_money_with_cents_and_symbol @order.shipment_total
-              - unless @order.tax_amount.zero?
-                %tr
-                  %th= t 'buy_sell_market.checkout.labels.tax'
-                  %td= humanized_money_with_cents_and_symbol @order.tax_amount
-              %tr
-                %th= t 'buy_sell_market.checkout.labels.service_fee'
-                %td= humanized_money_with_cents_and_symbol @order.service_fee_amount_guest
-              - if @order.additional_charges.any?
-                - @order.additional_charges.each do |charge|
-                  %tr
-                    %th= charge.name
-                    %td= humanized_money_with_cents_and_symbol charge.amount
-              %tr
-                %th.total= t 'buy_sell_market.checkout.labels.total2'
-                %td.total= humanized_money_with_cents_and_symbol @order.total_amount
+  .divider
 
-        %br/
+  %table.payment-totals{align: 'right'}
+    %tr
+      %td= t 'buy_sell_market.checkout.labels.subtotal'
+      %td= humanized_money_with_cents_and_symbol @order.monetize(@order.item_total)
+    %tr
+      %td= t 'buy_sell_market.checkout.labels.shipping'
+      %td= humanized_money_with_cents_and_symbol @order.monetize(@order.shipment_total)
+    %tr
+      %td= t 'buy_sell_market.checkout.labels.tax'
+      %td= humanized_money_with_cents_and_symbol @order.monetize(@order.additional_tax_total)
+    %tr
+      %td= t 'buy_sell_market.checkout.labels.service_fee'
+      %td= humanized_money_with_cents_and_symbol @order.total_service_fee_amount_cents
+    %tr
+      %td.total= t 'buy_sell_market.checkout.labels.total2'
+      %td.total= humanized_money_with_cents_and_symbol @order.total_amount
 
-        .row
-          .col-sm-9.col-sm-push-3
-            .order-actions
-              - if !@order.approved? && !@order.canceled?
-                = link_to t('buy_sell_market.checkout.labels.actions.approve'),approve_dashboard_company_orders_received_path(@order), data: { confirm: t('buy_sell_market.checkout.labels.actions.confirm_approve') }, class: 'btn btn-primary'
-
-              - if @order.allow_cancel? && @order.payment_state != 'paid'
-                = link_to t('buy_sell_market.checkout.labels.actions.cancel'), cancel_dashboard_company_orders_received_path(@order), data: { confirm: t('buy_sell_market.checkout.labels.actions.confirm_cancel') }, class: 'btn btn-warning'
-
-              - if @order.canceled?
-                = link_to t('buy_sell_market.checkout.labels.actions.resume'),resume_dashboard_company_orders_received_path(@order), data: { confirm: t('buy_sell_market.checkout.labels.actions.confirm_resume') }, class: 'btn btn-primary'
-
-          .col-sm-3.col-sm-pull-9
-            %small= t('orders.labels.order_placed_html', date: @order.display_completed_at)
+  .clearfix

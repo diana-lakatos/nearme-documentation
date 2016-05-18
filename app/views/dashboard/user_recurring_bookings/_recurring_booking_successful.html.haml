@@ -1,6 +1,9 @@
-%h2= t('dashboard.user_recurring_bookings.successful_booking')
+%h4.reservation-emphasis
+  Your recurring booking was requested successfully!
 
-= render 'recurring_booking', recurring_booking: @recurring_booking.decorate, booking_class: 'emf'
+.reservation-list.just-booked
+  = render 'recurring_booking', recurring_booking: @recurring_booking.decorate
 
 - unless (@recurring_bookings - [@recurring_booking]).empty?
-  %h2= t('dashboard.user_recurring_bookings.other_recurring_booking', count: (@recurring_bookings - [@recurring_booking]).count)
+  %h4.other-reservation-separator
+    #{pluralize((@recurring_bookings - [@recurring_booking]).count, ' other recurring booking')}

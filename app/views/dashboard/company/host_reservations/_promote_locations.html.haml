@@ -1,29 +1,36 @@
-.promote-location
+.promote-location.text-center
   - if locations.present?
     - locations.each do |location|
       - location.listings.searchable.find_each do |listing|
         - listing = listing.decorate
         %h2 #{listing.name}
-        %p= t('dashboard.host_reservations.no_reservations_promote_reservations')
+        %p
+          = t('dashboard.host_reservations.no_reservations_promote_reservations')
 
-        .share-location
+        .text-center.sharelocation
           %span
-            =link_to tweet_listing_url(listing), ref: "mg", class: 'btn btn-primary twitter submit', :"data-popup" => '{ "width": 600, "height": 440 }' do
-              %span.fa.fa-twitter
-              Twitter
+            =link_to tweet_listing_url(listing), :ref => "mg", :class => 'btn blue twitter submit', :onclick => 'return popitup(this.href)' do
+              %span.ico-twitter.padding="Twitter"
           %span
-            =link_to "https://www.facebook.com/sharer/sharer.php?u=#{listing.show_url}", ref: "mg", class: 'btn btn-primary facebook submit', :"data-popup" => '{ "width": 600, "height": 440 }' do
-              %span.fa.fa-facebook
-              Facebook
+            =link_to "https://www.facebook.com/sharer/sharer.php?u=#{listing.show_url}", :ref => "mg", :class => 'btn blue facebook submit', :onclick => 'return popitup(this.href)' do
+              %span.ico-facebook.padding="Facebook"
           %span
-            =link_to "http://www.linkedin.com/shareArticle?mini=true&url=#{listing.show_url}&title=#{listing.name}&summary=#{listing.description}&source=#{platform_context.instance.name}", ref: "mg", class: 'btn btn-primary linkedin submit', :"data-popup" => '{ "width": 600, "height": 440 }' do
-              %span.fa.fa-linkedin
-              LinkedIn
+            =link_to "http://www.linkedin.com/shareArticle?mini=true&url=#{listing.show_url}&title=#{listing.name}&summary=#{listing.description}&source=#{platform_context.instance.name}", :ref => "mg", :class => 'btn blue linkedin submit', :onclick => 'return popitup(this.href)' do
+              %span.ico-linkedin.padding="LinkedIn"
           %span
-            = link_to listing.show_url, :class => 'btn btn-primary' do
-              %span.fa.fa-link
-              = t('dashboard.host_reservations.direct_link')
+            = link_to listing.show_url, :class => 'btn blue' do
+              %span.ico-link.padding= "#{listing.name} Link"
+
+        %br
+
+      - content_for :script do
+        :javascript
+          function popitup(url) {
+            newwindow=window.open(url,'name','height=440,width=600');
+            if (window.focus) {newwindow.focus()}
+            return false;
+          }
+
   - else
-    %p= t('dashboard.host_reservations.you_havent_added_anything_yet')
-
+    %p You haven't added anything yet!
 

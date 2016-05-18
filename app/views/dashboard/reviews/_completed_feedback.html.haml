@@ -5,9 +5,9 @@
     = hidden_field_tag :rating_system_id, rating_system.id
     .row-fluid.clearfix
       .span8
-        = render 'review_image', order_image: feedback.order_image, review_target_image: feedback.review_target_image(rating_system.subject), feedback: feedback, feedback_type: rating_system.subject
+        = render 'order_image', feedback: feedback
         .review-actions
-          = render 'review_title', review_title: feedback.review_title, review_target_title: feedback.review_target_title(rating_system.subject), feedback: feedback, feedback_type: rating_system.subject
+          = render 'review_title', feedback: feedback
           %p= t('dashboard.reviews.feedback.your_submitted_feedback').upcase
           .wrapper
             .rating.non-editable{'data-score' => feedback.rating}

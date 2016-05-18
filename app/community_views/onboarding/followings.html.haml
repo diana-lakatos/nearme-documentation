@@ -24,7 +24,7 @@
                   %h3.hx
                     = link_to person.decorate.name_with_affiliation, user_path(person)
                   %p= person.properties.about_me rescue ""
-                  %p.location= address_for_user_card(person.current_address)
+                  %p.location= "#{person.current_address.city}, #{person.current_address.state}" rescue ""
           - if @people.blank?
             .cell
               = t('onboarding.no_suggestions_at_this_time')

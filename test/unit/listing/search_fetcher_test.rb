@@ -98,6 +98,45 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
 
     end
 
+    context 'company industries' do
+
+      setup do
+        @internet_industry = FactoryGirl.create(:industry, name: 'Internet')
+        @economics_industry = FactoryGirl.create(:industry, name: 'Economics')
+        @food_industry = FactoryGirl.create(:industry, name: 'Food')
+
+        @internet_food_company = FactoryGirl.build(:company)
+        @internet_food_company.industries = [@internet_industry, @food_industry]
+        @internet_food_company.save!
+        @economics_food_company = FactoryGirl.build(:company)
+        @economics_food_company.industries = [@economics_industry, @food_industry]
+        @economics_food_company.save!
+
+        @location1 = FactoryGirl.create(:location, company: @internet_food_company, location_address: FactoryGirl.build(:address, latitude: 5, longitude: 5))
+        @location2 = FactoryGirl.create(:location, company: @economics_food_company, location_address: FactoryGirl.build(:address, latitude: 5, longitude: 5))
+
+        @listing1 = FactoryGirl.create(:transactable, location: @location1)
+        @listing2 = FactoryGirl.create(:transactable, location: @location2)
+
+      end
+
+      should 'filter by single company industries' do
+        @filters.merge!({industries_ids: [@economics_industry.id]})
+        assert_equal [@listing2], Listing::SearchFetcher.new(@filters, @listing2.transactable_type).listings
+      end
+
+      should 'filter by multiple company industries' do
+        @filters.merge!({industries_ids: [@economics_industry.id, @internet_industry.id]})
+        assert_equal [@listing1, @listing2].sort, Listing::SearchFetcher.new(@filters, @listing1.transactable_type).listings.sort
+      end
+
+      should 'be able to return multiple results for single industry' do
+        @filters.merge!({industries_ids: [@food_industry.id]})
+        assert_equal [@listing1, @listing2].sort, Listing::SearchFetcher.new(@filters, @listing1.transactable_type).listings.sort
+      end
+
+    end
+
   end
 
 end

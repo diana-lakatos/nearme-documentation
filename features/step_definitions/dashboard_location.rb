@@ -8,6 +8,14 @@ Given /^(Location|Listing) with my details should be created$/ do |model|
   end
 end
 
+Given /^#{capture_model} should not be pickable$/ do |model|
+  location = Location.with_deleted.last
+  within('.edit-locations') do
+    page.should_not have_content(location.name, visible: true)
+  end
+  assert_not_nil location.deleted_at
+end
+
 Given /^TransactableType is for bulk upload$/ do
   FactoryGirl.create(:transactable_type_current_data)
 end
@@ -15,13 +23,13 @@ end
 When /^I upload csv file with locations and transactables$/ do
   FactoryGirl.create(:location_type, name: 'My Type')
   Utils::DefaultAlertsCreator::DataUploadCreator.new.notify_uploader_of_finished_import_email!
-  click_link 'Bulk upload'
+  find(:css, 'a.bulk-upload').click
   stub_image_url('http://www.example.com/image1.jpg')
   stub_image_url('http://www.example.com/image2.jpg')
   work_in_modal do
     page.should have_css('#new_data_upload')
     attach_file('data_upload_csv_file', File.join(Rails.root, *%w[test assets data_importer current_data.csv]))
-    click_button 'Import'
+    find('.btn-toolbar input[type=submit]').click
   end
   page.should_not have_css('#new_data_upload')
 end
@@ -60,12 +68,15 @@ When /^I fill (location|listing) form with valid details$/ do |model|
 end
 
 When /^I (disable|enable) (.*) pricing$/ do |action, period|
-  click_link 'Pricing & Availability'
+  page.find("#enable_#{period}").set(action == 'disable' ? false : true)
   if action=='enable'
-    page.execute_script("$(\".transactable_enable_#{period} input\").prop('checked', true)")
-    page.execute_script("$(\".transactable_enable_#{period} input\").trigger('change')")
-    page.find("#transactable_#{period}_price").set(15.50)
+    if page.has_selector?("#listing_#{period}_price")
+      page.find("#listing_#{period}_price").set(15.50)
+    else
+      page.find("#transactable_#{period}_price").set(15.50)
+    end
   end
+
 end
 
 When /^I provide new (location|listing) data$/ do |model|
@@ -108,39 +119,38 @@ When /^I click delete bookable noun link$/ do
 end
 
 Then /^Listing (.*) pricing should be (disabled|enabled)$/ do |period, state|
-  click_link 'Pricing & Availability'
-  enable_period_checkbox = page.find(".transactable_enable_#{period} input")
+  enable_period_checkbox = page.find("#enable_#{period}")
   if state=='enabled'
     assert enable_period_checkbox.checked?
-    assert_equal "15.50", page.find("#transactable_#{period}_price").value
+    if page.has_selector?("#listing_#{period}_price")
+      assert_equal "15.50", page.find("#listing_#{period}_price").value
+    else
+      assert_equal "15.50", page.find("#transactable_#{period}_price").value
+    end
   else
     assert !enable_period_checkbox.checked?
   end
 end
 
-When /^I mark transactable as free$/ do
-  page.execute_script('$("input[data-action-free-booking]").trigger("click")')
-end
-
 Then /^pricing should be free$/ do
-  click_link 'Pricing & Availability'
-  page.find("#transactable_regular_action_free_booking", visible: false).checked?
+  if page.has_selector?("#listing_price_type_free")
+    page.find("#listing_price_type_free").checked?
+  else
+    page.find("#transactable_action_free_booking").checked?
+  end
 end
 
 When /^I select custom availability:$/ do |table|
-  click_link 'Pricing & Availability'
-  first('.transactable_availability_template_id li:last-child').click
+  choose 'availability_rules_custom'
   (0..6).each do |day|
-    page.execute_script("$(\"#transactable_availability_template_attributes_availability_rules_attributes_0_days_#{day}\").prop('checked', false)")
-    page.execute_script("$(\"#transactable_availability_template_attributes_availability_rules_attributes_0_days_#{day}\").trigger('change')")
+    page.find("#transactable_availability_template_attributes_availability_rules_attributes_0_days_#{day}").set(false)
   end
   rules = availability_data_from_table(table)
   rules.each do |rule|
     fill_in "transactable_availability_template_attributes_availability_rules_attributes_0_open_time", with: rule[:open]
     fill_in "transactable_availability_template_attributes_availability_rules_attributes_0_close_time", with: rule[:close]
     rule[:days].each do |day|
-      page.execute_script("$(\"#transactable_availability_template_attributes_availability_rules_attributes_0_days_#{day}\").prop('checked', true)")
-      page.execute_script("$(\"#transactable_availability_template_attributes_availability_rules_attributes_0_days_#{day}\").trigger('change')")
+      page.find("#transactable_availability_template_attributes_availability_rules_attributes_0_days_#{day}").set(true)
     end
   end
 end

@@ -4,17 +4,30 @@ FactoryGirl.define do
     profile_type { InstanceProfileType::DEFAULT }
     instance { PlatformContext.current.instance || FactoryGirl.create(:instance) }
 
-    after(:create) do |ipt|
-      Utils::FormComponentsCreator.new(ipt).create!
-    end
-
     factory :seller_profile_type do
       profile_type { InstanceProfileType::SELLER }
+
+      after(:build) do |instance_profile_type|
+        instance_profile_type.form_components << FactoryGirl.build(:form_component_instance_profile_type_seller, form_componentable: instance_profile_type)
+        instance_profile_type.form_components << FactoryGirl.build(:form_component_seller_registration, form_componentable: instance_profile_type)
+      end
     end
 
     factory :buyer_profile_type do
       profile_type { InstanceProfileType::BUYER }
+
+      after(:build) do |instance_profile_type|
+        instance_profile_type.form_components << FactoryGirl.build(:form_component_instance_profile_type_buyer, form_componentable: instance_profile_type)
+        instance_profile_type.form_components << FactoryGirl.build(:form_component_buyer_registration, form_componentable: instance_profile_type)
+      end
+
     end
 
+    after(:build) do |instance_profile_type|
+      InstanceProfileType.transaction do
+        instance_profile_type.form_components << FactoryGirl.build(:form_component_instance_profile_type, form_componentable: instance_profile_type) if instance_profile_type.form_components.blank?
+        instance_profile_type.form_components << FactoryGirl.build(:form_component_default_registration, form_componentable: instance_profile_type)
+      end
+    end
   end
 end

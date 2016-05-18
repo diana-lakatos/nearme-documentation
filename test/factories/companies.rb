@@ -8,6 +8,7 @@ FactoryGirl.define do
     association :company_address, factory: :address_in_san_francisco
 
     after(:build) do |company|
+      company.industries = [FactoryGirl.build(:industry)] if company.industries.empty?
       company.update_metadata({ completed_at: Time.now })
     end
 

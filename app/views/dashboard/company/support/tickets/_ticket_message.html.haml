@@ -1,18 +1,15 @@
 .message
-  - if ticket_message.user
-    %figure.avatar= image_tag ticket_message.user.avatar_url(:medium)
-  - else
-    %figure.avatar= image_tag('dashboard/avatar/deleted.png')
-
-  %header
-    %span.author
-      = ticket_message.user.try(:name)
-
-    %span.date
-      %time{datetime: ticket_message.created_at}= distance_of_time_in_words_or_date_in_time_zone(ticket_message.created_at, current_user.time_zone)
-
-  .body
-    = ticket_message.message
-
-    .attachments
-      = render partial: 'dashboard/company/support/tickets/attachment', collection: ticket_message.attachments, as: :ticket_message_attachment
+  .row
+    .col-md-1
+      - if ticket_message.user
+        .circular-image= image_tag ticket_message.user.avatar_url(:medium)
+    .col-md-11.content
+      %p.message-title
+        = ticket_message.user.try(:name)
+        %span
+          %abbr.timeago{:title => "#{ticket_message.created_at.to_time.iso8601}"}
+            = ticket_message.created_at
+      %p
+        =simple_format(ticket_message.message)
+        .attachments.clearfix
+          = render partial: 'dashboard/company/support/tickets/attachment', collection: ticket_message.attachments, as: :ticket_message_attachment

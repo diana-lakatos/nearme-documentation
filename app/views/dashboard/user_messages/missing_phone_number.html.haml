@@ -6,7 +6,7 @@
   = dashboard_simple_form_for current_user, url: mobile_number_user_path(current_user), data: { modal: true } do |f|
 
     .dialog__body
-      = render 'registrations/attributes/mobile_number', f: f
+      = render 'dashboard/user_messages/mobile_number', f: f
       = hidden_field_tag :return_path, @return_path
 
     .dialog__actions

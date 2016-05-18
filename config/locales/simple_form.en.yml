@@ -219,6 +219,7 @@ en:
 
       companies:
         name: 'Company name'
+        industries: 'Industries'
         description: 'Description'
         mailing_address: 'Mailing address'
         url: 'Website'
@@ -231,6 +232,7 @@ en:
           address: 'Company Address'
       company:
         name: 'Company name'
+        industries: 'Industries'
         description: 'Description'
         mailing_address: 'Mailing address'
         url: 'Website'
@@ -329,6 +331,7 @@ en:
         accept_emails: 'Accept emails'
         click_to_call: 'Enable Click to Call'
         public_profile: "Public profile"
+        industries: "Industries"
         email: "Email"
         country_name: "Country"
         phone: "Phone number"
@@ -494,6 +497,10 @@ en:
         email: 'e.g. name@company.com'
 
     prompts:
+      companies:
+        industries: 'Select one or more'
+      company:
+        industries: 'Select one or more'
       location:
         administrator: 'Default'
 

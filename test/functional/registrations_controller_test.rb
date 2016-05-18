@@ -38,7 +38,17 @@ class RegistrationsControllerTest < ActionController::TestCase
       end
 
     end
-    
+
+    should 'successfully update' do
+      sign_in @user
+      @industry = FactoryGirl.create(:industry)
+      @industry2 = FactoryGirl.create(:industry)
+      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).once
+      put :update, :id => @user, user: { :industry_ids => [@industry.id, @industry2.id] }
+      @user.reload
+      assert_equal [@industry.id, @industry2.id].sort, @user.industries.collect(&:id).sort
+    end
+
     should 'show profile' do
       sign_in @user
 

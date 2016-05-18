@@ -13,7 +13,7 @@ class InstanceAdmin::Reports::BaseController < InstanceAdmin::BaseController
   def download_report
     @scope_search_form = @search_form.new
     @scope_search_form.validate(params)
-    @resources = SearchService.new(@scope_class.order(created_at: 'ASC')).search(@scope_search_form.to_search_params)
+    @resources = SearchService.new(@scope_class.order('created_at ASC')).search(@scope_search_form.to_search_params)
     @scope_type = @scope_type_class.find_by_id(params[:item_type_id])
 
     csv = export_data_to_csv_for(@resources)

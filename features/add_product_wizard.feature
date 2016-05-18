@@ -4,7 +4,8 @@ Feature: A user can add a product
   As a user
   I want to be able to step through an 'Add Product' wizard
   Background:
-    Given a product_type exists with name: "Sock"
+    Given a wizard_product_type exists with name: "Sock"
+    And a form component product wizard exists with form_componentable: the wizard_product_type
     And current instance with integrated shipping
     And a state exists
     And a country_nz exists

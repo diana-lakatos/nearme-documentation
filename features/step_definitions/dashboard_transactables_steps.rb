@@ -1,7 +1,3 @@
-Given(/^instance has default availability templates$/) do
-  PlatformContext.current.instance.tap { |i| i.build_availability_templates }.save!
-end
-
 Given(/^I am browsing transactables$/) do
   visit dashboard_company_transactable_type_transactables_path(TransactableType.first)
 end
@@ -15,34 +11,30 @@ Given(/^I am adding new transactable$/) do
 end
 
 Given(/^I add a new transactable$/) do
-  find(:css, '.additional-listing-options a:last-child').click
+  find(:css, 'a.new-transactable-btn ').click
 end
 
 Given(/^I add a new location$/) do
-  within('[data-location-actions]') do
-    click_link 'Add New Location'
-  end
+  find(:css, '.add-new a').click
 end
 
 Given(/^I edit first location$/) do
-  within('[data-location-actions]') do
-    click_link 'Edit'
-  end
+  all(:css, '#location-list .location-options > a:first-child').first.click
+  page.should have_css('#location-form')
 end
 
 Given(/^I remove all locations$/) do
-  within('[data-location-actions]') do
-    click_link 'Remove'
+  all(:css, '#location-list .location-options > a:last-child').each do |remove_location|
+    remove_location.click
   end
 end
 
 Given(/^I edit first transactable$/) do
-  all(:css, '.table-listing tr:last-child td:last-child a').last.click
+  all(:css, '.listings div:last-child > a:first-child').last.click
 end
 
 Given(/^I remove first transactable$/) do
-  all(:css, '.table-listing tr:last-child td:last-child a').last.click
-  click_link 'Delete'
+  first(:css, '.listings div:last-child > a:last-child').click
 end
 
 Given(/^transactable type has multiple booking types enabled$/) do
@@ -50,9 +42,7 @@ Given(/^transactable type has multiple booking types enabled$/) do
 end
 
 Given(/^I click on overnight booking tab$/) do
-  click_link 'Pricing & Availability'
-  page.execute_script("$('#define-day-fixed').prop('checked', true)")
-  click_link 'Details'
+  first(:css, "ul[data-booking-type-list] a[data-booking-type=\"overnight\"]").click
 end
 
 Then(/^transactables booking type is overnight$/) do

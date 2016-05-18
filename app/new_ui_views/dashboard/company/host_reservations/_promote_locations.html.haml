@@ -1,0 +1,29 @@
+.promote-location
+  - if locations.present?
+    - locations.each do |location|
+      - location.listings.searchable.find_each do |listing|
+        - listing = listing.decorate
+        %h2 #{listing.name}
+        %p= t('dashboard.host_reservations.no_reservations_promote_reservations')
+
+        .share-location
+          %span
+            =link_to tweet_listing_url(listing), ref: "mg", class: 'btn btn-primary twitter submit', :"data-popup" => '{ "width": 600, "height": 440 }' do
+              %span.fa.fa-twitter
+              Twitter
+          %span
+            =link_to "https://www.facebook.com/sharer/sharer.php?u=#{listing.show_url}", ref: "mg", class: 'btn btn-primary facebook submit', :"data-popup" => '{ "width": 600, "height": 440 }' do
+              %span.fa.fa-facebook
+              Facebook
+          %span
+            =link_to "http://www.linkedin.com/shareArticle?mini=true&url=#{listing.show_url}&title=#{listing.name}&summary=#{listing.description}&source=#{platform_context.instance.name}", ref: "mg", class: 'btn btn-primary linkedin submit', :"data-popup" => '{ "width": 600, "height": 440 }' do
+              %span.fa.fa-linkedin
+              LinkedIn
+          %span
+            = link_to listing.show_url, :class => 'btn btn-primary' do
+              %span.fa.fa-link
+              = t('dashboard.host_reservations.direct_link')
+  - else
+    %p= t('dashboard.host_reservations.you_havent_added_anything_yet')
+
+

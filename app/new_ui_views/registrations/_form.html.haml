@@ -1,0 +1,16 @@
+= dashboard_simple_form_for resource, :as => resource_name, :url => url, :html => { class: "form-expandable", :"data-includes-address-field" => true } do |f|
+
+  .panel
+    .panel-body
+
+      - @form_components.each do |form_component|
+
+        - form_component.form_fields.each do |form_field|
+          - model = form_field.keys.first
+          - field = form_field[model]
+          - if model == 'user'
+            = render :partial => 'registrations/new_attributes', :locals => { f: f, only_inputs: [field.to_sym], country: @country }
+
+  .panel.form-actions
+    .panel-body
+      = f.submit t('general.save')

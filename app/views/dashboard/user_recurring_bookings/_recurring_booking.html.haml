@@ -1,99 +1,79 @@
-%article.order{id: dom_id(recurring_booking)}
-  %header
+.order{id: dom_id(recurring_booking)}
+  .order-head
     .row
-      .col-sm-7
-        %h2
-          - if recurring_booking.listing.present? && !recurring_booking.listing.deleted?
-            = link_to recurring_booking.listing.try(:name), recurring_booking.listing.decorate.show_path
-          - else
-            = "#{recurring_booking.listing.try(:name)} [#{t('dashboard.user_recurring_bookings.listing_deleted')}]"
-
-      .col-sm-5
-        .order-status
-          %span{class: recurring_booking.state }
-            = recurring_booking.state.humanize.capitalize
-
-  - if recurring_booking.unconfirmed?
-    .alert.alert-warning= recurring_booking.my_booking_status_info_new
-
-  - if recurring_booking.rejected? && recurring_booking.rejection_reason.present?
-    .alert.alert-warning
-      = "#{t('dashboard.user_recurring_bookings.rejection_reason')}: #{recurring_booking.rejection_reason}"
-
-
-  .row
-    .col-md-3
-      - if recurring_booking.listing.present?
-        %h3= t('dashboard.user_recurring_bookings.address')
-
-        %p
-          = recurring_booking.listing.location.address.gsub(', ', '<br>').html_safe
-          %br/
-          [
-          = link_to t('dashboard.user_recurring_bookings.show_on_map'), "http://maps.apple.com/?q=#{recurring_booking.listing.location.address}", target: '_blank'
-          ]
-      - else
-        %h3= t('dashboard.user_reservations.listing_deleted')
-
-    .col-sm-2
-      %h3= t('dashboard.user_recurring_bookings.quantity')
-      %p= recurring_booking.quantity
-
-    .col-md-3
-      %h3= t('dashboard.user_recurring_bookings.starts_from')
-      %p= l recurring_booking.start_on, format: :short
-
-    - if recurring_booking.next_charge_date
       .col-md-3
-        %h3= t('dashboard.user_recurring_bookings.next_payment_at')
-        %p= l recurring_booking.next_charge_date, format: :short
+        %p= t('dashboard.user_recurring_bookings.placed')
+        %p= l recurring_booking.created_at.to_date, format: :long
 
-    .col-md-1
-      %h3= t("dashboard.user_recurring_bookings.#{recurring_booking.interval}_price")
-      %p
-        %b= recurring_booking.subtotal_price_for_guest
+      .col-md-3
+        %p= t('dashboard.user_recurring_bookings.starts_from')
+        %p= l recurring_booking.start_on, format: :short
 
+      .col-md-3
+        %p= t("dashboard.user_recurring_bookings.#{recurring_booking.interval}_price")
+        %p= recurring_booking.subtotal_price_for_guest
 
+      - if recurring_booking.next_charge_date
+        .col-md-3
+          %p= t('dashboard.user_recurring_bookings.next_payment_at')
+          %p= l recurring_booking.next_charge_date, format: :short
 
-  - if recurring_booking.guest_notes.present?
-    %h3= t('dashboard.user_recurring_bookings.user_note')
-    %blockquote= recurring_booking.guest_notes
+  .order-body
+    .order-status
+      %h3= recurring_booking.state.humanize.capitalize
+      - if recurring_booking.unconfirmed?
+        %p= recurring_booking.my_booking_status_info_new
 
+    .row
+      .order-item
+        .col-md-8
+          .row
+            %h4 Subscription
 
-  .row
-    .col-sm-9.col-sm-push-3
-      .order-actions
-        - if !recurring_booking.archived? and current_user == recurring_booking.owner
-          %span= link_to t('dashboard.user_reservations.update_credit_card'), edit_dashboard_user_recurring_booking_payment_subscription_path(recurring_booking, recurring_booking.payment_subscription), class: "btn btn-warning", data: { modal: "true"}
-          - if recurring_booking.overdued?
-            .cc-error= t('dashboard.user_reservations.must_change_credit_card')
-          - else
-            = form_for recurring_booking, method: :post, url: user_cancel_dashboard_user_recurring_booking_path(recurring_booking) do |f|
-              = f.submit I18n.t('general.cancel'), data: { confirm: t('dashboard.user_recurring_bookings.cancel_confirmation') }, class: 'btn btn-warning'
+          - if recurring_booking.rejected? && recurring_booking.rejection_reason.present?
+            .row
+              .inline
+                %p= "#{t('dashboard.user_recurring_bookings.rejection_reason')}: #{recurring_booking.rejection_reason}"
 
-    .col-sm-3.col-sm-pull-9
-      %small= t('dashboard.user_recurring_bookings.booking_placed_html', date: l(recurring_booking.created_at.to_date, format: :long))
+          .row
+            .inline
+              - if recurring_booking.listing.present? && !recurring_booking.listing.deleted?
+                = link_to recurring_booking.listing.try(:name), recurring_booking.listing.decorate.show_path
+                %br
+                %span.address
+                  = link_to recurring_booking.listing.location.address,
+                      "http://maps.apple.com/?q=#{recurring_booking.listing.location.address}", target: '_blank'
+              - else
+                = "#{recurring_booking.listing.try(:name)} [listing deleted]"
+              %p QTY: #{recurring_booking.quantity}
+              - if recurring_booking.guest_notes.present?
+                %p= "#{t('dashboard.user_recurring_bookings.user_note')} #{recurring_booking.guest_notes}"
 
-  - if recurring_booking.recurring_booking_periods.present?
-    %h3= t('dashboard.user_recurring_bookings.periods.title')
+        .col-md-4.order-actions
+          =# link_to 'See details', dashboard_user_recurring_booking_path(recurring_booking), class: 'btn blue full'
+          - unless recurring_booking.archived?
+            - if current_user == recurring_booking.owner
+              = render 'dashboard/user_recurring_bookings/user_actions', recurring_booking: recurring_booking
 
-    %table.table
-      %thead
-        %tr
-          %th= t('dashboard.user_recurring_bookings.periods.start_end')
-          %th= t('dashboard.user_recurring_bookings.periods.total_amount')
-          %th= t('dashboard.user_recurring_bookings.periods.payment_state')
-          %th= t('dashboard.user_recurring_bookings.periods.paid_at')
-      %tbody
-        - recurring_booking.recurring_booking_periods.each do |period|
-          %tr
-            %td= "#{I18n.l(period.period_start_date, format: :short)} - #{I18n.l(period.period_end_date, format: :short)}"
-            %td= humanized_money_with_cents_and_symbol(current_user == recurring_booking.host ? period.total_amount - period.service_fee_amount_guest : period.total_amount)
-            %td
-              %span{class: period.payment.try(:state) }
-                = t("dashboard.user_recurring_bookings.states.#{period.payment.try(:state)}")
+      .order-item
+        .col-md-12
+          .row
+            %h4= link_to "Periods", "#", data: { :'toggle-periods' => true }
+          .content{ style: 'display: none;', data: { :'toggleable-periods' => true } }
+            .row
+              .col-md-6
+                Start - End
 
-
-            %td
-              = "#{I18n.l(period.paid_at, format: :short)}" if period.paid_at?
+              .col-md-3
+                Total Amount
+              .col-md-3
+                Paid at
+            - recurring_booking.recurring_booking_periods.each do |period|
+              .row
+                .col-md-6
+                  = "#{I18n.l(period.period_start_date, format: :short)} - #{I18n.l(period.period_end_date, format: :short)}"
+                .col-md-3
+                  = humanized_money_with_cents_and_symbol(current_user == recurring_booking.host ? period.total_amount - period.service_fee_amount_guest : period.total_amount)
+                .col-md-3
+                  = "#{I18n.l(period.paid_at, format: :short)}" if period.paid_at?
 

@@ -6,6 +6,9 @@ Feature: A user can edit their settings
   Background:
     Given a user exists
     And I am logged in as the user
+    And a industry exists with name: "Computer Science"
+    And a industry exists with name: "IT"
+    And a industry exists with name: "Telecommunication"
     And a transactable_type_listing exists with name: "Listing"
 
   Scenario: A user can successfully edit his settings
@@ -20,6 +23,12 @@ Feature: A user can edit their settings
     When I press "Save"
     Then I should see "You have updated your account successfully."
     And a user should exist with email: "new@email.com"
+
+  Scenario: A user can select industries for self
+    Given a company exists with creator: the user
+    And I go to the account settings page
+    When I select industries for the user
+    Then the user should be connected to selected industries
 
   Scenario: A user should not be allowed to provide invalid settings
     Given I go to the account settings page

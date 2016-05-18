@@ -7,6 +7,7 @@
 - if only_inputs.empty? || only_inputs.include?(:address)
   = f.simple_fields_for :company_address, (f.object.company_address.presence || f.object.build_company_address) do |address_form|
     = render :partial => 'space_wizard/address', :locals => { :f => address_form, label: 'Company Address' }
+= f.association :industries, :blank => false, :input_html => { 'data-placeholder' => t('simple_form.prompts.company.industries'), :class => 'selectpicker' }, :required => true if (platform_context.instance.has_industries? && (only_inputs.empty? || only_inputs.include?(:industries)))
 = f.input :url if (only_inputs.empty? || only_inputs.include?(:url))
 = f.input :email if (only_inputs.empty? || only_inputs.include?(:email))
 = f.input :description, :as => :limited_text, :limit => 250, :input_html => { :maxlength => 250} if (only_inputs.empty? || only_inputs.include?(:description))

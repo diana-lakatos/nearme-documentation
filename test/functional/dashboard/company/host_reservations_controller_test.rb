@@ -21,11 +21,11 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       get :index
       assert_response :success
       assert_select ".order", 1
-      assert_select ".order .total-units p:last-child", "1 day"
+      assert_select ".order .order-item .inline p:last-child", "1 day"
       @related_listing.update!({booking_type: 'overnight'})
       get :index
       assert_response :success
-      assert_select ".order .total-units p:last-child", "1 night"
+      assert_select ".order .order-item .inline p:last-child", "1 night"
     end
 
     should 'show related listings when no related guests' do
@@ -44,6 +44,22 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       assert_response :success
       assert_select ".order", 0
     end
+
+    should 'show tweet links if no reservation' do
+      get :index
+      assert_response :success
+      assert_select ".sharelocation", 1
+      assert_select ".sharelocation > span", 4
+    end
+
+    should 'not show tweet links if there is reservation' do
+      FactoryGirl.create(:reservation, owner: @user, listing: @related_listing)
+      get :index
+      assert_response :success
+      assert_select ".sharelocation", 0
+    end
+
+
 
     should 'show reservation properly in correct time zones' do
       @user.update_attribute(:time_zone, 'Hawaii')
@@ -158,7 +174,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       should 'set rejection reason' do
         Reservation.any_instance.expects(:schedule_void).once
         put :reject, { id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
-        assert_equal 'Dont like him', @reservation.reload.rejection_reason
+        assert_equal @reservation.reload.rejection_reason, 'Dont like him'
       end
     end
 

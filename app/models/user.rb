@@ -82,6 +82,7 @@ class User < ActiveRecord::Base
   has_many :followed_users, through: :relationships, source: :followed
   has_many :followers, through: :reverse_relationships, source: :follower
   has_many :instance_clients, as: :client, dependent: :destroy
+  has_many :industries, through: :user_industries
   has_many :payments, foreign_key: 'payer_id'
   has_many :instance_admins, foreign_key: 'user_id', dependent: :destroy
   has_many :listings, through: :locations, class_name: 'Transactable', inverse_of: :creator
@@ -112,6 +113,7 @@ class User < ActiveRecord::Base
   has_many :shipping_categories, class_name: 'Spree::ShippingCategory'
   has_many :ticket_message_attachments, foreign_key: 'uploader_id', class_name: 'Support::TicketMessageAttachment'
   has_many :tickets, -> { order 'updated_at DESC' }, class_name: 'Support::Ticket'
+  has_many :user_industries, dependent: :destroy
   has_many :user_bans
   has_many :user_status_updates, class_name: 'UserStatusUpdate'
   has_many :wish_lists, dependent: :destroy
@@ -1073,10 +1075,6 @@ class User < ActiveRecord::Base
     unless has_verified_number?
       errors.add(:mobile_number, I18n.t('errors.messages.not_verified_phone'))
     end
-  end
-
-  def required?(attribute)
-    RequiredFieldChecker.new(self, attribute).required?
   end
 
 private

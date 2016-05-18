@@ -1,22 +1,23 @@
+- params[:search_type] = params[:search_type].present? && %w(people projects topics) ? params[:search_type] : 'projects'
 .wrap-a.reduce-top
   .contain
     / tabs
     %nav.tabs-a.trio.search-types
       %ul
-        %li{ class: active_class(@search_type, 'people', 'is-active')}
+        %li{ class: active_class(params[:search_type], 'people', 'is-active')}
           = link_to t(:people), search_url(search_type: :people), data: { search_type: 'people'}
-        %li{ class: active_class(@search_type, 'projects', 'is-active')}
+        %li{ class: active_class(params[:search_type], 'projects', 'is-active')}
           = link_to t(:projects), search_url(search_type: :projects), data: { search_type: 'projects'}
-        %li{ class: active_class(@search_type, 'topics', 'is-active')}
+        %li{ class: active_class(params[:search_type], 'topics', 'is-active')}
           = link_to t(:topics), search_url(search_type: :topics), data: { search_type: 'topics'}
     / white box
     .box-a
       .search-container
         / filters
-        = render "search/filters/#{@search_type}"
+        = render "search/filters/#{params[:search_type]}"
         .grid-a-search-a
           .wrap.search-results
-            = render @search_type
+            = render "#{params[:search_type]}"
         / more
       .pagination-more-a
         - if @searcher.results.next_page

@@ -5,8 +5,7 @@ class InstanceAdmin::Manage::ServiceTypes::FormComponentsControllerTest < Action
   setup do
     @instance = FactoryGirl.create(:instance)
     PlatformContext.current = PlatformContext.new(@instance)
-    @service_type = FactoryGirl.build(:transactable_type_csv_template)
-    @service_type.save!
+    @service_type = FactoryGirl.create(:transactable_type_csv_template)
     FactoryGirl.create(:location_type, name: 'My Type') unless LocationType.where(name: 'My Type').count > 0
     @user = FactoryGirl.create(:user)
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)

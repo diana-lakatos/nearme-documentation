@@ -1,14 +1,21 @@
-- title(params[:controller].include?('received') ? t('orders.title.orders_received') : t('orders.title.my_orders'))
+- title t('orders.index.title')
 
-- content_for :page_header do
-  %h1= yield :title
+.dash-head.clearfix
+  - if params[:controller].include?('received')
+    %p ORDERS RECEIVED
+  - else
+    %p MY ORDERS
 
-.panel
-  .panel-body
-    - if @orders.empty?
-      %p.empty-resultset= t 'orders.empty_list'
-    - else
-      .orders-a
-        = render partial: 'dashboard/orders/order', collection: @orders
+.dash-body
+  - if @orders.any?
+    = render partial: 'dashboard/orders/order', collection: @orders
+  - else
+    .dash-body-container
+      = image_tag 'dashboard/exclamation.png'
+      %p.inline= t 'orders.empty_list'
 
-= will_paginate_dashboard(@orders)
+- unless @orders.empty?
+  .row-fluid
+    .col-md-12
+      = will_paginate_styled(@orders)
+

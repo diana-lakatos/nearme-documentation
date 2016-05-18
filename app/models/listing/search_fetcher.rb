@@ -29,6 +29,7 @@ class Listing::SearchFetcher
     @locations_scope = @locations_scope.includes(:location_address).near(@midpoint, @radius, :order => "#{Address.order_by_distance_sql(@midpoint[0], @midpoint[1])} ASC") if @midpoint.present? && @radius.present? && !@bounding_box.present?
     @locations_scope = @locations_scope.includes(:location_address).bounding_box(@bounding_box, @midpoint) if @bounding_box.present?
     @locations_scope = @locations_scope.filtered_by_location_types_ids(@filters[:location_types_ids]) if @filters[:location_types_ids]
+    @locations_scope = @locations_scope.filtered_by_industries_ids(@filters[:industries_ids]) if @filters[:industries_ids]
     @locations_scope = @locations_scope.order(Location.build_order(@filters.except(:price))) if Location.can_order_by?(@filters.except(:price))
     @locations_scope
   end

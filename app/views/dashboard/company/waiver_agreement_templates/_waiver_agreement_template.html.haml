@@ -1,13 +1,7 @@
-%article.waiver-agreement{:data => {:template_id => waiver_agreement_template.id} }
-  %header
-    .row
-      .col-sm-8
-        %h3= waiver_agreement_template.name
-      .col-sm-4
-        .actions
-          = link_to t('dashboard.waiver_agreements.actions.edit'), edit_dashboard_company_waiver_agreement_template_path(waiver_agreement_template), data: { modal: true }, class: 'btn btn-primary btn-sm'
-          = link_to t('dashboard.waiver_agreements.actions.delete'), dashboard_company_waiver_agreement_template_path(waiver_agreement_template), :method => :delete, data: { confirm: t('dashboard.waiver_agreements.confirm_delete', name: waiver_agreement_template.name) }, class: 'btn btn-warning btn-sm'
+%tr{:data => {:template_id => waiver_agreement_template.id} }
+  %td= waiver_agreement_template.name
+  %td
+    = link_to "Edit", '#', data: { modal: true, href: edit_dashboard_company_waiver_agreement_template_path(waiver_agreement_template) }
+    = link_to 'Delete', dashboard_company_waiver_agreement_template_path(waiver_agreement_template), :method => :delete,
+        data: { confirm: 'Are you sure?' }
 
-
-  .content
-    = waiver_agreement_template.content

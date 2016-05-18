@@ -1,0 +1,26 @@
+%tr
+  -#
+    %td.hidden-sm.hidden-xs
+      .checkbox-standalone
+        = check_box_tag "listing_item_#{transactable.id}".to_sym
+        = label_tag "listing_item_#{transactable.id}".to_sym
+  %td.thumb
+    = link_to transactable.decorate.show_path, class: 'hidden-xs' do
+      = image_tag(transactable.photos.first.try(:image_url, :medium))
+
+    = link_to edit_dashboard_company_transactable_type_transactable_path(@transactable_type, transactable), class: 'visible-xs' do
+      = image_tag(transactable.photos.first.try(:image_url, :medium))
+  %td.name
+    = link_to transactable.name, transactable.decorate.show_path, class: 'hidden-xs'
+
+    = link_to transactable.name, edit_dashboard_company_transactable_type_transactable_path(@transactable_type, transactable), class: 'visible-xs'
+
+
+  %td.location.hidden-sm.hidden-xs
+    = @transactable_type.skip_location? ? transactable.quantity : transactable.location.try(&:name)
+  %td.price.hidden-sm.hidden-xs
+    = transactable.decorate.lowest_price_with_currency || t('dashboard.transactables.pricing.free')
+  %td.added.hidden-sm.hidden-xs
+    = transactable.decorate.listing_date
+  %td.actions.hidden-sm.hidden-xs
+    = link_to t('general.edit'), edit_dashboard_company_transactable_type_transactable_path(@transactable_type, transactable)

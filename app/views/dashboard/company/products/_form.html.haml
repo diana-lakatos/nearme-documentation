@@ -1,22 +1,18 @@
-- url = (@product_form.product.persisted? && @product_form.product.slug.present?) ? dashboard_company_product_type_product_path(@product_type, @product_form.product) : dashboard_company_product_type_products_path(@product_type)
+= simple_form_for @product_form, wrapper: :bs3, url: (@product_form.product.persisted? && @product_form.product.slug.present?) ? dashboard_company_product_type_product_path(@product_type, @product_form.product) : dashboard_company_product_type_products_path(@product_type), html: {id: "product_form", multipart: true,  method: @product_form.product.persisted? && @product_form.product.slug.present? ? :put : :post, data: { new_record: @product_form.product.new_record?, :"dimensions-template" => DimensionsTemplate::UNITS_OF_MEASURE.to_json } } do |f|
+  = f.simple_fields_for :extra_properties, f.object.extra_properties do |properties_form|
+    = f.input :id, as: :hidden if f.object.product.persisted?
+    - @form_components.each do |form_component|
+      - data_hash ||= nil
+      - if form_component.form_fields.include?({ 'product' => 'shipping_info' })
+        - data_hash = { 'js-element-identifier' => 'initial_shipping_profiles_section' }
+      %section.list{ data: data_hash }
+        - form_component.form_fields.each do |form_field|
+          - model = form_field.keys.first
+          - field = form_field[model]
+          - if model == 'product'
+            = render 'forms/product_form', f: f, properties_form: properties_form, only_inputs: [ field.to_sym ], form_fields: form_component.form_fields
 
-= dashboard_simple_form_for @product_form, url: url, html: { id: "product_form", multipart: true,  method: @product_form.product.persisted? && @product_form.product.slug.present? ? :put : :post, data: { new_record: @product_form.product.new_record? } } do |f|
-
-  = render "dashboard/company/products/errors", f: f
-
-  .panel
-    .panel-body
-      = f.simple_fields_for :extra_properties, f.object.extra_properties do |properties_form|
-
-        = f.input :id, as: :hidden if f.object.product.persisted?
-
-        - @form_components.each do |form_component|
-          - form_component.form_fields.each do |form_field|
-            - model = form_field.keys.first
-            - field = form_field[model]
-            - if model == 'product'
-              = render 'dashboard/company/products/form_fields', f: f, properties_form: properties_form, only_inputs: [ field.to_sym ], form_fields: form_component.form_fields
-
-  .panel.form-actions
-    .panel-body
-      = f.button :submit, t('dashboard.products.save')
+  .submit-bar
+    = link_to dashboard_company_product_type_products_path(@product_type) do
+      .btn.gray= t('cancel')
+    = f.submit "Save item", class: "btn medium blue"

@@ -1,19 +1,15 @@
 - title t('dashboard.nav.notification_preferences')
 
-- content_for :page_header do
-  %h1= yield :title
-
-= dashboard_simple_form_for @user, url: dashboard_notification_preferences_path, method: :put, html: { multipart: true, id: 'edit_notification_preferences', data: { :"notification-preferences" => true } } do |f|
-  .panel
-    .panel-body
+.dash-page
+  .dash-head.clearfix
+    %p= t('dashboard.nav.notification_preferences')
+  .dash-body
+    = simple_form_for @user, url: dashboard_notification_preferences_path, wrapper: :bs3, method: :put, html: { multipart: true, id: 'edit_notification_preferences' } do |f|
       - if HiddenUiControls.find('dashboard/notification_preferences/emails').visible?
-        = f.input :accept_emails, as: :switch
+        = f.input :accept_emails, as: :bootstrap_switch
       - if HiddenUiControls.find('dashboard/notification_preferences/sms').visible?
-        = f.input :sms_notifications_enabled, as: :switch
+        = f.input :sms_notifications_enabled, as: :bootstrap_switch
 
-
-  .panel.form-actions
-    .panel-body
-      = f.submit t('general.save')
-
+      .submit-bar
+        = f.submit "Save", class: "btn medium blue"
 

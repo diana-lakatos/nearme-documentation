@@ -21,7 +21,7 @@ class Listings::SocialShareController < ApplicationController
       tweet_body = "#{t('location.social_share.twitter', instance_name: @listing.instance.name)}: #{@listing.decorate.show_url}"
       "https://twitter.com/intent/tweet?text=#{URI::escape(tweet_body)}"
     when 'linkedin'
-      "http://www.linkedin.com/shareArticle?mini=true&url=#{@listing.decorate.show_url}&title=#{URI::escape(@listing.name.to_s)}&summary=#{URI::escape(@listing.description.to_s)}&source=#{URI::escape(@listing.instance.name)}"
+      "http://www.linkedin.com/shareArticle?mini=true&url=#{@listing.decorate.show_url}&title=#{URI::escape(@listing.name )}&summary=#{URI::escape(@listing.description)}&source=#{URI::escape(@listing.instance.name)}"
     else
       @listing.decorate.show_path
     end

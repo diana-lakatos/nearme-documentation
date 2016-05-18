@@ -40,7 +40,6 @@ class PlatformContext
   end
 
   def self.after_setting_current_callback(platform_context)
-    return unless platform_context.instance
     ActiveRecord::Base.establish_connection(platform_context.instance.db_connection_string) if platform_context.instance.db_connection_string.present?
     I18N_DNM_BACKEND.set_instance(platform_context.instance) if defined? I18N_DNM_BACKEND
     I18n.locale = platform_context.instance.primary_locale
@@ -175,8 +174,8 @@ class PlatformContext
   def initialize_with_instance(instance)
     @instance = instance
     @platform_context_detail = @instance
-    @theme = @instance.try(:theme)
-    @domain ||= @instance.try(:default_domain)
+    @theme = @instance.theme
+    @domain ||= @instance.default_domain
     self
   end
 

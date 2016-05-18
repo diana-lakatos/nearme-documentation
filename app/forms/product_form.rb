@@ -62,8 +62,8 @@ class ProductForm < Form
   end
 
   def shipping_category_id=(id)
-    shipping_category = @company.shipping_categories.where(id: id).first
-    shipping_category = Spree::ShippingCategory.where(user_id: @company.creator_id, id: id).first if shipping_category.blank?
+    shipping_category = @company.shipping_categories.where(:id => id).first
+    shipping_category = Spree::ShippingCategory.where(:user_id => @company.creator_id, :id => id).first if shipping_category.blank?
 
     if shipping_category.present?
       @product.shipping_category = shipping_category

@@ -113,12 +113,6 @@ class Project < ActiveRecord::Base
     affected_objects = [user] + self.topics
     ActivityFeedService.create_event(event, self, affected_objects, self)
   end
-  after_update :user_created_project_event_on_publish
-  def user_created_project_event_on_publish
-    if draft_at_changed?
-      user_created_project_event
-    end
-  end
 
   def to_liquid
     @project_drop ||= ProjectDrop.new(self)

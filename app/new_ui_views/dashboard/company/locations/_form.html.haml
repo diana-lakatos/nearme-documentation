@@ -1,0 +1,26 @@
+%header.dialog__header
+  %h2#dialog__title
+    - if @location.new_record?
+      = t('locations.add_new_location')
+    - else
+      = t('locations.edit_location')
+
+= dashboard_simple_form_for([:dashboard, :company, @location], html: { :"data-modal" => true, :"data-includes-address-field" => true, :'data-add-edit-location-form' => true } ) do |f|
+  .dialog__body
+
+    = render 'dashboard/shared/flash'
+
+    %input{name: 'with_deleted_link', type: 'hidden', value: params[:with_deleted_link]}
+    - current_instance.form_components.where(form_type: FormComponent::LOCATION_ATTRIBUTES).rank(:rank).each do |form_component|
+      - form_component.form_fields.each do |form_field|
+        - model = form_field.keys.first
+        - field = form_field[model]
+        - if model == 'location'
+          = render :partial => 'location_form', :locals => { :f => f, :location => @location, only_inputs: [field.to_sym] }
+
+  .dialog__actions
+    = f.submit t('locations.save_location')
+
+:javascript
+  $(document).trigger('init:limiter.nearme', ['[data-add-edit-location-form] [data-counter-limit]']);
+  $(document).trigger('init:unavailability.nearme');

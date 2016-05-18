@@ -6,11 +6,11 @@
 
 {% if merchant_account.permissions_granted %}
   {% if merchant_account.chain_payment_set? %}
-    <p><a class="btn btn-warning" href="/dashboard/company/merchant_accounts/{{ merchant_account.id}}/paypal_agreements/{{ merchant_account.id }}" data-method="delete" data-confirm="{{ 'payouts.revoke_permission_confirmation' | translate }}">{{ 'payouts.revoke_permission' | translate }}</a></p>
+    <p><a class="btn btn-warning" href="/dashboard/company/paypal_agreements/{{ merchant_account.id }}" data-method="delete" data-confirm="{{ 'payouts.revoke_permission_confirmation' | translate }}">{{ 'payouts.revoke_permission' | translate }}</a></p>
   {% else %}
     <div class="well">{{ 'payouts.grant_permission_info' | translate }}</div>
     <p>
-      <a class="btn btn-primary" href="/dashboard/company/merchant_accounts/{{ merchant_account.id}}/paypal_agreements/new">{{ 'payouts.grant_permission' | translate }}</a>
+      <a class="btn btn-primary" href="/dashboard/company/paypal_agreements/new">{{ 'payouts.grant_permission' | translate }}</a>
     </p>
   {% endif %}
 {% else %}

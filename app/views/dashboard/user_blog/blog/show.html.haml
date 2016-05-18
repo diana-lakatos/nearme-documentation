@@ -1,35 +1,43 @@
 - title t('user_blog.titles.index')
 
-- content_for :page_header do
-  %h1= yield :title
+.dash-head.clearfix
+  %p= t 'user_blog.nav.index'
 
-  .options
-    = link_to t('user_blog.buttons.visit_blog_html'), user_blog_posts_list_path(current_user), rel: 'external', class: 'hidden-xs'
+  = link_to new_dashboard_blog_post_path, class: 'dash-head-btn' do
+    .btn.blue{class: @blog.enabled? ? '' : 'disabled'}
+      = t 'user_blog.buttons.add_post'
 
-    - unless !@blog.enabled?
-      = link_to t('user_blog.buttons.add_post_html'), new_dashboard_blog_post_path
+  = link_to user_blog_posts_list_path(current_user), class: 'dash-head-btn', target: '_blank' do
+    .btn.dark-gray
+      = t 'user_blog.buttons.visit_blog'
 
-.panel
-  .panel-body
+.dash-body
+  - if !@blog.enabled? || @user_blog_posts.empty?
+    .dash-body-container
+      = image_tag 'dashboard/exclamation.png'
+      %p.inline
+        - if !@blog.enabled?
+          = t 'user_blog.labels.blog_disabled'
+        - else
+          = t 'user_blog.labels.no_posts', button_name: t('user_blog.buttons.add_post')
 
-    - if !@blog.enabled?
-      .alert.alert-warning
-        = t 'user_blog.labels.blog_disabled_html'
+  - else
+    .table-responsive
+      %table.table
+        %thead
+          %tr
+            %th= t 'user_blog.labels.name'
+            %th= t 'user_blog.labels.created_at'
+            %th= t 'user_blog.labels.published_at'
+            %th= t 'user_blog.labels.actions'
 
-    - elsif @user_blog_posts.empty?
-      %p.empty-resultset= t 'user_blog.labels.no_posts', button_name: t('user_blog.buttons.write_post')
-
-    - else
-      %ul.blog-listing
-        - @user_blog_posts.each do |blog_post|
-          %li
-            %h3= link_to blog_post.title, edit_dashboard_blog_post_path(blog_post)
-            .meta
-              - if blog_post.object.published_at > Date.today
-                = t('user_blog.dates.going_to_be_published_at_html', datetime: blog_post.published_at_datetime, date: blog_post.published_at)
-              - else
-                = t('user_blog.dates.published_at_html', datetime: blog_post.published_at_datetime, date: blog_post.published_at)
-            .actions
-              = link_to t('user_blog.actions.visit'), blog_post.url_to
-              = link_to t('user_blog.actions.edit'), edit_dashboard_blog_post_path(blog_post)
-              = link_to t('user_blog.actions.delete'), dashboard_blog_post_path(blog_post.id), method: :delete, data: { confirm: t('user_blog.confirmations.delete') }
+        %tbody
+          - @user_blog_posts.each do |blog_post|
+            %tr
+              %td= blog_post.title_link
+              %td= I18n.l(blog_post.created_at, format: :long)
+              %td= I18n.l(blog_post.published_at, format: :long)
+              %td
+                = link_to 'Edit', edit_dashboard_blog_post_path(blog_post)
+                = link_to 'Delete', dashboard_blog_post_path(blog_post.id), method: :delete,
+                  data: { confirm: t('user_blog.confirmations.delete') }

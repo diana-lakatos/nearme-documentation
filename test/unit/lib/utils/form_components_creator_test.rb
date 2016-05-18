@@ -3,8 +3,7 @@ require 'test_helper'
 class Utils::FormComponentsCreatorTest < ActiveSupport::TestCase
 
   setup do
-    @transactable_type = FactoryGirl.build(:transactable_type)
-    @transactable_type.save!
+    @transactable_type = FactoryGirl.create(:transactable_type)
   end
 
   context "#create!" do

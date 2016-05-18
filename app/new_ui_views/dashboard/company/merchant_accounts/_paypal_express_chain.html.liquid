@@ -1,0 +1,21 @@
+<h2>{{ 'simple_form.labels.company.payout.via_paypal' | translate }}</h2>
+
+<input id="merchant_account_id" name="merchant_account[id]" placeholder="" type="hidden" value="{{ merchant_account.id}}">
+
+<input id="merchant_account_merchant_token" name="merchant_account[merchant_token]" type="hidden" value="{{ merchant_account.data['merchant_token']}}">
+
+{% if merchant_account.permissions_granted %}
+  {% if merchant_account.chain_payment_set? %}
+    <p><a class="btn btn-warning" href="/dashboard/company/merchant_accounts/{{ merchant_account.id}}/paypal_agreements/{{ merchant_account.id }}" data-method="delete" data-confirm="{{ 'payouts.revoke_permission_confirmation' | translate }}">{{ 'payouts.revoke_permission' | translate }}</a></p>
+  {% else %}
+    <div class="well">{{ 'payouts.grant_permission_info' | translate }}</div>
+    <p>
+      <a class="btn btn-primary" href="/dashboard/company/merchant_accounts/{{ merchant_account.id}}/paypal_agreements/new">{{ 'payouts.grant_permission' | translate }}</a>
+    </p>
+  {% endif %}
+{% else %}
+  <p>
+    <button type="submit" class="btn btn-primary">{{ 'payouts.paypal.connect' | translate }}</button>
+  </p>
+{% endif %}
+

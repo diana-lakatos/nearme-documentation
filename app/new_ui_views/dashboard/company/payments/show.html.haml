@@ -1,0 +1,36 @@
+- title "#{t('buy_sell_market.checkout.labels.payments.details')} - ID: #{@payment.id}"
+
+- content_for :page_header do
+  %h1= yield :title
+
+  .options
+    = link_to t("dashboard.payments.back_to_order_html"), dashboard_company_orders_received_path(@order)
+
+.panel
+  .panel-body
+    %table.payment-summary
+      %tbody
+        %tr
+          %th= t('dashboard.payments.total')
+          %td= humanized_money_with_cents_and_symbol(@payment.total_amount)
+
+        %tr
+          %th= t('dashboard.payments.service_fee')
+          %td= humanized_money_with_cents_and_symbol(@payment.total_service_fee)
+
+        %tr
+          %th= t('dashboard.payments.state')
+          %td= t("dashboard.payments.states.#{@payment.state}")
+
+        - @payment.alerts.each do |alert|
+          %tr
+            %th= t 'dashboard.payments.alerts'
+            %td= alert
+
+
+    - if @payment.authorized?
+      %p= link_to t("dashboard.payments.capture"), capture_dashboard_company_orders_received_payment_path(@order, @payment), class: 'btn btn-warning', method: :post
+
+    - if @payment.paid? && @payment.refund_attempts.zero?
+      %p= link_to t("dashboard.payments.refund"), refund_dashboard_company_orders_received_payment_path(@order, @payment), class: 'btn btn-warning', method: :post
+

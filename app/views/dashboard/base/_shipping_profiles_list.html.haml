@@ -1,1 +1,1 @@
-= f.input :shipping_category_id, as: :radio_buttons, collection: dashboard_collection_for_shipping_profiles_radio_buttons(f.object), :label_method => :last, :value_method => :first, wrapper: :dashboard_radio_and_checkboxes
+= f.input :shipping_category_id, as: :radio_buttons, checked: f.object.shipping_category_id || f.object.try{ |o| o.all_shipping_categories.last.try(:id) }, collection: collection_for_shipping_profiles_radio_buttons(f.object), :label_method => :last, :value_method => :first

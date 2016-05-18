@@ -1,24 +1,15 @@
-- title t('dashboard.user_recurring_bookings.title', count: @recurring_bookings.count)
+- title "Subscriptions (#{@recurring_bookings.count})"
 
-- content_for :page_header do
-  %h1= yield :title
+.dash-head.clearfix
+  %ul
+    - actions = ['booking_successful', 'active', 'booking_failed']
+    %li{class: actions.include?(params[:action]) ? 'active' : ''}
+      = link_to t('dashboard.user_recurring_bookings.active'), active_dashboard_user_recurring_bookings_path
+    %li{class: params[:action] == 'archived' ? 'active' : ''}
+      = link_to t('dashboard.user_recurring_bookings.archived'), archived_dashboard_user_recurring_bookings_path
 
-- actions = ['booking_successful', 'active', 'booking_failed', 'index']
-- tabs = []
-- tabs.push({ name: t('dashboard.user_recurring_bookings.active'), url: active_dashboard_user_recurring_bookings_path, active: actions.include?(params[:action]) })
-- tabs.push({ name: t('dashboard.user_recurring_bookings.archived'), url: archived_dashboard_user_recurring_bookings_path, active: params[:action] == 'archived' })
+.dash-body
+  = render 'index'
 
-= dashboard_panel_multi_tabs(tabs)
+= render 'modals'
 
-.panel
-  .panel-body
-    - if @recurring_bookings.blank?
-      %p.empty-resultset
-        = t('recurring_bookings.no_bookings_html', {bookable_nouns: platform_context.bookable_nouns, type: booking_type_from_action(params[:action])})
-    - else
-      .orders-a
-        - if @recurring_booking
-          = render 'recurring_booking_successful'
-
-        - (@recurring_bookings - [@recurring_booking]).each_with_index do |recurring_booking, index|
-          = render 'recurring_booking', recurring_booking: recurring_booking.decorate

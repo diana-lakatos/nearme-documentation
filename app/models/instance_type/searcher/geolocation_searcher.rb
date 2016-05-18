@@ -44,7 +44,8 @@ module InstanceType::Searcher::GeolocationSearcher
   def search_query_values
     {
       loc: @params[:loc],
-      query: @params[:query]
+      query: @params[:query],
+      industries_ids: @params[:industries_ids]
     }.merge(filters)
   end
 

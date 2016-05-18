@@ -10,11 +10,10 @@ class SearchController < ApplicationController
   before_action :assign_transactable_type_id_to_lookup_context
   before_action :store_search
 
-  before_action :parse_community_search_params, if: -> { PlatformContext.current.instance.is_community? }
-
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
 
   def index
+    params[:search_type] ||= 'projects' if (PlatformContext.current.instance.is_community? && params[:search_type].nil?)
     search_params = params.merge(per_page: per_page)
     @searcher = InstanceType::SearcherFactory.new(@transactable_type, search_params, result_view, current_user).get_searcher
     @searcher.paginate_results([(params[:page].presence || 1).to_i, 1].max, per_page)
@@ -104,9 +103,5 @@ class SearchController < ApplicationController
     }
   end
 
-  def parse_community_search_params
-    params[:search_type] = 'projects' unless %w(people projects topics).include?(params[:search_type])
-    @search_type = params[:search_type]
-  end
-
 end
+

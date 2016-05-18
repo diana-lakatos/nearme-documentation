@@ -1,35 +1,34 @@
 - title t('dashboard.nav.transfers')
 
-- content_for :page_header do
-  %h1= yield :title
-
-.panel
-  .panel-body
-    - if @last_week_payment_transfers.present?
-      .chart-a
-        %figcaption
+.dash-page
+  .dash-head.clearfix
+    %p= t('dashboard.nav.transfers')
+  .dash-body
+    - if @last_week_payment_transfers.empty?
+      %p.no_data.text-center= t('dashboard.transfers.no_transfers_last_week')
+    - else
+      .chart
+        .total.right
           - @chart.totals_by_currency.each do |currency, sum|
-            = "#{currency_content_tag(currency, sum, :span, { :rel => false })}".html_safe
-            |
-          = t('dashboard.transfers.seven_days_total')
-
+            .total-number.left
+              = "#{currency_content_tag(currency, sum, :span, { :rel => false })}".html_safe
+          %span{class: 'total-text'} 7 day total
         %canvas#chart
 
     - unless @company.any_payout_option_available?
       %p.warning.text-center
-        %span.fa.fa-warning
+        %i.ico-warning
         = t('dashboard.transfers.cannot_transfer')
         = link_to t('dashboard.transfers.setup'), edit_dashboard_company_payouts_path
-
     - if @payment_transfers.present?
       .table-responsive
         %table.table.table-simple
           %thead
             %tr
-              %th= t('dashboard.transfers.columns.gross')
-              %th= t('dashboard.transfers.columns.fees')
-              %th= t('dashboard.transfers.columns.total')
-              %th= t('dashboard.transfers.columns.transferred')
+              %th Gross
+              %th Fees
+              %th Total
+              %th Transferred
           %tbody
             - @payment_transfers.each do |payment_transfer|
               %tr
@@ -43,10 +42,10 @@
                   - if payment_transfer.transferred_at.present?
                     = l(payment_transfer.transferred_at, format: :short)
                   - else
-                    %i.fa.fawarning
+                    %i.ico-warning
                     = t('dashboard.transfers.not_transferred')
 
-= will_paginate_dashboard @payment_transfers
+      = will_paginate_styled @payment_transfers
 
 - content_for :domready do
-  $(document).trigger('line:chart.nearme', ['#chart', #{@chart.values.to_json.html_safe}, #{@chart.labels.to_json.html_safe}]);
+  $(document).trigger('line:chart.nearme', [$('#chart'), #{@chart.values.to_json.html_safe}, #{@chart.labels.to_json.html_safe}]);

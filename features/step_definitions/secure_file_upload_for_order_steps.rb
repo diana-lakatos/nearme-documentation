@@ -43,13 +43,13 @@ end
 
 And /^File should be saved$/ do
   visit dashboard_orders_path
-  page.should have_css(".payment-documents li", count: 1)
+  page.should have_css(".payment-document", count: 1)
   page.should have_content(Attachable::PaymentDocument.first.payment_document_info.document_requirement.label)
 end
 
 And /^File should not be saved$/ do
   visit dashboard_orders_path
-  page.should_not have_css(".payment-documents")
+  page.should_not have_css(".payment-document")
 end
 
 Then /^Should not see default file label and field for upload$/ do
@@ -80,7 +80,7 @@ end
 
 And /^Two files should be saved$/ do
   visit dashboard_orders_path
-  page.should have_css(".payment-documents li", count: 2)
+  page.should have_css(".payment-document", count: 2)
   page.should have_content(Attachable::PaymentDocument.first.payment_document_info.document_requirement.label, count: 1)
   page.should have_content(Attachable::PaymentDocument.second.payment_document_info.document_requirement.label, count: 1)
 end

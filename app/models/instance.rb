@@ -83,6 +83,7 @@ class Instance < ActiveRecord::Base
   has_one :seller_profile_type, -> { seller }, class_name: 'InstanceProfileType'
   has_one :buyer_profile_type, -> { buyer }, class_name: 'InstanceProfileType'
   has_many :data_uploads, as: :target
+  has_many :industries
   has_many :user_blog_posts
   has_many :instance_views
   has_many :rating_systems, dependent: :destroy
@@ -304,6 +305,10 @@ class Instance < ActiveRecord::Base
   def onboarding_verification_required=(arg)
   end
 
+  def has_industries?
+    industries.any?
+  end
+
   def default_domain
     domains.order('use_as_default desc').try(:first)
   end
@@ -405,7 +410,6 @@ class Instance < ActiveRecord::Base
   end
 
   def build_availability_templates
-    unless self.availability_templates.any?
     self.availability_templates.build(
       name: "Working Week",
       instance: self,
@@ -429,7 +433,6 @@ class Instance < ActiveRecord::Base
         close_hour: 23, close_minute: 59
       }]
     )
-    end
   end
 
   def seller_profile_enabled?

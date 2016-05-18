@@ -91,10 +91,6 @@ class Review < ActiveRecord::Base
     end
   end
 
-  def to_liquid
-    @review_drop ||= ReviewDrop.new(self)
-  end
-
   private
 
   def recalculate_by_type(recalculate_product)

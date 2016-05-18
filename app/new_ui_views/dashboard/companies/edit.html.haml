@@ -1,0 +1,14 @@
+- title t('dashboard.nav.companies')
+
+- content_for :page_header do
+  %h1= yield :title
+
+
+= dashboard_simple_form_for [:dashboard, @company], :html => { multipart: true, :id => 'edit_company', :"data-includes-address-field" => true } do |f|
+  .panel
+    .panel-body
+      = render :partial => 'form', :locals => { :f => f }
+
+  .panel.form-actions
+    .panel-body
+      = f.button :submit, class: 'btn-lg btn-primary'

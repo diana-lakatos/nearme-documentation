@@ -9,7 +9,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   has_many :additional_charges, as: :target
   has_many :billing_authorizations, as: :reference
-  has_one :payment, as: :payable, dependent: :destroy
+  has_many :payments, as: :payable, dependent: :destroy
   has_one :billing_authorization, -> { where(success: true) }, as: :reference
 
   belongs_to :recurring_booking
@@ -22,7 +22,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
   scope :paid, -> { where.not(paid_at: nil) }
 
   def generate_payment!
-    payment = build_payment(
+    payment = payments.build(
       company: company,
       subtotal_amount: subtotal_amount,
       service_fee_amount_guest: service_fee_amount_guest,
@@ -33,9 +33,10 @@ class RecurringBookingPeriod < ActiveRecord::Base
     )
     payment.authorize && payment.capture!
     payment.save!
+    self.paid_at = Time.zone.now
+    save!
 
     if payment.paid?
-      self.update_attribute(:paid_at, Time.zone.now)
       mark_recurring_booking_as_paid!
     else
       recurring_booking.overdue
@@ -46,10 +47,10 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   def update_payment
     # we have unique index so there can be only one payment
+    payment = payments.unapid.last
     payment.update_attribute(:credit_card_id, payment_subscription.credit_card_id)
     payment.authorize && payment.capture!
     if payment.paid?
-      self.update_attribute(:paid_at, Time.zone.now)
       mark_recurring_booking_as_paid!
     end
     save!

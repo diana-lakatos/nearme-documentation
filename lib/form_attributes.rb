@@ -33,6 +33,7 @@ class FormAttributes
       :email,
       :description,
       :address,
+      :industries,
       :payments_mailing_address
     ]
   end

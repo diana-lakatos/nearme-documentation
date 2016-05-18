@@ -1,36 +1,39 @@
-.shipping-method
-  .row
-    .col-md-3
-      %h4= t('manage.buy_sell.shipping_profiles.shipping_rule')
-    .col-md-9
-      .remove_shipping_profile.hidden.clearfix
+.row.shipping_method_block
+  .col-md-3
+    .row
+      %label{:for => ""}
+        = t('manage.buy_sell.shipping_profiles.shipping_rule')
+  .col-md-9.input-container
+    .remove_shipping_profile.hidden
+      -if f.object.new_record?
+        = f.check_box :hidden, class: "hidden shipping_hidden"
+        = f.label :hidden, t('manage.buy_sell.shipping_profiles.remove_shipping_rule')
+      -else
+        = f.check_box :removed, class: "hidden remove_shipping red"
+        = f.label :removed, t('manage.buy_sell.shipping_profiles.remove_shipping_rule')
+    .shipping-form
+      .row.no-padding-top
+        = f.input :name, wrapper: :bs3_simple,  placeholder: t('manage.buy_sell.shipping_profiles.enter_name_for_shipping_profile'), label: t('manage.buy_sell.shipping_profiles.new_rule_name'), wrapper_html: {class: 'col-md-12 '}
+      .row
+        .col-md-6
+          = f.input :processing_time, wrapper: :bs3_simple, placeholder: t('manage.buy_sell.shipping_profiles.ready_to_ship_in'), label: t('manage.buy_sell.shipping_profiles.processing_time_in_days')
 
-        - attr_name = f.object.new_record? ? :hidden : :removed
+        .col-md-1
+        .col-md-6.shipping-cost
+          =f.fields_for :calculator do |fc|
+            = fc.input :preferred_amount, as: :price, label: t('manage.buy_sell.shipping_profiles.shipping_cost'), input_html: { currency: currency_symbol_from_code(Spree::Config[:currency] ) }
 
-        = f.check_box attr_name, class: "hidden shipping-#{attr_name}"
-        = f.label attr_name, class: 'pull-right' do
-          %span.btn.btn-xs.btn-warning{ type: :button }
-            = t('manage.buy_sell.shipping_profiles.remove_shipping_rule')
-
-      .shipping-form
-        = f.input :name, placeholder: t('manage.buy_sell.shipping_profiles.enter_name_for_shipping_profile'), label: t('manage.buy_sell.shipping_profiles.new_rule_name')
-
+      =f.fields_for :zones do |z|
+        =z.hidden_field :name
         .row
+          .col-md-12
+            Ships To
           .col-md-6
-            = f.input :processing_time, placeholder: t('manage.buy_sell.shipping_profiles.ready_to_ship_in'), label: t('manage.buy_sell.shipping_profiles.processing_time_in_days')
-
+            = z.input :kind, as: :select, include_blank: false, label: false,  collection: [["State based", "state_based"], ["Country based", "country"]], input_html: {class: 'zone_kind_select selectpicker'}
+          .col-md-1
           .col-md-6
-            = f.fields_for :calculator do |fc|
-              = fc.input :preferred_amount, as: :price, label: t('manage.buy_sell.shipping_profiles.shipping_cost'), input_html: { currency: currency_symbol_from_code(Spree::Config[:currency] ) }, wrapper: :dashboard_form
+            =# z.input :country_ids, collection: Spree::Country.all, label: false, :blank => false, :required => true,  as: :select, input_html: { class: 'country_based_select selectpicker', "data-live-search" => "true", multiple: true }
+            = z.input :country_ids, wrapper: :bs3_simple, label: false, as: :text,  input_html: { value: z.object.country_ids.join(","), class: 'country_based_select select2', data: {api: 'countries'}}, required: true
+            = z.input :state_ids, wrapper: :bs3_simple, label: false, as: :text, input_html: { value: z.object.state_ids.join(","), class: 'state_based_select  select2', data: {api: 'states'}}, required: true
 
-        = f.fields_for :zones do |z|
-          = z.hidden_field :name
-          .row
-            .col-md-6
-              = z.input :kind, as: :select, include_blank: false, label: t('manage.buy_sell.shipping_profiles.ships_to.label'), collection: [[t('manage.buy_sell.shipping_profiles.ships_to.state_based'), "state_based"], [t('manage.buy_sell.shipping_profiles.ships_to.country_based'), "country"]], input_html: { class: 'zone-select', data: { 'zone-kind-select': true } }, wrapper: :dashboard_form
 
-            .col-md-6
-              - countries = []
-              = z.input :country_ids, label: t('manage.buy_sell.shipping_profiles.ships_to.countries'), input_html: { value: z.object.country_ids.join(","), data: { api: 'countries', items: z.object.countries_json }}, required: true, wrapper: :dashboard_form, wrapper_html: { class: 'country-based', 'data-ships-to': 'countries' }
-
-              = z.input :state_ids, label: t('manage.buy_sell.shipping_profiles.ships_to.states'), input_html: { value: z.object.state_ids.join(","), data: { api: 'states', items: z.object.states_json  }}, required: true, wrapper: :dashboard_form,wrapper_html: { 'data-ships-to': 'states' }

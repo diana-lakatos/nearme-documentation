@@ -1,97 +1,117 @@
-- title t('buy_sell_market.checkout.labels.order_details')
+- render_content_outside_container!
 
-- content_for :page_header do
-  %h1
-    = link_to t('orders.title.my_orders'), dashboard_orders_path, class: 'hidden-xs hidden-sm'
-    %span.hidden-xs.hidden-sm >
-    =  t('buy_sell_market.checkout.labels.order_details')
+.dash-head.clearfix
+  %p #{t('buy_sell_market.checkout.labels.order_details')} - #{@order.number}
 
+.dash-body
+  %table.order-header
+    %thead
+      %th= t 'buy_sell_market.checkout.labels.billing_address'
+      %th= t 'buy_sell_market.checkout.labels.shipping_address'
+      %th= t 'buy_sell_market.checkout.labels.shipping_method'
+      %th= t 'buy_sell_market.checkout.labels.payment'
 
+    %tbody
+      %tr
+        %td= @order.bill_address.full_name
+        %td= @order.ship_address.full_name
+        %td{rowspan: 6}
+          - @order.shipments.each do |shipment|
+            From
+            %strong= shipment.stock_location.name
+            via
+            %br
+            %strong=shipment.selected_shipping_rate.name
+            %br
+            - if shipment.shippo_tracking_number.present?
+              Tracking number:
+              = shipment.shippo_tracking_number
 
-.panel
-  .panel-body
-    .orders-a
-      %article.order
-        %header
-          %h2= t('buy_sell_market.checkout.labels.order_no', number: @order.number)
+        %td
+          - if @charge_info && @charge_info.response['card']
+            #{t('buy_sell_market.checkout.labels.ending_in')} #{@charge_info.response['card']['last4']}
+            #{@charge_info.response['card']['name']}
+          - else
+            = t 'buy_sell_market.checkout.labels.na'
 
-        .row
-          .col-sm-3
-            %h4= t 'buy_sell_market.checkout.labels.billing_address'
-            %p= render 'dashboard/orders/address', address: @order.bill_address
+      - if @order.bill_address.company.present? || @order.ship_address.company.present?
+        %tr
+          %td= @order.bill_address.company
+          %td= @order.ship_address.company
+          %td
+          %td
 
+      %tr
+        %td= @order.bill_address.address1
+        %td= @order.ship_address.address1
+        %td
+        %td
+      %tr
+        %td= @order.bill_address.address2
+        %td= @order.ship_address.address2
+        %td
+        %td
+      %tr
+        %td= @order.bill_address.city
+        %td= @order.ship_address.city
+        %td
+        %td
+      %tr
+        %td= @order.bill_address.country.name
+        %td= @order.ship_address.country.name
+        %td
+        %td
+      %tr
+        %td= @order.bill_address.state.abbr
+        %td= @order.ship_address.state.abbr
+        %td
+        %td
+      %tr
+        %td= @order.bill_address.zipcode
+        %td= @order.ship_address.zipcode
+        %td
+        %td
 
-          .col-sm-3
-            %h4= t 'buy_sell_market.checkout.labels.shipping_address'
-            %p= render 'dashboard/orders/address', address: @order.shipping_address
+  .divider
 
-          .col-sm-3
-            %h4= t 'buy_sell_market.checkout.labels.shipping_method'
-            - @order.shipments.each do |shipment|
-              %p
-                = t('buy_sell_market.products.shipping.from')
-                %strong= shipment.stock_location.name
-                = t('buy_sell_market.products.shipping.via')
-                %br
-                %strong=shipment.selected_shipping_rate.name
-                - if shipment.shippo_tracking_number.present?
-                  %br
-                  = t('buy_sell_market.products.shipping.tracking_number', number: shipment.shippo_tracking_number)
+  %h2= t 'buy_sell_market.checkout.labels.order_summary'
+  %table.payment-summary
+    %thead
+      %th= t 'buy_sell_market.checkout.labels.item'
+      %th= t 'buy_sell_market.checkout.labels.price'
+      %th= t 'buy_sell_market.checkout.labels.qty'
+      %th= t 'buy_sell_market.checkout.labels.total'
 
-          .col-sm-3
-            %h4= t 'buy_sell_market.checkout.labels.payment'
+    %tbody
+      - @order.line_items.decorate.each do |item|
+        %tr
+          %td= item.name_with_link
+          %td= item.price
+          %td= item.quantity
+          %td= item.display_amount
 
-            %p
-              - if @charge_info && @charge_info.response['card']
-                #{t('buy_sell_market.checkout.labels.ending_in')} #{@charge_info.response['card']['last4']}
-                #{@charge_info.response['card']['name']}
-              - else
-                = t 'buy_sell_market.checkout.labels.na'
+  .divider
 
-        %h2= t 'buy_sell_market.checkout.labels.order_summary'
+  %table.payment-totals
+    %tr
+      %td= t 'buy_sell_market.checkout.labels.subtotal'
+      %td= humanized_money_with_cents_and_symbol @order.monetize(@order.item_total)
+    %tr
+      %td= t 'buy_sell_market.checkout.labels.shipping'
+      %td= humanized_money_with_cents_and_symbol @order.monetize(@order.shipment_total)
+    %tr
+      %td= t 'buy_sell_market.checkout.labels.tax'
+      %td= humanized_money_with_cents_and_symbol @order.monetize(@order.additional_tax_total)
+    %tr
+      %td= t 'buy_sell_market.checkout.labels.service_fee'
+      %td= humanized_money_with_cents_and_symbol @order.service_fee_amount_guest
+    - if @order.additional_charges.any?
+      - @order.additional_charges.each do |charge|
+        %tr
+          %td= charge.name
+          %td= humanized_money_with_cents_and_symbol charge.amount
+    %tr
+      %td.total= t 'buy_sell_market.checkout.labels.total2'
+      %td.total= humanized_money_with_cents_and_symbol @order.total_amount
 
-        .table-responsive
-          %table.table
-            %thead
-              %th= t 'buy_sell_market.checkout.labels.item'
-              %th= t 'buy_sell_market.checkout.labels.price'
-              %th= t 'buy_sell_market.checkout.labels.qty'
-              %th= t 'buy_sell_market.checkout.labels.total'
-
-            %tbody
-              - @order.line_items.decorate.each do |item|
-                %tr
-                  %td= item.name_with_link
-                  %td= item.price
-                  %td= item.quantity
-                  %td= item.display_amount
-
-        .row
-          .col-sm-4.col-sm-push-8
-
-            %table.payment-totals
-              %tr
-                %th= t 'buy_sell_market.checkout.labels.subtotal'
-                %td= humanized_money_with_cents_and_symbol @order.item_total
-              %tr
-                %th= t 'buy_sell_market.checkout.labels.shipping'
-                %td= humanized_money_with_cents_and_symbol @order.shipment_total
-              - unless @order.tax_amount.zero?
-                %tr
-                  %th= t 'buy_sell_market.checkout.labels.tax'
-                  %td= humanized_money_with_cents_and_symbol @order.tax_amount
-                %tr
-                %th= t 'buy_sell_market.checkout.labels.service_fee'
-                %td= humanized_money_with_cents_and_symbol @order.service_fee_amount_guest
-              - if @order.additional_charges.any?
-                - @order.additional_charges.each do |charge|
-                  %tr
-                    %th= charge.name
-                    %td= humanized_money_with_cents_and_symbol charge.amount
-              %tr
-                %th.total= t 'buy_sell_market.checkout.labels.total2'
-                %td.total= humanized_money_with_cents_and_symbol @order.total_amount
-
-        %br/
-
-        %small= t('orders.labels.order_placed_html', date: l(@order.completed_at.to_date, format: :long))
+  .clearfix

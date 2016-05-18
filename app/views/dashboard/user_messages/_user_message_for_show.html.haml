@@ -1,23 +1,14 @@
-- thread_context = user_message.thread_context
 - author = user_message.author_with_deleted
 
 .message{ class: user_message.css_class(current_user) }
-  - if author && !author.deleted?
-    %figure.avatar= image_tag(author.avatar.url(:thumb))
-  - else
-    %figure.avatar= image_tag('dashboard/avatar/deleted.png')
-
-  %header
-    %span.author
-      - if author
+  .row
+    .col-md-1
+      .circular-image=image_tag(author.avatar.url(:thumb)) unless author.deleted?
+    .col-md-11.content
+      %p.message-title
         - if author.deleted?
-          = t('user_messages.author_deleted', author: author.first_name)
+          = "#{author.first_name} (Deleted)"
         - else
-          = author.first_name
-
-    %span.date
-      %time{datetime: user_message.created_at}= distance_of_time_in_words_or_date_in_time_zone(user_message.created_at, current_user.time_zone)
-
-
-  .body
-    = user_message.body
+          = link_to author.first_name, profile_path(author.slug)
+          %span= distance_of_time_in_words_or_date_in_time_zone(user_message.created_at, current_user.time_zone)
+      %p= nl2br(user_message.body)

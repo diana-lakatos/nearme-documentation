@@ -5,6 +5,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
+    @industry = FactoryGirl.create(:industry)
 
     sign_in @user
     FactoryGirl.create(:location_type)
@@ -113,6 +114,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     setup do
       @user.country_name = nil
       @user.save!
+      FactoryGirl.create(:form_component, form_componentable: @transactable_type)
     end
 
     should "be set to Greece" do
@@ -296,6 +298,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
 
       @params_without_company_name = get_params
       @params_without_company_name['user']['companies_attributes']['0'].delete('name')
+      @params_without_company_name['user']['companies_attributes']['0'].delete('industry_ids')
     end
 
     should 'create listing when location skip_company is set to true' do
@@ -413,6 +416,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
            "latitude" => "52.406374",
            "longitude" => "16.925168100000064",
          },
+         "industry_ids"=>["#{@industry.id}"],
          "locations_attributes"=>
          {"0"=>
           {

@@ -1,0 +1,9 @@
+%h4.reservation-emphasis
+  = t('dashboard.user_reservations.booking_successful')
+
+.reservation-list.just-booked
+  = render 'reservation', reservation: @reservation.decorate
+
+- unless (@reservations - [@reservation]).empty?
+  %h4.other-reservation-separator
+    #{pluralize((@reservations - [@reservation]).count, ' other booking')}

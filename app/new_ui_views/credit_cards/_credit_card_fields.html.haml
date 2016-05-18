@@ -1,0 +1,35 @@
+- if form.object.errors.any?
+  .errors-global
+    %ul
+      - form.object.errors.full_messages.each do |msg|
+        %li= msg
+
+.row
+  .col-sm-8
+    %p
+      %span.fa.fa-lock
+      = t 'payments.heading'
+
+  .col-sm-4
+    = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover", class: 'pull-right'
+
+.row
+  .col-sm-6
+    = form.input :first_name, required: true, label: t('payments.cc_fields.first_name'), input_html: { value: (form.object.first_name.presence || current_user.first_name), autocomplete: :off, class: 'sessioncamexclude' }
+
+  .col-sm-6
+    = form.input :last_name, required: true, label: t('payments.cc_fields.last_name'), input_html: { value: (form.object.last_name.presence || current_user.last_name), autocomplete: :off, class: 'sessioncamexclude' }
+
+= form.input :number, required: true, label:  t('payments.cc_fields.card_number'), input_html: { placeholder: '•••• •••• •••• ••••', class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: :off, 'data-card-number' => true }
+
+.row
+  .col-sm-4
+    = form.input :month, as: :select, label: t('payments.cc_fields.expiration_date_month'), collection: credit_card_date[:month], input_html: { prompt: false, class: 'sessioncamexclude', placeholder: 'Select month'}
+  .col-sm-4
+    = form.input :year, as: :select, label: t('payments.cc_fields.expiration_date_year'), collection: credit_card_date[:year], input_html: { prompt: false, class: 'sessioncamexclude', placeholder: 'Select year' }
+
+  .col-sm-4
+    = form.input :verification_value, label: t('payments.cc_fields.security_code'), required: true, input_html: { placeholder: 'CCV', class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off", 'data-card-code' => true, size: 3 }
+
+- content_for :script do
+  = javascript_include_tag "https://js.stripe.com/v1/"

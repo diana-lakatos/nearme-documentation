@@ -7,10 +7,12 @@ FactoryGirl.define do
       after(:create) { |product| create(:custom_attribute_input, name: 'Manufacturer', target: product) }
     end
 
-    after(:create) do |product_type|
-      Utils::FormComponentsCreator.new(product_type).create!
+    factory :wizard_product_type do
+      after(:build) do |product_type|
+        Spree::ProductType.transaction do
+          product_type.form_components << FactoryGirl.build(:form_component_product, form_componentable: product_type)
+        end
+      end
     end
-
   end
 end
-

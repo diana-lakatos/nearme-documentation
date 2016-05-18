@@ -1,0 +1,51 @@
+- render_without_left_menu!
+
+- title t('onboarding_wizard.list_a_new', name: @product_type.name)
+
+- content_for :page_header do
+  %h1= yield :title
+
+
+#product-wizard
+
+  = dashboard_simple_form_for @boarding_form, url: product_type_product_wizard_index_path(@product_type), html: { multipart: true, :"data-includes-address-field" => true, class: 'boarding-form' }, method: :post do |f|
+
+    = render "errors"
+
+    .row
+      .col-md-4.col-md-offset-8.hidden-sm
+        %p.listing-draft-cta
+          %i<
+            = t('onboarding_wizard.finish_later')
+
+            = f.submit t('onboarding_wizard.save_for_later'), :name => "draft", data: { disable_with: t('onboarding_wizard.save_draft.disable_with') }, :class => "saveasdraft btn-link"
+
+
+    = f.simple_fields_for :user, @boarding_form.user do |user_form|
+      = f.simple_fields_for :seller_profile, @boarding_form.seller_profile do |seller_profile_form|
+        = f.simple_fields_for :seller_profile_properties, seller_profile_form.object.properties do |seller_properties_form|
+          = f.simple_fields_for :company, @boarding_form.company do |companies_form|
+            = f.simple_fields_for f.object.product_form do |product_form|
+              = product_form.simple_fields_for :extra_properties, product_form.object.extra_properties do |properties_form|
+                = product_form.input :id, :as => :hidden if product_form.object.product.persisted?
+                - @form_components.each do |form_component|
+
+                  .panel
+                    .panel-body
+                      %h2= form_component.name
+
+                      - form_component.form_fields.each do |form_field|
+                        - model = form_field.keys.first
+                        - field = form_field[model]
+                        - if model == 'user'
+                          = render :partial => 'registrations/new_attributes', :locals => { f: user_form, only_inputs: [field.to_sym], country: @country }
+                        - if model == 'seller'
+                          = render 'sellers/seller_form', f: seller_profile_form, properties_form: seller_properties_form, only_inputs: [ field.to_sym ]
+                        - elsif model == 'company'
+                          = render partial: 'companies/company_form', locals: { f: companies_form, company: companies_form.object, only_inputs: [ field.to_sym ] }
+                        - elsif model == 'product'
+                          = render 'dashboard/company/products/form_fields', f: product_form, properties_form: properties_form, only_inputs: [ field.to_sym ], form_fields: form_component.form_fields
+
+    .panel.form-actions
+      .panel-body
+        = f.submit t('onboarding_wizard.continue_and_preview_listing')

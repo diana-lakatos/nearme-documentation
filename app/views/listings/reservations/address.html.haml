@@ -22,37 +22,41 @@
           %hr.thin
 
         #shipping-address{ class: (@listing.rental_shipping_type == 'both' ? 'hide' : '')}
-          = f.simple_fields_for :shipments do |s|
-            = s.simple_fields_for :shipping_address do |a|
-              = a.input :user_id, as: :hidden, value: current_user.id
-              = a.input :name, placeholder: t('buy_sell_market.checkout.placeholders.first_name')
-              = a.input :company
-              = a.input :street1, placeholder: t('buy_sell_market.checkout.placeholders.address1')
-              = a.input :street2, placeholder: t('buy_sell_market.checkout.placeholders.address2')
-              = a.input :city, placeholder: t('buy_sell_market.checkout.placeholders.city')
-              = a.input :zip, required: true, placeholder: t('buy_sell_market.checkout.placeholders.zipcode')
-              = a.input :state
-              = a.input :phone
-              = a.input :email
-              = a.input :country, :as => :select, :collection => user_country_name_options, :selected => a.object.country, :input_html => { class: "select2" }, :required => true, include_blank: true
-            = s.input :is_insured, as: :bootstrap_switch, label: t('simple_form.labels.shipment.is_insured')
-            = s.input :direction, as: :hidden
+          = f.simple_fields_for :reservation, @reservation do |r|
+            = r.simple_fields_for :shipments do |s|
+              = s.simple_fields_for :shipping_address do |a|
+                = a.input :user_id, as: :hidden, value: current_user.id
+                = a.input :name, placeholder: t('buy_sell_market.checkout.placeholders.first_name')
+                = a.input :company
+                = a.input :street1, placeholder: t('buy_sell_market.checkout.placeholders.address1')
+                = a.input :street2, placeholder: t('buy_sell_market.checkout.placeholders.address2')
+                = a.input :city, placeholder: t('buy_sell_market.checkout.placeholders.city')
+                = a.input :zip, required: true, placeholder: t('buy_sell_market.checkout.placeholders.zipcode')
+                = a.input :state
+                = a.input :phone
+                = a.input :email
+                = a.input :country, :as => :select, :collection => user_country_name_options, :selected => a.object.country, :input_html => { class: "select2" }, :required => true, include_blank: true
+              = s.input :is_insured, as: :bootstrap_switch, label: t('simple_form.labels.shipment.is_insured')
+              = s.input :direction, as: :hidden
         = f.button :submit, t('reservations_review.buttons.continue'), data: { disable_with: t('reservations_review.disabled_buttons.processing')} , class: 'btn-green'
 
 - content_for :script do
   :javascript
-    function toggleAddressForm(elem) {
-      if(elem.val() == 'delivery'){
-        $('#shipping-address').show();
-        $(document).trigger('init:bootstrapswitch.nearme');
-      }else{
+    (function(){
+      function toggleAddressForm(elem) {
+        if(elem.val() == 'delivery'){
+          $('#shipping-address').show();
+          $(document).trigger('init:bootstrapswitch.nearme');
+          return;
+        }
+
         $('#shipping-address').hide();
       }
-    }
 
-    if($('input[name="reservation_request[delivery_type]"]:checked').length > 0)
-      toggleAddressForm($('input[name="reservation_request[delivery_type]"]:checked'));
+      if($('input[name="reservation_request[delivery_type]"]:checked').length > 0)
+        toggleAddressForm($('input[name="reservation_request[delivery_type]"]:checked'));
 
-    $('input[name="reservation_request[delivery_type]"]').on('change', function(){
-      toggleAddressForm($(this));
-    });
+      $('input[name="reservation_request[delivery_type]"]').on('change', function(){
+        toggleAddressForm($(this));
+      });
+    }());

@@ -5,10 +5,11 @@ module PhotoHelpers
   end
 
   def attach_file_via_uploader
-    page.execute_script("$('input[data-image-input]').css({display: 'block', visibility: 'visible', width: 200, height: 50}).removeClass('hidden')")
-    attach_file find('input[data-image-input]')[:name], File.join(Rails.root, 'test', 'assets', 'foobear.jpeg')
+    page.execute_script("$('input.browse-file').css({display: 'block', visibility: 'visible', width: 200, height: 50}).removeClass('hidden')")
+    attach_file(find('.browse-file')[:name], File.join(Rails.root, 'test', 'assets', 'foobear.jpeg'))
     wait_for_ajax
-    page.should have_css('[data-photo-item] img')
+    page.should_not have_css('.photo-item .loading-icon')
+    page.should have_css('.photo-item img')
   end
 end
 

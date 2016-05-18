@@ -9,6 +9,8 @@ class UserTest < ActiveSupport::TestCase
     super
   end
 
+  should have_many(:industries)
+
   context "instance owner method" do
     should "return true if the user is an instance owner" do
       @instance_owner = FactoryGirl.create(:instance_admin)
@@ -693,6 +695,10 @@ class UserTest < ActiveSupport::TestCase
 
   context 'recovering user with all objects' do
 
+    setup do
+      @industry = FactoryGirl.create(:industry)
+    end
+
     should 'recover all objects' do
       setup_user_with_all_objects
       @user.destroy
@@ -904,8 +910,10 @@ class UserTest < ActiveSupport::TestCase
 
   def setup_user_with_all_objects
     @user = FactoryGirl.create(:user)
+    @user_industry = UserIndustry.create(:user_id => @user.id, :industry_id => @industry.id)
     @authentication = FactoryGirl.create(:authentication, :user => @user)
     @company = FactoryGirl.create(:company, :creator => @user)
+    @company_industry = CompanyIndustry.where(:company_id => @company.id).first
     @location = FactoryGirl.create(:location, :company_id => @company.id)
     @listing = FactoryGirl.create(:transactable, :location => @location)
     @photo  = FactoryGirl.create(:photo, :listing => @listing, :creator => @photo)
@@ -919,7 +927,7 @@ class UserTest < ActiveSupport::TestCase
     @payment_document= FactoryGirl.create(:attachable_payment_document, attachable: @reservation, user: @user,
                                           payment_document_info: FactoryGirl.create(:payment_document_info, document_requirement: document_requirement)
                                          )
-    @objects = [@user, @authentication, @company,
+    @objects = [@user, @user_industry, @authentication, @company, @company_industry,
                 @location, @listing, @photo, @payment_document]
   end
 end

@@ -54,6 +54,7 @@ en:
         address: "Location address"
       "user/companies":
         name: "Company name"
+        industries: "Company industry"
       "user/companies/company_address":
         address: "Company address"
       "companies/locations/listings":
@@ -1373,12 +1374,6 @@ en:
 
 
     user_recurring_bookings:
-      states:
-        pending: "Pending"
-        authorized: "Authorized"
-        paid: "Paid"
-        voided: "Voided"
-        refunded: "Refunded"
       title: "Subscriptions (%{count})"
       active: "Active"
       archived: "Archived"
@@ -1407,7 +1402,6 @@ en:
         start_end: 'Start - End'
         total_amount: 'Total Amount'
         paid_at: 'Paid at'
-        payment_state: 'Payment State'
       not_paid: 'Not Paid'
       booked: 'booked'
       host_actions:
@@ -1530,7 +1524,6 @@ en:
       direct_link: 'Direct link'
       you_havent_added_anything_yet: "You haven't added anything yet!"
       contact_subscriber: 'Contact %{name}'
-      reservation_is_expired: "Reservation is expired!"
 
     merchant_account:
       you_almost_there: "You're almost there!"
@@ -2381,6 +2374,9 @@ en:
       view_profile: 'View profile'
       contact: 'Contact'
 
+    company:
+      industries: 'Industries'
+
     social_share:
       twitter: 'Check out @%{instance_name}'
 
@@ -2658,5 +2654,4 @@ en:
     view_item: 'View %{item_type_name}'
   credit_cards:
     masked_number: '**** **** **** %{last4}'
-  toggle_hint: 'Toggle hint'
 

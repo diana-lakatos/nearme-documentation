@@ -10,7 +10,7 @@ class DataImporter::Product::CsvFileTest < ActiveSupport::TestCase
     should 'return models hashes in params hash' do
       params = @product_csv.process_next_row
 
-      [:user, :company, :'spree/variant', :'spree/image'].each do |model|
+      [:user, :company, :'spree/variant', :industry, :'spree/shipping_category', :'spree/image'].each do |model|
         assert_includes(params, :user)
         assert_kind_of(Hash, params[model])
         refute_empty(params[model])

@@ -9,21 +9,4 @@
 = f.input :book_it_out, as: :hidden, input_html: {value: @reservation_request.book_it_out}
 = f.input :exclusive_price, as: :hidden, input_html: {value: @reservation_request.exclusive_price}
 = f.input :guest_notes, as: :hidden, input_html: {value: @reservation_request.guest_notes}
-= f.input :delivery_type, as: :hidden
-- if @reservation_request.with_delivery?
-  = f.simple_fields_for :shipments do |s|
-    = s.simple_fields_for :shipping_address do |a|
-      = a.input :user_id, as: :hidden, value: current_user.id
-      = a.input :shippo_id, as: :hidden
-      = a.input :name, as: :hidden
-      = a.input :company, as: :hidden
-      = a.input :street1, as: :hidden
-      = a.input :street2, as: :hidden
-      = a.input :city, as: :hidden
-      = a.input :zip, as: :hidden
-      = a.input :state, as: :hidden
-      = a.input :phone, as: :hidden
-      = a.input :email, as: :hidden
-      = a.input :country, as: :hidden
-    = s.input :is_insured, as: :hidden
-    = s.input :direction, as: :hidden
+
