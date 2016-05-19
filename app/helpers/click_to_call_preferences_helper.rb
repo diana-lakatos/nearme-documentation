@@ -2,6 +2,7 @@ module ClickToCallPreferencesHelper
   include ActionView::Helpers::TagHelper
 
   def build_click_to_call_verify_button(phone, country_name)
+    return unless current_instance.click_to_call?
     if current_user.communication.try(:verified?)
       link_to t('dashboard.click_to_call.verified'), edit_dashboard_click_to_call_preferences_path, class: 'btn btn-sm btn-primary', :'data-ctc-trigger' => '', :'data-verify-url' => verified_user_communications_path(current_user)
     else
