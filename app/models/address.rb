@@ -81,7 +81,9 @@ class Address < ActiveRecord::Base
   end
 
   def state_object
-    country_object.states.where(abbr: state_code).first
+    if country_object.present?
+      country_object.states.where(abbr: state_code).first
+    end
   end
 
   def postcode
