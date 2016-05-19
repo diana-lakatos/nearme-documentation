@@ -45,7 +45,7 @@
         - if reservation.company.possible_payout_not_configured?(reservation.billing_authorization.payment_gateway)
           .alert.alert-warning= I18n.t('dashboard.host_reservations.remember_to_setup_automated_payout', setup_link: edit_dashboard_company_payouts_path).html_safe
 
-  - if reservation.listing.present? && reservation.owner.communication.try(:verified) && !current_user.communication.try(:verified)
+  - if show_not_verified_host_alert?(reservation)
     .alert.alert-warning
       = I18n.t('dashboard.click_to_call.not_verified_self_warning', link: link_to(t('dashboard.nav.social_accounts'), social_accounts_path).html_safe).html_safe
 

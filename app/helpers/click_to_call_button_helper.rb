@@ -2,7 +2,7 @@ module ClickToCallButtonHelper
   include ActionView::Helpers::TagHelper
 
   def build_click_to_call_button_for_transactable(transactable)
-    return unless transactable.administrator.communication.try(:verified)
+    return unless PlatformContext.current.instance.click_to_call? && transactable.administrator.click_to_call? && transactable.administrator.communication.try(:verified)
 
     path_to_call = Rails.application.routes.url_helpers.new_user_phone_call_path(transactable.administrator)
 
@@ -18,10 +18,18 @@ module ClickToCallButtonHelper
   end
 
   def build_click_to_call_button_for_user(user)
-    return unless user.communication.try(:verified)
+    return unless PlatformContext.current.instance.click_to_call? && user.click_to_call? && user.communication.try(:verified)
 
     path_to_call = Rails.application.routes.url_helpers.new_user_phone_call_path(user)
     build_click_to_call_button(path_to_call, I18n.t('phone_calls.buttons.click_to_call_user', name: user.name), user.is_available_now?, user.time_zone)
+  end
+
+  def show_not_verified_user_alert?(transactable)
+    PlatformContext.current.instance.click_to_call? && transactable && transactable.administrator.communication.try(:verified) && !current_user.communication.try(:verified)
+  end
+
+  def show_not_verified_host_alert?(reservation)
+    PlatformContext.current.instance.click_to_call? && reservation.listing.present? && reservation.owner.communication.try(:verified) && !current_user.communication.try(:verified)
   end
 
   private
