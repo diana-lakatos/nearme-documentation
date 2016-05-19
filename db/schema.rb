@@ -1169,9 +1169,9 @@ ActiveRecord::Schema.define(version: 20160513125138) do
     t.boolean  "click_to_call",                                                                default: false
     t.boolean  "enable_reply_button_on_host_reservations",                                     default: false
     t.boolean  "split_registration",                                                           default: false
-    t.boolean  "tax_included_in_price",                                                        default: true
     t.boolean  "require_payout_information",                                                   default: false
     t.boolean  "precise_search",                                                               default: false,         null: false
+    t.boolean  "tax_included_in_price",                                                        default: true
     t.boolean  "enquirer_blogs_enabled",                                                       default: false
     t.boolean  "lister_blogs_enabled",                                                         default: false
   end
@@ -1781,7 +1781,6 @@ ActiveRecord::Schema.define(version: 20160513125138) do
     t.string   "test_mode"
     t.text     "guest_notes"
     t.hstore   "properties"
-    t.integer  "transactable_pricing_id"
   end
 
   add_index "recurring_bookings", ["administrator_id"], name: "index_recurring_bookings_on_administrator_id", using: :btree
@@ -1901,7 +1900,6 @@ ActiveRecord::Schema.define(version: 20160513125138) do
     t.decimal  "cancellation_policy_penalty_hours",                         precision: 8, scale: 2, default: 0.0
     t.boolean  "tax_included_in_price"
     t.integer  "total_tax_amount_cents"
-    t.integer  "transactable_pricing_id"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -3465,10 +3463,8 @@ ActiveRecord::Schema.define(version: 20160513125138) do
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
   create_table "tax_rates", force: :cascade do |t|
-    t.string   "taxable_type"
     t.datetime "deleted_at"
     t.integer  "instance_id"
-    t.integer  "taxable_id"
     t.integer  "state_id"
     t.integer  "value"
     t.boolean  "included_in_price", default: true
@@ -3484,7 +3480,6 @@ ActiveRecord::Schema.define(version: 20160513125138) do
   add_index "tax_rates", ["instance_id"], name: "index_tax_rates_on_instance_id", using: :btree
   add_index "tax_rates", ["state_id"], name: "index_tax_rates_on_state_id", using: :btree
   add_index "tax_rates", ["tax_region_id"], name: "index_tax_rates_on_tax_region_id", using: :btree
-  add_index "tax_rates", ["taxable_id"], name: "index_tax_rates_on_taxable_id", using: :btree
 
   create_table "tax_regions", force: :cascade do |t|
     t.datetime "deleted_at"
@@ -3645,67 +3640,6 @@ ActiveRecord::Schema.define(version: 20160513125138) do
   add_index "topics_user_status_updates", ["topic_id", "user_status_update_id"], name: "topic_usu_id", using: :btree
   add_index "topics_user_status_updates", ["user_status_update_id", "topic_id"], name: "usu_topic_id", using: :btree
 
-  create_table "transactable_action_types", force: :cascade do |t|
-    t.integer  "instance_id"
-    t.integer  "transactable_id"
-    t.integer  "transactable_type_action_type_id"
-    t.integer  "availability_template_id"
-    t.boolean  "enabled"
-    t.string   "type"
-    t.integer  "minimum_booking_minutes"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "transactable_action_types", ["instance_id", "transactable_id", "type"], name: "transactable_action_types_main_idx", using: :btree
-  add_index "transactable_action_types", ["instance_id"], name: "index_transactable_action_types_on_instance_id", using: :btree
-
-  create_table "transactable_pricings", force: :cascade do |t|
-    t.integer  "instance_id"
-    t.integer  "transactable_type_pricing_id"
-    t.string   "action_type"
-    t.integer  "action_id"
-    t.integer  "number_of_units"
-    t.string   "unit"
-    t.integer  "price_cents"
-    t.boolean  "has_exclusive_price"
-    t.integer  "exclusive_price_cents"
-    t.boolean  "has_book_it_out_discount"
-    t.integer  "book_it_out_discount"
-    t.integer  "book_it_out_minimum_qty"
-    t.boolean  "is_free_booking"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "transactable_pricings", ["instance_id", "action_type", "action_id"], name: "transactable_pricings_main_index", using: :btree
-  add_index "transactable_pricings", ["instance_id"], name: "index_transactable_pricings_on_instance_id", using: :btree
-
-  create_table "transactable_type_action_types", force: :cascade do |t|
-    t.integer  "instance_id"
-    t.integer  "transactable_type_id"
-    t.datetime "deleted_at"
-    t.string   "type"
-    t.integer  "minimum_booking_minutes",                    default: 60
-    t.boolean  "action_continuous_dates_booking"
-    t.integer  "hours_to_expiration",                        default: 24
-    t.datetime "cancellation_policy_enabled"
-    t.integer  "cancellation_policy_hours_for_cancellation", default: 0
-    t.integer  "cancellation_policy_penalty_percentage",     default: 0
-    t.integer  "cancellation_policy_penalty_hours",          default: 0
-    t.float    "service_fee_guest_percent",                  default: 0.0
-    t.float    "service_fee_host_percent",                   default: 0.0
-    t.boolean  "favourable_pricing_rate"
-    t.boolean  "allow_custom_pricings"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "transactable_type_action_types", ["instance_id", "transactable_type_id", "deleted_at"], name: "instance_tt_deleted_at_idx", using: :btree
-  add_index "transactable_type_action_types", ["instance_id"], name: "index_transactable_type_action_types_on_instance_id", using: :btree
-
   create_table "transactable_type_instance_views", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "instance_view_id"
@@ -3715,25 +3649,6 @@ ActiveRecord::Schema.define(version: 20160513125138) do
   end
 
   add_index "transactable_type_instance_views", ["instance_id", "instance_view_id", "transactable_type_id"], name: "index_tt_instance_views_on_instance_id_tt_view_unique", unique: true, using: :btree
-
-  create_table "transactable_type_pricings", force: :cascade do |t|
-    t.integer  "instance_id"
-    t.string   "action_type"
-    t.integer  "action_id"
-    t.integer  "number_of_units"
-    t.string   "unit"
-    t.integer  "min_price_cents",            default: 0
-    t.integer  "max_price_cents",            default: 0
-    t.boolean  "allow_exclusive_price"
-    t.boolean  "allow_book_it_out_discount"
-    t.boolean  "allow_free_booking"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "transactable_type_pricings", ["instance_id", "action_type", "action_id"], name: "action_type_pricings_main_index", using: :btree
-  add_index "transactable_type_pricings", ["instance_id"], name: "index_transactable_type_pricings_on_instance_id", using: :btree
 
   create_table "transactable_types", force: :cascade do |t|
     t.string   "name",                                       limit: 255
@@ -3892,7 +3807,6 @@ ActiveRecord::Schema.define(version: 20160513125138) do
     t.boolean  "featured",                                                              default: false
     t.decimal  "cancellation_policy_penalty_hours",             precision: 8, scale: 2, default: 0.0
     t.boolean  "possible_payout",                                                       default: false
-    t.string   "available_actions",                                                     default: [],                     array: true
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
