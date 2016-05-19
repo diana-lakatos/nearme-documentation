@@ -20,7 +20,7 @@ class Dashboard::ClickToCallPreferencesController < Dashboard::BaseController
       end
     else
       if request.xhr?
-        render :json, @user.errors, status: :unprocessable_entity
+        render json: @user.errors, status: :unprocessable_entity
       else
         render :edit
       end

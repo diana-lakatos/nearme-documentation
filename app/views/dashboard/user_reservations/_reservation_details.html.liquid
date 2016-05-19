@@ -32,8 +32,13 @@
 </div>
 
 <div class="col-sm-1">
-  <h3>{{ 'dashboard.user_reservations.total' | translate }}</h3>
-  <p>
+  <h3>{{ 'dashboard.user_reservations.price' | translate }}</h3>
+  {% if reservation.tax_price %}
+    <p>{{ 'dashboard.user_reservations.tax_included' | translate }}:
+      {{ reservation.tax_price }}
+    </p>
+  {% endif %}
+  <p>{{ 'dashboard.user_reservations.total' | translate }}:
   {% if for_host %}
     {{ reservation.total_amount_for_host_if_payment_at_least_authorized }}
   {% else %}

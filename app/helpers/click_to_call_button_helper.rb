@@ -2,26 +2,33 @@ module ClickToCallButtonHelper
   include ActionView::Helpers::TagHelper
 
   def build_click_to_call_button_for_transactable(transactable)
-    return unless transactable.administrator.communication.try(:verified)
+    return unless PlatformContext.current.instance.click_to_call? && transactable.administrator.click_to_call? && transactable.administrator.communication.try(:verified)
 
     path_to_call = Rails.application.routes.url_helpers.new_user_phone_call_path(transactable.administrator)
 
     closest_availability = transactable.first_available_date.to_datetime.in_time_zone(transactable.timezone)
 
-
     if closest_availability
       open_minute = transactable.availability.open_minute_for(closest_availability)
-      closest_availability = closest_availability.change({ min: open_minute.modulo(60), hour: (open_minute / 60).floor })
+      closest_availability = open_minute.present? ? closest_availability.change({ min: open_minute.modulo(60), hour: (open_minute / 60).floor }) : nil
     end
 
     build_click_to_call_button(path_to_call, I18n.t('phone_calls.buttons.click_to_call'), transactable.open_now?, transactable.timezone, closest_availability)
   end
 
   def build_click_to_call_button_for_user(user)
-    return unless user.communication.try(:verified)
+    return unless PlatformContext.current.instance.click_to_call? && user.click_to_call? && user.communication.try(:verified)
 
     path_to_call = Rails.application.routes.url_helpers.new_user_phone_call_path(user)
     build_click_to_call_button(path_to_call, I18n.t('phone_calls.buttons.click_to_call_user', name: user.name), user.is_available_now?, user.time_zone)
+  end
+
+  def show_not_verified_user_alert?(transactable)
+    PlatformContext.current.instance.click_to_call? && transactable && transactable.administrator.communication.try(:verified) && !current_user.communication.try(:verified)
+  end
+
+  def show_not_verified_host_alert?(reservation)
+    PlatformContext.current.instance.click_to_call? && reservation.listing.present? && reservation.owner.communication.try(:verified) && !current_user.communication.try(:verified)
   end
 
   private

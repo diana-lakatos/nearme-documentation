@@ -1,0 +1,21 @@
+.row.nested-fields
+  .input-container.col-xs-2
+    - if f.object.default?
+      = region_form.association :country, disabled: f.object.persisted?, label: "Region"
+      = f.hidden_field :default
+    - else
+      = f.association :state, collection: State.where(country: f.object.tax_region.country).order("name ASC"), label: f.object.default? ? :state : false
+  .input-container.col-xs-2
+    = f.input :name, label: f.object.default? ? "Name" : false
+  .input-container.col-xs-2
+    = f.input :value, label: f.object.default? ? "Rate" : false
+  .input-container.col-xs-
+    = f.input :included_in_price, boolean: true, label: f.object.default? ? "Included in price" : false
+  - unless f.object.default?
+    .input-container.col-xs-2
+      = f.input :calculate_with, collection: TaxRate::CALCULATE_WITH.sort.map {|k,v| [v,k]}, prompt: false, label: false
+    / =# form.input :calculate_with, collection: TaxType::CALCULATE_WITH
+    .input-container.col-xs-1
+      = link_to_remove_association  f, class: 'button-a small red' do
+        %span.intelicon-trash-outlined
+          = t('remove', default: 'Remove')

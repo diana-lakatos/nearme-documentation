@@ -31,6 +31,7 @@
       <div class='clearfix'></div>
     </div>
   {% endif %}
+
   {% if @reservation.additional_charges %}
     {% for charge in @reservation.additional_charges %}
       <div class='summary-line'>
@@ -41,6 +42,15 @@
       </div>
     {% endfor %}
   {% endif %}
+
+  {% if @reservation.tax_price %}
+    <div class='summary-line'>
+      <div class='summary-line-label'>{{ 'reservations_review.tax_included' | translate }}</div>
+      <div class='summary-line-value delivery-amount'>{{ @reservation.tax_price }}</div>
+      <div class='clearfix'></div>
+    </div>
+  {% endif %}
+
   <div class='summary-line'>
     <div class='summary-line-label'>{{ 'reservations_review.total' | translate }}</div>
   <div class='summary-line-value total-amount' data-currency-symbol='{{ @reservation.currency }}' data-total-amount='{{ @reservation.total_amount_float }}'>{{ @reservation.total_price }}</div>
