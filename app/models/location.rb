@@ -214,6 +214,12 @@ class Location < ActiveRecord::Base
     photos_metadata.try(:count).to_i > 0
   end
 
+  # This is to maintain interface compatibility with
+  # transactables
+  def timezone
+    self.time_zone.presence || get_default_timezone
+  end
+
   private
 
   def company_and_city
@@ -254,15 +260,15 @@ class Location < ActiveRecord::Base
   end
 
   def set_time_zone
-    self.time_zone ||= timezone
+    self.time_zone ||= get_default_timezone
   end
 
-  def timezone
+  def get_default_timezone
     if latitude && longitude
       tz = NearestTimeZone.to(latitude, longitude)
-      ActiveSupport::TimeZone::MAPPING.select {|k, v| v == tz }.keys.first || tz
+      ActiveSupport::TimeZone::MAPPING.select {|k, v| v == tz }.keys.first || 'UTC'
     else
-      self.company.try(:time_zone) || self.instance.try(:default_timezone)
+      self.company.try(:time_zone) || self.instance.try(:time_zone).presence || 'UTC'
     end
   end
 
