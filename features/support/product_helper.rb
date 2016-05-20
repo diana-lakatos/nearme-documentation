@@ -34,7 +34,7 @@ module ProductHelper
     fill_in 'shipping_category_form_shipping_methods_attributes_0_processing_time', with: '1'
     fill_in 'shipping_category_form_shipping_methods_attributes_0_calculator_attributes_preferred_amount', with: '1'
     choose_selectize '.country-based', 'United'
-    click_button('Save')
+    page.execute_script("$('.dialog__actions input[type=submit]').click()")
     wait_for_ajax
     page.execute_script("$('[data-shipping-methods-list] span.radio input').attr('checked', true)")
   end
