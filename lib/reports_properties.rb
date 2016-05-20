@@ -21,11 +21,23 @@ module ReportsProperties
 
   def export_data_to_csv(items, attribute_names = [], properties_columns)
     properties_column_name = items.first.is_a?(Spree::Product) ? :extra_properties : :properties
+
     csv = CSV.generate do |csv|
-      csv << [attribute_names, properties_columns].flatten
+      if items.first.is_a?(Transactable)
+        csv << [attribute_names, 'latitude', 'longitude', 'address', properties_columns].flatten
+      else
+        csv << [attribute_names, properties_columns].flatten
+      end
+
       items.each do |record|
         values = record.attributes.values
         properties = record.send(properties_column_name).to_h
+
+        if record.is_a?(Transactable)
+          values << record.location.latitude
+          values << record.location.longitude
+          values << record.location.address
+        end
 
         properties_columns.each do |column|
           values << properties[column]
