@@ -4,7 +4,7 @@ class UserBlog < ActiveRecord::Base
 
   class NotFound < ActiveRecord::RecordNotFound; end
 
-  belongs_to :user
+  belongs_to :user, touch: true
   belongs_to :instance
 
   validates :name, presence: true, if: lambda { |o| o.enabled? }
