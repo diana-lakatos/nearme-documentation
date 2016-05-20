@@ -77,7 +77,7 @@ When /^I provide new (location|listing) data$/ do |model|
 end
 
 When /^I submit the location form$/ do
-  page.find('#location-form input[type=submit]').click
+  page.execute_script("$(\"#location-form input[type=submit]\").click()")
   wait_for_ajax
 end
 
