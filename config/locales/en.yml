@@ -2384,6 +2384,12 @@ en:
     social_share:
       twitter: 'Check out @%{instance_name}'
 
+  listing:
+    buttons:
+      share_on_facebook: 'Share on Facebook'
+      share_on_linkedin: 'Share on LinkedIn'
+      share_on_twitter: 'Share on Twitter'
+      share_on_google_plus: 'Share on Google+'
 
   booking_module:
     description: 'Description'
@@ -2659,4 +2665,3 @@ en:
   credit_cards:
     masked_number: '**** **** **** %{last4}'
   toggle_hint: 'Toggle hint'
-

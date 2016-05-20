@@ -622,4 +622,18 @@ DNM.registerInitializer(function(){
     });
 });
 
+DNM.registerInitializer(function(){
+
+    var wrapper = document.querySelector('.social-buttons-wrapper');
+
+    if(!wrapper) {
+        return;
+    }
+
+    require('socialite-js/socialite.js');
+    var SocialButtons = require('./new_ui/modules/social_buttons');
+
+    new SocialButtons(wrapper, Socialite);
+});
+
 DNM.run();
