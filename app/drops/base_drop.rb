@@ -1,6 +1,10 @@
 class BaseDrop < Liquid::Drop
   include MoneyRails::ActionViewExtension
 
+  def drop_class
+    self.class.to_s
+  end
+
   private
 
   def hide_tab?(tab)

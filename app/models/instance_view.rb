@@ -462,6 +462,18 @@ class InstanceView < ActiveRecord::Base
       feedback: 'Polymorphic object',
       feedback_type: "string",
     },
+    'dashboard/reviews/rating_answer' => {
+      is_partial: true,
+      score: "number"
+    },
+    'dashboard/reviews/rating_question' => {
+      is_partial: true,
+    },
+    'dashboard/reviews/overall_rating' => {
+      is_partial: true,
+      score: "number",
+      hints: "string"
+    }
   }.freeze
 
   scope :for_instance_id, ->(instance_id) {

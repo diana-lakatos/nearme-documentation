@@ -172,6 +172,27 @@ class ReservationRequestTest < ActiveSupport::TestCase
     end
   end
 
+
+  context '#get_minimum_booking_minutes' do
+
+    setup do
+      @reservation = FactoryGirl.build(:reservation)
+      @listing = @reservation.listing
+      @reservation_request = ReservationRequest.new(@listing, @user, {dates: []})
+    end
+
+    should "return minimum_booking_minutes when listing exists" do
+      @listing.stubs(:minimum_booking_minutes).returns(85)
+      assert_equal 85, @reservation_request.send(:get_minimum_booking_minutes)
+    end
+
+    should "return '60' when listing doesn't exist" do
+      @reservation.listing = nil
+      assert_equal 60, @reservation_request.send(:get_minimum_booking_minutes)
+    end
+
+  end
+
   def attributes
     @attributes ||= {
         dates: [@date.to_s(:db)],

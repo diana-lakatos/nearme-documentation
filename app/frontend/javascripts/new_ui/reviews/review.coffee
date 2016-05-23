@@ -38,12 +38,24 @@ module.exports = class Review
     @toggleEdit(@isEditable)
 
   ratingsInit: ->
-    @ratings.raty
-      starType: 'i'
-      hints: ->
-        $(@).data("hints")
-      score: ->
-        return $(@).data('score');
+    @ratings.each (index) =>
+      element = $(@ratings[index])
+
+      if element.attr('data-images') == '1'
+        element.raty
+          hints: ->
+            $(@).data("hints")
+          score: ->
+            return $(@).data('score')
+          starOff: element.attr('data-star-off')
+          starOn: element.attr('data-star-on')
+      else
+        element.raty
+          starType: 'i'
+          hints: ->
+            $(@).data("hints")
+          score: ->
+            return $(@).data('score')
 
   toggleEdit: (state, persist = false) =>
     @isEditable = state

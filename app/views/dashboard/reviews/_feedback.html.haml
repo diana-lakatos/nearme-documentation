@@ -56,9 +56,7 @@
         %h3= t('dashboard.reviews.feedback.leave_subject_feedback', subject: t("dashboard.reviews.feedback.subject.#{subject}", default: 'user'))
 
       - score = is_completed ? feedback.rating : 0
-      %h4.overall
-        %span= t('dashboard.reviews.feedback.overall')
-        .rating{ data: { score: score, hints: rating_system.rating_hints.map(&:description_or_value).reverse }}
+      = render 'overall_rating', score: score, hints: rating_system.rating_hints.map(&:description_or_value).reverse.to_s
 
 
       %h4= t('dashboard.reviews.feedback.details')
@@ -69,17 +67,13 @@
           %ul.rating-questions
             - answers.each do |answer|
               %li
-                %span= answer.rating_question.text
-                .rating{'data-score' => answer.rating, 'data-question-id' => answer.rating_question_id, 'data-answer-id' => answer.id}
-
-
+                = render 'rating_answer', score: answer.rating, question_id: answer.rating_question_id, answer_id: answer.id, text: answer.rating_question.text
       - else
         - unless rating_system.rating_questions.blank?
           %ul.rating-questions
             - rating_system.rating_questions.each do |q|
               %li
-                %span= q.text
-                .rating{'data-question-id' => q.id, 'data-hints' => rating_system.rating_hints.map(&:description_or_value).reverse}
+                = render 'rating_question', text: q.text, question_id: q.id, hints: rating_system.rating_hints.map(&:description_or_value).reverse.to_s
 
       .comment
         %blockquote= feedback.try(:comment) if !feedback.reservation? || is_completed
