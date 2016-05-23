@@ -105,7 +105,7 @@ namespace :jira do
       end
     end
 
-    next_tag = @jira_helper.next_tag(1)
+    next_tag = @jira_helper.next_tag(2)
     @commits_for_hotfix.each do |commit_for_hotfix|
       if commit_for_hotfix.match(/^NM-/)
         card_number = @jira_helper.to_jira_number([commit_for_hotfix]).first
