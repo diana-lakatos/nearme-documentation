@@ -1,9 +1,11 @@
 - content_for :booking_type_schedule_tab_content do
-  %div{:class => "row #{"error" if f.object.errors.include?(:fixed_price).present?}"}
-    .col-md-3
-      %label
-        %abbr{:title => "required"}= t('simple_form.required.mark')
-        =t('simple_form.labels.listings.schedule')
-    .col-md-9
-      = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule).try(:to_hash).try(:to_json)) do |schedule_form|
-        = render 'schedules/fields', f: schedule_form
+
+
+  - schedule = f.object.schedule
+  - if schedule.nil?
+    - schedule = f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule).try(:to_hash).try(:to_json))
+    - f.object.transactable_type.schedule.try(:schedule_rules).try(:each) do |sr|
+      - schedule.schedule_rules.build(run_hours_mode: sr.run_hours_mode, every_hours: sr.every_hours, time_start: sr.time_start, time_end: sr.time_end, times: sr.times.map { |t| Time.zone.local_to_utc(t).in_time_zone }, run_dates_mode: sr.run_dates_mode, week_days: sr.week_days, dates: sr.dates, date_start: sr.date_start, date_end: sr.date_end)
+
+  = f.simple_fields_for :schedule,  schedule do |schedule_form|
+    = render 'schedules/fields', f: schedule_form

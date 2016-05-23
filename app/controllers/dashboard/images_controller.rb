@@ -64,9 +64,9 @@ class Dashboard::ImagesController < Dashboard::BaseController
   def find_product
     @product = @company.products.with_deleted.find(params[:product_id]) if params[:product_id].present? if @company.present?
     if params[:product_form]
-      @image_data = params[:product_form][:images_attributes]["0"][:image]
+      @image_data = params[:product_form][:images_attributes].try(:values).try(:first).try(:[], :image)
     elsif params[:boarding_form]
-      @image_data = params[:boarding_form][:product_form][:images_attributes]["0"][:image]
+      @image_data = params[:boarding_form][:product_form][:images_attributes].try(:values).try(:first).try(:[], :image)
     else
       raise NotImplementedError
     end

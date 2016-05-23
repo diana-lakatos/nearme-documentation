@@ -35,11 +35,14 @@ When(/^there is existing saved search$/) do
 end
 
 When(/^I edit the search title$/) do
-  saved_search = SavedSearch.first
-  page.execute_script("$('div.controls').css('visibility', 'visible')")
-  click_link 'Edit'
-  fill_in 'title', with: "New title\n"
-  wait_for_ajax
+  within('.saved-searches') do
+    click_button 'Edit'
+  end
+  within('.editableform') do
+    first('input').set("New title\n")
+    wait_for_ajax
+  end
+
 end
 
 Then(/^saved search is updated$/) do
@@ -54,10 +57,13 @@ When(/^I edit the search title setting title to already existing one$/) do
     query: '?loc=Auckland&query=&transactable_type_id=1&buyable=false'
   )
 
-  page.execute_script("$('div.controls').css('visibility', 'visible')")
-  click_link 'Edit'
-  fill_in 'title', with: "Another title\n"
-  wait_for_ajax
+  within('.saved-searches') do
+    click_button 'Edit'
+  end
+  within('.editableform') do
+    first('input').set("Another title\n")
+    wait_for_ajax
+  end
 end
 
 Then(/^saved search is not updated$/) do

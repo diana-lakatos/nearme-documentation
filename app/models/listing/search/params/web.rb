@@ -1,6 +1,6 @@
 class Listing::Search::Params::Web < Listing::Search::Params
   attr :location_string
-  attr_reader :location_types_ids, :industries_ids, :lntype, :lgtype, :lgpricing,
+  attr_reader :location_types_ids, :lntype, :lgtype, :lgpricing,
     :lntypes, :sort, :order, :dates, :start_date, :end_date, :display_dates, :lg_custom_attributes, :category_ids
 
   def initialize(options, transactable_type)

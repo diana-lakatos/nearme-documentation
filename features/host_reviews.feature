@@ -19,7 +19,3 @@ Feature: Host can rate a reservation
   Scenario: A host updates a review with selected rating
     When I edit guest rating with valid values
     Then I should see updated feedback
-
-  Scenario: A host updates a review with unselected rating
-    When I edit guest rating with invalid values
-    Then I should see error message

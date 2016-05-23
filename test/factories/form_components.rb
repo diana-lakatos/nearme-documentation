@@ -4,7 +4,7 @@ FactoryGirl.define do
     form_componentable { ServiceType.first.presence || FactoryGirl.create(:transactable_type_listing) }
     form_type { FormComponent::SPACE_WIZARD }
 
-    form_fields { [{'company' => 'name'}, {'company' => 'address'}, {'company' => 'industries'}, {'location' => 'name'}, {'location' => 'description'}, {'location' => 'phone'}, {'location' => 'location_type'}, {'location' => 'address'}, { 'transactable' => 'price' }, {'transactable' => 'description'}, { 'transactable' => 'photos' }, {'transactable' => 'quantity'}, { 'transactable' => 'name' }, { 'transactable' => 'listing_type' }, { 'user' => 'phone'}, { 'user' => 'approval_requests'}, { 'user' => 'first_name' }, { 'user' => 'last_name' } ] }
+    form_fields { [{'company' => 'name'}, {'company' => 'address'}, {'location' => 'name'}, {'location' => 'description'}, {'location' => 'phone'}, {'location' => 'location_type'}, {'location' => 'address'}, { 'transactable' => 'price' }, {'transactable' => 'description'}, { 'transactable' => 'photos' }, {'transactable' => 'quantity'}, { 'transactable' => 'name' }, { 'transactable' => 'listing_type' }, { 'user' => 'phone'}, { 'user' => 'approval_requests'}, { 'user' => 'first_name' }, { 'user' => 'last_name' } ] }
 
     factory :form_component_product_wizard do
       form_type { FormComponent::SPACE_WIZARD }
@@ -16,6 +16,12 @@ FactoryGirl.define do
       form_type { FormComponent::PRODUCT_ATTRIBUTES }
       form_componentable { Spree::ProductType.first.presence || FactoryGirl.create(:product_type) }
       form_fields { [{'product' => 'additional_charges'}, { 'product' => 'name'}, { 'product' => 'description'}, { 'product' => 'photos'}, { 'product' => 'action_rfq' }, { 'product' => 'price'}, { 'product' => 'quantity'}, { 'product' => 'integrated_shipping'}, { 'product' => 'documents_upload'}, {'product' => 'shipping_info'}] + form_componentable.categories.map {|c| [ {'product' => "Category - #{c.name}"} ] }}
+    end
+
+    factory :form_component_location do
+      form_type { FormComponent::LOCATION_ATTRIBUTES }
+      form_componentable { PlatformContext.current.instance || Instance.first }
+      form_fields { [ { 'location' => 'name' }, { 'location' => 'address' }, { 'location' => 'time_zone' }, { 'location' => 'description' }, { 'location' => 'location_type' }, { 'location' => 'email' }, { 'location' => 'administrator' }, { 'location' => 'special_notes' }, { 'location' => 'availability_rules' }, { 'location' => 'amenities' }, { 'location' => 'assigned_waiver_agreement_templates' }, ]}
     end
 
     factory :form_component_transactable do
@@ -32,7 +38,7 @@ FactoryGirl.define do
       form_type { FormComponent::INSTANCE_PROFILE_TYPES }
 
       form_fields { [
-        { "user" => "public_profile" }, { "user" => "password" }, { "user" => "industries" }, { "user" => "email" }, { "user" => "phone" }, { "user" => "job_title" }, { "user" => "avatar" }, { "user" => "biography" }, { "user" => "facebook_url" },
+        { "user" => "public_profile" }, { "user" => "password" }, { "user" => "email" }, { "user" => "phone" }, { "user" => "job_title" }, { "user" => "avatar" }, { "user" => "biography" }, { "user" => "facebook_url" },
         { "user" => "twitter_url" }, { "user" => "linkedin_url" }, { "user" => "instagram_url" }, { "user" => "skills_and_interests" },
         { "user" => "name" }, { "user" => "first_name" }, { "user" => "middle_name" }, { "user" => "last_name" }, { "user" => "gender" },
         { "user" => "drivers_licence_number" }, { "user" => "gov_number" }, { "user" => "approval_requests" }, { "user" => "google_plus_url" }, { "user" => "degree"},

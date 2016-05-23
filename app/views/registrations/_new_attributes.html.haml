@@ -1,104 +1,20 @@
+-# This file is intended to replace _attributes.html.haml eventually
 -# TODO Adjust _attributes partial to bs3 when redo space wizard form
 
 - resource ||= current_user
 - only_inputs ||= []
 - only_inputs.map!(&:to_sym)
-- if only_inputs.empty? || only_inputs.include?(:approval_requests)
-  = render :partial => 'approval_requests/form', :locals => { f: f, object: resource }
 
-- if only_inputs.include?(:name)
-  = f.input :name
-- else
-  = f.input :first_name, input_html: { value: f.object.first_name } if only_inputs.empty? || only_inputs.include?(:first_name)
-  = f.input :middle_name, input_html: { value: f.object.middle_name } if only_inputs.empty? || only_inputs.include?(:middle_name)
-  = f.input :last_name, input_html: { value: f.object.last_name } if only_inputs.empty? || only_inputs.include?(:last_name)
+- %w(approval_requests name properties categories email language time_zone phones mobile_phone current_address company_name password avatar public_profile custom_model).each do |attr|
+  = render "registrations/attributes/#{attr}", only_inputs: only_inputs, f: f, resource: resource
 
-= f.simple_fields_for :default_profile do |default_profile_form|
-  = default_profile_form.simple_fields_for :properties, default_profile_form.object.properties do |properties_form|
-    - (default_profile_form.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
-      = draw_attribute_for_form(attribute, properties_form) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
 
-- if only_inputs.empty? || Category.users.roots.map { |c| "Category - #{c.name}".to_sym }.include?(only_inputs.first)
-  - category_name = only_inputs.first.to_s.split(" - ")[1]
-  - category = Category.users.roots.where(name: category_name).first
 
-  = render partial: 'shared/category', locals: { category: category, f: f }
 
-= f.input(:email, required: true) if only_inputs.empty? || only_inputs.include?(:email)
 
-- if only_inputs.empty? || only_inputs.include?(:language)
-  = f.input :language, collection: platform_context.instance.locales.by_created_at, label_method: :display_name,
-    value_method: :code, include_blank: false
 
-= f.input :time_zone, input_html: { class: 'selectpicker', "data-live-search" => "true" } if only_inputs.empty? || only_inputs.include?(:time_zone)
 
-- if only_inputs.empty? || only_inputs.include?(:phone)
-  %div{'data-phone-fields-container' => true}
-    = f.input :country_name, :as => :select, :collection => user_country_name_options, :selected => user_country_default(@country), input_html: { 'data-country-selector' => true, class: 'selectpicker', "data-live-search" => "true" }, :required => true, include_blank: true
 
-    .row{:class => ('error' if f.object.errors[:phone].present?) }
-      .col-md-3
-        = f.label :phone, :class => 'control-label required' do
-          - if f.object.validation_for(:phone).try(:is_required?)
-            %abbr{:title => "required"} *
-          = t('simple_form.labels.user.phone')
 
-      .col-md-9.input-container
-        .phone-number-country-code-field
-          .country-calling-code
-            = "+#{f.object.country.calling_code}" if f.object.country
-          = f.text_field :phone, data: { 'phone' => true }
-        - if f.object.errors[:phone].present?
-          .error-block= f.object.errors[:phone].to_sentence
-        - if is_i18n_set?('simple_form.hints.user.phone')
-          %p.help-block= t('simple_form.hints.user.phone', default: '')
 
-    .row.mobile-number-field{:class => ('error' if f.object.errors[:mobile_number].present?)}
-      .col-md-3
-        = f.label :mobile_number
-      .col-md-9.input-container
-        .phone-number-country-code-field
-          .country-calling-code
-            = "+#{f.object.country.calling_code}" if f.object.country
-          = f.text_field :mobile_number, data: { 'mobile-number' => true }
-        = label_tag do
-          = check_box_tag "#{f.object.class.name.underscore}_mobile_same_as_phone", '1', (f.object.phone == f.object.mobile_number), data: { 'same-as-phone-checkbox' => true }
-          =  t 'general.same_as_phone'
 
-        - if f.object.errors[:mobile_number].present?
-          .error-block= f.object.errors[:mobile_number].to_sentence
-        - if is_i18n_set?('simple_form.hints.user.mobile_number')
-          %p.help-block= t('simple_form.hints.user.mobile_number', default: '')
-
-- if only_inputs.empty? || only_inputs.include?(:current_address)
-  = f.simple_fields_for :current_address, (f.object.current_address || f.object.build_current_address) do |address_form|
-    = render :partial => 'addresses/column_form', :locals => { :f => address_form }
-= f.input :company_name, label: "Company name", as: :string if only_inputs.empty? || only_inputs.include?(:company_name)
-= f.association :industries, :blank => false, input_html: { class: 'selectpicker', "data-live-search" => "true" } if only_inputs.empty? || only_inputs.include?(:industries)
-= f.input :password, :label => (f.object.persisted? ? t('general.change_password') : t('general.password') ) if only_inputs.empty? || only_inputs.include?(:password)
-
-- if only_inputs.empty? || only_inputs.include?(:avatar)
-  .row{:class => ('error' if f.object.errors[:avatar].present?)}
-    .col-md-3
-      = f.label :avatar
-    .col-md-9
-      - if is_i18n_set?('forms.hints.user_form.avatar')
-        %p.photo-uploader-hint
-          = t('forms.hints.user_form.avatar')
-      .col-md-4
-        .single-photo
-          = new_file_upload_input("avatar",
-            avatar_path,
-            resource.avatar.thumbnail_dimensions[:medium],
-            "Upload Photo",
-            "no-multiple" => true,
-            :error => f.object.errors.include?(:avatar).present? ? "Please upload avatar." : nil) do
-            - if current_user.attributes['avatar']
-              = fileupload_photo(resource.avatar_url(:medium),
-                destroy_avatar_path,
-                edit_avatar_path,
-                :div)
-= f.input :public_profile if only_inputs.empty? || only_inputs.include?(:public_profile)
-- if only_inputs.empty? || only_inputs.include?(:phone)
-  - content_for :domready do
-    $(document).trigger('init:phonenumberfieldsform.nearme');

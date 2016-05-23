@@ -22,9 +22,9 @@ Then /^I should see this question in my inbox marked as read$/ do
   page.should have_content('Messages')
   page.should have_content('Inbox')
   page.should have_content model('user').first_name
-  page.should have_content @listing.name
+  # we might want to re-add this to new ui
+  #page.should have_content @listing.name
   page.should have_content 'Short one'
-  page.find('.message').should have_content('Archive')
 end
 
 When /^I log in as this listings creator$/ do
@@ -37,31 +37,31 @@ Then /^I should see this question in my inbox marked as unread$/ do
   find('.count').should have_content('1')
   page.should have_content('Inbox (1)')
   page.should have_content model('user').first_name
-  page.should have_content @listing.name
+  #page.should have_content @listing.name
   page.should have_content 'Short one'
-  page.find('.message').should have_content('Archive')
 end
 
 Then /^I should be able to read, answer and archive this question$/ do
-  click_link('Read')
+  first('.message a').click
+  page.should have_css '.foreign-message.message'
   page.should have_content 'Short one'
 
-  fill_in 'user_message_body', with: 'This is answer'
-  click_button('Send')
-  page.should have_content('Your message was sent!')
+  within('[data-messages-form]') do
+    fill_in 'user_message_body', with: "This is answer"
+    click_button 'Send'
+  end
+  visit page.current_path
+
+  page.should have_css '.foreign-message', count: 1
+  page.should have_css '.message', count: 2
   page.should have_content 'Short one'
   page.should have_content 'This is answer'
-  visit dashboard_user_messages_path
 
-  click_link('Archive')
+  click_link('Archive this conversation')
   page.should have_content('Your message was archived!')
   page.should_not have_content 'Short one'
-  page.should_not have_content 'This is answer'
 
-
-  within('select.messages') do
-    select 'Archived'
-  end
+  click_link 'Archived'
   page.should_not have_content 'Short one'
   page.should have_content 'This is answer'
 end
@@ -81,6 +81,7 @@ Given /^I send a message to another user on his profile page$/ do
   find('header.user-profile__header').find("[rel='modal']").click
   work_in_modal do
     fill_in 'user_message_body', with: "Short one"
+
     click_button 'Send'
   end
 
@@ -96,13 +97,11 @@ Then /^I should see this( reservation)? message in my inbox marked as read$/ do 
   page.should have_content('Inbox')
   if reservation_message
     page.should have_content @reservation.listing.administrator.first_name
-    page.should have_content @reservation.name
   else
     page.should have_content model('user').first_name
-    page.should have_content @another_user.name
+    page.should have_content @another_user.first_name
   end
   page.should have_content 'Short one'
-  page.find('.message').should have_content('Archive')
 end
 
 When /^I log in as this user$/ do
@@ -117,13 +116,11 @@ Then /^I should see this( reservation)? message in my inbox marked as unread$/ d
   page.should have_content('Inbox (1)')
   if reservation_message
     page.should have_content @reservation.listing.administrator.first_name
-    page.should have_content @reservation.name
   else
     page.should have_content model('user').first_name
-    page.should have_content @another_user.name
+    page.should have_content @another_user.first_name
   end
   page.should have_content 'Short one'
-  page.find('.message').should have_content('Archive')
 end
 
 Given /^I am logged in as the reservation administrator$/ do
@@ -132,7 +129,7 @@ Given /^I am logged in as the reservation administrator$/ do
 end
 
 Given /^I send a message to reservation owner$/ do
-  page.execute_script("$('.order a.ico-mail').click()")
+  click_link "Contact #{@reservation.owner.name}"
   work_in_modal do
     fill_in 'user_message_body', with: "Short one"
     click_button 'Send'

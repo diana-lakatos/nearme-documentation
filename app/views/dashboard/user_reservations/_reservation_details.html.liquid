@@ -1,0 +1,43 @@
+<div class="col-sm-3">
+  <h3>{{ 'dashboard.user_reservations.address' | translate }}</h3>
+  <p>
+    {{ reservation.listing.location.address | replace: ', ', '<br>' }}
+    <br />
+    [ <a href="http://maps.apple.com/?q={{reservation.listing.location.address}}" target='_blank'>{{ 'dashboard.user_reservations.show_on_map' | translate }}</a> ]
+  </p>
+</div>
+
+<div class="col-sm-2 total-units">
+  <h3>{{ 'dashboard.user_reservations.quantity' | translate }}</h3>
+  <p> {{ reservation.quantity }}</p>
+  <p> {{ reservation.total_units_text }}</p>
+</div>
+
+<div class="col-sm-3">
+  {% assign requested_dates = reservation.long_dates | split: ' ; ' %}
+  {% assign requested_dates_size = requested_dates.size %}
+  <h3>{{ 'dashboard.user_reservations.requested_dates' | translate: count: requested_dates_size }}</h3>
+  <ul class="dates">
+    {% for date in requested_dates %}
+      <li>{{ date }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div class="col-sm-3">
+  <h3>{{ 'dashboard.user_reservations.requested_time' | translate }}</h3>
+  <p class="times">
+    {{ reservation.hourly_summary_if_available }}
+  </p>
+</div>
+
+<div class="col-sm-1">
+  <h3>{{ 'dashboard.user_reservations.total' | translate }}</h3>
+  <p>
+  {% if for_host %}
+    {{ reservation.total_amount_for_host_if_payment_at_least_authorized }}
+  {% else %}
+    {{ reservation.total_amount_if_payment_at_least_authorized }}
+  {% endif %}
+  </p>
+</div>

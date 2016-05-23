@@ -1,4 +1,3 @@
-
 - @reservation = @reservation_request.reservation
 
 .row-fluid.reservation-wizard{ :"data-payment-controller" => true }
@@ -6,45 +5,23 @@
     = render 'header', listing: @reservation_request.listing, location: @reservation_request.location
 
     .box
-      %h2
-        = @reservation.total_units_text.titleize
-
-      = simple_form_for @reservation_request, :url => secure_listing_url(@reservation_request.listing), :method => :post, :html => {:class => "payment form-horizontal"} do |f|
+      = simple_form_for @reservation_request, :url => secure_listing_url(@reservation_request.listing), :method => :post, :html => {class: "payment form-horizontal"} do |f|
         = render 'listings/reservations/fields', :f => f
-        = f.input :delivery_type, as: :hidden
-        - if @reservation_request.with_delivery?
-          = f.simple_fields_for :reservation, @reservation do |r|
-            = r.simple_fields_for :shipments do |s|
-              = s.simple_fields_for :shipping_address do |a|
-                = a.input :user_id, as: :hidden, value: current_user.id
-                = a.input :shippo_id, as: :hidden
-                = a.input :name, as: :hidden
-                = a.input :company, as: :hidden
-                = a.input :street1, as: :hidden
-                = a.input :street2, as: :hidden
-                = a.input :city, as: :hidden
-                = a.input :zip, as: :hidden
-                = a.input :state, as: :hidden
-                = a.input :phone, as: :hidden
-                = a.input :email, as: :hidden
-                = a.input :country, as: :hidden
-              = s.input :is_insured, as: :hidden
-              = s.input :direction, as: :hidden
         - if @reservation_request.errors.present?
           .flash.error
             %p= t 'reservations_review.errors.whoops'
             %ul
               - @reservation_request.errors[:base].each do |error|
-                %li= error
+                - error.split("\n").each do |e|
+                  - e.sub!(/^Properties/, '')
+                  - e.sub!(/^Address address/, '')
+                  - next if ["Address latitude can't be blank", "Address longitude can't be blank"].any? { |m| e == m }
+                  %li= e
 
-        - if @reservation_request.action_hourly_booking?
-          %p
-            = @reservation.hourly_summary_for_first_period
+            = f.hidden_field :total_amount_check, value: @reservation.total_amount.cents
 
-        - else
-          .selected-dates-summary
-            %hr.thin
-            = @reservation.selected_dates_summary(separator: "<hr class='thin' />")
+        = render 'summary', reservation: @reservation, reservation_request: @reservation_request
+
         - if @reservation_request.with_delivery?
           %hr.thin
           %h2 Delivery
@@ -55,44 +32,8 @@
           - else
             .error.flash
               %p= t 'reservations_review.errors.no_delivery_options'
-        %hr.thin
 
-        %h2= t 'reservations_review.summary'
-
-        .order-summary
-          .summary-line
-            .summary-line-label= t 'reservations_review.subtotal'
-            .summary-line-value.subtotal-amount= @reservation.subtotal_price
-            .clearfix
-
-          - if @reservation_request.with_delivery?
-            .summary-line
-              .summary-line-label= t 'reservations_review.delivery'
-              .summary-line-value.delivery-amount 0.00
-              .clearfix
-
-          - if @reservation.has_service_fee?
-            .summary-line
-              .summary-line-label= t 'reservations_review.service_fee'
-              .summary-line-value.service-fee-amount= @reservation.service_fee_guest
-              .clearfix
-
-          - if @reservation.additional_charges.any?
-            - @reservation.additional_charges.each do |charge|
-              .summary-line
-                .summary-line-label= charge.name
-                .summary-line-value.service-fee-amount= humanized_money_with_cents_and_symbol(charge.amount)
-                = hidden_field_tag "#{f.object_name}[additional_charge_ids][]", charge.additional_charge_type_id
-                .clearfix
-
-          .summary-line
-            .summary-line-label= t 'reservations_review.total'
-            .summary-line-value.total-amount{data: {currency_symbol: @reservation.total_amount.currency.symbol, total_amount: @reservation.total_amount.to_f}}= @reservation.total_price
-            .clearfix
-
-        - if should_display_checkout_extra_fields?(f.object.checkout_extra_fields.user, true)
-          %br
-          = render 'shared/checkout_extra_fields', f: f, show_company_name: @reservation.show_company_name
+        = render 'reservation_properties', f: f
 
         - if f.object.payment.payment_methods.blank?
           %h2= t("reservations_review.missing_payment_method")
@@ -110,7 +51,9 @@
               - if f.object.errors.include?(:"waiver_agreement_template_#{wat.id}")
                 %p.error-block= f.object.errors[:"waiver_agreement_template_#{wat.id}"].first
 
-          = f.button :submit, t('reservations_review.buttons.request'), class: 'btn-green', data: { disable_with: t('reservations_review.disabled_buttons.request') }
+          = f.button :submit, t('reservations_review.buttons.request'), class: 'btn-green submit-payment', data: { disable_with: t('reservations_review.disabled_buttons.request') }
+
+  = render 'sidebar'
 
 - content_for :script do
   :javascript

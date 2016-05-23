@@ -27,7 +27,6 @@ class OfferTypes::OfferWizardController < ApplicationController
     @user.build_seller_profile(instance_profile_type: current_instance.seller_profile_type) if @user.seller_profile.blank?
     if params[:save_as_draft]
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
-      company.update_metadata({draft_at: Time.now, completed_at: nil})
       if offer.new_record?
         offer.draft_at = Time.now
         @user.save(validate: false)
@@ -39,7 +38,6 @@ class OfferTypes::OfferWizardController < ApplicationController
       flash[:success] = t('flash_messages.space_wizard.draft_saved')
       redirect_to @offer_type.wizard_path
     elsif @user.save
-      company.update_metadata({draft_at: nil, completed_at: Time.now})
       track_new_offer_event(offer)
       track_new_company_event(company)
       flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: @offer_type.name)

@@ -1,16 +1,15 @@
-%table.table.payment-documents
-  %thead
-    %tr
-      %th=t('dashboard.payment_documents.table_head.order')
-      %th=t('dashboard.payment_documents.table_head.user')
-      %th=t('dashboard.payment_documents.table_head.date')
-      %th=t('dashboard.payment_documents.table_head.document')
-  %tbody
-  - collection.each do |pd|
-    %tr
-      %td= pd.decorate.attachable_link
-      %td= link_to pd.user.try(:name), user_path(pd.user)
-      %td= I18n.l(pd.created_at.to_date, format: :short)
-      %td.file= link_to pd.file.file_name, pd.file.url, target: '_blank'
-
-= will_paginate_styled collection
+.table-responsive
+  %table.table
+    %thead
+      %tr
+        %th=t('dashboard.payment_documents.table_head.order')
+        %th=t('dashboard.payment_documents.table_head.user')
+        %th=t('dashboard.payment_documents.table_head.date')
+        %th=t('dashboard.payment_documents.table_head.document')
+    %tbody
+    - collection.each do |pd|
+      %tr
+        %td= pd.decorate.attachable_link
+        %td= link_to pd.user.try(:name), user_path(pd.user)
+        %td= I18n.l(pd.created_at.to_date, format: :short)
+        %td.file= link_to pd.file.file_name, pd.file.url, target: '_blank', download: pd.file.file_name
