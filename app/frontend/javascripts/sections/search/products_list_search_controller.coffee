@@ -15,7 +15,7 @@ module.exports = class SearchProductsListSearchController extends SearchControll
     @initializePriceSlider()
 
   bindEvents: ->
-    @filters_container.on 'click', 'input[type=checkbox]', =>
+    @filters_container.on 'click', 'input[type=checkbox]:not(.nav-heading > label > input)', =>
       setTimeout =>
         @triggerSearchFromQuery()
         100

@@ -69,10 +69,9 @@ module.exports = class SearchSearchController extends SearchController
         $(event.target).closest('.search-filter').toggleClass('active')
       false
 
-    @filters_container.on 'click', 'input[type=checkbox], input[type=radio]', (event) =>
+    @filters_container.on 'click', 'input[type=checkbox]:not(.nav-heading > label > input), input[type=radio]', (event) =>
       if $(event.target).attr('name') == 'parent_category_ids[]'
         return
-
       @fieldChanged()
 
     @filters_container.on 'change', 'input[type=text], select', =>
