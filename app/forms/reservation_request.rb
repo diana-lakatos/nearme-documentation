@@ -5,7 +5,7 @@ class ReservationRequest < Form
     :delivery_type, :total_amount_check, :start_time, :dates_fake
   attr_reader   :reservation, :listing, :location, :user, :client_token, :payment
 
-  delegate :confirm_reservations?, :location, :company, :timezone, to: :@listing
+  delegate :confirm_reservations?, :location, :company, :timezone, :minimum_booking_minutes, to: :@listing
   delegate :country_name, :country_name=, :country, to: :@user
   delegate :id, :guest_notes, :quantity, :action_hourly_booking?, :booking_type=, :currency,
     :service_fee_amount_guest, :additional_charges, :shipments, :shipments_attributes=, :category_ids, :category_ids=,
@@ -131,8 +131,9 @@ class ReservationRequest < Form
   def set_start_minute
     return unless start_time && start_time.split(':').any?
     hours, minutes = start_time.split(':')
+
     self.start_minute = hours.to_i * 60 + minutes.to_i
-    self.end_minute = start_minute + 90
+    self.end_minute = start_minute + get_minimum_booking_minutes
   end
 
   def quantity=(qty)
@@ -323,6 +324,10 @@ class ReservationRequest < Form
 
   def current_instance
     @current_instance ||= PlatformContext.current.instance
+  end
+
+  def get_minimum_booking_minutes
+    @listing.present? ? minimum_booking_minutes : 60
   end
 
 end
