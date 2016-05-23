@@ -68,10 +68,10 @@ module.exports = class SearchMixedController extends SearchSearchController
 
     $(document).on 'click', '.pagination a', (e) =>
       e.preventDefault()
-      link = $(e.target)
-      page_regexp = /page=(\d+)/gm
+      link = $(e.target).closest('a')
       @loader.show()
-      @triggerSearchFromQuery(page_regexp.exec(link.attr('href'))[1])
+      res = /page=(\d+)/gm.exec(link.attr('href'))
+      @triggerSearchFromQuery(res[1]) if res[1]
 
     $(document).on 'click', '.list .locations .location .listing', (e) =>
       unless $(e.target).hasClass('truncated-ellipsis')
