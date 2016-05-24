@@ -89,6 +89,7 @@
         }
     }
 
+
     @include bp($screen-tablet-vertical) {
         overflow: visible;
 
@@ -109,6 +110,7 @@
             display: block;
         }
     }
+
 
     @include bp($screen-mobile) {
         line-height: 50px;
@@ -136,6 +138,11 @@
 
         li small {
             display: none;
+        }
+
+        p a + span, p a + a {
+            display: block;
+            margin-top: 10px;
         }
     }
 }

@@ -35,7 +35,7 @@
         - elsif current_user && InstanceAdminAuthorizer.new(current_user).authorized?('Manage')
           = link_to t(:edit), edit_instance_admin_manage_user_path, class: 'button-a small', rel: "modal"
         - if current_user.try(:id) != resource.id
-          %p{:'data-follow-button' => true}
+          %span{:'data-follow-button' => true}
             = render partial: 'shared/follow_button', locals: { object: @user }
 
 - if current_user.try(:admin?)
