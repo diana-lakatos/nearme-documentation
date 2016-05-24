@@ -15,7 +15,7 @@ class FeaturedItemsTag < Liquid::Tag
 
   def render(context)
     @context = context
-    @view = @context.registers[:view]
+    @view = @context.registers[:action_view]
     @attributes = {}
 
     @arguments.scan(Liquid::TagAttributes) do |key, value|
@@ -24,7 +24,7 @@ class FeaturedItemsTag < Liquid::Tag
 
     @attributes.symbolize_keys!
 
-    routes = Rails.application.routes.url_methods
+    routes = Rails.application.routes.url_helpers
     
     params = { target: @attributes[:target], amount: @attributes[:amount] }
     params.merge!(type: @attributes[:type]) if @attributes[:type].present?

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160513125138) do
+ActiveRecord::Schema.define(version: 20160518165926) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1169,8 +1169,9 @@ ActiveRecord::Schema.define(version: 20160513125138) do
     t.boolean  "click_to_call",                                                                default: false
     t.boolean  "enable_reply_button_on_host_reservations",                                     default: false
     t.boolean  "split_registration",                                                           default: false
-    t.boolean  "precise_search",                                                               default: false,         null: false
     t.boolean  "require_payout_information",                                                   default: false
+    t.boolean  "precise_search",                                                               default: false,         null: false
+    t.boolean  "tax_included_in_price",                                                        default: true
     t.boolean  "enquirer_blogs_enabled",                                                       default: false
     t.boolean  "lister_blogs_enabled",                                                         default: false
   end
@@ -1780,6 +1781,7 @@ ActiveRecord::Schema.define(version: 20160513125138) do
     t.string   "test_mode"
     t.text     "guest_notes"
     t.hstore   "properties"
+    t.integer  "reservation_type_id"
   end
 
   add_index "recurring_bookings", ["administrator_id"], name: "index_recurring_bookings_on_administrator_id", using: :btree
@@ -1897,6 +1899,8 @@ ActiveRecord::Schema.define(version: 20160513125138) do
     t.datetime "pending_guest_confirmation"
     t.datetime "archived_at"
     t.decimal  "cancellation_policy_penalty_hours",                         precision: 8, scale: 2, default: 0.0
+    t.boolean  "tax_included_in_price"
+    t.integer  "total_tax_amount_cents"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -3356,6 +3360,15 @@ ActiveRecord::Schema.define(version: 20160513125138) do
   add_index "spree_zones", ["partner_id"], name: "index_spree_zones_on_partner_id", using: :btree
   add_index "spree_zones", ["user_id"], name: "index_spree_zones_on_user_id", using: :btree
 
+  create_table "states", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.string   "abbr",       limit: 255
+    t.integer  "country_id"
+    t.datetime "updated_at"
+  end
+
+  add_index "states", ["country_id"], name: "index_states_on_country_id", using: :btree
+
   create_table "support_faqs", force: :cascade do |t|
     t.integer  "instance_id"
     t.text     "question",      null: false
@@ -3449,6 +3462,38 @@ ActiveRecord::Schema.define(version: 20160513125138) do
   end
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
+
+  create_table "tax_rates", force: :cascade do |t|
+    t.datetime "deleted_at"
+    t.integer  "instance_id"
+    t.integer  "state_id"
+    t.integer  "value"
+    t.boolean  "included_in_price", default: true
+    t.string   "name"
+    t.string   "admin_name"
+    t.string   "calculate_with"
+    t.integer  "tax_region_id"
+    t.boolean  "default",           default: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+  end
+
+  add_index "tax_rates", ["instance_id"], name: "index_tax_rates_on_instance_id", using: :btree
+  add_index "tax_rates", ["state_id"], name: "index_tax_rates_on_state_id", using: :btree
+  add_index "tax_rates", ["tax_region_id"], name: "index_tax_rates_on_tax_region_id", using: :btree
+
+  create_table "tax_regions", force: :cascade do |t|
+    t.datetime "deleted_at"
+    t.integer  "instance_id"
+    t.integer  "country_id"
+    t.integer  "state_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "tax_regions", ["country_id"], name: "index_tax_regions_on_country_id", using: :btree
+  add_index "tax_regions", ["instance_id"], name: "index_tax_regions_on_instance_id", using: :btree
+  add_index "tax_regions", ["state_id"], name: "index_tax_regions_on_state_id", using: :btree
 
   create_table "text_filters", force: :cascade do |t|
     t.string   "name",             limit: 255

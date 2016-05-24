@@ -4,7 +4,7 @@ namespace :jira do
     @jira_helper = JiraHelper.new
     puts @jira_helper.commit_parser.to_s
 
-    @client = JIRA::Client.new({username: 'jira-api', password: 'N#arM3123adam', context_path: '',site: 'https://near-me.atlassian.net', rest_base_path: "/rest/api/2", auth_type: :basic, read_timeout: 120 })
+    @client = @jira_helper.jira_client
 
     issues = @client.Issue.jql("project = \"Near Me\" AND sprint = #{args[:sprint_number]} AND status != Closed")
 
@@ -67,8 +67,9 @@ namespace :jira do
 
     next_tag = @jira_helper.next_tag(1)
     (@cards_to_be_added_to_sprint + cards_in_commits).each do |card_in_sprint|
-      @client.Issue.find(card_in_sprint).save({ fields: { fixVersions: [{ name: next_tag }] } })
-      @client.Issue.find(card_in_sprint).save({ fields: { customfield_10007: args[:sprint_number].to_i }})
+      jira_card = @client.Issue.find(card_in_sprint)
+      jira_card.save({ fields: { fixVersions: [{ name: next_tag }] } })
+      jira_card.save({ fields: { customfield_10007: args[:sprint_number].to_i }})
     end
 
     puts ""
@@ -82,6 +83,40 @@ namespace :jira do
 
   task :release_hotfix do
     @jira_helper = JiraHelper.new
+    @client = @jira_helper.jira_client
+
+    @commits_for_hotfix = []
+
+    (@jira_helper.jira_commits + @jira_helper.non_jira_commits).each do |commit|
+      puts commit
+      puts "Include this commit in the hotfix? [y]/[n]"
+
+      user_input = STDIN.gets.strip
+      while(!%w(y n).include?(user_input)) do
+        puts "\tinvalid input"
+        user_input = STDIN.gets.strip
+      end
+      case user_input
+      when "y"
+        @commits_for_hotfix << commit
+        puts "\tadding to hotfix"
+      when "n"
+        puts "\tskipping"
+      end
+    end
+
+    next_tag = @jira_helper.next_tag(2)
+    @commits_for_hotfix.each do |commit_for_hotfix|
+      if commit_for_hotfix.match(/^NM-/)
+        card_number = @jira_helper.to_jira_number([commit_for_hotfix]).first
+        jira_card = @client.Issue.find(card_number)
+        jira_card.save({ fields: { fixVersions: [{ name: next_tag }] } })
+        jira_card.save({ fields: { customfield_10007: nil }})
+      end
+    end
+
+    puts "Commits included in hotfix:"
+    puts @commits_for_hotfix.join("\n")
   end
 end
 
@@ -150,6 +185,10 @@ class JiraHelper
 
   def full_names(numbers, array)
     numbers.map { |n| array.find { |a| a.include?(n) } }
+  end
+
+  def jira_client
+    @jira_client ||= JIRA::Client.new({username: 'jira-api', password: 'N#arM3123adam', context_path: '',site: 'https://near-me.atlassian.net', rest_base_path: "/rest/api/2", auth_type: :basic, read_timeout: 120 })
   end
 
 end

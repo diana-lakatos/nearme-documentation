@@ -5,7 +5,7 @@
     %abbr{ title: "required" }
       *
     = field_label
-    - if defined?(field_hint)
+    - if defined?(field_hint) && field_hint.present?
       = hint_button field_hint
 
   = f.text_field :address, :'data-behavior' => 'address-autocomplete', placeholder: t('locations.address_placeholder'), 'data-address-input' => true, class: 'form-control', :'data-precise-search' => current_instance.precise_search?

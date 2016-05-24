@@ -40,8 +40,8 @@ FactoryGirl.define do
       end
 
       factory :expired_reservation do
+        state 'expired'
         after(:create) do |reservation|
-          reservation.expire!
           reservation.periods.reverse.each_with_index do |period, i|
             period.date = Date.yesterday - i.days
             period.save!

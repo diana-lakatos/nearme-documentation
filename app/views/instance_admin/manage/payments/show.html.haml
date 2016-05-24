@@ -17,6 +17,10 @@
       %li
         Host Usell & Addons:
         = humanized_money_with_cents_and_symbol @payment.host_additional_charges
+      - if @payment.payable.respond_to?(:tax_included_in_price) && @payment.payable.tax_included_in_price
+        %li
+          Tax included
+          = humanized_money_with_cents_and_symbol @payment.payable.total_tax_amount
       %li
         State:
         = @payment.state

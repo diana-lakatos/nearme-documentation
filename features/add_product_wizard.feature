@@ -7,6 +7,7 @@ Feature: A user can add a product
     Given a product_type exists with name: "Sock"
     And current instance with integrated shipping
     And a state exists
+    And a spree_country exists
     And a country_nz exists
     And I go to the home page
     And I follow "List Your" bookable noun

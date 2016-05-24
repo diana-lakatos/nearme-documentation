@@ -53,6 +53,11 @@ Spree::Order.class_eval do
     callback.raw_filter.attributes.delete(:email) if callback.raw_filter.is_a?(EmailValidator)
   end
 
+  # WORK AROUND FOR NOW
+  def total_tax_amount_cents
+    0
+  end
+
   def create_pending_payment!
     payments.create(amount: total_amount, company_id: company_id)
   end

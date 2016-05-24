@@ -50,6 +50,14 @@ class ReservationDecorator < Draper::Decorator
     end
   end
 
+  def tax_price
+    if total_tax_amount && total_tax_amount > 0
+      humanized_money_with_cents_and_symbol(total_tax_amount)
+    else
+      nil
+    end
+  end
+
   def total_price
     if total_amount.to_f.zero?
       "Free!"

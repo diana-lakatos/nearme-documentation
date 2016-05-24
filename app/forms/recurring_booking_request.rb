@@ -5,7 +5,8 @@ class RecurringBookingRequest < Form
   attr_reader   :recurring_booking, :listing, :location, :user, :payment_subscription
 
   delegate :currency, :service_fee_amount_host_cents, :service_fee_amount_guest_cents, :billing_authorization,
-    :create_billing_authorization, :total_service_amount, :total_amount, to: :recurring_booking
+    :create_billing_authorization, :total_service_amount, :total_amount, :owner, :owner_attributes=,
+    :properties, :properties=, :category_ids, :category_ids=, :reservation_type, to: :recurring_booking
   delegate :confirm_reservations?, :location, :company, to: :listing
   delegate :mobile_number, :mobile_number=, :country_name, :country_name=, :country, to: :user
 
@@ -21,12 +22,13 @@ class RecurringBookingRequest < Form
 
     # We need to store additional_charge_ids to pass it to reservations
     @additional_charge_ids = attributes.delete(:additional_charge_ids)
-    store_attributes(attributes)
 
     if @listing
       @recurring_booking = @listing.recurring_bookings.build
+      @recurring_booking.reservation_type = @listing.transactable_type.reservation_type
       @recurring_booking.owner = user
       @recurring_booking.creator = @listing.creator
+      store_attributes(attributes)
       @recurring_booking.interval = interval
       @recurring_booking.guest_notes = guest_notes
       @recurring_booking.start_on = start_on || Date.current

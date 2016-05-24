@@ -162,14 +162,29 @@ class SecuredParams
     ]
   end
 
+  def tax_region
+    [
+      :country_id,
+      tax_rates_attributes: nested(self.tax_rate)
+    ]
+  end
+
+  # This is mix for spree and our tax solution
+  # can be cleaned up
   def tax_rate
     [
+      :id,
       :name,
-      :amount,
+      :admin_name,
+      :value,
       :included_in_price,
-      :zone_id,
-      :tax_category_id,
-      :calculator_type
+      :calculate_with,
+      :default,
+      :state_id,
+      :calculator_type, # TODO rm with spree
+      :amount, # TODO rm with spree
+      :zone_id, # TODO rm with spree
+      :tax_category_id, # TODO rm with spree
     ]
   end
 
@@ -375,6 +390,7 @@ class SecuredParams
       :support_imap_ssl,
       :support_imap_username,
       :taxonomy_tree,
+      :tax_included_in_price,
       :test_balanced_api_key,
       :test_mode,
       :test_paypal_app_id,
@@ -1489,6 +1505,32 @@ class SecuredParams
       payment_attributes: nested(self.payment),
       documents: nested(self.payment_document),
       documents_attributes: nested(self.payment_document),
+      payment_documents_attributes: nested(self.payment_document),
+      owner_attributes: nested(self.user),
+      address_attributes: nested(self.address)
+    ]
+  end
+
+  def recurring_booking_request(reservation_type)
+    [
+      :quantity,
+      :interval,
+      :start_on,
+      :guest_notes,
+      :payment_method_id,
+      :total_amount_check,
+      :country_name,
+      :mobile_number,
+      properties: Reservation.public_custom_attributes_names(reservation_type),
+      dates: [],
+      category_ids: [],
+      additional_charge_ids: [],
+      waiver_agreement_templates: [],
+      shipments_attributes: nested(self.shipment),
+      payment_attributes: nested(self.payment),
+      documents: nested(self.payment_document),
+      documents_attributes: nested(self.payment_document),
+      payment_subscription_attributes: nested(self.payment_subscription),
       payment_documents_attributes: nested(self.payment_document),
       owner_attributes: nested(self.user),
       address_attributes: nested(self.address)
