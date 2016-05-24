@@ -18,7 +18,8 @@ class PhotoUploader < BaseImageUploader
     project_thumbnail: { width: 200, height: 175 },
     project_small: { width: 250, height: 200 },
     golden: { width: SPACE_FULL_IMAGE_W, height: SPACE_FULL_IMAGE_H },
-    fullscreen: { width: 1200, height: 800 }
+    fullscreen: { width: 1200, height: 800 },
+    fit_to_activity_feed: { width: 600, height: 482 }
   }
 
   ASPECT_RATIO = 16.0/10.0
@@ -70,6 +71,10 @@ class PhotoUploader < BaseImageUploader
 
   version :project_small, from_version: :transformed, if: :generate_project_versions? do
     process resize_to_fill: [dimensions[:project_small][:width], dimensions[:project_small][:height]]
+  end
+
+  version :fit_to_activity_feed, from_version: :transformed, if: :generate_project_versions? do
+    process resize_to_fill: [dimensions[:fit_to_activity_feed][:width], dimensions[:fit_to_activity_feed][:height]]
   end
 
   version :fullscreen, if: :generate_transactable_versions? do
