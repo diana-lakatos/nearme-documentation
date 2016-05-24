@@ -1,5 +1,6 @@
 class V1::AmenitiesController < V1::BaseController
   def index
-    render json: {"amenities" => Amenity.all}, root: false
+    @amenities = Amenity.joins(:amenity_type).where(amenity_types: {instance_id: 1})
+    render json: {"amenities" => @amenities}, root: false
   end
 end
