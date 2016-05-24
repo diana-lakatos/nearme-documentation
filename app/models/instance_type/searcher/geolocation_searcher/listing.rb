@@ -5,6 +5,9 @@ class InstanceType::Searcher::GeolocationSearcher::Listing
     @transactable_type = transactable_type
     set_options_for_filters
     @params = params
+  end
+
+  def invoke
     @results = fetcher.listings
   end
 

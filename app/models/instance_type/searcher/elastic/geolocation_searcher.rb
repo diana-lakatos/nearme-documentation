@@ -27,20 +27,13 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
         })
 
         geo_searcher_params = initialize_search_params
+
         if located || adjust_to_map
-          if adjust_to_map || search.country.present? && search.city.blank? && search.bounding_box
-            @search_params.merge!({
-                bounding_box: search.bounding_box
-              })
-          elsif located
-            radius = @transactable_type.search_radius.to_i
-            radius = search.radius.to_i if radius.zero?
-            lat, lng = search.midpoint.nil? ? [0.0, 0.0] : search.midpoint.map(&:to_s)
-          end
-          Transactable.geo_search(geo_searcher_params.merge(@search_params).merge({distance: "#{radius}km", lat: lat, lon: lng}), @transactable_type)
-        else
-          Transactable.regular_search(geo_searcher_params.merge(@search_params), @transactable_type)
+          extend_params_by_geo_filters
+          return Transactable.geo_search(geo_searcher_params.merge(@search_params), @transactable_type)
         end
+
+        Transactable.regular_search(geo_searcher_params.merge(@search_params), @transactable_type)
       end
   end
 
@@ -103,6 +96,27 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
   def paginated_results(page, per_page)
     @results = @results.paginate(page: page.to_pagination_number, per_page: per_page.to_pagination_number(20), total_entries: @search_results_count)
     @results = @results.offset(0) unless postgres_filters?
+  end
+
+  def extend_params_by_geo_filters
+
+    if adjust_to_map || (!search.precise_address? && !service_radius_enabled? && search.bounding_box)
+      @search_params.merge!({
+        bounding_box: search.bounding_box
+      })
+    end
+
+    if located
+      lat, lng = search.midpoint
+      radius = @transactable_type.search_radius.to_i
+      radius = search.radius.to_i if radius.zero?
+
+      @search_params.merge!({
+        lat: lat,
+        lon: lng,
+        distance: "#{radius}km"
+      })
+    end
   end
 
 end
