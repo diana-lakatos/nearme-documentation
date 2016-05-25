@@ -21,6 +21,8 @@ node[:deploy].each do |application, deploy|
     only_if     { node["opsworks"]["instance"]["layers"].include?('rails-app') }
   end
 
+  # We need public/assets/manifest.json on the utility instance as well otherwise certain images will be missing
+  # from emails sent by delayed jobs
   execute "Invoke gulp build:#{node[:deploy][application][:rails_env].downcase} #{deploy['environment']['ASSET_HOST'] ? '--asset_host ' + deploy['environment']['ASSET_HOST'] : ''}" do
     cwd         deploy[:current_path]
     user        deploy[:user]
@@ -28,7 +30,7 @@ node[:deploy].each do |application, deploy|
     environment ({'HOME' => '/home/deploy', 'USER' => 'deploy', 'PATH' => '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:/home/deploy/.local/bin:/home/deploy/bin'})
     command     "gulp build:#{node[:deploy][application][:rails_env].downcase} #{deploy['environment']['ASSET_HOST'] ? '--asset_host ' + deploy['environment']['ASSET_HOST'] : ''}"
     action      :run
-    only_if     { node["opsworks"]["instance"]["layers"].include?('rails-app') }
+    only_if     { node["opsworks"]["instance"]["layers"].include?('rails-app') || node["opsworks"]["instance"]["layers"].include?('utility') }
   end
 end
 
