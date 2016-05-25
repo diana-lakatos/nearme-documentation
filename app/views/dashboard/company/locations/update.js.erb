@@ -14,7 +14,7 @@
   actionsContainer.append('<%= escape_javascript( render @location ) %>');
   $('label[for="availability_rules_defer"] p').html("<%= pretty_availability_sentence(@location.availability).to_s %>");
 
-  $('main').prepend('<%= escape_javascript( render "dashboard/shared/flash") %>');
+  $('.main-wrapper').prepend('<%= escape_javascript( render "dashboard/shared/flash") %>');
 
 }(window.jQuery));
 

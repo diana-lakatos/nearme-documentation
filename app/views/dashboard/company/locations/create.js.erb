@@ -12,7 +12,7 @@
 
   $('[data-location-actions] [data-location-id]').attr('hidden', true);
   actionsContainer.append('<%= escape_javascript( render @location ) %>');
-  $('main').prepend('<%= escape_javascript( render "dashboard/shared/flash") %>');
+  $('.main-wrapper').prepend('<%= escape_javascript( render "dashboard/shared/flash") %>');
 
 }(window.jQuery));
 
