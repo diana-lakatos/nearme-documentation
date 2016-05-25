@@ -117,9 +117,10 @@ class MerchantAccount < ActiveRecord::Base
   end
 
   def set_possible_payout!
-    unless self.test?
-      self.merchantable.listings.where(currency: supported_currencies).update_all(possible_payout: true)
-      ElasticBulkUpdateJob.perform Transactable, self.merchantable.listings.map{ |listing| [listing.id, { possible_payout: true }]}
+    if !self.test? && self.merchantable && self.payment_gateway
+      transactables = self.merchantable.listings.where(currency: supported_currencies)
+      transactables.update_all(possible_payout: true)
+      ElasticBulkUpdateJob.perform Transactable, transactables.map{ |listing| [listing.id, { possible_payout: true }]}
     end
 
     true

@@ -3,6 +3,15 @@
 
 namespace :migrate do
 
+  task :update_require_payout => :environment do
+    Instance.all.each do |instance|
+      instance.set_context!
+      MerchantAccount.verified.live.each do |ma|
+        ma.set_possible_payout!
+      end
+    end
+  end
+
   task :create_payment_subscriptions_for_existing_subscriptions => :environment do
     Instance.all.each do |instance|
       instance.set_context!
