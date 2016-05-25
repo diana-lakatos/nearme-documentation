@@ -93,7 +93,7 @@ module.exports = class Dialog
       @hide()
 
   setClass: (klass)=>
-    return unless klass
     @dialog.removeClass(@customClass) if @customClass
+    return unless klass
     @customClass = klass
     @dialog.addClass(@customClass)
