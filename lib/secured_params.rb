@@ -421,6 +421,7 @@ class SecuredParams
       :seller_attachments_enabled,
       :enable_language_selector,
       :click_to_call,
+      :skip_meta_tags,
       allowed_currencies: [],
       allowed_countries: [],
       custom_translations: [:'buy_sell_market.checkout.manual_payment', :'buy_sell_market.checkout.manual_payment_description'],

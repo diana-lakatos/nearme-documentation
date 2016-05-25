@@ -13,7 +13,6 @@
 
     - if ActionController::Base.asset_host
       %link{rel:"dns-prefetch", href: ActionController::Base.asset_host }
-    %title= title_tag
     %meta{:'http-equiv' => "x-dns-prefetch-control", content: "off"}
     %link{rel:"dns-prefetch", href:"//s3.amazonaws.com"}
     %link{rel:"dns-prefetch", href:"//maps.googleapis.com"}
@@ -24,7 +23,9 @@
     %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}
     %meta{:name => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1"}
     %meta{:name => "authenticity_token", :content => form_authenticity_token}
-    %meta{:content => meta_description_content, :name => "description"}/
+    - unless current_instance.skip_meta_tags?
+      %meta{:content => meta_description_content, :name => "description"}/
+      %title= title_tag
     %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
     %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
 
