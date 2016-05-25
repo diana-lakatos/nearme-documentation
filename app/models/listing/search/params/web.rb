@@ -92,6 +92,10 @@ class Listing::Search::Params::Web < Listing::Search::Params
     get_address_component("postcode")
   end
 
+  def precise_address?
+    country.present? && city.present? && street.present?
+  end
+
   def lntypes
     return [] if @lntype.nil?
     @lntypes ||= LocationType.where('lower(name) = any(array[?])', @lntype.to_s.split(','))

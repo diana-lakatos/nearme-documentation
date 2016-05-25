@@ -27,6 +27,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
         @date_end = @date_start + 14.days
         @params = { availability: { dates: { start: @date_start.to_s, end: @date_end.to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
+        @searcher.invoke
         assert_equal([ @transactable_opened_whole_week ].map(&:id).sort, @searcher.results.map(&:id).sort)
       end
 
@@ -35,6 +36,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
         @date_end = @date_start + 5.days
         @params = { availability: { dates: { start: @date_start.to_s, end: @date_end.to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
+        @searcher.invoke
         assert_equal([@transactable_opened_whole_week].map(&:id).sort, @searcher.results.map(&:id).sort)
       end
 
@@ -42,6 +44,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
         @date_start = @date_start + 1.day
         @params = { availability: { dates: { start: @date_start.to_s, end: @date_start.to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
+        @searcher.invoke
         assert_equal([
           @transactable_in_location_opened_from_mon_to_friday,
           @transactable_opened_whole_week,
@@ -60,6 +63,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
         @date_end = @date_start + 14.days
         @params = { availability: { dates: { start: @date_start.to_s, end: @date_end.to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
+        @searcher.invoke
         assert_equal([
           @transactable_in_location_opened_from_mon_to_friday,
           @transactable_opened_whole_week,
@@ -71,6 +75,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
         @date_end = @date_start + 1.days
         @params = { availability: { dates: { start: @date_start.to_s, end: @date_end.to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
+        @searcher.invoke
         assert_equal([
           @transactable_opened_whole_week,
           @transactable_in_location_opened_from_mon_to_friday ].map(&:id).sort, @searcher.results.map(&:id).sort)
@@ -101,6 +106,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
         TransactableType.first.update_attribute(:date_pickers_mode, 'relative')
         @params = { availability: { dates: { start: @date_start.to_s, end: @date_start.to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
+        @searcher.invoke
         assert_equal([
           @transactable_with_some_days_fully_booked_via_multiple_reservations,
           @transactable_with_some_days_fully_booked_on_other_days,
@@ -113,6 +119,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
         TransactableType.first.update_attribute(:date_pickers_mode, 'relative')
         @params = { availability: { dates: { start: @date_start.to_s, end: (@date_start + 1.day).to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
+        @searcher.invoke
         assert_equal([
           @transactable_with_some_days_fully_booked_via_one_reservation,
           @transactable_with_some_days_fully_booked_via_multiple_reservations,
@@ -125,6 +132,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
       should 'return correct transactables for relative mode' do
         TransactableType.first.update_attribute(:date_pickers_mode, 'relative')
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
+        @searcher.invoke
         assert_equal([
           @transactable_with_some_days_fully_booked_via_one_reservation,
           @transactable_with_some_days_fully_booked_via_multiple_reservations,
@@ -137,6 +145,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
       should 'return correct transactables for strict mode' do
         TransactableType.first.update_attribute(:date_pickers_mode, 'strict')
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
+        @searcher.invoke
         assert_equal([
           @transactable_with_some_days_fully_booked_on_other_days,
           @transactable_without_reservations,
@@ -254,4 +263,3 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
   end
 
 end
-

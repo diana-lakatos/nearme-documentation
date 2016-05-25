@@ -4,6 +4,10 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
   def initialize(transactable_type, params)
     @transactable_type = transactable_type
     @params = params
+    @filters = {date_range: []}
+  end
+
+  def invoke
     set_options_for_filters
     @filters = {date_range: search.available_dates}
 
