@@ -106,6 +106,10 @@
         }
     }
 
+    > footer.no-spacing {
+      margin: 0px;
+    }
+
     @include bp-range($screen-lg, $screen-tablet) {
 
         > header p,

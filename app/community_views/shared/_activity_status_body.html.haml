@@ -1,21 +1,30 @@
 - if [:user_commented_on_project, :user_commented].include?(event.event.to_sym)
   - followed = event.event_source.commentable
   - body = event.event_source.body
-  - image = "intel/status-a-chat-a.png"
+  - header_image = "intel/status-a-chat-a.png"
+- elsif event.event.to_sym == :user_added_photos_to_project
+  - followed = event.followed
+  - big_image = event.event_source.image.url(:fit_to_activity_feed)
 - else
   - followed = event.followed
   - body = event.description
-  - image = image_for_event(event)
+  - header_image = header_image_for_event(event)
   - title = link_to event.name, followed, target: target
 
 %section
   %article.status-a
-    %header
-      %figure
-        = link_to followed, target: target do
-          = image.present? ? image_tag(image) : image_tag(space_listing_placeholder_path(width: 80, height: 80))
-    %section
-      %h3.hx= title if title.present?
-      = simple_format auto_link(body, html: { target: '_blank', ref: 'nofollow' })
+    - if big_image.present?
+      = link_to followed, target: target do
+        = image_tag big_image
 
-    = render 'shared/activity_status_footer', event: event
+      = render 'shared/activity_status_footer', event: event, footer_class: 'no-spacing'
+    - else
+      %header
+        %figure
+          = link_to followed, target: target do
+            = header_image.present? ? image_tag(header_image) : image_tag(space_listing_placeholder_path(width: 80, height: 80))
+      %section
+        %h3.hx= title if title.present?
+        = simple_format auto_link(body, html: { target: '_blank', ref: 'nofollow' }) if body.present?
+
+      = render 'shared/activity_status_footer', event: event
