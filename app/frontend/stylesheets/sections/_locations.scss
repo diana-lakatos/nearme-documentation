@@ -714,43 +714,33 @@ section.listings {
     }
 
     .social-buttons-wrapper {
-        position: relative;
-        margin-left: 15px;
-        padding: 0px 0px 0px 100px;
+        opacity: 0;
+        transition: opacity .5s ease-in;
 
-        .facebook {
-            position: absolute;
-            left: 0;
-            top: -3px;
+        &.active {
+            opacity: 1;
         }
 
-        .social-buttons {
-            height: 25px;
-            overflow: hidden;
+        @media (min-width: $booking-module-breakpoint) {
+            margin: 0 0 0 15px;
+        }
 
-            > div {
-                float: left;
-                margin-right: 10px;
-                margin-top: 5px;
-                height: 20px;
+        li {
+            float: left;
+            margin: 0 15px 0 0;
 
-                &:last-child {
-                    margin-right: 0px;
+            div {
+                text-align: center;
+
+                span {
+                    margin: 0 !important;
+                }
+
+                & > :first-child {
+                    line-height: 0 !important;
+                    vertical-align: bottom !important;
                 }
             }
-
-            .twitter iframe {
-                width: 81px !important;
-            }
-
-            .google-plus iframe,
-            .google-plus > div {
-                width: 66px !important;
-            }
-        }
-
-        @media (max-width: $booking-module-breakpoint) {
-            margin-left: 0px;
         }
     }
 }
