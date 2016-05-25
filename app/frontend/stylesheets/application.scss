@@ -8,6 +8,16 @@
 @import "vendor/overrides/jcrop";
 @import "vendor/overrides/spectrum";
 
+@import "font-awesome/scss/variables";
+$fa-font-path: '/assets/font-awesome/';
+@import "font-awesome/scss/mixins";
+@import "font-awesome/scss/path";
+@import "font-awesome/scss/core";
+@import "font-awesome/scss/larger";
+@import "font-awesome/scss/fixed-width";
+@import "font-awesome/scss/list";
+@import "font-awesome/scss/icons";
+
 
 @import "layout/layout";
 @import "pages/pages";
