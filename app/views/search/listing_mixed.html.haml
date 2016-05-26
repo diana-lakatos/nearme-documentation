@@ -11,7 +11,7 @@
         %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, @searcher.search, @searcher.transactable_type.translated_bookable_noun)}
       = render 'search/mixed/pagination', locations: @searcher.results, result_count: @searcher.result_count
       - @searcher.results.each_with_index do |listing|
-        - cache i18n_cache_key('listing_mixed', listing, listing.company, @searcher.search.lgpricing_filters) do
+        - cache i18n_cache_key('listing_mixed', listing, listing.location, listing.company, @searcher.search.lgpricing_filters) do
           = render partial: 'search/map/location_marker', locals: {location: listing}
           = render partial: 'search/mixed/individual_listing', locals: {listing: listing, transactable_type: @searcher.transactable_type, lgpricing_filters: @searcher.search.lgpricing_filters }
       = render 'search/mixed/pagination', locations: @searcher.results, result_count: @searcher.result_count

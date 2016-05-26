@@ -13,7 +13,7 @@ class Address < ActiveRecord::Base
   geocoded_by :address
 
   belongs_to :instance
-  belongs_to :entity, -> { with_deleted }, polymorphic: true
+  belongs_to :entity, -> { with_deleted }, polymorphic: true, touch: true
 
   validates_presence_of :address, unless: :accurate_address_required
   validate :check_address, if: :accurate_address_required
