@@ -67,16 +67,11 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    /* initializeWishList */
-    var addToFavoriteButton = require('./components/add_to_favorite_button');
-    addToFavoriteButton.load();
+    var loadWishlistButtons = require('./components/load_wishlist_buttons');
+    loadWishlistButtons();
 
-    $(document).on('init:favoritebutton.nearme', function(event, element){
-      addToFavoriteButton.init(element, event)
-    });
-
-    $(document).on('load:favoritebutton.nearme', function(event, element){
-      addToFavoriteButton.load(element)
+    $(document).on('load:searchResults.nearme', function(){
+      loadWishlistButtons();
     });
 });
 
@@ -630,10 +625,12 @@ DNM.registerInitializer(function(){
         return;
     }
 
-    require('socialite-js/socialite.js');
-    var SocialButtons = require('./new_ui/modules/social_buttons');
-
-    new SocialButtons(wrapper, Socialite);
+    require.ensure(['imports?window=>{}!exports?window.Socialite!socialite-js/socialite.js', './new_ui/modules/social_buttons'], function(require){
+        var
+            Socialite = require('imports?window=>{}!exports?window.Socialite!socialite-js/socialite.js'),
+            SocialButtons = require('./new_ui/modules/social_buttons');
+        return new SocialButtons(wrapper, Socialite);
+    });
 });
 
 DNM.run();
