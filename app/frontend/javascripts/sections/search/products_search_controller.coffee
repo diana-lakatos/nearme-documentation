@@ -105,7 +105,7 @@ module.exports = class SearchProductsSearchController extends SearchController
   initializeEndlessScrolling: ->
     if @performEndlessScrolling
       $('#results').scrollTop(0)
-      jQuery.ias({
+      ias = jQuery.ias({
         container : '#results',
         item: '.product',
         pagination: '.pagination',
@@ -120,6 +120,9 @@ module.exports = class SearchProductsSearchController extends SearchController
             $('#results').append('<div id="reinitialize"></div>')
             reinitialize = $('#reinitialize')
       })
+
+      ias.on 'rendered', (items)->
+        $(document).trigger('rendered-search:ias.nearme', [items])
 
 
   showResults: (html) ->

@@ -131,7 +131,8 @@ module.exports = class SearchSearchController extends SearchController
 
   initializeEndlessScrolling: ->
     $('#results').scrollTop(0)
-    jQuery.ias({
+
+    ias = jQuery.ias({
       container : '#results',
       item: '.listing',
       pagination: '.pagination',
@@ -147,6 +148,9 @@ module.exports = class SearchSearchController extends SearchController
           $('#results').append('<div id="reinitialize"></div>')
           reinitialize = $('#reinitialize')
     })
+
+    ias.on 'rendered', (items)->
+      $(document).trigger('rendered-search:ias.nearme', [items])
 
   initializeMap: ->
     mapContainer = @container.find('#listings_map')[0]

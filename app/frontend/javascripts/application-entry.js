@@ -73,6 +73,10 @@ DNM.registerInitializer(function(){
     $(document).on('load:searchResults.nearme', function(){
       loadWishlistButtons();
     });
+
+    $(document).on('rendered-search:ias.nearme', function(){
+        loadWishlistButtons();
+    });
 });
 
 DNM.registerInitializer(function(){

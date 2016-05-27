@@ -60,6 +60,10 @@ function load(context) {
 
     var url = elements[0].getAttribute('data-path-bulk');
 
+    elements = Array.prototype.filter.call(elements, function(el){
+        return !el.getAttribute('data-favorite-toggler-loaded');
+    });
+
     var data = Array.prototype.map.call(elements, function(item){
         return {
             'object_id': item.getAttribute('data-object-id'),
@@ -69,6 +73,8 @@ function load(context) {
 
     loadButtons(url, { items: JSON.stringify(data) }, function(item){
         var el = document.getElementById('favorite-button-'+ item.wishlistable_type + '-' + item.id);
+        el.setAttribute('data-favorite-toggler-loaded', true);
+
         el.innerHTML = item.content;
         initializeFavoriteButtons(el);
     });
