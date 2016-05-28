@@ -1,9 +1,9 @@
-- if f.object.errors.any?
+- if @global_errors.present?
   .errors-global
     %h3
       %b= t('dashboard.transactables.transactable_not_saved')
-      = t('dashboard.transactables.address_errors_html', count: f.object.errors.count)
+      = t('dashboard.transactables.address_errors_html', count: @global_errors.count)
 
     %ul
-      - f.object.errors.full_messages.each do |msg|
+      - @global_errors.each do |msg|
         %li= msg

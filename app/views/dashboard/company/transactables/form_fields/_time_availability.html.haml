@@ -13,7 +13,9 @@
           = t(:available_on, scope: [:pricing, :availability])
 
       = f.input :days, as: :week_days, label: false, wrapper: :vertical_radio_and_checkboxes, checked: f.object.try(:days).presence || (0..6).to_a
-
+      - if f.object.errors[:base]
+        .form-group.has-error
+          = f.error :base
   .col-xs-1
     .form-action
       %button.action--remove.remove_fields.dynamic{:type => "button"}

@@ -50,6 +50,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
       unless PlatformContext.current.instance.priority_view_path == 'new_ui'
         flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@transactable.errors.full_messages)
       end
+      @global_errors = filter_error_messages(@transactable.errors.full_messages)
       @photos = @transactable.photos
       @attachments = @transactable.attachments
       render :new
@@ -86,6 +87,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
           unless PlatformContext.current.instance.priority_view_path == 'new_ui'
             flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@transactable.errors.full_messages)
           end
+          @global_errors = filter_error_messages(@transactable.errors.full_messages)
           @photos = @transactable.photos
           @attachments = @transactable.attachments
           render :edit
@@ -177,6 +179,24 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
       flash[:warning] = t('flash_messages.manage.listings.phone_number_verification_needed')
       redirect_to edit_registration_path(current_user)
     end
+  end
+
+  def filter_error_messages(messages)
+    pattern_to_remove = /^Availability template availability rules (base )?/
+    # Transformation
+    messages = messages.collect do |message|
+      if message.to_s.match(pattern_to_remove)
+        message.to_s.gsub(pattern_to_remove, '').humanize
+      else
+        message
+      end
+    end
+    # Rejection
+    messages = messages.reject do |message|
+      message.to_s.match(/latitude|longitude/i)
+    end
+
+    messages
   end
 
 end

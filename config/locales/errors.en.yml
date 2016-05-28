@@ -118,6 +118,10 @@ en:
       range_too_wide: "can 't be later than 1 year from starting date"
       has_an_invalid_format: "has an invalid format"
       not_verified_phone: 'must be verified'
+      open_time_before_close_time: "The opening hour must occur before the closing hour."
+      minimum_open_time:
+        one: "must be opened for at least %{minimum_hours} hour"
+        other: "must be opened for at least %{minimum_hours} hours"
 
       communications:
         not_verified:

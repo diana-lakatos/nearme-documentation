@@ -11,13 +11,13 @@ class AvailabilityRule < ActiveRecord::Base
   # === Validations
   validate do |record|
     total_opening_time = record.floor_total_opening_time_in_hours
-    record.errors["open_time"] << I18n.t('errors.messages.blank') if day_open_minute.nil?
-    record.errors["close_time"] << I18n.t('errors.messages.blank') if day_close_minute.nil?
+    record.errors.add :open_time, I18n.t('errors.messages.blank') if day_open_minute.nil?
+    record.errors.add :close_time, I18n.t('errors.messages.blank') if day_close_minute.nil?
     if total_opening_time.present?
       if total_opening_time < 0
-        record.errors["open_time"] << "The opening hour must occur before the closing hour."
+        record.errors.add :base, I18n.t('errors.messages.open_time_before_close_time')
       elsif total_opening_time < record.minimum_booking_hours
-        record.errors["close_time"] << "must be opened for at least #{sprintf('%.2f', record.minimum_booking_hours)} #{'hour'.pluralize(record.minimum_booking_hours)}"
+        record.errors.add :base, I18n.t('errors.messages.minimum_open_time', minimum_hours: sprintf('%.2f', record.minimum_booking_hours), count: record.minimum_booking_hours)
       end
     end
   end

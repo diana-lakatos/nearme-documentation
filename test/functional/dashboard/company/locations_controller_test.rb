@@ -114,7 +114,7 @@ class Dashboard::Company::LocationsControllerTest < ActionController::TestCase
       }
       @location = assigns(:location)
       refute @location.availability_template.valid?
-      assert @location.availability_template.errors.any? { |e| e.to_s == 'availability_rules.close_time' }
+      assert @location.availability_template.errors.any? { |e| e.to_s == 'availability_rules.base' }
     end
 
     should "destroy location" do
