@@ -115,14 +115,14 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def filter_error_messages(messages)
-    pattern_listings_photos = /^Companies locations listings photos /
+    pattern_to_remove = /^Companies locations listings photos|^Companies locations listings availability template availability rules (base )?/
     pattern_listings = /^Companies locations listings/
     # Transformation
     messages = messages.collect do |message|
-      if message.to_s.match(pattern_listings_photos)
-        message.to_s.gsub(pattern_listings_photos, '')
+      if message.to_s.match(pattern_to_remove)
+        message.to_s.gsub(pattern_to_remove, '').humanize
       elsif message.to_s.match(pattern_listings)
-        message.to_s.gsub(pattern_listings, @transactable_type.translated_bookable_noun)
+        message.to_s.gsub(pattern_listings, @transactable_type.translated_bookable_noun).humanize
       else
         message
       end
