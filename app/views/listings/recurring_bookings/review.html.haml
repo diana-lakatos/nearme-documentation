@@ -4,7 +4,7 @@
   .span8.offset2
     = render 'header', listing: @recurring_booking_request.listing, location: @recurring_booking_request.location
 
-    .box
+    .box.reservation-review
       %h2
         %p
           = "#{t('recurring_reservations_review.starts_from')} #{l(@recurring_booking.start_on, format: :short)}"
@@ -49,7 +49,10 @@
           %h2= t 'reservations_review.contact_information'
 
           = render 'contact_information_fields', :f => f
-        = render 'reservation_properties', f: f
+
+        .reservation-properties
+          = render 'reservation_properties', f: f
+
         - if f.object.payment_subscription.present? && f.object.payment_subscription.payment_methods.any?
           = render 'shared/payment_subscription', f: f
           = f.button :submit, t('reservations_review.buttons.request'), data: { disable_with: t('reservations_review.disabled_buttons.request') }
