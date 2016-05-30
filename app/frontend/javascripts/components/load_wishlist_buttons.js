@@ -76,6 +76,10 @@ function load(context) {
         el.setAttribute('data-favorite-toggler-loaded', true);
 
         el.innerHTML = item.content;
+        var classes = el.getAttribute('data-link-to-classes');
+        if (classes) {
+            el.querySelector('a').className += ' ' + classes;
+        }
         initializeFavoriteButtons(el);
     });
 }
