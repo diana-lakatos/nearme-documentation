@@ -67,16 +67,15 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    /* initializeWishList */
-    var addToFavoriteButton = require('./components/add_to_favorite_button');
-    addToFavoriteButton.load();
+    var loadWishlistButtons = require('./components/load_wishlist_buttons');
+    loadWishlistButtons();
 
-    $(document).on('init:favoritebutton.nearme', function(event, element){
-      addToFavoriteButton.init(element, event)
+    $(document).on('load:searchResults.nearme', function(){
+      loadWishlistButtons();
     });
 
-    $(document).on('load:favoritebutton.nearme', function(event, element){
-      addToFavoriteButton.load(element)
+    $(document).on('rendered-search:ias.nearme', function(){
+        loadWishlistButtons();
     });
 });
 
@@ -619,6 +618,22 @@ DNM.registerInitializer(function(){
 DNM.registerInitializer(function(){
     $( document ).on('modal-shown.nearme', function(e, containerElement) {
         $(containerElement).find("input[data-authenticity-token]").val($('meta[name="authenticity_token"]').attr('content'));
+    });
+});
+
+DNM.registerInitializer(function(){
+
+    var wrapper = document.querySelector('.social-buttons-wrapper');
+
+    if(!wrapper) {
+        return;
+    }
+
+    require.ensure(['imports?window=>{}!exports?window.Socialite!socialite-js/socialite.js', './new_ui/modules/social_buttons'], function(require){
+        var
+            Socialite = require('imports?window=>{}!exports?window.Socialite!socialite-js/socialite.js'),
+            SocialButtons = require('./new_ui/modules/social_buttons');
+        return new SocialButtons(wrapper, Socialite);
     });
 });
 

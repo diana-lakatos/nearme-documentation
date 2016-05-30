@@ -8,7 +8,7 @@ module.exports = class BlogPostsController
     @initializeInfiniteScroll()
 
   initializeInfiniteScroll: ->
-    $.ias({
+    ias = jQuery.ias({
       container: '.blog-posts',
       item: '.blog-post',
       pagination: '.pagination',
@@ -17,3 +17,6 @@ module.exports = class BlogPostsController
       history: false,
       loader: '<div class="spinner col-xs-12"><h1><img src="' + urlUtil.assetUrl('spinner.gif') + '"></div>'
     })
+
+    ias.on 'rendered', (items)->
+      $(document).trigger('rendered-blog:ias.nearme', [items])

@@ -389,6 +389,7 @@ en:
       configuration:
         master_lock: 'Master Lock'
         update_lock: 'Update Lock'
+        update_tax: 'Save'
         user_authorization: 'User Authorization'
         basic_configuration: 'Basic Configuration'
         basic_configuration_section:
@@ -481,6 +482,11 @@ en:
           sellers_preference: "Sellers preference"
       languages:
         settings: "Settings"
+      tax_regions:
+        buttons:
+          new_region: "New Tax"
+        confirmations:
+          delete: "Are you sure?"
     theme:
       info:
         title_and_description: "Title & Description"
@@ -1325,6 +1331,8 @@ en:
 
     user_reservations:
       test_mode: 'This reservation was made in Test Mode. No money was actually transferred'
+      tax_included: "Tax"
+      price: "Price"
       total_amount_to_be_determined: 'N/A'
       title_count: "Bookings (%{count})"
       penalty_info: "The penalty fee for cancelling the reservation is %{penalty}% of the reservation price."
@@ -1448,6 +1456,7 @@ en:
       alerts: 'Alerts:'
 
     host_reservations:
+      tax_included: "Tax (included)"
       booked: 'booked'
       reservation_state: "Reservation state: "
       payment_state: "Payment state: "
@@ -2384,6 +2393,12 @@ en:
     social_share:
       twitter: 'Check out @%{instance_name}'
 
+  listing:
+    buttons:
+      share_on_facebook: 'Share on Facebook'
+      share_on_linkedin: 'Share on LinkedIn'
+      share_on_twitter: 'Share on Twitter'
+      share_on_google_plus: 'Share on Google+'
 
   booking_module:
     description: 'Description'
@@ -2402,6 +2417,8 @@ en:
       days_first: 'Please select days first'
 
   reservations_review:
+    tax: "Tax"
+    tax_included: "Tax (included)"
     missing_payment_method: "Payment is not possible"
     missing_payment_method_info: 'Unfortunately we do not sell in this country.'
     shipping_address: 'Shipping address'
@@ -2659,4 +2676,3 @@ en:
   credit_cards:
     masked_number: '**** **** **** %{last4}'
   toggle_hint: 'Toggle hint'
-

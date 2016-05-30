@@ -165,6 +165,7 @@ class Reservation < ActiveRecord::Base
 
   def build_additional_charges(attributes)
     act_ids = attributes.delete(:additional_charge_ids)
+    act_ids.reject! { |a| a.empty? } if act_ids.present?
     additional_charge_types.get_mandatory_and_optional_charges(act_ids).uniq.map do |act|
       self.additional_charges.build(target: self, additional_charge_type_id: act.id, currency: currency)
     end
@@ -371,6 +372,10 @@ class Reservation < ActiveRecord::Base
     shipments.sum(:price)
   end
 
+  def total_tax_amount_cents
+    super || 0
+  end
+
   def tax_amount_cents
     0
   end
@@ -528,6 +533,9 @@ class Reservation < ActiveRecord::Base
     self.subtotal_amount_cents = price_calculator.price.try(:cents)
     self.service_fee_amount_guest_cents = service_fee_amount_guest.try(:cents)
     self.service_fee_amount_host_cents = service_fee_amount_host.try(:cents)
+    self.total_tax_amount_cents = tax_calculator.included_tax_amount_cents
+
+    tax_calculator.build_additional_tax_rate
   end
 
   def can_complete_checkout?
@@ -585,6 +593,10 @@ class Reservation < ActiveRecord::Base
     else
       DailyPriceCalculator.new(self)
     end
+  end
+
+  def tax_calculator
+    TaxCalculator.new(self)
   end
 
   def create_waiver_agreements

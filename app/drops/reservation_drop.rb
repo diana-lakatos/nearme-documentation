@@ -42,7 +42,8 @@ class ReservationDrop < BaseDrop
   delegate :id, :quantity, :subtotal_price, :service_fee_guest, :total_price, :total_price_cents, :pending?, :listing, :state_to_string,
     :credit_card_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, :created_at,
     :total_payable_to_host_formatted, :total_units_text, :additional_charges, :unit_price, :has_service_fee?,
-    :starts_at, :properties, :long_dates, :address, :periods, :comment, :cancellation_policy_penalty_hours, to: :reservation
+    :starts_at, :properties, :long_dates, :address, :periods, :comment, :cancellation_policy_penalty_hours, :tax_price, to: :reservation
+
 
   # bookable_noun
   #   string representing the object to be booked (e.g. desk, room etc.)

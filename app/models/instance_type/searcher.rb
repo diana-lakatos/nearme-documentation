@@ -99,4 +99,8 @@ module InstanceType::Searcher
     @searcher_drop ||= SearcherDrop.new(self)
   end
 
+  def service_radius_enabled?
+    @transactable_type.custom_attributes.exists?(name: :service_radius)
+  end
+
 end

@@ -14,7 +14,7 @@ module.exports = class Geocoder
     constructor: (@result) ->
 
     isValid: ->
-      @result.geometry
+      @result && @result.geometry
 
     postcode: ->
       @_addressComponentOfType('postal_code', 'political')?.long_name

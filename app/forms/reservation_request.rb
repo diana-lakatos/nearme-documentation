@@ -25,10 +25,10 @@ class ReservationRequest < Form
 
   def initialize(listing, user, attributes = {}, checkout_extra_fields = {}, last_search_json = {})
     @listing = listing
+    @user = user
     @waiver_agreement_templates = []
     # remove with old ui
-    @checkout_extra_fields = CheckoutExtraFields.new(user, checkout_extra_fields)
-    @user = @checkout_extra_fields.user
+    @checkout_extra_fields = CheckoutExtraFields.new(@user, checkout_extra_fields)
     @last_search_json = last_search_json
 
     if @listing
@@ -44,7 +44,7 @@ class ReservationRequest < Form
         attributes[:quantity] = @listing.quantity # ignore user's input, exclusive is exclusive - full quantity
       end
 
-      @reservation.user = user
+      @reservation.user = @user
       @reservation = @reservation.decorate
       attributes = update_shipments(attributes)
 
@@ -57,9 +57,9 @@ class ReservationRequest < Form
       build_return_shipment
       build_payment_documents
       set_dates
-      @reservation.calculate_prices
 
       @reservation.build_additional_charges(attributes)
+      @reservation.calculate_prices
       @payment = @reservation.build_payment(attributes.try(:[], :payment_attributes) || {}).decorate
       @deposit = @reservation.build_deposit(attributes.try(:[], :payment_attributes) || {})
     end

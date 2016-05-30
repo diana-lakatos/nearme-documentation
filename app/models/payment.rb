@@ -182,7 +182,7 @@ class Payment < ActiveRecord::Base
       if should_retry_refund?
         PaymentRefundJob.perform_later(retry_refund_at, id)
       else
-        Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::REFUND_ERROR, "Refund for Reservation id=#{self.id} failed #{refund_attempts} times, manual intervation needed.")
+        MarketplaceLogger.error('Refund failed', "Refund for Reservation id=#{self.id} failed #{refund_attempts} times, manual intervation needed.", raise: false)
       end
 
       false

@@ -143,7 +143,7 @@ class Listings::ReservationsController < ApplicationController
     service = Listings::OverlapingReservationsService.new(@listing, params.slice(:date))
 
     if service.valid?
-      head 200
+      render json: {}
     else
       render json: { warnings: service.warnings }
     end

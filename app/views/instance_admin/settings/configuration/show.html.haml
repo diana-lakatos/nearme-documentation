@@ -36,6 +36,9 @@
         = f.input :custom_waiver_agreements, as: :boolean, inline_label: true
       .input-container.col-xs-6
         = f.input :time_zone, input_html: { class: 'selectpicker', "data-live-search" => "true" }, include_blank: t('general.default')
+    .row
+      .input-container.col-xs-6
+        = f.input :skip_meta_tags, inline_label: true
 
   .content-container
     %h4

@@ -53,6 +53,7 @@
     "jt.timepicker": "timepicker#^1.8.9",
     "raygun4js": "^2.2.3",
     "respond": "^1.4.2",
-    "placeholders": "^4.0.1"
+    "placeholders": "^4.0.1",
+    "socialite-js": "v2.0"
   }
 }

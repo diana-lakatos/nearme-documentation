@@ -49,7 +49,9 @@ class InstanceType::SearcherFactory
   end
 
   def listing_searcher
-    "InstanceType::Searcher#{search_module}::GeolocationSearcher::Listing".constantize.new(@transactable_type, @params)
+    searcher = "InstanceType::Searcher#{search_module}::GeolocationSearcher::Listing".constantize.new(@transactable_type, @params)
+    searcher.invoke
+    searcher
   end
 
   def community_searcher

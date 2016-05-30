@@ -37,7 +37,7 @@ module.exports = class SearchProductsListSearchController extends SearchControll
 
   initializeEndlessScrolling: ->
       $('#results').scrollTop(0)
-      jQuery.ias({
+      ias = jQuery.ias({
         container : '#results',
         item: '.product',
         pagination: '.pagination',
@@ -47,3 +47,6 @@ module.exports = class SearchProductsListSearchController extends SearchControll
         thresholdMargin: -90,
         loader: '<div class="row-fluid span12"><h1><img src="' + $('img[alt=Spinner]').eq(0).attr('src') + '"><span>Loading More Results</span></h1></div>'
       })
+
+      ias.on 'rendered', (items)->
+        $(document).trigger('rendered-search:ias.nearme', [items])

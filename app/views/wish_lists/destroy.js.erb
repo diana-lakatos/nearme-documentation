@@ -1,4 +1,9 @@
-$(".favorite#favorite-<%= dom_id(@item) %> [data-favorite-icon]").removeClass('selected');
-$(".favorite#favorite-<%= dom_id(@item) %> [data-text]").html("<%= t('wish_lists.buttons.unselected_state') %>");
-$(".favorite#favorite-<%= dom_id(@item) %> [data-action-link]").attr('href', "<%= wish_lists_path(id: @item.id, wishlistable_type: @item.class.name, method: :post).html_safe %>");
-$(".favorite#favorite-<%= dom_id(@item) %> [data-action-link]").data('method', "post");
+(function(){
+  var el = document.getElementById('favorite-<%= dom_id(@item) %>');
+  el.querySelector('[data-favorite-icon]').classList.remove('selected');
+  el.querySelector('[data-text]').innerHTML = '<%= t('wish_lists.buttons.unselected_state') %>';
+
+  var link = el.querySelector('[data-action-link]');
+  link.href = '<%= wish_lists_path(id: @item.id, wishlistable_type: @item.class.name, method: :post).html_safe %>';
+  link.setAttribute('data-method', 'post');
+}());

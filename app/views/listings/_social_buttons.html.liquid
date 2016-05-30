@@ -1,45 +1,25 @@
-<div class='social-buttons-wrapper'>
-  {% if platform_context.facebook_key != blank %}
-    <div class='facebook'>
-      <div class="fb-like" data-href='{{ path }}' data-colorscheme='light' data-layout='button_count' data-action='like' data-show-faces='false' data-send='false'></div>
-      <div id='fb-root'></div>
-      <script>
-          (function(d, s, id) {
-          var js, fjs = d.getElementsByTagName(s)[0];
-          if (d.getElementById(id)) return;
-          js = d.createElement(s); js.id = id;
-          js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId={{platform_context.facebook_key}}";
-          fjs.parentNode.insertBefore(js, fjs);
-          }(document, 'script', 'facebook-jssdk'));
-      </script>
-    </div>
-  {% endif %}
+<ul class='social-buttons-wrapper'>
+  <li>
+    <a href='http://www.facebook.com/sharer.php?u={{ url }}&t={{ listing.name }}' class='socialite facebook-like' data-app-id='{{ platform_context.facebook_key }}' data-href='{{ url }}' data-send='false' data-layout='button_count' data-width='60' data-show-faces='false' rel='nofollow' target='_blank'>
+      <span class='vhidden'>{{ 'listing.buttons.share_on_facebook' | translate }}</span>
+    </a>
+  </li>
 
-  <div class="social-buttons">
-    <div class="twitter">
-      <a href="https://twitter.com/share" class="twitter-share-button" data-text="{{ listing.name }}" data-url="{{ url }}">Tweet</a>
-      <script>
-        !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-      </script>
-    </div>
+  <li>
+    <a href='http://twitter.com/share' class='socialite twitter-share' data-text='{{ listing.name }}' data-url='{{ url }}' data-count='vertical' rel='nofollow' target='_blank'>
+      <span class='vhidden'>{{ 'listing.buttons.share_on_twitter' | translate }}</span>
+    </a>
+  </li>
 
-    <div class="linkedin">
-      <script src="//platform.linkedin.com/in.js" type="text/javascript" lang='en_US'></script>
-      <script type="IN/Share" data-counter="right" data-url='{{ url }}'></script>
-    </div>
+  <li>
+    <a href='http://www.linkedin.com/shareArticle?mini=true&url={{ url }}&title={{ listing.name }}' class='socialite linkedin-share' data-url='{{ url }}' data-counter='right' rel='nofollow' target='_blank'>
+      <span class='vhidden'>{{ 'listing.buttons.share_on_linkedin' | translate }}</span>
+    </a>
+  </li>
 
-    <div class="google-plus">
-      <div class="g-plusone" data-size="medium" data-href='{{ url}}'>
-      <script>
-        window.___gcfg = {parsetags: 'onload'};
-        (function() {
-          var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-          po.src = 'https://apis.google.com/js/plusone.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-          })();
-      </script>
-    </div>
-  </div>
-  <div class='clearfix'></div>
-
-</div>
+  <li>
+    <a href='https://plus.google.com/share?url={{ url }}' class='socialite googleplus-one' data-size='medium' data-href='{{ url }}' rel='nofollow' target='_blank'>
+      <span class='vhidden'>{{ 'listing.buttons.share_on_google_plus' | translate }}</span>
+    </a>
+  </li>
+</ul>

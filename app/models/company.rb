@@ -251,7 +251,7 @@ class Company < ActiveRecord::Base
 
   def time_zone
     if latitude && longitude
-      ActiveSupport::TimeZone::MAPPING.select {|k, v| v == NearestTimeZone.to(latitude, longitude) }.keys.first
+      ActiveSupport::TimeZone::MAPPING.select {|k, v| v == NearestTimeZone.to(latitude, longitude) }.keys.first || 'UTC'
     else
      creator.time_zone
     end
