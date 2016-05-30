@@ -1,0 +1,17 @@
+.hint-toggler {
+    margin-left: 5px;
+    border: none;
+    background: none;
+    padding: 0;
+    font-size: 0;
+    height: 20px;
+
+    &:before {
+        @include fa-icon;
+
+        font-size: 16px;
+        font-weight: normal;
+        content: $fa-var-question-circle;
+        color: #239ed9;
+    }
+}

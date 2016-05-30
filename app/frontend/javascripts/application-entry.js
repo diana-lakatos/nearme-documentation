@@ -622,7 +622,6 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-
     var wrapper = document.querySelector('.social-buttons-wrapper');
 
     if(!wrapper) {
@@ -635,6 +634,14 @@ DNM.registerInitializer(function(){
             SocialButtons = require('./new_ui/modules/social_buttons');
         return new SocialButtons(wrapper, Socialite);
     });
+});
+
+DNM.registerInitializer(function(){
+  $(document).on('init:tooltips.nearme', function(e, containerElement) {
+    $(containerElement).find('[data-toggle="tooltip"]').tooltip({
+      placement: 'right',
+    });
+  });
 });
 
 DNM.run();

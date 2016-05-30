@@ -29,7 +29,6 @@ class Instance < ActiveRecord::Base
   SEARCH_TYPES = %w(geo fulltext fulltext_geo fulltext_category geo_category)
   SEARCH_ENGINES = %w(postgresql elasticsearch)
   SEARCH_MODULES = { 'elasticsearch' => 'Elastic' }
-  PRICING_OPTIONS = %w(free hourly daily weekly monthly fixed)
   SEARCHABLE_CLASSES = ['TransactableType', 'ServiceType', 'Spree::ProductType', 'InstanceProfileType', 'OfferType']
 
   API_KEYS.each do |meth|
@@ -98,7 +97,6 @@ class Instance < ActiveRecord::Base
   has_many :availability_templates, as: :parent
   has_many :custom_validators
   has_many :form_components, as: :form_componentable, dependent: :destroy
-  serialize :pricing_options, Hash
 
   validates :name, presence: true, length: { maximum: 255 }
   validates :marketplace_password, presence: { if: :password_protected }, length: { maximum: 255 }
@@ -134,19 +132,6 @@ class Instance < ActiveRecord::Base
 
   def authentication_supported?(provider)
     self.send(:"#{provider.downcase}_consumer_key").present? && self.send(:"#{provider.downcase}_consumer_secret").present?
-  end
-
-  PRICING_OPTIONS.each do |price|
-    next if price == 'free'
-    next if price == 'fixed'
-    %w(min max).each do |edge|
-      # Flag each price type as a Money attribute.
-      # @see rails-money
-      monetize "#{edge}_#{price}_price_cents", :allow_nil => true
-
-      # Mark price fields as attr-accessible
-      # attr_accessible "#{edge}_#{price}_price_cents", "#{edge}_#{price}_price"
-    end
   end
 
   def allowed_countries_list

@@ -1068,7 +1068,6 @@ ActiveRecord::Schema.define(version: 20160525152051) do
     t.string   "lessor",                                   limit: 255
     t.string   "lessee",                                   limit: 255
     t.boolean  "skip_company",                                                                 default: false
-    t.text     "pricing_options"
     t.decimal  "service_fee_host_percent",                             precision: 5, scale: 2, default: 0.0
     t.string   "live_stripe_public_key",                   limit: 255
     t.string   "paypal_email",                             limit: 255
@@ -1080,14 +1079,6 @@ ActiveRecord::Schema.define(version: 20160525152051) do
     t.string   "encrypted_live_paypal_client_secret",      limit: 255
     t.string   "encrypted_live_stripe_api_key",            limit: 255
     t.string   "encrypted_marketplace_password",           limit: 255
-    t.integer  "min_hourly_price_cents"
-    t.integer  "max_hourly_price_cents"
-    t.integer  "min_daily_price_cents"
-    t.integer  "max_daily_price_cents"
-    t.integer  "min_weekly_price_cents"
-    t.integer  "max_weekly_price_cents"
-    t.integer  "min_monthly_price_cents"
-    t.integer  "max_monthly_price_cents"
     t.boolean  "password_protected",                                                           default: false
     t.boolean  "test_mode",                                                                    default: false
     t.string   "encrypted_test_paypal_username",           limit: 255

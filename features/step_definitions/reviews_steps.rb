@@ -56,7 +56,7 @@ end
 
 When(/^I remove review$/) do
   RatingSystem.update_all(transactable_type_id: @reservation.listing.transactable_type_id)
-  FactoryGirl.create(:review, rating_system_id: RatingSystem.for_hosts.first.id, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s, user: @user, rating: 5)
+  @review_to_be_removed = FactoryGirl.create(:review, rating_system_id: RatingSystem.for_hosts.first.id, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s, user: @user, rating: 5)
   visit completed_dashboard_reviews_path
   page.driver.accept_js_confirms!
 
@@ -84,5 +84,5 @@ end
 
 Then(/^I should see review in uncompleted feedback$/) do
   visit dashboard_reviews_path
-  page.should have_content(@reservation.listing.name)
+  page.should have_content(@review_to_be_removed.reviewable.listing.creator.name)
 end

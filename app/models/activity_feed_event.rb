@@ -55,7 +55,11 @@ class ActivityFeedEvent < ActiveRecord::Base
   end
 
   def description
-    followed.try(:description).presence || event_source.try(:description) || quotation_for(event_source.try(:text))
+    if self.event_source.is_a?(Link)
+      ActionController::Base.helpers.link_to(self.event_source.text, self.event_source.url)
+    else
+      followed.try(:description).presence || event_source.try(:description) || quotation_for(event_source.try(:text))
+    end
   end
 
   def quotation_for(text)
