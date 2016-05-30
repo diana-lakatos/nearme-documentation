@@ -67,9 +67,13 @@ namespace :jira do
 
     next_tag = @jira_helper.next_tag(1)
     (@cards_to_be_added_to_sprint + cards_in_commits).each do |card_in_sprint|
-      jira_card = @client.Issue.find(card_in_sprint)
-      jira_card.save({ fields: { fixVersions: [{ name: next_tag }] } })
-      jira_card.save({ fields: { customfield_10007: args[:sprint_number].to_i }})
+      begin
+        jira_card = @client.Issue.find(card_in_sprint)
+        jira_card.save({ fields: { fixVersions: [{ name: next_tag }] } })
+        jira_card.save({ fields: { customfield_10007: args[:sprint_number].to_i }})
+      rescue => e
+        puts "Error for card: #{card_in_sprint}. #{e}"
+      end
     end
 
     puts ""
