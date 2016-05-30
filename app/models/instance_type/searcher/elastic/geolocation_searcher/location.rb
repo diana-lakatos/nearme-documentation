@@ -22,24 +22,26 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location
       order_ids = locations.keys[@offset..@to]
       filtered_listings = Transactable.where(id: listings_scope.pluck(:id))
     else
-      @search_results_count = locations.size
       locations = locations.to_a[@offset..@to].to_h
 
       order_ids = location_ids
       filtered_listings = Transactable.where(id: locations.values.flatten)
     end
+    @search_results_count = fetcher.response[:aggregations]['filtered_aggregations']['distinct_locations'][:value]
     @results = ::Location.includes(:location_address, :company, listings: [:service_type]).
       where(id: location_ids).order_by_array_of_ids(order_ids).
       merge(filtered_listings)
   end
 
-  def per_page_elastic; end
+  def per_page_elastic
+    10_000
+  end
 
   def page_elastic; end
 
   def max_price
     return 0 if !@transactable_type.show_price_slider || results.blank?
-    max = fetcher.response[:aggregations]["filtered_price_range"]["maximum_price"].try(:[],'value') || 0
+    max = fetcher.response[:aggregations]["filtered_aggregations"]["maximum_price"].try(:[],'value') || 0
     max / 100
   end
 
