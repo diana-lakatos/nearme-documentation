@@ -25,7 +25,7 @@ class Review < ActiveRecord::Base
   validates_presence_of :rating, :user, :reviewable, :transactable_type
   validates :rating, inclusion: { in: RatingConstants::VALID_VALUES , message: :rating_is_required }
   validate  :creator_does_not_review_own_objects
-  validates_uniqueness_of :user_id, scope: [:reviewable_id, :reviewable_type, :subject]
+  validates_uniqueness_of :user_id, scope: [:reviewable_id, :reviewable_type, :subject], conditions: -> { where(deleted_at: nil) }
 
   default_scope { order('reviews.created_at DESC') }
 
