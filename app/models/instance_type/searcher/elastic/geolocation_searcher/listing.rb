@@ -37,7 +37,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
 
   def max_price
     return 0 if !@transactable_type.show_price_slider || results.blank?
-    max = fetcher.response[:aggregations]["filtered_price_range"]["maximum_price"].try(:[],'value') || 0
+    max = fetcher.response[:aggregations]["filtered_aggregations"]["maximum_price"].try(:[],'value') || 0
     max / 100
   end
 
