@@ -628,11 +628,11 @@ DNM.registerInitializer(function(){
         return;
     }
 
-    require.ensure(['imports?window=>{document: document}!exports?window.Socialite!socialite-js/socialite.js', './new_ui/modules/social_buttons'], function(require){
+    require.ensure(['socialite-js/socialite.js', './new_ui/modules/social_buttons'], function(require){
         var
-            Socialite = require('imports?window=>{document: document}!exports?window.Socialite!socialite-js/socialite.js'),
+            Socialite = require('socialite-js/socialite.js'),
             SocialButtons = require('./new_ui/modules/social_buttons');
-        return new SocialButtons(wrapper, Socialite);
+        return new SocialButtons(wrapper, window.Socialite);
     });
 });
 

@@ -249,13 +249,18 @@ module Elastic
     def aggregations
       {
         aggs: {
-          filtered_price_range: {
+          filtered_aggregations: {
             filter: {
               bool: {
                 must: @filters
               }
             },
             aggs: {
+              distinct_locations: {
+                cardinality: {
+                  field: 'location_id'
+                }
+              },
               maximum_price: {
                 max: {
                   field: "all_prices"

@@ -174,11 +174,12 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :marketplace_sessions, only: [:new, :create]
-    resources :wish_lists, only: [:show, :create, :destroy] do
-      collection do
-        get :bulk_show
-      end
-    end
+
+    delete 'wish_list/:id/:wishlistable_type', to: 'wish_lists#destroy'
+    get 'wish_list/:id/:wishlistable_type', to: 'wish_lists#show', as: 'wish_list'
+    get 'wish_lists/bulk_show', to: 'wish_lists#bulk_show', as: 'bulk_show_wish_lists'
+    post 'wish_lists', to: 'wish_lists#create', as: 'wish_lists'
+
 
     namespace :instance_admin do
       get '/', to: 'base#index'

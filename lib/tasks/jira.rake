@@ -112,10 +112,14 @@ namespace :jira do
     next_tag = @jira_helper.next_tag(2)
     @commits_for_hotfix.each do |commit_for_hotfix|
       if commit_for_hotfix.match(/^NM-/)
+        begin
         card_number = @jira_helper.to_jira_number([commit_for_hotfix]).first
         jira_card = @client.Issue.find(card_number)
         jira_card.save({ fields: { fixVersions: [{ name: next_tag }] } })
         jira_card.save({ fields: { customfield_10007: nil }})
+        rescue => e
+          puts "Error for card: #{commit_for_hotfix}. #{e}"
+        end
       end
     end
 
