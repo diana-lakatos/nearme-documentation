@@ -66,14 +66,14 @@ class ScheduleRule < ActiveRecord::Base
       if date_start < Time.zone.now.beginning_of_day
         errors.add(:user_date_start, :not_in_past)
       end
-      if date_end < Time.zone.now.beginning_of_day
+      if date_end.present? && date_end < Time.zone.now.beginning_of_day
         errors.add(:user_date_end, :not_in_past)
       end
     end
   end
 
   def range_not_too_wide
-    errors.add(:user_date_end, :range_too_wide) if date_start + 1.year < date_end
+    errors.add(:user_date_end, :range_too_wide) if date_start + 1.year < date_end if date_end.present?
   end
 
 end
