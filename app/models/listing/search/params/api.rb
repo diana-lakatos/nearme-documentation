@@ -11,8 +11,13 @@ class Listing::Search::Params::Api < Listing::Search::Params
   # The :location object provided is for the users actual location rather than the one
   # they are searching for.
   def midpoint
-    options.delete(:location)
-    super
+    @midpoint ||= begin
+      if @options[:location].present?
+        [@options[:location][:lat], @options[:location][:lon]]
+      elsif bounding_box.present?
+        ::Geocoder::Calculations.geographic_center(bounding_box)
+      end
+    end
   end
 
 end

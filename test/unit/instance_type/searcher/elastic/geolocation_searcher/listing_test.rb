@@ -17,18 +17,19 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::ListingTest < Active
   end
 
   test 'use "geo_search" when located' do
-    @searcher.instance_variable_set(:@params, {lat: 123, lng: 123})
+    @search_web_params.stubs(:midpoint).returns([123, 123])
     @searcher.expects(:extend_params_by_geo_filters)
     @searcher.fetcher
   end
 
   test 'use geo distance query when address is located' do
-    @searcher.instance_variable_set(:@params, {lat: 123, lng: 123})
+    @search_web_params.stubs(:midpoint).returns([123, 123])
     @searcher.fetcher
 
     params = @searcher.instance_variable_get(:@search_params)
+
     assert params.has_key?(:lat)
-    assert params.has_key?(:lng)
+    assert params.has_key?(:lon)
     assert params.has_key?(:distance)
   end
 
@@ -41,7 +42,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::ListingTest < Active
   end
 
   test 'use geo distance query when address is not precise but service radius is enabled' do
-    @searcher.instance_variable_set(:@params, {lat: 123, lng: 123})
+    @search_web_params.stubs(:midpoint).returns([123, 123])
     @searcher.stubs(:service_radius_enabled?).returns(true)
     @search_web_params.stubs(:precise_address?).returns(false)
     @search_web_params.stubs(:bounding_box).returns([[123,123], [123,123]])
@@ -50,7 +51,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::ListingTest < Active
 
     params = @searcher.instance_variable_get(:@search_params)
     assert params.has_key?(:lat)
-    assert params.has_key?(:lng)
+    assert params.has_key?(:lon)
     assert params.has_key?(:distance)
   end
 

@@ -18,6 +18,13 @@ class Listing::Search::Params::WebTest <  ActiveSupport::TestCase
     end
   end
 
+  context '#precise_address?' do
+    should 'return true when state and city are present' do
+      params = build_params({state: 'State', city: 'City'})
+      assert_equal(true, params.precise_address?)
+    end
+  end
+
   def build_params(options)
     Listing::Search::Params::Web.new(options, TransactableType.first)
   end
