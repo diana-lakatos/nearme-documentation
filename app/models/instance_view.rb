@@ -67,10 +67,8 @@ class InstanceView < ActiveRecord::Base
     'vendor_approval_mailer/notify_host_of_listing_questioned',
     'vendor_approval_mailer/notify_host_of_user_approval',
     'user_mailer/notify_about_wrong_phone_number',
-    'user_mailer/notify_about_unread_messages',
-
-
-  ].freeze
+    'user_mailer/notify_about_unread_messages'
+  ].sort.freeze
 
   DEFAULT_SMS_TEMPLATES_PATHS = [
     'company_sms_notifier/notify_host_of_no_payout_option',
@@ -80,9 +78,9 @@ class InstanceView < ActiveRecord::Base
     'reservation_sms_notifier/notify_host_with_confirmation',
     'user_message_sms_notifier/notify_user_about_new_message'
 
-  ].freeze
+  ].sort.freeze
 
-  DEFAULT_EMAIL_TEMPLATE_LAYOUTS_PATHS = ['layouts/mailer'].freeze
+  DEFAULT_EMAIL_TEMPLATE_LAYOUTS_PATHS = ['layouts/mailer'].sort.freeze
 
   # Contains documentation to be parsed by the documentation parser
   # Please keep it up-to-date when adding/modifying new liquid views to
@@ -474,7 +472,7 @@ class InstanceView < ActiveRecord::Base
       score: "number",
       hints: "string"
     }
-  }.freeze
+  }.sort.to_h.freeze
 
   scope :for_instance_id, ->(instance_id) {
     where('(instance_views.instance_id IS NULL OR instance_views.instance_id = ?)', instance_id)
@@ -489,23 +487,23 @@ class InstanceView < ActiveRecord::Base
   }
 
   scope :liquid_views, -> {
-    custom_views.where(handler: 'liquid')
+    custom_views.where(handler: 'liquid').order('path')
   }
 
   scope :custom_views, -> {
-    where(view_type: VIEW_VIEW)
+    where(view_type: VIEW_VIEW).order('path')
   }
 
   scope :custom_smses, -> {
-    where(view_type: SMS_VIEW, format: 'text', handler: 'liquid')
+    where(view_type: SMS_VIEW, format: 'text', handler: 'liquid').order('path')
   }
 
   scope :custom_emails, -> {
-    where(view_type: EMAIL_VIEW, format: ['text', 'html'], handler: 'liquid')
+    where(view_type: EMAIL_VIEW, format: ['text', 'html'], handler: 'liquid').order('path')
   }
 
   scope :custom_email_layouts, -> {
-    where(view_type: EMAIL_LAYOUT_VIEW, format: ['text', 'html'], handler: 'liquid')
+    where(view_type: EMAIL_LAYOUT_VIEW, format: ['text', 'html'], handler: 'liquid').order('path')
   }
 
   def self.all_email_templates_paths
