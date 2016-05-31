@@ -40,7 +40,7 @@ module InstanceType::Searcher
   end
 
   def located
-    @params[:loc].present? || @params[:lat].present? && @params[:lng].present?
+    search.midpoint.present?
   end
 
   def adjust_to_map

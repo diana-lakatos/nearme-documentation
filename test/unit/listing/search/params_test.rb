@@ -29,17 +29,19 @@ class Listing::Search::ParamsTest <  ActiveSupport::TestCase
   end
 
   context '#midpoint' do
-    context 'with a bounding_box' do
-      setup do
-        options = options_with_bounding_box
-        @bounding_box = [options[:boundingbox][:start].values, options[:boundingbox][:end].values]
-        @params = build_params(options_with_bounding_box)
+
+    context 'with params' do
+
+      should 'provide a midpoint by :location params' do
+        params = build_params({location: {lat: 123, lon: 234}})
+        assert_equal([123, 234], params.midpoint)
       end
 
-      should 'provide a midpoint between nx and sy' do
-        expected_midpoint = Geocoder::Calculations.geographic_center(@bounding_box)
-        assert_equal expected_midpoint, @params.midpoint
+      should 'provide a midpoint by :lat and :lng params' do
+        params = build_params({lat: 123, lng: 234})
+        assert_equal([123, 234], params.midpoint)
       end
+
     end
 
     context 'with a location' do

@@ -10,6 +10,7 @@ class Listing::Search::Params
   def initialize(options, transactable_type)
     @geocoder = Listing::Search::Geocoder
     @options = options.respond_to?(:deep_symbolize_keys) ? options.deep_symbolize_keys : options.symbolize_keys
+
     if !midpoint && query.present?
       @location = @geocoder.find_search_area(query)
       if @location.present?
@@ -60,8 +61,8 @@ class Listing::Search::Params
     @midpoint ||= begin
       if @options[:location].present?
         [@options[:location][:lat], @options[:location][:lon]]
-      elsif bounding_box.present?
-        ::Geocoder::Calculations.geographic_center(bounding_box)
+      elsif @options[:lat].present? && @options[:lng].present?
+        [@options[:lat], @options[:lng]]
       end
     end
   end
