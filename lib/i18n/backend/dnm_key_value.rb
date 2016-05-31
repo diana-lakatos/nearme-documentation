@@ -9,6 +9,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
 
   def rebuild!
     @store, @timestamps = {}, {}
+    populate(nil)
   end
 
   def set_instance(instance)
