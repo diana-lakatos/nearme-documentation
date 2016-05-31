@@ -563,7 +563,15 @@ class User < ActiveRecord::Base
   def field_blank_or_changed?(field_name)
     # ugly hack, but properties do not respond to _changed, _was etc.
     if self.respond_to?(field_name)
-      self.send(field_name).blank? || self.send("#{field_name}_changed?")
+      if self.respond_to?("#{field_name}_changed?")
+        self.send(field_name).blank? || self.send("#{field_name}_changed?")
+      # check if it's association. The idea is to avoid send(field_name) in case the field name is "destroy" etc
+      elsif self.class.reflect_on_association(field_name)
+        self.send(field_name).blank? || self.send("#{field_name}").changed?
+      else
+        db_field_value = User.find(self.id).properties[field_name]
+        self.properties[field_name].blank? || (db_field_value != self.properties[field_name])
+      end
     else
       db_field_value = User.find(self.id).properties[field_name]
       self.properties[field_name].blank? || (db_field_value != self.properties[field_name])
