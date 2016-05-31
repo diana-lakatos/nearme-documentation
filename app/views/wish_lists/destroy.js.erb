@@ -4,6 +4,6 @@
   el.querySelector('[data-text]').innerHTML = '<%= t('wish_lists.buttons.unselected_state') %>';
 
   var link = el.querySelector('[data-action-link]');
-  link.href = '<%= wish_lists_path(id: @item.id, wishlistable_type: @item.class.name, method: :post).html_safe %>';
+  link.href = '<%= wish_lists_path(id: @item.id, wishlistable_type: @item.class.name).html_safe %>';
   link.setAttribute('data-method', 'post');
 }());

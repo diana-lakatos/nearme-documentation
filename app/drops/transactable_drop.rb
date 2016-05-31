@@ -204,7 +204,7 @@ class TransactableDrop < BaseDrop
 
   # url to display favorite button
   def wish_list_path
-    routes.wish_list_path(@transactable.id)
+    routes.wish_list_path(id: @transactable.id, wishlistable_type: 'Transactable')
   end
 
   def wish_list_bulk_path
