@@ -228,11 +228,12 @@ class Transactable < ActiveRecord::Base
   end
 
   def self.require_payout?
+    return false unless current_instance
     !current_instance.test_mode? && current_instance.require_payout_information?
   end
 
   def self.current_instance
-    PlatformContext.current.instance
+    PlatformContext.current.try(:instance)
   end
 
   def availability_template
