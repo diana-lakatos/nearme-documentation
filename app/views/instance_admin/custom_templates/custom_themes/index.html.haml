@@ -1,0 +1,19 @@
+.content-container
+  %h4
+    = t('instance_admin.custom_themes.custom_themes')
+  .row
+    .table-container.col-xs-12
+      %table#custom_themes.table.sortable
+        %thead
+          %tr
+            %th
+              = t('instance_admin.custom_themes.name')
+            %th
+              = t('instance_admin.custom_themes.in_use')
+            %th
+        %tbody
+          - @custom_themes.each_with_index do |custom_theme|
+            = render 'index_row', custom_theme: custom_theme
+
+= content_for :header_buttons do
+  = link_to "#{t('instance_admin.add')} #{t('instance_admin.custom_themes.custom_theme')}", new_instance_admin_custom_templates_custom_theme_path, class: 'btn btn-blue pull-right'

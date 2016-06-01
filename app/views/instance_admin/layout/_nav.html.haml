@@ -53,6 +53,17 @@
               %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/theme/" + controller_name), action: settings[:default_action]}", :class => is_active_instance_admin_nav_link(controller_name, settings)}
                 %span= "#{controller_name.titleize}"
 
+    - if @authorizer.authorized?('CustomTemplates')
+      %li#custom_templates
+        %a{"data-parent" => "#theme", "data-toggle" => "collapse", :href => "#custom-template-sub"}
+          %i.fa.fa-picture-o
+          %span Custom Templates
+        %ul#custom-template-sub.sub-nav.collapse{:class => ("in" if controller.class.to_s.split("::").first(2).join("::") == "InstanceAdmin::CustomTemplates")}
+          - InstanceAdmin::BaseController::CUSTOM_TEMPLATES_CONTROLLERS.each do |controller_name, settings|
+            %li
+              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/custom_templates/" + controller_name), action: settings[:default_action]}", :class => is_active_instance_admin_nav_link(controller_name, settings)}
+                %span= "#{controller_name.titleize}"
+
 
     - if @authorizer.authorized?('Manage')
       %li#manage

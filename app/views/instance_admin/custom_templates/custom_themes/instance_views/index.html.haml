@@ -1,0 +1,31 @@
+.content-container
+  .row
+    .table-container.col-xs-12
+      %table.table
+        %tbody
+          %tr
+            %th
+              = t('instance_admin.liquid_views.template')
+            %th Transactable Types
+            %th Locales
+            %th
+            %th
+            %th
+
+          - @liquid_views.each do |liquid_view|
+            %tr
+              %td= pretty_path liquid_view.path
+              %td= liquid_view.transactable_types.pluck(:name).join(', ')
+              %td= liquid_view.locales.map(&:display_name).join(', ')
+              %td
+                .pull-right{style: 'margin-left: 10px'}
+                  = link_to t('instance_admin.destroy'), instance_admin_custom_templates_custom_theme_instance_view_path(@custom_theme, liquid_view), method: :delete,
+                      data: { confirm: 'Are you sure?' }
+                .pull-right{style: 'margin-left: 10px'}
+                  = link_to t('instance_admin.edit'), edit_instance_admin_custom_templates_custom_theme_instance_view_path(@custom_theme, liquid_view)
+                .pull-right{style: 'margin-left: 10px'}
+                  = link_to t('instance_admin.versions'), versions_instance_admin_custom_templates_custom_theme_instance_view_path(@custom_theme, liquid_view), title: 'Show previous versions'
+
+= content_for :header_buttons do
+  = link_to t('instance_admin.liquid_views.add_liquid_view'), new_instance_admin_custom_templates_custom_theme_instance_view_path(@custom_theme), class: 'pull-right btn btn-blue'
+
