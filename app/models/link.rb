@@ -3,6 +3,10 @@ class Link < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
+  # skip_activity_feed_event is used to prevent creating a new event
+  # on recreate_versions
+  attr_accessor :skip_activity_feed_event
+
   belongs_to :linkable, polymorphic: true
 
   validates_url :url, { no_local: true, schemes: %w(http https) }
@@ -12,9 +16,9 @@ class Link < ActiveRecord::Base
 
   after_commit :user_added_links_to_project_event, on: [:create, :update]
   def user_added_links_to_project_event
-    if linkable.present? && linkable_type == "Project" && !linkable.draft?
+    if linkable.present? && linkable_type == "Project" && !linkable.draft? && !self.skip_activity_feed_event
       event = :user_added_links_to_project
-      ActivityFeedService.create_event(event, self.linkable, [self.linkable.creator], self.linkable)
+      ActivityFeedService.create_event(event, self.linkable, [self.linkable.creator], self)
     end
   end
 

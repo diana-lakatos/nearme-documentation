@@ -1,6 +1,6 @@
 - is_active = (local_assigns[:is_active].presence || false)
 
-%footer
+%footer{ class: (defined?(footer_class) ? footer_class : '') }
   %p.actions
     - if user_signed_in?
       = link_to t(:comment), '#', data: { comment: '' }

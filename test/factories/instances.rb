@@ -36,11 +36,6 @@ FactoryGirl.define do
       end
     end
 
-    factory :instance_with_price_constraints do
-      min_hourly_price 10
-      max_hourly_price 100
-    end
-
     factory :instance_test_mode do
       test_mode true
       password_protected true

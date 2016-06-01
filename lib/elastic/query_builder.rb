@@ -399,26 +399,29 @@ module Elastic
       end
 
       if @query[:date].present?
-        date = Date.parse(@query[:date])
-        day = date.wday + 1
-        from_hour = day * 100 + (@query[:time_from].presence || '0:00').split(':').first.to_i
-        to_hour = day * 100 + (@query[:time_to].presence || '23:00').split(':').first.to_i
+        begin
+          date = Date.parse(@query[:date])
+          day = date.wday + 1
+          from_hour = day * 100 + (@query[:time_from].presence || '0:00').split(':').first.to_i
+          to_hour = day * 100 + (@query[:time_to].presence || '23:00').split(':').first.to_i
 
-        @filters << {
-          range: {
-            open_hours: {
-              gte: from_hour,
-              lte: to_hour
+          @filters << {
+            range: {
+              open_hours: {
+                gte: from_hour,
+                lte: to_hour
+              }
             }
           }
-        }
 
-        @filters << {
-          not: {
-            term: { availability_exceptions: date }
+          @filters << {
+            not: {
+              term: { availability_exceptions: date }
+            }
           }
-        }
-
+        rescue ArgumentError
+          # wrong date
+        end
       end
 
       if @query[:date].blank? && @query[:time_from].present? || @query[:time_to].present?

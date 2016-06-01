@@ -12,7 +12,7 @@
 
   actionsContainer.find('[data-location-id="<%= @location.id %>"]').remove();
 
-  $('main').prepend('<%= escape_javascript( render "dashboard/shared/flash") %>');
+  $('.main-wrapper').prepend('<%= escape_javascript( render "dashboard/shared/flash") %>');
 
 }(window.jQuery));
 

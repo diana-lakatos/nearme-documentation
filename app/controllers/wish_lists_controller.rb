@@ -38,7 +38,7 @@ class WishListsController < ApplicationController
   end
 
   def destroy
-    current_user.default_wish_list.items.find_by(wishlistable: @item).destroy
+    current_user.default_wish_list.items.find_by(wishlistable: @item).try(:destroy)
 
     respond_to do |format|
       format.html { redirect_to redirection_path(@item), notice: t('wish_lists.notices.item_removed') }

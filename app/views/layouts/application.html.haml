@@ -1,6 +1,8 @@
 !!!
 %html
   %head
+    %meta{name: 'app-server', content: ENV['HOSTNAME']}
+
     = render 'layouts/content_holder_injector'
     - if content_for(:canonical_url)
       %link{rel:"canonical", href: yield(:canonical_url)}
@@ -78,4 +80,3 @@
     = yield(:body_bottom)
 
     = render 'shared/javascripts/footer', entry: 'application', googlemaps: true, include_modal: true, analytics: true
-

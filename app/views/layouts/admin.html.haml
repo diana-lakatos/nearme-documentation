@@ -1,6 +1,8 @@
 !!!
 %html
   %head
+    %meta{name: 'app-server', content: ENV['HOSTNAME']}
+    
     %title
       Desks Near Me - Admin
     = csrf_meta_tag

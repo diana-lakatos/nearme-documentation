@@ -4,7 +4,7 @@
   .span8.offset2
     = render 'header', listing: @reservation_request.listing, location: @reservation_request.location
 
-    .box
+    .box.reservation-review
       = simple_form_for @reservation_request, :url => secure_listing_url(@reservation_request.listing), :method => :post, :html => {class: "payment form-horizontal"} do |f|
         = render 'listings/reservations/fields', :f => f
         - if @reservation_request.errors.present?
@@ -20,7 +20,8 @@
 
             = f.hidden_field :total_amount_check, value: @reservation.total_amount.cents
 
-        = render 'summary', reservation: @reservation, reservation_request: @reservation_request
+        .reservation-summary
+          = render 'summary', reservation: @reservation, reservation_request: @reservation_request
 
         - if @reservation_request.with_delivery?
           %hr.thin
@@ -33,7 +34,8 @@
             .error.flash
               %p= t 'reservations_review.errors.no_delivery_options'
 
-        = render 'reservation_properties', f: f
+        .reservation-properties
+          = render 'reservation_properties', f: f
 
         - if f.object.payment.payment_methods.blank?
           %h2= t("reservations_review.missing_payment_method")
@@ -60,4 +62,5 @@
     $(function() {
       $(document).trigger('init:phonenumberfieldsform.nearme', 'form.payment');
       window.sessioncamConfiguration.customDataObjects.push( { key: "event", value: "booking_modal_opened" } );
+      $(document).trigger('init:tooltips.nearme', '.reservation-summary');
     });

@@ -9,19 +9,14 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
 
   def rebuild!
     @store, @timestamps = {}, {}
-    prepare_store
-  end
-
-  def prepare_store
-    Translation.select('DISTINCT(instance_id)').map(&:instance_id).each do |instance_id|
-      _instance_key = instance_key(instance_id)
-      populate(instance_id)
-    end
+    populate(nil)
   end
 
   def set_instance(instance)
     self.instance_id = instance.id
     self.default_locale = instance.primary_locale
+    _instance_key = instance_key(self.instance_id)
+    populate(_instance_key) if @store[_instance_key].blank?
   end
 
   def update_cache(_instance_id)
