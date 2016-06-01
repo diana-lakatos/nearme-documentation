@@ -369,9 +369,19 @@ class Payment < ActiveRecord::Base
 
   def amount_to_be_refunded
     if cancelled_by_guest? && payment_gateway.supports_partial_refunds?
-      (subtotal_amount.cents * (1 - self.cancellation_policy_penalty_percentage.to_f/BigDecimal(100))).to_i
+      (subtotal_amount.cents * (1 - cancellation_policy_penalty_percentage.to_f/BigDecimal(100))).to_i
     else
       total_amount.cents
+    end
+  end
+
+  # Dirty hack for cancellation policies not set for payment
+  # Payment is built before cancelation policies are set
+  def cancellation_policy_penalty_percentage
+    if self.payable.respond_to?(:cancellation_policy_penalty_percentage) && super.zero?
+      self.payable.cancellation_policy_penalty_percentage
+    else
+      super
     end
   end
 
