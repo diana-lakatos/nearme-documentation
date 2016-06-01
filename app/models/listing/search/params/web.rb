@@ -28,12 +28,6 @@ class Listing::Search::Params::Web < Listing::Search::Params
     super
   end
 
-  def midpoint
-    super
-    @midpoint ||= [@options[:lat], @options[:lng]] if @options[:lat].present?
-    @midpoint
-  end
-
   def get_address_component(val, name_type = :long)
     if location.present?
       location.fetch_address_component(val, name_type)
@@ -93,7 +87,7 @@ class Listing::Search::Params::Web < Listing::Search::Params
   end
 
   def precise_address?
-    country.present? && city.present? && street.present?
+    state.present? && city.present?
   end
 
   def lntypes
