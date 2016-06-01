@@ -52,7 +52,7 @@ class ActivityFeedEventTest < ActiveSupport::TestCase
       assert_equal event_source1.description, @activity_feed_event.description
 
       @activity_feed_event.event_source = event_source2
-      assert_equal "&#147;#{event_source2.text}&#148;".html_safe, @activity_feed_event.description
+      assert_equal "#{event_source2.text}".html_safe, @activity_feed_event.description
 
     end
 
