@@ -715,6 +715,8 @@ section.listings {
 
     .social-buttons-wrapper {
         opacity: 0;
+        display: block;
+        overflow: hidden;
         transition: opacity .5s ease-in;
 
         &.active {
