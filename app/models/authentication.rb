@@ -4,7 +4,7 @@ class Authentication < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  belongs_to :user
+  belongs_to :user, touch: true
   belongs_to :instance
 
   has_many :user_relationships
