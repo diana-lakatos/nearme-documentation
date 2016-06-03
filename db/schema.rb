@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160525152051) do
+ActiveRecord::Schema.define(version: 20160603110153) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -956,7 +956,7 @@ ActiveRecord::Schema.define(version: 20160525152051) do
     t.integer  "instance_id"
     t.boolean  "permission_settings",                    default: false
     t.boolean  "permission_theme",                       default: false
-    t.boolean  "permission_analytics",                   default: true
+    t.boolean  "permission_analytics",                   default: false
     t.datetime "created_at",                                             null: false
     t.datetime "updated_at",                                             null: false
     t.boolean  "permission_manage",                      default: false
