@@ -18,7 +18,7 @@ node[:deploy].each do |application, deploy|
     environment ({'HOME' => '/home/deploy', 'USER' => 'deploy', 'PATH' => '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:/home/deploy/.local/bin:/home/deploy/bin'})
     command     "npm install"
     action      :run
-    only_if     { node["opsworks"]["instance"]["layers"].include?('rails-app') }
+    only_if     { node["opsworks"]["instance"]["layers"].include?('rails-app') || node["opsworks"]["instance"]["layers"].include?('utility') }
   end
 
   # We need public/assets/manifest.json on the utility instance as well otherwise certain images will be missing
