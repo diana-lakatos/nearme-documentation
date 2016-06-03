@@ -68,7 +68,6 @@ class Reservation < ActiveRecord::Base
   after_create :create_waiver_agreements
   after_create :copy_dimensions_template
   after_save :try_to_activate!
-  after_save :schedule_refund!
 
   alias_method :seller_type_review_receiver, :creator
   alias_method :buyer_type_review_receiver, :owner
@@ -87,7 +86,7 @@ class Reservation < ActiveRecord::Base
 
     after_transition inactive: :unconfirmed, do: :activate_reservation!
     after_transition unconfirmed: :confirmed, do: :set_confirmed_at
-    after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:mark_as_archived!, :set_cancelled_at]
+    after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:mark_as_archived!, :set_cancelled_at, :schedule_refund]
     after_transition unconfirmed: [:cancelled_by_host], do: [:mark_as_archived!]
     after_transition unconfirmed: [:cancelled_by_guest, :expired, :rejected], do: [:mark_as_archived!, :schedule_void]
     after_transition confirmed: [:cancelled_by_guest], do: [:charge_penalty!]
@@ -633,9 +632,8 @@ class Reservation < ActiveRecord::Base
     ReservationExpiryJob.perform_later(self.reload.expire_at, self.id) if hours_to_expiration > 0
   end
 
-  def schedule_refund!
-    run_at = Time.zone.now
-    if !payment.refunded? && (self.cancelled_by_guest? || self.cancelled_by_host?) && !skip_payment_authorization?
+  def schedule_refund(transition, run_at = Time.zone.now)
+    unless skip_payment_authorization?
       PaymentRefundJob.perform_later(run_at, payment.id)
     end
     true
