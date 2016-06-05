@@ -1,0 +1,17 @@
+- if groups.empty?
+  %p.empty-resultset= t('user_profile.empty_resultset.groups')
+- else
+  / grid
+  .grid-a-search-a
+    .wrap.content-container
+      - groups.each do |group|
+        = render 'shared/group', group: group
+
+  / more
+  - if user_signed_in?
+    %p.more-a{:'data-see-more' => true, class: "#{groups.next_page ? '' : 'hide-initially'}"}
+      %button{ data: { url: see_more_route, next_page: groups.next_page } }
+        = t(:see_more)
+  - elsif groups.next_page
+    %p.more-a
+      = link_to t(:see_more), new_user_session_path

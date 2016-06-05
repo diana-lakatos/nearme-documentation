@@ -1,0 +1,58 @@
+.wrap-a.reduce-top
+  .contain
+
+    %h1.h2
+      = t :my_groups
+
+    .box-a
+
+      - if @groups.empty?
+        .empty-groups
+          %p.cta
+            = t :empty_groups
+          %p
+            = link_to t(:add_group), new_dashboard_group_path, class: 'button-a'
+
+      - else
+        .group-actions
+          = link_to t(:add_group), new_dashboard_group_path, class: 'button-a small'
+
+        %table.projects-listing
+          %thead
+            %tr
+              %th.col-picture
+                = t :picture
+              %th.col-name
+                = t :name
+              %th.col-summary
+                = t :summary
+              %th.col-role
+                = t :role
+              %th.col-status
+                = t :status
+              %td.col-actions
+          %tbody
+
+            - @groups.each do |group|
+              %tr
+                %td.col-picture
+                  = link_to group_path(group) do
+                    = image_tag group.cover_image.url(:thumbnail)
+                %td.col-name
+                  = link_to group.name, group_path(group)
+                %td.col-summary
+                  = group.summary
+                %td.col-role
+                  = t(group.creator_id == current_user.id ? :owner : :collaborator)
+                %td.col-status
+                  - if group.draft?
+                    %span.status-draft
+                      = t('draft')
+                  - elsif group.try(:enabled?)
+                    %span.status-published
+                      = t('published')
+
+                %td.col-actions
+                  = link_to t(:edit), edit_dashboard_group_path(group), class: 'action-edit'
+                  - if group.creator_id == current_user.id
+                    = link_to t(:remove), dashboard_group_path(group), method: :delete, class: 'action-remove', data: { confirm: 'Are you sure?' }

@@ -1,0 +1,20 @@
+%tr
+  %td
+    = link_to group_member.name, user_path(group_member.user)
+  %td
+    = group_member.moderator
+  %td.col-status
+    - if group_member.pending?
+      =t('pending')
+    - elsif group_member.approved?
+      =t('approved')
+
+  %td
+    - unless group_member.approved_by_owner?
+      %button.button-a.small{'data-href': approve_dashboard_group_group_member_path(@group, group_member), 'data-action': 'PATCH' }
+        %span.intelicon-check
+        = t(:approve)
+
+    %button.button-a.small{'data-href': dashboard_group_group_member_path(@group, group_member),"data-action": 'DELETE' }
+      %span.intelicon-trash-outlined
+      = t(:remove)

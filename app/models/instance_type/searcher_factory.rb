@@ -11,7 +11,7 @@ class InstanceType::SearcherFactory
   end
 
   def get_searcher
-    if @params[:search_type].in?(%w(topics projects people))
+    if @params[:search_type].in?(%w(topics projects people groups))
       community_searcher
     elsif @transactable_type.is_a? InstanceProfileType
       user_searcher

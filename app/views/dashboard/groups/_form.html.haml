@@ -1,0 +1,140 @@
+= simple_form_for [:dashboard, @group], html: { multipart: true, class: 'form-a group-form-controller' } do |f|
+  -# needed for photo uploader to work correctly
+  = f.input :id, as: :hidden
+  .fields
+    = f.association :transactable_type, as: :select, required: true, input_html: { class: 'selectize' }
+    = f.input :name, required: true, input_html: { maxlength: 140 }
+    = f.input :summary, as: :text, required: true, input_html: { maxlength: 140, cols: 40, rows: 4 }
+    = f.input :description, as: :text, required: true, input_html: { maxlength: 5000, cols: 40, rows: 8 }
+    = f.association :projects, as: :select, collection: Project.all, input_html: { multiple: true, class: 'selectize', data: { placeholder: t('simple_form.placeholders.group.project_ids') } }
+
+    %fieldset.media-group.cover-image
+      %legend
+        %abbr{:title => t('general.required')} *
+        = t('group.main_image')
+
+      - if @group.cover_image.present?
+        .photo-item
+          = image_tag @group.cover_image.url
+
+      .new-photo
+        = f.input :cover_image, as: :file, label: t(:add_photo), input_html: { accept: "image/*", capture: "capture" }
+
+    %fieldset.media-group.sep
+      %legend
+        = t(:images)
+
+      .loading{:style => "display: none"}
+        = image_tag "spinner.gif"
+        %br/
+        .span
+          = t('manage.listings.photos.waiting_for_photo_processing')
+
+      = new_file_upload_input("#{f.object_name}[photos_attributes][0][image]",
+                                      dashboard_photos_path,
+                                      Photo.new.image.thumbnail_dimensions[:project_thumbnail],
+                                      t('simple_form.labels.listing.add_photo'),
+                                      :required => true,
+                                      :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
+        - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
+        .thumbnail-processing{:hidden => true}
+          .loading-icon
+
+        = hidden_field_tag "#{f.object_name}", nil, placeholder: t('ui.photo_uploader.caption'), id: 'photo-item-input-template', disabled: true, 'data-number' => 0, 'data-no-caption' => true
+        - unless @photos.nil?
+          - @photos.each_with_index do |photo|
+            - next unless photo.persisted?
+
+            .photo-item{:id => "photo-" + photo.id.to_s}
+              = image_tag photo.image_url(:project_thumbnail)
+              .media-actions
+                %button.button-a.small.action--edit{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_dashboard_photo_path(photo), :'ajax-options' => { id: photo.id }}, :title => t('forms.photos.collection.rotate_and_crop')}
+                  %span.intelicon-edit
+
+                %button.button-a.small.red.action--remove{:type => "button", :data => { :"delete-photo" => true, :url => destroy_space_wizard_photo_path(:id => photo.id) }, :title => t('forms.photos.collection.delete') }
+                  %span.intelicon-trash-outlined
+
+              = hidden_field_tag "#{f.object_name}[photo_ids][]", photo.id
+              = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][id]", photo.id
+              = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
+
+      - if is_i18n_set?('simple_form.hints.group.photos')
+        %p.photo-uploader-hint
+          = t('simple_form.hints.group.photos')
+
+    %fieldset.media-group.sep
+      %legend
+        = t('group.videos')
+
+      .group-inline
+        %input(type='text' id='video-url' placeholder="#{t('simple_form.placeholders.group.video_url')}")
+        %input(type='submit' id='video-submit' value="#{t('group.placeholders.add_video')}" data-href="#{video_dashboard_group_path('group')}")
+
+      %ul.gallery-video.gallery-a
+        - if @group.properties.try(:videos).present?
+          - @group.properties.videos.each do |video|
+            = render 'video', video: video
+
+      = hidden_field_tag 'group[properties][videos][]', nil
+
+    %fieldset.media-group.sep
+      %legend
+        = t(:links)
+
+      .project-links-listing
+        = f.simple_fields_for :links do |link_form|
+          = render 'dashboard/projects/link_fields', f: link_form
+        .fieldset-actions
+          = link_to_add_association t(:add_link), f, :links, class: 'button-a small'
+
+    - if current_user.id == f.object.creator_id
+      %fieldset.media-group.sep
+        %legend
+          = t('group.invite_member')
+
+        #new_group_members
+          = f.simple_fields_for :new_group_members do |new_group_member_form|
+            = render 'dashboard/groups/new_group_member_fields', f: new_group_member_form
+          .fieldset-actions
+            = link_to_add_association t('group.invite_member'), f, :new_group_members, class: 'button-a small'
+
+    - if @group.group_members.any?
+
+      %fieldset.media-group.sep
+        %legend
+          = t('group.manage_members')
+
+        .group-inline
+          %input(type='text' id='search-for-member' placeholder="#{t('simple_form.placeholders.group.search_for_member')}")
+          %input(type='submit' id='search-for-member-submit' value="#{t('search')}" data-href='#{dashboard_group_group_members_path(@group)}')
+
+      %table.members-listing-a
+        %thead
+          %tr
+            %th
+              = t(:name)
+            %th
+              = t('group.moderator')
+            %th.col-status
+              = t(:status)
+            %th
+              = t(:actions)
+        %tbody
+          = render @group.memberships
+
+  %p.action
+
+    - if f.object.new_record? || f.object.draft?
+      = f.submit t('group.save_for_later'), name: 'save_for_later', class: 'button-a white'
+
+      = f.submit t('group.publish_group'), name: 'submit', class: 'button-a'
+
+    - else
+      = f.submit t('group.save_changes'), class: 'button-a'
+
+      - if current_user.id == f.object.creator_id && f.object.persisted?
+        = link_to t('group.delete_group'), dashboard_group_path(f.object), method: :delete, class: 'action--delete-project', data: { confirm: 'Are you sure?' }
+
+  %p.required-info
+    %em *
+    Required

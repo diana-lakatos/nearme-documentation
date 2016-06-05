@@ -1,0 +1,61 @@
+.topic-a.group-a
+  .wrap
+    .contain
+      %h1.hx= @group.name
+      %p= @group.summary
+
+  .contain
+    %nav.navbar-a
+      %ul.nav.nav-tabs{role: "tablist"}
+
+        %li.active
+          = link_to '#about', role: "tab", :'data-toggle' => "tab" do
+            = t(:about)
+
+        - if !@group.private? || current_user.is_member_of?(@group)
+          %li
+            = link_to '#activity', role: "tab", :'data-toggle' => "tab" do
+              = t(:activity)
+
+          %li
+            = link_to '#members', role: "tab", :'data-toggle' => "tab" do
+              = t(:members)
+              %small
+                = "(#{@group.approved_members.count})"
+
+          %li
+            = link_to '#projects', role: "tab", :'data-toggle' => "tab" do
+              = t(:projects)
+              %small
+                = "(#{@projects.count})"
+
+      - if @membership.try(:waiting_for_user_response?)
+        %p
+          = link_to t('group.decline'), [@group, @membership], class: 'button-a small', method: :delete
+
+        %p
+          = link_to t('group.accept'), [:accept, @group, @membership], class: 'button-a small', method: :patch
+      - else
+        %p(data-group-member-button)
+          = render 'group_members/group_members_button', group: @group, membership: @membership
+
+.tab-content
+  #about.tab-pane.fade.active{:role => "tabpanel"}
+    .wrap-a.reduce-top
+      .contain
+        = render 'about', group: @group
+
+  - if !@group.private? || current_user.is_member_of?(@group)
+    #activity.tab-pane.fade{:role => "tabpanel"}
+      = render 'activity', group: @group, feed: @feed
+
+    #members.tab-pane.fade{:role => "tabpanel"}
+      .wrap-a.reduce-top
+        .contain
+          .box-a= render 'shared/show_followers', container: '#members', see_more_route: see_more_members_path(id: @group.id, type: 'Group', container: '#members'), collection: @members
+
+    #projects.tab-pane.fade{:role => "tabpanel"}
+      .wrap-a.reduce-top
+        .contain
+          .box-a
+            = render 'shared/show_projects', projects: @projects, container: '#projects', see_more_route: see_more_projects_path(id: @group.id, type: @group.class.name, container: '#projects')

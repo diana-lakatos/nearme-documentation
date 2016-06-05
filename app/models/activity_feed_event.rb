@@ -18,6 +18,10 @@ class ActivityFeedEvent < ActiveRecord::Base
     user_commented
     user_commented_on_project
 
+    user_created_group
+    user_added_photos_to_group
+    user_updated_group_status
+
     topic_created
   ).freeze
 
@@ -84,6 +88,10 @@ class ActivityFeedEvent < ActiveRecord::Base
       topic_created
       user_commented_on_project
       user_commented
+
+      user_created_group
+      user_added_photos_to_group
+      user_updated_group_status
     ).include?(event)
   end
 

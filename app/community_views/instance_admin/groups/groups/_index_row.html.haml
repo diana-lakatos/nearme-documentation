@@ -1,0 +1,10 @@
+%tr
+  %td= link_to resource.name, group_path(resource)
+  %td= "#{resource.creator.name} (#{resource.creator.email})"
+  %td= resource.featured? ? 'Yes' : 'No'
+  %td= l(resource.created_at.to_date, format: :long)
+  - if resource.deleted?
+    %td= link_to "Restore", restore_instance_admin_groups_group_path(resource), method: :post, data: { confirm: 'Are you sure you want to restore this?' }
+  - else
+    %td= link_to t('general.edit'), edit_instance_admin_groups_group_path(resource)
+    %td= link_to t('general.delete'), instance_admin_groups_group_path(resource), method: :delete, data: { confirm: 'Are you sure you want to delete this?' }

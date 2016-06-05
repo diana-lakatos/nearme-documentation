@@ -87,6 +87,11 @@ input[type="reset"] {
         font-weight: normal;
     }
 
+    &.gray {
+      background-color: #cdcccc;
+      border-color: #cdcccc;
+    }
+
     &.red:hover {
         background: darken(#f00, 10%);
     }

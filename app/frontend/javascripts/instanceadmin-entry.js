@@ -198,7 +198,7 @@ DNM.registerInitializer(function(){
         });
     }
 
-    if (main.hasClass('users') || main.hasClass('projects')) {
+    if (main.hasClass('users') || main.hasClass('projects') || main.hasClass('groups')) {
         require.ensure('./instance_admin/sections/users', function(require){
             var InstanceAdminUsersController = require('./instance_admin/sections/users');
             new InstanceAdminUsersController(main);
