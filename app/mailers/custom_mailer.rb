@@ -4,6 +4,8 @@ class CustomMailer < InstanceMailer
     @step = step
     return unless @step.should_be_processed?
     @workflow_alert = WorkflowAlert.find(workflow_id)
+    return unless @workflow_alert.should_be_triggered?(step)
+
     @step.data.each do |key, value|
       instance_variable_set(:"@#{key}", value)
     end
