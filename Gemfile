@@ -231,3 +231,5 @@ gem 'simple-navigation'
 gem 'sprockets'
 gem 'sprockets-rails'
 gem 'cocoon'
+
+gem 'redcarpet'
