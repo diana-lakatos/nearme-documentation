@@ -7,6 +7,7 @@ require('brace/mode/html');
 require('brace/mode/css');
 require('brace/mode/liquid');
 require('brace/theme/xcode');
+require('brace/ext/searchbox');
 
 // Hook up ACE editor to all textareas with data-editor attribute
 module.exports = function(textarea){
