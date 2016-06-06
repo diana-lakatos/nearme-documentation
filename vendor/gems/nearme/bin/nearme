@@ -2,5 +2,11 @@
 
 require 'bundler/setup'
 require 'nearme/cli'
+require 'figaro'
+
+ENV['RAILS_ENV'] ||= 'development'
+
+Figaro.application = Figaro::Application.new(environment: ENV['RAILS_ENV'], path: 'config/application.yml')
+Figaro.load
 
 NearMe::CLI.start(ARGV, debug: true)

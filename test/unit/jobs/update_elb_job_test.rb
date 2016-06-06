@@ -28,7 +28,7 @@ class UpdateElbJobTest < ActiveSupport::TestCase
       UpdateElbJob.perform(@domain.id, @certificate_body, @private_key, @certificate_chain)
       @domain.reload
       assert_equal @domain.error_message, error_text
-      assert @domain.error_update?
+      assert @domain.update_failed?
     end
   end
 end

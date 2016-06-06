@@ -7,12 +7,12 @@ module TransactablesIndex
     settings(index: { number_of_shards: 1 }) do
       mapping do
         indexes :custom_attributes, type: 'object' do
-          if Rails.env.staging? || Rails.env.production?
-            mapped = ServiceType.all.map{ |service_type|
-              service_type.custom_attributes.pluck(:name)
+          if TransactableType.table_exists?
+            mapped = TransactableType.all.map{ |transactable_type|
+              transactable_type.custom_attributes.pluck(:name)
             }.flatten.uniq
             for custom_attribute in mapped
-              indexes custom_attribute, type: 'string'
+              indexes custom_attribute, type: 'string', index: "not_analyzed"
             end
           end
         end

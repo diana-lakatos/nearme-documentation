@@ -29,7 +29,7 @@ class InstanceAdmin::Reports::BaseController < InstanceAdmin::BaseController
 
   def update
     @resource = @scope_class.with_deleted.find(params[:id])
-    if @resource.update_columns(transactable_params)
+    if @resource.update_attributes(transactable_params)
       flash[:success] = t('flash_messages.instance_admin.reports.listings.successfully_updated')
 
       redirect_to [:edit, :instance_admin, :reports, @resource]

@@ -12,6 +12,12 @@ class AbstractElbJob < Job
     @balancer ||= NearMe::Balancer.new(certificate_body: @certificate_body,
                                        name: @domain.load_balancer_name,
                                        private_key: @private_key,
-                                       certificate_chain: @certificate_chain)
+                                       certificate_chain: @certificate_chain,
+                                       template_name: template_name
+                                      )
+  end
+
+  def template_name
+    ['production','staging'].find(-> {'staging'}) {|e| e == ENV['RAILS_ENV']}
   end
 end

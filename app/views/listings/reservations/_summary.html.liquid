@@ -13,20 +13,44 @@
 <h2>{{ 'reservations_review.summary' | translate }}</h2>
 <div class='order-summary'>
   <div class='summary-line'>
-    <div class='summary-line-label'>{{ 'reservations_review.subtotal' | translate }}</div>
+    <div class='summary-line-label'>
+      {{ 'reservations_review.subtotal' | translate }}
+      {% assign subtotal_hint = 'reservations_review.hints.subtotal' | translate: default: '' %}
+      {% if subtotal_hint != blank %}
+        <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ subtotal_hint }}">
+          {{ 'toggle_hint' | translate }}
+        </button>
+      {% endif %}
+    </div>
     <div class='summary-line-value subtotal-amount'>{{ @reservation.subtotal_price }}</div>
     <div class='clearfix'></div>
   </div>
   {% if @reservation_request.with_delivery? %}
     <div class='summary-line'>
-      <div class='summary-line-label'>{{ 'reservations_review.delivery' | translate }}</div>
+      <div class='summary-line-label'>
+        {{ 'reservations_review.delivery' | translate }}
+        {% assign delivery_hint = 'reservations_review.hints.delivery' | translate: default: '' %}
+        {% if delivery_hint != blank %}
+          <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ delivery_hint }}">
+            {{ 'toggle_hint' | translate }}
+          </button>
+        {% endif %}
+      </div>
       <div class='summary-line-value delivery-amount'>0.00</div>
       <div class='clearfix'></div>
     </div>
   {% endif %}
   {% if @reservation_request.has_service_fee? %}
     <div class='summary-line'>
-      <div class='summary-line-label'>{{ 'reservations_review.service_fee' | translate }}</div>
+      <div class='summary-line-label'>
+        {{ 'reservations_review.service_fee' | translate }}
+        {% assign service_fee_hint = 'reservations_review.hints.service_fee' | translate: default: '' %}
+        {% if service_fee_hint != blank %}
+          <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ service_fee_hint }}">
+            {{ 'toggle_hint' | translate }}
+          </button>
+        {% endif %}
+      </div>
       <div class='summary-line-value service-fee-amount'>{{ @reservation.service_fee_guest }}</div>
       <div class='clearfix'></div>
     </div>
@@ -45,14 +69,30 @@
 
   {% if @reservation.tax_price %}
     <div class='summary-line'>
-      <div class='summary-line-label'>{{ 'reservations_review.tax_included' | translate }}</div>
+      <div class='summary-line-label'>
+        {{ 'reservations_review.tax_included' | translate }}
+        {% assign tax_included_hint = 'reservations_review.hints.tax_included' | translate: default: '' %}
+        {% if tax_included_hint != blank %}
+          <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ tax_included_hint }}">
+            {{ 'toggle_hint' | translate }}
+          </button>
+        {% endif %}
+      </div>
       <div class='summary-line-value delivery-amount'>{{ @reservation.tax_price }}</div>
       <div class='clearfix'></div>
     </div>
   {% endif %}
 
   <div class='summary-line'>
-    <div class='summary-line-label'>{{ 'reservations_review.total' | translate }}</div>
+    <div class='summary-line-label'>
+      {{ 'reservations_review.total' | translate }}
+      {% assign total_hint = 'reservations_review.hints.total' | translate: default: '' %}
+      {% if total_hint != blank %}
+        <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ total_hint }}">
+          {{ 'toggle_hint' | translate }}
+        </button>
+      {% endif %}
+    </div>
   <div class='summary-line-value total-amount' data-currency-symbol='{{ @reservation.currency }}' data-total-amount='{{ @reservation.total_amount_float }}'>{{ @reservation.total_price }}</div>
   <div class='clearfix'></div>
 </div>

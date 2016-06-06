@@ -1,5 +1,5 @@
 require 'pp'
-require 'aws'
+require 'aws-sdk'
 
 module NearMe
   class Backup
@@ -69,31 +69,31 @@ module NearMe
     end
 
     def opsworks_client
-      @opsworks_client ||= AWS.ops_works.client
+      @opsworks_client ||= Aws::OpsWorks::Client.new region: ENV['AWS_OPSWORKS_REGION']
     end
 
     def stacks
-      @stacks ||= opsworks_client.describe_stacks.data.fetch(:stacks, {})
+      @stacks ||= opsworks_client.describe_stacks.data.stacks
     end
 
     def stack
-      @stack ||= stacks.find(-> {{}}) {|stack| stack[:name] == @stack_name}
+      @stack ||= stacks.find(-> {{}}) {|stack| stack.name == @stack_name}
     end
 
     def stack_id
-      @stack_id ||= stack.fetch(:stack_id, nil)
+      @stack_id ||= stack.stack_id
     end
 
     def instances
-      @instances ||= opsworks_client.describe_instances(stack_id: stack_id).data.fetch(:instances, {})
+      @instances ||= opsworks_client.describe_instances(stack_id: stack_id).data.instances
     end
 
     def instance
-      @instance ||= instances.find(-> {{}}) {|instance| instance[:hostname] == @host_name}
+      @instance ||= instances.find(-> {{}}) {|instance| instance.hostname == @host_name}
     end
 
     def public_dns
-      @public_dns ||= instance.fetch(:public_dns, {})
+      @public_dns ||= instance.public_dns
     end
 
     def capture!

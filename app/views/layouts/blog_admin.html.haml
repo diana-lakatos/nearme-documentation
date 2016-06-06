@@ -1,6 +1,8 @@
 !!!
 %html
   %head
+    %meta{name: 'app-server', content: ENV['HOSTNAME']}
+    
     %title
       #{platform_context.name} - Admin
     %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}

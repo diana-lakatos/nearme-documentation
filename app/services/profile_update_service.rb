@@ -8,7 +8,7 @@ class ProfileUpdateService
     white_listed_attributes = extract_whitelist_attributes(@attributes)
     @user.update_attributes(white_listed_attributes['user'])
     @user.metadata['webhook_attributes'] = @attributes
-    @user.save!
+    @user.save(validate: false)
     @user.default_profile.properties = white_listed_attributes['default_profile_attributes'].presence || {}
     @user.default_profile.save(validate: false)
     address = @user.current_address || @user.build_current_address

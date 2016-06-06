@@ -5,7 +5,9 @@ class Photo < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  attr_accessor :force_regenerate_versions
+  # skip_activity_feed_event is used to prevent creating a new event
+  # on recreate_versions
+  attr_accessor :force_regenerate_versions, :skip_activity_feed_event
 
   include RankedModel
   has_metadata :without_db_column => true
@@ -37,7 +39,7 @@ class Photo < ActiveRecord::Base
 
   after_commit :user_added_photos_to_project_event, on: [:create, :update]
   def user_added_photos_to_project_event
-    if owner_type == "Project" && owner.present? && !owner.draft?
+    if owner_type == "Project" && owner.present? && !owner.draft? && !self.skip_activity_feed_event
       event = :user_added_photos_to_project
       ActivityFeedService.create_event(event, self.owner, [self.owner.creator], self) unless ActivityFeedEvent.where(followed: owner, event_source: self, event: event, created_at: Time.now-1.minute..Time.now).count > 0
     end
