@@ -430,6 +430,12 @@ en:
         auto_generated: "Auto-generated"
         remove_uploaded_sitemap: "Remove uploaded sitemap.xml"
         remove_uploaded_robots: "Remove uploaded robots.txt"
+        hosted_zones:
+          create: Create Route53 hosted zone
+          note: Before the Domain Name System will start to route queries for this domain to Route 53 name servers, you must update the name server records either with the current DNS service or with the registrar for the domain, as applicable.
+          record_name: Record name
+          record_type: Type
+          record_values: Values
       hidden_controls:
         name: "Name"
         type: "Type"

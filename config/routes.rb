@@ -236,7 +236,9 @@ DesksnearMe::Application.routes.draw do
 
       namespace :settings do
         get '/', :to => 'base#index'
-        resources :domains, except: :show
+        resources :domains do
+          resource :hosted_zone
+        end
         resource :hidden_controls, only: [:show, :update], :controller => 'hidden_controls'
         resource :certificate_request, only: [:new, :create]
         resource :configuration, :only => [:show, :update], :controller => 'configuration' do

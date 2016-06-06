@@ -1,27 +1,31 @@
 module Utils
   class S3FileHelper
     attr_accessor :pathname, :bucket_name, :bucket_path, :bucket_region
+    attr_reader :client
 
-    def initialize(pathname, &block)
+    def initialize(pathname)
       @pathname      = pathname
       @bucket_name   = 'near-me-db-backups'
       @bucket_path   = 'db_backup'
       @bucket_region = 'us-west-1'
-      yield self if block_given?
-      @s3            = AWS::S3.new(region: bucket_region)
+
+      @key = "#{@bucket_path}/#{@pathname.basename}"
     end
 
     def upload_file!
-      @s3.buckets[@bucket_name].objects["#{@bucket_path}/#{@pathname.basename}"].write(file: @pathname, acl: :authenticated_read)
+      client.put_object bucket: @bucket_name, key: @key, body: @pathname.read, acl: 'authenticated-read'
     end
 
     def download_file!
-      object = @s3.buckets[@bucket_name].objects["#{@bucket_path}/#{@pathname.basename}"]
       File.open(@pathname, 'wb') do |file|
-        object.read do |chunk|
+        client.get_object bucket: @bucket_name, key: @key do |chunk|
           file.write(chunk)
         end
       end
+    end
+
+    def client
+      Aws::S3::Client.new(region: bucket_region)
     end
   end
 end

@@ -1,6 +1,8 @@
 %tr
-  %td= link_to_if domain.editable?, domain.name, edit_instance_admin_settings_domain_path(domain)
-  %td= domain.state.to_s.humanize
+  %td= link_to domain.name, [:instance_admin,:settings, domain]
+  %td
+    = domain.state.to_s.humanize
+    .small= domain.error_message if domain.failed?
   %td= domain.dns_name
   %td= domain.redirect_to
   %td= domain.use_as_default ? "Yes" : "No"

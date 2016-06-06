@@ -13,7 +13,8 @@ class CreateElbJobTest < ActiveSupport::TestCase
         name: @domain.load_balancer_name,
         certificate_body: @certificate_body,
         private_key: @private_key,
-        certificate_chain: @certificate_chain
+        certificate_chain: @certificate_chain,
+        template_name: 'staging'
       }
     end
 
@@ -35,7 +36,7 @@ class CreateElbJobTest < ActiveSupport::TestCase
       CreateElbJob.perform(@domain.id, @certificate_body, @private_key, @certificate_chain)
       @domain.reload
       assert_equal @domain.error_message, error_text
-      assert @domain.error?
+      assert @domain.failed?
     end
   end
 end

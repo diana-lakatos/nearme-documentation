@@ -1,5 +1,6 @@
 require 'pp'
-require 'aws'
+
+# TODO: test deploying, remove comment after successful deploy
 
 module NearMe
   class Deploy
@@ -7,7 +8,7 @@ module NearMe
 
     def initialize(options = {})
       @stack_name = options[:stack]
-      @comment = options[:comment] || ""
+      @comment = options[:comment] || ''
       @migrate = options.fetch(:migrate, true)
 
       if not stack_id.nil?
@@ -30,23 +31,23 @@ module NearMe
     end
 
     def opsworks_client
-      @opsworks_client ||= AWS.ops_works.client
+      @opsworks_client ||= Aws::OpsWorks::Client.new region: ENV['AWS_OPSWORKS_REGION']
     end
 
     def stacks
-      @stacks ||= opsworks_client.describe_stacks.data.fetch(:stacks, {})
+      @stacks ||= opsworks_client.describe_stacks.data.stacks
     end
 
     def stack
-      @stack ||= stacks.find(-> {{}}) {|stack| stack[:name] == @stack_name}
+      @stack ||= stacks.find(-> {{}}) {|stack| stack.name == @stack_name}
     end
 
     def apps
-      @apps ||= opsworks_client.describe_apps(stack_id: stack_id).fetch(:apps, {})
+      @apps ||= opsworks_client.describe_apps(stack_id: stack_id).apps
     end
 
     def stack_id
-      @stack_id ||= stack.fetch(:stack_id, nil)
+      @stack_id ||= stack.stack_id
     end
 
     def stack_app
@@ -54,11 +55,11 @@ module NearMe
     end
 
     def stack_app_id
-      @stack_app_id ||= stack_app.fetch(:app_id, {})
+      @stack_app_id ||= stack_app.app_id
     end
 
     def start!
-      response = opsworks_client.create_deployment(
+      opsworks_client.create_deployment(
         stack_id: stack_id,
         app_id: stack_app_id,
         command: {
@@ -68,7 +69,7 @@ module NearMe
           }
         },
         comment: "#@comment (deployed by NearMe tool at #{Time.now})",
-        custom_json: {"deploy" => {stack_app[:shortname] => {"scm" => {"revision" => @deploy_branch}}}}.to_json
+        custom_json: {deploy: {stack_app.shortname => {scm: {revision: @deploy_branch}}}}.to_json
       )
     end
 
@@ -79,12 +80,13 @@ module NearMe
       end
       print "\n"
       result = opsworks_client.describe_commands(deployment_id: deployment_id)
-      pp result.data[:commands][0]
+      pp result.data.commands.first
     end
 
     def deploy_running?(deployment_id)
       result = opsworks_client.describe_commands(deployment_id: deployment_id)
-      !result.data[:commands][0].has_key?(:completed_at)
+
+      result.data.commands.first.status == 'pending'
     end
   end
 end

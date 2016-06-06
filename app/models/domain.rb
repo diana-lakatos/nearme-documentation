@@ -9,7 +9,7 @@ class Domain < ActiveRecord::Base
 
   state_machine :state, initial: :unsecured do
     event :prepare_elb do
-      transition [:unsecured, :error] => :preparing
+      transition [:unsecured, :failed] => :preparing
     end
 
     event :elb_created do
@@ -17,26 +17,26 @@ class Domain < ActiveRecord::Base
     end
 
     event :prepare_elb_update do
-      transition [:elb_secured, :error_update] => :preparing_update
+      transition [:elb_secured, :update_failed] => :preparing_update
     end
 
     event :elb_updated do
       transition :preparing_update => :elb_secured
     end
 
-    event :error do
-      transition :preparing => :error
+    event :failed do
+      transition :preparing => :failed
     end
 
-    event :error_update do
-      transition :preparing_update => :error_update
+    event :update_failed do
+      transition :preparing_update => :update_failed
     end
   end
 
   belongs_to :target, polymorphic: true, touch: true
   belongs_to :instance
 
-  before_validation lambda { self.name = self.name.try(:strip) }
+  before_validation -> { self.name = name.try(:strip) }
 
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :deleted_at
@@ -91,29 +91,33 @@ class Domain < ActiveRecord::Base
 
   def prepared_for_elb?
     # marked as secured but in unsecured state
-    secured? && unsecured? && !near_me_domain?
+    https_required? && unsecured? && !near_me_domain?
   end
 
   def delete_elb
-    DeleteElbJob.perform(load_balancer_name)
+    DeleteElbJob.perform(name)
+  end
+
+  def https_required?
+    secured?
   end
 
   def create_or_update_elb
     # Avoid endless loop because state_machine event methods are triggering after_save
     # except for when the state was nil and it's now unsecured (initial domain creation)
-    return true if self.state_changed? && !(self.state_was.blank? && self.unsecured?)
+    return true if state_changed? && !(state_was.blank? && unsecured?)
 
     if can_be_elb_managed?
       # The load balancer does not exist either because it's in the initial state
       # or because the creation failed
-      if self.unsecured? || self.error?
-        self.prepare_elb!
-        CreateElbJob.perform(self.id, self.certificate_body, self.private_key, self.certificate_chain)
+      if unsecured? || failed?
+        prepare_elb!
+        CreateElbJob.perform(id, certificate_body, private_key, certificate_chain)
       # The load balancer exists and has a certificate or exists but a certificate update has failed
       # and we also received a new certificate in the params from the user
-      elsif (self.elb_secured? || self.error_update?) && self.certificate_body.present? && self.private_key.present?
-        self.prepare_elb_update!
-        UpdateElbJob.perform(self.id, self.certificate_body, self.private_key, self.certificate_chain)
+      elsif (elb_secured? || update_failed?) && certificate_body.present? && private_key.present?
+        prepare_elb_update!
+        UpdateElbJob.perform(id, certificate_body, private_key, certificate_chain)
       end
     end
   rescue
@@ -124,7 +128,7 @@ class Domain < ActiveRecord::Base
   end
 
   def can_be_elb_managed?
-    !near_me_domain? && self.secured?
+    !near_me_domain? && https_required?
   end
 
   def to_dns_name
@@ -136,11 +140,11 @@ class Domain < ActiveRecord::Base
   end
 
   def editable?
-    !self.near_me_domain?
+    !near_me_domain?
   end
 
   def url
-    secured? ? "https://" + name : "http://" + name
+    https_required? ? "https://" + name : "http://" + name
   end
 
   def white_label_company?
@@ -181,12 +185,12 @@ class Domain < ActiveRecord::Base
 
   def mark_as_default
     if use_as_default && target_type.try(:include?, "Instance")
-      target.domains.default.where.not(id: self.id).update_all(use_as_default: false)
+      target.domains.default.where.not(id: id).update_all(use_as_default: false)
     end
   end
 
   def validate_default_domain_presence
-    if !use_as_default && target_type.try(:include?, "Instance") && target.domains.default.where.not(id: self.id).count.zero?
+    if !use_as_default && target_type.try(:include?, "Instance") && target.domains.default.where.not(id: id).count.zero?
       errors.add :use_as_default, "At least one domain needs to be default one"
     end
   end
