@@ -31,6 +31,7 @@ namespace :after_deploy do
     SendSpamReportsSummaryDaily.schedule!
     ScheduleChargeSubscriptions.schedule! if Rails.env.production?
     ScheduleCommunityAggregatesCreation.schedule!
+    ScheduleSitemapsRefresh.schedule!
 
     puts "Creating default locales"
     Utils::EnLocalesSeeder.new.go!

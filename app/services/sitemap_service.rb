@@ -84,7 +84,9 @@ module SitemapService
   end
 
   def update_on_search_engines(domain)
-    sitemap_url = "http://#{domain.name}/sitemap.xml"
-    ::SitemapSearchEngineUpdateJob.perform(sitemap_url)
+    if Rails.env.production? || Rails.env.staging?
+      sitemap_url = "http://#{domain.name}/sitemap.xml"
+      ::SitemapSearchEngineUpdateJob.perform(sitemap_url)
+    end
   end
 end
