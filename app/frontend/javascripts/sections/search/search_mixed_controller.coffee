@@ -241,7 +241,13 @@ module.exports = class SearchMixedController extends SearchSearchController
       # Only show bounds of new results
       bounds = new google.maps.LatLngBounds()
       bounds.extend(listing.latLng()) for listing in listings
-      bounds.extend(new google.maps.LatLng(@form.find('input[name=lat]').val(), @form.find('input[name=lng]').val()))
+
+      lat = @form.find('input[name=lat]').val();
+      lng = @form.find('input[name=lng]').val();
+
+      if lat.length and lng.length
+        bounds.extend(new google.maps.LatLng(@form.find('input[name=lat]').val(), @form.find('input[name=lng]').val()))
+
       _.defer => @map.fitBounds(bounds)
       @map.show()
       # In case the map is hidden

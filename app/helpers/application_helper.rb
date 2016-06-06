@@ -371,7 +371,7 @@ module ApplicationHelper
   end
 
   def i18n_cache_key(*args)
-    args.compact + [PlatformContext.current.instance.context_cache_key.to_s, I18n.locale]
+    args.compact + [PlatformContext.current.instance.context_cache_key.to_s, I18n.locale, PlatformContext.current.domain.name]
   end
 
   def is_i18n_set?(key)
