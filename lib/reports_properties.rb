@@ -24,19 +24,27 @@ module ReportsProperties
 
     csv = CSV.generate do |csv|
       if items.first.is_a?(Transactable)
-        csv << [attribute_names, 'latitude', 'longitude', 'address', properties_columns].flatten
+        csv << [attribute_names, 'url', 'latitude', 'longitude', 'address', 'street', 'suburb', 'city', 'country', 'state', 'postcode', properties_columns].flatten
       else
         csv << [attribute_names, properties_columns].flatten
       end
 
       items.each do |record|
+        record = record.decorate if record.is_a?(Transactable)
         values = record.attributes.values
         properties = record.send(properties_column_name).to_h
 
         if record.is_a?(Transactable)
+          values << record.show_url
           values << record.location.latitude
           values << record.location.longitude
           values << record.location.address
+          values << record.location.location_address.street
+          values << record.location.location_address.suburb
+          values << record.location.location_address.city
+          values << record.location.location_address.country
+          values << record.location.location_address.state
+          values << record.location.location_address.postcode
         end
 
         properties_columns.each do |column|
