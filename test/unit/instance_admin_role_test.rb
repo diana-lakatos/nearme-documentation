@@ -56,8 +56,12 @@ class InstanceAdminRoleTest < ActiveSupport::TestCase
       end
 
       should 'return false if instance_admin_role was destroyed' do
-        @instance_admin_role.destroy
-        refute @instance_admin_role.should_populate_metadata?
+        instance_admin_role = FactoryGirl.create(:instance_admin_role)
+        instance_admin_role.permission_analytics = true
+        instance_admin_role.save
+
+        instance_admin_role.destroy
+        refute instance_admin_role.should_populate_metadata?
       end
 
       should 'return false if name was changed' do

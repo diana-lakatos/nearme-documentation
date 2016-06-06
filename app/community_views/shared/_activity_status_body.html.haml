@@ -25,6 +25,7 @@
             = header_image.present? ? image_tag(header_image) : image_tag(space_listing_placeholder_path(width: 80, height: 80))
       %section
         %h3.hx= title if title.present?
-        = simple_format auto_link(body, html: { target: '_blank', ref: 'nofollow' }) if body.present?
+        - if body.present?
+          = videoify_and_parse_with_markdown(body)
 
       = render 'shared/activity_status_footer', event: event
