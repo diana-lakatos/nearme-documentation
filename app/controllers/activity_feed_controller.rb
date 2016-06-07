@@ -39,7 +39,11 @@ class ActivityFeedController < ApplicationController
 
   def activity_feed
     @container = params[:container].presence || "#activity"
-    @feed = ActivityFeedService.new(@object)
+
+    options = {}
+    options.merge!(user_feed: true) if params[:type] == 'User'
+
+    @feed = ActivityFeedService.new(@object, options)
 
     @partial = "shared/activity_status"
     @as = :event
