@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160603110153) do
+ActiveRecord::Schema.define(version: 20160606144342) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -4324,32 +4324,33 @@ ActiveRecord::Schema.define(version: 20160603110153) do
   add_index "workflow_alert_weekly_aggregated_logs", ["instance_id", "year", "week_number"], name: "wamal_instance_id_year_week_number_index", unique: true, using: :btree
 
   create_table "workflow_alerts", force: :cascade do |t|
-    t.string   "name",             limit: 255
-    t.string   "alert_type",       limit: 255
-    t.string   "recipient_type",   limit: 255
-    t.string   "template_path",    limit: 255
+    t.string   "name",                      limit: 255
+    t.string   "alert_type",                limit: 255
+    t.string   "recipient_type",            limit: 255
+    t.string   "template_path",             limit: 255
     t.integer  "workflow_step_id"
     t.integer  "instance_id"
     t.text     "options"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "delay",                        default: 0
+    t.integer  "delay",                                 default: 0
     t.text     "subject"
-    t.string   "layout_path",      limit: 255
+    t.string   "layout_path",               limit: 255
     t.text     "custom_options"
-    t.string   "from",             limit: 255
-    t.string   "reply_to",         limit: 255
-    t.string   "cc",               limit: 255
-    t.string   "bcc",              limit: 255
-    t.string   "recipient",        limit: 255
-    t.string   "from_type",        limit: 255
-    t.string   "reply_to_type",    limit: 255
+    t.string   "from",                      limit: 255
+    t.string   "reply_to",                  limit: 255
+    t.string   "cc",                        limit: 255
+    t.string   "bcc",                       limit: 255
+    t.string   "recipient",                 limit: 255
+    t.string   "from_type",                 limit: 255
+    t.string   "reply_to_type",             limit: 255
     t.text     "endpoint"
     t.string   "request_type"
     t.boolean  "use_ssl"
-    t.text     "payload_data",                 default: "{}"
-    t.text     "headers",                      default: "{}"
+    t.text     "payload_data",                          default: "{}"
+    t.text     "headers",                               default: "{}"
+    t.text     "prevent_trigger_condition",             default: "",   null: false
   end
 
   add_index "workflow_alerts", ["instance_id", "workflow_step_id"], name: "index_workflow_alerts_on_instance_id_and_workflow_step_id", using: :btree
