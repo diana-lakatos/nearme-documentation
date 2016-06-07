@@ -2,7 +2,7 @@
   - followed = event.event_source.commentable
   - body = event.event_source.body
   - header_image = "intel/status-a-chat-a.png"
-- elsif event.event.to_sym == :user_added_photos_to_project
+- elsif event.event.to_sym == :user_added_photos_to_project && event.event_source.is_a?(Photo)
   - followed = event.followed
   - big_image = event.event_source.image.url(:fit_to_activity_feed)
 - else
