@@ -386,5 +386,56 @@ namespace :fix do
     puts "Not found project: #{not_found_project}"
   end
 
+  task fix_event_source_for_intel_links: :environment do
+    found = 0
+    not_found = 0
+    not_found_project = 0
+
+    to_be_destroyed = []
+
+    Instance.where(is_community: true).find_each do |instance|
+      instance.set_context!
+
+      ActivityFeedEvent.where(event: 'user_added_links_to_project', event_source_type: 'Project').order('created_at DESC').find_each do |activity_feed_event|
+        affected_objects_identifiers = activity_feed_event.affected_objects_identifiers
+        project_id = affected_objects_identifiers.find { |aoi| aoi.match(/Project_/) }.match(/\d+/).to_a[0].to_i
+        project = Project.find_by_id(project_id)
+        if project.blank?
+          not_found_project += 1
+          next
+        end
+
+        links = project.links.order('id DESC')
+
+        added_link = false
+        links.each do |link|
+          activities_with_link = ActivityFeedEvent.where(event: 'user_added_links_to_project', event_source: link).count
+          if activities_with_link.zero?
+            found += 1
+            added_link = true
+
+            activity_feed_event.event_source = link
+            activity_feed_event.flags[:fixed_event_source_link] = true
+            activity_feed_event.save!
+            
+            break
+          end
+        end
+
+        not_found += 1 if !added_link
+        to_be_destroyed << activity_feed_event if !added_link
+      end
+    end
+
+    to_be_destroyed.each do |tbd|
+      tbd.destroy
+    end
+
+    puts "Destroyed: #{to_be_destroyed.length}"
+    puts "Found: #{found}"
+    puts "Not found: #{not_found}"
+    puts "Not found project: #{not_found_project}"
+  end
+
 end
 
