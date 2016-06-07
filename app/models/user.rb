@@ -56,7 +56,7 @@ class User < ActiveRecord::Base
   belongs_to :partner
   belongs_to :spree_shipping_address, class_name: 'Spree::Address', foreign_key: 'shipping_address_id'
   has_many :shipping_addresses
-  has_many :activity_feed_events, as: :event_source, dependent: :destroy
+  has_many :activity_feed_events, as: :followed, dependent: :destroy
   has_many :activity_feed_subscriptions, foreign_key: 'follower_id'
   has_many :activity_feed_subscriptions_as_followed, as: :followed, class_name: 'ActivityFeedSubscription', dependent: :destroy
   has_many :administered_locations, class_name: "Location", foreign_key: 'administrator_id', inverse_of: :administrator
