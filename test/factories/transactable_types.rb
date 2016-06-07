@@ -20,6 +20,7 @@ FactoryGirl.define do
     searchable true
     enable_reviews true
     show_path_format "/listings/:id"
+    searcher_type 'geo'
 
 
     ignore do

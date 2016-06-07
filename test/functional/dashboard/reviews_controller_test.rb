@@ -52,9 +52,9 @@ class Dashboard::ReviewsControllerTest < ActionController::TestCase
       @review = FactoryGirl.create(:review, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s, user: @user, instance: @current_instance, rating_system_id: @rating_system.id)
     end
 
-    should 'redirect to dashboard_reviews_path' do
+    should 'redirect to completed_dashboard_reviews_path' do
       delete :destroy, id: @review.id
-      assert_redirected_to dashboard_reviews_path
+      assert_redirected_to completed_dashboard_reviews_path
     end
   end
 end
