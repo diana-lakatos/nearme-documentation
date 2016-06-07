@@ -13,7 +13,7 @@ class InstanceAdmin < ActiveRecord::Base
   before_save :assign_default_role_if_empty
 
   validates_presence_of :user_id
-  validates_uniqueness_of :user_id, scope: :instance_id
+  validates_uniqueness_of :user_id, scope: :instance_id, conditions: -> { where(deleted_at: nil) }
 
   delegate :name, to: :user, allow_nil: true
   delegate :first_permission_have_access_to, to: :instance_admin_role, allow_nil: true
