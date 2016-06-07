@@ -21,7 +21,7 @@ class Project < ActiveRecord::Base
 
   belongs_to :transactable_type, -> { with_deleted }, foreign_key: 'transactable_type_id'
 
-  has_many :activity_feed_events, as: :event_source, dependent: :destroy
+  has_many :activity_feed_events, as: :followed, dependent: :destroy
   has_many :activity_feed_subscriptions, as: :followed, dependent: :destroy
   has_many :approved_project_collaborators, -> { approved }, class_name: 'ProjectCollaborator', dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
