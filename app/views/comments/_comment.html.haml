@@ -6,7 +6,7 @@
       = link_to comment.creator.decorate.secret_name, profile_path(comment.creator)
   %section
     %p
-      = readmore(comment.body)
+      = videoify_and_parse_with_markdown(comment.body)
 
   %footer
     %p.actions
