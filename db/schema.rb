@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160603110153) do
+ActiveRecord::Schema.define(version: 20160607135717) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,12 +24,13 @@ ActiveRecord::Schema.define(version: 20160603110153) do
     t.string   "event"
     t.integer  "followed_id"
     t.string   "followed_type"
-    t.text     "affected_objects_identifiers", default: [],    array: true
+    t.text     "affected_objects_identifiers", default: [],                 array: true
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "event_source_id"
     t.string   "event_source_type"
     t.boolean  "spam_ignored",                 default: false
+    t.hstore   "flags",                        default: {},    null: false
   end
 
   add_index "activity_feed_events", ["event"], name: "index_activity_feed_events_on_event", using: :btree

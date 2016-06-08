@@ -332,5 +332,110 @@ namespace :fix do
     end
   end
 
+  task fix_event_source_for_intel: :environment do
+    found = 0
+    not_found = 0
+    not_found_project = 0
+
+    to_be_destroyed = []
+
+    Instance.where(is_community: true).find_each do |instance|
+      instance.set_context!
+
+      ActivityFeedEvent.where(event: 'user_added_photos_to_project', event_source_type: 'Project').order('created_at DESC').find_each do |activity_feed_event|
+        affected_objects_identifiers = activity_feed_event.affected_objects_identifiers
+        project_id = affected_objects_identifiers.find { |aoi| aoi.match(/Project_/) }.match(/\d+/).to_a[0].to_i
+        project = Project.find_by_id(project_id)
+        if project.blank?
+          not_found_project += 1
+          next
+        end
+
+        photos = project.photos.order('created_at DESC')
+
+        added_photo = false
+        photos.each do |photo|
+          activities_with_photo = ActivityFeedEvent.where(event: 'user_added_photos_to_project', event_source: photo).count
+          if activities_with_photo.zero?
+            found += 1
+            added_photo = true
+
+            photo.creator_id = project.creator_id
+            photo.save(validate: false)
+
+            activity_feed_event.event_source = photo
+            activity_feed_event.flags[:fixed_event_source_photo] = true
+            activity_feed_event.save!
+            
+            break
+          end
+        end
+
+        not_found += 1 if !added_photo
+        to_be_destroyed << activity_feed_event if !added_photo
+      end
+    end
+
+    to_be_destroyed.each do |tbd|
+      tbd.destroy
+    end
+
+    puts "Destroyed: #{to_be_destroyed.length}"
+    puts "Found: #{found}"
+    puts "Not found: #{not_found}"
+    puts "Not found project: #{not_found_project}"
+  end
+
+  task fix_event_source_for_intel_links: :environment do
+    found = 0
+    not_found = 0
+    not_found_project = 0
+
+    to_be_destroyed = []
+
+    Instance.where(is_community: true).find_each do |instance|
+      instance.set_context!
+
+      ActivityFeedEvent.where(event: 'user_added_links_to_project', event_source_type: 'Project').order('created_at DESC').find_each do |activity_feed_event|
+        affected_objects_identifiers = activity_feed_event.affected_objects_identifiers
+        project_id = affected_objects_identifiers.find { |aoi| aoi.match(/Project_/) }.match(/\d+/).to_a[0].to_i
+        project = Project.find_by_id(project_id)
+        if project.blank?
+          not_found_project += 1
+          next
+        end
+
+        links = project.links.order('id DESC')
+
+        added_link = false
+        links.each do |link|
+          activities_with_link = ActivityFeedEvent.where(event: 'user_added_links_to_project', event_source: link).count
+          if activities_with_link.zero?
+            found += 1
+            added_link = true
+
+            activity_feed_event.event_source = link
+            activity_feed_event.flags[:fixed_event_source_link] = true
+            activity_feed_event.save!
+            
+            break
+          end
+        end
+
+        not_found += 1 if !added_link
+        to_be_destroyed << activity_feed_event if !added_link
+      end
+    end
+
+    to_be_destroyed.each do |tbd|
+      tbd.destroy
+    end
+
+    puts "Destroyed: #{to_be_destroyed.length}"
+    puts "Found: #{found}"
+    puts "Not found: #{not_found}"
+    puts "Not found project: #{not_found_project}"
+  end
+
 end
 
