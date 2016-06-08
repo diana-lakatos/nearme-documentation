@@ -11,7 +11,7 @@ class Listing::Search::Params
     @geocoder = Listing::Search::Geocoder
     @options = options.respond_to?(:deep_symbolize_keys) ? options.deep_symbolize_keys : options.symbolize_keys
 
-    if !midpoint && query.present?
+    if !midpoint && loc.present?
       @location = @geocoder.find_search_area(query)
       if @location.present?
         @bounding_box, @midpoint, @radius = @location.bounds, @location.center, @location.radius
