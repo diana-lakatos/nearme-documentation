@@ -57,7 +57,7 @@ FactoryGirl.define do
       booking_type 'schedule'
       quantity 10
       after(:create) do |listing|
-        listing.schedule = FactoryGirl.create(:simple_schedule, scheduable: listing)
+        listing.schedule = FactoryGirl.create(:schedule, scheduable: listing)
         listing.save!
       end
     end

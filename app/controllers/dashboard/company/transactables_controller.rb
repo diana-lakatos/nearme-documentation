@@ -39,7 +39,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
 
     if @transactable.save
-      @transactable.schedule.try(:create_schedule_from_schedule_rules) if PlatformContext.current.instance.priority_view_path == 'new_ui'
+      @transactable.schedule.try(:create_schedule_from_schedule_rules)
       WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @transactable.id) unless @transactable.is_trusted?
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.translated_bookable_noun)
       flash[:error] = t('manage.listings.no_trust_explanation') if !@transactable.is_trusted?
@@ -47,9 +47,6 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
       event_tracker.updated_profile_information(current_user)
       redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     else
-      unless PlatformContext.current.instance.priority_view_path == 'new_ui'
-        flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@transactable.errors.full_messages)
-      end
       @global_errors = filter_error_messages(@transactable.errors.full_messages)
       @photos = @transactable.photos
       @attachments = @transactable.attachments
@@ -77,16 +74,13 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     respond_to do |format|
       format.html {
         if @transactable.save
-          @transactable.schedule.try(:create_schedule_from_schedule_rules) if PlatformContext.current.instance.priority_view_path == 'new_ui'
+          @transactable.schedule.try(:create_schedule_from_schedule_rules)
           flash[:success] = t('flash_messages.manage.listings.listing_updated')
           unless @transactable.is_trusted?
             flash[:error] = t('manage.listings.no_trust_explanation')
           end
           redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
         else
-          unless PlatformContext.current.instance.priority_view_path == 'new_ui'
-            flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@transactable.errors.full_messages)
-          end
           @global_errors = filter_error_messages(@transactable.errors.full_messages)
           @photos = @transactable.photos
           @attachments = @transactable.attachments

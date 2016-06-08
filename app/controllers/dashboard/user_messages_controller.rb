@@ -30,7 +30,7 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
       @user_message.send_notification
 
       if request.xhr?
-        if current_instance.new_ui? and !@user_message.first_in_thread?
+        unless @user_message.first_in_thread?
           render :partial => 'user_message_for_show', locals: { user_message: @user_message }
         else
           flash[:notice] = t('flash_messages.user_messages.message_sent')
