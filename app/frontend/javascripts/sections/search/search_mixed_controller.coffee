@@ -154,10 +154,10 @@ module.exports = class SearchMixedController extends SearchSearchController
   # Trigger the API request for search
   #
   # Returns a jQuery Promise object which can be bound to execute response semantics.
-  triggerSearchRequest: (mapTrigger)->
+  triggerSearchRequest: ->
     @currentAjaxRequest.abort() if @currentAjaxRequest
     data = @form.add('.list .sort :input').serializeArray()
-    data.push({"name": "map_moved", "value": mapTrigger})
+    data.push({"name": "map_moved", "value": @mapTrigger})
     @currentAjaxRequest = $.ajax(
       url  : @form.attr("action")
       type : 'GET',
@@ -388,12 +388,13 @@ module.exports = class SearchMixedController extends SearchSearchController
       page: 1
     )
 
+    @mapTrigger = true
+
     @triggerSearchAndHandleResults =>
       @plotListingResultsWithinBounds()
       @assignFormParams(
         ignore_search_event: 1
       )
-    , true
 
 
   initializeCarousel: ->
