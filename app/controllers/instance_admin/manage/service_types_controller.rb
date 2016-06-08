@@ -23,7 +23,7 @@ class InstanceAdmin::Manage::ServiceTypesController < InstanceAdmin::Manage::Tra
 
   def update
     if resource.update_attributes(transactable_type_params)
-      resource.schedule.try(:create_schedule_from_schedule_rules) if PlatformContext.current.instance.priority_view_path == 'new_ui'
+      resource.schedule.try(:create_schedule_from_schedule_rules)
       flash.now[:success] = t 'flash_messages.instance_admin.manage.service_types.updated'
       redirect_to instance_admin_manage_service_types_path
     else

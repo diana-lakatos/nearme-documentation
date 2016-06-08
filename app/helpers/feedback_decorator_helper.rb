@@ -10,7 +10,7 @@ module FeedbackDecoratorHelper
   end
 
   def order_image
-    version = PlatformContext.current.instance.new_ui? ? :space_listing : :medium
+    version = :space_listing
 
     if reservation? && feedback_object.listing && feedback_object.listing.has_photos?
       h.link_to(h.image_tag(feedback_object.listing.photos.rank(:position).first.image_url(version)), feedback_object.listing.decorate.show_path)

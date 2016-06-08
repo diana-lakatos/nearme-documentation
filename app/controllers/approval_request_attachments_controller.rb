@@ -16,18 +16,10 @@ class ApprovalRequestAttachmentsController < ApplicationController
       required: template.required
     )
 
-    if current_instance.new_ui?
-      if @attachment.save
-        render partial: 'dashboard/shared/attachments/approval_request_attachment', locals: { attachment: @attachment }
-      else
-        render partial: 'dashboard/shared/errors', locals: { errors: @attachment.errors.full_messages.join(', ') }
-      end
+    if @attachment.save
+      render partial: 'dashboard/shared/attachments/approval_request_attachment', locals: { attachment: @attachment }
     else
-      if @attachment.save
-        render partial: 'approval_requests/uploaded_attachment', locals: {attachment: @attachment}
-      else
-        render partial: 'approval_requests/failed_attachment'
-      end
+      render partial: 'dashboard/shared/errors', locals: { errors: @attachment.errors.full_messages.join(', ') }
     end
   end
 

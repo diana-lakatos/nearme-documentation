@@ -35,10 +35,6 @@ class Dashboard::Company::ProductsController < Dashboard::Company::BaseControlle
     else
       @images = @product_form.product.images
       @attachments = current_user.attachments.where(assetable_id: nil)
-      unless current_instance.new_ui?
-        flash.now[:error] = t('flash_messages.product.complete_fields')
-        flash.now[:error] = t('flash_messages.product.missing_fields_invalid') if @product_form.required_field_missing?
-      end
       render :new
     end
   end

@@ -426,6 +426,7 @@ class Instance < ActiveRecord::Base
   end
 
   def new_ui?
+    Rails.logger.error("ERROR! new_ui? method should be deprecated, called from: #{caller[0]}")
     true
   end
 

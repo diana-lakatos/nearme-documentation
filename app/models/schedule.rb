@@ -11,11 +11,7 @@ class Schedule < ActiveRecord::Base
   has_many :schedule_rules, dependent: :destroy
 
   before_validation :validate_schedule_rules
-  before_save :create_schedule_from_simple_settings, if: :use_simple_schedule
   before_save :set_timezone
-
-  validates_presence_of :sr_start_datetime, :sr_from_hour, :sr_to_hour, if: :use_simple_schedule
-  validates_numericality_of :sr_every_hours, greater_than_or_equal_to: 0, allow_nil: true , if: :use_simple_schedule
 
   validates_associated :schedule_exception_rules, :schedule_rules
   validates_length_of :schedule_rules, maximum: 10
@@ -122,19 +118,9 @@ class Schedule < ActiveRecord::Base
     end
   end
 
-  def use_simple_schedule
-    read_attribute(:use_simple_schedule) && !PlatformContext.current.instance.new_ui?
-  end
-
-  def use_schedule_rules
-    PlatformContext.current.instance.priority_view_path == 'new_ui'
-  end
-
   def start_datetime_with_timezone
     start_time = if schedule_rules.size > 0
                    start_at || Time.now
-                 elsif use_simple_schedule
-                   sr_start_datetime
                  else
                    schedule.start_time
                  end

@@ -42,7 +42,7 @@ class Dashboard::ReviewsController < Dashboard::BaseController
     @review.destroy
     @review.recalculate_reviewable_average_rating
     flash[:success] = t('flash_messages.dashboard.reviews.review_deleted')
-    redirect_to current_instance.new_ui? ? completed_dashboard_reviews_path : dashboard_reviews_path
+    redirect_to completed_dashboard_reviews_path
   end
 
   def update
