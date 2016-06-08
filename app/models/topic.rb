@@ -10,7 +10,7 @@ class Topic < ActiveRecord::Base
   include CreationFilter
   include QuerySearchable
 
-  has_many :activity_feed_events, as: :event_source, dependent: :destroy
+  has_many :activity_feed_events, as: :followed, dependent: :destroy
   has_many :activity_feed_subscriptions, as: :followed, dependent: :destroy
   has_many :data_source_contents, through: :data_source
   has_many :feed_followers, through: :activity_feed_subscriptions, source: :follower

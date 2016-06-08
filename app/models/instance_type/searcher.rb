@@ -40,7 +40,7 @@ module InstanceType::Searcher
   end
 
   def located
-    search.midpoint.present?
+    @transactable_type.searcher_type =~ /geo/ && search.midpoint.present?
   end
 
   def adjust_to_map

@@ -12,6 +12,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
     @filters = {date_range: search.available_dates}
 
     listing_ids = fetcher.map(&:id)
+
     listings_scope = ::Transactable.all
 
     if postgres_filters?
@@ -19,7 +20,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
       order_ids = listing_ids[@offset..(@to + 5)]
       order_ids = listing_ids if order_ids.blank?
     else
-      @search_results_count = fetcher.response[:hits][:total]
+      @search_results_count = fetcher.results.total
       order_ids = listing_ids
     end
     listings_scope = listings_scope.where(id: listing_ids)

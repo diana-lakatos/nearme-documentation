@@ -426,7 +426,7 @@ class Instance < ActiveRecord::Base
   end
 
   def new_ui?
-    priority_view_path == "new_ui"
+    true
   end
 
   def available_locales
