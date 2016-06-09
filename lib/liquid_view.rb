@@ -20,6 +20,7 @@ class LiquidView
   Liquid::Template.register_tag('transactable_type_select', TransactableTypeSelectTag)
   Liquid::Template.register_tag('featured_items', FeaturedItemsTag)
   Liquid::Template.register_tag('render_featured_items', RenderFeaturedItemsTag)
+  Liquid::Template.register_tag('yield', YieldTag)
 
   def self.call(template)
     "LiquidView.new(self).render(#{template.source.inspect}, local_assigns)"
@@ -40,7 +41,15 @@ class LiquidView
     assigns['params'] = params.except(*Rails.application.config.filter_parameters)
     assigns['current_url'] = @view.try(:controller).try(:request).try(:original_url)
     assigns['current_user'] = @view.try(:controller).try(:current_user)
+    assigns['flash'] = @view.try(:flash).try(:to_hash) if ApplicationController === @view.try(:controller)
     assigns['form_authenticity_token'] = @view.try(:controller).try(:form_authenticity_token)
+    # this will need to be cached for performance reason
+    if PlatformContext.current.custom_theme.present?
+      assigns['asset_url'] = PlatformContext.current.custom_theme.custom_theme_assets.inject({}) do |hash, custom_theme_asset|
+        hash[custom_theme_asset.name] = custom_theme_asset.file.url
+        hash
+      end
+    end
 
     if content_for_layout = @view.instance_variable_get("@content_for_layout")
       assigns['content_for_layout'] = content_for_layout

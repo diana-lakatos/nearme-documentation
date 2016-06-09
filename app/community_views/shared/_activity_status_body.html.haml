@@ -26,6 +26,9 @@
       %section
         %h3.hx= title if title.present?
         - if body.present?
-          = videoify_and_parse_with_markdown(body)
+          - if event.is_text_update?
+            = videoify_and_parse_with_markdown(body)
+          - else
+            = simple_format auto_link(body, html: { target: '_blank', ref: 'nofollow' })
 
       = render 'shared/activity_status_footer', event: event

@@ -412,6 +412,7 @@ class ApplicationController < ActionController::Base
     register_lookup_context_detail(:instance_id)
     register_lookup_context_detail(:i18n_locale)
     register_lookup_context_detail(:transactable_type_id)
+    register_lookup_context_detail(:custom_theme_id)
   end
 
   def log_out_if_token_exists
@@ -496,14 +497,16 @@ class ApplicationController < ActionController::Base
   def details_for_lookup
     set_i18n_locale if @language_service.nil? && !Rails.env.test?
     {
-      :instance_id => PlatformContext.current.try(:instance).try(:id),
-      :i18n_locale => I18n.locale,
-      :transactable_type_id => @transactable_type.try(:id) || (params[:transactable_type_id].present? ? (TransactableType.find_by(slug: params[:transactable_type_id]).try(:id) || params[:transactable_type_id]).to_i : nil)
+      instance_id: PlatformContext.current.try(:instance).try(:id),
+      i18n_locale: I18n.locale,
+      custom_theme_id: PlatformContext.current.try(:custom_theme).try(:id),
+      transactable_type_id: @transactable_type.try(:id) || (params[:transactable_type_id].present? ? (TransactableType.find_by(slug: params[:transactable_type_id]).try(:id) || params[:transactable_type_id]).to_i : nil)
     }
   rescue
     {
-      :instance_id => PlatformContext.current.try(:instance).try(:id),
-      :i18n_locale => I18n.locale
+      instance_id: PlatformContext.current.try(:instance).try(:id),
+      i18n_locale: I18n.locale,
+      custom_theme_id: PlatformContext.current.try(:custom_theme).try(:id)
     }
   end
 

@@ -1,0 +1,221 @@
+<div class="container-fluid">
+  <article id="space">
+    <div class="container-row">
+      <div class="two-thirds column left">
+
+        <header class='clearfix'>
+          <div class='photo'>
+            <img src="{{ listing.photo_url }}" title="{{ listing.name }}" alt="{{ listing.name }}"></img>
+          </div>
+
+          <div class='data'>
+            <h1 class='username'>Hi, I'm {{ listing.name | filter_text | custom_sanitize }}</h1>
+            <div class="price">
+              {% assign price_info = listing | lowest_price_without_cents_with_currency %}
+              {% if price_info.price %}
+                <span>{{ price_info.price}} <span class='period'>/hr</span></span>
+              {% elsif price_info.free %}
+                <span>{{ 'search.free_listing' | translate }}</span>
+              {% endif %}
+            </div>
+            <div class='address'>
+              <img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2279/location_marker.png' />
+              {{ listing.location.address }}
+            <div>
+          </div>
+        </header>
+
+        {% if listing.description != blank %}
+          <div class="about-me">
+            <h2>About Me</h2>
+            {{ listing.description }}
+          </div>
+        {% endif %}
+
+        {% if listing.properties.service_area != blank %}
+          <div class="service-area">
+            <h2>Service Area</h2>
+            {{ listing.properties.service_area }}
+          </div>
+        {% endif %}
+
+        {% if listing.properties.conditions != blank %}
+          <div class="conditions">
+            <h2>Conditions</h2>
+            {{ listing.properties.conditions }}
+          </div>
+        {% endif %}
+
+        {% if listing.properties.video_url != blank %}
+          <div class="video-url">
+            {{ listing.properties.video_url | videoify }}
+          </div>
+        {% endif %}
+
+        {% if listing.customizations.size > 0 %}
+          <div class="testimonials">
+            <h2>Recommendations</h2>
+
+            <div class='carousel slide' id='testimonials'>
+              <div class='carousel-inner'>
+                {% for testimonial in listing.customizations %}
+                  <div class="item {% if forloop.first %}active{%endif%}">
+                    <div class="testimonial-body">{{ testimonial.properties.testimonial_body }}</div>
+                    <div class="testimonial-author">{{ testimonial.properties.testimonial_author }}</div>
+                  </div>
+                {% endfor %}
+              </div>
+
+              <ol class="carousel-indicators">
+                {% for testimonial in listing.customizations %}
+                <li data-target="#testimonials" data-slide-to="{{ forloop.index0 }}" class="{% if forloop.first %}active{%endif%}"></li>
+                {% endfor %}
+              </ol>
+            </div>
+          </div>
+        {% endif %}
+
+        <div data-reviews-controller="true" data-path="{{ 'reviews_path' | generate_url }}" data-reviewables="[{&quot;id&quot;:{{listing.id}},&quot;type&quot;:&quot;Transactable&quot;,&quot;subject&quot;:&quot;transactable&quot;},{&quot;id&quot;:{{listing.creator.id | default: "-1"}},&quot;type&quot;:&quot;User&quot;,&quot;subject&quot;:&quot;host&quot;}]" {%if platform_context.seller_attachments_enabled? %}data-seller-attachment-path="{{ 'seller_attachments_path' | generate_url }}" data-seller-attachable="{&quot;id&quot;:{{listing.id}},&quot;type&quot;:&quot;Transactable&quot;}"{%endif%}>
+
+          <h2>Ratings</h2>
+          <div class="reviews" data-tab-content="true">
+          </div>
+        </div>
+
+      </div>
+      <div class="one-third column left">
+        <div class='back-to-search-results'>
+          <a data-back-to-search-results-link href="/search">< Back to search results</a>
+        </div>
+
+        <div class="hire-me">
+          <form id="reservation_request_form_{{ listing.id }}" novalidate="novalidate" class="reservation_request" action="{{ 'review_listing_reservations_path' | generate_url: listing }}" accept-charset="UTF-8" method="post">
+            <input name="utf8" type="hidden" value="">
+            <input name="authenticity_token" value="{{ form_authenticity_token }}" data-authenticity-token type="hidden">
+            <input type="hidden" name="reservation_request[booking_type]" id="reservation_request_booking_type" value="hourly">
+            <input type="submit" value="Hire Me!">
+          </form>
+        </div>
+
+        {% include 'shared/components/wish_list_button_injection.html', object: listing, link_to_classes: 'btn btn-white btn-large ask' %}
+
+        <div class="missions-count">
+          <span>Missions:</span> {{ listing.creator.completed_host_reservations_count }}
+        </div>
+
+        <div class="review-stars">
+          <span class='details-label'>Rating:</span>
+          <span class='star-container'>
+            {% for i in (1..listing.creator.seller_average_rating) %}
+              <img src="https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2277/star_on.png" />
+            {% endfor %}
+            {% for i in (listing.creator.seller_average_rating..4) %}
+              <img src="https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2278/star_off.png" />
+            {% endfor %}
+          </span>
+        </div>
+
+        <div class="need-help">
+          <h2>Need help?</h2>
+          <p>Please call: {{ platform_context.phone_number }}</p>
+        </div>
+
+        <div class="categories">
+          <h2>Services offered:</h2>
+
+          {% for category in listing.transactable_type.categories["Services"]["children"] %}
+            {% assign is_included = listing.categories["Services"]["children"] | is_included_in_array: category %}
+            {% if is_included %}
+              {% assign div_class = "included" %}
+            {% else %}
+              {% assign div_class = "" %}
+            {% endif %}
+            <div class="category {{div_class}}">
+              <span>{{ category }}</span>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class ="availability">
+          <h2>Days available:</h2>
+
+          <div class="availability-week-container">
+            {% for day in listing.available_days %}
+              <span class="day-of-week {% if day[1] %}enabled{% else %}disabled{% endif %}">{{ day[0] }}</span>
+            {% endfor %}
+          </div>
+
+          <div class="availability-detailed-container">
+            {% for day in listing.availability_by_days %}
+              <div class='week-day'>
+                <span class="abbreviation">
+                  {{ day[0] }}:
+                </span>
+                <span class="times-in-day">
+                  {% for time in day[1] %}
+                    <span>{{ time[2] }}</span>
+                  {% endfor %}
+                </span>
+              </div>
+            {% endfor %}
+          </div>
+
+          <br />
+
+          {% if listing.availability_exceptions != blank %}
+            <h2>Except:</h2>
+
+            <div class="availability-detailed-container">
+              {% for exception in listing.availability_exceptions %}
+                <div class='week-day'>
+                  <strong>
+                    {{ exception.label }}:
+                  </strong>
+
+                   <span>
+                    <span>{{ exception.period }}</span>
+                  </span>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+        </div>
+
+        {% if listing.properties.education != blank %}
+          <div class="education">
+            <h2>Education:</h2>
+            {{ listing.properties.education }}
+          </div>
+        {% endif %}
+
+        {% if listing.properties.technical_certifications != blank %}
+          <div class="technical-certifications">
+            <h2>Technical Certifications</h2>
+            {% assign certifications = listing.properties.technical_certifications | split: ',' %}
+            {% for cert in certifications %}
+            <div>- <span>{{ cert }}</span></div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if listing.properties.languages.size > 0 %}
+          <div class="languages">
+            <h2>Languages:</h2>
+            <ul>
+            {% assign languages = listing.properties.languages | split: ',' %}
+            {% for language in languages %}
+              <li>{{ language | downcase | prepend: 'service_type.ninja.languages.' | translate }}</li>
+            {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        <div class='flag-as-inappropriate'>
+          <a href="#" data-href="{{ listing.inappropriate_report_path }}" data-modal="1">{{ 'inappropriate_reports.flag_as_inappropriate' | translate }}</a>
+        </div>
+
+      </div>
+    </div>
+  </article>
+</div>

@@ -108,10 +108,15 @@ class InstanceAdmin::BaseController < ApplicationController
     'spam_reports'  => { default_action: 'index' }
   }
 
+  CUSTOM_TEMPLATES_CONTROLLERS = {
+    'custom_themes' => { default_action: 'index' }
+  }
+
   PERMISSIONS_CONTROLLERS = {
     blog: 'manage_blog',
     support: 'support_root',
     buysell: 'buy_sell',
+    customtemplates: 'custom_templates',
     shippingoptions: ['shipping_options', 'shipping_profiles'],
     reports: ['reports', 'listings'],
   }.with_indifferent_access
