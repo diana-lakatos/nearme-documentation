@@ -6,6 +6,7 @@ class CustomThemeAsset < ActiveRecord::Base
   scoped_to_platform_context
 
   belongs_to :custom_theme
+  belongs_to :instance
 
   mount_uploader :file, CustomThemeAssetUploader
 
@@ -28,6 +29,17 @@ class CustomThemeAsset < ActiveRecord::Base
     self.name = File.basename(file.proper_file_path)
   end
 
+  # store the file in a new directory to avoid cdn cache issue
+  def prepare_for_uploading_new_file
+    touch(:file_updated_at)
+  end
+
+  # clear liquid view cache
+  def new_file_uploaded
+    custom_theme.touch
+    instance.recalculate_cache_key! if custom_theme.in_use?
+    true
+  end
 
 end
 
