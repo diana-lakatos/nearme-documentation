@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160607135717) do
+ActiveRecord::Schema.define(version: 20160609110201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -670,6 +670,7 @@ ActiveRecord::Schema.define(version: 20160607135717) do
     t.datetime "deleted_at"
     t.hstore   "settings"
     t.string   "type"
+    t.datetime "file_updated_at"
   end
 
   add_index "custom_theme_assets", ["instance_id", "custom_theme_id", "name"], name: "cta_on_instance_id_theme_and_name_uniq", unique: true, using: :btree

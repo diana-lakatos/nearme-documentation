@@ -351,7 +351,7 @@ class Instance < ActiveRecord::Base
   end
 
   def recalculate_cache_key!
-    update_column(:context_cache_key, [custom_theme.try(:id), Digest::SHA1.hexdigest(custom_sanitize_config.to_s + text_filters.pluck(:id, :updated_at).to_s), Time.now.to_s].join('timestamp'))
+    update_column(:context_cache_key, [custom_theme.try(:updated_at), Digest::SHA1.hexdigest(custom_sanitize_config.to_s + text_filters.pluck(:id, :updated_at).to_s), Time.now.to_s].join('timestamp'))
   end
 
   def require_payout?
