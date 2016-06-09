@@ -267,8 +267,7 @@ module.exports = class SearchSearchController extends SearchController
         categories_selects = categories_selects.concat(values)
 
     all_categories = categories_selects.concat(categories_checkboxes)
-
-    @mapTrigger = false unless page
+    @mapTrigger = false if parseInt($(page).val()) == 1
 
     price_max = if @container.find('input[name="price[max]"]:checked').length > 0 then @container.find('input[name="price[max]"]:checked').val() else $('input[name="price[max]"]').val()
     @assignFormParams(
