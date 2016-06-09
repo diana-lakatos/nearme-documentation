@@ -14,14 +14,14 @@
 %section
   %article.status-a
     - if big_image.present?
-      = link_to followed, target: target do
+      = followed_link(followed, target) do
         = image_tag big_image
 
       = render 'shared/activity_status_footer', event: event, footer_class: 'no-spacing'
     - else
       %header
         %figure
-          = link_to followed, target: target do
+          = followed_link(followed, target) do
             = header_image.present? ? image_tag(header_image) : image_tag(space_listing_placeholder_path(width: 80, height: 80))
       %section
         %h3.hx= title if title.present?
