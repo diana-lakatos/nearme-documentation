@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    {% yield 'meta' %}
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset_url['application.css'] }}">
+  </head>
+  <body>
+    <header class="top-a" id="top">
+      <a href="/">
+        <img src='{{ asset_url['near-me-badge.png'] }}' width="59" height="39" alt=" {{ platform_context.name }}"  />
+        {{ 'developer_mesh' }}
+      </a>
+    </header>
+
+    {% assign keys = "notice,success,warning,error,deleted" | split: ',' %}
+    {% for key in keys %}
+      {% if flash[key] != blank %}
+        <div class="alert {{key}}" data-flash-message data-close-label="{{ 'flash_messages.close_label' }}">
+          <div class="contain">{{ flash[key] | nl2br }}</div>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <section class="content-a" id="content">
+      {{ content_for_layout }}
+    </section>
+    {% yield 'tutorial' %}
+  </body>
+</html>

@@ -15,7 +15,7 @@ module Liquid
         context.registers[:controller].lookup_context.find_template(path, '', true, details).source
       rescue
         # our UI is not great, MPO might not check 'partial' - this is why this rescue
-        context.registers[:controller].lookup_context.find_template(path, '', false, details).source rescue "Liquid Error: can't find LiquidView with path #{path}. Make sure it has been added in Marketplace Admin"
+        context.registers[:controller].lookup_context.find_template(path, '', false, details).source rescue Rails.logger.warn("Liquid Error: can't find LiquidView with path #{path}. Make sure it has been added in Marketplace Admin")
       end
     end
   end

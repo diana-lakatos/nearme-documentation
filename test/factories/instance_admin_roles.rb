@@ -9,11 +9,13 @@ FactoryGirl.define do
     permission_settings false
     permission_theme false
     permission_manage false
+    permission_customtemplates false
 
     factory :instance_admin_role_default do
       name 'Default'
       instance_id nil
       permission_analytics true
+      permission_customtemplates false
       permission_settings false
       permission_theme false
       permission_blog false
@@ -29,6 +31,7 @@ FactoryGirl.define do
       permission_manage true
       permission_support true
       permission_blog true
+      permission_customtemplates true
     end
 
     factory :instance_admin_role_blog do
