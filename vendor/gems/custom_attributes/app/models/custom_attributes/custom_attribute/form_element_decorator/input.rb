@@ -2,15 +2,19 @@ module CustomAttributes
   class CustomAttribute::FormElementDecorator::Input < CustomAttribute::FormElementDecorator::Base
 
     def options
-      return {} unless limit
-      if limit.to_f <= 50
-        { as: :limited_string }
+      if ['integer', 'float', 'decimal', 'datetime', 'date'].include?(@attribute_decorator.attribute_type)
+        { as: @attribute_decorator.attribute_type, html5: true }
       else
-        { as: :limited_text }
-      end.merge({
-        limit: limit,
-        input_html: { maxlength: limit }
-      })
+        return {} unless limit
+        if limit.to_f <= 50
+          { as: :limited_string }
+        else
+          { as: :limited_text }
+        end.merge({
+          limit: limit,
+          input_html: { maxlength: limit }
+        })
+      end
     end
 
     def limit
