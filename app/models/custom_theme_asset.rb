@@ -37,7 +37,7 @@ class CustomThemeAsset < ActiveRecord::Base
   # clear liquid view cache
   def new_file_uploaded
     custom_theme.touch
-    instance.recalculate_cache_key! if custom_theme.in_use?
+    instance.recalculate_cache_key! if custom_theme.in_use? || custom_theme.in_use_for_instance_admins?
     true
   end
 

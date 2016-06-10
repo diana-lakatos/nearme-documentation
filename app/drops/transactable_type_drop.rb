@@ -15,7 +15,8 @@ class TransactableTypeDrop < BaseDrop
   # translated_bookable_noun
   #   translated name of this transactable type, based on current language
   delegate :id, :buyable?, :action_price_per_unit, :show_page_enabled?, :translated_bookable_noun,
-    :translation_key_suffix, :translation_namespace, :show_date_pickers, :searcher_type, :slug, to: :transactable_type
+    :translation_key_suffix, :translation_namespace, :show_date_pickers, :searcher_type, :slug,
+    :search_input_name, :search_field_placeholder, to: :transactable_type
 
   def initialize(transactable_type)
     @transactable_type = transactable_type

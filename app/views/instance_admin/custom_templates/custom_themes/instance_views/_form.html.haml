@@ -6,7 +6,7 @@
 
     .row
       .input-container.col-xs-12
-        = f.input :path, disabled: @liquid_view.persisted?, input_html: { class: 'form-control' }
+        = f.input :path, input_html: { class: 'form-control' }
     .row
       .input-container.col-xs-12
         = f.association :transactable_types, hint: 'Please note that for most liquid views this option is not relevant. For example, it does not make sense to create homepage for different Transactable Type because it does not depend on it. As a rule of thumb, Transactable Type is relevant if url includes transactable_type_id parameter or liquid view displays listing information.'

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160609110201) do
+ActiveRecord::Schema.define(version: 20160610130108) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -682,6 +682,7 @@ ActiveRecord::Schema.define(version: 20160609110201) do
     t.string   "name"
     t.boolean  "in_use",         default: false
     t.datetime "deleted_at"
+    t.boolean  "in_use_for_instance_admins"
   end
 
   add_index "custom_themes", ["instance_id", "themeable_id", "themeable_type"], name: "instance_id_and_themeable", using: :btree
