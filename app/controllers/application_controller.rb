@@ -495,6 +495,7 @@ class ApplicationController < ActionController::Base
   end
 
   def details_for_lookup
+    PlatformContext.current.overwrite_custom_theme(current_user)
     set_i18n_locale if @language_service.nil? && !Rails.env.test?
     {
       instance_id: PlatformContext.current.try(:instance).try(:id),

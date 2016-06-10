@@ -1,0 +1,21 @@
+<article>
+  <img src="{{ listing.photo_url }}" title="{{ listing.name }}" alt="{{ listing.name }}"></img>
+  <h1 class='username'>Hi, I'm {{ listing.name | filter_text | custom_sanitize }}</h1>
+  <div class="price">
+    {% assign price_info = listing | lowest_price_without_cents_with_currency %}
+    {% if price_info.price %}
+      <span>{{ price_info.price}} <span class='period'>/hr</span></span>
+    {% elsif price_info.free %}
+      <span>{{ 'search.free_listing' | translate }}</span>
+    {% endif %}
+  </div>
+
+  <div class="book">
+    <form id="reservation_request_form_{{ listing.id }}" novalidate="novalidate" class="reservation_request" action="{{ 'review_listing_reservations_path' | generate_url: listing }}" accept-charset="UTF-8" method="post">
+      <input name="utf8" type="hidden" value="">
+      <input name="authenticity_token" value="{{ form_authenticity_token }}" data-authenticity-token type="hidden">
+      <input type="hidden" name="reservation_request[booking_type]" id="reservation_request_booking_type" value="hourly">
+      <input type="submit" value="Book!">
+    </form>
+  </div>
+</article>

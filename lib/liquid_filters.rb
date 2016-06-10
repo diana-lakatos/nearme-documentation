@@ -20,6 +20,14 @@ module LiquidFilters
     end
   end
 
+  def no_footer!
+    @no_footer = true
+  end
+
+  def active_class(arg1, arg2, class_name = 'active')
+    class_name if arg1 == arg2
+  end
+
   def is_included_in_array(array, el)
     array.include?(el)
   end
@@ -37,6 +45,7 @@ module LiquidFilters
   end
 
   def location_path(transactable_type, location)
+    return '' if location.blank?
     location.listings.searchable.first.try(:decorate).try(:show_path)
   end
 

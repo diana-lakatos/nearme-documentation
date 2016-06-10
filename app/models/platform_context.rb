@@ -230,6 +230,13 @@ class PlatformContext
     @request_host =~ Regexp.new("^(#{root_domains.join('|')})$", true)
   end
 
+  def overwrite_custom_theme(user)
+    return false if @custom_theme.in_use_for_instance_admins?
+    return false if user.nil?
+    return false if !(user.metadata["#{@instance.id}"].try(:keys).try(:include?, 'instance_admins_metadata') || user.admin?)
+    @custom_theme = @platform_context_detail.custom_theme_for_instance_admins if @platform_context_detail.try(:custom_theme_for_instance_admins).present?
+  end
+
   private
 
   def fetch_domain

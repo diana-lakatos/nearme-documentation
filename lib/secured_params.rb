@@ -838,6 +838,7 @@ class SecuredParams
     [
       :name,
       :in_use,
+      :in_use_for_instance_admins,
       :copy_from_template,
       :overwrite_existing
     ]

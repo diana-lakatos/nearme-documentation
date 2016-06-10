@@ -45,6 +45,7 @@ class Instance < ActiveRecord::Base
 
   has_one :theme, as: :owner
   has_one :custom_theme, -> { where(in_use: true) }, as: :themeable
+  has_one :custom_theme_for_instance_admins, -> { where(in_use_for_instance_admins: true) }, as: :themeable, class_name: 'CustomTheme'
   has_many :custom_themes, as: :themeable
   has_many :companies, :inverse_of => :instance
   has_many :locations, :inverse_of => :instance
@@ -351,7 +352,7 @@ class Instance < ActiveRecord::Base
   end
 
   def recalculate_cache_key!
-    update_column(:context_cache_key, [custom_theme.try(:updated_at), Digest::SHA1.hexdigest(custom_sanitize_config.to_s + text_filters.pluck(:id, :updated_at).to_s), Time.now.to_s].join('timestamp'))
+    update_column(:context_cache_key, [custom_theme.try(:updated_at), custom_theme_for_instance_admins.try(:updated_at), Digest::SHA1.hexdigest(custom_sanitize_config.to_s + text_filters.pluck(:id, :updated_at).to_s), Time.now.to_s].join('timestamp'))
   end
 
   def require_payout?

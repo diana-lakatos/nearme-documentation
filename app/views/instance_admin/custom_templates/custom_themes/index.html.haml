@@ -11,6 +11,8 @@
             %th
               = t('instance_admin.custom_themes.in_use')
             %th
+              = t('instance_admin.custom_themes.in_use_for_instance_admins')
+            %th
         %tbody
           - @custom_themes.each_with_index do |custom_theme|
             = render 'index_row', custom_theme: custom_theme
