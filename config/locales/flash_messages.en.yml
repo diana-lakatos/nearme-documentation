@@ -474,6 +474,7 @@ en:
         error_create: 'Stock movement has not been created.'
       companies:
         company_updated: "Great, your company's details have been updated."
+        could_not_update_company: "Company could not be updated."
         white_label_updated: "Great, white-label details have been updated."
       listings:
         desk_added: "Great, your new %{bookable_noun} has been added!"
