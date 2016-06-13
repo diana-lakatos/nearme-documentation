@@ -195,4 +195,14 @@ class ReservationDrop < BaseDrop
       "<strong>#{@reservation.total_payable_to_host_formatted}</strong>"
     end
   end
+
+  # user message path
+  def user_message_path
+    routes.new_reservation_user_message_path(@reservation)
+  end
+
+  # owner including deleted ones
+  def owner_including_deleted
+    User.unscoped { @reservation.owner }
+  end
 end

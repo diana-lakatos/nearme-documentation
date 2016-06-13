@@ -1,0 +1,33 @@
+{% if reservation.listing != blank %}
+  <h2>
+    {% if reservation.owner != blank %}
+      <a href="{{ reservation.owner.user_profile_url }}">{{ reservation.owner.name }}</a>
+    {% else %}
+      {{ reservation.owner_including_deleted.name }} (Deleted)
+    {% endif %}
+
+    {{ 'dashboard.host_reservations.booked' | translate }}
+
+    {% assign listing_name = reservation.listing.name %}
+    {% if listing_name == blank %}
+      {% assign listing_name = 'dashboard.host_reservations.show_listing_page' | translate %}
+    {% endif %}
+    <a href="{{ reservation.listing.show_path }}">{{ listing_name }}</a>
+  </h2>
+
+  {% if reservation.owner != blank %}
+    <p>
+      <a href="{{ reservation.user_message_path }}" data-modal="true">
+        <span class="fa fa-envelope-o">
+        </span>
+        {{ 'dashboard.host_reservations.contact_subscriber' | translate: name: reservation.owner.name }}
+      </a>
+
+      {{ reservation.owner.click_to_call_button }}
+    </p>
+  {% endif %}
+{% else %}
+  <h2>
+    {{ 'dashboard.host_reservations.listing_deleted' | translate }}
+  </h2>
+{% endif %} 
