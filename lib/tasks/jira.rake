@@ -6,7 +6,7 @@ namespace :jira do
 
     @client = @jira_helper.jira_client
 
-    issues = @client.Issue.jql("project = \"Near Me\" AND sprint = #{args[:sprint_number]} AND status != Closed")
+    issues = @client.Issue.jql("project = \"Near Me\" AND sprint = #{args[:sprint_number]} AND status != Closed AND fixVersion is NULL")
 
     tickets_assigned_to_sprint = issues.map { |i| [i.key, i.summary].join(' ') }
     puts "All tickets assigned to sprint #{args[:sprint_number]} - total count #{tickets_assigned_to_sprint.count}"
