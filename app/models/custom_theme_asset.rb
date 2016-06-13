@@ -16,7 +16,7 @@ class CustomThemeAsset < ActiveRecord::Base
   scope :font_files, -> { where(type: 'CustomThemeAsset::ThemeFontFile') }
 
   validates_presence_of :name
-  validates_uniqueness_of :name, scope: [:instance_id, :custom_theme_id]
+  validates_uniqueness_of :name, scope: [:instance_id, :custom_theme_id], conditions: -> { where(deleted_at: nil) }
   validates_presence_of :type
 
   before_validation :use_filename_as_name, if: -> (cta) { cta.name.blank? && cta.file.present? }

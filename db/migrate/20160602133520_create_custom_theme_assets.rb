@@ -12,7 +12,7 @@ class CreateCustomThemeAssets < ActiveRecord::Migration
       t.hstore :settings
       t.string :type
     end
-    add_index :custom_theme_assets, [:instance_id, :custom_theme_id, :name], unique: true, name: 'cta_on_instance_id_theme_and_name_uniq'
+    add_index :custom_theme_assets, [:instance_id, :custom_theme_id, :name], unique: true, where: '(deleted_at IS NULL)', name: 'cta_on_instance_id_theme_and_name_uniq'
   end
 end
 
