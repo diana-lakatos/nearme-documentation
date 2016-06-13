@@ -30,10 +30,11 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
 
         if located || adjust_to_map
           extend_params_by_geo_filters
-          return Transactable.geo_search(geo_searcher_params.merge(@search_params), @transactable_type)
+          Transactable.geo_search(geo_searcher_params.merge(@search_params), @transactable_type)
+        else
+          Transactable.regular_search(geo_searcher_params.merge(@search_params), @transactable_type)
         end
 
-        Transactable.regular_search(geo_searcher_params.merge(@search_params), @transactable_type)
       end
   end
 

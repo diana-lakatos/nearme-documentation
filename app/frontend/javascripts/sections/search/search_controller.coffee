@@ -241,12 +241,13 @@ module.exports = class SearchSearchController extends SearchController
       ignore_search_event: 1
     )
 
+    @mapTrigger = true
+
     @triggerSearchAndHandleResults =>
       @plotListingResultsWithinBounds()
       @assignFormParams(
         ignore_search_event: 1
       )
-    , true
 
   # Provide a debounced method to trigger the search after a period of constant state
   triggerSearchWithBoundsAfterDelay: _.debounce(->
@@ -266,6 +267,8 @@ module.exports = class SearchSearchController extends SearchController
         categories_selects = categories_selects.concat(values)
 
     all_categories = categories_selects.concat(categories_checkboxes)
+
+    @mapTrigger = false unless page
 
     price_max = if @container.find('input[name="price[max]"]:checked').length > 0 then @container.find('input[name="price[max]"]:checked').val() else $('input[name="price[max]"]').val()
     @assignFormParams(
@@ -302,9 +305,9 @@ module.exports = class SearchSearchController extends SearchController
   , 500)
 
   # Triggers a search with default UX behaviour and semantics.
-  triggerSearchAndHandleResults: (callback, mapTrigger) ->
+  triggerSearchAndHandleResults: (callback) ->
     @loader.showWithoutLocker()
-    @triggerSearchRequest(mapTrigger).success (html) =>
+    @triggerSearchRequest().success (html) =>
       @processingResults = true
       @showResults(html)
       @updateUrlForSearchQuery()
@@ -320,9 +323,9 @@ module.exports = class SearchSearchController extends SearchController
   # Trigger the API request for search
   #
   # Returns a jQuery Promise object which can be bound to execute response semantics.
-  triggerSearchRequest: (mapTrigger)->
+  triggerSearchRequest: ->
     data = @form.serializeArray()
-    data.push({"name": "map_moved", "value": mapTrigger})
+    data.push({"name": "map_moved", "value": @mapTrigger})
     $.ajax(
       url  : @form.attr("action")
       type : 'GET',

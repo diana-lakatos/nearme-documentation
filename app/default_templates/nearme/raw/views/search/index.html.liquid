@@ -1,0 +1,11 @@
+{% if searcher.number_of_results == 0 %}
+  No results :(
+{% else %}
+  <h1>Results we found ({{searcher.number_of_results}}/{{searcher.total_entries}}) :</h1>
+  {% for result in searcher.results %}
+    <div>
+      Result name: <a href="{{ result.show_path }}">{{ result.name }}</a>
+    </div>
+  {% endfor %}
+  {{ searcher.original_results | pagination_links }}
+{% endif %}

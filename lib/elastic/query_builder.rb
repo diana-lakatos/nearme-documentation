@@ -190,13 +190,13 @@ module Elastic
           {
             geo_bounding_box: {
               geo_location: {
-                top_left: {
+                top_right: {
                   lat: @bounding_box.first.first.to_f,
-                  lon: @bounding_box.last.last.to_f
-                },
-                bottom_right: {
-                  lat: @bounding_box.last.first.to_f,
                   lon: @bounding_box.first.last.to_f
+                },
+                bottom_left: {
+                  lat: @bounding_box.last.first.to_f,
+                  lon: @bounding_box.last.last.to_f
                 }
               }
             }

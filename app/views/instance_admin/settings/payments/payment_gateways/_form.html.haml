@@ -77,29 +77,30 @@
                 - else
                   = p.input :active, as: :hidden, :input_html => { :value => true }
 
-          - if current_instance.test_mode?
-            %h4 Sandbox settings:
-            .row
-              .input-container.col-xs-12
-                = f.fields_for :test_settings, OpenStruct.new(@payment_gateway.test_settings) do |test|
-                  - f.object.class.settings.keys.each do |setting|
-                    = test.input setting, as: :string, input_html: { class: 'form-control', required: false }
-          - else
-            %h4 Live settings:
-            - if @payment_gateway.editable?
+          - if f.object.class.settings.keys.present?
+            - if current_instance.test_mode?
+              %h4 Sandbox settings:
               .row
                 .input-container.col-xs-12
-                  = f.fields_for :live_settings, OpenStruct.new(@payment_gateway.live_settings) do |live|
+                  = f.fields_for :test_settings, OpenStruct.new(@payment_gateway.test_settings) do |test|
                     - f.object.class.settings.keys.each do |setting|
-                      = live.input setting, as: :string, input_html: { class: 'form-control', required: false, disabled: !@payment_gateway.editable? }
+                      = test.input setting, as: :string, input_html: { class: 'form-control', required: false }
             - else
-              .row
-                .input-container.col-xs-12
-                  .text-info.bg-info
-                    %p
-                      %span.fa.fa-info-circle
-                      = t('flash_messages.instance_admin.settings.payments.payment_gateways.can_not_be_edited')
-                      Use ON/OFF switch to prevent users from using it. Payment Gateway will move into editable state when there are no refundable or pending Payments, all Merchant Accounts should be removed.
+              %h4 Live settings:
+              - if @payment_gateway.editable?
+                .row
+                  .input-container.col-xs-12
+                    = f.fields_for :live_settings, OpenStruct.new(@payment_gateway.live_settings) do |live|
+                      - f.object.class.settings.keys.each do |setting|
+                        = live.input setting, as: :string, input_html: { class: 'form-control', required: false, disabled: !@payment_gateway.editable? }
+              - else
+                .row
+                  .input-container.col-xs-12
+                    .text-info.bg-info
+                      %p
+                        %span.fa.fa-info-circle
+                        = t('flash_messages.instance_admin.settings.payments.payment_gateways.can_not_be_edited')
+                        Use ON/OFF switch to prevent users from using it. Payment Gateway will move into editable state when there are no refundable or pending Payments, all Merchant Accounts should be removed.
 
 
 

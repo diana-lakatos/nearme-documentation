@@ -154,10 +154,10 @@ module.exports = class SearchMixedController extends SearchSearchController
   # Trigger the API request for search
   #
   # Returns a jQuery Promise object which can be bound to execute response semantics.
-  triggerSearchRequest: (mapTrigger)->
+  triggerSearchRequest: ->
     @currentAjaxRequest.abort() if @currentAjaxRequest
     data = @form.add('.list .sort :input').serializeArray()
-    data.push({"name": "map_moved", "value": mapTrigger})
+    data.push({"name": "map_moved", "value": @mapTrigger})
     @currentAjaxRequest = $.ajax(
       url  : @form.attr("action")
       type : 'GET',
@@ -241,7 +241,13 @@ module.exports = class SearchMixedController extends SearchSearchController
       # Only show bounds of new results
       bounds = new google.maps.LatLngBounds()
       bounds.extend(listing.latLng()) for listing in listings
-      bounds.extend(new google.maps.LatLng(@form.find('input[name=lat]').val(), @form.find('input[name=lng]').val()))
+
+      lat = @form.find('input[name=lat]').val();
+      lng = @form.find('input[name=lng]').val();
+
+      if lat.length and lng.length
+        bounds.extend(new google.maps.LatLng(@form.find('input[name=lat]').val(), @form.find('input[name=lng]').val()))
+
       _.defer => @map.fitBounds(bounds)
       @map.show()
       # In case the map is hidden
@@ -382,12 +388,13 @@ module.exports = class SearchMixedController extends SearchSearchController
       page: 1
     )
 
+    @mapTrigger = true
+
     @triggerSearchAndHandleResults =>
       @plotListingResultsWithinBounds()
       @assignFormParams(
         ignore_search_event: 1
       )
-    , true
 
 
   initializeCarousel: ->

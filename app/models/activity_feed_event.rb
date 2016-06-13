@@ -58,7 +58,7 @@ class ActivityFeedEvent < ActiveRecord::Base
     if self.event_source.is_a?(Link)
       ActionController::Base.helpers.link_to(self.event_source.text, self.event_source.url)
     else
-      followed.try(:description).presence || event_source.try(:description) || quotation_for(event_source.try(:text))
+      followed.try(:description).presence || event_source.try(:description) || event_source.try(:text)
     end
   end
 
@@ -109,4 +109,15 @@ class ActivityFeedEvent < ActiveRecord::Base
   def self.with_identifiers(sql_array)
     where("affected_objects_identifiers && ?", sql_array).order(created_at: :desc).uniq
   end
+
+  def is_text_update?
+    %w(
+      user_updated_user_status
+      user_updated_project_status
+      user_updated_topic_status
+      user_commented
+      user_commented_on_project
+    ).include?(self.event)
+  end
+
 end

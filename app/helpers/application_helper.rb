@@ -371,7 +371,7 @@ module ApplicationHelper
   end
 
   def i18n_cache_key(*args)
-    args.compact + [PlatformContext.current.instance.context_cache_key.to_s, I18n.locale]
+    args.compact + [PlatformContext.current.instance.context_cache_key.to_s, I18n.locale, PlatformContext.current.domain.name]
   end
 
   def is_i18n_set?(key)
@@ -497,6 +497,16 @@ module ApplicationHelper
     # extra slashes in the URL; file_object.path will represent the local path
     # to the file
     File.basename(file_object.path.to_s).presence || file_object.filename
+  end
+
+  def parse_with_markdown(text)
+    markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new({ escape_html: true }), autolink: true, tables: true)
+    markdown.render(text.to_s).html_safe
+  end
+
+  def videoify_and_parse_with_markdown(text, embed_options = {})
+    markdown = Redcarpet::Markdown.new(HtmlWithVideos.new({ escape_html: true }, embed_options), autolink: true, tables: true)
+    markdown.render(text.to_s).html_safe
   end
 
 end

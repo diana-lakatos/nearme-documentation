@@ -3,7 +3,7 @@
 module ActionView
   class LookupContext
     class DetailsKey #:nodoc:
-      attr_accessor :instance_id, :i18n_locale
+      attr_accessor :instance_id, :i18n_locale, :custom_theme_id
 
       def self.get(details)
         if details[:formats]
@@ -16,6 +16,7 @@ module ActionView
       def initialize(details)
         @hash = object_hash
         @instance_id = details[:instance_id]
+        @custom_theme_id = details[:custom_theme_id]
         @i18n_locale = details[:i18n_locale]
       end
     end

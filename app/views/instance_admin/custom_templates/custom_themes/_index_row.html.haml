@@ -1,0 +1,13 @@
+%tr
+  %td= custom_theme.name
+  %td= custom_theme.in_use
+  %td= custom_theme.in_use_for_instance_admins
+  %td
+    = link_to t('instance_admin.custom_templates.liquid_views.liquid_views'), [:instance_admin, :custom_templates, custom_theme, :instance_views], class: 'pull-left btn btn-blue btn-bottom-margin'
+    = link_to t('instance_admin.custom_templates.custom_theme_assets.custom_theme_asset'), [:instance_admin, :custom_templates, custom_theme, :custom_theme_assets], class: 'pull-left btn btn-blue btn-bottom-margin'
+  %td
+    .pull-right
+      = link_to edit_instance_admin_custom_templates_custom_theme_path(custom_theme) do
+        .fa.fa-pencil.fa-2x.inline-form-icon
+      = link_to instance_admin_custom_templates_custom_theme_path(custom_theme), method: :delete, data: { confirm: 'Are you sure you want to delete this?' } do
+        .fa.fa-trash-o.fa-2x.inline-form-icon

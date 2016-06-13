@@ -299,6 +299,23 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
+      namespace :custom_templates do
+
+        concern :versionable do
+          member do
+            get :versions
+            get 'show_version/:version_id', action: :show_version
+            get 'rollback_version/:version_id', action: :rollback
+          end
+        end
+
+        resources :custom_themes do
+          resources :instance_views, controller: 'custom_themes/instance_views', concerns: :versionable
+          resources :custom_theme_assets, controller: 'custom_themes/custom_theme_assets', concerns: :versionable
+        end
+
+      end
+
       namespace :theme do
         get '/', :to => 'base#index'
         resource :info, :only => [:show, :update], :controller => 'info'
