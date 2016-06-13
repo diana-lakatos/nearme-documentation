@@ -2,7 +2,7 @@
 %html
   %head
     %meta{name: 'app-server', content: ENV['HOSTNAME']}
-    
+    = render 'layouts/content_holder_injector'
     %title= blog_title_tag
     %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}
     %meta{content: "width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1", name: "viewport"}/
@@ -23,9 +23,15 @@
 
     = render 'shared/javascripts/header'
 
+    = yield(:head_bottom)
+
   %body.blog
+    = yield(:body_top)
+
     = render 'blog/blog_posts/header'
     .blog-container
       = yield
+
+    = yield(:body_bottom)
 
     = render 'shared/javascripts/footer', entry: 'blog', analytics: true

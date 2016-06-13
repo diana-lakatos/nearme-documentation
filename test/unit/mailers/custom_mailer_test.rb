@@ -51,6 +51,20 @@ class CustomMailerTest < ActiveSupport::TestCase
     FactoryGirl.create(:instance_admin)
   end
 
+  should 'not send when prevented by liquid condition' do
+    WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(layout_path: @layout_template.path, should_be_triggered?: false)))
+    mail = CustomMailer.custom_mail(@step, 1)
+    # This is meant to test whether the email was not dispatched
+    assert_nil mail.to
+  end
+
+  should 'send when not prevented by liquid condition' do
+    WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(layout_path: @layout_template.path, should_be_triggered?: true)))
+    mail = CustomMailer.custom_mail(@step, 1)
+    # This is meant to test whether the email was dispatched
+    assert_not_nil mail.to
+  end
+
   should 'be able to send email to lister' do
     WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(from: 'maciek@example.com', reply_to: 'no-reply@example.com', cc: 'cc@example.com', bcc: 'bcc@example.com', recipient: 'my_email@example.com', subject: '[{{platform_context.name}}] This is {{ dummy_arg.name }} subject')))
     mail = CustomMailer.custom_mail(@step, 1)
@@ -227,7 +241,8 @@ class CustomMailerTest < ActiveSupport::TestCase
       cc: nil,
       bcc: nil,
       template_path: @email_template.path,
-      subject: 'Subject'
+      subject: 'Subject',
+      should_be_triggered?: true
     }
   end
 

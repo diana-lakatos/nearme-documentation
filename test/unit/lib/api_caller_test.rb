@@ -27,28 +27,56 @@ class ApiCallerTest < ActiveSupport::TestCase
     end
   end
 
-  setup do
-    @arg = stub(to_liquid: DummyArgDrop.new(stub(name: 'dummy name!', id: 5)))
-    @step = DummyWorkflow::DummyStep.new(@arg)
-    stub_request(:put, "http://example.com/?special_arg=5").with(:body => "{\"name\":\"dummy name!\"}",
-       :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Custom-Header'=>'dummy name!', 'Host'=>'example.com', 'User-Agent'=>'Ruby'})
-    WorkflowAlert.stubs(:find).returns(stub(default_hash))
-  end
-
-  should 'should properly parse liquid' do
-    ApiCaller.call(@step, 1)
-  end
-
-  should 'properly store error' do
-    Net::HTTP::Put.expects(:new).raises(StandardError.new('Epic fail'))
-    Rails.application.config.marketplace_error_logger.class.any_instance.stubs(:log_issue).with do |error_type, msg|
-      error_type == MarketplaceErrorLogger::BaseLogger::API_CALL_ERROR && msg.include?("DummyWorkflow::DummyStep") && msg.include?("http://example.com/?special_arg=5") && msg.include?("Epic fail")
+  context 'general' do
+    setup do
+      @arg = stub(to_liquid: DummyArgDrop.new(stub(name: 'dummy name!', id: 5)))
+      @step = DummyWorkflow::DummyStep.new(@arg)
+      stub_request(:put, "http://example.com/?special_arg=5").with(:body => "{\"name\":\"dummy name!\"}",
+         :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Custom-Header'=>'dummy name!', 'Host'=>'example.com', 'User-Agent'=>'Ruby'})
+      WorkflowAlert.stubs(:find).returns(stub(default_hash))
     end
-    ApiCaller.call(@step, 1)
+
+    should 'should properly parse liquid' do
+      ApiCaller.call(@step, 1)
+    end
+
+    should 'properly store error' do
+      Net::HTTP::Put.expects(:new).raises(StandardError.new('Epic fail'))
+      Rails.application.config.marketplace_error_logger.class.any_instance.stubs(:log_issue).with do |error_type, msg|
+        error_type == MarketplaceErrorLogger::BaseLogger::API_CALL_ERROR && msg.include?("DummyWorkflow::DummyStep") && msg.include?("http://example.com/?special_arg=5") && msg.include?("Epic fail")
+      end
+      ApiCaller.call(@step, 1)
+    end
+  end
+
+  context 'liquid conditions' do
+    setup do
+      @arg = stub(to_liquid: DummyArgDrop.new(stub(name: 'dummy name!', id: 5)))
+      @step = DummyWorkflow::DummyStep.new(@arg)
+      stub_request(:put, "http://example.com/?special_arg=5").with(:body => "{\"name\":\"dummy name!\"}",
+         :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Custom-Header'=>'dummy name!', 'Host'=>'example.com', 'User-Agent'=>'Ruby'})
+    end
+
+    should 'not call when prevented by liquid condition' do
+      WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(should_be_triggered?: false)))
+      result = ApiCaller.call(@step, 1)
+      assert_nil result
+    end
+
+    should 'call when not prevented by liquid condition' do
+      WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(should_be_triggered?: true)))
+      result = ApiCaller.call(@step, 1)
+      assert_not_nil result
+    end
   end
 
   context 'logger' do
     setup do
+      @arg = stub(to_liquid: DummyArgDrop.new(stub(name: 'dummy name!', id: 5)))
+      @step = DummyWorkflow::DummyStep.new(@arg)
+      stub_request(:put, "http://example.com/?special_arg=5").with(:body => "{\"name\":\"dummy name!\"}",
+         :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Custom-Header'=>'dummy name!', 'Host'=>'example.com', 'User-Agent'=>'Ruby'})
+      WorkflowAlert.stubs(:find).returns(stub(default_hash))
       WorkflowAlertLogger.setup { |config| config.logger_type = :db }
     end
 
@@ -70,7 +98,8 @@ class ApiCallerTest < ActiveSupport::TestCase
       request_type: 'PUT',
       use_ssl: false,
       payload_data: { name: "{{ dummy_arg.name }}" }.to_json,
-      headers:  { 'Custom-Header' => "{{ dummy_arg.name }}" }.to_json
+      headers:  { 'Custom-Header' => "{{ dummy_arg.name }}" }.to_json,
+      should_be_triggered?: true
     }
   end
 

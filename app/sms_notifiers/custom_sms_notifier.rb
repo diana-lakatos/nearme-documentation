@@ -3,7 +3,7 @@ class CustomSmsNotifier < InstanceSmsNotifier
   def custom_sms(step, workflow_alert_id)
     @step = step
     @workflow_alert = WorkflowAlert.find(workflow_alert_id)
-    if @step.should_be_processed? && user.present?
+    if @step.should_be_processed? && user.present? && @workflow_alert.should_be_triggered?(step)
       # the idea with callback is to truncate part of the content correctly. For example user_message sms, it's like:
       # Hello, {{ message.author.name }}, u got message {{ message.body }}. Check {{ listing.url }}
       # If we just truncate this mussage to required 160 chars, the url will be missing. Instead, we want to calculate the size

@@ -253,7 +253,7 @@ class Location < ActiveRecord::Base
     if transactable_type.try(:skip_location)
       self.location_type ||= instance.location_types.first
       if company.company_address.present? && company.company_address.address.present? && self.location_address.nil?
-        self.location_address = company.company_address.dup
+        self.build_location_address(company.company_address.dup.attributes)
         self.location_address.fetch_coordinates!
       end
     end

@@ -203,16 +203,20 @@ class Company < ActiveRecord::Base
   def add_default_url_scheme
     if url.present? && !/^(http|https):\/\//.match(url)
       new_url = "http://#{url}"
-      self.url = new_url if URL_REGEXP.match(new_url)
+      self.url = new_url
     end
   end
 
   def validate_url_format
     return if url.blank?
 
-    valid = URL_REGEXP.match(url)
+    # We parse and normalize with Addressable to make sure we catch unicode domains as well
+    parsed = Addressable::URI.parse(url)
+    normalized = parsed.try(:normalize).to_s
+
+    valid = URL_REGEXP.match(normalized)
     valid &&= begin
-                URI.parse(url)
+                URI.parse(normalized)
               rescue
                 false
               end

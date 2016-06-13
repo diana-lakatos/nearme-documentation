@@ -1443,7 +1443,8 @@ class SecuredParams
       :cc,
       :bcc,
       :subject,
-      :layout_path
+      :layout_path,
+      :prevent_trigger_condition,
     ] + (step_associated_class.present? && defined?(step_associated_class.constantize::CUSTOM_OPTIONS) ? [custom_options: step_associated_class.constantize::CUSTOM_OPTIONS] : [])
   end
 

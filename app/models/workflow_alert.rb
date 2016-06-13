@@ -41,6 +41,20 @@ class WorkflowAlert < ActiveRecord::Base
     workflow_step.associated_class.constantize.belongs_to_transactable_type?
   end
 
+  def should_be_triggered?(step)
+    condition = self.prevent_trigger_condition.to_s.strip
+    return true if condition.blank?
+
+    begin
+      result = Liquid::Template.parse("{% if #{self.prevent_trigger_condition} %} Do not run {% endif %}").render(step.data.merge('platform_context' => PlatformContext.current.decorate).stringify_keys, filters: [LiquidFilters])
+    rescue => e
+      result = ''
+      MarketplaceLogger.error('Workflow Alert Prevent Trigger Liquid Error', "Error parsing condition for workflow alert: #{self.id} - #{e.to_s}", raise: false)
+    end
+
+    result.to_s.strip.blank?
+  end
+
   protected
 
   def payload_data_is_parsable

@@ -953,6 +953,9 @@ en:
         categories: "Categories"
         new_product_type: "New Product Type"
         edit_product_type: "Edit Product Type"
+    workflows:
+      alerts:
+        prevent_trigger_condition: "Liquid parsed string of conditions; leave blank to always run; if evaluates to true, it will not be triggered; e.g. listing.draft?"
 
   buy_sell_market:
     buyer: "buyer"

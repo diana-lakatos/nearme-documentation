@@ -379,14 +379,34 @@ module.exports = class SearchMixedController extends SearchSearchController
   # Triggers a search request with the current map bounds as the geo constraint
   triggerSearchWithBounds: ->
     bounds = @map.getBoundsArray()
+    categories_checkboxes = _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val()))
+    categories_selects = []
+    @container.find('input[name="categories_ids[]"]').each ->
+      value = $(this).val()
+      if value && value != ''
+        values = value.split(',')
+        categories_selects = categories_selects.concat(values)
+
+    all_categories = categories_selects.concat(categories_checkboxes)
     @assignFormParams(
       nx: @formatCoordinate(bounds[2]),
       ny: @formatCoordinate(bounds[3]),
       sx: @formatCoordinate(bounds[0]),
       sy: @formatCoordinate(bounds[1]),
       ignore_search_event: 1,
-      page: 1
+      page: 1,
+      category_ids: all_categories.join(','),
+      'price[max]': price_max,
+      time_from: @container.find('select[name="time_from"]').val(),
+      time_to: @container.find('select[name="time_to"]').val(),
+      sort: @container.find('select[name="sort"]').val(),
+      lntype: _.toArray($('input[name="location_types_ids[]"]:checked').map(-> $(this).val())).join(',')
     )
+    custom_attributes = {}
+    for custom_attribute in @container.find('div[data-custom-attribute]')
+      custom_attribute = $(custom_attribute)
+      custom_attributes[custom_attribute.data('custom-attribute')] = _.toArray(custom_attribute.find('input[name="lg_custom_attributes[' + custom_attribute.data('custom-attribute') + '][]"]:checked').map(-> $(this).val())).join(',')
+    @assignFormParams(lg_custom_attributes: custom_attributes)
 
     @mapTrigger = true
 

@@ -9,4 +9,15 @@ module ActivityFeedHelper
     }
   end
 
+  def followed_link(followed, target, &block)
+    block_contents = capture(&block)
+    if followed.is_a?(ActivityFeedEvent)
+      block_contents
+    else
+      link_to followed, target: target do
+        block_contents
+      end
+    end
+  end
+
 end
