@@ -175,7 +175,7 @@ module.exports = class SearchController
     query = @queryField.val()
 
     # If the query has already been geolocated we can just search immediately
-    if @isQueryGeolocated(query)
+    if @isQueryGeolocated(query) || @mapTrigger
       return callback()
     # Otherwise we need to geolocate the query and assign it before searching
     deferred = @geocoder.geocodeAddress(query)

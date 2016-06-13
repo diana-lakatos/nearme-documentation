@@ -12,6 +12,11 @@ class InstanceViewResolver < DbViewResolver
       views = _find_templates name, prefix, partial, details.dup.tap { |d| d[:locale] = [PlatformContext.current.instance.primary_locale] }
     end
 
+    # Fallback to not custom theme
+    if views.count < 1 && details[:custom_theme_id].present?
+      views = find_templates(name, prefix, partial, details.except(:custom_theme_id))
+    end
+
     views
   end
 
@@ -50,10 +55,11 @@ class InstanceViewResolver < DbViewResolver
 
   def get_templates(name, prefix, partial, details)
     conditions = {
-      :path => normalize_path(name, prefix),
-      :format => normalize_array(details[:formats]),
-      :handler => normalize_array(details[:handlers]),
-      :partial => partial || false
+      path: normalize_path(name, prefix),
+      format: normalize_array(details[:formats]),
+      handler: normalize_array(details[:handlers]),
+      partial: partial || false,
+      custom_theme_id: details[:custom_theme_id]
     }
     locale = normalize_array(details[:locale]).first
     scope = ::InstanceView.for_instance_id(details[:instance_id]).for_locale(locale)

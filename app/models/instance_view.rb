@@ -9,10 +9,11 @@ class InstanceView < ActiveRecord::Base
   has_many :locales, through: :locale_instance_views
 
   VIEW_VIEW = 'view'
+  CUSTOM_VIEW = 'custom_view'
   EMAIL_VIEW = 'email'
   SMS_VIEW = 'sms'
   EMAIL_LAYOUT_VIEW = 'mail_layout'
-  VIEW_TYPES = [SMS_VIEW, EMAIL_VIEW, EMAIL_LAYOUT_VIEW, VIEW_VIEW]
+  VIEW_TYPES = [SMS_VIEW, EMAIL_VIEW, EMAIL_LAYOUT_VIEW, VIEW_VIEW,CUSTOM_VIEW ]
 
   DEFAULT_EMAIL_TEMPLATES_PATHS = [
     'post_action_mailer/sign_up_welcome', 'post_action_mailer/sign_up_verify',
@@ -494,6 +495,10 @@ class InstanceView < ActiveRecord::Base
     where(view_type: VIEW_VIEW).order('path')
   }
 
+  scope :custom_theme_views, -> {
+    where(view_type: CUSTOM_VIEW)
+  }
+
   scope :custom_smses, -> {
     where(view_type: SMS_VIEW, format: 'text', handler: 'liquid').order('path')
   }
@@ -561,7 +566,7 @@ class InstanceView < ActiveRecord::Base
   validate :does_not_duplicate_locale_and_transactable_type
 
   def does_not_duplicate_locale_and_transactable_type
-    if (ids = InstanceView.distinct.where.not(id: id).where(path: path, partial: partial, view_type: view_type, format: format).for_locale(locales.pluck(:code)).for_transactable_type_id(transactable_types.pluck(:id)).pluck(:id)).present?
+    if (ids = InstanceView.distinct.where.not(id: id).where(path: path, partial: partial, view_type: view_type, format: format, custom_theme_id: custom_theme_id).for_locale(locales.map(&:code)).for_transactable_type_id(transactable_types.map(&:id)).pluck(:id)).present?
       ids = ids.join(', ')
       locales_names = Locale.distinct.where(id: locale_ids).joins(:locale_instance_views).where(locale_instance_views: { instance_view: ids }).map(&:name).join(', ')
       transactable_type_names = TransactableType.distinct.where(id: transactable_type_ids).joins(:transactable_type_instance_views).where(transactable_type_instance_views: { instance_view_id: ids }).pluck(:name).join(', ')

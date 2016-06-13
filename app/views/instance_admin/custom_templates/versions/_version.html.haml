@@ -1,0 +1,11 @@
+%tr
+  %td= version.id
+  %td= User.exists?(version.whodunnit.to_i) ? User.find(version.whodunnit.to_i).try(:name) : version.whodunnit
+  %td= l(version.created_at, format: :long)
+  %td
+    .pull-right
+      -if (version.reify rescue false)
+        = link_to url_for(action: :show_version, version_id: version.id), title: "Show version" do
+          .fa.fa-eye.fa-2x.inline-form-icon
+        = link_to url_for(action: :rollback, version_id: version.id), {title: "Rollback to this version", data: { confirm: 'Are you sure you want to rollback page to this version?'}} do
+          .fa.fa-undo.fa-2x.inline-form-icon

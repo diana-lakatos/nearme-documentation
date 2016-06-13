@@ -21,7 +21,6 @@ class InstanceAdmin::Manage::Admins::InstanceAdminRolesControllerTest < ActionCo
           post :create, :instance_admin_role => { :name => 'new role' }
         end
         assert_equal 'new role', assigns(:instance_admin_role).name
-        assert assigns(:instance_admin_role).permission_analytics
       end
 
       should 'not duplicate role' do

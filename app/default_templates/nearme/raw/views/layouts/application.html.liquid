@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset_url['application.css'] }}">
+    {% yield 'meta' %}
+  </head>
+  <body>
+    <header>
+      <a href="/">
+        <img src='{{ asset_url['near-me-badge.png'] }}' width="59" height="39" alt=" {{ platform_context.name }}"  />
+      </a>
+    </header>
+
+    {% include 'layouts/flash.html' %}
+
+    <section>
+      {{ content_for_layout }}
+    </section>
+
+    <script src="{{ asset_url['application.js'] }}" type="text/javascript"></script>
+  </body>
+
+</html>
+

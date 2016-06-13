@@ -774,6 +774,7 @@ GEM
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
     rdiscount (2.1.7.1)
+    redcarpet (3.3.4)
     redis (3.2.0)
     redis-actionpack (4.0.0)
       actionpack (~> 4)
@@ -1110,6 +1111,7 @@ DEPENDENCIES
   raygun4ruby
   rdiscount
   recurring_select!
+  redcarpet
   redis
   redis-rails (~> 4.0.0)
   reform (~> 2.1.0)

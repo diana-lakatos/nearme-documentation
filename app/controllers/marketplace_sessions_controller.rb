@@ -1,4 +1,6 @@
 class MarketplaceSessionsController < ApplicationController
+  layout 'password_protected'
+
   skip_before_filter :redirect_if_marketplace_password_protected
 
   def new

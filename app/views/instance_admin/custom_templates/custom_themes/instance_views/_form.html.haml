@@ -1,0 +1,29 @@
+= simple_form_for [:instance_admin, :custom_templates, @custom_theme, @liquid_view], as: :liquid_view do |f|
+  .content-container
+    %h4
+      = link_to 'Manage liquid view', instance_admin_custom_templates_custom_theme_instance_views_url(@custom_theme)
+      =  "> #{pretty_path(@liquid_view.path)}" if @liquid_view.path
+
+    .row
+      .input-container.col-xs-12
+        = f.input :path, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-12
+        = f.association :transactable_types, hint: 'Please note that for most liquid views this option is not relevant. For example, it does not make sense to create homepage for different Transactable Type because it does not depend on it. As a rule of thumb, Transactable Type is relevant if url includes transactable_type_id parameter or liquid view displays listing information.'
+    .row
+      .input-container.col-xs-12
+        = f.association :locales
+    .row
+      .input-container.col-xs-12
+        - if @base_view.present?
+          = f.input :partial, as: :hidden
+        - else
+          = f.input :partial
+    .row
+      .input-container.col-xs-12
+        = f.input :body, as: :text, input_html: { class: 'form-control editor', :"data-editor" => 'liquid', rows: '30' }
+
+  = content_for :header_buttons do
+    = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+    = link_to t('instance_admin.cancel'), instance_admin_custom_templates_custom_theme_instance_views_url(@custom_theme) , class: 'btn btn-light pull-right'
+

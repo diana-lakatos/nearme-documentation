@@ -22,7 +22,7 @@ class PlatformContext
   NEAR_ME_REDIRECT_URL = 'http://near-me.com/?domain_not_valid=true'
   @@instance_view_cache_key = {}
 
-  attr_reader :domain, :platform_context_detail, :instance, :theme, :domain,
+  attr_reader :domain, :platform_context_detail, :instance, :theme, :custom_theme, :domain,
     :white_label_company, :partner, :request_host, :blog_instance
 
   class_attribute :root_secured
@@ -151,6 +151,7 @@ class PlatformContext
     @platform_context_detail = @partner
     @instance = @partner.instance
     @theme = @partner.theme.presence
+    @custom_theme = @partner.try(:custom_theme)
     @domain ||= @partner.domain
     self
   end
@@ -161,6 +162,7 @@ class PlatformContext
       @platform_context_detail = @white_label_company
       @instance = company.instance
       @theme = company.theme
+      @custom_theme = company.try(:custom_theme)
       @domain ||= company.domain
     else
       if company.partner.present?
@@ -176,6 +178,7 @@ class PlatformContext
     @instance = instance
     @platform_context_detail = @instance
     @theme = @instance.try(:theme)
+    @custom_theme = @instance.try(:custom_theme)
     @domain ||= @instance.try(:default_domain)
     self
   end
@@ -225,6 +228,13 @@ class PlatformContext
     root_domains = ['0\.0\.0\.0', 'localhost', 'near-me.com', 'setup.near-me.com', 'api\.desksnear\.me', '127\.0\.0\.1']
     root_domains += ['test\.host', '127\.0\.0\.1', 'example\.org', 'www.example\.com'] if Rails.env.test?
     @request_host =~ Regexp.new("^(#{root_domains.join('|')})$", true)
+  end
+
+  def overwrite_custom_theme(user)
+    return false if @custom_theme.try(:in_use_for_instance_admins?)
+    return false if user.nil?
+    return false if !(user.metadata["#{@instance.id}"].try(:keys).try(:include?, 'instance_admins_metadata') || user.admin?)
+    @custom_theme = @platform_context_detail.custom_theme_for_instance_admins if @platform_context_detail.try(:custom_theme_for_instance_admins).present?
   end
 
   private

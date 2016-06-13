@@ -159,6 +159,10 @@ en:
           created: 'Offer Type created'
           updated: 'Offer Type updated'
           deleted: 'Offer Type deleted'
+        custom_theme_assets:
+          created: 'Asset created'
+          updated: 'Asset updated'
+          deleted: 'Asset deleted'
         custom_model_types:
           created: 'Custom Model created'
           updated: 'Custom Model updated'

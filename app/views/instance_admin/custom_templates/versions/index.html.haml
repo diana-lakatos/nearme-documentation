@@ -1,0 +1,19 @@
+.content-container
+  %h4= "Previous versions"
+  .row
+    .table-container.col-xs-12
+      %table#pages.table.sortable
+        %thead
+          %tr
+            %th Version ID
+            %th Author
+            %th Changed At
+            %th
+        %tbody
+          = render partial: 'instance_admin/theme/versions/version', collection: @versions
+
+  .row
+    .text-container.col-xs-12
+      .pull-right
+        = will_paginate @versions
+

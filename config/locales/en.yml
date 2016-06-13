@@ -221,6 +221,8 @@ en:
     general:
       search: "Search"
   instance_admin:
+    custom_themes:
+      custom_theme: 'Custom Theme'
     form_components:
       approval_requests_section_title: 'Approval Requests'
     imap_settings:
