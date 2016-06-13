@@ -16,11 +16,17 @@ module ClickToCallButtonHelper
     build_click_to_call_button(path_to_call, I18n.t('phone_calls.buttons.click_to_call'), transactable.open_now?, transactable.timezone, closest_availability)
   end
 
-  def build_click_to_call_button_for_user(user)
+  def build_click_to_call_button_for_user(user, options = {})
     return unless PlatformContext.current.instance.click_to_call? && user.click_to_call? && user.communication.try(:verified)
 
     path_to_call = Rails.application.routes.url_helpers.new_user_phone_call_path(user)
-    build_click_to_call_button(path_to_call, I18n.t('phone_calls.buttons.click_to_call_user', name: user.name), user.is_available_now?, user.time_zone)
+    if options[:first_name]
+      user_name = user.first_name
+    else
+      user_name = user.name
+    end
+
+    build_click_to_call_button(path_to_call, I18n.t('phone_calls.buttons.click_to_call_user', name: user_name), user.is_available_now?, user.time_zone)
   end
 
   def show_not_verified_user_alert?(transactable)
