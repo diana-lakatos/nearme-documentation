@@ -84,9 +84,9 @@ class MerchantAccount < ActiveRecord::Base
   end
 
   def void!
-    # We use update_attribute to prevent validation errors 
+    # We use update_attribute to prevent validation errors
     update_attribute(:state, :void)
-    unset_possible_payout
+    unset_possible_payout!
   end
 
   def update_onboard!(*args)
@@ -126,7 +126,7 @@ class MerchantAccount < ActiveRecord::Base
     true
   end
 
-  def unset_possible_payout
+  def unset_possible_payout!
     unless self.test?
       self.merchantable.listings.update_all(possible_payout: false)
       self.merchantable.merchant_accounts.live.verified.each(&:set_possible_payout!)
