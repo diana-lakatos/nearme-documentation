@@ -51,7 +51,7 @@ module NearMe
       {
         'nm-production' => 'utility1',
         'nm-staging' => 'rails-app-1',
-        'nm-qa-1' => 'rails-qa-1',
+        'nm-qa-1' => 'rails-app1',
         'nm-qa-2' => 'rails-qa-2',
         'nm-qa-3' => 'rails-qa-3'
       }
