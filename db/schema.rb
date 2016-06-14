@@ -680,7 +680,7 @@ ActiveRecord::Schema.define(version: 20160610130108) do
     t.integer  "themeable_id"
     t.string   "themeable_type"
     t.string   "name"
-    t.boolean  "in_use",         default: false
+    t.boolean  "in_use",                     default: false
     t.datetime "deleted_at"
     t.boolean  "in_use_for_instance_admins"
   end
