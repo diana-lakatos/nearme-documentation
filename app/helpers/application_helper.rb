@@ -500,12 +500,12 @@ module ApplicationHelper
   end
 
   def parse_with_markdown(text)
-    markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new({ escape_html: true }), autolink: true, tables: true)
+    markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new({ escape_html: true }), autolink: true, tables: true, fenced_code_blocks: true)
     markdown.render(text.to_s).html_safe
   end
 
   def videoify_and_parse_with_markdown(text, embed_options = {})
-    markdown = Redcarpet::Markdown.new(HtmlWithVideos.new({ escape_html: true }, embed_options), autolink: true, tables: true)
+    markdown = Redcarpet::Markdown.new(HtmlWithVideos.new({ escape_html: true }, embed_options), autolink: true, tables: true, fenced_code_blocks: true)
     markdown.render(text.to_s).html_safe
   end
 
