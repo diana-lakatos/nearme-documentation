@@ -89,7 +89,9 @@ class Dashboard::ProjectsController < Dashboard::BaseController
   end
 
   def project_params
-    params.require(:project).permit(secured_params.project(@transactable_type, @project.nil? || current_user.id == @project.creator_id ))
+    params.require(:project).permit(secured_params.project(@transactable_type, @project.nil? || current_user.id == @project.creator_id )).tap do |whitelisted|
+      whitelisted[:properties] = params[:project][:properties] rescue {}
+    end
   end
 
 end

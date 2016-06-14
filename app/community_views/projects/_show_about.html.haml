@@ -10,6 +10,11 @@
       %li
         = image_tag p.image_url(:project_thumbnail), width: PhotoUploader.dimensions[:project_thumbnail][:width], height: PhotoUploader.dimensions[:project_thumbnail][:height]
 
+- video_embed_code = project_video_embed_html(@project)
+- if video_embed_code.present?
+  %h4= t :video
+  = video_embed_code
+
 - if @project.links.any?
   %h4= t :links
   - @project.links.each do |l|

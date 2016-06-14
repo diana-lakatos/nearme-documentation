@@ -87,6 +87,9 @@
         .links
           = link_to_add_association t(:add_collaborator), f, :new_collaborators, class: 'button-a small'
 
+    - if f.object.properties.respond_to?(:video_url)
+      = f.simple_fields_for :properties, f.object.properties do |properties_form|
+        = properties_form.input :video_url
 
   %p.action
 
