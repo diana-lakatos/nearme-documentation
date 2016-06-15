@@ -9,6 +9,10 @@ class DomainDecorator < Draper::Decorator
     @balancer ||= LoadBalancerRepository.find_by_name(load_balancer_name)
   end
 
+  def balancer?
+    balancer.load_balancer_name
+  end
+
   def hosted_zone?
     hosted_zone && hosted_zone.id
   end
