@@ -42,9 +42,10 @@ class CustomSmsNotifierTest < ActiveSupport::TestCase
     end
 
     context 'association with transactable type' do
+
       setup do
         @transactable_type = FactoryGirl.create(:transactable_type)
-        @transactable_type_sms_template = FactoryGirl.create(:instance_view_sms, transactable_type_id: @transactable_type.id, body: 'Hello from transactable type')
+        @transactable_type_sms_template = FactoryGirl.create(:instance_view_sms, transactable_types: [@transactable_type], body: 'Hello from transactable type')
       end
 
       should 'be able to find template associated with transactable type if data object associated with it' do
