@@ -1,5 +1,5 @@
 class MarketplaceSessionsController < ApplicationController
-  layout 'password_protected'
+  layout :layout_name
 
   skip_before_filter :redirect_if_marketplace_password_protected
 
@@ -17,4 +17,11 @@ class MarketplaceSessionsController < ApplicationController
       render :new
     end
   end
+
+  private
+
+  def layout_name
+    PlatformContext.current.instance.is_community? ? "community" : 'password_protected'
+  end
+
 end
