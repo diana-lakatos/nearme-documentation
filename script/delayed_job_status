@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+ENV['RAILS_ENV'] ||= 'development'
+
+require ::File.expand_path('../../vendor/gems/nearme/lib/nearme/delayed_job_monitor',  __FILE__)
+DelayedJobMonitor.perform
