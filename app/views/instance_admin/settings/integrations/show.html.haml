@@ -5,9 +5,9 @@
     - Authentication::PROVIDERS.each do |provider|
       .row
         .input-container.col-xs-6
-          = f.input :"#{provider.downcase}_consumer_key", label: "#{provider} Consumer Key", required: false, input_html: { class: 'form-control' }
+          = f.input :"#{provider.downcase}_consumer_key", label: authentication_provider_label(provider, :key), required: false, input_html: { class: 'form-control' }
         .input-container.col-xs-6
-          = f.input :"#{provider.downcase}_consumer_secret", label: "#{provider} Consumer Secret", required: false, input_html: { class: 'form-control' }
+          = f.input :"#{provider.downcase}_consumer_secret", label: authentication_provider_label(provider, :secret), required: false, input_html: { class: 'form-control' }
 
   .content-container
     %h4

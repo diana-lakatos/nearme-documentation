@@ -94,4 +94,17 @@ module InstanceAdminHelper
     Translation.where('instance_id is null AND key = ?', key).first.try(:value)
   end
 
+  def authentication_provider_label(provider, type)
+    case provider.downcase
+    when 'facebook'
+      if type == :key
+        "Facebook App ID"
+      else
+        "Facebook App Secret"
+      end
+    else
+      "#{provider} Consumer #{type.to_s.capitalize}"
+    end
+  end
+
 end
