@@ -31,7 +31,7 @@
 
   = content_for :header_buttons do
     = link_to t('instance_admin.back'), instance_admin_settings_domains_url , class: 'btn btn-light pull-right'
-    - unless @domain.hosted_zone?
+    - if @domain.balancer? && !@domain.hosted_zone?
       .pull-right
         = form_tag instance_admin_settings_domain_hosted_zone_path(@domain) do |form|
           = button_tag t('instance_admin.settings.domains.hosted_zones.create'), class: 'btn btn-blue pull-right', data:{disable_with: 'Creating Route53 hosted zone ...'}
