@@ -35,7 +35,10 @@ class UserMessageDecorator < Draper::Decorator
   end
 
   def show_path(options = {})
-    thread_context_with_deleted = self.thread_context_type.constantize.respond_to?(:with_deleted) ? self.thread_context_type.constantize.with_deleted.find(self.thread_context_id) : self.thread_context
+    thread_context_with_deleted = self.thread_context_type.constantize.respond_to?(:with_deleted) ? self.thread_context_type.constantize.with_deleted.find_by_id(self.thread_context_id) : self.thread_context
+    # Edge case, will only happen if an admin has its admin permissions revoked and thus is no longer findable
+    return '#' if thread_context_with_deleted.blank?
+
     if Transactable === thread_context_with_deleted
       listing_user_message_path(thread_context_with_deleted, self.object, options)
     else
