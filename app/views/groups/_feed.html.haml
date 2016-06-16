@@ -1,9 +1,9 @@
 - no_topic_select = false if local_assigns[:no_topic_select].nil?
 - project_select = true if local_assigns[:no_project_select].present?
 
-- if current_user.is_member_of?(group)
+- if current_user.try(:is_member_of?, group)
   .publish-a
-    = simple_form_for UserStatusUpdate.new do |f|
+    = simple_form_for UserStatusUpdate.new, url: user_status_updates_index_path, method: :post do |f|
       - image = current_user.try(:avatar).try(:url, :medium)
       %figure= image_tag(image || space_listing_placeholder_path(width: 80, height: 80))
 
@@ -20,7 +20,7 @@
       %p.action
         = f.submit I18n.t('activity_feed.user_status_submit'), class: 'button-a tiny'
 
-- if feed.events.count > 0 
+- if feed.events.count > 0
   .content-container{ 'data-activity-feed': true, data: feed_data }
     = render partial: "shared/activity_status", collection: feed.events, as: :event, locals: { object: group }
 
