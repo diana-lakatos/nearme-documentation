@@ -192,7 +192,9 @@ en:
 
         hidden_controls:
           update: 'Settings have been successfully saved.'
-
+        api_keys:
+          created: 'New Api Key has been generated.'
+          deleted: 'Api Key has been deleted.'
         locales:
           created: 'Language has been successfully created'
           updated: 'Language has been successfully updated'

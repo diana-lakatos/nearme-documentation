@@ -1,0 +1,22 @@
+.content-container
+  %h4 Api Keys
+
+  .row
+    .table-container.col-xs-12
+      %table.table.sortable
+        %thead
+          %tr
+            %th Token
+        %tbody
+          - @api_keys.each do |key|
+            %tr
+              %td= key.token
+              %td
+                .pull-right
+                  = link_to instance_admin_settings_api_key_path(key), method: :delete,
+                      data: { confirm: 'Are you sure you want to delete this?' }, title: 'Delete' do
+                    .fa.fa-trash-o.fa-2x.inline-form-icon
+
+= content_for :header_buttons do
+  = link_to 'Generate new API Key', instance_admin_settings_api_keys_path, class: 'pull-right btn btn-blue', method: :post, data: { disable_with: 'Creating...' }
+

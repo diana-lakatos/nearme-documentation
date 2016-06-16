@@ -1102,6 +1102,10 @@ class User < ActiveRecord::Base
     membership_for(group).present?
   end
 
+  def jsonapi_serializer_class_name
+    'UserJsonSerializer'
+  end
+
 private
 
   def get_first_name_from_name

@@ -14,10 +14,13 @@ gem 'redis-rails', '~> 4.0.0'
 gem 'raygun4ruby'
 gem 'liquid'
 gem 'active_model_serializers', '~> 0.8.1'
+gem 'jsonapi-serializers'
 gem 'rabl'
 gem 'carrierwave'
 gem 'devise', '~> 3.5.0'
 gem 'devise-token_authenticatable'
+gem 'rack-throttle'
+
 
 gem 'charlock_holmes', '~> 0.7.3'
 

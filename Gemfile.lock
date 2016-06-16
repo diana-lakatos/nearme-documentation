@@ -539,6 +539,8 @@ GEM
     json_spec (1.1.4)
       multi_json (~> 1.0)
       rspec (>= 2.0, < 4.0)
+    jsonapi-serializers (0.13.0)
+      activesupport
     jwt (1.5.1)
     kaminari (0.16.3)
       actionpack (>= 3.0.0)
@@ -727,6 +729,8 @@ GEM
     rack-rewrite (1.5.1)
     rack-test (0.6.3)
       rack (>= 1.0)
+    rack-throttle (0.4.0)
+      rack (>= 1.0.0)
     rails (4.2.4)
       actionmailer (= 4.2.4)
       actionpack (= 4.2.4)
@@ -1055,6 +1059,7 @@ DEPENDENCIES
   instagram
   jira-ruby
   json_spec
+  jsonapi-serializers
   koala
   launchy
   le
@@ -1103,6 +1108,7 @@ DEPENDENCIES
   rabl
   rack-mini-profiler
   rack-rewrite
+  rack-throttle
   rails (= 4.2.4)
   rails-dev-boost!
   rails-perftest

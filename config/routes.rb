@@ -239,6 +239,7 @@ DesksnearMe::Application.routes.draw do
         resources :domains do
           resource :hosted_zone
         end
+        resources :api_keys, only: [:index, :create, :destroy]
         resource :hidden_controls, only: [:show, :update], :controller => 'hidden_controls'
         resource :certificate_request, only: [:new, :create]
         resource :configuration, :only => [:show, :update], :controller => 'configuration' do
@@ -1098,6 +1099,14 @@ DesksnearMe::Application.routes.draw do
 
     resources :partner_inquiries, :only => [:index, :create], :controller => 'partner_inquiries', :path => 'partner'
     resources :waiver_agreement_templates, only: [:show]
+
+    namespace :api do
+      scope module: :v2, constraints: ApiConstraints.new(version: 2, default: true) do
+        resources :sessions, only: [:create]
+        resources :users, only: [:create, :show]
+        resource :space_wizard, only: [:create]
+      end
+    end
 
     namespace :v1, :defaults => {:format => 'json'} do
 

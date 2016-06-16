@@ -55,7 +55,7 @@ class V1::ListingsController < V1::BaseController
   end
 
   def search
-    params_object = Listing::Search::Params::Api.new(json_params.merge(user: current_user), ServiceType.first)
+    params_object = Listing::Search::Params::ApiParams.new(json_params.merge(user: current_user), ServiceType.first)
     search_params = params.merge({:midpoint => params_object.midpoint, :radius => params_object.radius, :available_dates => params_object.available_dates, transactable_type_id: TransactableType.first.id})
     listings = Listing::SearchFetcher.new(search_params, ServiceType.first).listings
     render :json => listings

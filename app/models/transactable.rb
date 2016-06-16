@@ -760,6 +760,10 @@ class Transactable < ActiveRecord::Base
     msgs
   end
 
+  def jsonapi_serializer_class_name
+    'TransactableJsonSerializer'
+  end
+
   private
 
   def close_request_for_quotes

@@ -1,4 +1,4 @@
-class Listing::Search::Params::Api < Listing::Search::Params
+class Listing::Search::Params::ApiParams < Listing::Search::Params
   def initialize(options, transactable_type = nil)
     super
     raise Listing::Search::SearchTypeNotSupported unless valid_search_method?
