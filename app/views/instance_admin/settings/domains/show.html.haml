@@ -1,18 +1,4 @@
 .content-container
-  - if @domain.hosted_zone?
-    .row
-      .col-sm-12
-        %h3 DNS Records
-
-        %table.table
-          %thead
-            %tr
-              %th= t('instance_admin.settings.domains.hosted_zones.record_name')
-              %th= t('instance_admin.settings.domains.hosted_zones.record_type')
-              %th= t('instance_admin.settings.domains.hosted_zones.record_values')
-          - @domain.hosted_zone.records.each do |record|
-            = render partial: 'dns_record', locals:{record: record}
-
   .row
     .col-sm-12
       %h3= t('instance_admin.settings.domains.hosted_zones.load_balancer')
@@ -28,6 +14,20 @@
         %tr
           %th= t('instance_admin.settings.domains.dns_name')
           %td= @domain.balancer.dns_name
+
+  - if @domain.hosted_zone?
+    .row
+      .col-sm-12
+        %h3 DNS Records
+
+        %table.table
+          %thead
+            %tr
+              %th= t('instance_admin.settings.domains.hosted_zones.record_name')
+              %th= t('instance_admin.settings.domains.hosted_zones.record_type')
+              %th= t('instance_admin.settings.domains.hosted_zones.record_values')
+          - @domain.hosted_zone.records.each do |record|
+            = render partial: 'dns_record', locals:{record: record}
 
   = content_for :header_buttons do
     = link_to t('instance_admin.back'), instance_admin_settings_domains_url , class: 'btn btn-light pull-right'
