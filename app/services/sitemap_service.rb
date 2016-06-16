@@ -8,7 +8,9 @@ module SitemapService
       domain.generated_sitemap.try(:file).try(:read).presence || 
       SitemapService::Generator.for_domain(domain).to_s.squish
   rescue
-    SitemapService.save_changes!(domain, SitemapService::Generator.for_domain(domain).to_s.squish)
+    new_sitemap = SitemapService::Generator.for_domain(domain).to_s.squish
+    SitemapService.save_changes!(domain, new_sitemap)
+    new_sitemap
   end
 
   def sitemap_xml_opening

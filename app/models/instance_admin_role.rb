@@ -4,7 +4,7 @@ class InstanceAdminRole < ActiveRecord::Base
   auto_set_platform_context :allow_nil => [:instance_id]
   scoped_to_platform_context :allow_nil => true
 
-  PERMISSIONS = %w(Analytics Settings Theme Manage Blog Support BuySell ShippingOptions Reports Projects)
+  PERMISSIONS = %w(Analytics Settings Theme Manage Blog Support BuySell ShippingOptions Reports Projects Groups)
 
   has_many :instance_admins
   belongs_to :instance

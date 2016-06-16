@@ -122,6 +122,12 @@ class User < ActiveRecord::Base
   has_many :incoming_phone_calls, foreign_key: :receiver_id, class_name: 'PhoneCall'
   has_many :spam_reports
 
+  has_many :groups, foreign_key: 'creator_id', inverse_of: :creator
+  has_many :memberships, class_name: 'GroupMember'
+  has_many :group_collaborated, -> { GroupMember.approved }, through: :memberships, source: :group
+  has_many :moderated_groups, -> { GroupMember.approved.moderator }, through: :memberships, source: :group
+  has_many :group_members
+
   has_one :blog, class_name: 'UserBlog'
   has_one :current_address, class_name: 'Address', as: :entity
 
@@ -1085,6 +1091,14 @@ class User < ActiveRecord::Base
 
   def required?(attribute)
     RequiredFieldChecker.new(self, attribute).required?
+  end
+
+  def membership_for(group)
+    group.memberships.approved.for_user(self).first
+  end
+
+  def is_member_of?(group)
+    membership_for(group).present?
   end
 
 private

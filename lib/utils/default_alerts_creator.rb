@@ -18,9 +18,9 @@ class Utils::DefaultAlertsCreator
     Utils::DefaultAlertsCreator::OrderCreator.new.create_all!
     Utils::DefaultAlertsCreator::PaymentGatewayCreator.new.create_all!
     Utils::DefaultAlertsCreator::ProjectCreator.new.create_all!
+    Utils::DefaultAlertsCreator::GroupCreator.new.create_all!
     Utils::DefaultAlertsCreator::UserCreator.new.create_all!
     Utils::DefaultAlertsCreator::SpamReportCreator.new.create_all!
   end
 
 end
-

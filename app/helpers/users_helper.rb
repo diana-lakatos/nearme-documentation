@@ -66,6 +66,12 @@ module UsersHelper
     params[:option] == 'reviews_left_by_seller' || params[:option] == 'reviews_left_by_buyer'
   end
 
+  def user_video_embed_html(user)
+    return if !user.properties.respond_to?(:video_url)
+    video_embedder = VideoEmbedder.new(user.properties.video_url, iframe_attributes: { width: 350, height: 175 })
+    video_embedder.html.html_safe
+  end
+
   private
 
   def social_icon(provider)

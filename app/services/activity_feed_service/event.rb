@@ -67,6 +67,7 @@ class ActivityFeedService::Event
   end
   alias_method :user_added_links_to_project, :user_added_photos_to_project
 
+
   def user_commented
     comment = @event.event_source
     self.image = image_or_placeholder(comment.creator.avatar.url(:medium))
@@ -80,6 +81,35 @@ class ActivityFeedService::Event
 
     self.image = image_or_placeholder(comment.creator.avatar.url(:medium))
     self.text = I18n.t(@event.i18n_key, user: user, project: project).html_safe
+  end
+
+  def user_created_group
+    group = @event.event_source
+    self.image = image_or_placeholder(group.creator.avatar.url(:medium))
+    self.text = I18n.t(@event.i18n_key, user: link_if_not_deleted(group.creator, :secret_name), group: link_if_not_deleted(group, :name)).html_safe
+  end
+
+  def user_added_photos_to_group
+    group = @event.followed
+    user_record = @event.event_source.creator rescue group.creator
+    user = link_if_not_deleted(user_record, :secret_name)
+    self.image = image_or_placeholder(user_record.avatar)
+    self.text = I18n.t(@event.i18n_key, user: user, group: link_if_not_deleted(group, :name)).html_safe
+  end
+
+  def user_added_links_to_group
+    group = @event.followed
+    user_record = @event.event_source.creator rescue group.creator
+    user = link_if_not_deleted(user_record, :secret_name)
+    self.image = image_or_placeholder(user_record.avatar)
+    self.text = I18n.t(@event.i18n_key, user: user, group: link_if_not_deleted(group, :name)).html_safe
+  end
+
+  def user_updated_group_status
+    user = @event.event_source.user
+    updated = @event.event_source.updateable
+    self.image = image_or_placeholder(user.avatar.url(:medium))
+    self.text = I18n.t(@event.i18n_key, user: link_if_not_deleted(user, :secret_name), updated: link_if_not_deleted(updated, :name)).html_safe
   end
 
   private

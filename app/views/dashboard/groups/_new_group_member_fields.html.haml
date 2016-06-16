@@ -1,0 +1,5 @@
+.nested-fields
+  = f.input :id, as: :hidden
+  = f.input :email, as: :email, label: false, input_html: { data: {"project-collaborator-email": true }}, required: false
+  = f.input :moderator, as: :boolean, inline_label: t('simple_form.placeholders.group.new_group_members.moderator'), input_html: { default: false, class: 'can-moderate' }
+  = link_to_remove_association t('remove', default: 'Remove'), f

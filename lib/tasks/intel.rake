@@ -1,5 +1,36 @@
 namespace :intel do
   desc "Setup intel"
+
+  task groups: [:environment] do
+    Instance.where(is_community: true).find_each do |instance|
+      instance.set_context!
+
+      ['Public', 'Moderated', 'Private'].each do |name|
+        group_type = GroupType.where(name: name).first_or_create!
+
+        group_type.custom_validators.where(field_name: 'name').first_or_initialize.tap do |cv|
+          cv.max_length = 140
+        end.save!
+
+        group_type.custom_validators.where(field_name: 'description').first_or_initialize.tap do |cv|
+          cv.max_length = 5000
+        end.save!
+
+        group_type.custom_attributes.where(name: 'videos').first_or_initialize.tap do |ca|
+          ca.public = true
+          ca.html_tag = 'input'
+          ca.attribute_type = 'array'
+          ca.label = 'Videos'
+          ca.hint = 'Enter URL to Youtube or Vimeo video'
+          ca.public = true
+          ca.searchable = false
+        end.save!
+      end
+    end
+
+    Utils::DefaultAlertsCreator::GroupCreator.new.create_all!
+  end
+
   task :setup => [:environment] do
     Utils::EnLocalesSeeder.new.go!
     Instance.where(is_community: true).find_each do |i|

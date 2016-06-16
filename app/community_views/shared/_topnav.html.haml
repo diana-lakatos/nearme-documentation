@@ -26,6 +26,8 @@
         = link_to "#{t(:projects)} <em>2</em>".html_safe, search_url(search_type: :projects), accesskey: 2
       %li.topics
         = link_to "#{t(:topics)} <em>3</em>".html_safe, search_url(search_type: :topics), accesskey: 3
+      %li.groups
+        = link_to "#{t(:groups)} <em>4</em>".html_safe, search_url(search_type: :groups), accesskey: 4
 
   .corner
     - if current_user
@@ -40,6 +42,10 @@
           - if (project_type = ProjectType.first).present?
             %li{ class: (controller_name == 'projects' ? 'active' : '') }
               = link_to t(:my_projects), dashboard_project_type_projects_path(project_type)
+          - if (group_type = GroupType.first).present?
+            %li{ class: (controller_name == 'groups' ? 'active' : '') }
+              = link_to t(:my_groups), dashboard_groups_path
+
           %li{ class: (controller_name == 'registrations' && action_name != 'show' ? 'active' : '') }
             = link_to t(:account), dashboard_profile_path
           %li

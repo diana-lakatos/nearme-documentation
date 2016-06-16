@@ -105,7 +105,7 @@ class SearchController < ApplicationController
   end
 
   def parse_community_search_params
-    params[:search_type] = 'projects' unless %w(people projects topics).include?(params[:search_type])
+    params[:search_type] = 'projects' unless %w(people projects topics groups).include?(params[:search_type])
     @search_type = params[:search_type]
   end
 
