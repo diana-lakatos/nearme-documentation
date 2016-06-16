@@ -1,0 +1,84 @@
+.page-a.group
+  .primary
+    .box-a
+      = image_tag @group.cover_image.url(:medium)
+
+      %h2
+        = @group.name
+
+      .owner-card
+        %figure
+          = image_tag @group.creator.avatar.url(:thumb), width: 80
+        %p<
+          = link_to @group.creator.name, @group.creator
+          , Owner
+
+        - if @group.creator.current_address.try(:address).present?
+          %p.location
+            = @group.creator.current_address.try(:address)
+
+      %h4
+        = t('group.description')
+
+      %p
+        = @group.description
+
+      - if @group.photos.any?
+        %section.gallery
+          %h4
+            = t('group.gallery')
+
+          %ul.gallery-a
+            - @group.photos.each do |photo|
+              %li
+                = image_tag photo.image_url(:project_thumbnail)
+
+      - if @group.properties[:videos].present?
+        %section.videos
+          %h4
+            = t('group.videos')
+
+          %ul.gallery-a
+            - @group.properties[:videos].each do |video_url|
+              %li
+                = VideoEmbedder.new(video_url).html.html_safe
+
+      - if @group.links.any?
+        %section.links
+          %h4
+            = t('group.links')
+
+          %ul.gallery-a
+            - @group.links.each do |link|
+              %li
+                = link_to image_tag(link.image.url(:standard)), link.url
+
+  - if !@group.private? || current_user.is_member_of?(@group)
+    .secondary
+      .box-a
+        .header-a
+          %h2.hx
+            = t(:members)
+            = "(#{group.approved_members.count})"
+
+        .featured
+          - @group.approved_members.limit(10).each do |member|
+            %article.card-a
+              %figure
+                = image_tag @group.creator.avatar.url
+
+              %ul.numbers
+                %li
+                  = t(:projects)
+                  %span
+                    = member.projects_collaborated.count
+
+              %p
+                = link_to member.name, member
+
+              - if member.current_address.try(:address).present?
+                %p.location
+                  = member.current_address.address
+
+          %p.action
+            = link_to t(:view_all), '#members', role: 'tab', :'data-force-toggle-tab' => '#members' , class: 'button-a small'

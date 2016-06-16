@@ -623,6 +623,16 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
+      namespace :groups do
+        resources :group_types do
+          resources :custom_validators, controller: 'group_types/custom_validators'
+        end
+
+        resources :groups, only: [:index, :edit, :update, :destroy] do
+          post :restore, on: :member
+        end
+      end
+
     end
 
     resources :inappropriate_reports
@@ -647,6 +657,12 @@ DesksnearMe::Application.routes.draw do
             delete :cancel
           end
         end
+      end
+    end
+
+    resources :groups, only: [:show] do
+      resources :group_members, only: [:create, :destroy] do
+        patch :accept, on: :member
       end
     end
 
@@ -741,6 +757,14 @@ DesksnearMe::Application.routes.draw do
       resources :project_types do
         resources :projects do
           resources :project_collaborators, only: [:create, :update, :destroy]
+        end
+      end
+
+      resources :groups do
+        get :video, on: :member
+        resources :group_members, only: [:index, :create, :destroy, :approve, :moderate] do
+          patch :approve, on: :member
+          patch :moderate, on: :member
         end
       end
 
@@ -1014,6 +1038,8 @@ DesksnearMe::Application.routes.draw do
     get "/see_more_followers", to: "activity_feed#followers", as: :see_more_followers
     get "/see_more_projects", to: "activity_feed#projects", as: :see_more_projects
     get "/see_more_collaborators", to: "activity_feed#collaborators", as: :see_more_collaborators
+    get "/see_more_members", to: "activity_feed#members", as: :see_more_members
+    get "/see_more_groups", to: "activity_feed#groups", as: :see_more_groups
 
     resources :user_status_updates, only: [ :create ]
 

@@ -35,13 +35,16 @@ en:
   people: 'People'
   projects: 'Projects'
   topics: 'Topics'
+  groups: 'Groups'
   profile: 'Profile'
   my_projects: 'My Projects'
+  my_groups: 'My Groups'
   favorites: 'Favorites'
   account: 'Account'
   log_out: 'Log Out'
   log_in: 'Log In'
   add_project: 'Add Project'
+  add_group: 'Add Group'
 
   # footer
   developer_zone: 'Developer Zone'
@@ -93,6 +96,7 @@ en:
   activity: 'Activity'
   following: 'Following'
   followers: 'Followers'
+  members: 'Members'
   projects: 'Projects'
   about: 'About'
 
@@ -102,6 +106,7 @@ en:
       users: 'No users to show at the moment.'
       topics: 'No topics to show at the moment.'
       projects: 'No projects to show at the moment.'
+      groups: 'No groups to show at the moment.'
 
 
   # search
@@ -184,6 +189,7 @@ en:
   published: 'Published'
   draft: 'Draft'
   empty_cta: 'You haven’t added any project yet. Create your first one now!'
+  empty_groups: 'You haven’t added any group yet. Create your first one now!'
   publish_project: 'Publish Project'
   save_for_later: 'Save for Later'
   images: 'Images'
@@ -193,6 +199,7 @@ en:
   or: 'or'
   upload_image: 'Upload Image'
   edit_project: 'Edit Project'
+  edit_group: 'Edit Group'
   actions: 'Actions'
   approve: 'Approve'
   decline: 'Decline'
@@ -202,6 +209,7 @@ en:
   save_changes: 'Save Changes'
   delete_project: 'Delete Project'
   draft_project: 'This project is disabled.'
+  draft_group: 'This group is disabled.'
 
   #collaborators
   collaboration_cancelled: "Collaboration request has been cancelled."
@@ -239,3 +247,35 @@ en:
       topic_created: '%{topic} has been created'
       user_commented: "%{user} added a comment on %{followed}'s %{activity}"
       user_commented_on_project: "%{user} added a comment on project %{project}"
+
+      user_created_group: '%{user} created group %{group}'
+      user_added_photos_to_group: '%{user} added photos to group %{group}'
+      user_updated_group_status: '%{user} updated group %{updated} status'
+
+  # groups
+  group:
+    name: 'Name'
+    description: 'Description'
+    gallery: 'Gallery'
+    videos: 'Videos'
+    links: 'Links'
+    invite_member: 'Invite Member'
+    accept: 'Accept'
+    decline: 'Decline'
+    join: 'Ask to join'
+    leave: 'Leave'
+    request_sent: 'Request send'
+    main_image: 'Main Image'
+    delete_group: 'Delete Group'
+    save_changes: 'Save Changes'
+    publish_group: 'Save Changes'
+    save_for_later: 'Save for Later'
+    moderator: 'Moderator'
+    placeholders:
+      video_url: 'Enter yourube or vimeo URL'
+      add_video: 'Add Video'
+    manage_members: 'Manage Members'
+
+  # membership
+  membership_cancelled: "Membership request has been cancelled."
+  membership_accepted: "Membership request has been approved."

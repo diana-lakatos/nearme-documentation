@@ -22,6 +22,10 @@
             = t :projects
             %small= "(#{@all_projects.total_count})"
         %li
+          = link_to '#groups', role: "tab", :'data-toggle' => "tab" do
+            = t :groups
+            %small= "(#{@groups.total_count})"
+        %li
           = link_to '#following', role: "tab", :'data-toggle' => "tab" do
             = t :following
             %small= "(#{@user.following_count})"
@@ -55,6 +59,12 @@
         .box-a
           = render 'shared/show_projects', projects: @all_projects, container: '#projects', see_more_route: see_more_projects_path(id: @user.id, type: @user.class.name, container: '#projects'), sort_options: Project::SORT_OPTIONS + ['Pending approvals']
 
+  #groups.tab-pane.fade{:role => "tabpanel"}
+    .wrap-a.reduce-top
+      .contain
+        .box-a
+          = render 'shared/show_groups', groups: @groups, container: '#groups', see_more_route: see_more_groups_path(id: @user.id, type: @user.class.name, container: '#groups')
+
   #following.tab-pane.fade{:role => "tabpanel"}
     = render 'show_following', object: @user
 
@@ -62,5 +72,3 @@
     .wrap-a.reduce-top
       .contain
         .box-a= render 'shared/show_followers', container: '#followers', see_more_route: see_more_followers_path(id: @user.id, type: 'User', container: '#followers'), collection: @followers
-
-

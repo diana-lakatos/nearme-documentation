@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160610130108) do
+ActiveRecord::Schema.define(version: 20160614201808) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -927,6 +927,50 @@ ActiveRecord::Schema.define(version: 20160610130108) do
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
 
+  create_table "group_members", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.string   "email"
+    t.boolean  "moderator",            default: false
+    t.datetime "approved_by_owner_at"
+    t.datetime "approved_by_user_at"
+    t.datetime "deleted_at"
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+  end
+
+  add_index "group_members", ["group_id"], name: "index_group_members_on_group_id", using: :btree
+  add_index "group_members", ["instance_id"], name: "index_group_members_on_instance_id", using: :btree
+  add_index "group_members", ["user_id"], name: "index_group_members_on_user_id", using: :btree
+
+  create_table "group_projects", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "group_id"
+    t.integer  "project_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "creator_id"
+    t.hstore   "properties",                default: {}
+    t.datetime "deleted_at"
+    t.integer  "transactable_type_id"
+    t.string   "cover_image"
+    t.text     "image_transformation_data"
+    t.string   "name"
+    t.text     "summary"
+    t.text     "description"
+    t.boolean  "featured",                  default: false
+    t.datetime "draft_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "groups", ["instance_id", "creator_id"], name: "index_groups_on_instance_id_and_creator_id", using: :btree
+
   create_table "impressions", force: :cascade do |t|
     t.integer  "impressionable_id"
     t.string   "impressionable_type", limit: 255
@@ -996,6 +1040,7 @@ ActiveRecord::Schema.define(version: 20160610130108) do
     t.boolean  "permission_reports",                     default: false
     t.boolean  "permission_projects",                    default: false
     t.boolean  "permission_customtemplates",             default: true
+    t.boolean  "permission_groups",                      default: false
   end
 
   add_index "instance_admin_roles", ["instance_id"], name: "index_instance_admin_roles_on_instance_id", using: :btree
@@ -1690,6 +1735,13 @@ ActiveRecord::Schema.define(version: 20160610130108) do
   end
 
   add_index "projects", ["instance_id", "creator_id"], name: "index_projects_on_instance_id_and_creator_id", using: :btree
+
+  create_table "projects_user_status_updates", force: :cascade do |t|
+    t.integer "project_id"
+    t.integer "user_status_update_id"
+  end
+
+  add_index "projects_user_status_updates", ["project_id", "user_status_update_id"], name: "project_usu_id", using: :btree
 
   create_table "rating_answers", force: :cascade do |t|
     t.integer  "rating"

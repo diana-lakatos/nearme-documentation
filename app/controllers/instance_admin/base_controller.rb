@@ -112,6 +112,11 @@ class InstanceAdmin::BaseController < ApplicationController
     'custom_themes' => { default_action: 'index' }
   }
 
+  GROUPS_CONTROLLERS = {
+    'group_types'  => { default_action: 'index' },
+    'groups'   => { default_action: 'index' }
+  }
+
   PERMISSIONS_CONTROLLERS = {
     blog: 'manage_blog',
     support: 'support_root',

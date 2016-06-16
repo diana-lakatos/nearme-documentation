@@ -1121,6 +1121,23 @@ class SecuredParams
     based_params
   end
 
+  def group
+    [
+      :transactable_type_id,
+      :name,
+      :summary,
+      :description,
+      :cover_image,
+      photos_attributes: nested(self.photo),
+      links_attributes: nested(self.link),
+      photo_ids: [],
+      project_ids: [],
+      new_group_members_attributes: nested(self.group_member),
+
+      properties: [videos: []]
+    ]
+  end
+
   def offer(offer_type)
     [
       :name,
@@ -1174,6 +1191,14 @@ class SecuredParams
     [
       :approved,
       :email
+    ]
+  end
+
+  def group_member
+    [
+      :approved,
+      :email,
+      :moderator
     ]
   end
 

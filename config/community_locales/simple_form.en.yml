@@ -14,6 +14,7 @@ en:
     placeholders:
       defaults:
         topic_ids: 'Select Topic'
+        project_ids: 'Select Topic'
         role: 'Select Role'
       search:
         search: 'Search'
@@ -27,7 +28,6 @@ en:
 
       search_filter:
         sort: 'Sort by:'
-
 
       address:
         address: "What’s your nearest city?"
@@ -46,6 +46,17 @@ en:
           url: 'Link to'
           text: 'Text to Display'
           photo: 'Photo'
+
+      group:
+        name: 'Enter the name of your group'
+        summary: 'Summarize this group in less than 140 characters'
+        description: 'Tell us all about this group'
+        project_ids: 'Select Project'
+        video_url: 'Enter youtube or vimeo URL'
+        search_for_member: 'Search for Member'
+        new_group_members:
+          email: 'Enter e-mail address'
+          moderator: 'Can moderate'
 
       profile:
         bio: 'Describe yourself in less than 140 characters'
@@ -90,6 +101,9 @@ en:
         topic: 'Topic'
         add_collaborators: 'Add Collaborators'
         seek_collaborators: 'Seeking Collaborators'
+
+      group:
+        transactable_type: 'Type'
 
       photos:
         file: 'Photo'

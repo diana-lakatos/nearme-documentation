@@ -1,0 +1,9 @@
+<h1>Hi {{ user.first_name }},</h1>
+
+<p>
+  <a href="{{ owner.profile_url }}">{{ owner.name }}</a>  has invited you to become
+  a member on <a href="{{ group.show_url }}">{{ group.name }}</a>.
+  Learn more about the group.
+</p>
+
+<p><a href="{{ user.groups_profile_url_with_token }}" >Accept | Decline invitation</a></p>

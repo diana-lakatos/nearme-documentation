@@ -126,6 +126,18 @@ class ActivityFeedController < ApplicationController
     end
   end
 
+  def members
+    @container = params[:container].presence || "#members"
+
+    @partial = "shared/person"
+    @as = :user
+    @collection = @object.members.custom_order(params[:sort], current_user).paginate(pagination_params)
+
+    respond_to do |format|
+      format.js { render :see_more }
+    end
+  end
+
   private
 
   def set_object(whitelist)

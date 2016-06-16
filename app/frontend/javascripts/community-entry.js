@@ -101,6 +101,40 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
+    var $container = $('.group-a');
+
+    if ($container.length === 0) {
+        return;
+    }
+
+    var $tabList = $('ul.nav.nav-tabs li'),
+        tabId, index;
+
+    $("[data-force-toggle-tab]").on('click', function(event) {
+        event.preventDefault();
+
+        tabId = $(this).data('force-toggle-tab');
+        index = $tabList.find('a').index($("[href='"+tabId+"']"));
+
+        $tabList.removeClass('active').eq(index).addClass('active')
+        $(this).tab('show')
+    });
+
+});
+
+DNM.registerInitializer(function(){
+    var els = $('.group-form-controller');
+    if (els.length === 0) {
+        return;
+    }
+
+    require.ensure(['./intel/sections/group_form'], function(require){
+        var GroupForm = require('./intel/sections/group_form');
+        return new GroupForm(els);
+    });
+});
+
+DNM.registerInitializer(function(){
     var els = $('#search_filter');
     if (els.length === 0) {
         return;

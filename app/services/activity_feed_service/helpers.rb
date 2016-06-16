@@ -1,7 +1,7 @@
 module ActivityFeedService::Helpers
   module_function
 
-  FOLLOWED_WHITELIST = %w(User Topic Project)
+  FOLLOWED_WHITELIST = %w(User Topic Project Group)
   EVENTS_PER_PAGE = 10
   FOLLOWED_PER_PAGE = 15
 
