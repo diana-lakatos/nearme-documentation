@@ -53,7 +53,7 @@
               %li
                 = link_to image_tag(link.image.url(:standard)), link.url
 
-  - if !@group.private? || current_user.is_member_of?(@group)
+  - if !@group.private? || current_user.try(:is_member_of?, @group)
     .secondary
       .box-a
         .header-a

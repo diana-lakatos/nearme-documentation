@@ -12,7 +12,7 @@
           = link_to '#about', role: "tab", :'data-toggle' => "tab" do
             = t(:about)
 
-        - if !@group.private? || current_user.is_member_of?(@group)
+        - if !@group.private? || current_user.try(:is_member_of?, @group)
           %li
             = link_to '#activity', role: "tab", :'data-toggle' => "tab" do
               = t(:activity)
@@ -45,7 +45,7 @@
       .contain
         = render 'about', group: @group
 
-  - if !@group.private? || current_user.is_member_of?(@group)
+  - if !@group.private? || current_user.try(:is_member_of?, @group)
     #activity.tab-pane.fade{:role => "tabpanel"}
       = render 'activity', group: @group, feed: @feed
 
