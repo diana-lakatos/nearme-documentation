@@ -13,4 +13,8 @@ class InstanceAdmin::Projects::ProjectTypes::CustomAttributesController < Instan
   def permitting_controller_class
     @controller_scope ||= 'projects'
   end
+
+  def resource_class
+    ProjectType
+  end
 end
