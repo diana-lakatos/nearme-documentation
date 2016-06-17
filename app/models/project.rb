@@ -3,6 +3,10 @@ class Project < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
+
+  # This must go before has_custom_attributes because of how the errors for the custom
+  # attributes are added to the instance
+  include CommunityValidators
   has_custom_attributes target_type: 'ProjectType', target_id: :transactable_type_id
 
   include CreationFilter

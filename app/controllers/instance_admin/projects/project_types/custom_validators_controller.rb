@@ -2,6 +2,10 @@ class InstanceAdmin::Projects::ProjectTypes::CustomValidatorsController < Instan
 
   protected
 
+  def resource_class
+    ProjectType
+  end
+
   def redirect_path
     instance_admin_projects_project_type_custom_validators_path
   end

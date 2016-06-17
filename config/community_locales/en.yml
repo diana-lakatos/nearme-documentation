@@ -281,3 +281,7 @@ en:
   # membership
   membership_cancelled: "Membership request has been cancelled."
   membership_accepted: "Membership request has been approved."
+
+  custom_errors:
+    video_url_not_supported: "Video URL is invalid or video provider is not supported."
+
