@@ -22,7 +22,7 @@ class InstanceAdmin::Projects::ProjectTypes::CustomValidatorsController < Instan
     @breadcrumbs_title = BreadcrumbsList.new(
       { :url => instance_admin_projects_project_types_path, :title => 'Project Type' },
       { :title => @validatable.name.titleize },
-      { :url => redirect_path, :title => t('instance_admin.manage.service_types.custom_validators') }
+      { :url => redirect_path, :title => t('instance_admin.manage.project_types.custom_validators') }
     )
   end
 end
