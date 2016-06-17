@@ -17,4 +17,12 @@ class InstanceAdmin::Projects::ProjectTypes::CustomAttributesController < Instan
   def resource_class
     ProjectType
   end
+
+  def set_breadcrumbs
+    @breadcrumbs_title = BreadcrumbsList.new(
+      { :url => instance_admin_projects_project_types_path, :title => 'Project Type' },
+      { :title => @target.name.titleize },
+      { :url => redirection_path, :title => t('instance_admin.manage.project_types.custom_attributes') }
+    )
+  end
 end

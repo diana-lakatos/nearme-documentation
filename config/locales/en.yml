@@ -822,6 +822,9 @@ en:
           weekly: "Weekly"
           monthly: "Monthly"
           free: "Free"
+      project_types:
+        custom_attributes: "Custom Attributes"
+        custom_validators: "Custom Validators"
       data_uploads:
         manage_data_uploads_for: 'Manage Data Uploads for %{name}'
         data_import_for: "Data import for %{name}"
