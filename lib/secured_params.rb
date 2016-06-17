@@ -392,6 +392,7 @@ class SecuredParams
       :taxonomy_tree,
       :tax_included_in_price,
       :test_balanced_api_key,
+      :test_email,
       :test_mode,
       :test_paypal_app_id,
       :test_paypal_client_id,

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160614201808) do
+ActiveRecord::Schema.define(version: 20160617133023) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1242,6 +1242,7 @@ ActiveRecord::Schema.define(version: 20160614201808) do
     t.boolean  "lister_blogs_enabled",                                                         default: false
     t.boolean  "tax_included_in_price",                                                        default: true
     t.boolean  "skip_meta_tags",                                                               default: false
+    t.string   "test_email"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
