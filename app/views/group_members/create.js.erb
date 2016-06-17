@@ -1,2 +1,2 @@
-$container = $("[data-group-member-button]")
+$container = $("[data-object-id='<%= @group.id %>'] [data-group-member-button]")
 $container.html("<%= escape_javascript(render('group_members_button', group: @group, membership: @membership)) %>")
