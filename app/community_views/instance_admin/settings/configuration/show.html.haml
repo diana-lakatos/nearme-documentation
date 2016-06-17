@@ -18,8 +18,8 @@
         = f.input :name, input_html: { class: 'form-control' }, required: false, placeholder: t('instance_admin.settings.configuration.basic_configuration_section.placeholder_marketplace_name')
     - if Rails.env.staging? # it's relevant only for staging -> staging_email.rb initializer
       .row
-        .input-container.col-xs-6
-          = f.input :test_email, inline_label: true
+        .input-container.col-xs-12
+          = f.input :test_email, input_html: { class: 'form-control' }, required: false
 
   .content-container
     %h4
