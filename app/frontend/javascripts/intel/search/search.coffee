@@ -8,7 +8,8 @@ module.exports = class Search
     @pageInput ||= => @form.find('input#_page');
     @topnavForm = $('form#search_topnav')
     @topnavFormQuery = $('#topnav_query')
-    @searchTabs = $('nav.search-types a')
+    @searchTabs = $('nav.search-types li a')
+    @actionButtons = $('nav.search-types .actions a')
     @paginationContainer = $('.pagination-more-a')
     @seeMoreLink ||= => @paginationContainer.find('p.more-a');
     @searchContainer ||= =>  $('.search-container')
@@ -28,6 +29,7 @@ module.exports = class Search
 
     @searchTabs.on 'click', (event) =>
       event.preventDefault()
+      @triggerActionButtonsVisibility($(event.target))
       @triggerTabSwitchAndHandleResults($(event.target))
 
   bindForm: ->
@@ -44,6 +46,10 @@ module.exports = class Search
       @appendResults(html)
       @replaceSeeMore(html)
     true
+
+  triggerActionButtonsVisibility: (tab) ->
+    @actionButtons.removeClass('is-active')
+    @actionButtons.filter('.' + tab.data('search-type')).addClass('is-active')
 
   triggerTabSwitchAndHandleResults: (tab) ->
     tab.parents('ul').find('li.is-active').removeClass('is-active')
