@@ -1,5 +1,5 @@
 .cell
-  %article.card-a{"data-equalize" => true}
+  %article.card-a{"data-equalize" => true, 'data-object-id': group.id}
     %figure
       = link_to group_path(group) do
         - if group.cover_image.present?
