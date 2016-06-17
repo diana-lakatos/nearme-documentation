@@ -45,6 +45,7 @@ en:
   log_in: 'Log In'
   add_project: 'Add Project'
   add_group: 'Add Group'
+  create_group: 'Create Group'
 
   # footer
   developer_zone: 'Developer Zone'
