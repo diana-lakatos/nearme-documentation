@@ -39,9 +39,11 @@
     .row
       .input-container.col-xs-6
         = f.input :skip_meta_tags, inline_label: true
-    .row
-      .input-container.col-xs-6
-        = f.input :test_email, inline_label: true
+
+    - if Rails.env.staging? # it's relevant only for staging -> staging_email.rb initializer
+      .row
+        .input-container.col-xs-6
+          = f.input :test_email, inline_label: true
 
   .content-container
     %h4
