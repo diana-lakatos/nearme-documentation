@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(version: 20160617133023) do
   end
 
   add_index "activity_feed_subscriptions", ["follower_id", "followed_id", "followed_type"], name: "afs_followers_followed", unique: true, using: :btree
+  add_index "activity_feed_subscriptions", ["follower_id", "followed_identifier"], name: "index_subscriptions_on_folllower_and_followed_identifier", unique: true, using: :btree
   add_index "activity_feed_subscriptions", ["instance_id", "followed_id", "followed_type"], name: "activity_feed_subscriptions_instance_followed", using: :btree
 
   create_table "additional_charge_types", force: :cascade do |t|
@@ -143,6 +144,7 @@ ActiveRecord::Schema.define(version: 20160617133023) do
   end
 
   add_index "amenity_types", ["instance_id"], name: "index_amenity_types_on_instance_id", using: :btree
+  add_index "amenity_types", ["name", "instance_id"], name: "index_amenity_types_on_name_and_instance_id", unique: true, using: :btree
 
   create_table "approval_request_attachment_templates", force: :cascade do |t|
     t.integer  "instance_id"
@@ -565,7 +567,7 @@ ActiveRecord::Schema.define(version: 20160617133023) do
     t.string   "calling_code"
   end
 
-  add_index "countries", ["iso"], name: "index_countries_on_iso", using: :btree
+  add_index "countries", ["iso"], name: "index_countries_on_iso", unique: true, using: :btree
   add_index "countries", ["name"], name: "index_countries_on_name", using: :btree
 
   create_table "country_payment_gateways", force: :cascade do |t|
@@ -635,6 +637,7 @@ ActiveRecord::Schema.define(version: 20160617133023) do
   end
 
   add_index "custom_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree
+  add_index "custom_attributes", ["name", "target_id", "target_type", "deleted_at"], name: "index_custom_attributes_on_name_and_target_and_type_and_deleted", unique: true, using: :btree
   add_index "custom_attributes", ["target_id", "target_type"], name: "index_custom_attributes_on_target_id_and_target_type", using: :btree
 
   create_table "custom_model_type_linkings", force: :cascade do |t|
@@ -658,6 +661,7 @@ ActiveRecord::Schema.define(version: 20160617133023) do
   end
 
   add_index "custom_model_types", ["deleted_at", "instance_id"], name: "index_custom_model_types_on_deleted_at_and_instance_id", using: :btree
+  add_index "custom_model_types", ["name", "deleted_at", "instance_id"], name: "index_custom_model_types_on_name_and_deleted_at_and_instance_id", unique: true, using: :btree
 
   create_table "custom_theme_assets", force: :cascade do |t|
     t.integer  "instance_id"
@@ -1044,6 +1048,7 @@ ActiveRecord::Schema.define(version: 20160617133023) do
   end
 
   add_index "instance_admin_roles", ["instance_id"], name: "index_instance_admin_roles_on_instance_id", using: :btree
+  add_index "instance_admin_roles", ["name", "instance_id"], name: "index_instance_admin_roles_on_name_and_instance_id", unique: true, using: :btree
 
   create_table "instance_admins", force: :cascade do |t|
     t.integer  "user_id"
@@ -1057,6 +1062,7 @@ ActiveRecord::Schema.define(version: 20160617133023) do
 
   add_index "instance_admins", ["instance_admin_role_id"], name: "index_instance_admins_on_instance_admin_role_id", using: :btree
   add_index "instance_admins", ["instance_id"], name: "index_instance_admins_on_instance_id", using: :btree
+  add_index "instance_admins", ["user_id", "instance_id"], name: "index_instance_admins_on_user_id_and_instance_id", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "instance_admins", ["user_id"], name: "index_instance_admins_on_user_id", using: :btree
 
   create_table "instance_billing_gateways", force: :cascade do |t|
@@ -1093,7 +1099,7 @@ ActiveRecord::Schema.define(version: 20160617133023) do
     t.datetime "updated_at"
   end
 
-  add_index "instance_creators", ["email"], name: "index_instance_creators_on_email", using: :btree
+  add_index "instance_creators", ["email"], name: "index_instance_creators_on_email", unique: true, using: :btree
 
   create_table "instance_profile_types", force: :cascade do |t|
     t.string   "name",                            limit: 255
@@ -1297,6 +1303,7 @@ ActiveRecord::Schema.define(version: 20160617133023) do
   end
 
   add_index "location_types", ["instance_id"], name: "index_location_types_on_instance_id", using: :btree
+  add_index "location_types", ["name", "instance_id"], name: "index_location_types_on_name_and_instance_id", unique: true, using: :btree
 
   create_table "locations", force: :cascade do |t|
     t.integer  "company_id"
@@ -1454,6 +1461,7 @@ ActiveRecord::Schema.define(version: 20160617133023) do
   end
 
   add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree
+  add_index "pages", ["slug", "theme_id"], name: "index_pages_on_slug_and_theme_id", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "pages", ["theme_id"], name: "index_pages_on_theme_id", using: :btree
 
   create_table "partner_inquiries", force: :cascade do |t|
@@ -1704,6 +1712,7 @@ ActiveRecord::Schema.define(version: 20160617133023) do
 
   add_index "project_collaborators", ["instance_id"], name: "index_project_collaborators_on_instance_id", using: :btree
   add_index "project_collaborators", ["project_id"], name: "index_project_collaborators_on_project_id", using: :btree
+  add_index "project_collaborators", ["user_id", "project_id"], name: "index_project_collaborators_on_user_id_and_project_id", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "project_collaborators", ["user_id"], name: "index_project_collaborators_on_user_id", using: :btree
 
   create_table "project_topics", force: :cascade do |t|
@@ -2012,6 +2021,7 @@ ActiveRecord::Schema.define(version: 20160617133023) do
   add_index "reviews", ["rating_system_id", "reviewable_id", "reviewable_type", "deleted_at"], name: "index_reviews_on_rating_system_id_and_reviewable_and_deleted_at", unique: true, using: :btree
   add_index "reviews", ["reviewable_id", "reviewable_type"], name: "index_reviews_on_reviewable_id_and_reviewable_type", using: :btree
   add_index "reviews", ["transactable_type_id"], name: "index_reviews_on_transactable_type_id", using: :btree
+  add_index "reviews", ["user_id", "reviewable_id", "reviewable_type", "subject", "instance_id"], name: "index_reviews_on_user_reviewable_and_type_and_subject", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "reviews", ["user_id"], name: "index_reviews_on_user_id", using: :btree
 
   create_table "saved_search_alert_logs", force: :cascade do |t|
@@ -3567,7 +3577,7 @@ ActiveRecord::Schema.define(version: 20160617133023) do
     t.datetime "updated_at",  null: false
   end
 
-  add_index "tax_regions", ["country_id"], name: "index_tax_regions_on_country_id", using: :btree
+  add_index "tax_regions", ["country_id"], name: "index_tax_regions_on_country_id", unique: true, using: :btree
   add_index "tax_regions", ["instance_id"], name: "index_tax_regions_on_instance_id", using: :btree
   add_index "tax_regions", ["state_id"], name: "index_tax_regions_on_state_id", using: :btree
 
@@ -4323,6 +4333,7 @@ ActiveRecord::Schema.define(version: 20160617133023) do
   end
 
   add_index "workflow_alerts", ["instance_id", "workflow_step_id"], name: "index_workflow_alerts_on_instance_id_and_workflow_step_id", using: :btree
+  add_index "workflow_alerts", ["template_path", "workflow_step_id", "recipient_type", "alert_type", "deleted_at"], name: "index_workflows_alerts_on_templ_step_recipient_alert_and_del", unique: true, using: :btree
 
   create_table "workflow_steps", force: :cascade do |t|
     t.string   "name",             limit: 255
@@ -4333,6 +4344,8 @@ ActiveRecord::Schema.define(version: 20160617133023) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "workflow_steps", ["associated_class", "instance_id", "deleted_at"], name: "index_workflow_steps_on_assoc_class_and_instance_and_deleted", unique: true, using: :btree
 
   create_table "workflows", force: :cascade do |t|
     t.string   "name",            limit: 255

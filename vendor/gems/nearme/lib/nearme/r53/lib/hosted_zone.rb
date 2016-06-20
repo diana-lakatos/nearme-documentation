@@ -48,7 +48,7 @@ module HostedZoneRepository
     client.delete_hosted_zone hosted_zone_id: hosted_zone.id
   end
 
-  def self.create(name, caller_reference = "caller-reference-#{Time.now.to_i}")
+  def self.create(name, caller_reference = "caller-reference-#{name}")
     client.create_hosted_zone name: name, caller_reference: caller_reference
   end
 

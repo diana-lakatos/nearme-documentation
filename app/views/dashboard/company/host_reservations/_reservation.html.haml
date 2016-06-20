@@ -2,29 +2,7 @@
   %header
   .row
     .col-xs-7
-      - if reservation.listing.present?
-        %h2
-          - if reservation.owner.present?
-            = link_to reservation.owner, profile_path(reservation.owner.slug)
-          - else
-            = "#{reservation.owner_including_deleted} (Deleted)"
-
-          = t('dashboard.host_reservations.booked')
-
-          - listing_name = reservation.listing.try(:name)
-          - listing_name = t('dashboard.host_reservations.show_listing_page') if listing_name.blank?
-          = link_to listing_name, reservation.listing.decorate.show_path
-
-        - if reservation.owner.present?
-          %p
-            = link_to new_reservation_user_message_path(reservation), data: { modal: true } do
-              %span.fa.fa-envelope-o
-              = t('dashboard.host_reservations.contact_subscriber', name: reservation.owner)
-
-            = build_click_to_call_button_for_user(reservation.owner)
-
-      - else
-        %h2= t('dashboard.host_reservations.listing_deleted')
+      = render 'client_info_area', reservation: reservation
 
     .col-xs-5
       .order-status

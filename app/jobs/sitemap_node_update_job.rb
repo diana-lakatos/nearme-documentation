@@ -24,11 +24,21 @@ class SitemapNodeUpdateJob < Job
   def update(domain)
     sitemap_xml = get_sitemap_xml(domain)
 
-    outdated_node = sitemap_xml.at(find_node_by_loc(node(domain).location)).parent
-    previous_node = outdated_node.previous_element
+    outdated_node = nil
+    previous_node = nil
 
-    outdated_node.remove
-    previous_node.add_next_sibling(node(domain).to_xml.squish)
+    outdated_node_location = sitemap_xml.at(find_node_by_loc(node(domain).location))
+    outdated_node = outdated_node_location.parent if outdated_node_location.present?
+    previous_node = outdated_node.previous_element if outdated_node.present?
+
+    outdated_node.remove if outdated_node.present?
+
+    if previous_node.present?
+      previous_node.add_next_sibling(node(domain).to_xml.squish)
+    else
+      closing_comment_mark = sitemap_xml.xpath("//comment()[contains(.,'/#{node_klass.comment_mark}')]").first
+      closing_comment_mark.add_previous_sibling(node(domain).to_xml.squish)
+    end
 
     save_changes!(domain, sitemap_xml)
   end

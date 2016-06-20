@@ -374,8 +374,14 @@ class UserDrop < BaseDrop
     @user.listing_reservations.reviewable.count
   end
 
+  # Click to call button
   def click_to_call_button
     build_click_to_call_button_for_user(@user)
+  end
+
+  # Click to call button with just the first name
+  def click_to_call_button_first_name
+    build_click_to_call_button_for_user(@user, first_name: true)
   end
 
   # whether or not the user has a buyer profile set up
