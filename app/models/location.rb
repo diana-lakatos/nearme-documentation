@@ -220,6 +220,10 @@ class Location < ActiveRecord::Base
     self.time_zone.presence || get_default_timezone
   end
 
+  def jsonapi_serializer_class_name
+    'LocationJsonSerializer'
+  end
+
   private
 
   def company_and_city

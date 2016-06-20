@@ -265,5 +265,8 @@ class Company < ActiveRecord::Base
     self.update_column(:external_id, "manual-#{id}") if self.external_id.blank?
   end
 
+  def jsonapi_serializer_class_name
+    'CompanyJsonSerializer'
+  end
 end
 

@@ -146,6 +146,15 @@ ActiveRecord::Schema.define(version: 20160617133023) do
   add_index "amenity_types", ["instance_id"], name: "index_amenity_types_on_instance_id", using: :btree
   add_index "amenity_types", ["name", "instance_id"], name: "index_amenity_types_on_name_and_instance_id", unique: true, using: :btree
 
+  create_table "api_keys", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.string   "token"
+    t.datetime "expires_at"
+  end
+
+  add_index "api_keys", ["instance_id", "token"], name: "index_api_keys_on_instance_id_and_token", unique: true, using: :btree
+
   create_table "approval_request_attachment_templates", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "approval_request_template_id"

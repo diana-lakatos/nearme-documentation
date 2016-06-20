@@ -32,4 +32,5 @@ DesksnearMe::Application.configure do
   config.assets.manifest = "#{Rails.root}/public/assets/manifest.json"
 
   config.middleware.use Rack::NoAnimations
+  config.verify_api_requests = false
 end

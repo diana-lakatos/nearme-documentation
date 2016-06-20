@@ -104,6 +104,12 @@ ActiveSupport::TestCase.class_eval do
     request.headers['Authorization'] = @user.authentication_token
   end
 
+  def set_authentication_header(user = nil)
+    user ||= FactoryGirl.create(:authenticated_user)
+    user.ensure_authentication_token!
+    request.headers['UserAuthorization'] = @user.authentication_token
+  end
+
   def assert_log_triggered(*args)
     Rails.application.config.event_tracker.any_instance.expects(event).with do
       yield(*args)

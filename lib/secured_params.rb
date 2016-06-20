@@ -1350,6 +1350,7 @@ class SecuredParams
       :skills_and_interests,
       :skip_password,
       :sms_notifications_enabled,
+      :accept_terms_of_service,
       :time_zone,
       :twitter_url,
       category_ids: [],

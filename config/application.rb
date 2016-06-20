@@ -117,6 +117,7 @@ module DesksnearMe
     # setting platform_context in app/models/platform_context/rack_setter.rb
     config.middleware.use Rack::Deflater
     config.middleware.use "PlatformContext::RackSetter"
+    config.middleware.use "ApiThrottler"
 
     config.mixpanel = (YAML.load_file(Rails.root.join("config", "mixpanel.yml"))[Rails.env] || {}).with_indifferent_access
     config.google_analytics = (YAML.load_file(Rails.root.join("config", "google_analytics.yml"))[Rails.env] || {}).with_indifferent_access
@@ -169,6 +170,8 @@ module DesksnearMe
     if version_parts
       config.app_version = "#{version_parts[1]}.#{(version_parts[2] || 0)}"
     end
+
+    config.verify_api_requests = true
 
   end
 end

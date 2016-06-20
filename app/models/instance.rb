@@ -46,6 +46,7 @@ class Instance < ActiveRecord::Base
   has_one :theme, as: :owner
   has_one :custom_theme, -> { where(in_use: true) }, as: :themeable
   has_one :custom_theme_for_instance_admins, -> { where(in_use_for_instance_admins: true) }, as: :themeable, class_name: 'CustomTheme'
+  has_many :api_keys
   has_many :custom_themes, as: :themeable
   has_many :companies, :inverse_of => :instance
   has_many :locations, :inverse_of => :instance
