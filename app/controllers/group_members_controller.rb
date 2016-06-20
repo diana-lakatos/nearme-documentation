@@ -44,7 +44,7 @@ class GroupMembersController < ApplicationController
   protected
 
   def find_group
-    @group = Group.find(params[:group_id])
+    @group = Group.find(params[:group_id]).try(:decorate)
   end
 
 end

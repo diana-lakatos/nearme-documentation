@@ -42,7 +42,7 @@ class Dashboard::GroupMembersController < Dashboard::BaseController
   end
 
   def find_group
-    @group = current_user.groups.find(params[:group_id])
+    @group = current_user.groups.find(params[:group_id]).try(:decorate)
   end
 
   def find_membership
