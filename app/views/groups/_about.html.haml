@@ -64,8 +64,9 @@
         .featured
           - @group.approved_members.limit(10).each do |member|
             %article.card-a
-              %figure
-                = image_tag @group.creator.avatar.url
+              = link_to member do
+                %figure
+                  = image_tag member.avatar.url(:big)
 
               %ul.numbers
                 %li
@@ -76,9 +77,8 @@
               %p
                 = link_to member.name, member
 
-              - if member.current_address.try(:address).present?
-                %p.location
-                  = member.current_address.address
+              %p{class: "location #{'missing-address' if member.current_address.blank? }"}
+                = member.current_address.try(:address)
 
           %p.action
             = link_to t(:view_all), '#members', role: 'tab', :'data-force-toggle-tab' => '#members' , class: 'button-a small'
