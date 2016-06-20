@@ -234,6 +234,11 @@ en:
           created: "Successfully created project type"
           updated: "Successfully updated project type"
           deleted: "Successfully deleted project type"
+      groups:
+        group_types:
+          updated: "Successfully updated group type"
+          created: "Successfully created group type"
+          deleted: "Successfully deleted group type"
       reports:
         listings:
           successfully_updated: "The settings have been successfully updated."
