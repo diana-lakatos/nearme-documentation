@@ -131,7 +131,7 @@ class ActivityFeedController < ApplicationController
 
     @partial = "shared/person"
     @as = :user
-    @collection = @object.members.custom_order(params[:sort], current_user).paginate(pagination_params)
+    @collection = @object.approved_members.custom_order(params[:sort], current_user).paginate(pagination_params)
 
     respond_to do |format|
       format.js { render :see_more }
