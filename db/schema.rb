@@ -14,10 +14,10 @@
 ActiveRecord::Schema.define(version: 20160617133023) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "hstore"
   enable_extension "plpgsql"
   enable_extension "btree_gin"
   enable_extension "btree_gist"
-  enable_extension "hstore"
 
   create_table "activity_feed_events", force: :cascade do |t|
     t.integer  "instance_id"
@@ -686,7 +686,7 @@ ActiveRecord::Schema.define(version: 20160617133023) do
     t.datetime "file_updated_at"
   end
 
-  add_index "custom_theme_assets", ["instance_id", "custom_theme_id", "name"], name: "cta_on_instance_id_theme_and_name_uniq", unique: true, using: :btree
+  add_index "custom_theme_assets", ["instance_id", "custom_theme_id", "name"], name: "cta_on_instance_id_theme_and_name_uniq", unique: true, where: "(deleted_at IS NULL)", using: :btree
 
   create_table "custom_themes", force: :cascade do |t|
     t.integer  "instance_id"
