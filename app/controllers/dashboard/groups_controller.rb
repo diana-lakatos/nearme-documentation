@@ -74,7 +74,7 @@ class Dashboard::GroupsController < Dashboard::BaseController
   private
 
   def find_group
-    @group = Group.find(params[:id])
+    @group = Group.find(params[:id]).try(:decorate)
   end
 
   def can_moderate?

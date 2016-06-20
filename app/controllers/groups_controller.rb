@@ -20,7 +20,7 @@ class GroupsController < ApplicationController
   end
 
   def find_group
-    @group = Group.find(params[:id])
+    @group = Group.find(params[:id]).try(:decorate)
   end
 
   def redirect_if_draft
