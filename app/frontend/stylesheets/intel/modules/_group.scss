@@ -200,6 +200,14 @@
 
 .group, .group-form-controller {
 
+  .group_transactable_type {
+    .selectize-control {
+      [data-value] {
+        padding-right: 0 !important;
+      }
+    }
+  }
+
   .video-wrapper {
     max-width: 1000px;
     height: auto;
