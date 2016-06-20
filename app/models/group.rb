@@ -16,6 +16,7 @@ class Group < ActiveRecord::Base
 
   has_many :group_projects, dependent: :destroy
   has_many :projects, through: :group_projects
+  alias_method :all_projects, :projects
 
   has_many :group_members, dependent: :destroy
   has_many :memberships, class_name: 'GroupMember', dependent: :destroy
