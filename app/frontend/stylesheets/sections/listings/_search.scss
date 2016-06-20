@@ -201,7 +201,9 @@ form.search-box {
   }
 
   input[type='submit'] {
-    display: none;
+    position: absolute;
+    left: -999em;
+    top: 0;
   }
 
   .input-wrapper {
