@@ -43,12 +43,15 @@ class Group < ActiveRecord::Base
     options.validates :description, presence: true, length: { maximum: 5000 }
   end
 
+  validates_with CustomValidators
+
   before_restore :restore_group_members
 
   after_save :trigger_workflow_alert_for_added_group_members, unless: ->(record) { record.draft? }
   after_commit :user_created_group_event, on: :create, unless: ->(record) { record.draft? }
 
   delegate :public?, :moderated?, :private?, to: :group_type
+  delegate :custom_validators, to: :transactable_type
 
   def to_liquid
     @group_drop ||= GroupDrop.new(self)
