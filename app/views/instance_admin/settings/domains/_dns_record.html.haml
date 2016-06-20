@@ -2,13 +2,14 @@
   %td= record.name
   %td= record.type
   %td
-    .well
-      %ul
-        - if record.alias_target
-          %li= record.alias_target.dns_name
-        - record.resource_records.map(&:value).each do |val|
-          %li= val
+    .code
+      - if record.alias_target
+        = record.alias_target.dns_name
+      - else
+        = record.resource_records.map(&:value).join("<br/>").html_safe
 
-        - if record.type == 'NS'
-          %hr
-          .small= t('instance_admin.settings.domains.hosted_zones.note')
+      - if record.type == 'NS'
+        %hr
+        .small= t('instance_admin.settings.domains.hosted_zones.note')
+  %td
+    = link_to :delete, instance_admin_settings_domain_hosted_zone_resource_record_path(@domain, record.id), method: 'delete', data: { confirm: 'Are you sure?' }

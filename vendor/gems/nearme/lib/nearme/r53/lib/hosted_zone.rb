@@ -1,7 +1,7 @@
 class HostedZone
   extend Forwardable
 
-  def_delegators :@resource, :id, :name
+  def_delegators :@resource, :id, :name, :resource_record_set_count
 
   def initialize(resource)
     @resource = resource
@@ -9,21 +9,23 @@ class HostedZone
 
   # target: ELB S3 EC2
   def add_target(target)
-    HostedZoneRepository.add_target self, target
+    ResourceRecordRepository.add_alias_record_to_target self, target
   end
 
   def records
-    HostedZoneRepository.list_resource_record_sets(self).resource_record_sets
+    ResourceRecordRepository.all(self)
   end
 
   def name_servers
-    records.find do |server|
-      server.type == 'NS'
-    end
+    records.find { |record| record.type == 'NS' }
   end
 
   def delete
-    HostedZoneRepository.delete self
+    HostedZoneRepository.delete id
+  end
+
+  def present?
+    id.present?
   end
 end
 
@@ -44,37 +46,12 @@ module HostedZoneRepository
     client.list_hosted_zones.hosted_zones
   end
 
-  def self.remove(hosted_zone)
-    client.delete_hosted_zone hosted_zone_id: hosted_zone.id
-  end
-
-  def self.create(name, caller_reference = "caller-reference-#{name}")
+  def self.create(name, caller_reference = "caller-reference-#{name}-#{Time.now.to_i}")
     client.create_hosted_zone name: name, caller_reference: caller_reference
   end
 
-  def self.add_target(zone, target)
-    apply_change ChangeRecordBuilder.add_alias_record(zone, target)
-  end
-
-  def self.delete(zone)
-    delete_alias zone
-
-    client.delete_hosted_zone id: zone.id
-  end
-
-  def self.delete_alias(zone)
-    alias_record = zone.records.find { |record| record.type == 'A' }
-    return unless alias_record
-
-    apply_change ChangeRecordBuilder.delete_record(zone, alias_record)
-  end
-
-  def self.apply_change(change)
-    client.change_resource_record_sets change
-  end
-
-  def self.list_resource_record_sets(zone)
-    client.list_resource_record_sets hosted_zone_id: zone.id
+  def self.delete(zone_id)
+    client.delete_hosted_zone id: zone_id
   end
 
   def self.client
@@ -96,6 +73,21 @@ class ChangeRecordBuilder
       }
     }
   end
+
+  def self.add_record(zone, record)
+    {
+      hosted_zone_id: zone.id,
+      change_batch: {
+        changes: [
+          {
+            action: 'CREATE',
+            resource_record_set: record
+          }
+        ]
+      }
+    }
+  end
+
   def self.add_alias_record(zone, target)
     {
       hosted_zone_id: zone.id,
@@ -119,13 +111,45 @@ class ChangeRecordBuilder
   end
 end
 
-class CreateRecord
-  def self.build(zone, change) #target, name = zone.name)
-
+module ResourceRecordDecorator
+  def id
+    [name.gsub('.','_'), type].join('-')
   end
 end
 
-module DeleteRecord
-  def self.build(zone, target)
+class ResourceRecordRepository
+  TYPE = ['MX', 'SPF', 'CNAME', 'A', 'TXT', 'ALIAS'].sort
+
+  def self.find_by_zone_and_name_and_type(zone, name, type)
+    zone.records.find { |record| record.name == name && record.type == type }
+  end
+
+  def self.add_record(zone, record)
+    apply_change ChangeRecordBuilder.add_record(zone, record)
+  end
+
+  def self.delete_resource_record(zone, record)
+    apply_change ChangeRecordBuilder.delete_record(zone, record)
+  end
+
+  def self.add_alias_record_to_target(zone, target)
+    apply_change ChangeRecordBuilder.add_alias_record(zone, target)
+  end
+
+  private
+
+  def self.apply_change(change)
+    client.change_resource_record_sets change
+  end
+
+  def self.client
+    Aws::Route53::Client.new
+  end
+
+  def self.all(zone)
+    client
+      .list_resource_record_sets(hosted_zone_id: zone.id)
+      .resource_record_sets
+      .map { |record| record.extend(ResourceRecordDecorator) }
   end
 end

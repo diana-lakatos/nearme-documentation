@@ -438,6 +438,12 @@ en:
           record_name: Record name
           record_type: Type
           record_values: Values
+      resource_records:
+        new:
+          header: 'Add new DNS record'
+        form:
+          create_record: 'Add DNS Record'
+          please_wait: Saving...
       hidden_controls:
         name: "Name"
         type: "Type"
