@@ -114,4 +114,19 @@ FactoryGirl.define do
   factory :project_type, class: 'ProjectType' do
     sequence(:name) { |n| "Project #{n}" }
   end
+
+  factory :group_type, class: 'GroupType' do
+
+    factory :public_group_type do
+      sequence(:name) { |n| "Public #{n}" }
+    end
+
+    factory :moderated_group_type do
+      sequence(:name) { |n| "Moderated #{n}" }
+    end
+
+    factory :private_group_type do
+      sequence(:name) { |n| "Private #{n}" }
+    end
+  end
 end
