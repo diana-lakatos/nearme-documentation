@@ -17,6 +17,8 @@ class GroupMember < ActiveRecord::Base
   scope :approved, -> { where.not(approved_by_owner_at: nil, approved_by_user_at: nil) }
   scope :for_user, -> (user) { user.present? ? where('user_id = ? OR email = ?', user.id, user.email) : [] }
 
+  scope :deleted_with_group, -> (group) { where('deleted_at >= ? AND deleted_at <= ?', group.deleted_at - 30.seconds, group.deleted_at + 30.seconds) }
+
   scope :by_phrase, -> (phrase) { joins(:user).where('users.name ilike ?', "%#{phrase}%") }
 
   def name
