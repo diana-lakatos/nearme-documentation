@@ -20,22 +20,27 @@ namespace :jira do
     puts "*******************"
     @cards_to_be_added_to_sprint = []
     issues_not_included_in_sprint.each do |number|
-      puts "Is this issue part of the sprint: #{@jira_helper.full_names([number], @jira_helper.jira_commits)[0]} [y]/[n]/[o]"
-      user_input = STDIN.gets.strip
-      while(!%w(y n).include?(user_input)) do
-        if user_input == 'o'
-          `launchy https://near-me.atlassian.net/browse/#{number}`
-        else
-          puts "\tinvalid input"
-        end
+      begin
+        issue = @client.Issue.find(number)
+        puts "Is this issue part of the sprint: #{@jira_helper.full_names([number], @jira_helper.jira_commits)[0]} [fixVersions: #{issue.fixVersions.map(&:name).join(', ')}] [y]/[n]/[o]"
         user_input = STDIN.gets.strip
-      end
-      case user_input
-      when "y"
-        @cards_to_be_added_to_sprint << number
-        puts "\tadding to sprint"
-      when "n"
-        puts "\tskipping"
+        while(!%w(y n).include?(user_input)) do
+          if user_input == 'o'
+            `launchy https://near-me.atlassian.net/browse/#{number}`
+          else
+            puts "\tinvalid input"
+          end
+          user_input = STDIN.gets.strip
+        end
+        case user_input
+        when "y"
+          @cards_to_be_added_to_sprint << number
+          puts "\tadding to sprint"
+        when "n"
+          puts "\tskipping"
+        end
+      rescue => e
+        puts "Error for card: #{number}. #{e} - can't check if fixVersion already assigned"
       end
     end
 
@@ -43,6 +48,7 @@ namespace :jira do
     puts ""
     puts "Cards that have not relevant code"
     puts "*******************"
+    issues_to_be_moved_to_next_sprint = []
     issues_without_code.each do |number|
       puts "Is this issue part of the sprint: #{@jira_helper.full_names([number], tickets_assigned_to_sprint)[0]} [y]/[n]/[o]"
       user_input = STDIN.gets.strip
@@ -59,7 +65,23 @@ namespace :jira do
         @cards_to_be_added_to_sprint << number
         puts "\tadding to sprint"
       when "n"
-        puts "\tskipping"
+        puts "\tDo you want to move it to the next sprint? [y]/[n]/[o]"
+        user_input = STDIN.gets.strip
+        while(!%w(y n).include?(user_input)) do
+          if user_input == 'o'
+            `launchy https://near-me.atlassian.net/browse/#{number}`
+          else
+            puts "\tinvalid input"
+          end
+          user_input = STDIN.gets.strip
+          case user_input
+          when "y"
+            puts "\t\tmoving to the next sprint"
+            issues_to_be_moved_to_next_sprint << number
+          when "n"
+            puts "\tskipping"
+          end
+        end
       end
     end
 
@@ -72,7 +94,15 @@ namespace :jira do
         jira_card.save({ fields: { fixVersions: [{ name: next_tag }] } })
         jira_card.save({ fields: { customfield_10007: args[:sprint_number].to_i }})
       rescue => e
-        puts "Error for card: #{card_in_sprint}. #{e}"
+        puts "Error for card: #{card_in_sprint}. #{e} - can't assign sprint and fixVersion"
+      end
+    end
+    issues_to_be_moved_to_next_sprint.each do |number|
+      begin
+        jira_card = @client.Issue.find(number)
+        jira_card.save({ fields: { customfield_10007: args[:sprint_number].to_i + 1}})
+      rescue => e
+        puts "Error for card: #{card_in_sprint}. #{e} - can't move to the next sprint"
       end
     end
 
@@ -113,10 +143,10 @@ namespace :jira do
     @commits_for_hotfix.each do |commit_for_hotfix|
       if commit_for_hotfix.match(/^NM-/)
         begin
-        card_number = @jira_helper.to_jira_number([commit_for_hotfix]).first
-        jira_card = @client.Issue.find(card_number)
-        jira_card.save({ fields: { fixVersions: [{ name: next_tag }] } })
-        jira_card.save({ fields: { customfield_10007: nil }})
+          card_number = @jira_helper.to_jira_number([commit_for_hotfix]).first
+          jira_card = @client.Issue.find(card_number)
+          jira_card.save({ fields: { fixVersions: [{ name: next_tag }] } })
+          jira_card.save({ fields: { customfield_10007: nil }})
         rescue => e
           puts "Error for card: #{commit_for_hotfix}. #{e}"
         end
