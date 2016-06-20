@@ -388,6 +388,7 @@ module.exports = class SearchMixedController extends SearchSearchController
         categories_selects = categories_selects.concat(values)
 
     all_categories = categories_selects.concat(categories_checkboxes)
+    price_max = if @container.find('input[name="price[max]"]:checked').length > 0 then @container.find('input[name="price[max]"]:checked').val() else $('input[name="price[max]"]').val()
     @assignFormParams(
       nx: @formatCoordinate(bounds[2]),
       ny: @formatCoordinate(bounds[3]),

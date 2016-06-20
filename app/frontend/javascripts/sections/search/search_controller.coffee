@@ -256,7 +256,7 @@ module.exports = class SearchSearchController extends SearchController
 
   # Trigger the search from manipulating the query.
   # Note that the behaviour semantics are different to manually moving the map.
-  triggerSearchFromQuery: ->
+  triggerSearchFromQuery: (page = false) ->
     # we want to log any new search query
     categories_checkboxes = _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val()))
     categories_selects = []
@@ -267,7 +267,7 @@ module.exports = class SearchSearchController extends SearchController
         categories_selects = categories_selects.concat(values)
 
     all_categories = categories_selects.concat(categories_checkboxes)
-    @mapTrigger = false if parseInt($(page).val()) == 1
+    @mapTrigger = false if (!page or parseInt($(page).val()) == 1)
 
     price_max = if @container.find('input[name="price[max]"]:checked').length > 0 then @container.find('input[name="price[max]"]:checked').val() else $('input[name="price[max]"]').val()
     @assignFormParams(
