@@ -575,6 +575,7 @@ class ApplicationController < ActionController::Base
       current_user.present? &&
       !current_user.admin? &&
       !Rails.env.test? &&
+      !Rails.env.staging? &&
       !session[:instance_admin_as_user].present?
   end
 
