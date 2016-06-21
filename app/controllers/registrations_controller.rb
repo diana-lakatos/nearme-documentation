@@ -134,6 +134,12 @@ class RegistrationsController < Devise::RegistrationsController
     resource.must_have_verified_phone_number = true if resource.requires_mobile_number_verifications?
     resource.custom_validation = true
     resource.assign_attributes(user_params)
+
+    # For the community we only ask for the full name so we ensure the components
+    # are set to nil, otherwise we'll get the name from components and it will appear
+    # like the name hasn't updated
+    resource.first_name = resource.middle_name = resource.last_name = nil if PlatformContext.current.instance.is_community?
+
     build_approval_request_for_object(resource) unless resource.is_trusted?
     all_params = user_params
     all_params[:default_profile_attributes].try(:delete, :customizations_attributes)
