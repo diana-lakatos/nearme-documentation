@@ -66,9 +66,15 @@ class Dashboard::GroupsController < Dashboard::BaseController
   end
 
   def video
-    render json: {
-      html: render_to_string(partial: 'video', object: params[:video_url])
-    }
+    video_embedder = VideoEmbedder.new(params[:video_url])
+
+    if video_embedder.valid?
+      render json: {
+        html: render_to_string(partial: 'video', object: video_embedder.video_url)
+      }
+    else
+      render json: { errors: video_embedder.errors }, status: 422
+    end
   end
 
   private

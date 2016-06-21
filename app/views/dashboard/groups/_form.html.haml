@@ -62,13 +62,14 @@
         %p.photo-uploader-hint
           = t('simple_form.hints.group.photos')
 
-    %fieldset.media-group.sep
+    %fieldset.media-group.sep.group-videos
       %legend
         = t('group.videos')
 
-      .group-inline
-        %input(type='text' id='video-url' placeholder="#{t('simple_form.placeholders.group.video_url')}")
-        %input(type='submit' id='video-submit' value="#{t('group.placeholders.add_video')}" data-href="#{video_dashboard_group_path('group')}")
+      .group-inline.video-form
+        %input(type='text' name='video-url' placeholder="#{t('simple_form.placeholders.group.video_url')}")
+        %button(data-href="#{video_dashboard_group_path('group')}")
+          = t('group.placeholders.add_video')
 
       %ul.gallery-video.gallery-a
         - if @group.properties.try(:videos).present?
