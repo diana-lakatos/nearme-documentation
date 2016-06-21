@@ -12,10 +12,10 @@ class TaxRegion < ActiveRecord::Base
 
   accepts_nested_attributes_for :tax_rates, :reject_if => :all_blank, :allow_destroy => true
 
-  validates :country_id, uniqueness: true, presence: true
+  validates_uniqueness_of :country_id, conditions: -> { where(deleted_at: nil) }
+  validates :country_id, presence: true
 
   def default_tax_rate
     tax_rates.where(default: true).first
   end
 end
-
