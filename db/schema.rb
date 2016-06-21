@@ -14,10 +14,10 @@
 ActiveRecord::Schema.define(version: 20160617133023) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "hstore"
   enable_extension "plpgsql"
   enable_extension "btree_gin"
   enable_extension "btree_gist"
+  enable_extension "hstore"
 
   create_table "activity_feed_events", force: :cascade do |t|
     t.integer  "instance_id"
@@ -3586,7 +3586,7 @@ ActiveRecord::Schema.define(version: 20160617133023) do
     t.datetime "updated_at",  null: false
   end
 
-  add_index "tax_regions", ["country_id"], name: "index_tax_regions_on_country_id", unique: true, using: :btree
+  add_index "tax_regions", ["country_id"], name: "index_tax_regions_on_country_id", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "tax_regions", ["instance_id"], name: "index_tax_regions_on_instance_id", using: :btree
   add_index "tax_regions", ["state_id"], name: "index_tax_regions_on_state_id", using: :btree
 

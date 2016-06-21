@@ -24,7 +24,7 @@ class AddMissingUniqueIndexes < ActiveRecord::Migration
     add_index :project_collaborators, [:user_id, :project_id], unique: true, where: '(deleted_at IS NULL)'
 
     remove_index :tax_regions, [:country_id]
-    add_index :tax_regions, [:country_id], unique: true
+    add_index :tax_regions, [:country_id], unique: true, where: '(deleted_at IS NULL)'
 
     add_index :workflow_alerts, [:template_path, :workflow_step_id, :recipient_type, :alert_type, :deleted_at], unique: true, name: 'index_workflows_alerts_on_templ_step_recipient_alert_and_del'
     add_index :workflow_steps, [:associated_class, :instance_id, :deleted_at], unique: true, name: 'index_workflow_steps_on_assoc_class_and_instance_and_deleted'
