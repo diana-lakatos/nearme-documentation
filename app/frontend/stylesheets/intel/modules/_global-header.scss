@@ -258,6 +258,11 @@
             content: '\e604';
         }
 
+        li.groups a:before {
+            content: '\e900';
+            font-size: 1.3em;
+        }
+
         li a [class*="intelicon-"] {
             margin-right: 5px;
         }
