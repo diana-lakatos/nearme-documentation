@@ -2,6 +2,10 @@ class InstanceAdmin::Groups::GroupTypes::CustomValidatorsController < InstanceAd
 
   protected
 
+  def resource_class
+    GroupType
+  end
+
   def redirect_path
     instance_admin_groups_group_type_custom_validators_path
   end
