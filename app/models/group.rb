@@ -47,6 +47,7 @@ class Group < ActiveRecord::Base
 
   before_restore :restore_group_members
 
+  before_destroy :mark_as_destroyed_by_parent, prepend: true
   after_save :trigger_workflow_alert_for_added_group_members, unless: ->(record) { record.draft? }
   after_commit :user_created_group_event, on: :create, unless: ->(record) { record.draft? }
 
@@ -113,6 +114,10 @@ class Group < ActiveRecord::Base
     self.group_members.only_deleted.deleted_with_group(self).each do |member|
       member.restore(recursive: true)
     end
+  end
+
+  def mark_as_destroyed_by_parent
+    group_members.each { |m| m.destroyed_by_parent = true }
   end
 
   class NotFound < ActiveRecord::RecordNotFound; end

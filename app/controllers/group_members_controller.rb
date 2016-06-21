@@ -1,4 +1,6 @@
 class GroupMembersController < ApplicationController
+  rescue_from GroupMember::OwnerCannotLeaveGroup, with: :owner_cannot_leave_group
+
   layout :dashboard_or_community_layout
 
   before_action :authenticate_user!
@@ -45,6 +47,10 @@ class GroupMembersController < ApplicationController
 
   def find_group
     @group = Group.find(params[:group_id]).try(:decorate)
+  end
+
+  def owner_cannot_leave_group(error)
+    render json: error.message
   end
 
 end
