@@ -36,6 +36,8 @@ en:
         account_type: Account Type
       owners:
         dob: Date Of Birth
+      group:
+        cover_photo: 'Main Image'
     errors:
       models:
         merchant_account:

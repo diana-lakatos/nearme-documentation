@@ -20,7 +20,11 @@ class Dashboard::AssetsController < Dashboard::BaseController
       @listing = current_user.projects.find(params[:project][:id]) if params[:project][:id].present?
     elsif params[:group]
       @listing_params = params[:group]
-      @listing = current_user.groups.find(params[:group][:id]) if params[:group][:id].present?
+      @owner_type = "Group"
+      if params[:group][:id].present?
+        @listing = current_user.moderated_groups.find(params[:group][:id])
+        @owner = @listing
+      end
     elsif params[:user]
       if params[:user][:companies_attributes]["0"][:locations_attributes]
         @listing_params = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]

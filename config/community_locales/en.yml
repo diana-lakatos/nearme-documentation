@@ -285,3 +285,4 @@ en:
 
   custom_errors:
     video_url_not_supported: "Video URL is invalid or video provider is not supported."
+    main_image_missing: 'Please upload main image'
