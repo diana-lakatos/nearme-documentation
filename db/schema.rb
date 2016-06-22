@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160621113049) do
+ActiveRecord::Schema.define(version: 20160624143651) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1675,6 +1675,22 @@ ActiveRecord::Schema.define(version: 20160621113049) do
     t.datetime "updated_at",     null: false
   end
 
+  create_table "photo_upload_versions", force: :cascade do |t|
+    t.integer  "theme_id"
+    t.integer  "instance_id"
+    t.string   "apply_transform"
+    t.integer  "width"
+    t.integer  "height"
+    t.string   "photo_uploader"
+    t.string   "version_name"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "photo_upload_versions", ["instance_id"], name: "index_photo_upload_versions_on_instance_id", using: :btree
+  add_index "photo_upload_versions", ["theme_id", "version_name", "photo_uploader"], name: "uniq_puv_theme_version_uploader", unique: true, using: :btree
+  add_index "photo_upload_versions", ["theme_id"], name: "index_photo_upload_versions_on_theme_id", using: :btree
+
   create_table "photos", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -2090,6 +2106,16 @@ ActiveRecord::Schema.define(version: 20160621113049) do
   end
 
   add_index "schedule_rules", ["instance_id", "schedule_id"], name: "index_schedule_rules_on_instance_id_and_schedule_id", using: :btree
+
+  create_table "scheduled_uploaders_regenerations", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.string   "photo_uploader"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "scheduled_uploaders_regenerations", ["instance_id", "photo_uploader"], name: "uniq_sur_instance_photo_uploader", unique: true, using: :btree
+  add_index "scheduled_uploaders_regenerations", ["instance_id"], name: "index_scheduled_uploaders_regenerations_on_instance_id", using: :btree
 
   create_table "schedules", force: :cascade do |t|
     t.datetime "start_at"

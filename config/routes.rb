@@ -350,6 +350,12 @@ DesksnearMe::Application.routes.draw do
             get :search
           end
         end
+
+        resources :photo_upload_versions do
+          collection do
+            post :regenerate_versions
+          end
+        end
       end
 
       namespace :manage do

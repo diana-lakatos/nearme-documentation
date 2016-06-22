@@ -101,6 +101,7 @@ class Instance < ActiveRecord::Base
   has_many :availability_templates, as: :parent
   has_many :custom_validators
   has_many :form_components, as: :form_componentable, dependent: :destroy
+  has_many :scheduled_uploaders_regenerations
 
   validates :name, presence: true, length: { maximum: 255 }
   validates :marketplace_password, presence: { if: :password_protected }, length: { maximum: 255 }
