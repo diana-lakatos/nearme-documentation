@@ -1,9 +1,9 @@
 - if membership.blank?
-  = link_to t('group.join'), [group, :group_members], class: 'button-a small', method: :post, remote: true
+  = link_to group.button_join_name, [group, :group_members], class: 'button-a small', method: :post, remote: true
 - elsif membership.waiting_for_owner_response?
   %span.button-a.small.gray
     = t('group.request_sent')
 - elsif membership.waiting_for_user_response?
   = link_to t('group.accept'), [:accept, group, membership], class: 'button-a small', method: :patch, remote: true
-- elsif membership.approved?
+- elsif membership.approved? && !group.is_owner?(current_user.id)
   = link_to t('group.leave'), [group, membership], class: 'button-a small', method: :delete, remote: true

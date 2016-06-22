@@ -1,6 +1,7 @@
 module.exports = class GroupForm
   constructor: (@form) ->
     @coverImageWrapper = $('.media-group.cover-image')
+    @videoUploadWrapper = $('.media-group.group-videos')
     @bindEvents()
 
   bindEvents: ->
@@ -20,22 +21,45 @@ module.exports = class GroupForm
       $label.text(str)
 
   initVideoField: ->
-    $input = $('#video-url')
-    $submit = $('#video-submit')
+    $input = @videoUploadWrapper.find('input[name=video-url]')
+    $submit = @videoUploadWrapper.find('button')
+    $videoForm = @videoUploadWrapper.find('.video-form')
+    $videoGallery = @videoUploadWrapper.find('.gallery-video')
+    i18nButtonText = $submit.text()
 
-    $('.gallery-video').on 'click', '.remove-video', (event) ->
+    requestInProgress = ->
+      $submit.text('Uploading...')
+      $input.prop('disabled', true)
+
+    requestDone = ->
+      $input.val('');
+      $submit.text(i18nButtonText)
+      $input.prop('disabled', false)
+
+    $videoGallery.on 'click', '.remove-video', (event) ->
       event.preventDefault()
       $(this).parent().remove()
 
     $submit.on 'click', (event) =>
       event.preventDefault();
+      requestInProgress()
+      @videoUploadWrapper.find('.error-block').remove()
+
       $.ajax
         type: 'GET',
         url: $submit.data('href'),
         dataType: "json",
         data: { video_url: $input.val() },
         success: (data) ->
-          $('.gallery-video').append(data.html)
+          requestDone()
+          $videoGallery.append(data.html)
+        error: (data) ->
+          requestDone()
+          $errorBlock = $('<p>', {class: 'error-block'})
+            .hide()
+            .text(data.responseJSON.errors.video_url[0])
+
+          $errorBlock.insertAfter($videoForm).show('fast')
 
   initSearchForMemberField: ->
     $input = $('#search-for-member')

@@ -16,6 +16,7 @@ class Group < ActiveRecord::Base
 
   has_many :group_projects, dependent: :destroy
   has_many :projects, through: :group_projects
+  alias_method :all_projects, :projects
 
   has_many :group_members, dependent: :destroy
   has_many :memberships, class_name: 'GroupMember', dependent: :destroy
@@ -42,10 +43,16 @@ class Group < ActiveRecord::Base
     options.validates :description, presence: true, length: { maximum: 5000 }
   end
 
+  validates_with CustomValidators
+
+  before_restore :restore_group_members
+
+  before_destroy :mark_as_destroyed_by_parent, prepend: true
   after_save :trigger_workflow_alert_for_added_group_members, unless: ->(record) { record.draft? }
   after_commit :user_created_group_event, on: :create, unless: ->(record) { record.draft? }
 
   delegate :public?, :moderated?, :private?, to: :group_type
+  delegate :custom_validators, to: :transactable_type
 
   def to_liquid
     @group_drop ||= GroupDrop.new(self)
@@ -101,6 +108,16 @@ class Group < ActiveRecord::Base
       end
 
     end
+  end
+
+  def restore_group_members
+    self.group_members.only_deleted.deleted_with_group(self).each do |member|
+      member.restore(recursive: true)
+    end
+  end
+
+  def mark_as_destroyed_by_parent
+    group_members.each { |m| m.destroyed_by_parent = true }
   end
 
   class NotFound < ActiveRecord::RecordNotFound; end

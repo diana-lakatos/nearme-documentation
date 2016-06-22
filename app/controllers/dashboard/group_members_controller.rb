@@ -1,4 +1,6 @@
 class Dashboard::GroupMembersController < Dashboard::BaseController
+  rescue_from GroupMember::OwnerCannotLeaveGroup, with: :owner_cannot_leave_group
+
   before_filter :find_group
   before_filter :find_membership, except: [:index, :create]
 
@@ -42,7 +44,7 @@ class Dashboard::GroupMembersController < Dashboard::BaseController
   end
 
   def find_group
-    @group = current_user.groups.find(params[:group_id])
+    @group = current_user.moderated_groups.find(params[:group_id]).try(:decorate)
   end
 
   def find_membership
@@ -51,5 +53,9 @@ class Dashboard::GroupMembersController < Dashboard::BaseController
 
   def group_member_params
     params.require(:group_member).permit(secured_params.group_member)
+  end
+
+  def owner_cannot_leave_group(error)
+    render json: error.message
   end
 end
