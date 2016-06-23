@@ -447,7 +447,7 @@ module ApplicationHelper
       event.event_source.image.url(:medium)
     else
       followed = event.event_source.is_a?(Photo) ? event.event_source : event.followed
-      image = (followed.try(:image).presence || followed.try(:avatar)).try(:url, :medium)
+      image = (followed.try(:cover_image).presence || followed.try(:image).presence || followed.try(:avatar)).try(:url, :medium)
       image.present? ? image : followed.try(:cover_photo).try(:image).try(:url, :medium)
     end
   end
