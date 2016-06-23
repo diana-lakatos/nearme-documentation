@@ -1,7 +1,7 @@
 .page-a.group
   .primary
     .box-a
-      = image_tag @group.cover_image.url(:medium)
+      = image_tag @group.cover_image.url(:large)
 
       %h2
         = @group.name
@@ -23,13 +23,13 @@
       %p
         = @group.description
 
-      - if @group.photos.any?
+      - if @group.gallery_photos.any?
         %section.gallery
           %h4
             = t('group.gallery')
 
           %ul.gallery-a
-            - @group.photos.each do |photo|
+            - @group.gallery_photos.each do |photo|
               %li
                 = image_tag photo.image_url(:project_thumbnail)
 

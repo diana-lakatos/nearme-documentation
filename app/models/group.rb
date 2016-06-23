@@ -5,12 +5,12 @@ class Group < ActiveRecord::Base
 
   include QuerySearchable
 
-  mount_uploader :cover_image, GroupCoverImageUploader
-
   belongs_to :transactable_type, -> { with_deleted }, foreign_key: 'transactable_type_id', class_name: 'GroupType'
   belongs_to :group_type, -> { with_deleted }, foreign_key: 'transactable_type_id'
   belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :groups
 
+  has_one  :cover_photo, -> { where(photo_role: 'cover') }, as: :owner, class_name: 'Photo', dependent: :destroy
+  has_many :gallery_photos, -> { where(photo_role: nil) }, as: :owner, class_name: 'Photo'
   has_many :photos, as: :owner, dependent: :destroy
   has_many :links, as: :linkable, dependent: :destroy
 
@@ -27,8 +27,11 @@ class Group < ActiveRecord::Base
 
   has_custom_attributes target_type: 'GroupType', target_id: :transactable_type_id
 
-  accepts_nested_attributes_for :photos, allow_destroy: true
-  accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
+  with_options reject_if: :all_blank, allow_destroy: true do |options|
+    options.accepts_nested_attributes_for :cover_photo
+    options.accepts_nested_attributes_for :photos
+    options.accepts_nested_attributes_for :links
+  end
 
   scope :with_date, ->(date) { where(created_at: date) }
   scope :by_search_query, lambda { |query|
@@ -37,10 +40,10 @@ class Group < ActiveRecord::Base
 
   with_options unless: ->(record) { record.draft? } do |options|
     options.validates :transactable_type, presence: true
-    options.validates :cover_image, presence: true
     options.validates :name, presence: true, length: { maximum: 140 }
     options.validates :summary, presence: true, length: { maximum: 140 }
     options.validates :description, presence: true, length: { maximum: 5000 }
+    options.validates :cover_photo, presence: true
   end
 
   validates_with CustomValidators
@@ -53,6 +56,19 @@ class Group < ActiveRecord::Base
 
   delegate :public?, :moderated?, :private?, to: :group_type
   delegate :custom_validators, to: :transactable_type
+
+  def cover_image
+    cover_photo.try(:image) || Photo.new.image
+  end
+
+  def cover_photo_attributes=(attrs)
+    photo = Photo.find_by(id: attrs[:id])
+
+    if photo.present?
+      photo.attributes = attrs
+      self.cover_photo = photo
+    end
+  end
 
   def to_liquid
     @group_drop ||= GroupDrop.new(self)

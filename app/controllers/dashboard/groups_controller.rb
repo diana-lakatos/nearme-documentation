@@ -10,7 +10,7 @@ class Dashboard::GroupsController < Dashboard::BaseController
   def new
     group_type = GroupType.find_by(name: 'Public')
     @group = current_user.groups.build(transactable_type: group_type)
-    @photos = current_user.photos.where(owner_id: nil)
+    @photos = @group.gallery_photos
   end
 
   def create
@@ -23,13 +23,13 @@ class Dashboard::GroupsController < Dashboard::BaseController
       redirect_to dashboard_groups_path
     else
       flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@group.errors.full_messages)
-      @photos = @group.photos
+      @photos = @group.photos - [@group.cover_photo]
       render :new
     end
   end
 
   def edit
-    @photos = @group.photos
+    @photos = @group.gallery_photos
   end
 
   def update
@@ -44,7 +44,7 @@ class Dashboard::GroupsController < Dashboard::BaseController
           redirect_to dashboard_groups_path
         else
           flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@group.errors.full_messages)
-          @photos = @group.photos
+          @photos = @group.gallery_photos
           @group.draft_at = draft
           render :edit
         end

@@ -1129,6 +1129,7 @@ class SecuredParams
       :summary,
       :description,
       :cover_image,
+      cover_photo_attributes: nested(self.photo),
       photos_attributes: nested(self.photo),
       links_attributes: nested(self.link),
       photo_ids: [],
@@ -1304,7 +1305,8 @@ class SecuredParams
       :id,
       :image,
       :caption,
-      :position
+      :position,
+      :photo_role
     ]
   end
 

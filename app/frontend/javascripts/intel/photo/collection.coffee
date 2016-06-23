@@ -42,6 +42,8 @@ module.exports = class PhotoCollection
     if @multiplePhoto()
       photo.multiplePhotoHtml(@initial_length + @position++)
       @reorderSortableList()
+    else if @coverPhoto()
+      photo.coverPhotoHtml()
     else
       photo.singlePhotoHtml()
       photo.resize()
@@ -55,6 +57,9 @@ module.exports = class PhotoCollection
 
   multiplePhoto: =>
     @sortable.length > 0
+
+  coverPhoto: =>
+    return true if @container.data('role') == 'cover-photo'
 
   singlePhotoExists: =>
     @uploaded.find('img').length > 0

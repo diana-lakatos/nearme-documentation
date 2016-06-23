@@ -13,12 +13,7 @@
         %abbr{:title => t('general.required')} *
         = t('group.main_image')
 
-      - if @group.cover_image.present?
-        .photo-item
-          = image_tag @group.cover_image.url
-
-      .new-photo
-        = f.input :cover_image, as: :file, label: t(:add_photo), input_html: { accept: "image/*", capture: "capture" }
+      = render 'cover_image_form', f: f
 
     %fieldset.media-group.sep
       %legend
@@ -30,37 +25,7 @@
         .span
           = t('manage.listings.photos.waiting_for_photo_processing')
 
-      = new_file_upload_input("#{f.object_name}[photos_attributes][0][image]",
-                                      dashboard_photos_path,
-                                      Photo.new.image.thumbnail_dimensions[:project_thumbnail],
-                                      t('simple_form.labels.listing.add_photo'),
-                                      :required => true,
-                                      :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
-        - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
-        .thumbnail-processing{:hidden => true}
-          .loading-icon
-
-        = hidden_field_tag "#{f.object_name}", nil, placeholder: t('ui.photo_uploader.caption'), id: 'photo-item-input-template', disabled: true, 'data-number' => 0, 'data-no-caption' => true
-        - unless @photos.nil?
-          - @photos.each_with_index do |photo|
-            - next unless photo.persisted?
-
-            .photo-item{:id => "photo-" + photo.id.to_s}
-              = image_tag photo.image_url(:project_thumbnail)
-              .media-actions
-                %button.button-a.small.action--edit{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_dashboard_photo_path(photo), :'ajax-options' => { id: photo.id }}, :title => t('forms.photos.collection.rotate_and_crop')}
-                  %span.intelicon-edit
-
-                %button.button-a.small.red.action--remove{:type => "button", :data => { :"delete-photo" => true, :url => destroy_space_wizard_photo_path(:id => photo.id) }, :title => t('forms.photos.collection.delete') }
-                  %span.intelicon-trash-outlined
-
-              = hidden_field_tag "#{f.object_name}[photo_ids][]", photo.id
-              = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][id]", photo.id
-              = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
-
-      - if is_i18n_set?('simple_form.hints.group.photos')
-        %p.photo-uploader-hint
-          = t('simple_form.hints.group.photos')
+      = render 'photos_form', f: f
 
     %fieldset.media-group.sep.group-videos
       %legend
