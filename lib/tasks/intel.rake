@@ -29,6 +29,21 @@ namespace :intel do
     end
 
     Utils::DefaultAlertsCreator::GroupCreator.new.create_all!
+
+
+    Instance.where(is_community: true).find_each do |instance|
+      Workflow.find_by(instance_id: instance.id, workflow_type: 'group_workflow').workflow_steps.each do |step|
+        step.workflow_alerts.where(alert_type: 'email').each do |alert|
+          alert.update!(
+            {
+              from: 'addresssoftware@developerzone.intel.com',
+              reply_to: 'addressno-reply@developerzone.intel.com'
+            }
+          )
+        end
+      end
+    end
+
   end
 
   task :setup => [:environment] do
