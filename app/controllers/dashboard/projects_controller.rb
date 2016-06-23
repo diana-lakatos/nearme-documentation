@@ -16,8 +16,9 @@ class Dashboard::ProjectsController < Dashboard::BaseController
   end
 
   def create
-    @project = @transactable_type.projects.build(project_params)
+    @project = @transactable_type.projects.build
     @project.creator = current_user
+    @project.assign_attributes(project_params)
     @project.draft_at = Time.now if params[:save_for_later]
     if @project.save
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.translated_bookable_noun)
