@@ -43,6 +43,13 @@ module.exports = class PhotoView
     @photo.html("<img src='#{@data.url}'>")
     actions.appendTo(@photo)
 
+  coverPhotoHtml: ->
+    @singlePhotoHtml()
+    modelName = @inputTemplate.attr('name')
+    @photo.append($('<input>', { type: 'hidden', name: modelName + '[photo_ids][]', value: @data.id }))
+    @photo.append($('<input>', { type: 'hidden', name: modelName + '[cover_photo_attributes][id]', value: @data.id }))
+    @photo.append($('<input>', { type: 'hidden', name: modelName + '[cover_photo_attributes][photo_role]', value: 'cover' }))
+
   multiplePhotoHtml: (position) ->
     @singlePhotoHtml()
     input = $("<input type='text'>").attr('name', @inputTemplate.attr('name')).attr('placeholder', @inputTemplate.attr('placeholder')).data('association-name', @inputTemplate.data('association-name'))

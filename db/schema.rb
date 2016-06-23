@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160617133023) do
+ActiveRecord::Schema.define(version: 20160621113049) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1683,6 +1683,7 @@ ActiveRecord::Schema.define(version: 20160617133023) do
     t.boolean  "mark_to_be_bulk_update_deleted",             default: false
     t.integer  "owner_id"
     t.string   "owner_type"
+    t.string   "photo_role"
   end
 
   add_index "photos", ["creator_id"], name: "index_photos_on_creator_id", using: :btree
