@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160621113049) do
+ActiveRecord::Schema.define(version: 20160629213740) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2007,6 +2007,28 @@ ActiveRecord::Schema.define(version: 20160621113049) do
   add_index "reservations", ["platform_context_detail_id"], name: "index_reservations_on_platform_context_detail_id", using: :btree
   add_index "reservations", ["recurring_booking_id"], name: "index_reservations_on_recurring_booking_id", using: :btree
   add_index "reservations", ["transactable_id"], name: "index_reservations_on_listing_id", using: :btree
+
+  create_table "reverse_proxies", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "domain_id"
+    t.string   "path"
+    t.string   "destination_domain"
+    t.string   "environment"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "headers",            default: "{}"
+  end
+
+  add_index "reverse_proxies", ["instance_id", "domain_id", "path"], name: "index_reverse_proxies_on_instance_id_and_domain_id_and_path", unique: true, using: :btree
+
+  create_table "reverse_proxy_links", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.string   "use_on_path"
+    t.string   "name"
+    t.string   "destination_path"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "reviews", force: :cascade do |t|
     t.integer  "rating"

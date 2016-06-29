@@ -3,13 +3,19 @@ class PagesController < ApplicationController
   layout :resolve_layout
 
   def show
-    @page = platform_context.theme.pages.find_by(slug: Page.possible_slugs(params[:slug], params[:format]))
+    @page = platform_context.theme.pages.find_by(slug: Page.possible_slugs([params[:slug], params[:slug2], params[:slug3]].compact.join('/'), params[:format]))
+    @page = platform_context.theme.pages.find_by(slug: Page.possible_slugs([params[:slug], params[:slug2]].compact.join('/'), params[:format])) if @page.nil?
+    @page = platform_context.theme.pages.find_by(slug: Page.possible_slugs(params[:slug], params[:format])) if @page.nil?
     raise Page::NotFound unless @page.present?
 
+    assigns = {}
+    assigns['params'] = params.except(*Rails.application.config.filter_parameters)
+    assigns['current_user'] = current_user
+    assigns['platform_context'] = PlatformContext.current.decorate
     if @page.redirect?
       redirect_to @page.redirect_url, status: @page.redirect_code
     elsif @page.no_layout?
-      render text: @page.content
+      render text: Liquid::Template.parse(@page.content).render(assigns, registers: { action_view: self }, filters: [LiquidFilters])
     else
       render :show, platform_context: [platform_context.decorate]
     end

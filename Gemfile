@@ -21,6 +21,7 @@ gem 'devise', '~> 3.5.0'
 gem 'devise-token_authenticatable'
 gem 'rack-throttle'
 
+gem "rack-reverse-proxy", require: "rack/reverse_proxy", git: 'git@github.com:mdyd-dev/rack-reverse-proxy.git'
 
 gem 'charlock_holmes', '~> 0.7.3'
 

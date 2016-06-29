@@ -77,6 +77,14 @@ GIT
     rails-dev-boost (0.3.0)
       railties (>= 3.0)
 
+GIT
+  remote: git@github.com:mdyd-dev/rack-reverse-proxy.git
+  revision: 45e26cfa1e08d4253ba97d0769c270c6bb546546
+  specs:
+    rack-reverse-proxy (0.11.1)
+      rack (>= 1.0.0)
+      rack-proxy (~> 0.5, >= 0.5.14)
+
 PATH
   remote: vendor/gems/custom_attributes
   specs:
@@ -726,6 +734,8 @@ GEM
       rack (>= 1.1.3)
     rack-protection (1.5.3)
       rack
+    rack-proxy (0.6.0)
+      rack
     rack-rewrite (1.5.1)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -1107,6 +1117,7 @@ DEPENDENCIES
   quiet_assets
   rabl
   rack-mini-profiler
+  rack-reverse-proxy!
   rack-rewrite
   rack-throttle
   rails (= 4.2.4)

@@ -70,4 +70,8 @@ class Photo < ActiveRecord::Base
     { :image_original_url => 'Photo URL' }
   end
 
+  def jsonapi_serializer_class_name
+    'PhotoJsonSerializer'
+  end
+
 end

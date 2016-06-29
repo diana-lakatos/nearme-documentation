@@ -91,6 +91,10 @@ module InstanceType::Searcher
     @results = @results.paginate(page: page.to_pagination_number, per_page: per_page.to_pagination_number(20), total_entries: @search_results_count)
   end
 
+  def total_pages
+    result_count / @params[:per_page].to_pagination_number(20)
+  end
+
   def transactable_type
     @transactable_type_decorator ||= @transactable_type.decorate
   end
