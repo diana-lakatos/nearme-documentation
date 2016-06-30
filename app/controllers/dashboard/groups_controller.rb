@@ -61,7 +61,7 @@ class Dashboard::GroupsController < Dashboard::BaseController
 
   def destroy
     @group.destroy
-    flash[:deleted] = t('flash_messages.manage.listings.listing_deleted')
+    flash[:deleted] = t('group.group_deleted')
     redirect_to dashboard_groups_path
   end
 
