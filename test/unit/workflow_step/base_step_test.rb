@@ -16,8 +16,8 @@ class WorkflowStep::BaseStepTest < ActiveSupport::TestCase
   context 'invoke!' do
 
     should 'process all alerts associated with this step' do
-      @alert1 = stub
-      @alert2 = stub
+      @alert1 = stub(alert_type: 'email')
+      @alert2 = stub(alert_type: 'email')
       @dummy_step = DummyStep.new
       @dummy_step.expects(:alerts).returns([@alert1, @alert2])
       @invoker_instance = stub()

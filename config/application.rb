@@ -173,5 +173,6 @@ module DesksnearMe
 
     config.verify_api_requests = true
 
+    config.force_sending_all_workflow_alerts = false
   end
 end
