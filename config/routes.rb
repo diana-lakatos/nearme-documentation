@@ -237,7 +237,9 @@ DesksnearMe::Application.routes.draw do
       namespace :settings do
         get '/', :to => 'base#index'
         resources :domains do
-          resource :hosted_zone
+          resource :hosted_zone do
+            resources :resource_records
+          end
         end
         resources :api_keys, only: [:index, :create, :destroy]
         resource :hidden_controls, only: [:show, :update], :controller => 'hidden_controls'

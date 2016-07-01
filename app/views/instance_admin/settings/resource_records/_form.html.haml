@@ -1,0 +1,30 @@
+= simple_form_for resource, as: :resource_record, url: instance_admin_settings_domain_hosted_zone_resource_records_path(domain), html: { class: 'form-a' }  do |form|
+  .content-container
+    - if resource.errors.any?
+      .row
+        - resource.errors.full_messages.each do |error|
+          .well.error= error
+    .row
+      .input-container.col-xs-6
+        = form.input :type, collection: ResourceRecordRepository::TYPE, input_html: { class: 'form-control' }, required: true
+
+
+    .row
+      .input-container.col-xs-6
+        = form.input :name, input_html: { class: 'form-control' }, label: "NAME.#{resource.hosted_zone_name}", placeholder: 'name'
+
+        = form.hidden_field :hosted_zone_name, input_html: { class: 'form-control' }
+        = form.hidden_field :hosted_zone_id, input_html: { class: 'form-control' }
+
+    .row
+      .input-container.col-xs-12
+        = form.input :value, as: :text, input_html: { class: 'form-control' }
+
+    .row
+      .input-container.col-xs-6
+        = form.input :ttl, input_html: { class: 'form-control', value: 300 }
+
+    .row
+      .input-container.col-xs-12
+        = form.submit t('.create_record'), class: 'btn btn-blue pull-right', data: { disable_with: t('.please_wait')}
+        = link_to t(:cancel), instance_admin_settings_domain_path(domain), class: 'btn pull-right btn-light'
