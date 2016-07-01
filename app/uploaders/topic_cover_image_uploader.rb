@@ -4,6 +4,7 @@ class TopicCoverImageUploader < BaseUploader
   # because of validation - cover images downloaded from social providers like
   # linkedin do not have extension
   include CarrierWave::TransformableImage
+  include DynamicPhotoUploads
 
   cattr_reader :delayed_versions
 
@@ -13,16 +14,16 @@ class TopicCoverImageUploader < BaseUploader
 
 
   self.dimensions = {
-    medium: { width: 575, height: 196 },
-    big: { width: 575, height: 441 },
+    medium: { width: 575, height: 196, transform: :resize_to_fill },
+    big: { width: 575, height: 441, transform: :resize_to_fill },
   }
 
   version :big do
-    process resize_to_fill: [dimensions[:big][:width], dimensions[:big][:height]]
+    process dynamic_version: :big
   end
 
   version :medium do
-    process resize_to_fill: [dimensions[:medium][:width], dimensions[:medium][:height]]
+    process dynamic_version: :medium
   end
 
   ASPECT_RATIO = 6.7368421053

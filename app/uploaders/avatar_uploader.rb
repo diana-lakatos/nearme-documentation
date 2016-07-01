@@ -4,6 +4,7 @@ class AvatarUploader < BaseUploader
   # because of validation - avatars downloaded from social providers like
   # linkedin do not have extension
   include CarrierWave::TransformableImage
+  include DynamicPhotoUploads
 
   cattr_reader :delayed_versions
 
@@ -19,13 +20,12 @@ class AvatarUploader < BaseUploader
   end
 
   self.dimensions = {
-    :thumb => { :width => 96, :height => 96 },
-    :medium => { :width => 144, :height => 144 },
-    :community_thumbnail => { :width => 200, :height => 200 },
-    :community_small => { :width => 250, :height => 200 },
-    :big => { :width => 279, :height => 279 },
-    :bigger => { :width => 460, :height => 460 },
-    :large => { :width => 1280, :height => 960 }
+    :thumb => { :width => 96, :height => 96, transform: :resize_to_fill },
+    :medium => { :width => 144, :height => 144, transform: :resize_to_fill },
+    :community_small => { :width => 250, :height => 200, transform: :resize_to_fill },
+    :big => { :width => 279, :height => 279, transform: :resize_to_fill },
+    :bigger => { :width => 460, :height => 460, transform: :resize_to_fill },
+    :large => { :width => 1280, :height => 960, transform: :resize_to_fill }
   }
 
   ASPECT_RATIO = 1
@@ -40,27 +40,27 @@ class AvatarUploader < BaseUploader
   end
 
   version :thumb, from_version: :transformed, if: :delayed_processing? do
-    process resize_to_fill: [dimensions[:thumb][:width], dimensions[:thumb][:height]]
+    process dynamic_version: :thumb
   end
 
   version :medium, from_version: :transformed do
-    process resize_to_fill: [dimensions[:medium][:width], dimensions[:medium][:height]]
+    process dynamic_version: :medium
   end
 
   version :big, from_version: :transformed, if: :delayed_processing? do
-    process resize_to_fill: [dimensions[:big][:width], dimensions[:big][:height]]
+    process dynamic_version: :big
   end
 
   version :bigger, from_version: :transformed, if: :delayed_processing? do
-    process resize_to_fill: [dimensions[:bigger][:width], dimensions[:bigger][:height]]
+    process dynamic_version: :bigger
   end
 
   version :large, from_version: :transformed, if: :delayed_processing? do
-    process resize_to_fill: [dimensions[:large][:width], dimensions[:large][:height]]
+    process dynamic_version: :large
   end
 
   version :community_small do
-    process resize_to_fill: [dimensions[:community_small][:width], dimensions[:community_small][:height]]
+    process dynamic_version: :community_small
   end
 
 

@@ -26,30 +26,30 @@ class InstanceAdmin::BaseController < ApplicationController
   }
 
   MANAGE_CONTROLLERS = {
-    'transfers'          => { controller: '/instance_admin/manage/transfers', default_action: 'index' },
-    'payments'           => { controller: '/instance_admin/manage/payments', default_action: 'index' },
-    'merchants'          => { controller: '/instance_admin/manage/merchant_accounts', default_action: 'index' },
-    'users'              => { controller: '/instance_admin/manage/users', default_action: 'index' },
-    'admins'             => { controller: '/instance_admin/manage/admins', default_action: 'index' },
-    'partners'           => { controller: '/instance_admin/manage/partners', default_action: 'index' },
-    'approval_requests'  => { controller: '/instance_admin/manage/approval_requests', default_action: 'index' },
-    'waiver_agreements'  => { controller: '/instance_admin/manage/waiver_agreement_templates', default_action: 'index' },
-    'email layouts'      => { controller: '/instance_admin/manage/email_layout_templates', default_action: 'index' },
-    'emails'             => { controller: '/instance_admin/manage/email_templates', default_action: 'index' },
-    'smses'              => { controller: '/instance_admin/manage/sms_templates', default_action: 'index' },
-    'workflows'          => { controller: '/instance_admin/manage/workflows', default_action: 'index' },
-    'reviews'            => { controller: '/instance_admin/manage/reviews', default_action: 'index' },
-    'wish_lists'         => { controller: '/instance_admin/manage/wish_lists', default_action: 'show' },
-    'user_profiles'      => { controller: '/instance_admin/manage/instance_profile_types', default_action: 'index' },
-    'location'           => { controller: '/instance_admin/manage/location', default_action: 'show' },
-    'service_types'      => { controller: '/instance_admin/manage/service_types', default_action: 'index' },
-    'offer_types'        => { controller: '/instance_admin/manage/offer_types', default_action: 'index' },
-    'reservation_types'  => { controller: '/instance_admin/manage/reservation_types', default_action: 'index' },
-    'custom_validators'  => { controller: '/instance_admin/manage/custom_validators', default_action: 'index', title: 'Custom Validators' },
-    'categories'         => { controller: '/instance_admin/manage/categories', default_action: 'index', title: 'Categories' },
-    'custom_models'      => { controller: '/instance_admin/manage/custom_model_types', default_action: 'index', title: 'Custom Models' },
-    'upsell_addons'      => { controller: '/instance_admin/manage/additional_charge_types', default_action: 'index', title: 'Upsell & Add-ons' },
-    'search'             => { controller: '/instance_admin/manage/search', default_action: 'show', title: 'Search' }
+    'transfers'              => { controller: '/instance_admin/manage/transfers', default_action: 'index' },
+    'payments'               => { controller: '/instance_admin/manage/payments', default_action: 'index' },
+    'merchants'              => { controller: '/instance_admin/manage/merchant_accounts', default_action: 'index' },
+    'users'                  => { controller: '/instance_admin/manage/users', default_action: 'index' },
+    'admins'                 => { controller: '/instance_admin/manage/admins', default_action: 'index' },
+    'partners'               => { controller: '/instance_admin/manage/partners', default_action: 'index' },
+    'approval_requests'      => { controller: '/instance_admin/manage/approval_requests', default_action: 'index' },
+    'waiver_agreements'      => { controller: '/instance_admin/manage/waiver_agreement_templates', default_action: 'index' },
+    'email layouts'          => { controller: '/instance_admin/manage/email_layout_templates', default_action: 'index' },
+    'emails'                 => { controller: '/instance_admin/manage/email_templates', default_action: 'index' },
+    'smses'                  => { controller: '/instance_admin/manage/sms_templates', default_action: 'index' },
+    'workflows'              => { controller: '/instance_admin/manage/workflows', default_action: 'index' },
+    'reviews'                => { controller: '/instance_admin/manage/reviews', default_action: 'index' },
+    'wish_lists'             => { controller: '/instance_admin/manage/wish_lists', default_action: 'show' },
+    'user_profiles'          => { controller: '/instance_admin/manage/instance_profile_types', default_action: 'index' },
+    'location'               => { controller: '/instance_admin/manage/location', default_action: 'show' },
+    'service_types'          => { controller: '/instance_admin/manage/service_types', default_action: 'index' },
+    'offer_types'            => { controller: '/instance_admin/manage/offer_types', default_action: 'index' },
+    'reservation_types'      => { controller: '/instance_admin/manage/reservation_types', default_action: 'index' },
+    'custom_validators'      => { controller: '/instance_admin/manage/custom_validators', default_action: 'index', title: 'Custom Validators' },
+    'categories'             => { controller: '/instance_admin/manage/categories', default_action: 'index', title: 'Categories' },
+    'custom_models'          => { controller: '/instance_admin/manage/custom_model_types', default_action: 'index', title: 'Custom Models' },
+    'upsell_addons'          => { controller: '/instance_admin/manage/additional_charge_types', default_action: 'index', title: 'Upsell & Add-ons' },
+    'search'                 => { controller: '/instance_admin/manage/search', default_action: 'show', title: 'Search' },
   }
 
   MANAGE_BLOG_CONTROLLERS = {
@@ -74,12 +74,13 @@ class InstanceAdmin::BaseController < ApplicationController
   }
 
   THEME_CONTROLLERS = {
-    'info'             => { default_action: 'show' },
-    'design'           => { default_action: 'show' },
-    'pages'            => { default_action: 'index' },
-    'content_holders'  => { default_action: 'index' },
-    'liquid views'     => { controller: '/instance_admin/theme/liquid_views', default_action: 'index' },
-    'file upload'      => { controller: '/instance_admin/theme/file_uploads', default_action: 'index' }
+    'info'                   => { default_action: 'show' },
+    'design'                 => { default_action: 'show' },
+    'pages'                  => { default_action: 'index' },
+    'content_holders'        => { default_action: 'index' },
+    'liquid views'           => { controller: '/instance_admin/theme/liquid_views', default_action: 'index' },
+    'file upload'            => { controller: '/instance_admin/theme/file_uploads', default_action: 'index' },
+    'photo_uploads'  => { controller: '/instance_admin/theme/photo_upload_versions', default_action: 'index', title: 'Photo Uploads' }
   }
 
   BUY_SELL_CONTROLLERS = {

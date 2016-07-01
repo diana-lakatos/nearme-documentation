@@ -347,6 +347,10 @@ en:
       offer: 'Offer'
       user: 'User'
       users: 'Users'
+      manage: 'Manage'
+      edit: 'Edit'
+      delete: 'Delete'
+      are_you_sure: "Are you sure?"
 
     analytics:
       no_revenue_yet: 'No revenue yet.'
@@ -518,6 +522,18 @@ en:
         call_to_action: "Call to action"
         images:
           icon_image_explanation: "Logo images will be displayed in the mobile view in the top left corner."
+      photo_upload_versions:
+        title: "Photo Upload Versions"
+        add_new: "Add New"
+        create_success: 'You have successfully created your custom version.'
+        create_error: 'Unable to create this version. Please check the errors below.'
+        update_success: 'You have successfully updated your custom version.'
+        update_error: 'Unable to update custom version. Please check your errors below.'
+        regenerate_existing_versions: "Regenerate existing versions"
+        regenerate: "Regenerate"
+        image_regeneration_scheduled: "Image regeneration has been scheduled."
+        please_specify_uploader_name: "Please specify uploader name."
+        already_scheduled: "There is already a scheduled version regeneration job for this uploader."
     homepage:
       homepage: "Homepage"
     homepage_template:

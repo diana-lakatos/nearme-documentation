@@ -1,27 +1,28 @@
 # Used in UserBlogPost only
 class AuthorAvatarUploader < BaseImageUploader
   include CarrierWave::TransformableImage
+  include DynamicPhotoUploads
 
   self.dimensions = {
-      :thumb => { :width => 96, :height => 96 },
-      :medium => { :width => 144, :height => 144 },
-      :big => { :width => 279, :height => 279 },
-      :large => { :width => 1280, :height => 960 }
+      :thumb => { :width => 96, :height => 96, transform: :resize_to_fill },
+      :medium => { :width => 144, :height => 144, transform: :resize_to_fill },
+      :big => { :width => 279, :height => 279, transform: :resize_to_fill },
+      :large => { :width => 1280, :height => 960, transform: :resize_to_fill }
   }
 
   version :thumb, :from_version => :transformed do
-    process :resize_to_fill => [dimensions[:thumb][:width], dimensions[:thumb][:height]]
+    process dynamic_version: :thumb
   end
 
   version :medium, :from_version => :transformed do
-    process :resize_to_fill => [dimensions[:medium][:width], dimensions[:medium][:height]]
+    process dynamic_version: :medium
   end
 
   version :big, :from_version => :transformed do
-    process :resize_to_fill => [dimensions[:big][:width], dimensions[:big][:height]]
+    process dynamic_version: :big
   end
 
   version :large, :from_version => :transformed do
-    process :resize_to_fill => [dimensions[:large][:width], dimensions[:large][:height]]
+    process dynamic_version: :large
   end
 end
