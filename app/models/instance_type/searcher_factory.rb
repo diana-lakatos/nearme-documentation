@@ -53,12 +53,12 @@ class InstanceType::SearcherFactory
       @transactable_type = InstanceProfileType.default.first
       user_searcher
     else
-      "InstanceType::Searcher#{search_module}::#{@params[:search_type].titleize}Searcher".constantize.new(@params, @current_user)
+      "InstanceType::Searcher::#{@params[:search_type].titleize}Searcher".constantize.new(@params, @current_user)
     end
   end
 
   def user_searcher
-    "InstanceType::Searcher#{search_module}::UserSearcher".constantize.new(@params, @current_user, @transactable_type)
+    "InstanceType::Searcher::UserSearcher".constantize.new(@params, @current_user, @transactable_type)
   end
 
   private
