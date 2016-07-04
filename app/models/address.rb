@@ -203,6 +203,10 @@ class Address < ActiveRecord::Base
     end
   end
 
+  def jsonapi_serializer_class_name
+    'AddressJsonSerializer'
+  end
+
   private
 
   def accurate_address_required
