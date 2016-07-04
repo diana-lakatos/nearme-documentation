@@ -189,11 +189,11 @@ class Transactable < ActiveRecord::Base
   validate :check_book_it_out_minimum_qty, if: ->(record) { record.book_it_out_minimum_qty.present? }
   validate :booking_availability, if: ->(record) { record.overnight_booking? }
 
-  delegate :latitude, :longitude, to: :location_address, allow_nil: true
+  delegate :latitude, :longitude, :postcode, :city, :suburb, :state, :street, :country, to: :location_address, allow_nil: true
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
-  delegate :formatted_address, :local_geocoding, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
+  delegate :formatted_address, :local_geocoding, :distance_from, :address, :administrator=, to: :location, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration, :hours_for_guest_to_confirm_payment,
     :custom_validators, :show_company_name, :skip_payment_authorization?, :display_additional_charges?, to: :transactable_type
   delegate :name, to: :creator, prefix: true

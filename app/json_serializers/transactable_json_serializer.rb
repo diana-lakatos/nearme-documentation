@@ -10,6 +10,12 @@ class TransactableJsonSerializer
   attribute :company_name
   attribute :currency
   attribute :address
+  attribute :postcode
+  attribute :street
+  attribute :suburb
+  attribute :state
+  attribute :city
+  attribute :country
   attribute :quantity
   attribute :location_name do
     object.location.name
