@@ -61,4 +61,6 @@ DesksnearMe::Application.configure do
   config.webpack[:use_manifest] = true
   config.assets.manifest = "#{Rails.root}/public/assets/manifest.json"
 
+  config.force_sending_all_workflow_alerts = true
+
 end

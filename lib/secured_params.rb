@@ -423,6 +423,7 @@ class SecuredParams
       :enable_language_selector,
       :click_to_call,
       :skip_meta_tags,
+      :enable_sms_and_api_workflow_alerts_on_staging,
       allowed_currencies: [],
       allowed_countries: [],
       custom_translations: [:'buy_sell_market.checkout.manual_payment', :'buy_sell_market.checkout.manual_payment_description'],
