@@ -42,7 +42,7 @@
         .single-photo
           = new_file_upload_input("avatar",
             avatar_path,
-            resource.avatar.thumbnail_dimensions[:community_thumbnail],
+            resource.avatar.thumbnail_dimensions[:medium],
             "Upload Photo",
             "no-multiple" => true,
             :error => f.object.errors.include?(:avatar).present? ? "Please upload avatar." : nil) do

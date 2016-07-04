@@ -1,0 +1,48 @@
+.content-container
+  %h4
+    = t('instance_admin.theme.photo_upload_versions.title')
+
+  .row
+    .table-container.col-xs-12
+      %table.table
+        %thead
+          %tr
+            %th
+              Uploader
+            %th
+              Version name
+            %th
+              Apply transform
+            %th
+              Width
+            %th
+              Height
+        %tbody
+          - @photo_upload_versions.each do |puv|
+            %tr
+              %td= puv.photo_uploader
+              %td= puv.version_name
+              %td= puv.apply_transform
+              %td= puv.width
+              %td= puv.height
+              %td
+                = link_to t('instance_admin.general.edit'), edit_instance_admin_theme_photo_upload_version_path(puv)
+                &nbsp;
+                = link_to t('instance_admin.general.delete'), instance_admin_theme_photo_upload_version_path(puv), method: :delete, data: { confirm: t('instance_admin.general.are_you_sure') }
+
+
+= content_for :header_buttons do
+  = link_to t('instance_admin.theme.photo_upload_versions.add_new'), new_instance_admin_theme_photo_upload_version_path, class: 'btn btn-blue'
+
+.content-container
+  %h4
+    = t('instance_admin.theme.photo_upload_versions.regenerate_existing_versions')
+
+  = simple_form_for :regenerate_upload, url: regenerate_versions_instance_admin_theme_photo_upload_versions_path do |f|
+    .row
+      .input-container.col-xs-6
+        = f.input :uploader_name, as: :select, collection: PhotoUploadVersion::PHOTO_UPLOADERS.keys
+    .row
+      .input-container.col-xs-6
+        = f.submit t('instance_admin.theme.photo_upload_versions.regenerate'), class: 'btn btn-blue'
+

@@ -18,8 +18,8 @@ class SetupHostedZoneJob < Job
     # TODO capture error but do not stop - raygun?
   end
 
-  def configure_alias_record
-    zone.add_target balancer
+   def configure_alias_record
+     zone.add_target balancer
   rescue Aws::Route53::Errors::InvalidChangeBatch
     # TODO capture error but do not stop - raygun?
   end

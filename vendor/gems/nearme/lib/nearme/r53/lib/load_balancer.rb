@@ -32,6 +32,10 @@ class LoadBalancer
                                                   load_balancer_port: 443,
                                                   ssl_certificate_id: certificate.arn
   end
+
+  def present?
+    load_balancer_name.present?
+  end
 end
 
 module LoadBalancerRepository

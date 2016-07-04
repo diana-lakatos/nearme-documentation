@@ -2,6 +2,7 @@
 class PhotoUploader < BaseImageUploader
 
   include CarrierWave::TransformableImage
+  include DynamicPhotoUploads
 
   cattr_reader :delayed_versions
 
@@ -9,17 +10,16 @@ class PhotoUploader < BaseImageUploader
   SPACE_FULL_IMAGE_H = 554
 
   self.dimensions = {
-    thumb: { width: 96, height: 96 },
-    medium: { width: 144, height: 89 },
-    large: { width: 1280, height: 960 },
-    space_listing: { width: 410, height: 254 },
-    #project_standard: { width: 460, height: 340 },
-    project_cover: { width: 680, height: 546 },
-    project_thumbnail: { width: 200, height: 175 },
-    project_small: { width: 250, height: 200 },
-    golden: { width: SPACE_FULL_IMAGE_W, height: SPACE_FULL_IMAGE_H },
-    fullscreen: { width: 1200, height: 800 },
-    fit_to_activity_feed: { width: 600, height: 482 }
+    thumb: { width: 96, height: 96, transform: :resize_to_fill },
+    medium: { width: 144, height: 89, transform: :resize_to_fill },
+    large: { width: 1280, height: 960, transform: :resize_to_fill },
+    space_listing: { width: 410, height: 254, transform: :resize_to_fill },
+    project_cover: { width: 680, height: 546, transform: :resize_to_fill },
+    project_thumbnail: { width: 200, height: 175, transform: :resize_to_fill },
+    project_small: { width: 250, height: 200, transform: :resize_to_fill },
+    golden: { width: SPACE_FULL_IMAGE_W, height: SPACE_FULL_IMAGE_H, transform: :resize_to_fill },
+    fullscreen: { width: 1200, height: 800, transform: :resize_to_fit },
+    fit_to_activity_feed: { width: 600, height: 482, transform: :resize_to_fill }
   }
 
   ASPECT_RATIO = 16.0/10.0
@@ -42,43 +42,43 @@ class PhotoUploader < BaseImageUploader
   end
 
   version :thumb, from_version: :transformed, if: :generate_transactable_versions? do
-    process resize_to_fill: [dimensions[:thumb][:width], dimensions[:thumb][:height]]
+    process dynamic_version: :thumb
   end
 
   version :medium, from_version: :transformed do
-    process resize_to_fill: [dimensions[:medium][:width], dimensions[:medium][:height]]
+    process dynamic_version: :medium
   end
 
   version :large, from_version: :transformed, if: :generate_transactable_versions? do
-    process resize_to_fill: [dimensions[:large][:width], dimensions[:large][:height]]
+    process dynamic_version: :large
   end
 
   version :space_listing, from_version: :transformed do
-    process resize_to_fill: [dimensions[:space_listing][:width], dimensions[:space_listing][:height]]
+    process dynamic_version: :space_listing
   end
 
   version :golden, from_version: :transformed, if: :generate_transactable_versions? do
-    process resize_to_fill: [dimensions[:golden][:width], dimensions[:golden][:height]]
+    process dynamic_version: :golden
   end
 
   version :project_cover, from_version: :transformed, if: :generate_project_versions? do
-    process resize_to_fill: [dimensions[:project_cover][:width], dimensions[:project_cover][:height]]
+    process dynamic_version: :project_cover
   end
 
   version :project_thumbnail, from_version: :transformed do
-    process resize_to_fill: [dimensions[:project_thumbnail][:width], dimensions[:project_thumbnail][:height]]
+    process dynamic_version: :project_thumbnail
   end
 
   version :project_small, from_version: :transformed, if: :generate_project_versions? do
-    process resize_to_fill: [dimensions[:project_small][:width], dimensions[:project_small][:height]]
+    process dynamic_version: :project_small
   end
 
   version :fit_to_activity_feed, from_version: :transformed, if: :generate_project_versions? do
-    process resize_to_fill: [dimensions[:fit_to_activity_feed][:width], dimensions[:fit_to_activity_feed][:height]]
+    process dynamic_version: :fit_to_activity_feed
   end
 
   version :fullscreen, if: :generate_transactable_versions? do
-    process resize_to_fit: [dimensions[:fullscreen][:width], dimensions[:fullscreen][:height]]
+    process dynamic_version: :fullscreen
   end
 
   def generate_transactable_versions?(image)

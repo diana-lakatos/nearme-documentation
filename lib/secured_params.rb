@@ -1760,6 +1760,16 @@ class SecuredParams
     ]
   end
 
+  def photo_upload_version
+    [
+      :apply_transform,
+      :width,
+      :height,
+      :photo_uploader,
+      :version_name
+    ]
+  end
+
   def seller_attachment(instance)
     allowed = [:title]
     allowed << :access_level if instance.seller_attachments_access_sellers_preference?
