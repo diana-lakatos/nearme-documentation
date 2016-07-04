@@ -1,5 +1,5 @@
 Given /^request for feature is enabled$/ do
-  TransactableType.update_all(action_rfq: true)
+  TransactableType::ActionType.update_all(allow_action_rfq: true)
 end
 
 When /^I select to request quote( and review)? space for:$/ do |and_review, table|
@@ -40,4 +40,9 @@ Then(/^I should see the request for quote screen for:$/) do |table|
   end
   assert page.has_content?("#{reservation[:listing].name}")
 
+end
+
+When /^a transactable has action_rfq$/ do
+  TransactableType::ActionType.update_all(allow_action_rfq: true)
+  Transactable::ActionType.update_all(action_rfq: true)
 end

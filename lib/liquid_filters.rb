@@ -65,36 +65,26 @@ module LiquidFilters
     lgpricing_filters ||= []
 
     if options[:full_price]
-      prices = object.lowest_full_price(lgpricing_filters)
+      pricing = object.lowest_full_price(lgpricing_filters)
     else
-      prices = object.lowest_price(lgpricing_filters)
+      pricing = object.lowest_price(lgpricing_filters)
     end
 
-    if prices
-      periods = {
-        monthly: I18n.t('periods.month'),
-        weekly: I18n.t('periods.week'),
-        daily: object.try(:overnight_booking?) ? I18n.t('periods.night') : I18n.t('periods.day'),
-        hourly: I18n.t('periods.hour'),
-        weekly_subscription: I18n.t('periods.week'),
-        monthly_subscription: I18n.t('periods.month')
-      }
-
-      if options[:with_cents]
-        { 'price' => self.price_with_cents_with_currency(prices[0]), 'period' =>  periods[prices[1]] }
-      else
-        { 'price' => self.price_without_cents_with_currency(prices[0]), 'period' =>  periods[prices[1]] }
-      end
+    if pricing.nil? || pricing.is_free_booking?
+      { 'free' => true }
     else
-      object.try(:action_free_booking?) ? { 'free' => true } : {}
+      if options[:with_cents]
+        { 'price' => self.price_with_cents_with_currency(pricing.price) }
+      else
+        { 'price' => self.price_without_cents_with_currency(pricing.price) }
+      end.merge({ 'period' => pricing.decorate.units_translation("search.per_unit_price", 'search') })
     end
   end
 
   def lowest_price_with_cents_with_currency(object, lgpricing_filters = [])
-    prices = object.lowest_price(lgpricing_filters)
-    if prices
-      periods = {monthly: t('periods.month'), weekly: t('periods.week'), daily: object.try(:overnight_booking?) ? t('periods.night') : t('periods.day'), hourly: t('periods.hour')}
-      { 'price' => self.price_with_cents_with_currency(prices[0]), 'period' =>  periods[prices[1]] }
+    pricing = object.lowest_price(lgpricing_filters)
+    if pricing
+      { 'price' => self.price_with_cents_with_currency(pricing.price), 'period' =>  pricing.decorate.units_translation("search.per_unit_price", 'search') }
     else
       {}
     end

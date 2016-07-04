@@ -10,8 +10,7 @@ module.exports = class FixedPriceCalculator
 
   getPriceForBookItOut: ->
     total = _.inject(@listing.bookedDates(), (sum, date) =>
-      sum + (@listing.fixedAvailability() * @listing.fixedPrice)
+      sum + (@listing.getQuantity() * @listing.fixedPrice)
     , 0)
     total *= (100 - @listing.data.book_it_out_discount) / 100
     total += @additionalCharges.getCharges(total)
-    total

@@ -15,13 +15,13 @@
     %thead
       %tr
         %th= t('dashboard.analytics.columns.amount')
-        %th= ServiceType.where(skip_location: false).count.zero? ? t('dashboard.analytics.columns.object', default: TransactableType.first.translated_bookable_noun) : t('dashboard.analytics.columns.location')
+        %th= TransactableType.where(skip_location: false).count.zero? ? t('dashboard.analytics.columns.object', default: TransactableType.first.translated_bookable_noun) : t('dashboard.analytics.columns.location')
         %th= t('dashboard.analytics.columns.date')
     %tbody
       - @payments.each do |payment|
         %tr
           %td= currency_content_tag(payment.currency, payment.total_amount, :span, { :rel => false }).html_safe
-          %td= (ServiceType.where(skip_location: false).count.zero? ? payment.payable.try(:listing).try(:name) : payment.payable.try(:listing).try(:location).try(:name)).presence || payment.payable.try(:number).presence || t('dashboard.analytics.deleted')
+          %td= (TransactableType.where(skip_location: false).count.zero? ? payment.payable.try(:listing).try(:name) : payment.payable.try(:listing).try(:location).try(:name)).presence || payment.payable.try(:number).presence || t('dashboard.analytics.deleted')
           %td= I18n.l(payment.created_at, format: :short)
 
       - @all_time_totals.each do |total|

@@ -19,14 +19,12 @@ end
 
 Given /^#{capture_model} is reserved hourly$/ do |listing_instance|
   listing = model!(listing_instance)
-  listing.action_hourly_booking = true
   listing.save!
 end
 
 Given /^#{capture_model} has an hourly price of \$?([0-9\.]+)$/ do |listing_instance, price|
   listing = model!(listing_instance)
-  listing.hourly_price = price
-  listing.save!
+  listing.time_based_booking.pricings.where(unit: 'hour').first.update_attribute(:price, 100)
 end
 
 Given /^bookings for #{capture_model} do( not)? need to be confirmed$/ do |listing, do_not_require_confirmation|
@@ -186,6 +184,8 @@ When /^I book space as new user for:$/ do |table|
   step "I select to book space for:", table
   step "I click to review the booking"
   step 'I sign up as a user in the modal'
+  # this line will have to be removed and missing feature implemented
+  step "I select to book space for:", table
   step "I click to review the booking"
 
   # here we might want to add extra fields
@@ -234,6 +234,7 @@ When /^I select to book( and review)? space for:$/ do |and_review, table|
   next if bookings.empty?
 
   if bookings.first[:start_minute]
+    page.find('.booking-price [data-unit="hour"]').click
     # Hourly bookgs
     ensure_datepicker_open('.date-start')
     select_datepicker_date(bookings.first[:date])
@@ -356,7 +357,7 @@ Then /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved f
 end
 
 When /^#{capture_model} is free$/ do |transactable|
-  model!(transactable).update_attribute(:action_free_booking, true)
+  model!(transactable).time_based_booking.pricings.each { |p| p.update_attributes(is_free_booking: true, price_cents: 0) }
 end
 
 Then /^I should see the following reservations in order:$/ do |table|

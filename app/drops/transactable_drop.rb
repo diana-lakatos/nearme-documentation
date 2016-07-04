@@ -20,8 +20,6 @@ class TransactableDrop < BaseDrop
   #   the description for this listing
   # action_hourly_booking?
   #   returns true if hourly booking is available for this listing
-  # action_rfq?
-  #   returns true if request for quote is available for this listing
   # creator
   #   the user object representing the creator of this listing
   # administrator
@@ -58,18 +56,16 @@ class TransactableDrop < BaseDrop
   #   returns true if paypal express gateway defined for country assigned to transactable
   # attachments
   #   array of (seller) attachments for this listing
-  # schedule_booking?
-  #   is schedule booking enabled for this listing
   # deposit_amount_cents
   #   deposit amount cents
   # average_rating
   #   average rating for this listing
-  delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :action_rfq?, :creator, :administrator, :last_booked_days,
-    :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?,
-    :action_free_booking?, :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at,
+  delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :creator, :administrator, :last_booked_days,
+    :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?, :action_type,
+    :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at,
     :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, :attachments, :confirm_reservations,
-    :schedule_booking?, :to_key, :model_name, :deposit_amount_cents, :customizations, :to_param, :hours_for_guest_to_confirm_payment, :availability_exceptions,
-    :average_rating, to: :transactable
+    :to_key, :model_name, :deposit_amount_cents, :customizations, :to_param, :hours_for_guest_to_confirm_payment, :availability_exceptions,
+    :action_free_booking?, :average_rating, to: :transactable
 
   # action_price_per_unit
   #   returns true if there is a single unit available of the transactable item for a given time period
@@ -86,6 +82,10 @@ class TransactableDrop < BaseDrop
   # search_url
   #   url to the search section of the marketplace
   delegate :dashboard_url, :search_url, to: :routes
+
+  # action_rfq?
+  #   returns true if request for quote is available for this listing
+  delegate :action_rfq?, to: :action_type
 
   def initialize(transactable)
     @transactable = transactable
@@ -287,12 +287,12 @@ class TransactableDrop < BaseDrop
 
   # returns true if price_per_unit is enabled for this listing
   def price_per_unit?
-    action_price_per_unit
+    @transactable.action_type.pricings.any?(&:price_per_measurable_unit?)
   end
 
   # returns the exclusive price set for this listing as a string
   def exclusive_price
-    @transactable.exclusive_price.to_s
+    @transactable.event_booking.pricing.exclusive_price.to_s
   end
 
   # returns the url to the section in the app for opening a new
@@ -349,6 +349,19 @@ class TransactableDrop < BaseDrop
 
   def last_search
     @last_search ||= JSON.parse(@context.registers[:action_view].cookies['last_search']) rescue {}
+  end
+
+  # is schedule booking enabled for this listing
+  def schedule_booking?
+    @transactable.event_booking?
+  end
+
+  def actions_allowed?
+    !action_type.no_action?
+  end
+
+  def all_free_pricings?
+    action_type.pricings.any?{ |p| !p.is_free_booking? }
   end
 
 end

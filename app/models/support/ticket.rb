@@ -120,9 +120,15 @@ class Support::Ticket < ActiveRecord::Base
 
   def reservation_date
     if @reservation_date.nil?
-      @reservation_date = self.reservation_details['dates'].try(:to_datetime)
+     @reservation_date =  self.reservation_details['dates'].try(:to_datetime)
     end
     @reservation_date
+  end
+
+  def reservation_pricing
+    if reservation_details[:transactable_pricing_id]
+      @pricing ||= Transactable::Pricing.find(reservation_details[:transactable_pricing_id]).decorate
+    end
   end
 
   def target_rfq?

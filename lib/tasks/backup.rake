@@ -1,3 +1,4 @@
+
 require 'utils/database_connection_helper'
 require 'utils/s3_file_helper'
 
@@ -62,9 +63,15 @@ namespace :backup do
       puts "Stack name can't be blank"
     else
       Instance.find_each do |instance|
-        instance.domains.find_or_create_by(name: "#{instance.name.to_url}.#{stack_name}.near-me.com")
+        instance.domains.where(name: "#{instance.name.to_url}.#{stack_name}.near-me.com", instance: instance).first_or_create do |domain|
+          domain.use_as_default = !instance.domains.default.where.not(id: domain.id).exists?
+        end
       end
-      Instance.first.domains.find_or_create_by(name: "desks.#{stack_name}.near-me.me")
+
+      dnm = Instance.first
+      dnm.domains.where(name: "#{stack_name}.near-me.com", instance: dnm).first_or_create do |domain|
+        domain.use_as_default = true
+      end
 
       puts "Stack domains created."
     end

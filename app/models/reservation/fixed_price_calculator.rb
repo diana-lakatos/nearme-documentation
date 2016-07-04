@@ -1,18 +1,19 @@
 class Reservation::FixedPriceCalculator
   def initialize(reservation)
     @reservation = reservation
+    @pricing = @reservation.transactable_pricing
   end
 
   def price
     if @reservation.book_it_out_discount
-      (listing.fixed_price * @reservation.quantity * (1 - @reservation.book_it_out_discount / BigDecimal(100))).to_money
+      (@pricing.price * @reservation.quantity * (1 - @reservation.book_it_out_discount / BigDecimal(100))).to_money
     elsif @reservation.exclusive_price_cents
       @reservation.exclusive_price
     else
-      if listing.action_free_booking?
+      if @pricing.is_free_booking?
         0.to_money
       else
-        (listing.fixed_price.to_f * (@reservation.quantity)).to_money
+        (@pricing.price.to_f * (@reservation.quantity)).to_money
       end
     end
   end
@@ -22,7 +23,7 @@ class Reservation::FixedPriceCalculator
   end
 
   def unit_price
-    listing.fixed_price
+    @pricing.price
   end
 
   private

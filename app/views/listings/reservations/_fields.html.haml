@@ -10,6 +10,7 @@
 = f.input :exclusive_price, as: :hidden, input_html: {value: @reservation_request.exclusive_price}
 = f.input :guest_notes, as: :hidden, input_html: {value: @reservation_request.guest_notes}
 = f.input :delivery_type, as: :hidden
+= f.input :transactable_pricing_id, as: :hidden, input_html: {value: @reservation_request.reservation.transactable_pricing_id}
 - if @reservation_request.with_delivery?
   = f.simple_fields_for :shipments do |s|
     = s.simple_fields_for :shipping_address do |a|

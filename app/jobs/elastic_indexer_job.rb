@@ -12,20 +12,20 @@ class ElasticIndexerJob < Job
   end
 
   def perform
-    return if Rails.env.test?
+    return unless Rails.application.config.use_elastic_search
     client = Elasticsearch::Model.client
     begin
       case @operation.to_s
         when /index|update/
-          record = @klass.constantize.find(@record_id)
+          record = @klass.constantize.with_deleted.find(@record_id)
+          return if record.deleted?
           record.__elasticsearch__.client = client
           record.__elasticsearch__.__send__ "#{@operation}_document"
         when /delete/
           client.delete index: @klass.constantize.index_name, type: @klass.constantize.document_type, id: @record_id
         else raise ArgumentError, "ElasticIndexer Unknown operation '#{@operation}'"
       end
-    rescue StandardError => e
-      raise e if e.is_a?(Faraday::Error::ConnectionFailed) && !Rails.env.development?
+    rescue Elasticsearch::Transport::Transport::Errors::NotFound
     end
   end
 end

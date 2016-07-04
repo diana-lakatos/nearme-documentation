@@ -100,7 +100,7 @@ class Listing::Search::Params::Web < Listing::Search::Params
   end
 
   def location_types_ids
-    @location_types_ids.presence || (lntypes.empty? ? nil : lntypes)
+    @location_types_ids.presence || (lntypes.empty? ? nil : lntypes.map(&:id))
   end
 
   def lgtypes

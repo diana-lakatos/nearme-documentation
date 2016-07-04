@@ -57,14 +57,4 @@ class InstanceTest < ActiveSupport::TestCase
     end
   end
 
-  context 'buyable_transactable_type' do
-    setup do
-      @transactable_type_buy_sell = FactoryGirl.create(:transactable_type_buy_sell, instance: @instance)
-    end
-
-    should 'return buyable transactable type' do
-      assert_equal @instance.transactable_types.count, 2
-      assert_equal @instance.buyable_transactable_type, @transactable_type_buy_sell
-    end
-  end
 end

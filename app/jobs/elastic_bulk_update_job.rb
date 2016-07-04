@@ -10,7 +10,7 @@ class ElasticBulkUpdateJob < Job
   end
 
   def perform
-    return if Rails.env.test?
+    return unless Rails.application.config.use_elastic_search
     begin
       @klass.__elasticsearch__.client.bulk body: build_body
     rescue StandardError => e

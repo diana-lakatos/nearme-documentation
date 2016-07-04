@@ -46,15 +46,18 @@ Given(/^I remove first transactable$/) do
 end
 
 Given(/^transactable type has multiple booking types enabled$/) do
-  TransactableType.first.update_attribute(:action_overnight_booking, true)
+  TransactableType.first.time_based_booking.pricings << FactoryGirl.create(:transactable_type_pricing, unit: 'night')
+  TransactableType.first.time_based_booking.pricings << FactoryGirl.create(:transactable_type_pricing, number_of_units: 5)
 end
 
 Given(/^I click on overnight booking tab$/) do
   click_link 'Pricing & Availability'
-  page.execute_script("$('#define-day-fixed').prop('checked', true)")
+  page.execute_script("$('#transactable_action_types_attributes_0_pricings_attributes_2_enabled').prop('checked', true)")
+  page.execute_script("$('#transactable_action_types_attributes_0_pricings_attributes_2_enabled').trigger('change')")
+  fill_in "transactable_action_types_attributes_0_pricings_attributes_2_price", with: "10"
   click_link 'Details'
 end
 
 Then(/^transactables booking type is overnight$/) do
-  Transactable.last.booking_type.should == 'overnight'
+  Transactable.last.action_type.night_booking? == true
 end

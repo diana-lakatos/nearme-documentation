@@ -18,6 +18,6 @@
       %button.btn.btn-primary{:type => "button"}
         = t :add_availability, scope: [:pricing, :availability]
 
-  %hr/
-
-  = render 'schedules/unavailability', f: f
+  - unless f.object.scheduable.is_a?(TransactableType::EventBooking)
+    %hr/
+    = render 'schedules/unavailability', f: f

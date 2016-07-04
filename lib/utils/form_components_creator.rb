@@ -185,7 +185,7 @@ module Utils
           {
             name: 'Details', fields: %w( name listing_type description amenity_types photos location_id waiver_agreement_templates documents_upload approval_requests ).map {|field| { 'transactable' => field } }
           },
-          { name: 'Pricing & Availability', fields: %w( confirm_reservations enabled price schedule currency quantity book_it_out exclusive_price, action_rfq capacity ).map {|field| { 'transactable' => field } }
+          { name: 'Pricing & Availability', fields: %w( confirm_reservations enabled price schedule currency quantity book_it_out exclusive_price action_rfq capacity ).map {|field| { 'transactable' => field } }
           }
         ],
         'new_dashboard')

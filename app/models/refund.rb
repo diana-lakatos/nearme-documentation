@@ -20,7 +20,7 @@ class Refund < ActiveRecord::Base
   scope :successful, -> { where(:success => true) }
   scope :failed, -> { where(:success => false) }
 
-  monetize :amount, with_model_currency: :currency
+  monetize :amount_cents, with_model_currency: :currency
 
   def refund_successful(response)
     self.success = true

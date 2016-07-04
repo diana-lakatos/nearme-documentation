@@ -1,5 +1,4 @@
 class Offer < ActiveRecord::Base
-  include Searchable
   include Categorizable
   include Approvable
   extend FriendlyId

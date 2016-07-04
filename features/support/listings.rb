@@ -81,21 +81,16 @@ module ListingsHelpers
 
     click_link 'Pricing & Availability'
     fill_in "transactable_quantity", with: "5"
-
-    page.execute_script("$('.transactable_enable_daily input').prop('checked', true)")
-    page.execute_script("$('.transactable_enable_daily input').trigger('change')")
-    fill_in "transactable_daily_price", with: "10"
-    page.execute_script("$('.transactable_enable_weekly input').prop('checked', true)")
-    page.execute_script("$('.transactable_enable_weekly input').trigger('change')")
-    fill_in "transactable_weekly_price", with: "60"
+    page.execute_script("$('#transactable_action_types_attributes_0_pricings_attributes_0_enabled').prop('checked', true)")
+    page.execute_script("$('#transactable_action_types_attributes_0_pricings_attributes_0_enabled').trigger('change')")
+    fill_in "transactable_action_types_attributes_0_pricings_attributes_0_price", with: "10"
   end
 
   def assert_listing_data(listing, update = false)
     assert_equal 'My Name', listing.name
     assert_equal 'Proin adipiscing nunc vehicula lacus varius dignissim.', listing.description
     assert_equal 5, listing.quantity
-    assert_equal 1000, listing.daily_price_cents
-    assert_equal 6000, listing.weekly_price_cents
+    assert_equal 1000, listing.action_type.price_cents_for('1_day')
   end
 end
 

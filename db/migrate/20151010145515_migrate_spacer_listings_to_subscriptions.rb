@@ -2,7 +2,7 @@ class MigrateSpacerListingsToSubscriptions < ActiveRecord::Migration
   def up
     instance = Instance.find_by(name: 'Spacer')
     instance.try(:set_context!)
-    instance.try(:service_types).try(:each) do |service_type|
+    instance.try(:transactable_type).try(:each) do |service_type|
       service_type.action_subscription_booking = true
       service_type.action_regular_booking = false
       service_type.action_weekly_booking = false

@@ -47,7 +47,7 @@ class BidPayment < Form
     end
 
     if @listing
-      if @reservation.action_hourly_booking? || @listing.schedule_booking?
+      if @reservation.action_hourly_booking? || @listing.event_booking?
         @start_minute = start_minute.try(:to_i)
         @end_minute = end_minute.try(:to_i)
       else
@@ -55,7 +55,7 @@ class BidPayment < Form
         @end_minute   = nil
       end
 
-      if listing.schedule_booking?
+      if listing.event_booking?
         if @dates.is_a?(String)
           @start_minute = @dates.to_datetime.try(:min).to_i + (60 * @dates.to_datetime.try(:hour).to_i)
           @end_minute = @start_minute

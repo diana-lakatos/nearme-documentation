@@ -1,5 +1,5 @@
 {% if listing.action_rfq? %}
-  {% if listing.action_free_boking? %}
+  {% if listing.action_free_booking? %}
     <div class="rfq-explanation">
       <span>{{ 'reservations.rfq_explanation' | translate }}</span>
     </div>
@@ -10,7 +10,7 @@
     {% else %}
       <input type="submit" data-disable-with="{{ 'general.processing' | translate }}" value="{{ 'reservations.book' | translate }}" {% for prop in book_hash %} {{prop[0]}}="{{prop[1]}}"{% endfor %}>
     {% endif %}
-    <input type="submit" data-disable-with="{{ 'general.processing' | translate }}" id="rfq-{{listing.id}}" class="{{rfq_class}}" data-behavior="RFQ" data-modal-method="GET" data-modal-url="{{listing.new_ticket_url}}" value="{{ rfq_label }}">
+    <input type="submit" data-disable-with="{{ 'general.processing' | translate }}" id="rfq-{{listing.id}}" class="{{rfq_class}}" data-behavior="RFQ" data-modal-method="GET" data-modal-url="{% if current_user %}{{ listing.new_ticket_url }}{% else %}{{ 'new_user_registration_path' | generate_url: return_to: listing.show_path }}{% endif %}" value="{{ rfq_label }}">
   </div>
 {% else %}
   <input type="submit" data-disable-with="{{ 'general.processing' | translate }}" value="{{ 'reservations.book' | translate }}" {% for prop in book_hash %} {{prop[0]}}="{{prop[1]}}"{% endfor %}>

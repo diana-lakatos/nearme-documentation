@@ -12,7 +12,7 @@ class ApprovalRequestTemplateCreationTest < ActiveSupport::TestCase
       @approval_request_templates << approval_request_template
     end
 
-    ServiceType.destroy_all
+    TransactableType.destroy_all
     @transactable_types = []
     1.upto(3) do
       @transactable_types << FactoryGirl.create(:transactable_type)
@@ -31,7 +31,7 @@ class ApprovalRequestTemplateCreationTest < ActiveSupport::TestCase
       form_components = @transactable_types[index].form_components.where(params)
       assert_equal 1, form_components.length
       assert_equal true, form_components[0].is_approval_request_surfacing
-      all_form_fields = form_components.first.form_fields 
+      all_form_fields = form_components.first.form_fields
       assert_equal 4, all_form_fields.length
       assert_equal 4, ApprovalRequestTemplate::OWNER_TYPES.collect { |owner_type| all_form_fields.detect { |form_field| form_field[owner_type.to_s.underscore] == 'approval_requests' } }.compact.length
     end

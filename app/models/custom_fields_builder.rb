@@ -23,11 +23,6 @@ class CustomFieldsBuilder
       elsif @form_componentable.instance_of?(ProjectType)
         to_object_field_notation(user_fields, 'user') +
           to_object_field_notation(project_fields, 'project')
-      elsif @form_componentable.instance_of?(OfferType)
-        to_object_field_notation(user_fields, 'user') +
-          to_object_field_notation(seller_fields, 'seller') +
-          to_object_field_notation(company_fields, 'company') +
-          to_object_field_notation(offer_fields, 'offer')
       else
         raise NotImplementedError.new("Unknown form type: #{@form_type}")
       end
@@ -37,8 +32,6 @@ class CustomFieldsBuilder
       to_object_field_notation(project_fields, 'project')
     when FormComponent::TRANSACTABLE_ATTRIBUTES
       to_object_field_notation(dashboard_transactable_fields, 'transactable')
-    when FormComponent::OFFER_ATTRIBUTES
-      to_object_field_notation(offer_fields, 'offer')
     when FormComponent::RESERVATION_ATTRIBUTES
       to_object_field_notation(reservation_fields, 'reservation') +
         to_object_field_notation(user_fields, 'user') +
@@ -156,10 +149,6 @@ class CustomFieldsBuilder
 
   def project_fields
     @project_fields ||= form_attributes.project(@form_componentable).map(&:to_s)
-  end
-
-  def offer_fields
-    @offer_fields ||= form_attributes.offer(@form_componentable).map(&:to_s)
   end
 
   def reservation_fields

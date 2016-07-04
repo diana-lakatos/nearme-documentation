@@ -6,9 +6,11 @@
       %h2= @listing.name
       .box
         %h3
-          - if @listing.schedule_booking?
+          - if @listing.event_booking?
             = @schedule_presenter.selected_date_summary
-          -else
+          - elsif @listing.subscription_booking
+            = t('support.new.subscription', period: @pricing.units_translation('search.per_unit_price').titleize, from: @date_presenter.get_date)
+          -elsif params[:reservation_request][:quantity]
             = "#{params[:reservation_request][:quantity]} x #{@hourly_presenter.present? ? "#{@hourly_presenter.hours} #{'hour'.pluralize(@hourly_presenter.hours.to_i)}" : @date_presenter.days_in_words}"
 
         .form

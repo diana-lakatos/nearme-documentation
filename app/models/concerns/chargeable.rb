@@ -13,7 +13,7 @@
 #     - for Reservation - sum of all shippmehts
 #   * service_fee_amount_host_cents/service_fee_amount_guest_cents:
 #     - for Spree::Order is based on Instance service_fee_guest_percent/service_fee_host_percent
-#     - for Reservation - defined individually per ServiceType
+#     - for Reservation - defined individually per TransactableType
 #   * service_additional_charges_cents
 #     - the same for Spree::Order and Reservation defined by MPO in admin panel
 #   * host_additional_charges_cents

@@ -1,12 +1,13 @@
 class RecurringBookingRequest < Form
 
   attr_accessor :start_minute, :end_minute, :start_on, :end_on, :schedule_params, :quantity,
-    :interval, :total_amount_cents, :guest_notes, :total_amount_check
+    :total_amount_cents, :guest_notes, :total_amount_check
   attr_reader   :recurring_booking, :listing, :location, :user, :payment_subscription
 
   delegate :currency, :service_fee_amount_host_cents, :service_fee_amount_guest_cents, :billing_authorization,
     :create_billing_authorization, :total_service_amount, :total_amount, :owner, :owner_attributes=,
-    :properties, :properties=, :category_ids, :category_ids=, :reservation_type, to: :recurring_booking
+    :properties, :properties=, :category_ids, :category_ids=, :transactable_pricing_id=,
+    :transactable_pricing_id, :reservation_type, to: :recurring_booking
   delegate :confirm_reservations?, :location, :company, to: :listing
   delegate :mobile_number, :mobile_number=, :country_name, :country_name=, :country, to: :user
 
@@ -29,7 +30,6 @@ class RecurringBookingRequest < Form
       @recurring_booking.owner = user
       @recurring_booking.creator = @listing.creator
       store_attributes(attributes)
-      @recurring_booking.interval = interval
       @recurring_booking.guest_notes = guest_notes
       @recurring_booking.start_on = start_on || Date.current
       @recurring_booking.next_charge_date = @recurring_booking.start_on

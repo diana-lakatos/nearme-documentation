@@ -8,7 +8,7 @@ class UserStatusUpdateTest < ActiveSupport::TestCase
       PlatformContext::ForeignKeysAssigner
     ).each do |_module|
       should "include #{_module}" do
-        assert ActivityFeedEvent.included_modules.include?(_module.constantize)
+        assert ActivityFeedEvent.included_modules.map(&:to_s).include?(_module)
       end
     end
   end

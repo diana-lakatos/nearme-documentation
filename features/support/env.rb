@@ -72,23 +72,13 @@ Before '~@photo' do
 end
 
 Around('@elasticsearch') do |scenario, block|
-  TransactableType.update_all(search_engine: Instance::SEARCH_ENGINES.last)
-  block.call
-  TransactableType.update_all(search_engine: Instance::SEARCH_ENGINES.first)
-end
-
-Around('@elasticreindex') do |scenario, block|
-  Transactable.send :include, Elasticsearch::Model::Callbacks
-  Spree::Product.send :include, Elasticsearch::Model::Callbacks
-  Transactable.searchable.import force: true
-  Spree::Product.searchable.import force: true
+  Rails.application.config.use_elastic_search = true
+  Transactable.__elasticsearch__.index_name = 'transactables_test'
+  Transactable.__elasticsearch__.create_index!(force: true)
+  Transactable.searchable.import
   block.call
   Transactable.__elasticsearch__.client.indices.delete index: Transactable.index_name
-  Spree::Product.__elasticsearch__.client.indices.delete index: Spree::Product.index_name
-end
-
-After('@new_ui') do
-  PlatformContext.current.instance.update! priority_view_path: ''
+  Rails.application.config.use_elastic_search = false
 end
 
 World(CarrierWave::Test::Matchers)

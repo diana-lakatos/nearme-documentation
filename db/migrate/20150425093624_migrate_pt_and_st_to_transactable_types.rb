@@ -27,7 +27,7 @@ class MigratePtAndStToTransactableTypes < ActiveRecord::Migration
 
     TransactableType.unscoped.find_each do |tt|
       if tt.type.blank?
-        tt.update_column :type, tt.buyable ? 'Spree::ProductType' : 'ServiceType'
+        tt.update_column :type, tt.buyable ? 'Spree::ProductType' : 'TransactableType'
       end
     end
 

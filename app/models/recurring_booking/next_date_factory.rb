@@ -1,19 +1,20 @@
 class RecurringBooking::NextDateFactory
 
-  def self.get_calculator(interval, previous_date)
-    case interval
-    when 'monthly'
+  def self.get_calculator(pricing, previous_date)
+    case pricing.unit
+    when 'subscription_month'
       NextChargeDateMonthlyCalculator
-    when 'weekly'
-      NextChargeDateWeeklyCalculator
+    when 'subscription_day'
+      NextChargeDateDailyCalculator
     else
       raise NotImplementedError
-    end.new(previous_date)
+    end.new(pricing, previous_date)
   end
 
   class NextChargeDateBaseCalculator
 
-    def initialize(date)
+    def initialize(pricing, date)
+      @pricing = pricing
       @date = date
     end
 
@@ -23,10 +24,10 @@ class RecurringBooking::NextDateFactory
 
   end
 
-  class NextChargeDateWeeklyCalculator < NextChargeDateBaseCalculator
+  class NextChargeDateDailyCalculator < NextChargeDateBaseCalculator
 
     def next_charge_date
-      @date + 7.days
+      @date + @pricing.number_of_units.days
     end
   end
 

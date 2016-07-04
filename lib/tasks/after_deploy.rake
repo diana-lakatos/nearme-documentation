@@ -6,14 +6,14 @@ namespace :after_deploy do
     RedisCache.clear
 
     begin
-        puts 'Updating ES Transactables index mappings'
-        Transactable.__elasticsearch__.client.indices.put_mapping index: 'transactables', type: 'transactable', body: Transactable.mappings
-        puts 'Updating ES Products index mappings'
-        Spree::Product.__elasticsearch__.client.indices.put_mapping index: 'spree-products', type: 'product', body: Spree::Product.mappings
-        job_id = ElasticInstanceIndexerJob.perform.id
-        puts "Updating ES documents id DJ ##{job_id}"
+      puts 'Updating ES Transactables index mappings'
+      Transactable.__elasticsearch__.client.indices.put_mapping index: 'transactables', type: 'transactable', body: Transactable.mappings
+      puts 'Updating ES Products index mappings'
+      Spree::Product.__elasticsearch__.client.indices.put_mapping index: 'spree-products', type: 'product', body: Spree::Product.mappings
+      job_id = ElasticInstanceIndexerJob.perform.id
+      puts "Updating ES documents id DJ ##{job_id}"
     rescue StandardError => e
-        raise e if Rails.application.config.use_elastic_search
+      raise e if Rails.application.config.use_elastic_search
     end
 
     puts "Removing all jobs from queue recurring-jobs"

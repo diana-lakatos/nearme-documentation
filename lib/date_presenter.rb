@@ -50,6 +50,10 @@ class DatePresenter
     I18n.l(date.to_date, format: format)
   end
 
+  def get_date(format = :long)
+    I18n.l(dates.first.to_date, format: format)
+  end
+
   def days_in_words
     I18n.t('day', count: days).titleize
   end

@@ -50,54 +50,53 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     should 'be able to handle 1 to 1 unit to subunit conversion date passed manually' do
       stub_us_geolocation
       assert_difference('Transactable.count', 1) do
-        post :submit_listing, get_params(daily_price: "25", currency: 'JPY')
+        post :submit_listing, get_params(prices: { '1_day': "25" }, currency: 'JPY')
       end
       @listing = assigns(:listing)
-      assert_equal 25.to_money('JPY'), @listing.daily_price
-      assert_equal 25, @listing.daily_price_cents
+      assert_equal 25.to_money('JPY'), @listing.action_type.price_for('1_day')
+      assert_equal 25, @listing.action_type.price_cents_for('1_day')
     end
 
     should 'be able to handle 5 to 1 unit to subunit conversion date passed manually' do
       stub_us_geolocation
       assert_difference('Transactable.count', 1) do
-        post :submit_listing, get_params(daily_price: "25", currency: 'MGA')
+        post :submit_listing, get_params(prices: { '1_day': "25" }, currency: 'MGA')
       end
       @listing = assigns(:listing)
-      assert_equal 25.to_money('MGA'), @listing.daily_price
-      assert_equal 125, @listing.daily_price_cents
+      assert_equal 25.to_money('MGA'), @listing.action_type.price_for('1_day')
+      assert_equal 125, @listing.action_type.price_cents_for('1_day')
     end
 
     should 'be able to handle 5 to 1 unit to subunit conversion if it is default currency' do
       stub_us_geolocation
       PlatformContext.current.instance.update_attribute(:default_currency, 'MGA')
       assert_difference('Transactable.count', 1) do
-        post :submit_listing, get_params(daily_price: "25", currency: '')
+        post :submit_listing, get_params(prices: { '1_day': "25" }, currency: '')
       end
       @listing = assigns(:listing)
-      assert_equal 25.to_money('MGA'), @listing.daily_price
-      assert_equal 125, @listing.daily_price_cents
+      assert_equal 25.to_money('MGA'), @listing.action_type.price_for('1_day')
+      assert_equal 125, @listing.action_type.price_cents_for('1_day')
     end
 
-    should "ignore invalid characters in price" do
+    should "not create with invalid characters in price" do
       stub_us_geolocation
-      assert_difference('Transactable.count', 1) do
-        post :submit_listing, get_params(daily_price: "249.31-300.00", weekly_price: '!@#$%^&*()_+=_:;"[]}{\,<.>/?`~', monthly_price: 'i am not valid price I guess', free: "0")
+      assert_difference('Transactable.count', 0) do
+        post :submit_listing, get_params(prices: { '7_day': '!@#$%^&*()_+=_:;"[]}{\,<.>/?`~', '30_day': 'i am not valid price I guess' })
       end
-      @listing = assigns(:listing)
-      assert_equal 24931, @listing.daily_price_cents
-      assert_equal 0, @listing.weekly_price_cents
-      assert_equal 0, @listing.monthly_price_cents
+      @user = assigns(:user)
+      assert @user.first_listing.errors["action_types.pricings"].present?
+      refute @user.first_listing.persisted?
     end
 
     should "handle nil and empty prices" do
       stub_us_geolocation
       assert_difference('Transactable.count', 1) do
-        post :submit_listing, get_params(daily_price: nil, weekly_price: "", monthly_price: "249.00", free: "0")
+        post :submit_listing, get_params(prices: { '1_day': nil, '7_day': "", '30_day': "249.00" })
       end
       @listing = assigns(:listing)
-      assert_nil @listing.daily_price
-      assert_nil @listing.weekly_price
-      assert_equal 24900, @listing.monthly_price_cents
+      assert_nil @listing.action_type.price_for('1_day')
+      assert_nil @listing.action_type.price_cents_for('7_day')
+      assert_equal 24900, @listing.action_type.price_cents_for('30_day')
     end
 
     should "not raise exception if hash is incomplete" do
@@ -352,12 +351,10 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     end
   end
 
-
   private
 
   def get_params(options = {})
-    free = options[:daily_price].to_f + options[:weekly_price].to_f + options[:monthly_price].to_f == 0
-    options.reverse_merge!(daily_price: nil, weekly_price: nil, monthly_price: nil, free: free, currency: 'USD')
+    options.reverse_merge!(currency: 'USD')
     {"user" =>
      {"companies_attributes"=>
       {"0" =>
@@ -391,18 +388,13 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
                "action_hourly_booking" => false,
                "quantity"=>"1",
                "booking_type" => options[:booking_type] || 'regular',
-               "daily_price"=>options[:daily_price],
-               "fixed_price"=>options[:fixed_price],
-               "weekly_price"=>options[:weekly_price],
-               "monthly_price"=> options[:monthly_price],
-               "action_free_booking"=>options[:free],
                "confirm_reservations"=>"0",
                "photos_attributes" => [FactoryGirl.attributes_for(:photo)],
                "currency"=>options[:currency],
                "properties" => {
                  "listing_type"=>"Desk",
                }
-             }
+             }.merge(action_type_attibutes(options))
             },
           }
          }

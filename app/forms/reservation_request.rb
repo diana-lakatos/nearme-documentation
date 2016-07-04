@@ -7,10 +7,11 @@ class ReservationRequest < Form
 
   delegate :confirm_reservations?, :location, :company, :timezone, :minimum_booking_minutes, to: :@listing
   delegate :country_name, :country_name=, :country, to: :@user
-  delegate :id, :guest_notes, :quantity, :action_hourly_booking?, :booking_type=, :currency,
+  delegate :id, :has_service_fee?, :guest_notes, :quantity, :action_hourly_booking?, :booking_type=, :currency,
     :service_fee_amount_guest, :additional_charges, :shipments, :shipments_attributes=, :category_ids, :category_ids=,
     :properties, :properties=, :creator_attributes=, :payment_documents, :payment_documents_attributes=, :has_service_fee?,
-    :reservation_type, :owner, :owner_attributes=, :address, :build_address, :address_attributes=, to: :@reservation
+    :reservation_type, :owner, :owner_attributes=, :address, :build_address, :address_attributes=, :transactable_pricing_id=,
+    :transactable_pricing, to: :@reservation
 
   validates :listing,      presence: true
   validates :reservation,  presence: true
@@ -33,27 +34,26 @@ class ReservationRequest < Form
 
     if @listing
       @reservation = @listing.reservations.build
-      @reservation.reservation_type = @listing.service_type.reservation_type
+      @reservation.reservation_type = @listing.transactable_type.reservation_type
       @reservation.currency = @listing.currency
       @reservation.time_zone = timezone
       @reservation.company = @listing.company
       @reservation.guest_notes = attributes[:guest_notes]
-      @reservation.book_it_out_discount = @listing.book_it_out_discount if attributes[:book_it_out] == 'true'
-      if attributes[:exclusive_price] == 'true'
-        @reservation.exclusive_price_cents = @listing.exclusive_price_cents
-        attributes[:quantity] = @listing.quantity # ignore user's input, exclusive is exclusive - full quantity
-      end
-
       @reservation.user = @user
       @reservation = @reservation.decorate
       attributes = update_shipments(attributes)
-
 
       if @user
         @user.phone ||= @user.mobile_number
       end
 
       store_attributes(attributes)
+      @reservation.transactable_pricing ||= @listing.action_type.pricings.first
+      if attributes[:exclusive_price] == 'true'
+        @reservation.exclusive_price_cents = @reservation.transactable_pricing.exclusive_price_cents
+        attributes[:quantity] = @listing.quantity # ignore user's input, exclusive is exclusive - full quantity
+      end
+      @reservation.book_it_out_discount = @reservation.transactable_pricing.book_it_out_discount if attributes[:book_it_out] == 'true'
       build_return_shipment
       build_payment_documents
       set_dates
@@ -73,7 +73,7 @@ class ReservationRequest < Form
     @dates = dates
 
     if @listing
-      if @reservation.action_hourly_booking? || @listing.schedule_booking?
+      if @reservation.action_hourly_booking? || @reservation.event_booking?
         set_start_minute
         @start_minute = start_minute.try(:to_i)
         @end_minute = end_minute.try(:to_i)
@@ -82,7 +82,7 @@ class ReservationRequest < Form
         @end_minute   = nil
       end
 
-      if @listing.schedule_booking?
+      if @reservation.event_booking?
         if @dates.is_a?(String)
           timestamp = Time.at(@dates.to_i).in_time_zone(@listing.timezone)
           @start_minute = timestamp.try(:min).to_i + (60 * timestamp.try(:hour).to_i)
@@ -91,8 +91,8 @@ class ReservationRequest < Form
         end
       else
         @dates = @dates.split(',')
+        @dates = @dates.take(1) if @reservation.action_hourly_booking?
       end
-
       @dates.flatten!
       @dates.reject(&:blank?).each do |date_string|
         begin
@@ -158,7 +158,6 @@ class ReservationRequest < Form
       @checkout_extra_fields.valid?
       @checkout_extra_fields.errors.full_messages.each { |m| add_error(m, :base) }
     end
-
     remove_empty_documents
     !!(@checkout_extra_fields.errors.empty? && valid? && authorize_payment && authorize_deposit && save_reservation)
   end
@@ -241,11 +240,11 @@ class ReservationRequest < Form
   end
 
   def set_cancellation_policy
-    if transactable_type.cancellation_policy_enabled.present?
-      reservation.cancellation_policy_hours_for_cancellation = transactable_type.cancellation_policy_hours_for_cancellation
-      reservation.cancellation_policy_penalty_hours = transactable_type.cancellation_policy_penalty_hours
+    if transactable_pricing.action.cancellation_policy_enabled.present?
+      reservation.cancellation_policy_hours_for_cancellation = transactable_pricing.action.cancellation_policy_hours_for_cancellation
+      reservation.cancellation_policy_penalty_hours = transactable_pricing.action.cancellation_policy_penalty_hours
       if payment.payment_gateway.supports_partial_refunds?
-        reservation.cancellation_policy_penalty_percentage = transactable_type.cancellation_policy_penalty_percentage
+        reservation.cancellation_policy_penalty_percentage = transactable_pricing.action.cancellation_policy_penalty_percentage
       end
     end
   end

@@ -11,7 +11,7 @@ When /^I fill in valid space details$/ do
   fill_in "Name", with:'Desk'
   fill_in "Description", with:'We have a group of several shared desks available.'
   fill_in 'Quantity', with:1
-  page.execute_script "$('#user_companies_attributes_0_locations_attributes_0_listings_attributes_0_action_free_booking').click();"
+  page.execute_script("$(\"[data-pricing-for='1_day'] input[name*='is_free_booking'][type=checkbox]\").click();")
   page.should_not have_content('Processing...')
 end
 

@@ -25,7 +25,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
   context 'cancellation policy' do
 
     setup do
-      TransactableType.update_all({
+      TransactableType::ActionType.update_all({
         cancellation_policy_enabled: Time.zone.now,
         cancellation_policy_hours_for_cancellation: 24,
         cancellation_policy_penalty_percentage: 60
@@ -40,7 +40,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     end
 
     should 'not store cancellation policy details if disabled' do
-      TransactableType.update_all(cancellation_policy_enabled: nil)
+      TransactableType::ActionType.update_all(cancellation_policy_enabled: nil)
       post :create, booking_params_for(@listing)
       reservation = assigns(:reservation_request).reservation.reload
       assert_equal 0, reservation.cancellation_policy_hours_for_cancellation
@@ -141,8 +141,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
   context 'Book It Out' do
     setup do
-      @transactable = FactoryGirl.create(:transactable, :fixed_price, :with_book_it_out)
-      @transactable.transactable_type.update_attributes! action_book_it_out: true
+      @transactable = FactoryGirl.create(:transactable, :fixed_price)
       @params = booking_params_for(@transactable)
       next_available_occurrence = @transactable.next_available_occurrences.first[:id].to_i
       @params[:reservation_request].merge!({book_it_out: "true", dates: next_available_occurrence, quantity: 10})
@@ -153,20 +152,20 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       post :create, @params
       reservation = Reservation.last
       assert_redirected_to booking_successful_dashboard_user_reservation_path(Reservation.last)
-      assert_equal reservation.book_it_out_discount, @transactable.book_it_out_discount
-      assert_equal reservation.subtotal_amount, @transactable.quantity * @transactable.fixed_price * ( 1 - @transactable.book_it_out_discount / 100.to_f)
-      assert_not_equal reservation.subtotal_amount, @transactable.quantity * @transactable.fixed_price
+      assert_equal reservation.book_it_out_discount, @transactable.action_type.pricing.book_it_out_discount
+      assert_equal reservation.subtotal_amount, @transactable.quantity * @transactable.action_type.pricing.price * ( 1 - @transactable.action_type.pricing.book_it_out_discount / 100.to_f)
+      assert_not_equal reservation.subtotal_amount, @transactable.quantity * @transactable.action_type.pricing.price
     end
 
     should 'not create reservation with discount and wrong quantity' do
-      @params[:reservation_request].merge!({quantity: 8})
+      @params[:reservation_request].merge!({quantity: 7})
       post :create, @params
       assert_response 200
-      assert response.body.include?(I18n.t('reservations_review.errors.book_it_out_quantity'))
+      assert response.body.include?(I18n.t('reservations_review.errors.book_it_out_not_available'))
     end
 
     should 'not create reservation with discount if it is turned off' do
-      @transactable.transactable_type.update_attributes! action_book_it_out: false
+      @transactable.transactable_type.event_booking.pricing.update_attributes! allow_book_it_out_discount: false
       post :create, @params
       assert_response 200
       assert response.body.include?(I18n.t('reservations_review.errors.book_it_out_not_available'))
@@ -176,8 +175,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
   context 'Exclusive Price' do
     setup do
-      @transactable = FactoryGirl.create(:transactable, :fixed_price, :with_exclusive_price)
-      @transactable.transactable_type.update_attributes! action_exclusive_price: true
+      @transactable = FactoryGirl.create(:transactable, :fixed_price)
       @params = booking_params_for(@transactable)
       next_available_occurrence = @transactable.next_available_occurrences.first[:id].to_i
       @params[:reservation_request].merge!({ dates: next_available_occurrence, quantity: 10, exclusive_price: "true" })
@@ -187,13 +185,13 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       post :create, @params
       reservation = Reservation.last
       assert_redirected_to booking_successful_dashboard_user_reservation_path(Reservation.last)
-      assert_equal reservation.exclusive_price, @transactable.exclusive_price
-      assert_equal reservation.subtotal_amount, @transactable.exclusive_price
-      assert_not_equal reservation.subtotal_amount, @transactable.quantity * @transactable.fixed_price
+      assert_equal reservation.exclusive_price, @transactable.action_type.pricing.exclusive_price
+      assert_equal reservation.subtotal_amount, @transactable.action_type.pricing.exclusive_price
+      assert_not_equal reservation.subtotal_amount, @transactable.quantity * @transactable.action_type.pricing.price
     end
 
     should 'not create reservation with discount if it is turned off' do
-      @transactable.transactable_type.update_attributes! action_exclusive_price: false
+      @transactable.transactable_type.event_booking.pricing.update_attributes! allow_exclusive_price: false
       post :create, @params
       assert_response 200
       assert response.body.include?(I18n.t('reservations_review.errors.exclusive_price_not_available'))
@@ -201,24 +199,23 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
   end
 
-  context 'Price per unit' do
-    setup do
-      @transactable = FactoryGirl.create(:transactable, :fixed_price)
-      @transactable.transactable_type.update_attributes! action_price_per_unit: true
-      @params = booking_params_for(@transactable)
-      next_available_occurrence = @transactable.next_available_occurrences.first[:id].to_i
-      @params[:reservation_request].merge!({ dates: next_available_occurrence, quantity: 11.23 })
-    end
+  #TODO Uncomment after adding price_per_unit_for action_types
+  # context 'Price per unit' do
+  #   setup do
+  #     @transactable = FactoryGirl.create(:transactable, :fixed_price)
+  #     @params = booking_params_for(@transactable)
+  #     next_available_occurrence = @transactable.next_available_occurrences.first[:id].to_i
+  #     @params[:reservation_request].merge!({ dates: next_available_occurrence, quantity: 11.23 })
+  #   end
 
-    should 'create reservation with price per unit' do
-      post :create, @params
-      reservation = Reservation.last
-      assert_redirected_to booking_successful_dashboard_user_reservation_path(Reservation.last)
-      assert_equal reservation.subtotal_amount, @transactable.fixed_price * @params[:reservation_request][:quantity]
-      assert_equal 11.23, reservation.quantity
-    end
-
-  end
+  #   should 'create reservation with price per unit' do
+  #     post :create, @params
+  #     reservation = Reservation.last
+  #     assert_redirected_to booking_successful_dashboard_user_reservation_path(Reservation.last)
+  #     assert_equal reservation.subtotal_amount, @transactable.action_type.pricing.price * @params[:reservation_request][:quantity]
+  #     assert_equal 11.23, reservation.quantity
+  #   end
+  # end
 
   context 'PayPal Express interaction' do
     setup do
@@ -256,6 +253,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       reservation_request: {
         dates: [Chronic.parse('Monday')],
         quantity: "1",
+        transactable_pricing_id: listing.action_type.pricings.first.id,
         payment_attributes: {
           payment_method_id: @payment_method.id,
           credit_card_attributes: {

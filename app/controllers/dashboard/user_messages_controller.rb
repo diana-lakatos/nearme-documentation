@@ -93,6 +93,8 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
     @country = current_user.country_name
     if params[:listing_id].present?
       @return_path = new_listing_user_message_path(params[:listing_id], skip: true)
+    elsif params[:product_id].present?
+      @return_path = new_product_user_message_path(params[:product_id], skip: true)
     elsif params[:user_id].present?
       @return_path = new_user_user_message_path(params[:user_id], skip: true)
     elsif params[:reservation_id].present?

@@ -12,7 +12,7 @@ class MigrateCustAttrsToCustValidators < ActiveRecord::Migration
       end
     end
 
-    CustomAttributes::CustomAttribute.unscoped.where(deleted_at: nil, target_type: 'ServiceType', name: ['name', 'description']).find_each do |attribute|
+    CustomAttributes::CustomAttribute.unscoped.where(deleted_at: nil, target_type: 'TransactableType', name: ['name', 'description']).find_each do |attribute|
       t = attribute.instance.translations.find_or_initialize_by(key: "simple_form.labels.transactable.#{attribute.name}", locale: 'en')
       t.value = attribute.label
       t.save!
@@ -20,7 +20,7 @@ class MigrateCustAttrsToCustValidators < ActiveRecord::Migration
 
     CustomAttributes::CustomAttribute.unscoped.where(
       deleted_at: nil,
-      target_type: 'ServiceType',
+      target_type: 'TransactableType',
       name: ['name', 'description', 'confirm_reservations', 'last_request_photos_sent_at', 'capacity']
     ).destroy_all
   end

@@ -269,13 +269,15 @@ en:
         description: "Item description"
         confirm_reservations: 'Confirm reservations'
         capacity: 'Capacity'
-        price_fixed: 'Fixed'
-        price_daily: 'Daily'
-        price_weekly: 'Weekly'
-        price_monthly: 'Monthly'
-        price_hourly: 'Hourly'
-        price_free: 'Free'
         insurance_value: 'Shipping insurance value'
+        action_types:
+          minimum_booking_minutes: "Minimum booking minutes"
+          no_action: 'Disable booking'
+          action_rfq: 'Request for Quote'
+          pricings:
+            number_of_units: 'Number of units'
+            unit: 'Unit'
+            price: 'Price'
         price:
           fixed: 'fixed price'
           daily: 'day'
@@ -294,24 +296,30 @@ en:
       transactable_type:
         action_book_it_out: 'Enable Book it Out option'
       service_type:
-        favourable_pricing_rate: "Favorable pricing rate"
-        action_continuous_dates_booking: 'Action continuous dates booking'
-        service_fee_guest_percent: 'Guest Service Fee Percent'
-        service_fee_host_percent: 'Host Service Fee Percent'
-        enable_cancellation_policy: "Should cancellation policy be enabled?"
-        cancellation_policy_hours_for_cancellation: 'Number of hours before booking to cancel'
-        cancellation_policy_penalty_percentage: 'Penalty fee (percent of total amount)'
-        hours_to_expiration: "Number of hours before unconfirmed reservation expires"
-        minimum_booking_minutes: "Minimum booking minutes (for hourly pricing)"
-        action_book_it_out: "Bulk Booking Discount"
-        action_exclusive_price: "Enable Exclusive Price"
+        all_action_types:
+          action_continuous_dates_booking: 'Action continuous dates booking'
+          favourable_pricing_rate: "Favorable pricing rate"
+          service_fee_guest_percent: 'Guest Service Fee Percent'
+          service_fee_host_percent: 'Host Service Fee Percent'
+          cancellation_policy_enabled: "Should cancellation policy be enabled?"
+          cancellation_policy_hours_for_cancellation: 'Number of hours before booking to cancel'
+          cancellation_policy_penalty_percentage: 'Penalty fee (percent of total amount)'
+          hours_to_expiration: "Number of hours before unconfirmed reservation expires"
+          minimum_booking_minutes: "Minimum booking minutes (for hourly pricing)"
+          allow_action_rfq: 'Allow Request for Quote'
+          allow_no_action: Allow to disable booking'
+          allow_custom_pricings: 'Allow custom pricings'
+          pricings:
+            allow_book_it_out_discount: "Allow Bulk Booking Discount"
+            allow_exclusive_price: "Allow Exclusive Price"
+            number_of_units: 'Number of units'
+            unit: 'Unit'
+            min_price: 'Minimal price'
+            max_price: 'Maximal price'
         action_price_per_unit: "Enable Per Unit Pricing"
-        action_schedule_booking: 'Schedule Booking'
         bookable_noun: 'Bookable Noun (e.g. Desk)'
         lessor: 'Lessor (e.g. host)'
         lessee: 'Lessee (e.g. guest)'
-        action_rfq: 'Request for Quote'
-        action_na: 'NO ACTION'
         searchable: 'Enable search'
         allow_save_search: 'Allow user to save search?'
         search_price_types_filter: "Show price filters?"
@@ -516,7 +524,8 @@ en:
         book_it_out_discount: "Set your % discount amount"
         book_it_out_minimum_qty: "Book it Out is only available if the set minimum quantity is available"
       service_type:
-        action_continuous_dates_booking: "Allow user to select only continuous dates when booking"
+        all_action_types:
+          action_continuous_dates_booking: "Allow user to select only continuous dates when booking"
         allowed_countries: "Leave blank to use all countries"
         allowed_currencies: "Leave blank to use all currencies"
         action_schedule_booking: 'Use recurring rules to define recurring services instead of simple availability rules'

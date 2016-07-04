@@ -3,16 +3,7 @@ FactoryGirl.define do
 
     sequence(:name) { |n| "Transactable Type #{n}" }
 
-    action_daily_booking true
-    action_weekly_booking true
-    action_monthly_booking true
-    action_free_booking true
-    action_hourly_booking true
     availability_options { { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } } }
-    action_recurring_booking false
-    action_rfq false
-    service_fee_guest_percent '10.00'
-    service_fee_host_percent '10.00'
     bookable_noun 'Desk'
     lessor 'host'
     lessee 'guest'
@@ -21,7 +12,7 @@ FactoryGirl.define do
     enable_reviews true
     show_path_format "/listings/:id"
     searcher_type 'geo'
-
+    search_engine 'elasticsearch'
 
     ignore do
       generate_rating_systems false
@@ -29,6 +20,7 @@ FactoryGirl.define do
 
     after(:build) do |transactable_type|
       transactable_type.custom_attributes << FactoryGirl.build(:custom_attribute, :listing_types)
+      transactable_type.action_types << FactoryGirl.build(:transactable_type_time_based_action, transactable_type: transactable_type)
     end
 
     after(:create) do |transactable_type, evaluator|
@@ -79,18 +71,16 @@ FactoryGirl.define do
           FactoryGirl.build(:custom_attribute_required, target: transactable_type, name: 'my_attribute', attribute_type: 'string'),
         ]
       end
+      after(:build) do |transactable_type|
+        transactable_type.action_types.first.pricings << FactoryGirl.build(:transactable_type_pricing, number_of_units: 7)
+        transactable_type.action_types.first.pricings << FactoryGirl.build(:transactable_type_pricing, number_of_units: 30)
+      end
     end
 
     factory :transactable_type_current_data do
 
-      action_free_booking false
-      action_hourly_booking true
-      action_daily_booking true
-      action_weekly_booking true
-      action_monthly_booking true
-
       availability_options { { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => false } } }
-      custom_csv_fields { [{'location' => 'name'}, {'location' => 'email'}, {'location' => 'external_id'}, {'location' => 'location_type'}, {'location' => 'description'}, { 'location' => 'special_notes'}, { 'address' => 'address'}, {'address' => 'city'}, { 'address' => 'street' }, { 'address' => 'suburb' }, { 'address' => 'state' }, { 'address' => 'postcode' }, { 'transactable' => 'monthly_price_cents' }, { 'transactable' => 'weekly_price_cents' }, { 'transactable' => 'daily_price_cents' }, { 'transactable' => 'name' }, { 'transactable' => 'my_attribute' }, { 'transactable' => 'external_id' }, { 'transactable' => 'enabled' }, { 'photo' => 'image_original_url' }] }
+      custom_csv_fields { [{'location' => 'name'}, {'location' => 'email'}, {'location' => 'external_id'}, {'location' => 'location_type'}, {'location' => 'description'}, { 'location' => 'special_notes'}, { 'address' => 'address'}, {'address' => 'city'}, { 'address' => 'street' }, { 'address' => 'suburb' }, { 'address' => 'state' }, { 'address' => 'postcode' }, { 'transactable' => 'for_1_hour_price_cents' }, { 'transactable' => 'for_1_day_price_cents' }, { 'transactable' => 'name' }, { 'transactable' => 'my_attribute' }, { 'transactable' => 'external_id' }, { 'transactable' => 'enabled' }, { 'photo' => 'image_original_url' }] }
 
       after(:build) do |transactable_type|
         transactable_type.availability_templates << FactoryGirl.build(:availability_template, :transactable_type => transactable_type)
@@ -102,12 +92,9 @@ FactoryGirl.define do
     end
 
     factory :transactable_type_subscription do
-      action_daily_booking false
-      action_weekly_booking false
-      action_monthly_booking false
-      action_free_booking false
-      action_hourly_booking false
-      action_monthly_subscription_booking true
+      after(:build) do |transactable_type|
+        transactable_type.action_types << FactoryGirl.build(:transactable_type_subscription_action, transactable_type: transactable_type)
+      end
     end
   end
 

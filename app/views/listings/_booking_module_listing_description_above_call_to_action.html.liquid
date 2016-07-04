@@ -1,8 +1,10 @@
 {% if listing.book_it_out_available? %}
   <div class="book-it-out">
     {{ 'reservations.booking_module.book_it_out' | translate }}
-    <input class="pull-right" name="book_it_out" type="checkbox" value="1">
-    <div class="price"><span>{{ listing.currency | currency_content_tag: 0.00,'span',rel: false }}</span></div>
+    <span class="checkbox pull-right">
+      <input class="pull-right" name="book_it_out" type="checkbox" value="1">
+    </span>
+    <div class="discount_price"><span></span></div>
   </div>
 {% endif %}
 {% if listing.exclusive_price_available? %}
@@ -11,14 +13,14 @@
     <span class="checkbox pull-right">
       <input class="pull-right" name="exclusive_price" type="checkbox" value="1" data-force-check="{% if listing.only_exclusive_price_available? %}1{% else %}0{% endif %}">
     </span>
-    <div class="price"><span>{{ listing.currency | currency_content_tag: listing.exclusive_price, 'span',rel: false }}</span></div>
+    <div class="discount_price"><span>{{ listing.currency | currency_content_tag: listing.exclusive_price, 'span',rel: false }}</span></div>
   </div>
   <div data-exclusive-price-content="true" style="display: none;">
     {{ 'reservations.booking_module.exclusive_price_content' | translate }}
     <input type="text" data-guest-notes="true">
   </div>
 {% endif %}
-{% if listing.schedule_booking? and listing.price_per_unit? %}
+{% if listing.price_per_unit? %}
   <div class="number-of-units">
     <span>
       {{ 'reservations.booking_module.number_of_units' | translate }}
@@ -37,9 +39,9 @@
 {% endif %}
 
 
-{% if listing.action_free_booking? %}
+{% unless listing.all_free_pricings? %}
   {% assign klass = ' hidden' %}
-{% endif %}
+{% endunless %}
 <div class="price{{ klass }}">
   {{ 'booking_module.total' | translate }}
   {{ listing.currency | currency_content_tag: 0.00,'span',rel: false }}

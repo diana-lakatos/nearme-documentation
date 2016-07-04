@@ -3,6 +3,19 @@ require 'test_helper'
 class SearchControllerTest < ActionController::TestCase
   setup do
     stub_request(:get, /.*maps\.googleapis\.com.*/).to_return(status: 404, body: {}.to_json, headers: {})
+    Rails.application.config.use_elastic_search = true
+    Transactable.__elasticsearch__.index_name = 'transactables_test'
+    Transactable.__elasticsearch__.create_index!
+    Transactable.__elasticsearch__.refresh_index!
+    Spree::Product.__elasticsearch__.index_name = 'products_test'
+    Spree::Product.__elasticsearch__.create_index!
+    Spree::Product.__elasticsearch__.refresh_index!
+  end
+
+  teardown do
+    Transactable.__elasticsearch__.client.indices.delete index: Transactable.index_name
+    Spree::Product.__elasticsearch__.client.indices.delete index: Spree::Product.index_name
+    Rails.application.config.use_elastic_search = false
   end
 
   context 'for anything when no TransactableType exists' do
@@ -77,7 +90,7 @@ class SearchControllerTest < ActionController::TestCase
           should 'filter only filtered locations' do
             filtered_listing_type = "Desk"
             another_listing_type = "Meeting Room"
-            service_type = ServiceType.first || FactoryGirl.create(:transactable_type_listing)
+            service_type = TransactableType.first || FactoryGirl.create(:transactable_type_listing)
             filtered_auckland = FactoryGirl.create(:listing_in_auckland, transactable_type: service_type, properties: { listing_type: filtered_listing_type }).location
             another_auckland = FactoryGirl.create(:listing_in_auckland, transactable_type: service_type, properties: { listing_type: another_listing_type }).location
 
@@ -156,20 +169,21 @@ class SearchControllerTest < ActionController::TestCase
                 refute_location_in_result(@auckland)
               end
 
-              context 'connections' do
+              context 'connectionsxxx' do
                 setup do
                   @me = FactoryGirl.create(:user)
                   @friend = FactoryGirl.create(:user)
                   @me.add_friend(@friend)
 
-                  FactoryGirl.create(:past_reservation, listing: FactoryGirl.create(:transactable, location: @adelaide), user: @friend)
+                  FactoryGirl.create(:past_reservation, listing: FactoryGirl.create(:transactable, :with_time_based_booking, location: @adelaide), user: @friend)
+                  @adelaide.reload
+                  Transactable.__elasticsearch__.refresh_index!
                 end
 
                 should 'are shown for logged user' do
                   sign_in(@me)
                   @me.stubs(:unread_messages_count).returns(0)
-
-                  get :index, loc: 'Adelaide', v: 'list', transactable_type_id: @adelaide.listings.first.transactable_type_id
+                  get :index, v: 'list', transactable_type_id: @adelaide.listings.first.transactable_type_id
                   assert_select '.connections[rel=?]', 'tooltip', 1
                   assert_select '[title=?]', "#{@friend.name} worked here"
                 end
@@ -296,7 +310,7 @@ class SearchControllerTest < ActionController::TestCase
           result_view: 'mixed',
           result_count: 0,
           custom_attributes: { 'listing_type' => [@listing_type] },
-          location_type_filter: [@location_type.name],
+          location_type_filter: [@location_type.id],
           listing_pricing_filter: ['daily'],
         }
         Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).with do |search, custom_options|
@@ -359,8 +373,6 @@ class SearchControllerTest < ActionController::TestCase
     end
 
     context 'search integration' do
-      # setup do
-      # end
 
       context 'for disabled listing' do
         should 'exclude disabled listing' do
@@ -502,16 +514,17 @@ class SearchControllerTest < ActionController::TestCase
   context 'for mixed individual settings' do
 
     setup do
-      PlatformContext.current.instance.update_attributes({
+      TransactableType.first.update_attributes({
         default_search_view: 'listing_mixed'
       })
       3.times { FactoryGirl.create(:listing_in_adelaide) }
+      Transactable.searchable.import
+      Transactable.__elasticsearch__.refresh_index!
     end
 
     should 'properly render all liquid views' do
       get :index
       assert_select 'article.location', count: 3
-      assert_select 'article.location > .tabbable .title .listing', count: 3
     end
 
   end

@@ -12,6 +12,7 @@ module.exports = class BookingsPriceCalculator
     @additionalCharges = new AdditionalChargesCalculator($("#additional-charges-#{@listing.id}"), @listing.data.subunit_to_unit_rate)
 
   getPrice: ->
+
     contiguousBlocks = if @listing.isOvernightBooking()
       @contiguousOvernightBlocks()
     else
@@ -19,23 +20,26 @@ module.exports = class BookingsPriceCalculator
 
     total = _.inject(contiguousBlocks, (sum, block) =>
       block_length = block.length
-      if @listing.isOvernightBooking()
+      if @listing.isOvernightBooking() && block_length > 1
         block_length = block_length - 1
       sum + @priceForDays(block_length)*@listing.getQuantity()
     , 0)
     total += @additionalCharges.getCharges(total)
+    if @pricing
+      @listing.currentPricingId = @pricing.id
     total
 
   priceForDays: (days) ->
-    prices = @listing.pricesByDays
+    prices = if @listing.isOvernightBooking() then @listing.pricesByNights else @listing.pricesByDays
     pricesDays = _.keys(prices)
 
     return 0 if pricesDays.length == 0
     block_size = _.inject pricesDays, (largestBlock, blockDays) ->
       largestBlock = blockDays if days >= blockDays
       largestBlock
+    @pricing = prices[block_size]
+    price = @pricing.price
 
-    price = prices[block_size]
     if @listing.hasFavourablePricingRate() || days < block_size
       Math.round((days/block_size) * price)
     else

@@ -19,6 +19,7 @@ Minitest::Reporters.use!(Minitest::Reporters::DefaultReporter.new(reporter_optio
 
 RoutingFilter.active = false
 ActiveMerchant::Billing::Base.mode = :test
+WebMock.disable_net_connect!(allow: %r{localhost:9200})
 
 # Disable carrierwave processing in tests
 # It can be enabled on a per-test basis as needed.
@@ -62,6 +63,44 @@ ActiveSupport::TestCase.class_eval do
     ensure
       PaperTrail.enabled = was_enabled
     end
+  end
+
+  def action_type_attibutes(options)
+    pricings = if options[:prices]
+      options[:prices].each.with_index.inject({}) do |result, values|
+        price, index = values
+        result["#{index}"] = {
+          enabled: '1',
+          transactable_type_pricing_id: TransactableType.first.time_based_booking.pricing_for(price[0].to_s).try(:id),
+          price: price[1],
+          number_of_units: price[0].to_s.split('_').first,
+          unit: price[0].to_s.split('_').last
+        }
+        result
+      end
+    else
+      {
+        "0"=> {
+          transactable_type_pricing_id: TransactableType.first.time_based_booking.pricing_for('1_day').id,
+          enabled: '1',
+          price: 0,
+          number_of_units: 1,
+          unit: 'day',
+          is_free_booking: true
+        }
+      }
+    end
+
+    {
+      action_types_attributes: {
+        "0"=> {
+          transactable_type_action_type_id: TransactableType.first.action_types.first.id,
+          enabled: 'true',
+          type: options[:type] || 'Transactable::TimeBasedBooking',
+          pricings_attributes: pricings
+        }
+      }
+    }
   end
 
   def assert_contains(expected, object, message = nil)
@@ -151,6 +190,11 @@ ActiveSupport::TestCase.class_eval do
     })
     ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(stub).at_least(0)
   end
+
+  # def mock_transactable_prices(transactable, options = [])
+  #   pricings = options.map{|o| stub(o)}
+  #   transactable.action_type.stubs(:pricings).returns(pricings)
+  # end
 end
 
 

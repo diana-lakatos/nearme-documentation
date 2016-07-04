@@ -1,6 +1,7 @@
 class V1::BaseController < ApplicationController
 
   respond_to :json
+  skip_before_action :set_locale, :set_i18n_locale
 
   # Error handling here...
   unless Rails.application.config.consider_all_requests_local

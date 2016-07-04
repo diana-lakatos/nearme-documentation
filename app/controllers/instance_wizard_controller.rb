@@ -76,7 +76,7 @@ class InstanceWizardController < ActionController::Base
     if params[:marketplace_type] == "Buy/Sell"
       tp = @instance.product_types.create(name: @instance.bookable_noun)
     else
-      tp = @instance.service_types.create(
+      tp = @instance.transactable_types.create(
         name: @instance.bookable_noun,
         action_free_booking: "1",
         action_hourly_booking: "1",

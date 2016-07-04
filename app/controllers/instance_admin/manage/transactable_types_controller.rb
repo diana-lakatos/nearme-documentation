@@ -9,6 +9,7 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
 
   def new
     @transactable_type = resource_class.new
+    @transactable_type.try(:initialize_action_types)
   end
 
   def create
@@ -22,6 +23,10 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
       flash[:error] = @transactable_type.errors.full_messages.to_sentence
       render action: :new
     end
+  end
+
+  def edit
+    resource.try(:initialize_action_types)
   end
 
   def update
@@ -67,7 +72,7 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
   end
 
   def resource_class
-    raise NotImplementedError
+    TransactableType
   end
 
   def controller_scope

@@ -2,7 +2,7 @@ class InstanceAdmin::Analytics::SalesController < InstanceAdmin::Analytics::Base
 
   def show
     custom_properties_columns = CustomAttributes::CustomAttribute.with_deleted.where(
-      target_type: 'ServiceType'
+      target_type: 'TransactableType'
     ).pluck(:name).sort.uniq
 
     sql = 'SELECT reservations.*, ARRAY_AGG(reservation_periods.date) AS date, '\

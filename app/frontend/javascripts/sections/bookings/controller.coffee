@@ -14,6 +14,7 @@ module.exports = class BookingsController
 
   constructor: (@container, @options = {}) ->
     @container = $(@container)
+    @activateFirstAvailableTab()
 
     @listingData = @container.data('listing')
     if $.isEmptyObject(@listingData.initial_bookings)
@@ -28,7 +29,7 @@ module.exports = class BookingsController
       @listing.setDates(@datepicker.getDates())
 
     @bindEvents()
-
+    @listing.currentPricingId = @transactablePricing.val()
     if !@listing.withCalendars() && @fixedPriceSelect.length > 0
       @initializeInfiniScroll()
     @updateQuantityField()
@@ -38,13 +39,11 @@ module.exports = class BookingsController
         @rfqBooking()
       else
         @reviewBooking()
-
+    return if @listing.onlyRfqAction()
     @updateSummary()
     @delayedUpdateBookingStatus()
     if !@listing.isPerUnitBooking()
       @quantityField.customSelect()
-
-    @activateFirstAvailableTab()
 
   # We need to set up delayed methods per each instance, not the prototype.
   # Otherwise, it will debounce for any instance calling the method.
@@ -57,13 +56,14 @@ module.exports = class BookingsController
 
   # Bind to the various DOM elements managed by this controller.
   bindDomElements: ->
+    @transactablePricing = @container.find('input[name="reservation_request[transactable_pricing_id]"]')
     @quantityField = @container.find('[name=quantity].quantity')
     @bookItOutContainer = @container.find('.book-it-out')
     @bookItOutCheck = @container.find('input[name=book_it_out]')
     @exclusivePriceContainer = @container.find('.exclusive-price')
     @exclusivePriceCheck = @exclusivePriceContainer.find('input')
     @exclusivePriceContent = @container.find('div[data-exclusive-price-content]')
-    @bookItOutTotal = @bookItOutContainer.find('.total')
+    @bookItOutTotal = @bookItOutContainer.find('.discount_price span')
     @quantityResourceElement = @container.find('.quantity .resource')
     @totalElement = @container.find('.book .price .total')
     @daysElement = @container.find('.total-days')
@@ -76,7 +76,6 @@ module.exports = class BookingsController
     @storeReservationRequestUrl = @bookButton.data('store-reservation-request-url')
     @userSignedIn = @bookButton.data('user-signed-in')
     @bookingTabs = @container.find("[data-pricing-tabs] li a")
-    @subscriptionPeriodRadios = @container.find('input[name="reservation_request[interval]"]')
     if !@listing.withCalendars()
       @fixedPriceSelect = @container.find("[data-fixed-date-select]")
       @fixedPriceSelectInit = @fixedPriceSelect.data('init-value')
@@ -88,24 +87,12 @@ module.exports = class BookingsController
     @setReservationType()
 
   bindEvents: ->
-    @subscriptionPeriodRadios.on 'change', (event) =>
-      period = $(event.target).data('subscription')
-      @container.find("li[data-subscription=#{period}] a").tab('show')
-      @listing.setSubscriptionPeriod(period)
-      @updateBookingStatus()
 
     @bookingTabs.on 'shown.bs.tab', (event) =>
-      if @listing.isRecurringBooking()
-        period = $(event.target).parents('li').data('subscription')
-        radioSwitch = @container.find("input[data-subscription='#{period}']")
-        radioSwitch.click()
-
-        @listing.setSubscriptionPeriod(period)
-      else
-        @listing.setHourlyBooking(@hourlyBookingSelected())
-        @datepicker.setDates(@listing.bookedDatesArray)
-        @setReservationType()
-
+      @listing.currentPricingId = $(event.target).parents('li').data('pricing-id')
+      @listing.setHourlyBooking(@hourlyBookingSelected())
+      @datepicker.setDates(@listing.bookedDatesArray)
+      @setReservationType()
       @updateBookingStatus()
 
     @bookButton.on 'click', (event) =>
@@ -158,7 +145,7 @@ module.exports = class BookingsController
       @bookForm.find('.reservation_type').val('daily')
 
   hourlyBookingSelected: ->
-    @container.find("li[data-hourly]").hasClass('active')
+    @container.find("li[data-unit='hour']").hasClass('active')
 
   # Setup the datepicker for the simple booking UI
   initializeDatepicker: ->
@@ -174,7 +161,7 @@ module.exports = class BookingsController
   # Update the view to display pricing, date selections, etc. based on
   # current selected dates.
   updateBookingStatus: ->
-    @updateSummary()
+    @transactablePricing.val(@listing.currentPricingId)
     if @fixedPriceSelect
       if @fixedPriceSelect.val()
         @listing.bookedDatesArray = [@fixedPriceSelect.val()]
@@ -190,6 +177,8 @@ module.exports = class BookingsController
             @quantityField.trigger('change')
       else
         @listing.bookedDatesArray = []
+    else
+      @updateSummary()
 
     if !@listing.isBooked()
       @bookButton.addClass('disabled')
@@ -200,11 +189,6 @@ module.exports = class BookingsController
       @bookButton.attr("data-disable-with", "Processing ...")
       @bookButton.tooltip('destroy')
 
-  disableBookButton: ->
-    @bookButton.addClass('click-disabled').find('span.text').text('Booking...')
-
-  disableRFQButton: ->
-    @rfqButton.addClass('click-disabled').find('span.text').text('Requesting...')
 
   quantityWasChanged: (quantity = @quantityField.val())->
     quantity = quantity.replace(',', '.') if quantity.replace
@@ -234,15 +218,13 @@ module.exports = class BookingsController
     additionalChargeFields.clone().prependTo(reservationRequestForm)
 
   updateSummary: ->
+    price = @listing.bookingSubtotal(@bookItOutSelected(), @exclusivePriceSelected())
     @totalElement.text(
-      (
-        @listing.bookingSubtotal(@bookItOutSelected(), @exclusivePriceSelected())/@listing.data.subunit_to_unit_rate
-      ).toFixed(2)
+      (price/@listing.data.subunit_to_unit_rate).toFixed(2)
     )
 
   reviewBooking: ->
     return unless @listing.isBooked()
-    @disableBookButton()
     @setFormFields()
 
     if @userSignedIn
@@ -254,7 +236,9 @@ module.exports = class BookingsController
     @setFormFields()
 
     if @userSignedIn
-      Modal.load({ type: @rfqButton.data('modal-method'), url: @rfqButton.data('modal-url'), data: @bookForm.serialize()})
+      Modal.load { type: @rfqButton.data('modal-method'), url: @rfqButton.data('modal-url'), data: @bookForm.serialize()}, null, false, =>
+        $.rails.enableFormElement(@bookButton)
+        $.rails.enableFormElement(@rfqButton)
     else
       @storeFormFields()
 
@@ -287,21 +271,27 @@ module.exports = class BookingsController
   updateBookItOut: ->
     if @listing.bookItOutAvailableForDate()
       @bookItOutContainer.show()
-      @bookItOutTotal.text((@listing.bookItOutSubtotal()/@listing.data.subunit_to_unit_rate).toFixed(0))
+      @bookItOutTotal.text('-' + @listing.bookItOutDiscount() + ' %')
     else
       @bookItOutContainer.hide()
 
   bookItOut: (element) ->
     if $(element).is(':checked')
-      @exclusivePriceCheck.attr('checked', false).trigger('change')
-      @bookItOutTotal.parents('.price').hide()
+      @exclusivePriceCheck.prop('checked', false).trigger('change')
+      # @bookItOutTotal.parents('.discount_price').hide()
       @totalElement.text (@listing.bookItOutSubtotal()/@listing.data.subunit_to_unit_rate).toFixed(2)
-      @listing.setDefaultQuantity @listing.fixedAvailability()
+      @quantityWasChanged @listing.bookItOutMin()
+      for option in @quantityField.find('option')
+        if parseInt(option.value) < @listing.bookItOutMin()
+          $(option).prop('disabled', true)
+        else
+          $(option).prop('disabled', false)
       @updateQuantityField()
-      @quantityField.prop('disabled', true)
+      # @quantityField.prop('disabled', true)
     else
-      @bookItOutTotal.parents('.price').show()
-      @quantityField.prop('disabled', false)
+      # @bookItOutTotal.parents('.discount_price').show()
+      @quantityField.find('option').prop('disabled', false)
+      # @quantityField.prop('disabled', false)
       @quantityWasChanged 1
 
   exclusivePriceSelected: ->
@@ -309,15 +299,15 @@ module.exports = class BookingsController
 
   exclusivePrice: ->
     if @exclusivePriceSelected()
-      @bookItOutCheck.attr('checked', false).trigger('change')
-      @exclusivePriceContainer.find('.price').hide()
+      @bookItOutCheck.prop('checked', false).trigger('change')
+      @exclusivePriceContainer.find('.discount_price').hide()
       @quantityField.prop('disabled', true)
       @container.find('div.quantity').hide()
       @exclusivePriceContent.show() if @exclusivePriceContent
       @updateSummary()
     else
       @container.find('div.quantity').show()
-      @exclusivePriceContainer.find('.price').show()
+      @exclusivePriceContainer.find('.discount_price').show()
       @quantityField.prop('disabled', false)
       @exclusivePriceContent.hide() if @exclusivePriceContent
       @updateSummary()

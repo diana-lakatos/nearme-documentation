@@ -23,7 +23,7 @@
             = t('reservations.tickets.quantity')
             = @ticket.reservation_details['quantity']
 
-          - if @ticket.target.try(:schedule_booking?) && @ticket.reservation_date.present?
+          - if @ticket.target.try(:event_booking?) && @ticket.reservation_date.present?
             = "; #{l(@ticket.reservation_date, format: :long)}"
           - elsif @ticket.reservation_dates.any?
             - if @ticket.reservation_details['start_minute'].present? && @ticket.reservation_details['end_minute'].present?

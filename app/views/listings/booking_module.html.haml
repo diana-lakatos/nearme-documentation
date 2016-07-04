@@ -1,4 +1,4 @@
-.booking-module-container{:class => "#{booking_module_class(@listing)} #{@collapsed ? " collapsed" : ""}", id: "booking-module-#{@listing.id}", data: { :'toggleable-booking-module' => true, listing: listing_booking_data(@listing).to_json, :'returned-from-session' => (@initial_bookings.present? ? @form_trigger : false) } }
+.booking-module-container{:class => "#{@collapsed ? " collapsed" : ""}", id: "booking-module-#{@listing.id}", data: { :'toggleable-booking-module' => true, listing: listing_booking_data(@listing).to_json, :'returned-from-session' => (@initial_bookings.present? ? @form_trigger : false) } }
   .booking-module
     .booking-header
       %a.toggleable-booking-trigger{:href => @listing.decorate.show_path, :'data-booking-trigger' => true}
@@ -11,7 +11,7 @@
       %span= price_information(@listing)
     .booking-body
       .booking-price
-        - if @listing.schedule_booking?
+        - if @listing.event_booking?
           - if @listing.fixed_price.to_f > 0
             %span.label
               = "#{@listing.price_with_currency(:fixed_price)}"
@@ -92,7 +92,7 @@
       = render 'listings/booking_module_listing_description', listing: @listing
 
       - if @listing.actions_allowed?
-        - unless @listing.schedule_booking?
+        - unless @listing.event_booking?
           .tab-content
             .calendar-wrapper.date-start
               .calendar
@@ -145,7 +145,7 @@
               - else
                 = f.input :interval, as: :hidden, input_html: { value: @listing.subscription_variants.keys.first }
 
-              - if @listing.schedule_booking?
+              - if @listing.event_booking?
                 = f.input :dates, label: false, input_html: { value: @listing.first_available_occurrence[:text], :'data-fixed-date-select' => true, 'data-init-value' => @listing.first_available_occurrence.to_json }
               - else
                 = f.hidden_field :dates

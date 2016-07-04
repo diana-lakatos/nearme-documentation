@@ -40,7 +40,7 @@ module InstanceType::Searcher
   end
 
   def located
-    @transactable_type.searcher_type =~ /geo/ && search.midpoint.present?
+    (@transactable_type.searcher_type =~ /geo/ && search.midpoint.present?) || search.bounding_box.present?
   end
 
   def adjust_to_map
@@ -105,6 +105,18 @@ module InstanceType::Searcher
 
   def service_radius_enabled?
     @transactable_type.custom_attributes.exists?(name: :service_radius)
+  end
+
+  def filterable_pricing
+    @filterable_pricing ||= transactable_type.action_types.map do |at|
+      at.pricings.map do |pricing|
+        [pricing.units_to_s, pricing.units_translation("reservations.per_unit_price").downcase.titleize]
+      end
+    end.flatten(1)
+    if transactable_type.action_types.any?(&:allow_free_booking?)
+      @filterable_pricing << ['0_free', I18n.t("search.pricing_types.free")]
+    end
+    @filterable_pricing.sort.uniq
   end
 
 end

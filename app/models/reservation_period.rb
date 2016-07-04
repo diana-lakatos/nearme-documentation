@@ -46,7 +46,7 @@ class ReservationPeriod < ActiveRecord::Base
   end
 
   def date_with_time
-    if listing.schedule_booking?
+    if listing.event_booking?
       Minute.new(start_minute, date).to_time.to_formatted_s(:db)
     else
       date.strftime('%Y-%m-%d')

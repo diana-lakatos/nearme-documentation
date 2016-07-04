@@ -34,4 +34,5 @@ DesksnearMe::Application.configure do
   config.middleware.use Rack::NoAnimations
   config.verify_api_requests = false
   config.force_sending_all_workflow_alerts = true
+  config.use_elastic_search = false
 end

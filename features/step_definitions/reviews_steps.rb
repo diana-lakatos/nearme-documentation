@@ -26,6 +26,7 @@ end
 When(/^I submit rating with (valid|invalid) values$/) do |valid|
   RatingSystem.update_all(transactable_type_id: @reservation.listing.transactable_type_id)
   visit dashboard_reviews_path
+
   page.should have_css('.rating i')
 
   if valid == 'valid'

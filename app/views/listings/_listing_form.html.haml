@@ -7,9 +7,6 @@
 - if only_inputs.empty? || only_inputs.include?(:transactable_type_id)
   = f.hidden_field :transactable_type_id, value: @transactable_type.id
 
-- if only_inputs.empty? || only_inputs.include?(:booking_type)
-  = f.hidden_field :booking_type, value: f.object.transactable_type.booking_choices.size == 1 ? f.object.transactable_type.booking_choices.first : f.object.booking_type, 'data-booking-type' => true
-
 - if only_inputs.empty? || only_inputs.include?(:enabled)
   = f.input :enabled, as: :switch, input_html: { disabled: !f.object.is_trusted? }
 
@@ -33,9 +30,6 @@
 
 - if only_inputs.empty? || only_inputs.include?(:price)
   = render "dashboard/company/transactables/form_fields/price", f: f, form_fields: form_fields, model: model
-
-- if only_inputs.empty? || only_inputs.include?(:action_rfq)
-  = render 'dashboard/company/transactables/form_fields/action_rfq', f: f
 
 - if only_inputs.empty? || only_inputs.include?(:photos)
   = render 'dashboard/company/transactables/form_fields/photos', f: f

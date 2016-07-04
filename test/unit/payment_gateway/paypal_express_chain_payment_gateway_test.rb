@@ -75,7 +75,7 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
       assert_equal 2, payment.refunds.successful.count
       assert_equal payment.payment_gateway_mode, payment.refunds.last.payment_gateway_mode
       # We have 2 refunds first from MPO to seller (service_fee) second total amount from Seller to Guest
-      assert_equal payment.payment_transfer.total_service_fee + payment.amount, Money.new(payment.refunds.sum(:amount))
+      assert_equal payment.payment_transfer.total_service_fee + payment.amount, Money.new(payment.refunds.map(&:amount).sum)
       assert_equal payment.amount, Money.new(payment.refunds.guest.successful.last.amount)
       assert_equal payment.payment_transfer.total_service_fee, Money.new(payment.refunds.host.successful.last.amount)
     end
@@ -113,7 +113,7 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
       assert_equal 100, payment.payment_transfer.service_fee_amount_host_cents
       # 50% cancellation policy apply + service fee is not refundable
       # 50% of 100$ subtotal should be refunded to guest, the rest 60$ is left on HOST account!
-      assert_equal payment.amount_to_be_refunded, payment.refunds.guest.successful.first.amount
+      assert_equal payment.amount_to_be_refunded, payment.refunds.guest.successful.first.amount_cents
       assert_equal 50_00, payment.amount_to_be_refunded
     end
   end
@@ -122,7 +122,7 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
     payout_response = ActiveMerchant::Billing::PaypalExpressResponse.new(true, 'OK', { "id" => "123", "message" => "message", "transaction_id" => 'payout_123' })
 
     payment_transfer = payment.company.payment_transfers.create!(payments: [payment.reload], payment_gateway_mode: mode, payment_gateway: payment.payment_gateway)
-    payout = payment_transfer.payout_attempts.create(amount: payment_transfer.amount)
+    payout = payment_transfer.payout_attempts.create(amount_cents: payment_transfer.amount_cents)
     payout.payout_successful(payout_response)
 
     assert payment.paid?

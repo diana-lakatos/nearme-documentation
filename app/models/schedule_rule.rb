@@ -23,7 +23,7 @@ class ScheduleRule < ActiveRecord::Base
   validates_length_of :week_days, minimum: 1, if: -> { run_dates_mode == RECURRING_MODE }
   validates_presence_of :user_date_start, :date_end, if: -> { run_dates_mode == RANGE_MODE }
   validates_length_of :user_dates, minimum: 1, maximum: 50, if: -> { run_dates_mode == SPECIFIC_MODE }
-  validate :dates_not_in_past, if: -> { run_dates_mode == RANGE_MODE }
+  validate :dates_not_in_past, if: -> { run_dates_mode == RANGE_MODE }, on: :create
   validate :range_not_too_wide, if: -> { run_dates_mode == RANGE_MODE }
 
   default_scope { order('created_at DESC') }

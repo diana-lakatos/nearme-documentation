@@ -12,9 +12,7 @@ class SearchHelperTest < ActionView::TestCase
 
     should "#listing_price_information" do
       assert_equal "$12", @listing.decorate.price_with_currency(Money.new(1200, 'EUR'))
-      assert_equal "$50", @listing.decorate.price_with_currency(:daily_price)
       assert_equal "$10 <span>/ hour</span>", @listing.decorate.lowest_price_with_currency
-      assert_equal "$50 <span>/ day</span>", @listing.decorate.lowest_price_with_currency(['daily'])
     end
   end
 

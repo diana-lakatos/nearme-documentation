@@ -58,7 +58,7 @@ class Listings::RecurringBookingsController < ApplicationController
   def hourly_availability_schedule
     schedule = if params[:date].present?
       date = Date.parse(params[:date])
-      @listing.hourly_availability_schedule(date).as_json
+      @listing.action_type.hourly_availability_schedule(date).as_json
     end
 
     render :json => schedule.presence || {}

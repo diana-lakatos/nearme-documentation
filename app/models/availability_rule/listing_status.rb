@@ -4,17 +4,18 @@
 class AvailabilityRule::ListingStatus
   attr_reader :start_date, :end_date
 
-  def initialize(listing, start_date, end_date)
-    @listing = listing
+  def initialize(action, start_date, end_date)
+    @action = action
+    @listing = action.transactable
     @start_date = start_date
     @end_date = end_date
   end
 
   def availability_for(date)
     return if date < @start_date || date > @end_date
-    return unless @listing.open_on?(date)
+    return unless @action.open_on?(date)
 
-    if @listing.action_hourly_booking?
+    if @action.hour_booking?
       @listing.quantity
     else
       q = @listing.quantity - booked_on(date)

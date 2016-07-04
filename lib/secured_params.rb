@@ -205,6 +205,7 @@ class SecuredParams
     [
       :name,
       service_type_ids: [],
+      transactable_type_ids: [],
       project_type_ids: [],
       product_type_ids: [],
       offer_type_ids: [],
@@ -630,54 +631,19 @@ class SecuredParams
 
   def transactable_type
     [
-      :action_book_it_out,
-      :action_exclusive_price,
-      :action_price_per_unit,
-      :action_weekly_subscription_booking,
-      :action_monthly_subscription_booking,
-      :action_rfq,
-      :action_overnight_booking,
-      :action_regular_booking,
-      :action_booking,
-      :action_recurring_booking,
-      :action_free_booking,
-      :action_hourly_booking,
-      :action_daily_booking,
-      :action_weekly_booking,
-      :action_monthly_booking,
-      :availability_options,
-      :action_continuous_dates_booking,
-      :action_na,
       :allow_save_search,
       :bookable_noun, :lessor, :lessee, :action_schedule_booking,
       :bookable_noun, :lessor, :lessee,
-      :cancellation_policy_enabled,
-      :cancellation_policy_penalty_percentage,
-      :cancellation_policy_hours_for_cancellation,
-      :cancellation_policy_penalty_hours,
       :category_search_type,
       :default_search_view,
       :date_pickers_use_availability_rules,
       :date_pickers_mode,
       :default_currency,
       :default_availability_template_id,
-      :enable_cancellation_policy,
       :enable_photo_required,
-      :favourable_pricing_rate,
-      :hours_to_expiration,
       :name,
-      :minimum_booking_minutes,
       :show_page_enabled,
       :groupable_with_others,
-      :service_fee_guest_percent, :service_fee_host_percent,
-      :min_daily_price,
-      :max_daily_price,
-      :min_hourly_price,
-      :max_hourly_price,
-      :min_weekly_price,
-      :max_weekly_price,
-      :min_monthly_price,
-      :max_monthly_price,
       :skip_location,
       :rental_shipping,
       :show_company_name,
@@ -685,6 +651,7 @@ class SecuredParams
       :search_engine,
       :searcher_type,
       :search_radius,
+      :action_rfq,
       :search_placeholder,
       :show_categories,
       :timezone_rule,
@@ -694,15 +661,51 @@ class SecuredParams
       :show_date_pickers,
       :date_pickers_use_availability_rules,
       :date_pickers_mode,
-      :default_availability_template_id,
       :show_path_format,
       :hide_additional_charges_on_listing_page,
       :single_location,
       :availability_templates_attributes => nested(self.availability_template),
       :allowed_currencies => [],
-      :action_type_ids => [],
-      schedule_attributes: nested(self.schedule),
+      all_action_types_attributes: nested(self.transactable_type_action_type),
       custom_attributes_attributes: [:searchable, :id],
+    ]
+  end
+
+  def transactable_type_action_type
+    [
+      :enabled,
+      :hours_to_expiration,
+      :minimum_booking_minutes,
+      :service_fee_guest_percent, :service_fee_host_percent,
+      :favourable_pricing_rate,
+      :cancellation_policy_enabled,
+      :cancellation_policy_penalty_percentage,
+      :cancellation_policy_hours_for_cancellation,
+      :cancellation_policy_penalty_hours,
+      :action_continuous_dates_booking,
+      :allow_action_rfq,
+      :allow_no_action,
+      :allow_custom_pricings,
+      :type,
+      pricings_attributes: nested(self.transactable_type_pricing),
+      schedule_attributes: nested(self.schedule),
+      availability_template_attributes: nested(self.availability_template),
+    ]
+  end
+
+   def transactable_type_pricing
+    [
+      :id,
+      :transactable_type_pricing_id,
+      :min_price,
+      :min_price_cents,
+      :max_price,
+      :max_price_cents,
+      :number_of_units,
+      :unit,
+      :allow_exclusive_price,
+      :allow_book_it_out_discount,
+      :allow_free_booking
     ]
   end
 
@@ -1050,30 +1053,14 @@ class SecuredParams
   def transactable(transactable_type)
     [
       :name, :description, :capacity, :confirm_reservations,
-      :location_id, :availability_template_id, :free,
-      :price_type, :draft, :enabled,
-      :hourly_price, :daily_price, :weekly_price, :monthly_price, :fixed_price, :fixed_price_cents,
-      :enable_daily, :enable_weekly, :enable_monthly,
-      :hourly_price_cents, :daily_price_cents, :weekly_price_cents, :monthly_price_cents,
-      :weekly_subscription_price_cents, :monthly_subscription_price_cents,
-      :enable_weekly_subscription, :enable_monthly_subscription,
-      :weekly_subscription_price, :monthly_subscription_price,
+      :location_id,
+      :draft,
+      :enabled,
       :deposit_amount,
-      :book_it_out_discount,
-      :book_it_out_minimum_qty,
-      :enable_exclusive_price,
-      :enable_deposit_amount,
-      :enable_book_it_out_discount,
-      :exclusive_price,
-      :action_rfq,
-      :quantity, :currency,
-      :action_recurring_booking,
-      :action_hourly_booking,
-      :action_free_booking,
-      :action_daily_booking,
-      :action_subscription_booking,
+      :quantity,
+      :currency,
       :last_request_photos_sent_at, :activated_at, :rank,
-      :transactable_type_id, :transactable_type, :booking_type,
+      :transactable_type_id, :transactable_type,
       :insurance_value,
       :rental_shipping_type, :dimensions_template_id,
       :minimum_booking_minutes,
@@ -1085,14 +1072,49 @@ class SecuredParams
       dimensions_template_attributes: nested(self.dimensions_template),
       attachment_ids: [],
       waiver_agreement_template_ids: [],
-      schedule_attributes: nested(self.schedule),
+      action_types_attributes: nested(self.transactable_action_type),
+      # schedule_attributes: nested(self.schedule),
       document_requirements_attributes: nested(self.document_requirement),
       upload_obligation_attributes: nested(self.upload_obligation),
-      availability_template_attributes: nested(self.availability_template),
+      # availability_template_attributes: nested(self.availability_template),
       additional_charge_types_attributes: nested(self.additional_charge_type),
       customizations_attributes: nested(self.customization(transactable_type))
     ] +
-    Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:service_types).try(:first)).try(:id))
+    Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
+  end
+
+  def transactable_action_type
+    [
+      :enabled,
+      :type,
+      :action_rfq,
+      :no_action,
+      :minimum_booking_minutes,
+      :availability_template_id,
+      :transactable_type_action_type_id,
+      pricings_attributes: nested(self.transactable_pricing),
+      schedule_attributes: nested(self.schedule),
+      availability_template_attributes: nested(self.availability_template),
+    ]
+  end
+
+  def transactable_pricing
+    [
+      :id,
+      :transactable_type_pricing_id,
+      :price,
+      :price_cents,
+      :number_of_units,
+      :unit,
+      :has_exclusive_price,
+      :exclusive_price,
+      :has_book_it_out_discount,
+      :book_it_out_discount,
+      :book_it_out_minimum_qty,
+      :enabled,
+      :is_free_booking,
+      :currency
+    ]
   end
 
   def transactable_for_instance_admin(transactable_type)
@@ -1548,6 +1570,7 @@ class SecuredParams
       :delivery_ids,
       :dates,
       :total_amount_check,
+      :transactable_pricing_id,
       properties: Reservation.public_custom_attributes_names(reservation_type),
       dates: [],
       category_ids: [],
@@ -1557,6 +1580,7 @@ class SecuredParams
       payment_attributes: nested(self.payment),
       documents: nested(self.payment_document),
       documents_attributes: nested(self.payment_document),
+      payment_subscription_attributes: nested(self.payment_subscription),
       payment_documents_attributes: nested(self.payment_document),
       owner_attributes: nested(self.user),
       address_attributes: nested(self.address)
@@ -1565,6 +1589,7 @@ class SecuredParams
 
   def recurring_booking_request(reservation_type)
     [
+      :transactable_pricing_id,
       :quantity,
       :interval,
       :start_on,

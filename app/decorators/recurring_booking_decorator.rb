@@ -4,6 +4,10 @@ class RecurringBookingDecorator < Draper::Decorator
   include CurrencyHelper
   include TooltipHelper
 
+  def interval
+    object.transactable_pricing.units_to_s
+  end
+
   delegate_all
 
   def days
@@ -242,4 +246,6 @@ class RecurringBookingDecorator < Draper::Decorator
   def period_to_string(date)
     I18n.l(date.to_date, format: :long)
   end
+
+
 end

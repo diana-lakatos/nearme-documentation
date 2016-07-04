@@ -9,11 +9,11 @@ task migrate_industries: :environment do
 
 	instance_ids.each do |instance_id|
 		Instance.find(instance_id).set_context! rescue next
-		
+
 		category = Category.create(name: "Industries")
 
 		category.project_types << ProjectType.all
-		category.service_types << ServiceType.all
+		category.transactable_types << ServiceType.all
 		category.product_types << Spree::ProductType.all
 		category.instance_profile_types << InstanceProfileType.all
 

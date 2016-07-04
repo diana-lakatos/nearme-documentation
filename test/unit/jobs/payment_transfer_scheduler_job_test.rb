@@ -68,7 +68,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
             cancellation_policy_penalty_percentage: 0.4,
             refunded_at: Time.zone.now
           )
-          FactoryGirl.create(:refund, payment: rc, amount: 3000)
+          FactoryGirl.create(:refund, payment: rc, amount_cents: 3000)
           PaymentTransferSchedulerJob.perform
           assert_equal 6000, @company_1.payment_transfers.first.amount.cents
         end
@@ -97,10 +97,10 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
                                        )
 
           listing = FactoryGirl.create(:transactable,
-                                       :daily_price => 50,
                                        :currency => 'NZD',
                                        :location => location
                                       )
+          listing.action_type.day_pricings.first.update(price_cents: 5000)
 
           nzd_reservations = prepare_charged_reservations_for_listing(listing, 2)
           PaymentTransferSchedulerJob.perform

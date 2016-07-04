@@ -76,8 +76,9 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
   def booking_params
     {
       reservation_request: {
-        dates: @listing.booking_type == 'overnight' ? [Chronic.parse('next week Monday'), Chronic.parse('next week Tuesday')] : [Chronic.parse('Monday')],
+        dates: @listing.action_type.night_booking? ? [Chronic.parse('next week Monday'), Chronic.parse('next week Tuesday')] : [Chronic.parse('Monday')],
         quantity: "1",
+        transactable_pricing_id: @listing.action_type.pricings.first.id,
         payment_attributes: {
           payment_method_id: @payment_method.id,
           credit_card_attributes: {
@@ -100,10 +101,11 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
     @instance.update_attribute(:service_fee_guest_percent, 15)
     @instance.update_attribute(:payment_transfers_frequency, 'daily')
     FactoryGirl.create(:additional_charge_type, currency: 'USD', amount: 15)
-    @listing = FactoryGirl.create(:transactable, currency: currency, :daily_price => 25.00)
-
-    @listing.transactable_type.update_attribute(:service_fee_host_percent, 10)
-    @listing.transactable_type.update_attribute(:service_fee_guest_percent, 15)
+    @listing = FactoryGirl.create(:transactable, :with_time_based_booking, currency: currency)
+    pricing = @listing.action_type.pricing_for('1_day').update! price: 25
+    # @listing.action_type.save!
+    @listing.action_type.transactable_type_action_type.update_attribute(:service_fee_host_percent, 10)
+    @listing.action_type.transactable_type_action_type.update_attribute(:service_fee_guest_percent, 15)
     @instance.update_attribute(:payment_transfers_frequency, 'daily')
 
     payment_gateway = FactoryGirl.create(:stripe_payment_gateway)

@@ -16,8 +16,8 @@ class RecurringBooking < ActiveRecord::Base
   has_custom_attributes target_type: 'ReservationType', target_id: :reservation_type_id
 
   delegate :location, to: :listing
-  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :listing, allow_nil: true
-
+  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :action, allow_nil: true
+  delegate :action, to: :transactable_pricing
   attr_encrypted :authorization_token, :payment_gateway_class
 
   has_one :payment_subscription, as: :subscriber
@@ -31,6 +31,7 @@ class RecurringBooking < ActiveRecord::Base
   belongs_to :platform_context_detail, :polymorphic => true
   belongs_to :credit_card
   belongs_to :reservation_type
+  belongs_to :transactable_pricing, class_name: 'Transactable::Pricing'
 
   # Note: additional_charges are not yet implemented for RecurringBooking
   # Following line is added only for the purpouse of including Chargebale model
@@ -54,7 +55,7 @@ class RecurringBooking < ActiveRecord::Base
   scope :needs_charge, -> (date) { with_state(:confirmed, :overdued).where('next_charge_date <= ?', date) }
 
 
-  validates :transactable_id, :interval, :presence => true
+  validates :transactable_id, :presence => true
   validates :owner_id, presence: true, unless: -> { owner.present? }
 
   state_machine :state, initial: :unconfirmed do
@@ -170,7 +171,7 @@ class RecurringBooking < ActiveRecord::Base
   end
 
   def recalculate_next_charge_date
-    RecurringBooking::NextDateFactory.get_calculator(self.interval, self.next_charge_date).next_charge_date
+    RecurringBooking::NextDateFactory.get_calculator(transactable_pricing, self.next_charge_date).next_charge_date
   end
 
   def amount_calculator
@@ -240,12 +241,8 @@ class RecurringBooking < ActiveRecord::Base
     @total_amount_calculator ||= RecurringBooking::SubscriptionPriceCalculator.new(self)
   end
 
-  def weekly?
-    interval == 'weekly'
-  end
-
   def monthly?
-    interval == 'monthly'
+    transactable_pricing.unit == 'subscription_month'
   end
 
   def expire_at

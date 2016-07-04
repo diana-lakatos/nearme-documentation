@@ -16,11 +16,11 @@
             }
         }
 
-        .pricing-model--regular:before {
+        .pricing-model--time_based_booking:before {
             content: $fa-var-clock-o;
         }
 
-        .pricing-model--schedule:before {
+        .pricing-model--event_booking:before {
             content: $fa-var-calendar;
         }
 
@@ -28,7 +28,7 @@
             content: $fa-var-money;
         }
 
-        .pricing-model--subscription:before {
+        .pricing-model--subscription_booking:before {
             content: $fa-var-refresh;
         }
 

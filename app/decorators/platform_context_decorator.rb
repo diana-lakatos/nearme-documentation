@@ -9,7 +9,7 @@ class PlatformContextDecorator
            :content_holders, to: :theme
 
   delegate :bookable_noun, :lessor, :lessee, :name, :buyable?, :bookable?, :biddable?,
-           :transactable_types, :product_types, :project_types, :service_types, :wish_lists_icon_set,
+           :transactable_types, :service_types, :product_types, :project_types, :wish_lists_icon_set,
            :seller_attachments_enabled?, :wish_lists_enabled?, :webhook_token, to: :instance
 
   liquid_methods :lessors
