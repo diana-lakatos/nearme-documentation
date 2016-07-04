@@ -362,7 +362,8 @@ namespace :migrate do
       end
       if pricing.nil?
         unless pricing = t.action_type.pricings.first
-          pricing = create_pricing_for_t(t.action_type, t, t.action_type.transactable_type_action_type.pricings.first, nil, 'daily', nil, reservation.instance)
+          tt_pricing = t.action_type.transactable_type_action_type.pricings.first
+          pricing = create_pricing_for_t(t.action_type, t, tt_pricing, tt_pricing.try(:unit) || 'day', 'daily', tt_pricing.try(:number_of_units) || 1, reservation.instance)
           pricing.is_free_booking = true
           pricing.save!
         end
