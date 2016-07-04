@@ -3,6 +3,8 @@ class Api::BaseController < ApplicationController
   respond_to :json
   before_filter :verified_api_request?
   before_filter :require_authentication # whitelist approach
+  skip_before_action :redirect_if_marketplace_password_protected
+
 
   rescue_from ::DNM::Error, with: :nm_error
   rescue_from ::DNM::Unauthorized, with: :nm_unauthorized

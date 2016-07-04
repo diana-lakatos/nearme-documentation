@@ -174,6 +174,14 @@ class PlatformContext
     self
   end
 
+  def rules
+    @rules ||= @domain.reverse_proxies.where(environment: Rails.env)
+  end
+
+  def rack_rules
+    @rack_rules ||= rules.map { |rp| RackReverseProxy::Rule.new(rp.path, rp.destination_domain) }
+  end
+
   def initialize_with_instance(instance)
     @instance = instance
     @platform_context_detail = @instance

@@ -149,5 +149,9 @@ class Category < ActiveRecord::Base
     categorizable_transactables.update_all(updated_at: Time.now)
   end
 
+  def jsonapi_serializer_class_name
+    'CategoryJsonSerializer'
+  end
+
 end
 

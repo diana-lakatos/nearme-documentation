@@ -33,6 +33,8 @@ class Domain < ActiveRecord::Base
     end
   end
 
+  has_many :reverse_proxies
+
   belongs_to :target, polymorphic: true, touch: true
   belongs_to :instance
 

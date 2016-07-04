@@ -1105,6 +1105,8 @@ DesksnearMe::Application.routes.draw do
         resources :sessions, only: [:create]
         resources :users, only: [:create, :show]
         resource :space_wizard, only: [:create]
+        resources :transactables, only: [:index]
+        resources :reverse_proxy_links, only: [:index, :create]
       end
     end
 
@@ -1172,7 +1174,7 @@ DesksnearMe::Application.routes.draw do
       resources :phone_calls, only: [:new, :create, :destroy]
     end
 
-    get "/:slug(.:format)", to: 'pages#show', as: :pages, constraints: Constraints::PageConstraints.new
+    get "/:slug/(:slug2)/(:slug3)(.:format)", to: 'pages#show', as: :pages, constraints: Constraints::PageConstraints.new
 
     # delayed_job web gui
     match "/delayed_job" => DelayedJobWeb, :anchor => false, via: [:get, :post]
