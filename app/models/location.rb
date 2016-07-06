@@ -210,7 +210,7 @@ class Location < ActiveRecord::Base
     ShippoApi::ShippoFromAddressFillerFromSpree.new(self).to_hash
   end
 
-  def hide_defered_availability_rules?
+  def hide_location_availability?
     true
   end
 

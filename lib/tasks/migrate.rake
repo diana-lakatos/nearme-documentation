@@ -218,7 +218,7 @@ namespace :migrate do
           if tt.action_overnight_booking && tt.action_monthly_booking
             vars[:night_month_tt_pricing] = create_pricing_for_tt(tt_action, tt, 'night', 'monthly', (tt.days_for_monthly_rate.to_i > 0 ? tt.days_for_monthly_rate.to_i : 30), instance)
           end
-          if tt.action_daily_booking || tt.action_regular_booking || tt.action_free_booking
+          if tt.action_daily_booking || (tt.action_regular_booking && !tt.action_hourly_booking) || tt.action_free_booking
             vars[:day_day_tt_pricing] = create_pricing_for_tt(tt_action, tt, 'day', 'daily', 1, instance)
           end
           if tt.action_weekly_booking

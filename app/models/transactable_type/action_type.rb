@@ -11,7 +11,7 @@ class TransactableType::ActionType < ActiveRecord::Base
   has_many :pricings, as: :action, inverse_of: :action
   has_many :transactable_action_types, class_name: 'Transactable::ActionType', foreign_key: :transactable_type_action_type_id
 
-  delegate :default_currency, to: :transactable_type
+  delegate :default_currency, :hide_location_availability?, to: :transactable_type
 
   validates_presence_of :cancellation_policy_hours_for_cancellation,
     :cancellation_policy_penalty_percentage,

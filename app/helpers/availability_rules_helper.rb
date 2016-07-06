@@ -19,7 +19,7 @@ module AvailabilityRulesHelper
       choices[template.parent_type] << [template.id, template.translated_name, options]
     end
 
-    unless object.try(:hide_defered_availability_rules?)
+    unless object.try(:hide_location_availability?)
       defer_options = { :id => "availability_rules_defer" }
       defer_options[:description] = object.transactable.location.try(:availability) ? pretty_availability_sentence(object.transactable.location.availability).to_s : t('simple_form.hints.availability_template.description.location_hours')
       choices['use_location'] = [['', t('simple_form.labels.availability_template.use_parent_availability'), defer_options]]

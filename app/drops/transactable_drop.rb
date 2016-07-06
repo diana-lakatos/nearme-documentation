@@ -26,8 +26,6 @@ class TransactableDrop < BaseDrop
   #   the user object representing the administrator of this listing (if present)
   # last_booked_days
   #   number of days since the last reservation has been made
-  # hide_defered_availability_rules?
-  #   returns true if the availability rules cann't be defered to the location object
   # lowest_price
   #   lowest price for this listing
   # lowest_full_price

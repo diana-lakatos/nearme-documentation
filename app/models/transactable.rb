@@ -233,10 +233,6 @@ class Transactable < ActiveRecord::Base
     time_based_booking.try(:availability_template) || location.try(:availability_template)
   end
 
-  def hide_defered_availability_rules?
-    transactable_type.try(:hide_location_availability)
-  end
-
   def validation_for(field_names)
     custom_validators.where(field_name: field_names)
   end

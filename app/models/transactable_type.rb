@@ -204,7 +204,7 @@ class TransactableType < ActiveRecord::Base
     Rails.application.routes.url_helpers.transactable_type_space_wizard_list_path(self, options)
   end
 
-  def hide_location_availability
+  def hide_location_availability?
     skip_location? || !availability_options["defer_availability_rules"]
   end
 
