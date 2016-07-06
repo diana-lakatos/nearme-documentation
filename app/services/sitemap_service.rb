@@ -52,7 +52,7 @@ module SitemapService
   end
 
   def node_class_for_object(object)
-    klass = if object.class.name == "Spree::Product"
+    klass = if ['Spree::ProductDecorator', 'Spree::Product'].include?(object.class.name)
       "SitemapService::Node::ProductNode"
     else
       "SitemapService::Node::#{object.class.name}Node"
