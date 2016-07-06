@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160719193510) do
+ActiveRecord::Schema.define(version: 20160719125742) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -1270,10 +1270,10 @@ ActiveRecord::Schema.define(version: 20160719193510) do
     t.boolean  "lister_blogs_enabled",                                                              default: false
     t.boolean  "tax_included_in_price",                                                             default: true
     t.boolean  "skip_meta_tags",                                                                    default: false
-    t.string   "test_email"
-    t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
     t.boolean  "use_cart",                                                                          default: false
+    t.string   "test_email"
     t.boolean  "expand_orders_list",                                                                default: true
+    t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1517,7 +1517,6 @@ ActiveRecord::Schema.define(version: 20160719193510) do
 
   add_index "old_recurring_booking_periods", ["credit_card_id"], name: "index_old_recurring_booking_periods_on_credit_card_id", using: :btree
   add_index "old_recurring_booking_periods", ["instance_id"], name: "index_old_recurring_booking_periods_on_instance_id", using: :btree
-  add_index "old_recurring_booking_periods", ["recurring_booking_id", "period_start_date", "period_end_date"], name: "index_recurring_booking_periods_on_fk_and_dates", unique: true, using: :btree
 
   create_table "order_addresses", force: :cascade do |t|
     t.string   "firstname",         limit: 255
@@ -1552,21 +1551,20 @@ ActiveRecord::Schema.define(version: 20160719193510) do
     t.integer  "creator_id"
     t.integer  "company_id"
     t.integer  "partner_id"
+    t.integer  "currency_id"
+    t.integer  "order_id"
     t.integer  "transactable_id"
     t.integer  "transactable_pricing_id"
     t.integer  "reservation_type_id"
     t.integer  "shipping_address_id"
     t.integer  "billing_address_id"
-    t.string   "currency"
     t.string   "state",                                         limit: 255
     t.string   "type",                                          limit: 255
     t.string   "time_zone"
     t.boolean  "use_billing",                                               default: false, null: false
     t.string   "rejection_reason",                              limit: 255
-    t.string   "completed_form_component_ids",                  limit: 255
     t.integer  "cancellation_policy_hours_for_cancellation",                default: 0
     t.integer  "cancellation_policy_penalty_percentage",                    default: 0
-    t.integer  "cancellation_policy_penalty_hours",                         default: 0
     t.integer  "minimum_booking_minutes",                                   default: 60
     t.integer  "book_it_out_discount"
     t.text     "guest_notes"
@@ -1582,7 +1580,6 @@ ActiveRecord::Schema.define(version: 20160719193510) do
     t.datetime "archived_at"
     t.datetime "deleted_at"
     t.boolean  "insurance_enabled",                                         default: false, null: false
-    t.string   "delivery_type",                                 limit: 255
     t.string   "confirmation_email",                            limit: 255
     t.text     "comment"
     t.boolean  "create_charge"
@@ -1594,9 +1591,13 @@ ActiveRecord::Schema.define(version: 20160719193510) do
     t.integer  "quantity"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.hstore   "settings",                                                  default: {}
+    t.integer  "cancellation_policy_penalty_hours"
+    t.string   "completed_form_component_ids",                  limit: 50
+    t.string   "delivery_type",                                 limit: 50
     t.boolean  "exclusive_price"
     t.boolean  "book_it_out"
+    t.string   "currency"
+    t.hstore   "settings",                                                  default: {}
     t.datetime "completed_at"
   end
 
@@ -1604,7 +1605,9 @@ ActiveRecord::Schema.define(version: 20160719193510) do
   add_index "orders", ["company_id"], name: "index_orders_on_company_id", using: :btree
   add_index "orders", ["creator_id"], name: "index_orders_on_creator_id", using: :btree
   add_index "orders", ["currency"], name: "index_orders_on_currency", using: :btree
+  add_index "orders", ["currency_id"], name: "index_orders_on_currency_id", using: :btree
   add_index "orders", ["instance_id"], name: "index_orders_on_instance_id", using: :btree
+  add_index "orders", ["order_id"], name: "index_orders_on_order_id", using: :btree
   add_index "orders", ["owner_id"], name: "index_orders_on_owner_id", using: :btree
   add_index "orders", ["partner_id"], name: "index_orders_on_partner_id", using: :btree
   add_index "orders", ["reservation_type_id"], name: "index_orders_on_reservation_type_id", using: :btree
@@ -1802,7 +1805,6 @@ ActiveRecord::Schema.define(version: 20160719193510) do
     t.integer  "credit_card_id"
     t.integer  "payer_id"
     t.integer  "total_amount_cents",                                                             default: 0
-    t.string   "type"
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
@@ -2058,8 +2060,8 @@ ActiveRecord::Schema.define(version: 20160719193510) do
     t.string   "test_mode"
     t.text     "guest_notes"
     t.hstore   "properties"
-    t.integer  "reservation_type_id"
     t.integer  "transactable_pricing_id"
+    t.integer  "reservation_type_id"
     t.integer  "order_id"
   end
 
@@ -4064,7 +4066,6 @@ ActiveRecord::Schema.define(version: 20160719193510) do
   create_table "transactable_type_action_types", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "transactable_type_id"
-    t.boolean  "enabled",                                    default: true
     t.datetime "deleted_at"
     t.string   "type"
     t.integer  "minimum_booking_minutes",                    default: 60
@@ -4082,6 +4083,7 @@ ActiveRecord::Schema.define(version: 20160719193510) do
     t.boolean  "allow_action_rfq"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "enabled",                                    default: true
     t.boolean  "confirm_reservations",                       default: true
   end
 
@@ -4275,10 +4277,10 @@ ActiveRecord::Schema.define(version: 20160719193510) do
     t.boolean  "featured",                                                              default: false
     t.decimal  "cancellation_policy_penalty_hours",             precision: 8, scale: 2, default: 0.0
     t.boolean  "possible_payout",                                                       default: false
-    t.integer  "action_type_id"
     t.string   "available_actions",                                                     default: [],                     array: true
-    t.integer  "spree_product_id"
+    t.integer  "action_type_id"
     t.integer  "shipping_profile_id"
+    t.integer  "spree_product_id"
     t.boolean  "seek_collaborators",                                                    default: false
     t.integer  "followers_count",                                                       default: 0,         null: false
   end
