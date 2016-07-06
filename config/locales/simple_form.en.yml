@@ -312,6 +312,7 @@ en:
           pricings:
             allow_book_it_out_discount: "Allow Bulk Booking Discount"
             allow_exclusive_price: "Allow Exclusive Price"
+            allow_free_booking: 'Allow free booking'
             number_of_units: 'Number of units'
             unit: 'Unit'
             min_price: 'Minimal price'

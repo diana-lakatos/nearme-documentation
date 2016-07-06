@@ -16,6 +16,8 @@
         .col-md-2
           = pricing.input :max_price, as: :numeric
         .col-md-1
+          = pricing.input :allow_free_booking, :inline_label => true
+        .col-md-1
           = pricing.input :allow_book_it_out_discount, as: :boolean, :inline_label => true
         .col-md-1
           = pricing.input :allow_exclusive_price, as: :boolean, :inline_label => true

@@ -6,8 +6,8 @@
       = f.input :enabled, as: :boolean, label: f.object.decorate.units_translation('pricing.unit_price', 'pricing'), input_html: { 'data-price-enabler' => true, checked: !f.object.marked_for_destruction? && (f.object.persisted? || f.object.enabled == '1') }
   - else
     = f.hidden_field :enabled, value: '1'
-  - if tt_pricing.try(:allow_free_booking?) || f.object.action.transactable_type_action_type.allow_free_booking?
-    .col-md-3
+  .col-md-3
+    - if tt_pricing.try(:allow_free_booking?)
       = f.input :is_free_booking, as: :switch, inline_label: true, label: t("simple_form.labels.transactable.price_free"), input_html: { 'data-free-booking' => true }
   .col-md-4
     = f.input :price, as: :numeric, label: false, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), input_html: { 'data-price-field' => true }
