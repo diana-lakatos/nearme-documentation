@@ -92,7 +92,7 @@ class InstanceAdmin::BaseController < ApplicationController
   }
 
   PROJECTS_CONTROLLERS = {
-    'project_types'  => { default_action: 'index' },
+    'transactable_types'  => { default_action: 'index', title: 'Project Types' },
     'projects'   => { default_action: 'index' },
     'topics'  => { default_action: 'index' },
     'spam_reports'  => { default_action: 'index' }

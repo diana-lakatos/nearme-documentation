@@ -48,12 +48,14 @@ class UserDrop < BaseDrop
   #   average rating of this user as a seller
   # default_wish_list
   #   return default wish list
+  # external_id
+  #   id of a user in a third party system, used by bulk upload
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of,
     :with_mutual_friendship_source, :first_name, :middle_name, :last_name,
     :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
     :country_name, :phone, :current_address, :is_trusted?, :reservations,
     :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
-    :seller_average_rating, :default_wish_list, to: :source
+    :external_id, :seller_average_rating, :default_wish_list, to: :source
 
   # string containing the location of the user making use of the various fields
   # the user has filled in for his profile

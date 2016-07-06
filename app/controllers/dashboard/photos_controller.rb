@@ -20,8 +20,8 @@ class Dashboard::PhotosController < Dashboard::AssetsController
       render :text => {
         :id => @photo.id,
         :transactable_id => @photo.owner_id,
-        :thumbnail_dimensions => ['Project', 'Group'].include?(@owner_type) ? @photo.image.thumbnail_dimensions[:project_thumbnail] : @photo.image.thumbnail_dimensions[:medium],
-        :url => ['Project', 'Group'].include?(@owner_type) ? @photo.image_url(:project_thumbnail) : @photo.image_url(:medium) ,
+        :thumbnail_dimensions => ['Group'].include?(@owner_type) ? @photo.image.thumbnail_dimensions[:project_thumbnail] : @photo.image.thumbnail_dimensions[:medium],
+        :url => ['Group'].include?(@owner_type) ? @photo.image_url(:project_thumbnail) : @photo.image_url(:medium) ,
         :destroy_url => destroy_space_wizard_photo_path(@photo),
         :resize_url =>  edit_dashboard_photo_path(@photo),
         :sizes => sizes

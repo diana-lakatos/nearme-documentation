@@ -8,7 +8,7 @@ class GroupsController < ApplicationController
   def show
     @feed = ActivityFeedService.new(@group)
     @members = @group.approved_members.paginate(paginate_params)
-    @projects = @group.projects.enabled.paginate(paginate_params)
+    @transactables = @group.transactables.active.paginate(paginate_params)
   end
 
   protected

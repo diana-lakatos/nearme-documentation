@@ -13,11 +13,10 @@ class Dashboard::AssetsController < Dashboard::BaseController
       @listing = current_user.offers.find(params[:offer][:id]) if params[:offer][:id].present?
     elsif params[:transactable]
       @listing_params = params[:transactable]
-      @listing = current_user.listings.find(params[:transactable][:id]) if params[:transactable][:id].present?
-    elsif params[:project]
-      @listing_params = params[:project]
-      @owner_type = "Project"
-      @listing = current_user.projects.find(params[:project][:id]) if params[:project][:id].present?
+      @listing = current_user.listings.find_by_id(params[:transactable][:id]) if params[:transactable][:id].present?
+      @listing = current_user.created_listings.find(params[:transactable][:id]) if @listing.blank? && params[:transactable][:id].present?
+      @owner = @listing
+      @owner_type = 'Transactable'
     elsif params[:group]
       @listing_params = params[:group]
       @owner_type = "Group"

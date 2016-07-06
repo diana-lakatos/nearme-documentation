@@ -1,5 +1,5 @@
 - if collaboration.approved_by_user?
-  = link_to t('cancel_request'), project_project_collaborator_path(project_id: project, id: project.pending_collaboration), method: :delete, class: "button-a tiny red"
+  = link_to t('cancel_request'), transactable_transactable_collaborator_path(transactable_id: transactable, id: transactable.pending_collaboration), method: :delete, class: "button-a tiny red"
 - else
-  = link_to t('approve'), accept_project_project_collaborator_path(id: project.pending_collaboration, project_id: project),class: "button-a tiny"
-  = link_to t('decline'), project_project_collaborator_path(project_id: project, id: project.pending_collaboration), method: :delete, class: "button-a tiny red", style: "float: right;"
+  = link_to t('approve'), accept_transactable_transactable_collaborator_path(id: transactable.pending_collaboration, transactable_id: transactable),class: "button-a tiny"
+  = link_to t('decline'), transactable_transactable_collaborator_path(transactable_id: transactable, id: transactable.pending_collaboration), method: :delete, class: "button-a tiny red", style: "float: right;"

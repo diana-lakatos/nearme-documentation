@@ -28,7 +28,7 @@ class CommunityAdvancedReportsGenerator
   end
 
   def search
-    Project.where('created_at >= ? and created_at < ?', @start_date, @end_date).order('created_at ASC').collect do |project|
+    Transactable.where('created_at >= ? and created_at < ?', @start_date, @end_date).order('created_at ASC').collect do |project|
       COLUMNS.inject([]) do |project_values, column|
         project_values << get_project_attributes(project, column[0])
       end
@@ -42,9 +42,9 @@ class CommunityAdvancedReportsGenerator
     when :project_name
       project.name
     when :project_url
-      Rails.application.routes.url_helpers.project_url(project)
+      project.decorate.show_path
     when :project_state
-      project.draft_at.present? ? 'Draft' : 'Published'
+      project.draft.present? ? 'Draft' : 'Published'
     when :project_owner_name
       project.creator.name
     when :project_owner_profile_url
@@ -56,7 +56,7 @@ class CommunityAdvancedReportsGenerator
     when :project_owner_follower_count
       project.creator.followers.count
     when :project_summary
-      project.summary
+      project.properties.summary
     when :project_description
       project.description
     when :project_topics
@@ -64,13 +64,13 @@ class CommunityAdvancedReportsGenerator
     when :project_image_urls
       project.photos.collect { |photo| photo.original_image_url }.join(',')
     when :project_links
-      project.links.map { |link| [link.url, link.text, link.image.try(:url)].compact.join(',') }.join(' | ') 
+      project.links.map { |link| [link.url, link.text, link.image.try(:url)].compact.join(',') }.join(' | ')
     when :project_seeking_collaborators
       project.seek_collaborators? ? 'Yes' : 'No'
     when :project_collaborators
-      project.project_collaborators.collect { |collaborator| collaborator.user.name }.join(',')
+      project.transactable_collaborators.collect { |collaborator| collaborator.user.name }.join(',')
     when :project_collaborator_count
-      project.project_collaborators.count
+      project.transactable_collaborators.count
     when :project_follower_count
       project.followers_count
     when :project_featured_status

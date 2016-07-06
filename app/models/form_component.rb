@@ -5,7 +5,6 @@ class FormComponent < ActiveRecord::Base
   scoped_to_platform_context
 
   SPACE_WIZARD = 'space_wizard'
-  PROJECT_ATTRIBUTES = 'project_attributes'
   OFFER_ATTRIBUTES = 'offer_attributes'
   RESERVATION_ATTRIBUTES = 'reservation_attributes'
   TRANSACTABLE_ATTRIBUTES = 'transactable_attributes'
@@ -18,7 +17,7 @@ class FormComponent < ActiveRecord::Base
   LOCATION_ATTRIBUTES = 'location_attributes'
   FORM_TYPES = [
     SPACE_WIZARD, TRANSACTABLE_ATTRIBUTES, INSTANCE_PROFILE_TYPES,
-    PROJECT_ATTRIBUTES, BUYER_PROFILE_TYPES, SELLER_PROFILE_TYPES, OFFER_ATTRIBUTES,
+    BUYER_PROFILE_TYPES, SELLER_PROFILE_TYPES, OFFER_ATTRIBUTES,
     RESERVATION_ATTRIBUTES, DEFAULT_REGISTRATION, BUYER_REGISTRATION, SELLER_REGISTRATION,
     LOCATION_ATTRIBUTES
   ]
@@ -67,8 +66,6 @@ class FormComponent < ActiveRecord::Base
       end
     elsif form_componentable.instance_of?(TransactableType)
       [SPACE_WIZARD, TRANSACTABLE_ATTRIBUTES]
-    elsif form_componentable.instance_of?(ProjectType)
-      [SPACE_WIZARD, PROJECT_ATTRIBUTES]
     elsif form_componentable.instance_of?(ReservationType)
       [RESERVATION_ATTRIBUTES]
     elsif form_componentable.instance_of?(Instance)

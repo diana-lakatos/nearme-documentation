@@ -17,9 +17,9 @@ class Group < ActiveRecord::Base
   has_many :photos, as: :owner, dependent: :destroy
   has_many :links, as: :linkable, dependent: :destroy
 
-  has_many :group_projects, dependent: :destroy
-  has_many :projects, through: :group_projects
-  alias_method :all_projects, :projects
+  has_many :group_transactables, dependent: :destroy
+  has_many :transactables, through: :group_transactables
+  alias_method :all_transactables, :transactables
 
   has_many :group_members, dependent: :destroy
   has_many :memberships, class_name: 'GroupMember', dependent: :destroy

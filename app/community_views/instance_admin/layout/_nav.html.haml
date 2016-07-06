@@ -102,7 +102,7 @@
           - InstanceAdmin::BaseController::PROJECTS_CONTROLLERS.each do |controller_name, settings|
             %li
               %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/projects/" + controller_name), action: settings[:default_action]}", :class => is_active_instance_admin_nav_link(controller_name, settings)}
-                %span= "#{controller_name.titleize}"
+                %span= "#{settings[:title] || controller_name.titleize}"
 
     - if @authorizer.authorized?('Groups') && current_instance.is_community?
       %li#groups

@@ -245,7 +245,11 @@ class TransactableDrop < BaseDrop
 
   # url to the section in the app for managing this listing, with tracking
   def manage_listing_url_with_tracking
-    routes.edit_dashboard_company_transactable_type_transactable_path(@source.location, @source, track_email_event: true, token_key => @source.administrator.try(:temporary_token))
+    if PlatformContext.current.instance.is_community?
+      urlify(routes.edit_dashboard_project_type_project_path(@source.transactable_type, @source, token_key => @source.creator.try(:temporary_token), anchor: :collaborators))
+    else
+      routes.edit_dashboard_company_transactable_type_transactable_path(@source.location, @source, track_email_event: true, token_key => @source.administrator.try(:temporary_token))
+    end
   end
 
   # url to the application wizard for publishing a new listing

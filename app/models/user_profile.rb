@@ -14,6 +14,8 @@ class UserProfile < ActiveRecord::Base
 
   has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
 
+  delegate :onboarding, :onboarding?, to: :instance_profile_type
+
   SELLER  = 'seller'.freeze
   BUYER = 'buyer'.freeze
   DEFAULT = 'default'.freeze

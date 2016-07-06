@@ -4,19 +4,19 @@ class ActivityFeedEvent < ActiveRecord::Base
 
   EVENT_WHITELIST = %w(
     user_followed_user
-    user_followed_project
+    user_followed_transactable
     user_followed_topic
 
     user_updated_user_status
-    user_updated_project_status
+    user_updated_transactable_status
     user_updated_topic_status
 
-    user_added_photos_to_project
-    user_added_links_to_project
+    user_added_photos_to_transactable
+    user_added_links_to_transactable
 
-    user_created_project
+    user_created_transactable
     user_commented
-    user_commented_on_project
+    user_commented_on_transactable
 
     user_created_group
     user_added_photos_to_group
@@ -42,7 +42,7 @@ class ActivityFeedEvent < ActiveRecord::Base
   validates_inclusion_of :event, in: EVENT_WHITELIST
 
   scope :exclude_events, lambda {
-    where("event NOT IN (?)", ['user_followed_user', 'user_followed_project', 'user_followed_topic'])
+    where("event NOT IN (?)", ['user_followed_user', 'user_followed_transactable', 'user_followed_topic'])
   }
 
   before_create :update_affected_objects
@@ -78,15 +78,15 @@ class ActivityFeedEvent < ActiveRecord::Base
 
   def has_body?
     %w(
-      user_created_project
+      user_created_transactable
       user_created_topic
       user_updated_user_status
-      user_updated_project_status
+      user_updated_transactable_status
       user_updated_topic_status
-      user_added_photos_to_project
-      user_added_links_to_project
+      user_added_photos_to_transactable
+      user_added_links_to_transactable
       topic_created
-      user_commented_on_project
+      user_commented_on_transactable
       user_commented
 
       user_created_group
@@ -125,10 +125,10 @@ class ActivityFeedEvent < ActiveRecord::Base
   def is_text_update?
     %w(
       user_updated_user_status
-      user_updated_project_status
+      user_updated_transactable_status
       user_updated_topic_status
       user_commented
-      user_commented_on_project
+      user_commented_on_transactable
     ).include?(self.event)
   end
 

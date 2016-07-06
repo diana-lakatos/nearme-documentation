@@ -29,6 +29,7 @@ DesksnearMe::Application.routes.draw do
     resources :photos
 
     resources :listings, only: [:show, :create, :update, :destroy] do
+
       member do
         post 'reservation'
         post 'availability'
@@ -588,15 +589,15 @@ DesksnearMe::Application.routes.draw do
 
       namespace :projects do
         get '/', :to => 'base#index'
-        resources :project_types do
-          resources :custom_attributes, controller: 'project_types/custom_attributes'
-          resources :custom_validators, controller: 'project_types/custom_validators'
-          resources :categories, except: [:new, :show], controller: 'project_types/categories' do
+        resources :transactable_types do
+          resources :custom_attributes, controller: 'transactable_types/custom_attributes'
+          resources :custom_validators, controller: 'transactable_types/custom_validators'
+          resources :categories, except: [:new, :show], controller: 'transactable_types/categories' do
             member do
               get :jstree
             end
           end
-          resources :form_components, controller: 'project_types/form_components', except: [:show] do
+          resources :form_components, controller: 'transactable_types/form_components', except: [:show] do
             member do
               patch :update_rank
             end
@@ -643,8 +644,15 @@ DesksnearMe::Application.routes.draw do
       resources :bids, only: [:new, :create]
     end
     resources :topics, only: [:show]
-    resources :projects, only: [:show] do
-      resources :project_collaborators, only: [:create, :destroy] do
+
+    resources :groups, only: [:show] do
+      resources :group_members, only: [:create, :destroy] do
+        patch :accept, on: :member
+      end
+    end
+
+    resources :listings, only: [] do
+      resources :transactable_collaborators, only: [:create, :destroy] do
         member do
           get :accept
         end
@@ -656,16 +664,6 @@ DesksnearMe::Application.routes.draw do
           end
         end
       end
-    end
-
-    resources :groups, only: [:show] do
-      resources :group_members, only: [:create, :destroy] do
-        patch :accept, on: :member
-      end
-    end
-
-    resources :listings, only: [] do
-
 
     end
 
@@ -1004,7 +1002,7 @@ DesksnearMe::Application.routes.draw do
     get "/see_more_following_projects", to: "activity_feed#following_projects", as: :see_more_following_projects
     get "/see_more_following_topics", to: "activity_feed#following_topics", as: :see_more_following_topics
     get "/see_more_followers", to: "activity_feed#followers", as: :see_more_followers
-    get "/see_more_projects", to: "activity_feed#projects", as: :see_more_projects
+    get "/see_more_transactables", to: "activity_feed#transactables", as: :see_more_transactables
     get "/see_more_collaborators", to: "activity_feed#collaborators", as: :see_more_collaborators
     get "/see_more_members", to: "activity_feed#members", as: :see_more_members
     get "/see_more_groups", to: "activity_feed#groups", as: :see_more_groups
