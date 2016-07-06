@@ -16,8 +16,8 @@
           .header-a
             %h2.hx
               = t :projects
-              = "(#{@topic.projects.count})"
+              = "(#{@topic.transactables.count})"
             %p.action
               = link_to t(:view_all), '#projects', role: "tab", :'data-toggle' => "tab" , class: 'button-a small white'
           .featured
-            = render partial: 'shared/project', collection: @topic.projects.last(4)
+            = render partial: 'shared/transactable', collection: @topic.transactables.last(4)

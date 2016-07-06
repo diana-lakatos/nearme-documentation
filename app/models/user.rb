@@ -79,7 +79,7 @@ class User < ActiveRecord::Base
   has_many :comments, inverse_of: :creator
   has_many :created_companies, class_name: "Company", foreign_key: 'creator_id', inverse_of: :creator
   has_many :feed_followers, through: :activity_feed_subscriptions_as_followed, source: :follower
-  has_many :feed_followed_projects, through: :activity_feed_subscriptions, source: :followed, source_type: 'Project'
+  has_many :feed_followed_transactables, through: :activity_feed_subscriptions, source: :followed, source_type: 'Transactable'
   has_many :feed_followed_topics, through: :activity_feed_subscriptions, source: :followed, source_type: 'Topic'
   has_many :feed_followed_users, through: :activity_feed_subscriptions,  source: :followed, source_type: 'User'
   has_many :feed_following, through: :activity_feed_subscriptions, source: :follower
@@ -90,6 +90,8 @@ class User < ActiveRecord::Base
   has_many :instance_admins, foreign_key: 'user_id', dependent: :destroy
   has_many :listings, through: :locations, class_name: 'Transactable', inverse_of: :creator
   has_many :listing_orders, class_name: 'Order', through: :listings, source: :orders, inverse_of: :creator
+  has_many :created_listings, class_name: 'Transactable', foreign_key: 'creator_id'
+  has_many :listing_reservations, class_name: 'Reservation', through: :listings, source: :reservations, inverse_of: :creator
   has_many :listing_recurring_bookings, class_name: 'RecurringBooking', through: :listings, source: :recurring_bookings, inverse_of: :creator
   has_many :locations, through: :companies, inverse_of: :creator
   has_many :mailer_unsubscriptions
@@ -97,13 +99,13 @@ class User < ActiveRecord::Base
   has_many :attachments, class_name: 'SellerAttachment'
   has_many :products_images, foreign_key: 'uploader_id', class_name: 'Spree::Image'
   has_many :products, foreign_key: 'user_id', class_name: 'Spree::Product'
-  has_many :projects, foreign_key: 'creator_id', inverse_of: :creator
+  has_many :transactables, foreign_key: 'creator_id', inverse_of: :creator
   has_many :offers, foreign_key: 'creator_id', inverse_of: :creator
   has_many :bids
   has_many :offer_bids, class_name: 'Bid', through: :offers, source: :bids
-  has_many :projects_collaborated, through: :project_collaborators, source: :project
-  has_many :project_collaborators
-  has_many :approved_project_collaborations, -> { approved }, class_name: 'ProjectCollaborator'
+  has_many :transactables_collaborated, through: :transactable_collaborators, source: :transactable
+  has_many :transactable_collaborators
+  has_many :approved_transactable_collaborations, -> { approved }, class_name: 'TransactableCollaborator'
   has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
   has_many :orders, foreign_key: 'owner_id'
   has_many :recurring_bookings, foreign_key: 'owner_id'
@@ -155,7 +157,7 @@ class User < ActiveRecord::Base
 
   accepts_nested_attributes_for :approval_requests
   accepts_nested_attributes_for :companies
-  accepts_nested_attributes_for :projects
+  accepts_nested_attributes_for :transactables
   accepts_nested_attributes_for :current_address
   accepts_nested_attributes_for :seller_profile
   accepts_nested_attributes_for :buyer_profile
@@ -217,14 +219,14 @@ class User < ActiveRecord::Base
 
   scope :admin,     -> { where(admin: true) }
   scope :not_admin, -> { where("admin is NULL or admin is false") }
-  scope :with_joined_project_collaborations, -> { joins("LEFT OUTER JOIN project_collaborators pc ON users.id = pc.user_id AND (pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)")}
-  scope :created_projects, -> { joins('LEFT OUTER JOIN projects p ON users.id = p.creator_id') }
+  scope :with_joined_transactable_collaborations, -> { joins("LEFT OUTER JOIN transactable_collaborators pc ON users.id = pc.user_id AND (pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)")}
+  scope :created_transactables, -> { joins('LEFT OUTER JOIN transactables p ON users.id = p.creator_id') }
   scope :featured, -> { where(featured: true) }
 
   scope :by_topic, -> (topic_ids) do
     if topic_ids.present?
-      with_joined_project_collaborations.created_projects.
-        joins(" LEFT OUTER JOIN project_topics pt on pt.project_id = pc.project_id OR pt.project_id = p.id ").
+      with_joined_transactable_collaborations.created_transactables.
+        joins(" LEFT OUTER JOIN transactable_topics pt on pt.transactable_id = pc.transactable_id OR pt.transactable_id = p.id ").
         where('pt.topic_id IN (?)', topic_ids).group('users.id')
     end
   end
@@ -347,10 +349,10 @@ class User < ActiveRecord::Base
           group('addresses.id, users.id').joins(:current_address).select('users.*')
           .merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance', select: 'users.*'))
         when /number_of_projects/i
-          order('projects_count + project_collborations_count DESC')
+          order('transactables_count + transactable_collaborators_count DESC')
         else
           if PlatformContext.current.instance.is_community?
-            order('projects_count + project_collborations_count DESC, followers_count DESC')
+            order('transactables_count + transactable_collaborators_count DESC, followers_count DESC')
           else
             all
           end
@@ -405,27 +407,27 @@ class User < ActiveRecord::Base
     )
   end
 
-  def all_projects(with_pending = false)
-    # If with_pending is true we want all projects including those to which this user is an unapproved collaborator (added by owner but not approved by this user or added by user but not approved by owner)
-    # Projects with pending should only be visible on the users's own profile page
-    projects = Project.where("
+  def all_transactables(with_pending = false)
+    # If with_pending is true we want all transactables including those to which this user is an unapproved collaborator (added by owner but not approved by this user or added by user but not approved by owner)
+    # Transactables with pending should only be visible on the users's own profile page
+    transactables = Transactable.where("
      creator_id = ? OR
-     EXISTS (SELECT 1 from project_collaborators pc WHERE pc.project_id = projects.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NOT NULL #{with_pending ? "OR" : "AND"} approved_by_owner_at IS NOT NULL) AND deleted_at IS NULL)
+     EXISTS (SELECT 1 from transactable_collaborators pc WHERE pc.transactable_id = transactables.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NOT NULL #{with_pending ? "OR" : "AND"} approved_by_owner_at IS NOT NULL) AND deleted_at IS NULL)
                              ",id, id, email)
 
-    # If the project is pending we add .pending_collaboration to the object (if we requested pending objects as well)
+    # If the transactable is pending we add .pending_collaboration to the object (if we requested pending objects as well)
     if with_pending
-      projects = projects.select(
+      transactables = transactables.select(
         ActiveRecord::Base.send(:sanitize_sql_array,
-                                ["projects.*,
-           (SELECT pc.id from project_collaborators pc WHERE pc.project_id = projects.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) as pending_collaboration
+                                ["transactables.*,
+           (SELECT pc.id from transactable_collaborators pc WHERE pc.transactable_id = transactables.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) as pending_collaboration
                                  ",
                                  id, email
       ]
                                )
       )
     end
-    projects
+    transactables
   end
 
   def iso_country_code
@@ -433,8 +435,8 @@ class User < ActiveRecord::Base
     iso_country_code.presence || PlatformContext.current.instance.default_country_code
   end
 
-  def all_projects_count
-    projects_count + project_collborations_count
+  def all_transactables_count
+    transactables_count + transactable_collaborators_count
   end
 
   UserProfile::PROFILE_TYPES.each do |profile_type|

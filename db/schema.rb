@@ -14,10 +14,10 @@
 ActiveRecord::Schema.define(version: 20160719193510) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "hstore"
   enable_extension "plpgsql"
   enable_extension "btree_gin"
   enable_extension "btree_gist"
-  enable_extension "hstore"
 
   create_table "activity_feed_events", force: :cascade do |t|
     t.integer  "instance_id"
@@ -581,14 +581,6 @@ ActiveRecord::Schema.define(version: 20160719193510) do
   add_index "countries", ["iso"], name: "index_countries_on_iso", unique: true, using: :btree
   add_index "countries", ["name"], name: "index_countries_on_name", using: :btree
 
-  create_table "countries_shipping_rules", id: false, force: :cascade do |t|
-    t.integer "country_id",       null: false
-    t.integer "shipping_rule_id", null: false
-  end
-
-  add_index "countries_shipping_rules", ["country_id", "shipping_rule_id"], name: "country_shipping_rule_idx", using: :btree
-  add_index "countries_shipping_rules", ["shipping_rule_id", "country_id"], name: "shipping_rule_country_idx", using: :btree
-
   create_table "country_payment_gateways", force: :cascade do |t|
     t.string   "country_alpha2_code", limit: 255
     t.integer  "payment_gateway_id"
@@ -975,6 +967,14 @@ ActiveRecord::Schema.define(version: 20160719193510) do
     t.datetime "updated_at",  null: false
   end
 
+  create_table "group_transactables", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "group_id"
+    t.integer  "transactable_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
   create_table "groups", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "creator_id"
@@ -995,28 +995,6 @@ ActiveRecord::Schema.define(version: 20160719193510) do
   end
 
   add_index "groups", ["instance_id", "creator_id"], name: "index_groups_on_instance_id_and_creator_id", using: :btree
-
-  create_table "host_fee_line_items", force: :cascade do |t|
-    t.integer  "instance_id"
-    t.integer  "user_id"
-    t.integer  "company_id"
-    t.integer  "partner_id"
-    t.integer  "line_item_source_id"
-    t.string   "line_item_source_type"
-    t.integer  "line_itemable_id"
-    t.string   "line_itemable_type"
-    t.integer  "unit_price_cents",      default: 0
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "host_fee_line_items", ["company_id"], name: "index_host_fee_line_items_on_company_id", using: :btree
-  add_index "host_fee_line_items", ["instance_id"], name: "index_host_fee_line_items_on_instance_id", using: :btree
-  add_index "host_fee_line_items", ["line_item_source_id"], name: "index_host_fee_line_items_on_line_item_source_id", using: :btree
-  add_index "host_fee_line_items", ["line_itemable_id"], name: "index_host_fee_line_items_on_line_itemable_id", using: :btree
-  add_index "host_fee_line_items", ["partner_id"], name: "index_host_fee_line_items_on_partner_id", using: :btree
-  add_index "host_fee_line_items", ["user_id"], name: "index_host_fee_line_items_on_user_id", using: :btree
 
   create_table "impressions", force: :cascade do |t|
     t.integer  "impressionable_id"
@@ -1154,6 +1132,7 @@ ActiveRecord::Schema.define(version: 20160719193510) do
     t.string   "category_search_type"
     t.integer  "position",                                    default: 0
     t.boolean  "must_have_verified_phone_number",             default: false
+    t.boolean  "onboarding",                                  default: false
   end
 
   add_index "instance_profile_types", ["instance_id", "profile_type"], name: "index_instance_profile_types_on_instance_id_and_profile_type", unique: true, using: :btree
@@ -1957,9 +1936,11 @@ ActiveRecord::Schema.define(version: 20160719193510) do
     t.boolean  "featured",              default: false
     t.datetime "draft_at"
     t.integer  "followers_count",       default: 0,     null: false
+    t.integer  "transactable_id"
   end
 
   add_index "projects", ["instance_id", "creator_id"], name: "index_projects_on_instance_id_and_creator_id", using: :btree
+  add_index "projects", ["transactable_id"], name: "index_projects_on_transactable_id", using: :btree
 
   create_table "projects_user_status_updates", force: :cascade do |t|
     t.integer "project_id"
@@ -4034,6 +4015,22 @@ ActiveRecord::Schema.define(version: 20160719193510) do
   add_index "transactable_action_types", ["instance_id", "transactable_id", "type"], name: "transactable_action_types_main_idx", using: :btree
   add_index "transactable_action_types", ["instance_id"], name: "index_transactable_action_types_on_instance_id", using: :btree
 
+  create_table "transactable_collaborators", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "user_id"
+    t.integer  "transactable_id"
+    t.datetime "approved_by_user_at"
+    t.datetime "approved_by_owner_at"
+    t.string   "email"
+    t.datetime "deleted_at"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "transactable_collaborators", ["instance_id"], name: "index_transactable_collaborators_on_instance_id", using: :btree
+  add_index "transactable_collaborators", ["transactable_id"], name: "index_transactable_collaborators_on_transactable_id", using: :btree
+  add_index "transactable_collaborators", ["user_id"], name: "index_transactable_collaborators_on_user_id", using: :btree
+
   create_table "transactable_pricings", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "transactable_type_pricing_id"
@@ -4055,6 +4052,14 @@ ActiveRecord::Schema.define(version: 20160719193510) do
 
   add_index "transactable_pricings", ["instance_id", "action_type", "action_id"], name: "transactable_pricings_main_index", using: :btree
   add_index "transactable_pricings", ["instance_id"], name: "index_transactable_pricings_on_instance_id", using: :btree
+
+  create_table "transactable_topics", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "transactable_id"
+    t.integer  "topic_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
 
   create_table "transactable_type_action_types", force: :cascade do |t|
     t.integer  "instance_id"
@@ -4200,8 +4205,9 @@ ActiveRecord::Schema.define(version: 20160719193510) do
     t.boolean  "single_transactable",                                                            default: false
     t.decimal  "cancellation_policy_penalty_hours",                      precision: 8, scale: 2, default: 0.0
     t.boolean  "display_additional_charges",                                                     default: true
-    t.boolean  "single_location",                                                                default: false,      null: false
     t.boolean  "hide_additional_charges_on_listing_page",                                        default: false,      null: false
+    t.boolean  "single_location",                                                                default: false,      null: false
+    t.hstore   "custom_settings",                                                                default: {},         null: false
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -4273,6 +4279,8 @@ ActiveRecord::Schema.define(version: 20160719193510) do
     t.string   "available_actions",                                                     default: [],                     array: true
     t.integer  "spree_product_id"
     t.integer  "shipping_profile_id"
+    t.boolean  "seek_collaborators",                                                    default: false
+    t.integer  "followers_count",                                                       default: 0,         null: false
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
@@ -4280,6 +4288,13 @@ ActiveRecord::Schema.define(version: 20160719193510) do
   add_index "transactables", ["parent_transactable_id"], name: "index_transactables_on_parent_transactable_id", using: :btree
   add_index "transactables", ["slug"], name: "index_transactables_on_slug", using: :btree
   add_index "transactables", ["transactable_type_id"], name: "index_transactables_on_transactable_type_id", using: :btree
+
+  create_table "transactables_user_status_updates", force: :cascade do |t|
+    t.integer "transactable_id"
+    t.integer "user_status_update_id"
+  end
+
+  add_index "transactables_user_status_updates", ["transactable_id", "user_status_update_id"], name: "transactable_usu_id", using: :btree
 
   create_table "translations", force: :cascade do |t|
     t.string   "locale",         limit: 255
@@ -4549,6 +4564,7 @@ ActiveRecord::Schema.define(version: 20160719193510) do
     t.integer  "projects_count",                                     default: 0,                                                                                   null: false
     t.integer  "project_collborations_count",                        default: 0,                                                                                   null: false
     t.boolean  "click_to_call",                                      default: false
+    t.integer  "transactable_collaborators_count",                   default: 0,                                                                                   null: false
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

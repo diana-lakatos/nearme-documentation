@@ -75,7 +75,7 @@
                 %li
                   = t(:projects)
                   %span
-                    = member.projects_collaborated.count + member.projects.count
+                    = member.transactables_collaborated.count + member.created_listings.active.count
 
               %p
                 = link_to member.name, member

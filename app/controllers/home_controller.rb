@@ -12,7 +12,7 @@ class HomeController < ApplicationController
       @hide_intro_video = !!cookies['hide_intro_video']
 
       if current_user.nil?
-        @projects = Project.featured.take(3)
+        @projects = Transactable.active.featured.take(3)
         @users = User.includes(:current_address).featured.take(8)
         @topics = Topic.featured.take(6).to_a.sort { |a, b| order.index(b.name).to_i <=> order.index(a.name).to_i }
       else
@@ -20,7 +20,7 @@ class HomeController < ApplicationController
 
         @feed = ActivityFeedService.new(current_user.try(:model))
 
-        @projects = Project.featured.where.not(id: current_user.feed_followed_projects).take(3)
+        @projects = Transactable.active.featured.where.not(id: current_user.feed_followed_transactables).take(3)
         @users = User.featured.includes(:current_address).where.not(id: current_user.feed_followed_users).take(8)
         render :tutorial if current_user.should_render_tutorial?
       end

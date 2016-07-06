@@ -16,15 +16,23 @@ class Transactable < ActiveRecord::Base
 
   DEFAULT_ATTRIBUTES = %w(name description capacity)
 
+  SORT_OPTIONS = ['All', 'Featured', 'Most Recent', 'Most Popular', 'Collaborators']
+
   DATE_VALUES = ['today', 'yesterday', 'week_ago', 'month_ago', '3_months_ago', '6_months_ago']
 
   RENTAL_SHIPPING_TYPES = %w(no_rental delivery pick_up both).freeze
 
   PRICE_TYPES = [:hourly, :weekly, :daily, :monthly, :fixed, :exclusive, :weekly_subscription, :monthly_subscription]
 
+  # This must go before has_custom_attributes because of how the errors for the custom
+  # attributes are added to the instance
+  include CommunityValidators
   has_custom_attributes target_type: 'TransactableType', target_id: :transactable_type_id
   has_metadata accessors: [:photos_metadata]
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
+
+  include CreationFilter
+  include QuerySearchable
 
   has_many :customizations, as: :customizable
   has_many :additional_charge_types, as: :additional_charge_type_target
@@ -41,6 +49,10 @@ class Transactable < ActiveRecord::Base
     def thumb
       (first || build).thumb
     end
+
+    def except_cover
+      offset(1)
+    end
   end
   has_many :attachments, -> { order(:id) }, class_name: 'SellerAttachment', as: :assetable
   has_many :recurring_bookings, inverse_of: :transactable
@@ -54,11 +66,16 @@ class Transactable < ActiveRecord::Base
   has_many :billing_authorizations, as: :reference
   has_many :inappropriate_reports, as: :reportable, dependent: :destroy
   has_many :action_types, inverse_of: :transactable
+  has_many :data_source_contents, through: :transactable_topics
   belongs_to :transactable_type, -> { with_deleted }
   belongs_to :company, -> { with_deleted }, inverse_of: :listings
   belongs_to :location, -> { with_deleted }, inverse_of: :listings, touch: true
   belongs_to :instance, inverse_of: :listings
-  belongs_to :creator, -> { with_deleted }, class_name: "User" #, inverse_of: :listings, counter_cache: true
+  belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :listings
+  counter_culture :creator,
+    column_name: -> (t) { t.draft.nil? ? 'transactables_count' : nil },
+    column_names: { ["transactables.draft IS NULL AND transactables.deleted_at IS NULL"] => 'transactables_count' }
+
   belongs_to :administrator, -> { with_deleted }, class_name: "User", inverse_of: :administered_listings
   has_one :dimensions_template, as: :entity
 
@@ -74,6 +91,19 @@ class Transactable < ActiveRecord::Base
 
   belongs_to :spree_product, class_name: "Spree::Product"
 
+  has_many :activity_feed_events, as: :followed, dependent: :destroy
+  has_many :activity_feed_subscriptions, as: :followed, dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
+  has_many :feed_followers, through: :activity_feed_subscriptions, source: :follower
+  has_many :links, dependent: :destroy, as: :linkable
+  has_many :transactable_topics, dependent: :destroy
+  has_many :topics, through: :transactable_topics
+  has_many :approved_transactable_collaborators, -> { approved }, class_name: 'TransactableCollaborator', dependent: :destroy
+  has_many :collaborating_users, through: :approved_transactable_collaborators, source: :user
+  has_many :transactable_collaborators, dependent: :destroy
+  has_many :group_transactables, dependent: :destroy
+  has_many :groups, through: :group_transactables
+
   accepts_nested_attributes_for :additional_charge_types, reject_if: :all_blank, allow_destroy: true
   accepts_nested_attributes_for :approval_requests
   accepts_nested_attributes_for :attachments, allow_destroy: true
@@ -84,6 +114,7 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :waiver_agreement_templates, allow_destroy: true
   accepts_nested_attributes_for :customizations, allow_destroy: true
   accepts_nested_attributes_for :action_types, allow_destroy: true
+  accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
 
   # == Callbacks
   before_destroy :decline_reservations
@@ -99,6 +130,26 @@ class Transactable < ActiveRecord::Base
     true
   end
   after_destroy :close_request_for_quotes
+  after_destroy :fix_counter_caches
+  after_destroy :fix_counter_caches_after_commit
+
+  before_restore :restore_photos
+  before_restore :restore_links
+  before_restore :restore_transactable_collaborators
+
+  after_commit :user_created_transactable_event, on: :create, unless: ->(record) { record.draft? || record.skip_activity_feed_event }
+  def user_created_transactable_event
+    event = :user_created_transactable
+    user = self.creator.try(:object).presence || self.creator
+    affected_objects = [user] + self.topics
+    ActivityFeedService.create_event(event, self, affected_objects, self)
+  end
+  after_update :user_created_transactable_event_on_publish, unless: ->(record) { record.skip_activity_feed_event }
+  def user_created_transactable_event_on_publish
+    if draft_changed?
+      user_created_transactable_event
+    end
+  end
 
   # == Scopes
   scope :purchasable, -> { joins(:action_type).where("transactable_action_types.enabled = true AND transactable_action_types.type = 'Transactable::PurchaseAction'") }
@@ -178,21 +229,30 @@ class Transactable < ActiveRecord::Base
   }
 
   scope :with_date, ->(date) { where(created_at: date) }
+  scope :by_topic, -> (topic_ids) { includes(:transactable_topics).where(transactable_topics: {topic_id: topic_ids}) if topic_ids.present?}
+  scope :seek_collaborators, -> { where(seek_collaborators: true) }
+  scope :feed_not_followed_by_user, -> (current_user) {
+    where.not(id: current_user.feed_followed_transactables.pluck(:id))
+  }
 
   # == Validations
   validates_with CustomValidators
 
   validates :currency, presence: true, allow_nil: false, currency: true
-  validates :location, :transactable_type, :action_type, presence: true
+  validates :transactable_type, :action_type, presence: true
+  validates :location, presence: true, unless: ->(record) { record.location_not_required }
   validates :photos, length: {:minimum => 1}, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
   validates :quantity, presence: true, numericality: {greater_than: 0}, unless: ->(record) { record.action_type.is_a?(Transactable::PurchaseAction) }
 
   #TODO probably move to concern as different actions can be shipped
   validates :rental_shipping_type, inclusion: { in: RENTAL_SHIPPING_TYPES }
   validates_presence_of :dimensions_template, if: lambda { |record| ['delivery', 'both'].include?(record.rental_shipping_type) }
+  validates :topics, length: { minimum: 1 }, if: ->(record) { record.topics_required && !record.draft.present? }
 
   validates_associated :approval_requests, :action_type
   validates :name, length: { maximum: 255 }, allow_blank: true
+
+  after_save :trigger_workflow_alert_for_added_collaborators, unless: ->(record) { record.draft? }
 
   delegate :latitude, :longitude, :postcode, :city, :suburb, :state, :street, :country, to: :location_address, allow_nil: true
 
@@ -211,9 +271,10 @@ class Transactable < ActiveRecord::Base
   delegate :open_on?, :open_now?, :bookable?, :has_price?, :hours_to_expiration, to: :action_type, allow_nil: true
 
   attr_accessor :distance_from_search_query, :photo_not_required, :enable_monthly,
-    :enable_weekly, :enable_daily, :enable_hourly,
+    :enable_weekly, :enable_daily, :enable_hourly, :skip_activity_feed_event,
     :enable_weekly_subscription,:enable_monthly_subscription, :enable_deposit_amount,
-    :scheduled_action_free_booking, :regular_action_free_booking
+    :scheduled_action_free_booking, :regular_action_free_booking, :location_not_required,
+    :topics_required
 
   monetize :insurance_value_cents, with_model_currency: :currency, allow_nil: true
   monetize :deposit_amount_cents, with_model_currency: :currency, allow_nil: true
@@ -575,6 +636,46 @@ class Transactable < ActiveRecord::Base
     self.action_type ||= action_types.first
   end
 
+  def self.custom_order(order)
+    case order
+    when /most recent/i
+      order('transactables.created_at DESC')
+    when /most popular/i
+      #TODO check most popular sort after followers are implemented
+      order('transactables.followers_count DESC')
+    when /collaborators/i
+      group('transactables.id').
+        joins("LEFT OUTER JOIN transactable_collaborators tc ON transactables.id = tc.transactable_id AND (tc.approved_by_owner_at IS NOT NULL AND tc.approved_by_user_at IS NOT NULL AND tc.deleted_at IS NULL)").
+        order('count(tc.id) DESC')
+    when /featured/i
+      where(featured: true, draft: nil)
+    when /pending/i
+      where("(SELECT tc.id from transactable_collaborators tc WHERE tc.transactable_id = transactables.id AND tc.user_id = 6520 AND ( approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) IS NOT NULL")
+    else
+      if PlatformContext.current.instance.is_community?
+        order('transactables.followers_count DESC')
+      else
+        all
+      end
+    end
+  end
+
+  def cover_photo
+    photos.first || Photo.new
+  end
+
+  def build_new_collaborator
+    OpenStruct.new(email: nil)
+  end
+
+  def new_collaborators
+    (@new_collaborators || []).empty? ? [OpenStruct.new(email: nil)] : @new_collaborators
+  end
+
+  def new_collaborators_attributes=(attributes)
+    @new_collaborators = (attributes || {}).values.map { |c| c[:email] }.reject(&:blank?).uniq.map { |email| OpenStruct.new(email: email) }
+  end
+
   private
 
   def close_request_for_quotes
@@ -638,6 +739,62 @@ class Transactable < ActiveRecord::Base
 
   def should_update_sitemap_node?
     draft.nil? && enabled?
+  end
+
+  # Counter culture does not play along well (on destroy) with acts_as_paranoid
+  def fix_counter_caches
+    if self.creator && !self.creator.destroyed?
+      self.creator.update_column(:transactables_count, self.creator.listings.where(draft: nil).count)
+    end
+    true
+  end
+
+  # Counter culture does not play along well (on destroy) with acts_as_paranoid
+  def fix_counter_caches_after_commit
+    execute_after_commit { fix_counter_caches }
+    true
+  end
+
+  def restore_photos
+    self.photos.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', self.deleted_at - 30.seconds, self.deleted_at + 30.seconds).each do |photo|
+      begin
+        photo.restore(recursive: true)
+      rescue
+      end
+    end
+  end
+
+  def restore_links
+    self.links.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', self.deleted_at - 30.seconds, self.deleted_at + 30.seconds).each do |link|
+      begin
+        link.restore(recursive: true)
+      rescue
+      end
+    end
+  end
+
+  def trigger_workflow_alert_for_added_collaborators
+    return true if @new_collaborators.nil?
+    @new_collaborators.each do |collaborator|
+      collaborator_email = collaborator.email.try(:downcase)
+      next if collaborator_email.blank?
+      user = User.find_by(email: collaborator_email)
+      next unless user.present?
+      unless self.transactable_collaborators.for_user(user).exists?
+        pc = self.transactable_collaborators.build(user: user, email: collaborator_email, approved_by_owner_at: Time.zone.now)
+        pc.save!
+        WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorAddedByProjectOwner, pc.id)
+      end
+    end
+  end
+
+  def restore_transactable_collaborators
+    self.transactable_collaborators.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', self.deleted_at - 30.seconds, self.deleted_at + 30.seconds).each do |tc|
+      begin
+        tc.restore(recursive: true)
+      rescue
+      end
+    end
   end
 
   class NotFound < ActiveRecord::RecordNotFound; end

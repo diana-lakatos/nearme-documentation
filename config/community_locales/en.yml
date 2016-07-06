@@ -61,7 +61,7 @@ en:
     male: 'his'
     female: 'her'
   user_updated_status: "%{user_link} updated %{possessive} status"
-  user_created_project: "%{user_link} created a new %{project_link}"
+  user_created_transactable: "%{user_link} created a new %{project_link}"
   user_shared_article: "%{user_link} shared an article on the %{page_link}"
   user_added_collaborator: "%{user_link} added a new collaborator to the %{project_link} project"
   user_added_photo: "%{user_link} added a photo to the %{project_link} project"
@@ -238,17 +238,17 @@ en:
       unfollow: "Unfollow"
     events:
       user_followed_user: '%{follower} started following user %{followed}'
-      user_followed_project: '%{follower} started following project %{followed}'
+      user_followed_transactable: '%{follower} started following project %{followed}'
       user_followed_topic: '%{follower} started following topic %{followed}'
-      user_created_project: '%{user} created project %{project}'
+      user_created_transactable: '%{user} created project %{transactable}'
       user_updated_user_status: '%{user} updated %{updated} status'
-      user_updated_project_status: '%{user} updated project %{updated} status'
+      user_updated_transactable_status: '%{user} updated project %{updated} status'
       user_updated_topic_status: '%{user} updated topic %{updated} status'
-      user_added_photos_to_project: '%{user} added photos to project %{project}'
-      user_added_links_to_project: '%{user} added links to project %{project}'
+      user_added_photos_to_transactable: '%{user} added photos to project %{transactable}'
+      user_added_links_to_transactable: '%{user} added links to project %{transactable}'
       topic_created: '%{topic} has been created'
       user_commented: "%{user} added a comment on %{followed}'s %{activity}"
-      user_commented_on_project: "%{user} added a comment on project %{project}"
+      user_commented_on_transactable: "%{user} added a comment on project %{transactable}"
 
       user_created_group: '%{user} created group %{group}'
       user_added_photos_to_group: '%{user} added photos to group %{group}'

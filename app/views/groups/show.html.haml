@@ -27,7 +27,7 @@
             = link_to '#projects', role: "tab", :'data-toggle' => "tab" do
               = t(:projects)
               %small
-                = "(#{@projects.count})"
+                = "(#{@transactables.count})"
 
       - if @membership.try(:waiting_for_user_response?)
         %p
@@ -58,4 +58,4 @@
       .wrap-a.reduce-top
         .contain
           .box-a
-            = render 'shared/show_projects', projects: @projects, container: '#projects', see_more_route: see_more_projects_path(id: @group.id, type: @group.class.name, container: '#projects')
+            = render 'shared/show_transactables', transactables: @transactables, container: '#projects', see_more_route: see_more_transactables_path(id: @group.id, type: @group.class.name, container: '#projects')

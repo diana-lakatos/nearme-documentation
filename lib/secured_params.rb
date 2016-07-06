@@ -925,7 +925,7 @@ class SecuredParams
   end
 
   def project(transactable_type, is_project_owner = false)
-    based_params = ([
+    based_params = [
       :description,
       :transactable_type_id,
       :seek_collaborators,
@@ -934,8 +934,9 @@ class SecuredParams
       photo_ids: [],
       topic_ids: [],
       group_ids: [],
-    ] + Project.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:project_types).try(:first)).try(:id)))
-    based_params += [ :name, :summary, new_collaborators: [ :email, :id, :_destroy ], new_collaborators_attributes: nested(self.project_collaborator) ] if is_project_owner
+      properties_attributes: Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
+    ]
+    based_params += [ :name, new_collaborators: [ :email, :id, :_destroy ], new_collaborators_attributes: nested(self.transactable_collaborator) ] if is_project_owner
     based_params
   end
 
@@ -983,7 +984,14 @@ class SecuredParams
     ]
   end
 
-  def project_collaborator
+  def bid(reservation_type)
+    [
+      properties: Bid.public_custom_attributes_names(reservation_type),
+      payment_documents_attributes: nested(self.payment_document)
+    ]
+  end
+
+  def transactable_collaborator
     [
       :approved,
       :email
@@ -1156,7 +1164,6 @@ class SecuredParams
       current_address_attributes: nested(self.address),
       companies_attributes: nested(self.company(transactable_type: transactable_type)),
       approval_requests_attributes: nested(self.approval_request),
-      projects_attributes: nested(self.project(transactable_type)),
     ]
   end
 

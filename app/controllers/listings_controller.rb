@@ -1,21 +1,31 @@
 class ListingsController < ApplicationController
-  before_action :authenticate_user!, only: [:ask_a_question]
-  before_action :find_listing, only: [:show, :ask_a_question, :occurrences, :booking_module]
-  before_action :find_location, only: [:show, :ask_a_question]
-  before_action :find_transactable_type, only: [:show, :booking_module, :ask_a_question]
-  before_action :find_siblings, only: [:show, :ask_a_question]
-  before_action :redirect_if_listing_inactive, only: [:show, :ask_a_question]
-  before_action :redirect_if_non_canonical_url, only: [:show]
-  before_action :assign_transactable_type_id_to_lookup_context
+  before_action :authenticate_user!, only: [:ask_a_question], if: :not_community?
+  before_action :find_listing, only: [:show, :ask_a_question, :occurrences, :booking_module], if: :not_community?
+  before_action :find_location, only: [:show, :ask_a_question], if: :not_community?
+  before_action :find_transactable_type, only: [:show, :booking_module, :ask_a_question], if: :not_community?
+  before_action :find_siblings, only: [:show, :ask_a_question], if: :not_community?
+  before_action :redirect_if_listing_inactive, only: [:show, :ask_a_question], if: :not_community?
+  before_action :redirect_if_non_canonical_url, only: [:show], if: :not_community?
+  before_action :assign_transactable_type_id_to_lookup_context, if: :not_community?
+
+  before_filter :find_project, only: [:show], if: :is_community?
+  before_filter :redirect_if_draft, only: [:show], if: :is_community?
+  before_filter :build_comment, only: [:show], if: :is_community?
 
   def show
-    @section_name = 'listings'
+    if !PlatformContext.current.instance.is_community?
+      @section_name = 'listings'
 
-    @listing.track_impression(request.remote_ip)
-    event_tracker.viewed_a_listing(@listing, { logged_in: user_signed_in? })
-    @reviews = @listing.reviews.paginate(page: params[:reviews_page])
+      @listing.track_impression(request.remote_ip)
+      event_tracker.viewed_a_listing(@listing, { logged_in: user_signed_in? })
+      @reviews = @listing.reviews.paginate(page: params[:reviews_page])
 
-    @rating_questions = RatingSystem.active_with_subject(RatingConstants::TRANSACTABLE).try(:rating_questions)
+      @rating_questions = RatingSystem.active_with_subject(RatingConstants::TRANSACTABLE).try(:rating_questions)
+    else
+      @feed = ActivityFeedService.new(@transactable)
+      @followers = @transactable.feed_followers.paginate(pagination_params)
+      @collaborators = @transactable.collaborating_users.paginate(pagination_params)
+    end
   end
 
   def booking_module
@@ -134,5 +144,34 @@ class ListingsController < ApplicationController
     redirect_to @listing.show_path(params.except(:format, :location_id, :controller, :action, :id, :transactable_type_id)), status: 301 unless [@listing.show_path, @listing.show_path(language: I18n.locale)].include?(request.path)
   end
 
+  def is_community?
+    PlatformContext.current.instance.is_community?
+  end
+
+  def not_community?
+    !is_community?
+  end
+
+  # Community methods
+
+  def find_project
+    @transactable = Transactable.find(params[:id]).decorate
+  end
+
+  def redirect_if_draft
+    redirect_to root_url, notice: I18n.t('draft_project') if @transactable.draft.present? && @project.creator != current_user
+  end
+
+  def build_comment
+    @comment = @transactable.comments.build
+    @comments = @transactable.comments.includes(:user).order("created_at DESC")
+  end
+
+  def pagination_params
+    {
+      page: 1,
+      per_page: ActivityFeedService::Helpers::FOLLOWED_PER_PAGE
+    }
+  end
 
 end

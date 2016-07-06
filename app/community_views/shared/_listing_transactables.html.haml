@@ -1,0 +1,17 @@
+- if transactables.empty?
+  %p.empty-resultset= t('user_profile.empty_resultset.projects')
+- else
+  / grid
+  .grid-a-search-a
+    .wrap.content-container
+      - transactables.each do |transactable|
+        = render 'shared/transactable', transactable: transactable
+
+  / more
+  - if user_signed_in?
+    %p.more-a{:'data-see-more' => true, class: "#{transactables.next_page ? '' : 'hide-initially'}"}
+      %button{ data: { url: see_more_route, next_page: transactables.next_page } }
+        = t(:see_more)
+  - elsif transactables.next_page
+    %p.more-a
+      = link_to t(:see_more), new_user_session_path
