@@ -274,7 +274,7 @@ class Instance < ActiveRecord::Base
   end
 
   def subscribable?
-    @subscribable ||= action_types.where(type: 'TransactableType::SubscriptionBooking').any?
+    @subscribable ||= action_types.where(type: 'TransactableType::SubscriptionBooking').enabled.any?
   end
 
   def marketplace_type
