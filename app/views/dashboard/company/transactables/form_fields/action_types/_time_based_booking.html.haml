@@ -12,7 +12,7 @@
         - if !pricing.object.transactable_type_pricing && (pricing.object.errors.any? || pricing.object.new_record?)
           = render 'dashboard/company/transactables/form_fields/action_types/custom_pricing', f: pricing
         -else
-          = render 'dashboard/company/transactables/form_fields/action_types/pricing', f: pricing, tt_pricing: pricing.object.transactable_type_pricing
+          = render 'dashboard/company/transactables/form_fields/action_types/pricing', f: pricing, tt_pricing: pricing.object.transactable_type_pricing, show_free_column: f.object.try(:allow_free_booking?)
     - if f.object.allow_custom_pricings?
       .add-link
         = link_to_add_association t('pricing.add_new') , f, :pricings, partial: 'dashboard/company/transactables/form_fields/action_types/custom_pricing', render_options: { locals: { tt_pricing: nil } }, class: 'btn btn-primary'
