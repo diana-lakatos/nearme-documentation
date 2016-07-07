@@ -1,4 +1,7 @@
 class RegenerateUploaderVersionsJob < Job
+
+  include Job::LongRunning
+
   def after_initialize(uploader)
     @uploader = uploader
   end
