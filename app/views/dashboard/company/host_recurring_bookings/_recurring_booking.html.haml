@@ -61,10 +61,6 @@
       %h3= t('dashboard.user_recurring_bookings.next_payment_at')
       %p= l(recurring_booking.next_charge_date, format: :short)
 
-      .col-md-3
-        %p= recurring_booking.transactable_pricing.decorate.units_translation("dashboard.user_recurring_bookings.every_unit_price")
-        %p= recurring_booking.total_price_for(current_user)
-
       - if recurring_booking.recurring_booking_periods.any?
         %h3= t('dashboard.user_recurring_bookings.paid_until')
         - if recurring_booking.paid_until.present?
@@ -73,13 +69,9 @@
           %p
             %span.label.label-error= t('dashboard.user_recurring_bookings.not_paid')
 
-
     .col-md-3
-      %h3= recurring_booking.transactable_pricing.decorate.units_translation('dashboard.user_recurring_bookings.every_unit_price')
-      %p= recurring_booking.total_payable_to_host_formatted
-
-
-
+      %p= recurring_booking.transactable_pricing.decorate.units_translation("dashboard.user_recurring_bookings.every_unit_price")
+      %p= recurring_booking.total_price_for(current_user)
 
   - if recurring_booking.guest_notes.present?
     %h3= t('dashboard.user_recurring_bookings.user_note')
