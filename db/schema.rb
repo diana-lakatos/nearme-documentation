@@ -11,13 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160701143125) do
+ActiveRecord::Schema.define(version: 20160708135659) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "hstore"
   enable_extension "plpgsql"
   enable_extension "btree_gin"
   enable_extension "btree_gist"
+  enable_extension "hstore"
 
   create_table "activity_feed_events", force: :cascade do |t|
     t.integer  "instance_id"
@@ -353,19 +353,20 @@ ActiveRecord::Schema.define(version: 20160701143125) do
   end
 
   create_table "blog_posts", force: :cascade do |t|
-    t.string   "title",            limit: 255
+    t.string   "title",                               limit: 255
     t.text     "content"
-    t.string   "header",           limit: 255
-    t.string   "author_name",      limit: 255
+    t.string   "header",                              limit: 255
+    t.string   "author_name",                         limit: 255
     t.text     "author_biography"
-    t.string   "author_avatar",    limit: 255
+    t.string   "author_avatar",                       limit: 255
     t.integer  "blog_instance_id"
     t.integer  "user_id"
-    t.string   "slug",             limit: 255
+    t.string   "slug",                                limit: 255
     t.datetime "published_at"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
     t.text     "excerpt"
+    t.datetime "author_avatar_versions_generated_at"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -441,20 +442,21 @@ ActiveRecord::Schema.define(version: 20160701143125) do
   end
 
   create_table "ckeditor_assets", force: :cascade do |t|
-    t.string   "data_file_name",    limit: 255, null: false
-    t.string   "data_content_type", limit: 255
+    t.string   "data_file_name",             limit: 255, null: false
+    t.string   "data_content_type",          limit: 255
     t.integer  "data_file_size"
     t.integer  "assetable_id"
-    t.string   "assetable_type",    limit: 30
-    t.string   "type",              limit: 30
+    t.string   "assetable_type",             limit: 30
+    t.string   "type",                       limit: 30
     t.integer  "width"
     t.integer  "height"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.integer  "instance_id"
-    t.string   "access_level",      limit: 255
+    t.string   "access_level",               limit: 255
     t.integer  "user_id"
     t.string   "title"
+    t.datetime "data_versions_generated_at"
   end
 
   add_index "ckeditor_assets", ["assetable_type", "assetable_id"], name: "idx_ckeditor_assetable", using: :btree
@@ -988,6 +990,7 @@ ActiveRecord::Schema.define(version: 20160701143125) do
     t.datetime "draft_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "cover_image_versions_generated_at"
   end
 
   add_index "groups", ["instance_id", "creator_id"], name: "index_groups_on_instance_id_and_creator_id", using: :btree
@@ -1334,6 +1337,7 @@ ActiveRecord::Schema.define(version: 20160701143125) do
     t.integer  "linkable_id"
     t.string   "linkable_type"
     t.datetime "deleted_at"
+    t.datetime "image_versions_generated_at"
   end
 
   add_index "links", ["instance_id", "linkable_id", "linkable_type"], name: "index_links_on_instance_id_and_linkable_id_and_linkable_type", using: :btree
@@ -4305,19 +4309,20 @@ ActiveRecord::Schema.define(version: 20160701143125) do
 
   create_table "user_blog_posts", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "title",             limit: 255
-    t.string   "slug",              limit: 255
-    t.string   "hero_image",        limit: 255
+    t.string   "title",                                   limit: 255
+    t.string   "slug",                                    limit: 255
+    t.string   "hero_image",                              limit: 255
     t.text     "content"
     t.text     "excerpt"
     t.datetime "published_at"
-    t.string   "author_name",       limit: 255
+    t.string   "author_name",                             limit: 255
     t.text     "author_biography"
-    t.string   "author_avatar_img", limit: 255
+    t.string   "author_avatar_img",                       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "highlighted",                   default: false
+    t.boolean  "highlighted",                                         default: false
     t.integer  "instance_id"
+    t.datetime "author_avatar_img_versions_generated_at"
   end
 
   create_table "user_blogs", force: :cascade do |t|
