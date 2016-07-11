@@ -6,7 +6,7 @@ namespace :jira do
 
     @client = @jira_helper.jira_client
 
-    issues = @client.Issue.jql("project = \"Near Me\" AND sprint = #{args[:sprint_number]} AND status != Closed AND fixVersion is NULL")
+    issues = @client.Issue.jql("project = \"Near Me\" AND sprint = #{args[:sprint_number]} AND status != Closed", max_results: 500)
 
     tickets_assigned_to_sprint = issues.map { |i| [i.key, i.summary].join(' ') }
     puts "All tickets assigned to sprint #{args[:sprint_number]} - total count #{tickets_assigned_to_sprint.count}"
@@ -19,10 +19,12 @@ namespace :jira do
     puts "Cards assigned to WRONG sprint"
     puts "*******************"
     @cards_to_be_added_to_sprint = []
+
+    @printer = JiraCardPrinter.new(@client)
     issues_not_included_in_sprint.each do |number|
       begin
         issue = @client.Issue.find(number)
-        puts "Is this issue part of the sprint: #{@jira_helper.full_names([number], @jira_helper.jira_commits)[0]} [fixVersions: #{issue.fixVersions.map(&:name).join(', ')}] [y]/[n]/[o]"
+        @printer.print(@jira_helper.full_names([number], @jira_helper.jira_commits)[0], issue)
         user_input = STDIN.gets.strip
         while(!%w(y n).include?(user_input)) do
           if user_input == 'o'
@@ -50,7 +52,8 @@ namespace :jira do
     puts "*******************"
     issues_to_be_moved_to_next_sprint = []
     issues_without_code.each do |number|
-      puts "Is this issue part of the sprint: #{@jira_helper.full_names([number], tickets_assigned_to_sprint)[0]} [y]/[n]/[o]"
+
+      @printer.print(@jira_helper.full_names([number], tickets_assigned_to_sprint)[0], @client.Issue.find(number))
       user_input = STDIN.gets.strip
       while(!%w(y n).include?(user_input)) do
         if user_input == 'o'
@@ -74,13 +77,13 @@ namespace :jira do
             puts "\tinvalid input"
           end
           user_input = STDIN.gets.strip
-          case user_input
-          when "y"
-            puts "\t\tmoving to the next sprint"
-            issues_to_be_moved_to_next_sprint << number
-          when "n"
-            puts "\tskipping"
-          end
+        end
+        case user_input
+        when "y"
+          puts "\t\tmoving to the next sprint"
+          issues_to_be_moved_to_next_sprint << number
+        when "n"
+          puts "\t\tskipping"
         end
       end
     end
@@ -97,10 +100,12 @@ namespace :jira do
         puts "Error for card: #{card_in_sprint}. #{e} - can't assign sprint and fixVersion"
       end
     end
+    puts "Moving cards: #{issues_to_be_moved_to_next_sprint.join(",")} to next sprint"
     issues_to_be_moved_to_next_sprint.each do |number|
       begin
         jira_card = @client.Issue.find(number)
         jira_card.save({ fields: { customfield_10007: args[:sprint_number].to_i + 1}})
+        jira_card.save({ fields: { fixVersions: [] } })
       rescue => e
         puts "Error for card: #{card_in_sprint}. #{e} - can't move to the next sprint"
       end
@@ -229,4 +234,29 @@ class JiraHelper
     @jira_client ||= JIRA::Client.new({username: 'jira-api', password: 'N#arM3123adam', context_path: '',site: 'https://near-me.atlassian.net', rest_base_path: "/rest/api/2", auth_type: :basic, read_timeout: 120 })
   end
 
+end
+
+class JiraCardPrinter
+
+  def initialize(client)
+    @client = client
+    @epics = {}
+  end
+
+  def print(name, issue)
+    if issue.customfield_10008.present?
+      @epics[issue.customfield_10008] ||= @client.Issue.find(issue.customfield_10008).summary
+    end
+
+    puts %Q{
+Is this issue part of the sprint:
+
+  Number: #{name}
+  fixVersions: #{issue.fixVersions.map(&:name).join(', ')}
+  status: #{issue.status.name}
+  assignee: #{issue.assignee.displayName}
+  epic: #{@epics[issue.customfield_10008]}
+  [y]/[n]/[o]
+    }
+  end
 end
