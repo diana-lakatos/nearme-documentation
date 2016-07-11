@@ -78,7 +78,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     context 'visited_listing' do
-      should 'find only users with confirmed past reservation for listing in friends' do
+      should 'xxxfind only users with confirmed past reservation for listing in friends' do
         FactoryGirl.create(:reservation, state: 'confirmed')
 
         4.times { @me.add_friend(FactoryGirl.create(:user)) }

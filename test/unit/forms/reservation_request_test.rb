@@ -5,7 +5,7 @@ class ReservationRequestTest < ActiveSupport::TestCase
   context 'payment method' do
 
     should 'use correct payment_method' do
-      @listing = FactoryGirl.create(:transactable, :name => "blah", currency: "USD")
+      @listing = FactoryGirl.create(:transactable, :with_time_based_booking, :name => "blah", currency: "USD")
       @user = FactoryGirl.create(:user, name: "Firstname Lastname")
       stub_active_merchant_interaction
 
@@ -26,7 +26,7 @@ class ReservationRequestTest < ActiveSupport::TestCase
   end
 
   should "assign correct cancellation policies" do
-    TransactableType.update_all({
+    TransactableType::ActionType.update_all({
       cancellation_policy_enabled: Time.zone.now,
       cancellation_policy_hours_for_cancellation: 48,
       cancellation_policy_penalty_percentage: 50})

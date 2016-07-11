@@ -2,9 +2,11 @@
 module ReservationTestSupport
   # Prepares a company and initializes some confirmed, charged reservations.
   def prepare_company_with_charged_reservations(options = {})
-    options.reverse_merge!(:reservation_count => 1, :listing => { :daily_price => 50 })
+    options.reverse_merge!(:reservation_count => 1)
 
-    listing = FactoryGirl.create(:transactable, options[:listing])
+    listing = FactoryGirl.create(:transactable)
+    listing.action_type.day_pricings.first.update(price_cents: 5000)
+
     prepare_charged_reservations_for_listing(listing, options[:reservation_count])
     listing.company
   end
@@ -20,7 +22,10 @@ module ReservationTestSupport
     reservations = []
     count.times do |i|
       reservation_request_attributes = FactoryGirl.attributes_for(:reservation_request)
-      reservation_request_attributes.merge!({ dates:[(date + i).to_s(:db)] })
+      reservation_request_attributes.merge!({
+        dates:[(date + i).to_s(:db)],
+        transactable_pricing_id: listing.action_type.day_pricings.first.id
+      })
 
       reservation_request = ReservationRequest.new(listing, user, reservation_request_attributes )
       if options.has_key?("reservation_#{i}".to_sym)

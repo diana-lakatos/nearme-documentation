@@ -58,7 +58,18 @@ class DataImporter::CsvCurrentDataGenerator < DataImporter::File
                 end
         data_row << begin
                       if (object == 'transactable' && model.present? && !model.respond_to?(field))
-                        model.try(:properties).try(:send, field)
+                        if field == 'listing_categories'
+                          model.categories.map { |c| c.permalink }.join(',')
+                        elsif field =~ /_price_cents/
+                          if model.action_type
+                            price = model.action_type.pricings.find{ |p| p.units_to_s == field.match(/for_(.*)_price_cents/)[1]}
+                            if price
+                              price.is_free_booking? ? 'Free' : price.price_cents
+                            end
+                          end
+                        else
+                          model.try(:properties).try(:send, field)
+                        end
                       elsif object == 'company' && model.present? && field == 'company_industries_list'
                         model.industries.map { |c| c.name }.join(',')
                       else
@@ -71,5 +82,4 @@ class DataImporter::CsvCurrentDataGenerator < DataImporter::File
   end
 
 end
-
 

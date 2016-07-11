@@ -45,7 +45,20 @@ class TransactableType::CsvFieldsBuilder
 
   def csv_fields_for_object(object)
     klass = object.to_s.classify.constantize
-    (klass == import_class ? klass.csv_fields(@importable) : klass.csv_fields).with_indifferent_access
+    case object
+      when 'company'
+        @company_fields ||= (klass == import_class ? klass.csv_fields(@importable) : klass.csv_fields).with_indifferent_access
+      when 'location'
+        @location_fields ||= (klass == import_class ? klass.csv_fields(@importable) : klass.csv_fields).with_indifferent_access
+      when 'address'
+        @address_fields ||= (klass == import_class ? klass.csv_fields(@importable) : klass.csv_fields).with_indifferent_access
+      when 'transactable'
+        @transactable_fields ||= (klass == import_class ? klass.csv_fields(@importable) : klass.csv_fields).with_indifferent_access
+      when 'photo'
+        @photo_fields ||= (klass == import_class ? klass.csv_fields(@importable) : klass.csv_fields).with_indifferent_access
+      else
+        (klass == import_class ? klass.csv_fields(@importable) : klass.csv_fields).with_indifferent_access
+      end
   end
 
   def to_object_field_notation(model)

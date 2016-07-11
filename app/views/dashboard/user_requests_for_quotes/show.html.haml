@@ -22,9 +22,12 @@
         - if @ticket.reservation_details && @ticket.reservation_details['quantity'].present?
           = @ticket.reservation_details['quantity']
 
-        - if @ticket.target.try(:schedule_booking?) && @ticket.reservation_date.present?
+        - if @ticket.target.try(:event_booking?) && @ticket.reservation_date.present?
           &times;
           = l(@ticket.reservation_date, format: :long)
+        - elsif @ticket.target.try(:subscription_booking) && @ticket.reservation_date.present? && @ticket.reservation_pricing
+          &times;
+          = t('support.new.subscription', period: @ticket.reservation_pricing.units_translation('search.per_unit_price').titleize, from: l(@ticket.reservation_date, format: :long))
         - elsif @ticket.reservation_dates.any?
           - if @ticket.reservation_details['start_minute'].present? && @ticket.reservation_details['end_minute'].present?
             - @hourly_presenter = HourlyPresenter.new(@ticket.reservation_dates.first, @ticket.reservation_details['start_minute'].to_i, @ticket.reservation_details['end_minute'].to_i)

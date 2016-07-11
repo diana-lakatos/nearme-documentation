@@ -1,4 +1,5 @@
 .row.nested-fields{ :"data-junction-label" => t('pricing.availability.available_and')}
+  = f.input :_destroy, as: :hidden
   .col-xs-11
     .form-inline
       = f.input :open_time, as: :time_picker, label: false, input_html: { value: f.object.try(:open_time_with_default) }, wrapper_html: { class: 'form-control-sm' }
@@ -18,6 +19,6 @@
           = f.error :base
   .col-xs-1
     .form-action
-      %button.action--remove.remove_fields.dynamic{:type => "button"}
-        = t('pricing.availability.remove_period')
+      = link_to_remove_association f, class: 'remove_fields' do
+        %button.action--remove
 

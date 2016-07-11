@@ -3,7 +3,7 @@ require "test_helper"
 class Listing::WebSerializationTest < ActiveSupport::TestCase
   context "a listing should have all the default attributes" do
     setup do
-      @listing = FactoryGirl.create(:transactable)
+      @listing = FactoryGirl.build(:transactable)
       @serializer = ListingWebSerializer.new(@listing)
       @json = @serializer.as_json[:listing]
     end
@@ -28,16 +28,12 @@ class Listing::WebSerializationTest < ActiveSupport::TestCase
       assert_equal @listing.listing_type_id, @json[:listing_type_id]
     end
 
-    should "have a daily_price" do
-      assert_equal @listing.daily_price, @json[:daily_price]
+    should "have a daily price" do
+      assert_equal @listing.action_type.day_pricings.first.price_cents, @json[:prices].find{|p| p[:unit] == 'day' }[:price_cents]
     end
 
-    should "have a weekly_price" do
-      assert_equal @listing.weekly_price, @json[:weekly_price]
-    end
-
-    should "have a monthly_price" do
-      assert_equal @listing.monthly_price, @json[:monthly_price]
+    should "have a hourly price" do
+      assert_equal @listing.action_type.hour_pricings.first.price_cents, @json[:prices].find{|p| p[:unit] == 'hour' }[:price_cents]
     end
 
     should "have 7 availability rules defined" do

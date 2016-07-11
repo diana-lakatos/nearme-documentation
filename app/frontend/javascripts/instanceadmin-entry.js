@@ -565,6 +565,20 @@ DNM.registerInitializer(function(){
     });
 });
 
+DNM.registerInitializer(function(){
+
+    var els = $('[data-booking-type-list]');
+    if (els.length === 0) {
+        return;
+    }
+    require.ensure('./instance_admin/forms/panel_tabs', function(require){
+        var PanelTabs = require('./instance_admin/forms/panel_tabs');
+        els.each(function(){
+            return new PanelTabs(this);
+        });
+    });
+});
+
 
 DNM.registerInitializer(function(){
     var ChosenInitializer = require('./instance_admin/forms/chosen')

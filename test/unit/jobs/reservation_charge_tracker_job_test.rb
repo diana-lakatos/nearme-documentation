@@ -4,7 +4,8 @@ class ReservationChargeTrackerJobTest < ActiveSupport::TestCase
 
   setup do
     stub_active_merchant_interaction
-    @listing = FactoryGirl.create(:transactable, :daily_price => 89.39)
+    @listing = FactoryGirl.create(:transactable, :with_time_based_booking)
+    @listing.action_type.pricing_for('1_day').price = 89.39
     @reservation = FactoryGirl.create(:unconfirmed_reservation, :listing => @listing)
     @reservation.charge_and_confirm!
   end

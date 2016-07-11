@@ -360,26 +360,13 @@ module Elastic
         price_filters[:range][:all_prices][:gt] = price_min if @query[:price][:min].to_f > 0
         price_filters[:range][:all_prices][:lte] = price_max if @query[:price][:max].to_f > 0
 
-        if price_min.zero?
-          @filters << {
-            or: [
-              price_filters,
-              {
-                term: {
-                  action_free_booking: true
-                }
-              }
-            ]
-          }
-        else
-          @filters << price_filters
-        end
+        @filters << price_filters
       end
 
       if @query[:location_types_ids] && @query[:location_types_ids].any?
         @filters << {
           terms: {
-            location_type_id: @query[:location_types_ids].map(&:id)
+            location_type_id: @query[:location_types_ids]
           }
         }
       end
@@ -471,18 +458,11 @@ module Elastic
       end
 
       if @query[:listing_pricing] && @query[:listing_pricing].any?
-        @query[:listing_pricing].each do |lp|
-          @filters << {
-            term: {
-              "action_#{lp}_booking" => true
-            }
+        @filters << {
+          terms: {
+            all_price_types: @query[:listing_pricing]
           }
-          @not_filters << {
-            term: {
-              "#{lp}_price_cents" => 0
-            }
-          } unless lp == 'free'
-        end
+        }
       end
 
       if @query[:date_range].any?

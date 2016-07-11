@@ -8,7 +8,8 @@ class ReservationsServiceTest < ActiveSupport::TestCase
       @user = FactoryGirl.create(:user)
       @date = @listing.first_available_date
       @attributes = {
-        :dates => [@date.to_s(:db)]
+        :dates => [@date.to_s(:db)],
+        transactable_pricing_id: @listing.action_type.pricings.first.id
       }
       FactoryGirl.create(:document_requirement, item: @listing)
       FactoryGirl.create(:upload_obligation, level: UploadObligation::LEVELS[0], item: @listing)

@@ -47,11 +47,11 @@ class AvailabilityTemplate < ActiveRecord::Base
   end
 
   def availability
-    AvailabilityRule::Summary.new(availability_rules)
+    @summary ||= AvailabilityRule::Summary.new(availability_rules)
   end
 
   def custom?
-    parent_type.in? ['Location', 'Transactable']
+    parent_type.in? ['Location', 'Transactable::TimeBasedBooking']
   end
 
   def custom_for_location?
@@ -59,7 +59,7 @@ class AvailabilityTemplate < ActiveRecord::Base
   end
 
   def custom_for_transactable?
-    parent_type == 'Transactable'
+    parent_type =~ /Transactable::/
   end
 
   def timezone

@@ -13,7 +13,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
   ##
   # C*UD
   #
-  test "create should be successful" do
+  test "create should be successfulxxx" do
     location = get_authenticated_location
     post :create, {
       listing: {
@@ -22,10 +22,8 @@ class V1::ListingsControllerTest < ActionController::TestCase
         name: 'My listing',
         description: 'nice listing',
         listing_type: "Desk",
-        action_hourly_booking: true,
-        hourly_price_cents: 1000,
-        quantity: 10
-      },
+        quantity: 10,
+      }.merge(action_type_attibutes(nil, 10, 1, 'hour')),
       format: 'json'
     }
     assert_response :success
@@ -34,7 +32,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
   test "update should be successful" do
     listing = get_authenticated_listing
     new_name = 'My listing'
-    put :update, id: listing, listing: { name: new_name, daily_price: "10-50" }, format: 'json'
+    put :update, id: listing, listing: { name: new_name }, format: 'json'
     listing = Transactable.find(listing.id)
     assert_equal new_name, listing.name
     assert_response :success
@@ -62,11 +60,6 @@ class V1::ListingsControllerTest < ActionController::TestCase
   ##
   # Search
 
-  test "should search" do
-    raw_post :search, {}, valid_search_params.to_json
-    assert_response :success
-  end
-
   test "search should raise when boundingbox is missing" do
     assert_raise DNM::MissingJSONData do
       raw_post :search, {}, valid_additional_params.to_json
@@ -75,17 +68,30 @@ class V1::ListingsControllerTest < ActionController::TestCase
 
   ##
   # Query
+  context 'search' do
+    setup do
+      Rails.application.config.use_elastic_search = true
+      Transactable.__elasticsearch__.index_name = 'transactables_test'
+      Transactable.__elasticsearch__.create_index!(force: true)
+      Transactable.searchable.import
+      Transactable.__elasticsearch__.refresh_index!
+    end
 
-  test "should query" do
-    WebMock.disable_net_connect!
-    GmapsFake.stub_requests
-    raw_post :query, {}, valid_query_params.to_json
-    assert_response :success
-  end
+    teardown do
+      Transactable.__elasticsearch__.client.indices.delete index: Transactable.index_name
+      Rails.application.config.use_elastic_search = false
+    end
 
-  test "query should raise when boundingbox is missing" do
-    assert_raise DNM::MissingJSONData do
-      raw_post :query, {}, valid_additional_params.to_json
+    should "should search" do
+      raw_post :search, {}, valid_search_params.to_json
+      assert_response :success
+    end
+
+    should "should query" do
+      WebMock.disable_net_connect!(allow: %r{localhost:9200})
+      GmapsFake.stub_requests
+      raw_post :query, {}, valid_query_params.to_json
+      assert_response :success
     end
   end
 
@@ -284,9 +290,11 @@ class V1::ListingsControllerTest < ActionController::TestCase
         "lat" => 37.0,
         "lon" => 128.0
       },
-      "date" => {
-        "start" => "2012-06-01",
-        "end" =>   "2012-06-15"
+      "availability" => {
+        "dates" => {
+          "start" => "2012-06-01",
+          "end" =>   "2012-06-15"
+        }
       },
       "quantity" => {
         "min" => 5,
@@ -297,6 +305,26 @@ class V1::ListingsControllerTest < ActionController::TestCase
         "max" => 100.00
       },
       "amenities" => [ "wifi", "projector", "view" ],
+    }
+  end
+
+  def action_type_attibutes(action_type, price, number_of_units, unit)
+    pricing = action_type && action_type.pricings.by_number_and_unit(number_of_units, unit).first
+    {
+      action_types_attributes: [{
+        transactable_type_action_type_id: TransactableType.first.action_types.first.id,
+        enabled: 'true',
+        type: action_type.try(:type) || 'Transactable::TimeBasedBooking',
+        id: action_type.try(:id),
+        pricings_attributes: [{
+          transactable_type_pricing_id: TransactableType.first.time_based_booking.pricing_for([number_of_units, unit].join('_')).try(:id),
+          enabled: '1',
+          id: pricing.try(:id),
+          price: price,
+          number_of_units: number_of_units,
+          unit: unit
+        }]
+      }]
     }
   end
 end

@@ -12,7 +12,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
     @listing_type = "Desk"
     @amenity_type = FactoryGirl.create(:amenity_type)
     @amenity = FactoryGirl.create(:amenity, amenity_type: @amenity_type)
-    @transactable_type = ServiceType.first
+    @transactable_type = TransactableType.first
   end
 
   context '#new' do
@@ -31,15 +31,13 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
 
   context "#create" do
     setup do
-      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge({ transactable_type_id: ServiceType.first.id,
+      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge({ transactable_type_id: TransactableType.first.id,
                                                                                photos_attributes: [FactoryGirl.attributes_for(:photo)],
                                                                                properties: { listing_type: @listing_type },
                                                                                description: "Aliquid eos ab quia officiis sequi.",
                                                                                name: "Listing #{Random.rand(1000)}",
-                                                                               daily_price: 10,
-                                                                               amenity_ids: [@amenity.id] })
+                                                                               amenity_ids: [@amenity.id] }.merge(action_type_attibutes(nil, 10, 1, 'day')))
       @attributes.delete(:photo_not_required)
-      @attributes.delete(:daily_price_cents)
     end
 
     should 'log' do
@@ -54,8 +52,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
         transactable: @attributes.merge(location_id: @location2.id),
         transactable_type_id: @transactable_type.id
       }
-
-      assert_equal assigns(:transactable).amenities.count, 1
+      assert_equal 1, assigns(:transactable).amenities.size
     end
 
     should "create transactable" do
@@ -75,7 +72,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
           transactable: @attributes.merge(location_id: @location2.id, currency: 'JPY'),
           transactable_type_id: @transactable_type.id
         }
-        assert_equal 10.to_money('JPY'), assigns(:transactable).daily_price
+        assert_equal 10.to_money('JPY'), assigns(:transactable).action_type.day_pricings.first.price
 
       end
 
@@ -84,7 +81,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
           transactable: @attributes.merge(location_id: @location2.id, currency: 'MGA'),
           transactable_type_id: @transactable_type.id
         }
-        assert_equal 10.to_money('MGA'), assigns(:transactable).daily_price
+        assert_equal 10.to_money('MGA'), assigns(:transactable).action_type.day_pricings.first.price
       end
 
       should 'work for currencies with 1000 to 1 ratio' do
@@ -92,7 +89,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
           transactable: @attributes.merge(location_id: @location2.id, currency: 'BHD'),
           transactable_type_id: @transactable_type.id
         }
-        assert_equal 10.to_money('BHD'), assigns(:transactable).daily_price
+        assert_equal 10.to_money('BHD'), assigns(:transactable).action_type.day_pricings.first.price
       end
     end
 
@@ -127,7 +124,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
 
         @related_company = FactoryGirl.create(:company_in_auckland, creator_id: @user.id, instance: @related_instance)
         @related_location = FactoryGirl.create(:location_in_auckland, company: @related_company)
-        @related_transactable = FactoryGirl.create(:transactable, location: @related_location, photos_count: 1)
+        @related_transactable = FactoryGirl.create(:transactable, :with_time_based_booking, location: @related_location, photos_count: 1)
       end
 
       context "#edit" do
@@ -145,7 +142,9 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
 
       context "#update" do
         should 'allow update for related transactable' do
-          put :update, id: @related_transactable.id, transactable: { name: 'new name', daily_price: 10 }, transactable_type_id: @transactable_type.id
+          put :update, id: @related_transactable.id,
+            transactable: { name: 'new name' }.merge(action_type_attibutes(@related_transactable.action_type, 10, 1, 'day')),
+            transactable_type_id: @transactable_type.id
           @related_transactable.reload
           assert_equal 'new name', @related_transactable.name
           assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type)
@@ -153,15 +152,17 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
 
         should 'properly update price if currency is set to JPY' do
           @related_transactable.update_attribute(:currency, 'JPY')
-          put :update, id: @related_transactable.id, transactable: { daily_price: 100 }, transactable_type_id: @transactable_type.id
+          put :update, id: @related_transactable.id, transactable: action_type_attibutes(@related_transactable.action_type, 100, 1, 'day'), transactable_type_id: @transactable_type.id
           @related_transactable.reload
-          assert_equal 100.to_money('JPY'), @related_transactable.daily_price
+          assert_equal 100.to_money('JPY'), @related_transactable.action_type.day_pricings.first.price
         end
 
         should 'properly update price if currency changes' do
-          put :update, id: @related_transactable.id, transactable: { daily_price: 100, currency: 'JPY' }, transactable_type_id: @transactable_type.id
+          put :update, id: @related_transactable.id,
+            transactable: { currency: 'JPY' }.merge(action_type_attibutes(@related_transactable.action_type, 100, 1, 'day')),
+            transactable_type_id: @transactable_type.id
           @related_transactable.reload
-          assert_equal 100.to_money('JPY'), @related_transactable.daily_price
+          assert_equal 100.to_money('JPY'), @related_transactable.action_type.day_pricings.first.price
         end
       end
 
@@ -185,24 +186,11 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
     end
 
     should "update transactable" do
-      put :update, id: @transactable.id, transactable: { name: 'new name', daily_price: 10}, transactable_type_id: @transactable_type.id
+      put :update, id: @transactable.id,
+        transactable: { name: 'new name'}.merge(action_type_attibutes(@transactable.action_type, 10, 1, 'day')),
+        transactable_type_id: @transactable_type.id
       @transactable.reload
       assert_equal 'new name', @transactable.name
-      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type)
-    end
-
-    should "update disable prices that are not checked" do
-      @transactable.daily_price = 10
-      @transactable.weekly_price = 20
-      @transactable.monthly_price = 30
-      @transactable.hourly_price = 1
-      @transactable.save!
-      put :update, id: @transactable.id, transactable: { weekly_price: 30.12 }, transactable_type_id: @transactable_type.id
-      @transactable.reload
-      assert_nil @transactable.daily_price
-      assert_nil @transactable.monthly_price
-      assert_nil @transactable.hourly_price
-      assert_equal 30.12, @transactable.weekly_price
       assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     end
 
@@ -283,7 +271,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
   context 'versions' do
 
     should 'track version change on create' do
-      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge({transactable_type_id: TransactableType.first.id, photos_attributes: [FactoryGirl.attributes_for(:photo)], properties: { listing_type: @listing_type }, daily_price: 10, description: "Aliquid eos ab quia officiis sequi.", name: "Listing #{Random.rand(1000)}" })
+      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge({transactable_type_id: TransactableType.first.id, photos_attributes: [FactoryGirl.attributes_for(:photo)], properties: { listing_type: @listing_type }, description: "Aliquid eos ab quia officiis sequi.", name: "Listing #{Random.rand(1000)}" }.merge(action_type_attibutes(nil, 10, 1, 'day')))
       @attributes.delete(:photo_not_required)
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Transactable", "create").count') do
         with_versioning do
@@ -297,7 +285,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
       @transactable = FactoryGirl.create(:transactable, location: @location, quantity: 2, photos_count: 1)
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Transactable", "update").count') do
         with_versioning do
-          put :update, id: @transactable.id, transactable: { name: 'new name', daily_price: 10 }, transactable_type_id: @transactable_type.id
+          put :update, id: @transactable.id, transactable: { name: 'new name' }, transactable_type_id: @transactable_type.id
         end
       end
     end
@@ -310,6 +298,26 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
         end
       end
     end
+  end
+
+  def action_type_attibutes(action_type, price, number_of_units, unit)
+    pricing = action_type && action_type.pricings.by_number_and_unit(number_of_units, unit).first
+    {
+      action_types_attributes: [{
+        transactable_type_action_type_id: TransactableType.first.action_types.first.id,
+        enabled: 'true',
+        type: action_type.try(:type) || 'Transactable::TimeBasedBooking',
+        id: action_type.try(:id),
+        pricings_attributes: [{
+          transactable_type_pricing_id: TransactableType.first.time_based_booking.pricing_for([number_of_units, unit].join('_')).try(:id),
+          enabled: '1',
+          id: pricing.try(:id),
+          price: price,
+          number_of_units: number_of_units,
+          unit: unit
+        }]
+      }]
+    }
   end
 
 

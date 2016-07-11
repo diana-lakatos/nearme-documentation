@@ -1,0 +1,14 @@
+.row.nested-fields
+  .col-md-2
+    = f.input :number_of_units, as: :numeric
+  .col-md-2
+    = f.input :unit, as: :select, collection: f.object.action.decorate.availabile_units_with_i18n
+  .col-md-2
+    = f.input :allow_free_booking
+  .col-md-2
+    = f.input :min_price, as: :numeric
+  .col-md-2
+    = f.input :max_price, as: :numeric
+  .col-md-1
+    = link_to_remove_association f, class: 'remove_fields' do
+      .action--remove x

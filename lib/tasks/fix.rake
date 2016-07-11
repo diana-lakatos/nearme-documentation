@@ -9,6 +9,17 @@ namespace :fix do
     end
   end
 
+  desc "fixes domain for local use after db rebuild"
+  task :domains_on_local => [:environment] do
+    if Rails.env.development?
+      Domain.where("name ilike '%near-me.com%'").find_each do |domain|
+        puts "Fixing #{domain.name}"
+        domain.update_column :name, domain.name.gsub('near-me.com', 'lvh.me')
+      end
+      Domain.where(name: 'desksnear.lvh.me', use_as_default: true, target: Instance.first, instance: Instance.first).first_or_create!
+    end
+  end
+
   desc "Fix first period pro-rata"
   task :first_period_pro_rata => [:environment] do
     Instance.find(130).set_context!

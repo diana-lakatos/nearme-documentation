@@ -3,7 +3,7 @@ class AddMonthlyWeeklySubscriptionBookingToTransactableTypes < ActiveRecord::Mig
     add_column :transactable_types, :action_weekly_subscription_booking, :boolean
     add_column :transactable_types, :action_monthly_subscription_booking, :boolean
 
-    ServiceType.unscoped.where(action_subscription_booking: true).
+    TransactableType.unscoped.where(action_subscription_booking: true).
       update_all({
         action_weekly_subscription_booking: true,
         action_monthly_subscription_booking: true
@@ -15,7 +15,7 @@ class AddMonthlyWeeklySubscriptionBookingToTransactableTypes < ActiveRecord::Mig
   def down
     add_column :transactable_types, :action_subscription_booking, :boolean
 
-    ServiceType.unscoped.where("action_weekly_subscription_booking IS true or action_monthly_subscription_booking IS true").
+    TransactableType.unscoped.where("action_weekly_subscription_booking IS true or action_monthly_subscription_booking IS true").
       update_all({
         action_subscription_booking: true
       })

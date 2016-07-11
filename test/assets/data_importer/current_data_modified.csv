@@ -1,4 +1,4 @@
-Location Email,Location External Id,Location Type,Location Description,Location Special Notes,Address,City,Street,Suburb,State,Postcode,Daily price cents,Enabled,External Id,Monthly price cents,My Attribute,Name,Weekly price cents,Photo URL
-example@empty.com,2,My Type,desc2,,"Aleja Niepodległości 40, Czestochowa, Poland",,Aleja Niepodległości 40,,,,8900,true,4353,,attribute,my updated name,4400,http://www.example.com/image2.jpg
-example@empty.com,2,My Type,desc2,,"Aleja Niepodległości 40, Czestochowa, Poland",,Aleja Niepodległości 40,,,,8900,true,4353,,attribute,my updated name,4400,http://www.example.com/image3.jpg
-example@empty.com,3,My Type,new location,,"Ludwika Rydygiera 8, 01-793 Warsaw, Poland",,Ludwika Rydygiera 8,,,,4400,true,no-touch,,attribute,newly added hey,,http://www.example.com/image1.jpg
+Location Email,Location External Id,Location Type,Location Description,Location Special Notes,Address,City,Street,Suburb,State,Postcode,For 1 day price cents,Enabled,External Id,For 1 hour price cents,My Attribute,Name,Photo URL
+example@empty.com,2,My Type,desc2,,"Aleja Niepodległości 40, Czestochowa, Poland",,Aleja Niepodległości 40,,,,7600,true,4353,4400,attribute,my updated name,http://www.example.com/image2.jpg
+example@empty.com,2,My Type,desc2,,"Aleja Niepodległości 40, Czestochowa, Poland",,Aleja Niepodległości 40,,,,3600,true,4353,,attribute,my updated name,http://www.example.com/image3.jpg
+example@empty.com,3,My Type,new location,,"Ludwika Rydygiera 8, 01-793 Warsaw, Poland",,Ludwika Rydygiera 8,,,,4400,true,no-touch,,attribute,newly added hey,http://www.example.com/image1.jpg

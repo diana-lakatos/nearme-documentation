@@ -25,7 +25,7 @@ class RecurringBookingDrop < BaseDrop
   # total_payable_to_host_formatted
   #   total amount payable to host formatted as a string with currency symbol and cents
   delegate :quantity, :subtotal_price, :guest_service_fee, :total_price, :pending?,
-    :credit_card_payment?, :rejection_reason, :owner, :interval, :has_service_fee?,
+    :credit_card_payment?, :rejection_reason, :owner, :has_service_fee?,
     :additional_charges, :with_delivery?, :last_unpaid_amount, :total_payable_to_host_formatted,
     to: :recurring_booking
 
@@ -117,6 +117,11 @@ class RecurringBookingDrop < BaseDrop
   # current state of the object (e.g. unconfirmed etc.) as a humanized string
   def state_to_string
     @recurring_booking.state.to_s.humanize
+  end
+
+  #returns translated number of units and unit for booking
+  def booking_units
+    @recurring_booking.transactable_pricing.decorate.units_translation("dashboard.user_recurring_bookings.every_unit_price")
   end
 
 end

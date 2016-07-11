@@ -12,7 +12,7 @@ module DashboardHelper
     if PlatformContext.current.instance.buyable?
       [[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.orders'), 'orders'], [t('dashboard.analytics.product_views'), 'product_views']]
     else
-      if ServiceType.where(skip_location: false).count.zero?
+      if TransactableType.where(skip_location: false).count.zero?
         [[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.bookings'), 'bookings']]
       else
         [[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.bookings'), 'bookings'], [t('dashboard.analytics.location_views'), 'location_views']]
@@ -123,14 +123,8 @@ module DashboardHelper
     caption
   end
 
-  def booking_types_active_toggle(transactable, booking_type, content = false)
-    booking_type = Array.wrap(booking_type)
-    if transactable.transactable_type.booking_choices.size == 1
-      'active' if booking_type.include? transactable.transactable_type.booking_choices.first
-    else
-      'active' if booking_type.include? transactable.booking_type \
-        || (content && transactable.booking_type.in?(%w(overnight recurring)) && booking_type.include?('regular'))
-    end
+  def booking_types_active_toggle(transactable, action_type, content = false)
+    'active' if transactable.action_type.try(:transactable_type_action_type) == action_type
   end
 
   def currency_options
@@ -240,9 +234,11 @@ module DashboardHelper
       item[:full_url] = photo.image_url
       item[:position] = photo.position
       item[:thumb_url] = photo.image_url(:space_listing)
-      item[:edit_url] = edit_dashboard_photo_path(photo)
-      item[:delete_url] = destroy_space_wizard_photo_path(photo)
       item[:caption] = photo.caption if photo.respond_to?(:caption)
+      if photo.persisted?
+        item[:edit_url] = edit_dashboard_photo_path(photo)
+        item[:delete_url] = destroy_space_wizard_photo_path(photo)
+      end
       collection << item
     end
 

@@ -1,4 +1,4 @@
-@javascript @new_ui
+@javascript
 Feature: User can complete reservation and provide time log and additional charges
   Background:
     Given a user exists
@@ -7,7 +7,6 @@ Feature: User can complete reservation and provide time log and additional charg
       And a always_open_location exists with company: the company, creator: the user
       And a listing_with_10_dollars_per_hour_and_24h exists with location: the always_open_location, creator: the user, confirm_reservations: true
       And transactable type skips payment authorization initially
-      And new ui is turned on
 
   Scenario: User adds 2 time logs and one additional charge
     Given a confirmed_hour_reservation exists with listing: the listing_with_10_dollars_per_hour_and_24h

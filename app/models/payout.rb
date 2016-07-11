@@ -15,7 +15,7 @@ class Payout < ActiveRecord::Base
   scope :pending, -> { where(:pending => true) }
   scope :failed, -> { where(:pending => false, :success => false) }
 
-  monetize :amount, with_model_currency: :currency
+  monetize :amount_cents, with_model_currency: :currency
 
   attr_encrypted :response
 

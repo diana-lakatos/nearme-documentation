@@ -43,7 +43,6 @@ Feature: A user can book at a space
        When I book space for:
         | Transactable     | Date             | Quantity |
         | the transactable | next week Monday | 1        |
-       Then show me the page
        Then I should be redirected to bookings page
        Then I should see "credit card will be charged when your reservation is confirmed"
        And reservation should have billing authorization token

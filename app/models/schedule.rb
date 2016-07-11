@@ -5,7 +5,7 @@ class Schedule < ActiveRecord::Base
   scoped_to_platform_context
 
   belongs_to :instance
-  belongs_to :scheduable, polymorphic: true, touch: true
+  belongs_to :scheduable, polymorphic: true, touch: true, inverse_of: :schedule
 
   has_many :schedule_exception_rules, dependent: :destroy
   has_many :schedule_rules, dependent: :destroy
@@ -40,6 +40,10 @@ class Schedule < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def schedule_exception_ranges(start_date)
+    schedule_exception_rules.future(start_date || Time.zone.now).map(&:time_range).flatten
   end
 
   def set_timezone

@@ -24,7 +24,7 @@ namespace :just_hala do
       }
     )
 
-    if @service_type = @instance.service_types.first
+    if @service_type = @instance.transactable_types.first
       @service_type.update!({
         name: 'Ninja',
         slug: 'ninja',
@@ -57,7 +57,7 @@ namespace :just_hala do
       })
       @service_type.update_column(:cancellation_policy_enabled, Time.zone.now)
     else
-      @service_type = @instance.service_types.create(
+      @service_type = @instance.transactable_types.create(
         name: 'Ninja',
         slug: 'ninja',
         min_hourly_price_cents: 50_00,
@@ -89,7 +89,7 @@ namespace :just_hala do
         enable_reviews: true
       )
     end
-    @reservation_type = ReservationType.first || ReservationType.create!(name: 'Mission', transactable_types: ServiceType.all)
+    @reservation_type = ReservationType.first || ReservationType.create!(name: 'Mission', transactable_types: TransactableType.all)
     @reservation_type.update!({
       settings: {
         precise_search: true,
@@ -98,7 +98,7 @@ namespace :just_hala do
     })
     reservation_components = @reservation_type.form_components.first || (Utils::FormComponentsCreator.new(@reservation_type).create! && @reservation_type.form_components.first)
     root_category = Category.where(name: 'Services').first_or_create!
-    root_category.service_types = ServiceType.all
+    root_category.transactable_types = TransactableType.all
     root_category.mandatory = true
     root_category.multiple_root_categories = true
     root_category.search_options = 'include'
@@ -355,7 +355,7 @@ namespace :just_hala do
       path: 'listings/reservations/summary'
     ).first_or_initialize
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <div></div>
 {% content_for domready %}
@@ -374,7 +374,7 @@ namespace :just_hala do
       path: 'dashboard/company/host_reservations/complete_reservation_top'
     ).first_or_initialize
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: "
 <h2>{{ 'dashboard.host_reservations.complete_reservation.client' | translate}}</h2>
 <p><a href='{{ reservation.owner.user_profile_url }}'>{{ @reservation.owner.name }}</a></p>
@@ -402,7 +402,7 @@ namespace :just_hala do
       path: 'search/list/search_filters_boxes'
     ).first_or_initialize
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <div class='search-filter-box-wrapper'>
   <div class="search-filter-box" data-filter data-search-filters-container>
@@ -508,7 +508,7 @@ namespace :just_hala do
       path: 'listings/show'
     ).first_or_initialize
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <div class="container-fluid">
   <article id="space">
@@ -744,7 +744,7 @@ namespace :just_hala do
       partial: true
     ).first_or_initialize
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <div class="row">
   <div class="col-sm-3">
@@ -800,7 +800,7 @@ namespace :just_hala do
       partial: true
     ).first_or_initialize
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <h2>{{ 'sign_up_form.buyer_sign_up_to' | translate: marketplace_name: platform_context.name }}</h2>
 <p class="transaction-side-switcher">Hire your own personal Ninja.</p>
@@ -818,7 +818,7 @@ namespace :just_hala do
       partial: true
     ).first_or_initialize
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <h2>{{ 'sign_up_form.seller_sign_up_to' | translate: marketplace_name: platform_context.name }}</h2>
 <p class="transaction-side-switcher">Looking to get technical help? {{ link_to_other }}</p>
@@ -836,7 +836,7 @@ namespace :just_hala do
       partial: true
     ).first_or_initialize
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <p class="signup-help-note">Need help signing up? Call Member Services at <a href="tel:+18886465868">1-888-NINJUNU</a> (<a href="tel:+18886465868">1-888-646-5868</a>)</p>
       },
@@ -853,7 +853,7 @@ namespace :just_hala do
       partial: true
     ).first_or_initialize
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <p class="signup-help-note">Need help signing up? Call Member Services at <a href="tel:+18886465868">1-888-NINJUNU</a> (<a href="tel:+18886465868">1-888-646-5868</a>)</p>
       },
@@ -1302,7 +1302,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <div class='navbar navbar-inverse navbar-fixed-top'>
     <div class='navbar-inner nav-links'>
@@ -1346,7 +1346,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <div class='homepage-carousel carousel slide'>
   <div class='carousel-inner' role='listbox'>
@@ -1373,7 +1373,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 {% content_for 'hero' %}
   {% include 'home/carousel.html' %}
@@ -1415,7 +1415,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <div class="{{ transactable_type.calculate_input_size }} search-field-wrapper">
   <input class="query" name="loc" placeholder="{{ transactable_type.geolocation_placeholder }}" type="text" />
@@ -1449,7 +1449,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <form action="/search" class="home_search search-box {{ class_name }}" method="get">
   <div class="input-wrapper">
@@ -1523,7 +1523,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <div class='category-multiple-choice'>
   {% for root_category in transactable_type.searchable_categories %}
@@ -1573,7 +1573,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <section id='how-it-works' class='how-it-works'>
   <div class='container-fluid'>
@@ -1776,7 +1776,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <footer>
   <div class="row-fluid">
@@ -1847,7 +1847,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <article class='listing' data-id="{{listing.id}}" data-name="{{listing.name}}" data-latitude="{{listing.latitude}}" data-longitude="{{listing.longitude}}" data-location-href="{{ listing.url }}">
   <header>
@@ -1945,7 +1945,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <div data-add-favorite-button="true" data-path="{{ object.wish_list_path }}", data-object-type="{{ object.class_name }}" data-link-to-classes="{{ link_to_classes}}">
   <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
@@ -1968,7 +1968,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <aside>
   <div class='sidebar-wrapper'>
@@ -2011,7 +2011,7 @@ namespace :just_hala do
     ).first_or_initialize
 
     iv.update!({
-      transactable_types: ServiceType.all,
+      transactable_types: TransactableType.all,
       body: %Q{
 <span class='star-container'>
   {% for i in (1..stars) %}

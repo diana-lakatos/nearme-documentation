@@ -4,7 +4,7 @@ class TranslationsTest < ActionDispatch::IntegrationTest
 
   setup do
     @admin = FactoryGirl.create(:admin)
-    @transactable_type = ServiceType.first
+    @transactable_type = TransactableType.first
     @translation_manager = TransactableType::TransactableTypeTranslationManager.new(@transactable_type)
     @company = FactoryGirl.create(:company, creator: @admin)
     @location = FactoryGirl.create(:location, company: @company)

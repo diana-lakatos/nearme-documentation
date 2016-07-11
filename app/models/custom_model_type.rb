@@ -11,6 +11,7 @@ class CustomModelType < ActiveRecord::Base
   belongs_to :instance
   has_many :customizations, dependent: :destroy
   has_many :custom_model_type_linkings, dependent: :destroy
+  has_many :transactable_types, through: :custom_model_type_linkings
   has_many :service_types, through: :custom_model_type_linkings
   has_many :product_types, through: :custom_model_type_linkings, class_name: 'Spree::ProductType'
   has_many :project_types, through: :custom_model_type_linkings
@@ -23,7 +24,7 @@ class CustomModelType < ActiveRecord::Base
   validates :name, uniqueness: { scope: [:instance_id, :deleted_at] }
 
   scope :products,  -> { joins(:custom_model_type_linkings).where(custom_model_type_linkings: { linkable_type: 'Spree::ProductType' } ) }
-  scope :services,  -> { joins(:custom_model_type_linkings).where(custom_model_type_linkings: { linkable_type: 'ServiceType' } ) }
+  scope :transactables,  -> { joins(:custom_model_type_linkings).where(custom_model_type_linkings: { linkable_type: 'ServiceType' } ) }
   scope :users,     -> { joins(:custom_model_type_linkings).where(custom_model_type_linkings: { linkable: PlatformContext.current.instance.default_profile_type } ) }
   scope :sellers,   -> { joins(:custom_model_type_linkings).where(custom_model_type_linkings: { linkable: PlatformContext.current.instance.seller_profile_type } ) }
   scope :buyers,    -> { joins(:custom_model_type_linkings).where(custom_model_type_linkings: { linkable: PlatformContext.current.instance.buyer_profile_type } ) }

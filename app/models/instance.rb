@@ -72,6 +72,7 @@ class Instance < ActiveRecord::Base
   has_many :tickets, -> { where(target_type: 'Instance').order('created_at DESC') }, class_name: 'Support::Ticket'
   has_many :transactable_types
   has_many :service_types
+  has_many :action_types, class_name: 'TransactableType::ActionType'
   has_many :product_types, class_name: "Spree::ProductType"
   has_many :project_types, class_name: "ProjectType"
   has_many :offer_types
@@ -255,12 +256,13 @@ class Instance < ActiveRecord::Base
     payout_gateways(country, currency).first
   end
 
+  #TODO remove buyable biddable etc.
   def buyable?
     @buyable ||= product_types.any?
   end
 
   def bookable?
-    @bookable ||= service_types.any?
+    @bookable ||= action_types.bookable.any?
   end
 
   def projectable?
@@ -268,11 +270,11 @@ class Instance < ActiveRecord::Base
   end
 
   def biddable?
-    @biddable ||= offer_types.any?
+    false
   end
 
   def subscribable?
-    @subscribable ||= service_types.any?{ |st| st.action_subscription_booking }
+    @subscribable ||= action_types.where(type: 'TransactableType::SubscriptionBooking').enabled.any?
   end
 
   def marketplace_type
@@ -298,10 +300,6 @@ class Instance < ActiveRecord::Base
     domains.order('use_as_default desc').try(:first)
   end
 
-  def buyable_transactable_type
-    self.transactable_types.where(buyable: true).first
-  end
-
   def documents_upload_enabled?
     self.documents_upload.present? && self.documents_upload.enabled?
   end
@@ -311,7 +309,7 @@ class Instance < ActiveRecord::Base
   end
 
   def action_rfq?
-    (product_types.pluck(:action_rfq) + transactable_types.pluck(:action_rfq)).any?
+    (product_types.pluck(:action_rfq) + action_types.enabled.pluck(:allow_action_rfq)).any?
   end
 
   def custom_translations=(translations)

@@ -5,8 +5,9 @@ class ListingSerializer < ApplicationSerializer
   }
 
   attributes :id, :name, :description, :company_name, :company_description, :currency,
-    :address, :price, :quantity
+    :address, :quantity
 
+  attribute :prices
   attribute :latitude,  key: :lat
   attribute :longitude, key: :lon
 
@@ -25,32 +26,8 @@ class ListingSerializer < ApplicationSerializer
     hash
   end
 
-  # Serialize price
-  def price
-    label = if object.action_free_booking?
-              'Free'
-            elsif object.daily_price_cents.nil?
-              'Call'
-            else
-              object.daily_price.format
-            end
-
-    {
-      amount:        object.daily_price.try(:to_f) || 0.0,
-      period:        price_period,
-      label:         label,
-      currency_code: object.daily_price.try(:currency).try(:iso_code) || 'USD'
-    }
-  end
-
-  private
-
-  def price_period
-    if object.action_free_booking?
-      PRICE_PERIODS[:free]
-    else
-      PRICE_PERIODS[:day]
-    end
+  def prices
+    object.action_type.available_prices_in_cents
   end
 
 end

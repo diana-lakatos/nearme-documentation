@@ -203,7 +203,7 @@ class Payment < ActiveRecord::Base
 
     refund = refunds.create(
       receiver: 'mpo',
-      amount: host_refund_amount_cents,
+      amount_cents: host_refund_amount_cents,
       currency: currency,
       payment_gateway: payment_gateway,
       payment_gateway_mode: payment_gateway_mode,
@@ -234,7 +234,7 @@ class Payment < ActiveRecord::Base
 
     refund = refunds.create(
       receiver: 'host',
-      amount: service_fee_refund_amount_cents,
+      amount_cents: service_fee_refund_amount_cents,
       currency: currency,
       payment_gateway_mode: payment_gateway_mode,
       payment_gateway: payment_gateway,
@@ -333,7 +333,7 @@ class Payment < ActiveRecord::Base
     if cancelled_by_host?
       result = 0
     else
-      result = subtotal_amount.cents + host_additional_charges.cents - refunds.guest.successful.sum(:amount)
+      result = subtotal_amount.cents + host_additional_charges.cents - refunds.guest.successful.sum(:amount_cents)
     end
 
     result

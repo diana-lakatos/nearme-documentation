@@ -8,7 +8,7 @@ module AvailabilityRulesHelper
     # Our set of choice options
     choices = {}
     # Add choices for each of the pre-defined templates
-    parent_objects = [object.instance, object.try(:service_type), object].compact
+    parent_objects = [object.instance, object.try(:transactable_type), object].compact
     AvailabilityTemplate.for_parents(parent_objects).order("transactable_type_id ASC").decorate.each do |template|
       options = {
         id: "#{id_prefix}availability_template_id_#{template.id}",
@@ -19,25 +19,24 @@ module AvailabilityRulesHelper
       choices[template.parent_type] << [template.id, template.translated_name, options]
     end
 
-    unless object.try(:hide_defered_availability_rules?)
+    unless object.try(:hide_location_availability?)
       defer_options = { :id => "availability_rules_defer" }
-      defer_options[:description] = object.location.try(:availability) ? pretty_availability_sentence(object.location.availability).to_s : t('simple_form.hints.availability_template.description.location_hours')
+      defer_options[:description] = object.transactable.location.try(:availability) ? pretty_availability_sentence(object.transactable.location.availability).to_s : t('simple_form.hints.availability_template.description.location_hours')
       choices['use_location'] = [['', t('simple_form.labels.availability_template.use_parent_availability'), defer_options]]
     end
 
     #Add choice for the 'Custom' rule creation
-    unless choices['Transactable'] || choices['Location']
+    unless choices['Transactable::TimeBasedBooking'] || choices['Location']
       custom_options = {
         :id => "#{id_prefix}availability_rules_custom",
         :'data-custom-rules' => true,
         description: t('simple_form.hints.availability_template.description.custom')
       }
       custom_options[:checked] = object.custom_availability_template?
-      choices['Transactable'] = [['custom', t('simple_form.labels.availability_template.custom'), custom_options]]
+      choices['Transactable::TimeBasedBooking'] = [['custom', t('simple_form.labels.availability_template.custom'), custom_options]]
     end
-
     # Return our set of choices in proper order
-    choices = [choices['Instance'], choices['ServiceType'], choices['use_location'], choices['User'], choices['Transactable'], choices['Location']].flatten(1).compact
+    choices = [choices['Instance'], choices['TransactableType'], choices['use_location'], choices['User'], choices['Transactable::TimeBasedBooking'], choices['Location']].flatten(1).compact
     choices.first.last[:checked] = true unless choices.find{|ch| ch.last[:checked]}
     choices
   end

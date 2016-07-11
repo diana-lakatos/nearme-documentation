@@ -1,7 +1,8 @@
 module Bookings
   def start_to_book(listing, dates, qty = 1)
     visit listing.decorate.show_path
-    select qty.to_s, :from => "quantity"
+    page.find('.booking-price [data-unit="day"]').click
+    select qty.to_s, from: "quantity"
     add_dates(dates)
   end
 
@@ -23,29 +24,33 @@ module Bookings
         ensure_datepicker_open('.calendar-wrapper.date-end')
         select_datepicker_date(date)
       end
-
-      # Close the datepicker
+    end
+    # Close the datepicker
+    begin
       find(:css, ".calendar-wrapper.date-end").click
-    else
-      # Close the datepicker
-      find(:css, ".calendar-wrapper.date-end").click
+    rescue
+      page.execute_script("$('.calendar-wrapper.date-end').click();")
     end
   end
 
   def ensure_datepicker_open(klass)
     if page.has_no_selector?('.dnm-datepicker', visible: true)
-      find(:css, klass).click
+      begin
+        find(:css, klass).click
+      rescue
+        page.execute_script("$('#{klass}').click();")
+      end
     end
   end
 
   def select_datepicker_date(date)
     ensure_datepicker_is_on_right_month(date)
-    el = find(:css, datepicker_class_for(date), :visible => true)
+    el = find(:css, datepicker_class_for(date), visible: true)
     el.click
   end
 
   def ensure_datepicker_is_on_right_month(date)
-    if date > Time.zone.today && !find(:css, '.datepicker-month', :visible => true).text.include?(Date::MONTHNAMES[date.month])
+    if date > Time.zone.today && !find(:css, '.datepicker-month', visible: true).text.include?(Date::MONTHNAMES[date.month])
       find(:css, '.datepicker-next', :visible => true).click
     end
   end

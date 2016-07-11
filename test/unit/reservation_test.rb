@@ -47,7 +47,7 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should 'set proper expiration time' do
-        @reservation.listing.transactable_type.update_attribute(:hours_to_expiration, 45)
+        @reservation.listing.action_type.transactable_type_action_type.update_attribute(:hours_to_expiration, 45)
         travel_to Time.zone.now do
           ReservationExpiryJob.expects(:perform_later).with do |expire_at, id|
             expire_at == @reservation.expire_at && id == @reservation.id
@@ -308,6 +308,7 @@ class ReservationTest < ActiveSupport::TestCase
     should "work even if the total amount is nil" do
       reservation = Reservation.new state: 'unconfirmed'
       reservation.listing = FactoryGirl.create(:transactable)
+      reservation.transactable_pricing = reservation.listing.action_type.pricings.first
       reservation.subtotal_amount_cents = nil
       reservation.service_fee_amount_guest_cents = nil
       reservation.service_fee_amount_host_cents = nil
@@ -394,10 +395,10 @@ class ReservationTest < ActiveSupport::TestCase
       @user = FactoryGirl.create(:user)
 
       @listing = FactoryGirl.create(:transactable, quantity: 2)
-      @listing.availability_template = AvailabilityTemplate.first
+      @listing.action_type.availability_template = AvailabilityTemplate.first
       @listing.save!
 
-      @reservation = Reservation.new(:user => @user, :quantity => 1, listing: @listing)
+      @reservation = Reservation.new(:user => @user, :quantity => 1, listing: @listing, transactable_pricing: @listing.action_type.pricings.first)
 
       @sunday = Time.zone.today.end_of_week
       @monday = Time.zone.today.next_week.beginning_of_week
@@ -407,7 +408,6 @@ class ReservationTest < ActiveSupport::TestCase
       should "validate date quantity available" do
         @reservation.add_period(@monday)
         assert @reservation.valid?
-
         @reservation.quantity = 3
         refute @reservation.valid?
       end
@@ -420,7 +420,8 @@ class ReservationTest < ActiveSupport::TestCase
         assert @reservation.valid?
 
         @reservation.add_period(@sunday)
-        refute @reservation.valid?
+        @reservation.charge_and_confirm!
+        refute @reservation.errors.blank?
       end
 
       should "validate against other reservations" do
@@ -429,18 +430,16 @@ class ReservationTest < ActiveSupport::TestCase
         first_reservation.save!
 
         @reservation.add_period(@monday)
-        @reservation.validate_all_dates_available
-        refute @reservation.valid?
+        @reservation.charge_and_confirm!
+        refute @reservation.errors.blank?
       end
     end
 
     context 'minimum contiguous block requirement' do
       setup do
-        @listing.daily_price = nil
-        @listing.weekly_price = 100_00
-        @listing.save!
+        @listing.action_type.day_pricings.first.update!(number_of_units: 5)
 
-        assert_equal 5, @listing.minimum_booking_days
+        assert_equal 5, @listing.action_type.minimum_booking_days
       end
 
       should "require minimum days" do
@@ -481,7 +480,7 @@ class ReservationTest < ActiveSupport::TestCase
 
         @listing = FactoryGirl.build(:transactable, quantity: 10)
         @user    = FactoryGirl.build(:user)
-        @reservation = FactoryGirl.build(:reservation, user: @user, listing: @listing)
+        @reservation = FactoryGirl.build(:reservation, user: @user, listing: @listing, transactable_pricing: @listing.action_type.pricings.first)
       end
 
       should "set total, subtotal and service fee cost after creating a new reservation" do
@@ -495,6 +494,7 @@ class ReservationTest < ActiveSupport::TestCase
         reservation = @listing.reservations.build(
           user: @user,
           quantity: quantity,
+          transactable_pricing: @listing.action_type.pricings.first
         )
 
         dates.each do |date|
@@ -544,7 +544,8 @@ class ReservationTest < ActiveSupport::TestCase
         reservation = @listing.reservations.build(
           user: @user,
           date: 1.week.from_now.monday,
-          quantity: 1
+          quantity: 1,
+          transactable_pricing: @listing.action_type.pricings.first
         )
         reservation.calculate_prices
         assert_not_equal 0, reservation.service_fee_amount_guest.cents
@@ -555,7 +556,8 @@ class ReservationTest < ActiveSupport::TestCase
         reservation = @listing.reservations.build(
           user: @user,
           date: 1.week.from_now.monday,
-          quantity: 1
+          quantity: 1,
+          transactable_pricing: @listing.action_type.pricings.first
         )
         reservation.calculate_prices
         assert_not_equal 0, reservation.service_fee_amount_guest.cents
@@ -576,8 +578,8 @@ class ReservationTest < ActiveSupport::TestCase
 
     context "hourly priced listing" do
       setup do
-        @listing = FactoryGirl.create(:transactable, quantity: 10, action_hourly_booking: true, hourly_price_cents: 100)
-        @reservation = FactoryGirl.create(:reservation_hourly, listing: @listing)
+        @listing = FactoryGirl.create(:transactable, quantity: 10)
+        @reservation = FactoryGirl.create(:confirmed_hour_reservation, listing: @listing)
       end
 
       should "set total cost based on HourlyPriceCalculator" do

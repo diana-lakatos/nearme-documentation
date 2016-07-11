@@ -3,16 +3,6 @@ module ListingsHelper
     raw(truncate(strip_tags(listing.company_description), :length => length))
   end
 
-  def booking_module_class(listing)
-    if listing.schedule_booking?
-      'booking-fixed'
-    elsif listing.action_hourly_booking?
-      'booking-hourly'
-    else
-      'booking-daily'
-    end
-  end
-
   # Listing data for initialising a client-side bookings module
   def listing_booking_data(listing)
     base_data = {
@@ -22,65 +12,11 @@ module ListingsHelper
       subunit_to_unit_rate: Money::Currency.new(listing.currency).subunit_to_unit,
       quantity: listing.quantity,
       initial_bookings: @initial_bookings,
-      booking_type: listing.booking_type,
-      continuous_dates: listing.transactable_type.action_continuous_dates_booking,
-      subscription_prices: listing.subscription_variants,
       zone_offset: listing.zone_utc_offset,
       timezone_info: listing.timezone_info,
     }
-    if listing.schedule_booking?
-      base_data.merge!({
-        fixed_price_cents: listing.fixed_price_cents,
-        action_price_per_unit: listing.transactable_type.action_price_per_unit
-      })
-      base_data.merge!({
-        book_it_out_discount: listing.book_it_out_discount,
-        book_it_out_minimum_qty: listing.book_it_out_minimum_qty
-      }) if listing.book_it_out_available?
-      base_data.merge!({
-        exclusive_price_cents: listing.exclusive_price_cents
-      }) if listing.exclusive_price_available?
-    else
-      first_date = listing.first_available_date
-      second_date = listing.second_available_date
-
-      # Daily open/quantity availability data for datepickers
-      time_now = Time.now.in_time_zone(listing.timezone)
-      minimum_date = time_now.to_date
-
-      close_minute = listing.availability.close_minute_for(minimum_date)
-      if close_minute.present? && (close_minute < (time_now.hour * 60 + time_now.min + listing.minimum_booking_minutes))
-        minimum_date = time_now.tomorrow.to_date
-      end
-
-      availability = listing.availability_status_between(minimum_date, minimum_date.advance(:years => 1))
-
-      # Initial hourly availability schedule data for hourly reservations
-      hourly_availability = {
-        I18n.l(first_date.to_date, format: :short) => listing.hourly_availability_schedule(first_date).as_json
-      } if listing.action_hourly_booking?
-
-      base_data.merge!({
-        prices_by_days: Hash[ listing.prices_by_days.map { |k, v| [k, v.cents] } ],
-        availability: availability.as_json,
-        minimum_date: availability.start_date,
-        maximum_date: availability.end_date,
-        favourable_pricing_rate: listing.favourable_pricing_rate,
-        first_available_date: first_date.strftime("%Y-%m-%d"),
-        second_available_date: second_date.strftime("%Y-%m-%d"),
-        earliest_open_minute: listing.availability.earliest_open_minute,
-        latest_close_minute: listing.availability.latest_close_minute,
-        minimum_booking_days: listing.minimum_booking_days,
-        minimum_booking_minutes: listing.minimum_booking_minutes,
-        hourly_availability_schedule_url: hourly_availability_schedule_listing_reservations_url(listing, format: :json),
-        action_hourly_booking: listing.action_hourly_booking? && listing.hourly_price_cents.to_i > 0,
-        action_daily_booking: listing.action_daily_booking?,
-        hourly_price_cents: listing.hourly_price_cents,
-        hourly_availability_schedule: hourly_availability,
-      })
-    end
+    base_data.merge!(listing.action_type.booking_module_options)
     base_data
-
   end
 
   def strip_http(url)

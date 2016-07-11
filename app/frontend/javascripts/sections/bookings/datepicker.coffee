@@ -37,7 +37,7 @@ module.exports = class BookingsDatepicker
     @bindEvents()
     @assignInitialDates()
 
-    if @listing.isReservedHourly()
+    if @listing.canReserveHourly()
       @initializeTimePicker()
 
 
@@ -83,7 +83,7 @@ module.exports = class BookingsDatepicker
 
         # If the user selects the same start/end date, let's close the datepicker
         # and assume they were only trying to select one day.
-        if @listing.minimumBookingDays > 1 or @endDatepicker.getDates().length <= 1
+        if @listing.minimumBookingDays() > 1 or @endDatepicker.getDates().length <= 1
           @endDatepicker.hide()
 
   initializeStartDatepicker: ->
@@ -183,7 +183,7 @@ module.exports = class BookingsDatepicker
       @endElement.find('.calendar-text').text(endText)
 
   setDatepickerToPickMode: ->
-    return if @listing.minimumBookingDays > 1
+    return if @listing.minimumBookingDays() > 1
     if @endDatepicker
       @endDatepicker.getModel().setMode(ModeAndConstraintModel.MODE_PICK)
       @endDatepicker.getView().setText(@end_text())
@@ -207,7 +207,7 @@ module.exports = class BookingsDatepicker
     @setDatepickerToRangeMode()
 
     # Show the end datepicker instantly
-    if @container.find("li[data-hourly]").hasClass('active')
+    if @listing.isReservedHourly()
       @timePicker.show()
     else if @endDatepicker
       @endDatepicker.show()
@@ -273,7 +273,7 @@ module.exports = class BookingsDatepicker
 
       # Map bookings to JS dates
       (dateUtil.idToDate(date) for date in @listingData.initial_bookings.dates)
-    else if @listing.isOvernightBooking()
+    else if @listing.isOvernightBooking() && endDate == dateUtil.next(startDate)
       [startDate, endDate]
     else
       [startDate]

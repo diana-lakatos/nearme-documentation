@@ -13,6 +13,10 @@ FactoryGirl.define do
     currency 'USD'
     next_charge_date { Date.current }
 
+    after(:build) do |booking|
+      booking.transactable_pricing = booking.listing.action_type.pricings.first
+    end
+
     factory :confirmed_recurring_booking do
       state 'confirmed'
     end

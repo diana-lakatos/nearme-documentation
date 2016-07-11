@@ -16,25 +16,11 @@ module Api
       @user.skip_validations_for = [:buyer]
       @user.must_have_verified_phone_number = true if @user.requires_mobile_number_verifications?
       @user.assign_attributes(wizard_params)
-      # TODO: tmp hack, the way we use rails-money does not work if you pass currency and daily_price at the same time
-      # We remove schedule attributes when assigning the attributes the second time so that we don't end up with duplicated schedule-related objects
-      # We also remove approval requests attributes
-      begin
-        wizard_params_listing = wizard_params[:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]
-        wizard_params_listing.delete(:schedule_attributes)
-        wizard_params_listing.delete(:approval_requests_attributes)
-        wizard_params_listing.delete(:customizations_attributes)
-        @user.companies.first.try(:locations).try(:first).try(:listings).try(:first).try(:assign_attributes, wizard_params_listing)
-      rescue
-        # listing attributes not present in the form, we ignore the error
-      end
+
       @user.companies.first.creator = current_user
       build_objects
       build_approval_requests
       @user.first_listing.creator = @user
-      if wizard_params[:companies_attributes]["0"][:locations_attributes] && !wizard_params[:companies_attributes]["0"][:locations_attributes]["0"].has_key?("availability_template_id") && !wizard_params_listing.has_key?("availability_template_id")
-        @user.first_listing.availability_template = @transactable_type.default_availability_template
-      end
       if params[:save_as_draft]
         remove_approval_requests
         @user.valid? # Send .valid? message to object to trigger any validation callbacks
@@ -49,7 +35,7 @@ module Api
         end
         render json: ApiSerializer.serialize_object(@user.first_listing)
       elsif @user.save
-        @user.listings.first.schedule.try(:create_schedule_from_schedule_rules)
+        @user.listings.first.action_type.try(:schedule).try(:create_schedule_from_schedule_rules)
         @user.companies.first.update_metadata({draft_at: nil, completed_at: Time.now})
         track_new_space_event
         track_new_company_event
@@ -67,10 +53,15 @@ module Api
     # When saving drafts we end up with parent_type = nil for custom availability templates causing problems down the line
     def fix_availability_templates
       listing = @user.companies.first.locations.first.listings.first
-      availability_template = listing.availability_template
-      if availability_template.try(:parent_type) == 'Transactable' && availability_template.try(:parent_id).nil?
-        availability_template.parent = listing
-        availability_template.save(validate: false)
+      return unless listing.time_based_booking
+      availability_template = listing.time_based_booking.availability_template
+      if availability_template
+        if availability_template.try(:parent_type) == 'Transactable::TimeBasedBooking' && availability_template.try(:parent_id).nil?
+          availability_template.parent = listing.time_based_booking
+          availability_template.save(validate: false)
+        end
+      else
+        listing.time_based_booking.update(availability_template: @transactable_type.default_availability_template)
       end
     end
 

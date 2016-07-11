@@ -338,7 +338,7 @@ class PaymentGateway < ActiveRecord::Base
     force_mode(payment.payment_gateway_mode)
 
     @refund = refunds.create(
-      amount: amount,
+      amount_cents: amount,
       currency: currency,
       payment: payment,
       payment_gateway_mode: mode,
@@ -407,7 +407,7 @@ class PaymentGateway < ActiveRecord::Base
     if merchant_account
       amount, reference = payout_details[:amount], payout_details[:reference]
       @payout = payouts.create(
-        amount: amount.cents,
+        amount_cents: amount.cents,
         currency: amount.currency.iso_code,
         reference: reference,
         payment_gateway_mode: mode

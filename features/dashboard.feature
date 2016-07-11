@@ -79,24 +79,25 @@ Feature: As a user of the site
 
   Scenario: A user can disable existing price in listing
     Given a location exists with company: the company
-      And a transactable exists with location: the location, daily_price_cents: 1000, photos_count: 1
+      And transactable type has multiple booking types enabled
+      And a transactable exists with location: the location, photos_count: 1
       And I am browsing transactables
      When I edit first transactable
-      And I disable daily pricing
-      And I mark transactable as free
+      And I mark 1_day price as free
       And I submit the transactable form
       And I edit first transactable
-     Then pricing should be free
+     Then pricing for 1_day should be free
 
   Scenario: A user can enable new pricing in listing
     Given a location exists with company: the company
-      And a transactable exists with location: the location, daily_price_cents: 1000, photos_count: 1
+      And transactable type has multiple booking types enabled
+      And a transactable exists with location: the location, photos_count: 1
       And I am browsing transactables
      When I edit first transactable
-      And I enable weekly pricing
+      And I enable 5_day pricing
       And I submit the transactable form
       And I edit first transactable
-     Then Listing weekly pricing should be enabled
+     Then Listing 5_day pricing should be enabled
 
   Scenario: A user can set availability rules on a transactable
     Given a location exists with company: the company

@@ -39,7 +39,7 @@
               .clearfix
 
           .summary-line
-            .summary-line-label= t 'recurring_reservations_review.total_per_interval', interval: t("recurring_reservations_review.#{@recurring_booking.interval}")
+            .summary-line-label= @recurring_booking.transactable_pricing.decorate.units_translation('recurring_reservations_review.total_per_unit')
             .summary-line-value.total-amount= @recurring_booking.total_price
             = f.hidden_field :total_amount_check, value: @recurring_booking.total_amount.cents
             .clearfix

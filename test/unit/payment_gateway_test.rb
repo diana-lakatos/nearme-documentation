@@ -54,7 +54,7 @@ class PaymentGatewayTest < ActiveSupport::TestCase
         charge_response = ActiveMerchant::Billing::Response.new true, 'OK', charge_params
         @charge.update_attribute(:response, charge_response)
         refund = @payment_gateway.refund(1000, @currency, @payment, @charge)
-        assert_equal 1000, refund.amount
+        assert_equal 1000, refund.amount_cents
         assert_equal 'JPY', refund.currency
         assert_equal SUCCESS_RESPONSE, refund.response.params
         assert_equal @payment, refund.payment
@@ -68,7 +68,7 @@ class PaymentGatewayTest < ActiveSupport::TestCase
         charge_response = ActiveMerchant::Billing::Response.new true, 'OK', charge_params
         @charge.update_attribute(:response, charge_response)
         refund = @payment_gateway.refund(1000, @currency, @payment, @charge)
-        assert_equal 1000, refund.amount
+        assert_equal 1000, refund.amount_cents
         assert_equal 'JPY', refund.currency
         assert_equal FAILURE_RESPONSE, refund.response.params
         refute refund.success?
@@ -114,7 +114,7 @@ class PaymentGatewayTest < ActiveSupport::TestCase
     should 'create payout object when succeeded' do
       @payout_gateway.payout(@payment_transfer.company, {amount: @amount, reference: @payment_transfer})
       payout = Payout.last
-      assert_equal 1234, payout.amount
+      assert_equal 1234, payout.amount_cents
       assert_equal 'JPY', payout.currency
       assert_equal @payment_transfer, payout.reference
       assert payout.success?
@@ -125,7 +125,7 @@ class PaymentGatewayTest < ActiveSupport::TestCase
     # should 'create payout object when payout' do
     #   @payout_gateway.payout(@payment_transfer.company, {amount: @amount, reference: @payment_transfer})
     #   payout = Payout.last
-    #   assert_equal 1234, payout.amount
+    #   assert_equal 1234, payout.amount_cents
     #   assert_equal 'JPY', payout.currency
     #   assert payout.pending?
     #   refute payout.success?
@@ -137,7 +137,7 @@ class PaymentGatewayTest < ActiveSupport::TestCase
 
       @payout_gateway.payout(@payment_transfer.company, {amount: @amount, reference: @payment_transfer})
       payout = Payout.last
-      assert_equal 1234, payout.amount
+      assert_equal 1234, payout.amount_cents
       assert_equal 'JPY', payout.currency
       refute payout.success?
       refute payout.pending?

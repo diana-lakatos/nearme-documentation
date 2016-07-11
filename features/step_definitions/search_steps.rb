@@ -9,11 +9,9 @@ end
 
 Given /^Auckland listing has fixed_price: (.*)$/ do |fixed_price|
   listing = Transactable.last
-  listing.min_fixed_price_cents = 0
-  listing.max_fixed_price_cents = fixed_price.to_i * 100 + 1
-  listing.fixed_price_cents = fixed_price.to_i * 100
-  listing.action_free_booking = true if !listing.has_price?
-  listing.save(validate: false)
+  listing.action_type.pricings.first.update!(price_cents: fixed_price.to_i * 100)
+  listing.save!
+  Transactable.__elasticsearch__.refresh_index!
 end
 
 Given /^this listing has location type (.*)$/ do |lntype|
@@ -68,7 +66,7 @@ Then /^I do( not)? see result for the (.*) listing$/ do |confirmation, lntype|
 end
 
 When /^I search for "([^"]*)" with prices (\d+) (\d+)$/ do |query, min, max|
-  visit search_path(:q => query, "price[min]" => min, "price[max]" => max, :lgpricing => "fixed")
+  visit search_path(:loc => query, "price[min]" => min, "price[max]" => max)
 end
 
 When /^I search for product "([^"]*)"$/ do |text|
@@ -76,11 +74,11 @@ When /^I search for product "([^"]*)"$/ do |text|
 end
 
 When /^I performed search for "([^\"]*)"$/ do |query|
-  visit search_path(:q => query)
+  visit search_path(loc: query)
 end
 
 When /^I search for "([^\"]*)" with location type (.*) forcing list view$/ do |query, lntype|
-  visit search_path(q: query, lntype: lntype.downcase, v: 'list')
+  visit search_path(loc: query, lntype: lntype.downcase, v: 'list')
 end
 
 When /^I make another search for "([^\"]*)"$/ do |query|
@@ -139,6 +137,10 @@ Given(/^no listings exists$/) do
   Company.unscoped.destroy_all
 end
 
+Given(/^price slider are turned on$/) do
+  TransactableType.update_all(show_price_slider: true)
+end
+
 Then(/^I should see filtering options$/) do
-  assert_equal 6, page.all(".filter-option").count
+  assert_equal 4, page.all(".filter-option").count
 end

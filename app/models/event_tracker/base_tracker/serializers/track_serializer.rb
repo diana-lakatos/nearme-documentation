@@ -33,9 +33,7 @@ class EventTracker::BaseTracker::Serializers::TrackSerializer
         listing_name: safe_get(object, 'name'),
         listing_quantity: safe_get(object, 'quantity'),
         listing_confirm: safe_get(object, 'confirm_reservations'),
-        listing_daily_price: safe_get(object, 'daily_price').try(:dollars),
-        listing_weekly_price: safe_get(object, 'weekly_price').try(:dollars),
-        listing_monthly_price: safe_get(object, 'monthly_price').try(:dollars),
+        listing_pricings: get_prices(object),
         listing_currency: safe_get(object, 'currency'),
         listing_url: object.try(:decorate).try(:show_url)
       }
@@ -112,6 +110,10 @@ class EventTracker::BaseTracker::Serializers::TrackSerializer
     else
       raise "Can't serialize #{object}."
     end
+  end
+
+  def self.get_prices(listing)
+    listing.action_type.pricings.map{|p| p.price_information.merge({ price: p.price.to_f })}
   end
 
   def self.safe_get(object, property)

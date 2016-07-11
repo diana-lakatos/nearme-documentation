@@ -61,7 +61,7 @@ class DataImporter::CsvFile::TemplateCsvFile < DataImporter::CsvFile
   end
 
   def build_attributes_hash(klass, sym)
-    @csv_attributes[sym] ||= (sym == :transactable ? (klass.csv_fields(@importable)) : klass.csv_fields).keys
+    @csv_attributes[sym] ||= (sym == :transactable ? klass.csv_fields(@importable) : klass.csv_fields).keys
     @csv_attributes[sym].inject({}) do |hash, attribute|
       if @mapping_hash[sym][attribute.to_sym].present?
         hash[attribute.to_sym] = @current_row[@mapping_hash[sym][attribute.to_sym]]

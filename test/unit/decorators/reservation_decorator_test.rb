@@ -66,9 +66,10 @@ class ReservationDecoratorTest < ActionView::TestCase
   context 'A free reservation' do
 
     setup do
-      ServiceType.first.update_columns(service_fee_guest_percent: 0)
+      TransactableType.first.update_columns(service_fee_guest_percent: 0)
       @payment = FactoryGirl.build(:manual_payment)
-      @reservation = FactoryGirl.build(:unconfirmed_reservation, listing: create(:free_listing), payment: @payment).decorate
+      listing = FactoryGirl.create(:transactable, :free_listing)
+      @reservation = FactoryGirl.build(:unconfirmed_reservation, listing: listing, transactable_pricing: listing.action_type.pricings.first, payment: @payment).decorate
       @reservation.charge_and_confirm!
     end
 
@@ -138,11 +139,12 @@ class ReservationDecoratorTest < ActionView::TestCase
     setup do
       @time = DateTime.new(2014, 1, 1).in_time_zone
       travel_to(@time)
-      listing = FactoryGirl.create(:transactable, action_hourly_booking: true)
+      listing = FactoryGirl.create(:transactable, :with_time_based_booking)
       @reservation = FactoryGirl.build(:reservation,
                                        subtotal_amount_cents: 500_00,
                                        service_fee_amount_guest_cents: 50_00,
                                        date: @time.to_date,
+                                       transactable_pricing: listing.action_type.hour_pricings.first,
                                        listing: listing).decorate
     end
 

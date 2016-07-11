@@ -6,6 +6,60 @@ DesksnearMe::Application.routes.draw do
   get '/test_endpoint', to: 'webhooks/base#test'
   match '/auth/:provider/callback' => 'authentications#create', via: [:get, :post]
 
+  namespace :v1, :defaults => {:format => 'json'} do
+
+    resource :authentication, only: [:create]
+    post 'authentication/:provider', :to => 'authentications#social'
+
+    resource :registration, only: [:create]
+
+    get 'profile', :to => 'profile#show'
+    match 'profile', :to => 'profile#update', via: [:put, :patch]
+    post 'profile/avatar/:filename', :to => 'profile#upload_avatar'
+    delete 'profile/avatar', :to => 'profile#destroy_avatar'
+
+    get 'iplookup', :to => 'iplookup#index'
+
+    resources :locations do
+      collection do
+        get 'list'
+      end
+    end
+
+    resources :photos
+
+    resources :listings, only: [:show, :create, :update, :destroy] do
+      member do
+        post 'reservation'
+        post 'availability'
+        post 'inquiry'
+        post 'share'
+        get 'patrons'
+        get 'connections'
+      end
+      collection do
+        post 'search'
+        post 'query'
+      end
+    end
+
+    resources :reservations do
+      collection do
+        get 'past'
+        get 'future'
+      end
+    end
+
+    resource :social, only: [:show], controller: 'social' do
+      %w(facebook twitter linkedin).each do |social|
+        resource social.to_sym, only: [:show, :update, :destroy], controller: 'social_provider', provider: social
+      end
+    end
+
+    get 'amenities', to: 'amenities#index'
+    get 'organizations', to: 'organizations#index'
+  end
+
   scope '(:language)', language: /[a-z]{2}/, defaults: { language: nil } do
 
     # Legacy pages redirect. Can be removed in Feb 16th. The redirect matches the route below.
@@ -421,17 +475,9 @@ DesksnearMe::Application.routes.draw do
           resources :custom_attributes, controller: 'custom_model_types/custom_attributes'
         end
 
-        resources :offer_types do
-          get :search_settings, on: :member
-          resources :custom_attributes, controller: 'offer_types/custom_attributes'
-          resources :custom_validators, controller: 'offer_types/custom_validators'
-          resources :data_uploads, only: %i(new index create show), controller: 'service_types/data_uploads' do
-            collection do
-              get :download_csv_template
-              get :download_current_data
-            end
-          end
-          resources :form_components, controller: 'offer_types/form_components' do
+        resources :reservation_types do
+          resources :custom_attributes, controller: 'reservation_types/custom_attributes'
+          resources :form_components, controller: 'reservation_types/form_components' do
             member do
               patch :update_rank
             end
@@ -441,9 +487,18 @@ DesksnearMe::Application.routes.draw do
           end
         end
 
-        resources :reservation_types do
-          resources :custom_attributes, controller: 'reservation_types/custom_attributes'
-          resources :form_components, controller: 'reservation_types/form_components' do
+        resources :transactable_types do
+          get :search_settings, on: :member
+          put :change_state, on: :member
+          resources :custom_attributes, controller: 'transactable_types/custom_attributes'
+          resources :custom_validators, controller: 'transactable_types/custom_validators'
+          resources :data_uploads, only: %i(new index create show), controller: 'transactable_types/data_uploads' do
+            collection do
+              get :download_csv_template
+              get :download_current_data
+            end
+          end
+          resources :form_components, controller: 'transactable_types/form_components', except: [:show] do
             member do
               patch :update_rank
             end
@@ -875,10 +930,6 @@ DesksnearMe::Application.routes.draw do
           end
         end
 
-        resources :service_types, controller: 'transactable_types' do
-          resources :services, controller: 'transactables'
-        end
-
         resources :transactable_types do
           resources :transactables do
             member do
@@ -1116,60 +1167,6 @@ DesksnearMe::Application.routes.draw do
         resources :transactables, only: [:index]
         resources :reverse_proxy_links, only: [:index, :create]
       end
-    end
-
-    namespace :v1, :defaults => {:format => 'json'} do
-
-      resource :authentication, only: [:create]
-      post 'authentication/:provider', :to => 'authentications#social'
-
-      resource :registration, only: [:create]
-
-      get 'profile', :to => 'profile#show'
-      match 'profile', :to => 'profile#update', via: [:put, :patch]
-      post 'profile/avatar/:filename', :to => 'profile#upload_avatar'
-      delete 'profile/avatar', :to => 'profile#destroy_avatar'
-
-      get 'iplookup', :to => 'iplookup#index'
-
-      resources :locations do
-        collection do
-          get 'list'
-        end
-      end
-
-      resources :photos
-
-      resources :listings, only: [:show, :create, :update, :destroy] do
-        member do
-          post 'reservation'
-          post 'availability'
-          post 'inquiry'
-          post 'share'
-          get 'patrons'
-          get 'connections'
-        end
-        collection do
-          post 'search'
-          post 'query'
-        end
-      end
-
-      resources :reservations do
-        collection do
-          get 'past'
-          get 'future'
-        end
-      end
-
-      resource :social, only: [:show], controller: 'social' do
-        %w(facebook twitter linkedin).each do |social|
-          resource social.to_sym, only: [:show, :update, :destroy], controller: 'social_provider', provider: social
-        end
-      end
-
-      get 'amenities', to: 'amenities#index'
-      get 'organizations', to: 'organizations#index'
     end
 
     resources :users do

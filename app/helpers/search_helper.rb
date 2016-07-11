@@ -25,26 +25,11 @@ module SearchHelper
   end
 
   def price_information(listing)
-    if listing.schedule_booking?
-      arr = []
-      arr << "#{humanized_money_with_symbol(listing.fixed_price)} / #{listing.transactable_type.action_price_per_unit? ? I18n.t("simple_form.labels.transactable.price.per_unit") : I18n.t("simple_form.labels.transactable.price.fixed")}" if listing.fixed_price.to_f > 0
-      arr << "#{humanized_money_with_symbol(listing.exclusive_price)} / #{I18n.t("simple_form.labels.transactable.price.exclusive_price")}" if listing.exclusive_price.to_f > 0
-      arr.join(' | ')
-    else
-      if listing.action_hourly_booking? && !listing.hourly_price.to_f.zero?
-        "#{I18n.t('reservations.from_price')} #{humanized_money_with_symbol(listing.hourly_price)} #{I18n.t('reservations.slash_per_hour')}"
-      elsif !listing.daily_price.to_f.zero?
-        "#{I18n.t('reservations.from_price')} #{humanized_money_with_symbol(listing.daily_price)} #{listing.overnight_booking? ? I18n.t('reservations.slash_per_night') : I18n.t('reservations.slash_per_day')}"
-      elsif !listing.weekly_price.to_f.zero?
-        "#{I18n.t('reservations.from_price')} #{humanized_money_with_symbol(listing.weekly_price)} #{I18n.t('reservations.slash_per_week')}"
-      elsif !listing.monthly_price.to_f.zero?
-        "#{I18n.t('reservations.from_price')} #{humanized_money_with_symbol(listing.monthly_price)} #{I18n.t('reservations.slash_per_month')}"
-      end
-    end
+    listing.action_type.decorate.list_available_prices
   end
 
   def individual_listing_price_information(listing, filter_pricing = [])
-    if listing.schedule_booking?
+    if listing.event_booking?
       humanized_money_with_symbol(listing.fixed_price)
     else
       listing_price = listing.lowest_price_with_type(filter_pricing)
