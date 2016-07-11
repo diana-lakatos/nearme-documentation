@@ -7,9 +7,9 @@
   - else
     = f.hidden_field :enabled, value: '1'
   - if show_free_column
-    .col-md-3
+    .col-md-2
       - if tt_pricing.try(:allow_free_booking?)
-        = f.input :is_free_booking, as: :switch, inline_label: true, label: t("simple_form.labels.transactable.price_free"), input_html: { 'data-free-booking' => true }
+        = f.input :is_free_booking, as: :switch, inline_label: true, label: false, input_html: { 'data-free-booking' => true, data: { :"label-off" => t('pricing.free'), :"label-on" => t('pricing.free') } }
   .col-md-4
     = f.input :price, as: :numeric, label: false, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), input_html: { 'data-price-field' => true }
   .col-md-3

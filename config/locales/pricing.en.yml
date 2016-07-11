@@ -23,6 +23,7 @@ en:
       deposit_amount: 'Deposit amount'
       enable: 'Enable deposits'
     price: 'Price'
+    free: 'Free'
     required: 'required'
     event:
       one: 'event'
