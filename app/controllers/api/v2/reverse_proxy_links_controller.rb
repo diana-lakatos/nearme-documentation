@@ -13,8 +13,8 @@ module Api
       ReverseProxyLink.transaction do
         @error_reverse_proxy_link = ReverseProxyLink.new
         params[:data].each do |use_on_path, links_data|
+          ReverseProxyLink.where(use_on_path: use_on_path).destroy_all
           links_data.each do |link_data|
-            ReverseProxyLink.where(use_on_path: use_on_path).destroy_all
             @reverse_proxy_link = ReverseProxyLink.new(use_on_path: use_on_path, destination_path: link_data[:url], name: link_data[:name])
             unless @reverse_proxy_link.save
               @error_reverse_proxy_link.errors.add(use_on_path, @reverse_proxy_link.errors.full_messages.join(', '))
