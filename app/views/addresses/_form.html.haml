@@ -1,7 +1,9 @@
 - label ||= nil
 - placeholder ||= nil
+- required = true unless local_assigns.has_key?(:required)
+
 %div{'data-address-field' => true, class: "control-group #{"error" if f.object.errors.any?}"}
-  = f.label :address, label: label, class: "control-label", required: true
+  = f.label :address, label: label, class: "control-label", required: required
   .controls
     = f.text_field :address, :'data-behavior' => 'address-autocomplete', :'data-address-input' => true, :'data-precise-search' => current_instance.precise_search?, placeholder: placeholder
     - if f.object.errors.include?(:address) || f.object.errors.include?(:latitude)

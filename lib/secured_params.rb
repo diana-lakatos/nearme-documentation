@@ -1152,6 +1152,7 @@ class SecuredParams
       :summary,
       :description,
       :cover_image,
+      current_address_attributes: nested(self.address),
       cover_photo_attributes: nested(self.photo),
       photos_attributes: nested(self.photo),
       links_attributes: nested(self.link),
