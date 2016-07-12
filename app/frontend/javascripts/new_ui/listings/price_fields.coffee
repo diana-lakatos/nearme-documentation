@@ -45,14 +45,16 @@ module.exports = class PriceFields
 
     @priceFields.on 'click', (event) =>
       $(event.target).parents(".row").find('input[data-free-booking]').prop('checked', false)
-      $(event.target).parents(".row").find('input[data-price-enabler]').prop('checked', true).trigger('change')
+      if $(event.target).parents(".row").find('input[data-price-enabler]').length > 0
+        $(event.target).parents(".row").find('input[data-price-enabler]').prop('checked', true).trigger('change')
+      else
+        @changePriceState($(event.target), false)
 
     @priceFields.on 'blur', (event) =>
       if $(event.target).val() == '' || $(event.target).val()=='0.00'
         price_enabler = $(event.target).parents(".row").find('input[data-price-enabler]')
         if price_enabler.length > 0
           price_enabler.prop('checked', false).trigger('change')
-          
 
     @priceFields.on 'change', (event) =>
       price = $(event.target)
