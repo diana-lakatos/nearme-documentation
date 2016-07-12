@@ -10,7 +10,7 @@ class GroupMembersController < ApplicationController
     @membership = @group.memberships.create(user: current_user, email: current_user.email, approved_by_user_at: Time.now)
 
     if @group.public?
-      @membership.update_column(:approved_by_owner_at, Time.now)
+      @membership.update(approved_by_owner_at: Time.zone.now)
     else
       WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberPendingApproval, @membership.id)
     end
@@ -22,7 +22,7 @@ class GroupMembersController < ApplicationController
 
   def accept
     @membership = @group.memberships.for_user(current_user).find(params[:id])
-    @membership.update_column(:approved_by_user_at, Time.now)
+    @membership.update(approved_by_user_at: Time.zone.now)
 
     respond_to do |format|
       format.js { render :create }

@@ -4,6 +4,7 @@ class Group < ActiveRecord::Base
   scoped_to_platform_context
 
   include QuerySearchable
+  SORT_OPTIONS = ['All', 'Featured', 'Most Recent', 'Near Me', 'Members']
 
   belongs_to :transactable_type, -> { with_deleted }, foreign_key: 'transactable_type_id', class_name: 'GroupType'
   belongs_to :group_type, -> { with_deleted }, foreign_key: 'transactable_type_id'
@@ -59,6 +60,21 @@ class Group < ActiveRecord::Base
 
   delegate :public?, :moderated?, :private?, to: :group_type
   delegate :custom_validators, to: :transactable_type
+
+  def self.custom_order(sort_name, params)
+    case sort_name
+    when /featured/i
+      order(featured: :desc)
+    when /most recent/i
+      order(created_at: :desc)
+    when /members/i
+      order(members_count: :desc)
+    when /near me/i
+      joins(:current_address).order("#{Address.order_by_distance_sql(params[:lat], params[:lng])} ASC")
+    else
+      all
+    end
+  end
 
   def cover_image
     cover_photo.try(:image) || Photo.new.image
