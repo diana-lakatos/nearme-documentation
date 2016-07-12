@@ -472,7 +472,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def event_booking?
-    !transactable_pricing.is_free_booking? && transactable_pricing.event_booking?
+    transactable_pricing.event_booking?
   end
 
   def is_free?
