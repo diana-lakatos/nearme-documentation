@@ -7,4 +7,8 @@ class TransactableType::SubscriptionBooking < TransactableType::ActionType
     %w(subscription_day subscription_month)
   end
 
+  def can_be_free?
+    false
+  end
+
 end

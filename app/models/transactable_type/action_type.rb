@@ -57,4 +57,8 @@ class TransactableType::ActionType < ActiveRecord::Base
     self.class.name.demodulize.underscore
   end
 
+  def can_be_free?
+    true
+  end
+
 end
