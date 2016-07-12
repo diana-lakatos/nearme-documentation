@@ -107,9 +107,9 @@ class ActivityFeedService::Event
 
   def user_updated_group_status
     user = @event.event_source.user
-    updated = @event.event_source.updateable
+    group = @event.event_source.updateable
     self.image = image_or_placeholder(user.avatar.url(:medium))
-    self.text = I18n.t(@event.i18n_key, user: link_if_not_deleted(user, :secret_name), updated: link_if_not_deleted(updated, :name)).html_safe
+    self.text = I18n.t(@event.i18n_key, user: link_if_not_deleted(user, :secret_name), group: link_if_not_deleted(group, :name)).html_safe
   end
 
   private
