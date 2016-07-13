@@ -4,7 +4,7 @@ class Dashboard::GroupsController < Dashboard::BaseController
   before_filter :can_moderate?, only: [:edit, :update, :destroy]
 
   def index
-    @groups = current_user.moderated_groups
+    @groups = current_user.group_collaborated.decorate
   end
 
   def new
