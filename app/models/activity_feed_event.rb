@@ -128,4 +128,13 @@ class ActivityFeedEvent < ActiveRecord::Base
     ).include?(self.event)
   end
 
+  def allowed_for_user(user)
+    case followed
+    when Group
+      user.try(:is_member_of?, followed)
+    else
+      true
+    end
+  end
+
 end

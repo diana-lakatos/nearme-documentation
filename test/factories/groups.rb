@@ -3,6 +3,7 @@ FactoryGirl.define do
     sequence(:name) { |n| "Group #{n}" }
     summary 'Summary'
     description 'Description'
+    cover_photo { FactoryGirl.create(:photo) }
 
     association :creator, factory: :user
     association :group_type, factory: :public_group_type

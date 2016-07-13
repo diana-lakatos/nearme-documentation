@@ -11,12 +11,26 @@ class UserStatusUpdate < ActiveRecord::Base
   validates_presence_of :text, :updateable_type, :updateable_id
   validates_length_of :text, maximum: 5000
 
+  validate :group_membership, if: :user_status_for_group_updated?
+
   after_commit :create_activity_feed_event, on: :create
 
   def create_activity_feed_event
     event = "user_updated_#{self.updateable_type.to_s.downcase}_status".to_sym
     affected_objects = [self.user] + self.topics + self.projects + [self.updateable]
     ActivityFeedService.create_event(event, self.user, affected_objects, self)
+  end
+
+  private
+
+  def group_membership
+    unless user.is_member_of?(updateable)
+      errors.add(:membership, I18n.t('activerecord.errors.models.user_status_update.membership'))
+    end
+  end
+
+  def user_status_for_group_updated?
+    updateable.is_a?(Group)
   end
 
 end
