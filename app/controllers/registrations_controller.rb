@@ -30,6 +30,10 @@ class RegistrationsController < Devise::RegistrationsController
     super unless already_signed_in?
   end
 
+  def status
+    render :json => { id: current_user.try(:id), name: current_user.try(:name) }
+  end
+
   def create
     params[:user][:custom_validation] = true
     setup_form_component

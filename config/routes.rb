@@ -741,6 +741,7 @@ DesksnearMe::Application.routes.draw do
     devise_for :users, :controllers => {:registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords'}
     devise_scope :user do
       post "users/avatar", :to => "registrations#avatar", :as => "avatar"
+      get "users/status", :to => "registrations#status", :as => "status"
       get "users/edit_avatar", :to => "registrations#edit_avatar", :as => "edit_avatar"
       match "users/update_avatar", :to => "registrations#update_avatar", :as => "update_avatar", via: [:patch, :put]
       delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
