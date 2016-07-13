@@ -288,6 +288,7 @@
         line-height: 40px;
 
         .name {
+            height: 70px;
             display: block;
             margin: 0;
             padding: 15px 30px 14px;
@@ -295,6 +296,18 @@
             color: inherit;
             text-decoration: none;
             transition: background 0.25s;
+
+            a {
+              max-width: 160px;
+              display: inline-block;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+
+              @include bp(1465px) {
+                max-width: none;
+              }
+            }
         }
 
         &:hover .name {
@@ -385,7 +398,7 @@
         }
     }
 
-    @include bp($screen-lg) {
+    @include bp(1465px) {
 
         .toggler {
             display: block;
