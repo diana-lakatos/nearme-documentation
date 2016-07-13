@@ -24,7 +24,7 @@ class InstanceAdmin < ActiveRecord::Base
   }
 
   def assign_default_role_if_empty
-     assign_default_role unless instance_admin_role_id.present?
+    assign_default_role unless instance_admin_role_id.present?
   end
 
   def assign_default_role

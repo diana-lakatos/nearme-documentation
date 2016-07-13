@@ -1,12 +1,17 @@
 class InstanceAdminAuthorizer < Authorizer
-
   class UnassignedInstanceAdminRoleError < StandardError; end
 
   def authorized?(controller)
-    return unless @user.instance_admin?
     return true if @user.admin?
-    raise InstanceAdminAuthorizer::UnassignedInstanceAdminRoleError.new("Instance admin (id=#{instance_admin.id}) has not been assigned any role") if instance_admin_role.nil?
-    if controller == "InstanceAdmin"
+    return unless @user.instance_admin?
+
+    check_instance_admin_role
+
+    if controller == 'AdministratorRestrictedAccess'
+      return instance_administrator?
+    end
+
+    if controller == 'InstanceAdmin'
       controller = first_permission_have_access_to
     end
     instance_admin_role.send(convert_controller_class_to_db_column(controller))
@@ -21,8 +26,18 @@ class InstanceAdminAuthorizer < Authorizer
 
   private
 
-  def convert_controller_class_to_db_column(controller)
-    "permission_" + controller.to_s.demodulize.downcase.gsub("controller", "").gsub(/manage(\w+)/, '\1')
+  def instance_administrator?
+    instance_admin_role == InstanceAdminRole.administrator_role
   end
 
+  def check_instance_admin_role
+    unless instance_admin_role
+      raise UnassignedInstanceAdminRoleError,
+            "Instance admin (id=#{instance_admin.id}) has not been assigned any role"
+    end
+  end
+
+  def convert_controller_class_to_db_column(controller)
+    'permission_' + controller.to_s.demodulize.downcase.gsub('controller', '').gsub(/manage(\w+)/, '\1')
+  end
 end
