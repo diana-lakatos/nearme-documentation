@@ -272,7 +272,7 @@ en:
     main_image: 'Main Image'
     delete_group: 'Delete Group'
     save_changes: 'Save Changes'
-    publish_group: 'Save Changes'
+    publish_group: 'Publish Group'
     save_for_later: 'Save for Later'
     moderator: 'Moderator'
     placeholders:
