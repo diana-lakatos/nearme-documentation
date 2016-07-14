@@ -71,7 +71,11 @@
   section.links {
     .gallery-a {
       li {
-        width: 50%;
+        width: 100%;
+
+        img {
+          width: auto;
+        }
       }
     }
   }
