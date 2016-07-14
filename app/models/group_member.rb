@@ -27,6 +27,7 @@ class GroupMember < ActiveRecord::Base
 
   attr_accessor :destroyed_by_parent
 
+  before_save :owner_cannot_lose_moderate_rights, if: -> { member_is_an_owner? && moderator.eql?(false) }
   before_destroy :owner_cannot_leave_group, if: -> { !destroyed_by_parent? && member_is_an_owner? }
 
   def name
@@ -63,6 +64,10 @@ class GroupMember < ActiveRecord::Base
     raise OwnerCannotLeaveGroup
   end
 
+  def owner_cannot_lose_moderate_rights
+    raise OwnerCannotLoseModerateRights
+  end
+
   def destroyed_by_parent?
     !!destroyed_by_parent
   end
@@ -72,4 +77,5 @@ class GroupMember < ActiveRecord::Base
   end
 
   class OwnerCannotLeaveGroup < StandardError; end
+  class OwnerCannotLoseModerateRights < StandardError; end
 end

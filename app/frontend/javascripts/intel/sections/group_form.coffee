@@ -6,7 +6,10 @@ module.exports = class GroupForm
 
   bindEvents: ->
     $('.members-listing-a').on 'click', 'button', (e) =>
-      @updateProjectCollaborator(e)
+      @updateGroupMember(e, true)
+
+    $('.members-listing-a').on 'click', 'input#toggle_moderator_rights', (e) =>
+      @updateGroupMember(e, false)
 
     @initGroupTypeDescription()
     @initCoverImage()
@@ -86,19 +89,25 @@ module.exports = class GroupForm
         success: (data) ->
           $('.members-listing-a tbody').html(data.html)
 
-  updateProjectCollaborator: (event) ->
+  updateGroupMember: (event, showConfirmDialog) ->
     event.preventDefault()
     request_method = $(event.target).attr("data-action")
     that = @
     url = $(event.target).attr("data-href")
 
-    if confirm("Are you sure you want to continue?")
+    triggerRequest = ->
       $.ajax
         type: request_method,
         url: url,
         dataType: "json",
         success: (data) -> that.handle_success(data, request_method, event)
         complete: (data) -> that.handle_success(data, request_method, event)
+
+    if showConfirmDialog && confirm("Are you sure you want to continue?")
+      triggerRequest()
+    else
+      triggerRequest()
+
 
   handle_success: (data, request_method, event) =>
     if request_method == "DELETE"

@@ -9,7 +9,7 @@ class GroupDecorator < Draper::Decorator
   end
 
   def is_moderator?(user)
-    user.membership_for(model).moderator
+    user.membership_for(model).try(:moderator)
   end
 
   def is_owner?(user)
@@ -18,6 +18,11 @@ class GroupDecorator < Draper::Decorator
 
   def button_join_name
     model.public? ? t('group.join') : t('group.ask_to_join')
+  end
+
+  def can_moderate?(user)
+    return :owner if is_owner?(user)
+    is_moderator?(user) || false
   end
 
   def self.collection_decorator_class

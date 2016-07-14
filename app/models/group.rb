@@ -102,16 +102,16 @@ class Group < ActiveRecord::Base
   end
 
   def build_new_group_member
-    OpenStruct.new(email: nil, moderator: false)
+    OpenStruct.new(email: nil)
   end
 
   def new_group_members
-    (@new_group_members || []).empty? ? [OpenStruct.new(email: nil, moderator: false)] : @new_group_members
+    (@new_group_members || []).empty? ? [OpenStruct.new(email: nil)] : @new_group_members
   end
 
   def new_group_members_attributes=(attributes = {})
     @new_group_members = attributes.values.uniq { |member| member[:email] }.map do |member|
-      OpenStruct.new(email: member[:email], moderator: member[:moderator]) unless member[:email].blank?
+      OpenStruct.new(email: member[:email]) unless member[:email].blank?
     end.compact
   end
 
@@ -134,7 +134,6 @@ class Group < ActiveRecord::Base
         gm = self.group_members.build(
           user: user,
           email: group_member_email,
-          moderator: group_member.moderator,
           approved_by_owner_at: Time.zone.now
         )
         gm.save!

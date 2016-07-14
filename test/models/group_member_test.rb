@@ -19,4 +19,13 @@ class GroupMemberTest < ActiveSupport::TestCase
     end
   end
 
+  test '#owner_cannot_lose_moderate_rights raise an exception when owner has no moderator rights' do
+    assert_raises GroupMember::OwnerCannotLoseModerateRights do
+      membership = create(:group_member, moderator: true, email: 'email@gexample.com')
+      membership.group.stubs(:creator_id).returns(membership.user_id)
+      membership.moderator = false
+      membership.save
+    end
+  end
+
 end
