@@ -26,8 +26,6 @@
       = render :partial => 'addresses/form', locals: { f: address_form, label: t('group.location'), required: false }
 
   .fields
-    = f.association :projects, as: :select, collection: Project.all, input_html: { multiple: true, class: 'selectize', data: { placeholder: t('simple_form.placeholders.group.project_ids') } }
-
     %fieldset.media-group.cover-image
       %legend
         %abbr{:title => t('general.required')} *

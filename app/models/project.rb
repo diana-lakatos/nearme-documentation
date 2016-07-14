@@ -47,6 +47,8 @@ class Project < ActiveRecord::Base
   has_many :topics, through: :project_topics
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :wish_list_items, as: :wishlistable
+  has_many :group_projects, dependent: :destroy
+  has_many :groups, through: :group_projects
 
   scope :by_topic, -> (topic_ids) { includes(:project_topics).where(project_topics: {topic_id: topic_ids}) if topic_ids.present?}
   scope :seek_collaborators, -> { where(seek_collaborators: true) }
@@ -211,4 +213,3 @@ class Project < ActiveRecord::Base
 
   class NotFound < ActiveRecord::RecordNotFound; end
 end
-

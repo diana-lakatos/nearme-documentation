@@ -15,6 +15,7 @@ en:
       defaults:
         topic_ids: 'Select Topic'
         project_ids: 'Select Topic'
+        group_ids: 'Select Group'
         role: 'Select Role'
         group_type_id: 'Select Group Type'
       search:
