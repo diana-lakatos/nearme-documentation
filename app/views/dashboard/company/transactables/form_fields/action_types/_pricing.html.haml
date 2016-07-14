@@ -11,7 +11,7 @@
       - if tt_pricing.try(:allow_free_booking?)
         = f.input :is_free_booking, as: :switch, inline_label: true, label: false, input_html: { 'data-free-booking' => true, data: { :"label-off" => t('pricing.free'), :"label-on" => t('pricing.free') } }
   .col-md-4
-    = f.input :price, as: :numeric, label: false, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), input_html: { 'data-price-field' => true }
+    = f.input :price, as: :numeric, label: false, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), input_html: { 'data-price-field' => true, readonly: f.object.is_free_booking? }
   .col-md-3
     .form-unit
       = t :person_unit, scope: [:pricing, :price_unit], unit: f.object.decorate.units_translation('pricing.unit_price', 'pricing')
