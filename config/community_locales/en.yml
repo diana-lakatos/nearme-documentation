@@ -282,6 +282,11 @@ en:
     manage_members: 'Manage Members'
     group_deleted: "The group has been successfully deleted."
 
+    type:
+      public: 'Anyone can view group content and join. Only members can post.'
+      moderated: 'Anyone can view group content and request to join. Only members can post.'
+      private: 'Anyone can request to join. Only members can view group content and post.'
+
   # membership
   membership_cancelled: "Membership request has been cancelled."
   membership_accepted: "Membership request has been approved."

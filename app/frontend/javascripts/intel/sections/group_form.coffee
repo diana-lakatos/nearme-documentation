@@ -8,9 +8,20 @@ module.exports = class GroupForm
     $('.members-listing-a').on 'click', 'button', (e) =>
       @updateProjectCollaborator(e)
 
+    @initGroupTypeDescription()
     @initCoverImage()
     @initVideoField()
     @initSearchForMemberField()
+
+  initGroupTypeDescription: ->
+    $groupTypeSelect = $('#group_transactable_type_id')
+    $groupDescriptions = $('.group-type-description p')
+    selected = $('option:selected', $groupTypeSelect).text().toLowerCase()
+
+    $groupTypeSelect.on 'change', (event) =>
+      $groupDescriptions.removeClass('active');
+      selected = $(event.target).text().toLowerCase();
+      $('.' + selected).addClass('active')
 
   initCoverImage: ->
     $label = @coverImageWrapper.find('label')

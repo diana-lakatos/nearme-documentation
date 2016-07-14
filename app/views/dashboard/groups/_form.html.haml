@@ -3,6 +3,20 @@
   = f.input :id, as: :hidden
   .fields
     = f.association :transactable_type, as: :select, required: true, input_html: { class: 'selectize' }
+
+    .group-type-description
+      %p.public{class: ('active' if @group.public?) }
+        %span.intelicon-information-outlined
+        = I18n.t('group.type.public')
+
+      %p.moderated{class: ('active' if @group.moderated?) }
+        %span.intelicon-information-outlined
+        = I18n.t('group.type.moderated')
+
+      %p.private{class: ('active' if @group.private?) }
+        %span.intelicon-information-outlined
+        = I18n.t('group.type.private')
+
     = f.input :name, required: true, input_html: { maxlength: 140 }
     = f.input :summary, as: :text, required: true, input_html: { maxlength: 140, cols: 40, rows: 4 }
     = f.input :description, as: :text, required: true, input_html: { maxlength: 5000, cols: 40, rows: 8 }
