@@ -51,6 +51,10 @@ class InstanceAdmin::Settings::DomainsController < InstanceAdmin::Settings::Base
 
   private
 
+  def permitting_controller_class
+    'AdministratorRestrictedAccess'
+  end
+
   def domains
     @domains ||= @instance.domains
   end
