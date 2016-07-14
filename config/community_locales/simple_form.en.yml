@@ -16,6 +16,7 @@ en:
         topic_ids: 'Select Topic'
         project_ids: 'Select Topic'
         role: 'Select Role'
+        group_type_id: 'Select Group Type'
       search:
         search: 'Search'
 
@@ -71,6 +72,7 @@ en:
       defaults:
         topic_ids: 'Topic'
         seek_collaborators: 'Seeking Collaborators'
+        group_type_id: 'Group Type'
       activity_feed:
         topics: 'Select topics'
 

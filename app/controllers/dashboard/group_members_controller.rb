@@ -25,7 +25,7 @@ class Dashboard::GroupMembersController < Dashboard::BaseController
   end
 
   def approve
-    @membership.update_column(:approved_by_owner_at, Time.zone.now)
+    @membership.update(approved_by_owner_at: Time.zone.now)
     WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberApproved, @membership.id)
     render_membership
   end
