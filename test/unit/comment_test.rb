@@ -38,4 +38,37 @@ class CommentTest < ActiveSupport::TestCase
       FactoryGirl.create(:comment, commentable: FactoryGirl.create(:activity_feed_event))
     end
   end
+
+  test '#group_activity_commented?' do
+    @group = create(:group)
+    @event = create(:activity_feed_event, event: 'user_commented', followed: @group)
+    @comment = build(:comment, commentable: @event, creator: @user)
+
+    assert @comment.send(:group_activity_commented?)
+  end
+
+  test 'create group activities comment when user is a member' do
+    @user = create(:user)
+    @group = create(:group)
+    @event = create(:activity_feed_event, event: 'user_commented', followed: @group)
+    @comment = build(:comment, commentable: @event, creator: @user)
+    @user.stubs(:is_member_of?).with(@group).returns(true)
+
+    @comment.valid?
+
+    assert_not @comment.errors.include?(:membership)
+  end
+
+  test 'does not create group activities comment when user is not a member' do
+    @user = create(:user)
+    @group = create(:group)
+    @event = create(:activity_feed_event, event: 'user_commented', followed: @group)
+    @comment = build(:comment, commentable: @event, creator: @user)
+    @user.stubs(:is_member_of?).with(@group).returns(false)
+
+    @comment.valid?
+
+    assert @comment.errors.include?(:membership)
+  end
+
 end

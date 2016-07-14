@@ -27,4 +27,33 @@ class UserStatusUpdateTest < ActiveSupport::TestCase
       assert_equal :user_updated_user_status, ActivityFeedEvent.last.event.to_sym
     end
   end
+
+  test '#user_status_for_group_updated?' do
+    @group = create(:group)
+    @status = build(:user_status_update, updateable: @group)
+
+    assert @status.send(:user_status_for_group_updated?)
+  end
+
+  test 'update status for group when user is a member' do
+    @user = create(:user)
+    @group = create(:group)
+    @status = build(:user_status_update, updateable: @group, user: @user)
+    @user.stubs(:is_member_of?).with(@group).returns(true)
+
+    @status.valid?
+
+    assert_not @status.errors.include?(:membership)
+  end
+
+  test 'do not update status for group when user is not a member' do
+    @user = create(:user)
+    @group = create(:group)
+    @status = build(:user_status_update, updateable: @group, user: @user)
+    @user.stubs(:is_member_of?).with(@group).returns(false)
+
+    @status.valid?
+
+    assert @status.errors.include?(:membership)
+  end
 end
