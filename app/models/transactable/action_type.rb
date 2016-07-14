@@ -95,6 +95,10 @@ class Transactable::ActionType < ActiveRecord::Base
     false
   end
 
+  def jsonapi_serializer_class_name
+    'ActionTypeJsonSerializer'
+  end
+
   protected
 
   def check_price_attributes(attribs)
