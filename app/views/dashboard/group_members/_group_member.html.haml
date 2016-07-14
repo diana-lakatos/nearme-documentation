@@ -15,7 +15,7 @@
         %span.intelicon-check
         = t(:approve)
 
-    - unless @group.is_owner?(group_member.user_id)
+    - unless @group.is_owner?(group_member)
       %button.button-a.small{'data-href': dashboard_group_group_member_path(@group, group_member),"data-action": 'DELETE' }
         %span.intelicon-trash-outlined
         = t(:remove)
