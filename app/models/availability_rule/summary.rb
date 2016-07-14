@@ -2,7 +2,7 @@
 class AvailabilityRule::Summary
   def initialize(rules)
     @rules = rules
-    @unavailable_periods = @rules.first.target.schedule_exception_rules.future.map(&:time_range).flatten
+    @unavailable_periods = @rules.first.try(:target).try(:schedule_exception_rules).try(:future).try(:map, &:time_range).try(:flatten) || {}
   end
 
   # Iterate over each day in the week and yield the day of week and the availability rule (if any) for that day.
