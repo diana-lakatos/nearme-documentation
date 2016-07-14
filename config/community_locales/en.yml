@@ -258,6 +258,7 @@ en:
   group:
     name: 'Name'
     description: 'Description'
+    location: 'Location'
     gallery: 'Gallery'
     videos: 'Videos'
     links: 'Links'

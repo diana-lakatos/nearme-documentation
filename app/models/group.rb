@@ -9,6 +9,8 @@ class Group < ActiveRecord::Base
   belongs_to :group_type, -> { with_deleted }, foreign_key: 'transactable_type_id'
   belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :groups
 
+  has_one :current_address, class_name: 'Address', as: :entity, dependent: :destroy
+
   has_one  :cover_photo, -> { where(photo_role: 'cover') }, as: :owner, class_name: 'Photo', dependent: :destroy
   has_many :gallery_photos, -> { where(photo_role: nil) }, as: :owner, class_name: 'Photo'
   has_many :photos, as: :owner, dependent: :destroy
@@ -28,6 +30,7 @@ class Group < ActiveRecord::Base
   has_custom_attributes target_type: 'GroupType', target_id: :transactable_type_id
 
   with_options reject_if: :all_blank, allow_destroy: true do |options|
+    options.accepts_nested_attributes_for :current_address
     options.accepts_nested_attributes_for :cover_photo
     options.accepts_nested_attributes_for :photos
     options.accepts_nested_attributes_for :links

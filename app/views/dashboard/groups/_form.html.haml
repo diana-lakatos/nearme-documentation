@@ -6,6 +6,12 @@
     = f.input :name, required: true, input_html: { maxlength: 140 }
     = f.input :summary, as: :text, required: true, input_html: { maxlength: 140, cols: 40, rows: 4 }
     = f.input :description, as: :text, required: true, input_html: { maxlength: 5000, cols: 40, rows: 8 }
+
+  = f.simple_fields_for :current_address, (f.object.current_address.presence || f.object.build_current_address) do |address_form|
+    .fields.location
+      = render :partial => 'addresses/form', locals: { f: address_form, label: t('group.location'), required: false }
+
+  .fields
     = f.association :projects, as: :select, collection: Project.all, input_html: { multiple: true, class: 'selectize', data: { placeholder: t('simple_form.placeholders.group.project_ids') } }
 
     %fieldset.media-group.cover-image
