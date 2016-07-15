@@ -179,7 +179,7 @@
 
   .gallery-video {
 
-    li:hover {
+    li.active {
       .remove-video {
         display: block;
       }

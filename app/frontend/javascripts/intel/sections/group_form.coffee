@@ -33,7 +33,7 @@ module.exports = class GroupForm
 
   initVideoField: ->
     $input = @videoUploadWrapper.find('input[name=video-url]')
-    $submit = @videoUploadWrapper.find('button')
+    $submit = @videoUploadWrapper.find('.video-form button')
     $videoForm = @videoUploadWrapper.find('.video-form')
     $videoGallery = @videoUploadWrapper.find('.gallery-video')
     i18nButtonText = $submit.text()
@@ -50,6 +50,10 @@ module.exports = class GroupForm
     $videoGallery.on 'click', '.remove-video', (event) ->
       event.preventDefault()
       $(this).parent().remove()
+
+    $videoGallery
+      .on 'mouseover', 'li', (event) => $('li').addClass('active');
+      .on 'mouseout', 'li', (event) => $('li').removeClass('active');
 
     $submit.on 'click', (event) =>
       event.preventDefault();
