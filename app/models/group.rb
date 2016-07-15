@@ -37,6 +37,8 @@ class Group < ActiveRecord::Base
     options.accepts_nested_attributes_for :links
   end
 
+  scope :only_private, -> { joins(:group_type).where(transactable_types: { name: 'Private' }) }
+
   scope :with_date, ->(date) { where(created_at: date) }
   scope :by_search_query, lambda { |query|
     where('name ilike ? or description ilike ? or summary ilike ?', query, query, query)

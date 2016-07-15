@@ -118,6 +118,10 @@ class ActivityFeedEvent < ActiveRecord::Base
     where("affected_objects_identifiers && ?", sql_array).order(created_at: :desc).uniq
   end
 
+  def self.without_identifiers(sql_array)
+    where.not("affected_objects_identifiers && ?", sql_array).order(created_at: :desc).uniq
+  end
+
   def is_text_update?
     %w(
       user_updated_user_status
