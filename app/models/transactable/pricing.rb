@@ -135,6 +135,10 @@ class Transactable::Pricing < ActiveRecord::Base
     self.price_cents = 0 if is_free_booking
   end
 
+  def jsonapi_serializer_class_name
+    'PricingJsonSerializer'
+  end
+
   private
 
   def check_pricing_uniqueness

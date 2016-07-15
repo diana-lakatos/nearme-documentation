@@ -1161,12 +1161,15 @@ DesksnearMe::Application.routes.draw do
     resources :waiver_agreement_templates, only: [:show]
 
     namespace :api do
-      scope module: :v2, constraints: ApiConstraints.new(version: 2, default: true) do
+      scope module: :v2, constraints: ApiConstraints.new(version: 2, default: false) do
         resources :sessions, only: [:create]
         resources :users, only: [:create, :show]
         resource :space_wizard, only: [:create]
         resources :transactables, only: [:index]
         resources :reverse_proxy_links, only: [:index, :create]
+      end
+      scope module: :v3, constraints: ApiConstraints.new(version: 3, default: true) do
+        resources :transactables, only: [:index]
       end
     end
 
