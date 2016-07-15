@@ -332,4 +332,8 @@ module LiquidFilters
     hash.to_query
   end
 
+  def widget_links(path)
+    ReverseProxyLink.where(use_on_path: path)
+  end
+
 end
