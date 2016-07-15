@@ -1,5 +1,6 @@
 class Dashboard::GroupMembersController < Dashboard::BaseController
   rescue_from GroupMember::OwnerCannotLeaveGroup, with: :owner_cannot_leave_group
+  rescue_from GroupMember::OwnerCannotLoseModerateRights, with: :owner_cannot_lose_moderate_rights
 
   before_filter :find_group
   before_filter :find_membership, except: [:index, :create]
@@ -31,7 +32,7 @@ class Dashboard::GroupMembersController < Dashboard::BaseController
   end
 
   def moderate
-    @membership.update_column(:moderator, true)
+    @membership.toggle!(:moderator)
     render_membership
   end
 
@@ -56,6 +57,10 @@ class Dashboard::GroupMembersController < Dashboard::BaseController
   end
 
   def owner_cannot_leave_group(error)
+    render json: error.message
+  end
+
+  def owner_cannot_lose_moderate_rights(error)
     render json: error.message
   end
 end
