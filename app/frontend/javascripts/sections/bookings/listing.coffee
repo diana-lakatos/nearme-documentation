@@ -103,7 +103,7 @@ module.exports = class BookingListing
     @data.booking_type == 'schedule'
 
   withCalendars: ->
-    @canBeSubscribed() || @canReserveHourly() || @canReserveDaily()
+    @canBeSubscribed() || ((@canReserveHourly() || @canReserveDaily()) && @data.first_available_date?)
 
   isReservedDaily: ->
     $('.pricing-tabs li.active').data('unit') == 'day'
