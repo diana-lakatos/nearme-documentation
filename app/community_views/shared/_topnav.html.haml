@@ -21,13 +21,24 @@
   %nav#nav.nav
     %ul
       %li.people
-        = link_to "#{t(:people)} <em>1</em>".html_safe, search_url(search_type: :people), accesskey: 1
+        = link_to search_url(search_type: :people), accesskey: 1 do
+          %span.text
+            = "#{t(:people)} <em>1</em>".html_safe
+
       %li.projects
-        = link_to "#{t(:projects)} <em>2</em>".html_safe, search_url(search_type: :projects), accesskey: 2
+        = link_to search_url(search_type: :projects), accesskey: 2 do
+          %span.text
+            = "#{t(:projects)} <em>2</em>".html_safe
+
       %li.topics
-        = link_to "#{t(:topics)} <em>3</em>".html_safe, search_url(search_type: :topics), accesskey: 3
+        = link_to search_url(search_type: :topics), accesskey: 3 do
+          %span.text
+            = "#{t(:topics)} <em>3</em>".html_safe
+
       %li.groups
-        = link_to "#{t(:groups)} <em>4</em>".html_safe, search_url(search_type: :groups), accesskey: 4
+        = link_to search_url(search_type: :groups), accesskey: 4 do
+          %span.text
+            = "#{t(:groups)} <em>4</em>".html_safe
 
   .corner
     - if current_user

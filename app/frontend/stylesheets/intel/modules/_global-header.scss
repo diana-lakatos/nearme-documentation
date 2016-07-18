@@ -229,6 +229,12 @@
             display: block;
             color: #fff;
             text-decoration: none !important;
+
+            @include bp-range(1465px, 1270px) {
+              span.text {
+                display: none;
+              }
+            }
         }
 
         li a:hover {
@@ -398,7 +404,7 @@
         }
     }
 
-    @include bp(1465px) {
+    @include bp(1270px) {
 
         .toggler {
             display: block;
