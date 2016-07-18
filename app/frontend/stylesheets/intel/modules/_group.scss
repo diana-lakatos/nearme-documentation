@@ -201,6 +201,18 @@
     width: 100%;
     margin: 50px 0 0 0;
 
+    button {
+      span {
+        margin: 0;
+
+        &.text {
+          @include bp(815px) {
+            display: none;
+          }
+        }
+      }
+    }
+
     th {
       border: 1px solid #dedede;
       border-width: 1px 0 1px 0;

@@ -95,9 +95,10 @@ module.exports = class GroupForm
 
   updateGroupMember: (event, showConfirmDialog) ->
     event.preventDefault()
-    request_method = $(event.target).attr("data-action")
+    $target = $(event.currentTarget)
+    request_method = $target.attr("data-action")
     that = @
-    url = $(event.target).attr("data-href")
+    url = $target.attr("data-href")
 
     triggerRequest = ->
       $.ajax

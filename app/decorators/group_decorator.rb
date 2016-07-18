@@ -21,8 +21,7 @@ class GroupDecorator < Draper::Decorator
   end
 
   def can_moderate?(user)
-    return :owner if is_owner?(user)
-    is_moderator?(user) || false
+    is_owner?(user) || is_moderator?(user)
   end
 
   def self.collection_decorator_class

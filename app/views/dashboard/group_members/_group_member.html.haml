@@ -2,10 +2,7 @@
   %td
     = link_to group_member.name, user_path(group_member.user)
   %td
-    - if group_member.approved? && !@group.is_owner?(group_member.user) && group_member.user.id != current_user.id
-      = check_box_tag(:toggle_moderator_rights, true, group_member.moderator, {'data-href': moderate_dashboard_group_group_member_path(@group, group_member), 'data-action': 'PATCH' })
-    - else
-      = @group.can_moderate?(group_member.user)
+    = @group.can_moderate?(group_member.user)
   %td.col-status
     - if group_member.pending?
       =t('pending')
@@ -16,9 +13,17 @@
     - unless group_member.approved_by_owner?
       %button.button-a.small{'data-href': approve_dashboard_group_group_member_path(@group, group_member), 'data-action': 'PATCH' }
         %span.intelicon-check
-        = t(:approve)
+        %span.text
+          = t(:approve)
+
+    - if group_member.approved? && !@group.is_owner?(group_member.user) && group_member.user.id != current_user.id
+      %button.button-a.small{'data-href': moderate_dashboard_group_group_member_path(@group, group_member), 'data-action': 'PATCH' }
+        %span{class: (group_member.moderator ? 'intelicon-minus' : 'intelicon-plus')}
+        %span.text
+          = 'Moderator'
 
     - unless @group.is_owner?(group_member.user)
       %button.button-a.small{'data-href': dashboard_group_group_member_path(@group, group_member), 'data-action': 'DELETE' }
         %span.intelicon-trash-outlined
-        = t(:remove)
+        %span.text
+          = t(:remove)
