@@ -23,7 +23,10 @@
 
   = f.simple_fields_for :current_address, (f.object.current_address.presence || f.object.build_current_address) do |address_form|
     .fields.location
-      = render :partial => 'addresses/form', locals: { f: address_form, label: t('group.location'), required: false }
+      .address-form.no-address
+        = render :partial => 'addresses/form', locals: { f: address_form, label: t('group.location'), required: false }
+        = address_form.hidden_field :_destroy, value: false, class: 'marked-to-delete'
+        = link_to 'Remove Address', '#', class: 'remove-address'
 
   .fields
     %fieldset.media-group.cover-image

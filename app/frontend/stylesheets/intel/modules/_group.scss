@@ -147,12 +147,6 @@
     }
   }
 
-  .location {
-    .map-container {
-      height: 100% !important;
-    }
-  }
-
   .control-group {
       &.group_transactable_type {
         margin: 0 0 10px;
@@ -232,6 +226,32 @@
       [data-value] {
         padding-right: 0 !important;
       }
+    }
+  }
+
+  .address-form {
+
+    &.no-address {
+      .remove-address {
+        display: none;
+      }
+
+      .map {
+        display: none !important;
+      }
+    }
+
+    .map {
+      margin: 20px 0 40px 0;
+
+      .map-container {
+        height: 100% !important;
+      }
+    }
+
+    .remove-address {
+      display: block;
+      margin: 20px 0 0 0;
     }
   }
 
