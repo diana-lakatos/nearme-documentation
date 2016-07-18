@@ -10,7 +10,7 @@ class InstanceType::Searcher::GroupsSearcher
   def fetcher
     @fetcher = Group.search_by_query([:name, :description, :summary], @params[:query])
     @fetcher = @fetcher.where(transactable_type_id: @params[:group_type_id]) if @params[:group_type_id].present?
-    @fetcher = @fetcher.custom_order(@params[:sort], sort_params)
+    @fetcher = @fetcher.custom_order(@params[:sort] || 'members', sort_params)
     @fetcher
   end
 
