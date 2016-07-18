@@ -528,6 +528,7 @@ en:
         successfully_configured: 'Your PayPal onfiguration is complete.'
       groups:
         added: "Great, your new %{bookable_noun} group has been added!"
+        updated: "Great, your group details have been updated!"
     marketplace_sessions:
       wrong_password: 'Wrong password!'
     partner_inquiries:

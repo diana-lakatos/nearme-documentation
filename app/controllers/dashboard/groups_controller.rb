@@ -40,7 +40,7 @@ class Dashboard::GroupsController < Dashboard::BaseController
     respond_to do |format|
       format.html {
         if @group.save
-          flash[:success] = t('flash_messages.manage.listings.listing_updated')
+          flash[:success] = t('flash_messages.manage.groups.updated')
           redirect_to dashboard_groups_path
         else
           flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@group.errors.full_messages)
