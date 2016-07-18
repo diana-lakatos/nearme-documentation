@@ -60,6 +60,9 @@ module.exports = class Forms
         hideSelected: false
         closeAfterSelect: !$select.is('[multiple]')
 
+      $select.on 'change', =>
+        if `$select.val() == 0`
+          $select.val('')
 
   @initialize: ()->
     @placeholders()

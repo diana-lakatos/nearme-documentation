@@ -69,10 +69,10 @@ class Group < ActiveRecord::Base
       order(featured: :desc)
     when /most recent/i
       order(created_at: :desc)
-    when /members/i
-      order(members_count: :desc)
     when /near me/i
       joins(:current_address).order("#{Address.order_by_distance_sql(params[:lat], params[:lng])} ASC")
+    when /members/i
+      order(members_count: :desc)
     else
       all
     end
