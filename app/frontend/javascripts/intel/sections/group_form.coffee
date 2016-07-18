@@ -1,7 +1,12 @@
+AddressController = require('../address_controller')
+
 module.exports = class GroupForm
   constructor: (@form) ->
     @coverImageWrapper = $('.media-group.cover-image')
     @videoUploadWrapper = $('.media-group.group-videos')
+    @autocomplete = new AddressController($('.address-form'))
+      .addressFieldController.address.autocomplete
+
     @bindEvents()
 
   bindEvents: ->
@@ -11,10 +16,35 @@ module.exports = class GroupForm
     $('.members-listing-a').on 'click', 'input#toggle_moderator_rights', (e) =>
       @updateGroupMember(e, false)
 
+    @initAddressField()
     @initGroupTypeDescription()
     @initCoverImage()
     @initVideoField()
     @initSearchForMemberField()
+
+  initAddressField: ->
+    $locationForm = $('.address-form')
+    $map = $('.map', $locationForm);
+    $markedToDeleteField = $('.marked-to-delete', $locationForm)
+    $addressField = $('[data-behavior=address-autocomplete]', $locationForm)
+    $removeAddress = $('.remove-address')
+
+    $addressField.after($removeAddress)
+
+    if $addressField.val().length
+      $locationForm.removeClass('no-address')
+
+    $removeAddress.on 'click', (event) ->
+      event.preventDefault()
+
+      $addressField.val('')
+      $markedToDeleteField.val(true)
+      $locationForm.addClass('no-address')
+
+    google.maps.event.addListener @autocomplete, 'place_changed', =>
+      $markedToDeleteField.val(false)
+      $locationForm.removeClass('no-address')
+
 
   initGroupTypeDescription: ->
     $groupTypeSelect = $('#group_transactable_type_id')
