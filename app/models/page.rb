@@ -13,7 +13,8 @@ class Page < ActiveRecord::Base
 
   validates_uniqueness_of :slug, scope: :theme_id
 
-  include SitemapService::Callbacks
+  # FIXME disabled Sitemap updates. Needs to be optimized.
+  # include SitemapService::Callbacks
 
   mount_uploader :hero_image, HeroImageUploader
   skip_callback :commit, :after, :remove_hero_image!

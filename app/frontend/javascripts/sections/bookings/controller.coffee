@@ -22,7 +22,7 @@ module.exports = class BookingsController
     @submitFormImmediately = @container.data('returned-from-session')
     @setupDelayedMethods()
 
-    @listing = new BookingsListing(@listingData)
+    @listing = new BookingsListing(@listingData, @container)
     @bindDomElements()
     if @listing.withCalendars()
       @initializeDatepicker()
