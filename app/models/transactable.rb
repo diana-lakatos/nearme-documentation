@@ -6,7 +6,8 @@ class Transactable < ActiveRecord::Base
 
   include Impressionable
   include Searchable
-  include SitemapService::Callbacks
+  # FIXME disabled Sitemap updates. Needs to be optimized.
+  # include SitemapService::Callbacks
   include SellerAttachments
     # == Helpers
   include Listing::Search

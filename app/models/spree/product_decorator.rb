@@ -2,7 +2,8 @@ Spree::Product.class_eval do
   include Spree::Scoper
   include Impressionable
   include Searchable
-  include SitemapService::Callbacks
+  # FIXME disabled Sitemap updates. Needs to be optimized.
+  # include SitemapService::Callbacks
   include SellerAttachments
   include Categorizable
 
