@@ -25,6 +25,14 @@ GIT
       activerecord (>= 3.0.5)
 
 GIT
+  remote: git://github.com/mdyd-dev/jsonapi-serializers.git
+  revision: 00de353117c32dcc5a3a726e706bf99807043aec
+  branch: feature/namespace
+  specs:
+    jsonapi-serializers (0.13.1)
+      activesupport
+
+GIT
   remote: git://github.com/radar/paranoia.git
   revision: 2b050e8d130a1b5089407fbad6d74f77b1bad8a0
   branch: rails4
@@ -547,8 +555,6 @@ GEM
     json_spec (1.1.4)
       multi_json (~> 1.0)
       rspec (>= 2.0, < 4.0)
-    jsonapi-serializers (0.13.0)
-      activesupport
     jwt (1.5.1)
     kaminari (0.16.3)
       actionpack (>= 3.0.0)
@@ -1073,7 +1079,7 @@ DEPENDENCIES
   instagram
   jira-ruby
   json_spec
-  jsonapi-serializers
+  jsonapi-serializers!
   koala
   launchy
   le

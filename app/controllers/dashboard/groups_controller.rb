@@ -4,7 +4,7 @@ class Dashboard::GroupsController < Dashboard::BaseController
   before_filter :can_moderate?, only: [:edit, :update, :destroy]
 
   def index
-    @groups = current_user.moderated_groups
+    @groups = current_user.group_collaborated.decorate
   end
 
   def new
@@ -19,7 +19,7 @@ class Dashboard::GroupsController < Dashboard::BaseController
 
     if @group.save
       @group.memberships.create(user: current_user, email: current_user.email, moderator: true, approved_by_user_at: Time.now, approved_by_owner_at: Time.now)
-      flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @group.transactable_type.translated_bookable_noun)
+      flash[:success] = t('flash_messages.manage.groups.added', bookable_noun: @group.transactable_type.translated_bookable_noun)
       redirect_to dashboard_groups_path
     else
       flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@group.errors.full_messages)

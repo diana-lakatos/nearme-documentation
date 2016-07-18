@@ -14,6 +14,8 @@ class Comment < ActiveRecord::Base
 
   validates :body, presence: true, length: { maximum: 5000 }
 
+  validate :group_membership, if: :group_activity_commented?
+
   after_commit :user_commented_event, on: :create
   def user_commented_event
     case self.commentable_type
@@ -51,4 +53,17 @@ class Comment < ActiveRecord::Base
   def event
     body
   end
+
+  private
+
+  def group_membership
+    unless creator.is_member_of?(commentable.followed)
+      errors.add(:membership, I18n.t('activerecord.errors.models.comment.membership'))
+    end
+  end
+
+  def group_activity_commented?
+    commentable.is_a?(ActivityFeedEvent) && commentable.followed.is_a?(Group)
+  end
+
 end

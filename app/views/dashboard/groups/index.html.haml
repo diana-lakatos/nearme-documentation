@@ -43,7 +43,7 @@
                 %td.col-summary
                   = group.summary
                 %td.col-role
-                  = t(group.creator_id == current_user.id ? :owner : :collaborator)
+                  = group.role_of_user(current_user)
                 %td.col-status
                   - if group.draft?
                     %span.status-draft
@@ -53,6 +53,9 @@
                       = t('published')
 
                 %td.col-actions
-                  = link_to t(:edit), edit_dashboard_group_path(group), class: 'action-edit'
-                  - if group.creator_id == current_user.id
+
+                  - if group.is_moderator?(current_user)
+                    = link_to t(:edit), edit_dashboard_group_path(group), class: 'action-edit'
+
+                  - if group.is_owner?(current_user)
                     = link_to t(:remove), dashboard_group_path(group), method: :delete, class: 'action-remove', data: { confirm: 'Are you sure?' }

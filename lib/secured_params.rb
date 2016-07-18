@@ -1140,6 +1140,7 @@ class SecuredParams
       links_attributes: nested(self.link),
       photo_ids: [],
       topic_ids: [],
+      group_ids: [],
     ] + Project.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:project_types).try(:first)).try(:id)))
     based_params += [ :name, :summary, new_collaborators: [ :email, :id, :_destroy ], new_collaborators_attributes: nested(self.project_collaborator) ] if is_project_owner
     based_params
@@ -1152,11 +1153,11 @@ class SecuredParams
       :summary,
       :description,
       :cover_image,
+      current_address_attributes: nested(self.address),
       cover_photo_attributes: nested(self.photo),
       photos_attributes: nested(self.photo),
       links_attributes: nested(self.link),
       photo_ids: [],
-      project_ids: [],
       new_group_members_attributes: nested(self.group_member),
 
       properties: [videos: []]

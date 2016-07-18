@@ -4,10 +4,13 @@ class Group < ActiveRecord::Base
   scoped_to_platform_context
 
   include QuerySearchable
+  SORT_OPTIONS = ['All', 'Featured', 'Most Recent', 'Near Me', 'Members']
 
   belongs_to :transactable_type, -> { with_deleted }, foreign_key: 'transactable_type_id', class_name: 'GroupType'
   belongs_to :group_type, -> { with_deleted }, foreign_key: 'transactable_type_id'
   belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :groups
+
+  has_one :current_address, class_name: 'Address', as: :entity, dependent: :destroy
 
   has_one  :cover_photo, -> { where(photo_role: 'cover') }, as: :owner, class_name: 'Photo', dependent: :destroy
   has_many :gallery_photos, -> { where(photo_role: nil) }, as: :owner, class_name: 'Photo'
@@ -28,10 +31,13 @@ class Group < ActiveRecord::Base
   has_custom_attributes target_type: 'GroupType', target_id: :transactable_type_id
 
   with_options reject_if: :all_blank, allow_destroy: true do |options|
+    options.accepts_nested_attributes_for :current_address
     options.accepts_nested_attributes_for :cover_photo
     options.accepts_nested_attributes_for :photos
     options.accepts_nested_attributes_for :links
   end
+
+  scope :only_private, -> { joins(:group_type).where(transactable_types: { name: 'Private' }) }
 
   scope :with_date, ->(date) { where(created_at: date) }
   scope :by_search_query, lambda { |query|
@@ -56,6 +62,21 @@ class Group < ActiveRecord::Base
 
   delegate :public?, :moderated?, :private?, to: :group_type
   delegate :custom_validators, to: :transactable_type
+
+  def self.custom_order(sort_name, params)
+    case sort_name
+    when /featured/i
+      order(featured: :desc)
+    when /most recent/i
+      order(created_at: :desc)
+    when /members/i
+      order(members_count: :desc)
+    when /near me/i
+      joins(:current_address).order("#{Address.order_by_distance_sql(params[:lat], params[:lng])} ASC")
+    else
+      all
+    end
+  end
 
   def cover_image
     cover_photo.try(:image) || Photo.new.image
@@ -83,16 +104,16 @@ class Group < ActiveRecord::Base
   end
 
   def build_new_group_member
-    OpenStruct.new(email: nil, moderator: false)
+    OpenStruct.new(email: nil)
   end
 
   def new_group_members
-    (@new_group_members || []).empty? ? [OpenStruct.new(email: nil, moderator: false)] : @new_group_members
+    (@new_group_members || []).empty? ? [OpenStruct.new(email: nil)] : @new_group_members
   end
 
   def new_group_members_attributes=(attributes = {})
     @new_group_members = attributes.values.uniq { |member| member[:email] }.map do |member|
-      OpenStruct.new(email: member[:email], moderator: member[:moderator]) unless member[:email].blank?
+      OpenStruct.new(email: member[:email]) unless member[:email].blank?
     end.compact
   end
 
@@ -115,7 +136,6 @@ class Group < ActiveRecord::Base
         gm = self.group_members.build(
           user: user,
           email: group_member_email,
-          moderator: group_member.moderator,
           approved_by_owner_at: Time.zone.now
         )
         gm.save!

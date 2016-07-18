@@ -19,13 +19,21 @@ class ActivityFeedService
       @events = ActivityFeedEvent.with_identifiers(sql_array).includes(:event_source, :followed).exclude_events.paginate(page: @page, per_page: per)
     else
       followed_identifiers = [ActivityFeedService::Helpers.object_identifier_for(@object)]
+      excluded_identifiers = @object.groups.only_private.pluck(:id).map { |i| "Group_#{i}" }
 
-      sql_array = "{#{followed_identifiers.join(',')}}"
+      sql_include_array = "{#{followed_identifiers.join(',')}}"
+      sql_exclude_array = "{#{excluded_identifiers.join(',')}}"
 
       # We filter out user_commented events except for those where this user
       # commented something on another object (we filter out comments on his own
       # wall, that is, where followed = him)
-      @events = ActivityFeedEvent.with_identifiers(sql_array).includes(:event_source, :followed).exclude_events.where('event != ? OR (event = ? AND (followed_id != ? OR followed_type != ?))', 'user_commented', 'user_commented', @object.id, 'User').paginate(page: @page, per_page: per)
+      @events = ActivityFeedEvent
+        .with_identifiers(sql_include_array)
+        .without_identifiers(sql_exclude_array)
+        .includes(:event_source, :followed)
+        .exclude_events
+        .where('event != ? OR (event = ? AND (followed_id != ? OR followed_type != ?))', 'user_commented', 'user_commented', @object.id, 'User')
+        .paginate(page: @page, per_page: per)
     end
   end
 

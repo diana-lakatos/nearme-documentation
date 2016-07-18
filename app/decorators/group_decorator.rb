@@ -3,12 +3,26 @@ class GroupDecorator < Draper::Decorator
 
   delegate_all
 
-  def is_owner?(user_id)
-    model.creator_id.eql?(user_id)
+  def role_of_user(user)
+    return :owner if is_owner?(user)
+    is_moderator?(user) ? :moderator : :member
+  end
+
+  def is_moderator?(user)
+    user.membership_for(model).try(:moderator)
+  end
+
+  def is_owner?(user)
+    model.creator_id.eql?(user.id)
   end
 
   def button_join_name
     model.public? ? t('group.join') : t('group.ask_to_join')
+  end
+
+  def can_moderate?(user)
+    return :owner if is_owner?(user)
+    is_moderator?(user) || false
   end
 
   def self.collection_decorator_class

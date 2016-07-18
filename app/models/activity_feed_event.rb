@@ -118,6 +118,10 @@ class ActivityFeedEvent < ActiveRecord::Base
     where("affected_objects_identifiers && ?", sql_array).order(created_at: :desc).uniq
   end
 
+  def self.without_identifiers(sql_array)
+    where.not("affected_objects_identifiers && ?", sql_array).order(created_at: :desc).uniq
+  end
+
   def is_text_update?
     %w(
       user_updated_user_status
@@ -126,6 +130,15 @@ class ActivityFeedEvent < ActiveRecord::Base
       user_commented
       user_commented_on_project
     ).include?(self.event)
+  end
+
+  def allowed_for_user(user)
+    case followed
+    when Group
+      user.try(:is_member_of?, followed)
+    else
+      true
+    end
   end
 
 end

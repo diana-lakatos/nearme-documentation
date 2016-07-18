@@ -11,4 +11,8 @@ class InstanceAdmin::Settings::HostedZonesController < InstanceAdmin::Settings::
   def domain
     Domain.find(params[:domain_id])
   end
+
+  def permitting_controller_class
+    'AdministratorRestrictedAccess'
+  end
 end

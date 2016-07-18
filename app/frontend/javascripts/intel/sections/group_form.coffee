@@ -6,11 +6,25 @@ module.exports = class GroupForm
 
   bindEvents: ->
     $('.members-listing-a').on 'click', 'button', (e) =>
-      @updateProjectCollaborator(e)
+      @updateGroupMember(e, true)
 
+    $('.members-listing-a').on 'click', 'input#toggle_moderator_rights', (e) =>
+      @updateGroupMember(e, false)
+
+    @initGroupTypeDescription()
     @initCoverImage()
     @initVideoField()
     @initSearchForMemberField()
+
+  initGroupTypeDescription: ->
+    $groupTypeSelect = $('#group_transactable_type_id')
+    $groupDescriptions = $('.group-type-description p')
+    selected = $('option:selected', $groupTypeSelect).text().toLowerCase()
+
+    $groupTypeSelect.on 'change', (event) =>
+      $groupDescriptions.removeClass('active');
+      selected = $(event.target).text().toLowerCase();
+      $('.' + selected).addClass('active')
 
   initCoverImage: ->
     $label = @coverImageWrapper.find('label')
@@ -22,7 +36,7 @@ module.exports = class GroupForm
 
   initVideoField: ->
     $input = @videoUploadWrapper.find('input[name=video-url]')
-    $submit = @videoUploadWrapper.find('button')
+    $submit = @videoUploadWrapper.find('.video-form button')
     $videoForm = @videoUploadWrapper.find('.video-form')
     $videoGallery = @videoUploadWrapper.find('.gallery-video')
     i18nButtonText = $submit.text()
@@ -39,6 +53,10 @@ module.exports = class GroupForm
     $videoGallery.on 'click', '.remove-video', (event) ->
       event.preventDefault()
       $(this).parent().remove()
+
+    $videoGallery
+      .on 'mouseover', 'li', (event) => $('li').addClass('active');
+      .on 'mouseout', 'li', (event) => $('li').removeClass('active');
 
     $submit.on 'click', (event) =>
       event.preventDefault();
@@ -75,19 +93,25 @@ module.exports = class GroupForm
         success: (data) ->
           $('.members-listing-a tbody').html(data.html)
 
-  updateProjectCollaborator: (event) ->
+  updateGroupMember: (event, showConfirmDialog) ->
     event.preventDefault()
     request_method = $(event.target).attr("data-action")
     that = @
     url = $(event.target).attr("data-href")
 
-    if confirm("Are you sure you want to continue?")
+    triggerRequest = ->
       $.ajax
         type: request_method,
         url: url,
         dataType: "json",
         success: (data) -> that.handle_success(data, request_method, event)
         complete: (data) -> that.handle_success(data, request_method, event)
+
+    if showConfirmDialog && confirm("Are you sure you want to continue?")
+      triggerRequest()
+    else
+      triggerRequest()
+
 
   handle_success: (data, request_method, event) =>
     if request_method == "DELETE"

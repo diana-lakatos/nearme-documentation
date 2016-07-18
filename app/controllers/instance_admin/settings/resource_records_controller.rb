@@ -75,4 +75,8 @@ class InstanceAdmin::Settings::ResourceRecordsController < InstanceAdmin::Settin
   def decode_resource_record_id
     params[:id].tr('_', '.').split('-')
   end
+
+  def permitting_controller_class
+    'AdministratorRestrictedAccess'
+  end
 end

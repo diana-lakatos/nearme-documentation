@@ -537,8 +537,8 @@ class Transactable < ActiveRecord::Base
     'TransactableJsonSerializer'
   end
 
-  def event_booking?
-    event_booking.present?
+  %w(EventBooking TimeBasedBooking NoActionBooking PurchaseAction SubscriptionBooking).each do |class_name|
+    define_method("#{class_name.underscore}?") { action_type.type == "Transactable::#{class_name}" }
   end
 
   def initialize_action_types

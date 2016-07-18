@@ -105,15 +105,15 @@ FactoryGirl.define do
   factory :group_type, class: 'GroupType' do
 
     factory :public_group_type do
-      sequence(:name) { |n| "Public #{n}" }
+      sequence(:name) { |n| "Public" }
     end
 
     factory :moderated_group_type do
-      sequence(:name) { |n| "Moderated #{n}" }
+      sequence(:name) { |n| "Moderated" }
     end
 
     factory :private_group_type do
-      sequence(:name) { |n| "Private #{n}" }
+      sequence(:name) { |n| "Private" }
     end
   end
 end

@@ -71,7 +71,11 @@
   section.links {
     .gallery-a {
       li {
-        width: 50%;
+        width: 100%;
+
+        img {
+          width: auto;
+        }
       }
     }
   }
@@ -143,6 +147,29 @@
     }
   }
 
+  .location {
+    .map-container {
+      height: 100% !important;
+    }
+  }
+
+  .control-group {
+      &.group_transactable_type {
+        margin: 0 0 10px;
+      }
+  }
+
+  .group-type-description {
+    p {
+      display: none;
+      margin: 0;
+
+      &.active {
+        display: block;
+      }
+    }
+  }
+
   .gallery-a {
     li {
       width: (100%/3);
@@ -152,7 +179,7 @@
 
   .gallery-video {
 
-    li:hover {
+    li.active {
       .remove-video {
         display: block;
       }

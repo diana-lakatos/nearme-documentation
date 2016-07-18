@@ -10,6 +10,7 @@
     = f.input :description, as: :text, required: true, input_html: { maxlength: 5000, cols: 40, rows: 8 }
 
     = f.association :topics, as: :select, input_html: { multiple: true, class: 'selectize', data: { placeholder: t(:topics, scope: [:simple_form, :placeholders, :activity_feed]) } }, wrapper_html: { class: 'topics' }, required: true
+    = f.association :groups, as: :select, collection: [@project.groups, current_user.group_collaborated].flatten, input_html: { multiple: true, class: 'selectize', data: { placeholder: t('simple_form.placeholders.defaults.group_ids') } }
 
     %fieldset.media-group.sep
       %legend

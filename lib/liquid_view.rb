@@ -40,6 +40,7 @@ class LiquidView
     params = @view.try(:controller).try(:params) || {}
     assigns['params'] = params.except(*Rails.application.config.filter_parameters)
     assigns['current_url'] = @view.try(:controller).try(:request).try(:original_url)
+    assigns['current_path'] = @view.try(:controller).try(:request).try(:path)
     assigns['current_user'] = @view.try(:controller).try(:current_user)
     assigns['flash'] = @view.try(:flash).try(:to_hash) if ApplicationController === @view.try(:controller)
     assigns['form_authenticity_token'] = @view.try(:controller).try(:form_authenticity_token)
