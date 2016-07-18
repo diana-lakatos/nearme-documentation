@@ -1169,7 +1169,11 @@ DesksnearMe::Application.routes.draw do
         resources :reverse_proxy_links, only: [:index, :create]
       end
       scope module: :v3, constraints: ApiConstraints.new(version: 3, default: true) do
+        resources :sessions, only: [:create]
+        resources :users, only: [:create, :show]
+        resource :space_wizard, only: [:create]
         resources :transactables, only: [:index]
+        resources :reverse_proxy_links, only: [:index, :create]
       end
     end
 
