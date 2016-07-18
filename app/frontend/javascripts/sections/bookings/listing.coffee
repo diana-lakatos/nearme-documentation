@@ -14,7 +14,7 @@ module.exports = class BookingListing
 
   defaultQuantity: 1
 
-  constructor: (@data) ->
+  constructor: (@data, @container) ->
     @id = parseInt(@data.id, 10)
     @bookedDatesArray = []
     @bookedDateAvailability = 0
@@ -91,13 +91,13 @@ module.exports = class BookingListing
     'subscription_day' in @possibleUnits || 'subscription_month' in @possibleUnits
 
   isReservedHourly: ->
-    $('.pricing-tabs li.active').data('unit') == 'hour'
+    @container.find('.pricing-tabs li.active').data('unit') == 'hour'
 
   isSubscriptionBooking: ->
-    $('.pricing-tabs li.active').data('unit') && $('.pricing-tabs li.active').data('unit').indexOf('subscription') > -1
+    @container.find('.pricing-tabs li.active').data('unit') && @container.find('.pricing-tabs li.active').data('unit').indexOf('subscription') > -1
 
   isOvernightBooking: ->
-    $('.pricing-tabs li.active').data('unit') == 'night'
+    @container.find('.pricing-tabs li.active').data('unit') == 'night'
 
   isFixedBooking: ->
     @data.booking_type == 'schedule'
@@ -106,13 +106,13 @@ module.exports = class BookingListing
     @canBeSubscribed() || ((@canReserveHourly() || @canReserveDaily()) && @data.first_available_date?)
 
   isReservedDaily: ->
-    $('.pricing-tabs li.active').data('unit') == 'day'
+    @container.find('.pricing-tabs li.active').data('unit') == 'day'
 
   isPerUnitBooking: ->
     @data.action_price_per_unit
 
   currentUnit: ->
-    $('.pricing-tabs li.active').data('unit')
+    @container.find('.pricing-tabs li.active').data('unit')
 
   # Returns whether the date is within the bounds available for booking
   dateWithinBounds: (date) ->
