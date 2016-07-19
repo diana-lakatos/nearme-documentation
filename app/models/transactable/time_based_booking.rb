@@ -164,6 +164,23 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
     end
   end
 
+  def booking_days_per_month
+    if transactable.transactable_type.days_for_monthly_rate.to_i.zero?
+      booking_days_per_week * 4
+    else
+      transactable.transactable_type.days_for_monthly_rate.to_i
+    end
+  end
+
+  def booking_days_per_week
+    if availability
+      availability.try(:days_open).try(:length) || 7
+    else
+      self.availability_template = transactable.transactable_type.availability_templates.first
+      availability.try(:days_open).try(:length) || 7
+    end
+  end
+
   private
 
   def booking_availability
