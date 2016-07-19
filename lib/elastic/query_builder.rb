@@ -223,7 +223,7 @@ module Elastic
     end
 
     def sorting_options
-      if @query[:sort] && sort = @query[:sort].match(/(\w*)_(asc|desc)/)
+      if @query[:sort] && sort = @query[:sort].match(/([a-zA-Z\.\_\-]*)_(asc|desc)/)
         [
           { sort[1] => { order: sort[2] } }
         ]
