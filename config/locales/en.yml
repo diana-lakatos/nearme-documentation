@@ -2617,6 +2617,7 @@ en:
     braintree:
       title: 'Braintree'
       terms_of_service_html: '%{name} uses Braintree, a division of PayPal, Inc. (Braintree) for payment processing services. By using the Braintree payment processing services you agree to the Braintree Payment Services Agreement available at <a href="https://www.braintreepayments.com/legal/gateway-agreement">https://www.braintreepayments.com/legal/gateway-agreement</a>, and the applicable bank agreement available at <a href="https://www.braintreepayments.com/legal/cea-wells">https://www.braintreepayments.com/legal/cea-wells</a>'
+      credit_card_subscription_info: "A credit card is required in the case of a cancellation to provide a refund of the booking charge to the Guest."
 
   amenities_attribute: 'Amenities'
   amenity_attribute: 'amenity'
