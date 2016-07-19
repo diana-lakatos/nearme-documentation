@@ -279,6 +279,7 @@ en:
       video_url: 'Enter yourube or vimeo URL'
       add_video: 'Add Video'
       select_group_type: 'Select Group Type'
+      all_groups: 'All Groups'
     manage_members: 'Manage Members'
     group_deleted: "The group has been successfully deleted."
 

@@ -61,6 +61,9 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
         type: "Transactable::#{tt_action_type.class.name.demodulize}"
       )
     end
+    if @transactable.action_type.nil? || !@transactable.action_type.transactable_type_action_type.enabled?
+      @transactable.action_type = @transactable.action_types.find{ |at| at.transactable_type_action_type.enabled? }
+    end
     @photos = @transactable.photos
     @attachments = @transactable.attachments
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
