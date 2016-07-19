@@ -9,7 +9,7 @@ class V1::ReservationsController < V1::BaseController
 
   # Show all known reservations for the user
   def index
-    @reservations = current_user.reservations
+    @reservations = current_user.orders.reservations
     render json: @reservations
   end
 
@@ -20,7 +20,7 @@ class V1::ReservationsController < V1::BaseController
   def past
 
     # Get all reservations for the user
-    @reservations = current_user.reservations
+    @reservations = current_user.orders.reservations
 
     # Drop reservations that have a date that is not in the past
     timestamp_now = Time.zone.now
@@ -50,7 +50,7 @@ class V1::ReservationsController < V1::BaseController
   def future
 
     # Get all reservations the user has created
-    @reservations = current_user.reservations
+    @reservations = current_user.orders.reservations
 
     # Drop reservations that have all dates in the past
     timestamp_now = Time.zone.now
@@ -77,7 +77,7 @@ class V1::ReservationsController < V1::BaseController
   # Show an individual reservation
   def show
 
-    @reservation = current_user.reservations.find(params[:id])
+    @reservation = current_user.orders.reservations.find(params[:id])
     render json: @reservation
 
   end
@@ -86,7 +86,7 @@ class V1::ReservationsController < V1::BaseController
   # Cancel an individual reservation
   def destroy
 
-    @reservation = current_user.reservations.find params[:id]
+    @reservation = current_user.orders.reservations.find params[:id]
 
     if @reservation.cancelable
 

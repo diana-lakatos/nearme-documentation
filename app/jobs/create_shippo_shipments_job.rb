@@ -5,9 +5,9 @@ class CreateShippoShipmentsJob < Job
   end
 
   def perform
-    @reservation = Reservation.find @reservation_id
+    @reservation = Order.find @reservation_id
     if @reservation.instance.shippo_enabled?
-      @reservation.shipments.without_transaction.map(&:create_shippo_shipment!)
+      @reservation.shipments.using_shippo.without_transaction.map(&:create_shippo_shipment!)
       WorkflowStepJob.new(PlatformContext.current.platform_context_detail.class.name, PlatformContext.current.platform_context_detail.id, WorkflowStep::ReservationWorkflow::ShippingDetails, @reservation.id).perform
     end
   end

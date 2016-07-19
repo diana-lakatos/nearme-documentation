@@ -1,4 +1,4 @@
-{% if reservation.listing != blank %}
+{% if reservation.transactable != blank %}
   <h2>
     {% if reservation.owner != blank %}
       <a href="{{ reservation.owner.user_profile_url }}">{{ reservation.owner.name }}</a>
@@ -8,11 +8,11 @@
 
     {{ 'dashboard.host_reservations.booked' | translate }}
 
-    {% assign listing_name = reservation.listing.name %}
+    {% assign listing_name = reservation.transactable.name %}
     {% if listing_name == blank %}
       {% assign listing_name = 'dashboard.host_reservations.show_listing_page' | translate %}
     {% endif %}
-    <a href="{{ reservation.listing.show_path }}">{{ listing_name }}</a>
+    <a href="{{ reservation.transactable.show_path }}">{{ listing_name }}</a>
   </h2>
 
   {% if reservation.owner != blank %}
@@ -30,4 +30,4 @@
   <h2>
     {{ 'dashboard.host_reservations.listing_deleted' | translate }}
   </h2>
-{% endif %} 
+{% endif %}

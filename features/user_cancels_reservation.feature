@@ -11,7 +11,7 @@ Feature: User Cancels Reservation
         | Joe's Codin Garage | Joe's Codin Garage |
         | WoughThorks        | WoughThorks        |
       And the following unconfirmed_reservations exist:
-       | listing                           | date       | user     |
+       | transactable                      | date       | user     |
        | transactable "Joe's Codin Garage" | 2010-10-18 | the user |
        | transactable "WoughThorks"        | 2010-10-19 | the user |
        | transactable "WoughThorks"        | 2010-10-20 | the user |

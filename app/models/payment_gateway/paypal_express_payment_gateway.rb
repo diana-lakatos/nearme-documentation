@@ -70,17 +70,17 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
     gateway.capture(amount, token, options)
   end
 
-  def process_express_checkout(transactable, options)
-    @transactable = transactable
-    @response = gateway.setup_authorization(@transactable.total_amount.cents, options.deep_merge(
+  def process_express_checkout(order, options)
+    @order = order
+    @response = gateway.setup_authorization(@order.total_amount.cents, options.deep_merge(
       {
-        currency: @transactable.currency,
+        currency: @order.currency,
         allow_guest_checkout: true,
-        items: line_items + service_fee + additional_charges,
-        subtotal: @transactable.total_amount.cents - @transactable.shipping_amount.cents - @transactable.tax_amount.cents,
-        shipping: @transactable.shipping_amount.cents,
+        items: line_items, #+ service_fee + additional_charges,
+        subtotal: @order.total_amount.cents - @order.shipping_total.cents - @order.total_tax_amount.cents,
+        shipping: @order.shipping_total.cents,
         handling: 0,
-        tax: @transactable.tax_amount.cents
+        tax: @order.total_tax_amount.cents
       })
     )
     # TODO: store @response somewhere
@@ -114,40 +114,40 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
 
   # Callback invoked by processor when charge was successful
   def charge_successful(response)
-    if @payment.payable.billing_authorization.immediate_payout?
+    if @payment.successful_billing_authorization.immediate_payout?
       @payment.company.payment_transfers.create!(payments: [@payment.reload], payment_gateway_mode: mode, payment_gateway_id: self.id)
     end
     @charge.charge_successful(response)
   end
 
   def line_items
-    @transactable.line_items.map { |i|
+    @order.line_items.map { |i|
       {
         name: i.name.strip,
-        description: i.respond_to?(:description) ? strip_tags(i.description.strip) : '',
+        description: i.respond_to?(:description) ? strip_tags(i.description.to_s.strip) : '',
         quantity: i.quantity.to_i,
-        amount: i.price_in_cents
+        amount: i.total_price_cents
       }
     }
   end
 
-  def service_fee
-    [
-      {
-        name: I18n.t('buy_sell_market.checkout.labels.service_fee'),
-        quantity: 1,
-        amount: @transactable.service_fee_amount_guest.cents
-      }
-    ]
-  end
+  # def service_fee
+  #   [
+  #     {
+  #       name: I18n.t('buy_sell_market.checkout.labels.service_fee'),
+  #       quantity: 1,
+  #       amount: @order.service_fee_amount_guest.cents
+  #     }
+  #   ]
+  # end
 
-  def additional_charges
-    @transactable.additional_charges.map do |charge|
-      {
-        name: charge.name,
-        quantity: 1,
-        amount: charge.amount.cents
-      }
-    end
-  end
+  # def additional_charges
+  #   @order.additional_charges.map do |charge|
+  #     {
+  #       name: charge.name,
+  #       quantity: 1,
+  #       amount: charge.amount.cents
+  #     }
+  #   end
+  # end
 end

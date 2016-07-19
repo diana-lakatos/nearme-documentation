@@ -1,5 +1,5 @@
 class Dashboard::UserReservations::PaymentsController <  Dashboard::BaseController
-  before_filter :find_reservation
+  before_filter :find_order
   before_filter :find_payment
   before_filter :check_if_actionable, only: [:approve, :rejection_form, :reject]
   before_filter :check_if_editable, only: [:edit, :update]
@@ -22,14 +22,14 @@ class Dashboard::UserReservations::PaymentsController <  Dashboard::BaseControll
   end
 
   def approve
-    @reservation.update_attribute(:pending_guest_confirmation, nil)
-    if @reservation.payment.capture!
+    @order.update_attribute(:pending_guest_confirmation, nil)
+    if @order.payment.capture!
       flash[:notice] = t('flash_messages.payments.successful_approval')
-      @reservation.mark_as_archived!
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestApprovedPayment, @reservation.id)
+      @order.mark_as_archived!
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestApprovedPayment, @order.id)
     else
-      @reservation.payment.void!
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestApprovedPaymentButCaptureFailed, @reservation.id)
+      @order.payment.void!
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestApprovedPaymentButCaptureFailed, @order.id)
       flash[:warning] = t('flash_messages.payments.failed_to_approve')
     end
     redirect_to dashboard_user_reservations_path
@@ -42,10 +42,10 @@ class Dashboard::UserReservations::PaymentsController <  Dashboard::BaseControll
     attributes = {
       pending_guest_confirmation: nil
     }
-    attributes.merge!(rejection_reason: params[:reservation][:rejection_reason]) if params[:reservation]
-    if @reservation.update_attributes(attributes)
-      @reservation.payment.void!
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestDeclinedPayment, @reservation.id)
+    attributes.merge!(rejection_reason: params[:delayed_reservation][:rejection_reason]) if params[:delayed_reservation]
+    if @order.update_attributes(attributes)
+      @order.payment.void!
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestDeclinedPayment, @order.id)
       flash[:notice] = t('flash_messages.payments.successful_rejection')
     end
     redirect_to dashboard_user_reservations_path
@@ -53,23 +53,23 @@ class Dashboard::UserReservations::PaymentsController <  Dashboard::BaseControll
 
   private
 
-  def find_reservation
-    @reservation = current_user.reservations.find(params[:user_reservation_id])
+  def find_order
+    @order = current_user.orders.find(params[:user_reservation_id])
   end
 
   def find_payment
-    @payment = @reservation.payment
+    @payment = @order.payment
   end
 
   def check_if_actionable
-    unless @reservation.can_approve_or_decline_checkout?
+    unless @order.can_approve_or_decline_checkout?
       flash[:error] = t('flash_messages.payments.cannot_take_action')
       redirect_to dashboard_user_reservations_path
     end
   end
 
   def check_if_editable
-    unless @reservation.has_to_update_credit_card?
+    unless @order.has_to_update_credit_card?
       if request.xhr?
         render text: t('flash_messages.payments.cannot_edit')
       else

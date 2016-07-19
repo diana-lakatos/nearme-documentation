@@ -8,5 +8,15 @@
     .row
       .input-container.col-xs-12
         = f.association :transactable_types
+    .row
+      .input-container.col-xs-12
+        = f.input :step_checkout, as: :boolean, checked_value: true, unchecked_value: false
+    .row
+      .input-container.col-xs-12
+        = f.input :validate_on_adding_to_cart, as: :boolean, checked_value: true, unchecked_value: false
+    .row
+      .input-container.col-xs-12
+        = f.input :skip_payment_authorization, as: :boolean, checked_value: true, unchecked_value: false
+
   = content_for :header_buttons do
     = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }

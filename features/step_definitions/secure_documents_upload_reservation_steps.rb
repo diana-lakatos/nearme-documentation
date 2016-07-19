@@ -32,31 +32,31 @@ And (/^I make booking request$/) do
 end
 
 And (/^I enter data in the credit card form$/) do
-  fill_in 'reservation_request_payment_attributes_credit_card_attributes_first_name', with: 'FirstName'
-  fill_in 'reservation_request_payment_attributes_credit_card_attributes_last_name', with: 'LastName'
-  fill_in 'reservation_request_payment_attributes_credit_card_attributes_number', :with => "4242424242424242"
-  select '12', from: 'reservation_request_payment_attributes_credit_card_attributes_month', visible: false
-  select '2020', from: 'reservation_request_payment_attributes_credit_card_attributes_year', visible: false
-  fill_in 'reservation_request_payment_attributes_credit_card_attributes_verification_value', :with => '411'
+  fill_in 'order_payment_attributes_credit_card_attributes_first_name', with: 'FirstName'
+  fill_in 'order_payment_attributes_credit_card_attributes_last_name', with: 'LastName'
+  fill_in 'order_payment_attributes_credit_card_attributes_number', :with => "4242424242424242"
+  select '12', from: 'order_payment_attributes_credit_card_attributes_month', visible: false
+  select '2020', from: 'order_payment_attributes_credit_card_attributes_year', visible: false
+  fill_in 'order_payment_attributes_credit_card_attributes_verification_value', :with => '411'
 end
 
 And (/^I should see error file can't be blank$/) do
-  page.should have_content("File cannot be empty")
+  page.should have_content("file can't be blank")
 end
 
 And (/^I choose file$/) do
-  page.execute_script('$("#reservation_request_payment_documents_attributes_0_file").show();')
-  attach_file('reservation_request_payment_documents_attributes_0_file', "#{Rails.root}/features/fixtures/photos/boss's desk.jpg")
+  page.execute_script('$("#order_payment_documents_attributes_0_file").show();')
+  attach_file('order_payment_documents_attributes_0_file', "#{Rails.root}/features/fixtures/photos/boss's desk.jpg")
 end
 
 Then (/^I should see page with booking requests without files$/) do
   page.should_not have_selector(".payment-documents")
-  page.should have_content("Your booking was requested successfully!")
+  page.should have_content("Your reservation has been made!")
 end
 
 Then (/^I should see page with booking requests with files$/) do
   page.should have_selector(".payment-documents li")
-  page.should have_content("Your booking was requested successfully!")
+  page.should have_content("Your reservation has been made!")
 end
 
 Then (/^I can not see section Required Documents$/) do
@@ -67,6 +67,12 @@ Given (/^a upload_obligation exists for listing$/) do
   if Location.first.listings.first.upload_obligation.blank?
     Location.first.listings.first.create_upload_obligation({level: UploadObligation::LEVELS[2]})
   end
+end
+
+Given /^a payment_documents are turned on for reservation_type$/ do
+  fc = TransactableType.first.reservation_type.form_components.first
+  fc.form_fields << {"reservation" => "payment_documents"}
+  fc.save
 end
 
 Given (/^a document_requirements exist for listing$/) do

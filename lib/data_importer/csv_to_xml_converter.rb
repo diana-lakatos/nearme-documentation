@@ -1,18 +1,18 @@
 class DataImporter::CsvToXmlConverter
 
-  def initialize(csv_file, output_path, service_type)
+  def initialize(csv_file, output_path, transactable_type)
     @csv_file = csv_file
     @output_path = output_path
     @last_company = nil
     @last_location = nil
-    @service_type = service_type
+    @transactable_type = transactable_type
     @xml_attributes = {}
   end
 
   def add_object(klass, builder, options = {}, &block)
     klass_symbol = options.fetch(:klass_symbol, klass.name.underscore.to_sym)
     if klass_symbol == :listing
-      @xml_attributes[klass_symbol] ||= klass.xml_attributes(@service_type)
+      @xml_attributes[klass_symbol] ||= klass.xml_attributes(@transactable_type)
     else
       @xml_attributes[klass_symbol] ||= klass.xml_attributes
     end

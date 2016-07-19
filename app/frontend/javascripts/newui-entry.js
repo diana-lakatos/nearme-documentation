@@ -281,14 +281,14 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    var els = $('.products-shippo');
+    var els = $('[data-shipping-methods-list]');
     if (els.length === 0) {
         return;
     }
-    require.ensure('./new_ui/controllers/shippo_controller', function(require){
-        var ShippoController = require('./new_ui/controllers/shippo_controller');
+    require.ensure('./new_ui/controllers/dimensions_template_controller', function(require){
+        var DimensionsTemplateController = require('./new_ui/controllers/dimensions_template_controller');
         els.each(function(){
-            return new ShippoController(this);
+            return new DimensionsTemplateController(this);
         });
     });
 });
@@ -562,6 +562,21 @@ DNM.registerInitializer(function(){
 
     $('html').on('loaded:dialog.nearme', function(){
         run(document.querySelector('.dialog'));
+    });
+});
+
+
+DNM.registerInitializer(function(){
+    var ordersList = $('.orders-a');
+    if (ordersList.length === 0) {
+        return;
+    }
+
+    $(document).on('init:orders.nearme', function(event){
+        require.ensure('./new_ui/controllers/orders_controller', function(require){
+            var OrdersController = require('./new_ui/controllers/orders_controller');
+            new OrdersController(ordersList);
+        });
     });
 });
 

@@ -4,7 +4,7 @@ class ReservationPreBookingJob < Job
   end
 
   def perform
-    @reservation = Reservation.find_by_id(@reservation_id)
+    @reservation = Order.find_by_id(@reservation_id)
     if @reservation && @reservation.confirmed?
       WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::OneDayToBooking, @reservation_id)
     end

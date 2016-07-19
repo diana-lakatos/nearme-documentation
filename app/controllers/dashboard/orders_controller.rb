@@ -3,7 +3,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
 
   def index
     @rating_systems = reviews_service.get_rating_systems
-    @orders = current_user.orders.complete.paginate(page: params[:page]).order('created_at DESC').decorate
+    @order_search_service = OrderSearchService.new(order_scope, params)
   end
 
   def show
@@ -15,8 +15,12 @@ class Dashboard::OrdersController < Dashboard::BaseController
 
   private
 
+  def order_scope
+    @order_scope ||= current_user.orders.active
+  end
+
   def find_order
-    @order = current_user.orders.find_by_number(params[:id])
+    @order = current_user.orders.find(params[:id]).decorate
   end
 
   def reviews_service

@@ -141,6 +141,7 @@ class PaymentTest < ActiveSupport::TestCase
     context 'advanced cancellation policy penalty' do
       setup do
         @payment.update_attribute(:cancellation_policy_penalty_percentage, 60)
+        @payment.update_attribute(:total_amount_cents, 1100)
         @payment.update_attribute(:subtotal_amount_cents, 1000)
         @payment.update_attribute(:service_fee_amount_guest_cents, 100)
         @payment.update_attribute(:service_fee_amount_host_cents, 150)
@@ -247,10 +248,10 @@ class PaymentTest < ActiveSupport::TestCase
     setup do
       @reservation = FactoryGirl.create(:reservation)
       @reservation.payment.destroy
-      @payment = @reservation.build_payment({
+      @payment = @reservation.build_payment(@reservation.shared_payment_attributes.merge({
         payment_method: FactoryGirl.build(:credit_card_payment_method),
         credit_card_attributes: FactoryGirl.attributes_for(:credit_card_attributes),
-        })
+        }))
       @payment.save!
     end
 

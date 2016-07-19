@@ -3,7 +3,7 @@ $:.push(File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'test')))
 require 'email_spec'
 require 'email_spec/cucumber'
 require 'factory_girl'
-require 'spree/testing_support/factories'
+# require 'spree/testing_support/factories'
 require "json_spec/cucumber"
 require 'helpers/gmaps_fake'
 require_relative 'minitest_setup'

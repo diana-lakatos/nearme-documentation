@@ -678,7 +678,6 @@ body.buy-sell-theme {
     }
 
     .list-item {
-      margin-bottom: 50px;
       padding: 10px 0;
     }
 
@@ -745,12 +744,21 @@ body.buy-sell-theme {
       padding-bottom: 20px;
     }
 
+    .delivery-options {
+      .radio {
+        display: block;
+        max-width: 845px;
+      }
+      .controls {
+        margin-left: 0px !important;
+      }
+    }
+
     .inline {
       display: inline-block;
     }
 
     .page-wrapper {
-      width: 63%;
       padding: 60px 0;
       margin: 0 auto;
     }

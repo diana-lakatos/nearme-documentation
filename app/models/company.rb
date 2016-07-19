@@ -26,7 +26,8 @@ class Company < ActiveRecord::Base
   has_many :locations_impressions, source: :impressions, through: :locations
   has_many :merchant_accounts, as: :merchantable, dependent: :nullify
   has_many :option_types, class_name: 'Spree::OptionType', dependent: :destroy
-  has_many :orders, class_name: 'Spree::Order'
+  has_many :orders
+  has_many :purchases
   has_many :order_line_items, class_name: 'Spree::LineItem'
   has_many :payments
   has_many :payment_transfers, dependent: :destroy
@@ -37,6 +38,7 @@ class Company < ActiveRecord::Base
   has_many :properties, class_name: 'Spree::Property', dependent: :destroy
   has_many :prototypes, class_name: 'Spree::Prototype', dependent: :destroy
   has_many :reservations
+  has_many :shipping_profiles
   has_many :shipping_categories, class_name: 'Spree::ShippingCategory', dependent: :destroy
   has_many :shipping_methods, class_name: 'Spree::ShippingMethod', dependent: :destroy
   has_many :stock_locations, class_name: 'Spree::StockLocation', dependent: :destroy

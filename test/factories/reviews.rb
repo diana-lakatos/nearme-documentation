@@ -9,7 +9,7 @@ FactoryGirl.define do
     user
 
     factory :order_review do
-      reviewable { FactoryGirl.create(:order_with_line_items, instance: instance).line_items.first  }
+      reviewable { FactoryGirl.build(:purchase, instance: instance, user: user).transactable_line_items.first  }
     end
   end
 end

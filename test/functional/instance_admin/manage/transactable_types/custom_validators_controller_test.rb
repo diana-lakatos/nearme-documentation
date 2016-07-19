@@ -34,7 +34,7 @@ class InstanceAdmin::Manage::TransactableTypes::CustomValidatorsControllerTest <
       assert_equal 'description', custom_validator.field_name
       assert_equal Hash.new, custom_validator.validation_rules['presence']
       assert_equal @transactable_type.id, custom_validator.validatable_id
-      assert_redirected_to instance_admin_manage_service_type_custom_validators_path(@transactable_type)
+      assert_redirected_to instance_admin_manage_transactable_type_custom_validators_path(@transactable_type)
     end
 
     should 'render form if validation errors' do
@@ -65,7 +65,7 @@ class InstanceAdmin::Manage::TransactableTypes::CustomValidatorsControllerTest <
       custom_validator.reload
       assert_equal 'description', custom_validator.field_name
       assert_equal custom_validator.valid_values, ['true', 'false']
-      assert_redirected_to instance_admin_manage_service_type_custom_validators_path(@transactable_type)
+      assert_redirected_to instance_admin_manage_transactable_type_custom_validators_path(@transactable_type)
     end
 
   end
@@ -75,7 +75,7 @@ class InstanceAdmin::Manage::TransactableTypes::CustomValidatorsControllerTest <
     assert_difference 'CustomValidator.count', -1 do
       delete :destroy, transactable_type_id: @transactable_type.id, id: @custom_validator.id
     end
-    assert_redirected_to instance_admin_manage_service_type_custom_validators_path(@transactable_type)
+    assert_redirected_to instance_admin_manage_transactable_type_custom_validators_path(@transactable_type)
   end
 
 end

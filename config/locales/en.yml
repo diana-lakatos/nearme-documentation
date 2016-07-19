@@ -145,6 +145,7 @@ en:
         the_listing: 'The listing'
         admin_logout_confirmation: 'This will log you out and re-log you in as location administrator.'
   transactables:
+    disable_shipping: 'Disable shipping'
     rental_shipping_types:
       no_rental: 'Not rental'
       delivery: 'Delivery'
@@ -160,6 +161,11 @@ en:
     you_need_to_pick_up_location: "You need to pick up location"
   bid:
     heading: 'Make an offer'
+  order:
+    shipping: 'Shipping: '
+    shipments:
+      address_based_price: 'Price will be calculated based on your address'
+      processing_time: '%{days} days'
 
   manage:
     companies:
@@ -808,14 +814,6 @@ en:
         fields_in_this_component: "Fields in this component"
         copy_from_template: "Copy From Template"
         template: "Template"
-      transactable_types:
-        form_components: "Form Components"
-        data_upload: "Data Upload"
-        custom_attributes: "Custom Attributes"
-        custom_validators: "Custom Validators"
-        categories: "Categories"
-        search_settings: 'Search settings'
-        new: 'New Type'
       offer_types:
         offer_types: 'Offer Types'
         new: 'New Offer Type'
@@ -825,9 +823,11 @@ en:
       reservation_types:
         reservation_types: 'Reservation Types'
         new: 'New Reservation Type'
-      service_types:
-        service_types: "Service Types"
+      transactable_types:
+        transactable_types: "Transactable Types"
         form_components: "Form Components"
+        purchase_settings: 'Purchase settings'
+        confirm_purchases: 'Confirm purchases'
         data_upload: "Data Upload"
         custom_attributes: "Custom Attributes"
         custom_validators: "Custom Validators"
@@ -841,6 +841,7 @@ en:
         calendar: "Calendar"
         terminology: "Terminology"
         allowed_action_types: "Allowed Action Types"
+        actions: 'Action Types'
         pricing_types:
           hourly: "Hourly"
           daily: "Daily"
@@ -988,8 +989,6 @@ en:
   buy_sell_market:
     buyer: "buyer"
     seller: "seller"
-    checkout_extra_fields:
-      fill_in_these_details: "Please fill in these details"
     products:
       edit_inline: 'Edit your Product'
       buttons:
@@ -1046,6 +1045,9 @@ en:
         confirm: 'Are you sure you want to ship this package?'
     checkout:
       labels:
+        gross: "Gross"
+        net: "Net"
+        tax: "Tax"
         checkout: 'Checkout'
         1address: '1. Address'
         2delivery: '2. Delivery'
@@ -1082,7 +1084,10 @@ en:
         no_file_chosen: 'No file chosen'
         actions:
           approve: 'Approve Order'
+          confirm: 'Confirm'
           confirm_approve: 'Are you sure you want to approve this order?'
+          complete: 'Completed'
+          complete_approve: 'Are you sure you want to complete this order?'
           cancel: 'Cancel Order'
           confirm_cancel: 'Are you sure you want to cancel this order?'
           resume: 'Resume Order'
@@ -1113,10 +1118,10 @@ en:
       placeholders:
         first_name: 'Enter your first name'
         last_name: 'Enter your last name'
-        address1: 'Enter your street address'
-        address2: 'Enter your street address (continue)'
+        street1: 'Enter your street address'
+        street2: 'Enter your street address (continue)'
         city: 'Enter your city'
-        zipcode: 'Enter Zip Code'
+        zip: 'Enter Zip Code'
         phone: 'Enter Phone Number'
 
       buttons:
@@ -1217,6 +1222,7 @@ en:
 
       errors:
         qty: 'Selected quantity is not available.'
+        undeletable: 'This item can not be removed'
 
   onboarding_wizard:
     list_a_new: "List a New %{name}"
@@ -1264,6 +1270,22 @@ en:
       delete_warning: 'You are about to remove credit card. Please note that it still will be charged if used for any past and unpaid reservations you have made. Please make sure to cancel all transations separately.'
       stripe: 'Credit Cards'
       in_gateway: '%{payment_gateway} Credit Cards'
+    orders:
+      payment_missing: "Missing"
+      details: "Details"
+      state:
+        unconfirmed: "Unconfirmed"
+        confirmed: "Confirmed"
+        completed: "Completed"
+        archived: "Archived"
+      columns:
+        listing: "Listing"
+        total: "Total"
+        photo: "Photo"
+        number: "Number"
+        state: "State"
+        payment: "Payment"
+        placed_at: "Placed At"
     items:
       list_new_item: "List New Item"
       edit_item: "Edit Item"
@@ -1355,7 +1377,7 @@ en:
       menu: 'Menu'
       blog: 'Blog'
       products_header: 'Products'
-      services_header: 'Services'
+      orders_header: 'Orders'
       reviews_header: 'Reviews'
       offers_header: 'Offers'
       offers: Offers
@@ -1439,6 +1461,8 @@ en:
       starts_from: 'Starts from'
       placed: 'Reservation placed'
       next_payment_at: 'Next payment'
+      7_subscription_day_price: "Weekly"
+      1_subscription_month_price: "Monthly"
       rejection_reason: 'Rejection reason'
       user_note: 'User note: '
       successful_booking: 'Your recurring booking was requested successfully!'
@@ -1541,6 +1565,7 @@ en:
         pick_up: 'Pick up'
         delivery: 'Delivery'
       order_placed_html: 'Order placed: <span>%{date}</span>'
+      order_number: 'Order number: %{number}'
       requested_time: 'Requested time'
       not_available_na: 'N/A'
       requested_dates:
@@ -2202,6 +2227,9 @@ en:
     event:
       one: 'event'
       other: 'events'
+    item:
+      one: 'item'
+      other: 'items'
     per_unit_price:
       one: "PER %{unit}"
       other: "PER %{no_of_units} %{unit}"
@@ -2213,6 +2241,7 @@ en:
     slash_per_event: '/ event'
     slash_per_subscription_month: '/ month'
     slash_per_subscription_day: '/ day'
+    slash_per_item: ''
     from_price: "From"
     first_day: 'Select a start date'
     last_day: 'Select an end date'
@@ -2257,6 +2286,9 @@ en:
       inactive: "Payment failed"
       completed: "Completed"
   search:
+    item:
+      one: 'item'
+      other: 'items'
     day:
       one: 'day'
       other: 'days'

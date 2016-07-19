@@ -1,4 +1,4 @@
-class ReservationDrop < BaseDrop
+class ReservationDrop < OrderDrop
   include ReservationsHelper
 
   attr_reader :reservation
@@ -13,8 +13,8 @@ class ReservationDrop < BaseDrop
   #   total price in a humanized format
   # pending?
   #   returns true if the payment status is 'pending'
-  # listing
-  #   listing object for which this reservation has been made
+  # transactable
+  #   transactable object for which this reservation has been made
   # state_to_string
   #   current state of the object in a humanized format as a string
   # credit_card_payment?
@@ -39,9 +39,9 @@ class ReservationDrop < BaseDrop
   #   Returns array with additional charges
   # address
   #   Returns address associated with this reservation
-  delegate :id, :quantity, :subtotal_price, :service_fee_guest, :total_price, :total_price_cents, :pending?, :listing, :state_to_string,
+  delegate :id, :quantity, :subtotal_price, :service_fee_guest, :total_price, :total_price_cents, :pending?, :transactable, :state_to_string,
     :credit_card_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, :created_at,
-    :total_payable_to_host_formatted, :total_units_text, :additional_charges, :unit_price, :has_service_fee?,
+    :total_payable_to_host_formatted, :total_units_text, :unit_price, :has_service_fee?, :transactable_line_items,
     :starts_at, :properties, :long_dates, :address, :periods, :comment, :cancellation_policy_penalty_hours, :tax_price, to: :reservation
 
 
@@ -52,12 +52,16 @@ class ReservationDrop < BaseDrop
   delegate :bookable_noun, :bookable_noun_plural, to: :transactable_type_drop
 
   def initialize(reservation)
-    @reservation = reservation.decorate
+    @order = @reservation = reservation.decorate
   end
 
-  # the listing for which this reservation has been made
+  def additional_charges
+    @reservation.additional_line_items
+  end
+
+  # the transactable for which this reservation has been made
   def transactable_type
-    @transactable_type ||= (@reservation.listing || Transactable.with_deleted.find(@reservation.transactable_id)).transactable_type
+    @transactable_type ||= (@reservation.transactable || Transactable.with_deleted.find(@reservation.transactable_id)).transactable_type
   end
 
   def formatted_unit_price
@@ -97,7 +101,7 @@ class ReservationDrop < BaseDrop
 
   # returns the search query URL for the same type of service as this reservation and for this location
   def search_url
-    routes.search_path(q: location_query_string(@reservation.listing.location), transactable_type_id: @reservation.transactable_type.id)
+    routes.search_path(q: location_query_string(@reservation.transactable.location), transactable_type_id: @reservation.transactable_type.id)
   end
 
   def host_show_url
@@ -108,7 +112,7 @@ class ReservationDrop < BaseDrop
             elsif @reservation.unconfirmed?
               'unconfirmed'
             end
-    routes.dashboard_company_host_reservations_url(state: state, anchor: "reservation_#{@reservation.id}", host: PlatformContext.current.decorate.host, token_key => @reservation.listing.creator.temporary_token)
+    routes.dashboard_company_host_reservations_url(state: state, anchor: "reservation_#{@reservation.id}", host: PlatformContext.current.decorate.host, token_key => @reservation.transactable.creator.temporary_token)
   end
 
   def guest_show_url
@@ -140,12 +144,12 @@ class ReservationDrop < BaseDrop
 
   # url for confirming the recurring booking
   def reservation_confirm_url
-    routes.confirm_dashboard_company_host_reservation_path(@reservation, token_key => @reservation.listing.administrator.try(:temporary_token))
+    routes.confirm_dashboard_company_host_reservation_path(@reservation, token_key => @reservation.transactable.administrator.try(:temporary_token))
   end
 
   # url for confirming the recurring booking with tracking
   def reservation_confirm_url_with_tracking
-    routes.confirm_dashboard_company_host_reservation_path(@reservation, token_key => @reservation.listing.administrator.try(:temporary_token), track_email_event: true)
+    routes.confirm_dashboard_company_host_reservation_path(@reservation, token_key => @reservation.transactable.administrator.try(:temporary_token), track_email_event: true)
   end
 
   # url to the reviews section in the user's dashboard

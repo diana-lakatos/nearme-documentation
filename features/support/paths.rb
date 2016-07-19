@@ -34,16 +34,16 @@ module NavigationHelpers
       listings_path
 
     when /the guests/
-      dashboard_company_host_reservations_path
+      dashboard_company_orders_received_index_path
 
     when /manage guests/
-      dashboard_company_host_reservations_path
+      dashboard_company_orders_received_index_path
 
     when /confirmed reservations/
-      dashboard_company_host_reservations_path(state: 'confirmed')
+      dashboard_company_orders_received_index_path(state: 'confirmed')
 
     when /the bookings/
-      dashboard_user_reservations_path
+      dashboard_orders_path
 
     when /the manage listing page/
       listing = model!('the transactable')
@@ -61,20 +61,22 @@ module NavigationHelpers
     when /instance admin sign in page/
       instance_admin_login_path
 
-    when /^(my|my archived|unconfirmed|confirmed|overdue|archived) subscriptions page$/
+    when /^(my|my archived|my unconfirmed|unconfirmed|confirmed|overdue|archived) subscriptions page$/
       case $1
       when 'my'
-        active_dashboard_user_recurring_bookings_path
+        dashboard_orders_path(state: 'confirmed')
+      when 'my unconfirmed'
+        dashboard_orders_path(state: 'unconfirmed')
       when 'my archived'
-        archived_dashboard_user_recurring_bookings_path
+        dashboard_orders_path(state: 'archived')
       when 'unconfirmed'
-        dashboard_company_host_recurring_bookings_path(state: 'unconfirmed')
+        dashboard_company_orders_received_index_path(state: 'unconfirmed')
       when 'confirmed'
-        dashboard_company_host_recurring_bookings_path(state: 'confirmed')
+        dashboard_company_orders_received_index_path(state: 'confirmed')
       when 'overdue'
-        dashboard_company_host_recurring_bookings_path(state: 'overdue')
+        dashboard_company_orders_received_index_path(state: 'overdue')
       when 'archived'
-        dashboard_company_host_recurring_bookings_path(state: 'archived')
+        dashboard_company_orders_received_index_path(state: 'archived')
       end
 
     when /^#{capture_model}(?:'s)? page which belong to deleted location$/   # eg. deleted listing page

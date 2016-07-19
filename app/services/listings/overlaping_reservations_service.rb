@@ -19,7 +19,7 @@ class Listings::OverlapingReservationsService
   private
 
   def overlaping_reservations
-    listing.reservations
+    listing.orders.reservations
       .confirmed
       .joins(:periods)
       .where(sql_query, @date)

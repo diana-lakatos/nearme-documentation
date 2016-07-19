@@ -18,8 +18,8 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
   context 'track_charge' do
     setup do
       @listing = FactoryGirl.create(:transactable)
-      @reservation = FactoryGirl.create(:unconfirmed_reservation, :listing => @listing)
-      @reservation.payment = FactoryGirl.create(:payment)
+      @reservation = FactoryGirl.create(:unconfirmed_reservation, :transactable => @listing)
+      @reservation.payment = FactoryGirl.create(:authorized_payment)
       @reservation.save!
     end
 
@@ -35,7 +35,7 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
         host_id: @reservation.host.id,
         payment_id: @reservation.payment.id,
         instance_name: @reservation.instance.name,
-        listing_name: @reservation.listing.name,
+        listing_name: @reservation.transactable.name,
       })
       @tracker.track_charge(@reservation)
     end
@@ -296,7 +296,7 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
     {
       booking_desks: @reservation.quantity,
       booking_days: @reservation.total_days,
-      booking_total: @reservation.total_amount_dollars,
+      booking_total: @reservation.total_amount.dollars,
       booking_currency: @reservation.currency,
       location_address: @reservation.location.address,
       location_suburb: @reservation.location.suburb,
@@ -348,7 +348,7 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
       created: @user.created_at,
       location_number: @user.locations.count,
       listing_number: @user.listings.count,
-      bookings_total: @user.reservations.count,
+      bookings_total: @user.orders.reservations.count,
       bookings_confirmed: @user.confirmed_reservations.count,
       bookings_rejected: @user.rejected_reservations.count,
       bookings_expired: @user.expired_reservations.count,

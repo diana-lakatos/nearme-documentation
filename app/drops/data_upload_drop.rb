@@ -56,8 +56,6 @@ class DataUploadDrop < BaseDrop
     case @data_upload.importable
     when TransactableType
       routes.new_dashboard_company_transactable_type_transactable_path(@data_upload.importable)
-    when Spree::ProductType
-      routes.new_dashboard_product_type_product_path(@data_upload.importable)
     else
       raise TypeError
     end

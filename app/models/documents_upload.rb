@@ -26,4 +26,13 @@ class DocumentsUpload < ActiveRecord::Base
   def is_vendor_decides?
     requirement == "vendor_decides"
   end
+
+  def force_file_upload?
+    is_enabled? && requirement =~ /mandatory|optional/
+  end
+
+  def to_obligation
+    UploadObligation::LEVELS[REQUIREMENTS.index(requirement.to_sym)]
+  end
+
 end

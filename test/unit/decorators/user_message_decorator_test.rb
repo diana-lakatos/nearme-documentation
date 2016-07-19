@@ -223,7 +223,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
   context 'With a message sent from host to reservation owner' do
     setup do
       @reservation = FactoryGirl.create(:reservation)
-      @host = @reservation.listing.administrator
+      @host = @reservation.transactable.administrator
       @another_user = FactoryGirl.create(:user)
       @user_message = FactoryGirl.create(:user_message,
                                             thread_context: @reservation,
@@ -278,72 +278,6 @@ class UserMessagesDecoratorTest < ActionView::TestCase
 
       owner_archived = UserMessagesDecorator.new(@reservation.owner.user_messages, @reservation.owner).archived.fetch
       assert_equal 0, owner_archived.size
-    end
-
-  end
-
-
-  context 'With a message sent from user to product administrator' do
-    setup do
-      @owner = FactoryGirl.create(:user)
-      @product = FactoryGirl.create(:product)
-      @user_message = FactoryGirl.create(:user_message,
-                                            thread_context: @product,
-                                            thread_recipient: @product.administrator,
-                                            thread_owner: @owner,
-                                            author: @owner,
-                                            read_for_recipient: true)
-      @product_administrator = @product.administrator
-
-      @answer_user_message = FactoryGirl.create(:user_message,
-                                                   thread_context: @product,
-                                                   thread_recipient: @product.administrator,
-                                                   thread_owner: @owner,
-                                                   author: @product_administrator)
-
-      @product2 = FactoryGirl.create(:product)
-      @archived_user_message = FactoryGirl.create(:user_message,
-                                                     thread_owner: @owner,
-                                                     thread_recipient: @product2.administrator,
-                                                     author: @product2.administrator,
-                                                     read_for_owner: true,
-                                                     archived_for_owner: true,
-                                                     archived_for_recipient: false)
-    end
-
-    should 'return inbox' do
-      owners_inbox = UserMessagesDecorator.new(@owner.user_messages, @owner).inbox.fetch
-      assert_equal 1, owners_inbox.size
-      thread = owners_inbox.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
-
-      creators_inbox = UserMessagesDecorator.new(@product_administrator.user_messages,
-                                                    @product_administrator).inbox.fetch
-      assert_equal 1, creators_inbox.size
-      thread = owners_inbox.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
-    end
-
-    should 'return unread' do
-      owners_unread = UserMessagesDecorator.new(@owner.user_messages, @owner).unread.fetch
-      assert_equal 1, owners_unread.size
-      thread = owners_unread.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
-
-      creators_unread = UserMessagesDecorator.new(@product_administrator.user_messages,
-                                                    @product_administrator).unread.fetch
-      assert_equal 0, creators_unread.size
-    end
-
-    should 'return archived' do
-      owners_archived = UserMessagesDecorator.new(@owner.user_messages, @owner).archived.fetch
-      assert_equal 1, owners_archived.size
-      thread = owners_archived.first[1]
-      assert_equal [@archived_user_message.id], thread.map(&:id)
-
-      creators_archived = UserMessagesDecorator.new(@product_administrator.user_messages,
-                                                    @product_administrator).archived.fetch
-      assert_equal 0, creators_archived.size
     end
 
   end

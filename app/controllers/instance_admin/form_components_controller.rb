@@ -80,7 +80,7 @@ class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceControll
   end
 
   def find_form_componentable
-    @form_componentable = resource_class.find(params["#{translation_key.singularize}_id"] || params[:service_type_id])
+    @form_componentable = resource_class.find(params["#{translation_key.singularize}_id"])
   end
 
   def translation_key

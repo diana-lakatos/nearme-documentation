@@ -42,15 +42,12 @@ When(/^I cancel (.*) reservation$/) do |number|
 end
 
 Then(/^I should have a cancelled reservation on "([^"]*)"$/) do |date|
-  user.cancelled_reservations.collect { |r| Chronic.parse(r.date) }.should include Chronic.parse(date)
+  user.cancelled_reservations.collect { |r| r.date.to_date }.should include Chronic.parse(date).to_date
 end
 
 Given /^Extra fields are prepared for booking$/ do
-  ensure_required_custom_attribute_is_present
-
   User.last.update_column(:instance_profile_type_id, InstanceProfileType.default.first.id)
   User.last.update_column(:mobile_number, '')
-  User.last.update_column(:first_name, '')
   User.last.update_column(:last_name, '')
   User.last.update_column(:phone, '')
   User.last.update_column(:company_name, '')
@@ -59,7 +56,7 @@ Given /^Extra fields are prepared for booking$/ do
   rt = FactoryGirl.create(:reservation_type)
   rt.transactable_types << TransactableType.all
   rt.form_components.last.update_attribute(:form_fields, [
-    { 'user' => 'phone' }, { 'user' => 'first_name' }, { 'user' => 'last_name' }, { 'user' => 'license_number' }
+    { 'user' => 'phone' }, { 'user' => 'first_name' }, { 'user' => 'last_name' }, { 'reservation' => 'payments'}
   ])
 end
 
@@ -74,16 +71,12 @@ When /^I book space for with extra fields:$/ do |table|
   step "I select to book space for:", table
   step "I click to review the booking"
   step "I provide reservation credit card details"
-  page.should have_css('input#reservation_request_owner_attributes_default_profile_attributes_properties_license_number')
-  page.should have_css('input#reservation_request_owner_attributes_mobile_number')
-  page.should have_css('input#reservation_request_owner_attributes_first_name')
-  page.should have_css('input#reservation_request_owner_attributes_last_name')
-  page.should have_css('input#reservation_request_owner_attributes_phone')
-  fill_in 'reservation_request_owner_attributes_default_profile_attributes_properties_license_number', with: '123123412345'
-  fill_in 'reservation_request_owner_attributes_mobile_number', with: '123123412345'
-  fill_in 'reservation_request_owner_attributes_first_name', with: 'Aaa'
-  fill_in 'reservation_request_owner_attributes_last_name', with: 'Aaa'
-  fill_in 'reservation_request_owner_attributes_phone', with: '12312341'
+  page.should have_css('input#order_user_attributes_mobile_number')
+  page.should have_css('input#order_user_attributes_last_name')
+  page.should have_css('input#order_user_attributes_phone')
+  fill_in 'order_user_attributes_mobile_number', with: '123123412345'
+  fill_in 'order_user_attributes_last_name', with: 'Aaa'
+  fill_in 'order_user_attributes_phone', with: '12312341'
   step "I click to confirm the booking"
 end
 
@@ -91,28 +84,23 @@ When /^I book space for with extra fields without company_name:$/ do |table|
   step "I select to book space for:", table
   step "I click to review the booking"
   step "I provide reservation credit card details"
-  page.should have_css('input#reservation_request_owner_attributes_default_profile_attributes_properties_license_number')
-  page.should have_css('input#reservation_request_owner_attributes_mobile_number')
-  page.should have_css('input#reservation_request_owner_attributes_first_name')
-  page.should have_css('input#reservation_request_owner_attributes_last_name')
-  page.should have_css('input#reservation_request_owner_attributes_phone')
-  fill_in 'reservation_request_owner_attributes_default_profile_attributes_properties_license_number', with: '123123412345'
-  fill_in 'reservation_request_owner_attributes_mobile_number', with: '123123412345'
-  fill_in 'reservation_request_owner_attributes_first_name', with: 'Aaa'
-  fill_in 'reservation_request_owner_attributes_last_name', with: 'Aaa'
-  fill_in 'reservation_request_owner_attributes_phone', with: '12312341'
+  page.should have_css('input#order_user_attributes_mobile_number')
+  page.should have_css('input#order_user_attributes_last_name')
+  page.should have_css('input#order_user_attributes_phone')
+  fill_in 'order_user_attributes_mobile_number', with: '123123412345'
+  fill_in 'order_user_attributes_last_name', with: 'Aaa'
+  fill_in 'order_user_attributes_phone', with: '12312341'
   step "I click to confirm the booking"
 end
 
 When /^I fail to book space for without extra fields:$/ do |table|
   step "I select to book space for:", table
   step "I click to review the booking"
+
   step "I provide reservation credit card details"
-  page.should have_css('input#reservation_request_owner_attributes_default_profile_attributes_properties_license_number')
-  page.should have_css('input#reservation_request_owner_attributes_mobile_number')
-  page.should have_css('input#reservation_request_owner_attributes_first_name')
-  page.should have_css('input#reservation_request_owner_attributes_last_name')
-  page.should have_css('input#reservation_request_owner_attributes_phone')
+  page.should have_css('input#order_user_attributes_mobile_number')
+  page.should have_css('input#order_user_attributes_last_name')
+  page.should have_css('input#order_user_attributes_phone')
   step "I click and fail to confirm the booking"
 end
 
@@ -120,15 +108,11 @@ When /^I fail to book space for without extra fields mobile number:$/ do |table|
   step "I select to book space for:", table
   step "I click to review the booking"
   step "I provide reservation credit card details"
-  page.should have_css('input#reservation_request_owner_attributes_default_profile_attributes_properties_license_number')
-  page.should have_css('input#reservation_request_owner_attributes_mobile_number')
-  page.should have_css('input#reservation_request_owner_attributes_first_name')
-  page.should have_css('input#reservation_request_owner_attributes_last_name')
-  page.should have_css('input#reservation_request_owner_attributes_phone')
-  fill_in 'reservation_request_owner_attributes_default_profile_attributes_properties_license_number', with: '123123412345'
-  fill_in 'reservation_request_owner_attributes_first_name', with: 'Aaa'
-  fill_in 'reservation_request_owner_attributes_last_name', with: 'Aaa'
-  fill_in 'reservation_request_owner_attributes_phone', with: '123123412345'
+  page.should have_css('input#order_user_attributes_mobile_number')
+  page.should have_css('input#order_user_attributes_last_name')
+  page.should have_css('input#order_user_attributes_phone')
+  fill_in 'order_user_attributes_last_name', with: 'Aaa'
+  fill_in 'order_user_attributes_phone', with: '123123412345'
   step "I click and fail to confirm the booking"
 end
 
@@ -136,15 +120,11 @@ When /^I fail to book space for without extra fields license number:$/ do |table
   step "I select to book space for:", table
   step "I click to review the booking"
   step "I provide reservation credit card details"
-  page.should have_css('input#reservation_request_owner_attributes_default_profile_attributes_properties_license_number')
-  page.should have_css('input#reservation_request_owner_attributes_mobile_number')
-  page.should have_css('input#reservation_request_owner_attributes_first_name')
-  page.should have_css('input#reservation_request_owner_attributes_last_name')
-  page.should have_css('input#reservation_request_owner_attributes_phone')
-  fill_in 'reservation_request_owner_attributes_mobile_number', with: '123123412345'
-  fill_in 'reservation_request_owner_attributes_first_name', with: 'Aaa'
-  fill_in 'reservation_request_owner_attributes_last_name', with: 'Aaa'
-  fill_in 'reservation_request_owner_attributes_phone', with: '12312341'
+  page.should have_css('input#order_user_attributes_mobile_number')
+  page.should have_css('input#order_user_attributes_last_name')
+  page.should have_css('input#order_user_attributes_phone')
+  fill_in 'order_user_attributes_last_name', with: 'Aaa'
+  fill_in 'order_user_attributes_phone', with: '12312341'
   step "I click and fail to confirm the booking"
 end
 
@@ -152,15 +132,11 @@ When /^I fail to book space for without extra fields last name:$/ do |table|
   step "I select to book space for:", table
   step "I click to review the booking"
   step "I provide reservation credit card details"
-  page.should have_css('input#reservation_request_owner_attributes_default_profile_attributes_properties_license_number')
-  page.should have_css('input#reservation_request_owner_attributes_mobile_number')
-  page.should have_css('input#reservation_request_owner_attributes_first_name')
-  page.should have_css('input#reservation_request_owner_attributes_last_name')
-  page.should have_css('input#reservation_request_owner_attributes_phone')
-  fill_in 'reservation_request_owner_attributes_default_profile_attributes_properties_license_number', with: '123123412345'
-  fill_in 'reservation_request_owner_attributes_mobile_number', with: '123123412345'
-  fill_in 'reservation_request_owner_attributes_first_name', with: 'Aaa'
-  fill_in 'reservation_request_owner_attributes_phone', with: '12312341'
+  page.should have_css('input#order_user_attributes_mobile_number')
+  page.should have_css('input#order_user_attributes_last_name')
+  page.should have_css('input#order_user_attributes_phone')
+  fill_in 'order_user_attributes_mobile_number', with: '123123412345'
+  fill_in 'order_user_attributes_phone', with: '12312341'
   step "I click and fail to confirm the booking"
 end
 
@@ -168,15 +144,12 @@ When /^I fail to book space for without extra fields first name:$/ do |table|
   step "I select to book space for:", table
   step "I click to review the booking"
   step "I provide reservation credit card details"
-  page.should have_css('input#reservation_request_owner_attributes_default_profile_attributes_properties_license_number')
-  page.should have_css('input#reservation_request_owner_attributes_mobile_number')
-  page.should have_css('input#reservation_request_owner_attributes_first_name')
-  page.should have_css('input#reservation_request_owner_attributes_last_name')
-  page.should have_css('input#reservation_request_owner_attributes_phone')
-  fill_in 'reservation_request_owner_attributes_default_profile_attributes_properties_license_number', with: '123123412345'
-  fill_in 'reservation_request_owner_attributes_mobile_number', with: '123123412345'
-  fill_in 'reservation_request_owner_attributes_last_name', with: 'Aaa'
-  fill_in 'reservation_request_owner_attributes_phone', with: '12312341'
+  page.should have_css('input#order_user_attributes_mobile_number')
+  page.should have_css('input#order_user_attributes_last_name')
+  page.should have_css('input#order_user_attributes_phone')
+  fill_in 'order_user_attributes_mobile_number', with: '123123412345'
+  fill_in 'order_user_attributes_last_name', with: 'Aaa'
+  fill_in 'order_user_attributes_phone', with: '12312341'
   step "I click and fail to confirm the booking"
 end
 
@@ -223,7 +196,7 @@ When /^the reservation expires/ do
   login User.find_by_name("Keith Contractor")
   visit dashboard_user_reservations_path
 
-  reservation = User.find_by_name("Keith Contractor").reservations.first
+  reservation = User.find_by_name("Keith Contractor").orders.first
   reservation.perform_expiry!
 
   visit dashboard_user_reservations_path
@@ -257,9 +230,9 @@ Then /^the user should have a reservation:$/ do |table|
   user = model!("the user")
   bookings = extract_reservation_options(table)
   listing = bookings.first[:listing]
-  reservation = user.reservations.last
+  reservation = user.orders.last
 
-  assert_equal listing, reservation.listing
+  assert_equal listing, reservation.transactable
   bookings.each do |booking|
     assert_equal booking[:quantity], reservation.quantity
     period = reservation.periods.detect { |p| p.date == booking[:date] }
@@ -272,19 +245,19 @@ Then /^the user should have a reservation:$/ do |table|
 end
 
 Then /^the reservation subtotal should show \$?([0-9\.,]+)$/ do |cost|
-  within '.order-summary .subtotal-amount' do
+  within '.payment-summary tr[data-line-item-class="Transactable"] td:last-child' do
     assert page.body.should have_content(cost)
   end
 end
 
 Then /^the reservation service fee should show \$?([0-9\.,]+)$/ do |cost|
-  within '.reservations-review .service-fee-amount' do
+  within '.payment-summary tr[data-line-item-class="ServiceFee"] td:last-child' do
     assert page.body.should have_content(cost)
   end
 end
 
 Then /^the reservation total should show \$?([0-9\.,]+)$/ do |cost|
-  within '.reservations-review .total-amount' do
+  within '.payment-summary .total' do
     assert page.body.should have_content(cost)
   end
 end
@@ -295,12 +268,12 @@ end
 
 When /^I provide reservation credit card details$/ do
   mock_billing_gateway
-  fill_in 'reservation_request_payment_attributes_credit_card_attributes_first_name', with: 'FirstName'
-  fill_in 'reservation_request_payment_attributes_credit_card_attributes_last_name', with: 'LastName'
-  fill_in 'reservation_request_payment_attributes_credit_card_attributes_number', :with => "4242424242424242"
-  select '12', from: 'reservation_request_payment_attributes_credit_card_attributes_month', visible: false
-  select '2020', from: 'reservation_request_payment_attributes_credit_card_attributes_year', visible: false
-  fill_in 'reservation_request_payment_attributes_credit_card_attributes_verification_value', :with => '411'
+  fill_in 'order_payment_attributes_credit_card_attributes_first_name', with: 'FirstName'
+  fill_in 'order_payment_attributes_credit_card_attributes_last_name', with: 'LastName'
+  fill_in 'order_payment_attributes_credit_card_attributes_number', :with => "4242424242424242"
+  select '12', from: 'order_payment_attributes_credit_card_attributes_month', visible: false
+  select '2020', from: 'order_payment_attributes_credit_card_attributes_year', visible: false
+  fill_in 'order_payment_attributes_credit_card_attributes_verification_value', :with => '411'
   @credit_card_reservation = true
 end
 
@@ -417,7 +390,7 @@ end
 
 Then /^I should be redirected to bookings page$/ do
   page.should have_content('Your reservation has been made!')
-  assert_includes URI.parse(current_url).path, booking_successful_dashboard_user_reservation_path(Reservation.last)
+  assert_includes URI.parse(current_url).path, dashboard_order_path(Reservation.last)
 end
 
 Then /^The second booking should be highlighted$/ do

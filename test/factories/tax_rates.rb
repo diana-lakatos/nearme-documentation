@@ -7,7 +7,8 @@ FactoryGirl.define do
     default true
 
     factory :california_state_tax_rate do
-      state { State.find_by_abbr("CA") || FactoryGirl.build(:_state) }
+      state { State.find_by_abbr("CA") || FactoryGirl.build(:state) }
+      calculate_with :replace
       value 13
     end
 

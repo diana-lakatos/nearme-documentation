@@ -9,6 +9,10 @@ class UserTest < ActiveSupport::TestCase
     super
   end
 
+  setup do
+    stub_active_merchant_interaction
+  end
+
   context "instance owner method" do
     should "return true if the user is an instance owner" do
       @instance_owner = FactoryGirl.create(:instance_admin)
@@ -84,8 +88,8 @@ class UserTest < ActiveSupport::TestCase
         4.times { @me.add_friend(FactoryGirl.create(:user)) }
 
         friends_with_visit = @me.friends.first(2)
-        @me.friends.last.reservations << FactoryGirl.create(:future_confirmed_reservation, date: Date.tomorrow)
-        friends_with_visit.each {|f| FactoryGirl.create(:past_reservation, listing: @listing, user:f)}
+        @me.friends.last.orders << FactoryGirl.create(:future_confirmed_reservation, date: Date.tomorrow)
+        friends_with_visit.each {|f| FactoryGirl.create(:past_reservation, transactable: @listing, user:f)}
 
         assert_equal friends_with_visit.sort, @me.friends.visited_listing(@listing).to_a.sort
       end
@@ -130,8 +134,8 @@ class UserTest < ActiveSupport::TestCase
         4.times { mutual_friends << FactoryGirl.create(:user); @friend.add_friend(mutual_friends.last) }
 
         mutual_friends_with_visit = @friend.friends.without(@me).first(2)
-        @friend.friends.last.reservations << FactoryGirl.create(:future_confirmed_reservation, date: Date.tomorrow)
-        mutual_friends_with_visit.each {|f| FactoryGirl.create(:past_reservation, listing: @listing, user:f)}
+        @friend.friends.last.orders << FactoryGirl.create(:future_confirmed_reservation, date: Date.tomorrow)
+        mutual_friends_with_visit.each {|f| FactoryGirl.create(:past_reservation, transactable: @listing, user:f)}
 
         result = User.mutual_friends_of(@me).visited_listing(@listing)
         assert_equal mutual_friends_with_visit.sort, result.sort
@@ -264,7 +268,7 @@ class UserTest < ActiveSupport::TestCase
 
   context 'reservations' do
     should 'find rejected reservations' do
-      @user = FactoryGirl.create(:user, :reservations => [
+      @user = FactoryGirl.create(:user, :orders => [
         FactoryGirl.create(:reservation, :state => 'unconfirmed'),
         FactoryGirl.create(:reservation, :state => 'rejected')
       ])
@@ -272,7 +276,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'find confirmed reservations' do
-      @user = FactoryGirl.create(:user, :reservations => [
+      @user = FactoryGirl.create(:user, :orders => [
         FactoryGirl.create(:reservation, :state => 'unconfirmed'),
         FactoryGirl.create(:reservation, :state => 'confirmed')
       ])
@@ -280,7 +284,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'find expired reservations' do
-      @user = FactoryGirl.create(:user, :reservations => [
+      @user = FactoryGirl.create(:user, :orders => [
         FactoryGirl.create(:reservation, :state => 'unconfirmed'),
         FactoryGirl.create(:reservation, :state => 'expired')
       ])
@@ -288,7 +292,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'find cancelled reservations' do
-      @user = FactoryGirl.create(:user, :reservations => [
+      @user = FactoryGirl.create(:user, :orders => [
         FactoryGirl.create(:reservation, :state => 'unconfirmed'),
         FactoryGirl.create(:reservation, :state => 'cancelled_by_guest'),
         FactoryGirl.create(:reservation, :state => 'cancelled_by_host')
@@ -336,10 +340,10 @@ class UserTest < ActiveSupport::TestCase
 
   should "it has reservations" do
     @user = User.new
-    @user.reservations << Reservation.new
-    @user.reservations << Reservation.new
+    @user.orders.reservations << Reservation.new
+    @user.orders.reservations << Reservation.new
 
-    assert @user.reservations
+    assert @user.orders.reservations
   end
 
   should "allow users to use the same email across marketplaces" do
@@ -594,7 +598,6 @@ class UserTest < ActiveSupport::TestCase
 
       should 'cancel any pending unconfirmed reservations' do
         # We need to stub void request on reservation
-        stub_active_merchant_interaction
 
         @reservation = FactoryGirl.create(:unconfirmed_reservation, owner: @user)
         @user.destroy
@@ -686,7 +689,7 @@ class UserTest < ActiveSupport::TestCase
       @user.save!
       listing_first = FactoryGirl.create(:listing_in_auckland)
       listing_second = FactoryGirl.create(:listing_in_auckland)
-      reservation = FactoryGirl.create(:rejected_reservation, listing: listing_first, user: @user)
+      reservation = FactoryGirl.create(:rejected_reservation, transactable: listing_first, user: @user)
       assert_equal [listing_second], @user.listings_in_near(3, 100, true)
     end
   end
@@ -909,7 +912,7 @@ class UserTest < ActiveSupport::TestCase
     @location = FactoryGirl.create(:location, :company_id => @company.id)
     @listing = FactoryGirl.create(:transactable, :location => @location)
     @photo  = FactoryGirl.create(:photo, :listing => @listing, :creator => @photo)
-    @reservation = FactoryGirl.create(:reservation, :user => @user, :listing => @listing)
+    @reservation = FactoryGirl.create(:reservation, :user => @user, :transactable => @listing)
     @reservation_period = @reservation.periods.first
     @payment = @reservation.payment
     @charge = FactoryGirl.create(:charge, :payment => @payment)

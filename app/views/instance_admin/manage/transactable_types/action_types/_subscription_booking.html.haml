@@ -1,3 +1,4 @@
 = render 'instance_admin/manage/transactable_types/action_types/pricings', f: f
 - content_for "booking_settings_subscription_booking" do
   = f.input :allow_custom_pricings, as: :boolean, :inline_label => true
+= render "instance_admin/manage/transactable_types/common_settings", f: f

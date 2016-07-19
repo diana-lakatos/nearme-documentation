@@ -89,7 +89,7 @@ module TransactablesIndex
         service_radius: self.properties.try(:service_radius),
         open_hours: self.availability.try(:days_with_hours),
         open_hours_during_week: self.availability.try(:open_hours_during_week),
-        completed_reservations: self.reservations.reviewable.count,
+        completed_reservations: self.orders.reservations.reviewable.count,
         seller_average_rating: self.creator.try(:seller_average_rating)
       )
     end

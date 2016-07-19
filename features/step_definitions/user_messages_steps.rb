@@ -96,7 +96,7 @@ Then /^I should see this( reservation)? message in my inbox marked as read$/ do 
   page.should have_content('Messages')
   page.should have_content('Inbox')
   if reservation_message
-    page.should have_content @reservation.listing.administrator.first_name
+    page.should have_content @reservation.transactable.administrator.first_name
   else
     page.should have_content model('user').first_name
     page.should have_content @another_user.first_name
@@ -115,7 +115,7 @@ Then /^I should see this( reservation)? message in my inbox marked as unread$/ d
 
   page.should have_content('Inbox (1)')
   if reservation_message
-    page.should have_content @reservation.listing.administrator.first_name
+    page.should have_content @reservation.transactable.administrator.first_name
   else
     page.should have_content model('user').first_name
     page.should have_content @another_user.first_name
@@ -125,7 +125,7 @@ end
 
 Given /^I am logged in as the reservation administrator$/ do
   @reservation = model('reservation')
-  login @reservation.listing.administrator
+  login @reservation.transactable.administrator
 end
 
 Given /^I send a message to reservation owner$/ do

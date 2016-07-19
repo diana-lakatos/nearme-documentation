@@ -26,7 +26,7 @@ class InstanceAdmin::Groups::GroupTypes::CustomValidatorsController < InstanceAd
     @breadcrumbs_title = BreadcrumbsList.new(
       { :url => instance_admin_groups_group_types_path, :title => 'Group Type' },
       { :title => @validatable.name.titleize },
-      { :url => redirect_path, :title => t('instance_admin.manage.service_types.custom_validators') }
+      { :url => redirect_path, :title => t('instance_admin.manage.transactable_types.custom_validators') }
     )
   end
 

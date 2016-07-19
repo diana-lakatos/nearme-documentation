@@ -72,7 +72,7 @@ module Api
     end
 
     def find_transactable_type
-      @transactable_type = ServiceType.includes(:custom_attributes).friendly.find(params[:transactable_type_id])
+      @transactable_type = TransactableType.includes(:custom_attributes).friendly.find(params[:transactable_type_id])
     end
 
     def set_form_components

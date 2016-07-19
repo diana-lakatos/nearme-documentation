@@ -38,8 +38,8 @@ class ChartDecoratorTest < ActionView::TestCase
     end
 
     should 'return array of sums for each day and each currency' do
-      expected_daily_sums = [[22, 22, 22, 22, 22, 22, 163]]
-      assert_equal expected_daily_sums, @chart.values
+      expected_daily_sums = [22, 22, 22, 22, 22, 22, 163]
+      assert_equal expected_daily_sums, @chart.values.first.map(&:to_i)
     end
 
     should 'return array of sums for each currency' do
@@ -54,30 +54,31 @@ class ChartDecoratorTest < ActionView::TestCase
   end
 
   private
-  def build_payment(reservation, days_ago, subtotal, service_fee_guest)
+  def build_payment(currency, days_ago, subtotal, service_fee_guest)
     FactoryGirl.build(:payment,
                       created_at: days_ago.days.ago,
-                      payable: reservation,
                       subtotal_amount_cents: subtotal,
                       service_fee_amount_guest_cents: service_fee_guest,
+                      total_amount_cents: subtotal + service_fee_guest,
                       paid_at: days_ago.days.ago,
-                      currency: reservation.currency)
+                      currency: currency)
   end
 
   def build_payments
-    reservation_usd = FactoryGirl.build(:reservation, currency: 'USD')
-    reservation_cad = FactoryGirl.build(:reservation, currency: 'CAD')
-
     # create a reservation charge for every of last six days
     payments = []
-    [reservation_usd, reservation_cad].each do |reservation|
-      6.downto(0).each do |i|
-        payments << build_payment(reservation, i, 1000, 100)
-      end
+
+    6.downto(0).each do |i|
+      payments << build_payment('USD', i, 1000, 100)
     end
+
+    6.downto(0).each do |i|
+      payments << build_payment('CAD', i, 1000, 100)
+    end
+
     # create a yesterdays reservation charge with different amount
-    payments << build_payment(reservation_usd, 0, 5000, 300)
-    payments << build_payment(reservation_cad, 0, 8000, 800)
+    payments << build_payment('USD', 0, 5000, 300)
+    payments << build_payment('CAD', 0, 8000, 800)
 
     payments
   end

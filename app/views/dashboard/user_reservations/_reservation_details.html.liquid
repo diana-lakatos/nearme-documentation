@@ -1,9 +1,9 @@
 <div class="col-sm-3">
   <h3>{{ 'dashboard.user_reservations.address' | translate }}</h3>
   <p>
-    {{ reservation.listing.location.address | replace: ', ', '<br>' }}
+    {{ reservation.transactable.location.address | replace: ', ', '<br>' }}
     <br />
-    [ <a href="http://maps.apple.com/?q={{reservation.listing.location.address}}" target='_blank'>{{ 'dashboard.user_reservations.show_on_map' | translate }}</a> ]
+    [ <a href="http://maps.apple.com/?q={{reservation.transactable.location.address}}" target='_blank'>{{ 'dashboard.user_reservations.show_on_map' | translate }}</a> ]
   </p>
 </div>
 

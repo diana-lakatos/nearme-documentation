@@ -50,6 +50,9 @@
 - if @transactable_type.rental_shipping && (only_inputs.empty? || only_inputs.include?(:rental_shipping_type))
   = render 'dashboard/company/transactables/form_fields/rental_shipping_type', { f: f, space_wizard: true }
 
+- if  (only_inputs.empty? || only_inputs.include?(:shipping_info))
+  = render "dashboard/company/transactables/form_fields/shipping_profiles", f: f
+
 - if only_inputs.empty? || @transactable_type.custom_model_types.map { |c| "Custom Model - #{c.name}".to_sym }.include?(only_inputs.first)
   = render "dashboard/company/transactables/form_fields/custom_model", f: f, field: only_inputs.first.to_s
 

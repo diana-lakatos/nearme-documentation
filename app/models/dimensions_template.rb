@@ -24,7 +24,7 @@ class DimensionsTemplate < ActiveRecord::Base
 
   scope :defaults, -> { where(use_as_default: true) }
 
-  validates_presence_of  :name, :weight, :height, :width, :depth
+  validates_presence_of  :weight, :height, :width, :depth
   validates_with UnitsOfMeasureValidator, :attributes => [:unit_of_measure, :weight_unit, :height_unit, :width_unit, :depth_unit]
   validates_numericality_of :weight, :height, :width, :depth, greater_than: 0
 

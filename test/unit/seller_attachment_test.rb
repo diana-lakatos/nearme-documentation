@@ -68,13 +68,21 @@ class SellerAttachmentTest < ActiveSupport::TestCase
       end
 
       should 'be accessible if user has reservation' do
-        @user.stubs(reservations: stub(confirmed: stub(find_by: true)))
+        @reservation = FactoryGirl.create(:reservation, state: "confirmed")
+        @reservation.transactable_line_items = [FactoryGirl.create(:transactable_line_item,
+          line_itemable: @reservation, line_item_source: @attachment.assetable )]
+
         assert @attachment.accessible_to?(@user)
       end
 
       should 'be accessible if user bought product' do
-        @attachment.assetable = FactoryGirl.create(:product)
-        @user.stubs(orders: stub(complete: stub(map: stub(flatten: stub(include?: true)))))
+        @attachment.assetable = FactoryGirl.create(:transactable)
+
+        @purchase = FactoryGirl.create(:purchase, state: "confirmed")
+        @purchase.transactable_line_items << FactoryGirl.create(:transactable_line_item,
+          line_itemable: @purchase, line_item_source: @attachment.assetable )
+
+
         assert @attachment.accessible_to?(@user)
       end
 

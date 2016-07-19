@@ -21,6 +21,7 @@ class RecurringBooking::AmountCalculatorFactory
     def subtotal_amount
       @recurring_booking.subtotal_amount
     end
+    alias price subtotal_amount
 
     def host_service_fee
       @recurring_booking.service_fee_amount_host

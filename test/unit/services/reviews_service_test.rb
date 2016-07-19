@@ -97,16 +97,17 @@ class ReviewsServiceTest < ActiveSupport::TestCase
 
   context '#get_line_items_for_owner_and_creator' do
     setup do
-      @order = create(:reviewable_order)
-      @line_items = @order.line_items
+      @order = create(:purchase, state: 'confirmed', archived_at: Time.now)
+      @order2 = create(:purchase, state: 'confirmed', archived_at: Time.now)
+      @line_items = @order.transactable_line_items
 
       @line_items.each do |line_item|
-        product = line_item.product
-        product.user = FactoryGirl.create(:user)
-        product.save!
+        transactable = line_item.line_item_source
+        transactable.creator = FactoryGirl.create(:user)
+        transactable.save!
       end
-      @line_items.first.product.product_type.create_rating_systems
-      @line_items.first.product.product_type.rating_systems.update_all(active: true)
+      @line_items.first.line_item_source.transactable_type.create_rating_systems
+      @line_items.first.line_item_source.transactable_type.rating_systems.update_all(active: true)
       user = @order.user
 
       @reviews_service = ReviewsService.new(user)
@@ -118,26 +119,9 @@ class ReviewsServiceTest < ActiveSupport::TestCase
     end
 
     should 'not return line items if order is not reviewable' do
-      @order.update_column(:shipment_state, 'pending')
+      @order.update_column(:state, 'unconfirmed')
       result = @reviews_service.get_line_items_for_owner_and_creator
       assert_equal 0, result[RatingConstants::GUEST].count
-    end
-  end
-
-  context '#get_orders' do
-    setup do
-      RatingSystem.destroy_all
-      @order = create(:completed_order_with_totals)
-      @order.update(completed_at: Date.today.yesterday)
-      @line_items = { RatingConstants::HOST => @order.line_items, RatingConstants::GUEST => @order.line_items }
-      user = @order.user
-      @review = create(:review, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::HOST, transactable_type: FactoryGirl.create(:product_type)), reviewable: @order.line_items.first, user: user)
-      @reviews_service = ReviewsService.new(user)
-    end
-
-    should 'return seller line items' do
-      result = @reviews_service.get_reviewables(@line_items, Spree::ProductType)
-      assert_equal @order.line_items.count - 1, result[:seller_collection].count
     end
   end
 
@@ -149,8 +133,8 @@ class ReviewsServiceTest < ActiveSupport::TestCase
     end
 
     should 'return reservations' do
-      result = @reviews_service.get_reservations_for_owner_and_creator
-      assert_equal result[RatingConstants::GUEST].first, @reservation
+      result = @reviews_service.get_line_items_for_owner_and_creator
+      assert_equal result[RatingConstants::GUEST].first, @reservation.transactable_line_items.first
     end
   end
 
@@ -158,7 +142,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
     setup do
       user = FactoryGirl.create(:user)
       @reservation = FactoryGirl.create(:reviewable_reservation, user: user)
-      @reservations = { RatingConstants::HOST => user.reservations, RatingConstants::GUEST => user.reservations }
+      @reservations = { RatingConstants::HOST => user.orders.reservations, RatingConstants::GUEST => user.orders.reservations }
       @review = create(:review, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::HOST), reviewable: @reservation, user: user)
       @reviews_service = ReviewsService.new(user)
     end
@@ -173,13 +157,13 @@ class ReviewsServiceTest < ActiveSupport::TestCase
     setup do
       user = FactoryGirl.create(:user)
       @reservations = FactoryGirl.create_list(:reviewable_reservation, 2, user: user)
-      @reservations_hash = { RatingConstants::HOST => user.reservations, RatingConstants::GUEST => user.reservations }
+      @reservations_hash = { RatingConstants::HOST => user.orders.reservations, RatingConstants::GUEST => user.orders.reservations }
       @review = create(:review, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::HOST), reviewable: @reservations.first, user: user)
       @reviews_service = ReviewsService.new(user)
     end
 
     should 'return reservations' do
-      result = @reviews_service.get_reviewables(@reservations_hash, ServiceType)
+      result = @reviews_service.get_reviewables(@reservations_hash, TransactableType)
       assert_equal 1, result[:seller_collection].count
       assert_equal @reservations.last, result[:seller_collection].first
     end
@@ -193,18 +177,6 @@ class ReviewsServiceTest < ActiveSupport::TestCase
       params = { review: { reviewable_id: reservation.id, reviewable_type: reservation.class.name } }
       reviews_service = ReviewsService.new(user, params)
       assert_equal review.transactable_type_id, reviews_service.get_transactable_type_id
-    end
-
-    should 'return transactable type. line item' do
-      user = FactoryGirl.create(:user)
-      completed_order = FactoryGirl.create(:order_with_line_items, state: 'complete', user: user)
-      transactable_type_buy_sell = FactoryGirl.create(:transactable_type_buy_sell)
-      line_item = completed_order.line_items.first
-      line_item.product.update_attribute(:product_type_id, transactable_type_buy_sell.id)
-      create(:review, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::HOST, transactable_type: transactable_type_buy_sell), reviewable: line_item, user: user)
-      params = { review: { reviewable_id: line_item.id, reviewable_type: line_item.class.name } }
-      reviews_service = ReviewsService.new(user, params)
-      assert_equal transactable_type_buy_sell.id, reviews_service.get_transactable_type_id
     end
   end
 end

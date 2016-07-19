@@ -2,7 +2,8 @@
   <div class="book-it-out">
     {{ 'reservations.booking_module.book_it_out' | translate }}
     <span class="checkbox pull-right">
-      <input class="pull-right" name="book_it_out" type="checkbox" value="1">
+      <input name="order[book_it_out]" type="hidden" value="0 ">
+      <input class="pull-right" name="order[book_it_out]" type="checkbox" value="1">
     </span>
     <div class="discount_price"><span></span></div>
   </div>

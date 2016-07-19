@@ -18,13 +18,11 @@ Feature: A user can subscribe to a service
      Then I am subscribed to the service
      Then I should see all text:
         |Your reservation has been made!                                                 |
-        |Your credit card will be charged when your reservation is confirmed by the host.|
-        |Your recurring booking was requested successfully!                              |
         |Pending confirmation from host. Booking will expire in 23 hours                 |
         |Unconfirmed                                                                     |
 
   Scenario: Host subscription flow walk through
-    Given a recurring_booking exists with owner: the user, listing: subscription_transactable
+    Given a recurring_booking exists with owner: the user, transactable: subscription_transactable
       And I am logged in as the user
      When I go to unconfirmed subscriptions page
      Then I should see all text:
@@ -51,25 +49,25 @@ Feature: A user can subscribe to a service
         |Paid until       |
 
   Scenario: Guest unconfiremd subscription cancel
-    Given a recurring_booking exists with owner: the user, listing: subscription_transactable
+    Given a recurring_booking exists with owner: the user, transactable: subscription_transactable
       And I am logged in as the user
-     When I go to my subscriptions page
+     When I go to my unconfirmed subscriptions page
       And I cancel the subscription
      Then I should see all text:
        |You have cancelled your reservation.    |
-       |You don't have any active subscriptions.|
+       |You don't have any orders yet           |
      When I go to my archived subscriptions page
      Then I should see all text:
        |Cancelled by guest|
 
   Scenario: Guest confirmed subscription cancel
-    Given a confirmed_recurring_booking exists with owner: the user, listing: subscription_transactable
+    Given a confirmed_recurring_booking exists with owner: the user, transactable: subscription_transactable
       And I am logged in as the user
      When I go to my subscriptions page
       And I cancel the subscription
      Then I should see all text:
        |You have cancelled your reservation.    |
-       |You don't have any active subscriptions.|
+       |You don't have any orders yet           |
      When I go to my archived subscriptions page
      Then I should see all text:
        |Cancelled by guest|

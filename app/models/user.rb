@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
 
-  include Spree::UserPaymentSource
+  # include Spree::UserPaymentSource
   include CreationFilter
   include QuerySearchable
   include Approvable
@@ -50,13 +50,16 @@ class User < ActiveRecord::Base
 
   delegate :to_s, to: :name
 
-  belongs_to :billing_address, class_name: 'Spree::Address'
   belongs_to :domain
   belongs_to :instance
   belongs_to :instance_profile_type, -> { with_deleted }
   belongs_to :partner
-  belongs_to :spree_shipping_address, class_name: 'Spree::Address', foreign_key: 'shipping_address_id'
-  has_many :shipping_addresses
+
+  has_many :orders
+  has_many :purchases
+  has_many :shipping_profiles
+  has_many :shipping_addresses, through: :orders, class_name: 'OrderAddress'
+  has_many :billing_addresses, through: :orders, class_name: 'OrderAddress'
   has_many :activity_feed_events, as: :followed, dependent: :destroy
   has_many :activity_feed_subscriptions, foreign_key: 'follower_id'
   has_many :activity_feed_subscriptions_as_followed, as: :followed, class_name: 'ActivityFeedSubscription', dependent: :destroy
@@ -86,11 +89,10 @@ class User < ActiveRecord::Base
   has_many :payments, foreign_key: 'payer_id'
   has_many :instance_admins, foreign_key: 'user_id', dependent: :destroy
   has_many :listings, through: :locations, class_name: 'Transactable', inverse_of: :creator
-  has_many :listing_reservations, class_name: 'Reservation', through: :listings, source: :reservations, inverse_of: :creator
+  has_many :listing_orders, class_name: 'Order', through: :listings, source: :orders, inverse_of: :creator
   has_many :listing_recurring_bookings, class_name: 'RecurringBooking', through: :listings, source: :recurring_bookings, inverse_of: :creator
   has_many :locations, through: :companies, inverse_of: :creator
   has_many :mailer_unsubscriptions
-  has_many :orders, foreign_key: :user_id, class_name: 'Spree::Order'
   has_many :photos, foreign_key: 'creator_id', inverse_of: :creator
   has_many :attachments, class_name: 'SellerAttachment'
   has_many :products_images, foreign_key: 'uploader_id', class_name: 'Spree::Image'
@@ -103,7 +105,7 @@ class User < ActiveRecord::Base
   has_many :project_collaborators
   has_many :approved_project_collaborations, -> { approved }, class_name: 'ProjectCollaborator'
   has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
-  has_many :reservations, foreign_key: 'owner_id'
+  has_many :orders, foreign_key: 'owner_id'
   has_many :recurring_bookings, foreign_key: 'owner_id'
   has_many :relationships, class_name: "UserRelationship", foreign_key: 'follower_id', dependent: :destroy
   has_many :reverse_relationships, class_name: "UserRelationship", foreign_key: 'followed_id', dependent: :destroy
@@ -161,7 +163,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :bids
 
   scope :patron_of, lambda { |listing|
-    joins(:reservations).where(reservations: { transactable_id: listing.id }).uniq
+    joins(:orders).where(orders: { transactable_id: listing.id }).uniq
   }
 
   scope :by_search_query, lambda { |query|
@@ -178,7 +180,7 @@ class User < ActiveRecord::Base
   scope :ordered_by_email, -> { order('users.email ASC') }
 
   scope :visited_listing, ->(listing) {
-    joins(:reservations).merge(Reservation.confirmed.past.for_listing(listing)).uniq
+    joins(:orders).merge(Order.reservations.confirmed.past.for_listing(listing)).uniq
   }
 
   scope :hosts_of_listing, ->(listing) {
@@ -474,19 +476,19 @@ class User < ActiveRecord::Base
   end
 
   def cancelled_reservations
-    reservations.cancelled
+    orders.reservations.cancelled
   end
 
   def rejected_reservations
-    reservations.rejected
+    orders.reservations.rejected
   end
 
   def expired_reservations
-    reservations.expired
+    orders.reservations.expired
   end
 
   def confirmed_reservations
-    reservations.confirmed
+    orders.reservations.confirmed
   end
 
   def name(avoid_stack_too_deep = nil)
@@ -796,7 +798,7 @@ class User < ActiveRecord::Base
 
     locations_in_near = Location.includes(:location_address).near(current_address, radius_in_km, units: :km)
 
-    listing_ids_of_cancelled_reservations = self.reservations.cancelled_or_expired_or_rejected.pluck(:transactable_id) if without_listings_from_cancelled_reservations
+    listing_ids_of_cancelled_reservations = self.orders.reservations.cancelled_or_expired_or_rejected.pluck(:transactable_id) if without_listings_from_cancelled_reservations
 
     listings = []
     locations_in_near.includes(:listings).each do |location|
@@ -853,7 +855,7 @@ class User < ActiveRecord::Base
     self.administered_locations.each do |location|
       location.update_attribute(:administrator_id, nil) if location.administrator_id == self.id
     end
-    self.reservations.unconfirmed.find_each do |r|
+    self.orders.reservations.unconfirmed.find_each do |r|
       r.user_cancel!
     end
   end
@@ -954,7 +956,7 @@ class User < ActiveRecord::Base
   end
 
   def cart
-    BuySell::CartService.new(self)
+    CartService.new(self)
   end
 
   def default_wish_list

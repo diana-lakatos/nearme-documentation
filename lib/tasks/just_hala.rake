@@ -2360,7 +2360,7 @@ Thanks for confirming {{ reservation.owner.first_name }}'s mission! You can <a h
                })
 
     create_sms("reservation_sms_notifier/notify_guest_with_state_change", %Q{
-Your mission for {{ reservation.listing.name | truncate: 90 }} was {{ reservation.state_to_string }}. View mission: {{ platform_context.host | append:reservation.bookings_dashboard_url | shorten_url}}
+Your mission for {{ reservation.transactable.name | truncate: 90 }} was {{ reservation.state_to_string }}. View mission: {{ platform_context.host | append:reservation.bookings_dashboard_url | shorten_url}}
                  })
     create_sms("reservation_sms_notifier/notify_host_with_confirmation", %Q{
 You have received a mission request on {{ platform_context.name | truncate: 50 }}. Please confirm or decline from your dashboard: {{ platform_context.host | append:reservation.manage_guests_dashboard_url | shorten_url}}

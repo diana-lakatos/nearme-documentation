@@ -5,22 +5,14 @@
     .row
       .input-container.col-xs-12
         = f.input :name, input_html: { class: 'form-control' }
-    - if ServiceType.count > 0
+    - if TransactableType.count > 0
       .row
         .input-container.col-xs-12
-          = f.association :service_types
-    - if Spree::ProductType.count > 0
-      .row
-        .input-container.col-xs-12
-          = f.association :product_types
+          = f.association :transactable_types
     - if ProjectType.count > 0
       .row
         .input-container.col-xs-12
           = f.association :project_types
-    - if OfferType.count > 0
-      .row
-        .input-container.col-xs-12
-          = f.association :offer_types
     .row
       .input-container.col-xs-12
         = f.association :instance_profile_types

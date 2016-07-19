@@ -32,17 +32,15 @@ class Dashboard::UserRecurringBookingsController < Dashboard::BaseController
   end
 
   def index
-    active
+    redirect_to dashboard_orders_path
   end
 
   def active
-    @recurring_bookings = recurring_bookings.not_archived.order(:start_on, :end_on)
-    render :index
+    redirect_to dashboard_orders_path
   end
 
   def archived
-    @recurring_bookings = recurring_bookings.archived.order(:start_on, :end_on)
-    render :index
+    redirect_to dashboard_orders_path(state: 'archived')
   end
 
   def booking_successful

@@ -5,10 +5,10 @@ task fix_custom_csv_fields: :environment do
   Instance.find_each do |instance|
     PlatformContext.current = PlatformContext.new(instance)
 
-    TransactableType.find_each do |service_type|
-      if ndx = service_type.custom_csv_fields.index('transactable' => 'listing_type')
-        service_type.custom_csv_fields[ndx] = {'listing_type' => 'name'}
-        service_type.save! validate: false
+    TransactableType.find_each do |transactable_type|
+      if ndx = transactable_type.custom_csv_fields.index('transactable' => 'listing_type')
+        transactable_type.custom_csv_fields[ndx] = {'listing_type' => 'name'}
+        transactable_type.save! validate: false
         counter += 1
       end
     end

@@ -96,12 +96,12 @@ class Listings::ReservationsController < ApplicationController
     payment = Payment.find_by_express_token!(params[:token])
     flash[:error] = t('flash_messages.reservations.booking_failed')
     reservation = payment.payable
-    redirect_to reservation.listing.decorate.show_path, status: 301
+    redirect_to reservation.transactable.decorate.show_path, status: 301
   end
 
   # Renders remote payment form
   def remote_payment
-    @billing_gateway = @reservation.instance.payment_gateway(@reservation.listing.company.iso_country_code, @reservation.currency)
+    @billing_gateway = @reservation.instance.payment_gateway(@reservation.transactable.company.iso_country_code, @reservation.currency)
     @billing_gateway.set_payment_data(@reservation)
   end
 
@@ -176,7 +176,7 @@ class Listings::ReservationsController < ApplicationController
   end
 
   def find_reservation
-    @reservation = @listing.reservations.find(params[:id])
+    @reservation = @listing.orders.reservations.find(params[:id])
   end
 
   def build_reservation_request

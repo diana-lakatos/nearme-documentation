@@ -11,7 +11,7 @@
 
 
 - content_for :panel_navigation_links do
-  - TransactableType.services.each do |transactable_type|
+  - TransactableType.all.each do |transactable_type|
     %li{class: transactable_type == @transactable_type ? "active" : ""}
       = link_to t('dashboard.manage_listings.tab', default: transactable_type.translated_bookable_noun(10)), dashboard_company_transactable_type_transactables_path(transactable_type)
 
@@ -30,7 +30,7 @@
   = dropdown_menu @transactable_type.translated_bookable_noun(10), { wrapper_class: 'links' } do
     = yield :panel_navigation_links
 
-- if TransactableType.services.size > 3
+- if TransactableType.count > 3
   .row
     .col-md-3
       %nav.hidden-xs.hidden-sm{role: 'navigation'}

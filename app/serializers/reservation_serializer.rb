@@ -37,7 +37,7 @@ class ReservationSerializer < ApplicationSerializer
         start_at: timestamp_start,
         end_at: timestamp_end,
         # Who's assigned the desks
-        assignee: (object.listing.transactable_type.action_price_per_unit? ? 1 : object.quantity.to_i).times.to_a.map { |s|
+        assignee: (object.transactable.transactable_type.action_price_per_unit? ? 1 : object.quantity.to_i).times.to_a.map { |s|
           {
             name: object.owner.try(:name),
             email: object.owner.try(:email)

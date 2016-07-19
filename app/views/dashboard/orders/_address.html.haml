@@ -6,18 +6,18 @@
 
 %br/
 
-= address.address1
-- if address.address2.present?
+= address.street1
+- if address.street2.present?
   %br/
-  = address.address2
+  = address.street2
 
 %br/
 
 = address.city
 ,
-= address.state.abbr
-= address.zipcode
+= address.state.try(:abbr)
+= address.zip
 
 %br/
 
-= address.country.name
+= address.country.try(:name)

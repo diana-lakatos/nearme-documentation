@@ -7,7 +7,7 @@
           %tr
             %th= t('instance_admin.manage.data_uploads.file_name')
             %th= t('instance_admin.manage.data_uploads.state')
-            - if params[:service_type_id].present?
+            - if params[:transactable_type_id].present?
               %th= t('instance_admin.manage.data_uploads.data_preview')
             %th= t('instance_admin.manage.data_uploads.imported_at')
             %th= t('instance_admin.manage.data_uploads.created_by')
@@ -17,7 +17,7 @@
             %tr
               %td= link_to resource.csv_file_identifier, {action: :show, id: resource}
               %td= resource.state
-              - if params[:service_type_id].present?
+              - if params[:transactable_type_id].present?
                 %td= link_to resource.xml_file_identifier, resource.xml_file.try(:url), target: :blank if resource.xml_file.present?
               %td= resource.imported_at.present? ? l(resource.imported_at, format: :long) : ''
               %td= resource.uploader.present? ? resource.uploader.email : ''
@@ -29,6 +29,6 @@
 
 = content_for :header_buttons do
   = link_to t('instance_admin.manage.data_uploads.download_csv_template'), {action: :download_csv_template}, class: 'pull-right btn btn-blue'
-  = link_to t('instance_admin.manage.data_uploads.download_current_data'), {action: :download_current_data}, class: 'pull-right btn btn-blue' if @importable.is_a?(ServiceType)
+  = link_to t('instance_admin.manage.data_uploads.download_current_data'), {action: :download_current_data}, class: 'pull-right btn btn-blue'
   = link_to t('instance_admin.manage.data_uploads.new_data_upload'), {action: :new}, class: 'pull-right btn btn-blue'
 

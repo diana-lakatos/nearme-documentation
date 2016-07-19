@@ -73,6 +73,12 @@ DesksnearMe::Application.routes.draw do
     get "/locations/:location_id/listings/:id", to: 'listings#show', as: 'location_listing'
 
     resources :listings, :only => [:show] do
+      resources :orders, :controller => 'listings/orders' do
+        collection do
+          post :store_order
+        end
+      end
+
       member do
         get :ask_a_question
         get :occurrences
@@ -99,8 +105,6 @@ DesksnearMe::Application.routes.draw do
           post :review
           post :address
           post :store_reservation_request
-          get :return_express_checkout
-          get :cancel_express_checkout
           get :hourly_availability_schedule
           get :detect_overlapping
         end
@@ -115,30 +119,26 @@ DesksnearMe::Application.routes.draw do
     get 'comments/index'
     get 'comments/create'
 
-    scope module: 'buy_sell_market' do
-      resources :products, only: [:show] do
-        resources :tickets, only: [:new, :create], :controller => 'support/tickets'
+    resources :orders, only: [:show, :index] do
+      resource :checkout, controller: 'checkout' do
+        get :back
+        get :get_states
+      end
+      resource :express_checkout, controller: 'express_checkout' do
+        get :return
+        get :cancel
       end
 
+    end
 
-      resources :orders, only: [:show, :index] do
-        resources :checkout do
-          collection do
-            get 'get_states'
-            get 'cancel_express_checkout'
-          end
-        end
-      end
-
-      namespace :cart do
-        get '/', action: 'index', as: 'index'
-        delete 'empty'
-        delete 'clear_all/:order_id', action: 'clear_all', as: 'clear_all'
-        patch 'update'
-        get 'add', action: 'add', as: 'add_product' # Get is for redirection after login
-        delete 'remove/:item_id', action: 'remove', as: 'remove_product'
-        get 'next/:order_id', action: 'next', as: 'next'
-      end
+    namespace :cart do
+      get '/', action: 'index', as: 'index'
+      delete 'empty'
+      delete 'clear_all/:order_id', action: 'clear_all', as: 'clear_all'
+      patch 'update'
+      get 'add', action: 'add', as: 'add_product' # Get is for redirection after login
+      delete 'remove/:item_id', action: 'remove', as: 'remove_product'
+      get 'next/:order_id', action: 'next', as: 'next'
     end
 
     mount CustomAttributes::Engine, at: '/custom_attributes'
@@ -508,27 +508,6 @@ DesksnearMe::Application.routes.draw do
           end
         end
 
-        resources :service_types do
-          get :search_settings, on: :member
-          put :change_state, on: :member
-          resources :custom_attributes, controller: 'service_types/custom_attributes'
-          resources :custom_validators, controller: 'service_types/custom_validators'
-          resources :data_uploads, only: %i(new index create show), controller: 'service_types/data_uploads' do
-            collection do
-              get :download_csv_template
-              get :download_current_data
-            end
-          end
-          resources :form_components, controller: 'service_types/form_components', except: [:show] do
-            member do
-              patch :update_rank
-            end
-            collection do
-              post :create_as_copy
-            end
-          end
-        end
-
         resources :custom_validators
 
         resources :users, only: [:index, :destroy, :edit, :update] do
@@ -598,35 +577,6 @@ DesksnearMe::Application.routes.draw do
             delete :delete_image
           end
         end
-      end
-
-      namespace :buy_sell do
-        get '/', :to => 'base#index'
-        resource :configuration, only: [:show, :update], controller: 'configuration'
-        resource :commissions, :only => [:show, :update], :controller => 'commissions'
-        resources :product_types do
-          get :search_settings, on: :member
-          resources :custom_attributes, controller: 'product_types/custom_attributes'
-          resources :custom_validators, controller: 'product_types/custom_validators'
-          resources :data_uploads, only: %i(new index create show), controller: 'product_types/data_uploads' do
-            collection do
-              get :download_csv_template
-            end
-          end
-          resources :form_components, controller: 'product_types/form_components', except: [:show] do
-            member do
-              patch :update_rank
-            end
-            collection do
-              post :create_as_copy
-            end
-          end
-        end
-        resources :tax_categories
-        resources :tax_rates
-        resources :zones
-        resources :shipping_categories
-        resources :shipping_methods
       end
 
       namespace :shipping_options do
@@ -841,9 +791,9 @@ DesksnearMe::Application.routes.draw do
         resource :analytics
         resources :orders_received, except: [:edit] do
           member do
-            get :approve
-            get :cancel
-            get :resume
+            post :confirm
+            post :complete
+            post :cancel
           end
 
           resources :payments do
@@ -911,26 +861,6 @@ DesksnearMe::Application.routes.draw do
           end
         end
 
-        resources :products
-        resources :product_type do
-          resources :products
-          resources :data_uploads, only: %i(new create), controller: 'product_types/data_uploads' do
-            collection do
-              get :download_csv_template
-              get :download_current_data_csv
-            end
-          end
-        end
-
-        resources :offer_types do
-          resources :offers do
-            member do
-              get :enable
-              get :disable
-            end
-          end
-        end
-
         resources :transactable_types do
           resources :transactables do
             member do
@@ -967,9 +897,9 @@ DesksnearMe::Application.routes.draw do
         end
       end #ends company namespace
 
-      resources :shipping_categories do
+      resources :shipping_profiles do
         collection do
-          get :get_shipping_categories_list
+          get :get_shipping_profiles_list
         end
       end
 
@@ -1133,18 +1063,8 @@ DesksnearMe::Application.routes.draw do
       post "/submit_item", controller: 'transactable_types/space_wizard', action: 'submit_item'
     end
 
-    resources :product_types do
-      resources :product_wizard, only: [:new, :create], controller: 'product_types/product_wizard'
-      resources :categories, only: [:index, :show], :controller => 'transactable_types/categories'
-    end
-
     resources :project_types do
       resources :project_wizard, only: [:new, :create], controller: 'project_types/project_wizard'
-      resources :categories, only: [:index, :show], :controller => 'transactable_types/categories'
-    end
-
-    resources :offer_types do
-      resources :offer_wizard, only: [:new, :create], controller: 'offer_types/offer_wizard'
       resources :categories, only: [:index, :show], :controller => 'transactable_types/categories'
     end
 

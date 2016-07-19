@@ -70,13 +70,13 @@ class Dashboard::Company::AnalyticsController < Dashboard::Company::BaseControll
 
   def prepare_data_for_analytics_bookings
     # All company reservations paginated
-    @reservations = @company.reservations.order('reservations.created_at DESC')
+    @reservations = @company.reservations.order('orders.created_at DESC')
     @reservations = @reservations.paginate(
       :page => params[:page],
       :per_page => 20
     )
 
-    @last_week_reservations = @company.reservations.last_x_days(6).order('reservations.created_at ASC')
+    @last_week_reservations = @company.reservations.last_x_days(6).order('orders.created_at ASC')
 
     @chart = ChartDecorator.decorate(@last_week_reservations)
   end

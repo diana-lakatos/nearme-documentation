@@ -6,7 +6,7 @@ class ReengagementNoBookingsJob < Job
   def perform
     @user = User.find_by_id(@user_id)
     if @user
-      WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::NoReservations, @user.id) if @user.reservations.empty? && @user.listings_in_near.size > 0
+      WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::NoReservations, @user.id) if @user.orders.empty? && @user.listings_in_near.size > 0
     end
   end
 end

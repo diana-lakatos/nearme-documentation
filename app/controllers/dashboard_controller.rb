@@ -6,9 +6,9 @@ class DashboardController < ApplicationController
   before_filter :redirect_if_no_company, :only => [:analytics, :transfers]
 
   def show
-    if current_user.reservations.visible.any?
+    if current_user.orders.reservations.visible.any?
       redirect_to bookings_dashboard_url
-    elsif current_user.reservations.upcoming.any?
+    elsif current_user.orders.reservations.upcoming.any?
       redirect_to manage_guests_dashboard_url
     else
       redirect_to edit_user_registration_url

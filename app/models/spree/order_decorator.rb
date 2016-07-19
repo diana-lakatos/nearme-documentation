@@ -5,9 +5,8 @@ Spree::Order.class_eval do
     :nonce       => 'nonce',
     :manual      => 'manual',
   )
-
-  include Spree::Scoper
   include Chargeable
+  include Spree::Scoper
 
   attr_accessor :start_express_checkout
   attr_reader :credit_card
@@ -29,8 +28,9 @@ Spree::Order.class_eval do
 
   has_one :billing_authorization, -> { where(success: true) }, as: :reference
   has_one :payment, class_name: '::Payment', as: :payable
-  has_many :billing_authorizations, as: :reference
 
+  has_many :billing_authorizations, as: :reference
+  has_many :reviews, as: :reviewable
   has_many :shipping_methods, class_name: 'Spree::ShippingMethod'
   has_many :additional_charges, as: :target
   has_many :payment_documents, as: :attachable, class_name: 'Attachable::PaymentDocument', dependent: :destroy
@@ -70,10 +70,6 @@ Spree::Order.class_eval do
 
   def validate_credit_card
     errors.add(:cc, I18n.t('buy_sell_market.checkout.invalid_cc')) unless credit_card.valid?
-  end
-
-  def checkout_extra_fields(attributes = {})
-    @checkout_extra_fields ||= CheckoutExtraFields.new(self.user, attributes)
   end
 
   def merchant_subject
@@ -188,10 +184,6 @@ Spree::Order.class_eval do
 
   def reviewable?(current_user)
     current_user != company.creator && completed? && approved_at.present? && paid? && shipped?
-  end
-
-  def paid?
-    payment_state == 'paid'
   end
 
   # hackish hacky hack

@@ -5,7 +5,7 @@ class WorkflowStep::ReservationWorkflow::BaseStep < WorkflowStep::BaseStep
   end
 
   def initialize(reservation_id)
-    @reservation = Reservation.find_by_id(reservation_id)
+    @reservation = Order.find_by_id(reservation_id)
   end
 
   def workflow_type
@@ -29,7 +29,7 @@ class WorkflowStep::ReservationWorkflow::BaseStep < WorkflowStep::BaseStep
   # listing:
   #   Transactable object
   def data
-    { reservation: @reservation, user: lister, host: enquirer, listing: @reservation.listing }
+    { reservation: @reservation, user: lister, host: enquirer, listing: @reservation.transactable }
   end
 
   def transactable_type_id

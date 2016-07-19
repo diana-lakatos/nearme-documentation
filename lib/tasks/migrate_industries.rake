@@ -13,8 +13,7 @@ task migrate_industries: :environment do
 		category = Category.create(name: "Industries")
 
 		category.project_types << ProjectType.all
-		category.transactable_types << ServiceType.all
-		category.product_types << Spree::ProductType.all
+		category.transactable_types << TransactableType.all
 		category.instance_profile_types << InstanceProfileType.all
 
 		industries = ActiveRecord::Base.connection.execute("SELECT * FROM industries")

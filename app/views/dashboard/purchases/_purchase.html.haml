@@ -1,0 +1,79 @@
+%header
+  %h2= t('buy_sell_market.checkout.labels.order_no', number: purchase.number.to_s)
+
+.row
+  .col-sm-3
+    %h4= t 'buy_sell_market.checkout.labels.billing_address'
+    %p= render 'dashboard/orders/address', address: purchase.billing_address
+
+
+  .col-sm-3
+    %h4= t 'buy_sell_market.checkout.labels.shipping_address'
+    %p= render 'dashboard/orders/address', address: purchase.shipping_address
+
+  .col-sm-3
+    %h4= t 'buy_sell_market.checkout.labels.shipping_method'
+    - purchase.shipments.each do |shipment|
+      %p
+        - unless shipment.is_pickup?
+          = t('buy_sell_market.products.shipping.from')
+          %strong= shipment.outbound? ? purchase.company.name : purchase.user.name
+          = t('buy_sell_market.products.shipping.via')
+          %br
+        %strong=shipment.name
+        - if shipment.tracking_number.present?
+          %br
+          = t('buy_sell_market.products.shipping.tracking_number', number: shipment.tracking_number)
+
+  .col-sm-3
+    %h4= t 'buy_sell_market.checkout.labels.payment'
+
+    %p
+      - if @charge_info && @charge_info.response['card']
+        #{t('buy_sell_market.checkout.labels.ending_in')} #{@charge_info.response['card']['last4']}
+        #{@charge_info.response['card']['name']}
+      - else
+        = t 'buy_sell_market.checkout.labels.na'
+
+%h2= t 'buy_sell_market.checkout.labels.order_summary'
+- item = purchase.transactable_line_items.first
+.table-responsive
+  %table.table
+    %thead
+      %th= t 'buy_sell_market.checkout.labels.item'
+      - unless item.included_tax_total_rate.zero?
+        %th= t 'buy_sell_market.checkout.labels.net'
+        %th= t 'buy_sell_market.checkout.labels.tax'
+      %th= t 'buy_sell_market.checkout.labels.price'
+      - unless item.additional_tax_total_rate.zero?
+        %th= t 'buy_sell_market.checkout.labels.tax'
+        %th= t 'buy_sell_market.checkout.labels.gross'
+      %th= t 'buy_sell_market.checkout.labels.qty'
+      %th= t 'buy_sell_market.checkout.labels.total'
+
+    %tbody
+      - purchase.line_items.decorate.sort_by { |l| l.cart_position }.each do |item|
+        %tr
+          %td= item.name_with_link
+          - unless item.included_tax_total_rate.zero?
+            %td= item.net_price
+            %td= item.included_tax_total_rate.to_s + "%"
+          %td= item.unit_price
+          - unless item.additional_tax_total_rate.zero?
+            %td= item.additional_tax_total_rate.to_s + "%"
+            %td= item.gross_price
+          %td= item.quantity
+          %td= item.total_price
+
+.row
+  .col-sm-4.col-sm-push-8
+
+    %table.payment-totals
+      %tr
+        %th.total= t 'buy_sell_market.checkout.labels.total2'
+        %td.total= humanized_money_with_cents_and_symbol purchase.total_amount
+
+%br/
+
+- if purchase.completed_at
+  %small= t('orders.labels.order_placed_html', date: l(purchase.completed_at.to_date, format: :long))

@@ -1,11 +1,6 @@
-- shipping_categories.each do |shipping_category|
+- @shipping_profiles.each do |shipping_category|
   = shipping_category.name
   = link_to t('general.edit'), '#', data: { href: edit_instance_admin_shipping_options_shipping_profile_path(shipping_category), modal: true, 'modal-class' => 'shipping_profiles_modal' }
-  - if shipping_category.is_system_category_enabled?
-    = link_to t('general.disable'), disable_category_instance_admin_shipping_options_shipping_profile_path(shipping_category), :method => :post
-  - else
-    = link_to t('general.enable'), enable_category_instance_admin_shipping_options_shipping_profile_path(shipping_category), :method => :post
-
   = link_to t('general.delete'), instance_admin_shipping_options_shipping_profile_path(shipping_category), :method => :delete, data: { confirm: t('confirmations.are_you_sure') }
   %br
 

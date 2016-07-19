@@ -21,9 +21,9 @@ class AvailabilityRule::HourlyListingStatus
   end
 
   def build_time_quantities
-    @transactable.reservations.confirmed.joins(:periods).
+    @transactable.orders.reservations.confirmed.joins(:periods).
      where(:reservation_periods => { :date => @date }).
-     select('reservations.quantity as quantity_booked, reservation_periods.start_minute, reservation_periods.end_minute').
+     select('orders.quantity as quantity_booked, reservation_periods.start_minute, reservation_periods.end_minute').
      each do |period|
       if period.start_minute.present?
         range = (period.start_minute.to_i..period.end_minute.to_i)

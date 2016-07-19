@@ -1,0 +1,28 @@
+- if only_inputs.empty? || only_inputs.include?(:payment_documents)
+  - if f.object.payment_documents.present?
+    = t 'buy_sell_market.checkout.labels.the_following_documents'
+    .document-requirements
+      = f.simple_fields_for :payment_documents do |pd|
+        = pd.hidden_field :id
+        = pd.hidden_field :user_id
+        .row-fluid
+          .span3.title
+            = pd.simple_fields_for :payment_document_info do |pdi|
+              = pdi.hidden_field :attachment_id
+              = pdi.hidden_field :document_requirement_id
+              - if pd.object.is_file_required?
+                %abbr{ title: "required" } *
+              = pdi.object.document_requirement.label
+          .span9.upload{ 'data-upload' => true }
+            = pd.input :file, as: :file, label: false, input_html: { hidden: true }
+            = pd.input :file_cache, as: :hidden
+            - if pd.object.file.present?
+              %button{ type: 'button', class: 'btn-upload-payment-document', 'data-upload-document' =>true }
+                = t 'buy_sell_market.checkout.labels.choose_another_file'
+              %span{ "data-file-name" => true }
+                = link_to pd.object.file.file_name, pd.object.file.url, target: '_blank'
+            - else
+              %button{ type: 'button', class: 'btn-upload-payment-document', 'data-upload-document' =>true }
+                = t 'buy_sell_market.checkout.labels.choose_file'
+              %span{ "data-file-name" => true }
+                = t 'buy_sell_market.checkout.labels.no_file_chosen'

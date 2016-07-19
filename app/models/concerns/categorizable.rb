@@ -10,7 +10,9 @@ module Categorizable
     validate :validate_mandatory_categories, unless: ->(record) { record.categories_not_required}
 
     def validate_mandatory_categories
-      transactable_type.categories.mandatory.each do |mandatory_category|
+      return true if Order === self
+      # it could be use by just hala
+      (Order === self ? reservation_type : transactable_type).categories.mandatory.each do |mandatory_category|
         errors.add(mandatory_category.name, I18n.t('errors.messages.blank')) if common_categories(mandatory_category).blank?
       end
     end

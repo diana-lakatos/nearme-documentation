@@ -1,3 +1,0 @@
-Weight,Weight Unit,Height,Height Unit,Width,Width Unit,Depth,Depth Unit,Brand,Product Name,Product Description,Price,Available On,Meta Description,Meta Keywords,Public,Shippo Enabled,Draft,Shipping Category Name,Image URL,Industry,Product External Id
-50,oz,10,in,20,in,30,in,brand 1,product 1,description 1,100,15.12.12,meta description 1,meta keywords,true,false,false,ship,http://www.example.com/image1.jpg,Retail,data-product-1
-40,oz,20,in,20,in,30,in,brand 2,product 2,description 2,200,15.12.15,meta description 2,meta keywords,false,true,false,ship,http://www.example.com/image2.jpg,Retail,data-product-2

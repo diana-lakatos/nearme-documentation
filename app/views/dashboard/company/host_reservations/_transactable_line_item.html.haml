@@ -1,0 +1,20 @@
+- unit_price = f.object.unit_price.zero? ? @reservation.transactable_line_items.detect { |li| li.unit_price > 0 }.unit_price : f.object.unit_price
+.row.nested-fields
+  .col-xs-12.col-md-7
+    = f.input :name, required: true
+  .col-xs-3.col-md-2
+    = f.input :quantity, required: true, input_html: { 'data-hours-input': true}
+  .col-xs-3.col-md-1
+    %label.control-label Rate
+    .rate{ data: { amount: unit_price.cents } }
+      = humanized_money_with_cents_and_symbol(unit_price)
+  .col-xs-6.col-md-2
+    .row
+      .col-xs-8
+        %label.control-label= t('dashboard.host_reservations.complete_reservation.subtotal')
+        .sub-total{ data: { subtotal: true, currency: @reservation.unit_price.symbol, amount: f.object.total_price } }
+          = humanized_money_with_cents_and_symbol(f.object.total_price)
+      .col-xs-4
+        - if @reservation.transactable_line_items.last.id != f.object.id
+          = link_to_remove_association f, class: 'remove_fields' do
+            %button.action--remove

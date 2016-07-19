@@ -36,7 +36,7 @@ class InstanceAdmin::Manage::TransactableTypes::FormComponentsControllerTest < A
       assert_equal [{ 'location' => 'address'}, {'transactable' => 'price'}], form_component.form_fields
       assert_equal @transactable_type.id, form_component.form_componentable_id
       assert_equal FormComponent::SPACE_WIZARD, form_component.form_type
-      assert_redirected_to instance_admin_manage_service_type_form_components_path(@transactable_type)
+      assert_redirected_to instance_admin_manage_transactable_type_form_components_path(@transactable_type)
     end
 
     should 'render form if validation errors' do
@@ -70,7 +70,7 @@ class InstanceAdmin::Manage::TransactableTypes::FormComponentsControllerTest < A
       assert_equal [{ 'location' => 'address'}, {'transactable' => 'price'}], form_component.form_fields
       assert_equal @transactable_type.id, form_component.form_componentable_id
       assert_equal FormComponent::SPACE_WIZARD, form_component.form_type
-      assert_redirected_to instance_admin_manage_service_type_form_components_path(@transactable_type)
+      assert_redirected_to instance_admin_manage_transactable_type_form_components_path(@transactable_type)
     end
 
     should 'render form if validation errors' do
@@ -88,7 +88,7 @@ class InstanceAdmin::Manage::TransactableTypes::FormComponentsControllerTest < A
     assert_difference 'FormComponent.count', -1 do
       delete :destroy, transactable_type_id: @transactable_type.id, id: @form_component.id
     end
-    assert_redirected_to instance_admin_manage_service_type_form_components_path(@transactable_type)
+    assert_redirected_to instance_admin_manage_transactable_type_form_components_path(@transactable_type)
   end
 
 end

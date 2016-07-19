@@ -87,6 +87,9 @@ module.exports = class BookingListing
   canReserveDaily: ->
     'day' in @possibleUnits || 'night' in @possibleUnits
 
+  canBePurchased: ->
+    'item' in @possibleUnits
+
   canBeSubscribed: ->
     'subscription_day' in @possibleUnits || 'subscription_month' in @possibleUnits
 
@@ -95,6 +98,9 @@ module.exports = class BookingListing
 
   isSubscriptionBooking: ->
     @container.find('.pricing-tabs li.active').data('unit') && @container.find('.pricing-tabs li.active').data('unit').indexOf('subscription') > -1
+
+  isPurchaseAction: ->
+    $('.pricing-tabs li.active').data('unit') == 'item'
 
   isOvernightBooking: ->
     @container.find('.pricing-tabs li.active').data('unit') == 'night'
@@ -161,12 +167,13 @@ module.exports = class BookingListing
     @availability.openFor(date)
 
   isBooked: ->
-      hasDate = @bookedDates().length > 0
-      hasTime = if @isReservedHourly() && @withCalendars()
-        @minutesBooked() > 0
-      else
-        true
-      hasDate and hasTime
+    return true if @canBePurchased()
+    hasDate = @bookedDates().length > 0
+    hasTime = if @isReservedHourly() && @withCalendars()
+      @minutesBooked() > 0
+    else
+      true
+    hasDate and hasTime
 
 
   # Return the days where there exist bookings
@@ -185,6 +192,8 @@ module.exports = class BookingListing
       @exclusivePrice
     else if @isSubscriptionBooking()
       @pricings[@currentPricingId].price * @getQuantity()
+    else if @canBePurchased()
+      @fixedPrice * @getQuantity()
     else
       @priceCalculator().getPrice()
 

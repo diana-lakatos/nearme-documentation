@@ -18,8 +18,8 @@ class InstanceAdmin::Manage::TransactableTypes::DataUploadsController < Instance
 
   def set_breadcrumbs_title
     @breadcrumbs_title = BreadcrumbsList.new(
-      { :url => instance_admin_manage_transactable_types_path, :title => t('instance_admin.manage.service_types.service_types') },
-      { :title => t('instance_admin.manage.service_types.data_upload') }
+      { :url => instance_admin_manage_transactable_types_path, :title => t('instance_admin.manage.transactable_types.transactable_types') },
+      { :title => t('instance_admin.manage.transactable_types.data_upload') }
     )
   end
 end

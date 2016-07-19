@@ -115,10 +115,10 @@ en:
             created: 'User has been banned from the marketplace.'
             not_created: 'User has not been banned from the marketplace.'
             deleted: 'User has been unbanned from the marketplace.'
-        service_types:
-          created: 'Service Type created.'
-          updated: 'Service Type updated.'
-          deleted: 'Service Type deleted.'
+        transactable_types:
+          created: 'Transactable Type created.'
+          updated: 'Transactable Type updated.'
+          deleted: 'Transactable Type deleted.'
         category:
           created: 'Category group created.'
           updated: 'Category group updated.'
@@ -155,10 +155,6 @@ en:
           deleted: 'Upsell charge has been deleted'
         rating_systems:
           updated: 'Rating systems were successfully updated.'
-        offer_types:
-          created: 'Offer Type created'
-          updated: 'Offer Type updated'
-          deleted: 'Offer Type deleted'
         custom_theme_assets:
           created: 'Asset created'
           updated: 'Asset updated'
@@ -167,10 +163,6 @@ en:
           created: 'Custom Model created'
           updated: 'Custom Model updated'
           deleted: 'Custom Model deleted'
-        offers:
-          created: 'Offer created'
-          updated: 'Offer updated'
-          deleted: 'Offer deleted'
         reservation_types:
           created: 'Reservation Type created'
           updated: 'Reservation Type updated'
@@ -568,7 +560,7 @@ en:
     reservations:
       credit_card_will_be_charged: "Your credit card will be charged when your reservation is confirmed by the host."
       invalid_operation:  "Not a valid reservation operation."
-      booking_failed:  "Your reservation was canceled."
+      booking_failed:  "Your payment was canceled."
       reservation_cancelled: "You have cancelled your reservation."
       reservation_not_cancellable: "This reservation can not be canceled anymore."
       reservation_made: "Your reservation has been made! %{message}"

@@ -48,9 +48,10 @@ class SellerAttachment < Ckeditor::Asset
     elsif accessible_to_purchasers?
       if user.present?
         if assetable.is_a?(Transactable)
-            !!user.reservations.confirmed.find_by(transactable_id: assetable_id)
-        else assetable.is_a?(Spree::Product)
-          !!user.orders.complete.map { |o| o.line_items.map(&:product) }.flatten.include?(assetable)
+          LineItem::Transactable.
+            where(line_item_source_id: assetable_id).
+            joins("INNER JOIN orders ON orders.id = line_items.line_itemable_id").
+            where("orders.state = 'confirmed'").any?
         end
       else
         false

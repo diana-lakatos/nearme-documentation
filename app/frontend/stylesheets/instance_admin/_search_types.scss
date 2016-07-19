@@ -1,4 +1,4 @@
-#main-container.service_types #main-container.product_types{
+#main-container.service_types #main-container.transactable_types {
   max-width: 848px;
   min-width: 810px;
   margin-right: 355px;
@@ -26,7 +26,7 @@
     }
   }
 }
-.service_types, .product_types {
+.service_types, .transactable_types {
   input[type='text'] {
     padding: 3px 5px;
     border: 1px solid #eee;

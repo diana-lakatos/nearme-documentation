@@ -28,7 +28,7 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
         WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::ManuallyConfirmed, @recurring_booking.id)
         track_recurring_booking_update_profile_informations
         event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
-        if @recurring_booking.paid_until.present?
+        if @recurring_booking.reload.paid_until.present?
           flash[:success] = t('flash_messages.manage.reservations.reservation_confirmed')
         else
           @recurring_booking.overdue!
@@ -41,7 +41,7 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
         ].join(' ')
       end
     end
-    redirect_to dashboard_company_host_recurring_bookings_url
+    redirect_to :back
   end
 
   def rejection_form
@@ -57,7 +57,7 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
     else
       flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
     end
-    redirect_to dashboard_company_host_recurring_bookings_url
+    redirect_to :back
     render_redirect_url_as_json if request.xhr?
   end
 
@@ -69,7 +69,7 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
     else
       flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
     end
-    redirect_to dashboard_company_host_recurring_bookings_url
+    redirect_to :back
   end
 
   private

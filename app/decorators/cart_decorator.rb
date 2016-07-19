@@ -12,16 +12,18 @@ class CartDecorator
     @cart_orders ||= if @order
       [@order]
     else
-      @user.cart_orders
+      @user.cart_orders.decorate
     end
   end
+
+  alias orders cart_orders
 
   def items_count
     cart_orders.size
   end
 
   def line_items_count
-    cart_orders.map(&:line_items).flatten.size
+    cart_orders.map(&:transactable_line_items).flatten.size
   end
 
   def total
@@ -42,11 +44,7 @@ class CartDecorator
   end
 
   def total_display
-    "#{Currency.find_by_iso_code(Spree::Config.currency).try(:symbol)} #{content_tag(:span, humanized_money(total.to_money), data: {"cart-total": true})}"
-  end
-
-  def orders
-    cart_orders.decorate
+    "#{orders.first.currency.try(:symbol)} #{content_tag(:span, humanized_money(total.to_money), data: {"cart-total": true})}"
   end
 
   def empty?

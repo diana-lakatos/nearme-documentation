@@ -3,13 +3,14 @@ class ReservationPeriod < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
   belongs_to :reservation
+  belongs_to :old_reservation
 
   validates :date, :presence => true
   validate :validate_start_end_times
 
   # attr_accessible :date, :start_minute, :end_minute
 
-  delegate :listing, :time_zone, :to => :reservation, allow_nil: true
+  delegate :transactable, :time_zone, :to => :reservation, allow_nil: true
 
   # Returns the number of hours reserved on this date.
   # If no hourly time specified, it is assumed that the reservation is for all open
@@ -30,15 +31,15 @@ class ReservationPeriod < ActiveRecord::Base
   end
 
   def start_minute
-    super || listing.try { |l| l.availability.try(:open_minute_for, date) }
+    super || transactable.try { |l| l.availability.try(:open_minute_for, date) }
   end
 
   def end_minute
-    super || listing.try { |l| l.availability.try(:close_minute_for, date) }
+    super || transactable.try { |l| l.availability.try(:close_minute_for, date) }
   end
 
   def bookable?
-    listing.available_on?(date, reservation.quantity, self[:start_minute], self[:end_minute])
+    transactable.available_on?(date, reservation.quantity, self[:start_minute], self[:end_minute])
   end
 
   def as_formatted_string
@@ -46,7 +47,7 @@ class ReservationPeriod < ActiveRecord::Base
   end
 
   def date_with_time
-    if listing.event_booking?
+    if transactable.event_booking?
       Minute.new(start_minute, date).to_time.to_formatted_s(:db)
     else
       date.strftime('%Y-%m-%d')

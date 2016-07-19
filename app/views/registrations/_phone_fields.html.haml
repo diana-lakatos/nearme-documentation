@@ -1,7 +1,7 @@
 %div{'data-phone-fields-container' => true }
-  = f.input :country_name, :label => "Country", :as => :select, :collection => user_country_name_options, :selected => user_country_default(@country), :input_html => { 'data-country-selector' => true, :class => "select2" }, :required => true, include_blank: true
-  = f.input :phone, wrapper: :bs_phone, required: true, input_html: { data: { phone: true } }
-  = f.input :mobile_number, wrapper: :bs_phone, input_html: { data: { mobile_number: true } }
+  = f.input :country_name, :label => "Country", :as => :select, :collection => user_country_name_options, :selected => user_country_default(f.object.try(:country_name) || @country), :input_html => { 'data-country-selector' => true, :class => "select2" }, :required => true, include_blank: true
+  = f.input :phone, wrapper: :bs_phone, required: is_required?(f.object, :phone), input_html: { data: { phone: true } }
+  = f.input :mobile_number, required: is_required?(f.object, :mobile_number), wrapper: :bs_phone, input_html: { data: { mobile_number: true } }
   .control-group
     .controls
       = label_tag do

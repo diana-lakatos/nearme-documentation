@@ -12,7 +12,7 @@ class RecurringBookingDrop < BaseDrop
   #   total_price as a string (including currency symbol etc.)
   # pending?
   #   returns true if the payment status is pending
-  # listing
+  # transactable
   #   service object for which the booking occurred
   # credit_card_payment?
   #   returns true if the payment method for the reservation was credit card
@@ -26,14 +26,14 @@ class RecurringBookingDrop < BaseDrop
   #   total amount payable to host formatted as a string with currency symbol and cents
   delegate :quantity, :subtotal_price, :guest_service_fee, :total_price, :pending?,
     :credit_card_payment?, :rejection_reason, :owner, :has_service_fee?,
-    :additional_charges, :with_delivery?, :last_unpaid_amount, :total_payable_to_host_formatted,
+    :additional_charges, :with_delivery?, :last_unpaid_amount, :total_payable_to_host_formatted, :total_units_text,
     to: :recurring_booking
 
   # transactable_type
   #   the object describing the type of item to be booked (e.g. desk, room etc.)
   # action_hourly_booking?
-  #   returns true if hourly booking is available for this listing
-  delegate :transactable_type, :action_hourly_booking?, to: :listing
+  #   returns true if hourly booking is available for this transactable
+  delegate :transactable_type, :action_hourly_booking?, to: :transactable
 
   # bookable_noun
   #   string representing the item to be booked (e.g. desk, room etc.)
@@ -45,8 +45,8 @@ class RecurringBookingDrop < BaseDrop
     @recurring_booking = recurring_booking.decorate
   end
 
-  def listing
-    @listing_drop ||= recurring_booking.listing.to_liquid
+  def transactable
+    @transactable_drop ||= recurring_booking.transactable.to_liquid
   end
 
   def location
@@ -60,7 +60,7 @@ class RecurringBookingDrop < BaseDrop
 
   # returns the search query URL for the same type of service as this recurring_booking and for this location
   def search_url
-    routes.search_path(q: location_query_string(@recurring_booking.listing.location), transactable_type_id: @recurring_booking.listing.transactable_type.id)
+    routes.search_path(q: location_query_string(@recurring_booking.transactable.location), transactable_type_id: @recurring_booking.transactable.transactable_type.id)
   end
 
   # url to the dashboard area for managing own recurring_bookings
@@ -84,6 +84,11 @@ class RecurringBookingDrop < BaseDrop
     routes.dashboard_user_recurring_bookings_path(token_key => @recurring_booking.owner.temporary_token, track_email_event: true)
   end
 
+  # reservation dates separated with <hr>
+  def dates_summary_with_hr
+    "#{I18n.t('recurring_reservations_review.starts_from')} #{I18n.l(@recurring_booking.starts_at.to_date, format: :short)}"
+  end
+
   # url to the dashboard area for managing received bookings
   def manage_guests_dashboard_url
     routes.dashboard_company_host_recurring_bookings_path
@@ -96,17 +101,17 @@ class RecurringBookingDrop < BaseDrop
 
   # url for confirming the recurring booking
   def reservation_confirm_url
-    routes.confirm_dashboard_company_host_recurring_booking_path(@recurring_booking, listing_id: @recurring_booking.listing, token_key => @recurring_booking.creator.try(:temporary_token))
+    routes.confirm_dashboard_company_host_recurring_booking_path(@recurring_booking, transactable_id: @recurring_booking.transactable, token_key => @recurring_booking.creator.try(:temporary_token))
   end
 
   # url for confirming the recurring booking with tracking
   def reservation_confirm_url_with_tracking
-    routes.confirm_dashboard_company_host_recurring_booking_path(@recurring_booking, listing_id: @recurring_booking.listing, token_key => @recurring_booking.creator.try(:temporary_token), :track_email_event => true)
+    routes.confirm_dashboard_company_host_recurring_booking_path(@recurring_booking, transactable_id: @recurring_booking.transactable, token_key => @recurring_booking.creator.try(:temporary_token), :track_email_event => true)
   end
 
   # reservation date (first date)
   def start_date
-    @recurring_booking.start_on
+    @recurring_booking.starts_at
   end
 
   # string representing the plural of the item to be booked (e.g. desks, rooms etc.)

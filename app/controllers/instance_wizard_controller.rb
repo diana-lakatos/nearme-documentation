@@ -73,19 +73,15 @@ class InstanceWizardController < ActionController::Base
     Utils::FormComponentsCreator.new(ipt).create!
     ipt = @instance.instance_profile_types.create!(name: 'Buyer', profile_type: InstanceProfileType::BUYER)
     Utils::FormComponentsCreator.new(ipt).create!
-    if params[:marketplace_type] == "Buy/Sell"
-      tp = @instance.product_types.create(name: @instance.bookable_noun)
-    else
-      tp = @instance.transactable_types.create(
-        name: @instance.bookable_noun,
-        action_free_booking: "1",
-        action_hourly_booking: "1",
-        action_daily_booking: "1",
-        action_weekly_booking: "1",
-        action_monthly_booking: "1",
-        availability_options: { "defer_availability_rules" => true, "confirm_reservations" => { "default_value" => true, "public" => true } }
-      )
-    end
+    tp = @instance.transactable_types.create(
+      name: @instance.bookable_noun,
+      action_free_booking: "1",
+      action_hourly_booking: "1",
+      action_daily_booking: "1",
+      action_weekly_booking: "1",
+      action_monthly_booking: "1",
+      availability_options: { "defer_availability_rules" => true, "confirm_reservations" => { "default_value" => true, "public" => true } }
+    )
 
     tp.create_rating_systems
     Utils::FormComponentsCreator.new(tp).create!

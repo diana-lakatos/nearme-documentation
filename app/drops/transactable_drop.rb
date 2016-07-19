@@ -6,8 +6,6 @@ class TransactableDrop < BaseDrop
   include CategoriesHelper
   include ClickToCallButtonHelper
 
-  attr_reader :transactable
-
   # location_id
   #   numeric identifier of the location object to which this listing belongs
   # name
@@ -63,7 +61,7 @@ class TransactableDrop < BaseDrop
     :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at,
     :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, :attachments, :confirm_reservations,
     :to_key, :model_name, :deposit_amount_cents, :customizations, :to_param, :hours_for_guest_to_confirm_payment, :availability_exceptions,
-    :action_free_booking?, :average_rating, to: :transactable
+    :action_free_booking?, :average_rating, :time_based_booking?, to: :source
 
   # action_price_per_unit
   #   returns true if there is a single unit available of the transactable item for a given time period
@@ -84,10 +82,6 @@ class TransactableDrop < BaseDrop
   # action_rfq?
   #   returns true if request for quote is available for this listing
   delegate :action_rfq?, to: :action_type
-
-  def initialize(transactable)
-    @transactable = transactable
-  end
 
   def class_name
     'Transactable'
@@ -125,19 +119,19 @@ class TransactableDrop < BaseDrop
 
   # availability for this listing as a string in a human-readable format
   def availability
-    pretty_availability_sentence(@transactable.availability).to_s
+    pretty_availability_sentence(@source.availability).to_s
   end
 
   # availability by days
   def availability_by_days
     days = {}
 
-    if @transactable.availability.present?
-      @transactable.availability.rules.each do |rule|
+    if @source.availability.present?
+      @source.availability.rules.each do |rule|
         rule.days.each do |day|
           days[day] ||= []
 
-          days[day] << [rule.open_hour, rule.close_hour, pretty_availability_rule_time_with_time_zone(rule, @transactable.timezone)]
+          days[day] << [rule.open_hour, rule.close_hour, pretty_availability_rule_time_with_time_zone(rule, @source.timezone)]
         end
       end
     end
@@ -164,8 +158,8 @@ class TransactableDrop < BaseDrop
     days = {}
     (0..6).each { |day| days[day] = false }
 
-    if @transactable.availability.present?
-      @transactable.availability.rules.each do |rule|
+    if @source.availability.present?
+      @source.availability.rules.each do |rule|
         rule.days.each do |day|
           days[day] = true
         end
@@ -187,12 +181,12 @@ class TransactableDrop < BaseDrop
 
   # url to the dashboard area for managing received bookings
   def manage_guests_dashboard_url
-    routes.dashboard_company_host_reservations_path(token_key => @transactable.administrator.try(:temporary_token))
+    routes.dashboard_company_host_reservations_path(token_key => @source.administrator.try(:temporary_token))
   end
 
   # url to the dashboard area for managing received bookings, with tracking
   def manage_guests_dashboard_url_with_tracking
-    routes.dashboard_company_host_reservations_path(token_key => @transactable.administrator.try(:temporary_token), :track_email_event => true)
+    routes.dashboard_company_host_reservations_path(token_key => @source.administrator.try(:temporary_token), :track_email_event => true)
   end
 
   # url to the search section of the marketplace, with tracking
@@ -202,7 +196,7 @@ class TransactableDrop < BaseDrop
 
   # url to display favorite button
   def wish_list_path
-    routes.wish_list_path(id: @transactable.id, wishlistable_type: 'Transactable')
+    routes.wish_list_path(id: @source.id, wishlistable_type: 'Transactable')
   end
 
   def wish_list_bulk_path
@@ -211,17 +205,17 @@ class TransactableDrop < BaseDrop
 
   # has inappropriate report for user
   def inappropriate_report_path
-    routes.inappropriate_report_path(id: @transactable.id, reportable_type: "Transactable")
+    routes.inappropriate_report_path(id: @source.id, reportable_type: "Transactable")
   end
 
   # url to the listing page for this listing
   def url
-    @transactable.show_url
+    @source.show_url
   end
   alias_method :listing_url, :url
 
   def show_path
-    @transactable.show_path
+    @source.show_path
   end
 
   # url to the listing page for this listing - location prefixed. Deprecated, pointing to url
@@ -231,7 +225,7 @@ class TransactableDrop < BaseDrop
 
   # street name for the location of this listing
   def street
-    @transactable.location.street
+    @source.location.street
   end
 
   # returns the url to the first image for this listing, or, if missing, the url to a placeholder image
@@ -241,7 +235,7 @@ class TransactableDrop < BaseDrop
 
   # returns a string of the type "From $currency_amount / period"
   def from_money_period
-    price_information(@transactable)
+    price_information(@source)
   end
 
   def space_placeholder
@@ -251,7 +245,7 @@ class TransactableDrop < BaseDrop
 
   # url to the section in the app for managing this listing, with tracking
   def manage_listing_url_with_tracking
-    routes.edit_dashboard_company_transactable_type_transactable_path(@transactable.location, @transactable, track_email_event: true, token_key => @transactable.administrator.try(:temporary_token))
+    routes.edit_dashboard_company_transactable_type_transactable_path(@source.location, @source, track_email_event: true, token_key => @source.administrator.try(:temporary_token))
   end
 
   # url to the application wizard for publishing a new listing
@@ -266,13 +260,13 @@ class TransactableDrop < BaseDrop
 
   # list of the names of the amenities defined for this listing
   def amenities
-    @amenities ||= @transactable.amenities.order('name ASC').pluck(:name)
+    @amenities ||= @source.amenities.order('name ASC').pluck(:name)
   end
 
   # url to the section of the app for sending a message to the administrator
   # of this listing using the internal messaging platform
   def new_user_message_path
-    routes.new_listing_user_message_path(@transactable)
+    routes.new_listing_user_message_path(@source)
   end
 
   # array of photo items; each photo item is a hash with the keys being:
@@ -280,41 +274,41 @@ class TransactableDrop < BaseDrop
   #   golden - photo having a dimension of the golden type
   #   large - photo having a dimension of the large type
   def photos
-    @transactable.photos_metadata
+    @source.photos_metadata
   end
 
   # returns true if price_per_unit is enabled for this listing
   def price_per_unit?
-    @transactable.action_type.pricings.any?(&:price_per_measurable_unit?)
+    @source.action_type.pricings.any?(&:price_per_measurable_unit?)
   end
 
   # returns the exclusive price set for this listing as a string
   def exclusive_price
-    @transactable.event_booking.pricing.exclusive_price.to_s
+    @source.event_booking.pricing.exclusive_price.to_s
   end
 
   # returns the url to the section in the app for opening a new
   # support ticket
   def new_ticket_url
-    routes.new_listing_ticket_path(@transactable)
+    routes.new_listing_ticket_path(@source)
   end
 
   # returns the total number of reviews for this listing
   def reviews_count
-    @transactable.reviews.count
+    @source.reviews.count
   end
 
   # returns hash of categories { "<name>" => { "name" => '<translated_name', "children" => [<collection of chosen values] } }
   def categories
     if @categories.nil?
-      @categories = build_categories_hash_for_object(@transactable, @transactable.transactable_type.categories.roots.includes(:children))
+      @categories = build_categories_hash_for_object(@source, @source.transactable_type.categories.roots.includes(:children))
     end
     @categories
   end
 
   # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => 'string with all children separated with comma' } }
   def formatted_categories
-    build_formatted_categories(@transactable)
+    build_formatted_categories(@source)
   end
 
   # returns whether or not the listing has seller attachments
@@ -324,25 +318,25 @@ class TransactableDrop < BaseDrop
 
   # url for sharing this location on Facebook
   def facebook_social_share_url
-    routes.new_listing_social_share_path(@transactable, provider: 'facebook', track_email_event: true)
+    routes.new_listing_social_share_path(@source, provider: 'facebook', track_email_event: true)
   end
 
   # url for sharing this location on Twitter
   def twitter_social_share_url
-    routes.new_listing_social_share_path(@transactable, provider: 'twitter', track_email_event: true)
+    routes.new_listing_social_share_path(@source, provider: 'twitter', track_email_event: true)
   end
 
   # url for sharing this location on LinkedIn
   def linkedin_social_share_url
-    routes.new_listing_social_share_path(@transactable, provider: 'linkedin', track_email_event: true)
+    routes.new_listing_social_share_path(@source, provider: 'linkedin', track_email_event: true)
   end
 
   def booking_module_path
-    routes.booking_module_listing_path(@transactable)
+    routes.booking_module_listing_path(@source)
   end
 
   def click_to_call_button
-    build_click_to_call_button_for_transactable(@transactable)
+    build_click_to_call_button_for_transactable(@source)
   end
 
   def last_search
@@ -351,7 +345,7 @@ class TransactableDrop < BaseDrop
 
   # is schedule booking enabled for this listing
   def schedule_booking?
-    @transactable.event_booking?
+    @source.event_booking?
   end
 
   def actions_allowed?

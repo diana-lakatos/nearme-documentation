@@ -4,8 +4,6 @@ class UserDrop < BaseDrop
   include CategoriesHelper
   include ClickToCallButtonHelper
 
-  attr_reader :user
-
   # id
   #   unique id of the user
   # name
@@ -48,21 +46,19 @@ class UserDrop < BaseDrop
   #   returns an array of custom attributes values for buyer profile
   # seller_average_rating
   #   average rating of this user as a seller
+  # default_wish_list
+  #   return default wish list
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of,
     :with_mutual_friendship_source, :first_name, :middle_name, :last_name,
     :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
     :country_name, :phone, :current_address, :is_trusted?, :reservations,
     :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
-    :seller_average_rating, to: :user
-
-  def initialize(user)
-    @user = user.decorate
-  end
+    :seller_average_rating, :default_wish_list, to: :source
 
   # string containing the location of the user making use of the various fields
   # the user has filled in for his profile
   def display_location
-    @user.decorate.display_location
+    @source.decorate.display_location
   end
 
   # plural of the user's name
@@ -77,22 +73,22 @@ class UserDrop < BaseDrop
 
   # returns true if the profile of the user has been marked as public
   def public_profile?
-    @user.public_profile
+    @source.public_profile
   end
 
   # returns true if user is authenticated with facebook
   def facebook_connections
-    @user.decorate.social_connections_for('facebook').present?
+    @source.decorate.social_connections_for('facebook').present?
   end
 
   # returns true if user is authenticated with linkedin
   def linkedin_connections
-    @user.decorate.social_connections_for('linkedin').present?
+    @source.decorate.social_connections_for('linkedin').present?
   end
 
   # returns true if user is authenticated with twitter
   def twitter_connections
-    @user.decorate.social_connections_for('twitter').present?
+    @source.decorate.social_connections_for('twitter').present?
   end
 
   # path to the search section in the application
@@ -107,18 +103,18 @@ class UserDrop < BaseDrop
 
   # returns true if the city where the user books items is present
   def reservation_city?
-    @user.reservations.first.listing.location[:city].present?
+    @source.orders.reservations.first.listing.location[:city].present?
   end
 
   # the city where the user books items
   def reservation_city
-    @user.reservations.first.listing.location.city
+    @source.orders.reservations.first.listing.location.city
   end
 
   # string identifying the location where the user books items
   # this method may be used if reservation_city is not present
   def reservation_name
-    self.reservation_city? ? @user.reservations.first.listing.location.city : @user.reservations.first.listing.location.name
+    self.reservation_city? ? @source.orders.reservations.first.listing.location.city : @source.orders.reservations.first.listing.location.name
   end
 
   # url to the app wizard for adding a new listing to the system
@@ -128,7 +124,7 @@ class UserDrop < BaseDrop
 
   # url to the app wizard for adding a new listing to the system, with tracking
   def space_wizard_list_url_with_tracking
-    routes.space_wizard_list_path(token_key => @user.try(:temporary_token), track_email_event: true)
+    routes.space_wizard_list_path(token_key => @source.try(:temporary_token), track_email_event: true)
   end
 
   def manage_locations_url
@@ -140,7 +136,7 @@ class UserDrop < BaseDrop
   end
 
   def manage_locations_url_with_tracking_and_token
-    routes.dashboard_company_transactable_types_path(token_key => @user.try(:temporary_token), track_email_event: true)
+    routes.dashboard_company_transactable_types_path(token_key => @source.try(:temporary_token), track_email_event: true)
   end
 
   # url to the section in the app for editing a user's profile
@@ -150,38 +146,38 @@ class UserDrop < BaseDrop
 
   # url to the section in the app for editing a user's profile
   def edit_user_registration_url(with_token = false)
-    routes.edit_user_registration_path(token_key => @user.try(:temporary_token))
+    routes.edit_user_registration_path(token_key => @source.try(:temporary_token))
   end
 
   # url to the section in the app for editing a user's profile, with authentication token
   def edit_user_registration_url_with_token
-    routes.edit_user_registration_path(token_key => @user.try(:temporary_token))
+    routes.edit_user_registration_path(token_key => @source.try(:temporary_token))
   end
 
   # url to the section in the app for editing a user's profile, with authentication token and tracking
   def edit_user_registration_url_with_token_and_tracking
-    routes.edit_user_registration_path(token_key => @user.try(:temporary_token), :track_email_event => true)
+    routes.edit_user_registration_path(token_key => @source.try(:temporary_token), :track_email_event => true)
   end
 
   # url to reset password
   def reset_password_url
-    routes.edit_user_password_url(:reset_password_token => @user.try(:reset_password_token))
+    routes.edit_user_password_url(:reset_password_token => @source.try(:reset_password_token))
   end
 
   # url to a user's public profile
   def user_profile_url
-    routes.profile_path(@user.slug)
+    routes.profile_path(@source.slug)
   end
 
   # url for seller/buyer/default user profile
   def profile_url_for_search
     case @context['transactable_type'].profile_type
     when UserProfile::SELLER
-      routes.seller_profile_path(@user.slug)
+      routes.seller_profile_path(@source.slug)
     when UserProfile::BUYER
-      routes.buyer_profile_path(@user.slug)
+      routes.buyer_profile_path(@source.slug)
     else
-      routes.profile_path(@user.slug)
+      routes.profile_path(@source.slug)
     end
   end
 
@@ -194,43 +190,43 @@ class UserDrop < BaseDrop
   end
 
   def show_blog_tab?
-    PlatformContext.current.instance.blogging_enabled?(@user) && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
+    PlatformContext.current.instance.blogging_enabled?(@source) && @source.blog.present? && @source.blog.enabled? && !hide_tab?('blog_posts')
   end
 
   def published_posts
-    @user.published_blogs.limit(5)
+    @source.published_blogs.limit(5)
   end
 
   def reviews_collection_path
-    routes.reviews_collections_path(@user)
+    routes.reviews_collections_path(@source)
   end
 
   def profile_url
-    urlify(routes.profile_path(@user.slug))
+    urlify(routes.profile_path(@source.slug))
   end
 
   def projects_profile_url_with_token
-    urlify(routes.profile_path(@user.slug, token_key => @user.try(:temporary_token), anchor: :projects))
+    urlify(routes.profile_path(@source.slug, token_key => @source.try(:temporary_token), anchor: :projects))
   end
 
   def groups_profile_url_with_token
-    urlify(routes.profile_path(@user.slug, token_key => @user.try(:temporary_token), anchor: :groups))
+    urlify(routes.profile_path(@source.slug, token_key => @source.try(:temporary_token), anchor: :groups))
   end
 
   # url to the section in the application where a user can change his password
   def set_password_url_with_token
-    routes.set_password_path(token_key => @user.try(:temporary_token))
+    routes.set_password_path(token_key => @source.try(:temporary_token))
   end
 
   # url to the section in the application where a user can change his password
   # with authentication token and tracking
   def set_password_url_with_token_and_tracking
-    routes.set_password_path(token_key => @user.try(:temporary_token), :track_email_event => true)
+    routes.set_password_path(token_key => @source.try(:temporary_token), :track_email_event => true)
   end
 
   # url for verifying (confirming) a user's email
   def verify_user_url
-    routes.verify_user_path(@user.id, @user.email_verification_token, :track_email_event => true)
+    routes.verify_user_path(@source.id, @source.email_verification_token, :track_email_event => true)
   end
 
   # url for verifying (confirming) a user's email
@@ -246,94 +242,94 @@ class UserDrop < BaseDrop
   # url to the section in the application for managing a user's own bookings, with authentication
   # token
   def bookings_dashboard_url_with_token
-    routes.dashboard_user_reservations_path(token_key => @user.try(:temporary_token))
+    routes.dashboard_user_reservations_path(token_key => @source.try(:temporary_token))
   end
 
   # url to the section in the application for managing a user's own bookings, with authentication
   # token, and tracking
   def bookings_dashboard_url_with_tracking_and_token
-    routes.dashboard_user_reservations_path(token_key => @user.try(:temporary_token), track_email_event: true)
+    routes.dashboard_user_reservations_path(token_key => @source.try(:temporary_token), track_email_event: true)
   end
 
   # listings in and around a user's location, limited to a 100 km radius and a maximum of 3 results
   def listings_in_near
-    @user.listings_in_near(3, 100, true)
+    @source.listings_in_near(3, 100, true)
   end
 
   # the user's custom properties list
   def properties
-    @user.properties
+    @source.properties
   end
 
   # url to the "big" version of a user's avatar image
   def avatar_url_big
-    ActionController::Base.helpers.asset_url(@user.avatar_url(:big))
+    ActionController::Base.helpers.asset_url(@source.avatar_url(:big))
   end
 
   # url to the "thumb" version of a user's avatar image
   def avatar_url_thumb
-    ActionController::Base.helpers.asset_url(@user.avatar_url(:thumb))
+    ActionController::Base.helpers.asset_url(@source.avatar_url(:thumb))
   end
 
   def avatar_url_bigger
-    ActionController::Base.helpers.asset_url(@user.avatar_url(:bigger))
+    ActionController::Base.helpers.asset_url(@source.avatar_url(:bigger))
   end
 
   # url to a user's public profile
   def profile_path
-    routes.profile_path(@user)
+    routes.profile_path(@source)
   end
 
   # url to the section in the application for sending a message to this user using the
   # marketplace's internal messaging system
   def user_message_path
-    routes.new_user_user_message_path(user_id: @user.slug)
+    routes.new_user_user_message_path(user_id: @source.slug)
   end
 
   def user_blog_posts_list_path
-    routes.user_blog_posts_list_path(@user)
+    routes.user_blog_posts_list_path(@source)
   end
 
   def has_active_blog?
-    PlatformContext.current.instance.blogging_enabled?(@user) && @user.blog.present? && @user.blog.enabled?
+    PlatformContext.current.instance.blogging_enabled?(@source) && @source.blog.present? && @source.blog.enabled?
   end
 
   # returns hash of categories { "<name>" => { "name" => '<translated_name', "children" => [<collection of chosen values] } }
   def categories
     if @categories.nil?
-      @categories = build_categories_hash_for_object(@user, Category.users.roots.includes(:children))
+      @categories = build_categories_hash_for_object(@source, Category.users.roots.includes(:children))
     end
     @categories
   end
 
   # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => 'string with all children separated with comma' } }
   def formatted_categories
-    build_formatted_categories(@user)
+    build_formatted_categories(@source)
   end
 
   # User's current address
   def address
-    @user.current_address.presence || @user.locations.first.try(:location_address)
+    @source.current_address.presence || @source.locations.first.try(:location_address)
   end
 
   # Returns true if currently logged user is this user
   def is_current_user?
-    @user.id == @context['current_user'].try(:id)
+    @source.id == @context['current_user'].try(:id)
   end
 
   # Returns an array of custom attributes for seller profile
   def seller_attributes
-    @user.seller_profile.instance_profile_type.custom_attributes.public_display
+    @source.seller_profile.instance_profile_type.custom_attributes.public_display
   end
 
   # Returns an array of custom attributes for buyer profile
   def buyer_attributes
-    @user.buyer_profile.instance_profile_type.custom_attributes.public_display
+    @source.buyer_profile.instance_profile_type.custom_attributes.public_display
   end
 
   # Returns an array of custom attributes for default profile
   def default_attributes
-    @user.default_profile.instance_profile_type.custom_attributes.public_display
+    @source.default_profile.instance_profile_type.custom_attributes.public_display
   end
 
   # Returns an array of custom attributes for default and seller profile
@@ -348,7 +344,7 @@ class UserDrop < BaseDrop
 
   # Returns an array of custom attributes values for all user profiles
   def all_properties
-    @all_properties ||= @user.default_properties.to_h.merge(@user.seller_properties.to_h.merge(user.buyer_properties.to_h))
+    @all_properties ||= @source.default_properties.to_h.merge(@source.seller_properties.to_h.merge(@source.buyer_properties.to_h))
   end
 
   # Is the user "twitter connected" to the site
@@ -367,31 +363,31 @@ class UserDrop < BaseDrop
   end
 
   def member_since
-    I18n.l(@user.created_at.to_date, format: :short)
+    I18n.l(@source.created_at.to_date, format: :short)
   end
 
   def completed_host_reservations_count
-    @user.listing_reservations.reviewable.count
+    @source.listing_orders.reservations.reviewable.count
   end
 
   # Click to call button
   def click_to_call_button
-    build_click_to_call_button_for_user(@user)
+    build_click_to_call_button_for_user(@source)
   end
 
   # Click to call button with just the first name
   def click_to_call_button_first_name
-    build_click_to_call_button_for_user(@user, first_name: true)
+    build_click_to_call_button_for_user(@source, first_name: true)
   end
 
   # whether or not the user has a buyer profile set up
   def has_buyer_profile?
-    @user.buyer_profile.present?
+    @source.buyer_profile.present?
   end
 
   # whether or not the user has a seller profile set up
   def has_seller_profile?
-    @user.seller_profile.present?
+    @source.seller_profile.present?
   end
 
   # whether the user only has a buyer profile
@@ -410,7 +406,7 @@ class UserDrop < BaseDrop
 
   private
     def social_connections
-      @social_connections_cache ||= @user.social_connections
+      @social_connections_cache ||= @source.social_connections
     end
 
 end

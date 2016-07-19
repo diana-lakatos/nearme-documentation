@@ -247,7 +247,7 @@ class PlatformContextTest < ActiveSupport::TestCase
       @platform_context = PlatformContext.new(Instance.first)
       @instance = @platform_context.instance
       2.times {
-        FactoryGirl.create(:product, instance: @instance)
+        FactoryGirl.create(:transactable_purchase)
       }
     end
 

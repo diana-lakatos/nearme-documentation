@@ -3,7 +3,6 @@
   .row
     .col-xs-7
       = render 'client_info_area', reservation: reservation
-
     .col-xs-5
       .order-status
         - if reservation.archived_at.present? && reservation.state == 'confirmed'
@@ -16,11 +15,11 @@
   - if reservation.can_confirm?
     .alert.alert-warning= reservation.manage_booking_status_info_new
     - if reservation.active_merchant_payment?
-      - if reservation.billing_authorization.present?
+      - if reservation.payment.successful_billing_authorization.present?
         .alert.alert-warning= I18n.t('dashboard.host_reservations.money_info')
         - unless current_instance.manual_transfers?
           .alert.alert-warning= I18n.t('dashboard.host_reservations.next_payment_transfer', next_payment_transfer: reservation.next_payment_transfer)
-        - if reservation.company.possible_payout_not_configured?(reservation.billing_authorization.payment_gateway)
+        - if reservation.company.possible_payout_not_configured?(reservation.payment.payment_gateway)
           .alert.alert-warning= I18n.t('dashboard.host_reservations.remember_to_setup_automated_payout', setup_link: edit_dashboard_company_payouts_path).html_safe
 
   - if show_not_verified_host_alert?(reservation)
@@ -42,13 +41,13 @@
           - reservation.payment_documents.each do |pd|
             %li
               %a{:href => pd.file.url, download: true}= pd.file.file_name
-    - if reservation.additional_charges.present?
+    - if reservation.additional_line_items.present?
       .col-sm-3.right
         %h3=  t('dashboard.host_reservations.additional_charges')
         %ul.payment-documents
-          - reservation.additional_charges.each do |ac|
+          - reservation.additional_line_items.each do |ac|
             %li
-              =ac.name + ' - ' + humanized_money_with_cents_and_symbol(ac.amount)
+              =ac.name + ' - ' + humanized_money_with_cents_and_symbol(ac.total_price)
 
   %hr/
 
@@ -66,7 +65,7 @@
     .col-md-3{class: reservation.paid? ? 'info' : "warn" }
       = t("dashboard.host_reservations.payment_methods." + reservation.payment.try(:payment_method).try(:payment_method_type).to_s)
 
-  - if reservation.listing.possible_delivery?
+  - if reservation.transactable.possible_delivery?
     .row
       .col-md-3
         %h3
@@ -83,4 +82,7 @@
 
     .col-sm-3.col-sm-pull-9
       %small= t('dashboard.host_reservations.order_placed_html', date: l(reservation.created_at.to_date, format: :long))
+
+    .col-sm-3.col-sm-pull-9
+      %small= t('dashboard.host_reservations.order_number', number: reservation.id)
 

@@ -127,9 +127,9 @@ class UserMessage < ActiveRecord::Base
       true
     when Reservation, RecurringBooking
       author == thread_context.owner ||
-        author == thread_context.listing.administrator ||
-        author == thread_context.listing.creator ||
-        author.can_manage_listing?(thread_context.listing)
+        author == thread_context.transactable.administrator ||
+        author == thread_context.transactable.creator ||
+        author.can_manage_listing?(thread_context.transactable)
     else
       false
     end

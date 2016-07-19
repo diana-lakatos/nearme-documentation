@@ -1,0 +1,10 @@
+- if only_inputs.empty? || only_inputs.include?(:waiver_agreements)
+  - f.object.assigned_waiver_agreement_templates.each do |wat|
+    %div
+      %label.checkbox.controls{for: "order_waiver_agreement_templates_#{wat.id}"}
+        = hidden_field_tag "order[waiver_agreement_templates][#{wat.id}]", "0"
+        = check_box_tag "order[waiver_agreement_templates][#{wat.id}]", "1", f.object.send(:waiver_agreement_templates).include?("#{wat.id}"), { class: 'input-block-level',  checked: f.object.waiver_agreements.where(waiver_agreement_template_id: wat.id).exists? }
+        = t('reservations_review.wat_accept', link_to_wat: link_to(wat.name, '#',
+          data: { modal: true, href: waiver_agreement_template_path(wat)})).html_safe
+      - if f.object.errors.include?(:"#{wat.name}")
+        %p.error-block= f.object.errors[:"#{wat.name}"].first

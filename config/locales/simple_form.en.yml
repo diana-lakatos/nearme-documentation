@@ -295,7 +295,6 @@ en:
         location: "Location"
       transactable_type:
         action_book_it_out: 'Enable Book it Out option'
-      service_type:
         all_action_types:
           action_continuous_dates_booking: 'Action continuous dates booking'
           favourable_pricing_rate: "Favorable pricing rate"
@@ -307,7 +306,7 @@ en:
           hours_to_expiration: "Number of hours before unconfirmed reservation expires"
           minimum_booking_minutes: "Minimum booking minutes (for hourly pricing)"
           allow_action_rfq: 'Allow Request for Quote'
-          allow_no_action: Allow to disable booking'
+          allow_no_action: 'Allow to disable booking'
           allow_custom_pricings: 'Allow custom pricings'
           pricings:
             allow_book_it_out_discount: "Allow Bulk Booking Discount"
@@ -366,7 +365,7 @@ en:
         options:
           send_invitational_email: "Send invitational email"
           enable_rfq: "Enable request for quote"
-          default_shipping_category_id: "Choose default shipping category/profile"
+          default_shipping_category_id: "Choose default shipping profile"
 
       category:
         name: 'New category group'
@@ -524,7 +523,7 @@ en:
       transactable:
         book_it_out_discount: "Set your % discount amount"
         book_it_out_minimum_qty: "Book it Out is only available if the set minimum quantity is available"
-      service_type:
+      transactable_type:
         all_action_types:
           action_continuous_dates_booking: "Allow user to select only continuous dates when booking"
         allowed_countries: "Leave blank to use all countries"

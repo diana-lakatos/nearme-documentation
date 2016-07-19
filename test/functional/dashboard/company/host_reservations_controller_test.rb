@@ -15,7 +15,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     end
 
     should 'show related guests and appropriate units' do
-      @reservation = FactoryGirl.create(:unconfirmed_reservation, owner: @user, listing: @related_listing)
+      @reservation = FactoryGirl.create(:unconfirmed_reservation, owner: @user, transactable: @related_listing)
       @reservation.send(:schedule_expiry)
 
       get :index
@@ -29,7 +29,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     end
 
     should 'show related listings when no related guests' do
-      @reservation = FactoryGirl.create(:reservation, owner: @user, listing: @unrelated_listing)
+      @reservation = FactoryGirl.create(:future_unconfirmed_reservation, owner: @user, transactable: @unrelated_listing)
       @reservation.update_attribute(:instance_id, @unrelated_listing.instance_id)
       get :index
       assert_response :success
@@ -38,7 +38,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     end
 
     should 'not show unrelated guests' do
-      @reservation = FactoryGirl.create(:reservation, owner: @user, listing: @unrelated_listing)
+      @reservation = FactoryGirl.create(:future_unconfirmed_reservation, owner: @user, transactable: @unrelated_listing)
       @reservation.update_attribute(:instance_id, @unrelated_listing.instance_id)
       get :index
       assert_response :success
@@ -49,7 +49,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       @user.update_attribute(:time_zone, 'Hawaii')
       Time.use_zone 'Hawaii' do
         Reservation.destroy_all
-        reservation = FactoryGirl.create(:unconfirmed_reservation, owner: @user, listing: @related_listing)
+        reservation = FactoryGirl.create(:unconfirmed_reservation, owner: @user, transactable: @related_listing)
         ReservationPeriod.destroy_all
         reservation.reload
         reservation.add_period(Time.zone.tomorrow, 600, 720) # Tommorow form 10:00 - 12:00 AM
@@ -74,9 +74,9 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
 
   context 'other actions' do
     setup do
-      @reservation = FactoryGirl.create(:unconfirmed_reservation)
+      @reservation = FactoryGirl.create(:unconfirmed_reservation, company: @related_company)
       @payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
-      @user = @reservation.listing.creator
+      @user = @reservation.transactable.creator
       sign_in @user
       stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
       stub_billing_gateway(@reservation.instance)
@@ -99,7 +99,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
 
       post :confirm, { id: @reservation.id }
 
-      assert_redirected_to dashboard_company_host_reservations_path
+      assert_redirected_to dashboard_company_orders_received_index_path
     end
 
     should "track and redirect a host to the Manage Guests page when they reject a booking" do
@@ -116,7 +116,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       end
       Reservation.any_instance.expects(:schedule_void).once
       put :reject, { id: @reservation.id }
-      assert_redirected_to dashboard_company_host_reservations_path
+      assert_redirected_to dashboard_company_orders_received_index_path
     end
 
     should "track and redirect a host to the Manage Guests page when they cancel a booking" do
@@ -135,13 +135,13 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       end
       Reservation.any_instance.stubs(:schedule_refund).returns(true)
       post :host_cancel, { id: @reservation.id }
-      assert_redirected_to dashboard_company_host_reservations_path
+      assert_redirected_to dashboard_company_orders_received_index_path
     end
 
     should "refund booking on cancel" do
       @reservation = FactoryGirl.create(:confirmed_reservation)
 
-      sign_in @reservation.listing.creator
+      sign_in @reservation.transactable.creator
       User.any_instance.stubs(:accepts_sms_with_type?)
 
       setup_refund_for_reservation(@reservation)
@@ -150,7 +150,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
         post :host_cancel, { id: @reservation.id }
       end
 
-      assert_redirected_to dashboard_company_host_reservations_path
+      assert_redirected_to dashboard_company_orders_received_index_path
       assert_equal 'refunded', @reservation.reload.payment.state
     end
 

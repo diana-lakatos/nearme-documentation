@@ -1,8 +1,28 @@
-class RecurringBookingDecorator < Draper::Decorator
+class RecurringBookingDecorator < OrderDecorator
   include Draper::LazyHelpers
 
   include CurrencyHelper
   include TooltipHelper
+
+  def with_payment?
+    false
+  end
+
+  def with_payment_subscription?
+    true
+  end
+
+  def total_units_text
+    ''
+  end
+
+  def payment_state
+    if recurring_booking_periods.any?
+      recurring_booking_periods.first.payment.state.capitalize
+    else
+      payment_subscription.present? ? "Authorized" : "Missing"
+    end
+  end
 
   def interval
     object.transactable_pricing.units_to_s
@@ -138,7 +158,7 @@ class RecurringBookingDecorator < Draper::Decorator
       period = period.decorate
       date = I18n.l(period.date.to_date, format: :long)
 
-      if listing.action_hourly_booking?
+      if transactable.action_hourly_booking?
         start_time = I18n.l(period.start_minute_of_day_to_time, format: :short)
         end_time = I18n.l(period.end_minute_of_day_to_time, format: :short)
         ('%s %s&ndash;%s' % [date, start_time, end_time]).html_safe
@@ -149,19 +169,19 @@ class RecurringBookingDecorator < Draper::Decorator
   end
 
   def my_booking_status_info
-    status_info("Pending confirmation from host. Booking will expire in #{time_to_expiry(expire_at)}.")
+    status_info("Pending confirmation from host. Booking will expire in #{time_to_expiry(expires_at)}.")
   end
 
   def my_booking_status_info_new
-    raw("Pending confirmation from host. Booking will expire in <strong>#{time_to_expiry(expire_at)}</strong>.")
+    raw("Pending confirmation from host. Booking will expire in <strong>#{time_to_expiry(expires_at)}</strong>.")
   end
 
   def manage_booking_status_info
-    status_info("You must confirm this booking within #{time_to_expiry(expire_at)} or it will expire.")
+    status_info("You must confirm this booking within #{time_to_expiry(expires_at)} or it will expire.")
   end
 
   def manage_booking_status_info_new
-    raw("You must confirm this booking within <strong>#{time_to_expiry(expire_at)}</strong> or it will expire.")
+    raw("You must confirm this booking within <strong>#{time_to_expiry(expires_at)}</strong> or it will expire.")
   end
 
   def user_message_recipient
@@ -178,12 +198,12 @@ class RecurringBookingDecorator < Draper::Decorator
   end
 
   def hourly_summary(show_date = false)
-    start_time = I18n.l(start_minute_of_day_to_time, format: :short)
-    end_time = I18n.l(end_minute_of_day_to_time, format: :short)
+    start_time = I18n.l(starts_at, format: :short)
+    end_time = I18n.l(ends_at, format: :short)
 
     if show_date
-      formatted_start_date = I18n.l(start_on.to_date, format: :long)
-      formatted_end_date = I18n.l(end_on.to_date, format: :long)
+      formatted_start_date = I18n.l(starts_at, format: :long)
+      formatted_end_date = I18n.l(ends_at, format: :long)
       ('%s&ndash;%s %s&ndash;%s (%0.2f hours)' % [formatted_start_date, formatted_end_date, start_time, end_time, hours]).html_safe
     else
       ('%s&ndash;%s<br />(%0.2f hours)' % [start_time, end_time, hours]).html_safe
@@ -197,11 +217,11 @@ class RecurringBookingDecorator < Draper::Decorator
   end
 
   def start_minute_of_day_to_time
-    minute_of_day_to_time(start_minute)
+    minute_of_day_to_time(start_minute.to_i)
   end
 
   def end_minute_of_day_to_time
-    minute_of_day_to_time(end_minute)
+    minute_of_day_to_time(end_minute.to_i)
   end
 
   private

@@ -38,6 +38,10 @@ module CustomAttributes
       end
     end
 
+    def persisted?
+      false
+    end
+
     def update_hash(hash)
       @hash = hash
     end

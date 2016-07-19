@@ -21,7 +21,7 @@ class Reservation::DailyPriceCalculator
     blocks = @pricing.overnight_booking? ? real_contiguous_blocks : contiguous_blocks
 
     blocks.map do |block|
-      price_for_days((@pricing.overnight_booking? && block.size > 1 ? (block.size - 1) : block.size) ) * @reservation.quantity rescue 0.0
+      price_for_days(@pricing.overnight_booking? && block.size > 1 ? (block.size - 1) : block.size) rescue 0.0
     end.sum.to_money
   end
 
@@ -77,7 +77,7 @@ class Reservation::DailyPriceCalculator
   end
 
   def listing
-    @reservation.listing
+    @reservation.transactable
   end
 
   def contiguous_blocks

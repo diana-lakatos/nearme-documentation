@@ -14,12 +14,12 @@
         .input-container.col-xs-12
           = option.input :enable_rfq, required: false, as: :boolean, inline_label: true
 
-      - if @importable.is_a?(Spree::ProductType)
+      - if ShippingProfile.global.any?
         .row
           .input-container.col-xs-12
-            = option.input :default_shipping_category_id, required: true, include_blank: false, as: :select, collection: Spree::ShippingCategory.system_profiles.map { |c| [c.name, c.id] }
+            = option.input :default_shipping_category_id, required: true, include_blank: false, as: :select, collection:  ShippingProfile.global.map { |c| [c.name, c.id] }
 
   = content_for :header_buttons do
     = link_to t('instance_admin.manage.data_uploads.download_csv_template'), {action: :download_csv_template}, class: 'pull-left btn btn-blue'
     = f.button :submit, t('instance_admin.manage.data_uploads.upload'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
-  
+

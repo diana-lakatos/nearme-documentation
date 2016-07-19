@@ -13,5 +13,5 @@
     = render 'attributes_table'
 
   .tab-pane#reservations
-    = render 'admin/reservations/list_table', :collection => resource.reservations.order('created_at desc')
+    = render 'admin/reservations/list_table', :collection => resource.orders.order('created_at desc')
 

@@ -1,20 +1,25 @@
 FactoryGirl.define do
   factory :recurring_booking do
-    association :owner, factory: :user
-    association :listing, factory: :subscription_transactable
+    association :user
+    owner { user }
+    association :transactable, factory: :subscription_transactable
+    company { transactable.try(:company) || Factory.build(:company) }
+    creator { transactable.creator }
+
     association :payment_subscription
     start_on { Time.zone.now.next_week }
-    platform_context_detail_type "Instance"
-    platform_context_detail_id { PlatformContext.current.instance.id }
     quantity 1
-    state 'unconfirmed'
-    interval 'monthly'
-    subtotal_amount_cents 1670
+    state 'inactive'
     currency 'USD'
     next_charge_date { Date.current }
 
     after(:build) do |booking|
-      booking.transactable_pricing = booking.listing.action_type.pricings.first
+      booking.transactable_pricing = booking.transactable.action_type.pricings.first
+      booking.transactable_line_items << LineItem::Transactable.new(unit_price_cents: 1670, quantity: 1)
+    end
+
+    after(:create) do |booking|
+      booking.authorize_payment
     end
 
     factory :confirmed_recurring_booking do

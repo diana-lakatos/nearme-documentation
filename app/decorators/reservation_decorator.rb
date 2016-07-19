@@ -1,4 +1,4 @@
-class ReservationDecorator < Draper::Decorator
+class ReservationDecorator < OrderDecorator
 
   include CurrencyHelper
   include TooltipHelper
@@ -9,17 +9,25 @@ class ReservationDecorator < Draper::Decorator
 
   delegate :days_in_words, :nights_in_words, :selected_dates_summary, :dates_in_groups, :period_to_string, to: :date_presenter
 
+  def with_payment?
+    true
+  end
+
+  def with_payment_subscription?
+    false
+  end
+
   def days
     periods.size
   end
 
   def hourly_summary_for_first_period(show_date = true)
     reservation_period = periods.first.decorate
-    reservation_period.hourly_summary(show_date, { event_booking: listing.event_booking? })
+    reservation_period.hourly_summary(show_date, { event_booking: transactable.event_booking? })
   end
 
   def total_cost
-    humanized_money_with_cents_and_symbol(periods_cost + additional_charges_cost)
+    humanized_money_with_cents_and_symbol(total_amount_cents)
   end
 
   def periods_cost
@@ -74,7 +82,7 @@ class ReservationDecorator < Draper::Decorator
     if is_free?
       humanized_money_with_cents_and_symbol(0.0)
     elsif paid?
-      humanized_money_with_cents_and_symbol(successful_payment_amount)
+      humanized_money_with_cents_and_symbol(payment.amount)
     else
       payment.state.titleize
     end
@@ -137,7 +145,7 @@ class ReservationDecorator < Draper::Decorator
     periods.map do |period|
       period = period.decorate
       date = I18n.l(period.date.to_date, format: :day_and_month)
-      if listing.event_booking?
+      if transactable.event_booking?
         ('%s %s' % [date, start_time]).html_safe
       elsif transactable_pricing.hour_booking?
         start_time = I18n.l(period.start_minute_of_day_to_time, format: :short)
@@ -150,15 +158,15 @@ class ReservationDecorator < Draper::Decorator
   end
 
   def my_booking_status_info
-    status_info("Pending confirmation from host. Booking will expire in #{time_to_expiry(expire_at)}.")
+    status_info("Pending confirmation from host. Booking will expire in #{time_to_expiry(expires_at)}.")
   end
 
   def manage_booking_status_info
-    status_info("You must confirm this booking within #{time_to_expiry(expire_at)} or it will expire.")
+    status_info("You must confirm this booking within #{time_to_expiry(expires_at)} or it will expire.")
   end
 
   def manage_booking_status_info_new
-    I18n.t('dashboard.host_reservations.pending_confirmation', time_to_expiry: time_to_expiry(expire_at)).html_safe
+    I18n.t('dashboard.host_reservations.pending_confirmation', time_to_expiry: time_to_expiry(expires_at)).html_safe
   end
 
   def next_payment_transfer
@@ -219,5 +227,4 @@ class ReservationDecorator < Draper::Decorator
   def service_fee_calculator
     object.send(:service_fee_calculator)
   end
-
 end

@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :user do
     sequence(:name) {|n| "User-#{n}"}
-    email { "#{name.to_s.underscore.downcase.tr(' ', '_')}@example.com" }
+    sequence(:email) {|n| "#{name.to_s.underscore.downcase.tr(' ', '_')}_#{n}@example.com"}
     password 'password'
     password_confirmation 'password'
     country_name "United States"

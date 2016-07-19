@@ -41,8 +41,8 @@ class Reservation::ContiguousBlockFinder
 
   private
 
-  def listing
-    @reservation.listing
+  def transactable
+    @reservation.transactable
   end
 
   # Are to dates deemed "contiguous" by our custom definition?
@@ -55,7 +55,7 @@ class Reservation::ContiguousBlockFinder
       from = from.advance(:days => 1)
 
       # Break if we reach a bookable date
-      break if listing.open_on?(from) && listing.availability_for(from) >= @reservation.quantity
+      break if transactable.open_on?(from) && transactable.availability_for(from) >= @reservation.quantity
     end
 
     return from == to

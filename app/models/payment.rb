@@ -42,7 +42,6 @@ class Payment < ActiveRecord::Base
   attr_accessor :express_checkout_redirect_url, :payment_response_params, :payment_method_nonce, :customer,
     :recurring, :rejection_form, :chosen_credit_card_id
 
-
   # === Associations
 
   # Payable association connects Payment with Reservation and Spree::Order
@@ -57,8 +56,10 @@ class Payment < ActiveRecord::Base
   belongs_to :payer, class_name: 'User'
 
   has_many :billing_authorizations
+  has_many :authorizations, class_name: "BillingAuthorization"
   has_many :charges, dependent: :destroy
   has_many :refunds
+  has_many :line_items
 
   has_one :successful_billing_authorization, -> { where(success: true) }, class_name: BillingAuthorization
   has_one :successful_charge, -> { where(success: true) }, class_name: Charge
@@ -149,7 +150,7 @@ class Payment < ActiveRecord::Base
         ReservationChargeTrackerJob.perform_later(payable.date.end_of_day, payable.id)
       end
       # this works for braintree, might not work for others - to be moved to separate class etc, and ideally somewhere else... hackish hack as a quick win
-      update_attribute(:external_transaction_id, payable.try(:billing_authorization).try(:response).try(:authorization))
+      update_attribute(:external_transaction_id, authorization_token)
       mark_as_paid!
     else
       touch(:failed_at)
@@ -309,7 +310,7 @@ class Payment < ActiveRecord::Base
     super(cc_attributes.merge({
       payment_gateway: payment_gateway,
       test_mode: test_mode?,
-      instance_client: payment_gateway.try {|p| p.instance_clients.where(client: payable.owner, test_mode: test_mode?).first_or_initialize }
+      instance_client: payment_gateway.try {|p| p.instance_clients.where(client: payable.user, test_mode: test_mode?).first_or_initialize(client: payable.user, test_mode: test_mode?) }
     }))
   end
 
@@ -317,10 +318,6 @@ class Payment < ActiveRecord::Base
   # We should change that to let MPO decide if it's mandatory or optional
   def save_credit_card?
     payment_gateway.supports_recurring_payment?
-  end
-
-  def total_amount_cents
-    subtotal_amount.cents + service_fee_amount_guest.cents + total_additional_charges.cents
   end
 
   def total_additional_charges_cents
@@ -361,6 +358,10 @@ class Payment < ActiveRecord::Base
 
   def total_service_fee_cents
     final_service_fee_amount_host_cents + final_service_fee_amount_guest_cents
+  end
+
+  def total_amount_cents
+    read_attribute(:total_amount_cents) || 0
   end
 
   def amount

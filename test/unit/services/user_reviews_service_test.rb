@@ -5,8 +5,8 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
     setup do
       @host_listing = FactoryGirl.create(:transactable)
       @guest_listing = FactoryGirl.create(:transactable)
-      @reservation = FactoryGirl.create(:reservation, listing: @host_listing, user: @guest_listing.creator)
-      @other_reservation = FactoryGirl.create(:reservation, listing: @guest_listing, user: @host_listing.creator)
+      @reservation = FactoryGirl.create(:reservation, transactable: @host_listing, user: @guest_listing.creator)
+      @other_reservation = FactoryGirl.create(:reservation, transactable: @guest_listing, user: @host_listing.creator)
     end
 
     context "#reviews_by_role if no both sides reviews" do
@@ -98,9 +98,9 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
   context "for reviews on Order" do
     setup do
       @buyer = FactoryGirl.create(:user)
-      order = FactoryGirl.create(:order_with_line_items, user: @buyer)
-      @user = order.line_items.first.product.company.creator
-      @line_item = order.line_items.first
+      order = FactoryGirl.create(:purchase, user: @buyer)
+      @user = order.transactable_line_items.first.line_item_source.company.creator
+      @line_item = order.transactable_line_items.first
     end
 
     should "return reviews_about_seller" do

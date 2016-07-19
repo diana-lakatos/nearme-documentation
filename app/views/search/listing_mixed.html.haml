@@ -46,7 +46,7 @@
           #listings_map.inner{ 'data-update-text' => t('search.update_map')}
     .list{:'data-list' => true}
       .filters{:'data-search-filters-container' => true}
-        - if current_instance.service_types.searchable.many?
+        - if current_instance.transactable_types.searchable.many?
           .search-mixed-filter{:'data-transactable-type-filter' => true}
             .container-fluid
               .row-fluid

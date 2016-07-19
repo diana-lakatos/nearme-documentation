@@ -1,0 +1,23 @@
+-# This file is intended to replace _attributes.html.haml eventually
+-# TODO Adjust _attributes partial to bs3 when redo space wizard form
+
+- resource ||= current_user
+- only_inputs ||= []
+- only_inputs.map!(&:to_sym)
+
+- (FormAttributes.new.reservation(@order.reservation_type) & only_inputs).each do |attr|
+  - if [:guest_notes].include?(attr) && f.object.attributes.include?(attr.to_s)
+    = f.input attr
+  - else
+    = render "checkout/attributes/#{attr}", only_inputs: only_inputs, f: f, resource: resource
+
+
+
+
+
+
+
+
+
+
+

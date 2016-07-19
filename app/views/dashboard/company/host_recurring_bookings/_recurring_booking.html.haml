@@ -2,7 +2,7 @@
   %header
     .row
       .col-sm-7
-        - if recurring_booking.listing.present?
+        - if recurring_booking.transactable.present?
           %h2
             - if recurring_booking.owner.present?
               = link_to recurring_booking.owner, profile_path(recurring_booking.owner.slug)
@@ -11,7 +11,7 @@
 
             = t('dashboard.user_recurring_bookings.booked')
 
-            = link_to recurring_booking.listing.try(:name), recurring_booking.listing.decorate.show_path
+            = link_to recurring_booking.transactable.try(:name), recurring_booking.transactable.decorate.show_path
 
           - if recurring_booking.owner.present?
             %p
@@ -37,14 +37,14 @@
 
   .row
     .col-md-3
-      - if recurring_booking.listing.present?
+      - if recurring_booking.transactable.present?
         %h3= t('dashboard.user_recurring_bookings.address')
 
         %p
-          = recurring_booking.listing.location.address.gsub(', ', '<br>').html_safe
+          = recurring_booking.transactable.location.address.gsub(', ', '<br>').html_safe
           %br/
           [
-          = link_to t('dashboard.user_recurring_bookings.show_on_map'), "http://maps.apple.com/?q=#{recurring_booking.listing.location.address}", target: '_blank'
+          = link_to t('dashboard.user_recurring_bookings.show_on_map'), "http://maps.apple.com/?q=#{recurring_booking.transactable.location.address}", target: '_blank'
           ]
       - else
         %h3 [#{t('dashboard.user_recurring_bookings.listing_deleted')}]
@@ -84,20 +84,22 @@
         - if !recurring_booking.archived? and current_user == recurring_booking.host
 
           - if recurring_booking.can_host_cancel? && !recurring_booking.unconfirmed?
-            = form_for recurring_booking, method: :post, url: host_cancel_dashboard_company_host_recurring_booking_path(recurring_booking, listing_id: recurring_booking.listing) do |f|
+            = form_for recurring_booking, method: :post, url: host_cancel_dashboard_company_host_recurring_booking_path(recurring_booking, listing_id: recurring_booking.transactable) do |f|
               = f.submit t('dashboard.user_recurring_bookings.host_actions.cancel'), data: { confirm: t('dashboard.user_recurring_bookings.host_actions.confirmations.cancel') }, class: 'btn btn-warning'
 
           - if recurring_booking.can_confirm?
-            = form_for recurring_booking, method: :post, url: confirm_dashboard_company_host_recurring_booking_path(recurring_booking, listing_id: recurring_booking.listing) do |f|
+            = form_for recurring_booking, method: :post, url: confirm_dashboard_company_host_recurring_booking_path(recurring_booking, listing_id: recurring_booking.transactable) do |f|
               = f.submit t('dashboard.user_recurring_bookings.host_actions.confirm'), data: { confirm: t('dashboard.user_recurring_bookings.host_actions.confirmations.confirm') }, class: 'btn btn-primary'
 
           - if recurring_booking.can_reject?
-            = link_to t('dashboard.user_recurring_bookings.host_actions.decline'), rejection_form_dashboard_company_host_recurring_booking_path(recurring_booking, listing_id: recurring_booking.listing), data: { modal: true }, class: 'btn btn-warning'
+            = link_to t('dashboard.user_recurring_bookings.host_actions.decline'), rejection_form_dashboard_company_host_recurring_booking_path(recurring_booking, listing_id: recurring_booking.transactable), data: { modal: true }, class: 'btn btn-warning'
 
 
 
     .col-sm-3.col-sm-pull-9
       %small= t('dashboard.user_recurring_bookings.booking_placed_html', date: l(recurring_booking.created_at.to_date, format: :long))
+      %br
+      %small= t('dashboard.host_reservations.order_number', number: recurring_booking.id)
 
   - if recurring_booking.recurring_booking_periods.present?
     %h3= t('dashboard.user_recurring_bookings.periods.title')

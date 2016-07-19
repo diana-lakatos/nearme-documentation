@@ -211,7 +211,7 @@ module ShippoApi
 
     def create_address(address)
       address = {
-        object_purpose: 'PURCHASE'
+        'object_purpose': 'PURCHASE'
       }.merge(address)
       Shippo::Address.create(address)
     end
@@ -287,7 +287,6 @@ module ShippoApi
       end
 
       shipment_info.merge!(extra)
-
       Shippo::Shipment.create(shipment_info)
     end
 

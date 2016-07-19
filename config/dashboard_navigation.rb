@@ -23,52 +23,22 @@ SimpleNavigation::Configuration.run do |navigation|
     end
     dashboard_nav_item primary, 'dashboard/wish_list_items', dashboard_wish_list_items_path, link_text: t('wish_lists.name'), if: platform_context.instance.wish_lists_enabled?, highlights_on: /dashboard\/favorites/
     dashboard_nav_item primary, 'dashboard/my_rfq', dashboard_user_requests_for_quotes_path, not_hideable: true, if: platform_context.instance.action_rfq?, highlights_on: /dashboard\/user_requests_for_quotes(\/.+)*/
-
-    if buyable?
-      primary.item :products_header, t('dashboard.nav.products_header'), nil do |sub_nav|
-        dashboard_nav_item sub_nav, 'dashboard/orders', dashboard_orders_path, highlights_on: /dashboard\/orders(\/.+)*/
-        if current_user.registration_completed?
-          dashboard_nav_item sub_nav, 'dashboard/orders_received', dashboard_company_orders_received_index_path, highlights_on: /dashboard\/company\/orders_received(\/.+)*/
-          dashboard_nav_item sub_nav, 'dashboard/products', dashboard_company_product_type_products_path(Spree::ProductType.first), highlights_on: /dashboard\/company\/product_type(\/.+)*/
+    if TransactableType.first
+      if projectable?
+        primary.item :projects_header, t('dashboard.nav.projects_header'), nil do |sub_nav|
+          dashboard_nav_item primary, 'dashboard/projects', dashboard_project_type_projects_path(ProjectType.first)
         end
       end
-    end
 
-    if projectable?
-      primary.item :projects_header, t('dashboard.nav.projects_header'), nil do |sub_nav|
-        dashboard_nav_item primary, 'dashboard/projects', dashboard_project_type_projects_path(ProjectType.first)
-      end
-    end
+      dashboard_nav_item primary, 'dashboard/transactables', dashboard_company_transactable_type_transactables_path(TransactableType.first), highlights_on: /dashboard\/company\/(service_types|transactable_types)/
 
-    if bookable?
-      primary.item :services_header, "#{t('dashboard.nav.services_header')} #{current_user_open_all_reservations_count_formatted}", nil do |sub_nav|
 
-        if !current_instance.split_registration || current_user.buyer_profile.present?
-          dashboard_nav_item sub_nav, 'dashboard/user_reservations', dashboard_user_reservations_path, highlights_on: /\/user_reservations\/*/, link_text: dashboard_nav_user_reservations_label
-        end
-
-        if subscribable?
-          dashboard_nav_item sub_nav, 'dashboard/user_recurring_bookings', active_dashboard_user_recurring_bookings_path, highlights_on: /\/user_recurring_bookings\/*/
-        end
-
-        if current_user.registration_completed?
-          dashboard_nav_item sub_nav, 'dashboard/host_reservations', dashboard_company_host_reservations_path, highlights_on: /\/(host_reservations)\/*/, link_text: dashboard_nav_host_reservations_label
-          if subscribable?
-            dashboard_nav_item sub_nav, 'dashboard/host_recurring_bookings', dashboard_company_host_recurring_bookings_path, highlights_on: /\/host_recurring_bookings\/*/
+      if bookable?
+        primary.item :orders_header, "#{t('dashboard.nav.orders_header')} #{current_user_open_all_reservations_count_formatted}", nil do |sub_nav|
+          dashboard_nav_item sub_nav, 'dashboard/orders', dashboard_orders_path, highlights_on: /dashboard\/orders(\/.+)*/
+          if current_user.registration_completed?
+            dashboard_nav_item sub_nav, 'dashboard/orders_received', dashboard_company_orders_received_index_path, highlights_on: /dashboard\/company\/orders_received(\/.+)*/
           end
-
-          dashboard_nav_item sub_nav, 'dashboard/transactables', dashboard_company_transactable_type_transactables_path(TransactableType.first), highlights_on: /dashboard\/company\/(service_types|transactable_types)/
-        end
-      end
-    end
-
-    if biddable?
-      primary.item :offers_header, t('dashboard.nav.offers_header'), nil do |sub_nav|
-        dashboard_nav_item sub_nav, 'dashboard/user_bids', dashboard_user_bids_path, highlights_on: /\/user_bids\/*/
-
-        if current_user.registration_completed?
-          dashboard_nav_item sub_nav, 'dashboard/user_auctions', dashboard_company_user_auctions_path, highlights_on: /\/(user_auctions)\/*/
-          dashboard_nav_item sub_nav, 'dashboard/offers', dashboard_company_offer_type_offers_path(OfferType.first), highlights_on: /dashboard\/company\/offer_types/
         end
       end
     end

@@ -1,21 +1,21 @@
 module FeedbackDecoratorHelper
   def review_title
     if reservation?
-      feedback_object.listing.try(:name)
+      feedback_object.transactable.try(:name)
     elsif bid?
       feedback_object.offer.try(:name)
-    else
-      feedback_object.product.try(:name)
+    elsif line_item?
+      feedback_object.line_item_source.try(:name)
     end
   end
 
   def order_image
     version = :space_listing
 
-    if reservation? && feedback_object.listing && feedback_object.listing.has_photos?
-      h.link_to(h.image_tag(feedback_object.listing.photos.rank(:position).first.image_url(version)), feedback_object.listing.decorate.show_path)
-    elsif line_item? && feedback_object.product && feedback_object.product.variant_images.present?
-      h.image_tag feedback_object.product.variant_images.first.image_url(version)
+    if reservation? && feedback_object.transactable && feedback_object.transactable.has_photos?
+      h.link_to(h.image_tag(feedback_object.transactable.photos.rank(:position).first.image_url(version)), feedback_object.transactable.decorate.show_path)
+    elsif line_item? && feedback_object.line_item_source && feedback_object.line_item_source.has_photos?
+      h.image_tag feedback_object.line_item_source.photos.rank(:position).first.image_url(version)
     elsif bid? && feedback_object.offer  && feedback_object.offer.photos.any?
       h.link_to(h.image_tag(feedback_object.offer.photos.rank(:position).first.image_url(version)), h.offer_path(feedback_object.offer))
     else
@@ -50,15 +50,15 @@ module FeedbackDecoratorHelper
 
     if reservation?
       if target == RatingConstants::HOST
-        user = feedback_object.listing.creator
+        user = feedback_object.transactable.creator
       else
         user = feedback_object.owner
       end
     elsif line_item?
       if target == RatingConstants::HOST
-        user = feedback_object.product.user
+        user = feedback_object.line_item_source.creator
       else
-        user = feedback_object.order.user
+        user = feedback_object.line_itemable.user
       end
     elsif bid?
       if target == RatingConstants::HOST
@@ -76,7 +76,7 @@ module FeedbackDecoratorHelper
   end
 
   def line_item?
-    feedback_object.is_a?(Spree::LineItem)
+    feedback_object.is_a?(LineItem)
   end
 
   def bid?

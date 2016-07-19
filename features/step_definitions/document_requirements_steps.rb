@@ -34,10 +34,6 @@ And /^Visit edit listing page$/ do
   visit edit_dashboard_company_transactable_type_transactable_path(listing.transactable_type, listing)
 end
 
-And /^Visit edit product page$/ do
-  visit edit_dashboard_company_product_type_product_path(@product.product_type, @product)
-end
-
 And /^Updated document requirement should be present in form$/ do
   assert_document_requirement_data("transactable")
 end
@@ -48,15 +44,6 @@ end
 
 And /^Two document requirements should be present in form$/ do
   page.should have_css('.document-requirements-fields .nested-fields', count: 2)
-end
-
-Given /^Product and document requirement for it exist$/ do
-  @product = FactoryGirl.create(:base_product, company: user.companies.first, user: user, product_type: user.instance.product_types.first)
-  @document_requirement = FactoryGirl.create(:document_requirement, item: @product)
-end
-
-When /^I edit first product$/ do
-  visit edit_dashboard_company_product_type_product_path(@product.product_type, @product)
 end
 
 And /^document upload enabled$/ do

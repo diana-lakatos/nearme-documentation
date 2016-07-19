@@ -22,7 +22,7 @@ class Transactable < ActiveRecord::Base
 
   PRICE_TYPES = [:hourly, :weekly, :daily, :monthly, :fixed, :exclusive, :weekly_subscription, :monthly_subscription]
 
-  has_custom_attributes target_type: 'ServiceType', target_id: :transactable_type_id
+  has_custom_attributes target_type: 'TransactableType', target_id: :transactable_type_id
   has_metadata accessors: [:photos_metadata]
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
 
@@ -43,8 +43,10 @@ class Transactable < ActiveRecord::Base
     end
   end
   has_many :attachments, -> { order(:id) }, class_name: 'SellerAttachment', as: :assetable
-  has_many :recurring_bookings, inverse_of: :listing
-  has_many :reservations, inverse_of: :listing
+  has_many :recurring_bookings, inverse_of: :transactable
+  has_many :orders
+  has_many :reservations
+  has_many :old_reservations
   has_many :transactable_tickets, as: :target, class_name: 'Support::Ticket'
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :waiver_agreement_templates, through: :assigned_waiver_agreement_templates
@@ -56,7 +58,7 @@ class Transactable < ActiveRecord::Base
   belongs_to :company, -> { with_deleted }, inverse_of: :listings
   belongs_to :location, -> { with_deleted }, inverse_of: :listings, touch: true
   belongs_to :instance, inverse_of: :listings
-  belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :listings, counter_cache: true
+  belongs_to :creator, -> { with_deleted }, class_name: "User" #, inverse_of: :listings, counter_cache: true
   belongs_to :administrator, -> { with_deleted }, class_name: "User", inverse_of: :administered_listings
   has_one :dimensions_template, as: :entity
 
@@ -66,7 +68,11 @@ class Transactable < ActiveRecord::Base
   belongs_to :subscription_booking, foreign_key: :action_type_id
   belongs_to :time_based_booking, foreign_key: :action_type_id
   belongs_to :no_action_booking, foreign_key: :action_type_id
+  belongs_to :purchase_action, foreign_key: :action_type_id
   belongs_to :action_type
+  belongs_to :shipping_profile
+
+  belongs_to :spree_product, class_name: "Spree::Product"
 
   accepts_nested_attributes_for :additional_charge_types, reject_if: :all_blank, allow_destroy: true
   accepts_nested_attributes_for :approval_requests
@@ -95,6 +101,7 @@ class Transactable < ActiveRecord::Base
   after_destroy :close_request_for_quotes
 
   # == Scopes
+  scope :purchasable, -> { joins(:action_type).where("transactable_action_types.enabled = true AND transactable_action_types.type = 'Transactable::PurchaseAction'") }
   scope :featured, -> { where(featured: true) }
   scope :draft, -> { where('transactables.draft IS NOT NULL') }
   scope :active, -> { where('transactables.draft IS NULL') }
@@ -112,16 +119,16 @@ class Transactable < ActiveRecord::Base
   scope :not_booked_relative, -> (start_date, end_date) {
     joins(ActiveRecord::Base.send(:sanitize_sql_array, ['LEFT OUTER JOIN (
        SELECT MIN(qty) as min_qty, transactable_id, count(*) as number_of_days_booked
-       FROM (SELECT SUM(reservations.quantity) as qty, reservations.transactable_id, reservation_periods.date
-         FROM "reservations"
-         INNER JOIN "reservation_periods" ON "reservation_periods"."reservation_id" = "reservations"."id"
+       FROM (SELECT SUM(orders.quantity) as qty, orders.transactable_id, reservation_periods.date
+         FROM "orders"
+         INNER JOIN "reservation_periods" ON "reservation_periods"."reservation_id" = "orders"."id"
          WHERE
-          "reservations"."instance_id" = ? AND
-          COALESCE("reservations"."booking_type", \'daily\') != \'hourly\' AND
-          "reservations"."deleted_at" IS NULL AND
-          "reservations"."state" NOT IN (\'cancelled_by_guest\',\'cancelled_by_host\',\'rejected\',\'expired\') AND
+          "orders"."instance_id" = ? AND
+          COALESCE("orders"."booking_type", \'daily\') != \'hourly\' AND
+          "orders"."deleted_at" IS NULL AND
+          "orders"."state" NOT IN (\'cancelled_by_guest\',\'cancelled_by_host\',\'rejected\',\'expired\') AND
           "reservation_periods"."date" BETWEEN ? AND ?
-         GROUP BY reservation_periods.date, reservations.transactable_id) AS spots_taken_per_transactable_per_date
+         GROUP BY reservation_periods.date, orders.transactable_id) AS spots_taken_per_transactable_per_date
        GROUP BY transactable_id
        ) as min_spots_taken_per_transactable_during_date_period ON min_spots_taken_per_transactable_during_date_period.transactable_id = transactables.id', PlatformContext.current.instance.id, start_date.to_s, end_date.to_s]))
       .where('(COALESCE(min_spots_taken_per_transactable_during_date_period.min_qty, 0) < transactables.quantity OR min_spots_taken_per_transactable_during_date_period.number_of_days_booked <= ?)', (end_date - start_date).to_i)
@@ -130,15 +137,15 @@ class Transactable < ActiveRecord::Base
   scope :not_booked_absolute, -> (start_date, end_date) {
     joins(ActiveRecord::Base.send(:sanitize_sql_array, ['LEFT OUTER JOIN (
        SELECT MAX(qty) as max_qty, transactable_id
-       FROM (SELECT SUM(reservations.quantity) as qty, reservations.transactable_id, reservation_periods.date
-         FROM "reservations"
-         INNER JOIN "reservation_periods" ON "reservation_periods"."reservation_id" = "reservations"."id"
+       FROM (SELECT SUM(orders.quantity) as qty, orders.transactable_id, reservation_periods.date
+         FROM "orders"
+         INNER JOIN "reservation_periods" ON "reservation_periods"."reservation_id" = "orders"."id"
          WHERE
-          "reservations"."instance_id" = ? AND
-          "reservations"."deleted_at" IS NULL AND
-          "reservations"."state" NOT IN (\'cancelled_by_guest\',\'cancelled_by_host\',\'rejected\',\'expired\') AND
+          "orders"."instance_id" = ? AND
+          "orders"."deleted_at" IS NULL AND
+          "orders"."state" NOT IN (\'cancelled_by_guest\',\'cancelled_by_host\',\'rejected\',\'expired\') AND
           "reservation_periods"."date" BETWEEN ? AND ?
-         GROUP BY reservation_periods.date, reservations.transactable_id) AS spots_taken_per_transactable_per_date
+         GROUP BY reservation_periods.date, orders.transactable_id) AS spots_taken_per_transactable_per_date
        GROUP BY transactable_id
        ) as min_spots_taken_per_transactable_during_date_period ON min_spots_taken_per_transactable_during_date_period.transactable_id = transactables.id', PlatformContext.current.instance.id, start_date.to_s, end_date.to_s]))
       .where('COALESCE(min_spots_taken_per_transactable_during_date_period.max_qty, 0) < transactables.quantity')
@@ -178,7 +185,7 @@ class Transactable < ActiveRecord::Base
   validates :currency, presence: true, allow_nil: false, currency: true
   validates :location, :transactable_type, :action_type, presence: true
   validates :photos, length: {:minimum => 1}, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
-  validates :quantity, presence: true, numericality: {greater_than: 0}
+  validates :quantity, presence: true, numericality: {greater_than: 0}, unless: ->(record) { record.action_type.is_a?(Transactable::PurchaseAction) }
 
   #TODO probably move to concern as different actions can be shipped
   validates :rental_shipping_type, inclusion: { in: RENTAL_SHIPPING_TYPES }
@@ -193,7 +200,7 @@ class Transactable < ActiveRecord::Base
   delegate :url, to: :company
   delegate :formatted_address, :local_geocoding, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration, :hours_for_guest_to_confirm_payment,
-    :custom_validators, :show_company_name, :skip_payment_authorization?, :display_additional_charges?, to: :transactable_type
+    :custom_validators, :show_company_name, :display_additional_charges?, to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, to: :transactable_type
@@ -271,7 +278,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def desks_booked_on(date, start_minute = nil, end_minute = nil)
-    scope = reservations.confirmed.joins(:periods).where(:reservation_periods => {:date => date})
+    scope = orders.confirmed.joins(:periods).where(:reservation_periods => {:date => date})
 
     if start_minute
       hourly_conditions = []
@@ -337,9 +344,15 @@ class Transactable < ActiveRecord::Base
 
   def reserve!(reserving_user, dates, quantity, pricing = action_type.pricings.first)
     payment_method  = PaymentMethod.manual.first
-    reservation = reservations.build(user: reserving_user, quantity: quantity, transactable_pricing: pricing)
-    reservation.calculate_prices
-    reservation.build_payment({ payment_method: payment_method })
+    reservation = Reservation.new(
+      user: reserving_user,
+      owner: reserving_user,
+      quantity: quantity,
+      transactable_pricing: pricing,
+      transactable: self,
+      currency: self.currency
+    )
+    reservation.build_payment(reservation.shared_payment_attributes.merge({ payment_method: payment_method }))
     dates.each do |date|
       raise ::DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
       reservation.add_period(date)
@@ -350,7 +363,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def dates_fully_booked
-    reservations.map(:date).select { |d| fully_booked_on?(date) }
+    orders.map(:date).select { |d| fully_booked_on?(date) }
   end
 
   def fully_booked_on?(date)
@@ -363,9 +376,12 @@ class Transactable < ActiveRecord::Base
     availability_for(date, start_min, end_min) >= quantity
   end
 
+  def all_additional_charge_types_ids
+    (additional_charge_types + transactable_type.try(:additional_charge_types) + instance.additional_charge_types).map(&:id)
+  end
+
   def all_additional_charge_types
-    ids = (additional_charge_types + transactable_type.additional_charge_types + instance.additional_charge_types).map(&:id)
-    AdditionalChargeType.where(id: ids).order(:status, :name)
+    AdditionalChargeType.where(id: all_additional_charge_types_ids).order(:status, :name)
   end
 
   def to_liquid
@@ -381,8 +397,15 @@ class Transactable < ActiveRecord::Base
     [name, location.street].compact.join(" at ")
   end
 
+  def order_attributes
+    {
+      currency_id: Currency.find_by_iso_code(currency).try(:id),
+      company: company
+    }
+  end
+
   def last_booked_days
-    last_reservation = reservations.order('created_at DESC').first
+    last_reservation = orders.order('created_at DESC').first
     last_reservation ? ((Time.current.to_f - last_reservation.created_at.to_f) / 1.day.to_f).round : nil
   end
 
@@ -447,7 +470,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def reviews
-    @reviews ||= Review.for_reviewables(self.reservations.pluck(:id), 'Reservation')
+    @reviews ||= Review.for_reviewables(self.orders.pluck(:id), 'Reservation')
   end
 
   def has_reviews?
@@ -585,7 +608,7 @@ class Transactable < ActiveRecord::Base
 
   def set_confirm_reservations
     if confirm_reservations.nil?
-      self.confirm_reservations = transactable_type.availability_options["confirm_reservations"]["default_value"]
+      self.confirm_reservations = action_type.transactable_type_action_type.confirm_reservations
     end
     true
   end
@@ -595,7 +618,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def decline_reservations
-    reservations.unconfirmed.each do |r|
+    orders.unconfirmed.each do |r|
       r.reject!
     end
 

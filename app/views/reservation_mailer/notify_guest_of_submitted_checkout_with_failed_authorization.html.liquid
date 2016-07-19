@@ -20,7 +20,7 @@
   {% for period in reservation.periods %}
     <div class="row">
       <strong style='display: inline-block;'>{{ period.description }}</strong>
-      <span style="float: right;">{{ period.hours }} x {{ reservation.formatted_unit_price }}</span>
+      <span style="float: right;">{{ period.quantity }} x {{ period.formatted_unit_price }}</span>
     </div>
   {% endfor %}
 

@@ -3,12 +3,44 @@
 - content_for :page_header do
   %h1= yield :title
 
+- actions = ['booking_successful', 'upcoming', 'booking_failed']
+- tabs = []
+- tabs.push({ name: "#{t('dashboard.orders.state.unconfirmed')} (#{@order_search_service.upcoming_count})".html_safe, url: path_to_orders(state: 'unconfirmed'), active: @order_search_service.state == :unconfirmed })
+- tabs.push({ name: "#{t('dashboard.orders.state.confirmed')} (#{@order_search_service.confirmed_count})".html_safe, url: path_to_orders(state: 'confirmed'), active: @order_search_service.state == :confirmed })
+- tabs.push({ name: "#{t('dashboard.orders.state.archived')} (#{@order_search_service.archived_count})".html_safe, url: path_to_orders(state: 'archived'), active: @order_search_service.state == :archived})
+
+= dashboard_panel_multi_tabs(tabs)
+
 .panel
   .panel-body
-    - if @orders.empty?
-      %p.empty-resultset= t 'orders.empty_list'
+    = dashboard_simple_form_for '', :url => path_to_orders, method: :get, html: { class: 'search' } do |f|
+      = f.input :query, as: :search, label: t('dashboard.items.search.search_your_products'), input_html: { value: params[:query] }, label_html: { class: 'sr-only' }
+      = f.button :submit, t('dashboard.items.search.search'), class: "hidden-xs hidden-sm btn btn-default"
+      = f.input :type, collection: @order_search_service.order_types, as: :check_boxes, label: false, input_html: { checked: params[:type].blank? }, checked: params[:type], wrapper_html: { class: 'always-inline' }
+      = f.input :state, as: :hidden, input_html: { value: params[:state]}
+    %br/
+    - if @order_search_service.orders.empty?
+      %p.empty-resultset= t('orders.empty_list')
     - else
+      - unless current_instance.expand_orders_list?
+        .orders-index
+          .row
+            .col-sm-2.head= t('dashboard.orders.columns.number')
+            .col-sm-2.head.hidden-xs= t('dashboard.orders.columns.listing')
+            .col-sm-2.head.hidden-xs= t('dashboard.orders.columns.payment')
+            .col-sm-2.head.hidden-xs= t('dashboard.orders.columns.placed_at')
+            .col-sm-2.head.hidden-xs= t('dashboard.orders.columns.total')
+            .col-sm-2.actions.hidden-xs
       .orders-a
-        = render partial: 'dashboard/orders/order', collection: @orders
+        - @order_search_service.orders.decorate.each do |order|
+          %article{id: dom_id(order)}
+            - unless current_instance.expand_orders_list?
+              = render 'dashboard/orders/order', order: order
+            .order{class: current_instance.expand_orders_list? ? 'with-margin-bottom' : 'hidden'}
+              = render order
 
-= will_paginate_dashboard(@orders)
+= will_paginate_dashboard(@order_search_service.orders)
+
+
+- content_for :domready do
+  $(document).trigger('init:orders.nearme')

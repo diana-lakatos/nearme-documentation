@@ -19,11 +19,11 @@
       .service
         .header
           .service-name
-            %input{type: 'checkbox', checked: transactable_type.enable_reviews?, 'data-url' => change_state_instance_admin_manage_service_type_path(transactable_type)}
+            %input{type: 'checkbox', checked: transactable_type.enable_reviews?, 'data-url' => change_state_instance_admin_manage_transactable_type_path(transactable_type)}
             %label= transactable_type.translated_bookable_noun
           - if transactable_type.rating_systems.where(subject: [RatingConstants::GUEST, RatingConstants::HOST]).count == 2
             .only-if-both-completed
-              %input{type: 'checkbox', checked: transactable_type.show_reviews_if_both_completed?, 'data-url' => change_state_instance_admin_manage_service_type_path(transactable_type), 'data-service-name' => transactable_type.translated_bookable_noun}
+              %input{type: 'checkbox', checked: transactable_type.show_reviews_if_both_completed?, 'data-url' => change_state_instance_admin_manage_transactable_type_path(transactable_type), 'data-service-name' => transactable_type.translated_bookable_noun}
               %label= t("instance_admin.rating_systems.index.only_if_both_completed_#{transactable_type.buyable? ? 'products' : 'services'}")
 
         .ratings-content-container{class: "#{'hidden' unless transactable_type.enable_reviews?}"}

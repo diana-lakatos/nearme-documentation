@@ -13,7 +13,7 @@ class TransactableTypeSelectTag < SelectTag
   end
 
   def classes
-    %w(transactable-type-select-tag)
+    %w(transactable-type-select-tag service-type-select-tag)
   end
 end
 

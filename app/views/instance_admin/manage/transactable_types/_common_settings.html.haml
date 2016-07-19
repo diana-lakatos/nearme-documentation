@@ -1,9 +1,10 @@
-%h4= t('instance_admin.manage.service_types.booking_settings')
+%h4= t('instance_admin.manage.transactable_types.booking_settings')
 .row
   .input-container.col-xs-12
     = yield "booking_settings_#{f.object.name}"
     = f.input :allow_action_rfq, as: :boolean, :inline_label => true
     = f.input :allow_no_action, as: :boolean, :inline_label => true
+    = f.input :confirm_reservations, as: :boolean, :inline_label => true
 .row
   .input-container.col-xs-6
     = f.input :hours_to_expiration, required: false, input_html: { class: 'form-control' }
@@ -15,7 +16,7 @@
     = f.input :service_fee_host_percent do
       = f.input_field :service_fee_host_percent, type: 'tel', class: 'form-control'
 
-%h4= t('instance_admin.manage.service_types.cancellation_policy')
+%h4= t('instance_admin.manage.transactable_types.cancellation_policy')
 .row
   .input-container.col-xs-12
     = f.input :cancellation_policy_enabled, required: false, as: :boolean, input_html: { checked: f.object.cancellation_policy_enabled.present? }, :inline_label => true

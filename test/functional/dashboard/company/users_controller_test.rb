@@ -6,7 +6,6 @@ class Dashboard::Company::UsersControllerTest < ActionController::TestCase
     sign_in @creator
     @company = FactoryGirl.create(:company, :creator => @creator)
     @company.users << @creator
-    @company.products << FactoryGirl.create(:product)
   end
 
   should "get index" do

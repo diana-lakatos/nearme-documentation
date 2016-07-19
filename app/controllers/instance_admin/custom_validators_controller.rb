@@ -59,9 +59,9 @@ end
 
 def set_breadcrumbs
     @breadcrumbs_title = BreadcrumbsList.new(
-      { :url => polymorphic_url([:instance_admin, @controller_scope, resource_class]), :title => t('instance_admin.manage.service_types.service_types') },
+      { :url => polymorphic_url([:instance_admin, @controller_scope, resource_class]), :title => t('instance_admin.manage.transactable_types.transactable_types') },
       { :title => @validatable.name.titleize },
-      { :url => redirect_path, :title => t('instance_admin.manage.service_types.custom_validators') }
+      { :url => redirect_path, :title => t('instance_admin.manage.transactable_types.custom_validators') }
     )
   end
 end

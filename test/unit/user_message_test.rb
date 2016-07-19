@@ -5,38 +5,38 @@ class UserMessageTest < ActiveSupport::TestCase
   context 'archived_for' do
 
     setup do
-      @listing = FactoryGirl.create(:transactable)
-      @listing_administrator = @listing.administrator
+      @transactable = FactoryGirl.create(:transactable)
+      @transactable_administrator = @transactable.administrator
       @user = FactoryGirl.create(:user)
 
       @user_message = FactoryGirl.create(:user_message,
-        thread_context: @listing,
+        thread_context: @transactable,
         thread_owner: @user,
         author: @user,
-        thread_recipient: @listing_administrator
+        thread_recipient: @transactable_administrator
       )
     end
 
     should 'choose write field to store information about archiving' do
       assert_equal @user_message.archived_for?(@user), false
-      assert_equal @user_message.archived_for?(@listing_administrator), false
+      assert_equal @user_message.archived_for?(@transactable_administrator), false
       assert_equal @user_message.archived_column_for(@user), 'archived_for_owner'
-      assert_equal @user_message.archived_column_for(@listing_administrator), 'archived_for_recipient'
+      assert_equal @user_message.archived_column_for(@transactable_administrator), 'archived_for_recipient'
     end
   end
 
   context 'mark as read' do
 
     setup do
-      @listing = FactoryGirl.create(:transactable)
-      @listing_administrator = @listing.administrator
+      @transactable = FactoryGirl.create(:transactable)
+      @transactable_administrator = @transactable.administrator
       @user = FactoryGirl.create(:user)
 
       @user_message = FactoryGirl.create(:user_message,
-        thread_context: @listing,
+        thread_context: @transactable,
         thread_owner: @user,
         author: @user,
-        thread_recipient: @listing_administrator
+        thread_recipient: @transactable_administrator
       )
     end
 
@@ -47,22 +47,22 @@ class UserMessageTest < ActiveSupport::TestCase
     end
 
     should 'mark as read for thread recipient' do
-      @user_message.mark_as_read_for!(@listing_administrator)
+      @user_message.mark_as_read_for!(@transactable_administrator)
 
-      assert @user_message.read_for?(@listing_administrator)
+      assert @user_message.read_for?(@transactable_administrator)
     end
   end
 
   context 'author_has_access_to_message_context' do
 
     should 'return true if reservation is a thread_context and author is company user' do
-      @listing = FactoryGirl.create(:transactable)
-      @reservation = FactoryGirl.create(:reservation, listing: @listing)
+      @transactable = FactoryGirl.create(:transactable)
+      @reservation = FactoryGirl.create(:reservation, transactable: @transactable)
       @user = FactoryGirl.create(:user)
       CompanyUser.create(company_id: @reservation.company.id, user_id: @user.id)
 
       @user_message = FactoryGirl.create(:user_message,
-                                         thread_context: @listing,
+                                         thread_context: @transactable,
                                          thread_owner: @user,
                                          thread_recipient: @reservation.owner,
                                          author: @user

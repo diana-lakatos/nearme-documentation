@@ -5,7 +5,7 @@ class Location < ActiveRecord::Base
   scoped_to_platform_context
 
   has_metadata :accessors => [:photos_metadata]
-  notify_associations_about_column_update([:reservations, :listings], :administrator_id)
+  notify_associations_about_column_update([:listings], :administrator_id)
   notify_associations_about_column_update([:payments, :reservations, :listings], :company_id)
   inherits_columns_from_association([:creator_id, :listings_public], :company)
 
@@ -14,8 +14,6 @@ class Location < ActiveRecord::Base
   include AvailabilityRule::TargetHelper
 
   attr_accessor :search_rank, :transactable_type, :availability_template_attributes
-
-  liquid_methods :name
 
   serialize :address_components, JSON
   serialize :info, Hash

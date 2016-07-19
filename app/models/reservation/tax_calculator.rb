@@ -1,21 +1,10 @@
 class Reservation::TaxCalculator
-  attr_reader :reservation
 
-  def initialize(reservation)
-    @reservation = reservation
-    @listing = @reservation.listing
-    @seller_company = @listing.company
-    @buyer_address = @reservation.owner.try(:current_address)
-    @seller_address = @reservation.host.try(:current_address) || @seller_company.try(:company_address)
-  end
-
-  def included_tax_amount_cents
-    (0.01 * included_tax_rate.value * @reservation.total_amount_cents) / (1 + 0.01 * included_tax_rate.value)
-  end
-
-  def tax_rates
-    tax_region = TaxRegion.find_by_country_id(@seller_address.country_object.try(:id))
-    @tax_rates ||= TaxRate.where(state: [@seller_address.state_object, nil], tax_region: tax_region)
+  def initialize(order, item)
+    @order = order
+    @seller_company = @order.company
+    @buyer_address = @order.user.try(:current_address)
+    @seller_address = @order.host.try(:current_address) || @seller_company.try(:company_address)
   end
 
   def included_tax_rate
@@ -26,16 +15,33 @@ class Reservation::TaxCalculator
     tax_rate(included_in_price: false)
   end
 
-  def build_additional_tax_rate
-    return nil if additional_tax_rate.blank? || additional_tax_rate.value.zero?
+  private
 
-    @reservation.additional_charges.build(
-      target: @reservation,
-      currency: @reservation.currency,
-      name: additional_tax_rate.name,
-      commission_receiver: 'host',
-      amount_cents: 0.01 * additional_tax_rate.value * @reservation.total_amount_cents)
+  def tax_rates
+    tax_region = TaxRegion.find_by_country_id(@seller_address.country_object.try(:id))
+    @tax_rates ||= TaxRate.where(state: [@seller_address.state_object, nil], tax_region: tax_region)
   end
+
+  # if needed we can caluclate tax as separate live item TBD
+
+  # def included_tax_amount_cents
+  #   (0.01 * included_tax_rate.value * @order.total_amount_cents) / (1 + 0.01 * included_tax_rate.value)
+  # end
+
+  # def added_tax_amount_cents
+  #   0.01 * additional_tax_rate.value * @order.total_amount_cents)
+  # end
+
+  # def build_additional_tax_rate
+  #   return nil if additional_tax_rate.blank? || additional_tax_rate.value.zero?
+
+  #   @order.tax_line_items.build(
+  #     target: @order,
+  #     currency: @order.currency,
+  #     name: additional_tax_rate.name,
+  #     commission_receiver: 'host',
+  #     amount_cents: 0.01 * additional_tax_rate.value * @order.total_amount_cents)
+  # end
 
   def tax_rate(options)
     return OpenStruct.new(name: 'Tax', value: 0) unless valid?
@@ -53,6 +59,6 @@ class Reservation::TaxCalculator
   end
 
   def valid?
-    @seller_address.present? && @seller_company.present? && @listing.present? && @reservation.present?
+    @seller_address.present? && @seller_company.present? && @order.present?
   end
 end

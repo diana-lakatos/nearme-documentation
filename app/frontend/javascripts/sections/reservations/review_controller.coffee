@@ -4,7 +4,7 @@ module.exports = class ReservationReviewController
 
   constructor: (@container) ->
     @dateInput = @container.find('.jquery-datepicker');
-    @startTimeInput = @container.find('#reservation_request_start_time')
+    @startTimeInput = @container.find('#order_start_time')
     if @dateInput.length > 0
       OverlappingReservationsController = require('./overlapping_reservations')
       @overlappingCheck = new OverlappingReservationsController(@container.find('[data-reservation-dates-controller]'));
@@ -14,7 +14,7 @@ module.exports = class ReservationReviewController
 
   initializeDatepicker: ->
     @dateInput.datepicker
-      altField: '#reservation_request_dates'
+      altField: '#order_dates'
       altFormat: 'yy-mm-dd'
       minDate: new Date()
       dateFormat: window.I18n.dateFormats['day_month_year'].replace('%d', 'dd').replace('%m', 'mm').replace('%Y', 'yy')

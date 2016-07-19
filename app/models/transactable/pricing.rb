@@ -44,6 +44,21 @@ class Transactable::Pricing < ActiveRecord::Base
   scope :by_number_and_unit, -> (number, unit) { where(number_of_units: number, unit: unit) }
   scope :by_unit, -> (by_unit) { where(unit: by_unit) if by_unit.present? }
 
+  def order_class
+    case action.type
+    when "Transactable::SubscriptionBooking"
+      RecurringBooking
+    when "Transactable::PurchaseAction"
+      Purchase
+    else
+      if action.transactable_type_action_type.transactable_type.try(:skip_payment_authorization?)
+        DelayedReservation
+      else
+        Reservation
+      end
+    end
+  end
+
   def units_and_price
     [number_of_units, slice(:price, :id)]
   end
@@ -139,6 +154,10 @@ class Transactable::Pricing < ActiveRecord::Base
     'PricingJsonSerializer'
   end
 
+  def to_liquid
+    @pricing_drop ||= Transactable::PricingDrop.new(self)
+  end
+
   private
 
   def check_pricing_uniqueness
@@ -153,4 +172,6 @@ class Transactable::Pricing < ActiveRecord::Base
     end
   end
 
+
 end
+

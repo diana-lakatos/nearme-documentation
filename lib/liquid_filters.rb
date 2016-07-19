@@ -321,7 +321,7 @@ module LiquidFilters
 
   def already_favorite(user, object)
     return false unless user.present?
-    user.user.default_wish_list.items.where(wishlistable_id: object.id, wishlistable_type: object.class_name).exists?
+    user.default_wish_list.items.where(wishlistable_id: object.id, wishlistable_type: object.class_name).exists?
   end
 
   def titleize(text)

@@ -3,11 +3,8 @@
     %p= mobile_menu_caption
     = image_tag 'themes/buy_sell/hamburger.png'
   %ul#mobile-nav-list.nav.collapse
-    - if buyable?
-      = dashboard_menu_item 'dashboard/orders', dashboard_orders_path
-    - else
-      = dashboard_menu_item 'dashboard/user_reservations', dashboard_user_reservations_path,
-        active: (params[:controller].include?('user_recurring_bookings') || params[:controller].include?('user_reservations'))
+    = dashboard_menu_item 'dashboard/user_reservations', dashboard_user_reservations_path,
+      active: (params[:controller].include?('user_recurring_bookings') || params[:controller].include?('user_reservations'))
 
     = dashboard_menu_item 'dashboard/user_messages', dashboard_user_messages_path
     - if platform_context.instance.action_rfq?
@@ -18,15 +15,10 @@
 
     - if current_user.companies.any?
       = dashboard_menu_item 'dashboard/companies', edit_dashboard_company_path(current_user.companies.first)
-      - if buyable?
-        = dashboard_menu_item 'dashboard/products', dashboard_company_product_type_products_path(Spree::ProductType.first)
-      - elsif TransactableType.first
+      - if TransactableType.first
         = dashboard_menu_item 'dashboard/transactables', dashboard_company_transactable_type_transactables_path(TransactableType.first)
       = dashboard_menu_item 'dashboard/payouts', edit_dashboard_company_payouts_path
-      - if buyable?
-        = dashboard_menu_item 'dashboard/orders_received', dashboard_company_orders_received_index_path
-      - else
-        = dashboard_menu_item 'dashboard/host_reservations', dashboard_company_host_reservations_path,
+      = dashboard_menu_item 'dashboard/host_reservations', dashboard_company_host_reservations_path,
           active: (params[:controller].include?('host_recurring_bookings') || params[:controller].include?('host_reservations'))
 
       = dashboard_menu_item 'dashboard/transfers', dashboard_company_transfers_path

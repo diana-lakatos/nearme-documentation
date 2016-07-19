@@ -3,7 +3,7 @@ Dialog = require('../../new_ui/modules/dialog')
 
 module.exports = class OverlappingReservationsController
   constructor: (@container, @review_options = {}) ->
-    @dateField = @container.find('#reservation_request_dates')
+    @dateField = @container.find('#order_dates')
     @visibleDateField = @container.find('.jquery-datepicker')
     @validatorUrl = @container.data('validator-url')
 

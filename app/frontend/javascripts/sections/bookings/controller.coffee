@@ -56,10 +56,10 @@ module.exports = class BookingsController
 
   # Bind to the various DOM elements managed by this controller.
   bindDomElements: ->
-    @transactablePricing = @container.find('input[name="reservation_request[transactable_pricing_id]"]')
+    @transactablePricing = @container.find('input[name="order[transactable_pricing_id]"]')
     @quantityField = @container.find('[name=quantity].quantity')
     @bookItOutContainer = @container.find('.book-it-out')
-    @bookItOutCheck = @container.find('input[name=book_it_out]')
+    @bookItOutCheck = @container.find('input[name="order[book_it_out]"]')
     @exclusivePriceContainer = @container.find('.exclusive-price')
     @exclusivePriceCheck = @exclusivePriceContainer.find('input')
     @exclusivePriceContent = @container.find('div[data-exclusive-price-content]')
@@ -212,7 +212,7 @@ module.exports = class BookingsController
       @quantityResourceElement.text(@quantityResourceElement.data('singular'))
 
   updateCharges: ->
-    additionalChargeFields = @container.find("[data-additional-charges] input[name='reservation_request[additional_charge_ids][]']")
+    additionalChargeFields = @container.find("[data-additional-charges] input[name='order[additional_charge_ids][]']")
     reservationRequestForm = @container.find('[data-reservation-charges]')
     reservationRequestForm.empty()
     additionalChargeFields.clone().prependTo(reservationRequestForm)
@@ -244,19 +244,19 @@ module.exports = class BookingsController
 
   setFormFields: ->
     options = @listing.reservationOptions()
-    @bookForm.find('[name="reservation_request[quantity]"]').val(options.quantity)
-    @bookForm.find('[name="reservation_request[book_it_out]"]').val(options.book_it_out || @bookItOutSelected())
-    @bookForm.find('[name="reservation_request[exclusive_price]"]').val(options.exclusive_price || @exclusivePriceSelected())
+    @bookForm.find('[name="order[quantity]"]').val(options.quantity)
+    @bookForm.find('[name="order[book_it_out]"]').val(options.book_it_out || @bookItOutSelected())
+    @bookForm.find('[name="order[exclusive_price]"]').val(options.exclusive_price || @exclusivePriceSelected())
     data_guest_notes = @container.find('[data-guest-notes]')
-    @bookForm.find('[name="reservation_request[dates]"]').val(options.dates)
+    @bookForm.find('[name="order[dates]"]').val(options.dates)
     if data_guest_notes && data_guest_notes.is(':visible')
-      @bookForm.find('[name="reservation_request[guest_notes]"]').val(options.guest_notes || data_guest_notes.val())
+      @bookForm.find('[name="order[guest_notes]"]').val(options.guest_notes || data_guest_notes.val())
     if @listing.withCalendars()
-      @bookForm.find('[name="reservation_request[start_on]"]').val(options.start_on)
-      @bookForm.find('[name="reservation_request[end_on]"]').val(options.end_on)
+      @bookForm.find('[name="order[start_on]"]').val(options.start_on)
+      @bookForm.find('[name="order[end_on]"]').val(options.end_on)
       if @listing.isReservedHourly()
-        @bookForm.find('[name="reservation_request[start_minute]"]').val(options.start_minute)
-        @bookForm.find('[name="reservation_request[end_minute]"]').val(options.end_minute)
+        @bookForm.find('[name="order[start_minute]"]').val(options.start_minute)
+        @bookForm.find('[name="order[end_minute]"]').val(options.end_minute)
 
   storeFormFields: ->
     $.post @storeReservationRequestUrl, @bookForm.serialize() + "&commit=#{@formTrigger.data('behavior')}", (data) =>

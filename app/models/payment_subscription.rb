@@ -16,6 +16,7 @@ class PaymentSubscription < ActiveRecord::Base
   belongs_to :payment_gateway
   belongs_to :credit_card, -> { with_deleted }
   belongs_to :payer, class_name: 'User'
+  belongs_to :company, -> { with_deleted }
 
   attr_accessor :chosen_credit_card_id
 
@@ -33,6 +34,14 @@ class PaymentSubscription < ActiveRecord::Base
     true
   end
 
+  def currency
+    @currency ||= subscriber.currency_object.iso_code
+  end
+
+  def iso_country_code
+    @iso_country_code ||= company.iso_country_code
+  end
+
   def payment_methods
     if payment_method
       [payment_method]
@@ -42,7 +51,7 @@ class PaymentSubscription < ActiveRecord::Base
   end
 
   def fetch_payment_methods
-    payment_gateways = PlatformContext.current.instance.payment_gateways(subscriber.company.iso_country_code, subscriber.currency)
+    payment_gateways = PlatformContext.current.instance.payment_gateways(iso_country_code, currency)
     PaymentMethod.active.credit_card.where(payment_gateway_id: payment_gateways.select {|p| p.supports_recurring_payment? }.map(&:id) )
   end
 

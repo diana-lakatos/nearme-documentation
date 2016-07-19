@@ -34,7 +34,7 @@ module ClickToCallButtonHelper
   end
 
   def show_not_verified_host_alert?(reservation)
-    PlatformContext.current.instance.click_to_call? && reservation.listing.present? && reservation.owner.communication.try(:verified) && !current_user.communication.try(:verified)
+    PlatformContext.current.instance.click_to_call? && reservation.transactable.present? && reservation.owner.communication.try(:verified) && !current_user.communication.try(:verified)
   end
 
   private

@@ -2,16 +2,16 @@
   %header
     .row
       .col-sm-7
-        - if reservation.listing.present? && !reservation.listing.deleted?
+        - if reservation.transactable.present? && !reservation.transactable.deleted?
           %h2
-            - listing_name = reservation.listing.try(:name)
-            - listing_name = t('dashboard.host_reservations.show_listing_page') if listing_name.blank?
-            = link_to listing_name, reservation.listing.decorate.show_path
+            - transactable_name = reservation.transactable.try(:name)
+            - transactable_name = t('dashboard.host_reservations.show_listing_page') if transactable_name.blank?
+            = link_to transactable_name, reservation.transactable.decorate.show_path
 
-            = build_click_to_call_button_for_transactable(reservation.listing)
+            = build_click_to_call_button_for_transactable(reservation.transactable)
 
         - else
-          %h2= "#{reservation.listing.try(:name)} [#{t('dashboard.user_reservations.listing_deleted')}]"
+          %h2= "#{reservation.transactable.try(:name)} [#{t('dashboard.user_reservations.listing_deleted')}]"
 
       .col-sm-5
         .order-status
@@ -25,7 +25,7 @@
 
   - if reservation.state == 'unconfirmed' && !reservation.archived?
     .alert.alert-warning
-      #{t('dashboard.user_reservations.pending_confirmation')} <strong>#{reservation.time_to_expiry(reservation.expire_at)}</strong>.
+      #{t('dashboard.user_reservations.pending_confirmation')} <strong>#{reservation.time_to_expiry(reservation.expires_at)}</strong>.
 
     - if reservation.payment.try(:active_merchant_payment?)
       - if reservation.payment.billing_authorizations.present?
@@ -34,7 +34,7 @@
   - if reservation.payment.test_mode?
     .alert.alert-warning= I18n.t('dashboard.user_reservations.test_mode')
 
-  - if show_not_verified_user_alert?(reservation.listing)
+  - if show_not_verified_user_alert?(reservation.transactable)
     .alert.alert-warning
       = I18n.t('dashboard.click_to_call.not_verified_self_warning', link: link_to(t('dashboard.nav.social_accounts'), social_accounts_path).html_safe).html_safe
 
@@ -56,13 +56,13 @@
           - reservation.payment_documents.each do |pd|
             %li
               %a{:href => pd.file.url, download: true}= pd.file.file_name
-    - if reservation.additional_charges.present?
+    - if reservation.additional_line_items.present?
       .col-sm-3.right
         %h3=  t('dashboard.user_reservations.additional_charges')
         %ul.payment-documents
-          - reservation.additional_charges.each do |ac|
+          - reservation.additional_line_items.each do |ac|
             %li
-              =ac.name + ' - ' + humanized_money_with_cents_and_symbol(ac.amount)
+              =ac.name + ' - ' + humanized_money_with_cents_and_symbol(ac.total_price)
 
   .row
     .col-sm-9.col-sm-push-3
@@ -98,3 +98,5 @@
 
     .col-sm-3.col-sm-pull-9
       %small= t('dashboard.user_reservations.reservation_placed_html', date: l(reservation.created_at.to_date, format: :long))
+      %br
+      %small= t('dashboard.host_reservations.order_number', number: reservation.id)

@@ -1,0 +1,12 @@
+- if @order.get_shipping_rates.any?
+  - if @order.shipments.many?
+    %p= t 'reservations_review.delivery_hint'
+  .row.delivery-options
+    .span12
+      = f.input :delivery_ids, collection: @order.get_shipping_rates, as: :radio_buttons, label: false, checked: @order.delivery_ids
+- elsif @order.shipments.none?(&:use_shippo?)
+  %ul
+    %li= @order.shipments.first.name
+- else
+  .error.flash
+    %p= t 'reservations_review.errors.no_delivery_options'

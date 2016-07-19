@@ -12,7 +12,7 @@ gem 'patron'
 gem 'redis'
 gem 'redis-rails', '~> 4.0.0'
 gem 'raygun4ruby'
-gem 'liquid'
+gem 'liquid', '3.0.6'
 gem 'active_model_serializers', '~> 0.8.1'
 gem 'jsonapi-serializers', github: "mdyd-dev/jsonapi-serializers", branch: 'feature/namespace'
 gem 'rabl'
@@ -77,7 +77,7 @@ gem 'i18n-active_record',
     git: 'git://github.com/svenfuchs/i18n-active_record.git',
     require: 'i18n/active_record'
 
-gem 'paper_trail', '3.0.0'
+gem 'paper_trail', '5.2.0'
 
 gem 'rack-rewrite', :require => 'rack/rewrite'
 
@@ -182,6 +182,7 @@ group :development do
   gem 'quiet_assets'
   gem 'pry-nav'
   gem 'pry-doc'
+  gem 'pry-stack_explorer'
   gem 'spring'
   gem 'spring-commands-cucumber'
   gem 'parallel_tests'

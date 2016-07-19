@@ -7,14 +7,10 @@ class SearchControllerTest < ActionController::TestCase
     Transactable.__elasticsearch__.index_name = 'transactables_test'
     Transactable.__elasticsearch__.create_index!
     Transactable.__elasticsearch__.refresh_index!
-    Spree::Product.__elasticsearch__.index_name = 'products_test'
-    Spree::Product.__elasticsearch__.create_index!
-    Spree::Product.__elasticsearch__.refresh_index!
   end
 
   teardown do
     Transactable.__elasticsearch__.client.indices.delete index: Transactable.index_name
-    Spree::Product.__elasticsearch__.client.indices.delete index: Spree::Product.index_name
     Rails.application.config.use_elastic_search = false
   end
 
@@ -175,7 +171,7 @@ class SearchControllerTest < ActionController::TestCase
                   @friend = FactoryGirl.create(:user)
                   @me.add_friend(@friend)
 
-                  FactoryGirl.create(:past_reservation, listing: FactoryGirl.create(:transactable, :with_time_based_booking, location: @adelaide), user: @friend)
+                  FactoryGirl.create(:past_reservation, transactable: FactoryGirl.create(:transactable, :with_time_based_booking, location: @adelaide), user: @friend)
                   @adelaide.reload
                   Transactable.__elasticsearch__.refresh_index!
                 end
@@ -366,151 +362,6 @@ class SearchControllerTest < ActionController::TestCase
     end
   end
 
-  context 'for transactable type buy/sell' do
-    setup do
-      TransactableType.destroy_all
-      FactoryGirl.create(:product_type)
-    end
-
-    context 'search integration' do
-
-      context 'for disabled listing' do
-        should 'exclude disabled listing' do
-          FactoryGirl.create(:product, approved: false, name: 'product')
-
-          get :index, query: 'product', v: 'products'
-          assert_no_products_found
-        end
-      end
-
-      context 'for invalid place' do
-        should 'find nothing for empty query' do
-          get :index, query: '', v: 'products'
-          assert_no_products_found
-        end
-
-        should 'find nothing for invalid query' do
-          get :index, query: 'bung', v: 'products'
-          assert_no_products_found
-        end
-      end
-
-      context 'for existing products' do
-        context 'with category filter' do
-          setup do
-            parent = FactoryGirl.create(:category, name: 'Categories')
-            @category = FactoryGirl.create(:category, name: 'category_1', parent: parent)
-            @another_category = FactoryGirl.create(:category, parent: parent)
-            @filtered_product = FactoryGirl.create(:product, categories: [@category])
-            @another_product = FactoryGirl.create(:product, categories: [@another_category])
-          end
-
-          should 'filter only filtered products' do
-            get :index, { category_ids: @category.id, v: 'products' }
-
-            assert_product_in_result(@filtered_product)
-            refute_product_in_result(@another_product)
-          end
-
-          should 'query only filtered products' do
-            another_product2 = FactoryGirl.create(:product, name: 'product three', categories: [@another_category])
-
-            get :index, { category_ids: @category.id, v: 'products', query: 'product' }
-
-            assert_product_in_result(@filtered_product)
-            refute_products_in_result([@another_product, another_product2])
-          end
-        end
-
-        context 'without filter' do
-          setup do
-            @product_type = FactoryGirl.create(:product_type, :with_custom_attribute)
-            @product1 = FactoryGirl.create(:product, name: 'product_one', product_type: @product_type)
-            @product2 = FactoryGirl.create(:product, name: 'product_two', product_type: @product_type)
-            @product3 = FactoryGirl.create(:product, name: 'product three', product_type: @product_type)
-            @product3.extra_properties['manufacturer'] = "Bosh"
-            @product3.save
-          end
-
-          should 'not show products that belong to different product type' do
-            get :index, query: 'product_one', v: 'products', transactable_type_id: FactoryGirl.create(:product_type).id
-            refute_products_in_result([@product1, @product2, @product3])
-          end
-
-          should 'show only valid products' do
-            get :index, query: 'product_one', v: 'products', transactable_type_id: @product_type.id
-            assert_product_in_result(@product1)
-            refute_products_in_result([@product2, @product3])
-          end
-
-          should 'show only valid products like' do
-            get :index, query: 'product one', v: 'products', transactable_type_id: @product_type.id
-            assert_products_in_result([@product1, @product2, @product3])
-          end
-
-          should 'show only valid products from extra_properties' do
-            get :index, query: 'product_one bosh', v: 'products', transactable_type_id: @product_type.id
-            assert_products_in_result([@product1, @product3])
-            refute_product_in_result(@product2)
-          end
-        end
-      end
-    end
-
-    context 'conduct search' do
-
-      should "not track search for empty query" do
-        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).never
-        get :index, query: nil, v: 'products'
-      end
-
-      should 'track search for first page' do
-        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).once
-        get :index, query: 'product_1', page: 1, v: 'products'
-      end
-
-      should 'not track search for second page' do
-        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).never
-        get :index, query: 'product_1', page: 2, v: 'products'
-      end
-
-      should 'not track second search for the different query' do
-        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).twice
-        get :index, query: 'product_1', v: 'products'
-        get :index, query: 'product_2', v: 'products'
-      end
-
-      should 'track search if ignore_search flag is set to 0' do
-        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).once
-        get :index, query: 'product_1', ignore_search_event: "0", v: 'products'
-      end
-
-      should 'not track search if ignore_search flag is set to 1' do
-        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).never
-        get :index, query: 'product_1', ignore_search_event: "1", v: 'products'
-      end
-
-      should 'not track second search for the same query if filters have not been changed' do
-        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).once
-        get :index, query: 'product_1', v: 'products'
-        get :index, query: 'product_1', v: 'products'
-      end
-
-      should 'log filters in mixpanel along with other arguments for products result type' do
-        expected_custom_options = {
-          search_query: 'product_1',
-          result_view: 'products',
-          result_count: 0,
-          custom_attributes: { 'attribute_filter' => ['Lefthanded'] }
-        }
-        Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).with do |search, custom_options|
-          expected_custom_options == custom_options
-        end
-        get :index, { query: 'product_1', lg_custom_attributes: { attribute_filter: ['Lefthanded'] }, v: 'products' }
-      end
-    end
-  end
-
   context 'for mixed individual settings' do
 
     setup do
@@ -558,10 +409,6 @@ class SearchControllerTest < ActionController::TestCase
     assert_select 'h1', 1, 'No results found'
   end
 
-  def assert_no_products_found
-    assert_select 'h1', 1, 'No results found'
-  end
-
   def assert_location_in_result(location)
     location.listings.each do |listing|
       assert_select 'article[data-id=?]', listing.id, count: 1
@@ -589,26 +436,5 @@ class SearchControllerTest < ActionController::TestCase
   def refute_location_in_mixed_result(location)
     assert_select 'article[data-id=?]', location.id, count: 0
   end
-
-  def assert_products_in_result(products)
-    products.each do |product|
-      assert_product_in_result(product)
-    end
-  end
-
-  def refute_products_in_result(products)
-    products.each do |product|
-      refute_product_in_result(product)
-    end
-  end
-
-  def assert_product_in_result(product)
-    assert_select '.result-item[data-product-id=?]', product.id, count: 1
-  end
-
-  def refute_product_in_result(product)
-    assert_select '.result-item[data-product-id=?]', product.id, count: 0
-  end
-
 
 end

@@ -12,7 +12,4 @@ if defined?(Spree)
     # config.site_name = "Spree Demo Site"
     # config.require_master_price = nil
   end
-
-  Spree.user_class = "User"
-
 end

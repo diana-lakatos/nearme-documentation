@@ -5,73 +5,51 @@ class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin
   before_filter :get_company
 
   def index
-    @shipping_categories = Spree::ShippingCategory.system_profiles
+    @shipping_profiles = ShippingProfile.global
   end
 
   def new
-    @shipping_category_form = ShippingCategoryForm.new(Spree::ShippingCategory.new)
-    @shipping_category_form.assign_all_attributes
-    render :partial => 'dashboard/shipping_categories/shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post }
+    @shipping_profile = ShippingProfile.new
+    render :partial => 'dashboard/shipping_profiles/shipping_profile', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post }
   end
 
   def create
-    @shipping_category = @company.shipping_categories.build
-    @shipping_category.user_id = current_user.id
-    @shipping_category_form = ShippingCategoryForm.new(@shipping_category, is_system_profile: true)
-    if @shipping_category_form.submit(shipping_category_form_params)
-      render :partial => 'dashboard/shipping_categories/shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post, :is_success => true }
+    @company ||= Company.new
+    @shipping_profile = ShippingProfile.new(shipping_profile_params)
+    @shipping_profile.user_id = current_user.id
+    @shipping_profile.global = true
+    if @shipping_profile.save
+      render :partial => 'dashboard/shipping_profiles/shipping_profile', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post, :is_success => true }
     else
-      render :partial => 'dashboard/shipping_categories/shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post }
+      render :partial => 'dashboard/shipping_profiles/shipping_profile', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post }
     end
   end
 
   def edit
-    shipping_category = Spree::ShippingCategory.system_profiles.find(params[:id])
-
-    @shipping_category_form = ShippingCategoryForm.new(shipping_category)
-    @shipping_category_form.assign_all_attributes
-    render :partial => 'dashboard/shipping_categories/shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profile_path(shipping_category), :form_method => :put }
+    @shipping_profile = ShippingProfile.find(params[:id])
+    render :partial => 'dashboard/shipping_profiles/shipping_profile', :locals => { :form_url => instance_admin_shipping_options_shipping_profile_path(@shipping_profile), :form_method => :put }
   end
 
   def update
-    @shipping_category = Spree::ShippingCategory.system_profiles.find(params[:id])
-
-    @shipping_category_form = ShippingCategoryForm.new(@shipping_category, is_system_profile: true)
-    if @shipping_category_form.submit(shipping_category_form_params)
-      render :partial => 'dashboard/shipping_categories/shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post, :is_success => true }
+    @shipping_profile = ShippingProfile.find(params[:id])
+    shipping_profile_params[:global] = true
+    if @shipping_profile.update(shipping_profile_params)
+      render :partial => 'dashboard/shipping_profiles/shipping_profile', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post, :is_success => true }
     else
-      render :partial => 'dashboard/shipping_categories/shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post }
+      render :partial => 'dashboard/shipping_profiles/shipping_profile', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post }
     end
   end
 
   def destroy
-    @shipping_category = Spree::ShippingCategory.system_profiles.find(params[:id])
-    @shipping_category.destroy
-    if request.xhr?
-      render json: { success: true }
-    else
-      redirect_to instance_admin_shipping_options_shipping_profiles_path
-    end
+    @shipping_profile = ShippingProfile.global.find(params[:id])
+    @shipping_profile.destroy
+    redirect_to action: :index
   end
 
   def get_shipping_categories_list
-    shipping_categories = Spree::ShippingCategory.system_profiles
+    @shipping_profiles = ShippingProfile.global
 
-    render partial: "categories_list", locals: { shipping_categories: shipping_categories }
-  end
-
-  def disable_category
-    shipping_category = Spree::ShippingCategory.system_profiles.find(params[:id])
-    shipping_category.update_attributes(is_system_category_enabled: false)
-
-    redirect_to instance_admin_shipping_options_shipping_profiles_path
-  end
-
-  def enable_category
-    shipping_category = Spree::ShippingCategory.system_profiles.find(params[:id])
-    shipping_category.update_attributes(is_system_category_enabled: true)
-
-    redirect_to instance_admin_shipping_options_shipping_profiles_path
+    render partial: "categories_list"
   end
 
   private
@@ -81,15 +59,15 @@ class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin
   end
 
   def get_company
-    @company = current_user.companies.first || Company.new
+    @company = Company.new
   end
 
   def set_breadcrumbs
     @breadcrumbs_title = 'Shipping Profiles'
   end
 
-  def shipping_category_form_params
-    params.require(:shipping_category_form).permit(secured_params.shipping_category_form)
+  def shipping_profile_params
+    params.require(:shipping_profile).permit(secured_params.shipping_profile)
   end
 
 end

@@ -35,7 +35,7 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
   end
 
   def notify_guest_of_expiration_email!
-    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::Expired, name: 'notify_guest_of_expiration', path: 'reservation_mailer/notify_guest_of_expiration', subject: "[{{platform_context.name}}] Your booking for '{{reservation.listing.name}}' at {{reservation.location.street}} has expired", alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::Expired, name: 'notify_guest_of_expiration', path: 'reservation_mailer/notify_guest_of_expiration', subject: "[{{platform_context.name}}] Your booking for '{{reservation.transactable.name}}' at {{reservation.location.street}} has expired", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def notify_host_of_expiration_email!
@@ -47,11 +47,11 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
   end
 
   def notify_host_of_cancellation_by_guest_email!
-    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::GuestCancelled, name: 'Notify host of guest cancellation', path: 'reservation_mailer/notify_host_of_cancellation_by_guest', subject: "[{{platform_context.name}}] {{reservation.owner.first_name }} cancelled a booking for '{{reservation.listing.name}}' at {{reservation.location.street}}", alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::GuestCancelled, name: 'Notify host of guest cancellation', path: 'reservation_mailer/notify_host_of_cancellation_by_guest', subject: "[{{platform_context.name}}] {{reservation.owner.first_name }} cancelled a booking for '{{reservation.transactable.name}}' at {{reservation.location.street}}", alert_type: 'email', recipient_type: 'lister'})
   end
 
   def notify_guest_of_cancellation_by_host_email!
-    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::HostCancelled, name: 'Notify guest of host cancellation', path: 'reservation_mailer/notify_guest_of_cancellation_by_host', subject: "[{{platform_context.name}}] Your booking for '{{reservation.listing.name}}' at {{reservation.location.street}} was cancelled by the host", alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::HostCancelled, name: 'Notify guest of host cancellation', path: 'reservation_mailer/notify_guest_of_cancellation_by_host', subject: "[{{platform_context.name}}] Your booking for '{{reservation.transactable.name}}' at {{reservation.location.street}} was cancelled by the host", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def notify_host_of_cancellation_by_host_email!
@@ -102,7 +102,7 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
   end
 
   def notify_guest_of_payment_request_email!
-    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::PaymentRequest, name: 'notify_guest_of_payment_request_email', path: 'reservation_mailer/notify_guest_of_payment_request', subject: "[{{platform_context.name}}] Your booking for '{{reservation.listing.name}}' at {{reservation.location.street}} requires payment", alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::PaymentRequest, name: 'notify_guest_of_payment_request_email', path: 'reservation_mailer/notify_guest_of_payment_request', subject: "[{{platform_context.name}}] Your booking for '{{reservation.transactable.name}}' at {{reservation.location.street}} requires payment", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def notify_guest_pre_booking_email!
@@ -122,7 +122,7 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
   end
 
   def request_rating_of_host_from_guest_email!
-    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::HostRatingRequested, name: 'request_rating_of_host_from_guest', path: 'rating_mailer/request_rating_of_host_from_guest', subject: "[{{platform_context.name}}] How was your experience at '{{reservation.listing.name}}'?", alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::HostRatingRequested, name: 'request_rating_of_host_from_guest', path: 'rating_mailer/request_rating_of_host_from_guest', subject: "[{{platform_context.name}}] How was your experience at '{{reservation.transactable.name}}'?", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def create_notify_host_of_shipping_details_email!
@@ -146,11 +146,11 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
   end
 
   def notify_guest_of_submitted_checkout!
-    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::HostSubmittedCheckout, name: 'notify_guest_of_submitted_checkout', path: 'reservation_mailer/notify_guest_of_submitted_checkout', subject: "[{{platform_context.name}}] {{reservation.listing.name}} submitted invoice",  alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::HostSubmittedCheckout, name: 'notify_guest_of_submitted_checkout', path: 'reservation_mailer/notify_guest_of_submitted_checkout', subject: "[{{platform_context.name}}] {{reservation.transactable.name}} submitted invoice",  alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def notify_guest_of_submitted_checkout_with_failed_authorization!
-    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::HostSubmittedCheckoutButAuthorizationFailed, name: 'notify_guest_of_submitted_checkout_with_failed_authorization', path: 'reservation_mailer/notify_guest_of_submitted_checkout_with_failed_authorization', subject: "[{{platform_context.name}}] {{reservation.listing.name}} submitted invoice",  alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::HostSubmittedCheckoutButAuthorizationFailed, name: 'notify_guest_of_submitted_checkout_with_failed_authorization', path: 'reservation_mailer/notify_guest_of_submitted_checkout_with_failed_authorization', subject: "[{{platform_context.name}}] {{reservation.transactable.name}} submitted invoice",  alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def notify_guest_of_penalty_charge_failed!

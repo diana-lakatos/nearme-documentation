@@ -3,7 +3,7 @@ include StubHelper
 
 Given /^I am (host|guest) of a reviewable reservation$/ do |kind|
   @reservation = FactoryGirl.create(:past_reservation)
-  %w(transactable guest host).each { |subject| FactoryGirl.create(:rating_system, subject: subject, active: true, transactable_type: @reservation.listing.transactable_type) }
+  %w(transactable guest host).each { |subject| FactoryGirl.create(:rating_system, subject: subject, active: true, transactable_type: @reservation.transactable.transactable_type) }
   @user = if kind == 'guest'
             @reservation.owner
           elsif kind == 'host'
@@ -24,7 +24,7 @@ Given(/^I receive an email request for (host and listing|guest) rating$/) do |ki
 end
 
 When(/^I submit rating with (valid|invalid) values$/) do |valid|
-  RatingSystem.update_all(transactable_type_id: @reservation.listing.transactable_type_id)
+  RatingSystem.update_all(transactable_type_id: @reservation.transactable.transactable_type_id)
   visit dashboard_reviews_path
 
   page.should have_css('.rating i')
@@ -37,7 +37,7 @@ When(/^I submit rating with (valid|invalid) values$/) do |valid|
 end
 
 When(/^I edit (host|transactable|guest) rating with (valid|invalid) values$/) do |object, valid|
-  RatingSystem.update_all(transactable_type_id: @reservation.listing.transactable_type_id)
+  RatingSystem.update_all(transactable_type_id: @reservation.transactable.transactable_type_id)
   rating_system = RatingSystem.where(subject: object).first
   rating_system ||= RatingSystem.where.not(subject: ['host', 'guest']).first
   FactoryGirl.create(:review, rating_system_id: rating_system.id, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s, user: @user, rating: 5)
@@ -56,7 +56,7 @@ When(/^I edit (host|transactable|guest) rating with (valid|invalid) values$/) do
 end
 
 When(/^I remove review$/) do
-  RatingSystem.update_all(transactable_type_id: @reservation.listing.transactable_type_id)
+  RatingSystem.update_all(transactable_type_id: @reservation.transactable.transactable_type_id)
   @review_to_be_removed = FactoryGirl.create(:review, rating_system_id: RatingSystem.for_hosts.first.id, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s, user: @user, rating: 5)
   visit completed_dashboard_reviews_path
   page.driver.accept_js_confirms!
@@ -85,5 +85,5 @@ end
 
 Then(/^I should see review in uncompleted feedback$/) do
   visit dashboard_reviews_path
-  page.should have_content(@review_to_be_removed.reviewable.listing.creator.name)
+  page.should have_content(@review_to_be_removed.reviewable.transactable.creator.name)
 end

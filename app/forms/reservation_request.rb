@@ -33,7 +33,7 @@ class ReservationRequest < Form
     @last_search_json = last_search_json
 
     if @listing
-      @reservation = @listing.reservations.build
+      @reservation = @listing.orders.reservations.build
       @reservation.reservation_type = @listing.transactable_type.reservation_type
       @reservation.currency = @listing.currency
       @reservation.time_zone = timezone
@@ -217,7 +217,7 @@ class ReservationRequest < Form
   private
 
   def transactable_type
-    @transactable_type ||= reservation.listing.transactable_type
+    @transactable_type ||= reservation.transactable.transactable_type
   end
 
   def user_has_mobile_phone_and_country?
