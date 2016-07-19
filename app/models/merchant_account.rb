@@ -127,7 +127,7 @@ class MerchantAccount < ActiveRecord::Base
   end
 
   def unset_possible_payout!
-    unless self.test?
+    if !self.test? && self.merchantable && self.payment_gateway
       self.merchantable.listings.update_all(possible_payout: false)
       self.merchantable.merchant_accounts.live.verified.each(&:set_possible_payout!)
       ElasticBulkUpdateJob.perform Transactable, self.merchantable.listings.map{ |listing| [listing.id, { possible_payout: false }]}
