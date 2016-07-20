@@ -33,7 +33,7 @@
               %li
                 = image_tag photo.image_url(:project_thumbnail)
 
-      - if @group.properties[:videos].present?
+      - if @group.properties.try(:videos).present?
         %section.videos
           %h4
             = t('group.videos')
@@ -75,7 +75,7 @@
                 %li
                   = t(:projects)
                   %span
-                    = member.projects_collaborated.count
+                    = member.projects_collaborated.count + member.projects.count
 
               %p
                 = link_to member.name, member
