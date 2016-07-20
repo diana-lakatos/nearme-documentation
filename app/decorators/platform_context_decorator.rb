@@ -9,8 +9,8 @@ class PlatformContextDecorator
            :content_holders, to: :theme
 
   delegate :bookable_noun, :lessor, :lessee, :name, :buyable?, :bookable?, :biddable?,
-           :transactable_types, :project_types, :wish_lists_icon_set,
-           :seller_attachments_enabled?, :wish_lists_enabled?, :webhook_token, to: :instance
+           :transactable_types, :project_types, :wish_lists_icon_set, :seller_attachments_enabled?,
+           :wish_lists_enabled?, :webhook_token, :enable_geo_localization, to: :instance
 
   def initialize(platform_context)
     @platform_context = platform_context

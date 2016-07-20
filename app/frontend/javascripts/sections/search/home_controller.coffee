@@ -14,8 +14,10 @@ module.exports = class HomeController extends SearchController
     @visibleFields = => @form.find('.transactable-type-search-box:visible')
     @visibleQueryField = => @visibleFields().find('input[name="loc"]:first')
     @keywordField = @form.find('input[name="query"]')
+    @initializeGeolocateButton()
 
     @initializeGeocoder()
+
     $.each @form.find('.transactable-type-search-box'), (idx, container)=>
       new SearchDatepickers($(container))
       geo_input = $(container).find('input[name="loc"]')
@@ -23,7 +25,7 @@ module.exports = class HomeController extends SearchController
         @initializeAutocomplete(geo_input)
         @initializeQueryField(geo_input)
 
-    if @queryField.length > 0
+    if @queryField.length > 0 && @form.find('.geolocation').data().enableGeoLocalization
       _.defer(=>@geolocateMe())
 
   assignFormParams: (paramsHash) ->
@@ -72,7 +74,6 @@ module.exports = class HomeController extends SearchController
       @transactableTypePicker.bind "change", (event) =>
         @toggleTransactableTypes($(event.target).val())
 
-
   toggleTransactableTypes: (tt_id) ->
     id = tt_id.split('-')
     @transactableTypeClass.val(id[0])
@@ -81,4 +82,3 @@ module.exports = class HomeController extends SearchController
     other_inputs = @form.find(".transactable-type-search-box")
     other_inputs.hide().find('input').prop('disabled', true)
     inputs.show().find('input').prop('disabled', false)
-
