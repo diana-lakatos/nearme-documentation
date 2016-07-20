@@ -8,38 +8,17 @@ class OnboardingController < ApplicationController
 
   def show
     @user = current_user
-    case step
-    when :location
-      @address = @user.current_address || @user.build_current_address
-    when :integrations
-      cookies[:redirect_after_callback_to] = {value: view_context.wizard_path(step), expires: 10.minutes.from_now}
-      @supported_providers = Authentication.available_providers
-    when :followings
-      quantity = 6
-      @topics = Topic.featured.feed_not_followed_by_user(@user).take(quantity)
-
-      friends_projects = Project.enabled.where(creator_id: @user.social_friends_ids).feed_not_followed_by_user(@user).take(quantity)
-      featured_projects = Project.featured.feed_not_followed_by_user(@user).take(quantity - friends_projects.count)
-      @projects = friends_projects + featured_projects
-
-      friends = @user.social_friends.not_admin.feed_not_followed_by_user(@user).take(quantity)
-      # We do not use the feed_not_followed_by_user scope because it doesn't play well
-      # with the nearby_friends filter
-      nearby =  @user.nearby_friends(100, @user.feed_followed_users.pluck(:id)).not_admin.take(quantity - friends.count)
-      featured = User.not_admin.featured.without(@user).feed_not_followed_by_user(@user).take(quantity - friends.count - nearby.count)
-      @people = (friends + nearby + featured).uniq
-    when :finish
-      @custom_attributes = @user.instance_profile_type.custom_attributes.includes(:target).where(public: true).all
-    end
+    set_variables_for_step(step)
     render_wizard
   end
 
   def update
     @user = current_user
 
+    set_variables_for_step(step)
+
     case step
     when :location
-      @address = @user.current_address || @user.build_current_address
       @address.update_attributes(address_params)
       render_wizard @address
     when :integrations
@@ -64,22 +43,50 @@ class OnboardingController < ApplicationController
 
   private
 
-    def user_params
-      params.require(:user).permit(secured_params.user).tap do |whitelisted|
-        whitelisted[:properties] = params[:user][:properties] if params[:user][:properties]
-      end
-    end
+  # To be DRY, extracted the variable setup to this method
+  # We need them both for show and for update (update renders the same step if the object fails to save)
+  def set_variables_for_step(step)
+    case step
+    when :location
+      @address = @user.current_address || @user.build_current_address
+    when :integrations
+      cookies[:redirect_after_callback_to] = {value: view_context.wizard_path(step), expires: 10.minutes.from_now}
+      @supported_providers = Authentication.available_providers
+    when :followings
+      quantity = 6
+      @topics = Topic.featured.feed_not_followed_by_user(@user).take(quantity)
 
-    def address_params
-      params.require(:address).permit(secured_params.address)
-    end
+      friends_projects = Project.enabled.where(creator_id: @user.social_friends_ids).feed_not_followed_by_user(@user).take(quantity)
+      featured_projects = Project.featured.feed_not_followed_by_user(@user).take(quantity - friends_projects.count)
+      @projects = friends_projects + featured_projects
 
-    def followed_params
-      params.require(:followed).permit(people: [], projects: [], topics: [])
+      friends = @user.social_friends.not_admin.feed_not_followed_by_user(@user).take(quantity)
+      # We do not use the feed_not_followed_by_user scope because it doesn't play well
+      # with the nearby_friends filter
+      nearby =  @user.nearby_friends(100, @user.feed_followed_users.pluck(:id)).not_admin.take(quantity - friends.count)
+      featured = User.not_admin.featured.without(@user).feed_not_followed_by_user(@user).take(quantity - friends.count - nearby.count)
+      @people = (friends + nearby + featured).uniq
+    when :finish
+      @custom_attributes = @user.instance_profile_type.custom_attributes.includes(:target).where(public: true).all
     end
+  end
 
-    def redirect_if_completed
-      redirect_to root_path if !user_signed_in? || current_user.onboarding_completed
+  def user_params
+    params.require(:user).permit(secured_params.user).tap do |whitelisted|
+      whitelisted[:properties] = params[:user][:properties] if params[:user][:properties]
     end
+  end
+
+  def address_params
+    params.require(:address).permit(secured_params.address)
+  end
+
+  def followed_params
+    params.require(:followed).permit(people: [], projects: [], topics: [])
+  end
+
+  def redirect_if_completed
+    redirect_to root_path if !user_signed_in? || current_user.onboarding_completed
+  end
 
 end
