@@ -5,13 +5,125 @@ namespace :litvault do
 
     @instance = Instance.find(198)
     @instance.update_attributes(
+      tt_select_type: 'dropdown',
       split_registration: true
     )
     @instance.set_context!
 
+    create_transactable_types!
+    set_theme_options
+    create_content_holders
     create_views
     create_translations
     expire_cache
+  end
+
+  def create_transactable_types!
+    transactable_type = @instance.transactable_types.where(name: 'CaseType1').first_or_initialize
+    transactable_type.attributes = {
+      name: 'CaseType1',
+      slug: 'case_type1',
+      action_free_booking: false,
+      action_daily_booking: false,
+      action_weekly_booking: false,
+      action_monthly_booking: false,
+      action_regular_booking: true,
+      show_path_format: '/:transactable_type_id/:id',
+      cancellation_policy_enabled: "1",
+      cancellation_policy_hours_for_cancellation: 24,
+      cancellation_policy_penalty_hours: 1.5,
+      default_search_view: 'list',
+      skip_payment_authorization: true,
+      hours_for_guest_to_confirm_payment: 24,
+      single_transactable: true,
+      show_price_slider: true,
+      service_fee_guest_percent: 0,
+      service_fee_host_percent: 30,
+      skip_location: true,
+      show_categories: true,
+      category_search_type: 'AND',
+      bookable_noun: 'CaseType1',
+      enable_photo_required: true,
+      min_hourly_price_cents: 50_00,
+      max_hourly_price_cents: 150_00,
+      lessor: 'Lawyer',
+      lessee: 'Client',
+      enable_reviews: true
+    }
+    transactable_type.save!
+
+    transactable_type = @instance.transactable_types.where(name: 'CaseType2').first_or_initialize
+    transactable_type.attributes = {
+      name: 'CaseType2',
+      slug: 'case_type2',
+      action_free_booking: false,
+      action_daily_booking: false,
+      action_weekly_booking: false,
+      action_monthly_booking: false,
+      action_regular_booking: true,
+      show_path_format: '/:transactable_type_id/:id',
+      cancellation_policy_enabled: "1",
+      cancellation_policy_hours_for_cancellation: 24,
+      cancellation_policy_penalty_hours: 1.5,
+      default_search_view: 'list',
+      skip_payment_authorization: true,
+      hours_for_guest_to_confirm_payment: 24,
+      single_transactable: true,
+      show_price_slider: true,
+      service_fee_guest_percent: 0,
+      service_fee_host_percent: 30,
+      skip_location: true,
+      show_categories: true,
+      category_search_type: 'AND',
+      bookable_noun: 'CaseType2',
+      enable_photo_required: true,
+      min_hourly_price_cents: 50_00,
+      max_hourly_price_cents: 150_00,
+      lessor: 'Lawyer',
+      lessee: 'Client',
+      enable_reviews: true
+    }
+    transactable_type.save!
+  end
+
+  def set_theme_options
+    theme = @instance.theme
+
+    theme.color_green = '#4fc6e1'
+    theme.call_to_action = 'Learn more'
+
+    theme.phone_number = '1-555-555-55555'
+    theme.contact_email = 'support@litvault.com'
+    theme.support_email = 'support@litvault.com'
+
+    theme.facebook_url = 'https://facebook.com'
+    theme.twitter_url = 'https://twitter.com'
+    theme.gplus_url = 'https://plus.google.com'
+    theme.instagram_url = 'https://www.instagram.com'
+    theme.youtube_url = 'https://www.youtube.com'
+
+    ['About', 'About', 'How it Works', 'FAQ', 'Terms of Use', 'Privacy Policy'].each do |name|
+      slug = name.parameterize
+      page = theme.pages.where(slug: slug).first_or_initialize
+      page.path = name
+      page.content = %Q{}
+      page.save
+    end
+
+    theme.updated_at = Time.now
+    theme.save!
+  end
+
+  def create_content_holders
+    ch = @instance.theme.content_holders.where(
+      name: 'LitVault CSS'
+    ).first_or_initialize
+
+    ch.update!({
+      content: "<link rel='stylesheet' media='screen' href='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/attachment_file/data/2699/litvault.css'>",
+      inject_pages: ['any_page'],
+      position: 'head_bottom'
+    })
   end
 
   def expire_cache
@@ -22,7 +134,11 @@ namespace :litvault do
   end
 
   def create_views
+    create_theme_header!
+    create_search_box_inputs!
+    create_home_homepage_content!
     create_listing_show!
+    create_theme_footer!
   end
 
   def create_translations
@@ -244,10 +360,358 @@ namespace :litvault do
     cv.save!
   end
 
+  def create_theme_header!
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'layouts/theme_header',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: %Q{
+  <div class='navbar navbar-inverse navbar-fixed-top'>
+  <div class='navbar-inner nav-links'>
+    <div class='container-fluid'>
+        <a href='{{ platform_context.root_path }}' id="logo">{{ platform_context.name }}</a>
+
+        <div class='header-social-links'>
+          <ul class='nav main-menu'>
+            <li><a href='#' class='nav-link'>Facebook</a></li>
+            <li><a href='#' class='nav-link'>Twitter</a></li>
+            <li><a href='#' class='nav-link'>Linkedin</a></li>
+            <li><a href='#' class='nav-link'>Google+</a></li>
+            <li><a href='#' class='nav-link'>Blog</a></li>
+          </ul>
+        </div>
+
+        {% if no_header_links == false %}
+          <div id='header_links' class='links-container pull-right'>
+            <ul class="nav main-menu header-custom-links">
+              <li>
+                <a href='/' class='nav-link'>
+                  <span class='text'>Home</span>
+                </a>
+              </li>
+
+              <li>
+                <a href='/?section=how-it-works' class='nav-link' scroll-to-section>
+                  <span class='text'>How It Works</span>
+                </a>
+              </li>
+            </ul>
+              {{ navigation_links | make_html_safe }}
+          </div>
+        {% endif %}
+    </div>
+  </div>
+</div>
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+  end
+
+  def create_search_box_inputs!
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'home/search_box_inputs',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: %Q{
+<h2>
+  The Easiest Way For Experienced Trial Lawyers To Get <span class='text-highlight'>Quality Contingent Fee Referrals</span>
+</h2>
+
+<form action="/search" class="home_search search-box {{ class_name }}" method="get">
+  <div class="input-wrapper">
+
+    <div class="row-fluid">
+      {% for transactable_type in transactable_types %}
+        <div class="transactable-type-search-box" data-transactable-type-id="{{ transactable_type.select_id }}" {% if forloop.first != true %} style=" display: none;" {% endif%}>
+          {% include 'home/search/fulltext' %}
+        </div>
+      {% endfor %}
+
+      {% if transactable_types.size > 1 %}
+        {% if platform_context.tt_select_type == 'dropdown' %}
+          <div class="span2 transactable-select-wrapper">
+            <select class="no-icon select2 transactable_select" data-transactable-type-picker name="transactable_type_selector">
+              {% for transactable_type in transactable_types %}
+                <option value="{{ transactable_type.select_id }}">{{ transactable_type.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        {% endif %}
+      {% endif %}
+      <input name="transactable_type_id" type="hidden" value="{{ transactable_type.id }}">
+
+      <div class="span2 pull-right submit-button-wrapper">
+        <a class="btn btn-green btn-large search-button" data-disable-with="{{ 'homepage.disabled_buttons.search' | translate }}" rel="submit" href="">
+          {{ 'homepage.buttons.search' | translate }}
+        </a>
+        <div id="suggest_location" style="display: none"></div>
+      </div>
+    </div>
+
+    {% if transactable_types.size > 1 and platform_context.tt_select_type == 'radio' %}
+      <div class="row-fluid">
+        <div class="span10">
+          <div class="search-transactable--radio">
+            {% for transactable_type in transactable_types %}
+            <label for="transactable-type-{{ transactable_type.id }}">
+            <input type="radio" name="transactable_type_selector" value="{{ transactable_type.select_id }}" id="transactable-type-{{ transactable_type.id }}" {% if forloop.first == true %} checked {% endif %} data-transactable-type-picker > {{ transactable_type.name}}</label>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+  <input type="hidden" name="transactable_type_class">
+  <input type="submit"/>
+</form>
+
+<script type="text/javascript">
+  $(document).ready(function() { $(document).trigger('init:homepageranges.nearme'); });
+</script>
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+  end
+
+  def create_home_homepage_content!
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'home/homepage_content',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: %Q{
+<section class='how-it-works'>
+  <div class='container-fluid'>
+
+    <header>
+      <h2>How it Works</h2>
+    </header>
+
+    <div class='table-row'>
+      <div class='teaser-wrapper table-cell'>
+        <div class='teaser'>
+          <div class='teaser-content'>
+            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2683/icn-save-time-energy.png' /></div>
+            <h3 class='text-highlight'>SAVE TIME + ENERGY</h3>
+            <p>Our specialized marketplace connects <strong>Referring and Handling Lawyers</strong> to engage on a wide variety of contingent fee cases.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class='teaser-wrapper table-cell'>
+        <div class='teaser'>
+          <div class='teaser-content'>
+            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2684/icn-quality-selection.png' /></div>
+            <h3 class='text-highlight'>QUALITY CASE SELECTION</h3>
+            <p>We provide a purpose-built platform that <strong>asks Referring Lawyers all the right questions</strong> so you don't have to.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class='teaser-wrapper table-cell'>
+        <div class='teaser'>
+          <div class='teaser-content'>
+            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2685/icn-secure-compliant.png' /></div>
+            <h3 class='text-highlight'>SECURE + COMPLIANT</h3>
+            <p>Our cloud-based platform offers advanced security in a <strong>HIPAA compliant environment</strong> to protect private information.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <a href='#' class='learn-more'>LEARN MORE</a>
+
+  </div>
+</section>
+
+<section class='video'>
+  <div class='container-fluid'>
+
+    <div class="video-wrapper">
+      <div class="video-constrainer">
+        <h2>VIDEO</h2>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class='benefits'>
+  <div class='container-fluid'>
+
+    <header>
+      <h2>Benefits to <span class='text-highlight'>LitVault Members</span></h2>
+      <h3>
+        <span class='text-highlight'>Designed by lawyers for lawyers.</span>
+        <span class='text-lighter'>Enjoy the time saving tools and process we have created.</span>
+      </h3>
+    </header>
+
+    <div class='table-row'>
+      <div class='teaser-wrapper table-cell'>
+        <div class='teaser'>
+          <div class='teaser-content'>
+            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2686/icn-merit.png' /></div>
+            <h3>Experience is Rewarded</h3>
+            <p>This is not a place to develop a new practice area. Handling Law Firms can only compete for a case listing if they can show competence and experience in that practice area.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class='teaser-wrapper table-cell'>
+        <div class='teaser'>
+          <div class='teaser-content'>
+            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2687/icn-case-alerts.png' /></div>
+            <h3>Auto Case Notifications</h3>
+            <p>Receive automatic notifications about new case listings in your practice area and your geography. Save your valuable time to work on cases instead of finding new cases.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class='teaser-wrapper table-cell'>
+        <div class='teaser'>
+          <div class='teaser-content'>
+            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2688/icn-offer-engine.png' /></div>
+            <h3>Simple Case Offer Engine</h3>
+            <p>Negotiate and contract on case listings using our simple, intuitive case offer engine.  It provides consistency and saves you time and energy.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='table-row'>
+      <div class='teaser-wrapper table-cell'>
+        <div class='teaser'>
+          <div class='teaser-content'>
+            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2689/icn-case-details.png' /></div>
+            <h3>Rich Case Details</h3>
+            <p>Our robust, curated case listing form already asks the Referring Lawyer the important questions about the facts of the case so you don't have to.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class='teaser-wrapper table-cell'>
+        <div class='teaser'>
+          <div class='teaser-content'>
+            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2690/icn-security.png' /></div>
+            <h3>Deal With Confidence</h3>
+            <p>Reputations matter here. Members receive quality scores from other members on a variety of applicable criteria based on actual interactions on this site.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class='teaser-wrapper table-cell'>
+        <div class='teaser'>
+          <div class='teaser-content'>
+            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2691/icn-hippa.png' /></div>
+            <h3>Secure and HIPAA-Compliant</h3>
+            <p>Our platform is built in a Amazon's HIPAA compliant AWS cloud platform for secure transmission of all types of case information.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class='referring-lawyers'>
+  <div class='container-fluid'>
+
+    <div class='table-row'>
+      <div class='sign-up table-cell'>
+        <h2 class='text-highlight'>Referring Lawyers</h2>
+        <h3 class='text-lighter'>Sign up and find out how easy it is to list your first case.</h3>
+        <a href='#' class='sign-up'>SIGN UP</a>
+      </div>
+
+      <div class='manage-on-mobile table-cell'>
+        <p><span class='text-highlight'>Manage</span> all your cases, offers, and<br>communications from any mobile device.</p>
+        <img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2692/iphone.png' />
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<section class='trusted-firms'>
+  <div class='container-fluid'>
+
+    <header>
+      <h2>Trusted firms using <span class='text-highlight'>LitVault</span></h2>
+      <h3><span class='text-lighter'>Designed by lawyers for lawyers. Enjoy the time saving tools and process we have created.</span></h3>
+    </header>
+
+  </div>
+</section>
+
+<section class='testimonials'>
+  <div class='container-fluid'>
+
+    <header>
+      <h2><span class='text-highlight'>Testimonials</span></h2>
+      <h3><span class='text-lighter'>Learn what other lawyers have to say about LitVault.</span></h3>
+    </header>
+
+    <div class='table-row'>
+      <div class='teaser-wrapper table-cell'>
+        <div class='teaser'>
+          <div class='teaser-content'>
+            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2693/johnsmith.png' /></div>
+            <p>“LitVault takes a tedious process and converts into actionable simple steps.  I was able to get my case listed and live for review in a matter of minutes.”</p>
+            <h3>John Smith</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class='teaser-wrapper table-cell'>
+        <div class='teaser'>
+          <div class='teaser-content'>
+            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2694/robertmills.png' /></div>
+            <p>“Posting cases and getting responses from interested and qualified lawyers is as easy as it gets.  I highly recommend LitVault to everyone!”</p>
+            <h3>Robert Mills</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class='teaser-wrapper table-cell'>
+        <div class='teaser'>
+          <div class='teaser-content'>
+            <div class='image'><img src='/litvault/michealduncan.png' /></div>
+            <p>“This service saves my firm time and energy.  It has allowed me to connect and collaborate with many other trusted professionals.”</p>
+            <h3>Micheal Duncan</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+  end
+
   def create_listing_show!
     iv = InstanceView.where(
       instance_id: @instance.id,
-      partial: true,
       path: 'listings/show'
     ).first_or_initialize
     iv.update!({
@@ -482,5 +946,96 @@ namespace :litvault do
       locales: Locale.all
     })
   end
+
+  def create_theme_footer!
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'layouts/theme_footer',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: %Q{
+<footer>
+
+  <div class='description column'>
+    <img src='/litvault/litvault-logo-icon.png'>
+    <p>LitVault is an online marketplace for the legal industry. We connect Referring and Handling Lawyers in order to collaborate on contingent fee plaintiffs' cases.</p>
+  </div>
+
+  <div class='general column'>
+    <h4>General</h4>
+
+    <ul>
+      <li><a href='/'>Home</a></li>
+
+      {% for page in platform_context.pages limit:3 %}
+        <li><a href="{{ page.page_url }}" target="{{ page.open_in_target }}" rel="{{ page.link_rel }}">{{ page.title }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class='more column'>
+    <h4>More</h4>
+
+    <ul>
+      {% for page in platform_context.pages offset:3 %}
+        <li><a href="{{ page.page_url }}" target="{{ page.open_in_target }}" rel="{{ page.link_rel }}">{{ page.title }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class='connect column'>
+    <h4>Connect</h4>
+
+    <ul>
+      {% if platform_context.facebook_url != blank %}<li><a href="{{ platform_context.facebook_url }}"  ref="nofollow" target="_blank"><span class="image icon-facebook"></span>Facebook</a></li>{% endif %}
+      {% if platform_context.twitter_url != blank %}<li><a href="{{ platform_context.twitter_url }}" ref="nofollow"  target="_blank"> <span class="image icon-twitter"></span>Twitter</a></li>{% endif %}
+      <li><a href='#' ref='nofollow' target='_blank'><span class='image icon-twitter'></span>Linkedin</a></li>
+      {% if platform_context.gplus_url != blank %}<li><a href="{{ platform_context.gplus_url }}" rel="publisher nofollow" target="_blank"><span class="image icon-gplus"></span>Google+</a></li>{% endif %}
+      {% if platform_context.instagram_url != blank %}<li><a href="{{ platform_context.instagram_url }}" ref="nofollow"  target="_blank"> <span class="image icon-instagram"></span>Instagram</a></li>{% endif %}
+    </ul>
+  </div>
+
+  <div class='contact column'>
+    <h4>Contact</h4>
+
+    <h5>TELEPHONE</h5>
+    <span>{{ platform_context.phone_number }}</span>
+
+    <h5>SUPPORT</h5>
+    <a href='mailto:{{ platform_context.support_email }}'>{{ platform_context.support_email }}</a>
+  </div>
+
+</footer>
+
+<div class='copyright-wrapper'>
+  <div class='copyright'>
+    &copy; 2016 LitVault. All rights reserved.
+  </div>
+</div>
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+  end
+
+  # def create_theme_footer!
+  #   iv = InstanceView.where(
+  #     instance_id: @instance.id,
+  #     path: 'listings/show'
+  #   ).first_or_initialize
+  #   iv.update!({
+  #     transactable_types: TransactableType.all,
+  #     body: %Q{},
+  #     format: 'html',
+  #     handler: 'liquid',
+  #     partial: true,
+  #     view_type: 'view',
+  #     locales: Locale.all
+  #   })
+  # end
 
 end
