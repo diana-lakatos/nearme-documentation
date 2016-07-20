@@ -9,14 +9,14 @@ class OrderSearchService
   end
 
   def orders
-    if @state == :archived
+    if state == :archived
       @orders = @order_scope.archived
     else
-      @orders = @order_scope.not_archived.where(state: @state)
+      @orders = @order_scope.not_archived.where(state: state)
     end
 
-    if (@order_types.values & (@options[:type] || [])).present?
-      @orders = @orders.where(type: @order_types.values & @options[:type])
+    if (order_types.values & (@options[:type] || [])).present?
+      @orders = @orders.where(type: order_types.values & @options[:type])
     end
 
     if @options[:query] && @options[:query] =~ /[P|R|S]\d{8}/
@@ -34,7 +34,7 @@ class OrderSearchService
 
   def order_types
     all_types = @order_scope.select(:type).group(:type).map(&:type)
-    @order_types = if all_types.size > 1
+    if all_types.size > 1
       {
         "Reservation" => "Reservations",
         "RecurringBooking" => "Subscription",
@@ -56,7 +56,5 @@ class OrderSearchService
   def archived_count
     @archived_count ||= @order_scope.archived.count
   end
-
-
 
 end

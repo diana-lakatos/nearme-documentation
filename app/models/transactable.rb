@@ -562,7 +562,7 @@ class Transactable < ActiveRecord::Base
   end
 
   %w(EventBooking TimeBasedBooking NoActionBooking PurchaseAction SubscriptionBooking).each do |class_name|
-    define_method("#{class_name.underscore}?") { action_type.type == "Transactable::#{class_name}" }
+    define_method("#{class_name.underscore}?") { action_type.try(:type) == "Transactable::#{class_name}" }
   end
 
   def initialize_action_types
