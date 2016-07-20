@@ -64,7 +64,8 @@ class FormAttributes
       :enabled, :amenity_types, :price, :currency, :schedule, :photos,
       :waiver_agreement_templates, :documents_upload, :quantity, :book_it_out,
       :exclusive_price, :action_rfq, :capacity, :seller_attachments,
-      :additional_charges, :minimum_booking_minutes, :deposit_amount, :shipping_info
+      :additional_charges, :minimum_booking_minutes, :deposit_amount, :shipping_info,
+      :collaborators
     ] +
     Transactable.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
     extra_attributes(transactable_type.categories.roots, 'Category') +

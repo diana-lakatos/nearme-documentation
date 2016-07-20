@@ -371,6 +371,17 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
+    var els = $('[data-transactable-collaborator]');
+    if (els.length === 0) {
+        return;
+    }
+    require.ensure('./new_ui/listings/collaborators', function(require){
+        var Collaborators = require('./new_ui/listings/collaborators');
+        return new Collaborators($(els[0]).closest('form'));
+    });
+});
+
+DNM.registerInitializer(function(){
     var els = $('.listing-availability');
     if (els.length === 0) {
         return;

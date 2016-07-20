@@ -67,11 +67,15 @@
         - when 'shipping_info'
           = render "dashboard/company/transactables/form_fields/shipping_profiles", f: f
 
+        - when 'collaborators'
+          = render "dashboard/company/transactables/form_fields/collaborators", f: f
+
         - when *@transactable_type.categories.roots.map { |c| "Category - #{c.name}" }
           = render "dashboard/company/transactables/form_fields/category", f: f, field: field
 
         - when *@transactable_type.custom_model_types.map { |c| "Custom Model - #{c.name}" }
           = render "dashboard/company/transactables/form_fields/custom_model", f: f, field: field
+
 
         - else
           - if custom_attribute_names.include?(field)

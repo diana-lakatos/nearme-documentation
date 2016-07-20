@@ -19,6 +19,7 @@ class LiquidView
   Liquid::Template.register_tag('featured_items', FeaturedItemsTag)
   Liquid::Template.register_tag('render_featured_items', RenderFeaturedItemsTag)
   Liquid::Template.register_tag('yield', YieldTag)
+  Liquid::Template.register_tag('form_tag', FormTagTag)
   Liquid::Template.register_tag('form_for', FormForTag)
   Liquid::Template.register_tag('input', InputTag)
   Liquid::Template.register_tag('submit', SubmitTag)

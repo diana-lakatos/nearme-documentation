@@ -35,8 +35,13 @@ class TransactableCollaborator < ActiveRecord::Base
     self.update_attribute(:approved_by_owner_at, Time.zone.now) if approve.present?
   end
 
+  def approve_by_owner!
+    touch(:approved_by_owner_at)
+
+  end
+
   def approve_by_user!
-    self.update_attribute(:approved_by_user_at, Time.now)
+    touch(:approved_by_user_at)
   end
 
   def approved_by_user?
@@ -45,5 +50,13 @@ class TransactableCollaborator < ActiveRecord::Base
 
   def approved_by_owner?
     approved_by_owner_at.present?
+  end
+
+  def jsonapi_serializer_class_name
+    'TransactableCollaboratorJsonSerializer'
+  end
+
+  def to_liquid
+    @transactable_collaborator_drop ||= TransactableCollaboratorDrop.new(self)
   end
 end

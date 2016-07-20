@@ -340,4 +340,14 @@ module LiquidFilters
     text.parameterize(separator)
   end
 
+  def find_collaborator(user, transactable)
+    return false if user.try(:id).blank?
+    transactable.transactable_collaborators.where(user: user.id).first
+  end
+
+  def is_approved_collaborator(user, transactable)
+    return false if user.try(:id).blank?
+    transactable.approved_transactable_collaborators.where(user: user.id).exists?
+  end
+
 end
