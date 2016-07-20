@@ -45,7 +45,7 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
   def first_available_date
     time = Time.now.in_time_zone(timezone)
     date = time.to_date
-    max_date = date + 31.days
+    max_date = date + 60.days
 
     closed_at = availability.close_minute_for(date)
 
