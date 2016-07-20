@@ -9,6 +9,9 @@
     - if form.object.subscriber.respond_to?(:monthly?) && form.object.subscriber.monthly?
       %p= t 'recurring_reservations_review.prorated_info'
 
+    - if controller_name == 'payouts'
+      %p= t 'payouts.braintree.credit_card_subscription_info'
+
     - if form.object.errors.any?
       - content_for :payout_errors do
         .errors-global
