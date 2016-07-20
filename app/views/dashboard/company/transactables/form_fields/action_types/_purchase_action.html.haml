@@ -9,7 +9,7 @@
   .price-options.nested-fields-set
     = f.simple_fields_for :pricings, f.object.decorate.pricings_for_form do |pricing|
       .nested-container
-        = render 'dashboard/company/transactables/form_fields/action_types/pricing', f: pricing, tt_pricing: pricing.object.transactable_type_pricing
+        = render 'dashboard/company/transactables/form_fields/action_types/pricing', f: pricing, tt_pricing: pricing.object.transactable_type_pricing, show_free_column: f.object.try(:allow_free_booking?)
 
       - if form_fields.find{ |h| h['transactable'] == 'book_it_out' }
         = render 'dashboard/company/transactables/form_fields/book_it_out', f: pricing
