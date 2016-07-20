@@ -17,7 +17,7 @@ class ExpressCheckoutController < ApplicationController
   end
 
   def cancel
-    flash[:error] = t('flash_messages.reservations.booking_failed')
+    flash[:error] = t('flash_messages.reservations.payment_failed')
     @order = @payment.payable
     @order.restart_checkout!
     @payment.destroy
