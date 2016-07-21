@@ -4,7 +4,7 @@ class PlatformContextDecorator
            :platform_context_detail, :secured_constraint, :latest_products, to: :platform_context
 
   delegate :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :instagram_url,
-           :youtube_url, :rss_url, :address, :phone_number, :site_name, :description, :support_email, :meta_title, :pages,
+           :youtube_url, :rss_url, :linkedin_url, :address, :phone_number, :site_name, :description, :support_email, :meta_title, :pages,
            :hero_image, :logo_image, :favicon_image, :icon_image, :icon_retina_image, :call_to_action, :is_company_theme?,
            :content_holders, to: :theme
 

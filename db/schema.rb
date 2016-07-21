@@ -3961,6 +3961,7 @@ ActiveRecord::Schema.define(version: 20160719125742) do
     t.integer  "instance_id"
     t.string   "youtube_url"
     t.string   "rss_url"
+    t.string   "linkedin_url"
   end
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree

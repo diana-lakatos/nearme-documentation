@@ -90,6 +90,7 @@ namespace :litvault do
     theme = @instance.theme
 
     theme.color_green = '#4fc6e1'
+    theme.color_blue = '#4fc6e1'
     theme.call_to_action = 'Learn more'
 
     theme.phone_number = '1-555-555-55555'
@@ -101,6 +102,8 @@ namespace :litvault do
     theme.gplus_url = 'https://plus.google.com'
     theme.instagram_url = 'https://www.instagram.com'
     theme.youtube_url = 'https://www.youtube.com'
+    theme.blog_url = 'http://blog.com'
+    theme.linkedin_url = 'https://www.linkedin.com'
 
     ['About', 'About', 'How it Works', 'FAQ', 'Terms of Use', 'Privacy Policy'].each do |name|
       slug = name.parameterize
@@ -120,7 +123,7 @@ namespace :litvault do
     ).first_or_initialize
 
     ch.update!({
-      content: "<link rel='stylesheet' media='screen' href='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/attachment_file/data/2699/litvault.css'>",
+      content: "<link rel='stylesheet' media='screen' href='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/attachment_file/data/2704/litvault.20160721.css'>",
       inject_pages: ['any_page'],
       position: 'head_bottom'
     })
@@ -368,18 +371,18 @@ namespace :litvault do
     iv.update!({
       transactable_types: TransactableType.all,
       body: %Q{
-  <div class='navbar navbar-inverse navbar-fixed-top'>
+<div class='navbar navbar-inverse navbar-fixed-top'>
   <div class='navbar-inner nav-links'>
     <div class='container-fluid'>
         <a href='{{ platform_context.root_path }}' id="logo">{{ platform_context.name }}</a>
 
         <div class='header-social-links'>
           <ul class='nav main-menu'>
-            <li><a href='#' class='nav-link'>Facebook</a></li>
-            <li><a href='#' class='nav-link'>Twitter</a></li>
-            <li><a href='#' class='nav-link'>Linkedin</a></li>
-            <li><a href='#' class='nav-link'>Google+</a></li>
-            <li><a href='#' class='nav-link'>Blog</a></li>
+            {% if platform_context.facebook_url != blank %}<li><a href="{{ platform_context.facebook_url }}"  ref="nofollow" target="_blank"><span class="image icon-facebook"></span></a></li>{% endif %}
+            {% if platform_context.twitter_url != blank %}<li><a href="{{ platform_context.twitter_url }}" ref="nofollow"  target="_blank"> <span class="image icon-twitter"></span></a></li>{% endif %}
+            {% if platform_context.linkedin_url != blank %}<li><a href="{{ platform_context.linkedin_url }}" rel="publisher nofollow" target="_blank"><span class="image icon-linkedin"></span></a></li>{% endif %}
+            {% if platform_context.gplus_url != blank %}<li><a href="{{ platform_context.gplus_url }}" rel="publisher nofollow" target="_blank"><span class="image icon-gplus"></span></a></li>{% endif %}
+            {% if platform_context.blog_url != blank %}<li><a href="{{ platform_context.blog_url }}" ref="nofollow"  target="_blank"> <span class="image icon-feed"></span></a></li>{% endif %}
           </ul>
         </div>
 
@@ -690,7 +693,7 @@ namespace :litvault do
       <div class='teaser-wrapper table-cell'>
         <div class='teaser'>
           <div class='teaser-content'>
-            <div class='image'><img src='/litvault/michealduncan.png' /></div>
+            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2695/michealduncan.png' /></div>
             <p>“This service saves my firm time and energy.  It has allowed me to connect and collaborate with many other trusted professionals.”</p>
             <h3>Micheal Duncan</h3>
           </div>
@@ -958,7 +961,7 @@ namespace :litvault do
 <footer>
 
   <div class='description column'>
-    <img src='/litvault/litvault-logo-icon.png'>
+    <img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2700/litvault-logo-icon.png'>
     <p>LitVault is an online marketplace for the legal industry. We connect Referring and Handling Lawyers in order to collaborate on contingent fee plaintiffs' cases.</p>
   </div>
 
@@ -990,9 +993,9 @@ namespace :litvault do
     <ul>
       {% if platform_context.facebook_url != blank %}<li><a href="{{ platform_context.facebook_url }}"  ref="nofollow" target="_blank"><span class="image icon-facebook"></span>Facebook</a></li>{% endif %}
       {% if platform_context.twitter_url != blank %}<li><a href="{{ platform_context.twitter_url }}" ref="nofollow"  target="_blank"> <span class="image icon-twitter"></span>Twitter</a></li>{% endif %}
-      <li><a href='#' ref='nofollow' target='_blank'><span class='image icon-twitter'></span>Linkedin</a></li>
+      {% if platform_context.linkedin_url != blank %}<li><a href="{{ platform_context.linkedin_url }}" rel="publisher nofollow" target="_blank"><span class="image icon-linkedin"></span>Linkedin</a></li>{% endif %}
       {% if platform_context.gplus_url != blank %}<li><a href="{{ platform_context.gplus_url }}" rel="publisher nofollow" target="_blank"><span class="image icon-gplus"></span>Google+</a></li>{% endif %}
-      {% if platform_context.instagram_url != blank %}<li><a href="{{ platform_context.instagram_url }}" ref="nofollow"  target="_blank"> <span class="image icon-instagram"></span>Instagram</a></li>{% endif %}
+      {% if platform_context.blog_url != blank %}<li><a href="{{ platform_context.blog_url }}" ref="nofollow"  target="_blank"> <span class="image icon-feed"></span>Blog</a></li>{% endif %}
     </ul>
   </div>
 
