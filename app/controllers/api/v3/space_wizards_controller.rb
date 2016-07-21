@@ -1,6 +1,7 @@
 module Api
   class V3::SpaceWizardsController < BaseController
 
+    skip_before_filter :require_authorization
     before_filter :find_transactable_type
     before_filter :set_common_variables
     before_filter :sanitize_price_parameters
@@ -9,7 +10,7 @@ module Api
 
     # see no evil :(
     def create
-      params[:user][:companies_attributes]["0"][:name] = current_user.first_name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
+      params[:user][:companies_attributes]["0"][:name] = current_user.first_name if current_instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
       set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
       set_proper_currency
       @user.get_seller_profile
@@ -72,7 +73,7 @@ module Api
     end
 
     def find_transactable_type
-      @transactable_type = ServiceType.includes(:custom_attributes).friendly.find(params[:transactable_type_id])
+      @transactable_type = TransactableType.includes(:custom_attributes).friendly.find(params[:transactable_type_id])
     end
 
     def set_form_components
@@ -122,7 +123,7 @@ module Api
 
     def track_new_company_event
       @company = @user.companies.first
-      event_tracker.created_a_company(@company) unless platform_context.instance.skip_company?
+      event_tracker.created_a_company(@company) unless current_instance.skip_company?
     end
 
     def set_proper_currency
@@ -162,6 +163,10 @@ module Api
       build_approval_request_for_object(@user)
       build_approval_request_for_object(@user.companies.first)
       build_approval_request_for_object(@user.companies.first.locations.first.listings.first)
+    end
+
+    def build_approval_request_for_object(object)
+      ApprovalRequestInitializer.new(object, current_user).process
     end
 
   end

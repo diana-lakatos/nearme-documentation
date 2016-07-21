@@ -93,7 +93,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_time_zone(&block)
-    time_zone = current_user.try(:time_zone).presence || current_instance.try(:timze_zone).presence || 'UTC'
+    time_zone = current_user.try(:time_zone).presence || current_instance.try(:time_zone).presence || 'UTC'
     Time.use_zone(time_zone, &block)
   end
 

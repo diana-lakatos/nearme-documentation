@@ -1,6 +1,7 @@
 module Api
   class V2::SpaceWizardsController < BaseController
 
+    skip_before_filter :require_authorization
     before_filter :find_transactable_type
     before_filter :set_common_variables
     before_filter :sanitize_price_parameters

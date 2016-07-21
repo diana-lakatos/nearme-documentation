@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Api::V2::UsersControllerTest < ActionController::TestCase
+class Api::V3::UsersControllerTest < ActionController::TestCase
 
   context '#create' do
     should "should create user with valid attributes" do
