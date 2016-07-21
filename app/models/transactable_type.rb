@@ -130,16 +130,18 @@ class TransactableType < ActiveRecord::Base
   end
 
   def create_reservation_type!
-    reservation_type = ReservationType.create({
-     :name => "#{self.name} checkout",
-     :settings => {
-        "skip_payment_authorization" => "false",
+    return true if self.reservation_type.present?
+
+    reservation_type = ReservationType.create!({
+     name: "#{self.name} checkout",
+     transactable_types: [self],
+     settings: {
+       "skip_payment_authorization" => "false",
         "validate_on_adding_to_cart" => "true"
       },
-      :step_checkout => false
+      step_checkout: false
     })
     Utils::FormComponentsCreator.new(reservation_type).create!
-    self.update_column(:reservation_type_id, reservation_type.id)
   end
 
   def destroy_translations!

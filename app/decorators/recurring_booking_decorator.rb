@@ -34,11 +34,11 @@ class RecurringBookingDecorator < OrderDecorator
     periods.size
   end
 
-  def subtotal_price
+  def total_price_host
     if subtotal_amount.to_f.zero?
       "Free!"
     else
-      humanized_money_with_cents_and_symbol(subtotal_amount)
+      humanized_money_with_cents_and_symbol(total_payable_to_host)
     end
   end
 
@@ -46,19 +46,19 @@ class RecurringBookingDecorator < OrderDecorator
     humanized_money_with_cents_and_symbol(total_payable_to_host)
   end
 
-  def subtotal_price_for_guest
+  def total_price_for_guest
     if subtotal_amount.to_f.zero?
       "Free!"
     else
-      humanized_money_with_cents_and_symbol(subtotal_amount + service_fee_amount_guest)
+      humanized_money_with_cents_and_symbol(total_amount)
     end
   end
 
   def total_price_for(current_user)
-    if subtotal_amount.to_f.zero?
+    if total_amount.to_f.zero?
       "Free!"
     else
-      current_user == recurring_booking.host ? subtotal_price : subtotal_price_for_guest
+      current_user == recurring_booking.host ? total_price_host : total_price_for_guest
     end
   end
 

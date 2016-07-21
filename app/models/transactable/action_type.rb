@@ -28,7 +28,7 @@ class Transactable::ActionType < ActiveRecord::Base
     {
       possible_units: pricings.map(&:adjusted_unit).uniq,
       action_rfq: action_rfq,
-      no_action: no_action,
+      no_action: no_action || false,
       favourable_pricing_rate: transactable_type_action_type.favourable_pricing_rate,
     }
   end
