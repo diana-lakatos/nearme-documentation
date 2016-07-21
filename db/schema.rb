@@ -4372,8 +4372,9 @@ ActiveRecord::Schema.define(version: 20160720160651) do
     t.text     "metadata"
     t.hstore   "properties"
     t.datetime "deleted_at"
-    t.integer  "orders_count",             default: 0
+    t.integer  "reservations_count",       default: 0
     t.integer  "transactables_count",      default: 0
+    t.integer  "orders_count",             default: 0
   end
 
   create_table "user_messages", force: :cascade do |t|
@@ -4521,7 +4522,7 @@ ActiveRecord::Schema.define(version: 20160720160651) do
     t.datetime "banned_at"
     t.integer  "instance_profile_type_id"
     t.hstore   "properties"
-    t.integer  "orders_count",                                       default: 0
+    t.integer  "reservations_count",                                 default: 0
     t.integer  "transactables_count",                                default: 0
     t.float    "buyer_average_rating",                               default: 0.0,                                                                                 null: false
     t.boolean  "public_profile",                                     default: false
@@ -4548,6 +4549,7 @@ ActiveRecord::Schema.define(version: 20160720160651) do
     t.integer  "projects_count",                                     default: 0,                                                                                   null: false
     t.integer  "project_collborations_count",                        default: 0,                                                                                   null: false
     t.boolean  "click_to_call",                                      default: false
+    t.integer  "orders_count",                                       default: 0
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

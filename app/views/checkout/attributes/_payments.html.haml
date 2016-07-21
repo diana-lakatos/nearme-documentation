@@ -2,7 +2,6 @@
   - if f.object.with_payment?
     #credit-card-select
       = f.simple_fields_for :payment_attributes, f.object.decorate.payment_decorator do |form|
-        %h2= t 'reservations_review.payment_information'
         - if @order.respond_to?(:monthly?) && @order.monthly?
           %p= t 'recurring_reservations_review.prorated_info'
 
@@ -24,7 +23,6 @@
           %h2= t("reservations_review.missing_payment_method")
           %span= t("reservations_review.missing_payment_method_info")
         - else
-          %h2= t 'reservations_review.payment_information'
           - if form.object.subscriber.respond_to?(:monthly?) && form.object.subscriber.monthly?
             %p= t 'recurring_reservations_review.prorated_info'
 
