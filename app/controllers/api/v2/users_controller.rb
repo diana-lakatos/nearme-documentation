@@ -1,6 +1,7 @@
 module Api
   class V2::UsersController < BaseController
     skip_before_filter :require_authentication, only: [:create, :show]
+    skip_before_filter :require_authorization, only: [:create, :show]
     before_filter :find_user, only: [:show]
 
     def create
@@ -13,7 +14,6 @@ module Api
       @user.custom_validation = true
 
       if @user.save
-        analytics_apply_user(@user)
         event_tracker.signed_up(@user, {
           referrer_id: platform_context.platform_context_detail.id,
           referrer_type: platform_context.platform_context_detail.class.to_s,

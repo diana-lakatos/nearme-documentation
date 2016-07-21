@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Api::V2::SpaceWizardsControllerTest < ActionController::TestCase
+class Api::V3::SpaceWizardsControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)

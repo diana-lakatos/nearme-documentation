@@ -3,6 +3,7 @@ module Api
 
     before_filter :find_transactable_type
     skip_before_filter :require_authentication
+    skip_before_filter :require_authorization
 
     def index
       params[:v] = 'listing_mixed'

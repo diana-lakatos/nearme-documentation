@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Api::V2::SessionsControllerTest < ActionController::TestCase
+class Api::V3::SessionsControllerTest < ActionController::TestCase
 
   PASSWORD = 'password123'
 

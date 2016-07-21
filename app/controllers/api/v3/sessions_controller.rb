@@ -1,6 +1,7 @@
 module Api
   class V3::SessionsController < BaseController
     skip_before_filter :require_authentication, only: [:create]
+    skip_before_filter :require_authorization
 
     def create
       user = User.find_by(email: params["email"])
