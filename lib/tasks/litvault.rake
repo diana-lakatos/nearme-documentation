@@ -123,7 +123,7 @@ namespace :litvault do
     ).first_or_initialize
 
     ch.update!({
-      content: "<link rel='stylesheet' media='screen' href='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/attachment_file/data/2704/litvault.20160721.css'>",
+      content: "<link rel='stylesheet' media='screen' href='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/attachment_file/data/2712/litvault.20160721.css'>",
       inject_pages: ['any_page'],
       position: 'head_bottom'
     })
@@ -137,6 +137,7 @@ namespace :litvault do
   end
 
   def create_views
+    create_home_index!
     create_theme_header!
     create_search_box_inputs!
     create_home_homepage_content!
@@ -243,6 +244,11 @@ namespace :litvault do
       locale: 'en',
       key: 'dashboard.analytics.bookings'
     ).first_or_initialize.update!(value: 'Offers')
+
+    @instance.translations.where(
+      locale: 'en',
+      key: 'homepage.search_field_placeholder.full_text'
+    ).first_or_initialize.update!(value: 'General search...')
 
     create_translation!('dashboard.user_reservations.title_count', "Offers (%{count})")
 
@@ -363,6 +369,43 @@ namespace :litvault do
     cv.save!
   end
 
+  def create_home_index!
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'home/index'
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: %Q{
+{% content_for 'hero' %}
+  <div class="container-fluid">
+    <div class="row-fluid">
+      {% if platform_context.is_company_theme? %}
+        {% include 'home/search_button.html' %}
+      {% else %}
+        {% include 'home/search_box.html' %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="call-to-action">
+    <a data-call-to-action="true">
+      {{platform_context.call_to_action}}
+      <span class="icon-arrow-down"></span>
+    </a>
+  </div>
+{% endcontent_for %}
+
+{% include 'home/homepage_content.html' %}
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: false,
+      view_type: 'view',
+      locales: Locale.all
+    })
+  end
+
   def create_theme_header!
     iv = InstanceView.where(
       instance_id: @instance.id,
@@ -425,7 +468,8 @@ namespace :litvault do
       transactable_types: TransactableType.all,
       body: %Q{
 <h2>
-  The Easiest Way For Experienced Trial Lawyers To Get <span class='text-highlight'>Quality Contingent Fee Referrals</span>
+  <span class='first-line'>The Easiest Way For Experienced Trial</span>
+  Lawyers To Get <span class='text-highlight'>Quality Contingent Fee Referrals</span></span>
 </h2>
 
 <form action="/search" class="home_search search-box {{ class_name }}" method="get">
@@ -649,7 +693,6 @@ namespace :litvault do
   </div>
 </section>
 
-
 <section class='trusted-firms'>
   <div class='container-fluid'>
 
@@ -657,6 +700,8 @@ namespace :litvault do
       <h2>Trusted firms using <span class='text-highlight'>LitVault</span></h2>
       <h3><span class='text-lighter'>Designed by lawyers for lawyers. Enjoy the time saving tools and process we have created.</span></h3>
     </header>
+
+    <img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2706/companies.png'>
 
   </div>
 </section>
