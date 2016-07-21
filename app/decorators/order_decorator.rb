@@ -157,14 +157,14 @@ class OrderDecorator < Draper::Decorator
   end
 
   def fill_address_from_user(address, billing_address=true)
-    address_info = billing_address ? current_user.billing_addresses.last : current_user.shipping_addresses.last
+    address_info = billing_address ? user.billing_addresses.last : user.shipping_addresses.last
 
     address.attributes = address_info.dup.attributes if address_info
-    address.firstname ||= current_user.first_name
-    address.lastname ||= current_user.last_name
-    address.phone ||= "#{current_user.phone}"
-    if current_user.country && !address.phone.include?('+')
-      address.phone ||= "+#{current_user.country.calling_code} #{address.phone}"
+    address.firstname ||= user.first_name
+    address.lastname ||= user.last_name
+    address.phone ||= "#{user.phone}"
+    if user.country && !address.phone.include?('+')
+      address.phone ||= "+#{user.country.calling_code} #{address.phone}"
     end
 
     address

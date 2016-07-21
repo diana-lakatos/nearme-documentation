@@ -60,6 +60,11 @@ class RecurringBooking < Order
 
   end
 
+  def activate_order!
+    schedule_expiry
+    auto_confirm_reservation
+  end
+
   def set_dates
     self.starts_at = @dates ? Date.parse(@dates) : Date.current
     self.next_charge_date = self.start_on

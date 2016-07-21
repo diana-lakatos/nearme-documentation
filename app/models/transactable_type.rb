@@ -60,6 +60,7 @@ class TransactableType < ActiveRecord::Base
   after_update :destroy_translations!, if: lambda { |transactable_type| transactable_type.name_changed? || transactable_type.bookable_noun_changed? || transactable_type.lessor_changed? || transactable_type.lessee_changed? }
   before_validation :set_default_options
   after_create :create_translations!
+  after_create :create_reservation_type!
 
   scope :searchable, -> { where(searchable: true) }
   scope :by_position, -> { order('position ASC') }
@@ -153,6 +154,19 @@ class TransactableType < ActiveRecord::Base
 
   def create_translations!
     translation_manager.create_translations!
+  end
+
+  def create_reservation_type!
+    reservation_type = ReservationType.create({
+     :name => "#{self.name} checkout",
+     :settings => {
+        "skip_payment_authorization" => "false",
+        "validate_on_adding_to_cart" => "true"
+      },
+      :step_checkout => false
+    })
+    Utils::FormComponentsCreator.new(reservation_type).create!
+    self.update_column(:reservation_type_id, reservation_type.id)
   end
 
   def destroy_translations!
