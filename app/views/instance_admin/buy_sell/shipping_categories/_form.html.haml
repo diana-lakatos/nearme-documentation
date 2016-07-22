@@ -1,9 +1,0 @@
-= simple_form_for [:instance_admin, :buy_sell, @shipping_category] do |f|
-  .content-container
-    .row
-      .input-container.col-xs-12
-        = f.input :name, placeholder: 'What is the name of the shipping category?', required: true, input_html: { class: 'form-control'}
-
-  = content_for :header_buttons do
-    = f.button :submit, class: "btn btn-blue pull-right", data: { 'submit-form' => 1, 'form-selector' => 'form' }
-

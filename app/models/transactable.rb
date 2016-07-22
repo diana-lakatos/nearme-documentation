@@ -72,8 +72,6 @@ class Transactable < ActiveRecord::Base
   belongs_to :action_type
   belongs_to :shipping_profile
 
-  belongs_to :spree_product, class_name: "Spree::Product"
-
   accepts_nested_attributes_for :additional_charge_types, reject_if: :all_blank, allow_destroy: true
   accepts_nested_attributes_for :approval_requests
   accepts_nested_attributes_for :attachments, allow_destroy: true

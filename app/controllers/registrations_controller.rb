@@ -115,10 +115,7 @@ class RegistrationsController < Devise::RegistrationsController
       @groups = @user.group_collaborated.paginate(pagination_params).decorate
     else
       @company = @user.companies.first
-      if @company.present? && buyable?
-        @products = @company.products.not_draft.paginate(page: params[:products_page], per_page: 8)
-      end
-      if @company.present? && bookable?
+      if @company.present?
         @listings = @company.listings.searchable.includes(:location).paginate(page: params[:services_page], per_page: 8)
       end
       if RatingSystem.active.any?

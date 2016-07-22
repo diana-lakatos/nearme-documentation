@@ -6,7 +6,7 @@ namespace :find_custom_attributes do
       attributes_regexp = CustomAttributes::CustomAttribute.pluck(:name).uniq.join("|")
       if attributes_regexp
         puts "Checking #{i.name}"
-        regexp = /(transactable|listing|product|user|administrator|creator)\.(#{attributes_regexp})/
+        regexp = /(transactable|listing|user|administrator|creator)\.(#{attributes_regexp})/
         InstanceView.where(instance_id: i.id).pluck(:id, :body, :path).each do |arr|
           matches = arr[1].scan(regexp)
           if matches.count > 0

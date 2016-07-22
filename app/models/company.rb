@@ -25,28 +25,16 @@ class Company < ActiveRecord::Base
   has_many :locations, dependent: :destroy, inverse_of: :company
   has_many :locations_impressions, source: :impressions, through: :locations
   has_many :merchant_accounts, as: :merchantable, dependent: :nullify
-  has_many :option_types, class_name: 'Spree::OptionType', dependent: :destroy
   has_many :orders
   has_many :purchases
-  has_many :order_line_items, class_name: 'Spree::LineItem'
   has_many :payments
   has_many :payment_transfers, dependent: :destroy
   has_many :photos, through: :listings
-  has_many :products, class_name: 'Spree::Product', inverse_of: :company, dependent: :destroy
-  has_many :products_images, through: :products, source: :variant_images
-  has_many :products_impressions, source: :impressions, through: :products
-  has_many :properties, class_name: 'Spree::Property', dependent: :destroy
-  has_many :prototypes, class_name: 'Spree::Prototype', dependent: :destroy
   has_many :reservations
+  has_many :recurring_bookings
   has_many :shipping_profiles
-  has_many :shipping_categories, class_name: 'Spree::ShippingCategory', dependent: :destroy
-  has_many :shipping_methods, class_name: 'Spree::ShippingMethod', dependent: :destroy
-  has_many :stock_locations, class_name: 'Spree::StockLocation', dependent: :destroy
-  has_many :tax_categories, class_name: 'Spree::TaxCategory', dependent: :destroy
   has_many :users, :through => :company_users
-  has_many :variants, class_name: 'Spree::Variant', dependent: :destroy
   has_many :waiver_agreement_templates, as: :target
-  has_many :zones, class_name: 'Spree::Zone', dependent: :destroy
 
   has_one :company_address, class_name: 'Address', as: :entity
   has_one :domain, :as => :target, foreign_key: 'target_id', :dependent => :destroy
@@ -101,19 +89,12 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :company_address
   accepts_nested_attributes_for :payments_mailing_address
   accepts_nested_attributes_for :approval_requests
-  accepts_nested_attributes_for :products, :shipping_methods, :shipping_categories, :stock_locations, :offers
   accepts_nested_attributes_for :merchant_accounts, allow_destroy: true, update_only: true
 
-
-  validates_associated :shipping_methods, if: :verify_associated
-  validates_associated :shipping_categories, if: :verify_associated
-  validates_associated :products, if: :verify_associated
-  validates_associated :stock_locations, if: :verify_associated
 
   validates :paypal_email, email: true, allow_blank: true
 
   after_create :set_external_id
-  after_create :add_company_to_partially_created_shipping_categories
 
   def email
     super.presence || creator.try(:email)
@@ -122,17 +103,6 @@ class Company < ActiveRecord::Base
   def iso_country_code
     iso_country_code = PlatformContext.current.instance.skip_company? ? creator.try(:iso_country_code) : company_address.try(:iso_country_code)
     iso_country_code.presence || instance.default_country_code
-  end
-
-  def add_company_to_partially_created_shipping_categories
-    if self.creator_id.present?
-      partial_categories = Spree::ShippingCategory.where(:user_id => self.creator_id, :company_id => nil)
-      partial_categories.each do |partial_category|
-        partial_category.update_attribute(:company_id, self.id)
-      end
-    end
-
-    true
   end
 
   def add_creator_to_company_users

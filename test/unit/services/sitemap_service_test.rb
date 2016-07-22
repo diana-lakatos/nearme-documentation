@@ -4,7 +4,6 @@ class SitemapServiceTest < ActiveSupport::TestCase
   setup do
     @page = create(:page)
     @transactable = create(:transactable)
-    @product = create(:transactable)
     @domain = PlatformContext.current.domain
     SitemapService.stubs(:update_on_search_engines).returns(nil)
   end
@@ -56,7 +55,7 @@ class SitemapServiceTest < ActiveSupport::TestCase
 
       should "contain nodes for each record" do
         # One for each record, and one for root path
-        assert_node_count(@xml, "urlset url", 4)
+        assert_node_count(@xml, "urlset url", 3)
       end
 
       should "contain comment marks for each class" do
@@ -176,28 +175,6 @@ class SitemapServiceTest < ActiveSupport::TestCase
         assert_equal "0.5", @transactable_node.priority
       end
     end
-
-    context "ProductNode" do
-      setup do
-        @product_node = SitemapService::Node::ProductNode.new(@domain.url, @product)
-      end
-
-      should "#location" do
-        assert_equal url_helpers.product_path(@product.slug), @product_node.location
-      end
-
-      should "#lastmod" do
-        assert_equal @product.updated_at.iso8601, @product_node.lastmod
-      end
-
-      should "#changefreq" do
-        assert_equal "daily", @product_node.changefreq
-      end
-
-      should "#priority" do
-        assert_equal "0.5", @product_node.priority
-      end
-    end
   end
 
   context "Callbacks" do
@@ -243,7 +220,7 @@ class SitemapServiceTest < ActiveSupport::TestCase
 
       pages.each do |page|
         # One node for the transactable, one for a product and another for root.
-        amount = 3 + (Page.count - 1)
+        amount = 2 + (Page.count - 1)
         page.destroy
         assert_node_count Nokogiri::XML(@domain.reload.sitemap), "url loc", amount
         assert_node_absence Nokogiri::XML(@domain.reload.sitemap), "url loc", page.slug

@@ -19,9 +19,7 @@ class Utils::DefaultAlertsCreatorTest < ActionDispatch::IntegrationTest
       Utils::DefaultAlertsCreator::InstanceAlertsCreator.expects(:new).returns(stub(:create_all! => true))
       Utils::DefaultAlertsCreator::InquiryCreator.expects(:new).returns(stub(:create_all! => true))
       Utils::DefaultAlertsCreator::UserMessageCreator.expects(:new).returns(stub(:create_all! => true))
-      #Utils::DefaultAlertsCreator::RecurringCreator.expects(:new).returns(stub(:create_all! => true))
       Utils::DefaultAlertsCreator::DataUploadCreator.expects(:new).returns(stub(:create_all! => true))
-      Utils::DefaultAlertsCreator::OrderCreator.expects(:new).returns(stub(:create_all! => true))
       Utils::DefaultAlertsCreator::PaymentGatewayCreator.expects(:new).returns(stub(:create_all! => true))
       @default_alerts_creator.create_all_workflows!
     end

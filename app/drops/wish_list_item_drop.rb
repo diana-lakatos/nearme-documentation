@@ -64,8 +64,6 @@ class WishListItemDrop < BaseDrop
       @wishlistable.decorate.show_path
     elsif @wishlistable.is_a?(Location)
       @wishlistable.listings.searchable.first.try(:decorate).try(:show_path)
-    elsif @wishlistable.is_a?(Spree::Product)
-      routes.product_path(@wishlistable)
     end
   end
 

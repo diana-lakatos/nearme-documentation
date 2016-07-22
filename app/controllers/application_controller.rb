@@ -41,10 +41,6 @@ class ApplicationController < ActionController::Base
     @secured_params ||= SecuredParams.new
   end
 
-  def spree_current_user
-    current_user
-  end
-
   def platform_context
     @platform_context = PlatformContext.current
   end

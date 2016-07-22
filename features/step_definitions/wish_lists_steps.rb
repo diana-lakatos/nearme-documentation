@@ -25,7 +25,3 @@ end
 And(/^I have one favorite item$/) do
   Transactable.last.wish_list_items.create wish_list_id: User.last.default_wish_list.id
 end
-
-Then(/^I visit product page$/) do
-  visit product_path(Spree::Product.last)
-end

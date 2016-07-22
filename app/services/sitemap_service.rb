@@ -4,8 +4,8 @@ module SitemapService
   module_function
 
   def content_for(domain)
-    domain.uploaded_sitemap.try(:file).try(:read).presence || 
-      domain.generated_sitemap.try(:file).try(:read).presence || 
+    domain.uploaded_sitemap.try(:file).try(:read).presence ||
+      domain.generated_sitemap.try(:file).try(:read).presence ||
       SitemapService::Generator.for_domain(domain).to_s.squish
   rescue
     new_sitemap = SitemapService::Generator.for_domain(domain).to_s.squish
@@ -15,8 +15,8 @@ module SitemapService
 
   def sitemap_xml_opening
     <<-XML
-      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" 
+      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
     XML
   end
@@ -36,8 +36,7 @@ module SitemapService
     [
       SitemapService::Node::StaticNode,
       SitemapService::Node::PageNode,
-      SitemapService::Node::TransactableNode,
-      SitemapService::Node::ProductNode
+      SitemapService::Node::TransactableNode
     ].each do |klass|
       comments.push(klass.comment_mark)
     end
@@ -52,13 +51,7 @@ module SitemapService
   end
 
   def node_class_for_object(object)
-    klass = if ['Spree::ProductDecorator', 'Spree::Product'].include?(object.class.name)
-      "SitemapService::Node::ProductNode"
-    else
-      "SitemapService::Node::#{object.class.name}Node"
-    end
-
-    klass.constantize
+    "SitemapService::Node::#{object.class.name}Node".constantize
   end
 
   def tmp_path

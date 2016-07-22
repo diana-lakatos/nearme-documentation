@@ -1,4 +1,4 @@
-module BuySellMarket::ProductsHelper
+module ShippingProfilesHelper
 
   def options_for_dimensions_templates_select(dimensions_templates)
     result_text = "<option disabled selected> -- select an option -- </option>"

@@ -47,13 +47,7 @@ class Review < ActiveRecord::Base
   after_commit :expire_cache
 
   def recalculate_reviewable_average_rating
-    if reviewable_type == "Spree::LineItem"
-      recalculate_by_type(-> { self.reviewable.product.recalculate_average_rating! })
-    elsif reviewable_type == "Bid"
-      recalculate_by_type(-> { self.reviewable.offer.recalculate_average_rating! })
-    else
-      recalculate_by_type(-> { self.reviewable.transactable.recalculate_average_rating! })
-    end
+    recalculate_by_type(-> { self.reviewable.transactable.recalculate_average_rating! })
   end
 
   def expire_cache

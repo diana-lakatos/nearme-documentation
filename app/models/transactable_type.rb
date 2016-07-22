@@ -7,7 +7,7 @@ class TransactableType < ActiveRecord::Base
   scoped_to_platform_context
   acts_as_custom_attributes_set
 
-  AVAILABLE_TYPES = ['Listing', 'Buy/Sell'].freeze
+  AVAILABLE_TYPES = ['Listing'].freeze
   AVAILABLE_ACTION_TYPES = [NoActionBooking, SubscriptionBooking, EventBooking, TimeBasedBooking, PurchaseAction]
   SEARCH_VIEWS = %w(mixed list listing_mixed)
   AVAILABLE_SHOW_PATH_FORMATS = [
@@ -98,33 +98,6 @@ class TransactableType < ActiveRecord::Base
       [:name, self.class.last.try(:id).to_i + 1],
       [:name, rand(1000000)]
     ]
-  end
-
-  #TODO to remove
-  def daily_options_names
-    pricing_options = []
-    # pricing_options << "daily" if action_daily_booking
-    # pricing_options << "weekly" if action_weekly_booking
-    # pricing_options << "monthly" if action_monthly_booking
-    pricing_options
-  end
-
-  #TODO to remove
-  def pricing_options_long_period_names
-    pricing_options = []
-    # pricing_options << "hourly" if action_hourly_booking
-    # pricing_options << "daily" if action_daily_booking
-    # pricing_options << "weekly" if action_weekly_booking
-    # pricing_options << "monthly" if action_monthly_booking
-    pricing_options
-  end
-
-  #TODO to remove
-  def subscription_options_names
-    pricing_options = []
-    # pricing_options << "weekly_subscription" if action_weekly_subscription_booking
-    # pricing_options << "monthly_subscription" if action_monthly_subscription_booking
-    pricing_options
   end
 
   def any_rating_system_active?

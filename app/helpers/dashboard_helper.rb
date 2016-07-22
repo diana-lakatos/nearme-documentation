@@ -9,14 +9,10 @@ module DashboardHelper
   end
 
   def analytics_options
-    if PlatformContext.current.instance.buyable?
-      [[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.orders'), 'orders'], [t('dashboard.analytics.product_views'), 'product_views']]
+    if TransactableType.exists?(skip_location: false)
+      [[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.bookings'), 'orders']]
     else
-      if TransactableType.where(skip_location: false).count.zero?
-        [[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.bookings'), 'bookings']]
-      else
-        [[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.bookings'), 'bookings'], [t('dashboard.analytics.location_views'), 'location_views']]
-      end
+      [[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.bookings'), 'orders'], [t('dashboard.analytics.location_views'), 'location_views']]
     end
   end
 
@@ -127,14 +123,6 @@ module DashboardHelper
     'active' if transactable.action_type.try(:transactable_type_action_type) == action_type
   end
 
-  def currency_options
-    currencies = ::Money::Currency.table.map do |code, details|
-      iso = details[:iso_code]
-      [iso, "#{details[:name]} (#{iso})"]
-    end
-    options_from_collection_for_select(currencies, :first, :last, Spree::Config[:currency])
-  end
-
   # New Ux UI
 
   def new_listing_step(index, current, label)
@@ -239,24 +227,6 @@ module DashboardHelper
         item[:edit_url] = edit_dashboard_photo_path(photo)
         item[:delete_url] = destroy_space_wizard_photo_path(photo)
       end
-      collection << item
-    end
-
-    return collection
-  end
-
-  def dashboard_product_images_to_image_input_collection(images)
-    collection = Array.new
-
-    images.each do |image|
-      item = Hash.new
-      item[:id] = image.id
-      item[:full_url] = image.image_url
-      item[:position] = image.position
-      item[:thumb_url] = image.image_url(:space_listing)
-      item[:edit_url] = edit_dashboard_image_path(image)
-      item[:delete_url] = dashboard_image_path(image)
-      item[:caption] = image.caption if image.respond_to?(:caption)
       collection << item
     end
 

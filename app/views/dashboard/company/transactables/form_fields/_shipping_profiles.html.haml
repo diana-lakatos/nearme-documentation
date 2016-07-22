@@ -21,4 +21,4 @@
     .explanation
       %p= t('manage.buy_sell.insurance_explanation')
 
-    = f.input :insurance_value, as: :price, input_html: { currency: currency_symbol_from_code(Spree::Config[:currency] ) }, wrapper_html: { class: 'form-control-sm' }
+    = f.input :insurance_value, as: :price, input_html: { currency: currency_symbol_from_code(f.object.currency) }, wrapper_html: { class: 'form-control-sm' }

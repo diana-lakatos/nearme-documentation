@@ -38,13 +38,6 @@ class SitemapService::Generator
       end
     end
 
-    with_comment(SitemapService::Node::ProductNode.comment_mark) do
-      Spree::Product.all.approved.not_draft.each do |product|
-        product_node = SitemapService::Node::ProductNode.new(@base_url, product).to_xml
-        self.nodes.push(product_node)
-      end
-    end
-
     self.xml += self.nodes.join
 
     self.xml += SitemapService.sitemap_xml_closing

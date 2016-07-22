@@ -94,22 +94,12 @@ class EventTracker::BaseTracker::Serializers::TrackSerializer
         search_country: object.country,
         search_postcode: object.postcode
       }
-    when Spree::Product::Search::Params::Web
-      {
-        search_product: object.query
-      }
     when Company
       {
         company_name: object.name,
         company_email: object.email,
         company_url: object.url,
         company_paypal_email: object.paypal_email
-      }
-    when Offer
-      {
-        offer_name: object.name,
-        offer_summary: object.summary,
-        offer_url: Rails.application.routes.url_helpers.offer_url(object)
       }
     when Hash
       object

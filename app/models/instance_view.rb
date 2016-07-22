@@ -44,15 +44,10 @@ class InstanceView < ActiveRecord::Base
     'reservation_mailer/notify_guest_of_shipping_details', 'reservation_mailer/notify_host_of_shipping_details',
     'reservation_mailer/notify_host_of_approved_payment',
     'reservation_mailer/notify_host_of_declined_payment',
-    'rating_mailer/line_items/request_rating_of_guest_from_host',
-    'rating_mailer/line_items/request_rating_of_host_and_product_from_guest',
     'reservation_mailer/notify_guest_of_submitted_checkout',
     'reservation_mailer/notify_guest_of_submitted_checkout_with_failed_authorization',
-    'spree/order_mailer/approved_email', 'spree/order_mailer/cancel_email',
-    'spree/order_mailer/confirm_email', 'spree/order_mailer/notify_seller_email',
-    'spree/order_mailer/shipping_info_for_buyer', 'spree/order_mailer/shipping_info_for_seller',
     'inappropriate_reports_mailer/inappropriate_report',
-    'spree/shipment_mailer/shipped_email', 'support_mailer/rfq_request_received',
+    'support_mailer/rfq_request_received',
     'support_mailer/rfq_request_replied', 'support_mailer/rfq_request_updated',
     'support_mailer/rfq_support_received', 'support_mailer/rfq_support_updated',
     'support_mailer/request_received', 'support_mailer/support_received',
@@ -167,17 +162,9 @@ class InstanceView < ActiveRecord::Base
       user: 'UserDrop',
       current_user: 'UserDrop'
     },
-    'search/products/product' => {
-      product: 'Spree::ProductDrop'
-    },
-    'search/products_table/head' => {
-    },
     'search/footer' => {
-      transactable_type: 'TransactableTypeDrop or ProductTypeDrop',
+      transactable_type: 'TransactableTypeDrop',
       searcher: 'The search results for this page'
-    },
-    'search/products_table/product' => {
-      product: 'Spree::ProductDrop'
     },
     'reservation_mailer/social_links' => {
       listing: 'TransactableDrop'
@@ -256,10 +243,6 @@ class InstanceView < ActiveRecord::Base
       user: 'UserDrop',
       platform_context: 'PlatformContextDrop'
     },
-    'registrations/buyers/profile/tabs/products' => {
-      user: 'UserDrop',
-      platform_context: 'PlatformContextDrop'
-    },
     'registrations/buyers/profile/tabs/reviews' => {
       user: 'UserDrop',
       platform_context: 'PlatformContextDrop'
@@ -284,10 +267,6 @@ class InstanceView < ActiveRecord::Base
       user: 'UserDrop',
       platform_context: 'PlatformContextDrop'
     },
-    'registrations/sellers/profile/tabs/products' => {
-      user: 'UserDrop',
-      platform_context: 'PlatformContextDrop'
-    },
     'registrations/sellers/profile/tabs/reviews' => {
       user: 'UserDrop',
       platform_context: 'PlatformContextDrop'
@@ -309,10 +288,6 @@ class InstanceView < ActiveRecord::Base
       post: 'UserBlogPostDrop',
       user: 'UserDrop',
       is_partial: true,
-    },
-    'registrations/profile/tabs/products' => {
-      is_partial: true,
-      products: 'Array',
     },
     'registrations/profile/tabs/reviews' => {
       is_partial: true,
@@ -385,8 +360,6 @@ class InstanceView < ActiveRecord::Base
     'home/search_box_inputs' => {
     },
     'home/homepage_content' => {
-    },
-    'shared/modules/latest_products' => {
     },
     'shared/components/wish_list_button' => {
     },
