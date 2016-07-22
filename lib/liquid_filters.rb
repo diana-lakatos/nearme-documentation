@@ -333,7 +333,7 @@ module LiquidFilters
   end
 
   def widget_links(path)
-    ReverseProxyLink.where(use_on_path: path)
+    ReverseProxyLink.where(use_on_path: ::CGI.unescapeHTML(path.to_str))
   end
 
 end
