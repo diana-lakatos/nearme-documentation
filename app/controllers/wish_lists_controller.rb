@@ -7,10 +7,11 @@ class WishListsController < ApplicationController
   def bulk_show
     @items.map! do |item|
       @object = item
+      @is_favorite = item[:is_favorite] == true
       content = render_to_string partial: 'shared/components/wish_list_button', handlers: [:liquid], formats: [:html]
       {
-        id: item.id,
-        wishlistable_type: item.class.name,
+        id: item['object_id'],
+        wishlistable_type: item['wishlistable_type'],
         content: content
       }
     end
@@ -91,11 +92,16 @@ class WishListsController < ApplicationController
   end
 
   def find_items
-    items = JSON.parse(params[:items])
-    @items = items.map do |item|
-      klass_name = item["wishlistable_type"]
+    @items = JSON.parse(params[:items])
+    return unless current_user
+    grouped_items = @items.group_by{|i| i["wishlistable_type"]}
+    grouped_items.each_pair do |klass_name, group|
       check_permitted_object_type(klass_name)
-      klass_name.constantize.find(item["object_id"])
+      on_wishlist_ids = WishListItem.
+        where(wishlistable_type: klass_name, wishlistable_id: group.map{|item| item["object_id"]}).
+        joins(:wish_list).where(wish_lists: { user_id: current_user.id }).
+        pluck(:wishlistable_id)
+      @items.select{|i| i['wishlistable_type'] == klass_name && on_wishlist_ids.include?(i['object_id'].to_i)}.each{|i| i[:is_favorite] = true }
     end
   end
 end

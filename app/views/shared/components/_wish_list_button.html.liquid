@@ -1,10 +1,9 @@
-<div class="favorite favorite-toggler" id="favorite-{{ object | dom_id }}" data-favorite-id="{{ object.id }}">
-  {% assign is_favorite = current_user | already_favorite: object %}
+<div class="favorite favorite-toggler" id="favorite-{{object.wishlistable_type | downcase }}_{{ object.object_id }}" data-favorite-id="{{ object.object_id }}">
   {% if is_favorite %}
-    {% assign path = 'wish_list_path' | generate_url: id: object.id, wishlistable_type: object.class_name %}
+    {% assign path = 'wish_list_path' | generate_url: id: object.object_id, wishlistable_type: object.wishlistable_type %}
     {% assign method = 'delete' %}
   {% else %}
-    {% assign path = 'wish_lists_path' | generate_url: id: object.id, wishlistable_type: object.class_name %}
+    {% assign path = 'wish_lists_path' | generate_url: id: object.object_id, wishlistable_type: object.wishlistable_type %}
     {% assign method = 'post' %}
   {% endif %}
     <a href="{{ path }}" class="{{ link_to_class }}" data-method="{{ method }}" data-action-link data-current-user="{% if current_user != blank %}true{% else%}false{% endif %}">
