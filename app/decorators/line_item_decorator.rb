@@ -51,7 +51,7 @@ class LineItemDecorator < Draper::Decorator
   end
 
   def total
-    humanized_money_with_symbol(object.total.to_money(Spree::Config.currency))
+    humanized_money_with_symbol(object.total.to_money(currency))
   end
 
   def image(target='')

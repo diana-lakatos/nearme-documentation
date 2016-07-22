@@ -6,7 +6,7 @@ class PayableTest < ActiveSupport::TestCase
     should 'be included in Reservation' do
       transactable = FactoryGirl.create(:transactable)
       FactoryGirl.create(:additional_charge_type)
-      FactoryGirl.create(:host_additional_charge_type)
+      FactoryGirl.create(:for_host_additional_charge_type)
       FactoryGirl.create(:transactable_additional_charge_type,
         additional_charge_type_target: [transactable.id, "Transactable"].join(",") )
 

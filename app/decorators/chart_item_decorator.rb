@@ -13,10 +13,6 @@ class ChartItemDecorator < Draper::Decorator
       object.listings_count.to_i
     when Reservation
       1
-    when Spree::Order
-      object.orders_count.to_i
-    when Spree::Product
-      1
     end
   end
 
@@ -26,10 +22,6 @@ class ChartItemDecorator < Draper::Decorator
       Time.strptime(object.impression_date.to_s, '%Y-%m-%d')
     when Transactable
       Time.strptime(object.listing_date.to_s, '%Y-%m-%d')
-    when Spree::Order
-      Time.strptime(object.orders_date.to_s, '%Y-%m-%d')
-    when Spree::Product
-      object.product_date
     else
       object.created_at
     end

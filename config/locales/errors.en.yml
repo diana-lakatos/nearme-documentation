@@ -22,11 +22,6 @@ en:
           attributes:
             sub_total:
               must_be_positive: 'Total must be greater than 0'
-        product_form:
-          attributes:
-            base:
-              label_empty: "Document requirements label can't be blank"
-              description_empty: "Document requirements description can't be blank"
   activerecord:
     attributes:
       listing_type:
@@ -98,14 +93,6 @@ en:
             book_it_out_minimum_qty: "Must be less than or equal to quantity"
             cant_set_montly_price: "Cant't set monthly price if listing is not open 7 days a week."
             no_consecutive_days: "Booking will not be possible if no consecutive days are open."
-        spree/shipping_method:
-          attributes:
-            base:
-              zone_incomplete: 'Shipping profile is incomplete'
-        spree/zone:
-          attributes:
-            kind:
-              members_missing: 'List of shipping destinations cannot be blank'
         review:
           attributes:
             rating:

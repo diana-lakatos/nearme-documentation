@@ -131,7 +131,7 @@ class OrderDecorator < Draper::Decorator
   end
 
   def display_total
-    humanized_money_with_symbol(object.total.to_money(Spree::Config.currency))
+    humanized_money_with_symbol(object.total.to_money(currency))
   end
 
   def display_shipping_address

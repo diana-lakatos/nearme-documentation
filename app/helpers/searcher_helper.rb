@@ -24,9 +24,7 @@ module SearcherHelper
   end
 
   def instantiate_searcher(transactable_type, params)
-    if transactable_type.buyable?
-      InstanceType::Searcher::ProductsSearcher.new(transactable_type, params)
-    elsif result_view == 'mixed'
+    if result_view == 'mixed'
       InstanceType::Searcher::GeolocationSearcher::Location.new(transactable_type, params)
     else
       searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(transactable_type, params)

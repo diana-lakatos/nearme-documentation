@@ -30,20 +30,11 @@ module DesksnearMe
         Rails.configuration.cache_classes ? require(c) : load(c)
       end
 
-      # Load Spree model's decorators
-      Dir.glob(File.join(File.dirname(__FILE__), "../app/models/spree/**/*_decorator*.rb")) do |c|
-        Rails.configuration.cache_classes ? require(c) : load(c)
-      end
-
       # Load LineItem STI
       Dir.glob(File.join(File.dirname(__FILE__), "../app/models/line_item/**.rb")) do |c|
         Rails.configuration.cache_classes ? require(c) : load(c)
       end
 
-      # Load Spree controllers's decorators
-      Dir.glob(File.join(File.dirname(__FILE__), "../app/controllers/spree/**/*_decorator*.rb")) do |c|
-        Rails.configuration.cache_classes ? require(c) : load(c)
-      end
     end
 
     # Only load the plugins named here, in the order given (default is alphabetical).

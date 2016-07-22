@@ -53,11 +53,7 @@ class Dashboard::ShippingProfilesController < Dashboard::BaseController
     @company ||= Company.new
     @transactable = @company.listings.build
 
-    if params['form'] == 'boarding'
-      render :partial => "shipping_profiles_list_form_boarding"
-    else
-      render :partial => "shipping_profiles_list_form_products"
-    end
+    render :partial => "shipping_profiles_list_form_products"
   end
 #
   private

@@ -26,15 +26,6 @@ en:
         name: "Listing type"
       location_type:
         name: "Location type"
-      spree/product:
-        shippo_enabled: 'Integrated Shipping'
-      spree/variant:
-        weight_unit: 'Type of Unit'
-        height_unit: 'Type of Unit'
-        width_unit: 'Type of Unit'
-        depth_unit: 'Type of Unit'
-      spree/order:
-        insurance_enabled: "Enable shipping insurance (if available)"
       saved_search:
         title: 'Title'
         created_at: 'Created at'
@@ -345,7 +336,6 @@ en:
 
     general:
       product: "Product"
-      spree/products: "Products"
       transactable: "Transactable"
       transactables: "Transactables"
       listing: "Listing"
@@ -380,8 +370,6 @@ en:
     reports:
       all_instance_profile_types: 'All User types'
       all_service_types: "All service types"
-      all_spree/product_types: "All product types"
-      all_offer_types: "All offer types"
       download_report_as_csv: "Download report as CSV"
       attribute: "Attribute"
       value: "Value"

@@ -7,7 +7,7 @@ class TransactableType::CsvFieldsBuilder
                 models.unshift(:location) unless @importable.skip_location?
                 additional_models + models
               else
-                additional_models + [import_model, :'spree/variant', :'spree/shipping_category', :'spree/image']
+                additional_models + [import_model]
               end
   end
 

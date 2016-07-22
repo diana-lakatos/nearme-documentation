@@ -49,7 +49,7 @@ namespace :migrate do
             transactable_types: [tt],
             name: tt.name + ' checkout'
           })
-          reservation_type.save!
+          reservation_type.save(validate: false)
           Utils::FormComponentsCreator.new(reservation_type).create!
           form_component = reservation_type.reload.form_components.first
           form_component.form_fields = [{"reservation" => "payments"}]

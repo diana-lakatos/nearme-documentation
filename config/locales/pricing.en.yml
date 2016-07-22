@@ -55,12 +55,6 @@ en:
 
     price_unit:
       person: '/ person'
-      person_hour: '/ person / hour'
-      person_day: '/ person / day'
-      person_week: '/ person / week'
-      person_month: '/ person / month'
-      person_weekly: '/ person / weekly'
-      person_monthly: '/ person / monthly'
       person_unit: '/ person / %{unit}'
     daily_rate:
       title: 'For daily rates, what defines one day?'

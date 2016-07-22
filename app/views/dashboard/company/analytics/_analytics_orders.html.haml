@@ -1,10 +1,10 @@
-- if @orders.total_entries.zero?
+- if @reservations.total_entries.zero?
   %p.empty-resultset
     = no_purchases_yet_text
 - else
   %figure.chart-a
     %figcaption
-      = t('dashboard.analytics.total.orders', total: @chart.total)
+      = t('dashboard.analytics.total.bookings', total: @last_week_reservations.count)
       |
       = t('dashboard.analytics.7_days_total')
 
@@ -14,13 +14,9 @@
     %thead
       %tr
         %th= t('dashboard.analytics.columns.date')
-        %th= t('dashboard.analytics.columns.orders')
-
-    - @orders.each do |order|
-      %tr
-        %td= order.orders_date
-        %td= order.orders_count
-
-- content_for :analytics_pagination do
-  = will_paginate_dashboard @orders, :params => { :analytics_mode => 'orders' }
-
+        %th= t('dashboard.analytics.columns.bookings')
+    %tbody
+      - @reservations.group_by{|reservation| reservation.created_at.to_date}.each_pair do |reservation_date, date_reservations|
+        %tr
+          %td= reservation_date
+          %td= date_reservations.size

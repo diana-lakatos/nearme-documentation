@@ -26,14 +26,6 @@ class InstanceType::SearcherFactory
     Instance::SEARCH_MODULES[@factory_type] ? "::#{Instance::SEARCH_MODULES[@factory_type]}" : ''
   end
 
-  # def product_searcher
-  #   "InstanceType::Searcher#{search_module}::ProductsSearcher".constantize.new(@transactable_type, @params)
-  # end
-
-  def offer_searcher
-    "InstanceType::Searcher#{search_module}::OffersSearcher".constantize.new(@transactable_type, @params)
-  end
-
   def location_searcher
     "InstanceType::Searcher#{search_module}::GeolocationSearcher::Location".constantize.new(@transactable_type, @params)
   end

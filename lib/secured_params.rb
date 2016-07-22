@@ -126,8 +126,6 @@ class SecuredParams
     ]
   end
 
-  # This is mix for spree and our tax solution
-  # can be cleaned up
   def tax_rate
     [
       :id,
@@ -138,10 +136,6 @@ class SecuredParams
       :calculate_with,
       :default,
       :state_id,
-      :calculator_type, # TODO rm with spree
-      :amount, # TODO rm with spree
-      :zone_id, # TODO rm with spree
-      :tax_category_id, # TODO rm with spree
     ]
   end
 
@@ -297,7 +291,6 @@ class SecuredParams
       :default_country,
       :default_currency,
       :default_oauth_signin_provider,
-      :default_products_search_view,
       :expand_orders_list,
       :facebook_consumer_key,
       :facebook_consumer_secret,

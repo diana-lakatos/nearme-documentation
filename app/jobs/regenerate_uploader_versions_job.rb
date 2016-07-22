@@ -21,12 +21,6 @@ class RegenerateUploaderVersionsJob < Job
         end
       end
 
-      Spree::Image.find_each do |image|
-        image.image.delayed_processing = true
-        image.image.recreate_versions! rescue nil
-        image.image_versions_generated_at = Time.now.utc
-        image.save(validate: false) rescue nil
-      end
     when 'AvatarUploader'
       User.find_each do |user|
         user.avatar.delayed_processing = true

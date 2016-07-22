@@ -228,10 +228,6 @@ class PlatformContext
     )
   end
 
-  def latest_products(number = 6)
-    Transactable.purchasable.order('created_at desc').limit(number).all
-  end
-
   def is_root_domain?
     root_domains = ['0\.0\.0\.0', 'localhost', 'near-me.com', 'setup.near-me.com', 'api\.desksnear\.me', '127\.0\.0\.1']
     root_domains += ['test\.host', '127\.0\.0\.1', 'example\.org', 'www.example\.com'] if Rails.env.test?

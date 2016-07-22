@@ -73,6 +73,7 @@ namespace :fix do
     instance.set_context!
     [Payment,PaymentTransfer,Charge, Payout, Refund, Webhook,
      RecurringBooking, Reservation, ReservationPeriod, Transactable,
+     Transactable::ActionType, Transactable::Pricing,
      Schedule, AvailabilityTemplate, AvailabilityRule,
      Location, Company, Address, ApprovalRequest,
      ApprovalRequestAttachment, AssignedWaiverAgreementTemplate,
@@ -82,9 +83,7 @@ namespace :fix do
      RecurringBookingPeriod, Refund, Review, SavedSearch,
      SavedSearchAlertLog, ScheduleExceptionRule, ScheduleRule,
      Shipment, UserMessage, Support::Ticket, WaiverAgreement,
-     Spree::StockLocation, Spree::StockItem, Spree::Product,
-     Spree::Variant, Spree::StockItem, Authentication,
-     UserRelationship
+     Authentication, UserRelationship
     ].each do |klass|
       puts "Deleting: #{klass} for #{instance.name}"
       puts "Before count: #{klass.count}"
@@ -114,6 +113,7 @@ namespace :fix do
     instance.set_context!
     [Payment,PaymentTransfer,Charge, Payout, Refund, Webhook,
      RecurringBooking, Reservation, ReservationPeriod, Transactable,
+     Transactable::ActionType, Transactable::Pricing,
      Schedule, AvailabilityTemplate, AvailabilityRule,
      Location, Company, Address, ApprovalRequest,
      ApprovalRequestAttachment, AssignedWaiverAgreementTemplate,
@@ -123,8 +123,6 @@ namespace :fix do
      RecurringBookingPeriod, Refund, Review, SavedSearch,
      SavedSearchAlertLog, ScheduleExceptionRule, ScheduleRule,
      Shipment, UserMessage, Support::Ticket, WaiverAgreement,
-     Spree::StockLocation, Spree::StockItem, Spree::Product,
-     Spree::Variant, Spree::StockItem, Locale, Translation,
      BillingAuthorization, PaymentGateway, Authentication,
      UserRelationship
     ].each do |klass|
@@ -227,7 +225,7 @@ namespace :fix do
       instance.set_context!
       p "Fixing company's metadata for Instance ##{instance.id}"
       instance.companies.find_each do |company|
-        all_transactables = [company.listings.with_deleted, company.products.with_deleted, company.offers.with_deleted].flatten.compact
+        all_transactables = company.listings.with_deleted
         completed = all_transactables.none? || all_transactables.any?{ |t| !(t.try(:draft_at) || t.try(:draft)) }
         company.update_metadata({
           draft_at: (completed ? nil : company.created_at),

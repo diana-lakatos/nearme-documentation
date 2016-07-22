@@ -58,36 +58,5 @@ FactoryGirl.define do
       end
     end
 
-    # factory :product_payment do
-    #   subtotal_amount_cents { 50_00 }
-    #   service_fee_amount_guest_cents { 5_00 }
-
-    #   after(:build) do |payment, evaluator|
-    #     payment.payable = evaluator.payable || FactoryGirl.create(:completed_order_with_totals)
-    #   end
-
-    #   factory :authorized_product_payment do
-    #     state 'authorized'
-
-    #     after(:build) do |payment, evaluator|
-    #       payment.payable = evaluator.payable || FactoryGirl.create(:completed_order_with_totals)
-    #       payment.billing_authorizations = [FactoryGirl.build(:billing_authorization, payment: payment, reference: payment.payable)]
-    #     end
-    #   end
-
-    #   factory :paid_product_payment do
-    #     state 'paid'
-
-    #     after(:build) do |payment, evaluator|
-    #       payment.payable = evaluator.payable || FactoryGirl.create(:completed_order_with_totals)
-    #       payment.charges = [FactoryGirl.build(:charge, payment: payment)]
-    #     end
-    #   end
-
-
-    #   factory :payment_order_unpaid do
-    #     paid_at nil
-    #   end
-    # end
   end
 end

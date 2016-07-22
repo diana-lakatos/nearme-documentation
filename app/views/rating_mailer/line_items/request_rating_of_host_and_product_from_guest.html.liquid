@@ -1,9 +1,0 @@
-<h2>How was it, {{ line_item.owner_first_name }}?</h2>
-
-<p>We can't wait to hear about your experience with '<a href="{{ platform_context.host | append:line_item.product_url }}">{{ line_item.product_name }}</a>'.</p>
-
-<p>Your opinion is very important and it will help other {{ line_item.lessees }} to find great {{ platform_context.bookable_noun_plural }}. Take a moment and give us your feedback!</p>
-
-<a class="btn" href="{{ platform_context.host | append:line_item.reviews_line_item_url }}">Write a Review</a>
-
-<p>If you'd prefer to talk to us directly, please send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> or call us on {{ platform_context.phone_number }} - we love to talk with our {{ line_item.lessees }}.</p>

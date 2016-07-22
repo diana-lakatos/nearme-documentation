@@ -23,8 +23,8 @@ module RegistrationsHelper
     name = name.to_sym
     active_class = 'active'
 
-    if (params[:services_page].present? && name == :services) || (params[:products_page].present? && name == :products) ||
-      (name == :general && params[:services_page].blank? && params[:products_page].blank?)
+    if (params[:services_page].present? && name == :services) ||
+      (name == :general && params[:services_page].blank?)
 
       return active_class
     end

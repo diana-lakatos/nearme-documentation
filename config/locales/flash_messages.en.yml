@@ -212,11 +212,6 @@ en:
         instance_admin_roles:
           role_added: "Great, new role has been added!"
           role_deleted: "That role has been deleted"
-      buy_sell:
-        product_types:
-          created: 'Product Type created.'
-          updated: 'Product Type updated.'
-          deleted: 'Product Type deleted.'
       data_uploads:
         created: 'Your data has been processed successfully and is now being imported.'
       projects:
@@ -268,70 +263,6 @@ en:
         resumed: 'Order has been resumed.'
         approved: 'Order has been approved.'
         error_update: 'Order has not been updated.'
-      shipping_category:
-        created: 'Shipping category has been created.'
-        deleted: 'Shipping category has been deleted.'
-        updated: 'Shipping category has been updated.'
-        error_create: 'Shipping category has not been created.'
-        error_update: 'Shipping category has not been updated.'
-      shipping_method:
-        created: 'Shipping method has been created.'
-        deleted: 'Shipping method has been deleted.'
-        updated: 'Shipping method has been updated.'
-        error_create: 'Shipping method has not been created.'
-        error_update: 'Shipping method has not been updated.'
-      variant:
-        created: 'Product variant has been created.'
-        deleted: 'Product variant has been deleted.'
-        updated: 'Product variant has been updated.'
-        error_create: 'Product variant has not been created.'
-        error_update: 'Product variant has not been updated.'
-      product:
-        created: 'Product has been created.'
-        deleted: 'Product has been deleted.'
-        updated: 'Product has been updated.'
-        error_create: 'Product has not been created.'
-        error_update: 'Product has not been updated.'
-      product_image:
-        created: 'Product image has been created.'
-        deleted: 'Product image has been deleted.'
-        updated: 'Product image has been updated.'
-        error_create: 'Product image has not been created.'
-        error_update: 'Product image has not been updated.'
-      property:
-        created: 'Property has been created.'
-        deleted: 'Property has been deleted.'
-        updated: 'Property has been updated.'
-        error_create: 'Property has not been created.'
-        error_update: 'Property has not been updated.'
-      product_property:
-        created: 'Product property has been created.'
-        deleted: 'Product property has been deleted.'
-        updated: 'Product property has been updated.'
-        error_create: 'Product property has not been created.'
-        error_update: 'Product property has not been updated.'
-      prototype:
-        created: 'Prototype has been created.'
-        deleted: 'Prototype has been deleted.'
-        updated: 'Prototype has been updated.'
-        error_create: 'Prototype has not been created.'
-        error_update: 'Prototype has not been updated.'
-      option_type:
-        created: 'Option type has been created.'
-        deleted: 'Option type has been deleted.'
-        updated: 'Option type has been updated.'
-        error_create: 'Option type has not been created.'
-        error_update: 'Option type has not been updated.'
-      stock_location:
-        created: 'Stock location has been created.'
-        deleted: 'Stock location has been deleted.'
-        updated: 'Stock location has been updated.'
-        error_create: 'Stock location has not been created.'
-        error_update: 'Stock location has not been updated.'
-      stock_movement:
-        created: 'Stock movement has been created.'
-        deleted: 'Stock movement has been deleted.'
-        error_create: 'Stock movement has not been created.'
       companies:
         company_updated: "Great, your company's details have been updated."
         white_label_updated: "Great, white-label details have been updated."
@@ -356,12 +287,6 @@ en:
         reservation_not_confirmed: "Your reservation could not be confirmed."
         reservation_rejected: "You have rejected the reservation. Maybe next time!"
         payment_requested: "Your request has been sent"
-      bids:
-        rejected: "You have rejected the offer."
-        cant_reject: "The offer can't be rejected."
-        already_confirmed: "This offer has already been confirmed."
-        confirmed: "You have confirmed the offer!"
-        not_confirmed: "The offer could not be confirmed."
       data_upload:
         created: "Import has been scheduled. You'll receive an email when it's done."
         scheduled: 'Data has been scheduled to be imported.'

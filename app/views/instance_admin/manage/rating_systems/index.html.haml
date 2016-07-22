@@ -24,7 +24,7 @@
           - if transactable_type.rating_systems.where(subject: [RatingConstants::GUEST, RatingConstants::HOST]).count == 2
             .only-if-both-completed
               %input{type: 'checkbox', checked: transactable_type.show_reviews_if_both_completed?, 'data-url' => change_state_instance_admin_manage_transactable_type_path(transactable_type), 'data-service-name' => transactable_type.translated_bookable_noun}
-              %label= t("instance_admin.rating_systems.index.only_if_both_completed_#{transactable_type.buyable? ? 'products' : 'services'}")
+              %label= t("instance_admin.rating_systems.index.only_if_both_completed_services")
 
         .ratings-content-container{class: "#{'hidden' unless transactable_type.enable_reviews?}"}
           = simple_form_for transactable_type.becomes(TransactableType), url: update_systems_instance_admin_manage_rating_systems_path(transactable_type_id: transactable_type.id), method: :put do |f|
