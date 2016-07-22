@@ -18,10 +18,11 @@
         = link_to_add_association t('pricing.add_new') , f, :pricings, partial: 'dashboard/company/transactables/form_fields/action_types/custom_pricing', render_options: { locals: { tt_pricing: nil } }, class: 'btn btn-primary'
 
 
-  - if form_fields.map(&:values).flatten.include? 'action_rfq'
+  - if fields.include? 'action_rfq'
     = render "dashboard/company/transactables/form_fields/action_rfq", f: f
 
-  = render 'dashboard/company/transactables/form_fields/availability', f: f
+  - if fields.include?('availability_rules') || fields.include?('schedule')
+    = render 'dashboard/company/transactables/form_fields/availability', f: f
 
-  - if form_fields.map(&:values).flatten.include? 'minimum_booking_minutes'
+  - if fields.include? 'minimum_booking_minutes'
     = render 'dashboard/company/transactables/form_fields/minimum_booking_minutes', f: f

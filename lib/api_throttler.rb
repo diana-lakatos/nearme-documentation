@@ -37,7 +37,7 @@ class ApiThrottler < Rack::Throttle::Hourly
   end
 
   def max_per_window
-    3600
+    999999
   end
 
 end

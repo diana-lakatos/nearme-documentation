@@ -17,6 +17,9 @@ class TransactableJsonSerializer
   attribute :city
   attribute :country
   attribute :quantity
+  attribute :path do
+    object.decorate.show_path
+  end
   attribute :location_name do
     object.location.name
   end
