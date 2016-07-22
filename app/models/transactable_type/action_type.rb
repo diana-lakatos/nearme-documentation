@@ -3,7 +3,7 @@ class TransactableType::ActionType < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  AVAILABILE_UNITS = %w(day hour night event subscription_day subscription_month allow_free item).freeze
+  AVAILABILE_UNITS = %w(day day_month hour night night_month event subscription_day subscription_month allow_free item).freeze
 
   belongs_to :instance
   belongs_to :transactable_type

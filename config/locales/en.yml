@@ -75,6 +75,7 @@ en:
         one: "1 follower"
         other: "%{count} followers"
   confirmations:
+    are_you_sure_delete_price: 'Are you sure? This price will be removed from all existing listings.'
     are_you_sure: 'Are you sure?'
     are_you_sure_you_want_to_delete_this_item: "Are you sure you want to delete this item?"
     are_you_sure_you_want_to_delete_this_image: "Are you sure you want to delete this image?"
@@ -2212,6 +2213,12 @@ en:
     day:
       one: 'day'
       other: 'days'
+    day_month:
+      one: 'month'
+      other: 'months'
+    night_month:
+      one: 'month'
+      other: 'months'
     hour:
       one: 'hour'
       other: 'hours'
@@ -2238,6 +2245,8 @@ en:
     slash_per_day: '/ day'
     slash_per_week: '/ week'
     slash_per_month: '/ month'
+    slash_per_day_month: '/ month'
+    slash_per_night_month: '/ month'
     slash_per_event: '/ event'
     slash_per_subscription_month: '/ month'
     slash_per_subscription_day: '/ day'
@@ -2292,6 +2301,12 @@ en:
     day:
       one: 'day'
       other: 'days'
+    day_month:
+      one: 'month'
+      other: 'months'
+    night_month:
+      one: 'month'
+      other: 'months'
     hour:
       one: 'hour'
       other: 'hours'

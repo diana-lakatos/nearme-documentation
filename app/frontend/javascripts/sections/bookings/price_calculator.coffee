@@ -13,10 +13,7 @@ module.exports = class BookingsPriceCalculator
 
   getPrice: ->
 
-    contiguousBlocks = if @listing.isOvernightBooking()
-      @contiguousOvernightBlocks()
-    else
-      @contiguousBlocks()
+    contiguousBlocks = @contiguousBlocks()
 
     total = _.inject(contiguousBlocks, (sum, block) =>
       block_length = block.length
