@@ -77,7 +77,7 @@ class InstanceWizardController < ActionController::Base
       name: @instance.bookable_noun,
     )
     tp.action_types << TransactableType::TimeBasedBooking.new(
-      confirm_reservations: true
+      confirm_reservations: true,
       pricings_attributes: [
         {
           unit: 'hour',
@@ -98,7 +98,7 @@ class InstanceWizardController < ActionController::Base
           unit: 'day',
           number_of_units: 30,
           allow_free_booking: true
-        },
+        }
       ]
     )
     tp.save!
