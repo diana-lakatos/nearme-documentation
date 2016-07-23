@@ -1,3 +1,4 @@
+SubscriptionPriceCalculator = require('./price_calculator/subscription_price_calculator')
 HourlyPriceCalculator = require('./price_calculator/hourly_price_calculator')
 FixedPriceCalculator = require('./price_calculator/fixed_price_calculator')
 PerUnitPriceCalculator = require('./price_calculator/per_unit_price_calculator')
@@ -22,6 +23,7 @@ module.exports = class BookingListing
     @initial_bookings = @data.initial_bookings || {}
     @possibleUnits = @data.possible_units
     @pricings = @data.pricings
+    @no_action = @data.no_action
 
     if @withCalendars()
       if @canBeSubscribed()
@@ -186,12 +188,13 @@ module.exports = class BookingListing
 
   # Return the subtotal for booking this listing
   bookingSubtotal: (book_it_out = false, exclusive_price = false) ->
+    return if @no_action
     if book_it_out
       @priceCalculator().getPriceForBookItOut()
     else if exclusive_price
       @exclusivePrice
     else if @isSubscriptionBooking()
-      @pricings[@currentPricingId].price * @getQuantity()
+      @priceCalculator().getPrice()
     else if @canBePurchased()
       @fixedPrice * @getQuantity()
     else
@@ -207,6 +210,8 @@ module.exports = class BookingListing
       new PerUnitPriceCalculator(this)
     else if @isFixedBooking()
       new FixedPriceCalculator(this)
+    else if @isSubscriptionBooking()
+      new SubscriptionPriceCalculator(this)
     else
       new PriceCalculator(this)
 

@@ -19,6 +19,9 @@ class ReservationType < ActiveRecord::Base
     :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
     :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
 
+  validates :name, :transactable_types, presence: true
+
+
   store_accessor :settings, :address_in_radius, :validate_on_adding_to_cart, :skip_payment_authorization
 
   def translation_manager

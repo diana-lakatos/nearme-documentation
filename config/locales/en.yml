@@ -1518,6 +1518,7 @@ en:
       reservation_state: "Reservation state: "
       payment_state: "Payment state: "
       payment_method: "Payment method: "
+      payment_missing: "Payment missing"
       unconfirmed: 'Unconfirmed'
       confirmed: 'Confirmed'
       archived: 'Archived'
