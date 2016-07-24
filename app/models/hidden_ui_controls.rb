@@ -5,15 +5,9 @@ class HiddenUiControls
 
   BUY_SELL_KEYS = [
       'dashboard/orders',
-      'dashboard/products',
       'dashboard/orders_received',
-      'registrations/show#products',
-      'registrations/sellers/show#products',
-      'registrations/buyers/show#products',
       'main_menu/my_orders',
       'main_menu/cart',
-      'dashboard/products/bulk_upload',
-      'dashboard/products/search'
   ]
 
   PROJECT_KEYS = [
@@ -101,7 +95,7 @@ class HiddenUiControls
     when :auto
       # We now return all keys on auto
       # as the instance is actually both especially
-      # before the admin created any product/service types
+      # before the admin created any transactable types
       # and we can't know what he wants
       all_keys
     when :buy_sell

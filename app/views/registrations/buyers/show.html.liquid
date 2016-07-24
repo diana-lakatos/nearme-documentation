@@ -4,11 +4,6 @@
     {% include 'registrations/buyers/profile/user_badge.html' %}
     <div class='profile-content'>
       <ul class='nav nav-tabs'>
-        {% if user.show_products_tab? %}
-          <li>
-            <a data-toggle='tab' href='#products'>{{ 'user_profile.labels.tabs.products' | translate }}</a>
-          </li>
-        {% endif %}
         {% if user.show_services_tab? %}
           <li>
             <a data-toggle='tab' href='#services'>{{ 'user_profile.labels.tabs.services' | translate }}</a>
@@ -26,16 +21,6 @@
         {% endif %}
       </ul>
       <div class='profile-listings tab-content'>
-        {% if user.show_products_tab? %}
-          <div id="products" class="tab-pane">
-            {% if company and products.size > 0 %}
-              {% include 'registrations/buyers/profile/tabs/products.html' %}
-            {% else %}
-              {% assign tab = 'products' %}
-              {% include 'registrations/buyers/profile/no_content.html' %}
-            {% endif %}
-          </div>
-        {% endif %}
         {% if user.show_services_tab? %}
           <div id="services" class="tab-pane">
             {% if company and listings.size > 0 %}

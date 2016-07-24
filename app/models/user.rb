@@ -1,6 +1,5 @@
 class User < ActiveRecord::Base
 
-  # include Spree::UserPaymentSource
   include CreationFilter
   include QuerySearchable
   include Approvable
@@ -67,7 +66,7 @@ class User < ActiveRecord::Base
   has_many :administered_listings, class_name: "Transactable", through: :administered_locations, source: :listings, inverse_of: :administrator
   has_many :authentications, dependent: :destroy
   has_many :assigned_tickets, -> { order 'updated_at DESC' }, foreign_key: 'assigned_to_id', class_name: 'Support::Ticket'
-  has_many :assigned_company_tickets, -> { where(target_type: ['Transactable', 'Spree::Product']).order('updated_at DESC') }, foreign_key: 'assigned_to_id', class_name: 'Support::Ticket'
+  has_many :assigned_company_tickets, -> { where(target_type: 'Transactable').order('updated_at DESC') }, foreign_key: 'assigned_to_id', class_name: 'Support::Ticket'
   has_many :approval_request_attachments, foreign_key: 'uploader_id'
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :authored_messages, class_name: "UserMessage", foreign_key: 'author_id', inverse_of: :author
@@ -95,8 +94,6 @@ class User < ActiveRecord::Base
   has_many :mailer_unsubscriptions
   has_many :photos, foreign_key: 'creator_id', inverse_of: :creator
   has_many :attachments, class_name: 'SellerAttachment'
-  has_many :products_images, foreign_key: 'uploader_id', class_name: 'Spree::Image'
-  has_many :products, foreign_key: 'user_id', class_name: 'Spree::Product'
   has_many :projects, foreign_key: 'creator_id', inverse_of: :creator
   has_many :offers, foreign_key: 'creator_id', inverse_of: :creator
   has_many :bids
@@ -110,9 +107,8 @@ class User < ActiveRecord::Base
   has_many :relationships, class_name: "UserRelationship", foreign_key: 'follower_id', dependent: :destroy
   has_many :reverse_relationships, class_name: "UserRelationship", foreign_key: 'followed_id', dependent: :destroy
   has_many :reviews
-  has_many :requests_for_quotes, -> { where(target_type: ['Transactable', 'Spree::Product']).order('updated_at DESC') }, class_name: 'Support::Ticket'
+  has_many :requests_for_quotes, -> { where(target_type: 'Transactable').order('updated_at DESC') }, class_name: 'Support::Ticket'
   has_many :saved_searches, dependent: :destroy
-  has_many :shipping_categories, class_name: 'Spree::ShippingCategory'
   has_many :ticket_message_attachments, foreign_key: 'uploader_id', class_name: 'Support::TicketMessageAttachment'
   has_many :tickets, -> { order 'updated_at DESC' }, class_name: 'Support::Ticket'
   has_many :user_bans
@@ -691,7 +687,7 @@ class User < ActiveRecord::Base
 
   def all_transactables
     if company = default_company
-      [company.listings.first, company.products.first, company.offers.first].compact
+      company.listings
     end
   end
 
@@ -727,12 +723,6 @@ class User < ActiveRecord::Base
     new_token = SecureRandom.hex(32)
     self.update_attribute(:payment_token, new_token)
     new_token
-  end
-
-  def generate_spree_api_key
-    new_spree_api_key = SecureRandom.hex(32)
-    self.update_attribute(:spree_api_key, new_spree_api_key)
-    new_spree_api_key
   end
 
   def verify_payment_token(token)
@@ -923,10 +913,6 @@ class User < ActiveRecord::Base
 
   def registration_completed?
     companies.first.try(:completed_at)
-  end
-
-  def has_any_active_products
-    companies.any? && companies.first.products.not_draft.any?
   end
 
   # get_instance_metadata method comes from Metadata::Base

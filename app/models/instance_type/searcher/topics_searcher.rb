@@ -1,5 +1,4 @@
 class InstanceType::Searcher::TopicsSearcher
-  #TODO remove InstanceType::Searcher if not needed
   include InstanceType::Searcher
 
   attr_reader :search
@@ -19,12 +18,7 @@ class InstanceType::Searcher::TopicsSearcher
     }
   end
 
-  #TODO remove search if not needed
-  def search
-    @search ||= Spree::Product::Search::Params::Web.new(@params)
-  end
-
   def to_event_params
-    { search_query: query, result_count: result_count }
+    { search_query: @params[:query], result_count: result_count }
   end
 end

@@ -247,12 +247,10 @@ class Reservation < Order
     periods.size
   end
 
-  #TODO: is it required?
   def total_nights
-    price_calculator.number_of_nights
+    total_days > 1 ? total_days - 1 : total_days
   end
 
-  #TODO: move overnight
   def total_units
     transactable_pricing.night_booking? ? total_nights : total_days
   end

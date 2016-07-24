@@ -11,11 +11,11 @@
       .nested-container
         = render 'dashboard/company/transactables/form_fields/action_types/pricing', f: pricing, tt_pricing: pricing.object.transactable_type_pricing, show_free_column: f.object.try(:allow_free_booking?)
 
-      - if form_fields.find{ |h| h['transactable'] == 'exclusive_price' }
+      - if fields.include? 'exclusive_price'
         = render 'dashboard/company/transactables/form_fields/exclusive_price', f: pricing
 
-      - if form_fields.find{ |h| h['transactable'] == 'book_it_out' }
+      - if fields.include? 'book_it_out'
         = render 'dashboard/company/transactables/form_fields/book_it_out', f: pricing
-  - if form_fields.map(&:values).flatten.include? 'action_rfq'
+  - if fields.include? 'action_rfq'
     = render "dashboard/company/transactables/form_fields/action_rfq", f: f
 = render 'dashboard/company/transactables/schedule_form', f: f

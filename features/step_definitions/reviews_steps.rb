@@ -85,5 +85,5 @@ end
 
 Then(/^I should see review in uncompleted feedback$/) do
   visit dashboard_reviews_path
-  page.should have_content(@review_to_be_removed.reviewable.transactable.creator.name)
+  page.should have_content('Leave host Feedback')
 end

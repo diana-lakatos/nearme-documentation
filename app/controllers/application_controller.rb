@@ -41,10 +41,6 @@ class ApplicationController < ActionController::Base
     @secured_params ||= SecuredParams.new
   end
 
-  def spree_current_user
-    current_user
-  end
-
   def platform_context
     @platform_context = PlatformContext.current
   end
@@ -93,7 +89,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_time_zone(&block)
-    time_zone = current_user.try(:time_zone).presence || current_instance.try(:timze_zone).presence || 'UTC'
+    time_zone = current_user.try(:time_zone).presence || current_instance.try(:time_zone).presence || 'UTC'
     Time.use_zone(time_zone, &block)
   end
 

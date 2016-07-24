@@ -158,7 +158,7 @@ module Payable
     end
     monetize :total_payable_to_host_cents, with_model_currency: :currency
     def total_payable_to_host_cents
-      total_amount_cents - service_fee_amount_host_cents - service_fee_amount_host_cents
+      subtotal_amount_cents + host_additional_charges_cents + shipping_total_cents + total_tax_amount_cents
     end
   end
 end

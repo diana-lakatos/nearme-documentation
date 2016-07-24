@@ -15,7 +15,7 @@ class PaymentMethod < ActiveRecord::Base
 
   belongs_to :payment_gateway, -> { with_deleted }
 
-  has_many :orders, class_name: "Spree::Order"
+  has_many :orders
   has_many :payments
 
   validates :payment_method_type, presence: true, inclusion: { in: PAYMENT_METHOD_TYPES }

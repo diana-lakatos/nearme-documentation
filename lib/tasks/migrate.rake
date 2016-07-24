@@ -2,9 +2,7 @@
 
 namespace :migrate do
 
-  task rollback_orders: :environment do
-    ReservationPeriod.update_all('reservation_id = old_reservation_id')
-
+  task rollback_reservations: :environment do
     puts "     ||||||||||||||||||||||||||\n     | Rollback Order Reservation | \n     |||||||||||||||||||||||||| "
 
     OldReservation.where.not(order_id: nil).each do |old_res|
@@ -51,7 +49,7 @@ namespace :migrate do
             transactable_types: [tt],
             name: tt.name + ' checkout'
           })
-          reservation_type.save!
+          reservation_type.save(validate: false)
           Utils::FormComponentsCreator.new(reservation_type).create!
           form_component = reservation_type.reload.form_components.first
           form_component.form_fields = [{"reservation" => "payments"}]
@@ -210,13 +208,6 @@ namespace :migrate do
   task :reservations_to_orders => :environment do
     puts "     ||||||||||||||||||||||||||\n     | Migrating Reservations | \n     |||||||||||||||||||||||||| "
 
-    Payment.where(payable_type: "Reservation").update_all(payable_type: "OldReservation")
-    Review.where(reviewable_type: "Reservation").update_all(reviewable_type: "OldReservation")
-    WaiverAgreement.where(target_type: "Reservation").update_all(target_type: "OldReservation")
-    Attachable::PaymentDocument.where(attachable_type: "Reservation").update_all(attachable_type: "OldReservation")
-    UserMessage.where(thread_context_type: "Reservation").update_all(thread_context_type: "OldReservation")
-    AdditionalCharge.where(target_type: "Reservation").update_all(target_type: "OldReservation")
-
     @deprecated_admin_ids = [2807,2854,7500,4374,5073,3528,7952,7501]
 
     class Reservation < Order
@@ -366,10 +357,6 @@ namespace :migrate do
         end
       end
     end
-
-    Payment.where(payable_type: "RecurringBookingPeriod").update_all(payable_type: "OldRecurringBookingPeriod")
-    PaymentSubscription.where(subscriber_type: "RecurringBooking").update_all(subscriber_type: "OldRecurringBooking")
-    UserMessage.where(thread_context_type: "RecurringBooking").update_all(thread_context_type: "OldRecurringBooking")
 
     Instance.all.each do |instance|
       instance.set_context!

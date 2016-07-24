@@ -6,7 +6,7 @@
     - else
       = t('reservations.charge_after_confirmation')
 
-- if @order
+- if @order.bookable?
   %p.cancellation-info
     - action_type = @order.transactable_pricing.action
     - if !action_type.cancellation_policy_enabled || action_type.cancellation_policy_hours_for_cancellation.zero?

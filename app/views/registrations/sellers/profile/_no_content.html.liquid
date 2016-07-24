@@ -1,6 +1,4 @@
-{% if tab == 'products' %}
-  {% assign link = 'dashboard_company_products_path' | generate_url %}
-{% elsif tab == 'services' %}
+{% if tab == 'services' %}
   {% assign link = 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types[0].id %}
 {% elsif tab == 'reviews' %}
   {% assign link = 'dashboard_reviews_path' | generate_url %}

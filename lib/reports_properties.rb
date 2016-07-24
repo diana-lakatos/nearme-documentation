@@ -20,8 +20,6 @@ module ReportsProperties
   end
 
   def export_data_to_csv(items, attribute_names = [], properties_columns)
-    properties_column_name = items.first.is_a?(Spree::Product) ? :extra_properties : :properties
-
     csv = CSV.generate do |csv|
       if items.first.is_a?(Transactable)
         csv << [attribute_names, 'url', 'latitude', 'longitude', 'address', 'street', 'suburb', 'city', 'country', 'state', 'postcode', properties_columns].flatten
@@ -32,7 +30,7 @@ module ReportsProperties
       items.each do |record|
         record = record.decorate if record.is_a?(Transactable)
         values = record.attributes.values
-        properties = record.send(properties_column_name).to_h
+        properties = record.send(:properties).to_h
 
         if record.is_a?(Transactable)
           values << record.show_url

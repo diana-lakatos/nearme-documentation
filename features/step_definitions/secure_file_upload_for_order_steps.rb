@@ -57,21 +57,6 @@ Then /^Should not see default file label and field for upload$/ do
   page.should_not have_content(I18n.t('upload_documents.file.default.label'))
 end
 
-Given /^Order has product with not required documents$/ do
-  product = @order.line_items.first.product
-  @upload_obligation = FactoryGirl.create(:upload_obligation, level: UploadObligation::LEVELS.last, item: product)
-end
-
-Given /^Order has two products with required and optional documents$/ do
-  @order = FactoryGirl.create(:order_waiting_for_payment, line_items_count: 2, user: user)
-  @product_first = @order.line_items.first.product
-  @product_second = @order.line_items.last.product
-  @required_upload_obligation = FactoryGirl.create(:upload_obligation, level: UploadObligation::LEVELS[0], item: @product_first)
-  @optional_upload_obligation = FactoryGirl.create(:upload_obligation, level: UploadObligation::LEVELS[1], item: @product_second)
-  @document_requirement_first = FactoryGirl.create(:document_requirement, label: 'Passport', item: @product_first)
-  @document_requirement_second = FactoryGirl.create(:document_requirement, item: @product_second)
-end
-
 Then /^User should see two labels and file fields$/ do
   page.should have_content(@document_requirement_first.label)
   page.should have_content(@document_requirement_second.label)
@@ -87,29 +72,6 @@ end
 
 Given /^Document upload is disabled$/ do
   @documents_upload.update(enabled: false)
-end
-
-Given /^Upload obligation for product is blank$/ do
-  @order.line_items.first.product.upload_obligation.try(:destroy)
-end
-
-Given /^Document requirements for product is blank$/ do
-  @order.line_items.first.product.document_requirements.try(:destroy_all)
-end
-
-Given /^Upload obligation for product is exist$/ do
-  if @order.line_items.first.product.upload_obligation.blank?
-    @order.line_items.first.product.create_upload_obligation(level: UploadObligation::LEVELS[0])
-  end
-end
-
-Given /^Document requirements for product is exist$/ do
-  if @order.line_items.first.product.document_requirements.blank?
-    @order.line_items.first.product.document_requirements.create({
-      label: "Passport",
-      description: "Please upload your passport"
-    })
-  end
 end
 
 def attach_secure_file(number)

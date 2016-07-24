@@ -40,7 +40,10 @@ class Transactable::Pricing < ActiveRecord::Base
   validate :check_pricing_uniqueness, :check_pricing_definition, unless: :transactable_type_pricing
 
   scope :by_price, -> { order('price_cents ASC') }
-  scope :order_by_unit_and_price, -> { order('unit DESC, price_cents ASC') }
+  scope :order_by_unit_and_price, -> {
+    units_decorated = Transactable::ActionType::AVAILABILE_UNITS.each_with_index.map {|unit_name, i| "WHEN unit='#{unit_name}' THEN #{i}" }
+    order("CASE #{units_decorated.join(' ')} END")
+  }
   scope :by_number_and_unit, -> (number, unit) { where(number_of_units: number, unit: unit) }
   scope :by_unit, -> (by_unit) { where(unit: by_unit) if by_unit.present? }
 
@@ -59,12 +62,26 @@ class Transactable::Pricing < ActiveRecord::Base
     end
   end
 
+  def adjusted_number_of_units
+    if unit == 'day_month' || unit == 'night_month'
+      action.booking_days_per_month
+    else
+      number_of_units
+    end
+  end
+
+  def adjusted_unit
+    return 'day' if unit == 'day_month'
+    return 'night' if unit == 'night_month'
+    unit
+  end
+
   def units_and_price
-    [number_of_units, slice(:price, :id)]
+    [adjusted_number_of_units, slice(:price, :id)]
   end
 
   def units_and_price_cents
-    [number_of_units, { price: price.cents, id: id } ]
+    [adjusted_number_of_units, { price: price.cents, id: id } ]
   end
 
   def price_information
@@ -75,8 +92,8 @@ class Transactable::Pricing < ActiveRecord::Base
     slice(:price_cents, :number_of_units, :unit).merge(availabile_discounts)
   end
 
-  %w( day hour night subscription_day subscription_month event).each do |u|
-    define_method("#{u}_booking?"){ unit == u }
+  Transactable::ActionType::AVAILABILE_UNITS.each do |u|
+    define_method("#{u}_booking?"){ unit =~ /^#{u}/ }
   end
 
   def overnight_booking?
@@ -120,12 +137,11 @@ class Transactable::Pricing < ActiveRecord::Base
   end
 
   def all_prices_for_unit
-    case unit
-    when 'day'
+    if day_booking?
       action.prices_by_days
-    when 'night'
+    elsif night_booking?
       action.prices_by_nights
-    when 'hour'
+    elsif hour_booking?
       action.prices_by_hours
     end
   end

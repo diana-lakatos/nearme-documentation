@@ -1,4 +1,3 @@
-
 %header
   .row
     .col-sm-7
@@ -51,9 +50,30 @@
   .col-md-3
     %h3= recurring_booking.transactable_pricing.decorate.units_translation('dashboard.user_recurring_bookings.every_unit_price')
     %p
-      %b= recurring_booking.subtotal_price_for_guest
+      %b= recurring_booking.total_price_for_guest
 
 
+.row
+  .col-md-3
+  - if recurring_booking.guest_notes.present?
+    .col-sm-3
+      %h3= t('dashboard.user_reservations.exclusive_price_guests_notes')
+      %blockquote= recurring_booking.guest_notes
+
+  - if recurring_booking.payment_documents.select(&:persisted?).present?
+    .col-sm-3
+      %h3=  t('dashboard.user_reservations.payment_documents')
+      %ul.payment-documents
+        - recurring_booking.payment_documents.select(&:persisted?).each do |pd|
+          %li
+            %a{:href => pd.file.url, download: true}= pd.file.file_name
+  - if recurring_booking.additional_line_items.present?
+    .col-sm-3.right
+      %h3=  t('dashboard.user_reservations.additional_charges')
+      %ul.payment-documents
+        - recurring_booking.additional_line_items.each do |ac|
+          %li
+            =ac.name + ' - ' + humanized_money_with_cents_and_symbol(ac.total_price)
 
 - if recurring_booking.guest_notes.present?
   %h3= t('dashboard.user_recurring_bookings.user_note')
@@ -91,7 +111,11 @@
           %td= humanized_money_with_cents_and_symbol(current_user == recurring_booking.host ? period.total_amount - period.service_fee_amount_guest : period.total_amount)
           %td
             %span{class: period.payment.try(:state) }
-              = t("dashboard.user_recurring_bookings.states.#{period.payment.try(:state)}")
+              - if period.payment.try(:state).blank?
+                = t("dashboard.host_reservations.payment_missing")
+              - else
+                = t("dashboard.user_recurring_bookings.states.#{period.payment.try(:state)}")
+
 
 
           %td

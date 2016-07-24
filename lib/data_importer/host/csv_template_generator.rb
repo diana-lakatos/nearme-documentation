@@ -5,7 +5,7 @@ class DataImporter::Host::CsvTemplateGenerator < DataImporter::CsvTemplateGenera
     @models = if import_model == :transactable
                 [:location, :address, import_model, :photo]
               else
-                [import_model, :'spree/variant', :'spree/shipping_category', :'spree/image']
+                [import_model]
               end
   end
 

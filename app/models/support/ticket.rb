@@ -132,6 +132,6 @@ class Support::Ticket < ActiveRecord::Base
   end
 
   def target_rfq?
-    ["Transactable", 'Spree::Product'].include?(self.target_type)
+    self.target_type == 'Transactable'
   end
 end

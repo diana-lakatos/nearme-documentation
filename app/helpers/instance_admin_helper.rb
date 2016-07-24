@@ -48,7 +48,7 @@ module InstanceAdminHelper
   end
 
   def pretty_path(path)
-    path.gsub('/', ' > ').titleize.gsub('Spree', 'Product')
+    path.gsub('/', ' > ').titleize
   end
 
   def currency_name(iso_code)

@@ -45,8 +45,6 @@ class ReviewDecorator < Draper::Decorator
   def link_to_buyer_profile
     if reservation?
       h.link_to t('dashboard.reviews.feedback.view_guest_profile'), user_path(reviewable.owner)
-    elsif bid?
-      h.link_to t('dashboard.reviews.feedback.view_bidder_profile'), user_path(reviewable.user)
     else
       h.link_to t('dashboard.reviews.feedback.view_buyer_profile'), user_path(reviewable.order.user)
     end
@@ -56,8 +54,6 @@ class ReviewDecorator < Draper::Decorator
   def link_to_seller_profile
     if reservation?
       h.link_to t('dashboard.reviews.feedback.view_host_profile'), user_path(reviewable.creator)
-    elsif bid?
-      h.link_to t('dashboard.reviews.feedback.view_owner_profile'), user_path(reviewable.offer_creator)
     else
       h.link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(reviewable.transactable.administrator)
     end
@@ -106,10 +102,6 @@ class ReviewDecorator < Draper::Decorator
   def object_photo
     if reservation? && reviewable.listing && reviewable.listing.has_photos?
       reviewable.listing.photos.first.image_url(:medium)
-    elsif line_item? && reviewable.product && reviewable.product.images.first.present?
-      reviewable.product.images.first.image_url(:medium)
-    elsif bid? && reviewable.offer  && reviewable.offer.photos.any?
-      reviewable.offer.photos.rank(:position).first.image_url(:medium)
     else
       default_item_photo
     end

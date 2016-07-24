@@ -4,10 +4,7 @@ class Registrations::BuyersController < ApplicationController
     @theme_name = 'buy-sell-theme'
     @user = User.find params[:user_id]
     @company = @user.companies.first
-    if @company.present? && buyable?
-      @products = @company.products.not_draft.paginate(page: params[:products_page], per_page: 8)
-    end
-    if @company.present? && bookable?
+    if @company.present?
       @listings = @company.listings.searchable.includes(:location).paginate(page: params[:services_page], per_page: 8)
     end
     if RatingSystem.active.any?

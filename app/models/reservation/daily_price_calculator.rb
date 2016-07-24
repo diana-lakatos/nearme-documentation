@@ -18,7 +18,7 @@ class Reservation::DailyPriceCalculator
   # Returns the total price for the listing and it's chosen
   # periods. Returns nil if the selection is unbookable
   def price
-    blocks = @pricing.overnight_booking? ? real_contiguous_blocks : contiguous_blocks
+    blocks = contiguous_blocks
 
     blocks.map do |block|
       price_for_days(@pricing.overnight_booking? && block.size > 1 ? (block.size - 1) : block.size) rescue 0.0

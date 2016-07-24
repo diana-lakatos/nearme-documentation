@@ -3,6 +3,7 @@ module Api
 
     before_filter :find_transactable_type
     skip_before_filter :require_authentication
+    skip_before_filter :require_authorization
 
     def index
       params[:v] = 'listing_mixed'
@@ -20,7 +21,7 @@ module Api
     private
 
     def find_transactable_type
-      @transactable_type = ServiceType.includes(:custom_attributes).friendly.find_by(id: params[:transactable_type_id]) || ServiceType.includes(:custom_attributes).first
+      @transactable_type = TransactableType.includes(:custom_attributes).friendly.find_by(id: params[:transactable_type_id]) || TransactableType.includes(:custom_attributes).first
     end
 
     def result_view

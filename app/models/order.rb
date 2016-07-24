@@ -135,6 +135,14 @@ class Order < ActiveRecord::Base
     cancelled_by_host? || cancelled_by_guest?
   end
 
+  def subscription?
+    type == "RecurringBooking"
+  end
+
+  def bookable?
+    type != "Purchase"
+  end
+
   def number
     sprintf "#{self.class.name[0]}%08d", id
   end

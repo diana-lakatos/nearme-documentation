@@ -3,7 +3,7 @@ class Transactable::ActionType < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  AVAILABILE_UNITS = %w(day hour night event subscription_day subscription_month is_free).freeze
+  AVAILABILE_UNITS = %w(hour day day_month night night_month event subscription_day subscription_month).freeze
 
   belongs_to :instance
   belongs_to :transactable, -> { with_deleted }
@@ -26,9 +26,9 @@ class Transactable::ActionType < ActiveRecord::Base
 
   def booking_module_options
     {
-      possible_units: pricings.map(&:unit).uniq,
+      possible_units: pricings.map(&:adjusted_unit).uniq,
       action_rfq: action_rfq,
-      no_action: no_action,
+      no_action: no_action || false,
       favourable_pricing_rate: transactable_type_action_type.favourable_pricing_rate,
     }
   end
@@ -65,7 +65,7 @@ class Transactable::ActionType < ActiveRecord::Base
     pricing_for(units).try(:price_cents)
   end
 
-  AVAILABILE_UNITS.each do |u|
+  (AVAILABILE_UNITS + %w(is_free)).each do |u|
     define_method("#{u}_booking?"){ pricings.any?(&:"#{u}_booking?") }
   end
 

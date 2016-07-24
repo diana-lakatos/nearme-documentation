@@ -12,7 +12,7 @@ class AdditionalCharge < ActiveRecord::Base
 
   before_destroy :check_if_mandatory
 
-  # Target is Spree::Order or Reservation
+  # Target is Order, Reservation, Purchase or RecurringBooking
   belongs_to :target, polymorphic: true
 
   monetize :amount_cents, with_model_currency: :currency
