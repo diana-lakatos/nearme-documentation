@@ -71,9 +71,9 @@ class ReviewsService
         where('orders.user_id != ?', @current_user.id)
 
       {
-        RatingConstants::TRANSACTABLE => host_line_item_scope.where("transactables.transactable_type_id IN (?)", active_systems_for_listing).by_period(*filter_period),
-        RatingConstants::HOST => host_line_item_scope.where("transactables.transactable_type_id IN (?)", active_systems_for_host).by_period(*filter_period),
-        RatingConstants::GUEST => guest_line_item_scope.by_period(*filter_period)
+        RatingConstants::TRANSACTABLE => host_line_item_scope.where("transactables.transactable_type_id IN (?)", active_systems_for_listing).by_archived_at(*filter_period),
+        RatingConstants::HOST => host_line_item_scope.where("transactables.transactable_type_id IN (?)", active_systems_for_host).by_archived_at(*filter_period),
+        RatingConstants::GUEST => guest_line_item_scope.by_archived_at(*filter_period)
       }
     else
       {}
