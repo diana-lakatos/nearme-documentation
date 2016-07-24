@@ -4,7 +4,7 @@ ActsAsTaggableOn::Tag.class_eval do
 
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
-  
+
   belongs_to :instance
 
   scope :alphabetically, -> { order(name: :asc) }
