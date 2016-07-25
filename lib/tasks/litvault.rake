@@ -124,7 +124,7 @@ namespace :litvault do
     ).first_or_initialize
 
     ch.update!({
-      content: "<link rel='stylesheet' media='screen' href='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/attachment_file/data/2716/litvault.20160725.css'>",
+      content: "<link rel='stylesheet' media='screen' href='https://raw.githubusercontent.com/mdyd-dev/marketplaces/master/litvault/css/litvault.css'>",
       inject_pages: ['any_page'],
       position: 'head_bottom'
     })
