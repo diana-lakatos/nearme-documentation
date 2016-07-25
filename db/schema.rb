@@ -1295,6 +1295,7 @@ ActiveRecord::Schema.define(version: 20160722122404) do
     t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
+    t.boolean  "enable_geo_localization",                                                           default: true
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -2997,6 +2998,7 @@ ActiveRecord::Schema.define(version: 20160722122404) do
     t.string   "available_actions",                                                     default: [],                     array: true
     t.integer  "shipping_profile_id"
     t.integer  "spree_product_id"
+    t.integer  "shipping_profile_id"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
@@ -3097,8 +3099,9 @@ ActiveRecord::Schema.define(version: 20160722122404) do
     t.text     "metadata"
     t.hstore   "properties"
     t.datetime "deleted_at"
-    t.integer  "orders_count",             default: 0
+    t.integer  "reservations_count",       default: 0
     t.integer  "transactables_count",      default: 0
+    t.integer  "orders_count",             default: 0
   end
 
   create_table "user_messages", force: :cascade do |t|
@@ -3246,7 +3249,7 @@ ActiveRecord::Schema.define(version: 20160722122404) do
     t.datetime "banned_at"
     t.integer  "instance_profile_type_id"
     t.hstore   "properties"
-    t.integer  "orders_count",                                       default: 0
+    t.integer  "reservations_count",                                 default: 0
     t.integer  "transactables_count",                                default: 0
     t.float    "buyer_average_rating",                               default: 0.0,                                                                                 null: false
     t.boolean  "public_profile",                                     default: false
@@ -3273,6 +3276,7 @@ ActiveRecord::Schema.define(version: 20160722122404) do
     t.integer  "projects_count",                                     default: 0,                                                                                   null: false
     t.integer  "project_collborations_count",                        default: 0,                                                                                   null: false
     t.boolean  "click_to_call",                                      default: false
+    t.integer  "orders_count",                                       default: 0
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

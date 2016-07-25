@@ -54,7 +54,7 @@ class Instance < ActiveRecord::Base
   has_many :location_types, :inverse_of => :instance
   has_many :listing_amenity_types, :inverse_of => :instance
   has_many :location_amenity_types, :inverse_of => :instance
-  has_many :listings, class_name: "Transactable", :inverse_of => :instance
+  has_many :listings, class_name: 'Transactable', :inverse_of => :instance
   has_many :domains, :as => :target, dependent: :destroy
   has_many :partners, :inverse_of => :instance
   has_many :instance_admins, :inverse_of => :instance
@@ -72,10 +72,10 @@ class Instance < ActiveRecord::Base
   has_many :tickets, -> { where(target_type: 'Instance').order('created_at DESC') }, class_name: 'Support::Ticket'
   has_many :transactable_types
   has_many :action_types, class_name: 'TransactableType::ActionType'
-  has_many :project_types, class_name: "ProjectType"
+  has_many :project_types, class_name: 'ProjectType'
   has_many :offer_types
   has_many :offers
-  has_many :all_payment_gateways, class_name: "PaymentGateway"
+  has_many :all_payment_gateways, class_name: 'PaymentGateway'
   has_many :users, inverse_of: :instance
   has_many :text_filters, inverse_of: :instance
   has_many :waiver_agreement_templates, as: :target
@@ -180,11 +180,11 @@ class Instance < ActiveRecord::Base
   end
 
   def lessor
-    read_attribute(:lessor).presence || "host"
+    read_attribute(:lessor).presence || 'host'
   end
 
   def lessee
-    read_attribute(:lessee).presence || "guest"
+    read_attribute(:lessee).presence || 'guest'
   end
 
   def to_liquid
@@ -395,9 +395,9 @@ class Instance < ActiveRecord::Base
   def build_availability_templates
     unless self.availability_templates.any?
     self.availability_templates.build(
-      name: "Working Week",
+      name: 'Working Week',
       instance: self,
-      description: "Mon - Fri, 9:00 AM - 5:00 PM",
+      description: 'Mon - Fri, 9:00 AM - 5:00 PM',
       availability_rules_attributes: [{
         days: (1..5).to_a,
         instance: self,
@@ -407,9 +407,9 @@ class Instance < ActiveRecord::Base
     )
 
     self.availability_templates.build(
-      name: "24/7",
+      name: '24/7',
       instance: self,
-      description: "Sunday - Saturday, 12am-11:59pm",
+      description: 'Sunday - Saturday, 12am-11:59pm',
       availability_rules_attributes: [{
         days: (0..6).to_a,
         instance: self,

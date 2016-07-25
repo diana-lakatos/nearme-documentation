@@ -222,6 +222,19 @@ form.search-box {
       position: absolute;
       top: 12px;
       left: 12px;
+
+      color: $icon;
+      width: 34px;
+
+      &:hover {
+        color: $icon-hover;
+        cursor: pointer;
+      }
+    }
+
+    .geo-loading {
+      position: absolute;
+      width: 16px;
     }
   }
 
