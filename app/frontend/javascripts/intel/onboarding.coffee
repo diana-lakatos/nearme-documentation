@@ -12,7 +12,7 @@ module.exports = class Onboarding
   # geolocation when entering user location
   @locationSelector: ()->
     return unless window.google and window.google.maps
-    new AddressController($('.form-a'))
+    new AddressController($('.form-a .fields.location'))
 
   @initialize: ()->
     @followCheckboxes()
