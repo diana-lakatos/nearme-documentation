@@ -1,6 +1,8 @@
 class InstanceType::Searcher::GroupsSearcher
   include InstanceType::Searcher
 
+  attr_reader :search
+
   def initialize(params, current_user)
     @params = params
     @current_user = current_user
@@ -22,7 +24,7 @@ class InstanceType::Searcher::GroupsSearcher
 
   def to_event_params
     {
-      search_query: query,
+      search_query: @params[:query],
       result_count: result_count
     }
   end
