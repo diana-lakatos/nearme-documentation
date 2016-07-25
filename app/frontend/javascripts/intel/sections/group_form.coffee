@@ -4,8 +4,8 @@ module.exports = class GroupForm
   constructor: (@form) ->
     @coverImageWrapper = $('.media-group.cover-image')
     @videoUploadWrapper = $('.media-group.group-videos')
-    @autocomplete = new AddressController($('.address-form'))
-      .addressFieldController.address.autocomplete
+    @addressFieldController = new AddressController($('.address-form')).addressFieldController;
+    @autocomplete = @addressFieldController.address.autocomplete;
 
     @bindEvents()
 
@@ -44,7 +44,8 @@ module.exports = class GroupForm
     google.maps.event.addListener @autocomplete, 'place_changed', =>
       $markedToDeleteField.val(false)
       $locationForm.removeClass('no-address')
-
+      setTimeout =>
+        google.maps.event.trigger(@addressFieldController.map.map, 'resize')
 
   initGroupTypeDescription: ->
     $groupTypeSelect = $('#group_transactable_type_id')

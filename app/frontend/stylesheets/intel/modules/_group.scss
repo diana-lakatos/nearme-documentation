@@ -250,18 +250,8 @@
   }
 
   .address-form {
-
-    &.no-address {
-      .remove-address {
-        display: none;
-      }
-
-      .map {
-        display: none !important;
-      }
-    }
-
     .map {
+      height: 300px;
       margin: 20px 0 40px 0;
 
       .map-container {
@@ -272,6 +262,16 @@
     .remove-address {
       display: block;
       margin: 20px 0 0 0;
+    }
+
+    &.no-address {
+      .remove-address {
+        display: none;
+      }
+
+      .map {
+        display: none !important;
+      }
     }
   }
 
