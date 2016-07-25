@@ -230,6 +230,11 @@ class UserDrop < BaseDrop
     routes.dashboard_user_reservations_path
   end
 
+  # returns true if the email address is verified
+  def is_email_verified?
+    @source.verified_at.present?
+  end
+
   # url to the section in the application for managing a user's own bookings, with tracking
   def bookings_dashboard_url_with_tracking
     routes.dashboard_user_reservations_path(track_email_event: true)
