@@ -41,8 +41,7 @@ class Transactable::Pricing < ActiveRecord::Base
 
   scope :by_price, -> { order('price_cents ASC') }
   scope :order_by_unit_and_price, -> {
-    units_decorated = Transactable::ActionType::AVAILABILE_UNITS.each_with_index.map {|unit_name, i| "WHEN unit='#{unit_name}' THEN #{i}" }
-    order("CASE #{units_decorated.join(' ')} END")
+    order("COALESCE(is_free_booking, false) DESC, price_cents ASC")
   }
   scope :by_number_and_unit, -> (number, unit) { where(number_of_units: number, unit: unit) }
   scope :by_unit, -> (by_unit) { where(unit: by_unit) if by_unit.present? }
