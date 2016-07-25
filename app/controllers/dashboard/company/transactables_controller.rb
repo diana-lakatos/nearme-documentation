@@ -157,7 +157,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def transactable_params
-    params.require(:transactable).permit(secured_params.transactable(@transactable_type)).tap do |whitelisted|
+    params.require(:transactable).permit(secured_params.transactable(@transactable_type, @transactable.new_record? || current_user.id == @transactable.creator_id)).tap do |whitelisted|
       whitelisted[:properties] = params[:transactable][:properties] rescue {}
     end
   end

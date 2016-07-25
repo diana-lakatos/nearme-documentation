@@ -20,7 +20,9 @@ class Api::BaseController < ApplicationController
 
   # Return the current user
   def current_user
-    if !auth_token.nil?
+    if auth_token.nil?
+      super
+    else
       @current_user ||= User.find_by(authentication_token: auth_token)
     end
   end

@@ -2796,3 +2796,20 @@ en:
   credit_cards:
     masked_number: '**** **** **** %{last4}'
   toggle_hint: 'Toggle hint'
+  transactable_collaborator:
+    collaborators: 'Collaborators'
+    collaborator: 'Collaborator'
+    add_collaborator: 'Add collaborator'
+    collaboration_cancelled: "Collaboration request has been cancelled."
+    user_added_collaborator: "%{user_link} added a new collaborator to the %{project_link} project"
+    collaboration_accepted: "Collaboration request has been approved."
+
+    name: 'Name'
+    actions: 'Actions'
+    approve: 'Approve'
+    status: 'Status'
+    remove: 'Remove'
+    decline: 'Decline'
+    approved: 'Approved'
+    pending: 'Pending'
+    cancel_request: 'Cancel request'

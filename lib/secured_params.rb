@@ -842,8 +842,8 @@ class SecuredParams
     ] + self.address
   end
 
-  def transactable(transactable_type)
-    [
+  def transactable(transactable_type, is_creator = false)
+    base_params = [
       :name, :description, :capacity, :confirm_reservations,
       :location_id,
       :draft,
@@ -873,6 +873,8 @@ class SecuredParams
       properties_attributes: Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
     ] +
     Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
+    base_params += [ new_collaborators: [ :email, :id, :_destroy ], new_collaborators_attributes: nested(self.transactable_collaborator) ] if is_creator
+    base_params
   end
 
   def transactable_action_type

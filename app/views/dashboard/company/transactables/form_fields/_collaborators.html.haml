@@ -1,0 +1,19 @@
+- if (current_user.id == f.object.creator_id ? f.object.transactable_collaborators : current_user.transactable_collaborators.where(transactable: f.object)).count > 0
+  %table.collaborators-listing-a
+    %thead
+      %tr
+        %th
+          = t 'transactable_collaborator.name'
+        %th.col-status
+          = t 'transactable_collaborator.status'
+        %th
+          = t 'transactable_collaborator.actions'
+    %tbody
+      = render partial: 'dashboard/company/transactable_collaborators/transactable_collaborator', collection: (current_user.id == f.object.creator_id ? f.object.transactable_collaborators : current_user.transactable_collaborators.find_by(transactable: f.object))
+
+- if current_user.id == f.object.creator_id
+  #new_collaborators
+    = f.simple_fields_for :new_collaborators do |new_collaborator_form|
+      = render 'dashboard/company/transactables/new_collaborator_fields', f: new_collaborator_form
+    .links
+      = link_to_add_association t('transactable_collaborator.add_collaborator'), f, :new_collaborators, class: 'button-a small'

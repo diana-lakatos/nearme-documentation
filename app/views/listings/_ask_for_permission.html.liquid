@@ -1,0 +1,28 @@
+<div style="min-height: 100px">
+  <p>You must request permissions first.</p>
+  {% if collaborator %}
+    <p>Your request is pending approval.</p>
+  {% else %}
+    <div class="btn btn-primary">
+      <button data-api="v3" data-ask-for-permission="true" data-transactable-id="{{ listing.id }}" data-disable-with: 'Requesting...'>Request permission</button>
+    </div>
+    <script>
+      request_permission = $('[data-ask-for-permission]');
+      transactable_id = request_permission.data('transactable-id');
+      request_permission.click(function(){
+        $.ajax({
+          url: "/api/transactable_collaborators",
+          type: "POST",
+          data: { transactable_id: transactable_id },
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+            xhr.setRequestHeader('Accept', 'application/vnd.nearme.v3+json');
+          },
+          success: function(data, status, xhr) {
+            request_permission.closest('div').html('<p>Your request is pending approval.</p>');
+          }
+        });
+      });
+    </script>
+  {% endif %}
+</div>

@@ -865,6 +865,8 @@ DesksnearMe::Application.routes.draw do
               get :enable
               get :disable
             end
+
+            resources :transactable_collaborators
           end
 
           resources :data_uploads, controller: 'transactable_types/data_uploads' do
@@ -1092,6 +1094,11 @@ DesksnearMe::Application.routes.draw do
         resource :space_wizard, only: [:create]
         resources :transactables, only: [:index]
         resources :reverse_proxy_links, only: [:index, :create]
+        resources :transactable_collaborators, only: [:create, :destroy] do
+          member do
+            put :accept
+          end
+        end
       end
     end
 
