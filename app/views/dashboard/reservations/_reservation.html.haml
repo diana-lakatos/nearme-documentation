@@ -37,10 +37,7 @@
   .alert.alert-warning
     = I18n.t('dashboard.click_to_call.not_verified_self_warning', link: link_to(t('dashboard.nav.social_accounts'), social_accounts_path).html_safe).html_safe
 
-
-
 = render 'dashboard/user_reservations/reservation_details', reservation: reservation, for_host: false
-
 
 .row
   - if reservation.guest_notes.present?
