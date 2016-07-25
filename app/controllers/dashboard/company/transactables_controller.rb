@@ -47,6 +47,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
       @global_errors = filter_error_messages(@transactable.errors.full_messages)
       @photos = @transactable.photos
       @attachments = @transactable.attachments
+      @transactable.initialize_action_types
       render :new
     end
   end

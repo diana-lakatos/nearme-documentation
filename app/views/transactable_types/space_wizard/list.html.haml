@@ -22,7 +22,7 @@
       = seller_profile_form.simple_fields_for :properties, seller_profile_form.object.properties do |seller_properties_form|
         = f.simple_fields_for :companies, @user.companies.first do |companies_form|
           = companies_form.simple_fields_for :locations, @user.companies.first.locations.first do |locations_form|
-            = locations_form.simple_fields_for :listings, @user.companies.first.locations.first.listings.first do |listings_form|
+            = locations_form.simple_fields_for :listings, @transactable do |listings_form|
               = listings_form.simple_fields_for :properties, @user.companies.first.locations.first.listings.first.properties do |properties_form|
 
                 - @form_components.each do |form_component|
