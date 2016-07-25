@@ -35,7 +35,7 @@ class Transactable < ActiveRecord::Base
   include QuerySearchable
 
   has_many :customizations, as: :customizable
-  has_many :additional_charge_types, as: :additional_charge_type_target
+  has_many :additional_charge_types, foreign_type: :charge_type_target_type, foreign_key: :charge_type_target_id
   has_many :availability_templates, as: :parent
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :amenity_holders, as: :holder, dependent: :destroy, inverse_of: :holder

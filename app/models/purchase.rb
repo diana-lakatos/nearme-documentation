@@ -70,7 +70,7 @@ class Purchase < Order
   end
 
   def to_liquid
-    @reservation_drop ||= OrderDrop.new(self)
+    @purchase_drop ||= OrderDrop.new(self)
   end
 
   # TODO we could want to extend that

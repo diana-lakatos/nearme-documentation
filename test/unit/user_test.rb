@@ -856,46 +856,46 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context '#all_projects_count' do
+  context '#all_transactables_count' do
     setup do
       @user = create(:user)
     end
 
     should 'set to 0 when creating a new user' do
-      assert_equal 0, @user.all_projects_count
+      assert_equal 0, @user.all_transactables_count
     end
 
     should 'increase by 1 when creates a new project' do
-      assert_difference '@user.reload.all_projects_count' do
-        project = create(:project, creator_id: @user.id)
+      assert_difference '@user.reload.all_transactables_count' do
+        project = create(:transactable, creator_id: @user.id)
       end
     end
 
     should 'not increase when changing project basic information' do
-      counter = @user.all_projects_count
-      project = create(:project, creator_id: @user.id)
-      assert_equal counter + 1, @user.reload.all_projects_count
+      counter = @user.all_transactables_count
+      project = create(:transactable, creator_id: @user.id)
+      assert_equal counter + 1, @user.reload.all_transactables_count
 
       project.name = "Something else"
       project.save
 
-      assert_equal counter + 1, @user.reload.all_projects_count
+      assert_equal counter + 1, @user.reload.all_transactables_count
     end
 
     should 'decrease counter if project is destroyed' do
-      project = create(:project, creator_id: @user.id)
-      counter = @user.reload.all_projects_count
+      project = create(:transactable, creator_id: @user.id)
+      counter = @user.reload.all_transactables_count
       project.destroy
 
-      assert_equal counter - 1, @user.reload.all_projects_count
+      assert_equal counter - 1, @user.reload.all_transactables_count
     end
 
     should 'increase by 1 when start collaborating a project' do
-      counter = @user.all_projects_count
-      collaborator = create(:project_collaborator, user: @user)
-      assert_equal counter, @user.reload.all_projects_count
+      counter = @user.all_transactables_count
+      collaborator = create(:transactable_collaborator, user: @user)
+      assert_equal counter, @user.reload.all_transactables_count
 
-      assert_difference '@user.reload.all_projects_count' do
+      assert_difference '@user.reload.all_transactables_count' do
         collaborator.approved_by_owner_at = DateTime.now
         collaborator.approved_by_user_at = DateTime.now
 
@@ -904,11 +904,11 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'decrease counter if collaborator is destroyed' do
-      collaborator = create(:project_collaborator, user: @user, approved_by_owner_at: DateTime.now, approved_by_user_at: DateTime.now)
-      counter = @user.reload.all_projects_count
+      collaborator = create(:transactable_collaborator, user: @user, approved_by_owner_at: DateTime.now, approved_by_user_at: DateTime.now)
+      counter = @user.reload.all_transactables_count
       collaborator.destroy
 
-      assert_equal counter - 1, @user.reload.all_projects_count
+      assert_equal counter - 1, @user.reload.all_transactables_count
     end
   end
 

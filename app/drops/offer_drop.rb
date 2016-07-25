@@ -1,21 +1,22 @@
-class OfferDrop < BaseDrop
+class OfferDrop < OrderDrop
 
   attr_reader :offer
 
-  delegate :slug, :id, :name, :price, to: :offer
-
   def initialize(offer)
-    @offer = offer
+    @order = @offer = offer
   end
 
-  # offer's url
-  def url
-    routes.offer_url(@offer)
+
+  def total_units_text
+    ''
   end
 
-  # offer's path
-  def path
-    routes.offer_path(@offer)
+  def new_payment_url
+    routes.new_dashboard_company_orders_received_payment_path(@offer)
+  end
+
+  def offer_cancel_url
+    routes.cancel_dashboard_company_orders_received_path(@offer)
   end
 
 end

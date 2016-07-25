@@ -92,7 +92,8 @@ class Instance < ActiveRecord::Base
   has_many :rating_questions
   has_many :rating_answers
   has_many :rating_hints
-  has_many :additional_charge_types, as: :additional_charge_type_target
+  has_many :additional_charge_types, foreign_type: :charge_type_target_type, foreign_key: :charge_type_target_id
+
   has_one :documents_upload, dependent: :destroy
   has_many :locales, dependent: :destroy
   has_many :dimensions_templates, as: :entity

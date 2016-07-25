@@ -161,6 +161,9 @@ en:
     shipments:
       address_based_price: 'Price will be calculated based on your address'
       processing_time: '%{days} days'
+  charge_type:
+    charge_at:
+      confirm: "Order confirmation"
 
   manage:
     companies:
@@ -1497,6 +1500,7 @@ en:
 
 
     payments:
+      approve: "Approve offer"
       reject: "What's wrong?"
       change_credit_card: 'Change credit card'
       periods_affected: 'Periods affected'
@@ -1574,6 +1578,7 @@ en:
       address: 'Location address'
       listing_deleted: 'Listing deleted'
       actions:
+        accept: 'Accept'
         cancel: 'Cancel'
         confirm: 'Confirm'
         decline: 'Decline'

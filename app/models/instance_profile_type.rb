@@ -5,7 +5,6 @@ class InstanceProfileType < ActiveRecord::Base
   scoped_to_platform_context
   SEARCH_VIEWS = %w(list)
 
-
   acts_as_custom_attributes_set
   belongs_to :instance
   has_many :users, through: :user_profiles

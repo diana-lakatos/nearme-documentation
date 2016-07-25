@@ -117,6 +117,10 @@ class Order < ActiveRecord::Base
     touch(:archived_at)
   end
 
+  def archived?
+    archived_at.present?
+  end
+
   def completed?
     # TODO soon we will introduce "completed" state instead of archived_at timestamp
     archived?

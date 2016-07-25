@@ -1,0 +1,7 @@
+= simple_form_for @payment, url: dashboard_company_orders_received_payments_path do |f|
+  = render 'shared/payment_form', f: f
+  - if f.object.decorate.payment_methods.any?
+    = f.submit t "dashboard.host_reservations.actions.accept"
+
+:javascript
+  $(function() { $(document).trigger('init:paymentmodal.nearme'); });

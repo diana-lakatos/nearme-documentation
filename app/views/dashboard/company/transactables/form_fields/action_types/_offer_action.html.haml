@@ -1,0 +1,5 @@
+= f.simple_fields_for :pricings, f.object.decorate.pricings_for_form do |pricing|
+  = pricing.hidden_field :transactable_type_pricing_id, value: pricing.object.transactable_type_pricing.try(:id)
+  = pricing.input :_destroy, as: :hidden
+  = pricing.hidden_field :enabled, value: '1'
+  = pricing.hidden_field :is_free_booking, value: '1'

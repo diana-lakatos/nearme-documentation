@@ -766,6 +766,7 @@ DesksnearMe::Application.routes.draw do
         resource :analytics
         resources :orders_received, except: [:edit] do
           member do
+            post :accept
             post :confirm
             post :complete
             post :cancel

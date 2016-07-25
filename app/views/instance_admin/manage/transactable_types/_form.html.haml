@@ -67,6 +67,12 @@
         = f.input :lessee, input_html: { class: 'form-control' }
 
   .content-container
+    %h4= t('instance_admin.manage.transactable_types.merchant_fees')
+    = f.simple_fields_for :merchant_fees, f.object.merchant_fees do |mf|
+      = render 'merchant_fee', f: mf
+    .row
+      = link_to_add_association 'Add Merchant Fee', f, :merchant_fees, partial: 'merchant_fee', class: 'btn btn-primary'
+  .content-container
     %h4= t('instance_admin.manage.transactable_types.actions')
 
     %ul.tabs{'data-booking-type-list' => true}
