@@ -1,3 +1,11 @@
+.group-a {
+  nav {
+    p {
+      margin: 0 0 0 5px;
+    }
+  }
+}
+
 .group-actions {
     @include clear;
 
