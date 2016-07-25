@@ -6,7 +6,7 @@ class TransactableType::Pricing < ActiveRecord::Base
 
   belongs_to :instance
   belongs_to :action, polymorphic: true, inverse_of: :pricings
-  has_many :transactable_pricings, dependent: :destroy, class_name: '::Transactable::Pricing', foreign_key: :transactable_type_pricing_id
+  has_many :transactable_pricings, class_name: '::Transactable::Pricing', foreign_key: :transactable_type_pricing_id
 
   delegate :default_currency, to: :action
 
