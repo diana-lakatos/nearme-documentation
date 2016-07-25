@@ -2802,3 +2802,7 @@ en:
   credit_cards:
     masked_number: '**** **** **** %{last4}'
   toggle_hint: 'Toggle hint'
+
+  placeholders:
+    image_unavailable_or_still_processing: "Photos Unavailable or Still Processing"
+

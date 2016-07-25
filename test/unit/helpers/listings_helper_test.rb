@@ -5,12 +5,12 @@ class ListingsHelperTest < ActionView::TestCase
 
   context '#space_listing_placeholder_path' do
     should "return valid placeholder from filesystem" do
-      expected_path = "placeholders/410x254.gif"
+      expected_path = "//placehold.it/410x254&text=Photos+Unavailable+or+Still+Processing"
       assert_equal expected_path, space_listing_placeholder_path(height: 254, width: 410)
     end
 
     should "return valid placeholder from placehold.it" do
-      expected_path = "//placehold.it/10x700&text=Photos+Unavailable"
+      expected_path = "//placehold.it/10x700&text=Photos+Unavailable+or+Still+Processing"
       assert_equal expected_path, space_listing_placeholder_path(height: 700, width: 10)
     end
   end

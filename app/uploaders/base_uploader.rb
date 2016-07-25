@@ -78,6 +78,9 @@ class BaseUploader < CarrierWave::Uploader::Base
       # We add 10 minutes because versions_generated_at is slightly in the past as to
       # our requirements
       "#{super_url}?v=#{model["#{mounted_as}_versions_generated_at"].to_i + 10.minutes.to_i}"
+    # Versions not generated, we have a default url and the version requested is a delayed version, so we use the default_url
+    elsif !versions_generated? && respond_to?(:default_url) && self.class.respond_to?(:delayed_versions) && self.class.delayed_versions.include?(args.first)
+      default_url(*args)
     else
       super_url
     end
