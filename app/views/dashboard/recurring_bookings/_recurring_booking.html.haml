@@ -57,7 +57,7 @@
   .col-md-3
   - if recurring_booking.guest_notes.present?
     .col-sm-3
-      %h3= t('dashboard.user_reservations.exclusive_price_guests_notes')
+      %h3= t('dashboard.user_reservations.user_note')
       %blockquote= recurring_booking.guest_notes
 
   - if recurring_booking.payment_documents.select(&:persisted?).present?
@@ -74,10 +74,6 @@
         - recurring_booking.additional_line_items.each do |ac|
           %li
             =ac.name + ' - ' + humanized_money_with_cents_and_symbol(ac.total_price)
-
-- if recurring_booking.guest_notes.present?
-  %h3= t('dashboard.user_recurring_bookings.user_note')
-  %blockquote= recurring_booking.guest_notes
 
 
 .row
