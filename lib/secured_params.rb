@@ -532,7 +532,8 @@ class SecuredParams
       :unit,
       :allow_exclusive_price,
       :allow_book_it_out_discount,
-      :allow_free_booking
+      :allow_free_booking,
+      :order_class_name
     ]
   end
 

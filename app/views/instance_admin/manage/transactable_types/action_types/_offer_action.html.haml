@@ -1,0 +1,8 @@
+%h4= t('instance_admin.manage.transactable_types.booking_settings')
+= f.simple_fields_for :pricings do |pricing|
+  .nested-container
+    .row.nested-fields
+      .col-md-2
+        = pricing.input :number_of_units, as: :hidden, input_html: { value: 1}
+        = pricing.input :unit, as: :hidden, input_html: { value: 'item'}
+        = pricing.input :order_class_name, as: :select, collection: Order::ORDER_TYPES

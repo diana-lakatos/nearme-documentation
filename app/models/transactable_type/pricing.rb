@@ -12,6 +12,8 @@ class TransactableType::Pricing < ActiveRecord::Base
   monetize :min_price_cents, allow_nil: true
   monetize :max_price_cents, allow_nil: true
 
+  before_validation :set_default_order_class
+
   validates :min_price_cents, :max_price_cents,
     numericality: { greater_than_or_equal_to: 0,
       less_than_or_equal_to: MAX_PRICE }, allow_blank: true
@@ -20,6 +22,7 @@ class TransactableType::Pricing < ActiveRecord::Base
 
   validates :number_of_units, numericality: { greater_than: 0 }, presence: true
   validates :unit, presence: true
+  validates :order_class_name, presence: true, inclusion: { in: Order::ORDER_TYPES }
   validate :check_pricing_uniqueness
 
   scope :ordered_by_unit, -> { order('unit DESC, number_of_units ASC') }
@@ -53,6 +56,14 @@ class TransactableType::Pricing < ActiveRecord::Base
         price: 0.to_money
       })
     )
+  end
+
+  def set_default_order_class
+    self.order_class_name ||= action.related_order_class
+  end
+
+  def order_class_name
+    super || action.related_order_class
   end
 
   private

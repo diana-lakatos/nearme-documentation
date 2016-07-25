@@ -45,18 +45,7 @@ class Transactable::Pricing < ActiveRecord::Base
   scope :by_unit, -> (by_unit) { where(unit: by_unit) if by_unit.present? }
 
   def order_class
-    case action.type
-    when "Transactable::SubscriptionBooking"
-      RecurringBooking
-    when "Transactable::PurchaseAction"
-      Purchase
-    else
-      if action.transactable_type_action_type.transactable_type.try(:skip_payment_authorization?)
-        DelayedReservation
-      else
-        Reservation
-      end
-    end
+    transactable_type_pricing.order_class_name.constantize
   end
 
   def units_and_price

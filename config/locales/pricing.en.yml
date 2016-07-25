@@ -22,6 +22,9 @@ en:
       purchase_action:
         label: 'Purchase'
         description: 'Customer can buy items.'
+      offer_action:
+        label: 'Offer'
+        description: "Customer makes an offer and listing's owner accepts one of the offers"
     deposit:
       deposit_amount: 'Deposit amount'
       enable: 'Enable deposits'

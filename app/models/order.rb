@@ -1,7 +1,7 @@
 class Order < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
 
-  ORDER_TYPES = ['Reservation', 'RecurringBooking', 'Purchase']
+  ORDER_TYPES = ['Reservation', 'RecurringBooking', 'Purchase', 'DelayedReservation', 'Offer']
 
   include Encryptable
   include Modelable

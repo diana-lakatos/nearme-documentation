@@ -8,7 +8,7 @@ class TransactableType < ActiveRecord::Base
   acts_as_custom_attributes_set
 
   AVAILABLE_TYPES = ['Listing', 'Buy/Sell'].freeze
-  AVAILABLE_ACTION_TYPES = [NoActionBooking, SubscriptionBooking, EventBooking, TimeBasedBooking, PurchaseAction]
+  AVAILABLE_ACTION_TYPES = [NoActionBooking, SubscriptionBooking, EventBooking, TimeBasedBooking, PurchaseAction, OfferAction]
   SEARCH_VIEWS = %w(mixed list listing_mixed)
   AVAILABLE_SHOW_PATH_FORMATS = [
     "/transactable_types/:transactable_type_id/locations/:location_id/listings/:id",
