@@ -5,8 +5,9 @@ namespace :litvault do
 
     @instance = Instance.find(198)
     @instance.update_attributes(
-      tt_select_type: 'dropdown',
-      split_registration: true
+      tt_select_type: 'radio',
+      split_registration: true,
+      hidden_ui_controls: { 'main_menu/cta': 1 }
     )
     @instance.set_context!
 
@@ -19,10 +20,10 @@ namespace :litvault do
   end
 
   def create_transactable_types!
-    transactable_type = @instance.transactable_types.where(name: 'CaseType1').first_or_initialize
+    transactable_type = @instance.transactable_types.where(name: 'Individual Case').first_or_initialize
     transactable_type.attributes = {
-      name: 'CaseType1',
-      slug: 'case_type1',
+      name: 'Individual Case',
+      slug: 'individual-case',
       action_free_booking: false,
       action_daily_booking: false,
       action_weekly_booking: false,
@@ -42,7 +43,7 @@ namespace :litvault do
       skip_location: true,
       show_categories: true,
       category_search_type: 'AND',
-      bookable_noun: 'CaseType1',
+      bookable_noun: 'Individual Case',
       enable_photo_required: true,
       min_hourly_price_cents: 50_00,
       max_hourly_price_cents: 150_00,
@@ -52,10 +53,10 @@ namespace :litvault do
     }
     transactable_type.save!
 
-    transactable_type = @instance.transactable_types.where(name: 'CaseType2').first_or_initialize
+    transactable_type = @instance.transactable_types.where(name: 'Group Case').first_or_initialize
     transactable_type.attributes = {
-      name: 'CaseType2',
-      slug: 'case_type2',
+      name: 'Group Case',
+      slug: 'group-case',
       action_free_booking: false,
       action_daily_booking: false,
       action_weekly_booking: false,
@@ -75,7 +76,7 @@ namespace :litvault do
       skip_location: true,
       show_categories: true,
       category_search_type: 'AND',
-      bookable_noun: 'CaseType2',
+      bookable_noun: 'Group Case',
       enable_photo_required: true,
       min_hourly_price_cents: 50_00,
       max_hourly_price_cents: 150_00,
@@ -123,7 +124,7 @@ namespace :litvault do
     ).first_or_initialize
 
     ch.update!({
-      content: "<link rel='stylesheet' media='screen' href='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/attachment_file/data/2712/litvault.20160721.css'>",
+      content: "<link rel='stylesheet' media='screen' href='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/attachment_file/data/2716/litvault.20160725.css'>",
       inject_pages: ['any_page'],
       position: 'head_bottom'
     })
@@ -140,6 +141,7 @@ namespace :litvault do
     create_home_index!
     create_theme_header!
     create_search_box_inputs!
+    create_home_search_custom_attributes!
     create_home_homepage_content!
     create_listing_show!
     create_theme_footer!
@@ -316,6 +318,9 @@ namespace :litvault do
 
     create_translation!('flash_messages.dashboard.locations.add_your_company', "Please complete your Case first.")
     create_translation!('flash_messages.dashboard.add_your_company', "Please complete your Case first.")
+
+    create_translation!('transactable_types.individual_case.labels.search', 'Individual Cases')
+    create_translation!('transactable_types.group_case.labels.search', 'Group Cases (Mass Torts)')
   end
 
   def create_email(path, body)
@@ -482,6 +487,8 @@ namespace :litvault do
         </div>
       {% endfor %}
 
+      {% include 'home/search/custom_attributes' %}
+
       {% if transactable_types.size > 1 %}
         {% if platform_context.tt_select_type == 'dropdown' %}
           <div class="span2 transactable-select-wrapper">
@@ -497,6 +504,7 @@ namespace :litvault do
 
       <div class="span2 pull-right submit-button-wrapper">
         <a class="btn btn-green btn-large search-button" data-disable-with="{{ 'homepage.disabled_buttons.search' | translate }}" rel="submit" href="">
+          <span class="ico-search"></span>
           {{ 'homepage.buttons.search' | translate }}
         </a>
         <div id="suggest_location" style="display: none"></div>
@@ -507,9 +515,12 @@ namespace :litvault do
       <div class="row-fluid">
         <div class="span10">
           <div class="search-transactable--radio">
-            {% for transactable_type in transactable_types %}
+            {% for transactable_type in transactable_types reversed %}
+            <input type="radio" name="transactable_type_selector" value="{{ transactable_type.select_id }}" id="transactable-type-{{ transactable_type.id }}" {% if forloop.first == true %} checked {% endif %} data-transactable-type-picker >
             <label for="transactable-type-{{ transactable_type.id }}">
-            <input type="radio" name="transactable_type_selector" value="{{ transactable_type.select_id }}" id="transactable-type-{{ transactable_type.id }}" {% if forloop.first == true %} checked {% endif %} data-transactable-type-picker > {{ transactable_type.name}}</label>
+              {% capture i18n_key %}transactable_types.{{ transactable_type.name | parameterize:'_' }}.labels.search{% endcapture %}
+              {{ i18n_key | translate }}
+            </label>
             {% endfor %}
           </div>
         </div>
@@ -523,6 +534,28 @@ namespace :litvault do
 <script type="text/javascript">
   $(document).ready(function() { $(document).trigger('init:homepageranges.nearme'); });
 </script>
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+  end
+
+  def create_home_search_custom_attributes!
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'home/search/custom_attributes'
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: %Q{
+<select class="no-icon select2 custom-attribute-select">
+  <option value>By State</option>
+  <option value='2'>State 2</option>
+  <option value='3'>State 3</option>
+</select>
       },
       format: 'html',
       handler: 'liquid',
@@ -680,7 +713,7 @@ namespace :litvault do
     <div class='table-row'>
       <div class='sign-up table-cell'>
         <h2 class='text-highlight'>Referring Lawyers</h2>
-        <h3 class='text-lighter'>Sign up and find out how easy it is to list your first case.</h3>
+        <h3 class='text-lighter'><span class='first-line'>Sign up and find out how</span> easy it is to list your first case.</h3>
         <a href='#' class='sign-up'>SIGN UP</a>
       </div>
 

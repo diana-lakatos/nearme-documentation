@@ -336,4 +336,8 @@ module LiquidFilters
     ReverseProxyLink.where(use_on_path: path)
   end
 
+  def parameterize(text, separator = '-')
+    text.parameterize(separator)
+  end
+
 end
