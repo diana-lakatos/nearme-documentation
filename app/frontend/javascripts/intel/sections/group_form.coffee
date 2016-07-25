@@ -141,7 +141,8 @@ module.exports = class GroupForm
 
     if showConfirmDialog && confirm("Are you sure you want to continue?")
       triggerRequest()
-    else
+
+    if !showConfirmDialog
       triggerRequest()
 
 
