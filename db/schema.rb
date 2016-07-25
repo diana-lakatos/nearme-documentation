@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160722122404) do
+ActiveRecord::Schema.define(version: 20160725010606) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2561,7 +2561,7 @@ ActiveRecord::Schema.define(version: 20160722122404) do
     t.integer "taggings_count",             default: 0
   end
 
-  add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
+  add_index "tags", ["name", "instance_id"], name: "tags_idx", unique: true, using: :btree
 
   create_table "tax_rates", force: :cascade do |t|
     t.datetime "deleted_at"
@@ -2996,7 +2996,6 @@ ActiveRecord::Schema.define(version: 20160722122404) do
     t.boolean  "possible_payout",                                                       default: false
     t.integer  "action_type_id"
     t.string   "available_actions",                                                     default: [],                     array: true
-    t.integer  "shipping_profile_id"
     t.integer  "spree_product_id"
     t.integer  "shipping_profile_id"
   end

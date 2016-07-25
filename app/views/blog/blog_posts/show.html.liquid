@@ -29,7 +29,7 @@
   {% include 'blog/blog_posts/social_buttons.html' %}
 
   <div class='content'>
-    <p> Tagged as: {{ tags | join:", " }}.</p>
+    <p> Tagged as: {{ tags | join: ", " }}.</p>
     {{ @blog_post.content }}
   </div>
 
