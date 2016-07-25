@@ -37,12 +37,12 @@ module ReportsProperties
           values << record.location.latitude
           values << record.location.longitude
           values << record.location.address
-          values << record.location.location_address.street
-          values << record.location.location_address.suburb
-          values << record.location.location_address.city
-          values << record.location.location_address.country
-          values << record.location.location_address.state
-          values << record.location.location_address.postcode
+          values << (record.location.location_address.try(:street) || '')
+          values << (record.location.location_address.try(:suburb) || '')
+          values << (record.location.location_address.try(:city) || '')
+          values << (record.location.location_address.try(:country) || '')
+          values << (record.location.location_address.try(:state) || '')
+          values << (record.location.location_address.try(:postcode) || '')
         end
 
         properties_columns.each do |column|
