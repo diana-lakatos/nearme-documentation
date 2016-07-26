@@ -251,11 +251,15 @@
 
   .address-form {
     .map {
-      height: 300px;
+      width: 100%;
       margin: 20px 0 40px 0;
 
-      .map-container {
-        height: 100% !important;
+      div {
+        margin-bottom: 0;
+      }
+
+      img {
+        max-width: inherit;
       }
     }
 
