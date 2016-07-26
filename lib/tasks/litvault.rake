@@ -12,6 +12,9 @@ namespace :litvault do
     @instance.set_context!
 
     create_transactable_types!
+    create_custom_attributes!
+    create_categories!
+    create_or_update_form_components!
     set_theme_options
     create_content_holders
     create_views
@@ -87,6 +90,65 @@ namespace :litvault do
     transactable_type.save!
   end
 
+  def create_custom_attributes!
+    @instance.transactable_types.each do |tt|
+      states = tt.custom_attributes.where({
+        name: 'states',
+        label: 'States',
+        attribute_type: 'array',
+        html_tag: 'select',
+        public: true,
+        searchable: true
+      }).first_or_create!
+      states.valid_values = %w(
+        AL AK AZ AR CA CO CT DE FL GA HI ID IL IA KS KY
+        LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC
+        ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY
+      )
+      states.save!
+    end
+  end
+
+  def create_categories!
+    root_category = Category.where(name: 'States').first_or_create!
+    root_category.transactable_types = TransactableType.all
+    root_category.mandatory = true
+    root_category.multiple_root_categories = true
+    root_category.search_options = 'exclude'
+    root_category.save!
+
+    %w(AL AK AZ AR CA CO CT DE FL GA HI ID IL IA KS KY
+       LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC
+       ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY).each do |category|
+      root_category.children.where(name: category).first_or_create!
+    end
+  end
+
+  def create_or_update_form_components!
+
+    @instance.transactable_types.each do |tt|
+
+      unless tt.form_components.any?
+        Utils::FormComponentsCreator.new(tt).create!
+      end
+
+      tt.form_components.find_by(name: 'Where is your Case located?')
+        .try(:update_column, :name, "Where is your #{tt.bookable_noun} located?")
+
+      component = tt.form_components.find_by(name: "Where is your #{tt.bookable_noun} located?")
+      component.form_fields = [
+        {'location'     => 'name'},
+        {'location'     => 'description'},
+        {'location'     => 'address'},
+        {'transactable' => 'states'},
+        {'location'     => 'location_type'},
+        {'location'     => 'phone'}
+      ]
+
+      component.save!
+    end
+  end
+
   def set_theme_options
     theme = @instance.theme
 
@@ -141,6 +203,7 @@ namespace :litvault do
     create_home_index!
     create_theme_header!
     create_search_box_inputs!
+    create_home_search_fulltext!
     create_home_search_custom_attributes!
     create_home_homepage_content!
     create_listing_show!
@@ -320,7 +383,12 @@ namespace :litvault do
     create_translation!('flash_messages.dashboard.add_your_company', "Please complete your Case first.")
 
     create_translation!('transactable_types.individual_case.labels.search', 'Individual Cases')
+    create_translation!('transactable_types.individual_case.labels.by_state', 'By State')
+    create_translation!('transactable_types.individual_case.labels.all_states', 'All States')
+
     create_translation!('transactable_types.group_case.labels.search', 'Group Cases (Mass Torts)')
+    create_translation!('transactable_types.group_case.labels.by_state.', 'By State')
+    create_translation!('transactable_types.group_case.labels.all_states.', 'All States')
   end
 
   def create_email(path, body)
@@ -484,10 +552,9 @@ namespace :litvault do
       {% for transactable_type in transactable_types %}
         <div class="transactable-type-search-box" data-transactable-type-id="{{ transactable_type.select_id }}" {% if forloop.first != true %} style=" display: none;" {% endif%}>
           {% include 'home/search/fulltext' %}
+          {% include 'home/search/custom_attributes' transactable_type:transactable_type %}
         </div>
       {% endfor %}
-
-      {% include 'home/search/custom_attributes' %}
 
       {% if transactable_types.size > 1 %}
         {% if platform_context.tt_select_type == 'dropdown' %}
@@ -543,6 +610,24 @@ namespace :litvault do
     })
   end
 
+  def create_home_search_fulltext!
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'home/search/fulltext'
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: %Q{
+<input class="query" name="query" placeholder="{{ transactable_type.fulltext_placeholder }}" type="text" >
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+  end
+
   def create_home_search_custom_attributes!
     iv = InstanceView.where(
       instance_id: @instance.id,
@@ -551,11 +636,18 @@ namespace :litvault do
     iv.update!({
       transactable_types: TransactableType.all,
       body: %Q{
-<select class="no-icon select2 custom-attribute-select">
-  <option value>By State</option>
-  <option value='2'>State 2</option>
-  <option value='3'>State 3</option>
-</select>
+{% for ca in transactable_type.custom_attributes %}
+  {% capture i18n_by_state %}transactable_types.{{ transactable_type.name | parameterize:'_' }}.labels.by_state{% endcapture %}
+  {% capture i18n_all_states %}transactable_types.{{ transactable_type.name | parameterize:'_' }}.labels.all_states{% endcapture %}
+
+  <select class='no-icon select2 custom-attribute-select' name='lg_custom_attributes[{{ca.name}}][]' data-select2-placeholder='{{ i18n_by_state | translate }}'>
+    <option></option>
+    <option>{{ i18n_all_states | translate }}</option>
+    {% for value in ca.valid_values %}
+      <option value='{{ value }}'>{{ value }}</option>
+    {% endfor %}
+  </select>
+{% endfor %}
       },
       format: 'html',
       handler: 'liquid',
@@ -612,7 +704,7 @@ namespace :litvault do
       </div>
     </div>
 
-    <a href='#' class='learn-more'>LEARN MORE</a>
+    <a href='/how-it-works' class='learn-more'>LEARN MORE</a>
 
   </div>
 </section>
@@ -714,7 +806,9 @@ namespace :litvault do
       <div class='sign-up table-cell'>
         <h2 class='text-highlight'>Referring Lawyers</h2>
         <h3 class='text-lighter'><span class='first-line'>Sign up and find out how</span> easy it is to list your first case.</h3>
-        <a href='#' class='sign-up'>SIGN UP</a>
+        {% unless current_user %}
+        <a href='#' data-href='/users/sign_up' data-modal='true' data-modal-class='sign-up-modal' data-modal-overlay-close='disabled' class='sign-up'>{{ 'top_navbar.sign_up' | translate }}</a>
+        {% endunless %}
       </div>
 
       <div class='manage-on-mobile table-cell'>
