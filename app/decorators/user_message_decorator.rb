@@ -29,6 +29,8 @@ class UserMessageDecorator < Draper::Decorator
     um ||= self.object
     if Transactable === self.thread_context
       listing_user_messages_path(self.thread_context)
+    elsif DelayedReservation === self.thread_context
+      reservation_user_message_path(self.thread_context, um)
     else
       polymorphic_path([self.thread_context, um])
     end
