@@ -712,7 +712,7 @@ DesksnearMe::Application.routes.draw do
 
     get "users/:id/reviews_collections", :to => "user_reviews#reviews_collections", :as => "reviews_collections"
 
-    resources :listings, :users, :reservations, :recurring_bookings do
+    resources :listings, :users, :reservations, :recurring_bookings, :delayed_reservations do
       resources :user_messages, controller: "dashboard/user_messages", except: [:index] do
         patch :archive
         put :archive
