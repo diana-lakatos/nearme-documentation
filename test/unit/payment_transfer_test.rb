@@ -39,6 +39,20 @@ class PaymentTransferTest < ActiveSupport::TestCase
       assert @payment_transfer.errors[:currency].present?
     end
 
+    should "calculate total_service_fee_cents" do
+      reservation = FactoryGirl.create(:confirmed_reservation, payment: Payment.new(
+        payment_method: PaymentMethod.where(payment_method_type: 'credit_card').last,
+        credit_card: FactoryGirl.build(:credit_card),
+        subtotal_amount: 10,
+        service_fee_amount_guest: 1,
+        service_fee_amount_host: 2,
+        currency: 'USD',
+      ))
+      @payment_transfer.payments = [reservation.payment].flatten
+      assert @payment_transfer.save
+      assert_equal Money.new(300, 'USD'), @payment_transfer.total_service_fee
+    end
+
     should "assign instance id" do
       @payment_transfer.payments = @payments
       @payment_transfer.save!
