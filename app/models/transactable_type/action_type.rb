@@ -61,4 +61,12 @@ class TransactableType::ActionType < ActiveRecord::Base
     true
   end
 
+  def related_order_class
+    if transactable_type.try(:skip_payment_authorization?)
+      'DelayedReservation'
+    else
+      'Reservation'
+    end
+  end
+
 end

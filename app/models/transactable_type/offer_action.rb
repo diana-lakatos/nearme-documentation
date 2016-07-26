@@ -1,4 +1,4 @@
-class TransactableType::PurchaseAction < TransactableType::ActionType
+class TransactableType::OfferAction < TransactableType::ActionType
 
   def available_units
     %w(item)
@@ -9,7 +9,7 @@ class TransactableType::PurchaseAction < TransactableType::ActionType
   end
 
   def related_order_class
-    'Purchase'
+    'Offer'
   end
 
 end
