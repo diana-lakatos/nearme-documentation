@@ -263,7 +263,7 @@ class ApplicationController < ActionController::Base
   end
 
   def stored_url_for(resource_or_scope)
-    redirect_url = params[:return_to] || session[:user_return_to] || root_path
+    redirect_url = session[:user_return_to].presence || params[:return_to].presence || root_path
     session[:user_return_to] = session[:return_to] = nil
     redirect_url
   end
