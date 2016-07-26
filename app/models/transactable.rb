@@ -89,7 +89,18 @@ class Transactable < ActiveRecord::Base
   belongs_to :action_type
   belongs_to :shipping_profile
 
-  belongs_to :spree_product, class_name: "Spree::Product"
+  has_many :activity_feed_events, as: :followed, dependent: :destroy
+  has_many :activity_feed_subscriptions, as: :followed, dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
+  has_many :feed_followers, through: :activity_feed_subscriptions, source: :follower
+  has_many :links, dependent: :destroy, as: :linkable
+  has_many :transactable_topics, dependent: :destroy
+  has_many :topics, through: :transactable_topics
+  has_many :approved_transactable_collaborators, -> { approved }, class_name: 'TransactableCollaborator', dependent: :destroy
+  has_many :collaborating_users, through: :approved_transactable_collaborators, source: :user
+  has_many :transactable_collaborators, dependent: :destroy
+  has_many :group_transactables, dependent: :destroy
+  has_many :groups, through: :group_transactables
 
   has_many :activity_feed_events, as: :followed, dependent: :destroy
   has_many :activity_feed_subscriptions, as: :followed, dependent: :destroy
@@ -631,7 +642,7 @@ class Transactable < ActiveRecord::Base
       action_types.build(
         transactable_type_action_type: tt_action_type,
         type: "Transactable::#{tt_action_type.class.name.demodulize}"
-      )
+      ) unless action_types.any?{ |at| at.transactable_type_action_type == tt_action_type }
     end
     self.action_type ||= action_types.first
   end
@@ -783,7 +794,7 @@ class Transactable < ActiveRecord::Base
       unless self.transactable_collaborators.for_user(user).exists?
         pc = self.transactable_collaborators.build(user: user, email: collaborator_email, approved_by_owner_at: Time.zone.now)
         pc.save!
-        WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorAddedByProjectOwner, pc.id)
+        WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorAddedByTransactableOwner, pc.id)
       end
     end
   end

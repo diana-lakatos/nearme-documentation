@@ -3,19 +3,15 @@
 
 # Quick explanation:
 #   * subtotal_amount_cents:
-#     - for Spree::Order it sumary of all line items, shipping and tax
 #     - for Reservation it service times quantity
 #   * tax_amount_cents:
-#     - for Spree::Order is counted automaticaly
 #     - for Reservation TODO
 #   * shipping_amount_cents:
-#     - for Spree::Order is counted automaticaly
 #     - for Reservation - sum of all shippmehts
 #   * service_fee_amount_host_cents/service_fee_amount_guest_cents:
-#     - for Spree::Order is based on Instance service_fee_guest_percent/service_fee_host_percent
 #     - for Reservation - defined individually per TransactableType
 #   * service_additional_charges_cents
-#     - the same for Spree::Order and Reservation defined by MPO in admin panel
+#     - is defined by MPO in admin panel
 #   * host_additional_charges_cents
 #     - not yet implemented - it's a framework to AdditionalCharges future improvements when host define his own
 #       AdditionalChargeType that is then calculated in payout for Host.

@@ -10,7 +10,6 @@ class Category < ActiveRecord::Base
   SEARCH_OPTIONS = [["Include in search", "include"], ["Exclude from search", "exclude"]].freeze
 
   has_many :categories_categorizables
-  has_many :categorizable_products, through: :categories_categorizables, source: :product, foreign_key: :categorizable_id
   has_many :categorizable_transactables, through: :categories_categorizables, source: :transactable, foreign_key: :categorizable_id
   has_many :categorizable_reservations, through: :categories_categorizables, source: :reservation, foreign_key: :categorizable_id
 

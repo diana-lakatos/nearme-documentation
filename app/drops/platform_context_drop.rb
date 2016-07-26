@@ -60,18 +60,12 @@ class PlatformContextDrop < BaseDrop
   #   returns true if the theme belongs to a company
   # call_to_action
   #   call to action text as set for this theme
-  # latest_products
-  #   array of the latest product objects created for this marketplace
   # buyable?
   #   returns true if the marketplace has any product types defined
   # bookable?
   #   returns true if the marketplace has any service types defined
   # transactable_types
   #   array of transactable_types (service types) for this marketplace
-  # product_types
-  #   array of product types for this instance
-  # service_types
-  #   array of service types for this instance
   # bookable_nouns
   #   text containing the bookable nouns as a sentence (e.g. "desk or table or room")
   # bookable_nouns_plural
@@ -90,7 +84,7 @@ class PlatformContextDrop < BaseDrop
     :instagram_url, :youtube_url, :rss_url, :linkedin_url, :lessor, :lessors,
     :lessee, :lessees, :search_by_keyword_placeholder, :address, :phone_number,
     :site_name, :support_url, :support_email, :logo_image, :hero_image, :tagline, :homepage_content,
-    :is_company_theme?, :call_to_action, :latest_products, :buyable?, :bookable?, :transactable_types,
+    :is_company_theme?, :call_to_action, :buyable?, :bookable?, :transactable_types,
     :bookable_nouns, :bookable_nouns_plural, :search_input_name, :facebook_key, :service_types,
     :wish_lists_icon_set, :seller_attachments_enabled?, :wish_lists_enabled?, :webhook_token, to: :platform_context_decorator
 

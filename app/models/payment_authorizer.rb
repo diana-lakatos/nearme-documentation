@@ -7,15 +7,15 @@
 # Failed validation of CC sends error message that is then displayed as flash message.
 
 # Succesful authorization creates successful billing authorization object assigned to Reservation or
-# Spree::Order, token saved within it is then used to capture payment.
+# Order, token saved within it is then used to capture payment.
 
-# Failed authorization creates failed billing authorization assigned to Transactable or Spree::Order
+# Failed authorization creates failed billing authorization assigned to Transactable or Order
 
 class PaymentAuthorizer
   include Rails.application.routes.url_helpers
 
   # authorizable argument in initialize method can be instance of
-  # Spree::Order, ReservationRequest or Reservation class
+  # Reservation Purchase RecurringBooking class
   # depending from where authorize method is called.
 
   def initialize(payment_gateway, payment, options={})
@@ -39,9 +39,6 @@ class PaymentAuthorizer
 
   def handle_failure
     @payment.billing_authorizations.build(billing_authoriazation_params.merge({ success: false })) if @authorizable.respond_to?(:billing_authorizations)
-    if @authorizable.instance_of?(Spree::Order)
-      @authorizable.create_failed_payment!
-    end
     @payment.errors.add(:base, @response.message)
     @payment.errors.add(:base, I18n.t("activemodel.errors.models.payment.attributes.base.authorization_failed"))
     false
@@ -57,9 +54,6 @@ class PaymentAuthorizer
         }
       )
     )
-    if @authorizable.instance_of?(Spree::Order)
-      @authorizable.create_pending_payment!
-    end
     @payment.merchant_account_id = merchant_account.try(:id)
     @payment.credit_card = nil unless @payment.save_credit_card?
     @payment.mark_as_authorized!

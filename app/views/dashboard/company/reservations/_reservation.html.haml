@@ -63,7 +63,10 @@
     %h3
       = t("dashboard.host_reservations.payment_method")
   .col-md-3{class: reservation.paid? ? 'info' : "warn" }
-    = t("dashboard.host_reservations.payment_methods." + reservation.payment.try(:payment_method).try(:payment_method_type).to_s)
+    - if reservation.payment.present? && reservation.payment.payment_method.try(:payment_method_type).present?
+      = t("dashboard.host_reservations.payment_methods." + reservation.payment.payment_method.try(:payment_method_type).to_s)
+    - else
+      = t("dashboard.host_reservations.payment_missing")
 
 - if reservation.transactable.possible_delivery?
   .row
@@ -82,7 +85,6 @@
 
   .col-sm-3.col-sm-pull-9
     %small= t('dashboard.host_reservations.order_placed_html', date: l(reservation.created_at.to_date, format: :long))
-
-  .col-sm-3.col-sm-pull-9
-    %small= t('dashboard.host_reservations.order_number', number: reservation.id)
+    %br
+    %small= t('dashboard.host_reservations.order_number', number: reservation.number)
 

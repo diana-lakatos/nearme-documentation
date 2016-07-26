@@ -11,7 +11,8 @@ module Api
         if @transactable_collaborator.valid?
           @transactable_collaborator.approved_by_owner_at = Time.zone.now
           @transactable_collaborator.save!
-          WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorAddedByProjectOwner, @transactable_collaborator.id)
+
+          WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorAddedByTransactableOwner, @transactable_collaborator.id)
           render json: ApiSerializer.serialize_object(@transactable_collaborator)
         else
           render json: ApiSerializer.serialize_errors(@transactable_collaborator.errors)

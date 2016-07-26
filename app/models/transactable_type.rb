@@ -7,7 +7,7 @@ class TransactableType < ActiveRecord::Base
   scoped_to_platform_context
   acts_as_custom_attributes_set
 
-  AVAILABLE_TYPES = ['Listing', 'Buy/Sell'].freeze
+  AVAILABLE_TYPES = ['Listing'].freeze
   AVAILABLE_ACTION_TYPES = [NoActionBooking, SubscriptionBooking, EventBooking, TimeBasedBooking, PurchaseAction, OfferAction]
   SEARCH_VIEWS = %w(mixed list listing_mixed)
   AVAILABLE_SHOW_PATH_FORMATS = [
@@ -60,6 +60,7 @@ class TransactableType < ActiveRecord::Base
   after_update :destroy_translations!, if: lambda { |transactable_type| transactable_type.name_changed? || transactable_type.bookable_noun_changed? || transactable_type.lessor_changed? || transactable_type.lessee_changed? }
   before_validation :set_default_options
   after_create :create_translations!
+  after_create :create_reservation_type!
 
   scope :searchable, -> { where(searchable: true) }
   scope :by_position, -> { order('position ASC') }
@@ -99,33 +100,6 @@ class TransactableType < ActiveRecord::Base
     ]
   end
 
-  #TODO to remove
-  def daily_options_names
-    pricing_options = []
-    # pricing_options << "daily" if action_daily_booking
-    # pricing_options << "weekly" if action_weekly_booking
-    # pricing_options << "monthly" if action_monthly_booking
-    pricing_options
-  end
-
-  #TODO to remove
-  def pricing_options_long_period_names
-    pricing_options = []
-    # pricing_options << "hourly" if action_hourly_booking
-    # pricing_options << "daily" if action_daily_booking
-    # pricing_options << "weekly" if action_weekly_booking
-    # pricing_options << "monthly" if action_monthly_booking
-    pricing_options
-  end
-
-  #TODO to remove
-  def subscription_options_names
-    pricing_options = []
-    # pricing_options << "weekly_subscription" if action_weekly_subscription_booking
-    # pricing_options << "monthly_subscription" if action_monthly_subscription_booking
-    pricing_options
-  end
-
   def any_rating_system_active?
     self.rating_systems.any?(&:active)
   end
@@ -153,6 +127,21 @@ class TransactableType < ActiveRecord::Base
 
   def create_translations!
     translation_manager.create_translations!
+  end
+
+  def create_reservation_type!
+    return true if self.reservation_type.present?
+
+    reservation_type = ReservationType.create!({
+     name: "#{self.name} checkout",
+     transactable_types: [self],
+     settings: {
+       "skip_payment_authorization" => "false",
+        "validate_on_adding_to_cart" => "true"
+      },
+      step_checkout: false
+    })
+    Utils::FormComponentsCreator.new(reservation_type).create!
   end
 
   def destroy_translations!

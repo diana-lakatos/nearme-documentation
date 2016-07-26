@@ -142,13 +142,13 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
         end
       end
 
-      context "semantics with availability for overnight" do
+      context "semantics with availability for overnightxxx" do
         setup do
           @transactable_pricing.stubs(:overnight_booking?).returns(true)
 
           # We set up a set of dates with gaps that are deemed "contiguous" by our
           # custom definition.
-          @dates = [Time.zone.today, Time.zone.today + 1.days, Time.zone.today + 2.days, Time.zone.today + 3.days, Time.zone.today + 5.days, Time.zone.today + 6.days]
+          @dates = [Time.zone.today, Time.zone.today + 1.days, Time.zone.today + 2.days, Time.zone.today + 3.days, Time.zone.today + 7.days, Time.zone.today + 8.days]
           @dates.each do |date|
             @transactable.stubs(:availability_for).with(date).returns(1)
             @transactable.stubs(:open_on?).with(date).returns(true)
@@ -159,19 +159,19 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
           seed_reservation_dates(@dates)
 
           # The expectation is to have blocks:
-          # [today, today+1, today+2] = 2 nights
-          # [today+4] = 1 night
+          # [today, today+1, today+2, today+3] = 3 nights
+          # [today+7] = 1 nights
           #
           # If a 'week' pricing is applied on 2 consecutive nights, then the pricing should be
           # 1n(from pro-rated week price) + 1n(per night price)
           @transactable_pricing.stubs(:all_prices_for_unit).returns({
             1 => { price: 100.to_money },
-            2 => { price: 400.to_money }
+            2 => { price: 500.to_money }
           })
         end
 
         should "take into account open availability" do
-          assert_equal (3 * 400.to_money / 2) + 100.to_money, @calculator.price
+          assert_equal (3 * 500.to_money/2) + 100.to_money, @calculator.price
         end
       end
     end

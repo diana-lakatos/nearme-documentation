@@ -43,7 +43,7 @@ class Support::TicketDrop < BaseDrop
   # requests
   def admin_url
     case ticket.target
-    when Transactable, Spree::Product
+    when Transactable
       routes.dashboard_company_support_ticket_path(ticket)
     when Instance
       routes.instance_admin_support_ticket_path(ticket)

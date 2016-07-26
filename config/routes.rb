@@ -137,7 +137,6 @@ DesksnearMe::Application.routes.draw do
       delete 'empty'
       delete 'clear_all/:order_id', action: 'clear_all', as: 'clear_all'
       patch 'update'
-      get 'add', action: 'add', as: 'add_product' # Get is for redirection after login
       delete 'remove/:item_id', action: 'remove', as: 'remove_product'
       get 'next/:order_id', action: 'next', as: 'next'
     end
@@ -241,11 +240,7 @@ DesksnearMe::Application.routes.draw do
 
       namespace :analytics do
         get '/', to: 'base#index'
-        resource :overview, only: [:show], controller: 'overview' do
-          member do
-            get :products
-          end
-        end
+        resource :overview, only: [:show], controller: 'overview'
         resource :sales, only: [:show]
         resource :profiles, only: [:show]
         resources :logs, only: [:index, :destroy, :show]
@@ -253,12 +248,6 @@ DesksnearMe::Application.routes.draw do
 
       namespace :reports do
         resources :transactables do
-          collection do
-            get :download_report
-          end
-        end
-
-        resources :products do
           collection do
             get :download_report
           end
@@ -282,11 +271,6 @@ DesksnearMe::Application.routes.draw do
           end
         end
 
-        resources :offers do
-          collection do
-            get :download_report
-          end
-        end
       end
 
       namespace :settings do
@@ -726,7 +710,7 @@ DesksnearMe::Application.routes.draw do
 
     get "users/:id/reviews_collections", :to => "user_reviews#reviews_collections", :as => "reviews_collections"
 
-    resources :listings, :users, :reservations, :products, :recurring_bookings do
+    resources :listings, :users, :reservations, :recurring_bookings do
       resources :user_messages, controller: "dashboard/user_messages", except: [:index] do
         patch :archive
         put :archive
@@ -744,13 +728,6 @@ DesksnearMe::Application.routes.draw do
             get :tree
             get :tree_new_ui
           end
-        end
-      end
-
-      resources :api do
-        collection do
-          get :countries
-          get :states
         end
       end
 
@@ -1116,8 +1093,6 @@ DesksnearMe::Application.routes.draw do
 
     # delayed_job web gui
     match "/delayed_job" => DelayedJobWeb, :anchor => false, via: [:get, :post]
-
-    get "/dashboard/api", to: 'dashboard#api', as: :spree
 
     get "/w-hotels-desks-near-me", to: 'locations#w_hotels', as: :w_hotels_location
     get "/W-hotels-desks-near-me", to: 'locations#w_hotels'

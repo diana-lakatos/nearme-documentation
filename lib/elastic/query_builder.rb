@@ -161,27 +161,31 @@ module Elastic
     end
 
     def sorting_options
-      if @query[:sort] && sort = @query[:sort].match(/([a-zA-Z\.\_\-]*)_(asc|desc)/)
-        [
-          { sort[1] => { order: sort[2] } }
-        ]
-      elsif @query[:lat] && @query[:lon]
-        [
-          {
-            _geo_distance: {
-              geo_location: {
-                lat: @query[:lat],
-                lon: @query[:lon]
-              },
-              order:         GEO_ORDER,
-              unit:          GEO_UNIT,
-              distance_type: GEO_DISTANCE
-            }
-          }
-        ]
-      else
-        ['_score']
+      sorting_fields = []
+      if @query[:sort].present?
+        sorting_fields = @query[:sort].split(',').compact.map do |sort_option|
+          if sort = sort_option.match(/([a-zA-Z\.\_\-]*)_(asc|desc)/)
+            { sort[1] => { order: sort[2] } }
+          end
+        end.compact
       end
+      if @query[:lat] && @query[:lon] && (sorting_fields.empty? || sorting_fields.any?{|opt| opt['distance']} )
+        order = sorting_fields.find{|opt| opt['distance']}.try(:[],'distance').try(:[], :order)
+        sorting_fields << {
+          _geo_distance: {
+            geo_location: {
+              lat: @query[:lat],
+              lon: @query[:lon]
+            },
+            order:         order || GEO_ORDER,
+            unit:          GEO_UNIT,
+            distance_type: GEO_DISTANCE
+          }
+        }
+      elsif sorting_fields.empty?
+        return ['_score']
+      end
+      sorting_fields.reject{ |opt| opt['distance'] }
     end
 
     def aggregations

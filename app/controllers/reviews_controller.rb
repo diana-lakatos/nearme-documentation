@@ -32,7 +32,6 @@ class ReviewsController < ApplicationController
     @reviewable_parent =
       case params[:reviewable_parent_type]
       when 'Transactable' then Transactable
-      when 'Spree::Product' then Spree::Product
       when 'User' then User
       end.with_deleted.find(params[:reviewable_parent_id])
   end

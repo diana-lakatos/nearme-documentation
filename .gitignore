@@ -9,7 +9,6 @@ public/media
 public/association
 public/user
 public/assets
-public/spree
 public/capybara.html
 public/staging*
 public/qa*

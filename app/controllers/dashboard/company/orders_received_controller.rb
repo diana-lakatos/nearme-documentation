@@ -1,6 +1,4 @@
 class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseController
-  include Spree::Core::ControllerHelpers::StrongParameters
-
   before_filter :find_order, except: :index
 
   def index
@@ -16,7 +14,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   end
 
   def update
-    if @order.update_from_params(params, permitted_checkout_attributes)
+    if @order.update(order_params)
       redirect_to location_after_save, notice: t('flash_messages.manage.order.updated')
     else
       flash[:error] = t('flash_messages.manage.order.error_update')
@@ -102,8 +100,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
     @order = @company.orders.find(params[:id]).try(:decorate)
   end
 
-  #TODO move params for checkout to secure params
-  # def order_params
-  #   params.require(:order).permit(secured_params.spree_order)
-  # end
+  def order_params
+    params.require(:order).permit(secured_params.order(@order.reservation_type))
+  end
 end

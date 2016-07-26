@@ -215,6 +215,51 @@ namespace :project_to_transactable do
       class NotFound < ActiveRecord::RecordNotFound; end
     end
 
+    class ProjectDrop < BaseDrop
+      attr_reader :project
+
+      # id
+      #   id of project as integer
+      # name
+      #   name of project as string
+      delegate :id, :name, :description, :data_source_contents, :creator, :photos, to: :project
+
+      def initialize(project)
+        @project = project
+      end
+
+      # url to the "space listing" version of a first photo
+      def cover_photo_url
+        ActionController::Base.helpers.asset_url(@project.cover_photo.try(:image_url, :project_cover))
+      end
+
+      # url to the "large" version of a first photo
+      def photo_large_url
+        ActionController::Base.helpers.asset_url(@project.photos.first.try(:image_url, :large))
+      end
+
+      def show_path
+        routes.project_path(@project)
+      end
+
+      def show_url
+        urlify(show_path)
+      end
+
+      def edit_url
+        urlify(routes.edit_dashboard_project_type_project_path(@project.transactable_type, @project))
+      end
+
+      def edit_url_with_token
+        urlify(routes.edit_dashboard_project_type_project_path(@project.transactable_type, @project, token_key => @project.creator.try(:temporary_token), anchor: :collaborators))
+      end
+
+      def topics_names
+        project.topics.pluck(:name).join(', ')
+      end
+
+    end
+
     class ProjectCollaborator < ActiveRecord::Base
       acts_as_paranoid
       auto_set_platform_context
@@ -282,13 +327,15 @@ namespace :project_to_transactable do
       has_paper_trail
       auto_set_platform_context
       scoped_to_platform_context
-    
+
       belongs_to :instance
       belongs_to :group
       belongs_to :project
     end
 
     Instance.find_each do |instance|
+      next if !instance.is_community?
+
       instance.set_context!
 
       ActivityFeedEvent.where("event like '%project%'").find_each do |activity_feed_event|
@@ -326,7 +373,7 @@ namespace :project_to_transactable do
         summary_attribute.transactable_type_id = transactable_type.id
         summary_attribute.attribute_type = 'string'
         summary_attribute.html_tag = 'textarea'
-        # TODO, add presence rule manually from the interface, we can't add it 
+        # TODO, add presence rule manually from the interface, we can't add it
         # now because it's missing for some projects
         #summary_attribute.validation_rules = { length: { maximum: 140 }, presence: {} }
         summary_attribute.validation_rules = { length: { maximum: 140 } }
@@ -451,6 +498,29 @@ namespace :project_to_transactable do
           activity_feed_event.destroy
         end
       end
+
+      Workflow.where(workflow_type: 'project_workflow').find_each do |workflow|
+        workflow.name = workflow.name.gsub(/Project/, 'Collaborator')
+        workflow.workflow_type = 'collaborator_workflow'
+        workflow.save!
+
+        workflow.workflow_steps.each do |workflow_step|
+          workflow_step.associated_class = workflow_step.associated_class.gsub(/ProjectWorkflow/, 'CollaboratorWorkflow')
+          workflow_step.associated_class = workflow_step.associated_class.gsub(/Project/, 'Transactable')
+          workflow_step.name = workflow_step.associated_class.demodulize.gsub(/(?<=[a-z])(?=[A-Z])/, ' ')
+          workflow_step.save!
+
+          workflow_step.workflow_alerts.find_each do |workflow_alert|
+            workflow_alert.subject = workflow_alert.subject.gsub(/project/, 'transactable')
+            workflow_alert.template_path = workflow_alert.template_path.gsub(/project_mailer/, 'transactable_mailer')
+            workflow_alert.template_path = workflow_alert.template_path.gsub(/project/, 'transactable')
+            workflow_alert.name = workflow_alert.name.gsub(/project/, 'transactable')
+            workflow_alert.name = workflow_alert.name.gsub(/Project/, 'Transactable')
+            workflow_alert.save!
+          end
+        end
+      end
+
     end
 
   end

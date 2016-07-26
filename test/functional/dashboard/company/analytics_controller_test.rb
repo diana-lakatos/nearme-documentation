@@ -80,7 +80,7 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
         end
 
         should '@last_week_reservations includes user company reservations' do
-          get :show, :analytics_mode => 'bookings'
+          get :show, :analytics_mode => 'orders'
           assert_equal [@reservation], assigns(:reservations)
         end
 
@@ -93,7 +93,7 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
         end
 
         should '@last_week_reservations includes only reservations not older than 6 days' do
-          get :show, :analytics_mode => 'bookings'
+          get :show, :analytics_mode => 'orders'
           assert_equal [@reservation_created_6_days_ago], assigns(:last_week_reservations)
         end
 

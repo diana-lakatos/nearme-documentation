@@ -7,7 +7,7 @@ FactoryGirl.define do
     status 'mandatory'
     additional_charge_type_target { Instance.first.signature }
 
-    factory :host_additional_charge_type do
+    factory :for_host_additional_charge_type do
       commission_receiver 'host'
     end
 

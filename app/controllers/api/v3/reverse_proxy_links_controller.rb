@@ -2,6 +2,7 @@ module Api
   class V3::ReverseProxyLinksController < BaseController
 
     skip_before_filter :require_authentication
+    skip_before_filter :require_authorization, only: [:index]
 
     def index
       @scope = ReverseProxyLink.all

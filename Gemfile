@@ -82,6 +82,9 @@ gem 'paper_trail', '5.2.0'
 gem 'rack-rewrite', :require => 'rack/rewrite'
 
 gem 'state_machine', '~> 1.2.0'
+gem 'state_machines-activerecord'
+gem 'awesome_nested_set'
+gem 'font-awesome-rails'
 gem 'will_paginate'
 
 
@@ -139,8 +142,6 @@ gem 'activemerchant'
 gem 'shippo'
 
 gem 'video_info'
-gem 'spree_core', github: 'spree/spree', branch: '3-0-stable'
-#gem 'spree_auth_devise', github: 'spree/spree_auth_devise', branch: '2-2-stable'
 
 gem 'domainatrix'
 gem 'store_base_sti_class', github: 'jcarreti/store_base_sti_class', branch: 'rails4-2'

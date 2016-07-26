@@ -87,17 +87,8 @@ class CustomFieldsBuilder
         location_fields
       when 'transactable'
         transactable_fields
-      when 'product'
-        product_fields
       else
         raise NotImplementedError.new("Unknown object for which field #{field} was defined: #{object}. Valid objects: location, address, transactable, product")
-      end
-    when FormComponent::PRODUCT_ATTRIBUTES
-      case object
-      when 'product'
-        product_fields
-      else
-        raise NotImplementedError.new("Unknown object for which field #{field} was defined: #{object}. Valid objects: location, address, product, photo")
       end
     end
   end
@@ -132,10 +123,6 @@ class CustomFieldsBuilder
 
   def dashboard_transactable_fields
     @transactable_fields ||= form_attributes.dashboard_transactable(@form_componentable).map(&:to_s)
-  end
-
-  def product_fields
-    @product_fields ||= form_attributes.product(@form_componentable).map(&:to_s)
   end
 
   def project_fields

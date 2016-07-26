@@ -9,4 +9,4 @@
 
 .row-fluid
   .content-wrapper.span8.offset2
-    = raw Liquid::Template.parse(@page.html_content).render(nil, registers: { action_view: self }, filters: [LiquidFilters])
+    = LiquidView.new(self).render(@page.html_content)

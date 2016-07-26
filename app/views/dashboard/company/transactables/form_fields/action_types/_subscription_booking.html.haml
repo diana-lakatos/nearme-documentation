@@ -14,5 +14,5 @@
       .add-link
         = link_to_add_association t('pricing.add_new') , f, :pricings, partial: 'dashboard/company/transactables/form_fields/action_types/custom_pricing', render_options: { locals: { tt_pricing: nil } }, class: 'btn btn-primary'
   %hr/
-  - if form_fields.map(&:values).flatten.include? 'action_rfq'
+  - if fields.include? 'action_rfq'
     = render "dashboard/company/transactables/form_fields/action_rfq", f: f

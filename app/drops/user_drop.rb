@@ -183,10 +183,6 @@ class UserDrop < BaseDrop
     end
   end
 
-  def show_products_tab?
-    !hide_tab?('products') && @context['products']
-  end
-
   def show_services_tab?
     !hide_tab?('services') && @context['listings']
   end

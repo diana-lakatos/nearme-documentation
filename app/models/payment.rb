@@ -44,7 +44,7 @@ class Payment < ActiveRecord::Base
 
   # === Associations
 
-  # Payable association connects Payment with Reservation and Spree::Order
+  # Payable association connects Payment with Reservation and Order
   belongs_to :payable, polymorphic: true
   belongs_to :company, -> { with_deleted }
   belongs_to :credit_card, -> { with_deleted }

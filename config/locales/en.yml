@@ -26,15 +26,6 @@ en:
         name: "Listing type"
       location_type:
         name: "Location type"
-      spree/product:
-        shippo_enabled: 'Integrated Shipping'
-      spree/variant:
-        weight_unit: 'Type of Unit'
-        height_unit: 'Type of Unit'
-        width_unit: 'Type of Unit'
-        depth_unit: 'Type of Unit'
-      spree/order:
-        insurance_enabled: "Enable shipping insurance (if available)"
       saved_search:
         title: 'Title'
         created_at: 'Created at'
@@ -75,6 +66,7 @@ en:
         one: "1 follower"
         other: "%{count} followers"
   confirmations:
+    are_you_sure_delete_price: 'Are you sure? This price will be removed from all existing listings.'
     are_you_sure: 'Are you sure?'
     are_you_sure_you_want_to_delete_this_item: "Are you sure you want to delete this item?"
     are_you_sure_you_want_to_delete_this_image: "Are you sure you want to delete this image?"
@@ -345,7 +337,6 @@ en:
 
     general:
       product: "Product"
-      spree/products: "Products"
       transactable: "Transactable"
       transactables: "Transactables"
       listing: "Listing"
@@ -380,8 +371,6 @@ en:
     reports:
       all_instance_profile_types: 'All User types'
       all_service_types: "All service types"
-      all_spree/product_types: "All product types"
-      all_offer_types: "All offer types"
       download_report_as_csv: "Download report as CSV"
       attribute: "Attribute"
       value: "Value"
@@ -1529,6 +1518,7 @@ en:
       reservation_state: "Reservation state: "
       payment_state: "Payment state: "
       payment_method: "Payment method: "
+      payment_missing: "Payment missing"
       unconfirmed: 'Unconfirmed'
       confirmed: 'Confirmed'
       archived: 'Archived'
@@ -2212,6 +2202,12 @@ en:
     day:
       one: 'day'
       other: 'days'
+    day_month:
+      one: 'month'
+      other: 'months'
+    night_month:
+      one: 'month'
+      other: 'months'
     hour:
       one: 'hour'
       other: 'hours'
@@ -2238,6 +2234,8 @@ en:
     slash_per_day: '/ day'
     slash_per_week: '/ week'
     slash_per_month: '/ month'
+    slash_per_day_month: '/ month'
+    slash_per_night_month: '/ month'
     slash_per_event: '/ event'
     slash_per_subscription_month: '/ month'
     slash_per_subscription_day: '/ day'
@@ -2292,6 +2290,12 @@ en:
     day:
       one: 'day'
       other: 'days'
+    day_month:
+      one: 'month'
+      other: 'months'
+    night_month:
+      one: 'month'
+      other: 'months'
     hour:
       one: 'hour'
       other: 'hours'

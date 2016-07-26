@@ -59,4 +59,5 @@ class TransactableCollaborator < ActiveRecord::Base
   def to_liquid
     @transactable_collaborator_drop ||= TransactableCollaboratorDrop.new(self)
   end
+
 end
