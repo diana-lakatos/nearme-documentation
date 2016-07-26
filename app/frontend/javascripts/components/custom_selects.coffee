@@ -21,6 +21,16 @@ module.exports = class CustomSelects
     )
 
     #select2
-    container.find('.select2').select2({
+
+    container.find('.select2').each ()->
+      $select = $(this)
+
+      defaults = {
         minimumResultsForSearch: 20
-    });
+      }
+
+      options = $.extend(defaults, {
+        placeholder: $select.data('select2-placeholder')
+      });
+
+      $select.select2(options)

@@ -147,6 +147,10 @@ class TransactableTypeDrop < BaseDrop
     @categories
   end
 
+  def custom_attributes
+    @source.custom_attributes
+  end
+
   def class_name
     @source.class.name
   end
