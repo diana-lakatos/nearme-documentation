@@ -93,7 +93,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   end
 
   def location_after_save
-    dashboard_orders_path
+    dashboard_orders_received_path
   end
 
   def find_order

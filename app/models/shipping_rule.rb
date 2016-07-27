@@ -8,4 +8,8 @@ class ShippingRule < ActiveRecord::Base
 
   monetize :price_cents, with_model_currency: PlatformContext.current.try {|c| c.instance.default_currency }, allow_nil: true
 
+  def to_liquid
+    @shipping_rule_drop ||= ShippingRuleDrop.new(self)
+  end
+
 end

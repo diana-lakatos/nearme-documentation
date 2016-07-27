@@ -322,7 +322,7 @@ class Reservation < Order
   end
 
   def try_to_activate!
-    if inactive? && (skip_payment_authorization? || payment && payment.authorized?)
+    if state == 'inactive' && (skip_payment_authorization? || payment && payment.authorized?)
       activate!
     end
   end

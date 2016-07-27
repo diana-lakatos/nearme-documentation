@@ -1,0 +1,151 @@
+<header>
+  <div class='row'>
+    <div class='col-sm-7'>
+      {% if reservation.transactable != blank and reservation.transactable.deleted? != true %}
+        <h2>
+          <a href="{{ reservation.transactable.show_path }}">
+            {% if reservation.transactable.name.size > 0 %}
+              {{ reservation.transactable.name }}
+            {% else %}
+              {{ 'dashboard.host_reservations.show_listing_page' | t}}
+            {% endif %}
+          </a>
+
+          {{ reservation.transactable.click_to_call_button }}
+        </h2>
+      {% else %}
+        <h2>{{ 'dashboard.user_reservations.listing_deleted' | t }}</h2>
+      {% endif %}
+    </div>
+    <div class='col-xs-5'>
+      <div class='order-status'>
+        {% if reservation.archived_at and reservation.state == 'confirmed' %}
+          <span class='confirmed'>
+            {{ "reservations.states.completed" | translate }}
+          </span>
+        {% else %}
+          <span class='{{ reservation.state }}'>
+            {{ 'reservations.states.' | append: reservation.state | translate }}
+          </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>
+
+{% if reservation.state == 'unconfirmed' and reservation.archived? == false %}
+  <div class='alert alert-warning'>
+    {{'dashboard.user_reservations.pending_confirmation' | t }} <strong>{{ reservation.time_to_expiration }}</strong>.
+  </div>
+  {% if reservation.payment.active_merchant_payment? and reservation.payment.billing_authorizations.size > 0 %}
+    <div class='alert alert-warning'>{{ 'dashboard.user_reservations.money_info' | translate }}</div>
+  {% endif %}
+{% endif %}
+
+{% if reservation.payment.test_mode? %}
+  <div class='alert alert-warning'>{{ 'dashboard.user_reservations.test_mode' | translate }}</div>
+{% endif %}
+
+{% if reservation.show_not_verified_user_alert? %}
+  <div class='alert alert-warning'>
+    {% capture link %} <a href='{{ routes.social_accounts_path }}'>{{ 'dashboard.nav.social_accounts' | t }}</a>{% endcapture %}
+    {{ 'dashboard.click_to_call.not_verified_self_warning' | translate: link: link | make_html_safe }}
+  </div>
+{% endif %}
+
+{% include 'dashboard/user_reservations/reservation_details', reservation: reservation, for_host: false %}
+
+<div class='row'>
+  {% if reservation.guest_notes != blank %}
+    <div class='col-sm-3'>
+      <h3>{{ 'dashboard.host_reservations.exclusive_price_guests_notes' | t }}</h3>
+      <blockquote>{{ reservation.guest_notes }}</blockquote>
+    </div>
+  {% endif %}
+  {% if reservation.payment_documents.size > 0 %}
+    <div class='col-sm-3'>
+      <h3>{{ 'dashboard.host_reservations.payment_documents' | t }}</h3>
+      <ul class='payment-documents'>
+        {% for pd in reservation.payment_documents %}
+          <li>
+            <a href='{{ pd.file_url }}' download=true>{{ pd.file_name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+  {% if reservation.additional_line_items.size > 0 %}
+    <div class='col-sm-3 right'>
+      <h3>{{ 'dashboard.host_reservations.additional_charges' | t }}</h3>
+      <ul class='payment-documents'>
+        {% for ac in reservation.additional_line_items %}
+          <li>
+            {{ ac.name | append: ' - ' | append: ac.formatted_total_price }}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+</div>
+
+<div class='row'>
+  <div class='col-sm-9 col-sm-push-3'>
+    <div class='order-actions'>
+      {% if reservation.confirmed?%}
+        <a class='btn btn-default' href="{{ 'export_dashboard_user_reservation_path' | generate_url: reservation.id, format: :ics }}">
+          {{ 'dashboard.user_reservations.add_to_ical' | t }}
+        </a>
+        {% if reservation.inbound_shipment.label_url != blank %}
+          <a class="btn btn-default" href="{{ reservation.inbound_shipment.label_url }}">{{ 'dashboard.user_reservations.return_label' | t }}</a>
+        {% endif %}
+        {% if reservation.outbound_shipment.tracking_url_provider != blank %}
+          <a class="btn btn-default" href="{{ reservation.outbound_shipment.tracking_url_provider }}">{{ 'dashboard.user_reservations.track_package' | t }}</a>
+        {% endif %}
+      {% endif %}
+
+      {% if reservation.can_approve_or_decline_checkout? %}
+        <form class="edit_reservation" action="{{ 'approve_dashboard_user_reservation_payment_path' | generate_url: reservation.id, payment_id: reservation.payment }}" accept-charset="UTF-8" method="post">
+          <input name="utf8" type="hidden" value="&#x2713;" />
+          <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
+          <input type="submit" name="commit" value="{{ 'general.approve' | t }}" data-confirm="{{ 'confirmations.are_you_sure' | t }}" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-success" />
+        </form>
+        <a class="btn btn-warning" data-modal="true" href="{{ 'rejection_form_dashboard_user_reservation_payment_path' | generate_url: reservation.id, payment_id: rreservation.payment }}">{{ 'general.reject' | t }}</a>
+      {% endif %}
+
+      {% if reservation.has_to_update_credit_card? %}
+        <span>
+          <a class="btn btn-warning" data-modal='true' href="{{ 'edit_dashboard_user_reservation_payment_path' | generate_url: reservation.id, payment_id: rreservation.payment }}">{{ 'dashboard.user_reservations.update_credit_card' | t }}</a>
+        </span>
+        <div class="cc-error">{{ 'dashboard.user_reservations.must_change_credit_card' | t }}</div>
+      {% endif %}
+
+      {% unless reservation.archived? %}
+        {% if reservation.cancelable? %}
+          <form class="edit_reservation" action="{{ 'user_cancel_dashboard_user_reservation_path' | generate_url: reservation.id }}" accept-charset="UTF-8" method="post">
+            <input name="utf8" type="hidden" value="&#x2713;" />
+            <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
+            <input type="submit" name="commit" value="{{ 'general.cancel' | t }}" data-confirm="{{ 'dashboard.user_reservations.cancel_confirmation' | t }}" class="btn btn-warning" data-disable-with="{{ 'general.processing' | t }}" />
+          </form>
+          {% if reservation.penalty_charge_apply? %}
+            <div class="cc-error">
+              {{ 'dashboard.user_reservations.penalty_charge_will_apply' | t: penalty_hours: reservation.cancellation_policy_penalty_hours, penalty_fee: reservation.formatted_penalty_fee, hours_for_cancellation: reservation.cancellation_policy_hours_for_cancellation) }}
+            </div>
+          {% endif %}
+        {% endif %}
+        {% if reservation.remote_payment? and reservation.paid? == false and reservation.archived? == false %}
+          <a class="btn btn-default" href="{{ 'remote_payment_dashboard_user_reservation_path' | generate_url: reservation.id }}">
+            {{ 'dashboard.user_reservations.pay_now' | t }}
+          </a>
+        {% endif %}
+      {% endunless %}
+    </div>
+  </div>
+
+  <div class='col-sm-3 col-sm-pull-9'>
+    {% assign date = reservation.created_at | to_date | l: 'long' %}
+    <small>{{ 'dashboard.user_reservations.reservation_placed_html' | t: date: date }}</small>
+    <br/>
+    <small>{{ 'dashboard.host_reservations.order_number' | t: number: reservation.id }}</small>
+  </div>
+
+</div>

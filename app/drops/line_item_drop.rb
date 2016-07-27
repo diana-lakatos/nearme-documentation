@@ -13,5 +13,9 @@ class LineItemDrop < BaseDrop
     humanized_money_with_cents_and_symbol(@line_item.unit_price)
   end
 
+  def formatted_total_price
+    humanized_money_with_cents_and_symbol(@line_item.total_price)
+  end
+
 end
 

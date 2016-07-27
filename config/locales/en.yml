@@ -1551,6 +1551,7 @@ en:
         nonce: "PayPal"
         remote: "Fetch"
         free: "None"
+        pending: 'Pending'
       delivery:
         pick_up: 'Pick up'
         delivery: 'Delivery'

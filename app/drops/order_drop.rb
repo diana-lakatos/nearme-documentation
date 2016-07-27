@@ -12,7 +12,13 @@ class OrderDrop < BaseDrop
   #   string representing the unique identifier for this order
   # line_items
   #   an array of line items that belong to this order in the form of LineItem objects
-  delegate :id, :user, :company, :number, :line_items, to: :order
+  delegate :id, :user, :company, :number, :line_items, :line_item_adjustments,
+    :shipping_profile, :adjustment, :can_host_cancel?, :can_confirm?, :can_reject?,
+    :paid?, :unconfirmed?, :confirmed?, :manual_payment?, :can_complete_checkout?,
+    :can_approve_or_decline_checkout?, :has_to_update_credit_card?, :user_messages,
+    :archived_at, :state, :cancelable?, :archived?, :penalty_charge_apply?, :cancellation_policy_hours_for_cancellation,
+    :cancellation_policy_penalty_hours, :payment,
+    to: :order
 
   def initialize(order)
     @order = order.decorate
@@ -39,6 +45,46 @@ class OrderDrop < BaseDrop
     end
 
     false
+  end
+
+  def possible_payout_not_configured?
+    @order.company.possible_payout_not_configured?(@order.payment.payment_gateway)
+  end
+
+  def show_not_verified_host_alert?
+    PlatformContext.current.instance.click_to_call? && @order.transactable.present? && @order.user.communication.try(:verified) && !@context['current_user'].try(:communication).try(:verified)
+  end
+
+  def show_not_verified_user_alert?
+    PlatformContext.current.instance.click_to_call? && @order.transactable && @order.transactable.administrator.communication.try(:verified) && !@context['current_user'].communication.try(:verified)
+  end
+
+  def payment_state
+    @order.payment.try(:state).try(:humanize).try(:capitalize)
+  end
+
+  def translated_payment_method
+    I18n.t("dashboard.host_reservations.payment_methods." + (@order.payment.try(:payment_method).try(:payment_method_type) || 'pending').to_s)
+  end
+
+  def outbound_shipment
+    @order.shipments.outbound.first
+  end
+
+  def inbound_shipment
+    @order.shipments.inbound.first
+  end
+
+  def time_to_expiration
+    @order.time_to_expiry(@order.expires_at)
+  end
+
+  def payment_documents
+    @order.payment_documents.select(&:persisted?)
+  end
+
+  def formatted_penalty_fee
+    humanized_money_with_cents_and_symbol(@order.penalty_fee)
   end
 
 end

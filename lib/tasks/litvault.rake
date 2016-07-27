@@ -208,6 +208,7 @@ namespace :litvault do
     create_home_homepage_content!
     create_listing_show!
     create_theme_footer!
+    create_my_cases!
   end
 
   def create_translations
@@ -979,6 +980,38 @@ namespace :litvault do
     &copy; 2016 LitVault. All rights reserved.
   </div>
 </div>
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+  end
+
+  def create_my_cases!
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'dashboard/user_reservations/reservation_details',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: %Q{
+<div class="row">
+  <div class="col-sm-6">Motorcycle | Broken Leg</div>
+  <div class="col-sm-6" style="text-align: right">Days of Hospitalization: 45</div>
+</div>
+<div class="row">
+  <div class="col-sm-6">Injury or Accident Date: 12/2/2015</div>
+  <div class="col-sm-6" style="text-align: right">Death Case: N</div>
+</div>
+<div class="row">
+  <div class="col-sm-6">Location of Injury or Accident: Missouri</div>
+  <div class="col-sm-6" style="text-align: right"></div>
+</div>
+
+<p>{{ reservation.transactable.description | truncate: 500, "..." }}</p>
+<hr/>
       },
       format: 'html',
       handler: 'liquid',

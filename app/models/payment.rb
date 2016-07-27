@@ -476,6 +476,10 @@ class Payment < ActiveRecord::Base
     self.failed_at + (refund_attempts * 6).hours
   end
 
+  def to_liquid
+    @payment_drop ||= PaymentDrop.new(self)
+  end
+
   private
 
   # TODO: move this flague to Payment from BillingAuthorization
