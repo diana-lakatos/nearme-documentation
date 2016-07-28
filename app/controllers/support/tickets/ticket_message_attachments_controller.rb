@@ -1,4 +1,5 @@
 class Support::Tickets::TicketMessageAttachmentsController < Support::BaseController
+  before_action :ensure_user_logged_in
   before_action :find_ticket
   before_action :set_form_name, only: [:create, :update, :edit]
 
@@ -43,6 +44,13 @@ class Support::Tickets::TicketMessageAttachmentsController < Support::BaseContro
   end
 
   private
+
+  def ensure_user_logged_in
+    if (request.xhr? && current_user.blank?)
+      render json: { error_message: I18n.t('general.session_stale') }, status: 503
+    end
+    true
+  end
 
   def find_ticket
     @ticket = if current_user.instance_admin?

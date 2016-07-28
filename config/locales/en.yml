@@ -129,6 +129,7 @@ en:
     reject: 'Reject'
     no_options: 'No options'
     unexpected_error_occurred: "An unexpected error occurred."
+    session_stale: "The session is stale. Please log back in."
   transactable_types:
     locations:
       listings:
