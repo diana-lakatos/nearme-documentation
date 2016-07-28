@@ -1,7 +1,7 @@
 class Order < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
 
-  ORDER_TYPES = ['Reservation', 'RecurringBooking', 'Purchase']
+  ORDER_TYPES = ['Reservation', 'RecurringBooking', 'Purchase', 'DelayedReservation']
 
   include Encryptable
   include Modelable
@@ -444,5 +444,9 @@ class Order < ActiveRecord::Base
 
   def confirm_reservations?
     transactable.confirm_reservations?
+  end
+
+  def transactable_pricing
+    super || transactable_line_items.first.transactable_pricing
   end
 end
