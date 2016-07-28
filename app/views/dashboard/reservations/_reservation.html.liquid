@@ -104,17 +104,17 @@
       {% endif %}
 
       {% if reservation.can_approve_or_decline_checkout? %}
-        <form class="edit_reservation" action="{{ 'approve_dashboard_user_reservation_payment_path' | generate_url: reservation.id, payment_id: reservation.payment }}" accept-charset="UTF-8" method="post">
+        <form class="edit_reservation" action="{{ 'approve_dashboard_user_reservation_payment_path' | generate_url: user_reservation_id: reservation.id, id: reservation.payment.id }}" accept-charset="UTF-8" method="post">
           <input name="utf8" type="hidden" value="&#x2713;" />
           <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
           <input type="submit" name="commit" value="{{ 'general.approve' | t }}" data-confirm="{{ 'confirmations.are_you_sure' | t }}" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-success" />
         </form>
-        <a class="btn btn-warning" data-modal="true" href="{{ 'rejection_form_dashboard_user_reservation_payment_path' | generate_url: reservation.id, payment_id: rreservation.payment }}">{{ 'general.reject' | t }}</a>
+        <a class="btn btn-warning" data-modal="true" href="{{ 'rejection_form_dashboard_user_reservation_payment_path' | generate_url: user_reservation_id: reservation.id, id: reservation.payment.id }}">{{ 'general.reject' | t }}</a>
       {% endif %}
 
       {% if reservation.has_to_update_credit_card? %}
         <span>
-          <a class="btn btn-warning" data-modal='true' href="{{ 'edit_dashboard_user_reservation_payment_path' | generate_url: reservation.id, payment_id: rreservation.payment }}">{{ 'dashboard.user_reservations.update_credit_card' | t }}</a>
+          <a class="btn btn-warning" data-modal='true' href="{{ 'edit_dashboard_user_reservation_payment_path' | generate_url: user_reservation_id: reservation.id, id: reservation.payment.id }}">{{ 'dashboard.user_reservations.update_credit_card' | t }}</a>
         </span>
         <div class="cc-error">{{ 'dashboard.user_reservations.must_change_credit_card' | t }}</div>
       {% endif %}
