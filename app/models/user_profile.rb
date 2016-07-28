@@ -14,7 +14,7 @@ class UserProfile < ActiveRecord::Base
 
   has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
 
-  delegate :onboarding, :onboarding?, to: :instance_profile_type
+  delegate :onboarding, :onboarding?, to: :instance_profile_type, allow_nil: true
 
   SELLER  = 'seller'.freeze
   BUYER = 'buyer'.freeze
@@ -58,6 +58,9 @@ class UserProfile < ActiveRecord::Base
 
   def assign_defaults
     self.instance_profile_type ||= PlatformContext.current.instance.try("#{self.profile_type}_profile_type")
+    # by default, seller and buyer profiles are enabled only if onboarding is disabled. Default profile is always enabled.
+    self.enabled = !onboarding? || profile_type == DEFAULT
+    true
   end
 
 end

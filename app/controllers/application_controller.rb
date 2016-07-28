@@ -269,6 +269,11 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
+    force_profile = params[:user] ? params[:user][:force_profile] : nil
+    if force_profile.present? && force_profile != 'default' && resource.send("get_#{force_profile}_profile").try(:onboarding?) && !resource.send("get_#{force_profile}_profile").enabled?
+      session[:after_onboarding_path] = session[:user_return_to]
+      session[:user_return_to] = send("edit_dashboard_#{force_profile}_path")
+    end
     url = stored_url_for(resource)
     url = url_without_authentication_token(url) if url.include?("token")
     url = add_login_token_to_url(url, resource) if redirect_to_different_host?(url)

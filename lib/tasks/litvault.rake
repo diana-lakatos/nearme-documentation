@@ -7,10 +7,11 @@ namespace :litvault do
     @instance.update_attributes(
       tt_select_type: 'radio',
       split_registration: true,
-      enable_reply_button_on_host_reservations: true
+      enable_reply_button_on_host_reservations: true,
       hidden_ui_controls: { 'main_menu/cta': 1 }
     )
     @instance.set_context!
+    InstanceProfileType.find(580).update_column(:onboarding, true)
 
     create_transactable_types!
     create_custom_attributes!
@@ -94,20 +95,43 @@ namespace :litvault do
   def create_custom_attributes!
     @instance.transactable_types.each do |tt|
       states = tt.custom_attributes.where({
-        name: 'states',
+        name: 'states'
+      }).first_or_initialize
+      states.assign_attributes({
         label: 'States',
         attribute_type: 'array',
         html_tag: 'select',
         public: true,
-        searchable: true
-      }).first_or_create!
-      states.valid_values = %w(
-        AL AK AZ AR CA CO CT DE FL GA HI ID IL IA KS KY
-        LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC
-        ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY
-      )
+        searchable: true,
+        valid_values: %w(
+          AL AK AZ AR CA CO CT DE FL GA HI ID IL IA KS KY
+          LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC
+          ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY
+        )
+      })
       states.save!
     end
+    law_firm = InstanceProfileType.find(580).custom_attributes.where(name: 'law_firm').first_or_initialize
+    law_firm.assign_attributes({
+      label: 'Law Firm',
+      attribute_type: 'string',
+      html_tag: 'input',
+      public: true,
+      searchable: false
+    })
+    law_firm.required = 1
+    law_firm.save!
+
+    law_firm = InstanceProfileType.find(579).custom_attributes.where(name: 'law_firm').first_or_initialize
+    law_firm.assign_attributes({
+      label: 'Law Firm',
+      attribute_type: 'string',
+      html_tag: 'input',
+      public: true,
+      searchable: false
+    })
+    law_firm.required = 1
+    law_firm.save!
   end
 
   def create_categories!
@@ -148,6 +172,8 @@ namespace :litvault do
 
       component.save!
     end
+    FormComponent.find(5404).update_attribute(:form_fields, [ { "user" => "name" }, { "user" => "email" }, { "user" => "password" }, { "buyer" => "law_firm" } ], return_to: '/dashboard/buyer/edit')
+    FormComponent.find(5402).update_attribute(:form_fields, [ { "user" => "name" }, { "user" => "email" }, { "user" => "password" }, { "buyer" => "law_firm" } ])
   end
 
   def set_theme_options

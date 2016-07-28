@@ -125,7 +125,7 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :waiver_agreement_templates, allow_destroy: true
   accepts_nested_attributes_for :customizations, allow_destroy: true
   accepts_nested_attributes_for :action_types, allow_destroy: true
-  accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
+  accepts_nested_attributes_for :links, allow_destroy: true
 
   # == Callbacks
   before_destroy :decline_reservations

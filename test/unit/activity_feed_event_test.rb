@@ -6,17 +6,6 @@ class ActivityFeedEventTest < ActiveSupport::TestCase
     @activity_feed_event = build(:activity_feed_event)
   end
 
-  context "included modules" do
-    %w(
-      PlatformContext::DefaultScoper
-      PlatformContext::ForeignKeysAssigner
-    ).each do |_module|
-      should "include #{_module}" do
-        assert ActivityFeedEvent.included_modules.include?(_module.constantize)
-      end
-    end
-  end
-
   context "associations" do
     should belong_to(:followed)
     should belong_to(:event_source)
@@ -40,8 +29,8 @@ class ActivityFeedEventTest < ActiveSupport::TestCase
     end
 
     should "#description" do
-      followed = create(:project, description: "followed")
-      event_source1 = create(:project, description: "evt_source1")
+      followed = create(:transactable, description: "followed")
+      event_source1 = create(:transactable, description: "evt_source1")
       event_source2 = create(:user_status_update, text: "evt_source2")
 
       @activity_feed_event.followed = followed

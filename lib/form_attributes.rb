@@ -15,13 +15,13 @@ class FormAttributes
   end
 
   def seller
-    UserProfile.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
+    [ :enabled ] + UserProfile.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
     extra_attributes(Category.sellers.roots, 'Category') +
     extra_attributes(CustomModelType.sellers, 'Custom Model')
   end
 
   def buyer
-    UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
+    [ :enabled ] + UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
     extra_attributes(Category.buyers.roots, 'Category') +
     extra_attributes(CustomModelType.buyers, 'Custom Model')
   end

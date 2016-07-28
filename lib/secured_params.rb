@@ -47,6 +47,7 @@ class SecuredParams
       :wrapper_html_options,
       :input_html_options_string,
       :wrapper_html_options_string,
+      :validation_only_on_update,
       valid_values: []
     ]
   end
@@ -1172,6 +1173,8 @@ class SecuredParams
 
   def default_profile
     [
+      :enabled,
+      :instance_profile_type_id,
       properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id)),
       properties_attributes: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id)),
       category_ids: [],
@@ -1181,6 +1184,8 @@ class SecuredParams
 
   def seller_profile
     [
+      :enabled,
+      :instance_profile_type_id,
       properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id)),
       properties_attributes: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id)),
       category_ids: [],
@@ -1190,6 +1195,8 @@ class SecuredParams
 
   def buyer_profile
     [
+      :enabled,
+      :instance_profile_type_id,
       properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id)),
       properties_attributes: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id)),
       category_ids: [],

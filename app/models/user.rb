@@ -365,9 +365,10 @@ class User < ActiveRecord::Base
     buyer_profile || self.build_buyer_profile(instance_profile_type: PlatformContext.current.instance.try("buyer_profile_type"))
   end
 
-  def build_profile
+  def get_default_profile
     default_profile || self.build_default_profile(instance_profile_type: PlatformContext.current.instance.try("default_profile_type"))
   end
+  alias :build_profile :get_default_profile
 
   def custom_validators
     case force_profile

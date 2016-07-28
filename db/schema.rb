@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160727140044) do
+ActiveRecord::Schema.define(version: 20160728160930) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -632,27 +632,28 @@ ActiveRecord::Schema.define(version: 20160727140044) do
   add_index "currencies", ["iso_code"], name: "index_currencies_on_iso_code", using: :btree
 
   create_table "custom_attributes", force: :cascade do |t|
-    t.string   "name",                 limit: 255
+    t.string   "name",                      limit: 255
     t.integer  "instance_id"
     t.integer  "transactable_type_id"
-    t.string   "attribute_type",       limit: 255
-    t.string   "html_tag",             limit: 255
-    t.string   "prompt",               limit: 255
-    t.string   "default_value",        limit: 255
-    t.boolean  "public",                           default: true
+    t.string   "attribute_type",            limit: 255
+    t.string   "html_tag",                  limit: 255
+    t.string   "prompt",                    limit: 255
+    t.string   "default_value",             limit: 255
+    t.boolean  "public",                                default: true
     t.text     "validation_rules"
     t.text     "valid_values"
     t.datetime "deleted_at"
-    t.string   "label",                limit: 255
+    t.string   "label",                     limit: 255
     t.text     "input_html_options"
     t.text     "wrapper_html_options"
     t.text     "hint"
-    t.string   "placeholder",          limit: 255
+    t.string   "placeholder",               limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "target_id"
-    t.string   "target_type",          limit: 255
-    t.boolean  "searchable",                       default: false
+    t.string   "target_type",               limit: 255
+    t.boolean  "searchable",                            default: false
+    t.boolean  "validation_only_on_update",             default: false
   end
 
   add_index "custom_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree
@@ -3178,6 +3179,7 @@ ActiveRecord::Schema.define(version: 20160727140044) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "enabled",                  default: false
   end
 
   add_index "user_profiles", ["instance_id", "user_id", "profile_type"], name: "index_user_profiles_on_instance_id_and_user_id_and_profile_type", unique: true, using: :btree
@@ -3509,6 +3511,10 @@ ActiveRecord::Schema.define(version: 20160727140044) do
     t.datetime "updated_at"
     t.text     "events_metadata"
     t.string   "workflow_type",   limit: 255
+  end
+
+end
+",   limit: 255
   end
 
 end
