@@ -15,7 +15,7 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
 
   # Number of minimum consecutive booking days required for this listing
   def minimum_booking_days
-    (day_pricings + night_pricings).map(&:number_of_units).min
+    (day_pricings + night_pricings).map(&:adjusted_number_of_units).min
   end
 
   def minimum_booking_minutes
