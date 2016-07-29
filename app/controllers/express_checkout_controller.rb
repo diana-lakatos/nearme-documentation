@@ -10,7 +10,7 @@ class ExpressCheckoutController < ApplicationController
       event_tracker.updated_profile_information(reservation.host)
       event_tracker.requested_a_booking(reservation)
 
-      redirect_to dashboard_orders_path
+      redirect_to dashboard_order_path(@order)
     else
       redirect_to order_checkout_path(@order)
     end
