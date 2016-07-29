@@ -7,7 +7,8 @@ class Order < ActiveRecord::Base
   include Modelable
   include Payable
 
-  attr_accessor :skip_checkout_validation, :delivery_ids, :skip_try_to_activate
+  attr_accessor :skip_checkout_validation, :delivery_ids, :skip_try_to_activate, :checkout_update
+
   store_accessor :settings, :validate_on_adding_to_cart, :skip_payment_authorization
 
   has_custom_attributes target_type: 'ReservationType', target_id: :reservation_type_id
@@ -372,7 +373,7 @@ class Order < ActiveRecord::Base
         templates << PlatformContext.current.instance.waiver_agreement_templates
       end
     end
-    templates.flatten
+    templates.flatten.uniq
   end
 
   def additional_charge_types
