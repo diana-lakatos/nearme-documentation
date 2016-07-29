@@ -19,9 +19,7 @@ class Api::BaseController < ActionController::Base
 
   # Ensure the user is authenticated
   def require_authentication
-    if current_user.nil?
-      raise DNM::Unauthorized
-    end
+    raise DNM::Unauthorized unless current_user
   end
 
   def require_authorization
@@ -31,7 +29,7 @@ class Api::BaseController < ActionController::Base
 
   # Return the current user
   def current_user
-    if !auth_token.nil?
+    if auth_token.present?
       @current_user ||= User.find_by(authentication_token: auth_token)
     end
   end
@@ -42,11 +40,11 @@ class Api::BaseController < ActionController::Base
   end
 
   def verified_api_request?
-    if Rails.application.config.verify_api_requests
-      valid_csrf_token? || valid_api_token?
-    else
-      true
-    end
+    skip_api_requests_verification? || valid_csrf_token? || valid_api_token?
+  end
+
+  def skip_api_requests_verification?
+    !Rails.application.config.verify_api_requests
   end
 
   def valid_csrf_token?
