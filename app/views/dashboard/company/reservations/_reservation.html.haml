@@ -66,7 +66,7 @@
     - if reservation.payment.present? && reservation.payment.payment_method.try(:payment_method_type).present?
       = t("dashboard.host_reservations.payment_methods." + reservation.payment.payment_method.try(:payment_method_type).to_s)
     - else
-    = t("dashboard.host_reservations.payment_missing")
+      = t("dashboard.host_reservations.payment_missing")
 
 - if reservation.transactable.possible_delivery?
   .row

@@ -15,6 +15,7 @@ class DelayedReservation < Reservation
     self.attributes = attrs
     self.reservation_type = transactable.transactable_type.reservation_type
     self.settings = reservation_type.try(:settings)
+    self.owner_id = self.user_id
     add_line_item_without_validation_setup
     save(validate: false)
   end

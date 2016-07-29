@@ -52,6 +52,8 @@ en:
       transactable/action_type:
         action_rfq: 'Request for Quote'
         no_action: 'No Action'
+      shipping_rule:
+        processing_time: 'Procesing time (in days)'
   connections:
     facebook:
       count:

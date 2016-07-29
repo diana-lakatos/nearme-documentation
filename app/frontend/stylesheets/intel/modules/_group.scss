@@ -1,3 +1,11 @@
+.group-a {
+  nav {
+    p {
+      margin: 0 0 0 5px;
+    }
+  }
+}
+
 .group-actions {
     @include clear;
 
@@ -242,6 +250,23 @@
   }
 
   .address-form {
+    .map {
+      width: 100%;
+      margin: 20px 0 40px 0;
+
+      div {
+        margin-bottom: 0;
+      }
+
+      img {
+        max-width: inherit;
+      }
+    }
+
+    .remove-address {
+      display: block;
+      margin: 20px 0 0 0;
+    }
 
     &.no-address {
       .remove-address {
@@ -251,19 +276,6 @@
       .map {
         display: none !important;
       }
-    }
-
-    .map {
-      margin: 20px 0 40px 0;
-
-      .map-container {
-        height: 100% !important;
-      }
-    }
-
-    .remove-address {
-      display: block;
-      margin: 20px 0 0 0;
     }
   }
 

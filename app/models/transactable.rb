@@ -568,7 +568,7 @@ class Transactable < ActiveRecord::Base
       action_types.build(
         transactable_type_action_type: tt_action_type,
         type: "Transactable::#{tt_action_type.class.name.demodulize}"
-      )
+      ) unless action_types.any?{ |at| at.transactable_type_action_type == tt_action_type }
     end
     self.action_type ||= action_types.first
   end

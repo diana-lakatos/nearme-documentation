@@ -13,9 +13,7 @@
 
 %br/
 
-= address.city
-,
-= address.state.try(:abbr)
+= [address.city.presence, address.state.try(:abbr).presence].compact.join(',')
 = address.zip
 
 %br/

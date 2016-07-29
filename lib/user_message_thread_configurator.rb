@@ -1,6 +1,6 @@
 class UserMessageThreadConfigurator
 
-  AVAILABLE_CONTEXTS = [Transactable, User, Reservation, RecurringBooking, Purchase]
+  AVAILABLE_CONTEXTS = [Transactable, User, Reservation, RecurringBooking, Purchase, DelayedReservation]
 
   def initialize(user_message, request_params)
     @user_message = user_message
@@ -21,6 +21,7 @@ class UserMessageThreadConfigurator
     AVAILABLE_CONTEXTS.each do |context_class|
       context_id_key = context_class.to_s.foreign_key.to_sym
       context_id_key = :listing_id if context_id_key == :transactable_id
+
       if @request_params[context_id_key].present?
         @message_context = context_class.with_deleted
         @message_context = @message_context.friendly if @message_context.respond_to?(:friendly)
@@ -38,8 +39,7 @@ class UserMessageThreadConfigurator
       @user_message.previous_in_thread.thread_owner
     end
 
-    @user_message.thread_context = @message_context
-    @user_message.thread_context_type = @user_message.thread_context_type.sub('Decorator', '')
+    @user_message.thread_context = @message_context.try(:object)
 
     raise DNM::MessageContextNotAvailable if !@user_message.author_has_access_to_message_context?
   end
