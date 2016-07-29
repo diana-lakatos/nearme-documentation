@@ -123,7 +123,7 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
   def line_items
     @order.line_items.map { |i|
       {
-        name: i.name.strip,
+        name: i.name.try(:strip),
         description: i.respond_to?(:description) ? strip_tags(i.description.to_s.strip) : '',
         quantity: i.quantity.to_i,
         amount: i.total_price_cents
