@@ -51,6 +51,18 @@ module.exports = class PhoneNumbers
         onHide: @updateCtcTriggerState
       }]
 
+    @phoneNumberField.closest('.disabled-catch-container').find('.click-catcher').on 'click', (e) =>
+      if @phoneNumberField.prop('disabled')
+        value = @phoneNumberField.data('disabled-field-notice')
+        if value
+          alert(value)
+
+    @mobileNumberField.closest('.disabled-catch-container').find('.click-catcher').on 'click', (e) =>
+      if @mobileNumberField.prop('disabled')
+        value = @mobileNumberField.data('disabled-field-notice')
+        if value
+          alert(value)
+
   updatePhoneNumber: ->
     @mobileNumberField.prop('readonly', !!@isMobileSameAsPhone())
     @mobileNumberField.val(@phoneNumberField.val()) if @isMobileSameAsPhone()
@@ -77,6 +89,13 @@ module.exports = class PhoneNumbers
 
     @mobileNumberField.prop('disabled', isDisabled).closest('.form-group').toggleClass('disabled', isDisabled)
     @phoneNumberField.prop('disabled', isDisabled).closest('.form-group').toggleClass('disabled', isDisabled)
+
+    if isDisabled
+      @mobileNumberField.attr('placeholder', @mobileNumberField.data('disabled-field-notice'))
+      @phoneNumberField.attr('placeholder', @mobileNumberField.data('disabled-field-notice'))
+    else
+      @mobileNumberField.attr('placeholder', '')
+      @phoneNumberField.attr('placeholder', '')
 
     @updateCtcTrigger()
 

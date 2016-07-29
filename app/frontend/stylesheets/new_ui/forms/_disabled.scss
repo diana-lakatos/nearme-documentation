@@ -5,3 +5,18 @@
         background: $input-bg;
     }
 }
+
+/* Click Catcher */
+/* This works around the fact that disabled inputs eat events */
+.disabled-catch-container {
+  position:relative;
+
+  .click-catcher {
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+  }
+}
+/* End Click Catcher */

@@ -1426,6 +1426,7 @@ en:
       view_profile: 'View Profile'
       view_profile_html: 'View <span class="hidden-xs">Profile</span>'
       submit: 'Save'
+      phone_disabled_field_notice: "Please select a country first."
 
       sections:
         default: 'Default'
