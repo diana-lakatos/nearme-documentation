@@ -57,6 +57,7 @@ class User < ActiveRecord::Base
   has_many :orders
   has_many :purchases
   has_many :shipping_profiles
+  has_many :transactable_line_items, class_name: 'LineItem::Transactable'
   has_many :shipping_addresses, through: :orders, class_name: 'OrderAddress'
   has_many :billing_addresses, through: :orders, class_name: 'OrderAddress'
   has_many :activity_feed_events, as: :followed, dependent: :destroy

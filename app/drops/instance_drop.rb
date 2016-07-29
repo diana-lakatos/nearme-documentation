@@ -1,7 +1,7 @@
 class InstanceDrop < BaseDrop
 
   attr_reader :instance
-  delegate :name, to: :instance
+  delegate :name, :enable_reply_button_on_host_reservations?, to: :instance
 
   def initialize(instance)
     @instance = instance

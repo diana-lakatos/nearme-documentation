@@ -87,4 +87,8 @@ class OrderDrop < BaseDrop
     humanized_money_with_cents_and_symbol(@order.penalty_fee)
   end
 
+  def all_other_orders
+    @order.user.transactable_line_items.where(line_item_source_id: @order.transactable.id).map(&:line_itemable)
+  end
+
 end

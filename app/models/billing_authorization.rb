@@ -20,5 +20,9 @@ class BillingAuthorization < ActiveRecord::Base
 
   validates_presence_of :token, if: lambda { |billing_authorization| billing_authorization.success? }
 
+  def to_liquid
+    @billing_authorization_drop ||= BillingAuthorizationDrop.new(self)
+  end
+
 end
 

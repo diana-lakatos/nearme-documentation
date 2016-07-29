@@ -1382,6 +1382,10 @@ en:
         colors: 'Colors'
 
     user_reservations:
+      approved_offer: 'APPROVED OFFER'
+      send_message: 'SEND MESSAGE'
+      view_case: 'VIEW CASE DETAILS'
+      close_case: 'CLOSE CASE'
       test_mode: 'This reservation was made in Test Mode. No money was actually transferred'
       tax_included: "Tax"
       price: "Price"

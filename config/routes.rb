@@ -769,6 +769,7 @@ DesksnearMe::Application.routes.draw do
             post :confirm
             post :complete
             post :cancel
+            post :archive
           end
 
           resources :payments do

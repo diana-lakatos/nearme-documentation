@@ -40,6 +40,12 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
     redirect_to location_after_save
   end
 
+  def archive
+    @order.touch(:archived_at)
+    flash[:success] = t('flash_messages.dashboard.order.archived')
+    redirect_to action: :index
+  end
+
 
   # TODO this is only used for Purchase but should confirm Reservation and ReservationRequest correctly
   # The idea is to move all host action for all Order types here
@@ -93,7 +99,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   end
 
   def location_after_save
-    dashboard_orders_received_path
+    dashboard_company_orders_received_path
   end
 
   def find_order
