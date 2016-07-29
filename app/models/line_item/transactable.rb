@@ -28,10 +28,6 @@ class LineItem::Transactable < LineItem
     self.unit_price ||= price_calculator.unit_price
   end
 
-  def total_price
-    unit_price * quantity
-  end
-
   def sufficient_stock?
     line_item_source.quantity >= quantity.to_i
   end
