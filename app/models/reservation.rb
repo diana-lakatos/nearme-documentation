@@ -25,7 +25,7 @@ class Reservation < ActiveRecord::Base
   belongs_to :platform_context_detail, :polymorphic => true
   belongs_to :recurring_booking
   belongs_to :reservation_type
-  belongs_to :transactable_pricing, class_name: 'Transactable::Pricing'
+  belongs_to :transactable_pricing, -> { with_deleted }, class_name: 'Transactable::Pricing'
 
   has_one :billing_authorization, as: :reference
   has_one :dimensions_template, as: :entity
