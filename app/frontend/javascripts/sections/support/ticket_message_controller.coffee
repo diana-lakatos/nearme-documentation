@@ -58,8 +58,18 @@ module.exports = class SupportTicketMessageController
             else
               Modal.showContent(data.modal_content)
           error: (xhr) =>
-            if @modal.length > 0
-              @modal.find(".modal-body").html(@uploadAttachment.data('error'))
+            try
+              validJson = JSON.parse(xhr.responseText)
+            catch
+              validJson = false
+
+            if validJson && validJson.error_message
+              error_message = validJson.error_message
             else
-              Modal.showContent(@uploadAttachment.data('error'))
+              error_message = @uploadAttachment.data('error')
+
+            if @modal.length > 0
+              @modal.find(".modal-body").html(error_message)
+            else
+              Modal.showContent(error_message)
 
