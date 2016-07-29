@@ -777,6 +777,7 @@ DesksnearMe::Application.routes.draw do
             member do
               post :refund
               post :capture
+              post :mark_as_paid
             end
           end
 

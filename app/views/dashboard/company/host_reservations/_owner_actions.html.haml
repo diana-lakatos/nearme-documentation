@@ -20,7 +20,7 @@
   - if reservation.remote_payment?
     = link_to  t('dashboard.host_reservations.actions.request_payment'), request_payment_dashboard_company_host_reservation_path(reservation, listing_id: reservation.transactable), class: 'btn btn-warning', data: { confirm: t('dashboard.host_reservations.confirmations.request_payment') }
   - elsif reservation.manual_payment?
-    = form_for reservation, method: :post, url: mark_as_paid_dashboard_company_host_reservation_path(reservation, listing_id: reservation.transactable) do |f|
+    = form_for reservation, method: :post, url: mark_as_paid_dashboard_company_orders_received_payment_path(reservation, reservation.payment.id) do |f|
       = f.submit  t('dashboard.host_reservations.actions.mark_as_paid'), data: { confirm:  t('dashboard.host_reservations.confirmations.mark_as_paid') }, class: 'btn btn-default'
 
 - if reservation.confirmed?

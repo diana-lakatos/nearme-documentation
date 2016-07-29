@@ -2,6 +2,18 @@ class Dashboard::Company::PaymentsController < Dashboard::Company::BaseControlle
   before_filter :find_order
   before_filter :find_payment
 
+
+  def mark_as_paid
+    if @order.manual_payment? && !@order.paid?
+      @order.payment.mark_as_paid!
+      flash[:notice] = t('flash_messages.manage.reservations.payment_confirmed')
+    else
+      flash[:error] = t('flash_messages.manage.reservations.payment_failed')
+    end
+
+    redirect_to :back
+  end
+
   # def capture
   #   unless @order.paid?
   #     payment = @order.payment
