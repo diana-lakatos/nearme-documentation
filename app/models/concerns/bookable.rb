@@ -5,8 +5,7 @@ module Bookable
     inherits_columns_from_association([:company_id, :creator_id], :transactable)
 
     attr_accessor :start_minute, :end_minute, :start_on, :end_on, :schedule_params, :total_amount_check,
-      :dates, :force_recalculate_fees, :last_search_json, :skip_try_to_activate,
-      :dates_fake, :start_time, :booking_type
+      :dates, :force_recalculate_fees, :last_search_json, :dates_fake, :start_time, :booking_type
 
     has_one :address, class_name: 'Address', as: :entity
 
