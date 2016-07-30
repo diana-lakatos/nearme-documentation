@@ -22,7 +22,7 @@ class OrderSearchService
     if @options[:query] && @options[:query] =~ /[P|R|S]\d{8}/
       @orders = @orders.where(id: @options[:query][1..-1].to_i)
     elsif @options[:query].present?
-      @orders = @orders.joins(:line_items).
+      @orders = @orders.joins("INNER JOIN line_items ON line_items.line_itemable_id = orders.id AND line_items.line_itemable_type IN (\'#{Order::ORDER_TYPES.join('\',\'')}\')").
         joins("INNER JOIN transactables ON line_items.line_item_source_id = transactables.id AND line_items.line_item_source_type = 'Transactable'").
         where('transactables.name ILIKE(?)', '%' + @options[:query].to_s + '%')
 
