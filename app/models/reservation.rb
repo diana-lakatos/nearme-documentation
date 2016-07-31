@@ -22,8 +22,6 @@ class Reservation < Order
 
   before_create :set_cancellation_policy
 
-  after_save :try_to_activate!, unless: -> { skip_try_to_activate }
-
   alias_method :seller_type_review_receiver, :creator
   alias_method :buyer_type_review_receiver, :user
 
@@ -43,8 +41,6 @@ class Reservation < Order
   end
 
   scope :for_transactable, -> (transactable) { where(:transactable_id => transactable.id) }
-
-
 
   def add_line_item!(attrs)
     self.attributes = attrs
@@ -318,12 +314,6 @@ class Reservation < Order
     else
       charge_and_confirm!
       WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, self.id)
-    end
-  end
-
-  def try_to_activate!
-    if inactive? && (skip_payment_authorization? || payment && payment.authorized?)
-      activate!
     end
   end
 

@@ -151,9 +151,9 @@ DesksnearMe::Application.routes.draw do
 
     root :to => "home#index"
 
-    get '/404', :to => 'errors#not_found'
-    get '/422', :to => 'errors#server_error'
-    get '/500', :to => 'errors#server_error'
+    match "/404", :to => "errors#not_found", :via => :all
+    match "/422", :to => "errors#server_error", :via => :all
+    match "/500", :to => "errors#server_error", :via => :all
 
     namespace :support do
       root :to => 'dashboard#index'
@@ -777,6 +777,7 @@ DesksnearMe::Application.routes.draw do
             member do
               post :refund
               post :capture
+              post :mark_as_paid
             end
           end
 

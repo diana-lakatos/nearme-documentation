@@ -69,12 +69,12 @@ module ReservationsHelper
 
   def current_user_open_host_reservations_count
     return 0 if current_user.default_company.blank?
-  
+
     current_user.default_company.orders.active.unconfirmed.count
   end
 
   def current_user_open_user_reservations_count
-    current_user.orders.not_archived.count
+    current_user.orders.unconfirmed.not_archived.count
   end
 
   def current_user_orders_count_formatted
