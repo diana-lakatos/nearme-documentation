@@ -469,8 +469,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def reviews
-    @reviews ||= Review.for_reviewables(self.orders.pluck(:id), 'Reservation') +
-      Review.for_reviewables(self.transactable_line_items.pluck(:id), 'LineItem::Transactable')
+    @reviews ||= Review.for_transactables(self.orders.pluck(:id), self.transactable_line_items.pluck(:id))
   end
 
   def has_reviews?
