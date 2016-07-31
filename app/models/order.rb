@@ -280,9 +280,11 @@ class Order < ActiveRecord::Base
 
       trigger_rating_workflow!
 
-      unless Rails.env.test?
+      if Rails.application.config.use_elastic_search
         begin
-          transactable.__elasticsearch__.update_document_attributes(completed_reservations: transactable.orders.reservations.reviewable.count)
+          transactables.each do |transactable|
+            transactable.__elasticsearch__.update_document_attributes(completed_reservations: transactable.orders.reservations.reviewable.count)
+          end
         rescue Elasticsearch::Transport::Transport::Errors::NotFound
         end
       end
