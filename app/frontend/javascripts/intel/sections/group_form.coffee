@@ -29,6 +29,8 @@ module.exports = class GroupForm
     $addressField = $('[data-behavior=address-autocomplete]', $locationForm)
     $removeAddress = $('.remove-address')
 
+    map = @addressFieldController.map
+
     $addressField.after($removeAddress)
 
     if $addressField.val().length
@@ -44,8 +46,11 @@ module.exports = class GroupForm
     google.maps.event.addListener @autocomplete, 'place_changed', =>
       $markedToDeleteField.val(false)
       $locationForm.removeClass('no-address')
-      setTimeout =>
-        google.maps.event.trigger(@addressFieldController.map.map, 'resize')
+
+      setTimeout (=>
+        google.maps.event.trigger(map.map, 'resize')
+        map.map.setCenter(map.marker.getPosition())
+      ), 0
 
   initGroupTypeDescription: ->
     $groupTypeSelect = $('#group_transactable_type_id')
