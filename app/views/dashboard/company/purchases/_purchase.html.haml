@@ -143,4 +143,4 @@
           = link_to t('buy_sell_market.checkout.labels.actions.resume'),resume_dashboard_company_orders_received_path(purchase), data: { confirm: t('buy_sell_market.checkout.labels.actions.confirm_resume') }, class: 'btn btn-primary'
 
   .col-sm-3.col-sm-pull-9
-    %small= t('orders.labels.order_placed_html', date: purchase.display_completed_at)
+    %small= t('orders.labels.order_placed_html', date: l(purchase.created_at.to_date, format: :long))
