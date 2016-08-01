@@ -17,7 +17,7 @@ class CheckoutController < ApplicationController
 
   def show
     @order.try(:last_search_json=, cookies[:last_search])
-    @order.try(:before_checkout_callback)
+    @order.object.try(:before_checkout_callback)
 
     event_tracker.reviewed_a_booking(@order)
   end

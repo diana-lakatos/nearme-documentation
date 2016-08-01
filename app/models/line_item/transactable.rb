@@ -1,15 +1,6 @@
 class LineItem::Transactable < LineItem
 
-  # attr_accessor :dates, :start_minute, :end_minute, :booking_type, :start_time
-  # inherits_columns_from_association([:quantity], :order_item)
-
-  # belongs_to :transactable, -> { with_deleted }, class_name: "::Transactable"
-  # belongs_to :transactable_pricing, -> { with_deleted }, class_name: "::Transactable::Pricing"
-  # belongs_to :order_item
-
-  # has_many :periods, :class_name => "ReservationPeriod", :inverse_of => :transactable_line_item, :dependent => :destroy, foreign_key: "line_item_id"
   before_create :build_service_fee, :build_host_fee
-
 
   delegate :price_calculator, to: :line_itemable
   delegate :creator_id, :transactable_type_id, to: :line_item_source, allow_nil: true

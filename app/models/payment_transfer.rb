@@ -42,6 +42,8 @@ class PaymentTransfer < ActiveRecord::Base
   #
   # Note that this is the gross amount excluding the service fee that we charged
   # to the end user. The service fee is our cut of the revenue.
+
+  # monetize :total_service_fee_cents, with_model_currency: :currency
   monetize :amount_cents, with_model_currency: :currency
   monetize :service_fee_amount_guest_cents, with_model_currency: :currency
   monetize :service_fee_amount_host_cents, with_model_currency: :currency
@@ -121,6 +123,7 @@ class PaymentTransfer < ActiveRecord::Base
   def total_service_fee
     Money.new(total_service_fee_cents, currency)
   end
+
 
   private
 

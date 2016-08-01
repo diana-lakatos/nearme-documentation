@@ -8,7 +8,6 @@ module Bookable
       :dates, :force_recalculate_fees, :last_search_json, :skip_try_to_activate,
       :dates_fake, :start_time, :booking_type
 
-    belongs_to :transactable_pricing, class_name: 'Transactable::Pricing'
     has_one :address, class_name: 'Address', as: :entity
 
     delegate :location, :transactable_type, to: :transactable

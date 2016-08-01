@@ -21,7 +21,7 @@
   - if fields.include? 'action_rfq'
     = render "dashboard/company/transactables/form_fields/action_rfq", f: f
 
-  - if fields.include?('availability_rules') || fields.include?('schedule')
+  - if fields.include?('availability_rules')
     = render 'dashboard/company/transactables/form_fields/availability', f: f
 
   - if fields.include? 'minimum_booking_minutes'

@@ -46,7 +46,6 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
     redirect_to action: :index
   end
 
-
   # TODO this is only used for Purchase but should confirm Reservation and ReservationRequest correctly
   # The idea is to move all host action for all Order types here
   def confirm
