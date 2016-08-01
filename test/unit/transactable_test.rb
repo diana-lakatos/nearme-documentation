@@ -317,18 +317,15 @@ class TransactableTest < ActiveSupport::TestCase
       @transactable = FactoryGirl.create(:transactable)
       @transactable.links << FactoryGirl.create(:link)
 
-      assert_equal 1, @transactable.links.count
       @link = @transactable.links.first
 
       links_attributes = { "0" => { "text" => "Changed", id: @link.id }}
-      @transactable.assign_attributes({"links_attributes" => links_attributes})
-      @transactable.save
+      @transactable.update_attributes({"links_attributes" => links_attributes})
       @transactable.reload
       assert_equal "Changed", @transactable.links.first.text
 
       links_attributes = { "0" => { "text" => "Changed", id: @link.id, _destroy: true }}
-      @transactable.assign_attributes({"links_attributes" => links_attributes})
-      @transactable.save
+      @transactable.update_attributes({"links_attributes" => links_attributes})
       @transactable.reload
       assert_equal nil, @transactable.links.first
 

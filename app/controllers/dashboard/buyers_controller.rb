@@ -10,10 +10,16 @@ class Dashboard::BuyersController < Dashboard::BaseController
     current_user.assign_attributes(user_params)
     if current_user.save
       flash.now[:success] = t('flash_messages.dashboard.buyer.updated')
+      if session[:after_onboarding_path].present?
+        redirect_to session[:after_onboarding_path]
+        session[:after_onboarding_path] = nil
+      else
+        render :edit
+      end
     else
       flash.now[:error] = current_user.errors.full_messages.join("\n")
+      render :edit
     end
-    render :edit
   end
 
   protected
