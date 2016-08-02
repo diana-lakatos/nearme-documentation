@@ -396,6 +396,8 @@ DesksnearMe::Application.routes.draw do
             post :regenerate_versions
           end
         end
+
+        resources :default_images
       end
 
       namespace :manage do

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160727140044) do
+ActiveRecord::Schema.define(version: 20160801114529) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -790,6 +790,24 @@ ActiveRecord::Schema.define(version: 20160727140044) do
   add_index "data_uploads", ["importable_id", "importable_type"], name: "index_data_uploads_on_importable_id_and_importable_type", using: :btree
   add_index "data_uploads", ["instance_id"], name: "index_data_uploads_on_instance_id", using: :btree
   add_index "data_uploads", ["target_id", "target_type"], name: "index_data_uploads_on_target_id_and_target_type", using: :btree
+
+  create_table "default_images", force: :cascade do |t|
+    t.integer  "theme_id"
+    t.integer  "instance_id"
+    t.string   "photo_uploader"
+    t.string   "photo_uploader_version"
+    t.string   "photo_uploader_image"
+    t.text     "photo_uploader_image_transformation_data"
+    t.string   "photo_uploader_image_original_url"
+    t.datetime "photo_uploader_image_versions_generated_at"
+    t.integer  "photo_uploader_image_original_width"
+    t.integer  "photo_uploader_image_original_height"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "default_images", ["instance_id"], name: "index_default_images_on_instance_id", using: :btree
+  add_index "default_images", ["theme_id"], name: "index_default_images_on_theme_id", using: :btree
 
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",                                 default: 20
