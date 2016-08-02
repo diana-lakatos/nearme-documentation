@@ -92,7 +92,7 @@ class PageTest < ActiveSupport::TestCase
   end
 
   def expected_html_content
-    '<h1>FAQ</h1>' + "\n\n" + '<p><em><a href="http://example.com">Checking link</a>' + "\n" + '</em><a href="http://allowed-domain.com/cool/path" rel="nofollow">Checking link</a></p>'
+    '<h1>FAQ</h1>' + "\n\n" + '<p><em><a href="http://example.com">Checking link</a>' + "\n" + '</em><a href="http://allowed-domain.com/cool/path">Checking link</a></p>'
   end
 end
 

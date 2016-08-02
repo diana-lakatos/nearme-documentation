@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160727140044) do
+ActiveRecord::Schema.define(version: 20160801203847) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -747,6 +747,8 @@ ActiveRecord::Schema.define(version: 20160727140044) do
     t.datetime "externally_created_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.json     "json_content",          default: {}
+    t.text     "fields",                default: [], array: true
   end
 
   add_index "data_source_contents", ["instance_id", "data_source_id"], name: "index_data_source_contents_on_instance_id_and_data_source_id", using: :btree
@@ -762,6 +764,7 @@ ActiveRecord::Schema.define(version: 20160727140044) do
     t.datetime "last_synchronized_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "label"
   end
 
   add_index "data_sources", ["instance_id", "data_sourcable_id", "data_sourcable_type"], name: "index_data_sources_on_data_sourcable", using: :btree

@@ -7,6 +7,4 @@
 %style
   = @page.css_content
 
-.row-fluid
-  .content-wrapper.span8.offset2
-    = LiquidView.new(self).render(@page.html_content)
+= LiquidView.new(self).render(@page.html_content)
