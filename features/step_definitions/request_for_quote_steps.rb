@@ -3,6 +3,7 @@ Given /^request for feature is enabled$/ do
 end
 
 When /^I select to request quote( and review)? space for:$/ do |and_review, table|
+  page.find('a[href=".hour-booking-1"]').click()
   bookings = extract_reservation_options(table)
   next if bookings.empty?
 
