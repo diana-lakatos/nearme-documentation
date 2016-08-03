@@ -1,7 +1,6 @@
 .checkout-wizard{ :"data-shipping-country-controller" => true, :"data-payment-controller" => true  }
   .page-wrapper
     %section.checkout-form
-
       .container-fluid
         %h2= t 'buy_sell_market.checkout.labels.order_summary'
         - first_item = @order.line_items.first || OpenStruct.new(included_tax_total_rate: 0, additional_tax_total_rate: 0)
@@ -22,7 +21,7 @@
             %th= t 'buy_sell_market.checkout.labels.total'
 
           %tbody
-            - @order.line_items.order(:created_at).decorate.each do |item|
+            - @order.line_items.decorate.sort_by { |l| l.cart_position }.each do |item|
               %tr{ data: { line_item_class: item.object.class.name.demodulize }}
                 %td= item.name
                 - unless item.included_tax_total_rate.zero?
