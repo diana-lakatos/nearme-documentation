@@ -8,8 +8,8 @@
       %small= resource.owner.email
   %td
     - # Some conditionals here to handle legacy/old records which are invalid.
-    - if resource.listing
-      %div= resource.listing.name
+    - if resource.transactable
+      %div= resource.transactable.name
 
       - if resource.company
         %div
