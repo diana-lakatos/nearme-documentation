@@ -11,7 +11,7 @@
           - platform_context.transactable_types.each do |tt|
             = render partial: 'layouts/list_your_bookable', locals: { transactable_type: tt }
   - if user_signed_in?
-    - if buyable? && current_user.cart_orders.any? && HiddenUiControls.find('main_menu/cart').visible?
+    - if current_instance.use_cart? && current_user.cart_orders.any? && HiddenUiControls.find('main_menu/cart').visible?
       %li
         - cart = CartDecorator.new(current_user)
         = link_to cart_index_path do
@@ -47,15 +47,6 @@
           = link_to main_app.dashboard_company_host_reservations_path do
             = t('top_navbar.bookings_received')
             = current_user_open_host_reservations_count_formatted
-
-      - if (subscribable? && HiddenUiControls.find('main_menu/my_subscriptions').visible?) && (!current_instance.split_registration || current_user.buyer_profile.present?)
-        %li= link_to t('top_navbar.my_subscriptions'), main_app.active_dashboard_user_recurring_bookings_path
-
-      - if (platform_context.buyable? && HiddenUiControls.find('main_menu/my_orders').visible?) && (!current_instance.split_registration || current_user.buyer_profile.present?)
-        %li= link_to t('top_navbar.my_orders'), main_app.dashboard_orders_path
-
-      - if (HiddenUiControls.find('main_menu/my_bids').visible? && platform_context.biddable?) && (!current_instance.split_registration || current_user.buyer_profile.present?)
-        %li= link_to t('top_navbar.user_bids'), main_app.dashboard_user_bids_path
 
       - if platform_context.instance.wish_lists_enabled? && HiddenUiControls.find('main_menu/wish_list').visible?
         %li= link_to t('wish_lists.name'), main_app.dashboard_wish_list_items_path

@@ -53,7 +53,6 @@ class Purchase < Order
     self.transactable_line_items.each(&:return_transactable_quantity!)
   end
 
-
   def with_payment?
     true
   end
@@ -95,6 +94,14 @@ class Purchase < Order
   end
 
   def remote_payment?
+    false
+  end
+
+  def sufficient_stock?
+    transactable_line_items.map{ |line_item| return line_item unless line_item.sufficient_stock? }
+    transactable_line_items.group_by(&:line_item_source).map do |transactable, line_items|
+      return transactable if transactable.quantity < line_items.sum(&:quantity)
+    end
     false
   end
 end

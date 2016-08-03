@@ -256,29 +256,16 @@ class Instance < ActiveRecord::Base
     payout_gateways(country, currency).first
   end
 
-  #TODO remove buyable biddable etc.
-  def buyable?
-    false
-  end
-
   def bookable?
-    @bookable ||= action_types.any?
+    @bookable ||= action_types.bookable.enabled.joins(:transactable_type).where(transactable_types: {deleted_at: nil}).any?
   end
 
   def projectable?
     @projectable ||= project_types.any?
   end
 
-  def biddable?
-    false
-  end
-
-  def subscribable?
-    @subscribable ||= action_types.where(type: 'TransactableType::SubscriptionBooking').enabled.any?
-  end
-
   def marketplace_type
-    TransactableType::AVAILABLE_TYPES[buyable? ? 1 : 0]
+    TransactableType::AVAILABLE_TYPES[0]
   end
 
   def manual_transfers?

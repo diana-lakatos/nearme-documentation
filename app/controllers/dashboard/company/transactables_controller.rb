@@ -57,14 +57,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def edit
-    @transactable_type.action_types.bookable.each do |tt_action_type|
-      @transactable.action_types.where(transactable_type_action_type: tt_action_type).first_or_initialize(
-        type: "Transactable::#{tt_action_type.class.name.demodulize}"
-      )
-    end
-    if @transactable.action_type.nil? || !@transactable.action_type.transactable_type_action_type.enabled?
-      @transactable.action_type = @transactable.action_types.find{ |at| at.transactable_type_action_type.enabled? }
-    end
+    @transactable.initialize_action_types
     @photos = @transactable.photos
     @attachments = @transactable.attachments
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
@@ -89,6 +82,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
           redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
         else
           @global_errors = filter_error_messages(@transactable.errors.full_messages)
+          @transactable.initialize_action_types
           @photos = @transactable.photos
           @attachments = @transactable.attachments
           render :edit

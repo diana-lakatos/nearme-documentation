@@ -2256,6 +2256,7 @@ en:
       per_unit: 'Per Unit'
       number_of_units: 'Number Of Units'
       not_bookable: 'Suggest date'
+      not_purchasable: 'Out of stock'
       documents: 'Documents'
     filters:
       open: 'Open'

@@ -9,7 +9,7 @@ class CheckoutController < ApplicationController
   before_filter :build_payment_documents, only: [:show, :back]
   # before_filter :check_step, only: [:show, :update]
   # before_filter :set_state, only: [:show]
-  # before_filter :check_qty_on_step, only: [:show, :update]
+  before_filter :check_qty, only: [:show, :update]
   # before_filter :assign_order_attributes, only: [:update]
   # before_filter :set_payment_methods, only: [:show, :update]
   before_filter :set_countries_states, only: [:show, :update, :back]
@@ -121,10 +121,14 @@ class CheckoutController < ApplicationController
     end
   end
 
+  def check_qty
+    if transactable_wo_qty = @order.sufficient_stock?
+      flash[:error] = t("activerecord.errors.models.order.transactable_quantity", transactable_name: transactable_wo_qty.name)
+      redirect_to cart_index_path
+    end
+  end
+
   def order_params
-    # if params[:payment_method_nonce] && params[:order][:payment]
-    #   params[:order][:payment][:payment_method_nonce] = params.delete(:payment_method_nonce)
-    # end
     if params[:order] && !params[:order].blank?
       params.require(:order).permit(secured_params.order(@order.reservation_type) )
     else
