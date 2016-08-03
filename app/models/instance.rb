@@ -102,6 +102,7 @@ class Instance < ActiveRecord::Base
   has_many :form_components, as: :form_componentable, dependent: :destroy
   has_many :scheduled_uploaders_regenerations
 
+  validates :id, uniqueness: true
   validates :name, presence: true, length: { maximum: 255 }
   validates :marketplace_password, presence: { if: :password_protected }, length: { maximum: 255 }
   validates :password_protected, presence: { if: :test_mode, message: I18n.t("activerecord.errors.models.instance.test_mode_needs_password") }

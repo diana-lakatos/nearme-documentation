@@ -996,6 +996,15 @@ ActiveRecord::Schema.define(version: 20160727140044) do
 
   add_index "groups", ["instance_id", "creator_id"], name: "index_groups_on_instance_id_and_creator_id", using: :btree
 
+  create_table "help_contents", force: :cascade do |t|
+    t.string   "slug",       null: false
+    t.text     "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "help_contents", ["slug"], name: "index_help_contents_on_slug", unique: true, using: :btree
+
   create_table "host_fee_line_items", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "user_id"
