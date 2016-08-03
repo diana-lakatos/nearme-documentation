@@ -32,6 +32,10 @@ class LineItem::Transactable < LineItem
     line_item_source.quantity >= quantity.to_i
   end
 
+  def insufficient_stock?
+    !sufficient_stock?
+  end
+
   def validate_transactable_quantity(order)
     unless sufficient_stock?
       order.errors.add :base,

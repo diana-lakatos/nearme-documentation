@@ -1,5 +1,7 @@
 class Purchase < Order
 
+  validate :check_quantities, if: :skip_checkout_validation
+
   state_machine :state, initial: :inactive do
     after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:return_transactable_quantity!]
     # after_transition confirmed: :completed, do: [:set_archived_at!]
@@ -17,20 +19,27 @@ class Purchase < Order
     self.reservation_type = transactable.transactable_type.reservation_type
     self.currency = transactable.try(:currency)
     self.additional_charge_ids = attrs[:additional_charge_ids]
-
-    transactable_line_items.build(
-      name: transactable.name,
-      transactable_pricing: transactable_pricing,
-      quantity: attrs[:quantity],
-      line_item_source: transactable,
-      unit_price: transactable_pricing.price,
-      line_itemable: self,
-      service_fee_guest_percent: transactable_pricing.action.service_fee_guest_percent,
-      service_fee_host_percent: transactable_pricing.action.service_fee_host_percent,
-    )
+    if transactable_line_item = transactable_line_items.find{ |li| li.line_item_source == transactable }
+      transactable_line_item.quantity += attrs[:quantity].to_i
+    else
+      transactable_line_items.build(
+        name: transactable.name,
+        transactable_pricing: transactable_pricing,
+        quantity: attrs[:quantity],
+        line_item_source: transactable,
+        unit_price: transactable_pricing.price,
+        line_itemable: self,
+        service_fee_guest_percent: transactable_pricing.action.service_fee_guest_percent,
+        service_fee_host_percent: transactable_pricing.action.service_fee_host_percent,
+      )
+    end
 
     self.skip_checkout_validation = true
     self.save
+  end
+
+  def check_quantities
+    errors.add(:base, I18n.t("activerecord.errors.models.order.maximim_quantity")) if transactable_line_items.any?(&:insufficient_stock?)
   end
 
   def charge_and_confirm!
@@ -97,11 +106,4 @@ class Purchase < Order
     false
   end
 
-  def sufficient_stock?
-    transactable_line_items.map{ |line_item| return line_item unless line_item.sufficient_stock? }
-    transactable_line_items.group_by(&:line_item_source).map do |transactable, line_items|
-      return transactable if transactable.quantity < line_items.sum(&:quantity)
-    end
-    false
-  end
 end

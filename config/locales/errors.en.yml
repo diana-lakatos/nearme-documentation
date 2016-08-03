@@ -49,6 +49,7 @@ en:
               total_amount_changed: "Looks like the total price of this reservation has changed. Please verify all prices."
         order:
           transactable_quantity: "Exceeded quantity for %{transactable_name}, please adjust listing quantity to confirm that order."
+          maximim_quantity: "Exceeded quantity for the product, please adjust the quantity to add this product to cart."
         merchant_account:
           attributes:
             account_type:

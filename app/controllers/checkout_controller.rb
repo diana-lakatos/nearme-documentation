@@ -1,19 +1,10 @@
 class CheckoutController < ApplicationController
 
-  # skip_before_filter :log_out_if_token_exists
-  # skip_before_filter :filter_out_token
-
   before_filter :authenticate_user!
   before_filter :set_theme
   before_filter :set_order
   before_filter :build_payment_documents, only: [:show, :back]
-  # before_filter :check_step, only: [:show, :update]
-  # before_filter :set_state, only: [:show]
-  before_filter :check_qty, only: [:show, :update]
-  # before_filter :assign_order_attributes, only: [:update]
-  # before_filter :set_payment_methods, only: [:show, :update]
   before_filter :set_countries_states, only: [:show, :update, :back]
-
 
   def show
     @order.try(:last_search_json=, cookies[:last_search])
@@ -118,13 +109,6 @@ class CheckoutController < ApplicationController
           )
         end
       end
-    end
-  end
-
-  def check_qty
-    if transactable_wo_qty = @order.sufficient_stock?
-      flash[:error] = t("activerecord.errors.models.order.transactable_quantity", transactable_name: transactable_wo_qty.name)
-      redirect_to cart_index_path
     end
   end
 
