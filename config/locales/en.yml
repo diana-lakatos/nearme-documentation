@@ -1074,6 +1074,7 @@ en:
         choose_file: 'Choose file'
         no_file_chosen: 'No file chosen'
         actions:
+          archive: 'Archive order'
           approve: 'Approve Order'
           confirm: 'Confirm'
           confirm_approve: 'Are you sure you want to approve this order?'
