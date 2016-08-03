@@ -418,7 +418,17 @@ class InstanceView < ActiveRecord::Base
     'dashboard/company/host_reservations/client_info_area' => {
       is_partial: true,
       reservation: 'ReservationDrop'
-    }
+    },
+
+    'checkout/summary' => {
+      is_partial: true,
+      order: 'OrderDrop'
+    },
+    'checkout/sidebar' => {
+      is_partial: true,
+      order: 'OrderDrop'
+    },
+
   }.sort.to_h.freeze
 
   scope :for_instance_id, ->(instance_id) {

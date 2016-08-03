@@ -41,4 +41,19 @@ class OrderDrop < BaseDrop
     false
   end
 
+  def included_tax?
+    @first_line_item =
+    first_line_item.included_tax_total_rate.zero? == false
+  end
+
+  def additional_tax?
+    first_line_item.additional_tax_total_rate.zero? == false
+  end
+
+  private
+    def first_line_item
+      @first_line_item ||= @order.line_items.first || OpenStruct.new(included_tax_total_rate: 0, additional_tax_total_rate: 0)
+      @first_line_item
+    end
+
 end
