@@ -10,13 +10,13 @@
   %tr
     %th Listing
     %td
-      %div= resource.listing.name
+      %div= resource.transactable.name
       %div
-        %small= resource.listing.company.name
+        %small= resource.transactable.company.name
       %div
-        %small= resource.listing.location.address
+        %small= resource.transactable.location.address
       %div
-        %small= link_to resource.listing.creator.name, admin_user_url(resource.listing.creator)
+        %small= link_to resource.transactable.creator.name, admin_user_url(resource.transactable.creator)
 
   %tr
     %th Quantity
