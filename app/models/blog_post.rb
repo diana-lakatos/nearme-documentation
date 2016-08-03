@@ -17,7 +17,7 @@ class BlogPost < ActiveRecord::Base
   mount_uploader :author_avatar, SimpleAvatarUploader
 
   scope :by_date, -> { order('COALESCE(published_at, created_at) DESC') }
-  scope :published, -> { where("published_at < ? OR published_at IS NULL", Time.zone.now ) }
+  scope :published, -> { where('published_at < ? OR published_at IS NULL', Time.zone.now ) }
 
 
   def previous_blog_post

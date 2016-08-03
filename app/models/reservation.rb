@@ -22,8 +22,6 @@ class Reservation < Order
 
   before_create :set_cancellation_policy
 
-  after_save :try_to_activate!, unless: -> { skip_try_to_activate }
-
   alias_method :seller_type_review_receiver, :creator
   alias_method :buyer_type_review_receiver, :user
 
@@ -32,9 +30,7 @@ class Reservation < Order
   delegate :action, to: :transactable_pricing
   delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :action, allow_nil: true
   delegate :display_additional_charges?, to: :transactable, allow_nil: true
-  delegate :remote_payment?, :manual_payment?, :active_merchant_payment?, :paid?, :billing_authorizations, to: :payment, allow_nil: true
   delegate :address_in_radius, to: :reservation_type, allow_nil: true
-
 
   state_machine :state, initial: :inactive do
     after_transition confirmed: [:cancelled_by_guest], do: [:charge_penalty!]
@@ -43,8 +39,6 @@ class Reservation < Order
   end
 
   scope :for_transactable, -> (transactable) { where(:transactable_id => transactable.id) }
-
-
 
   def add_line_item!(attrs)
     self.attributes = attrs

@@ -14,6 +14,8 @@ class ShippingProfile < ActiveRecord::Base
 
   scope :global, -> { where(global: true) }
 
+  validates :name, presence: true
+
   SHIPPING_TYPES = %w(predefined shippo_single shippo_return).freeze
 
   SHIPPING_TYPES.each do |type|

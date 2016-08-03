@@ -292,6 +292,8 @@ class SecuredParams
       :default_country,
       :default_currency,
       :default_oauth_signin_provider,
+      :default_products_search_view,
+      :enable_geo_localization,
       :expand_orders_list,
       :facebook_consumer_key,
       :facebook_consumer_secret,

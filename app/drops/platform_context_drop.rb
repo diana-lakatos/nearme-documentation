@@ -86,7 +86,8 @@ class PlatformContextDrop < BaseDrop
     :site_name, :support_url, :support_email, :logo_image, :hero_image, :tagline, :homepage_content,
     :is_company_theme?, :call_to_action, :buyable?, :bookable?, :transactable_types,
     :bookable_nouns, :bookable_nouns_plural, :search_input_name, :facebook_key, :service_types,
-    :wish_lists_icon_set, :seller_attachments_enabled?, :wish_lists_enabled?, :webhook_token, :instance, to: :platform_context_decorator
+    :wish_lists_icon_set, :seller_attachments_enabled?, :wish_lists_enabled?, :webhook_token, :instance, :enable_geo_localization,
+    to: :platform_context_decorator
 
 
   def initialize(platform_context_decorator)

@@ -24,7 +24,7 @@ class ExpressCheckoutControllerTest < ActionController::TestCase
     ActiveMerchant::Billing::PaypalExpressGateway.any_instance.stubs(:authorize).returns(response)
 
     get :return, { order_id: @reservation.id, token: 'token', "PayerID": "payer_identification" }
-    assert_redirected_to dashboard_orders_path
+    assert_redirected_to dashboard_order_path(@reservation)
     assert @reservation.reload.unconfirmed?
   end
 

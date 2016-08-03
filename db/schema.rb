@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160728160930) do
+ActiveRecord::Schema.define(version: 20160801203847) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -748,6 +748,8 @@ ActiveRecord::Schema.define(version: 20160728160930) do
     t.datetime "externally_created_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.json     "json_content",          default: {}
+    t.text     "fields",                default: [], array: true
   end
 
   add_index "data_source_contents", ["instance_id", "data_source_id"], name: "index_data_source_contents_on_instance_id_and_data_source_id", using: :btree
@@ -763,6 +765,7 @@ ActiveRecord::Schema.define(version: 20160728160930) do
     t.datetime "last_synchronized_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "label"
   end
 
   add_index "data_sources", ["instance_id", "data_sourcable_id", "data_sourcable_type"], name: "index_data_sources_on_data_sourcable", using: :btree
@@ -1305,6 +1308,7 @@ ActiveRecord::Schema.define(version: 20160728160930) do
     t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
+    t.boolean  "enable_geo_localization",                                                           default: true
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -2572,7 +2576,7 @@ ActiveRecord::Schema.define(version: 20160728160930) do
     t.integer "taggings_count",             default: 0
   end
 
-  add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
+  add_index "tags", ["name", "instance_id"], name: "tags_idx", unique: true, using: :btree
 
   create_table "tax_rates", force: :cascade do |t|
     t.datetime "deleted_at"
@@ -3511,10 +3515,6 @@ ActiveRecord::Schema.define(version: 20160728160930) do
     t.datetime "updated_at"
     t.text     "events_metadata"
     t.string   "workflow_type",   limit: 255
-  end
-
-end
-",   limit: 255
   end
 
 end

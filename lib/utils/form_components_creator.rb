@@ -136,7 +136,7 @@ module Utils
         },
         {
           name: "Please tell us about the #{@form_componentable.name} you're listing",
-          fields: [{ 'transactable' => 'name' }, { 'transactable' => 'description' }, { 'transactable' => 'listing_type' }, { 'transactable' => 'custom_type' }, { 'transactable' => 'quantity' }, { 'transactable' => 'currency' }, { 'transactable' => 'price' }, { 'transactable' => 'photos' } ]
+          fields: [{ 'transactable' => 'name' }, { 'transactable' => 'description' }, { 'transactable' => 'listing_type' }, { 'transactable' => 'custom_type' }, { 'transactable' => 'quantity' }, { 'transactable' => 'currency' }, { 'transactable' => 'price' }, { 'transactable' => 'availability_rules' }, { 'transactable' => 'photos' } ]
         },
         {
           name: "And finally, your contact information?",
@@ -152,7 +152,7 @@ module Utils
           {
             name: 'Details', fields: %w( name listing_type description amenity_types photos location_id waiver_agreement_templates documents_upload approval_requests ).map {|field| { 'transactable' => field } }
           },
-          { name: 'Pricing & Availability', fields: %w( confirm_reservations enabled price schedule currency quantity book_it_out exclusive_price action_rfq capacity ).map {|field| { 'transactable' => field } }
+          { name: 'Pricing & Availability', fields: %w( confirm_reservations enabled price schedule availability_rules currency quantity book_it_out exclusive_price action_rfq capacity ).map {|field| { 'transactable' => field } }
           }
         ],
         'new_dashboard')

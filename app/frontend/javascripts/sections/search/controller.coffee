@@ -45,8 +45,7 @@ module.exports = class SearchController
     @queryField = @form.find('input[name="loc"]')
     @keywordField = @form.find('input[name="query"]')
 
-    query_value = urlUtil.getParameterByName('loc')
-
+    urlUtil.getParameterByName('loc')
 
     @queryField.bind 'change', =>
       @fieldChanged('query', @queryField.val())
@@ -82,6 +81,10 @@ module.exports = class SearchController
 
   determineUserLocation: ->
     return unless Modernizr.geolocation
+
+    @form.find(".geolocation .ico-crosshairs").hide()
+    @form.find(".geolocation .geo-loading").show()
+
     navigator.geolocation.getCurrentPosition (position) =>
       deferred = @geocoder.reverseGeocodeLatLng(position.coords.latitude, position.coords.longitude)
       deferred.done (resultset) =>
@@ -95,6 +98,9 @@ module.exports = class SearchController
           @queryField.val(cityAndStateAddress).data('placeholder', cityAndStateAddress)
           @fieldChanged('query', @queryField.val())
           @setGeolocatedQuery(@queryField.val(), @cached_geolocate_me_result_set)
+
+          @form.find(".geolocation .ico-crosshairs").show()
+          @form.find(".geolocation .geo-loading").hide()
 
   # Is the given query currently geolocated by the search
   isQueryGeolocated: (query) ->

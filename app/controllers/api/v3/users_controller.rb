@@ -19,6 +19,7 @@ module Api
           referrer_type: PlatformContext.current.platform_context_detail.class.to_s,
           signed_up_via: 'api'
         })
+        sign_in(@user)
         ReengagementNoBookingsJob.perform_later(72.hours.from_now, @user.id)
         case @role
         when 'default'

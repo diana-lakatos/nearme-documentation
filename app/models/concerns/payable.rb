@@ -29,6 +29,9 @@ module Payable
     before_create :build_first_line_item
     after_save :create_additional_charges
 
+    delegate :remote_payment?, :manual_payment?, :active_merchant_payment?, :paid?, :billing_authorizations, to: :payment, allow_nil: true
+
+
     def authorize_payment
       if (payment && payment.valid? && payment.pending?)
         if (skip_payment_authorization? || payment.authorize) && inactive?
