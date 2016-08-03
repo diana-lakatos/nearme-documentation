@@ -6,7 +6,7 @@ class Transactable::ActionType < ActiveRecord::Base
   AVAILABILE_UNITS = %w(hour day day_month night night_month event subscription_day subscription_month).freeze
 
   belongs_to :instance
-  belongs_to :transactable, -> { with_deleted }
+  belongs_to :transactable, -> { with_deleted }, touch: true
   belongs_to :transactable_type_action_type, class_name: '::TransactableType::ActionType'
   has_many :pricings, as: :action, inverse_of: :action
 
@@ -109,4 +109,3 @@ class Transactable::ActionType < ActiveRecord::Base
   end
 
 end
-
