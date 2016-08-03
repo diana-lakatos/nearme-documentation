@@ -37,11 +37,18 @@ class LineItem < ActiveRecord::Base
   scope :by_period, -> (start_date, end_date = Time.zone.today.end_of_day) {
     where(created_at: start_date..end_date)
   }
+  scope :by_archived_at, -> (start_date, end_date = Time.zone.today.end_of_day) {
+    join_orders.where(['orders.archived_at BETWEEN ? AND ?', start_date, end_date])
+  }
 
   # TODO make sure that for all type of orders line_items.user_id == trasnactables.creator_id
   # and switch to user_id
   scope :of_lister, -> (lister) { where('transactables.creator_id = ?', lister.id) }
   scope :of_order_owner, -> (owner) { join_orders.where('orders.user_id = ?', owner.id) }
+
+  def archived_at
+    line_itemable.archived_at
+  end
 
   def cart_position
     10

@@ -21,7 +21,7 @@
 
       = render 'review_image', order_image: feedback.order_image, review_target_image: feedback.review_target_image(rating_system.subject), feedback: feedback, feedback_type: rating_system.subject
 
-      - created_at = is_completed ? feedback.reviewable.created_at : feedback.created_at
+      - archived_at = is_completed ? feedback.reviewable.archived_at : feedback.archived_at
       - order_id = (is_completed ? feedback.reviewable_id : feedback.id)
 
       - view_order_link = nil
@@ -40,7 +40,7 @@
           - else
             - link_to_user_profile = link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(feedback.line_itemable.company.creator)
 
-      = render 'dashboard/reviews/order_info', created_at: I18n.l(created_at.to_date, format: :long), order_id: order_id, feedback: feedback, link_to_user_profile: link_to_user_profile, view_order_link: view_order_link, feedback_type: rating_system.subject
+      = render 'dashboard/reviews/order_info', placed_at: I18n.l(archived_at.to_date, format: :long), order_id: order_id, feedback: feedback, link_to_user_profile: link_to_user_profile, view_order_link: view_order_link, feedback_type: rating_system.subject
 
     .col-sm-9
       - if is_completed
