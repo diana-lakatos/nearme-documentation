@@ -364,5 +364,20 @@ class TransactableDrop < BaseDrop
     project_collaborators.build
   end
 
-end
+  def edit_path
+    routes.edit_dashboard_company_transactable_type_transactable_path(@source.transactable_type, @source)
+  end
 
+  def listing_date
+    @source.decorate.listing_date
+  end
+
+  def location_name
+    @source.location.try(:name)
+  end
+
+  def lowest_price_with_currency
+    @source.decorate.lowest_price_with_currency
+  end
+
+end
