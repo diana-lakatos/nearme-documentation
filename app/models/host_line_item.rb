@@ -1,4 +1,4 @@
-class HostFeeLineItem < ActiveRecord::Base
+class HostLineItem < ActiveRecord::Base
 
   include Modelable
 

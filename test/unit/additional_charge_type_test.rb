@@ -3,7 +3,7 @@ require 'test_helper'
 class AdditionalChargeTypeTest < ActiveSupport::TestCase
 
   context 'associations' do
-    should have_many(:additional_charges)
+    # should have_many(:additional_charges)
     should belong_to(:additional_charge_type_target)
   end
 

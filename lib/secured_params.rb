@@ -489,6 +489,7 @@ class SecuredParams
       :single_location,
       :availability_templates_attributes => nested(self.availability_template),
       :allowed_currencies => [],
+      merchant_fees_attributes: nested(self.charge_type),
       all_action_types_attributes: nested(self.transactable_type_action_type),
       custom_attributes_attributes: [:searchable, :id],
     ]
@@ -1511,6 +1512,10 @@ class SecuredParams
   end
 
   def additional_charge_type
+    self.charge_type
+  end
+
+  def charge_type
     [
       :id,
       :name,

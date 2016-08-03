@@ -1,6 +1,6 @@
 class Dashboard::Company::PaymentsController < Dashboard::Company::BaseController
   before_filter :find_order
-  before_filter :find_payment
+  before_filter :find_payment, except: [:new, :create]
 
 
   def mark_as_paid
@@ -37,6 +37,20 @@ class Dashboard::Company::PaymentsController < Dashboard::Company::BaseControlle
   def show
   end
 
+  def new
+    @payment = @order.build_payment(@order.shared_payment_attributes).decorate
+  end
+
+  def create
+    @payment = @order.build_payment(@order.shared_payment_attributes.merge(payment_attributes))
+    if @payment.payable.charge_and_confirm!
+      flash[:notice] = t('flash_messages.payments.capture_success')
+      render json: { saved: true }.to_json
+    else
+      render json: { saved: false, html: render_to_string(partial: 'form', layout: false) }.to_json
+    end
+  end
+
   # def refund
   #   if @payment.refund!
   #     flash[:notice] = t('flash_messages.payments.refunded')
@@ -47,6 +61,10 @@ class Dashboard::Company::PaymentsController < Dashboard::Company::BaseControlle
   # end
 
   private
+
+  def payment_attributes
+    params.require(:payment).permit(secured_params.payment)
+  end
 
   def find_order
     @order = @company.orders.find(params[:orders_received_id])

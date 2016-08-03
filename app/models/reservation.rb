@@ -95,10 +95,6 @@ class Reservation < Order
     self.end_minute = start_minute + minimum_booking_minutes
   end
 
-  def archived?
-    archived_at.present?
-  end
-
   def cancelable?
     return false if can_approve_or_decline_checkout? || has_to_update_credit_card? || archived_at.present?
     case

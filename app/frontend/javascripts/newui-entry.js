@@ -591,4 +591,12 @@ DNM.registerInitializer(function(){
     });
 });
 
+DNM.registerInitializer(function(){
+    $(document).on('init:paymentmodal.nearme', function(){
+        require.ensure('./sections/dashboard/payment_modal_controller', function(require){
+            var PaymentModalController = require('./sections/dashboard/payment_modal_controller');
+            return new PaymentModalController($('.dialog__body'));
+        });
+    });
+});
 DNM.run();

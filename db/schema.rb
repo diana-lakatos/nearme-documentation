@@ -67,9 +67,6 @@ ActiveRecord::Schema.define(version: 20160801203847) do
     t.integer  "percent"
   end
 
-  add_index "additional_charge_types", ["additional_charge_type_target_id", "additional_charge_type_target_type"], name: "act_target", using: :btree
-  add_index "additional_charge_types", ["instance_id"], name: "index_additional_charge_types_on_instance_id", using: :btree
-
   create_table "additional_charges", force: :cascade do |t|
     t.string   "name",                      limit: 255
     t.integer  "amount_cents"
@@ -425,6 +422,28 @@ ActiveRecord::Schema.define(version: 20160801203847) do
   end
 
   add_index "category_linkings", ["instance_id", "category_linkable_id", "category_linkable_type", "category_id"], name: "index_category_linkings_on_instance_id_linkable_unique", unique: true, using: :btree
+
+  create_table "charge_types", force: :cascade do |t|
+    t.string   "name",                           limit: 255
+    t.text     "description"
+    t.integer  "amount_cents"
+    t.string   "currency",                       limit: 255
+    t.string   "commission_receiver",            limit: 255
+    t.integer  "provider_commission_percentage"
+    t.string   "status",                         limit: 255
+    t.integer  "instance_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "charge_type_target_id"
+    t.string   "charge_type_target_type"
+    t.integer  "percent"
+    t.string   "type"
+    t.string   "charge_event"
+    t.string   "deleted_at"
+  end
+
+  add_index "charge_types", ["charge_type_target_id", "charge_type_target_type"], name: "act_target", using: :btree
+  add_index "charge_types", ["instance_id"], name: "index_charge_types_on_instance_id", using: :btree
 
   create_table "charges", force: :cascade do |t|
     t.integer  "payment_id"
@@ -1029,6 +1048,22 @@ ActiveRecord::Schema.define(version: 20160801203847) do
   add_index "host_fee_line_items", ["line_itemable_id"], name: "index_host_fee_line_items_on_line_itemable_id", using: :btree
   add_index "host_fee_line_items", ["partner_id"], name: "index_host_fee_line_items_on_partner_id", using: :btree
   add_index "host_fee_line_items", ["user_id"], name: "index_host_fee_line_items_on_user_id", using: :btree
+
+  create_table "host_line_items", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "user_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "line_item_source_id"
+    t.string   "line_item_source_type"
+    t.integer  "line_itemable_id"
+    t.string   "line_itemable_type"
+    t.string   "name"
+    t.integer  "unit_price_cents",      default: 0
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "impressions", force: :cascade do |t|
     t.integer  "impressionable_id"
@@ -3149,9 +3184,8 @@ ActiveRecord::Schema.define(version: 20160801203847) do
     t.text     "metadata"
     t.hstore   "properties"
     t.datetime "deleted_at"
-    t.integer  "reservations_count",       default: 0
-    t.integer  "transactables_count",      default: 0
     t.integer  "orders_count",             default: 0
+    t.integer  "transactables_count",      default: 0
   end
 
   create_table "user_messages", force: :cascade do |t|
@@ -3300,7 +3334,7 @@ ActiveRecord::Schema.define(version: 20160801203847) do
     t.datetime "banned_at"
     t.integer  "instance_profile_type_id"
     t.hstore   "properties"
-    t.integer  "reservations_count",                                 default: 0
+    t.integer  "orders_count",                                       default: 0
     t.integer  "transactables_count",                                default: 0
     t.float    "buyer_average_rating",                               default: 0.0,                                                                                 null: false
     t.boolean  "public_profile",                                     default: false
@@ -3327,7 +3361,6 @@ ActiveRecord::Schema.define(version: 20160801203847) do
     t.integer  "projects_count",                                     default: 0,                                                                                   null: false
     t.integer  "project_collborations_count",                        default: 0,                                                                                   null: false
     t.boolean  "click_to_call",                                      default: false
-    t.integer  "orders_count",                                       default: 0
     t.integer  "transactable_collaborators_count",                   default: 0,                                                                                   null: false
   end
 
