@@ -23,7 +23,7 @@ class CheckoutController < ApplicationController
   end
 
   def update
-    @order.try(:checkout_update=, true)
+    @order.checkout_update = true
     if @order.update_attributes(order_params)
       if @order.payment && @order.payment.express_checkout_payment? && @order.payment.express_checkout_redirect_url
         redirect_to @order.payment.express_checkout_redirect_url
@@ -31,7 +31,7 @@ class CheckoutController < ApplicationController
       end
 
       flash[:notice] = ""  unless @order.inactive?
-      flash[:error] = nil
+      flash[:error] = @order.errors.full_messages.join(',<br />')
     else
       set_countries_states
       flash[:error] = @order.errors.full_messages.join(',<br />')

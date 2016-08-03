@@ -42,7 +42,7 @@ class ReservationDrop < OrderDrop
   delegate :id, :quantity, :subtotal_price, :service_fee_guest, :total_price, :total_price_cents, :pending?, :transactable, :state_to_string,
     :credit_card_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, :created_at,
     :total_payable_to_host_formatted, :total_units_text, :unit_price, :has_service_fee?, :transactable_line_items,
-    :starts_at, :properties, :long_dates, :address, :periods, :comment, :cancellation_policy_penalty_hours, :tax_price, to: :reservation
+    :properties, :long_dates, :address, :periods, :comment, :cancellation_policy_penalty_hours, :tax_price, to: :reservation
 
 
   # bookable_noun
@@ -178,6 +178,10 @@ class ReservationDrop < OrderDrop
   # reservation date (first date)
   def start_date
     @reservation.starts_at
+  end
+
+  def starts_at
+    @reservation.starts_at.in_time_zone(@reservation.transactable.timezone)
   end
 
   def total_amount_if_payment_at_least_authorized

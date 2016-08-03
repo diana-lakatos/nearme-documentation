@@ -1,6 +1,7 @@
 - if @order.with_delivery? && (only_inputs.empty? || only_inputs.include?(:shipping))
+  - transactable = @order.transactables.find(&:shipping_profile)
   .row-fluid.reservations-create
     .span10
       = f.simple_fields_for :shipments, @order.shipments.first_or_initialize do |shipment|
-        = shipment.input :shipping_rule_id, as: :radio_buttons, collection: @order.transactables.first.shipping_profile.decorate.shipping_rules_collection, label: false, checked: shipment.object.shipping_rule_id || @order.transactables.first.shipping_profile.shipping_rules.first.id
+        = shipment.input :shipping_rule_id, as: :radio_buttons, collection: transactable.shipping_profile.decorate.shipping_rules_collection, label: false, checked: shipment.object.shipping_rule_id || transactable.shipping_profile.shipping_rules.first.id
         = render 'checkout/attributes/shipping_address', only_inputs: only_inputs, f: f, resource: resource, shipment: shipment

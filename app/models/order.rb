@@ -7,7 +7,8 @@ class Order < ActiveRecord::Base
   include Modelable
   include Payable
 
-  attr_accessor :skip_checkout_validation, :delivery_ids
+  attr_accessor :skip_checkout_validation, :delivery_ids, :skip_try_to_activate, :checkout_update
+
   store_accessor :settings, :validate_on_adding_to_cart, :skip_payment_authorization
 
   has_custom_attributes target_type: 'ReservationType', target_id: :reservation_type_id
@@ -47,6 +48,7 @@ class Order < ActiveRecord::Base
 
   before_validation :copy_billing_address, :remove_empty_documents
   before_validation :set_owner, :build_return_shipment
+  after_save :try_to_activate!, unless: -> { skip_try_to_activate }
 
   state_machine :state, initial: :inactive do
     after_transition inactive: :unconfirmed, do: :activate_order!
@@ -280,9 +282,11 @@ class Order < ActiveRecord::Base
 
       trigger_rating_workflow!
 
-      unless Rails.env.test?
+      if Rails.application.config.use_elastic_search
         begin
-          transactable.__elasticsearch__.update_document_attributes(completed_reservations: transactable.orders.reservations.reviewable.count)
+          transactables.each do |transactable|
+            transactable.__elasticsearch__.update_document_attributes(completed_reservations: transactable.orders.reservations.reviewable.count)
+          end
         rescue Elasticsearch::Transport::Transport::Errors::NotFound
         end
       end
@@ -371,7 +375,7 @@ class Order < ActiveRecord::Base
         templates << PlatformContext.current.instance.waiver_agreement_templates
       end
     end
-    templates.flatten
+    templates.flatten.uniq
   end
 
   def additional_charge_types
@@ -450,4 +454,13 @@ class Order < ActiveRecord::Base
   def transactable_pricing
     super || transactable_line_items.first.transactable_pricing
   end
+
+  private
+
+  def try_to_activate!
+    if inactive? && (skip_payment_authorization? || payment && payment.authorized?)
+      activate!
+    end
+  end
+
 end

@@ -47,6 +47,7 @@ class Transactable < ActiveRecord::Base
   has_many :orders
   has_many :reservations
   has_many :old_reservations
+  has_many :transactable_line_items, class_name: 'LineItem::Transactable', as: :line_item_source
   has_many :transactable_tickets, as: :target, class_name: 'Support::Ticket'
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :waiver_agreement_templates, through: :assigned_waiver_agreement_templates
@@ -468,7 +469,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def reviews
-    @reviews ||= Review.for_reviewables(self.orders.pluck(:id), 'Reservation')
+    @reviews ||= Review.for_transactables(self.orders.pluck(:id), self.transactable_line_items.pluck(:id))
   end
 
   def has_reviews?

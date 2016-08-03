@@ -19,16 +19,21 @@ class PaymentAuthorizer::PaypalExpressPaymentAuthorizer < PaymentAuthorizer
   private
 
     def setup_authorization
-      @payment_gateway.process_express_checkout(@authorizable, {
+      response = @payment_gateway.process_express_checkout(@authorizable, {
         return_url: @authorizable.express_return_url,
         cancel_return_url: @authorizable.express_cancel_return_url,
         ip: "127.0.0.1"
       })
-      @payment.express_checkout_redirect_url = @payment_gateway.redirect_url
-      @payment.payment_method = @payment_gateway.payment_methods.first
-      @payment.express_token = @payment_gateway.token
-      @payment.express_checkout_redirect_url.present?
-      @payment.save
+      if response.success?
+        @payment.express_checkout_redirect_url = @payment_gateway.redirect_url
+        @payment.payment_method = @payment_gateway.payment_methods.first
+        @payment.express_token = @payment_gateway.token
+        @payment.express_checkout_redirect_url.present?
+        @payment.save
+      else
+        @authorizable.errors.add(:base, response.params["Errors"]["LongMessage"])
+        false
+      end
     end
 
     def prepare_options(options)
