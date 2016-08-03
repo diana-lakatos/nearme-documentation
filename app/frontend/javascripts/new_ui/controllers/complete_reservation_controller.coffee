@@ -9,6 +9,8 @@ module.exports = class CompleteReservationController
     @bindEvents()
 
   bindEvents: ->
+    @calculateTotal()
+
     @container.on 'change', '[data-hours-input]', (event) =>
       @calculateSubTotal($(event.target))
 
