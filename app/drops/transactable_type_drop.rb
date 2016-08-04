@@ -14,7 +14,7 @@ class TransactableTypeDrop < BaseDrop
   #   translated name of this transactable type, based on current language
   delegate :id, :buyable?, :action_price_per_unit, :show_page_enabled?, :translated_bookable_noun,
     :translation_key_suffix, :translation_namespace, :show_date_pickers, :searcher_type, :slug,
-    :search_input_name, :search_field_placeholder, to: :source
+    :search_input_name, :search_field_placeholder, :skip_location?, to: :source
 
   # name for the bookable item this transactable type represents (e.g. desk, room etc.)
   def name
@@ -160,7 +160,7 @@ class TransactableTypeDrop < BaseDrop
   end
 
   def show_bulk_upload_link?
-    !hide_tab?('bulk_upload')
+    hidden_ui_by_key('dashboard/transactables/bulk_upload').visible?
   end
 
   def show_search_form?

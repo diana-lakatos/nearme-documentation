@@ -26,6 +26,7 @@ class LiquidView
   Liquid::Template.register_tag('fields_for', FieldsForTag)
   Liquid::Template.register_tag('dropdown_menu', DropdownMenuBlock)
   Liquid::Template.register_tag('will_paginate', WillPaginateTag)
+  Liquid::Template.register_tag('title', TitleTag)
 
   def self.call(template)
     "LiquidView.new(self).render(#{template.source.inspect}, local_assigns)"

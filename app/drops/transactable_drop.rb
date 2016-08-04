@@ -233,6 +233,10 @@ class TransactableDrop < BaseDrop
     photos.try(:first).try(:[],:space_listing) || image_url(Placeholder.new(:width => 410, :height => 254).path).to_s
   end
 
+  def photo_medium_url
+    @source.photos.first.try(:image_url, :medium)
+  end
+
   # returns a string of the type "From $currency_amount / period"
   def from_money_period
     price_information(@source)
@@ -369,7 +373,7 @@ class TransactableDrop < BaseDrop
   end
 
   def listing_date
-    @source.decorate.listing_date
+    @source.listing_date
   end
 
   def location_name
@@ -377,7 +381,7 @@ class TransactableDrop < BaseDrop
   end
 
   def lowest_price_with_currency
-    @source.decorate.lowest_price_with_currency
+    @source.lowest_price_with_currency
   end
 
 end
