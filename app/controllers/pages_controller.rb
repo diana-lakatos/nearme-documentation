@@ -14,6 +14,8 @@ class PagesController < ApplicationController
     assigns['platform_context'] = PlatformContext.current.decorate
     if @page.redirect?
       redirect_to @page.redirect_url, status: @page.redirect_code
+    elsif params[:simple]
+      render :simple, platform_context: [platform_context.decorate]
     elsif @page.no_layout?
       render text: Liquid::Template.parse(@page.content).render(assigns, registers: { action_view: self }, filters: [LiquidFilters])
     else
