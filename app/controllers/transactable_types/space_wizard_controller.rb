@@ -45,6 +45,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     build_objects
     build_approval_requests
     @user.first_listing.creator = @user
+    @transactable.initialize_action_types unless params[:save_as_draft]
     if params[:save_as_draft]
       remove_approval_requests
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
