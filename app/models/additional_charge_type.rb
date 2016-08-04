@@ -4,9 +4,8 @@ class AdditionalChargeType < ActiveRecord::Base
   STATUSES = ['mandatory', 'optional']
   COMMISSION_TYPES = ['mpo', 'host']
 
-  has_paper_trail
-  auto_set_platform_context
-  scoped_to_platform_context
+  include Modelable # NOTE when conflit with litvault branch remove this line
+
   monetize :amount_cents, with_model_currency: :currency, allow_nil: true
 
   # additional_charge_type_target polymorphic relation can join AdditionalChargeType with:
