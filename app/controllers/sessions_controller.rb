@@ -16,7 +16,7 @@ class SessionsController < Devise::SessionsController
   def new
     super unless already_signed_in?
 
-    if !flash[:failed_login_attempt_with_email].blank?
+    if !flash[:failed_login_attempt_with_email].nil?
       params[:user] = { :email => flash[:failed_login_attempt_with_email], :password => '' }
     end
 
