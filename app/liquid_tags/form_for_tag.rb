@@ -15,10 +15,11 @@ class FormForTag < Liquid::Block
 
   def render(context)
     @model = context[@model_name]
-    @attributes = normalize_liquid_tag_attributes(@attributes, context, ['html'])
-    namespace = @attributes.delete(:namespace).try(:map) { |el| ServiceType === el ? el.becomes(TransactableType) : el }
-    namespace ||= @model.try(:source)
-    raise "Invalid object passed to form_for tag" unless @model.present? && Liquid::Drop === @model
+    @attributes = normalize_liquid_tag_attributes(@attributes, context, ['html', 'wrapper_mappings'])
+    @attributes.merge!(form_options) if @attributes[:form_for_type].present?
+    namespace = @model.try(:source) || @model_name.to_sym
+
+    raise "Object passed to form_for tag cannot be nil" if namespace.blank?
     context.stack do
       context.registers[:action_view].simple_form_for(namespace, @attributes) do |f|
         context['form_object'.freeze] = f
@@ -27,5 +28,36 @@ class FormForTag < Liquid::Block
     end
   end
 
-end
+  private
 
+  def form_options
+    case @attributes[:form_for_type]
+    when 'dashboard'
+      dashboard_form_options
+    else
+      fail NotImplementedError.new("Valid form_for_type options are: 'dashboard', but #{@attributes[:form_for_type]} was given. Typo?")
+    end
+  end
+
+  def dashboard_form_options
+    options = {}
+
+    options[:wrapper] = :dashboard_form
+    options[:error_class] = :field_with_errors
+    options[:wrapper_mappings] = {
+      check_boxes: :dashboard_radio_and_checkboxes,
+      radio_buttons: :dashboard_radio_and_checkboxes,
+      file: :dashboard_file_input,
+      boolean: :dashboard_boolean,
+      switch: :dashboard_switch,
+      inline_form: :dashboard_inline_form,
+      limited_string: :dashboard_form,
+      limited_text: :dashboard_form,
+      tel: :dashboard_addon,
+      price: :dashboard_form
+    }
+
+    options
+  end
+
+end

@@ -24,7 +24,8 @@ class LiquidView
   Liquid::Template.register_tag('input', InputTag)
   Liquid::Template.register_tag('submit', SubmitTag)
   Liquid::Template.register_tag('fields_for', FieldsForTag)
-
+  Liquid::Template.register_tag('dropdown_menu', DropdownMenuBlock)
+  Liquid::Template.register_tag('will_paginate', WillPaginateTag)
 
   def self.call(template)
     "LiquidView.new(self).render(#{template.source.inspect}, local_assigns)"

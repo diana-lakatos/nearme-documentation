@@ -159,4 +159,24 @@ class TransactableTypeDrop < BaseDrop
     "#{class_name}-#{id}"
   end
 
+  def show_bulk_upload_link?
+    !hide_tab?('bulk_upload')
+  end
+
+  def show_search_form?
+    !hide_tab?('search')
+  end
+
+  def new_transactable_path
+    routes.new_dashboard_company_transactable_type_transactable_path(@source)
+  end
+
+  def transactable_types_path
+    routes.dashboard_company_transactable_type_transactables_path(@source)
+  end
+
+  def new_data_upload_path
+    routes.new_dashboard_company_transactable_type_data_upload_path(@source)
+  end
+
 end

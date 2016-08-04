@@ -25,11 +25,12 @@ module AttributesParserHelper
       else
         values_value(value, context)
       end
+
       # check if key starts with a prefix - if yes, then we should create nested hash
-      if (prefix = prefixes.detect { |p| key =~ /^#{p}_/ }).present?
+      if (prefix = prefixes.detect { |p| key =~ /^#{p}-/ }).present?
         hash.delete(key)
         # store in proper hash but not under %prefix%_key, but just as a key
-        instance_variable_get(:"@#{prefix}_attributes")[key.sub(/^#{prefix}_/, '')] = value
+        instance_variable_get(:"@#{prefix}_attributes")[key.sub(/^#{prefix}-/, '')] = value
         # otherwise just overwrite value in case there are quotes
       else
         hash[key] = value
