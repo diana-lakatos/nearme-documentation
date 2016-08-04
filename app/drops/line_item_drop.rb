@@ -13,5 +13,21 @@ class LineItemDrop < BaseDrop
     humanized_money_with_cents_and_symbol(@line_item.unit_price)
   end
 
+  def net_price
+    @line_item.net_price.to_s
+  end
+
+  def gross_price
+    @line_item.gross_price.to_s
+  end
+
+  def total_price
+    @line_item.total_price.to_s
+  end
+
+  def class_name
+    @line_item.class.name.demodulize
+  end
+
 end
 
