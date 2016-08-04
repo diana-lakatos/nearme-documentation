@@ -26,6 +26,8 @@ class Page < ActiveRecord::Base
 
   before_save :convert_to_html, :if => lambda { |page| page.content.present? && (page.content_changed? || page.html_content.blank?) }
 
+  has_many :data_sources, as: :data_sourcable
+
   def to_liquid
     @page_drop ||= PageDrop.new(self)
   end
@@ -55,8 +57,6 @@ class Page < ActiveRecord::Base
 
   def convert_to_html
     self.html_content = self.content.include?('<div') ? self.content : RDiscount.new(self.content).to_html
-    rel_no_follow_adder = RelNoFollowAdder.new({:skip_domains => Domain.pluck(:name)})
-    self.html_content = rel_no_follow_adder.modify(self.html_content)
   end
 
   def should_generate_new_friendly_id?
