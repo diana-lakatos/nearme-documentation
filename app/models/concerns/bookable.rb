@@ -21,15 +21,6 @@ module Bookable
     before_save :set_start_and_end
     after_create :copy_dimensions_template
 
-
-    has_custom_attributes target_type: 'ReservationType', target_id: :reservation_type_id
-
-    # # Required to fetch all AdditionalCharges per on Transactable
-    # def additional_charge_types
-    #   transactable.all_additional_charge_types
-    # end
-
-
     def form_address(last_search_json)
       return address if address.present?
       if last_search_json
@@ -129,20 +120,5 @@ module Bookable
       self.update_column(:expires_at, expires_at)
       OrderExpiryJob.perform_later(expires_at, self.id) if hours_to_expiration > 0
     end
-
-    # # TODO
-    # def validate_mandatory_categories
-    #   return true if reservation_type.nil?
-    #   reservation_type.categories.mandatory.each do |mandatory_category|
-    #     errors.add(mandatory_category.name, I18n.t('errors.messages.blank')) if properties.send(mandatory_category.name).blank?
-    #   end
-    # end
-
-    # def validate_mandatory_categories
-    #   return true if reservation_type.nil?
-    #   reservation_type.categories.mandatory.each do |mandatory_category|
-    #     errors.add(mandatory_category.name, I18n.t('errors.messages.blank')) if common_categories(mandatory_category).blank?
-    #   end
-    # end
   end
 end

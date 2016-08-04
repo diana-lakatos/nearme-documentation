@@ -39,11 +39,22 @@ namespace :migrate do
       instance.transactable_types.each do |tt|
         if tt.reservation_type.present?
           reservation_type = tt.reservation_type
-          form_component = reservation_type.form_components.first
+          form_component = reservation_type.form_components.first_or_create(name: "Review", form_type: 'reservation_attributes')
+
+          InstanceProfileType.buyer.each do |ipt|
+            CustomAttributes::CustomAttribute.get_from_cache(ipt, "InstanceProfileType").each do |ca|
+              ca_name = ca[0]
+
+              unless form_component.form_fields.select {|a| a ==  {"buyer" => ca_name}}.any?
+                form_component.form_fields.insert(0, {"buyer" => ca_name})
+              end
+            end
+          end
+
           unless form_component.form_fields.select {|a| a ==  {"reservation" => 'payments'}}.any?
             form_component.form_fields << {"reservation" => "payments"}
-            form_component.save!
           end
+
         else
           reservation_type = tt.build_reservation_type({
             transactable_types: [tt],
@@ -52,9 +63,20 @@ namespace :migrate do
           reservation_type.save(validate: false)
           Utils::FormComponentsCreator.new(reservation_type).create!
           form_component = reservation_type.reload.form_components.first
+
+          InstanceProfileType.buyer.each do |ipt|
+            CustomAttributes::CustomAttribute.get_from_cache(ipt, "InstanceProfileType").each do |ca|
+              ca_name = ca[0]
+
+              unless form_component.form_fields.select {|a| a ==  {"buyer" => ca_name}}.any?
+                form_component.form_fields.insert(0, {"buyer" => ca_name})
+              end
+            end
+          end
           form_component.form_fields = [{"reservation" => "payments"}]
-          form_component.save!
         end
+
+        form_component.save!
       end
     end
   end
