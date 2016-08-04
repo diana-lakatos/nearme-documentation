@@ -1410,8 +1410,9 @@ class SecuredParams
       shipping_address_attributes: nested(self.order_address),
       billing_address_attributes: nested(self.order_address),
       payment_documents_attributes: nested(self.payment_document),
-      payment_attributes: nested(self.payment)
-    ] + (reservation_type.present? ? [properties: Reservation.public_custom_attributes_names(reservation_type), properties_attributes: Reservation.public_custom_attributes_names(reservation_type)] : [])
+      payment_attributes: nested(self.payment),
+      properties_attributes: Reservation.public_custom_attributes_names((reservation_type || PlatformContext.current.try(:instance).try(:reservation_type).try(:first)).try(:id))
+    ]
   end
 
   def waiver_agreement_templates
