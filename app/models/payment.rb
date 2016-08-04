@@ -103,7 +103,7 @@ class Payment < ActiveRecord::Base
   end
 
   validates :currency, presence: true
-  validates :credit_card, presence: true, if: Proc.new { |p| p.credit_card_payment? && p.save_credit_card? && new_record? }
+  validates :credit_card, presence: true, if: Proc.new { |p| p.credit_card_payment? && p.save_credit_card? && p.new_record? }
   validates :payer, presence: true
   validates :payment_gateway, presence: true
   validates :payment_method, presence: true
