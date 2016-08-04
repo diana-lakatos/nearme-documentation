@@ -877,6 +877,12 @@ DesksnearMe::Application.routes.draw do
         end
       end #ends company namespace
 
+      resources :transactable_types, only: [:index] do
+        resources :transactables, only: [:new, :create]
+      end
+
+      resources :transactables, except: [:new, :create]
+
       resources :shipping_profiles do
         collection do
           get :get_shipping_profiles_list

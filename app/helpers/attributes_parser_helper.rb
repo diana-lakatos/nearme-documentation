@@ -18,6 +18,7 @@ module AttributesParserHelper
     # inicjalize variables for each prefix, if prefix is 'html' then create '@html_attributes' variable
     prefixes.each { |p| instance_variable_set(:"@#{p}_attributes", {}) }
     hash.each do |key, value|
+      next unless String === value
       # if value starts with @ then get value from context as it's variable, otherwise remove trailing quotes
       value = value.sub(/^["']/, '').sub(/["']$/, '')
       value = if value[0] == '[' && value[-1] == ']'

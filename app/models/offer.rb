@@ -1,6 +1,6 @@
 class Offer < Order
 
-  validates :host_line_items, presence: true
+  #validates :host_line_items, presence: true
 
   after_update :activate!, if: :inactive?
 

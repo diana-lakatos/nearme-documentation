@@ -87,6 +87,8 @@ class Order < ActiveRecord::Base
   scope :visible, -> { without_state(:cancelled_by_guest, :cancelled_by_host, :inactive).upcoming }
   scope :with_listing, -> { where.not(transactable_id: nil) }
   scope :reservations, -> { where(type: %w(Reservation DelayedReservation)) }
+  scope :offers, -> { where(type: %w(Offer)) }
+  scope :for_lister_or_enquirer, -> (company, user) { where('orders.company_id = ? OR orders.user_id = ?', company.id, user.id) }
 
   scope :on, -> (date) {
     joins(:periods).

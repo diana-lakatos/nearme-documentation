@@ -61,7 +61,8 @@ class TransactableDrop < BaseDrop
     :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at,
     :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, :attachments, :confirm_reservations,
     :to_key, :model_name, :deposit_amount_cents, :customizations, :to_param, :hours_for_guest_to_confirm_payment, :availability_exceptions,
-    :action_free_booking?, :average_rating, :time_based_booking?, :transactable_collaborators, :approved_transactable_collaborators, to: :source
+    :action_free_booking?, :average_rating, :time_based_booking?, :transactable_collaborators, :approved_transactable_collaborators,
+    :user_messages, :line_item_orders, to: :source
 
   # action_price_per_unit
   #   returns true if there is a single unit available of the transactable item for a given time period
@@ -382,6 +383,11 @@ class TransactableDrop < BaseDrop
 
   def lowest_price_with_currency
     @source.lowest_price_with_currency
+  end
+
+  # user message path
+  def user_message_path
+    routes.new_transactable_user_message_path(@source)
   end
 
 end

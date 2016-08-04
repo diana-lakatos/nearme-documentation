@@ -54,6 +54,10 @@ class UserProfile < ActiveRecord::Base
     end
   end
 
+  def to_liquid
+    @user_profile_drop ||= UserProfileDrop.new(self)
+  end
+
   private
 
   def assign_defaults

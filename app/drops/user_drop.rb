@@ -55,7 +55,7 @@ class UserDrop < BaseDrop
     :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
     :country_name, :phone, :current_address, :is_trusted?, :reservations,
     :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
-    :external_id, :seller_average_rating, :default_wish_list, to: :source
+    :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile, to: :source
 
   # string containing the location of the user making use of the various fields
   # the user has filled in for his profile

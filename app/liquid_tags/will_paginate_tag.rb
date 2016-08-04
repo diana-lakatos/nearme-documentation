@@ -9,6 +9,9 @@ class WillPaginateTag < Liquid::Tag
 
   def render(context)
     @attributes['renderer'] = pagination_renderer
+    @attributes = normalize_liquid_tag_attributes(@attributes, context)
+
+    @attributes = normalize_liquid_tag_attributes(@attributes, context, ['html', 'wrapper_mappings'])
     context.registers[:action_view].send(:will_paginate, context[@collection], @attributes)
   end
 

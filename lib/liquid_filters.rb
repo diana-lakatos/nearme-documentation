@@ -120,6 +120,10 @@ module LiquidFilters
     connections.join('<br />').html_safe
   end
 
+  def pricify(amount, currency = 'USD')
+    humanized_money_with_symbol(amount.to_money(currency))
+  end
+
   def price_with_cents_with_currency(money)
     humanized_money_with_symbol(money)
   end
@@ -349,6 +353,22 @@ module LiquidFilters
   def is_approved_collaborator(user, transactable)
     return false if user.try(:id).blank?
     transactable.approved_transactable_collaborators.where(user: user.id).exists?
+  end
+
+  # alternative is to create WillPaginate::CollectionDrop, however when I tried it,
+  # I could not iterate through collection. I tried adding all
+  # instance methods found in documentation but it did not work,
+  # so using this as a workaround. Probably one had to add all array's method as well
+  def total_entries(will_paginate_collection)
+    will_paginate_collection.total_entries
+  end
+
+  def get_enquirer_orders(user, transactable)
+    transactable.line_item_orders.where(user_id: user.id).order('created_at ASC')
+  end
+
+  def get_lister_orders(company, transactable)
+    transactable.line_item_orders.where(company: company).order('created_at ASC')
   end
 
 end

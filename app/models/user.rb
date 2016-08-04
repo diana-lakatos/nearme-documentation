@@ -91,6 +91,7 @@ class User < ActiveRecord::Base
   has_many :listings, through: :locations, class_name: 'Transactable', inverse_of: :creator
   has_many :listing_orders, class_name: 'Order', through: :listings, source: :orders, inverse_of: :creator
   has_many :created_listings, class_name: 'Transactable', foreign_key: 'creator_id'
+  has_many :created_listings_orders, class_name: 'Order', through: :created_listings, source: :orders, inverse_of: :creator
   has_many :listing_reservations, class_name: 'Reservation', through: :listings, source: :reservations, inverse_of: :creator
   has_many :listing_recurring_bookings, class_name: 'RecurringBooking', through: :listings, source: :recurring_bookings, inverse_of: :creator
   has_many :locations, through: :companies, inverse_of: :creator

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160727140308) do
+ActiveRecord::Schema.define(version: 20160804130004) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,22 +50,6 @@ ActiveRecord::Schema.define(version: 20160727140308) do
   add_index "activity_feed_subscriptions", ["follower_id", "followed_id", "followed_type"], name: "afs_followers_followed", unique: true, using: :btree
   add_index "activity_feed_subscriptions", ["follower_id", "followed_identifier"], name: "index_subscriptions_on_folllower_and_followed_identifier", unique: true, using: :btree
   add_index "activity_feed_subscriptions", ["instance_id", "followed_id", "followed_type"], name: "activity_feed_subscriptions_instance_followed", using: :btree
-
-  create_table "additional_charge_types", force: :cascade do |t|
-    t.string   "name",                               limit: 255
-    t.text     "description"
-    t.integer  "amount_cents"
-    t.string   "currency",                           limit: 255
-    t.string   "commission_receiver",                limit: 255
-    t.integer  "provider_commission_percentage"
-    t.string   "status",                             limit: 255
-    t.integer  "instance_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "additional_charge_type_target_id"
-    t.string   "additional_charge_type_target_type"
-    t.integer  "percent"
-  end
 
   create_table "additional_charges", force: :cascade do |t|
     t.string   "name",                      limit: 255
@@ -1202,6 +1186,7 @@ ActiveRecord::Schema.define(version: 20160727140308) do
     t.integer  "position",                                    default: 0
     t.boolean  "must_have_verified_phone_number",             default: false
     t.boolean  "onboarding",                                  default: false
+    t.boolean  "create_company_on_sign_up",                   default: false
   end
 
   add_index "instance_profile_types", ["instance_id", "profile_type"], name: "index_instance_profile_types_on_instance_id_and_profile_type", unique: true, using: :btree
@@ -3004,6 +2989,7 @@ ActiveRecord::Schema.define(version: 20160727140308) do
     t.boolean  "single_location",                                                                default: false,      null: false
     t.boolean  "hide_additional_charges_on_listing_page",                                        default: false,      null: false
     t.hstore   "custom_settings",                                                                default: {},         null: false
+    t.boolean  "auto_accept_invitation_as_collaborator",                                         default: false
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -3184,8 +3170,9 @@ ActiveRecord::Schema.define(version: 20160727140308) do
     t.text     "metadata"
     t.hstore   "properties"
     t.datetime "deleted_at"
-    t.integer  "orders_count",             default: 0
+    t.integer  "reservations_count",       default: 0
     t.integer  "transactables_count",      default: 0
+    t.integer  "orders_count",             default: 0
   end
 
   create_table "user_messages", force: :cascade do |t|
@@ -3334,7 +3321,7 @@ ActiveRecord::Schema.define(version: 20160727140308) do
     t.datetime "banned_at"
     t.integer  "instance_profile_type_id"
     t.hstore   "properties"
-    t.integer  "orders_count",                                       default: 0
+    t.integer  "reservations_count",                                 default: 0
     t.integer  "transactables_count",                                default: 0
     t.float    "buyer_average_rating",                               default: 0.0,                                                                                 null: false
     t.boolean  "public_profile",                                     default: false
@@ -3361,6 +3348,7 @@ ActiveRecord::Schema.define(version: 20160727140308) do
     t.integer  "projects_count",                                     default: 0,                                                                                   null: false
     t.integer  "project_collborations_count",                        default: 0,                                                                                   null: false
     t.boolean  "click_to_call",                                      default: false
+    t.integer  "orders_count",                                       default: 0
     t.integer  "transactable_collaborators_count",                   default: 0,                                                                                   null: false
   end
 

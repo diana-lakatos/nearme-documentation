@@ -17,7 +17,7 @@ class OrderDrop < BaseDrop
     :paid?, :unconfirmed?, :confirmed?, :manual_payment?, :can_complete_checkout?,
     :can_approve_or_decline_checkout?, :has_to_update_credit_card?, :user_messages,
     :archived_at, :state, :cancelable?, :archived?, :penalty_charge_apply?, :cancellation_policy_hours_for_cancellation,
-    :cancellation_policy_penalty_hours, :payment,
+    :cancellation_policy_penalty_hours, :created_at, :payment,
     to: :order
 
   def initialize(order)
@@ -89,6 +89,18 @@ class OrderDrop < BaseDrop
 
   def all_other_orders
     @order.user.transactable_line_items.where(line_item_source_id: @order.transactable.id).map(&:line_itemable)
+  end
+
+  def new_payment_url
+    routes.new_dashboard_company_orders_received_payment_path(order)
+  end
+
+  def offer_cancel_url
+    routes.cancel_dashboard_company_orders_received_path(order)
+  end
+
+  def offer_enquirer_cancel_url
+    routes.cancel_dashboard_orders_path(order)
   end
 
 end

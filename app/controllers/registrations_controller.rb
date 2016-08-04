@@ -59,6 +59,10 @@ class RegistrationsController < Devise::RegistrationsController
           provider: Auth::Omni.new(session[:omniauth]).provider
         })
         ReengagementNoBookingsJob.perform_later(72.hours.from_now, @user.id)
+        if @user.send("get_#{@role}_profile").instance_profile_type.create_company_on_sign_up?
+          company = @user.companies.create!(name: @user.name)
+          company.update_metadata({draft_at: nil, completed_at: Time.zone.now})
+        end
         case @role
         when 'default'
           WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @user.id)

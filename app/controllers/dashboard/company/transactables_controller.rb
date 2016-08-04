@@ -12,9 +12,12 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   before_action :redirect_to_new_if_single_transactable, only: [:index, :edit, :update]
 
   def index
-    @transactables = @transactable_type.transactables.where(company_id: @company).
-      search_by_query([:name, :description], params[:query]).order('created_at DESC').
-        paginate(page: params[:page], per_page: 20)
+    @transactables = transactables_scope.order('transactables.created_at DESC').paginate(page: params[:page], per_page: 20)
+    if @transactable_type.action_types.any? { |at| TransactableType::OfferAction === at }
+      @in_progress_transactables = in_progress_scope.order('transactables.created_at DESC').paginate(page: params[:in_progress_page], per_page: 20)
+      @archived_transactables = archived_scope.order('transactables.created_at DESC').paginate(page: params[:archived_page], per_page: 20)
+      @pending_transactables = transactables_scope.where.not(id: in_progress_scope.pluck(:id) + archived_scope.pluck(:id)).order('transactables.created_at DESC').paginate(page: params[:archived_page], per_page: 20)
+    end
   end
 
   def new
@@ -193,6 +196,22 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     end
 
     messages
+  end
+
+  def transactables_scope
+    @transactable_type.transactables.
+      joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id').
+      uniq.
+      where('transactables.company_id = ? OR transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)', @company.id, current_user.id, current_user.id).
+      search_by_query([:name, :description], params[:query])
+  end
+
+  def in_progress_scope
+    transactables_scope.includes(:line_item_orders, :transactable_collaborators).merge(Order.upcoming.confirmed.for_lister_or_enquirer(@company, current_user))
+  end
+
+  def archived_scope
+    transactables_scope.includes(:line_item_orders, :transactable_collaborators).merge(Order.archived.for_lister_or_enquirer(@company, current_user)).where.not(id: in_progress_scope.pluck(:id))
   end
 
 end

@@ -19,6 +19,8 @@ class TransactableCollaborator < ActiveRecord::Base
   scope :approved, -> { where.not(approved_by_owner_at: nil, approved_by_user_at: nil) }
   scope :for_user, -> (user) { user.present? ? where('user_id = ? OR email = ?', user.id, user.email) : [] }
 
+  before_save :auto_confirm
+
   def name
     @name ||= user.try(:name)
   end
@@ -58,6 +60,11 @@ class TransactableCollaborator < ActiveRecord::Base
 
   def to_liquid
     @transactable_collaborator_drop ||= TransactableCollaboratorDrop.new(self)
+  end
+
+  def auto_confirm
+    self.approved_by_user_at = Time.zone.now if transactable.auto_accept_invitation_as_collaborator?
+    true
   end
 
 end

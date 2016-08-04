@@ -58,8 +58,10 @@ class Transactable < ActiveRecord::Base
   has_many :recurring_bookings, inverse_of: :transactable
   has_many :orders
   has_many :reservations
+  has_many :offers
   has_many :old_reservations
   has_many :transactable_line_items, class_name: 'LineItem::Transactable', as: :line_item_source
+  has_many :line_item_orders, class_name: 'Order', through: :transactable_line_items, source: :order
   has_many :transactable_tickets, as: :target, class_name: 'Support::Ticket'
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :waiver_agreement_templates, through: :assigned_waiver_agreement_templates
@@ -272,7 +274,7 @@ class Transactable < ActiveRecord::Base
   delegate :url, to: :company
   delegate :formatted_address, :local_geocoding, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration, :hours_for_guest_to_confirm_payment,
-    :custom_validators, :show_company_name, :display_additional_charges?, to: :transactable_type
+    :custom_validators, :show_company_name, :display_additional_charges?, :auto_accept_invitation_as_collaborator?, to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, to: :transactable_type

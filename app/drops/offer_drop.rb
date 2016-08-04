@@ -11,12 +11,4 @@ class OfferDrop < OrderDrop
     ''
   end
 
-  def new_payment_url
-    routes.new_dashboard_company_orders_received_payment_path(@offer)
-  end
-
-  def offer_cancel_url
-    routes.cancel_dashboard_company_orders_received_path(@offer)
-  end
-
 end

@@ -1,18 +1,21 @@
-namespace :litvault do
+namespace :uot do
 
-  desc 'Setup LitVault'
+  desc 'Setup UoT'
   task setup: :environment do
 
-    @instance = Instance.find(198)
+    @instance = Instance.find(195)
     @instance.update_attributes(
-      tt_select_type: 'radio',
       split_registration: true,
       enable_reply_button_on_host_reservations: true,
-      hidden_ui_controls: { 'main_menu/cta': 1 },
+      hidden_ui_controls: {
+        'main_menu/cta': 1,
+        'dashboard/offers': 1,
+        'dashboard/user_bids': 1
+      },
       skip_company: true
     )
     @instance.set_context!
-    InstanceProfileType.find(580).update_columns(onboarding: true, create_company_on_sign_up: true)
+    InstanceProfileType.find(571).update_columns(onboarding: true, create_company_on_sign_up: true)
 
     create_transactable_types!
     create_custom_attributes!
@@ -22,16 +25,14 @@ namespace :litvault do
     create_content_holders
     create_views
     create_translations
-
-    create_temporary_pages
     expire_cache
   end
 
   def create_transactable_types!
-    transactable_type = @instance.transactable_types.where(name: 'Individual Case').first_or_initialize
+    transactable_type = @instance.transactable_types.where(name: 'Project').first_or_initialize
     transactable_type.attributes = {
-      name: 'Individual Case',
-      slug: 'individual-case',
+      name: 'Project',
+      slug: 'project',
       action_free_booking: false,
       action_daily_booking: false,
       action_weekly_booking: false,
@@ -50,133 +51,154 @@ namespace :litvault do
       service_fee_host_percent: 30,
       skip_location: true,
       show_categories: true,
-      category_search_type: 'AND',
-      bookable_noun: 'Individual Case',
-      enable_photo_required: true,
+      category_search_type: 'OR',
+      bookable_noun: 'Project',
+      enable_photo_required: false,
       min_hourly_price_cents: 50_00,
       max_hourly_price_cents: 150_00,
-      lessor: 'Lawyer',
-      lessee: 'Client',
-      enable_reviews: true
-    }
-    transactable_type.save!
-
-    transactable_type = @instance.transactable_types.where(name: 'Group Case').first_or_initialize
-    transactable_type.attributes = {
-      name: 'Group Case',
-      slug: 'group-case',
-      action_free_booking: false,
-      action_daily_booking: false,
-      action_weekly_booking: false,
-      action_monthly_booking: false,
-      action_regular_booking: true,
-      show_path_format: '/:transactable_type_id/:id',
-      cancellation_policy_enabled: "1",
-      cancellation_policy_hours_for_cancellation: 24,
-      cancellation_policy_penalty_hours: 1.5,
-      default_search_view: 'list',
-      skip_payment_authorization: true,
-      hours_for_guest_to_confirm_payment: 24,
-      single_transactable: false,
-      show_price_slider: true,
-      service_fee_guest_percent: 0,
-      service_fee_host_percent: 30,
-      skip_location: true,
-      show_categories: true,
-      category_search_type: 'AND',
-      bookable_noun: 'Group Case',
-      enable_photo_required: true,
-      min_hourly_price_cents: 50_00,
-      max_hourly_price_cents: 150_00,
-      lessor: 'Lawyer',
-      lessee: 'Client',
-      enable_reviews: true
+      lessor: 'Client',
+      lessee: 'Expert',
+      enable_reviews: true,
+      auto_accept_invitation_as_collaborator: true
     }
     transactable_type.save!
   end
 
   def create_custom_attributes!
-    @instance.transactable_types.each do |tt|
-      states = tt.custom_attributes.where({
-        name: 'states'
-      }).first_or_initialize
-      states.assign_attributes({
-        label: 'States',
-        attribute_type: 'array',
-        html_tag: 'select',
+    @transactable_type = TransactableType.first
+    create_custom_attribute(@transactable_type, {
+        name: 'company_name',
+        label: 'Company Name',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "0",
+        placeholder: 'Enter Full Name',
         public: true,
-        searchable: true,
-        valid_values: %w(
-          AL AK AZ AR CA CO CT DE FL GA HI ID IL IA KS KY
-          LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC
-          ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY
-        )
-      })
-      states.save!
-    end
-    law_firm = InstanceProfileType.find(580).custom_attributes.where(name: 'law_firm').first_or_initialize
-    law_firm.assign_attributes({
-      label: 'Law Firm',
-      attribute_type: 'string',
-      html_tag: 'input',
-      public: true,
-      searchable: false
+        searchable: false
     })
-    law_firm.required = 1
-    law_firm.save!
-
-    law_firm = InstanceProfileType.find(579).custom_attributes.where(name: 'law_firm').first_or_initialize
-    law_firm.assign_attributes({
-      label: 'Law Firm',
-      attribute_type: 'string',
-      html_tag: 'input',
-      public: true,
-      searchable: false
+    create_custom_attribute(@transactable_type, {
+        name: 'about_company',
+        label: 'About Company (short description)',
+        attribute_type: 'string',
+        html_tag: 'textarea',
+        placeholder: 'Description of company',
+        required: "1",
+        public: true,
+        searchable: false
     })
-    law_firm.required = 1
-    law_firm.save!
+    create_custom_attribute(@transactable_type, {
+        name: 'estimation',
+        label: 'Approx. Time required to complete',
+        attribute_type: 'string',
+        html_tag: 'input',
+        placeholder: "Enter Amount (months, days, hours)",
+        required: "1",
+        public: true,
+        searchable: false
+    })
+    create_custom_attribute(@transactable_type, {
+        name: 'workplace_type',
+        label: 'Workplace Type',
+        attribute_type: 'string',
+        html_tag: 'select',
+        required: "1",
+        valid_values: ["Online", "On Site"],
+        public: true,
+        searchable: true
+    })
+    create_custom_attribute(@transactable_type, {
+        name: 'office_location',
+        label: 'Office Location',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "0",
+        placeholder: "Enter City or Area",
+        public: true,
+        searchable: false
+    })
+    create_custom_attribute(@transactable_type, {
+        name: 'budget',
+        label: 'Approximate value / budget',
+        attribute_type: 'float',
+        html_tag: 'input',
+        placeholder: "Enter Amount",
+        required: "1",
+        min_length: 1,
+        public: true,
+        searchable: false
+    })
+    create_custom_attribute(@transactable_type, {
+        name: 'deadline',
+        label: 'Deadline',
+        attribute_type: 'date',
+        html_tag: 'input',
+        placeholder: "Enter Amount",
+        required: "1",
+        public: true,
+        searchable: false
+    })
+    create_custom_attribute(@transactable_type, {
+        name: 'project_contact',
+        label: 'Project Contact',
+        attribute_type: 'string',
+        html_tag: 'input',
+        placeholder: "Enter Full Name",
+        required: "0",
+        public: true,
+        searchable: false
+    })
   end
 
   def create_categories!
-    root_category = Category.where(name: 'States').first_or_create!
+    root_category = Category.where(name: 'Languages').first_or_create!
     root_category.transactable_types = TransactableType.all
     root_category.mandatory = true
     root_category.multiple_root_categories = true
     root_category.search_options = 'exclude'
     root_category.save!
 
-    %w(AL AK AZ AR CA CO CT DE FL GA HI ID IL IA KS KY
-       LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC
-       ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY).each do |category|
+    %w(English Spanish French German Japanese Korean Italian Polish Russian Other).each do |category|
       root_category.children.where(name: category).first_or_create!
     end
   end
 
   def create_or_update_form_components!
+    TransactableType.first.form_components.destroy_all
 
-    @instance.transactable_types.each do |tt|
+    component = TransactableType.first.form_components.where(form_type: 'space_wizard').first_or_initialize
+    component.name = 'Add a Project'
+    component.form_fields = [
+      { "transactable" => "name" },
+      { "transactable" => "project_contact" },
+      { "transactable" => "company_name" },
+      { "transactable" => "about_company" },
+      { "transactable" => "description" },
+      { "transactable" => "estimation" },
+      { "transactable" => "workplace_type" },
+      { "transactable" => "office_location" },
+      { "transactable" => "Category - Languages" },
+      { "transactable" => "budget" },
+      { "transactable" => "deadline" }
+    ]
+    component.save!
+    component = TransactableType.first.form_components.where(form_type: 'transactable_attributes').first_or_initialize
+    component.name = 'Add a Project'
+    component.form_fields = [
+      { "transactable" => "name" },
+      { "transactable" => "company_name" },
+      { "transactable" => "about_company" },
+      { "transactable" => "project_contact" },
+      { "transactable" => "description" },
+      { "transactable" => "estimation" },
+      { "transactable" => "workplace_type" },
+      { "transactable" => "office_location" },
+      { "transactable" => "Category - Languages" },
+      { "transactable" => "budget" },
+      { "transactable" => "deadline" }
+    ]
+    component.save!
 
-      unless tt.form_components.any?
-        Utils::FormComponentsCreator.new(tt).create!
-      end
 
-      tt.form_components.find_by(name: 'Where is your Case located?')
-        .try(:update_column, :name, "Where is your #{tt.bookable_noun} located?")
-
-      component = tt.form_components.find_by(name: "Where is your #{tt.bookable_noun} located?")
-      component.form_fields = [
-        {'location'     => 'name'},
-        {'location'     => 'description'},
-        {'location'     => 'address'},
-        {'transactable' => 'states'},
-        {'location'     => 'location_type'},
-        {'location'     => 'phone'}
-      ]
-
-      component.save!
-    end
-    FormComponent.find(5404).update_attribute(:form_fields, [ { "user" => "name" }, { "user" => "email" }, { "user" => "password" }, { "buyer" => "law_firm" } ])
-    FormComponent.find(5402).update_attribute(:form_fields, [ { "user" => "name" }, { "user" => "email" }, { "user" => "password" }, { "buyer" => "law_firm" } ])
   end
 
   def set_theme_options
@@ -187,8 +209,8 @@ namespace :litvault do
     theme.call_to_action = 'Learn more'
 
     theme.phone_number = '1-555-555-55555'
-    theme.contact_email = 'support@litvault.com'
-    theme.support_email = 'support@litvault.com'
+    theme.contact_email = 'support@uot.com'
+    theme.support_email = 'support@uot.com'
 
     theme.facebook_url = 'https://facebook.com'
     theme.twitter_url = 'https://twitter.com'
@@ -212,11 +234,11 @@ namespace :litvault do
 
   def create_content_holders
     ch = @instance.theme.content_holders.where(
-      name: 'LitVault CSS'
+      name: 'UoT CSS'
     ).first_or_initialize
 
     ch.update!({
-      content: "<link rel='stylesheet' media='screen' href='https://raw.githubusercontent.com/mdyd-dev/marketplaces/master/litvault/css/litvault.css'>",
+      content: "<link rel='stylesheet' media='screen' href='https://raw.githubusercontent.com/mdyd-dev/marketplaces/master/uot/css/uot.css'>",
       inject_pages: ['any_page'],
       position: 'head_bottom'
     })
@@ -242,20 +264,27 @@ namespace :litvault do
   end
 
   def create_translations
+
+    @instance.translations.where(locale: 'en', key: 'transactable_type.project.labels.name').first_or_initialize.update!(value: 'Project Title')
+    @instance.translations.where(locale: 'en', key: 'transactable_type.project.placeholders.name').first_or_initialize.update!(value: 'Enter Title')
+
+    @instance.translations.where(locale: 'en', key: 'transactable_type.project.labels.description').first_or_initialize.update!(value: 'Vignette of a scope (describe the project)')
+    @instance.translations.where(locale: 'en', key: 'transactable_type.project.placeholders.description').first_or_initialize.update!(value: 'Description, format of delivery, any other requirements')
+
     transformation_hash = {
       'reservation' => 'offer',
       'Reservation' => 'Offer',
       'booking' => 'offer',
       'Booking' => 'Offer',
-      'host' => 'Referring Lawyer',
-      'Host' => 'Referring Lawyer',
-      'guest' => 'Handling Lawyer',
-      'Guest' => 'Handling Lawyer',
-      'this listing' => 'your Case',
-      'that listing' => 'your Case',
-      'This listing' => 'Your Case',
-      'That listing' => 'Your Case',
-      'listing' => 'Case'
+      'host' => 'Client',
+      'Host' => 'Client',
+      'guest' => 'Expert',
+      'Guest' => 'Expert',
+      'this listing' => 'your Project',
+      'that listing' => 'your Project',
+      'This listing' => 'Your Project',
+      'That listing' => 'Your Project',
+      'listing' => 'Project'
     }
     (Dir.glob(Rails.root.join('config', 'locales', '*.en.yml')) + Dir.glob(Rails.root.join('config', 'locales', 'en.yml'))).each do |yml_filename|
       en_locales = YAML.load_file(yml_filename)
@@ -279,17 +308,17 @@ namespace :litvault do
     @instance.translations.where(
       locale: 'en',
       key: 'sign_up_form.buyer_sign_up_to'
-    ).first_or_initialize.update!(value: 'Sign Up for LitVault')
+    ).first_or_initialize.update!(value: 'Sign Up for UoT')
 
     @instance.translations.where(
       locale: 'en',
       key: 'sign_up_form.seller_sign_up_to'
-    ).first_or_initialize.update!(value: 'Create a Referring Lawyer Account')
+    ).first_or_initialize.update!(value: 'Create a Client Account')
 
     @instance.translations.where(
       locale: 'en',
       key: 'ui.header.list_your_thing'
-    ).first_or_initialize.update!(value: 'Become a Referring Lawyer')
+    ).first_or_initialize.update!(value: 'Become a Client')
 
     @instance.translations.where(
       locale: 'en',
@@ -299,7 +328,7 @@ namespace :litvault do
     @instance.translations.where(
       locale: 'en',
       key: 'onboarding_wizard.list_your'
-    ).first_or_initialize.update!(value: 'Complete Your Case')
+    ).first_or_initialize.update!(value: 'Complete Your Project')
 
     @instance.translations.where(
       locale: 'en',
@@ -324,7 +353,7 @@ namespace :litvault do
     @instance.translations.where(
       locale: 'en',
       key: 'dashboard.nav.transactables'
-    ).first_or_initialize.update!(value: 'My Cases')
+    ).first_or_initialize.update!(value: 'My Projects')
 
     @instance.translations.where(
       locale: 'en',
@@ -369,8 +398,8 @@ namespace :litvault do
 
     create_translation!('dashboard.host_reservations.pending_confirmation', "You must confirm this offer within <strong>%{time_to_expiry}</strong> or it will expire.")
 
-    create_translation!('dashboard.transactables.title.listings', "My Cases")
-    create_translation!('dashboard.manage_listings.tab', "My Cases")
+    create_translation!('dashboard.transactables.title.listings', "My Projects")
+    create_translation!('dashboard.manage_listings.tab', "My Projects")
 
     create_translation!('dashboard.user_reservations.upcoming', "Offers Open")
     create_translation!('dashboard.user_reservations.archived', "Offers Closed")
@@ -382,44 +411,37 @@ namespace :litvault do
     create_translation!('reservations.states.unconfirmed', "Pending")
     create_translation!('reservations.states.confirmed', "Open")
     create_translation!('reservations.states.archived', "Closed")
-    create_translation!('reservations.states.cancelled_by_guest', "Cancelled by Handling Lawyer")
-    create_translation!('reservations.states.cancelled_by_host', "Cancelled by Referring Lawyer")
+    create_translation!('reservations.states.cancelled_by_guest', "Cancelled by Expert")
+    create_translation!('reservations.states.cancelled_by_host', "Cancelled by Client")
 
-    create_translation!('top_navbar.manage_bookable', "My Cases")
+    create_translation!('top_navbar.manage_bookable', "My Projects")
     create_translation!('top_navbar.bookings_received', "My Offers")
-    create_translation!('reservations_review.heading', "Bid on Case")
+    create_translation!('reservations_review.heading', "Bid on Project")
 
     create_translation!('reservations_review.errors.whoops', "Whoops! We couldn't make that offer.")
 
-    create_translation!('activemodel.errors.models.reservation_request.attributes.base.total_amount_changed', "Bid on Case")
-    create_translation!('dashboard.items.new_listing_full', "Add new Case")
+    create_translation!('activemodel.errors.models.reservation_request.attributes.base.total_amount_changed', "Bid on Project")
+    create_translation!('dashboard.items.new_listing_full', "Add new Project")
 
     create_translation!('reservations_review.disabled_buttons.request', "Bidding...")
     create_translation!('dashboard.transactables.view_html', "View Profile")
 
     create_translation!('buy_sell_market.products.labels.summary', "Overall Rating:")
-    create_translation!('dashboard.items.delete_listing', "Delete Case")
+    create_translation!('dashboard.items.delete_listing', "Delete Project")
 
-    create_translation!('sign_up_form.link_to_buyer', "Become a member here")
-    create_translation!('sign_up_form.link_to_seller', "Become a Referring Lawyer here")
+    create_translation!('sign_up_form.link_to_buyer', "Become an Expert here")
+    create_translation!('sign_up_form.link_to_seller', "Become a Client here")
 
     create_translation!('time.formats.short', "%l:%M %p")
 
     create_translation!('wish_lists.buttons.selected_state', "Favorite")
     create_translation!('wish_lists.buttons.unselected_state', "Favorite")
 
-    create_translation!('flash_messages.space_wizard.space_listed', "Your Case has been submitted to the marketplace!")
+    create_translation!('flash_messages.space_wizard.space_listed', "Your Project has been submitted to the marketplace!")
 
-    create_translation!('flash_messages.dashboard.locations.add_your_company', "Please complete your Case first.")
-    create_translation!('flash_messages.dashboard.add_your_company', "Please complete your Case first.")
+    create_translation!('flash_messages.dashboard.locations.add_your_company', "Please complete your Project first.")
+    create_translation!('flash_messages.dashboard.add_your_company', "Please complete your Project first.")
 
-    create_translation!('transactable_types.individual_case.labels.search', 'Individual Cases')
-    create_translation!('transactable_types.individual_case.labels.by_state', 'By State')
-    create_translation!('transactable_types.individual_case.labels.all_states', 'All States')
-
-    create_translation!('transactable_types.group_case.labels.search', 'Group Cases (Mass Torts)')
-    create_translation!('transactable_types.group_case.labels.by_state.', 'By State')
-    create_translation!('transactable_types.group_case.labels.all_states.', 'All States')
   end
 
   def create_email(path, body)
@@ -709,7 +731,7 @@ namespace :litvault do
           <div class='teaser-content'>
             <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2683/icn-save-time-energy.png' /></div>
             <h3 class='text-highlight'>SAVE TIME + ENERGY</h3>
-            <p>Our specialized marketplace connects <strong>Referring and Handling Lawyers</strong> to engage on a wide variety of contingent fee cases.</p>
+            <p>Our specialized marketplace connects <strong>Referring and Experts</strong> to engage on a wide variety of contingent fee cases.</p>
           </div>
         </div>
       </div>
@@ -719,7 +741,7 @@ namespace :litvault do
           <div class='teaser-content'>
             <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2684/icn-quality-selection.png' /></div>
             <h3 class='text-highlight'>QUALITY CASE SELECTION</h3>
-            <p>We provide a purpose-built platform that <strong>asks Referring Lawyers all the right questions</strong> so you don't have to.</p>
+            <p>We provide a purpose-built platform that <strong>asks Clients all the right questions</strong> so you don't have to.</p>
           </div>
         </div>
       </div>
@@ -756,7 +778,7 @@ namespace :litvault do
   <div class='container-fluid'>
 
     <header>
-      <h2>Benefits to <span class='text-highlight'>LitVault Members</span></h2>
+      <h2>Benefits to <span class='text-highlight'>UoT Members</span></h2>
       <h3>
         <span class='text-highlight'>Designed by lawyers for lawyers.</span>
         <span class='text-lighter'>Enjoy the time saving tools and process we have created.</span>
@@ -778,7 +800,7 @@ namespace :litvault do
         <div class='teaser'>
           <div class='teaser-content'>
             <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2687/icn-case-alerts.png' /></div>
-            <h3>Auto Case Notifications</h3>
+            <h3>Auto Project Notifications</h3>
             <p>Receive automatic notifications about new case listings in your practice area and your geography. Save your valuable time to work on cases instead of finding new cases.</p>
           </div>
         </div>
@@ -788,7 +810,7 @@ namespace :litvault do
         <div class='teaser'>
           <div class='teaser-content'>
             <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2688/icn-offer-engine.png' /></div>
-            <h3>Simple Case Offer Engine</h3>
+            <h3>Simple Project Offer Engine</h3>
             <p>Negotiate and contract on case listings using our simple, intuitive case offer engine.  It provides consistency and saves you time and energy.</p>
           </div>
         </div>
@@ -800,8 +822,8 @@ namespace :litvault do
         <div class='teaser'>
           <div class='teaser-content'>
             <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2689/icn-case-details.png' /></div>
-            <h3>Rich Case Details</h3>
-            <p>Our robust, curated case listing form already asks the Referring Lawyer the important questions about the facts of the case so you don't have to.</p>
+            <h3>Rich Project Details</h3>
+            <p>Our robust, curated case listing form already asks the Client the important questions about the facts of the case so you don't have to.</p>
           </div>
         </div>
       </div>
@@ -835,7 +857,7 @@ namespace :litvault do
 
     <div class='table-row'>
       <div class='sign-up table-cell'>
-        <h2 class='text-highlight'>Referring Lawyers</h2>
+        <h2 class='text-highlight'>Clients</h2>
         <h3 class='text-lighter'><span class='first-line'>Sign up and find out how</span> easy it is to list your first case.</h3>
         {% unless current_user %}
         <a href='#' data-href='/users/sign_up' data-modal='true' data-modal-class='sign-up-modal' data-modal-overlay-close='disabled' class='sign-up'>{{ 'top_navbar.sign_up' | translate }}</a>
@@ -855,7 +877,7 @@ namespace :litvault do
   <div class='container-fluid'>
 
     <header>
-      <h2>Trusted firms using <span class='text-highlight'>LitVault</span></h2>
+      <h2>Trusted firms using <span class='text-highlight'>UoT</span></h2>
       <h3><span class='text-lighter'>Designed by lawyers for lawyers. Enjoy the time saving tools and process we have created.</span></h3>
     </header>
 
@@ -869,7 +891,7 @@ namespace :litvault do
 
     <header>
       <h2><span class='text-highlight'>Testimonials</span></h2>
-      <h3><span class='text-lighter'>Learn what other lawyers have to say about LitVault.</span></h3>
+      <h3><span class='text-lighter'>Learn what other lawyers have to say about UoT.</span></h3>
     </header>
 
     <div class='table-row'>
@@ -877,7 +899,7 @@ namespace :litvault do
         <div class='teaser'>
           <div class='teaser-content'>
             <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2693/johnsmith.png' /></div>
-            <p>“LitVault takes a tedious process and converts into actionable simple steps.  I was able to get my case listed and live for review in a matter of minutes.”</p>
+            <p>“UoT takes a tedious process and converts into actionable simple steps.  I was able to get my case listed and live for review in a matter of minutes.”</p>
             <h3>John Smith</h3>
           </div>
         </div>
@@ -887,7 +909,7 @@ namespace :litvault do
         <div class='teaser'>
           <div class='teaser-content'>
             <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2694/robertmills.png' /></div>
-            <p>“Posting cases and getting responses from interested and qualified lawyers is as easy as it gets.  I highly recommend LitVault to everyone!”</p>
+            <p>“Posting cases and getting responses from interested and qualified lawyers is as easy as it gets.  I highly recommend UoT to everyone!”</p>
             <h3>Robert Mills</h3>
           </div>
         </div>
@@ -956,7 +978,7 @@ namespace :litvault do
 
   <div class='description column'>
     <img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2700/litvault-logo-icon.png'>
-    <p>LitVault is an online marketplace for the legal industry. We connect Referring and Handling Lawyers in order to collaborate on contingent fee plaintiffs' cases.</p>
+    <p>UoT is an online marketplace for the legal industry. We connect Referring and Experts in order to collaborate on contingent fee plaintiffs' cases.</p>
   </div>
 
   <div class='general column'>
@@ -1007,7 +1029,7 @@ namespace :litvault do
 
 <div class='copyright-wrapper'>
   <div class='copyright'>
-    &copy; 2016 LitVault. All rights reserved.
+    &copy; 2016 UoT. All rights reserved.
   </div>
 </div>
       },
@@ -1033,7 +1055,7 @@ namespace :litvault do
 </div>
 <div class="row">
   <div class="col-sm-6">Injury or Accident Date: 12/2/2015</div>
-  <div class="col-sm-6" style="text-align: right">Death Case: N</div>
+  <div class="col-sm-6" style="text-align: right">Death Project: N</div>
 </div>
 <div class="row">
   <div class="col-sm-6">Location of Injury or Accident: Missouri</div>
@@ -1130,7 +1152,7 @@ namespace :litvault do
 <h2>Offer</h2>
 {% if reservation.confirmed? %}
   <div class='row'>
-    <div class='col-sm-2'>Referring Lawyer</div>
+    <div class='col-sm-2'>Client</div>
     <div class='col-sm-2'>Offer Date</div>
     <div class='col-sm-2'>Offer Status</div>
     <div class='col-sm-2'>Accepted Date</div>
@@ -1259,7 +1281,7 @@ namespace :litvault do
 {% if reservation.confirmed? %}
   <h2>Offer Accepted</h2>
   <div class='row'>
-    <div class='col-sm-2'>Handling Lawyer</div>
+    <div class='col-sm-2'>Expert</div>
     <div class='col-sm-2'>Offer Date</div>
     <div class='col-sm-2'>Offer Status</div>
     <div class='col-sm-2'>Accepted Date</div>
@@ -1274,7 +1296,7 @@ namespace :litvault do
   <h2>Offers({{ reservation.all_other_orders.size }})</h2>
 
   <div class='row'>
-    <div class='col-sm-3'>Handling Lawyer</div>
+    <div class='col-sm-3'>Expert</div>
     <div class='col-sm-2'>Offer Date</div>
     <div class='col-sm-2'>Offer Status</div>
     <div class='col-sm-3'>Offer Actions</div>
@@ -1352,202 +1374,268 @@ namespace :litvault do
       view_type: 'view',
       locales: Locale.all
     })
-  end
 
-  def create_temporary_pages
-    page = theme.pages.where(slug: 'search-results').first_or_initialize
-    page.path = 'Search results'
-    page.content = %Q{
-<section class="search-form-wrapper">
-    <div class="search-form-inner">
-        <div class="search-form-type-toggle">
-            <h2><span class="struct-label">Current search type:</span> <span class="current-type" tabindex="0">Case Search</span></h2>
-            <h3 class="struct-label">Change search type to:</h3>
-            <ul>
-                <li class="selected"><a href="?casesearch">Case Search</a></li>
-                <li><a href="?peoplesearch">People Search</a></li>
-            </ul>
-        </div>
-        <form action="./" class="search-form">
-            <div class="fields">
-                <div class="query-field">
-                    <label for="field-q" class="struct-label">Search keyword</label>
-                    <input type="text" name="q" id="field-q" placeholder="Enter keywords&hellip;">
-                </div>
-                <div class="state-filter">
-                    <label for="field-state" class="struct-label">Filter by state</label>
-                    <span class="nice-select">
-                        <select name="state" id="field-state" class="unstyled-select">
-                            <option value="">By state</option>
-                            <option value="AZ">AZ</option>
-                            <option value="CA">CA</option>
-                        </select>
-                    </span>
-                </div>
-                <fieldset class="type-filter">
-                    <legend class="struct-label">Case type</legend>
-                    <ul>
-                        <li>
-                            <input type="radio" name="field-type" value="1" id="field-type-individual" checked>
-                            <label for="field-type-individual">Individual Cases</label>
-                        </li>
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'dashboard/company/transactables/index',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: %Q{
+{% assign i18n_title = 'dashboard.transactables.manage' | translate %}
+{% title i18n_title %}
 
-                        <li>
-                            <input type="radio" name="field-type" value="1" id="field-type-group">
-                            <label for="field-type-group">Group Cases (Mass Torts)</label>
-                        </li>
-                    </ul>
-                </fieldset>
-            </div>
-            <div class="form-action">
-                <button type="submit" class="btn-a">Search</button>
-            </div>
-        </form>
+{% capture is_client %}{% if current_user.buyer_profile == blank %}true{% else %}false{% endif %}{% endcapture %}
+{% if is_client == 'true' %}
+  {% assign role = 'lister' %}
+{% else %}
+  {% assign role = 'enquirer' %}
+{% endif %}
+
+{% if params.status != blank %}
+  {% assign current_status = params.status  %}
+{% else %}
+  {% assign current_status = 'pending'  %}
+{% endif %}
+
+{% content_for 'page_header' %}
+  <h1>
+    My Projects > {{ current_status | humanize }}
+  </h1>
+
+  {% if is_client == "true" %}
+    <div class='options visible-sm visible-xs'>
+      <a href='{{ transactable_type.new_transactable_path }}' class='btn btn-primary'>
+        <span class='fa fa-plus'></span>
+        {{ 'dashboard.items.new_listing_short' | translate }}
+      </a>
     </div>
-</section>
+  {% endif %}
+{% endcontent_for %}
 
-<div class="search-results-wrapper">
-    <section class="search-results">
-        <div class="search-results-query-info">
-            <span class="results-count"><b>2</b> Results Found</span>
-            <form action="./" class="search-sort-form">
-                <div>
-                    <label for="search-order">Sort by:</label>
-                    <span class="nice-select">
-                        <select id="search-order" name="search-order" class="unstyled-select">
-                            <option selected value="1">Newest</option>
-                            <option selected value="2">Oldest</option>
-                        </select>
-                    </span>
-                </div>
-            </form>
-        </div>
+{% content_for 'panel_navigation_links' %}
+    <li class='{{ 'pending' | active_class:current_status }}'>
+      <a href='{{ tt.transactable_types_path | append: "?status=pending" }}'>Projects Pending ({{ pending_transactables | total_entries }})</a>
+    </li>
+    <li class='{{ 'in progress' | active_class:current_status }}'>
+      <a href='{{ tt.transactable_types_path | append: "?status=in progress" }}'>Projects In Progress ({{ in_progress_transactables | total_entries }})</a>
+    </li>
+    <li class='{{ 'archived' | active_class:current_status }}'>
+      <a href='{{ tt.transactable_types_path | append: "?status=archived" }}'>Projects Archived ({{ archived_transactables | total_entries }})</a>
+    </li>
+{% endcontent_for %}
 
+{% content_for 'panel_options' %}
+  <div class='pull-right options {% if transactables.size > 0 %} additional-listing-options {% endif %}'>
 
-        <article class="search-result search-result-case">
-            <header class="search-result-header">
-                <h3><a href="./">Vehicle Accident</a></h3>
-
-                <div class="search-result-meta-action">
-                    <a href="./" class="btn-b">Bid on Case</a>
-                    <p class="meta">
-                        <span class="publish-date">posted 10 days ago</span>
-                        |
-                        <span class="favorite">
-                            <a href="./">favorite</a>
-                        </span>
-                    </p>
-                </div>
-            </header>
-
-            <ul class="search-result-case-properties">
-                <li>Car</li>
-                <li>Injury or Accident Date: <b>12/2/2015</b></li>
-                <li>Location of Injury or Accident: <b>Missouri</b></li>
-                <li>Days of Hospitalization: <b>5</b></li>
-                <li>Death Case: <b>No</b></li>
-            </ul>
-
-            <div class="search-result-description">
-                <p>In March 2015, my client was rear-ended by a truck owned by a large public company.  The accident occurred in Saint Louis, Missouri.  My client is also a resident of Missouri.  The driver of the truck was determined to be at fault in the accident report.  My client’s car was totaled and my client was hospitalized for 5 days and received physical therapy for 1 year.  My client was unable to work as a teacher for 2 months as a result of the accident.  My client’s injuries included broken ribs and a concussion.</p>
-            </div>
-
-            <p>Posted by <a href="./">Law Firm</a></p>
-
-            <div class="tags-a">
-                <h4>Tags</h4>
-                <ul>
-                    <li><a href="./">Car Accident</a></li>
-                    <li><a href="./">Missouri</a></li>
-                    <li><a href="./">Broken Leg</a></li>
-                    <li><a href="./">Hospitalization</a></li>
-                    <li><a href="./">Car Accident</a></li>
-                    <li><a href="./">Missouri</a></li>
-                    <li><a href="./">Broken Leg</a></li>
-                    <li><a href="./">Hospitalization</a></li>
-                </ul>
-
-                <button type="button" class="tags-more-trigger">View 4 More</button>
-            </div>
-        </article>
-
-        <article class="search-result search-result-case">
-            <header class="search-result-header">
-                <h3><a href="./">Vehicle Accident</a></h3>
-
-                <div class="search-result-meta-action">
-                    <a href="./" class="btn-b">Bid on Case</a>
-                    <p class="meta">
-                        <span class="publish-date">posted 10 days ago</span>
-                        |
-                        <span class="favorite">
-                            <a href="./">favorite</a>
-                        </span>
-                    </p>
-                </div>
-            </header>
-
-            <ul class="search-result-case-properties">
-                <li>Car</li>
-                <li>Injury or Accident Date: <b>12/2/2015</b></li>
-                <li>Location of Injury or Accident: <b>Missouri</b></li>
-                <li>Days of Hospitalization: <b>5</b></li>
-                <li>Death Case: <b>No</b></li>
-            </ul>
-
-            <div class="search-result-description">
-                <p>In March 2015, my client was rear-ended by a truck owned by a large public company.  The accident occurred in Saint Louis, Missouri.  My client is also a resident of Missouri.  The driver of the truck was determined to be at fault in the accident report.  My client’s car was totaled and my client was hospitalized for 5 days and received physical therapy for 1 year.  My client was unable to work as a teacher for 2 months as a result of the accident.  My client’s injuries included broken ribs and a concussion.</p>
-            </div>
-
-            <p>Posted by <a href="./">Law Firm</a></p>
-
-            <div class="tags-a">
-                <h4>Tags</h4>
-                <ul>
-                    <li><a href="./">Car Accident</a></li>
-                    <li><a href="./">Missouri</a></li>
-                    <li><a href="./">Broken Leg</a></li>
-                    <li><a href="./">Hospitalization</a></li>
-                    <li><a href="./">Car Accident</a></li>
-                    <li><a href="./">Missouri</a></li>
-                    <li><a href="./">Broken Leg</a></li>
-                    <li><a href="./">Hospitalization</a></li>
-                </ul>
-
-                <button type="button" class="tags-more-trigger">View 4 More</button>
-            </div>
-        </article>
-
-        <p class="search-results-more-trigger">
-            <a href="./" class="btn-a">More Cases</a>
-        </p>
-    </section>
-
-    <div class="search-results-filter">
-        <h2>Filter by types:</h2>
-        <ul>
-            <li>
-                <input type="checkbox" name="filter" id="filter-a"> <label for="filter-a">Individual Injury</label>
-
-                <ul>
-                    <li>
-                        <input type="checkbox" name="filter" id="filter-b"> <label for="filter-b">Sub</label>
-                        <ul>
-                            <li>
-                                <input type="checkbox" name="filter" id="filter-c"> <label for="filter-c">Sub sub long label that should wrap </label>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <input type="checkbox" name="filter" id="filter-d"> <label for="filter-d">Individual Non-injury</label>
-            </li>
-        </ul>
+    {% if is_client == 'true' %}
+      <a href='{{ transactable_type.new_transactable_path }}' class='btn btn-primary navbar-btn'>
+        <span class='fa fa-plus'></span>
+        {{ 'dashboard.items.new_listing_full' | translate: type: transactable_type.bookable_noun_plural }}
+      </a>
     </div>
+  {% endif %}
+{% endcontent_for %}
+
+<nav class='panel-nav-mobile visibile-sm visible-xs' role='navigation'>
+  {% dropdown_menu { label: transactable_type.bookable_noun_plural, wrapper_class: 'links' } %}
+    {% yield 'panel_navigation_links' %}
+  {% enddropdown_menu %}
+</nav>
+
+<nav class='panel-nav hidden-xs hidden-sm'>
+  <ul class='tabs pull-left'>
+    {% yield 'panel_navigation_links' %}
+  </ul>
+  {% yield 'panel_options' %}
+</nav>
+
+{% if current_status == 'pending' %}
+  {% include 'dashboard/company/transactables/listing.html' transactables: pending_transactables, param_name: 'pending_page' %}
+{% elsif current_status == 'in progress' %}
+  {% include 'dashboard/company/transactables/listing.html' transactables: in_progress_transactables, param_name: 'in_progress_page' %}
+{% elsif current_status == 'archived' %}
+  {% include 'dashboard/company/transactables/listing.html' transactables: archived_transactables, param_name: 'archived_page' %}
+{% endif %}
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: false,
+      view_type: 'view',
+      locales: Locale.all
+    })
+
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'dashboard/company/transactables/listing',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: %Q{
+<div class='panel'>
+  <div class='panel-body'>
+
+    {% if true %}
+      {% assign form_url = transactable_type.transactable_types_path %}
+
+      {% form_for :transactable, url: @form_url, method: 'get', html-class: 'search', form_for_type: 'dashboard' %}
+        {% assign query_label = 'dashboard.items.search.search_your_products' | translate %}
+        {% input query, as: 'search', label: @query_label, input_html-value: @params['query'], input_html-name: 'query' label_html-class: 'sr-only' %}
+        {% submit submit, class: 'hidden-xs hidden-sm btn btn-default' %}
+      {% endform_for %}
+    {% endif %}
+
+  </div>
+
+  {% if transactables.size > 0 %}
+    {% if is_client == "true" %}
+      {% include 'dashboard/company/transactables/client_listing.html' %}
+    {% else %}
+      {% include 'dashboard/company/transactables/sme_listing.html' %}
+    {% endif %}
+  {% else %}
+    <p class='empty-resultset'>
+      {{ 'dashboard.items.empty' | translate: name: transactable_type.bookable_noun_plural }}
+    </p>
+  {% endif %}
 </div>
-    }
-    page.save
+
+{% will_paginate collection: transactables, inner_window: 1, outer_window: 0, class: '', renderer: dashboard, param_name: @param_name %}
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'dashboard/company/transactables/sme_actions',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: %Q{
+{% if transactable.user_messages.size == 0 %}
+  <a class="btn btn-info" data-modal="true" href="{{ 'new_reservation_user_message_path' | generate_url: transactable.id, skip: true }}">Send Message</a>
+{% else %}
+  <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: transactable.user_messages.first.id }}">Send Message</a>
+{% endif %}
+
+{{ transactable.creator.click_to_call_button }}
+
+{% if can_make_offer == true %}
+  <div class="make-offer">
+      {% assign make_offer_url = 'listing_orders_path' | generate_url: transactable %}
+      {% form_for :order, url: @make_offer_url, method: 'post' %}
+        <input type="hidden" name="order[booking_type]" value="offer" >
+        <input value="{{ transactable.id }}" type="hidden" name="order[transactable_id]" id="order_transactable_id">
+        <input value="{{ transactable.action_type.pricings.first.id }}" type="hidden" name="order[transactable_pricing_id]" id="order_transactable_pricing_id">
+        {% submit 'Make Offer' %}
+      {% endform_for %}
+  </div>
+{% elsif current_status == 'in progress' %}
+  In progress
+{% endif %}
+
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'dashboard/company/transactables/sme_listing',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: %Q{
+{% for transactable in transactables %}
+  {% assign collaborator = current_user  | find_collaborator: transactable %}
+  <article class="listing">
+    <h2>{{ transactable.name }}</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <p>Contact: {{ transactable.properties.project_contact }}</p>
+        <p>Company: {{ transactable.properties.company_name }}</p>
+        <p>Invite sent: {{ collaborator.approved_by_owner_at | to_date | l: 'short' }}</p>
+        <p>Workplace: {{ transactable.properties.workplace_type }}</p>
+      </div>
+      <div class="col-md-6">
+        <p>Approx. Budget: {{ transactable.properties.budget | pricify }}</p>
+        <p>Deadline: {{ transactable.properties.deadline | to_date | l: 'short' }}</p>
+        <p>Approx. Time to Complete: {{ transactable.properties.estimation }}</p>
+      </div>
+    </div>
+    <h4>Project Description</h4>
+    <p>{{ transactable.description }}</p>
+
+    {% assign orders = current_user | get_enquirer_orders: transactable %}
+    {% assign can_make_offer = false %}
+    {% if current_status == 'pending' %}
+      {% if orders == empty %}
+        {% assign can_make_offer = true %}
+      {% else %}
+        {% assign can_make_offer = true %}
+        {% for order in orders %}
+          {% if order.state == 'unconfirmed' %}
+            {% assign can_make_offer = false %}
+          {% endif %}
+        {% endfor %}
+      {% endif  %}
+    {% endif %}
+
+    {% include 'dashboard/company/transactables/sme_actions.htnl' %}
+
+    <hr>
+
+    {% if orders != empty %}
+      <h3>Offer</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Offer Made:</th>
+            <th>Offer Status:</th>
+            <th>Offer Action:</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+            <tr>
+              <td>{{ order.created_at | to_date | l: 'short' }}</td>
+              <td>{{ 'reservations.states.' | append: order.state | t }}</td>
+              <td>
+                {% if order.state == 'unconfirmed' %}
+                  <a href="#">Edit</a>
+                {% endif %}
+                {% if order.state == 'unconfirmed' %}
+                  <a href="#">Cancel</a>
+                {% endif %}
+                {% if order.state == 'confirmed' or order.state == 'rejected' %}
+                  <a href="#">View order</a>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+
+  </article>
+{% endfor %}
+
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+
+
   end
 
   # def create_theme_footer!
@@ -1565,5 +1653,15 @@ namespace :litvault do
   #     locales: Locale.all
   #   })
   # end
+  #
+  def create_custom_attribute(object, hash)
+      hash = hash.with_indifferent_access
+      attr = object.custom_attributes.where({
+        name: hash.delete(:name)
+      }).first_or_initialize
+      attr.assign_attributes(hash)
+      attr.set_validation_rules!
+  end
 
 end
+

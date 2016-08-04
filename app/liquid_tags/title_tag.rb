@@ -8,6 +8,7 @@ class TitleTag < Liquid::Tag
 
   def render(context)
     context.registers[:action_view].send(:title, context[@title])
+    nil
   end
 
 end
