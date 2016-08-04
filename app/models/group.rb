@@ -66,7 +66,7 @@ class Group < ActiveRecord::Base
   def self.custom_order(sort_name, params)
     case sort_name
     when /featured/i
-      order(featured: :desc)
+      where(featured: true)
     when /most recent/i
       order(created_at: :desc)
     when /near me/i
