@@ -8,6 +8,7 @@ class DropdownMenuBlock < Liquid::Block
   end
 
   def render(context)
+    @attributes = normalize_liquid_tag_attributes(@attributes, context)
     context.registers[:action_view].send(:dropdown_menu, context[@label], @attributes) { super.html_safe }
   end
 end

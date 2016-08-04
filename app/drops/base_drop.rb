@@ -17,6 +17,10 @@ class BaseDrop < Liquid::Drop
 
   private
 
+  def hidden_ui_by_key(key)
+    HiddenUiControls.find(key)
+  end
+
   def hide_tab?(tab)
     key = "#{@context['params'][:controller]}/#{@context['params'][:action]}##{tab}"
     HiddenUiControls.find(key).hidden?

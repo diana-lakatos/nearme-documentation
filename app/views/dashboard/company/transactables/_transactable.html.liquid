@@ -1,8 +1,8 @@
 {% for transactable in transactables %}
   <tr>
     <td class='thumb'>
-      <a href='{{ transactable.show_path }}' class='hidden-xs'><img src='{{ transactable.photo_url }}'></a>
-      <a href='{{ transactable.edit_path }}' class='visible-xs'><img src='{{ transactable.photo_url }}'></a>
+      <a href='{{ transactable.show_path }}' class='hidden-xs'><img src='{{ transactable.photo_medium_url }}'></a>
+      <a href='{{ transactable.edit_path }}' class='visible-xs'><img src='{{ transactable.photo_medium_url }}'></a>
     </td>
 
     <td class='name'>
@@ -11,10 +11,10 @@
     </td>
 
     <td class='location hidden-sm hidden-xs'>
-      {% if transactable.skip_location? %}
-        {{ transactable.location_name }}
-      {% else %}
+      {% if transactable_type.skip_location? %}
         {{ transactable.quantity }}
+      {% else %}
+        {{ transactable.location_name }}
       {% endif %}
     </td>
 
