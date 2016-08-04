@@ -6,6 +6,11 @@
       %h2
         = @group.name
 
+      - if @group.current_address.present?
+        %p.group-location
+          %span Group location:
+          = @group.current_address.address
+
       .owner-card
         %figure
           = image_tag @group.creator.avatar.url(:thumb), width: 80
