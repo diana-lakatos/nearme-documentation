@@ -645,7 +645,8 @@ class Transactable < ActiveRecord::Base
         type: "Transactable::#{tt_action_type.class.name.demodulize}"
       ) unless action_types.any?{ |at| at.transactable_type_action_type == tt_action_type }
     end
-    self.action_type ||= action_types.first
+    self.action_type ||= action_types.find(&:enabled) || action_types.first
+    self.action_type.enabled = true
   end
 
   def self.custom_order(order)

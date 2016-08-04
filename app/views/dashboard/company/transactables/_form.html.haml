@@ -3,12 +3,12 @@
 = f.input :id, as: :hidden
 
 = f.simple_fields_for :properties, f.object.properties do |properties_form|
-
+  - unless @form_components.map(&:form_fields).map{|ff| ff.map(&:values).flatten }.flatten.include? 'price'
+    = render "dashboard/company/transactables/form_fields/price", f: f, form_fields: {}, model: 'transactable'
   - @form_components.each_with_index do |form_component, index|
     - component_class = 'listing-form-component panel-tab-container'
     - component_class = "#{component_class} active" if index == 0
     %div{class: component_class, indexid: "form-component-#{form_component.id}"}
-
       - form_component.form_fields.each do |form_field|
 
         - model = form_field.keys.first

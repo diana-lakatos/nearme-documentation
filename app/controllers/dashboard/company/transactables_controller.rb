@@ -34,6 +34,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     @transactable.location ||= @company.locations.first if @transactable_type.skip_location?
     @transactable.attachment_ids = attachment_ids_for(@transactable)
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
+    @transactable.initialize_action_types
 
     if @transactable.save
       @transactable.action_type.try(:schedule).try(:create_schedule_from_schedule_rules)
@@ -47,7 +48,6 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
       @global_errors = filter_error_messages(@transactable.errors.full_messages)
       @photos = @transactable.photos
       @attachments = @transactable.attachments
-      @transactable.initialize_action_types
       render :new
     end
   end
@@ -76,6 +76,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     @transactable.attachment_ids = attachment_ids_for(@transactable)
     @transactable.assign_attributes(transactable_params)
     @transactable.action_type = @transactable.action_types.find(&:enabled)
+    @transactable.initialize_action_types
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
 
     respond_to do |format|

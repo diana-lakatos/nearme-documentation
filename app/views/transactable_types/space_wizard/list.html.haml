@@ -24,7 +24,8 @@
           = companies_form.simple_fields_for :locations, @user.companies.first.locations.first do |locations_form|
             = locations_form.simple_fields_for :listings, @transactable do |listings_form|
               = listings_form.simple_fields_for :properties, @user.companies.first.locations.first.listings.first.properties do |properties_form|
-
+                - unless @form_components.map(&:form_fields).map{|ff| ff.map(&:values).flatten }.flatten.include? 'price'
+                  = render "dashboard/company/transactables/form_fields/price", f: listings_form, form_fields: {}, model: 'transactable'
                 - @form_components.each do |form_component|
                   .panel
                     .panel-body
