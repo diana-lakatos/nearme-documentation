@@ -5,9 +5,11 @@
 
 - actions = ['booking_successful', 'upcoming', 'booking_failed']
 - tabs = []
-- tabs.push({ name: "#{t('dashboard.orders.state.unconfirmed')} (#{@order_search_service.upcoming_count})".html_safe, url: path_to_orders(state: 'unconfirmed'), active: @order_search_service.state == :unconfirmed })
-- tabs.push({ name: "#{t('dashboard.orders.state.confirmed')} (#{@order_search_service.confirmed_count})".html_safe, url: path_to_orders(state: 'confirmed'), active: @order_search_service.state == :confirmed })
-- tabs.push({ name: "#{t('dashboard.orders.state.archived')} (#{@order_search_service.archived_count})".html_safe, url: path_to_orders(state: 'archived'), active: @order_search_service.state == :archived})
+/ - tabs.push({ name: "#{t('dashboard.orders.state.unconfirmed')} (#{@order_search_service.upcoming_count})".html_safe, url: path_to_orders(state: 'unconfirmed'), active: @order_search_service.state == :unconfirmed })
+/ - tabs.push({ name: "#{t('dashboard.orders.state.confirmed')} (#{@order_search_service.confirmed_count})".html_safe, url: path_to_orders(state: 'confirmed'), active: @order_search_service.state == :confirmed })
+/ - tabs.push({ name: "#{t('dashboard.orders.state.archived')} (#{@order_search_service.archived_count})".html_safe, url: path_to_orders(state: 'archived'), active: @order_search_service.state == :archived})
+
+- tabs = Order.dashboard_tabs(controller_name == 'orders_received').map { |tab_name| { name: "#{t("dashboard.orders.state.#{tab_name}")} (#{ @order_search_service.count(tab_name)})".html_safe, url:  path_to_orders(state: tab_name), active: @order_search_service.state == tab_name }}
 
 = dashboard_panel_multi_tabs(tabs)
 

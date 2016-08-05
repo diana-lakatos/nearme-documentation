@@ -2,15 +2,19 @@ class OrderSearchService
   def initialize(order_scope, options)
     @order_scope = order_scope
     @options = options
+    @company_dashboard = options[:controller] == 'dashboard/company/orders_received'
+    @all_states = Order.dashboard_tabs(@company_dashboard)
   end
 
   def state
-    @state ||= (Order.state_machine.states.map(&:name) + [:archived] & [@options[:state].try(:to_sym)]).try(:first) || :unconfirmed
+    @state ||= (@all_states & [@options[:state]]).try(:first) || @all_states.first
   end
 
   def orders
-    if state == :archived
+    if state == 'archived'
       @orders = @order_scope.archived
+    elsif state == 'not_archived'
+      @orders = @order_scope.not_archived
     else
       @orders = @order_scope.not_archived.where(state: state)
     end
@@ -45,16 +49,33 @@ class OrderSearchService
     end
   end
 
-  def upcoming_count
-    @upcoming_count ||= @order_scope.unconfirmed.count
+  def count(state)
+    if instance_variable_defined?("@#{state}_count")
+      instance_variable_get("@#{state}_count")
+    else
+      if state == :archived
+        @orders = @order_scope.archived
+      elsif state == 'not_archived'
+        @orders = @order_scope.not_archived
+      else
+        @orders = @order_scope.not_archived.where(state: state)
+      end
+
+      instance_variable_set("@#{state}_count", @orders.count)
+    end
   end
 
-  def confirmed_count
-    @confirmed_count ||= @order_scope.confirmed.not_archived.count
-  end
 
-  def archived_count
-    @archived_count ||= @order_scope.archived.count
-  end
+  # def upcoming_count
+  #   @upcoming_count ||= @order_scope.unconfirmed.count
+  # end
+
+  # def confirmed_count
+  #   @confirmed_count ||= @order_scope.confirmed.not_archived.count
+  # end
+
+  # def archived_count
+  #   @archived_count ||= @order_scope.archived.count
+  # end
 
 end

@@ -1271,6 +1271,8 @@ en:
         confirmed: "Confirmed"
         completed: "Completed"
         archived: "Archived"
+        not_archived: "Active"
+        overdue: "Overdue"
       columns:
         listing: "Listing"
         total: "Total"
