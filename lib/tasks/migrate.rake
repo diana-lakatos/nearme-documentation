@@ -420,8 +420,6 @@ namespace :migrate do
         transactable = old_recurring_booking.listing
         recurring_booking.user = old_recurring_booking.owner
         recurring_booking.transactable = transactable
-        recurring_booking.starts_at = old_recurring_booking.start_on
-        recurring_booking.ends_at = old_recurring_booking.end_on
 
         transactable_line_item = recurring_booking.transactable_line_items.build({
           line_itemable: recurring_booking,
@@ -439,6 +437,12 @@ namespace :migrate do
         end
 
         if recurring_booking.save
+          recurring_booking.update_attributes({
+            starts_at: old_recurring_booking.start_on,
+            ends_at: old_recurring_booking.end_on,
+            next_charge_date: old_recurring_booking.next_charge_date
+          })
+
           old_recurring_booking.update_column(:order_id, recurring_booking.id)
           old_recurring_booking.payment_subscription.update_attribute(:subscriber, recurring_booking)
           old_recurring_booking.user_messages.each { |um| um.update_attribute(:thread_context, recurring_booking) }

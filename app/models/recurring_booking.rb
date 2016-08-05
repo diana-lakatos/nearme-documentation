@@ -84,7 +84,7 @@ class RecurringBooking < Order
 
   # Temporary work around, change when there's time for it
   def start_on
-    starts_at.try(:to_date)
+    starts_at.try(:utc).try(:to_date)
   end
 
   def end_on
