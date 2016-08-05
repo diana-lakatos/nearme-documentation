@@ -114,6 +114,7 @@ en:
     required: 'required'
     show: 'Show'
     none: "None"
+    customized: ' - customized'
     day:
       one: "day"
       other: "days"

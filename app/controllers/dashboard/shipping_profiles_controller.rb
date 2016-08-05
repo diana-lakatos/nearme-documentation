@@ -32,6 +32,10 @@ class Dashboard::ShippingProfilesController < Dashboard::BaseController
       @shipping_profile.global = false
       @shipping_profile.save
       profile_params = shipping_profile_params
+      if profile_params[:name] == @shipping_profile.name
+        @shipping_profile.name += I18n.t('general.customized')
+        profile_params.delete :name
+      end
       profile_params["shipping_rules_attributes"].each{ |k,values| values.delete('id')}
     else
       @shipping_profile = shipping_profile
