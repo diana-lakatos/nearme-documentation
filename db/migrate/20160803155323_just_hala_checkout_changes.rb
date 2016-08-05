@@ -1,6 +1,8 @@
 class JustHalaCheckoutChanges < ActiveRecord::Migration
   def up
-    @instance = Instance.find(175)
+    @instance = Instance.find_by(id: 175)
+    return true if @instance.nil?
+
     @instance.set_context!
 
     ch = @instance.theme.content_holders.find_by(
