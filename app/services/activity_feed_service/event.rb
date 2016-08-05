@@ -83,6 +83,16 @@ class ActivityFeedService::Event
     self.text = I18n.t(@event.i18n_key, user: user, project: project).html_safe
   end
 
+  def user_commented_on_user_activity
+    comment = @event.event_source
+    user = link_if_not_deleted(comment.creator, :secret_name)
+    followed = link_if_not_deleted(@event.followed, :secret_name, :name)
+    type = link_if_not_deleted(comment.commentable.event_source.updateable, :name)
+
+    self.image = image_or_placeholder(comment.creator.avatar.url(:medium))
+    self.text = I18n.t(@event.i18n_key, user: user, followed: followed, type: type).html_safe
+  end
+
   def user_created_group
     group = @event.event_source
     self.image = image_or_placeholder(group.creator.avatar.url(:medium))

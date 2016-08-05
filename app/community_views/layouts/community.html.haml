@@ -13,7 +13,8 @@
               %h1.logo
                 = link_to root_url, accesskey: 'h' do
                   = image_tag "intel/logo-white.png", width: 59, height: 39, alt: current_instance.name
-                  = t :developer_mesh
+                  %span.text
+                    = t :developer_mesh
 
               = render 'shared/topnav' unless @omit_topnav
 

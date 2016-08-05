@@ -14,10 +14,11 @@ class Link < ActiveRecord::Base
 
   mount_uploader :image, LinkImageUploader
 
-  after_commit :user_added_links_to_project_event, on: [:create, :update]
-  def user_added_links_to_project_event
-    if linkable.present? && linkable_type == "Project" && !linkable.draft? && !self.skip_activity_feed_event
-      event = :user_added_links_to_project
+  after_commit :user_added_links_event, on: [:create, :update], if: -> { ['Group', 'Project'].include?(linkable_type) }
+
+  def user_added_links_event
+    if linkable.present? && !linkable.draft? && !self.skip_activity_feed_event
+      event = ['user_added_links_to', linkable_type.downcase].join('_').to_sym
       ActivityFeedService.create_event(event, self.linkable, [self.linkable.creator], self)
     end
   end
@@ -32,4 +33,3 @@ class Link < ActiveRecord::Base
   end
 
 end
-
