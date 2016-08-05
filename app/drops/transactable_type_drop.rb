@@ -12,7 +12,7 @@ class TransactableTypeDrop < BaseDrop
   #   translation namespace that is a prefix for translation keys specific to this transactable type
   # translated_bookable_noun
   #   translated name of this transactable type, based on current language
-  delegate :id, :buyable?, :action_price_per_unit, :show_page_enabled?, :translated_bookable_noun,
+  delegate :id, :action_price_per_unit, :show_page_enabled?, :translated_bookable_noun,
     :translation_key_suffix, :translation_namespace, :show_date_pickers, :searcher_type, :slug,
     :search_input_name, :search_field_placeholder, :skip_location?, to: :source
 

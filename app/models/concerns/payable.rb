@@ -25,6 +25,8 @@ module Payable
     accepts_nested_attributes_for :transactable_line_items, allow_destroy: Proc.new {|p| p.inactive? }
     accepts_nested_attributes_for :additional_line_items, allow_destroy: Proc.new {|p| p.deleteable? }
 
+    validates_associated :line_items
+
     before_update :authorize_payment
     before_create :build_first_line_item
     after_save :create_additional_charges

@@ -6,7 +6,7 @@ class Transactable::Pricing < ActiveRecord::Base
   scoped_to_platform_context
 
   belongs_to :instance
-  belongs_to :action, -> { with_deleted }, polymorphic: true, inverse_of: :pricings
+  belongs_to :action, -> { with_deleted }, polymorphic: true, inverse_of: :pricings, touch: true
   belongs_to :transactable_type_pricing, class_name: '::TransactableType::Pricing'
 
   attr_accessor :enabled

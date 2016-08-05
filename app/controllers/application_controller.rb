@@ -137,16 +137,8 @@ class ApplicationController < ActionController::Base
 
   helper_method :authorizer
 
-  def buyable?
-    @buyable ||= platform_context.instance.buyable?
-  end
-
   def bookable?
     @bookable ||= platform_context.instance.bookable?
-  end
-
-  def subscribable?
-    @subscribable ||= platform_context.instance.subscribable?
   end
 
   # maybe we will rename project to follow? making this followable? for now this stupid name :)
@@ -154,11 +146,7 @@ class ApplicationController < ActionController::Base
     @projectable ||= platform_context.instance.projectable?
   end
 
-  def biddable?
-    @biddable ||= platform_context.instance.biddable?
-  end
-
-  helper_method :buyable?, :bookable?, :projectable?, :subscribable?, :biddable?
+  helper_method :bookable?, :projectable?
 
   # Provides an EventTracker instance for the current request.
   #

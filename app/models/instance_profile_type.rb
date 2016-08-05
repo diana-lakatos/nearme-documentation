@@ -65,9 +65,5 @@ class InstanceProfileType < ActiveRecord::Base
     @instance_profile_type_drop ||= InstanceProfileTypeDrop.new(self)
   end
 
-  def buyable?
-    false
-  end
-
 end
 
