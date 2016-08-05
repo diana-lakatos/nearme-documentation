@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160804180021) do
+ActiveRecord::Schema.define(version: 20160805133339) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1296,6 +1296,8 @@ ActiveRecord::Schema.define(version: 20160804180021) do
     t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
+    t.string   "orders_received_tabs"
+    t.string   "my_orders_tabs"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree

@@ -2,6 +2,8 @@ class Order < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
 
   ORDER_TYPES = ['Reservation', 'RecurringBooking', 'Purchase', 'DelayedReservation']
+  STATES = ['unconfirmed', 'confirmed', 'overdue', 'archived', 'not_archived']
+  DEFAULT_DASHBOARD_TABS = ['unconfirmed', 'confirmed', 'archived']
 
   include Encryptable
   include Modelable
@@ -104,6 +106,17 @@ class Order < ActiveRecord::Base
   }
 
   delegate :photos, to: :transactable, allow_nil: true
+
+  # You can customize order tabs (states) displauyed in dashboard
+  # via orders_received_tabs and my_orders_tabs Instance attributes
+
+  def self.dashboard_tabs(company_dashboard=false)
+    if company_dashboard
+      PlatformContext.current.instance.orders_received_tabs
+    else
+      PlatformContext.current.instance.my_orders_tabs
+    end.presence || DEFAULT_DASHBOARD_TABS
+  end
 
   def schedule_refund(transition, run_at = Time.zone.now)
     if payment.paid? && !skip_payment_authorization?
