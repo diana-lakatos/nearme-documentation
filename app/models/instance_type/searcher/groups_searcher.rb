@@ -33,8 +33,8 @@ class InstanceType::Searcher::GroupsSearcher
 
   def sort_params
     {
-      lat: @current_user.current_address.try(:latitude),
-      lng: @current_user.current_address.try(:longitude)
+      lat: @current_user.try(:current_address).try(:latitude),
+      lng: @current_user.try(:current_address).try(:longitude)
     }
   end
 
