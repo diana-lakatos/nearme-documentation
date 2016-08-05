@@ -253,6 +253,7 @@ en:
       user_created_group: '%{user} created group %{group}'
       user_added_photos_to_group: '%{user} added photos to group %{group}'
       user_updated_group_status: '%{user} posted an update in %{group}'
+      user_commented_on_user_activity: "%{user} commented on %{followed}'s update in %{type}"
 
   # groups
   group:

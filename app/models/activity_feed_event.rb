@@ -21,6 +21,7 @@ class ActivityFeedEvent < ActiveRecord::Base
     user_created_group
     user_added_photos_to_group
     user_updated_group_status
+    user_commented_on_user_activity
 
     topic_created
   ).freeze
@@ -92,6 +93,7 @@ class ActivityFeedEvent < ActiveRecord::Base
       user_created_group
       user_added_photos_to_group
       user_updated_group_status
+      user_commented_on_user_activity
     ).include?(event)
   end
 
