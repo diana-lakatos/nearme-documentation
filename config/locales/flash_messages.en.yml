@@ -111,6 +111,8 @@ en:
           deleted: 'User has been successfully deleted.'
           restored: 'User has been successfully restored.'
           restore_email_taken: 'User could not be restored, that email address is currently in use.'
+          login_as:
+            no_permissions: 'You have no permissions to login as selected user.'
           user_ban:
             created: 'User has been banned from the marketplace.'
             not_created: 'User has not been banned from the marketplace.'

@@ -25,6 +25,11 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
   end
 
   def login_as
+    if resource.admin?
+      flash[:error] = t('flash_messages.instance_admin.manage.users.login_as.no_permissions')
+      redirect_to(instance_admin_manage_users_path) and return
+    end
+
     admin_user = current_user
     sign_out
 
