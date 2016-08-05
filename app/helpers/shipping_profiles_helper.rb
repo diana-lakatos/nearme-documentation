@@ -24,7 +24,7 @@ module ShippingProfilesHelper
     end
     options << [
       t('transactables.disable_shipping'),
-      'disabled',
+      '0',
       { data: { shipping_type: 'predefined' } }
     ]
   end

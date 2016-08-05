@@ -15,7 +15,12 @@ module.exports = class DimensionsTemplateController
     state = element.data('shipping-type') == 'predefined'
     if state
       @dimensions_template_fields.hide()
+      if @dimensions_template_fields.find("input#transactable_dimensions_template_attributes__destroy").length > 0
+        @dimensions_template_fields.find("input#transactable_dimensions_template_attributes__destroy").val('1')
     else
       @dimensions_template_fields.removeClass('hidden')
       @dimensions_template_fields.show()
+      if @dimensions_template_fields.find("input#transactable_dimensions_template_attributes__destroy").length > 0
+        @dimensions_template_fields.find("input#transactable_dimensions_template_attributes__destroy").val('0')
+
     @template.trigger('toggle.dimensiontemplates', [!state])

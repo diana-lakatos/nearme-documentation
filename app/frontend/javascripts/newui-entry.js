@@ -294,19 +294,6 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    var els = $('.rental-shipping-type-section');
-    if (els.length === 0) {
-        return;
-    }
-    require.ensure('./new_ui/controllers/rental_shipping_controller', function(require){
-        var ShippoController = require('./new_ui/controllers/rental_shipping_controller');
-        els.each(function(){
-            return new ShippoController(this);
-        });
-    });
-});
-
-DNM.registerInitializer(function(){
     var els = $('[data-booking-type-list]');
     if (els.length === 0) {
         return;

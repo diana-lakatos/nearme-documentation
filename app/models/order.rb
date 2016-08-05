@@ -408,6 +408,10 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def delivery_ids
+    shipments.map(&:delivery_id).join(',')
+  end
+
   def build_return_shipment
     if shipments.one? && shipments.first.shipping_rule.shipping_profile.shippo_return? && shipping_address.valid?
       outbound_shipping = shipments.first

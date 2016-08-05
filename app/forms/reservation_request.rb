@@ -186,7 +186,7 @@ class ReservationRequest < Form
   end
 
   def with_delivery?
-    current_instance.shippo_enabled? && (@listing.rental_shipping_type == 'delivery' || (@listing.rental_shipping_type == 'both' && delivery_type == 'delivery'))
+    current_instance.shippo_enabled?
   end
 
   def get_shipping_rates

@@ -1,4 +1,4 @@
-class RecurringBookingDrop < BaseDrop
+class RecurringBookingDrop < OrderDrop
 
   attr_reader :recurring_booking
 
@@ -42,7 +42,7 @@ class RecurringBookingDrop < BaseDrop
   delegate :bookable_noun, :translated_bookable_noun, to: :transactable_type
 
   def initialize(recurring_booking)
-    @recurring_booking = recurring_booking.decorate
+    @order = @recurring_booking = recurring_booking.decorate
   end
 
   def transactable

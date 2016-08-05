@@ -29,13 +29,13 @@ SimpleNavigation::Configuration.run do |navigation|
           dashboard_nav_item primary, 'dashboard/projects', dashboard_project_type_projects_path(ProjectType.first)
         end
       end
-
-
+      if current_user.registration_completed?
+        dashboard_nav_item primary, 'dashboard/transactables', dashboard_company_transactable_type_transactables_path(TransactableType.first), highlights_on: /dashboard\/company\/(service_types|transactable_types)/
+      end
       if bookable?
         primary.item :orders_header, "#{t('dashboard.nav.orders_header')} #{current_user_open_all_reservations_count_formatted}", nil do |sub_nav|
           dashboard_nav_item sub_nav, 'dashboard/orders', dashboard_orders_path, highlights_on: /dashboard\/orders(\/.+)*/
           if current_user.registration_completed?
-            dashboard_nav_item primary, 'dashboard/transactables', dashboard_company_transactable_type_transactables_path(TransactableType.first), highlights_on: /dashboard\/company\/(service_types|transactable_types)/
             dashboard_nav_item sub_nav, 'dashboard/orders_received', dashboard_company_orders_received_index_path, highlights_on: /dashboard\/company\/orders_received(\/.+)*/
           end
         end

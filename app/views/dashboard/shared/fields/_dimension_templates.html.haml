@@ -4,8 +4,8 @@
     = label_tag :select_instance_dimensions_template, label, class: 'control-label'
     = content_tag :select, id: 'select_instance_dimensions_template', class: 'form-control dimensions-templates product-form', :data => { 'shipping-dimensions-templates-select': true }, placeholder: t('manage.buy_sell.dimensions_templates.select') do
       = options_for_dimensions_templates_select(templates)
-
-
+  - unless dt.object.persisted?
+    = dt.input :_destroy, as: :hidden, input_html: { value: 1 }
   = dt.input :unit_of_measure, as: :hidden, input_html: { 'data-shipping-unit-of-measure': true }
 
   .dimensions_element_container.row

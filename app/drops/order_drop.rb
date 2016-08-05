@@ -12,7 +12,7 @@ class OrderDrop < BaseDrop
   #   string representing the unique identifier for this order
   # line_items
   #   an array of line items that belong to this order in the form of LineItem objects
-  delegate :id, :user, :company, :number, :line_items, to: :order
+  delegate :id, :user, :company, :number, :line_items, :total_units_text, to: :order
 
   def initialize(order)
     @order = order.decorate
