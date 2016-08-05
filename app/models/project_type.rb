@@ -14,10 +14,6 @@ class ProjectType < TransactableType
     "/project_types/#{id}/project_wizard/new"
   end
 
-  def buyable?
-    false
-  end
-
   def available_search_views
     SEARCH_VIEWS
   end

@@ -5,8 +5,8 @@ class LineItem < ActiveRecord::Base
   # line_itemable relation is polymorphic becuase we associate RecurringBookingPeriod
   # as well as Order object with it subclasses
   # NOTE that in most cases line_item.order will do the trick
-  belongs_to :line_itemable, polymorphic: true
-  belongs_to :line_item_source, polymorphic: true
+  belongs_to :line_itemable, -> { with_deleted }, polymorphic: true
+  belongs_to :line_item_source, -> { with_deleted }, polymorphic: true
   belongs_to :transactable_pricing, -> { with_deleted }, class_name: 'Transactable::Pricing'
   belongs_to :user, -> { with_deleted }
   belongs_to :company, -> { with_deleted }

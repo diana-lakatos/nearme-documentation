@@ -9,7 +9,7 @@
             %tr
               %th= t('instance_admin.manage.admins.role_name')
               - InstanceAdminRole::PERMISSIONS.each do |p|
-                - next if !platform_context.instance.buyable? && p == 'BuySell'
+                - next if p == 'BuySell'
                 %th
                   = p
           %tbody
@@ -18,7 +18,7 @@
                 %td
                   = instance_admin_role.name
                 - InstanceAdminRole::PERMISSIONS.each do |p|
-                  - next if !platform_context.instance.buyable? && p == 'BuySell'
+                  - next if p == 'BuySell'
                   %td
                     = check_box_tag "instance_admin_role[permission_#{p.downcase}]", true, instance_admin_role.send("permission_#{p.downcase}"), { :disabled => instance_admin_role.instance_id.nil?, :'data-role-id' => instance_admin_role.id, :id => "permission_#{p.downcase}_#{instance_admin_role.id}", :'data-permission-checkbox' => "permission_#{p.downcase}", :class => 'pull-left' }
                     .loading{:'data-loading' => true}

@@ -44,7 +44,7 @@ class CartDecorator
   end
 
   def total_display
-    "#{orders.first.currency.try(:symbol)} #{content_tag(:span, humanized_money(total.to_money), data: {"cart-total": true})}"
+    "#{orders.first.currency_object.try(:symbol)} #{content_tag(:span, humanized_money(total.to_money), data: {"cart-total": true})}"
   end
 
   def empty?

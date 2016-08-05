@@ -6,7 +6,6 @@ class SearchController < ApplicationController
 
   before_filter :ensure_valid_params
   before_filter :find_transactable_type
-  before_filter :theme_name
   before_action :assign_transactable_type_id_to_lookup_context
   before_action :store_search
 
@@ -91,10 +90,6 @@ class SearchController < ApplicationController
 
   def ignore_search_event_flag_false?
     params[:ignore_search_event].nil? || params[:ignore_search_event].to_i.zero?
-  end
-
-  def theme_name
-    @theme_name = 'buy-sell-theme' if @transactable_type.buyable?
   end
 
   def store_search

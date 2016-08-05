@@ -411,6 +411,10 @@ class InstanceView < ActiveRecord::Base
       score: "number",
       hints: "string"
     },
+    'dashboard/user_reservations/reservation_details' => {
+      is_partial: true,
+      reservation: 'ReservationDrop'
+    },
     'dashboard/company/host_reservations/client_info_area' => {
       is_partial: true,
       reservation: 'ReservationDrop'

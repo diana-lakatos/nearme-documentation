@@ -42,11 +42,7 @@ module DashboardHelper
   end
 
   def no_purchases_yet_text
-    if PlatformContext.current.instance.buyable?
-      t('dashboard.analytics.no_purchases_yet')
-    else
-      t('dashboard.analytics.no_reservations_yet')
-    end
+    t('dashboard.analytics.no_reservations_yet')
   end
 
   def dashboard_company_nav_class(company)

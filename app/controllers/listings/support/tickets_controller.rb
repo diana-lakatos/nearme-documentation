@@ -31,7 +31,7 @@ class Listings::Support::TicketsController < ApplicationController
       redirect_to support_ticket_path(@ticket)
       render_redirect_url_as_json if request.xhr?
     else
-      params[:reservation_request] = details
+      params[:order] = details
       render :new
     end
   end

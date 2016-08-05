@@ -509,6 +509,7 @@ class SecuredParams
       :allow_no_action,
       :allow_custom_pricings,
       :type,
+      :confirm_reservations,
       pricings_attributes: nested(self.transactable_type_pricing),
       schedule_attributes: nested(self.schedule),
       availability_template_attributes: nested(self.availability_template),

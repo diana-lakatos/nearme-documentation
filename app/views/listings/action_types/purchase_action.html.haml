@@ -38,12 +38,12 @@
               .clearfix
               = render 'listings/additional_charges', listing: @listing
               = render 'listings/booking_module_listing_description_above_call_to_action', listing: @listing
-              = render 'listings/booking_module_call_to_actions', listing: @listing, book_hash: book_hash.stringify_keys, rfq_class: rfq_class, rfq_label: rfq_label
+              = render 'listings/booking_module_call_to_actions', action_translation: 'buy_sell_market.products.buttons.add_to_cart', listing: @listing, book_hash: book_hash.stringify_keys, rfq_class: rfq_class, rfq_label: rfq_label
               .clearfix
               = render 'listings/booking_module_listing_description_below_call_to_action', listing: @listing
 
         - else
-          = render 'listings/booking_module_not_bookable', listing: @listing
+          = render 'listings/booking_module_not_purchasable', listing: @listing
 
     .clearfix
 

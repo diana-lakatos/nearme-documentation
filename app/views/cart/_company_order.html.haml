@@ -13,7 +13,7 @@
       = render partial: 'cart_item', locals: { item: item.decorate, index: index }
 
   .list-footer
-    %h3 #{t('orders.labels.total')} #{order.total_amount}
+    %h3 #{t('orders.labels.total')} #{order.display_total}
 
 .checkout
   = link_to order_checkout_path(order.id) do
