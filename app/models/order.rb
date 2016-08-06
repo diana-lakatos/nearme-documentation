@@ -72,8 +72,13 @@ class Order < ActiveRecord::Base
   scope :cart, -> { with_state(:inactive) }
   scope :complete, -> { without_state(:inactive) }
   scope :active, -> { without_state(:inactive) }
-  scope :archived, -> { active.where('archived_at IS NOT NULL') }
-  scope :not_archived, -> { active.where(archived_at: nil) }
+  # TODO we should switch to use completed state instead of archived_at for Reservation
+  # and fully switch to state machine
+
+  # scope :archived, -> { active.where('archived_at IS NOT NULL') }
+  # scope :not_archived, -> { active.where(archived_at: nil) }
+  scope :not_archived, -> { where("(type != 'RecurringBooking' AND state != 'inactive' AND archived_at IS NULL) OR (type = 'RecurringBooking' AND state NOT IN ('cancelled_by_guest', 'cancelled_by_host', 'rejected', 'expired'))") }
+  scope :archived, -> { where("(type != 'RecurringBooking' AND archived_at IS NOT NULL) OR (type = 'RecurringBooking' AND state IN ('rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest'))") }
   scope :reviewable, -> { where.not(archived_at: nil).confirmed }
   scope :cancelled, -> { with_state(:cancelled_by_guest, :cancelled_by_host) }
   scope :confirmed, -> { with_state(:confirmed)}

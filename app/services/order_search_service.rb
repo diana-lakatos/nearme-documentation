@@ -53,7 +53,7 @@ class OrderSearchService
     if instance_variable_defined?("@#{state}_count")
       instance_variable_get("@#{state}_count")
     else
-      if state == :archived
+      if state == 'archived'
         @orders = @order_scope.archived
       elsif state == 'not_archived'
         @orders = @order_scope.not_archived
