@@ -439,22 +439,26 @@ class Order < ActiveRecord::Base
     return [] if shipments.none?(&:use_shippo?)
     return @options unless @options.nil?
     rates = []
-    # Get rates for both ways shipping (rental shipping)
-    shipments.each do |shipment|
-      shipment.get_rates(self).map{|rate| rate[:direction] = shipment.direction; rates << rate }
+    begin
+      # Get rates for both ways shipping (rental shipping)
+      shipments.each do |shipment|
+        shipment.get_rates(self).map{|rate| rate[:direction] = shipment.direction; rates << rate }
+      end
+      rates = rates.flatten.group_by{ |rate| rate[:servicelevel_name] }
+      @options = rates.to_a.map do |type, rate|
+        # Skip if service is available only in one direction
+        # next if rate.one?
+        price_sum = Money.new(rate.sum{|r| r[:amount_cents].to_f }, rate[0][:currency])
+        # Format options for simple_form radio
+        [
+          [ price_sum.format, "#{rate[0][:provider]} #{rate[0][:servicelevel_name]}", rate[0][:duration_terms]].join(' - '),
+          rate.map{|r| "#{r[:direction]}:#{r[:object_id]}" }.join(','),
+          { data: { price_formatted: price_sum.format, price: price_sum.to_f } }
+        ]
+      end.compact
+    rescue Shippo::APIError
+      []
     end
-    rates = rates.flatten.group_by{ |rate| rate[:servicelevel_name] }
-    @options = rates.to_a.map do |type, rate|
-      # Skip if service is available only in one direction
-      # next if rate.one?
-      price_sum = Money.new(rate.sum{|r| r[:amount_cents].to_f }, rate[0][:currency])
-      # Format options for simple_form radio
-      [
-        [ price_sum.format, "#{rate[0][:provider]} #{rate[0][:servicelevel_name]}", rate[0][:duration_terms]].join(' - '),
-        rate.map{|r| "#{r[:direction]}:#{r[:object_id]}" }.join(','),
-        { data: { price_formatted: price_sum.format, price: price_sum.to_f } }
-      ]
-    end.compact
   end
 
   def skip_steps
