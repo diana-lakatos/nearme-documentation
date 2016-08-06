@@ -66,16 +66,16 @@ class OrderSearchService
   end
 
 
-  # def upcoming_count
-  #   @upcoming_count ||= @order_scope.unconfirmed.count
-  # end
+  def upcoming_count
+    @upcoming_count ||= @order_scope.unconfirmed.count
+  end
 
-  # def confirmed_count
-  #   @confirmed_count ||= @order_scope.confirmed.not_archived.count
-  # end
+  def confirmed_count
+    @confirmed_count ||= @order_scope.confirmed.not_archived.count
+  end
 
-  # def archived_count
-  #   @archived_count ||= @order_scope.archived.count
-  # end
+  def archived_count
+    @archived_count ||= @order_scope.archived.count
+  end
 
 end
