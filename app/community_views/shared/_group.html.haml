@@ -5,6 +5,10 @@
         - if group.cover_image.present?
           = image_tag group.cover_image.url(:project_cover)
 
+          - if group.featured?
+            %figcaption
+              = t :featured
+
     %ul.numbers
       %li
         = t :members
