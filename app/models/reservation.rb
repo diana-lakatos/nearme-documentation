@@ -3,8 +3,6 @@ class Reservation < Order
   include Bookable
   include Categorizable
 
-  belongs_to :transactable_pricing, class_name: 'Transactable::Pricing'
-
   has_one :transactable_line_item, class_name: 'LineItem::Transactable', as: :line_itemable
   has_one :old_reservation, foreign_key: 'order_id', inverse_of: :reservation
 

@@ -26,7 +26,7 @@ class Order < ActiveRecord::Base
   belongs_to :billing_address, foreign_key: :billing_address_id, class_name: 'OrderAddress'
   belongs_to :reservation_type
   belongs_to :transactable, -> { with_deleted }
-  belongs_to :transactable_pricing, class_name: 'Transactable::Pricing'
+  belongs_to :transactable_pricing, -> { with_deleted }, class_name: 'Transactable::Pricing'
 
   has_one :dimensions_template, as: :entity
 
