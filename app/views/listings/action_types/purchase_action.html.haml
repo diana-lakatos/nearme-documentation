@@ -15,6 +15,7 @@
       - unless @action_type.no_action?
         - if @action_type.bookable?
           .clearfix
+          - action_translation = current_instance.use_cart? ? 'buy_sell_market.products.buttons.add_to_cart' : 'buy_sell_market.products.buttons.purchase'
           - rfq_class = nil
           - rfq_label = nil
           - registration_url = new_user_registration_path(return_to: @listing.show_path(restore_reservations: @listing.id))
@@ -38,7 +39,7 @@
               .clearfix
               = render 'listings/additional_charges', listing: @listing
               = render 'listings/booking_module_listing_description_above_call_to_action', listing: @listing
-              = render 'listings/booking_module_call_to_actions', action_translation: 'buy_sell_market.products.buttons.add_to_cart', listing: @listing, book_hash: book_hash.stringify_keys, rfq_class: rfq_class, rfq_label: rfq_label
+              = render 'listings/booking_module_call_to_actions', action_translation: action_translation, listing: @listing, book_hash: book_hash.stringify_keys, rfq_class: rfq_class, rfq_label: rfq_label
               .clearfix
               = render 'listings/booking_module_listing_description_below_call_to_action', listing: @listing
 

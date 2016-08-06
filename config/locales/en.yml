@@ -984,6 +984,7 @@ en:
     products:
       edit_inline: 'Edit your Product'
       buttons:
+        purchase: 'Purchase'
         add_to_cart: 'Add to cart'
         out_of_stock: 'Out of stock'
         favorite: 'Favorite'
