@@ -1428,6 +1428,12 @@ class SecuredParams
     ]
   end
 
+  def admin_paymnet
+    [
+      :exclude_from_payout
+    ]
+  end
+
   def payment_subscription
     [
       :payer_id,
