@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160805133339) do
+ActiveRecord::Schema.define(version: 20160807112639) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1826,6 +1826,7 @@ ActiveRecord::Schema.define(version: 20160805133339) do
     t.integer  "credit_card_id"
     t.integer  "payer_id"
     t.integer  "total_amount_cents",                                                             default: 0
+    t.boolean  "exclude_from_payout",                                                            default: false
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree

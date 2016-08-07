@@ -518,7 +518,7 @@ DesksnearMe::Application.routes.draw do
             post :generate
           end
         end
-        resources :payments, only: [:index, :show]
+        resources :payments, only: [:index, :show, :update]
         resources :orders, only: [:index, :show] do 
           member do
             post :generate_next_period

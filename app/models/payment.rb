@@ -78,7 +78,7 @@ class Payment < ActiveRecord::Base
   scope :refunded, -> { where("#{table_name}.state = 'refunded'") }
   scope :not_refunded, -> { where("#{table_name}.state IS NOT 'refunded'") }
   scope :last_x_days, lambda { |days_in_past| where('DATE(payments.created_at) >= ? ', days_in_past.days.ago) }
-  scope :needs_payment_transfer, -> { paid_or_refunded.where(payment_transfer_id: nil, offline: false).migrated_payment }
+  scope :needs_payment_transfer, -> { paid_or_refunded.where(payment_transfer_id: nil, offline: false, exclude_from_payout: false).migrated_payment }
   scope :transferred, -> { where.not(payment_transfer_id: nil)}
 
   scope :total_by_currency, -> {
