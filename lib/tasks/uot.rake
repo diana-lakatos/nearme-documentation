@@ -12,7 +12,8 @@ namespace :uot do
         'dashboard/offers': 1,
         'dashboard/user_bids': 1
       },
-      skip_company: true
+      skip_company: true,
+      click_to_call: true
     )
     @instance.set_context!
     InstanceProfileType.find(571).update_columns(onboarding: true, create_company_on_sign_up: true)
