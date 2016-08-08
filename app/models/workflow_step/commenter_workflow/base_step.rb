@@ -1,26 +1,17 @@
 class WorkflowStep::CommenterWorkflow::BaseStep < WorkflowStep::BaseStep
 
-  attr_reader :comment_creator, :transctable_owner, :transactable
+  def initialize(comment_id)
+    @comment = Comment.find_by(id: comment_id)
+    @commentable = @comment.try(:commentable)
+    @user = @comment.try(:creator)
+  end
 
-  def initialize(user_id, transactable_id)
-    @comment_creator = User.find_by(id: user_id)
-    @transactable = Transactable.find_by(id: transactable_id)
-    @transctable_owner = @transactable.try(:creator)
+  def enquirer
+    @user
   end
 
   def lister
-    transctable_owner
-  end
-
-  def collaborators
-    transactable.approved_transactable_collaborators
-  end
-
-  def data
-    {
-      user: comment_creator,
-      transactable: transactable
-    }
+    raise NotImplementedError.new("#{self.class.name} has to define lister method")
   end
 
   def workflow_type
@@ -28,7 +19,7 @@ class WorkflowStep::CommenterWorkflow::BaseStep < WorkflowStep::BaseStep
   end
 
   def should_be_processed?
-    @transactable.present?
+    @comment.present? && @commentable.present?
   end
 
 end

@@ -15,6 +15,8 @@ class UpdateWorkflowAlertsForCommunity < ActiveRecord::Migration
       Utils::DefaultAlertsCreator::GroupCreator.new.create_all!
       Utils::DefaultAlertsCreator::ActivityEventsSummaryCreator.new.create_all!
       Utils::DefaultAlertsCreator::CommenterCreator.new.create_all!
+      Utils::DefaultAlertsCreator::CollaboratorCreator.new.create_all!
+      Utils::DefaultAlertsCreator::FollowerCreator.new.create_all!
     end
   end
 end

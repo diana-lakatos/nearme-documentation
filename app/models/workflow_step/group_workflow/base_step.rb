@@ -16,10 +16,7 @@ class WorkflowStep::GroupWorkflow::BaseStep < WorkflowStep::BaseStep
   end
 
   def members
-    @group.approved_members.select do |u|
-      u.notification_preference.blank? ||
-      u.notification_preference.email_frequency.eql?('immediately')
-    end
+    @group.members_email_recipients
   end
 
   def data
@@ -28,12 +25,13 @@ class WorkflowStep::GroupWorkflow::BaseStep < WorkflowStep::BaseStep
       group: @group,
       user: @user,
       enquirer: @user,
+      lister: @owner,
       owner: @owner
     }
   end
 
   def should_be_processed?
-    @membership.present? && @group.present? && @user.present? && members.any?
+    @membership.present?
   end
 
   def workflow_type
