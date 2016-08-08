@@ -119,4 +119,10 @@ class BaseUploader < CarrierWave::Uploader::Base
   def delayed_processing?(image = nil)
     !!@delayed_processing
   end
+
+  def get_default_image_and_version(*args)
+    version = args.shift || version_name.try(:to_sym)
+    [PlatformContext.current.theme.reload.default_images.where(photo_uploader: self.class.to_s, photo_uploader_version: version).first, version]
+  end
+
 end

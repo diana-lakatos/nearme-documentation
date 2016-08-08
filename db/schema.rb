@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160807112639) do
+ActiveRecord::Schema.define(version: 20160804211745) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -795,6 +795,24 @@ ActiveRecord::Schema.define(version: 20160807112639) do
   add_index "data_uploads", ["instance_id"], name: "index_data_uploads_on_instance_id", using: :btree
   add_index "data_uploads", ["target_id", "target_type"], name: "index_data_uploads_on_target_id_and_target_type", using: :btree
 
+  create_table "default_images", force: :cascade do |t|
+    t.integer  "theme_id"
+    t.integer  "instance_id"
+    t.string   "photo_uploader"
+    t.string   "photo_uploader_version"
+    t.string   "photo_uploader_image"
+    t.text     "photo_uploader_image_transformation_data"
+    t.string   "photo_uploader_image_original_url"
+    t.datetime "photo_uploader_image_versions_generated_at"
+    t.integer  "photo_uploader_image_original_width"
+    t.integer  "photo_uploader_image_original_height"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "default_images", ["instance_id"], name: "index_default_images_on_instance_id", using: :btree
+  add_index "default_images", ["theme_id"], name: "index_default_images_on_theme_id", using: :btree
+
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",                                 default: 20
     t.integer  "attempts",                                 default: 0
@@ -999,15 +1017,6 @@ ActiveRecord::Schema.define(version: 20160807112639) do
   end
 
   add_index "groups", ["instance_id", "creator_id"], name: "index_groups_on_instance_id_and_creator_id", using: :btree
-
-  create_table "help_contents", force: :cascade do |t|
-    t.string   "slug",       null: false
-    t.text     "content"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "help_contents", ["slug"], name: "index_help_contents_on_slug", unique: true, using: :btree
 
   create_table "host_fee_line_items", force: :cascade do |t|
     t.integer  "instance_id"

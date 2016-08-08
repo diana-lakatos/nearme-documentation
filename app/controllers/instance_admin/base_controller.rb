@@ -78,7 +78,8 @@ class InstanceAdmin::BaseController < ApplicationController
     'content_holders'        => { default_action: 'index' },
     'liquid views'           => { controller: '/instance_admin/theme/liquid_views', default_action: 'index' },
     'file upload'            => { controller: '/instance_admin/theme/file_uploads', default_action: 'index' },
-    'photo_uploads'  => { controller: '/instance_admin/theme/photo_upload_versions', default_action: 'index', title: 'Photo Uploads' }
+    'photo_uploads'          => { controller: '/instance_admin/theme/photo_upload_versions', default_action: 'index', title: 'Photo Uploads' },
+    'default_images'         => { controller: '/instance_admin/theme/default_images', default_action: 'index', title: 'Default Images' }
   }
 
   SHIPPING_OPTIONS_CONTROLLERS = {

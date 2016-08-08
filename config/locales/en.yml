@@ -134,6 +134,7 @@ en:
     unexpected_error_occurred: "An unexpected error occurred."
     session_stale: "The session is stale. Please log back in."
     saving: "Saving..."
+    must_be_present: "must be present"
   transactable_types:
     locations:
       listings:
@@ -543,6 +544,11 @@ en:
         image_regeneration_scheduled: "Image regeneration has been scheduled."
         please_specify_uploader_name: "Please specify uploader name."
         already_scheduled: "There is already a scheduled version regeneration job for this uploader."
+      default_images:
+        title: "Default Images"
+        no_default_images_created: "No default images created"
+        create_default_image: "Create default image"
+        default_image_created_successfully: "Default image created successfully."
     homepage:
       homepage: "Homepage"
     homepage_template:
