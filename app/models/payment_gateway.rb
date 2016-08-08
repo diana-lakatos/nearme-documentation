@@ -64,6 +64,8 @@ class PaymentGateway < ActiveRecord::Base
   STORE_ERROR = 'Payment Gateway credit card store error'.freeze
   UNSTORE_ERROR = 'Payment Gateway credit card delete error'.freeze
   PURCHASE_ERROR = 'Payment Gateway purchase error'.freeze
+  TEST_MODE = 'test'.freeze
+  LIVE_MODE = 'live'.freeze
 
   PAYOUT_GATEWAYS = {
     'PayPal Adpative Payments (Payouts)' => 'PaymentGateway::PaypalAdaptivePaymentGateway'
@@ -266,11 +268,11 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def mode
-    test_mode? ? 'test' : 'live'
+    test_mode? ? TEST_MODE : LIVE_MODE
   end
 
   def force_mode(mode)
-    @test_mode = (mode == 'live' ? false : true)
+    @test_mode = (mode == LIVE_MODE ? false : true)
   end
 
   def create_token(credit_card, customer_id, merchant_id, mode)
@@ -369,7 +371,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def store(credit_card, instance_client)
-    force_mode(instance_client.test_mode? ? 'test' : 'live')
+    force_mode(instance_client.test_mode? ? TEST_MODE : LIVE_MODE)
     options = { email: instance_client.client.email, default_card: true, customer: instance_client.customer_id }
     gateway_store(credit_card, options)
   end

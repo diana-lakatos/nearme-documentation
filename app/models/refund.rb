@@ -1,5 +1,5 @@
 class Refund < ActiveRecord::Base
-  RECEIVERS = %w(mpo host guest)
+  RECEIVERS = %w(mpo host guest).freeze
 
   include Encryptable
   acts_as_paranoid

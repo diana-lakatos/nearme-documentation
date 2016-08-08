@@ -36,6 +36,7 @@
 
     = content_for :header_buttons do
       = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => '#edit-payment-form' }
+      = link_to "Update payment", reload_instance_admin_manage_payment_path(@payment),  class: 'btn btn-danger pull-right', data: { confirm: "Are you sure?"}, method: 'put'
 
 
 
