@@ -6,7 +6,7 @@ class Blog::BlogPostsController < Blog::ApplicationController
   before_filter :find_post, :only => [:show]
 
   def index
-    @tags = Tag.alphabetically
+    @tags = Tag.for_instance_blog.alphabetically
     @blog_posts = get_blog_posts
     @blog_rss_feed_url = view_context.blog_rss_feed_url
     respond_to do |format|

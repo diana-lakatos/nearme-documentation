@@ -47,9 +47,6 @@
 - if only_inputs.empty? || only_inputs.include?(:currency)
   = render 'dashboard/company/transactables/form_fields/currency', f: f
 
-- if @transactable_type.rental_shipping && (only_inputs.empty? || only_inputs.include?(:rental_shipping_type))
-  = render 'dashboard/company/transactables/form_fields/rental_shipping_type', { f: f, space_wizard: true }
-
 - if  (only_inputs.empty? || only_inputs.include?(:shipping_info))
   = render "dashboard/company/transactables/form_fields/shipping_profiles", f: f
 

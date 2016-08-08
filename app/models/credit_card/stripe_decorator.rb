@@ -11,6 +11,8 @@ class CreditCard::StripeDecorator
   end
 
   def token
+    return nil if response.blank?
+
     @token ||= response.params["object"] == 'card' ? response.params["id"] : response.params["default_source"]
   end
 

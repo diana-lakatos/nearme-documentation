@@ -17,11 +17,9 @@
             %ul
               - @errors[:base].each do |error|
                 %li= error
-        - if @listing.rental_shipping_type == 'both'
-          = f.input :delivery_type, as: :radio_buttons, collection: [[t('reservations_review.pick_up'), 'pick_up'], [t('reservations_review.delivery'), 'delivery']], checked: (@reservation_request.delivery_type || 'pick_up'), label: false
           %hr.thin
 
-        #shipping-address{ class: (@listing.rental_shipping_type == 'both' ? 'hide' : '')}
+        #shipping-address
           = f.simple_fields_for :shipments do |s|
             = s.input :is_insured, as: :bootstrap_switch, label: t('simple_form.labels.shipment.is_insured')
             = s.input :direction, as: :hidden

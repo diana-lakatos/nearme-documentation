@@ -125,11 +125,11 @@ module LiquidFilters
   end
 
   def price_with_cents_with_currency(money)
-    humanized_money_with_symbol(money)
+    humanized_money_with_cents_and_symbol(money)
   end
 
   def price_without_cents_with_currency(money)
-    money_without_cents_and_with_symbol(money)
+    humanized_money_with_symbol(money)
   end
 
   def space_listing_placeholder_path(height, width)
@@ -369,6 +369,11 @@ module LiquidFilters
 
   def get_lister_orders(company, transactable)
     transactable.line_item_orders.where(company: company).order('created_at ASC')
+  end
+
+  def get_data_contents(external_id, options = {})
+    data_source_contents = DataSourceContent.where('external_id like ?', external_id)
+    data_source_contents.paginate(per_page: options[:per_page].presence || 10)
   end
 
 end

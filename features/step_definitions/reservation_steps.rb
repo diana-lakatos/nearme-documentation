@@ -257,7 +257,7 @@ Then /^the reservation service fee should show \$?([0-9\.,]+)$/ do |cost|
 end
 
 Then /^the reservation total should show \$?([0-9\.,]+)$/ do |cost|
-  within '.payment-summary .total' do
+  within '#summary-total' do
     assert page.body.should have_content(cost)
   end
 end

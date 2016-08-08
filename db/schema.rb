@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20160804130004) do
+=======
+ActiveRecord::Schema.define(version: 20160804211745) do
+>>>>>>> current_sprint
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +55,29 @@ ActiveRecord::Schema.define(version: 20160804130004) do
   add_index "activity_feed_subscriptions", ["follower_id", "followed_identifier"], name: "index_subscriptions_on_folllower_and_followed_identifier", unique: true, using: :btree
   add_index "activity_feed_subscriptions", ["instance_id", "followed_id", "followed_type"], name: "activity_feed_subscriptions_instance_followed", using: :btree
 
+<<<<<<< HEAD
+=======
+  create_table "additional_charge_types", force: :cascade do |t|
+    t.string   "name",                               limit: 255
+    t.text     "description"
+    t.integer  "amount_cents"
+    t.string   "currency",                           limit: 255
+    t.string   "commission_receiver",                limit: 255
+    t.integer  "provider_commission_percentage"
+    t.string   "status",                             limit: 255
+    t.integer  "instance_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "additional_charge_type_target_id"
+    t.string   "additional_charge_type_target_type"
+    t.integer  "percent"
+    t.datetime "deleted_at"
+  end
+
+  add_index "additional_charge_types", ["additional_charge_type_target_id", "additional_charge_type_target_type"], name: "act_target", using: :btree
+  add_index "additional_charge_types", ["instance_id"], name: "index_additional_charge_types_on_instance_id", using: :btree
+
+>>>>>>> current_sprint
   create_table "additional_charges", force: :cascade do |t|
     t.string   "name",                      limit: 255
     t.integer  "amount_cents"
@@ -798,6 +825,24 @@ ActiveRecord::Schema.define(version: 20160804130004) do
   add_index "data_uploads", ["instance_id"], name: "index_data_uploads_on_instance_id", using: :btree
   add_index "data_uploads", ["target_id", "target_type"], name: "index_data_uploads_on_target_id_and_target_type", using: :btree
 
+  create_table "default_images", force: :cascade do |t|
+    t.integer  "theme_id"
+    t.integer  "instance_id"
+    t.string   "photo_uploader"
+    t.string   "photo_uploader_version"
+    t.string   "photo_uploader_image"
+    t.text     "photo_uploader_image_transformation_data"
+    t.string   "photo_uploader_image_original_url"
+    t.datetime "photo_uploader_image_versions_generated_at"
+    t.integer  "photo_uploader_image_original_width"
+    t.integer  "photo_uploader_image_original_height"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "default_images", ["instance_id"], name: "index_default_images_on_instance_id", using: :btree
+  add_index "default_images", ["theme_id"], name: "index_default_images_on_theme_id", using: :btree
+
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",                                 default: 20
     t.integer  "attempts",                                 default: 0
@@ -1329,6 +1374,8 @@ ActiveRecord::Schema.define(version: 20160804130004) do
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
     t.boolean  "enable_geo_localization",                                                           default: true
+    t.string   "orders_received_tabs"
+    t.string   "my_orders_tabs"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1857,6 +1904,7 @@ ActiveRecord::Schema.define(version: 20160804130004) do
     t.integer  "credit_card_id"
     t.integer  "payer_id"
     t.integer  "total_amount_cents",                                                             default: 0
+    t.boolean  "exclude_from_payout",                                                            default: false
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree

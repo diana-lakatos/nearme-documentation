@@ -21,7 +21,7 @@
   .row
     .input-container.col-xs-12
       = f.input :header
-      - if @blog_post.header.present?
+      - if f.object.persisted? && @blog_post.header.present?
         = link_to(@blog_post.header.filename, @blog_post.header.url)
         = link_to 'Delete', delete_image_instance_admin_manage_blog_post_path(image_type: 'header'), data: { confirm: t('confirmations.are_you_sure') }, method: :delete
 
@@ -32,10 +32,9 @@
   .row
     .input-container.col-xs-12
       = f.input :author_avatar, input_html: { class: 'form-control'}
-      - if @blog_post.author_avatar.present?
-        - if f.object.persisted?
-          = link_to(@blog_post.author_avatar.filename, @blog_post.author_avatar.url)
-          = link_to 'Delete', delete_image_instance_admin_manage_blog_post_path(image_type: 'author_avatar'), data: { confirm: t('confirmations.are_you_sure') }, method: :delete
+      - if f.object.persisted? && @blog_post.author_avatar.present?
+        = link_to(@blog_post.author_avatar.filename, @blog_post.author_avatar.url)
+        = link_to 'Delete', delete_image_instance_admin_manage_blog_post_path(image_type: 'author_avatar'), data: { confirm: t('confirmations.are_you_sure') }, method: :delete
   .row
     .input-container.col-xs-12
       = f.input :author_biography, input_html: { class: 'form-control'}

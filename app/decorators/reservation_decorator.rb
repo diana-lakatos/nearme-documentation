@@ -137,7 +137,7 @@ class ReservationDecorator < OrderDecorator
   end
 
   def total_units_text
-    unit = transactable_pricing.night_booking? ? 'general.night' : 'general.day'
+    unit = transactable_pricing.try(:night_booking?) ? 'general.night' : 'general.day'
     [total_units, I18n.t(unit, count: reservation.total_units)].join(' ')
   end
 

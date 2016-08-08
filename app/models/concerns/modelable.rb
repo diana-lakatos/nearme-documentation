@@ -12,5 +12,9 @@ module Modelable
     def current_instance
       @current_instance ||= PlatformContext.current.instance
     end
+
+    def self.current_instance
+      @current_instance ||= PlatformContext.current.instance
+    end
   end
 end

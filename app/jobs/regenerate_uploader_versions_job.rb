@@ -72,12 +72,22 @@ class RegenerateUploaderVersionsJob < Job
         topic.save(validate: false) rescue nil
       end
     end
+
+    update_default_images(@uploader)
   end
 
   def after(job)
     PlatformContext.current.instance.scheduled_uploaders_regenerations.where(photo_uploader: @uploader).destroy_all
 
     super
+  end
+
+  def update_default_images(uploader_name)
+    DefaultImage.where(photo_uploader: uploader_name).find_each do |default_image|
+      default_image.photo_uploader_image.recreate_versions! rescue nil
+      default_image.photo_uploader_image_versions_generated_at = Time.now
+      default_image.save(validate: false) rescue nil
+    end
   end
 
   def max_attempts; 1; end

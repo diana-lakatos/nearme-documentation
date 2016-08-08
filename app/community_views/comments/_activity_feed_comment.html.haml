@@ -1,7 +1,7 @@
 - hide_comment_options = local_assigns[:hide_comment_options].presence || false
 - target = local_assigns[:target].presence || "_self"
 
-.comment-a{ data: { comment_id: comment.id, creator_id: comment.creator_id, commentable_creator_id: comment.commentable.try(:creator_id) } }
+.comment-a{ class: ('commented-own-thread' if commented_own_thread?(comment)), data: { comment_id: comment.id, creator_id: comment.creator_id, commentable_creator_id: comment.commentable.try(:creator_id) } }
   %figure
     = image_tag comment.creator.avatar.url(:thumb)
   %p.author

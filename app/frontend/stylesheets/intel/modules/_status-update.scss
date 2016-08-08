@@ -57,6 +57,20 @@
             line-height: inherit;
             vertical-align: top;
         }
+
+        .status-update {
+            .hx, header {
+              display: none;
+            }
+
+            section {
+              margin: 0 0 5px 0;
+            }
+
+            footer {
+              margin: 0 0 0 0;
+            }
+        }
     }
 
     > footer {

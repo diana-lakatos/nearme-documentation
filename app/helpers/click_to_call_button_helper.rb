@@ -5,15 +5,18 @@ module ClickToCallButtonHelper
     return unless PlatformContext.current.instance.click_to_call? && transactable.administrator.click_to_call? && transactable.administrator.communication.try(:verified)
 
     path_to_call = Rails.application.routes.url_helpers.new_user_phone_call_path(transactable.administrator)
+    if transactable.time_based_booking?
+      closest_availability = transactable.first_available_date.try(:to_datetime).try(:in_time_zone, transactable.timezone)
 
-    closest_availability = transactable.first_available_date.try(:Lto_datetime).try(:in_time_zone, transactable.timezone)
+      if closest_availability
+        open_minute = transactable.availability.open_minute_for(closest_availability)
+        closest_availability = open_minute.present? ? closest_availability.change({ min: open_minute.modulo(60), hour: (open_minute / 60).floor }) : nil
+      end
 
-    if closest_availability
-      open_minute = transactable.availability.open_minute_for(closest_availability)
-      closest_availability = open_minute.present? ? closest_availability.change({ min: open_minute.modulo(60), hour: (open_minute / 60).floor }) : nil
+      build_click_to_call_button(path_to_call, I18n.t('phone_calls.buttons.click_to_call'), transactable.open_now?, transactable.timezone, closest_availability)
+    else
+      build_click_to_call_button(path_to_call, I18n.t('phone_calls.buttons.click_to_call'), true, transactable.timezone)
     end
-
-    build_click_to_call_button(path_to_call, I18n.t('phone_calls.buttons.click_to_call'), transactable.open_now?, transactable.timezone, closest_availability)
   end
 
   def build_click_to_call_button_for_user(user, options = {})

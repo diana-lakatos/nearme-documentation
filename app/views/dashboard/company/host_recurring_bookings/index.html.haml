@@ -6,7 +6,7 @@
 
 - active_state = params[:state] || 'unconfirmed'
 
-- tabs = ['unconfirmed', 'confirmed', 'overdue', 'archived'].map { |state| { name: t(state.to_sym, scope: [:dashboard, :host_reservations]), url:  dashboard_company_host_recurring_bookings_path(state: state), active: (params[:action] == 'index' && active_state == state) }}
+- tabs = ['unconfirmed', 'confirmed', 'overdue', 'archived', 'not_archived'].map { |state| { name: t(state.to_sym, scope: [:dashboard, :host_reservations]), url:  dashboard_company_host_recurring_bookings_path(state: state), active: (params[:action] == 'index' && active_state == state) }}
 
 = dashboard_panel_multi_tabs(tabs)
 

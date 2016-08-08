@@ -21,6 +21,11 @@ class Comment < ActiveRecord::Base
     case self.commentable_type
     when "ActivityFeedEvent"
       event = :user_commented
+
+      if self.commentable.event_source.try(:updateable_type).eql?('Group')
+        event = :user_commented_on_user_activity
+      end
+
       followed = self.commentable.followed
     when "Project"
       event = :user_commented_on_project

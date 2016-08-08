@@ -47,7 +47,7 @@ class Listings::OrdersController < ApplicationController
   # end
 
   def find_or_create_order
-    if @transactable_pricing.order_class == Purchase
+    if current_instance.use_cart? && @transactable_pricing.order_class == Purchase
       @order = @transactable_pricing.order_class.cart.where(
         user: current_user,
         currency: @transactable.currency,

@@ -14,6 +14,7 @@
   .col-sm-3
     %h4= t 'buy_sell_market.checkout.labels.shipping_method'
     - purchase.shipments.each do |shipment|
+      - next unless shipment.shipping_rule
       %p
         - unless shipment.is_pickup?
           = t('buy_sell_market.products.shipping.from')

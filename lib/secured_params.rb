@@ -235,6 +235,13 @@ class SecuredParams
     ]
   end
 
+  def default_image
+    [
+      :photo_uploader,
+      :photo_uploader_version
+    ]
+  end
+
   def blog_post
     [
       :title,
@@ -1430,8 +1437,9 @@ class SecuredParams
       shipping_address_attributes: nested(self.order_address),
       billing_address_attributes: nested(self.order_address),
       payment_documents_attributes: nested(self.payment_document),
-      payment_attributes: nested(self.payment)
-    ] + (reservation_type.present? ? [properties: Reservation.public_custom_attributes_names(reservation_type), properties_attributes: Reservation.public_custom_attributes_names(reservation_type)] : [])
+      payment_attributes: nested(self.payment),
+      properties_attributes: Reservation.public_custom_attributes_names((reservation_type || PlatformContext.current.try(:instance).try(:reservation_type).try(:first)).try(:id))
+    ]
   end
 
   def waiver_agreement_templates
@@ -1444,6 +1452,12 @@ class SecuredParams
       :payment_method_nonce,
       :chosen_credit_card_id,
       credit_card_attributes: nested(self.credit_card)
+    ]
+  end
+
+  def admin_paymnet
+    [
+      :exclude_from_payout
     ]
   end
 

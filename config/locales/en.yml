@@ -114,6 +114,7 @@ en:
     required: 'required'
     show: 'Show'
     none: "None"
+    customized: ' - customized'
     day:
       one: "day"
       other: "days"
@@ -132,6 +133,8 @@ en:
     no_options: 'No options'
     unexpected_error_occurred: "An unexpected error occurred."
     session_stale: "The session is stale. Please log back in."
+    saving: "Saving..."
+    must_be_present: "must be present"
   transactable_types:
     locations:
       listings:
@@ -544,6 +547,11 @@ en:
         image_regeneration_scheduled: "Image regeneration has been scheduled."
         please_specify_uploader_name: "Please specify uploader name."
         already_scheduled: "There is already a scheduled version regeneration job for this uploader."
+      default_images:
+        title: "Default Images"
+        no_default_images_created: "No default images created"
+        create_default_image: "Create default image"
+        default_image_created_successfully: "Default image created successfully."
     homepage:
       homepage: "Homepage"
     homepage_template:
@@ -987,6 +995,7 @@ en:
     products:
       edit_inline: 'Edit your Product'
       buttons:
+        purchase: 'Purchase'
         add_to_cart: 'Add to cart'
         out_of_stock: 'Out of stock'
         favorite: 'Favorite'
@@ -1274,6 +1283,8 @@ en:
         confirmed: "Confirmed"
         completed: "Completed"
         archived: "Archived"
+        not_archived: "Active"
+        overdue: "Overdue"
       columns:
         listing: "Listing"
         total: "Total"
@@ -2592,7 +2603,7 @@ en:
       book_it_out_quantity: "Quantity for Book It Out option should equal maximal available quantity."
       book_it_out_not_available: 'Book It Out option is no longer available'
       exclusive_price_not_available: 'Exclusive Price option is no longer available'
-      no_delivery_options: 'There are no delivery options available.'
+      no_delivery_options: 'There are no delivery options available for provided address.'
       internal_payment: 'Unfortunately we have some internal issues with processing your credit card. Please try again later.'
       date_in_past: 'You cannot book a date in past.'
       invalid_date: 'Invalid date.'

@@ -31,7 +31,7 @@ class Transactable::Pricing < ActiveRecord::Base
 
   before_validation :remove_price_if_free
 
-  validates :unit, :number_of_units, presence: true
+  validates :unit, :number_of_units, :price_cents, presence: true
   validates :number_of_units, numericality: { greater_than: 0 }
   validates :book_it_out_discount, numericality: { in: 1..100 }, if: :has_book_it_out_discount
   validates_numericality_of :book_it_out_minimum_qty, greater_than: 0, if: :has_book_it_out_discount

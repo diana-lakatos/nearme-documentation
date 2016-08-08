@@ -1,0 +1,24 @@
+.content-container
+  %h4
+    = t('instance_admin.theme.default_images.create_default_image')
+
+  .row
+    .table-container.col-xs-12
+      = simple_form_for @default_image, :url => instance_admin_theme_default_images_path, :html => { id: 'theme_form', multipart: true, data: { 'default-images' => true, 'photo-uploaders' => photo_uploaders_with_versions(DefaultImage::PHOTO_UPLOADERS) } } do |f|
+        .row
+          .input-container.col-xs-12
+            = f.file_field :photo_uploader_image
+            -# Required as otherwise error messages for file upload will not be shown
+            - if f.object.errors[:photo_uploader_image].present?
+              %p{ class: 'error-block' }
+                = t('general.must_be_present')
+        .row
+          .input-container.col-xs-6
+            = f.input :photo_uploader, as: :select, collection: DefaultImage::PHOTO_UPLOADERS, input_html: { class: 'photo-uploader' }
+        .row
+          .input-container.col-xs-6
+            = f.input :photo_uploader_version, as: :select, collection: [], input_html: { class: 'photo-uploader-versions' }
+
+        .row
+          .input-container.col-xs-12
+            = f.submit 'Submit', class: 'btn btn-primary'

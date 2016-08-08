@@ -26,6 +26,7 @@ class InstanceAdmin::BaseController < ApplicationController
   MANAGE_CONTROLLERS = {
     'transfers'          => { controller: '/instance_admin/manage/transfers', default_action: 'index' },
     'payments'           => { controller: '/instance_admin/manage/payments', default_action: 'index' },
+    'orders'             => { controller: '/instance_admin/manage/orders', default_action: 'index' },
     'merchants'          => { controller: '/instance_admin/manage/merchant_accounts', default_action: 'index' },
     'users'              => { controller: '/instance_admin/manage/users', default_action: 'index' },
     'admins'             => { controller: '/instance_admin/manage/admins', default_action: 'index' },
@@ -77,7 +78,8 @@ class InstanceAdmin::BaseController < ApplicationController
     'content_holders'        => { default_action: 'index' },
     'liquid views'           => { controller: '/instance_admin/theme/liquid_views', default_action: 'index' },
     'file upload'            => { controller: '/instance_admin/theme/file_uploads', default_action: 'index' },
-    'photo_uploads'  => { controller: '/instance_admin/theme/photo_upload_versions', default_action: 'index', title: 'Photo Uploads' }
+    'photo_uploads'          => { controller: '/instance_admin/theme/photo_upload_versions', default_action: 'index', title: 'Photo Uploads' },
+    'default_images'         => { controller: '/instance_admin/theme/default_images', default_action: 'index', title: 'Default Images' }
   }
 
   SHIPPING_OPTIONS_CONTROLLERS = {

@@ -8,15 +8,16 @@
     %nav.navbar-a
       %ul.nav.nav-tabs{role: "tablist"}
 
-        %li.active
+        - if !@group.private? || current_user.try(:is_member_of?, @group)
+          %li.active
+            = link_to '#activity', role: "tab", :'data-toggle' => "tab" do
+              = t(:activity)
+
+        %li
           = link_to '#about', role: "tab", :'data-toggle' => "tab" do
             = t(:about)
 
         - if !@group.private? || current_user.try(:is_member_of?, @group)
-          %li
-            = link_to '#activity', role: "tab", :'data-toggle' => "tab" do
-              = t(:activity)
-
           %li
             = link_to '#members', role: "tab", :'data-toggle' => "tab" do
               = t(:members)
@@ -40,15 +41,16 @@
           = render 'group_members/group_members_button', group: @group, membership: @membership
 
 .tab-content
-  #about.tab-pane.fade.active{:role => "tabpanel"}
+  - if !@group.private? || current_user.try(:is_member_of?, @group)
+    #activity.tab-pane.fade.active{:role => "tabpanel"}
+      = render 'activity', group: @group, feed: @feed
+
+  #about.tab-pane.fade{:role => "tabpanel"}
     .wrap-a.reduce-top
       .contain
         = render 'about', group: @group
 
   - if !@group.private? || current_user.try(:is_member_of?, @group)
-    #activity.tab-pane.fade{:role => "tabpanel"}
-      = render 'activity', group: @group, feed: @feed
-
     #members.tab-pane.fade{:role => "tabpanel"}
       .wrap-a.reduce-top
         .contain

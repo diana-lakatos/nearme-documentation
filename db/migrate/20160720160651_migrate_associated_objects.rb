@@ -1,5 +1,6 @@
 class MigrateAssociatedObjects < ActiveRecord::Migration
   def up
+    PlatformContext.clear_current
     Payment.where(payable_type: "Reservation").update_all(payable_type: "OldReservation")
     Review.where(reviewable_type: "Reservation").update_all(reviewable_type: "OldReservation")
     WaiverAgreement.where(target_type: "Reservation").update_all(target_type: "OldReservation")
@@ -13,6 +14,7 @@ class MigrateAssociatedObjects < ActiveRecord::Migration
   end
 
   def down
+    PlatformContext.clear_current
     Payment.where(payable_type: "OldReservation").update_all(payable_type: "Reservation")
     Review.where(reviewable_type: "OldReservation").update_all(reviewable_type: "Reservation")
     WaiverAgreement.where(target_type: "OldReservation").update_all(target_type: "Reservation")

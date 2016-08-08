@@ -134,6 +134,12 @@ class OrderDecorator < Draper::Decorator
     humanized_money_with_symbol(object.total_amount)
   end
 
+  def total_units_text
+    unit = 'reservations.item'
+    quantity = object.transactable_line_items.sum(:quantity)
+    [quantity.to_i, I18n.t(unit, count: quantity)].join(' ')
+  end
+
   def display_shipping_address
     return '' if object.shipping_address.blank?
     shipping_address = []

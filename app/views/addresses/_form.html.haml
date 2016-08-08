@@ -16,7 +16,7 @@
     .map{style: "display: none", :'data-marker' => image_path("components/map-pin.png")}
       .map-container{:style => "height: 240px; width: 100%;"}
 
-    = f.hidden_field :should_check_address, value: (@transactable_type.try(:rental_shipping) || current_instance.precise_search? || params[:should_check_address])
+    = f.hidden_field :should_check_address, value: (current_instance.shippo_enabled? || current_instance.precise_search? || params[:should_check_address])
     = f.hidden_field :local_geocoding, 'data-local-geocoding' => true
     = f.hidden_field :latitude, 'data-latitude' => true
     = f.hidden_field :longitude, 'data-longitude' => true

@@ -20,8 +20,6 @@ class Transactable < ActiveRecord::Base
 
   DATE_VALUES = ['today', 'yesterday', 'week_ago', 'month_ago', '3_months_ago', '6_months_ago']
 
-  RENTAL_SHIPPING_TYPES = %w(no_rental delivery pick_up both).freeze
-
   PRICE_TYPES = [:hourly, :weekly, :daily, :monthly, :fixed, :exclusive, :weekly_subscription, :monthly_subscription]
 
   # This must go before has_custom_attributes because of how the errors for the custom
@@ -258,10 +256,8 @@ class Transactable < ActiveRecord::Base
   validates :photos, length: {:minimum => 1}, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
   validates :quantity, presence: true, numericality: {greater_than: 0}, unless: ->(record) { record.action_type.is_a?(Transactable::PurchaseAction) }
 
-  #TODO probably move to concern as different actions can be shipped
-  validates :rental_shipping_type, inclusion: { in: RENTAL_SHIPPING_TYPES }
-  validates_presence_of :dimensions_template, if: lambda { |record| ['delivery', 'both'].include?(record.rental_shipping_type) }
-  validates :topics, length: { minimum: 1 }, if: ->(record) { record.topics_required && !record.draft.present? }
+  validates :topics, length: { minimum: 1 }, if: -> (record) { record.topics_required && !record.draft.present? }
+  validates_presence_of :dimensions_template, if: lambda { |record| record.shipping_profile.try(:shippo?) }
 
   validates_associated :approval_requests, :action_type
   validates :name, length: { maximum: 255 }, allow_blank: true
@@ -345,11 +341,6 @@ class Transactable < ActiveRecord::Base
 
   def administrator
     super.presence || creator
-  end
-
-  #TODO rental shipping
-  def rental_shipping_type
-    transactable_type.rental_shipping ? super : 'no_rental'
   end
 
   def desks_booked_on(date, start_minute = nil, end_minute = nil)
@@ -526,7 +517,7 @@ class Transactable < ActiveRecord::Base
       name: 'Name', description: 'Description',
       external_id: 'External Id', enabled: 'Enabled',
       confirm_reservations: 'Confirm reservations', capacity: 'Capacity', quantity: 'Quantity',
-      listing_categories: 'Listing categories', rental_shipping_type: "Rental shipping type",
+      listing_categories: 'Listing categories',
       currency: 'Currency', minimum_booking_minutes: 'Minimum booking minutes'
     ).reverse_merge(
       transactable_type.custom_attributes.shared.pluck(:name, :label).inject({}) do |hash, arr|
@@ -573,7 +564,7 @@ class Transactable < ActiveRecord::Base
 
   #TODO rental shipping
   def possible_delivery?
-    rental_shipping_type.in?(['delivery', 'both'])
+    shipping_profile.present?
   end
 
   # TODO: to be deleted once we get rid of instance views

@@ -17,7 +17,7 @@ class OrderDrop < BaseDrop
     :paid?, :unconfirmed?, :confirmed?, :manual_payment?, :can_complete_checkout?,
     :can_approve_or_decline_checkout?, :has_to_update_credit_card?, :user_messages,
     :archived_at, :state, :cancelable?, :archived?, :penalty_charge_apply?, :cancellation_policy_hours_for_cancellation,
-    :cancellation_policy_penalty_hours, :created_at, :payment,
+    :cancellation_policy_penalty_hours, :created_at, :payment, :total_units_text,
     to: :order
 
   def initialize(order)
@@ -101,6 +101,22 @@ class OrderDrop < BaseDrop
 
   def offer_enquirer_cancel_url
     routes.cancel_dashboard_orders_path(order)
+  end
+
+  def included_tax?
+    @first_line_item =
+      first_line_item.included_tax_total_rate.zero? == false
+  end
+
+  def additional_tax?
+    first_line_item.additional_tax_total_rate.zero? == false
+  end
+
+  private
+
+  def first_line_item
+    @first_line_item ||= @order.line_items.first || OpenStruct.new(included_tax_total_rate: 0, additional_tax_total_rate: 0)
+    @first_line_item
   end
 
 end
