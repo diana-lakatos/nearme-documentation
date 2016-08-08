@@ -7,7 +7,7 @@ class InstanceAdmin::Theme::FileUploadsController < InstanceAdmin::Theme::BaseCo
 
   def create
     if params[:upload] && params[:upload][:file]
-      if params[:upload][:file].content_type.to_s.match(/^image/i)
+      if params[:upload][:file].content_type.to_s.match(/^image\/(?!svg)/i)
         @attachment = Ckeditor.picture_model.new
       else
         @attachment = Ckeditor.attachment_file_model.new

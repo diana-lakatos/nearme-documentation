@@ -80,7 +80,7 @@ class PlatformContextDrop < BaseDrop
   #   Whether wish lists is enabled or not
   delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :facebook_url, :twitter_url, :gplus_url,
     :instagram_url, :youtube_url, :rss_url, :linkedin_url, :lessor, :lessors,
-    :lessee, :lessees, :search_by_keyword_placeholder, :address, :phone_number,
+    :lessee, :lessees, :search_by_keyword_placeholder, :address, :phone_number, :phone_number_noformat,
     :site_name, :support_url, :support_email, :logo_image, :hero_image, :tagline, :homepage_content,
     :is_company_theme?, :call_to_action, :bookable?, :transactable_types,
     :bookable_nouns, :bookable_nouns_plural, :search_input_name, :facebook_key, :service_types,

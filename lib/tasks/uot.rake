@@ -238,13 +238,23 @@ namespace :uot do
 
   def create_content_holders
     ch = @instance.theme.content_holders.where(
-      name: 'UoT CSS'
+      name: 'HEAD links and scripts'
     ).first_or_initialize
 
     ch.update!({
-      content: "<link rel='stylesheet' media='screen' href='https://raw.githubusercontent.com/mdyd-dev/marketplaces/master/uot/css/uot.css'>",
+      content: read_template('head.liquid'),
       inject_pages: ['any_page'],
       position: 'head_bottom'
+    })
+
+    ch = @instance.theme.content_holders.where(
+      name: 'BODY end scripts'
+    ).first_or_initialize
+
+    ch.update!({
+      content: read_template('body_end.liquid'),
+      inject_pages: ['any_page'],
+      position: 'body_bottom'
     })
   end
 
@@ -506,28 +516,7 @@ namespace :uot do
     ).first_or_initialize
     iv.update!({
       transactable_types: TransactableType.all,
-      body: %Q{
-{% content_for 'hero' %}
-  <div class="container-fluid">
-    <div class="row-fluid">
-      {% if platform_context.is_company_theme? %}
-        {% include 'home/search_button.html' %}
-      {% else %}
-        {% include 'home/search_box.html' %}
-      {% endif %}
-    </div>
-  </div>
-
-  <div class="call-to-action">
-    <a data-call-to-action="true">
-      {{platform_context.call_to_action}}
-      <span class="icon-arrow-down"></span>
-    </a>
-  </div>
-{% endcontent_for %}
-
-{% include 'home/homepage_content.html' %}
-      },
+      body: read_template('home_index.liquid'),
       format: 'html',
       handler: 'liquid',
       partial: false,
@@ -543,396 +532,7 @@ namespace :uot do
     ).first_or_initialize
     iv.update!({
       transactable_types: TransactableType.all,
-      body: %Q{
-<div class='navbar navbar-inverse navbar-fixed-top'>
-  <div class='navbar-inner nav-links'>
-    <div class='container-fluid'>
-        <a href='{{ platform_context.root_path }}' id="logo">{{ platform_context.name }}</a>
-
-        <div class='header-social-links'>
-          <ul class='nav main-menu'>
-            {% if platform_context.facebook_url != blank %}<li><a href="{{ platform_context.facebook_url }}"  ref="nofollow" target="_blank"><span class="image icon-facebook"></span></a></li>{% endif %}
-            {% if platform_context.twitter_url != blank %}<li><a href="{{ platform_context.twitter_url }}" ref="nofollow"  target="_blank"> <span class="image icon-twitter"></span></a></li>{% endif %}
-            {% if platform_context.linkedin_url != blank %}<li><a href="{{ platform_context.linkedin_url }}" rel="publisher nofollow" target="_blank"><span class="image icon-linkedin"></span></a></li>{% endif %}
-            {% if platform_context.gplus_url != blank %}<li><a href="{{ platform_context.gplus_url }}" rel="publisher nofollow" target="_blank"><span class="image icon-gplus"></span></a></li>{% endif %}
-            {% if platform_context.blog_url != blank %}<li><a href="{{ platform_context.blog_url }}" ref="nofollow"  target="_blank"> <span class="image icon-feed"></span></a></li>{% endif %}
-          </ul>
-        </div>
-
-        {% if no_header_links == false %}
-          <div id='header_links' class='links-container pull-right'>
-            <ul class="nav main-menu header-custom-links">
-              <li>
-                <a href='/' class='nav-link'>
-                  <span class='text'>Home</span>
-                </a>
-              </li>
-
-              <li>
-                <a href='/?section=how-it-works' class='nav-link' scroll-to-section>
-                  <span class='text'>How It Works</span>
-                </a>
-              </li>
-            </ul>
-              {{ navigation_links | make_html_safe }}
-          </div>
-        {% endif %}
-    </div>
-  </div>
-</div>
-      },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
-  end
-
-  def create_search_box_inputs!
-    iv = InstanceView.where(
-      instance_id: @instance.id,
-      path: 'home/search_box_inputs',
-    ).first_or_initialize
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
-<h2>
-  <span class='first-line'>The Easiest Way For Experienced Trial</span>
-  Lawyers To Get <span class='text-highlight'>Quality Contingent Fee Referrals</span></span>
-</h2>
-
-<form action="/search" class="home_search search-box {{ class_name }}" method="get">
-  <div class="input-wrapper">
-
-    <div class="row-fluid">
-      {% for transactable_type in transactable_types %}
-        <div class="transactable-type-search-box" data-transactable-type-id="{{ transactable_type.select_id }}" {% if forloop.first != true %} style=" display: none;" {% endif%}>
-          {% include 'home/search/fulltext' %}
-          {% include 'home/search/custom_attributes' transactable_type:transactable_type %}
-        </div>
-      {% endfor %}
-
-      {% if transactable_types.size > 1 %}
-        {% if platform_context.tt_select_type == 'dropdown' %}
-          <div class="span2 transactable-select-wrapper">
-            <select class="no-icon select2 transactable_select" data-transactable-type-picker name="transactable_type_selector">
-              {% for transactable_type in transactable_types %}
-                <option value="{{ transactable_type.select_id }}">{{ transactable_type.name }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        {% endif %}
-      {% endif %}
-      <input name="transactable_type_id" type="hidden" value="{{ transactable_type.id }}">
-
-      <div class="span2 pull-right submit-button-wrapper">
-        <a class="btn btn-green btn-large search-button" data-disable-with="{{ 'homepage.disabled_buttons.search' | translate }}" rel="submit" href="">
-          <span class="ico-search"></span>
-          {{ 'homepage.buttons.search' | translate }}
-        </a>
-        <div id="suggest_location" style="display: none"></div>
-      </div>
-    </div>
-
-    {% if transactable_types.size > 1 and platform_context.tt_select_type == 'radio' %}
-      <div class="row-fluid">
-        <div class="span10">
-          <div class="search-transactable--radio">
-            {% for transactable_type in transactable_types reversed %}
-            <input type="radio" name="transactable_type_selector" value="{{ transactable_type.select_id }}" id="transactable-type-{{ transactable_type.id }}" {% if forloop.first == true %} checked {% endif %} data-transactable-type-picker >
-            <label for="transactable-type-{{ transactable_type.id }}">
-              {% capture i18n_key %}transactable_types.{{ transactable_type.name | parameterize:'_' }}.labels.search{% endcapture %}
-              {{ i18n_key | translate }}
-            </label>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-    {% endif %}
-  </div>
-  <input type="hidden" name="transactable_type_class">
-  <input type="submit"/>
-</form>
-
-<script type="text/javascript">
-  $(document).ready(function() { $(document).trigger('init:homepageranges.nearme'); });
-</script>
-      },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
-  end
-
-  def create_home_search_fulltext!
-    iv = InstanceView.where(
-      instance_id: @instance.id,
-      path: 'home/search/fulltext'
-    ).first_or_initialize
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
-<input class="query" name="query" placeholder="{{ transactable_type.fulltext_placeholder }}" type="text" >
-      },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
-  end
-
-  def create_home_search_custom_attributes!
-    iv = InstanceView.where(
-      instance_id: @instance.id,
-      path: 'home/search/custom_attributes'
-    ).first_or_initialize
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
-{% for ca in transactable_type.custom_attributes %}
-  {% capture i18n_by_state %}transactable_types.{{ transactable_type.name | parameterize:'_' }}.labels.by_state{% endcapture %}
-  {% capture i18n_all_states %}transactable_types.{{ transactable_type.name | parameterize:'_' }}.labels.all_states{% endcapture %}
-
-  <select class='no-icon select2 custom-attribute-select' name='lg_custom_attributes[{{ca.name}}][]' data-select2-placeholder='{{ i18n_by_state | translate }}'>
-    <option></option>
-    <option>{{ i18n_all_states | translate }}</option>
-    {% for value in ca.valid_values %}
-      <option value='{{ value }}'>{{ value }}</option>
-    {% endfor %}
-  </select>
-{% endfor %}
-      },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
-  end
-
-  def create_home_homepage_content!
-    iv = InstanceView.where(
-      instance_id: @instance.id,
-      path: 'home/homepage_content',
-    ).first_or_initialize
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
-<section class='how-it-works'>
-  <div class='container-fluid'>
-
-    <header>
-      <h2>How it Works</h2>
-    </header>
-
-    <div class='table-row'>
-      <div class='teaser-wrapper table-cell'>
-        <div class='teaser'>
-          <div class='teaser-content'>
-            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2683/icn-save-time-energy.png' /></div>
-            <h3 class='text-highlight'>SAVE TIME + ENERGY</h3>
-            <p>Our specialized marketplace connects <strong>Referring and Experts</strong> to engage on a wide variety of contingent fee cases.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class='teaser-wrapper table-cell'>
-        <div class='teaser'>
-          <div class='teaser-content'>
-            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2684/icn-quality-selection.png' /></div>
-            <h3 class='text-highlight'>QUALITY CASE SELECTION</h3>
-            <p>We provide a purpose-built platform that <strong>asks Clients all the right questions</strong> so you don't have to.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class='teaser-wrapper table-cell'>
-        <div class='teaser'>
-          <div class='teaser-content'>
-            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2685/icn-secure-compliant.png' /></div>
-            <h3 class='text-highlight'>SECURE + COMPLIANT</h3>
-            <p>Our cloud-based platform offers advanced security in a <strong>HIPAA compliant environment</strong> to protect private information.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <a href='/how-it-works' class='learn-more'>LEARN MORE</a>
-
-  </div>
-</section>
-
-<section class='video'>
-  <div class='container-fluid'>
-
-    <div class="video-wrapper">
-      <div class="video-constrainer">
-        <h2>VIDEO</h2>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<section class='benefits'>
-  <div class='container-fluid'>
-
-    <header>
-      <h2>Benefits to <span class='text-highlight'>UoT Members</span></h2>
-      <h3>
-        <span class='text-highlight'>Designed by lawyers for lawyers.</span>
-        <span class='text-lighter'>Enjoy the time saving tools and process we have created.</span>
-      </h3>
-    </header>
-
-    <div class='table-row'>
-      <div class='teaser-wrapper table-cell'>
-        <div class='teaser'>
-          <div class='teaser-content'>
-            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2686/icn-merit.png' /></div>
-            <h3>Experience is Rewarded</h3>
-            <p>This is not a place to develop a new practice area. Handling Law Firms can only compete for a case listing if they can show competence and experience in that practice area.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class='teaser-wrapper table-cell'>
-        <div class='teaser'>
-          <div class='teaser-content'>
-            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2687/icn-case-alerts.png' /></div>
-            <h3>Auto Project Notifications</h3>
-            <p>Receive automatic notifications about new case listings in your practice area and your geography. Save your valuable time to work on cases instead of finding new cases.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class='teaser-wrapper table-cell'>
-        <div class='teaser'>
-          <div class='teaser-content'>
-            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2688/icn-offer-engine.png' /></div>
-            <h3>Simple Project Offer Engine</h3>
-            <p>Negotiate and contract on case listings using our simple, intuitive case offer engine.  It provides consistency and saves you time and energy.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class='table-row'>
-      <div class='teaser-wrapper table-cell'>
-        <div class='teaser'>
-          <div class='teaser-content'>
-            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2689/icn-case-details.png' /></div>
-            <h3>Rich Project Details</h3>
-            <p>Our robust, curated case listing form already asks the Client the important questions about the facts of the case so you don't have to.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class='teaser-wrapper table-cell'>
-        <div class='teaser'>
-          <div class='teaser-content'>
-            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2690/icn-security.png' /></div>
-            <h3>Deal With Confidence</h3>
-            <p>Reputations matter here. Members receive quality scores from other members on a variety of applicable criteria based on actual interactions on this site.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class='teaser-wrapper table-cell'>
-        <div class='teaser'>
-          <div class='teaser-content'>
-            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2691/icn-hippa.png' /></div>
-            <h3>Secure and HIPAA-Compliant</h3>
-            <p>Our platform is built in a Amazon's HIPAA compliant AWS cloud platform for secure transmission of all types of case information.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<section class='referring-lawyers'>
-  <div class='container-fluid'>
-
-    <div class='table-row'>
-      <div class='sign-up table-cell'>
-        <h2 class='text-highlight'>Clients</h2>
-        <h3 class='text-lighter'><span class='first-line'>Sign up and find out how</span> easy it is to list your first case.</h3>
-        {% unless current_user %}
-        <a href='#' data-href='/users/sign_up' data-modal='true' data-modal-class='sign-up-modal' data-modal-overlay-close='disabled' class='sign-up'>{{ 'top_navbar.sign_up' | translate }}</a>
-        {% endunless %}
-      </div>
-
-      <div class='manage-on-mobile table-cell'>
-        <p><span class='text-highlight'>Manage</span> all your cases, offers, and<br>communications from any mobile device.</p>
-        <img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2692/iphone.png' />
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<section class='trusted-firms'>
-  <div class='container-fluid'>
-
-    <header>
-      <h2>Trusted firms using <span class='text-highlight'>UoT</span></h2>
-      <h3><span class='text-lighter'>Designed by lawyers for lawyers. Enjoy the time saving tools and process we have created.</span></h3>
-    </header>
-
-    <img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2706/companies.png'>
-
-  </div>
-</section>
-
-<section class='testimonials'>
-  <div class='container-fluid'>
-
-    <header>
-      <h2><span class='text-highlight'>Testimonials</span></h2>
-      <h3><span class='text-lighter'>Learn what other lawyers have to say about UoT.</span></h3>
-    </header>
-
-    <div class='table-row'>
-      <div class='teaser-wrapper table-cell'>
-        <div class='teaser'>
-          <div class='teaser-content'>
-            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2693/johnsmith.png' /></div>
-            <p>“UoT takes a tedious process and converts into actionable simple steps.  I was able to get my case listed and live for review in a matter of minutes.”</p>
-            <h3>John Smith</h3>
-          </div>
-        </div>
-      </div>
-
-      <div class='teaser-wrapper table-cell'>
-        <div class='teaser'>
-          <div class='teaser-content'>
-            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2694/robertmills.png' /></div>
-            <p>“Posting cases and getting responses from interested and qualified lawyers is as easy as it gets.  I highly recommend UoT to everyone!”</p>
-            <h3>Robert Mills</h3>
-          </div>
-        </div>
-      </div>
-
-      <div class='teaser-wrapper table-cell'>
-        <div class='teaser'>
-          <div class='teaser-content'>
-            <div class='image'><img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2695/michealduncan.png' /></div>
-            <p>“This service saves my firm time and energy.  It has allowed me to connect and collaborate with many other trusted professionals.”</p>
-            <h3>Micheal Duncan</h3>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-      },
+      body: read_template('layouts_theme_header.liquid'),
       format: 'html',
       handler: 'liquid',
       partial: true,
@@ -948,20 +548,7 @@ namespace :uot do
     ).first_or_initialize
     iv.update!({
       transactable_types: TransactableType.all,
-      body: %Q{
-{% if current_user == blank %}
-  {% include 'listings/ask_for_sign_up.html' %}
-{% else %}
-  {% assign collaborator = current_user | find_collaborator: listing %}
-  {% if collaborator.approved_by_owner? or current_user.id == listing.creator_id %}
-    {% include 'listings/case_details.html' %}
-  {% else %}
-    {% include 'listings/ask_for_permission.html', collaborator: collaborator %}
-  {% endif %}
-
-{% endif %}
-
-},
+      body: read_template('listings_show.liquid'),
       format: 'html',
       handler: 'liquid',
       partial: false,
@@ -977,66 +564,7 @@ namespace :uot do
     ).first_or_initialize
     iv.update!({
       transactable_types: TransactableType.all,
-      body: %Q{
-<footer>
-
-  <div class='description column'>
-    <img src='https://s3-us-west-1.amazonaws.com/near-me-staging/instances/198/uploads/ckeditor/picture/data/2700/litvault-logo-icon.png'>
-    <p>UoT is an online marketplace for the legal industry. We connect Referring and Experts in order to collaborate on contingent fee plaintiffs' cases.</p>
-  </div>
-
-  <div class='general column'>
-    <h4>General</h4>
-
-    <ul>
-      <li><a href='/'>Home</a></li>
-
-      {% for page in platform_context.pages limit:3 %}
-        <li><a href="{{ page.page_url }}" target="{{ page.open_in_target }}" rel="{{ page.link_rel }}">{{ page.title }}</a></li>
-      {% endfor %}
-    </ul>
-  </div>
-
-  <div class='more column'>
-    <h4>More</h4>
-
-    <ul>
-      {% for page in platform_context.pages offset:3 %}
-        <li><a href="{{ page.page_url }}" target="{{ page.open_in_target }}" rel="{{ page.link_rel }}">{{ page.title }}</a></li>
-      {% endfor %}
-    </ul>
-  </div>
-
-  <div class='connect column'>
-    <h4>Connect</h4>
-
-    <ul>
-      {% if platform_context.facebook_url != blank %}<li><a href="{{ platform_context.facebook_url }}"  ref="nofollow" target="_blank"><span class="image icon-facebook"></span>Facebook</a></li>{% endif %}
-      {% if platform_context.twitter_url != blank %}<li><a href="{{ platform_context.twitter_url }}" ref="nofollow"  target="_blank"> <span class="image icon-twitter"></span>Twitter</a></li>{% endif %}
-      {% if platform_context.linkedin_url != blank %}<li><a href="{{ platform_context.linkedin_url }}" rel="publisher nofollow" target="_blank"><span class="image icon-linkedin"></span>Linkedin</a></li>{% endif %}
-      {% if platform_context.gplus_url != blank %}<li><a href="{{ platform_context.gplus_url }}" rel="publisher nofollow" target="_blank"><span class="image icon-gplus"></span>Google+</a></li>{% endif %}
-      {% if platform_context.blog_url != blank %}<li><a href="{{ platform_context.blog_url }}" ref="nofollow"  target="_blank"> <span class="image icon-feed"></span>Blog</a></li>{% endif %}
-    </ul>
-  </div>
-
-  <div class='contact column'>
-    <h4>Contact</h4>
-
-    <h5>TELEPHONE</h5>
-    <span>{{ platform_context.phone_number }}</span>
-
-    <h5>SUPPORT</h5>
-    <a href='mailto:{{ platform_context.support_email }}'>{{ platform_context.support_email }}</a>
-  </div>
-
-</footer>
-
-<div class='copyright-wrapper'>
-  <div class='copyright'>
-    &copy; 2016 UoT. All rights reserved.
-  </div>
-</div>
-      },
+      body: read_template('layouts_theme_footer.liquid'),
       format: 'html',
       handler: 'liquid',
       partial: true,
@@ -1648,22 +1176,6 @@ namespace :uot do
 
   end
 
-  # def create_theme_footer!
-  #   iv = InstanceView.where(
-  #     instance_id: @instance.id,
-  #     path: 'listings/show'
-  #   ).first_or_initialize
-  #   iv.update!({
-  #     transactable_types: TransactableType.all,
-  #     body: %Q{},
-  #     format: 'html',
-  #     handler: 'liquid',
-  #     partial: true,
-  #     view_type: 'view',
-  #     locales: Locale.all
-  #   })
-  # end
-  #
   def create_custom_attribute(object, hash)
       hash = hash.with_indifferent_access
       attr = object.custom_attributes.where({
@@ -1671,6 +1183,12 @@ namespace :uot do
       }).first_or_initialize
       attr.assign_attributes(hash)
       attr.set_validation_rules!
+  end
+
+  private
+
+  def read_template(name)
+    File.read(File.join(Rails.root, 'lib', 'tasks', 'uot_templates', name))
   end
 
 end
