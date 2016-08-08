@@ -234,6 +234,13 @@ class SecuredParams
     ]
   end
 
+  def default_image
+    [
+      :photo_uploader,
+      :photo_uploader_version
+    ]
+  end
+
   def blog_post
     [
       :title,

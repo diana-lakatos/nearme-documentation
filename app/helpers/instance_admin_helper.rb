@@ -107,4 +107,12 @@ module InstanceAdminHelper
     end
   end
 
+  def photo_uploaders_with_versions(uploader_list)
+    uploaders = {}
+    uploader_list.each do |uploader|
+      uploaders[uploader] = uploader.constantize.dimensions.keys
+    end
+    uploaders
+  end
+
 end

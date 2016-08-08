@@ -65,7 +65,13 @@ class AvatarUploader < BaseUploader
 
 
   def default_url(*args)
-    ActionController::Base.helpers.image_url('default-user-avatar.svg')
+    default_image, version = get_default_image_and_version(*args)
+
+    if default_image.blank? || self.class == DefaultImageUploader
+      ActionController::Base.helpers.image_url('default-user-avatar.svg')
+    else
+      default_image.photo_uploader_image.url(:transformed)
+    end
   end
 
   def clean_model

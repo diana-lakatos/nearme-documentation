@@ -589,4 +589,16 @@ DNM.registerInitializer(function(){
     });
 });
 
+DNM.registerInitializer(function(){
+    var els = $("[data-default-images]");
+    if (els.length === 0) {
+        return;
+    }
+
+    require.ensure('./instance_admin/forms/default_images', function(require){
+        var DefaultImages = require('./instance_admin/forms/default_images');
+        return new DefaultImages();
+    });
+});
+
 DNM.run();

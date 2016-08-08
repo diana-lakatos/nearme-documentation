@@ -795,6 +795,24 @@ ActiveRecord::Schema.define(version: 20160804211745) do
   add_index "data_uploads", ["instance_id"], name: "index_data_uploads_on_instance_id", using: :btree
   add_index "data_uploads", ["target_id", "target_type"], name: "index_data_uploads_on_target_id_and_target_type", using: :btree
 
+  create_table "default_images", force: :cascade do |t|
+    t.integer  "theme_id"
+    t.integer  "instance_id"
+    t.string   "photo_uploader"
+    t.string   "photo_uploader_version"
+    t.string   "photo_uploader_image"
+    t.text     "photo_uploader_image_transformation_data"
+    t.string   "photo_uploader_image_original_url"
+    t.datetime "photo_uploader_image_versions_generated_at"
+    t.integer  "photo_uploader_image_original_width"
+    t.integer  "photo_uploader_image_original_height"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "default_images", ["instance_id"], name: "index_default_images_on_instance_id", using: :btree
+  add_index "default_images", ["theme_id"], name: "index_default_images_on_theme_id", using: :btree
+
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",                                 default: 20
     t.integer  "attempts",                                 default: 0
