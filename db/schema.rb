@@ -11,11 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(version: 20160804130004) do
-=======
-ActiveRecord::Schema.define(version: 20160804211745) do
->>>>>>> current_sprint
+ActiveRecord::Schema.define(version: 20160807112639) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,29 +51,6 @@ ActiveRecord::Schema.define(version: 20160804211745) do
   add_index "activity_feed_subscriptions", ["follower_id", "followed_identifier"], name: "index_subscriptions_on_folllower_and_followed_identifier", unique: true, using: :btree
   add_index "activity_feed_subscriptions", ["instance_id", "followed_id", "followed_type"], name: "activity_feed_subscriptions_instance_followed", using: :btree
 
-<<<<<<< HEAD
-=======
-  create_table "additional_charge_types", force: :cascade do |t|
-    t.string   "name",                               limit: 255
-    t.text     "description"
-    t.integer  "amount_cents"
-    t.string   "currency",                           limit: 255
-    t.string   "commission_receiver",                limit: 255
-    t.integer  "provider_commission_percentage"
-    t.string   "status",                             limit: 255
-    t.integer  "instance_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "additional_charge_type_target_id"
-    t.string   "additional_charge_type_target_type"
-    t.integer  "percent"
-    t.datetime "deleted_at"
-  end
-
-  add_index "additional_charge_types", ["additional_charge_type_target_id", "additional_charge_type_target_type"], name: "act_target", using: :btree
-  add_index "additional_charge_types", ["instance_id"], name: "index_additional_charge_types_on_instance_id", using: :btree
-
->>>>>>> current_sprint
   create_table "additional_charges", force: :cascade do |t|
     t.string   "name",                      limit: 255
     t.integer  "amount_cents"
