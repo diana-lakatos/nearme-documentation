@@ -190,6 +190,10 @@ section.user_messages {
       background-color: #C0C0C0;
     }
   }
+
+  a.btn {
+    padding: 0;
+  }
 }
 
 @media (max-width: $ipad-width) {
