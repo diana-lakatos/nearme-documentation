@@ -29,6 +29,9 @@ namespace :uot do
   end
 
   def create_transactable_types!
+    transactable_type = @instance.transactable_types.where(name: 'Business Services').first
+    transactable_type.destroy if transactable_type.present?
+
     transactable_type = @instance.transactable_types.where(name: 'Project').first_or_initialize
     transactable_type.attributes = {
       name: 'Project',
