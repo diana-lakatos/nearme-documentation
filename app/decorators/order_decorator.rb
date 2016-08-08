@@ -22,6 +22,10 @@ class OrderDecorator < Draper::Decorator
     transactable.location
   end
 
+  def user_message_recipient
+    owner
+  end
+
   #===============================
 
   def payment_decorator

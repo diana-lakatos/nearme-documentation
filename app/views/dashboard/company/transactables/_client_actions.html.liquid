@@ -1,0 +1,20 @@
+{% if current_status == 'pending' %}
+  <a href='{{ transactable.edit_path }}'>Edit Project</a>
+{% endif %}
+
+{% if current_status != 'archived' %}
+  <a href='{{ transactable.destroy_path }}' data-method="delete" data-confirm="Are you sure?">Cancel Project</a>
+{% endif %}
+
+{% if current_status == 'in progress' %}
+
+  {% if accepted_order.user_messages.size == 0 %}
+    <a class="btn btn-info" data-modal="true" href="{{ 'new_reservation_user_message_path' | generate_url: accepted_order.id, skip: true }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+  {% else %}
+    <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: accepted_order.user_messages.first.id }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+  {% endif %}
+
+  {{ accepted_order.user.click_to_call_button }}
+
+{% endif %}
+

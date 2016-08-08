@@ -15,7 +15,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
 
   def update
     if @order.update(order_params)
-      redirect_to location_after_save, notice: t('flash_messages.manage.order.updated')
+      redirect_to request.referer.presence || location_after_save, notice: t('flash_messages.manage.order.updated')
     else
       flash[:error] = t('flash_messages.manage.order.error_update')
       render :edit
@@ -25,25 +25,25 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   def destroy
     @order.destroy
     flash[:success] = t('flash_messages.manage.order.deleted')
-    redirect_to location_after_save
+    redirect_to request.referer.presence || location_after_save
   end
 
   def cancel
     @order.host_cancel!
     flash[:success] = t('flash_messages.manage.order.canceled')
-    redirect_to location_after_save
+    redirect_to request.referer.presence || location_after_save
   end
 
   def complete
     @order.complete!
     flash[:success] = t('flash_messages.manage.order.approved')
-    redirect_to location_after_save
+    redirect_to request.referer.presence || location_after_save
   end
 
   def archive
     @order.touch(:archived_at)
     flash[:success] = t('flash_messages.dashboard.order.archived')
-    redirect_to action: :index
+    redirect_to request.referer.presence || location_after_save
   end
 
   # TODO this is only used for Purchase but should confirm Reservation and ReservationRequest correctly
@@ -83,7 +83,25 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
       flash[:error] = t('dashboard.host_reservations.reservation_is_expired') if @reservation.expired?
     end
 
-    redirect_to location_after_save
+    redirect_to request.referer.presence || location_after_save
+  end
+
+  def rejection_form
+    render layout: false
+  end
+
+  def reject
+    if @order.reject(rejection_reason)
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::Rejected, @order.id)
+      event_tracker.rejected_a_booking(@order)
+      track_order_update_profile_informations
+      flash[:deleted] = t('flash_messages.manage.reservations.reservation_rejected')
+    else
+      flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
+    end
+
+    redirect_to request.referer.presence || dashboard_offers_path
+    render_redirect_url_as_json if request.xhr?
   end
 
   private
@@ -111,5 +129,9 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
 
   def order_params
     params.require(:order).permit(secured_params.order(@order.reservation_type))
+  end
+
+  def rejection_reason
+    params[:order][:rejection_reason] if params[:order] && params[:order][:rejection_reason]
   end
 end

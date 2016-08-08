@@ -3,6 +3,7 @@ class Utils::DefaultAlertsCreator
   def create_all_workflows!
     Utils::DefaultAlertsCreator::SignUpCreator.new.create_all!
     Utils::DefaultAlertsCreator::ReservationCreator.new.create_all!
+    Utils::DefaultAlertsCreator::OfferCreator.new.create_all!
     Utils::DefaultAlertsCreator::ListingCreator.new.create_all!
     Utils::DefaultAlertsCreator::RecurringBookingCreator.new.create_all!
     Utils::DefaultAlertsCreator::PayoutCreator.new.create_all!

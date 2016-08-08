@@ -99,7 +99,19 @@ class OrderDrop < BaseDrop
     routes.cancel_dashboard_company_orders_received_path(order)
   end
 
-  def offer_enquirer_cancel_url
+  def rejection_form_path
+    routes.rejection_form_dashboard_company_orders_received_path(order)
+  end
+
+  def confirm_path
+    routes.confirm_dashboard_company_orders_received_path(order)
+  end
+
+  def complete_path
+    routes.complete_dashboard_company_orders_received_path(order)
+  end
+
+  def offer_enquirer_cancel_path
     routes.cancel_dashboard_orders_path(order)
   end
 

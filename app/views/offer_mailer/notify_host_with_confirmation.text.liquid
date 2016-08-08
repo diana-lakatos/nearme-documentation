@@ -1,0 +1,28 @@
+Good news, {{ user.first_name }}!
+
+Your listing, '{{ listing.name }}', was just booked!
+
+Who: {{ reservation.owner.first_name }}
+
+What: {{ listing.name }} x {{ reservation.quantity }}
+{% if reservation.guest_notes != blank %}
+
+Exclusive booking instructions from guest: {{ reservation.guest_notes }}
+{% endif %}
+
+When:
+{% if reservation.action_hourly_booking? %}
+  {{ reservation.hourly_summary }}
+{% else %}
+  {{ reservation.dates_summary }}
+{% endif %}
+
+Total: {{ reservation.total_payable_to_host_formatted }}
+
+Exciting, right? Please, confirm the booking and let's get the {{ listing.lessee }} set up!
+
+Confirm Booking {{ platform_context.host | append:reservation.reservation_confirm_url_with_tracking | append:signature_for_tracking }}
+
+Not ready for {{ listing.lessees }}? You can manage your bookings here: {{ platform_context.host | append:listing.manage_guests_dashboard_url }}
+
+If you need help, send an email to {{ platform_context.support_email }} or contact us at {{ platform_context.phone_number }}.

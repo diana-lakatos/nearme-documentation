@@ -74,7 +74,7 @@ class Offer < Order
   end
 
   def charge_and_confirm!
-    if payment.authorize && payment.capture! && confirm!
+    if (payment.nil? || (payment.authorize && payment.capture!)) && confirm!
       reject_related_offers!
       disable_transactable!
 
@@ -110,6 +110,10 @@ class Offer < Order
 
   def cancelable?
     true
+  end
+
+  def can_reject?
+    state == 'unconfirmed'
   end
 
   def enquirer_cancelable

@@ -61,7 +61,7 @@ class TransactableDrop < BaseDrop
     :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at,
     :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, :attachments, :confirm_reservations,
     :to_key, :model_name, :deposit_amount_cents, :customizations, :to_param, :hours_for_guest_to_confirm_payment, :availability_exceptions,
-    :action_free_booking?, :average_rating, :time_based_booking?, :transactable_collaborators, :approved_transactable_collaborators,
+    :action_free_booking?, :average_rating, :time_based_booking?, :transactable_collaborators, :collaborating_users, :approved_transactable_collaborators,
     :user_messages, :line_item_orders, to: :source
 
   # action_price_per_unit
@@ -373,6 +373,10 @@ class TransactableDrop < BaseDrop
     routes.edit_dashboard_company_transactable_type_transactable_path(@source.transactable_type, @source)
   end
 
+  def destroy_path
+    routes.dashboard_company_transactable_type_transactable_path(@source.transactable_type, @source)
+  end
+
   def listing_date
     @source.listing_date
   end
@@ -388,6 +392,18 @@ class TransactableDrop < BaseDrop
   # user message path
   def user_message_path
     routes.new_transactable_user_message_path(@source)
+  end
+
+  def accepted_orders
+    line_item_orders.upcoming.confirmed.uniq
+  end
+
+  def first_accepted_order
+    line_item_orders.confirmed.first
+  end
+
+  def orders
+    line_item_orders.all.uniq
   end
 
 end

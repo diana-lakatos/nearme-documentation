@@ -1491,6 +1491,7 @@ namespace :uot do
       transactable_types: TransactableType.all,
       body: %Q{
 <div class='panel'>
+  <div class='panel-body'></div>
 
   {% if transactables.size > 0 %}
     {% if is_client == "true" %}
@@ -1573,6 +1574,9 @@ namespace :uot do
         <p>Company: {{ transactable.properties.company_name }}</p>
         <p>Invite sent: {{ collaborator.approved_by_owner_at | to_date | l: 'short' }}</p>
         <p>Workplace: {{ transactable.properties.workplace_type }}</p>
+        {% if transactable.properties.workplace_type == 'On Site' %}
+          <p>Office: {{ transactable.properties.office_location }}</p>
+        {% endif %}
       </div>
       <div class="col-md-6">
         <p>Approx. Budget: {{ transactable.properties.budget | pricify }}</p>
@@ -1618,10 +1622,10 @@ namespace :uot do
               <td>{{ order.created_at | to_date | l: 'short' }}</td>
               <td>{{ 'reservations.states.' | append: order.state | t }}</td>
               <td>
-                {% if order.enquirer_editable == true %}
+                {% if current_status == 'pending' %}
                   <a href="{{ 'edit_dashboard_order_path' | generate_url: order.id }}">{{ 'general.edit' | t }}</a>
                 {% endif %}
-                {% if order.enquirer_cancelable == true %}
+                {% if current_status == 'pending'  %}
                   <a href="{{ 'enquirer_cancel_dashboard_order_path' | generate_url: order.id }}" data-method="post" data-confirm="Are you sure?">{{ 'general.cancel' | t }}</a>
                 {% endif %}
                 {% if order.state == 'confirmed' or order.state == 'rejected' %}
@@ -1645,7 +1649,178 @@ namespace :uot do
       locales: Locale.all
     })
 
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'dashboard/company/transactables/client_listing',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: %Q{
+{% for transactable in transactables %}
+  {% assign collaborator = current_user  | find_collaborator: transactable %}
+  {% assign accepted_order = transactable.first_accepted_order %}
+  <article class="listing">
+    <h2>{{ transactable.name }}</h2>
+    {% if current_status == 'archived' %}
+      Completed
+    {% else %}
+      <a href="{{ transactable.show_path }}">Project details</a>
+    {% endif %}
+    <div class="row">
+      <div class="col-md-6">
+        <p>Workplace: {{ transactable.properties.workplace_type }}</p>
+        {% if transactable.properties.workplace_type == 'On Site' %}
+          <p>Office: {{ transactable.properties.office_location }}</p>
+        {% endif %}
+      </div>
+      <div class="col-md-6">
+        <p>Approx. Budget: {{ transactable.properties.budget | pricify }}</p>
+        <p>Deadline: {{ transactable.properties.deadline | to_date | l: 'short' }}</p>
+        <p>Approx. Time to Complete: {{ transactable.properties.estimation }}</p>
+      </div>
+    </div>
+    <h4>Project Description</h4>
+    <p>{{ transactable.description }}</p>
 
+    {% include 'dashboard/company/transactables/client_actions.htnl' %}
+
+    <hr>
+
+    {% if current_status == "pending" %}
+      {% assign transactable_collaborators = transactable.approved_transactable_collaborators %}
+      {% if transactable_collaborators != empty %}
+        <h3>SMEs Invited ({{ transactable_collaborators.size }})</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>SMEs:</th>
+              <th>Invite Date:</th>
+              <th>Invite Action:</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for transactable_collaborator in transactable_collaborators %}
+              <tr>
+                <td>{{ transactable_collaborator.user.name }}</td>
+                <td>{{ transactable_collaborator.approved_by_owner_at | to_date | l: 'short' }}</td>
+                <td>
+                  <a class="btn btn-info" data-modal="true" href="{{ transactable_collaborator.user.user_message_path }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+
+                  {{ transactable_collaborator.user.click_to_call_button }}
+
+                  <a class="btn btn-info" href="{{ transactable_collaborator.destroy_path }}" data-method="delete" data-confirm="Are you sure?">Remove</a>
+
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+
+      {% assign orders = transactable.orders %}
+      {% if orders != empty %}
+        <h3>Offers ({{ orders.size }})</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>SMEs:</th>
+              <th>Offer Date:</th>
+              <th>Offer Status:</th>
+              <th>Offer Action:</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in orders %}
+              <tr>
+                <td>{{ order.user.name }}</td>
+                <td>{{ order.created_at | to_date | l: 'short' }}</td>
+                <td>{{ 'reservations.states.' | append: order.state | t }}</td>
+                <td>
+                  <a href="#">Review</a>
+                  {% if order.state == 'unconfirmed' %}
+                    <a href="{{ order.rejection_form_path }}" data-modal="true">Reject</a>
+                    <a href="{{ order.confirm_path }}" data-method="post" data-confirm="Are you sure?">Accept</a>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+
+
+    {% elsif current_status == "in progress" or current_status == "archived" %}
+      <h3>Offer</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Offer Made:</th>
+            <th>Offer Status:</th>
+            <th>Offer Action:</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ accepted_order.created_at | to_date | l: 'short' }}</td>
+            <td>Accepted</td>
+            <td><a href="#">View order</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <a href="#" class="btn btn-default">View Time & Expenses</a>
+      {% if current_status == 'in progress' %}
+        <a href="{{ accepted_order.complete_path }}" data-method="post" class="btn btn-default">Project Completed</a>
+      {% else %}
+        <p>Total Paid {{ order.total_amount | pricify: order.currency }}</p>
+      {% endif %}
+    {% endif %}
+
+  </article>
+{% endfor %}
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'dashboard/company/transactables/sme_actions',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: %Q{
+{% if current_status == 'pending' %}
+  <a href='{{ transactable.edit_path }}'>Edit Project</a>
+{% endif %}
+
+{% if current_status != 'archived' %}
+  <a href='{{ transactable.destroy_path }}' data-method="delete" data-confirm="Are you sure?">Cancel Project</a>
+{% endif %}
+
+{% if current_status == 'in progress' %}
+
+  {% if accepted_order.user_messages.size == 0 %}
+    <a class="btn btn-info" data-modal="true" href="{{ 'new_reservation_user_message_path' | generate_url: accepted_order.id, skip: true }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+  {% else %}
+    <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: accepted_order.user_messages.first.id }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+  {% endif %}
+
+  {{ accepted_order.user.click_to_call_button }}
+
+{% endif %}
+
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
   end
 
   # def create_theme_footer!

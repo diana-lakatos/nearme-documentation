@@ -121,7 +121,7 @@ module LiquidFilters
   end
 
   def pricify(amount, currency = 'USD')
-    humanized_money_with_symbol(amount.to_money(currency))
+    humanized_money_with_symbol(amount.to_f.to_money(currency))
   end
 
   def price_with_cents_with_currency(money)
