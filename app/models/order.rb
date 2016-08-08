@@ -1,7 +1,9 @@
 class Order < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
 
-  ORDER_TYPES = %w(Reservation RecurringBooking Purchase DelayedReservation)
+  ORDER_TYPES = %w(Reservation RecurringBooking Purchase DelayedReservation).freeze
+  STATES = %w(unconfirmed confirmed overdue archived not_archived).freeze
+  DEFAULT_DASHBOARD_TABS = %w(unconfirmed confirmed archived).freeze
 
   include Encryptable
   include Modelable
@@ -24,7 +26,7 @@ class Order < ActiveRecord::Base
   belongs_to :billing_address, foreign_key: :billing_address_id, class_name: 'OrderAddress'
   belongs_to :reservation_type
   belongs_to :transactable, -> { with_deleted }
-  belongs_to :transactable_pricing, class_name: 'Transactable::Pricing'
+  belongs_to :transactable_pricing, -> { with_deleted }, class_name: 'Transactable::Pricing'
 
   has_one :dimensions_template, as: :entity
 
@@ -47,7 +49,7 @@ class Order < ActiveRecord::Base
   validate :validate_acceptance_of_waiver_agreements, on: :update, if: -> { should_validate_field?('reservation', 'waiver_agreements') }
 
   before_validation :copy_billing_address, :remove_empty_documents
-  before_validation :set_owner, :build_return_shipment
+  before_validation :set_owner, :build_return_shipment, :skip_validation_for_custom_attributes
   after_save :try_to_activate!, unless: -> { skip_try_to_activate }
 
   state_machine :state, initial: :inactive do
@@ -70,8 +72,13 @@ class Order < ActiveRecord::Base
   scope :cart, -> { with_state(:inactive) }
   scope :complete, -> { without_state(:inactive) }
   scope :active, -> { without_state(:inactive) }
-  scope :archived, -> { active.where('archived_at IS NOT NULL') }
-  scope :not_archived, -> { active.where(archived_at: nil) }
+  # TODO we should switch to use completed state instead of archived_at for Reservation
+  # and fully switch to state machine
+
+  # scope :archived, -> { active.where('archived_at IS NOT NULL') }
+  # scope :not_archived, -> { active.where(archived_at: nil) }
+  scope :not_archived, -> { where("(orders.type != 'RecurringBooking' AND orders.state != 'inactive' AND orders.archived_at IS NULL) OR (orders.type = 'RecurringBooking' AND orders.state NOT IN ('cancelled_by_guest', 'cancelled_by_host', 'rejected', 'expired'))") }
+  scope :archived, -> { where("(orders.type != 'RecurringBooking' AND orders.archived_at IS NOT NULL) OR (type = 'RecurringBooking' AND orders.state IN ('rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest'))") }
   scope :reviewable, -> { where.not(archived_at: nil).confirmed }
   scope :cancelled, -> { with_state(:cancelled_by_guest, :cancelled_by_host) }
   scope :confirmed, -> { with_state(:confirmed)}
@@ -104,6 +111,17 @@ class Order < ActiveRecord::Base
   }
 
   delegate :photos, to: :transactable, allow_nil: true
+
+  # You can customize order tabs (states) displauyed in dashboard
+  # via orders_received_tabs and my_orders_tabs Instance attributes
+
+  def self.dashboard_tabs(company_dashboard=false)
+    if company_dashboard
+      PlatformContext.current.instance.orders_received_tabs
+    else
+      PlatformContext.current.instance.my_orders_tabs
+    end.presence || DEFAULT_DASHBOARD_TABS
+  end
 
   def schedule_refund(transition, run_at = Time.zone.now)
     if payment.paid? && !skip_payment_authorization?
@@ -408,6 +426,10 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def delivery_ids
+    shipments.map(&:delivery_id).join(',')
+  end
+
   def build_return_shipment
     if shipments.one? && shipments.first.shipping_rule.shipping_profile.shippo_return? && shipping_address.valid?
       outbound_shipping = shipments.first
@@ -422,22 +444,26 @@ class Order < ActiveRecord::Base
     return [] if shipments.none?(&:use_shippo?)
     return @options unless @options.nil?
     rates = []
-    # Get rates for both ways shipping (rental shipping)
-    shipments.each do |shipment|
-      shipment.get_rates(self).map{|rate| rate[:direction] = shipment.direction; rates << rate }
+    begin
+      # Get rates for both ways shipping (rental shipping)
+      shipments.each do |shipment|
+        shipment.get_rates(self).map{|rate| rate[:direction] = shipment.direction; rates << rate }
+      end
+      rates = rates.flatten.group_by{ |rate| rate[:servicelevel_name] }
+      @options = rates.to_a.map do |type, rate|
+        # Skip if service is available only in one direction
+        # next if rate.one?
+        price_sum = Money.new(rate.sum{|r| r[:amount_cents].to_f }, rate[0][:currency])
+        # Format options for simple_form radio
+        [
+          [ price_sum.format, "#{rate[0][:provider]} #{rate[0][:servicelevel_name]}", rate[0][:duration_terms]].join(' - '),
+          rate.map{|r| "#{r[:direction]}:#{r[:object_id]}" }.join(','),
+          { data: { price_formatted: price_sum.format, price: price_sum.to_f } }
+        ]
+      end.compact
+    rescue Shippo::APIError
+      []
     end
-    rates = rates.flatten.group_by{ |rate| rate[:servicelevel_name] }
-    @options = rates.to_a.map do |type, rate|
-      # Skip if service is available only in one direction
-      # next if rate.one?
-      price_sum = Money.new(rate.sum{|r| r[:amount_cents].to_f }, rate[0][:currency])
-      # Format options for simple_form radio
-      [
-        [ price_sum.format, "#{rate[0][:provider]} #{rate[0][:servicelevel_name]}", rate[0][:duration_terms]].join(' - '),
-        rate.map{|r| "#{r[:direction]}:#{r[:object_id]}" }.join(','),
-        { data: { price_formatted: price_sum.format, price: price_sum.to_f } }
-      ]
-    end.compact
   end
 
   def skip_steps
@@ -456,6 +482,11 @@ class Order < ActiveRecord::Base
   end
 
   private
+
+  def skip_validation_for_custom_attributes
+    self.skip_custom_attribute_validation = !checkout_update
+    true
+  end
 
   def try_to_activate!
     if inactive? && (skip_payment_authorization? || payment && payment.authorized?)

@@ -9,6 +9,19 @@ module ActivityFeedHelper
     }
   end
 
+  def commented_own_thread?(comment)
+    event = comment.commentable
+    creator_id = event.event_source.try(:creator_id) || event.followed.try(:creator_id)
+    creator_id == comment.creator_id
+  end
+
+  def status_update?(event_name)
+    [
+      :user_updated_group_status,
+      :user_updated_user_status
+    ].include?(event_name.to_sym)
+  end
+
   def followed_link(followed, target, &block)
     block_contents = capture(&block)
     if followed.is_a?(ActivityFeedEvent)

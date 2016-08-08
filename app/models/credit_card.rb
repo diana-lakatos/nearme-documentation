@@ -87,6 +87,8 @@ class CreditCard < ActiveRecord::Base
   end
 
   def success?
+    return true if persisted? && response.blank?
+
     has_response = response.present? rescue false
     if has_response
       !!YAML.load(response).try(&:success?)

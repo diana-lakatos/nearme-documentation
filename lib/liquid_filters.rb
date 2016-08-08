@@ -121,11 +121,11 @@ module LiquidFilters
   end
 
   def price_with_cents_with_currency(money)
-    humanized_money_with_symbol(money)
+    humanized_money_with_cents_and_symbol(money)
   end
 
   def price_without_cents_with_currency(money)
-    money_without_cents_and_with_symbol(money)
+    humanized_money_with_symbol(money)
   end
 
   def space_listing_placeholder_path(height, width)

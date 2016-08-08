@@ -114,6 +114,7 @@ en:
     required: 'required'
     show: 'Show'
     none: "None"
+    customized: ' - customized'
     day:
       one: "day"
       other: "days"
@@ -985,6 +986,7 @@ en:
     products:
       edit_inline: 'Edit your Product'
       buttons:
+        purchase: 'Purchase'
         add_to_cart: 'Add to cart'
         out_of_stock: 'Out of stock'
         favorite: 'Favorite'
@@ -1272,6 +1274,8 @@ en:
         confirmed: "Confirmed"
         completed: "Completed"
         archived: "Archived"
+        not_archived: "Active"
+        overdue: "Overdue"
       columns:
         listing: "Listing"
         total: "Total"
@@ -2583,7 +2587,7 @@ en:
       book_it_out_quantity: "Quantity for Book It Out option should equal maximal available quantity."
       book_it_out_not_available: 'Book It Out option is no longer available'
       exclusive_price_not_available: 'Exclusive Price option is no longer available'
-      no_delivery_options: 'There are no delivery options available.'
+      no_delivery_options: 'There are no delivery options available for provided address.'
       internal_payment: 'Unfortunately we have some internal issues with processing your credit card. Please try again later.'
       date_in_past: 'You cannot book a date in past.'
       invalid_date: 'Invalid date.'

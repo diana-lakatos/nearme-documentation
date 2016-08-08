@@ -53,6 +53,10 @@ class Shipment < ActiveRecord::Base
     false
   end
 
+  def delivery_id
+    "#{direction}:#{shippo_rate_id}"
+  end
+
   def outbound?
     direction == 'outbound'
   end
@@ -92,6 +96,7 @@ class Shipment < ActiveRecord::Base
       unit_price_cents: shipping_rule.price_cents,
       quantity: 1
     )
+    order.line_items << self.shipping_line_item unless order.line_items.include?(self.shipping_line_item)
   end
 
   def set_attributes
@@ -109,6 +114,7 @@ class Shipment < ActiveRecord::Base
         unit_price_cents: rate[:amount_cents],
         quantity: 1
       )
+      order.line_items << self.shipping_line_item unless order.line_items.include?(self.shipping_line_item)
     end
     true
   end

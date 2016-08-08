@@ -12,7 +12,7 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
   end
 
   def self.supported_countries
-    self.all_supported_by_pay_pal - ["BR", "IN", "IL", "JP"]
+    all_supported_by_pay_pal - ["BR", "IN", "IL", "JP"]
   end
 
   def self.settings

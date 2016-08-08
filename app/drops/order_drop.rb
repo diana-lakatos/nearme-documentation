@@ -12,7 +12,7 @@ class OrderDrop < BaseDrop
   #   string representing the unique identifier for this order
   # line_items
   #   an array of line items that belong to this order in the form of LineItem objects
-  delegate :id, :user, :company, :number, :line_items, to: :order
+  delegate :id, :user, :company, :number, :line_items, :total_units_text, to: :order
 
   def initialize(order)
     @order = order.decorate
@@ -40,5 +40,20 @@ class OrderDrop < BaseDrop
 
     false
   end
+
+  def included_tax?
+    @first_line_item =
+    first_line_item.included_tax_total_rate.zero? == false
+  end
+
+  def additional_tax?
+    first_line_item.additional_tax_total_rate.zero? == false
+  end
+
+  private
+    def first_line_item
+      @first_line_item ||= @order.line_items.first || OpenStruct.new(included_tax_total_rate: 0, additional_tax_total_rate: 0)
+      @first_line_item
+    end
 
 end

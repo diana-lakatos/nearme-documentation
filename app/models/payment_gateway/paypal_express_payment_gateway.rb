@@ -28,7 +28,7 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
   end
 
   def self.supported_countries
-    self.all_supported_by_pay_pal
+    all_supported_by_pay_pal
   end
 
   def express_gateway

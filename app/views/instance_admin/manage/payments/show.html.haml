@@ -25,6 +25,18 @@
         State:
         = @payment.state
 
+  = simple_form_for ['instance_admin', 'manage', @payment], html: { id: 'edit-payment-form'} do |f|
+    .row
+      .input-container.col-xs-12
+        = f.input :exclude_from_payout, as: :boolean
+
+
+    = content_for :header_buttons do
+      = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => '#edit-payment-form' }
+
+
+
+
   %h4 Charge attempts:
 
   - @payment.charges.each do |charge|

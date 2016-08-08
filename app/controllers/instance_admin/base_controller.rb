@@ -26,6 +26,7 @@ class InstanceAdmin::BaseController < ApplicationController
   MANAGE_CONTROLLERS = {
     'transfers'          => { controller: '/instance_admin/manage/transfers', default_action: 'index' },
     'payments'           => { controller: '/instance_admin/manage/payments', default_action: 'index' },
+    'orders'             => { controller: '/instance_admin/manage/orders', default_action: 'index' },
     'merchants'          => { controller: '/instance_admin/manage/merchant_accounts', default_action: 'index' },
     'users'              => { controller: '/instance_admin/manage/users', default_action: 'index' },
     'admins'             => { controller: '/instance_admin/manage/admins', default_action: 'index' },

@@ -3,6 +3,16 @@
 .comment-a {
     margin: 0 0 30px;
 
+    &.commented-own-thread {
+
+      figure {
+        display: none;
+      }
+
+      blockquote, .author, .meta {
+        margin-left: 0;
+      }
+    }
 
     figure {
         float: left;
@@ -39,7 +49,6 @@
         color: inherit;
         font: 14px/1.4 Helvetica Neue, Helvetica, Arial, sans-serif;
     }
-
 
     @include bp($screen-mobile) {
         margin-bottom: 15px;

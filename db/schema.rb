@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160801203847) do
+ActiveRecord::Schema.define(version: 20160807112639) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,6 +65,7 @@ ActiveRecord::Schema.define(version: 20160801203847) do
     t.integer  "additional_charge_type_target_id"
     t.string   "additional_charge_type_target_type"
     t.integer  "percent"
+    t.datetime "deleted_at"
   end
 
   add_index "additional_charge_types", ["additional_charge_type_target_id", "additional_charge_type_target_type"], name: "act_target", using: :btree
@@ -1308,6 +1309,8 @@ ActiveRecord::Schema.define(version: 20160801203847) do
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
     t.boolean  "enable_geo_localization",                                                           default: true
+    t.string   "orders_received_tabs"
+    t.string   "my_orders_tabs"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1836,6 +1839,7 @@ ActiveRecord::Schema.define(version: 20160801203847) do
     t.integer  "credit_card_id"
     t.integer  "payer_id"
     t.integer  "total_amount_cents",                                                             default: 0
+    t.boolean  "exclude_from_payout",                                                            default: false
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree

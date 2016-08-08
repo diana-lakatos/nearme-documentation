@@ -23,6 +23,8 @@ class Instance < ActiveRecord::Base
   serialize :hidden_ui_controls, Hash
   serialize :allowed_countries, Array
   serialize :allowed_currencies, Array
+  serialize :orders_received_tabs, Array
+  serialize :my_orders_tabs, Array
 
 
   API_KEYS = %w(paypal_username paypal_password paypal_signature paypal_app_id paypal_client_id paypal_client_secret stripe_api_key stripe_public_key)
