@@ -1402,6 +1402,20 @@ namespace :uot do
   <h1>
     My Projects > {{ current_status | humanize }}
   </h1>
+  {% assign form_url = transactable_type.transactable_types_path %}
+
+  {% form_for :transactable, url: @form_url, method: 'get', html-class: 'search', form_for_type: 'dashboard' %}
+    <select name="filter[properties][workplace_type]">
+      <option value="">Any</option>
+      <option value="Online" {% if params.filter.properties.workplace_type == 'Online' %}selected{% endif%}>Workplace Online</option>
+      <option value="On Site" {% if params.filter.properties.workplace_type == 'On Site' %}selected{% endif%}>Workplace On Site</option>
+    </select>
+    <select name="order_by">
+      <option value="created_at desc">Newest</option>
+      <option value="created_at asc" {% if params.order_by == 'created_at asc' %}selected{% endif%}>Oldest</option>
+    </select>
+    {% submit submit, class: 'hidden' %}
+  {% endform_for %}
 
   {% if is_client == "true" %}
     <div class='options visible-sm visible-xs'>
@@ -1473,19 +1487,6 @@ namespace :uot do
       transactable_types: TransactableType.all,
       body: %Q{
 <div class='panel'>
-  <div class='panel-body'>
-
-    {% if true %}
-      {% assign form_url = transactable_type.transactable_types_path %}
-
-      {% form_for :transactable, url: @form_url, method: 'get', html-class: 'search', form_for_type: 'dashboard' %}
-        {% assign query_label = 'dashboard.items.search.search_your_products' | translate %}
-        {% input query, as: 'search', label: @query_label, input_html-value: @params['query'], input_html-name: 'query' label_html-class: 'sr-only' %}
-        {% submit submit, class: 'hidden-xs hidden-sm btn btn-default' %}
-      {% endform_for %}
-    {% endif %}
-
-  </div>
 
   {% if transactables.size > 0 %}
     {% if is_client == "true" %}
@@ -1538,6 +1539,10 @@ namespace :uot do
   In progress
 {% endif %}
 
+{% unless current_user.has_verified_merchant_account == true %}
+  <p class="merchant-account-reminder">Before making any offer, you need to set up your <a href="{{ 'edit_dashboard_company_payouts_path' | generate_url: company.id }}">merchant account</a>.</p>
+{% endunless %}
+
       },
       format: 'html',
       handler: 'liquid',
@@ -1557,6 +1562,7 @@ namespace :uot do
   {% assign collaborator = current_user  | find_collaborator: transactable %}
   <article class="listing">
     <h2>{{ transactable.name }}</h2>
+    <a href="{{ transactable.show_path }}">Project details</a>
     <div class="row">
       <div class="col-md-6">
         <p>Contact: {{ transactable.properties.project_contact }}</p>
@@ -1608,11 +1614,11 @@ namespace :uot do
               <td>{{ order.created_at | to_date | l: 'short' }}</td>
               <td>{{ 'reservations.states.' | append: order.state | t }}</td>
               <td>
-                {% if order.state == 'unconfirmed' %}
-                  <a href="#">Edit</a>
+                {% if order.enquirer_editable == true %}
+                  <a href="{{ 'edit_dashboard_order_path' | generate_url: order.id }}">{{ 'general.edit' | t }}</a>
                 {% endif %}
-                {% if order.state == 'unconfirmed' %}
-                  <a href="#">Cancel</a>
+                {% if order.enquirer_cancelable == true %}
+                  <a href="{{ 'enquirer_cancel_dashboard_order_path' | generate_url: order.id }}" data-method="post" data-confirm="Are you sure?">{{ 'general.cancel' | t }}</a>
                 {% endif %}
                 {% if order.state == 'confirmed' or order.state == 'rejected' %}
                   <a href="#">View order</a>

@@ -25,6 +25,24 @@ module QuerySearchable
         all
       end
     end
+
+    def self.apply_filter(params = {}, custom_attributes_definition = nil)
+      scope = all
+      if params.present? && params[:properties].present? && custom_attributes_definition.present?
+        params[:properties].each do |name, value|
+          definition = custom_attributes_definition.detect { |d| d[CustomAttributes::CustomAttribute::NAME] == name }
+          next if definition.nil?
+          case definition[CustomAttributes::CustomAttribute::ATTRIBUTE_TYPE]
+          when 'string'
+            scope = scope.where("#{self.table_name}.properties @> ?", "\"#{definition[CustomAttributes::CustomAttribute::NAME]}\"=>\"#{value}\"")
+          else
+            raise NotImplementedError.new("Cannot filter by attribute with type: #{definition[CustomAttributes::CustomAttribute::ATTRIBUTE_TYPE]}")
+          end
+        end
+      end
+      scope
+    end
+
   end
 
 end

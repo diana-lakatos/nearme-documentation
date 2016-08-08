@@ -112,6 +112,16 @@ class Offer < Order
     true
   end
 
+  def enquirer_cancelable
+    state == 'unconfirmed'
+  end
+  alias :enquirer_cancelable? :enquirer_cancelable
+
+  def enquirer_editable
+    state == 'unconfirmed'
+  end
+  alias :enquirer_editable? :enquirer_editable
+
   def to_liquid
     @offer_drop ||= OfferDrop.new(self)
   end

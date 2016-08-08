@@ -407,6 +407,10 @@ class UserDrop < BaseDrop
     !self.has_buyer_profile? && self.has_seller_profile?
   end
 
+  def has_verified_merchant_account
+    @source.companies.first.try(:merchant_accounts).try(:any?) { |ma| ma.verified? }
+  end
+
   private
     def social_connections
       @social_connections_cache ||= @source.social_connections

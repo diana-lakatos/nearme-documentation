@@ -1,9 +1,28 @@
 class Dashboard::OrdersController < Dashboard::BaseController
-  before_filter :find_order, except: [:index]
+  before_action :find_order, except: [:index]
+  before_action :redirect_to_index_if_not_editable, only: [:edit, :update]
 
   def index
     @rating_systems = reviews_service.get_rating_systems
     @order_search_service = OrderSearchService.new(order_scope, params)
+  end
+
+  def enquirer_cancel
+    if @order.enquirer_cancelable?
+      if @order.user_cancel
+        # we want to make generic workflows probably. Maybe even per TT [ many to many ]
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestCancelled, @order.id)
+        event_tracker.cancelled_a_booking(@order, { actor: 'guest' })
+        event_tracker.updated_profile_information(@order.owner)
+        event_tracker.updated_profile_information(@order.host)
+        flash[:success] = t('flash_messages.reservations.reservation_cancelled')
+      else
+        flash[:error] = t('flash_messages.reservations.reservation_not_confirmed')
+      end
+    else
+      flash[:error] = t('flash_messages.reservations.reservation_not_cancellable')
+    end
+    redirect_to request.referer.presence || dashboard_orders_path
   end
 
   def show
@@ -25,5 +44,9 @@ class Dashboard::OrdersController < Dashboard::BaseController
 
   def reviews_service
     @reviews_service ||= ReviewsService.new(current_user, params)
+  end
+
+  def redirect_to_index_if_not_editable
+    redirect_to request.referer.presence || dashboard_orders_path unless @order.enquirer_editable?
   end
 end

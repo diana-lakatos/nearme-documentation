@@ -903,9 +903,11 @@ DesksnearMe::Application.routes.draw do
       resources :companies, only: [:edit, :update, :show]
 
       resources :images
-      resources :orders, only: [:index, :show] do
+      resources :orders, only: [:index, :show, :edit, :update] do
         member do
           get :success
+          post :generate_next_period
+          post :enquirer_cancel
         end
       end
       resources :photos, :only => [:create, :destroy, :edit, :update]

@@ -12,11 +12,11 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   before_action :redirect_to_new_if_single_transactable, only: [:index, :edit, :update]
 
   def index
-    @transactables = transactables_scope.order('transactables.created_at DESC').paginate(page: params[:page], per_page: 20)
+    @transactables = transactables_scope.order(order_param).paginate(page: params[:page], per_page: 20)
     if @transactable_type.action_types.any? { |at| TransactableType::OfferAction === at }
-      @in_progress_transactables = in_progress_scope.order('transactables.created_at DESC').paginate(page: params[:in_progress_page], per_page: 20)
-      @archived_transactables = archived_scope.order('transactables.created_at DESC').paginate(page: params[:archived_page], per_page: 20)
-      @pending_transactables = transactables_scope.where.not(id: in_progress_scope.pluck(:id) + archived_scope.pluck(:id)).order('transactables.created_at DESC').paginate(page: params[:archived_page], per_page: 20)
+      @in_progress_transactables = in_progress_scope.order(order_param).paginate(page: params[:in_progress_page], per_page: 20)
+      @archived_transactables = archived_scope.order(order_param).paginate(page: params[:archived_page], per_page: 20)
+      @pending_transactables = transactables_scope.where.not(id: in_progress_scope.pluck(:id) + archived_scope.pluck(:id)).order(order_param).paginate(page: params[:archived_page], per_page: 20)
     end
   end
 
@@ -203,15 +203,29 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
       joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id').
       uniq.
       where('transactables.company_id = ? OR transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)', @company.id, current_user.id, current_user.id).
-      search_by_query([:name, :description], params[:query])
+      search_by_query([:name, :description], params[:query]).
+      apply_filter(params[:filter], @transactable_type.cached_custom_attributes)
   end
 
   def in_progress_scope
     transactables_scope.includes(:line_item_orders, :transactable_collaborators).merge(Order.upcoming.confirmed.for_lister_or_enquirer(@company, current_user))
   end
 
+  # if my offer was rejected, I should still be able to make a new offer, unless someone else's has been accepted
+  def all_in_progress
+    transactables_scope.includes(:line_item_orders, :transactable_collaborators).merge(Order.upcoming.confirmed)
+  end
+
   def archived_scope
-    transactables_scope.includes(:line_item_orders, :transactable_collaborators).merge(Order.archived.for_lister_or_enquirer(@company, current_user)).where.not(id: in_progress_scope.pluck(:id))
+    transactables_scope.includes(:line_item_orders, :transactable_collaborators).merge(Order.archived.for_lister_or_enquirer(@company, current_user)).where.not(id: all_in_progress.pluck(:id))
+  end
+
+  def possible_sorts
+    ["created_at desc", "created_at asc"]
+  end
+
+  def order_param
+    "transactables." + (possible_sorts.detect { |sort| sort == params[:order_by] }.presence || possible_sorts.first)
   end
 
 end
