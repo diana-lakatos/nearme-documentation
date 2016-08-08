@@ -1,0 +1,28 @@
+<header class="masthead">
+  <div class="wrapper-a">
+    <h1 class="brand-a">
+      <a href="{{ platform_context.root_path }}">
+        <img src="https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/attachment_file/data/2737/logo.svg" alt="Upside of Talent" width="155" height="91">
+      </a>
+    </h1>
+
+    <div class="navs">
+
+      <div class="social-a">
+        <h2 class="struct-label">Follow Us</h2>
+        <ul>
+          {% if platform_context.facebook_url != blank %}<li><a href="{{ platform_context.facebook_url }}" class="facebook">Facebook</a></li>{% endif %}
+          {% if platform_context.twitter_url != blank %}<li><a href="{{ platform_context.twitter_url }}" class="twitter">Twitter</a></li>{% endif %}
+          {% if platform_context.linkedin_url != blank %}<li><a href="{{ platform_context.linkedin_url }}" class="linkedin">LinkedIn</a></li>{% endif %}
+          {% if platform_context.gplus_url != blank %}<li><a href="{{ platform_context.gplus_url }}" class="googleplus">Google+</a></li>{% endif %}
+          {% if platform_context.blog_url != blank %}<li><a href="{{ platform_context.blog_url }}" class="feed">News feed</a></li>{% endif %}
+        </ul>
+      </div>
+
+      <nav class="nav-main">
+        {{ navigation_links | make_html_safe }}
+      </nav>
+
+    </div>
+  </div>
+</header>

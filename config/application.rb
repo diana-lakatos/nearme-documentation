@@ -144,7 +144,7 @@ module DesksnearMe
     config.active_merchant_billing_gateway_app_id = 'NearMe_SP'
     config.redis_cache_client = NullRedisCache
 
-    config.attachment_upload_file_types = %w(doc docx xls odt ods pdf rar zip tar tar.gz swf mp4 css txt text js xlsx)
+    config.attachment_upload_file_types = %w(doc docx xls odt ods pdf rar zip tar tar.gz swf mp4 css txt text js xlsx svg)
     config.private_upload_file_types = %w(jpg jpeg png pdf doc docx)
 
     config.webpack = {
