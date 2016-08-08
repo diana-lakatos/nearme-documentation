@@ -4,7 +4,7 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
   supported :company_onboarding, :immediate_payout, :credit_card_payment,
             :partial_refunds, :host_subscription, :multiple_currency, :recurring_payment
 
-  delegate :verify_webhook, :parse_webhook, :find_transaction, :find_merchant, :onboard!, :update_onboard!,
+  delegate :verify_webhook, :parse_webhook, :find_payment, :find_merchant, :onboard!, :update_onboard!,
            :client_token, :payment_settled?, to: :gateway
 
   has_many :webhooks, class_name: 'Webhook::BraintreeMarketplaceWebhook', foreign_key: 'payment_gateway_id'
@@ -54,13 +54,12 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
   end
 
   def process_payout(_merchant_account, _amount, _payment_transfer)
-    # TODO: integrate Stripe Transfer API for manual transfer_schedule
-
-    payout_pending(@pay_response)
+    payout_pending('')
   end
 
+
   def refund_identification(charge)
-    charge.payment.payable.billing_authorization.token
+    charge.payment.authorization_token
   end
 
   def supported_currencies

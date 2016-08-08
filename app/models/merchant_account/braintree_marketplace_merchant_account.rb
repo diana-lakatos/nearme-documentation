@@ -1,13 +1,13 @@
 require 'braintree'
 
 class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
-  ATTRIBUTES = %w(bank_routing_number bank_account_number ssn date_of_birth terms_of_service first_name last_name email street_address locality region postal_code)
+  ATTRIBUTES = %w(bank_routing_number bank_account_number ssn date_of_birth terms_of_service first_name last_name email street_address locality region postal_code).freeze
   include MerchantAccount::Concerns::DataAttributes
 
   with_options unless: :skip_validation do
-    validates_presence_of :bank_routing_number, :bank_account_number, :first_name, :last_name,
-                          :street_address, :locality, :region, :postal_code
-    validates_acceptance_of :terms_of_service
+    validates :bank_routing_number, :bank_account_number, :first_name, :last_name,
+              :street_address, :locality, :region, :postal_code, presence: true
+    validates :terms_of_service, acceptance: true
   end
 
   def initialize_defaults
@@ -17,7 +17,11 @@ class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
                         'email' => merchantable.try(:email),
                         'street_address' => merchantable.try(:address),
                         'locality' => merchantable.try(:city),
-                        'region' => (merchantable.address_components.values.find { |arr| arr['types'].include?('administrative_area_level_1') }['short_name'] rescue ''),
+                        'region' => (begin
+                                       merchantable.address_components.values.find { |arr| arr['types'].include?('administrative_area_level_1') }['short_name']
+                                     rescue
+                                       ''
+                                     end),
                         'postal_code' => merchantable.try(:postcode))
   end
 
@@ -27,7 +31,7 @@ class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
   end
 
   def update_onboard!
-    result = payment_gateway.update_onboard!(internal_payment_gateway_account_id, common_params)
+    result = payment_gateway.update_onboard!(external_id, common_params)
     handle_result(result)
   end
 
@@ -35,7 +39,7 @@ class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
     if result.success?
       self.response = result.to_yaml
       data['bank_account_number'] = data['bank_account_number'].to_s[-4, 4]
-      self.internal_payment_gateway_account_id ||= custom_braintree_id
+      self.external_id ||= custom_braintree_id
       true
     else
       result.errors.each { |e| errors.add(:base, e.message); }
@@ -74,7 +78,7 @@ class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
   end
 
   def custom_options
-    { merchant_account_id: internal_payment_gateway_account_id }
+    { merchant_account_id: external_id }
   end
 
   def custom_braintree_id

@@ -10,9 +10,8 @@ class Webhooks::BraintreeMarketplacesControllerTest < ActionController::TestCase
       @braintree_marketplace_merchant_account = FactoryGirl.create(:braintree_marketplace_merchant_account,
                                                                    merchantable: @company,
                                                                    payment_gateway: @payment_gateway,
-                                                                   internal_payment_gateway_account_id: "id_#{@company.id}",
-                                                                   state: 'pending'
-                                                                  )
+                                                                   external_id: "id_#{@company.id}",
+                                                                   state: 'pending')
       Braintree::WebhookNotification.stubs(:verify).returns(true)
     end
 

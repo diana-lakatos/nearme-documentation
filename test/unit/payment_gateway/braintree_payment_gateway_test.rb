@@ -31,7 +31,7 @@ class PaymentGateway::BraintreePaymentGatewayTest < ActiveSupport::TestCase
   end
 
   should 'retry refund 10 times' do
-    Braintree::Transaction.stubs(:find).returns(OpenStruct.new(status: 'settled'))
+    Braintree::Transaction.stubs(:find).returns(OpenStruct.new(status: 'settled', refund_ids: []))
     stub_active_merchant_interaction(success?: false, message: 'fail')
 
     @payment_gateway = FactoryGirl.create(:braintree_payment_gateway)

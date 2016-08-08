@@ -6,7 +6,7 @@
   = form_for recurring_booking, method: :post, url: confirm_dashboard_company_host_recurring_booking_path(recurring_booking, listing_id: recurring_booking.listing) do |f|
     = f.submit 'Confirm', data: { confirm: 'Do you want to confirm subscription?' }, class: 'btn blue full'
 
-- if recurring_booking.can_reject?
+- if recurring_booking.can_reject? && !recurring_booking.unconfirmed?
   = link_to 'Decline', '#',
       data: { modal: true, href: rejection_form_dashboard_company_host_recurring_booking_path(recurring_booking, listing_id: recurring_booking.listing) }, class: 'btn dark-gray full'
 

@@ -13,7 +13,7 @@ class MerchantAccountService::BraintreeMarketplace
 
   def custom_authorize_options
     {
-      merchant_account_id: internal_payment_gateway_account_id
+      merchant_account_id: external_id
     }
   end
 end

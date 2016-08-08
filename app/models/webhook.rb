@@ -26,15 +26,13 @@ class Webhook < ActiveRecord::Base
   end
 
   def show_event
-    begin
-      event.to_yaml.gsub(' ', '&nbsp;&nbsp;').gsub("\n", '<br/>')
-    rescue
-      "Can't fetch this event"
-    end
+    event.to_yaml.gsub(' ', '&nbsp;&nbsp;').gsub("\n", '<br/>')
+  rescue
+    "Can't fetch this event"
   end
 
   def set_payment_gateway_mode
-    self.payment_gateway_mode = (livemode? ? 'live' : 'test')
+    self.payment_gateway_mode = (livemode? ? PaymentGateway::LIVE_MODE : PaymentGateway::TEST_MODE)
   end
 
   def webhook_type
