@@ -285,6 +285,7 @@ namespace :uot do
     create_home_homepage_content!
     create_listing_show!
     create_theme_footer!
+    create_search_list!
     create_my_cases!
   end
 
@@ -581,6 +582,22 @@ namespace :uot do
       format: 'html',
       handler: 'liquid',
       partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+  end
+
+  def create_search_list!
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'search/list',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: read_template('search_list.liquid'),
+      format: 'html',
+      handler: 'liquid',
+      partial: false,
       view_type: 'view',
       locales: Locale.all
     })
