@@ -37,35 +37,46 @@ namespace :uot do
     transactable_type.attributes = {
       name: 'Project',
       slug: 'project',
-      action_free_booking: false,
-      action_daily_booking: false,
-      action_weekly_booking: false,
-      action_monthly_booking: false,
-      action_regular_booking: true,
       show_path_format: '/:transactable_type_id/:id',
-      cancellation_policy_enabled: "1",
-      cancellation_policy_hours_for_cancellation: 24,
-      cancellation_policy_penalty_hours: 1.5,
+
       default_search_view: 'list',
       skip_payment_authorization: true,
       hours_for_guest_to_confirm_payment: 24,
       single_transactable: false,
       show_price_slider: true,
-      service_fee_guest_percent: 0,
-      service_fee_host_percent: 30,
       skip_location: true,
       show_categories: true,
       category_search_type: 'OR',
       bookable_noun: 'Project',
       enable_photo_required: false,
-      min_hourly_price_cents: 50_00,
-      max_hourly_price_cents: 150_00,
+      # min_hourly_price_cents: 50_00,
+      # max_hourly_price_cents: 150_00,
       lessor: 'Client',
       lessee: 'Expert',
       enable_reviews: true,
       auto_accept_invitation_as_collaborator: true
     }
+
+    transactable_type.offer_action ||= transactable_type.build_offer_action(
+      enabled: true,
+      cancellation_policy_enabled: "1",
+      cancellation_policy_hours_for_cancellation: 24,
+      cancellation_policy_penalty_hours: 1.5,
+      service_fee_guest_percent: 0,
+      service_fee_host_percent: 30,
+      pricings_attributes: [{
+        min_price_cents: 50_00,
+        max_price_cents: 150_00,
+        unit: 'hour',
+        number_of_units: 1,
+        order_class_name: 'Offer'
+      }]
+    )
     transactable_type.save!
+    fc = transactable_type.reservation_type.form_components.first
+    fc.name = 'Make an Offer'
+    fc.form_fields = [{'reservation' => 'payment_documents'}]
+    fc.save
   end
 
   def create_custom_attributes!
@@ -274,6 +285,7 @@ namespace :uot do
     create_home_homepage_content!
     create_listing_show!
     create_theme_footer!
+    create_search_list!
     create_my_cases!
   end
 
@@ -455,6 +467,8 @@ namespace :uot do
 
     create_translation!('flash_messages.dashboard.locations.add_your_company', "Please complete your Project first.")
     create_translation!('flash_messages.dashboard.add_your_company', "Please complete your Project first.")
+    create_translation!('buy_sell_market.checkout.labels.the_following_documents', "Please make an offer by submitting a proposal with scope of work and terms for client to review.  Please upload your PDF file here:")
+    create_translation!('reservations_review.buttons.request', "SUBMIT OFFER")
 
   end
 
@@ -573,36 +587,23 @@ namespace :uot do
     })
   end
 
-  def create_my_cases!
+  def create_search_list!
     iv = InstanceView.where(
       instance_id: @instance.id,
-      path: 'dashboard/user_reservations/reservation_details',
+      path: 'search/list',
     ).first_or_initialize
     iv.update!({
       transactable_types: TransactableType.all,
-      body: %Q{
-<div class="row">
-  <div class="col-sm-6">Motorcycle | Broken Leg</div>
-  <div class="col-sm-6" style="text-align: right">Days of Hospitalization: 45</div>
-</div>
-<div class="row">
-  <div class="col-sm-6">Injury or Accident Date: 12/2/2015</div>
-  <div class="col-sm-6" style="text-align: right">Death Project: N</div>
-</div>
-<div class="row">
-  <div class="col-sm-6">Location of Injury or Accident: Missouri</div>
-  <div class="col-sm-6" style="text-align: right"></div>
-</div>
-
-<p>{{ reservation.transactable.description | truncate: 500, "..." }}</p>
-<hr/>
-      },
+      body: read_template('search_list.liquid'),
       format: 'html',
       handler: 'liquid',
-      partial: true,
+      partial: false,
       view_type: 'view',
       locales: Locale.all
     })
+  end
+
+  def create_my_cases!
     iv = InstanceView.where(
       instance_id: @instance.id,
       path: 'dashboard/offers/offer',
@@ -656,7 +657,7 @@ namespace :uot do
     </div>
   {% endif %}
   {% if reservation.payment_documents.size > 0 %}
-    <div class='col-sm-3'>
+    <div class='col-sm-6'>
       <h3>{{ 'dashboard.host_reservations.payment_documents' | t }}</h3>
       <ul class='payment-documents'>
         {% for pd in reservation.payment_documents %}
@@ -775,8 +776,6 @@ namespace :uot do
   </div>
 </header>
 
-{% include 'dashboard/user_reservations/reservation_details', reservation: reservation, for_host: true %}
-
 <div class='row'>
   {% if reservation.guest_notes != blank %}
     <div class='col-sm-3'>
@@ -785,15 +784,18 @@ namespace :uot do
     </div>
   {% endif %}
   {% if reservation.payment_documents.size > 0 %}
-    <div class='col-sm-3'>
-      <h3>{{ 'dashboard.host_reservations.payment_documents' | t }}</h3>
-      <ul class='payment-documents'>
+    <div class='col-sm-10'>
+      <h3>Offers</h3>
+      <div class="row">
+        <div class="col-sm-3">Date</div>
+        <div class="col-sm-4">File</div>
+      </div>
         {% for pd in reservation.payment_documents %}
-          <li>
-            <a href='{{ pd.file_url }}' download=true>{{ pd.file_name }}</a>
-          </li>
+          <div class="row">
+            <div class="col-sm-3">{{ pd.created_at | l: 'long' }}</div>
+            <div class="col-sm-4"><a href='{{ pd.file_url }}' download="{{ pd.file_name }}">{{ pd.file_name }}</a></div>
+          </div>
         {% endfor %}
-      </ul>
     </div>
   {% endif %}
   {% if reservation.additional_line_items.size > 0 %}
@@ -810,74 +812,7 @@ namespace :uot do
   {% endif %}
 </div>
 
-{% if reservation.confirmed? %}
-  <h2>Offer Accepted</h2>
-  <div class='row'>
-    <div class='col-sm-2'>Expert</div>
-    <div class='col-sm-2'>Offer Date</div>
-    <div class='col-sm-2'>Offer Status</div>
-    <div class='col-sm-2'>Accepted Date</div>
-  </div>
-  <div class='row'>
-    <div class='col-sm-2'>{{ reservation.user.company_name }}</div>
-    <div class='col-sm-2'>{{ reservation.created_at | to_date | l: 'long' }}</div>
-    <div class='col-sm-2'>{{ reservation.state }}</div>
-    <div class='col-sm-2'>{{ reservation.confirmed_at | to_date | l: 'long' }}</div>
-  </div>
-{% elsif reservation.unconfirmed? %}
-  <h2>Offers({{ reservation.all_other_orders.size }})</h2>
-
-  <div class='row'>
-    <div class='col-sm-3'>Expert</div>
-    <div class='col-sm-2'>Offer Date</div>
-    <div class='col-sm-2'>Offer Status</div>
-    <div class='col-sm-3'>Offer Actions</div>
-  </div>
-  {% for order in reservation.all_other_orders %}
-    <div class='row'>
-      <div class='col-sm-3'>{{ order.user.company_name }}</div>
-      <div class='col-sm-2'>{{ order.created_at | to_date | l: 'long' }}</div>
-      <div class='col-sm-2'>{{ order.state }}</div>
-      <div class='col-sm-3'>
-        Review
-        {% if order.can_confirm? %}
-          | <a href="#" onclick="$('form#confirm_reservation').submit()" data-disable-with="{{ 'general.processing' | t }}" >Accept</a>
-        {% endif %}
-        {% if order.can_reject? %}
-          | <a data-modal="true" href="{{ 'rejection_form_dashboard_company_host_reservation_path' | generate_url: order.id, listing_id: order.transactable.id }}">Reject</a>
-        {% endif %}
-        {% if order.can_confirm? %}
-          <form class="edit_reservation" id="confirm_reservation" action="{{ 'confirm_dashboard_company_host_reservation_path' | generate_url: order.id, listing_id: order.transactable.id }}" accept-charset="UTF-8" method="post">
-            <input name="utf8" type="hidden" value="&#x2713;" />
-            <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
-          </form>
-        {% endif %}
-      </div>
-    </div>
-  {% endfor %}
-{% endif %}
-
 <hr/>
-
-<h2>Finders Fee</h2>
-
-<div class='row'>
-  <div class='col-md-3'>
-    <h3>{{ 'dashboard.host_reservations.payment_state' | t }}</h3>
-  </div>
-  <div class='col-md-9 {% if reservation.paid? %} "info" {% else %} "warn" {% endif %}'>
-    {{ reservation.payment_state }}
-  </div>
-</div>
-
-<div class='row'>
-  <div class='col-md-3'>
-    <h3>{{ 'dashboard.host_reservations.payment_method' | t }}</h3>
-  </div>
-  <div class='col-md-3 {% if reservation.paid? %} "info" {% else %} "warn" {% endif %}'>
-    {{ reservation.translated_payment_method }}
-  </div>
-</div>
 
 {% if reservation.confirmed? and reservation.archived_at == blank %}
   <hr/>
@@ -1059,15 +994,7 @@ namespace :uot do
 {{ transactable.creator.click_to_call_button }}
 
 {% if can_make_offer == true %}
-  <div class="make-offer">
-      {% assign make_offer_url = 'listing_orders_path' | generate_url: transactable %}
-      {% form_for :order, url: @make_offer_url, method: 'post' %}
-        <input type="hidden" name="order[booking_type]" value="offer" >
-        <input value="{{ transactable.id }}" type="hidden" name="order[transactable_id]" id="order_transactable_id">
-        <input value="{{ transactable.action_type.pricings.first.id }}" type="hidden" name="order[transactable_pricing_id]" id="order_transactable_pricing_id">
-        {% submit 'Make Offer' %}
-      {% endform_for %}
-  </div>
+  <a class="btn btn-info" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id }}">Make an Offer</a>
 {% elsif current_status == 'in progress' %}
   In progress
 {% endif %}
@@ -1130,38 +1057,50 @@ namespace :uot do
       {% endif  %}
     {% endif %}
 
-    {% include 'dashboard/company/transactables/sme_actions.htnl' %}
+    {% include 'dashboard/company/transactables/sme_actions.html' %}
 
     <hr>
 
     {% if orders != empty %}
+      {% assign order = orders.last %}
       <h3>Offer</h3>
       <table>
         <thead>
           <tr>
             <th>Offer Made:</th>
             <th>Offer Status:</th>
-            <th>Offer Action:</th>
+            {% if order.unconfirmed? %}
+              <th>Offer Action:</th>
+            {% else %}
+              <th>Date</th>
+            {% endif %}
+            {% if order.confirmed? %}
+              <th>View offer</th>
+            {% endif %}
           </tr>
         </thead>
         <tbody>
-          {% for order in orders %}
-            <tr>
-              <td>{{ order.created_at | to_date | l: 'short' }}</td>
-              <td>{{ 'reservations.states.' | append: order.state | t }}</td>
+          <tr>
+            <td>{{ order.created_at | to_date | l: 'short' }}</td>
+            <td>{{ 'reservations.states.' | append: order.state | t }}</td>
+            {% if order.unconfirmed? %}
               <td>
-                {% if current_status == 'pending' %}
+                {% if order.unconfirmed? %}
                   <a href="{{ 'edit_dashboard_order_path' | generate_url: order.id }}">{{ 'general.edit' | t }}</a>
                 {% endif %}
-                {% if current_status == 'pending'  %}
+                {% if order.unconfirmed?  %}
                   <a href="{{ 'enquirer_cancel_dashboard_order_path' | generate_url: order.id }}" data-method="post" data-confirm="Are you sure?">{{ 'general.cancel' | t }}</a>
                 {% endif %}
-                {% if order.state == 'confirmed' or order.state == 'rejected' %}
-                  <a href="#">View order</a>
-                {% endif %}
               </td>
-            </tr>
-          {% endfor %}
+            {% elsif order.confirmed? %}
+              <td>{{ order.confirmed_at | l: 'long' }}</td>
+            {% else %}
+              <td>{{ order.archived_at | l: 'long' }}</td>
+            {% endif %}
+            {% if order.confirmed? %}
+              <td><a href="{{ order.payment_documents[0].file_url }}" target="_blank">{{  order.payment_documents[0].file_name }}</a></td>
+            {% endif %}
+          </tr>
         </tbody>
       </table>
     {% endif %}
@@ -1210,7 +1149,7 @@ namespace :uot do
     <h4>Project Description</h4>
     <p>{{ transactable.description }}</p>
 
-    {% include 'dashboard/company/transactables/client_actions.htnl' %}
+    {% include 'dashboard/company/transactables/client_actions.html' %}
 
     <hr>
 
@@ -1264,8 +1203,8 @@ namespace :uot do
                 <td>{{ order.created_at | to_date | l: 'short' }}</td>
                 <td>{{ 'reservations.states.' | append: order.state | t }}</td>
                 <td>
-                  <a href="#">Review</a>
-                  {% if order.state == 'unconfirmed' %}
+                  {% if order.unconfirmed? %}
+                    <a href="{{ order.payment_documents[0].file_url }}" target="_blank">Review</a>
                     <a href="{{ order.rejection_form_path }}" data-modal="true">Reject</a>
                     <a href="{{ order.confirm_path }}" data-method="post" data-confirm="Are you sure?">Accept</a>
                   {% endif %}
@@ -1282,17 +1221,18 @@ namespace :uot do
       <table>
         <thead>
           <tr>
-            <th>Offer Made:</th>
-            <th>Offer Status:</th>
-            <th>Offer Action:</th>
+            <th>Offer Made</th>
+            <th>Offer Status</th>
+            <th>Date</th>
+            <th>View Offer</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>{{ accepted_order.created_at | to_date | l: 'short' }}</td>
             <td>Accepted</td>
-            <td><a href="#">View order</a>
-            </td>
+            <td>{{ accepted_order.confirmed_at | to_date | l: 'short' }}</td>
+            <td><a href="{{ accepted_order.payment_documents[0].file_url }}" target="_blank">{{ accepted_order.payment_documents[0].file_name }}</a></td>
           </tr>
         </tbody>
       </table>
@@ -1317,7 +1257,7 @@ namespace :uot do
 
     iv = InstanceView.where(
       instance_id: @instance.id,
-      path: 'dashboard/company/transactables/sme_actions',
+      path: 'dashboard/company/transactables/client_actions',
     ).first_or_initialize
     iv.update!({
       transactable_types: TransactableType.all,
@@ -1342,6 +1282,37 @@ namespace :uot do
 
 {% endif %}
 
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'checkout/summary',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: %Q{
+<div></div>
+      },
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
+      view_type: 'view',
+      locales: Locale.all
+    })
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'checkout/sidebar',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: %Q{
+<div></div>
       },
       format: 'html',
       handler: 'liquid',

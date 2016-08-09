@@ -403,7 +403,7 @@ class TransactableDrop < BaseDrop
   end
 
   def orders
-    line_item_orders.all.uniq
+    line_item_orders.order(created_at: :desc).uniq
   end
 
 end

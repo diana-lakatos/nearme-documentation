@@ -1,6 +1,6 @@
 .checkout-wizard{ :"data-shipping-country-controller" => true, :"data-payment-controller" => true  }
   - sidebar = capture_haml do
-    = render 'sidebar', order: @order unless @order.instance_of?(Purchase)
+    = render 'checkout/sidebar', order: @order unless @order.instance_of?(Purchase)
 
   - if !sidebar.strip.empty?
     %aside.checkout-wizard-aside
@@ -8,11 +8,11 @@
 
   .checkout-wizard-main
     %section.checkout-form
-      = render 'summary', order: @order
+      = render 'checkout/summary', order: @order
 
-    - if @order.inactive?
+    - if @order.inactive? || @order.unconfirmed?
 
-      = simple_form_for @order, as: :order,  url: order_checkout_path(@order), html: { id: 'checkout-form', class: 'form-horizontal' } do |f|
+      = simple_form_for @order, as: :order,  url: @update_path || order_checkout_path(@order), html: { id: 'checkout-form', class: 'form-horizontal' } do |f|
         - if f.object.reservation_type
           = f.simple_fields_for :user, f.object.user do |user|
             = f.simple_fields_for :properties, f.object.properties do |properties_form|

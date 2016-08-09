@@ -33,6 +33,7 @@ class TransactableType < ActiveRecord::Base
   has_one :subscription_booking
   has_one :no_action_booking
   has_one :purchase_action
+  has_one :offer_action
 
   has_many :form_components, as: :form_componentable, dependent: :destroy
   has_many :data_uploads, as: :importable, dependent: :destroy

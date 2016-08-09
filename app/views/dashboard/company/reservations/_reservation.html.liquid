@@ -62,7 +62,7 @@
       <ul class='payment-documents'>
         {% for pd in reservation.payment_documents %}
           <li>
-            <a href='{{ pd.file_url }}' download=true>{{ pd.file_name }}</a>
+            <a href='{{ pd.file_url }}' download="{{ pd.file_name }}">{{ pd.file_name }}</a>
           </li>
         {% endfor %}
       </ul>

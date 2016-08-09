@@ -6,7 +6,6 @@ class OfferDrop < OrderDrop
     @order = @offer = offer
   end
 
-
   def total_units_text
     ''
   end

@@ -3,7 +3,7 @@ class Attachable::PaymentDocumentDrop < BaseDrop
 
   # name
   #   name of additional charge
-  delegate :name, :file, to: :payment_document
+  delegate :name, :file, :created_at, to: :payment_document
 
   def initialize(payment_document)
     @payment_document = payment_document.decorate
