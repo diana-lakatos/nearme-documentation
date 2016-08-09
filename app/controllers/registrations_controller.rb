@@ -60,7 +60,7 @@ class RegistrationsController < Devise::RegistrationsController
         })
         ReengagementNoBookingsJob.perform_later(72.hours.from_now, @user.id)
         if @user.send("get_#{@role}_profile").instance_profile_type.create_company_on_sign_up?
-          company = @user.companies.create!(name: @user.name)
+          company = @user.companies.create!(name: @user.name, creator: @user)
           company.update_metadata({draft_at: nil, completed_at: Time.zone.now})
         end
         case @role
@@ -335,7 +335,7 @@ class RegistrationsController < Devise::RegistrationsController
     @country = current_user.country_name
     @return_path = params[:return_path]
 
-    # We only want to render the missing phone number if there's an actual error 
+    # We only want to render the missing phone number if there's an actual error
     # for the mobile number, like missing for example
     if current_user.invalid? && current_user.errors[:mobile_number].present?
       render('dashboard/user_messages/missing_phone_number')
