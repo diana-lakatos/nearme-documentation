@@ -20,7 +20,7 @@ class Offer < Order
     transactable_line_items.build(
       name: transactable.name,
       transactable_pricing: transactable_pricing,
-      quantity: attrs[:quantity],
+      quantity: attrs[:quantity] || 1,
       line_item_source: transactable,
       unit_price: transactable_pricing.price,
       line_itemable: self,
@@ -40,7 +40,6 @@ class Offer < Order
     # self.skip_checkout_validation = true
     self.save
   end
-
 
   def shared_payment_attributes
     {
@@ -122,7 +121,7 @@ class Offer < Order
   alias :enquirer_cancelable? :enquirer_cancelable
 
   def enquirer_editable
-    state == 'unconfirmed'
+    state.in? ['unconfirmed', 'inactive']
   end
   alias :enquirer_editable? :enquirer_editable
 

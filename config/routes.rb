@@ -647,9 +647,6 @@ DesksnearMe::Application.routes.draw do
 
     resources :reviews, only: [:index]
 
-    resources :offers, only: [:show] do
-      resources :bids, only: [:new, :create]
-    end
     resources :topics, only: [:show]
 
     resources :groups, only: [:show] do
@@ -906,7 +903,7 @@ DesksnearMe::Application.routes.draw do
       resources :companies, only: [:edit, :update, :show]
 
       resources :images
-      resources :orders, only: [:index, :show, :edit, :update] do
+      resources :orders do
         member do
           get :success
           post :generate_next_period
