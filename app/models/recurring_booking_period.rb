@@ -14,6 +14,11 @@ class RecurringBookingPeriod < ActiveRecord::Base
   scope :paid, -> { where.not(paid_at: nil) }
 
 
+  def skip_payment_authorization
+    false
+  end
+  alias :skip_payment_authorization? :skip_payment_authorization
+
   # TODO unifiy with ReservationPeriod
   def starts_at
     period_start_date
