@@ -57,7 +57,7 @@ class Transactable < ActiveRecord::Base
   belongs_to :company, -> { with_deleted }, inverse_of: :listings
   belongs_to :location, -> { with_deleted }, inverse_of: :listings, touch: true
   belongs_to :instance, inverse_of: :listings
-  belongs_to :creator, -> { with_deleted }, class_name: "User" #, inverse_of: :listings, counter_cache: true
+  belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :listings, counter_cache: true
   belongs_to :administrator, -> { with_deleted }, class_name: "User", inverse_of: :administered_listings
   has_one :dimensions_template, as: :entity
 
