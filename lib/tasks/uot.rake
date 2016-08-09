@@ -37,34 +37,41 @@ namespace :uot do
     transactable_type.attributes = {
       name: 'Project',
       slug: 'project',
-      action_free_booking: false,
-      action_daily_booking: false,
-      action_weekly_booking: false,
-      action_monthly_booking: false,
-      action_regular_booking: true,
       show_path_format: '/:transactable_type_id/:id',
-      cancellation_policy_enabled: "1",
-      cancellation_policy_hours_for_cancellation: 24,
-      cancellation_policy_penalty_hours: 1.5,
+
       default_search_view: 'list',
       skip_payment_authorization: true,
       hours_for_guest_to_confirm_payment: 24,
       single_transactable: false,
       show_price_slider: true,
-      service_fee_guest_percent: 0,
-      service_fee_host_percent: 30,
       skip_location: true,
       show_categories: true,
       category_search_type: 'OR',
       bookable_noun: 'Project',
       enable_photo_required: false,
-      min_hourly_price_cents: 50_00,
-      max_hourly_price_cents: 150_00,
+      # min_hourly_price_cents: 50_00,
+      # max_hourly_price_cents: 150_00,
       lessor: 'Client',
       lessee: 'Expert',
       enable_reviews: true,
       auto_accept_invitation_as_collaborator: true
     }
+
+    transactable_type.offer_action ||= transactable_type.build_offer_action(
+      enabled: true,
+      cancellation_policy_enabled: "1",
+      cancellation_policy_hours_for_cancellation: 24,
+      cancellation_policy_penalty_hours: 1.5,
+      service_fee_guest_percent: 0,
+      service_fee_host_percent: 30,
+      pricings_attributes: [{
+        min_price_cents: 50_00,
+        max_price_cents: 150_00,
+        unit: 'hour',
+        number_of_units: 1,
+        order_class_name: 'Offer'
+      }]
+    )
     transactable_type.save!
   end
 
@@ -1130,7 +1137,7 @@ namespace :uot do
       {% endif  %}
     {% endif %}
 
-    {% include 'dashboard/company/transactables/sme_actions.htnl' %}
+    {% include 'dashboard/company/transactables/sme_actions.html' %}
 
     <hr>
 
@@ -1210,7 +1217,7 @@ namespace :uot do
     <h4>Project Description</h4>
     <p>{{ transactable.description }}</p>
 
-    {% include 'dashboard/company/transactables/client_actions.htnl' %}
+    {% include 'dashboard/company/transactables/client_actions.html' %}
 
     <hr>
 
@@ -1317,7 +1324,7 @@ namespace :uot do
 
     iv = InstanceView.where(
       instance_id: @instance.id,
-      path: 'dashboard/company/transactables/sme_actions',
+      path: 'dashboard/company/transactables/client_actions',
     ).first_or_initialize
     iv.update!({
       transactable_types: TransactableType.all,

@@ -28,6 +28,24 @@ class Dashboard::OrdersController < Dashboard::BaseController
   def show
   end
 
+  def new
+    @order = @transactable_pricing.order_class.new(
+        currency: @transactable.currency,
+        user: current_user
+      )
+    # @order.user.skip_validations_for = [:seller, :buyer, :default]
+    render template: 'checkout/show'
+  end
+
+  def create
+  end
+
+  def edit
+  end
+
+  def update
+  end
+
   def success
     render action: :show
   end
@@ -49,4 +67,9 @@ class Dashboard::OrdersController < Dashboard::BaseController
   def redirect_to_index_if_not_editable
     redirect_to request.referer.presence || dashboard_orders_path unless @order.enquirer_editable?
   end
+
+  def order_params
+    params.require(:order).permit(secured_params.order(@transactable.transactable_type.reservation_type))
+  end
+
 end
