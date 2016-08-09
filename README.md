@@ -95,6 +95,6 @@ In Rails Console run:
 
 To access the Instance you need locally, find its domain with the 'lvh.me' part and use instead of 'localhost'.
 
-For easy find, use: ```  Domain.where(‘name like ?’, “%lvh.me”).pluck(:name) ```
+For easy find, use: ```  Domain.where('name like ?', "%lvh.me").pluck(:name) ```
 
 Remember about port in url address: ``` <mp>.lvh.me:3000 ```
