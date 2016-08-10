@@ -75,21 +75,18 @@
                             </li>
                         </ul>
                     </fieldset>
-
-                    <div class="search-results-query-info">
-                        <div data-search-filters-container>
-                            <label for="search-order">Sort by:</label>
-                            <span class="select-a">
-                                <select id="search-order" name="sort" class="unstyled-select">
-                                    <option {% if params['sort'] == 'hourly_rate_asc'  %}selected{% endif %} value='hourly_rate_asc'>Hourly rate ascending</option>
-                                    <option {% if params['sort'] == 'hourly_rate_desc' %}selected{% endif %} value='hourly_rate_desc'>Houry rate descending</option>
-                                </select>
-                            </span>
-                        </div>
-                    </div>
-
                 </div>
             </fieldset>
+
+            <div class="search-sort-order" data-search-filters-container>
+                <label for="search-order">Sort by:</label>
+                <span class="select-a">
+                    <select id="search-order" name="sort" class="unstyled-select">
+                        <option {% if params['sort'] == 'hourly_rate_asc'  %}selected{% endif %} value='hourly_rate_asc'>Hourly rate ascending</option>
+                        <option {% if params['sort'] == 'hourly_rate_desc' %}selected{% endif %} value='hourly_rate_desc'>Houry rate descending</option>
+                    </select>
+                </span>
+            </div>
         </div>
     </div>
 {% endcontent_for %}
@@ -100,17 +97,17 @@
         <section class="search-results">
 
             <div class="search-results-query-info">
-                <span class="results-count"><b>{{ searcher.result_count }}</b> Results Found</span>
+                <span class="results-count"><b>{{ searcher.result_count }}</b> Result(s) Found</span>
             </div>
 
             {% for user in searcher.results %}
-                <article class="transactable-sme">
+                <article class="user-a">
                     <div class="wrapper">
                         <header class="header">
                             <figure>
                                 <img src="{{user.avatar_url_thumb}}" alt="{{ user.name }}">
                             </figure>
-                            <h2><a href="./">{{ user.name }}</a></h2>
+                            <h2><a href="{{ user.user_profile_url }}">{{ user.name }}</a></h2>
 
                             <div class="properties">
                                 <p class="price">
@@ -131,51 +128,45 @@
                         {% assign category = user.buyer_categories['Area Of Expertise'] %}
                         <div class="content">
                             <h3>{{ category.name }}</h3>
-                        <ul>
-                            {% for expertise in category.children %}
-                                <li>{{ expertise }}</li>
+                            <ul>
+                                {% for expertise in category.children %}
+                                    <li>{{ expertise }}</li>
+                                {% endfor %}
+                            </ul>
+
+                            <p><a href="{{ user.user_profile_url }}">View More</a></p>
+
+                            {% assign category = user.buyer_categories['Industry'] %}
+                            <h3>{{ category.name }}</h3>
+                            <ul>
+                                {% for industry in category.children %}
+                                    <li>{{ industry }}</li>
+                                {% endfor %}
+                            </ul>
+                            <p><a href="{{ user.user_profile_url }}">View More</a></p>
+
+                             {% assign category = user.buyer_categories['Languages'] %}
+                            <h3>{{ category.name }}</h3>
+                            {% for language in category.children %}
+                                <p>{{ language }}</p>
                             {% endfor %}
-                        </ul>
 
-                        <p><a href="./">View More</a></p>
-
-                        {% assign category = user.buyer_categories['Industry'] %}
-                        <h3>{{ category.name }}</h3>
-
-                        <ul>
-                            {% for industry in category.children %}
-                                <li>{{ industry }}</li>
-                            {% endfor %}
-                        </ul>
-                        <p><a href="./">View More</a></p>
-
-                        <h3>Will work in these Cities:</h3>
-                        <p>Online, Saint Louis, Chicago, Kansas City</p>
-
-                         {% assign category = user.buyer_categories['Languages'] %}
-                        <h3>{{ category.name }}</h3>
-                        {% for language in category.children %}
-                            <p>{{ language }}</p>
-                        {% endfor %}
-
-                        <h3>Bio</h3>
-                        <p>{{ user.buyer_properties.bio }}</p>
+                            <h3>Bio</h3>
+                            <p>{{ user.buyer_properties.bio }}</p>
 
                         </div>
                     </div>
 
                     <aside class="sidebar">
-                        <ul class="transactable-actions">
-                        <li><a href="./" class="button-a">Invite to project</a></li>
-                        <li><a href="./" class="button-b action-favorite">Add as Favorite</a></li>
-                        <li><a href="./" class="button-b action-favorite active">Remove Favorite</a></li>
-                        <li>{% include 'shared/components/wish_list_button_injection.html', object: user %}</li>
+                        <ul class="user-actions">
+                            <li><a href="./" class="button-a">Invite to project</a></li>
+                            <li>{% include 'shared/components/wish_list_button_injection.html', object: user %}</li>
 
-                        {% if user.has_active_blog? %}
-                        <li><a href="{{ user.user_blog_posts_list_path }}" class="button-b action-blog">View Blog</a></li>
-                        {% endif %}
+                            {% if user.has_active_blog? %}
+                            <li><a href="{{ user.user_blog_posts_list_path }}" class="button-b action-blog">View Blog</a></li>
+                            {% endif %}
 
-                        <li><a href="./" class="button-b action-linkedin">LinkedIn Bio</a></li>
+                            <li><a href="./" class="button-b action-linkedin">LinkedIn Bio</a></li>
                         </ul>
                     </aside>
 
@@ -193,6 +184,7 @@
                             <li><a href="./">Mobile Robotics</a></li>
                         </ul>
                     </div>
+
                 </article>
             {% endfor %}
 
