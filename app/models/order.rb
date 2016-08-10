@@ -2,7 +2,7 @@ class Order < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
 
   ORDER_TYPES = %w(Reservation RecurringBooking Purchase DelayedReservation).freeze
-  STATES = %w(unconfirmed confirmed overdue archived not_archived).freeze
+  STATES = %w(unconfirmed confirmed overdued archived not_archived).freeze
   DEFAULT_DASHBOARD_TABS = %w(unconfirmed confirmed archived).freeze
 
   include Encryptable
