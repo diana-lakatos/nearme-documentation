@@ -44,6 +44,9 @@ module.exports = class SearchSearchController extends SearchController
     @responsiveCategoryTree()
     @updateLinks()
 
+    if $('.load-more', @container).length
+      @initLoadMoreButton()
+
   bindEvents: ->
     @form.bind 'submit', (event) =>
       event.preventDefault()
@@ -388,3 +391,13 @@ module.exports = class SearchSearchController extends SearchController
         href = link.href.replace(/\?.*$/, "")
         href += "?start_date=#{@date_range[0].value}&end_date=#{@date_range[1].value}"
         link.href = href
+
+  initLoadMoreButton: ->
+    @container.on 'click', '.load-more', (event) =>
+      event.preventDefault()
+
+      nextPage = $(event.target).data('next-page')
+
+      if(nextPage)
+        $("input[name='page']", @form).val(nextPage)
+        @triggerSearchFromQuery()
