@@ -17,9 +17,12 @@ class InstanceType::Searcher::UserSearcher
     @fetcher.includes(:current_address)
 
     (@params[:lg_custom_attributes] || {}).each do |field_name, values|
-      next if values.blank?
-      @fetcher = @fetcher.filtered_by_custom_attribute(field_name, values.split(','))
+      values = Array(values).reject(&:blank?)
+      next if values.empty?
+
+      @fetcher = @fetcher.filtered_by_custom_attribute(field_name, values.join(','))
     end
+
     if @params[:category_ids].present?
       @fetcher = @fetcher.joins("INNER JOIN categories_categorizables cc ON
         cc.categorizable_type = 'UserProfile' AND cc.categorizable_id = user_profiles.id").
@@ -29,6 +32,7 @@ class InstanceType::Searcher::UserSearcher
           having("count(cc.category_id) >= #{@params[:category_ids].split(',').size}")
       end
     end
+
     @fetcher
   end
 
