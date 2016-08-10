@@ -122,7 +122,19 @@ class BaseUploader < CarrierWave::Uploader::Base
 
   def get_default_image_and_version(*args)
     version = args.shift || version_name.try(:to_sym)
-    [PlatformContext.current.theme.reload.default_images.where(photo_uploader: self.class.to_s, photo_uploader_version: version).first, version]
+    [theme_default_image(version), version]
   end
 
+  private
+
+  def theme_default_image(version)
+    return unless platform_context
+
+    platform_context
+      .theme.reload
+      .default_images.where(
+        photo_uploader: self.class.to_s,
+        photo_uploader_version: version)
+      .first
+  end
 end
