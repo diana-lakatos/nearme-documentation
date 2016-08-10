@@ -204,7 +204,7 @@ module.exports = class SearchController
     params
 
   autocompleteEnabled: ->
-    @queryField.data('disable-autocomplete') == undefined
+    @queryField.length && (@queryField.data('disable-autocomplete') == undefined)
 
   responsiveCategoryTree: ->
     if $("#category-tree").length > 0

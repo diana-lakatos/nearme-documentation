@@ -398,9 +398,6 @@ namespace :uot do
     create_search_list!
     create_user_profile!
     create_my_cases!
-    create_search_list_results!
-    create_search_list_user!
-    create_search_list_search_filter_boxes!
     create_wish_list_button!
   end
 
@@ -1462,54 +1459,6 @@ namespace :uot do
       body: %Q{
 <div></div>
       },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
-  end
-
-  def create_search_list_results!
-    iv = InstanceView.where(
-      instance_id: @instance.id,
-      path: 'search/list_results'
-    ).first_or_initialize
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: read_template('search_list_results.liquid'),
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
-  end
-
-  def create_search_list_user!
-    iv = InstanceView.where(
-      instance_id: @instance.id,
-      path: 'search/list/user'
-    ).first_or_initialize
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: read_template('search_list_user.liquid'),
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
-  end
-
-  def create_search_list_search_filter_boxes!
-    iv = InstanceView.where(
-      instance_id: @instance.id,
-      path: 'search/list/search_filters_boxes'
-    ).first_or_initialize
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: read_template('search_list_search_filter_boxes.liquid'),
       format: 'html',
       handler: 'liquid',
       partial: true,

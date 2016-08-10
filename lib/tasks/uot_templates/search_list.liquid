@@ -1,6 +1,4 @@
 {% content_for 'hero' %}
-    {% assign cattr_param = params['lg_custom_attributes'] %}
-
     <div class="search-form" id="listing_search">
         <div class="wrapper-a">
             <form action="/search" method="get">
@@ -10,8 +8,8 @@
                     <input type="hidden" name="lg_custom_attributes[workplace_type]" value="{{ searcher.lg_custom_attributes_hash['workplace_type'] }}">
                     <input type="hidden" name="lg_custom_attributes[travel]" value="{{ searcher.lg_custom_attributes_hash['travel'] }}">
                     <input type="hidden" name="category_ids" value="{{ searcher.category_ids }}">
+                    <input type="hidden" name="page" value="{{ searcher.current_page }}">
                     <input type="hidden" name="sort">
-
 
                     <div class="form-action">
                         <button type="submit" class="button-a">Search</button>
@@ -188,9 +186,11 @@
                 </article>
             {% endfor %}
 
-            <p class="search-results-more-trigger">
-                <a href="./" class="button-a">More Results</a>
-            </p>
+            {% if searcher.next_page %}
+                <p class="search-results-more-trigger">
+                    <a href="./" class="button-a load-more" data-next-page='{{ searcher.next_page }}'>More Results</a>
+                </p>
+            {% endif %}
         </section>
     </div>
 </main>
