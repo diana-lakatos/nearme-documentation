@@ -6,7 +6,7 @@
     {% assign path = 'wish_lists_path' | generate_url: id: object.object_id, wishlistable_type: object.wishlistable_type %}
     {% assign method = 'post' %}
   {% endif %}
-    <a href="{{ path }}" class="button-a action-favorite{% if is_favorite %} active{% endif %}" data-method="{{ method }}" data-action-link data-current-user="{% if current_user != blank %}true{% else%}false{% endif %}">
+    <a href="{{ path }}" class="button-b action-favorite{% if is_favorite %} selected{% endif %}" data-method="{{ method }}" data-action-link data-current-user="{% if current_user != blank %}true{% else%}false{% endif %}" data-text data-favorite-icon>
     {% if is_favorite %}{{ 'wish_lists.buttons.selected_state' | t}}{% else %}{{ 'wish_lists.buttons.unselected_state' | t }}{% endif %}
     </a>
 </div>
