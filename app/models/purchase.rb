@@ -10,6 +10,10 @@ class Purchase < Order
     event :ship do transition :completed => :shipped; end
   end
 
+  def workflow_class
+    Purchase
+  end
+
   def add_line_item!(attrs)
     transactable = Transactable.find(attrs[:transactable_id])
     transactable_pricing = transactable.action_type.pricings.find(attrs[:transactable_pricing_id])

@@ -1,0 +1,12 @@
+<h2>Offer Rejected</h2>
+
+<p>Unfortunately, your offer for {{ transactable.name }} has been rejected. </p>
+
+{% if offer.rejection_reason != blank %}
+  <p>Client said: "{{ offer.rejection_reason }}"</p>
+{% endif %}
+
+<p>Feel free to reach out to {{ lister.name }} for more details.</p>
+
+<p>You are able to submit another offer with updated details at your convenience.</p>
+

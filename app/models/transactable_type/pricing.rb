@@ -60,7 +60,7 @@ class TransactableType::Pricing < ActiveRecord::Base
   end
 
   def set_default_order_class
-    self.order_class_name ||= action.related_order_class
+    self.order_class_name ||= action.try(:related_order_class)
   end
 
   def order_class_name

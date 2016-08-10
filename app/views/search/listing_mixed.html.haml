@@ -61,9 +61,10 @@
                           %input{type: 'radio', name: 'transactable_type_id', value: transactable_type.id, checked: @transactable_type.id == transactable_type.id}
                           %span.filter-label-text
                             = transactable_type.translated_bookable_noun
+
         - @searcher.searchable_categories.each do |category|
           - unless category.autocomplete?
-            = render partial: 'search/mixed/filter', locals: { header_name: category.translated_name, selected_values: @searcher.category_ids || [], input_name: 'category_ids[]', options: @searcher.category_options(category)}
+            = render partial: 'search/mixed/filter', locals: { category_id: category.id, header_name: category.translated_name, selected_values: @searcher.category_ids || [], input_name: 'category_ids[]', options: @searcher.category_options(category)}
             #categories-children
           - else
             = render partial: 'search/mixed/autocomplete_category_filter', locals: { category: category }

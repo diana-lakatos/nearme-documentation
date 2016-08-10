@@ -12,7 +12,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
     if @order.enquirer_cancelable?
       if @order.user_cancel
         # we want to make generic workflows probably. Maybe even per TT [ many to many ]
-        WorkflowStepJob.perform("WorkflowStep::#{@order.object.class.name}Workflow::EnquirerCancelled".constantize, @order.id)
+        WorkflowStepJob.perform("WorkflowStep::#{@order.class.workflow_class}Workflow::EnquirerCancelled".constantize, @order.id)
         event_tracker.cancelled_a_booking(@order, { actor: 'guest' })
         event_tracker.updated_profile_information(@order.owner)
         event_tracker.updated_profile_information(@order.host)

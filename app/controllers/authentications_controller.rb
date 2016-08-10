@@ -47,10 +47,10 @@ class AuthenticationsController < ApplicationController
           WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @oauth.authentication.user.id)
           @onboarding = @oauth.authentication.user.default_profile.onboarding?
         when 'seller'
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::HostAccountCreated, @oauth.authentication.user.id)
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::ListerAccountCreated, @oauth.authentication.user.id)
           @onboarding = @oauth.authentication.user.seller_profile.onboarding?
         when 'buyer'
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::GuestAccountCreated, @oauth.authentication.user.id)
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::EnquirerAccountCreated, @oauth.authentication.user.id)
           @onboarding = @oauth.authentication.user.buyer_profile.onboarding?
         end
         if @onboarding

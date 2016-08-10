@@ -23,6 +23,10 @@ class WorkflowStep::CollaboratorWorkflow::BaseStep < WorkflowStep::BaseStep
     @owner
   end
 
+  def transactable
+    @transactable
+  end
+
   # transactable_collaborator:
   #   Transactable Collaborator object
   # transactable:
@@ -37,6 +41,7 @@ class WorkflowStep::CollaboratorWorkflow::BaseStep < WorkflowStep::BaseStep
       transactable: @transactable,
       user: @user,
       enquirer: @user,
+      lister: @owner,
       owner: @owner
     }
   end

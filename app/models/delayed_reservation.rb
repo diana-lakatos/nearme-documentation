@@ -11,6 +11,10 @@ class DelayedReservation < Reservation
   end
   alias :skip_payment_authorization? :skip_payment_authorization
 
+  def workflow_class
+    Reservation
+  end
+
   def add_line_item!(attrs)
     self.attributes = attrs
     self.reservation_type = transactable.transactable_type.reservation_type

@@ -60,8 +60,19 @@ class UserProfile < ActiveRecord::Base
     @user_profile_drop ||= UserProfileDrop.new(self)
   end
 
+  def mark_as_onboarded!
+    if self.onboarded_at.nil?
+      touch(:onboarded_at)
+      if profile_type == BUYER
+        WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::EnquirerOnboarded, user_id)
+      elsif profile_type == SELLER
+        WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::ListerOnboarded, user_id)
+      end
+    end
+  end
 
   private
+
 
   def assign_defaults
     self.instance_profile_type ||= PlatformContext.current.instance.try("#{self.profile_type}_profile_type")

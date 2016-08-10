@@ -51,6 +51,10 @@ class Reservation < Order
     self.save
   end
 
+  def workflow_class
+    Reservation
+  end
+
   def build_periods
     return if @dates.nil?
     if transactable

@@ -6,6 +6,10 @@ class Offer < Order
 
   has_many :host_line_items, as: :line_itemable
 
+  def workflow_class
+    Order
+  end
+
   def add_line_item!(attrs)
     transactable = Transactable.find(attrs[:transactable_id])
     transactable_pricing = transactable.action_type.pricings.find(attrs[:transactable_pricing_id])

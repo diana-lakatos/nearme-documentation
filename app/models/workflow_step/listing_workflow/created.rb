@@ -8,5 +8,9 @@ class WorkflowStep::ListingWorkflow::Created < WorkflowStep::ListingWorkflow::Ba
     { user: @transactable.creator, listing: @transactable }
   end
 
+  def should_be_processed?
+    true
+  end
+
 end
 

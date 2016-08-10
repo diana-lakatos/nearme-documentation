@@ -60,6 +60,7 @@ class SecuredParams
       :max_length,
       :valid_values,
       :validatable_type,
+      :validation_only_on_update,
       :regex_validation,
       :regex_expression
     ]
@@ -1298,7 +1299,7 @@ class SecuredParams
       :from,
       :from_type,
       :reply_to,
-      :replt_to_type,
+      :reply_to_type,
       :use_ssl,
       :request_type,
       :endpoint,
@@ -1306,6 +1307,7 @@ class SecuredParams
       :payload_data,
       :cc,
       :bcc,
+      :bcc_type,
       :subject,
       :layout_path,
       :prevent_trigger_condition,

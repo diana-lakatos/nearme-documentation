@@ -3,9 +3,9 @@ class Order::Recurring < Order
   def cancel
     update_attribute :end_on, paid_until
     if cancelled_by_guest?
-      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::GuestCancelled, self.id)
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::EnquirerCancelled, self.id)
     elsif cancelled_by_host?
-      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::HostCancelled, self.id)
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::ListerCancelled, self.id)
     end
   end
 

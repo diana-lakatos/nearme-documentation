@@ -19,11 +19,11 @@ class Utils::DefaultAlertsCreator::SignUpCreator < Utils::DefaultAlertsCreator::
   end
 
   def create_guest_welcome_email!
-    create_alert!({associated_class: WorkflowStep::SignUpWorkflow::GuestAccountCreated, name: 'Welcome email', path: 'post_action_mailer/guest_sign_up_welcome', subject: '{{user.first_name}}, welcome to {{platform_context.name}}!', alert_type: 'email', recipient_type: 'enquirer', delay: 30})
+    create_alert!({associated_class: WorkflowStep::SignUpWorkflow::EnquirerAccountCreated, name: 'Welcome email', path: 'post_action_mailer/guest_sign_up_welcome', subject: '{{user.first_name}}, welcome to {{platform_context.name}}!', alert_type: 'email', recipient_type: 'enquirer', delay: 30})
   end
 
   def create_host_welcome_email!
-    create_alert!({associated_class: WorkflowStep::SignUpWorkflow::HostAccountCreated, name: 'Welcome email', path: 'post_action_mailer/host_sign_up_welcome', subject: '{{user.first_name}}, welcome to {{platform_context.name}}!', alert_type: 'email', recipient_type: 'enquirer', delay: 30})
+    create_alert!({associated_class: WorkflowStep::SignUpWorkflow::ListerAccountCreated, name: 'Welcome email', path: 'post_action_mailer/host_sign_up_welcome', subject: '{{user.first_name}}, welcome to {{platform_context.name}}!', alert_type: 'email', recipient_type: 'enquirer', delay: 30})
   end
 
   def create_reengageemnt_email!
@@ -44,6 +44,14 @@ class Utils::DefaultAlertsCreator::SignUpCreator < Utils::DefaultAlertsCreator::
 
   def create_approved_email!
     create_alert!({associated_class: WorkflowStep::SignUpWorkflow::Approved, name: 'user_approved_email', path: 'vendor_approval_mailer/notify_host_of_user_approval', subject: "{{ user.first_name }}, you have been approved at {{ platform_context.name }}!", alert_type: 'email', recipient_type: 'enquirer', delay: 0})
+  end
+
+  def create_lister_onboarding_email!
+    create_alert!({associated_class: WorkflowStep::SignUpWorkflow::ListerOnboarded, name: 'lister_onboarded', path: 'post_action_mailer/lister_onboarded', subject: "{{ user.first_name }}, you have completed profile!", alert_type: 'email', recipient_type: 'lister', delay: 0})
+  end
+
+  def create_enquirer_onboarding_email!
+    create_alert!({associated_class: WorkflowStep::SignUpWorkflow::EnquirerOnboarded, name: 'enquirer_onboarded', path: 'post_action_mailer/enquirer_onboarded', subject: "{{ user.first_name }}, you have completed profile!", alert_type: 'email', recipient_type: 'lister', delay: 0})
   end
 
   protected

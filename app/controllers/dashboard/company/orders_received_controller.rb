@@ -61,7 +61,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
 
       if @order.confirmed?
         event_tracker.confirmed_a_recurring_booking(@order)
-        WorkflowStepJob.perform("WorkflowStep::#{@order.object.class.name}Workflow::ManuallyConfirmed".constantize, @order.id)
+        WorkflowStepJob.perform("WorkflowStep::#{@order.class.workflow_class}Workflow::ManuallyConfirmed".constantize, @order.id)
 
         track_order_update_profile_informations
         event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]

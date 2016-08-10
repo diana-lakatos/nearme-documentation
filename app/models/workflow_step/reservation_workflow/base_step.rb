@@ -20,6 +20,14 @@ class WorkflowStep::ReservationWorkflow::BaseStep < WorkflowStep::BaseStep
     @reservation.owner
   end
 
+  def transactable
+    @reservation.transactable
+  end
+
+  def collaborators
+    transactable.try(:collaborating_users)
+  end
+
   # reservation:
   #   Reservation object
   # user:
@@ -29,7 +37,7 @@ class WorkflowStep::ReservationWorkflow::BaseStep < WorkflowStep::BaseStep
   # listing:
   #   Transactable object
   def data
-    { reservation: @reservation, user: lister, host: enquirer, listing: @reservation.transactable }
+    { reservation: @reservation, user: enquirer, host: lister, listing: @reservation.transactable }
   end
 
   def transactable_type_id

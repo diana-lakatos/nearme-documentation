@@ -20,16 +20,24 @@ class WorkflowStep::OfferWorkflow::BaseStep < WorkflowStep::BaseStep
     @offer.owner
   end
 
+  def transactable
+    @offer.transactables.first
+  end
+
+  def collaborators
+    transactable.try(:collaborating_users)
+  end
+
   # offer:
   #   Offer object
-  # user:
+  # enquirer:
+  #   enquirer User object
+  # lister:
   #   listing User object
-  # host:
-  #   enquiring User object
   # listing:
   #   Transactable object
   def data
-    { offer: @offer, user: lister, host: enquirer, listing: @offer.transactable }
+    { offer: @offer, enquirer: enquirer, lister: lister, listing: @offer.transactables.first }
   end
 
   def transactable_type_id

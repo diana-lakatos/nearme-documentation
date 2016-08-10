@@ -26,10 +26,10 @@ class Dashboard::UserReservations::PaymentsController <  Dashboard::BaseControll
     if @order.payment.capture!
       flash[:notice] = t('flash_messages.payments.successful_approval')
       @order.mark_as_archived!
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestApprovedPayment, @order.id)
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerApprovedPayment, @order.id)
     else
       @order.payment.void!
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestApprovedPaymentButCaptureFailed, @order.id)
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerApprovedPaymentButCaptureFailed, @order.id)
       flash[:warning] = t('flash_messages.payments.failed_to_approve')
     end
     redirect_to dashboard_user_reservations_path
@@ -45,7 +45,7 @@ class Dashboard::UserReservations::PaymentsController <  Dashboard::BaseControll
     attributes.merge!(rejection_reason: params[:delayed_reservation][:rejection_reason]) if params[:delayed_reservation]
     if @order.update_attributes(attributes)
       @order.payment.void!
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestDeclinedPayment, @order.id)
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerDeclinedPayment, @order.id)
       flash[:notice] = t('flash_messages.payments.successful_rejection')
     end
     redirect_to dashboard_user_reservations_path

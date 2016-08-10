@@ -134,7 +134,7 @@ en:
 
   flash_messages:
     space_wizard:
-      space_listed: Your Project has been submitted to the marketplace!
+      space_listed: You have successfully completed profile!
     dashboard:
       locations:
         add_your_company: Please complete your Project first.

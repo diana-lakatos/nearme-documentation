@@ -38,6 +38,7 @@ namespace :uot do
     create_content_holders
     create_views
     create_translations
+    create_workflow_alerts
     expire_cache
   end
 
@@ -66,7 +67,8 @@ namespace :uot do
       lessor: 'Client',
       lessee: 'Expert',
       enable_reviews: true,
-      auto_accept_invitation_as_collaborator: true
+      auto_accept_invitation_as_collaborator: true,
+      require_transactable_during_onboarding: false
     }
 
     transactable_type.offer_action ||= transactable_type.build_offer_action(
@@ -93,16 +95,6 @@ namespace :uot do
 
   def create_custom_attributes!
     @transactable_type = TransactableType.first
-    create_custom_attribute(@transactable_type, {
-        name: 'company_name',
-        label: 'Company Name',
-        attribute_type: 'string',
-        html_tag: 'input',
-        required: "0",
-        placeholder: 'Enter Full Name',
-        public: true,
-        searchable: false
-    })
     create_custom_attribute(@transactable_type, {
         name: 'about_company',
         label: 'About Company (short description)',
@@ -166,6 +158,7 @@ namespace :uot do
         public: true,
         searchable: false
     })
+
     create_custom_attribute(@transactable_type, {
         name: 'project_contact',
         label: 'Project Contact',
@@ -183,6 +176,7 @@ namespace :uot do
         attribute_type: 'string',
         html_tag: 'textarea',
         required: "1",
+        validation_only_on_update: true,
         public: true,
         searchable: false
     })
@@ -193,6 +187,7 @@ namespace :uot do
         attribute_type: 'array',
         html_tag: 'check_box_list',
         required: "1",
+        validation_only_on_update: true,
         valid_values: ["online", "on_site"],
         public: true,
         searchable: true
@@ -204,6 +199,7 @@ namespace :uot do
         attribute_type: 'string',
         html_tag: 'radio_buttons',
         required: "1",
+        validation_only_on_update: true,
         valid_values: ['yes', 'no'],
         public: true,
         searchable: true
@@ -215,6 +211,7 @@ namespace :uot do
         attribute_type: 'integer',
         html_tag: 'input',
         required: "1",
+        validation_only_on_update: true,
         public: true,
         searchable: false
     })
@@ -224,8 +221,66 @@ namespace :uot do
         label: 'Discounts available',
         attribute_type: 'string',
         html_tag: 'radio_buttons',
+        validation_only_on_update: true,
         required: "1",
         valid_values: ['available', 'not_available'],
+        public: true,
+        searchable: false
+    })
+
+    @lister_instance_profile_type = InstanceProfileType.find(570)
+
+    cv = @lister_instance_profile_type.custom_validators.where(field_name: 'mobile_number').first_or_initialize
+    cv.required = "1"
+    cv.validation_only_on_update = true
+    cv.save!
+
+    create_custom_attribute(@lister_instance_profile_type, {
+        name: 'google_id',
+        label: 'Google ID',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "0",
+        public: true,
+        searchable: false
+    })
+
+    create_custom_attribute(@lister_instance_profile_type, {
+        name: 'linkedin_id',
+        label: 'LinkedIn ID',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "0",
+        public: true,
+        searchable: false
+    })
+
+    create_custom_attribute(@lister_instance_profile_type, {
+        name: 'twitter_id',
+        label: 'Twitter ID',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "0",
+        public: true,
+        searchable: false
+    })
+
+    create_custom_attribute(@lister_instance_profile_type, {
+        name: 'linkedin_url',
+        label: 'LinkedIn URL',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "0",
+        public: true,
+        searchable: false
+    })
+
+    create_custom_attribute(@lister_instance_profile_type, {
+        name: 'referred_by',
+        label: 'Referred By',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "0",
         public: true,
         searchable: false
     })
@@ -286,26 +341,23 @@ namespace :uot do
     TransactableType.first.form_components.destroy_all
 
     component = TransactableType.first.form_components.where(form_type: 'space_wizard').first_or_initialize
-    component.name = 'Add a Project'
+    component.name = 'Complete Profile'
     component.form_fields = [
-      { "transactable" => "name" },
-      { "transactable" => "project_contact" },
-      { "transactable" => "company_name" },
-      { "transactable" => "about_company" },
-      { "transactable" => "description" },
-      { "transactable" => "estimation" },
-      { "transactable" => "workplace_type" },
-      { "transactable" => "office_location" },
-      { "transactable" => "Category - Languages" },
-      { "transactable" => "budget" },
-      { "transactable" => "deadline" }
+      { "company" => "name" },
+      { "user" => "current_address" },
+      { "user" => "mobile_phone" },
+      { "user" => "google_id" },
+      { "user" => "twitter_id" },
+      { "user" => "linkedin_id" },
+      { "user" => "linkedin_url" },
+      { "user" => "avatar" },
+      { "user" => "referred_by" }
     ]
     component.save!
     component = TransactableType.first.form_components.where(form_type: 'transactable_attributes').first_or_initialize
     component.name = 'Add a Project'
     component.form_fields = [
       { "transactable" => "name" },
-      { "transactable" => "company_name" },
       { "transactable" => "about_company" },
       { "transactable" => "project_contact" },
       { "transactable" => "description" },
@@ -458,28 +510,6 @@ namespace :uot do
     end
   end
 
-  def create_email(path, body)
-    iv = InstanceView.where(instance_id: @instance.id, view_type: 'email', path: path, handler: 'liquid', format: 'html', partial: false).first_or_initialize
-    iv.locales = Locale.all
-    iv.transactable_types = TransactableType.all
-    iv.body = body
-    iv.save!
-
-    iv = InstanceView.where(instance_id: @instance.id, view_type: 'email', path: path, handler: 'liquid', format: 'text', partial: false).first_or_initialize
-    iv.body = ActionView::Base.full_sanitizer.sanitize(body)
-    iv.locales = Locale.all
-    iv.transactable_types = TransactableType.all
-    iv.save!
-  end
-
-  def create_sms(path, body)
-    iv = InstanceView.where(instance_id: @instance.id, view_type: 'sms', path: path, handler: 'liquid', format: 'text', partial: false).first_or_initialize
-    iv.locales = Locale.all
-    iv.transactable_types = TransactableType.all
-    iv.body = body
-    iv.save!
-  end
-
   def create_translation!(key, value)
     @instance.translations.where(
       locale: 'en',
@@ -498,17 +528,6 @@ namespace :uot do
       end
     end
   end
-
-  def create_custom_validators!
-    cv = CustomValidator.where(field_name: 'mobile_number', validatable: InstanceProfileType.seller.first).first_or_initialize
-    cv.required = "1"
-    cv.save!
-
-    cv = CustomValidator.where(field_name: 'mobile_number', validatable: InstanceProfileType.buyer.first).first_or_initialize
-    cv.required = "1"
-    cv.save!
-  end
-
 
   def create_home_index!
     load_template('home/index', false)
@@ -596,12 +615,92 @@ namespace :uot do
     })
   end
 
+  def create_custom_attribute(object, hash)
+      hash = hash.with_indifferent_access
+      attr = object.custom_attributes.where({
+        name: hash.delete(:name)
+      }).first_or_initialize
+      attr.assign_attributes(hash)
+      attr.set_validation_rules!
+  end
+
+  def create_workflow_alerts
+    WorkflowStep.where(associated_class: ['WorkflowStep::OfferWorkflow::OneDayToBooking',
+                                          'WorkflowStep::OfferWorkflow::OneBookingSuggestions'
+                                          ]).find_each do |ws|
+                                            ws.workflow_alerts.destroy_all
+                                          end
+    @offer_creator = Utils::DefaultAlertsCreator::OfferCreator.new.create_all!
+    @sign_up_creator = Utils::DefaultAlertsCreator::SignUpCreator.new
+
+    @sign_up_creator.create_guest_welcome_email!
+    @sign_up_creator.create_host_welcome_email!
+    @sign_up_creator.create_lister_onboarding_email!
+    @sign_up_creator.create_enquirer_onboarding_email!
+
+    @listing_creator = Utils::DefaultAlertsCreator::ListingCreator.new
+    @listing_creator.create_notify_lister_of_cancellation!
+
+    @user_message_creator = Utils::DefaultAlertsCreator::UserMessageCreator.new
+    @user_message_creator.create_user_message_created!
+
+
+    Workflow.where(workflow_type: %w(request_for_quote reservation recurring_booking inquiry spam_report)).destroy_all
+    WorkflowAlert.where(alert_type: 'sms').destroy_all
+    #alerts_to_be_destroyed = [ ]
+    #WorkflowAlert.where(template_path: alerts_to_be_destroyed).destroy_all
+
+    create_email('post_action_mailer/host_sign_up_welcome')
+    create_email('post_action_mailer/guest_sign_up_welcome')
+    create_email('post_action_mailer/list')
+    create_email('post_action_mailer/enquirer_onboarded')
+    create_email('post_action_mailer/lister_onboarded')
+
+    create_email('transactable_mailer/notify_lister_of_cancellation')
+    create_email('transactable_mailer/notify_collaborators_of_cancellation')
+
+    create_email('offer_mailer/notify_guest_of_confirmation')
+
+
+    create_email('offer_mailer/notify_host_of_cancellation_by_guest')
+
+
+    create_email('offer_mailer/notify_guest_of_cancellation_by_guest')
+
+    create_email('offer_mailer/notify_host_with_confirmation')
+
+    create_email("user_message_mailer/notify_user_about_new_message")
+
+    create_email('transactable_mailer/transactable_owner_added_collaborator_email')
+    create_email('transactable_mailer/collaborator_declined')
+
+    create_email('offer_mailer/notify_guest_of_rejection')
+
+  end
+
+  private
+
   def read_template(name)
     File.read(File.join(Rails.root, 'lib', 'tasks', 'uot', 'templates', name))
   end
 
   def get_page_content(filename)
     File.read(File.join(Rails.root, 'lib', 'tasks', 'uot', 'pages', filename))
+  end
+
+  def create_email(path)
+    body = File.read(File.join(Rails.root, 'lib', 'tasks', 'uot', 'templates', 'mailers', path + '.html.liquid'))
+    iv = InstanceView.where(instance_id: @instance.id, view_type: 'email', path: path, handler: 'liquid', format: 'html', partial: false).first_or_initialize
+    iv.locales = Locale.all
+    iv.transactable_types = TransactableType.all
+    iv.body = body
+    iv.save!
+
+    iv = InstanceView.where(instance_id: @instance.id, view_type: 'email', path: path, handler: 'liquid', format: 'text', partial: false).first_or_initialize
+    iv.body = ActionView::Base.full_sanitizer.sanitize(body)
+    iv.locales = Locale.all
+    iv.transactable_types = TransactableType.all
+    iv.save!
   end
 
 end

@@ -80,6 +80,7 @@ class Order < ActiveRecord::Base
   # scope :not_archived, -> { active.where(archived_at: nil) }
   scope :not_archived, -> { where("(orders.type != 'RecurringBooking' AND orders.state != 'inactive' AND orders.archived_at IS NULL) OR (orders.type = 'RecurringBooking' AND orders.state NOT IN ('inactive', 'cancelled_by_guest', 'cancelled_by_host', 'rejected', 'expired'))") }
   scope :archived, -> { where("(orders.type != 'RecurringBooking' AND orders.archived_at IS NOT NULL) OR (orders.type = 'RecurringBooking' AND orders.state IN ('rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest'))") }
+  # we probably want new state - completed
   scope :reviewable, -> { where.not(archived_at: nil).confirmed }
   scope :cancelled, -> { with_state(:cancelled_by_guest, :cancelled_by_host) }
   scope :confirmed, -> { with_state(:confirmed)}
@@ -117,6 +118,10 @@ class Order < ActiveRecord::Base
 
   # You can customize order tabs (states) displauyed in dashboard
   # via orders_received_tabs and my_orders_tabs Instance attributes
+
+  def workflow_class
+    raise NotImplementedError
+  end
 
   def self.dashboard_tabs(company_dashboard=false)
     if company_dashboard
@@ -330,12 +335,12 @@ class Order < ActiveRecord::Base
   def trigger_rating_workflow!
     if archived? && confirmed?
       if request_guest_rating_email_sent_at.blank? && RatingSystem.active_with_subject(RatingConstants::GUEST).where(transactable_type_id: transactable_type_id).exists?
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestRatingRequested, id)
+        WorkflowStepJob.perform("WorkflowStep::#{self.class.workflow_class}Workflow::EnquirerRatingRequested".constantize, id)
         update_column(:request_guest_rating_email_sent_at, Time.zone.now)
       end
 
       if request_host_and_product_rating_email_sent_at.blank? && RatingSystem.active_with_subject([RatingConstants::HOST, RatingConstants::TRANSACTABLE]).where(transactable_type_id: transactable_type_id).exists?
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::HostRatingRequested, id)
+        WorkflowStepJob.perform("WorkflowStep::#{self.class.workflow_class}Workflow::ListerRatingRequested".constantize, id)
         update_column(:request_host_and_product_rating_email_sent_at, Time.zone.now)
       end
     end

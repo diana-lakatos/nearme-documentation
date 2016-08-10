@@ -49,7 +49,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
     should "#notify_guest_of_cancellation_by_host" do
       @reservation_creator.notify_guest_of_cancellation_by_host_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
-        WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::HostCancelled, @reservation.id)
+        WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::ListerCancelled, @reservation.id)
       end
       mail = ActionMailer::Base.deliveries.last
       assert_contains @reservation.owner.first_name, mail.html_part.body
@@ -66,7 +66,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
     should "#notify_host_of_cancellation_by_host" do
       @reservation_creator.notify_host_of_cancellation_by_host_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::HostCancelled, @reservation.id)
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerCancelled, @reservation.id)
       end
       mail = ActionMailer::Base.deliveries.last
       assert_contains @reservation.transactable.administrator.first_name, mail.html_part.body
@@ -79,7 +79,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
     should "#notify_guest_of_cancellation_by_guest" do
       @reservation_creator.notify_guest_of_cancellation_by_guest_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestCancelled, @reservation.id)
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerCancelled, @reservation.id)
       end
       mail = ActionMailer::Base.deliveries.last
       assert_contains @reservation.owner.first_name, mail.html_part.body
@@ -92,7 +92,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
     should "#notify_host_of_cancellation_by_guest" do
       @reservation_creator.notify_host_of_cancellation_by_guest_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestCancelled, @reservation.id)
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerCancelled, @reservation.id)
       end
       mail = ActionMailer::Base.deliveries.last
 
@@ -332,7 +332,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
     should 'notify host of approved payment' do
       @reservation_creator.notify_host_of_approved_payment!
       assert_difference 'ActionMailer::Base.deliveries.size' do
-        WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::GuestApprovedPayment, @reservation.id)
+        WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::EnquirerApprovedPayment, @reservation.id)
       end
       mail = ActionMailer::Base.deliveries.last
 
@@ -351,7 +351,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       @reservation.update_attribute(:rejection_reason, 'You stinks.')
       @reservation_creator.notify_host_of_declined_payment!
       assert_difference 'ActionMailer::Base.deliveries.size' do
-        WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::GuestDeclinedPayment, @reservation.id)
+        WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::EnquirerDeclinedPayment, @reservation.id)
       end
       mail = ActionMailer::Base.deliveries.last
 
@@ -369,7 +369,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
     should 'request_rating_of_guest_from_host_email' do
       @reservation_creator.request_rating_of_guest_from_host_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
-        WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::GuestRatingRequested, @reservation.id)
+        WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::EnquirerRatingRequested, @reservation.id)
       end
       mail = ActionMailer::Base.deliveries.last
 
@@ -395,7 +395,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       should 'notify_guest_of_submitted_checkout' do
         @reservation_creator.notify_guest_of_submitted_checkout!
         assert_difference 'ActionMailer::Base.deliveries.size' do
-          WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::HostSubmittedCheckout, @reservation.id)
+          WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::ListerSubmittedCheckout, @reservation.id)
         end
         mail = ActionMailer::Base.deliveries.last
 
@@ -414,7 +414,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       should 'notify_guest_of_submitted_checkout_with_failed_authorization' do
         @reservation_creator.notify_guest_of_submitted_checkout_with_failed_authorization!
         assert_difference 'ActionMailer::Base.deliveries.size' do
-          WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::HostSubmittedCheckoutButAuthorizationFailed, @reservation.id)
+          WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::ListerSubmittedCheckoutButAuthorizationFailed, @reservation.id)
         end
         mail = ActionMailer::Base.deliveries.last
 
@@ -435,7 +435,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
     should 'request_rating_of_host_from_guest_email!' do
       @reservation_creator.request_rating_of_host_from_guest_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
-        WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::HostRatingRequested, @reservation.id)
+        WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::ListerRatingRequested, @reservation.id)
       end
       mail = ActionMailer::Base.deliveries.last
 
@@ -542,7 +542,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
         should 'trigger proper sms' do
           WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last).returns(stub(:invoke! => true)).once
-          WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::HostCancelled, @reservation.id)
+          WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerCancelled, @reservation.id)
         end
 
         should "render with the reservation" do
@@ -550,7 +550,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
           @reservation.stubs(:cancelable?).returns(true)
           @reservation.confirm!
           @reservation.host_cancel!
-          sms = WorkflowAlert::SmsInvoker.new(WorkflowAlert.where(alert_type: 'sms').last).invoke!(WorkflowStep::ReservationWorkflow::HostCancelled.new(@reservation.id))
+          sms = WorkflowAlert::SmsInvoker.new(WorkflowAlert.where(alert_type: 'sms').last).invoke!(WorkflowStep::ReservationWorkflow::ListerCancelled.new(@reservation.id))
           assert_equal "+1987654421", sms.to
           assert sms.body =~ Regexp.new("Your booking for #{@reservation.transactable.name} was cancelled. View booking:"), "wrong body: #{sms.body}"
           assert sms.body =~ /http:\/\/goo.gl/, "Sms body does not include http://goo.gl: #{sms.body}"

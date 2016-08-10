@@ -9,6 +9,7 @@ class Dashboard::BuyersController < Dashboard::BaseController
   def update
     current_user.assign_attributes(user_params)
     if current_user.save
+      current_user.buyer_profile.mark_as_onboarded!
       flash.now[:success] = t('flash_messages.dashboard.buyer.updated')
       if session[:after_onboarding_path].present?
         redirect_to session[:after_onboarding_path]

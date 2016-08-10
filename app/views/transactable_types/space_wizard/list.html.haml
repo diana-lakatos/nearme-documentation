@@ -11,21 +11,23 @@
 
     .row
       .col-md-4.col-md-offset-8.hidden-sm
-        %p.listing-draft-cta
-          %i<
-            = t('onboarding_wizard.finish_later')
+        - if @transactable_type.require_transactable_during_onboarding?
+          %p.listing-draft-cta
+            %i<
+              = t('onboarding_wizard.finish_later')
 
-            = f.submit t('onboarding_wizard.save_draft.label'), :name => "save_as_draft", data: { disable_with: t('onboarding_wizard.save_draft.disable_with') }, :class => "saveasdraft btn-link"
+              = f.submit t('onboarding_wizard.save_draft.label'), :name => "save_as_draft", data: { disable_with: t('onboarding_wizard.save_draft.disable_with') }, :class => "saveasdraft btn-link"
 
 
     = f.simple_fields_for :seller_profile, @user.get_seller_profile do |seller_profile_form|
       = seller_profile_form.simple_fields_for :properties, seller_profile_form.object.properties do |seller_properties_form|
         = f.simple_fields_for :companies, @user.companies.first do |companies_form|
           = companies_form.simple_fields_for :locations, @user.companies.first.locations.first do |locations_form|
-            = locations_form.simple_fields_for :listings, @transactable do |listings_form|
-              = listings_form.simple_fields_for :properties, @user.companies.first.locations.first.listings.first.properties do |properties_form|
-                - unless @form_components.map(&:form_fields).map{|ff| ff.map(&:values).flatten }.flatten.include? 'price'
-                  = render "dashboard/company/transactables/form_fields/price", f: listings_form, form_fields: {}, model: 'transactable'
+            = locations_form.simple_fields_for :listings, @transactable || Transactable.new do |listings_form|
+              = listings_form.simple_fields_for :properties, @user.companies.first.locations.first.listings.first.try(:properties) do |properties_form|
+                - if @transactable_type.require_transactable_during_onboarding?
+                  - unless @form_components.map(&:form_fields).map{|ff| ff.map(&:values).flatten }.flatten.include? 'price'
+                    = render "dashboard/company/transactables/form_fields/price", f: listings_form, form_fields: {}, model: 'transactable'
                 - @form_components.each do |form_component|
                   .panel
                     .panel-body
@@ -46,7 +48,8 @@
                         - elsif model == 'transactable'
                           = render 'listings/listing_form', f: listings_form, properties_form: properties_form, listing: listings_form.object, only_inputs: [ field.to_sym ], photos: @photos, form_fields: form_component.form_fields, model: model
 
-                = render 'listings/listing_form', f: listings_form, properties_form: properties_form, listing: listings_form.object, only_inputs: [ :transactable_type_id, :booking_type, :id ]
+                - if @transactable_type.require_transactable_during_onboarding?
+                  = render 'listings/listing_form', f: listings_form, properties_form: properties_form, listing: listings_form.object, only_inputs: [ :transactable_type_id, :booking_type, :id ]
 
                 .hidden
                   - Money::Currency.table.values.each do |c|

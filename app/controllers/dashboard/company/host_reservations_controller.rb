@@ -65,7 +65,7 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
 
   def host_cancel
     if @reservation.host_cancel
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::HostCancelled, @reservation.id)
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerCancelled, @reservation.id)
       event_tracker.cancelled_a_booking(@reservation, { actor: 'host' })
       track_reservation_update_profile_informations
       flash[:deleted] = t('flash_messages.manage.reservations.reservation_cancelled')
@@ -112,11 +112,11 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
       @reservation.update_payment_attributes
       @reservation.save!
       if @reservation.payment.authorize
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::HostSubmittedCheckout, @reservation.id)
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerSubmittedCheckout, @reservation.id)
         PaymentConfirmationExpiryJob.perform_later(@reservation.pending_guest_confirmation + @reservation.transactable.hours_for_guest_to_confirm_payment.hours, @reservation.id) if @reservation.transactable.hours_for_guest_to_confirm_payment.to_i > 0
       else
         flash[:warning] = t('flash_messages.dashboard.complete_reservation.failed_to_authorize_credit_card')
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::HostSubmittedCheckoutButAuthorizationFailed, @reservation.id)
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerSubmittedCheckoutButAuthorizationFailed, @reservation.id)
       end
       redirect_to action: :reservation_completed
     else

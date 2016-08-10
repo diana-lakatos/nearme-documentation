@@ -1,4 +1,4 @@
-class WorkflowStep::SignUpWorkflow::HostAccountCreated < WorkflowStep::SignUpWorkflow::BaseStep
+class WorkflowStep::SignUpWorkflow::ListerAccountCreated < WorkflowStep::SignUpWorkflow::BaseStep
 
   # user:
   #  User object
