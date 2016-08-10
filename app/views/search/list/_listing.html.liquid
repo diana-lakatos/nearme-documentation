@@ -6,7 +6,7 @@
           <div class="span10">
             {{ listing.company.name | filter_text | custom_sanitize }}
           </div>
-          {% if user_has_firends %}
+          {% if current_user.has_firends %}
             {% assign connections = listing | connections_for: current_user %}
             {% if connections.size > 0 %}
               <div class="span2 connections" rel='tooltip' title="{{ connections | connections_tooltip: 5 }}">

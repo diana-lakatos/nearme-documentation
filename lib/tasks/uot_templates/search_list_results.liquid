@@ -1,0 +1,21 @@
+{% if searcher.result_count > 0 %}
+  <section id='results' class='list clearfix'>
+    {% for result in searcher.results %}
+      {% include 'search/list/user' with result %}
+    {% endfor %}
+    {% will_paginate collection: searcher.original_results %}
+
+    {% include 'search/footer' %}
+    {% include 'shared/loading_spinner' %}
+  </section>
+{% else %}
+  <section id='results' class='no_results'>
+    {% include 'shared/loading_spinner' %}
+    <div class='text-center'>
+      <br><br><br><br><br>
+      <h1 class='tk-adelle fat'>
+        No results found
+      </h1>
+    </div>
+  </section>
+{% endif %}

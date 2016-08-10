@@ -74,4 +74,8 @@ class InstanceProfileTypeDrop < BaseDrop
     "#{class_name}-#{id}"
   end
 
+  def searchable_categories
+     @instance_profile_type.categories.searchable.roots
+  end
+
 end

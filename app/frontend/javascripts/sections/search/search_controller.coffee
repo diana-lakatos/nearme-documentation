@@ -30,7 +30,7 @@ module.exports = class SearchSearchController extends SearchController
     @date_range = $('div[data-date-range-filter] input')
     @date_range_btn = $('div[data-date-range-filter] div[data-date-range-filter-update]')
     @filters = $('a[data-search-filter]')
-    @filters_container = $('div[data-search-filters-container]')
+    @filters_container = $('[data-search-filters-container]')
     @movableGoogleMap = $('#search-result-movable-google-map')
     if @movableGoogleMap.length > 0
       new SearchResultsGoogleMapController(@resultsContainer(), @movableGoogleMap);
@@ -259,20 +259,23 @@ module.exports = class SearchSearchController extends SearchController
   triggerSearchFromQuery: (page = false) ->
     # we want to log any new search query
     categories_checkboxes = _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val()))
-    categories_selects = []
+    category_selects = _.toArray(@container.find('select[name="category_ids[]"] option:selected').map(-> $(this).val() if $(this).val()))
+    category_inputs = []
     @container.find('input[name="categories_ids[]"]').each ->
       value = $(this).val()
       if value && value != ''
         values = value.split(',')
-        categories_selects = categories_selects.concat(values)
+        category_inputs = category_inputs.concat(values)
 
-    all_categories = categories_selects.concat(categories_checkboxes)
+    all_categories = category_inputs.concat(categories_checkboxes, category_selects)
     @mapTrigger = false if (!page or parseInt($(page).val()) == 1)
 
     price_max = if @container.find('input[name="price[max]"]:checked').length > 0 then @container.find('input[name="price[max]"]:checked').val() else $('input[name="price[max]"]').val()
+
     @assignFormParams(
       'price[max]': price_max
       time_from: @container.find('select[name="time_from"]').val()
+      time_to: @container.find('select[name="time_to"]').val()
       time_to: @container.find('select[name="time_to"]').val()
       sort: @container.find('select[name="sort"]').val()
       ignore_search_event: 0
@@ -280,7 +283,7 @@ module.exports = class SearchSearchController extends SearchController
       lntype: _.toArray($('input[name="location_types_ids[]"]:checked').map(-> $(this).val())).join(',')
     )
     custom_attributes = {}
-    for custom_attribute in @container.find('div[data-custom-attribute]')
+    for custom_attribute in @container.find('[data-custom-attribute]')
       custom_attribute = $(custom_attribute)
       custom_attributes[custom_attribute.data('custom-attribute')] = _.toArray(custom_attribute.find('input[name="lg_custom_attributes[' + custom_attribute.data('custom-attribute') + '][]"]:checked').map(-> $(this).val())).join(',')
     @assignFormParams(lg_custom_attributes: custom_attributes)
