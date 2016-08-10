@@ -3,11 +3,6 @@ class RecurringBooking < Order
   include Bookable
   include Categorizable
 
-
-  #TODO Rename this class to Subscription
-
-  # after_create :auto_confirm_reservation
-
   delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :action, allow_nil: true
   delegate :action, to: :transactable_pricing
 
@@ -110,8 +105,14 @@ class RecurringBooking < Order
   end
 
   def auto_confirm_reservation
-    confirm! unless transactable.confirm_reservations?
+    if transactable.confirm_reservations?
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithoutAutoConfirmation, self.id)
+    else
+      confirm!
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithAutoConfirmation, self.id)
+    end
   end
+
 
   def cancelable?
     true
