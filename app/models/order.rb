@@ -2,7 +2,7 @@ class Order < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
 
   ORDER_TYPES = ['Reservation', 'RecurringBooking', 'Purchase', 'DelayedReservation']
-  STATES = ['unconfirmed', 'confirmed', 'overdue', 'archived', 'not_archived']
+  STATES = ['unconfirmed', 'confirmed', 'overdued', 'archived', 'not_archived']
   DEFAULT_DASHBOARD_TABS = ['unconfirmed', 'confirmed', 'archived']
 
   include Encryptable

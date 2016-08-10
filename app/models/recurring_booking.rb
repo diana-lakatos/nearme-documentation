@@ -166,10 +166,8 @@ class RecurringBooking < Order
       period_start_date = next_charge_date
 
       recalculate_next_charge_date!
+
       period = recurring_booking_periods.create!(
-        service_fee_amount_guest_cents: amount_calculator.guest_service_fee.cents,
-        service_fee_amount_host_cents: amount_calculator.host_service_fee.cents,
-        subtotal_amount_cents: amount_calculator.subtotal_amount.cents,
         period_start_date: period_start_date,
         period_end_date: next_charge_date - 1.day,
         credit_card_id: payment_subscription.credit_card_id,

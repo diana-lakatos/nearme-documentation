@@ -1273,7 +1273,7 @@ en:
         completed: "Completed"
         archived: "Archived"
         not_archived: "Active"
-        overdue: "Overdue"
+        overdued: "Overdue"
       columns:
         listing: "Listing"
         total: "Total"

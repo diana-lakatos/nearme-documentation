@@ -7,7 +7,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   delegate :payment_gateway, :company, :company_id, :user, :owner, :currency,
     :service_fee_guest_percent, :service_fee_host_percent, :payment_subscription,
-    :transactable, :quantity, :price_calculator, :cancellation_policy_hours_for_cancellation,
+    :transactable, :quantity, :cancellation_policy_hours_for_cancellation,
     :cancellation_policy_penalty_percentage, :action, :host, to: :recurring_booking
 
   scope :unpaid, -> { where(paid_at: nil) }
@@ -29,6 +29,10 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   def start_minute
     0
+  end
+
+  def price_calculator
+    recurring_booking.amount_calculator
   end
 
   def generate_payment!

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160805133339) do
+ActiveRecord::Schema.define(version: 20160810011059) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1826,6 +1826,7 @@ ActiveRecord::Schema.define(version: 20160805133339) do
     t.integer  "credit_card_id"
     t.integer  "payer_id"
     t.integer  "total_amount_cents",                                                             default: 0
+    t.boolean  "exclude_from_payout",                                                            default: false
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
@@ -2028,12 +2029,12 @@ ActiveRecord::Schema.define(version: 20160805133339) do
 
   create_table "recurring_booking_periods", force: :cascade do |t|
     t.integer  "recurring_booking_id"
-    t.integer  "instance_id",                    null: false
+    t.integer  "instance_id",                        null: false
     t.date     "period_start_date"
     t.date     "period_end_date"
-    t.integer  "subtotal_amount_cents"
-    t.integer  "service_fee_amount_guest_cents"
-    t.integer  "service_fee_amount_host_cents"
+    t.integer  "old_subtotal_amount_cents"
+    t.integer  "old_service_fee_amount_guest_cents"
+    t.integer  "old_service_fee_amount_host_cents"
     t.integer  "credit_card_id"
     t.string   "currency"
     t.datetime "deleted_at"
