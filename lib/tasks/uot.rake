@@ -396,10 +396,12 @@ namespace :uot do
     create_listing_show!
     create_theme_footer!
     create_search_list!
+    create_user_profile!
     create_my_cases!
     create_search_list_results!
     create_search_list_user!
     create_search_list_search_filter_boxes!
+    create_wish_list_button!
   end
 
   def create_translations
@@ -573,8 +575,8 @@ namespace :uot do
 
     create_translation!('time.formats.short', "%l:%M %p")
 
-    create_translation!('wish_lists.buttons.selected_state', "Favorite")
-    create_translation!('wish_lists.buttons.unselected_state', "Favorite")
+    create_translation!('wish_lists.buttons.selected_state', "Remove Favorite")
+    create_translation!('wish_lists.buttons.unselected_state', "Add to Favorites")
 
     create_translation!('flash_messages.space_wizard.space_listed', "Your Project has been submitted to the marketplace!")
 
@@ -712,6 +714,38 @@ namespace :uot do
       format: 'html',
       handler: 'liquid',
       partial: false,
+      view_type: 'view',
+      locales: Locale.all
+    })
+  end
+
+  def create_user_profile!
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'registrations/show',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: read_template('registrations_show.liquid'),
+      format: 'html',
+      handler: 'liquid',
+      partial: false,
+      view_type: 'view',
+      locales: Locale.all
+    })
+  end
+
+  def create_wish_list_button!
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'shared/components/wish_list_button',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: read_template('shared_components_wish_list_button.liquid'),
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
       view_type: 'view',
       locales: Locale.all
     })
