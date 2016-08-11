@@ -5,32 +5,32 @@ class CommentTest < ActiveSupport::TestCase
   should belong_to(:commentable)
 
   setup do
-    @project_creator = FactoryGirl.create :user
+    @transactable_creator = FactoryGirl.create :user
     @comment_creator = FactoryGirl.create :user
     @guest = FactoryGirl.create :user
-    @project = FactoryGirl.create :project, creator: @project_creator
-    @comment = FactoryGirl.create :comment, commentable: @project, creator: @comment_creator
+    @transactable = FactoryGirl.create :transactable, creator: @transactable_creator
+    @comment = FactoryGirl.create :comment, commentable: @transactable, creator: @comment_creator
   end
 
   should "not allow to remove to stranger" do
-    assert @comment.can_remove?(@project_creator)
+    assert @comment.can_remove?(@transactable_creator)
     assert @comment.can_remove?(@comment_creator)
     assert_not @comment.can_remove?(@guest)
   end
 
-  should "add activity feed event if commentable is project" do
-    project = FactoryGirl.create(:project)
+  should "add activity feed event if commentable is transactable" do
+    transactable = FactoryGirl.create(:transactable)
     assert_difference "ActivityFeedEvent.count" do
-      FactoryGirl.create(:comment, commentable: project)
+      FactoryGirl.create(:comment, commentable: transactable)
     end
   end
 
-  should "add activity feed event if commentable is project" do
+  should "add activity feed event if commentable is transactable" do
     # events:
     # 1) Project created for event_source
     # 2) Project created for followed
     # 3) User commented on activity feed event
-    # 4 and 5) Topics created for projects above.
+    # 4 and 5) Topics created for transactables above.
     # 6 and 7) Link / Photo events
     # 8) For user.
     #

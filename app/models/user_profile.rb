@@ -71,7 +71,7 @@ class UserProfile < ActiveRecord::Base
   end
 
   def create_company_if_needed
-    if instance_profile_type.create_company_on_sign_up? && user.companies.count.zero?
+    if instance_profile_type.try(:create_company_on_sign_up?) && user.companies.count.zero?
       company = user.companies.create!(name: user.name, creator: user)
       company.update_metadata({draft_at: nil, completed_at: Time.zone.now})
     end

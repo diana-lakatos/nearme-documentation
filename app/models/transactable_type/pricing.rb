@@ -64,7 +64,7 @@ class TransactableType::Pricing < ActiveRecord::Base
   end
 
   def order_class_name
-    super || action.related_order_class
+    super || action.try(:related_order_class)
   end
 
   private

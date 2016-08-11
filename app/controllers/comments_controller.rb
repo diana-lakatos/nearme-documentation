@@ -23,8 +23,8 @@ class CommentsController < ApplicationController
 
   def find_commentable
     params.each do |name, value|
-      if name =~ /(.+)_id$/ && ["listing_id", "activity_feed_event_id"].include?(name)
-        if $1 == 'listing'
+      if name =~ /(.+)_id$/ && %w(transactable_id listing_id activity_feed_event_id).include?(name)
+        if $1 == 'listing' || $1 == 'transactable'
           @commentable = Transactable.find(value)
         else
           @commentable = $1.classify.constantize.find(value)
