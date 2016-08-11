@@ -4,6 +4,8 @@ class PaymentTransfer < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
+  attr_encrypted :token, key: DesksnearMe::Application.config.secret_token
+
   FREQUENCIES = %w(monthly fortnightly weekly semiweekly daily manually)
   DEFAULT_FREQUENCY = "fortnightly"
 
@@ -34,6 +36,7 @@ class PaymentTransfer < ActiveRecord::Base
   scope :last_x_days, lambda { |days_in_past|
     where("DATE(#{table_name}.created_at) >= ? ", days_in_past.days.ago)
   }
+  scope :with_token, -> (not_encrypted_token) { where(encrypted_token: PaymentTransfer.encrypt_token(not_encrypted_token, key: DesksnearMe::Application.config.secret_token)) }
 
   validate :validate_all_charges_in_currency
 
@@ -63,6 +66,10 @@ class PaymentTransfer < ActiveRecord::Base
 
   def mark_transferred
     touch(:transferred_at)
+  end
+
+  def mark_as_failed
+    touch(:failed_at)
   end
 
   def company_including_deleted

@@ -42,6 +42,7 @@ class PaymentGateway < ActiveRecord::Base
   has_many :instance_clients, dependent: :destroy
   has_many :merchant_accounts, dependent: :destroy
   has_many :payments, through: :billing_authorizations
+  has_many :payment_transfers
   has_many :payment_gateways_countries, dependent: :destroy
   has_many :payment_countries, through: :payment_gateways_countries, source: 'country'
   has_many :payment_gateways_currencies, dependent: :destroy

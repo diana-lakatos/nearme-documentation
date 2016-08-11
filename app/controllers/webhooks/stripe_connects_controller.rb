@@ -19,6 +19,12 @@ class Webhooks::StripeConnectsController < Webhooks::BaseWebhookController
           if account.verification.fields_needed.present?
             merchant_account.update_column :data, merchant_account.data.merge(fields_needed: account.verification.fields_needed)
           end
+        when 'transfer.paid'
+          transfer = @payment_gateway.payment_transfers.with_token(event.data.object.id).first
+          transfer.mark_transferred
+        when 'transfer.failed'
+          transfer = @payment_gateway.payment_transfers.with_token(event.data.object.id).first
+          transfer.mark_as_failed
         end
       ensure
         merchant_account.webhooks.create!(response: params.to_yaml)
