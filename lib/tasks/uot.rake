@@ -15,6 +15,11 @@ namespace :uot do
       skip_company: true,
       click_to_call: true
     )
+    @instance.build_documents_upload(
+      enabled: true,
+      requirement: 'mandatory'
+    )
+    @instance.save
     @instance.set_context!
 
     @instance_profile_type = InstanceProfileType.find(571)
