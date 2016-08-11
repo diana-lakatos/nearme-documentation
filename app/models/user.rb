@@ -47,6 +47,9 @@ class User < ActiveRecord::Base
   serialize :instance_unread_messages_threads_count, Hash
   serialize :avatar_transformation_data, Hash
 
+  # strange bug, serialize stops to work if Taggable is included before it
+  include Taggable
+
   delegate :to_s, to: :name
 
   belongs_to :domain
@@ -313,27 +316,6 @@ class User < ActiveRecord::Base
       recoverable
     end
 
-    def search_by_query(attributes = [], query)
-      if query.present?
-        words = query.split.map.with_index{|w, i| ["word#{i}".to_sym, "%#{w}%"]}.to_h
-
-        sql = attributes.map do |attrib|
-          if self.columns_hash[attrib.to_s].type == :hstore
-            attrib = "CAST(avals(#{quoted_table_name}.\"#{attrib}\") AS text)"
-          else
-            attrib = "#{quoted_table_name}.\"#{attrib}\""
-          end
-          words.map do |word, value|
-            "#{attrib} ILIKE :#{word}"
-          end
-        end.flatten.join(' OR ')
-
-        where(ActiveRecord::Base.send(:sanitize_sql_array, [sql, words]))
-      else
-        all
-      end
-    end
-
     def custom_order(order, user)
       case order
         when /featured/i
@@ -356,6 +338,10 @@ class User < ActiveRecord::Base
           end
       end
     end
+  end
+
+  def user
+    self
   end
 
   def get_seller_profile

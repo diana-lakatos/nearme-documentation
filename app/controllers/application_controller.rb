@@ -20,6 +20,7 @@ class ApplicationController < ActionController::Base
   before_action :set_raygun_custom_data
   before_action :filter_out_token
   before_action :sign_out_if_signed_out_from_intel_sso, if: -> { should_log_out_from_intel? }
+  before_filter :set_paper_trail_whodunnit
 
   around_filter :set_time_zone
 

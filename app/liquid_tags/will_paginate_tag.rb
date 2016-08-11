@@ -8,7 +8,7 @@ class WillPaginateTag < Liquid::Tag
   end
 
   def render(context)
-    @attributes['renderer'] = pagination_renderer
+    @attributes['renderer'] = pagination_renderer if @attributes['renderer']
     @attributes = normalize_liquid_tag_attributes(@attributes, context)
 
     @attributes = normalize_liquid_tag_attributes(@attributes, context, ['html', 'wrapper_mappings'])

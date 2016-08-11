@@ -333,6 +333,14 @@ namespace :project_to_transactable do
       belongs_to :project
     end
 
+    TransactableType.class_eval do
+      def auto_accept_invitation_as_collaborator?
+        false
+      end  
+    end
+
+    Transactable.reset_column_information
+
     Instance.find_each do |instance|
       next if !instance.is_community?
 

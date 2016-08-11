@@ -186,7 +186,7 @@ class PlatformContext
     @instance = instance
     @platform_context_detail = @instance
     @theme = @instance.try(:theme)
-    @custom_theme = @instance.try(:custom_theme)
+    @custom_theme = @instance.try(:custom_theme) if CustomTheme.table_exists?
     @domain ||= @instance.try(:default_domain)
     self
   end

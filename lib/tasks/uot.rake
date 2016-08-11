@@ -16,7 +16,14 @@ namespace :uot do
       click_to_call: true
     )
     @instance.set_context!
-    InstanceProfileType.find(571).update_columns(onboarding: true, create_company_on_sign_up: true)
+
+    @instance_profile_type = InstanceProfileType.find(571)
+    @instance_profile_type.update_columns(
+      onboarding: true,
+      create_company_on_sign_up: true,
+      show_categories: true,
+      category_search_type: 'AND'
+    )
 
     create_transactable_types!
     create_custom_attributes!
@@ -111,16 +118,18 @@ namespace :uot do
         public: true,
         searchable: false
     })
+
     create_custom_attribute(@transactable_type, {
         name: 'workplace_type',
         label: 'Workplace Type',
         attribute_type: 'string',
         html_tag: 'select',
         required: "1",
-        valid_values: ["Online", "On Site"],
+        valid_values: ["online", "on_site"],
         public: true,
         searchable: true
     })
+
     create_custom_attribute(@transactable_type, {
         name: 'office_location',
         label: 'Office Location',
@@ -162,19 +171,110 @@ namespace :uot do
         public: true,
         searchable: false
     })
+
+    create_custom_attribute(@instance_profile_type, {
+        name: 'bio',
+        label: 'Bio',
+        attribute_type: 'string',
+        html_tag: 'textarea',
+        required: "1",
+        public: true,
+        searchable: false
+    })
+
+    create_custom_attribute(@instance_profile_type, {
+        name: 'workplace_type',
+        label: 'Workplace Type',
+        attribute_type: 'array',
+        html_tag: 'check_box_list',
+        required: "1",
+        valid_values: ["online", "on_site"],
+        public: true,
+        searchable: true
+    })
+
+    create_custom_attribute(@instance_profile_type, {
+        name: 'travel',
+        label: 'Travel',
+        attribute_type: 'string',
+        html_tag: 'radio_buttons',
+        required: "1",
+        valid_values: ['yes', 'no'],
+        public: true,
+        searchable: true
+    })
+
+    create_custom_attribute(@instance_profile_type, {
+        name: 'hourly_rate',
+        label: 'Hourly rate',
+        attribute_type: 'integer',
+        html_tag: 'input',
+        required: "1",
+        public: true,
+        searchable: false
+    })
+
+    create_custom_attribute(@instance_profile_type, {
+        name: 'discounts_available',
+        label: 'Discounts available',
+        attribute_type: 'string',
+        html_tag: 'radio_buttons',
+        required: "1",
+        valid_values: ['available', 'not_available'],
+        public: true,
+        searchable: false
+    })
+
   end
 
-  def create_categories!
+  def create_langauge_categories
     root_category = Category.where(name: 'Languages').first_or_create!
     root_category.transactable_types = TransactableType.all
+    root_category.instance_profile_types = [@instance_profile_type]
     root_category.mandatory = true
-    root_category.multiple_root_categories = true
-    root_category.search_options = 'exclude'
+    root_category.multiple_root_categories = false
+    root_category.search_options = 'include'
     root_category.save!
 
     %w(English Spanish French German Japanese Korean Italian Polish Russian Other).each do |category|
       root_category.children.where(name: category).first_or_create!
     end
+  end
+
+  def create_industry_categories
+    root_category = Category.where(name: 'Industry').first_or_create!
+    root_category.transactable_types = []
+    root_category.instance_profile_types = [@instance_profile_type]
+    root_category.mandatory = true
+    root_category.multiple_root_categories = true
+    root_category.search_options = 'include'
+    root_category.save!
+
+    ["Aerospace, Defense", "Civilian", "Defense and Intelligence", "Federal Government",
+     "Health Payers", "Health Plans", "Healthcare Providers", "High Tech", "Law Enforcement and Homeland Security",
+     "Life Sciences, Biotechnology, & Pharmaceutical", "State Government"].each do |category|
+      root_category.children.where(name: category).first_or_create!
+    end
+  end
+
+  def create_area_of_expertise_categories
+    root_category = Category.where(name: 'Area Of Expertise').first_or_create!
+    root_category.transactable_types = []
+    root_category.instance_profile_types = [@instance_profile_type]
+    root_category.mandatory = true
+    root_category.multiple_root_categories = true
+    root_category.search_options = 'include'
+    root_category.save!
+
+    ['Management', 'Information Technology'].each do |category|
+      root_category.children.where(name: category).first_or_create!
+    end
+  end
+
+  def create_categories!
+    create_langauge_categories
+    create_industry_categories
+    create_area_of_expertise_categories
   end
 
   def create_or_update_form_components!
@@ -213,6 +313,19 @@ namespace :uot do
     ]
     component.save!
 
+    component = @instance_profile_type.form_components.where(form_type: 'buyer_profile_types').first_or_initialize
+    component.form_fields = [
+      {"buyer" => "enabled"},
+      {"buyer" => "bio"},
+      {"buyer" => "workplace_type"},
+      {"buyer" => "discounts_available"},
+      {"buyer" => "hourly_rate"},
+      {"buyer" => "travel"},
+      {"buyer" => "Category - Languages"},
+      {"buyer" => "Category - Industry"},
+      {"buyer" => "Category - Area Of Expertise"}
+    ]
+    component.save!
 
   end
 
@@ -279,14 +392,15 @@ namespace :uot do
   def create_views
     create_home_index!
     create_theme_header!
-    create_search_box_inputs!
     create_home_search_fulltext!
     create_home_search_custom_attributes!
     create_home_homepage_content!
     create_listing_show!
     create_theme_footer!
     create_search_list!
+    create_user_profile!
     create_my_cases!
+    create_wish_list_button!
   end
 
   def create_translations
@@ -460,8 +574,8 @@ namespace :uot do
 
     create_translation!('time.formats.short', "%l:%M %p")
 
-    create_translation!('wish_lists.buttons.selected_state', "Favorite")
-    create_translation!('wish_lists.buttons.unselected_state', "Favorite")
+    create_translation!('wish_lists.buttons.selected_state', "Remove Favorite")
+    create_translation!('wish_lists.buttons.unselected_state', "Add to Favorites")
 
     create_translation!('flash_messages.space_wizard.space_listed', "Your Project has been submitted to the marketplace!")
 
@@ -522,6 +636,7 @@ namespace :uot do
     cv.required = "1"
     cv.save!
   end
+
 
   def create_home_index!
     iv = InstanceView.where(
@@ -598,6 +713,38 @@ namespace :uot do
       format: 'html',
       handler: 'liquid',
       partial: false,
+      view_type: 'view',
+      locales: Locale.all
+    })
+  end
+
+  def create_user_profile!
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'registrations/show',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: read_template('registrations_show.liquid'),
+      format: 'html',
+      handler: 'liquid',
+      partial: false,
+      view_type: 'view',
+      locales: Locale.all
+    })
+  end
+
+  def create_wish_list_button!
+    iv = InstanceView.where(
+      instance_id: @instance.id,
+      path: 'shared/components/wish_list_button',
+    ).first_or_initialize
+    iv.update!({
+      transactable_types: TransactableType.all,
+      body: read_template('shared_components_wish_list_button.liquid'),
+      format: 'html',
+      handler: 'liquid',
+      partial: true,
       view_type: 'view',
       locales: Locale.all
     })

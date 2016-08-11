@@ -2083,12 +2083,12 @@ ActiveRecord::Schema.define(version: 20160810183147) do
 
   create_table "recurring_booking_periods", force: :cascade do |t|
     t.integer  "recurring_booking_id"
-    t.integer  "instance_id",                    null: false
+    t.integer  "instance_id",                        null: false
     t.date     "period_start_date"
     t.date     "period_end_date"
-    t.integer  "subtotal_amount_cents"
-    t.integer  "service_fee_amount_guest_cents"
-    t.integer  "service_fee_amount_host_cents"
+    t.integer  "old_subtotal_amount_cents"
+    t.integer  "old_service_fee_amount_guest_cents"
+    t.integer  "old_service_fee_amount_host_cents"
     t.integer  "credit_card_id"
     t.string   "currency"
     t.datetime "deleted_at"
@@ -3372,6 +3372,7 @@ ActiveRecord::Schema.define(version: 20160810183147) do
     t.boolean  "click_to_call",                                      default: false
     t.integer  "orders_count",                                       default: 0
     t.integer  "transactable_collaborators_count",                   default: 0,                                                                                   null: false
+    t.integer  "wish_list_items_count",                              default: 0
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

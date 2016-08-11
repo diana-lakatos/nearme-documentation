@@ -67,6 +67,9 @@
         - when 'collaborators'
           = render "dashboard/company/transactables/form_fields/collaborators", f: f
 
+        - when 'tags'
+          = render "dashboard/company/transactables/form_fields/tags", f: f
+
         - when *@transactable_type.categories.roots.map { |c| "Category - #{c.name}" }
           = render "dashboard/company/transactables/form_fields/category", f: f, field: field
 

@@ -134,16 +134,18 @@ When /^I select custom availability:$/ do |table|
   click_link 'Pricing & Availability'
   first('.transactable_action_types_availability_template_id li:last-child').click
   (0..6).each do |day|
-    page.execute_script("$(\"#transactable_action_types_attributes_1_availability_template_attributes_availability_rules_attributes_0_days_#{day}\").prop('checked', false)")
-    page.execute_script("$(\"#transactable_action_types_attributes_1_availability_template_attributes_availability_rules_attributes_0_days_#{day}\").trigger('change')")
+    page.execute_script("$(\"input.check_boxes[id$='_days_#{day}']\").prop('checked', false)")
+    page.execute_script("$(\"input.check_boxes[id$='_days_#{day}']\").trigger('change')")
   end
   rules = availability_data_from_table(table)
   rules.each do |rule|
-    fill_in "transactable_action_types_attributes_1_availability_template_attributes_availability_rules_attributes_0_open_time", with: rule[:open]
-    fill_in "transactable_action_types_attributes_1_availability_template_attributes_availability_rules_attributes_0_close_time", with: rule[:close]
+
+    page.execute_script("$(\"input.time_picker[id$='_open_time']\").timepicker('setTime', '#{rule[:open]}')")
+    page.execute_script("$(\"input.time_picker[id$='_close_time']\").timepicker('setTime', '#{rule[:close]}')")
+
     rule[:days].each do |day|
-      page.execute_script("$(\"#transactable_action_types_attributes_1_availability_template_attributes_availability_rules_attributes_0_days_#{day}\").prop('checked', true)")
-      page.execute_script("$(\"#transactable_action_types_attributes_1_availability_template_attributes_availability_rules_attributes_0_days_#{day}\").trigger('change')")
+      page.execute_script("$(\"input.check_boxes[id$='_days_#{day}']\").prop('checked', true)")
+      page.execute_script("$(\"input.check_boxes[id$='_days_#{day}']\").trigger('change')")
     end
   end
 end

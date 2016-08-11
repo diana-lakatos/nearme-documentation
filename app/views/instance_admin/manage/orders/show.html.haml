@@ -7,7 +7,7 @@
 
       - unless Rails.env.production?
         .col-xs-4
-          = link_to "Generate next period now", generate_next_period_instance_admin_manage_order_path(@order),  class: 'btn btn-light', method: :post, "data-confirm": "Are you sure you want to generate next period?"
+          = link_to "Generate next period now", generate_next_period_instance_admin_manage_order_path(@order), method: :post, class: 'btn btn-light', data: {confirm: " Are you sure you want to generate next period?"}
 
     %h4 Periods:
     .row
