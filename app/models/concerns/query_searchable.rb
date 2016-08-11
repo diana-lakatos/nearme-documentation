@@ -5,22 +5,35 @@ module QuerySearchable
 
     def self.search_by_query(attributes = [], query)
       if query.present?
-        words = query.split.map.with_index{|w, i| ["word#{i}".to_sym, "%#{w}%"]}.to_h
-
-        sql = attributes.map do |attrib|
-          if self.columns_hash[attrib.to_s].type == :hstore
-            attrib = "CAST(avals(#{quoted_table_name}.\"#{attrib}\") AS text)"
-          elsif self.columns_hash[attrib.to_s].type == :integer
-            attrib = "CAST(#{quoted_table_name}.\"#{attrib}\" AS text)"
+        words = query.split.map.with_index{|w, i| ["word#{i}".to_sym, w]}.to_h
+        words_like = query.split.map.with_index{|w, i| ["word_like#{i}".to_sym, "%#{w}%"]}.to_h
+        conditions = []
+        attributes.map do |attrib|
+          if attrib == :tags
+            conditions += words.map do |word, value|
+              "LOWER(tags.name) = :#{word}"
+            end
           else
-            attrib = "#{quoted_table_name}.\"#{attrib}\""
+            if self.columns_hash[attrib.to_s].type == :hstore
+              attrib = "CAST(avals(#{quoted_table_name}.\"#{attrib}\") AS text)"
+            elsif self.columns_hash[attrib.to_s].type == :integer
+              attrib = "CAST(#{quoted_table_name}.\"#{attrib}\" AS text)"
+            else
+              attrib = "#{quoted_table_name}.\"#{attrib}\""
+            end
+            conditions += words_like.map do |word, value|
+              "#{attrib} ILIKE :#{word}"
+            end
           end
-          words.map do |word, value|
-            "#{attrib} ILIKE :#{word}"
-          end
-        end.flatten.join(' OR ')
-
-        where(ActiveRecord::Base.send(:sanitize_sql_array, [sql, words]))
+        end
+        sql = conditions.flatten.join(' OR ')
+        result = where(ActiveRecord::Base.send(:sanitize_sql_array, [sql, words.merge(words_like)]))
+        result = result.joins(%Q{
+          LEFT JOIN "taggings" ON "taggings"."taggable_id" = "users"."id"
+          AND "taggings"."context" = 'tags' AND "taggings"."taggable_type" = 'User'
+          LEFT JOIN "tags" ON "tags"."id" = "taggings"."tag_id"
+          }).uniq if attributes.include?(:tags)
+        result
       else
         all
       end

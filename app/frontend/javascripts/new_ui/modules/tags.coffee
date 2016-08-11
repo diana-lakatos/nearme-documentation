@@ -3,7 +3,7 @@ require 'selectize/dist/js/selectize'
 module.exports = class Tags
   constructor: (el)->
     @tagList = $(el)
-    @queryUrl = @tagList.data('tags-url') + '?q='
+    @queryUrl = @tagList.data('tags').url + '?q='
     @initSelectize()
 
   initSelectize: ->
@@ -30,7 +30,7 @@ module.exports = class Tags
         }
     }
 
-    @tagList.selectize(options)
+    selectizeObj = @tagList.selectize(options)
 
   atInstanceAdmin: ->
     window.location.href.match(/instance_admin/)
