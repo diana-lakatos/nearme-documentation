@@ -232,7 +232,7 @@ namespace :uot do
     root_category.transactable_types = TransactableType.all
     root_category.instance_profile_types = [@instance_profile_type]
     root_category.mandatory = true
-    root_category.multiple_root_categories = false
+    root_category.multiple_root_categories = true
     root_category.search_options = 'include'
     root_category.save!
 

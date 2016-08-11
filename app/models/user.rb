@@ -106,6 +106,7 @@ class User < ActiveRecord::Base
   has_many :bids
   has_many :offer_bids, class_name: 'Bid', through: :offers, source: :bids
   has_many :transactables_collaborated, through: :transactable_collaborators, source: :transactable
+  has_many :approved_transactables_collaborated, through: :transactable_collaborators, source: :transactable
   has_many :transactable_collaborators
   has_many :approved_transactable_collaborations, -> { approved }, class_name: 'TransactableCollaborator'
   has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
@@ -330,6 +331,9 @@ class User < ActiveRecord::Base
           .merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance', select: 'users.*'))
         when /number_of_projects/i
           order('transactables_count + transactable_collaborators_count DESC')
+        when /custom_attributes./
+          parsed_order = order.match(/custom_attributes.([a-zA-Z\.\_\-]*)_(asc|desc)/)
+          order("cast(user_profiles.properties -> '#{parsed_order[1]}' as float) #{parsed_order[2]}")
         else
           if PlatformContext.current.instance.is_community?
             order('transactables_count + transactable_collaborators_count DESC, followers_count DESC')

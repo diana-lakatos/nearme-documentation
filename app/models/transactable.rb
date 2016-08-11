@@ -112,9 +112,6 @@ class Transactable < ActiveRecord::Base
   has_many :links, dependent: :destroy, as: :linkable
   has_many :transactable_topics, dependent: :destroy
   has_many :topics, through: :transactable_topics
-  has_many :approved_transactable_collaborators, -> { approved }, class_name: 'TransactableCollaborator', dependent: :destroy
-  has_many :collaborating_users, through: :approved_transactable_collaborators, source: :user
-  has_many :transactable_collaborators, dependent: :destroy
   has_many :group_transactables, dependent: :destroy
   has_many :groups, through: :group_transactables
 
@@ -682,6 +679,10 @@ class Transactable < ActiveRecord::Base
 
   def new_collaborators_attributes=(attributes)
     @new_collaborators = (attributes || {}).values.map { |c| c[:email] }.reject(&:blank?).uniq.map { |email| OpenStruct.new(email: email) }
+  end
+
+  def is_collaborator?(user)
+    transactable_collaborators.approved.where(user: user).exists?
   end
 
   private

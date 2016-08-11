@@ -1276,6 +1276,7 @@ en:
       stripe: 'Credit Cards'
       in_gateway: '%{payment_gateway} Credit Cards'
     orders:
+      not_collaborator: 'Only invited users can make an offer'
       payment_missing: "Missing"
       details: "Details"
       state:

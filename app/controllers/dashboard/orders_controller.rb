@@ -73,9 +73,13 @@ class Dashboard::OrdersController < Dashboard::BaseController
   private
 
   def find_transactable
-    @transactable = current_user.transactables_collaborated.find(params[:transactable_id])
-    params[:transactable_pricing_id] ||= @transactable.action_type.pricings.first.id
-    @transactable_pricing = @transactable.action_type.pricings.find(params[:transactable_pricing_id])
+    if @transactable = current_user.approved_transactables_collaborated.find_by(id: params[:transactable_id])
+      params[:transactable_pricing_id] ||= @transactable.action_type.pricings.first.id
+      @transactable_pricing = @transactable.action_type.pricings.find(params[:transactable_pricing_id])
+    else
+      flash[:error] = I18n.t('dashboard.orders.not_collaborator')
+      redirect_to dashboard_company_transactable_type_transactables_path(TransactableType.first)
+    end
   end
 
   def build_payment_documents
