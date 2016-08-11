@@ -2,9 +2,8 @@ require 'test_helper'
 
 class CommentsControllerTest < ActionController::TestCase
   setup do
-    @project_creator = FactoryGirl.create :user
-    @comment_creator = FactoryGirl.create :user
-    @project = FactoryGirl.create :project, creator: @project_creator
+    @comment_creator = FactoryGirl.create(:user)
+    @transactable = FactoryGirl.create(:transactable)
 
     sign_in @comment_creator
   end
@@ -12,14 +11,14 @@ class CommentsControllerTest < ActionController::TestCase
 
   test "should create comment" do
     assert_difference "Comment.count", 1 do
-      post :create, project_id: @project, comment: {body: "Test body"}, format: :js
+      post :create, transactable_id: @transactable, comment: {body: "Test body"}, format: :js
     end
     assert_response :success
   end
 
   test "should list comment" do
-    @comment = FactoryGirl.create :comment, creator: @comment_creator, commentable: @project
-    xhr :get, :index, project_id: @project, format: :js
+    @comment = FactoryGirl.create :comment, creator: @comment_creator, commentable: @transactable
+    xhr :get, :index, transactable_id: @transactable, format: :js
     assert_equal [@comment], assigns(:comments)
     assert_response :success
   end

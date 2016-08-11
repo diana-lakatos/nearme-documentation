@@ -43,7 +43,7 @@ class WishListsControllerTest < ActionController::TestCase
 
     should 'allow only permitted classes' do
       assert_raise WishListItem::NotPermitted do
-        post :create, id: @transactable.id, wishlistable_type: 'User'
+        post :create, id: @transactable.id, wishlistable_type: 'Company'
       end
     end
   end
