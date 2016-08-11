@@ -25,12 +25,16 @@ class InstanceType::Searcher::UserSearcher
     end
 
     if @params[:category_ids].present?
-      @fetcher = @fetcher.joins("INNER JOIN categories_categorizables cc ON
-        cc.categorizable_type = 'UserProfile' AND cc.categorizable_id = user_profiles.id").
-        where("cc.category_id in (?)", @params[:category_ids].split(','))
+      category_ids = @params[:category_ids].split(',')
+
       if @transactable_type.category_search_type == "AND"
-        @fetcher = @fetcher.group('users.id').
-          having("count(cc.category_id) >= #{@params[:category_ids].split(',').size}")
+        @fetcher = @fetcher.where("(select count(*) from categories_categorizables cc
+          WHERE cc.categorizable_type = 'UserProfile' AND cc.categorizable_id = user_profiles.id
+          AND cc.category_id in (?)) = ?", category_ids, category_ids.size)
+      else
+        @fetcher = @fetcher.joins("INNER JOIN categories_categorizables cc ON
+          cc.categorizable_type = 'UserProfile' AND cc.categorizable_id = user_profiles.id").
+          where("cc.category_id in (?)", category_ids)
       end
     end
 
