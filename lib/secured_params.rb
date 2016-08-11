@@ -572,8 +572,22 @@ class SecuredParams
       payout_country_ids: [],
       live_settings: payment_gateway_class.settings.keys,
       test_settings: payment_gateway_class.settings.keys,
-      payment_methods_attributes: nested(self.payment_method)
+      payment_methods_attributes: nested(self.payment_method),
+      config: payment_gateway_config(payment_gateway_class.new.config_settings)
     ]
+  end
+
+  def payment_gateway_config(config_settings)
+    config = []
+    config_settings.each do |key, value|
+      if value.instance_of?(Hash) && !value.has_key?(:valid_values)
+        config << [key => payment_gateway_config(value)]
+      else
+        config << key
+      end
+    end
+
+    config
   end
 
   def payment_method

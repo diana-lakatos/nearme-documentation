@@ -53,6 +53,13 @@ en:
           shipping_category_id: 'Shipping category'
       product_form:
         action_rfq: "Enable request for quote"
+      payment_gateway:
+        config:
+          transfer_schedule:
+            interval: "Transfer interval"
+            delay_days: "Delay days"
+            weekly_anchor: "Day of transfer"
+            monthly_anchor: "Day of the month"
       instance:
         mark_as_locked: "Lock admin settings"
         name: "Marketplace Name"

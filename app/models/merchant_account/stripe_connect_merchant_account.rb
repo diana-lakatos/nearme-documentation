@@ -137,7 +137,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
         account_number: bank_account_number,
         routing_number: bank_routing_number
       }
-    }.merge(legal_entity: legal_entity_hash)
+    }.merge(legal_entity: legal_entity_hash).merge(payment_gateway.config)
   end
 
   def address_hash

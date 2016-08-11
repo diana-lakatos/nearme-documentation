@@ -24,6 +24,17 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
     super.merge({environment: test_mode? ? :sandbox : :production, test: test_mode? })
   end
 
+  def config_settings
+    {
+      transfer_schedule: {
+        interval: { valid_values: ['daily', 'weekly', 'monthly'], data: {'data-interval' => '' }},
+        weekly_anchor: { valid_values: Date::DAYNAMES.map(&:downcase), data: {'data-show-if' => 'interval-weekly'} },
+        monthly_anchor: { valid_values: (1..31).to_a, data: {'data-show-if' => 'interval-monthly'} },
+        delay_days: { valid_values: nil, data: {'data-show-if' => 'interval-daily'} }
+      },
+    }
+  end
+
   def gateway
     @gateway ||= ActiveMerchant::Billing::StripeConnectPayments.new(settings)
   end
