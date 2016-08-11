@@ -2,6 +2,10 @@ class Api::V3::InstancesController < Api::BaseController
   skip_before_filter :verified_api_request?
   skip_before_action :require_authorization
 
+  # temporary disable forcing SSL on this controller
+  # TODO remove before releasing to production
+  force_ssl if: -> { false }
+
   def index
     render json: serialized_collection
   end
@@ -127,15 +131,35 @@ class InstanceFactory
     Utils::FormComponentsCreator.new(ipt).create!
     ipt = instance.instance_profile_types.create!(name: 'Buyer', profile_type: InstanceProfileType::BUYER)
     Utils::FormComponentsCreator.new(ipt).create!
-    tp = instance.transactable_types.create(
-      name: instance.bookable_noun,
-      action_free_booking: '1',
-      action_hourly_booking: '1',
-      action_daily_booking: '1',
-      action_weekly_booking: '1',
-      action_monthly_booking: '1',
-      availability_options: { 'defer_availability_rules' => true, 'confirm_reservations' => { 'default_value' => true, 'public' => true } }
+    tp = @instance.transactable_types.new(
+      name: @instance.bookable_noun,
     )
+    tp.action_types << TransactableType::TimeBasedBooking.new(
+      confirm_reservations: true,
+      pricings_attributes: [
+        {
+          unit: 'hour',
+          number_of_units: 1,
+          allow_free_booking: true
+        },
+        {
+          unit: 'day',
+          number_of_units: 1,
+          allow_free_booking: true
+        },
+        {
+          unit: 'day',
+          number_of_units: 7,
+          allow_free_booking: true
+        },
+        {
+          unit: 'day',
+          number_of_units: 30,
+          allow_free_booking: true
+        }
+      ]
+    )
+    tp.save!
 
     tp.create_rating_systems
     Utils::FormComponentsCreator.new(tp).create!

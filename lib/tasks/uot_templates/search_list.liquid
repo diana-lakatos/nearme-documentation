@@ -4,11 +4,12 @@
             <form action="/search" method="get">
                 <div class="query">
                     <label for="field-q" class="struct-label">Search keyword</label>
-                    <input type="text" name="query" id="field-q" placeholder="Enter keywords&hellip;">
+                    <input type="text" name="query" id="field-q" placeholder="Enter keywords&hellip;" value="{{ params['query'] }}">
                     <input type="hidden" name="lg_custom_attributes[workplace_type]" value="{{ searcher.lg_custom_attributes_hash['workplace_type'] }}">
                     <input type="hidden" name="lg_custom_attributes[travel]" value="{{ searcher.lg_custom_attributes_hash['travel'] }}">
                     <input type="hidden" name="category_ids" value="{{ searcher.category_ids }}">
                     <input type="hidden" name="page" value="{{ searcher.current_page }}">
+                    <input type="hidden" name="query_fields" value="tags">
                     <input type="hidden" name="sort">
 
                     <div class="form-action">
@@ -80,8 +81,8 @@
                 <label for="search-order">Sort by:</label>
                 <span class="select-a">
                     <select id="search-order" name="sort" class="unstyled-select">
-                        <option {% if params['sort'] == 'hourly_rate_asc'  %}selected{% endif %} value='hourly_rate_asc'>Hourly rate ascending</option>
-                        <option {% if params['sort'] == 'hourly_rate_desc' %}selected{% endif %} value='hourly_rate_desc'>Houry rate descending</option>
+                        <option {% if params['sort'] == 'custom_attributes.hourly_rate_asc'  %}selected{% endif %} value='custom_attributes.hourly_rate_asc'>Hourly rate ascending</option>
+                        <option {% if params['sort'] == 'custom_attributes.hourly_rate_desc' %}selected{% endif %} value='custom_attributes.hourly_rate_desc'>Houry rate descending</option>
                     </select>
                 </span>
             </div>
@@ -171,15 +172,9 @@
                     <div class="tags-a tags-short-list">
                         <h4>Tags</h4>
                         <ul>
-                            <li><a href="./">Electrical Engineering</a></li>
-                            <li><a href="./">Parallel Processing</a></li>
-                            <li><a href="./">Mobile Robotics</a></li>
-                            <li><a href="./">Electrical Engineering</a></li>
-                            <li><a href="./">Parallel Processing</a></li>
-                            <li><a href="./">Mobile Robotics</a></li>
-                            <li><a href="./">Electrical Engineering</a></li>
-                            <li><a href="./">Parallel Processing</a></li>
-                            <li><a href="./">Mobile Robotics</a></li>
+                            {% for tag in user.tags %}
+                                <li><a href="?query_fields=tags&query={{ tag.name }}">{{ tag.name }}</a></li>
+                            {% endfor %}
                         </ul>
                     </div>
 

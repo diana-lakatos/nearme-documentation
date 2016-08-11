@@ -104,7 +104,7 @@
       - recurring_booking.recurring_booking_periods.each do |period|
         %tr
           %td= "#{I18n.l(period.period_start_date, format: :short)} - #{I18n.l(period.period_end_date, format: :short)}"
-          %td= humanized_money_with_cents_and_symbol(current_user == recurring_booking.host ? period.total_amount - period.service_fee_amount_guest : period.total_amount)
+          %td= humanized_money_with_cents_and_symbol(period.total_amount)
           %td
             %span{class: period.payment.try(:state) }
               - if period.payment.try(:state).blank?

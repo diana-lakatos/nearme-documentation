@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160809152940) do
+ActiveRecord::Schema.define(version: 20160810135954) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -421,9 +421,9 @@ ActiveRecord::Schema.define(version: 20160809152940) do
     t.integer  "charge_type_target_id"
     t.string   "charge_type_target_type"
     t.integer  "percent"
-    t.datetime "deleted_at"
     t.string   "type"
     t.string   "charge_event"
+    t.string   "deleted_at"
   end
 
   add_index "charge_types", ["charge_type_target_id", "charge_type_target_type"], name: "act_target", using: :btree
@@ -1346,9 +1346,9 @@ ActiveRecord::Schema.define(version: 20160809152940) do
     t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
+    t.boolean  "enable_geo_localization",                                                           default: true
     t.string   "orders_received_tabs"
     t.string   "my_orders_tabs"
-    t.boolean  "enable_geo_localization",                                                           default: true
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -2082,12 +2082,12 @@ ActiveRecord::Schema.define(version: 20160809152940) do
 
   create_table "recurring_booking_periods", force: :cascade do |t|
     t.integer  "recurring_booking_id"
-    t.integer  "instance_id",                    null: false
+    t.integer  "instance_id",                        null: false
     t.date     "period_start_date"
     t.date     "period_end_date"
-    t.integer  "subtotal_amount_cents"
-    t.integer  "service_fee_amount_guest_cents"
-    t.integer  "service_fee_amount_host_cents"
+    t.integer  "old_subtotal_amount_cents"
+    t.integer  "old_service_fee_amount_guest_cents"
+    t.integer  "old_service_fee_amount_host_cents"
     t.integer  "credit_card_id"
     t.string   "currency"
     t.datetime "deleted_at"
