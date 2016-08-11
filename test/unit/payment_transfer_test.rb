@@ -21,6 +21,15 @@ class PaymentTransferTest < ActiveSupport::TestCase
       @payment_transfer = @company.payment_transfers.build
     end
 
+    should 'find with encrypted token' do
+      @payment_gateway = PaymentGateway.last
+      @payment_transfer.token = 'tokenowski'
+      @payment_transfer.payment_gateway = @payment_gateway
+      @payment_transfer.save!
+
+      assert_equal 1, @payment_gateway.payment_transfers.with_token("tokenowski").count
+    end
+
     should "only allow charges of the same currency" do
       @reservations = prepare_charged_reservations_for_transactable(@reservation_1.transactable)
       reservation = @reservations.last
