@@ -339,6 +339,8 @@ namespace :project_to_transactable do
       end  
     end
 
+    Transactable.reset_column_information
+
     Instance.find_each do |instance|
       next if !instance.is_community?
 
