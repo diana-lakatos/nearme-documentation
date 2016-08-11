@@ -25,7 +25,7 @@ class InstanceAdmin::Manage::OrdersController < InstanceAdmin::Manage::BaseContr
   end
 
   def order_scope
-    @order_scope ||= Order.paginate(per_page: 20, :page => params[:page]).order("created_at DESC")
+    @order_scope ||= Order.without_state(:inactive).paginate(per_page: 20, :page => params[:page]).order("created_at DESC")
   end
 
 end
