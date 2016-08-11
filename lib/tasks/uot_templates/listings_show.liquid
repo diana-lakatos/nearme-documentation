@@ -3,7 +3,7 @@
 {% else %}
   {% assign collaborator = current_user | find_collaborator: listing %}
   {% if collaborator.approved_by_owner? or current_user.id == listing.creator_id %}
-    {% include 'listings/case_details.html' %}
+    {% include 'listings/project_details.html' %}
   {% else %}
     {% include 'listings/ask_for_permission.html', collaborator: collaborator %}
   {% endif %}
