@@ -92,6 +92,10 @@ class MerchantAccount < ActiveRecord::Base
   def update_onboard!(*args)
   end
 
+  def response_object
+    YAML.load(response)
+  end
+
   def client
     merchantable
   end

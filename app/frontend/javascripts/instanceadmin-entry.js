@@ -601,4 +601,14 @@ DNM.registerInitializer(function(){
     });
 });
 
+DNM.registerInitializer(function(){
+    $(document).on('init:paymentgateway.nearme', function(event, container, options){
+        options = options || {};
+        require.ensure('./instance_admin/sections/payment_gateway_form', function(require){
+            var InstanceAdminPaymentGatewayForm = require('./instance_admin/sections/payment_gateway_form');
+            return new InstanceAdminPaymentGatewayForm($(container), options);
+        });
+    });
+});
+
 DNM.run();

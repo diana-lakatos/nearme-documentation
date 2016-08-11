@@ -20,6 +20,7 @@ class PaymentGateway < ActiveRecord::Base
 
   serialize :test_settings, Hash
   serialize :live_settings, Hash
+  serialize :config, Hash
 
   validates_each :test_settings do |payment_gateway, attribute, value|
     validate_settings(payment_gateway, attribute, value)
@@ -112,6 +113,10 @@ class PaymentGateway < ActiveRecord::Base
 
   def self.supported_countries
     raise NotImplementedError.new("#{self.name} has not implemented self.supported_countries")
+  end
+
+  def config_settings
+    {}
   end
 
   def documentation_url

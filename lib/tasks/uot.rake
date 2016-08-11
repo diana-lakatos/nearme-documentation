@@ -323,7 +323,8 @@ namespace :uot do
       {"buyer" => "travel"},
       {"buyer" => "Category - Languages"},
       {"buyer" => "Category - Industry"},
-      {"buyer" => "Category - Area Of Expertise"}
+      {"buyer" => "Category - Area Of Expertise"},
+      {"user" => "tags"}
     ]
     component.save!
 
