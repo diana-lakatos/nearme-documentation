@@ -24,7 +24,7 @@ class Webhooks::StripeConnectsController < Webhooks::BaseWebhookController
           transfer.mark_transferred
         when 'transfer.failed'
           transfer = @payment_gateway.payment_transfers.with_token(event.data.object.id).first
-          transfer.mark_as_filed
+          transfer.mark_as_failed
         end
       ensure
         merchant_account.webhooks.create!(response: params.to_yaml)

@@ -68,7 +68,7 @@ class PaymentTransfer < ActiveRecord::Base
     touch(:transferred_at)
   end
 
-  def mark_as_filed
+  def mark_as_failed
     touch(:failed_at)
   end
 
