@@ -242,7 +242,7 @@ namespace :uot do
 
   def create_industry_categories
     root_category = Category.where(name: 'Industry').first_or_create!
-    root_category.transactable_types = TransactableType.all
+    root_category.transactable_types = []
     root_category.instance_profile_types = [@instance_profile_type]
     root_category.mandatory = true
     root_category.multiple_root_categories = true
@@ -258,7 +258,7 @@ namespace :uot do
 
   def create_area_of_expertise_categories
     root_category = Category.where(name: 'Area Of Expertise').first_or_create!
-    root_category.transactable_types = TransactableType.all
+    root_category.transactable_types = []
     root_category.instance_profile_types = [@instance_profile_type]
     root_category.mandatory = true
     root_category.multiple_root_categories = true
@@ -314,6 +314,7 @@ namespace :uot do
 
     component = @instance_profile_type.form_components.where(form_type: 'buyer_profile_types').first_or_initialize
     component.form_fields = [
+      {"buyer" => "enabled"},
       {"buyer" => "bio"},
       {"buyer" => "workplace_type"},
       {"buyer" => "discounts_available"},

@@ -16,6 +16,8 @@ class UserProfile < ActiveRecord::Base
 
   delegate :onboarding, :onboarding?, to: :instance_profile_type, allow_nil: true
 
+  after_create :create_company_if_needed
+
   SELLER  = 'seller'.freeze
   BUYER = 'buyer'.freeze
   DEFAULT = 'default'.freeze
@@ -58,12 +60,21 @@ class UserProfile < ActiveRecord::Base
     @user_profile_drop ||= UserProfileDrop.new(self)
   end
 
+
   private
 
   def assign_defaults
     self.instance_profile_type ||= PlatformContext.current.instance.try("#{self.profile_type}_profile_type")
     # by default, seller and buyer profiles are enabled only if onboarding is disabled. Default profile is always enabled.
     self.enabled = !onboarding? || profile_type == DEFAULT
+    true
+  end
+
+  def create_company_if_needed
+    if instance_profile_type.create_company_on_sign_up? && user.companies.count.zero?
+      company = user.companies.create!(name: user.name, creator: user)
+      company.update_metadata({draft_at: nil, completed_at: Time.zone.now})
+    end
     true
   end
 

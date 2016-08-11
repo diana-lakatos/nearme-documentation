@@ -7,7 +7,8 @@ module Categorizable
 
     attr_accessor :categories_not_required
 
-    validate :validate_mandatory_categories, unless: ->(record) { record.categories_not_required}
+    # for now we do not require categories on sign up
+    validate :validate_mandatory_categories, unless: ->(record) { record.categories_not_required || (UserProfile === record && record.new_record?) }
 
     def validate_mandatory_categories
       return true if Order === self
