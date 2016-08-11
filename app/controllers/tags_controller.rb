@@ -5,7 +5,7 @@ class TagsController < ApplicationController
   before_action :empty_result
 
   def index
-    tags = Tag.autocomplete(params[:q]).merge!(@user.owned_tags)
+    tags = Tag.autocomplete(params[:q])
     render json: tags, root: false
   end
 

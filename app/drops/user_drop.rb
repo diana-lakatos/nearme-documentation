@@ -50,12 +50,15 @@ class UserDrop < BaseDrop
   #   return default wish list
   # external_id
   #   id of a user in a third party system, used by bulk upload
+  # tags
+  #   user tags
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of,
     :with_mutual_friendship_source, :first_name, :middle_name, :last_name,
     :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
     :country_name, :phone, :current_address, :is_trusted?, :reservations,
     :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
-    :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile, :has_friends, to: :source
+    :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile,
+    :tags, :has_friends, to: :source
 
   def class_name
     'User'

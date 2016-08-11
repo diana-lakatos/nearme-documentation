@@ -21,7 +21,8 @@ namespace :uot do
     @instance_profile_type.update_columns(
       onboarding: true,
       create_company_on_sign_up: true,
-      show_categories: true
+      show_categories: true,
+      category_search_type: 'AND'
     )
 
     create_transactable_types!

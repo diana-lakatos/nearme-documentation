@@ -13,6 +13,7 @@ class Transactable < ActiveRecord::Base
   include Listing::Search
   include Categorizable
   include Approvable
+  include Taggable
 
   DEFAULT_ATTRIBUTES = %w(name description capacity)
 
@@ -73,6 +74,7 @@ class Transactable < ActiveRecord::Base
   belongs_to :location, -> { with_deleted }, inverse_of: :listings, touch: true
   belongs_to :instance, inverse_of: :listings
   belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :listings
+  belongs_to :user, -> { with_deleted }, foreign_key: :creator_id, inverse_of: :listings
   counter_culture :creator,
     column_name: -> (t) { t.draft.nil? ? 'transactables_count' : nil },
     column_names: { ["transactables.draft IS NULL AND transactables.deleted_at IS NULL"] => 'transactables_count' }
