@@ -685,20 +685,6 @@ namespace :uot do
       view_type: 'view',
       locales: Locale.all
     })
-
-    iv = InstanceView.where(
-      instance_id: @instance.id,
-      path: 'listings/project_details'
-    ).first_or_initialize
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: read_template('listings_project_details.liquid'),
-      format: 'html',
-      handler: 'liquid',
-      partial: false,
-      view_type: 'view',
-      locales: Locale.all
-    })
   end
 
   def create_theme_footer!
