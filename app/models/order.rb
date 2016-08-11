@@ -2,7 +2,8 @@ class Order < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
 
   ORDER_TYPES = %w(Reservation RecurringBooking Purchase DelayedReservation Offer).freeze
-  STATES = %w(unconfirmed confirmed overdue archived not_archived).freeze
+  STATES = %w(unconfirmed confirmed overdued archived not_archived).freeze
+
   DEFAULT_DASHBOARD_TABS = %w(unconfirmed confirmed archived).freeze
 
   include Encryptable
@@ -77,7 +78,7 @@ class Order < ActiveRecord::Base
 
   # scope :archived, -> { active.where('archived_at IS NOT NULL') }
   # scope :not_archived, -> { active.where(archived_at: nil) }
-  scope :not_archived, -> { where("(orders.type != 'RecurringBooking' AND orders.state != 'inactive' AND orders.archived_at IS NULL) OR (orders.type = 'RecurringBooking' AND orders.state NOT IN ('cancelled_by_guest', 'cancelled_by_host', 'rejected', 'expired'))") }
+  scope :not_archived, -> { where("(orders.type != 'RecurringBooking' AND orders.state != 'inactive' AND orders.archived_at IS NULL) OR (orders.type = 'RecurringBooking' AND orders.state NOT IN ('inactive', 'cancelled_by_guest', 'cancelled_by_host', 'rejected', 'expired'))") }
   scope :archived, -> { where("(orders.type != 'RecurringBooking' AND orders.archived_at IS NOT NULL) OR (orders.type = 'RecurringBooking' AND orders.state IN ('rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest'))") }
   scope :reviewable, -> { where.not(archived_at: nil).confirmed }
   scope :cancelled, -> { with_state(:cancelled_by_guest, :cancelled_by_host) }

@@ -40,6 +40,10 @@ class RecurringBooking::AmountCalculatorFactory
       to_pro_rated_money(super)
     end
 
+    def price
+      subtotal_amount
+    end
+
     def host_service_fee
       to_pro_rated_money(super)
     end
