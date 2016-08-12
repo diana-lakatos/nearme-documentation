@@ -1019,7 +1019,7 @@ DesksnearMe::Application.routes.draw do
 
     get "/see_more_activity_feed", to: "activity_feed#activity_feed", as: :see_more_activity_feed
     get "/see_more_following_people", to: "activity_feed#following_people", as: :see_more_following_people
-    get "/see_more_following_projects", to: "activity_feed#following_projects", as: :see_more_following_projects
+    get "/see_more_following_transactables", to: "activity_feed#following_transactables", as: :see_more_following_transactables
     get "/see_more_following_topics", to: "activity_feed#following_topics", as: :see_more_following_topics
     get "/see_more_followers", to: "activity_feed#followers", as: :see_more_followers
     get "/see_more_transactables", to: "activity_feed#transactables", as: :see_more_transactables

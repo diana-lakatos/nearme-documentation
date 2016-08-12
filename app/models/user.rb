@@ -685,14 +685,14 @@ class User < ActiveRecord::Base
     self.companies.first
   end
 
-  def all_transactables
+  def all_company_transactables
     if company = default_company
       company.listings
     end
   end
 
   def first_transactable
-    all_transactables.try(:first)
+    all_company_transactables.try(:first)
   end
 
   def first_listing

@@ -107,11 +107,11 @@ class RegistrationsController < Devise::RegistrationsController
       @feed = ActivityFeedService.new(@user, user_feed: true)
       @events = @feed.events(params)
 
-      @projects_followed = @user.feed_followed_projects.enabled.paginate(pagination_params)
+      @transactables_followed = @user.feed_followed_transactables.active.paginate(pagination_params)
       @topics_followed = @user.feed_followed_topics.paginate(pagination_params)
       @users_followed = @user.feed_followed_users.paginate(pagination_params)
       @followers = @user.feed_followers.paginate(pagination_params)
-      @all_projects = @user.all_projects(current_user == @user).enabled.paginate(pagination_params)
+      @all_transactables = @user.all_transactables.active.paginate(pagination_params)
       @groups = @user.group_collaborated.paginate(pagination_params).decorate
     else
       @company = @user.companies.first
