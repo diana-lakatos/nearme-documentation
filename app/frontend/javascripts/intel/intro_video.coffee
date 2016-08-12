@@ -43,7 +43,7 @@ module.exports = class IntroVideo
       @player = new YT.Player 'intro-player', {
         height: 1280
         width: 720
-        videoId: 'W3d4gNLUJzE'
+        videoId: 'cBamideLh3g'
         events:
           onReady: @onPlayerReady
           onStateChange: @onPlayerStateChange
