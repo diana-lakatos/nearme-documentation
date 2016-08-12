@@ -410,6 +410,10 @@ class TransactableDrop < BaseDrop
     line_item_orders.upcoming.confirmed.uniq
   end
 
+  def last_accepted_order
+    accepted_orders.last
+  end
+
   def first_accepted_order
     line_item_orders.confirmed.first
   end

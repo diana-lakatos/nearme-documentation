@@ -1,0 +1,73 @@
+class Dashboard::Company::PaymentSubscriptionsController <  Dashboard::BaseController
+  before_filter :find_order
+  before_filter :find_payment_subscription, except: [:new, :create]
+  before_filter :get_payment_gateway_data
+  before_filter :build_payment_subscription
+
+  def new
+    @payment_subscription.build_credit_card
+    render layout: false
+  end
+
+
+  def create
+    @payment_subscription.attributes = payment_subscription_attributes
+
+    if @payment_subscription.save && @order.charge_and_confirm!
+      flash[:notice] = I18n.t('flash_messages.dashboard.offer.accepted')
+      render json: { saved: true }.to_json
+    else
+      render json: { saved: false, html: render_to_string(partial: 'form', layout: false) }.to_json
+    end
+  end
+
+  # def edit
+  # end
+
+  # def update
+  #   if @payment_subscription.update_attributes(payment_subscription_params)
+  #     if @unpaid_recurring_booking_periods.count.zero? || @unpaid_recurring_booking_periods.all? { |rbp| rbp.update_payment.paid? }
+  #       flash[:success] = t('flash_messages.payments.updated')
+  #       @recurring_booking.reconfirm! if @recurring_booking.overdued?
+  #     else
+  #       flash[:error] = t('flash_messages.payments.authorization_failed_anyway')
+  #     end
+  #     redirect_to dashboard_order_path(@recurring_booking)
+  #     render_redirect_url_as_json
+  #   else
+  #     render :edit
+  #   end
+  # end
+
+  private
+
+  def build_payment_subscription
+    @payment_subscription = @order.build_payment_subscription({
+      payer: current_user.object,
+      company: current_user.default_company
+    })
+  end
+
+  def get_payment_gateway_data
+    @payment_gateways = if current_instance.skip_company?
+       current_user.payout_payment_gateways
+    else
+      @order.company.payout_payment_gateways
+    end
+  end
+
+
+  def payment_subscription_attributes
+    params.require(:payment_subscription).permit(secured_params.payment)
+  end
+
+  def find_order
+    @order = @company.orders.find(params[:orders_received_id])
+  end
+
+  def find_payment_subscription
+    @payment = @order.payment_subscription.decorate
+  end
+
+end
+

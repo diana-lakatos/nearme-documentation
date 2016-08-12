@@ -368,6 +368,10 @@ module LiquidFilters
     transactable.line_item_orders.where(user_id: user.id).order('created_at ASC')
   end
 
+  def get_enquirer_confirmed_orders(user, transactable)
+    transactable.line_item_orders.where(user_id: user.id).confirmed.order('created_at ASC')
+  end
+
   def get_lister_orders(company, transactable)
     transactable.line_item_orders.where(company: company).order('created_at ASC')
   end

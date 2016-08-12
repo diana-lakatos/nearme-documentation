@@ -1,10 +1,12 @@
 class Offer < Order
 
   #validates :host_line_items, presence: true
+  delegate :action, to: :transactable_pricing
 
   after_update :activate!, if: :inactive?
 
   has_many :host_line_items, as: :line_itemable
+  has_many :recurring_booking_periods, dependent: :destroy, foreign_key: :order_id
 
   def self.workflow_class
     Offer
@@ -77,7 +79,7 @@ class Offer < Order
   end
 
   def charge_and_confirm!
-    if (payment.nil? || (payment.authorize && payment.capture!)) && confirm!
+    if (payment_subscription.present? || (payment.authorize && payment.capture!)) && confirm!
       transactable.start!
       reject_related_offers!
       disable_transactable!

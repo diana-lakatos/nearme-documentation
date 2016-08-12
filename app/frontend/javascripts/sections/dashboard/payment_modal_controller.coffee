@@ -29,6 +29,9 @@ module.exports = class PaymentModalController
         data: @paymentForm.serialize()
         success: (response) =>
           if response.saved
-            window.location.replace("/dashboard/company/orders_received")
+            window.location.replace(@paymentForm.attr('data-redirect-to'))
           else
+            console.log(response.saved)
             @container.html(response.html)
+
+      return false

@@ -6,3 +6,10 @@
         = pricing.input :number_of_units, as: :hidden, input_html: { value: 1}
         = pricing.input :unit, as: :hidden, input_html: { value: 'item'}
         = pricing.input :order_class_name, as: :select, collection: Order::ORDER_TYPES
+.row
+  .input-container.col-xs-6
+    = f.input :service_fee_guest_percent do
+      = f.input_field :service_fee_guest_percent, type: 'tel', class: 'form-control'
+  .input-container.col-xs-6
+    = f.input :service_fee_host_percent do
+      = f.input_field :service_fee_host_percent, type: 'tel', class: 'form-control'
