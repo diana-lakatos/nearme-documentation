@@ -6,7 +6,10 @@
           = image_tag f.object.image_url(:standard), width: LinkImageUploader.dimensions[:standard][:width], height: LinkImageUploader.dimensions[:standard][:height]
       %p
         URL:
-        = link_to f.object.url, f.object.url
+        - if f.object.valid_attribute?(:url)
+          = link_to f.object.url, f.object.url
+        - else
+          = f.object.url
       - if f.object.text
         %p
           Label:

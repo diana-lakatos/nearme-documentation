@@ -23,6 +23,11 @@ class Link < ActiveRecord::Base
     end
   end
 
+  def valid_attribute?(attribute_name)
+    self.valid?
+    self.errors[attribute_name].blank?
+  end
+
   protected
 
   def text_or_image_present
