@@ -2837,6 +2837,7 @@ en:
     collaboration_cancelled: "Collaboration request has been cancelled."
     user_added_collaborator: "%{user_link} added a new collaborator to the %{project_link} project"
     collaboration_accepted: "Collaboration request has been approved."
+    cant_remove_collaborator: "You can't remove user from this project"
 
     name: 'Name'
     actions: 'Actions'

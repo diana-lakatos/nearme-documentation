@@ -17,13 +17,27 @@ class Dashboard::Company::TransactableCollaboratorsController < Dashboard::BaseC
   end
 
   def destroy
-    @transactable_collaborator.destroy
-    if current_user.id == @transactable_collaborator.user_id
-      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorHasQuit, @transactable_collaborator.transactable_id, @transactable_collaborator.user_id)
-    else
-      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorDeclined, @transactable_collaborator.transactable_id, @transactable_collaborator.user_id)
+    respond_to do |format|
+      if @transactable.pending? || !@transactable.line_item_orders.where.not(confirmed_at: nil).where(user: @transactable_collaborator.user).exists?
+        @transactable_collaborator.destroy
+        if current_user.id == @transactable_collaborator.user_id
+          WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorHasQuit, @transactable_collaborator.transactable_id, @transactable_collaborator.user_id)
+        else
+          WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorDeclined, @transactable_collaborator.transactable_id, @transactable_collaborator.user_id)
+        end
+        format.html do
+          flash[:notice] = I18n.t('transactable_collaborator.collaboration_cancelled')
+          redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
+        end
+        format.json { render json: { result: 'OK' } }
+      else
+        format.html do
+          flash[:error] = I18n.t('transactable_collaborator.cant_remove_collaborator')
+          redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
+        end
+        format.json { render json: { result: I18n.t('transactable_collaborator.cant_remove_collaborator') }}
+      end
     end
-    render json: { result: 'OK' }
   end
 
   private

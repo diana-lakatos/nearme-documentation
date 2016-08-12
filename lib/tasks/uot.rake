@@ -589,6 +589,7 @@ namespace :uot do
     create_translation!('flash_messages.dashboard.add_your_company', "Please complete your Project first.")
     create_translation!('buy_sell_market.checkout.labels.the_following_documents', "Please make an offer by submitting a proposal with scope of work and terms for client to review.  Please upload your PDF file here:")
     create_translation!('reservations_review.buttons.request', "SUBMIT OFFER")
+    create_translation!('transactable_collaborator.collaboration_cancelled', "User has been removed from project.")
 
   end
 
