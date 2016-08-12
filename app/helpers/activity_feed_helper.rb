@@ -11,6 +11,7 @@ module ActivityFeedHelper
 
   def commented_own_thread?(comment)
     if comment.commentable.is_a?(ActivityFeedEvent)
+      event = comment.commentable
       creator_id = event.event_source.try(:creator_id) || event.followed.try(:creator_id)
       creator_id == comment.creator_id
     else
