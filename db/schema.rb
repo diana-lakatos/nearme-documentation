@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160812100637) do
+ActiveRecord::Schema.define(version: 20160812192936) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -421,9 +421,9 @@ ActiveRecord::Schema.define(version: 20160812100637) do
     t.integer  "charge_type_target_id"
     t.string   "charge_type_target_type"
     t.integer  "percent"
-    t.datetime "deleted_at"
     t.string   "type"
     t.string   "charge_event"
+    t.string   "deleted_at"
   end
 
   add_index "charge_types", ["charge_type_target_id", "charge_type_target_type"], name: "act_target", using: :btree
@@ -716,16 +716,17 @@ ActiveRecord::Schema.define(version: 20160812100637) do
 
   create_table "custom_validators", force: :cascade do |t|
     t.integer  "instance_id"
-    t.string   "validatable_type", limit: 255
+    t.string   "validatable_type",          limit: 255
     t.integer  "validatable_id"
-    t.string   "field_name",       limit: 255
+    t.string   "field_name",                limit: 255
     t.text     "validation_rules"
     t.text     "valid_values"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "regex_validation",             default: false, null: false
+    t.boolean  "regex_validation",                      default: false, null: false
     t.string   "regex_expression"
+    t.boolean  "validation_only_on_update",             default: false
   end
 
   add_index "custom_validators", ["instance_id", "validatable_type", "validatable_id"], name: "index_custom_validators_on_i_id_and_v_type_and_v_id", using: :btree
@@ -1346,9 +1347,9 @@ ActiveRecord::Schema.define(version: 20160812100637) do
     t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
+    t.boolean  "enable_geo_localization",                                                           default: true
     t.string   "orders_received_tabs"
     t.string   "my_orders_tabs"
-    t.boolean  "enable_geo_localization",                                                           default: true
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -3013,6 +3014,7 @@ ActiveRecord::Schema.define(version: 20160812100637) do
     t.boolean  "hide_additional_charges_on_listing_page",                                        default: false,      null: false
     t.hstore   "custom_settings",                                                                default: {},         null: false
     t.boolean  "auto_accept_invitation_as_collaborator",                                         default: false
+    t.boolean  "require_transactable_during_onboarding",                                         default: true
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -3229,6 +3231,7 @@ ActiveRecord::Schema.define(version: 20160812100637) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "enabled",                  default: false
+    t.datetime "onboarded_at"
   end
 
   add_index "user_profiles", ["instance_id", "user_id", "profile_type"], name: "index_user_profiles_on_instance_id_and_user_id_and_profile_type", unique: true, using: :btree
@@ -3536,6 +3539,7 @@ ActiveRecord::Schema.define(version: 20160812100637) do
     t.text     "payload_data",                          default: "{}"
     t.text     "headers",                               default: "{}"
     t.text     "prevent_trigger_condition",             default: "",   null: false
+    t.string   "bcc_type"
   end
 
   add_index "workflow_alerts", ["instance_id", "workflow_step_id"], name: "index_workflow_alerts_on_instance_id_and_workflow_step_id", using: :btree

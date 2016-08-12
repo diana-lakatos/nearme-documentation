@@ -208,7 +208,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def in_progress_scope
-    transactables_scope.with_state(:in_progress)
+    transactables_scope.with_state(:in_progress).joins(:line_item_orders).merge(Order.upcoming.confirmed.for_lister_or_enquirer(@company, current_user))
   end
 
   def pending_scope
@@ -216,7 +216,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def archived_scope
-    transactables_scope.with_state(:completed)
+    transactables_scope.without_state(:pending).where.not(id: in_progress_scope.pluck(:id))
   end
 
   def possible_sorts
