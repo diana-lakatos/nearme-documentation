@@ -263,7 +263,7 @@ class Transactable < ActiveRecord::Base
 
   after_save :trigger_workflow_alert_for_added_collaborators, unless: ->(record) { record.draft? }
 
-  delegate :latitude, :longitude, :postcode, :city, :suburb, :state, :street, :country, to: :location_address, allow_nil: true
+  delegate :latitude, :longitude, :postcode, :city, :suburb, :street, :country, to: :location_address, allow_nil: true
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
@@ -287,6 +287,11 @@ class Transactable < ActiveRecord::Base
 
   monetize :insurance_value_cents, with_model_currency: :currency, allow_nil: true
   monetize :deposit_amount_cents, with_model_currency: :currency, allow_nil: true
+
+  state_machine :state, initial: :pending do
+    event :start                 do transition pending: :in_progress; end
+    event :finish                 do transition in_progress: :completed; end
+  end
 
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :finders, :scoped], scope: :instance

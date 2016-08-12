@@ -433,6 +433,14 @@ class UserDrop < BaseDrop
     @source.companies.first.try(:merchant_accounts).try(:any?) { |ma| ma.verified? }
   end
 
+  def has_pending_transactables?
+    pending_transactables.any?
+  end
+
+  def pending_transactables
+    @source.created_listings.with_state(:pending)
+  end
+
   private
     def social_connections
       @social_connections_cache ||= @source.social_connections

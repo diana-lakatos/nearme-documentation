@@ -74,6 +74,7 @@ class Offer < Order
 
   def charge_and_confirm!
     if (payment.nil? || (payment.authorize && payment.capture!)) && confirm!
+      transactable.start!
       reject_related_offers!
       disable_transactable!
 
