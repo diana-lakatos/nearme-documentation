@@ -11,6 +11,7 @@ var
             root: __dirname,
             stylesheets: path.join(__dirname, 'app', 'frontend', 'stylesheets'),
             bower_components: path.join(__dirname, 'vendor', 'assets', 'bower_components'),
+            node_modules: path.join(__dirname, 'node_modules'),
             javascripts: path.join(__dirname, 'app', 'frontend', 'javascripts'),
             fonts: path.join(__dirname, 'app', 'frontend', 'fonts'),
             images: path.join(__dirname, 'app', 'frontend', 'images'),

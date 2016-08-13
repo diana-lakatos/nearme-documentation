@@ -1,0 +1,130 @@
+{% for transactable in transactables %}
+  {% assign collaborator = current_user  | find_collaborator: transactable %}
+  {% assign accepted_order = transactable.first_accepted_order %}
+  <article class="listing-b">
+    <h2>
+      {{ transactable.name }}
+      {% if current_status == 'archived' %}
+      <span class="label label-success">Completed</span>
+      {% endif %}
+    </h2>
+
+    <div class="row">
+      <div class="col-md-9">
+        <dl class="properties">
+          <dt>Workplace</dt>
+          <dd>{{ transactable.properties.workplace_type }}</dd>
+
+          {% if transactable.properties.workplace_type == 'On Site' %}
+            <dt>Office</dt>
+            <dd>{{ transactable.properties.office_location }}</dd>
+          {% endif %}
+
+          <dt>Approx. Budget</dt>
+          <dd>{{ transactable.properties.budget | pricify }}</dd>
+          <dt>Deadline</dt>
+          <dd>{{ transactable.properties.deadline | to_date | l: 'short' }}</dd>
+
+          <dt>Approx. Time to Complete</dt>
+          <dd>{{ transactable.properties.estimation }}</dd>
+        </dl>
+
+        <h4>Description</h4>
+        <p>{{ transactable.description }}</p>
+      </div>
+      <div class="col-md-3">
+        {% include 'dashboard/company/transactables/client_actions.html' %}
+      </div>
+    </div>
+
+    {% if current_status == "pending" %}
+      {% assign transactable_collaborators = transactable.approved_transactable_collaborators %}
+      {% if transactable_collaborators != empty %}
+        <h3>SMEs Invited ({{ transactable_collaborators.size }})</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>SMEs:</th>
+              <th>Invite Date:</th>
+              <th>Invite Action:</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for transactable_collaborator in transactable_collaborators %}
+              <tr>
+                <td>{{ transactable_collaborator.user.name }}</td>
+                <td>{{ transactable_collaborator.approved_by_owner_at | to_date | l: 'short' }}</td>
+                <td>
+                  <a class="btn btn-info" data-modal="true" href="{{ transactable_collaborator.user.user_message_path }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+
+                  {{ transactable_collaborator.user.click_to_call_button }}
+
+                  <a class="btn btn-danger" href="{{ transactable_collaborator.destroy_path }}" data-method="delete" data-confirm="Are you sure?">Remove invite</a>
+
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+
+      {% assign orders = transactable.orders %}
+      {% if orders != empty %}
+        <h3>Offers ({{ orders.size }})</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>SMEs:</th>
+              <th>Offer Date:</th>
+              <th>Offer Status:</th>
+              <th>Offer Action:</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in orders %}
+              <tr>
+                <td>{{ order.user.name }}</td>
+                <td>{{ order.created_at | to_date | l: 'short' }}</td>
+                <td>{{ 'reservations.states.' | append: order.state | t }}</td>
+                <td>
+                  {% if order.unconfirmed? %}
+                    <a href="{{ order.payment_documents[0].file_url }}" target="_blank" class="btn btn-info">Review</a>
+                    <a href="{{ order.rejection_form_path }}" data-modal="true" class="btn btn-danger">Reject</a>
+                    <a href="{{ order.confirm_path }}" data-method="post" data-confirm="Are you sure?" class="btn btn-success">Accept</a>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+
+
+    {% elsif current_status == "in progress" or current_status == "archived" %}
+      <h3>Offer</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Offer Made</th>
+            <th>Offer Status</th>
+            <th>Date</th>
+            <th>View Offer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ accepted_order.created_at | to_date | l: 'short' }}</td>
+            <td>Accepted</td>
+            <td>{{ accepted_order.confirmed_at | to_date | l: 'short' }}</td>
+            <td><a href="{{ accepted_order.payment_documents[0].file_url }}" target="_blank">{{ accepted_order.payment_documents[0].file_name }}</a></td>
+          </tr>
+        </tbody>
+      </table>
+
+      {% if current_status != 'in progress' %}
+        <p>Total Paid {{ order.total_amount | pricify: order.currency }}</p>
+      {% endif %}
+    {% endif %}
+
+  </article>
+{% endfor %}

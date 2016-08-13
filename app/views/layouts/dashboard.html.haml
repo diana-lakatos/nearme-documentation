@@ -51,7 +51,10 @@
 
     = yield(:head_bottom)
 
-  %body{class: (navigation_visible? ? 'navigation-visible' : nil ) }
+  - body_class = 'layout-dashboard'
+  - body_class += ' navigation-visible' if navigation_visible?
+  - body_class += ' no-sidebar' if render_without_left_menu?
+  %body{class: body_class }
 
     = yield(:body_top)
 
@@ -61,10 +64,11 @@
       = render 'dashboard/layout/left_navigation'
 
     %header.page-header
-      - unless render_without_left_menu?
-        %button.nav-toggler
-          = t :toggle_navigation, scope: [:navigation]
-      = yield :page_header
+      .page-header-wrapper
+        - unless render_without_left_menu?
+          %button.nav-toggler
+            = t :toggle_navigation, scope: [:navigation]
+        = yield :page_header
 
     %main{:role => "main"}
       .main-wrapper

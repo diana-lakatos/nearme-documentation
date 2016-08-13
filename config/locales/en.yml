@@ -1247,6 +1247,9 @@ en:
     vendor_approval:
       intro: 'Please provide the following information to become an approved seller for this service. Your listing will be published when the Marketplace Owner approves your status.'
 
+  navigation:
+    toggle_navigation: Toggle navigation
+
   support:
     new:
       subscription: '%{period} based subscription from %{from}'

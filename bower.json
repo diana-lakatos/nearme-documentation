@@ -17,7 +17,6 @@
     "bootstrap-sass": "~3.3.6",
     "swipebox": "~1.4.1",
     "underscore": "~1.8.3",
-    "selectize": "~0.12.1",
     "x-editable": "~1.5.1",
     "blueimp-file-upload": "jquery-file-upload#~9.11.2",
     "raty": "~2.7.0",
