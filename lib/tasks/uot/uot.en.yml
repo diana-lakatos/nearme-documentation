@@ -4,6 +4,7 @@ en:
     seller_sign_up_to: Create a Client Account
     link_to_buyer: Become an Expert here
     link_to_seller: Become a Client here
+    log_in_to: Log in
 
   ui:
     header:
@@ -95,6 +96,7 @@ en:
     manage_bookable: My Projects
     bookings_received: My Offers
     my_bookings: My Offers
+    sign_up: Join Our Community
 
   reservations_review:
     heading: Bid on Project

@@ -20,6 +20,14 @@
       </div>
 
       <nav class="nav-main">
+        <ul class="nav main-menu">
+          <li><a class="nav-link" href="/">Home</a></li>
+          <li><a class="nav-link" href="/about">About</a></li>
+          <li><a class="nav-link" href="/how-it-works">How it works</a></li>
+          {% if current_user == blank %}
+          <li><a class="nav-link" href="/join-our-community">Join our Community</a></li>
+          {% endif %}
+        </ul>
         {{ navigation_links | make_html_safe }}
       </nav>
 
