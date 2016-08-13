@@ -52,6 +52,7 @@
   "dependencies": {
     "brace": "^0.7.0",
     "jquery.cookie": "^1.4.1",
+    "selectize": "^0.12.2",
     "vinyl-paths": "^2.1.0"
   }
 }

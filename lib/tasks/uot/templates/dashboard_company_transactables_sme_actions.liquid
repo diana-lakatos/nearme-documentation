@@ -1,0 +1,17 @@
+{% if transactable.user_messages.size == 0 %}
+  <a class="btn btn-info" data-modal="true" href="{{ 'new_reservation_user_message_path' | generate_url: transactable.id, skip: true }}">Send Message</a>
+{% else %}
+  <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: transactable.user_messages.first.id }}">Send Message</a>
+{% endif %}
+
+{{ transactable.creator.click_to_call_button }}
+
+{% if can_make_offer == true %}
+  <a class="btn btn-info" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id }}">Make an Offer</a>
+{% elsif current_status == 'in progress' %}
+  In progress
+{% endif %}
+
+{% unless current_user.has_verified_merchant_account == true %}
+  <p class="merchant-account-reminder">Before making any offer, you need to set up your <a href="{{ 'edit_dashboard_company_payouts_path' | generate_url: company.id }}">merchant account</a>.</p>
+{% endunless %}

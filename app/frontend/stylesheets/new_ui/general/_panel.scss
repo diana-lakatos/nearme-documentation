@@ -161,7 +161,8 @@
     }
 }
 
-.panel-nav + .panel {
+.panel-nav + .panel,
+.panel-nav + form > .panel:first-of-type {
     border: 1px solid $panel-nav-border;
     border-top: none;
     border-top-left-radius: 0;

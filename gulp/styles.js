@@ -14,7 +14,7 @@ module.exports = function(gulp, browserSync, config) {
     var sassConfig = {
         outputStyle: 'expanded',
         precision: 10,
-        includePaths: ['.', config.paths.bower_components]
+        includePaths: ['.', config.paths.bower_components, config.paths.node_modules]
     };
 
     function processStyles(files) {

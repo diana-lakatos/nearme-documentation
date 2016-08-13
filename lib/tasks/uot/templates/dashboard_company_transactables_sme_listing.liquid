@@ -1,0 +1,89 @@
+{% for transactable in transactables %}
+  {% assign collaborator = current_user  | find_collaborator: transactable %}
+  <article class="listing">
+    <h2>{{ transactable.name }}</h2>
+    <a href="{{ transactable.show_path }}">Project details</a>
+    <div class="row">
+      <div class="col-md-6">
+        <p>Contact: {{ transactable.properties.project_contact }}</p>
+        <p>Company: {{ transactable.properties.company_name }}</p>
+        <p>Invite sent: {{ collaborator.approved_by_owner_at | to_date | l: 'short' }}</p>
+        <p>Workplace: {{ transactable.properties.workplace_type }}</p>
+        {% if transactable.properties.workplace_type == 'On Site' %}
+          <p>Office: {{ transactable.properties.office_location }}</p>
+        {% endif %}
+      </div>
+      <div class="col-md-6">
+        <p>Approx. Budget: {{ transactable.properties.budget | pricify }}</p>
+        <p>Deadline: {{ transactable.properties.deadline | to_date | l: 'short' }}</p>
+        <p>Approx. Time to Complete: {{ transactable.properties.estimation }}</p>
+      </div>
+    </div>
+    <h4>Project Description</h4>
+    <p>{{ transactable.description }}</p>
+
+    {% assign orders = current_user | get_enquirer_orders: transactable %}
+    {% assign can_make_offer = false %}
+    {% if current_status == 'pending' %}
+      {% if orders == empty %}
+        {% assign can_make_offer = true %}
+      {% else %}
+        {% assign can_make_offer = true %}
+        {% for order in orders %}
+          {% if order.state == 'unconfirmed' %}
+            {% assign can_make_offer = false %}
+          {% endif %}
+        {% endfor %}
+      {% endif  %}
+    {% endif %}
+
+    {% include 'dashboard/company/transactables/sme_actions.html' %}
+
+    <hr>
+
+    {% if orders != empty %}
+      {% assign order = orders.last %}
+      <h3>Offer</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Offer Made:</th>
+            <th>Offer Status:</th>
+            {% if order.unconfirmed? %}
+              <th>Offer Action:</th>
+            {% else %}
+              <th>Date</th>
+            {% endif %}
+            {% if order.confirmed? %}
+              <th>View offer</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ order.created_at | to_date | l: 'short' }}</td>
+            <td>{{ 'reservations.states.' | append: order.state | t }}</td>
+            {% if order.unconfirmed? %}
+              <td>
+                {% if order.unconfirmed? %}
+                  <a href="{{ 'edit_dashboard_order_path' | generate_url: order.id }}">{{ 'general.edit' | t }}</a>
+                {% endif %}
+                {% if order.unconfirmed?  %}
+                  <a href="{{ 'enquirer_cancel_dashboard_order_path' | generate_url: order.id }}" data-method="post" data-confirm="Are you sure?">{{ 'general.cancel' | t }}</a>
+                {% endif %}
+              </td>
+            {% elsif order.confirmed? %}
+              <td>{{ order.confirmed_at | l: 'long' }}</td>
+            {% else %}
+              <td>{{ order.archived_at | l: 'long' }}</td>
+            {% endif %}
+            {% if order.confirmed? %}
+              <td><a href="{{ order.payment_documents[0].file_url }}" target="_blank">{{  order.payment_documents[0].file_name }}</a></td>
+            {% endif %}
+          </tr>
+        </tbody>
+      </table>
+    {% endif %}
+
+  </article>
+{% endfor %}
