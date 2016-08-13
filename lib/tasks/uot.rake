@@ -358,7 +358,9 @@ namespace :uot do
       slug = name.parameterize
       page = theme.pages.where(slug: slug).first_or_initialize
       page.path = name
-      page.content = %Q{}
+      page.content = %Q{
+        <div class="wrapper-a"></div>
+      }
       page.save
     end
 
@@ -407,6 +409,7 @@ namespace :uot do
     create_user_profile!
     create_my_cases!
     create_wish_list_button!
+    create_registration_screens!
   end
 
   def create_translations
@@ -451,6 +454,7 @@ namespace :uot do
 
     uot_locales_hash.each_pair do |key, value|
       create_translation!(key, value)
+      puts "\t\tTranslation created: key: #{key}, value: #{value}"
     end
   end
 
@@ -548,6 +552,14 @@ namespace :uot do
     load_template('checkout/sidebar')
   end
 
+  def create_registration_screens!
+    create_page!('Join Our Community')
+    load_template('registrations/buyer_header')
+    load_template('registrations/buyer_footer')
+    load_template('registrations/seller_header')
+    load_template('registrations/seller_footer')
+  end
+
   def create_custom_attribute(object, hash)
       hash = hash.with_indifferent_access
       attr = object.custom_attributes.where({
@@ -558,6 +570,14 @@ namespace :uot do
   end
 
   private
+
+  def create_page!(name)
+    slug = name.parameterize
+    page = @instance.theme.pages.where(slug: slug).first_or_initialize
+    page.path = name
+    page.content = get_page_content("#{slug}.html")
+    page.save
+  end
 
   def load_template(path, partial = true)
     iv = InstanceView.where(
@@ -577,6 +597,10 @@ namespace :uot do
 
   def read_template(name)
     File.read(File.join(Rails.root, 'lib', 'tasks', 'uot', 'templates', name))
+  end
+
+  def get_page_content(filename)
+    File.read(File.join(Rails.root, 'lib', 'tasks', 'uot', 'pages', filename))
   end
 
 end
