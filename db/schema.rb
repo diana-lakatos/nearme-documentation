@@ -178,7 +178,7 @@ ActiveRecord::Schema.define(version: 20160812192936) do
   create_table "approval_requests", force: :cascade do |t|
     t.string   "state",                         limit: 255
     t.string   "message",                       limit: 255
-    t.string   "notes",                         limit: 255
+    t.text     "notes"
     t.integer  "instance_id"
     t.integer  "approval_request_template_id"
     t.integer  "owner_id"

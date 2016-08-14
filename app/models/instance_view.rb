@@ -428,6 +428,9 @@ class InstanceView < ActiveRecord::Base
       is_partial: true,
       order: 'OrderDrop'
     },
+    'home/search/datepickers' => {
+      is_partial: true,
+    }
 
   }.sort.to_h.freeze
 
