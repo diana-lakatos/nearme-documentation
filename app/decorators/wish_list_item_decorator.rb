@@ -24,7 +24,7 @@ class WishListItemDecorator < Draper::Decorator
   end
 
   def company_name
-    object.wishlistable.company.try(:name)
+    object.wishlistable.companies.first.try(:name)
   end
 
   def polymorphic_wishlistable_path
