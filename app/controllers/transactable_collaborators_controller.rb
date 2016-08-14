@@ -6,9 +6,8 @@ class TransactableCollaboratorsController < ApplicationController
 
   def create
     @transactable = Transactable.seek_collaborators.find(params[:transactable_id] || params[:listing_id])
-    transactable_collaborator = @transactable.transactable_collaborators.create(user: current_user, approved_by_user_at: Time.now)
+    @transactable.transactable_collaborators.create(user: current_user, approved_by_user_at: Time.now)
     @collaborators_count = @transactable.reload.transactable_collaborators.approved.count
-    WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorPendingApproval, transactable_collaborator.id)
     respond_to do |format|
       format.js { render :collaborators_button }
     end

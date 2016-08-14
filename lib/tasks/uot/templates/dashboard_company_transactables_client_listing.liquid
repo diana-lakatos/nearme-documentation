@@ -1,7 +1,7 @@
 {% for transactable in transactables %}
   {% assign collaborator = current_user  | find_collaborator: transactable %}
   {% assign accepted_order = transactable.first_accepted_order %}
-  <article class="listing-b">
+  <article class="listing-b" id="transactable_{{transactable.id}}">
     <h2>
       {{ transactable.name }}
       {% if transactable.state == 'completed' %}

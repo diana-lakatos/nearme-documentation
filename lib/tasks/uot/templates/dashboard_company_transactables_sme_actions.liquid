@@ -1,8 +1,4 @@
-{% if transactable.user_messages.size == 0 %}
-  <a class="btn btn-info" data-modal="true" href="{{ 'new_reservation_user_message_path' | generate_url: transactable.id, skip: true }}">Send Message</a>
-{% else %}
-  <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: transactable.user_messages.first.id }}">Send Message</a>
-{% endif %}
+<a class="btn btn-info" data-modal="true" href="{{ transactable.creator.user_message_path }}">Send Message</a>
 
 {{ transactable.creator.click_to_call_button }}
 

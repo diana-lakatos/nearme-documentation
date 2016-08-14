@@ -62,7 +62,7 @@ class TransactableDrop < BaseDrop
     :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, :attachments, :confirm_reservations,
     :to_key, :model_name, :deposit_amount_cents, :customizations, :to_param, :hours_for_guest_to_confirm_payment, :availability_exceptions,
     :action_free_booking?, :average_rating, :time_based_booking?, :transactable_collaborators, :collaborating_users, :approved_transactable_collaborators,
-    :user_messages, :line_item_orders, :state, to: :source
+    :user_messages, :line_item_orders, :state, :created_at, to: :source
 
   # action_price_per_unit
   #   returns true if there is a single unit available of the transactable item for a given time period
@@ -183,6 +183,14 @@ class TransactableDrop < BaseDrop
   # url to the dashboard area for managing received bookings
   def manage_guests_dashboard_url
     routes.dashboard_company_host_reservations_path(token_key => @source.administrator.try(:temporary_token))
+  end
+
+  def index_url
+    routes.dashboard_company_transactable_type_transactables_path(@source.transactable_type, anchor: "transactable_#{@source.id}", token_key => @source.administrator.try(:temporary_token))
+  end
+
+  def in_progress_index_url
+    routes.dashboard_company_transactable_type_transactables_path(@source.transactable_type, state: 'in progress', anchor: "transactable_#{@source.id}", token_key => @source.administrator.try(:temporary_token))
   end
 
   # url to the dashboard area for managing received bookings, with tracking

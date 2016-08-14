@@ -23,10 +23,12 @@ class Dashboard::OrdersController < Dashboard::BaseController
     else
       flash[:error] = t('flash_messages.reservations.reservation_not_cancellable')
     end
+    @order = @order.decorate
     redirect_to request.referer.presence || dashboard_orders_path
   end
 
   def show
+    @order = @order.decorate
   end
 
   def new
@@ -56,7 +58,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
       event_tracker.updated_profile_information(@order.host)
       event_tracker.requested_a_booking(@order)
 
-      card_message = @order.payment.credit_card_payment? ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
+      card_message = @order.payment.try(:credit_card_payment?) ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
       flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
       redirect_to dashboard_company_transactable_type_transactables_path(@order.transactable.transactable_type)
     else
@@ -120,7 +122,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
   end
 
   def find_order
-    @order = current_user.orders.find(params[:id]).decorate
+    @order = current_user.orders.find(params[:id])
   end
 
   def reviews_service

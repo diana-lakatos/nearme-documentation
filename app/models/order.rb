@@ -59,6 +59,7 @@ class Order < ActiveRecord::Base
     after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:mark_as_archived!, :set_cancelled_at, :schedule_refund]
     after_transition unconfirmed: [:cancelled_by_host], do: [:mark_as_archived!]
     after_transition unconfirmed: [:cancelled_by_guest, :expired, :rejected], do: [:mark_as_archived!, :schedule_void]
+    after_transition any => [:rejected] { |o| WorkflowStepJob.perform("WorkflowStep::#{o.class.workflow_class}Workflow::Rejected".constantize, o.id) }
 
     event :activate                 do transition inactive: :unconfirmed; end
     event :confirm                  do transition unconfirmed: :confirmed; end
@@ -119,7 +120,7 @@ class Order < ActiveRecord::Base
   # You can customize order tabs (states) displauyed in dashboard
   # via orders_received_tabs and my_orders_tabs Instance attributes
 
-  def workflow_class
+  def self.workflow_class
     raise NotImplementedError
   end
 
@@ -493,6 +494,11 @@ class Order < ActiveRecord::Base
     super || transactable_line_items.first.transactable_pricing
   end
 
+  def reject(reason = nil)
+    self.rejection_reason = reason if reason
+    fire_state_event :reject
+  end
+
   private
 
   def skip_validation_for_custom_attributes
@@ -504,6 +510,10 @@ class Order < ActiveRecord::Base
     if inactive? && (skip_payment_authorization? || payment && payment.authorized?)
       activate!
     end
+  end
+
+  def send_rejected_workflow_alerts!
+
   end
 
 end

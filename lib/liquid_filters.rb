@@ -5,6 +5,7 @@ module LiquidFilters
   include WillPaginate::ViewHelpers
   include ActionView::Helpers::UrlHelper
   include ActionView::RecordIdentifier
+  include ActionView::Helpers::DateHelper
 
   def shorten_url(url)
     if DesksnearMe::Application.config.googl_api_key.present?

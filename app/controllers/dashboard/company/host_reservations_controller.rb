@@ -45,7 +45,6 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
 
   def reject
     if @reservation.reject(rejection_reason)
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::Rejected, @reservation.id)
       event_tracker.rejected_a_booking(@reservation)
       track_reservation_update_profile_informations
       flash[:deleted] = t('flash_messages.manage.reservations.reservation_rejected')

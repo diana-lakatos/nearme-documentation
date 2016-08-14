@@ -7,6 +7,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   end
 
   def show
+    @order = @order.decorate
   end
 
   def edit
@@ -93,7 +94,6 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
 
   def reject
     if @order.reject(rejection_reason)
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::Rejected, @order.id)
       event_tracker.rejected_a_booking(@order)
       track_order_update_profile_informations
       flash[:deleted] = t('flash_messages.manage.reservations.reservation_rejected')
@@ -125,7 +125,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   end
 
   def find_order
-    @order = @company.orders.find(params[:id]).try(:decorate)
+    @order = @company.orders.find(params[:id])
   end
 
   def order_params

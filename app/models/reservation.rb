@@ -51,7 +51,7 @@ class Reservation < Order
     self.save
   end
 
-  def workflow_class
+  def self.workflow_class
     Reservation
   end
 
@@ -222,11 +222,6 @@ class Reservation < Order
 
   def owner_including_deleted
     User.unscoped { owner }
-  end
-
-  def reject(reason = nil)
-    self.rejection_reason = reason if reason
-    fire_state_event :reject
   end
 
   def add_period(date, start_minute = nil, end_minute = nil)

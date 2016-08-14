@@ -16,8 +16,9 @@ class OrderDrop < BaseDrop
     :shipping_profile, :adjustment, :can_host_cancel?, :can_confirm?, :can_reject?,
     :paid?, :unconfirmed?, :confirmed?, :manual_payment?, :can_complete_checkout?,
     :can_approve_or_decline_checkout?, :has_to_update_credit_card?, :user_messages,
-    :archived_at, :state, :cancelable?, :archived?, :penalty_charge_apply?, :cancellation_policy_hours_for_cancellation,
-    :cancellation_policy_penalty_hours, :created_at, :payment, :total_units_text, :enquirer_cancelable, :enquirer_editable,
+    :archived_at, :state, :cancelable?, :archived?, :penalty_charge_apply?, :rejection_reason,
+    :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_hours,
+    :created_at, :payment, :total_units_text, :enquirer_cancelable, :enquirer_editable,
     :transactable, :cancelled_at, :confirmed_at, to: :order
 
   def initialize(order)

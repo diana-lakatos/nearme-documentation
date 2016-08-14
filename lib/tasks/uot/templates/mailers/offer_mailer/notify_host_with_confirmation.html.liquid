@@ -1,3 +1,4 @@
-<p>Congratulations, {{ user.first_name }}!</p>
+<p>Congratulations, {{ lister.first_name }}!</p>
 
-<p>You have received an offer from {{ enquirer.name }} for {{ transactable.name }}. You can view offers under the "My Projects" > "Projects Pending" in your user dashboard.</p>
+<p>You have received an offer from {{ enquirer.name }} for {{ listing.name }}. You can view offers under the <a href="{{ platform_context.host | append: listing.index_url }}">My Projects > Projects Pending</a> in your user dashboard.</p>
+

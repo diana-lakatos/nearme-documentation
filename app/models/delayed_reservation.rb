@@ -11,7 +11,7 @@ class DelayedReservation < Reservation
   end
   alias :skip_payment_authorization? :skip_payment_authorization
 
-  def workflow_class
+  def self.workflow_class
     Reservation
   end
 

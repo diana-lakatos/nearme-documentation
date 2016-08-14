@@ -31,31 +31,31 @@ class Utils::DefaultAlertsCreator::OfferCreator < Utils::DefaultAlertsCreator::W
   end
 
   def notify_guest_of_expiration_email!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::Expired, name: 'notify_guest_of_expiration', path: 'offer_mailer/notify_guest_of_expiration', subject: "[{{platform_context.name}}] Your booking for '{{offer.transactable.name}}' at {{offer.location.street}} has expired", alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::Expired, name: 'notify_guest_of_expiration', path: 'offer_mailer/notify_guest_of_expiration', subject: "[{{platform_context.name}}] Your offer for '{{transactable.name}}' at {{offer.location.street}} has expired", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def notify_host_of_expiration_email!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::Expired, name: 'notify_host_of_expiration_email', path: 'offer_mailer/notify_host_of_expiration', subject: "[{{platform_context.name}}] A booking at one of your listings has expired", alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::Expired, name: 'notify_host_of_expiration_email', path: 'offer_mailer/notify_host_of_expiration', subject: "[{{platform_context.name}}] An offer at one of your projects has expired", alert_type: 'email', recipient_type: 'lister'})
   end
 
   def notify_guest_of_cancellation_by_guest_email!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::EnquirerCancelled, name: 'Notify guest of guest cancellation', path: 'offer_mailer/notify_guest_of_cancellation_by_guest', subject: "[{{platform_context.name}}] You just cancelled a booking", alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::EnquirerCancelled, name: 'Notify guest of guest cancellation', path: 'offer_mailer/notify_guest_of_cancellation_by_guest', subject: "[{{platform_context.name}}] You just cancelled your offer", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def notify_host_of_cancellation_by_guest_email!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::EnquirerCancelled, name: 'Notify host of guest cancellation', path: 'offer_mailer/notify_host_of_cancellation_by_guest', subject: "[{{platform_context.name}}] {{offer.owner.first_name }} cancelled a booking for '{{offer.transactable.name}}' at {{offer.location.street}}", alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::EnquirerCancelled, name: 'Notify host of guest cancellation', path: 'offer_mailer/notify_host_of_cancellation_by_guest', subject: "[{{platform_context.name}}] {{enquirer.first_name }} cancelled their offer for {{ transactable.name }}", alert_type: 'email', recipient_type: 'lister'})
   end
 
   def notify_guest_of_cancellation_by_host_email!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::ListerCancelled, name: 'Notify guest of host cancellation', path: 'offer_mailer/notify_guest_of_cancellation_by_host', subject: "[{{platform_context.name}}] Your booking for '{{offer.transactable.name}}' at {{offer.location.street}} was cancelled by the host", alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::ListerCancelled, name: 'Notify guest of host cancellation', path: 'offer_mailer/notify_guest_of_cancellation_by_host', subject: "[{{platform_context.name}}] Your offer has been cancelled", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def notify_host_of_cancellation_by_host_email!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::ListerCancelled, name: 'Notify host of host cancellation', path: 'offer_mailer/notify_host_of_cancellation_by_host', subject: "[{{platform_context.name}}] You just declined a booking", alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::ListerCancelled, name: 'Notify host of host cancellation', path: 'offer_mailer/notify_host_of_cancellation_by_host', subject: "[{{platform_context.name}}] You just declined an offer", alert_type: 'email', recipient_type: 'lister'})
   end
 
   def notify_host_offer_created_and_pending_confirmation_email!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::CreatedWithoutAutoConfirmation, name: 'Ask host for confirmation email', path: 'offer_mailer/notify_host_with_confirmation', subject: "[{{platform_context.name}}] {{offer.owner.first_name}} just booked your {{listing.transactable_type.bookable_noun}}!", alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::CreatedWithoutAutoConfirmation, name: 'Ask host for confirmation email', path: 'offer_mailer/notify_host_with_confirmation', subject: "[{{platform_context.name}}] {{enquirer.first_name}} has just submitted offer to your {{transactable.transactable_type.bookable_noun}}!", alert_type: 'email', recipient_type: 'lister'})
   end
 
   def notify_host_offer_created_and_pending_confirmation_sms!
@@ -63,11 +63,11 @@ class Utils::DefaultAlertsCreator::OfferCreator < Utils::DefaultAlertsCreator::W
   end
 
   def notify_guest_offer_created_and_pending_confirmation_email!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::CreatedWithoutAutoConfirmation, name: 'Inform guest about pending confirmation', path: 'offer_mailer/notify_guest_with_confirmation', subject: "[{{platform_context.name}}] {{offer.owner.first_name}}, your booking is pending confirmation", alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::CreatedWithoutAutoConfirmation, name: 'Inform guest about pending confirmation', path: 'offer_mailer/notify_guest_with_confirmation', subject: "[{{platform_context.name}}] {{enquirer.first_name}}, your offer is pending confirmation", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def notify_guest_offer_confirmed_email!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::ManuallyConfirmed, name: 'Notify guest of confirmation', path: 'offer_mailer/notify_guest_of_confirmation', alert_type: 'email', subject: "[{{platform_context.name}}] {{offer.owner.first_name}}, your booking has been confirmed", recipient_type: 'enquirer', custom_options: {'booking_calendar_attachment_name' => 'booking.ics'}})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::ManuallyConfirmed, name: 'Notify guest of confirmation', path: 'offer_mailer/notify_guest_of_confirmation', alert_type: 'email', subject: "[{{platform_context.name}}] {{enquirer.first_name}}, your offer has been confirmed", recipient_type: 'enquirer'})
   end
 
   def notify_host_offer_confirmed_email!
@@ -85,24 +85,25 @@ class Utils::DefaultAlertsCreator::OfferCreator < Utils::DefaultAlertsCreator::W
   def notify_guest_offer_reject_sms!
     create_alert!({associated_class: WorkflowStep::OfferWorkflow::Rejected, name: 'notify_guest_of_rejection_sms', path: 'offer_sms_notifier/notify_guest_with_state_change', alert_type: 'sms', recipient_type: 'enquirer'})
   end
+
   def notify_guest_offer_rejected_email!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::Rejected, name: 'notify_guest_of_rejection', path: 'offer_mailer/notify_guest_of_rejection', subject: "[{{platform_context.name}}] Can we help, {{offer.owner.first_name}}?", alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::Rejected, name: 'notify_guest_of_rejection', path: 'offer_mailer/notify_guest_of_rejection', subject: "[{{platform_context.name}}] Your offer has been rejected.", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def notify_guest_of_payment_request_email!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::PaymentRequest, name: 'notify_guest_of_payment_request_email', path: 'offer_mailer/notify_guest_of_payment_request', subject: "[{{platform_context.name}}] Your booking for '{{offer.transactable.name}}' at {{offer.location.street}} requires payment", alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::PaymentRequest, name: 'notify_guest_of_payment_request_email', path: 'offer_mailer/notify_guest_of_payment_request', subject: "[{{platform_context.name}}] Your offer for '{{transactable.name}}' at {{offer.location.street}} requires payment", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def notify_host_offer_rejected_email!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::Rejected, name: 'notify_host_of_rejection', path: 'offer_mailer/notify_host_of_rejection', subject: "[{{platform_context.name}}] Can we help, {{user.first_name}}?", alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::Rejected, name: 'notify_host_of_rejection', path: 'offer_mailer/notify_host_of_rejection', subject: "[{{platform_context.name}}] You have reject {{enquirer.first_name}}'s offer.", alert_type: 'email', recipient_type: 'lister'})
   end
 
   def request_rating_of_guest_from_host_email!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::EnquirerRatingRequested, name: 'request_rating_of_guest_from_host', path: 'rating_mailer/request_rating_of_guest_from_host', subject: "[{{platform_context.name}}] How was your experience hosting {{@offer.owner.first_name}}?", alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::EnquirerRatingRequested, name: 'request_rating_of_guest_from_host', path: 'rating_mailer/request_rating_of_guest_from_host', subject: "[{{platform_context.name}}] How was your experience hosting {{@enquirer.first_name}}?", alert_type: 'email', recipient_type: 'lister'})
   end
 
   def request_rating_of_host_from_guest_email!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::ListerRatingRequested, name: 'request_rating_of_host_from_guest', path: 'rating_mailer/request_rating_of_host_from_guest', subject: "[{{platform_context.name}}] How was your experience at '{{offer.transactable.name}}'?", alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::ListerRatingRequested, name: 'request_rating_of_host_from_guest', path: 'rating_mailer/request_rating_of_host_from_guest', subject: "[{{platform_context.name}}] How was your experience at '{{transactable.name}}'?", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def create_notify_host_of_shipping_details_email!
@@ -114,23 +115,23 @@ class Utils::DefaultAlertsCreator::OfferCreator < Utils::DefaultAlertsCreator::W
   end
 
   def notify_host_of_approved_payment!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::EnquirerApprovedPayment, name: 'notify_host_of_approved_payment', path: 'offer_mailer/notify_host_of_approved_payment', subject: "[{{platform_context.name}}] {{offer.owner.first_name}} confirmed payment!",  alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::EnquirerApprovedPayment, name: 'notify_host_of_approved_payment', path: 'offer_mailer/notify_host_of_approved_payment', subject: "[{{platform_context.name}}] {{enquirer.first_name}} confirmed payment!",  alert_type: 'email', recipient_type: 'lister'})
   end
 
   def notify_host_of_approved_payment!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::EnquirerApprovedPayment, name: 'notify_host_of_approved_payment', path: 'offer_mailer/notify_host_of_approved_payment', subject: "[{{platform_context.name}}] {{offer.owner.first_name}} confirmed payment!",  alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::EnquirerApprovedPayment, name: 'notify_host_of_approved_payment', path: 'offer_mailer/notify_host_of_approved_payment', subject: "[{{platform_context.name}}] {{enquirer.first_name}} confirmed payment!",  alert_type: 'email', recipient_type: 'lister'})
   end
 
   def notify_host_of_declined_payment!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::EnquirerDeclinedPayment, name: 'notify_host_of_declined_payment', path: 'offer_mailer/notify_host_of_declined_payment', subject: "[{{platform_context.name}}] {{offer.owner.first_name}} declined payment!",  alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::EnquirerDeclinedPayment, name: 'notify_host_of_declined_payment', path: 'offer_mailer/notify_host_of_declined_payment', subject: "[{{platform_context.name}}] {{enquirer.first_name}} declined payment!",  alert_type: 'email', recipient_type: 'lister'})
   end
 
   def notify_guest_of_submitted_checkout!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::ListerSubmittedCheckout, name: 'notify_guest_of_submitted_checkout', path: 'offer_mailer/notify_guest_of_submitted_checkout', subject: "[{{platform_context.name}}] {{offer.transactable.name}} submitted invoice",  alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::ListerSubmittedCheckout, name: 'notify_guest_of_submitted_checkout', path: 'offer_mailer/notify_guest_of_submitted_checkout', subject: "[{{platform_context.name}}] {{transactable.name}} submitted invoice",  alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def notify_guest_of_submitted_checkout_with_failed_authorization!
-    create_alert!({associated_class: WorkflowStep::OfferWorkflow::ListerSubmittedCheckoutButAuthorizationFailed, name: 'notify_guest_of_submitted_checkout_with_failed_authorization', path: 'offer_mailer/notify_guest_of_submitted_checkout_with_failed_authorization', subject: "[{{platform_context.name}}] {{offer.transactable.name}} submitted invoice",  alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::OfferWorkflow::ListerSubmittedCheckoutButAuthorizationFailed, name: 'notify_guest_of_submitted_checkout_with_failed_authorization', path: 'offer_mailer/notify_guest_of_submitted_checkout_with_failed_authorization', subject: "[{{platform_context.name}}] {{transactable.name}} submitted invoice",  alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def notify_guest_of_penalty_charge_failed!

@@ -6,8 +6,8 @@ class Offer < Order
 
   has_many :host_line_items, as: :line_itemable
 
-  def workflow_class
-    Order
+  def self.workflow_class
+    Offer
   end
 
   def add_line_item!(attrs)
@@ -96,7 +96,7 @@ class Offer < Order
       where("line_items.line_item_source_type = 'Transactable' AND line_items.line_item_source_id = ?", transactable.id).where.not(id: self.id)
 
     related_offers.each do |offer|
-      offer.host_cancel!
+      offer.reject!
     end
   end
 
@@ -109,7 +109,7 @@ class Offer < Order
   end
 
   def activate_order!
-
+    WorkflowStepJob.perform(WorkflowStep::OfferWorkflow::CreatedWithoutAutoConfirmation, self.id)
   end
 
   def cancelable?

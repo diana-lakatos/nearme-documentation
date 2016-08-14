@@ -1,12 +1,12 @@
 {% for transactable in transactables %}
   {% assign collaborator = current_user  | find_collaborator: transactable %}
-  <article class="listing">
+  <article class="listing" id="transactable_{{transactable.id}}">
     <h2>{{ transactable.name }}</h2>
     <a href="{{ transactable.show_path }}">Project details</a>
     <div class="row">
       <div class="col-md-6">
         <p>Contact: {{ transactable.properties.project_contact }}</p>
-        <p>Company: {{ transactable.properties.company_name }}</p>
+        <p>Company: {{ transactable.company.name }}</p>
         <p>Invite sent: {{ collaborator.approved_by_owner_at | to_date | l: 'short' }}</p>
         <p>Workplace: {{ transactable.properties.workplace_type }}</p>
         {% if transactable.properties.workplace_type == 'On Site' %}

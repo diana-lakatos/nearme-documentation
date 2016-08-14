@@ -51,6 +51,14 @@ class Utils::DefaultAlertsCreator::ListingCreator < Utils::DefaultAlertsCreator:
     create_alert!({associated_class: WorkflowStep::ListingWorkflow::Cancelled, name: 'notify_collaborators_of_cancellation', path: 'transactable_mailer/notify_collaborators_of_cancellation', subject: "{{ listing.name }} has been cancelled!", alert_type: 'email', recipient_type: '', bcc_type: 'collaborators', delay: 0})
   end
 
+  def create_notify_lister_of_completion!
+    create_alert!({associated_class: WorkflowStep::ListingWorkflow::Cancelled, name: 'notify_lister_of_completion', path: 'transactable_mailer/notify_lister_of_completion', subject: "You have marked {{ listing.name }} as completed!", alert_type: 'email', recipient_type: 'lister', delay: 0})
+  end
+
+  def create_notify_enquirer_of_completion!
+    create_alert!({associated_class: WorkflowStep::ListingWorkflow::Completed, name: 'notify_enquirer_of_completion', path: 'transactable_mailer/notify_enquirer_of_completion', subject: "{{ listing.name }} has been marked as completed!", alert_type: 'email', recipient_type: 'enquirer', delay: 0})
+  end
+
   protected
 
   def workflow_type

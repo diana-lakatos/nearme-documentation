@@ -160,6 +160,28 @@ namespace :uot do
     })
 
     create_custom_attribute(@transactable_type, {
+        name: 'type_of_deliverable',
+        label: 'Type of Deliverable',
+        attribute_type: 'string',
+        html_tag: 'textarea',
+        placeholder: "",
+        required: "0",
+        public: true,
+        searchable: false
+    })
+
+    create_custom_attribute(@transactable_type, {
+        name: 'other_requirements',
+        label: 'Other Requirements',
+        attribute_type: 'string',
+        html_tag: 'textarea',
+        placeholder: "",
+        required: "0",
+        public: true,
+        searchable: false
+    })
+
+    create_custom_attribute(@transactable_type, {
         name: 'project_contact',
         label: 'Project Contact',
         attribute_type: 'string',
@@ -361,6 +383,8 @@ namespace :uot do
       { "transactable" => "about_company" },
       { "transactable" => "project_contact" },
       { "transactable" => "description" },
+      { "transactable" => "type_of_deliverable" },
+      { "transactable" => "other_requirements" },
       { "transactable" => "estimation" },
       { "transactable" => "workplace_type" },
       { "transactable" => "office_location" },
@@ -630,11 +654,7 @@ namespace :uot do
   end
 
   def create_workflow_alerts
-    WorkflowStep.where(associated_class: ['WorkflowStep::OfferWorkflow::OneDayToBooking',
-                                          'WorkflowStep::OfferWorkflow::OneBookingSuggestions'
-                                          ]).find_each do |ws|
-                                            ws.workflow_alerts.destroy_all
-                                          end
+    Workflow.where(workflow_type: 'offer').destroy_all
     @offer_creator = Utils::DefaultAlertsCreator::OfferCreator.new.create_all!
     @sign_up_creator = Utils::DefaultAlertsCreator::SignUpCreator.new
 
@@ -645,6 +665,7 @@ namespace :uot do
 
     @listing_creator = Utils::DefaultAlertsCreator::ListingCreator.new
     @listing_creator.create_notify_lister_of_cancellation!
+    @listing_creator.create_notify_enquirer_of_completion!
 
     @user_message_creator = Utils::DefaultAlertsCreator::UserMessageCreator.new
     @user_message_creator.create_user_message_created!
@@ -652,8 +673,8 @@ namespace :uot do
 
     Workflow.where(workflow_type: %w(request_for_quote reservation recurring_booking inquiry spam_report)).destroy_all
     WorkflowAlert.where(alert_type: 'sms').destroy_all
-    #alerts_to_be_destroyed = [ ]
-    #WorkflowAlert.where(template_path: alerts_to_be_destroyed).destroy_all
+    alerts_to_be_destroyed = [ 'offer_mailer/notify_host_of_rejection' ]
+    WorkflowAlert.where(template_path: alerts_to_be_destroyed).destroy_all
 
     create_email('post_action_mailer/host_sign_up_welcome')
     create_email('post_action_mailer/guest_sign_up_welcome')
@@ -663,6 +684,7 @@ namespace :uot do
 
     create_email('transactable_mailer/notify_lister_of_cancellation')
     create_email('transactable_mailer/notify_collaborators_of_cancellation')
+    create_email('transactable_mailer/notify_enquirer_of_completion')
 
     create_email('offer_mailer/notify_guest_of_confirmation')
 
@@ -672,6 +694,7 @@ namespace :uot do
 
     create_email('offer_mailer/notify_guest_of_cancellation_by_guest')
 
+    create_email('offer_mailer/notify_guest_with_confirmation')
     create_email('offer_mailer/notify_host_with_confirmation')
 
     create_email("user_message_mailer/notify_user_about_new_message")

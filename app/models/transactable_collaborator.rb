@@ -4,6 +4,7 @@ class TransactableCollaborator < ActiveRecord::Base
   scoped_to_platform_context
 
   belongs_to :user
+  attr_accessor :actor
 
   counter_culture :user,
     column_name: ->(p) { p.approved? ? 'transactable_collaborators_count' : nil },
@@ -19,7 +20,11 @@ class TransactableCollaborator < ActiveRecord::Base
   scope :approved, -> { where.not(approved_by_owner_at: nil, approved_by_user_at: nil) }
   scope :for_user, -> (user) { user.present? ? where('user_id = ? OR email = ?', user.id, user.email) : [] }
 
-  before_save :auto_confirm
+  before_create :auto_confirm
+  after_create :trigger_workflow_alert_on_create!
+  after_update :trigger_workflow_alert_on_update!
+  before_destroy :trigger_workflow_alert_on_destroy!
+
 
   def name
     @name ||= user.try(:name)
@@ -65,6 +70,30 @@ class TransactableCollaborator < ActiveRecord::Base
   def auto_confirm
     self.approved_by_user_at = Time.zone.now if transactable.auto_accept_invitation_as_collaborator?
     true
+  end
+
+  def trigger_workflow_alert_on_create!
+    if approved_by_owner?
+      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorAddedByTransactableOwner, self.id)
+    elsif approved_by_user?
+      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorPendingApproval, self.id)
+    end
+  end
+
+  def trigger_workflow_alert_on_update!
+    if approved_by_owner_at_changed?
+      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorApproved, self.id)
+    end
+  end
+
+  def trigger_workflow_alert_on_destroy!
+    if actor == transactable.creator
+      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorDeclined, self.transactable_id, self.user_id)
+    elsif actor == user
+      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorHasQuit, self.transactable_id, self.user_id)
+    else
+      raise NotImplementedError
+    end
   end
 
 end

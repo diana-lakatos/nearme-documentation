@@ -58,7 +58,8 @@ class UserDrop < BaseDrop
     :country_name, :phone, :current_address, :is_trusted?, :reservations,
     :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
     :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile,
-    :tags, :has_friends, to: :source
+    :tags, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
+    :created_at, to: :source
 
   def class_name
     'User'
@@ -439,6 +440,10 @@ class UserDrop < BaseDrop
 
   def pending_transactables
     @source.created_listings.with_state(:pending)
+  end
+
+  def completed_transactables_count
+    @source.created_listings.with_state(:completed).count
   end
 
   private

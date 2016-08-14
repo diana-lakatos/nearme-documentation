@@ -6,7 +6,7 @@
   <p>Client said: "{{ offer.rejection_reason }}"</p>
 {% endif %}
 
-<p>Feel free to reach out to {{ lister.name }} for more details.</p>
+<p>Feel free to <a href="{{ lister.user_message_path }}">reach out to {{ lister.name }}</a> for more details.</p>
 
 <p>You are able to submit another offer with updated details at your convenience.</p>
 

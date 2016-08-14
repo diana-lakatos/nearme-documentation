@@ -55,7 +55,7 @@ class RecurringBooking < Order
 
   end
 
-  def workflow_class
+  def self.workflow_class
     RecurringBooking
   end
 

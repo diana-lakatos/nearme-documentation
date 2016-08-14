@@ -12,19 +12,14 @@ class Dashboard::Company::TransactableCollaboratorsController < Dashboard::BaseC
 
   def update
     @transactable_collaborator.update_attributes(transactable_collaborator_params)
-    WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorApproved, @transactable_collaborator.id)
     render_transactable_collaborator
   end
 
   def destroy
     respond_to do |format|
       if @transactable.pending? || !@transactable.line_item_orders.where.not(confirmed_at: nil).where(user: @transactable_collaborator.user).exists?
+        @transactable_collaborator.actor = current_user
         @transactable_collaborator.destroy
-        if current_user.id == @transactable_collaborator.user_id
-          WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorHasQuit, @transactable_collaborator.transactable_id, @transactable_collaborator.user_id)
-        else
-          WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorDeclined, @transactable_collaborator.transactable_id, @transactable_collaborator.user_id)
-        end
         format.html do
           flash[:notice] = I18n.t('transactable_collaborator.collaboration_cancelled')
           redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)

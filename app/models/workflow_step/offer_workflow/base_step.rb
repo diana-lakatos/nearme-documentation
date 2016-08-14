@@ -37,11 +37,11 @@ class WorkflowStep::OfferWorkflow::BaseStep < WorkflowStep::BaseStep
   # listing:
   #   Transactable object
   def data
-    { offer: @offer, enquirer: enquirer, lister: lister, listing: @offer.transactables.first }
+    { offer: @offer, enquirer: enquirer, lister: lister, listing: transactable, transactable: transactable }
   end
 
   def transactable_type_id
-    @offer.try(:listing).try(:transactable_type_id)
+    transactable.try(:transactable_type_id)
   end
 
   def should_be_processed?

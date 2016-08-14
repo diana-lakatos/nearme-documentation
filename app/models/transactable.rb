@@ -296,6 +296,9 @@ class Transactable < ActiveRecord::Base
     before_transition in_progress: :cancelled do
       #check if all is paid
     end
+
+    after_transition any => [:cancelled] { |t| WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Cancelled, t.id) }
+    after_transition any => [:completed] { |t| WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Completed, t.id) }
   end
 
   extend FriendlyId
@@ -385,7 +388,6 @@ class Transactable < ActiveRecord::Base
   end
 
   def lowest_full_price(available_price_types = [])
-    lowest_full_price = nil
     lowest_price = lowest_price_with_type(available_price_types)
 
     if lowest_price.present?
@@ -800,9 +802,7 @@ class Transactable < ActiveRecord::Base
       user = User.find_by(email: collaborator_email)
       next unless user.present?
       unless self.transactable_collaborators.for_user(user).exists?
-        pc = self.transactable_collaborators.build(user: user, email: collaborator_email, approved_by_owner_at: Time.zone.now)
-        pc.save!
-        WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorAddedByTransactableOwner, pc.id)
+        self.transactable_collaborators.create!(user: user, email: collaborator_email, approved_by_owner_at: Time.zone.now)
       end
     end
   end

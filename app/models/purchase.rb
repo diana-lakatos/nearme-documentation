@@ -10,7 +10,7 @@ class Purchase < Order
     event :ship do transition :completed => :shipped; end
   end
 
-  def workflow_class
+  def self.workflow_class
     Purchase
   end
 

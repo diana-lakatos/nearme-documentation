@@ -7,7 +7,7 @@ class Workflow < ActiveRecord::Base
   validates_presence_of :name
   serialize :events_metadata, Hash
 
-  has_many :workflow_steps
+  has_many :workflow_steps, dependent: :destroy
   belongs_to :instance
 
   scope :for_workflow_type, -> (workflow_type) { where(workflow_type: workflow_type) }

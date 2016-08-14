@@ -11,17 +11,12 @@ class Dashboard::TransactableCollaboratorsController < Dashboard::BaseController
 
   def update
     @transactable_collaborator.update_attributes(transactable_collaborator_params)
-    WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorApproved, @transactable_collaborator.id)
     render_transactable_collaborator
   end
 
   def destroy
+    @transactable_collaborator.actor = current_user
     @transactable_collaborator.destroy
-    if current_user.id == @transactable_collaborator.user_id
-      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorHasQuit, @transactable_collaborator.transactable_id, @transactable_collaborator.user_id)
-    else
-      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorDeclined, @transactable_collaborator.transactable_id, @transactable_collaborator.user_id)
-    end
     render json: { result: 'OK' }
   end
 
