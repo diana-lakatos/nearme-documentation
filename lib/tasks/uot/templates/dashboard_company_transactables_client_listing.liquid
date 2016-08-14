@@ -4,8 +4,10 @@
   <article class="listing-b">
     <h2>
       {{ transactable.name }}
-      {% if current_status == 'archived' %}
-      <span class="label label-success">Completed</span>
+      {% if transactable.state == 'completed' %}
+        <span class="label label-success">Completed</span>
+      {% elsif transactable.state == 'cancelled' %}
+        <span class="label label-cancelled">Cancelled</span>
       {% endif %}
     </h2>
 

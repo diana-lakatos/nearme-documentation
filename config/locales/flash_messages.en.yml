@@ -407,6 +407,7 @@ en:
         desk_added: "Great, your new %{bookable_noun} has been added!"
         listing_deleted: "That listing has been deleted."
         listing_updated: "Great, your listing's details have been updated."
+        listing_cancelled: 'Your listing has been marked as completed.'
         phone_number_verification_needed: 'Please verify your mobile number first'
       locations:
         add_your_company: "Please add your company first"

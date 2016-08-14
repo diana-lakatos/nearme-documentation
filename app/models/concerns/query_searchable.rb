@@ -44,7 +44,7 @@ module QuerySearchable
       if params.present? && params[:properties].present? && custom_attributes_definition.present?
         params[:properties].each do |name, value|
           definition = custom_attributes_definition.detect { |d| d[CustomAttributes::CustomAttribute::NAME] == name }
-          next if definition.nil?
+          next if definition.nil? || value.blank?
           case definition[CustomAttributes::CustomAttribute::ATTRIBUTE_TYPE]
           when 'string'
             scope = scope.where("#{self.table_name}.properties @> ?", "\"#{definition[CustomAttributes::CustomAttribute::NAME]}\"=>\"#{value}\"")

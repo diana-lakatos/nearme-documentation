@@ -291,6 +291,11 @@ class Transactable < ActiveRecord::Base
   state_machine :state, initial: :pending do
     event :start                 do transition pending: :in_progress; end
     event :finish                 do transition in_progress: :completed; end
+    event :cancel                 do transition [:in_progress, :pending] => :cancelled; end
+
+    before_transition in_progress: :cancelled do
+      #check if all is paid
+    end
   end
 
   extend FriendlyId

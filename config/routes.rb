@@ -851,6 +851,7 @@ DesksnearMe::Application.routes.draw do
             member do
               get :enable
               get :disable
+              get :cancel
             end
 
             resources :transactable_collaborators

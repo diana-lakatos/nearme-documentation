@@ -139,6 +139,9 @@ en:
       locations:
         add_your_company: Please complete your Project first.
       add_your_company: Please complete your Project first.
+    manage:
+      listings:
+        listing_cancelled: "Your project has been canceled."
 
   transactable_collaborator:
     collaboration_cancelled: User has been removed from project.

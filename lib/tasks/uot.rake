@@ -548,6 +548,7 @@ namespace :uot do
     load_template('dashboard/company/transactables/sme_listing')
     load_template('dashboard/company/transactables/client_listing')
     load_template('dashboard/company/transactables/client_actions')
+    load_template('dashboard/company/transactables/form_actions')
     load_template('checkout/summary')
     load_template('checkout/sidebar')
   end

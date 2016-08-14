@@ -125,6 +125,15 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
   end
 
+  def cancel
+    if @transactable.cancel!
+      flash[:notice] = t('flash_messages.manage.listings.listing_cancelled')
+    else
+      flash[:error] = @transactable.errors.full_messages.join(', ')
+    end
+    redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
+  end
+
   private
 
   def set_form_components

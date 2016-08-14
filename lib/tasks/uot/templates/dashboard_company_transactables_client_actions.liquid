@@ -18,7 +18,7 @@
   {% endif %}
 
   {% if current_status != 'archived' %}
-    <li><a href='{{ transactable.destroy_path }}' data-method="delete" data-confirm="Are you sure you want to cancel this project?" class="btn btn-danger">Cancel Project</a></li>
+    <li><a href='{{ transactable.cancel_path }}' data-confirm="Are you sure you want to cancel this project?" class="btn btn-danger">Cancel Project</a></li>
   {% endif %}
 
   {% if current_status == 'in progress' %}
