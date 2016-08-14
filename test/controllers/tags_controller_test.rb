@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'tag'
 
 class TagsControllerTest < ActionController::TestCase
 
@@ -12,7 +11,7 @@ class TagsControllerTest < ActionController::TestCase
     user = @blog_post1.user
 
     get :index, q: " ", user_id: user
-    assert_equal 4, JSON.parse(response.body).length
+    assert_equal 7, JSON.parse(response.body).length
 
     get :index, q: 'a', user_id: user
     assert_equal 3, JSON.parse(response.body).length
@@ -31,8 +30,7 @@ class TagsControllerTest < ActionController::TestCase
     user = @blog_post2.user
     get :index, q: " ", user_id: user
 
-    assert_equal 3, JSON.parse(response.body).length
-    assert_equal user.owned_tags.pluck(:name), JSON.parse(response.body).map {|i| i['name']}
+    assert_equal 7, JSON.parse(response.body).length
   end
 
 end
