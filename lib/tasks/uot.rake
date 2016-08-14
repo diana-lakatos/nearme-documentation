@@ -122,7 +122,7 @@ namespace :uot do
         attribute_type: 'string',
         html_tag: 'select',
         required: "1",
-        valid_values: ["online", "on_site"],
+        valid_values: ["Online", "On Site"],
         public: true,
         searchable: true
     })
@@ -188,7 +188,7 @@ namespace :uot do
         html_tag: 'check_box_list',
         required: "1",
         validation_only_on_update: true,
-        valid_values: ["online", "on_site"],
+        valid_values: ["Online", "On Site"],
         public: true,
         searchable: true
     })
