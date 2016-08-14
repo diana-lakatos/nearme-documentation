@@ -556,6 +556,7 @@ namespace :uot do
 
   def create_user_profile!
     load_template('registrations/show', false)
+    load_template('transactables/invite')
   end
 
   def create_wish_list_button!

@@ -1,0 +1,42 @@
+<div class="project-invite" id="project-invite-{{ user.id }}">
+  <div class="project-invite-content">
+    <header>
+      <h2>Invite to project</h2>
+      <button type="button" data-close>Cancel</button>
+    </header>
+
+    {% if current_user.has_pending_transactables? %}
+      <p><strong>{{ user.name }}</strong> will be invited to your project.</p>
+
+      <p>Please select the project from the list below:</p>
+
+      <form method="post" action="./">
+        <input type="hidden" name="project[user_id]" value="{{ user.id }}">
+        <div class="control-group">
+          <label for="projects-list" class="control-label">My projects</label>
+          <span class="select-a">
+            <select id="projects-list" name="project[id]" class="unstyled-select">
+              {% for project in current_user.pending_transactables %}
+              <option value="{{ project.id }}">{{ project.name }}</option>
+              {% endfor %}
+            </select>
+          </span>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="button-a">Invite</button>
+          <button type="button" class="button-b" data-close>Cancel</button>
+        </div>
+      </form>
+    {% else %}
+      <p>In order to invite a SME to a project, you must first create one.</p>
+
+      <p>Would you like to add a project now?</p>
+
+      <div class="actions">
+        <a href="./" class="button-a">Add a project</a>
+        <button type="button" class="button-b" data-close>Cancel</button>
+      </div>
+    {% endif %}
+  </div>
+</div>
