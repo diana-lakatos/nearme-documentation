@@ -613,8 +613,17 @@ DNM.registerInitializer(function(){
 
 DNM.registerInitializer(function(){
     $(document).on('init:homepageranges.nearme', function() {
-      $('[name="start_date"]').each(function(index, element) { if($(element).datepicker) $(element).datepicker('setDate', new Date()) });
-      $('[name="end_date"]').each(function(index, element) { if($(element).datepicker) $(element).datepicker('setDate', 1) });
+      $('[name="start_date"]').each(function(index, element) {
+        if($(element).datepicker && !$(element).attr('data-no-default')) {
+          $(element).datepicker('setDate', new Date());
+        }
+      });
+
+      $('[name="end_date"]').each(function(index, element) {
+        if($(element).datepicker && !$(element).attr('data-no-default')) {
+          $(element).datepicker('setDate', 1);
+        }
+      });
     })
 });
 
