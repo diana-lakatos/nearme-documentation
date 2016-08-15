@@ -44,7 +44,7 @@ class Dashboard::Company::PaymentSubscriptionsController <  Dashboard::BaseContr
   def build_payment_subscription
     @payment_subscription = @order.build_payment_subscription({
       payer: current_user.object,
-      company: current_user.default_company
+      company: @order.owner.default_company
     })
   end
 

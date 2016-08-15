@@ -81,6 +81,7 @@ class PaymentTransfer < ActiveRecord::Base
     return if !payout_gateway.present?
     return if transferred?
     return if amount <= 0
+    return if payout_attempts.any?
 
     # Generates a ChargeAttempt with this record as the reference.
     payout = payout_gateway.payout(
@@ -96,7 +97,7 @@ class PaymentTransfer < ActiveRecord::Base
   end
 
   def pending?
-    payout_attempts.last && payout_attempts.last.pending? && payout_attempts.last.should_be_verified_after_time?
+    payout_attempts.last && payout_attempts.last.pending?
   end
 
   def failed?
@@ -109,7 +110,7 @@ class PaymentTransfer < ActiveRecord::Base
 
   def success!
     if (payout = self.payout_attempts.reload.successful.first).present? && persisted?
-      self.update_column(:transferred_at, payout.created_at)
+      mark_transferred
     end
   end
 

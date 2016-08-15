@@ -130,6 +130,12 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       end
     end
 
+    payment_gateway_config = { }
+    if payment_gateway.config["transfer_schedule"] &&
+      ['daily', 'weekly', 'monthly'].include?(payment_gateway.config["transfer_schedule"]["interval"])
+      payment_gateway_config["transfer_schedule"] = payment_gateway.config[:transfer_schedule]
+    end
+
     {
       bank_account: {
         country: iso_country_code,
@@ -137,7 +143,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
         account_number: bank_account_number,
         routing_number: bank_routing_number
       }
-    }.merge(legal_entity: legal_entity_hash).merge(payment_gateway.config)
+    }.merge(legal_entity: legal_entity_hash).merge(payment_gateway_config)
   end
 
   def address_hash
