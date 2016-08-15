@@ -15,6 +15,7 @@ class CreateWorkflowApiCallForIntel < ActiveRecord::Migration
     alert.payload_data = {
       'enterprise_id' => "{{ user.external_id }}"
     }.to_json
+    alert.skip_bcc_validation = true
     alert.save!
   end
 
