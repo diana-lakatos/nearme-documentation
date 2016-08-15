@@ -339,6 +339,9 @@ namespace :project_to_transactable do
       end  
     end
 
+    # We delete stray TransactableType object
+    TransactableType.find(444).delete
+
     Transactable.reset_column_information
 
     Instance.find_each do |instance|
