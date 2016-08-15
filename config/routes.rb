@@ -142,7 +142,7 @@ DesksnearMe::Application.routes.draw do
 
     mount CustomAttributes::Engine, at: '/custom_attributes'
 
-    constraints host: 'setup.near-me.com' do
+    constraints subdomain: 'setup' do
       get '/', to: 'instance_wizard#index'
       get '/new', to: 'instance_wizard#new'
       post '/new', to: 'instance_wizard#new'
@@ -396,6 +396,8 @@ DesksnearMe::Application.routes.draw do
             post :regenerate_versions
           end
         end
+
+        resources :default_images
       end
 
       namespace :manage do
@@ -518,7 +520,7 @@ DesksnearMe::Application.routes.draw do
             post :generate
           end
         end
-        resources :payments, only: [:index, :show]
+        resources :payments, only: [:index, :show, :update]
         resources :orders, only: [:index, :show] do 
           member do
             post :generate_next_period
@@ -1077,6 +1079,7 @@ DesksnearMe::Application.routes.draw do
         resource :space_wizard, only: [:create]
         resources :transactables, only: [:index]
         resources :reverse_proxy_links, only: [:index, :create]
+        resources :instances, only: [:index, :create]
       end
     end
 

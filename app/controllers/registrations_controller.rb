@@ -331,7 +331,9 @@ class RegistrationsController < Devise::RegistrationsController
     @country = current_user.country_name
     @return_path = params[:return_path]
 
-    if current_user.invalid?
+    # We only want to render the missing phone number if there's an actual error 
+    # for the mobile number, like missing for example
+    if current_user.invalid? && current_user.errors[:mobile_number].present?
       render('dashboard/user_messages/missing_phone_number')
     end
   end

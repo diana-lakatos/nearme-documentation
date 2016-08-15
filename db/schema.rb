@@ -748,6 +748,8 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.datetime "externally_created_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.json     "json_content",          default: {}
+    t.text     "fields",                default: [], array: true
   end
 
   add_index "data_source_contents", ["instance_id", "data_source_id"], name: "index_data_source_contents_on_instance_id_and_data_source_id", using: :btree
@@ -763,6 +765,7 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.datetime "last_synchronized_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "label"
   end
 
   add_index "data_sources", ["instance_id", "data_sourcable_id", "data_sourcable_type"], name: "index_data_sources_on_data_sourcable", using: :btree
@@ -791,6 +794,24 @@ ActiveRecord::Schema.define(version: 20160810011059) do
   add_index "data_uploads", ["importable_id", "importable_type"], name: "index_data_uploads_on_importable_id_and_importable_type", using: :btree
   add_index "data_uploads", ["instance_id"], name: "index_data_uploads_on_instance_id", using: :btree
   add_index "data_uploads", ["target_id", "target_type"], name: "index_data_uploads_on_target_id_and_target_type", using: :btree
+
+  create_table "default_images", force: :cascade do |t|
+    t.integer  "theme_id"
+    t.integer  "instance_id"
+    t.string   "photo_uploader"
+    t.string   "photo_uploader_version"
+    t.string   "photo_uploader_image"
+    t.text     "photo_uploader_image_transformation_data"
+    t.string   "photo_uploader_image_original_url"
+    t.datetime "photo_uploader_image_versions_generated_at"
+    t.integer  "photo_uploader_image_original_width"
+    t.integer  "photo_uploader_image_original_height"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "default_images", ["instance_id"], name: "index_default_images_on_instance_id", using: :btree
+  add_index "default_images", ["theme_id"], name: "index_default_images_on_theme_id", using: :btree
 
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",                                 default: 20
@@ -1298,6 +1319,7 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.boolean  "expand_orders_list",                                                                default: true
     t.string   "orders_received_tabs"
     t.string   "my_orders_tabs"
+    t.boolean  "enable_geo_localization",                                                           default: true
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -2564,7 +2586,7 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.integer "taggings_count",             default: 0
   end
 
-  add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
+  add_index "tags", ["name", "instance_id"], name: "tags_idx", unique: true, using: :btree
 
   create_table "tax_rates", force: :cascade do |t|
     t.datetime "deleted_at"

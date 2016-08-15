@@ -51,17 +51,17 @@ class MountUploaderTest < ActiveSupport::TestCase
   context '#default_url' do
     should 'return transformed version versions dimensions if they are provided' do
       photo = FactoryGirl.create(:photo, image_versions_generated_at: nil)
-      assert_equal '895x554.gif', photo.image.default_url(:golden).split('/').last
+      assert_equal '895x554&text=Photos+Unavailable+or+Still+Processing', photo.image.default_url(:golden).split('/').last
     end
 
     should 'return default 100x100 placeholder for original version' do
       page = FactoryGirl.create(:page)
-      assert_equal '100x100.gif', page.hero_image.default_url.split('/').last
+      assert_equal '100x100&text=Photos+Unavailable+or+Still+Processing', page.hero_image.default_url.split('/').last
     end
 
     should 'return default 100x100 placeholder if dimensions are not provided' do
       page = FactoryGirl.create(:page)
-      assert_equal '100x100.gif', page.hero_image.default_url.split('/').last
+      assert_equal '100x100&text=Photos+Unavailable+or+Still+Processing', page.hero_image.default_url.split('/').last
     end
   end
 

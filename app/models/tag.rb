@@ -4,12 +4,13 @@ ActsAsTaggableOn::Tag.class_eval do
 
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
-  
+
   belongs_to :instance
 
   scope :alphabetically, -> { order(name: :asc) }
   scope :by_query, -> (query) { where('name ILIKE ?', "%#{query}%") }
   scope :autocomplete, -> (query) { by_query(query).alphabetically }
+  scope :for_instance_blog, -> { includes(:taggings).where(taggings: { taggable_type: 'BlogPost' } ) }
 
   def to_liquid
     @tag_drop ||= TagDrop.new(self)

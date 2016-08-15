@@ -337,4 +337,9 @@ module LiquidFilters
     ReverseProxyLink.where(use_on_path: ::CGI.unescapeHTML(path.to_str))
   end
 
+  def get_data_contents(external_id, options = {})
+    data_source_contents = DataSourceContent.where('external_id like ?', external_id)
+    data_source_contents.paginate(per_page: options[:per_page].presence || 10)
+  end
+
 end

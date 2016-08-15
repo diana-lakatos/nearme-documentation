@@ -78,6 +78,9 @@ class BaseUploader < CarrierWave::Uploader::Base
       # We add 10 minutes because versions_generated_at is slightly in the past as to
       # our requirements
       "#{super_url}?v=#{model["#{mounted_as}_versions_generated_at"].to_i + 10.minutes.to_i}"
+    # Versions not generated, we have a default url and the version requested is a delayed version, so we use the default_url
+    elsif !versions_generated? && respond_to?(:default_url) && self.class.respond_to?(:delayed_versions) && self.class.delayed_versions.include?(args.first)
+      default_url(*args)
     else
       super_url
     end
@@ -115,5 +118,23 @@ class BaseUploader < CarrierWave::Uploader::Base
 
   def delayed_processing?(image = nil)
     !!@delayed_processing
+  end
+
+  def get_default_image_and_version(*args)
+    version = args.shift || version_name.try(:to_sym)
+    [theme_default_image(version), version]
+  end
+
+  private
+
+  def theme_default_image(version)
+    return unless platform_context
+
+    platform_context
+      .theme.reload
+      .default_images.where(
+        photo_uploader: self.class.to_s,
+        photo_uploader_version: version)
+      .first
   end
 end

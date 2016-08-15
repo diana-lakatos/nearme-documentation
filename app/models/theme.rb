@@ -16,6 +16,7 @@ class Theme < ActiveRecord::Base
   has_many :content_holders, :dependent => :destroy
   has_one :theme_font, :dependent => :destroy
   has_many :photo_upload_versions
+  has_many :default_images, :dependent => :destroy
   delegate :bookable_noun, :to => :instance
   delegate :lessor, :to => :instance
   delegate :lessee, :to => :instance

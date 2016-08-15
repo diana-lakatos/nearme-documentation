@@ -44,6 +44,9 @@
           = f.input :enable_sms_and_api_workflow_alerts_on_staging, as: :boolean, inline_label: true
       .input-container.col-xs-6
         = f.input :expand_orders_list, as: :boolean, inline_label: true
+    .row
+      .input-container.col-xs-6
+        = f.input :enable_geo_localization, as: :boolean, inline_label: true
 
     - if Rails.env.staging? # it's relevant only for staging -> staging_email.rb initializer
       .row

@@ -8,9 +8,9 @@ class PlatformContextDecorator
            :hero_image, :logo_image, :favicon_image, :icon_image, :icon_retina_image, :call_to_action, :is_company_theme?,
            :content_holders, to: :theme
 
-  delegate :bookable_noun, :lessor, :lessee, :name, :bookable?,
-           :transactable_types, :project_types, :wish_lists_icon_set,
-           :seller_attachments_enabled?, :wish_lists_enabled?, :webhook_token, to: :instance
+  delegate :bookable_noun, :lessor, :lessee, :name, :buyable?, :bookable?, :biddable?,
+           :transactable_types, :project_types, :wish_lists_icon_set, :seller_attachments_enabled?,
+           :wish_lists_enabled?, :webhook_token, :enable_geo_localization, to: :instance
 
   def initialize(platform_context)
     @platform_context = platform_context

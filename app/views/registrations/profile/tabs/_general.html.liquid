@@ -74,7 +74,11 @@
   <dl class="verifications">
     {% if user.email != blank %}
       <dt>{{ 'buy_sell_market.products.labels.email_address' | translate }}</dt>
-      <dd><span class="ico-check">{{ 'user_profile.labels.verified' | translate }}</span></dd>
+      {% if user.is_email_verified? %}
+        <dd><span class="ico-check">{{ 'user_profile.labels.verified' | translate }}</span></dd>
+      {% else %}
+        <dd><span class="ico-check">{{ 'user_profile.labels.not_verified' | translate }}</span></dd>
+      {% endif %}
     {% endif %}
 
     {% if user.phone != blank %}

@@ -1,9 +1,9 @@
 class Order < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
 
-  ORDER_TYPES = ['Reservation', 'RecurringBooking', 'Purchase', 'DelayedReservation']
-  STATES = ['unconfirmed', 'confirmed', 'overdued', 'archived', 'not_archived']
-  DEFAULT_DASHBOARD_TABS = ['unconfirmed', 'confirmed', 'archived']
+  ORDER_TYPES = %w(Reservation RecurringBooking Purchase DelayedReservation).freeze
+  STATES = %w(unconfirmed confirmed overdued archived not_archived).freeze
+  DEFAULT_DASHBOARD_TABS = %w(unconfirmed confirmed archived).freeze
 
   include Encryptable
   include Modelable
@@ -17,11 +17,11 @@ class Order < ActiveRecord::Base
 
   belongs_to :user, -> { with_deleted }
   # TODO creator is not intuitive name we should switch to the "lister"
-  belongs_to :creator, -> { with_deleted }, class_name: "User"
-  belongs_to :owner, -> { with_deleted }, :class_name => "User", counter_cache: true
-  belongs_to :administrator, -> { with_deleted }, class_name: "User"
+  belongs_to :creator, -> { with_deleted }, class_name: 'User'
+  belongs_to :owner, -> { with_deleted }, class_name: 'User', counter_cache: true
+  belongs_to :administrator, -> { with_deleted }, class_name: 'User'
   belongs_to :company, -> { with_deleted }
-  belongs_to :currency_object, foreign_key: :currency, primary_key: :iso_code, class_name: "Currency"
+  belongs_to :currency_object, foreign_key: :currency, primary_key: :iso_code, class_name: 'Currency'
   belongs_to :shipping_address, foreign_key: :shipping_address_id, class_name: 'OrderAddress'
   belongs_to :billing_address, foreign_key: :billing_address_id, class_name: 'OrderAddress'
   belongs_to :reservation_type

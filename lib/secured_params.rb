@@ -234,6 +234,13 @@ class SecuredParams
     ]
   end
 
+  def default_image
+    [
+      :photo_uploader,
+      :photo_uploader_version
+    ]
+  end
+
   def blog_post
     [
       :title,
@@ -291,6 +298,8 @@ class SecuredParams
       :default_country,
       :default_currency,
       :default_oauth_signin_provider,
+      :default_products_search_view,
+      :enable_geo_localization,
       :expand_orders_list,
       :facebook_consumer_key,
       :facebook_consumer_secret,
@@ -1425,6 +1434,12 @@ class SecuredParams
       :payment_method_nonce,
       :chosen_credit_card_id,
       credit_card_attributes: nested(self.credit_card)
+    ]
+  end
+
+  def admin_paymnet
+    [
+      :exclude_from_payout
     ]
   end
 
