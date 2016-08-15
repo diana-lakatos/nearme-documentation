@@ -237,6 +237,7 @@ class User < ActiveRecord::Base
   end
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((user_profiles.properties->?), ',') && ARRAY[?]", property, values) if values.present? }
   scope :by_profile_type, -> (ipt_id) { includes(:user_profiles).where(user_profiles: { instance_profile_type_id: ipt_id }) if ipt_id.present? }
+  scope :with_enabled_profile, -> (ipt_id) { where(user_profiles: { enabled: true }) }
 
   validates_with CustomValidators
   validates :name, :first_name, presence: true
@@ -336,7 +337,7 @@ class User < ActiveRecord::Base
           order('transactables_count + transactable_collaborators_count DESC')
         when /custom_attributes./
           parsed_order = order.match(/custom_attributes.([a-zA-Z\.\_\-]*)_(asc|desc)/)
-          order("cast(user_profiles.properties -> '#{parsed_order[1]}' as float) #{parsed_order[2]}")
+          order(ActiveRecord::Base.send(:sanitize_sql_array, [ "cast(user_profiles.properties -> :field_name as float) #{parsed_order[2]}", { field_name: parsed_order[1] }]))
         else
           if PlatformContext.current.instance.is_community?
             order('transactables_count + transactable_collaborators_count DESC, followers_count DESC')

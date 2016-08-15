@@ -5,13 +5,13 @@ module QuerySearchable
 
     def self.search_by_query(attributes = [], query)
       if query.present?
-        words = query.split.map.with_index{|w, i| ["word#{i}".to_sym, w]}.to_h
         words_like = query.split.map.with_index{|w, i| ["word_like#{i}".to_sym, "%#{w}%"]}.to_h
         conditions = []
+        tags_conditions = []
         attributes.map do |attrib|
           if attrib == :tags
-            conditions += words.map do |word, value|
-              "LOWER(tags.name) = :#{word}"
+            tags_conditions += words_like.map do |word, value|
+              "tags.name ILIKE :#{word}"
             end
           else
             if self.columns_hash[attrib.to_s].type == :hstore
@@ -26,13 +26,12 @@ module QuerySearchable
             end
           end
         end
+        if tags_conditions.any?
+          conditions << Tagging.joins(:tag).where("taggings.taggable_id = users.id AND taggings.taggable_type = 'User'")
+                          .where(tags_conditions.join(' OR ')).exists.to_sql
+        end
         sql = conditions.flatten.join(' OR ')
-        result = where(ActiveRecord::Base.send(:sanitize_sql_array, [sql, words.merge(words_like)]))
-        result = result.joins(%Q{
-          LEFT JOIN "taggings" ON "taggings"."taggable_id" = "users"."id"
-          AND "taggings"."context" = 'tags' AND "taggings"."taggable_type" = 'User'
-          LEFT JOIN "tags" ON "tags"."id" = "taggings"."tag_id"
-          }).uniq if attributes.include?(:tags)
+        result = where(ActiveRecord::Base.send(:sanitize_sql_array, [sql, words_like]))
         result
       else
         all

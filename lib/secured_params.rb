@@ -403,6 +403,7 @@ class SecuredParams
       :show_categories,
       :category_search_type,
       :position,
+      :search_only_enabled_profiles,
       custom_attributes_attributes: [:searchable, :id]
     ]
   end
