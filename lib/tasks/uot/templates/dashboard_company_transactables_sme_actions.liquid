@@ -1,13 +1,18 @@
-<a class="btn btn-info" data-modal="true" href="{{ transactable.creator.user_message_path }}">Send Message</a>
+<ul class="actions-a">
 
-{{ transactable.creator.click_to_call_button }}
+  <li>
+    <a href="{{ transactable.show_path }}" class="btn btn-default">Project details</a>
+  </li>
 
-{% if can_make_offer == true %}
-  <a class="btn btn-info" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id }}">Make an Offer</a>
-{% elsif current_status == 'in progress' %}
-  In progress
-{% endif %}
+  <li>
+    <a class="btn btn-info" data-modal="true" href="{{ transactable.creator.user_message_path }}">Send Message</a>
+  </li>
 
-{% unless current_user.has_verified_merchant_account == true %}
-  <p class="merchant-account-reminder">Before making any offer, you need to set up your <a href="{{ 'edit_dashboard_company_payouts_path' | generate_url: company.id }}">merchant account</a>.</p>
-{% endunless %}
+  {{ transactable.creator.click_to_call_button }}
+
+  {% if can_make_offer == true %}
+    <li>
+      <a class="btn btn-info" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id }}">Make an Offer</a>
+    </li>
+  {% endif %}
+</ul>
