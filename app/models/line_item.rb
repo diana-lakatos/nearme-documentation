@@ -23,6 +23,7 @@ class LineItem < ActiveRecord::Base
   delegate :action, to: :transactable_pricing, allow_nil: true
 
   validates :quantity, :numericality => { :greater_than_or_equal_to => 1 }
+  validates :name, :quantity, presence: true
 
   before_create :calculate_tax
 

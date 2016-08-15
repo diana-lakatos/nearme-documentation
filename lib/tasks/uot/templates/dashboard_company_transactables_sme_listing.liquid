@@ -84,6 +84,10 @@
         </tbody>
       </table>
     {% endif %}
+    {% assign order = transactable.last_accepted_order %}
+    {% if order.confirmed? %}
+      <a class="btn btn-info" href="{{ order.new_order_item_path }}">{{ 'dashboard.user_reservations.track_time' | t}}</a>
+    {% endif %}
 
   </article>
 {% endfor %}

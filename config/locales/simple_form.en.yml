@@ -106,6 +106,12 @@ en:
         redirect_to: 'Redirect to'
         state: "Status"
         dns_name: "DNS name"
+      recurring_booking_period:
+        transactable_line_items:
+          name: "Service Type / Item"
+          description: "Description"
+          quantity: "Hours / Items:"
+          unit_price: "Rate / Cost:"
       locale:
         code: 'Select language'
         custom_name: 'Custom name'

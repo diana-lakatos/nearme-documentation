@@ -49,7 +49,7 @@ class PaymentAuthorizer
       billing_authoriazation_params.merge(
         {
           success: true,
-          immediate_payout: @payment_gateway.immediate_payout(@authorizable.company),
+          immediate_payout: @payment_gateway.immediate_payout(@payment.company),
           merchant_account_id: merchant_account.try(:id)
         }
       )
@@ -61,7 +61,7 @@ class PaymentAuthorizer
   end
 
   def merchant_account
-    @payment_gateway.merchant_account(@authorizable.company)
+    @payment_gateway.merchant_account(@payment.company)
   end
 
   def billing_authoriazation_params
@@ -76,7 +76,7 @@ class PaymentAuthorizer
   end
 
   def payment_record
-    @authorizable.payments.build(amount: @authorizable.total_amount, company_id: @authorizable.company_id)
+    @authorizable.payments.build(amount: @authorizable.total_amount, company_id: @payment.company_id)
   end
 
   def prepare_options(options)

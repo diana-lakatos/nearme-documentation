@@ -1,0 +1,16 @@
+<h2>To: {{ transactable.name }}</h2>
+<div class="row">
+  <div class="col-md-6">
+    <p>Contact: {{ transactable.properties.project_contact }}</p>
+    <p>Company: {{ transactable.properties.company_name }}</p>
+    <p>Workplace: {{ transactable.properties.workplace_type }}</p>
+    {% if transactable.properties.workplace_type == 'On Site' %}
+      <p>Office: {{ transactable.properties.office_location }}</p>
+    {% endif %}
+  </div>
+  <div class="col-md-6">
+    <p>Approx. Budget: {{ transactable.properties.budget | pricify }}</p>
+    <p>Deadline: {{ transactable.properties.deadline | to_date | l: 'short' }}</p>
+    <p>Approx. Time to Complete: {{ transactable.properties.estimation }}</p>
+  </div>
+</div>

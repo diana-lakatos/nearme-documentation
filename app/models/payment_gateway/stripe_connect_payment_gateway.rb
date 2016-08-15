@@ -62,7 +62,7 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
         payments: [payment.reload],
         payment_gateway_mode: mode,
         payment_gateway_id: self.id,
-        token: charge_record.source_transfer
+        token: charge_record.response.params['transfer']
       )
     end
     charge_record

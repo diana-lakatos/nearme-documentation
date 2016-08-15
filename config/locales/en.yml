@@ -1278,7 +1278,11 @@ en:
       delete_warning: 'You are about to remove credit card. Please note that it still will be charged if used for any past and unpaid reservations you have made. Please make sure to cancel all transations separately.'
       stripe: 'Credit Cards'
       in_gateway: '%{payment_gateway} Credit Cards'
+    order_items:
+      back_to_projects: "< Back to Projects In Progress"
+      total: "Total"
     orders:
+      track_time_and_expenses: Track Time and Expenses
       not_collaborator: 'Only invited users can make an offer'
       payment_missing: "Missing"
       details: "Details"
@@ -1404,6 +1408,7 @@ en:
         colors: 'Colors'
 
     user_reservations:
+      track_time: "TRACK TIME & EXPENCES"
       approved_offer: 'APPROVED OFFER'
       send_message: 'SEND MESSAGE'
       view_case: 'VIEW CASE DETAILS'
@@ -1507,6 +1512,7 @@ en:
           cancel: 'Do you really want to cancel subscription?'
           confirm: 'Do you want to confirm subscription?'
           decline: 'Are you sure you want to decline?'
+          confirm_credit_card: 'Credit card details are required to accept offer.'
         cancel: 'Cancel'
         confirm: 'Confirm'
         decline: 'Decline'
