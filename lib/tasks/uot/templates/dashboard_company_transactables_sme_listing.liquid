@@ -1,26 +1,16 @@
 {% for transactable in transactables %}
   {% assign collaborator = current_user  | find_collaborator: transactable %}
-  <article class="listing" id="transactable_{{transactable.id}}">
-    <h2>{{ transactable.name }}</h2>
-    <a href="{{ transactable.show_path }}">Project details</a>
-    <div class="row">
-      <div class="col-md-6">
-        <p>Contact: {{ transactable.properties.project_contact }}</p>
-        <p>Company: {{ transactable.company.name }}</p>
-        <p>Invite sent: {{ collaborator.approved_by_owner_at | to_date | l: 'short' }}</p>
-        <p>Workplace: {{ transactable.properties.workplace_type }}</p>
-        {% if transactable.properties.workplace_type == 'On Site' %}
-          <p>Office: {{ transactable.properties.office_location }}</p>
-        {% endif %}
-      </div>
-      <div class="col-md-6">
-        <p>Approx. Budget: {{ transactable.properties.budget | pricify }}</p>
-        <p>Deadline: {{ transactable.properties.deadline | to_date | l: 'short' }}</p>
-        <p>Approx. Time to Complete: {{ transactable.properties.estimation }}</p>
-      </div>
-    </div>
-    <h4>Project Description</h4>
-    <p>{{ transactable.description }}</p>
+  <article class="listing-b" id="transactable_{{transactable.id}}">
+    <h2>
+      {{ transactable.name }}
+      {% if transactable.state == 'in progress' %}
+        <span class="label label-info">In Progress</span>
+      {% elsif transactable.state == 'completed' %}
+        <span class="label label-success">Completed</span>
+      {% elsif transactable.state == 'cancelled' %}
+        <span class="label label-cancelled">Cancelled</span>
+      {% endif %}
+    </h2>
 
     {% assign orders = current_user | get_enquirer_orders: transactable %}
     {% assign can_make_offer = false %}
@@ -37,14 +27,55 @@
       {% endif  %}
     {% endif %}
 
-    {% include 'dashboard/company/transactables/sme_actions.html' %}
+    {% unless current_user.has_verified_merchant_account == true %}
+      <div class='alert alert-warning'>Before making any offer, you need to set up your <a href="{{ 'edit_dashboard_company_payouts_path' | generate_url: company.id }}">merchant account</a>.</div>
+    {% endunless %}
+
+    <div class="row">
+      <div class="col-md-9">
+        <dl class="properties">
+
+          <dt>Contact</dt>
+          <dd>{{ transactable.properties.project_contact }}</dd>
+
+          <dt>Company</dt>
+          <dd>{{ transactable.company.name }}</dd>
+
+          <dt>Invite sent</dt>
+          <dd>{{ collaborator.approved_by_owner_at | to_date | l: 'short' }}</dd>
+
+          <dt>Workplace</dt>
+          <dd>{{ transactable.properties.workplace_type }}</dd>
+
+          {% if transactable.properties.workplace_type == 'On Site' %}
+            <dt>Office</dt>
+            <dd>{{ transactable.properties.office_location }}</dd>
+          {% endif %}
+
+          <dt>Approx. Budget</dt>
+          <dd>{{ transactable.properties.budget | pricify }}</dd>
+
+          <dt>Deadline</dt>
+          <dd>{{ transactable.properties.deadline | to_date | l: 'short' }}</dd>
+
+          <dt>Approx. Time to Complete</dt>
+          <dd>{{ transactable.properties.estimation }}</dd>
+        </dl>
+
+        <h4>Description</h4>
+        <p>{{ transactable.description }}</p>
+      </div>
+      <div class="col-md-3">
+        {% include 'dashboard/company/transactables/sme_actions.html' %}
+      </div>
+    </div>
 
     <hr>
 
     {% if orders != empty %}
       {% assign order = orders.last %}
       <h3>Offer</h3>
-      <table>
+      <table class="table">
         <thead>
           <tr>
             <th>Offer Made:</th>
@@ -66,10 +97,10 @@
             {% if order.unconfirmed? %}
               <td>
                 {% if order.unconfirmed? %}
-                  <a href="{{ 'edit_dashboard_order_path' | generate_url: order.id }}">{{ 'general.edit' | t }}</a>
+                  <a class="btn btn-info" href="{{ 'edit_dashboard_order_path' | generate_url: order.id }}">{{ 'general.edit' | t }}</a>
                 {% endif %}
                 {% if order.unconfirmed?  %}
-                  <a href="{{ 'enquirer_cancel_dashboard_order_path' | generate_url: order.id }}" data-method="post" data-confirm="Are you sure?">{{ 'general.cancel' | t }}</a>
+                  <a class="btn btn-danger" href="{{ 'enquirer_cancel_dashboard_order_path' | generate_url: order.id }}" data-method="post" data-confirm="Are you sure you want to cancel?">{{ 'general.cancel' | t }}</a>
                 {% endif %}
               </td>
             {% elsif order.confirmed? %}
