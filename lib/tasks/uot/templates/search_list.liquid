@@ -124,36 +124,41 @@
                             </div>
                         </header>
 
-                        {% assign category = user.buyer_categories['Area Of Expertise'] %}
-                        <div class="content">
-                            <h3>{{ category.name }}</h3>
-                            <ul>
-                                {% for expertise in category.children %}
-                                    <li>{{ expertise }}</li>
-                                {% endfor %}
-                            </ul>
+                        {% assign aoe_category = user.buyer_categories['Area Of Expertise'] %}
+                        {% assign industry_category = user.buyer_categories['Industry'] %}
+                        {% assign languages_category = user.buyer_categories['Languages'] %}
 
-                            <p><a href="{{ user.user_profile_url }}">View More</a></p>
+                        {% if aoe_category.children.size > 0 || industry_category.children.size > 0 || languages_category.children.size > 0 || user.buyer_properties.bio != blank %}
+                            <div class="content">
+                                {% if aoe_category.children.size > 0 %}
+                                    <h3>{{ aoe_category.name }}</h3>
+                                    <ul class="short-list">
+                                        {% for expertise in aoe_category.children %}
+                                        <li>{{ expertise }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
 
-                            {% assign category = user.buyer_categories['Industry'] %}
-                            <h3>{{ category.name }}</h3>
-                            <ul>
-                                {% for industry in category.children %}
-                                    <li>{{ industry }}</li>
-                                {% endfor %}
-                            </ul>
-                            <p><a href="{{ user.user_profile_url }}">View More</a></p>
+                                {% if industry_category.children.size > 0 %}
+                                    <h3>{{ industry_category.name }}</h3>
+                                    <ul class="short-list">
+                                        {% for industry in industry_category.children %}
+                                        <li>{{ industry }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
 
-                             {% assign category = user.buyer_categories['Languages'] %}
-                            <h3>{{ category.name }}</h3>
-                            {% for language in category.children %}
-                                <p>{{ language }}</p>
-                            {% endfor %}
+                                {% if languages_category.children.size > 0 %}
+                                    <h3>{{ languages_category.name }}</h3>
+                                    <p>{{ languages_category.children | join: ', ' }}</p>
+                                {% endif %}
 
-                            <h3>Bio</h3>
-                            <p>{{ user.buyer_properties.bio }}</p>
-
-                        </div>
+                                {% if user.buyer_properties.bio != blank %}
+                                    <h3>Bio</h3>
+                                    <p>{{ user.buyer_properties.bio }}</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
                     </div>
 
                     <aside class="sidebar">
@@ -172,6 +177,7 @@
                         </ul>
                     </aside>
 
+                    {% if user.tags.size > 0 %}
                     <div class="tags-a tags-short-list">
                         <h4>Tags</h4>
                         <ul>
@@ -180,6 +186,7 @@
                             {% endfor %}
                         </ul>
                     </div>
+                    {% endif %}
                 </article>
 
                 {% include 'transactables/invite.html' user: user %}
