@@ -92,6 +92,10 @@ class OrderDrop < BaseDrop
     @order.user.transactable_line_items.where(line_item_source_id: @order.transactable.id).map(&:line_itemable)
   end
 
+  def new_order_item_path
+    routes.new_dashboard_order_order_item_path(@order)
+  end
+
   def new_payment_url
     routes.new_dashboard_company_orders_received_payment_path(order)
   end
@@ -102,6 +106,10 @@ class OrderDrop < BaseDrop
 
   def rejection_form_path
     routes.rejection_form_dashboard_company_orders_received_path(order)
+  end
+
+  def confirmation_form_path
+    routes.new_dashboard_company_orders_received_payment_subscription_path(order)
   end
 
   def confirm_path

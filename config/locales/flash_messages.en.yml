@@ -290,6 +290,8 @@ en:
         reservation_not_confirmed: "Your reservation could not be confirmed."
         reservation_rejected: "You have rejected the reservation. Maybe next time!"
         payment_requested: "Your request has been sent"
+      offer:
+        accepted: "You have successfuly added credit card and accepted an offer."
       data_upload:
         created: "Import has been scheduled. You'll receive an email when it's done."
         scheduled: 'Data has been scheduled to be imported.'

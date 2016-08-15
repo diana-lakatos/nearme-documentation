@@ -92,6 +92,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
     render layout: false
   end
 
+
   def reject
     if @order.reject(rejection_reason)
       event_tracker.rejected_a_booking(@order)

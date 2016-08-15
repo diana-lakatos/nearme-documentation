@@ -93,9 +93,9 @@ module Payable
 
     def shared_payment_attributes
       {
-        payer: owner,
-        company: company,
-        company_id: company_id,
+        payer: payment_subscription ? payment_subscription.payer : owner,
+        company: payment_subscription ? payment_subscription.company : company,
+        company_id: payment_subscription ? payment_subscription.company.id : company_id,
         currency: currency,
         total_amount_cents: total_amount_cents,
         subtotal_amount_cents: subtotal_amount_cents,

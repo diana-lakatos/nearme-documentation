@@ -92,7 +92,7 @@
                   {% if order.unconfirmed? %}
                     <a href="{{ order.payment_documents[0].file_url }}" target="_blank" class="btn btn-info">Review</a>
                     <a href="{{ order.rejection_form_path }}" data-modal="true" class="btn btn-danger">Reject</a>
-                    <a href="{{ order.confirm_path }}" data-method="post" data-confirm="Are you sure?" class="btn btn-success">Accept</a>
+                    <a href="{{ order.confirmation_form_path }}" data-modal="true">Accept</a>
                   {% endif %}
                 </td>
               </tr>

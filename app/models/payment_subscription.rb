@@ -23,7 +23,7 @@ class PaymentSubscription < ActiveRecord::Base
   accepts_nested_attributes_for :credit_card
 
   validates_associated :credit_card
-
+  validates :credit_card, presence: true, if: Proc.new { |p| p.new_record? }
   validates :payer, presence: true
 
   before_validation do |p|
@@ -69,7 +69,7 @@ class PaymentSubscription < ActiveRecord::Base
     super(cc_attrs.merge(
         payment_gateway: self.payment_gateway,
         test_mode: test_mode?,
-        client: self.subscriber.client
+        client: self.payer || self.subscriber.user
       )
     )
   end

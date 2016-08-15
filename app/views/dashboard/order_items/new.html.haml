@@ -1,0 +1,9 @@
+- title t('dashboard.orders.track_time_and_expenses')
+
+.panel
+  .panel-body
+    %h3=  t('dashboard.orders.track_time_and_expenses')
+    = link_to t('dashboard.order_items.back_to_projects'), dashboard_company_transactable_type_transactables_path(@order.transactable.transactable_type, status: 'in progress')
+    .orders-a
+      = render 'form'
+      = render partial: 'order_item', collection: @order_items

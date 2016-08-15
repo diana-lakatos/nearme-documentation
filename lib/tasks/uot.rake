@@ -670,6 +670,11 @@ namespace :uot do
     @user_message_creator = Utils::DefaultAlertsCreator::UserMessageCreator.new
     @user_message_creator.create_user_message_created!
 
+    @order_item_creator = Utils::DefaultAlertsCreator::OrderItemCreator.new
+
+    @order_item_creator.create_notify_enquirer_approved_order_item!
+    @order_item_creator.create_notify_enquirer_rejected_order_item!
+    @order_item_creator.create_notify_lister_created_order_item!
 
     Workflow.where(workflow_type: %w(request_for_quote reservation recurring_booking inquiry spam_report)).destroy_all
     WorkflowAlert.where(alert_type: 'sms').destroy_all
@@ -681,28 +686,21 @@ namespace :uot do
     create_email('post_action_mailer/list')
     create_email('post_action_mailer/enquirer_onboarded')
     create_email('post_action_mailer/lister_onboarded')
-
     create_email('transactable_mailer/notify_lister_of_cancellation')
     create_email('transactable_mailer/notify_collaborators_of_cancellation')
     create_email('transactable_mailer/notify_enquirer_of_completion')
-
     create_email('offer_mailer/notify_guest_of_confirmation')
-
-
     create_email('offer_mailer/notify_host_of_cancellation_by_guest')
-
-
     create_email('offer_mailer/notify_guest_of_cancellation_by_guest')
-
     create_email('offer_mailer/notify_guest_with_confirmation')
     create_email('offer_mailer/notify_host_with_confirmation')
-
     create_email("user_message_mailer/notify_user_about_new_message")
-
     create_email('transactable_mailer/transactable_owner_added_collaborator_email')
     create_email('transactable_mailer/collaborator_declined')
-
     create_email('offer_mailer/notify_guest_of_rejection')
+    create_email('order_item_mailer/notify_enquirer_approved_order_item')
+    create_email('order_item_mailer/notify_enquirer_rejected_order_item')
+    create_email('order_item_mailer/notify_lister_created_order_item')
 
   end
 

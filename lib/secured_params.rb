@@ -1460,6 +1460,13 @@ class SecuredParams
     ]
   end
 
+  def order_item #aka RecurringBookingPeriod
+    [
+      :comment,
+      transactable_line_items_attributes: nested(self.line_item),
+    ]
+  end
+
   def waiver_agreement_templates
     WaiverAgreementTemplate.all.map{|w| w.id.to_s}
   end

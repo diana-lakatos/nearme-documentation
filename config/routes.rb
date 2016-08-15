@@ -778,6 +778,7 @@ DesksnearMe::Application.routes.draw do
             patch :reject
             put :reject
             get :rejection_form
+            get :confirmation_form
           end
 
           resources :payments do
@@ -787,6 +788,8 @@ DesksnearMe::Application.routes.draw do
               post :mark_as_paid
             end
           end
+
+          resources :payment_subscriptions
 
           resources :shipments do
             member do
@@ -905,12 +908,14 @@ DesksnearMe::Application.routes.draw do
 
       resources :images
       resources :orders do
+        resources :order_items
         member do
           get :success
           post :generate_next_period
           post :enquirer_cancel
         end
       end
+
       resources :photos, :only => [:create, :destroy, :edit, :update]
       resources :seller_attachments, only: %i(create update destroy)
       resources :reviews, :only => [:index, :create, :update, :destroy] do

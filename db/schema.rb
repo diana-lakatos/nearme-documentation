@@ -2097,6 +2097,9 @@ ActiveRecord::Schema.define(version: 20160812192936) do
     t.datetime "paid_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "order_id"
+    t.text     "comment"
+    t.string   "state"
   end
 
   create_table "recurring_bookings", force: :cascade do |t|

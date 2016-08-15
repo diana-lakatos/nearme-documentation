@@ -53,6 +53,19 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
+    var els = $('[data-order-items]');
+    if (els.length === 0) {
+        return;
+    }
+    require.ensure('./new_ui/controllers/complete_reservation_controller', function(require){
+        var OrderItemsController = require('./new_ui/controllers/order_items_controller');
+        els.each(function(){
+            return new OrderItemsController(this);
+        });
+    });
+});
+
+DNM.registerInitializer(function(){
     var els = $('[data-category-autocomplete]');
     if (els.length === 0) {
         return;
@@ -582,8 +595,9 @@ DNM.registerInitializer(function(){
     $(document).on('init:paymentmodal.nearme', function(){
         require.ensure('./sections/dashboard/payment_modal_controller', function(require){
             var PaymentModalController = require('./sections/dashboard/payment_modal_controller');
-            return new PaymentModalController($('.dialog__body'));
+            new PaymentModalController($('.dialog__body'));
         });
     });
 });
+
 DNM.run();
