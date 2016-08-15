@@ -13,7 +13,8 @@ namespace :uot do
         'dashboard/user_bids': 1
       },
       skip_company: true,
-      click_to_call: true
+      click_to_call: true,
+      wish_lists_enabled: true
     )
     @instance.build_documents_upload(
       enabled: true,
@@ -27,7 +28,9 @@ namespace :uot do
       onboarding: true,
       create_company_on_sign_up: true,
       show_categories: true,
-      category_search_type: 'AND'
+      category_search_type: 'AND',
+      searchable: true,
+      search_only_enabled_profiles: true
     )
 
     create_transactable_types!
