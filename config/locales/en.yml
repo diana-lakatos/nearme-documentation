@@ -310,6 +310,9 @@ en:
       notices:
         key_created: "Custom translation key has been successfully created: %{key}."
         key_destroyed: 'Custom translation key has been deleted.'
+    projects:
+      transactable_types:
+        transactable_types: "Transactable Types"
 
     services: 'Services'
     products: 'Products'

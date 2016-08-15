@@ -1,10 +1,10 @@
-class InstanceAdmin::Projects::ProjectTypes::FormComponentsController < InstanceAdmin::FormComponentsController
+class InstanceAdmin::Projects::TransactableTypes::FormComponentsController < InstanceAdmin::FormComponentsController
   before_filter :form_type, only: [:index]
 
   def create_as_copy
     project_type_id = params[:copy_template][:form_componentable_id]
     form_type = params[:copy_template][:form_type]
-    ProjectType.find(project_type_id).form_components.where(form_type: form_type).each do |form_component|
+    TransactableType.find(project_type_id).form_components.where(form_type: form_type).each do |form_component|
       @form_componentable.form_components << form_component.dup
     end
 
@@ -13,12 +13,16 @@ class InstanceAdmin::Projects::ProjectTypes::FormComponentsController < Instance
 
   private
 
+  def resource_class
+    TransactableType
+  end
+
   def form_type
-    @form_type = FormComponent::PROJECT_ATTRIBUTES
+    @form_type = FormComponent::TRANSACTABLE_ATTRIBUTES
   end
 
   def find_form_componentable
-    @form_componentable = ProjectType.find(params[:project_type_id])
+    @form_componentable = TransactableType.find(params[:transactable_type_id])
   end
 
   def redirect_path

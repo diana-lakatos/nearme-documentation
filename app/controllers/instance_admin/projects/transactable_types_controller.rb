@@ -1,7 +1,7 @@
 class InstanceAdmin::Projects::TransactableTypesController < InstanceAdmin::Manage::BaseController
 
   def index
-    @project_types = TransactableType.all
+    @project_types = TransactableType.where(type: nil)
   end
 
   def new
