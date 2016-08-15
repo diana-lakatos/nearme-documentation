@@ -19,13 +19,15 @@ class Dashboard::ProjectsController < Dashboard::BaseController
     @transactable = @transactable_type.transactables.build
     @transactable.creator = current_user
     @transactable.assign_attributes(transactable_params)
-    @transactable.draft_at = Time.now if params[:save_for_later]
+    @transactable.draft = Time.now if params[:save_for_later]
     @transactable.location_not_required = true
     @transactable.build_action_type
     @transactable.action_type.transactable_type_action_type = @transactable_type.action_types.first
     @transactable.topics_required = true
+    validate = true
+    validate = false if params[:save_for_later]
 
-    if @transactable.save
+    if @transactable.save(validate: validate)
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.translated_bookable_noun)
       redirect_to dashboard_project_type_projects_path(@transactable_type)
     else
@@ -49,9 +51,11 @@ class Dashboard::ProjectsController < Dashboard::BaseController
     @transactable.topics_required = true
     draft = @transactable.draft
     @transactable.draft = nil if params[:submit]
+    validate = true
+    validate = false if @transactable.draft
     respond_to do |format|
       format.html {
-        if @transactable.save
+        if @transactable.save(validate: validate)
           flash[:success] = t('flash_messages.manage.listings.listing_updated')
           redirect_to dashboard_project_type_projects_path(@transactable_type)
         else

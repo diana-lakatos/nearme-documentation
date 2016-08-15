@@ -12,7 +12,7 @@ class InstanceAdmin::ProjectSearchForm < SearchForm
     result = {}
 
     if q.present?
-      result[:by_search_query] = ["%#{q}%"]
+      result[:search_by_query] = [[:name, :description], q]
     end
 
     if date.present?

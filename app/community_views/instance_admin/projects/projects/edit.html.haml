@@ -1,4 +1,4 @@
-= simple_form_for [:instance_admin, :projects, @project], html: { class: 'form-a', data: { modal: true } } do |f|
+= simple_form_for @project, url: instance_admin_projects_project_path(@project), html: { class: 'form-a' } do |f|
   .content-container
     %h4 Edit #{@project.name}
 
