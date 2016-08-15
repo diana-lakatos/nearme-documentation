@@ -1,12 +1,13 @@
 class Dashboard::Company::TransactableCollaboratorsController < Dashboard::BaseController
 
-  before_filter :find_transactable_type
   before_filter :find_transactable
+  before_filter :find_transactable_type
   before_filter :find_transactable_collaborator, except: [:create]
 
   def create
-    user = User.find_by_email(params[:email])
-    @transactable_collaborator = @transactable.transactable_collaborators.create(user: user, approved_at: Time.zone.now)
+    @transactable_collaborator = @transactable.transactable_collaborators.create(transactable_collaborator_params) do |tc|
+      tc.approved_by_owner_at = Time.zone.now
+    end
     render_transactable_collaborator
   end
 
@@ -40,15 +41,15 @@ class Dashboard::Company::TransactableCollaboratorsController < Dashboard::BaseC
   def render_transactable_collaborator
     html = render_to_string(partial: @transactable_collaborator)
     error = @transactable_collaborator.errors.full_messages.to_sentence
-    render json: { html: html, error: error }
+    render json: { html: html, error: error }, status: error.present? ? 400 : 200
   end
 
   def find_transactable_type
-    @transactable_type = TransactableType.find(params[:transactable_type_id])
+    @transactable_type = @transactable.transactable_type
   end
 
   def find_transactable
-    @transactable = current_user.transactables.find(params[:transactable_id])
+    @transactable = current_user.transactables.find(params[:transactable_id] || transactable_collaborator_params[:transactable_id])
   end
 
   def find_transactable_collaborator

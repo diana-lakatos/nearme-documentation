@@ -446,6 +446,13 @@ class UserDrop < BaseDrop
     @source.created_listings.with_state(:completed).count
   end
 
+  def pending_transactables_for_current_user
+    Transactable.where(creator_id: @context['current_user'].id).with_state(:pending).
+    joins("LEFT Outer JOIN transactable_collaborators tc on
+      tc.transactable_id = transactables.id and tc.user_id = #{@source.id} and
+      tc.deleted_at is NULL").where("tc.id is NULL")
+  end
+
   private
     def social_connections
       @social_connections_cache ||= @source.social_connections

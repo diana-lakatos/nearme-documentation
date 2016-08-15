@@ -849,6 +849,7 @@ DesksnearMe::Application.routes.draw do
           end
         end
 
+        resources :transactable_collaborators
         resources :transactable_types do
           resources :transactables do
             member do

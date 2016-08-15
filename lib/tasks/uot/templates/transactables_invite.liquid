@@ -10,13 +10,14 @@
 
       <p>Please select the project from the list below:</p>
 
-      <form method="post" action="./">
-        <input type="hidden" name="project[user_id]" value="{{ user.id }}">
+      <form method="post" action="{{ 'dashboard_company_transactable_collaborators_path' | generate_url }}">
+        <input type="hidden" name="transactable_collaborator[user_id]" value="{{ user.id }}">
+        <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
         <div class="control-group">
           <label for="projects-list" class="control-label">My projects</label>
           <span class="select-a">
-            <select id="projects-list" name="project[id]" class="unstyled-select">
-              {% for project in current_user.pending_transactables %}
+            <select id="projects-list" name="transactable_collaborator[transactable_id]" class="unstyled-select">
+              {% for project in user.pending_transactables_for_current_user %}
               <option value="{{ project.id }}">{{ project.name }}</option>
               {% endfor %}
             </select>
@@ -34,7 +35,7 @@
       <p>Would you like to add a project now?</p>
 
       <div class="actions">
-        <a href="./" class="button-a">Add a project</a>
+        <a href="{{ platform_context.transactable_types[0].new_transactable_path }}" class="button-a">Add a project</a>
         <button type="button" class="button-b" data-close>Cancel</button>
       </div>
     {% endif %}
