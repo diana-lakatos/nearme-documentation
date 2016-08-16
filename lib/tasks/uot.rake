@@ -11,11 +11,15 @@ namespace :uot do
         'main_menu/cta': 1,
         'dashboard/offers': 1,
         'dashboard/user_bids': 1,
-        'dashboard/host_reservations': 1
+        'dashboard/host_reservations': 1,
+        'main_menu/my_bookings': 1
       },
       skip_company: true,
       click_to_call: true,
-      wish_lists_enabled: true
+      wish_lists_enabled: true,
+      default_currency: 'USD',
+      default_country: 'United States',
+      force_accepting_tos: true
     )
     @instance.build_documents_upload(
       enabled: true,
@@ -686,6 +690,8 @@ namespace :uot do
     @order_item_creator.create_notify_enquirer_approved_order_item!
     @order_item_creator.create_notify_enquirer_rejected_order_item!
     @order_item_creator.create_notify_lister_created_order_item!
+
+    Utils::DefaultAlertsCreator::CollaboratorCreator.new.create_all!
 
     Workflow.where(workflow_type: %w(request_for_quote reservation recurring_booking inquiry spam_report)).destroy_all
     WorkflowAlert.where(alert_type: 'sms').destroy_all

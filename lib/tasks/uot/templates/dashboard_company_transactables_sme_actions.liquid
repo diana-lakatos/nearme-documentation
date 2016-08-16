@@ -1,8 +1,10 @@
 <ul class="actions-a">
 
-  <li>
-    <a href="{{ transactable.show_path }}" class="btn btn-default">Project details</a>
-  </li>
+  {% if current_status != 'archived' %}
+    <li>
+      <a href="{{ transactable.show_path }}" class="btn btn-default">Project details</a>
+    </li>
+  {% endif %}
 
   <li>
     <a class="btn btn-info" data-modal="true" href="{{ transactable.creator.user_message_path }}">Send Message</a>
