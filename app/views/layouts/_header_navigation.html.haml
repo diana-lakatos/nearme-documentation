@@ -50,7 +50,7 @@
               = link_to transactable_type.manage_transactables_path, class: 'nav-link dropdown-toggle' do
                 %div.truncate= title
 
-        - if platform_context.bookable? && current_instance.split_registration && current_user.seller_profile.present?
+        - if platform_context.bookable? && current_instance.split_registration && current_user.seller_profile.present? && HiddenUiControls.find('dashboard/host_reservations').visible?
           %li
             = link_to main_app.dashboard_company_orders_received_index_path, class: 'nav-link dropdown-toggle' do
               %span= t 'top_navbar.bookings_received'

@@ -42,7 +42,7 @@
             = t('top_navbar.my_bookings')
             = current_user_orders_count_formatted
 
-      - if platform_context.bookable? && current_instance.split_registration && current_user.seller_profile.present?
+      - if platform_context.bookable? && current_instance.split_registration && current_user.seller_profile.present? && HiddenUiControls.find('dashboard/host_reservations').visible?
         %li
           = link_to main_app.dashboard_company_host_reservations_path do
             = t('top_navbar.bookings_received')
