@@ -56,11 +56,12 @@ class RecurringBookingPeriod < ActiveRecord::Base
   end
 
   def generate_payment!
-    payment = build_payment(shared_payment_attributes.merge({
-      credit_card: payment_subscription.credit_card,
-      payment_method: payment_subscription.payment_method,
-    })
-                           )
+    payment = build_payment(
+      shared_payment_attributes.merge({
+        credit_card: payment_subscription.credit_card,
+        payment_method: payment_subscription.payment_method,
+      })
+    )
 
     payment.authorize && payment.capture!
     payment.save!
@@ -93,7 +94,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
   end
 
   def to_liquid
-    @recurring_booking_period = OrderItemDrop.new(self)
+    @booking_period_drop ||= RecurringBookingPeriodDrop.new(self)
   end
 
   def decorate

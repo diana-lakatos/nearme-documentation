@@ -8,13 +8,12 @@
     <li><a href='{{ transactable.edit_path }}' class="btn btn-primary">Edit Project</a></li>
   {% endif %}
 
-  {% if current_status == "in progress" or current_status == "archived" %}
-    <li><a href="#" class="btn btn-default">View Time &amp; Expenses</a></li>
+  {% if transactable.pending? == false and accepted_order != blank %}
+    <li><a href="{{ 'dashboard_order_order_items_path' | generate_url: order_id: accepted_order.id, transactable_id: transactable.id }}" class="btn btn-default">View Time &amp; Expenses</a></li>
   {% endif %}
 
   {% if current_status == 'in progress' %}
-    <li><a href="{{ accepted_order.complete_path }}" data-method="post" class="btn btn-success" data-confirm="Are you sure you want to mark this project as completed?">Mark project as Completed</a>
-    </li>
+    <li><a href="{{ accepted_order.complete_path }}" data-method="post" class="btn btn-success" data-confirm="Are you sure you want to mark this project as completed?">Mark Project as Completed</a></li>
   {% endif %}
 
   {% if current_status != 'archived' %}

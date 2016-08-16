@@ -1,4 +1,5 @@
 class OrderDrop < BaseDrop
+  include CurrencyHelper
 
   attr_reader :order
 
@@ -19,7 +20,7 @@ class OrderDrop < BaseDrop
     :archived_at, :state, :cancelable?, :archived?, :penalty_charge_apply?, :rejection_reason,
     :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_hours,
     :created_at, :payment, :total_units_text, :enquirer_cancelable, :enquirer_editable,
-    :transactable, :cancelled_at, :confirmed_at, to: :order
+    :transactable, :cancelled_at, :confirmed_at, :recurring_booking_periods, :creator, to: :order
 
   def initialize(order)
     @order = order.decorate

@@ -44,7 +44,6 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
 
     else
       @error = @user_message.errors.messages.values.flatten.first
-
       if request.xhr?
         render :partial => "form"
       else

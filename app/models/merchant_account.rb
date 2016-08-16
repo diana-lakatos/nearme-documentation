@@ -143,6 +143,11 @@ class MerchantAccount < ActiveRecord::Base
     @redirect_url || Rails.application.routes.url_helpers.edit_dashboard_company_payouts_path
   end
 
+  def next_transfer_date
+    #TODO Fix for Tomasz
+    3.days.from_now.to_date
+  end
+
   private
 
   def set_test_mode_if_necessary

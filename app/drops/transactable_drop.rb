@@ -62,7 +62,7 @@ class TransactableDrop < BaseDrop
     :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, :attachments, :confirm_reservations,
     :to_key, :model_name, :deposit_amount_cents, :customizations, :to_param, :hours_for_guest_to_confirm_payment, :availability_exceptions,
     :action_free_booking?, :average_rating, :time_based_booking?, :transactable_collaborators, :collaborating_users, :approved_transactable_collaborators,
-    :user_messages, :line_item_orders, :state, :created_at, to: :source
+    :user_messages, :line_item_orders, :state, :created_at, :pending?, :transactable_type_id, to: :source
 
   # action_price_per_unit
   #   returns true if there is a single unit available of the transactable item for a given time period
@@ -419,11 +419,11 @@ class TransactableDrop < BaseDrop
   end
 
   def orders
-    line_item_orders.order(created_at: :desc).uniq
+    line_item_orders.order(created_at: :desc).active.uniq
   end
 
-  def active_orders
-    orders.without_state(:inactive)
+  def confirmed_order
+    line_item_orders.confirmed.first
   end
 
 end

@@ -1,0 +1,23 @@
+<div class="row">
+  <div class="col-sm-5">History for <a href="{{ transactable.show_path }}">{{ order.transactable.name }}</a></div>
+
+  <div class="col-sm-5">Next Payment Cycle Scheduled For: {{ order.user.default_company.merchant_accounts[0].next_transfer_date | l: 'short' }}</div>
+</div>
+<hr/>
+
+{% for item in order.recurring_booking_periods %}
+  {% unless item.persisted? %}
+    {% continue %}
+  {% endunless %}
+  {% include 'dashboard/order_items/order_item' %}
+{% endfor %}
+<hr/>
+<hr/>
+<div class="row">
+  <div class="col-sm-3">Grand Total: {{ order.formatted_total_amount }}</div>
+</div>
+
+<div class="row">
+  <div class="col-sm-6">Total Paid: {{ order.formatted_total_paid_amount }}</div>
+  <div class="col-sm-6">Total Unpaid: {{ order.formatted_total_unpaid_amount }}</div>
+</div>

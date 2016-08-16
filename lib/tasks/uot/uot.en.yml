@@ -23,6 +23,7 @@ en:
       host_reservations: My Offers
       edit: Account
       transactables: My Projects
+      order_items: 'Time / Expense Overview'
       user_reservations_count_html: My Offers <span>%{count}</span>
 
     user_reservations:
@@ -139,6 +140,9 @@ en:
       locations:
         add_your_company: Please complete your Project first.
       add_your_company: Please complete your Project first.
+      order_items:
+        updated: 'Expenses have been updated.'
+        approved: 'Expenses have been approved.'
     manage:
       listings:
         listing_cancelled: "Your project has been canceled."
