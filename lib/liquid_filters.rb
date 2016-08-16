@@ -397,4 +397,7 @@ module LiquidFilters
     PaymentGateway.with_credit_card.mode_scope.first.try(:id)
   end
 
+  def find_collaborators_for_user_projects(current_user, user)
+    user.source.transactable_collaborators.where(transactable_id: current_user.source.created_listings.pluck(:id))
+  end
 end

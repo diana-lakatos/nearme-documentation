@@ -585,7 +585,8 @@ namespace :uot do
 
   def create_user_profile!
     load_template('registrations/show', false)
-    load_template('transactables/invite')
+    load_template('dashboard/company/users/collaborations_for_current_user', false)
+    load_template('dashboard/company/transactable_collaborators/transactable_collaborator')
   end
 
   def create_wish_list_button!
