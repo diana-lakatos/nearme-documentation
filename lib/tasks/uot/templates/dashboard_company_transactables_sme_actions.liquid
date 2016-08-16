@@ -12,7 +12,12 @@
 
   {% if can_make_offer == true %}
     <li>
-      <a class="btn btn-info" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id }}">Make an Offer</a>
+      {% if current_user.has_verified_merchant_account == true %}
+        <a class="btn btn-info" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id }}">Make an Offer</a>
+      {% else %}
+        <a class="btn btn-info" data-modal="true" href="{{ 'required_modal_dashboard_company_payouts_path' | generate_url }}">Make an Offer</a>
+      {% endif %}
+
     </li>
   {% endif %}
 </ul>

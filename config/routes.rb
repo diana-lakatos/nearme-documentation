@@ -841,7 +841,11 @@ DesksnearMe::Application.routes.draw do
             get :uploaded_by_me
           end
         end
-        resource :payouts, except: [:index, :show, :new, :create, :destroy]
+        resource :payouts, except: [:index, :show, :new, :create, :destroy] do
+          collection do
+            get :required_modal
+          end
+        end
         resources :merchant_accounts do
           resources :paypal_agreements
           member do

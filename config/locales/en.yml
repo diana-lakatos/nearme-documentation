@@ -1270,6 +1270,8 @@ en:
         resolved: "Resolved"
   dashboard:
     payouts:
+      payment_transfers: 'Payment Transfers'
+      payment_transfers_info: 'Payment Transfers for your profile must be set up before making any offer.  This step is required, so in the event that an offer is accepted, you are able to get paid for your work.'
       merchant_boarding_missing_gateway: "Looks like this marketplace doesn't support %{currency} currency for your country (%{country_code}). Please contact marketplace owner if you are missing some payouts."
     additional_charge_type:
       new: "New Upsell & Add-ons"

@@ -1,0 +1,9 @@
+%header.dialog__header
+  %h2#dialog__title= t('dashboard.payouts.payment_transfers')
+.dialog__body#payment-modal-box
+  = t('dashboard.payouts.payment_transfers_info')
+.dialog__actions
+  = link_to "SET UP PAYMENT TRANSFERS", edit_dashboard_company_payouts_path, class: "btn btn-default btn-danger"
+  %button.modal-close
+    %span.intelicon-close-outlined
+      Close
