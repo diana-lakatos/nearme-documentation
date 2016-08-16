@@ -479,6 +479,10 @@ class UserDrop < BaseDrop
     count > 0 ? count : nil
   end
 
+  def collaborator_transactables_for_current_user
+    @source.transactables_collaborated.where(creator_id: @context['current_user'].try(:id))
+  end
+
   private
     def social_connections
       @social_connections_cache ||= @source.social_connections

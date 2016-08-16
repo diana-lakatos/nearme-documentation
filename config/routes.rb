@@ -876,7 +876,11 @@ DesksnearMe::Application.routes.draw do
           end
         end
         resource :transfers
-        resources :users, :except => [:edit, :update]
+        resources :users, :except => [:edit, :update] do
+          member do
+            get :collaborations_for_current_user
+          end
+        end
         resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
 
         resources :white_labels, :only => [:edit, :update, :show] do

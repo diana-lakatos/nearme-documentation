@@ -4,6 +4,10 @@ class Dashboard::Company::UsersController < Dashboard::Company::BaseController
     @users = @company.users.without(current_user).ordered_by_email
   end
 
+  def collaborations_for_current_user
+    @user = User.find(params[:id])
+  end
+
   def new
     @user = @company.users.build
     render partial: 'form'
