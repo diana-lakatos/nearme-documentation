@@ -62,7 +62,7 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
   end
 
   def express_gateway
-    gateway(@order.merchant_subject)
+    gateway(@order.try(:merchant_subject))
   end
 
   def set_billing_agreement(options)
