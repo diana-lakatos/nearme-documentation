@@ -422,4 +422,8 @@ class TransactableDrop < BaseDrop
     line_item_orders.order(created_at: :desc).uniq
   end
 
+  def active_orders
+    orders.without_state(:inactive)
+  end
+
 end

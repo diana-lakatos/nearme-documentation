@@ -71,7 +71,7 @@
         </table>
       {% endif %}
 
-      {% assign orders = transactable.orders %}
+      {% assign orders = transactable.active_orders %}
       {% if orders != empty %}
         <h3>Offers ({{ orders.size }})</h3>
         <table class="table">
@@ -93,7 +93,7 @@
                   {% if order.unconfirmed? %}
                     <a href="{{ order.payment_documents[0].file_url }}" target="_blank" class="btn btn-info">Review</a>
                     <a href="{{ order.rejection_form_path }}" data-modal="true" class="btn btn-danger">Reject</a>
-                    <a href="{{ order.confirmation_form_path }}" data-modal="true">Accept</a>
+                    <a href="{{ order.confirmation_form_path }}" class="btn btn-success" data-modal="true">Accept</a>
                   {% endif %}
                 </td>
               </tr>

@@ -365,7 +365,7 @@ module LiquidFilters
   end
 
   def get_enquirer_orders(user, transactable)
-    transactable.line_item_orders.where(user_id: user.id).order('created_at ASC')
+    transactable.line_item_orders.where(user_id: user.id).order('created_at ASC').without_state(:inactive)
   end
 
   def get_enquirer_confirmed_orders(user, transactable)
