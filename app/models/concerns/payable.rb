@@ -40,7 +40,7 @@ module Payable
           activate! unless payment.express_checkout_payment?
         end
       elsif payment_subscription && payment_subscription.valid? && payment.blank? && self.valid? && payment_subscription.credit_card.store!
-        activate! if inactive?
+        activate! if try(:inactive?)
       end
     end
 

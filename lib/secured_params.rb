@@ -1418,7 +1418,8 @@ class SecuredParams
       :quantity,
       :unit_price,
       :receiver,
-      :name
+      :name,
+      :description
     ]
   end
 

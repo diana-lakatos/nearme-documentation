@@ -63,9 +63,6 @@ class LineItem < ActiveRecord::Base
     false
   end
 
-  def description
-  end
-
   def single_money
   end
 

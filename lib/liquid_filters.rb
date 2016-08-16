@@ -352,7 +352,7 @@ module LiquidFilters
   end
 
   def find_collaborators_for_user_projects(current_user, user)
-    user.source.transactable_collaborators(transactable_id: current_user.source.created_transactables.pluck(:id))
+    user.source.transactable_collaborators.where(transactable_id: current_user.source.created_listings.pluck(:id))
   end
 
   def is_approved_collaborator(user, transactable)
@@ -369,7 +369,7 @@ module LiquidFilters
   end
 
   def get_enquirer_orders(user, transactable)
-    transactable.line_item_orders.where(user_id: user.id).order('created_at ASC').without_state(:inactive)
+    transactable.line_item_orders.where(user_id: user.id).order('created_at ASC').active
   end
 
   def get_enquirer_confirmed_orders(user, transactable)
@@ -397,7 +397,12 @@ module LiquidFilters
     PaymentGateway.with_credit_card.mode_scope.first.try(:id)
   end
 
-  def find_collaborators_for_user_projects(current_user, user)
-    user.source.transactable_collaborators.where(transactable_id: current_user.source.created_listings.pluck(:id))
+  def map(object, method)
+    object.map(&method.to_sym)
   end
+
+  def strftime(date, format)
+    date.strftime(format)
+  end
+
 end

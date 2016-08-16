@@ -1286,6 +1286,7 @@ en:
     order_items:
       back_to_projects: "< Back to Projects In Progress"
       total: "Total"
+      send_message: 'Send Message'
     orders:
       track_time_and_expenses: Track Time and Expenses
       not_collaborator: 'Only invited users can make an offer'
@@ -1414,7 +1415,7 @@ en:
         colors: 'Colors'
 
     user_reservations:
-      track_time: "TRACK TIME & EXPENCES"
+      track_time: "TRACK TIME & EXPENSES"
       approved_offer: 'APPROVED OFFER'
       send_message: 'SEND MESSAGE'
       view_case: 'VIEW CASE DETAILS'
@@ -1550,6 +1551,7 @@ en:
         paid: "Paid"
         voided: "Voided"
         refunded: "Refunded"
+        unpaid: 'Unpaid'
       alerts: 'Alerts:'
 
     host_reservations:

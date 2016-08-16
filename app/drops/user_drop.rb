@@ -68,7 +68,7 @@ class UserDrop < BaseDrop
     :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
     :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile,
     :tags, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
-    :created_at, :has_buyer_profile?, to: :source
+    :created_at, :has_buyer_profile?, :default_company, to: :source
 
   def class_name
     'User'
@@ -481,7 +481,7 @@ class UserDrop < BaseDrop
 
   def collaborator_transactables_for_current_user
     @source.transactables_collaborated.where(creator_id: @context['current_user'].try(:id))
-  end
+  end
 
   private
     def social_connections

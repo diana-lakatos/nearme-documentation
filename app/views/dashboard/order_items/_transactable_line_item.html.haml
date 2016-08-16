@@ -1,18 +1,20 @@
+- readonly ||= false
 .row.nested-fields
   .col-xs-12.col-md-3
-    = f.input :name, required: true
+    = f.input :name, required: true, input_html: { readonly: readonly }
   .col-xs-12.col-md-4
-    = f.input :description
+    = f.input :description, input_html: { readonly: readonly }
   .col-xs-3.col-md-2
-    = f.input :quantity, required: true, input_html: { 'data-quantity-input': true}
+    = f.input :quantity, required: true, input_html: { 'data-quantity-input': true, readonly: readonly}
   .col-xs-3.col-md-1
-    = f.input :unit_price, required: true, input_html: { 'data-price-input': true}
+    = f.input :unit_price, required: true, input_html: { 'data-price-input': true, readonly: readonly}
   .col-xs-6.col-md-2
     .row
       .col-xs-8
         %label.control-label= t('dashboard.order_items.total')
         .sub-total{ data: { subtotal: true, currency: @order_item.unit_price.symbol, amount: f.object.total_price } }
           = humanized_money_with_cents_and_symbol(f.object.total_price)
-      .col-xs-4
-        = link_to_remove_association f, class: 'remove_fields' do
-          %button.action--remove
+      - if readonly == false
+        .col-xs-4
+          = link_to_remove_association f, class: 'remove_fields' do
+            %button.action--remove

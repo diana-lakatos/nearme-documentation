@@ -600,4 +600,17 @@ DNM.registerInitializer(function(){
     });
 });
 
+DNM.registerInitializer(function(){
+    var els = $('[data-expenses-overview]');
+    if (els.length === 0) {
+        return;
+    }
+    require.ensure('./new_ui/modules/order_items_index', function(require){
+        var OrderItemsIndex = require('./new_ui/modules/order_items_index');
+        els.each(function(){
+            return new OrderItemsIndex(this);
+        });
+    });
+});
+
 DNM.run();
