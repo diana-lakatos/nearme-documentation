@@ -17,7 +17,7 @@ namespace :uot do
       click_to_call: true,
       wish_lists_enabled: true
     )
-    @instance.build_documents_upload(
+    @instance.create_documents_upload(
       enabled: true,
       requirement: 'mandatory'
     )
@@ -476,9 +476,9 @@ namespace :uot do
   end
 
   def expire_cache
-    CacheExpiration.send_expire_command 'InstanceView', instance_id: 198
-    CacheExpiration.send_expire_command 'Translation', instance_id: 198
-    CacheExpiration.send_expire_command 'CustomAttribute', instance_id: 198
+    CacheExpiration.send_expire_command 'RebuildInstanceView'
+    CacheExpiration.send_expire_command 'Translation', instance_id: 195
+    CacheExpiration.send_expire_command 'RebuildCustomAttributes'
     Rails.cache.clear
   end
 
@@ -609,6 +609,7 @@ namespace :uot do
     load_template('dashboard/company/transactables/client_listing')
     load_template('dashboard/company/transactables/client_actions')
     load_template('dashboard/company/transactables/form_actions')
+    load_template('dashboard/layout/left_navigation')
     load_template('checkout/summary')
     load_template('checkout/sidebar')
   end

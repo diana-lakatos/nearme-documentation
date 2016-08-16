@@ -918,8 +918,13 @@ DesksnearMe::Application.routes.draw do
       resources :companies, only: [:edit, :update, :show]
 
       resources :images
+      resources :order_items
       resources :orders do
-        resources :order_items
+        resources :order_items do
+          member do
+            post :approve
+          end
+        end
         member do
           get :success
           post :generate_next_period

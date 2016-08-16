@@ -95,7 +95,7 @@ class User < ActiveRecord::Base
   has_many :payments, foreign_key: 'payer_id'
   has_many :instance_admins, foreign_key: 'user_id', dependent: :destroy
   has_many :listings, through: :locations, class_name: 'Transactable', inverse_of: :creator
-  has_many :listing_orders, class_name: 'Order', through: :listings, source: :orders, inverse_of: :creator
+  has_many :listing_orders, class_name: 'Order', source: :orders, foreign_key: :creator_id, inverse_of: :creator
   has_many :created_listings, class_name: 'Transactable', foreign_key: 'creator_id'
   has_many :created_listings_orders, class_name: 'Order', through: :created_listings, source: :orders, inverse_of: :creator
   has_many :listing_reservations, class_name: 'Reservation', through: :listings, source: :reservations, inverse_of: :creator
@@ -106,8 +106,6 @@ class User < ActiveRecord::Base
   has_many :attachments, class_name: 'SellerAttachment'
   has_many :transactables, foreign_key: 'creator_id', inverse_of: :creator
   has_many :offers, foreign_key: 'creator_id', inverse_of: :creator
-  has_many :bids
-  has_many :offer_bids, class_name: 'Bid', through: :offers, source: :bids
   has_many :transactables_collaborated, through: :transactable_collaborators, source: :transactable
   has_many :approved_transactables_collaborated, through: :transactable_collaborators, source: :transactable
   has_many :transactable_collaborators
@@ -167,7 +165,6 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :seller_profile
   accepts_nested_attributes_for :buyer_profile
   accepts_nested_attributes_for :default_profile
-  accepts_nested_attributes_for :bids
 
   scope :patron_of, lambda { |listing|
     joins(:orders).where(orders: { transactable_id: listing.id }).uniq

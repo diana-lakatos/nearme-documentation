@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160815171150) do
+ActiveRecord::Schema.define(version: 20160816184027) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -421,9 +421,9 @@ ActiveRecord::Schema.define(version: 20160815171150) do
     t.integer  "charge_type_target_id"
     t.string   "charge_type_target_type"
     t.integer  "percent"
+    t.datetime "deleted_at"
     t.string   "type"
     t.string   "charge_event"
-    t.string   "deleted_at"
   end
 
   add_index "charge_types", ["charge_type_target_id", "charge_type_target_type"], name: "act_target", using: :btree
@@ -1348,9 +1348,9 @@ ActiveRecord::Schema.define(version: 20160815171150) do
     t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
-    t.boolean  "enable_geo_localization",                                                           default: true
     t.string   "orders_received_tabs"
     t.string   "my_orders_tabs"
+    t.boolean  "enable_geo_localization",                                                           default: true
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1380,6 +1380,7 @@ ActiveRecord::Schema.define(version: 20160815171150) do
     t.decimal  "included_tax_price_cents",               precision: 10, scale: 2, default: 0.0
     t.decimal  "service_fee_guest_percent",              precision: 5,  scale: 2, default: 0.0
     t.decimal  "service_fee_host_percent",               precision: 5,  scale: 2, default: 0.0
+    t.text     "description"
   end
 
   add_index "line_items", ["company_id"], name: "index_line_items_on_company_id", using: :btree

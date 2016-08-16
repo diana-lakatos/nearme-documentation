@@ -66,7 +66,7 @@
         <p>{{ transactable.description }}</p>
       </div>
       <div class="col-md-3">
-        {% include 'dashboard/company/transactables/sme_actions.html' %}
+        {% include 'dashboard/company/transactables/sme_actions.html', order: orders.last %}
       </div>
     </div>
 

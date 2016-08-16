@@ -58,7 +58,11 @@
                 <td>{{ transactable_collaborator.user.name }}</td>
                 <td>{{ transactable_collaborator.approved_by_owner_at | to_date | l: 'short' }}</td>
                 <td>
-                  <a class="btn btn-info" data-modal="true" href="{{ transactable_collaborator.user.user_message_path }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+                  {% if transactable.user_messages.size > 0 %}
+                    <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: transactable.user_messages.first.id, skip: true }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+                  {% else %}
+                    <a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id, skip: true }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+                  {% endif %}
 
                   {{ transactable_collaborator.user.click_to_call_button }}
 
@@ -71,7 +75,7 @@
         </table>
       {% endif %}
 
-      {% assign orders = transactable.active_orders %}
+      {% assign orders = transactable.orders %}
       {% if orders != empty %}
         <h3>Offers ({{ orders.size }})</h3>
         <table class="table">
