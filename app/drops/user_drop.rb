@@ -3,6 +3,7 @@ class UserDrop < BaseDrop
   include ActionView::Helpers::AssetUrlHelper
   include CategoriesHelper
   include ClickToCallButtonHelper
+  include ReservationsHelper
 
   # id
   #   unique id of the user
@@ -52,14 +53,22 @@ class UserDrop < BaseDrop
   #   id of a user in a third party system, used by bulk upload
   # tags
   #   user tags
+  # registration_completed?
+  #   returns string / nil depending on first company completion date
+  # has_company?
+  #   returns whether user has company
+  # company_id
+  #   returns id of first user company
+  # reservations_count
+  #   returns number of reservations
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of,
-    :with_mutual_friendship_source, :first_name, :middle_name, :last_name,
+    :with_mutual_friendship_source, :first_name, :middle_name, :last_name, :reservations_count,
     :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
     :country_name, :phone, :current_address, :is_trusted?, :reservations,
     :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
     :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile,
     :tags, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
-    :created_at, to: :source
+    :created_at, :has_buyer_profile?, to: :source
 
   def class_name
     'User'
@@ -204,7 +213,7 @@ class UserDrop < BaseDrop
   end
 
   def show_blog_tab?
-    PlatformContext.current.instance.blogging_enabled?(@source) && @source.blog.present? && @source.blog.enabled? && !hide_tab?('blog_posts')
+    PlatformContext.current.instance.blogging_enabled?(@source) && @source.blog.try(:enabled?) && !hide_tab?('blog_posts')
   end
 
   def published_posts
@@ -310,7 +319,7 @@ class UserDrop < BaseDrop
   end
 
   def has_active_blog?
-    PlatformContext.current.instance.blogging_enabled?(@source) && @source.blog.present? && @source.blog.enabled?
+    PlatformContext.current.instance.blogging_enabled?(@source)
   end
 
   # returns hash of categories { "<name>" => { "name" => '<translated_name', "children" => [<collection of chosen values] } }
@@ -451,6 +460,23 @@ class UserDrop < BaseDrop
     joins("LEFT Outer JOIN transactable_collaborators tc on
       tc.transactable_id = transactables.id and tc.user_id = #{@source.id} and
       tc.deleted_at is NULL").where("tc.id is NULL")
+  end
+
+  def has_company?
+    @source.companies.size > 0
+  end
+
+  def company_id
+    has_company? && @source.companies.first.id
+  end
+
+  def registration_completed?
+    !!@source.registration_completed?
+  end
+
+  def reservations_count
+    count = reservations_count_for_user(@source)
+    count > 0 ? count : nil
   end
 
   private

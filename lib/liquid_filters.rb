@@ -381,4 +381,16 @@ module LiquidFilters
     data_source_contents.paginate(per_page: options[:per_page].presence || 10)
   end
 
+  def is_visible(key)
+    HiddenUiControls.find(key).visible?
+  end
+
+  def matches(string, regexp)
+    !!(string =~ Regexp.new(regexp))
+  end
+
+  def get_payment_gateway_id(str)
+    PaymentGateway.with_credit_card.mode_scope.first.try(:id)
+  end
+
 end

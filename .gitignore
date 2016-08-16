@@ -42,6 +42,8 @@ dump.rdb
 .ruby-gemset
 .envrc
 .vimrc
+.pryrc
+.npm-debug.log
 work_files
 vendor/assets/bower_components
 *.sublime-project

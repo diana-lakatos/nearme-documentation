@@ -78,13 +78,18 @@ class PlatformContextDrop < BaseDrop
   #   Whether seller attachments are enabled or not
   # wish_lists_enabled?
   #   Whether wish lists is enabled or not
+  # active_rating_systems_present?
+  #   Whether there is at least one active system
+  # split_registration?
+  #   Whether split registration is enabled for the instance
   delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :facebook_url, :twitter_url, :gplus_url,
     :instagram_url, :youtube_url, :rss_url, :linkedin_url, :lessor, :lessors,
     :lessee, :lessees, :search_by_keyword_placeholder, :address, :phone_number, :phone_number_noformat,
     :site_name, :support_url, :support_email, :logo_image, :hero_image, :tagline, :homepage_content,
-    :is_company_theme?, :call_to_action, :bookable?, :transactable_types,
+    :is_company_theme?, :call_to_action, :projectable?, :bookable?, :transactable_types, :action_rfq?,
     :bookable_nouns, :bookable_nouns_plural, :search_input_name, :facebook_key, :service_types,
-    :wish_lists_icon_set, :seller_attachments_enabled?, :wish_lists_enabled?, :webhook_token, :instance, :enable_geo_localization,
+    :wish_lists_icon_set, :seller_attachments_enabled?, :wish_lists_enabled?,
+    :active_rating_systems_present?, :webhook_token, :instance, :enable_geo_localization, :split_registration?,
     to: :platform_context_decorator
 
 
@@ -175,7 +180,6 @@ class PlatformContextDrop < BaseDrop
     RatingSystem.active.any?
   end
 
-  # whether split registration is enabled for the instance
   def split_registration?
     @instance.split_registration?
   end

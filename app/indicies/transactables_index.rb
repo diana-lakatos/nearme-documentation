@@ -64,7 +64,7 @@ module TransactablesIndex
       for custom_attribute in custom_attribs
         if self.properties.respond_to?(custom_attribute)
           val = self.properties.send(custom_attribute)
-          val = Array[val].map{|v| v.to_s.downcase }
+          val = Array(val).map{|v| v.to_s.downcase }
           custom_attrs[custom_attribute] = (val.size == 1 ? val.first : val)
         end
       end

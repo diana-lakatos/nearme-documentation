@@ -330,7 +330,7 @@ module Elastic
           unless value.blank?
             @filters << {
               terms: {
-                "custom_attributes.#{key}" => value.to_s.split(',').map{ |val| val }
+                "custom_attributes.#{key}" => value.to_s.split(',').map{ |val| val.downcase }
               }
             }
           end

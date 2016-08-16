@@ -10,9 +10,14 @@ module ActivityFeedHelper
   end
 
   def commented_own_thread?(comment)
-    event = comment.commentable
-    creator_id = event.event_source.try(:creator_id) || event.followed.try(:creator_id)
-    creator_id == comment.creator_id
+    if comment.commentable.is_a?(ActivityFeedEvent)
+      event = comment.commentable
+      creator_id = event.event_source.try(:creator_id) || event.followed.try(:creator_id)
+      creator_id == comment.creator_id
+    else
+      creator_id = comment.commentable.try(:creator_id)
+      creator_id == comment.creator_id
+    end
   end
 
   def status_update?(event_name)

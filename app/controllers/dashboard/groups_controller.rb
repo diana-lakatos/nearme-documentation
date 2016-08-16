@@ -66,14 +66,19 @@ class Dashboard::GroupsController < Dashboard::BaseController
   end
 
   def video
-    video_embedder = VideoEmbedder.new(params[:video_url])
+    video_urls = params[:video_url].to_s.split(/\s*,\s*/)
+    video_urls = [""] if video_urls.blank?
 
-    if video_embedder.valid?
+    video_embedders = video_urls.map { |video_url| VideoEmbedder.new(video_url) }
+
+    if video_embedders.any? { |video_embedder| video_embedder.valid? }
       render json: {
-        html: render_to_string(partial: 'video', object: video_embedder.video_url)
+        html: video_embedders.map do |video_embedder|
+          video_embedder.valid? ? render_to_string(partial: 'video', object: video_embedder.video_url) : ""
+        end.join
       }
     else
-      render json: { errors: video_embedder.errors }, status: 422
+      render json: { errors: video_embedders.find { |video_embedder| !video_embedder.valid? }.errors }, status: 422
     end
   end
 
