@@ -488,7 +488,7 @@ namespace :uot do
     create_search_list!
     create_user_profile!
     create_my_cases!
-    create_wish_list_button!
+    create_wish_list_views!
     create_registration_screens!
     create_analytics!
   end
@@ -589,7 +589,8 @@ namespace :uot do
     load_template('dashboard/company/transactable_collaborators/transactable_collaborator')
   end
 
-  def create_wish_list_button!
+  def create_wish_list_views!
+    load_template('dashboard/wish_list_items/wish_list_item')
     load_template('shared/components/wish_list_button')
   end
 
