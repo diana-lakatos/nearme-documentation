@@ -259,6 +259,7 @@ en:
       buyer:
         updated: 'Buyer profile has been updated'
       order:
+        valid_merchant_account_required: "Before you can create an offer, you need to provide your payment information."
         deleted: 'Order has been deleted.'
         updated: 'Order has been updated.'
         canceled: 'Order has been canceled.'

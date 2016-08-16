@@ -1,6 +1,6 @@
 class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
-  ATTRIBUTES = %w(account_type first_name last_name currency bank_routing_number bank_account_number tos  business_tax_id business_vat_id ssn_last_4 personal_id_number )
+  ATTRIBUTES = %w(account_type first_name last_name currency bank_routing_number bank_account_number tos  business_tax_id business_vat_id ssn_last_4 personal_id_number)
   ACCOUNT_TYPES = %w(individual company)
 
   SUPPORTED_CURRENCIES = {
