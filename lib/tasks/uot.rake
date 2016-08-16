@@ -420,6 +420,11 @@ namespace :uot do
 
     theme.color_green = '#4fc6e1'
     theme.color_blue = '#05caf9'
+    theme.color_red = '#e83d33'
+    theme.color_orange = '#ff8d00'
+    theme.color_gray = '#394449'
+    theme.color_black = '#1e2222'
+    theme.color_white = '#fafafa'
     theme.call_to_action = 'Learn more'
 
     theme.phone_number = '1-555-555-55555'
