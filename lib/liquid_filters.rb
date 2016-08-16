@@ -351,6 +351,10 @@ module LiquidFilters
     transactable.transactable_collaborators.where(user: user.id).first
   end
 
+  def find_collaborators_for_user_projects(current_user, user)
+    user.source.transactable_collaborators(transactable_id: current_user.source.created_transactables.pluck(:id))
+  end
+
   def is_approved_collaborator(user, transactable)
     return false if user.try(:id).blank?
     transactable.approved_transactable_collaborators.where(user: user.id).exists?

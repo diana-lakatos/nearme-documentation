@@ -93,7 +93,6 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
   end
 
   def validate_config_hash
-    errors.add('transfer_schedule', :blank ) and return if config["transfer_schedule"].blank?
     intrval = config["transfer_schedule"]["interval"]
     if intrval == 'daily'
       label = I18n.t('simple_form.labels.payment_gateway.config.transfer_schedule.delay_days')
