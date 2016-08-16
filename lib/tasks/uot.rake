@@ -10,7 +10,8 @@ namespace :uot do
       hidden_ui_controls: {
         'main_menu/cta': 1,
         'dashboard/offers': 1,
-        'dashboard/user_bids': 1
+        'dashboard/user_bids': 1,
+        'dashboard/host_reservations': 1
       },
       skip_company: true,
       click_to_call: true,
@@ -489,6 +490,7 @@ namespace :uot do
     create_my_cases!
     create_wish_list_button!
     create_registration_screens!
+    create_analytics!
   end
 
   def create_translations
@@ -610,6 +612,10 @@ namespace :uot do
     load_template('registrations/buyer_footer')
     load_template('registrations/seller_header')
     load_template('registrations/seller_footer')
+  end
+
+  def create_analytics!
+    load_template('dashboard/company/analytics/show', false)
   end
 
   def create_custom_attribute(object, hash)

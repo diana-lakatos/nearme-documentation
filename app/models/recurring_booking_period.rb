@@ -57,10 +57,10 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   def generate_payment!
     payment = build_payment(shared_payment_attributes.merge({
-        credit_card: payment_subscription.credit_card,
-        payment_method: payment_subscription.payment_method,
-      })
-    )
+      credit_card: payment_subscription.credit_card,
+      payment_method: payment_subscription.payment_method,
+    })
+                           )
 
     payment.authorize && payment.capture!
     payment.save!
@@ -92,9 +92,17 @@ class RecurringBookingPeriod < ActiveRecord::Base
     recurring_booking.bump_paid_until_date! if recurring_booking
   end
 
+  def to_liquid
+    @recurring_booking_period = OrderItemDrop.new(self)
+  end
+
+  def decorate
+    @decorator ||= OrderItemDecorator.new(self)
+  end
+
   private
 
-   def send_creation_alert
+  def send_creation_alert
     WorkflowStepJob.perform(WorkflowStep::OrderItemWorkflow::Created, self.id)
   end
 
