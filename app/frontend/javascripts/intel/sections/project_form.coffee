@@ -18,7 +18,7 @@ module.exports = class ProjectForm
     if confirm("Are you sure you want to continue?")
       $.ajax
         type: request_method,
-        url: @form.attr('action') + '/transactable_collaborators/' + $(event.target).attr("data-transactable-collaborator"),
+        url: @form.attr('action') + '/company/transactable_collaborators/' + $(event.target).attr("data-transactable-collaborator"),
         dataType: "json",
         data: { transactable_collaborator: { approved: 'true' } }
         success: (data) -> that.handle_success(data, request_method, event)
@@ -28,4 +28,7 @@ module.exports = class ProjectForm
     if request_method == "DELETE"
       $(event.target).parents("tr").hide("slow")
     else
-      $(event.target).parents("tr").replaceWith(data.html)
+      new_data = $(data.html)
+      $(event.target).parents("tr").replaceWith(new_data)
+      new_data.find("[data-transactable-collaborator]").on "click", (e) =>
+        @updateProjectCollaborator(e)

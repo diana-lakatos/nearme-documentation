@@ -49,7 +49,7 @@ class Dashboard::Company::TransactableCollaboratorsController < Dashboard::BaseC
   end
 
   def find_transactable
-    @transactable = current_user.transactables.find(params[:transactable_id] || transactable_collaborator_params[:transactable_id])
+    @transactable = current_user.transactables.find(params[:transactable_id] || params[:project_id] || transactable_collaborator_params[:transactable_id])
   end
 
   def find_transactable_collaborator

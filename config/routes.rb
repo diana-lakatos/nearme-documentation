@@ -750,7 +750,9 @@ DesksnearMe::Application.routes.draw do
 
       resources :project_types do
         resources :projects do
-          resources :project_collaborators, only: [:create, :update, :destroy]
+          namespace :company do
+            resources :transactable_collaborators, only: [:create, :update, :destroy]
+          end
         end
       end
 
