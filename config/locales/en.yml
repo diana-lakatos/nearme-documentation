@@ -1535,6 +1535,7 @@ en:
       reject: "What's wrong?"
       change_credit_card: 'Change credit card'
       periods_affected: 'Periods affected'
+      merchant_fee_charge: "%{name} of %{price} is going to be chared upon confirmation."
       reject_placeholder: 'Please let us know what is the reason of declining payment'
       order: "Back to order"
       back_to_order_html: "Back <span class='hidden-xs'>to order</span>"

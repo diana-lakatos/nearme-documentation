@@ -28,12 +28,12 @@ module.exports = class OrderItemsController
   calculateSubTotal: (target)=>
     fieldset = target.parents('.nested-fields')
     if fieldset.find('[data-price-input]').length > 0
-      price = parseInt(fieldset.find('[data-price-input]').val())
+      price = parseFloat(fieldset.find('[data-price-input]').val())
     else
       price = 0
 
     if fieldset.find('[data-quantity-input]').length > 0
-      quantity = parseInt(fieldset.find('[data-quantity-input]').val())
+      quantity = parseFloat(fieldset.find('[data-quantity-input]').val())
     else
       quantity = 0
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160816184027) do
+ActiveRecord::Schema.define(version: 20160816234251) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -421,9 +421,9 @@ ActiveRecord::Schema.define(version: 20160816184027) do
     t.integer  "charge_type_target_id"
     t.string   "charge_type_target_type"
     t.integer  "percent"
-    t.datetime "deleted_at"
     t.string   "type"
     t.string   "charge_event"
+    t.string   "deleted_at"
   end
 
   add_index "charge_types", ["charge_type_target_id", "charge_type_target_type"], name: "act_target", using: :btree
@@ -1348,9 +1348,9 @@ ActiveRecord::Schema.define(version: 20160816184027) do
     t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
+    t.boolean  "enable_geo_localization",                                                           default: true
     t.string   "orders_received_tabs"
     t.string   "my_orders_tabs"
-    t.boolean  "enable_geo_localization",                                                           default: true
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1676,6 +1676,7 @@ ActiveRecord::Schema.define(version: 20160816184027) do
     t.boolean  "exclusive_price"
     t.boolean  "book_it_out"
     t.datetime "completed_at"
+    t.boolean  "is_free_booking",                                           default: false
   end
 
   add_index "orders", ["billing_address_id"], name: "index_orders_on_billing_address_id", using: :btree

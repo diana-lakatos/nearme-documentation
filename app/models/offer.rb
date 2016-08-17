@@ -7,6 +7,7 @@ class Offer < Order
 
   has_many :host_line_items, as: :line_itemable
   has_many :recurring_booking_periods, dependent: :destroy, foreign_key: :order_id
+  has_many :order_items, class_name: 'RecurringBookingPeriod', dependent: :destroy, foreign_key: :order_id
 
   def self.workflow_class
     Offer
@@ -22,6 +23,7 @@ class Offer < Order
     self.reservation_type = transactable_type.reservation_type
     self.currency = transactable.try(:currency)
     self.additional_charge_ids = attrs[:additional_charge_ids]
+    self.is_free_booking = is_free_booking.is_free_booking
 
     transactable_line_items.build(
       name: transactable.name,

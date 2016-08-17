@@ -11,7 +11,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
   delegate :payment_gateway, :company, :company_id, :user, :owner, :currency,
     :service_fee_guest_percent, :service_fee_host_percent, :payment_subscription,
     :transactable, :quantity, :cancellation_policy_hours_for_cancellation,
-    :cancellation_policy_penalty_percentage, :action, :host, to: :order
+    :cancellation_policy_penalty_percentage, :action, :host, :is_free_booking?, to: :order
 
   scope :unpaid, -> { where(paid_at: nil) }
   scope :paid, -> { where.not(paid_at: nil) }
@@ -55,7 +55,14 @@ class RecurringBookingPeriod < ActiveRecord::Base
     recurring_booking.amount_calculator
   end
 
+  def charge_and_approve!
+    generate_payment!
+    paid? ? approve! : false
+  end
+
   def generate_payment!
+    return true if paid?
+
     payment = build_payment(
       shared_payment_attributes.merge({
         credit_card: payment_subscription.credit_card,
@@ -69,12 +76,15 @@ class RecurringBookingPeriod < ActiveRecord::Base
     if payment.paid?
       self.update_attribute(:paid_at, Time.zone.now)
       mark_recurring_booking_as_paid!
-      approve!
     else
       recurring_booking.overdue
     end
 
     payment
+  end
+
+  def paid?
+    is_free_booking? ? true : !!payment.try(:paid?)
   end
 
   def update_payment

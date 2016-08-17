@@ -1,8 +1,10 @@
 <ul class="actions-a">
 
-  <li>
-    <a href="{{ transactable.show_path }}" class="btn btn-default">Project details</a>
-  </li>
+  {% if current_status != 'archived' %}
+    <li>
+      <a href="{{ transactable.show_path }}" class="btn btn-default">Project details</a>
+    </li>
+  {% endif %}
 
   <li>
     {% if order != blank and order.user_messages.size > 0 %}
