@@ -91,8 +91,6 @@ class TransactableCollaborator < ActiveRecord::Base
       WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorDeclined, self.transactable_id, self.user_id)
     elsif actor == user
       WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorHasQuit, self.transactable_id, self.user_id)
-    else
-      raise NotImplementedError
     end
   end
 

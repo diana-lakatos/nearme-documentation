@@ -139,6 +139,10 @@ $wish-list-item-padding: 20px;
         bottom: $wish-list-item-padding;
     }
 
+    .name {
+        font-size: 1.4em;
+    }
+
     @media (min-width: 450px) {
         width: 49%;
 

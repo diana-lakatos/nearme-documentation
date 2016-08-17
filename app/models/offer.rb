@@ -23,7 +23,7 @@ class Offer < Order
     self.reservation_type = transactable_type.reservation_type
     self.currency = transactable.try(:currency)
     self.additional_charge_ids = attrs[:additional_charge_ids]
-    self.is_free_booking = is_free_booking.is_free_booking
+    self.is_free_booking = transactable_pricing.is_free_booking
 
     transactable_line_items.build(
       name: transactable.name,
