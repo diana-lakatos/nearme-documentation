@@ -399,7 +399,6 @@ module LiquidFilters
 
   def find_collaborators_for_user_projects(current_user, user)
     user.source.transactable_collaborators.where(transactable_id: current_user.source.created_listings.with_state(:pending).pluck(:id))
-
   end
 
   def map(object, method)
