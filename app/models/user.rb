@@ -133,6 +133,7 @@ class User < ActiveRecord::Base
   has_many :groups, foreign_key: 'creator_id', inverse_of: :creator
   has_many :memberships, class_name: 'GroupMember'
   has_many :group_collaborated, -> { GroupMember.approved }, through: :memberships, source: :group
+  has_many :all_group_collaborated, through: :memberships, source: :group
   has_many :moderated_groups, -> { GroupMember.approved.moderator }, through: :memberships, source: :group
   has_many :group_members
 
