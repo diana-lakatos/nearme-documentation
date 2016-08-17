@@ -319,7 +319,7 @@ class UserDrop < BaseDrop
   end
 
   def has_active_blog?
-    PlatformContext.current.instance.blogging_enabled?(@source)
+    PlatformContext.current.instance.blogging_enabled?(@source) && @source.blog.try(:enabled?)
   end
 
   # returns hash of categories { "<name>" => { "name" => '<translated_name', "children" => [<collection of chosen values] } }
@@ -481,6 +481,11 @@ class UserDrop < BaseDrop
 
   def collaborator_transactables_for_current_user
     @source.transactables_collaborated.where(creator_id: @context['current_user'].try(:id))
+  end
+
+  # has inappropriate report for user
+  def inappropriate_report_path
+    routes.inappropriate_report_path(id: @source.id, reportable_type: "User")
   end
 
   private

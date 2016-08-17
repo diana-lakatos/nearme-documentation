@@ -1,6 +1,10 @@
 Hi,
 
-{{ listing.transactable_type.bookable_noun }} <a href="{{ listing.listing_url }}">{{ listing.name }}</a> has been reported by {{ reporter.name }}, the reason given being:
+{% if listing.class_name == 'User' %}
+  user <a href="{{ listing.user_profile_url }}">{{ listing.name }}</a>
+{% else %}
+  {{ listing.transactable_type.bookable_noun }} <a href="{{ listing.listing_url }}">{{ listing.name }}</a>
+{% endif %}  has been reported by {{ reporter.name }}, the reason given being:
 
 <p>
   {{ reason }}

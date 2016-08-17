@@ -15,7 +15,9 @@ en:
 
   onboarding_wizard:
     list_your: Complete Your Project
-
+  phone_calls:
+    buttons:
+      click_to_call_user: 'Call Me'
   dashboard:
     nav:
       user_reservations: My Offers
