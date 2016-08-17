@@ -52,7 +52,7 @@ en:
         bookings: '%{total} offers'
 
     transactables:
-      view_html: View Profile
+      view_html: View Project
       title:
         listings: My Projects
 
