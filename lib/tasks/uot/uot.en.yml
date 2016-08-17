@@ -5,6 +5,9 @@ en:
     link_to_buyer: Become an Expert here
     link_to_seller: Become a Client here
     log_in_to: Log in
+  errors:
+    transactable:
+      cant_cancel: "Can't cancel a project with unpaid expenses."
 
   ui:
     header:
@@ -27,6 +30,7 @@ en:
       transactables: My Projects
       order_items: 'Time / Expense Overview'
       user_reservations_count_html: My Offers <span>%{count}</span>
+      admin: 'Payments Admin'
 
     user_reservations:
       reservation_placed_html: 'Offer created: <span>%{date}</span>'

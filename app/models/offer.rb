@@ -112,6 +112,10 @@ class Offer < Order
     false
   end
 
+  def all_paid?
+    recurring_booking_periods.all?(&:paid_at)
+  end
+
   def activate_order!
     WorkflowStepJob.perform(WorkflowStep::OfferWorkflow::CreatedWithoutAutoConfirmation, self.id)
   end

@@ -93,7 +93,13 @@
         <tbody>
           <tr>
             <td>{{ order.created_at | to_date | l: 'short' }}</td>
-            <td>{{ 'reservations.states.' | append: order.state | t }}</td>
+            <td>
+              {% if order.archived_at != blank %}
+                Archived
+              {% else %}
+                {{ 'reservations.states.' | append: order.state | t }}
+              {% endif %}
+            </td>
             {% if order.unconfirmed? %}
               <td>
                 {% if order.unconfirmed? %}

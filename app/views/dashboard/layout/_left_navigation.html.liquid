@@ -244,6 +244,7 @@
       {% endif %}
 
       {% comment %} Account menu {% endcomment %}
+      {% assign profile_edit_selected = current_path | matches: '(users/edit|dashboard/seller/edit|dashboard/buyer/edit|dashboard/edit_profile)' %}
       {% assign credit_cards_selected = current_path | matches: '/dashboard/payment_gateways/[0-9]+/credit_card/' %}
       {% assign notification_preferences_show = 'dashboard/notification_preferences' | is_visible %}
       {% assign notification_preferences_path = 'edit_dashboard_notification_preferences_path' | generate_url %}
@@ -255,14 +256,17 @@
       {% assign saved_searches_path = 'dashboard_saved_searches_path' | generate_url %}
       {% assign saved_searches_selected = current_path | matches: saved_searches_path %}
 
-      <li id="dashboard-nav-account" class="{% if credit_cards_selected or notification_preferences_selected or social_accounts_selected or saved_searches_selected %}selected{% endif %}">
+      <li id="dashboard-nav-account" class="{% if profile_edit_selected or credit_cards_selected or notification_preferences_selected or social_accounts_selected or saved_searches_selected %}selected{% endif %}">
         <span>{{ 'dashboard.nav.account' | t }}</span>
         <ul>
+          <li id="dashboard-nav-edit" class="{% if profile_edit_selected %}selected{% endif %}">
+            <a href="{{ 'dashboard_profile_path' | generate_url }}">{{ 'dashboard.nav.edit' | t }}</a>
+          </li>
           {% if current_user.has_active_credit_cards? %}
             {% assign payment_gateway_id = '' | get_payment_gateway_id %}
             {% assign credit_cards_path = 'dashboard_payment_gateway_credit_cards_path' | generate_url: payment_gateway_id %}
             <li id="dashboard-nav-credit_cards" class="{% if credit_cards_selected %}selected{% endif %}">
-              <a href="{{ credit_cards_path }}">{{ 'dashboard.nav.edit' | t }}</a>
+              <a href="{{ credit_cards_path }}">{{ 'dashboard.nav.credit_cards' | t }}</a>
             </li>
           {% endif %}
 

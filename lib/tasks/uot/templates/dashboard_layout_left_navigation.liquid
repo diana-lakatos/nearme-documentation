@@ -74,7 +74,8 @@
         {% assign projects_visible = 'dashboard/projects' | is_visible %}
         {% assign projects_show = platform_context.projectable? and projects_visible %}
         {% assign transactables_path = 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id %}
-        {% assign transactables_selected = current_path | matches: 'dashboard/company/transactable_types' %}
+        {% assign transactables_selected = current_path | matches: '/transactables(?!/new)' %}
+        {% assign new_transactable_selected = current_path | matches: '/transactables/new' %}
         {% assign transactables_visible = 'dashboard/transactables' | is_visible %}
         {% assign transactables_show = current_user.registration_completed? and transactables_visible %}
         {% assign order_items_path = 'dashboard_order_items_path' | generate_url %}
@@ -92,15 +93,20 @@
         {% endif %}
 
         {% if transactables_show %}
-          <li id="dashboard-nav-transactables" class="{% if transactables_selected or order_items_selected %}selected{% endif %}">
+          <li id="dashboard-nav-transactables" class="{% if new_transactable_selected or transactables_selected or order_items_selected %}selected{% endif %}">
             <span>{{ 'dashboard.nav.transactables' | t }}</span>
 
               <ul>
-                {% if transactables_show %}
+                {% if current_user.buyer_profile == blank %}
+                  <li id="dashboard-nav-new_transactable" class="{% if new_transactable_selected %}selected{% endif %}">
+                    <a href='{{ platform_context.transactable_types[0].new_transactable_path }}'>
+                      Add a Project
+                    </a>
+                  </li>
+                {% endif %}
                   <li id="dashboard-nav-transactables" class="{% if transactables_selected %}selected{% endif %}">
                     <a href="{{ transactables_path }}">{{ 'dashboard.nav.transactables' | t }}</a>
                   </li>
-                {% endif %}
 
                   <li id="dashboard-nav-order_items" class="{% if order_items_selected %}selected{% endif %}">
                     <a href="{{ order_items_path }}">{{ 'dashboard.nav.order_items' | t }}</a>
@@ -111,9 +117,6 @@
       {% endif %}
 
       {% if current_user.registration_completed? and current_user.has_company? %}
-        {% assign companies_show = 'dashboard/companies' | is_visible %}
-        {% assign companies_path = 'edit_dashboard_company_path' | generate_url: current_user.company_id %}
-        {% assign companies_selected = current_path | matches: '/dashboard/companies/[0-9]+(/edit)?' %}
         {% assign payouts_show = 'dashboard/payouts' | is_visible %}
         {% assign payouts_path = 'edit_dashboard_company_payouts_path' | generate_url %}
         {% assign payouts_selected = current_path | matches: payouts_path %}
@@ -123,34 +126,11 @@
         {% assign analytics_show = 'dashboard/analytics' | is_visible %}
         {% assign analytics_path = 'dashboard_company_analytics_path' | generate_url %}
         {% assign analytics_selected = current_path | matches: analytics_path %}
-        {% assign users_show = 'dashboard/users' | is_visible %}
-        {% assign users_path = 'dashboard_company_users_path' | generate_url %}
-        {% assign users_selected = current_path | matches: users_path %}
-        {% assign waiver_agreement_templates_show = 'dashboard/waiver_agreement_templates' | is_visible %}
-        {% assign waiver_agreement_templates_path = 'dashboard_company_waiver_agreement_templates_path' | generate_url %}
-        {% assign waiver_agreement_templates_selected = current_path | matches: waiver_agreement_templates_path %}
-        {% assign white_labels_show = 'dashboard/white_labels' | is_visible %}
-        {% assign white_labels_path = 'edit_dashboard_company_white_label_path' | generate_url: current_user.company_id %}
-        {% assign white_labels_selected = current_path | matches: '/dashboard/white_labels' %}
-        {% assign tickets_visible = 'dashboard/tickets' | is_visible %}
-        {% assign tickets_show = platform_context.instance.action_rfq? and tickets_visible %}
-        {% assign tickets_path = 'dashboard_company_support_tickets_path' | generate_url %}
-        {% assign tickets_selected = current_path | matches: '/dashboard\/company\/support\/tickets(\/[0-9]+)?' %}
-        {% assign sent_to_me_visible = 'dashboard/payment_documents/sent_to_me' | is_visible %}
-        {% assign sent_to_me_show = platform_context.instance.documents_upload_enabled? and sent_to_me_visible %}
-        {% assign sent_to_me_path = 'sent_to_me_dashboard_company_payment_documents_path' | generate_url %}
-        {% assign sent_to_me_selected = current_path | matches: sent_to_me_path %}
 
         <li id="dashboard-nav-admin" class="{% if companies_selected or payouts_selected or transfers_selected or analytics_selected or users_selected or waiver_agreement_templates_selected or white_labels_selected or tickets_selected or sent_to_me_selected %}selected{% endif %}">
           <span>{{ 'dashboard.nav.admin' | t }}</span>
 
           <ul>
-            {% if companies_show %}
-              <li id="dashboard-nav-companies" class="{% if companies_selected %}selected{% endif %}">
-                <a href="{{ companies_path }}">{{ 'dashboard.nav.companies' | t }}</a>
-              </li>
-            {% endif %}
-
             {% if payouts_show %}
               <li id="dashboard-nav-payouts" class="{% if payouts_selected %}selected{% endif %}">
                 <a href="{{ payouts_path }}">{{ 'dashboard.nav.payouts' | t }}</a>
@@ -166,36 +146,6 @@
             {% if analytics_show %}
               <li id="dashboard-nav-analytics" class="{% if analytics_selected %}selected{% endif %}">
                 <a href="{{ analytics_path }}">{{ 'dashboard.nav.analytics' | t }}</a>
-              </li>
-            {% endif %}
-
-            {% if users_show %}
-              <li id="dashboard-nav-users" class="{% if users_selected %}selected{% endif %}">
-                <a href="{{ users_path }}">{{ 'dashboard.nav.users' | t }}</a>
-              </li>
-            {% endif %}
-
-            {% if waiver_agreement_templates_show %}
-              <li id="dashboard-nav-waiver_agreement_templates" class="{% if waiver_agreement_templates_selected %}selected{% endif %}">
-                <a href="{{ waiver_agreement_templates_path }}">{{ 'dashboard.nav.waiver_agreement_templates' | t }}</a>
-              </li>
-            {% endif %}
-
-            {% if white_labels_show %}
-              <li id="dashboard-nav-white_labels" class="{% if white_labels_selected %}selected{% endif %}">
-                <a href="{{ white_labels_path }}">{{ 'dashboard.nav.white_labels' | t }}</a>
-              </li>
-            {% endif %}
-
-            {% if tickets_show %}
-              <li id="dashboard-nav-tickets" class="{% if tickets_selected %}selected{% endif %}">
-                <a href="{{ tickets_path }}">{{ 'dashboard.nav.tickets' | t }}</a>
-              </li>
-            {% endif %}
-
-            {% if sent_to_me_show %}
-              <li id="dashboard-nav-sent_to_me" class="{% if sent_to_me_selected %}selected{% endif %}">
-                <a href="{{ sent_to_me_path }}">{{ 'dashboard.nav.sent_to_me' | t }}</a>
               </li>
             {% endif %}
           </ul>
@@ -226,6 +176,7 @@
       {% endif %}
 
       {% comment %} Account menu {% endcomment %}
+      {% assign profile_edit_selected = current_path | matches: '(users/edit|dashboard/seller/edit|dashboard/buyer/edit|dashboard/edit_profile)' %}
       {% assign credit_cards_selected = current_path | matches: '/dashboard/payment_gateways/[0-9]+/credit_card/' %}
       {% assign notification_preferences_show = 'dashboard/notification_preferences' | is_visible %}
       {% assign notification_preferences_path = 'edit_dashboard_notification_preferences_path' | generate_url %}
@@ -237,14 +188,17 @@
       {% assign saved_searches_path = 'dashboard_saved_searches_path' | generate_url %}
       {% assign saved_searches_selected = current_path | matches: saved_searches_path %}
 
-      <li id="dashboard-nav-account" class="{% if credit_cards_selected or notification_preferences_selected or social_accounts_selected or saved_searches_selected %}selected{% endif %}">
+      <li id="dashboard-nav-account" class="{% if profile_edit_selected or credit_cards_selected or notification_preferences_selected or social_accounts_selected or saved_searches_selected %}selected{% endif %}">
         <span>{{ 'dashboard.nav.account' | t }}</span>
         <ul>
+          <li id="dashboard-nav-edit" class="{% if profile_edit_selected %}selected{% endif %}">
+            <a href="{{ 'dashboard_profile_path' | generate_url }}">{{ 'dashboard.nav.edit' | t }}</a>
+          </li>
           {% if current_user.has_active_credit_cards? %}
             {% assign payment_gateway_id = '' | get_payment_gateway_id %}
             {% assign credit_cards_path = 'dashboard_payment_gateway_credit_cards_path' | generate_url: payment_gateway_id %}
             <li id="dashboard-nav-credit_cards" class="{% if credit_cards_selected %}selected{% endif %}">
-              <a href="{{ credit_cards_path }}">{{ 'dashboard.nav.edit' | t }}</a>
+              <a href="{{ credit_cards_path }}">{{ 'dashboard.nav.credit_cards' | t }}</a>
             </li>
           {% endif %}
 

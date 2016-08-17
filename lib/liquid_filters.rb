@@ -352,7 +352,7 @@ module LiquidFilters
   end
 
   def find_collaborators_for_user_projects(current_user, user)
-    user.source.transactable_collaborators.where(transactable_id: current_user.source.created_listings.pluck(:id))
+    user.source.transactable_collaborators.where(transactable_id: current_user.source.created_listings.with_state([:pending, :in_progress]).pluck(:id))
   end
 
   def is_approved_collaborator(user, transactable)

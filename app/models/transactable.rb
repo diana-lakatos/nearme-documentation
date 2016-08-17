@@ -293,10 +293,10 @@ class Transactable < ActiveRecord::Base
     event :finish                 do transition in_progress: :completed; end
     event :cancel                 do transition [:in_progress, :pending] => :cancelled; end
 
-    before_transition in_progress: :cancelled do
-      #check if all is paid
-    end
+    before_transition in_progress: :cancelled, do: :check_expenses
 
+    after_transition any => [:cancelled], do: :decline_reservations
+    after_transition any => [:completed], do: :archive_orders
     after_transition any => [:cancelled] { |t| WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Cancelled, t.id) }
     after_transition any => [:completed] { |t| WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Completed, t.id) }
   end
@@ -699,6 +699,18 @@ class Transactable < ActiveRecord::Base
 
   private
 
+  def check_expenses
+    unless line_item_orders.with_state(:confirmed).all?(&:all_paid?)
+      errors.add(:base, I18n.t('errors.transactable.cant_cancel'))
+      return false
+    end
+    true
+  end
+
+  def archive_orders
+    line_item_orders.with_state(:confirmed).map(&:complete!)
+  end
+
   def close_request_for_quotes
     self.transactable_tickets.with_state(:open).each { |ticket| ticket.resolve! }
     true
@@ -740,7 +752,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def decline_reservations
-    orders.unconfirmed.each do |r|
+    line_item_orders.unconfirmed.each do |r|
       r.reject!
     end
 

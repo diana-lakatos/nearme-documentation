@@ -1372,6 +1372,7 @@ en:
       transactables: 'My Listings'
       payouts: 'Payments'
       orders_received: 'Orders Received'
+      order_items: 'Time / Expense Overview'
       host_reservations: 'Bookings Received'
       host_reservations_count_html: 'Bookings Received <span>%{count}</span>'
       transfers: 'Payment Transfers'
