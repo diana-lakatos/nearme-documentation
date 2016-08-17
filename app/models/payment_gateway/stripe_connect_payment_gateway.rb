@@ -13,11 +13,18 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
   end
 
   def supported_currencies
-    ["AED", "ALL", "ANG", "ARS", "AUD", "AWG", "BBD", "BDT", "BIF", "BMD", "BND", "BOB", "BRL", "BSD", "BWP", "BZD", "CAD", "CHF", "CLP", "CNY", "COP", "CRC", "CVE", "CZK", "DJF", "DKK", "DOP", "DZD", "EGP", "ETB", "EUR", "FJD", "FKP", "GBP", "GIP", "GMD", "GNF", "GTQ", "GYD", "HKD", "HNL", "HRK", "HTG", "HUF", "IDR", "ILS", "INR", "ISK", "JMD", "JPY", "KES", "KHR", "KMF", "KRW", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "MAD", "MDL", "MNT", "MOP", "MRO", "MUR", "MVR", "MWK", "MXN", "MYR", "NAD", "NGN", "NIO", "NOK", "NPR", "NZD", "PAB", "PEN", "PGK", "PHP", "PKR", "PLN", "PYG", "QAR", "RUB", "SAR", "SBD", "SCR", "SEK", "SGD", "SHP", "SLL", "SOS", "STD", "SVC", "SZL", "THB", "TOP", "TTD", "TWD", "TZS", "UAH", "UGX", "USD", "UYU", "UZS", "VND", "VUV", "WST", "XAF", "XOF", "XPF", "YER", "ZAR", "AFN", "AMD", "AOA", "AZN", "BAM", "BGN", "CDF", "GEL", "KGS", "LSL", "MGA", "MKD", "MZN", "RON", "RSD", "RWF", "SRD", "TJS", "TRY", "XCD", "ZMW"]
+    %w{
+      AED ALL ANG ARS AUD AWG BBD BDT BIF BMD BND BOB BRL BSD BWP BZD CAD CHF CLP CNY COP CRC CVE
+      CZK DJF DKK DOP DZD EGP ETB EUR FJD FKP GBP GIP GMD GNF GTQ GYD HKD HNL HRK HTG HUF IDR ILS
+      INR ISK JMD JPY KES KHR KMF KRW KYD KZT LAK LBP LKR LRD MAD MDL MNT MOP MRO MUR MVR MWK MXN
+      MYR NAD NGN NIO NOK NPR NZD PAB PEN PGK PHP PKR PLN PYG QAR RUB SAR SBD SCR SEK SGD SHP SLL
+      SOS STD SVC SZL THB TOP TTD TWD TZS UAH UGX USD UYU UZS VND VUV WST XAF XOF XPF YER ZAR AFN
+      AMD AOA AZN BAM BGN CDF GEL KGS LSL MGA MKD MZN RON RSD RWF SRD TJS TRY XCD ZMW
+    }
   end
 
   def self.settings
-    { login: '' }
+    { login: { validate: [:presence] } }
   end
 
   def settings
