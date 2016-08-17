@@ -759,7 +759,8 @@ class SecuredParams
   def user_message
     [
       :body,
-      :replying_to_id
+      :replying_to_id,
+      attachments_attributes: nested(self.attachment)
     ]
   end
 
@@ -1124,6 +1125,13 @@ class SecuredParams
     [
       :approval_request_attachment_template_id,
       :caption,
+      :file,
+      :file_cache,
+    ]
+  end
+
+  def attachment
+    [
       :file,
       :file_cache,
     ]

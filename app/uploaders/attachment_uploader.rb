@@ -1,4 +1,4 @@
-class PaymentDocumentUploader < PrivateFileUploader
+class AttachmentUploader < PrivateFileUploader
   def extension_white_list
     %w(jpg jpeg png pdf doc docx xls xlsx psd)
   end
