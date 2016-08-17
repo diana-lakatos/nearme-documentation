@@ -87,10 +87,21 @@ namespace :uot do
         max_price_cents: 150_00,
         unit: 'hour',
         number_of_units: 1,
-        order_class_name: 'Offer'
+        order_class_name: 'Offer',
+        allow_free_booking: true
       }]
     )
+
+    merchant_fee = transactable_type.merchant_fees.first_or_initialize
+    merchant_fee.attributes = {
+      name: "Finder's Fee",
+      amount_cents: 10000,
+      currency: "USD",
+      commission_receiver: "mpo"
+    }
+
     transactable_type.save!
+    merchant_fee.save!
     fc = transactable_type.reservation_type.form_components.first
     fc.name = 'Make an Offer'
     fc.form_fields = [{'reservation' => 'payment_documents'}]
@@ -517,7 +528,8 @@ namespace :uot do
       'that listing' => 'your Project',
       'This listing' => 'Your Project',
       'That listing' => 'Your Project',
-      'listing' => 'Project'
+      'listing' => 'Project',
+      'free' => 'Pro Bono',
     }
     (Dir.glob(Rails.root.join('config', 'locales', '*.en.yml')) + Dir.glob(Rails.root.join('config', 'locales', 'en.yml'))).each do |yml_filename|
       en_locales = YAML.load_file(yml_filename)

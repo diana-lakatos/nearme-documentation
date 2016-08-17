@@ -6,6 +6,10 @@
         = pricing.input :number_of_units, as: :hidden, input_html: { value: 1}
         = pricing.input :unit, as: :hidden, input_html: { value: 'item'}
         = pricing.input :order_class_name, as: :select, collection: Order::ORDER_TYPES
+  %h4= t('instance_admin.manage.transactable_types.purchase_settings')
+  .row
+    .input-container.col-xs-12
+      = pricing.input :allow_free_booking, as: :boolean, :inline_label => true
 .row
   .input-container.col-xs-6
     = f.input :service_fee_guest_percent do

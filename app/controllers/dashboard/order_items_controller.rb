@@ -46,8 +46,12 @@ class Dashboard::OrderItemsController < Dashboard::Company::BaseController
 
   def approve
     @order_item = @order.recurring_booking_periods.find(params[:id])
-    @order_item.generate_payment!
-    flash[:notice] = t('flash_messages.dashboard.order_items.approved')
+    if @order_item.charge_and_approve!
+      flash[:notice] = t('flash_messages.dashboard.order_items.approved')
+    else
+      flash[:error] = t('flash_messages.dashboard.order_items.approve_failed')
+    end
+
     redirect_to dashboard_order_order_items_path(@order, transactable_id: @order.transactable.id)
   end
 
