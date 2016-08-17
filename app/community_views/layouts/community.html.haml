@@ -47,6 +47,13 @@
 
         = yield :tutorial
 
+    = render 'shared/footer'
+
+    = yield(:body_bottom)
+
+    = render 'shared/modal'
+    = yield :modals
+
     = render "shared/javascripts/javascript_assets"
     = render 'shared/javascripts/raygun/libs'
     = render 'shared/javascripts/marketplace_logger'
@@ -55,8 +62,26 @@
     = javascript_include_tag 'vendor/jquery.min'
     = javascript_include_tag 'vendor/modernizr'
 
-    = render 'shared/footer'
+    = javascript_tag do
+      = javascript_i18n_include_tag
 
-    = yield(:body_bottom)
+    = javascript_include_tag '//maps.googleapis.com/maps/api/js?libraries=places'
 
-    = render 'shared/javascripts/footer', entry: 'community', googlemaps: true, analytics: true, include_modal: true
+    = webpack_manifest_script
+    = webpack_bundle_tag 'common'
+    = webpack_bundle_tag 'community'
+
+    = render 'shared/javascripts/olark/olark' if platform_context.instance.olark_enabled?
+    = render 'shared/javascripts/google_analytics'
+    = render 'shared/javascripts/sessioncam'
+
+    = yield :page_scripts
+    = yield :script
+
+    - if content_for?(:domready)
+      = javascript_tag do
+        $(function(){
+        = yield :domready
+        });
+
+    = render 'shared/javascripts/raygun/init'
