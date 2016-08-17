@@ -42,6 +42,7 @@ class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceControll
 
   def update
     @form_component = @form_componentable.form_components.find(params[:id])
+
     if @form_component.update_attributes(form_component_params)
       flash[:success] = t 'flash_messages.instance_admin.manage.form_component.updated'
       redirect_to redirect_path
@@ -106,6 +107,7 @@ class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceControll
   def form_component_params
     params.require(:form_component).permit(secured_params.form_component).tap do |whitelisted|
       whitelisted[:form_fields] = params[:form_component][:form_fields].map { |el| el = el.split('=>'); { el[0].try(:strip) => el[1].try(:strip) } } if params[:form_component][:form_fields]
+      whitelisted[:form_fields] ||= []
     end
 
   end

@@ -65,5 +65,9 @@ class InstanceProfileType < ActiveRecord::Base
     @instance_profile_type_drop ||= InstanceProfileTypeDrop.new(self)
   end
 
+  def has_fields?(profile_type)
+    form_components.where(form_type: profile_type).any? {|f| f.form_fields.present? }
+  end
+
 end
 
