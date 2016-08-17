@@ -65,12 +65,34 @@
 
             <aside class="sidebar">
                 <ul class="actions-a">
-                  {% if listing.state == 'pending' and collaborator != blank %}
-                    <li><a href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: listing.id }}" class="button-a">Make an Offer</a></li>
-                  {% endif %}
+
+                    {% assign orders = current_user | get_enquirer_orders: listing %}
+                    {% assign can_make_offer = false %}
+                    {% if current_status == 'pending' %}
+                      {% if orders == empty %}
+                        {% assign can_make_offer = true %}
+                      {% else %}
+                        {% assign can_make_offer = true %}
+                        {% for order in orders %}
+                          {% if order.state == 'unconfirmed' %}
+                            {% assign can_make_offer = false %}
+                          {% endif %}
+                        {% endfor %}
+                      {% endif  %}
+                    {% endif %}
+                    {% if can_make_offer == true %}
+                      <li>
+                        {% if current_user.has_verified_merchant_account == true %}
+                          <a class="btn btn-info" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id }}">Make an Offer</a>
+                        {% else %}
+                          <a class="btn btn-info" data-modal="true" data-href="{{ 'required_modal_dashboard_company_payouts_path' | generate_url }}">Make an Offer</a>
+                        {% endif %}
+
+                      </li>
+                    {% endif %}
                     <li>{{ listing.creator.click_to_call_button }}</li>
                     {% if collaborator != blank %}
-                      <li><a class="button-b action-message" data-modal="true" href="{{ listing.creator.user_message_path }}">Send Message</a></li>
+                      <li><a class="button-b action-message" data-modal="true" data-href="{{ listing.creator.user_message_path }}">Send Message</a></li>
                     {% endif %}
                 </ul>
 
