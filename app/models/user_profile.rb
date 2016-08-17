@@ -14,7 +14,7 @@ class UserProfile < ActiveRecord::Base
 
   has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
 
-  delegate :onboarding, :onboarding?, to: :instance_profile_type, allow_nil: true
+  delegate :onboarding, :onboarding?, :has_fields?, to: :instance_profile_type, allow_nil: true
 
   after_create :create_company_if_needed
 

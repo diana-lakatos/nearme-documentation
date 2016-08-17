@@ -68,12 +68,16 @@
             = render 'layouts/hero'
             = render 'shared/admin_logged_in_as_user' if admin_as_user?
             = render 'shared/instance_admin_logged_in_as_user' if instance_admin_as_user?
-            .container-fluid
-              = (yield(:content).empty? ? yield : yield(:content)) unless render_content_outside_container?
-            - unless no_footer?
-              = render 'layouts/footer'
 
-            = (yield(:content).empty? ? yield : yield(:content)) if render_content_outside_container?
+            - if render_content_outside_container?
+              = (yield(:content).empty? ? yield : yield(:content))
+            - else
+              .container-fluid
+                = (yield(:content).empty? ? yield : yield(:content))
+
+            - unless no_footer?
+              .container-fluid
+                = render 'layouts/footer'
         - unless no_footer?
           .footer-push{class: "footer_#{section_class(@section_name)}"}
 
