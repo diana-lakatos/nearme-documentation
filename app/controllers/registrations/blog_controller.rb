@@ -5,7 +5,7 @@ class Registrations::BlogController < ApplicationController
   def index
     @user = blog_user
     @blog_posts = get_blog_posts
-    @tags = blog_user.published_blogs.try(:tags).try(:alphabetically)
+    @tags = blog_user.published_blogs.map(&:tags).sort_by(&:name)
 
     @no_footer = true
     @render_content_outside_container = true

@@ -149,6 +149,18 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
+    var el = $('[data-back-to-search-results-link]');
+    if (el.length === 0) {
+        return;
+    }
+
+    require.ensure('./new_ui/modules/back_to_search', function(require){
+        var BackToSearch = require('./new_ui/modules/back_to_search');
+        return new BackToSearch(el);
+    });
+});
+
+DNM.registerInitializer(function(){
     var els = $('[data-routelink]');
     if (els.length === 0) {
         return;

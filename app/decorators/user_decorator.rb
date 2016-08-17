@@ -57,6 +57,10 @@ class UserDecorator < Draper::Decorator
     feed_subscribed_to?(object) ? "delete" : "post"
   end
 
+  def show_path
+    profile_path(slug)
+  end
+
   private
 
   def user_messages_decorator_for(instance)

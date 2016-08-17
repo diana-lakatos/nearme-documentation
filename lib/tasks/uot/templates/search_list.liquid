@@ -168,12 +168,12 @@
                             {% endif %}
 
                             <li>{% include 'shared/components/wish_list_button_injection.html', object: user %}</li>
-
                             {% if user.has_active_blog? %}
-                            <li><a href="{{ user.user_blog_posts_list_path }}" class="button-b action-blog">View Blog</a></li>
+                                <li><a href="{{ user.user_blog_posts_list_path }}" class="button-b action-blog">View Blog</a></li>
                             {% endif %}
-
-                            <li><a href="./" class="button-b action-linkedin">LinkedIn Bio</a></li>
+                            {% if user.buyer_properties['linkedin_url'] != blank %}
+                                <li><a href="{{ user.buyer_properties['linkedin_url'] }}" class="button-b action-linkedin" target="_blank">LinkedIn Bio</a></li>
+                            {% endif %}
                         </ul>
                     </aside>
 

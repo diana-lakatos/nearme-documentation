@@ -19,7 +19,8 @@ namespace :uot do
       wish_lists_enabled: true,
       default_currency: 'USD',
       default_country: 'United States',
-      force_accepting_tos: true
+      force_accepting_tos: true,
+      user_blogs_enabled: true
     )
     @instance.create_documents_upload(
       enabled: true,
@@ -40,6 +41,7 @@ namespace :uot do
 
     create_transactable_types!
     create_custom_attributes!
+    create_custom_model!
     create_categories!
     create_or_update_form_components!
     set_theme_options
@@ -48,6 +50,30 @@ namespace :uot do
     create_translations
     create_workflow_alerts
     expire_cache
+  end
+
+  def create_custom_model!
+    cmt = CustomModelType.where(instance_id: @instance.id, name: 'Recommendations').first_or_create!
+    cmt.instance_profile_types = [@instance_profile_type]
+    cmt.save!
+    create_custom_attribute(cmt, {
+      name: 'recommendation',
+      label: 'Recommendation',
+      attribute_type: 'string',
+      html_tag: 'textarea',
+      required: "1",
+      public: true,
+      searchable: false
+    })
+    create_custom_attribute(cmt, {
+      name: 'author',
+      label: 'Author',
+      attribute_type: 'string',
+      html_tag: 'input',
+      required: "1",
+      public: true,
+      searchable: false
+    })
   end
 
   def create_transactable_types!
@@ -264,7 +290,37 @@ namespace :uot do
         html_tag: 'radio_buttons',
         validation_only_on_update: true,
         required: "1",
-        valid_values: ['available', 'not_available'],
+        valid_values: ['Available', 'Not Available'],
+        public: true,
+        searchable: false
+    })
+
+    create_custom_attribute(@instance_profile_type, {
+        name: 'discounts_description',
+        label: 'What kind of discounts do you offer?',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "0",
+        public: true,
+        searchable: false
+    })
+
+    create_custom_attribute(@instance_profile_type, {
+        name: 'linkedin_url',
+        label: 'LinkedIn URL',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "0",
+        public: true,
+        searchable: false
+    })
+
+    create_custom_attribute(@instance_profile_type, {
+        name: 'cities',
+        label: 'In what cities you are willing to work?',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "0",
         public: true,
         searchable: false
     })
@@ -419,12 +475,16 @@ namespace :uot do
       {"buyer" => "bio"},
       {"buyer" => "workplace_type"},
       {"buyer" => "discounts_available"},
+      {"buyer" => "discounts_description"},
       {"buyer" => "hourly_rate"},
       {"buyer" => "travel"},
+      {"buyer" => "cities"},
+      {"buyer" => "linkedin_url"},
       {"buyer" => "Category - Languages"},
       {"buyer" => "Category - Industry"},
       {"buyer" => "Category - Area Of Expertise"},
-      {"user" => "tags"}
+      {"user" => "tags"},
+      {"buyer" => "Custom Model - Recommendations"}
     ]
     component.save!
 
