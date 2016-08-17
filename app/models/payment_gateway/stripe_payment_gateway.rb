@@ -1,5 +1,5 @@
 class PaymentGateway::StripePaymentGateway < PaymentGateway
-  supported :multiple_currency, :recurring_payment, :credit_card_payment, :partial_refunds
+  supported :multiple_currency, :recurring_payment, :credit_card_payment, :partial_refunds, :any_country
 
   def self.settings
     { login: { validate: [:presence] } }
@@ -22,12 +22,19 @@ class PaymentGateway::StripePaymentGateway < PaymentGateway
     'stripe_id'
   end
 
-  def self.supported_countries
-    ["AU", "AT", "BE", "BR", "CA", "DK", "FI", "FR", "DE", "HK", "IE", "IT", "JP", "LU", "MX", "NL", "NZ", "NO", "PT", "SG", "ES", "SE", "CH", "GB", "US"]
-  end
+  # def self.supported_countries
+    #["AU", "AT", "BE", "BR", "CA", "DK", "FI", "FR", "DE", "HK", "IE", "IT", "JP", "LU", "MX", "NL", "NZ", "NO", "PT", "SG", "ES", "SE", "CH", "GB", "US"]
+  # end
 
   def supported_currencies
-    ["AUD", "CAD", "USD", "DKK", "NOK", "SEK", "EUR", "GBP", "ILS"]
+    %w{
+      AED ALL ANG ARS AUD AWG BBD BDT BIF BMD BND BOB BRL BSD BWP BZD CAD CHF CLP CNY COP CRC CVE
+      CZK DJF DKK DOP DZD EGP ETB EUR FJD FKP GBP GIP GMD GNF GTQ GYD HKD HNL HRK HTG HUF IDR ILS
+      INR ISK JMD JPY KES KHR KMF KRW KYD KZT LAK LBP LKR LRD MAD MDL MNT MOP MRO MUR MVR MWK MXN
+      MYR NAD NGN NIO NOK NPR NZD PAB PEN PGK PHP PKR PLN PYG QAR RUB SAR SBD SCR SEK SGD SHP SLL
+      SOS STD SVC SZL THB TOP TTD TWD TZS UAH UGX USD UYU UZS VND VUV WST XAF XOF XPF YER ZAR AFN
+      AMD AOA AZN BAM BGN CDF GEL KGS LSL MGA MKD MZN RON RSD RWF SRD TJS TRY XCD ZMW
+    }
   end
 
   def gateway

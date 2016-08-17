@@ -1,4 +1,5 @@
 class OrderDrop < BaseDrop
+  include CurrencyHelper
 
   attr_reader :order
 
@@ -30,6 +31,10 @@ class OrderDrop < BaseDrop
   # the total amount to be charged for this order
   def total_amount
     @order.total_amount.to_s
+  end
+
+  def formatted_total_amount
+    humanized_money_with_cents_and_symbol(@order.total_amount)
   end
 
   # whether or not the order has products with seller attachments

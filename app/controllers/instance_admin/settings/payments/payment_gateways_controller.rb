@@ -8,7 +8,6 @@ class InstanceAdmin::Settings::Payments::PaymentGatewaysController < InstanceAdm
     @payment_gateway = payment_gateway_class.new(payment_gateway_params)
 
     if @payment_gateway.valid?
-      @payment_gateway.payment_country_ids = @payment_gateway.available_payment_countries.map(&:id)
       if @payment_gateway.supports_multiple_currency?
         @payment_gateway.payment_currency_ids = @payment_gateway.available_currencies.map(&:id)
       end
