@@ -21,6 +21,7 @@ en:
   phone_calls:
     buttons:
       click_to_call_user: 'Call Me'
+
   dashboard:
     nav:
       user_reservations: My Offers
@@ -37,6 +38,9 @@ en:
       title_count: Offers (%{count})
       archived: Offers Closed
       upcoming: Offers Open
+      send_message: Send Message
+      track_time: Track Time & Expenses
+      approved_offer: Approved Offer
 
     host_reservations:
       no_unconfirmed_reservations: You have no unconfirmed offers.

@@ -1,0 +1,14 @@
+.row
+  .col-md-4
+    = f.input :name, required: true, input_html: { readonly: readonly }
+  .col-md-8
+    = f.input :description, input_html: { readonly: readonly }
+.row
+  .col-sm-4
+    = f.input :quantity, required: true, input_html: { 'data-quantity-input': true, readonly: readonly}
+  .col-sm-4
+    = f.input :unit_price, required: true, input_html: { 'data-price-input': true, readonly: readonly}
+  .col-sm-4.text-right
+    %label.control-label= t('dashboard.order_items.total')
+    .sub-total{ data: { subtotal: true, currency: @order_item.unit_price.symbol, amount: f.object.total_price } }
+      = humanized_money_with_cents_and_symbol(f.object.total_price)

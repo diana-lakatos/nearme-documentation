@@ -1,16 +1,33 @@
-<h2>To: {{ transactable.name }}</h2>
-<div class="row">
-  <div class="col-md-6">
-    <p>Contact: {{ transactable.properties.project_contact }}</p>
-    <p>Company: {{ transactable.properties.company_name }}</p>
-    <p>Workplace: {{ transactable.properties.workplace_type }}</p>
-    {% if transactable.properties.workplace_type == 'On Site' %}
-      <p>Office: {{ transactable.properties.office_location }}</p>
-    {% endif %}
-  </div>
-  <div class="col-md-6">
-    <p>Approx. Budget: {{ transactable.properties.budget | pricify }}</p>
-    <p>Deadline: {{ transactable.properties.deadline | to_date | l: 'short' }}</p>
-    <p>Approx. Time to Complete: {{ transactable.properties.estimation }}</p>
-  </div>
-</div>
+<h2>To: <span>{{ transactable.name }}</span></h2>
+<dl class="transactable-properties">
+  {% if transactable.properties.project_contact != blank %}
+    <dt>Contact</dt>
+    <dd>{{ transactable.properties.project_contact }}</dd>
+  {% endif %}
+
+  {% if transactable.properties.company_name != blank %}
+    <dt>Company</dt>
+    <dd>{{ transactable.properties.company_name }}</dd>
+  {% endif %}
+
+  {% if transactable.properties.workplace_type != blank %}
+    <dt>Workplace</dt>
+    <dd>{{ transactable.properties.workplace_type }}</dd>
+  {% endif %}
+
+  {% if transactable.properties.workplace_type == 'On Site' && transactable.properties.office_location != blank %}
+    <dt>Office</dt>
+    <dd>{{ transactable.properties.office_location }}</dd>
+  {% endif %}
+
+  <dt>Approx. Budget</dt>
+  <dd>{{ transactable.properties.budget | pricify }}</dd>
+
+  <dt>Deadline</dt>
+  <dd>{{ transactable.properties.deadline | to_date | l: 'short' }}</dd>
+
+  {% if transactable.properties.estimation != blank %}
+    <dt>Approx. Time to Complete</dt>
+    <dd>{{ transactable.properties.estimation }}</dd>
+  {% endif %}
+</dl>
