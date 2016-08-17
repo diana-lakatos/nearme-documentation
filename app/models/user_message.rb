@@ -11,6 +11,7 @@ class UserMessage < ActiveRecord::Base
   belongs_to :thread_owner, -> { with_deleted }, class_name: 'User'     # user that started conversation
   belongs_to :thread_recipient, -> { with_deleted }, class_name: 'User' # user that is conversation recipient
   belongs_to :thread_context, -> { with_deleted }, polymorphic: true    # conversation context: Transactable, Reservation, User
+  has_many :attachments, class_name: 'Attachable::Attachment', as: :attachable
 
   validates_presence_of :author_id
   validates_presence_of :thread_owner_id
@@ -28,6 +29,8 @@ class UserMessage < ActiveRecord::Base
   scope :by_created, -> {order('created_at desc')}
 
   after_create :update_recipient_unread_message_counter, :mark_as_read_for_author
+
+  accepts_nested_attributes_for :attachments, allow_destroy: true
 
   def thread_scope
     [thread_owner_id, thread_recipient_id, thread_context_id, thread_context_type]

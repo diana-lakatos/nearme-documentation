@@ -4,6 +4,8 @@ en:
       payment_gateway: "Payment gateway"
       payment_method: "Payment method"
     attributes:
+      attachable/attachment:
+        file: 'Attachment'
       additional_charge_type:
         additional_charge_type_target: "Product/Service Type"
       instance:

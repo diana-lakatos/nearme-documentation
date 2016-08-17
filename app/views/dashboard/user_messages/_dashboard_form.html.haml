@@ -1,4 +1,7 @@
-= dashboard_simple_form_for @user_message, url: @displayed_user_message.create_path(@user_message), remote: true do |f|
+= dashboard_simple_form_for @user_message, url: @displayed_user_message.create_path(@user_message), remote: true, input_html: { multipart: true } do |f|
+  = hidden_field_tag :authenticity_token, form_authenticity_token
   = f.hidden_field :replying_to_id
   = f.input :body, required: false, label: false, input_html: { "data-message-body": true }
+  = f.simple_fields_for :attachments, @user_message.attachments.build do |attachment|
+    = attachment.input :file, as: :file, input_html: { data: { file: true } }
   = f.submit t('user_messages.send_message'), class: 'btn btn-primary'

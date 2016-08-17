@@ -4,6 +4,8 @@ class Attachable::Attachment < ActiveRecord::Base
   scoped_to_platform_context
   acts_as_paranoid
 
+  mount_uploader :file, ::AttachmentUploader
+
   belongs_to :instance
   belongs_to :user
   belongs_to :attachable, polymorphic: true
