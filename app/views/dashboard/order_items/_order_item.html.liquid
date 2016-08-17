@@ -1,58 +1,71 @@
-<div class="row">
-  <div class="col-sm-7">Tracked Items & Expenses: Submission on {{ item.created_at | strftime: "%m/%d/%Y at %I:%M%p" }}</div>
-  <div class="col-sm-2 pull-right">
-    {% if item.payment_state == 'unpaid' and  item.order.user.id == current_user.id %}
-      <a href="{{ 'edit_dashboard_order_order_item_path' | generate_url: order_id: order.id, id: item.id }}">Edit</a>
-    {% else %}
-      <a href="{{ 'dashboard_order_order_item_path' | generate_url: order_id: order.id, id: item.id }}">View</a>
-    {% endif%}
-  </div>
-</div>
-<hr/>
+<article class="order-item-entry">
+  <header>
+    <h4>Tracked Items &amp; Expenses entry</h4>
 
-<div class="row">
-  <div class="col-sm-2">Status</div>
-  <div class="col-sm-2">Date</div>
-  <div class="col-sm-2">Service Type / Item</div>
-  <div class="col-sm-2">Hours / Items</div>
-  <div class="col-sm-2">Rate / Cost</div>
-  <div class="col-sm-2">Totals</div>
-</div>
-{% for line_item in item.line_items %}
-  <div class="row">
-    <div class="col-sm-2">{{ 'dashboard.payments.states.' | append: item.payment_state | t }}</div>
-    <div class="col-sm-2">{{ line_item.created_at | to_date | l: 'short' }}</div>
-    <div class="col-sm-2">{{ line_item.name }}</div>
-    <div class="col-sm-2">{{ line_item.quantity }}</div>
-    <div class="col-sm-2">{{ line_item.formatted_unit_price }}</div>
-    <div class="col-sm-2">{{ line_item.formatted_total_price }}</div>
-  </div>
-{% endfor %}
-<hr/>
-<div class="row">
-  <div class="col-sm-9">
-    {% if order.creator.id == current_user.id %}
-      {% if item.approved? %}
-        <h3>Approved</h3>
+    <div class="options">
+      {% if item.payment_state == 'unpaid' and  item.order.user.id == current_user.id %}
+        <a href="{{ 'edit_dashboard_order_order_item_path' | generate_url: order_id: order.id, id: item.id }}" class="btn btn-primary btn-xs">Edit</a>
       {% else %}
-        {% if item.pending? %}
-          <form class="edit_reservation" action="{{ 'approve_dashboard_order_order_item_path' | generate_url: order.id, item.id }}" accept-charset="UTF-8" method="post">
-            <input name="utf8" type="hidden" value="&#x2713;" />
-            <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
-            <input type="submit" name="commit" value="{{ 'general.approve' | t }}" data-confirm="{{ 'confirmations.are_you_sure' | t }}" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-success" />
-          </form>
-          <a href="#">Reject</a> |
-          {% if order.user_messages.size == 0 %}
-            <a class="btn btn-info" data-modal="true" href="{{ 'new_reservation_user_message_path' | generate_url: order.id, skip: true }}">{{ 'dashboard.order_items.send_message' | t}}</a>
-          {% else %}
-            <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: order.user_messages.first.id }}">{{ 'dashboard.order_items.send_message' | t}}</a>
-          {% endif %}
-        {% endif %}
+        <a href="{{ 'dashboard_order_order_item_path' | generate_url: order_id: order.id, id: item.id }}" class="btn btn-primary btn-xs">View</a>
       {% endif %}
-    {% endif %}
-  </div>
-  <div class="col-sm-3">
-    Subtotal: {{ item.formatted_total_amount }}
-  </div>
-</div>
+    </div>
 
+    <div class="meta">
+      Submitted on <time datetime="{{ item.created_at }}">{{ item.created_at | strftime: "%m/%d/%Y at %I:%M%p" }}</time>
+    </div>
+  </header>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Service Type / Item</th>
+          <th>Hours / Items</th>
+          <th>Rate / Cost</th>
+          <th>Totals</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for line_item in item.line_items %}
+          <tr>
+            <td>
+              {{ 'dashboard.payments.states.' | append: item.payment_state | t }}</td>
+            <td>{{ line_item.created_at | to_date | l: 'short' }}</td>
+            <td>{{ line_item.name }}</td>
+            <td>{{ line_item.quantity }}</td>
+            <td>{{ line_item.formatted_unit_price }}</td>
+            <td>{{ line_item.formatted_total_price }}</td>
+          </tr>
+        {% endfor %}
+
+        <tr>
+          <td colspan="4" class="order-item-actions">
+            {% if order.creator.id == current_user.id %}
+              {% if item.approved? %}
+                <span class="label label-success">Approved</span>
+              {% else %}
+                {% if item.pending? %}
+                  <form class="edit_reservation" action="{{ 'approve_dashboard_order_order_item_path' | generate_url: order.id, item.id }}" accept-charset="UTF-8" method="post">
+                    <input name="utf8" type="hidden" value="&#x2713;" />
+                    <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
+                    <input type="submit" name="commit" value="{{ 'general.approve' | t }}" data-confirm="{{ 'confirmations.are_you_sure' | t }}" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-success btn-sm" />
+                  </form>
+                  <a href="#" class="btn btn-danger btn-sm">Reject</a>
+                  {% if order.user_messages.size == 0 %}
+                    <a class="btn btn-info btn-sm" data-modal="true" href="{{ 'new_reservation_user_message_path' | generate_url: order.id, skip: true }}">{{ 'dashboard.order_items.send_message' | t}}</a>
+                  {% else %}
+                    <a class="btn btn-info btn-sm" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: order.user_messages.first.id }}">{{ 'dashboard.order_items.send_message' | t}}</a>
+                  {% endif %}
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          </td>
+          <th scope="row" class="subtotal">Subtotal</th>
+          <td>{{ item.formatted_total_amount }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</article>

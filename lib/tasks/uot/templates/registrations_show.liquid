@@ -28,49 +28,63 @@
                 </header>
 
                 <div class="content">
-                    <h3>Expertise</h3>
-                    <ul>
-                        {% for exp in user.buyer_categories["Area Of Expertise"]['children'] %}
-                            <li>{{ exp }}</li>
-                        {% endfor %}
-                    </ul>
+                    {% if user.buyer_categories["Area Of Expertise"]['children'].size > 0 %}
+                      <h3>Expertise</h3>
+                      <ul>
+                          {% for exp in user.buyer_categories["Area Of Expertise"]['children'] %}
+                              <li>{{ exp }}</li>
+                          {% endfor %}
+                      </ul>
+                    {% endif %}
 
-                    <h3>Industry</h3>
-                    <ul>
-                        {% for exp in user.buyer_categories["Industry"]['children'] %}
-                            <li>{{ exp }}</li>
-                        {% endfor %}
-                    </ul>
+                    {% if user.buyer_categories["Industry"]['children'].size > 0 %}
+                      <h3>Industry</h3>
+                      <ul>
+                          {% for exp in user.buyer_categories["Industry"]['children'] %}
+                              <li>{{ exp }}</li>
+                          {% endfor %}
+                      </ul>
+                    {% endif %}
 
-                    <h3>Will work in these Cities</h3>
-                    <p>{{ user.buyer_properties['cities'] }}</p>
+                    {% if user.buyer_properties['cities'] != blank %}
+                      <h3>Will work in these Cities</h3>
+                      <p>{{ user.buyer_properties['cities'] }}</p>
+                    {% endif %}
 
-                    <h3>Languages</h3>
-                    <ul>
-                    {% for exp in user.buyer_categories["Languages"]['children'] %}
-                        <li>{{ exp }}</li>
-                    {% endfor %}
-                    </ul>
+                    {% if user.buyer_categories["Languages"]['children'].size > 0 %}
+                      <h3>Languages</h3>
+                      <ul>
+                      {% for exp in user.buyer_categories["Languages"]['children'] %}
+                          <li>{{ exp }}</li>
+                      {% endfor %}
+                      </ul>
+                    {% endif %}
 
-                    <hr>
+                    {% if user.buyer_properties['bio'] != blank %}
+                      <hr>
+                      <p>{{ user.buyer_properties['bio'] }}</p>
+                    {% endif %}
 
-                    <p>{{ user.buyer_properties['bio'] }}</p>
 
-                    <hr>
+                    {% if user.buyer_profile.customizations.size > 0 %}
 
-                    <section class="recommendations-a">
-                        <h3>Recommendations</h3>
-                        <div class="items">
-                            {% for recommendation in user.buyer_profile.customizations %}
-                                <div class="item">
-                                    <blockquote>
-                                        <p>&ldquo;{{ recommendation.properties['recommendation'] }}&rdquo;</p>
-                                    </blockquote>
-                                    <p class="author">{{ recommendation.properties['author'] }}</p>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </section>
+                      <hr>
+
+                      <section class="recommendations-a">
+                          <h3>Recommendations</h3>
+                          <div class="items">
+                              {% for recommendation in user.buyer_profile.customizations %}
+                                  <div class="item">
+                                      <blockquote>
+                                          <p>&ldquo;{{ recommendation.properties['recommendation'] }}&rdquo;</p>
+                                      </blockquote>
+                                      <p class="author">{{ recommendation.properties['author'] }}</p>
+                                  </div>
+                              {% endfor %}
+                          </div>
+                      </section>
+
+                    {% endif %}
                 </div>
             </div>
 
@@ -95,18 +109,22 @@
                     <dd>{{ user.buyer_properties['discounts_available'] }}</dd>
                 </dl>
 
-                <p>{{ user.buyer_properties['discounts_description'] }}</p>
+                {% if user.buyer_properties['discounts_description'] != blank %}
+                  <p>{{ user.buyer_properties['discounts_description'] }}</p>
+                {% endif %}
 
-                <hr>
 
-                <div class="tags-a">
-                    <h4>Tags</h4>
-                    <ul>
-                        {% for tag in user.tags %}
-                            <li><a href="/search?query_fields=tags&amp;query={{ tag.name }}">{{ tag.name }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                {% if user.tags.size > 0 %}
+                  <hr>
+                  <div class="tags-a">
+                      <h4>Tags</h4>
+                      <ul>
+                          {% for tag in user.tags %}
+                              <li><a href="/search?query_fields=tags&amp;query={{ tag.name }}">{{ tag.name }}</a></li>
+                          {% endfor %}
+                      </ul>
+                  </div>
+                {% endif %}
 
                 <hr>
 

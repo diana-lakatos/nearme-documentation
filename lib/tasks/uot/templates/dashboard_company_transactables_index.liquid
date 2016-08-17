@@ -16,8 +16,8 @@
 
 {% content_for 'page_header' %}
   <h1>
-    <span class='hidden-xs'>My Projects &gt;</span>
-    {{ current_status | humanize }}
+    My Projects
+    <span class='hidden-xs'>&gt; {{ current_status | humanize }}</span>
   </h1>
 
   {% if is_client == "true" %}
