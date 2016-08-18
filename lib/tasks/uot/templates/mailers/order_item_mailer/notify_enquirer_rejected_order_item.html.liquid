@@ -8,5 +8,5 @@
   <p>Client said: "{{ order_item.rejection_reason }}"</p>
 {% endif %}
 
-<p>Please review your information and re-submit time and expenses per your agreed terms. Feel free to <a href="{{ lister.use_message_path }}">reach out to {{ lister.name }}</a> for more details.</p>
+<p>Please review your information and re-submit time and expenses per your agreed terms. Feel free to reach out to <a href="{{ platform_context.host | append: lister.user_message_path }}"> {{ lister.name }}</a> for more details.</p>
 

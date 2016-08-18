@@ -12,7 +12,7 @@ class Utils::DefaultAlertsCreator::OrderItemCreator < Utils::DefaultAlertsCreato
   end
 
   def create_notify_enquirer_approved_order_item!
-    create_alert!({associated_class: WorkflowStep::OrderItemWorkflow::Rejected, name: 'notify_enquirer_approved_order_item', path: 'order_item_mailer/notify_enquirer_approved_order_item', subject: '[{{platform_context.name}}] {{lister.first_name}} has approved invoice!', alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::OrderItemWorkflow::Approved, name: 'notify_enquirer_approved_order_item', path: 'order_item_mailer/notify_enquirer_approved_order_item', subject: '[{{platform_context.name}}] {{lister.first_name}} has approved invoice!', alert_type: 'email', recipient_type: 'lister'})
   end
 
   protected

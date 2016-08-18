@@ -17,11 +17,11 @@ class RecurringBookingPeriod < ActiveRecord::Base
   scope :paid, -> { where.not(paid_at: nil) }
 
   state_machine :state, initial: :pending do
-    event :approve                  do transition pending: :approved; end
+    event :approve                  do transition [:rejected, :pending] => :approved; end
     event :reject                   do transition pending: :rejected; end
 
-    after_transition pending: :approved, do: :send_approve_alert
-    after_transition pending: :approved, do: :send_reject_alert
+    after_transition [:rejected, :pending] => :approved, do: :send_approve_alert
+    after_transition pending: :rejected, do: :send_reject_alert
   end
 
   def skip_payment_authorization

@@ -1,6 +1,7 @@
 class Dashboard::OrderItemsController < Dashboard::Company::BaseController
 
   before_filter :find_order
+  before_filter :find_order_item, except: [:index, :new, :create]
   before_filter :check_owner, only: [:approve, :reject]
 
   def index
@@ -9,7 +10,6 @@ class Dashboard::OrderItemsController < Dashboard::Company::BaseController
   end
 
   def show
-    @order_item = @order.recurring_booking_periods.find(params[:id])
   end
 
   def new
@@ -19,7 +19,6 @@ class Dashboard::OrderItemsController < Dashboard::Company::BaseController
   end
 
   def edit
-    @order_item = @order.recurring_booking_periods.find(params[:id])
   end
 
   def create
@@ -35,7 +34,6 @@ class Dashboard::OrderItemsController < Dashboard::Company::BaseController
   end
 
   def update
-    @order_item = @order.recurring_booking_periods.find(params[:id])
     if @order_item.update(order_item_params)
       flash[:notice] = t('flash_messages.dashboard.order_items.updated')
       redirect_to dashboard_order_order_item_path(@order, @order_item)
@@ -45,7 +43,6 @@ class Dashboard::OrderItemsController < Dashboard::Company::BaseController
   end
 
   def approve
-    @order_item = @order.recurring_booking_periods.find(params[:id])
     if @order_item.charge_and_approve!
       flash[:notice] = t('flash_messages.dashboard.order_items.approved')
     else
@@ -55,9 +52,20 @@ class Dashboard::OrderItemsController < Dashboard::Company::BaseController
     redirect_to dashboard_order_order_items_path(@order, transactable_id: @order.transactable.id)
   end
 
-  def reject
-
+  def rejection_form
   end
+
+  def reject
+    if @order_item.update_attribute(:rejection_reason, order_item_params[:rejection_reason])
+      if @order_item.reject!
+        flash[:notice] = t('flash_messages.dashboard.order_items.rejected')
+      else
+        flash[:error] = t('flash_messages.dashboard.order_items.reject_failed')
+      end
+    end
+    redirect_to dashboard_order_order_items_path(@order, transactable_id: @order.transactable.id)
+  end
+
 
   private
 
@@ -67,6 +75,10 @@ class Dashboard::OrderItemsController < Dashboard::Company::BaseController
 
   def find_order
     @order = Order.where("creator_id = :user_id OR user_id = :user_id", user_id: current_user.id).find(params[:order_id]) if params[:order_id]
+  end
+
+  def find_order_item
+    @order_item = @order.recurring_booking_periods.find(params[:id])
   end
 
   def check_owner

@@ -923,6 +923,8 @@ DesksnearMe::Application.routes.draw do
         resources :order_items do
           member do
             post :approve
+            put :reject
+            get :rejection_form
           end
         end
         member do

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160818110237) do
+ActiveRecord::Schema.define(version: 20160818144823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2104,6 +2104,7 @@ ActiveRecord::Schema.define(version: 20160818110237) do
     t.integer  "order_id"
     t.text     "comment"
     t.string   "state"
+    t.text     "rejection_reason"
   end
 
   create_table "recurring_bookings", force: :cascade do |t|

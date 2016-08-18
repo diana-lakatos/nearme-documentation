@@ -1475,6 +1475,7 @@ class SecuredParams
   def order_item #aka RecurringBookingPeriod
     [
       :comment,
+      :rejection_reason,
       transactable_line_items_attributes: nested(self.line_item),
     ]
   end

@@ -23,6 +23,9 @@ en:
       click_to_call_user: 'Call Me'
 
   dashboard:
+    order_items:
+      reject: "What's wrong?"
+      reject_placeholder: 'Please let us know what is the reason of declining expenses'
     nav:
       user_reservations: My Offers
       reviews: Ratings
@@ -153,6 +156,8 @@ en:
       order_items:
         updated: 'Expenses have been updated.'
         approved: 'Expenses have been approved.'
+        rejected: 'Expenses have been rejected'
+        reject_failed: 'Expenses could not be rejected'
     manage:
       listings:
         listing_cancelled: "Your project has been canceled."

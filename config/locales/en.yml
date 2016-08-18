@@ -1538,7 +1538,7 @@ en:
       reject: "What's wrong?"
       change_credit_card: 'Change credit card'
       periods_affected: 'Periods affected'
-      merchant_fee_charge: "%{name} of %{price} is going to be chared upon confirmation."
+      merchant_fee_charge: "%{name} of %{price} is going to be charged upon confirmation."
       reject_placeholder: 'Please let us know what is the reason of declining payment'
       order: "Back to order"
       back_to_order_html: "Back <span class='hidden-xs'>to order</span>"
@@ -1558,6 +1558,7 @@ en:
         voided: "Voided"
         refunded: "Refunded"
         unpaid: 'Unpaid'
+        rejected: 'Rejected'
       alerts: 'Alerts:'
 
     host_reservations:
