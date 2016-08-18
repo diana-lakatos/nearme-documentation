@@ -63,7 +63,7 @@
                       <p>{{ listing.properties.type_of_deliverable }}</p>
                     {% endif %}
 
-                    {% if listing.properties.other_requirements %}
+                    {% if listing.properties.other_requirements != blank %}
                       <h3>Other Requirements:</h3>
                       <p>{{ listing.properties.other_requirements }}</p>
                     {% endif %}
@@ -104,10 +104,13 @@
                     {% endif %}
                 </ul>
 
+                {% if listing.properties.about_company != blank %}
                 <hr>
 
                 <h4>About Company</h4>
                 <p>{{ listing.properties.about_company }}</p>
+
+                {% endif %}
 
                 <hr>
 
