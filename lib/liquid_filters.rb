@@ -409,4 +409,8 @@ module LiquidFilters
     date.strftime(format)
   end
 
+  def to_money(amount, currency)
+    Money.new(amount, currency)
+  end
+
 end

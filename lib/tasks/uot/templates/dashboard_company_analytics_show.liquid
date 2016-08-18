@@ -35,13 +35,14 @@
               <tr>
                 <td>{{ payment.currency | currency_content_tag:  payment.total_amount, 'span' }}</td>
                 <td>{{ payment.payable.listing.name }}</td>
-                <td>{{ payment.created_at | l: 'short' }}</td>
+                <td>{{ payment.created_at | l: 'long' }}</td>
               </tr>
             {% endfor %}
             {% for total in all_time_totals %}
               <tr class="total-row">
-                <td>{{ total.currency | currency_content_tag: total.sum, 'span' }}</td>
-                <td>{{ 'dashboard.analytics.total.all_time' }}</td>
+                {% assign total_money = total.sum | to_money: total.currency %}
+                <td>{{ total.currency | currency_content_tag: total_money, 'span' }}</td>
+                <td>{{ 'dashboard.analytics.total.all_time' | t }}</td>
                 <td></td>
               </tr>
             {% endfor %}
