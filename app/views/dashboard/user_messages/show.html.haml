@@ -26,3 +26,7 @@
 
 .form-actions
   = link_to t('user_messages.archive_html'), user_message.archive_path, method: :put
+
+- if request.xhr?
+  :javascript
+    $(document).trigger('init:user_messages.nearme');

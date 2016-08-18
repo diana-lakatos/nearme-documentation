@@ -254,6 +254,12 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
+    $(document).on('init:user_messages.nearme', function(event, elements){
+        require.ensure('./new_ui/controllers/messages_controller', function(require){
+            var MessagesController = require('./new_ui/controllers/messages_controller');
+            return new MessagesController($('[data-messages-form]'));
+        });
+    });
 
     var els = $('[data-messages-form]');
     if (els.length === 0) {
