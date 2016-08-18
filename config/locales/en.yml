@@ -2672,7 +2672,9 @@ en:
       card_number: 'Card number'
       expiration_date: 'Expiration date'
       expiration_date_month: 'Expiration date: Month'
+      expiration_date_month_html: '<span>Expiration date:</span> Month'
       expiration_date_year: 'Expiration date: Year'
+      expiration_date_year_html: '<span>Expiration date:</span> Year'
       security_code: 'Security code'
       ccv_hint: "The Card Security Code is usually a 3- or 4- digit number, typically printed on the back of a credit card (usually in the signature field)"
       whats_this: "(What's this?)"

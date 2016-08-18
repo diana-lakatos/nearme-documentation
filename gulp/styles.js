@@ -74,11 +74,7 @@ module.exports = function(gulp, browserSync, config) {
     /* Other */
 
     gulp.task('styles:other', function(){
-        return processStyles(path.join(config.paths.stylesheets, 'admin.scss'));
-    });
-
-    gulp.task('styles:other', function(){
-        var files = ['admin', 'blog', 'blog_admin', 'dashboard', 'errors','instance_wizard'];
+        var files = ['admin', 'blog', 'dashboard', 'errors','instance_wizard'];
         files = files.map(function(val){
             return path.join(config.paths.stylesheets, val + '.scss');
         });

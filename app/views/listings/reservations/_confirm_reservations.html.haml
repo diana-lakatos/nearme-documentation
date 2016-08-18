@@ -1,4 +1,4 @@
-- if @order && @order.confirm_reservations?
+- if @order && @order.confirm_reservations? && @order.payment
   %p.confirm-reservations
     = t('reservations.manually_confirm', lessor: @order.transactable.transactable_type.lessor)
     - if @order.payment.nonce_payment?

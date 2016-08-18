@@ -16,11 +16,13 @@ class PaymentDecorator < Draper::Decorator
   end
 
   def payment_methods
-    if is_free?
+    ids = if is_free?
       payment_gateways.map(&:active_free_payment_methods)
     else
       payment_gateways.map(&:active_payment_methods)
-    end.flatten.uniq
+    end.flatten.uniq.map(&:id)
+
+    PaymentMethod.where(id: ids)
   end
 
   def host_payment_methods

@@ -2,7 +2,7 @@ function sendUpdateRequest(href, method) {
     $.ajax({
         url: href,
         method: method,
-        dataType: "script"
+        dataType: 'script'
     });
 }
 
@@ -56,7 +56,7 @@ function initializeFavoriteButtons(context){
 function load(context) {
     context = context || document;
 
-    elements = context.querySelectorAll('[data-add-favorite-button]');
+    var elements = context.querySelectorAll('[data-add-favorite-button]');
 
     if (elements.length === 0) {
         return;

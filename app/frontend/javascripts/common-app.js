@@ -113,7 +113,7 @@ DNM.registerInitializer(function(){
         var Limiter = require('./components/limiter');
         els.each(function(){
             return new Limiter(this);
-        })
+        });
     });
 });
 
@@ -128,7 +128,7 @@ DNM.registerInitializer(function(){
         var Multiselect = require('./components/multiselect');
         els.each(function(){
             return new Multiselect.initialize(this);
-        })
+        });
     });
 });
 
@@ -142,7 +142,7 @@ DNM.registerInitializer(function(){
         var Fileupload = require('./components/fileupload');
         els.each(function(){
             return new Fileupload(this);
-        })
+        });
     });
 });
 
@@ -178,8 +178,8 @@ DNM.registerInitializer(function(){
 DNM.registerInitializer(function(){
     /* setFooterPushHeight */
     var
-    wrapper = $('.footer-wrapper'),
-    pusher = $('.footer-push');
+        wrapper = $('.footer-wrapper'),
+        pusher = $('.footer-push');
 
     if (wrapper.length === 0 || pusher.length === 0) {
         return;
@@ -236,7 +236,7 @@ DNM.registerInitializer(function(){
     }
 
     require.ensure('./ckeditor/init', function(require){
-        var CKEDITOR = require('./ckeditor/init');
+        require('./ckeditor/init');
     });
 });
 

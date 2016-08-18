@@ -1,6 +1,9 @@
-var config = module.exports = require('./manifest.config.js');
-var _ = require('lodash');
+var
+    config = require('./manifest.config.js'),
+    _ = require('lodash');
 
 config = _.merge(config, {
-  devtool: 'source-map'
+    devtool: 'source-map'
 });
+
+module.exports = config;

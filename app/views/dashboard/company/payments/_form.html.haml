@@ -1,9 +1,7 @@
-= simple_form_for @payment, url: dashboard_company_orders_received_payments_path, data: {"redirect-to" => dashboard_company_transactable_type_transactables_path(@payment.payable.transactable.transactable_type, status: 'in progress') } do |f|
-  - @payment.payable.host_line_items.each do |hli|
-    .alert.alert-info= t('dashboard.payments.merchant_fee_charge', name: hli.name, price: humanized_money_with_cents_and_symbol(hli.unit_price))
-  = render 'shared/payment_form', f: f
-  - if f.object.decorate.payment_methods.any?
-    = f.submit t "dashboard.host_reservations.actions.accept"
+= dashboard_simple_form_for @payment, url: dashboard_company_orders_received_payments_path, data: {"redirect-to" => dashboard_company_transactable_type_transactables_path(@payment.payable.transactable.transactable_type, status: 'in progress') } do |f|
 
-:javascript
-  $(function() { $(document).trigger('init:paymentmodal.nearme'); });
+  .dialog__body#payment-modal-box
+    = render 'shared/single_payment', f: f
+
+  .dialog__actions
+    = yield :dialog_actions

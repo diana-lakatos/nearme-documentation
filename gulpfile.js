@@ -25,6 +25,7 @@ require('./gulp/scripts')(gulp, config);
 require('./gulp/fonts')(gulp, config);
 require('./gulp/images')(gulp, config);
 require('./gulp/vendor')(gulp, config);
+require('./gulp/lint')(gulp, config);
 require('./gulp/serve')(gulp, browserSync, config);
 require('./gulp/watch')(gulp, config);
 require('./gulp/build')(gulp, config);
