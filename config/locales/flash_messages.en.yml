@@ -13,6 +13,7 @@ en:
         unknown: "We cannot authorize you."
     authorizations:
       not_authorized: "Sorry, you do not have permission to view that page."
+      not_filled_form: "Please complete your profile first."
     communications:
       validation_code: "Validation code: %{validation_code}"
       phone_number_disconnected: "Phone number successfully disconnected."

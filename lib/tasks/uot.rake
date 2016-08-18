@@ -20,7 +20,8 @@ namespace :uot do
       default_currency: 'USD',
       default_country: 'United States',
       force_accepting_tos: true,
-      user_blogs_enabled: true
+      user_blogs_enabled: true,
+      force_fill_in_wizard_form: true
     )
     @instance.create_documents_upload(
       enabled: true,

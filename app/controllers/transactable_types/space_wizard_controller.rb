@@ -3,6 +3,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   include AttachmentsHelper
 
+  skip_before_filter :force_fill_in_wizard_form
   before_filter :find_transactable_type
   before_filter :redirect_to_dashboard_if_registration_completed, only: [:new, :list]
   before_filter :redirect_to_dashboard_if_started_other_listing, only: [:new, :list]

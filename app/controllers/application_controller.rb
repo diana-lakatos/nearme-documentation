@@ -21,6 +21,7 @@ class ApplicationController < ActionController::Base
   before_action :filter_out_token
   before_action :sign_out_if_signed_out_from_intel_sso, if: -> { should_log_out_from_intel? }
   before_filter :set_paper_trail_whodunnit
+  before_filter :force_fill_in_wizard_form
 
   around_filter :set_time_zone
 
@@ -571,6 +572,13 @@ class ApplicationController < ActionController::Base
 
   def date_time_handler
     @date_time_handler ||= DateTimeHandler.new
+  end
+
+  def force_fill_in_wizard_form
+    if PlatformContext.current.instance.try(:force_fill_in_wizard_form?) && current_user && current_user.seller_profile && current_user.companies.none?
+      flash[:error] = t('flash_messages.authorizations.not_filled_form')
+      redirect_to PlatformContext.current.instance.transactable_types.first.wizard_path
+    end
   end
 
 end
