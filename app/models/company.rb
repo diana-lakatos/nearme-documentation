@@ -66,6 +66,7 @@ class Company < ActiveRecord::Base
 
   validates_presence_of :name
   validates_length_of :description, :maximum => 250
+  validates_length_of :url, :maximum => 250
   validates_length_of :name, :maximum => 50
   validates :email, email: true, allow_blank: true
   validate :validate_url_format
