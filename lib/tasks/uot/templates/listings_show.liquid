@@ -17,8 +17,10 @@
 
                     <div class="properties">
                         <dl>
+                            {% if listing.company != blank %}
                             <dt>Company Name:</dt>
                             <dd>{{ listing.company.name }}</dd>
+                            {% endif %}
 
                             {% if collaborator != blank %}
                               <dt>Invite Sent:</dt>
@@ -51,14 +53,20 @@
                 </div>
 
                 <div class="listing-description">
-                    <h3>Vignette of a Scope:</h3>
-                    <p>{{ listing.description }}</p>
+                    {% if listing.description != blank %}
+                      <h3>Vignette of a Scope:</h3>
+                      <p>{{ listing.description }}</p>
+                    {% endif %}
 
-                    <h3>Type of Deliverable:</h3>
-                    <p>{{ listing.properties.type_of_deliverable }}</p>
+                    {% if listing.properties.type_of_deliverable != blank %}
+                      <h3>Type of Deliverable:</h3>
+                      <p>{{ listing.properties.type_of_deliverable }}</p>
+                    {% endif %}
 
-                    <h3>Other Requirements:</h3>
-                    <p>{{ listing.properties.other_requirements }}</p>
+                    {% if listing.properties.other_requirements %}
+                      <h3>Other Requirements:</h3>
+                      <p>{{ listing.properties.other_requirements }}</p>
+                    {% endif %}
                 </div>
             </div>
 

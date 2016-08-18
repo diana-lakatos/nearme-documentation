@@ -495,7 +495,7 @@ DNM.registerInitializer(function(){
         });
     };
 
-    $(document).on('init:creditcardform.nearme', run)
+    $(document).on('init:creditcardform.nearme', run);
 
     if ($('input[data-card-number], input[data-card-code]').length > 0) {
         run();
@@ -596,6 +596,8 @@ DNM.registerInitializer(function(){
         require.ensure('./sections/dashboard/payment_modal_controller', function(require){
             var PaymentModalController = require('./sections/dashboard/payment_modal_controller');
             new PaymentModalController($('.dialog__body'));
+
+            $(document).trigger('init:creditcardform.nearme');
         });
     });
 });

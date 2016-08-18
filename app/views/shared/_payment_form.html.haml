@@ -14,4 +14,5 @@
           .accordion-inner
             = render partial: "shared/payment_methods/" + payment_method.payment_method_type, locals: {f: f, payment_method: payment_method}
   - else
-    %h3= t("reservations_review.missing_payment_method")
+    .alert.alert-danger
+      %b= t("reservations_review.missing_payment_method")
