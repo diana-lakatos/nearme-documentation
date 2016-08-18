@@ -1,6 +1,8 @@
 <h3>History for <a href="{{ transactable.show_path }}">{{ order.transactable.name }}</a></h3>
 
-<div class="alert alert-info">Next Payment Cycle Scheduled For: <b>{{ order.user.default_company.merchant_accounts[0].next_transfer_date | l: 'short' }}</b></div>
+{% if order.user.default_company.merchant_accounts[0].weekly_or_monthly_transfers? %}
+  <div class="alert alert-info">Next Payment Cycle Scheduled For: <b>{{ order.user.default_company.merchant_accounts[0].next_transfer_date | l: 'short' }}</b></div>
+  {% endif %}
 
 <div class="time-tracking-a">
   {% for item in order.recurring_booking_periods %}

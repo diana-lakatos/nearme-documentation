@@ -116,7 +116,7 @@
                   .input-container.col-xs-4
                     = label_tag "payment_gateway[config][#{key}][#{nested_key}]", t("simple_form.labels.payment_gateway.config.#{key}.#{nested_key}")
                     - if nested_options.try('[]', :valid_values)
-                      = select_tag "payment_gateway[config][#{key}][#{nested_key}]", options_for_select(nested_options.try('[]', :valid_values), @payment_gateway.config[key].try('[]', nested_key.to_s) ), { class: 'selectpicker' }.merge(nested_options.try('[]', :data))
+                      = select_tag "payment_gateway[config][#{key}][#{nested_key}]", options_for_select(nested_options.try('[]', :valid_values).map {|v| [v.to_s.capitalize, v]} , @payment_gateway.config[key].try('[]', nested_key.to_s) ), { class: 'selectpicker' }.merge(nested_options.try('[]', :data))
                     - else
                       = text_field_tag "payment_gateway[config][#{key}][#{nested_key}]", @payment_gateway.config[key].try('[]', nested_key.to_s), { class: 'string required form-control' }.merge(nested_options.try('[]', :data))
 

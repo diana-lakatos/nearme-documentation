@@ -82,7 +82,7 @@ class TransactableType < ActiveRecord::Base
   accepts_nested_attributes_for :availability_templates
   accepts_nested_attributes_for :action_types
   accepts_nested_attributes_for :all_action_types
-  accepts_nested_attributes_for :merchant_fees
+  accepts_nested_attributes_for :merchant_fees, allow_destroy: true
 
   delegate :translated_bookable_noun, :translation_namespace, :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
     :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
