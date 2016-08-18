@@ -138,6 +138,10 @@ class OrderDrop < BaseDrop
     first_line_item.additional_tax_total_rate.zero? == false
   end
 
+  def transactable_user_messages
+    transactable.user_messages.where("author_id = :user_id OR thread_recipient_id = :user_id", user_id: @order.user_id)
+  end
+
   private
 
   def first_line_item

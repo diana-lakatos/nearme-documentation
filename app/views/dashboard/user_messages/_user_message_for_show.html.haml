@@ -25,4 +25,4 @@
   %footer
     %span.attachment
       - user_message.attachments.each do |attachment|
-        = link_to attachment.file.file_name, attachment.file.url, download: attachment.file.file_name
+        = link_to attachment[:file], attachment.file.url, download: attachment[:file]

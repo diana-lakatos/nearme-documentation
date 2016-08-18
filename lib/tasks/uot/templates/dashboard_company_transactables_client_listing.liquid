@@ -59,10 +59,10 @@
                   <td>{{ transactable_collaborator.user.name }}</td>
                   <td>{{ transactable_collaborator.approved_by_owner_at | to_date | l: 'short' }}</td>
                   <td>
-                    {% if transactable.user_messages.size > 0 %}
-                      <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: transactable.user_messages.first.id, skip: true }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+                    {% if transactable_collaborator.transactable_user_messages.size > 0 %}
+                      <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: transactable_collaborator.transactable_user_messages.first.id, skip: true }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
                     {% else %}
-                      <a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id, skip: true }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+                      <a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id ,user_id: transactable_collaborator.user.id, skip: true }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
                     {% endif %}
 
                     {{ transactable_collaborator.user.click_to_call_button }}
