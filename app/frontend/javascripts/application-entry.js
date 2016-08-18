@@ -57,11 +57,10 @@ DNM.registerInitializer(function(){
 DNM.registerInitializer(function(){
     /* initializeModalClose */
     /* Re-enable form submit buttons on sign-in/sign-up modal close */
-    $(document).on('click.nearme', '.sign-up-modal a.modal-close', function() {
-        var reservation_request_form = $('form.reservation_request');
-        if(reservation_request_form.length > 0) {
-            $.rails.enableFormElements(reservation_request_form);
-            reservation_request_form.find('[data-behavior=reviewBooking]').removeClass('click-disabled');
+    $(document).on('click.nearme', '.sign-up-modal a.modal-close, .modal-overlay', function() {
+        var need_reenable = $('.triggers-show-modal');
+        if(need_reenable.length > 0) {
+            $.rails.enableFormElements(need_reenable);
         }
     });
 });
