@@ -347,7 +347,7 @@ namespace :project_to_transactable do
       instance.set_context!
 
       # We delete stray TransactableType object
-      stray_tt = TransactableType.find(444)
+      stray_tt = TransactableType.find_by_id(444)
       stray_tt.delete if stray_tt.present?
 
       ActivityFeedEvent.where("event like '%project%'").find_each do |activity_feed_event|
