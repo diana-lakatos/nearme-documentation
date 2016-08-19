@@ -339,15 +339,16 @@ namespace :project_to_transactable do
       end  
     end
 
-    # We delete stray TransactableType object
-    TransactableType.find(444).delete
-
     Transactable.reset_column_information
 
     Instance.find_each do |instance|
       next if !instance.is_community?
 
       instance.set_context!
+
+      # We delete stray TransactableType object
+      stray_tt = TransactableType.find_by_id(444)
+      stray_tt.delete if stray_tt.present?
 
       ActivityFeedEvent.where("event like '%project%'").find_each do |activity_feed_event|
         event = activity_feed_event.event
