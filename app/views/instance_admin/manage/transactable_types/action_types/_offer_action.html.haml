@@ -3,6 +3,7 @@
   .nested-container
     .row.nested-fields
       .col-md-2
+        = pricing.input :allow_nil_price_cents, as: :hidden, input_html: { value: 1}
         = pricing.input :number_of_units, as: :hidden, input_html: { value: 1}
         = pricing.input :unit, as: :hidden, input_html: { value: 'item'}
         = pricing.input :order_class_name, as: :select, collection: Order::ORDER_TYPES
