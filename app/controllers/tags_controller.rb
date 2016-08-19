@@ -3,6 +3,7 @@ class TagsController < ApplicationController
   before_action :coerce_query
   before_action :find_user
   before_action :empty_result
+  skip_before_filter :force_fill_in_wizard_form
 
   def index
     tags = Tag.autocomplete(params[:q])

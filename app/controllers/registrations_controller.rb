@@ -4,6 +4,7 @@ class RegistrationsController < Devise::RegistrationsController
   before_action :configure_permitted_parameters, only: :create
   skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:update_password, :set_password]
   skip_before_filter :filter_out_token, :only => [:verify, :unsubscribe]
+  skip_before_filter :force_fill_in_wizard_form
   before_filter :nm_force_ssl, only: [:new]
   before_filter :find_company, only: [:social_accounts, :edit]
   before_filter :set_form_components, only: [:edit, :update]
