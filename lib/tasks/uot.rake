@@ -113,15 +113,18 @@ namespace :uot do
       cancellation_policy_penalty_hours: 1.5,
       service_fee_guest_percent: 0,
       service_fee_host_percent: 30,
-      pricings_attributes: [{
-        min_price_cents: 50_00,
-        max_price_cents: 150_00,
-        unit: 'hour',
-        number_of_units: 1,
-        order_class_name: 'Offer',
-        allow_free_booking: true
-      }]
     )
+
+    pricing = transactable_type.offer_action.pricings.first_or_initialize
+    pricing.attributes = {
+      min_price_cents: 50_00,
+      max_price_cents: 150_00,
+      unit: 'hour',
+      number_of_units: 1,
+      order_class_name: 'Offer',
+      allow_free_booking: true,
+      allow_nil_price_cents: true
+    }
 
     merchant_fee = transactable_type.merchant_fees.first_or_initialize
     merchant_fee.attributes = {
@@ -132,6 +135,8 @@ namespace :uot do
     }
 
     transactable_type.save!
+    pricing.save!
+
     merchant_fee.save!
     fc = transactable_type.reservation_type.form_components.first
     fc.name = 'Make an Offer'
@@ -466,7 +471,9 @@ namespace :uot do
       { "transactable" => "office_location" },
       { "transactable" => "Category - Languages" },
       { "transactable" => "budget" },
-      { "transactable" => "deadline" }
+      { "transactable" => "deadline" },
+      { "transactable" => "price" }
+
     ]
     component.save!
 

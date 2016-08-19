@@ -110,7 +110,7 @@ class OrderDrop < BaseDrop
   end
 
   def confirmation_form_path
-    if @order.transactable.action_free_booking?
+    if @order.is_free_booking?
       routes.new_dashboard_company_orders_received_payment_path(order)
     else
       routes.new_dashboard_company_orders_received_payment_subscription_path(order)
