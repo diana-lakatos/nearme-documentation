@@ -6,7 +6,7 @@
       {% if item.payment_state == 'unpaid' %}
         <a href="{{ 'edit_dashboard_order_order_item_path' | generate_url: order_id: order.id, id: item.id }}" class="btn btn-primary btn-xs">Edit</a>
       {% else %}
-        <a href="{{ 'dashboard_order_order_item_path' | generate_url: order_id: order.id, id: item.id }}" class="btn btn-primary btn-xs">View2</a>
+        <a href="{{ 'dashboard_order_order_item_path' | generate_url: order_id: order.id, id: item.id }}" class="btn btn-primary btn-xs">View</a>
       {% endif %}
     </div>
 

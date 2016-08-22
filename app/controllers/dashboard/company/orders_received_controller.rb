@@ -67,8 +67,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
         track_order_update_profile_informations
         event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
         event_tracker.confirmed_a_booking(@order)
-
-        if @order.reload.paid_until.present? ||  !@order.instance_of?(RecurringBooking)
+        if @order.reload.paid_until.present? || !@order.instance_of?(RecurringBooking)
           flash[:success] = t('flash_messages.manage.reservations.reservation_confirmed')
         else
           @order.overdue!

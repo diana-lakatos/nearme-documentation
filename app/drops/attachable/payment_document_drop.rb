@@ -14,7 +14,7 @@ class Attachable::PaymentDocumentDrop < BaseDrop
   end
 
   def file_name
-    @payment_document.file.file_name
+    @payment_document[:file]
   end
 
 

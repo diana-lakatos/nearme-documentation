@@ -134,7 +134,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     else
       flash[:error] = @transactable.errors.full_messages.join(', ')
     end
-    redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
+    redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type, status: params[:status])
   end
 
   private
