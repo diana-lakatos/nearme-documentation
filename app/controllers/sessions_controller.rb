@@ -1,4 +1,5 @@
 class SessionsController < Devise::SessionsController
+  skip_before_filter :force_fill_in_wizard_form
   skip_before_filter :redirect_to_set_password_unless_unnecessary, only: [:destroy]
   before_filter :sso_logout, only: [:destroy]
   before_filter :omniauth_login, only: [:new]

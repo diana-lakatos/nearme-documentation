@@ -2,6 +2,7 @@ class Dashboard::BuyersController < Dashboard::BaseController
 
   before_filter :set_buyer_profile
   before_filter :set_form_components, only: [:edit, :update]
+  skip_before_filter :force_fill_in_wizard_form
 
   def edit
   end

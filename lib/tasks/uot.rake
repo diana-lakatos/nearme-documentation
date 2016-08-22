@@ -21,7 +21,9 @@ namespace :uot do
       default_country: 'United States',
       force_accepting_tos: true,
       user_blogs_enabled: true,
-      force_fill_in_wizard_form: true
+      force_fill_in_wizard_form: true,
+      linkedin_consumer_key: '78uvu99t7fxfcz',
+      linkedin_consumer_secret: 'NGaQfcPmglHuaLOX'
     )
     @instance.create_documents_upload(
       enabled: true,

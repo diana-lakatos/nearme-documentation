@@ -17,7 +17,7 @@ en:
     accept_terms_of_service: Yes, I understand and agree to <a href="/terms-of-use" target="_blank">Terms of Service</a> including the <a href="/user-agreement" target="_blank">User Agreement</a> and <a href="/privacy-policy" target="_blank">Privacy Policy</a>
 
   onboarding_wizard:
-    list_your: Complete Your Project
+    list_your: Complete Your Profile
   phone_calls:
     buttons:
       click_to_call_user: 'Call Me'
@@ -101,7 +101,7 @@ en:
   reservations:
     states:
       unconfirmed: Pending
-      confirmed: Open
+      confirmed: Accepted
       archived: Closed
       cancelled_by_guest: Cancelled by Expert
       cancelled_by_host: Cancelled by Client

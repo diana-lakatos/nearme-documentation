@@ -129,7 +129,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def cancel
-    if @transactable.cancel!
+    if @transactable.cancel
       flash[:notice] = t('flash_messages.manage.listings.listing_cancelled')
     else
       flash[:error] = @transactable.errors.full_messages.join(', ')
