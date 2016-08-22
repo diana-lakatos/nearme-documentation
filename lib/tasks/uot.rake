@@ -22,8 +22,15 @@ namespace :uot do
       force_accepting_tos: true,
       user_blogs_enabled: true,
       force_fill_in_wizard_form: true,
-      linkedin_consumer_key: '78uvu99t7fxfcz',
-      linkedin_consumer_secret: 'NGaQfcPmglHuaLOX'
+      test_twilio_consumer_key: 'ACc6efd025edf0bccc089965cdb7a63ed7',
+      test_twilio_consumer_secret: '0bcda4577848ec9708905296efcf6aa3',
+      test_twilio_from_number: '+1 703-898-8300',
+      twilio_consumer_key: 'AC107ea702c0d8255b0afc2baff62c345c',
+      twilio_consumer_secret: 'df396dbe315d3e3d233ac76e49a1fabd',
+      twilio_from_number: '+1 703-898-8300'
+      #TODO reenable for production
+      # linkedin_consumer_key: '78uvu99t7fxfcz',
+      # linkedin_consumer_secret: 'NGaQfcPmglHuaLOX'
     )
     @instance.create_documents_upload(
       enabled: true,

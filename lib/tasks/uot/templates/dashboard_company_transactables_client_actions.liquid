@@ -9,7 +9,7 @@
   {% endif %}
 
   {% if transactable.pending? == false and accepted_order != blank %}
-    <li><a href="{{ 'dashboard_order_order_items_path' | generate_url: order_id: accepted_order.id, transactable_id: transactable.id }}" class="btn btn-default">View Time &amp; Expenses</a></li>
+    <li><a href="{{ 'dashboard_company_order_order_items_path' | generate_url: order_id: accepted_order.id, transactable_id: transactable.id }}" class="btn btn-default">View Time &amp; Expenses</a></li>
   {% endif %}
 
   {% if current_status == 'in progress' %}
