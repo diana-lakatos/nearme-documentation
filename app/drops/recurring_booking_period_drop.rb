@@ -6,7 +6,6 @@ class RecurringBookingPeriodDrop < BaseDrop
     :approved?, :rejected?, :state, :order, :persisted?, :rejection_reason, to: :source
 
   def payment_state
-    return 'rejected' if @source.rejected?
     @source.payment.try(:state) || 'unpaid'
   end
 
@@ -15,7 +14,7 @@ class RecurringBookingPeriodDrop < BaseDrop
   end
 
   def rejection_form_path
-    routes.rejection_form_dashboard_order_order_item_path(@source.order, @source)
+    routes.rejection_form_dashboard_company_order_order_item_path(@source.order, @source)
   end
 
   def show_url

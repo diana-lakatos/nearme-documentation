@@ -1286,6 +1286,8 @@ en:
       stripe: 'Credit Cards'
       in_gateway: '%{payment_gateway} Credit Cards'
     order_items:
+      add_item_expenses: "Add item expenses"
+      add_time_expenses: "Add time expenses"
       back_to_projects: "Go Back to Projects In Progress"
       back_to_projects_html: "Go Back<span class='hidden-xs'> to Projects In Progress</span>"
       total: "Total"

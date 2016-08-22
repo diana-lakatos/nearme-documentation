@@ -158,6 +158,8 @@ en:
         approved: 'Expenses have been approved.'
         rejected: 'Expenses have been rejected'
         reject_failed: 'Expenses could not be rejected'
+        can_not_edit_accepted_order_item: "You can\'t edit accepted expenses."
+        recently_edited: "Looks like total amount of expenses has changed. Please verify total price and reaccept."
     manage:
       listings:
         listing_cancelled: "Your project has been canceled."

@@ -770,6 +770,21 @@ DesksnearMe::Application.routes.draw do
 
       namespace :company do
         resource :analytics
+        # TODO move orders_received scoep to company/orders scope
+        resources :order_items
+
+        resources :orders do
+          resources :order_items do
+            member do
+              post :approve
+              put :reject
+              get :rejection_form
+            end
+          end
+        end
+
+        # TODO move orders_received scoep to company/orders scope
+        # plese add new controllers in orders scope
         resources :orders_received, except: [:edit] do
           member do
             post :accept

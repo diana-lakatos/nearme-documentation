@@ -1,0 +1,68 @@
+<article class="order-item-entry">
+  <header>
+    <h4>Tracked Items &amp; Expenses entry</h4>
+
+    <div class="options">
+      <a href="{{ 'dashboard_company_order_order_item_path' | generate_url: order_id: order.id, id: item.id }}" class="btn btn-primary btn-xs">View</a>
+    </div>
+
+    <div class="meta">
+      Submitted on <time datetime="{{ item.created_at }}">{{ item.created_at | strftime: "%m/%d/%Y at %I:%M%p" }}</time>
+    </div>
+  </header>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Service Type / Item</th>
+          <th>Hours / Items</th>
+          <th>Rate / Cost</th>
+          <th>Totals</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for line_item in item.line_items %}
+          <tr>
+            <td>
+              {{ 'dashboard.payments.states.' | append: item.payment_state | t }}</td>
+            <td>{{ line_item.created_at | to_date | l: 'short' }}</td>
+            <td>{{ line_item.name }}</td>
+            <td>{{ line_item.quantity }}</td>
+            <td>{{ line_item.formatted_unit_price }}</td>
+            <td>{{ line_item.formatted_total_price }}</td>
+          </tr>
+        {% endfor %}
+
+        <tr>
+          <td colspan="4" class="order-item-actions">
+            {% if item.approved? %}
+              <span class="label label-success">Approved</span>
+            {% else %}
+              {% unless item.approved? %}
+                <form class="edit_reservation" action="{{ 'approve_dashboard_company_order_order_item_path' | generate_url: order.id, item.id }}" accept-charset="UTF-8" method="post">
+                  <input name="utf8" type="hidden" value="&#x2713;" />
+                  <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
+                  <input type="hidden" name="total" value="{{ item.total_amount_cents }}" />
+                  <input type="submit" name="commit" value="{{ 'general.approve' | t }}" data-confirm="{{ 'confirmations.are_you_sure' | t }}" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-success btn-sm" />
+                </form>
+                {% unless item.rejected? %}
+                  <a href="{{ item.rejection_form_path }}" data-modal="true" class="btn btn-danger btn-sm">Reject</a>
+                {% endunless %}
+                {% if order.user_messages.size == 0 %}
+                  <a class="btn btn-info btn-sm" data-modal="true" href="{{ 'new_reservation_user_message_path' | generate_url: order.id, skip: true }}">{{ 'dashboard.order_items.send_message' | t}}</a>
+                {% else %}
+                  <a class="btn btn-info btn-sm" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: order.user_messages.first.id }}">{{ 'dashboard.order_items.send_message' | t}}</a>
+                {% endif %}
+              {% endunless %}
+            {% endif %}
+          </td>
+          <th scope="row" class="subtotal">Subtotal</th>
+          <td>{{ item.formatted_total_amount }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</article>

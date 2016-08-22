@@ -45,7 +45,7 @@ module Payable
     end
 
     def build_first_line_item
-      if line_items.blank? && transactable_line_items.blank?
+      if line_items.blank? && transactable_line_items.blank? && additional_line_items.blank?
         transactable_line_items.build(
           user: self.user,
           name: self.transactable.name,

@@ -78,9 +78,12 @@
         {% assign new_transactable_selected = current_path | matches: '/transactables/new' %}
         {% assign transactables_visible = 'dashboard/transactables' | is_visible %}
         {% assign transactables_show = current_user.registration_completed? and transactables_visible %}
-        {% assign order_items_path = 'dashboard_order_items_path' | generate_url %}
-        {% assign order_items_selected = current_path | matches: 'dashboard/(orders/[0-9]*/)?order_items' %}
-
+        {% if current_user.buyer_profile == blank %}
+          {% assign order_items_path = 'dashboard_company_order_items_path' | generate_url %}
+        {% else %}
+          {% assign order_items_path = 'dashboard_order_items_path' | generate_url %}
+        {% endif %}
+        {% assign order_items_selected = current_path | matches: order_items_path %}
         {% if projects_show %}
           <li id="dashboard-nav_projects_header" class="{% if projects_selected %}selected{% endif %}">
             <span>{{ 'dashboard.nav.projects_header' | t }}</span>

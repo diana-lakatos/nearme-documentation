@@ -1,21 +1,20 @@
 - readonly ||= false
 %div{'data-order-items' => true }
   = render 'project_info', transactable: @order.transactable.to_liquid
-  .form-group.has-error
-    %span.help-block= f.full_error :line_items
+
   .transactable-line-items.nested-fields-set
     = f.simple_fields_for :transactable_line_items do |transactable_line_item_form|
       = render 'transactable_line_item', f: transactable_line_item_form, readonly: readonly
     - if readonly == false
       .add-link
-        = link_to_add_association t('dashboard.order_items.add_time_expenses') , f, :transactable_line_items, partial: 'transactable_line_item', id: "add_new_transactable_line_item", class: 'btn btn-primary'
+        = link_to_add_association t('dashboard.host_reservations.complete_reservation.add_new_period') , f, :transactable_line_items, partial: 'transactable_line_item', id: "add_new_transactable_line_item", class: 'btn btn-primary'
 
   .transactable-line-items.nested-fields-set
     = f.simple_fields_for :additional_line_items do |additional_line_item_form|
       = render 'additional_line_item', f: additional_line_item_form, readonly: readonly
     - if readonly == false
       .add-link
-        = link_to_add_association t('dashboard.order_items.add_item_expenses') , f, :additional_line_items, partial: 'transactable_line_item', id: "add_new_transactable_line_item", class: 'btn btn-primary'
+        = link_to_add_association t('dashboard.host_reservations.complete_reservation.add_new_period') , f, :additional_line_items, partial: 'additional_line_item', id: "add_new_additional_line_item", class: 'btn btn-primary'
 
   .total
     - if @order_item.errors[:total_cost].present?

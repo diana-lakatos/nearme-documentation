@@ -1477,6 +1477,7 @@ class SecuredParams
     [
       :comment,
       :rejection_reason,
+      additional_line_items_attributes: nested(self.line_item),
       transactable_line_items_attributes: nested(self.line_item),
     ]
   end
