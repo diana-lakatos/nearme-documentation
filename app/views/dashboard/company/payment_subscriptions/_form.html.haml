@@ -1,3 +1,6 @@
 = dashboard_simple_form_for @payment_subscription, url: dashboard_company_orders_received_payment_subscriptions_path(nil, @order, @payment_subscription), data: { modal: true, "redirect-to" => dashboard_company_transactable_type_transactables_path(@order.transactable.transactable_type, status: 'in progress') }, html: {id: 'new_payment'} do |f|
 
   = render 'shared/single_payment', f: f
+
+  .dialog__actions
+    = yield :dialog_actions

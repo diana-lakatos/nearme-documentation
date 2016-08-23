@@ -18,7 +18,7 @@ class PaymentMethodCreditCard {
     }
 
     _bindEvents() {
-        Array.prototype.forEach.call(this._ui.creditCardSwitcher.querySelector('input[type=radio]'), (el)=>{
+        Array.prototype.forEach.call(this._ui.creditCardSwitcher.querySelectorAll('input[type=radio]'), (el)=>{
             el.addEventListener('change', (event) => this._toggleByValue(event.target.value));
         });
     }
