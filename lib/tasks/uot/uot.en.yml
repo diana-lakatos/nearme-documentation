@@ -1,4 +1,8 @@
 en:
+  datepicker:
+    dformat: '%m/%d/%Y'
+    pformat: 'MM/DD/YYYY'
+
   sign_up_form:
     buyer_sign_up_to: Sign Up for UoT
     seller_sign_up_to: Create a Client Account
