@@ -1,10 +1,9 @@
 class WorkflowStep::GroupWorkflow::BaseStep < WorkflowStep::BaseStep
 
-  def initialize(group_member_id)
-    @group_member = GroupMember.find_by(id: group_member_id)
-
-    @group = @group_member.try(:group)
-    @user = @group_member.try(:user)
+  def initialize
+    @membership = GroupMember.find_by(id: membership_id)
+    @group = @membership.try(:group)
+    @user = @membership.try(:user)
     @owner = @group.try(:creator)
   end
 
@@ -16,9 +15,16 @@ class WorkflowStep::GroupWorkflow::BaseStep < WorkflowStep::BaseStep
     @owner
   end
 
+  def members
+    @group.approved_members.select do |u|
+      u.notification_preference.blank? ||
+      u.notification_preference.email_frequency.eql?('immediately')
+    end
+  end
+
   def data
     {
-      group_member: @group_member,
+      group_member: @membership,
       group: @group,
       user: @user,
       enquirer: @user,
@@ -27,7 +33,7 @@ class WorkflowStep::GroupWorkflow::BaseStep < WorkflowStep::BaseStep
   end
 
   def should_be_processed?
-    @group_member.present? && @group.present? && @user.present?
+    @membership.present? && @group.present? && @user.present? && members.any?
   end
 
   def workflow_type

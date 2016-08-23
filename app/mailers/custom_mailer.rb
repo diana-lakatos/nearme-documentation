@@ -65,9 +65,14 @@ class CustomMailer < InstanceMailer
 
   def get_bcc_emails
     emails = @workflow_alert.bcc.try(:split, ',') || []
-    if @workflow_alert.bcc_type == 'collaborators'
-      emails += @step.collaborators.try(:map, &:email)
+
+    case @workflow_alert.bcc_type
+      when 'collaborators'
+        emails += @step.collaborators.try(:map, &:email)
+      when 'members'
+        emails += @step.members.try(:map, &:email)
     end
+
     emails
   end
 

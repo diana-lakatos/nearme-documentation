@@ -17,6 +17,8 @@ class Comment < ActiveRecord::Base
   validate :group_membership, if: :group_activity_commented?
 
   after_commit :user_commented_event, on: :create
+  after_save :trigger_workflow_alert_for_new_comment, on: :create
+
   def user_commented_event
     case self.commentable_type
     when "ActivityFeedEvent"
@@ -27,15 +29,22 @@ class Comment < ActiveRecord::Base
       end
 
       followed = self.commentable.followed
-    when "Project"
-      event = :user_commented_on_project
-      followed = self.commentable.creator
+    when "Transactable"
+      event = :user_commented_on_transactable
+      followed = self.commentable
     else
       return
     end
 
     affected_objects = [self.creator]
     ActivityFeedService.create_event(event, followed, affected_objects, self)
+  end
+
+  def trigger_workflow_alert_for_new_comment
+    case self.commentable_type
+    when "Transactable"
+      WorkflowStepJob.perform(WorkflowStep::CommenterWorkflow::UserCommentedOnTransactable, self.creator.id, self.commentable.id)
+    end
   end
 
   def reported_by(user, ip)

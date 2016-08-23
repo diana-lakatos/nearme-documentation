@@ -1267,7 +1267,12 @@ class SecuredParams
   def notification_preferences
     [
       :accept_emails,
-      :sms_notifications_enabled
+      :sms_notifications_enabled,
+      notification_preference_attributes: [
+        :group_updates_enabled,
+        :project_updates_enabled,
+        :email_frequency
+      ]
     ]
   end
 

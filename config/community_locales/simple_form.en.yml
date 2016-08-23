@@ -127,6 +127,16 @@ en:
 
       notifications:
         accept_emails: 'Accept Emails'
+        group_updates_enabled: 'Group notifications'
+        group_updates_enabled_hint: 'You will be notified about group updates like comments or status updates'
+        project_updates_enabled: 'Project notifications'
+        project_updates_enabled_hint: 'You will be notified about project updates like comments or status updates'
+
+        email_frequency:
+          immediately: 'immediately'
+          immediately_hint: 'Email me about each update right away'
+          weekly: 'weekly'
+          weekly_hint: 'Email me updates summary every week'
 
     hints:
       project:
