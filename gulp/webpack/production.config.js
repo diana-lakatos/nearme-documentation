@@ -1,15 +1,18 @@
-var webpack = require('webpack');
-var config = module.exports = require('./manifest.config.js');
-var _ = require('lodash');
+var
+    webpack = require('webpack'),
+    config = require('./manifest.config.js'),
+    _ = require('lodash');
 
 config = _.merge(config, {
-  devtool: 'source-map'
+    devtool: 'source-map'
 });
 
 config.plugins.push(
-  new webpack.optimize.UglifyJsPlugin({
-    mangle: {
-        except: ['Modernizr','jQuery','$', 'exports', 'require']
-    }
-  })
+    new webpack.optimize.UglifyJsPlugin({
+        mangle: {
+            except: ['Modernizr','jQuery','$', 'exports', 'require']
+        }
+    })
 );
+
+module.exports = config;

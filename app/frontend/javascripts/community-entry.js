@@ -110,16 +110,14 @@ DNM.registerInitializer(function(){
     var $tabList = $('ul.nav.nav-tabs li'),
         tabId, index;
 
-    $("[data-force-toggle-tab]").on('click', function(event) {
+    $('[data-force-toggle-tab]').on('click', function(event) {
         event.preventDefault();
-
         tabId = $(this).data('force-toggle-tab');
-        index = $tabList.find('a').index($("[href='"+tabId+"']"));
+        index = $tabList.find('a').index($('[href="' + tabId + '"]'));
 
-        $tabList.removeClass('active').eq(index).addClass('active')
-        $(this).tab('show')
+        $tabList.removeClass('active').eq(index).addClass('active');
+        $(this).tab('show');
     });
-
 });
 
 DNM.registerInitializer(function(){
@@ -168,7 +166,7 @@ DNM.registerInitializer(function(){
     }
 
     require.ensure('./ckeditor/init', function(require){
-        var CKEDITOR = require('./ckeditor/init');
+        require('./ckeditor/init');
     });
 });
 
