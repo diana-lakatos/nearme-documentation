@@ -241,6 +241,7 @@ en:
       listing_disabled: "This listing has been temporarily disabled by the owner. Displaying other listings in this location."
       listing_disabled_but_admin: "This listing has been temporarily disabled by the owner. Other users will not be able to browse it."
       listing_inactive: "This listing is inactive. Displaying other listings in this location."
+      no_longer_have_access: "You no longer have an access to this listing."
     locations:
       listing_removed: "This listing has been removed. Displaying other listings near %{address}."
       no_listings: "There aren't any listings at that location. Check out some other locations."

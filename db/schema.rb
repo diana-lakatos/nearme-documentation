@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160822104448) do
+ActiveRecord::Schema.define(version: 20160823104900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -3024,6 +3024,7 @@ ActiveRecord::Schema.define(version: 20160822104448) do
     t.hstore   "custom_settings",                                                                default: {},         null: false
     t.boolean  "auto_accept_invitation_as_collaborator",                                         default: false
     t.boolean  "require_transactable_during_onboarding",                                         default: true
+    t.boolean  "access_restricted_to_invited"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

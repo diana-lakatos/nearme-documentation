@@ -84,7 +84,8 @@ class Offer < Order
     if (payment_subscription.present? || (payment.authorize && payment.capture!)) && confirm!
       transactable.start!
       reject_related_offers!
-      disable_transactable!
+      withdraw_invitations!
+      WorkflowStepJob.perform(WorkflowStep::OfferWorkflow::ManuallyConfirmed, self.id)
 
       true
     end
@@ -92,6 +93,10 @@ class Offer < Order
 
   def disable_transactable!
     transactable.disable!
+  end
+
+  def withdraw_invitations!
+    transactable.transactable_collaborators.where.not(user: self.user).destroy_all
   end
 
   def reject_related_offers!

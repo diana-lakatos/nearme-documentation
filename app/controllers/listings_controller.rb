@@ -4,6 +4,7 @@ class ListingsController < ApplicationController
   before_action :find_location, only: [:show, :ask_a_question], if: :not_community?
   before_action :find_transactable_type, only: [:show, :booking_module, :ask_a_question], if: :not_community?
   before_action :find_siblings, only: [:show, :ask_a_question], if: :not_community?
+  before_action :redirect_if_no_access_granted, only: [:show, :ask_a_question], if: :restricted_access?
   before_action :redirect_if_listing_inactive, only: [:show, :ask_a_question], if: :not_community?
   before_action :redirect_if_non_canonical_url, only: [:show], if: :not_community?
   before_action :assign_transactable_type_id_to_lookup_context, if: :not_community?
@@ -123,6 +124,13 @@ class ListingsController < ApplicationController
     end
   end
 
+  def redirect_if_no_access_granted
+    unless current_user && (current_user.can_manage_listing?(@listing) || @listing.is_collaborator?(current_user))
+      flash[:warning] = t('flash_messages.listings.no_longer_have_access')
+      redirect_to root_path
+    end
+  end
+
   def current_user_can_manage_location?
     user_signed_in? && (current_user.can_manage_location?(@location) || current_user.instance_admin?)
   end
@@ -150,6 +158,10 @@ class ListingsController < ApplicationController
 
   def not_community?
     !is_community?
+  end
+
+  def restricted_access?
+    @listing.transactable_type.access_restricted_to_invited?
   end
 
   # Community methods

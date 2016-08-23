@@ -114,7 +114,8 @@ namespace :uot do
       lessee: 'Expert',
       enable_reviews: true,
       auto_accept_invitation_as_collaborator: true,
-      require_transactable_during_onboarding: false
+      require_transactable_during_onboarding: false,
+      access_restricted_to_invited: true
     }
 
     transactable_type.offer_action ||= transactable_type.build_offer_action(
@@ -455,7 +456,7 @@ namespace :uot do
     TransactableType.first.form_components.destroy_all
 
     component = TransactableType.first.form_components.where(form_type: 'space_wizard').first_or_initialize
-    component.name = 'Complete Profile'
+    component.name = 'Fill out the information below'
     component.form_fields = [
       { "company" => "name" },
       { "user" => "current_address" },

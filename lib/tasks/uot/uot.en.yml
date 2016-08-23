@@ -149,6 +149,8 @@ en:
   flash_messages:
     space_wizard:
       space_listed: You have successfully completed profile!
+    listings:
+      no_longer_have_access: "You no longer have an access to this project."
     dashboard:
       locations:
         add_your_company: Please complete your Project first.
