@@ -9,9 +9,6 @@
     = link_to(thread_recipient.first_name, thread_recipient)
 
 
-.content-box-a
-
-
 .inbox-thread
   - @user_messages.reverse.each do |user_message|
     = render "user_message_for_show", user_message: user_message
