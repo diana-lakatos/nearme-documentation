@@ -4,8 +4,13 @@ module CustomAttributes
       return nil unless (attribute.public || with_private) && attribute.html_tag.present?
       form_element = ::CustomAttributes::CustomAttribute::FormElementDecorator.new(attribute)
       case attribute.html_tag.to_sym
-      when :input, :select, :textarea, :radio_buttons, :date, :date_time, :time
-        render partial: "custom_attributes/input", locals: { attribute: form_element, f: form, extra_options: extra_options }
+      when :input, :select, :textarea, :radio_buttons
+        case attribute.attribute_type.to_sym
+        when :date, :date_time, :time
+          render partial: "custom_attributes/date", locals: { attribute: form_element, f: form }
+        else
+          render partial: "custom_attributes/input", locals: { attribute: form_element, f: form, extra_options: extra_options }
+        end
       when :check_box
         render partial: "custom_attributes/check_box", locals: { attribute: form_element, f: form }
       when :check_box_list
