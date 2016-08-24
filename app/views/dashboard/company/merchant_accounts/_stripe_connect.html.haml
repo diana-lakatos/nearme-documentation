@@ -78,7 +78,10 @@
       %h3= t("dashboard.merchant_account.#{merchant_account.state}")
 
     .form-group.string.optional{class: f.error(:account_type) ? 'has-error' : ''}
-      = f.label :account_type, t('dashboard.merchant_account.account_type'), class: 'string optional control-label'
+      = f.label :account_type, class: 'string optional control-label' do
+        - if f.object.class.validators_on(:account_type).any?
+          %abbr{title: "required"} *
+        =t('dashboard.merchant_account.account_type')
       = f.select :account_type, options_for_select([[t('dashboard.merchant_account.select_account_type'), '']] + MerchantAccount::StripeConnectMerchantAccount::ACCOUNT_TYPES.map { |at| [t("dashboard.merchant_account.#{at}"), at] }, f.object.account_type), {}, class: 'form-control optional', data: {'account-type' => true}
       %span.help-block= f.error :account_type
 
