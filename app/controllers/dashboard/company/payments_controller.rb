@@ -42,7 +42,7 @@ class Dashboard::Company::PaymentsController < Dashboard::Company::BaseControlle
   end
 
   def create
-    @payment = @order.build_payment(@order.shared_payment_attributes.merge(payment_attributes))
+    @payment = @order.build_payment(@order.shared_payment_attributes.merge(payment_attributes)).decorate
     if @payment.payable.charge_and_confirm!
       flash[:notice] = t('flash_messages.payments.capture_success')
       render json: { saved: true }.to_json

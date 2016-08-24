@@ -14,7 +14,7 @@
 
   .panel.form-actions
     .panel-body
-      = f.submit t('dashboard.host_reservations.complete_reservation.submit'), class: 'btn-lg btn-primary'
+      = f.submit t('dashboard.host_reservations.complete_reservation.submit'), class: 'btn btn-lg btn-primary'
 
   - if @order.recurring_booking_periods.any?(&:persisted?)
     .panel

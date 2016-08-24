@@ -29,7 +29,7 @@ module.exports = function(gulp, config) {
                 });
             }
 
-            fs.lstat(output, function(err, stats){
+            fs.lstat(output, function(err){
                 if (err && err.code == 'ENOENT') {
                     fs.mkdirSync(output);
                 }
@@ -49,7 +49,7 @@ module.exports = function(gulp, config) {
 
     gulp.task('webpack', function(callback) {
         var webpackConfig = require('./webpack/development.config');
-        var output = webpack(webpackConfig).run(onWebpackBuild(callback, config.paths.tmp));
+        webpack(webpackConfig).run(onWebpackBuild(callback, config.paths.tmp));
     });
 
     gulp.task('watch:webpack', function() {

@@ -5,7 +5,7 @@ var SocialButtons = function(element, plugin) {
 
     this.setup();
     this.bindEvents();
-}
+};
 
 SocialButtons.prototype.setup = function() {
 
@@ -26,15 +26,15 @@ SocialButtons.prototype.setup = function() {
             return btn.getAttribute(attr);
         }
     }
-}
+};
 
 SocialButtons.prototype.bindEvents = function() {
     var that = this;
 
     $(window).load(function() {
         that.init();
-    })
-}
+    });
+};
 
 SocialButtons.prototype.init = function() {
     var that = this,
@@ -47,6 +47,6 @@ SocialButtons.prototype.init = function() {
             that.wrapper.classList.add('active');
         }
     });
-}
+};
 
 module.exports = SocialButtons;

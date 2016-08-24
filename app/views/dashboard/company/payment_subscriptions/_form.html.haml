@@ -1,23 +1,6 @@
 = dashboard_simple_form_for @payment_subscription, url: dashboard_company_orders_received_payment_subscriptions_path(nil, @order, @payment_subscription), data: { modal: true, "redirect-to" => dashboard_company_transactable_type_transactables_path(@order.transactable.transactable_type, status: 'in progress') }, html: {id: 'new_payment'} do |f|
-  - if f.object.payment_methods.blank?
-    .alert.warning
-      %b= t("reservations_review.missing_payment_method")
-      %br/
-      %span= t("reservations_review.missing_payment_method_info")
-  - else
-    - f.object.payment_methods.each_with_index do |payment_method, index|
-      - based_collection = current_user.instance_clients.for_payment_gateway(payment_method.payment_gateway_id, payment_method.payment_gateway.test_mode?).first.try(:credit_cards).try(:select, &:active?).try(:map) { |cc| [I18n.t('credit_cards.masked_number', last4: cc.last_4), cc.id] } || []
-      - default_option = based_collection.first.present? ? based_collection.first[1] : 'custom'
-      - selected_option = f.object.chosen_credit_card_id.presence || default_option
 
-      = f.input :chosen_credit_card_id, as: :radio_buttons, collection: based_collection << [I18n.t('payments.cc_fields.add_new'), 'custom'], label: false, checked: selected_option
-      .new-credit-card-form{style: "#{'display: none;' unless f.object.chosen_credit_card_id == 'custom'}"}
-        = f.input :payment_method_id, as: :hidden, input_html: { value: payment_method.id }
-        = f.simple_fields_for :credit_card_attributes, f.object.credit_card do |form|
-          = render 'credit_cards/credit_card_fields', form: form
+  = render 'shared/single_payment', f: f
 
-    .dialog__actions
-      = f.submit t('dashboard.user_recurring_bookings.host_actions.confirm')
-
-:javascript
-  $(function() { $(document).trigger('init:paymentmodal.nearme'); });
+  .dialog__actions
+    = yield :dialog_actions

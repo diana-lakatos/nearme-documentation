@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160818171837) do
+ActiveRecord::Schema.define(version: 20160823104900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -421,9 +421,9 @@ ActiveRecord::Schema.define(version: 20160818171837) do
     t.integer  "charge_type_target_id"
     t.string   "charge_type_target_type"
     t.integer  "percent"
+    t.datetime "deleted_at"
     t.string   "type"
     t.string   "charge_event"
-    t.string   "deleted_at"
   end
 
   add_index "charge_types", ["charge_type_target_id", "charge_type_target_type"], name: "act_target", using: :btree
@@ -1348,9 +1348,9 @@ ActiveRecord::Schema.define(version: 20160818171837) do
     t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
-    t.boolean  "enable_geo_localization",                                                           default: true
     t.string   "orders_received_tabs"
     t.string   "my_orders_tabs"
+    t.boolean  "enable_geo_localization",                                                           default: true
     t.boolean  "force_fill_in_wizard_form"
   end
 
@@ -3024,6 +3024,7 @@ ActiveRecord::Schema.define(version: 20160818171837) do
     t.hstore   "custom_settings",                                                                default: {},         null: false
     t.boolean  "auto_accept_invitation_as_collaborator",                                         default: false
     t.boolean  "require_transactable_during_onboarding",                                         default: true
+    t.boolean  "access_restricted_to_invited"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

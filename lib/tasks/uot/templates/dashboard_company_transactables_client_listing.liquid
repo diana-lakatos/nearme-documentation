@@ -111,7 +111,7 @@
       {% endif %}
 
 
-    {% elsif current_status == "in progress" or current_status == "archived" %}
+    {% elsif current_status == "in progress" or current_status == "archived" and accepted_order != blank %}
       <h3>Offer</h3>
       <div class="table-responsive">
         <table class="table">

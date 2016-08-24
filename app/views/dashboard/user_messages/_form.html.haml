@@ -6,8 +6,8 @@
 
   .dialog__body
     = f.input :body
-  = f.simple_fields_for @user_message.attachments.build, html: { :'data-attachment-form'=> true } do |f|
-    = f.input :file, as: :file, input_html: { data: { file: true } }
+  = f.simple_fields_for :attachments, @user_message.attachments.build, html: { :'data-attachment-form'=> true } do |attachment|
+    = attachment.input :file, as: :file, input_html: { data: { file: true } }
 
   .dialog__actions
     = f.submit t('user_messages.send_message'), class: 'btn btn-green'

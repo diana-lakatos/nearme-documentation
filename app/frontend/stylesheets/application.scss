@@ -9,7 +9,9 @@
 @import "vendor/overrides/spectrum";
 
 @import "font-awesome/scss/variables";
-$fa-font-path: '/assets/font-awesome/';
+
+$fa-font-path: "/assets/font-awesome/";
+
 @import "font-awesome/scss/mixins";
 @import "font-awesome/scss/path";
 @import "font-awesome/scss/core";
@@ -17,7 +19,6 @@ $fa-font-path: '/assets/font-awesome/';
 @import "font-awesome/scss/fixed-width";
 @import "font-awesome/scss/list";
 @import "font-awesome/scss/icons";
-
 
 @import "layout/layout";
 @import "pages/pages";
@@ -27,3 +28,5 @@ $fa-font-path: '/assets/font-awesome/';
 @import "user_blog/user_blog";
 @import "dashboard/pagination";
 @import "vendor/jquery-ui-datepicker";
+
+@import "shared/payment_methods/credit_card";

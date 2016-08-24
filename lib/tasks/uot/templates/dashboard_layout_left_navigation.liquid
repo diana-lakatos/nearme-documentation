@@ -83,7 +83,7 @@
         {% else %}
           {% assign order_items_path = 'dashboard_order_items_path' | generate_url %}
         {% endif %}
-        {% assign order_items_selected = current_path | matches: order_items_path %}
+        {% assign order_items_selected = current_path | matches: 'dashboard/(company/)?(orders/[0-9]*/)?order_items' %}
         {% if projects_show %}
           <li id="dashboard-nav_projects_header" class="{% if projects_selected %}selected{% endif %}">
             <span>{{ 'dashboard.nav.projects_header' | t }}</span>
@@ -187,11 +187,8 @@
       {% assign social_accounts_show = 'dashboard/social_accounts' | is_visible %}
       {% assign social_accounts_path = 'social_accounts_path' | generate_url %}
       {% assign social_accounts_selected = current_path | matches: social_accounts_path %}
-      {% assign saved_searches_show = 'dashboard/saved_searches' | is_visible %}
-      {% assign saved_searches_path = 'dashboard_saved_searches_path' | generate_url %}
-      {% assign saved_searches_selected = current_path | matches: saved_searches_path %}
 
-      <li id="dashboard-nav-account" class="{% if profile_edit_selected or credit_cards_selected or notification_preferences_selected or social_accounts_selected or saved_searches_selected %}selected{% endif %}">
+      <li id="dashboard-nav-account" class="{% if profile_edit_selected or credit_cards_selected or notification_preferences_selected or social_accounts_selected %}selected{% endif %}">
         <span>{{ 'dashboard.nav.account' | t }}</span>
         <ul>
           <li id="dashboard-nav-edit" class="{% if profile_edit_selected %}selected{% endif %}">
@@ -214,12 +211,6 @@
           {% if social_accounts_show %}
             <li id="dashboard-nav-social_accounts" class="{% if social_accounts_selected %}selected{% endif %}">
               <a href="{{ social_accounts_path }}">{{ 'dashboard.nav.social_accounts' | t }}</a>
-            </li>
-          {% endif %}
-
-          {% if saved_searches_show %}
-            <li id="dashboard-nav-saved_searches" class="{% if saved_searches_selected %}selected{% endif %}">
-              <a href="{{ saved_searches_path }}">{{ 'dashboard.nav.saved_searches' | t }}</a>
             </li>
           {% endif %}
         </ul>

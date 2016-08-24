@@ -2,7 +2,7 @@
 
 var DNM = require('./app');
 
-require('jquery-ui/ui/widget')
+require('jquery-ui/ui/widget');
 require('../vendor/jquery-ui-1.9.2.custom.min');
 require('../vendor/bootstrap-3.2.0');
 require('bootstrap-switch/src/coffee/bootstrap-switch');
@@ -20,7 +20,7 @@ DNM.registerInitializer(function(){
         var Fileupload = require('./components/fileupload');
         els.each(function(){
             return new Fileupload(this);
-        })
+        });
     });
 });
 
@@ -57,15 +57,15 @@ DNM.registerInitializer(function(){
     var previous_value = $('#instance_wish_lists_icon_set').val();
 
     $('#instance_wish_lists_icon_set').on('change', function(){
-      var icon_set = $('#instance_wish_lists_icon_set').val();
+        var icon_set = $('#instance_wish_lists_icon_set').val();
 
-      $('#set-' + previous_value).hide(0, function(){
-        $('#set-' + icon_set).show(0);
-        previous_value = icon_set;
+        $('#set-' + previous_value).hide(0, function(){
+            $('#set-' + icon_set).show(0);
+            previous_value = icon_set;
+        });
+
+        return;
     });
-
-      return;
-  });
 });
 
 DNM.registerInitializer(function(){
@@ -112,8 +112,8 @@ DNM.registerInitializer(function(){
 DNM.registerInitializer(function(){
     /* Display file name on upload */
     $('.upload-file').change(function() {
-      $('#' + $(this).attr('name')).append($(this).val().split('\\').pop());
-  });
+        $('#' + $(this).attr('name')).append($(this).val().split('\\').pop());
+    });
 });
 
 DNM.registerInitializer(function(){
@@ -261,8 +261,8 @@ DNM.registerInitializer(function(){
 
 DNM.registerInitializer(function(){
     $('.payment-gateway-select').on('change', function(){
-      $('.instance-payment-gateway-form').html('Loading...');
-      $(this).submit();
+        $('.instance-payment-gateway-form').html('Loading...');
+        $(this).submit();
     });
 });
 
@@ -531,14 +531,14 @@ DNM.registerInitializer(function(){
     }
 
     require.ensure('./ckeditor/init', function(require){
-        var CKEDITOR = require('./ckeditor/init');
+        require('./ckeditor/init');
     });
 });
 
 DNM.registerInitializer(function(){
     // Make fa-icon submitting icons submit the form
     $('.fa-action-icon-submit').click(function() {
-      $(this).closest('form').submit();
+        $(this).closest('form').submit();
     });
 });
 
@@ -569,16 +569,16 @@ DNM.registerInitializer(function(){
 
 
 DNM.registerInitializer(function(){
-    var ChosenInitializer = require('./instance_admin/forms/chosen')
+    var ChosenInitializer = require('./instance_admin/forms/chosen');
     function run(){
-        new ChosenInitializer()
+        new ChosenInitializer();
     }
     $(document).on('cocoon:after-insert', run);
     run();
 });
 
 DNM.registerInitializer(function(){
-    var els = $("[data-photo-uploader-versions]");
+    var els = $('[data-photo-uploader-versions]');
     if (els.length === 0) {
         return;
     }
@@ -590,7 +590,7 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    var els = $("[data-default-images]");
+    var els = $('[data-default-images]');
     if (els.length === 0) {
         return;
     }

@@ -1,0 +1,82 @@
+.nm-new-credit-card-form {
+    margin: 30px 0;
+
+    .control-group {
+        .control-label {
+            display: block;
+            float: none;
+            width: 100%;
+            text-align: left;
+            margin-top: 0;
+        }
+
+        .controls {
+            margin-left: 0;
+        }
+    }
+}
+
+.form-horizontal .nm-new-credit-card-form {
+    @media (min-width: 960px) {
+        margin-left: 200px;
+    }
+}
+
+.nm-new-credit-card-form-header {
+    &:after {
+        display: table;
+        content: "";
+        clear: both;
+    }
+
+    h3:before {
+        font-family: FontAwesome;
+        content: "\f023";
+        margin-right: 10px;
+    }
+
+    img {
+        display: block;
+        margin: 20px auto;
+    }
+
+    @media (min-width: 600px) {
+        margin: 0 0 20px;
+
+        h3 {
+            float: left;
+        }
+
+        img {
+            float: right;
+            margin: 0;
+        }
+    }
+}
+
+.nm-new-credit-card-form-name-container {
+    @media (min-width: 600px) {
+        display: flex;
+        justify-content: space-between;
+
+        .form-group, .control-group {
+            width: 49%;
+        }
+    }
+}
+
+.nm-new-credit-card-form-exp-date-container {
+    @media (min-width: 600px) {
+        display: flex;
+        justify-content: space-between;
+
+        .form-group, .control-group {
+            width: 32%;
+
+            label span {
+                position: absolute;
+                left: -999em;
+            }
+        }
+    }
+}

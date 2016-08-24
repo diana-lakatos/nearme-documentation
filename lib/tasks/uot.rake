@@ -22,8 +22,17 @@ namespace :uot do
       force_accepting_tos: true,
       user_blogs_enabled: true,
       force_fill_in_wizard_form: true,
-      linkedin_consumer_key: '78uvu99t7fxfcz',
-      linkedin_consumer_secret: 'NGaQfcPmglHuaLOX'
+      # test_twilio_consumer_key: 'ACc6efd025edf0bccc089965cdb7a63ed7',
+      # test_twilio_consumer_secret: '0bcda4577848ec9708905296efcf6aa3',
+      test_twilio_from_number: '+1 703-898-8300',
+      test_twilio_consumer_key: 'AC107ea702c0d8255b0afc2baff62c345c',
+      test_twilio_consumer_secret: 'df396dbe315d3e3d233ac76e49a1fabd',
+      twilio_consumer_key: 'AC107ea702c0d8255b0afc2baff62c345c',
+      twilio_consumer_secret: 'df396dbe315d3e3d233ac76e49a1fabd',
+      twilio_from_number: '+1 703-898-8300'
+      #TODO reenable for production
+      # linkedin_consumer_key: '78uvu99t7fxfcz',
+      # linkedin_consumer_secret: 'NGaQfcPmglHuaLOX'
     )
     @instance.create_documents_upload(
       enabled: true,
@@ -105,7 +114,8 @@ namespace :uot do
       lessee: 'Expert',
       enable_reviews: true,
       auto_accept_invitation_as_collaborator: true,
-      require_transactable_during_onboarding: false
+      require_transactable_during_onboarding: false,
+      access_restricted_to_invited: true
     }
 
     transactable_type.offer_action ||= transactable_type.build_offer_action(
@@ -446,7 +456,7 @@ namespace :uot do
     TransactableType.first.form_components.destroy_all
 
     component = TransactableType.first.form_components.where(form_type: 'space_wizard').first_or_initialize
-    component.name = 'Complete Profile'
+    component.name = 'Fill out the information below'
     component.form_fields = [
       { "company" => "name" },
       { "user" => "current_address" },
@@ -513,8 +523,8 @@ namespace :uot do
     theme.call_to_action = 'Learn more'
 
     theme.phone_number = '1-555-555-55555'
-    theme.contact_email = 'support@uot.com'
-    theme.support_email = 'support@uot.com'
+    theme.contact_email = 'support@upsideoftalent.com'
+    theme.support_email = 'support@upsideoftalent.com'
 
     theme.facebook_url = 'https://facebook.com'
     theme.twitter_url = 'https://twitter.com'

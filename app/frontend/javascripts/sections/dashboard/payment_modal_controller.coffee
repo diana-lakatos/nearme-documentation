@@ -5,20 +5,7 @@ module.exports = class PaymentModalController
     @bindEvents()
 
   bindEvents: ->
-    @radioTabs()
     @ajaxForm()
-
-  radioTabs: ->
-    new_credit_card_form = @container.find('.new-credit-card-form');
-    @container.find('input.radio_buttons').on 'change', (event) ->
-      target = $(event.target)
-      if target.val() == 'custom'
-        new_credit_card_form.show()
-      else
-        new_credit_card_form.hide()
-      return
-
-    $(@container.find('input.radio_buttons:checked')).trigger('change')
 
   ajaxForm: ->
     @paymentForm.on "submit", (e) =>
@@ -31,7 +18,6 @@ module.exports = class PaymentModalController
           if response.saved
             window.location.replace(@paymentForm.attr('data-redirect-to'))
           else
-            console.log(response.saved)
-            @container.html(response.html)
+            @container.find('.dialog__content').html(response.html)
 
       return false

@@ -1,3 +1,5 @@
+/* global _ */
+
 var ClickToCallPreferences = function(el){
     this.wrapper = el;
     this.toggler = el.querySelector('[data-ctc-toggler]');
@@ -6,7 +8,7 @@ var ClickToCallPreferences = function(el){
 
     this.connectForm = el.querySelector('.twilio-connect-form');
     this.connectFormSubmit = el.querySelector('.twilio-connect-form [type="submit"]');
-    this.disconnectForm = el.querySelector('form[data-disconnect]')
+    this.disconnectForm = el.querySelector('form[data-disconnect]');
     this.disconnectFormSubmit = el.querySelector('form[data-disconnect] [type="submit"]');
     this.labels = {
         validationCode: _.template(el.dataset.labelValidationCode),
@@ -37,7 +39,7 @@ ClickToCallPreferences.prototype.bindEvents = function(){
         this.disconnectForm.addEventListener('submit', function(e){
             e.preventDefault();
             initializeDisconnectBound();
-        })
+        });
     }
 };
 
@@ -132,7 +134,7 @@ ClickToCallPreferences.prototype.initializeDisconnect = function(){
     this.cleanupAlerts();
 
     var processDisconnectResult = function(){
-        this.showSuccess(this.labels.disconnectSuccessMessage())
+        this.showSuccess(this.labels.disconnectSuccessMessage());
         this.disconnectForm.parentNode.remove(this.disconnectForm);
     };
 
@@ -157,11 +159,11 @@ ClickToCallPreferences.prototype.showError = function(message){
 ClickToCallPreferences.prototype.showSuccess = function(message){
     var el = document.createElement('p');
     el.classList.add('alert','alert-success');
-    el.innerHTML = message
+    el.innerHTML = message;
     this.wrapper.appendChild(el);
 };
 
-ClickToCallPreferences.prototype.cleanupAlerts = function(message){
+ClickToCallPreferences.prototype.cleanupAlerts = function(){
     Array.prototype.forEach.call(this.wrapper.querySelectorAll('.alert'), function(el){
         el.parentNode.removeChild(el);
     });
@@ -174,7 +176,8 @@ ClickToCallPreferences.prototype.xhrFormSubmit = function(form, options) {
         method: form.method,
         dataType: 'json',
         data: $(form).serialize()
-    }
+    };
+
     options = options || {};
     options = $.extend({}, defaults, options);
     return $.ajax(options);

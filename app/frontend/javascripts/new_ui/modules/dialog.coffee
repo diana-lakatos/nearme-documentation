@@ -31,7 +31,7 @@ module.exports = class Dialog
     $('body').on 'submit.nearme', 'form[data-modal]', (e) =>
       e.preventDefault()
       form = $(e.currentTarget)
-      ajaxOptions = { type: form.attr('method'), url: form.attr("action"), data: form.serialize()}
+      ajaxOptions = { type: form.attr('method'), url: form.attr("action"), data: new FormData(e.currentTarget), processData: false, contentType: false }
       @load(ajaxOptions, form.data('modal-class'))
 
     $(document).on 'hide:dialog.nearme', =>
@@ -57,7 +57,6 @@ module.exports = class Dialog
     @show()
 
     $.ajax(ajaxOptions).success (data) =>
-
       if data.redirect
         window.location = data.redirect
       else if data.hide
