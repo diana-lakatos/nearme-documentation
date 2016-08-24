@@ -22,8 +22,18 @@
       <nav class="nav-main">
         <ul class="nav main-menu">
           <li><a class="nav-link" href="/">Home</a></li>
-          <li><a class="nav-link" href="/about">About</a></li>
-          <li><a class="nav-link" href="/how-it-works">How it works</a></li>
+          <li class="dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+              <span class="text">About</span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="nav-link" href="/about-overview">About Overview</a></li>
+              <li><a class="nav-link" href="/business-benefits">Business Benefits</a></li>
+              <li><a class="nav-link" href="/sme-benefits">SME Benefits</a></li>
+              <li><a class="nav-link" href="/expertise">Expertise</a></li>
+            </ul>
+          </li>
+
           {% if current_user == blank %}
           <li><a class="nav-link" href="/join-our-community">Join our Community</a></li>
           {% endif %}

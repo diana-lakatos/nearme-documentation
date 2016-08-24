@@ -522,9 +522,9 @@ namespace :uot do
     theme.color_white = '#fafafa'
     theme.call_to_action = 'Learn more'
 
-    theme.phone_number = '1-555-555-55555'
-    theme.contact_email = 'support@upsideoftalent.com'
-    theme.support_email = 'support@upsideoftalent.com'
+    theme.phone_number = '1-888-893-0705'
+    theme.contact_email = 'info@UpsideOfTalent.com'
+    theme.support_email = 'info@UpsideOfTalent.com'
 
     theme.facebook_url = 'https://facebook.com'
     theme.twitter_url = 'https://twitter.com'
@@ -533,16 +533,6 @@ namespace :uot do
     theme.youtube_url = 'https://www.youtube.com'
     theme.blog_url = 'http://blog.com'
     theme.linkedin_url = 'https://www.linkedin.com'
-
-    ['About', 'About', 'How it Works', 'FAQ', 'Terms of Use', 'Privacy Policy'].each do |name|
-      slug = name.parameterize
-      page = theme.pages.where(slug: slug).first_or_initialize
-      page.path = name
-      page.content = %Q{
-        <div class="wrapper-a"></div>
-      }
-      page.save
-    end
 
     theme.updated_at = Time.now
     theme.save!
@@ -591,6 +581,9 @@ namespace :uot do
     create_wish_list_views!
     create_registration_screens!
     create_analytics!
+    create_static_pages!
+
+    cleanup
   end
 
   def create_translations
@@ -718,6 +711,16 @@ namespace :uot do
     load_template('registrations/seller_footer')
   end
 
+  def create_static_pages!
+    create_page!('About Overview')
+    create_page!('Business Benefits')
+    create_page!('SME Benefits')
+    create_page!('Expertise')
+    create_page!('FAQ')
+    create_page!('Privacy Policy')
+    create_page!('Terms of Use')
+  end
+
   def create_analytics!
     load_template('dashboard/company/analytics/show', false)
   end
@@ -739,6 +742,12 @@ namespace :uot do
     page.path = name
     page.content = get_page_content("#{slug}.html")
     page.save
+  end
+
+  def destroy_page!(name)
+    slug = name.parameterize
+    page = @instance.theme.pages.where(slug: slug).first
+    page.destroy if page
   end
 
   def load_template(path, partial = true)
@@ -817,6 +826,11 @@ namespace :uot do
     create_email('order_item_mailer/notify_enquirer_rejected_order_item')
     create_email('order_item_mailer/notify_lister_created_order_item')
 
+  end
+
+  def cleanup
+    destroy_page!('About')
+    destroy_page!('How It Works')
   end
 
   private

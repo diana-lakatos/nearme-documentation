@@ -13,18 +13,18 @@
                     <h3>General</h3>
                     <ul>
                       <li><a href='/'>Home</a></li>
-
-                      {% for page in platform_context.pages limit:3 %}
-                        <li><a href="{{ page.page_url }}" target="{{ page.open_in_target }}" rel="{{ page.link_rel }}">{{ page.title }}</a></li>
-                      {% endfor %}
+                      <li><a href='/about-overview'>About</a></li>
+                      <li><a href='/business-benefits'>Business Benefits</a></li>
+                      <li><a href='/sme-benefits'>SME Benefits</a></li>
+                      <li><a href='/expertise'>Experise</a></li>
                     </ul>
                 </div>
                 <div class="col">
                     <h3>More</h3>
                     <ul>
-                      {% for page in platform_context.pages offset:3 %}
-                        <li><a href="{{ page.page_url }}" target="{{ page.open_in_target }}" rel="{{ page.link_rel }}">{{ page.title }}</a></li>
-                      {% endfor %}
+                      <li><a href='/terms-of-use'>Terms of Use</a></li>
+                      <li><a href='/privacy-policy'>Privacy Policy</a></li>
+                      <li><a href='/faq'>FAQ</a></li>
                     </ul>
                 </div>
 

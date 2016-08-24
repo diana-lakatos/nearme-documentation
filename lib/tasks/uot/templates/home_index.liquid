@@ -29,8 +29,10 @@
 <main id="main">
     <div class="wrapper-a">
         <section class="how-it-works-cta">
-            <h2>How it Works</h2>
-            <h3>Fast, Easily, and Efficiently</h3>
+            <header class="section-header">
+                <h2 class="hx-a">How it Works</h2>
+                <h3 class="hx-b">Fast, Easily, and Efficiently</h3>
+            </header>
 
             <div class="cta-boxes-a">
                 <article>
@@ -65,21 +67,27 @@
                     </ul>
                 </article>
             </div>
-
+            {% comment %}
             <p class="more-a">
                 <a href="./" class="button-a">Learn More</a>
             </p>
+            {% endcomment %}
         </section>
 
         <section class="video-cta">
-          <div class="video-container">
-            <iframe width="1280" height="720" src="https://www.youtube.com/embed/VqnilLKrzUo" frameborder="0" allowfullscreen></iframe>
-          </div>
+            <header class="section-header">
+                <h2 class="hx-a">Watch Our Video</h2>
+            </header>
+            <div class="video-container">
+                <iframe width="1280" height="720" src="https://www.youtube.com/embed/VqnilLKrzUo" frameborder="0" allowfullscreen></iframe>
+            </div>
         </section>
 
         <section class="reasons-cta">
-            <h2>Why should SMEs join UoT?</h2>
-            <h3>Join a Global Community of Subject Matter Experts</h3>
+            <header class="section-header">
+                <h2 class="hx-a">Why should SMEs join UoT?</h2>
+                <h3 class="hx-b">Join a Global Community of Subject Matter Experts</h3>
+            </header>
 
             <div class="cta-boxes-b">
                 <article>
@@ -122,14 +130,19 @@
                 </article>
             </div>
 
+            {% comment %}
             <p class="more-a">
                 <a href="./" class="button-a">Learn More</a>
             </p>
+            {% endcomment %}
         </section>
 
         <section class="target-audience">
-            <h2>Why should professionals use UoT?</h2>
-            <h3>Collaborate with some of the best Subject Matter Experts</h3>
+            <header class="section-header">
+                <h2 class="hx-a">Why should professionals use UoT?</h2>
+                <h3 class="hx-b">Collaborate with some of the best Subject Matter Experts</h3>
+            </header>
+
             <div class="target-audience-wrapper cta-boxes-b">
                 <article>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 24" width="72" height="72"><path d="M8,3a5,5,0,1,0,5,5A5,5,0,0,0,8,3Zm0,9a4,4,0,1,1,4-4A4,4,0,0,1,8,12ZM8,0A8,8,0,0,0,3,14.24V24l5-2,5,2V20H12v2.52L8.37,21.07,8,20.92l-.37.15L4,22.52v-7.6H4A8,8,0,1,0,8,0ZM8,15a7,7,0,1,1,7-7A7,7,0,0,1,8,15Zm4,1h1v2H12Z"/></svg>
@@ -162,14 +175,18 @@
                     <p>Access top Industry SME blogs. Gain more insights into your important issues.</p>
                 </article>
             </div>
+            {% comment %}
             <p class="more-a">
                 <a href="./" class="button-a">Learn More</a>
             </p>
+            {% endcomment %}
         </section>
 
         <section class="blog-posts-cta">
-            <h2>Blog Post Feed</h2>
-            <h3>Learn from our UoT Experts!</h3>
+            <header class="section-header">
+                <h2 class="hx-a">Blog Post Feed</h2>
+                <h3 class="hx-b">Learn from our UoT Experts!</h3>
+            </header>
 
             <div class="wrapper">
                 <article itemscope itemtype="http://schema.org/BlogPosting">
@@ -222,7 +239,7 @@
                 </article>
             </div>
 
-            <p class="more-a"><a href="./" class="button-a">Learn More</a></p>
+            <p class="more-a"><a href="/blog" class="button-a">Visit Our Blog</a></p>
         </section>
     </div>
 </main>
