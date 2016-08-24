@@ -37,6 +37,7 @@ class Dashboard::OrderItemsController < Dashboard::Company::BaseController
 
   def update
     if @order_item.update(order_item_params)
+      @order_item.recalculate_fees!
       flash[:notice] = t('flash_messages.dashboard.order_items.updated')
       redirect_to dashboard_order_order_item_path(@order, @order_item)
     else
