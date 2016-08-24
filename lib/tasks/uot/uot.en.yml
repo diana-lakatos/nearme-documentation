@@ -27,6 +27,9 @@ en:
       click_to_call_user: 'Call Me'
 
   dashboard:
+    user_profile:
+      sections:
+        default: 'My Profile'
     order_items:
       reject: "What's wrong?"
       reject_placeholder: 'Please let us know what is the reason of declining expenses'
@@ -34,7 +37,7 @@ en:
       user_reservations: My Offers
       reviews: Ratings
       host_reservations: My Offers
-      edit: Account
+      edit: Edit Profile
       transactables: My Projects
       order_items: 'Time / Expense Overview'
       user_reservations_count_html: My Offers <span>%{count}</span>
@@ -99,8 +102,15 @@ en:
 
   simple_form:
     labels:
+      user:
+        name: 'Full Name'
       transactable:
         confirm_reservations: Manually confirm offers
+    hints:
+      user:
+        verify_number: 'Verifying your mobile number allows you to take advantage of Click to Call functionality. This allows you to communicate with experts without sharing your private number information.'
+      buyer_profile:
+        enabled: 'In order for your Expert Profile to be listed in our marketplace, it must be set to ON. You can work on your profile as a draft or disable your listing from being publicly listed while it is OFF. Make sure to click save for settings to be applied.'
 
   reservations:
     states:
@@ -115,6 +125,7 @@ en:
     bookings_received: My Offers
     my_bookings: My Offers
     sign_up: Join Our Community
+    account: 'Edit Profile'
 
   reservations_review:
     heading: Bid on Project

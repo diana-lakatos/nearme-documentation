@@ -1,4 +1,6 @@
 {% assign collaborator = current_user | find_collaborator: listing %}
+{% assign title = platform_context.name | append: ' - ' | append: listing.name %}
+{% title title %}
 <main id="main">
     <div class="wrapper-a">
         <div class="back-to-search-results back-to-listings">
@@ -11,7 +13,13 @@
             <div class="content">
                 <div class="listing-properties">
                     <div class="overview">
-                      <h2>Client Name: <span>{{ listing.properties.project_contact }}</span></h2>
+                      <h2>Client Name:
+                        <span>{{ listing.properties.project_contact }}
+                          {% if listing.creator.seller_properties['linkedin_url'] != blank %}
+                            | <a href="{{ listing.creator.seller_properties['linkedin_url'] }}" target="_blank">LinkedIn Bio</a>
+                          {% endif %}
+                        </span>
+                      </h2>
                       <div class="meta">Project posted <b>{{ listing.created_at | time_ago_in_words }}</b> ago</div>
                     </div>
 

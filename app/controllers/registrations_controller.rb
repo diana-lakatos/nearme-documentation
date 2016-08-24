@@ -91,6 +91,8 @@ class RegistrationsController < Devise::RegistrationsController
     @country = current_user.country_name
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     build_approval_request_for_object(current_user) unless current_user.is_trusted?
+    @buyer_profile = resource.get_buyer_profile
+    @seller_profile = resource.get_seller_profile
     render :edit, layout: dashboard_or_community_layout
   end
 
@@ -159,6 +161,8 @@ class RegistrationsController < Devise::RegistrationsController
       event_tracker.updated_profile_information(@user)
       redirect_to dashboard_profile_path
     else
+      @buyer_profile = resource.get_buyer_profile
+      @seller_profile = resource.get_seller_profile
       flash.now[:error] = (@user.errors.full_messages).join(', ')
       @company = current_user.companies.first
       @country = resource.country_name

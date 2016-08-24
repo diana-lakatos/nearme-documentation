@@ -36,7 +36,12 @@
         <dl class="properties">
 
           <dt>Contact</dt>
-          <dd>{{ transactable.properties.project_contact }}</dd>
+          <dd>
+            {{ transactable.properties.project_contact }}
+            {% if transactable.creator.seller_properties['linkedin_url'] != blank %}
+               | <a href="{{ transactable.creator.seller_properties['linkedin_url'] }}" target="_blank">LinkedIn Bio</a>
+            {% endif %}
+          </dd>
 
           <dt>Company</dt>
           <dd>{{ transactable.company.name }}</dd>

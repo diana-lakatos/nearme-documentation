@@ -581,7 +581,7 @@ class ApplicationController < ActionController::Base
         redirect_to PlatformContext.current.instance.transactable_types.first.wizard_path
       elsif current_user.buyer_profile && !current_user.buyer_profile.valid?
         flash[:error] = t('flash_messages.authorizations.not_filled_form')
-        redirect_to edit_dashboard_buyer_path
+        redirect_to dashboard_profile_path
       end
     end
   end

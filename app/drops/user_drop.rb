@@ -417,12 +417,12 @@ class UserDrop < BaseDrop
 
   # whether or not the user has a buyer profile set up
   def has_buyer_profile?
-    @source.buyer_profile.present?
+    @source.buyer_profile.present? && @source.buyer_profile.persisted?
   end
 
   # whether or not the user has a seller profile set up
   def has_seller_profile?
-    @source.seller_profile.present?
+    @source.seller_profile.present? && @source.seller_profile.persisted?
   end
 
   # whether the user only has a buyer profile

@@ -22,7 +22,8 @@
   %p.thread-locked= t('user_messages.thread_locked')
 
 .form-actions
-  = link_to t('user_messages.archive_html'), user_message.archive_path, method: :put
+  - unless user_message.archived_for?(current_user)
+    = link_to t('user_messages.archive_html'), user_message.archive_path, method: :put
 
 - if request.xhr?
   :javascript

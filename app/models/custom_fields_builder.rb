@@ -29,7 +29,9 @@ class CustomFieldsBuilder
         to_object_field_notation(buyer_fields, 'buyer') +
         to_object_field_notation(seller_fields, 'seller')
     when FormComponent::INSTANCE_PROFILE_TYPES
-      to_object_field_notation(user_fields, 'user')
+      to_object_field_notation(user_fields, 'user')+
+        to_object_field_notation(buyer_fields, 'buyer') +
+        to_object_field_notation(seller_fields, 'seller')
     when FormComponent::SELLER_PROFILE_TYPES
       to_object_field_notation(user_fields, 'user') +
       to_object_field_notation(seller_fields, 'seller')

@@ -40,5 +40,9 @@ class UserMessageDrop < BaseDrop
     @user_message.author.first_name
   end
 
+  def archived_for_current_user?
+    @user_message.archived_for?(@context['current_user'])
+  end
+
 end
 

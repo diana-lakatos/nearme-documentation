@@ -38,7 +38,11 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     if platform_context.instance.skip_company?
         params[:user][:companies_attributes] ||= {}
         params[:user][:companies_attributes]["0"] ||= {}
-        params[:user][:companies_attributes]["0"][:name] = current_user.first_name if params[:user][:companies_attributes]["0"][:name].blank?
+        if params[:user][:companies_attributes]["0"][:name].blank?
+          params[:user][:companies_attributes]["0"][:name] = current_user.first_name
+        else
+          @user.company_name ||= params[:user][:companies_attributes]["0"][:name]
+        end
     end
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.get_seller_profile

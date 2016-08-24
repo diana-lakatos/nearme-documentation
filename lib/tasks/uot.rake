@@ -108,8 +108,6 @@ namespace :uot do
       category_search_type: 'OR',
       bookable_noun: 'Project',
       enable_photo_required: false,
-      # min_hourly_price_cents: 50_00,
-      # max_hourly_price_cents: 150_00,
       lessor: 'Client',
       lessee: 'Expert',
       enable_reviews: true,
@@ -351,36 +349,6 @@ namespace :uot do
     cv.save!
 
     create_custom_attribute(@lister_instance_profile_type, {
-        name: 'google_id',
-        label: 'Google ID',
-        attribute_type: 'string',
-        html_tag: 'input',
-        required: "0",
-        public: true,
-        searchable: false
-    })
-
-    create_custom_attribute(@lister_instance_profile_type, {
-        name: 'linkedin_id',
-        label: 'LinkedIn ID',
-        attribute_type: 'string',
-        html_tag: 'input',
-        required: "0",
-        public: true,
-        searchable: false
-    })
-
-    create_custom_attribute(@lister_instance_profile_type, {
-        name: 'twitter_id',
-        label: 'Twitter ID',
-        attribute_type: 'string',
-        html_tag: 'input',
-        required: "0",
-        public: true,
-        searchable: false
-    })
-
-    create_custom_attribute(@lister_instance_profile_type, {
         name: 'linkedin_url',
         label: 'LinkedIn URL',
         attribute_type: 'string',
@@ -461,10 +429,7 @@ namespace :uot do
       { "company" => "name" },
       { "user" => "current_address" },
       { "user" => "mobile_phone" },
-      { "user" => "google_id" },
-      { "user" => "twitter_id" },
-      { "user" => "linkedin_id" },
-      { "user" => "linkedin_url" },
+      { "seller" => "linkedin_url" },
       { "user" => "avatar" },
       { "user" => "referred_by" }
     ]
@@ -488,10 +453,13 @@ namespace :uot do
 
     ]
     component.save!
-
-    component = @instance_profile_type.form_components.where(form_type: 'buyer_profile_types').first_or_initialize
+    @default_profile_type = InstanceProfileType.find(569)
+    component = @default_profile_type.form_components.where(form_type: 'instance_profile_types').first_or_initialize
     component.form_fields = [
       {"buyer" => "enabled"},
+      { "user" => "name" },
+      { "user" => "mobile_phone" },
+      { "user" => "avatar" },
       {"buyer" => "bio"},
       {"buyer" => "workplace_type"},
       {"buyer" => "discounts_available"},
@@ -503,9 +471,15 @@ namespace :uot do
       {"buyer" => "Category - Languages"},
       {"buyer" => "Category - Industry"},
       {"buyer" => "Category - Area Of Expertise"},
-      {"user" => "tags"},
-      {"buyer" => "Custom Model - Recommendations"}
+      {"buyer" => "tags"},
+      {"buyer" => "Custom Model - Recommendations"},
+      { "seller" => "company_name" },
+      { "seller" => "linkedin_url" },
+      { "user" => "current_address" },
+      { "user" => "email" },
+      { "user" => "password" },
     ]
+
     component.save!
 
   end
@@ -686,6 +660,7 @@ namespace :uot do
 
   def create_user_profile!
     load_template('registrations/show', false)
+    load_template('registrations/edit_options')
     load_template('dashboard/company/users/collaborations_for_current_user', false)
     load_template('dashboard/company/transactable_collaborators/transactable_collaborator')
   end

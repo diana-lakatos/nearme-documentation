@@ -1986,6 +1986,7 @@ en:
     send: "Send"
     report_has_been_sent: "Your report has been sent. Thank you!"
     redirecting_to_log_in_page: "Redirecting to log in page..."
+    please_fill_in_reason: 'Please fill the form.'
 
   wish_lists:
     name: 'Favorites'

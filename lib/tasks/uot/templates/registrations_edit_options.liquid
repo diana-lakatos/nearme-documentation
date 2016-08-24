@@ -1,0 +1,5 @@
+{% if current_user.has_buyer_profile? %}
+  <div class="options">
+    <a href="{{ current_user.user_profile_url }}">{{ 'dashboard.user_profile.view_profile_html' | t }}</a>
+  </div>
+{% endif %}
