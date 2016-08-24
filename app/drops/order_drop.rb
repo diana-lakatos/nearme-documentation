@@ -40,6 +40,11 @@ class OrderDrop < BaseDrop
     @order.total_amount.to_s
   end
 
+  # the total amount of all order items
+  def total_order_items_amount_formatted
+    humanized_money_with_cents_and_symbol @order.order_items.paid.map(&:total_amount).sum
+  end
+
   # whether or not the order has products with seller attachments
   def has_seller_attachments?
     @order.transactable_line_items.each do |line_item|
