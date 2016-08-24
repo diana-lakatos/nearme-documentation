@@ -1,6 +1,6 @@
 class AttachmentUploader < PrivateFileUploader
   def extension_white_list
-    %w(jpg jpeg png pdf doc docx xls xlsx psd)
+    %w(jpg jpeg png pdf doc docx xls xlsx psd txt zip rar)
   end
 
   def file_name

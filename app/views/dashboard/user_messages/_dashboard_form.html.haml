@@ -2,6 +2,6 @@
   = hidden_field_tag :authenticity_token, form_authenticity_token
   = f.hidden_field :replying_to_id
   = f.input :body, required: false, label: false, input_html: { "data-message-body": true }
-  = f.simple_fields_for :attachments, @user_message.attachments.build do |attachment|
+  = f.simple_fields_for :attachments, @user_message.attachments.first_or_initialize do |attachment|
     = attachment.input :file, as: :file, input_html: { data: { file: true } }
   = f.submit t('user_messages.send_message'), class: 'btn btn-primary'

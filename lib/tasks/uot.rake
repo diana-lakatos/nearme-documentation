@@ -754,6 +754,7 @@ namespace :uot do
     @listing_creator = Utils::DefaultAlertsCreator::ListingCreator.new
     @listing_creator.create_notify_lister_of_cancellation!
     @listing_creator.create_notify_enquirer_of_completion!
+    @listing_creator.create_notify_collaborators_of_cancellation!
 
     @user_message_creator = Utils::DefaultAlertsCreator::UserMessageCreator.new
     @user_message_creator.create_user_message_created!

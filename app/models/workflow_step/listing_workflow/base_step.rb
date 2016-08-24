@@ -34,6 +34,7 @@ class WorkflowStep::ListingWorkflow::BaseStep < WorkflowStep::BaseStep
   def data
     {
       listing: @transactable,
+      transactable: @transactable,
       enquirer: nil,
       lister: lister,
       approval_request: @approval_request
