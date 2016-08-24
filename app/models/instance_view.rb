@@ -430,6 +430,11 @@ class InstanceView < ActiveRecord::Base
     },
     'home/search/datepickers' => {
       is_partial: true,
+    },
+    'search/shared/date_range' => {
+      is_partial: true,
+      date_start: 'string',
+      date_end: 'string'
     }
 
   }.sort.to_h.freeze

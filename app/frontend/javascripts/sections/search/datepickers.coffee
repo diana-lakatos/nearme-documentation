@@ -16,6 +16,8 @@ module.exports = class SearchDatepickers
     dateStartFormat = 'mm/dd/yy'
     if @container.find('[name="start_date"]').attr('data-date-format')
       dateStartFormat = @container.find('[name="start_date"]').attr('data-date-format')
+    else if @container.find('[name="fake_start_date"]').attr('data-date-format')
+      dateStartFormat = @container.find('[name="fake_start_date"]').attr('data-date-format')
 
     @container.find('[name="start_date"], [name="fake_start_date"]').datepicker($.extend({}, common_options, {
       altField: @container.find('[name="availability[dates][start]"]'),
@@ -32,6 +34,8 @@ module.exports = class SearchDatepickers
     dateEndFormat = 'mm/dd/yy'
     if @container.find('[name="end_date"]').attr('data-date-format')
       dateEndFormat = @container.find('[name="end_date"]').attr('data-date-format')
+    else if @container.find('[name="fake_end_date"]').attr('data-date-format')
+      dateEndFormat = @container.find('[name="fake_end_date"]').attr('data-date-format')
 
     @container.find('[name="end_date"], [name="fake_end_date"]').datepicker($.extend({}, common_options, {
       altField: @container.find('[name="availability[dates][end]"]'),
