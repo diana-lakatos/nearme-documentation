@@ -36,6 +36,8 @@ class Dashboard::OrderItemsController < Dashboard::Company::BaseController
   end
 
   def update
+    @order_item.set_service_fees
+
     if @order_item.update(order_item_params)
       @order_item.recalculate_fees!
       flash[:notice] = t('flash_messages.dashboard.order_items.updated')
