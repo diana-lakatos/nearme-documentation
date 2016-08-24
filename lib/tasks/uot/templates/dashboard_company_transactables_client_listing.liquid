@@ -134,8 +134,8 @@
         </table>
       </div>
 
-      {% if current_status != 'in progress' %}
-        <p>Total Paid {{ order.total_amount | pricify: order.currency }}</p>
+      {% if current_status != 'in progress' and !accepted_order.is_free_booking %}
+        <p>Total Paid {{ accepted_order.total_order_items_amount_formatted }}</p>
       {% endif %}
     {% endif %}
 

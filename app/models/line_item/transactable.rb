@@ -54,6 +54,7 @@ class LineItem::Transactable < LineItem
 
   def build_service_fee
     return true if service_fee_guest_percent.to_f.zero?
+
     if self.line_itemable.service_fee_line_items.any?
       service_fee = self.line_itemable.service_fee_line_items.first
       service_fee.update_attribute(
@@ -84,6 +85,7 @@ class LineItem::Transactable < LineItem
 
   def build_host_fee
     return true if service_fee_host_percent.to_f.zero?
+
     if self.line_itemable.host_fee_line_items.any?
       host_fee = self.line_itemable.host_fee_line_items.first
       host_fee.update_attribute(

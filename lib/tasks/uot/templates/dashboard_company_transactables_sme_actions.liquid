@@ -14,6 +14,11 @@
     {% endif %}
   </li>
 
+  {% if order != blank and transactable.completed? == true %}
+    <li><a href="{{ 'dashboard_order_order_items_path' | generate_url: order_id: order.id, transactable_id: transactable.id }}" class="btn btn-default">View Time &amp; Expenses</a></li>
+  {% endif %}
+
+
   {{ transactable.creator.click_to_call_button }}
 
   {% if can_make_offer == true %}
