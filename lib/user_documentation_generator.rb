@@ -207,7 +207,7 @@ class UserDocumentationGenerator
 
   def parse_workflows
     # Utils::DefaultAlertsCreator.new.create_all_workflows!
-    PlatformContext.current = PlatformContext.new(Instance.find(1))
+    PlatformContext.current = PlatformContext.new(Instance.find_by_id(1) || Instance.first)
 
     Workflow.all.each do |workflow|
       @workflow_variables[workflow.name] ||= {}
@@ -252,6 +252,8 @@ class UserDocumentationGenerator
     end
 
     parse_variables_from_data_comment(data_comment)
+  rescue Exception => e
+    {}
   end
 
   def parse_variables_from_data_comment(comment)
@@ -321,7 +323,7 @@ class UserDocumentationGenerator
     @liquid_views_variables = InstanceView::DEFAULT_LIQUID_VIEWS_PATHS.dup
     @liquid_views_variables = @liquid_views_variables.sort { |v1, v2| v1[0] <=> v2[0] }.to_h
     @liquid_views_variables.each do |k, v|
-      @liquid_views_variables[k] = @liquid_views_variables[k].sort { |v1, v2| v1[0] <=> v2[0] }.to_h
+      @liquid_views_variables[k] = @liquid_views_variables[k].sort { |v1, v2| v1[0].to_s <=> v2[0].to_s }.to_h
     end
   end
 
