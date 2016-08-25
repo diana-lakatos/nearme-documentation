@@ -2,14 +2,14 @@
   {% assign collaborator = current_user  | find_collaborator: transactable %}
   {% assign accepted_order = transactable.first_accepted_order %}
   <article class="listing-b" id="transactable_{{transactable.id}}">
-    <h2>
-      {{ transactable.name }}
-      {% if transactable.state == 'completed' %}
-        <span class="label label-success">Completed</span>
-      {% elsif transactable.state == 'cancelled' %}
-        <span class="label label-cancelled">Cancelled</span>
-      {% endif %}
-    </h2>
+
+    {% if transactable.state == 'completed' %}
+      <span class="label label-success">Completed</span>
+    {% elsif transactable.state == 'cancelled' %}
+      <span class="label label-cancelled">Cancelled</span>
+    {% endif %}
+
+    <h2>{{ transactable.name }}</h2>
 
     <div class="row">
       <div class="col-md-8">

@@ -1,16 +1,16 @@
 {% for transactable in transactables %}
   {% assign collaborator = current_user  | find_collaborator: transactable %}
   <article class="listing-b" id="transactable_{{transactable.id}}">
-    <h2>
-      {{ transactable.name }}
-      {% if transactable.state == 'in progress' %}
-        <span class="label label-info">In Progress</span>
-      {% elsif transactable.state == 'completed' %}
-        <span class="label label-success">Completed</span>
-      {% elsif transactable.state == 'cancelled' %}
-        <span class="label label-cancelled">Cancelled</span>
-      {% endif %}
-    </h2>
+
+    {% if transactable.state == 'in progress' %}
+      <span class="label label-info">In Progress</span>
+    {% elsif transactable.state == 'completed' %}
+      <span class="label label-success">Completed</span>
+    {% elsif transactable.state == 'cancelled' %}
+      <span class="label label-cancelled">Cancelled</span>
+    {% endif %}
+
+    <h2>{{ transactable.name }}</h2>
 
     {% assign orders = current_user | get_enquirer_orders: transactable %}
     {% assign can_make_offer = false %}
