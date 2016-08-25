@@ -1,12 +1,8 @@
 - content_for :page_header do
   %h1= t('user_messages.title')
 
-%nav.panel-nav
-  %ul.tabs.pull-left
-    %li{:class => params[:action] != 'archived' ? 'active' : nil}
-      = link_to dashboard_user_messages_path do
-        = t('user_messages.inbox', count: current_user.unread_user_message_threads_count_for(platform_context.instance))
+- tabs = []
+- tabs.push({ name: t('user_messages.inbox', count: current_user.unread_user_message_threads_count_for(platform_context.instance)), url: dashboard_user_messages_path, active: params[:action] != 'archived' })
+- tabs.push({ name: t('user_messages.archived'), url: archived_dashboard_user_messages_path, active: params[:action] == 'archived' })
 
-    %li{:class => params[:action] == 'archived' ? 'active' : nil}
-      = link_to archived_dashboard_user_messages_path do
-        = t('user_messages.archived')
+= dashboard_panel_multi_tabs(tabs)

@@ -36,7 +36,7 @@
   </div>
 {% endcontent_for %}
 
-<nav class='panel-nav-mobile visibile-sm visible-xs' role='navigation'>
+<nav class='panel-nav-mobile' role='navigation'>
   {% dropdown_menu { label: transactable_type.bookable_noun_plural, wrapper_class: 'links' } %}
     {% yield 'panel_navigation_links' %}
   {% enddropdown_menu %}
@@ -61,7 +61,7 @@
     </div>
   </div>
 {% else %}
-  <nav class='panel-nav hidden-xs hidden-sm'>
+  <nav class='panel-nav'>
     <ul class='tabs pull-left'>
       {% yield 'panel_navigation_links' %}
     </ul>

@@ -24,7 +24,7 @@
       = t('dashboard.credit_cards.new')
 
 
-%nav.panel-nav-mobile.visible-sm.visible-xs{role: 'navigation'}
+%nav.panel-nav-mobile{role: 'navigation'}
   = dropdown_menu @payment_gateway.name, { wrapper_class: 'links' } do
     = yield :panel_navigation_links
 
@@ -41,7 +41,7 @@
       = render 'credit_card'
 
 - else
-  %nav.panel-nav.hidden-xs.hidden-sm
+  %nav.panel-nav
     %ul.tabs.pull-left
       = yield :panel_navigation_links
     = yield :panel_options
