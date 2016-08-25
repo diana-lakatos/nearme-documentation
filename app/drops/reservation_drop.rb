@@ -192,10 +192,6 @@ class ReservationDrop < OrderDrop
     end
   end
 
-  def formatted_total_amount
-    humanized_money_with_symbol(@reservation.total_price)
-  end
-
   def total_amount_for_host_if_payment_at_least_authorized
     if @reservation.payment.pending? && !@reservation.has_to_update_credit_card?
       I18n.t('dashboard.user_reservations.total_amount_to_be_determined')

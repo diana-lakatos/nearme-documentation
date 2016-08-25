@@ -36,7 +36,7 @@
     <tr>
       <td colspan="{% if @order.included_tax? || @order.additional_tax? %}4{% else %}2{% endif %}"></td>
       <th headers="summary-total">Total</th>
-      <td id="summary-total">{{ @order.total_amount | price_with_cents_with_currency }}</td>
+      <td id="summary-total">{{ @order.formatted_total_amount }}</td>
     </tr>
   </tfoot>
   <tbody>
@@ -45,7 +45,7 @@
         <td>{{ item.name }}</td>
 
         {% if @order.included_tax? %}
-          <td>{{ item.net_price | price_with_cents_with_currency }}</td>
+          <td>{{ item.formatted_net_price }}</td>
           <td>{{ item.included_tax_total_rate }}%</td>
         {% endif %}
 
@@ -53,10 +53,10 @@
 
         {% if @order.additional_tax? %}
           <td>{{ item.additional_tax_total_rate }}%</td>
-          <td>{{ item.gross_price | price_with_cents_with_currency }}</td>
+          <td>{{ item.formatted_gross_price }}</td>
         {% endif %}
         <td>{{ item.quantity }}</td>
-        <td>{{ item.total_price | price_with_cents_with_currency }}</td>
+        <td>{{ item.formatted_total_price }}</td>
       </tr>
     {% endfor %}
   </tbody>

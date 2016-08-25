@@ -143,7 +143,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   def address_hash
     {
       country: iso_country_code,
-      state: address.state,
+      state: address.state_code,
       city: address.city,
       postal_code: address.postcode,
       line1: address.address,

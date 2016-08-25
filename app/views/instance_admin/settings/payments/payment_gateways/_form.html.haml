@@ -132,18 +132,22 @@
               %li=link_to "Associated Payments ", instance_admin_manage_payments_path(payment_gateway_id: @payment_gateway.id, transferred: "all", mode: "live")
               - if @payment_gateway.payout_gateway?
                 %li=link_to "Associated Merchant Accounts", instance_admin_manage_merchant_accounts_path(payment_gateway_id: @payment_gateway.id, mode: "live")
+
       .content-container
         %h4
-          By default Payment Gateway works for all supported countries.
-          If you want to exclude any country/currency simply remove it with x near the name.
+          Localization settings:
         .input-container.col-xs-12
           %br
-
           .row
             .input-container.col-xs-6
-              = f.association :payment_countries, label_method: :full_name, collection: @payment_gateway.available_payment_countries, input_html: { "data-live-search" => "true", multiple: true }
+              = f.association :payment_countries, label_method: :full_name, collection: @payment_gateway.available_payment_countries, input_html: { "data-live-search" => "true", multiple: true }, label: "Payment countries - use this Payment Gateway for hosts based in country:"
             .input-container.col-xs-6
-              = f.association :payment_currencies, label_method: :full_name, collection: @payment_gateway.available_currencies, input_html: { "data-live-search" => "true", multiple: @payment_gateway.supports_multiple_currency? }
+              = f.association :payment_currencies, label_method: :full_name, collection: @payment_gateway.available_currencies, input_html: { "data-live-search" => "true", multiple: @payment_gateway.supports_multiple_currency? }, label: "Payment currencies - use this Payment Gateway for hosts selling in currency:"
+              %span
+                Additional exchange fees may apply.
+                - if @payment_gateway.name.include?("Stripe")
+                  You can find more information
+                  = link_to('here', 'https://support.stripe.com/questions/which-currencies-does-stripe-support', target: '_blank') + '.'
 
     = content_for :header_buttons do
       = button_tag t('instance_admin.save'), class: "btn btn-blue pull-right", data: { 'submit-form' => 1, 'form-selector' => 'form',  disable_with: "Please wait..."}
