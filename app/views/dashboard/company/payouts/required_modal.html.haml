@@ -3,5 +3,5 @@
 .dialog__body#payment-modal-box
   = t('dashboard.payouts.payment_transfers_info')
 .dialog__actions
-  %button.btn.btn-default{:type => "button", 'data-modal-close'}= t('general.cancel')
+  %button.btn.btn-default{:type => "button", 'data-modal-close' => true }= t('general.cancel')
   = link_to "SET UP PAYMENT TRANSFERS", edit_dashboard_company_payouts_path, class: "btn btn-default btn-danger"

@@ -38,6 +38,7 @@ class Order < ActiveRecord::Base
   has_many :periods, :class_name => "::ReservationPeriod", :dependent => :destroy, foreign_key: 'reservation_id', inverse_of: :reservation
   has_many :waiver_agreements, as: :target
   has_many :transactables, through: :transactable_line_items, source: :line_item_source, source_type: 'Transactable'
+  has_many :order_items, class_name: 'RecurringBookingPeriod', dependent: :destroy, foreign_key: :order_id
 
   accepts_nested_attributes_for :billing_address
   accepts_nested_attributes_for :user
@@ -171,6 +172,10 @@ class Order < ActiveRecord::Base
 
   def subscription?
     type == "RecurringBooking"
+  end
+
+  def has_order_items?
+    order_items.any?
   end
 
   def bookable?

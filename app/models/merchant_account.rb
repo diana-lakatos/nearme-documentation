@@ -1,6 +1,7 @@
 class MerchantAccount < ActiveRecord::Base
   include Encryptable
 
+  has_paper_trail
   auto_set_platform_context
   scoped_to_platform_context
   acts_as_paranoid
@@ -85,7 +86,7 @@ class MerchantAccount < ActiveRecord::Base
 
   def void!
     # We use update_attribute to prevent validation errors
-    update_attribute(:state, :void)
+    update_attribute(:state, :voided)
     unset_possible_payout!
   end
 

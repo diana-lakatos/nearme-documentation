@@ -172,11 +172,12 @@ class RecurringBooking < Order
 
       recalculate_next_charge_date!
 
-      period = recurring_booking_periods.create!(
+      period = order_items.create!(
         period_start_date: period_start_date,
         period_end_date: next_charge_date - 1.day,
         credit_card_id: payment_subscription.credit_card_id,
-        currency: currency
+        currency: currency,
+        order: self
       ).tap do
         # to avoid cache issues if one would like to generate multiple periods in the future
         self.amount_calculator = nil

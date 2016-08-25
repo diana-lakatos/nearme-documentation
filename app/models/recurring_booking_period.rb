@@ -47,6 +47,10 @@ class RecurringBookingPeriod < ActiveRecord::Base
     self.host_fee_line_items.destroy_all
 
     self.transactable_line_items.each do |tli|
+      tli.attributes = {
+        service_fee_guest_percent: action.service_fee_guest_percent,
+        service_fee_host_percent: action.service_fee_host_percent,
+      }
       tli.build_host_fee
       tli.build_service_fee
     end
