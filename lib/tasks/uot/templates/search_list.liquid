@@ -126,8 +126,8 @@
                               </div>
                           </header>
 
-                          {% assign aoe_category = user.buyer_categories['Area Of Expertise'] %}
-                          {% assign industry_category = user.buyer_categories['Industry'] %}
+                          {% assign aoe_category = user.formatted_buyer_categories["Area Of Expertise"] %}
+                          {% assign industry_category = user.formatted_buyer_categories['Industry'] %}
                           {% assign languages_category = user.buyer_categories['Languages'] %}
 
                           {% if aoe_category.children.size > 0 || industry_category.children.size > 0 || languages_category.children.size > 0 || user.buyer_properties.bio != blank %}
@@ -136,7 +136,7 @@
                                       <h3>{{ aoe_category.name }}</h3>
                                       <ul class="short-list">
                                           {% for expertise in aoe_category.children %}
-                                          <li>{{ expertise }}</li>
+                                          <li>{{ expertise[-1] }}</li>
                                           {% endfor %}
                                       </ul>
                                   {% endif %}
@@ -145,7 +145,7 @@
                                       <h3>{{ industry_category.name }}</h3>
                                       <ul class="short-list">
                                           {% for industry in industry_category.children %}
-                                          <li>{{ industry }}</li>
+                                          <li>{{ industry[-1] }}</li>
                                           {% endfor %}
                                       </ul>
                                   {% endif %}
