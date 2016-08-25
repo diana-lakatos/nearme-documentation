@@ -1,11 +1,12 @@
 - if current_instance.seller_profile_enabled? || current_instance.buyer_profile_enabled?
-  %nav.panel-nav
-    %ul.tabs.pull-left
-      %li{class: "#{'active' if active == :default}"}
-        = link_to t('dashboard.user_profile.sections.default'), edit_registration_path(current_user)
-      - if current_user.seller_profile.present? && current_instance.seller_profile_enabled? && current_user.seller_profile.has_fields?(FormComponent::SELLER_PROFILE_TYPES)
-        %li{class: "#{'active' if active == :seller}"}
-          = link_to t('dashboard.user_profile.sections.seller'), edit_dashboard_seller_path
-      - if current_user.buyer_profile.present? && current_instance.buyer_profile_enabled?
-        %li{class: "#{'active' if active == :buyer}"}
-          = link_to t('dashboard.user_profile.sections.buyer'), edit_dashboard_buyer_path
+
+  - tabs = []
+  - tabs.push({ name: t('dashboard.user_profile.sections.default'), url: edit_registration_path(current_user), active: active == :default })
+
+  - if current_user.seller_profile.present? && current_instance.seller_profile_enabled? && current_user.seller_profile.has_fields?(FormComponent::SELLER_PROFILE_TYPES)
+    - tabs.push({ name: t('dashboard.user_profile.sections.seller'), url: edit_dashboard_seller_path, active: active == :seller })
+
+  - if current_user.buyer_profile.present? && current_instance.buyer_profile_enabled?
+    - tabs.push({ name: t('dashboard.user_profile.sections.buyer'), url: edit_dashboard_buyer_path, active: active == :buyer })
+
+  = dashboard_panel_multi_tabs(tabs)
