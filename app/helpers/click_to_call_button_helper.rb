@@ -48,9 +48,9 @@ module ClickToCallButtonHelper
     available_info = next_available_occurence ? I18n.t('phone_calls.tooltip.next_available_occurence', time: I18n.l(next_available_occurence, format: :with_time_zone)) : ''
 
     if available_now
-      tag = content_tag(:a, label, class: 'btn btn-primary btn-green', href: path, data: { modal: true, href: path, :"modal-class" => 'ctc-dialog' }, title: time_info, rel: 'tooltip', :'data-toggle' => 'tooltip')
+      tag = content_tag(:a, label, class: 'btn btn-info btn-green', href: path, data: { modal: true, href: path, :"modal-class" => 'ctc-dialog' }, title: time_info, rel: 'tooltip', :'data-toggle' => 'tooltip')
     else
-      tag = content_tag(:span, label, class: 'btn btn-primary disabled btn-gray', title: "#{time_info}#{available_info}", rel: 'tooltip', :'data-toggle' => 'tooltip')
+      tag = content_tag(:span, label, class: 'btn btn-info disabled btn-gray', title: "#{time_info}#{available_info}", rel: 'tooltip', :'data-toggle' => 'tooltip')
     end
     content_tag(:span, tag, class: 'click-to-call')
   end
