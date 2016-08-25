@@ -7,7 +7,6 @@ class Offer < Order
 
   has_many :host_line_items, as: :line_itemable
   has_many :recurring_booking_periods, dependent: :destroy, foreign_key: :order_id
-  has_many :order_items, class_name: 'RecurringBookingPeriod', dependent: :destroy, foreign_key: :order_id
 
   def self.workflow_class
     Offer
