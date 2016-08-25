@@ -13,19 +13,24 @@ namespace :litvault do
     )
     @instance.set_context!
     InstanceProfileType.find(580).update_columns(onboarding: true, create_company_on_sign_up: true)
-
-    create_transactable_types!
-    create_custom_attributes!
-    create_categories!
-    create_or_update_form_components!
-    set_theme_options
-    create_content_holders
-    create_views
-    create_translations
-
-    create_temporary_pages
-    expire_cache
+    setup = LitvaultSetup.new(@instance)
+    setup.create_transactable_types!
+    setup.create_custom_attributes!
+    setup.create_categories!
+    setup.create_or_update_form_components!
+    setup.set_theme_options
+    setup.create_content_holders
+    setup.create_views
+    setup.create_translations
+    setup.create_temporary_pages
+    setup.expire_cache
   end
+
+  class LitvaultSetup
+
+    def initialize(instance)
+      @instance = instance
+    end
 
   def create_transactable_types!
     transactable_type = @instance.transactable_types.where(name: 'Individual Case').first_or_initialize
@@ -180,34 +185,31 @@ namespace :litvault do
   end
 
   def set_theme_options
-    theme = @instance.theme
-
-    theme.color_green = '#4fc6e1'
-    theme.color_blue = '#4fc6e1'
-    theme.call_to_action = 'Learn more'
-
-    theme.phone_number = '1-555-555-55555'
-    theme.contact_email = 'support@litvault.com'
-    theme.support_email = 'support@litvault.com'
-
-    theme.facebook_url = 'https://facebook.com'
-    theme.twitter_url = 'https://twitter.com'
-    theme.gplus_url = 'https://plus.google.com'
-    theme.instagram_url = 'https://www.instagram.com'
-    theme.youtube_url = 'https://www.youtube.com'
-    theme.blog_url = 'http://blog.com'
-    theme.linkedin_url = 'https://www.linkedin.com'
+    @theme = @instance.theme
+    @theme.color_green = '#4fc6e1'
+    @theme.color_blue = '#4fc6e1'
+    @theme.call_to_action = 'Learn more'
+    @theme.phone_number = '1-555-555-55555'
+    @theme.contact_email = 'support@litvault.com'
+    @theme.support_email = 'support@litvault.com'
+    @theme.facebook_url = 'https://facebook.com'
+    @theme.twitter_url = 'https://twitter.com'
+    @theme.gplus_url = 'https://plus.google.com'
+    @theme.instagram_url = 'https://www.instagram.com'
+    @theme.youtube_url = 'https://www.youtube.com'
+    @theme.blog_url = 'http://blog.com'
+    @theme.linkedin_url = 'https://www.linkedin.com'
 
     ['About', 'About', 'How it Works', 'FAQ', 'Terms of Use', 'Privacy Policy'].each do |name|
       slug = name.parameterize
-      page = theme.pages.where(slug: slug).first_or_initialize
+      page = @theme.pages.where(slug: slug).first_or_initialize
       page.path = name
       page.content = %Q{}
       page.save
     end
 
-    theme.updated_at = Time.now
-    theme.save!
+    @theme.updated_at = Time.now
+    @theme.save!
   end
 
   def create_content_holders
@@ -1355,7 +1357,7 @@ namespace :litvault do
   end
 
   def create_temporary_pages
-    page = theme.pages.where(slug: 'search-results').first_or_initialize
+    page = @theme.pages.where(slug: 'search-results').first_or_initialize
     page.path = 'Search results'
     page.content = %Q{
 <section class="search-form-wrapper">
@@ -1565,5 +1567,5 @@ namespace :litvault do
   #     locales: Locale.all
   #   })
   # end
-
+end
 end
