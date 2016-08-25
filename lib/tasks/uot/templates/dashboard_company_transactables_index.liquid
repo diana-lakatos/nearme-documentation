@@ -81,13 +81,20 @@
   {% endcontent_for %}
 {% endif %}
 
-<nav class='panel-nav-mobile visibile-sm visible-xs' role='navigation'>
-  {% dropdown_menu { label: transactable_type.bookable_noun_plural, wrapper_class: 'links' } %}
+<nav class='panel-nav-mobile' role='navigation'>
+  {% if current_status == 'pending' %}
+    {% capture nav_label %}Projects Pending ({{ pending_transactables | total_entries }}){% endcapture %}
+  {% elsif current_status == 'in progress' %}
+    {% capture nav_label %}Projects In Progress ({{ in_progress_transactables | total_entries }}){% endcapture %}
+  {% elsif current_status == 'archived' %}
+    {% capture nav_label %}Projects Archived ({{ archived_transactables | total_entries }}){% endcapture %}
+  {% endif %}
+  {% dropdown_menu { label: nav_label, wrapper_class: 'links' } %}
     {% yield 'panel_navigation_links' %}
   {% enddropdown_menu %}
 </nav>
 
-<nav class='panel-nav hidden-xs hidden-sm'>
+<nav class='panel-nav'>
   <ul class='tabs pull-left'>
     {% yield 'panel_navigation_links' %}
   </ul>

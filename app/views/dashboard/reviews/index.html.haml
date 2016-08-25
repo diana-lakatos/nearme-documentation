@@ -25,7 +25,7 @@
               = number
 
   - if @rating_systems[:seller_rating_system] && seller_collection.present? || @rating_systems[:product_rating_system]  && product_collection.present? || @rating_systems[:buyer_rating_system] && buyer_collection.present?
-    %nav.panel-nav{:'data-internal-nav' => true}
+    %nav.panel-nav.panel-nav-standalone{:'data-internal-nav' => true}
       %ul.tabs.pull-left{role: 'tablist'}
 
         - if @rating_systems[:seller_rating_system].try(:values).try(:present?) && seller_collection.present?
