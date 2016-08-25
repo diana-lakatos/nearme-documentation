@@ -5,6 +5,6 @@
     = pricing.hidden_field :enabled, value: '1'
 
     - if fields.include?('pro_bono')
-      = pricing.input :is_free_booking, as: :radio_buttons, collection: [[t('pricing.free_disabled'), '0'], [t('pricing.free_enabled'), '1']], label: 'fdfdfd', input_html: { 'data-free-booking' => true }, selected: (pricing.object.is_free_booking ? '1' : '0')
+      = pricing.input :is_free_booking, as: :radio_buttons, collection: [[t('pricing.free_disabled'), '0'], [t('pricing.free_enabled'), '1']], input_html: { 'data-free-booking' => true }, selected: (pricing.object.is_free_booking ? '1' : '0')
     - elsif pricing.object.transactable_type_pricing.try(:allow_free_booking?) && f.object.try(:allow_free_booking?)
       = pricing.input :is_free_booking, as: :switch, inline_label: true, label: false, input_html: { 'data-free-booking' => true, data: { :"label-off" => t('pricing.free'), :"label-on" => t('pricing.free') } }

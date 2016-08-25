@@ -110,6 +110,9 @@ en:
         name: 'Full Name'
       transactable:
         confirm_reservations: Manually confirm offers
+        action_types:
+          pricings:
+            is_free_booking: 'Please define project type?'
     hints:
       user:
         verify_number: 'Verifying your mobile number allows you to take advantage of Click to Call functionality. This allows you to communicate with experts without sharing your private number information.'

@@ -41,6 +41,7 @@ namespace :uot do
     @instance.save
     @instance.set_context!
 
+    @default_profile_type = InstanceProfileType.find(569)
     @instance_profile_type = InstanceProfileType.find(571)
     @instance_profile_type.update_columns(
       onboarding: true,
@@ -337,6 +338,7 @@ namespace :uot do
         attribute_type: 'string',
         html_tag: 'input',
         required: "1",
+        validation_only_on_update: true,
         public: true,
         searchable: false
     })
@@ -354,6 +356,11 @@ namespace :uot do
     @lister_instance_profile_type = InstanceProfileType.find(570)
 
     cv = @lister_instance_profile_type.custom_validators.where(field_name: 'mobile_number').first_or_initialize
+    cv.required = "1"
+    cv.validation_only_on_update = true
+    cv.save!
+
+    cv = @default_profile_type.custom_validators.where(field_name: 'avatar').first_or_initialize
     cv.required = "1"
     cv.validation_only_on_update = true
     cv.save!
@@ -488,7 +495,6 @@ namespace :uot do
 
     ]
     component.save!
-    @default_profile_type = InstanceProfileType.find(569)
     component = @default_profile_type.form_components.where(form_type: 'instance_profile_types').first_or_initialize
     component.form_fields = [
       {"buyer" => "enabled"},
