@@ -24,7 +24,7 @@ class Company < ActiveRecord::Base
   has_many :offers, inverse_of: :company, dependent: :destroy
   has_many :locations, dependent: :destroy, inverse_of: :company
   has_many :locations_impressions, source: :impressions, through: :locations
-  has_many :merchant_accounts, as: :merchantable, dependent: :nullify
+  has_many :merchant_accounts, as: :merchantable
   has_many :orders
   has_many :purchases
   has_many :payments
