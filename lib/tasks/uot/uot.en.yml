@@ -25,6 +25,9 @@ en:
   phone_calls:
     buttons:
       click_to_call_user: 'Call Me'
+  pricing:
+    free_enabled: 'Pro Bono'
+    free_disabled: 'Paid'
 
   dashboard:
     user_profile:
@@ -42,6 +45,7 @@ en:
       order_items: 'Time / Expense Overview'
       user_reservations_count_html: My Offers <span>%{count}</span>
       admin: 'Payments Admin'
+      payouts: 'Merchant Account'
 
     user_reservations:
       reservation_placed_html: 'Offer created: <span>%{date}</span>'
@@ -91,7 +95,7 @@ en:
     project:
       labels:
         name: Project Title
-        description: Vignette of a scope (describe the project)
+        description: Vignette of a Scope (describe the project)
       placeholders:
         name: Enter Title
         description: Description, format of delivery, any other requirements

@@ -61,7 +61,7 @@
         %li= link_to t('top_navbar.account'), main_app.dashboard_profile_path
 
       - if HiddenUiControls.find('main_menu/view_profile').visible?
-        %li= link_to t('top_navbar.view_profile'), main_app.user_path(current_user), rel: 'external'
+        %li.view_profile= link_to t('top_navbar.view_profile'), main_app.user_path(current_user), rel: 'external'
 
       %li= link_to t('top_navbar.log_out'), main_app.destroy_user_session_path, :method => :delete, class: 'nav-link dropdown-toggle', :data => {:user => current_user.first_name }
 

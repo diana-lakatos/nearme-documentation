@@ -44,7 +44,7 @@
           </dd>
 
           <dt>Company</dt>
-          <dd>{{ transactable.company.name }}</dd>
+          <dd>{{ transactable.creator.company_name }}</dd>
 
           <dt>Invite sent</dt>
           <dd>{{ collaborator.approved_by_owner_at | to_date | l: 'short' }}</dd>
@@ -52,13 +52,21 @@
           <dt>Workplace</dt>
           <dd>{{ transactable.properties.workplace_type }}</dd>
 
-          {% if transactable.properties.workplace_type == 'On Site' %}
+          {% if transactable.properties.workplace_type | matches: 'On Site' %}
             <dt>Office</dt>
             <dd>{{ transactable.properties.office_location }}</dd>
           {% endif %}
 
-          <dt>Approx. Budget</dt>
-          <dd>{{ transactable.properties.budget | pricify }}</dd>
+          {% if transactable.action_free_booking? %}
+            <dt>Type</dt>
+            <dd>Pro Bono</dd>
+          {% else %}
+            <dt>Type</dt>
+            <dd>Paid</dd>
+
+            <dt>Approx. Budget</dt>
+            <dd>{{ transactable.properties.budget | pricify }}</dd>
+          {% endif %}
 
           <dt>Deadline</dt>
           <dd>{{ transactable.properties.deadline | to_date | l: 'short' }}</dd>
@@ -100,7 +108,7 @@
             <tr>
               <td>{{ order.created_at | to_date | l: 'short' }}</td>
               <td>
-                {% if order.archived_at != blank %}
+                {% if order.archived_at != blank and order.transactable.pending? == false %}
                   Archived
                 {% else %}
                   {{ 'reservations.states.' | append: order.state | t }}

@@ -68,7 +68,7 @@ class UserDrop < BaseDrop
     :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
     :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile,
     :tags, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
-    :created_at, :has_buyer_profile?, :default_company, to: :source
+    :created_at, :has_buyer_profile?, :default_company, :company_name, to: :source
 
   def class_name
     'User'
@@ -339,7 +339,17 @@ class UserDrop < BaseDrop
 
   # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => 'string with all children separated with comma' } }
   def formatted_categories
-    build_formatted_categories(@source)
+    build_formatted_categories(@source.categories)
+  end
+
+  # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => [array with children] } }
+  def formatted_buyer_categories
+    build_categories_to_array(@source.buyer_profile.categories) if @source.buyer_profile
+  end
+
+    # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => [array with children] } }
+  def formatted_seller_categories
+    build_categories_to_array(@source.seller_profile.categories) if @source.seller_profile
   end
 
   # User's current address

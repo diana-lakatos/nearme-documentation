@@ -1040,8 +1040,8 @@ class User < ActiveRecord::Base
   end
 
   def is_available_now?
-    if seller_profile.present?
-      listings.find { |listing| listing.open_now? }.present?
+    if seller_profile.present? && listings.any?(&:time_based_booking?)
+      listings.find { |listing| listing.time_based_booking? && listing.open_now? }.present?
     else
       # right now there is no way to determine buyer availability, so we assume he
       # is available at all times and are displaying

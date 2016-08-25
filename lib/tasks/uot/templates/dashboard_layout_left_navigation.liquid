@@ -119,7 +119,7 @@
         {% endif %}
       {% endif %}
 
-      {% if current_user.registration_completed? and current_user.has_company? %}
+      {% if current_user.registration_completed? %}
         {% assign payouts_show = 'dashboard/payouts' | is_visible %}
         {% assign payouts_path = 'edit_dashboard_company_payouts_path' | generate_url %}
         {% assign payouts_selected = current_path | matches: payouts_path %}
@@ -134,13 +134,13 @@
           <span>{{ 'dashboard.nav.admin' | t }}</span>
 
           <ul>
-            {% if payouts_show %}
+            {% if payouts_show and current_user.has_buyer_profile? %}
               <li id="dashboard-nav-payouts" class="{% if payouts_selected %}selected{% endif %}">
                 <a href="{{ payouts_path }}">{{ 'dashboard.nav.payouts' | t }}</a>
               </li>
             {% endif %}
 
-            {% if transfers_show %}
+            {% if transfers_show and current_user.has_buyer_profile? %}
               <li id="dashboard-nav-transfers" class="{% if transfers_selected %}selected{% endif %}">
                 <a href="{{ transfers_path }}">{{ 'dashboard.nav.transfers' | t }}</a>
               </li>

@@ -30,22 +30,27 @@
                 </header>
 
                 <div class="content">
-                    {% if user.buyer_categories["Area Of Expertise"]['children'].size > 0 %}
+                    {% if user.formatted_buyer_categories["Area Of Expertise"]['children'].size > 0 %}
                       <h3>Expertise</h3>
                       <ul>
-                          {% for exp in user.buyer_categories["Area Of Expertise"]['children'] %}
-                              <li>{{ exp }}</li>
+                          {% for exp in user.formatted_buyer_categories["Area Of Expertise"]['children'] %}
+                              <li>{{ exp[2] }}</li>
                           {% endfor %}
                       </ul>
                     {% endif %}
 
-                    {% if user.buyer_categories["Industry"]['children'].size > 0 %}
+                    {% if user.formatted_buyer_categories["Industry"]['children'].size > 0 %}
                       <h3>Industry</h3>
                       <ul>
-                          {% for exp in user.buyer_categories["Industry"]['children'] %}
-                              <li>{{ exp }}</li>
+                          {% for exp in user.formatted_buyer_categories["Industry"]['children'] %}
+                              <li>{{ exp[1] }}</li>
                           {% endfor %}
                       </ul>
+                    {% endif %}
+
+                    {% if user.buyer_properties['availability'] != blank %}
+                      <h3>Availability</h3>
+                      <p>{{ user.buyer_properties['availability'] }}</p>
                     {% endif %}
 
                     {% if user.buyer_properties['cities'] != blank %}

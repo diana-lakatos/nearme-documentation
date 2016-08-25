@@ -42,27 +42,6 @@
 
         <tr>
           <td colspan="4" class="order-item-actions">
-            {% if order.creator.id == current_user.id %}
-              {% if item.approved? %}
-                <span class="label label-success">Approved</span>
-              {% else %}
-                {% unless item.approved? %}
-                  <form class="edit_reservation" action="{{ 'approve_dashboard_order_order_item_path' | generate_url: order.id, item.id }}" accept-charset="UTF-8" method="post">
-                    <input name="utf8" type="hidden" value="&#x2713;" />
-                    <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
-                    <input type="submit" name="commit" value="{{ 'general.approve' | t }}" data-confirm="{{ 'confirmations.are_you_sure' | t }}" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-success btn-sm" />
-                  </form>
-                  {% unless item.rejected? %}
-                    <a href="{{ item.rejection_form_path }}" data-modal="true" class="btn btn-danger btn-sm">Reject</a>
-                  {% endunless %}
-                  {% if order.user_messages.size == 0 %}
-                    <a class="btn btn-info btn-sm" data-modal="true" href="{{ 'new_reservation_user_message_path' | generate_url: order.id, skip: true }}">{{ 'dashboard.order_items.send_message' | t}}</a>
-                  {% else %}
-                    <a class="btn btn-info btn-sm" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: order.user_messages.first.id }}">{{ 'dashboard.order_items.send_message' | t}}</a>
-                  {% endif %}
-                {% endunless %}
-              {% endif %}
-            {% endif %}
           </td>
           <th scope="row" class="subtotal">Subtotal</th>
           <td>{{ item.formatted_total_amount }}</td>

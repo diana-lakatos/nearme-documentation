@@ -27,7 +27,7 @@
                         <dl>
                             {% if listing.company != blank %}
                             <dt>Company Name:</dt>
-                            <dd>{{ listing.company.name }}</dd>
+                            <dd>{{ listing.creator.company_name }}</dd>
                             {% endif %}
 
                             {% if collaborator != blank %}
@@ -38,7 +38,7 @@
                             <dt>Workplace:</dt>
                             <dd>{{ listing.properties.workplace_type }}</dd>
 
-                            {% if listing.properties.workplace_type == 'On Site' %}
+                            {% if listing.properties.workplace_type | matches: 'On Site' %}
                               <dt>Office:</dt>
                               <dd>{{ listing.properties.office_location }}</dd>
                             {% endif %}
@@ -48,8 +48,17 @@
                         </dl>
 
                         <dl>
-                            <dt>Approx. Budget:</dt>
+
+                          {% if listing.action_free_booking? %}
+                            <dt>Type</dt>
+                            <dd>Pro Bono</dd>
+                          {% else %}
+                            <dt>Type</dt>
+                            <dd>Paid</dd>
+
+                            <dt>Approx. Budget</dt>
                             <dd>{{ listing.properties.budget | pricify }}</dd>
+                          {% endif %}
 
                             <dt>Deadline:</dt>
                             <dd>{{ listing.properties.deadline | to_date | l: 'short' }}</dd>

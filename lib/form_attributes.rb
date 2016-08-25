@@ -51,7 +51,8 @@ class FormAttributes
       :name, :description, :availability_rules, :price, :currency, :photos, :tags,
       :approval_requests, :quantity, :book_it_out, :exclusive_price, :action_rfq,
       :confirm_reservations, :capacity, :rental_shipping_type, :seller_attachments,
-      :additional_charges, :minimum_booking_minutes, :deposit_amount, :shipping_info
+      :additional_charges, :minimum_booking_minutes, :deposit_amount, :shipping_info,
+      :pro_bono
     ] +
     Transactable.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
     extra_attributes(transactable_type.categories.roots, 'Category') +
@@ -65,7 +66,7 @@ class FormAttributes
       :waiver_agreement_templates, :documents_upload, :quantity, :book_it_out,
       :exclusive_price, :action_rfq, :capacity, :seller_attachments,
       :additional_charges, :minimum_booking_minutes, :deposit_amount, :shipping_info,
-      :collaborators
+      :collaborators, :pro_bono
     ] +
     Transactable.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
     extra_attributes(transactable_type.categories.roots, 'Category') +

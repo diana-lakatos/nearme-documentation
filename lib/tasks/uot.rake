@@ -168,7 +168,7 @@ namespace :uot do
     })
     create_custom_attribute(@transactable_type, {
         name: 'estimation',
-        label: 'Approx. Time required to complete',
+        label: 'Approx. Time Required to Complete',
         attribute_type: 'string',
         html_tag: 'input',
         placeholder: "Enter Amount (months, days, hours)",
@@ -180,8 +180,8 @@ namespace :uot do
     create_custom_attribute(@transactable_type, {
         name: 'workplace_type',
         label: 'Workplace Type',
-        attribute_type: 'string',
-        html_tag: 'select',
+        attribute_type: 'array',
+        html_tag: 'check_box_list',
         required: "1",
         valid_values: ["Online", "On Site"],
         public: true,
@@ -200,12 +200,11 @@ namespace :uot do
     })
     create_custom_attribute(@transactable_type, {
         name: 'budget',
-        label: 'Approximate value / budget',
+        label: 'Approximate Value / Budget',
         attribute_type: 'float',
         html_tag: 'input',
         placeholder: "Enter Amount",
-        required: "1",
-        min_length: 1,
+        required: "0",
         public: true,
         searchable: false
     })
@@ -269,7 +268,7 @@ namespace :uot do
         label: 'Workplace Type',
         attribute_type: 'array',
         html_tag: 'check_box_list',
-        required: "1",
+        required: "0",
         validation_only_on_update: true,
         valid_values: ["Online", "On Site"],
         public: true,
@@ -305,7 +304,7 @@ namespace :uot do
         attribute_type: 'string',
         html_tag: 'radio_buttons',
         validation_only_on_update: true,
-        required: "1",
+        required: "0",
         valid_values: ['Available', 'Not Available'],
         public: true,
         searchable: false
@@ -322,11 +321,22 @@ namespace :uot do
     })
 
     create_custom_attribute(@instance_profile_type, {
+        name: 'availability',
+        label: 'Availability',
+        attribute_type: 'string',
+        hint: "Describe your availability to take projects. e.g. I am available to take projects on part time from Monday through Thursday every week.",
+        html_tag: 'input',
+        required: "0",
+        public: true,
+        searchable: false
+    })
+
+    create_custom_attribute(@instance_profile_type, {
         name: 'linkedin_url',
         label: 'LinkedIn URL',
         attribute_type: 'string',
         html_tag: 'input',
-        required: "0",
+        required: "1",
         public: true,
         searchable: false
     })
@@ -393,11 +403,19 @@ namespace :uot do
     root_category.search_options = 'include'
     root_category.save!
 
-    ["Aerospace, Defense", "Civilian", "Defense and Intelligence", "Federal Government",
-     "Health Payers", "Health Plans", "Healthcare Providers", "High Tech", "Law Enforcement and Homeland Security",
-     "Life Sciences, Biotechnology, & Pharmaceutical", "State Government"].each do |category|
-      root_category.children.where(name: category).first_or_create!
+    root_category.children.destroy_all if root_category.children.count > 3
+
+    {
+      'Government' => ["Civilian Government", "Defense and Intelligence", "Law Enforcement and Homeland Security", "State and Local Government"],
+      'Health and Life Sciences' => ["Health Plans", "Healthcare Providers", "Life Sciences, Biotechnology, & Pharmaceutical"],
+      'Technology' => ['Oversight and Decision Support', 'Management and Operations']
+    }.each_pair do |cat, subs|
+      parent = root_category.children.where(name: cat).first_or_create!
+      subs.each do |sub|
+        parent.children.where(name: sub).first_or_create!
+      end
     end
+
   end
 
   def create_area_of_expertise_categories
@@ -409,8 +427,24 @@ namespace :uot do
     root_category.search_options = 'include'
     root_category.save!
 
-    ['Management', 'Information Technology'].each do |category|
-      root_category.children.where(name: category).first_or_create!
+    {
+      'Management' => {
+        'Growth' => ['Globalization, International & Emerging Markets', 'Business Development', 'Marketing, Branding, Communications, Social Media & Digital Engagement', 'Packaging and Pricing', 'Procurement, Government Contracting, Vehicles & RFPs', 'Sales Forecasting and Execution'],
+        'Organization' => ['Advisory', 'Business Disruption and Digital Transformation', 'Business Turnarounds', 'Innovation', 'Leadership', 'M&A and Divestitures', 'Small Business, Start-ups & Entrepreneurship', 'Strategy'],
+        'Operations' => ['Financial, Revenue Management & Tax', 'Governance, Policy, and Standards', 'HR, Culture, Diversity and Inclusion', 'Legal, Compliance & Regulatory', 'Operations, Efficiency, People & Organization', 'Organizational Change Management', 'Postmerger Integration'],
+      },
+      'Information Technology' => {
+        'Oversight and Decision Support' => ['Analytics', 'Architecture and Methodologies', 'Assessments', 'Big Data', 'Database Analysis and Design', 'IoT'],
+        'Management and Operations' => ['Cloud & Hosting', 'CRM', 'Documentation and Technical Writing', 'Mainframe Environment', 'Operating Systems', 'Operations and Productivity', 'Program Management', 'Programming & Assembly Languages', 'Quality and Testing', 'Rapid Prototyping', 'Security, Privacy & Cyber Risk', 'Software Design, Development & Integration', 'Supply Chain, PLM, Manufacturing & ERP', 'Technology Infrastructure', 'Training', 'Usability and user experience']
+      }
+    }.each_pair do |cat, subs|
+      parent1 = root_category.children.where(name: cat).first_or_create!
+      subs.each_pair do |cat, subs|
+        parent2 = parent1.children.where(name: cat).first_or_create!
+        subs.each do |sub|
+          parent2.children.where(name: sub).first_or_create!
+        end
+      end
     end
   end
 
@@ -437,6 +471,8 @@ namespace :uot do
     component = TransactableType.first.form_components.where(form_type: 'transactable_attributes').first_or_initialize
     component.name = 'Add a Project'
     component.form_fields = [
+      { "transactable" => "price" },
+      { "transactable" => "pro_bono" },
       { "transactable" => "name" },
       { "transactable" => "about_company" },
       { "transactable" => "project_contact" },
@@ -444,12 +480,11 @@ namespace :uot do
       { "transactable" => "type_of_deliverable" },
       { "transactable" => "other_requirements" },
       { "transactable" => "estimation" },
+      { "transactable" => "deadline" },
       { "transactable" => "workplace_type" },
       { "transactable" => "office_location" },
       { "transactable" => "Category - Languages" },
       { "transactable" => "budget" },
-      { "transactable" => "deadline" },
-      { "transactable" => "price" }
 
     ]
     component.save!
@@ -458,25 +493,26 @@ namespace :uot do
     component.form_fields = [
       {"buyer" => "enabled"},
       { "user" => "name" },
-      { "user" => "mobile_phone" },
       { "user" => "avatar" },
-      {"buyer" => "bio"},
+      { "user" => "email" },
+      { "user" => "current_address" },
+      { "user" => "mobile_phone" },
+      {"buyer" => "linkedin_url"},
+      {"buyer" => "hourly_rate"},
       {"buyer" => "workplace_type"},
       {"buyer" => "discounts_available"},
       {"buyer" => "discounts_description"},
-      {"buyer" => "hourly_rate"},
       {"buyer" => "travel"},
       {"buyer" => "cities"},
-      {"buyer" => "linkedin_url"},
-      {"buyer" => "Category - Languages"},
-      {"buyer" => "Category - Industry"},
       {"buyer" => "Category - Area Of Expertise"},
+      {"buyer" => "Category - Industry"},
+      {"buyer" => "Category - Languages"},
+      {"buyer" => "bio"},
+      {"buyer" => "availability"},
       {"buyer" => "tags"},
       {"buyer" => "Custom Model - Recommendations"},
-      { "seller" => "company_name" },
       { "seller" => "linkedin_url" },
-      { "user" => "current_address" },
-      { "user" => "email" },
+      { "seller" => "company_name" },
       { "user" => "password" },
     ]
 

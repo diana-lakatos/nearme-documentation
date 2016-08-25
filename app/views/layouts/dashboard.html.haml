@@ -54,7 +54,7 @@
   - body_class = 'layout-dashboard'
   - body_class += ' navigation-visible' if navigation_visible?
   - body_class += ' no-sidebar' if render_without_left_menu?
-  %body{class: body_class }
+  %body{class: theme_class(body_class) }
 
     = yield(:body_top)
 

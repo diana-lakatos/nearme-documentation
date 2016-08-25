@@ -3,6 +3,8 @@ en:
     how_is_the_service_priced: 'How is the service priced?'
     title: 'Pricing'
     add_new: 'Add new price'
+    free_enabled: 'Free'
+    free_disabled: 'Paid'
     mode:
       time_based_booking:
         label: 'Time-Based'

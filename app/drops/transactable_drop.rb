@@ -325,7 +325,7 @@ class TransactableDrop < BaseDrop
 
   # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => 'string with all children separated with comma' } }
   def formatted_categories
-    build_formatted_categories(@source)
+    build_formatted_categories(@source.categories)
   end
 
   # returns whether or not the listing has seller attachments

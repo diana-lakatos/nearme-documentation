@@ -48,9 +48,7 @@
                   <input type="hidden" name="total" value="{{ item.total_amount_cents }}" />
                   <input type="submit" name="commit" value="{{ 'general.approve' | t }}" data-confirm="{{ 'confirmations.are_you_sure' | t }}" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-success btn-sm" />
                 </form>
-                {% unless item.rejected? %}
-                  <a href="{{ item.rejection_form_path }}" data-modal="true" class="btn btn-danger btn-sm">Reject</a>
-                {% endunless %}
+                <a href="{{ item.rejection_form_path }}" data-modal="true" class="btn btn-danger btn-sm">Reject</a>
                 {% if order.user_messages.size == 0 %}
                   <a class="btn btn-info btn-sm" data-modal="true" href="{{ 'new_reservation_user_message_path' | generate_url: order.id, skip: true }}">{{ 'dashboard.order_items.send_message' | t}}</a>
                 {% else %}
