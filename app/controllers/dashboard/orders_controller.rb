@@ -64,8 +64,8 @@ class Dashboard::OrdersController < Dashboard::BaseController
       redirect_to dashboard_company_transactable_type_transactables_path(@order.transactable.transactable_type)
     else
       @update_path = dashboard_order_path(@order)
-      render template: 'checkout/show'
       flash[:error] = @order.errors.full_messages.join(',<br />')
+      render template: 'checkout/show'
     end
   end
 

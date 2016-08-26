@@ -6,7 +6,7 @@
     {% if transactable.state == 'completed' %}
       <span class="label label-success">Completed</span>
     {% elsif transactable.state == 'cancelled' %}
-      <span class="label label-cancelled">Cancelled</span>
+      <span class="label label-warning">Cancelled</span>
     {% endif %}
 
     <h2>{{ transactable.name }}</h2>

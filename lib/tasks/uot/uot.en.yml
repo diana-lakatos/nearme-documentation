@@ -143,6 +143,11 @@ en:
     buttons:
       request: SUBMIT OFFER
 
+  activerecord:
+    attributes:
+      order/payment_documents:
+        file: "Secure Document Upload"
+
   activemodel:
     errors:
       models:

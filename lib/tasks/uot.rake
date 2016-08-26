@@ -556,7 +556,7 @@ namespace :uot do
       theme.gplus_url = 'https://plus.google.com'
       theme.instagram_url = 'https://www.instagram.com'
       theme.youtube_url = 'https://www.youtube.com'
-      theme.blog_url = 'http://blog.com'
+      theme.blog_url = '/blog'
       theme.linkedin_url = 'https://www.linkedin.com'
 
       theme.remote_favicon_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/picture/data/2760/favicon.png'
@@ -688,6 +688,7 @@ namespace :uot do
     def create_theme_header!
       load_template('layouts/theme_header')
       load_template('layouts/theme_dashboard_header')
+      load_template('blog/blog_posts/header')
     end
 
     def create_listing_show!
