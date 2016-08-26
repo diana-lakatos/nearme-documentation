@@ -189,6 +189,8 @@
                           </ul>
                       </div>
                       {% endif %}
+
+                      <div class="project-invite" id="project-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
                   </article>
 
                   <script>
@@ -196,8 +198,6 @@
                       $(document).trigger('userLoaded.uot', 'user-{{user.id}}')
                     });
                   </script>
-
-                  <div class="project-invite" id="project-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
               {% endfor %}
             </div>
 
