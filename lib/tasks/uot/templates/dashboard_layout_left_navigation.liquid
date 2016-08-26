@@ -1,7 +1,7 @@
 <aside class="sidebar" role="complementary">
   <nav class="nav-primary">
     <div class="dashboard">
-      <a href="/dashboard">{{ 'dashboard.nav.title' | t }}</a>
+      <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}">{{ 'dashboard.nav.title' | t }}</a>
     </div>
 
     <ul>
@@ -12,7 +12,12 @@
         {% assign selected = current_path | matches: path %}
 
         <li id="dashboard-nav-user_messages" class="{% if selected %}selected{% endif %}">
-          <a href="{{ path }}">{{ 'dashboard.nav.user_messages' | t }}</a>
+          <a href="{{ path }}">
+            {{ 'dashboard.nav.user_messages' | t }}
+            {% if current_user.unread_messages_count > 0 %}
+            <span class="count">{{ current_user.unread_messages_count }}</span>
+            {% endif %}
+          </a>
         </li>
       {% endif %}
 
@@ -96,8 +101,14 @@
         {% endif %}
 
         {% if transactables_show %}
+          {% assign pending_transactables_count = current_user.pending_transactables_count %}
           <li id="dashboard-nav-transactables" class="{% if new_transactable_selected or transactables_selected or order_items_selected %}selected{% endif %}">
-            <span>{{ 'dashboard.nav.transactables' | t }}</span>
+            <span>
+                {{ 'dashboard.nav.transactables' | t }}
+                {% if pending_transactables_count > 0 %}
+                <span class="count">{{ pending_transactables_count }}</span>
+                {% endif %}
+            </span>
 
               <ul>
                 {% if current_user.buyer_profile == blank %}
@@ -108,7 +119,12 @@
                   </li>
                 {% endif %}
                   <li id="dashboard-nav-transactables" class="{% if transactables_selected %}selected{% endif %}">
-                    <a href="{{ transactables_path }}">{{ 'dashboard.nav.transactables' | t }}</a>
+                    <a href="{{ transactables_path }}">
+                        {{ 'dashboard.nav.transactables' | t }}
+                        {% if pending_transactables_count > 0 %}
+                        <span class="count">{{ pending_transactables_count }}</span>
+                        {% endif %}
+                    </a>
                   </li>
 
                   <li id="dashboard-nav-order_items" class="{% if order_items_selected %}selected{% endif %}">

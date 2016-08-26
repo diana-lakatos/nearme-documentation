@@ -498,6 +498,20 @@ class UserDrop < BaseDrop
     routes.inappropriate_report_path(id: @source.id, reportable_type: "User")
   end
 
+  # total count of unread messages in user inbox
+  def unread_messages_count
+    @source.unread_user_message_threads_count_for(PlatformContext.current.instance)
+  end
+
+  # total count of user transactables with state pending
+  def pending_transactables_count
+    if has_seller_profile?
+      @source.transactables.with_state(:pending).count
+    elsif has_buyer_profile?
+      @source.approved_transactables_collaborated.with_state(:pending).count
+    end
+  end
+
   private
     def social_connections
       @social_connections_cache ||= @source.social_connections
