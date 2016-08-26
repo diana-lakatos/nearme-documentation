@@ -575,7 +575,7 @@ class ApplicationController < ActionController::Base
   end
 
   def force_fill_in_wizard_form
-    if PlatformContext.current.instance.try(:force_fill_in_wizard_form?) && current_user
+    if PlatformContext.current.instance.try(:force_fill_in_wizard_form?) && current_user && !session[:instance_admin_as_user]
       if current_user.seller_profile && current_user.companies.none?
         flash[:error] = t('flash_messages.authorizations.not_filled_form')
         redirect_to PlatformContext.current.instance.transactable_types.first.wizard_path

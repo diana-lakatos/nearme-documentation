@@ -34,6 +34,7 @@ class CommentTest < ActiveSupport::TestCase
     # 6 and 7) Link / Photo events
     # 8) For user.
     #
+
     assert_difference "ActivityFeedEvent.count", 8 do
       FactoryGirl.create(:comment, commentable: FactoryGirl.create(:activity_feed_event))
     end

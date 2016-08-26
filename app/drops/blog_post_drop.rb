@@ -10,7 +10,7 @@ class BlogPostDrop < BaseDrop
   #   object representing a post published after current post
   # author_biography
   #   post author's biography
-  delegate :title, :previous_blog_post, :next_blog_post, :author_biography, to: :blog_post
+  delegate :title, :previous_blog_post, :next_blog_post, :author_biography, :user, to: :blog_post
 
   def initialize(blog_post)
     @blog_post = blog_post
@@ -99,6 +99,10 @@ class BlogPostDrop < BaseDrop
   # url for header image
   def header_url
     @blog_post.header.present? ? @blog_post.header.url : nil
+  end
+
+  def link_for_enquirer
+    @blog_post.user.seller_profile ? '' : routes.user_path(@blog_post.user)
   end
 
 end

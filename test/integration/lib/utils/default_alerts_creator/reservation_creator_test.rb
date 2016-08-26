@@ -275,7 +275,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_contains @reservation.transactable.name, mail.html_part.body
 
       assert_equal [@reservation.transactable.administrator.email], mail.to
-      assert_equal "[#{@platform_context.decorate.name}] Can we help, #{@reservation.transactable.administrator.first_name}?", mail.subject
+      assert_equal "[#{@platform_context.decorate.name}] Can we help, #{@reservation.transactable.creator.first_name}?", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
       assert_not_contains "translation missing:", mail.html_part.body
     end

@@ -6,7 +6,7 @@ class RecurringBookingPeriodDrop < BaseDrop
     :approved?, :rejected?, :state, :order, :persisted?, :rejection_reason, to: :source
 
   def payment_state
-    @source.payment.try(:state) || 'unpaid'
+    @source.pending? ? @source.state : (@source.payment.try(:state) || 'unpaid')
   end
 
   def formatted_total_amount

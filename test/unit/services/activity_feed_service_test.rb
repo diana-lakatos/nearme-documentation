@@ -13,7 +13,7 @@ class ActivityFeedServiceTest < ActiveSupport::TestCase
       followed1 = create(:user)
       followed2 = create(:user)
       follower1 = create(:user)
-      project1  = create(:transactable)
+      project1  = create(:project)
 
       assert_equal 0, @feed.events.count
 

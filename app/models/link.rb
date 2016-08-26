@@ -14,7 +14,7 @@ class Link < ActiveRecord::Base
 
   mount_uploader :image, LinkImageUploader
 
-  after_commit :user_added_links_event, on: [:create, :update], if: -> { ['Group', 'Project'].include?(linkable_type) }
+  after_commit :user_added_links_event, on: [:create, :update], if: -> { ['Group', 'Transactable'].include?(linkable_type) }
 
   def user_added_links_event
     if linkable.present? && !linkable.draft? && !self.skip_activity_feed_event
