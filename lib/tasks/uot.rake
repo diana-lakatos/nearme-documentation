@@ -559,6 +559,9 @@ namespace :uot do
       theme.blog_url = 'http://blog.com'
       theme.linkedin_url = 'https://www.linkedin.com'
 
+      theme.remote_favicon_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/picture/data/2760/favicon.png'
+      theme.remote_icon_retina_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/picture/data/2761/apple-touch-icon-60_2x.png'
+
       theme.updated_at = Time.now
       theme.save!
     end

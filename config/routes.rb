@@ -770,10 +770,11 @@ DesksnearMe::Application.routes.draw do
 
       namespace :company do
         resource :analytics
-        # TODO move orders_received scoep to company/orders scope
         resources :order_items
 
+        # TODO move orders_received scope to company/orders scope
         resources :orders do
+          resources :payment_subscriptions
           resources :order_items do
             member do
               post :approve
@@ -805,8 +806,6 @@ DesksnearMe::Application.routes.draw do
               post :mark_as_paid
             end
           end
-
-          resources :payment_subscriptions
 
           resources :shipments do
             member do

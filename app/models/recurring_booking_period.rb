@@ -77,24 +77,26 @@ class RecurringBookingPeriod < ActiveRecord::Base
   def generate_payment!
     return true if paid?
 
-    payment = build_payment(
-      shared_payment_attributes.merge({
-        credit_card: payment_subscription.credit_card,
-        payment_method: payment_subscription.payment_method,
-      })
-    )
+    payment_object = self.payment || build_payment
 
-    payment.authorize && payment.capture!
-    payment.save!
+    payment_object.attributes = shared_payment_attributes.merge({
+      credit_card: payment_subscription.credit_card,
+      payment_method: payment_subscription.payment_method,
+    })
 
-    if payment.paid?
+    payment_object.authorize && payment_object.capture!
+    payment_object.save!
+
+    if payment_object.paid?
+      payment_subscription.try(:unexpire!)
       self.update_attribute(:paid_at, Time.zone.now)
       mark_recurring_booking_as_paid!
     else
-      recurring_booking.overdue
+      payment_subscription.try(:expire!)
+      order.overdue
     end
 
-    payment
+    payment_object
   end
 
   def paid?

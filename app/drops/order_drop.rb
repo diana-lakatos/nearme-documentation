@@ -20,7 +20,8 @@ class OrderDrop < BaseDrop
     :archived_at, :state, :cancelable?, :archived?, :penalty_charge_apply?, :rejection_reason,
     :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_hours,
     :created_at, :payment, :total_units_text, :enquirer_cancelable, :enquirer_editable,
-    :transactable, :cancelled_at, :confirmed_at, :recurring_booking_periods, :creator, to: :order
+    :transactable, :cancelled_at, :confirmed_at, :recurring_booking_periods, :creator,
+    :payment_subscription, to: :order
 
   def initialize(order)
     @order = order.decorate
@@ -122,7 +123,7 @@ class OrderDrop < BaseDrop
     if @order.is_free_booking?
       routes.new_dashboard_company_orders_received_payment_path(order)
     else
-      routes.new_dashboard_company_orders_received_payment_subscription_path(order)
+      routes.new_dashboard_company_order_payment_subscription_path(order)
     end
   end
 

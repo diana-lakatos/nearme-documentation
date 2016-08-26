@@ -34,6 +34,18 @@ class PaymentSubscription < ActiveRecord::Base
     true
   end
 
+  def expired?
+    !expired_at.nil?
+  end
+
+  def expire!
+    touch(:expired_at)
+  end
+
+  def unexpire!
+    update_attribute(:expired_at, nil)
+  end
+
   def currency
     @currency ||= subscriber.currency_object.iso_code
   end
@@ -43,11 +55,13 @@ class PaymentSubscription < ActiveRecord::Base
   end
 
   def payment_methods
-    if payment_method
+    ids = if payment_method
       [payment_method]
     else
       fetch_payment_methods
-    end
+    end.flatten.uniq.map(&:id)
+
+    PaymentMethod.where(id: ids)
   end
 
   def fetch_payment_methods
@@ -72,5 +86,9 @@ class PaymentSubscription < ActiveRecord::Base
         client: self.payer || self.subscriber.user
       )
     )
+  end
+
+  def to_liquid
+    @payment_subscription_drop ||= PaymentSubscriptionDrop.new(self)
   end
 end

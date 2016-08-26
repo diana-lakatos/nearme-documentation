@@ -13,27 +13,27 @@
         %table.table
           %thead
             %tr
-              %th= t('instance_admin.manage.periods.starts_at')
-              %th= t('instance_admin.manage.periods.ends_at')
+              %th= t('instance_admin.manage.periods.id')
               %th= t('instance_admin.manage.periods.payment')
               %th= t('instance_admin.manage.periods.paid_at')
               %th= t('instance_admin.manage.periods.created_at')
+              %th= t('instance_admin.manage.periods.currency')
               %th
                 %b= t('instance_admin.manage.periods.total_amount')
 
-            - @order.order_items.each do |period|
+            - @order.order_items.each do |order_item|
               %tr
-                %td= period.starts_at
-                %td= period.ends_at
+                %td= order_item.id
                 %td
-                  - if period.payment
-                    = link_to 'payment', instance_admin_manage_payment_path(period.payment)
+                  - if order_item.payment
+                    = link_to 'payment', instance_admin_manage_payment_path(order_item.payment)
                   - else
                     none
-                %td= period.paid_at
-                %td= l(period.created_at, format: :long)
+                %td= order_item.paid_at
+                %td= l(order_item.created_at, format: :long)
+                %td= order_item.currency
                 %td
-                  %b= humanized_money_with_cents_and_symbol(period.total_amount)
+                  %b= humanized_money_with_cents_and_symbol(order_item.total_amount)
   - else
     %h4 Items
     - item = @order.transactable_line_items.first
@@ -65,11 +65,11 @@
                 %td= item.quantity
                 %td= item.total_price
 
-  .row
-    .col-sm-4.col-sm-push-8
+    .row
+      .col-sm-4.col-sm-push-8
 
-      %table.payment-totals
-        %tr
-          %th.total= t 'buy_sell_market.checkout.labels.total2'
-          %td.total= humanized_money_with_cents_and_symbol @order.total_amount
+        %table.payment-totals
+          %tr
+            %th.total= t 'buy_sell_market.checkout.labels.total2'
+            %td.total= humanized_money_with_cents_and_symbol @order.total_amount
 

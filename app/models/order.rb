@@ -140,6 +140,11 @@ class Order < ActiveRecord::Base
     true
   end
 
+  # This is workaround to use STI class with routing Rails standards
+  def routing_object
+    Order.new(id: id)
+  end
+
   def complete!
     # TODO soon we will introduce "completed" state instead of archived_at timestamp
     touch(:archived_at)
