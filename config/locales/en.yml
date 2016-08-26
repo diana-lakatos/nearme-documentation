@@ -131,6 +131,7 @@ en:
     generic_lessor_term: "host"
     default: "Default"
     approve: 'Approve'
+    update_credit_card: 'Update Credit Card'
     reject: 'Reject'
     no_options: 'No options'
     unexpected_error_occurred: "An unexpected error occurred."

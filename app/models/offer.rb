@@ -12,6 +12,11 @@ class Offer < Order
     Offer
   end
 
+  def overdue
+    # Offer currently doesn't go into overdue state
+    # we simply ask to add new credit card
+  end
+
   def add_line_item!(attrs)
     transactable = Transactable.find(attrs[:transactable_id])
     transactable_pricing = transactable.action_type.pricings.find(attrs[:transactable_pricing_id])

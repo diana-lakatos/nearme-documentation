@@ -42,6 +42,9 @@
               <span class="label label-success">Approved</span>
             {% else %}
               {% unless item.approved? %}
+                {% if order.payment_subscription.expired? %}
+                  <a class="btn btn-success btn-sm" data-modal="true" href="{{ 'edit_dashboard_company_order_payment_subscription_path' | generate_url: order.id, order.payment_subscription  }}">{{ 'general.update_credit_card' | t}}</a>
+                {% endif %}
                 <form class="edit_reservation" action="{{ 'approve_dashboard_company_order_order_item_path' | generate_url: order.id, item.id }}" accept-charset="UTF-8" method="post">
                   <input name="utf8" type="hidden" value="&#x2713;" />
                   <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />

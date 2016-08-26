@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160823104900) do
+ActiveRecord::Schema.define(version: 20160826004551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1819,6 +1819,7 @@ ActiveRecord::Schema.define(version: 20160823104900) do
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
     t.integer  "payer_id"
+    t.datetime "expired_at"
   end
 
   add_index "payment_subscriptions", ["company_id"], name: "index_payment_subscriptions_on_company_id", using: :btree

@@ -5,7 +5,7 @@
   - else
     - based_collection = current_user.instance_clients.for_payment_gateway(payment_method.payment_gateway_id, current_instance.test_mode?).first.try(:credit_cards).try(:select, &:active?).try(:map) { |cc| [I18n.t('credit_cards.masked_number', last4: cc.last_4), cc.id] } || []
     - default_option = based_collection.first.present? ? based_collection.first[1] : 'custom'
-    - selected_option = f.object.chosen_credit_card_id.presence || default_option
+    - selected_option = f.object.chosen_credit_card_id.presence || f.object.credit_card_id ||default_option
 
     = f.input :chosen_credit_card_id, as: :radio_buttons, collection: based_collection << [I18n.t('payments.cc_fields.add_new'), 'custom'], label: false, checked: selected_option, wrapper_html: { class: 'nm-credit-card-option-select' }
 
