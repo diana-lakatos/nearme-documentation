@@ -15,7 +15,7 @@ FactoryGirl.define do
 
     after(:build) do |booking|
       booking.transactable_pricing = booking.transactable.action_type.pricings.first
-      booking.transactable_line_items << LineItem::Transactable.new(unit_price_cents: 1670, quantity: 1)
+      booking.transactable_line_items << LineItem::Transactable.new(unit_price_cents: 1670, quantity: 1, name: booking.transactable.name)
     end
 
     after(:create) do |booking|

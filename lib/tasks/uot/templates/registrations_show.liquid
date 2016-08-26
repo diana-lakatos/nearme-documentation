@@ -34,7 +34,7 @@
                       <h3>Expertise</h3>
                       <ul>
                           {% for exp in user.formatted_buyer_categories["Area Of Expertise"]['children'] %}
-                              <li>{{ exp[2] }}</li>
+                              <li>{{ exp[-1] }}</li>
                           {% endfor %}
                       </ul>
                     {% endif %}
@@ -43,7 +43,7 @@
                       <h3>Industry</h3>
                       <ul>
                           {% for exp in user.formatted_buyer_categories["Industry"]['children'] %}
-                              <li>{{ exp[1] }}</li>
+                              <li>{{ exp[-1] }}</li>
                           {% endfor %}
                       </ul>
                     {% endif %}

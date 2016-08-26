@@ -2,7 +2,7 @@
   .options
     = render "dashboard/company/transactables/form_fields/enabled", f: f, label: t('dashboard.items.listing_published')
 
-%nav.panel-nav{ "data-internal-nav": true }
+%nav.panel-nav.panel-nav-standalone{ "data-internal-nav": true }
   %ul.tabs.pull-left
     - @form_components.each_with_index do |form_component, index|
       %li{class: index == 0 ? 'active' : ''}

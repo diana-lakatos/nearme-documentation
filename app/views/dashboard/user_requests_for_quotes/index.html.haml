@@ -3,15 +3,12 @@
 - content_for :page_header do
   %h1= yield :title
 
-%nav.panel-nav
-  %ul.tabs.pull-left
-    - actions = ['open', 'resolved', 'all']
-    %li{class: @filter == 'open' ? 'active' : ''}
-      = link_to t('reservations.filters.open'), url_for(:filter => 'open')
-    %li{class: @filter == 'resolved' ? 'active' : ''}
-      = link_to t('reservations.filters.resolved'), url_for(:filter => 'resolved')
-    %li{class: @filter == 'all' ? 'active' : ''}
-      = link_to t('reservations.filters.all'), url_for(:filter => 'all')
+- tabs = []
+- actions = ['open', 'resolved', 'all']
+- actions.each_with_index do |action, i|
+  - tabs.push({ name: t("reservations.filters.#{action}"), url: url_for(:filter => action), active: @filter == action })
+
+= dashboard_panel_multi_tabs(tabs)
 
 .panel
   .panel-body

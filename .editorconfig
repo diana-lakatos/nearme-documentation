@@ -19,5 +19,14 @@ insert_final_newline = true
 [*.rb]
 indent_size = 2
 
+[*.haml]
+indent_size = 2
+
+[*.html]
+indent_size = 2
+
+[*.liquid]
+indent_size = 2
+
 [*.md]
 trim_trailing_whitespace = false
