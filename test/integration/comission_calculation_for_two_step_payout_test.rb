@@ -174,7 +174,6 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
     # assert_equal 25.to_money(@transactable.currency), @order.subtotal_amount
     assert_equal 25.to_money(@transactable.currency), @order.unit_price
     assert_equal 3.75.to_money(@transactable.currency), @order.service_fee_amount_guest  if %w(USD IQD).include?(@transactable.currency)
-
     assert_equal 15.00.to_money(@transactable.currency), @order.service_additional_charges
     assert_equal 18.75.to_money(@transactable.currency), @order.service_fee_amount_guest + @order.service_additional_charges
     assert_equal 2.5.to_money(@transactable.currency), @order.service_fee_amount_host if %w(USD IQD).include?(@transactable.currency)

@@ -62,8 +62,9 @@ module Payable
 
     def create_additional_charges
       return true unless respond_to?(:additional_charge_types)
+
       additional_charge_types.get_mandatory_and_optional_charges(additional_charge_ids).uniq.map do |act|
-        self.additional_line_items.where(line_item_source: act).first_or_create(
+        self.additional_line_items.where(line_item_source_id: act.id, line_item_source_type: act.class.name, ).first_or_create(
           line_itemable: self,
           line_item_source: act,
           optional: act.optional?,
