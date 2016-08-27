@@ -619,6 +619,12 @@ DNM.registerInitializer(function(){
     });
 });
 
+DNM.registerInitializer(function(){
+    $(document).on('init:disableorderform.nearme', function(event, form) {
+      $(form).find('input, textarea, button, select').attr('disabled','disabled');
+    });
+});
+
 // New shared libraries
 let sharedInitializers = require('shared-initializers');
 sharedInitializers.forEach((initializer)=> DNM.registerInitializer(initializer));

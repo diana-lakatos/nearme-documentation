@@ -74,6 +74,8 @@ class WishListItemDrop < BaseDrop
       @wishlistable.decorate.show_path
     elsif @wishlistable.is_a?(Location)
       @wishlistable.listings.searchable.first.try(:decorate).try(:show_path)
+    elsif @wishlistable.is_a?(User)
+      @wishlistable.decorate.show_path
     end
   end
 

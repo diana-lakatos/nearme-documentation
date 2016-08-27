@@ -175,6 +175,7 @@ class PlatformContext
   end
 
   def rules
+    return [] unless @domain
     @rules ||= @domain.reverse_proxies.where(environment: Rails.env)
   end
 

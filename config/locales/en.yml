@@ -1562,6 +1562,7 @@ en:
         refunded: "Refunded"
         unpaid: 'Unpaid'
         rejected: 'Rejected'
+        approved: 'Approved'
       alerts: 'Alerts:'
 
     host_reservations:

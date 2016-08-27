@@ -58,7 +58,9 @@ FactoryGirl.define do
       type 'Transactable::EventBooking'
 
       after(:build) do |at|
-        at.transactable_type_action_type ||= FactoryGirl.build(:transactable_type_event_action, transactable_type: at.transactable.transactable_type)
+        unless at.transactable_type_action_type && at.transactable_type_action_type.pricing_for('1_event')
+          at.transactable_type_action_type = FactoryGirl.build(:transactable_type_event_action, transactable_type: at.transactable.transactable_type)
+        end
         at.schedule = FactoryGirl.build(:schedule, scheduable: at)
         at.pricings << FactoryGirl.build(
           :event_pricing, :with_exclusive_price, :with_book_it_out,

@@ -321,13 +321,7 @@ class TransactableTest < ActiveSupport::TestCase
 
       links_attributes = { "0" => { "text" => "Changed", id: @link.id }}
       @transactable.update_attributes({"links_attributes" => links_attributes})
-      @transactable.reload
-      assert_equal "Changed", @transactable.links.first.text
-
-      links_attributes = { "0" => { "text" => "Changed", id: @link.id, _destroy: true }}
-      @transactable.update_attributes({"links_attributes" => links_attributes})
-      @transactable.reload
-      assert_equal nil, @transactable.links.first
+      assert_equal "Changed", @transactable.links[0].text
 
     end
   end

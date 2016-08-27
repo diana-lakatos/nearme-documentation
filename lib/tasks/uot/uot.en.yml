@@ -155,7 +155,15 @@ en:
           attributes:
             base:
               total_amount_changed: Bid on Project
-
+  activerecord:
+    attributes:
+      user/buyer_profile:
+        "Area Of Expertise": 'Area Of Expertise'
+        "Languages": 'Languages'
+        "Industry": 'Industry'
+        "travel": 'Travel'
+        "hourly_rate": 'Hourly Rate'
+        "linkedin_url": 'Linkedin URL'
   buy_sell_market:
     products:
       labels:

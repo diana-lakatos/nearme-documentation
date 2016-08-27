@@ -3,7 +3,7 @@
     <h4>Tracked Items &amp; Expenses entry</h4>
 
     <div class="options">
-      {% if item.payment_state == 'unpaid' %}
+      {% if item.pending? %}
         <a href="{{ 'edit_dashboard_order_order_item_path' | generate_url: order_id: order.id, id: item.id }}" class="btn btn-primary btn-xs">Edit</a>
       {% else %}
         <a href="{{ 'dashboard_order_order_item_path' | generate_url: order_id: order.id, id: item.id }}" class="btn btn-primary btn-xs">View</a>
@@ -42,6 +42,11 @@
 
         <tr>
           <td colspan="4" class="order-item-actions">
+            {% if item.approved? %}
+              <span class="label label-success">Approved</span>
+            {% elsif item.rejected?%}
+              <span class="label label-danger">Rejected</span>
+            {% endif %}
           </td>
           <th scope="row" class="subtotal">Subtotal</th>
           <td>{{ item.formatted_total_amount }}</td>

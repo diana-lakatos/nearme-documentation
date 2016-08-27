@@ -882,6 +882,7 @@ class SecuredParams
       :shipping_profile_id,
       :tag_list,
       :minimum_booking_minutes,
+      :seek_collaborators,
       photos_attributes: nested(self.photo),
       approval_requests_attributes: nested(self.approval_request),
       photo_ids: [],
@@ -890,11 +891,14 @@ class SecuredParams
       dimensions_template_attributes: nested(self.dimensions_template),
       attachment_ids: [],
       waiver_agreement_template_ids: [],
+      topic_ids: [],
+      group_ids: [],
       action_types_attributes: nested(self.transactable_action_type),
       document_requirements_attributes: nested(self.document_requirement),
       upload_obligation_attributes: nested(self.upload_obligation),
       additional_charge_types_attributes: nested(self.additional_charge_type),
       customizations_attributes: nested(self.customization(transactable_type)),
+      links_attributes: nested(self.link),
       properties_attributes: Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
     ] +
     Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
