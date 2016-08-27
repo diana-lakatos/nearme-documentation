@@ -37,7 +37,6 @@ class Webhooks::StripeConnectsController < Webhooks::BaseWebhookController
         else
           @payment_gateway.webhooks.create!(response: params.to_yaml)
         end
-
       end
     end
   ensure
