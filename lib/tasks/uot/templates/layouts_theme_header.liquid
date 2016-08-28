@@ -49,6 +49,14 @@
               </a>
               <ul class="dropdown-menu">
 
+                {% if current_user.instance_admins_metadata %}
+                  <li>
+                    <a href="{{ current_user.user_menu_instance_admin_path}}" class='nav-link dropdown-toggle' target='_blank'>
+                      <span>{{ 'top_navbar.marketplace_admin' | t }}</span>
+                    </a>
+                </li>
+                {% endif %}
+
                 <li>
                   <a class="nav-link" href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}">
                     My Projects

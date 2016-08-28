@@ -31,7 +31,17 @@
                                   <select id="filter-industry" class="unstyled-select" name='category_ids[]'>
                                       <option value="">Please Select --</option>
                                       {% for category in root_category.children %}
-                                          <option {% if searcher.category_ids contains category.id %}selected{% endif %} value='{{category.id}}'>{{ category.name }}</option>
+                                        <option {% if searcher.category_ids contains subcat.id %}selected{% endif %} value='{{subcat.id}}'>{{ category.name }}</option>
+                                        {% if category.children.size > 0 %}
+                                          {% for subcat in category.children %}
+                                            <option {% if searcher.category_ids contains subcat.id %}selected{% endif %} value='{{subcat.id}}'>{{ subcat.name }}</option>
+                                            {% if subcat.children.size > 0 %}
+                                              {% for subcat2 in subcat.children %}
+                                                <option {% if searcher.category_ids contains subcat2.id %}selected{% endif %} value='{{subcat2.id}}'>{{ subcat2.name }}</option>
+                                              {% endfor %}
+                                            {% endif %}
+                                          {% endfor %}
+                                        {% endif %}
                                       {% endfor %}
                                   </select>
                               </span>

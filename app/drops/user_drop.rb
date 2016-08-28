@@ -68,7 +68,7 @@ class UserDrop < BaseDrop
     :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
     :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile,
     :tags, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
-    :created_at, :has_buyer_profile?, :default_company, :company_name, to: :source
+    :created_at, :has_buyer_profile?, :default_company, :company_name, :instance_admins_metadata, to: :source
 
   def class_name
     'User'
@@ -510,6 +510,12 @@ class UserDrop < BaseDrop
     elsif has_buyer_profile?
       @source.approved_transactables_collaborated.with_state(:pending).count
     end
+  end
+
+  def user_menu_instance_admin_path
+    users_instance_admin = '_manage_blog' if @source.instance_admins_metadata == 'blog'
+    users_instance_admin = '_support_root' if @source.instance_admins_metadata == 'support'
+    routes.send("instance_admin#{users_instance_admin}_path")
   end
 
   private

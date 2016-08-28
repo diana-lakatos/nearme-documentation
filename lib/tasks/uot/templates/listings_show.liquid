@@ -39,8 +39,8 @@
 
                             <dt>Workplace:</dt>
                             <dd>{{ listing.properties.workplace_type }}</dd>
-
-                            {% if listing.properties.workplace_type | matches: 'On Site' %}
+                            {% assign show_office = listing.properties.workplace_type | matches: 'On Site' %}
+                            {% if show_office %}
                               <dt>Office:</dt>
                               <dd>{{ listing.properties.office_location }}</dd>
                             {% endif %}

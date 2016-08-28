@@ -17,7 +17,8 @@
           <dt>Workplace</dt>
           <dd>{{ transactable.properties.workplace_type }}</dd>
 
-          {% if transactable.properties.workplace_type | matches: 'On Site' %}
+          {% assign show_office = transactable.properties.workplace_type | matches: 'On Site' %}
+          {% if show_office %}
             <dt>Office</dt>
             <dd>{{ transactable.properties.office_location }}</dd>
           {% endif %}
