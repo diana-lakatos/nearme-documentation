@@ -13,21 +13,22 @@
             <div class="content">
                 <div class="listing-properties">
                     <div class="overview">
-                      {% if listing.properties.project_contact != blank %}
-                      <h2>Client Name:
-                        <span>{{ listing.properties.project_contact }}
-                          {% if listing.creator.seller_properties['linkedin_url'] != blank %}
-                            | <a href="{{ listing.creator.seller_properties['linkedin_url'] }}" target="_blank">LinkedIn Bio</a>
-                          {% endif %}
-                        </span>
-                      </h2>
-                      {% endif %}
-                      <div class="meta">Project posted <b>{{ listing.created_at | time_ago_in_words }}</b> ago</div>
+                        {% if listing.properties.project_contact != blank %}
+                        <h2>Contact Name:
+                            <span>{{ listing.properties.project_contact }}</span>
+                            {% if listing.creator.seller_properties['linkedin_url'] != blank %}
+                            | <a href="{{ listing.creator.seller_properties['linkedin_url'] }}" rel="external" class="linkedin">LinkedIn Bio</a>
+                            {% endif %}
+                        </h2>
+                        {% endif %}
+                        <div class="meta">
+                            Project posted <b>{{ listing.created_at | time_ago_in_words }}</b> ago
+                        </div>
                     </div>
 
                     <div class="properties">
                         <dl>
-                            {% if listing.company != blank %}
+                            {% if listing.creator.company_name != blank %}
                             <dt>Company Name:</dt>
                             <dd>{{ listing.creator.company_name }}</dd>
                             {% endif %}
