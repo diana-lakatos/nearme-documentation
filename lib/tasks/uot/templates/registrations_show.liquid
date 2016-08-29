@@ -4,7 +4,7 @@
 {% for customization in user.buyer_profile.customizations %}
   {% if customization.custom_model_type.name == 'Recommendations' %}
     {% assign recommendations  = recommendations | add_to_array: customization %}
-  {% elsif model.name == 'Links' %}
+  {% elsif customization.custom_model_type.name == 'Links' %}
     {% assign links = links | add_to_array: customization %}
   {% endif %}
 {% endfor%}

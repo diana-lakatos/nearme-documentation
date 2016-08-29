@@ -24,7 +24,8 @@
 
                 <div class="filters-wrapper">
                     <div class="filter-categories">
-                      {% for root_category in searcher.searchable_categories %}
+                      {% assign categories = searcher.searchable_categories | rotate %}
+                      {% for root_category in  categories %}
                           <div class="filter">
                               <label for="filter-industry" class="filter-title">{{ root_category.name }}</label>
                               <span class="select-a">
@@ -170,7 +171,14 @@
 
                                   {% if user.buyer_properties.bio != blank %}
                                       <h3>Bio</h3>
-                                      <p>{{ user.buyer_properties.bio }}</p>
+                                      {% if user.buyer_properties.bio.size > 350 %}
+                                         <div data-shorten-description>
+                                          <p data-description>{{ user.buyer_properties.bio | slice: 0, 350 }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
+                                          <div style='display: none;'  class="rest_of_text"> {{ user.buyer_properties.bio | slice: 350, user.buyer_properties.bio.size }} </div>
+                                        </div>
+                                      {% else %}
+                                        <p>{{ user.buyer_properties.bio }}</p>
+                                      {% endif %}
                                   {% endif %}
                               </div>
                           {% endif %}

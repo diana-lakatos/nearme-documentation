@@ -51,6 +51,10 @@ module LiquidFilters
     array
   end
 
+  def rotate(array, count=1)
+    array.rotate(count)
+  end
+
   def location_path(transactable_type, location)
     return '' if location.blank?
     location.listings.searchable.first.try(:decorate).try(:show_path)
