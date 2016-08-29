@@ -22,4 +22,8 @@ class RecurringBookingPeriodDrop < BaseDrop
     #urlify(routes.dashboard_company_order_items_path)
   end
 
+  def recurring_booking
+    @source.order
+  end
+
 end

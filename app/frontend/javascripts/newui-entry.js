@@ -621,7 +621,7 @@ DNM.registerInitializer(function(){
 
 DNM.registerInitializer(function(){
     $(document).on('init:disableorderform.nearme', function(event, form) {
-      $(form).find('input, textarea, button, select').attr('disabled','disabled');
+        $(form).find('input, textarea, button, select').attr('disabled','disabled');
     });
 });
 

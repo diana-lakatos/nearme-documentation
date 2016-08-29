@@ -34,7 +34,7 @@
             {% for payment in payments %}
               <tr>
                 <td>{{ payment.currency | currency_content_tag:  payment.total_amount, 'span' }}</td>
-                <td>{{ payment.payable.listing.name }}</td>
+                <td>{{ payment.payable.order.transactable.name }}</td>
                 <td>{{ payment.created_at | l: 'long' }}</td>
               </tr>
             {% endfor %}
