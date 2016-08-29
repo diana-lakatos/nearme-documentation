@@ -100,8 +100,8 @@ class ReviewDecorator < Draper::Decorator
   end
 
   def object_photo
-    if reservation? && reviewable.listing && reviewable.listing.has_photos?
-      reviewable.listing.photos.first.image_url(:medium)
+    if reservation? && reviewable.transactable && reviewable.transactable.has_photos?
+      reviewable.transactable.photos.first.image_url(:medium)
     else
       default_item_photo
     end
