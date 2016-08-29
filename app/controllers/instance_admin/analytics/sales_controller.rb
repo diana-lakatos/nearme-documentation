@@ -5,19 +5,19 @@ class InstanceAdmin::Analytics::SalesController < InstanceAdmin::Analytics::Base
       target_type: 'TransactableType'
     ).pluck(:name).sort.uniq
 
-    sql = 'SELECT reservations.*, ARRAY_AGG(reservation_periods.date) AS date, '\
+    sql = 'SELECT orders.*, ARRAY_AGG(reservation_periods.date) AS date, '\
     'hstore_to_json(transactables.properties) AS transactable_properties, '\
     'transactable_types.name AS transactable_type_name, '\
     'transactables.deleted_at AS transactable_deleted_at '\
-    'FROM reservations '\
+    'FROM orders '\
     'JOIN transactables '\
-    'ON reservations.transactable_id = transactables.id '\
+    'ON orders.transactable_id = transactables.id '\
     'JOIN transactable_types '\
     'ON transactable_types.id = transactables.transactable_type_id '\
     'LEFT JOIN reservation_periods '\
-    'ON reservation_periods.reservation_id = reservations.id '\
-    "WHERE reservations.instance_id = #{platform_context.instance.id} "\
-    "GROUP BY reservations.id, transactables.id, transactable_types.id"
+    'ON reservation_periods.reservation_id = orders.id '\
+    "WHERE orders.instance_id = #{platform_context.instance.id} "\
+    "GROUP BY orders.id, transactables.id, transactable_types.id ORDER BY orders.created_at ASC"
 
     records_array = ActiveRecord::Base.connection.execute(sql)
 
