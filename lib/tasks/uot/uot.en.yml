@@ -28,7 +28,11 @@ en:
   pricing:
     free_enabled: 'Pro Bono'
     free_disabled: 'Paid'
-
+  custom_model_type:
+    links:
+      name:
+        one: 'Links to whitepapers, articles'
+        other: 'Links to whitepapers, articles'
   dashboard:
     user_profile:
       sections:
@@ -36,6 +40,9 @@ en:
     order_items:
       reject: "What's wrong?"
       reject_placeholder: 'Please let us know what is the reason of declining expenses'
+      free_unit_price: 'Pro bono projects don’t allow hourly rate to be set as project time is free.'
+    payments:
+      merchant_fee_charge: '<b>Important Note:</b> Pro bono projects will not charge any hourly time expenses due to the nature of the project. However, there is a one time "%{name}" of %{price} due. Also, system will track any expense items required for the project.'
     nav:
       user_reservations: My Offers
       reviews: Ratings

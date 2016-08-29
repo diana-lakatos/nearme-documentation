@@ -1,5 +1,20 @@
 {% assign title = platform_context.name | append: ' - ' | append: user.name %}
 {% title title %}
+
+{% for customization in user.buyer_profile.customizations %}
+  {% if customization.custom_model_type.name == 'Recommendations' %}
+    {% assign recommendations  = recommendations | add_to_array: customization %}
+  {% elsif model.name == 'Links' %}
+    {% assign links = links | add_to_array: customization %}
+  {% endif %}
+{% endfor%}
+
+<style>
+  div.mid-h{
+    margin-top: 10px;
+    font-weight: bold;
+  }
+</style>
 <main id="main">
     <div class="wrapper-a">
         <div class="back-to-search-results">
@@ -72,15 +87,64 @@
                       <p>{{ user.buyer_properties['bio'] }}</p>
                     {% endif %}
 
+                    {% if user.buyer_properties['education'] != blank %}
+                      <div class='mid-h'>Education, Certifications and Training</div>
+                      <p>{{ user.buyer_properties['education'] }}</p>
+                    {% endif %}
 
-                    {% if user.buyer_profile.customizations.size > 0 %}
+                    {% if user.buyer_properties['awards'] != blank %}
+                      <div class='mid-h'>Awards and Honors</div>
+                      <p>{{ user.buyer_properties['awards'] }}</p>
+                    {% endif %}
+
+                    {% if user.buyer_properties['pro_service'] != blank %}
+                      <div class='mid-h'>Professional Service</div>
+                      <p>{{ user.buyer_properties['pro_service'] }}</p>
+                    {% endif %}
+
+                    {% if user.buyer_properties['teaching'] != blank %}
+                      <div class='mid-h'>Teaching, Writing and Publishing</div>
+                      <p>{{ user.buyer_properties['teaching'] }}</p>
+                    {% endif %}
+
+                    {% if links.size > 0 %}
+                      <div class='mid-h'>Links to whitepapers, articles</div>
+                      <ul>
+                        {% for link in links %}
+                          <li><a href="{{ link.properties['url_link'] }}" target="_blank">{{ link.properties['url_link'] }}</a></li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+
+                    {% if user.buyer_properties['employers'] != blank %}
+                      <div class='mid-h'>Prior Employers or Clients</div>
+                      <p>{{ user.buyer_properties['employers'] }}</p>
+                    {% endif %}
+
+                    {% if user.buyer_properties['accomplishments'] != blank %}
+                      <div class='mid-h'>Special Projects and Accomplishments</div>
+                      <p>{{ user.buyer_properties['accomplishments'] }}</p>
+                    {% endif %}
+
+                    {% if user.buyer_properties['giving_back'] != blank %}
+                      <div class='mid-h'>Community and Giving Back Interests</div>
+                      <p>{{ user.buyer_properties['giving_back'] }}</p>
+                    {% endif %}
+
+                    {% if user.buyer_properties['hobbies'] != blank %}
+                      <div class='mid-h'>Brief Personal Details (Family and Hobbies)</div>
+                      <p>{{ user.buyer_properties['hobbies'] }}</p>
+                    {% endif %}
+
+
+                    {% if recommendations.size > 0 %}
 
                       <hr>
 
                       <section class="recommendations-a">
                           <h3>Recommendations</h3>
                           <div class="items">
-                              {% for recommendation in user.buyer_profile.customizations %}
+                              {% for recommendation in recommendations %}
                                   <div class="item">
                                       <blockquote>
                                           <p>&ldquo;{{ recommendation.properties['recommendation'] }}&rdquo;</p>

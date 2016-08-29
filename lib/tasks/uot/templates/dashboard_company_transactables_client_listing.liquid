@@ -42,7 +42,14 @@
         </dl>
 
         <h4>Description</h4>
-        <p>{{ transactable.description }}</p>
+        {% if transactable.description.size > 350 %}
+           <div data-shorten-description>
+            <p data-description>{{ transactable.description | slice: 0, 350 }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
+            <div style='display: none;'  class="rest_of_text"> {{ transactable.description | slice: 350, transactable.description.size }} </div>
+          </div>
+        {% else %}
+          <p>{{ transactable.description }}</p>
+        {% endif %}
       </div>
       <div class="col-md-4">
         {% include 'dashboard/company/transactables/client_actions.html' %}

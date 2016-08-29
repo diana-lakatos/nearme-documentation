@@ -96,6 +96,18 @@ namespace :uot do
         public: true,
         searchable: false
       })
+      cmt = CustomModelType.where(instance_id: @instance.id, name: 'Links').first_or_create!
+      cmt.instance_profile_types = [@instance_profile_type]
+      cmt.save!
+      create_custom_attribute(cmt, {
+        name: 'url_link',
+        label: 'URL',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "1",
+        public: true,
+        searchable: false
+      })
     end
 
     def create_transactable_types!
@@ -274,6 +286,94 @@ namespace :uot do
       })
 
       create_custom_attribute(@instance_profile_type, {
+          name: 'education',
+          label: 'Education, Certifications and Training',
+          attribute_type: 'string',
+          html_tag: 'textarea',
+          required: "0",
+          validation_only_on_update: true,
+          public: true,
+          searchable: false
+      })
+
+      create_custom_attribute(@instance_profile_type, {
+          name: 'awards',
+          label: 'Awards and Honors',
+          attribute_type: 'string',
+          html_tag: 'textarea',
+          required: "0",
+          validation_only_on_update: true,
+          public: true,
+          searchable: false
+      })
+
+      create_custom_attribute(@instance_profile_type, {
+          name: 'pro_service',
+          label: 'Professional Service',
+          attribute_type: 'string',
+          html_tag: 'textarea',
+          required: "0",
+          validation_only_on_update: true,
+          public: true,
+          searchable: false
+      })
+
+      create_custom_attribute(@instance_profile_type, {
+          name: 'teaching',
+          label: 'Teaching, Writing and Publishing',
+          attribute_type: 'string',
+          html_tag: 'textarea',
+          required: "0",
+          validation_only_on_update: true,
+          public: true,
+          searchable: false
+      })
+
+      create_custom_attribute(@instance_profile_type, {
+          name: 'employers',
+          label: 'Prior Employers or Clients',
+          attribute_type: 'string',
+          html_tag: 'textarea',
+          required: "0",
+          validation_only_on_update: true,
+          public: true,
+          searchable: false
+      })
+
+      create_custom_attribute(@instance_profile_type, {
+          name: 'accomplishments',
+          label: 'Special Projects and Accomplishments ',
+          attribute_type: 'string',
+          html_tag: 'textarea',
+          required: "0",
+          validation_only_on_update: true,
+          public: true,
+          searchable: false
+      })
+
+      create_custom_attribute(@instance_profile_type, {
+          name: 'giving_back',
+          label: 'Community and Giving Back Interests',
+          attribute_type: 'string',
+          html_tag: 'textarea',
+          required: "0",
+          validation_only_on_update: true,
+          public: true,
+          searchable: false
+      })
+
+      create_custom_attribute(@instance_profile_type, {
+          name: 'hobbies',
+          label: 'Brief Personal Details (Family and Hobbies)',
+          attribute_type: 'string',
+          html_tag: 'textarea',
+          required: "0",
+          validation_only_on_update: true,
+          public: true,
+          searchable: false
+      })
+
+      create_custom_attribute(@instance_profile_type, {
           name: 'workplace_type',
           label: 'Workplace Type',
           attribute_type: 'array',
@@ -379,7 +479,7 @@ namespace :uot do
           label: 'LinkedIn URL',
           attribute_type: 'string',
           html_tag: 'input',
-          required: "0",
+          required: "1",
           public: true,
           searchable: false
       })
@@ -523,6 +623,15 @@ namespace :uot do
         {"buyer" => "Category - Industry"},
         {"buyer" => "Category - Languages"},
         {"buyer" => "bio"},
+        {"buyer" => "education"},
+        {"buyer" => "awards"},
+        {"buyer" => "pro_service"},
+        {"buyer" => "teaching"},
+        {"buyer" => "Custom Model - Links"},
+        {"buyer" => "employers"},
+        {"buyer" => "accomplishments"},
+        {"buyer" => "giving_back"},
+        {"buyer" => "hobbies"},
         {"buyer" => "availability"},
         {"buyer" => "tags"},
         {"buyer" => "Custom Model - Recommendations"},
@@ -727,6 +836,7 @@ namespace :uot do
       load_template('dashboard/company/transactables/client_listing')
       load_template('dashboard/company/transactables/client_actions')
       load_template('dashboard/company/transactables/form_actions')
+      load_template('listings/reservations/confirm_reservations')
       load_template('dashboard/layout/left_navigation')
       load_template('checkout/summary')
       load_template('checkout/sidebar')

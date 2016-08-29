@@ -45,6 +45,12 @@ module LiquidFilters
     array.compact
   end
 
+  def add_to_array(array, item)
+    array ||= []
+    array << item
+    array
+  end
+
   def location_path(transactable_type, location)
     return '' if location.blank?
     location.listings.searchable.first.try(:decorate).try(:show_path)

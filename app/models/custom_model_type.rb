@@ -31,4 +31,8 @@ class CustomModelType < ActiveRecord::Base
     @translation_manager ||= CustomModelType::CustomModelTypeTranslationManager.new(self)
   end
 
+  def to_liquid
+    @custom_model_drop ||= CustomModelTypeDrop.new(self)
+  end
+
 end

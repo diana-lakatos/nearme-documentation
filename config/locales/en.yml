@@ -1293,6 +1293,7 @@ en:
       back_to_projects_html: "Go Back<span class='hidden-xs'> to Projects In Progress</span>"
       total: "Total"
       send_message: 'Send Message'
+      free_unit_price: ''
     orders:
       track_time_and_expenses: Track Time and Expenses
       track_time_and_expenses_html: 'Track Time<span class="hidden-xs"> and Expenses</span>'

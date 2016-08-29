@@ -49,7 +49,7 @@ class Dashboard::OrderItemsController < Dashboard::Company::BaseController
   private
 
   def can_edit?
-    if @order_item.paid? || @order_item.approved?
+    if (@order_item.paid? && @order_item.approved?) || @order_item.approved?
       flash[:error] = t('flash_messages.dashboard.order_items.can_not_edit_accepted_order_item')
       redirect_to dashboard_order_order_items_path(@order, transactable_id: @order.transactable.id)
       return

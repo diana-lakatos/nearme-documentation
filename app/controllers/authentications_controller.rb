@@ -4,6 +4,7 @@ class AuthenticationsController < ApplicationController
   skip_before_filter :set_locale
   skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:create, :setup]
   skip_before_filter :verify_authenticity_token
+  skip_before_filter :force_fill_in_wizard_form
   before_action :set_role
 
   def set_role

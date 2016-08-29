@@ -21,7 +21,7 @@ class OrderDrop < BaseDrop
     :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_hours,
     :created_at, :payment, :total_units_text, :enquirer_cancelable, :enquirer_editable,
     :transactable, :cancelled_at, :confirmed_at, :recurring_booking_periods, :creator,
-    :payment_subscription, to: :order
+    :payment_subscription, :confirm_reservations?, :bookable?, :transactable_pricing, to: :order
 
   def initialize(order)
     @order = order.decorate
