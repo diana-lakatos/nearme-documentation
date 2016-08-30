@@ -9,12 +9,6 @@
   {% endif %}
 {% endfor%}
 
-<style>
-  div.mid-h{
-    margin-top: 10px;
-    font-weight: bold;
-  }
-</style>
 <main id="main">
     <div class="wrapper-a">
         <div class="back-to-search-results">
@@ -65,12 +59,12 @@
 
                     {% if user.buyer_properties['availability'] != blank %}
                       <h3>Availability</h3>
-                      <p>{{ user.buyer_properties['availability'] }}</p>
+                      <p>{{ user.buyer_properties['availability'] | nl2br }}</p>
                     {% endif %}
 
                     {% if user.buyer_properties['cities'] != blank %}
                       <h3>Will work in these Cities</h3>
-                      <p>{{ user.buyer_properties['cities'] }}</p>
+                      <p>{{ user.buyer_properties['cities'] | nl2br  }}</p>
                     {% endif %}
 
                     {% if user.buyer_categories["Languages"]['children'].size > 0 %}
@@ -83,32 +77,32 @@
                     {% endif %}
 
                     {% if user.buyer_properties['bio'] != blank %}
-                      <div class='mid-h'>Biography</div>
-                      <p>{{ user.buyer_properties['bio'] }}</p>
+                      <h3>Biography</h3>
+                      <p>{{ user.buyer_properties['bio'] | nl2br  }}</p>
                     {% endif %}
 
                     {% if user.buyer_properties['education'] != blank %}
-                      <div class='mid-h'>Education, Certifications and Training</div>
-                      <p>{{ user.buyer_properties['education'] }}</p>
+                      <h3>Education, Certifications and Training</h3>
+                      <p>{{ user.buyer_properties['education'] | nl2br }}</p>
                     {% endif %}
 
                     {% if user.buyer_properties['awards'] != blank %}
-                      <div class='mid-h'>Awards and Honors</div>
-                      <p>{{ user.buyer_properties['awards'] }}</p>
+                      <h3>Awards and Honors</h3>
+                      <p>{{ user.buyer_properties['awards'] | nl2br  }}</p>
                     {% endif %}
 
                     {% if user.buyer_properties['pro_service'] != blank %}
-                      <div class='mid-h'>Professional Service</div>
-                      <p>{{ user.buyer_properties['pro_service'] }}</p>
+                      <h3>Professional Service</h3>
+                      <p>{{ user.buyer_properties['pro_service'] | nl2br  }}</p>
                     {% endif %}
 
                     {% if user.buyer_properties['teaching'] != blank %}
-                      <div class='mid-h'>Teaching, Writing and Publishing</div>
-                      <p>{{ user.buyer_properties['teaching'] }}</p>
+                      <h3>Teaching, Writing and Publishing</h3>
+                      <p>{{ user.buyer_properties['teaching'] | nl2br  }}</p>
                     {% endif %}
 
                     {% if links.size > 0 %}
-                      <div class='mid-h'>Links to whitepapers, articles</div>
+                      <h3>Links to whitepapers, articles</h3>
                       <ul>
                         {% for link in links %}
                           <li><a href="{{ link.properties['url_link'] }}" target="_blank">{{ link.properties['url_link'] }}</a></li>
@@ -117,23 +111,23 @@
                     {% endif %}
 
                     {% if user.buyer_properties['employers'] != blank %}
-                      <div class='mid-h'>Prior Employers or Clients</div>
-                      <p>{{ user.buyer_properties['employers'] }}</p>
+                      <h3>Prior Employers or Clients</h3>
+                      <p>{{ user.buyer_properties['employers'] | nl2br  }}</p>
                     {% endif %}
 
                     {% if user.buyer_properties['accomplishments'] != blank %}
-                      <div class='mid-h'>Special Projects and Accomplishments</div>
-                      <p>{{ user.buyer_properties['accomplishments'] }}</p>
+                      <h3>Special Projects and Accomplishments</h3>
+                      <p>{{ user.buyer_properties['accomplishments'] | nl2br  }}</p>
                     {% endif %}
 
                     {% if user.buyer_properties['giving_back'] != blank %}
-                      <div class='mid-h'>Community and Giving Back Interests</div>
-                      <p>{{ user.buyer_properties['giving_back'] }}</p>
+                      <h3>Community and Giving Back Interests</h3>
+                      <p>{{ user.buyer_properties['giving_back'] | nl2br  }}</p>
                     {% endif %}
 
                     {% if user.buyer_properties['hobbies'] != blank %}
-                      <div class='mid-h'>Brief Personal Details (Family and Hobbies)</div>
-                      <p>{{ user.buyer_properties['hobbies'] }}</p>
+                      <h3>Brief Personal Details (Family and Hobbies)</h3>
+                      <p>{{ user.buyer_properties['hobbies'] | nl2br  }}</p>
                     {% endif %}
 
 
