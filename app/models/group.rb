@@ -43,6 +43,7 @@ class Group < ActiveRecord::Base
   scope :by_search_query, lambda { |query|
     where('name ilike ? or description ilike ? or summary ilike ?', query, query, query)
   }
+  scope :active, -> { where('groups.draft_at IS NULL') }
 
   with_options unless: ->(record) { record.draft? } do |options|
     options.validates :transactable_type, presence: true

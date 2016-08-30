@@ -13,6 +13,7 @@ module.exports = class PaymentModalController
       $.ajax
         url: @paymentForm.attr('action')
         method: 'POST'
+        dataType: 'json',
         data: @paymentForm.serialize()
         success: (response) =>
           if response.saved

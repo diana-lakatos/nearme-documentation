@@ -7,6 +7,8 @@ class LineItem::Transactable < LineItem
 
   before_validation :set_unit_price, if: lambda { line_itemable }
 
+  validate :validate_unit_price_cents
+
   def transactable
     line_item_source
   end
@@ -109,6 +111,9 @@ class LineItem::Transactable < LineItem
   end
 
   private
+  def validate_unit_price_cents
+    errors.add :unit_price, :equal_to, count: 0 if !self.unit_price_cents.zero? && self.line_itemable && self.line_itemable.is_free_booking?
+  end
 
   def calculate_fee(fee_percent)
     (total_price * fee_percent.to_f / BigDecimal(100)).to_money(currency).cents

@@ -161,7 +161,7 @@ class ListingsController < ApplicationController
   end
 
   def restricted_access?
-    @listing.transactable_type.access_restricted_to_invited?
+    not_community? && @listing.transactable_type.access_restricted_to_invited?
   end
 
   # Community methods
@@ -171,7 +171,7 @@ class ListingsController < ApplicationController
   end
 
   def redirect_if_draft
-    redirect_to root_url, notice: I18n.t('draft_project') if @transactable.draft.present? && @project.creator != current_user
+    redirect_to root_url, notice: I18n.t('draft_project') if @transactable.draft.present? && @transactable.creator != current_user
   end
 
   def build_comment

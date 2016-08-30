@@ -84,6 +84,11 @@ module Payable
       service_fee_line_items.any? && !service_fee_amount_guest_cents.zero?
     end
 
+    def transactable_line_items_attributes=(tli_attrs)
+      tli_attrs.each {|k, v| v.merge!(line_itemable: self) }
+      super(tli_attrs)
+    end
+
     def payment_attributes=(payment_attrs={})
       super(payment_attrs.merge(shared_payment_attributes))
     end

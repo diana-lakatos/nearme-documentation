@@ -56,7 +56,6 @@ class Dashboard::Company::PaymentSubscriptionsController <  Dashboard::BaseContr
     end
   end
 
-
   def payment_subscription_params
     params.require(:payment_subscription).permit(secured_params.payment_subscription)
   end
