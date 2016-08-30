@@ -15,7 +15,9 @@
     %div{ class: new_cc_klass }
       = f.simple_fields_for :credit_card_attributes, credit_card do |form|
 
-        = form.error :base
+        .has-error
+          = f.error :base
+          = form.error :base
 
         .nm-new-credit-card-form-header
           %h3= t 'payments.heading'

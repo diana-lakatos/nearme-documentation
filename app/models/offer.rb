@@ -86,6 +86,7 @@ class Offer < Order
 
   def charge_and_confirm!
     if (payment_subscription.present? || (payment.authorize && payment.capture!)) && confirm!
+      create_payment_subscription! if payment_subscription.blank?
       transactable.start!
       reject_related_offers!
       withdraw_invitations!
@@ -93,6 +94,17 @@ class Offer < Order
 
       true
     end
+  end
+
+  def create_payment_subscription!
+    create_payment_subscription({
+      credit_card_id: payment.credit_card_id,
+      payment_method_id: payment.payment_method_id,
+      payment_gateway_id: payment.payment_gateway_id,
+      company_id: payment.company_id,
+      test_mode: payment.payment_gateway_mode == 'test',
+      payer_id: payment.payer_id,
+    })
   end
 
   def disable_transactable!
