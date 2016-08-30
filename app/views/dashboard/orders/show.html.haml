@@ -9,7 +9,7 @@
 .panel
   .panel-body
     .orders-a
-      = render 'checkout/form', disabled: true
+      = render @order
 
 - content_for :script do
   :javascript

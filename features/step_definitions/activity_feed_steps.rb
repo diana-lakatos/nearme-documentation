@@ -71,13 +71,12 @@ end
 
 When(/^I visit project page$/) do
   @resource = @project
-  @resource_path = project_path(@project)
-  visit @resource_path
+  visit @project.decorate.show_url
 end
 
 When(/^I visit project page with status$/) do
   @resource = @project
-  @resource_path = project_path(@project)
+  @resource_path = @project.decorate.show_url
   @project.creator.user_status_updates.create({"text"=>"This is the project status XYZZ", "topic_ids"=>[""], "updateable_id"=>@project.id, "updateable_type"=>"Project"})
   visit @resource_path
 end

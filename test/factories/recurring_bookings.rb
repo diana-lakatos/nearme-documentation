@@ -6,7 +6,7 @@ FactoryGirl.define do
     company { transactable.try(:company) || Factory.build(:company) }
     creator { transactable.creator }
 
-    association :payment_subscription
+    payment_subscription { FactoryGirl.build(:payment_subscription, company: company) }
     start_on { Time.zone.now.next_week }
     quantity 1
     state 'inactive'
