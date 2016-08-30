@@ -98,3 +98,41 @@ To access the Instance you need locally, find its domain with the 'lvh.me' part 
 For easy find, use: ```  Domain.where(‘name like ?’, “%lvh.me”).pluck(:name) ```
 
 Remember about port in url address: ``` <mp>.lvh.me:3000 ```
+
+### DEPLOY Procedure
+
+The code approved by QA is inside staging branch. Go ahead and make sure that you have newest code:
+```
+git fetch --all
+git checkout master
+git merge origin/staging
+```
+Then check what's the last tag:
+```
+git describe
+```
+It will return version in a format x.y.z. If you release hotfix, you should increment z, otherwise 99% of cases you want to increment y. If release introduced some breaking changes or is a very big initiative, like Spree Removal or upgrade Rails version, increment x (not supported via rake task described below though).
+
+Make sure that proper next version is added in jira: https://near-me.atlassian.net/projects/NM?selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=all .
+If it is regular deploy, the next thing to do is to run this command [ for hotfix just use release_hotfix without argument ]:
+```
+rake jira:release_sprint[X] # for example rake jira:release_sprint[50] to release sprint with ID 50
+```
+where X is ID of a sprint - you can check what's the ID for example while searching - https://near-me.atlassian.net/issues/ - just type in `Sprint = "NM Sprint ..." where ... is the sprint number, and when you click on autocomplete it will transform sprint name into ID.
+
+The script will first check if all commits have corresponding jira card, and if so, if the jira card is assigned to proper sprint. That's why it's so important to start each commit with NM-XXX, where XXX is a proper number. Then, it will fetch list of all cards assigned to sprint from jira and will ask you question whether it is part of a sprint or not. If not, you will be able to choose whether to move it to the next sprint or not.
+
+Once you are done, add manually proper tag via
+```
+git tag -a x.y+1.z -m 'Sprint ... and other description'
+git push --tags
+```
+Make sure you have pushed master as well: `git push origin master` and proceed with deploy:
+```
+bin/nearme deploy -r master -e nm-production
+bin/nearme deploy -r master -e nm-oregon
+```
+Go to jira and:
+1) Mark version as released
+2) Go to Boards -> View all boards -> choose 'Configure' on current -> update quick filters
+3) merge code -> master to staging, current_sprint to staging, staging to current_sprint etc
