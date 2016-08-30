@@ -2,10 +2,6 @@ class Api::V3::InstancesController < Api::BaseController
   skip_before_filter :verified_api_request?
   skip_before_action :require_authorization
 
-  # temporary disable forcing SSL on this controller
-  # TODO remove before releasing to production
-  force_ssl if: -> { false }
-
   def index
     render json: serialized_collection
   end
@@ -23,8 +19,7 @@ class Api::V3::InstancesController < Api::BaseController
 
   def valid_token?
     request
-      .headers
-      .fetch('X-APPLICATION-API-TOKEN') == ENV['APPLICATION_API_TOKEN']
+      .headers['X-APPLICATION-API-TOKEN'] == ENV.fetch('APPLICATION_API_TOKEN')
   end
 
   def factory
@@ -176,7 +171,7 @@ class InstanceFactory
     instance.locales.create! code: instance.primary_locale, primary: true
 
     WorkflowStepJob.perform(WorkflowStep::InstanceWorkflow::Created, instance.id, user.id, @password)
-
     instance
+
   end
 end

@@ -68,7 +68,7 @@
           - else
             = render partial: 'search/mixed/autocomplete_category_filter', locals: { category: category }
 
-        = render partial: 'search/shared/date_range'
+        = render partial: 'search/shared/date_range', locals: { date_start: @searcher.search.display_dates[:start], date_end: @searcher.search.display_dates[:end] }
         - @searcher.filterable_custom_attributes.each do |ca|
           - if ca.valid_values_translated.any?
             = render partial: 'search/mixed/filter', locals: { header_name: t(ca.label_key), selected_values: @searcher.search.lg_custom_attributes[ca.name.to_sym] || [], input_name: "lg_custom_attributes[#{ca.name}][]", options: ca.valid_values_translated, name: ca.name }
