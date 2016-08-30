@@ -147,11 +147,13 @@ class RegistrationsController < Devise::RegistrationsController
     build_approval_request_for_object(resource) unless resource.is_trusted?
     all_params = user_params
     all_params[:default_profile_attributes].try(:delete, :customizations_attributes)
+    all_params[:buyer_profile_attributes].try(:delete, :customizations_attributes)
+    all_params[:seller_profile_attributes].try(:delete, :customizations_attributes)
 
     # We remove approval_requests_attributes from the params used to update the user
     # to avoid duplication, as the approval request is already set by assign_attributes
     # and build_approval_request_for_object
-    if resource.update_with_password(user_params.except(:approval_requests_attributes))
+    if resource.update_with_password(all_params.except(:approval_requests_attributes))
       if @user.try(:language).try(:to_sym) != I18n.locale
         I18n.locale = @user.try(:language).try(:to_sym) || :en
       end
