@@ -480,6 +480,7 @@ namespace :uot do
           attribute_type: 'string',
           html_tag: 'input',
           required: "1",
+          validation_only_on_update: true,
           public: true,
           searchable: false
       })
