@@ -5,10 +5,14 @@ class DataSourceContent < ActiveRecord::Base
 
   belongs_to :data_source
 
-  delegate :fields, to: :data_source
+  has_many :page_data_source_contents
 
   def to_liquid
-    DataSourceContentDrop.new(self)
+    @data_source_content_drop ||= DataSourceContentDrop.new(self)
+  end
+
+  def fields
+    data_source.fields
   end
 end
 

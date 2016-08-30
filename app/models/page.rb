@@ -27,6 +27,7 @@ class Page < ActiveRecord::Base
   before_save :convert_to_html, :if => lambda { |page| page.content.present? && (page.content_changed? || page.html_content.blank?) }
 
   has_many :data_sources, as: :data_sourcable
+  has_many :page_data_source_content
 
   def to_liquid
     @page_drop ||= PageDrop.new(self)

@@ -100,7 +100,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
   end
 
   def paid?
-    is_free_booking? ? true : !!payment.try(:paid?)
+    total_amount_cents.zero? ? true : !!payment.try(:paid?)
   end
 
   def update_payment
