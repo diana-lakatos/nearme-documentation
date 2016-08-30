@@ -1338,6 +1338,7 @@ en:
       close: 'Close modal'
 
     nav:
+      title: 'Dashboard'
       orders: 'My Orders'
       credit_cards: 'Credit Cards'
       user_reservations: 'My Bookings'
@@ -2822,4 +2823,3 @@ en:
 
   placeholders:
     image_unavailable_or_still_processing: "Photos Unavailable or Still Processing"
-

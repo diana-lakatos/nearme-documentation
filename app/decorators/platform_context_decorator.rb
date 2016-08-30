@@ -1,6 +1,6 @@
 class PlatformContextDecorator
 
-  delegate :white_label_company, :instance, :theme, :partner, :domain, :white_label_company_user?,
+  delegate :white_label_company, :instance, :theme, :partner, :domain, :white_label_company_user?, :project_space_wizard_path,
            :platform_context_detail, :secured_constraint, to: :platform_context
 
   delegate :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :instagram_url,
@@ -8,9 +8,9 @@ class PlatformContextDecorator
            :hero_image, :logo_image, :favicon_image, :icon_image, :icon_retina_image, :call_to_action, :is_company_theme?,
            :content_holders, to: :theme
 
-  delegate :bookable_noun, :lessor, :lessee, :name, :buyable?, :bookable?, :biddable?,
-           :transactable_types, :project_types, :wish_lists_icon_set, :seller_attachments_enabled?,
-           :wish_lists_enabled?, :webhook_token, :enable_geo_localization, to: :instance
+  delegate :bookable_noun, :lessor, :lessee, :name, :buyable?, :bookable?, :projectable?, :biddable?,
+           :transactable_types, :project_types, :wish_lists_icon_set, :seller_attachments_enabled?, :action_rfq?,
+           :wish_lists_enabled?, :active_rating_systems_present?, :webhook_token, :enable_geo_localization, to: :instance
 
   def initialize(platform_context)
     @platform_context = platform_context

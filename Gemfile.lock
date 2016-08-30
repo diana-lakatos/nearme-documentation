@@ -819,8 +819,6 @@ GEM
     shoulda-context (1.2.1)
     shoulda-matchers (2.7.0)
       activesupport (>= 3.0.0)
-    simple-navigation (4.0.3)
-      activesupport (>= 2.3.2)
     simple_form (3.1.0)
       actionpack (~> 4.0)
       activemodel (~> 4.0)
@@ -1092,7 +1090,6 @@ DEPENDENCIES
   selenium-webdriver
   shippo
   shoulda
-  simple-navigation
   simple_form (~> 3.1)
   simplecov
   simplecov-rcov-text
@@ -1121,6 +1118,9 @@ DEPENDENCIES
   webmock (= 1.17.4)
   wicked
   will_paginate
+
+RUBY VERSION
+   ruby 2.2.4p230
 
 BUNDLED WITH
    1.13.0.rc.1

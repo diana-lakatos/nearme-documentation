@@ -3,6 +3,7 @@ class UserDrop < BaseDrop
   include ActionView::Helpers::AssetUrlHelper
   include CategoriesHelper
   include ClickToCallButtonHelper
+  include ReservationsHelper
 
   # id
   #   unique id of the user
@@ -48,12 +49,22 @@ class UserDrop < BaseDrop
   #   average rating of this user as a seller
   # default_wish_list
   #   return default wish list
+  # external_id
+  #   id of a user in a third party system, used by bulk upload
+  # registration_completed?
+  #   returns string / nil depending on first company completion date
+  # has_company?
+  #   returns whether user has company
+  # company_id
+  #   returns id of first user company
+  # reservations_count
+  #   returns number of reservations
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of,
-    :with_mutual_friendship_source, :first_name, :middle_name, :last_name,
+    :with_mutual_friendship_source, :first_name, :middle_name, :last_name, :reservations_count,
     :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
     :country_name, :phone, :current_address, :is_trusted?, :reservations,
-    :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
-    :seller_average_rating, :default_wish_list, to: :source
+    :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation, :has_active_credit_cards?,
+    :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :has_buyer_profile?, :seller_profile, to: :source
 
   # string containing the location of the user making use of the various fields
   # the user has filled in for his profile
@@ -186,7 +197,7 @@ class UserDrop < BaseDrop
   end
 
   def show_blog_tab?
-    PlatformContext.current.instance.blogging_enabled?(@source) && @source.blog.present? && @source.blog.enabled? && !hide_tab?('blog_posts')
+    PlatformContext.current.instance.blogging_enabled?(@source) && @source.blog.try(:enabled?) && !hide_tab?('blog_posts')
   end
 
   def published_posts
@@ -292,7 +303,7 @@ class UserDrop < BaseDrop
   end
 
   def has_active_blog?
-    PlatformContext.current.instance.blogging_enabled?(@source) && @source.blog.present? && @source.blog.enabled?
+    PlatformContext.current.instance.blogging_enabled?(@source)
   end
 
   # returns hash of categories { "<name>" => { "name" => '<translated_name', "children" => [<collection of chosen values] } }
@@ -403,6 +414,27 @@ class UserDrop < BaseDrop
   # have a not operator
   def only_seller_profile?
     !self.has_buyer_profile? && self.has_seller_profile?
+  end
+
+  def has_verified_merchant_account
+    @source.companies.first.try(:merchant_accounts).try(:any?) { |ma| ma.verified? }
+  end
+
+  def has_company?
+    @source.companies.size > 0
+  end
+
+  def company_id
+    has_company? && @source.companies.first.id
+  end
+
+  def registration_completed?
+    !!@source.registration_completed?
+  end
+
+  def reservations_count
+    count = reservations_count_for_user(@source)
+    count > 0 ? count : nil
   end
 
   private

@@ -115,7 +115,8 @@ module.exports = class Modal
 
     # Bind to the overlay to close the modal
     @overlay.bind 'click', (e) =>
-      @hide() unless @overlayCloseDisabled
+      if !@overlayCloseDisabled
+        @hide()
 
   setCallback : (callback) ->
     @callback = callback

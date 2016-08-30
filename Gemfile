@@ -232,8 +232,6 @@ gem 'parser'
 
 gem 'routing-filter', '~> 0.5.0'
 
-gem 'simple-navigation'
-
 gem 'sprockets'
 gem 'sprockets-rails'
 gem 'cocoon'

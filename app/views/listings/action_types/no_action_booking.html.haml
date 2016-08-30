@@ -20,7 +20,7 @@
           - rfq_class = (@action_type.is_free_booking? ? 'btn btn-green btn-large' :  'btn btn-gray-light btn-large offer-button span6' )
           - rfq_label = (@action_type.is_free_booking? ?  t('reservations.rfq') : t('reservations.offer'))
         .book
-          = simple_form_for :order, url: review_listing_recurring_bookings_path(@listing), html: { id: "reservation_request_form_#{@listing.id}" } do |f|
+          = simple_form_for :order, url: review_listing_recurring_bookings_path(@listing), html: { id: "reservation_request_form_#{@listing.id}", class: 'triggers-show-modal' } do |f|
             = f.hidden_field :listing_id, value: @listing.id
             = render 'listings/booking_module_call_to_actions', listing: @listing, book_hash: book_hash.stringify_keys, rfq_class: rfq_class, rfq_label: rfq_label
     .clearfix
