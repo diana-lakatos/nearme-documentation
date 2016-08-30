@@ -171,7 +171,7 @@ class ListingsController < ApplicationController
   end
 
   def redirect_if_draft
-    redirect_to root_url, notice: I18n.t('draft_project') if @transactable.draft.present? && @project.creator != current_user
+    redirect_to root_url, notice: I18n.t('draft_project') if @transactable.draft.present? && @transactable.creator != current_user
   end
 
   def build_comment
