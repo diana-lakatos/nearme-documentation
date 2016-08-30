@@ -357,13 +357,13 @@ DNM.registerInitializer(function(){
 
 /* Search result pages */
 DNM.registerInitializer(function(){
-    $(document).on('init:searchresults.nearme', function(){
-        require.ensure(['./sections/search/search_controller'], function(require){
+    $(document).on('init:list:searchresults.nearme', function(){
+        require.ensure(['./sections/search/search_list_search_controller'], function(require){
             var
-                SearchController = require('./sections/search/search_controller'),
+                SearchListSearchController = require('./sections/search/search_list_search_controller'),
                 form = $('#listing_search form'),
                 container = $('#content.search');
-            return new SearchController(form, container);
+            return new SearchListSearchController(form, container);
         });
     });
 

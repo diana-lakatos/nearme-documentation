@@ -1,5 +1,6 @@
 = render 'search/meta_tags'
 - no_footer!
+
 - content_for :hero do
   = render 'search/header'
   #search-result-google-map{:'data-marker' => image_path("components/map-pin.png")}
@@ -28,4 +29,4 @@
     = render 'search/footer'
 
 - content_for :domready do
-  $(document).trigger('init:searchresults.nearme');
+  $(document).trigger('init:list:searchresults.nearme');

@@ -18,7 +18,7 @@ class InstanceType::Searcher::GeolocationSearcher::Location
 
   def max_price
     return 0 if !@transactable_type.show_price_slider || @results.blank?
-    @max_fixed_price ||= (@results.map(&:listings).flatten.map(&:fixed_price_cents).flatten.compact.max || 0).to_f / 100
+    @max_fixed_price ||= (@results.map(&:listings).flatten.map(&:action_type).map(&:pricings).flatten.map(&:price_cents).compact.max).to_f / 100
     @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
   end
 
