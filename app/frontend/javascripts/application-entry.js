@@ -648,9 +648,9 @@ DNM.registerInitializer(function(){
         return;
     }
 
-    require.ensure(['socialite-js/socialite.js', './new_ui/modules/social_buttons'], function(require){
+    require.ensure(['./vendor/socialite', './new_ui/modules/social_buttons'], function(require){
         var SocialButtons = require('./new_ui/modules/social_buttons');
-        require('socialite-js/socialite.js');
+        require('./vendor/socialite');
 
         return new SocialButtons(wrapper, window.Socialite);
     });
@@ -659,7 +659,7 @@ DNM.registerInitializer(function(){
 DNM.registerInitializer(function(){
     $(document).on('init:tooltips.nearme', function(e, containerElement) {
         $(containerElement).find('[data-toggle="tooltip"]').tooltip({
-            placement: 'right',
+            placement: 'right'
         });
     });
 });

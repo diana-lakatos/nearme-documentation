@@ -25,7 +25,7 @@ module.exports = function(gulp, config){
             }
 
 
-            gulp.src([path.join(config.paths.root, './bower.json'), path.join(config.paths.root, './package.json')])
+            gulp.src([path.join(config.paths.root, './package.json')])
                 .pipe(plumber())
                 .pipe(bump({ version: version }))
                 .pipe(gulp.dest(config.paths.root));

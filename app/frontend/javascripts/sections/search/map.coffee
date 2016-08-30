@@ -1,4 +1,4 @@
-asEvented = require('asEvented');
+asEvented = require('asevented');
 MarkerClusterer = require('../../../vendor/markerclusterer');
 SmartGoogleMap = require('../../components/smart_google_map');
 GoogleMapPopover = require('../../components/google_map_popover')
