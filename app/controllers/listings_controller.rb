@@ -161,7 +161,7 @@ class ListingsController < ApplicationController
   end
 
   def restricted_access?
-    @listing.transactable_type.access_restricted_to_invited?
+    not_community? && @listing.transactable_type.access_restricted_to_invited?
   end
 
   # Community methods
