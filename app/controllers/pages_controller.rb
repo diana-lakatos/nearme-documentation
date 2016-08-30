@@ -8,7 +8,9 @@ class PagesController < ApplicationController
     @page = platform_context.theme.pages.find_by(slug: Page.possible_slugs(params[:slug], params[:format])) if @page.nil?
     raise Page::NotFound unless @page.present?
 
-    @data_source_contents = DataSource.where(label: [params[:slug], params[:slug2], params[:slug3]].compact.join('/')).first.try(:data_source_contents).try(:paginate, page: 1, per_page: 20)
+    @data_source_contents_scope = DataSourceContent.joins(:page_data_source_contents).where(page_data_source_contents: { page: @page, slug: [nil, [params[:slug], params[:slug2], params[:slug3]].compact.join('/')] } )
+    @data_source_last_update = @data_source_contents_scope.maximum(:updated_at)
+    @data_source_contents = @data_source_contents_scope.paginate(page: params[:page].to_i.zero? ? 1 : params[:page].to_i, per_page: 20)
 
     if @page.redirect?
       redirect_to @page.redirect_url, status: @page.redirect_code

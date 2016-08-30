@@ -30,7 +30,7 @@ class AnimalistRakeHelper
 
         puts "\tCreating page with slug: #{page_slug}"
 
-        data_source = page.data_sources.where(type: 'DataSource::CustomSource', label: "#{data["path"][1..-1]}").first_or_create! do |ds|
+        data_source = page.data_sources.where(type: 'DataSource::CustomSource', label: data["path"][1..-1]).first_or_create! do |ds|
           puts "\t\tAssociating data source with label: #{data["path"]}"
           ds.settings = { endpoint: "http://api.ddn.io/v1#{data["path"]}?domain=animalist.com" }
           ds.data_source_contents.where(external_id: data["id"]).first_or_initialize do |dsc|

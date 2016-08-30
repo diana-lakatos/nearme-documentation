@@ -421,9 +421,9 @@ ActiveRecord::Schema.define(version: 20160826004551) do
     t.integer  "charge_type_target_id"
     t.string   "charge_type_target_type"
     t.integer  "percent"
-    t.datetime "deleted_at"
     t.string   "type"
     t.string   "charge_event"
+    t.string   "deleted_at"
   end
 
   add_index "charge_types", ["charge_type_target_id", "charge_type_target_type"], name: "act_target", using: :btree
@@ -1348,9 +1348,9 @@ ActiveRecord::Schema.define(version: 20160826004551) do
     t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
+    t.boolean  "enable_geo_localization",                                                           default: true
     t.string   "orders_received_tabs"
     t.string   "my_orders_tabs"
-    t.boolean  "enable_geo_localization",                                                           default: true
     t.boolean  "force_fill_in_wizard_form"
   end
 
@@ -1692,6 +1692,17 @@ ActiveRecord::Schema.define(version: 20160826004551) do
   add_index "orders", ["transactable_id"], name: "index_orders_on_transactable_id", using: :btree
   add_index "orders", ["transactable_pricing_id"], name: "index_orders_on_transactable_pricing_id", using: :btree
   add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
+
+  create_table "page_data_source_contents", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "page_id"
+    t.integer  "data_source_content_id"
+    t.string   "slug"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "page_data_source_contents", ["instance_id", "page_id", "data_source_content_id", "slug"], name: "pdsc_on_foreign_keys", using: :btree
 
   create_table "pages", force: :cascade do |t|
     t.string   "path",                      limit: 255,                 null: false
