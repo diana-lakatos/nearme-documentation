@@ -126,6 +126,8 @@ $wish-list-item-padding: 20px;
 }
 
 .wish-list__item-user {
+    display: block;
+
     .link {
         position: relative;
         padding: 0 0 100%;
