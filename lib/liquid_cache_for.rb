@@ -26,7 +26,6 @@ module Liquid
         end
         id_keys = (v.is_a?(Array) ? v.map{|a| a.try(:id).to_s}.join('_') : v.try(:id).to_s)
         date_keys = (v.is_a?(Array) ? v.map{|a| a.try(:updated_at).to_s}.join('_') : v.try(:updated_at).to_s)
-        binding.pry
         generated_keys << k + ((id_keys + date_keys).presence || v)
       end
       Digest::MD5.hexdigest(generated_keys.join('-'))
