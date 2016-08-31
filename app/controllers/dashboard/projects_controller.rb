@@ -5,7 +5,7 @@ class Dashboard::ProjectsController < Dashboard::BaseController
 
   def index
     @transactables = @transactable_type.transactables.joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id').
-      where('transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)', current_user.id, current_user.id).
+      where('transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)', current_user.id, current_user.id).
       search_by_query([:name, :description, :summary], params[:query]).
       group('transactables.id').order('created_at DESC').paginate(page: params[:page], per_page: 20)
   end
