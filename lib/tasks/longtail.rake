@@ -14,10 +14,10 @@ class LongtailRakeHelper
   class << self
 
     def parse_keywords!(page_number = 1)
-      url = URI.parse("http://api-staging.longtailux.com/keywords/seo?page_limit=1000")
+      url = URI.parse("http://api-staging.longtailux.com/keywords/seo?page_limit=10000")
       http = Net::HTTP.new(url.host, url.port)
       req = Net::HTTP::Get.new(url)
-      req.add_field("Authorization", "Bearer 892e8d1431c5fb62275d753dcda89756")
+      req.add_field("Authorization", "Bearer bd6502da3bc87081bb32be0b7187534c")
       response = http.request(req)
       keywords = JSON.parse(response.body)
 
@@ -30,7 +30,9 @@ class LongtailRakeHelper
 
       wait = 0
       keywords["data"].each do |keyword|
-        if ((wait+=1) % 10) == 0
+        wait += 1
+        if wait == 10
+          wait = 0
           puts "waiting 2secs"
           sleep 2
         end
@@ -39,10 +41,16 @@ class LongtailRakeHelper
         url = URI.parse(host)
         http = Net::HTTP.new(url.host, url.port)
         req = Net::HTTP::Get.new(url)
-        req.add_field("Authorization", "Bearer 892e8d1431c5fb62275d753dcda89756")
+        req.add_field("Authorization", "Bearer bd6502da3bc87081bb32be0b7187534c")
         response = http.request(req)
-        if String === response.body
+        while response.body == 'Too Many Attempts.'
+          puts "Too many attempts, retrying after 5secs..."
+          sleep(5)
+          response = http.request(req)
+        end
+        unless response.body =~ /^{"data"/
           puts "\tSkipping keyword: #{host}"
+          puts response.body
           next
         end
 
@@ -50,10 +58,27 @@ class LongtailRakeHelper
           puts "\tNew data source content for #{keyword['attributes']['slug']}"
           dsc.external_id = keyword['id']
           dsc.externally_created_at = nil
-          dsc.json_content = JSON.parse(response.body)
+          parsed_body = JSON.parse(response.body)
+          parsed_body['included'].each_with_index do |item, index|
+            transactable = Transactable.with_deleted.find_by(id: item['attributes']['guid'])
+            if transactable.nil?
+              puts "\t\tSkipping additional attributes - no transactable"
+              next
+            else
+              puts "\t\tFetching additional attributes"
+            end
+            parsed_body['included'][index]['attributes']['price'] = transactable.action_type.pricings.first.price.to_s
+            parsed_body['included'][index]['attributes']['photos'] = transactable.photos_metadata.try(:map) { |p| p['space_listing'] }
+            parsed_body['included'][index]['attributes']['address'] = transactable.formatted_address
+            transactable.properties.to_h.each do |k, v|
+              parsed_body['included'][index]['attributes'][k] = v
+            end
+            parsed_body['included'][index]['attributes']['categories'] = transactable.to_liquid.categories
+          end
+          dsc.json_content = parsed_body
         end
-        @page.page_data_source_content.where(data_source_content: data_source_content, slug: 'storage').first_or_create!
-        @page.page_data_source_content.where(data_source_content: data_source_content, slug: keyword['attributes']['category_url'][1..-1]).first_or_create!
+        #@page.page_data_source_content.where(data_source_content: data_source_content, slug: 'storage').first_or_create!
+        #@page.page_data_source_content.where(data_source_content: data_source_content, slug: keyword['attributes']['category_url'][1..-1]).first_or_create!
         @page.page_data_source_content.where(data_source_content: data_source_content, slug: keyword['attributes']['url'][1..-1]).first_or_create!
 
       end
@@ -182,9 +207,11 @@ class LongtailRakeHelper
                             <div class="location-photos">
                               <div class="carousel" id="location-gallery-{{ listing.attributes.guid }}" data-interval="false">
                                 <div class="carousel-inner">
-                                  <div class="item">
-                                    <a href="{{ listing.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp"><img src="{{ photo.space_listing_url }}" alt="{{ listing.attributes.name }}"></a>
-                                  </div>
+                                  {% for photo in listing.attributes.photos %}
+                                    <div class="item">
+                                      <a href="{{ listing.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp"><img src="{{ photo }}" alt="{{ listing.attributes.name }}"></a>
+                                    </div>
+                                  {% endfor %}
                                 </div>
 
                                 <div class="carousel-nav">
@@ -211,21 +238,21 @@ class LongtailRakeHelper
                                 <p>Space Type</p>
                                 <div>
                                   <i class="fa fa-building-o"></i>
-                                  <p>{{ listing.attributes.space_type }}</p>
+                                  <p>{{ listing.attributes.categories['Storage Type']['children'].first }}</p>
                                 </div>
                               </div>
                               <div>
                                 <p>Space Area</p>
                                 <div>
                                   <i class="fa fa-square-o"></i>
-                                  <p>{{ listing.attributes.space_area }} </p>
+                                  <p>{{ listing.attributes.size_of_space }} </p>
                                 </div>
                               </div>
                               <div>
                                 <p>Space Access</p>
                                 <div>
                                   <i class="fa fa-key"></i>
-                                  <p>{{ listing.attributes.space_access }}</p>
+                                  <p>{{ listing.attributes.categories['Access']['children'].first }}</p>
                                 </div>
                               </div>
                               <div class="price-and-types hidden-xs ">
