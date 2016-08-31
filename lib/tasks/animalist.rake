@@ -5,7 +5,7 @@ namespace :animalist do
   desc 'Parses data from their api and creates what needs to be created'
   task setup: :environment do
     Instance.find(201).set_context!
-    AnimalistRakeHelper.parse_episodes!
+    AnimalistRakeHelper.go!
   end
 end
 
@@ -13,7 +13,22 @@ class AnimalistRakeHelper
 
   class << self
 
+    def go!
+      InstanceView.where(instance_id: PlatformContext.current.instance.id, path: 'tag_page_content', handler: 'liquid', format: 'html', partial: true, view_type: 'view').destroy_all
+      InstanceView.where(instance_id: PlatformContext.current.instance.id, path: 'tag_page_content', handler: 'liquid', format: 'html', partial: true, view_type: 'view').create! do |iv|
+        iv.body = tag_page_content
+        iv.locales << Locale.all
+      end
+      InstanceView.where(instance_id: PlatformContext.current.instance.id, path: 'show_page_content', handler: 'liquid', format: 'html', partial: true, view_type: 'view').destroy_all
+      InstanceView.where(instance_id: PlatformContext.current.instance.id, path: 'show_page_content', handler: 'liquid', format: 'html', partial: true, view_type: 'view').create! do |iv|
+        iv.body = page_content
+        iv.locales << Locale.all
+      end
+      parse_episodes!
+    end
+
     def parse_episodes!(page_number = 1)
+
       url = "http://api.ddn.io/v1/episodes/#{page_number}?domain=animalist.com"
       uri = URI(url)
       response = JSON.parse(Net::HTTP.get(uri))
@@ -24,37 +39,35 @@ class AnimalistRakeHelper
 
         page_slug = data["path"].split('/')[1]
         page = Page.where(slug: page_slug, theme_id: PlatformContext.current.theme.id).first_or_initialize(path: page_slug.humanize)
-        page.content = page_content
-        page.css_content = page_css
+        page.content = "{% include 'show_page_content.html' %}"
+        page.css_content = ''
         page.save!
 
-        puts "\tCreating page with slug: #{page_slug}"
-
-        data_source = page.data_sources.where(type: 'DataSource::CustomSource', label: data["path"][1..-1]).first_or_create! do |ds|
-          puts "\t\tAssociating data source with label: #{data["path"]}"
-          ds.settings = { endpoint: "http://api.ddn.io/v1#{data["path"]}?domain=animalist.com" }
-          ds.data_source_contents.where(external_id: data["id"]).first_or_initialize do |dsc|
-            puts "\t\t\tNew data source content #{data["id"]}"
-            dsc.external_id = data["id"]
-            dsc.externally_created_at = data["publishTime"].to_time
-            uri = URI("http://api.ddn.io/v1#{data["path"]}?domain=animalist.com")
-            dsc.json_content =  JSON.parse(Net::HTTP.get(uri))
-          end
-        end
+        puts "\tCreating (if_needed) page with slug: #{page_slug}"
 
         data_source = page.data_sources.where(type: 'DataSource::CustomSource', label: page_slug).first_or_create! do |ds|
-          puts "\t\tAssociating data source with label: #{page_slug}"
-          ds.settings = { endpoint: "http://api.ddn.io/v1/#{page_slug}?domain=animalist.com" }
-          ds.data_source_contents.where(external_id: data["id"]).first_or_initialize do |dsc|
-            puts "\t\t\tNew data source content for #{data["id"]}"
-            dsc.external_id = data["id"]
-            dsc.externally_created_at = data["publishTime"].to_time
-            uri = URI("http://api.ddn.io/v1/#{page_slug}?domain=animalist.com")
-            dsc.json_content = JSON.parse(Net::HTTP.get(uri))
-          end
+          puts "\t\tneeded :)"
+          ds.settings = { endpoint: "http://api.ddn.io/v1#{data["path"]}?domain=animalist.com" }
         end
 
+        puts "\t\tAssociating data source with label: #{data["path"]}"
+        data_source_content = data_source.data_source_contents.where(external_id: data["id"]).first_or_create! do |dsc|
+          puts "\t\t\tNew data source content #{data["id"]}"
+          dsc.external_id = data["id"]
+          dsc.externally_created_at = data["publishTime"].to_time
+          uri = URI("http://api.ddn.io/v1#{data["path"]}?domain=animalist.com")
+          dsc.json_content =  JSON.parse(Net::HTTP.get(uri))
+        end
 
+        page.page_data_source_content.where(data_source_content: data_source_content, slug: page_slug).first_or_create!
+        page.page_data_source_content.where(data_source_content: data_source_content, slug: data["path"][1..-1]).first_or_create!
+        data_source_content.json_content['data']['tags']['data'].each do |tag|
+          tag_page = Page.where(slug: tag['slug'], theme_id: PlatformContext.current.theme.id).first_or_initialize(path: tag['name'])
+          tag_page.content = "{% include 'tag_page_content.html' %}"
+          tag_page.css_content = ''
+          tag_page.save!
+          tag_page.page_data_source_content.where(data_source_content: data_source_content, slug: tag['slug']).first_or_create!
+        end
       end
       if response["data"].any?
         parse_episodes!(page_number + 1)
@@ -63,57 +76,59 @@ class AnimalistRakeHelper
 
     def page_content
       %Q{
-{% assign data_source_content = data_source_contents.first.json_content %}
-{% if params.slug2 == blank %}
-  <div class="main-cols-central">
-    <ul>
-      {% for episode in data_source_content.episodes.data %}
-        <li class="feed-item">
-          <article class="feed-article">
-            <a href="{{ episode.path }}" class="feed-article-anchor"></a>
-            {% assign url = episode.thumbnails.medium.data.url | replace: "\/", "/"%}
-            <div class="picture feed-article-thumbnail" style="background-image: url('{{ url }}')"></div>
-            <div class="feed-article-text">
-              <h2 class="feed-article-title">{{ episode.name }}</h2>
-              <p class="feed-article-subtitle">{{ episode.summary }}</p>
-              <p class="feed-article-postscript"><a href="/{{ data_source_content.show.data.slug }}"><span class="show-name">{{ data_source_content.show.data.name }}</span></a><span class="timestamp"><span> – </span><time datetime="{{ episode.publishTime }}">{{ episode.publishTime }}</time></span></p>
-            </div>
-          </article>
-        </li>
-      {% endfor %}
-    </ul>
 
-    <h2>About</h2>
-    <p>{{ data_source_content.data.show.summary }}</p>
-    <p>{{ data_source_content.data.hosts.data.name }}</p>
-  </div>
-
-{% else %}
-
-  {% assign data_source_content = data_source_content.data %}
-  <div class="main-cols-central">
-    <article clas="episode-article">
-      <p class="episode-meta">
-      <a href="/{{ data_source_content.show.data.slug }}"><span class="show-name">{{ data_source_content.show.data.name }}</span></a>
-      <span class="timestamp"> <span> – </span> <time datetime="{{ data_source_content.publishTime }}">{{ data_source_content.publishTime }}</time> </span>
-      </p>
-      <h1 class="episode-title">{{ data_source_content.name }}
-      </h1>
-      <section class="episode-copy" id="episode-copy">
-        <h4 class="episode-summary">{{ data_source_content.summary }}</h4>
-        <div class="episode-description">{{ data_source_content.description }}</div>
-      </section>
-      <ul class="episode-tags">
-        {% for tag_data in data_source_content.tags.data %}
-          <li>
-            <a href="/{{ tag_data.slug }}"><p>{{ tag_data.name }}</p></a>
+{% assign cache_key = params.page | append: params.slug %}
+{% cache_for data_source_last_update, cache_key %}
+  {% if params.slug2 == blank %}
+    <div class="main-cols-central">
+      <ul>
+        {% for dsc in data_source_contents %}
+          {% assign data_source_content = dsc.json_content.data %}
+          <li class="feed-item">
+            <article class="feed-article">
+              <a href="{{data_source_content.show.data.slug}}/{{ data_source_content.slug }}" class="feed-article-anchor"></a>
+              {% assign url = data_source_content.thumbnails.medium.data.url | replace: "\/", "/"%}
+              <div class="picture feed-article-thumbnail" style="background-image: url('{{ url }}')"></div>
+              <div class="feed-article-text">
+                <h2 class="feed-article-title">{{ data_source_content.name }}</h2>
+                <p class="feed-article-subtitle">{{ data_source_content.summary }}</p>
+                <p class="feed-article-postscript"><a href="/{{ data_source_content.show.data.slug }}"><span class="show-name">{{ data_source_content.show.data.name }}</span></a><span class="timestamp"><span> – </span><time datetime="{{ data_source_content.publishTime }}">{{ data_source_content.publishTime }}</time></span></p>
+              </div>
+            </article>
           </li>
         {% endfor %}
       </ul>
-    </article>
-  </div>
 
-{% endif %}
+      {% will_paginate collection: data_source_contents, inner_window: 1, outer_window: 0, class: '' %}
+
+    </div>
+
+  {% else %}
+    {% assign data_source_content = data_source_contents.first.json_content.data %}
+    <div class="main-cols-central">
+      <article clas="episode-article">
+        <p class="episode-meta">
+        <a href="/{{ data_source_content.show.data.slug }}"><span class="show-name">{{ data_source_content.show.data.name }}</span></a>
+        <span class="timestamp"> <span> – </span> <time datetime="{{ data_source_content.publishTime }}">{{ data_source_content.publishTime }}</time> </span>
+        </p>
+        <h1 class="episode-title">{{ data_source_content.name }}
+        </h1>
+        <section class="episode-copy" id="episode-copy">
+          <h4 class="episode-summary">{{ data_source_content.summary }}</h4>
+          <div class="episode-description">{{ data_source_content.description }}</div>
+        </section>
+        <ul class="episode-tags">
+          {% for tag_data in data_source_content.tags.data %}
+            <li>
+              <a href="/{{ tag_data.slug }}"><p>{{ tag_data.name }}</p></a>
+            </li>
+          {% endfor %}
+        </ul>
+      </article>
+    </div>
+
+  {% endif %}
+{% endcache_for %}
       }
 
     end
@@ -253,6 +268,39 @@ ol, ul {
     padding: 5px 5px 2.5px;
 }
 
+
+      }
+
+    end
+
+    def tag_page_content
+      %Q{
+
+{% assign cache_key = params.page | append: params.slug %}
+{% cache_for data_source_last_update, cache_key %}
+  <h1>{{ params.slug | humanize }}</h1>
+  <div class="main-cols-central">
+    <ul>
+      {% for dsc in data_source_contents %}
+        {% assign data_source_content = dsc.json_content.data %}
+        <li class="feed-item">
+          <article class="feed-article">
+            <a href="{{data_source_content.show.data.slug}}/{{ data_source_content.slug }}" class="feed-article-anchor"></a>
+            {% assign url = data_source_content.thumbnails.medium.data.url | replace: "\/", "/"%}
+            <div class="picture feed-article-thumbnail" style="background-image: url('{{ url }}')"></div>
+            <div class="feed-article-text">
+              <h2 class="feed-article-title">{{ data_source_content.name }}</h2>
+              <p class="feed-article-subtitle">{{ data_source_content.summary }}</p>
+              <p class="feed-article-postscript"><a href="/{{ data_source_content.show.data.slug }}"><span class="show-name">{{ data_source_content.show.data.name }}</span></a><span class="timestamp"><span> – </span><time datetime="{{ data_source_content.publishTime }}">{{ data_source_content.publishTime }}</time></span></p>
+            </div>
+          </article>
+        </li>
+      {% endfor %}
+    </ul>
+
+    {% will_paginate collection: data_source_contents, inner_window: 1, outer_window: 0, class: '' %}
+  </div>
+{% endcache_for %}
 
       }
 
