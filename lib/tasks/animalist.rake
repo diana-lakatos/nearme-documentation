@@ -276,8 +276,8 @@ ol, ul {
     def tag_page_content
       %Q{
 
-{% assign cache_key = params.page | append: params.slug %}
-{% cache_for data_source_last_update, cache_key %}
+{% assign cache_key = "page" | append: params.page | append: "slug" | append: params.slug | append: data_source_last_update  %}
+{% cache_for cache_key %}
   <h1>{{ params.slug | humanize }}</h1>
   <div class="main-cols-central">
     <ul>
