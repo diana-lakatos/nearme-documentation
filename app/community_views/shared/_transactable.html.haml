@@ -20,7 +20,7 @@
       %p.action
         %p{:'data-follow-button' => true}
           - if transactable.try(:pending_collaboration)
-            =render 'shared/collaboration_buttons', transactable: transactable, collaboration: transactable.transactable_collaborators.find(transactable.pending_collaboration)
+            = render 'shared/collaboration_buttons', transactable: transactable, collaboration: transactable.transactable_collaborators.find(transactable.pending_collaboration)
           - else
             = render partial: 'shared/follow_button', locals: { object: transactable, css_class: 'tiny' }
       %h3.hx

@@ -114,7 +114,7 @@ class RegistrationsController < Devise::RegistrationsController
       @topics_followed = @user.feed_followed_topics.paginate(pagination_params)
       @users_followed = @user.feed_followed_users.paginate(pagination_params)
       @followers = @user.feed_followers.paginate(pagination_params)
-      @all_transactables = @user.all_transactables.active.paginate(pagination_params)
+      @all_transactables = @user.all_transactables(true).active.paginate(pagination_params)
       @groups = @user.all_group_collaborated.paginate(pagination_params).decorate
     else
       @company = @user.companies.first
