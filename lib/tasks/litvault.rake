@@ -337,9 +337,9 @@ namespace :litvault do
 
     def expire_cache
       puts "\nClearing cache..."
-      CacheExpiration.send_expire_command 'InstanceView', instance_id: 198
-      CacheExpiration.send_expire_command 'Translation', instance_id: 198
-      CacheExpiration.send_expire_command 'CustomAttribute', instance_id: 198
+      CacheExpiration.send_expire_command 'InstanceView', instance_id: @instance.id
+      CacheExpiration.send_expire_command 'Translation', instance_id: @instance.id
+      CacheExpiration.send_expire_command 'CustomAttribute', instance_id: @instance.id
       Rails.cache.clear
     end
 
@@ -445,6 +445,15 @@ namespace :litvault do
         config["path"] ||= path
 
         OpenStruct.new(config)
+      end
+
+      def create_custom_attribute(object, hash)
+          hash = hash.with_indifferent_access
+          attr = object.custom_attributes.where({
+            name: hash.delete(:name)
+          }).first_or_initialize
+          attr.assign_attributes(hash)
+          attr.set_validation_rules!
       end
   end
 end
