@@ -88,11 +88,14 @@ class Dashboard::ProjectsController < Dashboard::BaseController
   end
 
   def find_transactable
-    begin
-      @transactable = @transactable_type.transactables.where(creator_id: current_user.id).includes(transactable_collaborators: :user).find(params[:id])
-      @transactable ||= current_user.transactable_collaborators.find_by!(transactable_id: params[:id]).try(:transactable)
-    rescue ActiveRecord::RecordNotFound
-      raise Project::NotFound
+    find_scope = @transactable_type.transactables.where(creator_id: current_user.id).includes(transactable_collaborators: :user)
+    @transactable = find_scope.find_by_id(params[:id])
+    @transactable ||= find_scope.find_by_slug(params[:id])
+    @transactable ||= current_user.transactable_collaborators.find_by(transactable_id: params[:id]).try(:transactable)
+
+    if @transactable.blank?
+      transactable_by_slug = Transactable.find_by_slug(params[:id])
+      @transactable = current_user.transactable_collaborators.find_by(transactable_id: transactable_by_slug.id).try(:transactable) if transactable_by_slug.present?
     end
   end
 
