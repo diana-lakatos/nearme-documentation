@@ -25,7 +25,7 @@ class LoadBalancer
     LoadBalancerRepository.configure_health_check self, template.health_check
   end
 
-  def set_ssl_certificate(certificate)
+  def update_ssl_certificate(certificate)
     Aws::ElasticLoadBalancing::Client
       .new
       .set_load_balancer_listener_ssl_certificate load_balancer_name: load_balancer_name,

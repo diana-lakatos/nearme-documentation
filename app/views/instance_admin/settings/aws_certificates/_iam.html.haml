@@ -1,0 +1,6 @@
+%tr
+  %td= certificate.name
+  %td= certificate.status
+  %td= l certificate.updated_at, format: :long
+  %td
+    = link_to :delete, instance_admin_settings_certificate_upload_path(certificate), method: :delete, data: { confirm: 'Are you sure?' }

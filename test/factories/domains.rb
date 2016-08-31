@@ -7,8 +7,7 @@ FactoryGirl.define do
 
     factory :secured_domain do
       secured true
-      private_key "ahoj"
-      certificate_body "ahoj"
+      aws_certificate { FactoryGirl.create :aws_certificate }
     end
 
     factory :unsecured_domain do

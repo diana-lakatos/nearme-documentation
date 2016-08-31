@@ -5,7 +5,8 @@ class Domain < ActiveRecord::Base
 
   REDIRECT_CODES = [301, 302]
 
-  attr_accessor :certificate_body, :private_key, :certificate_chain
+  has_many :reverse_proxies
+  belongs_to :aws_certificate
 
   state_machine :state, initial: :unsecured do
     event :prepare_elb do
@@ -16,24 +17,10 @@ class Domain < ActiveRecord::Base
       transition :preparing => :elb_secured
     end
 
-    event :prepare_elb_update do
-      transition [:elb_secured, :update_failed] => :preparing_update
-    end
-
-    event :elb_updated do
-      transition :preparing_update => :elb_secured
-    end
-
     event :failed do
       transition :preparing => :failed
     end
-
-    event :update_failed do
-      transition :preparing_update => :update_failed
-    end
   end
-
-  has_many :reverse_proxies
 
   belongs_to :target, polymorphic: true, touch: true
   belongs_to :instance
@@ -41,19 +28,16 @@ class Domain < ActiveRecord::Base
   before_validation -> { self.name = name.try(:strip) }
 
   validates_presence_of :name
+  validates_presence_of :aws_certificate_id, if: Proc.new { |d| d.https_required? }
   validates_uniqueness_of :name, :scope => :deleted_at
   validates_length_of :name, :maximum => 150
   validates_length_of :google_analytics_tracking_code, maximum: 15
 
   validates :name, domain_name: true
-  validates_presence_of :certificate_body, if: :prepared_for_elb?
-  validates_presence_of :private_key, if: :prepared_for_elb?
   validate :validate_default_domain_presence
 
   before_destroy :prevent_destroy_if_only_child
-  before_destroy :delete_elb, if: :elb_secured?
   before_save :ensure_load_balancer_name
-  after_save :create_or_update_elb
 
   after_save :mark_as_default
   after_commit :clear_cache
@@ -96,37 +80,8 @@ class Domain < ActiveRecord::Base
     https_required? && unsecured? && !near_me_domain?
   end
 
-  def delete_elb
-    DeleteElbJob.perform(name)
-  end
-
   def https_required?
     secured?
-  end
-
-  def create_or_update_elb
-    # Avoid endless loop because state_machine event methods are triggering after_save
-    # except for when the state was nil and it's now unsecured (initial domain creation)
-    return true if state_changed? && !(state_was.blank? && unsecured?)
-
-    if can_be_elb_managed?
-      # The load balancer does not exist either because it's in the initial state
-      # or because the creation failed
-      if unsecured? || failed?
-        prepare_elb!
-        CreateElbJob.perform(id, certificate_body, private_key, certificate_chain)
-      # The load balancer exists and has a certificate or exists but a certificate update has failed
-      # and we also received a new certificate in the params from the user
-      elsif (elb_secured? || update_failed?) && certificate_body.present? && private_key.present?
-        prepare_elb_update!
-        UpdateElbJob.perform(id, certificate_body, private_key, certificate_chain)
-      end
-    end
-  rescue
-    # Ignore to allow state to be set in dev mode
-    # In production it will avoid showing an error page
-    # but the error will be visible in the column and the
-    # message saved in the DB
   end
 
   def can_be_elb_managed?
@@ -138,7 +93,7 @@ class Domain < ActiveRecord::Base
   end
 
   def deletable?
-    not(preparing? || use_as_default || near_me_domain? || preparing_update?)
+    not(use_as_default || near_me_domain?)
   end
 
   def editable?
