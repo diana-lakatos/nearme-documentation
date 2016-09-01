@@ -1,6 +1,6 @@
 .content-container
   - if @order.has_order_items?
-    - if !Rails.env.production? && @order.subscription?
+    - if @order.subscription? && @order.payment_subscription.try(:test_mode?)
       .row
         .col-xs-8
           Next charge date is #{@order.next_charge_date}
