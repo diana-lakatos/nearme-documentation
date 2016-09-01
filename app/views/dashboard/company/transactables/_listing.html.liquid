@@ -1,15 +1,13 @@
 <div class='panel'>
   <div class='panel-body'>
+    {% assign form_url = transactable_type.transactable_types_path %}
 
-    {% if true %}
-      {% assign form_url = transactable_type.transactable_types_path %}
-
-      {% form_for :transactable, url: @form_url, method: 'get', html-class: 'search', form_for_type: 'dashboard' %}
-        {% assign query_label = 'dashboard.items.search.search_your_products' | translate %}
-        {% input query, as: 'search', label: @query_label, input_html-value: @params['query'], input_html-name: 'query' label_html-class: 'sr-only' %}
-        {% submit submit, class: 'hidden-xs hidden-sm btn btn-default' %}
-      {% endform_for %}
-    {% endif %}
+    {% form_for :transactable, url: @form_url, method: 'get', html-class: 'search', form_for_type: 'dashboard' %}
+      {% assign query_label = 'dashboard.items.search.search_your_products' | translate %}
+      {% input query, as: 'search', label: @query_label, input_html-value: @params['query'], input_html-name: 'query' label_html-class: 'sr-only' %}
+      {% assign submit_text = 'dashboard.items.search.search' | t %}
+      {% submit @submit_text, class: 'hidden-xs hidden-sm btn btn-default' %}
+    {% endform_for %}
 
   </div>
 
