@@ -11,7 +11,16 @@
         }
 
         .controls {
+            position: relative;
             margin-left: 0;
+
+            select.hasCustomSelect {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100% !important;
+                height: 100% !important;
+            }
         }
     }
 }
