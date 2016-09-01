@@ -38,6 +38,7 @@ class Group < ActiveRecord::Base
   end
 
   scope :only_private, -> { joins(:group_type).where(transactable_types: { name: 'Private' }) }
+  scope :not_public, -> { joins(:group_type).where(transactable_types: { name: %w(Private Moderated) }) }
 
   scope :with_date, ->(date) { where(created_at: date) }
   scope :by_search_query, lambda { |query|

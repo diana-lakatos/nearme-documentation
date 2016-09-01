@@ -240,6 +240,7 @@ class CustomMailerTest < ActiveSupport::TestCase
       reply_to_type: nil,
       cc: nil,
       bcc: nil,
+      bcc_type: nil,
       template_path: @email_template.path,
       subject: 'Subject',
       should_be_triggered?: true,

@@ -23,6 +23,7 @@ class GroupMembersController < ApplicationController
   def accept
     @membership = @group.memberships.for_user(current_user).find(params[:id])
     @membership.update(approved_by_user_at: Time.zone.now)
+    WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::UserAcceptsInvitation, @membership.id)
 
     respond_to do |format|
       format.js { render :create }
@@ -33,7 +34,8 @@ class GroupMembersController < ApplicationController
   end
 
   def destroy
-    @group.memberships.for_user(current_user).destroy_all
+    @memberships = @group.memberships.for_user(current_user).destroy_all
+    WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberHasQuit, @memberships.first.id)
 
     respond_to do |format|
       format.js { render :create }

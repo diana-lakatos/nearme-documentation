@@ -21,6 +21,26 @@
           - if HiddenUiControls.find('dashboard/notification_preferences/sms').visible?
             = f.input :sms_notifications_enabled, as: :switch, wrapper_html: { class: 'sep' }
 
+        .notification-preferences
+          = f.fields_for :notification_preference, @notification_preference do |nf|
+            = nf.label :group_updates_enabled, t('simple_form.labels.notifications.group_updates_enabled')
+            %p= "(#{t('simple_form.labels.notifications.group_updates_enabled_hint')})"
+            = nf.input :group_updates_enabled, as: :switch, wrapper_html: { class: 'sep' }, label: false
+
+            = nf.label :project_updates_enabled, t('simple_form.labels.notifications.project_updates_enabled')
+            %p= "(#{t('simple_form.labels.notifications.project_updates_enabled_hint')})"
+            = nf.input :project_updates_enabled, as: :switch, wrapper_html: { class: 'sep' }, label: false
+
+            .form-row
+              = nf.radio_button :email_frequency, 'immediately'
+              = nf.label :email_frequency, t('simple_form.labels.notifications.email_frequency.immediately'), value: 'immediately'
+              %p= "(#{t('simple_form.labels.notifications.email_frequency.immediately_hint')})"
+
+            .form-row
+              = nf.radio_button :email_frequency, 'weekly'
+              = nf.label :email_frequency, t('simple_form.labels.notifications.email_frequency.weekly'), value: 'weekly'
+              %p= "(#{t('simple_form.labels.notifications.email_frequency.weekly_hint')})"
+
         %p.action
           = f.submit t('general.save')
 

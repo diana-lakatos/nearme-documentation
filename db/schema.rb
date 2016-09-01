@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160826004551) do
+ActiveRecord::Schema.define(version: 20160901193949) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1550,6 +1550,18 @@ ActiveRecord::Schema.define(version: 20160826004551) do
   end
 
   add_index "merchant_accounts", ["instance_id", "merchantable_id", "merchantable_type"], name: "index_on_merchant_accounts_on_merchant", using: :btree
+
+  create_table "notification_preferences", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "user_id"
+    t.boolean  "project_updates_enabled", default: true
+    t.boolean  "group_updates_enabled",   default: true
+    t.string   "email_frequency",         default: "immediately"
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
+  end
+
+  add_index "notification_preferences", ["instance_id", "user_id"], name: "index_notification_preferences_on_instance_id_and_user_id", unique: true, using: :btree
 
   create_table "offers", force: :cascade do |t|
     t.string   "name"

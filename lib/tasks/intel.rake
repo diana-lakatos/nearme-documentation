@@ -30,6 +30,12 @@ namespace :intel do
 
     Utils::DefaultAlertsCreator::GroupCreator.new.create_all!
 
+    WorkflowAlert
+      .find_by(instance_id: 23, name: 'Member approved email')
+      .try(:update_columns , {
+        name: 'Notify user of approved join request',
+        template_path: 'group_mailer/notify_user_of_approved_join_request'
+      })
 
     Instance.where(is_community: true).find_each do |instance|
       Workflow.find_by(instance_id: instance.id, workflow_type: 'group_workflow').workflow_steps.each do |step|

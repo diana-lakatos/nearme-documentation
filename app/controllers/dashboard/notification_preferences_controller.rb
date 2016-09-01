@@ -2,6 +2,7 @@ class Dashboard::NotificationPreferencesController < Dashboard::BaseController
 
   def edit
     @user = current_user
+    @notification_preference = @user.notification_preference || @user.build_notification_preference
   end
 
   def update
