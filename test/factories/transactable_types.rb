@@ -96,8 +96,21 @@ FactoryGirl.define do
     end
   end
 
-  factory :project_type, class: 'ProjectType' do
+  factory :transactable_type_project, class: 'TransactableType' do
     sequence(:name) { |n| "Project #{n}" }
+
+    after(:build) do |transactable_type|
+      transactable_type.custom_attributes = [
+        FactoryGirl.build(:custom_attribute, target: transactable_type, name: 'summary', label: 'Summary', attribute_type: 'string')
+      ]
+    end
+
+    after(:create) do |transactable_type|
+      transactable_type_action_type = TransactableType::NoActionBooking.new
+      transactable_type_action_type.transactable_type_id = transactable_type.id
+      transactable_type_action_type.enabled = true
+      transactable_type_action_type.save!
+    end
   end
 
   factory :group_type, class: 'GroupType' do

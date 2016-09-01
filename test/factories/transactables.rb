@@ -202,6 +202,15 @@ FactoryGirl.define do
         end
       end
 
+    end
+
+    factory :transactable_project do
+
+      after(:build) do |listing, evaluator|
+        listing.build_action_type
+        listing.action_type.transactable_type_action_type = TransactableType::ActionType.where(transactable_type_id: listing.transactable_type_id).first
+      end
+
       factory :project do
         name "Project Manhattan"
         description "The Manhattan Project was a research and development project that produced the first nuclear weapon"
@@ -214,7 +223,7 @@ FactoryGirl.define do
         end
 
         initialize_with do
-          new(transactable_type: (ProjectType.first.presence || FactoryGirl.create(:transactable_type)))
+          new(transactable_type: FactoryGirl.create(:transactable_type_project))
         end
 
         after(:build) do |project|
@@ -225,7 +234,7 @@ FactoryGirl.define do
           project.links << FactoryGirl.create(:link)
         end
       end
-
     end
+
   end
 end
