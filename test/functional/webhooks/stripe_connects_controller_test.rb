@@ -11,7 +11,7 @@ class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
     context '#webhook' do
       should 'mark payment_transfer as transferred on transfer.paid webhook' do
         payment_transfer = FactoryGirl.create(:payment_transfer_unpaid, payment_gateway: @payment_gateway)
-        event_options = { type: "transfer.paid", id: payment_transfer.token }
+        event_options = { type: "transfer.updated", id: payment_transfer.token, status: 'paid' }
 
         Stripe::Event.stubs(:retrieve).returns(event_object(event_options))
 
@@ -27,7 +27,7 @@ class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
 
       should 'mark payment_transfer as failed on transfer.failed webhook' do
         payment_transfer = FactoryGirl.create(:payment_transfer_unpaid, payment_gateway: @payment_gateway)
-        event_options = { type: "transfer.failed", id: payment_transfer.token }
+        event_options = { type: "transfer.updated", id: payment_transfer.token, status: 'failed' }
 
         Stripe::Event.stubs(:retrieve).returns(event_object(event_options))
 
@@ -86,7 +86,7 @@ class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
           "source_transaction": "ch_18iZBA2NyQr8dJTtumqma5cX",
           "source_type": "card",
           "statement_descriptor": nil,
-          "status": "paid",
+          "status": options[:status],
           "type": "stripe_account",
           "account": nil
         })

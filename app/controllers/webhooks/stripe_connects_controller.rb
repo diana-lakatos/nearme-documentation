@@ -20,15 +20,15 @@ class Webhooks::StripeConnectsController < Webhooks::BaseWebhookController
           if account.verification.fields_needed.present?
             merchant_account.update_column :data, merchant_account.data.merge(fields_needed: account.verification.fields_needed)
           end
-        when 'transfer.paid'
+        when 'transfer.updated'
           transfer = @payment_gateway.payment_transfers.pending.with_token(event.data.object.id).first
           if transfer.pending?
-            transfer.payout_attempts.last.payout_successful(event)
-          end
-        when 'transfer.failed'
-          transfer = @payment_gateway.payment_transfers.pending.with_token(event.data.object.id).first
-          if transfer.pending?
-            transfer.payout_attempts.last.payout_failed(event)
+            transfer_state = event.data.object.status
+            if transfer_state == 'paid'
+              transfer.payout_attempts.last.payout_successful(event)
+            elsif ['canceled', 'failed'].include?(transfer_state)
+              transfer.payout_attempts.last.payout_failed(event)
+            end
           end
         end
       ensure
