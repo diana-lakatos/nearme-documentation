@@ -18,7 +18,7 @@
 {% content_for 'panel_navigation_links' %}
   {% for tt in platform_context.transactable_types %}
     <li class='{{ tt.id | active_class:transactable_type.id }}'>
-      <a href='{{ tt.transactable_types_path }}'>{{ 'dashboard.manage_listings.tab' | translate: default: transactable_type.bookable_noun_plural }}</a>
+      <a href='{{ tt.transactable_types_path }}'>{{ 'dashboard.manage_listings.tab' | translate: default: tt.bookable_noun_plural }}</a>
     </li>
   {% endfor %}
 {% endcontent_for %}
@@ -36,11 +36,13 @@
   </div>
 {% endcontent_for %}
 
+{% if platform_context.transactable_types.size > 1 %}
 <nav class='panel-nav-mobile' role='navigation'>
   {% dropdown_menu { label: transactable_type.bookable_noun_plural, wrapper_class: 'links' } %}
     {% yield 'panel_navigation_links' %}
   {% enddropdown_menu %}
 </nav>
+{% endif %}
 
 {% if platform_context.transactable_types.size > 3 %}
   <div class='row'>
@@ -62,9 +64,11 @@
   </div>
 {% else %}
   <nav class='panel-nav'>
+    {% if platform_context.transactable_types.size > 1 %}
     <ul class='tabs pull-left'>
       {% yield 'panel_navigation_links' %}
     </ul>
+    {% endif %}
     {% yield 'panel_options' %}
   </nav>
 

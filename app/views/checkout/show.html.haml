@@ -7,10 +7,11 @@
       = sidebar
 
   .checkout-wizard-main
-    - if @order.inactive? || @order.unconfirmed?
-
-      = render 'checkout/form'
 
     %section.checkout-form
       = render 'checkout/summary', order: @order
+
+    - if @order.inactive? || @order.unconfirmed?
+
+      = render 'checkout/form'
 
