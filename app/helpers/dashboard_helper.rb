@@ -218,8 +218,15 @@ module DashboardHelper
   end
 
   def dashboard_panel_multi_tabs(items)
+    return if items.count < 2
+
     out = ActiveSupport::SafeBuffer.new
     active = items.select {|item| item[:active] }.first
+
+    if active == nil
+      items.first[:active] = true
+      active = items.first
+    end
 
     out << content_tag(:nav, class: 'panel-nav-mobile') do
       dropdown_menu active[:name], { wrapper_class: 'links'} do
