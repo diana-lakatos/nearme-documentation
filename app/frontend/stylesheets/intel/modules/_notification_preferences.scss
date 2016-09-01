@@ -1,0 +1,10 @@
+.notification-preferences {
+  label {
+    font-size: 20px;
+  }
+
+  input[type=radio] + label {
+    font-size: 16px;
+    margin: 0 0 0 5px;
+  }
+}

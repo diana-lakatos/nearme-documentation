@@ -19,6 +19,7 @@ class Utils::DefaultAlertsCreator::WorkflowCreator
     alert.custom_options = hash.fetch(:custom_options, {})
     alert.from = hash.fetch(:from, PlatformContext.current.theme.contact_email)
     alert.reply_to = hash.fetch(:no_reply, PlatformContext.current.theme.contact_email)
+    alert.bcc_type = hash[:bcc_type]
     alert.save!
     alert
   end

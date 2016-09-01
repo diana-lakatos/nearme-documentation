@@ -14,8 +14,8 @@ module ActiveMerchant
         OpenStruct.new(error: e.message)
       end
 
-      def parse_webhook(id, secret_key)
-        Stripe::Event.retrieve(id, secret_key)
+      def parse_webhook(id)
+        Stripe::Event.retrieve(id)
       end
 
       def retrieve_account(id)

@@ -4,6 +4,8 @@ en:
       payment_gateway: "Payment gateway"
       payment_method: "Payment method"
     attributes:
+      attachable/attachment:
+        file: 'Attachment'
       additional_charge_type:
         additional_charge_type_target: "Product/Service Type"
       instance:
@@ -129,6 +131,7 @@ en:
     generic_lessor_term: "host"
     default: "Default"
     approve: 'Approve'
+    update_credit_card: 'Update Credit Card'
     reject: 'Reject'
     no_options: 'No options'
     unexpected_error_occurred: "An unexpected error occurred."
@@ -164,6 +167,9 @@ en:
     shipments:
       address_based_price: 'Price will be calculated based on your address'
       processing_time: '%{days} days'
+  charge_type:
+    charge_at:
+      confirm: "Order confirmation"
 
   manage:
     companies:
@@ -307,6 +313,9 @@ en:
       notices:
         key_created: "Custom translation key has been successfully created: %{key}."
         key_destroyed: 'Custom translation key has been deleted.'
+    projects:
+      transactable_types:
+        transactable_types: "Transactable Types"
 
     services: 'Services'
     products: 'Products'
@@ -1244,6 +1253,9 @@ en:
     vendor_approval:
       intro: 'Please provide the following information to become an approved seller for this service. Your listing will be published when the Marketplace Owner approves your status.'
 
+  navigation:
+    toggle_navigation: Toggle navigation
+
   support:
     new:
       subscription: '%{period} based subscription from %{from}'
@@ -1261,6 +1273,8 @@ en:
         resolved: "Resolved"
   dashboard:
     payouts:
+      payment_transfers: 'Payment Transfers'
+      payment_transfers_info: 'Payment Transfers for your profile must be set up before making any offer.  This step is required, so in the event that an offer is accepted, you are able to get paid for your work.'
       merchant_boarding_missing_gateway: "Looks like this marketplace doesn't support %{currency} currency for your country (%{country_code}). Please contact marketplace owner if you are missing some payouts."
     additional_charge_type:
       new: "New Upsell & Add-ons"
@@ -1272,7 +1286,18 @@ en:
       delete_warning: 'You are about to remove credit card. Please note that it still will be charged if used for any past and unpaid reservations you have made. Please make sure to cancel all transations separately.'
       stripe: 'Credit Cards'
       in_gateway: '%{payment_gateway} Credit Cards'
+    order_items:
+      add_item_expenses: "Add item expenses"
+      add_time_expenses: "Add time expenses"
+      back_to_projects: "Go Back to Projects In Progress"
+      back_to_projects_html: "Go Back<span class='hidden-xs'> to Projects In Progress</span>"
+      total: "Total"
+      send_message: 'Send Message'
+      free_unit_price: ''
     orders:
+      track_time_and_expenses: Track Time and Expenses
+      track_time_and_expenses_html: 'Track Time<span class="hidden-xs"> and Expenses</span>'
+      not_collaborator: 'Only invited users can make an offer'
       payment_missing: "Missing"
       details: "Details"
       state:
@@ -1353,6 +1378,7 @@ en:
       transactables: 'My Listings'
       payouts: 'Payments'
       orders_received: 'Orders Received'
+      order_items: 'Time / Expense Overview'
       host_reservations: 'Bookings Received'
       host_reservations_count_html: 'Bookings Received <span>%{count}</span>'
       transfers: 'Payment Transfers'
@@ -1398,6 +1424,11 @@ en:
         colors: 'Colors'
 
     user_reservations:
+      track_time: "TRACK TIME & EXPENSES"
+      approved_offer: 'APPROVED OFFER'
+      send_message: 'SEND MESSAGE'
+      view_case: 'VIEW CASE DETAILS'
+      close_case: 'CLOSE CASE'
       test_mode: 'This reservation was made in Test Mode. No money was actually transferred'
       tax_included: "Tax"
       price: "Price"
@@ -1497,6 +1528,7 @@ en:
           cancel: 'Do you really want to cancel subscription?'
           confirm: 'Do you want to confirm subscription?'
           decline: 'Are you sure you want to decline?'
+          confirm_credit_card: 'Credit card details are required to accept offer.'
         cancel: 'Cancel'
         confirm: 'Confirm'
         decline: 'Decline'
@@ -1506,9 +1538,11 @@ en:
 
 
     payments:
+      approve: "Approve offer"
       reject: "What's wrong?"
       change_credit_card: 'Change credit card'
       periods_affected: 'Periods affected'
+      merchant_fee_charge: "%{name} of %{price} is going to be charged upon confirmation."
       reject_placeholder: 'Please let us know what is the reason of declining payment'
       order: "Back to order"
       back_to_order_html: "Back <span class='hidden-xs'>to order</span>"
@@ -1527,6 +1561,9 @@ en:
         paid: "Paid"
         voided: "Voided"
         refunded: "Refunded"
+        unpaid: 'Unpaid'
+        rejected: 'Rejected'
+        approved: 'Approved'
       alerts: 'Alerts:'
 
     host_reservations:
@@ -1568,6 +1605,7 @@ en:
         nonce: "PayPal"
         remote: "Fetch"
         free: "None"
+        pending: 'Pending'
       delivery:
         pick_up: 'Pick up'
         delivery: 'Delivery'
@@ -1582,6 +1620,7 @@ en:
       address: 'Location address'
       listing_deleted: 'Listing deleted'
       actions:
+        accept: 'Accept'
         cancel: 'Cancel'
         confirm: 'Confirm'
         decline: 'Decline'
@@ -1950,6 +1989,7 @@ en:
     send: "Send"
     report_has_been_sent: "Your report has been sent. Thank you!"
     redirecting_to_log_in_page: "Redirecting to log in page..."
+    please_fill_in_reason: 'Please fill the form.'
 
   wish_lists:
     name: 'Favorites'
@@ -2636,7 +2676,9 @@ en:
       card_number: 'Card number'
       expiration_date: 'Expiration date'
       expiration_date_month: 'Expiration date: Month'
+      expiration_date_month_html: '<span>Expiration date:</span> Month'
       expiration_date_year: 'Expiration date: Year'
+      expiration_date_year_html: '<span>Expiration date:</span> Year'
       security_code: 'Security code'
       ccv_hint: "The Card Security Code is usually a 3- or 4- digit number, typically printed on the back of a credit card (usually in the signature field)"
       whats_this: "(What's this?)"
@@ -2820,6 +2862,24 @@ en:
   credit_cards:
     masked_number: '**** **** **** %{last4}'
   toggle_hint: 'Toggle hint'
+  transactable_collaborator:
+    collaborators: 'Collaborators'
+    collaborator: 'Collaborator'
+    add_collaborator: 'Add collaborator'
+    collaboration_cancelled: "Collaboration request has been cancelled."
+    user_added_collaborator: "%{user_link} added a new collaborator to the %{project_link} project"
+    collaboration_accepted: "Collaboration request has been approved."
+    cant_remove_collaborator: "You can't remove user from this project"
+
+    name: 'Name'
+    actions: 'Actions'
+    approve: 'Approve'
+    status: 'Status'
+    remove: 'Remove'
+    decline: 'Decline'
+    approved: 'Approved'
+    pending: 'Pending'
+    cancel_request: 'Cancel request'
 
   placeholders:
     image_unavailable_or_still_processing: "Photos Unavailable or Still Processing"

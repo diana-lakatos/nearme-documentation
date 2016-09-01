@@ -10,3 +10,9 @@
   .panel-body
     .orders-a
       = render @order
+
+- content_for :script do
+  :javascript
+    $(function() {
+      $(document).trigger('init:disableorderform.nearme', 'form#checkout-form');
+    });

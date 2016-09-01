@@ -1,5 +1,5 @@
 %tr
-  %td= link_to resource.name, project_path(resource)
+  %td= link_to resource.name, listing_path(resource)
   %td= resource.featured? ? 'Yes' : 'No'
   %td= l(resource.created_at.to_date, format: :long)
   - if resource.deleted?

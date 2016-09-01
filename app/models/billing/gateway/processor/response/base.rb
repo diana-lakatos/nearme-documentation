@@ -11,10 +11,6 @@ class Billing::Gateway::Processor::Response::Base
     nil
   end
 
-  def should_be_verified_after_time?
-    false
-  end
-
   def confirmation_url
     nil
   end

@@ -1,11 +1,11 @@
 %article.card-a
   %figure
-    = link_to project_path(project) do
+    = link_to listing_path(project) do
       = image_tag project.cover_photo.image_url(:project_cover)
   %p.action{:'data-follow-button' => true}
     = render partial: 'shared/follow_button', locals: { object: project, css_class: 'tiny' }
   %h3.hx
-    = link_to project.name, project_path(project)
+    = link_to project.name, listing_path(project)
   %p.user
     = link_to user_path(project.creator) do
       = image_tag project.creator.avatar.url(:thumb), width: 30, height: 30

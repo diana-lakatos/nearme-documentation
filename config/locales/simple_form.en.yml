@@ -53,6 +53,13 @@ en:
           shipping_category_id: 'Shipping category'
       product_form:
         action_rfq: "Enable request for quote"
+      payment_gateway:
+        config:
+          transfer_schedule:
+            interval: "Transfer interval"
+            delay_days: "Delay days"
+            weekly_anchor: "Day of transfer"
+            monthly_anchor: "Day of the month"
       instance:
         mark_as_locked: "Lock admin settings"
         name: "Marketplace Name"
@@ -99,6 +106,12 @@ en:
         redirect_to: 'Redirect to'
         state: "Status"
         dns_name: "DNS name"
+      recurring_booking_period:
+        transactable_line_items:
+          name: "Service Type / Item"
+          description: "Description"
+          quantity: "Hours / Items:"
+          unit_price: "Rate / Cost:"
       locale:
         code: 'Select language'
         custom_name: 'Custom name'
@@ -342,7 +355,6 @@ en:
         phone: "Phone number"
         mobile_number: "Mobile number"
         avatar: "Profile Photo"
-        name: "Name"
         first_name: "First name"
         middle_name: "Middle name"
         last_name: "Last name"

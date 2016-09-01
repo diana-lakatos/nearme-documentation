@@ -1,31 +1,38 @@
 class Dashboard::ProjectsController < Dashboard::BaseController
   before_filter :find_transactable_type
-  before_filter :find_project, except: [:index, :new, :create]
+  before_filter :find_transactable, except: [:index, :new, :create]
   before_filter :set_form_components, only: [:new, :create, :edit, :update]
 
   def index
-    @projects = @transactable_type.projects.joins('LEFT JOIN project_collaborators pc ON pc.project_id = projects.id').
-      where('projects.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)', current_user.id, current_user.id).
+    @transactables = @transactable_type.transactables.joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id').
+      where('transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)', current_user.id, current_user.id).
       search_by_query([:name, :description, :summary], params[:query]).
-      group('projects.id').order('created_at DESC').paginate(page: params[:page], per_page: 20)
+      group('transactables.id').order('created_at DESC').paginate(page: params[:page], per_page: 20)
   end
 
   def new
-    @project = @transactable_type.projects.build(creator: current_user)
+    @transactable = @transactable_type.transactables.build(creator: current_user)
     @photos = current_user.photos.where(owner_id: nil)
   end
 
   def create
-    @project = @transactable_type.projects.build
-    @project.creator = current_user
-    @project.assign_attributes(project_params)
-    @project.draft_at = Time.now if params[:save_for_later]
-    if @project.save
+    @transactable = @transactable_type.transactables.build
+    @transactable.creator = current_user
+    @transactable.assign_attributes(transactable_params)
+    @transactable.draft = Time.now if params[:save_for_later]
+    @transactable.location_not_required = true
+    @transactable.build_action_type
+    @transactable.action_type.transactable_type_action_type = @transactable_type.action_types.first
+    @transactable.topics_required = true
+    validate = true
+    validate = false if params[:save_for_later]
+
+    if @transactable.save(validate: validate)
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.translated_bookable_noun)
       redirect_to dashboard_project_type_projects_path(@transactable_type)
     else
-      flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@project.errors.full_messages)
-      @photos = @project.photos
+      flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@transactable.errors.full_messages)
+      @photos = @transactable.photos
       render :new
     end
   end
@@ -35,37 +42,41 @@ class Dashboard::ProjectsController < Dashboard::BaseController
   end
 
   def edit
-    @photos = @project.photos
+    @photos = @transactable.photos
   end
 
   def update
-    @project.assign_attributes(project_params)
-    draft = @project.draft_at
-    @project.draft_at = nil if params[:submit]
+    @transactable.assign_attributes(transactable_params)
+    @transactable.location_not_required = true
+    @transactable.topics_required = true
+    draft = @transactable.draft
+    @transactable.draft = nil if params[:submit]
+    validate = true
+    validate = false if @transactable.draft
     respond_to do |format|
       format.html {
-        if @project.save
+        if @transactable.save(validate: validate)
           flash[:success] = t('flash_messages.manage.listings.listing_updated')
           redirect_to dashboard_project_type_projects_path(@transactable_type)
         else
-          flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@project.errors.full_messages)
-          @photos = @project.photos
-          @project.draft_at = draft
+          flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@transactable.errors.full_messages)
+          @photos = @transactable.photos
+          @transactable.draft = draft
           render :edit
         end
       }
       format.json {
-        if @project.save
+        if @transactable.save
           render :json => { :success => true }
         else
-          render :json => { :errors => @project.errors.full_messages }, :status => 422
+          render :json => { :errors => @transactable.errors.full_messages }, :status => 422
         end
       }
     end
   end
 
   def destroy
-    @project.destroy
+    @transactable.destroy
     flash[:deleted] = t('flash_messages.manage.listings.listing_deleted')
     redirect_to dashboard_project_type_projects_path(@transactable_type)
   end
@@ -73,25 +84,28 @@ class Dashboard::ProjectsController < Dashboard::BaseController
   private
 
   def set_form_components
-    @form_components = @transactable_type.form_components.where(form_type: FormComponent::PROJECT_ATTRIBUTES).rank(:rank)
+    @form_components = @transactable_type.form_components.where(form_type: FormComponent::TRANSACTABLE_ATTRIBUTES).rank(:rank)
   end
 
-  def find_project
-    begin
-      @project = @transactable_type.projects.where(creator_id: current_user.id).includes(project_collaborators: :user).find_by(id: params[:id])
-      @project ||= current_user.project_collaborators.find_by!(project_id: params[:id]).try(:project)
-    rescue ActiveRecord::RecordNotFound
-      raise Project::NotFound
+  def find_transactable
+    find_scope = @transactable_type.transactables.where(creator_id: current_user.id).includes(transactable_collaborators: :user)
+    @transactable = find_scope.find_by_id(params[:id])
+    @transactable ||= find_scope.find_by_slug(params[:id])
+    @transactable ||= current_user.transactable_collaborators.find_by(transactable_id: params[:id]).try(:transactable)
+
+    if @transactable.blank?
+      transactable_by_slug = Transactable.find_by_slug(params[:id])
+      @transactable = current_user.transactable_collaborators.find_by(transactable_id: transactable_by_slug.id).try(:transactable) if transactable_by_slug.present?
     end
   end
 
   def find_transactable_type
-    @transactable_type = ProjectType.find(params[:project_type_id])
+    @transactable_type = TransactableType.find(params[:project_type_id])
   end
 
-  def project_params
-    params.require(:project).permit(secured_params.project(@transactable_type, @project.nil? || current_user.id == @project.creator_id )).tap do |whitelisted|
-      whitelisted[:properties] = params[:project][:properties] rescue {}
+  def transactable_params
+    params.require(:transactable).permit(secured_params.project(@transactable_type, @transactable.nil? || current_user.id == @transactable.creator_id )).tap do |whitelisted|
+      whitelisted[:properties] = params[:transactable][:properties] rescue {}
     end
   end
 

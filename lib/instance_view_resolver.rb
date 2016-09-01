@@ -25,7 +25,7 @@ class InstanceViewResolver < DbViewResolver
   end
 
   def expire_cache_for_path(path, instance_id = nil)
-    return if instance_id.nil? && PlatformContext.current.nil?
+    return if path.blank? || instance_id.nil? && PlatformContext.current.nil?
     cache = @cache.instance_variable_get("@data")
     instance_id ||= PlatformContext.current.instance.id
 

@@ -31,12 +31,14 @@ class Api::BaseController < ActionController::Base
   def current_user
     if auth_token.present?
       @current_user ||= User.find_by(authentication_token: auth_token)
+    else
+      super
     end
   end
 
   # Retrieve the current authorization token
   def auth_token
-    request.headers['UserAuthorization']
+    request.headers['UserAuthorization'].presence
   end
 
   def verified_api_request?

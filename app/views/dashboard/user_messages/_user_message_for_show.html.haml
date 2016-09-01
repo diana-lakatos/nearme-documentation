@@ -21,3 +21,8 @@
 
   .body
     = user_message.body
+
+  %footer
+    %span.attachment
+      - user_message.attachments.each do |attachment|
+        = link_to attachment[:file], attachment.file.url, download: attachment[:file]

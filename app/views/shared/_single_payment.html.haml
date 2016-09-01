@@ -1,0 +1,22 @@
+- if f.object.respond_to?(:payable)
+  - f.object.payable.host_line_items.each do |hli|
+    .alert.alert-info= t('dashboard.payments.merchant_fee_charge', name: hli.name, price: humanized_money_with_cents_and_symbol(hli.unit_price)).html_safe
+
+- if f.object.payment_methods.credit_card.blank?
+  .alert.warning
+    %b= t("reservations_review.missing_payment_method")
+    %br/
+    %span= t("reservations_review.missing_payment_method_info")
+
+    - content_for :dialog_actions do
+      %button.btn.btn-default{:type => "button", :"data-modal-close" => ""}= t('general.cancel')
+- else
+  - payment_method = f.object.payment_methods.credit_card.last
+  = f.input :payment_method_id, as: :hidden, input_html: { value: payment_method.id }
+  = render 'shared/payment_methods/credit_card', f: f, payment_method: payment_method
+
+  - content_for :dialog_actions do
+    %button{type: "submit", data: { disable_with: t('general.processing') } }= t "dashboard.host_reservations.actions.accept"
+
+:javascript
+  $(function() { $(document).trigger('init:paymentmodal.nearme'); });

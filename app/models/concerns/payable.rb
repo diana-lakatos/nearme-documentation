@@ -40,13 +40,14 @@ module Payable
           activate! unless payment.express_checkout_payment?
         end
       elsif payment_subscription && payment_subscription.valid? && payment.blank? && self.valid? && payment_subscription.credit_card.store!
-        activate! if inactive?
+        activate! if try(:inactive?)
       end
     end
 
     def build_first_line_item
-      if line_items.blank? && transactable_line_items.blank?
+      if line_items.blank? && transactable_line_items.blank? && additional_line_items.blank?
         transactable_line_items.build(
+          user: self.user,
           name: self.transactable.name,
           quantity: self.quantity,
           line_item_source: self.transactable,
@@ -61,8 +62,9 @@ module Payable
 
     def create_additional_charges
       return true unless respond_to?(:additional_charge_types)
+
       additional_charge_types.get_mandatory_and_optional_charges(additional_charge_ids).uniq.map do |act|
-        self.additional_line_items.where(line_item_source: act).first_or_create(
+        self.additional_line_items.where(line_item_source_id: act.id, line_item_source_type: act.class.name, ).first_or_create(
           line_itemable: self,
           line_item_source: act,
           optional: act.optional?,
@@ -82,6 +84,11 @@ module Payable
       service_fee_line_items.any? && !service_fee_amount_guest_cents.zero?
     end
 
+    def transactable_line_items_attributes=(tli_attrs)
+      tli_attrs.each {|k, v| v.merge!(line_itemable: self) }
+      super(tli_attrs)
+    end
+
     def payment_attributes=(payment_attrs={})
       super(payment_attrs.merge(shared_payment_attributes))
     end
@@ -92,9 +99,9 @@ module Payable
 
     def shared_payment_attributes
       {
-        payer: owner,
-        company: company,
-        company_id: company_id,
+        payer: payment_subscription ? payment_subscription.payer : owner,
+        company: payment_subscription ? payment_subscription.company : company,
+        company_id: payment_subscription ? payment_subscription.company.id : company_id,
         currency: currency,
         total_amount_cents: total_amount_cents,
         subtotal_amount_cents: subtotal_amount_cents,

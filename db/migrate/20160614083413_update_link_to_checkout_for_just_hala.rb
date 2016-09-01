@@ -1,6 +1,8 @@
 class UpdateLinkToCheckoutForJustHala < ActiveRecord::Migration
 
   def up
+    return if Instance.find_by(id: 175).blank?
+
     ReservationType.find_each { |rt| rt.update_attributes(validate_on_adding_to_cart: "true", skip_payment_authorization: "false") }
     Instance.find_by(id: 175).try(:set_context!)
     return true if PlatformContext.current.nil?

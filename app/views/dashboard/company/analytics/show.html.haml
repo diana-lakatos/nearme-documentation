@@ -3,13 +3,11 @@
 - content_for :page_header do
   %h1= yield :title
 
-%nav.panel-nav-mobile.visible-sm.visible-xs
-  = dropdown_menu analytics_active_nav_tab, { wrapper_class: 'links' } do
-    = analytics_nav_tabs
+- tabs = []
+- analytics_options.each do |tab|
+  - tabs.push({ name: tab[0], url: url_for(:analytics_mode => tab[1]), active: tab[1] == @analytics_mode })
 
-%nav.panel-nav.hidden-xs.hidden-sm
-  %ul.tabs.pull-left
-    = analytics_nav_tabs
+= dashboard_panel_multi_tabs(tabs)
 
 .panel
   .panel-body

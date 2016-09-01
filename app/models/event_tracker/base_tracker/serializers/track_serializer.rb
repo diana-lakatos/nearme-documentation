@@ -66,6 +66,12 @@ class EventTracker::BaseTracker::Serializers::TrackSerializer
         booking_total: object.total_amount.try(:dollars),
         booking_currency: object.currency,
       }
+    when Offer
+      {
+        booking_desks: object.quantity,
+        booking_total: object.total_amount.try(:dollars),
+        booking_currency: object.currency,
+      }
     when User
       {
         first_name: object.first_name,

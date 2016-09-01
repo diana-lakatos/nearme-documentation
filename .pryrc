@@ -28,7 +28,13 @@ if defined?(Rails) && Rails.env
     save_and_open_page
   end
 
+  def local_domain_setup
+    Domain.find_each { |d| d.update_attribute(:name, d.name.gsub('near-me.com', 'lvh.me')) }
+  end
+  alias lds local_domain_setup
+
   puts "lc(instance) - to load instance context"
   puts "dc to drop current instance context"
+  puts "lds to replace all near-me.com domains to lvh.me"
   puts "Default methods loaded from ./pryrc"
 end

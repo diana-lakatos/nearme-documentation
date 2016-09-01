@@ -33,6 +33,7 @@ namespace :migrate do
 
   task :checkout_to_form_components => :environment do
     Instance.where.not(id: 23).find_each do |instance|
+      next if instance.is_community?
       instance.set_context!
       puts "processing #{instance.name}"
 
@@ -640,6 +641,7 @@ namespace :migrate do
   desc 'Migrate to ActionTypes'
   task to_action_types: :environment do
     Instance.find_each do |instance|
+      next if instance.is_community?
       instance.set_context!
       puts "Migrating instance #{instance.id} - #{instance.name}"
       TransactableType.where(type: 'ServiceType').with_deleted.all.each do |tt|

@@ -1,0 +1,18 @@
+- title t('dashboard.orders.track_time_and_expenses')
+
+- content_for :page_header do
+  %h1= t('dashboard.orders.track_time_and_expenses_html')
+
+  .options
+    = link_to t('dashboard.order_items.back_to_projects_html'), dashboard_company_transactable_type_transactables_path(@order.transactable.transactable_type, status: 'in progress')
+
+
+= dashboard_simple_form_for @order_item, url: dashboard_order_order_item_path(@order, @order_item) do |f|
+  .panel
+    .panel-body
+      .time-tracking-a
+        = render 'form', f: f
+
+  .panel.form-actions
+    .panel-body
+      = f.submit t('dashboard.host_reservations.complete_reservation.submit'), class: 'btn-lg btn-primary'

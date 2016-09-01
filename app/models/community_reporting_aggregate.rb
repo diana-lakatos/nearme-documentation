@@ -73,12 +73,12 @@ class CommunityReportingAggregate < ActiveRecord::Base
   end
 
   def update_number_of_new_projects
-    statistics[:number_of_new_projects] = Project.created_between(start_date, end_date).count
+    statistics[:number_of_new_projects] = Transactable.created_between(start_date, end_date).count
   end
 
   def update_number_of_projects_by_collaborators_range(from_collaborators, to_collaborators)
     if to_collaborators.present? && to_collaborators.zero?
-      statistics[:projects_with_0_collaborators] = Project.joins('left join project_collaborators pc ON pc.project_id = projects.id').where('pc.id is null').group('projects.id').count.length
+      statistics[:projects_with_0_collaborators] = Transactable.joins('left join transactable_collaborators pc ON pc.transactable_id = transactables.id').where('pc.id is null').group('transactables.id').count.length
     else
       if to_collaborators.blank?
         to_collaborators = 2 ** 32
@@ -87,13 +87,13 @@ class CommunityReportingAggregate < ActiveRecord::Base
         hash_key = "projects_with_#{from_collaborators}_to_#{to_collaborators}_collaborators"
       end
 
-      statistics[hash_key.to_sym] = Project.joins('left join project_collaborators pc ON pc.project_id = projects.id').where('pc.created_at >= ? AND pc.created_at < ?', start_date, end_date).where('pc.approved_by_owner_at is not null AND pc.approved_by_user_at is not null').group('projects.id').having('count(projects.id) >= ? AND count(projects.id) <= ?', from_collaborators, to_collaborators).count.length
+      statistics[hash_key.to_sym] = Transactable.joins('left join transactable_collaborators pc ON pc.transactable_id = transactables.id').where('pc.created_at >= ? AND pc.created_at < ?', start_date, end_date).where('pc.approved_by_owner_at is not null AND pc.approved_by_user_at is not null').group('transactables.id').having('count(transactables.id) >= ? AND count(transactables.id) <= ?', from_collaborators, to_collaborators).count.length
     end
   end
 
   def update_number_of_projects_by_followers_range(from_followers, to_followers)
     if to_followers.present? && to_followers.zero?
-      statistics[:projects_with_0_followers] = Project.joins("left join activity_feed_subscriptions afs ON afs.followed_id = projects.id AND afs.followed_type = 'Project'").where('afs.id is null').group('projects.id').count.length
+      statistics[:projects_with_0_followers] = Transactable.joins("left join activity_feed_subscriptions afs ON afs.followed_id = transactables.id AND afs.followed_type = 'Transactable'").where('afs.id is null').group('transactables.id').count.length
     else
       if to_followers.blank?
         to_followers = 2 ** 32
@@ -102,7 +102,7 @@ class CommunityReportingAggregate < ActiveRecord::Base
         hash_key = "projects_with_#{from_followers}_to_#{to_followers}_followers"
       end
 
-      statistics[hash_key.to_sym] = Project.joins("left join activity_feed_subscriptions afs ON afs.followed_id = projects.id AND afs.followed_type = 'Project'").where('afs.created_at >= ? AND afs.created_at < ?', start_date, end_date).group('projects.id').having('count(projects.id) >= ? AND count(projects.id) <= ?', from_followers, to_followers).count.length
+      statistics[hash_key.to_sym] = Transactable.joins("left join activity_feed_subscriptions afs ON afs.followed_id = transactables.id AND afs.followed_type = 'Transactable'").where('afs.created_at >= ? AND afs.created_at < ?', start_date, end_date).group('transactables.id').having('count(transactables.id) >= ? AND count(transactables.id) <= ?', from_followers, to_followers).count.length
     end
   end
 

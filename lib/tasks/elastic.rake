@@ -3,6 +3,8 @@ require 'ansi/progressbar'
 namespace :elastic do
   desc 'Re-creates and fills defined indexes'
   task :reindex => [:environment] do
+
+    # DO NOT RUN THIS MANUALLY -> DESTROYS THE INDEX. PlatformContext does not matter
     Transactable.__elasticsearch__.create_index! force: true
     Transactable.searchable.import force: true
   end

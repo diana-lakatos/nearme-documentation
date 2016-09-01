@@ -24,7 +24,7 @@ module.exports = class Navigation
 
     @toggler.on 'click', $.proxy(togglerClick, this)
 
-    $('.page-header').prepend(@toggler);
+    $('.page-header-wrapper').prepend(@toggler);
 
 
   saveState: (state)->

@@ -5,6 +5,7 @@ module LiquidFilters
   include WillPaginate::ViewHelpers
   include ActionView::Helpers::UrlHelper
   include ActionView::RecordIdentifier
+  include ActionView::Helpers::DateHelper
 
   def shorten_url(url)
     if DesksnearMe::Application.config.googl_api_key.present?
@@ -42,6 +43,16 @@ module LiquidFilters
 
   def compact(array)
     array.compact
+  end
+
+  def add_to_array(array, item)
+    array ||= []
+    array << item
+    array
+  end
+
+  def rotate(array, count=1)
+    array.rotate(count)
   end
 
   def location_path(transactable_type, location)
@@ -118,6 +129,10 @@ module LiquidFilters
     connections = connections.first(5)
     connections << t('search.list.additional_social_connections', count: difference) if difference > 0
     connections.join('<br />').html_safe
+  end
+
+  def pricify(amount, currency = 'USD')
+    humanized_money_with_symbol(amount.to_f.to_money(currency))
   end
 
   def price_with_cents_with_currency(money)
@@ -337,6 +352,44 @@ module LiquidFilters
     ReverseProxyLink.where(use_on_path: ::CGI.unescapeHTML(path.to_str))
   end
 
+  def parameterize(text, separator = '-')
+    text.parameterize(separator)
+  end
+
+  def find_collaborator(user, transactable)
+    return false if user.try(:id).blank?
+    transactable.transactable_collaborators.where(user: user.id).first
+  end
+
+  def find_collaborators_for_user_projects(current_user, user)
+    user.source.transactable_collaborators.where(transactable_id: current_user.source.created_listings.with_state([:pending, :in_progress]).pluck(:id))
+  end
+
+  def is_approved_collaborator(user, transactable)
+    return false if user.try(:id).blank?
+    transactable.approved_transactable_collaborators.where(user: user.id).exists?
+  end
+
+  # alternative is to create WillPaginate::CollectionDrop, however when I tried it,
+  # I could not iterate through collection. I tried adding all
+  # instance methods found in documentation but it did not work,
+  # so using this as a workaround. Probably one had to add all array's method as well
+  def total_entries(will_paginate_collection)
+    will_paginate_collection.total_entries
+  end
+
+  def get_enquirer_orders(user, transactable)
+    transactable.line_item_orders.where(user_id: user.id).order('created_at ASC').active
+  end
+
+  def get_enquirer_confirmed_orders(user, transactable)
+    transactable.line_item_orders.where(user_id: user.id).confirmed.order('created_at ASC')
+  end
+
+  def get_lister_orders(company, transactable)
+    transactable.line_item_orders.where(company: company).order('created_at ASC')
+  end
+
   def get_data_contents(external_id, options = {})
     data_source_contents = DataSourceContent.where('external_id like ?', external_id)
     data_source_contents.paginate(per_page: options[:per_page].presence || 10)
@@ -352,6 +405,22 @@ module LiquidFilters
 
   def get_payment_gateway_id(str)
     PaymentGateway.with_credit_card.mode_scope.first.try(:id)
+  end
+
+  def find_collaborators_for_user_projects(current_user, user)
+    user.source.transactable_collaborators.where(transactable_id: current_user.source.created_listings.with_state(:pending).pluck(:id))
+  end
+
+  def map(object, method)
+    object.map(&method.to_sym)
+  end
+
+  def strftime(date, format)
+    date.strftime(format)
+  end
+
+  def to_money(amount, currency)
+    Money.new(amount, currency)
   end
 
 end

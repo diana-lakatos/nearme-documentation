@@ -11,6 +11,8 @@ selects = (context = 'body')->
     if $(this).attr('multiple')
       options.plugins = ['remove_button']
 
+    options.allowEmptyOption = !!$(this).data('allow-empty-option')
+
     $(this).selectize(options)
 
 

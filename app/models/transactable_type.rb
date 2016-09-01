@@ -8,7 +8,7 @@ class TransactableType < ActiveRecord::Base
   acts_as_custom_attributes_set
 
   AVAILABLE_TYPES = ['Listing'].freeze
-  AVAILABLE_ACTION_TYPES = [NoActionBooking, SubscriptionBooking, EventBooking, TimeBasedBooking, PurchaseAction]
+  AVAILABLE_ACTION_TYPES = [NoActionBooking, SubscriptionBooking, EventBooking, TimeBasedBooking, PurchaseAction, OfferAction]
   SEARCH_VIEWS = %w(mixed list listing_mixed)
   AVAILABLE_SHOW_PATH_FORMATS = [
     "/transactable_types/:transactable_type_id/locations/:location_id/listings/:id",
@@ -33,6 +33,7 @@ class TransactableType < ActiveRecord::Base
   has_one :subscription_booking
   has_one :no_action_booking
   has_one :purchase_action
+  has_one :offer_action
 
   has_many :form_components, as: :form_componentable, dependent: :destroy
   has_many :data_uploads, as: :importable, dependent: :destroy
@@ -43,7 +44,8 @@ class TransactableType < ActiveRecord::Base
   has_many :custom_model_type_linkings, as: :linkable
   has_many :custom_model_types, through: :custom_model_type_linkings
   has_many :custom_validators, as: :validatable
-  has_many :additional_charge_types, -> { where(additional_charge_type_target_type: "TransactableType")  }, foreign_key: :additional_charge_type_target_id
+  has_many :additional_charge_types, foreign_type: :charge_type_target_type, foreign_key: :charge_type_target_id
+  has_many :merchant_fees, foreign_type: :charge_type_target_type, foreign_key: :charge_type_target_id, :as => :charge_type_target
   has_many :transactable_type_instance_views, dependent: :destroy
   has_many :instance_views, through: :transactable_type_instance_views
   has_many :transactables, dependent: :destroy, foreign_key: 'transactable_type_id'
@@ -80,6 +82,7 @@ class TransactableType < ActiveRecord::Base
   accepts_nested_attributes_for :availability_templates
   accepts_nested_attributes_for :action_types
   accepts_nested_attributes_for :all_action_types
+  accepts_nested_attributes_for :merchant_fees, allow_destroy: true
 
   delegate :translated_bookable_noun, :translation_namespace, :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
     :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager

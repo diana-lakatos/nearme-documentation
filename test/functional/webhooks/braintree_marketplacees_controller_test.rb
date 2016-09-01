@@ -34,7 +34,6 @@ class Webhooks::BraintreeMarketplacesControllerTest < ActionController::TestCase
           klass == WorkflowStep::PaymentGatewayWorkflow::MerchantAccountApproved && merchant_account_id == @braintree_marketplace_merchant_account.id
         end
 
-
         assert_difference 'Webhook.count' do
           post :webhook, bt_signature: sample_notification[:bt_signature], bt_payload: sample_notification[:bt_payload]
         end

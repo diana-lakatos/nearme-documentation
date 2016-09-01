@@ -88,8 +88,8 @@ class PlatformContextDrop < BaseDrop
     :site_name, :support_url, :support_email, :logo_image, :hero_image, :tagline, :homepage_content,
     :is_company_theme?, :call_to_action, :projectable?, :bookable?, :transactable_types, :action_rfq?,
     :bookable_nouns, :bookable_nouns_plural, :search_input_name, :facebook_key, :service_types,
-    :wish_lists_icon_set, :seller_attachments_enabled?, :wish_lists_enabled?, :active_rating_systems_present?,
-    :webhook_token, :instance, :enable_geo_localization, :split_registration?,
+    :wish_lists_icon_set, :seller_attachments_enabled?, :wish_lists_enabled?,
+    :active_rating_systems_present?, :webhook_token, :instance, :enable_geo_localization, :split_registration?,
     to: :platform_context_decorator
 
 

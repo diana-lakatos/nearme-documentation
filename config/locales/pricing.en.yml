@@ -3,6 +3,8 @@ en:
     how_is_the_service_priced: 'How is the service priced?'
     title: 'Pricing'
     add_new: 'Add new price'
+    free_enabled: 'Free'
+    free_disabled: 'Paid'
     mode:
       time_based_booking:
         label: 'Time-Based'
@@ -22,6 +24,9 @@ en:
       purchase_action:
         label: 'Purchase'
         description: 'Customer can buy items.'
+      offer_action:
+        label: 'Offer'
+        description: "Customer makes an offer and listing's owner accepts one of the offers"
     deposit:
       deposit_amount: 'Deposit amount'
       enable: 'Enable deposits'

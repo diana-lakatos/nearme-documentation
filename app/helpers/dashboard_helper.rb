@@ -20,18 +20,6 @@ module DashboardHelper
     options_for_select(analytics_options, @analytics_mode)
   end
 
-  def analytics_nav_tabs
-    out = ActiveSupport::SafeBuffer.new
-
-    analytics_options.each do |tab|
-      out << content_tag(:li, class: (tab[1] == @analytics_mode ? 'active' : '')) do
-        link_to tab[0], "?analytics_mode=#{tab[1]}"
-      end
-    end
-
-    out
-  end
-
   def analytics_active_nav_tab
     tab = analytics_options.find { |t| t[1] == @analytics_mode }
     if tab.blank?
@@ -230,10 +218,17 @@ module DashboardHelper
   end
 
   def dashboard_panel_multi_tabs(items)
+    return if items.count < 2
+
     out = ActiveSupport::SafeBuffer.new
     active = items.select {|item| item[:active] }.first
 
-    out << content_tag(:nav, class: 'panel-nav-mobile visible-sm visible-xs') do
+    if active == nil
+      items.first[:active] = true
+      active = items.first
+    end
+
+    out << content_tag(:nav, class: 'panel-nav-mobile') do
       dropdown_menu active[:name], { wrapper_class: 'links'} do
         links = ActiveSupport::SafeBuffer.new
         items.each do |item|
@@ -245,7 +240,7 @@ module DashboardHelper
       end
     end
 
-    out << content_tag(:nav, class: 'panel-nav hidden-sm hidden-xs') do
+    out << content_tag(:nav, class: 'panel-nav') do
       content_tag(:ul, class: 'tabs pull-left') do
         links = ActiveSupport::SafeBuffer.new
         items.each do |item|

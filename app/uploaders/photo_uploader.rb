@@ -86,7 +86,7 @@ class PhotoUploader < BaseImageUploader
   end
 
   def generate_project_versions?(image)
-    ['Project', 'Group'].include?(model.try(:owner_type))
+    ['Transactable', 'Group'].include?(model.try(:owner_type))
   end
 
   protected

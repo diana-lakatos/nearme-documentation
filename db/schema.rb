@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160810011059) do
+ActiveRecord::Schema.define(version: 20160901193949) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,26 +50,6 @@ ActiveRecord::Schema.define(version: 20160810011059) do
   add_index "activity_feed_subscriptions", ["follower_id", "followed_id", "followed_type"], name: "afs_followers_followed", unique: true, using: :btree
   add_index "activity_feed_subscriptions", ["follower_id", "followed_identifier"], name: "index_subscriptions_on_folllower_and_followed_identifier", unique: true, using: :btree
   add_index "activity_feed_subscriptions", ["instance_id", "followed_id", "followed_type"], name: "activity_feed_subscriptions_instance_followed", using: :btree
-
-  create_table "additional_charge_types", force: :cascade do |t|
-    t.string   "name",                               limit: 255
-    t.text     "description"
-    t.integer  "amount_cents"
-    t.string   "currency",                           limit: 255
-    t.string   "commission_receiver",                limit: 255
-    t.integer  "provider_commission_percentage"
-    t.string   "status",                             limit: 255
-    t.integer  "instance_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "additional_charge_type_target_id"
-    t.string   "additional_charge_type_target_type"
-    t.integer  "percent"
-    t.datetime "deleted_at"
-  end
-
-  add_index "additional_charge_types", ["additional_charge_type_target_id", "additional_charge_type_target_type"], name: "act_target", using: :btree
-  add_index "additional_charge_types", ["instance_id"], name: "index_additional_charge_types_on_instance_id", using: :btree
 
   create_table "additional_charges", force: :cascade do |t|
     t.string   "name",                      limit: 255
@@ -427,6 +407,28 @@ ActiveRecord::Schema.define(version: 20160810011059) do
 
   add_index "category_linkings", ["instance_id", "category_linkable_id", "category_linkable_type", "category_id"], name: "index_category_linkings_on_instance_id_linkable_unique", unique: true, using: :btree
 
+  create_table "charge_types", force: :cascade do |t|
+    t.string   "name",                           limit: 255
+    t.text     "description"
+    t.integer  "amount_cents"
+    t.string   "currency",                       limit: 255
+    t.string   "commission_receiver",            limit: 255
+    t.integer  "provider_commission_percentage"
+    t.string   "status",                         limit: 255
+    t.integer  "instance_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "charge_type_target_id"
+    t.string   "charge_type_target_type"
+    t.integer  "percent"
+    t.string   "type"
+    t.string   "charge_event"
+    t.string   "deleted_at"
+  end
+
+  add_index "charge_types", ["charge_type_target_id", "charge_type_target_type"], name: "act_target", using: :btree
+  add_index "charge_types", ["instance_id"], name: "index_charge_types_on_instance_id", using: :btree
+
   create_table "charges", force: :cascade do |t|
     t.integer  "payment_id"
     t.boolean  "success"
@@ -633,27 +635,28 @@ ActiveRecord::Schema.define(version: 20160810011059) do
   add_index "currencies", ["iso_code"], name: "index_currencies_on_iso_code", using: :btree
 
   create_table "custom_attributes", force: :cascade do |t|
-    t.string   "name",                 limit: 255
+    t.string   "name",                      limit: 255
     t.integer  "instance_id"
     t.integer  "transactable_type_id"
-    t.string   "attribute_type",       limit: 255
-    t.string   "html_tag",             limit: 255
-    t.string   "prompt",               limit: 255
-    t.string   "default_value",        limit: 255
-    t.boolean  "public",                           default: true
+    t.string   "attribute_type",            limit: 255
+    t.string   "html_tag",                  limit: 255
+    t.string   "prompt",                    limit: 255
+    t.string   "default_value",             limit: 255
+    t.boolean  "public",                                default: true
     t.text     "validation_rules"
     t.text     "valid_values"
     t.datetime "deleted_at"
-    t.string   "label",                limit: 255
+    t.string   "label",                     limit: 255
     t.text     "input_html_options"
     t.text     "wrapper_html_options"
     t.text     "hint"
-    t.string   "placeholder",          limit: 255
+    t.string   "placeholder",               limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "target_id"
-    t.string   "target_type",          limit: 255
-    t.boolean  "searchable",                       default: false
+    t.string   "target_type",               limit: 255
+    t.boolean  "searchable",                            default: false
+    t.boolean  "validation_only_on_update",             default: false
   end
 
   add_index "custom_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree
@@ -713,16 +716,17 @@ ActiveRecord::Schema.define(version: 20160810011059) do
 
   create_table "custom_validators", force: :cascade do |t|
     t.integer  "instance_id"
-    t.string   "validatable_type", limit: 255
+    t.string   "validatable_type",          limit: 255
     t.integer  "validatable_id"
-    t.string   "field_name",       limit: 255
+    t.string   "field_name",                limit: 255
     t.text     "validation_rules"
     t.text     "valid_values"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "regex_validation",             default: false, null: false
+    t.boolean  "regex_validation",                      default: false, null: false
     t.string   "regex_expression"
+    t.boolean  "validation_only_on_update",             default: false
   end
 
   add_index "custom_validators", ["instance_id", "validatable_type", "validatable_id"], name: "index_custom_validators_on_i_id_and_v_type_and_v_id", using: :btree
@@ -997,6 +1001,14 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.datetime "updated_at",  null: false
   end
 
+  create_table "group_transactables", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "group_id"
+    t.integer  "transactable_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
   create_table "groups", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "creator_id"
@@ -1039,6 +1051,22 @@ ActiveRecord::Schema.define(version: 20160810011059) do
   add_index "host_fee_line_items", ["line_itemable_id"], name: "index_host_fee_line_items_on_line_itemable_id", using: :btree
   add_index "host_fee_line_items", ["partner_id"], name: "index_host_fee_line_items_on_partner_id", using: :btree
   add_index "host_fee_line_items", ["user_id"], name: "index_host_fee_line_items_on_user_id", using: :btree
+
+  create_table "host_line_items", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "user_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "line_item_source_id"
+    t.string   "line_item_source_type"
+    t.integer  "line_itemable_id"
+    t.string   "line_itemable_type"
+    t.string   "name"
+    t.integer  "unit_price_cents",      default: 0
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "impressions", force: :cascade do |t|
     t.integer  "impressionable_id"
@@ -1176,6 +1204,9 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.string   "category_search_type"
     t.integer  "position",                                    default: 0
     t.boolean  "must_have_verified_phone_number",             default: false
+    t.boolean  "onboarding",                                  default: false
+    t.boolean  "create_company_on_sign_up",                   default: false
+    t.boolean  "search_only_enabled_profiles"
   end
 
   add_index "instance_profile_types", ["instance_id", "profile_type"], name: "index_instance_profile_types_on_instance_id_and_profile_type", unique: true, using: :btree
@@ -1317,9 +1348,10 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
+    t.boolean  "enable_geo_localization",                                                           default: true
     t.string   "orders_received_tabs"
     t.string   "my_orders_tabs"
-    t.boolean  "enable_geo_localization",                                                           default: true
+    t.boolean  "force_fill_in_wizard_form"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1349,6 +1381,7 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.decimal  "included_tax_price_cents",               precision: 10, scale: 2, default: 0.0
     t.decimal  "service_fee_guest_percent",              precision: 5,  scale: 2, default: 0.0
     t.decimal  "service_fee_host_percent",               precision: 5,  scale: 2, default: 0.0
+    t.text     "description"
   end
 
   add_index "line_items", ["company_id"], name: "index_line_items_on_company_id", using: :btree
@@ -1518,6 +1551,18 @@ ActiveRecord::Schema.define(version: 20160810011059) do
 
   add_index "merchant_accounts", ["instance_id", "merchantable_id", "merchantable_type"], name: "index_on_merchant_accounts_on_merchant", using: :btree
 
+  create_table "notification_preferences", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "user_id"
+    t.boolean  "project_updates_enabled", default: true
+    t.boolean  "group_updates_enabled",   default: true
+    t.string   "email_frequency",         default: "immediately"
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
+  end
+
+  add_index "notification_preferences", ["instance_id", "user_id"], name: "index_notification_preferences_on_instance_id_and_user_id", unique: true, using: :btree
+
   create_table "offers", force: :cascade do |t|
     t.string   "name"
     t.text     "summary"
@@ -1644,6 +1689,7 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.boolean  "exclusive_price"
     t.boolean  "book_it_out"
     t.datetime "completed_at"
+    t.boolean  "is_free_booking",                                           default: false
   end
 
   add_index "orders", ["billing_address_id"], name: "index_orders_on_billing_address_id", using: :btree
@@ -1658,6 +1704,17 @@ ActiveRecord::Schema.define(version: 20160810011059) do
   add_index "orders", ["transactable_id"], name: "index_orders_on_transactable_id", using: :btree
   add_index "orders", ["transactable_pricing_id"], name: "index_orders_on_transactable_pricing_id", using: :btree
   add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
+
+  create_table "page_data_source_contents", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "page_id"
+    t.integer  "data_source_content_id"
+    t.string   "slug"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "page_data_source_contents", ["instance_id", "page_id", "data_source_content_id", "slug"], name: "pdsc_on_foreign_keys", using: :btree
 
   create_table "pages", force: :cascade do |t|
     t.string   "path",                      limit: 255,                 null: false
@@ -1725,6 +1782,7 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.boolean  "test_active"
     t.boolean  "live_active"
     t.datetime "deleted_at"
+    t.text     "config"
   end
 
   create_table "payment_gateways_countries", force: :cascade do |t|
@@ -1784,6 +1842,7 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
     t.integer  "payer_id"
+    t.datetime "expired_at"
   end
 
   add_index "payment_subscriptions", ["company_id"], name: "index_payment_subscriptions_on_company_id", using: :btree
@@ -1807,6 +1866,7 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.string   "payment_gateway_mode",           limit: 4
     t.integer  "payment_gateway_id"
     t.datetime "failed_at"
+    t.string   "encrypted_token"
   end
 
   add_index "payment_transfers", ["company_id"], name: "index_payment_transfers_on_company_id", using: :btree
@@ -1982,9 +2042,11 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.boolean  "featured",              default: false
     t.datetime "draft_at"
     t.integer  "followers_count",       default: 0,     null: false
+    t.integer  "transactable_id"
   end
 
   add_index "projects", ["instance_id", "creator_id"], name: "index_projects_on_instance_id_and_creator_id", using: :btree
+  add_index "projects", ["transactable_id"], name: "index_projects_on_transactable_id", using: :btree
 
   create_table "projects_user_status_updates", force: :cascade do |t|
     t.integer "project_id"
@@ -2063,6 +2125,10 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.datetime "paid_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "order_id"
+    t.text     "comment"
+    t.string   "state"
+    t.text     "rejection_reason"
   end
 
   create_table "recurring_bookings", force: :cascade do |t|
@@ -2728,6 +2794,7 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.integer  "instance_id"
     t.string   "youtube_url"
     t.string   "rss_url"
+    t.string   "linkedin_url"
   end
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
@@ -2784,6 +2851,22 @@ ActiveRecord::Schema.define(version: 20160810011059) do
   add_index "transactable_action_types", ["instance_id", "transactable_id", "type"], name: "transactable_action_types_main_idx", using: :btree
   add_index "transactable_action_types", ["instance_id"], name: "index_transactable_action_types_on_instance_id", using: :btree
 
+  create_table "transactable_collaborators", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "user_id"
+    t.integer  "transactable_id"
+    t.datetime "approved_by_user_at"
+    t.datetime "approved_by_owner_at"
+    t.string   "email"
+    t.datetime "deleted_at"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "transactable_collaborators", ["instance_id"], name: "index_transactable_collaborators_on_instance_id", using: :btree
+  add_index "transactable_collaborators", ["transactable_id"], name: "index_transactable_collaborators_on_transactable_id", using: :btree
+  add_index "transactable_collaborators", ["user_id"], name: "index_transactable_collaborators_on_user_id", using: :btree
+
   create_table "transactable_pricings", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "transactable_type_pricing_id"
@@ -2805,6 +2888,14 @@ ActiveRecord::Schema.define(version: 20160810011059) do
 
   add_index "transactable_pricings", ["instance_id", "action_type", "action_id"], name: "transactable_pricings_main_index", using: :btree
   add_index "transactable_pricings", ["instance_id"], name: "index_transactable_pricings_on_instance_id", using: :btree
+
+  create_table "transactable_topics", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "transactable_id"
+    t.integer  "topic_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
 
   create_table "transactable_type_action_types", force: :cascade do |t|
     t.integer  "instance_id"
@@ -2857,6 +2948,8 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "order_class_name"
+    t.boolean  "allow_nil_price_cents",      default: false
   end
 
   add_index "transactable_type_pricings", ["instance_id", "action_type", "action_id"], name: "action_type_pricings_main_index", using: :btree
@@ -2952,6 +3045,10 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.boolean  "display_additional_charges",                                                     default: true
     t.boolean  "single_location",                                                                default: false,      null: false
     t.boolean  "hide_additional_charges_on_listing_page",                                        default: false,      null: false
+    t.hstore   "custom_settings",                                                                default: {},         null: false
+    t.boolean  "auto_accept_invitation_as_collaborator",                                         default: false
+    t.boolean  "require_transactable_during_onboarding",                                         default: true
+    t.boolean  "access_restricted_to_invited"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -3023,6 +3120,9 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.string   "available_actions",                                                     default: [],                     array: true
     t.integer  "spree_product_id"
     t.integer  "shipping_profile_id"
+    t.boolean  "seek_collaborators",                                                    default: false
+    t.integer  "followers_count",                                                       default: 0,         null: false
+    t.string   "state"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
@@ -3030,6 +3130,13 @@ ActiveRecord::Schema.define(version: 20160810011059) do
   add_index "transactables", ["parent_transactable_id"], name: "index_transactables_on_parent_transactable_id", using: :btree
   add_index "transactables", ["slug"], name: "index_transactables_on_slug", using: :btree
   add_index "transactables", ["transactable_type_id"], name: "index_transactables_on_transactable_type_id", using: :btree
+
+  create_table "transactables_user_status_updates", force: :cascade do |t|
+    t.integer "transactable_id"
+    t.integer "user_status_update_id"
+  end
+
+  add_index "transactables_user_status_updates", ["transactable_id", "user_status_update_id"], name: "transactable_usu_id", using: :btree
 
   create_table "translations", force: :cascade do |t|
     t.string   "locale",         limit: 255
@@ -3157,6 +3264,8 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "enabled",                  default: false
+    t.datetime "onboarded_at"
   end
 
   add_index "user_profiles", ["instance_id", "user_id", "profile_type"], name: "index_user_profiles_on_instance_id_and_user_id_and_profile_type", unique: true, using: :btree
@@ -3301,6 +3410,8 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.integer  "project_collborations_count",                        default: 0,                                                                                   null: false
     t.boolean  "click_to_call",                                      default: false
     t.integer  "orders_count",                                       default: 0
+    t.integer  "transactable_collaborators_count",                   default: 0,                                                                                   null: false
+    t.integer  "wish_list_items_count",                              default: 0
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
@@ -3462,6 +3573,7 @@ ActiveRecord::Schema.define(version: 20160810011059) do
     t.text     "payload_data",                          default: "{}"
     t.text     "headers",                               default: "{}"
     t.text     "prevent_trigger_condition",             default: "",   null: false
+    t.string   "bcc_type"
   end
 
   add_index "workflow_alerts", ["instance_id", "workflow_step_id"], name: "index_workflow_alerts_on_instance_id_and_workflow_step_id", using: :btree

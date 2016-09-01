@@ -1,0 +1,28 @@
+<h3>History for <a href="{{ transactable.show_path }}">{{ order.transactable.name }}</a></h3>
+
+{% if order.user.default_company.merchant_accounts[0].weekly_or_monthly_transfers? %}
+  <div class="alert alert-info">Next Payment Cycle Scheduled For: <b>{{ order.user.default_company.merchant_accounts[0].next_transfer_date | l: 'short' }}</b></div>
+  {% endif %}
+
+<div class="time-tracking-a">
+  {% for item in order.recurring_booking_periods %}
+    {% unless item.persisted? %}
+      {% continue %}
+    {% endunless %}
+    {% include 'dashboard/order_items/order_item' %}
+  {% endfor %}
+
+  <div class="totals-summary">
+    <h4>Summary</h4>
+    <dl>
+      <dt class="grand-total-label">Grand total:</dt>
+      <dd class="grand-total-amount">{{ order.formatted_total_amount }}</dd>
+
+      <dt class="total-paid-label">Total Paid:</dt>
+      <dd class="total-paid-amount">{{ order.formatted_total_paid_amount }}</dd>
+
+      <dt class="total-unpaid-label">Total Unpaid:</dt>
+      <dd class="total-unpaid-amount">{{ order.formatted_total_unpaid_amount }}</dd>
+    </dl>
+  </div>
+</div>

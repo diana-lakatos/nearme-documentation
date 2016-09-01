@@ -25,4 +25,3 @@ class ProjectType < TransactableType
     self.searcher_type ||= 'fulltext'
   end
 end
-

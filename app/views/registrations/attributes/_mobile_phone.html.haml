@@ -9,3 +9,5 @@
 
     - if HiddenUiControls.find('registrations/click_to_call').visible?
       = build_click_to_call_verify_button(f.object.mobile_number, f.object.country.try(:name))
+      - if I18n.exists?('simple_form.hints.user.verify_number')
+        %button{type: "button", class: "hint-toggler", title: "", data: { toggle: "tooltip", placement: "right", original_title: t('simple_form.hints.user.verify_number') } }

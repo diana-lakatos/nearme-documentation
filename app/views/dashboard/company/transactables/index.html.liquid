@@ -1,0 +1,76 @@
+{% assign i18n_title = 'dashboard.transactables.manage' | translate %}
+{% title i18n_title %}
+
+{% content_for 'page_header' %}
+  <h1>
+    <span class='hidden-xs'>{{ 'dashboard.transactables.title.manage' | translate }}</span>
+    {{ 'dashboard.transactables.title.listings' | translate }}
+  </h1>
+
+  <div class='options visible-sm visible-xs'>
+    <a href='{{ transactable_type.new_transactable_path }}' class='btn btn-primary'>
+      <span class='fa fa-plus'></span>
+      {{ 'dashboard.items.new_listing_short' | translate }}
+    </a>
+  </div>
+{% endcontent_for %}
+
+{% content_for 'panel_navigation_links' %}
+  {% for tt in platform_context.transactable_types %}
+    <li class='{{ tt.id | active_class:transactable_type.id }}'>
+      <a href='{{ tt.transactable_types_path }}'>{{ 'dashboard.manage_listings.tab' | translate: default: tt.bookable_noun_plural }}</a>
+    </li>
+  {% endfor %}
+{% endcontent_for %}
+
+{% content_for 'panel_options' %}
+  <div class='pull-right options {% if transactables.size > 0 %} additional-listing-options {% endif %}'>
+    {% if transactable_type.show_bulk_upload_link? %}
+      <a href='{{ transactable_type.new_data_upload_path }}' data-modal='true'>{{ 'data_upload.manage.bulk_upload' | translate }}</a>
+    {% endif %}
+
+    <a href='{{ transactable_type.new_transactable_path }}' class='btn btn-primary navbar-btn'>
+      <span class='fa fa-plus'></span>
+      {{ 'dashboard.items.new_listing_full' | translate: type: transactable_type.bookable_noun_plural }}
+    </a>
+  </div>
+{% endcontent_for %}
+
+{% if platform_context.transactable_types.size > 1 %}
+<nav class='panel-nav-mobile' role='navigation'>
+  {% dropdown_menu { label: transactable_type.bookable_noun_plural, wrapper_class: 'links' } %}
+    {% yield 'panel_navigation_links' %}
+  {% enddropdown_menu %}
+</nav>
+{% endif %}
+
+{% if platform_context.transactable_types.size > 3 %}
+  <div class='row'>
+    <div class='col-md-3'>
+      <nav class='hidden-xs hidden-sm' role='navigation'>
+        <ul class='nav nav-pills nav-stacked'>
+          {% yield 'panel_navigation_links' %}
+        </ul>
+      </nav>
+    </div>
+
+    <div class='col-md-9'>
+      <nav class='panel-nav hidden-xs hidden-sm'>
+        {% yield 'panel_options' %}
+      </nav>
+
+      {% include 'dashboard/company/transactables/listing.html' %}
+    </div>
+  </div>
+{% else %}
+  <nav class='panel-nav'>
+    {% if platform_context.transactable_types.size > 1 %}
+    <ul class='tabs pull-left'>
+      {% yield 'panel_navigation_links' %}
+    </ul>
+    {% endif %}
+    {% yield 'panel_options' %}
+  </nav>
+
+  {% include 'dashboard/company/transactables/listing.html' %}
+{% endif %}

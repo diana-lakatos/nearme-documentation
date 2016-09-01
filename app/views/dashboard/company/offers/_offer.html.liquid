@@ -1,0 +1,15 @@
+{{ offer.state }}
+<br />
+{% if offer.can_confirm? %}
+
+  <a class="btn btn-info" data-modal="true" href="{{ offer.new_payment_url }}">{{ 'dashboard.host_reservations.actions.accept' | t}}</a>
+
+{% endif %}
+
+{% if reservation.can_reject? %}
+  <form class="edit_reservation" action="{{ offer.offer_cancel_url }}" accept-charset="UTF-8" method="post">
+    <input name="utf8" type="hidden" value="&#x2713;" />
+    <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
+    <input type="submit" name="commit" value="{{ 'dashboard.host_reservations.actions.cancel' | t }}" data-confirm="{{ 'dashboard.host_reservations.confirmations.reject' | t }}" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-success" />
+  </form>
+{% endif %}

@@ -18,9 +18,9 @@ class Dashboard::GroupMembersController < Dashboard::BaseController
   def destroy
     @membership.destroy
     if current_user.id == @membership.user_id
-      WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberHasQuit, @membership.group_id, @membership.user_id)
+      WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberHasQuit, @membership.id)
     else
-      WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberDeclined, @membership.group_id, @membership.user_id)
+      WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberDeclined, @membership.id)
     end
     render json: { result: 'OK' }
   end

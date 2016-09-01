@@ -47,6 +47,12 @@ class User < ActiveRecord::Base
   serialize :instance_unread_messages_threads_count, Hash
   serialize :avatar_transformation_data, Hash
 
+  # strange bug, serialize stops to work if Taggable is included before it
+  include Taggable
+
+  def to_s
+    puts "hi"
+  end
   delegate :to_s, to: :name
 
   belongs_to :domain
@@ -57,6 +63,7 @@ class User < ActiveRecord::Base
   has_many :orders
   has_many :purchases
   has_many :shipping_profiles
+  has_many :transactable_line_items, class_name: 'LineItem::Transactable'
   has_many :shipping_addresses, through: :orders, class_name: 'OrderAddress'
   has_many :billing_addresses, through: :orders, class_name: 'OrderAddress'
   has_many :activity_feed_events, as: :followed, dependent: :destroy
@@ -78,7 +85,7 @@ class User < ActiveRecord::Base
   has_many :comments, inverse_of: :creator
   has_many :created_companies, class_name: "Company", foreign_key: 'creator_id', inverse_of: :creator
   has_many :feed_followers, through: :activity_feed_subscriptions_as_followed, source: :follower
-  has_many :feed_followed_projects, through: :activity_feed_subscriptions, source: :followed, source_type: 'Project'
+  has_many :feed_followed_transactables, through: :activity_feed_subscriptions, source: :followed, source_type: 'Transactable'
   has_many :feed_followed_topics, through: :activity_feed_subscriptions, source: :followed, source_type: 'Topic'
   has_many :feed_followed_users, through: :activity_feed_subscriptions,  source: :followed, source_type: 'User'
   has_many :feed_following, through: :activity_feed_subscriptions, source: :follower
@@ -88,19 +95,21 @@ class User < ActiveRecord::Base
   has_many :payments, foreign_key: 'payer_id'
   has_many :instance_admins, foreign_key: 'user_id', dependent: :destroy
   has_many :listings, through: :locations, class_name: 'Transactable', inverse_of: :creator
-  has_many :listing_orders, class_name: 'Order', through: :listings, source: :orders, inverse_of: :creator
+  has_many :listing_orders, class_name: 'Order', source: :orders, foreign_key: :creator_id, inverse_of: :creator
+  has_many :created_listings, class_name: 'Transactable', foreign_key: 'creator_id'
+  has_many :created_listings_orders, class_name: 'Order', through: :created_listings, source: :orders, inverse_of: :creator
+  has_many :listing_reservations, class_name: 'Reservation', through: :listings, source: :reservations, inverse_of: :creator
   has_many :listing_recurring_bookings, class_name: 'RecurringBooking', through: :listings, source: :recurring_bookings, inverse_of: :creator
   has_many :locations, through: :companies, inverse_of: :creator
   has_many :mailer_unsubscriptions
   has_many :photos, foreign_key: 'creator_id', inverse_of: :creator
   has_many :attachments, class_name: 'SellerAttachment'
-  has_many :projects, foreign_key: 'creator_id', inverse_of: :creator
+  has_many :transactables, foreign_key: 'creator_id', inverse_of: :creator
   has_many :offers, foreign_key: 'creator_id', inverse_of: :creator
-  has_many :bids
-  has_many :offer_bids, class_name: 'Bid', through: :offers, source: :bids
-  has_many :projects_collaborated, through: :project_collaborators, source: :project
-  has_many :project_collaborators
-  has_many :approved_project_collaborations, -> { approved }, class_name: 'ProjectCollaborator'
+  has_many :transactables_collaborated, through: :transactable_collaborators, source: :transactable
+  has_many :approved_transactables_collaborated, through: :transactable_collaborators, source: :transactable
+  has_many :transactable_collaborators
+  has_many :approved_transactable_collaborations, -> { approved }, class_name: 'TransactableCollaborator'
   has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
   has_many :orders, foreign_key: 'owner_id'
   has_many :recurring_bookings, foreign_key: 'owner_id'
@@ -124,6 +133,7 @@ class User < ActiveRecord::Base
   has_many :groups, foreign_key: 'creator_id', inverse_of: :creator
   has_many :memberships, class_name: 'GroupMember'
   has_many :group_collaborated, -> { GroupMember.approved }, through: :memberships, source: :group
+  has_many :all_group_collaborated, through: :memberships, source: :group
   has_many :moderated_groups, -> { GroupMember.approved.moderator }, through: :memberships, source: :group
   has_many :group_members
 
@@ -134,6 +144,10 @@ class User < ActiveRecord::Base
   has_one :buyer_profile, -> { buyer }, class_name: 'UserProfile'
   has_one :default_profile, -> { default }, class_name: 'UserProfile'
   has_one :communication, ->(user) { where(provider_key: PlatformContext.current.instance.twilio_config[:key]) }, dependent: :destroy
+
+  has_one :notification_preference, dependent: :destroy
+  has_one :recurring_notification_preference, -> { NotificationPreference.recurring }, class_name: 'NotificationPreference'
+  has_one :immediate_notification_preference, -> { NotificationPreference.immediate }, class_name: 'NotificationPreference'
 
   after_create :create_blog
   after_destroy :perform_cleanup
@@ -151,12 +165,13 @@ class User < ActiveRecord::Base
 
   accepts_nested_attributes_for :approval_requests
   accepts_nested_attributes_for :companies
-  accepts_nested_attributes_for :projects
+  accepts_nested_attributes_for :transactables
   accepts_nested_attributes_for :current_address
   accepts_nested_attributes_for :seller_profile
   accepts_nested_attributes_for :buyer_profile
   accepts_nested_attributes_for :default_profile
-  accepts_nested_attributes_for :bids
+
+  accepts_nested_attributes_for :notification_preference
 
   scope :patron_of, lambda { |listing|
     joins(:orders).where(orders: { transactable_id: listing.id }).uniq
@@ -213,19 +228,20 @@ class User < ActiveRecord::Base
 
   scope :admin,     -> { where(admin: true) }
   scope :not_admin, -> { where("admin is NULL or admin is false") }
-  scope :with_joined_project_collaborations, -> { joins("LEFT OUTER JOIN project_collaborators pc ON users.id = pc.user_id AND (pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)")}
-  scope :created_projects, -> { joins('LEFT OUTER JOIN projects p ON users.id = p.creator_id') }
+  scope :with_joined_transactable_collaborations, -> { joins("LEFT OUTER JOIN transactable_collaborators pc ON users.id = pc.user_id AND (pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)")}
+  scope :created_transactables, -> { joins('LEFT OUTER JOIN transactables p ON users.id = p.creator_id') }
   scope :featured, -> { where(featured: true) }
 
   scope :by_topic, -> (topic_ids) do
     if topic_ids.present?
-      with_joined_project_collaborations.created_projects.
-        joins(" LEFT OUTER JOIN project_topics pt on pt.project_id = pc.project_id OR pt.project_id = p.id ").
+      with_joined_transactable_collaborations.created_transactables.
+        joins(" LEFT OUTER JOIN transactable_topics pt on pt.transactable_id = pc.transactable_id OR pt.transactable_id = p.id ").
         where('pt.topic_id IN (?)', topic_ids).group('users.id')
     end
   end
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((user_profiles.properties->?), ',') && ARRAY[?]", property, values) if values.present? }
   scope :by_profile_type, -> (ipt_id) { includes(:user_profiles).where(user_profiles: { instance_profile_type_id: ipt_id }) if ipt_id.present? }
+  scope :with_enabled_profile, -> (ipt_id) { where(user_profiles: { enabled: true }) }
 
   validates_with CustomValidators
   validates :name, :first_name, presence: true
@@ -309,27 +325,6 @@ class User < ActiveRecord::Base
       recoverable
     end
 
-    def search_by_query(attributes = [], query)
-      if query.present?
-        words = query.split.map.with_index{|w, i| ["word#{i}".to_sym, "%#{w}%"]}.to_h
-
-        sql = attributes.map do |attrib|
-          if self.columns_hash[attrib.to_s].type == :hstore
-            attrib = "CAST(avals(#{quoted_table_name}.\"#{attrib}\") AS text)"
-          else
-            attrib = "#{quoted_table_name}.\"#{attrib}\""
-          end
-          words.map do |word, value|
-            "#{attrib} ILIKE :#{word}"
-          end
-        end.flatten.join(' OR ')
-
-        where(ActiveRecord::Base.send(:sanitize_sql_array, [sql, words]))
-      else
-        all
-      end
-    end
-
     def custom_order(order, user)
       case order
         when /featured/i
@@ -343,15 +338,22 @@ class User < ActiveRecord::Base
           group('addresses.id, users.id').joins(:current_address).select('users.*')
           .merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance', select: 'users.*'))
         when /number_of_projects/i
-          order('projects_count + project_collborations_count DESC')
+          order('transactables_count + transactable_collaborators_count DESC')
+        when /custom_attributes./
+          parsed_order = order.match(/custom_attributes.([a-zA-Z\.\_\-]*)_(asc|desc)/)
+          order(ActiveRecord::Base.send(:sanitize_sql_array, [ "cast(user_profiles.properties -> :field_name as float) #{parsed_order[2]}", { field_name: parsed_order[1] }]))
         else
           if PlatformContext.current.instance.is_community?
-            order('projects_count + project_collborations_count DESC, followers_count DESC')
+            order('transactables_count + transactable_collaborators_count DESC, followers_count DESC')
           else
             all
           end
       end
     end
+  end
+
+  def user
+    self
   end
 
   def get_seller_profile
@@ -362,9 +364,10 @@ class User < ActiveRecord::Base
     buyer_profile || self.build_buyer_profile(instance_profile_type: PlatformContext.current.instance.try("buyer_profile_type"))
   end
 
-  def build_profile
+  def get_default_profile
     default_profile || self.build_default_profile(instance_profile_type: PlatformContext.current.instance.try("default_profile_type"))
   end
+  alias :build_profile :get_default_profile
 
   def custom_validators
     case force_profile
@@ -401,27 +404,27 @@ class User < ActiveRecord::Base
     )
   end
 
-  def all_projects(with_pending = false)
-    # If with_pending is true we want all projects including those to which this user is an unapproved collaborator (added by owner but not approved by this user or added by user but not approved by owner)
-    # Projects with pending should only be visible on the users's own profile page
-    projects = Project.where("
+  def all_transactables(with_pending = false)
+    # If with_pending is true we want all transactables including those to which this user is an unapproved collaborator (added by owner but not approved by this user or added by user but not approved by owner)
+    # Transactables with pending should only be visible on the users's own profile page
+    transactables = Transactable.where("
      creator_id = ? OR
-     EXISTS (SELECT 1 from project_collaborators pc WHERE pc.project_id = projects.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NOT NULL #{with_pending ? "OR" : "AND"} approved_by_owner_at IS NOT NULL) AND deleted_at IS NULL)
+     EXISTS (SELECT 1 from transactable_collaborators pc WHERE pc.transactable_id = transactables.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NOT NULL #{with_pending ? "OR" : "AND"} approved_by_owner_at IS NOT NULL) AND deleted_at IS NULL)
                              ",id, id, email)
 
-    # If the project is pending we add .pending_collaboration to the object (if we requested pending objects as well)
+    # If the transactable is pending we add .pending_collaboration to the object (if we requested pending objects as well)
     if with_pending
-      projects = projects.select(
+      transactables = transactables.select(
         ActiveRecord::Base.send(:sanitize_sql_array,
-                                ["projects.*,
-           (SELECT pc.id from project_collaborators pc WHERE pc.project_id = projects.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) as pending_collaboration
+                                ["transactables.*,
+           (SELECT pc.id from transactable_collaborators pc WHERE pc.transactable_id = transactables.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) as pending_collaboration
                                  ",
                                  id, email
       ]
                                )
       )
     end
-    projects
+    transactables
   end
 
   def iso_country_code
@@ -434,8 +437,8 @@ class User < ActiveRecord::Base
     iso_country_code.presence || PlatformContext.current.instance.default_country_code
   end
 
-  def all_projects_count
-    projects_count + project_collborations_count
+  def all_transactables_count
+    transactables_count + transactable_collaborators_count
   end
 
   UserProfile::PROFILE_TYPES.each do |profile_type|
@@ -690,14 +693,14 @@ class User < ActiveRecord::Base
     self.companies.first
   end
 
-  def all_transactables
+  def all_company_transactables
     if company = default_company
       company.listings
     end
   end
 
   def first_transactable
-    all_transactables.try(:first)
+    all_company_transactables.try(:first)
   end
 
   def first_listing
@@ -1043,8 +1046,8 @@ class User < ActiveRecord::Base
   end
 
   def is_available_now?
-    if seller_profile.present?
-      listings.find { |listing| listing.open_now? }.present?
+    if seller_profile.present? && listings.any?(&:time_based_booking?)
+      listings.find { |listing| listing.time_based_booking? && listing.open_now? }.present?
     else
       # right now there is no way to determine buyer availability, so we assume he
       # is available at all times and are displaying
@@ -1097,6 +1100,10 @@ class User < ActiveRecord::Base
 
   def jsonapi_serializer_class_name
     'UserJsonSerializer'
+  end
+
+  def members_email_recipients
+    approved_members.select { |u| u.notification_preference.blank? || u.notification_preference.email_frequency.eql?('immediately') }
   end
 
 private

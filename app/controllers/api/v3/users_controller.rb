@@ -25,9 +25,9 @@ module Api
         when 'default'
           WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @user.id)
         when 'seller'
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::HostAccountCreated, @user.id)
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::ListerAccountCreated, @user.id)
         when 'buyer'
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::GuestAccountCreated, @user.id)
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::EnquirerAccountCreated, @user.id)
         end
         render json: ApiSerializer.serialize_object(@user)
       else

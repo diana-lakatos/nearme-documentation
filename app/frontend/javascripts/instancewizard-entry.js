@@ -12,7 +12,7 @@ DNM.registerInitializer(function(){
         var InstanceWizardForm = require('./instance_wizard/instance_wizard_form');
         els.each(function(){
             return new InstanceWizardForm(this);
-        })
+        });
     });
 });
 

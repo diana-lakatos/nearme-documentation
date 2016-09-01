@@ -22,6 +22,14 @@ class WishListItemDrop < BaseDrop
     polymorphic_wishlistable_path(@wishlistable)
   end
 
+  def wishlistable_type
+    @wishlistable.class.name.downcase
+  end
+
+  def wishlistable_id
+    @wishlistable.id
+  end
+
   # Name of the associated object
   def wishlistable_name
     @wishlistable.name
@@ -29,7 +37,7 @@ class WishListItemDrop < BaseDrop
 
   # Name of the associated company
   def company_name
-    @wishlistable.company.name
+    @wishlistable.try(:companies).try(:first).try(:name) || @wishlistable.company.name
   end
 
   # Price of the associated item, otherwise the address
@@ -37,7 +45,7 @@ class WishListItemDrop < BaseDrop
     if @wishlistable.try(:price)
       number_to_currency_symbol @wishlistable.currency, @wishlistable.price
     else
-      @wishlistable.address
+      @wishlistable.try(:address)
     end
   end
 
@@ -52,7 +60,9 @@ class WishListItemDrop < BaseDrop
 
   # Path to the image of the item
   def image_url
-    if @wishlistable.try(:images)
+    if @wishlistable.try(:avatar_url)
+      @wishlistable.avatar_url(:big)
+    elsif @wishlistable.try(:images)
       @wishlistable.images.empty? ? no_image : asset_url(@wishlistable.images.first.image_url)
     else
       @wishlistable.photos_metadata.any? ? @wishlistable.photos_metadata[0][:golden] : no_image
@@ -64,6 +74,8 @@ class WishListItemDrop < BaseDrop
       @wishlistable.decorate.show_path
     elsif @wishlistable.is_a?(Location)
       @wishlistable.listings.searchable.first.try(:decorate).try(:show_path)
+    elsif @wishlistable.is_a?(User)
+      @wishlistable.decorate.show_path
     end
   end
 

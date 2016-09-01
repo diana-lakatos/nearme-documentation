@@ -40,10 +40,9 @@ When(/^I edit (host|transactable|guest) rating with (valid|invalid) values$/) do
   RatingSystem.update_all(transactable_type_id: @reservation.transactable.transactable_type_id)
   rating_system = RatingSystem.where(subject: object).first
   rating_system ||= RatingSystem.where.not(subject: ['host', 'guest']).first
-  FactoryGirl.create(:review, rating_system_id: rating_system.id, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s, user: @user, rating: 5)
+  FactoryGirl.create(:review, rating_system_id: rating_system.id, reviewable_id: @reservation.transactable_line_items.first.id, reviewable_type: 'LineItem::Transactable', user: @user, rating: 5)
 
   visit completed_dashboard_reviews_path
-
   within('.review-actions') do
     click_button 'Edit'
   end
@@ -57,7 +56,7 @@ end
 
 When(/^I remove review$/) do
   RatingSystem.update_all(transactable_type_id: @reservation.transactable.transactable_type_id)
-  @review_to_be_removed = FactoryGirl.create(:review, rating_system_id: RatingSystem.for_hosts.first.id, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s, user: @user, rating: 5)
+  @review_to_be_removed = FactoryGirl.create(:review, rating_system_id: RatingSystem.for_hosts.first.id, reviewable_id: @reservation.transactable_line_items.first.id, reviewable_type: 'LineItem::Transactable', user: @user, rating: 5)
   visit completed_dashboard_reviews_path
   page.driver.accept_js_confirms!
 

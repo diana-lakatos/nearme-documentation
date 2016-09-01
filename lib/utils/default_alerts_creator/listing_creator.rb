@@ -43,6 +43,22 @@ class Utils::DefaultAlertsCreator::ListingCreator < Utils::DefaultAlertsCreator:
     create_alert!({associated_class: WorkflowStep::ListingWorkflow::InappropriateReported, name: 'listing_inappropriate_reported_email', path: 'inappropriate_reports_mailer/inappropriate_report', subject: "{{ listing.name }} has been flagged as inappropriate!", alert_type: 'email', recipient_type: 'Administrator', delay: 0})
   end
 
+  def create_notify_lister_of_cancellation!
+    create_alert!({associated_class: WorkflowStep::ListingWorkflow::Cancelled, name: 'notify_lister_of_cancellation', path: 'transactable_mailer/notify_lister_of_cancellation', subject: "You have cancelled {{ listing.name }}!", alert_type: 'email', recipient_type: 'lister', delay: 0})
+  end
+
+  def create_notify_collaborators_of_cancellation!
+    create_alert!({associated_class: WorkflowStep::ListingWorkflow::Cancelled, name: 'notify_collaborators_of_cancellation', path: 'transactable_mailer/notify_collaborators_of_cancellation', subject: "{{ listing.name }} has been cancelled!", alert_type: 'email', recipient_type: '', bcc_type: 'collaborators', delay: 0})
+  end
+
+  def create_notify_lister_of_completion!
+    create_alert!({associated_class: WorkflowStep::ListingWorkflow::Cancelled, name: 'notify_lister_of_completion', path: 'transactable_mailer/notify_lister_of_completion', subject: "You have marked {{ listing.name }} as completed!", alert_type: 'email', recipient_type: 'lister', delay: 0})
+  end
+
+  def create_notify_enquirer_of_completion!
+    create_alert!({associated_class: WorkflowStep::ListingWorkflow::Completed, name: 'notify_enquirer_of_completion', path: 'transactable_mailer/notify_enquirer_of_completion', subject: "{{ listing.name }} has been marked as completed!", alert_type: 'email', recipient_type: 'enquirer', delay: 0})
+  end
+
   protected
 
   def workflow_type

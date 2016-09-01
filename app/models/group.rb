@@ -17,9 +17,9 @@ class Group < ActiveRecord::Base
   has_many :photos, as: :owner, dependent: :destroy
   has_many :links, as: :linkable, dependent: :destroy
 
-  has_many :group_projects, dependent: :destroy
-  has_many :projects, through: :group_projects
-  alias_method :all_projects, :projects
+  has_many :group_transactables, dependent: :destroy
+  has_many :transactables, through: :group_transactables
+  alias_method :all_transactables, :transactables
 
   has_many :group_members, dependent: :destroy
   has_many :memberships, class_name: 'GroupMember', dependent: :destroy
@@ -38,11 +38,13 @@ class Group < ActiveRecord::Base
   end
 
   scope :only_private, -> { joins(:group_type).where(transactable_types: { name: 'Private' }) }
+  scope :not_public, -> { joins(:group_type).where(transactable_types: { name: %w(Private Moderated) }) }
 
   scope :with_date, ->(date) { where(created_at: date) }
   scope :by_search_query, lambda { |query|
     where('name ilike ? or description ilike ? or summary ilike ?', query, query, query)
   }
+  scope :active, -> { where('groups.draft_at IS NULL') }
 
   with_options unless: ->(record) { record.draft? } do |options|
     options.validates :transactable_type, presence: true

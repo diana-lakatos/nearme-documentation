@@ -1,0 +1,21 @@
+class WorkflowStep::FollowerWorkflow::BaseStep < WorkflowStep::BaseStep
+
+  def initialize(activity_feed_subscription_id)
+    @activity_feed_subscription = ActivityFeedSubscription.find_by(id: activity_feed_subscription_id)
+    @followed = @activity_feed_subscription.try(:followed)
+    @user = @activity_feed_subscription.try(:follower)
+  end
+
+  def enquirer
+    @user
+  end
+
+  def should_be_processed?
+    @activity_feed_subscription.present? && @followed.present?
+  end
+
+  def workflow_type
+    'follower_workflow'
+  end
+
+end

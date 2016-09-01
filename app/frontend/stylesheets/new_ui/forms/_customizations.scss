@@ -1,0 +1,15 @@
+.customizations-fields-wrapper {
+    margin-bottom: 20px;
+    border: 1px solid $panel-default-border;
+    padding: 20px;
+
+    hr {
+        border-color: $panel-default-border;
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+
+    .add-link:first-child {
+        margin-top: 20px;
+    }
+}

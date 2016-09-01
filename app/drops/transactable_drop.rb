@@ -56,12 +56,13 @@ class TransactableDrop < BaseDrop
   #   deposit amount cents
   # average_rating
   #   average rating for this listing
-  delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :creator, :administrator, :last_booked_days,
+  delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :creator, :creator_id, :administrator, :last_booked_days,
     :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?, :action_type,
     :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at,
     :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, :attachments, :confirm_reservations,
     :to_key, :model_name, :deposit_amount_cents, :customizations, :to_param, :hours_for_guest_to_confirm_payment, :availability_exceptions,
-    :action_free_booking?, :average_rating, :time_based_booking?, to: :source
+    :action_free_booking?, :average_rating, :time_based_booking?, :transactable_collaborators, :collaborating_users, :approved_transactable_collaborators,
+    :user_messages, :line_item_orders, :state, :created_at, :pending?, :completed?,:transactable_type_id, to: :source
 
   # action_price_per_unit
   #   returns true if there is a single unit available of the transactable item for a given time period
@@ -184,6 +185,14 @@ class TransactableDrop < BaseDrop
     routes.dashboard_company_host_reservations_path(token_key => @source.administrator.try(:temporary_token))
   end
 
+  def index_url
+    routes.dashboard_company_transactable_type_transactables_path(@source.transactable_type, anchor: "transactable_#{@source.id}", token_key => @source.administrator.try(:temporary_token))
+  end
+
+  def in_progress_index_url
+    routes.dashboard_company_transactable_type_transactables_path(@source.transactable_type, state: 'in progress', anchor: "transactable_#{@source.id}", token_key => @source.administrator.try(:temporary_token))
+  end
+
   # url to the dashboard area for managing received bookings, with tracking
   def manage_guests_dashboard_url_with_tracking
     routes.dashboard_company_host_reservations_path(token_key => @source.administrator.try(:temporary_token), :track_email_event => true)
@@ -233,6 +242,10 @@ class TransactableDrop < BaseDrop
     photos.try(:first).try(:[],:space_listing) || image_url(Placeholder.new(:width => 410, :height => 254).path).to_s
   end
 
+  def photo_medium_url
+    @source.photos.first.try(:image_url, :medium)
+  end
+
   # returns a string of the type "From $currency_amount / period"
   def from_money_period
     price_information(@source)
@@ -245,7 +258,11 @@ class TransactableDrop < BaseDrop
 
   # url to the section in the app for managing this listing, with tracking
   def manage_listing_url_with_tracking
-    routes.edit_dashboard_company_transactable_type_transactable_path(@source.location, @source, track_email_event: true, token_key => @source.administrator.try(:temporary_token))
+    if PlatformContext.current.instance.is_community?
+      urlify(routes.edit_dashboard_project_type_project_path(@source.transactable_type, @source, token_key => @source.creator.try(:temporary_token), anchor: :collaborators))
+    else
+      routes.edit_dashboard_company_transactable_type_transactable_path(@source.location, @source, track_email_event: true, token_key => @source.administrator.try(:temporary_token))
+    end
   end
 
   # url to the application wizard for publishing a new listing
@@ -308,7 +325,7 @@ class TransactableDrop < BaseDrop
 
   # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => 'string with all children separated with comma' } }
   def formatted_categories
-    build_formatted_categories(@source)
+    build_formatted_categories(@source.categories)
   end
 
   # returns whether or not the listing has seller attachments
@@ -356,5 +373,57 @@ class TransactableDrop < BaseDrop
     action_type.pricings.any?{ |p| !p.is_free_booking? }
   end
 
-end
+  def new_project_collaborator
+    project_collaborators.build
+  end
 
+  def edit_path
+    routes.edit_dashboard_company_transactable_type_transactable_path(@source.transactable_type, @source)
+  end
+
+  def destroy_path
+    routes.dashboard_company_transactable_type_transactable_path(@source.transactable_type, @source)
+  end
+
+  def cancel_path
+    routes.cancel_dashboard_company_transactable_type_transactable_path(@source.transactable_type, @source)
+  end
+
+  def listing_date
+    @source.listing_date
+  end
+
+  def location_name
+    @source.location.try(:name)
+  end
+
+  def lowest_price_with_currency
+    @source.lowest_price_with_currency
+  end
+
+  # user message path
+  def user_message_path
+    routes.new_transactable_user_message_path(@source)
+  end
+
+  def accepted_orders
+    line_item_orders.upcoming.confirmed.uniq
+  end
+
+  def last_accepted_order
+    accepted_orders.last
+  end
+
+  def first_accepted_order
+    line_item_orders.confirmed.first
+  end
+
+  def orders
+    line_item_orders.order(created_at: :desc).active.uniq
+  end
+
+  def confirmed_order
+    line_item_orders.confirmed.first
+  end
+
+end

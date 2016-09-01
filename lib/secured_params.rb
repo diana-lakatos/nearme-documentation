@@ -47,6 +47,7 @@ class SecuredParams
       :wrapper_html_options,
       :input_html_options_string,
       :wrapper_html_options_string,
+      :validation_only_on_update,
       valid_values: []
     ]
   end
@@ -59,6 +60,7 @@ class SecuredParams
       :max_length,
       :valid_values,
       :validatable_type,
+      :validation_only_on_update,
       :regex_validation,
       :regex_expression
     ]
@@ -401,6 +403,7 @@ class SecuredParams
       :show_categories,
       :category_search_type,
       :position,
+      :search_only_enabled_profiles,
       custom_attributes_attributes: [:searchable, :id]
     ]
   end
@@ -495,6 +498,7 @@ class SecuredParams
       :single_location,
       :availability_templates_attributes => nested(self.availability_template),
       :allowed_currencies => [],
+      merchant_fees_attributes: nested(self.charge_type),
       all_action_types_attributes: nested(self.transactable_type_action_type),
       custom_attributes_attributes: [:searchable, :id],
     ]
@@ -535,7 +539,9 @@ class SecuredParams
       :unit,
       :allow_exclusive_price,
       :allow_book_it_out_discount,
-      :allow_free_booking
+      :allow_free_booking,
+      :allow_nil_price_cents,
+      :order_class_name
     ]
   end
 
@@ -569,8 +575,22 @@ class SecuredParams
       payout_country_ids: [],
       live_settings: payment_gateway_class.settings.keys,
       test_settings: payment_gateway_class.settings.keys,
-      payment_methods_attributes: nested(self.payment_method)
+      payment_methods_attributes: nested(self.payment_method),
+      config: payment_gateway_config(payment_gateway_class.new.config_settings)
     ]
+  end
+
+  def payment_gateway_config(config_settings)
+    config = []
+    config_settings.each do |key, value|
+      if value.instance_of?(Hash) && !value.has_key?(:valid_values)
+        config << [key => payment_gateway_config(value)]
+      else
+        config << key
+      end
+    end
+
+    config
   end
 
   def payment_method
@@ -740,7 +760,8 @@ class SecuredParams
   def user_message
     [
       :body,
-      :replying_to_id
+      :replying_to_id,
+      attachments_attributes: nested(self.attachment)
     ]
   end
 
@@ -786,7 +807,7 @@ class SecuredParams
 
   def merchant_account(merchant_account)
     attributes = merchant_account.class::ATTRIBUTES
-    attributes << [:id]
+    attributes << [:id, :redirect_url]
     attributes << { current_address_attributes: nested(self.address)}
     attributes << {payment_subscription_attributes: nested(self.payment_subscription) }
     attributes << {owners_attributes: nested([:document]) + MerchantAccountOwner::StripeConnectMerchantAccountOwner::ATTRIBUTES}
@@ -845,8 +866,8 @@ class SecuredParams
     ] + self.address
   end
 
-  def transactable(transactable_type)
-    [
+  def transactable(transactable_type, is_creator = false)
+    base_params = [
       :name, :description, :capacity, :confirm_reservations,
       :location_id,
       :draft,
@@ -859,7 +880,9 @@ class SecuredParams
       :insurance_value,
       :rental_shipping_type, :dimensions_template_id,
       :shipping_profile_id,
+      :tag_list,
       :minimum_booking_minutes,
+      :seek_collaborators,
       photos_attributes: nested(self.photo),
       approval_requests_attributes: nested(self.approval_request),
       photo_ids: [],
@@ -868,14 +891,19 @@ class SecuredParams
       dimensions_template_attributes: nested(self.dimensions_template),
       attachment_ids: [],
       waiver_agreement_template_ids: [],
+      topic_ids: [],
+      group_ids: [],
       action_types_attributes: nested(self.transactable_action_type),
       document_requirements_attributes: nested(self.document_requirement),
       upload_obligation_attributes: nested(self.upload_obligation),
       additional_charge_types_attributes: nested(self.additional_charge_type),
       customizations_attributes: nested(self.customization(transactable_type)),
+      links_attributes: nested(self.link),
       properties_attributes: Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
     ] +
     Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
+    base_params += [ new_collaborators: [ :email, :id, :_destroy ], new_collaborators_attributes: nested(self.transactable_collaborator) ] if is_creator
+    base_params
   end
 
   def transactable_action_type
@@ -928,7 +956,7 @@ class SecuredParams
   end
 
   def project(transactable_type, is_project_owner = false)
-    based_params = ([
+    based_params = [
       :description,
       :transactable_type_id,
       :seek_collaborators,
@@ -937,8 +965,9 @@ class SecuredParams
       photo_ids: [],
       topic_ids: [],
       group_ids: [],
-    ] + Project.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:project_types).try(:first)).try(:id)))
-    based_params += [ :name, :summary, new_collaborators: [ :email, :id, :_destroy ], new_collaborators_attributes: nested(self.project_collaborator) ] if is_project_owner
+      properties_attributes: Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
+    ]
+    based_params += [ :name, new_collaborators: [ :email, :id, :_destroy ], new_collaborators_attributes: nested(self.transactable_collaborator) ] if is_project_owner
     based_params
   end
 
@@ -986,9 +1015,18 @@ class SecuredParams
     ]
   end
 
-  def project_collaborator
+  def bid(reservation_type)
+    [
+      properties: Bid.public_custom_attributes_names(reservation_type),
+      payment_documents_attributes: nested(self.payment_document)
+    ]
+  end
+
+  def transactable_collaborator
     [
       :approved,
+      :transactable_id,
+      :user_id,
       :email
     ]
   end
@@ -1097,6 +1135,13 @@ class SecuredParams
     ]
   end
 
+  def attachment
+    [
+      :file,
+      :file_cache,
+    ]
+  end
+
   def photo
     [
       :id,
@@ -1151,6 +1196,7 @@ class SecuredParams
       :sms_notifications_enabled,
       :accept_terms_of_service,
       :time_zone,
+      :tag_list,
       :twitter_url,
       category_ids: [],
       seller_profile_attributes: nested(self.seller_profile),
@@ -1159,7 +1205,6 @@ class SecuredParams
       current_address_attributes: nested(self.address),
       companies_attributes: nested(self.company(transactable_type: transactable_type)),
       approval_requests_attributes: nested(self.approval_request),
-      projects_attributes: nested(self.project(transactable_type)),
     ]
   end
 
@@ -1172,6 +1217,8 @@ class SecuredParams
 
   def default_profile
     [
+      :enabled,
+      :instance_profile_type_id,
       properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id)),
       properties_attributes: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id)),
       category_ids: [],
@@ -1181,6 +1228,8 @@ class SecuredParams
 
   def seller_profile
     [
+      :enabled,
+      :instance_profile_type_id,
       properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id)),
       properties_attributes: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id)),
       category_ids: [],
@@ -1190,6 +1239,8 @@ class SecuredParams
 
   def buyer_profile
     [
+      :enabled,
+      :instance_profile_type_id,
       properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id)),
       properties_attributes: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id)),
       category_ids: [],
@@ -1216,7 +1267,12 @@ class SecuredParams
   def notification_preferences
     [
       :accept_emails,
-      :sms_notifications_enabled
+      :sms_notifications_enabled,
+      notification_preference_attributes: [
+        :group_updates_enabled,
+        :project_updates_enabled,
+        :email_frequency
+      ]
     ]
   end
 
@@ -1264,7 +1320,7 @@ class SecuredParams
       :from,
       :from_type,
       :reply_to,
-      :replt_to_type,
+      :reply_to_type,
       :use_ssl,
       :request_type,
       :endpoint,
@@ -1272,6 +1328,7 @@ class SecuredParams
       :payload_data,
       :cc,
       :bcc,
+      :bcc_type,
       :subject,
       :layout_path,
       :prevent_trigger_condition,
@@ -1379,7 +1436,8 @@ class SecuredParams
       :quantity,
       :unit_price,
       :receiver,
-      :name
+      :name,
+      :description
     ]
   end
 
@@ -1421,6 +1479,15 @@ class SecuredParams
       payment_documents_attributes: nested(self.payment_document),
       payment_attributes: nested(self.payment),
       properties_attributes: Reservation.public_custom_attributes_names((reservation_type || PlatformContext.current.try(:instance).try(:reservation_type).try(:first)).try(:id))
+    ]
+  end
+
+  def order_item #aka RecurringBookingPeriod
+    [
+      :comment,
+      :rejection_reason,
+      additional_line_items_attributes: nested(self.line_item),
+      transactable_line_items_attributes: nested(self.line_item),
     ]
   end
 
@@ -1509,6 +1576,10 @@ class SecuredParams
   end
 
   def additional_charge_type
+    self.charge_type
+  end
+
+  def charge_type
     [
       :id,
       :name,

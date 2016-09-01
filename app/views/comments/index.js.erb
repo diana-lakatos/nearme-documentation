@@ -1,4 +1,4 @@
-<% partial = @commentable.is_a?(Project) ? 'comments/comment' : 'comments/activity_feed_comment' %>
+<% partial = @commentable.is_a?(Transactable) ? 'comments/comment' : 'comments/activity_feed_comment' %>
 $('[data-comments-for=<%= @commentable.id %>]').append('<%= escape_javascript( render(partial: partial, collection: @comments, as: :comment) ) %>');
 
 <% if @comments.total_pages == @comments.current_page %>

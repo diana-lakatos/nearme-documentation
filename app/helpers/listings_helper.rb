@@ -58,6 +58,59 @@ module ListingsHelper
     end
   end
 
+  def link_to_activity_feed_object(text, object, *options, &block)
+    text = capture(&block) if block_given?
+    if object.is_a?(Transactable)
+      link_to(text, object.decorate.show_path, *options)
+    else
+      link_to(text, object, *options)
+    end
+  end
+
+  def url_to_comment(commentable, comment)
+    if commentable.is_a?(Transactable)
+      if comment.new_record?
+        listing_comments_path(listing_id: commentable.id)
+      else
+        listing_comment_path(listing_id: commentable.id, id: comment.id)
+      end
+    else
+      [comment.commentable, comment]
+    end
+  end
+
+  def form_url_to_project(transactable_type, transactable)
+    if transactable.new_record?
+      dashboard_project_type_projects_path(project_type_id: transactable_type.id)
+    else
+      dashboard_project_type_project_path(project_type_id: transactable_type.id, id: transactable.id)
+    end
+  end
+
+  def url_to_spam_report(commentable, comment, report)
+    if commentable.is_a?(Transactable)
+      if report.new_record?
+        listing_comment_spam_reports_path(listing_id: commentable.id, comment_id: comment.id)
+      else
+        listing_comment_spam_report_path(listing_id: commentable.id, comment_id: comment.id, id: report.id)
+      end
+    else
+      [comment.commentable, comment, report]
+    end
+  end
+
+  def url_to_cancel_spam_report(commentable, comment, report)
+    if commentable.is_a?(Transactable)
+      if report.new_record?
+        cancel_listing_comment_spam_reports_path(listing_id: commentable.id, comment_id: comment.id)
+      else
+        cancel_listing_comment_spam_report_path(listing_id: commentable.id, comment_id: comment.id, id: report.id)
+      end
+    else
+      [:cancel, comment.commentable, comment, report]
+    end
+  end
+
   private
 
   def find_connections_for(listing, current_user)

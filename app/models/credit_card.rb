@@ -23,7 +23,6 @@ class CreditCard < ActiveRecord::Base
   scope :default, lambda { where(default_card: true).limit(1) }
 
   validate :validate_card
-
   validates :instance_client, presence: true
 
   delegate :customer_id, to: :instance_client, allow_nil: true
@@ -147,8 +146,6 @@ class CreditCard < ActiveRecord::Base
   end
 
   def set_instance_client
-    return false if payment_gateway.blank?
-
     self.instance_client ||= payment_gateway.instance_clients.where(
       client: client,  test_mode: test_mode?).first_or_initialize(
       client: client,  test_mode: test_mode?)

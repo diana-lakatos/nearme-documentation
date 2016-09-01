@@ -1,78 +1,75 @@
 .content-container
-  - if @order.subscription?
-
-    .row
-      .col-xs-8
-        Next charge date is #{@order.next_charge_date}
-
-      - unless Rails.env.production?
+  - if @order.has_order_items?
+    - if @order.subscription? && @order.payment_subscription.try(:test_mode?)
+      .row
+        .col-xs-8
+          Next charge date is #{@order.next_charge_date}
         .col-xs-4
           = link_to "Generate next period now", generate_next_period_instance_admin_manage_order_path(@order), method: :post, class: 'btn btn-light', data: {confirm: " Are you sure you want to generate next period?"}
 
-    %h4 Periods:
+    %h4 Order items:
     .row
       .table-container.col-xs-12
         %table.table
           %thead
             %tr
-              %th= t('instance_admin.manage.periods.starts_at')
-              %th= t('instance_admin.manage.periods.ends_at')
+              %th= t('instance_admin.manage.periods.id')
               %th= t('instance_admin.manage.periods.payment')
               %th= t('instance_admin.manage.periods.paid_at')
               %th= t('instance_admin.manage.periods.created_at')
+              %th= t('instance_admin.manage.periods.currency')
               %th
                 %b= t('instance_admin.manage.periods.total_amount')
 
-            - @order.periods.each do |period|
+            - @order.order_items.each do |order_item|
               %tr
-                %td= period.starts_at
-                %td= period.ends_at
+                %td= order_item.id
                 %td
-                  - if period.payment
-                    = link_to 'payment', instance_admin_manage_payment_path(period.payment)
+                  - if order_item.payment
+                    = link_to 'payment', instance_admin_manage_payment_path(order_item.payment)
                   - else
                     none
-                %td= period.paid_at
-                %td= l(period.created_at, format: :long)
+                %td= order_item.paid_at
+                %td= l(order_item.created_at, format: :long)
+                %td= order_item.currency
                 %td
-                  %b= humanized_money_with_cents_and_symbol(period.total_amount)
+                  %b= humanized_money_with_cents_and_symbol(order_item.total_amount)
+  - else
+    %h4 Items
+    - item = @order.transactable_line_items.first
+    .row
+      .table-container.col-xs-12
+        %table.table
+          %th= t 'buy_sell_market.checkout.labels.item'
+          - unless item.included_tax_total_rate.zero?
+            %th= t 'buy_sell_market.checkout.labels.net'
+            %th= t 'buy_sell_market.checkout.labels.tax'
+          %th= t 'buy_sell_market.checkout.labels.price'
+          - unless item.additional_tax_total_rate.zero?
+            %th= t 'buy_sell_market.checkout.labels.tax'
+            %th= t 'buy_sell_market.checkout.labels.gross'
+          %th= t 'buy_sell_market.checkout.labels.qty'
+          %th= t 'buy_sell_market.checkout.labels.total'
 
+          %tbody
+            - @order.line_items.decorate.sort_by { |l| l.cart_position }.each do |item|
+              %tr
+                %td= item.name_with_link
+                - unless item.included_tax_total_rate.zero?
+                  %td= item.net_price
+                  %td= item.included_tax_total_rate.to_s + "%"
+                %td= item.unit_price
+                - unless item.additional_tax_total_rate.zero?
+                  %td= item.additional_tax_total_rate.to_s + "%"
+                  %td= item.gross_price
+                %td= item.quantity
+                %td= item.total_price
 
-  %h4 Items
-  - item = @order.transactable_line_items.first
-  .row
-    .table-container.col-xs-12
-      %table.table
-        %th= t 'buy_sell_market.checkout.labels.item'
-        - unless item.included_tax_total_rate.zero?
-          %th= t 'buy_sell_market.checkout.labels.net'
-          %th= t 'buy_sell_market.checkout.labels.tax'
-        %th= t 'buy_sell_market.checkout.labels.price'
-        - unless item.additional_tax_total_rate.zero?
-          %th= t 'buy_sell_market.checkout.labels.tax'
-          %th= t 'buy_sell_market.checkout.labels.gross'
-        %th= t 'buy_sell_market.checkout.labels.qty'
-        %th= t 'buy_sell_market.checkout.labels.total'
+    .row
+      .col-sm-4.col-sm-push-8
 
-        %tbody
-          - @order.line_items.decorate.sort_by { |l| l.cart_position }.each do |item|
-            %tr
-              %td= item.name_with_link
-              - unless item.included_tax_total_rate.zero?
-                %td= item.net_price
-                %td= item.included_tax_total_rate.to_s + "%"
-              %td= item.unit_price
-              - unless item.additional_tax_total_rate.zero?
-                %td= item.additional_tax_total_rate.to_s + "%"
-                %td= item.gross_price
-              %td= item.quantity
-              %td= item.total_price
-
-  .row
-    .col-sm-4.col-sm-push-8
-
-      %table.payment-totals
-        %tr
-          %th.total= t 'buy_sell_market.checkout.labels.total2'
-          %td.total= humanized_money_with_cents_and_symbol @order.total_amount
+        %table.payment-totals
+          %tr
+            %th.total= t 'buy_sell_market.checkout.labels.total2'
+            %td.total= humanized_money_with_cents_and_symbol @order.total_amount
 

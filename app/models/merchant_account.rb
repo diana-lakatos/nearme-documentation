@@ -1,6 +1,7 @@
 class MerchantAccount < ActiveRecord::Base
   include Encryptable
 
+  has_paper_trail
   auto_set_platform_context
   scoped_to_platform_context
   acts_as_paranoid
@@ -46,7 +47,7 @@ class MerchantAccount < ActiveRecord::Base
   scope :mode_scope, -> (test_mode = PlatformContext.current.instance.test_mode? ){  test_mode ? where(test: true) : where(test: false) }
   scope :paypal_express_chain,   -> { where(type: "MerchantAccount::PaypalExpressChainMerchantAccount") }
 
-  attr_accessor :skip_validation
+  attr_accessor :skip_validation, :redirect_url
 
   before_create :set_test_mode_if_necessary
   before_create :onboard!
@@ -85,11 +86,15 @@ class MerchantAccount < ActiveRecord::Base
 
   def void!
     # We use update_attribute to prevent validation errors
-    update_attribute(:state, :void)
+    update_attribute(:state, :voided)
     unset_possible_payout!
   end
 
   def update_onboard!(*args)
+  end
+
+  def response_object
+    YAML.load(response)
   end
 
   def client
@@ -135,6 +140,10 @@ class MerchantAccount < ActiveRecord::Base
     true
   end
 
+  def redirect_url
+    @redirect_url || Rails.application.routes.url_helpers.edit_dashboard_company_payouts_path
+  end
+
   private
 
   def set_test_mode_if_necessary
@@ -142,8 +151,5 @@ class MerchantAccount < ActiveRecord::Base
     true
   end
 
-  def redirect_url
-    Rails.application.routes.url_helpers.edit_dashboard_company_payouts_path
-  end
 end
 

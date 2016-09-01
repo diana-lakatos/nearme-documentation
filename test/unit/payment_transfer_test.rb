@@ -21,19 +21,29 @@ class PaymentTransferTest < ActiveSupport::TestCase
       @payment_transfer = @company.payment_transfers.build
     end
 
+    should 'find with encrypted token' do
+      @payment_gateway = PaymentGateway.last
+      @payment_transfer.token = 'tokenowski'
+      @payment_transfer.payment_gateway = @payment_gateway
+      @payment_transfer.save!
+
+      assert_equal 1, @payment_gateway.payment_transfers.with_token("tokenowski").count
+    end
+
     should "only allow charges of the same currency" do
       @reservations = prepare_charged_reservations_for_transactable(@reservation_1.transactable)
       reservation = @reservations.last
       reservation.payment.destroy
 
       rc = Payment.create!(
-        :payment_method => PaymentMethod.where(payment_method_type: 'credit_card').last,
-        :credit_card => FactoryGirl.build(:credit_card),
-        :payable => reservation,
-        :subtotal_amount => 10,
-        :service_fee_amount_guest => 1,
-        :service_fee_amount_host => 2,
-        :currency => 'NZD'
+        payment_method: PaymentMethod.where(payment_method_type: 'credit_card').last,
+        credit_card: FactoryGirl.build(:credit_card),
+        payable: reservation,
+        subtotal_amount: 10,
+        service_fee_amount_guest: 1,
+        service_fee_amount_host: 2,
+        currency: 'NZD',
+        payer: reservation.owner
       )
 
       @payment_transfer.payments = [@payments, rc].flatten
@@ -41,28 +51,32 @@ class PaymentTransferTest < ActiveSupport::TestCase
       assert @payment_transfer.errors[:currency].present?
     end
 
-    should "calculate total_service_fee_cents" do
-      reservation = FactoryGirl.build(:confirmed_reservation)
-      reservation.payment = Payment.new(
-        payer: reservation.user,
-        payment_method: PaymentMethod.where(payment_method_type: 'credit_card').last,
-        credit_card: FactoryGirl.build(:credit_card),
-        subtotal_amount: 10,
-        service_fee_amount_guest: 1,
-        service_fee_amount_host: 2,
-        currency: 'USD'
-      )
-      reservation.save
-      @payment_transfer.payments = [reservation.payment].flatten
-      assert @payment_transfer.save
-      assert_equal Money.new(300, 'USD'), @payment_transfer.total_service_fee
-    end
-
     should "assign instance id" do
       @payment_transfer.payments = @payments
       @payment_transfer.save!
       @payment_transfer.reload
       assert_equal @payment_transfer.company.instance_id, @payment_transfer.instance_id
+    end
+
+    should "calculate total_service_fee_cents" do
+      @reservations = prepare_charged_reservations_for_transactable(@reservation_1.transactable)
+      reservation = @reservations.last
+      reservation.payment.destroy
+
+      rc = Payment.create!(
+        payment_method: PaymentMethod.where(payment_method_type: 'credit_card').last,
+        credit_card: FactoryGirl.build(:credit_card),
+        payable: reservation,
+        subtotal_amount: 10,
+        service_fee_amount_guest: 1,
+        service_fee_amount_host: 2,
+        currency: 'USD',
+        payer: reservation.owner
+      )
+
+      @payment_transfer.payments = [@payments, rc].flatten
+      assert @payment_transfer.save
+      assert_equal Money.new(300, 'NZD'), @payment_transfer.total_service_fee
     end
 
     should "assign currency attribute" do

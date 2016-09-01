@@ -1,5 +1,4 @@
 var path = require('path');
-var rename = require('gulp-rename');
 var fs = require('fs');
 var gutil = require('gulp-util');
 var del = require('del');
@@ -19,7 +18,7 @@ module.exports = function(gulp, config){
 
     gulp.task('vendor:checkfiles', function(){
         for (var file in files) {
-            fs.stat(files[file], function(err, stat) {
+            fs.stat(files[file], function(err) {
                 if(err) {
                     gutil.beep();
                     throw err;
@@ -75,10 +74,10 @@ module.exports = function(gulp, config){
         del(libDir);
 
         gulp.src([
-                path.join(config.paths.bower_components, 'jquery','dist','jquery.min.js'),
-                path.join(config.paths.bower_components, 'jquery','dist','jquery.min.map'),
-            ])
-            .pipe(gulp.dest(libDir));
+            path.join(config.paths.bower_components, 'jquery','dist','jquery.min.js'),
+            path.join(config.paths.bower_components, 'jquery','dist','jquery.min.map')
+        ])
+        .pipe(gulp.dest(libDir));
 
         gulp.start('vendor:checkfiles');
     });
@@ -96,4 +95,4 @@ module.exports = function(gulp, config){
     // Aggregate taks
     gulp.task('vendor', ['vendor:checkfiles', 'vendor:modernizr', 'vendor:ckeditor', 'vendor:raygun', 'vendor:jquery', 'vendor:polyfills']);
     gulp.task('vendor:dist', ['vendor:checkfiles', 'vendor:modernizr:dist', 'vendor:ckeditor', 'vendor:raygun:dist', 'vendor:jquery:dist', 'vendor:polyfills:dist']);
-}
+};

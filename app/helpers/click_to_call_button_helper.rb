@@ -6,7 +6,7 @@ module ClickToCallButtonHelper
 
     path_to_call = Rails.application.routes.url_helpers.new_user_phone_call_path(transactable.administrator)
     if transactable.time_based_booking?
-      closest_availability = transactable.first_available_date.to_datetime.in_time_zone(transactable.timezone)
+      closest_availability = transactable.first_available_date.try(:to_datetime).try(:in_time_zone, transactable.timezone)
 
       if closest_availability
         open_minute = transactable.availability.open_minute_for(closest_availability)
@@ -42,17 +42,17 @@ module ClickToCallButtonHelper
 
   private
 
-    def build_click_to_call_button(path, label, available_now, timezone, next_available_occurence = nil)
-      time_info = I18n.t('phone_calls.tooltip.current_time', time: I18n.l(Time.now.in_time_zone(timezone), format: :short_with_time_zone))
+  def build_click_to_call_button(path, label, available_now, timezone, next_available_occurence = nil)
+    time_info = I18n.t('phone_calls.tooltip.current_time', time: I18n.l(Time.now.in_time_zone(timezone), format: :short_with_time_zone))
 
-      available_info = next_available_occurence ? I18n.t('phone_calls.tooltip.next_available_occurence', time: I18n.l(next_available_occurence, format: :with_time_zone)) : ''
+    available_info = next_available_occurence ? I18n.t('phone_calls.tooltip.next_available_occurence', time: I18n.l(next_available_occurence, format: :with_time_zone)) : ''
 
-      if available_now
-        tag = content_tag(:a, label, class: 'btn btn-primary btn-green', href: path, data: { modal: true, href: path, :"modal-class" => 'ctc-dialog' }, title: time_info, rel: 'tooltip', :'data-toggle' => 'tooltip')
-      else
-        tag = content_tag(:span, label, class: 'btn btn-primary disabled btn-gray', title: "#{time_info}#{available_info}", rel: 'tooltip', :'data-toggle' => 'tooltip')
-      end
-      content_tag(:span, tag, class: 'click-to-call')
+    if available_now
+      tag = content_tag(:a, label, class: 'btn btn-info btn-green', href: path, data: { modal: true, href: path, :"modal-class" => 'ctc-dialog' }, title: time_info, rel: 'tooltip', :'data-toggle' => 'tooltip')
+    else
+      tag = content_tag(:span, label, class: 'btn btn-info disabled btn-gray', title: "#{time_info}#{available_info}", rel: 'tooltip', :'data-toggle' => 'tooltip')
     end
+    content_tag(:span, tag, class: 'click-to-call')
+  end
 
 end

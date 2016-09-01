@@ -2,7 +2,7 @@
 
 var DNM = require('./common-app');
 
-require('../vendor/bootstrap-sass-2.3.2.2/vendor/assets/javascripts/bootstrap')
+require('../vendor/bootstrap-sass-2.3.2.2/vendor/assets/javascripts/bootstrap');
 
 DNM.registerInitializer(function(){
     var els = $('#edit_company');
@@ -168,7 +168,7 @@ DNM.registerInitializer(function(){
         require.ensure([
             './sections/dashboard/location_controller',
             './components/limiter'
-            ], function(require){
+        ], function(require){
             var
                 DashboardLocationController = require('./sections/dashboard/location_controller'),
                 Limiter = require('./components/limiter');
@@ -188,7 +188,7 @@ DNM.registerInitializer(function(){
     require.ensure([
         './sections/dashboard/listing_controller',
         './sections/categories'
-        ], function(require){
+    ], function(require){
         var
             DashboardListingController = require('./sections/dashboard/listing_controller'),
             CategoriesController = require('./sections/categories');
@@ -232,6 +232,9 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
+
+
+
     var el = $('#user_blog_post_published_at');
     if (el.length === 0) {
         return;

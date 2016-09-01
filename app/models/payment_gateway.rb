@@ -20,6 +20,7 @@ class PaymentGateway < ActiveRecord::Base
 
   serialize :test_settings, Hash
   serialize :live_settings, Hash
+  serialize :config, Hash
 
   validates_each :test_settings do |payment_gateway, attribute, value|
     validate_settings(payment_gateway, attribute, value)
@@ -41,12 +42,14 @@ class PaymentGateway < ActiveRecord::Base
   has_many :instance_clients, dependent: :destroy
   has_many :merchant_accounts, dependent: :destroy
   has_many :payments, through: :billing_authorizations
+  has_many :payment_transfers
   has_many :payment_gateways_countries, dependent: :destroy
   has_many :payment_countries, through: :payment_gateways_countries, source: 'country'
   has_many :payment_gateways_currencies, dependent: :destroy
   has_many :payment_currencies, through: :payment_gateways_currencies, source: 'currency'
   has_many :payment_methods, dependent: :destroy
   has_many :refunds
+  has_many :webhooks, as: :webhookable, dependent: :destroy
 
   accepts_nested_attributes_for :payment_methods, :reject_if => :all_blank
 
@@ -112,6 +115,10 @@ class PaymentGateway < ActiveRecord::Base
 
   def self.supported_countries
     raise NotImplementedError.new("#{self.name} has not implemented self.supported_countries")
+  end
+
+  def config_settings
+    {}
   end
 
   def documentation_url

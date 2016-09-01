@@ -4,6 +4,7 @@ class AuthenticationsController < ApplicationController
   skip_before_filter :set_locale
   skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:create, :setup]
   skip_before_filter :verify_authenticity_token
+  skip_before_filter :force_fill_in_wizard_form
   before_action :set_role
 
   def set_role
@@ -45,23 +46,15 @@ class AuthenticationsController < ApplicationController
         case @role
         when 'default'
           WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @oauth.authentication.user.id)
+          @onboarding = @oauth.authentication.user.default_profile.onboarding?
         when 'seller'
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::HostAccountCreated, @oauth.authentication.user.id)
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::ListerAccountCreated, @oauth.authentication.user.id)
+          @onboarding = @oauth.authentication.user.seller_profile.onboarding?
         when 'buyer'
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::GuestAccountCreated, @oauth.authentication.user.id)
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::EnquirerAccountCreated, @oauth.authentication.user.id)
+          @onboarding = @oauth.authentication.user.buyer_profile.onboarding?
         end
-        if PlatformContext.current.instance.is_community?
-          user = @oauth.authenticated_user
-          fail 'External id is nil' if user.external_id.blank?
-          uri = URI.parse("https://idz-profile-rest-prod.wdg.infra-host.com")
-          http = Net::HTTP.new(uri.host, uri.port)
-          http.use_ssl = true
-          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-          request = Net::HTTP::Post.new("/api/update-profile")
-          request.add_field('Content-Type', 'application/json')
-          request.add_field('x-token', PlatformContext.current.instance.webhook_token)
-          request.body = {'enterprise_id' => user.external_id}.to_json
-          http.request(request)
+        if @onboarding
           session[:user_return_to] = onboarding_index_url
         end
 

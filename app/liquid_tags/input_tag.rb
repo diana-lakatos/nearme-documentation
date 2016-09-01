@@ -17,8 +17,7 @@ class InputTag < Liquid::Tag
     # drop for form_builder defined in form_builder_to_liquid_monkeypatch.rb
     @attributes = normalize_liquid_tag_attributes(@attributes, context, %w(label_html wrapper_html input_html))
     form_name = @attributes.delete(:form)
-    @form =  (context["form_object_#{form_name}"] || context["form_object"]).source
-    raise "#{@form.object.class} does not have field called #{@field_name}" unless @form.object.to_liquid.respond_to?(@field_name)
+    @form = (context["form_object_#{form_name}"] || context["form_object"]).source
     @form.input(@field_name, @attributes).html_safe
   end
 

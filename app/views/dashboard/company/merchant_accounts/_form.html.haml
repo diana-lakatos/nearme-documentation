@@ -8,6 +8,7 @@
     = dashboard_simple_form_for merchant_account,  as: :merchant_account, url: url, html: { 'data-payouts-form' => true, :'data-includes-address-field' => true} do |f|
       = f.input :payment_gateway_id, as: :hidden
       = f.input :type, as: :hidden
+      = f.input :redirect_url, as: :hidden, input_html: { value: params[:redirect_url] || merchant_account.redirect_url  }
       = render merchant_account.parital_location, merchant_account: merchant_account, f: f
       - unless merchant_account.try(:payment_subscription).blank?
         = render 'dashboard/shared/fields/payment_subscription', f: f

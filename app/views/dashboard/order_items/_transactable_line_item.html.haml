@@ -1,0 +1,14 @@
+- readonly ||= false
+- free_hint ||= false
+
+
+.time-tracking-entry.nested-fields
+  - if readonly == false
+    .row
+      .col-xs-10.col-sm-11
+        = render "dashboard/order_items/line_item_fields", f: f, readonly: readonly, free_hint: free_hint
+      .col-xs-2.col-sm-1.text-right
+        = link_to_remove_association f, class: 'remove_fields' do
+          %button.action--remove
+  - else
+    = render "dashboard/order_items/line_item_fields", f: f, readonly: readonly

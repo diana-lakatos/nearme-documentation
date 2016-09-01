@@ -14,6 +14,9 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
     render :edit
   end
 
+  def required_modal
+  end
+
   private
 
   def company_params

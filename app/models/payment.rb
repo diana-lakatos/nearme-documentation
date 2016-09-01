@@ -311,7 +311,7 @@ class Payment < ActiveRecord::Base
     super(cc_attributes.merge({
       payment_gateway: payment_gateway,
       test_mode: test_mode?,
-      instance_client: payment_gateway.try {|p| p.instance_clients.where(client: payable.user, test_mode: test_mode?).first_or_initialize(client: payable.user, test_mode: test_mode?) }
+      instance_client: payment_gateway.try {|p| p.instance_clients.where(client: payer, test_mode: test_mode?).first_or_initialize(client: payer, test_mode: test_mode?) }
     }))
   end
 
@@ -475,6 +475,10 @@ class Payment < ActiveRecord::Base
 
   def retry_refund_at
     self.failed_at + (refund_attempts * 6).hours
+  end
+
+  def to_liquid
+    @payment_drop ||= PaymentDrop.new(self)
   end
 
   private

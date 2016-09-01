@@ -80,7 +80,7 @@ gulp serve
 ### Payments Configuration
 
 Go to the Payments Settings in instance_admin in your Application ``` /instance_admin/settings/payments ``` and edit
-"Stripe" Payment Gateway. In 'Sandbox settings > Login' set ``` sk_test_lpr4WQXQdncpXjjX6IJx01W7 ```.
+"Stripe" Payment Gateway. In 'Sandbox settings > Login' set ```sk_test_lpr4WQXQdncpXjjX6IJx01W7```.
 
 If there is no "Stripe" Payment Gateway, just create it.
 

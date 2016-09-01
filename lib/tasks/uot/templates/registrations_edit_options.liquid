@@ -1,0 +1,6 @@
+  <div class="options">
+    <a href="#" onclick="$('form#edit_user').submit()" class="btn btn-default">Save</a>
+    {% if current_user.has_buyer_profile? %}
+      <a href="{{ current_user.user_profile_url }}">{{ 'dashboard.user_profile.view_profile_html' | t }}</a>
+    {% endif %}
+  </div>

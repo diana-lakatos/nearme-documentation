@@ -9,9 +9,6 @@
     = link_to(thread_recipient.first_name, thread_recipient)
 
 
-.content-box-a
-
-
 .inbox-thread
   - @user_messages.reverse.each do |user_message|
     = render "user_message_for_show", user_message: user_message
@@ -25,4 +22,9 @@
   %p.thread-locked= t('user_messages.thread_locked')
 
 .form-actions
-  = link_to t('user_messages.archive_html'), user_message.archive_path, method: :put
+  - unless user_message.archived_for?(current_user)
+    = link_to t('user_messages.archive_html'), user_message.archive_path, method: :put
+
+- if request.xhr?
+  :javascript
+    $(document).trigger('init:user_messages.nearme');

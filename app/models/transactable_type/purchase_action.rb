@@ -8,4 +8,8 @@ class TransactableType::PurchaseAction < TransactableType::ActionType
     false
   end
 
+  def related_order_class
+    'Purchase'
+  end
+
 end

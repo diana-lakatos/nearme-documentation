@@ -4,6 +4,7 @@ class CustomValidators < ActiveModel::Validator
     return true if record.try(:draft?)
 
     record.custom_validators.each do |validator|
+      next if validator.validation_only_on_update? && record.new_record?
       if validator.validation_rules.present?
         validator.validation_rules.each do |validation_rule_type, validation_rule_options|
           validation_rule_options ||= {}

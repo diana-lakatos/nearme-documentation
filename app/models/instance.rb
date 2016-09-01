@@ -94,7 +94,8 @@ class Instance < ActiveRecord::Base
   has_many :rating_questions
   has_many :rating_answers
   has_many :rating_hints
-  has_many :additional_charge_types, as: :additional_charge_type_target
+  has_many :additional_charge_types, foreign_type: :charge_type_target_type, foreign_key: :charge_type_target_id
+
   has_one :documents_upload, dependent: :destroy
   has_many :locales, dependent: :destroy
   has_many :dimensions_templates, as: :entity
@@ -411,11 +412,11 @@ class Instance < ActiveRecord::Base
   end
 
   def seller_profile_enabled?
-    seller_profile_type.custom_attributes.count > 0 || seller_profile_type.custom_model_types.count > 0
+    seller_profile_type.form_components.where(form_type: 'seller_profile_types').any?
   end
 
   def buyer_profile_enabled?
-    buyer_profile_type.custom_attributes.count > 0 || buyer_profile_type.custom_model_types.count > 0
+    buyer_profile_type.form_components.where(form_type: 'buyer_profile_types').any?
   end
 
   def new_ui?

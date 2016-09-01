@@ -8,7 +8,7 @@ class CustomAttributeDrop < BaseDrop
   # label_key
   #   Translation key for label
 
-  delegate :name, :label, :label_key, to: :custom_attribute
+  delegate :name, :label, :label_key, :valid_values, to: :custom_attribute
 
   def initialize(custom_attribute)
     @custom_attribute = custom_attribute

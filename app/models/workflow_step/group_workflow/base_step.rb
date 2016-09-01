@@ -1,10 +1,9 @@
 class WorkflowStep::GroupWorkflow::BaseStep < WorkflowStep::BaseStep
 
-  def initialize(group_member_id)
-    @group_member = GroupMember.find_by(id: group_member_id)
-
-    @group = @group_member.try(:group)
-    @user = @group_member.try(:user)
+  def initialize
+    @membership = GroupMember.find_by(id: membership_id)
+    @group = @membership.try(:group)
+    @user = @membership.try(:user)
     @owner = @group.try(:creator)
   end
 
@@ -16,18 +15,23 @@ class WorkflowStep::GroupWorkflow::BaseStep < WorkflowStep::BaseStep
     @owner
   end
 
+  def members
+    @group.members_email_recipients
+  end
+
   def data
     {
-      group_member: @group_member,
+      group_member: @membership,
       group: @group,
       user: @user,
       enquirer: @user,
+      lister: @owner,
       owner: @owner
     }
   end
 
   def should_be_processed?
-    @group_member.present? && @group.present? && @user.present?
+    @membership.present?
   end
 
   def workflow_type

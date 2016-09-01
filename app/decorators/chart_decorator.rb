@@ -48,6 +48,10 @@ class ChartDecorator < Draper::CollectionDecorator
     hash
   end
 
+  def to_liquid
+    @chart_drop ||= ChartDrop.new(self)
+  end
+
   private
   def grouped_by_date
     @grouped_by_date ||= begin

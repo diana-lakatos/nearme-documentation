@@ -8,7 +8,7 @@ class UserMessageDrop < BaseDrop
   #  conversation context: a listing, a reservation, a user
   # recipient_name
   #   first name of the recipient
-  delegate :body, :thread_context, :recipient_name, :create_path, to: :user_message
+  delegate :id, :body, :thread_context, :recipient_name, :create_path, to: :user_message
 
   def initialize(user_message)
     @user_message = user_message.decorate
@@ -38,6 +38,10 @@ class UserMessageDrop < BaseDrop
   # first name of the author (user that wrote this message)
   def author_first_name
     @user_message.author.first_name
+  end
+
+  def archived_for_current_user?
+    @user_message.archived_for?(@context['current_user'])
   end
 
 end

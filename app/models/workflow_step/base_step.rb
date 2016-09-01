@@ -62,6 +62,10 @@ class WorkflowStep::BaseStep
     nil
   end
 
+  def transactable
+    nil
+  end
+
   def data
     {}
   end

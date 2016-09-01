@@ -11,4 +11,8 @@ class TransactableType::SubscriptionBooking < TransactableType::ActionType
     false
   end
 
+  def related_order_class
+    'RecurringBooking'
+  end
+
 end

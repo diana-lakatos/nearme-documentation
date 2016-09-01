@@ -3,12 +3,14 @@ module Utils
 
     def initialize(form_componentable, options = {})
       @creator = case form_componentable
-                 when ProjectType
-                   ProjectComponentCreator
                  when ReservationType
                    ReservationComponentCreator
                  when TransactableType
-                   TransactableComponentCreator
+                   if options[:project]
+                     ProjectComponentCreator
+                   else
+                     TransactableComponentCreator
+                   end
                  when InstanceProfileType
                    case form_componentable.profile_type
                    when InstanceProfileType::SELLER
@@ -172,17 +174,17 @@ module Utils
         },
         {
           name: "#{@form_componentable.name.try(:pluralize)} Details",
-          fields: [{ 'project' => 'name' }, { 'project' => 'description' }, { 'project' => 'topics' }, { 'project' => 'photos' } ]
+          fields: [{ 'transactable' => 'name' }, { 'transactable' => 'description' }, { 'transactable' => 'topics' }, { 'transactable' => 'photos' } ]
         }
       ])
     end
 
     def create_dashboard_form!
-      @form_type_class = FormComponent::PROJECT_ATTRIBUTES
+      @form_type_class = FormComponent::TRANSACTABLE_ATTRIBUTES
       create_components!([
         {
           name: "Main",
-          fields: [{ 'project' => 'name' }, { 'project' => 'description' }, { 'project' => 'topics' }, { 'project' => 'photos' } ]
+          fields: [{ 'transactable' => 'name' }, { 'transactable' => 'description' }, { 'transactable' => 'topics' }, { 'transactable' => 'photos' } ]
         }
       ])
     end

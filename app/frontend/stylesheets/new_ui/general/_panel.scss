@@ -18,7 +18,9 @@
     @include clear;
 
     padding: 10px $panel-body-padding;
-    margin-top: -30px;
+    background: $panel-bg;
+    border: 1px solid $panel-nav-border;
+    border-bottom: none;
 
     .alert + & {
         margin-top: 0;
@@ -40,9 +42,21 @@
     .options {
         float: right;
     }
+
+    @media (min-width: $screen-md-min) {
+        display: none;
+    }
 }
 
 .panel-nav {
+    @media (max-width: $screen-sm-max) {
+        display: none;
+
+        &.panel-nav-standalone {
+            display: block;
+        }
+    }
+
     @include clear;
 
     background: $panel-nav-background;
@@ -161,7 +175,8 @@
     }
 }
 
-.panel-nav + .panel {
+.panel-nav + .panel,
+.panel-nav + form > .panel:first-of-type {
     border: 1px solid $panel-nav-border;
     border-top: none;
     border-top-left-radius: 0;

@@ -1,95 +1,46 @@
 - credit_card = f.object.credit_card || f.object.build_credit_card
-.credit-card-fields
+.nm-credit-card-fields
   - if f.object.respond_to?(:authorized?) && f.object.authorized?
     = t 'payments.already_authorized'
   - else
     - based_collection = current_user.instance_clients.for_payment_gateway(payment_method.payment_gateway_id, current_instance.test_mode?).first.try(:credit_cards).try(:select, &:active?).try(:map) { |cc| [I18n.t('credit_cards.masked_number', last4: cc.last_4), cc.id] } || []
     - default_option = based_collection.first.present? ? based_collection.first[1] : 'custom'
-    - selected_option = f.object.chosen_credit_card_id.presence || default_option
+    - selected_option = f.object.chosen_credit_card_id.presence || f.object.credit_card_id ||default_option
 
-    = f.input :chosen_credit_card_id, as: :radio_buttons, collection: based_collection << [I18n.t('payments.cc_fields.add_new'), 'custom'], label: false, checked: selected_option
-    .new-credit-card-form{style: "#{'display: none;' unless f.object.chosen_credit_card_id == 'custom'}"}
+    = f.input :chosen_credit_card_id, as: :radio_buttons, collection: based_collection << [I18n.t('payments.cc_fields.add_new'), 'custom'], label: false, checked: selected_option, wrapper_html: { class: 'nm-credit-card-option-select' }
+
+    - new_cc_klass = 'nm-new-credit-card-form'
+    - new_cc_klass += ' hidden' unless f.object.chosen_credit_card_id == 'custom'
+
+    %div{ class: new_cc_klass }
       = f.simple_fields_for :credit_card_attributes, credit_card do |form|
-        = form.error :base
-        .padding-bottom.submit-secure-payment
-          .row-fluid
-            .span5.text
-              .ico-lock= t 'payments.heading'
-            .span7.credit-card-images
-              = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
-            .clearfix
 
-        .padding-bottom.credit-card
-          .row-fluid
-            .span6
-              = form.label :first_name, required: true, label: t('payments.cc_fields.first_name')
-              = form.input_field :first_name, class: 'sessioncamexclude', required: true, autocomplete: :off, value: (form.object.first_name.presence || current_user.first_name)
-            .span6
-              = form.label :last_name, required: true, label: t('payments.cc_fields.last_name')
-              = form.input_field :last_name, class: 'sessioncamexclude', required: true, autocomplete: :off, value: (form.object.last_name.presence || current_user.last_name)
-          .row-fluid
-            .span12.card-info{class: "#{"error" if form.object.errors.include?(:number).present?}"}
-              = form.label :number, required: true, label: t('payments.cc_fields.card_number')
-              .controls.card-number.input-icon-holder-right
-                = form.input_field :number, required: true, placeholder: 'aaaa aaaa aaaa aaaa', class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off", 'data-card-number' => true
-                %span.ico-credit-card
-              - if form.object.errors[:number].present?
-                %p.error-block
-                  = form.object.errors[:number].flatten.first
-          .row-fluid
-            .span4.card-info.expiry.column.left{class: "#{"error" if form.object.errors.include?(:month).present?}"}
-              .visible-phone
-                = form.label :month, t('payments.cc_fields.expiration_date_month'), class: 'control-label'
-              .hidden-phone
-                = form.label :month, t('payments.cc_fields.expiration_date'), class: 'control-label'
-              .controls.card-expires
-                = form.input_field :month, collection: credit_card_date[:month], prompt: false, class: 'sessioncamexclude no-icon select2'
+        .has-error
+          = f.error :base
+          = form.error :base
 
-              - if form.object.errors[:month].present?
-                %p.error-block
-                  = form.object.errors[:month].flatten.first
+        .nm-new-credit-card-form-header
+          %h3= t 'payments.heading'
+          = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
 
-            .span4.card-info.expiry.column.left{class: "#{"error" if form.object.errors.include?(:year).present?}"}
-              .hidden-phone
-                %label.control-label
-                  &nbsp;
-              .visible-phone
-                = form.label :year, t('payments.cc_fields.expiration_date_year'), class: 'control-label'
-              .controls.card-expires
-                = form.input_field :year, collection: credit_card_date[:year], prompt: false, class: 'sessioncamexclude no-icon select2'
+        .nm-new-credit-card-form-name-container
+          = form.input :first_name, required: true, label: t('payments.cc_fields.first_name'), input_html: { value: (form.object.first_name.presence || current_user.first_name), autocomplete: :off, class: 'sessioncamexclude' }
 
-              - if form.object.errors[:year].present?
-                %p.error-block
-                  = form.object.errors[:year].flatten.first
+          = form.input :last_name, required: true, label: t('payments.cc_fields.last_name'), input_html: { value: (form.object.last_name.presence || current_user.last_name), autocomplete: :off, class: 'sessioncamexclude' }
 
-            .span4.card-info.security.column.right{class: "#{"error" if form.object.errors.include?(:verification_value).present?}"}
-              = form.label :verification_value, class: 'control-label' do
-                %abbr{ title: "required" } *
-                = t 'payments.cc_fields.security_code'
+        = form.input :number, required: true, label:  t('payments.cc_fields.card_number'), input_html: { placeholder: '•••• •••• •••• ••••', class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: :off, 'data-card-number' => true }
 
-              .controls.card-code
-                = form.input_field :verification_value, size: 3, placeholder: 'CCV', required: true, class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off", 'data-card-code' => true
-              - if form.object.errors[:verification_value].present?
-                %p.error-block
-                  = form.object.errors[:verification_value].flatten.first
+        .nm-new-credit-card-form-exp-date-container
+          = form.input :month, as: :select, label: t('payments.cc_fields.expiration_date_month_html'), collection: credit_card_date[:month], input_html: { prompt: false, class: 'sessioncamexclude', placeholder: 'Select month'}
 
-      = render 'listings/reservations/confirm_reservations', f: f
+          = form.input :year, as: :select, label: t('payments.cc_fields.expiration_date_year_html'), collection: credit_card_date[:year], input_html: { prompt: false, class: 'sessioncamexclude', placeholder: 'Select year' }
 
-- content_for :script do
-  :javascript
-    $('.credit-card-fields').each(function(index, el){
-      el = $(el)
-      new_credit_card_form = el.find('.new-credit-card-form');
-      el.find('input.radio_buttons').on('change', function(event){
-        target = $(event.target);
-        if(target.val() == 'custom'){
-         new_credit_card_form.show();
-        }
-        else {
-         new_credit_card_form.hide();
-        }
-      });
-      $(el.find('input.radio_buttons:checked')).trigger('change')
-    });
+          = form.input :verification_value, label: t('payments.cc_fields.security_code'), required: true, input_html: { placeholder: 'CCV', class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off", 'data-card-code' => true, size: 3 }
 
-  = javascript_include_tag "https://js.stripe.com/v1/"
+    = render 'listings/reservations/confirm_reservations', f: f
+
+
+:javascript
+  $(document).trigger('init:paymentMethodCreditCard.nearme');
+
+= javascript_include_tag "https://js.stripe.com/v1/"

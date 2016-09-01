@@ -14,8 +14,9 @@ module CustomAttributes
         type = array[CustomAttribute::ATTRIBUTE_TYPE]
         validation_rules = array[CustomAttribute::VALIDATION_RULES]
         valid_values = array[CustomAttribute::VALID_VALUES]
+        validation_only_on_update = array[CustomAttribute::VALIDATION_ONLY_ON_UPDATE]
 
-        if validation_rules.present? && !validation_rules.empty?
+        if validation_rules.present? && !validation_rules.empty? && !(validation_only_on_update && record.new_record?)
           validation_rules.each do |validation_rule_type, validation_rule_options|
             validation_rule_options ||= {}
             options = ({ attributes:  name }.merge(validation_rule_options)).symbolize_keys

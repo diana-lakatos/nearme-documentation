@@ -1,0 +1,22 @@
+.cell
+  / teaser box
+  %article.card-a{"data-equalize" => true}
+    %figure
+      = link_to root_url do
+        = image_tag space_listing_placeholder_path(width: 460, height: 340)
+        %figcaption
+          = t :featured
+    %ul.numbers
+      %li
+        = t :projects
+        %span= transactable_collaborator.user.all_projects_count
+      %li
+        = t :followers
+        %span 120
+    %p.action
+      = link_to t(:unfollow), root_url, class: 'button-a tiny'
+    %h3.hx
+      = link_to transactable_collaborator.name, profile_path(transactable_collaborator.user)
+    %p Quisque euismod orci sed nisi malesuada porta. In non molestie purus. Sed ut maximus nibh, eu ultrices massa. In accum san augue nisl, eget ultrices
+    %p.location San Francisco, CA
+/ repeated structure

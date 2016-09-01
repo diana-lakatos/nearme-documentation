@@ -9,6 +9,9 @@
       .input-container.col-xs-6
         .input-col-clearfix
           = f.input :searchable, as: :boolean, inline_label: true
+      .input-container.col-xs-6
+        .input-col-clearfix
+          = f.input :search_only_enabled_profiles, as: :boolean, inline_label: true
 
     %hr
     %h4= t('instance_admin.manage.search.category_tree_search')

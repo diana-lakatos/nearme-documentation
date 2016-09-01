@@ -4,6 +4,7 @@ class RegistrationsController < Devise::RegistrationsController
   before_action :configure_permitted_parameters, only: :create
   skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:update_password, :set_password]
   skip_before_filter :filter_out_token, :only => [:verify, :unsubscribe]
+  skip_before_filter :force_fill_in_wizard_form
   before_filter :nm_force_ssl, only: [:new]
   before_filter :find_company, only: [:social_accounts, :edit]
   before_filter :set_form_components, only: [:edit, :update]
@@ -63,9 +64,9 @@ class RegistrationsController < Devise::RegistrationsController
         when 'default'
           WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @user.id)
         when 'seller'
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::HostAccountCreated, @user.id)
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::ListerAccountCreated, @user.id)
         when 'buyer'
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::GuestAccountCreated, @user.id)
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::EnquirerAccountCreated, @user.id)
         end
       end
 
@@ -90,6 +91,8 @@ class RegistrationsController < Devise::RegistrationsController
     @country = current_user.country_name
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     build_approval_request_for_object(current_user) unless current_user.is_trusted?
+    @buyer_profile = resource.get_buyer_profile
+    @seller_profile = resource.get_seller_profile
     render :edit, layout: dashboard_or_community_layout
   end
 
@@ -107,12 +110,12 @@ class RegistrationsController < Devise::RegistrationsController
       @feed = ActivityFeedService.new(@user, user_feed: true)
       @events = @feed.events(params)
 
-      @projects_followed = @user.feed_followed_projects.enabled.paginate(pagination_params)
+      @transactables_followed = @user.feed_followed_transactables.active.paginate(pagination_params)
       @topics_followed = @user.feed_followed_topics.paginate(pagination_params)
       @users_followed = @user.feed_followed_users.paginate(pagination_params)
       @followers = @user.feed_followers.paginate(pagination_params)
-      @all_projects = @user.all_projects(current_user == @user).enabled.paginate(pagination_params)
-      @groups = @user.group_collaborated.paginate(pagination_params).decorate
+      @all_transactables = @user.all_transactables(current_user == @user).active.paginate(pagination_params)
+      @groups = @user.all_group_collaborated.paginate(pagination_params).decorate
     else
       @company = @user.companies.first
       if @company.present?
@@ -144,11 +147,13 @@ class RegistrationsController < Devise::RegistrationsController
     build_approval_request_for_object(resource) unless resource.is_trusted?
     all_params = user_params
     all_params[:default_profile_attributes].try(:delete, :customizations_attributes)
+    all_params[:buyer_profile_attributes].try(:delete, :customizations_attributes)
+    all_params[:seller_profile_attributes].try(:delete, :customizations_attributes)
 
     # We remove approval_requests_attributes from the params used to update the user
     # to avoid duplication, as the approval request is already set by assign_attributes
     # and build_approval_request_for_object
-    if resource.update_with_password(user_params.except(:approval_requests_attributes))
+    if resource.update_with_password(all_params.except(:approval_requests_attributes))
       if @user.try(:language).try(:to_sym) != I18n.locale
         I18n.locale = @user.try(:language).try(:to_sym) || :en
       end
@@ -158,6 +163,8 @@ class RegistrationsController < Devise::RegistrationsController
       event_tracker.updated_profile_information(@user)
       redirect_to dashboard_profile_path
     else
+      @buyer_profile = resource.get_buyer_profile
+      @seller_profile = resource.get_seller_profile
       flash.now[:error] = (@user.errors.full_messages).join(', ')
       @company = current_user.companies.first
       @country = resource.country_name
@@ -331,7 +338,7 @@ class RegistrationsController < Devise::RegistrationsController
     @country = current_user.country_name
     @return_path = params[:return_path]
 
-    # We only want to render the missing phone number if there's an actual error 
+    # We only want to render the missing phone number if there's an actual error
     # for the mobile number, like missing for example
     if current_user.invalid? && current_user.errors[:mobile_number].present?
       render('dashboard/user_messages/missing_phone_number')

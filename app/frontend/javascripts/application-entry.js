@@ -3,9 +3,7 @@
 var DNM = require('./common-app');
 
 DNM.registerInitializer(function(){
-    $( document ).ready(function(){
-        $("input[data-authenticity-token]").val($('meta[name="authenticity_token"]').attr('content'));
-    });
+    $('input[data-authenticity-token]').val($('meta[name="authenticity_token"]').attr('content'));
 });
 
 DNM.registerInitializer(function(){
@@ -32,10 +30,10 @@ DNM.registerInitializer(function(){
 
     function centerSearchBox(){
         var
-        navbar_height = $('.navbar-fixed-top').height(),
-        image_height = $('.dnm-page').height(),
-        search_height = $('#search_row').height(),
-        wood_box_height = $('.wood-box').height();
+            navbar_height = $('.navbar-fixed-top').height(),
+            image_height = $('.dnm-page').height(),
+            search_height = $('#search_row').height(),
+            wood_box_height = $('.wood-box').height();
         $('#search_row').css('margin-top', (image_height)/2 - search_height/2 + navbar_height/2 - wood_box_height/2 + 'px');
     }
 
@@ -70,7 +68,7 @@ DNM.registerInitializer(function(){
     loadWishlistButtons();
 
     $(document).on('load:searchResults.nearme', function(){
-      loadWishlistButtons();
+        loadWishlistButtons();
     });
 
     $(document).on('rendered-search:ias.nearme', function(){
@@ -88,12 +86,12 @@ DNM.registerInitializer(function(){
     }
 
     $(window).on('scroll.nearme', function(){
-      var next_page_path = $('.pagination .next_page').attr('href');
-      if (next_page_path && $(window).scrollTop() > $(document).height() - $(window).height() - 60){
-          $('.pagination').html('<img id="spinner" src="' + urlUtil.assetUrl('spinner.gif') + '" alt="Loading ..." title="Loading ..." />');
-          $.getScript(next_page_path);
-      }
-  });
+        var next_page_path = $('.pagination .next_page').attr('href');
+        if (next_page_path && $(window).scrollTop() > $(document).height() - $(window).height() - 60){
+            $('.pagination').html('<img id="spinner" src="' + urlUtil.assetUrl('spinner.gif') + '" alt="Loading ..." title="Loading ..." />');
+            $.getScript(next_page_path);
+        }
+    });
 });
 
 DNM.registerInitializer(function(){
@@ -144,6 +142,18 @@ DNM.registerInitializer(function(){
     require.ensure('./sections/space/controller', function(require){
         var SpaceController = require('./sections/space/controller');
         return new SpaceController(el);
+    });
+});
+
+DNM.registerInitializer(function(){
+    var el = $('[data-back-to-search-results-link]');
+    if (el.length === 0) {
+        return;
+    }
+
+    require.ensure('./new_ui/modules/back_to_search', function(require){
+        var BackToSearch = require('./new_ui/modules/back_to_search');
+        return new BackToSearch(el);
     });
 });
 
@@ -591,8 +601,7 @@ DNM.registerInitializer(function(){
     require.ensure(['./sections/search/time_and_datepickers', './new_ui/forms/timepickers'], function(require){
         var SearchTimeAndDatepickers = require('./sections/search/time_and_datepickers');
         return new SearchTimeAndDatepickers(dateInput);
-    })
-
+    });
 });
 
 
@@ -607,28 +616,28 @@ DNM.registerInitializer(function(){
             customSelects(container);
             return new PhoneNumbers(container);
         });
-    })
+    });
 });
 
 DNM.registerInitializer(function(){
     $(document).on('init:homepageranges.nearme', function() {
-      $('[name="start_date"]').each(function(index, element) {
-        if($(element).datepicker && !$(element).attr('data-no-default')) {
-          $(element).datepicker('setDate', new Date());
-        }
-      });
+        $('[name="start_date"]').each(function(index, element) {
+            if($(element).datepicker && !$(element).attr('data-no-default')) {
+                $(element).datepicker('setDate', new Date());
+            }
+        });
 
-      $('[name="end_date"]').each(function(index, element) {
-        if($(element).datepicker && !$(element).attr('data-no-default')) {
-          $(element).datepicker('setDate', 1);
-        }
-      });
-    })
+        $('[name="end_date"]').each(function(index, element) {
+            if($(element).datepicker && !$(element).attr('data-no-default')) {
+                $(element).datepicker('setDate', 1);
+            }
+        });
+    });
 });
 
 DNM.registerInitializer(function(){
     $( document ).on('modal-shown.nearme', function(e, containerElement) {
-        $(containerElement).find("input[data-authenticity-token]").val($('meta[name="authenticity_token"]').attr('content'));
+        $(containerElement).find('input[data-authenticity-token]').val($('meta[name="authenticity_token"]').attr('content'));
     });
 });
 
@@ -641,18 +650,46 @@ DNM.registerInitializer(function(){
 
     require.ensure(['socialite-js/socialite.js', './new_ui/modules/social_buttons'], function(require){
         var
-            Socialite = require('socialite-js/socialite.js'),
             SocialButtons = require('./new_ui/modules/social_buttons');
+
+        window.Socialite = require('socialite-js/socialite.js');
+
         return new SocialButtons(wrapper, window.Socialite);
     });
 });
 
 DNM.registerInitializer(function(){
-  $(document).on('init:tooltips.nearme', function(e, containerElement) {
-    $(containerElement).find('[data-toggle="tooltip"]').tooltip({
-      placement: 'right',
+    $(document).on('init:tooltips.nearme', function(e, containerElement) {
+        $(containerElement).find('[data-toggle="tooltip"]').tooltip({
+            placement: 'right',
+        });
     });
-  });
 });
+
+// New shared libraries
+
+DNM.registerInitializer(()=>{
+    function run(){
+        let els = document.querySelectorAll('.nm-credit-card-fields');
+        if (els.length === 0) {
+            return;
+        }
+
+        require.ensure('shared/payment_methods/credit_card', (require)=>{
+            let PaymentMethodCreditCard = require('shared/payment_methods/credit_card');
+
+            Array.prototype.forEach.call(els, function(el){
+                return new PaymentMethodCreditCard(el);
+            });
+        });
+    }
+
+    $(document).on('init:paymentMethodCreditCard.nearme', run);
+
+    run();
+});
+
+let sharedInitializers = require('shared-initializers');
+sharedInitializers.forEach((initializer)=> DNM.registerInitializer(initializer));
 
 DNM.run();

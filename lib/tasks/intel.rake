@@ -30,6 +30,12 @@ namespace :intel do
 
     Utils::DefaultAlertsCreator::GroupCreator.new.create_all!
 
+    WorkflowAlert
+      .find_by(instance_id: 23, name: 'Member approved email')
+      .try(:update_columns , {
+        name: 'Notify user of approved join request',
+        template_path: 'group_mailer/notify_user_of_approved_join_request'
+      })
 
     Instance.where(is_community: true).find_each do |instance|
       Workflow.find_by(instance_id: instance.id, workflow_type: 'group_workflow').workflow_steps.each do |step|
@@ -127,8 +133,10 @@ namespace :intel do
         ca.searchable = false
       end.save!
 
-      Utils::DefaultAlertsCreator::ProjectCreator.new.create_all!
+      Utils::DefaultAlertsCreator::CollaboratorCreator.new.create_all!
       Utils::DefaultAlertsCreator::UserCreator.new.create_user_promoted_email!
+      Utils::DefaultAlertsCreator::FollowerCreator.new.create_all!
+      Utils::DefaultAlertsCreator::CommenterCreator.new.create_all!
       PlatformContext.current.theme.update_attributes(
         facebook_url: 'https://www.facebook.com/IntelDeveloperZone/',
         twitter_url: 'https://twitter.com/intelsoftware',

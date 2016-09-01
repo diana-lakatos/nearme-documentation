@@ -1,14 +1,13 @@
 @import "common/common";
 
 // Vendor libs
-@import 'selectize/dist/css/selectize.bootstrap3';
-@import 'swipebox/src/css/swipebox';
-@import 'x-editable/dist/bootstrap3-editable/css/bootstrap-editable';
-@import 'cropper/dist/cropper.min';
+@import "selectize/dist/css/selectize.bootstrap3";
+@import "swipebox/src/css/swipebox";
+@import "x-editable/dist/bootstrap3-editable/css/bootstrap-editable";
+@import "cropper/dist/cropper.min";
 @import "eonasdan-bootstrap-datetimepicker/src/sass/bootstrap-datetimepicker-build";
-@import 'spectrum/spectrum';
-@import 'jt.timepicker/jquery.timepicker';
+@import "spectrum/spectrum";
+@import "jt.timepicker/jquery.timepicker";
 
 // Vendor overrides
 @import "vendor/vendor";
-
