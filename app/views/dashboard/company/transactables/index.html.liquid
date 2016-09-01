@@ -18,7 +18,7 @@
 {% content_for 'panel_navigation_links' %}
   {% for tt in platform_context.transactable_types %}
     <li class='{{ tt.id | active_class:transactable_type.id }}'>
-      <a href='{{ tt.transactable_types_path }}'>{{ 'dashboard.manage_listings.tab' | translate: default: transactable_type.bookable_noun_plural }}</a>
+      <a href='{{ tt.transactable_types_path }}'>{{ 'dashboard.manage_listings.tab' | translate: default: tt.bookable_noun_plural }}</a>
     </li>
   {% endfor %}
 {% endcontent_for %}
