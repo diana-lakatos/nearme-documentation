@@ -202,7 +202,7 @@ namespace :uot do
       create_custom_attribute(@transactable_type, {
           name: 'workplace_type',
           label: 'Workplace Type',
-          attribute_type: 'array',
+          attribute_type: 'string',
           html_tag: 'check_box_list',
           required: "1",
           valid_values: ["Online", "On Site"],
