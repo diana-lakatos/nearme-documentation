@@ -76,8 +76,7 @@
                 = (yield(:content).empty? ? yield : yield(:content))
 
             - unless no_footer?
-              .container-fluid
-                = render 'layouts/footer'
+              = render 'layouts/footer'
         - unless no_footer?
           .footer-push{class: "footer_#{section_class(@section_name)}"}
 
