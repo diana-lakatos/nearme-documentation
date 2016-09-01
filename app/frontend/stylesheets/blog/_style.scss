@@ -225,18 +225,16 @@ body.blog {
         }
 
         .avatar {
-            min-height: 76px;
+            padding: 10px;
+            color: $light-gray;
 
-            .avatar-container {
-                overflow: hidden;
-                margin: 13px 5px 20px 0;
-                height: 56px;
-                width: 56px;
-                background-repeat: no-repeat;
-                background-size: 46px 46px;
-                background-position: center center;
-                border-radius: 50%;
-                border: 7px solid white;
+            img {
+                vertical-align: middle;
+                margin-right: 10px;
+                width: 45px;
+                height: 45px;
+                border-radius: 50px;
+                border: 7px solid #fff;
             }
         }
     }
@@ -482,36 +480,6 @@ body.blog {
         p {
             line-height: 20px;
             margin-bottom: 0px;
-        }
-
-        .blog-post {
-            .avatar {
-                .col-sm-1 {
-                    width: 60px !important;
-                    float: left;
-                }
-
-                .col-sm-11 {
-                    float: left;
-
-                    &.with-avatar {
-                        max-width: 80%;
-                        overflow: hidden;
-                        white-space: nowrap;
-                        text-overflow: ellipsis;
-                    }
-                }
-
-                .author-name {
-                    display: inline-block;
-                    padding-top: 17px;
-                    color: $light-gray;
-                }
-
-                .avatar-container {
-                    margin-top: 0;
-                }
-            }
         }
     }
 }
