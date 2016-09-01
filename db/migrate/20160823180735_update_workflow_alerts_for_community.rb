@@ -1,5 +1,6 @@
 class UpdateWorkflowAlertsForCommunity < ActiveRecord::Migration
   def up
+    WorkflowAlert.reset_column_information
     Instance.where(is_community: true).find_each do |instance|
       instance.set_context!
 
