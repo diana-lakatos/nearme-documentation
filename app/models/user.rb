@@ -1102,6 +1102,10 @@ class User < ActiveRecord::Base
     'UserJsonSerializer'
   end
 
+  def members_email_recipients
+    approved_members.select { |u| u.notification_preference.blank? || u.notification_preference.email_frequency.eql?('immediately') }
+  end
+
 private
 
   def get_first_name_from_name

@@ -17,7 +17,7 @@ class Comment < ActiveRecord::Base
   validate :group_membership, if: :group_activity_commented?
 
   after_commit :user_commented_event, on: :create
-  after_save :trigger_workflow_alert_for_new_comment, on: :create
+  after_create :trigger_workflow_alert_for_new_comment
 
   def user_commented_event
     case self.commentable_type
@@ -41,10 +41,16 @@ class Comment < ActiveRecord::Base
   end
 
   def trigger_workflow_alert_for_new_comment
-    case self.commentable_type
+    klass = case self.commentable_type
     when "Transactable"
-      WorkflowStepJob.perform(WorkflowStep::CommenterWorkflow::UserCommentedOnTransactable, self.creator.id, self.commentable.id)
+      WorkflowStep::CommenterWorkflow::UserCommentedOnTransactable
+    when "Group"
+      WorkflowStep::CommenterWorkflow::UserCommentedOnGroup
+    when 'User'
+      WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate
     end
+    WorkflowStepJob.perform(klass, self.id) if klass.present?
+    true
   end
 
   def reported_by(user, ip)

@@ -20,6 +20,7 @@ class Utils::DefaultAlertsCreator
     Utils::DefaultAlertsCreator::UserCreator.new.create_all!
     Utils::DefaultAlertsCreator::SpamReportCreator.new.create_all!
     Utils::DefaultAlertsCreator::ActivityEventsSummaryCreator.new.create_all!
+    Utils::DefaultAlertsCreator::FollowerCreator.new.create_all!
     Utils::DefaultAlertsCreator::CommenterCreator.new.create_all!
   end
 
