@@ -5,7 +5,7 @@ class WorkflowStep::CommenterWorkflow::UserCommentedOnTransactable < WorkflowSte
   end
 
   def collaborators
-    @commentable.approved_transactable_collaborators
+    @commentable.collaborators_email_recipients
   end
 
   def data

@@ -203,7 +203,7 @@ namespace :uot do
           name: 'workplace_type',
           label: 'Workplace Type',
           attribute_type: 'string',
-          html_tag: 'check_box_list',
+          html_tag: 'radio_buttons',
           required: "1",
           valid_values: ["Online", "On Site"],
           public: true,
@@ -235,7 +235,8 @@ namespace :uot do
           label: 'Deadline',
           attribute_type: 'date',
           html_tag: 'input',
-          placeholder: "Enter Amount",
+          placeholder: "yyyy-mm-dd",
+          hint: "Valid format for date is:\nyyyy-mm-dd",
           required: "1",
           public: true,
           searchable: false
@@ -722,7 +723,7 @@ namespace :uot do
     end
 
     def create_translations
-
+      print 'Translating'
       transformation_hash = {
         'reservation' => 'offer',
         'Reservation' => 'Offer',
@@ -757,7 +758,8 @@ namespace :uot do
             t.value = new_value
             t.skip_expire_cache = true
             t.save!
-            puts "\t\tTranslation updated: key: #{key}, value: #{value} -> #{t.value}"
+            print '.'
+            $stdout.flush
           end
 
         end
@@ -768,8 +770,10 @@ namespace :uot do
 
       uot_locales_hash.each_pair do |key, value|
         create_translation!(key, value)
-        puts "\t\tTranslation created: key: #{key}, value: #{value}"
+        print '.'
+        $stdout.flush
       end
+      puts ""
     end
 
     def create_translation!(key, value)

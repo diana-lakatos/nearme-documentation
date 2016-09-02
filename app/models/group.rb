@@ -158,5 +158,9 @@ class Group < ActiveRecord::Base
     group_members.each { |m| m.destroyed_by_parent = true }
   end
 
+  def members_email_recipients
+    approved_members.select { |u| u.notification_preference.blank? || u.notification_preference.email_frequency.eql?('immediately') && u.notification_preference.group_updates_enabled? }
+  end
+
   class NotFound < ActiveRecord::RecordNotFound; end
 end
