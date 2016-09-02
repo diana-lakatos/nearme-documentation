@@ -1,6 +1,7 @@
 class Dashboard::Api::CategoriesController < Dashboard::Api::BaseController
 
   skip_before_filter :authenticate_user!, only: [:show]
+  skip_before_filter :force_fill_in_wizard_form
 
   def show
     category = Category.find(params[:id])

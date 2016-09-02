@@ -6,7 +6,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
     should "track and redirect a host to the My Bookings page when they cancel a booking" do
       @reservation = FactoryGirl.create(:future_unconfirmed_reservation)
       sign_in @reservation.owner
-      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::GuestCancelled, @reservation.id)
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::EnquirerCancelled, @reservation.id)
 
       Rails.application.config.event_tracker.any_instance.expects(:cancelled_a_booking).with do |reservation, custom_options|
         reservation == assigns(:reservation) && custom_options == { actor: 'guest' }

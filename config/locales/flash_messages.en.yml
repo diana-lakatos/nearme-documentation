@@ -13,6 +13,7 @@ en:
         unknown: "We cannot authorize you."
     authorizations:
       not_authorized: "Sorry, you do not have permission to view that page."
+      not_filled_form: "Please complete your profile first."
     communications:
       validation_code: "Validation code: %{validation_code}"
       phone_number_disconnected: "Phone number successfully disconnected."
@@ -240,6 +241,7 @@ en:
       listing_disabled: "This listing has been temporarily disabled by the owner. Displaying other listings in this location."
       listing_disabled_but_admin: "This listing has been temporarily disabled by the owner. Other users will not be able to browse it."
       listing_inactive: "This listing is inactive. Displaying other listings in this location."
+      no_longer_have_access: "You no longer have an access to this listing."
     locations:
       listing_removed: "This listing has been removed. Displaying other listings near %{address}."
       no_listings: "There aren't any listings at that location. Check out some other locations."
@@ -259,12 +261,24 @@ en:
       buyer:
         updated: 'Buyer profile has been updated'
       order:
+        valid_merchant_account_required: "Before you can create an offer, you need to provide your payment information."
         deleted: 'Order has been deleted.'
         updated: 'Order has been updated.'
         canceled: 'Order has been canceled.'
         resumed: 'Order has been resumed.'
         approved: 'Order has been approved.'
+        archived: 'Offer has been closed.'
         error_update: 'Order has not been updated.'
+      order_items:
+        updated: 'Order item has been updated.'
+        approved: 'Order item has been approved.'
+        approve_failed: 'Order item could not be approved.'
+        rejected: 'Order item has been rejected'
+        reject_failed: 'Order item could not be rejected'
+        can_not_edit_accepted_order_item: "You can\'t edit accepted order item."
+        recently_edited: "Looks like total amount of this order item has changed please verify and reaccept."
+      payment_subscription:
+        updated: "Credit Card updated successfully"
       companies:
         company_updated: "Great, your company's details have been updated."
         white_label_updated: "Great, white-label details have been updated."
@@ -289,6 +303,8 @@ en:
         reservation_not_confirmed: "Your reservation could not be confirmed."
         reservation_rejected: "You have rejected the reservation. Maybe next time!"
         payment_requested: "Your request has been sent"
+      offer:
+        accepted: "You have successfuly added credit card and accepted an offer."
       data_upload:
         created: "Import has been scheduled. You'll receive an email when it's done."
         scheduled: 'Data has been scheduled to be imported.'
@@ -406,6 +422,7 @@ en:
         desk_added: "Great, your new %{bookable_noun} has been added!"
         listing_deleted: "That listing has been deleted."
         listing_updated: "Great, your listing's details have been updated."
+        listing_cancelled: 'Your listing has been marked as completed.'
         phone_number_verification_needed: 'Please verify your mobile number first'
       locations:
         add_your_company: "Please add your company first"

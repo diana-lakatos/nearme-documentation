@@ -15,14 +15,10 @@
   {% if blog_post.show_author_avatar? %}
     <div class='clearfix avatar'>
       {% if blog_post.author_avatar_present? %}
-        <div class='col-sm-1'>
-          <div class='avatar-container' style="background-image: url({{ blog_post.author_avatar_thumb_url }});"></div>
-        </div>
+        <img src="{{ blog_post.author_avatar_thumb_url }}" alt="{{ blog_post.author_name }}">
       {% endif %}
       {% if blog_post.author_name_present? %}
-        <div class='col-sm-11' class="{% if blog_post.author_avatar_present? %} with-avatar {% endif %}">
-          <div class='author-name'>{{ blog_post.author_name }}</div>
-        </div>
+        <span class="author-name">{{ blog_post.author_name }}</span>
       {% endif %}
     </div>
   {% endif %}

@@ -1,6 +1,6 @@
 class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
-  ATTRIBUTES = %w(account_type first_name last_name currency bank_routing_number bank_account_number tos  business_tax_id business_vat_id ssn_last_4 personal_id_number )
+  ATTRIBUTES = %w(account_type first_name last_name currency bank_routing_number bank_account_number tos  business_tax_id business_vat_id ssn_last_4 personal_id_number)
   ACCOUNT_TYPES = %w(individual company)
 
   SUPPORTED_CURRENCIES = {
@@ -137,7 +137,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
         account_number: bank_account_number,
         routing_number: bank_routing_number
       }
-    }.merge(legal_entity: legal_entity_hash)
+    }.merge(legal_entity: legal_entity_hash).merge(payment_gateway_config)
   end
 
   def address_hash
@@ -207,7 +207,50 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     @iso_country_code ||= address.iso_country_code
   end
 
+
+  def next_transfer_date(transfer_created_on = Date.today)
+    case transfer_interval
+    when 'daily'
+      transfer_created_on + transfer_schedule[:delay_days].to_i
+    when 'weekly'
+      day_of_the_week = Date::DAYNAMES.index(transfer_schedule[:weekly_anchor].to_s.capitalize)
+      Time.current.to_date + (day_of_the_week - Time.current.wday).modulo(7).days
+    when 'monthly'
+      month = (Time.current.day > monthly_anchor) ? Time.current.month + 1 : Time.current.month
+      year = (month == 1 &&  Time.current.month == 12) ? Time.current.year + 1 : Time.current.year
+      Date.parse("#{monthly_anchor}/#{month}/#{year}")
+    end
+  end
+
+  def weekly_or_monthly_transfers?
+    ['daily', 'monthly'].include?(transfer_interval)
+  end
+
   private
+
+  def payment_gateway_config
+    if self.data[:payment_gateway_config].blank?
+      self.data[:payment_gateway_config] = { }
+      if payment_gateway.config[:transfer_schedule] &&
+        ['daily', 'weekly', 'monthly'].include?(payment_gateway.config[:transfer_schedule][:interval])
+        self.data[:payment_gateway_config][:transfer_schedule] = payment_gateway.config[:transfer_schedule]
+      end
+    end
+
+    self.data[:payment_gateway_config]
+  end
+
+  def transfer_schedule
+    payment_gateway_config[:transfer_schedule] || {}
+  end
+
+  def transfer_interval
+    transfer_schedule[:interval]
+  end
+
+  def monthly_anchor
+    transfer_schedule[:monthly_anchor].to_i
+  end
 
   def upload_documents(stripe_account)
     files_data = owners.map { |owner| owner.upload_document(stripe_account.id) }

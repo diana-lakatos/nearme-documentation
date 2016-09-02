@@ -37,7 +37,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
     should "#notify_guest_of_cancellation_by_host" do
       @recurring_booking_creator.notify_guest_of_cancellation_by_host_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
-        WorkflowStepJob.perform(::WorkflowStep::RecurringBookingWorkflow::HostCancelled, @recurring_booking.id)
+        WorkflowStepJob.perform(::WorkflowStep::RecurringBookingWorkflow::ListerCancelled, @recurring_booking.id)
       end
       mail = ActionMailer::Base.deliveries.last
       assert_contains @recurring_booking.owner.first_name, mail.html_part.body
@@ -49,7 +49,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
     should "#notify_host_of_cancellation_by_host" do
       @recurring_booking_creator.notify_host_of_cancellation_by_host_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
-        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::HostCancelled, @recurring_booking.id)
+        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::ListerCancelled, @recurring_booking.id)
       end
       mail = ActionMailer::Base.deliveries.last
       assert_contains @recurring_booking.transactable.administrator.first_name, mail.html_part.body
@@ -60,7 +60,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
     should "#notify_guest_of_cancellation_by_guest" do
       @recurring_booking_creator.notify_guest_of_cancellation_by_guest_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
-        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::GuestCancelled, @recurring_booking.id)
+        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::EnquirerCancelled, @recurring_booking.id)
       end
       mail = ActionMailer::Base.deliveries.last
       assert_contains @recurring_booking.owner.first_name, mail.html_part.body
@@ -71,7 +71,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
     should "#notify_host_of_cancellation_by_guest" do
       @recurring_booking_creator.notify_host_of_cancellation_by_guest_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
-        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::GuestCancelled, @recurring_booking.id)
+        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::EnquirerCancelled, @recurring_booking.id)
       end
       mail = ActionMailer::Base.deliveries.last
 

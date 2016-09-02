@@ -29,20 +29,4 @@
     = f.submit t('general.save')
 
 :javascript
-  $('.dialog__body').each(function(index, el){
-    el = $(el)
-    new_credit_card_form = el.find('.new-credit-card-form');
-    el.find('input.radio_buttons').on('change', function(event){
-      target = $(event.target);
-      if(target.val() == 'custom'){
-       new_credit_card_form.show();
-      }
-      else {
-       new_credit_card_form.hide();
-      }
-    });
-    $(el.find('input.radio_buttons:checked')).trigger('change')
-  });
-  $(document).trigger('init:creditcardform.nearme');
-
-= javascript_include_tag "https://js.stripe.com/v1/"
+  $(function() { $(document).trigger('init:paymentmodal.nearme'); });

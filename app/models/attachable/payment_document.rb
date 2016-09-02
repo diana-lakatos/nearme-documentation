@@ -17,4 +17,8 @@ class Attachable::PaymentDocument < Attachable::Attachment
   def is_file_required?
     payment_document_info.try(:document_requirement).try(:is_file_required?) || false
   end
+
+  def to_liquid
+    @payment_document_drop ||= Attachable::PaymentDocumentDrop.new(self)
+  end
 end

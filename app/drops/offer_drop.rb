@@ -1,21 +1,25 @@
-class OfferDrop < BaseDrop
+class OfferDrop < OrderDrop
 
   attr_reader :offer
 
-  delegate :slug, :id, :name, :price, to: :offer
-
   def initialize(offer)
-    @offer = offer
+    @order = @offer = offer
   end
 
-  # offer's url
-  def url
-    routes.offer_url(@offer)
+  def total_units_text
+    ''
   end
 
-  # offer's path
-  def path
-    routes.offer_path(@offer)
+  def formatted_total_amount
+    humanized_money_with_cents_and_symbol(@order.recurring_booking_periods.map(&:total_amount).sum)
+  end
+
+  def formatted_total_unpaid_amount
+    humanized_money_with_cents_and_symbol(@order.recurring_booking_periods.unpaid.map(&:total_amount).sum)
+  end
+
+  def formatted_total_paid_amount
+    humanized_money_with_cents_and_symbol(@order.recurring_booking_periods.paid.map(&:total_amount).sum)
   end
 
 end

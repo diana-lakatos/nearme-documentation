@@ -5,7 +5,7 @@ class Registrations::BlogController < ApplicationController
   def index
     @user = blog_user
     @blog_posts = get_blog_posts
-    @tags = blog_user.published_blogs.tags.alphabetically
+    @tags = blog_user.published_blogs.map(&:tags).flatten.uniq.sort_by(&:name)
 
     @no_footer = true
     @render_content_outside_container = true
@@ -40,7 +40,7 @@ class Registrations::BlogController < ApplicationController
 
   def check_blog_enabled
     if blog_user.blog.present? && !blog_user.blog.enabled? && blog_user == current_user
-      redirect_to user_path(blog_user), notice: t('user_blog.errors.blog_disabled')
+      redirect_to root_path, notice: t('user_blog.errors.blog_disabled')
       return
     end
 

@@ -1,1 +1,1 @@
-var config = module.exports = require('./manifest.config.js');
+module.exports = require('./manifest.config.js');

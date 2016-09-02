@@ -1,0 +1,32 @@
+{%if @order and @order.confirm_reservations? and @order.payment %}
+  <p class="confirm-reservations">{{ 'reservations.manually_confirm' | t: lessor: @order.transactable.transactable_type.lessor }}
+    {% if @order.payment.nonce_payment? %}
+      {{ 'reservations.paypal_and_cc_charge_after_confirmation' | t }}
+    {% else %}
+      {{ 'reservations.charge_after_confirmation' | t }}
+    {% endif %}
+  </p>
+{% endif %}
+
+{% if @order.bookable? %}
+  <p class="cancellation-info">
+    {% assign action_type = @order.transactable_pricing.action %}
+    {% if !action_type.cancellation_policy_enabled or action_type.cancellation_policy_hours_for_cancellation == 0 %}
+      {{ 'reservations.no_cancellation_time' | t}}
+    {% else %}
+      <span class="cancellation-time">
+        {{ 'reservations.cancellation_time' | t: time: action_type.cancellation_policy_hours_for_cancellation }}
+      </span>
+    {% endif %}
+
+    {% if action_type.cancellation_policy_enabled != true or (action_type.cancellation_policy_penalty_percentage == 0 and action_type.cancellation_policy_penalty_hours == 0)
+      {{ 'reservations.no_cancellation_fee' | t }}
+    {% elsif action_type.cancellation_policy_penalty_hours > 0 %}
+      {{ 'reservations.hours_cancellation_fee' | t: fee: action_type.cancellation_policy_penalty_hours }}
+    {% else %}
+      <span class="cancellation-fee">
+        {{ 'reservations.cancellation_fee' | t: fee: action_type.cancellation_policy_penalty_percentage }}
+        </span>
+    {% endif %}
+  </p>
+{% endif %}

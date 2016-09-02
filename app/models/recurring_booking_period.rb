@@ -3,16 +3,26 @@ class RecurringBookingPeriod < ActiveRecord::Base
   include Payable
   include Modelable
 
-  belongs_to :recurring_booking
+  after_create :send_creation_alert
+
+  belongs_to :recurring_booking, foreign_key: :order_id
+  belongs_to :order
 
   delegate :payment_gateway, :company, :company_id, :user, :owner, :currency,
     :service_fee_guest_percent, :service_fee_host_percent, :payment_subscription,
     :transactable, :quantity, :cancellation_policy_hours_for_cancellation,
-    :cancellation_policy_penalty_percentage, :action, :host, to: :recurring_booking
+    :cancellation_policy_penalty_percentage, :action, :host, :is_free_booking?, to: :order
 
   scope :unpaid, -> { where(paid_at: nil) }
   scope :paid, -> { where.not(paid_at: nil) }
 
+  state_machine :state, initial: :pending do
+    event :approve                  do transition [:rejected, :pending] => :approved; end
+    event :reject                   do transition pending: :rejected; end
+
+    after_transition [:rejected, :pending] => :approved, do: :send_approve_alert
+    after_transition pending: :rejected, do: :send_reject_alert
+  end
 
   def skip_payment_authorization
     false
@@ -23,6 +33,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
   def starts_at
     period_start_date
   end
+
   def ends_at
     period_end_date
   end
@@ -31,27 +42,65 @@ class RecurringBookingPeriod < ActiveRecord::Base
     0
   end
 
+  def recalculate_fees!
+    self.service_fee_line_items.destroy_all
+    self.host_fee_line_items.destroy_all
+
+    self.transactable_line_items.each do |tli|
+      tli.attributes = {
+        service_fee_guest_percent: action.service_fee_guest_percent,
+        service_fee_host_percent: action.service_fee_host_percent,
+      }
+      tli.build_host_fee
+      tli.build_service_fee
+    end
+  end
+
+  def set_service_fees
+    transactable_line_items.each do |tli|
+      tli.attributes = {
+        service_fee_guest_percent: action.service_fee_guest_percent,
+        service_fee_host_percent: action.service_fee_host_percent,
+      }
+    end
+  end
+
   def price_calculator
     recurring_booking.amount_calculator
   end
 
-  def generate_payment!
-    payment = build_payment(shared_payment_attributes.merge({
-        credit_card: payment_subscription.credit_card,
-        payment_method: payment_subscription.payment_method,
-      })
-    )
-    payment.authorize && payment.capture!
-    payment.save!
+  def charge_and_approve!
+    generate_payment!
+    paid? ? approve! : false
+  end
 
-    if payment.paid?
+  def generate_payment!
+    return true if paid?
+
+    payment_object = self.payment || build_payment
+
+    payment_object.attributes = shared_payment_attributes.merge({
+      credit_card: payment_subscription.credit_card,
+      payment_method: payment_subscription.payment_method,
+    })
+
+    payment_object.authorize && payment_object.capture!
+    payment_object.save!
+
+    if payment_object.paid?
+      payment_subscription.try(:unexpire!)
       self.update_attribute(:paid_at, Time.zone.now)
       mark_recurring_booking_as_paid!
     else
-      recurring_booking.overdue
+      payment_subscription.try(:expire!)
+      order.overdue
     end
 
-    payment
+    payment_object
+  end
+
+  def paid?
+    total_amount_cents.zero? ? true : !!payment.try(:paid?)
   end
 
   def update_payment
@@ -67,7 +116,29 @@ class RecurringBookingPeriod < ActiveRecord::Base
   end
 
   def mark_recurring_booking_as_paid!
-    recurring_booking.bump_paid_until_date!
+    recurring_booking.bump_paid_until_date! if recurring_booking
+  end
+
+  def to_liquid
+    @booking_period_drop ||= RecurringBookingPeriodDrop.new(self)
+  end
+
+  def decorate
+    @decorator ||= OrderItemDecorator.new(self)
+  end
+
+  private
+
+  def send_creation_alert
+    WorkflowStepJob.perform(WorkflowStep::OrderItemWorkflow::Created, self.id)
+  end
+
+  def send_approve_alert
+    WorkflowStepJob.perform(WorkflowStep::OrderItemWorkflow::Approved, self.id)
+  end
+
+  def send_reject_alert
+    WorkflowStepJob.perform(WorkflowStep::OrderItemWorkflow::Rejected, self.id)
   end
 end
 

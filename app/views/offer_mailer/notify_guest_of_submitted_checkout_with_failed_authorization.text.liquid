@@ -1,0 +1,26 @@
+Hello, {{ user.first_name }}!
+
+{{ listing.name }} has submitted invoice. Unfortunately we had an issue with authorizing your credit card. Please update your payment information to be able to pay.
+
+Update payment information({{ reservation.guest_show_url }})
+
+{% if reservation.comment != blank %}
+  Additional comment: {{ reservation.comment }}
+{% endif %}
+
+Invoice Details
+
+{% for period in reservation.periods %}
+  {{ period.description }}: { period.hours }} x {{ reservation.formatted_unit_price }}
+{% endfor %}
+
+{% for additional_charge in reservation.additional_charges %}
+  {{ additional_charge.name }}: {{ additional_charge.formatted_amount }}
+{% endfor %}
+
+{% if reservation.has_service_fee? %}
+  Service fee: {{ reservation.service_fee }}
+{% endif %}
+
+Total: {{ reservation.total_price }}
+

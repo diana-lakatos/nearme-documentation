@@ -16,12 +16,21 @@ class PaymentDecorator < Draper::Decorator
   end
 
   def payment_methods
-    payment_gateways = PlatformContext.current.instance.payment_gateways(company.iso_country_code, currency)
-    if is_free?
+    ids = if is_free?
       payment_gateways.map(&:active_free_payment_methods)
     else
       payment_gateways.map(&:active_payment_methods)
-    end.flatten.uniq
+    end.flatten.uniq.map(&:id)
+
+    PaymentMethod.where(id: ids)
+  end
+
+  def host_payment_methods
+    payment_gateways.map(&:active_payment_methods).flatten.uniq
+  end
+
+  def payment_gateways
+    @payment_gateways ||= PlatformContext.current.instance.payment_gateways(company.iso_country_code, currency)
   end
 
   def self.collection_decorator_class

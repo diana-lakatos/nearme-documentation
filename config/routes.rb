@@ -29,6 +29,7 @@ DesksnearMe::Application.routes.draw do
     resources :photos
 
     resources :listings, only: [:show, :create, :update, :destroy] do
+
       member do
         post 'reservation'
         post 'availability'
@@ -521,7 +522,7 @@ DesksnearMe::Application.routes.draw do
           end
         end
         resources :payments, only: [:index, :show, :update]
-        resources :orders, only: [:index, :show] do 
+        resources :orders, only: [:index, :show] do
           member do
             post :generate_next_period
           end
@@ -595,15 +596,15 @@ DesksnearMe::Application.routes.draw do
 
       namespace :projects do
         get '/', :to => 'base#index'
-        resources :project_types do
-          resources :custom_attributes, controller: 'project_types/custom_attributes'
-          resources :custom_validators, controller: 'project_types/custom_validators'
-          resources :categories, except: [:new, :show], controller: 'project_types/categories' do
+        resources :transactable_types do
+          resources :custom_attributes, controller: 'transactable_types/custom_attributes'
+          resources :custom_validators, controller: 'transactable_types/custom_validators'
+          resources :categories, except: [:new, :show], controller: 'transactable_types/categories' do
             member do
               get :jstree
             end
           end
-          resources :form_components, controller: 'project_types/form_components', except: [:show] do
+          resources :form_components, controller: 'transactable_types/form_components', except: [:show] do
             member do
               patch :update_rank
             end
@@ -646,12 +647,16 @@ DesksnearMe::Application.routes.draw do
 
     resources :reviews, only: [:index]
 
-    resources :offers, only: [:show] do
-      resources :bids, only: [:new, :create]
-    end
     resources :topics, only: [:show]
-    resources :projects, only: [:show] do
-      resources :project_collaborators, only: [:create, :destroy] do
+
+    resources :groups, only: [:show] do
+      resources :group_members, only: [:create, :destroy] do
+        patch :accept, on: :member
+      end
+    end
+
+    resources :listings, only: [] do
+      resources :transactable_collaborators, only: [:create, :destroy] do
         member do
           get :accept
         end
@@ -663,16 +668,6 @@ DesksnearMe::Application.routes.draw do
           end
         end
       end
-    end
-
-    resources :groups, only: [:show] do
-      resources :group_members, only: [:create, :destroy] do
-        patch :accept, on: :member
-      end
-    end
-
-    resources :listings, only: [] do
-
 
     end
 
@@ -719,7 +714,7 @@ DesksnearMe::Application.routes.draw do
 
     get "users/:id/reviews_collections", :to => "user_reviews#reviews_collections", :as => "reviews_collections"
 
-    resources :listings, :users, :reservations, :recurring_bookings, :delayed_reservations do
+    resources :listings, :users, :reservations, :recurring_bookings, :offers, :delayed_reservations do
       resources :user_messages, controller: "dashboard/user_messages", except: [:index] do
         patch :archive
         put :archive
@@ -755,7 +750,9 @@ DesksnearMe::Application.routes.draw do
 
       resources :project_types do
         resources :projects do
-          resources :project_collaborators, only: [:create, :update, :destroy]
+          namespace :company do
+            resources :transactable_collaborators, only: [:create, :update, :destroy]
+          end
         end
       end
 
@@ -773,11 +770,33 @@ DesksnearMe::Application.routes.draw do
 
       namespace :company do
         resource :analytics
+        resources :order_items
+
+        # TODO move orders_received scope to company/orders scope
+        resources :orders do
+          resources :payment_subscriptions
+          resources :order_items do
+            member do
+              post :approve
+              put :reject
+              get :rejection_form
+            end
+          end
+        end
+
+        # TODO move orders_received scoep to company/orders scope
+        # plese add new controllers in orders scope
         resources :orders_received, except: [:edit] do
           member do
+            post :accept
             post :confirm
             post :complete
             post :cancel
+            post :archive
+            patch :reject
+            put :reject
+            get :rejection_form
+            get :confirmation_form
           end
 
           resources :payments do
@@ -838,7 +857,11 @@ DesksnearMe::Application.routes.draw do
             get :uploaded_by_me
           end
         end
-        resource :payouts, except: [:index, :show, :new, :create, :destroy]
+        resource :payouts, except: [:index, :show, :new, :create, :destroy] do
+          collection do
+            get :required_modal
+          end
+        end
         resources :merchant_accounts do
           resources :paypal_agreements
           member do
@@ -846,12 +869,16 @@ DesksnearMe::Application.routes.draw do
           end
         end
 
+        resources :transactable_collaborators
         resources :transactable_types do
           resources :transactables do
             member do
               get :enable
               get :disable
+              get :cancel
             end
+
+            resources :transactable_collaborators
           end
 
           resources :data_uploads, controller: 'transactable_types/data_uploads' do
@@ -863,7 +890,11 @@ DesksnearMe::Application.routes.draw do
           end
         end
         resource :transfers
-        resources :users, :except => [:edit, :update]
+        resources :users, :except => [:edit, :update] do
+          member do
+            get :collaborations_for_current_user
+          end
+        end
         resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
 
         resources :white_labels, :only => [:edit, :update, :show] do
@@ -882,6 +913,12 @@ DesksnearMe::Application.routes.draw do
         end
       end #ends company namespace
 
+      resources :transactable_types, only: [:index] do
+        resources :transactables, only: [:new, :create]
+      end
+
+      resources :transactables, except: [:new, :create]
+
       resources :shipping_profiles do
         collection do
           get :get_shipping_profiles_list
@@ -895,11 +932,22 @@ DesksnearMe::Application.routes.draw do
       resources :companies, only: [:edit, :update, :show]
 
       resources :images
-      resources :orders, only: [:index, :show] do
+      resources :order_items
+      resources :orders do
+        resources :order_items do
+          member do
+            post :approve
+            put :reject
+            get :rejection_form
+          end
+        end
         member do
           get :success
+          post :generate_next_period
+          post :enquirer_cancel
         end
       end
+
       resources :photos, :only => [:create, :destroy, :edit, :update]
       resources :seller_attachments, only: %i(create update destroy)
       resources :reviews, :only => [:index, :create, :update, :destroy] do
@@ -1009,10 +1057,10 @@ DesksnearMe::Application.routes.draw do
 
     get "/see_more_activity_feed", to: "activity_feed#activity_feed", as: :see_more_activity_feed
     get "/see_more_following_people", to: "activity_feed#following_people", as: :see_more_following_people
-    get "/see_more_following_projects", to: "activity_feed#following_projects", as: :see_more_following_projects
+    get "/see_more_following_transactables", to: "activity_feed#following_transactables", as: :see_more_following_transactables
     get "/see_more_following_topics", to: "activity_feed#following_topics", as: :see_more_following_topics
     get "/see_more_followers", to: "activity_feed#followers", as: :see_more_followers
-    get "/see_more_projects", to: "activity_feed#projects", as: :see_more_projects
+    get "/see_more_transactables", to: "activity_feed#transactables", as: :see_more_transactables
     get "/see_more_collaborators", to: "activity_feed#collaborators", as: :see_more_collaborators
     get "/see_more_members", to: "activity_feed#members", as: :see_more_members
     get "/see_more_groups", to: "activity_feed#groups", as: :see_more_groups
@@ -1079,6 +1127,11 @@ DesksnearMe::Application.routes.draw do
         resource :space_wizard, only: [:create]
         resources :transactables, only: [:index]
         resources :reverse_proxy_links, only: [:index, :create]
+        resources :transactable_collaborators, only: [:create, :destroy] do
+          member do
+            put :accept
+          end
+        end
         resources :instances, only: [:index, :create]
       end
     end

@@ -7,10 +7,10 @@ class PaymentConfirmationExpiryJob < Job
   def perform
     if @reservation.can_approve_or_decline_checkout? && @reservation.pending_guest_confirmation <= Time.zone.now
       if @reservation.payment.capture!
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestApprovedPayment, @reservation.id)
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerApprovedPayment, @reservation.id)
         @reservation.mark_as_archived!
       else
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestApprovedPaymentButCaptureFailed, @reservation.id)
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerApprovedPaymentButCaptureFailed, @reservation.id)
       end
     end
   end

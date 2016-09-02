@@ -51,10 +51,6 @@ class Payout < ActiveRecord::Base
     response.failure_message
   end
 
-  def should_be_verified_after_time?
-    pending? && response.should_be_verified_after_time?
-  end
-
   def verify_after_time_arguments
     response.verify_after_time_arguments
   end

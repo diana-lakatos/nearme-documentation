@@ -1,0 +1,10 @@
+<h1>Hi {{ user.first_name }},</h1>
+
+<p>
+  <a href="{{ owner.profile_url }}">{{ owner.name }}</a>  has invited you to become
+  a collaborator on <a href="{{ transactable.listing_url }}">{{ transactable.name }}</a>.
+  Learn more about the listing.
+</p>
+
+<p><a href="{{ user.profile_url }}#transactables" >Accept | Decline invitation</a></p>
+

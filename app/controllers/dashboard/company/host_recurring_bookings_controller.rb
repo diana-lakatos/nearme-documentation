@@ -50,7 +50,6 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
 
   def reject
     if @recurring_booking.reject(rejection_reason)
-      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::Rejected, @recurring_booking.id)
       event_tracker.rejected_a_recurring_booking(@recurring_booking)
       track_recurring_booking_update_profile_informations
       flash[:deleted] = t('flash_messages.manage.reservations.reservation_rejected')

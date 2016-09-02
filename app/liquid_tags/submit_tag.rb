@@ -17,6 +17,7 @@ class SubmitTag < Liquid::Tag
     # drop for form_builder defined in form_builder_to_liquid_monkeypatch.rb
     @attributes = normalize_liquid_tag_attributes(@attributes, context)
     @form =  context["form_object"].source
+    @value = values_value(@value, context)
     @form.submit(@value, @attributes).html_safe
   end
 

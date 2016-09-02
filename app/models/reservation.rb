@@ -51,6 +51,10 @@ class Reservation < Order
     self.save
   end
 
+  def self.workflow_class
+    Reservation
+  end
+
   def build_periods
     return if @dates.nil?
     if transactable
@@ -93,10 +97,6 @@ class Reservation < Order
 
     self.start_minute = hours.to_i * 60 + minutes.to_i
     self.end_minute = start_minute + minimum_booking_minutes
-  end
-
-  def archived?
-    archived_at.present?
   end
 
   def cancelable?
@@ -224,11 +224,6 @@ class Reservation < Order
     User.unscoped { owner }
   end
 
-  def reject(reason = nil)
-    self.rejection_reason = reason if reason
-    fire_state_event :reject
-  end
-
   def add_period(date, start_minute = nil, end_minute = nil)
     periods.build(date: date, start_minute: start_minute, end_minute: end_minute)
   end
@@ -312,6 +307,12 @@ class Reservation < Order
     else
       charge_and_confirm!
       WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, self.id)
+    end
+  end
+
+  def try_to_activate!
+    if state == 'inactive' && (skip_payment_authorization? || payment && payment.authorized?)
+      activate!
     end
   end
 

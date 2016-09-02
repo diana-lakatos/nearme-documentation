@@ -8,6 +8,16 @@ class TransactableTest < ActiveSupport::TestCase
     should belong_to(:location)
     should have_many(:reservations)
     should have_many(:orders)
+    should have_many(:transactable_collaborators)
+    should have_many(:transactable_topics)
+    should have_many(:topics)
+    should have_many(:user_messages)
+    should have_many(:wish_list_items)
+    should have_many(:photos)
+    should have_many(:links)
+
+    should belong_to(:transactable_type)
+    should belong_to(:creator)
 
     should validate_presence_of(:location)
     should validate_presence_of(:name)
@@ -287,4 +297,33 @@ class TransactableTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "scopes" do
+    setup do
+      @transactable = FactoryGirl.create(:transactable)
+    end
+
+    should ".by_topic" do
+      @topic1 = create(:topic)
+      @topic2 = create(:topic)
+      @transactable.topics << [@topic1, @topic2]
+      @another_listing = FactoryGirl.create(:transactable)
+      assert_includes Transactable.by_topic([@topic1.id, @topic2.id]), @transactable
+    end
+  end
+
+  context "associated links" do
+    should "update links when transactable is saved" do
+      @transactable = FactoryGirl.create(:transactable)
+      @transactable.links << FactoryGirl.create(:link)
+
+      @link = @transactable.links.first
+
+      links_attributes = { "0" => { "text" => "Changed", id: @link.id }}
+      @transactable.update_attributes({"links_attributes" => links_attributes})
+      assert_equal "Changed", @transactable.links[0].text
+
+    end
+  end
+
 end

@@ -14,6 +14,9 @@ class ActivityFeedSubscription < ActiveRecord::Base
   validates_inclusion_of :followed_type, in: ActivityFeedService::Helpers::FOLLOWED_WHITELIST
 
   before_save :set_followed_identifier
+
+  after_create :trigger_workflow_alert_for_new_follow
+
   def set_followed_identifier
     self.followed_identifier = ActivityFeedService::Helpers.object_identifier_for(followed)
   end
@@ -28,4 +31,17 @@ class ActivityFeedSubscription < ActiveRecord::Base
   def destroy_events_related_to_this_subscription
     ActivityFeedEvent.where(event_source_id: self.id_was, event_source_type: "ActivityFeedSubscription").destroy_all
   end
+
+  def trigger_workflow_alert_for_new_follow
+    klass = case self.followed_type
+    when "Transactable"
+      WorkflowStep::FollowerWorkflow::UserFollowedTransactable
+    when 'User'
+      WorkflowStep::FollowerWorkflow::UserFollowedUser
+    end
+    WorkflowStepJob.perform(klass, self.id) if klass.present?
+    true
+  end
+
 end
+

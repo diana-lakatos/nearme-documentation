@@ -1,0 +1,21 @@
+<h1>Hi {{ enquirer.first_name }}</h1>
+
+<h1>{{summary_data['total_events']}} notifications and updates from your network</h1>
+
+{% if summary_data['groups'].size > 0 %}
+  <h1>Following groups have been updated</h1>
+  {% for group in summary_data['groups'] %}
+    <p>{{ group.name }}</p>
+    <p>Status updates: {{ group['status_updates'] }}</p>
+    <p>Comments: {{ group['comments'] }}</p>
+  {% endfor %}
+{% endif %}
+
+{% if summary_data['projects'].size > 0 %}
+  <h1>Following projects have been updated</h1>
+  {% for project in summary_data['projects'] %}
+    <p>{{ project.name }}</p>
+    <p>Status updates: {{ project['status_updates'] }}</p>
+    <p>Comments: {{ project['comments'] }}</p>
+  {% endfor %}
+{% endif %}

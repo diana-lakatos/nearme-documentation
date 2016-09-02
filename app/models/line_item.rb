@@ -23,6 +23,7 @@ class LineItem < ActiveRecord::Base
   delegate :action, to: :transactable_pricing, allow_nil: true
 
   validates :quantity, :numericality => { :greater_than_or_equal_to => 1 }
+  validates :name, :quantity, presence: true, if: :should_validate_name?
 
   before_create :calculate_tax
 
@@ -60,9 +61,6 @@ class LineItem < ActiveRecord::Base
 
   def deletable?
     false
-  end
-
-  def description
   end
 
   def single_money
@@ -116,5 +114,11 @@ class LineItem < ActiveRecord::Base
 
     true
   end
+
+  def should_validate_name?
+    line_item_source.blank?
+  end
+
 end
+
 

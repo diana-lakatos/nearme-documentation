@@ -175,6 +175,7 @@ class PlatformContext
   end
 
   def rules
+    return [] unless @domain
     @rules ||= @domain.reverse_proxies.where(environment: Rails.env)
   end
 
@@ -186,7 +187,7 @@ class PlatformContext
     @instance = instance
     @platform_context_detail = @instance
     @theme = @instance.try(:theme)
-    @custom_theme = @instance.try(:custom_theme)
+    @custom_theme = @instance.try(:custom_theme) if CustomTheme.table_exists?
     @domain ||= @instance.try(:default_domain)
     self
   end

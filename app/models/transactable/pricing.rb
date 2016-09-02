@@ -16,7 +16,7 @@ class Transactable::Pricing < ActiveRecord::Base
   monetize :price_cents, with_model_currency: :currency, allow_nil: true, subunit_numericality: {
     greater_than: :min_price,
     less_than_or_equal_to: :max_price,
-    unless: :is_free_or_exclusive?
+    if: :monetize_price_cents?
   }
   monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true,
     subunit_numericality: {
@@ -25,7 +25,7 @@ class Transactable::Pricing < ActiveRecord::Base
       if: :has_exclusive_price
     }
 
-  delegate :allow_book_it_out_discount, :allow_exclusive_price, to: :transactable_type_pricing, allow_nil: true
+  delegate :allow_book_it_out_discount, :allow_exclusive_price, :allow_nil_price_cents, to: :transactable_type_pricing, allow_nil: true
   delegate :transactable, to: :action, allow_nil: true
   delegate :quantity, to: :transactable, prefix: true
 
@@ -47,18 +47,7 @@ class Transactable::Pricing < ActiveRecord::Base
   scope :by_unit, -> (by_unit) { where(unit: by_unit) if by_unit.present? }
 
   def order_class
-    case action.type
-    when "Transactable::SubscriptionBooking"
-      RecurringBooking
-    when "Transactable::PurchaseAction"
-      Purchase
-    else
-      if action.transactable_type_action_type.transactable_type.try(:skip_payment_authorization?)
-        DelayedReservation
-      else
-        Reservation
-      end
-    end
+    transactable_type_pricing.order_class_name.constantize
   end
 
   def adjusted_number_of_units
@@ -117,6 +106,10 @@ class Transactable::Pricing < ActiveRecord::Base
 
   def has_price
     !is_free_booking && price_cents.to_i > 0
+  end
+
+  def monetize_price_cents?
+    !(is_free_or_exclusive? || allow_nil_price_cents)
   end
 
   def is_free_or_exclusive?

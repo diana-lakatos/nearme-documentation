@@ -55,7 +55,7 @@ Then(/^I should see the event on the user's Activity Feed$/) do
 end
 
 Then(/I can see user created project event/) do
-  @event = I18n.t("activity_feed.events.user_created_project", user: @project.creator, project: @project)
+  @event = I18n.t("activity_feed.events.user_created_transactable", user: @project.creator, project: @project)
   page.body.should have_content(@event)
 end
 
@@ -71,14 +71,14 @@ end
 
 When(/^I visit project page$/) do
   @resource = @project
-  @resource_path = project_path(@project)
+  @resource_path = @project.decorate.show_path
   visit @resource_path
 end
 
 When(/^I visit project page with status$/) do
   @resource = @project
-  @resource_path = project_path(@project)
-  @project.creator.user_status_updates.create({"text"=>"This is the project status XYZZ", "topic_ids"=>[""], "updateable_id"=>@project.id, "updateable_type"=>"Project"})
+  @resource_path = @project.decorate.show_path
+  @project.creator.user_status_updates.create({"text"=>"This is the project status XYZZ", "topic_ids"=>[""], "updateable_id"=>@project.id, "updateable_type"=>"Transactable"})
   visit @resource_path
 end
 

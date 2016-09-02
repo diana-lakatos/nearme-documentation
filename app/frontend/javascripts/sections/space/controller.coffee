@@ -2,7 +2,6 @@ SpacePhotosController = require('./photos_controller')
 SmartGoogleMap = require('../../components/smart_google_map')
 GoogleMapMarker = require('../../components/google_map_marker')
 GoogleMapPopover = require('../../components/google_map_popover')
-require('jquery.cookie/jquery.cookie')
 
 module.exports = class SpaceController
 
@@ -23,7 +22,6 @@ module.exports = class SpaceController
     @_bindEvents()
     @adjustBookingModulePosition()
     @adjustFullGalleryHeight()
-    @setupBackToSearchLink()
 
   _bindEvents: ->
     @container.on 'click', '[data-behavior=scrollToBook]', (event) =>
@@ -168,8 +166,3 @@ module.exports = class SpaceController
     amenities_header.find('a span').toggleClass('ico-chevron-right').toggleClass('ico-chevron-down')
     amenities_block.toggleClass('amenities-shown')
     false
-
-  setupBackToSearchLink: ->
-    if $('a[data-back-to-search-results-link]').length > 0 && $.cookie('last_search')
-      params = $.param($.parseJSON($.cookie('last_search')))
-      $('a[data-back-to-search-results-link]').attr('href', "/search?#{params}")

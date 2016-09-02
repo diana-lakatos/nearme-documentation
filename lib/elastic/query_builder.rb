@@ -224,7 +224,7 @@ module Elastic
         { match_all: { boost: QUERY_BOOST } }
       else
         query = @query[:query]
-        { multi_match: build_multi_match(query, @searchable_custom_attributes + ['name^2', 'description']) }
+        { simple_query_string: build_multi_match(query, @searchable_custom_attributes + ['name^2', 'tags', 'description']) }
       end
     end
 
@@ -232,8 +232,8 @@ module Elastic
       multi_match = {
         query: query_string,
         fields: custom_attributes,
-        operator: "and",
-        type: :phrase_prefix
+        default_operator: @query[:logic_operator].presence || "OR",
+        analyzer: :snowball
       }
 
       # You should enable fuzzy search manually. Not included in the current release

@@ -2,7 +2,7 @@ class WishListItem < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  PERMITTED_CLASSES = %w(Location Transactable)
+  PERMITTED_CLASSES = %w(Location Transactable User)
 
   class NotPermitted < Exception
   end

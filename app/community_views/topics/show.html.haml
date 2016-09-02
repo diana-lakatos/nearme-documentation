@@ -17,7 +17,7 @@
         %li
           = link_to '#projects', role: "tab", :'data-toggle' => "tab" do
             = t :projects
-            %small= "(#{@topic.projects.enabled.count})"
+            %small= "(#{@topic.transactables.active.count})"
       %p{:'data-follow-button' => true}
         = render partial: 'shared/follow_button', locals: { object: @topic }
         - if current_user && InstanceAdminAuthorizer.new(current_user).authorized?('Manage')
@@ -37,4 +37,4 @@
       .contain
         / white box
         .box-a
-          = render 'shared/show_projects', projects: @all_projects, container: '#projects', see_more_route: see_more_projects_path(id: @topic.id, type: @topic.class.name, container: '#projects')
+          = render 'shared/show_transactables', transactables: @all_transactables, container: '#projects', see_more_route: see_more_transactables_path(id: @topic.id, type: @topic.class.name, container: '#projects')

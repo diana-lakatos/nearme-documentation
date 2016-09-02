@@ -55,6 +55,10 @@ class RecurringBooking < Order
 
   end
 
+  def self.workflow_class
+    RecurringBooking
+  end
+
   def activate_order!
     schedule_expiry
     auto_confirm_reservation
@@ -98,9 +102,9 @@ class RecurringBooking < Order
   def cancel
     update_attribute :ends_at, paid_until
     if cancelled_by_guest?
-      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::GuestCancelled, self.id)
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::EnquirerCancelled, self.id)
     elsif cancelled_by_host?
-      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::HostCancelled, self.id)
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::ListerCancelled, self.id)
     end
   end
 
@@ -172,7 +176,8 @@ class RecurringBooking < Order
         period_start_date: period_start_date,
         period_end_date: next_charge_date - 1.day,
         credit_card_id: payment_subscription.credit_card_id,
-        currency: currency
+        currency: currency,
+        order: self
       ).tap do
         # to avoid cache issues if one would like to generate multiple periods in the future
         self.amount_calculator = nil

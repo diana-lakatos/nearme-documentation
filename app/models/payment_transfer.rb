@@ -4,6 +4,8 @@ class PaymentTransfer < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
+  attr_encrypted :token, key: DesksnearMe::Application.config.secret_token
+
   FREQUENCIES = %w(monthly fortnightly weekly semiweekly daily manually)
   DEFAULT_FREQUENCY = "fortnightly"
 
@@ -34,6 +36,7 @@ class PaymentTransfer < ActiveRecord::Base
   scope :last_x_days, lambda { |days_in_past|
     where("DATE(#{table_name}.created_at) >= ? ", days_in_past.days.ago)
   }
+  scope :with_token, -> (not_encrypted_token) { where(encrypted_token: PaymentTransfer.encrypt_token(not_encrypted_token, key: DesksnearMe::Application.config.secret_token)) }
 
   validate :validate_all_charges_in_currency
 
@@ -65,6 +68,10 @@ class PaymentTransfer < ActiveRecord::Base
     touch(:transferred_at)
   end
 
+  def mark_as_failed
+    touch(:failed_at)
+  end
+
   def company_including_deleted
     Company.with_deleted.find(company_id)
   end
@@ -74,6 +81,7 @@ class PaymentTransfer < ActiveRecord::Base
     return if !payout_gateway.present?
     return if transferred?
     return if amount <= 0
+    return if payout_attempts.any?
 
     # Generates a ChargeAttempt with this record as the reference.
     payout = payout_gateway.payout(
@@ -89,7 +97,7 @@ class PaymentTransfer < ActiveRecord::Base
   end
 
   def pending?
-    payout_attempts.last && payout_attempts.last.pending? && payout_attempts.last.should_be_verified_after_time?
+    payout_attempts.last && payout_attempts.last.pending?
   end
 
   def failed?
@@ -102,7 +110,7 @@ class PaymentTransfer < ActiveRecord::Base
 
   def success!
     if (payout = self.payout_attempts.reload.successful.first).present? && persisted?
-      self.update_column(:transferred_at, payout.created_at)
+      mark_transferred
     end
   end
 

@@ -51,6 +51,8 @@ class UserDrop < BaseDrop
   #   return default wish list
   # external_id
   #   id of a user in a third party system, used by bulk upload
+  # tags
+  #   user tags
   # registration_completed?
   #   returns string / nil depending on first company completion date
   # has_company?
@@ -63,8 +65,22 @@ class UserDrop < BaseDrop
     :with_mutual_friendship_source, :first_name, :middle_name, :last_name, :reservations_count,
     :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
     :country_name, :phone, :current_address, :is_trusted?, :reservations,
-    :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation, :has_active_credit_cards?,
-    :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :has_buyer_profile?, :seller_profile, to: :source
+    :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
+    :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile,
+    :tags, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
+    :created_at, :has_buyer_profile?, :default_company, :company_name, :instance_admins_metadata, to: :source
+
+  def class_name
+    'User'
+  end
+
+  def wish_list_path
+    routes.wish_list_path(id: @source.id, wishlistable_type: 'User')
+  end
+
+  def wish_list_bulk_path
+    routes.bulk_show_wish_lists_path
+  end
 
   # string containing the location of the user making use of the various fields
   # the user has filled in for his profile
@@ -303,7 +319,7 @@ class UserDrop < BaseDrop
   end
 
   def has_active_blog?
-    PlatformContext.current.instance.blogging_enabled?(@source)
+    PlatformContext.current.instance.blogging_enabled?(@source) && @source.blog.try(:enabled?)
   end
 
   # returns hash of categories { "<name>" => { "name" => '<translated_name', "children" => [<collection of chosen values] } }
@@ -314,9 +330,26 @@ class UserDrop < BaseDrop
     @categories
   end
 
+  def buyer_categories
+    if @categories.nil?
+      @categories = build_categories_hash_for_object(@source.buyer_profile, Category.buyers.roots.includes(:children))
+    end
+    @categories
+  end
+
   # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => 'string with all children separated with comma' } }
   def formatted_categories
-    build_formatted_categories(@source)
+    build_formatted_categories(@source.categories)
+  end
+
+  # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => [array with children] } }
+  def formatted_buyer_categories
+    build_categories_to_array(@source.buyer_profile.categories) if @source.buyer_profile
+  end
+
+    # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => [array with children] } }
+  def formatted_seller_categories
+    build_categories_to_array(@source.seller_profile.categories) if @source.seller_profile
   end
 
   # User's current address
@@ -394,12 +427,12 @@ class UserDrop < BaseDrop
 
   # whether or not the user has a buyer profile set up
   def has_buyer_profile?
-    @source.buyer_profile.present?
+    @source.buyer_profile.present? && @source.buyer_profile.persisted?
   end
 
   # whether or not the user has a seller profile set up
   def has_seller_profile?
-    @source.seller_profile.present?
+    @source.seller_profile.present? && @source.seller_profile.persisted?
   end
 
   # whether the user only has a buyer profile
@@ -420,6 +453,25 @@ class UserDrop < BaseDrop
     @source.companies.first.try(:merchant_accounts).try(:any?) { |ma| ma.verified? }
   end
 
+  def has_pending_transactables?
+    pending_transactables.any?
+  end
+
+  def pending_transactables
+    @source.created_listings.with_state(:pending)
+  end
+
+  def completed_transactables_count
+    @source.created_listings.with_state(:completed).count
+  end
+
+  def pending_transactables_for_current_user
+    Transactable.where(creator_id: @context['current_user'].id).with_state(:pending).
+    joins("LEFT Outer JOIN transactable_collaborators tc on
+      tc.transactable_id = transactables.id and tc.user_id = #{@source.id} and
+      tc.deleted_at is NULL").where("tc.id is NULL")
+  end
+
   def has_company?
     @source.companies.size > 0
   end
@@ -435,6 +487,35 @@ class UserDrop < BaseDrop
   def reservations_count
     count = reservations_count_for_user(@source)
     count > 0 ? count : nil
+  end
+
+  def collaborator_transactables_for_current_user
+    @source.transactables_collaborated.where(creator_id: @context['current_user'].try(:id))
+  end
+
+  # has inappropriate report for user
+  def inappropriate_report_path
+    routes.inappropriate_report_path(id: @source.id, reportable_type: "User")
+  end
+
+  # total count of unread messages in user inbox
+  def unread_messages_count
+    @source.unread_user_message_threads_count_for(PlatformContext.current.instance)
+  end
+
+  # total count of user transactables with state pending
+  def pending_transactables_count
+    if has_seller_profile?
+      @source.transactables.with_state(:pending).count
+    elsif has_buyer_profile?
+      @source.approved_transactables_collaborated.with_state(:pending).count
+    end
+  end
+
+  def user_menu_instance_admin_path
+    users_instance_admin = '_manage_blog' if @source.instance_admins_metadata == 'blog'
+    users_instance_admin = '_support_root' if @source.instance_admins_metadata == 'support'
+    routes.send("instance_admin#{users_instance_admin}_path")
   end
 
   private

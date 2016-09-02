@@ -7,6 +7,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   end
 
   def show
+    @order = @order.decorate
   end
 
   def edit
@@ -15,7 +16,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
 
   def update
     if @order.update(order_params)
-      redirect_to location_after_save, notice: t('flash_messages.manage.order.updated')
+      redirect_to request.referer.presence || location_after_save, notice: t('flash_messages.manage.order.updated')
     else
       flash[:error] = t('flash_messages.manage.order.error_update')
       render :edit
@@ -25,19 +26,26 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   def destroy
     @order.destroy
     flash[:success] = t('flash_messages.manage.order.deleted')
-    redirect_to location_after_save
+    redirect_to request.referer.presence || location_after_save
   end
 
   def cancel
     @order.host_cancel!
     flash[:success] = t('flash_messages.manage.order.canceled')
-    redirect_to location_after_save
+    redirect_to request.referer.presence || location_after_save
   end
 
   def complete
     @order.complete!
+    @order.transactable.finish!
     flash[:success] = t('flash_messages.manage.order.approved')
-    redirect_to location_after_save
+    redirect_to request.referer.presence || location_after_save
+  end
+
+  def archive
+    @order.touch(:archived_at)
+    flash[:success] = t('flash_messages.dashboard.order.archived')
+    redirect_to request.referer.presence || location_after_save
   end
 
   # TODO this is only used for Purchase but should confirm Reservation and ReservationRequest correctly
@@ -54,13 +62,12 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
 
       if @order.confirmed?
         event_tracker.confirmed_a_recurring_booking(@order)
-        WorkflowStepJob.perform("WorkflowStep::#{@order.object.class.name}Workflow::ManuallyConfirmed".constantize, @order.id)
+        WorkflowStepJob.perform("WorkflowStep::#{@order.class.workflow_class}Workflow::ManuallyConfirmed".constantize, @order.id)
 
         track_order_update_profile_informations
         event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
         event_tracker.confirmed_a_booking(@order)
-
-        if @order.reload.paid_until.present? ||  !@order.instance_of?(RecurringBooking)
+        if @order.reload.paid_until.present? || !@order.instance_of?(RecurringBooking)
           flash[:success] = t('flash_messages.manage.reservations.reservation_confirmed')
         else
           @order.overdue!
@@ -77,7 +84,25 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
       flash[:error] = t('dashboard.host_reservations.reservation_is_expired') if @reservation.expired?
     end
 
-    redirect_to location_after_save
+    redirect_to request.referer.presence || location_after_save
+  end
+
+  def rejection_form
+    render layout: false
+  end
+
+
+  def reject
+    if @order.reject(rejection_reason)
+      event_tracker.rejected_a_booking(@order)
+      track_order_update_profile_informations
+      flash[:deleted] = t('flash_messages.manage.reservations.reservation_rejected')
+    else
+      flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
+    end
+
+    redirect_to request.referer.presence || dashboard_offers_path
+    render_redirect_url_as_json if request.xhr?
   end
 
   private
@@ -100,10 +125,14 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   end
 
   def find_order
-    @order = @company.orders.find(params[:id]).try(:decorate)
+    @order = @company.orders.find(params[:id])
   end
 
   def order_params
     params.require(:order).permit(secured_params.order(@order.reservation_type))
+  end
+
+  def rejection_reason
+    params[:order][:rejection_reason] if params[:order] && params[:order][:rejection_reason]
   end
 end

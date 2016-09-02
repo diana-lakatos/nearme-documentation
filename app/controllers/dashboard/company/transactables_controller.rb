@@ -12,9 +12,12 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   before_action :redirect_to_new_if_single_transactable, only: [:index, :edit, :update]
 
   def index
-    @transactables = @transactable_type.transactables.where(company_id: @company).
-      search_by_query([:name, :description], params[:query]).order('created_at DESC').
-        paginate(page: params[:page], per_page: 20)
+    @transactables = transactables_scope.order(order_param).paginate(page: params[:page], per_page: 20)
+    if @transactable_type.action_types.any? { |at| TransactableType::OfferAction === at }
+      @in_progress_transactables = in_progress_scope.order(order_param).paginate(page: params[:in_progress_page], per_page: 20)
+      @archived_transactables = archived_scope.order(order_param).paginate(page: params[:archived_page], per_page: 20)
+      @pending_transactables = pending_scope.order(order_param).paginate(page: params[:pending_page], per_page: 20)
+    end
   end
 
   def new
@@ -34,10 +37,14 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     @transactable.location ||= @company.locations.first if @transactable_type.skip_location?
     @transactable.attachment_ids = attachment_ids_for(@transactable)
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
+    @transactable.initialize_action_types
 
     if @transactable.save
       @transactable.action_type.try(:schedule).try(:create_schedule_from_schedule_rules)
       WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @transactable.id) unless @transactable.is_trusted?
+      if !@transactable.transactable_type.require_transactable_during_onboarding? && current_user.transactables.with_deleted.count == 1
+        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @transactable.id)
+      end
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.translated_bookable_noun)
       flash[:error] = t('manage.listings.no_trust_explanation') if !@transactable.is_trusted?
       event_tracker.created_a_listing(@transactable, { via: 'dashboard' })
@@ -47,7 +54,6 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
       @global_errors = filter_error_messages(@transactable.errors.full_messages)
       @photos = @transactable.photos
       @attachments = @transactable.attachments
-      @transactable.initialize_action_types
       render :new
     end
   end
@@ -69,6 +75,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     @transactable.attachment_ids = attachment_ids_for(@transactable)
     @transactable.assign_attributes(transactable_params)
     @transactable.action_type = @transactable.action_types.find(&:enabled)
+    @transactable.initialize_action_types
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
 
     respond_to do |format|
@@ -121,6 +128,15 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
   end
 
+  def cancel
+    if @transactable.cancel
+      flash[:notice] = t('flash_messages.manage.listings.listing_cancelled')
+    else
+      flash[:error] = @transactable.errors.full_messages.join(', ')
+    end
+    redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type, status: params[:status])
+  end
+
   private
 
   def set_form_components
@@ -152,7 +168,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def transactable_params
-    params.require(:transactable).permit(secured_params.transactable(@transactable_type)).tap do |whitelisted|
+    params.require(:transactable).permit(secured_params.transactable(@transactable_type, @transactable.new_record? || current_user.id == @transactable.creator_id)).tap do |whitelisted|
       whitelisted[:properties] = params[:transactable][:properties] rescue {}
     end
   end
@@ -192,6 +208,35 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     end
 
     messages
+  end
+
+  def transactables_scope
+    @transactable_type.transactables.
+      joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id AND pc.deleted_at IS NULL').
+      uniq.
+      where('transactables.company_id = ? OR transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)', @company.id, current_user.id, current_user.id).
+      search_by_query([:name, :description], params[:query]).
+      apply_filter(params[:filter], @transactable_type.cached_custom_attributes)
+  end
+
+  def in_progress_scope
+    transactables_scope.with_state(:in_progress).joins(:line_item_orders).merge(Order.upcoming.confirmed.for_lister_or_enquirer(@company, current_user))
+  end
+
+  def pending_scope
+    transactables_scope.with_state(:pending)
+  end
+
+  def archived_scope
+    transactables_scope.without_state(:pending).where.not(id: in_progress_scope.pluck(:id))
+  end
+
+  def possible_sorts
+    ["created_at desc", "created_at asc"]
+  end
+
+  def order_param
+    "transactables." + (possible_sorts.detect { |sort| sort == params[:order_by] }.presence || possible_sorts.first)
   end
 
 end

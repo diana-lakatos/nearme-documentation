@@ -32,9 +32,7 @@ module ActivityFeedHelper
     if followed.is_a?(ActivityFeedEvent)
       block_contents
     else
-      link_to followed, target: target do
-        block_contents
-      end
+      link_to_activity_feed_object block_contents, followed, target: target
     end
   end
 

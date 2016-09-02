@@ -14,8 +14,8 @@ class Topic < ActiveRecord::Base
   has_many :activity_feed_subscriptions, as: :followed, dependent: :destroy
   has_many :data_source_contents, through: :data_source
   has_many :feed_followers, through: :activity_feed_subscriptions, source: :follower
-  has_many :projects, through: :project_topics
-  has_many :project_topics
+  has_many :transactables, through: :transactable_topics
+  has_many :transactable_topics
   has_many :users, through: :user_topics
   has_many :user_topics
 
@@ -40,12 +40,12 @@ class Topic < ActiveRecord::Base
 
   def create_activity_feed_event
     event = :topic_created
-    affected_objects = [self] + self.projects.to_a
+    affected_objects = [self] + self.transactables.to_a
     ActivityFeedService.create_event(event, self, affected_objects, self)
   end
 
-  def all_projects
-    projects
+  def all_transactables
+    transactables
   end
 
   def to_liquid

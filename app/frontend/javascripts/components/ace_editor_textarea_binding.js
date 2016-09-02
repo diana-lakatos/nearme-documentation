@@ -18,9 +18,9 @@ module.exports = function(textarea){
 
     var editDiv = $('<div>', {
         css: {
-           position: 'absolute',
-           width: textarea.width(),
-           height: textarea.height()
+            position: 'absolute',
+            width: textarea.width(),
+            height: textarea.height()
         },
         'class': textarea.attr('class')
     }).insertBefore(textarea);

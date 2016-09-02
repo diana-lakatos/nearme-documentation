@@ -26,7 +26,7 @@ DNM.registerInitializer(function(){
     }
 
     require.ensure('./ckeditor/init', function(require){
-        var CKEDITOR = require('./ckeditor/init');
+        require('./ckeditor/init');
     });
 });
 

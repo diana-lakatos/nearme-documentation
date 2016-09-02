@@ -46,11 +46,11 @@ class RecurringBookingDrop < OrderDrop
   end
 
   def transactable
-    @transactable_drop ||= recurring_booking.transactable.to_liquid
+    @transactable_drop ||= @recurring_booking.transactable.to_liquid
   end
 
   def location
-    @location_drop ||= recurring_booking.location.to_liquid
+    @location_drop ||= @recurring_booking.location.to_liquid
   end
 
   # returns true if there is a rejection reason for this recurring_booking

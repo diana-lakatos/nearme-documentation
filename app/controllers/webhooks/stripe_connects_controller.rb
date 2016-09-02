@@ -1,11 +1,12 @@
 class Webhooks::StripeConnectsController < Webhooks::BaseWebhookController
 
   def webhook
-    if request.post? && merchant_account = MerchantAccount::StripeConnectMerchantAccount.find_by(internal_payment_gateway_account_id: params[:user_id])
+    if request.post?
       begin
-        event = @payment_gateway.parse_webhook(params[:id], merchant_account.data[:secret_key])
+        event = @payment_gateway.parse_webhook(params[:id])
         case event.type
         when 'account.updated'
+          merchant_account = MerchantAccount::StripeConnectMerchantAccount.find_by(internal_payment_gateway_account_id: params[:user_id])
           account = @payment_gateway.retrieve_account(event.data.object.id)
           merchant_account.skip_validation = true
           merchant_account.change_state_if_needed(account) do |new_state|
@@ -19,9 +20,23 @@ class Webhooks::StripeConnectsController < Webhooks::BaseWebhookController
           if account.verification.fields_needed.present?
             merchant_account.update_column :data, merchant_account.data.merge(fields_needed: account.verification.fields_needed)
           end
+        when 'transfer.updated'
+          transfer = @payment_gateway.payment_transfers.pending.with_token(event.data.object.id).first
+          if transfer.pending?
+            transfer_state = event.data.object.status
+            if transfer_state == 'paid'
+              transfer.payout_attempts.last.payout_successful(event)
+            elsif ['canceled', 'failed'].include?(transfer_state)
+              transfer.payout_attempts.last.payout_failed(event)
+            end
+          end
         end
       ensure
-        merchant_account.webhooks.create!(response: params.to_yaml)
+        if merchant_account
+          merchant_account.webhooks.create!(response: params.to_yaml)
+        else
+          @payment_gateway.webhooks.create!(response: params.to_yaml)
+        end
       end
     end
   ensure

@@ -25,7 +25,6 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
     @user_message = current_user.authored_messages.new(message_params).decorate
     @user_message.set_message_context_from_request_params(params)
 
-
     if @user_message.save
       @user_message.send_notification
 
@@ -44,7 +43,6 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
 
     else
       @error = @user_message.errors.messages.values.flatten.first
-
       if request.xhr?
         render :partial => "form"
       else

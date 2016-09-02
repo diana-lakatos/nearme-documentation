@@ -1,5 +1,7 @@
 class Dashboard::ClickToCallPreferencesController < Dashboard::BaseController
 
+  skip_before_filter :force_fill_in_wizard_form
+
   def edit
     @user = current_user
     if params[:phone] && params[:country_name]

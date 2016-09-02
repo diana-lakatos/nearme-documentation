@@ -15,6 +15,6 @@ class Currency < ActiveRecord::Base
   end
 
   def full_name
-    "#{name} (#{iso_code})"
+    "#{iso_code} - #{name}"
   end
 end

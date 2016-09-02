@@ -47,7 +47,7 @@ class CommunityReportingAggregateTest < ActiveSupport::TestCase
     end
 
     should "create correct statistics for projects" do
-      Project.destroy_all
+      Transactable.destroy_all
 
       now = Time.now.utc
 
@@ -69,8 +69,8 @@ class CommunityReportingAggregateTest < ActiveSupport::TestCase
     end
 
     should "create correct statistics for number of collaborators" do
-      Project.destroy_all
-      ProjectCollaborator.destroy_all
+      Transactable.destroy_all
+      TransactableCollaborator.destroy_all
 
       project1 = FactoryGirl.create(:project)
       project2 = FactoryGirl.create(:project)
@@ -87,12 +87,12 @@ class CommunityReportingAggregateTest < ActiveSupport::TestCase
       assert_equal 0, cre.statistics[:projects_with_21_or_more_collaborators]
 
       (1..15).each do |number|
-        project_collaborator = ProjectCollaborator.new
+        project_collaborator = TransactableCollaborator.new
         project_collaborator.user = FactoryGirl.create(:user)
         if number <= 10
-          project_collaborator.project = project1
+          project_collaborator.transactable = project1
         else
-          project_collaborator.project = project2
+          project_collaborator.transactable = project2
         end
         project_collaborator.approved_by_owner_at = now
         project_collaborator.approved_by_user_at = now
@@ -108,7 +108,7 @@ class CommunityReportingAggregateTest < ActiveSupport::TestCase
     end
 
     should "create correct statistics for number of followers" do
-      Project.destroy_all
+      Transactable.destroy_all
       ActivityFeedSubscription.destroy_all
 
       project1 = FactoryGirl.create(:project)

@@ -65,6 +65,10 @@ class Theme < ActiveRecord::Base
     read_attribute(:phone_number) || DEFAULT_PHONE_NUMBER
   end
 
+  def phone_number_noformat
+    phone_number.gsub(/[^0-9+]/, '')
+  end
+
   def to_liquid
     @theme_drop ||= ThemeDrop.new(self)
   end

@@ -13,27 +13,27 @@ Feature: A user can interact with activity feeds
     Then I should be following it
     Then I can see and press "Unfollow" button
     And I shouldn't be following it anymore
-  
+
   Scenario: A user can follow a project
     When I visit project page
     Then I can see and press "Follow" button
     Then I should be following it
     Then I can see and press "Unfollow" button
     And I shouldn't be following it anymore
-  
+
   Scenario: A user can follow a topic
     When I visit topic page
     Then I can see and press "Follow" button
     Then I should be following it
     Then I can see and press "Unfollow" button
     And I shouldn't be following it anymore
-  
+
   Scenario: A user can't report a follow event
     When I visit another user page
     Then I can see and press "Follow" button
     Then I should be following it
     And I shouldn't see report as spam button
-  
+
   Scenario: A user can update his status
     When I visit my page
     Then I can fill status update and submit it

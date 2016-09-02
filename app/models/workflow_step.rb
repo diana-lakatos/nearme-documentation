@@ -7,7 +7,7 @@ class WorkflowStep < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :associated_class
 
-  has_many :workflow_alerts
+  has_many :workflow_alerts, dependent: :destroy
   belongs_to :workflow
   belongs_to :instance
   validates_uniqueness_of :associated_class, scope: [:instance_id, :deleted_at]

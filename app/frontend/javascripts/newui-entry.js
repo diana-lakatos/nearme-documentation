@@ -53,6 +53,19 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
+    var els = $('[data-order-items]');
+    if (els.length === 0) {
+        return;
+    }
+    require.ensure('./new_ui/controllers/complete_reservation_controller', function(require){
+        var OrderItemsController = require('./new_ui/controllers/order_items_controller');
+        els.each(function(){
+            return new OrderItemsController(this);
+        });
+    });
+});
+
+DNM.registerInitializer(function(){
     var els = $('[data-category-autocomplete]');
     if (els.length === 0) {
         return;
@@ -241,6 +254,12 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
+    $(document).on('init:user_messages.nearme', function(){
+        require.ensure('./new_ui/controllers/messages_controller', function(require){
+            var MessagesController = require('./new_ui/controllers/messages_controller');
+            return new MessagesController($('[data-messages-form]'));
+        });
+    });
 
     var els = $('[data-messages-form]');
     if (els.length === 0) {
@@ -358,6 +377,17 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
+    var els = $('[data-transactable-collaborator]');
+    if (els.length === 0) {
+        return;
+    }
+    require.ensure('./new_ui/listings/collaborators', function(require){
+        var Collaborators = require('./new_ui/listings/collaborators');
+        return new Collaborators($(els[0]).closest('form'));
+    });
+});
+
+DNM.registerInitializer(function(){
     var els = $('.listing-availability');
     if (els.length === 0) {
         return;
@@ -458,7 +488,7 @@ DNM.registerInitializer(function(){
     }
 
     require.ensure('./ckeditor/init', function(require){
-        var CKEDITOR = require('./ckeditor/init');
+        require('./ckeditor/init');
     });
 });
 
@@ -471,7 +501,7 @@ DNM.registerInitializer(function(){
         });
     };
 
-    $(document).on('init:creditcardform.nearme', run)
+    $(document).on('init:creditcardform.nearme', run);
 
     if ($('input[data-card-number], input[data-card-code]').length > 0) {
         run();
@@ -521,14 +551,12 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function() {
-  $(document).ready(function() {
     $('.schedule-exception-rules-container').on('cocoon:after-insert', function(e, insertedElement) {
-      require.ensure('./new_ui/forms/hints', function(require) {
-        var hints = require('./new_ui/forms/hints');
-        hints(insertedElement);
-      });
+        require.ensure('./new_ui/forms/hints', function(require) {
+            var hints = require('./new_ui/forms/hints');
+            hints(insertedElement);
+        });
     });
-  });
 });
 
 DNM.registerInitializer(function(){
@@ -559,12 +587,46 @@ DNM.registerInitializer(function(){
         return;
     }
 
-    $(document).on('init:orders.nearme', function(event){
+    $(document).on('init:orders.nearme', function(){
         require.ensure('./new_ui/controllers/orders_controller', function(require){
             var OrdersController = require('./new_ui/controllers/orders_controller');
             new OrdersController(ordersList);
         });
     });
 });
+
+DNM.registerInitializer(function(){
+    $(document).on('init:paymentmodal.nearme', function(){
+        require.ensure('./sections/dashboard/payment_modal_controller', function(require){
+            var PaymentModalController = require('./sections/dashboard/payment_modal_controller');
+            new PaymentModalController($('.dialog'));
+
+            $(document).trigger('init:creditcardform.nearme');
+        });
+    });
+});
+
+DNM.registerInitializer(function(){
+    var els = $('[data-expenses-overview]');
+    if (els.length === 0) {
+        return;
+    }
+    require.ensure('./new_ui/modules/order_items_index', function(require){
+        var OrderItemsIndex = require('./new_ui/modules/order_items_index');
+        els.each(function(){
+            return new OrderItemsIndex(this);
+        });
+    });
+});
+
+DNM.registerInitializer(function(){
+    $(document).on('init:disableorderform.nearme', function(event, form) {
+        $(form).find('input, textarea, button, select').attr('disabled','disabled');
+    });
+});
+
+// New shared libraries
+let sharedInitializers = require('shared-initializers');
+sharedInitializers.forEach((initializer)=> DNM.registerInitializer(initializer));
 
 DNM.run();

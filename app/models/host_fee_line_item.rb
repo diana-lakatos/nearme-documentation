@@ -2,8 +2,6 @@ class HostFeeLineItem < ActiveRecord::Base
 
   include Modelable
 
-  self.inheritance_column = :type
-
   monetize :unit_price_cents, with_model_currency: :currency
   monetize :total_price_cents, with_model_currency: :currency
 

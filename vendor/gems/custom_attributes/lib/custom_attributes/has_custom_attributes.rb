@@ -36,6 +36,7 @@ module CustomAttributes
 
           def #{@options[:store_accessor_name]}_attributes=(attrs)
             attrs.each do |key, value|
+              value = value.map(&:presence).compact if Array === value
               properties[key] = value
             end
           end
@@ -71,7 +72,7 @@ module CustomAttributes
             end
             value.each do |k, v|
               if Array === v
-                value[k] = v.join(',')
+                value[k] = v.map(&:presence).compact.join(',')
               end
             end
             set_keys = value.keys.map(&:to_s)

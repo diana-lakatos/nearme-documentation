@@ -5,7 +5,6 @@ class InstanceProfileType < ActiveRecord::Base
   scoped_to_platform_context
   SEARCH_VIEWS = %w(list)
 
-
   acts_as_custom_attributes_set
   belongs_to :instance
   has_many :users, through: :user_profiles
@@ -64,6 +63,10 @@ class InstanceProfileType < ActiveRecord::Base
 
   def to_liquid
     @instance_profile_type_drop ||= InstanceProfileTypeDrop.new(self)
+  end
+
+  def has_fields?(profile_type)
+    form_components.where(form_type: profile_type).any? {|f| f.form_fields.present? }
   end
 
 end

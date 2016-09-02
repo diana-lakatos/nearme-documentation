@@ -7,6 +7,8 @@ class LineItem::Transactable < LineItem
 
   before_validation :set_unit_price, if: lambda { line_itemable }
 
+  validate :validate_unit_price_cents
+
   def transactable
     line_item_source
   end
@@ -54,43 +56,64 @@ class LineItem::Transactable < LineItem
 
   def build_service_fee
     return true if service_fee_guest_percent.to_f.zero?
+
     if self.line_itemable.service_fee_line_items.any?
       service_fee = self.line_itemable.service_fee_line_items.first
       service_fee.update_attribute(
         :unit_price_cents, service_fee.unit_price_cents + (total_price_cents * service_fee_guest_percent.to_f / BigDecimal(100))
       )
     else
-      self.line_itemable.service_fee_line_items.build(
-        line_itemable: self.line_itemable,
-        line_item_source: current_instance,
-        optional: false,
-        receiver: "mpo",
-        name: "Service Fee",
-        quantity: 1,
-        unit_price_cents: calculate_fee(service_fee_guest_percent),
-        service_fee_guest_percent: service_fee_guest_percent,
-        service_fee_host_percent: service_fee_host_percent,
-      )
+      if self.line_itemable.persisted?
+        self.line_itemable.service_fee_line_items.create(service_fee_attributes)
+      else
+        self.line_itemable.service_fee_line_items.build(service_fee_attributes)
+      end
     end
+  end
+
+  def service_fee_attributes
+    {
+      line_itemable: self.line_itemable,
+      line_item_source: current_instance,
+      optional: false,
+      receiver: "mpo",
+      name: "Service Fee",
+      quantity: 1,
+      unit_price_cents: calculate_fee(service_fee_guest_percent),
+      service_fee_guest_percent: service_fee_guest_percent,
+      service_fee_host_percent: service_fee_host_percent,
+    }
   end
 
   def build_host_fee
     return true if service_fee_host_percent.to_f.zero?
+
     if self.line_itemable.host_fee_line_items.any?
       host_fee = self.line_itemable.host_fee_line_items.first
       host_fee.update_attribute(
         :unit_price_cents, host_fee.unit_price_cents + (total_price_cents * service_fee_host_percent.to_f / BigDecimal(100))
       )
     else
-      self.line_itemable.host_fee_line_items.build(
-        line_itemable: self.line_itemable,
-        line_item_source: current_instance,
-        unit_price_cents: calculate_fee(service_fee_host_percent)
-      )
+      if self.line_itemable.persisted?
+        self.line_itemable.host_fee_line_items.create(host_fee_attributes)
+      else
+        self.line_itemable.host_fee_line_items.build(host_fee_attributes)
+      end
     end
   end
 
+  def host_fee_attributes
+    {
+      line_itemable: self.line_itemable,
+      line_item_source: current_instance,
+      unit_price_cents: calculate_fee(service_fee_host_percent)
+    }
+  end
+
   private
+  def validate_unit_price_cents
+    errors.add :unit_price, :equal_to, count: 0 if !self.unit_price_cents.zero? && self.line_itemable && self.line_itemable.is_free_booking?
+  end
 
   def calculate_fee(fee_percent)
     (total_price * fee_percent.to_f / BigDecimal(100)).to_money(currency).cents

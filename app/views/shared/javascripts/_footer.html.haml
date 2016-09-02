@@ -1,3 +1,7 @@
+- if defined? include_modal
+  = render 'shared/modal'
+  = yield :modals
+
 = javascript_tag do
   = javascript_i18n_include_tag
 
@@ -12,10 +16,6 @@
   = render 'shared/javascripts/olark/olark' if platform_context.instance.olark_enabled?
   = render 'shared/javascripts/google_analytics'
   = render 'shared/javascripts/sessioncam'
-
-- if defined? include_modal
-  = render 'shared/modal'
-  = yield :modals
 
 = yield :page_scripts
 = yield :script

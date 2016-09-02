@@ -50,7 +50,7 @@
         %ul
           %li{ class: (controller_name == 'registrations' && action_name == 'show' ? 'active' : '') }
             = link_to t(:profile), user_path(current_user)
-          - if (project_type = ProjectType.first).present?
+          - if (project_type = TransactableType.where(name: 'Project').first).present?
             %li{ class: (controller_name == 'projects' ? 'active' : '') }
               = link_to t(:my_projects), dashboard_project_type_projects_path(project_type)
           - if (group_type = GroupType.first).present?
@@ -66,7 +66,7 @@
         = link_to t(:log_in), new_user_session_path(wizard: :onboarding), class: 'button-a small orange'
 
     %p.actions
-      - if (project_type = ProjectType.first).present?
+      - if (project_type = TransactableType.find_by_name('Project')).present?
         = link_to t(:add_project), new_dashboard_project_type_project_path(project_type), class: 'button-a small orange add'
       - else
-        = link_to "ADD PROJECT TYPE IN INSTANCE ADMIN", new_instance_admin_projects_project_type_path, class: 'button-a small orange add'
+        = link_to "ADD PROJECT TYPE IN INSTANCE ADMIN", new_instance_admin_projects_transactable_type_path, class: 'button-a small orange add'

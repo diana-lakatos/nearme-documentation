@@ -3,6 +3,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   include AttachmentsHelper
 
+  skip_before_filter :force_fill_in_wizard_form
   before_filter :find_transactable_type
   before_filter :redirect_to_dashboard_if_registration_completed, only: [:new, :list]
   before_filter :redirect_to_dashboard_if_started_other_listing, only: [:new, :list]
@@ -25,7 +26,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   def list
     build_objects
-    @transactable.initialize_action_types
+    @transactable.try(:initialize_action_types)
     build_approval_requests
     @photos = (@user.first_listing.try(:photos) || []) + @user.photos.where(owner_id: nil)
     @attachments = (@user.first_listing.try(:attachments) || []) + @user.attachments.where(assetable_id: nil)
@@ -34,39 +35,52 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def submit_listing
-    params[:user][:companies_attributes]["0"][:name] = current_user.first_name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
+    if platform_context.instance.skip_company?
+        params[:user][:companies_attributes] ||= {}
+        params[:user][:companies_attributes]["0"] ||= {}
+        if params[:user][:companies_attributes]["0"][:name].blank?
+          params[:user][:companies_attributes]["0"][:name] = current_user.first_name
+        else
+          @user.company_name ||= params[:user][:companies_attributes]["0"][:name]
+        end
+    end
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.get_seller_profile
     @user.skip_validations_for = [:buyer]
     @user.must_have_verified_phone_number = true if @user.requires_mobile_number_verifications?
     @user.assign_attributes(wizard_params)
 
-    @user.companies.first.creator = current_user
+    @user.companies.first.try(:creator=, current_user)
     build_objects
     build_approval_requests
-    @user.first_listing.creator = @user
+    @user.first_listing.try(:creator=, @user)
+    @transactable.try(:initialize_action_types) unless params[:save_as_draft]
     if params[:save_as_draft]
       remove_approval_requests
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
       @user.companies.first.update_metadata({draft_at: Time.now, completed_at: nil})
-      if @user.first_listing.new_record?
+      if @user.first_listing.nil? || @user.first_listing.new_record?
         @user.save(validate: false)
         fix_availability_templates
         track_saved_draft_event
-        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::DraftCreated, @user.first_listing.id)
+        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::DraftCreated, @user.first_listing.try(:id))
       else
         @user.save(validate: false)
       end
       flash[:success] = t('flash_messages.space_wizard.draft_saved')
       redirect_to transactable_type_space_wizard_list_path(@transactable_type)
     elsif @user.save
-      @user.listings.first.action_type.try(:schedule).try(:create_schedule_from_schedule_rules) if current_instance.new_ui?
+      @user.listings.first.try(:action_type).try(:schedule).try(:create_schedule_from_schedule_rules)
       @user.companies.first.update_metadata({draft_at: nil, completed_at: Time.now})
       track_new_space_event
       track_new_company_event
 
-      WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @user.first_listing.id) unless @user.first_listing.is_trusted?
-      WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @user.first_listing.id)
+      if @transactable_type.require_transactable_during_onboarding?
+        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @user.first_listing.try(:id)) unless @user.first_listing.try(:is_trusted?)
+        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @user.first_listing.try(:id))
+      else
+        @user.seller_profile.mark_as_onboarded!
+      end
       flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: @transactable_type.translated_bookable_noun)
       flash[:error] = t('manage.listings.no_trust_explanation') if @user.listings.first.present? && !@user.listings.first.is_trusted?
       redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
@@ -83,6 +97,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   # When saving drafts we end up with parent_type = nil for custom availability templates causing problems down the line
   def fix_availability_templates
     listing = @user.companies.first.locations.first.listings.first
+    return if listing.nil?
     return unless listing.time_based_booking
     availability_template = listing.time_based_booking.availability_template
     if availability_template
@@ -149,8 +164,10 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     @user.companies.build if @user.companies.first.nil?
     @user.companies.first.locations.build if @user.companies.first.locations.first.nil?
     @user.companies.first.locations.first.transactable_type = @transactable_type
-    @transactable = @user.companies.first.locations.first.listings.first || @user.companies.first.locations.first.listings.build({transactable_type_id: @transactable_type.id})
-    @transactable.attachment_ids = attachment_ids_for(@transactable) if params.has_key?(:attachment_ids)
+    if @transactable_type.require_transactable_during_onboarding?
+      @transactable = @user.companies.first.locations.first.listings.first || @user.companies.first.locations.first.listings.build({transactable_type_id: @transactable_type.id})
+      @transactable.attachment_ids = attachment_ids_for(@transactable) if params.has_key?(:attachment_ids)
+    end
   end
 
   def redirect_to_dashboard_if_registration_completed
@@ -210,7 +227,9 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   def build_approval_requests
     build_approval_request_for_object(@user)
     build_approval_request_for_object(@user.companies.first)
-    build_approval_request_for_object(@user.companies.first.locations.first.listings.first)
+    if @transactable_type.require_transactable_during_onboarding?
+      build_approval_request_for_object(@user.companies.first.locations.first.listings.first)
+    end
   end
 
   def can_delete_photo?(photo, user)

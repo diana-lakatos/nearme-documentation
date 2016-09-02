@@ -8,20 +8,20 @@ class FormAttributes
   def user
     [
       :email, :phone, :avatar, :name, :first_name, :middle_name, :last_name, :approval_requests, :current_address,
-      :password, :public_profile, :time_zone, :language, :mobile_number, :company_name
+      :password, :public_profile, :time_zone, :language, :mobile_number, :mobile_phone, :company_name, :tags
     ] + UserProfile.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
     extra_attributes(Category.users.roots, 'Category') +
     extra_attributes(CustomModelType.users, 'Custom Model')
   end
 
   def seller
-    UserProfile.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
+    [ :enabled ] + UserProfile.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
     extra_attributes(Category.sellers.roots, 'Category') +
     extra_attributes(CustomModelType.sellers, 'Custom Model')
   end
 
   def buyer
-    UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
+    [ :enabled ] + UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
     extra_attributes(Category.buyers.roots, 'Category') +
     extra_attributes(CustomModelType.buyers, 'Custom Model')
   end
@@ -48,10 +48,11 @@ class FormAttributes
 
   def transactable(transactable_type = nil)
     [
-      :name, :description, :availability_rules, :price, :currency, :photos,
+      :name, :description, :availability_rules, :price, :currency, :photos, :tags,
       :approval_requests, :quantity, :book_it_out, :exclusive_price, :action_rfq,
       :confirm_reservations, :capacity, :rental_shipping_type, :seller_attachments,
-      :additional_charges, :minimum_booking_minutes, :deposit_amount, :shipping_info
+      :additional_charges, :minimum_booking_minutes, :deposit_amount, :shipping_info,
+      :pro_bono
     ] +
     Transactable.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
     extra_attributes(transactable_type.categories.roots, 'Category') +
@@ -61,10 +62,11 @@ class FormAttributes
   def dashboard_transactable(transactable_type = nil)
     [
       :confirm_reservations, :name, :description, :location_id, :approval_requests,
-      :enabled, :amenity_types, :price, :currency, :schedule, :photos,
+      :enabled, :amenity_types, :price, :currency, :schedule, :photos, :tags,
       :waiver_agreement_templates, :documents_upload, :quantity, :book_it_out,
       :exclusive_price, :action_rfq, :capacity, :seller_attachments,
-      :additional_charges, :minimum_booking_minutes, :deposit_amount, :shipping_info
+      :additional_charges, :minimum_booking_minutes, :deposit_amount, :shipping_info,
+      :collaborators, :pro_bono
     ] +
     Transactable.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
     extra_attributes(transactable_type.categories.roots, 'Category') +

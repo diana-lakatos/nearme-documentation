@@ -50,7 +50,7 @@
               = link_to transactable_type.manage_transactables_path, class: 'nav-link dropdown-toggle' do
                 %div.truncate= title
 
-        - if platform_context.bookable? && current_instance.split_registration && current_user.seller_profile.present?
+        - if platform_context.bookable? && current_instance.split_registration && current_user.seller_profile.present? && HiddenUiControls.find('dashboard/host_reservations').visible?
           %li
             = link_to main_app.dashboard_company_orders_received_index_path, class: 'nav-link dropdown-toggle' do
               %span= t 'top_navbar.bookings_received'
@@ -83,7 +83,7 @@
               %span= t 'top_navbar.account'
 
         - if HiddenUiControls.find('main_menu/view_profile').visible?
-          %li
+          %li.view_profile
             = link_to main_app.user_path(current_user), class: 'nav-link dropdown-toggle', target: '_blank' do
               %span= t 'top_navbar.view_profile'
 
@@ -102,7 +102,7 @@
 
   - else
     %li.divider-vertical
-    %li
+    %li.nav-main-register-link
       - options = {}
       - options[:role] = :buyer if current_instance.split_registration?
       = link_to_registration get_return_to_url(dashboard_orders_path, options), platform_context.secured_constraint, secure_links?, :class => "nav-link header-first", data: { modal: true, 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } do

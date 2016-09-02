@@ -26,4 +26,8 @@ class ShippingProfile < ActiveRecord::Base
     shipping_type =~ /shippo/
   end
 
+  def to_liquid
+    @shipping_profile_drop ||= ShippingProfileDrop.new(self)
+  end
+
 end

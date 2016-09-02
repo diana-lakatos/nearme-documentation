@@ -4,6 +4,8 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
 
   supported :immediate_payout, :credit_card_payment, :multiple_currency, :partial_refunds, :recurring_payment
 
+  validate :validate_config_hash
+
   # def self.supported_countries
   #   %w(AT AU BE CA CH DE DK ES FI FR GB IE IT JP LU MX NL NO SE US)
   # end
@@ -31,6 +33,17 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
     super.merge({environment: test_mode? ? :sandbox : :production, test: test_mode? })
   end
 
+  def config_settings
+    {
+      transfer_schedule: {
+        interval: { valid_values: ['default', 'daily', 'weekly', 'monthly'], data: {'data-interval' => '' }},
+        weekly_anchor: { valid_values: Date::DAYNAMES.map(&:downcase), data: {'data-show-if' => 'interval-weekly'} },
+        monthly_anchor: { valid_values: (1..31).to_a, data: {'data-show-if' => 'interval-monthly'} },
+        delay_days: { valid_values: (1..10).to_a, data: {'data-show-if' => 'interval-daily'} }
+      },
+    }
+  end
+
   def gateway
     @gateway ||= ActiveMerchant::Billing::StripeConnectPayments.new(settings)
   end
@@ -54,16 +67,28 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
   def charge(user, amount, currency, payment, token)
     charge_record = super(user, amount.to_i, currency, payment, token)
     if charge_record.try(:success?)
-      payment_transfer = payment.company.payment_transfers.create!(payments: [payment.reload], payment_gateway_mode: mode, payment_gateway_id: self.id)
-      unless payment.successful_billing_authorization.immediate_payout?
-        payment_transfer.update_attribute(:transferred_at, nil)
-      end
+      payment_transfer = payment.company.payment_transfers.build(
+        payments: [payment.reload],
+        payment_gateway_mode: mode,
+        payment_gateway_id: self.id,
+        token: charge_record.response.params['transfer']
+      )
+
+      payout = payment_transfer.payout_attempts.build({
+        amount_cents: payment_transfer.amount.cents,
+        currency: payment_transfer.amount.currency.iso_code,
+        reference: payment_transfer,
+        payment_gateway_mode: mode
+      })
+
+      payment_transfer.save!
+      payout.payout_pending('')
     end
     charge_record
   end
 
   def payout(*args)
-    OpenStruct.new(success: true, success?: true)
+    raise NotImplementedError.new("#{self.name} does not support classic payout")
   end
 
   def immediate_payout(company)
@@ -72,5 +97,19 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
 
   def refund_identification(charge)
     charge.payment.successful_billing_authorization.token
+  end
+
+  def validate_config_hash
+    intrval = config["transfer_schedule"] && config["transfer_schedule"]["interval"]
+    if intrval == 'daily'
+      label = I18n.t('simple_form.labels.payment_gateway.config.transfer_schedule.delay_days')
+      errors.add(:base, label + ' can\'t be blank.') if config["transfer_schedule"]["delay_days"].blank?
+    elsif intrval == 'weekly'
+      label = I18n.t('simple_form.labels.payment_gateway.config.transfer_schedule.weekly_anchor')
+      errors.add(:base, label + ' can\'t be blank.') if config["transfer_schedule"]["weekly_anchor"].blank?
+    elsif intrval == 'monthly'
+      label = I18n.t('simple_form.labels.payment_gateway.config.transfer_schedule.monthly_anchor')
+      errors.add(:base, label + ' can\'t be blank.') if config["transfer_schedule"]["monthly_anchor"].blank?
+    end
   end
 end

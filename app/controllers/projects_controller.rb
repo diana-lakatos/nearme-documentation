@@ -14,7 +14,7 @@ class ProjectsController < ApplicationController
   protected
 
   def find_project
-    @project = Project.find(params[:id])
+    @project = Transactable.find(params[:id])
   end
 
   def redirect_if_draft

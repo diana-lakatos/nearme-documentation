@@ -1,8 +1,9 @@
 class Order < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
 
-  ORDER_TYPES = %w(Reservation RecurringBooking Purchase DelayedReservation).freeze
+  ORDER_TYPES = %w(Reservation RecurringBooking Purchase DelayedReservation Offer).freeze
   STATES = %w(unconfirmed confirmed overdued archived not_archived).freeze
+
   DEFAULT_DASHBOARD_TABS = %w(unconfirmed confirmed archived).freeze
 
   include Encryptable
@@ -37,6 +38,7 @@ class Order < ActiveRecord::Base
   has_many :periods, :class_name => "::ReservationPeriod", :dependent => :destroy, foreign_key: 'reservation_id', inverse_of: :reservation
   has_many :waiver_agreements, as: :target
   has_many :transactables, through: :transactable_line_items, source: :line_item_source, source_type: 'Transactable'
+  has_many :order_items, class_name: 'RecurringBookingPeriod', dependent: :destroy, foreign_key: :order_id
 
   accepts_nested_attributes_for :billing_address
   accepts_nested_attributes_for :user
@@ -58,6 +60,7 @@ class Order < ActiveRecord::Base
     after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:mark_as_archived!, :set_cancelled_at, :schedule_refund]
     after_transition unconfirmed: [:cancelled_by_host], do: [:mark_as_archived!]
     after_transition unconfirmed: [:cancelled_by_guest, :expired, :rejected], do: [:mark_as_archived!, :schedule_void]
+    after_transition any => [:rejected] { |o| WorkflowStepJob.perform("WorkflowStep::#{o.class.workflow_class}Workflow::Rejected".constantize, o.id) }
 
     event :activate                 do transition inactive: :unconfirmed; end
     event :confirm                  do transition unconfirmed: :confirmed; end
@@ -78,7 +81,8 @@ class Order < ActiveRecord::Base
   # scope :archived, -> { active.where('archived_at IS NOT NULL') }
   # scope :not_archived, -> { active.where(archived_at: nil) }
   scope :not_archived, -> { where("(orders.type != 'RecurringBooking' AND orders.state != 'inactive' AND orders.archived_at IS NULL) OR (orders.type = 'RecurringBooking' AND orders.state NOT IN ('inactive', 'cancelled_by_guest', 'cancelled_by_host', 'rejected', 'expired'))") }
-  scope :archived, -> { where("(orders.type != 'RecurringBooking' AND orders.archived_at IS NOT NULL) OR (type = 'RecurringBooking' AND orders.state IN ('rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest'))") }
+  scope :archived, -> { where("(orders.type != 'RecurringBooking' AND orders.archived_at IS NOT NULL) OR (orders.type = 'RecurringBooking' AND orders.state IN ('rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest'))") }
+  # we probably want new state - completed
   scope :reviewable, -> { where.not(archived_at: nil).confirmed }
   scope :cancelled, -> { with_state(:cancelled_by_guest, :cancelled_by_host) }
   scope :confirmed, -> { with_state(:confirmed)}
@@ -94,6 +98,8 @@ class Order < ActiveRecord::Base
   scope :visible, -> { without_state(:cancelled_by_guest, :cancelled_by_host, :inactive).upcoming }
   scope :with_listing, -> { where.not(transactable_id: nil) }
   scope :reservations, -> { where(type: %w(Reservation DelayedReservation)) }
+  scope :offers, -> { where(type: %w(Offer)) }
+  scope :for_lister_or_enquirer, -> (company, user) { where('orders.company_id = ? OR orders.user_id = ?', company.id, user.id) }
 
   scope :on, -> (date) {
     joins(:periods).
@@ -115,6 +121,10 @@ class Order < ActiveRecord::Base
   # You can customize order tabs (states) displauyed in dashboard
   # via orders_received_tabs and my_orders_tabs Instance attributes
 
+  def self.workflow_class
+    raise NotImplementedError
+  end
+
   def self.dashboard_tabs(company_dashboard=false)
     if company_dashboard
       PlatformContext.current.instance.orders_received_tabs
@@ -130,9 +140,18 @@ class Order < ActiveRecord::Base
     true
   end
 
+  # This is workaround to use STI class with routing Rails standards
+  def routing_object
+    Order.new(id: id)
+  end
+
   def complete!
     # TODO soon we will introduce "completed" state instead of archived_at timestamp
     touch(:archived_at)
+  end
+
+  def archived?
+    archived_at.present?
   end
 
   def completed?
@@ -158,6 +177,10 @@ class Order < ActiveRecord::Base
 
   def subscription?
     type == "RecurringBooking"
+  end
+
+  def has_order_items?
+    order_items.any?
   end
 
   def bookable?
@@ -323,12 +346,12 @@ class Order < ActiveRecord::Base
   def trigger_rating_workflow!
     if archived? && confirmed?
       if request_guest_rating_email_sent_at.blank? && RatingSystem.active_with_subject(RatingConstants::GUEST).where(transactable_type_id: transactable_type_id).exists?
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestRatingRequested, id)
+        WorkflowStepJob.perform("WorkflowStep::#{self.class.workflow_class}Workflow::EnquirerRatingRequested".constantize, id)
         update_column(:request_guest_rating_email_sent_at, Time.zone.now)
       end
 
       if request_host_and_product_rating_email_sent_at.blank? && RatingSystem.active_with_subject([RatingConstants::HOST, RatingConstants::TRANSACTABLE]).where(transactable_type_id: transactable_type_id).exists?
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::HostRatingRequested, id)
+        WorkflowStepJob.perform("WorkflowStep::#{self.class.workflow_class}Workflow::ListerRatingRequested".constantize, id)
         update_column(:request_host_and_product_rating_email_sent_at, Time.zone.now)
       end
     end
@@ -481,6 +504,11 @@ class Order < ActiveRecord::Base
     super || transactable_line_items.first.transactable_pricing
   end
 
+  def reject(reason = nil)
+    self.rejection_reason = reason if reason
+    fire_state_event :reject
+  end
+
   private
 
   def skip_validation_for_custom_attributes
@@ -492,6 +520,10 @@ class Order < ActiveRecord::Base
     if inactive? && (skip_payment_authorization? || payment && payment.authorized?)
       activate!
     end
+  end
+
+  def send_rejected_workflow_alerts!
+
   end
 
 end

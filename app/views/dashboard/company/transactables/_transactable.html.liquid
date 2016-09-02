@@ -1,0 +1,37 @@
+{% for transactable in transactables %}
+  <tr>
+    <td class='thumb'>
+      <a href='{{ transactable.show_path }}' class='hidden-xs'><img src='{{ transactable.photo_medium_url }}'></a>
+      <a href='{{ transactable.edit_path }}' class='visible-xs'><img src='{{ transactable.photo_medium_url }}'></a>
+    </td>
+
+    <td class='name'>
+      <a href='{{ transactable.show_path}}' class='hidden-xs'>{{ transactable.name }}</a>
+      <a href='{{ transactable.edit_path}}' class='visible-xs'>{{ transactable.name }}</a>
+    </td>
+
+    <td class='location hidden-sm hidden-xs'>
+      {% if transactable_type.skip_location? %}
+        {{ transactable.quantity }}
+      {% else %}
+        {{ transactable.location_name }}
+      {% endif %}
+    </td>
+
+    <td class='price hidden-sm hidden-xs'>
+      {% if transactable.lowest_price_with_currency != blank %}
+        {{ transactable.lowest_price_with_currency }}
+      {% else %}
+        {{ 'dashboard.transactables.pricing.free' | translate }}
+      {% endif %}
+    </td>
+
+    <td class='added hidden-sm hidden-xs'>
+      {{ transactable.listing_date }}
+    </td>
+
+    <td class='actions hidden-sm hidden-xs'>
+      <a href='{{ transactable.edit_path }}'>{{ 'general.edit' | translate }}</a>
+    </td>
+  </tr>
+{% endfor %}

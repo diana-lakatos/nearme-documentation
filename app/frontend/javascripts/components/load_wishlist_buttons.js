@@ -2,7 +2,7 @@ function sendUpdateRequest(href, method) {
     $.ajax({
         url: href,
         method: method,
-        dataType: "script"
+        dataType: 'script'
     });
 }
 
@@ -16,10 +16,14 @@ function loadButtons(url, data, callback) {
         method: 'get',
         dataType: 'json'
     }).done(function(items){
+
         if (!items.wish_lists) {
             throw new Error('Invalid response from wish list buttons fetch');
         }
+
         items.wish_lists.forEach(callback);
+    }).fail(function(){
+        throw new Error('Unable to parse wish list buttons response');
     });
 }
 
@@ -52,7 +56,7 @@ function initializeFavoriteButtons(context){
 function load(context) {
     context = context || document;
 
-    elements = context.querySelectorAll('[data-add-favorite-button]');
+    var elements = context.querySelectorAll('[data-add-favorite-button]');
 
     if (elements.length === 0) {
         return;

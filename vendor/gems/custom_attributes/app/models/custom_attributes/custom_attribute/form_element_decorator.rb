@@ -1,7 +1,7 @@
 module CustomAttributes
   class CustomAttribute::FormElementDecorator
 
-    delegate :name, :label, :errors, :valid_values, :input_html_options, :validation_rules, :html_tag,
+    delegate :name, :label, :errors, :valid_values, :input_html_options, :wrapper_html_options, :validation_rules, :html_tag,
       :label_key, :attribute_type, :prompt_key, :placeholder_key, :hint_key, to: :attribute
 
     attr_accessor :attribute
@@ -40,6 +40,7 @@ module CustomAttributes
 
     def default_options
       @default_options ||= {
+        wrapper_html: wrapper_html_options,
         input_html: input_html_options,
         label: I18n.translate(attribute.label_key, default: attribute.name.try(:humanize)),
         hint: I18n.translate(attribute.hint_key, default: '').presence || nil,

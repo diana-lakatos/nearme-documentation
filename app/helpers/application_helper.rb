@@ -181,11 +181,16 @@ module ApplicationHelper
   end
 
   def theme_class(theme_name = nil)
-    [
+    classes = [
       theme_name,
       controller_name,
       "#{controller_name}-#{params[:action]}",
-    ].compact.join(' ')
+    ]
+    if current_user
+      classes << 'user-role-lister' if current_user.seller_profile
+      classes << 'user-role-enquirer' if current_user.buyer_profile
+    end
+    classes.compact.join(' ')
   end
 
 

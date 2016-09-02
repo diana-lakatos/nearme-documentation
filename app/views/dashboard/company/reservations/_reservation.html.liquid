@@ -1,0 +1,135 @@
+<header>
+  <div class='row'>
+    <div class='col-xs-7'>
+      {% include 'dashboard/company/host_reservations/client_info_area', reservation: reservation %}
+    </div>
+    <div class='col-xs-5'>
+      <div class='order-status'>
+        {% if reservation.archived_at and reservation.state == 'confirmed' %}
+          <span class='confirmed'>
+            {{ "reservations.states.completed" | translate }}
+          </span>
+        {% else %}
+          <span class='{{ reservation.state }}'>
+            {{ 'reservations.states.' | append: reservation.state | translate }}
+          </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>
+{% if reservation.can_confirm? %}
+  <div class='alert alert-warning'>
+    {{ reservation.manage_booking_status_info_new }}
+  </div>
+  {% if reservation.payment.active_merchant_payment? %}
+    {% if reservation.payment.successful_billing_authorization != blank %}
+      <div class='alert alert-warning'>{{ 'dashboard.host_reservations.money_info' | translate }}</div>
+      {% unless current_instance.manual_transfers? %}
+        <div class='alert alert-warning'>
+          {{ 'dashboard.host_reservations.next_payment_transfer' | translate: next_payment_transfer: reservation.next_payment_transfer }}
+        </div>
+      {% endunless %}
+      {% if reservation.possible_payout_not_configured? %}
+        <div class='alert alert-warning'>
+          {% assign setup_link = 'edit_dashboard_company_payouts_path' | generate_url %}
+          {{ 'dashboard.host_reservations.remember_to_setup_automated_payout' | translate: setup_link: setup_link | make_html_safe }}
+        </div>
+      {% endif %}
+    {% endif %}
+  {% endif %}
+{% endif %}
+
+{% if reservation.show_not_verified_host_alert? %}
+  <div class='alert alert-warning'>
+    {% capture link %} <a href='{{ routes.social_accounts_path }}'>{{ 'dashboard.nav.social_accounts' | t }}</a> {% endcapture %}
+    {{ 'dashboard.click_to_call.not_verified_self_warning' | translate: link: link | make_html_safe }}
+  </div>
+{% endif %}
+
+{% include 'dashboard/user_reservations/reservation_details', reservation: reservation, for_host: true %}
+
+<div class='row'>
+  {% if reservation.guest_notes != blank %}
+    <div class='col-sm-3'>
+      <h3>{{ 'dashboard.host_reservations.exclusive_price_guests_notes' | t }}</h3>
+      <blockquote>{{ reservation.guest_notes }}</blockquote>
+    </div>
+  {% endif %}
+  {% if reservation.payment_documents.size > 0 %}
+    <div class='col-sm-3'>
+      <h3>{{ 'dashboard.host_reservations.payment_documents' | t }}</h3>
+      <ul class='payment-documents'>
+        {% for pd in reservation.payment_documents %}
+          <li>
+            <a href='{{ pd.file_url }}' download="{{ pd.file_name }}">{{ pd.file_name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+  {% if reservation.additional_line_items.size > 0 %}
+    <div class='col-sm-3 right'>
+      <h3>{{ 'dashboard.host_reservations.additional_charges' | t }}</h3>
+      <ul class='payment-documents'>
+        {% for ac in reservation.additional_line_items %}
+          <li>
+            {{ ac.name | append: ' - ' | append: ac.formatted_total_price }}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+</div>
+
+<hr/>
+
+<div class='row'>
+  <div class='col-md-3'>
+    <h3>{{ 'dashboard.host_reservations.payment_state' | t }}</h3>
+  </div>
+  <div class='col-md-9 {% if reservation.paid? %} "info" {% else %} "warn" {% endif %}'>
+    {{ reservation.payment_state }}
+  </div>
+</div>
+
+<div class='row'>
+  <div class='col-md-3'>
+    <h3>{{ 'dashboard.host_reservations.payment_method' | t }}</h3>
+  </div>
+  <div class='col-md-3 {% if reservation.paid? %} "info" {% else %} "warn" {% endif %}'>
+    {{ reservation.translated_payment_method }}
+  </div>
+</div>
+
+{% if reservation.shipments.size > 0 %}
+  <div class='row'>
+    <div class='col-md-3'>
+      <h3>{{ 'dashboard.host_reservations.delivery_type' | t }}</h3>
+    </div>
+    <div class='col-md-9'>
+      {% if reservation.shipments[0].present? and reservation.shipments[0].shipping_rule.is_pickup %}
+        {{ 'dashboard.host_reservations.delivery.pick_up' | t }}
+      {% else %}
+        {{ 'dashboard.host_reservations.delivery.delivery' | t }}
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+
+<hr/>
+
+<div class='row'>
+  <div class='col-sm-9 col-sm-push-3'>
+    <div class='order-actions'>
+    {% include 'dashboard/company/host_reservations/owner_actions', reservation: reservation %}
+    </div>
+  </div>
+  <div class='col-sm-3 col-sm-pull-9'>
+    {% assign date = reservation.created_at | to_date | l: 'long' %}
+    <small>{{ 'dashboard.host_reservations.order_placed_html' | t: date: date }}</small>
+  </div>
+  <div class='col-sm-3 col-sm-pull-9'>
+    {{ 'dashboard.host_reservations.order_number' | t: number: reservation.id }}
+  </div>
+</div>

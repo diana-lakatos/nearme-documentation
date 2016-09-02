@@ -10,6 +10,10 @@ class Purchase < Order
     event :ship do transition :completed => :shipped; end
   end
 
+  def self.workflow_class
+    Purchase
+  end
+
   def add_line_item!(attrs)
     transactable = Transactable.find(attrs[:transactable_id])
     transactable_pricing = transactable.action_type.pricings.find(attrs[:transactable_pricing_id])
@@ -78,7 +82,7 @@ class Purchase < Order
   end
 
   def to_liquid
-    @reservation_drop ||= OrderDrop.new(self)
+    @purchase_drop ||= OrderDrop.new(self)
   end
 
   # TODO we could want to extend that

@@ -22,8 +22,8 @@ class InstanceAdmin::Reports::ProjectsController < InstanceAdmin::Reports::BaseC
   private
 
   def set_scopes
-    @scope_type_class = ProjectType
-    @scope_class = Project
+    @scope_type_class = TransactableType
+    @scope_class = Transactable
   end
 
 end

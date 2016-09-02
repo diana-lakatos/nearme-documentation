@@ -1,6 +1,6 @@
 class UserMessageThreadConfigurator
 
-  AVAILABLE_CONTEXTS = [Transactable, User, Reservation, RecurringBooking, Purchase, DelayedReservation]
+  AVAILABLE_CONTEXTS = [Transactable, User, Reservation, RecurringBooking, Purchase, DelayedReservation, Offer]
 
   def initialize(user_message, request_params)
     @user_message = user_message
@@ -23,6 +23,7 @@ class UserMessageThreadConfigurator
       context_id_key = :listing_id if context_id_key == :transactable_id
 
       if @request_params[context_id_key].present?
+        context_class = Order if Order::ORDER_TYPES.include?(context_class.to_s)
         @message_context = context_class.with_deleted
         @message_context = @message_context.friendly if @message_context.respond_to?(:friendly)
         @message_context = @message_context.find(@request_params[context_id_key]).decorate

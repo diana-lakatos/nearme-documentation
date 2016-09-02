@@ -1,0 +1,58 @@
+{% if reservation.can_host_cancel? %}
+  <form class="edit_reservation" action="{{ 'host_cancel_dashboard_company_host_reservation_path' | generate_url: reservation.id, listing_id: reservation.transactable}}" accept-charset="UTF-8" method="post">
+    <input name="utf8" type="hidden" value="&#x2713;" />
+    <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
+    <input type="submit" name="commit" value="{{ 'dashboard.host_reservations.actions.cancel' | t }}" data-confirm="{{ 'dashboard.host_reservations.confirmations.cancel' | t }}" class="btn btn-warning" data-disable-with="{{ 'general.processing' | t }}" />
+  </form>
+{% endif %}
+
+{% if reservation.can_confirm? %}
+  {% if platform_context.instance.enable_reply_button_on_host_reservations? %}
+    {% if reservation.user_messages.size == 0 %}
+      <a class="btn btn-info" data-modal="true" href="{{ 'new_reservation_user_message_path' | generate_url: reservation.id, skip: true }}">{{ 'general.reply' | t}}</a>
+    {% else %}
+      <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: reservation.user_messages.first.id }}">{{ 'general.reply' | t}}</a>
+    {% endif %}
+  {% endif %}
+  <form class="edit_reservation" action="{{ 'confirm_dashboard_company_host_reservation_path' | generate_url: reservation.id, listing_id: reservation.transactable }}" accept-charset="UTF-8" method="post">
+    <input name="utf8" type="hidden" value="&#x2713;" />
+    <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
+    <input type="submit" name="commit" value="{{ 'dashboard.host_reservations.actions.confirm' | t }}" data-confirm="{{ 'dashboard.host_reservations.confirmations.confirm' | t }}" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-success" />
+  </form>
+{% endif %}
+
+{% if reservation.can_reject? %}
+  <a class="btn btn-warning" data-modal="true" href="{{ 'rejection_form_dashboard_company_host_reservation_path' | generate_url: reservation.id, listing_id: reservation.transactable }}">{{ 'dashboard.host_reservations.actions.decline' | t }}</a>
+{% endif %}
+{% if reservation.paid? == false and (reservation.unconfirmed? or reservation.confirmed?) %}
+  {% if reservation.remote_payment? %}
+    <a class="btn btn-warning" data-modal="true" href="{{ 'request_payment_dashboard_company_host_reservation_path' | generate_url: reservation.id, listing_id:reservation.transactable }}" data-confirm="{{ 'dashboard.host_reservations.confirmations.request_payment' | t }}">{{ 'dashboard.host_reservations.actions.request_payment' | t }}</a>
+
+  {% elsif reservation.manual_payment? %}
+    <form class="edit_reservation" action="{{ 'mark_as_paid_dashboard_company_host_reservation_path' | generate_url: reservation.id, listing_id: reservation.transactable }}" accept-charset="UTF-8" method="post">
+      <input name="utf8" type="hidden" value="&#x2713;" />
+      <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
+      <input type="submit" name="commit" value="{{ 'dashboard.host_reservations.actions.mark_as_paid' | t }}" data-confirm="{{ 'dashboard.host_reservations.confirmations.mark_as_paid' | t }}" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-default" />
+    </form>
+  {% endif %}
+{% endif%}
+
+{% if reservation.confirmed? %}
+  {% if reservation.can_complete_checkout? %}
+    <a class="btn btn-success" href="{{ 'complete_reservation_dashboard_company_host_reservation_path' | generate_url: reservation.id }}">{{ 'dashboard.host_reservations.actions.complete_reservation' | t }}</a>
+  {% endif %}
+  {% if reservation.can_approve_or_decline_checkout? %}
+    <div class='pending-approval'>{{ 'dashboard.host_reservations.pending_approval' | t }}</div>
+  {% endif %}
+  {% if reservation.has_to_update_credit_card? %}
+    <div class='cc-error'>{{ 'dashboard.host_reservations.must_change_credit_card' | t }}</div>
+  {% endif %}
+  {% if reservation.outbound_shipment != blank %}
+    <a class="btn btn-primary" href="{{ reservation.outbound_shipment.label_url }}">{{ 'dashboard.host_reservations.shipping_label' | t }}</a>
+    <a class="btn btn-primary" href="{{ reservation.outbound_shipment.tracking_url_provider }}">{{ 'dashboard.host_reservations.track_package' | t }}</a>
+  {% endif %}
+  {% if reservation.inbound_shipment != blank %}
+    <a class="btn btn-default" href="{{ reservation.inbound_shipment.label_url }}">{{ 'dashboard.host_reservations.return_label' | t }}</a>
+    <a class="btn gray full" href="{{ reservation.inbound_shipment.tracking_url_provider }}">{{ 'dashboard.host_reservations.return_track_package' | t }}</a>
+  {% endif %}
+{% endif %}

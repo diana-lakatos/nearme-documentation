@@ -21,11 +21,22 @@ class WorkflowStep::ListingWorkflow::BaseStep < WorkflowStep::BaseStep
     @transactable.creator
   end
 
+  def transactable
+    @transactable
+  end
+
+  def collaborators
+    transactable.try(:collaborating_users)
+  end
+
   # listing:
   #   Transactable object
   def data
     {
       listing: @transactable,
+      transactable: @transactable,
+      enquirer: nil,
+      lister: lister,
       approval_request: @approval_request
     }
   end

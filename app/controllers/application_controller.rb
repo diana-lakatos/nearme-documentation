@@ -20,6 +20,8 @@ class ApplicationController < ActionController::Base
   before_action :set_raygun_custom_data
   before_action :filter_out_token
   before_action :sign_out_if_signed_out_from_intel_sso, if: -> { should_log_out_from_intel? }
+  before_filter :set_paper_trail_whodunnit
+  before_filter :force_fill_in_wizard_form
 
   around_filter :set_time_zone
 
@@ -251,12 +253,17 @@ class ApplicationController < ActionController::Base
   end
 
   def stored_url_for(resource_or_scope)
-    redirect_url = params[:return_to] || session[:user_return_to] || root_path
+    redirect_url = session[:user_return_to].presence || params[:return_to].presence || root_path
     session[:user_return_to] = session[:return_to] = nil
     redirect_url
   end
 
   def after_sign_in_path_for(resource)
+    force_profile = params[:user] ? params[:user][:force_profile] : nil
+    if force_profile.present? && force_profile != 'default' && resource.send("get_#{force_profile}_profile").try(:onboarding?) && !resource.send("get_#{force_profile}_profile").enabled?
+      session[:after_onboarding_path] = session[:user_return_to]
+      session[:user_return_to] = send("edit_dashboard_#{force_profile}_path")
+    end
     url = stored_url_for(resource)
     url = url_without_authentication_token(url) if url.include?("token")
     url = add_login_token_to_url(url, resource) if redirect_to_different_host?(url)
@@ -565,6 +572,18 @@ class ApplicationController < ActionController::Base
 
   def date_time_handler
     @date_time_handler ||= DateTimeHandler.new
+  end
+
+  def force_fill_in_wizard_form
+    if PlatformContext.current.instance.try(:force_fill_in_wizard_form?) && current_user && !session[:instance_admin_as_user]
+      if current_user.seller_profile && current_user.companies.none?
+        flash[:error] = t('flash_messages.authorizations.not_filled_form')
+        redirect_to PlatformContext.current.instance.transactable_types.first.wizard_path
+      elsif current_user.buyer_profile && !current_user.buyer_profile.valid?
+        flash[:error] = t('flash_messages.authorizations.not_filled_form')
+        redirect_to dashboard_profile_path
+      end
+    end
   end
 
 end

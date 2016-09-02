@@ -3,7 +3,7 @@ class LineItemDrop < BaseDrop
 
   attr_reader :line_item
 
-  delegate :name, :quantity, :unit_price, to: :line_item
+  delegate :name, :quantity, :unit_price, :created_at, to: :line_item
 
   def initialize(line_item)
     @line_item = line_item
@@ -11,6 +11,10 @@ class LineItemDrop < BaseDrop
 
   def formatted_unit_price
     humanized_money_with_cents_and_symbol(@line_item.unit_price)
+  end
+
+  def formatted_total_price
+    humanized_money_with_cents_and_symbol(@line_item.total_price)
   end
 
   def net_price

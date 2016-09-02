@@ -9,7 +9,7 @@
   - followed = event.followed
   - body = event.description
   - header_image = header_image_for_event(event)
-  - title = link_to event.name, followed, target: target
+  - title = link_to_activity_feed_object event.name, followed, target: target
 
 %section
   %article.status-a{ class: ('status-update' if status_update?(event.event)) }

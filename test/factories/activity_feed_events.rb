@@ -5,3 +5,4 @@ FactoryGirl.define do
     event_source { FactoryGirl.create(:project) }
   end
 end
+

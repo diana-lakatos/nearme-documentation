@@ -120,7 +120,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     end
 
     should "track and redirect a host to the Manage Guests page when they cancel a booking" do
-      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::HostCancelled, @reservation.id)
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::ListerCancelled, @reservation.id)
 
       @reservation.confirm # Must be confirmed before can be cancelled
 

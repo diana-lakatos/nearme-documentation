@@ -1,16 +1,17 @@
-= simple_form_for [:dashboard, @transactable_type, @project], html: { class: 'form-a project-form-controller' } do |f|
+= simple_form_for @transactable, url: form_url_to_project(@transactable_type, @transactable), html: { class: 'form-a project-form-controller' } do |f|
   -# needed for photo uploader to work correctly
   = f.input :id, as: :hidden
   .fields
     - if current_user.id == f.object.creator_id
       = f.input :name, required: true, input_html: { maxlength: 140 }
 
-      = f.input :summary, as: :text, required: true, input_html: { maxlength: 140, cols: 40, rows: 4 }
+      = f.simple_fields_for :properties, f.object.properties do |properties_form|
+        = properties_form.input :summary, required: true, as: :text, input_html: { maxlength: 140 }
 
     = f.input :description, as: :text, required: true, input_html: { maxlength: 5000, cols: 40, rows: 8 }
 
     = f.association :topics, as: :select, input_html: { multiple: true, class: 'selectize', data: { placeholder: t(:topics, scope: [:simple_form, :placeholders, :activity_feed]) } }, wrapper_html: { class: 'topics' }, required: true
-    = f.association :groups, as: :select, collection: [@project.groups, current_user.group_collaborated].flatten, input_html: { multiple: true, class: 'selectize', data: { placeholder: t('simple_form.placeholders.defaults.group_ids') } }
+    = f.association :groups, as: :select, collection: [@transactable.groups, current_user.group_collaborated].flatten, input_html: { multiple: true, class: 'selectize', data: { placeholder: t('simple_form.placeholders.defaults.group_ids') } }
 
     %fieldset.media-group.sep
       %legend
@@ -68,7 +69,7 @@
     - if current_user.id == f.object.creator_id
       = f.input :seek_collaborators, as: :switch, wrapper_html: { class: 'sep' }
 
-    - if (current_user.id == f.object.creator_id ? @project.project_collaborators : current_user.project_collaborators.where(project: f.object)).count > 0
+    - if (current_user.id == f.object.creator_id ? @transactable.transactable_collaborators : current_user.transactable_collaborators.where(transactable: f.object)).count > 0
       %table.collaborators-listing-a
         %thead
           %tr
@@ -79,7 +80,7 @@
             %th
               = t :actions
         %tbody
-          = render current_user.id == f.object.creator_id ? @project.project_collaborators : current_user.project_collaborators.find_by(project: f.object)
+          = render partial: 'dashboard/company/transactable_collaborators/transactable_collaborator', collection: (current_user.id == f.object.creator_id ? @transactable.transactable_collaborators : current_user.transactable_collaborators.find_by(transactable: f.object))
 
     - if current_user.id == f.object.creator_id
       #new_collaborators

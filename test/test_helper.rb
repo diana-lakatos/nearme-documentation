@@ -144,7 +144,7 @@ ActiveSupport::TestCase.class_eval do
   def set_authentication_header(user = nil)
     user ||= FactoryGirl.create(:authenticated_user)
     user.ensure_authentication_token!
-    request.headers['UserAuthorization'] = @user.authentication_token
+    request.headers['UserAuthorization'] = user.authentication_token
   end
 
   def assert_log_triggered(*args)

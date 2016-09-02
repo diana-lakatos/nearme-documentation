@@ -11,7 +11,7 @@ class UserBlogPostDrop < BaseDrop
   #   post author's biography
   # published_at
   #   date when post was published
-  delegate :title, :previous_blog_post, :next_blog_post, :author_biography, :published_at, to: :blog_post
+  delegate :title, :previous_blog_post, :next_blog_post, :author_biography, :published_at, :user, to: :blog_post
 
   def initialize(blog_post)
     @blog_post = blog_post
