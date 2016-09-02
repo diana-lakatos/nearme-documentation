@@ -26,7 +26,11 @@ class TransactableCollaboratorsController < ApplicationController
     transactable_collaboration = @transactable.transactable_collaborators.for_user(current_user).find(params[:id])
     transactable_collaboration.update_attribute(:user_id, current_user.id) unless transactable_collaboration.approved_by_owner_at.present?
     transactable_collaboration.approve_by_user!
-    redirect_to profile_path(current_user, anchor: :transactables), notice: t('collaboration_accepted')
+    @collaborators_count = @transactable.reload.transactable_collaborators.approved.count
+    respond_to do |format|
+      format.js { render :collaborators_button }
+      format.html { redirect_to profile_path(current_user, anchor: :transactables), notice: t('collaboration_accepted') }
+    end
   end
 
   protected
