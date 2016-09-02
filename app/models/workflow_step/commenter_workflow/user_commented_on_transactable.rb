@@ -11,6 +11,7 @@ class WorkflowStep::CommenterWorkflow::UserCommentedOnTransactable < WorkflowSte
   def data
     {
       user: @user,
+      commenter: @user,
       transactable: @commentable
     }
   end

@@ -11,6 +11,7 @@ class WorkflowStep::CommenterWorkflow::UserCommentedOnGroup < WorkflowStep::Comm
   def data
     {
       user: @user,
+      commenter: @user,
       group: @commentable
     }
   end

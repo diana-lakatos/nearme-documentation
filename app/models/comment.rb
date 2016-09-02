@@ -46,8 +46,8 @@ class Comment < ActiveRecord::Base
       WorkflowStep::CommenterWorkflow::UserCommentedOnTransactable
     when "Group"
       WorkflowStep::CommenterWorkflow::UserCommentedOnGroup
-    when 'User'
-      WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate
+    when 'ActivityFeedEvent'
+      WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate if commentable.event_source_type == 'UserStatusUpdate'
     end
     WorkflowStepJob.perform(klass, self.id) if klass.present?
     true

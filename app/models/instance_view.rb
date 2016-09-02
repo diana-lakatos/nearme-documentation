@@ -63,7 +63,13 @@ class InstanceView < ActiveRecord::Base
     'vendor_approval_mailer/notify_host_of_listing_questioned',
     'vendor_approval_mailer/notify_host_of_user_approval',
     'user_mailer/notify_about_wrong_phone_number',
-    'user_mailer/notify_about_unread_messages'
+    'user_mailer/notify_about_unread_messages',
+    'user_mailer/user_commented_on_group',
+    'user_mailer/user_commented_on_transactable',
+    'user_mailer/user_commented_on_user_update',
+    'user_mailer/user_followed_transactable',
+    'user_mailer/user_followed_user',
+    'user_mailer/user_promoted_to_instance_admin_email'
   ].sort.freeze
 
   DEFAULT_SMS_TEMPLATES_PATHS = [

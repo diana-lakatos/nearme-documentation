@@ -11,6 +11,7 @@ class WorkflowStep::FollowerWorkflow::UserFollowedTransactable < WorkflowStep::F
   def data
     {
       user: @user,
+      follower_user: @user,
       transactable: @followed
     }
   end

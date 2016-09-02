@@ -11,7 +11,7 @@ class WorkflowStep::FollowerWorkflow::BaseStep < WorkflowStep::BaseStep
   end
 
   def should_be_processed?
-    @activity_feed_subscription.present? && @followed.present?
+    @activity_feed_subscription.present?
   end
 
   def workflow_type
