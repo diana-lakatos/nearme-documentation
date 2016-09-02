@@ -70,6 +70,8 @@ class LongtailRakeHelper
             parsed_body['included'][index]['attributes']['price'] = transactable.action_type.pricings.first.price.to_s
             parsed_body['included'][index]['attributes']['photos'] = transactable.photos_metadata.try(:map) { |p| p['space_listing'] }
             parsed_body['included'][index]['attributes']['address'] = transactable.formatted_address
+            parsed_body['included'][index]['attributes']['latitude'] = transactable.latitude
+            parsed_body['included'][index]['attributes']['longitude'] = transactable.longitude
             transactable.properties.to_h.each do |k, v|
               parsed_body['included'][index]['attributes'][k] = v
             end
