@@ -5,7 +5,7 @@ class WorkflowStep::FollowerWorkflow::UserFollowedTransactable < WorkflowStep::F
   end
 
   def collaborators
-    @followed.approved_transactable_collaborators
+    @followed.collaborators_email_recipients
   end
 
   def data
