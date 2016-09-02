@@ -40,21 +40,24 @@
           <dt>Approx. Time to Complete</dt>
           <dd>{{ transactable.properties.estimation }}</dd>
         </dl>
-
-        <h4>Description</h4>
-        {% if transactable.description.size > 350 %}
-           <div data-shorten-description>
-            <p data-description>{{ transactable.description | slice: 0, 350 }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
-            <div style='display: none;'  class="rest_of_text">{{ transactable.description | slice: 350, transactable.description.size }}</div>
-          </div>
-        {% else %}
-          <p>{{ transactable.description }}</p>
-        {% endif %}
       </div>
       <div class="col-md-4">
         {% include 'dashboard/company/transactables/client_actions.html' %}
       </div>
     </div>
+
+    {% if transactable.description != blank %}
+        <hr>
+        <h4>Description:</h4>
+        {% if transactable.description.size > 350 %}
+           <div data-shorten-description>
+            <p data-description>{{ transactable.description | slice: 0, 350 | nl2br }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
+            <div style='display: none;'  class="rest_of_text">{{ transactable.description | slice: 350, transactable.description.size | nl2br }}</div>
+          </div>
+        {% else %}
+          <p>{{ transactable.description | nl2br }}</p>
+        {% endif %}
+    {% endif %}
 
     {% if current_status == "pending" %}
       {% assign transactable_collaborators = transactable.approved_transactable_collaborators %}
