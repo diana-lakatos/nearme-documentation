@@ -1,6 +1,6 @@
 class WorkflowStep::GroupWorkflow::BaseStep < WorkflowStep::BaseStep
 
-  def initialize
+  def initialize(membership_id)
     @membership = GroupMember.find_by(id: membership_id)
     @group = @membership.try(:group)
     @user = @membership.try(:user)
