@@ -88,7 +88,8 @@ class LongtailRakeHelper
 
     def page_content
       %Q{
-  {% cache_for data_source_last_update, current_path %}
+  {% assign cache_key = data_source_last_update | append: current_path %}
+  {% cache_for cache_key, page %}
     {% assign dsc = @data_source_contents.first.json_content %}
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
