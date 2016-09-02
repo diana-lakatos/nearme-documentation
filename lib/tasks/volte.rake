@@ -67,8 +67,8 @@ namespace :volte do
       setup.set_theme_options
       setup.create_content_holders
       setup.create_liquid_views
-      setup.create_mailers
-      setup.create_smses
+      # setup.create_mailers
+      # setup.create_smses
       setup.create_pages
       setup.create_translations
 

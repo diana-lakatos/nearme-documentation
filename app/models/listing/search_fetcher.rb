@@ -53,7 +53,7 @@ class Listing::SearchFetcher
       end
     end
 
-    @listings_scope = @listings_scope.where('transactables.fixed_price_cents >= ? AND transactables.fixed_price_cents <= ?', @filters[:price][:min].to_i * 100, @filters[:price][:max].to_i * 100) if @filters[:price] && !@filters[:price][:max].to_i.zero?
+    @listings_scope = @listings_scope.joins("inner join transactable_action_types tat ON tat.id = transactables.action_type_id inner join transactable_pricings tp ON tp.action_id = tat.id").where('tp.price_cents >= ? AND tp.price_cents <= ?', @filters[:price][:min].to_i * 100, @filters[:price][:max].to_i * 100).distinct if @filters[:price] && !@filters[:price][:max].to_i.zero?
 
     # Date pickers
     if availability_filter?
