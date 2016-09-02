@@ -2,7 +2,7 @@ class PageDrop < BaseDrop
 
   attr_reader :page
 
-  delegate :slug, to: :page
+  delegate :slug, :updated_at, to: :page
 
   def initialize(page)
     @page = page

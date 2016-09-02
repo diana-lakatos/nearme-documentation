@@ -182,14 +182,14 @@ class LongtailRakeHelper
                   Showing <span class="no-of-listings"> {{ dsc.data.first.relationships.items.data.count }} </span> results for: <strong> {{  dsc.data.first.attributes.name }} </strong>
                 </h4>
                 <p> Related storage listings:
-                {% for related_storage in dsc.data.first.relationships.popular_searches.data %}
-                  {% for included_link in dsc.included %}
-                    {% if included_link.id == related_storage.id %}
-                      <a class="selected-location" href="{{ included_link.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp">{{ included_link.attributes.highlighted }}</a>
-                      {% break %}
-                    {% endif %}
+                  {% for similar_storage in dsc.data.first.relationships.similar_searches.data %}
+                    {% for included_link in dsc.included %}
+                      {% if included_link.id == similar_storage.id %}
+                        <li class="lux-search-listings-option"><a href="{{ included_link.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp"><span class="selected-location">{{ included_link.attributes.highlighted }}</span></a></li>
+                        {% break %}
+                      {% endif %}
+                    {% endfor %}
                   {% endfor %}
-                {% endfor %}
                 </p>
                 <ol class="breadcrumb center ">
                   <li><a href="/?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp"><i class="fa fa-home" aria-hidden="true"></i></a></li>
@@ -210,7 +210,7 @@ class LongtailRakeHelper
                               <div class="carousel" id="location-gallery-{{ listing.attributes.guid }}" data-interval="false">
                                 <div class="carousel-inner">
                                   {% for photo in listing.attributes.photos %}
-                                    <div class="item">
+                                    <div class="item" {% if forloop.index == 1 %}style="display: block;"{% endif %}>
                                       <a href="{{ listing.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp"><img src="{{ photo }}" alt="{{ listing.attributes.name }}"></a>
                                     </div>
                                   {% endfor %}
@@ -283,10 +283,11 @@ class LongtailRakeHelper
                           Other storage searches in <span class="selected-location">{{ dsc.data.first.attributes.category }}</span>:
                         </h4>
                         <ul class="lux-search-listings">
-                          {% for similar_storage in dsc.data.first.relationships.similar_searches.data %}
+
+                          {% for related_storage in dsc.data.first.relationships.popular_searches.data %}
                             {% for included_link in dsc.included %}
-                              {% if included_link.id == similar_storage.id %}
-                                <li class="lux-search-listings-option"><a href="{{ included_link.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp"><span class="selected-location">{{ included_link.attributes.highlighted }}</span></a></li>
+                              {% if included_link.id == related_storage.id %}
+                                <a class="selected-location" href="{{ included_link.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp">{{ included_link.attributes.highlighted }}</a>
                                 {% break %}
                               {% endif %}
                             {% endfor %}
