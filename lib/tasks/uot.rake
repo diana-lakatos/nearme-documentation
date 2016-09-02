@@ -203,7 +203,7 @@ namespace :uot do
           name: 'workplace_type',
           label: 'Workplace Type',
           attribute_type: 'string',
-          html_tag: 'check_box_list',
+          html_tag: 'radio_buttons',
           required: "1",
           valid_values: ["Online", "On Site"],
           public: true,
