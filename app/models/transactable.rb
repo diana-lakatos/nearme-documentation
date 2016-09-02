@@ -827,6 +827,10 @@ class Transactable < ActiveRecord::Base
     end
   end
 
+  def collaborators_email_recipients
+    approved_transactable_collaborators.select { |u| u.notification_preference.blank? || (u.notification_preference.email_frequency.eql?('immediately') && u.notification_preference.project_updates_enabled? ) }
+  end
+
   class NotFound < ActiveRecord::RecordNotFound; end
 end
 
