@@ -25,7 +25,7 @@ class WorkflowStep::ReservationWorkflow::BaseStep < WorkflowStep::BaseStep
   end
 
   def collaborators
-    transactable.try(:collaborating_users)
+    transactable.try(:collaborators_email_recipients)
   end
 
   # reservation:
