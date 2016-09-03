@@ -13,7 +13,7 @@ class Utils::DefaultAlertsCreator::CollaboratorCreator < Utils::DefaultAlertsCre
   end
 
   def create_pending_approval_email!
-    create_alert!({associated_class: WorkflowStep::CollaboratorWorkflow::CollaboratorPendingApproval, name: 'notify transactable owner of pending request', path: 'transactable_mailer/pending_approval', subject: 'New request to join {{ transactable.name }}', alert_type: 'email', recipient_type: 'lister', delay: 2})
+    create_alert!({associated_class: WorkflowStep::CollaboratorWorkflow::CollaboratorPendingApproval, name: 'notify transactable owner of pending request', path: 'transactable_mailer/pending_approval', subject: 'New request to join {{ transactable.name }}', alert_type: 'email', recipient_type: 'lister', delay: 0})
   end
 
   def create_collaborator_approved_email!

@@ -1,13 +1,14 @@
 class WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate < WorkflowStep::CommenterWorkflow::BaseStep
 
   def lister
-    @commentable
+    @commentable.followed
   end
 
   def data
     {
       user: @user,
-      commented_user: @commentable
+      commenter: @user,
+      commented_user: lister
     }
   end
 

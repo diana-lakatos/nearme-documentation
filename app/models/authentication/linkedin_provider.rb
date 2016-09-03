@@ -25,6 +25,10 @@ class Authentication::LinkedinProvider < Authentication::BaseProvider
   def info
     begin
       @info ||= Info.new(connection.profile(fields: FIELDS))
+      original_image = LinkedinImageRetrieverService.new(token).retrieve_original_image
+      @info.image_url = original_image if original_image.present?
+
+      @info
     rescue LinkedIn::InvalidRequest
       @info ||= Info.new(OpenStruct.new(id: nil, first_name: nil, last_name: nil, headline: nil, picture_url: nil, public_profile_url: nil, location: nil))
     end

@@ -70,6 +70,8 @@ class LongtailRakeHelper
             parsed_body['included'][index]['attributes']['price'] = transactable.action_type.pricings.first.price.to_s
             parsed_body['included'][index]['attributes']['photos'] = transactable.photos_metadata.try(:map) { |p| p['space_listing'] }
             parsed_body['included'][index]['attributes']['address'] = transactable.formatted_address
+            parsed_body['included'][index]['attributes']['latitude'] = transactable.latitude
+            parsed_body['included'][index]['attributes']['longitude'] = transactable.longitude
             transactable.properties.to_h.each do |k, v|
               parsed_body['included'][index]['attributes'][k] = v
             end
@@ -86,7 +88,8 @@ class LongtailRakeHelper
 
     def page_content
       %Q{
-  {% cache_for data_source_last_update, current_path %}
+  {% assign cache_key = data_source_last_update | append: current_path %}
+  {% cache_for cache_key, page %}
     {% assign dsc = @data_source_contents.first.json_content %}
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -180,14 +183,14 @@ class LongtailRakeHelper
                   Showing <span class="no-of-listings"> {{ dsc.data.first.relationships.items.data.count }} </span> results for: <strong> {{  dsc.data.first.attributes.name }} </strong>
                 </h4>
                 <p> Related storage listings:
-                {% for related_storage in dsc.data.first.relationships.popular_searches.data %}
-                  {% for included_link in dsc.included %}
-                    {% if included_link.id == related_storage.id %}
-                      <a class="selected-location" href="{{ included_link.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp">{{ included_link.attributes.highlighted }}</a>
-                      {% break %}
-                    {% endif %}
+                  {% for similar_storage in dsc.data.first.relationships.similar_searches.data %}
+                    {% for included_link in dsc.included %}
+                      {% if included_link.id == similar_storage.id %}
+                        <li class="lux-search-listings-option"><a href="{{ included_link.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp"><span class="selected-location">{{ included_link.attributes.highlighted }}</span></a></li>
+                        {% break %}
+                      {% endif %}
+                    {% endfor %}
                   {% endfor %}
-                {% endfor %}
                 </p>
                 <ol class="breadcrumb center ">
                   <li><a href="/?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp"><i class="fa fa-home" aria-hidden="true"></i></a></li>
@@ -208,7 +211,7 @@ class LongtailRakeHelper
                               <div class="carousel" id="location-gallery-{{ listing.attributes.guid }}" data-interval="false">
                                 <div class="carousel-inner">
                                   {% for photo in listing.attributes.photos %}
-                                    <div class="item">
+                                    <div class="item" {% if forloop.index == 1 %}style="display: block;"{% endif %}>
                                       <a href="{{ listing.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp"><img src="{{ photo }}" alt="{{ listing.attributes.name }}"></a>
                                     </div>
                                   {% endfor %}
@@ -281,10 +284,11 @@ class LongtailRakeHelper
                           Other storage searches in <span class="selected-location">{{ dsc.data.first.attributes.category }}</span>:
                         </h4>
                         <ul class="lux-search-listings">
-                          {% for similar_storage in dsc.data.first.relationships.similar_searches.data %}
+
+                          {% for related_storage in dsc.data.first.relationships.popular_searches.data %}
                             {% for included_link in dsc.included %}
-                              {% if included_link.id == similar_storage.id %}
-                                <li class="lux-search-listings-option"><a href="{{ included_link.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp"><span class="selected-location">{{ included_link.attributes.highlighted }}</span></a></li>
+                              {% if included_link.id == related_storage.id %}
+                                <a class="selected-location" href="{{ included_link.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp">{{ included_link.attributes.highlighted }}</a>
                                 {% break %}
                               {% endif %}
                             {% endfor %}

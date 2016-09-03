@@ -448,6 +448,7 @@ namespace :project_to_transactable do
 
           ProjectCollaborator.where(project: project).find_each do |project_collaborator|
             transactable_collaborator = TransactableCollaborator.new
+            transactable_collaborator.instance_id = instance.id
             transactable_collaborator.user_id = project_collaborator.user_id
             transactable_collaborator.transactable_id = transactable.id
             transactable_collaborator.approved_by_owner_at = project_collaborator.approved_by_owner_at

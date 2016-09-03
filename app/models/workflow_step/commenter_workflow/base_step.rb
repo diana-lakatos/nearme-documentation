@@ -19,7 +19,7 @@ class WorkflowStep::CommenterWorkflow::BaseStep < WorkflowStep::BaseStep
   end
 
   def should_be_processed?
-    @comment.present? && @commentable.present?
+    @comment.present? && @commentable.present?# && @user.id != lister.id
   end
 
 end

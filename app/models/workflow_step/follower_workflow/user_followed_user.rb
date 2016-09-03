@@ -7,6 +7,7 @@ class WorkflowStep::FollowerWorkflow::UserFollowedUser < WorkflowStep::FollowerW
   def data
     {
       user: @user,
+      follower_user: @user,
       followed_user: @followed
     }
   end

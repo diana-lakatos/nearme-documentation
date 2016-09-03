@@ -696,6 +696,10 @@ class Transactable < ActiveRecord::Base
     transactable_collaborators.approved.where(user: user).exists?
   end
 
+  def collaborators_email_recipients
+    approved_transactable_collaborators.includes(user: :notification_preference).select { |tc| u = tc.user; u.notification_preference.blank? || (u.notification_preference.email_frequency.eql?('immediately') && u.notification_preference.project_updates_enabled? ) }
+  end
+
   private
 
   def check_expenses
@@ -825,10 +829,6 @@ class Transactable < ActiveRecord::Base
       rescue
       end
     end
-  end
-
-  def collaborators_email_recipients
-    approved_transactable_collaborators.select { |u| u.notification_preference.blank? || (u.notification_preference.email_frequency.eql?('immediately') && u.notification_preference.project_updates_enabled? ) }
   end
 
   class NotFound < ActiveRecord::RecordNotFound; end
