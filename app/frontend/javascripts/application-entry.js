@@ -649,10 +649,8 @@ DNM.registerInitializer(function(){
     }
 
     require.ensure(['socialite-js/socialite.js', './new_ui/modules/social_buttons'], function(require){
-        var
-            SocialButtons = require('./new_ui/modules/social_buttons');
-
-        window.Socialite = require('socialite-js/socialite.js');
+        var SocialButtons = require('./new_ui/modules/social_buttons');
+        require('socialite-js/socialite.js');
 
         return new SocialButtons(wrapper, window.Socialite);
     });
