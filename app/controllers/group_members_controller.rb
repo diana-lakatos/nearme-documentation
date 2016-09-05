@@ -11,6 +11,7 @@ class GroupMembersController < ApplicationController
 
     if @group.public?
       @membership.update(approved_by_owner_at: Time.zone.now)
+      WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberJoined, @membership.id)
     else
       WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberPendingApproval, @membership.id)
     end
