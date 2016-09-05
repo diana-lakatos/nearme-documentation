@@ -5,6 +5,6 @@ class AddOrderItToRecurringBookingPeriods < ActiveRecord::Migration
     add_column :recurring_booking_periods, :state, :string
 
     RecurringBookingPeriod.reset_column_information
-    RecurringBookingPeriod.update_all("order_id = recurring_booking_id")
+    RecurringBookingPeriod.unscoped.where(order_id: nil).update_all("order_id = recurring_booking_id")
   end
 end
