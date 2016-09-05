@@ -21,9 +21,7 @@ class InstanceMailer < ActionMailer::Base
     subject  = options.delete(:subject)
     reply_to = options.delete(:reply_to)
     # do not change name of this var :) if you change it to @user, it will overwrite variables set by workflow step :)
-    # @user_to_which_email_will_be_sent  = User.with_deleted.find_by_email(to.kind_of?(Array) ? to.first : to)
-    #TODO temp fix for emails that were using above bug ;)
-    @user  = User.with_deleted.find_by_email(to.kind_of?(Array) ? to.first : to)
+    @user_to_which_email_will_be_sent = User.with_deleted.find_by_email(Array(to).first)
 
     @email_method = template
     custom_tracking_options  = (options.delete(:custom_tracking_options) || {}).reverse_merge({template: template, campaign: @email_method.split('/')[0].humanize})
