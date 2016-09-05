@@ -1,6 +1,6 @@
 {
   "name": "desksnearme",
-  "version": "10.1.0-326",
+  "version": "10.2.1-417",
   "homepage": "https://github.com/mdyd-dev/desksnearme",
   "private": true,
   "ignore": [
@@ -12,7 +12,7 @@
   ],
   "dependencies": {
     "jquery": "git@github.com:jquery/jquery-dist.git#~2.2.0",
-    "eonasdan-bootstrap-datetimepicker": "~4.17.37",
+    "eonasdan-bootstrap-datetimepicker": "4.17.37",
     "font-awesome": "~4.6.0",
     "bootstrap-sass": "~3.3.6",
     "swipebox": "~1.4.1",
