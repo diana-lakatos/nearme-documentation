@@ -62,6 +62,7 @@ module CustomAttributes
           end
 
           define_method(:#{@options[:store_accessor_name]}=) do |value|
+            value = value.to_h if CustomAttributes::CollectionProxy === value
             value = (value.presence || {}).with_indifferent_access
             if self.new_record?
               hash = self.custom_attributes.inject({}.with_indifferent_access) do |h, cust_attr_array|

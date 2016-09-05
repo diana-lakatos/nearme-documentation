@@ -47,7 +47,11 @@ class Transactable::Pricing < ActiveRecord::Base
   scope :by_unit, -> (by_unit) { where(unit: by_unit) if by_unit.present? }
 
   def order_class
-    transactable_type_pricing.order_class_name.constantize
+    if transactable_type_pricing
+      transactable_type_pricing.order_class_name.constantize
+    else
+      default_order_class
+    end
   end
 
   def adjusted_number_of_units
@@ -180,6 +184,20 @@ class Transactable::Pricing < ActiveRecord::Base
     end
   end
 
+  def default_order_class
+    case action.type
+    when "Transactable::SubscriptionBooking"
+      RecurringBooking
+    when "Transactable::PurchaseAction"
+      Purchase
+    else
+      if action.transactable_type_action_type.transactable_type.try(:skip_payment_authorization?)
+        DelayedReservation
+      else
+        Reservation
+      end
+    end
+  end
 
 end
 
