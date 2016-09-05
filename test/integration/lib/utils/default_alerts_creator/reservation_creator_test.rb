@@ -240,7 +240,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         assert_not_contains "translation missing:", mail.html_part.body
       end
 
-      should 'include nearme listings when it is presentxxx' do
+      should 'include nearme listings when it is present' do
         @listing = FactoryGirl.create(:transactable)
         @listing2 = FactoryGirl.create(:transactable, :fixed_price)
         User.any_instance.stubs(:listings_in_near).returns([@listing, @listing2])

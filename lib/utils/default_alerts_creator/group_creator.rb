@@ -7,6 +7,8 @@ class Utils::DefaultAlertsCreator::GroupCreator < Utils::DefaultAlertsCreator::W
     create_notify_user_approved_email!
     create_notify_members_of_new_member!
 
+    create_notify_members_of_new_member_in_public_group!
+
     create_member_declined_email!
     create_member_has_quit_email!
 
@@ -26,7 +28,11 @@ class Utils::DefaultAlertsCreator::GroupCreator < Utils::DefaultAlertsCreator::W
   end
 
   def create_notify_members_of_new_member!
-    create_alert!({associated_class: WorkflowStep::GroupWorkflow::MemberApproved, name: 'notify members of new member', path: 'group_mailer/notify_members_of_new_member', subject: "{{ user.first_name }} has been approved as a group member on {{ group.name }}", alert_type: 'email', recipient_type: 'enquirer', bcc_type: 'members'})
+    create_alert!({associated_class: WorkflowStep::GroupWorkflow::MemberApproved, name: 'notify members of new member', path: 'group_mailer/notify_members_of_new_member', subject: "{{ user.first_name }} has been approved as a group member on {{ group.name }}", alert_type: 'email', recipient_type: 'lister', bcc_type: 'members'})
+  end
+
+  def create_notify_members_of_new_member_in_public_group!
+    create_alert!({associated_class: WorkflowStep::GroupWorkflow::MemberJoined, name: 'notify members of new member in public group', path: 'group_mailer/notify_members_of_new_member_in_public_group', subject: "{{ user.first_name }} has joined {{ group.name }}", alert_type: 'email', recipient_type: 'lister', bcc_type: 'members'})
   end
 
   def create_member_accepts_invitation_email!

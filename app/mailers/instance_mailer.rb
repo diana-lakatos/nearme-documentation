@@ -20,7 +20,11 @@ class InstanceMailer < ActionMailer::Base
     from = options.delete(:from)
     subject  = options.delete(:subject)
     reply_to = options.delete(:reply_to)
+    # do not change name of this var :) if you change it to @user, it will overwrite variables set by workflow step :)
+    # @user_to_which_email_will_be_sent  = User.with_deleted.find_by_email(to.kind_of?(Array) ? to.first : to)
+    #TODO temp fix for emails that were using above bug ;)
     @user  = User.with_deleted.find_by_email(to.kind_of?(Array) ? to.first : to)
+
     @email_method = template
     custom_tracking_options  = (options.delete(:custom_tracking_options) || {}).reverse_merge({template: template, campaign: @email_method.split('/')[0].humanize})
 
@@ -80,10 +84,10 @@ class InstanceMailer < ActionMailer::Base
   def event_tracker
     @mixpanel_wrapper ||= AnalyticWrapper::MixpanelApi.new(
       AnalyticWrapper::MixpanelApi.mixpanel_instance(),
-      :current_user       => @user,
+      :current_user       => @user_to_which_email_will_be_sent,
       :request_details    => { current_instance_id: @platform_context.instance.id }
     )
-    @event_tracker ||= Rails.application.config.event_tracker.new(@mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(@user))
+    @event_tracker ||= Rails.application.config.event_tracker.new(@mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(@user_to_which_email_will_be_sent))
     @event_tracker
   end
 

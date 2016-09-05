@@ -358,7 +358,7 @@ namespace :litvault do
       end
 
       def get_templates_from_dir(template_folder, defaults = {})
-        template_files = Dir.entries(template_folder).select{ |e| File.file? File.join(template_folder, e) }
+        template_files = Dir.entries(template_folder).select{ |e| File.file?(File.join(template_folder, e)) && e != '.keep' }
         template_files.map! { |filename| load_file_with_yaml_front_matter(File.join(template_folder, filename), defaults) }
       end
 

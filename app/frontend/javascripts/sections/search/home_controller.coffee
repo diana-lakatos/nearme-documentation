@@ -25,7 +25,7 @@ module.exports = class HomeController extends SearchController
         @initializeAutocomplete(geo_input)
         @initializeQueryField(geo_input)
 
-    if @queryField.length > 0 && @form.find('.geolocation').data().enableGeoLocalization
+    if @queryField.length > 0 && @form.find('.geolocation').data('enableGeoLocalization')
       _.defer(=>@geolocateMe())
 
   assignFormParams: (paramsHash) ->

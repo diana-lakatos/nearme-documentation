@@ -5,7 +5,7 @@ class DataSourceContent < ActiveRecord::Base
 
   belongs_to :data_source
 
-  has_many :page_data_source_contents
+  has_many :page_data_source_contents, dependent: :destroy
 
   def to_liquid
     @data_source_content_drop ||= DataSourceContentDrop.new(self)
