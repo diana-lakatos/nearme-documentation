@@ -449,6 +449,10 @@ class InstanceView < ActiveRecord::Base
       is_partial: true,
       date_start: 'string',
       date_end: 'string'
+    },
+    'dashboard/offers/offer' => {
+      is_partial: true,
+      offer: 'OfferDrop'
     }
 
   }.sort.to_h.freeze
