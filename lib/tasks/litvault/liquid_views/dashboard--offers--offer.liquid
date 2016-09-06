@@ -1,3 +1,17 @@
+{% comment %}
+
+Add disabled custom attributes here as below
+
+{% form_for offer, url: '/dashboard/offers' %}
+  {% fields_for properties %}
+    {% input custom_1, form: properties, input_html-disabled: "true" %}
+
+    {% input custom_2, form: properties, input_html-disabled: "true" %}
+  {% endfields_for %}
+{% endform_for %}
+
+{% endcomment %}
+
 <header>
   <div class='row'>
     <div class='col-sm-7'>
