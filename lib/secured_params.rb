@@ -519,6 +519,7 @@ class SecuredParams
       :allow_action_rfq,
       :allow_no_action,
       :allow_custom_pricings,
+      :allow_drafts,
       :type,
       :confirm_reservations,
       pricings_attributes: nested(self.transactable_type_pricing),

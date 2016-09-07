@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160826004551) do
+ActiveRecord::Schema.define(version: 20160907133901) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1690,6 +1690,7 @@ ActiveRecord::Schema.define(version: 20160826004551) do
     t.boolean  "book_it_out"
     t.datetime "completed_at"
     t.boolean  "is_free_booking",                                           default: false
+    t.datetime "draft_at"
   end
 
   add_index "orders", ["billing_address_id"], name: "index_orders_on_billing_address_id", using: :btree
@@ -2919,6 +2920,7 @@ ActiveRecord::Schema.define(version: 20160826004551) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "confirm_reservations",                       default: true
+    t.boolean  "allow_drafts",                               default: false, null: false
   end
 
   add_index "transactable_type_action_types", ["instance_id", "transactable_type_id", "deleted_at"], name: "instance_tt_deleted_at_idx", using: :btree

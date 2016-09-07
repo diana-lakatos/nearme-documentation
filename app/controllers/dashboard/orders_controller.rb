@@ -47,6 +47,9 @@ class Dashboard::OrdersController < Dashboard::BaseController
 
   def update
     @order.checkout_update = true
+    @order.save_draft = true if params[:save_draft]
+    @order.cancel_draft = true if params[:cancel_draft]
+
     if @order.update_attributes(order_params)
       if @order.payment && @order.payment.express_checkout_payment? && @order.payment.express_checkout_redirect_url
         redirect_to @order.payment.express_checkout_redirect_url
@@ -126,7 +129,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
   end
 
   def order_scope
-    @order_scope ||= current_user.orders.active
+    @order_scope ||= current_user.orders.active_or_drafts
   end
 
   def find_order

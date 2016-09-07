@@ -3,7 +3,8 @@ class Offer < Order
   #validates :host_line_items, presence: true
   delegate :action, to: :transactable_pricing
 
-  after_update :activate!, if: :inactive?
+  before_update :set_draft_at
+  after_update :activate!, if: lambda { |record| self.inactive? && !(self.save_draft || self.cancel_draft) }
 
   has_many :host_line_items, as: :line_itemable
   has_many :recurring_booking_periods, dependent: :destroy, foreign_key: :order_id
@@ -161,5 +162,15 @@ class Offer < Order
 
   def to_liquid
     @offer_drop ||= OfferDrop.new(self)
+  end
+
+  def set_draft_at
+    if self.save_draft
+      self.draft_at = Time.now
+    else
+      self.draft_at = nil
+    end
+
+    true
   end
 end

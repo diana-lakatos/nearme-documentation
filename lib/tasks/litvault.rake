@@ -34,6 +34,7 @@ namespace :litvault do
       setup.create_translations
 
       setup.expire_cache
+      setup.create_dashboard_orders_tabs
     end
 
     puts "\nDone in #{time.round(2)}s\n\n"
@@ -341,6 +342,11 @@ namespace :litvault do
       CacheExpiration.send_expire_command 'Translation', instance_id: @instance.id
       CacheExpiration.send_expire_command 'CustomAttribute', instance_id: @instance.id
       Rails.cache.clear
+    end
+
+    def create_dashboard_orders_tabs
+      @instance.my_orders_tabs = %w(unconfirmed confirmed archived draft)
+      @instance.save
     end
 
     private
