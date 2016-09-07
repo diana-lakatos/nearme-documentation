@@ -214,6 +214,10 @@ namespace :litvault do
       @theme.blog_url = 'http://blog.com'
       @theme.linkedin_url = 'https://www.linkedin.com'
       @theme.updated_at = Time.now
+
+      @theme.remote_favicon_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/198/uploads/ckeditor/picture/data/2816/favicon.png'
+      @theme.remote_icon_retina_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/198/uploads/ckeditor/picture/data/2815/apple-touch-icon.png'
+
       @theme.save!
     end
 
@@ -229,6 +233,9 @@ namespace :litvault do
 
     def create_pages
       puts "\nCreating pages:"
+
+      @instance.theme.pages.destroy_all
+
       templates = get_templates_from_dir(File.join(@theme_path, 'pages'))
       templates.each do |template|
         create_page(template.name, template.body)
@@ -238,6 +245,8 @@ namespace :litvault do
 
     def create_content_holders
       puts "\nCreating content holders:"
+
+      @instance.theme.content_holders.destroy_all
 
       templates = get_templates_from_dir(File.join(@theme_path, 'content_holders'), {
         inject_pages: 'any_page',

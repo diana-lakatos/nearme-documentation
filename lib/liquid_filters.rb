@@ -339,6 +339,12 @@ module LiquidFilters
     user.default_wish_list.items.where(wishlistable_id: object.id, wishlistable_type: object.class_name).exists?
   end
 
+  def set_render_content_outside_container(object)
+    @context.registers[:action_view].instance_variable_set('@render_content_outside_container', true)
+
+    object
+  end
+
   def titleize(text)
     text.titleize
   end
