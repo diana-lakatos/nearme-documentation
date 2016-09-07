@@ -7,6 +7,8 @@ class WishListItemDrop < BaseDrop
   include ActionView::Helpers::NumberHelper
   include ActionView::Helpers::TagHelper
 
+  attr_reader :wishlistable
+
   def initialize(wish_list_item)
     @wish_list_item = wish_list_item
     @wishlistable = @wish_list_item.wishlistable
@@ -85,4 +87,3 @@ class WishListItemDrop < BaseDrop
   end
 
 end
-
