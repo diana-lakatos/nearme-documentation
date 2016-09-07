@@ -1,9 +1,9 @@
-{{ user.first_name }}, your booking has been declined
+{{ enquirer.first_name }}, your booking has been declined
 
 Your booking for '{{ listing.name }}' has been declined by the {{ listing.lessor }}.{% if recurring_booking.has_rejection_reason %} They said:
 
 {{ recurring_booking.rejection_reason }}{% endif %}
-{% if user.listings_in_near.size > 0 %}But we have you covered! Here are some alternatives, similar to the listing you tried to book:
+{% if lister.listings_in_near.size > 0 %}But we have you covered! Here are some alternatives, similar to the listing you tried to book:
 {% include 'reservation_mailer/listings_in_near.text' %}{% endif %}
 Search More {{ recurring_booking.bookable_noun_plural }}: {{ platform_context.host | append:listing.search_url_with_tracking | append:signature_for_tracking }}
 

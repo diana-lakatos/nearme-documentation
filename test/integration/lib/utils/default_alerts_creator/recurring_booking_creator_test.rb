@@ -290,4 +290,3 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
 
 
 end
-

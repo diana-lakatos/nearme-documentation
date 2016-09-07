@@ -1,4 +1,4 @@
-<h2>You got it, {{ user.first_name }}!</h2>
+<h2>You got it, {{ enquirer.first_name }}!</h2>
 
 <p>Your booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' has been confirmed! Here it is:</p>
 
@@ -6,7 +6,7 @@
 
   <div class="row">
     <strong style='display: inline-block;'>{{listing.lessor | capitalize}}</strong>
-    <span style="float: right;"><a href="{{ platform_context.host | append:listing.administrator.user_profile_url }}">{{ host.first_name }}</a></span>
+    <span style="float: right;"><a href="{{ platform_context.host | append:listing.administrator.user_profile_url }}">{{ lister.first_name }}</a></span>
   </div>
 
   <div class="row">

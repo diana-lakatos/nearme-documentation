@@ -83,7 +83,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreator < Utils::DefaultAlert
   end
 
   def notify_host_recurring_booking_rejected_email!
-    create_alert!({associated_class: WorkflowStep::RecurringBookingWorkflow::Rejected, name: 'notify_host_of_rejection', path: 'recurring_booking_mailer/notify_host_of_rejection', subject: "[{{platform_context.name}}] Can we help, {{user.first_name}}?", alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::RecurringBookingWorkflow::Rejected, name: 'notify_host_of_rejection', path: 'recurring_booking_mailer/notify_host_of_rejection', subject: "[{{platform_context.name}}] Can we help, {{lister.first_name}}?", alert_type: 'email', recipient_type: 'lister'})
   end
 
   def notify_host_recurring_booking_payment_overdue_email!
@@ -105,4 +105,3 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreator < Utils::DefaultAlert
   end
 
 end
-
