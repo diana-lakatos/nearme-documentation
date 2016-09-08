@@ -24,7 +24,7 @@
               %span.ico-mail
           - elsif field == "password" && !hide_password
             .password-holder.input-icon-holder
-              = f.input :password, label: false, placeholder: t('simple_form.placeholders.registration.password'), input_html: { tabindex: tab_index }
+              = f.input :password, label: false, placeholder: t('simple_form.placeholders.registration.password'), input_html: { tabindex: tab_index, autocomplete: 'new-password' }
               %span.ico-lock
           - elsif field == "phone"
             %div{'data-phone-fields-container' => true}
