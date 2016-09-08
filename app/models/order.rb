@@ -10,7 +10,7 @@ class Order < ActiveRecord::Base
   include Modelable
   include Payable
 
-  attr_accessor :skip_checkout_validation, :delivery_ids, :skip_try_to_activate, :checkout_update
+  attr_accessor :skip_checkout_validation, :delivery_ids, :skip_try_to_activate, :checkout_update, :save_draft, :cancel_draft
 
   store_accessor :settings, :validate_on_adding_to_cart, :skip_payment_authorization
 
@@ -75,12 +75,13 @@ class Order < ActiveRecord::Base
   scope :cart, -> { with_state(:inactive) }
   scope :complete, -> { without_state(:inactive) }
   scope :active, -> { without_state(:inactive) }
+  scope :active_or_drafts, -> { where('state != ? OR draft_at IS NOT NULL', 'inactive') }
   # TODO we should switch to use completed state instead of archived_at for Reservation
   # and fully switch to state machine
 
   # scope :archived, -> { active.where('archived_at IS NOT NULL') }
   # scope :not_archived, -> { active.where(archived_at: nil) }
-  scope :not_archived, -> { where("(orders.type != 'RecurringBooking' AND orders.state != 'inactive' AND orders.archived_at IS NULL) OR (orders.type = 'RecurringBooking' AND orders.state NOT IN ('inactive', 'cancelled_by_guest', 'cancelled_by_host', 'rejected', 'expired'))") }
+  scope :not_archived, -> { where("(orders.type != 'RecurringBooking' AND (orders.state != 'inactive' OR orders.draft_at IS NOT NULL) AND orders.archived_at IS NULL) OR (orders.type = 'RecurringBooking' AND (orders.state NOT IN ('inactive', 'cancelled_by_guest', 'cancelled_by_host', 'rejected', 'expired') OR (orders.state = 'inactive' AND orders.draft_at IS NOT NULL)))") }
   scope :archived, -> { where("(orders.type != 'RecurringBooking' AND orders.archived_at IS NOT NULL) OR (orders.type = 'RecurringBooking' AND orders.state IN ('rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest'))") }
   # we probably want new state - completed
   scope :reviewable, -> { where.not(archived_at: nil).confirmed }

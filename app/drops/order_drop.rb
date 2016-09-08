@@ -156,6 +156,14 @@ class OrderDrop < BaseDrop
     @order.properties
   end
 
+  def allows_draft?
+    @order.is_a?(Offer) && @order.try(:transactable).try(:action_type).try(:transactable_type_action_type).try(:allow_drafts) && @order.state == 'inactive'
+  end
+
+  def is_draft?
+    @order.draft_at.present? && @order.state == 'inactive'
+  end
+
   private
 
   def first_line_item
