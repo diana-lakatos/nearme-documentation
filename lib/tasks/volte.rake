@@ -9,58 +9,19 @@ namespace :volte do
     time = Benchmark.realtime do
 
       @instance = Instance.find(194)
-      # @instance.update_attributes(
-      #   split_registration: true,
-      #   enable_reply_button_on_host_reservations: true,
-      #   hidden_ui_controls: {
-      #     'main_menu/cta': 1,
-      #     'dashboard/offers': 1,
-      #     'dashboard/user_bids': 1,
-      #     'dashboard/host_reservations': 1,
-      #     'main_menu/my_bookings': 1
-      #   },
-      #   skip_company: true,
-      #   click_to_call: true,
-      #   wish_lists_enabled: true,
-      #   default_currency: 'USD',
-      #   default_country: 'United States',
-      #   force_accepting_tos: true,
-      #   user_blogs_enabled: true,
-      #   force_fill_in_wizard_form: true,
-        # test_twilio_consumer_key: 'ACc6efd025edf0bccc089965cdb7a63ed7',
-        # test_twilio_consumer_secret: '0bcda4577848ec9708905296efcf6aa3',
-      #   test_twilio_from_number: '+1 703-898-8300',
-      #   test_twilio_consumer_key: 'AC107ea702c0d8255b0afc2baff62c345c',
-      #   test_twilio_consumer_secret: 'df396dbe315d3e3d233ac76e49a1fabd',
-      #   twilio_consumer_key: 'AC107ea702c0d8255b0afc2baff62c345c',
-      #   twilio_consumer_secret: 'df396dbe315d3e3d233ac76e49a1fabd',
-      #   twilio_from_number: '+1 703-898-8300'
-        #TODO reenable for production
-        # linkedin_consumer_key: '78uvu99t7fxfcz',
-        # linkedin_consumer_secret: 'NGaQfcPmglHuaLOX'
-      # )
-      # @instance.create_documents_upload(
-      #   enabled: true,
-      #   requirement: 'mandatory'
-      # )
-      @instance.save
+      @instance.allowed_countries = ['Australia']
+      @instance.default_country = 'Australia'
+      @instance.allowed_currencies = ['AUD']
+      @instance.default_currency = 'AUD'
+      @instance.time_zone = 'Sydney'
+      @instance.force_accepting_tos = true
+      @instance.skip_company = true
+      @instance.save!
       @instance.set_context!
-
-      # @default_profile_type = InstanceProfileType.find(569)
-      # @instance_profile_type = InstanceProfileType.find(571)
-      # @instance_profile_type.update_columns(
-      #   onboarding: true,
-      #   create_company_on_sign_up: true,
-      #   show_categories: true,
-      #   category_search_type: 'AND',
-      #   searchable: true,
-      #   search_only_enabled_profiles: true
-      # )
 
       setup = VolteSetup.new(@instance, File.join(Rails.root, 'lib', 'tasks', 'volte'))
       setup.create_transactable_types!
       setup.create_custom_attributes!
-      setup.create_custom_model!
       setup.create_categories!
       setup.create_or_update_form_components!
 
@@ -84,23 +45,405 @@ namespace :volte do
     def initialize(instance, theme_path)
       @instance = instance
       @theme_path = theme_path
-    end
-
-    def create_custom_model!
+      @default_profile_type = InstanceProfileType.find(566)
     end
 
     def create_transactable_types!
+      @instance.transactable_types.where(name: 'Fashion Item').destroy_all
+
+      transactable_type = @instance.transactable_types.where(name: 'Item').first_or_initialize
+      transactable_type.attributes = {
+        name: 'Item',
+        slug: 'item',
+        show_path_format: '/:transactable_type_id/:id',
+
+        default_search_view: 'list',
+        skip_payment_authorization: true,
+        hours_for_guest_to_confirm_payment: 24,
+        single_transactable: false,
+        show_price_slider: true,
+        skip_location: false,
+        show_categories: true,
+        category_search_type: 'OR',
+        bookable_noun: 'Item',
+        enable_photo_required: true,
+        lessor: 'Lender',
+        lessee: 'Borrower',
+        enable_reviews: true,
+        require_transactable_during_onboarding: true
+      }
+
+      transactable_type.time_based_booking ||= transactable_type.build_time_based_booking(
+        enabled: true,
+        cancellation_policy_enabled: "1",
+        cancellation_policy_hours_for_cancellation: 24, #RT to confirm
+        cancellation_policy_penalty_percentage: 30, #RT to confirm
+        service_fee_guest_percent: 0,
+        service_fee_host_percent: 15,
+      )
+
+      transactable_type.time_based_booking.pricings.where(unit: 'day', number_of_units: 4).first_or_initialize
+      transactable_type.time_based_booking.pricings.where(unit: 'day', number_of_units: 8).first_or_initialize
+      transactable_type.time_based_booking.pricings.where(unit: 'day', number_of_units: 30).first_or_initialize
+
+      transactable_type.save!
+      transactable_type.time_based_booking.save!
+
+      fc = transactable_type.reservation_type.form_components.first
+      fc.name = 'Request Item'
+      fc.form_fields = [{'reservation' => 'payment_documents'}]
+      fc.save
     end
 
 
     def create_custom_attributes!
+      @transactable_type = TransactableType.first
+
+      create_custom_attribute(@transactable_type, {
+        name: 'item_type',
+        label: 'Item Type',
+        attribute_type: 'string',
+        html_tag: 'select',
+        required: "0",
+        public: true,
+        valid_values: ['Dress', 'Bag', 'Milinery', 'Outerwear', 'Accessories'],
+        searchable: true,
+        input_html_options: { 'data-show-field' => 'value-dependent' }
+      })
+
+      create_custom_attribute(@transactable_type, {
+        name: 'item_style_bag',
+        label: 'Item Style',
+        attribute_type: 'string',
+        html_tag: 'select',
+        required: "0",
+        public: true,
+        valid_values: ['Clutch', 'Hobo', 'Mini bags', 'Satchels', 'Shoulder Bags', 'Totes', 'Wallets'],
+        searchable: true,
+        wrapper_html_options: { 'data-visibility-dependent' => 'bag' }
+      })
+
+      create_custom_attribute(@transactable_type, {
+        name: 'item_style_milinery',
+        label: 'Item Style',
+        attribute_type: 'string',
+        html_tag: 'select',
+        required: "0",
+        public: true,
+        valid_values: ['Fascinator', 'Hat'],
+        searchable: true,
+        wrapper_html_options: { 'data-visibility-dependent' => 'milinery' }
+      })
+
+      create_custom_attribute(@transactable_type, {
+        name: 'item_style_outerwear',
+        label: 'Item Style',
+        attribute_type: 'string',
+        html_tag: 'select',
+        required: "0",
+        public: true,
+        valid_values: ["Blazer", "Coat", "Denim", "Leather", "Fur"],
+        searchable: true,
+        wrapper_html_options: { 'data-visibility-dependent' => 'outerwear' }
+      })
+
+      create_custom_attribute(@transactable_type, {
+        name: 'item_style_dress',
+        label: 'Item Style',
+        attribute_type: 'string',
+        html_tag: 'select',
+        required: "0",
+        public: true,
+        valid_values: ['Bridesmaid', 'Formal', 'Races', 'Wedding', 'Guest', 'Cocktail',
+          'Work Function', 'Daytime', 'Mother of the Bride', 'Evening', 'Ball',
+          'Maternity', 'Bridal', 'Black Tie'
+        ],
+        searchable: true,
+        wrapper_html_options: { 'data-visibility-dependent' => 'dress' }
+      })
+
+      create_custom_attribute(@transactable_type, {
+        name: 'item_style_accessories',
+        label: 'Item Subtype',
+        attribute_type: 'string',
+        html_tag: 'select',
+        required: "0",
+        public: true,
+        valid_values: ['Necklace', 'Belt', 'Other'],
+        searchable: true,
+        wrapper_html_options: { 'data-visibility-dependent' => 'accessories' }
+      })
+
+
+      create_custom_attribute(@transactable_type, {
+        name: 'dress_size',
+        label: 'Dress Size',
+        attribute_type: 'string',
+        html_tag: 'select',
+        required: "0",
+        public: true,
+        valid_values: ["One size", "6", "8", "10", "12", "14", "16", "18", "20"],
+        searchable: true,
+        wrapper_html_options: { 'data-visibility-dependent' => 'dress' }
+      })
+
+      create_custom_attribute(@transactable_type, {
+        name: 'milinery_size',
+        label: 'Milinery Size',
+        attribute_type: 'string',
+        html_tag: 'select',
+        required: "0",
+        public: true,
+        valid_values: ["One size", "Small", "Medium", "Large"],
+        searchable: true,
+        wrapper_html_options: { 'data-visibility-dependent' => 'milinery' }
+      })
+
+      create_custom_attribute(@transactable_type, {
+        name: 'outerwear_size',
+        label: 'Outerwear Size',
+        attribute_type: 'string',
+        html_tag: 'select',
+        required: "0",
+        public: true,
+        valid_values: ["One size", "6", "8", "10", "12", "14", "16", "18", "20"],
+        searchable: true,
+        wrapper_html_options: { 'data-visibility-dependent' => 'outerwear' }
+      })
+
+      create_custom_attribute(@transactable_type, {
+        name: 'dress_length',
+        label: 'Dress Length',
+        attribute_type: 'string',
+        html_tag: 'select',
+        required: "0",
+        public: true,
+        valid_values: ["Mini", "Knee Length", "Midi", "Floor Length"],
+        searchable: true,
+        wrapper_html_options: { 'data-visibility-dependent' => 'dress' }
+      })
+
+      create_custom_attribute(@transactable_type, {
+        name: 'color',
+        label: 'Color',
+        attribute_type: 'string',
+        html_tag: 'select',
+        required: "0",
+        public: true,
+        valid_values: [
+          "Black", "Brown", "Blue", "Cream", "Gold", "Green", "Grey", "Navy", "Orange", "Pink",
+          "Print", "Purple ", "Red", "Silver", "White", "Yellow", "Assign your own color"
+        ],
+        searchable: true
+      })
+
+      create_custom_attribute(@transactable_type, {
+        name: 'designer_name',
+        label: 'Item Designer',
+        attribute_type: 'string',
+        html_tag: 'select',
+        required: "0",
+        public: true,
+        valid_values: [
+          'Amelie Pichard', 'And Re Walker', 'Andrea Incontri', 'Anine Bing',
+          'Ann Demeulemeester', 'Anndra Neen', 'Antonio Marras', 'Anya Hindmarch',
+          'Area Di Barbara Bologna'
+        ],
+        searchable: true
+      })
+
+      create_custom_attribute(@transactable_type, {
+        name: 'retail_value',
+        label: 'Retail Value',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "0",
+        public: true,
+        searchable: false
+      })
+
+      create_custom_attribute(@transactable_type, {
+        name: 'item_comments',
+        label: 'Comments',
+        attribute_type: 'text',
+        html_tag: 'textarea',
+        required: "0",
+        public: true,
+        searchable: false
+      })
+
+      create_custom_attribute(@transactable_type, {
+        name: 'dry_cleaning',
+        label: 'Dry Cleaning',
+        attribute_type: 'string',
+        html_tag: 'select',
+        required: "0",
+        public: true,
+        valid_values: ['By Lender', 'By Borrower'],
+        searchable: false
+      })
+
+      # create_custom_attribute(@transactable_type, {
+      #   name: 'shipping_cost',
+      #   label: 'Dry Cleaning',
+      #   attribute_type: 'string',
+      #   html_tag: 'select',
+      #   required: "0",
+      #   public: true,
+      #   valid_values: ['By Lender', 'By Borrower'],
+      #   searchable: false
+      # })
+
+      create_custom_attribute(@default_profile_type, {
+        name: 'user_alias',
+        label: 'Alias',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "1",
+        public: true,
+        searchable: false
+      })
+
+      create_custom_attribute(@default_profile_type, {
+        name: 'use_alias_as_name',
+        label: 'Use instead of Full Name',
+        attribute_type: 'boolean',
+        html_tag: 'check_box',
+        required: "0",
+        public: true
+      })
+
+      create_custom_attribute(@default_profile_type, {
+        name: 'facebook_url',
+        label: 'Facebook URL',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "0",
+        public: true
+      })
+
+      create_custom_attribute(@default_profile_type, {
+        name: 'google_url',
+        label: 'Google+ URL',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "0",
+        public: true
+      })
+
+     create_custom_attribute(@default_profile_type, {
+        name: 'instagram_url',
+        label: 'Instagram URL',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "0",
+        public: true
+      })
+
+     create_custom_attribute(@default_profile_type, {
+        name: 'twitter_url',
+        label: 'Twitter URL',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "0",
+        public: true
+      })
+
+      create_custom_attribute(@default_profile_type, {
+        name: 'pinterest_url',
+        label: 'Pinterest URL',
+        attribute_type: 'string',
+        html_tag: 'input',
+        required: "0",
+        public: true
+      })
+
     end
 
 
     def create_categories!
     end
 
+
     def create_or_update_form_components!
+      TransactableType.first.form_components.destroy_all
+
+      component = TransactableType.first.form_components.where(form_type: 'space_wizard').first_or_initialize
+      component.name = 'Fill out the information below'
+      component.form_fields = [
+        { "user" => "name" },
+        { "user" => "user_alias" },
+        { "user" => "use_alias_as_name" },
+        { "location" => "address" },
+        { "user" => "mobile_phone" },
+        { "transactable" => "name" },
+        { "transactable" => "photos" },
+        { "transactable" => "description" },
+        { "transactable" => "item_type" },
+        { "transactable" => "item_style_accessories" },
+        { "transactable" => "item_style_bag" },
+        { "transactable" => "item_style_dress" },
+        { "transactable" => "item_style_milinery" },
+        { "transactable" => "item_style_outerwear" },
+        { "transactable" => "dress_size" },
+        { "transactable" => "milinery_size" },
+        { "transactable" => "outerwear_size" },
+        { "transactable" => "dress_length" },
+        { "transactable" => "color" },
+        { "transactable" => "designer_name" },
+        { "transactable" => "price" },
+        { "transactable" => "retail_value" },
+        { "transactable" => "item_comments" },
+        { "transactable" => "dry_cleaning" },
+        { "transactable" => "shipping_profile" },
+        { "transactable" => "tags" }
+      ]
+      component.save!
+      component = TransactableType.first.form_components.where(form_type: 'transactable_attributes').first_or_initialize
+      component.name = 'Details'
+      component.form_fields = [
+        { "transactable" => "name" },
+        { "transactable" => "location_id" },
+        { "transactable" => "photos" },
+        { "transactable" => "description" },
+        { "transactable" => "item_type" },
+        { "transactable" => "item_style_accessories" },
+        { "transactable" => "item_style_bag" },
+        { "transactable" => "item_style_dress" },
+        { "transactable" => "item_style_milinery" },
+        { "transactable" => "item_style_outerwear" },
+        { "transactable" => "dress_size" },
+        { "transactable" => "milinery_size" },
+        { "transactable" => "outerwear_size" },
+        { "transactable" => "dress_length" },
+        { "transactable" => "color" },
+        { "transactable" => "designer_name" },
+        { "transactable" => "price" },
+        { "transactable" => "retail_value" },
+        { "transactable" => "unavailable_periods" },
+        { "transactable" => "item_comments" },
+        { "transactable" => "dry_cleaning" },
+        { "transactable" => "shipping_profile" },
+        { "transactable" => "tags" }
+      ]
+      component.save!
+
+      component = @default_profile_type.form_components.where(form_type: 'instance_profile_types').first_or_initialize
+      component.form_fields = [
+        { "user" => "name" },
+        { "user" => "user_alias" },
+        { "user" => "use_alias_as_name" },
+        { "user" => "password" },
+        { "user" => "email" },
+        { "user" => "mobile_phone" },
+        { "user" => "facebook_url" },
+        { "user" => "google_url" },
+        { "user" => "instagram_url" },
+        { "user" => "twitter_url" },
+        { "user" => "pinterest_url" },
+      ]
+
+      component.save!
     end
 
     def create_workflow_alerts
@@ -193,42 +536,42 @@ namespace :volte do
     def create_translations
       puts "\nTranslating:"
 
-      # transformation_hash = {
-      #   'reservation' => 'offer',
-      #   'Reservation' => 'Offer',
-      #   'booking' => 'offer',
-      #   'Booking' => 'Offer',
-      #   'host' => 'Referring Lawyer',
-      #   'Host' => 'Referring Lawyer',
-      #   'guest' => 'Handling Lawyer',
-      #   'Guest' => 'Handling Lawyer',
-      #   'this listing' => 'your Case',
-      #   'that listing' => 'your Case',
-      #   'This listing' => 'Your Case',
-      #   'That listing' => 'Your Case',
-      #   'listing' => 'Case'
-      # }
+      transformation_hash = {
+        # 'reservation' => 'offer',
+        # 'Reservation' => 'Offer',
+        # 'booking' => 'offer',
+        # 'Booking' => 'Offer',
+        'host' => 'Lender',
+        'Host' => 'Lender',
+        'guest' => 'Borrower',
+        'Guest' => 'Borrower',
+        'this listing' => 'your Item',
+        'that listing' => 'your Item',
+        'This listing' => 'Your Item',
+        'That listing' => 'Your Item',
+        # 'listing' => 'Item'
+      }
 
-      # (Dir.glob(Rails.root.join('config', 'locales', '*.en.yml')) + Dir.glob(Rails.root.join('config', 'locales', 'en.yml'))).each do |yml_filename|
-      #   en_locales = YAML.load_file(yml_filename)
-      #   en_locales_hash = convert_hash_to_dot_notation(en_locales['en'])
+      (Dir.glob(Rails.root.join('config', 'locales', '*.en.yml')) + Dir.glob(Rails.root.join('config', 'locales', 'en.yml'))).each do |yml_filename|
+        en_locales = YAML.load_file(yml_filename)
+        en_locales_hash = convert_hash_to_dot_notation(en_locales['en'])
 
-      #   en_locales_hash.each_pair do |key, value|
-      #     next if value.blank?
-      #     new_value = value
-      #     transformation_hash.keys.each do |word|
-      #       new_value = new_value.gsub(word, transformation_hash[word])
-      #     end
-      #     if value != new_value
-      #       t = Translation.find_or_initialize_by(locale: 'en', key: key, instance_id: @instance.id)
-      #       t.value = new_value
-      #       t.skip_expire_cache = true
-      #       t.save!
-      #       print '.'
-      #       $stdout.flush
-      #     end
-      #   end
-      # end
+        en_locales_hash.each_pair do |key, value|
+          next if value.blank?
+          new_value = value
+          transformation_hash.keys.each do |word|
+            new_value = new_value.gsub(word, transformation_hash[word])
+          end
+          if value != new_value
+            t = Translation.find_or_initialize_by(locale: 'en', key: key, instance_id: @instance.id)
+            t.value = new_value
+            t.skip_expire_cache = true
+            t.save!
+            print '.'
+            $stdout.flush
+          end
+        end
+      end
 
       locales = YAML.load_file(File.join(@theme_path, 'translations', 'en.yml'))
 
