@@ -74,7 +74,7 @@ module CustomAttributes
           def transform_hash_string_to_hash(hash_string)
             hash_string.split(',').inject({}) do |hash, key_value_string|
               key_value_arr = key_value_string.split('=>')
-              hash[key_value_arr[0].strip] = key_value_arr[1].strip
+              hash[key_value_arr[0].strip] = key_value_arr[1].strip if key_value_arr.length == 2
               hash
             end
           end
