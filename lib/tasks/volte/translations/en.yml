@@ -9,3 +9,6 @@ en:
     labels:
       transactable:
         name: 'Item Name'
+
+  top_navbar:
+    bookings_received: My Orders
