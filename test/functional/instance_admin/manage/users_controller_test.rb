@@ -23,14 +23,14 @@ class InstanceAdmin::Manage::UsersControllerTest < ActionController::TestCase
 
     should 'delete a user' do
       post :destroy, id: @user.id
-      assert_redirected_to instance_admin_manage_users_path
+      assert_redirected_to edit_instance_admin_manage_user_path(@user)
       assert_equal @user, assigns(:user)
       assert_not_nil @user.reload.deleted_at
     end
 
     should 'restore a deleted user' do
       post :restore, id: @deleted_user.id
-      assert_redirected_to instance_admin_manage_users_path
+      assert_redirected_to edit_instance_admin_manage_user_path(@deleted_user)
       assert_equal @deleted_user, assigns(:user)
       assert_nil @user.reload.deleted_at
     end
@@ -38,7 +38,7 @@ class InstanceAdmin::Manage::UsersControllerTest < ActionController::TestCase
     should 'warn if a user cannot be restored' do
       @duplicate_user = FactoryGirl.create(:user, name: 'Dup Deleted Jane', email: 'jane@example.com')
       post :restore, id: @deleted_user.id
-      assert_redirected_to instance_admin_manage_users_path
+      assert_redirected_to edit_instance_admin_manage_user_path(@deleted_user)
       assert_equal @deleted_user, assigns(:user)
       assert_equal 'User could not be restored, that email address is currently in use.', flash[:error]
       assert_not_nil @deleted_user.reload.deleted_at
