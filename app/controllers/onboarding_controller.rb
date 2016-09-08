@@ -25,7 +25,7 @@ class OnboardingController < ApplicationController
       render_wizard @user
     when :followings
       @user.feed_followed_users << User.where(id: followed_params[:people]).feed_not_followed_by_user(@user) if followed_params[:people]
-      @user.feed_followed_projects << Project.enabled.where(id: followed_params[:projects]).feed_not_followed_by_user(@user) if followed_params[:projects]
+      @user.feed_followed_transactables << Transactable.active.where(id: followed_params[:projects]).feed_not_followed_by_user(@user) if followed_params[:projects]
       @user.feed_followed_topics << Topic.where(id: followed_params[:topics]).feed_not_followed_by_user(@user) if followed_params[:topics]
       render_wizard @user
     when :finish
@@ -56,8 +56,8 @@ class OnboardingController < ApplicationController
       quantity = 6
       @topics = Topic.featured.feed_not_followed_by_user(@user).take(quantity)
 
-      friends_projects = Project.enabled.where(creator_id: @user.social_friends_ids).feed_not_followed_by_user(@user).take(quantity)
-      featured_projects = Project.featured.feed_not_followed_by_user(@user).take(quantity - friends_projects.count)
+      friends_projects = Transactable.active.where(creator_id: @user.social_friends_ids).feed_not_followed_by_user(@user).take(quantity)
+      featured_projects = Transactable.active.featured.feed_not_followed_by_user(@user).take(quantity - friends_projects.count)
       @projects = friends_projects + featured_projects
 
       friends = @user.social_friends.not_admin.feed_not_followed_by_user(@user).take(quantity)
@@ -67,7 +67,8 @@ class OnboardingController < ApplicationController
       featured = User.not_admin.featured.without(@user).feed_not_followed_by_user(@user).take(quantity - friends.count - nearby.count)
       @people = (friends + nearby + featured).uniq
     when :finish
-      @custom_attributes = @user.instance_profile_type.custom_attributes.includes(:target).where(public: true).all
+      @custom_attributes = []
+      @custom_attributes = @user.instance_profile_type.custom_attributes.includes(:target).where(public: true).all if @user.instance_profile_type.present?
     end
   end
 
