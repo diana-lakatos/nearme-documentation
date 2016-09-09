@@ -77,6 +77,8 @@ en:
     analytics:
       bookings: Offers
       no_reservations_yet: You currently do not have any offers.
+      no_invoices_paid: You've not paid any invoices.
+
       columns:
         bookings: Offers
       total:
