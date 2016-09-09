@@ -1,5 +1,3 @@
-{% if current_user.has_seller_profile? %}
-  <div data-add-favorite-button="true" data-path="{{ object.wish_list_path }}" data-wishlistable-type="{{ object.class_name }}" data-link-to-classes="{{ link_to_classes }}" data-path-bulk="{{ object.wish_list_bulk_path }}" data-object-id="{{ object.id }}" id="favorite-button-{{ object.class_name }}-{{ object.id }}">
-    <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
-  </div>
-{% endif %}
+<div data-add-favorite-button="true" data-path="{{ object.wish_list_path }}" data-wishlistable-type="{{ object.class_name }}" data-link-to-classes="{{ link_to_classes }}" data-path-bulk="{{ object.wish_list_bulk_path }}" data-object-id="{{ object.id }}" id="favorite-button-{{ object.class_name }}-{{ object.id }}">
+  <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
+</div>
