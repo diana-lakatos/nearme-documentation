@@ -23,6 +23,18 @@ FactoryGirl.define do
       end
     end
 
+    factory :with_seller_profile do
+      after(:build) do |u|
+        u.get_seller_profile
+      end
+    end
+
+    factory :with_buyer_profile do
+      after(:build) do |u|
+        u.get_buyer_profile
+      end
+    end
+
     factory :user_without_country_name do
       country_name nil
     end
