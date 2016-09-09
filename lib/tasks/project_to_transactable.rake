@@ -394,6 +394,21 @@ namespace :project_to_transactable do
         summary_attribute.placeholder = 'Summarize this project in less than 140 characters'
         summary_attribute.save!
 
+
+        video_url_attribute = transactable_type.custom_attributes.build
+        video_url_attribute.name = 'video_url'
+        video_url_attribute.transactable_type_id = transactable_type.id
+        video_url_attribute.attribute_type = 'string'
+        video_url_attribute.html_tag = 'input'
+        # TODO, add presence rule manually from the interface, we can't add it
+        # now because it's missing for some projects
+        #video_url_attribute.validation_rules = { length: { maximum: 140 }, presence: {} }
+        #video_url_attribute.validation_rules = { length: { maximum: 140 } }
+        video_url_attribute.label = 'Video URL'
+        video_url_attribute.target = transactable_type
+        #video_url_attribute.placeholder = 'Summarize this project in less than 140 characters'
+        video_url_attribute.save!
+
         project_type.projects.each do |project|
           transactable = Transactable.new
           transactable.transactable_type = transactable_type
@@ -413,7 +428,9 @@ namespace :project_to_transactable do
           transactable.location_not_required = true
           transactable.action_type.transactable_type_action_type_id = transactable_type_action_type.id
           transactable.properties.summary = project.summary
+          transactable.properties.video_url = project.properties.video_url if project.properties.respond_to?(:video_url)
           transactable.skip_activity_feed_event = true
+          transactable.featured = project.featured
           transactable.save!
           transactable.update_columns(created_at: project.created_at, updated_at: project.updated_at)
           project.update_columns(transactable_id: transactable.id)

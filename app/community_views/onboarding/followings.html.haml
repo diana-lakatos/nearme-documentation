@@ -45,7 +45,7 @@
                   = f.input 'projects][', as: :boolean, checked_value: project.id, input_html: { checked: "checked", class: 'tick-a', id: "follow-project-#{project.id}" }, wrapper_html: { class: 'check' }, wrapper: :inline_checkbox, label_html: { id: "follow-project-#{project.id}", class: 'no-label' }
 
                   %h3.hx= project.name
-                  %p= project.summary
+                  %p= project.properties.summary
           - if @projects.blank?
             .cell
               = t('onboarding.no_suggestions_at_this_time')
