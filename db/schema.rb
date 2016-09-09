@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160826004551) do
+ActiveRecord::Schema.define(version: 20160907133901) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -421,9 +421,9 @@ ActiveRecord::Schema.define(version: 20160826004551) do
     t.integer  "charge_type_target_id"
     t.string   "charge_type_target_type"
     t.integer  "percent"
-    t.datetime "deleted_at"
     t.string   "type"
     t.string   "charge_event"
+    t.string   "deleted_at"
   end
 
   add_index "charge_types", ["charge_type_target_id", "charge_type_target_type"], name: "act_target", using: :btree
@@ -1330,9 +1330,9 @@ ActiveRecord::Schema.define(version: 20160826004551) do
     t.string   "encrypted_google_consumer_secret",              limit: 255
     t.string   "default_oauth_signin_provider"
     t.boolean  "custom_waiver_agreements",                                                          default: true
+    t.string   "time_zone"
     t.string   "seller_attachments_access_level",               limit: 255,                         default: "disabled",    null: false
     t.integer  "seller_attachments_documents_num",                                                  default: 10,            null: false
-    t.string   "time_zone"
     t.string   "priority_view_path"
     t.boolean  "enable_language_selector",                                                          default: false,         null: false
     t.boolean  "click_to_call",                                                                     default: false
@@ -1344,13 +1344,13 @@ ActiveRecord::Schema.define(version: 20160826004551) do
     t.boolean  "lister_blogs_enabled",                                                              default: false
     t.boolean  "tax_included_in_price",                                                             default: true
     t.boolean  "skip_meta_tags",                                                                    default: false
-    t.boolean  "use_cart",                                                                          default: false
     t.string   "test_email"
     t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
+    t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
+    t.boolean  "enable_geo_localization",                                                           default: true
     t.string   "orders_received_tabs"
     t.string   "my_orders_tabs"
-    t.boolean  "enable_geo_localization",                                                           default: true
     t.boolean  "force_fill_in_wizard_form"
   end
 
@@ -1690,6 +1690,7 @@ ActiveRecord::Schema.define(version: 20160826004551) do
     t.boolean  "book_it_out"
     t.datetime "completed_at"
     t.boolean  "is_free_booking",                                           default: false
+    t.datetime "draft_at"
   end
 
   add_index "orders", ["billing_address_id"], name: "index_orders_on_billing_address_id", using: :btree
@@ -2919,6 +2920,7 @@ ActiveRecord::Schema.define(version: 20160826004551) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "confirm_reservations",                       default: true
+    t.boolean  "allow_drafts",                               default: false, null: false
   end
 
   add_index "transactable_type_action_types", ["instance_id", "transactable_type_id", "deleted_at"], name: "instance_tt_deleted_at_idx", using: :btree
@@ -3015,8 +3017,8 @@ ActiveRecord::Schema.define(version: 20160826004551) do
     t.boolean  "searchable",                                                                     default: true
     t.boolean  "action_regular_booking",                                                         default: true
     t.boolean  "action_continuous_dates_booking",                                                default: false
-    t.boolean  "search_location_type_filter",                                                    default: true
     t.boolean  "rental_shipping",                                                                default: false
+    t.boolean  "search_location_type_filter",                                                    default: true
     t.boolean  "show_company_name",                                                              default: true
     t.string   "slug"
     t.string   "default_search_view"
@@ -3043,8 +3045,8 @@ ActiveRecord::Schema.define(version: 20160826004551) do
     t.boolean  "single_transactable",                                                            default: false
     t.decimal  "cancellation_policy_penalty_hours",                      precision: 8, scale: 2, default: 0.0
     t.boolean  "display_additional_charges",                                                     default: true
-    t.boolean  "hide_additional_charges_on_listing_page",                                        default: false,      null: false
     t.boolean  "single_location",                                                                default: false,      null: false
+    t.boolean  "hide_additional_charges_on_listing_page",                                        default: false,      null: false
     t.hstore   "custom_settings",                                                                default: {},         null: false
     t.boolean  "auto_accept_invitation_as_collaborator",                                         default: false
     t.boolean  "require_transactable_during_onboarding",                                         default: true
