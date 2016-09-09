@@ -82,6 +82,11 @@ class PlatformContextDrop < BaseDrop
   #   Whether there is at least one active system
   # split_registration?
   #   Whether split registration is enabled for the instance
+  # set_render_content_outside_container
+  #   Remove wrapper around page content
+  # set_blank_theme_name
+  #   Remove default theme name class from body
+
   delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :facebook_url, :twitter_url, :gplus_url,
     :instagram_url, :youtube_url, :rss_url, :linkedin_url, :lessor, :lessors,
     :lessee, :lessees, :search_by_keyword_placeholder, :address, :phone_number, :phone_number_noformat,
@@ -182,6 +187,14 @@ class PlatformContextDrop < BaseDrop
 
   def split_registration?
     @instance.split_registration?
+  end
+
+  def set_render_content_outside_container
+    @context.registers[:action_view].instance_variable_set('@render_content_outside_container', true)
+  end
+
+  def set_blank_theme_name
+    @context.registers[:action_view].instance_variable_set('@theme_name', '')
   end
 
   private

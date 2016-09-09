@@ -1,7 +1,8 @@
 ---
 partial: false
 ---
-{{ "" | set_render_content_outside_container }}
+{{ platform_context.set_render_content_outside_container }}
+{{ platform_context.set_blank_theme_name }}
 
 {% content_for 'litvault-hero' %}
     <section class="hero-a">

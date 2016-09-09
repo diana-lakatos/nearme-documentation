@@ -339,16 +339,6 @@ module LiquidFilters
     user.default_wish_list.items.where(wishlistable_id: object.id, wishlistable_type: object.class_name).exists?
   end
 
-  def set_render_content_outside_container(object)
-    @context.registers[:action_view].instance_variable_set('@render_content_outside_container', true)
-    object
-  end
-
-  def set_theme_name(object, theme_name)
-    @context.registers[:action_view].instance_variable_set('@theme_name', theme_name)
-    object
-  end
-
   def titleize(text)
     text.titleize
   end
