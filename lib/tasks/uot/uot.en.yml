@@ -206,6 +206,9 @@ en:
         can_not_edit_accepted_order_item: "You can\'t edit accepted expenses."
         recently_edited: "Looks like total amount of expenses has changed. Please verify total price and reaccept."
     manage:
+      order:
+        can_not_approve: "Can't approve offer with pending expenses. Please approve or reject all pending expenses."
+
       listings:
         listing_cancelled: "Your project has been canceled."
 

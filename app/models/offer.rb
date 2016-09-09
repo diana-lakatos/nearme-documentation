@@ -8,6 +8,18 @@ class Offer < Order
   has_many :host_line_items, as: :line_itemable
   has_many :recurring_booking_periods, dependent: :destroy, foreign_key: :order_id
 
+  def complete!
+    if can_complete?
+      touch(:archived_at)
+    else
+      false
+    end
+  end
+
+  def can_complete?
+    !order_items.pending.any?
+  end
+
   def self.workflow_class
     Offer
   end
