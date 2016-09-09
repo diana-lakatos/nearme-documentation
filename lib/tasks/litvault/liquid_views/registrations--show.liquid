@@ -1,6 +1,8 @@
 ---
 partial: false
 ---
+{{ "" | set_render_content_outside_container | set_theme_name: '' }}
+
 {% assign title = platform_context.name | append: ' - ' | append: user.name %}
 {% title title %}
 

@@ -1,0 +1,159 @@
+<section class="search-form-wrapper">
+    <div class="search-form-inner">
+        <div class="search-form-type-toggle">
+            <h2><span class="struct-label">Current search type:</span> <span class="current-type" tabindex="0">Lawyer Search</span></h2>
+            <h3 class="struct-label">Change search type to:</h3>
+            <ul>
+                <li class="selected"><a href="/search?transactable_type_id={{ searcher.transactable_types.first.id }}&amp;transactable_type_class=TransactableType">Case Search</a></li>
+                <li><a href="/search?transactable_type_id=580&amp;transactable_type_class=InstanceProfileType">Lawyer Search</a></li>
+            </ul>
+        </div>
+        <form action="/search" method="get" class="search-form">
+            <div class="fields">
+                <input type="hidden" name="transactable_type_class" value="InstanceProfileType">
+                <input type="hidden" name="lg_custom_attributes[state][]" value="{{ searcher.lg_custom_attributes_hash['state'] }}">
+                <input type="hidden" name="category_ids" value="{{ searcher.category_ids }}">
+                <input type="hidden" name="per_page" value="{{ searcher.per_page }}">
+                <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
+                <input type="hidden" name="query_fields" value="tags">
+                <input type="hidden" name="sort">
+
+                <div class="query-field">
+                    <label for="field-q" class="struct-label">Search keyword</label>
+                    <input type="text" name="q" id="field-q" placeholder="Enter keywords&hellip;" value="{{ params['query'] }}">
+                </div>
+                <div class="state-filter">
+                    <label for="field-state" class="struct-label">Filter by state</label>
+                    <span class="select-a">
+                        <select name="lg_custom_attributes[state][]" id="field-state" class="unstyled-select">
+                            <option value="">By State</option>
+                            {% for ca in platform_context.instance_profile_types.first.custom_attributes %}
+                                {% for value in ca.valid_values %}
+                                <option value='{{ value }}'{% if value == searcher.lg_custom_attributes_hash['state'] %} selected{% endif %}>{{ value }}</option>
+                                {% endfor %}
+                            {% endfor %}
+                        </select>
+                    </span>
+                </div>
+            </div>
+            <div class="form-action">
+                <button type="submit" class="button-a">Search</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<div class="search-results-wrapper">
+    <section class="search-results">
+
+        <div class="search-results-query-info">
+            <span class="results-count"><b>{{ searcher.result_count }}</b> Result(s) Found</span>
+        </div>
+
+        <div class="search-results-items">
+            {% for user in searcher.results %}
+                <article class="user-a" id="user-{{ user.id }}">
+                    <div class="wrapper">
+                        <header class="header">
+                            <div class="portrait">
+                                <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
+
+                                <ul class="social">
+                                    {% if user.buyer_properties['linkedin_url'] != blank %}
+                                    <li><a href="{{ user.buyer_properties['linkedin_url'] }}" class="linkedin" rel="external">LinkedIn</a></li>
+                                    {% endif %}
+                                    {% if user.buyer_properties['twitter_url'] != blank %}
+                                    <li><a href="{{ user.buyer_properties['twitter_url'] }}" class="twitter" rel="external">Twitter</a></li>
+                                    {% endif %}
+                                    {% if user.buyer_properties['googleplus_url'] != blank %}
+                                    <li><a href="{{ user.buyer_properties['googleplus_url'] }}" class="googleplus" rel="external">Google+</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <h2><a href="{{ user.user_profile_url }}">{{ user.name }}</a></h2>
+                            <h3>{{ user.company-name }}</h3>
+
+                            <div class="location">{{ user.location }}</div>
+                        </header>
+
+                        <div class="search-result-meta-action">
+                            {% if current_user != blank and current_user.has_seller_profile? %}
+                                <a href="#case-invite-{{ user.id }}" class="button-a" data-case-invite-trigger>Invite to Case</a>
+                            {% endif %}
+
+                            <p class="meta">
+                                {% if user.has_active_blog? %}
+                                  <a href="{{ user.user_blog_posts_list_path }}">View Blog</a>
+                                  |
+                                {% endif %}
+
+                                <span class="favorite">
+                                    {% include 'shared/components/wish_list_button_injection.html', object: user %}
+                                </span>
+                            </p>
+                        </div>
+
+                        <ul class="actions-a">
+                        {% if current_user != blank and current_user.has_seller_profile? %}
+                          <li><a href="#case-invite-{{ user.id }}" class="button-a" data-case-invite-trigger>Invite to Case</a></li>
+                        {% endif %}
+
+                        <li>{% include 'shared/components/wish_list_button_injection.html', object: user %}</li>
+                        {% if user.has_active_blog? %}
+                          <li><a href="{{ user.user_blog_posts_list_path }}" class="button-b action-blog">View Blog</a></li>
+                        {% endif %}
+                        {% if user.buyer_properties['linkedin_url'] != blank %}
+                          <li><a href="{{ user.buyer_properties['linkedin_url'] }}" class="button-b action-linkedin" target="_blank">LinkedIn Bio</a></li>
+                        {% endif %}
+                        </ul>
+
+                        {% assign aoe_category = user.formatted_buyer_categories["Area Of Expertise"] %}
+                        {% assign industry_category = user.formatted_buyer_categories['Industry'] %}
+                        {% assign languages_category = user.buyer_categories['Languages'] %}
+
+                        {% if user.buyer_properties.bio != blank %}
+                            <div class="content">
+
+                                {% if user.buyer_properties.bio.size > 350 %}
+                                   <div data-shorten-description>
+                                    <p data-description>{{ user.buyer_properties.bio | slice: 0, 350 | nl2br }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
+                                    <div style='display: none;'  class="rest_of_text">{{ user.buyer_properties.bio | slice: 350, user.buyer_properties.bio.size | nl2br }}</div>
+                                  </div>
+                                {% else %}
+                                  <p>{{ user.buyer_properties.bio }}</p>
+                                {% endif %}
+                          </div>
+                      {% endif %}
+                  </div>
+
+                  {% if user.tags.size > 0 %}
+                  <div class="tags-a tags-short-list">
+                      <h4>Tags</h4>
+                      <ul>
+                          {% for tag in user.tags %}
+                              <li><a href="?query_fields=tags&amp;query={{ tag.name }}">{{ tag.name }}</a></li>
+                          {% endfor %}
+                      </ul>
+                  </div>
+                  {% endif %}
+
+                  <div class="case-invite" id="case-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
+              </article>
+
+              <script>
+                $(function(){
+                  $(document).trigger('userLoaded.litvault', 'user-{{user.id}}')
+                });
+              </script>
+          {% endfor %}
+        </div>
+
+        {% if searcher.next_page %}
+            <p class="search-results-more-trigger">
+                <button type="button" class="button-a" data-page='{{ searcher.next_page }}'>More Results</button>
+            </p>
+        {% endif %}
+    </section>
+
+    {% include 'search/filter_categories' %}
+</div>

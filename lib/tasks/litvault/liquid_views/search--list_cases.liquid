@@ -11,8 +11,7 @@
         <form action="/search" method="get" class="search-form">
             <div class="fields">
                 <input type="hidden" name="transactable_type_class" value="TransactableType">
-                <input type="hidden" name="lg_custom_attributes[workplace_type]" value="{{ searcher.lg_custom_attributes_hash['workplace_type'] }}">
-                <input type="hidden" name="lg_custom_attributes[travel]" value="{{ searcher.lg_custom_attributes_hash['state'] }}">
+                <input type="hidden" name="lg_custom_attributes[state][]" value="{{ searcher.lg_custom_attributes_hash['state'] }}">
                 <input type="hidden" name="category_ids" value="{{ searcher.category_ids }}">
                 <input type="hidden" name="per_page" value="{{ searcher.per_page }}">
                 <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
@@ -28,10 +27,11 @@
                     <span class="select-a">
                         <select name="lg_custom_attributes[state][]" id="field-state" class="unstyled-select">
                             <option value="">By State</option>
-                            {% for value in ca.valid_values %}
-                            <option value='{{ value }}'{% if value == searcher.lg_custom_attributes_hash['state'] %} selected{% endif %}>{{ value }}</option>
+                            {% for ca in platform_context.transactable_types.first.custom_attributes %}
+                                {% for value in ca.valid_values %}
+                                <option value='{{ value }}'{% if value == searcher.lg_custom_attributes_hash['state'] %} selected{% endif %}>{{ value }}</option>
+                                {% endfor %}
                             {% endfor %}
-                        </select>
                         </select>
                     </span>
                 </div>
@@ -39,7 +39,7 @@
                     <legend class="struct-label">Case type</legend>
 
                     <ul>
-                        {% for transactable_type in transactable_types %}
+                        {% for transactable_type in platform_context.transactable_types %}
 
                         {% if not_first_item == blank %}
                             {% assign not_first_item = true %}
@@ -67,6 +67,7 @@
     <section class="search-results">
         <div class="search-results-query-info">
             <span class="results-count"><b>{{ searcher.result_count }}</b> Result(s) Found</span>
+            {% if searcher.result_count > 0 %}
             <div class="search-sort-form">
                 <div>
                     <label for="search-order">Sort by:</label>
@@ -78,6 +79,7 @@
                     </span>
                 </div>
             </div>
+            {% endif %}
         </div>
 
         <div class="search-results-items">
@@ -150,41 +152,5 @@
         {% endif %}
     </section>
 
-    <div class="search-results-filter">
-        <h2>Filter by types:</h2>
-
-        {% assign categories = searcher.searchable_categories | rotate %}
-        {% for root_category in categories %}
-            <ul>
-                {% for category in root_category.children %}
-                    <li>
-                        <input type="checkbox" name="category_ids[]" id="category-{{ category.id }}" value='{{category.id}}' {% if searcher.category_ids contains category.id %}checked{% endif %}>
-                        <label for="category-{{ category.id }}">{{ category.name }}</label>
-
-                        {% if category.children.size > 0 %}
-                            <ul>
-                                {% for subcat in category.children %}
-                                    <li>
-                                        <input type="checkbox" name="category_ids[]" id="category-{{ subcat.id }}" value='{{subcat.id}}' {% if searcher.category_ids contains subcat.id %}checked{% endif %}>
-                                        <label for="category-{{ subcat.id }}">{{ subcat.name }}</label>
-
-                                    {% if subcat.children.size > 0 %}
-                                        <ul>
-                                        {% for subcat2 in subcat.children %}
-                                            <li>
-                                                <input type="checkbox" name="category_ids[]" id="category-{{ subcat2.id }}" value='{{subcat2.id}}' {% if searcher.category_ids contains subcat2.id %}checked{% endif %}>
-                                                <label for="category-{{ subcat2.id }}">{{ subcat2.name }}</label>
-                                            </li>
-                                        {% endfor %}
-                                        </ul>
-                                    {% endif %}
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endfor %}
-    </div>
+    {% include 'search/filter_categories' %}
 </div>

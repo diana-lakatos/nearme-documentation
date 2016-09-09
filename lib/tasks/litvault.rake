@@ -16,7 +16,15 @@ namespace :litvault do
         skip_company: true
       )
       @instance.set_context!
-      InstanceProfileType.find(580).update_columns(onboarding: true, create_company_on_sign_up: true)
+
+      InstanceProfileType.find(580).update_columns({
+        onboarding: true,
+        create_company_on_sign_up: true,
+        show_categories: true,
+        category_search_type: 'AND',
+        searchable: true,
+        search_only_enabled_profiles: true
+      })
 
       setup = LitvaultSetup.new(@instance, File.join(Rails.root, 'lib', 'tasks', 'litvault'))
       setup.create_transactable_types!

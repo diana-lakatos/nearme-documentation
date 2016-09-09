@@ -26,7 +26,7 @@
             <legend>Case Type</legend>
 
             <ul>
-                {% for transactable_type in transactable_types %}
+                {% for transactable_type in platform_context.transactable_types %}
 
                 {% if not_first_item == blank %}
                     {% assign not_first_item = true %}

@@ -341,7 +341,11 @@ module LiquidFilters
 
   def set_render_content_outside_container(object)
     @context.registers[:action_view].instance_variable_set('@render_content_outside_container', true)
+    object
+  end
 
+  def set_theme_name(object, theme_name)
+    @context.registers[:action_view].instance_variable_set('@theme_name', theme_name)
     object
   end
 
