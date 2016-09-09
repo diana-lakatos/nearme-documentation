@@ -200,7 +200,7 @@ class Instance < ActiveRecord::Base
   end
 
   def blogging_enabled?(user)
-    user_blogs_enabled? || (user.buyer_profile.present? && enquirer_blogs_enabled?) || (user.seller_profile.present? && lister_blogs_enabled?)
+    (!split_registration && user_blogs_enabled?) || (user.buyer_profile.present? && enquirer_blogs_enabled?) || (user.seller_profile.present? && lister_blogs_enabled?)
   end
 
   def twilio_config

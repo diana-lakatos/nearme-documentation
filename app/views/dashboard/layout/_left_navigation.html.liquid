@@ -223,7 +223,7 @@
       {% comment %} Blog menu {% endcomment %}
       {% assign blog_menu_show = 'dashboard/blog' | is_visible %}
 
-      {% if blog_menu_show %}
+      {% if blog_menu_show and current_user.show_blog_menu? %}
         {% assign blog_posts_path = 'dashboard_blog_path' | generate_url %}
         {% assign blog_posts_selected = current_path | matches: '/dashboard/blog(/posts)?(?!/edit)' %}
         {% assign blog_settings_path = 'edit_dashboard_blog_path' | generate_url %}
