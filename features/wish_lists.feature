@@ -5,9 +5,9 @@ Feature: User can add locations to wish list
     Given a company exists
     And a location exists with company: that company, name: "My loved location"
     And a transactable exists with location: that location, name: "My loved listing", quantity: 10, photos_count: 1, currency: "USD"
-    And a with_seller_profile exists
+    And a user exists
     And wish lists are enabled for the instance
-    And I am logged in as the with_seller_profile
+    And I am logged in as the user
 
   Scenario: User can add and remove transactable to wish list after logging in
     Given I go to the transactable's page
@@ -17,7 +17,7 @@ Feature: User can add locations to wish list
     Then I should see "Add to Favorites"
 
   Scenario: User can visit and manage wish list under dashboard section
-    Given I am logged in as the with_seller_profile
+    Given I am logged in as the user
     And I have one favorite item
     Then I visit dashboard wish list page
     Then I should see "My loved listing"
