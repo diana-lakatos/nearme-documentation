@@ -3,6 +3,9 @@
   .row
     %ul
       %li
+        Payer:
+        = link_to @payment.payer.name, edit_instance_admin_manage_user_path(@payment.payer)
+      %li
         Total:
         = humanized_money_with_cents_and_symbol @payment.total_amount
       %li

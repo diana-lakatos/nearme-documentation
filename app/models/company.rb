@@ -52,7 +52,7 @@ class Company < ActiveRecord::Base
         pg = "PaymentGateway::#{name.classify}PaymentGateway".constantize.find_by(instance_id: (PlatformContext.current.try(:instance).try(:id) || record.instance_id))
         pg ? assoc.where(test: pg.test_mode?) : assoc
       },
-      class_name: klass.to_s, as: :merchantable, dependent: :nullify
+      class_name: klass.to_s, as: :merchantable, dependent: :destroy
   end
 
 

@@ -649,6 +649,7 @@ en:
           reference: Reference
           id: ID
           lessor: Lessor
+          lister: Lister
           paid_at: "Paid at"
         resource:
           plural:

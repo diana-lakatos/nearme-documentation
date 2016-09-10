@@ -7,7 +7,7 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
   end
 
   def edit
-    @user = User.find(params[:id])
+    @user = User.with_deleted.find(params[:id])
     if request.xhr?
       render :modal_edit, layout: false
     end
@@ -60,7 +60,7 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
     @user = User.find(params[:id])
     @user.destroy
     flash[:success] = t('flash_messages.instance_admin.manage.users.deleted')
-    redirect_to instance_admin_manage_users_path
+    redirect_to edit_instance_admin_manage_user_path(@user)
   end
 
   def restore
@@ -71,7 +71,7 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
       @user.restore
       flash[:success] = t('flash_messages.instance_admin.manage.users.restored')
     end
-    redirect_to instance_admin_manage_users_path
+    redirect_to edit_instance_admin_manage_user_path(@user)
   end
 
   protected
