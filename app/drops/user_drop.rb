@@ -469,7 +469,15 @@ class UserDrop < BaseDrop
     Transactable.where(creator_id: @context['current_user'].id).with_state(:pending).
     joins("LEFT Outer JOIN transactable_collaborators tc on
       tc.transactable_id = transactables.id and tc.user_id = #{@source.id} and
-      tc.deleted_at is NULL").where("tc.id is NULL")
+      tc.deleted_at is NULL")
+  end
+
+  def pending_transactables
+    pending_transactables_for_current_user.where("tc.id is NULL")
+  end
+
+  def pending_collaborated_transactables
+    pending_transactables_for_current_user.where("tc.id is NOT NULL")
   end
 
   def has_company?
@@ -519,8 +527,9 @@ class UserDrop < BaseDrop
   end
 
   private
-    def social_connections
-      @social_connections_cache ||= @source.social_connections
-    end
+
+  def social_connections
+    @social_connections_cache ||= @source.social_connections
+  end
 
 end
