@@ -152,6 +152,10 @@ class OrderDrop < BaseDrop
     transactable.user_messages.where("author_id = :user_id OR thread_recipient_id = :user_id", user_id: @order.user_id)
   end
 
+  def properties
+    @order.properties
+  end
+
   private
 
   def first_line_item
