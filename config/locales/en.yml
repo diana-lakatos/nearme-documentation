@@ -2883,3 +2883,7 @@ en:
 
   placeholders:
     image_unavailable_or_still_processing: "Photos Unavailable or Still Processing"
+
+  merchant_account:
+    gateway_errors:
+      us_social_security_format: 'Social Security number must be 9 characters long'

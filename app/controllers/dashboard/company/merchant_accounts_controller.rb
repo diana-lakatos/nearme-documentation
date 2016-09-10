@@ -21,6 +21,7 @@ class Dashboard::Company::MerchantAccountsController < Dashboard::Company::BaseC
     if @merchant_account.save
       redirect_to @merchant_account.try(:redirect_url) || edit_dashboard_company_payouts_path
     else
+      @merchant_account.translate_error_messages
       render :edit
     end
   end
