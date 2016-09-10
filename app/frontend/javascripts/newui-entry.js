@@ -625,6 +625,21 @@ DNM.registerInitializer(function(){
     });
 });
 
+DNM.registerInitializer(function(){
+    var conditionFields = document.querySelectorAll('[data-condition-field]');
+    if (conditionFields.length < 0) {
+        return;
+    }
+
+    require.ensure('form_components/condition_field', (require)=>{
+        var ConditionField = require('form_components/condition_field');
+        Array.prototype.forEach.call(conditionFields, (wrapper) => {
+            new ConditionField(wrapper);
+        });
+    });
+});
+
+
 // New shared libraries
 let sharedInitializers = require('shared-initializers');
 sharedInitializers.forEach((initializer)=> DNM.registerInitializer(initializer));

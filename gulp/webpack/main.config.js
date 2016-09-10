@@ -20,7 +20,6 @@ config.entry = {
     instancewizard: 'instancewizard-entry.js',
     blog: 'blog-entry.js',
     blogadmin: 'blogadmin-entry.js',
-    dashboard: 'dashboard-entry.js',
     admin: 'admin-entry.js',
     community: 'community-entry.js'
 };
