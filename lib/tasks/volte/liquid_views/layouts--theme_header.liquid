@@ -1,22 +1,28 @@
-<header class="masthead wrapper-a">
-  <div class="topnav">
-    <a class="logo" href="#"><img alt="The Volte" src="https://d2rw3as29v290b.cloudfront.net/instances/194/uploads/ckeditor/attachment_file/data/2773/volte-logo.svg" /></a>
-    <nav role="nav">
-      <button class="topnav-toggle animated zoomIn">☰</button>
-      <ul>
-        <li class="active">
-          <a href="#">List your items</a>
-        </li>
-        <li>
-          <a href="#">FAQ</a>
-        </li>
-        <li>
-          <a href="#">Sign Up</a>
-        </li>
-        <li>
-          <a href="#">Log In</a>
-        </li>
-      </ul>
-    </nav>
-  </div>
+<header class="masthead">
+    <div class="wrapper-a">
+        <div class="topnav">
+            <a class="logo" href="/"><img alt="The Volte" src="https://d2rw3as29v290b.cloudfront.net/instances/194/uploads/ckeditor/attachment_file/data/2773/volte-logo.svg" /></a>
+            <nav role="nav">
+                <button class="topnav-toggle animated zoomIn">☰</button>
+                {% if current_user == blank %}
+                    <ul class="nav main-menu">
+                        <li class="active">
+                            <a data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" data-href="/users/sign_up?return_to=%2Ftransactable_types%2Ffashion-item%2Flist" href="#">List your items</a>
+                        </li>
+                        <li>
+                            <a href="/faq">FAQ</a>
+                        </li>
+
+                        <li>
+                            <a data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" data-href="/users/sign_up" href="#">Sign Up</a>
+                        </li>
+
+                        <li><a href="#" data-href="/users/sign_in" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" url_options='{:return_to="/"}'>Log In</a></li>
+                    </ul>
+                {% else %}
+                    {{ navigation_links | html_safe }}
+                {% endif %}
+            </nav>
+        </div>
+    </div>
 </header>

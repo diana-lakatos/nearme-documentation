@@ -24,5 +24,8 @@
   - if fields.include?('availability_rules')
     = render 'dashboard/company/transactables/form_fields/availability', f: f
 
+  - if fields.include?('unavailable_periods')
+    = render 'dashboard/company/transactables/form_fields/unavailable_periods', f: f
+
   - if fields.include? 'minimum_booking_minutes'
     = render 'dashboard/company/transactables/form_fields/minimum_booking_minutes', f: f

@@ -1,8 +1,9 @@
+- html_class = "env-#{Rails.env} no-js"
 !!!
-%html
+%html{ class: html_class }
   %head
     %meta{name: 'app-server', content: ENV['HOSTNAME']}
-    
+
     %title
       #{platform_context.name} - Marketplace Admin
     %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}
