@@ -526,6 +526,11 @@ class UserDrop < BaseDrop
     routes.send("instance_admin#{users_instance_admin}_path")
   end
 
+  def show_blog_menu?
+    (!platform_context_decorator.instance.split_registration? && platform_context_decorator.instance.user_blogs_enabled) ||
+      (has_seller_profile? && @source.instance.lister_blogs_enabled || has_buyer_profile? && @source.instance.enquirer_blogs_enabled)
+  end
+
   private
 
   def social_connections

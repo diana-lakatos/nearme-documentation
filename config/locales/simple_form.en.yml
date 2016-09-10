@@ -383,6 +383,7 @@ en:
         name: 'New category group'
 
       blog_instance:
+        enabled: 'Enable Blog for MPO'
         owner:
           user_blogs_enabled: 'Enable user blogs'
 
