@@ -12,7 +12,7 @@
       - @unpaid_recurring_booking_periods.each do |period|
         %tr
           %td= "#{I18n.l(period.period_start_date, format: :short)} - #{I18n.l(period.period_end_date, format: :short)}"
-          %td= humanized_money_with_cents_and_symbol(period.total_amount)
+          %td= render_money(period.total_amount)
 
 = dashboard_simple_form_for @payment_subscription, url: dashboard_user_recurring_booking_payment_subscription_path(@recurring_booking, @payment_subscription), method: :put, data: { modal: true } do |f|
   .dialog__body

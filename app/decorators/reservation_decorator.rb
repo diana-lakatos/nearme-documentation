@@ -27,7 +27,7 @@ class ReservationDecorator < OrderDecorator
   end
 
   def total_cost
-    humanized_money_with_cents_and_symbol(total_amount_cents)
+    render_money(total_amount_cents)
   end
 
   def periods_cost
@@ -39,14 +39,14 @@ class ReservationDecorator < OrderDecorator
   end
 
   def unit_price_with_currency
-    humanized_money_with_cents_and_symbol(unit_price)
+    render_money(unit_price)
   end
 
   def subtotal_price
     if subtotal_amount.to_f.zero?
       "Free!"
     else
-      humanized_money_with_cents_and_symbol(subtotal_amount)
+      render_money(subtotal_amount)
     end
   end
 
@@ -54,13 +54,13 @@ class ReservationDecorator < OrderDecorator
     if service_fee_amount_guest.to_f.zero?
       "Free!"
     else
-      humanized_money_with_cents_and_symbol(service_fee_amount_guest)
+      render_money(service_fee_amount_guest)
     end
   end
 
   def tax_price
     if total_tax_amount && total_tax_amount > 0
-      humanized_money_with_cents_and_symbol(total_tax_amount)
+      render_money(total_tax_amount)
     else
       nil
     end
@@ -70,19 +70,19 @@ class ReservationDecorator < OrderDecorator
     if total_amount.to_f.zero?
       "Free!"
     else
-      humanized_money_with_cents_and_symbol(total_amount)
+      render_money(total_amount)
     end
   end
 
   def total_payable_to_host_formatted
-    humanized_money_with_cents_and_symbol(total_payable_to_host)
+    render_money(total_payable_to_host)
   end
 
   def paid
     if is_free?
-      humanized_money_with_cents_and_symbol(0.0)
+      render_money(0.0)
     elsif paid?
-      humanized_money_with_cents_and_symbol(payment.amount)
+      render_money(payment.amount)
     else
       payment.state.titleize
     end
@@ -111,7 +111,7 @@ class ReservationDecorator < OrderDecorator
   end
 
   def formatted_balance
-    humanized_money_with_cents_and_symbol(balance/100.0)
+    render_money(balance/100.0)
   end
 
   def dates_to_array

@@ -7,23 +7,23 @@
         = link_to @payment.payer.name, edit_instance_admin_manage_user_path(@payment.payer)
       %li
         Total:
-        = humanized_money_with_cents_and_symbol @payment.total_amount
+        = render_money @payment.total_amount
       %li
         Subtotal:
-        = humanized_money_with_cents_and_symbol @payment.subtotal_amount
+        = render_money @payment.subtotal_amount
       %li
         Service Fee:
-        = humanized_money_with_cents_and_symbol @payment.service_fee_amount_guest
+        = render_money @payment.service_fee_amount_guest
       %li
         Service Usell & Addons:
-        = humanized_money_with_cents_and_symbol @payment.service_additional_charges
+        = render_money @payment.service_additional_charges
       %li
         Host Usell & Addons:
-        = humanized_money_with_cents_and_symbol @payment.host_additional_charges
+        = render_money @payment.host_additional_charges
       - if @payment.payable.respond_to?(:tax_included_in_price) && @payment.payable.tax_included_in_price
         %li
           Tax included
-          = humanized_money_with_cents_and_symbol @payment.payable.total_tax_amount
+          = render_money @payment.payable.total_tax_amount
       %li
         State:
         = @payment.state
@@ -62,7 +62,7 @@
             = charge.payment_gateway_mode
           %p
             Amount:
-            = humanized_money_with_cents_and_symbol charge.price
+            = render_money charge.price
 
           %p
             Response:

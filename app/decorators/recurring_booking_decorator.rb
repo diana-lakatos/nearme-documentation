@@ -38,19 +38,19 @@ class RecurringBookingDecorator < OrderDecorator
     if subtotal_amount.to_f.zero?
       "Free!"
     else
-      humanized_money_with_cents_and_symbol(total_payable_to_host)
+      render_money(total_payable_to_host)
     end
   end
 
   def total_payable_to_host_formatted
-    humanized_money_with_cents_and_symbol(total_payable_to_host)
+    render_money(total_payable_to_host)
   end
 
   def total_price_for_guest
     if subtotal_amount.to_f.zero?
       "Free!"
     else
-      humanized_money_with_cents_and_symbol(total_amount)
+      render_money(total_amount)
     end
   end
 
@@ -66,7 +66,7 @@ class RecurringBookingDecorator < OrderDecorator
     if service_fee_amount_guest.to_f.zero?
       "Free!"
     else
-      humanized_money_with_cents_and_symbol(service_fee_amount_guest)
+      render_money(service_fee_amount_guest)
     end
   end
 
@@ -74,12 +74,12 @@ class RecurringBookingDecorator < OrderDecorator
     if total_amount.to_f.zero?
       "Free!"
     else
-      humanized_money_with_cents_and_symbol(total_amount)
+      render_money(total_amount)
     end
   end
 
   def last_unpaid_amount
-    humanized_money_with_cents_and_symbol(recurring_booking_periods.unpaid.last.try(:total_amount))
+    render_money(recurring_booking_periods.unpaid.last.try(:total_amount))
   end
 
   def selected_dates_summary(options = {})
@@ -126,7 +126,7 @@ class RecurringBookingDecorator < OrderDecorator
   end
 
   def formatted_balance
-    humanized_money_with_cents_and_symbol(balance/100.0)
+    render_money(balance/100.0)
   end
 
   def dates

@@ -1,6 +1,6 @@
 - if f.object.respond_to?(:payable)
   - f.object.payable.host_line_items.each do |hli|
-    .alert.alert-info= t('dashboard.payments.merchant_fee_charge', name: hli.name, price: humanized_money_with_cents_and_symbol(hli.unit_price)).html_safe
+    .alert.alert-info= t('dashboard.payments.merchant_fee_charge', name: hli.name, price: render_money(hli.unit_price)).html_safe
 
 - if f.object.payment_methods.credit_card.blank?
   .alert.warning

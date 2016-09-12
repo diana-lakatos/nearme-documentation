@@ -38,7 +38,7 @@
             = t('dashboard.host_reservations.complete_reservation.total_cost')
           .col-xs-6.col-sm-2
             .amount{ data: { currency: @reservation.unit_price.symbol } }
-              = humanized_money_with_cents_and_symbol(@reservation.unit_price)
+              = render_money(@reservation.unit_price)
 
       %hr
 

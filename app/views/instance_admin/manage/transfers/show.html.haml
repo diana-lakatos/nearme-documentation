@@ -95,15 +95,15 @@
         %tr
           %th
             = t('instance_admin.manage.transfers.amount_transferred')
-          %td= humanized_money_with_cents_and_symbol(resource.amount)
+          %td= render_money(resource.amount)
         %tr
           %th
             = t('instance_admin.manage.transfers.guest_fee')
-          %td= humanized_money_with_cents_and_symbol(resource.service_fee_amount_guest)
+          %td= render_money(resource.service_fee_amount_guest)
         %tr
           %th
             = t('instance_admin.manage.transfers.host_fee')
-          %td= humanized_money_with_cents_and_symbol(resource.service_fee_amount_host)
+          %td= render_money(resource.service_fee_amount_host)
 
 
 .content-container
