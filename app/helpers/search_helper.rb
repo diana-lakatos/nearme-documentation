@@ -88,4 +88,5 @@ module SearchHelper
       end.join("\n").html_safe
     end
   end
+
 end

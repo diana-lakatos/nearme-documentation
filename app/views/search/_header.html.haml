@@ -58,3 +58,6 @@
         = render partial: 'search/filter', locals: { header_name: t(ca.label_key), selected_values: params[:lg_custom_attributes] ? params[:lg_custom_attributes][ca.name] || [] : [], input_name: "lg_custom_attributes[#{ca.name}][]", options: ca.valid_values_translated, name: ca.name }
       - if @searcher.transactable_type.display_location_type_filter?
         = render partial: 'search/filter', locals: { header_name: 'Location Types', selected_values: params[:location_types_ids] || [], input_name: 'location_types_ids[]', options: @searcher.filterable_location_types.map { |lt| [lt.name.downcase, lt.name ] } }
+      - if @transactable_type.show_price_slider
+        .search-list-price-slider-container
+          = render partial: 'search/shared/price_slider'

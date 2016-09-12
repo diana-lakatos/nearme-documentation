@@ -350,6 +350,7 @@ en:
         resumed: 'Order has been resumed.'
         approved: 'Order has been approved.'
         error_update: 'Order has not been updated.'
+        can_not_approve: "Can't approve order with pending invoices"
       shipping_category:
         created: 'Shipping category has been created.'
         deleted: 'Shipping category has been deleted.'

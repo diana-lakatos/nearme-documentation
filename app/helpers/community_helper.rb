@@ -6,10 +6,10 @@ module CommunityHelper
   end
 
   def address_for_user_card(address)
-    if address.city.present? && address.state.present?
+    if address.try(:city).present? && address.try(:state).present?
       "#{address.city}, #{address.state}"
     else
-      address.address
+      address.try(:address)
     end
   end
 

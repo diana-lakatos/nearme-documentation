@@ -38,7 +38,6 @@ module.exports = class SearchSearchController extends SearchController
     @initializeMap()
     @bindEvents()
     @initializeEndlessScrolling()
-    @reinitializeEndlessScrolling = false
     @initializeConnectionsTooltip()
     setTimeout((=> @processingResults = false), 1000)
     @responsiveCategoryTree()
@@ -146,10 +145,6 @@ module.exports = class SearchSearchController extends SearchController
       loader: '<div class="row-fluid span12"><h1><img src="' + $('img[alt=Spinner]').eq(0).attr('src') + '"><span>Loading More Results</span></h1></div>',
       onRenderComplete: (items) =>
         @initializeConnectionsTooltip()
-        # when there are no more resuls, add special div element which tells us, that we need to reinitialize ias - it disables itself on the last page...
-        if !$('#results .pagination .next_page').attr('href')
-          $('#results').append('<div id="reinitialize"></div>')
-          reinitialize = $('#reinitialize')
     })
 
     ias.on 'rendered', (items)->
@@ -294,10 +289,12 @@ module.exports = class SearchSearchController extends SearchController
      # Infinite-Ajax-Scroller [ ias ] which we use disables itself when there are no more results
      # we need to reenable it when it is necessary, and only then - otherwise we will get duplicates
 
-    if $('#reinitialize').length > 0
-      @initializeEndlessScrolling()
     @geocodeSearchQuery =>
       @triggerSearchAndHandleResults =>
+        if $.ias
+          $.ias('destroy')
+          @initializeEndlessScrolling()
+
         @movableGoogleMap = $('#search-result-movable-google-map').get(0)
         new SearchResultsGoogleMapController(@resultsContainer(), @movableGoogleMap) if @movableGoogleMap?
         @updateMapWithListingResults() if @map?
