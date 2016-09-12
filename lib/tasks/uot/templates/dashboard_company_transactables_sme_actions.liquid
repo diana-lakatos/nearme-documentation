@@ -6,6 +6,13 @@
     </li>
   {% endif %}
 
+  {% if current_status == 'pending' %}
+    {% assign transactable_collaborator = current_user | find_collaborator: transactable %}
+    <li>
+      <a class="btn btn-danger" href="{{ 'dashboard_transactable_collaborator_path' | generate_url: transactable_collaborator.id }}" data-method="delete" data-confirm="Are you sure?">Decline Project</a>
+    </li>
+  {% endif %}
+
   {% if order != blank and transactable.completed? == true %}
     <li><a href="{{ 'dashboard_order_order_items_path' | generate_url: order_id: order.id, transactable_id: transactable.id }}" class="btn btn-default">View Time &amp; Expenses</a></li>
   {% endif %}
