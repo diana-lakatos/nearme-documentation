@@ -34,9 +34,8 @@
                 %td= order_item.currency
                 %td
                   %b= humanized_money_with_cents_and_symbol(order_item.total_amount)
-  - else
+  - elsif (item = @order.transactable_line_items.first).present?
     %h4 Items
-    - item = @order.transactable_line_items.first
     .row
       .table-container.col-xs-12
         %table.table
