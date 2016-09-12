@@ -815,6 +815,8 @@ namespace :uot do
 
     def create_search_list!
       load_template('search/list', false)
+      load_template('search/basic_search')
+      load_template('search/advanced_search')
     end
 
     def create_user_profile!
