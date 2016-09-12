@@ -8,6 +8,7 @@ module.exports = class Search
     @pageInput ||= => @form.find('input#_page');
     @topnavForm = $('form#search_topnav')
     @topnavFormQuery = $('#topnav_query')
+    @searchTabNav = $('nav.search-types')
     @searchTabs = $('nav.search-types li a')
     @actionButtons = $('nav.search-types .actions a')
     @paginationContainer = $('.pagination-more-a')
@@ -31,6 +32,7 @@ module.exports = class Search
       event.preventDefault()
       @triggerActionButtonsVisibility($(event.target))
       @triggerTabSwitchAndHandleResults($(event.target))
+      @triggerRelatedDropdownSwitch($(event.target))
 
   bindForm: ->
     @form = $('form#search_filter')
@@ -54,9 +56,16 @@ module.exports = class Search
   triggerTabSwitchAndHandleResults: (tab) ->
     tab.parents('ul').find('li.is-active').removeClass('is-active')
     tab.parents('li').addClass('is-active')
+
     data = { search_type: tab.data('search-type'), query: @topnavFormQuery.val(), page: 1 }
     @triggerSearchAndHandleResults(data)
 
+  triggerRelatedDropdownSwitch: (tab) ->
+    index = @searchTabs.index(tab)
+    $options = $('select option', @searchTabNav)
+
+    $options.attr('selected', false)
+    $options.eq(index).attr('selected', true)
 
 # Triggers a search with default UX behaviour and semantics.
   triggerSearchAndHandleResults: (data) ->
