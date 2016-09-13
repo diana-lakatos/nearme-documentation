@@ -56,6 +56,7 @@ namespace :litvault do
     end
 
     def create_transactable_types!
+      @instance.transactable_types.where(name: 'Project').destroy_all
       transactable_type = @instance.transactable_types.where(name: 'Individual Case').first_or_initialize
       transactable_type.attributes = {
         name: 'Individual Case',
@@ -124,6 +125,9 @@ namespace :litvault do
     end
 
     def create_custom_attributes!
+      if CustomAttributes::CustomAttribute.where(name: 'office_location').any?
+        CustomAttributes::CustomAttribute.destroy_all
+      end
       @instance.transactable_types.each do |tt|
         states = tt.custom_attributes.where({
           name: 'states'
@@ -196,7 +200,8 @@ namespace :litvault do
           {'location'     => 'name'},
           {'location'     => 'description'},
           {'location'     => 'address'},
-          {'transactable' => 'states'},
+          {'transactable' => 'Category - States'},
+          {'transactable' => 'price'},
           {'location'     => 'location_type'},
           {'location'     => 'phone'}
         ]

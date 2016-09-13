@@ -1330,9 +1330,9 @@ ActiveRecord::Schema.define(version: 20160907133901) do
     t.string   "encrypted_google_consumer_secret",              limit: 255
     t.string   "default_oauth_signin_provider"
     t.boolean  "custom_waiver_agreements",                                                          default: true
+    t.string   "time_zone"
     t.string   "seller_attachments_access_level",               limit: 255,                         default: "disabled",    null: false
     t.integer  "seller_attachments_documents_num",                                                  default: 10,            null: false
-    t.string   "time_zone"
     t.string   "priority_view_path"
     t.boolean  "enable_language_selector",                                                          default: false,         null: false
     t.boolean  "click_to_call",                                                                     default: false
@@ -1344,9 +1344,9 @@ ActiveRecord::Schema.define(version: 20160907133901) do
     t.boolean  "lister_blogs_enabled",                                                              default: false
     t.boolean  "tax_included_in_price",                                                             default: true
     t.boolean  "skip_meta_tags",                                                                    default: false
-    t.boolean  "use_cart",                                                                          default: false
     t.string   "test_email"
     t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
+    t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
     t.string   "orders_received_tabs"
     t.string   "my_orders_tabs"
@@ -3017,8 +3017,8 @@ ActiveRecord::Schema.define(version: 20160907133901) do
     t.boolean  "searchable",                                                                     default: true
     t.boolean  "action_regular_booking",                                                         default: true
     t.boolean  "action_continuous_dates_booking",                                                default: false
-    t.boolean  "search_location_type_filter",                                                    default: true
     t.boolean  "rental_shipping",                                                                default: false
+    t.boolean  "search_location_type_filter",                                                    default: true
     t.boolean  "show_company_name",                                                              default: true
     t.string   "slug"
     t.string   "default_search_view"
@@ -3045,8 +3045,8 @@ ActiveRecord::Schema.define(version: 20160907133901) do
     t.boolean  "single_transactable",                                                            default: false
     t.decimal  "cancellation_policy_penalty_hours",                      precision: 8, scale: 2, default: 0.0
     t.boolean  "display_additional_charges",                                                     default: true
-    t.boolean  "hide_additional_charges_on_listing_page",                                        default: false,      null: false
     t.boolean  "single_location",                                                                default: false,      null: false
+    t.boolean  "hide_additional_charges_on_listing_page",                                        default: false,      null: false
     t.hstore   "custom_settings",                                                                default: {},         null: false
     t.boolean  "auto_accept_invitation_as_collaborator",                                         default: false
     t.boolean  "require_transactable_during_onboarding",                                         default: true
