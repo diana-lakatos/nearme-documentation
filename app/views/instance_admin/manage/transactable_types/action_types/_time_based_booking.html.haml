@@ -1,7 +1,7 @@
 = render 'instance_admin/manage/transactable_types/action_types/pricings', f: f
 .row
   .input-container.col-xs-4
-    = tt_form.input :default_availability_template_id, collection: current_instance.availability_templates.all, required: false, input_html: { class: 'form-control' }, include_blank: true
+    = tt_form.input :default_availability_template_id, collection: [[t('general.none'), '']] + current_instance.availability_templates.all.map { |at| [at.name, at.id] }, required: false, input_html: { class: 'form-control' }, include_blank: false
   .input-container.col-xs-4
     = f.input :minimum_booking_minutes, required: false, input_html: { class: 'form-control' }
 
