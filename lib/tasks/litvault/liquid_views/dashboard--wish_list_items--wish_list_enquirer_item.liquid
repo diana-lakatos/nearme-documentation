@@ -1,0 +1,24 @@
+{% assign wish_list_item = wish_list_enquirer_item %}
+
+{% if wish_list_item.wishlistable_present? %}
+  <article class='wish-list__item wish-list__item-{{ wish_list_item.wishlistable_type }}' style="background-image: url({{ wish_list_item.image_url }});">
+
+    <a href='{{ wish_list_item.wishlistable_path }}' rel='external' class='link'>
+      <div class='wish-list__item__content'>
+        <div class='name'>
+          {{ wish_list_item.wishlistable_name }}
+        </div>
+        <div class='description'>
+          {{ wish_list_item.wishlistable.description }}
+        </div>
+        <div class='law-firm'>
+          {{ wish_list_item.wishlistable.buyer_properties['law_firm'] }}
+        </div>
+      </div>
+    </a>
+
+    <div class='actions'>
+      <a href='{{ wish_list_item.dashboard_wish_list_item_path }}' rel='nofollow' data-method='delete' class='action--delete'>{{ 'wish_lists.buttons.delete' | translate }}</a>
+    </div>
+  </article>
+{% endif %}

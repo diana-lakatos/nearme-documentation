@@ -1,0 +1,23 @@
+{% content_for 'page_header' %}
+  <h1>{{ 'wish_lists.name' | translate }}
+{% endcontent_for %}
+
+<div class='panel'>
+  <div class='panel-body'>
+    {% if items.size > 0 %}
+      <div class='wish-list'>
+        {% include 'dashboard/wish_list_items/wish_list_item' for items %}
+      </div>
+    {% else %}
+      <p class='empty-resultset'>
+        {{ 'wish_lists.empty_list' | translate }}
+      </p>
+    {% endif %}
+  </div>
+</div>
+
+{% if items.size > 0 %}
+  <div class='form-actions'>
+    <a href="{{ 'clear_dashboard_wish_list_items_path' | generate_url }}" data-method='delete' data-confirm="{{ 'wish_lists.confirmations.clear' | translate }}">{{ 'wish_lists.buttons.clear' | translate }}</a>
+  </div>
+{% endif %}
