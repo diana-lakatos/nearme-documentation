@@ -29,7 +29,7 @@ module Api
         when 'buyer'
           WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::EnquirerAccountCreated, @user.id)
         end
-        render json: ApiSerializer.serialize_object(@user)
+        render json: ApiSerializer.serialize_object(@user, meta: { csrf_token: form_authenticity_token })
       else
         render json: ApiSerializer.serialize_errors(@user.errors)
       end
