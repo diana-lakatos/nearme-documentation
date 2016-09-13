@@ -1,20 +1,26 @@
 var path = require('path');
 var fs = require('fs');
 var gutil = require('gulp-util');
+var modernizr = require('gulp-modernizr');
 var del = require('del');
 
 module.exports = function(gulp, config){
 
     var files = {
-        ckeditor: path.join(config.paths.bower_components, 'ckeditor'),
+        ckeditor: path.join(config.paths.node_modules, 'ckeditor'),
         ckeditorConfig: path.join(config.paths.javascripts, 'ckeditor','config.js'),
-        raygun: path.join(config.paths.bower_components, 'raygun4js','dist','raygun.min.js'),
-        raygunMap: path.join(config.paths.bower_components, 'raygun4js','dist','raygun.min.js.map'),
-        modernizr: path.join(config.paths.javascripts, 'vendor', 'modernizr.js'),
-        jquery: path.join(config.paths.javascripts, 'vendor', 'jquery','jquery.min.js'),
-        jqueryMap: path.join(config.paths.javascripts, 'vendor', 'jquery','jquery.min.map'),
-        placeholders: path.join(config.paths.bower_components, 'placeholders','dist','placeholders.min.js')
+        raygun: path.join(config.paths.node_modules, 'raygun4js','dist','raygun.min.js'),
+        raygunMap: path.join(config.paths.node_modules, 'raygun4js','dist','raygun.min.js.map'),
+        jquery: path.join(config.paths.node_modules, 'jquery', 'dist', 'jquery.min.js'),
+        jqueryMap: path.join(config.paths.node_modules, 'jquery', 'dist', 'jquery.min.map'),
+        placeholders: path.join(config.paths.javascripts, 'vendor', 'placeholders.js')
     };
+
+    var modernizrConfig = {
+        options: ['setClasses'],
+        tests: ['geolocation', 'svg', 'touchevents', 'canvas', 'filereader']
+    };
+
 
     gulp.task('vendor:checkfiles', function(){
         for (var file in files) {
@@ -46,12 +52,14 @@ module.exports = function(gulp, config){
     });
 
     gulp.task('vendor:modernizr', function(){
-        gulp.src(files.modernizr)
+        gulp.src(path.join(config.paths.javascripts, '*.js'))
+            .pipe(modernizr(modernizrConfig))
             .pipe(gulp.dest(path.join(config.paths.output, 'vendor')));
     });
 
     gulp.task('vendor:modernizr:dist', function(){
-        gulp.src(files.modernizr)
+        gulp.src(path.join(config.paths.javascripts, '*.js'))
+            .pipe(modernizr(modernizrConfig))
             .pipe(gulp.dest(path.join(config.paths.tmp, 'vendor')));
     });
 
@@ -69,15 +77,16 @@ module.exports = function(gulp, config){
     // inside of vendor libraries in application rather than from bower
     // Should revisit at some point to make sure jquery repository structure
     // is not changing anymore when on Semaphore, resulting in missing jquery files
+    // TODO: Verify if problem still occurs
     gulp.task('vendor:jquery:update', function(){
-        var libDir = path.join(config.paths.javascripts,'vendor','jquery');
+        var libDir = path.join(config.paths.javascripts, 'vendor', 'jquery');
         del(libDir);
 
         gulp.src([
-            path.join(config.paths.bower_components, 'jquery','dist','jquery.min.js'),
-            path.join(config.paths.bower_components, 'jquery','dist','jquery.min.map')
+            path.join(config.paths.node_modules, 'jquery', 'dist', 'jquery.min.js'),
+            path.join(config.paths.node_modules, 'jquery', 'dist', 'jquery.min.map')
         ])
-        .pipe(gulp.dest(libDir));
+            .pipe(gulp.dest(libDir));
 
         gulp.start('vendor:checkfiles');
     });

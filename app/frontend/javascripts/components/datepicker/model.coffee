@@ -1,4 +1,4 @@
-asEvented = require('asEvented')
+asEvented = require('asevented')
 dateUtil = require('../../lib/utils/date')
 
 # Internal backing model for datepicker data

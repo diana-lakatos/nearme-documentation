@@ -1,5 +1,5 @@
 urlUtil = require('../../lib/utils/url')
-require('raty/lib/jquery.raty')
+require('raty-js/lib/jquery.raty')
 
 module.exports = class DashboardReviewsController
   constructor: (@container) ->

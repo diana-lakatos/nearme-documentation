@@ -14,7 +14,7 @@ module.exports = function(gulp, browserSync, config) {
     var sassConfig = {
         outputStyle: 'expanded',
         precision: 10,
-        includePaths: ['.', config.paths.bower_components, config.paths.node_modules]
+        includePaths: ['.', config.paths.node_modules]
     };
 
     function processStyles(files) {
@@ -82,7 +82,7 @@ module.exports = function(gulp, browserSync, config) {
     });
 
     /* Global task for all styles */
-    gulp.task('styles', ['styles:newui', 'styles:application', 'styles:instance_admin', 'styles:intel', 'styles:other']);
+    gulp.task('styles', ['styles:newui', 'styles:application', 'styles:instance_admin', 'styles:intel', 'styles:other' ]);
 
     gulp.task('styles:dist', function(){
         return gulp.src([path.join(config.paths.stylesheets, '*.scss'), path.join(config.paths.stylesheets, 'new_ui', '*.scss')])

@@ -2,7 +2,7 @@
 
 // Font awesome section
 @import "font-awesome/scss/variables";
-$fa-font-path: '/assets/font-awesome/';
+$fa-font-path: '/assets/font-awesome';
 
 @import "font-awesome/scss/mixins";
 @import "font-awesome/scss/path";
@@ -12,8 +12,8 @@ $fa-font-path: '/assets/font-awesome/';
 @import "font-awesome/scss/list";
 @import "font-awesome/scss/icons";
 
-@import "Jcrop/css/jquery.Jcrop";
-@import "chosen/chosen.min";
+@import "jquery-jcrop/css/jquery.Jcrop";
+@import "chosen-npm/public/chosen";
 @import "vendor/overrides/jcrop";
 @import "vendor/icui";
 
@@ -30,5 +30,5 @@ $fa-font-path: '/assets/font-awesome/';
 @import "eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min";
 @import "select2/select2";
 
-@import "spectrum/spectrum";
-@import 'jt.timepicker/jquery.timepicker';
+@import "spectrum-colorpicker/spectrum";
+@import "timepicker/jquery.timepicker";

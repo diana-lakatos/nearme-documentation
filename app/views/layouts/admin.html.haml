@@ -2,14 +2,13 @@
 %html
   %head
     %meta{name: 'app-server', content: ENV['HOSTNAME']}
-    
+
     %title
       Desks Near Me - Admin
     = csrf_meta_tag
     %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}
     %link{:href => "/favicon.ico", :rel => "shortcut icon"}/
 
-    = stylesheet_link_tag 'admin_vendor'
     = stylesheet_link_tag 'admin'
 
     = render 'shared/head/fonts'
