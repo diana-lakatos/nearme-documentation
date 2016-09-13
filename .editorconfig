@@ -22,8 +22,5 @@ indent_size = 2
 [*.rake]
 indent_size = 2
 
-[*.haml]
-indent_size = 2
-
 [*.md]
 trim_trailing_whitespace = false
