@@ -56,7 +56,8 @@ namespace :litvault do
     end
 
     def create_transactable_types!
-      @instance.transactable_types.where(name: 'Project').destroy_all
+      @instance.transactable_types.where.not(name: ['Individual Case', 'Group Case']).destroy_all
+
       transactable_type = @instance.transactable_types.where(name: 'Individual Case').first_or_initialize
       transactable_type.attributes = {
         name: 'Individual Case',
@@ -88,7 +89,41 @@ namespace :litvault do
         lessee: 'Client',
         enable_reviews: true
       }
+
+      transactable_type.offer_action ||= transactable_type.build_offer_action(
+        enabled: true,
+        cancellation_policy_enabled: "1",
+        cancellation_policy_hours_for_cancellation: 24,
+        cancellation_policy_penalty_hours: 1.5,
+        service_fee_guest_percent: 0,
+        service_fee_host_percent: 30,
+      )
+
+      pricing = transactable_type.offer_action.pricings.first_or_initialize
+      pricing.attributes = {
+        min_price_cents: 50_00,
+        max_price_cents: 150_00,
+        unit: 'hour',
+        number_of_units: 1,
+        order_class_name: 'Offer',
+        allow_free_booking: false,
+        allow_nil_price_cents: true
+      }
+
+      merchant_fee = transactable_type.merchant_fees.first_or_initialize
+      merchant_fee.attributes = {
+        name: "Finder's Fee",
+        amount_cents: 10000,
+        currency: "USD",
+        commission_receiver: "mpo"
+      }
+
       transactable_type.save!
+      pricing.save!
+
+      merchant_fee.save!
+
+
 
       transactable_type = @instance.transactable_types.where(name: 'Group Case').first_or_initialize
       transactable_type.attributes = {
@@ -121,7 +156,39 @@ namespace :litvault do
         lessee: 'Client',
         enable_reviews: true
       }
+
+      transactable_type.offer_action ||= transactable_type.build_offer_action(
+        enabled: true,
+        cancellation_policy_enabled: "1",
+        cancellation_policy_hours_for_cancellation: 24,
+        cancellation_policy_penalty_hours: 1.5,
+        service_fee_guest_percent: 0,
+        service_fee_host_percent: 30,
+      )
+
+      pricing = transactable_type.offer_action.pricings.first_or_initialize
+      pricing.attributes = {
+        min_price_cents: 50_00,
+        max_price_cents: 150_00,
+        unit: 'hour',
+        number_of_units: 1,
+        order_class_name: 'Offer',
+        allow_free_booking: false,
+        allow_nil_price_cents: true
+      }
+
+      merchant_fee = transactable_type.merchant_fees.first_or_initialize
+      merchant_fee.attributes = {
+        name: "Finder's Fee",
+        amount_cents: 10000,
+        currency: "USD",
+        commission_receiver: "mpo"
+      }
+
       transactable_type.save!
+      pricing.save!
+
+      merchant_fee.save!
     end
 
     def create_custom_attributes!
