@@ -9,6 +9,9 @@ en:
     labels:
       transactable:
         name: 'Item Name'
+  devise:
+    registrations:
+      signed_up: 'You have successfully registered. <a href="/dashboard/edit_profile">Click here</a> to complete your profile.'
 
   top_navbar:
     bookings_received: My Orders
