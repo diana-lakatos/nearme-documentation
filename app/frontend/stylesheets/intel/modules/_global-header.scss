@@ -32,7 +32,7 @@
         font-weight: normal;
         line-height: 40px;
 
-        @include bp-range(1405px, 1269px) {
+        @include bp-range(1420px, 1269px) {
           .text {
             display: none;
           }
@@ -310,7 +310,7 @@
               white-space: nowrap;
               text-overflow: ellipsis;
 
-              @include bp(1465px) {
+              @include bp(1270px) {
                 max-width: none;
               }
             }
