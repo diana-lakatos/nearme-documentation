@@ -25,6 +25,8 @@
       <a href="#case-invite-{{ user.id }}" class="button-a" data-case-invite-trigger>Invite to case</a>
     </div>
 
+    <input type='checkbox' name='user[collaborator_ids]' value='{{ user.id }}' class='bulk-invite-collabolator-id' />
+
+    <div class="case-invite" id="case-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
   </article>
-  <div class="case-invite" id="case-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
 {% endif %}

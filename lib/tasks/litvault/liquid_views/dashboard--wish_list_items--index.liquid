@@ -16,6 +16,7 @@ partial: false
       <div class='wish-list'>
         {% if current_user.has_seller_profile? %}
           {% include 'dashboard/wish_list_items/wish_list_lister_item' for items %}
+          <div id="case-bulk-invite" class='case-invite' data-collaborations-url="{{ 'bulk_collaborations_for_current_user_dashboard_company_users_path' | generate_url }}"></div>
         {% else %}
           {% include 'dashboard/wish_list_items/wish_list_enquirer_item' for items %}
         {% endif %}
