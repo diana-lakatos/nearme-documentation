@@ -166,9 +166,10 @@ en:
         blog_url: Blog
         facebook_url: "Facebook URL"
         twitter_url: "Twitter URL"
-        gplus_url: "Goggle+ URL"
+        gplus_url: "Google+ URL"
         instagram_url: "Instagram URL"
         youtube_url: "Youtube URL"
+        linkedin_url: "LinkedIn URL"
         rss_url: "RSS URL"
         favicon_image: 'Favicon (16px x 16px or 32px x 32px)'
         favicon_image_html: 'Favicon (16px &times; 16px or 32px &times; 32px)'
