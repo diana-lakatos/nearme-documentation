@@ -5,7 +5,7 @@ class Dashboard::Company::OrderItemsController < Dashboard::Company::BaseControl
   before_filter :check_owner, only: [:approve, :reject]
 
   def index
-    @transactables = (current_user.created_listings.without_state(:pending) + current_user.orders.where.not(confirmed_at: nil).map(&:transactable)).uniq
+    @transactables = current_user.created_listings.without_state(:pending).order('created_at DESC')
     @for_transactable = @transactables.find{ |t| t.id.to_s == params[:transactable_id] } if params[:transactable_id].present?
   end
 

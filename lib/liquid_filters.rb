@@ -408,10 +408,6 @@ module LiquidFilters
     PaymentGateway.with_credit_card.mode_scope.first.try(:id)
   end
 
-  def find_collaborators_for_user_projects(current_user, user)
-    user.source.transactable_collaborators.where(transactable_id: current_user.source.created_listings.with_state(:pending).pluck(:id))
-  end
-
   def map(object, method)
     object.map(&method.to_sym)
   end

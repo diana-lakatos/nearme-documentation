@@ -15,6 +15,8 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   scope :unpaid, -> { where(paid_at: nil) }
   scope :paid, -> { where.not(paid_at: nil) }
+  scope :pending, -> { with_state(:pending) }
+  scope :not_rejected, -> { where.not(state: 'rejected') }
 
   state_machine :state, initial: :pending do
     event :approve                  do transition [:rejected, :pending] => :approved; end

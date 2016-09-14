@@ -1,0 +1,8 @@
+- id_prefix ||= ''
+.listing-availability
+  %hr/
+  %h3
+    = title ||= t(:title, scope: [:pricing, :availability])
+  = f.simple_fields_for :availability_template, get_availability_template_object(f.object) do |at|
+    = at.input :id, as: :hidden, input_html: { value: at.object.id }
+    .unavailability= render 'schedules/unavailability', f: at

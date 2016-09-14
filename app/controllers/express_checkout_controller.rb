@@ -17,12 +17,16 @@ class ExpressCheckoutController < ApplicationController
   end
 
   def cancel
-    flash[:error] = t('flash_messages.reservations.payment_failed')
-    @order = @payment.payable
-    @order.restart_checkout!
-    @payment.destroy
+    if @payment.paid?
+      redirect_to dashboard_order_path(@payment.payable)
+    else
+      flash[:error] = t('flash_messages.reservations.payment_failed')
+      @order = @payment.payable
+      @order.restart_checkout!
+      @payment.destroy
 
-    redirect_to order_checkout_path(@order)
+      redirect_to order_checkout_path(@order)
+    end
   end
 
   private

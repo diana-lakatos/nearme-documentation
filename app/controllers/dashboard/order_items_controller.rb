@@ -5,7 +5,7 @@ class Dashboard::OrderItemsController < Dashboard::Company::BaseController
   before_filter :can_edit?, only: [:edit, :update]
 
   def index
-    @transactables = (current_user.created_listings.without_state(:pending) + current_user.orders.where.not(confirmed_at: nil).map(&:transactable)).uniq
+    @transactables = current_user.orders.where.not(confirmed_at: nil).order('created_at DESC').map(&:transactable)
     @for_transactable = @transactables.find{ |t| t.id.to_s == params[:transactable_id] } if params[:transactable_id].present?
   end
 

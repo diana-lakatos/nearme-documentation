@@ -63,7 +63,6 @@
                             = transactable_type.translated_bookable_noun
 
         - @searcher.searchable_categories.each do |category|
-          - binding.pry
           - unless category.autocomplete?
             = render partial: 'search/mixed/filter', locals: { category_id: category.id, header_name: category.translated_name, selected_values: @searcher.category_ids || [], input_name: 'category_ids[]', options: @searcher.category_options(category)}
           - else
