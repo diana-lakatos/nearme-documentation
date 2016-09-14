@@ -58,6 +58,8 @@
     .row
       .input-container.col-xs-4
         = f.input :rss_url, input_html: { class: 'form-control' }
+      .input-container.col-xs-4
+        = f.input :linkedin_url, input_html: { class: 'form-control' }
 
   = content_for :header_buttons do
     = f.button :submit, 'Save', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
