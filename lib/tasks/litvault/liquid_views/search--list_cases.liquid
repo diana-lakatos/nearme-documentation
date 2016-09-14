@@ -29,7 +29,7 @@
                             <option value="">By State</option>
                             {% for ca in platform_context.transactable_types.first.custom_attributes %}
                                 {% for value in ca.valid_values %}
-                                <option value='{{ value }}'{% if value == searcher.lg_custom_attributes_hash['state'] %} selected{% endif %}>{{ value }}</option>
+                                <option value='{{ value }}'{% if value == searcher.lg_custom_attributes_hash['state'].first %} selected{% endif %}>{{ value }}</option>
                                 {% endfor %}
                             {% endfor %}
                         </select>
