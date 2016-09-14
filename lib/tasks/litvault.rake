@@ -212,6 +212,7 @@ namespace :litvault do
           )
         })
         states.save!
+
       end
       law_firm = InstanceProfileType.find(580).custom_attributes.where(name: 'law_firm').first_or_initialize
       law_firm.assign_attributes({
@@ -401,6 +402,9 @@ namespace :litvault do
           transformation_hash.keys.each do |word|
             new_value = new_value.gsub(word, transformation_hash[word])
           end
+
+          new_value.gsub!('Cases_count', 'listings_count')
+
           if value != new_value
             t = Translation.find_or_initialize_by(locale: 'en', key: key, instance_id: @instance.id)
             t.value = new_value
