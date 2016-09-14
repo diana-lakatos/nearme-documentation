@@ -15,27 +15,27 @@
 
 <table class="payment-summary">
   <thead>
-    <th scope="col">Item</th>
+    <th scope="col">{{ 'orders.checkout.item' | translate }}</th>
 
     {% if @order.included_tax? %}
-      <th scope="col">Net</th>
-      <th scope="col">Tax</th>
+      <th scope="col">{{ 'orders.checkout.net' | translate }}</th>
+      <th scope="col">{{ 'orders.checkout.tax' | translate }}</th>
     {% endif %}
 
-    <th scope="col">Price</th>
+    <th scope="col">{{ 'orders.checkout.price' | translate }}</th>
 
     {% if @order.additional_tax? %}
-      <th scope="col">Tax</th>
-      <th scope="col">Gross</th>
+      <th scope="col">{{ 'orders.checkout.tax' | translate }}</th>
+      <th scope="col">{{ 'orders.checkout.gross' | translate }}</th>
     {% endif %}
 
-    <th scope="col">Qty</th>
-    <th scope="col">Total</th>
+    <th scope="col">{{ 'orders.checkout.qty' | translate }}</th>
+    <th scope="col">{{ 'orders.checkout.total' | translate }}</th>
   </thead>
   <tfoot>
     <tr>
       <td colspan="{% if @order.included_tax? || @order.additional_tax? %}4{% else %}2{% endif %}"></td>
-      <th headers="summary-total">Total</th>
+      <th headers="summary-total">{{ 'orders.checkout.total' | translate }}</th>
       <td id="summary-total">{{ @order.formatted_total_amount }}</td>
     </tr>
   </tfoot>

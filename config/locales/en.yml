@@ -2176,6 +2176,14 @@ en:
       refunded: "Payment refunded"
       authorized: "Payment authorized"
       voided: "Payment voided"
+    checkout:
+      item: "Item"
+      net: "Net"
+      tax: "Tax"
+      price: "Price"
+      gross: "Gross"
+      qty: "Qty"
+      total: "Total"
 
     index:
       title: 'My orders'
