@@ -1,4 +1,4 @@
-require('strftime')
+require('./gf3-strftime')
 # ICUI
 # ====
 #

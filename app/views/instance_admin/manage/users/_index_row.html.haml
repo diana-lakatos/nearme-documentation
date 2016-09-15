@@ -2,24 +2,4 @@
   %td= link_to resource.name, profile_path(resource)
   %td= resource.email
   %td= I18n.l(resource.created_at, format: :long)
-  - if PlatformContext.current.instance.is_community?
-    %td= link_to t('general.edit'), edit_instance_admin_manage_user_path(resource)
-
-  %td
-    - if resource != current_user
-      = link_to t('instance_admin.manage.users.login_as'), login_as_instance_admin_manage_user_path(resource), :method => :post,
-          data: { confirm: 'This will log you out and re-log you in as this user' }
-  %td
-    - if resource != current_user && !resource.deleted?
-      - if resource.banned? && resource.user_bans.first.present?
-        = link_to t('instance_admin.manage.users.account.unban'), instance_admin_manage_user_user_ban_path(resource, resource.user_bans.first), :method => :delete,
-          data: { confirm:  'You will unban this user from your marketplace, do you want to continue?' }
-      - else
-        = link_to t('instance_admin.manage.users.account.ban'), instance_admin_manage_user_user_bans_path(resource), :method => :post,
-          data: { confirm:  'You will ban this user from logging in to your marketplace, do you want to continue?' }
-  %td
-    - if resource != current_user
-      - if resource.deleted?
-        = link_to "Restore", restore_instance_admin_manage_user_path(resource), :method => :post, data: { confirm: 'Are you sure you want to restore this?' }
-      - else
-        = link_to "Delete", instance_admin_manage_user_path(resource), :method => :delete, data: { confirm: 'Are you sure you want to delete this?' }
+  %td= link_to t('general.details'), edit_instance_admin_manage_user_path(resource)

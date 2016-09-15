@@ -1,4 +1,4 @@
-require('jquery-tokeninput/src/jquery.tokeninput');
+require('../vendor/jquery-tokeninput');
 
 module.exports = class Tags
 

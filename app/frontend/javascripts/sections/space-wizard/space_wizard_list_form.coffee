@@ -1,6 +1,6 @@
 CustomInputs = require('../../components/custom_inputs');
 CustomSelects = require('../../components/custom_selects');
-jstz = require('exports?jstz!../../../vendor/jstz');
+jstz = require('exports?jstz!jstimezonedetect/dist/jstz');
 
 module.exports = class SpaceWizardSpaceForm
 

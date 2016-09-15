@@ -1,4 +1,4 @@
-asEvented = require('asEvented')
+asEvented = require('asevented')
 DatepickerModel = require('./datepicker/model')
 DatepickerView = require('./datepicker/view')
 

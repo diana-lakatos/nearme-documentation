@@ -4,11 +4,11 @@ var DNM = require('./app');
 
 require('../vendor/jquery-ui-1.9.2.custom.min');
 require('jquery-ui/ui/widget');
-require('../vendor/bootstrap-3.2.0');
+require('bootstrap-sass/assets/javascripts/bootstrap');
 require('bootstrap-switch/src/coffee/bootstrap-switch');
 require('../vendor/nested_form');
-require('cocoon');
-require('jquery-timeago');
+require('../vendor/cocoon');
+require('timeago');
 
 DNM.registerInitializer(function(){
     var els = $('div[data-fileupload-wrapper]');
@@ -548,8 +548,8 @@ DNM.registerInitializer(function(){
         return;
     }
 
-    require.ensure('spectrum/spectrum', function(require){
-        require('spectrum/spectrum');
+    require.ensure('spectrum-colorpicker', function(require){
+        require('spectrum-colorpicker');
     });
 });
 

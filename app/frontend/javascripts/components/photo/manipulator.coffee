@@ -1,5 +1,5 @@
-require('jQueryRotate/index');
-require('Jcrop/js/jquery.Jcrop');
+require('../../vendor/jQueryRotate');
+require('jquery-jcrop/js/jquery.Jcrop');
 Modal = require('../modal');
 
 module.exports = class PhotoManipulator

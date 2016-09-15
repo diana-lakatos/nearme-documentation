@@ -11,8 +11,8 @@ require('./intel/vendor/trueresize');
 require('./intel/vendor/geocomplete');
 require('./intel/vendor/bootstrap-tab');
 require('./intel/vendor/jquery-ui');
-require('jQueryRotate/index');
-require('cocoon');
+require('./vendor/jQueryRotate');
+require('../vendor/cocoon');
 
 DNM.registerInitializer(function(){
     var

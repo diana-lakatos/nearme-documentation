@@ -1,5 +1,5 @@
 require('../../vendor/jquery.hasScrollBar');
-asEvented = require('asEvented')
+asEvented = require('asevented')
 InfoBox = require('exports?InfoBox!../../vendor/infobox');
 
 # Wrapper class for our custom Google Map popover dialog boxes.
