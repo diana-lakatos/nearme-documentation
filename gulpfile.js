@@ -10,7 +10,6 @@ var
         paths: {
             root: __dirname,
             stylesheets: path.join(__dirname, 'app', 'frontend', 'stylesheets'),
-            bower_components: path.join(__dirname, 'vendor', 'assets', 'bower_components'),
             node_modules: path.join(__dirname, 'node_modules'),
             javascripts: path.join(__dirname, 'app', 'frontend', 'javascripts'),
             fonts: path.join(__dirname, 'app', 'frontend', 'fonts'),
@@ -32,4 +31,3 @@ require('./gulp/build')(gulp, config);
 require('./gulp/version')(gulp, config);
 
 gulp.task('default', ['build']);
-

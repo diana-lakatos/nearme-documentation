@@ -1,4 +1,4 @@
-require 'raty/lib/jquery.raty.js'
+require 'raty-js/lib/jquery.raty'
 
 module.exports = class Review
   constructor: (form)->
@@ -135,4 +135,3 @@ module.exports = class Review
 
   removeErrors: ->
     @form.find('.comment-error, .rating-error').remove()
-

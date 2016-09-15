@@ -78,6 +78,15 @@ en:
   day:
     one: "1 day"
     other: "%{count} days"
+  week:
+    short:
+      monday: 'M'
+      tuesday: 'T'
+      wednesday: 'W'
+      thursday: 'TH'
+      friday: 'F'
+      saturday: 'SA'
+      sunday: 'SU'
   night:
     one: "1 night"
     other: "%{count} nights"
@@ -649,6 +658,7 @@ en:
           reference: Reference
           id: ID
           lessor: Lessor
+          lister: Lister
           paid_at: "Paid at"
         resource:
           plural:

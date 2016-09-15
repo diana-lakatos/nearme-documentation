@@ -4,14 +4,15 @@ var DNM = require('./app');
 
 require('../vendor/jquery-ui-1.10.4.custom.min');
 require('jquery-ui/ui/widget');
-require('jquery-timeago');
-require('jqueryui-touch-punch');
+require('timeago');
+require('jquery-ui-touch-punch');
 
 require('../vendor/bootstrap');
 require('../vendor/bootstrap-modal-fullscreen');
 require('../vendor/detect-mobile-browser');
 require('../vendor/nested_form');
-require('cocoon');
+require('../vendor/cocoon');
+
 
 $.ajaxSetup({
     'beforeSend': function(xhr) {
@@ -292,8 +293,8 @@ DNM.registerInitializer(function(){
         return;
     }
 
-    require.ensure('spectrum/spectrum', function(require){
-        require('spectrum/spectrum');
+    require.ensure('spectrum-colorpicker', function(require){
+        require('spectrum-colorpicker');
     });
 });
 

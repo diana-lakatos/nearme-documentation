@@ -1,4 +1,4 @@
-asEvented = require('asEvented')
+asEvented = require('asevented')
 
 # Class that constrains the height of an element based on the height of another element.
 # Useful for preserving equal height of adjacent fluid elements.

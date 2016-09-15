@@ -1,4 +1,5 @@
-require('history.js/scripts/bundled/html5/jquery.history.js');
+require('history.js/history.js');
+require('history.js/history.adapter.ender.js');
 
 Forms = require('../forms')
 

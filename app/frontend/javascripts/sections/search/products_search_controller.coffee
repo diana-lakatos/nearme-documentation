@@ -1,10 +1,11 @@
-require('history.js/scripts/bundled/html5/jquery.history.js')
+require('history.js/history')
+require('history.js/history.adapter.ender')
 SearchController = require('./controller')
 urlUtil = require('../../lib/utils/url')
 SearchScreenLockLoader = require('./screen_lock_loader')
 
-window.IASCallbacks = require('exports?IASCallbacks!jquery-ias/src/callbacks')
-require('jquery-ias/src/jquery-ias')
+window.IASCallbacks = require('exports?IASCallbacks!../../vendor/jquery-ias/callbacks')
+require('../../vendor/jquery-ias/jquery-ias')
 
 module.exports = class SearchProductsSearchController extends SearchController
   constructor: (@form, @container) ->

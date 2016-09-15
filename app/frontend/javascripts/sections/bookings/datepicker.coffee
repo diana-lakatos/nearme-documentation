@@ -1,12 +1,12 @@
 AvailabilityView = require('./datepicker/availability_view')
 ModeAndConstraintModel = require('./datepicker/mode_and_constraint_model')
-asEvented = require('asEvented')
+asEvented = require('asevented')
 Datepicker = require('../../components/datepicker')
 DatepickerModelSingle = require('../../components/datepicker/single')
 dateUtil = require('../../lib/utils/date')
 urlUtil = require('../../lib/utils/url')
 TimePicker = require('./time_picker')
-require('strftime')
+require('../../../vendor/gf3-strftime')
 
 # Wraps our custom Datepicker implementation for use as a Booking selection calendar.
 #

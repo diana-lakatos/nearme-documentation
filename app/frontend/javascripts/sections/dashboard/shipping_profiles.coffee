@@ -1,5 +1,5 @@
 Modal = require('../../components/modal')
-require('select2')
+require('select2/select2')
 
 module.exports = class ShippingProfiles
   constructor: (form, @profile_add_success = false) ->
@@ -105,4 +105,3 @@ module.exports = class ShippingProfiles
       @form.find(".shipping_hidden:checked").eq(0).prop('checked', false).trigger("change")
       if @form.find(".shipping_hidden:checked").length == 0
         @form.find(".add_shipping_profile").hide()
-
