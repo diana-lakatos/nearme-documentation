@@ -27,6 +27,7 @@ class RecurringBookingDrop < OrderDrop
   delegate :quantity, :subtotal_price, :guest_service_fee, :total_price, :pending?,
     :credit_card_payment?, :rejection_reason, :owner, :has_service_fee?,
     :additional_charges, :with_delivery?, :last_unpaid_amount, :total_payable_to_host_formatted, :total_units_text,
+    :manage_booking_status_info, :manage_booking_status_info_new,
     to: :recurring_booking
 
   # transactable_type
