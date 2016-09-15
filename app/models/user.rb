@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
 
+  include Searchable
+
   include CreationFilter
   include QuerySearchable
   include Approvable
@@ -242,6 +244,12 @@ class User < ActiveRecord::Base
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((user_profiles.properties->?), ',') && ARRAY[?]", property, values) if values.present? }
   scope :by_profile_type, -> (ipt_id) { includes(:user_profiles).where(user_profiles: { instance_profile_type_id: ipt_id }) if ipt_id.present? }
   scope :with_enabled_profile, -> (ipt_id) { where(user_profiles: { enabled: true }) }
+
+  scope :order_by_array_of_ids, -> (user_ids) {
+    user_ids ||= []
+    user_ids_decorated = user_ids.each_with_index.map {|lid, i| "WHEN users.id=#{lid} THEN #{i}" }
+    order("CASE #{user_ids_decorated.join(' ')} END") if user_ids.present?
+  }
 
   validates_with CustomValidators
   validates :name, :first_name, presence: true

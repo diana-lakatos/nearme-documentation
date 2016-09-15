@@ -39,6 +39,7 @@ class InstanceType::SearcherFactory
   def community_searcher
     if @params[:search_type] == 'people'
       @transactable_type = InstanceProfileType.default.first
+      @factory_type = @transactable_type.search_engine
       user_searcher
     else
       "InstanceType::Searcher::#{@params[:search_type].titleize}Searcher".constantize.new(@params, @current_user)
@@ -46,7 +47,11 @@ class InstanceType::SearcherFactory
   end
 
   def user_searcher
-    "InstanceType::Searcher::UserSearcher".constantize.new(@params, @current_user, @transactable_type)
+    if elasticsearch?
+      "InstanceType::Searcher::Elastic::UserSearcher".constantize.new(@params, @current_user, @transactable_type)
+    else
+      "InstanceType::Searcher::UserSearcher".constantize.new(@params, @current_user, @transactable_type)
+    end
   end
 
   private

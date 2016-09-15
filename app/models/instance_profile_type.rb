@@ -49,10 +49,6 @@ class InstanceProfileType < ActiveRecord::Base
     SEARCH_VIEWS.first
   end
 
-  def search_engine
-    'postgres'
-  end
-
   def searcher_type
     'fulltext'
   end

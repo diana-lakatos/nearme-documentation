@@ -400,6 +400,7 @@ class SecuredParams
   def instance_profile_type
     [
       :searchable,
+      :search_engine,
       :show_categories,
       :category_search_type,
       :position,
