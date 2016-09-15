@@ -7,7 +7,7 @@ class Api::V3::UsersControllerTest < ActionController::TestCase
       assert_difference('User.count') do
         post :create, user: user_attributes, format: :json
       end
-      assert_equal ApiSerializer.serialize_object(assigns(:user)), JSON.parse(response.body)
+      assert_equal ApiSerializer.serialize_object(assigns(:user)), JSON.parse(response.body).slice('data')
     end
 
     context 'force accepting ToS' do
@@ -25,7 +25,7 @@ class Api::V3::UsersControllerTest < ActionController::TestCase
       should 'sign up after accepting ToS' do
         assert_difference('User.count') do
           post :create, user: user_attributes.merge({accept_terms_of_service: "1"}), format: :json
-          assert_equal ApiSerializer.serialize_object(assigns(:user)), JSON.parse(response.body)
+          assert_equal ApiSerializer.serialize_object(assigns(:user)), JSON.parse(response.body).slice('data')
         end
       end
     end

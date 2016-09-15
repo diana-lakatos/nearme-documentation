@@ -14,10 +14,6 @@
     @include bp($screen-tablet-vertical) {
       float: none;
       transform: none;
-
-      a {
-        display: block;
-      }
     }
   }
 }
