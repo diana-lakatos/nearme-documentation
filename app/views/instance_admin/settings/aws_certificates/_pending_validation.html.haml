@@ -1,0 +1,19 @@
+.header
+  = t('.status_header')
+
+.status
+  = t('.detailed_status', date: l(@certificate.created_at, format: :long)).html_safe
+  %ul
+    - @view.subject_alternative_names.each do |domain|
+      %li= domain
+  - if @view.validation_emails.any?
+    %p
+      %b= t('.line_2')
+      %ul
+        - @view.validation_emails.each do |email|
+          %li= email
+  - else
+    %h3 processing request ... please reload the page in a while.
+
+= content_for :header_buttons do
+  = link_to t('.resend_confirmation'), instance_admin_settings_aws_certificate_confirmations_path(id: @certificate), class: 'pull-right btn btn-blue', method: :post

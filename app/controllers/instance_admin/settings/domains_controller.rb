@@ -19,6 +19,7 @@ class InstanceAdmin::Settings::DomainsController < InstanceAdmin::Settings::Base
     @domain = domains.build(domain_params)
     if @domain.save
       if @domain.secured?
+        CreateElbJob.perform(@domain)
         flash[:success] = t('flash_messages.instance_admin.settings.domain_preparing')
       else
         flash[:success] = t('flash_messages.instance_admin.settings.domain_created')
@@ -32,6 +33,7 @@ class InstanceAdmin::Settings::DomainsController < InstanceAdmin::Settings::Base
 
   def update
     if @domain.update_attributes(domain_params)
+      UpdateElbJob.perform(@domain) if @domain.aws_certificate_id_changed?
       flash[:success] = t('flash_messages.instance_admin.settings.settings_updated')
       redirect_to instance_admin_settings_domains_path
     else
@@ -41,11 +43,19 @@ class InstanceAdmin::Settings::DomainsController < InstanceAdmin::Settings::Base
   end
 
   def destroy
-    if @domain.try(:deletable?) && @domain.try(:destroy)
-      flash[:success] = t('flash_messages.instance_admin.settings.domain_deleted')
-    else
-      flash[:error] = t('flash_messages.instance_admin.settings.domain_not_deleted')
+    Domain.transaction do
+      if @domain.deletable? && @domain.destroy
+        if @domain.load_balancer_name
+          DeleteElbJob.perform(@domain.load_balancer_name)
+        end
+        flash[:success] = t('flash_messages.instance_admin.settings.domain_deleted')
+      else
+        flash[:error] = t('flash_messages.instance_admin.settings.domain_not_deleted')
+      end
     end
+  rescue
+    flash[:error] = t('flash_messages.instance_admin.settings.domain_not_deleted')
+  ensure
     redirect_to instance_admin_settings_domains_path
   end
 

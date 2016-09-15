@@ -104,6 +104,7 @@ class Instance < ActiveRecord::Base
   has_many :custom_validators
   has_many :form_components, as: :form_componentable, dependent: :destroy
   has_many :scheduled_uploaders_regenerations
+  has_many :aws_certificates
 
   validates :id, uniqueness: true
   validates :name, presence: true, length: { maximum: 255 }
