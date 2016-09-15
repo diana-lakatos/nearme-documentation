@@ -1,0 +1,12 @@
+.header
+= t('.detailed_status', date: l(@view.details.issued_at, format: :long))
+.table-container.col-xs-12
+  %table.table
+    %tr
+      %td Status
+      %td= @view.status
+
+    - %w(created_at issued_at not_before not_after).each do |field|
+      %tr
+        %td= t(".#{field}")
+        %td= l @view.public_send(field), format: :long

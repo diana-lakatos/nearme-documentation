@@ -1,0 +1,10 @@
+.content-container
+  .row
+    .col-xs-12
+      %h3= t '.header', domain_name: @view.domain_name
+  .row
+    .col-xs-12
+      = render partial: @view.status.downcase
+
+= content_for :header_buttons do
+  = link_to t('.back'), instance_admin_settings_aws_certificates_path, class: 'pull-right btn btn-light'

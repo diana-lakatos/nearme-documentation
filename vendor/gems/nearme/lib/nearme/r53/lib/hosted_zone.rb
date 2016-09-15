@@ -118,7 +118,7 @@ module ResourceRecordDecorator
 end
 
 class ResourceRecordRepository
-  TYPE = ['MX', 'SPF', 'CNAME', 'A', 'TXT', 'ALIAS'].sort
+  TYPE = ['A', 'ALIAS', 'CNAME', 'MX', 'TXT', 'SPF']
 
   def self.find_by_zone_and_name_and_type(zone, name, type)
     zone.records.find { |record| record.name == name && record.type == type }
