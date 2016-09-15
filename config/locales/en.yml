@@ -2263,7 +2263,7 @@ en:
     manually_confirm: "This %{lessor} manually confirms all bookings."
     paypal_and_cc_charge_after_confirmation: "Your will not be charged until the booking is confirmed."
     cancellation_time: "You have up to %{time} hours before the booking takes place to cancel."
-    no_cancellation_time: "You can cancel before the first day."
+    no_cancellation_time: "You can cancel before the first day and you will receive a full refund except for service fee."
     cancellation_fee: "The penalty fee for cancelling is %{fee}%. Service fee is not refunded."
     hours_cancellation_fee: "The penalty fee for cancelling later is equivalent to %{fee} times hourly rate."
     no_cancellation_fee: "You will get full refund except of service fee."
