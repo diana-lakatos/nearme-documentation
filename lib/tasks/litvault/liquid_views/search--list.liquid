@@ -1,8 +1,8 @@
 ---
 partial: false
 ---
-{% if params['transactable_type_class'] contains 'TransactableType' %}
-    {% include 'search/list_cases.html' %}
-{% else %}
+{% if params['search_type'] contains 'people' %}
     {% include 'search/list_people.html' %}
+{% else %}
+    {% include 'search/list_cases.html' %}
 {% endif %}

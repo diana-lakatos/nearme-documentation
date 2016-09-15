@@ -9,7 +9,7 @@ class SearchController < ApplicationController
   before_action :assign_transactable_type_id_to_lookup_context
   before_action :store_search
 
-  before_action :parse_uot_search_params, if: -> { PlatformContext.current.instance.id.eql? 195 }
+  before_action :parse_uot_search_params, if: -> { PlatformContext.current.instance.id.eql? 195 || params[:search_type] == 'people' }
   before_action :parse_community_search_params, if: -> { PlatformContext.current.instance.is_community? }
 
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
@@ -21,6 +21,7 @@ class SearchController < ApplicationController
     event_tracker.conducted_a_search(@searcher.search, @searcher.to_event_params.merge(result_view: result_view)) if should_log_conducted_search?
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     remember_search_query
+
     render "search/#{result_view}", formats: [:html]
   end
 
