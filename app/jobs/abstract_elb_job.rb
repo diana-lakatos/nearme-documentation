@@ -8,7 +8,8 @@ class AbstractElbJob < Job
   def balancer
     @balancer ||= NearMe::Balancer.new(
       name: @domain.load_balancer_name,
-      certificate: @domain.aws_certificate
+      certificate: @domain.aws_certificate,
+      template_name: template_name
     )
   end
 

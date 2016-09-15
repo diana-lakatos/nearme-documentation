@@ -7,7 +7,8 @@ class CreateElbJobTest < ActiveSupport::TestCase
 
       @balancer_options = {
         name: @domain.load_balancer_name,
-        certificate: @domain.aws_certificate
+        certificate: @domain.aws_certificate,
+        template_name: 'staging'
       }
     end
 
