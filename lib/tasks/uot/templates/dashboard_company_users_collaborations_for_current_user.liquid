@@ -1,14 +1,14 @@
 <div class="project-invite-content">
   <header>
     <h2>Invite to project</h2>
-    <button type="button" data-close>Cancel</button>
+    <button type="button" data-close>Close</button>
   </header>
 
   {% assign collaborators = current_user | find_collaborators_for_user_projects: user %}
 
   {% if collaborators.size > 0 %}
     <div class="existing-projects" data-delete-url="{{ 'dashboard_company_transactable_collaborators_path' | generate_url }}">
-      <h3>{{ user.name }} is already invited to following projects:</h3>
+      <h3>{{ user.name }} has been invited to your project.</h3>
       <ul>
         {% for collaborator in collaborators %}
         <li>
@@ -22,11 +22,14 @@
     </div>
   {% endif %}
 
-  {% if user.pending_transactables_for_current_user.size > 0 %}
+  {% if user.pending_transactables.size > 0 %}
 
-    <p><strong>{{ user.name }}</strong> will be invited to your project.</p>
-
-    <p>Please select the project from the list below:</p>
+    {% if user.pending_collaborated_transactables.size == 0 %}
+      <p><strong>{{ user.name }}</strong> will be invited to your project.</p>
+      <p>Please select the project from the list below:</p>
+    {% else %}
+      <p>You have other projects, would you like to invite <strong>{{ user.name }}</strong> to another project? If so, please select from your project list below.</p>
+    {% endif %}
 
     <form method="post" action="{{ 'dashboard_company_transactable_collaborators_path' | generate_url }}">
       <input type="hidden" name="transactable_collaborator[user_id]" value="{{ user.id }}">
@@ -36,7 +39,7 @@
         <label for="projects-list" class="control-label">My projects</label>
         <span class="select-a">
           <select id="projects-list" name="transactable_collaborator[transactable_id]" class="unstyled-select">
-            {% for project in user.pending_transactables_for_current_user %}
+            {% for project in user.pending_transactables %}
             <option value="{{ project.id }}">{{ project.name }}</option>
             {% endfor %}
           </select>
@@ -45,18 +48,21 @@
 
       <div class="actions">
         <button type="submit" class="button-a">Invite</button>
+        {% if user.pending_collaborated_transactables.size == 0 %}
+          <button type="button" class="button-b" data-close>Cancel</button>
+        {% else %}
+          <button type="button" class="button-b" data-close>I'm done</button>
+        {% endif %}
       </div>
     </form>
 
-  {% elsif current_user.has_pending_transactables? && user.pending_transactables_for_current_user.size == 0 %}
+  {% elsif current_user.has_pending_transactables? && user.pending_transactables.size == 0 %}
 
-    <p>This user has been invited to all of your projects already.</p>
-
-    <p>Would you like to add a new project now?</p>
+    <p>There are no other projects to invite {{ user.name }} to. Would you can create another project right now?</p>
 
     <div class="actions">
       <a href="{{ platform_context.transactable_types[0].new_transactable_path }}" class="button-a">Add a project</a>
-      <button type="button" class="button-b" data-close>Cancel</button>
+      <button type="button" class="button-b" data-close>I'm done</button>
     </div>
 
   {% else %}
@@ -67,6 +73,7 @@
 
     <div class="actions">
       <a href="{{ platform_context.transactable_types[0].new_transactable_path }}" class="button-a">Add a project</a>
+      <button type="button" class="button-b" data-close>Cancel</button>
     </div>
 
   {% endif %}

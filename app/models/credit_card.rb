@@ -6,9 +6,9 @@ class CreditCard < ActiveRecord::Base
 
   attr_encrypted :response
 
-  belongs_to :instance_client
+  belongs_to :instance_client, -> { with_deleted }
   belongs_to :instance
-  belongs_to :payment_gateway
+  belongs_to :payment_gateway, -> { with_deleted }
   has_many :payments
   has_many :authorized_payments, -> { authorized }, class_name: 'Payment'
   has_many :reservations

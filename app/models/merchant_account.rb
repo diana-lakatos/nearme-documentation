@@ -74,6 +74,10 @@ class MerchantAccount < ActiveRecord::Base
     end
   end
 
+  TRANSLATED_ERRORS = {
+    'US ID numbers must be 9 characters long' => I18n.t('merchant_account.gateway_errors.us_social_security_format')
+  }
+
   def to_liquid
     @mechant_account_drop ||= MerchantAccountDrop.new(self)
   end
@@ -142,6 +146,20 @@ class MerchantAccount < ActiveRecord::Base
 
   def redirect_url
     @redirect_url || Rails.application.routes.url_helpers.edit_dashboard_company_payouts_path
+  end
+
+  def translate_error_messages
+    if self.try(:errors).try(:messages).try("[]", :base).present?
+      self.errors.messages[:base] = self.errors.messages[:base].map do |error|
+        if TRANSLATED_ERRORS[error]
+          TRANSLATED_ERRORS[error]
+        else
+          error
+        end
+      end
+    end
+
+    true
   end
 
   private

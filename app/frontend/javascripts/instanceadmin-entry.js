@@ -2,8 +2,8 @@
 
 var DNM = require('./app');
 
-require('jquery-ui/ui/widget');
 require('../vendor/jquery-ui-1.9.2.custom.min');
+require('jquery-ui/ui/widget');
 require('../vendor/bootstrap-3.2.0');
 require('bootstrap-switch/src/coffee/bootstrap-switch');
 require('../vendor/nested_form');

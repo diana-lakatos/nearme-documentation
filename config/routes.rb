@@ -918,6 +918,7 @@ DesksnearMe::Application.routes.draw do
       end
 
       resources :transactables, except: [:new, :create]
+      resources :transactable_collaborators
 
       resources :shipping_profiles do
         collection do

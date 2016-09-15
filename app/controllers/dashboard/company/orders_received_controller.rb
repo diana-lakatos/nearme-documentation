@@ -36,9 +36,12 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   end
 
   def complete
-    @order.complete!
-    @order.transactable.finish!
-    flash[:success] = t('flash_messages.manage.order.approved')
+    if @order.complete!
+      @order.transactable.finish!
+      flash[:success] = t('flash_messages.manage.order.approved')
+    else
+      flash[:error] = t('flash_messages.manage.order.can_not_approve')
+    end
     redirect_to request.referer.presence || location_after_save
   end
 

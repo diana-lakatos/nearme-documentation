@@ -695,6 +695,7 @@ class SecuredParams
       :gplus_url,
       :instagram_url,
       :youtube_url,
+      :linkedin_url,
       :rss_url,
       :color_blue,
       :color_red,

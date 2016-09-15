@@ -1,1 +1,17 @@
 en:
+  pricing:
+    unavailability:
+      info: 'Add dates when item is not available.'
+    price_unit:
+      person: '/ item'
+      person_unit: '/ item / %{unit}'
+  simple_form:
+    labels:
+      transactable:
+        name: 'Item Name'
+  devise:
+    registrations:
+      signed_up: 'You have successfully registered. <a href="/dashboard/edit_profile">Click here</a> to complete your profile.'
+
+  top_navbar:
+    bookings_received: My Orders
