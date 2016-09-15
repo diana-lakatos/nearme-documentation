@@ -8,7 +8,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
   belongs_to :recurring_booking, foreign_key: :order_id
   belongs_to :order
 
-  delegate :payment_gateway, :company, :company_id, :user, :owner, :currency,
+  delegate :payment_gateway, :company, :company_id, :user, :creator, :owner, :currency,
     :service_fee_guest_percent, :service_fee_host_percent, :payment_subscription,
     :transactable, :quantity, :cancellation_policy_hours_for_cancellation,
     :cancellation_policy_penalty_percentage, :action, :host, :is_free_booking?, to: :order
