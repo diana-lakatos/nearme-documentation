@@ -1,4 +1,4 @@
-require('chosen/chosen.jquery.min')
+require('chosen/chosen.jquery')
 
 module.exports = class InstanceAdminForms
   constructor: ->
