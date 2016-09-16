@@ -7,7 +7,12 @@
   = simple_form_for [:instance_admin, :settings, @certificate], html: { class: 'form-a' } do |form|
     .row
       .input-container.col-xs-12
-        = form.input :name, required: false, input_html: { class: 'form-control' }, placeholder: 'example.com'
+        = form.input :name, required: true, input_html: { class: 'form-control' }, placeholder: 'example.com'
+
+    .row
+      .input-container.col-xs-12
+        = form.input :arn, required: false, input_html: { class: 'form-control', disabled: true }
+
 
     = content_for :header_buttons do
       = form.button :submit, t('.request_certificate'), class: "btn btn-blue pull-right", data: { 'submit-form' => 1, 'form-selector' => 'form' }
