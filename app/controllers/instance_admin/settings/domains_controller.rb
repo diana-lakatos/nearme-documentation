@@ -32,8 +32,13 @@ class InstanceAdmin::Settings::DomainsController < InstanceAdmin::Settings::Base
   end
 
   def update
-    if @domain.update_attributes(domain_params)
-      UpdateElbJob.perform(@domain) if @domain.aws_certificate_id_changed?
+    @domain.assign_attributes(domain_params)
+
+    elb_need_updating = @domain.aws_certificate_id_changed?
+
+    if @domain.save
+      UpdateElbJob.perform(@domain) if elb_need_updating
+
       flash[:success] = t('flash_messages.instance_admin.settings.settings_updated')
       redirect_to instance_admin_settings_domains_path
     else
