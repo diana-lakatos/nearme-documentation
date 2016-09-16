@@ -9,6 +9,14 @@ class Ckeditor::ApplicationController < ApplicationController
 
   protected
 
+  def ckeditor_scope
+    if current_user.try(:is_instance_admin?) || current_user.try(:admin?)
+      ["(assetable_id = ? AND assetable_type = ?) OR (assetable_id = ? AND assetable_type = ?)", current_user.id, "User", PlatformContext.current.instance.id, "Instance"]
+    else
+      ["assetable_id = ? AND assetable_type = ?", current_user.try(:id), "User"]
+    end
+  end
+
   def check_authorized
     if current_user.blank?
       render text: 'No access'

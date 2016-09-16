@@ -1,7 +1,7 @@
 class Ckeditor::PicturesController < Ckeditor::ApplicationController
 
   def index
-    @pictures = Ckeditor::Picture.where(ckeditor_pictures_scope).order('id DESC')
+    @pictures = Ckeditor::Picture.where(ckeditor_scope).order('id DESC')
     @pictures = Ckeditor::Paginatable.new(@pictures).page(params[:page])
 
     respond_with(@pictures, :layout => @pictures.first_page?)
@@ -20,7 +20,7 @@ class Ckeditor::PicturesController < Ckeditor::ApplicationController
   protected
 
     def find_asset
-      @picture = Ckeditor::Picture.where(ckeditor_pictures_scope).find(params[:id])
+      @picture = Ckeditor::Picture.where(ckeditor_scope).find(params[:id])
     end
 
     def authorize_resource
