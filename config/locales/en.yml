@@ -78,6 +78,15 @@ en:
   day:
     one: "1 day"
     other: "%{count} days"
+  week:
+    short:
+      monday: 'M'
+      tuesday: 'T'
+      wednesday: 'W'
+      thursday: 'TH'
+      friday: 'F'
+      saturday: 'SA'
+      sunday: 'SU'
   night:
     one: "1 night"
     other: "%{count} nights"
@@ -433,6 +442,25 @@ en:
         payment_gateways:
           new: "New Payment Gateway"
           edit: "Payment Gateway Configuration"
+      aws_certificates:
+        certificate_list:
+          title:
+            ACM: Certificate requests
+            IAM: Uploaded certificates
+        new:
+          request_certificate: Request certificate
+        show:
+          header: "Certificate details for domain: %{domain_name}"
+        issued:
+          status: 'Status:'
+          detailed_status: The certificate was issued at %{date}
+        validation_timed_out:
+          status_header: Timed out.
+          detailed_status: Certificate requests time out after 72 hours if they are not approved. Delete this request and start over if you want a certificate.
+        pending_validation:
+          status_header: The status of this certificate request is "Pending validation". Further action is needed to validate and approve the certificate.
+          detailed_status: "Email to validate the request was sent at <strong>%{date}</strong> but we have not yet received approval to issue the certificate for the following domains: "
+          line_2: "Emails were sent to:"
       domains:
         domains: "Domains"
         domain: "Domain"
@@ -649,6 +677,7 @@ en:
           reference: Reference
           id: ID
           lessor: Lessor
+          lister: Lister
           paid_at: "Paid at"
         resource:
           plural:
@@ -2234,7 +2263,7 @@ en:
     manually_confirm: "This %{lessor} manually confirms all bookings."
     paypal_and_cc_charge_after_confirmation: "Your will not be charged until the booking is confirmed."
     cancellation_time: "You have up to %{time} hours before the booking takes place to cancel."
-    no_cancellation_time: "You can cancel before the first day."
+    no_cancellation_time: "You can cancel before the first day and you will receive a full refund except for service fee."
     cancellation_fee: "The penalty fee for cancelling is %{fee}%. Service fee is not refunded."
     hours_cancellation_fee: "The penalty fee for cancelling later is equivalent to %{fee} times hourly rate."
     no_cancellation_fee: "You will get full refund except of service fee."

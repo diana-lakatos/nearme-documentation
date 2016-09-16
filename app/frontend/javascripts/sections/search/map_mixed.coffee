@@ -1,5 +1,5 @@
 SearchMap = require('./map')
-asEvented = require('asEvented')
+asEvented = require('asevented')
 SearchResultsGoogleMapMarker = require('../../components/search_results_google_map_marker')
 SmartGoogleMap = require('../../components/smart_google_map')
 

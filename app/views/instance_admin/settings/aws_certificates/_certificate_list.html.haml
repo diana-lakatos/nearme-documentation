@@ -1,0 +1,16 @@
+.content-container
+  %h4= t(".title.#{as}")
+  .row
+    .table-container.col-xs-12
+      - if list.any?
+        %table.table
+          %thead
+            %tr
+              %th= t('.domain')
+              %th= t('.status')
+              %th= t('.updated_at')
+              %th= t('.actions')
+            %tbody
+              = render partial: as, collection: list, as: :certificate
+      - else
+        = t '.empty_collection'

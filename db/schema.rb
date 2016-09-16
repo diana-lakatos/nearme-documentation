@@ -275,6 +275,17 @@ ActiveRecord::Schema.define(version: 20160907133901) do
   add_index "availability_templates", ["instance_id", "transactable_type_id"], name: "availability_templates_on_instance_id_and_tt_id", using: :btree
   add_index "availability_templates", ["parent_type", "parent_id"], name: "index_availability_templates_on_parent_type_and_parent_id", using: :btree
 
+  create_table "aws_certificates", force: :cascade do |t|
+    t.integer  "instance_id",      null: false
+    t.string   "name",             null: false
+    t.datetime "elb_uploaded_at"
+    t.string   "status"
+    t.string   "arn"
+    t.string   "certificate_type"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
   create_table "bids", force: :cascade do |t|
     t.integer  "offer_id"
     t.integer  "user_id"
@@ -922,6 +933,7 @@ ActiveRecord::Schema.define(version: 20160907133901) do
     t.string   "uploaded_sitemap",               limit: 255
     t.string   "uploaded_robots_txt",            limit: 255
     t.integer  "instance_id"
+    t.integer  "aws_certificate_id"
   end
 
   add_index "domains", ["deleted_at"], name: "index_domains_on_deleted_at", using: :btree

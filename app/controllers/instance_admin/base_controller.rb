@@ -60,6 +60,7 @@ class InstanceAdmin::BaseController < ApplicationController
     'configuration'        => { default_action: 'show', controller_class: 'InstanceAdmin::Settings::ConfigurationController' },
     'payments'             => { default_action: 'index' },
     'domains'              => { default_action: 'index' },
+    'ssl_certificates'     => { default_action: 'index', title: "SSL Certificates", controller: '/instance_admin/settings/aws_certificates' },
     'api_keys'             => { default_action: 'index' },
     'hidden_controls'      => { default_action: 'show' },
     'locations'            => { default_action: 'show' },

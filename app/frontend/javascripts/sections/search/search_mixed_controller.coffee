@@ -1,4 +1,5 @@
-require('history.js/scripts/bundled/html5/jquery.history.js')
+require('history.js/history')
+require('history.js/history.adapter.ender')
 SearchSearchController = require('./search_controller')
 urlUtil = require('../../lib/utils/url')
 SearchMapMixed = require('./map_mixed')

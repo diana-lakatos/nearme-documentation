@@ -5,9 +5,9 @@
 @import "swipebox/src/css/swipebox";
 @import "x-editable/dist/bootstrap3-editable/css/bootstrap-editable";
 @import "cropper/dist/cropper.min";
-@import "eonasdan-bootstrap-datetimepicker/src/sass/bootstrap-datetimepicker-build";
-@import "spectrum/spectrum";
-@import "jt.timepicker/jquery.timepicker";
+@import "eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min";
+@import "spectrum-colorpicker/spectrum";
+@import "timepicker/jquery.timepicker";
 
 // Vendor overrides
 @import "vendor/vendor";

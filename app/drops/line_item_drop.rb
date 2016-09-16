@@ -45,5 +45,9 @@ class LineItemDrop < BaseDrop
     @line_item.class.name.demodulize
   end
 
+  def is_service_fee?
+    @line_item.is_service_fee?
+  end
+
 end
 

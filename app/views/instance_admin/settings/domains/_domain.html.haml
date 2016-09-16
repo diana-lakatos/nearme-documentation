@@ -2,7 +2,7 @@
   %td= link_to domain.name, [:instance_admin,:settings, domain]
   %td
     = domain.state.to_s.humanize
-    .small= domain.error_message if domain.failed?
+    .small= domain.error_message if domain.error_message
   %td= domain.dns_name
   %td= domain.redirect_to
   %td= domain.use_as_default ? "Yes" : "No"

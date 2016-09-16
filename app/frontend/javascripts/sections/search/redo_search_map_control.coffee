@@ -1,4 +1,4 @@
-asEvented = require('asEvented')
+asEvented = require('asevented')
 
 module.exports = class SearchRedoSearchMapControl
   asEvented.call @prototype

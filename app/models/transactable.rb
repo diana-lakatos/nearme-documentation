@@ -652,6 +652,16 @@ class Transactable < ActiveRecord::Base
     self.action_type.enabled = true
   end
 
+  def initialize_default_availability_template
+    if self.transactable_type.try(:default_availability_template_id).present?
+      self.action_types.each do |at|
+        if at.is_a?(Transactable::TimeBasedBooking)
+          at.availability_template_id = self.transactable_type.default_availability_template_id if at.availability_template_id.blank?
+        end
+      end
+    end
+  end
+
   def self.custom_order(order)
     case order
     when /most recent/i

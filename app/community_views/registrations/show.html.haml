@@ -1,6 +1,6 @@
 .user-a
   - if @user.cover_image.present?
-    .bg{style: "background-image: url(#{@user.cover_image.url})"}
+    .bg{style: "background-image: url(#{@user.cover_image_url})"}
   - else
     .bg
   .contain

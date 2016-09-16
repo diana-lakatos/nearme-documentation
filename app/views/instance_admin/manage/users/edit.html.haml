@@ -1,17 +1,83 @@
 = simple_form_for [:instance_admin, :manage, @user], html: { class: 'form-a', data: { modal: true } } do |f|
   .content-container
-    %h4 Edit #{@user.first_name}
+    .row
+      .col-xs-5
+        %h3 #{@user.name_with_state}
 
+      .col-xs-7
+        - if resource != current_user
+          - if resource.deleted?
+            = link_to "Restore", restore_instance_admin_manage_user_path(resource), :method => :post, data: { confirm: 'Are you sure you want to restore this?' },  class: 'btn pull-right btn-danger'
+          - else
+            = link_to "Delete", instance_admin_manage_user_path(resource), :method => :delete, data: { confirm: 'Are you sure you want to delete this user? All associated data is going to be removed permanently.' },  class: 'btn pull-right btn-danger'
+
+        - if resource != current_user && !resource.deleted?
+          - if resource.banned? && resource.user_bans.first.present?
+            = link_to t('instance_admin.manage.users.account.unban'), instance_admin_manage_user_user_ban_path(resource, resource.user_bans.first), :method => :delete, class: 'btn pull-right btn-info',
+              data: { confirm:  'You will unban this user from your marketplace, do you want to continue?' }
+          - else
+            = link_to t('instance_admin.manage.users.account.ban'), instance_admin_manage_user_user_bans_path(resource), :method => :post, class: 'btn pull-right btn-danger',
+              data: { confirm:  'You will ban this user from logging in to your marketplace, do you want to continue?' }
+
+        - if !(resource.banned? || resource.deleted?)
+          = link_to t('instance_admin.manage.users.login_as'), login_as_instance_admin_manage_user_path(resource), :method => :post, class: 'btn pull-right btn-blue',
+            data: { confirm: 'This will log you out and re-log you in as this user' }
+
+          = link_to t('dashboard.user_profile.view_profile'), user_path(@user), class: 'btn btn-light pull-right', target: '_blank'
     .row
       .input-container.col-xs-12
-        = f.input :featured, as: :switch, label: 'Featured'
-    = f.simple_fields_for :default_profile do |default_profile_form|
-      = default_profile_form.simple_fields_for :properties, default_profile_form.object.properties do |properties_form|
-        - (default_profile_form.object.instance_profile_type.try(:custom_attributes).try(:where, public: false) || []).each do |attribute|
-          .row
-            .input-container.col-xs-12
-              = draw_attribute_for_form(attribute, properties_form, true)
+        = link_to "Total payments count: #{@user.payments.count}", instance_admin_manage_payments_path(payer_id: @user.id) if @user.payments.count > 0
 
-  = content_for :header_buttons do
-    = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+    - if PlatformContext.current.instance.is_community?
+      .row
+        .input-container.col-xs-12
+          = f.input :featured, as: :switch, label: 'Featured'
+
+
+      = f.simple_fields_for :default_profile do |default_profile_form|
+        = default_profile_form.simple_fields_for :properties, default_profile_form.object.properties do |properties_form|
+          - (default_profile_form.object.instance_profile_type.try(:custom_attributes).try(:where, public: false) || []).each do |attribute|
+            .row
+              .input-container.col-xs-12
+                = draw_attribute_for_form(attribute, properties_form, true)
+
+      = content_for :header_buttons do
+        = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+
+
+.content-container
+  .table-responsive
+    %table.table.table-striped.sortable
+      %tbody
+        %tr
+          %td Email
+          %td= @user.email
+        %tr
+          %td Phone
+          %td= @user.phone
+        %tr
+          %td Country
+          %td= @user.country_name
+        %tr
+          %td Created at
+          %td= l @user.created_at, format: :long
+        - if @user.deleted?
+          %tr
+            %td Deleted at
+            %td= l @user.deleted_at, format: :long
+        %tr
+          %td Sign in count
+          %td= @user.sign_in_count
+        %tr
+          %td Current sign in at
+          %td= l @user.current_sign_in_at, format: :long
+        %tr
+          %td Last sign in at
+          %td= l @user.last_sign_in_at, format: :long
+        %tr
+          %td Current sign in IP
+          %td= @user.current_sign_in_ip
+        %tr
+          %td Last sign in IP
+          %td= @user.last_sign_in_ip
 

@@ -1,12 +1,9 @@
 {
   "name": "desksnearme",
-  "version": "10.2.1-436",
+  "version": "10.2.1-442",
   "description": "All documentation is set out on the [GitHub Wiki](https://near-me.atlassian.net/wiki/).",
   "private": true,
   "directories": {},
-  "scripts": {
-    "postinstall": "bower install"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mdyd-dev/desksnearme.git"
@@ -59,14 +56,48 @@
     "node-sass": "^3.4.2",
     "postcss": "^5.1.2",
     "style-loader": "^0.13.1",
-    "stylelint": "^7.1.0",
     "webpack": "^1.13.2"
   },
   "dependencies": {
+    "animate.css": "^3.5.0",
+    "asevented": "^0.4.5",
     "babel-runtime": "^6.11.6",
+    "blueimp-file-upload": "^9.11.2",
+    "bootstrap-colorpicker": "^2.3.0",
+    "bootstrap-sass": "^3.3.6",
+    "bootstrap-switch": "^3.3.2",
     "brace": "^0.7.0",
+    "chart.js": "^1.0.2",
+    "chosen-js": "^1.4.2",
+    "ckeditor": "^4.5.6",
+    "cropper": "^1.0.0",
+    "eonasdan-bootstrap-datetimepicker": "^4.17.37",
+    "font-awesome": "^4.6.0",
+    "gulp-modernizr": "^1.0.0-alpha",
+    "history.js": "^1.8.0",
+    "jquery": "^2.2.0",
+    "jquery-inview": "^1.1.2",
+    "jquery-jcrop": "^0.9.13",
+    "jquery-ui": "^1.11.4",
+    "jquery-ui-touch-punch": "^0.2.3",
+    "jquery-ujs": "^1.1.0",
     "jquery.cookie": "^1.4.1",
+    "jquery.customSelect": "^0.5.2",
+    "jquery.payment": "1.0.2",
+    "jstimezonedetect": "^1.0.6",
+    "jstree": "^3.2.1",
+    "nouislider": "^7.0.10",
+    "raty-js": "^2.7.0",
+    "raygun4js": "^2.2.3",
+    "select2": "^3.5.0",
     "selectize": "^0.12.2",
-    "vinyl-paths": "^2.1.0"
+    "spectrum-colorpicker": "^1.6.2",
+    "swipebox": "^1.4.1",
+    "timeago": "^1.4.3",
+    "timepicker": "^1.8.9",
+    "underscore": "^1.8.3",
+    "urlify": "^0.3.6",
+    "vinyl-paths": "^2.1.0",
+    "x-editable": "^1.5.1"
   }
 }

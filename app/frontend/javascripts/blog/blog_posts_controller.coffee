@@ -1,5 +1,5 @@
-window.IASCallbacks = require('exports?IASCallbacks!jquery-ias/src/callbacks')
-require('jquery-ias/src/jquery-ias');
+window.IASCallbacks = require('exports?IASCallbacks!../vendor/jquery-ias/callbacks')
+require('../vendor/jquery-ias/jquery-ias');
 urlUtil = require('../lib/utils/url')
 
 module.exports = class BlogPostsController

@@ -1,4 +1,4 @@
-require 'jt.timepicker/jquery.timepicker'
+require 'timepicker/jquery.timepicker'
 
 timepickers = (context = 'body')->
   $(context).find('input.time_picker').each ->
