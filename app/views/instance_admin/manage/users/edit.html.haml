@@ -23,7 +23,7 @@
           = link_to t('instance_admin.manage.users.login_as'), login_as_instance_admin_manage_user_path(resource), :method => :post, class: 'btn pull-right btn-blue',
             data: { confirm: 'This will log you out and re-log you in as this user' }
 
-          = link_to t('dashboard.user_profile.view_profile'), user_path(@user), class: 'btn btn-light pull-right'
+          = link_to t('dashboard.user_profile.view_profile'), user_path(@user), class: 'btn btn-light pull-right', target: '_blank'
     .row
       .input-container.col-xs-12
         = link_to "Total payments count: #{@user.payments.count}", instance_admin_manage_payments_path(payer_id: @user.id) if @user.payments.count > 0

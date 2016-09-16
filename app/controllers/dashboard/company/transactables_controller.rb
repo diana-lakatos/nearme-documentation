@@ -23,6 +23,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   def new
     @transactable = @transactable_type.transactables.build company: @company
     @transactable.initialize_action_types
+    @transactable.initialize_default_availability_template
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     @photos = current_user.photos.where(owner_id: nil)
     @attachments = current_user.attachments.where(assetable_id: nil)

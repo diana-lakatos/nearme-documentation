@@ -27,6 +27,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   def list
     build_objects
     @transactable.try(:initialize_action_types)
+    @transactable.try(:initialize_default_availability_template)
     build_approval_requests
     @photos = (@user.first_listing.try(:photos) || []) + @user.photos.where(owner_id: nil)
     @attachments = (@user.first_listing.try(:attachments) || []) + @user.attachments.where(assetable_id: nil)

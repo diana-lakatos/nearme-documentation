@@ -25,6 +25,7 @@ config/elasticsearch.yml
 config/unicorn.conf
 log
 node_modules
+vendor/assets/bower_components
 tmp
 *.swo
 *.swp

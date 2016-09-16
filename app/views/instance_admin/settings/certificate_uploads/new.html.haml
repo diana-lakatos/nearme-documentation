@@ -1,0 +1,13 @@
+.content-container
+  .row
+    %h4 Uploading cerificate files
+
+  = simple_form_for [:instance_admin, :settings, @certificate], url: instance_admin_settings_certificate_uploads_url, html: { class: 'form-a' } do |form|
+    .row
+      .input-container.col-xs-12
+        = form.input :name, required: false, input_html: { class: 'form-control' }, placeholder: 'example.com'
+        = render 'form', form: form
+
+    = content_for :header_buttons do
+      = form.button :submit, :upload, class: "btn btn-blue pull-right", data: { 'submit-form' => 1, 'form-selector' => 'form' }
+      = link_to t('.cancel'), instance_admin_settings_aws_certificates_url , class: 'btn btn-light pull-right'

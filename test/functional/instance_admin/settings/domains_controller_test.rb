@@ -31,7 +31,7 @@ class InstanceAdmin::Settings::DomainsControllerTest < ActionController::TestCas
         balancer = stub(:dns_name => dns_name, :create! => nil)
         NearMe::Balancer.expects(:new).returns(balancer)
         assert_difference("Domain.count") {
-          post :create, domain: {"name" => 'example.org', "secured" => true, "certificate_body" => 'body', "private_key" => 'key'}
+          post :create, domain: {"name" => 'example.org', "secured" => true, aws_certificate_id: FactoryGirl.create(:aws_certificate)}
           assert_equal flash[:success], I18n.t('flash_messages.instance_admin.settings.domain_preparing')
           assert_response :redirect
           assert_redirected_to instance_admin_settings_domains_path
@@ -59,6 +59,7 @@ class InstanceAdmin::Settings::DomainsControllerTest < ActionController::TestCas
     end
 
     should 'delete' do
+      DeleteElbJob.expects(:perform)
       new_domain = FactoryGirl.create(:domain)
       assert_difference("Domain.count", -1) {
         delete :destroy, id: new_domain.id.to_s

@@ -103,6 +103,10 @@ class LineItem < ActiveRecord::Base
     line_item_source.creator
   end
 
+  def is_service_fee?
+    is_a? LineItem::ServiceFee
+  end
+
   private
 
   def calculate_tax

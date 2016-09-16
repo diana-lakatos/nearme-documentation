@@ -1,41 +1,32 @@
 require_relative 'r53/lib/load_balancer.rb'
 require_relative 'r53/lib/hosted_zone.rb'
-require_relative 'commands.rb'
 
 module NearMe
   class Balancer
-    attr_accessor :certificate_body, :name, :private_key,
-                  :certificate_chain, :stack_id, :dns_name,
-                  :template_name
-
+    attr_accessor :name, :stack_id, :dns_name, :template_name
     attr_accessor :certificate
 
     def initialize(options = {})
       @name = options[:name]
-
-      @certificate_body = options[:certificate_body]
-      @private_key = options[:private_key]
-      @certificate_chain = options[:certificate_chain]
-
+      @certificate = options[:certificate]
       @template_name = options[:template_name] || 'production'
     end
 
     def create!
-      upload_certificate
       create_balancer
       configure_health_check
       attach_instances
     end
 
     def update_certificates!
-      upload_certificate
       update_load_balancer
     end
 
     def delete!
-      DeleteELBCommand.new(elb_name).execute
-      # delete_certificates
-      DeleteHostedZoneCommand.new(name).execute
+      LoadBalancerRepository.delete(@name)
+      HostedZoneRepository.find_by_name(@name).tap do |zone|
+        zone.delete if zone.id
+      end
     end
 
     def dns_name
@@ -67,24 +58,10 @@ module NearMe
 
     def create_balancer
       LoadBalancerRepository.create elb_name, template_balancer, certificate
-    rescue Aws::ElasticLoadBalancing::Errors::CertificateNotFound
-      sleep 3
-      retry
     end
 
     def update_load_balancer
-      balancer.set_ssl_certificate certificate
-    rescue Aws::ElasticLoadBalancing::Errors::CertificateNotFound
-      sleep 3
-      retry
-    end
-
-    def upload_certificate
-      @certificate ||= SSLCertificateRepository.upload(
-        certificate_name,
-        certificate_body,
-        private_key,
-        certificate_chain)
+      balancer.update_ssl_certificate certificate
     end
 
     def template_balancer

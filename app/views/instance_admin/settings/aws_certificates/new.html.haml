@@ -1,0 +1,20 @@
+.content-container
+  .row
+    %h4= 'Type the fully qualified domain name of the site you want to secure with an SSL/TLS certificate (e.g., example.com).'
+    .row
+      .input-container.col-xs-12
+        The system automatically will add `www` and `*` subdomains. (e.g., www.example.com and *.example.com)
+  = simple_form_for [:instance_admin, :settings, @certificate], html: { class: 'form-a' } do |form|
+    .row
+      .input-container.col-xs-12
+        = form.input :name, required: false, input_html: { class: 'form-control' }, placeholder: 'example.com'
+
+    = content_for :header_buttons do
+      = form.button :submit, t('.request_certificate'), class: "btn btn-blue pull-right", data: { 'submit-form' => 1, 'form-selector' => 'form' }
+      = link_to t('.cancel'), instance_admin_settings_aws_certificates_url , class: 'btn btn-light pull-right'
+
+.content-container
+  %h4 Note
+  .row
+    .col-xs-12
+      After you request the certificate, email will be sent to the registered owner of each domain name. The domain owner or an authorized representative can validate control of the domain and approve the certificate by following the instructions in the body of the email. After all of the domains are validated, the certificate will be issued.

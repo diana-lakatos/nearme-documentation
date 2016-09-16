@@ -1,0 +1,6 @@
+= render 'certificate_list', as: 'acm', list: @certificates.requests
+= render 'certificate_list', as: 'iam', list: @certificates.uploaded
+
+= content_for :header_buttons do
+  = link_to t('.request_aws_certificate'), new_instance_admin_settings_aws_certificate_path, class: 'pull-right btn btn-blue'
+  = link_to t('.upload_certificate'), new_instance_admin_settings_certificate_upload_path, class: 'pull-right btn btn-blue'
