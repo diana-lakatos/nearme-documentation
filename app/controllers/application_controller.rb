@@ -506,20 +506,19 @@ class ApplicationController < ActionController::Base
     FormAttributes::CKEFIELDS.fetch(model.to_sym, []).include?(field.to_sym)
   end
 
-  def ckeditor_pictures_scope(options = {})
-    options[:assetable_id] = platform_context.instance.id
-    options[:assetable_type] = "Instance"
-    ckeditor_filebrowser_scope(options)
+  def ckeditor_pictures_scope
+    ckeditor_set_scope
   end
 
-  def ckeditor_attachment_files_scope(options = {})
-    options[:assetable_id] = platform_context.instance.id
-    options[:assetable_type] = "Instance"
-    ckeditor_filebrowser_scope(options)
+  def ckeditor_attachment_files_scope
+    ckeditor_set_scope
   end
 
   def ckeditor_before_create_asset(asset)
-    asset.assetable = platform_context.instance
+    # We set id/type manually to avoid having
+    # UserDecorator under some circumstances here
+    asset.assetable_id = current_user.id
+    asset.assetable_type = "User"
     return true
   end
 
@@ -583,6 +582,14 @@ class ApplicationController < ActionController::Base
         flash[:error] = t('flash_messages.authorizations.not_filled_form')
         redirect_to dashboard_profile_path
       end
+    end
+  end
+
+  def ckeditor_set_scope
+    if current_user.try(:is_instance_admin?) || current_user.try(:admin?)
+      ["(assetable_id = ? AND assetable_type = ?) OR (assetable_id = ? AND assetable_type = ?)", current_user.id, "User", PlatformContext.current.instance.id, "Instance"]
+    else
+      ["assetable_id = ? AND assetable_type = ?", current_user.try(:id), "User"]
     end
   end
 
