@@ -82,7 +82,7 @@ partial: false
 {% if is_client == 'true' %}
   {% content_for 'panel_options' %}
   <div class='pull-right options {% if transactables.size > 0 %} additional-listing-options {% endif %}'>
-    <a href='{{ transactable_type.new_transactable_path }}' class='btn btn-primary navbar-btn'>
+    <a href='/create-a-new-case?nolayout=1' class='btn btn-primary navbar-btn' data-modal="true" data-modal-class="new-case-dialog">
       <span class='fa fa-plus'></span>
       {{ 'dashboard.items.new_listing_full' | translate: type: transactable_type.bookable_noun_plural }}
     </a>

@@ -44,6 +44,13 @@
                                 <li><a href="{{ current_user.user_menu_instance_admin_path}}" rel="external">{{ 'top_navbar.marketplace_admin' | t }}</a></li>
                                 {% endif %}
 
+                                {% if current_user.has_seller_profile? and current_user.transactables_count == 0 %}
+                                <li>
+                                    <a href="/create-a-new-case">
+                                        Create a New Case
+                                    </a>
+                                </li>
+                                {% else %}
                                 <li>
                                     <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}">
                                         My Cases
@@ -52,6 +59,7 @@
                                         {% endif %}
                                     </a>
                                 </li>
+                                {% endif %}
 
                                 {% if platform_context.wish_lists_enabled? %}
                                 {% comment %} Favorites menu {% endcomment %}
