@@ -191,10 +191,12 @@ class PlatformContextDrop < BaseDrop
 
   def set_render_content_outside_container
     @context.registers[:action_view].instance_variable_set('@render_content_outside_container', true)
+    '' # return empty string so nothing is displayed
   end
 
   def set_blank_theme_name
     @context.registers[:action_view].instance_variable_set('@theme_name', '')
+    '' # return empty string so nothing is displayed
   end
 
   private

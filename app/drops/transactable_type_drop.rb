@@ -175,6 +175,10 @@ class TransactableTypeDrop < BaseDrop
     routes.dashboard_company_transactable_type_transactables_path(@source)
   end
 
+  def space_wizard_path
+    routes.transactable_type_space_wizard_list_path(@source)
+  end
+
   def new_data_upload_path
     routes.new_dashboard_company_transactable_type_data_upload_path(@source)
   end
