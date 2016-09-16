@@ -445,8 +445,8 @@ en:
       aws_certificates:
         certificate_list:
           title:
-            ACM: Certificate requests
-            IAM: Uploaded certificates
+            acm: Certificate requests
+            iam: Uploaded certificates
         new:
           request_certificate: Request certificate
         show:
