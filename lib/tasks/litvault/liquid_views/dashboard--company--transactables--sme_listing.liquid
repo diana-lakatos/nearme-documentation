@@ -35,10 +35,10 @@
       <div class="col-md-8">
         <dl class="properties">
 
-          {% if transactable.properties.project_contact != blank %}
+          {% if transactable.properties.case_contact != blank %}
               <dt>Contact</dt>
               <dd>
-                {{ transactable.properties.project_contact }}
+                {{ transactable.properties.case_contact }}
                 {% if transactable.creator.seller_properties['linkedin_url'] != blank %}
                    | <a href="{{ transactable.creator.seller_properties['linkedin_url'] }}" target="_blank">LinkedIn Bio</a>
                 {% endif %}

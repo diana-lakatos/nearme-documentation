@@ -1,7 +1,7 @@
 ---
 partial: false
 ---
-{% assign i18n_title = 'dashboard.transactables.manage' | translate %}
+{% assign i18n_title = 'dashboard.transactables.title.listings' | translate %}
 {% title i18n_title %}
 
 {% capture is_client %}{% if current_user.buyer_profile == blank %}true{% else %}false{% endif %}{% endcapture %}
@@ -19,7 +19,7 @@ partial: false
 
 {% content_for 'page_header' %}
   <h1>
-    My Projects
+    {{ i18n_title }}
     <span class='hidden-xs'>&gt; {{ current_status | humanize }}</span>
   </h1>
 
@@ -69,13 +69,13 @@ partial: false
 
 {% content_for 'panel_navigation_links' %}
     <li class='{{ 'pending' | active_class:current_status }}'>
-      <a href='{{ tt.transactable_types_path | append: "?status=pending" | append: filter_params }}'>Projects Pending ({{ pending_transactables | total_entries }})</a>
+      <a href='{{ tt.transactable_types_path | append: "?status=pending" | append: filter_params }}'>Pending Cases ({{ pending_transactables | total_entries }})</a>
     </li>
     <li class='{{ 'in progress' | active_class:current_status }}'>
-      <a href='{{ tt.transactable_types_path | append: "?status=in+progress" | append: filter_params }}'>Projects In Progress ({{ in_progress_transactables | total_entries }})</a>
+      <a href='{{ tt.transactable_types_path | append: "?status=in+progress" | append: filter_params }}'>Cases In Progress ({{ in_progress_transactables | total_entries }})</a>
     </li>
     <li class='{{ 'archived' | active_class:current_status }}'>
-      <a href='{{ tt.transactable_types_path | append: "?status=archived" | append: filter_params }}'>Projects Archived ({{ archived_transactables | total_entries }})</a>
+      <a href='{{ tt.transactable_types_path | append: "?status=archived" | append: filter_params }}'>Archived Cases ({{ archived_transactables | total_entries }})</a>
     </li>
 {% endcontent_for %}
 
@@ -92,11 +92,11 @@ partial: false
 
 <nav class='panel-nav-mobile' role='navigation'>
   {% if current_status == 'pending' %}
-    {% capture nav_label %}Projects Pending ({{ pending_transactables | total_entries }}){% endcapture %}
+    {% capture nav_label %}Pending Cases ({{ pending_transactables | total_entries }}){% endcapture %}
   {% elsif current_status == 'in progress' %}
-    {% capture nav_label %}Projects In Progress ({{ in_progress_transactables | total_entries }}){% endcapture %}
+    {% capture nav_label %}Cases In Progress ({{ in_progress_transactables | total_entries }}){% endcapture %}
   {% elsif current_status == 'archived' %}
-    {% capture nav_label %}Projects Archived ({{ archived_transactables | total_entries }}){% endcapture %}
+    {% capture nav_label %}Cases Archived ({{ archived_transactables | total_entries }}){% endcapture %}
   {% endif %}
   {% dropdown_menu { label: nav_label, wrapper_class: 'links' } %}
     {% yield 'panel_navigation_links' %}
