@@ -5,7 +5,7 @@ class Ckeditor::ApplicationController < ApplicationController
   before_filter :find_asset, :only => [:destroy]
   before_filter :ckeditor_authorize!
   before_filter :authorize_resource
-  before_filter :check_is_admin
+  # before_filter :check_is_admin
 
   protected
 
