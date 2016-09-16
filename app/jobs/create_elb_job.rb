@@ -2,8 +2,6 @@ class CreateElbJob < AbstractElbJob
   def perform
     return true if Rails.env.development?
 
-    @domain.prepare_elb!
-
     balancer.create!
     @domain.update_column(:dns_name, balancer.dns_name)
     @domain.elb_created!

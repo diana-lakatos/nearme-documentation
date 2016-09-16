@@ -19,6 +19,7 @@ class InstanceAdmin::Settings::DomainsController < InstanceAdmin::Settings::Base
     @domain = domains.build(domain_params)
     if @domain.save
       if @domain.secured?
+        @domain.prepare_elb!
         CreateElbJob.perform(@domain)
         flash[:success] = t('flash_messages.instance_admin.settings.domain_preparing')
       else
