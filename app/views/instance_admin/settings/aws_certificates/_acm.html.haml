@@ -1,6 +1,9 @@
 %tr
   %td= link_to certificate.name, [:instance_admin, :settings, certificate]
-  %td= certificate.status
+  %td
+    = certificate.status
+    %br
+    %small= certificate.arn
   %td= l certificate.updated_at, format: :long
   %td
     = link_to :delete,[:instance_admin, :settings,  certificate], method: :delete, data: { confirm: 'Are you sure?' }
