@@ -12,6 +12,9 @@ class InstanceAdmin::Settings::CertificateUploadsController < InstanceAdmin::Set
     NearMe::IAM::UploadCertificate.new(@certificate, params).execute
 
     respond_with :instance_admin, :settings, :aws_certificates
+  rescue NearMe::IAM::UploadError
+    flash['error'] = $!.message
+    render :new
   end
 
   def destroy

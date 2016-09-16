@@ -1,5 +1,11 @@
 en:
   activerecord:
+    errors:
+      models:
+        aws_certificate:
+          attributes:
+            arn:
+              taken: "You can not request more than one certificate for the same domain name within one hour."
     models:
       payment_gateway: "Payment gateway"
       payment_method: "Payment method"
@@ -445,8 +451,8 @@ en:
       aws_certificates:
         certificate_list:
           title:
-            ACM: Certificate requests
-            IAM: Uploaded certificates
+            acm: Certificate requests
+            iam: Uploaded certificates
         new:
           request_certificate: Request certificate
         show:
