@@ -72,11 +72,9 @@ module CustomAttributes
           end
 
           def transform_hash_string_to_hash(hash_string)
-            hash_string.split(',').inject({}) do |hash, key_value_string|
-              key_value_arr = key_value_string.split('=>')
-              hash[key_value_arr[0].strip] = key_value_arr[1].strip
-              hash
-            end
+            hash = {}
+            hash_string.scan(/([^, ]+) ?=> ?('[^']+'|"[^"]+"|[^,]+)/) { |key, value| hash[key.strip] = value.strip }
+            hash
           end
 
           def self.find_as_array(target_id, target_type)
