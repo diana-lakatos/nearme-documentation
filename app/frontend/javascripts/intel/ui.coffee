@@ -1,5 +1,5 @@
 require('./vendor/vequalize');
-require('./vendor/tinynav');
+require('imports?this=>window!./vendor/tinynav');
 
 module.exports = class UI
   constructor: ()->

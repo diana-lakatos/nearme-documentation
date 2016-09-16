@@ -517,6 +517,10 @@ class User < ActiveRecord::Base
     (self.read_attribute(:last_name)) || get_last_name_from_name
   end
 
+  def name_with_state
+    name + (deleted? ? " (Deleted)" : (banned? ? " (Banned)" : ""))
+  end
+
   def secret_name
     secret_name = last_name.present? ? last_name[0] : middle_name.try(:[], 0)
     secret_name = secret_name.present? ? "#{first_name} #{secret_name[0]}." : first_name

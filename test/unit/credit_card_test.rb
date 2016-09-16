@@ -33,6 +33,17 @@ class CreditCardTest < ActiveSupport::TestCase
       assert_equal customer_params["id"], card.instance_client.customer_id
       assert_equal true, card.test_mode
     end
+
+    should 'find instance_client when deleted' do
+      ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(am_success_response(customer_params))
+      Instance.any_instance.stubs(:test_mode?).returns(false)
+      card = FactoryGirl.build(:credit_card_attributes, response: nil, instance_client: @instance_client, payment_gateway: @instance_client.payment_gateway)
+      assert card.save
+      card.payment_gateway.destroy
+      card.reload
+      assert card.payment_gateway.deleted?
+      assert card.instance_client.deleted?
+    end
   end
 
   private

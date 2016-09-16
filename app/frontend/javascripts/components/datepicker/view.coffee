@@ -1,4 +1,4 @@
-asEvented = require('asEvented')
+asEvented = require('asevented')
 dateUtil = require('../../lib/utils/date')
 
 PositionedView = require ('../lib/positioned_view')

@@ -1,14 +1,14 @@
-@import "vendor/bootstrap";
+@import "bootstrap-sass/assets/stylesheets/bootstrap";
 @import "vendor/bootstrap-theme";
 @import "vendor/bootstrap-select";
 @import "bootstrap-switch/dist/css/bootstrap3/bootstrap-switch";
-@import "spectrum/spectrum";
+@import "spectrum-colorpicker/spectrum";
 
-@import "chosen/chosen.min";
+@import "chosen-js/chosen";
 
 @import "select2/select2";
 
-@import "Jcrop/css/jquery.Jcrop";
+@import "jquery-jcrop/css/jquery.Jcrop";
 @import "vendor/overrides/jcrop";
 @import "vendor/overrides/chosen";
 @import "vendor/icui";

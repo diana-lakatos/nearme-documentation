@@ -10,6 +10,7 @@ class InstanceAdmin::Manage::PaymentsController < InstanceAdmin::Manage::BaseCon
     payments_scope = payments_scope.where(state: params[:state]) if params[:state].present?
     payments_scope = payments_scope.where(payment_gateway_id: params[:payment_gateway_id]) if params[:payment_gateway_id].present?
     payments_scope = payments_scope.where(payment_gateway_mode: params[:mode])
+    payments_scope = payments_scope.where(payer_id: params[:payer_id]) if params[:payer_id]
     payments_scope = case params[:transferred]
       when 'awaiting', nil
         payments_scope.needs_payment_transfer
@@ -19,7 +20,7 @@ class InstanceAdmin::Manage::PaymentsController < InstanceAdmin::Manage::BaseCon
         payments_scope.where(exclude_from_payout: true)
       else
         payments_scope
-    end
+    end if params[:payer_id].blank?
 
     @payments = PaymentDecorator.decorate_collection(payments_scope.paginate(per_page: 20, :page => params[:page]))
   end

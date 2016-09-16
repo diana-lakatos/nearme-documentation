@@ -47,6 +47,9 @@
 - if only_inputs.empty? || only_inputs.include?(:currency)
   = render 'dashboard/company/transactables/form_fields/currency', f: f
 
+- if only_inputs.empty? || only_inputs.include?(:tags)
+  = render 'dashboard/company/transactables/form_fields/tags', f: f
+
 - if  (only_inputs.empty? || only_inputs.include?(:shipping_info))
   = render "dashboard/company/transactables/form_fields/shipping_profiles", f: f
 

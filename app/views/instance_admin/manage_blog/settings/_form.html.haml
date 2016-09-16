@@ -7,12 +7,14 @@
 
 .row
   = f.simple_fields_for :owner do |i|
-    .input-container.col-xs-4
-      = i.input :user_blogs_enabled, inline_label: true
-    .input-container.col-xs-4
-      = i.input :enquirer_blogs_enabled, inline_label: true
-    .input-container.col-xs-4
-      = i.input :lister_blogs_enabled, inline_label: true
+    - unless current_instance.split_registration?
+      .input-container.col-xs-4
+        = i.input :user_blogs_enabled, inline_label: true
+    - else
+      .input-container.col-xs-4
+        = i.input :enquirer_blogs_enabled, inline_label: true
+      .input-container.col-xs-4
+        = i.input :lister_blogs_enabled, inline_label: true
 
 .row
   .input-container.col-xs-6

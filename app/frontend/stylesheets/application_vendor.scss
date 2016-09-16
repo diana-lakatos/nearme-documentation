@@ -3,7 +3,8 @@
 
 @import "select2/select2";
 @import "animate.css/animate";
-@import "chosen/chosen.min";
+@import "chosen-js/chosen";
+
 
 @import "vendor/bootstrap-custom";
 @import "vendor/bootstrap-modal-fullscreen";
@@ -12,8 +13,8 @@
 @import "vendor/icui";
 @import "vendor/powerange";
 
-@import "Jcrop/css/jquery.Jcrop";
-@import "spectrum/spectrum";
+@import "jquery-jcrop/css/jquery.Jcrop";
+@import "spectrum-colorpicker/spectrum";
 @import "bootstrap-switch/dist/css/bootstrap2/bootstrap-switch";
 
 @import "vendor/jstree";

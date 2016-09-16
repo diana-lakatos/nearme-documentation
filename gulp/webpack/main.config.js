@@ -46,17 +46,10 @@ config.resolve = {
     // tell webpack which extensions to auto search when it resolves modules. With this,
     // you'll be able to do `require('./utils')` instead of `require('./utils.js')`
     extensions: ['', '.js', '.coffee'],
-    // by default, webpack will search in `web_modules` and `node_modules`. Because we're using
-    // Bower, we want it to look in there too
-    modulesDirectories: [ '.', 'node_modules', path.join('vendor','assets','bower_components') ],
+    modulesDirectories: ['node_modules', '.']
 };
 
 config.plugins = [
-    // we need this plugin to teach webpack how to find module entry points for bower files,
-    // as these may not have a package.json file
-    new webpack.ResolverPlugin([
-        new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin('.bower.json', ['main'])
-    ]),
     new webpack.ProvidePlugin({
         '$': 'jquery',
         'jQuery': 'jquery',
@@ -71,13 +64,11 @@ config.module = {
     loaders: [
         { test: /\.coffee$/, loader: 'coffee-loader' },
         {
-            test: /\.jsx?$/,
-            exclude: /(node_modules|bower_components|vendor)/,
+            test: /\.js$/,
+            exclude: /(node_modules|vendor)/,
             loader: 'babel',
             query: {
-                cacheDirectory: true,
-                presets: ['es2015', 'react'],
-                plugins: ['transform-runtime']
+                cacheDirectory: true
             }
         },
         { test: /\.css$/, loader: 'style-loader!css-loader' }

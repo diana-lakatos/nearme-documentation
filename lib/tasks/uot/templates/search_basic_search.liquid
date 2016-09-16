@@ -1,0 +1,76 @@
+<div class="search-type-toggle">
+  <a href="/search?search_type=advanced">Advanced search</a>
+</div>
+
+<fieldset class="filters basic" data-search-filters-container>
+    <legend class="struct-label">Filter</legend>
+
+    <div class="filters-wrapper">
+        <div class="filter-categories">
+          {% assign categories = searcher.searchable_categories | rotate %}
+          {% for root_category in  categories %}
+              <div class="filter">
+                  <label for="filter-industry" class="filter-title">{{ root_category.name }}</label>
+                  <span class="select-a">
+                      <select id="filter-industry" class="unstyled-select" name='category_ids[]'>
+                          <option value="">Please Select --</option>
+                          {% for category in root_category.children %}
+                            <option {% if searcher.category_ids contains subcat.id %}selected{% endif %} value='{{category.id}}'>{{ category.name }}</option>
+                            {% if category.children.size > 0 %}
+                              {% for subcat in category.children %}
+                                <option {% if searcher.category_ids contains subcat.id %}selected{% endif %} value='{{subcat.id}}'>{{ subcat.name }}</option>
+                                {% if subcat.children.size > 0 %}
+                                  {% for subcat2 in subcat.children %}
+                                    <option {% if searcher.category_ids contains subcat2.id %}selected{% endif %} value='{{subcat2.id}}'>{{ subcat2.name }}</option>
+                                  {% endfor %}
+                                {% endif %}
+                              {% endfor %}
+                            {% endif %}
+                          {% endfor %}
+                      </select>
+                  </span>
+              </div>
+          {% endfor %}
+        </div>
+
+        <div class="filter-switches">
+            <fieldset class="filter" data-custom-attribute='workplace_type'>
+                <legend class="filter-title">By Workplace</legend>
+                <ul>
+                    <li>
+                        <span class="radio-a">
+                            <input type="radio" {% if searcher.lg_custom_attributes_hash['workplace_type'] contains 'Online' %}checked{% endif %} id="filter-workplace-online" name="lg_custom_attributes[workplace_type][]" value="Online">
+                            <label for="filter-workplace-online">Online</label>
+                        </span>
+                    </li>
+
+                    <li>
+                        <span class="radio-a">
+                            <input type="radio" {% if searcher.lg_custom_attributes_hash['workplace_type'] contains 'On Site' %}checked{% endif %} id="filter-workplace-onsite" name="lg_custom_attributes[workplace_type][]" value="On Site">
+                            <label for="filter-workplace-onsite">On Site</label>
+                        </span>
+                    </li>
+                </ul>
+            </fieldset>
+
+            <fieldset class="filter" data-custom-attribute='travel'>
+                <legend class="filter-title">By Travel</legend>
+                <ul>
+                    <li>
+                        <span class="radio-a">
+                            <input type="radio" {% if searcher.lg_custom_attributes_hash['travel'] contains 'yes' %}checked{% endif %} id="filter-travel-yes" name="lg_custom_attributes[travel][]" value="yes">
+                            <label for="filter-travel-yes">Yes</label>
+                        </span>
+                    </li>
+
+                    <li>
+                        <span class="radio-a">
+                            <input type="radio" {% if searcher.lg_custom_attributes_hash['travel'] contains'no' %}checked{% endif %} id="filter-travel-no" name="lg_custom_attributes[travel][]" value="no">
+                            <label for="filter-travel-no">No</label>
+                        </span>
+                    </li>
+                </ul>
+            </fieldset>
+        </div>
+    </div>
+</fieldset>

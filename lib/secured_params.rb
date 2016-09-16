@@ -696,6 +696,7 @@ class SecuredParams
       :gplus_url,
       :instagram_url,
       :youtube_url,
+      :linkedin_url,
       :rss_url,
       :color_blue,
       :color_red,
@@ -833,7 +834,16 @@ class SecuredParams
       :uploaded_sitemap,
       :remove_uploaded_sitemap,
       :uploaded_robots_txt,
-      :remove_uploaded_robots_txt
+      :remove_uploaded_robots_txt,
+      :aws_certificate_id
+    ]
+  end
+
+  def aws_certificate
+    [
+      :name,
+      :instance_id,
+      :domain_id
     ]
   end
 

@@ -1,4 +1,4 @@
-require('jquery.inview/jquery.inview');
+require('jquery-inview/jquery.inview')
 
 module.exports = class SupportTickets
 

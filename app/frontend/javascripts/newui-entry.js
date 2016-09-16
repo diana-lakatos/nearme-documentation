@@ -4,8 +4,8 @@ var DNM = require('./app');
 
 require('jquery-ui/ui/widget');
 require('bootstrap-sass/assets/javascripts/bootstrap');
-require('cocoon');
-require('jquery-timeago');
+require('../vendor/cocoon');
+require('timeago');
 
 DNM.registerInitializer(function(){
     var fields = $('[data-address-field]');
@@ -534,8 +534,8 @@ DNM.registerInitializer(function(){
         return;
     }
 
-    require.ensure('spectrum/spectrum', function(require){
-        require('spectrum/spectrum');
+    require.ensure('spectrum-colorpicker', function(require){
+        require('spectrum-colorpicker');
     });
 });
 

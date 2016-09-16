@@ -30,19 +30,45 @@
     {% endif %}
 
     <th scope="col">Qty</th>
-    <th scope="col">Total</th>
+    <th scope="col">
+      Total
+      {% assign subtotal_hint = 'reservations_review.hints.subtotal' | translate: default: '' %}
+      {% if subtotal_hint != blank %}
+        <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ subtotal_hint }}">
+          {{ 'toggle_hint' | translate }}
+        </button>
+      {% endif %}
+    </th>
   </thead>
   <tfoot>
     <tr>
       <td colspan="{% if @order.included_tax? || @order.additional_tax? %}4{% else %}2{% endif %}"></td>
-      <th headers="summary-total">Total</th>
+      <th headers="summary-total">Total
+        {% assign total_hint = 'reservations_review.hints.total' | translate: default: '' %}
+        {% if total_hint != blank %}
+        <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ total_hint }}">
+          {{ 'toggle_hint' | translate }}
+        </button>
+        {% endif %}
+      </th>
       <td id="summary-total">{{ @order.formatted_total_amount }}</td>
     </tr>
   </tfoot>
   <tbody>
     {% for item in @order.line_items %}
       <tr data-line-item-class="{{ item.class_name }}">
-        <td>{{ item.name }}</td>
+        <td>
+          {{ item.name }}
+
+          {% if item.is_service_fee? %}
+            {% assign service_fee_hint = 'reservations_review.hints.service_fee' | translate: default: '' %}
+            {% if service_fee_hint != blank %}
+              <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ service_fee_hint }}">
+                {{ 'toggle_hint' | translate }}
+              </button>
+            {% endif %}
+          {% endif %}
+        </td>
 
         {% if @order.included_tax? %}
           <td>{{ item.formatted_net_price }}</td>

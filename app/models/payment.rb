@@ -53,7 +53,7 @@ class Payment < ActiveRecord::Base
   belongs_to :payment_gateway, -> { with_deleted }
   belongs_to :payment_method, -> { with_deleted }
   belongs_to :merchant_account
-  belongs_to :payer, class_name: 'User'
+  belongs_to :payer, -> { with_deleted }, class_name: 'User'
 
   has_many :billing_authorizations
   has_many :authorizations, class_name: "BillingAuthorization"

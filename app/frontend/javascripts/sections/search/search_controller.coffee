@@ -1,4 +1,5 @@
-require('history.js/scripts/bundled/html5/jquery.history.js')
+require('history.js/history')
+require('history.js/history.adapter.ender')
 
 SearchController = require('./controller')
 SearchScreenLockLoader = require('./screen_lock_loader');
@@ -8,8 +9,8 @@ SearchRedoSearchMapControl = require('./redo_search_map_control')
 SearchListing = require('./listing')
 SearchMap = require('./map')
 urlUtil = require('../../lib/utils/url');
-window.IASCallbacks = require('exports?IASCallbacks!jquery-ias/src/callbacks')
-require('jquery-ias/src/jquery-ias')
+window.IASCallbacks = require('exports?IASCallbacks!../../vendor/jquery-ias/callbacks')
+require('../../vendor/jquery-ias/jquery-ias')
 
 # Controller for Search results and filtering page
 #
@@ -314,7 +315,8 @@ module.exports = class SearchSearchController extends SearchController
       @showResults(html)
       @updateUrlForSearchQuery()
       @updateLinksForSearchQuery()
-      window.scrollTo(0, 0) if !@map
+      # This was commented out for UoT purpose, as I couldn't imagine why it is necessary to change user position on page
+      # window.scrollTo(0, 0) if !@map
       @reinitializePriceSlider()
       @loader.hide()
       callback() if callback

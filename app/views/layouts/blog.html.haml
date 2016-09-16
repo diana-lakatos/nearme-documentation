@@ -1,5 +1,6 @@
+- html_class = "env-#{Rails.env} no-js"
 !!!
-%html
+%html{ class: html_class }
   %head
     %meta{name: 'app-server', content: ENV['HOSTNAME']}
     = render 'layouts/content_holder_injector'
@@ -13,7 +14,6 @@
     = auto_discovery_link_tag(:rss, current_url)
     /[if lt IE 9]
       = stylesheet_link_tag 'browser_specific/ie8'
-    = stylesheet_link_tag '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css'
     = stylesheet_link_tag 'blog'
     = stylesheet_link_tag 'application_vendor'
     = stylesheet_link_tag 'application'

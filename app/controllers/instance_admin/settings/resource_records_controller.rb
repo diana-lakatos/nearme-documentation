@@ -2,10 +2,6 @@ class InstanceAdmin::Settings::ResourceRecordsController < InstanceAdmin::Settin
   respond_to :html, :json
   helper_method :domain, :resource
 
-  # rescue_from StandardError do
-  #   binding.pry
-  # end
-
   def index
     respond_with collection
   end

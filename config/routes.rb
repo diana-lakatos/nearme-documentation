@@ -280,6 +280,10 @@ DesksnearMe::Application.routes.draw do
             resources :resource_records
           end
         end
+        resources :aws_certificates
+        resources :aws_certificate_confirmations, only: [:create]
+        resources :certificate_uploads, only: [:new, :create, :destroy]
+
         resources :api_keys, only: [:index, :create, :destroy]
         resource :hidden_controls, only: [:show, :update], :controller => 'hidden_controls'
         resource :certificate_request, only: [:new, :create]
@@ -923,6 +927,7 @@ DesksnearMe::Application.routes.draw do
       end
 
       resources :transactables, except: [:new, :create]
+      resources :transactable_collaborators
 
       resources :shipping_profiles do
         collection do

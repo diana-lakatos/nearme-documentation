@@ -134,7 +134,7 @@ class Group < ActiveRecord::Base
       user = User.find_by(email: group_member_email)
       next unless user.present?
 
-      unless group_members.for_user(user).exists?
+      if !group_members.for_user(user).exists? && user != self.creator
         gm = self.group_members.build(
           user: user,
           email: group_member_email,

@@ -1,7 +1,7 @@
 @import "common/common";
 @import "common/fonts";
 
-@import "vendor/bootstrap";
+@import "bootstrap-sass/assets/stylesheets/bootstrap";
 @import "vendor/bootstrap-theme";
 
 @import "instance_admin/variables";
@@ -34,4 +34,3 @@
 @import "instance_admin/tabs";
 
 @import "instance_admin/dashboard_modal";
-

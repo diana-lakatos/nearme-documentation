@@ -33,8 +33,8 @@
               = payment.company.name
             - else
               = "(#{t('instance_admin.deleted')})"
-          %td= payment.payable.user.try(:name) if payment.payable
-          %td= payment.payer ? link_to(payment.payer.name, profile_path(payment.payer)) : "-  "
+          %td=  payment.payable ? link_to(payment.payable.creator.name_with_state, edit_instance_admin_manage_user_path(payment.payable.creator)) : "-  "
+          %td= payment.payer ? link_to(payment.payer.name_with_state, edit_instance_admin_manage_user_path(payment.payer)) : "-  "
           %td= payment.state.try(:capitalize)
           %td= payment.payment_gateway.try(:name)
           %td= l(payment.created_at, format: :long)

@@ -15,7 +15,8 @@ module LiquidFilters
     end
   rescue => e
     if Rails.env.production?
-      raise e
+      MarketplaceLogger.error('Url Shortening Error', e.to_s, raise: false)
+      ""
     else
      'http://limitreached'
     end

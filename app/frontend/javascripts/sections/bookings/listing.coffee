@@ -7,7 +7,7 @@ Availability = require('./availability/availability')
 ScheduleAvailability = require('./availability/schedule_availability')
 HourlyAvailability = require('./availability/hourly_availability')
 dateUtil = require('../../lib/utils/date')
-asEvented = require('asEvented')
+asEvented = require('asevented')
 
 # Each Listing has it's own object which keeps track of number booked, availability etc.
 module.exports = class BookingListing

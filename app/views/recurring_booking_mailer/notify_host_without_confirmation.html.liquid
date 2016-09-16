@@ -1,4 +1,4 @@
-<h2>Good news, {{ user.first_name }}!</h2>
+<h2>Good news, {{ lister.first_name }}!</h2>
 
 <p>
 Your listing, '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>', was just subscribed!
@@ -39,4 +39,3 @@ Your listing, '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>', was 
 <a class="btn" href="{{ platform_context.host | append:recurring_booking.manage_guests_dashboard_url | append:signature_for_tracking }}">Manage {{ listing.lessees | capitalize }}</a>
 
 <p>If you need help, send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> or contact us at {{ platform_context.phone_number }}.</p>
-

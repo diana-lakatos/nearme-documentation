@@ -1,5 +1,5 @@
-asEvented = require('asEvented')
-require('strftime')
+asEvented = require('asevented')
+require('../../../vendor/gf3-strftime')
 PositionedView = require('../../components/lib/positioned_view');
 
 module.exports = class TimePicker

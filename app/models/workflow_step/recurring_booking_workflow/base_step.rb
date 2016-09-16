@@ -31,7 +31,13 @@ class WorkflowStep::RecurringBookingWorkflow::BaseStep < WorkflowStep::BaseStep
   # listing:
   #   Transactable object
   def data
-    { recurring_booking: @recurring_booking, user: lister, host: enquirer, reservation: @recurring_booking, listing: @recurring_booking.transactable }
+    {
+      recurring_booking: @recurring_booking,
+      enquirer: enquirer,
+      lister: lister,
+      reservation: @recurring_booking,
+      listing: @recurring_booking.transactable
+    }
   end
 
   def transactable_type_id

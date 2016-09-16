@@ -1,4 +1,4 @@
-asEvented = require('asEvented')
+asEvented = require('asevented')
 # A simple wrapper around the search result data
 #
 # TODO: At some point we should probalby be retrieving JSON result data rather than
