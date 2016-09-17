@@ -67,28 +67,19 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
   def charge(user, amount, currency, payment, token)
     charge_record = super(user, amount.to_i, currency, payment, token)
     if charge_record.try(:success?)
-      payment_transfer = payment.company.payment_transfers.build(
+      payment_transfer = payment.company.payment_transfers.create!(
         payments: [payment.reload],
         payment_gateway_mode: mode,
         payment_gateway_id: self.id,
         token: charge_record.response.params['transfer']
       )
-
-      payout = payment_transfer.payout_attempts.build({
-        amount_cents: payment_transfer.amount.cents,
-        currency: payment_transfer.amount.currency.iso_code,
-        reference: payment_transfer,
-        payment_gateway_mode: mode
-      })
-
-      payment_transfer.save!
-      payout.payout_pending('')
     end
     charge_record
   end
 
-  def payout(*args)
-    raise NotImplementedError.new("#{self.name} does not support classic payout")
+  def process_payout(merchant_account, amount, reference)
+    # TODO integrate Stripe Transfer API for manual transfer_schedule
+    payout_pending(@pay_response)
   end
 
   def immediate_payout(company)
