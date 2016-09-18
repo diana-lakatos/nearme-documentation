@@ -19,8 +19,9 @@ module Api
       @user.assign_attributes(wizard_params)
 
       @user.companies.first.creator = current_user
-
-      @user.companies.first.locations.first.assign_attributes wizard_params[:companies_attributes][0][:locations_attributes][0]
+      unless @user.companies.first.locations.first.listings.first
+        @user.companies.first.locations.first.assign_attributes wizard_params[:companies_attributes][0][:locations_attributes][0]
+      end
       build_objects
       build_approval_requests
       @user.first_listing.creator = @user
