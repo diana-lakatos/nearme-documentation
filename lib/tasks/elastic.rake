@@ -9,6 +9,14 @@ namespace :elastic do
     Transactable.searchable.import force: true
   end
 
+  desc 'Re-creates and fills user index'
+  task :reindex_users => [:environment] do
+
+    # DO NOT RUN THIS MANUALLY -> DESTROYS THE INDEX. PlatformContext does not matter
+    User.__elasticsearch__.create_index! force: true
+    User.searchable.import force: true
+  end
+
   desc 'Updates index and documents'
   task update: :environment do
     puts 'Updating Transactables index mappings'

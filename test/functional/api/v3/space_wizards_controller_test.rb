@@ -25,9 +25,11 @@ class Api::V3::SpaceWizardsControllerTest < ActionController::TestCase
   private
 
   def get_params(options = {})
+    at_attributes = action_type_attibutes(options)
+    at_attributes[:action_types_attributes] = [at_attributes[:action_types_attributes]["0"]]
     {"user" =>
      {"companies_attributes"=>
-      {"0" =>
+      [
        {
          "name"=>"International Secret Intelligence Service",
          "company_address_attributes" => {
@@ -36,7 +38,7 @@ class Api::V3::SpaceWizardsControllerTest < ActionController::TestCase
            "longitude" => "16.925168100000064",
          },
          "locations_attributes"=>
-         {"0"=>
+         [
           {
             "description"=>"Our historic 11-story Southern Pacific Building, also known as \"The Landmark\", was completed in 1916. We are in the 172 m Spear Tower.",
             "name" => 'Location',
@@ -49,7 +51,7 @@ class Api::V3::SpaceWizardsControllerTest < ActionController::TestCase
               "formatted_address"=>"formatted usa",
             },
             "listings_attributes"=>
-            {"0"=>
+            [
              {
                "transactable_type_id" => TransactableType.first.id,
                "name"=>"Desk",
@@ -62,12 +64,12 @@ class Api::V3::SpaceWizardsControllerTest < ActionController::TestCase
                "properties" => {
                  "listing_type"=>"Desk",
                }
-             }.merge(action_type_attibutes(options))
-            },
+             }.merge(at_attributes)
+            ],
           }
-         }
+         ]
        },
-      },
+      ],
       "country_name" => "United States",
       "phone" => "123456789"
      },
@@ -78,7 +80,7 @@ class Api::V3::SpaceWizardsControllerTest < ActionController::TestCase
   def empty_params
     {"user" =>
      {"companies_attributes"=>
-      {"0" =>
+      [
        {
          "name"=>"",
          "locations_attributes"=>
@@ -93,7 +95,7 @@ class Api::V3::SpaceWizardsControllerTest < ActionController::TestCase
           }
          }
        },
-      },
+      ],
       "country_name" => "",
       "phone" => ""
      },
