@@ -26,11 +26,12 @@ module UsersIndex
           indexes :properties, type: 'object' do
             if InstanceProfileType.table_exists?
               mapped = InstanceProfileType.all.map{ |instance_profile_type|
-                instance_profile_type.custom_attributes.pluck(:name)
-              }.flatten.uniq
+                instance_profile_type.custom_attributes
+              }.flatten
 
               mapped.each do |custom_attribute|
-                indexes custom_attribute, type: 'string', index: 'not_analyzed'
+                type = custom_attribute.attribute_type.in?(['integer', 'boolean', 'float']) ? custom_attribute.attribute_type : 'string'
+                indexes custom_attribute.name, type: type, index: 'not_analyzed'
               end
             end
           end
