@@ -17,6 +17,10 @@ class Domain < ActiveRecord::Base
       transition :preparing => :elb_secured
     end
 
+    event :elb_updated do
+      transition [:elb_secured, :failed] => :elb_secured
+    end
+
     event :failed do
       transition :preparing => :failed
     end
