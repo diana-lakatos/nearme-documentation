@@ -1,10 +1,9 @@
 @import "common/common";
 @import "common/fonts";
 
+@import "instance_admin/variables";
 @import "bootstrap-sass/assets/stylesheets/bootstrap";
 @import "vendor/bootstrap-theme";
-
-@import "instance_admin/variables";
 
 @import "components/fileupload";
 @import "components/tags";
