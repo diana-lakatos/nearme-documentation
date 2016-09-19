@@ -315,8 +315,8 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       end
       mail = ActionMailer::Base.deliveries.last
 
-      assert_contains @user.first_name, mail.html_part.body
-      assert_contains @reservation.transactable.name, mail.html_part.body
+      assert mail.html_part.body.include?(@user.first_name)
+      assert mail.html_part.body.include?(@reservation.transactable.name)
 
       assert_equal [@user.email], mail.to
       assert_equal "[DesksNearMe] Check out these new Desks in your area!", mail.subject
@@ -561,3 +561,4 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
     end
   end
 end
+
