@@ -2934,3 +2934,20 @@ en:
   merchant_account:
     gateway_errors:
       us_social_security_format: 'Social Security number must be 9 characters long'
+
+  service_type:
+    common:
+      languages:
+        english: 'I speak English'
+        german: 'Ich spreche Deutsch'
+        french: 'Je parle français'
+        spanish: 'Yo hablo español'
+        chinese: '我說中國'
+        tagalog: 'Nagsasalita ako ng Tagalog'
+        vietnamese: 'Tôi nói tiếng Việt nam'
+        korean: '저는 한국말 할줄 알아요'
+        farsi: 'من فارسی حرف می زنم'
+        russian: 'Я говорю по русски'
+        arabic: 'اتحدث العربية'
+        italian: 'Parlo italiano'
+        polish: 'Mówię po polsku'
