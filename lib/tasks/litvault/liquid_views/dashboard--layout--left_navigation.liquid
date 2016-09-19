@@ -111,10 +111,10 @@
             </span>
 
               <ul>
-                {% if current_user.buyer_profile == blank %}
+                {% if current_user.has_seller_profile? %}
                   <li id="dashboard-nav-new_transactable" class="{% if new_transactable_selected %}selected{% endif %}">
-                    <a href='{{ platform_context.transactable_types[0].new_transactable_path }}'>
-                      Add a Project
+                    <a href='/create-a-new-case?nolayout=1' data-modal="true" data-modal-class="new-case-dialog">
+                      Create a New Case
                     </a>
                   </li>
                 {% endif %}
