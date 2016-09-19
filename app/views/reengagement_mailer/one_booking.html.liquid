@@ -1,4 +1,4 @@
-<h2>Hey, {{ enquirer.first_name }}!</h2>
+<h2>Hey, {{ user.first_name }}!</h2>
 
 <p>We hope you enjoyed your booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' on {{ reservation.start_date | to_date | localize: 'day_and_month' }}.</p>
 
@@ -8,4 +8,4 @@
 
 <a class="btn" href="{{ platform_context.host | append:listing.search_url_with_tracking | append:signature_for_tracking  }}">Search More {{ platform_context.bookable_noun_plural }}</a>
 
-<p>Not looking for a {{ platform_context.bookable_noun }}? <a href="{{ platform_context.host | append:enquirer.space_wizard_list_url_with_tracking | append:signature_for_tracking  }}">List your {{ listing.bookable_noun }}</a>.</p>
+<p>Not looking for a {{ platform_context.bookable_noun }}? <a href="{{ platform_context.host | append:user.space_wizard_list_url_with_tracking | append:signature_for_tracking  }}">List your {{ listing.bookable_noun }}</a>.</p>
