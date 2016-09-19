@@ -3,11 +3,12 @@ require 'test_helper'
 class CreateElbJobTest < ActiveSupport::TestCase
   context '#perform' do
     setup do
-      @domain = FactoryGirl.create(:domain, load_balancer_name: 'name')
+      @domain = FactoryGirl.create(:domain, load_balancer_name: 'name', state: 'preparing')
 
       @balancer_options = {
         name: @domain.load_balancer_name,
-        certificate: @domain.aws_certificate
+        certificate: @domain.aws_certificate,
+        template_name: 'staging'
       }
     end
 

@@ -18,7 +18,7 @@ class ElasticIndexerJob < Job
       case @operation.to_s
         when /index|update/
           record = @klass.constantize.with_deleted.find(@record_id)
-          return if record.deleted? || record.draft
+          return if record.deleted? || record.try(:draft)
           record.__elasticsearch__.client = client
           record.__elasticsearch__.__send__ "#{@operation}_document"
         when /delete/

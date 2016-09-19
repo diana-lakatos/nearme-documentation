@@ -1,5 +1,6 @@
 class AwsCertificate < ActiveRecord::Base
   validates :name, :instance_id, presence: true
+  validates :arn, uniqueness: true
 
   has_many :domains
 

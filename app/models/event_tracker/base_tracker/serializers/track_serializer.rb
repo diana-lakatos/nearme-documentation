@@ -91,6 +91,14 @@ class EventTracker::BaseTracker::Serializers::TrackSerializer
         browser_version: object.browser_version,
         platform: object.platform
       }
+    when User::Search::Params::Web
+      {
+        search_industry: '',
+        search_area_of_expertise: '',
+        search_language: '',
+        search_workplace_type: '',
+        search_travel: ''
+      }
     when Listing::Search::Params::Web
       {
         search_street: object.street,

@@ -1,4 +1,4 @@
-require 'chosen-npm/public/chosen.jquery.min'
+require 'chosen-js/chosen.jquery.js'
 
 module.exports = class ChosenInitializer
   constructor: (context)->

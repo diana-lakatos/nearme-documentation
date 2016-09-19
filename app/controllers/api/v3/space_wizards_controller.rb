@@ -10,7 +10,7 @@ module Api
 
     # see no evil :(
     def create
-      params[:user][:companies_attributes]["0"][:name] = current_user.first_name if current_instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
+      params[:user][:companies_attributes][0][:name] = current_user.first_name if current_instance.skip_company? && params[:user][:companies_attributes][0][:name].blank?
       set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
       set_proper_currency
       @user.get_seller_profile
@@ -19,6 +19,9 @@ module Api
       @user.assign_attributes(wizard_params)
 
       @user.companies.first.creator = current_user
+      unless @user.companies.first.locations.first.listings.first
+        @user.companies.first.locations.first.assign_attributes wizard_params[:companies_attributes][0][:locations_attributes][0]
+      end
       build_objects
       build_approval_requests
       @user.first_listing.creator = @user
@@ -99,7 +102,7 @@ module Api
       @user.companies.build if @user.companies.first.nil?
       @user.companies.first.locations.build if @user.companies.first.locations.first.nil?
       @user.companies.first.locations.first.transactable_type = @transactable_type
-      @transactable = @user.companies.first.locations.first.listings.first || @user.companies.first.locations.first.listings.build({transactable_type_id: @transactable_type.id, booking_type: @transactable_type.booking_choices.first})
+      @transactable = @user.companies.first.locations.first.listings.first || @user.companies.first.locations.first.listings.build({transactable_type_id: @transactable_type.id})
       @transactable.attachment_ids = attachment_ids_for(@transactable) if params.has_key?(:attachment_ids)
     end
 
@@ -127,15 +130,15 @@ module Api
     end
 
     def set_proper_currency
-      params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:currency] = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:currency].presence || PlatformContext.current.instance.default_currency
+      params[:user][:companies_attributes][0][:locations_attributes][0][:listings_attributes][0][:currency] = params[:user][:companies_attributes][0][:locations_attributes][0][:listings_attributes][0][:currency].presence || PlatformContext.current.instance.default_currency
     rescue
       nil
     end
 
     def set_listing_draft_timestamp(timestamp)
       begin
-        params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:draft] = timestamp
-        params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:enabled] = true
+        params[:user][:companies_attributes][0][:locations_attributes][0][:listings_attributes][0][:draft] = timestamp
+        params[:user][:companies_attributes][0][:locations_attributes][0][:listings_attributes][0][:enabled] = true
       rescue
         nil
       end
@@ -143,8 +146,8 @@ module Api
 
     def sanitize_price_parameters
       begin
-        params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"].select { |k, v| k.include?('_price') }.each do |k, v|
-          params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][k] = v.to_f unless v.blank?
+        params[:user][:companies_attributes][0][:locations_attributes][0][:listings_attributes][0].select { |k, v| k.include?('_price') }.each do |k, v|
+          params[:user][:companies_attributes][0][:locations_attributes][0][:listings_attributes][0][k] = v.to_f unless v.blank?
         end
       rescue
         # no need to do anything
@@ -155,7 +158,7 @@ module Api
       params.require(:user).permit(secured_params.user(transactable_type: @transactable_type)).tap do |whitelisted|
         (whitelisted[:seller_profile_attributes][:properties] = params[:user][:seller_profile_attributes][:properties]) rescue {}
         (whitelisted[:properties] = params[:user][:properties]) rescue {}
-        (whitelisted[:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:properties] = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:properties]) rescue {}
+        (whitelisted[:companies_attributes][0][:locations_attributes][0][:listings_attributes][0][:properties] = params[:user][:companies_attributes][0][:locations_attributes][0][:listings_attributes][0][:properties]) rescue {}
       end
     end
 
