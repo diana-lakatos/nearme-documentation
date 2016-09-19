@@ -47,7 +47,6 @@ DesksnearMe::Application.configure do
 
   config.action_controller.asset_host = ENV['ASSET_HOST']
   config.action_mailer.asset_host     = ENV['ASSET_HOST']
-  config.cache_dir                    = ENV['FOG_DIRECTORY']
 
   # Protect this environment with a simple Basic authentication dialog
   # config.middleware.insert_before(Rack::Sendfile, "Rack::Auth::Basic") do |username, password|
