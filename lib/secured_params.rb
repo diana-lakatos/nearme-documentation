@@ -1177,6 +1177,7 @@ class SecuredParams
   def user(transactable_type: nil, reservation_type: nil)
     [
       :avatar,
+      :avatar_cache,
       :avatar_transformation_data,
       :avatar_versions_generated_at,
       :biography,
