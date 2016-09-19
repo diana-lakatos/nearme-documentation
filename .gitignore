@@ -46,6 +46,7 @@ dump.rdb
 .pryrc
 npm-debug.log
 work_files
+vendor/assets/bower_components
 *.sublime-project
 *.sublime-workspace
 *.org

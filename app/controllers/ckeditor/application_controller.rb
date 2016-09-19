@@ -5,12 +5,20 @@ class Ckeditor::ApplicationController < ApplicationController
   before_filter :find_asset, :only => [:destroy]
   before_filter :ckeditor_authorize!
   before_filter :authorize_resource
-  before_filter :check_is_admin
+  before_filter :check_authorized
 
   protected
 
-  def check_is_admin
-    if PlatformContext.current.instance.instance_admins.for_user(current_user).first.blank? && !current_user.try(:admin?)
+  def ckeditor_scope
+    if current_user.try(:is_instance_admin?) || current_user.try(:admin?)
+      ["(assetable_id = ? AND assetable_type = ?) OR (assetable_id = ? AND assetable_type = ?)", current_user.id, "User", PlatformContext.current.instance.id, "Instance"]
+    else
+      ["assetable_id = ? AND assetable_type = ?", current_user.try(:id), "User"]
+    end
+  end
+
+  def check_authorized
+    if current_user.blank?
       render text: 'No access'
     end
   end
@@ -37,4 +45,5 @@ class Ckeditor::ApplicationController < ApplicationController
       end
     end
   end
+
 end
