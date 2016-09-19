@@ -37,12 +37,7 @@ class WorkflowStep::ReservationWorkflow::BaseStep < WorkflowStep::BaseStep
   # listing:
   #   Transactable object
   def data
-    {
-      reservation: @reservation,
-      enquirer: enquirer,
-      lister: lister,
-      listing: @reservation.transactable
-    }
+    { reservation: @reservation, user: enquirer, host: lister, listing: @reservation.transactable }
   end
 
   def transactable_type_id

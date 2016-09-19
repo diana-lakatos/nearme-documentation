@@ -37,13 +37,7 @@ class WorkflowStep::OfferWorkflow::BaseStep < WorkflowStep::BaseStep
   # listing:
   #   Transactable object
   def data
-    {
-      offer: @offer,
-      enquirer: enquirer,
-      lister: lister,
-      listing: transactable,
-      transactable: transactable
-    }
+    { offer: @offer, enquirer: enquirer, lister: lister, listing: transactable, transactable: transactable }
   end
 
   def transactable_type_id
