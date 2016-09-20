@@ -23,6 +23,8 @@ data using ``` rake backup:restore ``` in your console.
 
 ```
 brew install qt5
+brew linkapps qt5
+brew link --force qt5
 brew install icu4c
 ```
 
