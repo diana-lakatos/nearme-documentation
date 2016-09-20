@@ -25,11 +25,15 @@ partial: false
     </div>
   {% endif %}
 
-  {% if user.pending_transactables_for_current_user.size > 0 %}
+  {% if user.pending_transactables.size > 0 %}
 
-    <p><strong>{{ user.name }}</strong> will be invited to your case.</p>
 
-    <p>Please select the case from the list below:</p>
+    {% if user.pending_collaborated_transactables.size == 0 %}
+      <p><strong>{{ user.name }}</strong> will be invited to your case.</p>
+      <p>Please select the case from the list below:</p>
+    {% else %}
+      <p>You have other cases, would you like to invite <strong>{{ user.name }}</strong> to another case? If so, please select from your case list below.</p>
+    {% endif %}
 
     <form method="post" action="{{ 'dashboard_company_transactable_collaborators_path' | generate_url }}">
       <input type="hidden" name="transactable_collaborator[user_id]" value="{{ user.id }}">
@@ -39,7 +43,7 @@ partial: false
         <label for="cases-list" class="control-label">My cases</label>
         <span class="select-a">
           <select id="cases-list" name="transactable_collaborator[transactable_id]" class="unstyled-select">
-            {% for case in user.pending_transactables_for_current_user %}
+            {% for case in user.pending_transactables %}
             <option value="{{ case.id }}">{{ case.name }}</option>
             {% endfor %}
           </select>
@@ -51,7 +55,7 @@ partial: false
       </div>
     </form>
 
-  {% elsif current_user.has_pending_transactables? && user.pending_transactables_for_current_user.size == 0 %}
+  {% elsif current_user.has_pending_transactables? && user.pending_transactables.size == 0 %}
 
     <p>This user has been invited to all of your cases already.</p>
 
