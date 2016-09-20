@@ -2360,6 +2360,7 @@ en:
       not_bookable: 'Suggest date'
       not_purchasable: 'Out of stock'
       documents: 'Documents'
+      not_available: '%{bookable_noun} is currently not available'
     filters:
       open: 'Open'
       resolved: 'Resolved'
