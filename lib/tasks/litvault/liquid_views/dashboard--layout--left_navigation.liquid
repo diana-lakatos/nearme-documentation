@@ -1,7 +1,7 @@
 <aside class="sidebar" role="complementary">
   <nav class="nav-primary">
     <div class="dashboard">
-      <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}">{{ 'dashboard.nav.title' | t }}</a>
+      <a href="{{ 'dashboard_company_transactables_path' | generate_url }}">{{ 'dashboard.nav.title' | t }}</a>
     </div>
 
     <ul>
@@ -78,7 +78,7 @@
         {% assign projects_selected = current_path | matches: path %}
         {% assign projects_visible = 'dashboard/projects' | is_visible %}
         {% assign projects_show = platform_context.projectable? and projects_visible %}
-        {% assign transactables_path = 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id %}
+        {% assign transactables_path = 'dashboard_company_transactables_path' | generate_url %}
         {% assign transactables_selected = current_path | matches: '/transactables(?!/new)' %}
         {% assign new_transactable_selected = current_path | matches: '/transactables/new' %}
         {% assign transactables_visible = 'dashboard/transactables' | is_visible %}

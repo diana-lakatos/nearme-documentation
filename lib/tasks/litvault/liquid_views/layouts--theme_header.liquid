@@ -52,7 +52,7 @@
                                 </li>
                                 {% else %}
                                 <li>
-                                    <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}">
+                                    <a href="{{ 'dashboard_company_transactables_path' | generate_url }}">
                                         My Cases
                                         {% if pending_transactables_count > 0 %}
                                         <span class="count">{{ pending_transactables_count }}</span>

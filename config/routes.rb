@@ -877,8 +877,18 @@ DesksnearMe::Application.routes.draw do
           post :create_bulk, on: :collection
         end
 
+        resources :transactables do
+          member do
+            get :enable
+            get :disable
+            get :cancel
+          end
+
+          resources :transactable_collaborators
+        end
+
         resources :transactable_types do
-          resources :transactables do
+          resources :transactables, controller: 'transactable_types/transactables' do
             member do
               get :enable
               get :disable
