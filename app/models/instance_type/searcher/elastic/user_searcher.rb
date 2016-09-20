@@ -12,8 +12,6 @@ class InstanceType::Searcher::Elastic::UserSearcher
     @instance_profile_type = instance_profile_type
 
     @results = load_results
-
-    set_options_for_filters
   end
 
   def load_results
@@ -51,16 +49,7 @@ class InstanceType::Searcher::Elastic::UserSearcher
   end
 
   def search_query_values
-    { :query => @params[:query] }.merge(filters)
-  end
-
-  def filters
-    search_filters = {}
-
-    search_filters
-  end
-
-  def set_options_for_filters
+    { :query => @params[:query] }
   end
 
   def to_event_params

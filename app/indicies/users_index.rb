@@ -40,13 +40,13 @@ module UsersIndex
     end
 
     def as_indexed_json(options = {})
-      custom_attributes = {}
 
       custom_attributes_by_type = InstanceProfileType.all.map do |instance_profile_type|
         instance_profile_type.custom_attributes.pluck(:name)
       end.flatten.uniq
 
       profiles = self.user_profiles.map do |user_profile|
+        custom_attributes = {}
         custom_attributes_by_type.each do |custom_attribute|
           if user_profile.properties.respond_to?(custom_attribute)
             val = user_profile.properties.send(custom_attribute)
@@ -69,7 +69,6 @@ module UsersIndex
 
       self.as_json(only: allowed_keys).merge(
         instance_profile_type_ids: self.user_profiles.map(&:instance_profile_type_id),
-        custom_attributes: custom_attributes,
         tags: self.tags_as_comma_string,
         user_profiles: profiles
       )

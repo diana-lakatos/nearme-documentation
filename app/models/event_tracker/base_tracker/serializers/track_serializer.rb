@@ -93,11 +93,6 @@ class EventTracker::BaseTracker::Serializers::TrackSerializer
       }
     when User::Search::Params::Web
       {
-        search_industry: '',
-        search_area_of_expertise: '',
-        search_language: '',
-        search_workplace_type: '',
-        search_travel: ''
       }
     when Listing::Search::Params::Web
       {
