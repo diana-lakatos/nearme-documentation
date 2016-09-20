@@ -1,14 +1,14 @@
 {% include 'layouts/theme_header.html' %}
 
 {% if @blog_post != nil and @blog_post.header_present? %}
-  {% assign header_url = @blog_post.header_url %}
-{% else %}
-  {% assign header_url = @blog_instance.header_url %}
+  {% capture header_image %} style="background-image: url({{ @blog_post.header_url }});"{% endcapture %}
+{% elsif @blog_instance.header_present? %}
+  {% capture header_image %} style="background-image: url({{ @blog_instance.header_url }});"{% endcapture %}
 {% endif %}
 
 <div class="header">
   <a href='{{ @blog_instance.blog_posts_path }}'>
-    <div class='header-text-and-logo' style='background-image: url({{ header_url }});'>
+    <div class='header-text-and-logo'{{ header_image }}>
       <div class='v-wrap'>
         <div class='v-box'>
           {% if @blog_instance.header_logo_present? %}
