@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Dashboard::Company::TransactablesControllerTest < ActionController::TestCase
+class Dashboard::Company::TransactableTypes::TransactablesControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)

@@ -7,7 +7,7 @@
   - if !f.object.transactable_type.single_location?
     = link_to t('locations.add_new_location'), new_dashboard_company_location_path(with_deleted_link: true), data: { modal: true }
 
-  = render @locations, f: f, transactable_type: f.object.transactable_type
+  = render partial: 'dashboard/company/locations/location', collection: @locations, f: f, transactable_type: f.object.transactable_type
 
 
 .map-location
