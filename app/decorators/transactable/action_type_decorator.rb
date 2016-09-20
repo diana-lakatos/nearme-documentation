@@ -8,7 +8,7 @@ class Transactable::ActionTypeDecorator < Draper::Decorator
       if pricing.is_free_booking?
         "#{I18n.t('booking_module.free')} #{pricing.decorate.units_translation("reservations.per_unit_price")}"
       else
-        "#{I18n.t('reservations.from_price')} #{humanized_money_with_symbol(pricing.price)} #{I18n.t("reservations.slash_per_#{pricing.unit}")}"
+        "#{I18n.t('reservations.from_price')} #{render_money(pricing.price)} #{I18n.t("reservations.slash_per_#{pricing.unit}")}"
       end
     end.join(' | ')
   end
@@ -20,11 +20,11 @@ class Transactable::ActionTypeDecorator < Draper::Decorator
   end
 
   def price_with_currency(pricing = pricings.first)
-    humanized_money_with_symbol pricing.price
+    render_money pricing.price
   end
 
   def exclusive_price_with_currency(pricing = pricings.first)
-    humanized_money_with_symbol pricing.exclusive_price
+    render_money pricing.exclusive_price
   end
 
   def show_end_date?

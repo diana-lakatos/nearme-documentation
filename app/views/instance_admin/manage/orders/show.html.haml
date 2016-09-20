@@ -33,7 +33,7 @@
                 %td= l(order_item.created_at, format: :long)
                 %td= order_item.currency
                 %td
-                  %b= humanized_money_with_cents_and_symbol(order_item.total_amount)
+                  %b= render_money(order_item.total_amount)
   - elsif (item = @order.transactable_line_items.first).present?
     %h4 Items
     .row
@@ -70,5 +70,5 @@
         %table.payment-totals
           %tr
             %th.total= t 'buy_sell_market.checkout.labels.total2'
-            %td.total= humanized_money_with_cents_and_symbol @order.total_amount
+            %td.total= render_money @order.total_amount
 

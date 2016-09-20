@@ -444,6 +444,7 @@ en:
           replacement_text: "Replacement Text"
           ignore_case: "Ignore case"
         support: "Support"
+        currency_options: "Currency Options"
       payments:
         payment_gateways:
           new: "New Payment Gateway"

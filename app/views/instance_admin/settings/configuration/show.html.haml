@@ -55,6 +55,18 @@
 
   .content-container
     %h4
+      = t('instance_admin.settings.configuration.currency_options')
+    .row
+      .input-container.col-xs-6
+        = f.input :show_currency_symbol, as: :boolean, inline_label: true
+      .input-container.col-xs-6
+        = f.input :show_currency_name, as: :boolean, inline_label: true
+    .row
+      .input-container.col-xs-6
+        = f.input :no_cents_if_whole, as: :boolean, inline_label: true
+
+  .content-container
+    %h4
       = t('instance_admin.settings.configuration.checkout')
     .row
       .input-container.col-xs-6

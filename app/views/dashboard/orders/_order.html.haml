@@ -9,6 +9,6 @@
     .col-sm-2.added.hidden-xs
       = l order.created_at.to_date, format: :short
     .col-sm-2.price.hidden-xs
-      = humanized_money_with_cents_and_symbol order.total_amount
+      = render_money order.total_amount
     .col-sm-2.actions.hidden-xs
       = link_to t('dashboard.orders.details'), url_for(action: :show, id: order.id), data: {'order-details': true}

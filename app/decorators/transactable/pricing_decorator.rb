@@ -24,7 +24,7 @@ class Transactable::PricingDecorator < Draper::Decorator
       actual_price = self.send(price_name_or_object)
     end
 
-    humanized_money_with_symbol(Money.new(actual_price.try(:fractional), currency.blank? ? PlatformContext.current.instance.default_currency : currency))
+    render_money(Money.new(actual_price.try(:fractional), currency.blank? ? PlatformContext.current.instance.default_currency : currency))
   end
 
 end

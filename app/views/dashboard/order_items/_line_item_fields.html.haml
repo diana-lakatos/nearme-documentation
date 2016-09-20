@@ -16,5 +16,5 @@
   .col-sm-4.text-right
     %label.control-label= t('dashboard.order_items.total')
     .sub-total{ data: { subtotal: true, currency: @order_item.unit_price.symbol, amount: f.object.total_price } }
-      = humanized_money_with_cents_and_symbol(f.object.total_price)
+      = render_money(f.object.total_price)
 

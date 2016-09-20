@@ -12,11 +12,11 @@
       %tbody
         %tr
           %th= t('dashboard.payments.total')
-          %td= humanized_money_with_cents_and_symbol(@payment.total_amount)
+          %td= render_money(@payment.total_amount)
 
         %tr
           %th= t('dashboard.payments.service_fee')
-          %td= humanized_money_with_cents_and_symbol(@payment.total_service_fee)
+          %td= render_money(@payment.total_service_fee)
 
         %tr
           %th= t('dashboard.payments.state')

@@ -95,7 +95,7 @@
       %ul.payment-documents
         - recurring_booking.additional_line_items.host.each do |ac|
           %li
-            =ac.name + ' - ' + humanized_money_with_cents_and_symbol(ac.total_price)
+            =ac.name + ' - ' + render_money(ac.total_price)
 
 
 .row
@@ -135,7 +135,7 @@
       - recurring_booking.recurring_booking_periods.each do |period|
         %tr
           %td= "#{I18n.l(period.period_start_date, format: :short)} - #{I18n.l(period.period_end_date, format: :short)}"
-          %td= humanized_money_with_cents_and_symbol(current_user == recurring_booking.host ? period.total_amount - period.service_fee_amount_guest : period.total_amount)
+          %td= render_money(current_user == recurring_booking.host ? period.total_amount - period.service_fee_amount_guest : period.total_amount)
           %td
             %span{class: period.payment.try(:state) }
               = t("dashboard.user_recurring_bookings.states.#{period.payment.try(:state)}")
