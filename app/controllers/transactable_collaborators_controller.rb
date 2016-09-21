@@ -8,8 +8,11 @@ class TransactableCollaboratorsController < ApplicationController
     @transactable = Transactable.seek_collaborators.find(params[:transactable_id] || params[:listing_id])
     @transactable.transactable_collaborators.create(user: current_user, approved_by_user_at: Time.now)
     @collaborators_count = @transactable.reload.transactable_collaborators.approved.count
+
+    html = render_to_string('create', layout: false)
     respond_to do |format|
       format.js { render :collaborators_button }
+      format.json { render json: { html: html }, status: 200 }
     end
   end
 
