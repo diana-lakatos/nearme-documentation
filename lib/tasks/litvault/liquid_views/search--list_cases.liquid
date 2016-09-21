@@ -79,7 +79,13 @@
                 <article class="case-a" id="case-{{ case.id }}">
 
                     <header class="search-result-header">
-                        <h3><a href="{{ case.url }}">{{ case.name }}</a></h3>
+
+                        {% assign collaborator = current_user | find_collaborator: case %}
+                        {% if collaborator.approved_by_owner? or current_user.id == listing.creator_id %}
+                          <h3><a href="{{ case.url }}">{{ case.name }}</a></h3>
+                        {% else %}
+                          <h3><a href="#case-permission-request-{{ case.id }}" data-case-invite-trigger>{{ case.name }}</a></h3>
+                        {% endif %}
 
                         <div class="search-result-meta-action">
                             <a href="./" class="button-b">Bid on Case</a>
@@ -127,6 +133,8 @@
                     </div>
                     {% endif %}
                   </div>
+
+                  <div class="case-invite modal" id="case-permission-request-{{ case.id }}" data-collaborations-url="{{ case.url }}"></div>
               </article>
 
               <script>
