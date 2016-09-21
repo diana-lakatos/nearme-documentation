@@ -1131,6 +1131,7 @@ DesksnearMe::Application.routes.draw do
         resources :users, only: [:create, :show]
         resource :space_wizard, only: [:create]
         resources :transactables, only: [:index]
+        resources :photos, only: [:create]
         resources :reverse_proxy_links, only: [:index, :create]
         resources :transactable_collaborators, only: [:create, :destroy] do
           member do
