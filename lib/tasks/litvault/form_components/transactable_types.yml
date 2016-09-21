@@ -1,0 +1,127 @@
+"Group Case":
+  SPACE_WIZARD:
+    -
+      name: "Tell us a little about your company"
+      fields:
+        - company: name
+        - company: address
+
+    -
+      name: "Where is your group case located?"
+      fields:
+        - location: name
+        - location: description
+        - location: address
+        - location: location_type
+        - location: phone
+
+    -
+      name: "Please tell us about the case you’re listing"
+      fields:
+        - transactable: name
+        - transactable: description
+        - transactable: listing_type
+        - transactable: custom_type
+        - transactable: quantity
+        - transactable: currency
+        - transactable: price
+        - transactable: availability_rules
+        - transactable: photos
+    -
+      name: "And finally, your contact information?"
+      fields:
+        - user: phone
+
+  TRANSACTABLE_ATTRIBUTES:
+    -
+      name: Details
+      fields:
+        - transactable: name
+        - transactable: listing_type
+        - transactable: description
+        - transactable: amenity_types
+        - transactable: photos
+        - transactable: location_id
+        - transactable: waiver_agreement_templates
+        - transactable: documents_upload
+        - transactable: approval_requests
+
+    -
+      name: 'Pricing & Availability'
+      fields:
+        - transactable: confirm_reservations
+        - transactable: enabled
+        - transactable: price
+        - transactable: schedule
+        - transactable: availability_rules
+        - transactable: currency
+        - transactable: quantity
+        - transactable: book_it_out
+        - transactable: exclusive_price
+        - transactable: action_rfq
+        - transactable: capacity
+
+
+"Individual Case":
+  SPACE_WIZARD:
+    -
+      name: "Tell us a little about your company"
+      fields:
+        - company: name
+        - company: address
+
+    -
+      name: "Where is your individual case located?"
+      fields:
+        - location: name
+        - location: description
+        - location: address
+        - location: location_type
+        - location: phone
+
+    -
+      name: "Please tell us about the case you’re listing"
+      fields:
+        - transactable: name
+        - transactable: description
+        - transactable: listing_type
+        - transactable: custom_type
+        - transactable: quantity
+        - transactable: currency
+        - transactable: price
+        - transactable: availability_rules
+        - transactable: photos
+    -
+      name: "And finally, your contact information?"
+      fields:
+        - user: phone
+
+  TRANSACTABLE_ATTRIBUTES:
+    -
+      name: Details
+      fields:
+        - transactable: name
+        - transactable: listing_type
+        - transactable: description
+        - transactable: amenity_types
+        - transactable: photos
+        - transactable: location_id
+        - transactable: waiver_agreement_templates
+        - transactable: documents_upload
+        - transactable: approval_requests
+
+    -
+      name: 'Pricing & Availability'
+      fields:
+        - transactable: confirm_reservations
+        - transactable: enabled
+        - transactable: price
+        - transactable: schedule
+        - transactable: availability_rules
+        - transactable: currency
+        - transactable: quantity
+        - transactable: book_it_out
+        - transactable: exclusive_price
+        - transactable: action_rfq
+        - transactable: capacity
+

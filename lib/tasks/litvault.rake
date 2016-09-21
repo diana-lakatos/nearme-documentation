@@ -1,5 +1,6 @@
 require 'yaml'
 require 'benchmark'
+require 'utils/form_components_creator'
 
 namespace :litvault do
 
@@ -194,90 +195,60 @@ namespace :litvault do
     end
 
     def create_custom_attributes!
-      if CustomAttributes::CustomAttribute.where(name: 'office_location').any?
-        CustomAttributes::CustomAttribute.destroy_all
-      end
-      @instance.transactable_types.each do |tt|
-        states = tt.custom_attributes.where({
-          name: 'states'
-        }).first_or_initialize
-        states.assign_attributes({
-          label: 'States',
-          attribute_type: 'array',
-          html_tag: 'select',
-          public: true,
-          searchable: true,
-          valid_values: %w(
-            AL AK AZ AR CA CO CT DE FL GA HI ID IL IA KS KY
-            LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC
-            ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY
-          )
-        })
-        states.save!
+      create_transactable_type_attributes
+      create_instance_profile_type_attributes
+    end
 
-      end
-      law_firm = InstanceProfileType.find(580).custom_attributes.where(name: 'law_firm').first_or_initialize
-      law_firm.assign_attributes({
-        label: 'Law Firm',
-        attribute_type: 'string',
-        html_tag: 'input',
-        public: true,
-        searchable: false
-      })
-      law_firm.required = 1
-      law_firm.save!
+    def create_transactable_type_attributes
+      puts "\nCustom transactable type attributes:"
 
-      law_firm = InstanceProfileType.find(579).custom_attributes.where(name: 'law_firm').first_or_initialize
-      law_firm.assign_attributes({
-        label: 'Law Firm',
-        attribute_type: 'string',
-        html_tag: 'input',
-        public: true,
-        searchable: false
-      })
-      law_firm.required = 1
-      law_firm.save!
+      custom_attributes = YAML.load_file(File.join(@theme_path, 'custom_attributes', 'transactable_types.yml'))
+
+      custom_attributes.keys.each do |tt_name|
+        puts "\n\t#{tt_name}:"
+        object = @instance.transactable_types.where(name: tt_name).first
+        update_custom_attributes_for_object(object, custom_attributes[tt_name])
+      end
+    end
+
+    def create_instance_profile_type_attributes
+      puts "\nCustom instance profile type attributes:"
+      custom_attributes = YAML.load_file(File.join(@theme_path, 'custom_attributes', 'instance_profile_types.yml'))
+
+      custom_attributes.keys.each do |id|
+        puts "\n\tInstanceProfileType ##{id}:"
+        object = InstanceProfileType.find(id)
+        update_custom_attributes_for_object(object, custom_attributes[id])
+      end
     end
 
     def create_categories!
-      root_category = Category.where(name: 'States').first_or_create!
-      root_category.transactable_types = TransactableType.all
-      root_category.mandatory = true
-      root_category.multiple_root_categories = true
-      root_category.search_options = 'exclude'
-      root_category.save!
+      puts "\nCreating categories:"
+      categories = YAML.load_file(File.join(@theme_path, 'categories', 'transactable_types.yml'))
 
-      %w(AL AK AZ AR CA CO CT DE FL GA HI ID IL IA KS KY
-         LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC
-         ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY).each do |category|
-        root_category.children.where(name: category).first_or_create!
+      remove_unused_categories(categories)
+
+      categories.keys.each do |tt_name|
+        puts "\n\t#{tt_name}:"
+        object = @instance.transactable_types.where(name: tt_name).first
+        update_categories_for_object(object, categories[tt_name])
       end
     end
 
     def create_or_update_form_components!
+      puts "\nCreating form components:"
+      transactable_types = YAML.load_file(File.join(@theme_path, 'form_components', 'transactable_types.yml'))
 
-      @instance.transactable_types.each do |tt|
+      transactable_types.keys.each do |tt_name|
+        puts "\n\t#{tt_name}:"
+        object = @instance.transactable_types.where(name: tt_name).first
 
-        unless tt.form_components.any?
-          Utils::FormComponentsCreator.new(tt).create!
-        end
-
-        tt.form_components.find_by(name: 'Where is your Case located?')
-          .try(:update_column, :name, "Where is your #{tt.bookable_noun} located?")
-
-        component = tt.form_components.find_by(name: "Where is your #{tt.bookable_noun} located?")
-        component.form_fields = [
-          {'location'     => 'name'},
-          {'location'     => 'description'},
-          {'location'     => 'address'},
-          {'transactable' => 'Category - States'},
-          {'transactable' => 'price'},
-          {'location'     => 'location_type'},
-          {'location'     => 'phone'}
-        ]
-
-        component.save!
+        puts "\t  Cleanup..."
+        object.form_components.destroy_all
+        create_form_components_for_object(object, transactable_types[tt_name])
       end
+
+
       FormComponent.find(5404).update_attribute(:form_fields, [ { "user" => "name" }, { "user" => "email" }, { "user" => "password" }, { "buyer" => "law_firm" } ])
       FormComponent.find(5402).update_attribute(:form_fields, [ { "user" => "name" }, { "user" => "email" }, { "user" => "password" }, { "buyer" => "law_firm" } ])
     end
@@ -548,13 +519,103 @@ namespace :litvault do
         OpenStruct.new(config)
       end
 
-      def create_custom_attribute(object, hash)
+      def create_custom_attribute(object, name, hash)
           hash = hash.with_indifferent_access
           attr = object.custom_attributes.where({
-            name: hash.delete(:name)
+            name: name
           }).first_or_initialize
           attr.assign_attributes(hash)
           attr.set_validation_rules!
       end
+
+      def remove_unused_categories(categories)
+        used_categories = []
+        categories.each do |tt, cats|
+          used_categories.concat(cats.keys)
+        end
+        used_categories.uniq!
+
+        unused_categories = Category.where("name NOT IN (?) AND parent_id IS NULL", used_categories)
+        if unused_categories.size > 0
+          puts "\tRemoving unused categories:"
+          unused_categories.each do |category|
+            puts "\t  - #{category.name}"
+            category.destroy!
+          end
+        end
+      end
+
+      def update_categories_for_object(tt, categories)
+        puts "\t  Updating / creating categories:"
+        categories.each do |name, hash|
+          hash = default_category_properties.merge(hash)
+          children = hash.delete('children') || []
+
+          category = Category.where(name: name).first_or_create!
+          category.transactable_types = category.transactable_types.push(tt) if !category.transactable_types.include?(tt)
+          category.assign_attributes(hash)
+          category.save!
+
+          puts "\t    - #{name}"
+
+          create_category_tree(category, children, 1)
+        end
+      end
+
+      def create_category_tree(category, children, level)
+        children.each do |child|
+          name = (child.is_a? Hash) ? child['name'] : child
+          subcategory = category.children.where(name: name).first_or_create!
+          puts "\t    #{'  ' * (level + 1)}- #{name}"
+          # create_category_tree(subcategory, child['children'], level + 1) if child['children']
+        end
+      end
+
+      def update_custom_attributes_for_object(object, attributes)
+        unused_attrs = object.custom_attributes.where("name NOT IN (?)", attributes.keys)
+        if unused_attrs.size > 0
+          puts "\t  Removing unused attributes:"
+          unused_attrs.each do |ca|
+            puts "\t    - #{ca.name}"
+            ca.destroy
+          end
+        end
+
+        puts "\t  Updating / creating attributes:"
+        attributes.each do |name, attrs|
+          create_custom_attribute(object, name, default_attribute_properties.merge(attrs))
+          puts "\t    - #{name}"
+        end
+      end
+
+      def default_category_properties
+        {
+          mandatory: false,
+          multiple_root_categories: false,
+          search_options: 'exclude',
+          children: []
+        }
+      end
+
+      def default_attribute_properties
+        {
+          attribute_type: 'string',
+          html_tag: 'input',
+          public: true,
+          searchable: false,
+          required: false
+        }
+      end
+
+      def create_form_components_for_object(object, component_types)
+        component_types.each do |type, components|
+          puts "\t  Creating #{type}..."
+          creator = Utils::BaseComponentCreator.new(object)
+          creator.instance_variable_set(:@form_type_class, "FormComponent::#{type}".safe_constantize)
+          components.map!{|component| component.symbolize_keys }
+          creator.create_components!(components)
+        end
+      end
+
   end
 end
