@@ -46,6 +46,7 @@ class InstanceView < ActiveRecord::Base
     'reservation_mailer/notify_host_of_declined_payment',
     'reservation_mailer/notify_guest_of_submitted_checkout',
     'reservation_mailer/notify_guest_of_submitted_checkout_with_failed_authorization',
+    'reservation_mailer/warn_guest_of_expiration',
     'inappropriate_reports_mailer/inappropriate_report',
     'support_mailer/rfq_request_received',
     'support_mailer/rfq_request_replied', 'support_mailer/rfq_request_updated',
