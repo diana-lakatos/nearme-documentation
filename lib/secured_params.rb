@@ -525,6 +525,8 @@ class SecuredParams
       :allow_custom_pricings,
       :type,
       :confirm_reservations,
+      :send_alert_hours_before_expiry,
+      :send_alert_hours_before_expiry_hours,
       pricings_attributes: nested(self.transactable_type_pricing),
       schedule_attributes: nested(self.schedule),
       availability_template_attributes: nested(self.availability_template),

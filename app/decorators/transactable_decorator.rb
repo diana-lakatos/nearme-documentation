@@ -1,5 +1,6 @@
 class TransactableDecorator < Draper::Decorator
   include Draper::LazyHelpers
+  include CurrencyHelper
 
   delegate_all
 

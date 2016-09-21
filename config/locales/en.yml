@@ -2533,6 +2533,9 @@ en:
     rating:
       experience_hosting: "How was your experience hosting %{name}?"
       experience_at: "How was your experience at '%{name}'?"
+    orders:
+      warn_guest_of_expiration:
+        subject: "Your reservation is about to expire"
 
   top_navbar:
     sign_up: 'Sign Up'

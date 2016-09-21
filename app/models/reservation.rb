@@ -34,6 +34,7 @@ class Reservation < Order
 
   state_machine :state, initial: :inactive do
     after_transition confirmed: [:cancelled_by_guest], do: [:charge_penalty!]
+    after_transition unconfirmed: :confirmed, do: [:warn_user_of_expiration]
 
     event :refund do transition :paid => :refunded; end
   end
@@ -297,6 +298,18 @@ class Reservation < Order
 
   def set_minimum_booking_minutes
     self.minimum_booking_minutes = action.minimum_booking_minutes
+  end
+
+  def warn_user_of_expiration
+    tt_action_type = self.transactable.try(:action_type).try(:transactable_type_action_type)
+    if self.ends_at.present? && tt_action_type.try(:type) == "TransactableType::TimeBasedBooking" &&
+      tt_action_type.send_alert_hours_before_expiry &&
+      tt_action_type.send_alert_hours_before_expiry_hours > 0
+
+      WarnUserOfExpirationJob.perform_later(self.ends_at - tt_action_type.send_alert_hours_before_expiry_hours.hours, self.id)
+    end
+
+    true
   end
 
   private
