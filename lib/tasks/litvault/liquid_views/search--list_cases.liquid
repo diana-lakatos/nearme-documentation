@@ -11,7 +11,6 @@
         <form action="/search" method="get" class="search-form">
             <div class="fields">
                 <input type="hidden" name="transactable_type_class" value="TransactableType">
-                <input type="hidden" name="lg_custom_attributes[state][]" value="{{ searcher.lg_custom_attributes_hash['state'] }}">
                 <input type="hidden" name="category_ids" value="{{ searcher.category_ids }}">
                 <input type="hidden" name="per_page" value="{{ searcher.per_page }}">
                 <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
@@ -20,7 +19,7 @@
 
                 <div class="query-field">
                     <label for="field-q" class="struct-label">Search keyword</label>
-                    <input type="text" name="q" id="field-q" placeholder="Enter keywords&hellip;" value="{{ params['query'] }}">
+                    <input type="text" name="query" id="field-q" placeholder="Enter keywords&hellip;" value="{{ params.query }}">
                 </div>
                 <div class="state-filter">
                     <label for="field-state" class="struct-label">Filter by state</label>
@@ -29,7 +28,7 @@
                             <option value="">By State</option>
                             {% for ca in platform_context.transactable_types.first.custom_attributes %}
                                 {% for value in ca.valid_values %}
-                                <option value='{{ value }}'{% if value == searcher.lg_custom_attributes_hash['state'].first %} selected{% endif %}>{{ value }}</option>
+                                    <option value='{{ value }}' {% if value == searcher.lg_custom_attributes_hash['state'].first %} selected {% endif %}>{{ value }}</option>
                                 {% endfor %}
                             {% endfor %}
                         </select>
@@ -40,18 +39,11 @@
 
                     <ul>
                         {% for transactable_type in platform_context.transactable_types %}
-
-                        {% if not_first_item == blank %}
-                            {% assign not_first_item = true %}
-                            {% assign checked = ' checked ' %}
-                        {% else %}
-                            {% assign checked = '' %}
-                        {% endif %}
-
-                        <li>
-                            <input type="radio" name="transactable_type_id" value="{{ transactable_type.id }}" id="transactable-type-{{ transactable_type.id }}"{{ checked }}>
-                            <label for="transactable-type-{{ transactable_type.id }}">{{ transactable_type.name }}</label>
-                        </li>
+                            {% assign zero = params.transactable_type_id | minus: transactable_type.id %}
+                            <li>
+                                <input type="radio" name="transactable_type_id" value="{{ transactable_type.id }}" id="transactable-type-{{ transactable_type.id }}" {% if zero == 0 %} checked {% endif %}>
+                                <label for="transactable-type-{{ transactable_type.id }}">{{ transactable_type.name }}</label>
+                            </li>
                         {% endfor %}
                     </ul>
                 </fieldset>

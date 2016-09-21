@@ -87,7 +87,8 @@ namespace :litvault do
         max_hourly_price_cents: 150_00,
         lessor: 'Lawyer',
         lessee: 'Client',
-        enable_reviews: true
+        enable_reviews: true,
+        auto_accept_invitation_as_collaborator: true,
       }
 
       transactable_type.offer_action ||= transactable_type.build_offer_action(
@@ -154,7 +155,8 @@ namespace :litvault do
         max_hourly_price_cents: 150_00,
         lessor: 'Lawyer',
         lessee: 'Client',
-        enable_reviews: true
+        enable_reviews: true,
+        auto_accept_invitation_as_collaborator: true
       }
 
       transactable_type.offer_action ||= transactable_type.build_offer_action(

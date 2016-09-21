@@ -29,17 +29,17 @@
             <ul>
                 {% for transactable_type in platform_context.transactable_types %}
 
-                {% if not_first_item == blank %}
-                    {% assign not_first_item = true %}
-                    {% assign checked = ' checked ' %}
-                {% else %}
-                    {% assign checked = '' %}
-                {% endif %}
+                    {% if not_first_item == blank %}
+                        {% assign not_first_item = true %}
+                        {% assign checked = ' checked ' %}
+                    {% else %}
+                        {% assign checked = '' %}
+                    {% endif %}
 
-                <li class="radio-a">
-                    <input type="radio" name="transactable_type_id" value="{{ transactable_type.id }}" id="transactable-type-{{ transactable_type.id }}"{{ checked }}>
-                    <label for="transactable-type-{{ transactable_type.id }}">{{ transactable_type.name }}</label>
-                </li>
+                    <li class="radio-a">
+                        <input type="radio" name="transactable_type_id" value="{{ transactable_type.id }}" id="transactable-type-{{ transactable_type.id }}"{{ checked }}>
+                        <label for="transactable-type-{{ transactable_type.id }}">{{ transactable_type.name }}</label>
+                    </li>
                 {% endfor %}
             </ul>
         </fieldset>
