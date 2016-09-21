@@ -3,6 +3,9 @@ require Rails.root.join('app', 'controllers', 'registrations_controller.rb') if 
 
 DesksnearMe::Application.routes.draw do
 
+  #favicon for scraping
+  get '/favicon.ico', to: 'favicon#show'
+
   get '/test_endpoint', to: 'webhooks/base#test'
   match '/auth/:provider/callback' => 'authentications#create', via: [:get, :post]
 
