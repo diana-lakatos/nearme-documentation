@@ -18,9 +18,9 @@ Feature: A user can book at a space
       | Transactable     | Date             | Quantity |
       | the transactable | next week Monday | 1        |
     Then I should see "This host manually confirms all bookings."
-    And the reservation subtotal should show $50.00
-    And the reservation service fee should show $5.00
-    And the reservation total should show $55.00
+    And the reservation subtotal should show $50
+    And the reservation service fee should show $5
+    And the reservation total should show $55
 
   Scenario: Paying manually should not incur a service fee
     Given a location exists with company: that company
@@ -30,7 +30,7 @@ Feature: A user can book at a space
     And I select to book and review space for:
       | Transactable     | Date             | Quantity |
       | the transactable | next week Monday | 1        |
-    Then the reservation total should show $50.00
+    Then the reservation total should show $50
 
   Scenario: Free booking should show 'Free' in place of rates and $0.00 for the total
     Given I am logged in as the user
@@ -88,9 +88,9 @@ Feature: A user can book at a space
     Then I should see the booking confirmation screen for:
       | Transactable     | Date             | Quantity | Start | End   |
       | the transactable | next week Monday | 1        | 9:00  | 14:00 |
-    And the reservation subtotal should show $500.00
-    And the reservation service fee should show $50.00
-    And the reservation total should show $550.00
+    And the reservation subtotal should show $500
+    And the reservation service fee should show $50
+    And the reservation total should show $550
     And I provide reservation credit card details
     When I click to confirm the booking
     Then the user should have a reservation:

@@ -43,11 +43,11 @@ class OrderDrop < BaseDrop
 
   # the total amount of all order items
   def total_order_items_amount_formatted
-    humanized_money_with_cents_and_symbol @order.order_items.paid.map(&:total_amount).sum
+    render_money @order.order_items.paid.map(&:total_amount).sum
   end
 
   def formatted_total_amount
-    humanized_money_with_cents_and_symbol(@order.total_amount)
+    render_money(@order.total_amount)
   end
 
   # whether or not the order has products with seller attachments
@@ -96,7 +96,7 @@ class OrderDrop < BaseDrop
   end
 
   def formatted_penalty_fee
-    humanized_money_with_cents_and_symbol(@order.penalty_fee)
+    render_money(@order.penalty_fee)
   end
 
   def all_other_orders

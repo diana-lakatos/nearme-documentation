@@ -11,7 +11,7 @@ class RecurringBookingPeriodDrop < BaseDrop
   end
 
   def formatted_total_amount
-    humanized_money_with_cents_and_symbol(@source.total_amount)
+    render_money(@source.total_amount)
   end
 
   def rejection_form_path

@@ -31,19 +31,19 @@ class LineItemDecorator < Draper::Decorator
   end
 
   def unit_price
-    humanized_money_with_symbol(object.unit_price.to_money(currency))
+    render_money(object.unit_price.to_money(currency))
   end
 
   def gross_price
-    humanized_money_with_symbol(object.gross_price.to_money(currency))
+    render_money(object.gross_price.to_money(currency))
   end
 
   def net_price
-    humanized_money_with_symbol(object.net_price.to_money(currency))
+    render_money(object.net_price.to_money(currency))
   end
 
   def total_price
-    humanized_money_with_cents_and_symbol(object.total_price.to_money(currency))
+    render_money(object.total_price.to_money(currency))
   end
 
   def price_in_cents
@@ -51,7 +51,7 @@ class LineItemDecorator < Draper::Decorator
   end
 
   def total
-    humanized_money_with_symbol(object.total.to_money(currency))
+    render_money(object.total.to_money(currency))
   end
 
   def image(target='')

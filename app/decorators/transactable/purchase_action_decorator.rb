@@ -6,7 +6,7 @@ class Transactable::PurchaseActionDecorator < Transactable::ActionTypeDecorator
 
   def list_available_prices
     arr = []
-    arr << "#{humanized_money_with_symbol(pricing.price)} #{I18n.t("reservations.slash_per_#{pricing.unit}")}" if pricing.price > 0
+    arr << "#{render_money(pricing.price)} #{I18n.t("reservations.slash_per_#{pricing.unit}")}" if pricing.price > 0
     arr.join(' | ')
   end
 

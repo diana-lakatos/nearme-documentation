@@ -77,7 +77,7 @@ class ReservationDecoratorTest < ActionView::TestCase
     end
 
     should 'return that its free' do
-      assert_equal '$0.00', @reservation.paid
+      assert_equal '$0', @reservation.paid
     end
 
     should 'return its subtotal_price' do
@@ -116,19 +116,19 @@ class ReservationDecoratorTest < ActionView::TestCase
     end
 
     should "return right paid amount" do
-      assert_equal '$55.00', @reservation.paid
+      assert_equal '$55', @reservation.paid
     end
 
     should 'return its subtotal_price' do
-      assert_equal '$50.00', @reservation.subtotal_price
+      assert_equal '$50', @reservation.subtotal_price
     end
 
     should 'return its service_fee' do
-      assert_equal '$5.00', @reservation.service_fee_guest
+      assert_equal '$5', @reservation.service_fee_guest
     end
 
     should 'return its total_price' do
-      assert_equal '$55.00', @reservation.total_price
+      assert_equal '$55', @reservation.total_price
     end
 
     should 'return right manage_guests_action_column_class' do

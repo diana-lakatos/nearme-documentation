@@ -30,12 +30,12 @@ module SearchHelper
 
   def individual_listing_price_information(listing, filter_pricing = [])
     if listing.event_booking?
-      humanized_money_with_symbol(listing.fixed_price)
+      render_money(listing.fixed_price)
     else
       listing_price = listing.lowest_price_with_type(filter_pricing)
       if listing_price
         periods = {:monthly => 'month', :weekly => 'week', :daily => 'day', :hourly => 'hour'}
-        "From <span>#{humanized_money_with_symbol(listing_price[0])}</span> / #{periods[listing_price[1]]}".html_safe
+        "From <span>#{render_money(listing_price[0])}</span> / #{periods[listing_price[1]]}".html_safe
       end
     end
   end

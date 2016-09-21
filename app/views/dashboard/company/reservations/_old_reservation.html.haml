@@ -47,7 +47,7 @@
       %ul.payment-documents
         - reservation.additional_line_items.each do |ac|
           %li
-            =ac.name + ' - ' + humanized_money_with_cents_and_symbol(ac.total_price)
+            =ac.name + ' - ' + render_money(ac.total_price)
 
 %hr/
 

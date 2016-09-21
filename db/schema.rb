@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160916150754) do
+ActiveRecord::Schema.define(version: 20160921112328) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1365,6 +1365,9 @@ ActiveRecord::Schema.define(version: 20160916150754) do
     t.string   "my_orders_tabs"
     t.boolean  "enable_geo_localization",                                                           default: true
     t.boolean  "force_fill_in_wizard_form"
+    t.boolean  "show_currency_symbol",                                                              default: true,          null: false
+    t.boolean  "show_currency_name",                                                                default: false,         null: false
+    t.boolean  "no_cents_if_whole",                                                                 default: true,          null: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree

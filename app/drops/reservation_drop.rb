@@ -67,7 +67,7 @@ class ReservationDrop < OrderDrop
   end
 
   def formatted_unit_price
-    humanized_money_with_symbol(unit_price)
+    render_money(unit_price)
   end
 
   # Hourly summary as string for the first booked period

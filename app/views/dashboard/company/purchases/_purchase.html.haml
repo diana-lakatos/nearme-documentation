@@ -122,7 +122,7 @@
     .col-sm-4.col-sm-push-8
       %table.payment-totals
         %th.total= t 'buy_sell_market.checkout.labels.total2'
-        %td.total= humanized_money_with_cents_and_symbol purchase.total_amount
+        %td.total= render_money purchase.total_amount
 
 %br/
 
