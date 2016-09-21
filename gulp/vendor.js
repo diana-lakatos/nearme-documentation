@@ -9,6 +9,7 @@ module.exports = function(gulp, config){
     var files = {
         ckeditor: path.join(config.paths.node_modules, 'ckeditor'),
         ckeditorConfig: path.join(config.paths.javascripts, 'ckeditor','config.js'),
+        ckeditorFileuploader: path.join(config.paths.root, 'vendor', 'gems','ckeditor', 'assets'),
         raygun: path.join(config.paths.node_modules, 'raygun4js','dist','raygun.min.js'),
         raygunMap: path.join(config.paths.node_modules, 'raygun4js','dist','raygun.min.js.map'),
         jquery: path.join(config.paths.node_modules, 'jquery', 'dist', 'jquery.min.js'),
@@ -37,7 +38,7 @@ module.exports = function(gulp, config){
         gulp.src([path.join(files.ckeditor, '**', '*'), path.join('!', files.ckeditor, 'config.js')])
             .pipe(gulp.dest(path.join(config.paths.output, 'ckeditor')));
 
-        gulp.src(files.ckeditorConfig)
+        gulp.src([files.ckeditorConfig, path.join(files.ckeditorFileuploader, '**', '*')])
             .pipe(gulp.dest(path.join(config.paths.output, 'ckeditor')));
     });
 
