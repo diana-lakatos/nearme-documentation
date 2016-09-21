@@ -1219,6 +1219,7 @@ ActiveRecord::Schema.define(version: 20160922111858) do
     t.boolean  "onboarding",                                  default: false
     t.boolean  "create_company_on_sign_up",                   default: false
     t.boolean  "search_only_enabled_profiles"
+    t.string   "search_engine",                   limit: 255, default: "postgresql", null: false
   end
 
   add_index "instance_profile_types", ["instance_id", "profile_type"], name: "index_instance_profile_types_on_instance_id_and_profile_type", unique: true, using: :btree
@@ -2874,6 +2875,7 @@ ActiveRecord::Schema.define(version: 20160922111858) do
     t.datetime "deleted_at"
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
+    t.datetime "rejected_by_owner_at"
   end
 
   add_index "transactable_collaborators", ["instance_id"], name: "index_transactable_collaborators_on_instance_id", using: :btree

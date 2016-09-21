@@ -1036,6 +1036,8 @@ class SecuredParams
   def transactable_collaborator
     [
       :approved,
+      :approved_by_owner_at,
+      :rejected_by_owner_at,
       :transactable_id,
       :user_id,
       :email
