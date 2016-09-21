@@ -1,12 +1,12 @@
-Can we help, {{ user.first_name }}?
+Can we help, {{ lister.first_name }}?
 
-We noticed that you didn't confirm {{ recurring_booking.owner.first_name.pluralize }} booking for '{{ listing.name }}' within the required 24 hour period.
+We noticed that you didn't confirm {{ enquirer.first_name.pluralize }} booking for '{{ listing.name }}' within the required 24 hour period.
 
 That's one missed opportunity but we're here to help so you don’t miss any other bookings!>
 
 Please, let us know if your {{ recurring_booking.translated_bookable_noun }} is still available. Also don't forget to update your contact information in your personal account so {{ listing.lessees }} can reach you easily.
 
-Go to My Account: {{ platform_context.host | append:user.edit_user_registration_url_with_token_and_tracking | append:signature_for_tracking }}
+Go to My Account: {{ platform_context.host | append:lister.edit_user_registration_url_with_token_and_tracking | append:signature_for_tracking }}
 
 If you prefer, you can talk with us directly; just send an email to {{ platform_context.support_email }} or call us on {{ platform_context.phone_number }}.
 

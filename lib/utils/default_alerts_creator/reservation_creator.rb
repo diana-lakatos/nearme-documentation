@@ -110,7 +110,7 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
   end
 
   def notify_host_reservation_rejected_email!
-    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::Rejected, name: 'notify_host_of_rejection', path: 'reservation_mailer/notify_host_of_rejection', subject: "[{{platform_context.name}}] Can we help, {{host.first_name}}?", alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::Rejected, name: 'notify_host_of_rejection', path: 'reservation_mailer/notify_host_of_rejection', subject: "[{{platform_context.name}}] Can we help, {{lister.first_name}}?", alert_type: 'email', recipient_type: 'lister'})
   end
 
   def notify_guest_one_booking_suggestions_email!
@@ -168,4 +168,3 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
   end
 
 end
-

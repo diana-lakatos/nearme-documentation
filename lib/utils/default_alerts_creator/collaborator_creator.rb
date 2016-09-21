@@ -25,7 +25,7 @@ class Utils::DefaultAlertsCreator::CollaboratorCreator < Utils::DefaultAlertsCre
   end
 
   def create_collaborator_has_quit_email!
-    create_alert!({associated_class: WorkflowStep::CollaboratorWorkflow::CollaboratorHasQuit, name: 'collaborator has quit email', path: 'transactable_mailer/collaborator_has_quit', subject: '{{owner.first_name}}, {{ user.first_name }} decided to be no longer collaborator on {{ transactable.name }}', alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::CollaboratorWorkflow::CollaboratorHasQuit, name: 'collaborator has quit email', path: 'transactable_mailer/collaborator_has_quit', subject: '{{lister.first_name}}, {{ enquirer.first_name }} decided to be no longer collaborator on {{ transactable.name }}', alert_type: 'email', recipient_type: 'lister'})
   end
 
   protected
@@ -35,4 +35,3 @@ class Utils::DefaultAlertsCreator::CollaboratorCreator < Utils::DefaultAlertsCre
   end
 
 end
-

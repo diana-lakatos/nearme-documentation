@@ -1,4 +1,5 @@
 class WorkflowStep::BaseStep
+  attr_reader :lister, :enquirer, :transactable
 
   def self.belongs_to_transactable_type?
     false
@@ -54,18 +55,6 @@ class WorkflowStep::BaseStep
     raise NotImplementedError.new("#{self.class.name} must implemented workflow_type method")
   end
 
-  def lister
-    nil
-  end
-
-  def enquirer
-    nil
-  end
-
-  def transactable
-    nil
-  end
-
   def data
     {}
   end
@@ -78,4 +67,3 @@ class WorkflowStep::BaseStep
   end
 
 end
-
