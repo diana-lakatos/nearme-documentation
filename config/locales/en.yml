@@ -62,6 +62,8 @@ en:
         no_action: 'No Action'
       shipping_rule:
         processing_time: 'Procesing time (in days)'
+      user_blog_post:
+        published_at_str: "Published at"
   connections:
     facebook:
       count:
