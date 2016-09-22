@@ -65,63 +65,112 @@
 "Individual Case":
   SPACE_WIZARD:
     -
-      name: "Tell us a little about your company"
+      name: "Tell us a little about your firm"
       fields:
         - company: name
         - company: address
+        - company: phone
+        - company: url
 
     -
-      name: "Where is your individual case located?"
+      name: "Case representative and general details"
       fields:
-        - location: name
-        - location: description
-        - location: address
-        - location: location_type
-        - location: phone
+        - transactable: enabled
+        - transactable: law_firm
+        - transactable: principal_office
+        - transactable: "Category - Individual Case Categories"
 
     -
-      name: "Please tell us about the case you’re listing"
+      name: "Engagement Agreement"
       fields:
-        - transactable: name
-        - transactable: description
-        - transactable: listing_type
-        - transactable: custom_type
-        - transactable: quantity
-        - transactable: currency
-        - transactable: price
-        - transactable: availability_rules
-        - transactable: photos
+        - transactable: engagement_agreement_exists
+        - transactable: date_engagement_agreemen_signed
+        - transactable: engagement_agreement_fee_percentage
+        - transactable: engagement_agreement_expenses_advancement
+
     -
-      name: "And finally, your contact information?"
+      name: "Your client details"
       fields:
-        - user: phone
+        - transactable: client_name
+        - transactable: client_dob
+
+    -
+      name: "Describe the incident"
+      fields:
+        - transactable: date_of_incident
+        - transactable: city_of_incident
+        - transactable: state_of_incident
+        - transactable: description_of_incident
+        - transactable: description_of_medical_diagnoses
+        - transactable: description_of_medical_care
+        - transactable: days_of_hospitalization
+
+    -
+      name: "Case details"
+      fields:
+        - transactable: case_short_description
+        - transactable: case_full_description
+        - transactable: list_defendants
+        - transactable: potential_cause_of_action
+        - transactable: earliest_deadline_to_file
+        - transactable: date_of_earliest_deadline
+        - transactable: states
+        - transactable: city_in_which_law_firm_must_be_located
+        - transactable: involve_wrongful_death
+        - transactable: name_of_decedent
+        - transactable: refer_only_clients_listed
+        - transactable: has_probate_estate_been_opened
+        - transactable: available_records
+        - transactable: description_of_records
+        - transactable: underlying_records_documents
+        - transactable: other_matters
 
   TRANSACTABLE_ATTRIBUTES:
     -
-      name: Details
+      name: "General"
       fields:
-        - transactable: name
-        - transactable: listing_type
-        - transactable: description
-        - transactable: amenity_types
-        - transactable: photos
-        - transactable: location_id
-        - transactable: waiver_agreement_templates
-        - transactable: documents_upload
-        - transactable: approval_requests
+        - transactable: enabled
+        - transactable: law_firm
+        - transactable: principal_office
+        - transactable: "Category - Individual Case Categories"
+        - transactable: client_name
+        - transactable: client_dob
 
     -
-      name: 'Pricing & Availability'
+      name: "Engagement Agreement"
       fields:
-        - transactable: confirm_reservations
-        - transactable: enabled
-        - transactable: price
-        - transactable: schedule
-        - transactable: availability_rules
-        - transactable: currency
-        - transactable: quantity
-        - transactable: book_it_out
-        - transactable: exclusive_price
-        - transactable: action_rfq
-        - transactable: capacity
+        - transactable: engagement_agreement_exists
+        - transactable: date_engagement_agreemen_signed
+        - transactable: engagement_agreement_fee_percentage
+        - transactable: engagement_agreement_expenses_advancement
+    -
+      name: "Incident"
+      fields:
+        - transactable: date_of_incident
+        - transactable: city_of_incident
+        - transactable: state_of_incident
+        - transactable: description_of_incident
+        - transactable: description_of_medical_diagnoses
+        - transactable: description_of_medical_care
+        - transactable: days_of_hospitalization
+
+    -
+      name: "Details"
+      fields:
+        - transactable: case_short_description
+        - transactable: case_full_description
+        - transactable: list_defendants
+        - transactable: potential_cause_of_action
+        - transactable: earliest_deadline_to_file
+        - transactable: date_of_earliest_deadline
+        - transactable: states
+        - transactable: city_in_which_law_firm_must_be_located
+        - transactable: involve_wrongful_death
+        - transactable: name_of_decedent
+        - transactable: refer_only_clients_listed
+        - transactable: has_probate_estate_been_opened
+        - transactable: available_records
+        - transactable: description_of_records
+        - transactable: underlying_records_documents
+        - transactable: other_matters
 
