@@ -1826,7 +1826,7 @@ en:
         order_placed: "Order placed"
         order: "Order #"
         order_id: 'Order #%{id}'
-        order_placed_with_date: "Order placed: %{date}"
+        order_placed_with_date: "Review posted on: %{date}"
         overall: 'Overall:'
         details: 'Details'
         view_order_details: "View Order Details"
