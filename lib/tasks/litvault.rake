@@ -90,6 +90,7 @@ namespace :litvault do
         lessee: 'Client',
         enable_reviews: true,
         auto_accept_invitation_as_collaborator: true,
+        auto_seek_collaborators: true
       }
 
       transactable_type.offer_action ||= transactable_type.build_offer_action(
