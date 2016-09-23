@@ -205,7 +205,7 @@
             <ul>
             {% assign languages = listing.properties.languages | split: ',' %}
             {% for language in languages %}
-              <li>{{ language | downcase | prepend: 'service_type.ninja.languages.' | translate }}</li>
+              <li>{{ language | downcase | prepend: 'service_type.common.languages.' | translate }}</li>
             {% endfor %}
             </ul>
           </div>
