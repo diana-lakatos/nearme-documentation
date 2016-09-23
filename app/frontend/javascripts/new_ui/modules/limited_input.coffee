@@ -3,6 +3,7 @@ module.exports = class Limiter
     @input = $(el)
     @limit = @input.data('counter-limit')
     @info = @input.next('[data-counter-for]')
+    @info = $('<p class="help-block limiter"/>').insertAfter(@input) if @info.length == 0
     @labels = {
       few: @info.data('label-few') || "%{count} characters left"
       one: @info.data('label-one') || "1 character left"

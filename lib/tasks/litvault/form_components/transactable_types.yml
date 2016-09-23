@@ -1,65 +1,46 @@
 "Group Case":
   SPACE_WIZARD:
     -
-      name: "Tell us a little about your company"
+      name: "Tell us a little about your firm"
       fields:
         - company: name
         - company: address
+        - company: phone
+        - company: url
 
     -
-      name: "Where is your group case located?"
+      name: "Case representative and general details"
       fields:
-        - location: name
-        - location: description
-        - location: address
-        - location: location_type
-        - location: phone
+        - transactable: enabled
+        - transactable: law_firm
+        - transactable: principal_office
+        - transactable: "Category - Group Case Categories"
 
     -
-      name: "Please tell us about the case you’re listing"
+      name: "Describe the case"
       fields:
-        - transactable: name
-        - transactable: description
-        - transactable: listing_type
-        - transactable: custom_type
-        - transactable: quantity
-        - transactable: currency
-        - transactable: price
-        - transactable: availability_rules
-        - transactable: photos
-    -
-      name: "And finally, your contact information?"
-      fields:
-        - user: phone
+        - transactable: types_of_injuries_included
+        - transactable: engagement_agreement_fee_percentage
+        - transactable: engagement_agreement_expenses_advancement
+        - transactable: matters_to_include
+        - transactable: case_short_description
+        - transactable: case_full_description
+
 
   TRANSACTABLE_ATTRIBUTES:
     -
-      name: Details
+      name: "General"
       fields:
-        - transactable: name
-        - transactable: listing_type
-        - transactable: description
-        - transactable: amenity_types
-        - transactable: photos
-        - transactable: location_id
-        - transactable: waiver_agreement_templates
-        - transactable: documents_upload
-        - transactable: approval_requests
-
-    -
-      name: 'Pricing & Availability'
-      fields:
-        - transactable: confirm_reservations
         - transactable: enabled
-        - transactable: price
-        - transactable: schedule
-        - transactable: availability_rules
-        - transactable: currency
-        - transactable: quantity
-        - transactable: book_it_out
-        - transactable: exclusive_price
-        - transactable: action_rfq
-        - transactable: capacity
+        - transactable: law_firm
+        - transactable: principal_office
+        - transactable: "Category - Group Case Categories"
+        - transactable: types_of_injuries_included
+        - transactable: engagement_agreement_fee_percentage
+        - transactable: engagement_agreement_expenses_advancement
+        - transactable: matters_to_include
+        - transactable: case_short_description
+        - transactable: case_full_description
 
 
 "Individual Case":
