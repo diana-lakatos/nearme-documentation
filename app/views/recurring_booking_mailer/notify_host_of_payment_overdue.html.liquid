@@ -1,8 +1,8 @@
-<h2>{{ user.first_name }},</h2>
+<h2>{{ lister.first_name }},</h2>
 
-<p>We were unable to charge {{ recurring_booking.owner.first_name }}'s credit card for subscription of '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>'</p>
+<p>We were unable to charge {{ enquirer.first_name }}'s credit card for subscription of '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>'</p>
 
-<p>{{ recurring_booking.owner.first_name }} has been notified about the fact and asked to update his payment information.</p>
+<p>{{ enquirer.first_name }} has been notified about the fact and asked to update his payment information.</p>
 
 <p>Amount: {{ recurring_booking.last_unpaid_amount }}</p>
 
