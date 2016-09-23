@@ -104,7 +104,7 @@
           {% assign pending_transactables_count = current_user.pending_transactables_count %}
           <li id="dashboard-nav-transactables" class="{% if new_transactable_selected or transactables_selected or order_items_selected %}selected{% endif %}">
             <span>
-                {{ 'dashboard.nav.transactables' | t }}
+                Manage Cases
                 {% if pending_transactables_count > 0 %}
                 <span class="count">{{ pending_transactables_count }}</span>
                 {% endif %}

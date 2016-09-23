@@ -44,13 +44,21 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     messages
   end
 
+  # This Scope can be overwritten in
+  # Dashboard::Company::TransactableTypes::TransactablesController
+
   def transactables_scope
+
+    # For Litvault we want to show all transactables but we could make a setting
+    # and display only approved ones:
+    # "AND pc.approved_by_owner_at IS NOT NULL"
+
     Transactable.
       joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id AND pc.deleted_at IS NULL').
       uniq.
-      where('transactables.company_id = ? OR transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)', @company.id, current_user.id, current_user.id).
+      where('transactables.company_id = ? OR transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_user_at IS NOT NULL)', @company.id, current_user.id, current_user.id).
       search_by_query([:name, :description], params[:query])
-      #.apply_filter(params[:filter], @transactable_type.cached_custom_attributes)
+      .apply_filter(params[:filter], TransactableType.all.map(&:cached_custom_attributes).flatten.uniq)
   end
 
   def in_progress_scope

@@ -11,6 +11,9 @@ en:
             labels:
                 summary: "Overall Rating:"
 
+    transactable_collaborator:
+        collaboration_cancelled: Case details request cancelled
+
     dashboard:
         analytics:
             bookings: 'Offers'

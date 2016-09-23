@@ -1,88 +1,22 @@
 {% for transactable in transactables %}
-  {% assign collaborator = current_user  | find_collaborator: transactable %}
+  {% assign transactable_collaborator = current_user  | find_collaborator: transactable %}
   <article class="listing-b" id="transactable_{{transactable.id}}">
-
-    {% if transactable.state == 'in progress' %}
-      <span class="label label-info">In Progress</span>
-    {% elsif transactable.state == 'completed' %}
-      <span class="label label-success">Completed</span>
-    {% elsif transactable.state == 'cancelled' %}
-      <span class="label label-warning">Cancelled</span>
-    {% endif %}
-
     <h2>{{ transactable.name }}</h2>
 
-    {% assign orders = current_user | get_enquirer_orders: transactable %}
-    {% assign can_make_offer = false %}
-    {% if current_status == 'pending' %}
-      {% if orders == empty %}
-        {% assign can_make_offer = true %}
+    <div class="col-md-8">
+      {{ transactable.properties.types_of_injuries_included }}
+      Days of Hospitalization: {{ transactable.properties.days_of_hospitalization }}
+      Death Case: {{ transactable.properties.involve_wrongful_death }}
+      {{ transactable.properties.case_short_description }}
+    </div>
+    <div class="col-md-4">
+      {% if transactable_collaborator.approved_by_owner? %}
+        Access Approved
+      {% elsif transactable_collaborator.rejected_by_owner? %}
+        Access Rejected
       {% else %}
-        {% assign can_make_offer = true %}
-        {% for order in orders %}
-          {% if order.state == 'unconfirmed' %}
-            {% assign can_make_offer = false %}
-          {% endif %}
-        {% endfor %}
-      {% endif  %}
-    {% endif %}
-
-    {% unless current_user.has_verified_merchant_account == true %}
-      <div class='alert alert-warning'>Before making any offer, you need to set up your <a href="{{ 'edit_dashboard_company_payouts_path' | generate_url: company.id }}">merchant account</a>.</div>
-    {% endunless %}
-
-    <div class="row">
-      <div class="col-md-8">
-        <dl class="properties">
-
-          {% if transactable.properties.case_contact != blank %}
-              <dt>Contact</dt>
-              <dd>
-                {{ transactable.properties.case_contact }}
-                {% if transactable.creator.seller_properties['linkedin_url'] != blank %}
-                   | <a href="{{ transactable.creator.seller_properties['linkedin_url'] }}" target="_blank">LinkedIn Bio</a>
-                {% endif %}
-              </dd>
-          {% endif %}
-
-          {% if transactable.creator.company_name != blank %}
-              <dt>Company</dt>
-              <dd>{{ transactable.creator.company_name }}</dd>
-          {% endif %}
-
-          <dt>Invite sent</dt>
-          <dd>{{ collaborator.approved_by_owner_at | to_date | l: 'short' }}</dd>
-
-          <dt>Workplace</dt>
-          <dd>{{ transactable.properties.workplace_type }}</dd>
-
-          {% assign show_office = transactable.properties.workplace_type | matches: 'On Site' %}
-          {% if show_office %}
-            <dt>Office</dt>
-            <dd>{{ transactable.properties.office_location }}</dd>
-          {% endif %}
-
-          {% if transactable.action_free_booking? %}
-            <dt>Type</dt>
-            <dd>Pro Bono</dd>
-          {% else %}
-            <dt>Type</dt>
-            <dd>Paid</dd>
-
-            <dt>Approx. Budget</dt>
-            <dd>{{ transactable.properties.budget | pricify }}</dd>
-          {% endif %}
-
-          <dt>Deadline</dt>
-          <dd>{{ transactable.properties.deadline | to_date | l: 'short' }}</dd>
-
-          <dt>Approx. Time to Complete</dt>
-          <dd>{{ transactable.properties.estimation }}</dd>
-        </dl>
-      </div>
-      <div class="col-md-4">
-        {% include 'dashboard/company/transactables/sme_actions.html', order: orders.last %}
-      </div>
+        Access Requested
+      {% endif %}
     </div>
 
     {% if transactable.description != blank %}
@@ -98,62 +32,33 @@
         {% endif %}
     {% endif %}
 
+    <h3>Request To View Case Details:</h3>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Handling Lawyer:</th>
+            <th>Date:</th>
+            <th>Status:</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr>
+              <td>{{ transactable_collaborator.user.name }}</td>
+              <td>{{ transactable_collaborator.created_at | to_date | l: 'short' }}</td>
+              <td>{{ transactable_collaborator.status }}</td>
+              <td><a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id, skip: true }}">Send message</a></td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+
+    {% if transactable_collaborator.approved_by_owner? %}
+      <a href="{{ transactable.show_path }}" class="btn btn-default">Project Details</a>
+    {% else %}
+      <a href="{{ transactable_collaborator.enquirerer_destroy_path }}" data-method="delete" data-confirm="Are you sure?" class="btn btn-default">Cancel Request</a>
+    {% endif %}
+
     <hr>
-
-    {% if orders != empty %}
-      {% assign order = orders.last %}
-      <h3>Offer</h3>
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Offer Made:</th>
-              <th>Offer Status:</th>
-              {% if order.unconfirmed? %}
-                <th>Offer Action:</th>
-              {% else %}
-                <th>Date</th>
-              {% endif %}
-              {% if order.confirmed? %}
-                <th>View offer</th>
-              {% endif %}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{{ order.created_at | to_date | l: 'short' }}</td>
-              <td>
-                {% if order.archived_at != blank and order.transactable.pending? == false %}
-                  Archived
-                {% else %}
-                  {{ 'reservations.states.' | append: order.state | t }}
-                {% endif %}
-              </td>
-              {% if order.unconfirmed? %}
-                <td>
-                  {% if order.unconfirmed? %}
-                    <a class="btn btn-success" href="{{ order.payment_documents[0].file_url }}" download="{{ order.payment_documents[0].file_name }}" target="_blank">View</a>
-                    <a class="btn btn-info" href="{{ 'edit_dashboard_order_path' | generate_url: order.id }}">{{ 'general.edit' | t }}</a>
-                    <a class="btn btn-danger" href="{{ 'enquirer_cancel_dashboard_order_path' | generate_url: order.id }}" data-method="post" data-confirm="Are you sure you want to cancel?">{{ 'general.cancel' | t }}</a>
-                  {% endif %}
-                </td>
-              {% elsif order.confirmed? %}
-                <td>{{ order.confirmed_at | l: 'long' }}</td>
-              {% else %}
-                <td>{{ order.archived_at | l: 'long' }}</td>
-              {% endif %}
-              {% if order.confirmed? %}
-                <td><a href="{{ order.payment_documents[0].file_url }}" target="_blank">{{  order.payment_documents[0].file_name }}</a></td>
-              {% endif %}
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    {% endif %}
-    {% assign order = transactable.last_accepted_order %}
-    {% if order.confirmed? %}
-      <a class="btn btn-info" href="{{ order.new_order_item_path }}">{{ 'dashboard.user_reservations.track_time' | t}}</a>
-    {% endif %}
-
   </article>
 {% endfor %}
