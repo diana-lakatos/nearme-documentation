@@ -566,7 +566,7 @@ namespace :litvault do
       def create_category_tree(category, children, level)
         children.each do |child|
           name = (child.is_a? Hash) ? child['name'] : child
-          subcategory = category.children.where(name: name).first_or_create!
+          subcategory = category.children.where(name: name).first_or_create!(parent_id: category.id)
           puts "\t    #{'  ' * (level + 1)}- #{name}"
           create_category_tree(subcategory, child['children'], level + 1) if child['children']
         end
