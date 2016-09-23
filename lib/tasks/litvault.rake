@@ -554,7 +554,7 @@ namespace :litvault do
           category = Category.where(name: name).first_or_create!
           category.transactable_types = category.transactable_types.push(tt) if !category.transactable_types.include?(tt)
           category.instance_profile_types = category.instance_profile_types.push(InstanceProfileType.buyer.first) if hash.delete('assign_to_buyer_profile') && !category.instance_profile_types.include?(InstanceProfileType.buyer.first)
-          category.assign_attributes(hash)
+          category.assign_attributes(hash.reject {|k,v| k == :children})
           category.save!
 
           puts "\t    - #{name}"
