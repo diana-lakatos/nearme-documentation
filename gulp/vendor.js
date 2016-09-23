@@ -42,6 +42,17 @@ module.exports = function(gulp, config){
             .pipe(gulp.dest(path.join(config.paths.output, 'ckeditor')));
     });
 
+    gulp.task('vendor:ckeditor:dist', function(){
+        gulp.src([path.join(files.ckeditorFileuploader, '**', '*')])
+            .pipe(gulp.dest(path.join(config.paths.tmp, 'ckeditor')));
+
+        gulp.src([path.join(files.ckeditor, '**', '*'), path.join('!', files.ckeditor, 'config.js')])
+            .pipe(gulp.dest(path.join(config.paths.output, 'ckeditor')));
+
+        gulp.src([files.ckeditorConfig])
+            .pipe(gulp.dest(path.join(config.paths.output, 'ckeditor')));
+    });
+
     gulp.task('vendor:raygun', function() {
         return gulp.src([files.raygun, files.raygunMap])
             .pipe(gulp.dest(config.paths.output));
@@ -104,5 +115,5 @@ module.exports = function(gulp, config){
 
     // Aggregate taks
     gulp.task('vendor', ['vendor:checkfiles', 'vendor:modernizr', 'vendor:ckeditor', 'vendor:raygun', 'vendor:jquery', 'vendor:polyfills']);
-    gulp.task('vendor:dist', ['vendor:checkfiles', 'vendor:modernizr:dist', 'vendor:ckeditor', 'vendor:raygun:dist', 'vendor:jquery:dist', 'vendor:polyfills:dist']);
+    gulp.task('vendor:dist', ['vendor:checkfiles', 'vendor:modernizr:dist', 'vendor:ckeditor:dist', 'vendor:raygun:dist', 'vendor:jquery:dist', 'vendor:polyfills:dist']);
 };
