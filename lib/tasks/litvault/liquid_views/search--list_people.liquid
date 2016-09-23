@@ -57,6 +57,12 @@
                         <header class="header">
                             <div class="portrait">
                                 <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
+                                {% if user.has_seller_profile? %}
+                                  {{ user.seller_properties.law_firm }}
+                                {% else %}
+                                  {{ user.buyer_properties.law_firm }}
+                                {% endif %}
+                                {{ user.display_location }}
 
                                 <ul class="social">
                                     {% if user.buyer_properties['linkedin_url'] != blank %}

@@ -28,6 +28,7 @@ namespace :litvault do
       })
 
       setup = LitvaultSetup.new(@instance, File.join(Rails.root, 'lib', 'tasks', 'litvault'))
+      setup.update_settings
       setup.create_transactable_types!
       setup.create_custom_attributes!
       setup.create_categories!
@@ -54,6 +55,13 @@ namespace :litvault do
     def initialize(instance, theme_path)
       @instance = instance
       @theme_path = theme_path
+    end
+
+    def update_settings
+      @instance.update_attributes(wish_lists_enabled: true,
+                                  lister_blogs_enabled: true,
+                                  enquirer_blogs_enabled: true
+                                 )
     end
 
     def create_transactable_types!
@@ -249,9 +257,21 @@ namespace :litvault do
         create_form_components_for_object(object, transactable_types[tt_name])
       end
 
-
+      # registration buyer profile
       FormComponent.find(5404).update_attribute(:form_fields, [ { "user" => "name" }, { "user" => "email" }, { "user" => "password" }, { "buyer" => "law_firm" } ])
-      FormComponent.find(5402).update_attribute(:form_fields, [ { "user" => "name" }, { "user" => "email" }, { "user" => "password" }, { "buyer" => "law_firm" } ])
+      # registration seller profile
+      FormComponent.find(5402).update_attribute(:form_fields, [ { "user" => "name" }, { "user" => "email" }, { "user" => "password" }, { "seller" => "law_firm" } ])
+
+      # buyer profile
+      FormComponent.find(5403).update_attribute(:form_fields, [ { "user" => "name" }, { "user" => "email" }, { "user" => "password" }, { "buyer" => "law_firm" },
+                                                                { "buyer" => "bio" }, { "buyer" => "linkedin_url" }, { "buyer" => "twitter_url" },
+                                                                { "buyer" => "googleplus_url" }, 
+                                                                { "buyer" => "Category - Group Case Categories" }, { "buyer" => "Category - Individual Case Categories" },
+                                                                { "user" => "current_address" },
+                                                              ])
+
+      # seller profile
+      FormComponent.find(5401).update_attribute(:form_fields, [ { "user" => "name" }, { "user" => "email" }, { "user" => "password" }, { "user" => "current_address" } ])
     end
 
     def set_theme_options
