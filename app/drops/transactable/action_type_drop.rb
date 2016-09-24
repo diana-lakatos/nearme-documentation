@@ -12,4 +12,8 @@ class Transactable::ActionTypeDrop < BaseDrop
     pricings.first
   end
 
+  def sorted_pricings
+    pricings.sort_by(&:number_of_units)
+  end
+
 end

@@ -16,6 +16,7 @@ namespace :volte do
       @instance.time_zone = 'Sydney'
       @instance.force_accepting_tos = true
       @instance.skip_company = true
+      @instance.wish_lists_enabled = true
       @instance.save!
       @instance.set_context!
 
@@ -107,7 +108,7 @@ namespace :volte do
         html_tag: 'select',
         required: "0",
         public: true,
-        valid_values: ['Dress', 'Bag', 'Milinery', 'Outerwear', 'Accessories'],
+        valid_values: ['Dress', 'Bag', 'Millinery', 'Outerwear', 'Accessories'],
         searchable: true,
         input_html_options: { 'data-show-field' => 'value-dependent' }
       })

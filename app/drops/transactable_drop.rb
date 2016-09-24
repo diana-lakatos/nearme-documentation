@@ -62,7 +62,7 @@ class TransactableDrop < BaseDrop
     :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, :attachments, :confirm_reservations,
     :to_key, :model_name, :deposit_amount_cents, :customizations, :to_param, :hours_for_guest_to_confirm_payment, :availability_exceptions,
     :action_free_booking?, :average_rating, :time_based_booking?, :transactable_collaborators, :collaborating_users, :approved_transactable_collaborators,
-    :user_messages, :line_item_orders, :state, :created_at, :pending?, :completed?,:transactable_type_id, to: :source
+    :user_messages, :line_item_orders, :state, :created_at, :pending?, :completed?,:transactable_type_id, :tags, to: :source
 
   # action_price_per_unit
   #   returns true if there is a single unit available of the transactable item for a given time period
@@ -424,6 +424,11 @@ class TransactableDrop < BaseDrop
 
   def confirmed_order
     line_item_orders.confirmed.first
+  end
+
+  def transactable_user_messages
+    return [] unless @context['current_user']
+    @source.user_messages.where("author_id = :user_id OR thread_recipient_id = :user_id", user_id: @context['current_user'].id)
   end
 
 end
