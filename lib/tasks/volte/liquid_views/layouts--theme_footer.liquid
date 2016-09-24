@@ -16,27 +16,28 @@
                 <a href="/">Home</a>
             </li>
             <li>
-                <a href="/about">About</a>
+                <a href="/about-us">About us</a>
             </li>
             <li>
                 <a href="/faq">FAQ</a>
-            </li>
-            <li>
-                <a href="/contact">Contact US</a>
             </li>
         </ul>
         <ul class="more">
             <li>
                 More
             </li>
+            {% if current_user == blank %}
             <li>
-                <a href="#">Sign Up</a>
+                <a data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" data-href="/users/sign_up" href="#">Sign Up</a>
             </li>
+            {% endif %}
+            {% if current_user %}
             <li>
-                <a href="#">List Your Items</a>
+                <a href="/transactable_types/item/list">List your items</a>
             </li>
+            {% endif %}
             <li>
-                <a href="/terms-of-use">Terms of Use</a>
+                <a href="/terms-of-service">Terms of Service</a>
             </li>
             <li>
                 <a href="/policies">Policies</a>
@@ -46,21 +47,20 @@
             <li>
                 Connect
             </li>
-
+            {% if platform_context.instagram_url != blank %}
+                <li><a href="{{ platform_context.instagram_url }}" itemprop="sameAs"><i class="volte-icon-instagram"></i>Instagram</a></li>
+            {% endif %}
             {% if platform_context.facebook_url != blank %}
-                <li><a href="{{ platform_context.facebook_url }}" itemprop="sameAs"><i class="volte-icon-facebook"></i> Facebook</a></li>
+                <li><a href="{{ platform_context.facebook_url }}" itemprop="sameAs"><i class="volte-icon-facebook"></i>Facebook</a></li>
             {% endif %}
             {% if platform_context.twitter_url != blank %}
-                <li><a href="{{ platform_context.twitter_url }}" itemprop="sameAs"><i class="volte-icon-twitter"></i> Twitter</a></li>
-            {% endif %}
-            {% if platform_context.linkedin_url != blank %}
-                <li><a href="{{ platform_context.linkedin_url }}" itemprop="sameAs"><i class="volte-icon-linkedin"></i> LinkedIn</a></li>
+                <li><a href="{{ platform_context.twitter_url }}" itemprop="sameAs"><i class="volte-icon-twitter"></i>Twitter</a></li>
             {% endif %}
             {% if platform_context.gplus_url != blank %}
-                <li><a href="{{ platform_context.gplus_url }}" itemprop="sameAs"><i class="volte-icon-googleplus"></i> Google+</a></li>
+                <li><a href="{{ platform_context.gplus_url }}" itemprop="sameAs"><i class="volte-icon-googleplus"></i>Google+</a></li>
             {% endif %}
             {% if platform_context.blog_url != blank %}
-                <li><a href="{{ platform_context.blog_url }}"><i class="volte-icon-blog"></i> Blog</a></li>
+                <li><a href="{{ platform_context.blog_url }}"><i class="volte-icon-blog"></i>Blog</a></li>
             {% endif %}
         </ul>
         <ul class="contact">
@@ -68,10 +68,7 @@
                 Contact
             </li>
             <li>
-                <a href="tel:{{ platform_context.phone_number_noformat }}" itemprop="telephone">{{ platform_context.phone_number }}</a>
-            </li>
-            <li>
-                <a href="mailto:{{ platform_context.support_email.downcase }}" itemprop="email">{{ platform_context.support_email }}</a>
+                <a href="mailto:{{ platform_context.support_email }}" itemprop="email">{{ platform_context.support_email }}</a>
             </li>
         </ul>
         <div class="footer-bottom" role="contentinfo">

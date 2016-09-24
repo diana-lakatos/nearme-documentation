@@ -1,0 +1,126 @@
+{% if listing.transactable_type.show_page_enabled? %}
+  {% assign photos = listing.photos %}
+{% else %}
+  {% assign photos = listing.location.photos_count %}
+{% endif %}
+{% assign photos_count = photos | size %}
+
+<div class="wrapper-a">
+
+  <div class="item-top-bar">
+    <div class="user-bar">
+      <div class="user-bar__photo" style="background-image: url('https://unsplash.it/200/200?image=0')">
+      </div>
+
+      <div class="flex-container">
+        <div class="user-bar__name">
+          <a href="#">User Name</a>
+        </div>
+        <div class="user-bar__action-bar">
+          <ul>
+            <li><a href="#" class="button button-inverse">Message</a></li>
+            <li><a href="#" class="button button-inverse">Lender's Closet</a></li>
+            <li><a href="#" class="button button-inverse">Lender's Blog</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-pricing">
+      <dl>
+        <dt>4 days: </dt>
+        <dd>$1000 AUD</dd>
+        <dt>8 days: </dt>
+        <dd>$1500 AUD</dd>
+        <dt>30 days: </dt>
+        <dd>$3000 AUD</dd>
+        <dt>Bond value: </dt>
+        <dd>$3000 AUD</dd>
+      </dl>
+    </div>
+  </div>
+
+
+  <div class="item-content">
+    <div class="item-name">
+      <h1>{%if listing.transactable_type.show_page_enabled? %}{{ listing.name | filter_text }}{%else%}{{ location.name | filter_text }}{%endif%}</h1>
+    </div>
+
+    <div class="image-gallery" data-image-gallery>
+      <div class="image-gallery__container">
+      {% if photos_count > 0 %}
+        <div class="image-gallery__container-image" style="background-image: url('{{ photos[0].golden  }}')" data-image-gallery-full-image></div>
+      {% endif %}
+      </div>
+
+      <div class="image-gallery__controls-container">
+        <ul class="image-gallery__zoom-controls">
+          <li><a href="#" data-image-gallery-zoom="1">X</a></li>
+          <li><a href="#" data-image-gallery-zoom="+1">+</a></li>
+          <li><a href="#" data-image-gallery-zoom="-1">&ndash;</a></li>
+        </ul>
+
+          {% if photos_count > 0 %}
+          <ul class="image-gallery__list">
+            {% assign index = 0 %}
+            {% for photo in photos %}
+              <li data-image-gallery-image><a href="#"><img src="{{ photo.golden }}" data-image-gallery-full-image-url="{{ photo.golden }}" /></a></li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+      </div>
+    </div> <!-- Image gallery -->
+  </div> <!-- Item content -->
+
+  <div class="item-sidebar">
+    <div class="item-actions">
+      <ul>
+        <li class="separated"><a href="#" class="button button-default">REQUEST ITEM</a></li>
+        <li><a href="#" class="button button-default button-disabled">CHECK AVAILABILITY</a></li>
+        <li><a href="#" class="button button-default button-disabled">ADD AS FAVORITE</a></li>
+      </ul>
+    </div> <!-- Item actions -->
+
+    <div class="item-details">
+     <ul>
+        <li class="active">
+          <a data-toggle='tab' href='#tab-details'>Details</a>
+        </li>
+        <li>
+          <a data-toggle='tab' href='#tab-description'>Description</a>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="tab-details">
+          <h3>Tralalal intro details</h3>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor.
+          </p>
+        </div>
+        <div class="tab-pane" id="tab-description">
+          <h3>Tralalal intro description</h3>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor.
+          </p>
+        </div>
+      </div>
+    </div> <!-- Item details -->
+  </div> <!-- Item sidebar -->
+
+  <div class="item-tags">
+    <h4>Tags:</h4>
+    <ul>
+      <li><a href="#" class="button button-inverse">Wedding</a></li>
+      <li><a href="#" class="button button-inverse">Like New</a></li>
+      <li><a href="#" class="button button-inverse">Black</a></li>
+      <li><a href="#" class="button button-inverse">Dress</a></li>
+      <li><a href="#" class="button button-inverse item-tags__view-more">view more</a></li>
+    </ul>
+  </div> <!-- Item tags -->
+
+  <div class="item-disclaimers">
+    <h2>Cancellation policy</h2>
+
+    <p>What do you need to know... lorem ipsum</p>
+  </div>
+</div> <!-- Wrapper -->
