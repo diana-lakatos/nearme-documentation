@@ -8,12 +8,15 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
+  store_accessor :properties, :min_value, :max_value, :step
+
   after_save :create_translations
 
   scope :searchable, -> { where(searchable: true) }
   scope :public_display, -> { where(public: true) }
 
   validates_presence_of :valid_values, if: :searchable
+  validates :min_value, :max_value, :step, presence: true, if: -> { html_tag.eql?('range') }
 
   def create_translations
     ::CustomAttributes::CustomAttribute::TranslationCreator.new(self).create_translations!

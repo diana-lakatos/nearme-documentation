@@ -232,6 +232,14 @@ DNM.registerInitializer(function(){
             new InstanceAdminProjectsController(main);
         });
     }
+
+    if (main.hasClass('custom_attributes')) {
+        require.ensure('./instance_admin/sections/custom_attributes', function(require){
+            var InstanceAdminCustomAttributesController = require('./instance_admin/sections/custom_attributes');
+            new InstanceAdminCustomAttributesController(main);
+        });
+    }
+
 });
 
 DNM.registerInitializer(function(){

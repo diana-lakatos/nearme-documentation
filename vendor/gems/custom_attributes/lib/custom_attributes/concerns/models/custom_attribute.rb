@@ -19,7 +19,7 @@ module CustomAttributes
           HTML_TAG = 6 unless defined?(HTML_TAG)
           VALIDATION_ONLY_ON_UPDATE = 8 unless defined?(VALIDATION_ONLY_ON_UPDATE)
           ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean) unless defined?(ATTRIBUTE_TYPES)
-          HTML_TAGS = %w(input select switch textarea check_box radio_buttons check_box_list) unless defined?(HTML_TAGS)
+          HTML_TAGS = %w(input select switch textarea check_box radio_buttons check_box_list range) unless defined?(HTML_TAGS)
           MULTIPLE_ARRAY_TAGS = %w(check_box_list) unless defined?(MULTIPLE_ARRAY_TAGS)
 
           scope :listable, -> { all }

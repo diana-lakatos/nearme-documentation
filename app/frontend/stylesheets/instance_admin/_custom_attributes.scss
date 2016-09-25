@@ -1,0 +1,12 @@
+#main-container.custom_attributes {
+
+  .row.properties {
+
+    display: none;
+
+    &.active {
+      display: block;
+    }
+  }
+
+}

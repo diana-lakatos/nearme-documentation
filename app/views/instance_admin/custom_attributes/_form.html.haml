@@ -16,6 +16,15 @@
       = f.input :prompt, input_html: { class: 'form-control' }
     .input-container.col-xs-4
       = f.input :default_value, input_html: { class: 'form-control' }
+
+  .row.range-properties.properties{ class: active_class(resource.html_tag, 'range') }
+    .input-container.col-xs-4
+      = f.input :min_value, input_html: { class: 'form-control' }
+    .input-container.col-xs-4
+      = f.input :max_value, input_html: { class: 'form-control' }
+    .input-container.col-xs-4
+      = f.input :step, input_html: { class: 'form-control' }
+
   .row
     .input-container.col-xs-6
       = f.input :hint, input_html: { class: 'form-control' }
