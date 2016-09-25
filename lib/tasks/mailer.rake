@@ -115,5 +115,25 @@ namespace :mailer do
 
       template.save
     end
+
+    templates('offer_mailer/%').each do |template|
+      update([template.text_body, template.html_body], 'reservation.owner', 'enquirer')
+
+      template.save
+    end
+
+    # UOT
+
+    templates('transactable_mailer/notify_lister_of_cancellation%').each do |template|
+      update([template.text_body, template.html_body], 'user', 'lister')
+
+      template.save
+    end
+
+    templates('transactable_mailer/transactable_owner_added_collaborator_email%').each do |template|
+      update([template.text_body, template.html_body], 'user', 'enquirer')
+
+      template.save
+    end
   end
 end

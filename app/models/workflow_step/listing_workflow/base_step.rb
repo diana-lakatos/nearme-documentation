@@ -7,22 +7,13 @@ class WorkflowStep::ListingWorkflow::BaseStep < WorkflowStep::BaseStep
   def initialize(transactable_id, approval_request_id = nil)
     @transactable = Transactable.find_by_id(transactable_id)
     @approval_request = @transactable.approval_requests.find(approval_request_id) if approval_request_id
+
+    @enquirer = @transactable.creator
+    @lister = @transactable.creator
   end
 
   def workflow_type
     'listing'
-  end
-
-  def enquirer
-    @transactable.creator
-  end
-
-  def lister
-    @transactable.creator
-  end
-
-  def transactable
-    @transactable
   end
 
   def collaborators
