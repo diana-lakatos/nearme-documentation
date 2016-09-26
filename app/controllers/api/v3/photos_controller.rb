@@ -12,7 +12,7 @@ module Api
         photo.save
         photo
       end
-      render json: { data: { photo_ids: photos.map(&:id) } }
+      render json: ApiSerializer.serialize_collection(photos, meta: { photos_ids: photos.map(&:id) })
     end
 
     protected
