@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160922111858) do
+ActiveRecord::Schema.define(version: 20160922143456) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -668,6 +668,7 @@ ActiveRecord::Schema.define(version: 20160922111858) do
     t.string   "target_type",               limit: 255
     t.boolean  "searchable",                            default: false
     t.boolean  "validation_only_on_update",             default: false
+    t.hstore   "properties",                            default: {},    null: false
   end
 
   add_index "custom_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree
