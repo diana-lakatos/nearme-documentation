@@ -1,6 +1,7 @@
 ---
 partial: false
 ---
+{{ platform_context.set_render_content_outside_container }}
 {% if params['search_type'] contains 'people' %}
     {% include 'search/list_people.html' %}
 {% else %}

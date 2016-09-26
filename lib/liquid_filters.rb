@@ -420,4 +420,8 @@ module LiquidFilters
     Money.new(amount, currency)
   end
 
+  def timeago(time)
+    "<abbr class='timeago' title='#{time.to_time.iso8601}'>#{l(time, 'short')}</abbr>".html_safe
+  end
+
 end

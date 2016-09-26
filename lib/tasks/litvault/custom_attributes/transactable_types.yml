@@ -101,7 +101,7 @@
     label: 'State of Injury or Accident'
     html_tag: select
     required: true
-    valid_values: ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
+    valid_values: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
 
   description_of_incident:
     label: 'Description of injury or accident'
@@ -156,6 +156,7 @@
 
   states:
     label: Select state(s) in which lawyer(s) at Handling Law Firm must be licensed to handle case
+    attribute_type: array
     html_tag: check_box_list
     valid_values: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
     required: true
@@ -193,9 +194,9 @@
 
   available_records:
     label: Available Records
+    attribute_type: array
     html_tag: check_box_list
-    valid_values: ['None', 'Accident Report', 'Medical Records']
-    required: true
+    valid_values: ['Accident Report', 'Medical Records']
 
   description_of_records:
     label: 'Description of records obtained by referring lawyer'
@@ -207,8 +208,8 @@
   underlying_records_documents:
     label: 'Identify any underlying records and /or documents you have obtained and reviewed'
     html_tag: check_box_list
-    valid_values: ['None', 'Accident Report', 'Incedent Report', 'Medical Records', 'Pharmacy Records', 'Employtment Records', 'Death Certificate']
-    required: true
+    attribute_type: array
+    valid_values: ['Accident Report', 'Incedent Report', 'Medical Records', 'Pharmacy Records', 'Employtment Records', 'Death Certificate']
 
   other_matters:
     label: 'Other matters you wish to include'

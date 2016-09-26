@@ -17,12 +17,8 @@
       <p>I would like to send a request to have access to Case Details for the following Case:</p>
       <h3>{{ listing.name }}</h3>
       <ul class="search-result-case-properties">
-        <li>Car</li>
-        <li>Injury or Accident Date: <b>12/2/2015</b></li>
-        <li>Location of Injury or Accident: <b>Missouri</b></li>
-        <li>Days of Hospitalization: <b>5</b></li>
-        <li>Death Case: <b>No</b></li>
-        <li>by Law Firm</li>
+        {% include 'search/case_properties', case: case %}
+        <li>by {{ listing.creator.company_name }}</li>
       </ul>
 
       <form method="post" action="{{ 'listing_transactable_collaborators_path' | generate_url: listing }}">

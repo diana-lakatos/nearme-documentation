@@ -1,0 +1,36 @@
+---
+# registration buyer profile
+5404:
+  - user: name
+  - user: email
+  - user: password
+  - user: company_name
+
+# registration seller profile
+5402:
+  - user: name
+  - user: email
+  - user: password
+  - user: company_name
+
+# buyer profile
+5403:
+  - user: name
+  - user: email
+  - user: password
+  - user: company_name
+  - buyer: bio
+  - buyer: linkedin_url
+  - buyer: twitter_url
+  - buyer: googleplus_url
+  - buyer: Category - Group Case Categories
+  - buyer: Category - Individual Case Categories
+  - user: current_address
+
+# seller profile
+5401:
+  - user: name
+  - user: email
+  - user: password
+  - user: company_name
+  - user: current_address
