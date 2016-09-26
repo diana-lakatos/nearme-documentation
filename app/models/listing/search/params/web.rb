@@ -24,7 +24,9 @@ class Listing::Search::Params::Web < Listing::Search::Params
   end
 
   def bounding_box
-    @bounding_box ||= [[@options[:sx], @options[:sy]], [@options[:nx], @options[:ny]]] if @options[:nx].present?
+    if is_numeric?(@options[:nx]) && is_numeric?(@options[:sx]) && is_numeric?(@options[:ny]) && is_numeric?(@options[:sy])
+      @bounding_box ||= [[@options[:sx], @options[:sy]], [@options[:nx], @options[:ny]]]
+    end
     super
   end
 
