@@ -24,8 +24,8 @@ namespace :mailer do
 
     templates('transactable_mailer/%').each do |template|
       puts "updating #{template.path}"
-      update([template.text_body, template.html_body], 'user', 'enquirer')
-      update([template.text_body, template.html_body], 'owner', 'lister')
+      update([template.body], 'user', 'enquirer')
+      update([template.body], 'owner', 'lister')
 
       template.save
     end
@@ -42,27 +42,27 @@ namespace :mailer do
 
     # listings gonna be fixed in a separate step NM-5844
     templates('recurring_booking_mailer/_listings_in_near.%').each do |template|
-      update([template.text_body, template.html_body], 'user', 'lister')
+      update([template.body], 'user', 'lister')
 
       template.save
     end
 
     templates('recurring_booking_mailer/%').each do |template|
-      update([template.text_body, template.html_body], 'recurring_booking.owner', 'enquirer')
+      update([template.body], 'recurring_booking.owner', 'enquirer')
 
       template.save
     end
 
     templates('recurring_booking_mailer/notify_guest_%').each do |template|
-      update([template.text_body, template.html_body], 'user', 'enquirer')
-      update([template.text_body, template.html_body], 'host', 'lister')
+      update([template.body], 'user', 'enquirer')
+      update([template.body], 'host', 'lister')
 
       template.save
     end
 
     templates('recurring_booking_mailer/notify_host_%').each do |template|
-      update([template.text_body, template.html_body], 'user', 'lister')
-      update([template.text_body, template.html_body], 'host', 'lister')
+      update([template.body], 'user', 'lister')
+      update([template.body], 'host', 'lister')
 
       template.save
     end
@@ -75,15 +75,15 @@ namespace :mailer do
     # RESERVATION MAILER
 
     templates('reservation_mailer/notify_host_%').each do |template|
-      update([template.text_body, template.html_body], 'user', 'lister')
-      update([template.text_body, template.html_body], 'host', 'lister')
+      update([template.body], 'user', 'lister')
+      update([template.body], 'host', 'lister')
 
       template.save
     end
 
     templates('reservation_mailer/notify_guest_%').each do |template|
-      update([template.text_body, template.html_body], 'user', 'enquirer')
-      update([template.text_body, template.html_body], 'host', 'lister')
+      update([template.body], 'user', 'enquirer')
+      update([template.body], 'host', 'lister')
 
       template.save
     end
@@ -96,28 +96,28 @@ namespace :mailer do
     # OFFER MAILER
 
     templates('offer_mailer/notify_host_%').each do |template|
-      update([template.text_body, template.html_body], 'user', 'lister')
-      update([template.text_body, template.html_body], 'host', 'lister')
+      update([template.body], 'user', 'lister')
+      update([template.body], 'host', 'lister')
 
       template.save
     end
 
     templates('offer_mailer/notify_guest_%').each do |template|
-      update([template.text_body, template.html_body], 'user', 'enquirer')
-      update([template.text_body, template.html_body], 'host', 'lister')
+      update([template.body], 'user', 'enquirer')
+      update([template.body], 'host', 'lister')
 
       template.save
     end
 
     templates('offer_mailer/pre_booking.%').each do |template|
-      update([template.text_body, template.html_body], 'user', 'enquirer')
-      update([template.text_body, template.html_body], 'host', 'lister')
+      update([template.body], 'user', 'enquirer')
+      update([template.body], 'host', 'lister')
 
       template.save
     end
 
     templates('offer_mailer/%').each do |template|
-      update([template.text_body, template.html_body], 'reservation.owner', 'enquirer')
+      update([template.body], 'reservation.owner', 'enquirer')
 
       template.save
     end
@@ -125,13 +125,13 @@ namespace :mailer do
     # UOT
 
     templates('transactable_mailer/notify_lister_of_cancellation%').each do |template|
-      update([template.text_body, template.html_body], 'user', 'lister')
+      update([template.body], 'user', 'lister')
 
       template.save
     end
 
     templates('transactable_mailer/transactable_owner_added_collaborator_email%').each do |template|
-      update([template.text_body, template.html_body], 'user', 'enquirer')
+      update([template.body], 'user', 'enquirer')
 
       template.save
     end
