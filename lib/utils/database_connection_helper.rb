@@ -14,7 +14,7 @@ module Utils
     end
 
     def build_dump_command
-      "PGPASSWORD=#{@password} pg_dump -h #{@host}#{@port} -U #{@username} -f #{@pathname} -Fc #{@name} --exclude-table-data versions"
+      "PGPASSWORD=#{@password} pg_dump -h #{@host} -p #{@port} -U #{@username} -f #{@pathname} -Fc #{@name} --exclude-table-data versions"
     end
 
     def build_restore_command
