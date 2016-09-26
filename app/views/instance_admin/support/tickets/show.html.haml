@@ -7,7 +7,7 @@
         .pull-right
           %h4= "#{@ticket.state}".upcase
           %h4
-            =select_tag("user[assigned_to_id]", options_for_select(@admins.compact.map{|a| [a.name, a.id]}, @ticket.assigned_to.try(:id)), prompt: 'UNASSIGNED', class: 'form-control')
+            = select_tag("user[assigned_to_id]", options_for_select(@admins.compact.map{|a| [a.name, a.id]}, @ticket.assigned_to.try(:id)), prompt: 'UNASSIGNED', class: 'form-control')
 
     .row
       .input-container.col-xs-12
