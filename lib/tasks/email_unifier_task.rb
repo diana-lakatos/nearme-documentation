@@ -1,9 +1,6 @@
 module EmailUnifierTask
-  class EmailTemplate < ActiveRecord::Base
-  end
-
   def templates(path)
-    EmailTemplate.where("path like ?", path).tap do |results|
+    InstanceView.where("path like ?", path).tap do |results|
       puts "Found #{results.count} templates for: #{path}"
     end
   end
