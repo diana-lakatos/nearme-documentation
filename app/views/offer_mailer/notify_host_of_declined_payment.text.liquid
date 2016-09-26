@@ -1,6 +1,6 @@
 Hello, {{ lister.first_name }}!
 
-The payment for {{ listing.name }} {{ listing.listing_url }} has been declined by {{ reservation.owner.name }}. {% if reservation.has_rejection_reason %} They said:
+The payment for {{ listing.name }} {{ listing.listing_url }} has been declined by {{ enquirer.name }}. {% if reservation.has_rejection_reason %} They said:
 
 {{ reservation.rejection_reason }}{% endif %}
 
