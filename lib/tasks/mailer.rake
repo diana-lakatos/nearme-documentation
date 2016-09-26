@@ -22,7 +22,23 @@ namespace :mailer do
     require_relative './email_unifier_task'
     include EmailUnifierTask
 
-    templates('transactable_mailer/%').each do |template|
+    templates('transactable_mailer/notify_host%').each do |template|
+      puts "updating #{template.path}"
+      update([template.body], 'user', 'lister')
+      update([template.body], 'owner', 'lister')
+
+      template.save
+    end
+
+    templates('transactable_mailer/notify_lister%').each do |template|
+      puts "updating #{template.path}"
+      update([template.body], 'user', 'lister')
+      update([template.body], 'owner', 'lister')
+
+      template.save
+    end
+
+    templates('transactable_mailer/notify_enquirer%').each do |template|
       puts "updating #{template.path}"
       update([template.body], 'user', 'enquirer')
       update([template.body], 'owner', 'lister')
