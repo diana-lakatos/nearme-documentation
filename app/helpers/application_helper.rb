@@ -190,6 +190,10 @@ module ApplicationHelper
       classes << 'user-role-lister' if current_user.seller_profile
       classes << 'user-role-enquirer' if current_user.buyer_profile
     end
+    if controller_name == "pages" && params[:action] == "show"
+      classes << "page-#{@page.id}-#{@page.slug}"
+    end
+
     classes.compact.join(' ')
   end
 
