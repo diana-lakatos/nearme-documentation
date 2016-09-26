@@ -1,25 +1,15 @@
 ---
-579:
-  law_firm:
-    label: "Law Firm"
-    required: true
+# seller profile
+579: ~
+
+# buyer profile
 580:
-  law_firm:
-    label: "Law Firm"
-    required: true
   linkedin_url:
     label: "LinkedIn URL"
-    attribute_type: 'string'
-    html_tag: 'input'
   googleplus_url:
     label: "Google Plus URL"
-    attribute_type: 'string'
-    html_tag: 'input'
   twitter_url:
     label: "Twitter URL"
-    attribute_type: 'string'
-    html_tag: 'input'
   bio:
     label: "Bio"
-    attribute_type: 'string'
-    html_tag: 'textarea'
+    html_tag: textarea

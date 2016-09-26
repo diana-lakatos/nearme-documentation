@@ -33,6 +33,7 @@ namespace :litvault do
       setup.create_custom_attributes!
       setup.create_categories!
       setup.create_or_update_form_components!
+      setup.create_custom_validators!
 
       setup.set_theme_options
 
@@ -91,7 +92,7 @@ namespace :litvault do
         show_categories: true,
         category_search_type: 'AND',
         bookable_noun: 'Individual Case',
-        enable_photo_required: true,
+        enable_photo_required: false,
         min_hourly_price_cents: 50_00,
         max_hourly_price_cents: 150_00,
         lessor: 'Lawyer',
@@ -160,7 +161,7 @@ namespace :litvault do
         show_categories: true,
         category_search_type: 'AND',
         bookable_noun: 'Group Case',
-        enable_photo_required: true,
+        enable_photo_required: false,
         min_hourly_price_cents: 50_00,
         max_hourly_price_cents: 150_00,
         lessor: 'Lawyer',
@@ -257,21 +258,14 @@ namespace :litvault do
         create_form_components_for_object(object, transactable_types[tt_name])
       end
 
-      # registration buyer profile
-      FormComponent.find(5404).update_attribute(:form_fields, [ { "user" => "name" }, { "user" => "email" }, { "user" => "password" }, { "buyer" => "law_firm" } ])
-      # registration seller profile
-      FormComponent.find(5402).update_attribute(:form_fields, [ { "user" => "name" }, { "user" => "email" }, { "user" => "password" }, { "seller" => "law_firm" } ])
+      puts "\nUpdating existing form components"
+      existing = YAML.load_file(File.join(@theme_path, 'form_components', 'existing.yml'))
 
-      # buyer profile
-      FormComponent.find(5403).update_attribute(:form_fields, [ { "user" => "name" }, { "user" => "email" }, { "user" => "password" }, { "buyer" => "law_firm" },
-                                                                { "buyer" => "bio" }, { "buyer" => "linkedin_url" }, { "buyer" => "twitter_url" },
-                                                                { "buyer" => "googleplus_url" }, 
-                                                                { "buyer" => "Category - Group Case Categories" }, { "buyer" => "Category - Individual Case Categories" },
-                                                                { "user" => "current_address" },
-                                                              ])
-
-      # seller profile
-      FormComponent.find(5401).update_attribute(:form_fields, [ { "user" => "name" }, { "user" => "email" }, { "user" => "password" }, { "user" => "current_address" } ])
+      existing.keys.each do |id|
+        fc = FormComponent.find(id)
+        fc.update_attribute(:form_fields, existing[id])
+        puts "\t- #{fc.name}"
+      end
     end
 
     def set_theme_options
@@ -298,13 +292,24 @@ namespace :litvault do
     end
 
     def create_custom_validators!
-      cv = CustomValidator.where(field_name: 'mobile_number', validatable: InstanceProfileType.seller.first).first_or_initialize
-      cv.required = "1"
+
+      seller = InstanceProfileType.seller.first
+
+      cv = CustomValidator.where(field_name: 'company_name', validatable: seller).first_or_initialize
+      cv.required = true
       cv.save!
 
-      cv = CustomValidator.where(field_name: 'mobile_number', validatable: InstanceProfileType.buyer.first).first_or_initialize
-      cv.required = "1"
+      buyer = InstanceProfileType.buyer.first
+
+      cv = CustomValidator.where(field_name: 'company_name', validatable: buyer).first_or_initialize
+      cv.required = true
       cv.save!
+
+      TransactableType.all.each do |tt|
+        cv = CustomValidator.where(field_name: 'name', validatable: tt).first_or_initialize
+        cv.required = true
+        cv.save!
+      end
     end
 
     def create_pages
@@ -593,7 +598,13 @@ namespace :litvault do
       end
 
       def update_custom_attributes_for_object(object, attributes)
-        unused_attrs = object.custom_attributes.where("name NOT IN (?)", attributes.keys)
+        attributes ||= {}
+        if attributes.size == 0
+          unused_attrs = object.custom_attributes
+        else
+          unused_attrs = object.custom_attributes.where("name NOT IN (?)", attributes.keys)
+        end
+
         if unused_attrs.size > 0
           puts "\t  Removing unused attributes:"
           unused_attrs.each do |ca|
@@ -602,10 +613,12 @@ namespace :litvault do
           end
         end
 
-        puts "\t  Updating / creating attributes:"
-        attributes.each do |name, attrs|
-          create_custom_attribute(object, name, default_attribute_properties.merge(attrs))
-          puts "\t    - #{name}"
+        if attributes.size > 0
+          puts "\t  Updating / creating attributes:"
+          attributes.each do |name, attrs|
+            create_custom_attribute(object, name, default_attribute_properties.merge(attrs))
+            puts "\t    - #{name}"
+          end
         end
       end
 
@@ -613,7 +626,7 @@ namespace :litvault do
         {
           mandatory: false,
           multiple_root_categories: false,
-          search_options: 'exclude',
+          search_options: 'include',
           children: []
         }
       end

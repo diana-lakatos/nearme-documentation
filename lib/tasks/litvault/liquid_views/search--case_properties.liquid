@@ -1,0 +1,7 @@
+ {% for category in case.categories %}
+   <li>{{ category.name }}</li>
+ {% endfor %}
+ <li>Injury or Accident Date: <b>{{ case.properties.date_of_incident }}</b></li>
+ <li>Location of Injury or Accident: <b>{{ case.properties.city_of_incident }}</b></li>
+ <li>Days of Hospitalization: <b>{{ case.properties.days_of_hospitalization }}</b></li>
+ <li>Death Case: <b>{{ case.properties.involve_wrongful_death }}</b></li>

@@ -54,7 +54,7 @@ class CustomValidator < ActiveRecord::Base
   def set_validation_rules
     self.instance_id ||= validatable.try(:instance_id)
     self.validation_rules ||= {}
-    self.required.to_i == 1 ? (self.validation_rules['presence'] = {}) : self.validation_rules.delete('presence')
+    self.required == true || self.required.try(:to_i) == 1 ? (self.validation_rules['presence'] = {}) : self.validation_rules.delete('presence')
     if self.min_length.present? || self.max_length.present?
       self.validation_rules['length'] = {}
       self.min_length.present? ? self.validation_rules['length']['minimum'] = self.min_length.to_i : self.validation_rules['length'].delete('minimum')

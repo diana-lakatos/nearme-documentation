@@ -3,7 +3,7 @@
     -
       name: "Tell us a little about your firm"
       fields:
-        - company: name
+        - user: company_name
         - company: address
         - company: phone
         - company: url
@@ -11,6 +11,7 @@
     -
       name: "Case representative and general details"
       fields:
+        - transactable: name
         - transactable: enabled
         - transactable: law_firm
         - transactable: principal_office
@@ -31,6 +32,7 @@
     -
       name: "General"
       fields:
+        - transactable: name
         - transactable: enabled
         - transactable: law_firm
         - transactable: principal_office
@@ -48,7 +50,7 @@
     -
       name: "Tell us a little about your firm"
       fields:
-        - company: name
+        - user: company_name
         - company: address
         - company: phone
         - company: url
@@ -56,6 +58,7 @@
     -
       name: "Case representative and general details"
       fields:
+        - transactable: name
         - transactable: enabled
         - transactable: law_firm
         - transactable: principal_office
@@ -110,6 +113,7 @@
     -
       name: "General"
       fields:
+        - transactable: name
         - transactable: enabled
         - transactable: law_firm
         - transactable: principal_office
