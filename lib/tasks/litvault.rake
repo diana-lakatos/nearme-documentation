@@ -207,6 +207,19 @@ namespace :litvault do
     def create_custom_attributes!
       create_transactable_type_attributes
       create_instance_profile_type_attributes
+      create_reservation_type_attributes
+    end
+
+    def create_reservation_type_attributes
+      puts "\nCustom reservation type attributes:"
+
+      custom_attributes = YAML.load_file(File.join(@theme_path, 'custom_attributes', 'reservation_types.yml'))
+
+      custom_attributes.keys.each do |rt_name|
+        puts "\n\t#{rt_name}:"
+        object = @instance.reservation_types.where(name: rt_name).first
+        update_custom_attributes_for_object(object, custom_attributes[rt_name])
+      end
     end
 
     def create_transactable_type_attributes
@@ -246,7 +259,21 @@ namespace :litvault do
     end
 
     def create_or_update_form_components!
-      puts "\nCreating form components:"
+      create_or_update_for_components_for_transactable_types
+      create_or_update_for_components_for_reservation_types
+
+      puts "\nUpdating existing form components"
+      existing = YAML.load_file(File.join(@theme_path, 'form_components', 'existing.yml'))
+
+      existing.keys.each do |id|
+        fc = FormComponent.find(id)
+        fc.update_attribute(:form_fields, existing[id])
+        puts "\t- #{fc.name}"
+      end
+    end
+
+    def create_or_update_for_components_for_transactable_types
+      puts "\nTransactable Types: Creating form components"
       transactable_types = YAML.load_file(File.join(@theme_path, 'form_components', 'transactable_types.yml'))
 
       transactable_types.keys.each do |tt_name|
@@ -257,14 +284,18 @@ namespace :litvault do
         object.form_components.destroy_all
         create_form_components_for_object(object, transactable_types[tt_name])
       end
+    end
 
-      puts "\nUpdating existing form components"
-      existing = YAML.load_file(File.join(@theme_path, 'form_components', 'existing.yml'))
+    def create_or_update_for_components_for_reservation_types
+      puts "\nReservation Types: Creating form components"
+      reservation_types = YAML.load_file(File.join(@theme_path, 'form_components', 'reservation_types.yml'))
+      reservation_types.keys.each do |rt_name|
+        puts "\n\t#{rt_name}:"
+        object = @instance.reservation_types.where(name: rt_name).first
 
-      existing.keys.each do |id|
-        fc = FormComponent.find(id)
-        fc.update_attribute(:form_fields, existing[id])
-        puts "\t- #{fc.name}"
+        puts "\t  Cleanup..."
+        object.form_components.destroy_all
+        create_form_components_for_object(object, reservation_types[rt_name])
       end
     end
 
