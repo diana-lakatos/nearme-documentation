@@ -386,6 +386,7 @@ class SecuredParams
       :show_currency_symbol,
       :show_currency_name,
       :no_cents_if_whole,
+      :google_maps_api_key,
       allowed_currencies: [],
       allowed_countries: [],
       custom_translations: [:'buy_sell_market.checkout.manual_payment', :'buy_sell_market.checkout.manual_payment_description'],
