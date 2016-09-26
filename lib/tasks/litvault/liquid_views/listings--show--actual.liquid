@@ -92,67 +92,61 @@
 
 
             <aside class="sidebar">
-                <ul class="actions-a">
-
-                    {% assign orders = current_user | get_enquirer_orders: listing %}
-                    {% assign can_make_offer = false %}
-                    {% if current_status == 'pending' %}
-                      {% if orders == empty %}
-                        {% assign can_make_offer = true %}
-                      {% else %}
-                        {% assign can_make_offer = true %}
-                        {% for order in orders %}
-                          {% if order.state == 'unconfirmed' %}
-                            {% assign can_make_offer = false %}
-                          {% endif %}
-                        {% endfor %}
-                      {% endif  %}
+              <ul class="actions-a">
+                {% assign orders = current_user | get_enquirer_orders: listing %}
+                {% assign can_make_offer = false %}
+                {% if orders == empty %}
+                  {% assign can_make_offer = true %}
+                {% else %}
+                  {% assign can_make_offer = true %}
+                  {% for order in orders %}
+                    {% if order.state == 'unconfirmed' %}
+                      {% assign can_make_offer = false %}
                     {% endif %}
-                    {% if can_make_offer == true %}
-                      <li>
-                        {% if current_user.has_verified_merchant_account == true %}
-                          <a class="btn btn-info" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id }}">Make an Offer</a>
-                        {% else %}
-                          <a class="btn btn-info" data-modal="true" data-href="{{ 'required_modal_dashboard_company_payouts_path' | generate_url }}">Make an Offer</a>
-                        {% endif %}
+                  {% endfor %}
+                {% endif  %}
 
-                      </li>
-                    {% endif %}
-                    <li>{{ listing.creator.click_to_call_button }}</li>
-                    {% if collaborator != blank %}
-                      <li><a class="button-b action-message" data-modal="true" data-href="{{ listing.creator.user_message_path }}">Send Message</a></li>
-                    {% endif %}
-                </ul>
-
-                {% if listing.properties.about_company != blank %}
-                <hr>
-
-                <h4>About Company</h4>
-                <p>{{ listing.properties.about_company }}</p>
-
+                {% if can_make_offer == true %}
+                  {{ transactable.name }}
+                  <li>
+                    <a class="button-b" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id }}">Bid</a>
+                  </li>
                 {% endif %}
-
-                <hr>
-
-                <ul class="company-properties">
-                  <li><b>{{ listing.creator.transactables_count }}</b> Cases Posted</li>
-                  <li><b>{{ listing.creator.completed_transactables_count }}</b> Cases Completed</li>
-                    <li>Member Since {{ listing.creator.created_at | to_date | l: 'short' }}</li>
-                </ul>
-
-                <hr>
-
-                {% if listing.creator.has_active_credit_cards? %}
-                  <p class="payment-verified">
-                      <strong>Payment Method Verified</strong>
-                  </p>
-
-                  <hr>
+                <li>{{ listing.creator.click_to_call_button }}</li>
+                {% if collaborator != blank %}
+                  <li><a class="button-b action-message" data-modal="true" data-href="{{ listing.creator.user_message_path }}">Send Message</a></li>
                 {% endif %}
+              </ul>
 
-                <ul class="actions-a">
-                    <li><a data-href="{{ listing.inappropriate_report_path }}" data-modal="true" class="button-b action-flag">Flag as inappropriate</a></li>
-                </ul>
+              {% if listing.properties.about_company != blank %}
+              <hr>
+
+              <h4>About Company</h4>
+              <p>{{ listing.properties.about_company }}</p>
+
+              {% endif %}
+
+              <hr>
+
+              <ul class="company-properties">
+                <li><b>{{ listing.creator.transactables_count }}</b> Cases Posted</li>
+                <li><b>{{ listing.creator.completed_transactables_count }}</b> Cases Completed</li>
+                  <li>Member Since {{ listing.creator.created_at | to_date | l: 'short' }}</li>
+              </ul>
+
+              <hr>
+
+              {% if listing.creator.has_active_credit_cards? %}
+                <p class="payment-verified">
+                    <strong>Payment Method Verified</strong>
+                </p>
+
+                <hr>
+              {% endif %}
+
+              <ul class="actions-a">
+                  <li><a data-href="{{ listing.inappropriate_report_path }}" data-modal="true" class="button-b action-flag">Flag as inappropriate</a></li>
+              </ul>
             </aside>
         </article>
     </div>
