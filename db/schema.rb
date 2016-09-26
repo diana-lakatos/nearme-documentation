@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160922143456) do
+ActiveRecord::Schema.define(version: 20160925222821) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2244,10 +2244,11 @@ ActiveRecord::Schema.define(version: 20160922143456) do
     t.string   "name"
     t.integer  "instance_id"
     t.datetime "deleted_at"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.hstore   "settings",      default: {}
-    t.boolean  "step_checkout", default: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+    t.hstore   "settings",                 default: {}
+    t.boolean  "step_checkout",            default: false
+    t.boolean  "require_merchant_account", default: false
   end
 
   add_index "reservation_types", ["instance_id"], name: "index_reservation_types_on_instance_id", using: :btree

@@ -6,7 +6,7 @@ partial: false
 {% else %}
   {% assign collaborator = current_user | find_collaborator: listing %}
   {% if collaborator.approved_by_owner? or current_user.id == listing.creator_id %}
-    {% include 'listings/show/actual.html' %}
+    {% include 'listings/show/actual.html', transactable: listing %}
   {% else %}
     {% include 'listings/ask_for_permission.html', collaborator: collaborator %}
   {% endif %}

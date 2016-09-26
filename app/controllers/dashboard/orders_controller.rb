@@ -1,6 +1,7 @@
 class Dashboard::OrdersController < Dashboard::BaseController
   before_action :find_order, except: [:index, :new]
   before_action :find_transactable, only: :new
+  before_action :find_reservation_type, only: :new
   before_action :redirect_to_index_if_not_editable, only: [:edit, :update]
   before_action :ensure_merchant_account_exists, only: [:new, :create]
 
@@ -79,7 +80,9 @@ class Dashboard::OrdersController < Dashboard::BaseController
   private
 
   def ensure_merchant_account_exists
-     unless @company.merchant_accounts.any? { |m| m.verified? }
+    return unless @reservation_type.require_merchant_account?
+
+    unless @company.merchant_accounts.any? { |m| m.verified? }
       flash[:notice] = t("flash_messages.dashboard.order.valid_merchant_account_required")
       redirect_to edit_dashboard_company_payouts_path(redirect_url: new_dashboard_order_path(transactable_id: @transactable.id))
     end
@@ -136,6 +139,10 @@ class Dashboard::OrdersController < Dashboard::BaseController
     @order = current_user.orders.find(params[:id])
   end
 
+  def find_reservation_type
+    @reservation_type = @transactable.transactable_type.reservation_type
+  end
+
   def reviews_service
     @reviews_service ||= ReviewsService.new(current_user, params)
   end
@@ -145,7 +152,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
   end
 
   def order_params
-    params.require(:order).permit(secured_params.order(@order.transactable.transactable_type.reservation_type))
+    params.require(:order).permit(secured_params.order(@reservation_type))
   end
 
 end
