@@ -2,7 +2,8 @@
   .input-container.col-xs-4
     .row
     - if ticket_message.user
-      = image_tag ticket_message.user.avatar.url(:medium)
+      = link_to  profile_path(ticket_message.user ), target: '_blank' do
+        = image_tag ticket_message.user.avatar.url(:medium)
     .row.name
       = ticket_message.full_name
     .row.time
