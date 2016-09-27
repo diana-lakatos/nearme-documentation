@@ -1,10 +1,13 @@
+- page_html_content = LiquidView.new(self).render(@page.html_content)
+
 - title @page.metadata_title.presence || @page.path
-- meta_description @page.metadata_meta_description.presence || truncate(strip_tags(@page.html_content.try(:squish)), length: 160)
+- meta_description @page.metadata_meta_description.presence || truncate(strip_tags(page_html_content.try(:squish)), length: 160)
 - canonical_url @page.metadata_canonical_url.presence || request.original_url
 
 = content_for :hero do
   = image_tag(@page.hero_image.url) if @page.hero_image.present?
+
 %style
   = @page.css_content
 
-= LiquidView.new(self).render(@page.html_content)
+= page_html_content
