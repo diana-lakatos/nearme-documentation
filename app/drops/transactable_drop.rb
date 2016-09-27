@@ -431,4 +431,10 @@ class TransactableDrop < BaseDrop
     @source.user_messages.where("author_id = :user_id OR thread_recipient_id = :user_id", user_id: @context['current_user'].id)
   end
 
+  def unavailable_periods
+    Time.use_zone(@source.timezone) do
+      @source.availability_exceptions.map(&:range)
+    end.to_json
+  end
+
 end

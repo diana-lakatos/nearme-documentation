@@ -77,8 +77,15 @@
   <div class="item-sidebar">
     <div class="item-actions">
       <ul>
-        <li class="separated"><a href="#" class="button button-default">REQUEST ITEM</a></li>
-        <li><a href="#" class="button button-default button-disabled">CHECK AVAILABILITY</a></li>
+        <li class="separated">
+          <form id="order_form_{{ listing.id }}" novalidate="novalidate" class="order" action="{{ 'listing_orders_path' | generate_url: listing }}" accept-charset="UTF-8" method="post">
+            <input name="utf8" type="hidden" value="">
+            <input name="authenticity_token" value="{{ form_authenticity_token }}" data-authenticity-token type="hidden">
+            <input value="{{ listing.id }}" type="hidden" name="order[transactable_id]" id="order_transactable_id">
+            <input value="{{ listing.action_type.pricings.first.id }}" type="hidden" name="order[transactable_pricing_id]" id="order_transactable_pricing_id">
+            <input type="submit" class="button button-default" value="REQUEST ITEM">
+          </form>
+        <li><a data-unavailable-periods="{{ listing.unavailable_periods }}" class="button button-default button-disabled">CHECK AVAILABILITY</a></li>
         <li>
           <div data-add-favorite-button="true" data-path="{{ listing.wish_list_path }}" data-wishlistable-type="{{ listing.class_name }}" data-link-to-classes="button button-default" data-path-bulk="{{ listing.wish_list_bulk_path }}" data-object-id="{{ listing.id }}" id="favorite-button-{{ listing.class_name }}-{{ listing.id }}">
             <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
