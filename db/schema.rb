@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160925222821) do
+ActiveRecord::Schema.define(version: 20160926185103) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -657,7 +657,7 @@ ActiveRecord::Schema.define(version: 20160925222821) do
     t.text     "validation_rules"
     t.text     "valid_values"
     t.datetime "deleted_at"
-    t.string   "label",                     limit: 255
+    t.text     "label"
     t.text     "input_html_options"
     t.text     "wrapper_html_options"
     t.text     "hint"
