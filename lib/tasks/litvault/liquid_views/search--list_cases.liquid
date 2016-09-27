@@ -1,21 +1,9 @@
 <section class="search-form-wrapper">
   <div class="container-fluid">
     <div class="search-form-inner">
-      <div class="search-form-type-toggle">
-        <h2>
-          <span class="struct-label">Current search type:</span>
-          <span class="current-type" tabindex="0">Case Search</span>
-        </h2>
-        <h3 class="struct-label">Change search type to:</h3>
-        <ul>
-          <li class="selected">
-            <a href="/search?transactable_type_id={{ searcher.transactable_types.first.id }}&amp;transactable_type_class=TransactableType">Case Search</a>
-          </li>
-          <li>
-            <a href="/search/people">People Search</a>
-          </li>
-        </ul>
-      </div>
+
+      {% include 'search/user-case-toggler', search_type: 'case' %}
+
       <form action="/search" method="get" class="search-form">
         <div class="fields">
           <input type="hidden" name="transactable_type_class" value="TransactableType">
@@ -94,12 +82,14 @@
         <article class="case-a search-result" id="case-{{ case.id }}">
 
           <header class="search-result-header">
-            {% assign collaborator = current_user | find_collaborator: case %}
-            {% if collaborator.approved_by_owner? or current_user.id == case.creator_id %}
-              <h3><a href="{{ case.url }}">{{ case.name }}</a></h3>
-            {% else %}
-              <h3><a href="#case-permission-request-{{ case.id }}" data-case-invite-trigger>{{ case.name }}</a></h3>
-            {% endif %}
+            <div class="h">
+              {% assign collaborator = current_user | find_collaborator: case %}
+              {% if collaborator.approved_by_owner? or current_user.id == case.creator_id %}
+                <h3><a href="{{ case.url }}">{{ case.name }}</a></h3>
+              {% else %}
+                <h3><a href="#case-permission-request-{{ case.id }}" data-case-invite-trigger>{{ case.name }}</a></h3>
+              {% endif %}
+            </div>
 
             <div class="search-result-meta-action">
               <button type="button" class="button-a inverted">Bid on Case</button>
@@ -112,7 +102,7 @@
             </div>
           </header>
 
-          <ul class="search-result-case-properties">
+          <ul class="search-result-properties">
             {% include 'search/case_properties', case: case %}
           </ul>
 
@@ -141,13 +131,13 @@
             </ul>
           </div>
           {% endif %}
-
-          <div class="case-invite modal" id="case-permission-request-{{ case.id }}" data-collaborations-url="{{ case.url }}"></div>
         </article>
+
+        <div class="case-invite" id="case-permission-request-{{ case.id }}" data-collaborations-url="{{ case.url }}"></div>
 
         <script>
           $(function(){
-            $(document).trigger('caseLoaded.litvault', 'case-{{case.id}}');
+            $(document).trigger('itemLoaded.litvault', 'case-{{case.id}}');
           });
         </script>
         {% endfor %}

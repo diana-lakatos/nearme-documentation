@@ -16,6 +16,7 @@
         - transactable: law_firm
         - transactable: principal_office
         - transactable: "Category - Group Case Categories"
+        - transactable: tags
 
     -
       name: "Describe the case"
@@ -63,6 +64,7 @@
         - transactable: law_firm
         - transactable: principal_office
         - transactable: "Category - Individual Case Categories"
+        - transactable: tags
 
     -
       name: "Engagement Agreement"
@@ -117,9 +119,10 @@
         - transactable: enabled
         - transactable: law_firm
         - transactable: principal_office
-        - transactable: "Category - Individual Case Categories"
         - transactable: client_name
         - transactable: client_dob
+        - transactable: "Category - Individual Case Categories"
+        - transactable: tags
 
     -
       name: "Engagement Agreement"
