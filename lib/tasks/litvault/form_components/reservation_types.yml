@@ -49,6 +49,7 @@
         - reservation: agreement_will_be_constructed_state_law
         - reservation: disputes_with_referring_firm_by_arbitration_aaa_aaarules
         - reservation: any_additional_language_dispute_resolution
+        - reservation: additional_comments_for_dispute_resolution
         - reservation: no_partnership_created
         - reservation: any_additional_language_to_any_other_matter
         - reservation: additional_comments_for_any_other_matter
@@ -109,6 +110,7 @@
         - reservation: agreement_will_be_constructed_state_law
         - reservation: disputes_with_referring_firm_by_arbitration_aaa_aaarules
         - reservation: any_additional_language_dispute_resolution
+        - reservation: additional_comments_for_dispute_resolution
         - reservation: handling_firm_shall_have_the_sole_discretion_to_terminate
         - reservation: no_partnership_created
         - reservation: any_additional_language_to_any_other_matter
