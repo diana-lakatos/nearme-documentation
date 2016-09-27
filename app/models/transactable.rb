@@ -164,6 +164,7 @@ class Transactable < ActiveRecord::Base
   end
 
   # == Scopes
+  scope :with_orders, -> { joins(:transactable_line_items).distinct('transactables.id') }
   scope :purchasable, -> { joins(:action_type).where("transactable_action_types.enabled = true AND transactable_action_types.type = 'Transactable::PurchaseAction'") }
   scope :featured, -> { where(featured: true) }
   scope :draft, -> { where('transactables.draft IS NOT NULL') }

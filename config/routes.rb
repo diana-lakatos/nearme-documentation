@@ -877,6 +877,8 @@ DesksnearMe::Application.routes.draw do
           post :create_bulk, on: :collection
         end
 
+        get 'offers', controller: 'transactables', action: :orders, with_orders: true
+
         resources :transactables do
           member do
             get :enable

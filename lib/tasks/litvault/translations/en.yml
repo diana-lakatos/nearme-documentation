@@ -15,6 +15,12 @@ en:
     collaboration_cancelled: Case details request cancelled
 
   dashboard:
+    orders:
+      state:
+        unconfirmed: "Cases Open"
+        confirmed: "Cases Accepted"
+        completed: "Cases Closed"
+        archived: "Cases Closed"
     analytics:
       bookings: 'Offers'
       columns:
