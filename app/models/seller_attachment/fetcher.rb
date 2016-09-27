@@ -12,11 +12,11 @@ class SellerAttachment::Fetcher
   end
 
   def has_access_to?(attachment)
-
     raise ArgumentError if attachment.access_level == 'disabled'
     return true if attachment.accessible_to_all?
     return false if @user.nil?
     return true if attachment.user_id == @user.id
+    return true if attachment.assetable.creator_id == @user.id
     return !!@user if attachment.accessible_to_users?
 
     if attachment.assetable.is_a?(Transactable)
