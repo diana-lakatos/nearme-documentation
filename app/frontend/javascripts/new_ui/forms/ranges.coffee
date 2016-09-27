@@ -1,17 +1,21 @@
 ranges = (context = 'body')->
-  $rangeInput = $(context).find('input[type=range]')
-  $outputLeft = $(context).find('.range-output-left')
-  $outputRight = $(context).find('.range-output-right')
-  max = $rangeInput.attr('max')
 
-  calculateOutput = ->
+  calculateOutput = ($rangeInput, $outputLeft, $outputRight, max) ->
     per = ((max - $rangeInput.val())*100)/max
     $outputLeft.text(100-per + '%')
     $outputRight.text(per + '%')
 
-  $rangeInput.on 'change', ->
-    calculateOutput()
+  initializeRange = ->
+    $rangeInput = $(this).find('input[type=range]')
+    $outputLeft = $(this).find('.range-output-left')
+    $outputRight = $(this).find('.range-output-right')
+    max = $rangeInput.attr('max')
 
-  calculateOutput()
+    $rangeInput.on 'change', ->
+      calculateOutput($rangeInput, $outputLeft, $outputRight, max)
+
+    calculateOutput($rangeInput, $outputLeft, $outputRight, max)
+
+  $(context).each(initializeRange)
 
 module.exports = ranges

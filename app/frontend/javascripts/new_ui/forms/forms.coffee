@@ -79,7 +79,7 @@ module.exports = class Forms
 
     require.ensure './ranges', (require)->
       ranges = require('./ranges')
-      ranges(context)
+      ranges(els)
 
   initialize: (context = 'body')->
     @hints(context)
