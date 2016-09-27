@@ -15,7 +15,7 @@
         .box-a
           %h2
             = t :about
-          = simple_format auto_link(@user.properties.try(:about_me))
+          = videoify_and_parse_with_markdown(@user.properties.try(:about_me).to_s, { iframe_width: 350, iframe_height: 276 })
 
         - video_embed_code = user_video_embed_html(@user)
         - if video_embed_code.present?
