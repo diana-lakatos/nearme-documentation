@@ -9,8 +9,6 @@ module GoogleMapsHelper
     google_maps_api_url('staticmap', params)
   end
 
-  private
-
   def google_maps_params(options = {})
     options = options.reverse_merge(
       width: 640,
@@ -37,6 +35,9 @@ module GoogleMapsHelper
   end
 
   def google_maps_api_url(endpoint, params = {})
-    "http#{'s' if request.ssl?}://maps.googleapis.com/maps/api/#{endpoint}?#{params.to_query}"
+    instance = PlatformContext.current.instance
+    params = params.merge(key: instance.google_maps_api_key) if instance.google_maps_api_key.present?
+
+    "http#{'s' if request.ssl?}://maps.googleapis.com/maps/api/#{endpoint}?#{params.to_query}".html_safe
   end
 end

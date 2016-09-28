@@ -65,7 +65,7 @@
     = javascript_tag do
       = javascript_i18n_include_tag
 
-    = javascript_include_tag '//maps.googleapis.com/maps/api/js?libraries=places'
+    = javascript_include_tag google_maps_api_url(:js, libraries: :places)
 
     = webpack_manifest_script
     = webpack_bundle_tag 'common'

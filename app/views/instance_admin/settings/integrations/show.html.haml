@@ -11,6 +11,13 @@
 
   .content-container
     %h4
+      = t('instance_admin.settings.configuration.api_settings')
+    .row
+      .input-container.col-xs-12
+        = f.input :google_maps_api_key, required: false, input_html: { class: 'form-control' }
+
+  .content-container
+    %h4
       = t('instance_admin.settings.configuration.user_authorization')
     .row
       .input-container.col-xs-12

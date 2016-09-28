@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160921112328) do
+ActiveRecord::Schema.define(version: 20160926111627) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1368,6 +1368,7 @@ ActiveRecord::Schema.define(version: 20160921112328) do
     t.boolean  "show_currency_symbol",                                                              default: true,          null: false
     t.boolean  "show_currency_name",                                                                default: false,         null: false
     t.boolean  "no_cents_if_whole",                                                                 default: true,          null: false
+    t.string   "encrypted_google_maps_api_key",                                                     default: "",            null: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
