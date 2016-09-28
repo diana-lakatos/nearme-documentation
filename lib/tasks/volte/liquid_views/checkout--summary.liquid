@@ -1,7 +1,7 @@
 <h2>Request Item</h2>
 <hr/>
 <p>{{ current_user.name }} is asking to borrow this item:</p>
-<a href="{{ @order.transactable.show_path">{{ @order.transactable.name }}</a>
+<a href="{{ @order.transactable.show_path }}">{{ @order.transactable.name }}</a>
 <p>
   <input type='checkbox' id="order_agree_on_terms" name="order[properties_attributes][agree_on_terms]"/>
   <label for="order_agree_on_terms">You agree to the bond value terms and conditions. Read Terms.</label>

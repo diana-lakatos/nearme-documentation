@@ -184,6 +184,10 @@ class PlatformContextDrop < BaseDrop
     @instance.split_registration?
   end
 
+  def rails_env
+    Rails.env
+  end
+
   private
 
   def theme_color(color)

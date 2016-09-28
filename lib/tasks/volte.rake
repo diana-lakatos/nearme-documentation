@@ -92,7 +92,11 @@ namespace :volte do
 
       fc = transactable_type.reservation_type.form_components.first
       fc.name = 'Request Item'
-      fc.form_fields = [{'reservation' => 'payment_documents'}]
+      fc.form_fields = [
+        {'reservation' => 'payment_documents'},
+        {'reservation' => 'dates'},
+        {'reservation' => 'price'}
+      ]
       fc.save
     end
 

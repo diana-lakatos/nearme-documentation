@@ -433,8 +433,8 @@ class TransactableDrop < BaseDrop
 
   def unavailable_periods
     Time.use_zone(@source.timezone) do
-      @source.availability_exceptions.map(&:range)
-    end.to_json
+      @source.availability_exceptions.map(&:range).to_json
+    end
   end
 
 end
