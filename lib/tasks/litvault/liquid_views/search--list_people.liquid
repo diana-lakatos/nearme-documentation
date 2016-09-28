@@ -103,49 +103,37 @@
                 </ul>
               </div>
               <div class="description">
-                <p>{{ user.display_location }}</p>
-
                 {% assign group_category = user.formatted_buyer_categories["Group Case Categories"] %}
                 {% assign individual_category = user.formatted_buyer_categories['Individual Case Categories'] %}
 
-                {% if group_category.children.size > 0 || individual_category.children.size > 0 ||  user.buyer_properties.bio != blank %}
-                  <div class="content">
-                    <div class="props">
-                      {% if group_category.children.size > 0 %}
-                        <div class="prop">
-                          <h3>Group Cases</h3>
-                          <ul class="short-list">
-                            {% for cat in group_category.children %}
-                            <li>{{ cat | rotate }}</li>
-                            {% endfor %}
-                          </ul>
-                        </div>
-                      {% endif %}
+                {% if group_category.children.size > 0 %}
+                  <h3>Group Cases</h3>
+                  <ul class="short-list">
+                    {% for cat in group_category.children %}
+                    <li>{{ cat[-1] }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
 
-                      {% if individual_category.children.size > 0 %}
-                        <div class="prop">
-                          <h3>Individual Cases</h3>
-                          <ul class="short-list">
-                            {% for cat in individual_category.children %}
-                            <li>{{ cat | rotate }}</li>
-                            {% endfor %}
-                          </ul>
-                        </div>
-                      {% endif %}
+                {% if individual_category.children.size > 0 %}
+                  <h3>Individual Cases</h3>
+                  <ul class="short-list">
+                    {% for cat in individual_category.children %}
+                    <li>{{ cat[-1] }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+
+                {% if user.buyer_properties.bio != blank %}
+                  <h3>Bio</h3>
+                  {% if user.buyer_properties.bio.size > 350 %}
+                     <div data-shorten-description>
+                    <p data-description>{{ user.buyer_properties.bio | slice: 0, 350 | nl2br }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
+                    <div style='display: none;'  class="rest_of_text">{{ user.buyer_properties.bio | slice: 350, user.buyer_properties.bio.size | nl2br }}</div>
                     </div>
-
-                    {% if user.buyer_properties.bio != blank %}
-                      <h3>Bio</h3>
-                      {% if user.buyer_properties.bio.size > 350 %}
-                         <div data-shorten-description>
-                        <p data-description>{{ user.buyer_properties.bio | slice: 0, 350 | nl2br }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
-                        <div style='display: none;'  class="rest_of_text">{{ user.buyer_properties.bio | slice: 350, user.buyer_properties.bio.size | nl2br }}</div>
-                        </div>
-                      {% else %}
-                        <p>{{ user.buyer_properties.bio | nl2br }}</p>
-                      {% endif %}
-                    {% endif %}
-                  </div>
+                  {% else %}
+                    <p>{{ user.buyer_properties.bio | nl2br }}</p>
+                  {% endif %}
                 {% endif %}
               </div>
             </div>
