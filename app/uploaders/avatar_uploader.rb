@@ -30,15 +30,6 @@ class AvatarUploader < BaseUploader
 
   ASPECT_RATIO = 1
 
-  # tmp hack to make avatars work
-  def instance_id
-    instance_id_nil
-  end
-
-  def legacy_store_dir
-    "media/#{model.class.to_s.underscore}/#{model.id}/#{mounted_as}"
-  end
-
   version :thumb, from_version: :transformed, if: :delayed_processing? do
     process dynamic_version: :thumb
   end
@@ -78,7 +69,5 @@ class AvatarUploader < BaseUploader
     model.update_attribute(:avatar_transformation_data, nil)
   end
 
-  def instance_id
-    instance_id_nil
-  end
 end
+
