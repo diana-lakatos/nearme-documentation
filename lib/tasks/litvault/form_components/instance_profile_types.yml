@@ -25,7 +25,7 @@
   - buyer: googleplus_url
   - buyer: Category - Group Case Categories
   - buyer: Category - Individual Case Categories
-  - user: current_address
+  - buyer: states
 
 # seller profile
 5401:
@@ -33,4 +33,3 @@
   - user: email
   - user: password
   - user: company_name
-  - user: current_address

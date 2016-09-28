@@ -1,10 +1,6 @@
 "Individual Case checkout":
   name_of_client_or_clients:
     label: 'Name(s) of Client(s): If multiple names, enter "," in between Names'
-    attribute_type: 'string'
-    html_tag: 'input'
-    public: true
-    required: false
 
   #
   # Fees
@@ -17,22 +13,14 @@
     min_value: 0
     max_value: 100
     step: 5
-    public: true
-    required: false
 
   fee_split_shall_not_affect_fee_paid:
     label: 'The above fee split shall not affect the amount of fees to be paid by Client(s) as set forth in the Engagement Agreement.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   engage_other_counsel:
     label: 'Is it possible that local counsel, other than Handling Firm, will need to be engaged?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   attorney_additional_firm_fee_split:
@@ -42,22 +30,14 @@
     min_value: 0
     max_value: 100
     step: 5
-    public: true
-    required: false
 
   handling_firm_has_sole_discretion_for_terms:
     label: 'Handling Firm will have sole discretion to associate local counsel on whatever terms deemed appropriate.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   claims_will_be_subject_to_assessments:
     label: 'Is it possible that the Claims will be the subject of Multi-District Litigation or the potential for common benefit fee or expense assessments imposed against the Firms?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   claims_will_be_subject_to_assessments_percentage:
@@ -67,22 +47,15 @@
     min_value: 0
     max_value: 100
     step: 5
-    public: true
-    required: false
 
   additional_language_to_be_included:
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to fees?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   additional_language_that_needs_to_be_included:
     label: 'Please add any additional language or provisions you wish to include regarding fees.'
-    attribute_type: 'string'
     html_tag: 'textarea'
-    public: true
     required: true
     max_length: 2500
 
@@ -92,18 +65,12 @@
 
   attorneys_to_pay_litigation_expenses:
     label: 'Does the Engagement Agreement require attorneys to pay or advance litigation expenses related to the Claims?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   engagement_agreement_contain_sufficient_definition_of_expenses:
     label: 'Does the Engagement Agreement contain a definition of expenses with sufficient specificity that you do not need another definition of expenses?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   expenses_per_engagement_agreement_split:
@@ -113,8 +80,6 @@
     min_value: 0
     max_value: 100
     step: 5
-    public: true
-    required: false
 
   firm_agrees_to_this_litigation_expense_split:
     label: 'The Firms agree that any litigation expenses will be split as follows:'
@@ -123,29 +88,19 @@
     min_value: 0
     max_value: 100
     step: 5
-    public: true
-    required: false
 
   each_firm_responsible_to_pay_own_inhouse_expenses:
     label: 'Notwithstanding the above, each Firm is responsible to pay its own in-house firm expenses and overhead.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   additional_language_for_expenses:
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to expenses?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   additional_comments_for_expenses:
     label: 'Please add any additional language or provisions you wish to include regarding expenses.'
-    attribute_type: 'string'
     html_tag: 'textarea'
-    public: true
     required: true
     max_length: 2500
 
@@ -155,38 +110,24 @@
 
   handling_firm_will_take_responsibility_for_litigation:
     label: 'Handling Firm will take principal responsibility for litigation strategy and handling the litigation, for negotiating a settlement, for receiving and disbursing any recoveries.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   both_firms_agree_to_maintain_join_responsibility:
     label: 'Both Firms agree to maintain joint responsibility for the Client on the Claims and will maintain adequate staffing to comply with their responsibilities.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   both_firms_agree_to_maintain_malpractice_insurance:
     label: 'Both Firms separately agree to maintain malpractice or professional liability insurance coverage at least $1 million per occurrence.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   any_additional_language_to_be_included_case_responsibilities:
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to case responsibilities?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   additional_comments_for_responsibilities:
     label: 'Please add any additional language or provisions you wish to include regarding responsibilities.'
-    attribute_type: 'string'
     html_tag: 'textarea'
-    public: true
     required: true
     max_length: 2500
 
@@ -196,117 +137,72 @@
 
   handling_firm_received_copy_of_signed_engagement_agreement:
     label: 'Handling Firm has received a copy of the signed Engagement Agreement between Referring Firm and Client pertaining to the Claims.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   client_written_consent_to_agreement_required:
     label: 'Is the Client’s written consent to this Agreement and the association of Handling Firm required?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   refering_firm_responsible_for_written_consent:
     label: 'Do you wish for Referring Firm to be responsible for obtaining necessary written consent from Client relating to this Agreement and the association of Handling Firm on the Claims?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   agreement_is_not_effective_until_client_signs_consent:
     label: 'Would you prefer the Agreement to state: “This Agreement is not effective until Client signs a written consent to the association of the Firms on the Claims.”'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   nothing_in_this_agreement_will_change:
     label: 'Nothing in this Agreement will change or alter Client’s duties, responsibilities or rights under the terms of the Engagement Agreement.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   sole_agreement_of_the_firms:
     label: 'This is the sole agreement of the Firms on this subject matter and may only be modified or amended in writing signed by both Firms.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   undersigned_has_authority_to_enter_this_agreement:
     label: 'By signing below, the undersigned represents that he or she has authority to enter this agreement on behalf of the Firm on whose behalf the signature is made.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   agreement_will_be_constructed_state_law:
     label: 'This Agreement will be construed in accordance with law of the State without regard to conflicts of law principals.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   disputes_with_referring_firm_by_arbitration_aaa_aaarules:
     label: 'Do you wish to have disputes with Referring Firm resolved by binding arbitration with the American Arbitration Association (“AAA”) applying the AAA’s Commercial Arbitration Rules?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   any_additional_language_dispute_resolution:
     label: 'do you have any additional language you wish to include in this Agreement pertaining to dispute resolution?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   additional_comments_for_dispute_resolution:
     label: 'Please add any additional language or provisions you wish to include regarding dispute resolution.'
-    attribute_type: 'string'
     html_tag: 'textarea'
-    public: true
     required: true
     max_length: 2500
 
   no_partnership_created:
     label: 'This Agreement is not intended to create a partnership or joint venture between the Firms.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   any_additional_language_to_any_other_matter:
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to any other matter?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   additional_comments_for_any_other_matter:
     label: 'Please add any additional language or provisions you wish to include.'
-    attribute_type: 'string'
     html_tag: 'textarea'
-    public: true
-    required: false
     max_length: 2500
 
 "Group Case checkout":
   name_of_client_or_clients:
     label: 'Name(s) of Client(s): If multiple names, enter "," in between Names'
-    attribute_type: 'string'
-    html_tag: 'input'
-    public: true
-    required: false
 
   #
   # Fees
@@ -319,22 +215,14 @@
     min_value: 0
     max_value: 100
     step: 5
-    public: true
-    required: false
 
   fee_split_shall_not_affect_fee_paid:
     label: 'The above fee split shall not affect the amount of fees to be paid by Client(s) as set forth in the Engagement Agreement.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   engage_other_counsel:
     label: 'Is it possible that local counsel, other than Handling Firm, will need to be engaged?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   attorney_additional_firm_fee_split:
@@ -344,22 +232,14 @@
     min_value: 0
     max_value: 100
     step: 5
-    public: true
-    required: false
 
   handling_firm_has_sole_discretion_for_terms:
     label: 'Handling Firm will have sole discretion to associate local counsel on whatever terms deemed appropriate.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   claims_will_be_subject_to_assessments:
     label: 'Is it possible that the Claims will be the subject of Multi-District Litigation or the potential for common benefit fee or expense assessments imposed against the Firms?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   claims_will_be_subject_to_assessments_percentage:
@@ -369,29 +249,19 @@
     min_value: 0
     max_value: 100
     step: 5
-    public: true
-    required: false
 
   fees_recovered_shall_be_divided_on_join_responsibility:
     label: 'Notwithstanding the division of responsibilities above, attorneys’ fees recovered from the Claims shall be divided on the basis of joint responsibility.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   additional_language_to_be_included:
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to fees?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   additional_language_that_needs_to_be_included:
     label: 'Please add any additional language or provisions you wish to include regarding fees.'
-    attribute_type: 'string'
     html_tag: 'textarea'
-    public: true
     required: true
     max_length: 2500
 
@@ -401,18 +271,12 @@
 
   attorneys_to_pay_litigation_expenses:
     label: 'Will attorneys be required to pay or advance litigation expenses related to the Claims?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   engagement_agreement_contain_sufficient_definition_of_expenses:
     label: 'Does the Engagement Agreement contain a definition of expenses with sufficient specificity that you do not need another definition of expenses?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   expenses_per_engagement_agreement_split:
@@ -422,8 +286,6 @@
     min_value: 0
     max_value: 100
     step: 5
-    public: true
-    required: false
 
   firm_agrees_to_this_litigation_expense_split:
     label: 'The Firms agree that any litigation expenses will be split as follows:'
@@ -432,29 +294,19 @@
     min_value: 0
     max_value: 100
     step: 5
-    public: true
-    required: false
 
   each_firm_responsible_to_pay_own_inhouse_expenses:
     label: 'Notwithstanding the above, each Firm is responsible to pay its own in-house firm expenses and overhead.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   additional_language_for_expenses:
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to expenses?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   additional_comments_for_expenses:
     label: 'Please add any additional language or provisions you wish to include regarding expenses.'
-    attribute_type: 'string'
     html_tag: 'textarea'
-    public: true
     required: true
     max_length: 2500
 
@@ -464,38 +316,24 @@
 
   handling_firm_will_take_responsibility_for_litigation:
     label: 'Handling Firm will take principal responsibility for litigation strategy and handling the litigation, for negotiating a settlement, for receiving and disbursing any recoveries.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   both_firms_agree_to_maintain_join_responsibility:
     label: 'Both Firms agree to maintain joint responsibility for the Client on the Claims and will maintain adequate staffing to comply with their responsibilities.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   both_firms_agree_to_maintain_malpractice_insurance:
     label: 'Both Firms separately agree to maintain malpractice or professional liability insurance coverage at least $1 million per occurrence.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   any_additional_language_to_be_included_case_responsibilities:
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to case responsibilities?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   additional_comments_for_responsibilities:
     label: 'Please add any additional language or provisions you wish to include regarding responsibilities.'
-    attribute_type: 'string'
     html_tag: 'textarea'
-    public: true
     required: true
     max_length: 2500
 
@@ -505,120 +343,73 @@
 
   handling_firm_received_copy_of_signed_engagement_agreement:
     label: 'Referring Firm has uploaded a copy of the form Engagement Agreement used by Referring Firm pertaining to the Claims and Handling Firm has reviewed same.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   handling_firm_approves_engagement_agreement:
     label: 'Handling Firm approves the form Engagement Agreement used by Referring Firm pertaining to the Claims.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   client_written_consent_to_agreement_required:
     label: 'Are Clients’ written consent to this Agreement and the association of Handling Firm required?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   refering_firm_responsible_for_written_consent:
     label: 'Do you wish for Referring Firm to be responsible for obtaining necessary written consent from Client relating to this Agreement and the association of Handling Firm on the Claims?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   agreement_is_not_effective_until_client_signs_consent:
     label: 'Would you prefer the Agreement to state: “This Agreement is not effective until Client signs a written consent to the association of the Firms on the Claims.”'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   nothing_in_this_agreement_will_change:
     label: 'Nothing in this Agreement will change or alter Client’s duties, responsibilities or rights under the terms of the Engagement Agreement.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   sole_agreement_of_the_firms:
     label: 'This is the sole agreement of the Firms on this subject matter and may only be modified or amended in writing signed by both Firms.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   undersigned_has_authority_to_enter_this_agreement:
     label: 'By signing below, the undersigned represents that he or she has authority to enter this agreement on behalf of the Firm on whose behalf the signature is made.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   agreement_will_be_constructed_state_law:
     label: 'This Agreement will be construed in accordance with law of the State without regard to conflicts of law principals.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   disputes_with_referring_firm_by_arbitration_aaa_aaarules:
     label: 'Do you wish to have disputes with Referring Firm resolved by binding arbitration with the American Arbitration Association (“AAA”) applying the AAA’s Commercial Arbitration Rules?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   any_additional_language_dispute_resolution:
     label: 'do you have any additional language you wish to include in this Agreement pertaining to dispute resolution?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   additional_comments_for_dispute_resolution:
     label: 'Please add any additional language or provisions you wish to include regarding dispute resolution.'
-    attribute_type: 'string'
     html_tag: 'textarea'
-    public: true
     required: true
     max_length: 2500
 
   handling_firm_shall_have_the_sole_discretion_to_terminate:
     label: 'Handling Firm shall have sole discretion to terminate representation with respect to any Client or Case for any reason, including but not limited to Handling Firm determination that a case is not be economically viable. In the event Handling Firm terminates representation for any Client or Case, (Autofill name of Handling Firm) shall also terminate representation on behalf of Referring Firm by communication in writing to the Client and carbon copy to Referring Firm.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   no_partnership_created:
     label: 'This Agreement is not intended to create a partnership or joint venture between the Firms.'
-    attribute_type: 'string'
     html_tag: 'check_box'
-    public: true
-    required: false
 
   any_additional_language_to_any_other_matter:
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to any other matter?'
-    attribute_type: 'string'
     html_tag: 'radio_buttons'
-    public: true
-    required: false
     valid_values: ['Yes', 'No']
 
   additional_comments_for_any_other_matter:
     label: 'Please add any additional language or provisions you wish to include.'
-    attribute_type: 'string'
     html_tag: 'textarea'
-    public: true
-    required: false
     max_length: 2500

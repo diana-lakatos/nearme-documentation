@@ -28,5 +28,13 @@ class SearcherDrop < BaseDrop
   def number_of_results
     [total_entries, (per_page * current_page)].min
   end
+
+  def meta_description
+    @context.registers[:action_view].meta_description_for_search(PlatformContext.current, @searcher.search)
+  end
+
+  def meta_title
+    @context.registers[:action_view].meta_title_for_search(PlatformContext.current, @searcher.search)
+  end
 end
 

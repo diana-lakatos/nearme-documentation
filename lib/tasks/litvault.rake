@@ -259,20 +259,12 @@ namespace :litvault do
     end
 
     def create_or_update_form_components!
-      create_or_update_for_components_for_transactable_types
-      create_or_update_for_components_for_reservation_types
-
-      puts "\nUpdating existing form components"
-      existing = YAML.load_file(File.join(@theme_path, 'form_components', 'existing.yml'))
-
-      existing.keys.each do |id|
-        fc = FormComponent.find(id)
-        fc.update_attribute(:form_fields, existing[id])
-        puts "\t- #{fc.name}"
-      end
+      create_or_update_form_components_for_transactable_types
+      create_or_update_form_components_for_reservation_types
+      create_or_update_form_components_for_instance_profile_types
     end
 
-    def create_or_update_for_components_for_transactable_types
+    def create_or_update_form_components_for_transactable_types
       puts "\nTransactable Types: Creating form components"
       transactable_types = YAML.load_file(File.join(@theme_path, 'form_components', 'transactable_types.yml'))
 
@@ -286,7 +278,21 @@ namespace :litvault do
       end
     end
 
-    def create_or_update_for_components_for_reservation_types
+    def create_or_update_form_components_for_instance_profile_types
+      puts "\nUpdating existing form components"
+      instance_profile_types = YAML.load_file(File.join(@theme_path, 'form_components', 'instance_profile_types.yml'))
+
+      instance_profile_types.keys.each do |id|
+        fc = FormComponent.find(id)
+        fc.update_attribute(:form_fields, instance_profile_types[id])
+        puts "\t- #{fc.name}:"
+        instance_profile_types[id].each do |object|
+          puts "\t\t- #{object.keys.first}: #{object.values.first}"
+        end
+      end
+    end
+
+    def create_or_update_form_components_for_reservation_types
       puts "\nReservation Types: Creating form components"
       reservation_types = YAML.load_file(File.join(@theme_path, 'form_components', 'reservation_types.yml'))
       reservation_types.keys.each do |rt_name|

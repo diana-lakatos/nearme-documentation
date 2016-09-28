@@ -1,7 +1,10 @@
 ---
 partial: false
 ---
+{% content_for :title %}{{ searcher.meta_title }}{% endcontent_for %}
+{% content_for :meta_description %}{{ searcher.meta_description }}{% endcontent_for %}
 {{ platform_context.set_render_content_outside_container }}
+
 {% if params['search_type'] contains 'people' %}
     {% include 'search/list_people.html' %}
 {% else %}
