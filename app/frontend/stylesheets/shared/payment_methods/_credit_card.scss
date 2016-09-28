@@ -28,9 +28,18 @@
     }
 }
 
-.form-horizontal .nm-new-credit-card-form {
-    @media (min-width: 960px) {
-        margin-left: 160px;
+.nm-credit-card-fields {
+
+    .control-group {
+        &.nm-credit-card-option-select {
+            .controls {
+                margin-left: 0;
+
+                span.radio {
+                    display: block;
+                }
+            }
+        }
     }
 }
 
@@ -52,7 +61,7 @@
         margin: 20px auto;
     }
 
-    @media (min-width: 600px) {
+    @media (min-width: 750px) {
         margin: 0 0 20px;
 
         h3 {
