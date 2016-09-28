@@ -59,12 +59,16 @@ class Listing::Search::Params
 
   def midpoint
     @midpoint ||= begin
-      if @options[:location].present?
+      if @options[:location].present? && is_numeric?(@options[:location][:lat]) && is_numeric?(@options[:location][:lon])
         [@options[:location][:lat], @options[:location][:lon]]
-      elsif @options[:lat].present? && @options[:lng].present?
+      elsif is_numeric?(@options[:lat]) && is_numeric?(@options[:lng])
         [@options[:lat], @options[:lng]]
       end
     end
+  end
+
+  def is_numeric?(str)
+    str.present? && Float(str) rescue false
   end
 
   def bounding_box
