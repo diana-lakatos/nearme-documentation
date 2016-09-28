@@ -2937,6 +2937,8 @@ ActiveRecord::Schema.define(version: 20160921112328) do
     t.datetime "updated_at"
     t.boolean  "confirm_reservations",                       default: true
     t.boolean  "allow_drafts",                               default: false, null: false
+    t.boolean  "send_alert_hours_before_expiry",             default: false, null: false
+    t.integer  "send_alert_hours_before_expiry_hours",       default: 0,     null: false
   end
 
   add_index "transactable_type_action_types", ["instance_id", "transactable_type_id", "deleted_at"], name: "instance_tt_deleted_at_idx", using: :btree
