@@ -16,22 +16,4 @@
     $(document).trigger('load:modal.nearme', ['#{new_listing_user_message_path(@listing)}']);
 
 = content_for :script do
-  :javascript
-    $("[data-booking-module-container]").each(function(index, el) {
-      el = $(el)
-      path = el.data('path')
-      collapsed = el.data('collapsed')
-      restore_reservations = el.data('restore-reservations')
-      start_date = el.data('start-date')
-      $.get(
-        path,
-        {
-          collapsed: collapsed,
-          restore_reservations: restore_reservations,
-          start_date: start_date
-        },
-        function(data) {
-          el.html(data);
-        }
-      );
-    });
+  = render 'data_booking_module_loader'
