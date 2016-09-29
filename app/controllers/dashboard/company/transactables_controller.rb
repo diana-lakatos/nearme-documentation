@@ -13,14 +13,6 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     @pending_transactables = pending_scope.order(order_param).paginate(page: params[:pending_page], per_page: 20)
   end
 
-  def orders
-    @transactables = transactables_scope.with_orders.order(order_param).paginate(page: params[:page], per_page: 20)
-
-    @in_progress_transactables = in_progress_scope.with_orders.order(order_param).paginate(page: params[:in_progress_page], per_page: 20)
-    @archived_transactables = archived_scope.with_orders.order(order_param).paginate(page: params[:archived_page], per_page: 20)
-    @pending_transactables = pending_scope.with_orders.order(order_param).paginate(page: params[:pending_page], per_page: 20)
-  end
-
   private
 
   def find_locations

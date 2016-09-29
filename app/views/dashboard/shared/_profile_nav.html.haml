@@ -2,6 +2,8 @@
 
   - tabs = []
 
+  - tabs.push({ name: t('dashboard.user_profile.sections.default'), url: dashboard_profile_path, active: ![:seller, :buyer].include?(active) })
+
   - if current_user.seller_profile.present? && current_instance.seller_profile_enabled? && current_user.seller_profile.has_fields?(FormComponent::SELLER_PROFILE_TYPES)
     - tabs.push({ name: t('dashboard.user_profile.sections.seller'), url: edit_dashboard_seller_path, active: active == :seller })
 

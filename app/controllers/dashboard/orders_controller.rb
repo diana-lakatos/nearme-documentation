@@ -152,7 +152,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
   end
 
   def order_params
-    params.require(:order).permit(secured_params.order(@reservation_type))
+    params.require(:order).permit(secured_params.order(@reservation_type || @order.reservation_type))
   end
 
 end

@@ -22,6 +22,7 @@ class RegistrationsController < Devise::RegistrationsController
   before_filter :find_supported_providers, :only => [:social_accounts, :update]
   after_filter :render_or_redirect_after_create, :only => [:create]
   before_filter :redirect_to_edit_profile_if_password_set, :only => [:set_password]
+  before_filter :set_user_profiles, only: [:edit]
 
   skip_before_filter :redirect_if_marketplace_password_protected, :only => [:store_geolocated_location, :store_google_analytics_id, :update_password, :set_password]
 
@@ -91,8 +92,6 @@ class RegistrationsController < Devise::RegistrationsController
     @country = current_user.country_name
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     build_approval_request_for_object(current_user) unless current_user.is_trusted?
-    @buyer_profile = resource.get_buyer_profile
-    @seller_profile = resource.get_seller_profile
     render :edit, layout: dashboard_or_community_layout
   end
 
@@ -370,6 +369,18 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   private
+
+  def set_user_profiles
+
+    if resource.buyer_profile.nil? && resource.seller_profile.nil?
+      resource.get_buyer_profile
+      resource.get_seller_profile
+    end
+
+    @buyer_profile = resource.buyer_profile
+    @seller_profile = resource.seller_profile
+  end
+
 
   def find_company
     @company = current_user.try(:companies).try(:first)
