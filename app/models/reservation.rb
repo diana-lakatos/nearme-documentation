@@ -34,8 +34,6 @@ class Reservation < Order
 
   state_machine :state, initial: :inactive do
     after_transition confirmed: [:cancelled_by_guest], do: [:charge_penalty!]
-
-    event :refund do transition :paid => :refunded; end
   end
 
   scope :for_transactable, -> (transactable) { where(:transactable_id => transactable.id) }

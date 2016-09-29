@@ -1,10 +1,10 @@
 <div class='panel'>
   <div class='panel-body'>
     {% if transactables.size > 0 %}
-      {% if is_client == "true" %}
-        {% include 'dashboard/company/transactables/client_listing.html' %}
+      {% if is_lister == "true" %}
+        {% include 'dashboard/company/transactables/lister_view.html' %}
       {% else %}
-        {% include 'dashboard/company/transactables/sme_listing.html' %}
+        {% include 'dashboard/company/transactables/enquirer_view.html' %}
       {% endif %}
     {% else %}
       <p class='empty-resultset'>

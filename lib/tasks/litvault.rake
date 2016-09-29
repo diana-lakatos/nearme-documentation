@@ -29,6 +29,7 @@ namespace :litvault do
 
       setup = LitvaultSetup.new(@instance, File.join(Rails.root, 'lib', 'tasks', 'litvault'))
       setup.update_settings
+      setup.create_payment_gateway!
       setup.create_transactable_types!
       setup.create_custom_attributes!
       setup.create_categories!
@@ -65,6 +66,22 @@ namespace :litvault do
                                   enquirer_blogs_enabled: true
                                  )
     end
+
+    def create_payment_gateway!
+      pg = PaymentGateway::StripePaymentGateway.first_or_initialize({
+        instance_id: 198,
+        test_settings: {
+          "login" => "sk_test_sPLnOkI5mvXCoUuaqi5j6djR"
+        },
+        test_active: true,
+      })
+
+      pg.payment_countries << Country.find_by_name('United States') if pg.payment_countries.blank?
+      pg.payment_currencies << Currency.find_by_iso_code('USD') if pg.payment_currencies.blank?
+      pg.payment_methods.build(active: true, payment_method_type: 'credit_card')
+      pg.save!
+    end
+
 
     def create_transactable_types!
       @instance.transactable_types.where.not(name: ['Individual Case', 'Group Case']).destroy_all
@@ -168,7 +185,8 @@ namespace :litvault do
         lessor: 'Lawyer',
         lessee: 'Client',
         enable_reviews: true,
-        auto_accept_invitation_as_collaborator: true
+        auto_accept_invitation_as_collaborator: true,
+        auto_seek_collaborators: true
       }
 
       transactable_type.offer_action ||= transactable_type.build_offer_action(
@@ -260,20 +278,12 @@ namespace :litvault do
     end
 
     def create_or_update_form_components!
-      create_or_update_for_components_for_transactable_types
-      create_or_update_for_components_for_reservation_types
-
-      puts "\nUpdating existing form components"
-      existing = YAML.load_file(File.join(@theme_path, 'form_components', 'existing.yml'))
-
-      existing.keys.each do |id|
-        fc = FormComponent.find(id)
-        fc.update_attribute(:form_fields, existing[id])
-        puts "\t- #{fc.name}"
-      end
+      create_or_update_form_components_for_transactable_types
+      create_or_update_form_components_for_reservation_types
+      create_or_update_form_components_for_instance_profile_types
     end
 
-    def create_or_update_for_components_for_transactable_types
+    def create_or_update_form_components_for_transactable_types
       puts "\nTransactable Types: Creating form components"
       transactable_types = YAML.load_file(File.join(@theme_path, 'form_components', 'transactable_types.yml'))
 
@@ -287,7 +297,21 @@ namespace :litvault do
       end
     end
 
-    def create_or_update_for_components_for_reservation_types
+    def create_or_update_form_components_for_instance_profile_types
+      puts "\nUpdating existing form components"
+      instance_profile_types = YAML.load_file(File.join(@theme_path, 'form_components', 'instance_profile_types.yml'))
+
+      instance_profile_types.keys.each do |id|
+        fc = FormComponent.find(id)
+        fc.update_attribute(:form_fields, instance_profile_types[id])
+        puts "\t- #{fc.name}:"
+        instance_profile_types[id].each do |object|
+          puts "\t\t- #{object.keys.first}: #{object.values.first}"
+        end
+      end
+    end
+
+    def create_or_update_form_components_for_reservation_types
       puts "\nReservation Types: Creating form components"
       reservation_types = YAML.load_file(File.join(@theme_path, 'form_components', 'reservation_types.yml'))
       reservation_types.keys.each do |rt_name|
@@ -632,12 +656,11 @@ namespace :litvault do
       def update_categories_for_object(tt, categories)
         puts "\t  Updating / creating categories:"
         categories.each do |name, hash|
-          hash = default_category_properties.merge(hash)
-          children = hash.delete('children') || []
+          hash = default_category_properties.merge(hash.symbolize_keys)
+          children = hash.delete(:children) || []
           category = Category.where(name: name).first_or_create!
           category.transactable_types = category.transactable_types.push(tt) if !category.transactable_types.include?(tt)
           category.instance_profile_types = category.instance_profile_types.push(InstanceProfileType.buyer.first) if hash.delete('assign_to_buyer_profile') && !category.instance_profile_types.include?(InstanceProfileType.buyer.first)
-          category.assign_attributes(hash.reject {|k,v| k == :children})
           category.save!
 
           puts "\t    - #{name}"
@@ -674,7 +697,7 @@ namespace :litvault do
         if attributes.size > 0
           puts "\t  Updating / creating attributes:"
           attributes.each do |name, attrs|
-            create_custom_attribute(object, name, default_attribute_properties.merge(attrs))
+            create_custom_attribute(object, name, default_attribute_properties.merge(attrs.symbolize_keys))
             puts "\t    - #{name}"
           end
         end

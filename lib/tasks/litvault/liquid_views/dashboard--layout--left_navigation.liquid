@@ -83,12 +83,9 @@
         {% assign new_transactable_selected = current_path | matches: '/transactables/new' %}
         {% assign transactables_visible = 'dashboard/transactables' | is_visible %}
         {% assign transactables_show = current_user.registration_completed? and transactables_visible %}
-        {% if current_user.buyer_profile == blank %}
-          {% assign order_items_path = 'dashboard_company_order_items_path' | generate_url %}
-        {% else %}
-          {% assign order_items_path = 'dashboard_order_items_path' | generate_url %}
-        {% endif %}
-        {% assign order_items_selected = current_path | matches: 'dashboard/(company/)?(orders/[0-9]*/)?order_items' %}
+        {% assign offers_path = '/dashboard/company/offers' %}
+
+        {% assign orders_selected = current_path | matches: 'dashboard/company/offers' %}
         {% if projects_show %}
           <li id="dashboard-nav_projects_header" class="{% if projects_selected %}selected{% endif %}">
             <span>{{ 'dashboard.nav.projects_header' | t }}</span>
@@ -102,7 +99,7 @@
 
         {% if transactables_show %}
           {% assign pending_transactables_count = current_user.pending_transactables_count %}
-          <li id="dashboard-nav-transactables" class="{% if new_transactable_selected or transactables_selected or order_items_selected %}selected{% endif %}">
+          <li id="dashboard-nav-transactables" class="{% if new_transactable_selected or transactables_selected or orders_selected %}selected{% endif %}">
             <span>
                 Manage Cases
                 {% if pending_transactables_count > 0 %}
@@ -118,18 +115,19 @@
                     </a>
                   </li>
                 {% endif %}
-                  <li id="dashboard-nav-transactables" class="{% if transactables_selected %}selected{% endif %}">
-                    <a href="{{ transactables_path }}">
-                        {{ 'dashboard.nav.transactables' | t }}
-                        {% if pending_transactables_count > 0 %}
-                        <span class="count">{{ pending_transactables_count }}</span>
-                        {% endif %}
-                    </a>
-                  </li>
 
-                  <li id="dashboard-nav-order_items" class="{% if order_items_selected %}selected{% endif %}">
-                    <a href="{{ order_items_path }}">{{ 'dashboard.nav.order_items' | t }}</a>
-                  </li>
+                <li id="dashboard-nav-transactables" class="{% if transactables_selected %}selected{% endif %}">
+                  <a href="{{ transactables_path }}">
+                      {{ 'dashboard.nav.transactables' | t }}
+                      {% if pending_transactables_count > 0 %}
+                      <span class="count">{{ pending_transactables_count }}</span>
+                      {% endif %}
+                  </a>
+                </li>
+
+                <li id="dashboard-nav-order_items" class="{% if orders_selected %}selected{% endif %}">
+                  <a href="{{ offers_path }}">My Offers</a>
+                </li>
               </ul>
           </li>
         {% endif %}
