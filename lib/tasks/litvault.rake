@@ -442,14 +442,13 @@ namespace :litvault do
 
     def create_liquid_views
       puts "\nCreating liquid views:"
+      @instance.instance_views.liquid_views.destroy_all
 
-      templates = get_templates_from_dir(File.join(@theme_path, 'liquid_views'), {
-        partial: true
-      })
+      templates = get_templates_from_dir(File.join(@theme_path, 'liquid_views'))
 
       templates.each do |template|
         create_liquid_view(template.liquid_path, template.body, template.partial)
-        puts "\t- #{template.name}"
+        puts "\t- #{template.liquid_path}"
       end
     end
 
@@ -538,8 +537,11 @@ namespace :litvault do
       end
 
       def get_templates_from_dir(template_folder, defaults = {})
-        template_files = Dir.entries(template_folder).select{ |e| File.file?(File.join(template_folder, e)) && e != '.keep' }
-        template_files.map! { |filename| load_file_with_yaml_front_matter(File.join(template_folder, filename), defaults) }
+        template_files = Dir.glob("#{template_folder}/**/*").select{ |path| File.file?(path) && /\.keep$/.match(path) == nil }
+        template_files.map! do |filename|
+          defaults[:partial] = /^_/.match(File.basename(filename)) != nil
+          load_file_with_yaml_front_matter(filename, template_folder, defaults)
+        end
       end
 
       def create_email(path, body)
@@ -608,7 +610,7 @@ namespace :litvault do
         })
       end
 
-      def load_file_with_yaml_front_matter(path, config = {})
+      def load_file_with_yaml_front_matter(path, template_folder, config = {})
         body = File.read(path)
         regex = /\A---(.|\n)*?---\n/
 
@@ -620,8 +622,8 @@ namespace :litvault do
         end
         config = config.merge({ body: body })
 
-        config["liquid_path"] ||= File.basename(path, '.*').gsub('--','/')
-        config["name"] ||= File.basename(path, '.*').gsub('--','/').humanize.titleize
+        config["liquid_path"] ||= path.sub("#{template_folder}/", '').gsub(/\.[a-z]+$/,'').gsub(/\/_(?=[^\/]+$)/,'/') # first remove folder path, then file extension, then `_` partial symbol
+        config["name"] ||= File.basename(path, '.*').sub(/^_/,'').humanize.titleize
         config["path"] ||= path
 
         OpenStruct.new(config)
