@@ -146,11 +146,11 @@
 
         <hr>
 
-        {% if case.tags.size > 0 %}
+        {% if listing.tags.size > 0 %}
         <div class="tags-a tags-short-list">
           <h4>Tags</h4>
           <ul>
-            {% for tag in case.tags %}
+            {% for tag in listing.tags %}
             <li><a href="?query_fields=tags&amp;query={{ tag.name }}">{{ tag.name }}</a></li>
             {% endfor %}
           </ul>
@@ -170,6 +170,10 @@
         </div>
 
         <hr>
+
+          <p class="payment-verified">
+            <strong>Payment Method Verified</strong>
+          </p>
 
         {% if listing.creator.has_active_credit_cards? %}
           <p class="payment-verified">
