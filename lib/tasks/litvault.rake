@@ -43,6 +43,7 @@ namespace :litvault do
       setup.create_smses
       setup.create_pages
       setup.create_translations
+      setup.create_workflow_alerts
 
       setup.expire_cache
       setup.create_dashboard_orders_tabs
@@ -297,6 +298,32 @@ namespace :litvault do
         object.form_components.destroy_all
         create_form_components_for_object(object, reservation_types[rt_name])
       end
+    end
+
+    def create_workflow_alerts
+      puts "\nCreating workflow alerts"
+      @offer_creator = Utils::DefaultAlertsCreator::OfferCreator.new.create_all!
+      @sign_up_creator = Utils::DefaultAlertsCreator::SignUpCreator.new
+
+      @sign_up_creator.create_guest_welcome_email!
+      @sign_up_creator.create_host_welcome_email!
+      @sign_up_creator.create_lister_onboarding_email!
+      @sign_up_creator.create_enquirer_onboarding_email!
+
+      @listing_creator = Utils::DefaultAlertsCreator::ListingCreator.new
+      @listing_creator.create_notify_lister_of_cancellation!
+      @listing_creator.create_notify_enquirer_of_completion!
+      @listing_creator.create_notify_collaborators_of_cancellation!
+
+      @user_message_creator = Utils::DefaultAlertsCreator::UserMessageCreator.new
+      @user_message_creator.create_user_message_created!
+
+      Utils::DefaultAlertsCreator::CollaboratorCreator.new.create_all!
+
+      Workflow.where(workflow_type: %w(request_for_quote reservation recurring_booking inquiry)).destroy_all
+      WorkflowAlert.where(alert_type: 'sms').destroy_all
+      alerts_to_be_destroyed = [ 'offer_mailer/notify_host_of_rejection' ]
+      WorkflowAlert.where(template_path: alerts_to_be_destroyed).destroy_all
     end
 
     def set_theme_options
