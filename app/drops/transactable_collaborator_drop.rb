@@ -21,7 +21,7 @@ class TransactableCollaboratorDrop < BaseDrop
   end
 
   def status
-    approved_by_owner_at.nil? ? 'Pending' : rejected_by_owner_at.nil? ? 'Accepted' : "Rejected"
+    approved_by_owner_at.nil? ? 'Pending' : rejected_by_owner_at.nil? ? 'Approved' : "Rejected"
   end
 end
 

@@ -1,15 +1,28 @@
 <div class="row">
   <div class="col-sm-6">Motorcycle | Broken Leg</div>
-  <div class="col-sm-6" style="text-align: right">Days of Hospitalization: 45</div>
+  <div class="col-sm-6" style="text-align: right">
+    {% if for_host %}
+      <a href='{{ transactable.edit_path }}' class="btn btn-primary">Edit Case</a>
+    {% endif %}
+  </div>
 </div>
 <div class="row">
   <div class="col-sm-6">Injury or Accident Date: 12/2/2015</div>
-  <div class="col-sm-6" style="text-align: right">Death Case: N</div>
+  <div class="col-sm-6" style="text-align: right">Days of Hospitalization: 45</div>
 </div>
 <div class="row">
   <div class="col-sm-6">Location of Injury or Accident: Missouri</div>
-  <div class="col-sm-6" style="text-align: right"></div>
+  <div class="col-sm-6" style="text-align: right">Death Case: N</div>
 </div>
 
-<p>{{ reservation.transactable.description | truncate: 500, "..." }}</p>
-<hr/>
+{% if transactable.description != blank %}
+    <h4>Description:</h4>
+    {% if transactable.description.size > 350 %}
+       <div data-shorten-description>
+        <p data-description>{{ transactable.description | slice: 0, 350 | nl2br }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
+        <div style='display: none;'  class="rest_of_text">{{ transactable.description | slice: 350, transactable.description.size | nl2br }}</div>
+      </div>
+    {% else %}
+      <p>{{ transactable.description | nl2br }}</p>
+    {% endif %}
+{% endif %}

@@ -1,0 +1,19 @@
+<ul class="actions-a">
+  {% if current_status != 'archived' %}
+    <li><a href="{{ transactable.show_path }}" class="btn btn-default">View Case Details</a></li>
+  {% endif %}
+  <li>
+    {% if order != blank and order.transactable_user_messages.size > 0 %}
+      <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: order.transactable_user_messages.first.id }}">{{ 'dashboard.order_items.send_message' | t}}</a>
+    {% else %}
+      <a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id, skip: true }}">{{ 'dashboard.order_items.send_message' | t}}</a>
+    {% endif %}
+  </li>
+{% comment %}  <li>
+    {% assign form_url = order.offer_cancel_url %}
+
+    {% form_for order, url: @form_url %}
+      <input type='submit' class="btn btn-warning" value='Close case'>
+    {% endform_for %}
+  </li>
+{% endcomment %}</ul>

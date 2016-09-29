@@ -1,0 +1,112 @@
+{% for transactable in transactables %}
+  {% assign transactable_collaborator = current_user  | find_collaborator: transactable %}
+  <article class="listing-b" id="transactable_{{transactable.id}}">
+    <h2>{{ transactable.name }}</h2>
+    <div class="row">
+      <div class="col-md-4 pull-right">
+        <h3>
+          {% if params.action == 'orders' %}
+            {% if transactable.state == 'pending' %}
+              Open
+            {% elsif transactable.state == 'completed' %}
+              Completed
+            {% else %}
+              Accepted
+            {% endif %}
+          {% else %}
+            {% if transactable_collaborator.approved_by_owner? %}
+              Access Approved
+            {% elsif transactable_collaborator.rejected_by_owner? %}
+              Access Rejected
+            {% else %}
+              Access Requested
+            {% endif %}
+          {% endif %}
+        </h3>
+      </div>
+    </div>
+
+
+    <div class="row">
+      {% include 'dashboard/user_reservations/reservation_details', reservation: reservation, for_host: false %}
+    </div>
+
+    {% if params.action == 'orders' %}
+      {% assign orders = current_user | get_enquirer_orders: transactable %}
+
+      {% if orders != empty %}
+        {% assign order = orders.last %}
+        <h3>Offer</h3>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Offer Date:</th>
+                <th>Offer Status:</th>
+                <th>Offer Action:</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{ order.created_at | to_date | l: 'short' }}</td>
+                <td>
+                  {{ 'reservations.states.' | append: order.state | t }}
+                </td>
+                {% if order.unconfirmed? %}
+                  <td>
+                    {% if order.unconfirmed? %}
+                      <a class="btn btn-info" href="{{ 'edit_dashboard_order_path' | generate_url: order.id }}">{{ 'general.edit' | t }}</a>
+                      <a class="btn btn-danger" href="{{ 'enquirer_cancel_dashboard_order_path' | generate_url: order.id }}" data-method="post" data-confirm="Are you sure you want to cancel?">{{ 'general.cancel' | t }}</a>
+                    {% endif %}
+                  </td>
+                {% elsif order.confirmed? %}
+                  <td>{{ order.confirmed_at | l: 'long' }}</td>
+                {% else %}
+                  <td>{{ order.archived_at | l: 'long' }}</td>
+                {% endif %}
+                {% if order.confirmed? %}
+                  <td><a href="{{ order.payment_documents[0].file_url }}" target="_blank">{{  order.payment_documents[0].file_name }}</a></td>
+                {% endif %}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+
+      <hr>
+      <div class="row">
+        <div class="col-md-3 pull-right">
+          {% include 'dashboard/company/transactables/enquirer_actions.html' %}
+        </div>
+      </div>
+
+    {% else %}
+      <h3>Request To View Case Details:</h3>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Handling Lawyer:</th>
+              <th>Date:</th>
+              <th>Status:</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td>{{ transactable_collaborator.user.name }}</td>
+                <td>{{ transactable_collaborator.created_at | to_date | l: 'short' }}</td>
+                <td>{{ transactable_collaborator.status }}</td>
+                <td><a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id, skip: true }}">Send message</a></td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {% if transactable_collaborator.approved_by_owner? %}
+        <a href="{{ transactable.show_path }}" class="btn btn-default">Project Details</a>
+      {% else %}
+        <a href="{{ transactable_collaborator.enquirerer_destroy_path }}" data-method="delete" data-confirm="Are you sure?" class="btn btn-default">Cancel Request</a>
+      {% endif %}
+    {% endif %}
+  </article>
+{% endfor %}
