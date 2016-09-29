@@ -107,7 +107,6 @@
                 {% endif  %}
 
                 {% if can_make_offer == true %}
-                  {{ transactable.name }}
                   <li>
                     <a class="button-b" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id }}">Bid</a>
                   </li>
