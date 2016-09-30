@@ -2,7 +2,7 @@ require 'nearme/acm'
 
 class InstanceAdmin::Settings::AwsCertificatesController < InstanceAdmin::Settings::BaseController
   respond_to :html
-  before_action :sync_certificate_statuses, only: :index
+  before_action :sync_certificate_statuses, only: [:index, :show]
 
   def index
     respond_with :instance_admin, :settings, collection
