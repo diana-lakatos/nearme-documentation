@@ -521,7 +521,6 @@ GEM
       multi_json
     launchy (2.4.3)
       addressable (~> 2.3)
-    le (2.6.1)
     linkedin-oauth2 (1.0.0)
       faraday (~> 0.9)
       hashie (~> 3.2)
@@ -1021,7 +1020,6 @@ DEPENDENCIES
   jsonapi-serializers!
   koala
   launchy
-  le
   linkedin-oauth2 (~> 1.0)
   liquid (= 3.0.6)
   mail_view (~> 2)
