@@ -47,10 +47,6 @@ class BaseUploader < CarrierWave::Uploader::Base
     "#{instance_prefix}/uploads/images/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
 
-  def legacy_store_dir
-    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
-  end
-
   def platform_context
     PlatformContext.current
   end
@@ -60,11 +56,8 @@ class BaseUploader < CarrierWave::Uploader::Base
   end
 
   def instance_id
-    (platform_context.present? ? platform_context.instance.id : instance_id_nil)
-  end
-
-  def instance_id_nil
-    'universal'
+    raise NotImplementedError.new('PlatformContext must be present to upload to s3') if platform_context.try(:instance).nil?
+    platform_context.instance.id
   end
 
   def versions_generated?
