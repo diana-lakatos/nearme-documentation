@@ -38,10 +38,6 @@ FactoryGirl.define do
       name "United Kingdom"
       numcode 826
       states_required true
-      instance_id nil
-      company_id nil
-      partner_id nil
-      user_id nil
       calling_code "44"
     end
   end

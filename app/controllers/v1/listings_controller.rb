@@ -3,14 +3,13 @@ class V1::ListingsController < V1::BaseController
   skip_before_filter :verify_authenticity_token, :only => [:create, :update, :destroy]
 
   # Endpoints that require authentication
-  before_filter :require_authentication,         only: [:create, :update, :destroy, :connections, :inquiry, :reservation, :share]
+  before_filter :require_authentication,         only: [:create, :update, :destroy, :connections, :reservation, :share]
   before_filter :find_listing,                   only: [:update, :destroy]
   before_filter :convert_price_params,           only: [:create, :update]
   before_filter :validate_search_params!,        only: :search
   before_filter :validate_query_params!,         only: :query
   before_filter :validate_reservation_params!,   only: :reservation
   before_filter :validate_availability_params!,  only: :availability
-  before_filter :validate_inquiry_params!,       only: :inquiry
 
   # Default error handler
   rescue_from ActiveRecord::RecordNotFound, with: :listing_not_found
@@ -78,16 +77,6 @@ class V1::ListingsController < V1::BaseController
   def availability
     listing = Transactable.find(params[:id])
     render :json => formatted_availability_for(listing, @dates)
-  end
-
-  def inquiry
-    listing = Transactable.find(params[:id])
-    @message = json_params["message"]
-
-    inquiry = listing.inquiry_from!(current_user, message: @message)
-    WorkflowStepJob.perform(WorkflowStep::InquiryWorkflow::Created, inquiry.id)
-
-    head :no_content
   end
 
   def share
@@ -195,10 +184,6 @@ class V1::ListingsController < V1::BaseController
     @dates.map! { |d| Date.parse d }.sort!
   rescue
     raise DNM::InvalidJSONData, "dates"
-  end
-
-  def validate_inquiry_params!
-    raise DNM::MissingJSONData, "message" if json_params["message"].blank?
   end
 
   def validate_share_params!

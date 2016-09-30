@@ -2,13 +2,6 @@ module Metadata
   module CompanyMetadata
     extend ActiveSupport::Concern
 
-    included do
-
-      def populate_industries_metadata!
-        update_metadata({ :industries_metadata => self.reload.industries.order('name').collect(&:name) })
-      end
-
-    end
-
+    # I guess we need this fake class
   end
 end

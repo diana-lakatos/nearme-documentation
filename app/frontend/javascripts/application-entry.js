@@ -202,30 +202,6 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    var els = $('.become-a-partner');
-    if (els.length === 0) {
-        return;
-    }
-
-    require.ensure('./sections/partner_inquiries/partner_controller', function(require){
-        var PartnerController = require('./sections/partner_inquiries/partner_controller');
-        return new PartnerController($('body'));
-    });
-});
-
-DNM.registerInitializer(function(){
-    var els = $('#signup');
-    if (els.length === 0) {
-        return;
-    }
-
-    require.ensure('./sections/partner_inquiries/partner_controller', function(require){
-        var PartnerController = require('./sections/partner_inquiries/partner_controller');
-        return new PartnerController($('body'));
-    });
-});
-
-DNM.registerInitializer(function(){
     $(document).on('init:signinform.nearme', function(){
         require.ensure('./sections/signin_form', function(require){
             var SigninForm = require('./sections/signin_form');

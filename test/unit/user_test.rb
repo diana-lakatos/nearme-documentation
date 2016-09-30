@@ -560,7 +560,7 @@ class UserTest < ActiveSupport::TestCase
       assert_equal [@user.email], sent_mail.to
 
       assert sent_mail.html_part.body.encoded.include?('1.888.998.3375'), "Body did not include expected phone number 1.888.998.3375"
-      assert sent_mail.html_part.body.encoded =~ /<a class="btn" href="https:\/\/custom.domain.com\/users\/edit\?#{TemporaryTokenAuthenticatable::PARAMETER_NAME}=.+" style=".+">Go to My account<\/a>/, "Body did not include expected link to edit profile in #{sent_mail.html_part.body}"
+      assert sent_mail.html_part.body.encoded =~ /<a class="btn" href="https:\/\/custom.domain.com\/users\/edit\?#{TemporaryTokenAuthenticatable::PARAMETER_NAME}=.+" style=".+">Go to My account<\/a>/, "Body did not include expected link to edit profile #{TemporaryTokenAuthenticatable::PARAMETER_NAME}: #{"<a class='btn' href='https:\/\/custom.domain.com\/users\/edit\?#{TemporaryTokenAuthenticatable::PARAMETER_NAME}=.+' style='.+'"} in #{sent_mail.html_part.body}"
     end
 
     should 'not spam user' do
@@ -589,8 +589,6 @@ class UserTest < ActiveSupport::TestCase
         @listing = FactoryGirl.create(:transactable)
         @location = @listing.location
         @company = @location.company
-        @company.add_creator_to_company_users
-        @company.save!
         @listing.creator.destroy
         assert @listing.reload.deleted?
         assert @location.reload.deleted?
@@ -620,47 +618,6 @@ class UserTest < ActiveSupport::TestCase
         refute @reservation.reload.cancelled_by_guest?
         assert @reservation.confirmed?
       end
-    end
-
-    context 'company has multiple administrators' do
-
-      setup do
-        @listing = FactoryGirl.create(:transactable)
-        @user = @listing.creator
-        @company = @listing.company
-        @company.add_creator_to_company_users
-        @company.save!
-        @new_user = FactoryGirl.create(:user)
-        CompanyUser.create(:user_id => @new_user.id, :company_id => @listing.company.id)
-      end
-
-      should 'not delete company and assign new creator' do
-        @listing.creator.destroy
-        @listing.reload
-        assert_equal @new_user, @listing.creator
-        refute @listing.deleted?
-        refute @listing.location.deleted?
-        refute @listing.location.company.deleted?
-      end
-
-      should 'not destroy company' do
-        @new_user.destroy
-        @listing.reload
-        assert_equal @user, @listing.reload.creator
-        refute @listing.deleted?
-        refute @listing.location.deleted?
-        refute @listing.location.company.deleted?
-      end
-
-    end
-
-    should 'nullify administrator_id if user is administrator' do
-      @user = FactoryGirl.create(:user)
-      @location = FactoryGirl.create(:location, :creator => FactoryGirl.create(:user), :administrator => @user)
-      CompanyUser.create(:user_id => @user.id, :company_id => @location.company.id)
-      assert @location.administrator_id = @user.id
-      @user.destroy
-      assert_nil @location.reload.administrator_id
     end
 
   end

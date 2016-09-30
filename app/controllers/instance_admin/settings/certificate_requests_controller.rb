@@ -1,3 +1,5 @@
+require 'nearme'
+
 class InstanceAdmin::Settings::CertificateRequestsController < InstanceAdmin::Settings::BaseController
   def new
     @certificate_request = CertificateRequest.new

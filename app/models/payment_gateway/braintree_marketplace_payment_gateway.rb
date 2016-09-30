@@ -1,3 +1,5 @@
+require 'braintree'
+
 class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
 
   supported :company_onboarding, :immediate_payout, :credit_card_payment,

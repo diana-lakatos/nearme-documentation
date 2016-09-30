@@ -1,3 +1,5 @@
+require 'rest-client'
+
 class GoogleAnalyticsApiJob < Job
   def after_initialize(endpoint, params)
     @endpoint = endpoint

@@ -1,4 +1,30 @@
 namespace :fix do
+  task :unused_tables => [:environment] do
+    connection = ActiveRecord::Base.connection
+    connection.tables.collect do |t|
+      puts "Processing: #{t}"
+      count = connection.select_all("SELECT count(1) as count FROM #{t}", "Count").first['count']
+
+      puts "\tTABLE UNUSED #{t}" if count.to_i == 0
+
+      columns = connection.columns(t).collect(&:name).reject {|x| x == 'id' }
+      columns.each do |column|
+        begin
+        values = connection.select_all("SELECT DISTINCT(#{column}) AS val FROM #{t} LIMIT 2", "Distinct Check")
+        if values.count == 1
+          if values.first['val'].nil?
+            puts "\tCOLUMN UNUSED #{t}:#{column}"
+          else
+            puts "\tCOLUMN SINGLE VALUE #{t}:#{column} -- #{values.first['val']}"
+          end
+        end
+        rescue => e
+          puts e.inspect
+        end
+      end
+    end
+  end
+
   task :payments_payer => [:environment] do
     Instance.find_each do |i|
       puts "Processing #{i.name}"

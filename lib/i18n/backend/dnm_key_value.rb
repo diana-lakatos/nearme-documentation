@@ -4,11 +4,10 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
 
   def initialize(cache, subtrees=true)
     @cache, @subtrees = cache, subtrees
-    rebuild!
+    @store, @timestamps = {}, {}
   end
 
   def rebuild!
-    @store, @timestamps = {}, {}
     populate(nil)
   end
 

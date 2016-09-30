@@ -164,38 +164,6 @@ class V1::ListingsControllerTest < ActionController::TestCase
   end
 
   ##
-  # Inquiry
-
-  test "should accept inquiry" do
-    authenticate!
-    listing         = Transactable.find(@listing.id)
-    listing.creator = FactoryGirl.create(:user)
-    listing.save
-
-    assert_difference "listing.inquiries.count", 1 do
-      raw_post :inquiry, {id: @listing.id}, '{ "message": "hello" }'
-    end
-    assert_response :no_content
-  end
-
-  test "inquiry should raise when a listing is not found" do
-    authenticate!
-    raw_post :inquiry, {id: 999999999}, '{ "message": "hello" }'
-    assert_response :unprocessable_entity
-  end
-
-  test "inquiry should raise when json is missing" do
-    assert_raise DNM::MissingJSONData do
-      authenticate!
-      assert_no_difference "Transactable.find(@listing.id).inquiries.count" do
-        assert_no_difference "ActionMailer::Base.deliveries.count" do
-          raw_post :inquiry, {id: @listing.id}, '{ "no_message": "I am missing!" }'
-        end
-      end
-    end
-  end
-
-  ##
   # Share
 
   test "share should raise when a listing is not found" do

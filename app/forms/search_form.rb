@@ -1,3 +1,5 @@
+require 'reform'
+
 class SearchForm < Reform::Form
 
   def date_from_params

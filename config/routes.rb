@@ -1,6 +1,3 @@
-# super hackish way to fix add_space_wizard:12 feature
-require Rails.root.join('app', 'controllers', 'registrations_controller.rb') if Rails.env.test?
-
 DesksnearMe::Application.routes.draw do
 
   #favicon for scraping
@@ -36,7 +33,6 @@ DesksnearMe::Application.routes.draw do
       member do
         post 'reservation'
         post 'availability'
-        post 'inquiry'
         post 'share'
         get 'patrons'
         get 'connections'
@@ -306,9 +302,6 @@ DesksnearMe::Application.routes.draw do
         end
         resource :locations, :only => [:show, :update], :controller => 'locations'
         resources :location_types, only: [:index, :create, :update, :destroy_modal, :destroy] do
-          get 'destroy_modal', on: :member
-        end
-        resources :listing_types, only: [:index, :create, :destroy_modal, :destroy] do
           get 'destroy_modal', on: :member
         end
         resource :listings, :only => [:show, :update], :controller => 'listings'
@@ -721,7 +714,7 @@ DesksnearMe::Application.routes.draw do
 
     get "users/:id/reviews_collections", :to => "user_reviews#reviews_collections", :as => "reviews_collections"
 
-    resources :listings, :users, :reservations, :recurring_bookings, :offers, :delayed_reservations do
+    resources :listings, :users, :reservations, :recurring_bookings, :offers, :delayed_reservations, only: [] do
       resources :user_messages, controller: "dashboard/user_messages", except: [:index] do
         patch :archive
         put :archive
@@ -976,7 +969,6 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
-      resources :user_bids, :except => [:update, :destroy]
       resources :user_requests_for_quotes, only: [:index, :show]
       resources :user_reservations, :except => [:update, :destroy, :show] do
         member do
@@ -1118,7 +1110,6 @@ DesksnearMe::Application.routes.draw do
       delete "/photo/:id" => "space_wizard#destroy_photo", :as => "destroy_space_wizard_photo"
     end
 
-    resources :partner_inquiries, :only => [:index, :create], :controller => 'partner_inquiries', :path => 'partner'
     resources :waiver_agreement_templates, only: [:show]
 
     namespace :api do

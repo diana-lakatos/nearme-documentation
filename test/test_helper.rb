@@ -8,6 +8,7 @@ require 'mocha/setup'
 require 'mocha/mini_test'
 require 'webmock/minitest'
 require 'backtrace_filter'
+require 'ffaker'
 
 require Rails.root.join('test', 'helpers', 'stub_helper.rb')
 

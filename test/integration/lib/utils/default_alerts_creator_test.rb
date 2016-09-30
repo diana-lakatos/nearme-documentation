@@ -17,7 +17,6 @@ class Utils::DefaultAlertsCreatorTest < ActionDispatch::IntegrationTest
       Utils::DefaultAlertsCreator::SupportCreator.expects(:new).returns(stub(:create_all! => true))
       Utils::DefaultAlertsCreator::RfqCreator.expects(:new).returns(stub(:create_all! => true))
       Utils::DefaultAlertsCreator::InstanceAlertsCreator.expects(:new).returns(stub(:create_all! => true))
-      Utils::DefaultAlertsCreator::InquiryCreator.expects(:new).returns(stub(:create_all! => true))
       Utils::DefaultAlertsCreator::UserMessageCreator.expects(:new).returns(stub(:create_all! => true))
       Utils::DefaultAlertsCreator::DataUploadCreator.expects(:new).returns(stub(:create_all! => true))
       Utils::DefaultAlertsCreator::PaymentGatewayCreator.expects(:new).returns(stub(:create_all! => true))

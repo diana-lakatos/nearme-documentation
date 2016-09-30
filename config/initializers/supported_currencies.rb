@@ -5,7 +5,6 @@
 # https://www.braintreepayments.com/docs/ruby/reference/currencies
 
 DesksnearMe::Application.config.supported_currencies = []
-
 require 'csv'
 CSV.foreach(Rails.root.join('config', 'supported_currencies.csv'), :headers => :first_row, :return_headers => false) do |row|
   DesksnearMe::Application.config.supported_currencies << {

@@ -23,9 +23,8 @@ class ApprovalRequest < ActiveRecord::Base
     joins("LEFT join locations on locations.id = owner_id AND owner_type = 'Location'").
     joins("LEFT join users on users.id = owner_id AND owner_type = 'User'").
     joins("LEFT join transactables on transactables.id = owner_id AND owner_type = 'Transactable'").
-    joins("LEFT join offers on offers.id = owner_id AND owner_type = 'Offer'").
     joins("LEFT join companies on companies.id = owner_id AND owner_type = 'Company'").
-    where("locations.name ilike ? or users.name ilike ? or transactables.name ilike ? or companies.name ilike ? or offers.name ilike ?", q, q, q, q, q)
+    where("locations.name ilike ? or users.name ilike ? or transactables.name ilike ? or companies.name ilike ?", q, q, q, q)
   }
 
   before_create :set_defaults

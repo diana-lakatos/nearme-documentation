@@ -5,8 +5,6 @@ FactoryGirl.define do
     bookable_noun 'Desk'
     lessor 'host'
     lessee 'guest'
-    service_fee_guest_percent '10.00'
-    service_fee_host_percent '10.00'
 
     facebook_consumer_key 'fb1'
     facebook_consumer_secret 'fb2'

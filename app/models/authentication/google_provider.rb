@@ -1,3 +1,5 @@
+require 'google_plus'
+
 class Authentication::GoogleProvider < Authentication::BaseProvider
 
   META   = { name: "Google",

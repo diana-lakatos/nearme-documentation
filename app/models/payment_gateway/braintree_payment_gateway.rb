@@ -1,3 +1,5 @@
+require 'braintree'
+
 class PaymentGateway::BraintreePaymentGateway < PaymentGateway
   include PaymentGateway::ActiveMerchantGateway
 

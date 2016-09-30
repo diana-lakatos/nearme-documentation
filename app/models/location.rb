@@ -1,3 +1,5 @@
+require 'nearest_time_zone'
+
 class Location < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
   has_paper_trail
@@ -6,8 +8,8 @@ class Location < ActiveRecord::Base
 
   has_metadata :accessors => [:photos_metadata]
   notify_associations_about_column_update([:listings], :administrator_id)
-  notify_associations_about_column_update([:payments, :reservations, :listings], :company_id)
-  inherits_columns_from_association([:creator_id, :listings_public], :company)
+  #notify_associations_about_column_update([:payments, :reservations, :listings], :company_id)
+  inherits_columns_from_association([:creator_id], :company)
 
   include Impressionable
   # Include a set of helpers for handling availability rules and interface onto them

@@ -1,3 +1,5 @@
+require 'twilio-ruby'
+
 # Wraps sending a message via the twilio client in an interface
 # similar to Mail used in ActionMailer.
 class SmsNotifier::Message

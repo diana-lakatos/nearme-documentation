@@ -4,7 +4,6 @@ source 'http://rubygems.org'
 
 gem 'rails', '4.2.4'
 gem 'pg'
-gem 'elasticsearch-persistence'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 gem 'patron'
@@ -17,15 +16,16 @@ gem 'active_model_serializers', '~> 0.8.1'
 gem 'jsonapi-serializers', github: "mdyd-dev/jsonapi-serializers", branch: 'feature/namespace'
 gem 'rabl'
 gem 'carrierwave'
-gem 'devise', '~> 3.5.0'
+gem 'devise', '3.5.1'
 gem 'devise-token_authenticatable'
 gem 'rack-throttle'
 
 gem "rack-reverse-proxy", require: "rack/reverse_proxy", git: 'git@github.com:mdyd-dev/rack-reverse-proxy.git'
 
-gem 'charlock_holmes', '~> 0.7.3'
+gem 'charlock_holmes', '~> 0.7.3', require: false
+gem 'stringex', require: 'stringex_lite' # used by category model
 
-gem 'aws-sdk'
+gem 'aws-sdk', require: false
 
 gem 'omniauth'
 gem 'omniauth-twitter'
@@ -36,22 +36,20 @@ gem 'omniauth-saml'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-github'
 
-gem 'koala'
+gem 'koala', require: false
 gem 'linkedin-oauth2', '~> 1.0'
 gem 'omniauth-linkedin-oauth2'
-gem 'twitter', '~> 5.5.1'
+gem 'twitter', '~> 5.5.1', require: false
 # Installing instagram from the master branch will fix ruby 2.2 circular dependency warning
-gem 'instagram'
-gem 'github_api'
-gem 'google_plus'
+gem 'instagram', require: false
+gem 'github_api', require: false
+gem 'google_plus', require: false
 
-gem 'reform', '~> 2.1.0'
-gem 'tilt'
-
+gem 'reform', '~> 2.1.0', require: false
 
 gem 'fog'
 gem 'geocoder'
-gem 'nearest_time_zone'
+gem 'nearest_time_zone', require: false
 gem 'haml'
 gem 'mini_magick', '~> 4.0.1'
 gem 'money-rails', github: 'RubyMoney/money-rails'
@@ -59,17 +57,11 @@ gem 'simple_form', '~> 3.1'
 gem "paranoia", :github => "radar/paranoia", :branch => "rails4"
 gem 'nested_form'
 
-
 gem 'nokogiri', '~> 1.6.0'
-gem 'hpricot'
-gem 'amatch'
-gem 'ri_cal'
-gem 'ffaker', '~> 1.16'
+gem 'ri_cal', require: false
 gem 'draper'
 gem 'counter_culture'
-gem 'crummy'
-gem 'ice_cube'
-gem 'recurring_select', path: 'vendor/gems/recurring_select'
+gem 'ice_cube', require: false
 gem 'rails_autolink'
 
 gem 'i18n-active_record',
@@ -82,47 +74,38 @@ gem 'rack-rewrite', :require => 'rack/rewrite'
 
 gem 'state_machine', '~> 1.2.0'
 gem 'state_machines-activerecord'
-gem 'awesome_nested_set'
+gem 'awesome_nested_set', require: false
 gem 'font-awesome-rails'
 gem 'will_paginate'
-
 
 gem 'delayed_job_active_record'
 gem 'delayed_job_web'
 gem 'delayed_job_recurring'
-gem 'daemons'
-gem 'rdiscount'
+gem 'rdiscount', require: false
 gem 'attr_encrypted'
-gem 'stripe'
+gem 'stripe', require: false
 gem 'paypal-sdk-rest', '~> 1.3.2'
 gem 'paypal-sdk-merchant'
 gem 'paypal-sdk-adaptivepayments'
-gem 'braintree', '2.46.0'
-gem 'faraday', '~> 0.9'
+gem 'braintree', '2.46.0', require: false
 gem 'friendly_id', '~> 5.1'
 
-gem 'chronic', '~> 0.9.1'
-
+gem 'chronic'
 
 gem 'unicorn'
 
-gem 'stringex'
 gem 'ckeditor', github: 'galetahub/ckeditor'
 gem 'orm_adapter', '~> 0.5.0' # needed for ckeditor, see https://github.com/galetahub/ckeditor/issues/375
-gem 'sanitize'
+gem 'sanitize', require: false
 
-gem 'useragent'
-gem 'mixpanel', '4.0.2'
-gem 'mixpanel_client'
-gem 'voight_kampff'
+gem 'useragent', require: false
+gem 'mixpanel', '4.0.2', require: false
 
-gem 'rest-client'
+gem 'rest-client', require: false
 gem 'jira-ruby', require: false
 
-gem 'gibbon'
-
-gem 'twilio-ruby'
-gem 'googl'
+gem 'twilio-ruby', require: false
+gem 'googl', require: false
 
 
 gem 'inherited_resources', '~> 1.6'
@@ -132,7 +115,8 @@ gem 'ranked-model'
 gem 'after_commit_action'
 
 gem 'premailer-rails'
-gem 'addressable'
+gem 'hpricot' # used by premailer, premailer is used to insert token?
+gem 'addressable', require: false
 gem 'newrelic_rpm'
 gem 'unicorn-worker-killer'
 
@@ -140,10 +124,11 @@ gem 'activemerchant'
 
 gem 'shippo'
 
-gem 'video_info'
+gem 'video_info', require: false
 
-gem 'domainatrix'
+# store base is also used for payment gateways
 gem 'store_base_sti_class', github: 'jcarreti/store_base_sti_class', branch: 'rails4-2'
+gem 'domainatrix', require: false
 
 gem 'acts-as-taggable-on', '~> 3.4'
 
@@ -152,8 +137,8 @@ gem 'ansi', require: false
 
 group :profiling, :development do
   gem 'rack-mini-profiler', require: false
-  gem 'flamegraph'
-  gem 'bullet'
+  gem 'flamegraph', require: false
+  gem 'bullet', require: false
 end
 
 group :profiling, :test do
@@ -166,7 +151,6 @@ group :coverage do
 end
 
 group :development, :test, :staging do
-  gem 'factory_girl_rails', '~> 4.5.0'
   gem 'byebug', require: 'byebug'
 end
 
@@ -181,7 +165,7 @@ group :development do
   gem "binding_of_caller"
   gem 'quiet_assets'
   gem 'pry-nav'
-  gem 'pry-doc'
+  gem 'pry-doc', require: false
   gem 'pry-stack_explorer'
   gem 'spring'
   gem 'spring-commands-cucumber'
@@ -213,10 +197,12 @@ group :test do
   gem 'test_after_commit'
   gem 'rails-perftest'
   gem 'selenium-webdriver'
+  gem 'factory_girl_rails', '~> 4.5.0'
+  gem 'ffaker', '~> 1.16'
 end
 gem 'mailman'
 
-gem 'nearme', path: 'vendor/gems/nearme'
+gem 'nearme', path: 'vendor/gems/nearme', require: false
 gem 'custom_attributes', path: 'vendor/gems/custom_attributes'
 
 gem 'figaro'
@@ -227,7 +213,7 @@ gem 'pry-rails'
 gem 'awesome_print'
 gem 'i18n_data'
 
-gem 'parser'
+gem 'parser', require: false
 
 gem 'routing-filter', '~> 0.5.0'
 

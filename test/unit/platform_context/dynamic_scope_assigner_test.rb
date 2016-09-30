@@ -4,8 +4,8 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
 
   MODELS_SCOPEABLE_ONLY_TO_INSTANCE = [:amenity_type, :instance_admin, :instance_billing_gateway,
                                        :instance_client, :location_type, :user_message]
-  MODELS_SCOPEABLE_TO_WHITE_LABEL_COMPANY_AND_PARTNER = [:location, :transactable, :reservation, :payment, :payment_transfer]
-  MODELS_WITH_LISTINGS_PUBLIC = [:location, :transactable, :reservation]
+  MODELS_SCOPEABLE_TO_WHITE_LABEL_COMPANY_AND_PARTNER = [] #[:location, :transactable, :reservation, :payment, :payment_transfer]
+  MODELS_WITH_LISTINGS_PUBLIC = [] #[:location, :transactable, :reservation]
 
   setup do
     PlatformContext.clear_current

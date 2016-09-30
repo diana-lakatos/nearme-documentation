@@ -202,38 +202,6 @@ class TransactableTest < ActiveSupport::TestCase
       assert_equal @location.administrator_id, @listing.reload.administrator_id
     end
 
-    context 'update company' do
-
-      should 'assign correct creator_id' do
-        @location.company.update_attribute(:creator_id, @location.company.creator_id + 1)
-        assert_equal @location.company.creator_id, @listing.reload.creator_id
-      end
-
-      should 'assign correct company_id' do
-        @location.update_attribute(:company_id, @location.company_id + 1)
-        assert_equal @location.company_id, @listing.reload.company_id
-      end
-
-      should 'assign correct partner_id' do
-        partner = FactoryGirl.create(:partner)
-        @location.company.update_attribute(:partner_id, partner.id)
-        assert_equal partner.id, @listing.reload.partner_id
-      end
-
-      should 'assign correct instance_id' do
-        instance = FactoryGirl.create(:instance)
-        @location.company.update_attribute(:instance_id, instance.id)
-        PlatformContext.any_instance.stubs(:instance).returns(instance)
-        assert_equal instance.id, @location.reload.instance_id
-      end
-
-      should 'update listings_public' do
-        assert @listing.listings_public
-        @listing.company.update_attribute(:listings_public, false)
-        refute @listing.reload.listings_public
-      end
-
-    end
   end
 
   should 'populate external id' do

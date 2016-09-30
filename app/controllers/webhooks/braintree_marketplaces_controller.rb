@@ -1,3 +1,5 @@
+require 'braintree'
+
 class Webhooks::BraintreeMarketplacesController < Webhooks::BaseWebhookController
 
   def webhook

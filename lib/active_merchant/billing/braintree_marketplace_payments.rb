@@ -1,3 +1,5 @@
+require 'braintree'
+
 module ActiveMerchant
   module Billing
     class BraintreeMarketplacePayments

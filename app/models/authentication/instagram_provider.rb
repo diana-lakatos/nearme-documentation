@@ -1,3 +1,5 @@
+require 'instagram'
+
 class Authentication::InstagramProvider < Authentication::BaseProvider
 
   META   = { name: "Instagram",
