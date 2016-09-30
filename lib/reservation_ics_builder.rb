@@ -1,3 +1,5 @@
+require 'ri_cal'
+
 # Helper class to build calendar ics file for given reservation
 class ReservationIcsBuilder
 

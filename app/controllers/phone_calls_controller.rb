@@ -1,3 +1,5 @@
+require 'twilio-ruby'
+
 class PhoneCallsController < ApplicationController
   class NoVerifiedPhoneNumber < Exception; end
 

@@ -1,3 +1,5 @@
+require 'aws-sdk'
+
 module Utils
   class S3FileHelper
     attr_accessor :pathname, :bucket_name, :bucket_path, :bucket_region

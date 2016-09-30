@@ -8,9 +8,7 @@ class Instance < ActiveRecord::Base
 
   has_metadata :accessors => [:support_metadata]
 
-  attr_encrypted :live_paypal_username, :live_paypal_password, :live_paypal_signature, :live_paypal_app_id, :live_stripe_api_key, :live_paypal_client_id,
-    :live_paypal_client_secret, :marketplace_password, :test_stripe_api_key, :test_paypal_username, :test_paypal_password,
-    :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :olark_api_key,
+  attr_encrypted :marketplace_password, :olark_api_key,
     :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret,
     :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string, :shippo_username, :shippo_password, :shippo_api_token,
     :twilio_consumer_key, :twilio_consumer_secret, :test_twilio_consumer_key, :test_twilio_consumer_secret, :support_imap_password, :webhook_token,
@@ -18,7 +16,6 @@ class Instance < ActiveRecord::Base
 
   attr_accessor :mark_as_locked
   attr_accessor :custom_translations
-  serialize :user_required_fields, Array
   serialize :custom_sanitize_config, Hash
   serialize :hidden_ui_controls, Hash
   serialize :allowed_countries, Array
@@ -75,8 +72,6 @@ class Instance < ActiveRecord::Base
   has_many :transactable_types
   has_many :action_types, class_name: 'TransactableType::ActionType'
   has_many :project_types, class_name: 'ProjectType'
-  has_many :offer_types
-  has_many :offers
   has_many :all_payment_gateways, class_name: 'PaymentGateway'
   has_many :users, inverse_of: :instance
   has_many :text_filters, inverse_of: :instance

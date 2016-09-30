@@ -1,3 +1,5 @@
+require 'charlock_holmes'
+
 class DataImporter::CsvFileValidator
 
   def initialize(csv_file_path, *mandatory_fields)

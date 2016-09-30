@@ -22,12 +22,10 @@ module Approvable
 
   def approval_request_acceptance_cancelled!
     listings.find_each(&:approval_request_acceptance_cancelled!)
-    offers.find_each(&:approval_request_acceptance_cancelled!)
   end
 
   def approval_request_approved!
     listings.find_each(&:approval_request_approved!)
-    offers.find_each(&:approval_request_approved!)
   end
 
   def current_approval_requests

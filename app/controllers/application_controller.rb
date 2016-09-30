@@ -1,3 +1,6 @@
+require 'user_agent'
+require 'addressable/uri'
+
 class ApplicationController < ActionController::Base
   before_action :prepend_view_paths
 
@@ -179,8 +182,7 @@ class ApplicationController < ActionController::Base
                       :request_details => request_details,
                       :anonymous_identity => anonymous_identity,
                       :session_properties => session_properties,
-                      :request_params => params,
-                      :request => user_signed_in? ? nil : request # we assume that logged in user is not a bot
+                      :request_params => params
                     )
                   end
   end

@@ -1,3 +1,4 @@
+require 'aws-sdk'
 require "nearme/version"
 require "nearme/deploy"
 require "nearme/balancer"

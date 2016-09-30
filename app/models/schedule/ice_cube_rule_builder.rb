@@ -1,3 +1,5 @@
+require 'ice_cube'
+
 class Schedule::IceCubeRuleBuilder
 
   def initialize(schedule_rule)

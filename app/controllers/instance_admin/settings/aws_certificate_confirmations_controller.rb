@@ -1,3 +1,5 @@
+require 'nearme'
+
 class InstanceAdmin::Settings::AwsCertificateConfirmationsController < InstanceAdmin::Settings::BaseController
   respond_to :html
 

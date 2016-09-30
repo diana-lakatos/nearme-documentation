@@ -22,19 +22,11 @@ module DesksnearMe
 
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
-    config.autoload_paths -= Dir["#{config.root}/lib/previewers/"] unless defined? MailView
 
     config.to_prepare do
-      # Load application's view overrides
-      Dir.glob(File.join(File.dirname(__FILE__), "../app/overrides/*.rb")) do |c|
-        Rails.configuration.cache_classes ? require(c) : load(c)
-      end
-
-      # Load LineItem STI
-      Dir.glob(File.join(File.dirname(__FILE__), "../app/models/line_item/**.rb")) do |c|
-        Rails.configuration.cache_classes ? require(c) : load(c)
-      end
-
+        Dir.glob(File.join(File.dirname(__FILE__), "../app/models/line_item/**.rb")) do |c|
+          Rails.configuration.cache_classes ? require(c) : load(c)
+        end
     end
 
     # Only load the plugins named here, in the order given (default is alphabetical).

@@ -6,7 +6,6 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   before_action :find_transactable_type
   before_action :find_transactable, except: [:index, :new, :create]
   before_action :find_locations
-  before_action :disable_unchecked_prices, only: :update
   before_action :set_form_components, except: [:index, :enable, :disable, :destroy]
   before_action :redirect_to_edit_if_single_transactable, only: [:index, :new, :create]
   before_action :redirect_to_new_if_single_transactable, only: [:index, :edit, :update]
@@ -153,14 +152,6 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
       @transactable = @transactable_type.transactables.where(company_id: @company).find(params[:id])
     rescue ActiveRecord::RecordNotFound
       raise Transactable::NotFound
-    end
-  end
-
-  def disable_unchecked_prices
-    Transactable::PRICE_TYPES.each do |price|
-      if params[:transactable]["#{price}_price"].blank?
-        @transactable.send("#{price}_price_cents=", nil) if @transactable.respond_to?("#{price}_price_cents=")
-      end
     end
   end
 

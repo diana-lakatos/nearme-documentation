@@ -1,3 +1,5 @@
+require 'twilio-ruby'
+
 class CommunicationsController < ApplicationController
   rescue_from Twilio::REST::RequestError, with: :request_error
 

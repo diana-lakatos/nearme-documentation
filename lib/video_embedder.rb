@@ -1,3 +1,5 @@
+require 'video_info'
+
 class VideoEmbedder
   include ActiveModel::Model
 

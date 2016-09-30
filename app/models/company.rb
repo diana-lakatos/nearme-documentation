@@ -1,3 +1,6 @@
+require 'nearest_time_zone'
+require 'addressable/uri'
+
 class Company < ActiveRecord::Base
   include DomainsCacheable
   include Approvable
@@ -8,9 +11,8 @@ class Company < ActiveRecord::Base
   scoped_to_platform_context
   URL_REGEXP = URI::regexp(%w(http https))
 
-
-  notify_associations_about_column_update([:payment_transfers, :payments, :reservations, :listings, :locations], [:instance_id, :partner_id])
-  notify_associations_about_column_update([:reservations, :listings, :locations], [:creator_id, :listings_public])
+  #notify_associations_about_column_update([:payment_transfers, :payments, :reservations, :listings, :locations], [:instance_id, :partner_id])
+  #notify_associations_about_column_update([:reservations, :listings, :locations], [:creator_id, :listings_public])
 
   has_metadata accessors: [:draft_at, :completed_at]
 
@@ -21,7 +23,6 @@ class Company < ActiveRecord::Base
   has_many :data_uploads, as: :target
   has_many :instance_clients, as: :client, dependent: :destroy
   has_many :listings, class_name: 'Transactable', inverse_of: :company
-  has_many :offers, inverse_of: :company, dependent: :destroy
   has_many :locations, dependent: :destroy, inverse_of: :company
   has_many :locations_impressions, source: :impressions, through: :locations
   has_many :merchant_accounts, as: :merchantable
@@ -32,6 +33,7 @@ class Company < ActiveRecord::Base
   has_many :photos, through: :listings
   has_many :reservations
   has_many :recurring_bookings
+  has_many :offers, inverse_of: :company, dependent: :destroy
   has_many :shipping_profiles
   has_many :users, :through => :company_users
   has_many :waiver_agreement_templates, as: :target

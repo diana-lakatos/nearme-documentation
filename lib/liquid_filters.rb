@@ -1,3 +1,6 @@
+require 'googl'
+require 'sanitize'
+
 module LiquidFilters
   include MoneyRails::ActionViewExtension
   include CurrencyHelper

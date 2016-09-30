@@ -130,10 +130,6 @@ class OrderDecorator < Draper::Decorator
 
   end
 
-  def display_completed_at
-    object.completed_at ? l(object.completed_at.to_date, format: :long) : ''
-  end
-
   def display_total
     render_money(object.total_amount)
   end

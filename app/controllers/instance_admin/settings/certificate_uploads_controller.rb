@@ -1,3 +1,4 @@
+require 'nearme'
 require 'nearme/iam'
 class InstanceAdmin::Settings::CertificateUploadsController < InstanceAdmin::Settings::BaseController
   respond_to :html

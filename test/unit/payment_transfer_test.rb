@@ -247,22 +247,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
       assert_equal @company.instance_id, @payment_transfer.instance_id
     end
 
-    should 'assign correct partner_id' do
-      @company = FactoryGirl.create(:company)
-      @company.update_attribute(:partner_id, FactoryGirl.create(:partner).id)
-      PlatformContext.current = PlatformContext.new(@company)
-      @payment_transfer = FactoryGirl.create(:payment_transfer, :company => @company)
-      assert_equal @company.partner_id, @payment_transfer.partner_id
-      assert @payment_transfer.partner_id.present?
-    end
-
     context 'update company' do
-
-      should 'assign correct partner_id' do
-        partner = FactoryGirl.create(:partner)
-        @company.update_attribute(:partner_id, partner.id)
-        assert_equal partner.id, @payment_transfer.reload.partner_id
-      end
 
       should 'assign correct instance_id' do
         instance = FactoryGirl.create(:instance)

@@ -1,3 +1,5 @@
+require 'twilio-ruby'
+
 class Communication::TwilioProvider
 
   attr_reader :client

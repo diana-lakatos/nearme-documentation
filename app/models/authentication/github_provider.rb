@@ -1,3 +1,5 @@
+require 'github_api'
+
 class Authentication::GithubProvider < Authentication::BaseProvider
 
   META   = { name: "GitHub",

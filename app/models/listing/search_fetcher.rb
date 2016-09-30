@@ -35,7 +35,6 @@ class Listing::SearchFetcher
 
   def filtered_listings
     @listings_scope = Transactable.includes(:transactable_type).searchable.where(transactable_type_id: @filters[:transactable_type_id])
-    @listings_scope = @listings_scope.filtered_by_price_types(@filters[:listing_pricing] & (Transactable::PRICE_TYPES + [:free]).map(&:to_s)) if @filters[:listing_pricing]
 
     (@filters[:custom_attributes] || {}).each do |field_name, values|
       next if values.blank? || values.all?(&:blank?)

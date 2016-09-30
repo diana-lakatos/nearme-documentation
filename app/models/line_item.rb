@@ -9,7 +9,6 @@ class LineItem < ActiveRecord::Base
   belongs_to :line_item_source, -> { with_deleted }, polymorphic: true
   belongs_to :transactable_pricing, -> { with_deleted }, class_name: 'Transactable::Pricing'
   belongs_to :user, -> { with_deleted }
-  belongs_to :company, -> { with_deleted }
   belongs_to :order, foreign_key: 'line_itemable_id'
 
   monetize :net_price_cents, with_model_currency: :currency
