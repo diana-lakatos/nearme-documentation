@@ -58,12 +58,14 @@
     .col-md-9{class: reservation.paid? ? 'info' : "warn" }
       = reservation.payment.try(:state).try(:humanize).try(:capitalize)
 
-  .row
-    .col-md-3
-      %h3
-        = t("dashboard.host_reservations.payment_method")
-    .col-md-3{class: reservation.paid? ? 'info' : "warn" }
-      = t("dashboard.host_reservations.payment_methods." + reservation.payment.try(:payment_method).try(:payment_method_type).to_s)
+  - payment_method = reservation.payment.try(:payment_method).try(:payment_method_type).to_s
+  - if payment_method.present?
+    .row
+      .col-md-3
+        %h3
+          = t("dashboard.host_reservations.payment_method")
+      .col-md-3{class: reservation.paid? ? 'info' : "warn" }
+        = t("dashboard.host_reservations.payment_methods." + payment_method)
 
   - if reservation.transactable.possible_delivery?
     .row
