@@ -15,6 +15,11 @@ en:
     collaboration_cancelled: Case details request cancelled
 
   dashboard:
+    user_profile:
+      sections:
+        default: 'Profile'
+        seller: 'Handling Lawyer Details'
+        buyer: 'Referring Lawyer Details'
     orders:
       state:
         unconfirmed: "Cases Open"

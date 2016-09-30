@@ -77,6 +77,18 @@
   {% endcontent_for %}
 {% endif %}
 
+{% content_for 'panel_navigation_links' %}
+    <li class='{{ 'pending' | active_class:current_status }}'>
+      <a href='{{ tt.transactable_types_path | append: "?status=pending" }}'>Pending Cases ({{ pending_transactables | total_entries }})</a>
+    </li>
+    <li class='{{ 'in progress' | active_class:current_status }}'>
+      <a href='{{ tt.transactable_types_path | append: "?status=in+progress" }}'>Cases In Progress ({{ in_progress_transactables | total_entries }})</a>
+    </li>
+    <li class='{{ 'archived' | active_class:current_status }}'>
+      <a href='{{ tt.transactable_types_path | append: "?status=archived" }}'>Archived Cases ({{ archived_transactables | total_entries }})</a>
+    </li>
+{% endcontent_for %}
+
 <nav class='panel-nav'>
   <ul class='tabs pull-left'>
     {% yield 'panel_navigation_links' %}
