@@ -72,7 +72,7 @@
         = render partial: 'search/shared/date_range', locals: { date_start: @searcher.search.display_dates[:start], date_end: @searcher.search.display_dates[:end] }
         - @searcher.filterable_custom_attributes.each do |ca|
           - if ca.valid_values_translated.any?
-            = render partial: 'search/mixed/filter', locals: { header_name: t(ca.label_key), selected_values: @searcher.search.lg_custom_attributes[ca.name.to_sym] || [], input_name: "lg_custom_attributes[#{ca.name}][]", options: ca.valid_values_translated, name: ca.name }
+            = render partial: 'search/mixed/filter', locals: { header_name: t(ca.label_key), selected_values: @searcher.search.lg_custom_attributes[ca.name.to_sym] || [], input_name: "lg_custom_attributes[#{ca.name}][]", options: ca.valid_values_translated.map { |pair| [pair[1], pair[0]] }, name: ca.name }
         - if @transactable_type.search_price_types_filter
           = render partial: 'search/mixed/filter', locals: { header_name: 'Pricing', selected_values: @searcher.search.lgpricing_filters || [], input_name: 'listing_pricing[]', options: @searcher.filterable_pricing }
         - if @searcher.transactable_type.display_location_type_filter?
