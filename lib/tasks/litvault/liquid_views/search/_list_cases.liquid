@@ -92,7 +92,11 @@
             </div>
 
             <div class="search-result-meta-action">
-              <button type="button" class="button-a inverted">Bid on Case</button>
+              {% if collaborator.approved_by_owner? or current_user.id == case.creator_id %}
+                <a class="button-a inverted"  href="{{ case.url }}" >Bid on Case</a>
+              {% else %}
+                <a href="#case-permission-request-{{ case.id }}" class="button-a inverted" data-case-invite-trigger>Bid on Case</a>
+              {% endif %}
 
               <div class="meta">
                 <span class="publish-date">posted {{ case.created_at | timeago }}</span>

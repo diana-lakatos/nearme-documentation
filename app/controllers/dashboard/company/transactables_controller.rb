@@ -4,6 +4,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
 
   before_action :redirect_to_account_if_verification_required
   before_action :find_locations
+  before_action :find_transactable_types
 
   def index
     @transactables = transactables_scope.order(order_param).paginate(page: params[:page], per_page: 20)
@@ -14,6 +15,10 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   private
+
+  def find_transactable_types
+    @transactable_types = TransactableType.where((id = params.try(:[], 'transactable_type_id')).present? ? {id: id} : {})
+  end
 
   def find_locations
     @locations = @company.locations
@@ -57,8 +62,9 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
       joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id AND pc.deleted_at IS NULL').
       uniq.
       where('transactables.company_id = ? OR transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_user_at IS NOT NULL)', @company.id, current_user.id, current_user.id).
+      where(transactable_type: @transactable_types).
       search_by_query([:name, :description], params[:query])
-      .apply_filter(params[:filter], TransactableType.all.map(&:cached_custom_attributes).flatten.uniq)
+      .apply_filter(params[:filter], @transactable_types.map(&:cached_custom_attributes).flatten.uniq)
   end
 
   def in_progress_scope
