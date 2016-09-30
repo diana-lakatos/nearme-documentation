@@ -25,6 +25,7 @@
 
 {% content_for 'panel_options' %}
   <div class='pull-right options {% if transactables.size > 0 %} additional-listing-options {% endif %}'>
+
     {% if transactable_type.show_bulk_upload_link? %}
       <a href='{{ transactable_type.new_data_upload_path }}' data-modal='true'>{{ 'data_upload.manage.bulk_upload' | translate }}</a>
     {% endif %}
