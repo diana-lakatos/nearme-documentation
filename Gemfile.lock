@@ -837,6 +837,7 @@ GEM
     skinny (0.2.3)
       eventmachine (~> 1.0.0)
       thin (~> 1.5.0)
+    slack-notifier (1.5.1)
     slop (3.6.0)
     spring (1.7.1)
     spring-commands-cucumber (1.0.1)
@@ -1093,6 +1094,7 @@ DEPENDENCIES
   simple_form (~> 3.1)
   simplecov
   simplecov-rcov-text
+  slack-notifier
   spring
   spring-commands-cucumber
   sprockets
@@ -1119,5 +1121,8 @@ DEPENDENCIES
   wicked
   will_paginate
 
+RUBY VERSION
+   ruby 2.2.4p230
+
 BUNDLED WITH
-   1.13.0.rc.1
+   1.13.1

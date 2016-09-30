@@ -2,6 +2,24 @@
 
 All documentation is set out on the [GitHub Wiki](https://github.com/mdyd-dev/desksnearme/wiki).
 
+### Cheatsheet to get started
+
+```
+brew install redis
+brew install postgresql
+brew install elasticsearch
+brew install imagemagick
+brew install qt5
+brew linkapps qt5
+brew link --force qt5
+brew install icu4c
+bundle
+brew install node
+npm install -g gulp
+npm install
+gulp build:development
+```
+
 ### Credentials setup
 
 Add to bash, for example ~/.bash_profile :
@@ -18,14 +36,6 @@ export AWS_OPSWORKS_REGION=us-east-1
 
 After you configure database.yml and create database with ``` rake db:create ```, get backup to fill it with the current
 data using ``` rake backup:restore ``` in your console.
-
-### Pre-requisites
-
-```
-brew install qt5
-brew install icu4c
-```
-
 
 ### ElasticSearch on local
 
