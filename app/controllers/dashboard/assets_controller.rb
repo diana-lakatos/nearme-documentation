@@ -8,6 +8,9 @@ class Dashboard::AssetsController < Dashboard::BaseController
     if params[:listing]
       @listing_params = params[:listing]
       @listing = current_user.listings.find(params[:listing][:id]) if params[:listing][:id].present?
+    elsif params[:seller_attachment]
+      @listing_params = { attachments_attributes: { '0' => params[:seller_attachment] } }
+      @listing = current_user.transactables.find_by(id: params[:transactable_id]) || current_user.approved_transactables_collaborated.find_by(id: params[:transactable_id])
     elsif params[:offer]
       @listing_params = params[:offer]
       @listing = current_user.offers.find(params[:offer][:id]) if params[:offer][:id].present?

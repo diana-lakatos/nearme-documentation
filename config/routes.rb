@@ -957,7 +957,7 @@ DesksnearMe::Application.routes.draw do
       end
 
       resources :photos, :only => [:create, :destroy, :edit, :update]
-      resources :seller_attachments, only: %i(create update destroy)
+      resources :seller_attachments, only: %i(new create update destroy)
       resources :reviews, :only => [:index, :create, :update, :destroy] do
         collection do
           get :rate

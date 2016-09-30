@@ -420,4 +420,8 @@ module LiquidFilters
     Money.new(amount, currency)
   end
 
+  def attachments_visible_for(transactable_drop, user_drop)
+    transactable_drop.source.attachments_visible_for(user_drop.source)
+  end
+
 end
