@@ -78,7 +78,7 @@ namespace :litvault do
 
       pg.payment_countries << Country.find_by_name('United States') if pg.payment_countries.blank?
       pg.payment_currencies << Currency.find_by_iso_code('USD') if pg.payment_currencies.blank?
-      pg.payment_methods.build(active: true, payment_method_type: 'credit_card')
+      pg.payment_methods.build(active: true, payment_method_type: 'credit_card') if pg.payment_methods.blank?
       pg.save!
     end
 
