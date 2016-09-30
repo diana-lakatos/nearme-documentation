@@ -1,6 +1,6 @@
 class SellerAttachment < Ckeditor::Asset
 
-  ACCESS_LEVELS = %w(all users purchasers)
+  ACCESS_LEVELS = %w(all users purchasers collaborators).freeze
 
   include Thumbnable
 
@@ -11,6 +11,7 @@ class SellerAttachment < Ckeditor::Asset
   validates_inclusion_of :access_level, in: ACCESS_LEVELS, allow_nil: true
 
   validate :max_attachments_num, on: :create
+  belongs_to :transactable, foreign_key: 'assetable_id'
 
   scope :for_user, -> (user) { where(user: user) }
 
@@ -41,24 +42,7 @@ class SellerAttachment < Ckeditor::Asset
   end
 
   def accessible_to?(user)
-    if accessible_to_all?
-      true
-    elsif accessible_to_users?
-      !!user
-    elsif accessible_to_purchasers?
-      if user.present?
-        if assetable.is_a?(Transactable)
-          LineItem::Transactable.
-            where(line_item_source_id: assetable_id).
-            joins("INNER JOIN orders ON orders.id = line_items.line_itemable_id").
-            where("orders.state = 'confirmed'").any?
-        end
-      else
-        false
-      end
-    else
-      raise ArgumentError
-    end
+    ::SellerAttachment::Fetcher.new(user).has_access_to?(self)
   end
 
   def to_liquid
