@@ -53,7 +53,7 @@ DESC
       deployment_id = result.data[:deployment_id]
       puts "Deploy started with ID: #{deployment_id}"
 
-      notifier.ping("Deploy started by #{ENV['AWS_USER']}: #{options[:branch]} -> #{options[:stack]} (id: #{deployment_id})", icon_emoji: ':airplane_departure:')
+      notifier.ping(":airplane_departure: Deploy started by #{ENV['AWS_USER']}: #{options[:branch]} -> #{options[:stack]} (id: #{deployment_id})", icon_emoji: ':passenger_ship:')
       if options[:watch]
         puts "Waiting until deploy is done."
         result_hash = deploy.watch!(deployment_id)
@@ -70,7 +70,7 @@ DESC
                       ":white_check_mark: All good."
                     end
                   end
-        notifier.ping("Deploy finished: #{ENV['AWS_USER']} #{options[:branch]} -> #{options[:stack]} (id: #{deployment_id})\n#{message}", icon_emoji: ':airplane_arriving:')
+        notifier.ping(":airplane_arriving: Deploy finished: #{ENV['AWS_USER']} #{options[:branch]} -> #{options[:stack]} (id: #{deployment_id})\n#{message}", icon_emoji: ':passenger_ship:')
       end
     end
 

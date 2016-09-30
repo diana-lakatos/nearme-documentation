@@ -548,6 +548,7 @@ en:
           all: "All"
           users: "Users"
           purchasers: "Purchasers"
+          collaborators: 'Collaborators'
           sellers_preference: "Sellers preference"
       languages:
         settings: "Settings"
@@ -2861,10 +2862,13 @@ en:
     seller_attachments: "Seller attachments"
     upload_attachments: "Upload attachments"
     wrong_file_message: 'Uploaded documents does not have an accepted extension. Accepted extensions are %{formats}'
+    submit: 'Upload'
+    new_attachment: 'Upload File'
     access_levels:
       all: 'All users'
       users: 'Registered users'
       purchasers: 'Purchasers only'
+      collaborators: 'Collaborators'
     max_num_reached: "Max number of attached documents reached"
     associated_with_order: "Here are the seller attachments associated with your order"
 

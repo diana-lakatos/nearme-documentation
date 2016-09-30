@@ -2,7 +2,7 @@ class Instance < ActiveRecord::Base
   include Encryptable
   include DomainsCacheable
 
-  SELLER_ATTACHMENTS_ACCESS_LEVELS = SellerAttachment::ACCESS_LEVELS + ['sellers_preference']
+  SELLER_ATTACHMENTS_ACCESS_LEVELS = (SellerAttachment::ACCESS_LEVELS + ['sellers_preference']).freeze
 
   has_paper_trail
 

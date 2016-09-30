@@ -710,6 +710,10 @@ class Transactable < ActiveRecord::Base
     approved_transactable_collaborators.includes(user: :notification_preference).select { |tc| u = tc.user; u.notification_preference.blank? || (u.notification_preference.email_frequency.eql?('immediately') && u.notification_preference.project_updates_enabled? ) }
   end
 
+  def attachments_visible_for(user)
+    ::SellerAttachment::Fetcher.new(user).attachments_for(self)
+  end
+
   private
 
   def check_expenses
