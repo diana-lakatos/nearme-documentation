@@ -13,17 +13,20 @@ class DataImporter::CsvTemplateGenerator < DataImporter::File
   end
 
   def generate
-    CSV.generate_line(required_fields)
+    CSV.generate_line(csv_template_fields)
   end
 
   private
 
-  def required_fields
-    (@include_user_fields ? static_fields(%i(user)) : []) + if @importable.custom_csv_fields.empty?
-                                                              static_fields
-    else
-      custom_fields(@importable.custom_csv_fields).compact
-    end
+  def csv_template_fields
+    fields_array = if @importable.custom_csv_fields.empty?
+                     static_fields
+                   else
+                     custom_fields(@importable.custom_csv_fields).compact
+                   end
+
+    csv_fields = (@include_user_fields ? static_fields(%i(user)) : []) + fields_array
+    csv_fields | ['Company External Id']
   end
 
   def static_fields(models = nil)

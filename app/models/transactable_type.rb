@@ -179,11 +179,11 @@ class TransactableType < ActiveRecord::Base
   end
 
   def and_category_search?
-    category_search_type == "AND"
+    category_search_type == 'AND'
   end
 
   def or_category_search?
-    category_search_type == "OR"
+    category_search_type == 'OR'
   end
 
   def date_pickers_relative_mode?
@@ -191,7 +191,7 @@ class TransactableType < ActiveRecord::Base
   end
 
   def signature
-    [id, "TransactableType"].join(",")
+    [id, 'TransactableType'].join(',')
   end
 
   def available_search_views
@@ -214,6 +214,14 @@ class TransactableType < ActiveRecord::Base
       action.pricings.first_or_initialize
       self.association(:all_action_types).add_to_target(action)
     end
+  end
+
+  def required_custom_attributes
+    custom_attributes.required
+  end
+
+  def required_custom_attributes_for_csv(import_model = 'transactable')
+    required_custom_attributes.map { |required_attribute| { import_model => required_attribute.name } }
   end
 
   private

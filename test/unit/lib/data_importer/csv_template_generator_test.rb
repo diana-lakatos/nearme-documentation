@@ -41,7 +41,7 @@ class DataImporter::CsvTemplateGeneratorTest < ActiveSupport::TestCase
       should 'allow to include custom fields in template' do
         @transactable_type.update_attribute(:custom_csv_fields, [ {'transactable' => 'public_attribute'}, {'location' => 'email'} ])
         result_csv = DataImporter::Host::CsvTemplateGenerator.new(@transactable_type).generate
-        assert_equal "My Public Attribute,Location Email\n", result_csv
+        assert_equal "My Public Attribute,Location Email,Company External Id\n", result_csv
       end
     end
   end

@@ -4,6 +4,9 @@
   - all_fields = csv_fields_builder.object_field_pairs.clone
   - csv_fields_builder.all_valid_object_field_pairs.each do |pair|
     - all_fields << pair unless all_fields.include?({ pair.keys.first.to_s => pair.values.first.to_s})
+
+  - required_custom_fields = f.object.required_custom_attributes_for_csv
+
   - all_fields.each do |object_field_pair|
     - object = object_field_pair.keys.first
     - field = object_field_pair[object]
@@ -11,7 +14,14 @@
       %li.panel.panel-info
         %div.panel-heading
           = csv_fields_builder.get_label(object_field_pair)
-          %span= check_box_tag "#{f.object_name}[custom_csv_fields][]", "#{object}=>#{field}", csv_fields_builder.object_field_pairs.include?(object_field_pair)
+          %span
+            - if required_custom_fields.include?(object_field_pair)
+              = check_box_tag "#{f.object_name}[custom_csv_fields][]", "#{object}=>#{field}", true, disabled: true
+
+              = hidden_field_tag "#{f.object_name}[custom_csv_fields][]", "#{object}=>#{field}"
+            - else
+              = check_box_tag "#{f.object_name}[custom_csv_fields][]", "#{object}=>#{field}",
+                csv_fields_builder.object_field_pairs.include?(object_field_pair)
 
 = content_for :script do
   :javascript

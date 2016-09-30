@@ -7,6 +7,7 @@
             %th= t('instance_admin.manage.custom_attributes.name')
             %th= t('instance_admin.manage.custom_attributes.search')
             %th= t('instance_admin.manage.custom_attributes.public')
+            %th= t('instance_admin.manage.custom_attributes.required')
             %th
             %th
         %tbody
@@ -15,6 +16,7 @@
               %td= resource.name.humanize
               %td= resource.searchable
               %td= resource.public
+              %td= resource.required?
               %td= link_to t('instance_admin.edit'), edit_polymorphic_url([:instance_admin, @controller_scope, @target, resource]), class: 'pull-right'
               %td= link_to t('instance_admin.delete'), polymorphic_url([:instance_admin, @controller_scope, @target, resource]), :method => :delete, data: { confirm: t('instance_admin.are_you_sure') }, :class => "pull-right"
 
