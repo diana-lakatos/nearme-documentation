@@ -41,6 +41,8 @@ class ConditionField {
      */
     applyConditionsForValue(value) {
         let condition;
+        value = value.toLowerCase();
+
         if (this.conditions.hasOwnProperty(value)) {
             condition = this.conditions[value];
         }
