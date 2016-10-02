@@ -340,7 +340,7 @@ class Payment < ActiveRecord::Base
   def final_service_fee_amount_host_cents
     result = self.service_fee_amount_host.cents
 
-    if cancelled_by_host? || cancelled_by_guest?
+    if cancelled_by_host? || (cancelled_by_guest? && !payable.penalty_charge_apply?)
       result = 0
     end
 
