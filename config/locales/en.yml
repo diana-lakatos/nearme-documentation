@@ -1877,6 +1877,7 @@ en:
         document: "Document"
     transfers:
       not_transferred: 'N/A'
+      no_transfers_present: 'There are no transfers to display at this time.'
       cannot_transfer: "You haven't set a payment method yet."
       setup: "Set one up now."
       no_transfers_last_week: 'No transfers have been made in the preceding 7 day period.'
