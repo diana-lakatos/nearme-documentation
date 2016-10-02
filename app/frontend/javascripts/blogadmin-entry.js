@@ -6,28 +6,28 @@ require('../vendor/jquery-ui-1.9.2.custom.min');
 require('../vendor/bootstrap');
 
 DNM.registerInitializer(function(){
-    var els = $('form[data-blog-posts-form]');
-    if (els.length === 0) {
-        return;
-    }
+  var els = $('form[data-blog-posts-form]');
+  if (els.length === 0) {
+    return;
+  }
 
-    require.ensure('./blog/admin/blog_posts_form', function(require){
-        var BlogPostsForm = require('./blog/admin/blog_posts_form');
-        els.each(function(){
-            return new BlogPostsForm(this);
-        });
+  require.ensure('./blog/admin/blog_posts_form', function(require){
+    var BlogPostsForm = require('./blog/admin/blog_posts_form');
+    els.each(function(){
+      return new BlogPostsForm(this);
     });
+  });
 });
 
 DNM.registerInitializer(function(){
-    var els = $('div.ckeditor');
-    if (els.length === 0) {
-        return;
-    }
+  var els = $('div.ckeditor');
+  if (els.length === 0) {
+    return;
+  }
 
-    require.ensure('./ckeditor/init', function(require){
-        require('./ckeditor/init');
-    });
+  require.ensure('./ckeditor/init', function(require){
+    require('./ckeditor/init');
+  });
 });
 
 DNM.run();

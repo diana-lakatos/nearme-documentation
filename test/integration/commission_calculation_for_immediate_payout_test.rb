@@ -95,7 +95,7 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
     @payment_gateway = FactoryGirl.create(:braintree_marketplace_payment_gateway)
     @payment_method = @payment_gateway.payment_methods.first
 
-    ActiveMerchant::Billing::BraintreeMarketplacePayments.any_instance.stubs(:onboard!).returns(OpenStruct.new(success?: true))
+    ActiveMerchant::Billing::BraintreeCustomGateway.any_instance.stubs(:onboard!).returns(OpenStruct.new(success?: true))
     FactoryGirl.create(:braintree_marketplace_merchant_account, payment_gateway: @payment_gateway, merchantable: @transactable.company)
     Instance.any_instance.stubs(:payment_gateway).returns(@payment_gateway)
     PaymentTransfer.any_instance.stubs(:billing_gateway).returns(@payment_gateway)
@@ -116,7 +116,7 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
     }
     gateway = stub(capture: stubs[:capture], refund: stubs[:refund], void: stubs[:void], client_token: 'my_token', store: stubs[:store])
     gateway.expects(:authorize).with do |total_amount_cents, credit_card_or_token, options|
-      total_amount_cents == 43.75.to_money(@transactable.currency).cents && options['service_fee_host'] == (18.75 + 2.5).to_money(@transactable.currency).cents
+      total_amount_cents == 43.75.to_money(@transactable.currency).cents && options['service_fee_amount'] == (18.75 + 2.5).to_money(@transactable.currency).cents
     end.returns(stubs[:authorize])
     PaymentGateway::BraintreeMarketplacePaymentGateway.any_instance.stubs(:gateway).returns(gateway).at_least(0)
     assert_difference "@transactable.orders.reservations.count" do

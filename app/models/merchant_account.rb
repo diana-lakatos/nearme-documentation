@@ -1,6 +1,8 @@
 class MerchantAccount < ActiveRecord::Base
   include Encryptable
 
+  not_implemented :custom_options
+
   has_paper_trail
   auto_set_platform_context
   scoped_to_platform_context
@@ -86,6 +88,10 @@ class MerchantAccount < ActiveRecord::Base
   end
 
   def onboard!(*args)
+  end
+
+  def merchant_id
+    self.internal_payment_gateway_account_id
   end
 
   def void!

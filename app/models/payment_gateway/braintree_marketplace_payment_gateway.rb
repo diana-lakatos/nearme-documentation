@@ -5,6 +5,9 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
   supported :company_onboarding, :immediate_payout, :credit_card_payment,
     :partial_refunds, :host_subscription, :multiple_currency
 
+  delegate :verify_webhook, :parse_webhook, :find_transaction, :find_merchant, :onboard!, :update_onboard!,
+    :client_token, :payment_settled?, to: :gateway
+
   def self.supported_countries
     ['US']
   end
@@ -26,34 +29,14 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
     super.merge({environment: test_mode? ? :sandbox : :production })
   end
 
+  def options_key_map
+    {
+      application_fee: :service_fee_amount
+    }
+  end
+
   def gateway
-    @gateway ||= ActiveMerchant::Billing::BraintreeMarketplacePayments.new(settings)
-  end
-
-  def payment_settled?(token)
-    configure_braintree_class
-    transaction = Braintree::Transaction.find(token)
-    transaction.status == 'settled'
-  end
-
-  def verify_webhook(*args)
-    gateway.verify(*args)
-  end
-
-  def parse_webhook(*args)
-    gateway.parse_webhook(*args)
-  end
-
-  def find(*args)
-    gateway.find(*args)
-  end
-
-  def onboard!(*args)
-    gateway.onboard!(*args)
-  end
-
-  def update_onboard!(*args)
-    gateway.update_onboard!(*args)
+    @gateway ||= ActiveMerchant::Billing::BraintreeCustomGateway.new(settings)
   end
 
   def charge(user, amount, currency, payment, token)
@@ -69,10 +52,6 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
 
   def payout(*args)
     OpenStruct.new(success: true, success?: true)
-  end
-
-  def client_token
-    @client_token ||= gateway.client_token
   end
 
   def refund_identification(charge)
@@ -94,26 +73,9 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
     ]
   end
 
-
   def immediate_payout(company)
     merchant_account(company).present?
   end
 
-  def supports_immediate_payout?
-    true
-  end
-
-  def credit_card_payment?
-    true
-  end
-
-  private
-
-  def configure_braintree_class
-    Braintree::Configuration.environment = settings["environment"]
-    Braintree::Configuration.merchant_id = settings["merchant_id"]
-    Braintree::Configuration.public_key  = settings["public_key"]
-    Braintree::Configuration.private_key = settings["private_key"]
-  end
 end
 

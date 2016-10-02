@@ -31,6 +31,8 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   accepts_nested_attributes_for :owners, allow_destroy: true
   accepts_nested_attributes_for :current_address
 
+  delegate :direct_charge?, to: :payment_gateway
+
   def onboard!
     result = payment_gateway.onboard!(create_params)
     handle_result(result)
@@ -174,6 +176,14 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     end
   end
 
+  def custom_options
+    if direct_charge?
+      { stripe_account: internal_payment_gateway_account_id }
+    else
+      { destination: internal_payment_gateway_account_id }
+    end
+  end
+
   def get_currency
     case iso_country_code
     when 'US'
@@ -268,7 +278,6 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       stripe_account.save
     end
   end
-
 
   def validate_current_address
     return if current_address.blank?
