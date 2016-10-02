@@ -3,9 +3,26 @@ require 'json'
 
 namespace :longtail do
   desc 'Parses data from their api and creates what needs to be created'
-  task setup: :environment do
+
+  task desksnearme: :environment do
+    Instance.find(1).set_context!
+    page = Page.where(slug: 'workspace', theme_id: PlatformContext.current.theme.id).first_or_create!(path: 'Workplace')
+    page.redirect_url = nil
+    page.content = LongtailRakeHelper.generic_page_content
+    page.css_content = ''
+    page.save!
+    LongtailRakeHelper.parse_keywords!(page, 'c3ac011214f481a580dae3fa3a3e8cf9')
+  end
+
+  task spacer: :environment do
     Instance.find(130).set_context!
-    LongtailRakeHelper.parse_keywords!
+    page = Page.where(slug: 'storage', theme_id: PlatformContext.current.theme.id).first_or_create!(path: 'Storage')
+    page.redirect_url = nil
+    page.content = LongtailRakeHelper.spacer_page_content
+    page.css_content = LongtailRakeHelper.spacer_page_css
+    page.save!
+    LongtailRakeHelper.parse_keywords!(page, 'bd6502da3bc87081bb32be0b7187534c')
+
   end
 end
 
@@ -13,35 +30,24 @@ class LongtailRakeHelper
 
   class << self
 
-    def parse_keywords!(page_number = 1)
+    def parse_keywords!(page, token, page_number = 1)
       url = URI.parse("http://api-staging.longtailux.com/keywords/seo?page_limit=10000")
       http = Net::HTTP.new(url.host, url.port)
       req = Net::HTTP::Get.new(url)
-      req.add_field("Authorization", "Bearer bd6502da3bc87081bb32be0b7187534c")
+      req.add_field("Authorization", "Bearer #{token}")
       response = http.request(req)
       keywords = JSON.parse(response.body)
 
-      @page = Page.where(slug: 'storage', theme_id: PlatformContext.current.theme.id).first_or_create!(path: 'Storage')
-      @page.redirect_url = nil
-      @page.content = page_content
-      @page.css_content = page_css
-      @page.save!
-      @main_data_source = @page.data_sources.where(type: 'DataSource::CustomSource', label: "storage").first_or_create!
+      @main_data_source = page.data_sources.where(type: 'DataSource::CustomSource', label: page.slug).first_or_create!
 
-      wait = 0
       keywords["data"].each do |keyword|
-        wait += 1
-        if wait == 10
-          wait = 0
-          puts "waiting 2secs"
-          sleep 2
-        end
+        ensure_100_requests_per_minute!
 
         host = "http://api-staging.longtailux.com/search/seo/#{keyword['attributes']['slug']}"
         url = URI.parse(host)
         http = Net::HTTP.new(url.host, url.port)
         req = Net::HTTP::Get.new(url)
-        req.add_field("Authorization", "Bearer bd6502da3bc87081bb32be0b7187534c")
+        req.add_field("Authorization", "Bearer #{token}")
         response = http.request(req)
         while response.body == 'Too Many Attempts.'
           puts "Too many attempts, retrying after 5secs..."
@@ -62,12 +68,13 @@ class LongtailRakeHelper
           parsed_body['included'].each_with_index do |item, index|
             transactable = Transactable.with_deleted.find_by(id: item['attributes']['guid'])
             if transactable.nil?
-              puts "\t\tSkipping additional attributes - no transactable"
+              puts "\t\tSkipping additional attributes - no transactable #{item['attributes']['guid']}"
               next
-            else
-              puts "\t\tFetching additional attributes"
             end
-            parsed_body['included'][index]['attributes']['price'] = transactable.action_type.pricings.first.price.to_s
+            parsed_body['included'][index]['attributes']['price'] = {}
+            transactable.action_type.pricings.each do |pricing|
+              parsed_body['included'][index]['attributes']['price'][pricing.unit] = pricing.price.to_s
+            end
             parsed_body['included'][index]['attributes']['photos'] = transactable.photos_metadata.try(:map) { |p| p['space_listing'] }
             parsed_body['included'][index]['attributes']['address'] = transactable.formatted_address
             parsed_body['included'][index]['attributes']['latitude'] = transactable.latitude
@@ -79,14 +86,136 @@ class LongtailRakeHelper
           end
           dsc.json_content = parsed_body
         end
-        #@page.page_data_source_content.where(data_source_content: data_source_content, slug: 'storage').first_or_create!
-        #@page.page_data_source_content.where(data_source_content: data_source_content, slug: keyword['attributes']['category_url'][1..-1]).first_or_create!
-        @page.page_data_source_content.where(data_source_content: data_source_content, slug: keyword['attributes']['url'][1..-1]).first_or_create!
+        page.page_data_source_contents.where(data_source_content: data_source_content, slug: keyword['attributes']['url'][1..-1]).first_or_create!
 
       end
     end
 
-    def page_content
+    def ensure_100_requests_per_minute!
+      @first_request ||= Time.zone.now.strftime('%M').to_i
+      @number_of_requests ||= 0
+
+      if @first_request == Time.zone.now.strftime('%M').to_i
+        @number_of_requests += 1
+        if @number_of_requests == 100
+          puts "have to sleep, reached 100 requests in the same minute ("
+          loop do
+            sleep(1)
+          end while @first_request == Time.zone.now.strftime('%M').to_i
+          @first_request = Time.zone.now.strftime('%M').to_i
+          @number_of_requests = 1
+        end
+      else
+        @first_request = Time.zone.now.strftime('%M').to_i
+        @number_of_requests = 1
+      end
+    end
+
+    def generic_page_content
+      %Q{
+{% assign cache_key = data_source_last_update | append: current_path %}
+{% cache_for cache_key, page %}
+  {% assign dsc = @data_source_contents.first.json_content %}
+  {% if params.slug2 == blank or dsc == blank %}
+    <h1>404 does not exist.</h1>
+  {% else %}
+    {% assign dsc = @data_source_contents.first.json_content %}
+    <p>Found {{ dsc.data.first.relationships.items.data.count }} results for {{  dsc.data.first.attributes.name }}</p>
+    <p>Related listings:
+      <ul>
+        {% for similar_storage in dsc.data.first.relationships.similar_searches.data %}
+          {% for included_link in dsc.included %}
+            {% if included_link.id == similar_storage.id %}
+              <li><a href="{{ included_link.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp">{{ included_link.attributes.highlighted }}</a></li>
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    </p>
+    <ol class="breadcrumb center ">
+      <li><a href="/?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp"><i class="fa fa-home" aria-hidden="true"></i></a></li>
+      <li><a href="{{ dsc.data.first.attributes.category_url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp">{{ dsc.data.first.attributes.category }}</a></li>
+      <li class="active"><a href="{{ dsc.data.first.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp">{{ dsc.data.first.attributes.name | titleize }}</a></li>
+    </ol>
+    <section class="results">
+      {% for item in dsc.data.first.relationships.items.data %}
+        {% for listing in dsc.included %}
+          {% if listing.id == item.id %}
+            <article class="location" data-id="{{ listing.attributes.guid }}" data-name="{{ listing.attributes.name }}" data-latitude="{{ listing.attributes.latitude }}" data-longitude="{{ listing.attributes.longitude }}">
+              <div class="location-photos-container">
+                <div class="location-photos">
+                  <div class="carousel" id="location-gallery-{{ listing.attributes.guid }}" data-interval="false">
+                    <div class="carousel-inner">
+                      {% for photo in listing.attributes.photos %}
+                        <div class="item" {% if forloop.index == 1 %}style="display: block;"{% endif %}>
+                          <a href="{{ listing.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp"><img src="{{ photo }}" alt="{{ listing.attributes.name }}"></a>
+                        </div>
+                      {% endfor %}
+                    </div>
+
+                    <div class="carousel-nav">
+                      <a href="#location-gallery-{{ listing.attributes.guid }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp" class="carousel-control left ico-chevron-left" data-slide="prev"></a>
+                      <a href="#location-gallery-{{ listing.attributes.guid }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp" class="carousel-control right ico-chevron-right" data-slide="next"></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="location-data">
+                <a href="{{ listing.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp" class="name">{{ listing.attributes.name }}</a>
+                <div data-add-favorite-button="true" data-path="/wish_list/{{ listing.attributes.guid }}/Transactable" data-wishlistable-type="Transactable" data-link-to-classes="btn btn-white btn-large ask" data-path-bulk="/wish_lists/bulk_show" data-object-id="{{ listing.attributes.guid }}" id="favorite-button-Transactable-{{ listing.attributes.guid }}">
+                </div>
+                <p class="subheader">
+                  {{ listing.attributes.address }}
+                </p>
+                <p class="details">
+                  {{ listing.attributes.snippet }}
+                </p>
+              </div>
+              <div class="features">
+                {% for category in listing.attributes.categories  %}
+                  <div>
+                    <p>{{ category.name }}</p>
+                    <div>
+                      {% for child in category.children %}
+                        <p>{{ child }}</p>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+              <div>
+                {% for price in listing.attributes.price %}
+                  <p>{{price[0]}} : {{ price[1] }}</p>
+                {% endfor %}
+                <a href="{{ listing.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp" class="btn">
+                  Reserve
+                </a>
+              </div>
+            </article>
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </section>
+
+    <p>Related listings:
+      {% for related_storage in dsc.data.first.relationships.popular_searches.data %}
+        {% for included_link in dsc.included %}
+          {% if included_link.id == related_storage.id %}
+            <a href="{{ included_link.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp">{{ included_link.attributes.highlighted }}</a>
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </p>
+
+  {% endif %}
+{% endcache_for %}
+      }
+    end
+
+    def spacer_page_content
       %Q{
   {% assign cache_key = data_source_last_update | append: current_path %}
   {% cache_for cache_key, page %}
@@ -259,7 +388,7 @@ class LongtailRakeHelper
                                 </div>
                               </div>
                               <div class="price-and-types hidden-xs ">
-                                <span class="original-price">${{ listing.attributes.price }}</span> / month
+                                <span class="original-price">${{ listing.attributes.price.subscription_month }}</span> / month
                                 <a href="{{ listing.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp" class="btn">
                                   Reserve
                                 </a>
@@ -267,7 +396,7 @@ class LongtailRakeHelper
                             </div>
                           </div>
                           <div class="price-and-types visible-xs ">
-                            <span class="original-price">${{ listing.attributes.price }}</span> / month
+                            <span class="original-price">${{ listing.attributes.price.subscription_month }}</span> / month
                             <a href="{{ listing.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp" class="btn">
                               Reserve
                             </a>
@@ -328,7 +457,7 @@ class LongtailRakeHelper
 
     end
 
-    def page_css
+    def spacer_page_css
       %Q{
 body {
   background: #fff !important;
