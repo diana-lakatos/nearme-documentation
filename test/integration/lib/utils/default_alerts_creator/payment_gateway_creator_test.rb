@@ -16,7 +16,7 @@ class Utils::DefaultAlertsCreator::PaymentGatewayCreatorTest < ActionDispatch::I
   context 'methods' do
 
     setup do
-      ActiveMerchant::Billing::BraintreeMarketplacePayments.any_instance.stubs(:onboard!).returns(OpenStruct.new(success?: true))
+      ActiveMerchant::Billing::BraintreeCustomGateway.any_instance.stubs(:onboard!).returns(OpenStruct.new(success?: true))
       @merchant_account = FactoryGirl.create(:braintree_marketplace_merchant_account)
       @platform_context = PlatformContext.current
       @instance = @platform_context.instance

@@ -2,7 +2,10 @@ class PaymentGateway::StripePaymentGateway < PaymentGateway
   supported :multiple_currency, :recurring_payment, :credit_card_payment, :partial_refunds, :any_country
 
   def self.settings
-    { login: { validate: [:presence] } }
+    {
+      login: { validate: [:presence], label:  "#{test_mode? ? 'Test' : 'Live'} Secret Key"},
+      publishable_key: { validate: [:presence], label: "#{test_mode? ? 'Test' : 'Live'} Publishable Key"}
+    }
   end
 
   def settings

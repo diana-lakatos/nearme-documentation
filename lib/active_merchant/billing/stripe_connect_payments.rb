@@ -16,6 +16,15 @@ module ActiveMerchant
         OpenStruct.new(error: e.message)
       end
 
+      def create_token(credit_card_id, customer_id, merchant_id)
+        Stripe::Token.create(
+          {:customer => customer_id, :card => credit_card_id},
+          {:stripe_account => merchant_id} # id of the connected account
+        )
+      rescue
+        nil
+      end
+
       def parse_webhook(id)
         Stripe::Event.retrieve(id)
       end
@@ -43,15 +52,27 @@ module ActiveMerchant
         OpenStruct.new(error: e.message)
       end
 
-      def create_post_for_auth_or_purchase(money, payment, options)
-        super.tap do |p|
-          if options[:merchant_account]
-            p[:destination]     = options[:merchant_account].internal_payment_gateway_account_id
-            p[:application_fee] = amount(options[:service_fee_host]).to_s
-          end
+      # TODO headers and add_destination and create_post_for_auth_or_purchase methods is 
+      # temporal work around.
+      # Should be removed with upgrade of ActiveMerchant (activemerchant gem)
+      # to the version higher that v1.60.0
+
+      def headers(options = {})
+        super.tap do |headers|
+          headers.merge!("Stripe-Account" => options[:stripe_account]) if options[:stripe_account]
         end
       end
 
+      def add_destination(post, options)
+        post[:destination] = options[:destination] if options[:destination]
+      end
+
+      def create_post_for_auth_or_purchase(money, payment, options)
+        super.tap do |post|
+          add_destination(post, options)
+          post
+        end
+      end
     end
   end
 end

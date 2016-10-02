@@ -4,7 +4,7 @@ class Webhooks::BraintreeMarketplacesControllerTest < ActionController::TestCase
 
   context '#index' do
     setup do
-      ActiveMerchant::Billing::BraintreeMarketplacePayments.any_instance.stubs(:onboard!).returns(OpenStruct.new(success?: true))
+      ActiveMerchant::Billing::BraintreeCustomGateway.any_instance.stubs(:onboard!).returns(OpenStruct.new(success?: true))
 
       @company = FactoryGirl.create(:company)
       @payment_gateway = FactoryGirl.create(:braintree_marketplace_payment_gateway)
