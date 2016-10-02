@@ -25,6 +25,7 @@ class HomeController < ApplicationController
         render :tutorial if current_user.should_render_tutorial?
       end
     end
+    respond_to :html
   end
 end
 

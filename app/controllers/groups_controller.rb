@@ -9,6 +9,7 @@ class GroupsController < ApplicationController
     @feed = ActivityFeedService.new(@group)
     @members = @group.approved_members.paginate(paginate_params)
     @transactables = @group.transactables.active.paginate(paginate_params)
+    respond_to :html
   end
 
   protected

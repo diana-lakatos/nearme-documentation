@@ -4,6 +4,7 @@ class MarketplaceSessionsController < ApplicationController
   skip_before_filter :redirect_if_marketplace_password_protected
 
   def new
+    respond_to :html
   end
 
   def create
