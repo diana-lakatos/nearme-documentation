@@ -5,7 +5,7 @@
 #
 # just ensure it's added to config/application.rb as a rack middleware.
 
-class PlatformContext::RackSetter
+class PlatformContextSetter
   def initialize(app)
     @app = app
   end

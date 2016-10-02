@@ -5,6 +5,7 @@ class TopicsController < ApplicationController
     @feed = ActivityFeedService.new(@topic)
     @followers = @topic.feed_followers.paginate(paginate_params)
     @all_transactables = @topic.transactables.active.paginate(paginate_params)
+    respond_to :html
   end
 
   def paginate_params
