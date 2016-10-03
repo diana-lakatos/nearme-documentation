@@ -1,6 +1,7 @@
 require 'thor'
 require 'nearme'
 require 'slack-notifier'
+require_relative '../../../../../lib/jira_wrapper.rb'
 
 module NearMe
   class CLI < Thor
@@ -54,6 +55,11 @@ DESC
       puts "Deploy started with ID: #{deployment_id}"
 
       notifier.ping(":airplane_departure: Deploy started by #{ENV['AWS_USER']}: #{options[:branch]} -> #{options[:stack]} (id: #{deployment_id})", icon_emoji: ':passenger_ship:')
+      if @production_deploy.present?
+        production_notifier = Slack::Notifier.new('https://hooks.slack.com/services/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')
+        production_release_notes = JiraWrapper.new.release_notes(@production_deploy)
+        production_notifier.ping("Production release started #{options[:branch]} -> #{options[:stack]}. You can <a href='#{production_release_notes}'>Check Release Notes</a>. Details in #eng-deploys", icon_emoji: ':see_no_evil:')
+      end
       if options[:watch]
         puts "Waiting until deploy is done."
         result_hash = deploy.watch!(deployment_id)
@@ -162,12 +168,14 @@ BANNER
           end
         end
 
-        answer = ask "\nAre you sure you want to perform this action on production? Type 'production' if so:"
+        answer = ask "\nAre you sure you want to perform this action on production? Type 'production' if so. BTW: Have you created git tag?"
 
         if answer != 'production'
           puts 'Nope!'
           exit 1
         end
+
+        @production_deploy = `git describe`.split('-')[0].strip
       end
 
       def notifier
