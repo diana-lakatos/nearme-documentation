@@ -175,7 +175,7 @@ BANNER
           exit 1
         end
 
-        @production_deploy = `git describe`.split('-')[0]
+        @production_deploy = `git describe`.split('-')[0].strip
       end
 
       def notifier
