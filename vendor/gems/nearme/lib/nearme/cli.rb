@@ -1,6 +1,7 @@
 require 'thor'
 require 'nearme'
 require 'slack-notifier'
+require_relative '../../../../../lib/jira_wrapper.rb'
 
 module NearMe
   class CLI < Thor
