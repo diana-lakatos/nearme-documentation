@@ -1,12 +1,11 @@
 namespace :jira do
   desc "Populate new foreign keys and flags"
   task :release_sprint, [:sprint_number] => [:environment] do |t, args|
+    @jira_wrapper = JiraWrapper.new
     @jira_helper = JiraHelper.new
     puts @jira_helper.commit_parser.to_s
 
-    @client = @jira_helper.jira_client
-
-    issues = @client.Issue.jql("project = \"Near Me\" AND sprint = #{args[:sprint_number]} AND status != Closed", max_results: 500)
+    issues = @jira_wrapper.issues(args[:sprint_number])
 
     tickets_assigned_to_sprint = issues.map { |i| [i.key, i.summary].join(' ') }
     puts "All tickets assigned to sprint #{args[:sprint_number]} - total count #{tickets_assigned_to_sprint.count}"
@@ -20,27 +19,13 @@ namespace :jira do
     puts "*******************"
     @cards_to_be_added_to_sprint = []
 
-    @printer = JiraCardPrinter.new(@client)
+    @printer = JiraCardPrinter.new
     issues_not_included_in_sprint.each do |number|
       begin
-        issue = @client.Issue.find(number)
-        @printer.print(@jira_helper.full_names([number], @jira_helper.jira_commits)[0], issue)
-        user_input = STDIN.gets.strip
-        while(!%w(y n).include?(user_input)) do
-          if user_input == 'o'
-            `launchy https://near-me.atlassian.net/browse/#{number}`
-          else
-            puts "\tinvalid input"
-          end
-          user_input = STDIN.gets.strip
-        end
-        case user_input
-        when "y"
-          @cards_to_be_added_to_sprint << number
-          puts "\tadding to sprint"
-        when "n"
-          puts "\tskipping"
-        end
+        issue_hash = @jira_wrapper.issue_hash(number)
+        @printer.print(@jira_helper.full_names([number], @jira_helper.jira_commits)[0], issue_hash)
+        @cards_to_be_added_to_sprint << number
+        puts "\tadding to sprint"
       rescue => e
         puts "Error for card: #{number}. #{e} - can't check if fixVersion already assigned"
       end
@@ -50,64 +35,71 @@ namespace :jira do
     puts ""
     puts "Cards that have not relevant code"
     puts "*******************"
-    issues_to_be_moved_to_next_sprint = []
+    @remember_decision_for_epic = {}
     issues_without_code.each do |number|
+      issue_hash = @jira_wrapper.issue_hash(number)
+      @printer.print(@jira_helper.full_names([number], tickets_assigned_to_sprint)[0], issue_hash)
 
-      @printer.print(@jira_helper.full_names([number], tickets_assigned_to_sprint)[0], @client.Issue.find(number))
-      user_input = STDIN.gets.strip
-      while(!%w(y n).include?(user_input)) do
-        if user_input == 'o'
-          `launchy https://near-me.atlassian.net/browse/#{number}`
-        else
-          puts "\tinvalid input"
-        end
-        user_input = STDIN.gets.strip
+      puts '[y]/[n]/[o]'
+      if issue_hash[:epic].present?
+        puts "[Y]/[N] for all cards in this epic"
       end
-      case user_input
-      when "y"
-        @cards_to_be_added_to_sprint << number
-        puts "\tadding to sprint"
-      when "n"
-        puts "\tDo you want to move it to the next sprint? [y]/[n]/[o]"
-        user_input = STDIN.gets.strip
-        while(!%w(y n).include?(user_input)) do
-          if user_input == 'o'
-            `launchy https://near-me.atlassian.net/browse/#{number}`
-          else
-            puts "\tinvalid input"
+
+      if @remember_decision_for_epic[issue_hash[:epic]]
+        case @remember_decision_for_epic[issue_hash[:epic]]
+        when "y"
+          @cards_to_be_added_to_sprint << number
+          puts "\t\tautomatically adding "
+        when "n"
+          puts "\t\tautomatically skipping"
+        end
+      else
+        if ["IN QA", "Ready for Test Server", "Ready for Production"].include?(issue_hash[:status])
+          if issue_hash[:fixVersions].present?
+            puts "\tSkipping - fixVersion already assigned"
+            next
           end
           user_input = STDIN.gets.strip
-        end
-        case user_input
-        when "y"
-          puts "\t\tmoving to the next sprint"
-          issues_to_be_moved_to_next_sprint << number
-        when "n"
-          puts "\t\tskipping"
+          while(!%w(Y y N n).include?(user_input)) do
+            if user_input == 'o'
+              `launchy https://near-me.atlassian.net/browse/#{number}`
+            else
+              puts "\tinvalid input"
+            end
+            user_input = STDIN.gets.strip
+          end
+          case user_input
+          when "y"
+            @cards_to_be_added_to_sprint << number
+            puts "\tadding to sprint"
+          when "Y"
+            @cards_to_be_added_to_sprint << number
+            puts "\t\tall cards from epic #{issue_hash[:epic]} will be added"
+            @remember_decision_for_epic[issue_hash[:epic]] = "y"
+          when "N"
+            puts "\t\tall cards from epic #{issue_hash[:epic]} will be skipped"
+            @remember_decision_for_epic[issue_hash[:epic]] = "n"
+          when "n"
+            puts "\t\tskipping"
+          end
+        else
+          puts "Not in QA and not Ready for Production -> will be moved automatically"
         end
       end
     end
 
     cards_in_commits = @jira_helper.to_jira_number(@jira_helper.jira_commits) & @jira_helper.to_jira_number(tickets_assigned_to_sprint)
 
+    puts "Ok, time to update JIRA"
+
     next_tag = @jira_helper.next_tag(1)
+    total_count = (@cards_to_be_added_to_sprint + cards_in_commits).count
+    i = 0
     (@cards_to_be_added_to_sprint + cards_in_commits).each do |card_in_sprint|
-      begin
-        jira_card = @client.Issue.find(card_in_sprint)
-        jira_card.save({ fields: { fixVersions: [{ name: next_tag }] } })
-        jira_card.save({ fields: { customfield_10007: args[:sprint_number].to_i }})
-      rescue => e
-        puts "Error for card: #{card_in_sprint}. #{e} - can't assign sprint and fixVersion"
-      end
-    end
-    puts "Moving cards: #{issues_to_be_moved_to_next_sprint.join(",")} to next sprint"
-    issues_to_be_moved_to_next_sprint.each do |number|
-      begin
-        jira_card = @client.Issue.find(number)
-        jira_card.save({ fields: { customfield_10007: args[:sprint_number].to_i + 1}})
-        jira_card.save({ fields: { fixVersions: [] } })
-      rescue => e
-        puts "Error for card: #{card_in_sprint}. #{e} - can't move to the next sprint"
+      i += 1
+      @jira_wrapper.update_issue(card_in_sprint, tag: [{ name: next_tag }], sprint_number: args[:sprint_number].to_i)
+      if i % 10 == 0
+        puts "Updated #{i}/#{total_count}"
       end
     end
 
@@ -122,7 +114,7 @@ namespace :jira do
 
   task :release_hotfix do
     @jira_helper = JiraHelper.new
-    @client = @jira_helper.jira_client
+    @jira_wrapper= JiraWrapper.new
 
     @commits_for_hotfix = []
 
@@ -147,14 +139,8 @@ namespace :jira do
     next_tag = @jira_helper.next_tag(2)
     @commits_for_hotfix.each do |commit_for_hotfix|
       if commit_for_hotfix.match(/^NM-/)
-        begin
-          card_number = @jira_helper.to_jira_number([commit_for_hotfix]).first
-          jira_card = @client.Issue.find(card_number)
-          jira_card.save({ fields: { fixVersions: [{ name: next_tag }] } })
-          jira_card.save({ fields: { customfield_10007: nil }})
-        rescue => e
-          puts "Error for card: #{commit_for_hotfix}. #{e}"
-        end
+        card_number = @jira_helper.to_jira_number([commit_for_hotfix]).first
+        @jira_wrapper.update_issue(card_number, tag: [{ name: next_tag }], sprint_number: nil)
       end
     end
 
@@ -223,7 +209,7 @@ class JiraHelper
   end
 
   def to_jira_number(array)
-    array.map { |a| a.split(' ')[0] }
+    array.map { |a| a[0..6] }
   end
 
   def full_names(numbers, array)
@@ -231,32 +217,26 @@ class JiraHelper
   end
 
   def jira_client
-    @jira_client ||= JIRA::Client.new({username: 'jira-api', password: 'N#arM3123adam', context_path: '',site: 'https://near-me.atlassian.net', rest_base_path: "/rest/api/2", auth_type: :basic, read_timeout: 120 })
+    @jira_wrapper = JiraWrapper.new
   end
 
 end
 
 class JiraCardPrinter
 
-  def initialize(client)
-    @client = client
-    @epics = {}
+  def initialize
   end
 
-  def print(name, issue)
-    if issue.customfield_10008.present?
-      @epics[issue.customfield_10008] ||= @client.Issue.find(issue.customfield_10008).summary
-    end
-
+  def print(name, issue_hash)
     puts %Q{
 Is this issue part of the sprint:
 
   Number: #{name}
-  fixVersions: #{issue.fixVersions.map(&:name).join(', ')}
-  status: #{issue.status.name}
-  assignee: #{issue.assignee.displayName}
-  epic: #{@epics[issue.customfield_10008]}
-  [y]/[n]/[o]
+  fixVersions: #{issue_hash[:fixVersions]}
+  status: #{issue_hash[:status]}
+  assignee: #{issue_hash[:assignee]}
+  epic: #{issue_hash[:epic]}
+  sprint: #{issue_hash[:sprint]}
     }
   end
 end
