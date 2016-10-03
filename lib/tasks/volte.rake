@@ -73,6 +73,7 @@ namespace :volte do
         enable_reviews: true,
         require_transactable_during_onboarding: true
       }
+      transactable_type.default_availability_template = @instance.availability_templates.where(name: '24/7').first
 
       transactable_type.time_based_booking ||= transactable_type.build_time_based_booking(
         enabled: true,
@@ -93,9 +94,11 @@ namespace :volte do
       fc = transactable_type.reservation_type.form_components.first
       fc.name = 'Request Item'
       fc.form_fields = [
-        {'reservation' => 'payment_documents'},
-        {'reservation' => 'dates'},
-        {'reservation' => 'price'}
+        {'reservation' => 'start_date'},
+        {'reservation' => 'price'},
+        {'reservation' => 'waiver_agreements'},
+        {'reservation' => 'payments'}
+        # {'reservation' => 'shipping_address_google'},
       ]
       fc.save
     end

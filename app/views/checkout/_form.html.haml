@@ -29,7 +29,6 @@
                   - if form_components_count > 1
                     %span.step-no= "#{index + 1}."
                   = form_component.name
-
                 - form_component.form_fields.each do |form_field|
                   - model = form_field.keys.first
                   - field = form_field[model]

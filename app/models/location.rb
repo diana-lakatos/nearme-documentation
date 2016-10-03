@@ -127,7 +127,7 @@ class Location < ActiveRecord::Base
   end
 
   def assign_default_availability_rules
-    self.availability_template ||= instance.availability_templates.first
+    self.availability_template ||= (listings.first.try(:transactable_type).try(:default_availability_template) || instance.availability_templates.first)
   end
 
   def name
