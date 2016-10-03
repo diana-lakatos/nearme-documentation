@@ -1,7 +1,7 @@
 class SellerAttachmentDrop < BaseDrop
   include ActionView::Helpers::NumberHelper
 
-  delegate :user, :created_at, to: :source
+  delegate :id, :user, :created_at, to: :source
 
   # Title of the attachment
   def title

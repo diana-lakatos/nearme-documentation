@@ -45,7 +45,7 @@ class Dashboard::SellerAttachmentsController < Dashboard::AssetsController
       if request.xhr?
         render text: "$('li[data-attachment=#{attachment.id}]').remove();"
       else
-        redirect_to (request.referer.presence || root_path) + "#transactable_#{attachment.assetable_id}"
+        redirect_to(request.referer.presence || root_path) + "#transactable_#{attachment.assetable_id}"
       end
     else
       render nothing: true, status: 401
