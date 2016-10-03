@@ -1,21 +1,21 @@
-<div class="row">
-  <div class="col-sm-6">Motorcycle | Broken Leg</div>
-  <div class="col-sm-6" style="text-align: right">
-    {% if for_host %}
-      <a href='{{ transactable.edit_path }}' class="btn btn-primary">Edit Case</a>
-    {% endif %}
-  </div>
-</div>
-<div class="row">
-  <div class="col-sm-6">Injury or Accident Date: 12/2/2015</div>
-  <div class="col-sm-6" style="text-align: right">Days of Hospitalization: 45</div>
-</div>
-<div class="row">
-  <div class="col-sm-6">Location of Injury or Accident: Missouri</div>
-  <div class="col-sm-6" style="text-align: right">Death Case: N</div>
+<div class="properties">
+  <dl>
+    <dt>Injury or Accident Date:</dt>
+    <dd>{{ transactable.properties.date_of_incident }}</dd>
+
+    <dt>Days of Hospitalization:</dt>
+    <dd>{{ transactable.properties.days_of_hospitalization }}</dd>
+
+    <dt>Location of Injury or Accident:</dt>
+    <dd>{{ transactable.properties.city_of_incident }}, {{ transactable.properties.state_of_incident }}</dd>
+
+    <dt>Death Case:</dt>
+    <dd>{{ transactable.properties.involve_wrongful_death }}</dd>
+  </dl>
 </div>
 
 {% if transactable.properties.case_short_description != blank %}
+    <hr>
     <h4>Description:</h4>
     {% if transactable.properties.case_short_description.size > 350 %}
        <div data-shorten-description>

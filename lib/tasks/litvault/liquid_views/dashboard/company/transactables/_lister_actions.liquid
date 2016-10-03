@@ -1,4 +1,5 @@
 <ul class="actions-a">
+  <li><a href='{{ transactable.edit_path }}' class="btn btn-primary">Edit Case</a></li>
   {% if current_status != 'archived' %}
     <li><a href="{{ transactable.show_path }}" class="btn btn-default">View Case Details</a></li>
   {% endif %}
@@ -9,11 +10,13 @@
       <a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id, skip: true }}">{{ 'dashboard.order_items.send_message' | t}}</a>
     {% endif %}
   </li>
-{% comment %}  <li>
+{% comment %}
+  <li>
     {% assign form_url = order.offer_cancel_url %}
 
     {% form_for order, url: @form_url %}
       <input type='submit' class="btn btn-warning" value='Close case'>
     {% endform_for %}
   </li>
-{% endcomment %}</ul>
+{% endcomment %}
+</ul>

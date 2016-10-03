@@ -2,61 +2,57 @@
   {% assign transactable_collaborator = current_user  | find_collaborator: transactable %}
   <article class="listing-b" id="transactable_{{transactable.id}}">
     <h2>{{ transactable.name }}</h2>
+
+    <p>
+    {% if params.action == 'orders' %}
+      {% if transactable.state == 'pending' %}
+        <span class="label label-info">Open</span>
+      {% elsif transactable.state == 'completed' %}
+        <span class="label label-success">Completed</span>
+      {% else %}
+        <span class="label label-info">Accepted</span>
+      {% endif %}
+    {% else %}
+      {% if transactable_collaborator.approved_by_owner? %}
+        <span class="label label-success">Access Approved</span>
+      {% elsif transactable_collaborator.rejected_by_owner? %}
+        <span class="label label-danger">Access Rejected</span>
+      {% else %}
+        <span class="label label-info">Open</span>
+      {% endif %}
+    {% endif %}
+    </p>
+
+
     <div class="row">
-      <div class="col-md-4 pull-right">
-        <h3>
-          {% if params.action == 'orders' %}
-            {% if transactable.state == 'pending' %}
-              Open
-            {% elsif transactable.state == 'completed' %}
-              Completed
-            {% else %}
-              Accepted
-            {% endif %}
-          {% else %}
-            {% if transactable_collaborator.approved_by_owner? %}
-              Access Approved
-            {% elsif transactable_collaborator.rejected_by_owner? %}
-              Access Rejected
-            {% else %}
-              Access Requested
-            {% endif %}
-          {% endif %}
-        </h3>
+      <div class="col-md-9">
+        {% include 'dashboard/user_reservations/reservation_details', reservation: reservation %}
       </div>
-    </div>
-
-
-    <div class="row">
-      {% include 'dashboard/user_reservations/reservation_details', reservation: reservation, for_host: false %}
+      <div class="col-md-3">
+        {% include 'dashboard/company/transactables/enquirer_actions.html', transactable_collaborator: transactable_collaborator%}
+      </div>
     </div>
 
     <h3>Request To View Case Details:</h3>
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Handling Lawyer:</th>
+            <th>Date:</th>
+            <th>Status:</th>
+          </tr>
+        </thead>
+        <tbody>
             <tr>
-              <th>Handling Lawyer:</th>
-              <th>Date:</th>
-              <th>Status:</th>
+              <td>{{ transactable_collaborator.user.name }}</td>
+              <td>{{ transactable_collaborator.created_at | to_date | l: 'short' }}</td>
+              <td>{{ transactable_collaborator.status }}</td>
+              <td><a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id, skip: true }}">Send message</a></td>
             </tr>
-          </thead>
-          <tbody>
-              <tr>
-                <td>{{ transactable_collaborator.user.name }}</td>
-                <td>{{ transactable_collaborator.created_at | to_date | l: 'short' }}</td>
-                <td>{{ transactable_collaborator.status }}</td>
-                <td><a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id, skip: true }}">Send message</a></td>
-              </tr>
-          </tbody>
-        </table>
-      </div>
-
-      {% if transactable_collaborator.approved_by_owner? %}
-        <a href="{{ transactable.show_path }}" class="btn btn-default">Project Details</a>
-      {% else %}
-        <a href="{{ transactable_collaborator.enquirerer_destroy_path }}" data-method="delete" data-confirm="Are you sure?" class="btn btn-default">Cancel Request</a>
-      {% endif %}
+        </tbody>
+      </table>
+    </div>
 
     {% assign orders = current_user | get_enquirer_orders: transactable %}
 
@@ -98,12 +94,5 @@
         </table>
       </div>
     {% endif %}
-
-    <hr>
-    <div class="row">
-      <div class="col-md-3 pull-right">
-        {% include 'dashboard/company/transactables/enquirer_actions.html' %}
-      </div>
-    </div>
   </article>
 {% endfor %}

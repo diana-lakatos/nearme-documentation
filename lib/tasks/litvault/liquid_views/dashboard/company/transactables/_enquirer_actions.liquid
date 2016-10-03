@@ -1,10 +1,13 @@
 <ul class="actions-a">
 
-  {% if current_status != 'archived' %}
-    <li>
-      <a href="{{ transactable.show_path }}" class="btn btn-default">Project Details</a>
-    </li>
+  <li>
+  {% if transactable_collaborator.approved_by_owner? %}
+    <a href="{{ transactable.show_path }}" class="btn btn-default">Project Details</a>
+  {% else %}
+    <a href="{{ transactable_collaborator.enquirerer_destroy_path }}" data-method="delete" data-confirm="Are you sure?" class="btn btn-default">Cancel Request</a>
   {% endif %}
+  </li>
+
 
   {% if order != blank and transactable.completed? == true %}
     <li><a href="{{ 'dashboard_order_order_items_path' | generate_url: order_id: order.id, transactable_id: transactable.id }}" class="btn btn-default">View Time &amp; Expenses</a></li>
