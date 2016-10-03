@@ -9,9 +9,9 @@ brew install redis
 brew install postgresql
 brew install elasticsearch
 brew install imagemagick
-brew install qt5
-brew linkapps qt5
-brew link --force qt5
+brew install qt55
+brew linkapps qt55
+brew link --force qt55
 brew install icu4c
 bundle
 brew install node
@@ -31,11 +31,10 @@ export AWS_USER=yourname
 export AWS_OPSWORKS_REGION=us-east-1
 ```
 
-
 ### Get Database Backup
 
-After you configure database.yml and create database with ``` rake db:create ```, get backup to fill it with the current
-data using ``` rake backup:restore ``` in your console.
+After you configure database.yml and create database with `rake db:create`, get backup to fill it with the current
+data using `rake backup:restore` in your console.
 
 ### ElasticSearch on local
 
@@ -50,15 +49,17 @@ script.disable_dynamic: false
 ### Troubleshooting
 
 If you can't install capybara gem, try following:
-
+```
 gem uninstall capybara-webkit
 gem uninstall capybara
-brew remove qt
-brew remove qt5
-brew install qt5
-brew linkapps qt5
-brew link --force qt5
+brew remove qt5 qt55
+brew install qt55
+brew linkapps qt55
+brew link --force qt55
 bundle install
+```
+
+[More on Qt and capybara-webkit troubleshooting.](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#os-x-el-capitan-1011-and-yosemite-1010)
 
 ### Assets on local
 
@@ -75,7 +76,9 @@ npm install
 
 And last thing:
 
-```gulp build:development```
+```
+gulp build:development
+```
 
 Note - if you want to run cucumber tests on local, please compile assets for test environment:
 ```
@@ -89,25 +92,26 @@ gulp serve
 
 ### Payments Configuration
 
-Go to the Payments Settings in instance_admin in your Application ``` /instance_admin/settings/payments ``` and edit
-"Stripe" Payment Gateway. In 'Sandbox settings > Login' set ```sk_test_lpr4WQXQdncpXjjX6IJx01W7```.
+Go to the Payments Settings in instance_admin in your Application `/instance_admin/settings/payments` and edit
+"Stripe" Payment Gateway. In 'Sandbox settings > Login' set `sk_test_lpr4WQXQdncpXjjX6IJx01W7`.
 
 If there is no "Stripe" Payment Gateway, just create it.
 
-For payments use any Security Code (CCV), Expiration date that is in future and card numbers from:
-``` https://stripe.com/docs/testing#cards ```
+For payments use any Security Code (CCV), Expiration date that is in future and card numbers from: `https://stripe.com/docs/testing#cards`
 
 ### Different Instances (Market Places [MP])
 
 In Rails Console run:
 
-``` Domain.find_each { |d| d.update_attribute(:name, d.name.gsub('near-me.com', 'lvh.me')) } ```
+```
+Domain.find_each { |d| d.update_attribute(:name, d.name.gsub('near-me.com', 'lvh.me')) }
+```
 
 To access the Instance you need locally, find its domain with the 'lvh.me' part and use instead of 'localhost'.
 
-For easy find, use: ```  Domain.where('name like ?', "%lvh.me").pluck(:name) ```
+For easy find, use: `Domain.where('name like ?', "%lvh.me").pluck(:name)`
 
-Remember about port in url address: ``` <mp>.lvh.me:3000 ```
+Remember about port in url address: `<mp>.lvh.me:3000`
 
 ### DEPLOY Procedure
 
@@ -143,6 +147,7 @@ bin/nearme deploy -r master -e nm-production
 bin/nearme deploy -r master -e nm-oregon
 ```
 Go to jira and:
-1) Mark version as released
-2) Go to Boards -> View all boards -> choose 'Configure' on current -> update quick filters
-3) merge code -> master to staging, current_sprint to staging, staging to current_sprint etc
+
+1. Mark version as released
+2. Go to Boards -> View all boards -> choose 'Configure' on current -> update quick filters
+3. merge code -> master to staging, current_sprint to staging, staging to current_sprint etc
