@@ -427,7 +427,7 @@ namespace :litvault do
       templates = get_templates_from_dir(File.join(@theme_path, 'mailers'))
       templates.each do |template|
         create_email(template.liquid_path, template.body)
-        puts "\t- #{template.name}"
+        puts "\t- #{template.liquid_path}"
       end
     end
 
@@ -436,7 +436,7 @@ namespace :litvault do
       templates = get_templates_from_dir(File.join(@theme_path, 'sms'))
       templates.each do |template|
         create_email(template.liquid_path, template.body)
-        puts "\t- #{template.name}"
+        puts "\t- #{template.liquid_path}"
       end
     end
 

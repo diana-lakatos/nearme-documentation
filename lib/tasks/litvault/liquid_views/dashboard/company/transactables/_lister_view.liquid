@@ -12,7 +12,12 @@
     <h2>{{ transactable.name }}</h2>
 
     <div class="row">
-      {% include 'dashboard/user_reservations/reservation_details', reservation: reservation, for_host: true %}
+      <div class="col-md-9">
+        {% include 'dashboard/user_reservations/reservation_details', reservation: reservation %}
+      </div>
+      <div class="col-md-3">
+        {% include 'dashboard/company/transactables/lister_actions.html' %}
+      </div>
     </div>
 
     {% assign transactable_collaborators = transactable.transactable_collaborators %}
@@ -102,15 +107,6 @@
           </table>
         </div>
       {% endif %}
-
-      <hr>
-      <div class="row">
-        <div class="col-md-3 pull-right">
-          {% include 'dashboard/company/transactables/lister_actions.html' %}
-        </div>
-      </div>
-
-
     {% elsif current_status == "in progress" or current_status == "archived" and accepted_order != blank %}
       <h3>Offer Accepted</h3>
       <div class="table-responsive">
@@ -132,13 +128,6 @@
             </tr>
           </tbody>
         </table>
-      </div>
-
-      <hr>
-      <div class="row">
-        <div class="col-md-3 pull-right">
-          {% include 'dashboard/company/transactables/lister_actions.html' %}
-        </div>
       </div>
     {% endif %}
 
