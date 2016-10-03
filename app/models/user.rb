@@ -957,25 +957,39 @@ class User < ActiveRecord::Base
 
   def recalculate_seller_average_rating!
     seller_average_rating = reviews_about_seller.average(:rating) || 0.0
-    update_column(:seller_average_rating, seller_average_rating)
-    ElasticBulkUpdateJob.perform Transactable, listings.searchable.map { |listing| [listing.id, { seller_average_rating: seller_average_rating }] }
-    touch
+    self.update_columns(
+      seller_average_rating: seller_average_rating, updated_at: Time.now)
+    ElasticBulkUpdateJob.perform Transactable, listings.searchable.map do |listing|
+      [listing.id, { seller_average_rating: seller_average_rating }]
+    end
   end
 
   def recalculate_buyer_average_rating!
     buyer_average_rating = reviews_about_buyer.average(:rating) || 0.0
-    update_column(:buyer_average_rating, buyer_average_rating)
-    touch
-  end
-
-  def recalculate_left_as_buyer_average_rating!
-    update_column(:left_by_buyer_average_rating, Review.left_by_buyer(self).average(:rating) || 0.0)
-    touch
+    self.update_columns(buyer_average_rating: buyer_average_rating, updated_at: Time.now)
   end
 
   def recalculate_left_as_seller_average_rating!
-    update_column(:left_by_seller_average_rating, Review.left_by_seller(self).average(:rating) || 0.0)
-    touch
+    self.update_columns(
+      left_by_seller_average_rating: Review.left_by_seller(self).average(:rating) || 0.0,
+      updated_at: Time.now
+    )
+  end
+
+  def recalculate_left_as_buyer_average_rating!
+    left_by_buyer_avg = Review.left_by_buyer(self).active_with_subject(RatingConstants::HOST).average(:rating) || 0.0
+    self.update_columns(
+      left_by_buyer_average_rating: left_by_buyer_avg,
+      updated_at: Time.now
+    )
+  end
+
+  def recalculate_product_avarage_rating!
+    product_avg = Review.left_by_buyer(self).active_with_subject(RatingConstants::TRANSACTABLE).average(:rating) || 0.0
+    self.update_columns(
+      product_average_rating: product_avg,
+      updated_at: Time.now
+    )
   end
 
   def reset_password!(*args)

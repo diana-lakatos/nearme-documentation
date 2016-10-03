@@ -1,7 +1,7 @@
 .review{id: dom_id(review)}
   .row-fluid
     .span2
-      =review.decorate.show_reviewable_info
+      = review.decorate.show_reviewable_info
     .span10
       .rating
         = render 'shared/stars', stars: review.rating, max_rating: RatingConstants::MAX_RATING

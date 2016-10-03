@@ -30,6 +30,11 @@
               {{ 'user_reviews.reviews_left_by_this_buyer' | translate: first_name: @user.first_name}} ({{@reviews_left_by_buyer_count}})
             </li>
           {% endif %}
+          {% if @reviews_left_about_product_count > 0 %}
+            <li data-option='reviews_left_about_product'>
+              {{ 'user_reviews.reviews_about_product' | translate: first_name: @user.first_name}} ({{@reviews_left_about_product_count}})
+            </li>
+          {% endif %}
         </ul>
       </div>
     </div>
