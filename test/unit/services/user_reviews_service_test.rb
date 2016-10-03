@@ -15,8 +15,9 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
         assert_equal reviews_ids([:host_rates_guest]), reviews_by_role(@reservation.creator, 'reviews_left_by_seller')
         assert_equal reviews_ids([:guest_rates_as_host_other_guest]), reviews_by_role(@reservation.owner, 'reviews_left_by_seller')
 
-        assert_equal reviews_ids([:host_rates_as_guest_other_host, :host_rates_as_guest_other_transactable]), reviews_by_role(@reservation.creator, 'reviews_left_by_buyer')
-        assert_equal reviews_ids([:guest_rates_host, :guest_rates_transactable]), reviews_by_role(@reservation.owner, 'reviews_left_by_buyer')
+        assert_equal reviews_ids([:host_rates_as_guest_other_host]), reviews_by_role(@reservation.creator, 'reviews_left_by_buyer')
+        assert_equal reviews_ids([:host_rates_as_guest_other_transactable]), reviews_by_role(@reservation.creator, 'reviews_left_about_product')
+        assert_equal reviews_ids([:guest_rates_host]), reviews_by_role(@reservation.owner, 'reviews_left_by_buyer')
 
         assert_equal reviews_ids([:guest_rates_host]), reviews_by_role(@reservation.creator, 'reviews_about_seller')
         assert_equal reviews_ids([:host_rates_as_guest_other_host]), reviews_by_role(@reservation.owner, 'reviews_about_seller')
@@ -30,8 +31,9 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
         assert_equal reviews_ids([]), reviews_by_role(@reservation.creator, 'reviews_left_by_seller')
         assert_equal reviews_ids([:guest_rates_as_host_other_guest]), reviews_by_role(@reservation.owner, 'reviews_left_by_seller')
 
-        assert_equal reviews_ids([:host_rates_as_guest_other_host, :host_rates_as_guest_other_transactable]), reviews_by_role(@reservation.creator, 'reviews_left_by_buyer')
-        assert_equal reviews_ids([:guest_rates_host, :guest_rates_transactable]), reviews_by_role(@reservation.owner, 'reviews_left_by_buyer')
+        assert_equal reviews_ids([:host_rates_as_guest_other_host]), reviews_by_role(@reservation.creator, 'reviews_left_by_buyer')
+        assert_equal reviews_ids([:host_rates_as_guest_other_transactable]), reviews_by_role(@reservation.creator, 'reviews_left_about_product')
+        assert_equal reviews_ids([:guest_rates_host]), reviews_by_role(@reservation.owner, 'reviews_left_by_buyer')
 
         assert_equal reviews_ids([:guest_rates_host]), reviews_by_role(@reservation.creator, 'reviews_about_seller')
         assert_equal reviews_ids([:host_rates_as_guest_other_host]), reviews_by_role(@reservation.owner, 'reviews_about_seller')
@@ -51,8 +53,9 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
         assert_equal reviews_ids([:host_rates_guest]), reviews_by_role(@reservation.creator, 'reviews_left_by_seller')
         assert_equal reviews_ids([:guest_rates_as_host_other_guest]), reviews_by_role(@reservation.owner, 'reviews_left_by_seller')
 
-        assert_equal reviews_ids([:host_rates_as_guest_other_host, :host_rates_as_guest_other_transactable]), reviews_by_role(@reservation.creator, 'reviews_left_by_buyer')
-        assert_equal reviews_ids([:guest_rates_host, :guest_rates_transactable]), reviews_by_role(@reservation.owner, 'reviews_left_by_buyer')
+        assert_equal reviews_ids([:host_rates_as_guest_other_host]), reviews_by_role(@reservation.creator, 'reviews_left_by_buyer')
+        assert_equal reviews_ids([:host_rates_as_guest_other_transactable]), reviews_by_role(@reservation.creator, 'reviews_left_about_product')
+        assert_equal reviews_ids([:guest_rates_host]), reviews_by_role(@reservation.owner, 'reviews_left_by_buyer')
 
         assert_equal reviews_ids([:guest_rates_host]), reviews_by_role(@reservation.creator, 'reviews_about_seller')
         assert_equal reviews_ids([:host_rates_as_guest_other_host]), reviews_by_role(@reservation.owner, 'reviews_about_seller')
@@ -66,8 +69,9 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
         assert_equal reviews_ids([]), reviews_by_role(@reservation.creator, 'reviews_left_by_seller')
         assert_equal reviews_ids([:guest_rates_as_host_other_guest]), reviews_by_role(@reservation.owner, 'reviews_left_by_seller')
 
-        assert_equal reviews_ids([:host_rates_as_guest_other_host, :host_rates_as_guest_other_transactable]), reviews_by_role(@reservation.creator, 'reviews_left_by_buyer')
-        assert_equal reviews_ids([:guest_rates_transactable]), reviews_by_role(@reservation.owner, 'reviews_left_by_buyer')
+        assert_equal reviews_ids([:host_rates_as_guest_other_host]), reviews_by_role(@reservation.creator, 'reviews_left_by_buyer')
+        assert_equal reviews_ids([:host_rates_as_guest_other_transactable]), reviews_by_role(@reservation.creator, 'reviews_left_about_product')
+        assert_equal reviews_ids([]), reviews_by_role(@reservation.owner, 'reviews_left_by_buyer')
 
         assert_equal reviews_ids([]), reviews_by_role(@reservation.creator, 'reviews_about_seller')
         assert_equal reviews_ids([:host_rates_as_guest_other_host]), reviews_by_role(@reservation.owner, 'reviews_about_seller')
@@ -81,8 +85,9 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
         assert_equal reviews_ids([]), reviews_by_role(@reservation.creator, 'reviews_left_by_seller')
         assert_equal reviews_ids([:guest_rates_as_host_other_guest]), reviews_by_role(@reservation.owner, 'reviews_left_by_seller')
 
-        assert_equal reviews_ids([:host_rates_as_guest_other_host, :host_rates_as_guest_other_transactable]), reviews_by_role(@reservation.creator, 'reviews_left_by_buyer')
-        assert_equal reviews_ids([:guest_rates_transactable]), reviews_by_role(@reservation.owner, 'reviews_left_by_buyer')
+        assert_equal reviews_ids([:host_rates_as_guest_other_host]), reviews_by_role(@reservation.creator, 'reviews_left_by_buyer')
+        assert_equal reviews_ids([:host_rates_as_guest_other_transactable]), reviews_by_role(@reservation.creator, 'reviews_left_about_product')
+        assert_equal reviews_ids([]), reviews_by_role(@reservation.owner, 'reviews_left_by_buyer')
 
         assert_equal reviews_ids([]), reviews_by_role(@reservation.creator, 'reviews_about_seller')
         assert_equal reviews_ids([:host_rates_as_guest_other_host]), reviews_by_role(@reservation.owner, 'reviews_about_seller')

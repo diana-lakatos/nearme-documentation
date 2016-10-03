@@ -59,14 +59,14 @@ class ReviewDecorator < Draper::Decorator
   end
 
   def show_reviewable_info
-    info = if params[:option] == 'reviews_left_by_seller' || params[:option] == 'reviews_left_by_buyer'
-             if object.rating_system.try(:subject) == 'transactable'
-               get_product_info
-             else
-               get_user_info
-             end
-           else
-             own_info
+    info = if ['reviews_left_by_seller', 'reviews_left_by_buyer', 'reviews_left_about_product'].include? params[:option]
+      if object.rating_system.try(:subject) == 'transactable'
+        get_product_info
+      else
+        get_user_info
+      end
+    else
+      own_info
     end
 
     reviewable_info(info)
