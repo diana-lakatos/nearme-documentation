@@ -629,6 +629,8 @@ en:
       upload_file: "Upload File"
       search: "Search"
     manage:
+      orders:
+        no_details: "This order has no details to display at this time."
       instance_profile_types:
         instance_profile_types: 'User Profiles'
         manage: 'Manage User Profiles'
