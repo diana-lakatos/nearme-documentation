@@ -4,136 +4,136 @@ partial: false
 
 <div class="wrapper-a search-list">
   <div class="search-box">
-    <form class="search-form" action="/search" method="GET">
-        <input type="text" name="query" placeholder="Item name" />
-        <button class="button button-default">SEARCH</button>
+    <form class="search-form" action="/search" method="GET" data-search-form="filters" data-search-form-container>
+      <input type="text" name="query" placeholder="Item name" data-search-form="query" />
+      <button class="button button-default" data-search-form="submit">SEARCH</button>
     </form>
   </div>
 
   <aside class="search-sidebar">
-    <form class="form-horizontal">
-    <ul>
-      <li>
-        <fieldset>
-          <legend>Item type</legend>
-          <select class="form-control ordinary-select" name="item_type" id="">
-            <option value="">Please select</option>
-            <option value="">Dress</option>
-            <option value="">Bag</option>
-            <option value="">Millinary</option>
-            <option value="">Outwear</option>
-            <option value="">Accessories</option>
-          </select>
-        </fieldset>
-      </li>
-      <li>
-        <fieldset>
-          <legend>Item SubType</legend>
-          <select class="form-control ordinary-select" name="item_subtype">
-            <option value="Please Select">Please Select</option>
-            <option value="Neckless">Neckless</option>
-            <option value="Belt">Belt</option>
-            <option value="Other">Other</option>
-          </select>
-        </fieldset>
-      </li>
-      <li>
-        <fieldset>
-          <legend>Style</legend>
-          <select class="form-control ordinary-select" name="item_style" id="item_style">
-            <option value="Please Select">Please Select</option>
-            <option value="">2</option>
-            <option value="">3</option>
-          </select>
-        </fieldset>
-      </li>
-      <li>
-        <fieldset>
-          <legend>Color</legend>
-          <select class="form-control ordinary-select" name="item_color" id="item_color">
-            <option value="Please Select">Please Select</option>
-            <option value="">2</option>
-            <option value="">3</option>
-          </select>
-        </fieldset>
-      </li>
-      <li>
-        <fieldset>
-          <legend>Size</legend>
-          <select class="form-control ordinary-select" name="item_size" id="item_size">
-            <option value="Please Select">Please Select</option>
-            <option value="">2</option>
-            <option value="">3</option>
-          </select>
-        </fieldset>
-      </li>
-      <li>
-        <fieldset>
-          <legend>Designer</legend>
-          <select class="form-control ordinary-select" name="item_designer" id="item_designer">
-            <option value="Please Select">Please Select</option>
-            <option value="">2</option>
-            <option value="">3</option>
-          </select>
-        </fieldset>
-      </li>
-      <li>
-        <fieldset>
-          <legend>Location</legend>
-          <input type="text" name="item_location_city" id="item_location_city" placeholder="City" />
-          <select class="form-control ordinary-select" name="item_location_state" id="item_location_state">
-            <option value="Please Select">Select State</option>
-            <option value="">2</option>
-            <option value="">3</option>
-          </select>
-        </fieldset>
-      </li>
-      <li>
-        <fieldset>
-          <legend>Availability</legend>
-          <ul>
-            <li>
-              <label>
-                From:
-                MM/DD/YYYY
-              </label>
-            </li>
-            <li>
-              <label>
-                To:
-                MM/DD/YYYY
-              </label>
-            </li>
-          </ul>
-        </fieldset>
-      </li>
-      <li>
-        <fieldset>
-          <legend>Price</legend>
-          <select class="form-control ordinary-select" name="price" id="price">
-            <option value="Please select">Please select</option>
-            <option value="Under $50">Under $50</option>
-            <option value="Under $100">Under $100</option>
-            <option value="Under $200">Under $200</option>
-            <option value="Under $300">Under $300</option>
-            <option value="Under $400">Under $400</option>
-            <option value="Under $500">Under $500</option>
-            <option value="$500+">$500+</option>
-          </select>
-        </fieldset>
-      </li>
-    </ul>
+    <form class="form-horizontal" data-search-form="filters">
+      <ul>
+        <li>
+          <fieldset>
+            <legend>Item type</legend>
+            <select class="form-control ordinary-select" name="item_type" id="">
+              <option value="">Please select</option>
+              <option value="Dress">Dress</option>
+              <option value="Bag">Bag</option>
+              <option value="Millinary">Millinary</option>
+              <option value="Outwear">Outwear</option>
+              <option value="Accessories">Accessories</option>
+            </select>
+          </fieldset>
+        </li>
+        <li>
+          <fieldset>
+            <legend>Item SubType</legend>
+            <select class="form-control ordinary-select" name="item_subtype">
+              <option value="">Please Select</option>
+              <option value="Neckless">Neckless</option>
+              <option value="Belt">Belt</option>
+              <option value="Other">Other</option>
+            </select>
+          </fieldset>
+        </li>
+        <li>
+          <fieldset>
+            <legend>Style</legend>
+            <select class="form-control ordinary-select" name="item_style" id="item_style">
+              <option value="">Please Select</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </fieldset>
+        </li>
+        <li>
+          <fieldset>
+            <legend>Color</legend>
+            <select class="form-control ordinary-select" name="item_color" id="item_color">
+              <option value="">Please Select</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </fieldset>
+        </li>
+        <li>
+          <fieldset>
+            <legend>Size</legend>
+            <select class="form-control ordinary-select" name="item_size" id="item_size">
+              <option value="">Please Select</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </fieldset>
+        </li>
+        <li>
+          <fieldset>
+            <legend>Designer</legend>
+            <select class="form-control ordinary-select" name="item_designer" id="item_designer">
+              <option value="">Please Select</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </fieldset>
+        </li>
+        <li>
+          <fieldset>
+            <legend>Location</legend>
+            <input type="text" name="item_location_city" id="item_location_city" placeholder="City" />
+            <select class="form-control ordinary-select" name="item_location_state" id="item_location_state">
+              <option value="">Select State</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </fieldset>
+        </li>
+        <li>
+          <fieldset>
+            <legend>Availability</legend>
+            <ul>
+              <li>
+                <label>
+                  From:
+                  MM/DD/YYYY
+                </label>
+              </li>
+              <li>
+                <label>
+                  To:
+                  MM/DD/YYYY
+                </label>
+              </li>
+            </ul>
+          </fieldset>
+        </li>
+{% comment %}        <li>
+          <fieldset>
+            <legend>Price</legend>
+            <select class="form-control ordinary-select" name="price" id="price">
+              <option value="">Please select</option>
+              <option value="50">Under $50</option>
+              <option value="100">Under $100</option>
+              <option value="200">Under $200</option>
+              <option value="300">Under $300</option>
+              <option value="400">Under $400</option>
+              <option value="500">Under $500</option>
+              <option value="10000">$500+</option>
+            </select>
+          </fieldset>
+        </li>{% endcomment %}
+      </ul>
     </form>
   </aside>
 
-  <main class="search-results">
+  <main class="search-results" data-search-form="results">
     <div class="search-results__summary">
       <div class="results-number">
         <p>2 Results</p>
       </div>
 
       <div class="results-sorting">
-        <form class="form-inline">
+        <form class="form-inline" data-search-form="filters">
           <label for="sort_by">
             Sort by:
             <select class="form-control ordinary-select" name="sort_by" id="sort_by">
