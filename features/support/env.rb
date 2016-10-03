@@ -12,7 +12,7 @@ require "json_spec/cucumber"
 require 'cucumber/rails'
 
 require 'capybara-screenshot/cucumber'
-Capybara::Screenshot.autosave_on_failure = false
+Capybara::Screenshot.autosave_on_failure = true
 
 require 'rack/utils'
 Capybara.app = Rack::ShowExceptions.new(DesksnearMe::Application)

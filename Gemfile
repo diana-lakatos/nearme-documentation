@@ -117,7 +117,7 @@ gem 'mixpanel_client'
 gem 'voight_kampff'
 
 gem 'rest-client'
-gem 'jira-ruby', :require => 'jira'
+gem 'jira-ruby', require: false
 
 gem 'gibbon'
 

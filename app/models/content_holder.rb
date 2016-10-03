@@ -1,6 +1,7 @@
 class ContentHolder < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
+  has_paper_trail
   class NotFound < ActiveRecord::RecordNotFound; end
 
   ANY_PAGE = 'any_page'.freeze

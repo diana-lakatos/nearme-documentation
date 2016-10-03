@@ -46,21 +46,6 @@ script.indexed: on
 script.disable_dynamic: false
 ```
 
-### Troubleshooting
-
-If you can't install capybara gem, try following:
-```
-gem uninstall capybara-webkit
-gem uninstall capybara
-brew remove qt5 qt55
-brew install qt55
-brew linkapps qt55
-brew link --force qt55
-bundle install
-```
-
-[More on Qt and capybara-webkit troubleshooting.](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#os-x-el-capitan-1011-and-yosemite-1010)
-
 ### Assets on local
 
 You have to install gulp on local - use
@@ -151,3 +136,27 @@ Go to jira and:
 1. Mark version as released
 2. Go to Boards -> View all boards -> choose 'Configure' on current -> update quick filters
 3. merge code -> master to staging, current_sprint to staging, staging to current_sprint etc
+
+### Troubleshooting
+
+#### Capybara & qt
+If you can't install capybara gem, try following:
+```
+gem uninstall capybara-webkit
+gem uninstall capybara
+brew remove qt5 qt55
+brew install qt55
+brew linkapps qt55
+brew link --force qt55
+bundle install
+```
+
+[More on Qt and capybara-webkit troubleshooting.](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#os-x-el-capitan-1011-and-yosemite-1010)
+
+#### charlock_holmes (0.7.3) and new icu4c (57.1) on OSX
+
+`charlock_holmes` in 0.7.3 does not work with `icu4c` in 57.1
+
+quick solution is to switch icu4c to previous working version
+
+    brew switch icu4c 56.1
