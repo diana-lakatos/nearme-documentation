@@ -65,7 +65,7 @@ DESC
         result_hash = deploy.watch!(deployment_id)
         message = begin
                     if result_hash.any? { |arr| arr[:status] != 'successful' }
-                      m = ':sos: WHOOOPSE!!!\n'
+                      m = ":sos: WHOOOPSE!!!\n"
                       m += result_hash.map do |arr|
                         icon = arr[:status] == 'successful' ? ':white_check_mark:' : ':x:'
                         status = "#{arr[:name]}: #{arr[:status]}"
