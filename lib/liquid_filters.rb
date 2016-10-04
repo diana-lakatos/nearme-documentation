@@ -179,6 +179,10 @@ module LiquidFilters
   end
   alias_method :l, :localize
 
+  def add_to_date(date, number_of_days)
+    date + number_of_days.days
+  end
+
   def filter_text(text = '')
     return '' if text.blank?
     if PlatformContext.current.instance.apply_text_filters

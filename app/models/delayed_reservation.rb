@@ -74,6 +74,7 @@ class DelayedReservation < Reservation
         periods.first.update_attributes({ date: date, start_minute: @start_minute, end_minute: @end_minute })
       end
     end
+    self.checkout_update = false
     true
   end
 
