@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class SecuredParams
   def shipping_profile
     [
@@ -367,6 +368,7 @@ class SecuredParams
       :show_currency_name,
       :no_cents_if_whole,
       :google_maps_api_key,
+      :debugging_mode_for_admins,
       allowed_currencies: [],
       allowed_countries: [],
       custom_translations: [:'buy_sell_market.checkout.manual_payment', :'buy_sell_market.checkout.manual_payment_description'],
