@@ -1,3 +1,5 @@
+require 'nearme'
+
 class AbstractElbJob < Job
   def after_initialize(domain_id)
     @domain = Domain.find(domain_id)

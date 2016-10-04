@@ -105,12 +105,10 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
   def mockup_database_with_currency(currency = 'USD')
     stub_what_has_to_be_stubbed
     @instance = PlatformContext.current.instance
-    @instance.update_attribute(:service_fee_host_percent, 10)
-    @instance.update_attribute(:service_fee_guest_percent, 15)
     @instance.update_attribute(:payment_transfers_frequency, 'daily')
     FactoryGirl.create(:additional_charge_type, currency: currency, amount: 15)
     @transactable = FactoryGirl.create(:transactable, :with_time_based_booking, currency: currency)
-    pricing = @transactable.action_type.pricing_for('1_day').update! price: 25
+    @transactable.action_type.pricing_for('1_day').update! price: 25
     # @transactable.action_type.save!
     @transactable.action_type.transactable_type_action_type.update_attribute(:service_fee_host_percent, 10)
     @transactable.action_type.transactable_type_action_type.update_attribute(:service_fee_guest_percent, 15)

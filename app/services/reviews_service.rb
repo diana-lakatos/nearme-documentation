@@ -89,7 +89,7 @@ class ReviewsService
   end
 
   def get_transactable_type_id
-    if @params[:review][:reviewable_type].in? %w(Reservation Bid LineItem::Transactable )
+    if @params[:review][:reviewable_type].in? %w(Reservation LineItem::Transactable )
       @params[:review][:reviewable_type].constantize.find(@params[:review][:reviewable_id]).transactable_type_id
     end
   end

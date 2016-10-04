@@ -1,3 +1,5 @@
+require 'braintree'
+
 class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
 
   ATTRIBUTES = %w(bank_routing_number bank_account_number ssn date_of_birth terms_of_service first_name last_name email street_address locality region postal_code)

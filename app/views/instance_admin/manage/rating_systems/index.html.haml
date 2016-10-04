@@ -27,7 +27,7 @@
               %label= t("instance_admin.rating_systems.index.only_if_both_completed_services")
 
         .ratings-content-container{class: "#{'hidden' unless transactable_type.enable_reviews?}"}
-          = simple_form_for transactable_type.becomes(TransactableType), url: update_systems_instance_admin_manage_rating_systems_path(transactable_type_id: transactable_type.id), method: :put do |f|
+          = simple_form_for transactable_type, url: update_systems_instance_admin_manage_rating_systems_path(transactable_type_id: transactable_type.id), method: :put do |f|
             = f.simple_fields_for :rating_systems do |rating_form|
               = rating_form.hidden_field :id
               = rating_form.hidden_field :transactable_type_id

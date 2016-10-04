@@ -1,3 +1,4 @@
+require 'nearme'
 require 'nearme/acm'
 
 class InstanceAdmin::Settings::AwsCertificatesController < InstanceAdmin::Settings::BaseController

@@ -10,7 +10,6 @@ class Utils::DefaultAlertsCreator
     Utils::DefaultAlertsCreator::SupportCreator.new.create_all!
     Utils::DefaultAlertsCreator::RfqCreator.new.create_all!
     Utils::DefaultAlertsCreator::InstanceAlertsCreator.new.create_all!
-    Utils::DefaultAlertsCreator::InquiryCreator.new.create_all!
     Utils::DefaultAlertsCreator::UserMessageCreator.new.create_all!
     Utils::DefaultAlertsCreator::DataUploadCreator.new.create_all!
     Utils::DefaultAlertsCreator::SavedSearchCreator.new.create_all!

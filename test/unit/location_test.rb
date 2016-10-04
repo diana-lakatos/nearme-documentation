@@ -209,28 +209,6 @@ class LocationTest < ActiveSupport::TestCase
       assert_equal @company.id, @location.company_id
     end
 
-    context 'update company' do
-      should 'assign correct creator_id' do
-        @company.update_attribute(:creator_id, @company.creator_id + 1)
-        assert_equal @company.creator_id, @location.reload.creator_id
-      end
-
-      should 'assign correct instance_id' do
-        @company.update_attribute(:instance_id, @company.instance_id + 1)
-        assert_equal @company.instance_id, @location.reload.instance_id
-      end
-
-      should 'assign correct partner_id' do
-        @company.update_attribute(:partner_id, FactoryGirl.create(:partner).id)
-        assert_equal @company.partner_id, @location.reload.partner_id
-      end
-
-      should 'update listings_public' do
-        assert @location.listings_public
-        @location.company.update_attribute(:listings_public, false)
-        refute @location.reload.listings_public
-      end
-    end
   end
 
   should 'populate external id' do

@@ -177,8 +177,6 @@ en:
     does_not_exist: "does not exist"
     address_placeholder: 'Enter location address'
     you_need_to_pick_up_location: "You need to pick up location"
-  bid:
-    heading: 'Make an offer'
   order:
     shipping: 'Shipping: '
     shipments:
@@ -1453,7 +1451,6 @@ en:
       offers_header: 'Offers'
       offers: Offers
       user_auctions: 'My Auctions'
-      user_bids: 'My Bids'
       click_to_call_preferences: 'Click to Call'
 
     white_labels:
@@ -1795,22 +1792,6 @@ en:
       list_new_item: 'List New Offer'
       transactable_not_saved: 'Offer not saved.'
       address_errors_html: 'Please address the following <b>%{count}</b> errors in order to save your offer.'
-    user_bids:
-      unconfirmed: 'In progress'
-      accepted: 'Won Cases'
-      archived: 'Archived'
-    user_auctions:
-      bid_documents: 'Documents'
-      auction_open: 'Active'
-      auction_finished: 'Finished'
-      archived: 'Archived'
-      title_count: 'Auctions (%{count})'
-      actions:
-        approve: 'Approve'
-        reject: 'Reject'
-        confirmations:
-          approve: 'Are you sure you want to approve this offer?'
-          reject: 'Are you sure you want to reject this offer?'
     reviews:
       templates:
         comments: "Comments"
@@ -1836,7 +1817,6 @@ en:
         view_order_details: "View Order Details"
         comments: "Comments"
         view_seller_profile: "View Seller's Profile"
-        view_bidder_profile: "View Bidder's Profile"
         view_owner_profile: "View Owner's Profile"
         view_host_profile: "View Host's Profile"
         view_guest_profile: "View Guest's Profile"
@@ -1853,7 +1833,6 @@ en:
           buyer: "buyer"
           host: "host"
           guest: "guest"
-        view_bidder_profile: "View Bidder profile"
       index:
         title: "Reviews"
         rate_your_experience: "Rate Your Experience"
@@ -2557,7 +2536,6 @@ en:
     cart: 'Cart %{cart}'
     cart_dashboard: 'Cart'
     my_subscriptions: 'My Subscriptions'
-    user_bids: 'My Bids'
 
   sign_up_form:
     sign_up_to: 'Sign up to %{marketplace_name}'

@@ -1,3 +1,5 @@
+require 'sanitize'
+
 module ApplicationHelper
 
   include FormHelper

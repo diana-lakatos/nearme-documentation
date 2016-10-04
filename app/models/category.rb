@@ -1,3 +1,5 @@
+require 'awesome_nested_set'
+
 class Category < ActiveRecord::Base
 
   has_paper_trail

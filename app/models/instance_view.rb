@@ -32,8 +32,6 @@ class InstanceView < ActiveRecord::Base
     "group_mailer/pending_approval",
     "group_mailer/user_accepts_invitation",
     "inappropriate_reports_mailer/inappropriate_report",
-    "inquiry_mailer/inquiring_user_notification",
-    "inquiry_mailer/listing_creator_notification",
     "listing_mailer/share",
     "offer_mailer/notify_guest_of_cancellation_by_guest",
     "offer_mailer/notify_guest_of_cancellation_by_host",

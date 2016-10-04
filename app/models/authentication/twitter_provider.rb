@@ -1,3 +1,5 @@
+require 'twitter'
+
 class Authentication::TwitterProvider < Authentication::BaseProvider
 
   SETUP_PROC = lambda do |env|

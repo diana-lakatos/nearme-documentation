@@ -1,3 +1,5 @@
+require 'video_info'
+
 class HtmlWithVideos < Redcarpet::Render::HTML
 
   def initialize(options = {}, embed_options = {})

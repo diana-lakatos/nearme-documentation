@@ -1,6 +1,5 @@
 class StagingEmailInterceptor
   def self.delivering_email(mail)
-    #TODO: Get rid of this once Intel is migrated to production environment from staging
     rewrite = Proc.new do |address|
       PlatformContext.current.instance.test_email.presence || DesksnearMe::Application.config.test_email
     end

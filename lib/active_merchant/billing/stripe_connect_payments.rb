@@ -1,3 +1,5 @@
+require 'stripe'
+
 module ActiveMerchant
   module Billing
     class StripeConnectPayments < StripeGateway

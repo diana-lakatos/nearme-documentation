@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'nearme'
 
 class InstanceAdmin::Settings::DomainsControllerTest < ActionController::TestCase
   context 'attributes' do
