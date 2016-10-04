@@ -1,5 +1,5 @@
 require 'test_helper'
-require 'twilio'
+require 'twilio-ruby'
 
 class CheckoutControllerTest < ActionController::TestCase
 
