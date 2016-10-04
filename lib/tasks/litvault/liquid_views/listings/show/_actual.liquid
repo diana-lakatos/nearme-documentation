@@ -115,7 +115,7 @@
 
         {% if can_make_offer == true %}
           <div class="make-an-offer">
-            <a class="button-a inverted" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: listing.id }}">Bid on Case</a>
+            <a class="button-a inverted" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: listing.id }}">Make an Offer</a>
           </div>
         {% endif %}
 
@@ -126,7 +126,7 @@
           <ul>
             {% if can_make_offer == true %}
               <li>
-                <a class="button-a inverted" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: listing.id }}">Make na Offer</a>
+                <a class="button-a inverted" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: listing.id }}">Make an Offer</a>
               </li>
             {% endif %}
             {% if current_user.has_seller_profile? %}
