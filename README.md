@@ -5,31 +5,23 @@ All documentation is set out on the [GitHub Wiki](https://github.com/mdyd-dev/de
 ### Cheatsheet to get started
 
 ```
-brew install redis
-brew install postgresql
-brew install elasticsearch
-brew install imagemagick
-brew install qt55
+brew install redis postgresql elasticsearch imagemagick qt55 icu4c node
 brew linkapps qt55
 brew link --force qt55
-brew install icu4c
 bundle
-brew install node
 npm install -g gulp
 npm install
-gulp build:development
+gulp build
 ```
 
 ### Credentials setup
 
 Add to bash, for example ~/.bash_profile :
 
-```
-export AWS_ACCESS_KEY_ID=yourkeyid
-export AWS_SECRET_ACCESS_KEY=youraccesskey
-export AWS_USER=yourname
-export AWS_OPSWORKS_REGION=us-east-1
-```
+    export AWS_ACCESS_KEY_ID=yourkeyid
+    export AWS_SECRET_ACCESS_KEY=youraccesskey
+    export AWS_USER=yourname
+    export AWS_OPSWORKS_REGION=us-east-1
 
 ### Get Database Backup
 
@@ -39,41 +31,34 @@ data using `rake backup:restore` in your console.
 ### ElasticSearch on local
 
 to make ES search work locally you have to enable scripting queries in your local ES instance. to do so please edit ES config file in ES installation path (elasticsearch.yml) and add:
-```
-script.engine.groovy.inline.search: on
-script.inline: on
-script.indexed: on
-script.disable_dynamic: false
-```
+
+    script.engine.groovy.inline.search: on
+    script.inline: on
+    script.indexed: on
+    script.disable_dynamic: false
 
 ### Assets on local
 
 You have to install gulp on local - use
-```
-brew install node
-npm install -g gulp
-```
+
+    brew install node
+    npm install -g gulp
 
 Then in project directory:
-```
-npm install
-```
+
+    npm install
 
 And last thing:
 
-```
-gulp build:development
-```
+    gulp build:development
 
 Note - if you want to run cucumber tests on local, please compile assets for test environment:
-```
-gulp build:test
-```
+
+    gulp build:test
 
 If you are directly working with assets, to avoiding having to compile assets after each change, just use:
-```
-gulp serve
-```
+
+    gulp serve
 
 ### Payments Configuration
 
@@ -88,9 +73,7 @@ For payments use any Security Code (CCV), Expiration date that is in future and 
 
 In Rails Console run:
 
-```
-Domain.find_each { |d| d.update_attribute(:name, d.name.gsub('near-me.com', 'lvh.me')) }
-```
+    Domain.find_each { |d| d.update_attribute(:name, d.name.gsub('near-me.com', 'lvh.me')) }
 
 To access the Instance you need locally, find its domain with the 'lvh.me' part and use instead of 'localhost'.
 
@@ -101,41 +84,42 @@ Remember about port in url address: `<mp>.lvh.me:3000`
 ### DEPLOY Procedure
 
 The code approved by QA is inside staging branch. Go ahead and make sure that you have newest code:
-```
-git fetch --all
-git checkout master
-git merge origin/staging
-```
+ 
+    git fetch --all
+    git checkout master
+    git merge origin/staging
+
+    
 Then check what's the last tag:
-```
-git describe
-```
+
+    git describe
+
 It will return version in a format x.y.z. If you release hotfix, you should increment z, otherwise 99% of cases you want to increment y. If release introduced some breaking changes or is a very big initiative, like Spree Removal or upgrade Rails version, increment x (not supported via rake task described below though).
 
 Make sure that proper next version is added in jira: https://near-me.atlassian.net/projects/NM?selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=all .
 If it is regular deploy, the next thing to do is to run this command [ for hotfix just use release_hotfix without argument ]:
-```
-rake jira:release_sprint[X] # for example rake jira:release_sprint[50] to release sprint with ID 50
-```
+
+    rake jira:release_sprint[X] # for example rake jira:release_sprint[50] to release sprint with ID 50
+
 where X is ID of a sprint - you can check what's the ID for example while searching - https://near-me.atlassian.net/issues/ - just type in `Sprint = "NM Sprint ..." where ... is the sprint number, and when you click on autocomplete it will transform sprint name into ID.
 
 The script will first check if all commits have corresponding jira card, and if so, if the jira card is assigned to proper sprint. That's why it's so important to start each commit with NM-XXX, where XXX is a proper number. Then, it will fetch list of all cards assigned to sprint from jira and will ask you question whether it is part of a sprint or not. If not, you will be able to choose whether to move it to the next sprint or not.
 
 Once you are done, add manually proper tag via
-```
-git tag -a x.y+1.z -m 'Sprint ... and other description'
-git push --tags
-```
+
+    git tag -a x.y+1.z -m 'Sprint ... and other description'
+    git push --tags
+
 Make sure you have pushed master as well: `git push origin master` and proceed with deploy:
-```
-bin/nearme deploy -r master -e nm-production
-bin/nearme deploy -r master -e nm-oregon
-```
+
+    bin/nearme deploy -r master -e nm-production
+    bin/nearme deploy -r master -e nm-oregon
+
 Go to jira and:
 
 1. Mark version as released
 2. Go to Boards -> View all boards -> choose 'Configure' on current -> update quick filters
-3. merge code -> master to staging, current_sprint to staging, staging to current_sprint etc
+3. Merge code -> master to staging, current_sprint to staging, staging to current_sprint etc
 
 ### Troubleshooting
 
@@ -151,12 +135,19 @@ brew link --force qt55
 bundle install
 ```
 
-[More on Qt and capybara-webkit troubleshooting.](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#os-x-el-capitan-1011-and-yosemite-1010)
+If you have xcode 8.0+ and get an error:
+    
+    Project ERROR: Xcode not set up properly. You may need to confirm the license agreement by running /usr/bin/xcodebuild. 
+
+Look into this solution [https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#xcode-80](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#xcode-80)
+
+
+More on [capybara-webkit troubleshooting.](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit)
 
 #### charlock_holmes (0.7.3) and new icu4c (57.1) on OSX
 
 `charlock_holmes` in 0.7.3 does not work with `icu4c` in 57.1
 
-quick solution is to switch icu4c to previous working version
+Quick solution is to switch icu4c to previous working version:
 
     brew switch icu4c 56.1
