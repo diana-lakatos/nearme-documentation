@@ -14,4 +14,8 @@ class CategoryDrop < BaseDrop
   def initialize(category)
     @category = category
   end
+
+  def sorted_descendants
+    @category.descendants.sort { |a,b| a.name.downcase <=> b.name.downcase }
+  end
 end
