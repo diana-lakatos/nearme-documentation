@@ -13,70 +13,20 @@ partial: false
   <aside class="search-sidebar">
     <form class="form-horizontal" data-search-form="filters">
       <ul>
-        <li>
+        {% assign attributes = searcher.filterable_custom_attributes | reverse%}
+        {% for ca in attributes %}
+        <li {{ ca.wrapper_html_options }}>
           <fieldset>
-            <legend>Item type</legend>
-            <select class="form-control ordinary-select" name="item_type" id="">
+            <legend>{{ ca.label }}</legend>
+            <select {{ ca.input_html_options }} class="form-control ordinary-select" name="lg_custom_attributes[{{ ca.name }}][]" id="">
               <option value="">Please select</option>
-              <option value="Dress">Dress</option>
-              <option value="Bag">Bag</option>
-              <option value="Millinary">Millinary</option>
-              <option value="Outwear">Outwear</option>
-              <option value="Accessories">Accessories</option>
+              {% for opt in ca.valid_values %}
+                <option value="{{ opt }}" {% if params['lg_custom_attributes']['item_type'][0] == opt %}selected{% endif %}>{{ opt }}</option>
+              {% endfor %}
             </select>
           </fieldset>
         </li>
-        <li>
-          <fieldset>
-            <legend>Item SubType</legend>
-            <select class="form-control ordinary-select" name="item_subtype">
-              <option value="">Please Select</option>
-              <option value="Neckless">Neckless</option>
-              <option value="Belt">Belt</option>
-              <option value="Other">Other</option>
-            </select>
-          </fieldset>
-        </li>
-        <li>
-          <fieldset>
-            <legend>Style</legend>
-            <select class="form-control ordinary-select" name="item_style" id="item_style">
-              <option value="">Please Select</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
-          </fieldset>
-        </li>
-        <li>
-          <fieldset>
-            <legend>Color</legend>
-            <select class="form-control ordinary-select" name="item_color" id="item_color">
-              <option value="">Please Select</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
-          </fieldset>
-        </li>
-        <li>
-          <fieldset>
-            <legend>Size</legend>
-            <select class="form-control ordinary-select" name="item_size" id="item_size">
-              <option value="">Please Select</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
-          </fieldset>
-        </li>
-        <li>
-          <fieldset>
-            <legend>Designer</legend>
-            <select class="form-control ordinary-select" name="item_designer" id="item_designer">
-              <option value="">Please Select</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
-          </fieldset>
-        </li>
+        {% endfor %}
         <li>
           <fieldset>
             <legend>Location</legend>
@@ -95,22 +45,22 @@ partial: false
               <li>
                 <label>
                   From:
-                  MM/DD/YYYY
+                  <input type="text" name="availability_exceptions[from]"/>
                 </label>
               </li>
               <li>
                 <label>
                   To:
-                  MM/DD/YYYY
+                  <input type="text" name="availability_exceptions[to]"/>
                 </label>
               </li>
             </ul>
           </fieldset>
         </li>
-{% comment %}        <li>
+        <li>
           <fieldset>
             <legend>Price</legend>
-            <select class="form-control ordinary-select" name="price" id="price">
+            <select class="form-control ordinary-select" name="price[max]" id="price">
               <option value="">Please select</option>
               <option value="50">Under $50</option>
               <option value="100">Under $100</option>
@@ -118,10 +68,10 @@ partial: false
               <option value="300">Under $300</option>
               <option value="400">Under $400</option>
               <option value="500">Under $500</option>
-              <option value="10000">$500+</option>
+              <option value="1000000">$500+</option>
             </select>
           </fieldset>
-        </li>{% endcomment %}
+        </li>
       </ul>
     </form>
   </aside>
@@ -129,20 +79,20 @@ partial: false
   <main class="search-results" data-search-form="results">
     <div class="search-results__summary">
       <div class="results-number">
-        <p>2 Results</p>
+        <p>{{ searcher.result_count }} Results</p>
       </div>
 
       <div class="results-sorting">
         <form class="form-inline" data-search-form="filters">
           <label for="sort_by">
             Sort by:
-            <select class="form-control ordinary-select" name="sort_by" id="sort_by">
-              <option value="alph_asc">Alphabetically ascending</option>
-              <option value="alph_desc">Alphabetically descending</option>
-              <option value="price_asc">Price ascending</option>
-              <option value="price_desc">Price descending</option>
-              <option value="date_entered">Date entered</option>
-              <option value="popularity">Popularity</option>
+            <select class="form-control ordinary-select" name="sort" id="sort_by">
+              <option value="name_asc" {% if searcher.sort == 'name_asc' %}selected{% endif %}>Alphabetically ascending</option>
+              <option value="name_desc" {% if searcher.sort == 'name_desc' %}selected{% endif %}>Alphabetically descending</option>
+              <option value="all_prices_asc" {% if searcher.sort == 'all_prices_asc' %}selected{% endif %}>Price ascending</option>
+              <option value="all_prices_desc" {% if searcher.sort == 'all_prices_desc' %}selected{% endif %}>Price descending</option>
+              <option value="created_at_desc" {% if searcher.sort == 'created_at_desc' %}selected{% endif %}>Date entered</option>
+              <option value="popularity" {% if searcher.sort == 'popularity' %}selected{% endif %}>Popularity</option>
             </select>
           </label>
         </form>
@@ -150,78 +100,66 @@ partial: false
     </div>
 
     <section class="search-results__items">
-      <article data-item-link="/listings/item/1">
-        <div class="item-photo">
-          <img src="http://placekitten.com/150/150" />
-        </div>
-        <div class="item-info">
-          <div class="item-description">
-            <h2>White Bridesmade  Dress</h2>
-            <p><strong>Designer:</strong> Ralph Lauren</p>
+      {% for listing in searcher.results %}
+        <article data-item-link="{{ listing.show_path }}">
+          <div class="item-photo">
+            <img src="{{ listing.photos[0].space_listing }}" />
           </div>
-          <div class="item-pricing">
-            <dl>
-              <dt>4 days: </dt>
-              <dd>$1000 AUD</dd>
-              <dt>8 days: </dt>
-              <dd>$1500 AUD</dd>
-              <dt>30 days: </dt>
-              <dd>$3000 AUD</dd>
-              <dt>Bond value: </dt>
-              <dd>$3000 AUD</dd>
-            </dl>
-          </div>
-          <div class="lender-info">
-            <p>Lender: <a href="#Jane_Lane_Profile">Jane Lane</a></p>
-            <a href="#" class="button button-small button-inverse">Message</a>
-          </div>
-        </div>
-        <div class="item-actions">
-          <ul>
-            <li class="item-actions__primary"><a href="#REQUEST-ITEM" class="button button-default">REQUEST ITEM</a></li>
-            <li class="item-actions__secondary"><a href="#ADD-TO-FAVORITE" class="button button-small button-inverse">Favorite</a></li>
-            <li class="item-actions__secondary"><a href="#JANE-LANE-BLOG" class="button button-small button-inverse">Blog</a></li>
-          </ul>
+          <div class="item-info">
+            <div class="item-description">
+              <h2>{{ listing.name }}</h2>
+              <p><strong>Designer:</strong> {{ listing.properties.designer_name }}</p>
+            </div>
+            <div class="item-pricing">
+              <dl>
+                {% for price in listing.action_type.sorted_pricings %}
+                  <dt>{{ price.number_of_units }} days: </dt>
+                  <dd>${{ price.price.amount }} AUD</dd>
+                {% endfor %}
+                <dt>Bond value: </dt>
+                <dd>${{ listing.properties.bond_value }} AUD</dd>
+              </dl>
+            </div>
 
-          <p class="item-availability">Check item availability: ?</p>
-        </div>
-      </article>
-      <article data-item-link="/listings/item/2">
-        <div class="item-photo">
-          <img src="http://placekitten.com/150/150" />
-        </div>
-        <div class="item-info">
-          <div class="item-description">
-            <h2>White Bridesmade  Dress</h2>
-            <p><strong>Designer:</strong> Ralph Lauren</p>
+            <div class="lender-info">
+              <p>Lender: <a href="{{ listing.creator.user_profile_url }}">{% if listing.creator.properties.use_alias_as_name == '1' %}{{ listing.creator.properties.user_alias }}{% else %}{{ listing.creator.name }}{% endif %}</a>
+              </p>
+              {% if listing.transactable_user_messages.size > 0 %}
+                <a class="button button-inverse"" data-modal="true" data-href="{{ 'dashboard_user_message_path' | generate_url: listing.transactable_user_messages.first.id, skip: true }}">Message</a>
+              {% else %}
+                <a class="button button-inverse"" data-modal="true" data-href="{{ 'new_listing_user_message_path' | generate_url: listing.id ,user_id: listing.creator.id, skip: true }}">Message</a>
+              {% endif %}
+            </div>
           </div>
-          <div class="item-pricing">
-            <dl>
-              <dt>4 days: </dt>
-              <dd>$1000 AUD</dd>
-              <dt>8 days: </dt>
-              <dd>$1500 AUD</dd>
-              <dt>30 days: </dt>
-              <dd>$3000 AUD</dd>
-              <dt>Bond value: </dt>
-              <dd>$3000 AUD</dd>
-            </dl>
-          </div>
-          <div class="lender-info">
-            <p>Lender: <a href="#Jane_Lane_Profile">Jane Lane</a></p>
-            <a href="#" class="button button-small button-inverse">Message</a>
-          </div>
-        </div>
-        <div class="item-actions">
-          <ul>
-            <li class="item-actions__primary"><a href="#REQUEST-ITEM"" class="button button-default">REQUEST ITEM</a></li>
-            <li class="item-actions__secondary"><a href="#ADD-TO-FAVORITE" class="button button-small button-inverse">Favorite</a></li>
-            <li class="item-actions__secondary"><a href="#JANE-LANE-BLOG" class="button button-small button-inverse">Blog</a></li>
-          </ul>
+          <div class="item-actions">
+            <ul>
+              <li class="item-actions__primary">
+                <form id="order_form_{{ listing.id }}" novalidate="novalidate" class="order" action="{{ 'listing_orders_path' | generate_url: listing }}" accept-charset="UTF-8" method="post">
+                  <input name="utf8" type="hidden" value="">
+                  <input name="authenticity_token" value="{{ form_authenticity_token }}" data-authenticity-token type="hidden">
+                  <input value="{{ listing.id }}" type="hidden" name="order[transactable_id]" id="order_transactable_id">
+                  <input value="{{ listing.action_type.pricings.first.id }}" type="hidden" name="order[transactable_pricing_id]" id="order_transactable_pricing_id">
+                  <input type="submit" class="button button-default" value="REQUEST ITEM">
+                </form>
+              </li>
+              <li class="item-actions__secondary">
+                <div data-add-favorite-button="true" data-path="{{ listing.wish_list_path }}" data-wishlistable-type="{{ listing.class_name }}" data-link-to-classes="button button-default" data-path-bulk="{{ listing.wish_list_bulk_path }}" data-object-id="{{ listing.id }}" id="favorite-button-{{ listing.class_name }}-{{ listing.id }}">
+                  <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
+                </div>
+              </li>
+              {% if listing.creator.has_active_blog? %}
+                <li class="item-actions__secondary">
+                  <a href="{{ listing.creator.user_blog_posts_list_path }}" class="button button-inverse button-small ">Lender's Blog</a>
+                </li>
+              {% endif %}
+            </ul>
 
-          <p class="item-availability">Check item availability: ?</p>
-        </div>
-      </article>
+            <p class="item-availability">
+              <a data-listing-availability-toggle data-listing-availability-periods={{ listing.unavailable_periods }} class="datetimepicker"><input type="hidden" />Check item availability</a>
+            </p>
+          </div>
+        </article>
+      {% endfor %}
     </section>
   </main>
 </div>

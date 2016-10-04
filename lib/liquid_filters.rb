@@ -46,6 +46,10 @@ module LiquidFilters
     array.compact
   end
 
+  def reverse(array)
+    array.reverse
+  end
+
   def add_to_array(array, item)
     array ||= []
     array << item

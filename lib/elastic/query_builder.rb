@@ -315,6 +315,26 @@ module Elastic
         end
       end
 
+      if @query[:availability_exceptions].present?
+        begin
+          from = Date.parse(@query[:availability_exceptions][:from])
+          to = Date.parse(@query[:availability_exceptions][:to])
+
+          @filters << {
+            not: {
+              range: {
+                availability_exceptions: {
+                  gte: from,
+                  lte: to
+                }
+              }
+            }
+          }
+        rescue ArgumentError
+          # wrong date
+        end
+      end
+
       if @query[:date].blank? && @query[:time_from].present? || @query[:time_to].present?
         from_hour = (@query[:time_from].presence || '0:00').split(':').first.to_i
         to_hour = (@query[:time_to].presence || '23:00').split(':').first.to_i
@@ -331,10 +351,11 @@ module Elastic
 
       if @query[:lg_custom_attributes]
         @query[:lg_custom_attributes].each do |key, value|
-          unless value.blank?
+          unless value.blank? || value.empty? || value.none?(&:present?)
+            value = value.is_a?(Array) ? value : value.to_s.split(',')
             @filters << {
               terms: {
-                "custom_attributes.#{key}" => value.to_s.split(',').map{ |val| val.downcase }
+                "custom_attributes.#{key}" => value.map{ |val| val.downcase }
               }
             }
           end
