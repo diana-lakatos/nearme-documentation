@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'nearme'
 
 class DeleteElbJobTest < ActiveSupport::TestCase
   context '#perform' do
