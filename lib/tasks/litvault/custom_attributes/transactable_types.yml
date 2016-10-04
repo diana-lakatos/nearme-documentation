@@ -12,6 +12,7 @@
     html_tag: textarea
     required: true
     max_length: 3000
+    input_html_options_string: "data-counter-limit=>3000"
 
   matters_to_include:
     label: 'Other matters you wish to include'

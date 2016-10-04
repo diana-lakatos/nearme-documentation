@@ -112,10 +112,27 @@ en:
     link_to_seller: "Become a Referring Lawyer here"
     seller_sign_up_to: 'Create a Referring Lawyer Account'
 
+
   simple_form:
     labels:
       transactable:
         confirm_reservations: "Manually confirm offers"
+      seller:
+        company_name: 'Law Firm'
+      buyer:
+        company_name: 'Law Firm'
+      user:
+        company_name: 'Law Firm'
+      registration:
+        company_name: 'Law Firm'
+      company:
+        name: 'Law Firm'
+        company_address: 'Law Firm Address'
+        url: 'Law Firm Website URL'
+      companies:
+        name: 'Law Firm'
+        company_address: 'Law Firm Address'
+        url: 'Law Firm Website URL'
 
   time:
     formats:
@@ -126,17 +143,23 @@ en:
     manage_bookable: "My Cases"
     my_bookings: 'My Offers'
 
-  transactable_types:
+  transactable_type:
     group_case:
       labels:
+        name: 'Case Name'
         all_states.: 'All States'
         by_state.: 'By State'
         search: 'Group Cases (Mass Torts)'
+      hints:
+        name: 'Case Name will be used as a heading in case listings. It should allow to easily identify case among others'
     individual_case:
       labels:
+        name: 'Case Name'
         all_states: 'All States'
         by_state: 'By State'
         search: 'Individual Cases'
+      hints:
+        name: 'Case Name will be used as a heading in case listings. It should allow to easily identify case among others'
 
   ui:
     header:
@@ -160,26 +183,6 @@ en:
         alphabetical: 'Alphabetical'
         individual_cases: 'Individual Cases'
         group_cases: 'Group Cases'
-
-
-  simple_form:
-    labels:
-      seller:
-        company_name: 'Law Firm'
-      buyer:
-        company_name: 'Law Firm'
-      user:
-        company_name: 'Law Firm'
-      registration:
-        company_name: 'Law Firm'
-      company:
-        name: 'Law Firm'
-        company_address: 'Law Firm Address'
-        url: 'Law Firm Website URL'
-      companies:
-        name: 'Law Firm'
-        company_address: 'Law Firm Address'
-        url: 'Law Firm Website URL'
 
     placeholders:
       registration:
