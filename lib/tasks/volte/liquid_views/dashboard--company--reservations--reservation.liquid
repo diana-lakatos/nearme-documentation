@@ -1,0 +1,144 @@
+<header>
+  <div class='row'>
+    <div class='col-xs-7'>
+      {% if reservation.transactable != blank and reservation.transactable.deleted? != true %}
+        <h2>
+          <a href="{{ reservation.transactable.show_path }}">
+            {% if reservation.transactable.name.size > 0 %}
+              {{ reservation.transactable.name }}
+            {% else %}
+              {{ 'dashboard.host_reservations.show_listing_page' | t}}
+            {% endif %}
+          </a>
+
+          {{ reservation.transactable.click_to_call_button }}
+        </h2>
+      {% else %}
+        <h2>{{ 'dashboard.user_reservations.listing_deleted' | t }}</h2>
+      {% endif %}
+    </div>
+
+    <div class='col-xs-5'>
+      <div class='order-status'>
+        {% if reservation.archived_at and reservation.state == 'confirmed' %}
+          <span class='confirmed'>
+            {{ "reservations.states.completed" | t }}
+          </span>
+        {% else %}
+          <span class='{{ reservation.state }}'>
+            {{ 'reservations.states.' | append: reservation.state | t }}
+          </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class='row'>
+  <div class="col-xs-12">
+    <dl>
+      {% if reservation.owner != blank %}
+        <dt>Borrower:</dt>
+        <dd>{{ reservation.owner.name }}</dd>
+      {% endif %}
+
+      <dt>{{ 'dashboard.user_reservations.address' | t }}:</dt>
+      <dd>{{ reservation.transactable.location.address }}</dd>
+
+      <dt>Shipping Package:</dt>
+      <dd>National - Briefcase (20L - 5kg)</dd>
+
+      <dt>Borrower ship to address:</dt>
+      <dd>12345 Street Name, St. Louis MO, 63366</dd>
+
+      {% assign requested_dates = reservation.long_dates %}
+      {% assign requested_dates_size = requested_dates.size %}
+
+      <dt>Period:</dt>
+      <dd>{{ requested_dates_size }} days</dd>
+
+      <dt>Rental date:</dt>
+      <dd>{{ requested_dates }}</dd>
+
+      <dt>Return date:</dt>
+      <dd>{{ requested_dates }}</dd>
+    </dl>
+  </div>
+</div>
+
+<form class="item-reservation__shipping-details row">
+  <div class="col-xs-10">
+    <div class="row">
+      <div class="col-xs-6 form-group">
+        <label for="shipping_details[pickup_date]">Pick Up Date:</label>
+        <input type="text" class="form-control" value="9/18/2016" name="shipping_details[pickup_date]" />
+      </div>
+      <div class="col-xs-6 form-group">
+        <label for="shipping_details[return_date]">Shipping Return Date:</label>
+        <input type="text" class="form-control" value="9/25/2016" name="shipping_details[return_date]" />
+      </div>
+      <div class="col-xs-6 form-group">
+        <label for="shipping_details[lender_pickup]">Lender Pick Up Address:</label>
+        <input type="text" class="form-control" value="9001 Lender Street, St. Louis MO, 63141" name="shipping_details[lender_pickup]" />
+      </div>
+      <div class="col-xs-6 form-group">
+        <label for="shipping_details[lender_ship]">Lender Ship To Address:</label>
+        <input type="text" class="form-control" value="9001 Lender Street, St. Louis MO, 63141" name="shipping_details[lender_ship]" />
+      </div>
+    </div>
+    <hr />
+  </div>
+</form>
+
+
+<div class="item-reservation__costs row">
+  <div class="col-xs-12 col-md-6">
+    <h3>Total Costs</h3>
+    <table class="col-xs-12">
+      <tr>
+        <td>Item Rental ({{ requested_dates_size }} days)</td>
+        <td>$1000</td>
+      </tr>
+      <tr>
+        <td>Shipping</td>
+        <td>$30.00</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="item-reservation__costs-total">$1030.00</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<hr class="hr-contrast" />
+
+
+
+<div class='reservation-actions'>
+  {% if reservation.confirmed? and reservation.archived_at == blank %}
+    <a class="button button-inverse" href="{{ 'dashboard_order_path' | generate_url: reservation.id }}">{{ 'dashboard.user_reservations.approved_offer' | t}}</a>
+    {% if platform_context.instance.enable_reply_button_on_host_reservations? %}
+      {% if reservation.user_messages.size == 0 %}
+        <a class="button button-inverse" data-modal="true" href="{{ 'new_reservation_user_message_path' | generate_url: reservation.id, skip: true }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+      {% else %}
+        <a class="button button-inverse" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: reservation.user_messages.first.id }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+      {% endif %}
+    {% endif %}
+    <a class="button button-inverse" href="{{ reservation.transactable.show_path }}">{{ 'dashboard.user_reservations.view_case' | t}}</a>
+    <a class="button button-inverse" href="#" onclick="$('form#archive_reservation').submit()" data-disable-with="{{ 'general.processing' | t }}" >{{ 'dashboard.user_reservations.close_case' | t }}</a>
+
+    <form class="edit_reservation hide" id="archive_reservation" action="{{ 'archive_dashboard_company_orders_received_path' | generate_url: reservation.id }}" accept-charset="UTF-8" method="post">
+      <input name="utf8" type="hidden" value="&#x2713;" />
+      <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
+    </form>
+  {% endif %}
+
+  <form>
+    <a class="button button-inverse" data-modal="true" href="#">SEND MESSAGE</a>
+  </form>
+
+  {% include 'dashboard/company/host_reservations/owner_actions', reservation: reservation %}
+
+  <p>Before approving rental, you need to set up your <a href="#payment_transfers">Payment Transfers</a>.</p>
+</div>
