@@ -24,6 +24,7 @@
         - transactable: types_of_injuries_included
         - transactable: engagement_agreement_fee_percentage
         - transactable: engagement_agreement_expenses_advancement
+        - transactable: seller_attachments
         - transactable: matters_to_include
         - transactable: case_short_description
         - transactable: case_full_description
@@ -38,9 +39,14 @@
         - transactable: law_firm
         - transactable: principal_office
         - transactable: "Category - Group Case Categories"
+        - transactable: tags
+
+    - name: "Case Details"
+      fields:
         - transactable: types_of_injuries_included
         - transactable: engagement_agreement_fee_percentage
         - transactable: engagement_agreement_expenses_advancement
+        - transactable: seller_attachments
         - transactable: matters_to_include
         - transactable: case_short_description
         - transactable: case_full_description
@@ -73,6 +79,7 @@
         - transactable: date_engagement_agreement_signed
         - transactable: engagement_agreement_fee_percentage
         - transactable: engagement_agreement_expenses_advancement
+        - transactable: seller_attachments
 
     -
       name: "Your client details"
@@ -131,6 +138,7 @@
         - transactable: date_engagement_agreement_signed
         - transactable: engagement_agreement_fee_percentage
         - transactable: engagement_agreement_expenses_advancement
+        - transactable: seller_attachments
     -
       name: "Incident"
       fields:
