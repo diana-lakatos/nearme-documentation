@@ -62,7 +62,7 @@ en:
     transactables:
       title:
         listings: "My Cases"
-      view_html: "View Profile"
+      view_html: "View Case"
 
     user_reservations:
       archived: "Offers Closed"
