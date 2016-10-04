@@ -21,7 +21,7 @@ class TransactableCollaboratorsController < ApplicationController
     @collaborators_count = @transactable.reload.transactable_collaborators.approved.count
     respond_to do |format|
       format.js { render :collaborators_button }
-      format.html { redirect_to profile_path(current_user, anchor: :transactables), notice: t('collaboration_cancelled') }
+      format.html { redirect_to profile_path(current_user, anchor: :transactables), notice: t('transactable_collaborator.collaboration_cancelled') }
     end
   end
 
