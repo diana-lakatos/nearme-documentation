@@ -23,7 +23,7 @@ class Api::BaseController < ActionController::Base
   end
 
   def require_authorization
-    return true if valid_api_token? # we assume api token is secret
+    return true if verified_api_request? || valid_api_token? # we assume api token is secret
     current_user.instance_admins.exists? # for now no role distinguish - we assume MPO won't be hacking :)
   end
 

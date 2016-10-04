@@ -8,7 +8,7 @@ Your listing, '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>', was 
 
   <div class="row">
     <strong style='display: inline-block;'>Who</strong>
-    <span style="float: right;"><a href="{{ platform_context.host | append:reservation.owner.user_profile_url }}">{{ recurring_booking.owner.first_name }}</a></span>
+    <span style="float: right;"><a href="{{ platform_context.host | append:reservation.owner.user_profile_url }}">{{ enquirer.first_name }}</a></span>
   </div>
 
   <div class="row">

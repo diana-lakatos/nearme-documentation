@@ -42,7 +42,9 @@ class ReservationDrop < OrderDrop
   delegate :id, :quantity, :subtotal_price, :service_fee_guest, :total_price, :total_price_cents, :pending?, :transactable, :state_to_string,
     :credit_card_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, :created_at,
     :total_payable_to_host_formatted, :total_units_text, :unit_price, :has_service_fee?, :transactable_line_items,
-    :properties, :long_dates, :address, :periods, :comment, :cancellation_policy_penalty_hours, :tax_price, to: :reservation
+    :properties, :long_dates, :address, :periods, :comment, :cancellation_policy_penalty_hours, :tax_price,
+    :manage_booking_status_info, :manage_booking_status_info_new,
+    to: :reservation
 
 
   # bookable_noun
@@ -65,7 +67,7 @@ class ReservationDrop < OrderDrop
   end
 
   def formatted_unit_price
-    humanized_money_with_symbol(unit_price)
+    render_money(unit_price)
   end
 
   # Hourly summary as string for the first booked period

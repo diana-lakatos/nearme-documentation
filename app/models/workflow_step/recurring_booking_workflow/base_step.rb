@@ -6,18 +6,12 @@ class WorkflowStep::RecurringBookingWorkflow::BaseStep < WorkflowStep::BaseStep
 
   def initialize(recurring_booking_id)
     @recurring_booking = RecurringBooking.find_by_id(recurring_booking_id)
+    @lister = @recurring_booking.host
+    @enquirer = @recurring_booking.owner
   end
 
   def workflow_type
     'recurring_booking'
-  end
-
-  def lister
-    @recurring_booking.host
-  end
-
-  def enquirer
-    @recurring_booking.owner
   end
 
   # recurring_booking:
@@ -43,5 +37,4 @@ class WorkflowStep::RecurringBookingWorkflow::BaseStep < WorkflowStep::BaseStep
   def transactable_type_id
     @recurring_booking.transactable.transactable_type_id
   end
-
 end

@@ -135,7 +135,7 @@ class OrderDecorator < Draper::Decorator
   end
 
   def display_total
-    humanized_money_with_symbol(object.total_amount)
+    render_money(object.total_amount)
   end
 
   def total_units_text

@@ -85,7 +85,7 @@ module.exports = class SearchController
     @form.find(".geolocation .ico-crosshairs").hide()
     @form.find(".geolocation .geo-loading").show()
 
-    navigator.geolocation.getCurrentPosition (position) =>
+    navigator.geolocation.getCurrentPosition ((position) =>
       deferred = @geocoder.reverseGeocodeLatLng(position.coords.latitude, position.coords.longitude)
       deferred.done (resultset) =>
         cityAndStateAddress = resultset.getBestResult().cityAndStateAddress()
@@ -101,6 +101,13 @@ module.exports = class SearchController
 
           @form.find(".geolocation .ico-crosshairs").show()
           @form.find(".geolocation .geo-loading").hide()
+
+    ), (error) =>
+      if error.code == error.PERMISSION_DENIED
+        @form.find(".geolocation .ico-crosshairs").show()
+        @form.find(".geolocation .geo-loading").hide()
+
+      return
 
   # Is the given query currently geolocated by the search
   isQueryGeolocated: (query) ->

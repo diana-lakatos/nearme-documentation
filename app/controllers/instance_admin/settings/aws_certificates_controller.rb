@@ -2,7 +2,7 @@ require 'nearme/acm'
 
 class InstanceAdmin::Settings::AwsCertificatesController < InstanceAdmin::Settings::BaseController
   respond_to :html
-  before_action :sync_certificate_statuses, only: :index
+  before_action :sync_certificate_statuses, only: [:index, :show]
 
   def index
     respond_with :instance_admin, :settings, collection
@@ -17,9 +17,13 @@ class InstanceAdmin::Settings::AwsCertificatesController < InstanceAdmin::Settin
   def create
     @certificate = collection.build certificate_params
 
-    NearMe::ACM::RequestCertificate.new(@certificate).execute
+    @certificate.valid? && NearMe::ACM::RequestCertificate.new(@certificate).execute
 
     respond_with :instance_admin, :settings, @certificate
+
+  rescue Aws::ACM::Errors::ValidationException
+    flash[:error] = $!.message
+    render :new
   end
 
   def show

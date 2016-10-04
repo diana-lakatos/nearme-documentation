@@ -3,6 +3,9 @@ require Rails.root.join('app', 'controllers', 'registrations_controller.rb') if 
 
 DesksnearMe::Application.routes.draw do
 
+  #favicon for scraping
+  get '/favicon.ico', to: 'favicon#show'
+
   get '/test_endpoint', to: 'webhooks/base#test'
   match '/auth/:provider/callback' => 'authentications#create', via: [:get, :post]
 
@@ -971,7 +974,7 @@ DesksnearMe::Application.routes.draw do
       end
 
       resources :photos, :only => [:create, :destroy, :edit, :update]
-      resources :seller_attachments, only: %i(create update destroy)
+      resources :seller_attachments, only: %i(new create update destroy)
       resources :reviews, :only => [:index, :create, :update, :destroy] do
         collection do
           get :rate
@@ -1148,6 +1151,7 @@ DesksnearMe::Application.routes.draw do
         resources :users, only: [:create, :show]
         resource :space_wizard, only: [:create]
         resources :transactables, only: [:index]
+        resources :photos, only: [:create]
         resources :reverse_proxy_links, only: [:index, :create]
         resources :transactable_collaborators, only: [:create, :destroy] do
           member do

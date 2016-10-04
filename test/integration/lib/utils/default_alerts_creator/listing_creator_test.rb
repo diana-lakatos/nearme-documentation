@@ -165,4 +165,3 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
   end
 
 end
-

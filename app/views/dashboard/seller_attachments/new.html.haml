@@ -1,0 +1,15 @@
+%header.dialog__header
+  %h2#dialog__title
+    = t('seller_attachments.new_attachment')
+
+= dashboard_simple_form_for [:dashboard, @attachment], html: { :'data-attachment-form'=> true } do |f|
+
+  .dialog__body
+    = hidden_field_tag :transactable_id, @listing.id
+    = hidden_field_tag :path, (request.referer + "#transactable_#{@listing.id}")
+    = f.input :title
+    = f.input :data, input_html: { data: { file: true } }
+
+  .dialog__actions
+    = f.submit t('seller_attachments.submit'), class: 'btn btn-green'
+

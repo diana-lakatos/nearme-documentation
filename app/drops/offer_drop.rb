@@ -11,15 +11,15 @@ class OfferDrop < OrderDrop
   end
 
   def formatted_total_amount
-    humanized_money_with_cents_and_symbol(@order.recurring_booking_periods.not_rejected.map(&:total_amount).sum)
+    render_money(@order.recurring_booking_periods.not_rejected.map(&:total_amount).sum)
   end
 
   def formatted_total_unpaid_amount
-    humanized_money_with_cents_and_symbol(@order.recurring_booking_periods.not_rejected.unpaid.map(&:total_amount).sum)
+    render_money(@order.recurring_booking_periods.not_rejected.unpaid.map(&:total_amount).sum)
   end
 
   def formatted_total_paid_amount
-    humanized_money_with_cents_and_symbol(@order.recurring_booking_periods.paid.map(&:total_amount).sum)
+    render_money(@order.recurring_booking_periods.paid.map(&:total_amount).sum)
   end
 
   def offer_url

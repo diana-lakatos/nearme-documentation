@@ -2,12 +2,11 @@ class WorkflowStep::CollaboratorWorkflow::CollaboratorHasQuit < WorkflowStep::Co
 
   def initialize(transactable_id, user_id)
     @transactable = Transactable.find_by(id: transactable_id)
-    @user = User.find_by(id: user_id)
-    @owner = @transactable.try(:creator)
+    @enquirer = User.find_by(id: user_id)
+    @lister = @transactable.try(:creator)
   end
 
   def should_be_processed?
-    @transactable.present? && @user.present?
+    transactable.present? && enquirer.present?
   end
 end
-

@@ -12,9 +12,13 @@ $highlight_color:           #2F7FBE;
 $form_field_outline_color:  #DEDFDF;
 $error_color:               #b94a48;
 
+// Glyphicons
+$icon-font-path: "/assets/" !default;
+
 // Typography
 $light_text_color:          #A9ABAE;
 $dark_text_color:           #3B3B3B;
 
 // Stuff
 $border-radius-default:         5px;
+$input-color:               $dark_text_color;

@@ -1366,6 +1366,10 @@ ActiveRecord::Schema.define(version: 20160926185103) do
     t.string   "orders_received_tabs"
     t.string   "my_orders_tabs"
     t.boolean  "force_fill_in_wizard_form"
+    t.boolean  "show_currency_symbol",                                                              default: true,          null: false
+    t.boolean  "show_currency_name",                                                                default: false,         null: false
+    t.boolean  "no_cents_if_whole",                                                                 default: true,          null: false
+    t.string   "encrypted_google_maps_api_key",                                                     default: "",            null: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -2937,6 +2941,8 @@ ActiveRecord::Schema.define(version: 20160926185103) do
     t.datetime "updated_at"
     t.boolean  "confirm_reservations",                       default: true
     t.boolean  "allow_drafts",                               default: false, null: false
+    t.boolean  "send_alert_hours_before_expiry",             default: false, null: false
+    t.integer  "send_alert_hours_before_expiry_hours",       default: 0,     null: false
   end
 
   add_index "transactable_type_action_types", ["instance_id", "transactable_type_id", "deleted_at"], name: "instance_tt_deleted_at_idx", using: :btree

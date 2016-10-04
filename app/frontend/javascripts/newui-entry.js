@@ -639,6 +639,17 @@ DNM.registerInitializer(function(){
     });
 });
 
+DNM.registerInitializer(function(){
+    var form = $('#edit_user');
+    if (form.length === 0) {
+        return;
+    }
+
+    require.ensure('./sections/registrations/edit', function(require){
+        var EditUserForm = require('./sections/registrations/edit');
+        new EditUserForm(form);
+    });
+});
 
 // New shared libraries
 let sharedInitializers = require('shared-initializers');

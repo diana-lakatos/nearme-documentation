@@ -286,6 +286,10 @@ en:
         updated: "Notification preferences have been updated."
       click_to_call_preferences:
         updated: "Click to Call preferences have been updated."
+      seller_attachments:
+        created: 'File has been successfully uploaded.'
+        not_created: 'File has not been uploaded.'
+        deleted: 'File has been deleted.'
       listings:
         desk_added: "Great, your new %{bookable_noun} has been added!"
         listing_deleted: "That listing has been deleted."

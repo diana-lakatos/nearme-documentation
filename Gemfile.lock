@@ -498,9 +498,9 @@ GEM
       hashie (>= 0.4.0)
       multi_json (~> 1.0, >= 1.0.3)
     ipaddress (0.8.0)
-    jira-ruby (0.1.18)
+    jira-ruby (1.1.0)
       activesupport
-      oauth (~> 0.4.7)
+      oauth (~> 0.5, >= 0.5.0)
     jmespath (1.2.4)
       json_pure (>= 1.8.1)
     jquery-rails (4.0.4)
@@ -521,7 +521,6 @@ GEM
       multi_json
     launchy (2.4.3)
       addressable (~> 2.3)
-    le (2.6.1)
     linkedin-oauth2 (1.0.0)
       faraday (~> 0.9)
       hashie (~> 3.2)
@@ -561,7 +560,7 @@ GEM
     mime-types (2.99)
     mini_magick (4.0.1)
     mini_portile2 (2.1.0)
-    minitest (5.9.0)
+    minitest (5.9.1)
     minitest-reporters (1.0.19)
       ansi
       builder
@@ -599,7 +598,7 @@ GEM
       pkg-config (~> 1.1.7)
     nokogumbo (1.2.0)
       nokogiri
-    oauth (0.4.7)
+    oauth (0.5.1)
     oauth2 (1.0.0)
       faraday (>= 0.8, < 0.10)
       jwt (~> 1.0)
@@ -837,6 +836,7 @@ GEM
     skinny (0.2.3)
       eventmachine (~> 1.0.0)
       thin (~> 1.5.0)
+    slack-notifier (1.5.1)
     slop (3.6.0)
     spring (1.7.1)
     spring-commands-cucumber (1.0.1)
@@ -1020,7 +1020,6 @@ DEPENDENCIES
   jsonapi-serializers!
   koala
   launchy
-  le
   linkedin-oauth2 (~> 1.0)
   liquid (= 3.0.6)
   mail_view (~> 2)
@@ -1093,6 +1092,7 @@ DEPENDENCIES
   simple_form (~> 3.1)
   simplecov
   simplecov-rcov-text
+  slack-notifier
   spring
   spring-commands-cucumber
   sprockets
@@ -1119,5 +1119,8 @@ DEPENDENCIES
   wicked
   will_paginate
 
+RUBY VERSION
+   ruby 2.2.4p230
+
 BUNDLED WITH
-   1.13.0.rc.1
+   1.13.1

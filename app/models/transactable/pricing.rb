@@ -14,13 +14,13 @@ class Transactable::Pricing < ActiveRecord::Base
   inherits_columns_from_association([:unit, :number_of_units], :transactable_type_pricing, :before_validation)
 
   monetize :price_cents, with_model_currency: :currency, allow_nil: true, subunit_numericality: {
-    greater_than: :min_price,
+    greater_than_or_equal_to: :min_price,
     less_than_or_equal_to: :max_price,
     if: :monetize_price_cents?
   }
   monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true,
     subunit_numericality: {
-      greater_than: :min_price,
+      greater_than_or_equal_to: :min_price,
       less_than: :max_price,
       if: :has_exclusive_price
     }

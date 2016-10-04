@@ -26,16 +26,16 @@
 - if false
   %li
     Subtotal:
-    = humanized_money_with_cents_and_symbol @merchant_account.subtotal_amount
+    = render_money @merchant_account.subtotal_amount
   %li
     Service Fee:
-    = humanized_money_with_cents_and_symbol @merchant_account.service_fee_amount_guest
+    = render_money @merchant_account.service_fee_amount_guest
   %li
     Service Usell & Addons:
-    = humanized_money_with_cents_and_symbol @merchant_account.service_additional_charges
+    = render_money @merchant_account.service_additional_charges
   %li
     Host Usell & Addons:
-    = humanized_money_with_cents_and_symbol @merchant_account.host_additional_charges
+    = render_money @merchant_account.host_additional_charges
   %li
     State:
     = @merchant_account.state
@@ -59,7 +59,7 @@
               = link_to charge.payment_gateway.try(:name), edit_instance_admin_settings_payment_gateway_path(charge.payment_gateway)
           %p
             Amount:
-            = humanized_money_with_cents_and_symbol charge.price
+            = render_money charge.price
 
           %p
             Response:

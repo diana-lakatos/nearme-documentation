@@ -19,18 +19,18 @@ module CurrencyHelper
     number_to_currency_symbol(currency, content_tag(el.to_sym, price, content_tag_options), currency_options)
   end
 
-  def humanized_money_with_cents_and_symbol(money)
+  def render_money(money)
     return "" unless money.respond_to?(:to_money)
 
-    money = money.to_money
-    money.format(:symbol => true)
-  end
+    instance = PlatformContext.current.instance
+    options = {
+      symbol: instance.show_currency_symbol,
+      with_currency: instance.show_currency_name,
+      no_cents_if_whole: instance.no_cents_if_whole
+    }
 
-  def humanized_money_with_symbol(money)
-    return "" unless money.respond_to?(:to_money)
-
     money = money.to_money
-    money.format(:symbol => true, :no_cents_if_whole => true)
+    money.format(options)
   end
 
 end

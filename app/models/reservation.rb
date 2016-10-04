@@ -34,6 +34,9 @@ class Reservation < Order
 
   state_machine :state, initial: :inactive do
     after_transition confirmed: [:cancelled_by_guest], do: [:charge_penalty!]
+    after_transition unconfirmed: :confirmed, do: [:warn_user_of_expiration]
+
+    event :refund do transition :paid => :refunded; end
   end
 
   scope :for_transactable, -> (transactable) { where(:transactable_id => transactable.id) }
@@ -154,20 +157,13 @@ class Reservation < Order
   def charge_penalty!
     if penalty_charge_apply?
       fail('Charging penalty when there exist already authorized/paid payment!') if payment.present? && (payment.paid? || payment.authorized?)
-      self.update_column(:subtotal_amount_cents, penalty_fee_subtotal.cents)
-      self.force_recalculate_fees = true
-      self.update_columns({
-        service_fee_amount_guest_cents: self.service_fee_amount_guest.cents,
-        service_fee_amount_host_cents: self.service_fee_amount_host.cents
-      })
-      # note: this might not work with shipment?
-      self.payment.update_attributes({
-        subtotal_amount_cents: self.subtotal_amount.cents,
-        service_fee_amount_guest_cents: self.service_fee_amount_guest.cents,
-        service_fee_amount_host_cents: self.service_fee_amount_host.cents,
-        service_additional_charges_cents: self.service_additional_charges.cents,
-        host_additional_charges_cents: self.host_additional_charges.cents
-      })
+      line_items.where.not(id: transactable_line_item.id).destroy_all
+
+      transactable_line_item.update_columns(unit_price_cents: penalty_fee_subtotal.cents, quantity: 1, name: 'Cancellation Penalty')
+      reload
+      transactable_line_item.build_service_fee.try(:save!)
+      transactable_line_item.build_host_fee.try(:save!)
+      self.update_payment_attributes
       self.payment.payment_transfer.try(:send, :assign_amounts_and_currency)
       if self.payment.authorize && self.payment.capture!
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::PenaltyChargeSucceeded, self.id)
@@ -179,7 +175,7 @@ class Reservation < Order
   end
 
   def penalty_fee_subtotal
-    unit_price * cancellation_policy_penalty_hours
+    transactable_line_item.unit_price * cancellation_policy_penalty_hours
   end
 
   def penalty_fee
@@ -295,6 +291,18 @@ class Reservation < Order
 
   def set_minimum_booking_minutes
     self.minimum_booking_minutes = action.minimum_booking_minutes
+  end
+
+  def warn_user_of_expiration
+    tt_action_type = self.transactable.try(:action_type).try(:transactable_type_action_type)
+    if self.ends_at.present? && tt_action_type.try(:type) == "TransactableType::TimeBasedBooking" &&
+      tt_action_type.send_alert_hours_before_expiry &&
+      tt_action_type.send_alert_hours_before_expiry_hours > 0
+
+      WarnUserOfExpirationJob.perform_later(self.ends_at - tt_action_type.send_alert_hours_before_expiry_hours.hours, self.id)
+    end
+
+    true
   end
 
   private

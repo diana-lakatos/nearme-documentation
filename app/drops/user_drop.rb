@@ -68,7 +68,8 @@ class UserDrop < BaseDrop
     :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
     :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile,
     :tags, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
-    :created_at, :has_buyer_profile?, :default_company, :company_name, :instance_admins_metadata, to: :source
+    :communication, :created_at, :has_buyer_profile?, :default_company, :company_name, :instance_admins_metadata,
+    to: :source
 
   def class_name
     'User'

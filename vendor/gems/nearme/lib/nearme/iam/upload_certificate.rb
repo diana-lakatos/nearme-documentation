@@ -1,4 +1,6 @@
 class NearMe::IAM::UploadCertificate
+  class NearMe::IAM::UploadError < StandardError
+  end
 
   def initialize(certificate, params)
     @certificate = certificate
@@ -11,6 +13,11 @@ class NearMe::IAM::UploadCertificate
     @certificate.update_attributes arn: response.server_certificate_metadata.arn,
                                    certificate_type: 'IAM',
                                    status: 'UPLOADED'
+
+  rescue Aws::IAM::Errors::ValidationError,
+         Aws::IAM::Errors::MalformedCertificate
+
+    raise NearMe::IAM::UploadError, $!.message
   end
 
   private

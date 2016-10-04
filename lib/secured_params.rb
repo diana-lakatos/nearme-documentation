@@ -386,6 +386,10 @@ class SecuredParams
       :click_to_call,
       :skip_meta_tags,
       :enable_sms_and_api_workflow_alerts_on_staging,
+      :show_currency_symbol,
+      :show_currency_name,
+      :no_cents_if_whole,
+      :google_maps_api_key,
       allowed_currencies: [],
       allowed_countries: [],
       custom_translations: [:'buy_sell_market.checkout.manual_payment', :'buy_sell_market.checkout.manual_payment_description'],
@@ -403,6 +407,7 @@ class SecuredParams
   def instance_profile_type
     [
       :searchable,
+      :search_engine,
       :show_categories,
       :category_search_type,
       :position,
@@ -525,6 +530,8 @@ class SecuredParams
       :allow_drafts,
       :type,
       :confirm_reservations,
+      :send_alert_hours_before_expiry,
+      :send_alert_hours_before_expiry_hours,
       pricings_attributes: nested(self.transactable_type_pricing),
       schedule_attributes: nested(self.schedule),
       availability_template_attributes: nested(self.availability_template),
@@ -1182,6 +1189,7 @@ class SecuredParams
   def user(transactable_type: nil, reservation_type: nil)
     [
       :avatar,
+      :avatar_cache,
       :avatar_transformation_data,
       :avatar_versions_generated_at,
       :biography,

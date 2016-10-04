@@ -98,6 +98,7 @@ namespace :volte do
 
     def create_custom_attributes!
       @transactable_type = TransactableType.first
+      @transactable_type.custom_attributes.where(name: 'item_comments').destroy_all
 
       create_custom_attribute(@transactable_type, {
         name: 'item_type',
@@ -259,17 +260,21 @@ namespace :volte do
         html_tag: 'input',
         required: "0",
         public: true,
-        searchable: false
+        searchable: false,
+        wrapper_html_options: { 'data-money-value-container' => true },
+        input_html_options: { 'type' => 'number', 'data-money-value' => true }
       })
 
       create_custom_attribute(@transactable_type, {
-        name: 'item_comments',
-        label: 'Comments',
-        attribute_type: 'text',
-        html_tag: 'textarea',
-        required: "0",
+        name: 'bond_value',
+        label: 'Bond Value',
+        attribute_type: 'integer',
+        html_tag: 'input',
+        required: "1",
         public: true,
-        searchable: false
+        searchable: false,
+        wrapper_html_options: { 'data-money-value-container' => true },
+        input_html_options: { 'type' => 'number', 'data-money-value' => true }
       })
 
       create_custom_attribute(@transactable_type, {
@@ -393,7 +398,7 @@ namespace :volte do
         { "transactable" => "designer_name" },
         { "transactable" => "price" },
         { "transactable" => "retail_value" },
-        { "transactable" => "item_comments" },
+        { "transactable" => "bond_value" },
         { "transactable" => "dry_cleaning" },
         { "transactable" => "shipping_profile" },
         { "transactable" => "tags" }
@@ -420,8 +425,8 @@ namespace :volte do
         { "transactable" => "designer_name" },
         { "transactable" => "price" },
         { "transactable" => "retail_value" },
+        { "transactable" => "bond_value" },
         { "transactable" => "unavailable_periods" },
-        { "transactable" => "item_comments" },
         { "transactable" => "dry_cleaning" },
         { "transactable" => "shipping_profile" },
         { "transactable" => "tags" }

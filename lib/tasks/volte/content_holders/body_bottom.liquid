@@ -3,7 +3,7 @@ name: Body End
 inject_pages: any_page
 position: body_bottom
 ---
-<script src="https://rawgit.com/mdyd-dev/marketplaces/master/volte/dist/js/volte.js" async></script>
+<script src="https://rawgit.com/mdyd-dev/marketplaces/master/volte-webpack/dist/app.js" async></script>
 <script>
   function showCustomAttributes(attribute){
     $('[data-visibility-dependent]').hide().attr('disabled', true)
@@ -14,5 +14,10 @@ position: body_bottom
   $('[data-show-field]').on('change', function(){ showCustomAttributes($(this))});
 
   $('[data-show-field]').each(function(){showCustomAttributes($(this));});
+
+  // Remove google maps API since its not used
+  $(function() {
+    return document.querySelectorAll('script[src*="maps.googleapis.com"]').forEach(function(v, i) { v.parentNode.removeChild(v) });
+  });
+
 </script>
-<!-- <script src="http://localhost:8000/js/volte.js" async></script> -->

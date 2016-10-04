@@ -16,7 +16,7 @@ class AdditionalChargeDrop < BaseDrop
   end
 
   def formatted_amount
-    humanized_money_with_symbol(amount)
+    render_money(amount)
   end
 
 end

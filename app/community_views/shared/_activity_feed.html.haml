@@ -2,7 +2,7 @@
 
 - if current_user.try(:can_update_feed_status?, object) == true
   .publish-a
-    = simple_form_for UserStatusUpdate.new, url: user_status_updates_index_path, method: :post do |f|
+    = simple_form_for UserStatusUpdate.new, method: :post do |f|
       - image = current_user.try(:avatar).try(:url, :medium)
       %figure= image_tag(image || space_listing_placeholder_path(width: 80, height: 80))
 

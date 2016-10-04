@@ -35,7 +35,14 @@ class ListingsController < ApplicationController
     @location = @listing.location
     if @listing.action_type
       @action_type = @listing.action_type.decorate
-      render template: "listings/action_types/#{@action_type.object.class.name.demodulize.underscore}", layout: false
+
+      if params[:unavailable].eql?('true')
+        action_type_template = 'unavailable'
+      else
+        action_type_template = @action_type.object.class.name.demodulize.underscore
+      end
+
+      render template: "listings/action_types/#{action_type_template}", layout: false
     end
   end
 

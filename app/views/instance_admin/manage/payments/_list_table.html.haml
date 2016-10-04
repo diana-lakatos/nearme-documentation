@@ -39,5 +39,5 @@
           %td= payment.payment_gateway.try(:name)
           %td= l(payment.created_at, format: :long)
           %td
-            %b= humanized_money_with_cents_and_symbol(payment.total_amount)
+            %b= render_money(payment.total_amount)
           %td= link_to 'Details',  instance_admin_manage_payment_path(payment)

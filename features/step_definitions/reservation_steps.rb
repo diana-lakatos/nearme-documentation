@@ -375,9 +375,10 @@ Then /^a reservation email of rejection should be sent to (.*)$/ do |email|
 end
 
 Then /^a reservation rejected email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should match "Can we help"
-  last_email_for(email).html_part.body.should include 'has been declined by the host'
-  last_email_for(email).text_part.body.should include 'has been declined by the host'
+  last_email_for(email, with_subject: "Can we help").tap do |found|
+    found.html_part.body.should include 'has been declined by the host'
+    found.text_part.body.should include 'has been declined by the host'
+  end
 end
 
 Then /^a new reservation email should be sent to (.*)$/ do |email|

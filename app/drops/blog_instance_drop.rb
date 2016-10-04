@@ -22,6 +22,10 @@ class BlogInstanceDrop < BaseDrop
     header.present? ? header.url : nil
   end
 
+  def header_present?
+    header.present?
+  end
+
   # check if header icon is present
   def header_icon_present?
     @blog.header_icon.present?

@@ -37,5 +37,5 @@
           %td= order.state
           %td= l(order.created_at, format: :long)
           %td
-            %b= humanized_money_with_cents_and_symbol(order.total_amount)
+            %b= render_money(order.total_amount)
           %td= link_to 'Details',  instance_admin_manage_order_path(order)

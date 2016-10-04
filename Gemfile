@@ -53,7 +53,6 @@ gem 'fog'
 gem 'geocoder'
 gem 'nearest_time_zone'
 gem 'haml'
-gem 'le'
 gem 'mini_magick', '~> 4.0.1'
 gem 'money-rails', github: 'RubyMoney/money-rails'
 gem 'simple_form', '~> 3.1'
@@ -118,7 +117,7 @@ gem 'mixpanel_client'
 gem 'voight_kampff'
 
 gem 'rest-client'
-gem 'jira-ruby', :require => 'jira'
+gem 'jira-ruby', require: false
 
 gem 'gibbon'
 
@@ -237,3 +236,4 @@ gem 'sprockets-rails'
 gem 'cocoon'
 
 gem 'redcarpet'
+gem 'slack-notifier', require: false

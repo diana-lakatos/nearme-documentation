@@ -1,6 +1,6 @@
 <h2>{{ lister.first_name }},</h2>
 
-<p>We just wanted to nofiy you that {{ recurring_booking.owner.first_name }} has paid for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>'</p>
+<p>We just wanted to nofiy you that {{ enquirer.first_name }} has paid for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>'</p>
 
 <p>You can manage your bookings <a href="{{ platform_context.host | append:recurring_booking.manage_guests_dashboard_url }}">here</a></p>
 

@@ -27,7 +27,7 @@
     - else
       %span.total-cost-label= t('dashboard.host_reservations.complete_reservation.total_cost')
       %span.amount{ data: { currency: @order_item.unit_price.symbol } }
-        = humanized_money_with_cents_and_symbol(@order_item.unit_price)
+        = render_money(@order_item.unit_price)
 
   = f.input :comment, as: :text, label: t('dashboard.host_reservations.complete_reservation.comment'), input_html: { readonly: readonly }
 

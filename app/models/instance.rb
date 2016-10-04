@@ -2,7 +2,7 @@ class Instance < ActiveRecord::Base
   include Encryptable
   include DomainsCacheable
 
-  SELLER_ATTACHMENTS_ACCESS_LEVELS = SellerAttachment::ACCESS_LEVELS + ['sellers_preference']
+  SELLER_ATTACHMENTS_ACCESS_LEVELS = (SellerAttachment::ACCESS_LEVELS + ['sellers_preference']).freeze
 
   has_paper_trail
 
@@ -14,7 +14,7 @@ class Instance < ActiveRecord::Base
     :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret,
     :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string, :shippo_username, :shippo_password, :shippo_api_token,
     :twilio_consumer_key, :twilio_consumer_secret, :test_twilio_consumer_key, :test_twilio_consumer_secret, :support_imap_password, :webhook_token,
-    :google_consumer_key, :google_consumer_secret, :github_consumer_key, :github_consumer_secret
+    :google_consumer_key, :google_consumer_secret, :github_consumer_key, :github_consumer_secret, :google_maps_api_key
 
   attr_accessor :mark_as_locked
   attr_accessor :custom_translations

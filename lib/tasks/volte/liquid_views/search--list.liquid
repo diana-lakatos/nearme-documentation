@@ -1,0 +1,227 @@
+---
+partial: false
+---
+
+<div class="wrapper-a search-list">
+  <div class="search-box">
+    <form class="search-form" action="/search" method="GET">
+        <input type="text" name="query" placeholder="Item name" />
+        <button class="button button-default">SEARCH</button>
+    </form>
+  </div>
+
+  <aside class="search-sidebar">
+    <form class="form-horizontal">
+    <ul>
+      <li>
+        <fieldset>
+          <legend>Item type</legend>
+          <select class="form-control ordinary-select" name="item_type" id="">
+            <option value="">Please select</option>
+            <option value="">Dress</option>
+            <option value="">Bag</option>
+            <option value="">Millinary</option>
+            <option value="">Outwear</option>
+            <option value="">Accessories</option>
+          </select>
+        </fieldset>
+      </li>
+      <li>
+        <fieldset>
+          <legend>Item SubType</legend>
+          <select class="form-control ordinary-select" name="item_subtype">
+            <option value="Please Select">Please Select</option>
+            <option value="Neckless">Neckless</option>
+            <option value="Belt">Belt</option>
+            <option value="Other">Other</option>
+          </select>
+        </fieldset>
+      </li>
+      <li>
+        <fieldset>
+          <legend>Style</legend>
+          <select class="form-control ordinary-select" name="item_style" id="item_style">
+            <option value="Please Select">Please Select</option>
+            <option value="">2</option>
+            <option value="">3</option>
+          </select>
+        </fieldset>
+      </li>
+      <li>
+        <fieldset>
+          <legend>Color</legend>
+          <select class="form-control ordinary-select" name="item_color" id="item_color">
+            <option value="Please Select">Please Select</option>
+            <option value="">2</option>
+            <option value="">3</option>
+          </select>
+        </fieldset>
+      </li>
+      <li>
+        <fieldset>
+          <legend>Size</legend>
+          <select class="form-control ordinary-select" name="item_size" id="item_size">
+            <option value="Please Select">Please Select</option>
+            <option value="">2</option>
+            <option value="">3</option>
+          </select>
+        </fieldset>
+      </li>
+      <li>
+        <fieldset>
+          <legend>Designer</legend>
+          <select class="form-control ordinary-select" name="item_designer" id="item_designer">
+            <option value="Please Select">Please Select</option>
+            <option value="">2</option>
+            <option value="">3</option>
+          </select>
+        </fieldset>
+      </li>
+      <li>
+        <fieldset>
+          <legend>Location</legend>
+          <input type="text" name="item_location_city" id="item_location_city" placeholder="City" />
+          <select class="form-control ordinary-select" name="item_location_state" id="item_location_state">
+            <option value="Please Select">Select State</option>
+            <option value="">2</option>
+            <option value="">3</option>
+          </select>
+        </fieldset>
+      </li>
+      <li>
+        <fieldset>
+          <legend>Availability</legend>
+          <ul>
+            <li>
+              <label>
+                From:
+                MM/DD/YYYY
+              </label>
+            </li>
+            <li>
+              <label>
+                To:
+                MM/DD/YYYY
+              </label>
+            </li>
+          </ul>
+        </fieldset>
+      </li>
+      <li>
+        <fieldset>
+          <legend>Price</legend>
+          <select class="form-control ordinary-select" name="price" id="price">
+            <option value="Please select">Please select</option>
+            <option value="Under $50">Under $50</option>
+            <option value="Under $100">Under $100</option>
+            <option value="Under $200">Under $200</option>
+            <option value="Under $300">Under $300</option>
+            <option value="Under $400">Under $400</option>
+            <option value="Under $500">Under $500</option>
+            <option value="$500+">$500+</option>
+          </select>
+        </fieldset>
+      </li>
+    </ul>
+    </form>
+  </aside>
+
+  <main class="search-results">
+    <div class="search-results__summary">
+      <div class="results-number">
+        <p>2 Results</p>
+      </div>
+
+      <div class="results-sorting">
+        <form class="form-inline">
+          <label for="sort_by">
+            Sort by:
+            <select class="form-control ordinary-select" name="sort_by" id="sort_by">
+              <option value="alph_asc">Alphabetically ascending</option>
+              <option value="alph_desc">Alphabetically descending</option>
+              <option value="price_asc">Price ascending</option>
+              <option value="price_desc">Price descending</option>
+              <option value="date_entered">Date entered</option>
+              <option value="popularity">Popularity</option>
+            </select>
+          </label>
+        </form>
+      </div>
+    </div>
+
+    <section class="search-results__items">
+      <article data-item-link="/listings/item/1">
+        <div class="item-photo">
+          <img src="http://placekitten.com/150/150" />
+        </div>
+        <div class="item-info">
+          <div class="item-description">
+            <h2>White Bridesmade  Dress</h2>
+            <p><strong>Designer:</strong> Ralph Lauren</p>
+          </div>
+          <div class="item-pricing">
+            <dl>
+              <dt>4 days: </dt>
+              <dd>$1000 AUD</dd>
+              <dt>8 days: </dt>
+              <dd>$1500 AUD</dd>
+              <dt>30 days: </dt>
+              <dd>$3000 AUD</dd>
+              <dt>Bond value: </dt>
+              <dd>$3000 AUD</dd>
+            </dl>
+          </div>
+          <div class="lender-info">
+            <p>Lender: <a href="#Jane_Lane_Profile">Jane Lane</a></p>
+            <a href="#" class="button button-small button-inverse">Message</a>
+          </div>
+        </div>
+        <div class="item-actions">
+          <ul>
+            <li class="item-actions__primary"><a href="#REQUEST-ITEM" class="button button-default">REQUEST ITEM</a></li>
+            <li class="item-actions__secondary"><a href="#ADD-TO-FAVORITE" class="button button-small button-inverse">Favorite</a></li>
+            <li class="item-actions__secondary"><a href="#JANE-LANE-BLOG" class="button button-small button-inverse">Blog</a></li>
+          </ul>
+
+          <p class="item-availability">Check item availability: ?</p>
+        </div>
+      </article>
+      <article data-item-link="/listings/item/2">
+        <div class="item-photo">
+          <img src="http://placekitten.com/150/150" />
+        </div>
+        <div class="item-info">
+          <div class="item-description">
+            <h2>White Bridesmade  Dress</h2>
+            <p><strong>Designer:</strong> Ralph Lauren</p>
+          </div>
+          <div class="item-pricing">
+            <dl>
+              <dt>4 days: </dt>
+              <dd>$1000 AUD</dd>
+              <dt>8 days: </dt>
+              <dd>$1500 AUD</dd>
+              <dt>30 days: </dt>
+              <dd>$3000 AUD</dd>
+              <dt>Bond value: </dt>
+              <dd>$3000 AUD</dd>
+            </dl>
+          </div>
+          <div class="lender-info">
+            <p>Lender: <a href="#Jane_Lane_Profile">Jane Lane</a></p>
+            <a href="#" class="button button-small button-inverse">Message</a>
+          </div>
+        </div>
+        <div class="item-actions">
+          <ul>
+            <li class="item-actions__primary"><a href="#REQUEST-ITEM"" class="button button-default">REQUEST ITEM</a></li>
+            <li class="item-actions__secondary"><a href="#ADD-TO-FAVORITE" class="button button-small button-inverse">Favorite</a></li>
+            <li class="item-actions__secondary"><a href="#JANE-LANE-BLOG" class="button button-small button-inverse">Blog</a></li>
+          </ul>
+
+          <p class="item-availability">Check item availability: ?</p>
+        </div>
+      </article>
+    </section>
+  </main>
+</div>

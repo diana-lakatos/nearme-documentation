@@ -133,15 +133,15 @@ module LiquidFilters
   end
 
   def pricify(amount, currency = 'USD')
-    humanized_money_with_symbol(amount.to_f.to_money(currency))
+    render_money(amount.to_f.to_money(currency))
   end
 
   def price_with_cents_with_currency(money)
-    humanized_money_with_cents_and_symbol(money)
+    render_money(money)
   end
 
   def price_without_cents_with_currency(money)
-    humanized_money_with_symbol(money)
+    render_money(money)
   end
 
   def space_listing_placeholder_path(height, width)
@@ -422,6 +422,10 @@ module LiquidFilters
 
   def timeago(time)
     "<abbr class='timeago' title='#{time.to_time.iso8601}'>#{l(time, 'short')}</abbr>".html_safe
+  end
+
+  def attachments_visible_for(transactable_drop, user_drop)
+    transactable_drop.source.attachments_visible_for(user_drop.source)
   end
 
 end

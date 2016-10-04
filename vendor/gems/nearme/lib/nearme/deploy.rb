@@ -80,13 +80,26 @@ module NearMe
       end
       print "\n"
       result = opsworks_client.describe_commands(deployment_id: deployment_id)
-      pp result.data.commands.first
+      instance_id_to_name = opsworks_client.describe_instances(stack_id: stack_id).instances.inject({}) do |hash, el|
+        hash[el.instance_id] = el.hostname
+        hash
+      end
+      result_hash = result.data.commands.map do |el|
+        {
+          name: instance_id_to_name[el.instance_id],
+          status: el.status,
+          log_url: el.log_url
+        }
+      end
+
+      pp result_hash.inspect
+      result_hash
     end
 
     def deploy_running?(deployment_id)
       result = opsworks_client.describe_commands(deployment_id: deployment_id)
-
-      result.data.commands.first.status == 'pending'
+      # deploy is running if there is at least one pending server we deploy to and nothing failed so far
+      result.data.commands.any? { |c| c.status == 'pending' } && result.data.commands.none? { |c| c.status == 'failed' }
     end
   end
 end

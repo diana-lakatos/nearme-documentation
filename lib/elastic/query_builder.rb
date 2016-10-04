@@ -224,15 +224,19 @@ module Elastic
         { match_all: { boost: QUERY_BOOST } }
       else
         query = @query[:query]
-        { simple_query_string: build_multi_match(query, @searchable_custom_attributes + ['name^2', 'tags', 'description']) }
+        { simple_query_string: build_multi_match(query, @searchable_custom_attributes + searchable_main_attributes) }
       end
+    end
+
+    def searchable_main_attributes
+      ['name^2', 'tags', 'description']
     end
 
     def build_multi_match(query_string, custom_attributes)
       multi_match = {
         query: query_string,
         fields: custom_attributes,
-        default_operator: @query[:logic_operator].presence || "OR",
+        default_operator: @query[:logic_operator].presence || 'OR',
         analyzer: :snowball
       }
 

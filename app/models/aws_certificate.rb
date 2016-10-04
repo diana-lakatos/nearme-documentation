@@ -1,5 +1,9 @@
 class AwsCertificate < ActiveRecord::Base
-  validates :name, :instance_id, presence: true
+  scoped_to_platform_context
+  auto_set_platform_context
+
+  validates :name, presence: true
+  validates :arn, uniqueness: true
 
   has_many :domains
 

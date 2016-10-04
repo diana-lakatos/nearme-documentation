@@ -1,0 +1,26 @@
+{% assign unavailable = false %}
+{% if listing.properties['space_availability'] == 'Unavailable' %}
+  {% assign unavailable = true %}
+{% endif %}
+
+<script type="text/javascript">
+  $("[data-booking-module-container]").each(function(index, el) {
+    el = $(el)
+    path = el.data('path')
+    collapsed = el.data('collapsed')
+    restore_reservations = el.data('restore-reservations')
+    start_date = el.data('start-date')
+    $.get(
+      path,
+      {
+        collapsed: collapsed,
+        restore_reservations: restore_reservations,
+        start_date: start_date,
+        unavailable: {{ unavailable }}
+      },
+      function(data) {
+        el.html(data);
+      }
+    );
+  });
+</script>

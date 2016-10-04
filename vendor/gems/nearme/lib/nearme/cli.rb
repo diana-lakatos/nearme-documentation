@@ -1,5 +1,7 @@
 require 'thor'
 require 'nearme'
+require 'slack-notifier'
+require_relative '../../../../../lib/jira_wrapper.rb'
 
 module NearMe
   class CLI < Thor
@@ -51,9 +53,30 @@ DESC
       result = deploy.start!
       deployment_id = result.data[:deployment_id]
       puts "Deploy started with ID: #{deployment_id}"
+
+      notifier.ping(":airplane_departure: Deploy started by #{ENV['AWS_USER']}: #{options[:branch]} -> #{options[:stack]} (id: #{deployment_id})", icon_emoji: ':passenger_ship:')
+      if @production_deploy.present?
+        production_notifier = Slack::Notifier.new('https://hooks.slack.com/services/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')
+        production_release_notes = JiraWrapper.new.release_notes(@production_deploy)
+        production_notifier.ping("Production release started #{options[:branch]} -> #{options[:stack]}. You can <a href='#{production_release_notes}'>Check Release Notes</a>. Details in #eng-deploys", icon_emoji: ':see_no_evil:')
+      end
       if options[:watch]
         puts "Waiting until deploy is done."
-        deploy.watch!(deployment_id)
+        result_hash = deploy.watch!(deployment_id)
+        message = begin
+                    if result_hash.any? { |arr| arr[:status] != 'successful' }
+                      m = ":sos: WHOOOPSE!!!\n"
+                      m += result_hash.map do |arr|
+                        icon = arr[:status] == 'successful' ? ':white_check_mark:' : ':x:'
+                        status = "#{arr[:name]}: #{arr[:status]}"
+                        log_url = arr[:status] == 'successful' ? nil : "[check log](#{arr[:log_url]})"
+                        [icon, status, log_url].compact.join(' ')
+                      end.join("\n")
+                    else
+                      ":white_check_mark: All good."
+                    end
+                  end
+        notifier.ping(":airplane_arriving: Deploy finished: #{ENV['AWS_USER']} #{options[:branch]} -> #{options[:stack]} (id: #{deployment_id})\n#{message}", icon_emoji: ':passenger_ship:')
       end
     end
 
@@ -109,7 +132,7 @@ DESC
         stack = options[:stack]
         environment = options[:environment].to_s
 
-        return true unless stack.include?('production')
+        return true unless stack.include?('production') || stack == 'nm-oregon'
 
         if !environment.empty? && environment != 'production'
           puts 'ERROR: You cannot use this environment for production stack'
@@ -145,12 +168,18 @@ BANNER
           end
         end
 
-        answer = ask "\nAre you sure you want to perform this action on production? Type 'production' if so:"
+        answer = ask "\nAre you sure you want to perform this action on production? Type 'production' if so. BTW: Have you created git tag?"
 
         if answer != 'production'
           puts 'Nope!'
           exit 1
         end
+
+        @production_deploy = `git describe`.split('-')[0].strip
+      end
+
+      def notifier
+        @notifier ||= Slack::Notifier.new('https://hooks.slack.com/services/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')
       end
     end
   end

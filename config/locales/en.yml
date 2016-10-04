@@ -1,5 +1,11 @@
 en:
   activerecord:
+    errors:
+      models:
+        aws_certificate:
+          attributes:
+            arn:
+              taken: "You can not request more than one certificate for the same domain name within one hour."
     models:
       payment_gateway: "Payment gateway"
       payment_method: "Payment method"
@@ -56,6 +62,8 @@ en:
         no_action: 'No Action'
       shipping_rule:
         processing_time: 'Procesing time (in days)'
+      user_blog_post:
+        published_at_str: "Published at"
   connections:
     facebook:
       count:
@@ -419,6 +427,7 @@ en:
         update_lock: 'Update Lock'
         update_tax: 'Save'
         user_authorization: 'User Authorization'
+        api_settings: "API Settings"
         basic_configuration: 'Basic Configuration'
         basic_configuration_section:
           placeholder_marketplace_name: 'Your marketplace name'
@@ -438,6 +447,7 @@ en:
           replacement_text: "Replacement Text"
           ignore_case: "Ignore case"
         support: "Support"
+        currency_options: "Currency Options"
       payments:
         payment_gateways:
           new: "New Payment Gateway"
@@ -445,8 +455,8 @@ en:
       aws_certificates:
         certificate_list:
           title:
-            ACM: Certificate requests
-            IAM: Uploaded certificates
+            acm: Certificate requests
+            iam: Uploaded certificates
         new:
           request_certificate: Request certificate
         show:
@@ -538,6 +548,7 @@ en:
           all: "All"
           users: "Users"
           purchasers: "Purchasers"
+          collaborators: 'Collaborators'
           sellers_preference: "Sellers preference"
       languages:
         settings: "Settings"
@@ -1820,7 +1831,7 @@ en:
         order_placed: "Order placed"
         order: "Order #"
         order_id: 'Order #%{id}'
-        order_placed_with_date: "Order placed: %{date}"
+        order_placed_with_date: "Review posted on: %{date}"
         overall: 'Overall:'
         details: 'Details'
         view_order_details: "View Order Details"
@@ -2196,6 +2207,14 @@ en:
       refunded: "Payment refunded"
       authorized: "Payment authorized"
       voided: "Payment voided"
+    checkout:
+      item: "Item"
+      net: "Net"
+      tax: "Tax"
+      price: "Price"
+      gross: "Gross"
+      qty: "Qty"
+      total: "Total"
 
     index:
       title: 'My orders'
@@ -2264,10 +2283,10 @@ en:
     manually_confirm: "This %{lessor} manually confirms all bookings."
     paypal_and_cc_charge_after_confirmation: "Your will not be charged until the booking is confirmed."
     cancellation_time: "You have up to %{time} hours before the booking takes place to cancel."
-    no_cancellation_time: "You can cancel before the first day and you will receive a full refund except for service fee."
+    no_cancellation_time: "You can cancel before the first day."
     cancellation_fee: "The penalty fee for cancelling is %{fee}%. Service fee is not refunded."
     hours_cancellation_fee: "The penalty fee for cancelling later is equivalent to %{fee} times hourly rate."
-    no_cancellation_fee: "You will get full refund except of service fee."
+    no_cancellation_fee: "You will get full refund except for service fee."
     no_bookings_html: "You don't have any %{type} bookings. <a href='/search'>Find %{bookable_nouns} near you!</a>"
     no_tickets: "There are no tickets to show."
     upcoming: 'upcoming'
@@ -2344,6 +2363,7 @@ en:
       not_bookable: 'Suggest date'
       not_purchasable: 'Out of stock'
       documents: 'Documents'
+      not_available: '%{bookable_noun} is currently not available'
     filters:
       open: 'Open'
       resolved: 'Resolved'
@@ -2517,6 +2537,9 @@ en:
     rating:
       experience_hosting: "How was your experience hosting %{name}?"
       experience_at: "How was your experience at '%{name}'?"
+    orders:
+      warn_guest_of_expiration:
+        subject: "Your reservation is about to expire"
 
   top_navbar:
     sign_up: 'Sign Up'
@@ -2842,10 +2865,13 @@ en:
     seller_attachments: "Seller attachments"
     upload_attachments: "Upload attachments"
     wrong_file_message: 'Uploaded documents does not have an accepted extension. Accepted extensions are %{formats}'
+    submit: 'Upload'
+    new_attachment: 'Upload File'
     access_levels:
       all: 'All users'
       users: 'Registered users'
       purchasers: 'Purchasers only'
+      collaborators: 'Collaborators'
     max_num_reached: "Max number of attached documents reached"
     associated_with_order: "Here are the seller attachments associated with your order"
 
@@ -2920,3 +2946,20 @@ en:
   merchant_account:
     gateway_errors:
       us_social_security_format: 'Social Security number must be 9 characters long'
+
+  service_type:
+    common:
+      languages:
+        english: 'I speak English'
+        german: 'Ich spreche Deutsch'
+        french: 'Je parle français'
+        spanish: 'Yo hablo español'
+        chinese: '我說中國'
+        tagalog: 'Nagsasalita ako ng Tagalog'
+        vietnamese: 'Tôi nói tiếng Việt nam'
+        korean: '저는 한국말 할줄 알아요'
+        farsi: 'من فارسی حرف می زنم'
+        russian: 'Я говорю по русски'
+        arabic: 'اتحدث العربية'
+        italian: 'Parlo italiano'
+        polish: 'Mówię po polsku'

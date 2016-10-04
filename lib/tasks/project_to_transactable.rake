@@ -336,7 +336,7 @@ namespace :project_to_transactable do
     TransactableType.class_eval do
       def auto_accept_invitation_as_collaborator?
         false
-      end  
+      end
     end
 
     Transactable.reset_column_information
@@ -464,6 +464,7 @@ namespace :project_to_transactable do
           end
 
           ProjectCollaborator.where(project: project).find_each do |project_collaborator|
+            puts project.id
             transactable_collaborator = TransactableCollaborator.new
             transactable_collaborator.instance_id = instance.id
             transactable_collaborator.user_id = project_collaborator.user_id
@@ -471,8 +472,12 @@ namespace :project_to_transactable do
             transactable_collaborator.approved_by_owner_at = project_collaborator.approved_by_owner_at
             transactable_collaborator.approved_by_user_at = project_collaborator.approved_by_user_at
             transactable_collaborator.email = project_collaborator.email
+            begin
             transactable_collaborator.save!
             transactable_collaborator.update_columns(created_at: project_collaborator.created_at, updated_at: project_collaborator.updated_at)
+            rescue
+              puts "Couldn't create project collaborator with id=#{project_collaborator.id}"
+            end
           end
 
           GroupProject.where(project: project).find_each do |group_project|
