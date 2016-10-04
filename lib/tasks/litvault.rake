@@ -13,6 +13,8 @@ namespace :litvault do
         tt_select_type: 'radio',
         split_registration: true,
         enable_reply_button_on_host_reservations: true,
+        seller_attachments_enabled: true,
+        seller_attachments_access_level: 'collaborators',
         hidden_ui_controls: { 'main_menu/cta': 1 },
         skip_company: true
       )
