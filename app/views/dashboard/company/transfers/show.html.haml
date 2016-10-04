@@ -45,6 +45,11 @@
                   - else
                     %i.fa.fawarning
                     = t('dashboard.transfers.not_transferred')
+    - else
+      - if @company.any_payout_option_available?
+        %p.warning.text-center
+          %span.fa.fa-warning
+          = t('dashboard.transfers.no_transfers_present')
 
 = will_paginate_dashboard @payment_transfers
 
