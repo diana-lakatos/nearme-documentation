@@ -70,7 +70,7 @@
       name: "Engagement Agreement"
       fields:
         - transactable: engagement_agreement_exists
-        - transactable: date_engagement_agreemen_signed
+        - transactable: date_engagement_agreement_signed
         - transactable: engagement_agreement_fee_percentage
         - transactable: engagement_agreement_expenses_advancement
 
@@ -128,7 +128,7 @@
       name: "Engagement Agreement"
       fields:
         - transactable: engagement_agreement_exists
-        - transactable: date_engagement_agreemen_signed
+        - transactable: date_engagement_agreement_signed
         - transactable: engagement_agreement_fee_percentage
         - transactable: engagement_agreement_expenses_advancement
     -
