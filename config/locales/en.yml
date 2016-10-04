@@ -847,6 +847,7 @@ en:
         name: "Name"
         search: "Search?"
         public: "Public?"
+        required: "Required?"
         internal: "Internal?"
         new_attribute: "New Attribute"
         edit_attribute: "Edit Attribute"
