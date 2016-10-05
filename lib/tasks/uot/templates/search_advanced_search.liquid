@@ -13,37 +13,12 @@
                 <div class="filter filter-{{ root_category.name | parameterize }}">
                     <span class="filter-title">{{ root_category.name }}</span>
                     <ul>
-                    {% for category in root_category.children %}
+                    {% for category in root_category.sorted_descendants %}
                         <li>
                             <span class="checkbox-a">
                                 <input type="checkbox" name="category_ids[]" {% if searcher.category_ids contains category.id %}checked{% endif %} value="{{category.id}}" id="category-{{category.id}}">
                                 <label for="category-{{category.id}}">{{ category.name }}</label>
                             </span>
-
-                            {% if category.children.size > 0 %}
-                                <ul>
-                                {% for subcat in category.children %}
-                                    <li>
-                                        <span class="checkbox-a">
-                                            <input type="checkbox" name="category_ids[]" {% if searcher.category_ids contains subcat.id %}checked{% endif %} value="{{subcat.id}}" id="category-{{subcat.id}}">
-                                            <label for="category-{{subcat.id}}">{{ subcat.name }}</label>
-                                        </span>
-                                        {% if subcat.children.size > 0 %}
-                                        <ul>
-                                            {% for subcat2 in subcat.children %}
-                                            <li>
-                                                <span class="checkbox-a">
-                                                  <input type="checkbox" name="category_ids[]" {% if searcher.category_ids contains subcat2.id %}checked{% endif %} value="{{subcat2.id}}" id="category-{{subcat2.id}}">
-                                                  <label for="category-{{subcat2.id}}">{{ subcat2.name }}</label>
-                                                </span>
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                        {% endif %}
-                                    </li>
-                                {% endfor %}
-                                </ul>
-                            {% endif %}
                         </li>
                         {% endfor %}
                     </ul>
