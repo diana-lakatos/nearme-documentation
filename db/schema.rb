@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161001124651) do
+ActiveRecord::Schema.define(version: 20161005125252) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1585,6 +1585,7 @@ ActiveRecord::Schema.define(version: 20161001124651) do
     t.string   "metadata_meta_description"
     t.integer  "redirect_code"
     t.string   "metadata_canonical_url"
+    t.string   "layout_name",                           default: "application"
   end
 
   add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree

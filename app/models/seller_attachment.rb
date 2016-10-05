@@ -1,14 +1,12 @@
 class SellerAttachment < Ckeditor::Asset
 
-  ACCESS_LEVELS = %w(all users purchasers collaborators).freeze
-
   include Thumbnable
 
   belongs_to :user
 
   mount_uploader :data, SellerAttachmentUploader, mount_on: :data_file_name
 
-  validates_inclusion_of :access_level, in: ACCESS_LEVELS, allow_nil: true
+  validates_inclusion_of :access_level, in: Ckeditor::Asset::ACCESS_LEVELS, allow_nil: true
 
   validate :max_attachments_num, on: :create
   belongs_to :transactable, foreign_key: 'assetable_id'
@@ -33,20 +31,6 @@ class SellerAttachment < Ckeditor::Asset
       else
         'all'
       end
-  end
-
-  ACCESS_LEVELS.each do |al|
-    define_method "accessible_to_#{al}?" do
-      access_level == al
-    end
-  end
-
-  def accessible_to?(user)
-    ::SellerAttachment::Fetcher.new(user).has_access_to?(self)
-  end
-
-  def to_liquid
-    @seller_attachment_drop ||= SellerAttachmentDrop.new(self)
   end
 
   private

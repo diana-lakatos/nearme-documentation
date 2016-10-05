@@ -13,6 +13,8 @@
     .img-data
       .img-name
         = link_to asset.filename, asset.url, target: '_blank'
+      .img-name
+        Access Level: #{asset.access_level.presence || 'public'}
       .time-size
         .time
           = asset.format_created_at

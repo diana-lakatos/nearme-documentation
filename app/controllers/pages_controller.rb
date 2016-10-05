@@ -16,7 +16,7 @@ class PagesController < ApplicationController
       redirect_to @page.redirect_url, status: @page.redirect_code
     elsif params[:simple]
       render :simple, platform_context: [platform_context.decorate]
-    elsif @page.no_layout?
+    elsif @page.layout_name.blank?
       assigns = {}
       assigns['params'] = params.except(*Rails.application.config.filter_parameters)
       assigns['current_user'] = current_user
@@ -24,7 +24,7 @@ class PagesController < ApplicationController
       assigns['data_source_contents'] = @data_source_contents
       render text: Liquid::Template.parse(@page.content).render(assigns, registers: { action_view: self }, filters: [LiquidFilters])
     else
-      render :show
+      render :show, layout: @page.layout_name
     end
   end
 

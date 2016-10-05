@@ -427,4 +427,13 @@ module LiquidFilters
     transactable_drop.source.attachments_visible_for(user_drop.source)
   end
 
+  def get_ckeditor_assets(access_level, options = {})
+    sort_option = %w(created_at name).detect { |valid_key| options['sort']  == valid_key } || 'created_at'
+    sort_direction = %w(asc desc).detect { |valid_key| options['direction']  == valid_key } || 'desc'
+    Ckeditor::Asset.where(access_level: access_level).
+      where('data_file_name LIKE ?', "%#{options['query']}%").
+      order("#{sort_option} #{sort_direction}").
+      paginate(page: options['page'] || 1, per_page: [(options['per_page'] || 10).to_i, 50].min)
+  end
+
 end

@@ -8,15 +8,22 @@
               = f.input :query, label: false, as: :string, input_html: { value: @query, class: 'string form-control' }
             .input-container
               = f.submit t('instance_admin.file_upload.search'), class: 'btn btn-light btn-smaller'
-          .row 
+          .row
             .input-container.col-xs-12
-              = file_upload_input('upload[file]', instance_admin_theme_file_uploads_path, nil, t('instance_admin.file_upload.upload_file'), {"no-multiple" => true, height: 0, row: 0, file_types: '(\.|\/)(' + [Ckeditor.attachment_file_types, Ckeditor.image_file_types].flatten.join('|') + ')$', upload_type: 'ckfile', files_container: '#fileupload', wrong_file_message: t('ckeditor_custom.file_uploads.wrong_file_message') })
-  
+              /= file_upload_input('upload[file]', instance_admin_theme_file_uploads_path, nil, t('instance_admin.file_upload.upload_file'), {"no-multiple" => true, height: 0, row: 0, file_types: '(\.|\/)(' + [Ckeditor.attachment_file_types, Ckeditor.image_file_types].flatten.join('|') + ')$', upload_type: 'ckfile', files_container: '#fileupload', wrong_file_message: t('ckeditor_custom.file_uploads.wrong_file_message') })
+
+      .form
+        = simple_form_for [:instance_admin, :theme, Ckeditor::Asset.new ], as: :upload, url: instance_admin_theme_file_uploads_path, method: :post, html: { :'data-attachment-form'=> true } do |f|
+          = f.input :title
+          = f.input :access_level, collection: Ckeditor::Asset::GLOBAL_ASSET_ACCESS_LEVELS, include_blank: true
+          = f.input :data, input_html: { data: { file: true } }
+          = f.submit
+
     #fileupload.gal-holder
       .fileupload-list
         - @files.scoped.each do |asset|
           = render :partial => 'asset', locals: { asset: asset }
-  
+
       .clear
       - unless @files.first_page?
         .pagination
@@ -24,4 +31,4 @@
       - unless @files.last_page?
         .pagination
           = link_to t('ckeditor_custom.file_uploads.next'), params.merge(:page => @files.next_page), :class => "next", :rel => "next"
-  
+

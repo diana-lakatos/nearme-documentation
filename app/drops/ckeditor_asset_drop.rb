@@ -1,4 +1,4 @@
-class SellerAttachmentDrop < BaseDrop
+class CkeditorAssetDrop < BaseDrop
   include ActionView::Helpers::NumberHelper
 
   delegate :id, :user, :created_at, to: :source
@@ -14,7 +14,7 @@ class SellerAttachmentDrop < BaseDrop
 
   # URL to the attachment
   def attachment_url
-    urlify(routes.seller_attachment_path(@source))
+    urlify(routes.custom_asset_path(@source))
   end
 
   def destroy_path

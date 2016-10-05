@@ -618,7 +618,7 @@ class SecuredParams
       :redirect_url,
       :redirect_code,
       :open_in_new_window,
-      :no_layout,
+      :layout_name,
       :metadata_title,
       :metadata_meta_description,
       :metadata_canonical_url

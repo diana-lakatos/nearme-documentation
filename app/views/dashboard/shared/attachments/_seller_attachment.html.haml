@@ -21,4 +21,4 @@
     - if @platform_context.instance.seller_attachments_access_sellers_preference?
       .access-level.form-group
         = label_tag :access_level, t('attachment_upload.access_level'), class: 'control-label'
-        = select_tag :access_level, options_for_select(SellerAttachment::ACCESS_LEVELS.map { |level| [t(level, scope: 'seller_attachments.access_levels'), level] }, attachment.access_level), data: {'attachment-property' => 'access_level' }, class: 'form-control'
+        = select_tag :access_level, options_for_select(Ckeditor::Asset::ACCESS_LEVELS.map { |level| [t(level, scope: 'seller_attachments.access_levels'), level] }, attachment.access_level), data: {'attachment-property' => 'access_level' }, class: 'form-control'
