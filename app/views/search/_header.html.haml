@@ -55,7 +55,7 @@
     .search-filters{:'data-search-filters-container' => true, :class => platform_context.domain.name.include?('desksnear.me') ? '' : 'two-filters'}
       = render partial: 'search/transactable_type_filter' if current_instance.transactable_types.searchable.many?
       - @searcher.filterable_custom_attributes.each do |ca|
-        = render partial: 'search/filter', locals: { header_name: t(ca.label_key), selected_values: params[:lg_custom_attributes] ? params[:lg_custom_attributes][ca.name] || [] : [], input_name: "lg_custom_attributes[#{ca.name}][]", options: ca.valid_values_translated, name: ca.name }
+        = render partial: 'search/filter', locals: { header_name: t(ca.label_key), selected_values: params[:lg_custom_attributes] ? params[:lg_custom_attributes][ca.name] || [] : [], input_name: "lg_custom_attributes[#{ca.name}][]", options: ca.valid_values_translated.map { |pair| [pair[1], pair[0]] }, name: ca.name }
       - if @searcher.transactable_type.display_location_type_filter?
         = render partial: 'search/filter', locals: { header_name: 'Location Types', selected_values: params[:location_types_ids] || [], input_name: 'location_types_ids[]', options: @searcher.filterable_location_types.map { |lt| [lt.name.downcase, lt.name ] } }
       - if @transactable_type.show_price_slider
