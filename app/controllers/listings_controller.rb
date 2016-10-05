@@ -27,6 +27,7 @@ class ListingsController < ApplicationController
       @followers = @transactable.feed_followers.paginate(pagination_params)
       @collaborators = @transactable.collaborating_users.paginate(pagination_params)
     end
+    respond_to :html
   end
 
   def booking_module
