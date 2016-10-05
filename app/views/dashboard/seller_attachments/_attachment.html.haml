@@ -20,4 +20,4 @@
     .access-level
       = label_tag :access_level
       .access-level-select-container
-        = select_tag :access_level, options_for_select(SellerAttachment::ACCESS_LEVELS.map { |level| [t(level, scope: 'seller_attachments.access_levels'), level] }, attachment.access_level), data: {'seller-attachment-access-level' => true, 'seller-attachment-update-url' => dashboard_seller_attachment_path(attachment.id)}
+        = select_tag :access_level, options_for_select(Ckeditor::Asset::ACCESS_LEVELS.map { |level| [t(level, scope: 'seller_attachments.access_levels'), level] }, attachment.access_level), data: {'seller-attachment-access-level' => true, 'seller-attachment-update-url' => dashboard_seller_attachment_path(attachment.id)}

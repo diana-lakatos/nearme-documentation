@@ -5,7 +5,7 @@ module CommunityValidators
     validate :validate_community_custom_fields
 
     def validate_community_custom_fields
-      if PlatformContext.current.instance.is_community?
+      if PlatformContext.current.try(:instance).try(:is_community?)
         if self.properties.respond_to?(:video_url) && self.properties.video_url.present?
           video_embedder = VideoEmbedder.new(self.properties.video_url)
           if video_embedder.html.blank?

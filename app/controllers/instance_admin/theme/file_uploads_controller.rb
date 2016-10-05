@@ -3,24 +3,40 @@ class InstanceAdmin::Theme::FileUploadsController < InstanceAdmin::Theme::BaseCo
   def index
     @files = Ckeditor::Asset.where(assetable: PlatformContext.current.instance).order(:id => :desc)
     @files = Ckeditor::Paginatable.new(@files).page(params[:page])
+    @file = Ckeditor::Asset.new
   end
 
   def create
+    params[:upload][:file] ||= params[:upload][:data] if params[:upload] # compatibility hack
     if params[:upload] && params[:upload][:file]
       if params[:upload][:file].content_type.to_s.match(/^image\/(?!svg)/i)
-        @attachment = Ckeditor.picture_model.new
+        @file = Ckeditor.picture_model.new
       else
-        @attachment = Ckeditor.attachment_file_model.new
+        @file = Ckeditor.attachment_file_model.new
       end
 
       file = params[:upload][:file]
-      @attachment.data = Ckeditor::Http.normalize_param(file, request)
-      @attachment.assetable = PlatformContext.current.instance
+      @file.title = params[:upload][:title]
+      @file.access_level = params[:upload][:access_level]
+      @file.data = Ckeditor::Http.normalize_param(file, request)
+      @file.assetable = PlatformContext.current.instance
 
-      if @attachment.save
-        render(partial: 'asset', locals: { asset: @attachment })
+      if request.xhr?
+        if @file.save
+          render(partial: 'asset', locals: { asset: @file })
+        else
+          render text: I18n.t('flash_messages.instance_admin.theme.file_uploads.failed', errors: @file.errors.full_messages.join(', '))
+        end
       else
-        render text: I18n.t('flash_messages.instance_admin.theme.file_uploads.failed', errors: @attachment.errors.full_messages.join(', '))
+        if @file.save
+          flash[:notice] = I18n.t('flash_messages.instance_admin.theme.file_uploads.created')
+          redirect_to instance_admin_theme_file_uploads_path
+        else
+          @files = Ckeditor::Asset.where(assetable: PlatformContext.current.instance).order(:id => :desc)
+          @files = Ckeditor::Paginatable.new(@files).page(params[:page])
+          render text: I18n.t('flash_messages.instance_admin.theme.file_uploads.failed', errors: @file.errors.full_messages.join(', '))
+          render :index
+        end
       end
     end
   end
@@ -39,12 +55,12 @@ class InstanceAdmin::Theme::FileUploadsController < InstanceAdmin::Theme::BaseCo
     @file.try(:destroy)
 
     respond_to do |format|
-        format.js {
-          render :text => %Q"
+      format.js {
+        render :text => %Q"
               jQuery('#picture_#{@file.try(:id)}').remove();
               jQuery('#attachment_file_#{@file.try(:id)}').remove();
-            "
-        }
+        "
+      }
     end
   end
 
