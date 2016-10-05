@@ -1119,5 +1119,8 @@ DEPENDENCIES
   wicked
   will_paginate
 
+RUBY VERSION
+   ruby 2.2.4p230
+
 BUNDLED WITH
-   1.13.0.rc.1
+   1.13.2
