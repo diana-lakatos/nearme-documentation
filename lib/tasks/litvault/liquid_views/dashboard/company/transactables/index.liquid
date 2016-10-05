@@ -41,8 +41,10 @@
             <label for="filter-properties-workplace" class="control-label">Case Type</label>
             <select id="filter-properties-workplace" name="transactable_type_id" data-allow-empty-option="true">
               <option value="">Any</option>
-                <option value='768' {% if params.transactable_type_id == '768' %}selected{% endif%}>Individual Case</option>
-                <option value='769' {% if params.transactable_type_id == '769' %}selected{% endif%}>Group Case</option>
+              {% for transactable_type in platform_context.transactable_types %}
+                {% assign param_transactable_type_id = params.transactable_type_id | plus: 0 %}
+                <option value="{{ transactable_type.id }}" {% if param_transactable_type_id == transactable_type.id %}selected{% endif%}>{{ transactable_type.name }}</option>
+              {% endfor %}
             </select>
           </div>
           <div class="form-group">
