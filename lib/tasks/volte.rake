@@ -474,10 +474,10 @@ namespace :volte do
 
       theme.contact_email = 'support@thevolte.com'
 
-      theme.facebook_url = 'https://facebook.com'
-      theme.twitter_url = 'https://twitter.com'
+      theme.facebook_url = 'https://www.facebook.com/thevolte/'
+      theme.twitter_url = 'https://twitter.com/the_volte/'
       theme.gplus_url = 'https://plus.google.com'
-      theme.instagram_url = 'https://www.instagram.com'
+      theme.instagram_url = 'https://www.instagram.com/thevolte/'
       theme.youtube_url = 'https://www.youtube.com'
       theme.blog_url = '/blog'
       theme.linkedin_url = 'https://www.linkedin.com'

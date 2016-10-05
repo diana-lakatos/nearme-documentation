@@ -20,10 +20,15 @@
 
                     <li><a href="#" data-href="/users/sign_in" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" url_options='{:return_to="/"}'>Log In</a></li>
                 {% else %}
-                    {{ navigation_links | make_html_safe }}
+                    <li>
+                      <a href="/transactable_types/item/list">List your items</a>
+                    </li>
                 {% endif %}
               </ul>
 
+              {% if current_user != blank %}
+                {{ navigation_links | html_safe }}
+            {% endif %}
             </nav>
         </div>
     </div>
