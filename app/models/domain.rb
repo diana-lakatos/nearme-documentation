@@ -34,7 +34,7 @@ class Domain < ActiveRecord::Base
   before_validation -> { self.name = name.try(:strip) }
 
   validates_presence_of :name
-  validates_presence_of :aws_certificate_id, if: Proc.new { |d| d.https_required? }
+  validates_presence_of :aws_certificate_id, if: Proc.new { |d| d.https_required? && !d.near_me_domain?}
   validates_uniqueness_of :name, :scope => :deleted_at
   validates_length_of :name, :maximum => 150
   validates_length_of :google_analytics_tracking_code, maximum: 15

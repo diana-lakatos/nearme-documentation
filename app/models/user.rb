@@ -52,9 +52,6 @@ class User < ActiveRecord::Base
   # strange bug, serialize stops to work if Taggable is included before it
   include Taggable
 
-  def to_s
-    puts "hi"
-  end
   delegate :to_s, to: :name
 
   belongs_to :domain
