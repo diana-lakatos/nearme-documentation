@@ -209,6 +209,10 @@ class UserDrop < BaseDrop
     end
   end
 
+  def listings
+    @source.listings
+  end
+
   def show_services_tab?
     !hide_tab?('services') && @context['listings']
   end
