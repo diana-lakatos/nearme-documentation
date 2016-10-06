@@ -51,6 +51,31 @@ class DelayedReservation < Reservation
     true
   end
 
+  def authorize_payment
+    if transactable_pricing.day_booking? && transactable_line_items.any? && transactable_line_items.first.unit_price != price_calculator.price
+      rebuild_first_line_item
+    end
+    super
+  end
+
+  def rebuild_first_line_item
+    if transactable_line_items.any?
+      transactable_line_items.destroy_all
+      transactable_line_items.build(
+        user: self.user,
+        name: self.transactable.name,
+        quantity: self.quantity,
+        line_item_source: self.transactable,
+        unit_price: price_calculator.price,
+        line_itemable: self,
+        service_fee_guest_percent: action.service_fee_guest_percent,
+        service_fee_host_percent: action.service_fee_host_percent,
+        transactable_pricing_id: self.try(:transactable_pricing_id)
+      )
+      update_payment_attributes
+    end
+  end
+
   def update_reservation_period
     @dates = dates_fake
     return if @dates.blank?
@@ -71,7 +96,15 @@ class DelayedReservation < Reservation
         if date.past? && !date.today?
           errors.add(:dates_fake, I18n.t('reservations_review.errors.invalid_date'))
         end
-        periods.first.update_attributes({ date: date, start_minute: @start_minute, end_minute: @end_minute })
+        if transactable_pricing.day_booking? && periods.count != transactable_pricing.number_of_units
+          @dates = transactable_pricing.number_of_units.times.map do |unit|
+            (date + unit.day).to_date.to_s
+          end.join(',')
+          periods.destroy_all
+          build_periods
+        else
+          periods.first.update_attributes({ date: date, start_minute: @start_minute, end_minute: @end_minute })
+        end
       end
     end
     self.checkout_update = false
