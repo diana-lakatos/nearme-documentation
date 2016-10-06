@@ -144,12 +144,17 @@ class Payment < ActiveRecord::Base
   end
 
   def authorize_options
-    {
+    options = {
       customer: credit_card.try(:customer_id),
       currency: currency,
-      payment_method_nonce: payment_method_nonce,
-      application_fee: total_service_amount_cents
+      payment_method_nonce: payment_method_nonce
     }
+
+    if merchant_account.try(:verified?)
+      options.merge!({ application_fee: total_service_amount_cents })
+    end
+
+    options
   end
 
   def capture!
