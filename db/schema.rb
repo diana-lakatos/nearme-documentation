@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161006102908) do
+ActiveRecord::Schema.define(version: 20161006135250) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1401,21 +1401,23 @@ ActiveRecord::Schema.define(version: 20161006102908) do
     t.string   "line_itemable_type"
     t.integer  "transactable_pricing_id"
     t.string   "name"
-    t.string   "type",                       limit: 255
-    t.integer  "unit_price_cents",                                                default: 0
-    t.float    "quantity",                                                        default: 0.0
+    t.string   "type",                             limit: 255
+    t.integer  "unit_price_cents",                                                      default: 0
+    t.float    "quantity",                                                              default: 0.0
     t.string   "receiver"
     t.boolean  "optional"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal  "additional_tax_total_rate",              precision: 10, scale: 2, default: 0.0
-    t.decimal  "additional_tax_price_cents",             precision: 10, scale: 2, default: 0.0
-    t.decimal  "included_tax_total_rate",                precision: 10, scale: 2, default: 0.0
-    t.decimal  "included_tax_price_cents",               precision: 10, scale: 2, default: 0.0
-    t.decimal  "service_fee_guest_percent",              precision: 5,  scale: 2, default: 0.0
-    t.decimal  "service_fee_host_percent",               precision: 5,  scale: 2, default: 0.0
+    t.decimal  "additional_tax_total_rate",                    precision: 10, scale: 2, default: 0.0
+    t.decimal  "additional_tax_price_cents",                   precision: 10, scale: 2, default: 0.0
+    t.decimal  "included_tax_total_rate",                      precision: 10, scale: 2, default: 0.0
+    t.decimal  "included_tax_price_cents",                     precision: 10, scale: 2, default: 0.0
+    t.decimal  "service_fee_guest_percent",                    precision: 5,  scale: 2, default: 0.0
+    t.decimal  "service_fee_host_percent",                     precision: 5,  scale: 2, default: 0.0
     t.text     "description"
+    t.text     "properties"
+    t.integer  "minimum_lister_service_fee_cents",                                      default: 0
   end
 
   add_index "line_items", ["company_id"], name: "index_line_items_on_company_id", using: :btree

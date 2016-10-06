@@ -49,6 +49,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
       tli.attributes = {
         service_fee_guest_percent: action.service_fee_guest_percent,
         service_fee_host_percent: action.service_fee_host_percent,
+        minimum_lister_service_fee_cents: action.minimum_lister_service_fee_cents
       }
     end
   end

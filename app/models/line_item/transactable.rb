@@ -91,7 +91,7 @@ class LineItem::Transactable < LineItem
     if self.line_itemable.host_fee_line_items.any?
       host_fee = self.line_itemable.host_fee_line_items.first
       host_fee.update_attribute(
-        :unit_price_cents, calculate_fee(service_fee_host_percent, host_fee.unit_price_cents)
+        :unit_price_cents, calculate_fee(service_fee_host_percent, { current_fee: host_fee.unit_price_cents, minimum: minimum_lister_service_fee_cents })
       )
     else
       if self.line_itemable.persisted?
@@ -106,7 +106,7 @@ class LineItem::Transactable < LineItem
     {
       line_itemable: self.line_itemable,
       line_item_source: current_instance,
-      unit_price_cents: calculate_fee(service_fee_host_percent)
+      unit_price_cents: calculate_fee(service_fee_host_percent, { minimum: minimum_lister_service_fee_cents })
     }
   end
 
@@ -115,8 +115,9 @@ class LineItem::Transactable < LineItem
     errors.add :unit_price, :equal_to, count: 0 if !self.unit_price_cents.zero? && self.line_itemable && self.line_itemable.is_free_booking?
   end
 
-  def calculate_fee(fee_percent, current_fee=0)
-    current_fee + (total_price * fee_percent.to_f / BigDecimal(100)).to_money(currency).cents
+  def calculate_fee(fee_percent, options = { current_fee: 0, minimum: 0})
+    # changed the code to ignore current_fee, previous version: options[:current_fee].to_i + <percentage of new>
+    [(total_price * fee_percent.to_f / BigDecimal(100)).to_money(currency).cents, options[:minimum].to_i].max
   end
 
 end

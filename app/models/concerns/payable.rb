@@ -106,6 +106,7 @@ module Payable
         tli.attributes = {
           service_fee_guest_percent: action.service_fee_guest_percent,
           service_fee_host_percent: action.service_fee_host_percent,
+          minimum_lister_service_fee_cents: action.minimum_lister_service_fee_cents,
         }
         tli.build_host_fee
         tli.build_service_fee

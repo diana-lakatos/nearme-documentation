@@ -19,7 +19,7 @@ class Transactable::ActionType < ActiveRecord::Base
     :cancellation_policy_enabled, :cancellation_policy_penalty_percentage,
     :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_hours,
     :hours_to_expiration, :hide_location_availability?, :allow_free_booking?,
-    :service_fee_host_percent,
+    :minimum_lister_service_fee_cents,
     to: :transactable_type_action_type, allow_nil: true
 
   accepts_nested_attributes_for :pricings, allow_destroy: true, reject_if: :check_price_attributes
