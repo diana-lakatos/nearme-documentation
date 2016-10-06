@@ -4,7 +4,7 @@ module QuerySearchable
   included do
 
     def self.search_by_query(attributes = [], query)
-      if query.present? && query.try?(:split)
+      if query.present? && query.try(:split).present?
         words_like = query.split.map.with_index{|w, i| ["word_like#{i}".to_sym, "%#{w}%"]}.to_h
         conditions = []
         tags_conditions = []
