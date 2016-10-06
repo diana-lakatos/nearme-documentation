@@ -26,7 +26,10 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
   end
 
   def self.settings
-    { login: { validate: [:presence] } }
+    {
+      login: { validate: [:presence], label:  "#{test_mode? ? 'Test' : 'Live'} Secret Key"},
+      publishable_key: { validate: [:presence], label: "#{test_mode? ? 'Test' : 'Live'} Publishable Key"}
+    }
   end
 
   def settings
@@ -35,6 +38,9 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
 
   def config_settings
     {
+      settings: {
+        charge_type: { valid_values: ['platform', 'direct'], data: {} },
+      },
       transfer_schedule: {
         interval: { valid_values: ['default', 'daily', 'weekly', 'monthly'], data: {'data-interval' => '' }},
         weekly_anchor: { valid_values: Date::DAYNAMES.map(&:downcase), data: {'data-show-if' => 'interval-weekly'} },
@@ -42,6 +48,11 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
         delay_days: { valid_values: (1..10).to_a, data: {'data-show-if' => 'interval-daily'} }
       },
     }
+  end
+
+  def direct_charge?
+    return false if config["settings"].blank?
+    config["settings"]['charge_type'] == 'direct'
   end
 
   def gateway
@@ -75,6 +86,9 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
       )
     end
     charge_record
+  end
+
+  def custom_options
   end
 
   def process_payout(merchant_account, amount, reference)

@@ -83,16 +83,16 @@
               .row
                 .input-container.col-xs-12
                   = f.fields_for :test_settings, OpenStruct.new(@payment_gateway.test_settings) do |test|
-                    - f.object.class.settings.keys.each do |setting|
-                      = test.input setting, as: :string, input_html: { class: 'form-control', required: false }
+                    - f.object.class.settings.each do |setting, options|
+                      = test.input setting, as: :string, input_html: { class: 'form-control', required: false}, label: (options[:label] || setting.to_s)
             - else
               %h4 Live settings:
               - if @payment_gateway.editable?
                 .row
                   .input-container.col-xs-12
                     = f.fields_for :live_settings, OpenStruct.new(@payment_gateway.live_settings) do |live|
-                      - f.object.class.settings.keys.each do |setting|
-                        = live.input setting, as: :string, input_html: { class: 'form-control', required: false, disabled: !@payment_gateway.editable? }
+                      - f.object.class.settings.each do |setting, options|
+                        = live.input setting, as: :string, input_html: { class: 'form-control', required: false, disabled: !@payment_gateway.editable?, label: options[:label] }
               - else
                 .row
                   .input-container.col-xs-12

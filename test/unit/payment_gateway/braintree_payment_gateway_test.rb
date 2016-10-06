@@ -4,14 +4,25 @@ class PaymentGateway::BraintreePaymentGatewayTest < ActiveSupport::TestCase
 
   setup do
     @braintree_processor = PaymentGateway::BraintreePaymentGateway.new
+    @braintree_marketplace_processor = PaymentGateway::BraintreeMarketplacePaymentGateway.new
+  end
+
+  should 'properly translate options keys' do
+    @payment = FactoryGirl.build(:payment)
+    @payment.stubs(:payment_gateway).returns(@braintree_marketplace_processor)
+    options = @payment.authorize_options
+    options = @payment.payment_gateway.translate_option_keys(options)
+
+    assert_equal options[:service_fee_amount], @payment.authorize_options[:application_fee]
+    assert_equal options.size, @payment.authorize_options.size
   end
 
   should "include environment in settings" do
     assert_equal :sandbox, @braintree_processor.settings[:environment]
   end
 
-  should "#setup_api_on_initialize should return a ActiveMerchant BraintreeBlueGateway object" do
-    assert_equal ActiveMerchant::Billing::BraintreeBlueGateway, @braintree_processor.class.active_merchant_class
+  should "#setup_api_on_initialize should return a ActiveMerchant BraintreeCustomGateway object" do
+    assert_equal ActiveMerchant::Billing::BraintreeCustomGateway, @braintree_processor.class.active_merchant_class
   end
 
   should "have a refund identification based on its id key" do

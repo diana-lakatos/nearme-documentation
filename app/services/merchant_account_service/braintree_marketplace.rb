@@ -12,5 +12,11 @@ class MerchantAccountService::BraintreeMarketplace
     data.slice([:bank_routing_number, :bank_account_number, :email, :phone_number])
   end
 
+  def custom_authorize_options
+    {
+      merchant_account_id: internal_payment_gateway_account_id
+    }
+  end
+
 end
 

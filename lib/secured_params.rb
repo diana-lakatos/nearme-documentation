@@ -1515,7 +1515,8 @@ class SecuredParams
       :month,
       :year,
       :first_name,
-      :last_name
+      :last_name,
+      :credit_card_token
     ]
   end
 
