@@ -8,7 +8,7 @@ class Attachable::PaymentDocumentDecorator < Draper::Decorator
   end
 
   def attachable_link
-    h.link_to "#{t('dashboard.payment_documents.reservation')} #{ attachable.id }", attachable.listing.decorate.show_path
+    h.link_to "#{t('dashboard.payment_documents.reservation')} #{ attachable.id }", attachable.transactable.decorate.show_path
   end
 
   def uploaded_file_link
