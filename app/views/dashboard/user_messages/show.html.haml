@@ -1,5 +1,5 @@
 - title t('user_messages.title')
-- user_message = @user_messages.last.decorate
+- user_message = @user_messages.last.try(:decorate) || @user_message
 - thread_recipient = user_message.thread_owner == current_user ? user_message.thread_recipient : user_message.thread_owner
 
 - content_for :page_header do
@@ -22,7 +22,7 @@
   %p.thread-locked= t('user_messages.thread_locked')
 
 .form-actions
-  - unless user_message.archived_for?(current_user)
+  - if user_message.persisted? && !user_message.archived_for?(current_user)
     = link_to t('user_messages.archive_html'), user_message.archive_path, method: :put
 
 - if request.xhr?

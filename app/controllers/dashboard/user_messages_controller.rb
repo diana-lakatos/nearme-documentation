@@ -56,7 +56,6 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
   def show
     @displayed_user_message = current_user.user_messages.find(params[:id]).decorate
     @user_message = current_user.authored_messages.new(replying_to_id: @displayed_user_message.id)
-
     @user_messages = UserMessage.for_thread(@displayed_user_message.thread_owner_with_deleted, @displayed_user_message.thread_recipient_with_deleted, @displayed_user_message.thread_context_with_deleted).by_created.decorate
     @user_messages.mark_as_read_for(current_user)
 
