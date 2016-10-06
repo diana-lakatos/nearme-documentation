@@ -10,6 +10,10 @@
     - collection.each do |pd|
       %tr
         %td= pd.decorate.attachable_link
-        %td= link_to pd.user.try(:name), user_path(pd.user)
+        - if pd.user.present?
+          %td= link_to pd.user.name, user_path(pd.user)
+        - else
+          %td
+            &#8212;
         %td= I18n.l(pd.created_at.to_date, format: :short)
         %td.file= link_to pd.file.file_name, pd.file.url, target: '_blank', download: pd.file.file_name
