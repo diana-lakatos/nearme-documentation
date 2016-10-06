@@ -1,0 +1,14 @@
+---
+partial: false
+---
+
+<h1>{{ waiver_agreement_template.name }}</h1>
+
+<p>{{ current_user.name }} agrees to:</p>
+
+{{ waiver_agreement_template.content }}
+
+<p>
+  For Item: {{ @transactable.name }}<br />
+  Bond Value: {{ transactable.properties.bond_value }}
+</p>

@@ -9,6 +9,8 @@ class LineItem::Transactable < LineItem
 
   validate :validate_unit_price_cents
 
+  before_create :store_properties
+
   def transactable
     line_item_source
   end
@@ -118,6 +120,11 @@ class LineItem::Transactable < LineItem
   def calculate_fee(fee_percent, options = { current_fee: 0, minimum: 0})
     # changed the code to ignore current_fee, previous version: options[:current_fee].to_i + <percentage of new>
     [(total_price * fee_percent.to_f / BigDecimal(100)).to_money(currency).cents, options[:minimum].to_i].max
+  end
+
+  def store_properties
+    self.properties = line_item_source.try(:properties).try(:to_h).try(:to_json)
+    true
   end
 
 end

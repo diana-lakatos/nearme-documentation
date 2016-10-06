@@ -11,4 +11,8 @@ class WaiverAgreementTemplate < ActiveRecord::Base
 
   validates_presence_of :name, :content
 
+  def to_liquid
+    @waiver_agreement_template_drop ||= WaiverAgreementTemplateDrop.new(self)
+  end
+
 end
