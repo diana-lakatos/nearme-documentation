@@ -70,10 +70,10 @@
           %td= @user.sign_in_count
         %tr
           %td Current sign in at
-          %td= l @user.current_sign_in_at, format: :long
+          %td= l(@user.current_sign_in_at, format: :long) if @user.current_sign_in_at.present?
         %tr
           %td Last sign in at
-          %td= l @user.last_sign_in_at, format: :long
+          %td= l @user.last_sign_in_at, format: :long  if @user.current_sign_in_at.present?
         %tr
           %td Current sign in IP
           %td= @user.current_sign_in_ip
