@@ -22,9 +22,12 @@ class TransactableType::ActionType < ActiveRecord::Base
 
   validates_numericality_of :hours_to_expiration, :minimum_booking_minutes,
     :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_percentage,
-      :cancellation_policy_penalty_hours, greater_than_or_equal_to: 0, allow_nil: true
+      :cancellation_policy_penalty_hours, :minimum_lister_service_fee,
+      greater_than_or_equal_to: 0, allow_nil: true
 
   accepts_nested_attributes_for :pricings, allow_destroy: true, reject_if: lambda { |attrs| attrs[:number_of_units].blank? && attrs[:unit].blank? }
+
+  monetize :minimum_lister_service_fee_cents, with_model_currency: :default_currency
 
   scope :bookable, -> { where.not(type: 'TransactableType::NoActionBooking')}
   scope :enabled, -> { where(enabled: true) }

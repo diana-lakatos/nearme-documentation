@@ -28,7 +28,7 @@ class Reservation < Order
   delegate :location, :show_company_name, :transactable_type_id, :transactable_type, to: :transactable
   delegate :administrator=, to: :location
   delegate :action, to: :transactable_pricing
-  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :action, allow_nil: true
+  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, :minimum_lister_service_fee_cents, to: :action, allow_nil: true
   delegate :display_additional_charges?, to: :transactable, allow_nil: true
   delegate :address_in_radius, to: :reservation_type, allow_nil: true
 

@@ -55,6 +55,7 @@ module Payable
           line_itemable: self,
           service_fee_guest_percent: action.service_fee_guest_percent,
           service_fee_host_percent: action.service_fee_host_percent,
+          minimum_lister_service_fee_cents: action.minimum_lister_service_fee_cents,
           transactable_pricing_id: self.try(:transactable_pricing_id)
         )
       end
