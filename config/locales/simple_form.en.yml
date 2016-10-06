@@ -544,6 +544,7 @@ en:
         allowed_countries: "Leave blank to use all countries"
         allowed_currencies: "Leave blank to use all currencies"
         action_schedule_booking: 'Use recurring rules to define recurring services instead of simple availability rules'
+        bulk_upload_csv_fields: 'Required custom attributes are selected automatically'
       availability_template:
         description:
           working_week: 'Monday - Friday, 9am - 5pm'

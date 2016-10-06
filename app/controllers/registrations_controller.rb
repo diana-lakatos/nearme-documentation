@@ -128,6 +128,7 @@ class RegistrationsController < Devise::RegistrationsController
         @total_reviews_count = @reviews_count + @reviews_about_buyer_count + @reviews_left_by_seller_count + @reviews_left_by_buyer_count
       end
     end
+    respond_to :html
   end
 
   def update

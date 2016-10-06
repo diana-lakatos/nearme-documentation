@@ -22,19 +22,11 @@ module DesksnearMe
 
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
-    config.autoload_paths -= Dir["#{config.root}/lib/previewers/"] unless defined? MailView
 
     config.to_prepare do
-      # Load application's view overrides
-      Dir.glob(File.join(File.dirname(__FILE__), "../app/overrides/*.rb")) do |c|
-        Rails.configuration.cache_classes ? require(c) : load(c)
-      end
-
-      # Load LineItem STI
-      Dir.glob(File.join(File.dirname(__FILE__), "../app/models/line_item/**.rb")) do |c|
-        Rails.configuration.cache_classes ? require(c) : load(c)
-      end
-
+        Dir.glob(File.join(File.dirname(__FILE__), "../app/models/line_item/**.rb")) do |c|
+          Rails.configuration.cache_classes ? require(c) : load(c)
+        end
     end
 
     # Only load the plugins named here, in the order given (default is alphabetical).
@@ -110,10 +102,11 @@ module DesksnearMe
 
     config.exceptions_app = self.routes
 
-    # setting platform_context in app/models/platform_context/rack_setter.rb
+    # setting platform_context in app/middlewares/platform_context_setter.rb
     config.middleware.use Rack::Deflater
-    config.middleware.use "PlatformContext::RackSetter"
-    config.middleware.use "ApiThrottler"
+    config.middleware.use 'PlatformContextSetter'
+    config.middleware.use 'ApiThrottler'
+    config.middleware.insert_before ActionDispatch::ParamsParser, "BadRequestCatcher"
 
     config.mixpanel = (YAML.load_file(Rails.root.join("config", "mixpanel.yml"))[Rails.env] || {}).with_indifferent_access
     config.google_analytics = (YAML.load_file(Rails.root.join("config", "google_analytics.yml"))[Rails.env] || {}).with_indifferent_access

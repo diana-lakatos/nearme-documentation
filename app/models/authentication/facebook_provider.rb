@@ -1,3 +1,5 @@
+require 'koala'
+
 class Authentication::FacebookProvider < Authentication::BaseProvider
 
   META   = { name: "Facebook",

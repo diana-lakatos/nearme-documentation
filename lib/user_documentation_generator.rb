@@ -1,3 +1,4 @@
+require 'parser'
 require 'parser/current'
 
 # Simple documentation generator class, designed to be run locally
@@ -30,7 +31,7 @@ class UserDocumentationGenerator
   end
 
   private
-  
+
   def output_text(text)
     @output_file.write(text)
   end
@@ -242,7 +243,7 @@ class UserDocumentationGenerator
   def get_variables_for_workflow_alert(workflow_alert)
     data_method_info = workflow_alert.workflow_step.associated_class.constantize.instance_method(:data).source_location
     file = data_method_info[0]
-    
+
     ast, comments_association = raw_parse_file(file)
 
     data_comment = find_data_method_comment(ast, comments_association)
@@ -329,7 +330,7 @@ class UserDocumentationGenerator
 
   def parse_drop_file(file_path)
     file_contents = File.read(file_path)
-    
+
     ast, comments = Parser::CurrentRuby.parse_with_comments(file_contents)
     comments_association = Parser::Source::Comment.associate(ast, comments)
 

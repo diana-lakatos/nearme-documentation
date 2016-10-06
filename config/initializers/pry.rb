@@ -1,3 +1,5 @@
+require 'pry'
+
 unless Rails.env.development?
   old_prompt = Pry.config.prompt
   env = Pry::Helpers::Text.red(Rails.env.upcase)

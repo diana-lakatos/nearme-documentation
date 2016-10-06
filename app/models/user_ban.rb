@@ -12,7 +12,7 @@ class UserBan < ActiveRecord::Base
   after_destroy :unban_user!
 
   def ban_user!
-    user.cleanup
+    user.perform_cleanup!
     user.update_attribute(:banned_at, self.created_at)
   end
 

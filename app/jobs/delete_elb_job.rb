@@ -1,3 +1,5 @@
+require 'nearme'
+
 class DeleteElbJob < Job
   def after_initialize(name)
     @name = name

@@ -1,3 +1,5 @@
+require 'ice_cube'
+
 class Schedule < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid

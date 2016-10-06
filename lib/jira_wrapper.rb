@@ -1,4 +1,4 @@
-require 'jira-ruby'
+require 'jira'
 
 class JiraWrapper
   NM_PROJECT_ID = 10000

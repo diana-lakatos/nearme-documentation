@@ -71,4 +71,8 @@
           %tr
             %th.total= t 'buy_sell_market.checkout.labels.total2'
             %td.total= render_money @order.total_amount
+  - else
+    .row
+      .text-container.col-xs-12
+        = t('instance_admin.manage.orders.no_details')
 

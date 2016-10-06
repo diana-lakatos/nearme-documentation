@@ -36,43 +36,6 @@ class UserBanTest < ActiveSupport::TestCase
 
     end
 
-    context 'user is not the only owner but creator' do
-
-      setup do
-        @other_user = FactoryGirl.create(:user)
-        CompanyUser.create(user: @other_user, company: @company)
-        @company.reload
-      end
-
-      context 'delete creator' do
-
-        should 'assign other user to administer this company' do
-          FactoryGirl.create(:user_ban, user: @user)
-          refute @company.reload.deleted?
-          refute @location.reload.deleted?
-          refute @listing.reload.deleted?
-          assert_equal @other_user.id, @company.creator_id
-          assert_equal @other_user.id, @location.creator_id
-          assert_equal @other_user.id, @listing.creator_id
-        end
-
-      end
-
-      context 'delete other_user' do
-
-        should 'change nothing' do
-          FactoryGirl.create(:user_ban, user: @other_user)
-          refute @company.reload.deleted?
-          refute @location.reload.deleted?
-          refute @listing.reload.deleted?
-          assert_equal @user.id, @company.creator_id
-          assert_equal @user.id, @location.creator_id
-          assert_equal @user.id, @listing.creator_id
-        end
-
-      end
-    end
-
   end
 end
 

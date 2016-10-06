@@ -21,8 +21,6 @@ class Transactable < ActiveRecord::Base
 
   DATE_VALUES = ['today', 'yesterday', 'week_ago', 'month_ago', '3_months_ago', '6_months_ago']
 
-  PRICE_TYPES = [:hourly, :weekly, :daily, :monthly, :fixed, :exclusive, :weekly_subscription, :monthly_subscription]
-
   # This must go before has_custom_attributes because of how the errors for the custom
   # attributes are added to the instance
   include CommunityValidators
@@ -42,7 +40,6 @@ class Transactable < ActiveRecord::Base
   has_many :assigned_waiver_agreement_templates, as: :target
   has_many :billing_authorizations, as: :reference
   has_many :document_requirements, as: :item, dependent: :destroy, inverse_of: :item
-  has_many :inquiries, inverse_of: :listing
   has_many :impressions, :as => :impressionable, :dependent => :destroy
   has_many :photos, as: :owner, dependent: :destroy do
     def thumb
@@ -57,8 +54,6 @@ class Transactable < ActiveRecord::Base
   has_many :recurring_bookings, inverse_of: :transactable
   has_many :orders
   has_many :reservations
-  has_many :offers
-  has_many :old_reservations
   has_many :transactable_line_items, class_name: 'LineItem::Transactable', as: :line_item_source
   has_many :line_item_orders, class_name: 'Order', through: :transactable_line_items, source: :order
   has_many :transactable_tickets, as: :target, class_name: 'Support::Ticket'
@@ -176,8 +171,6 @@ class Transactable < ActiveRecord::Base
   scope :without_possible_payout, -> { where(possible_payout: false) }
   scope :for_transactable_type_id, -> transactable_type_id { where(transactable_type_id: transactable_type_id) }
   scope :for_groupable_transactable_types, -> { joins(:transactable_type).where('transactable_types.groupable_with_others = ?', true) }
-  scope :filtered_by_price_types, -> price_types { where([(price_types - ['free']).map { |pt| "#{pt}_price_cents IS NOT NULL" }.join(' OR '),
-                                                          ("transactables.action_free_booking=true" if price_types.include?('free'))].reject(&:blank?).join(' OR ')) }
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((transactables.properties->?), ',') && ARRAY[?]", property, values) unless values.blank? }
 
   scope :not_booked_relative, -> (start_date, end_date) {
@@ -188,7 +181,6 @@ class Transactable < ActiveRecord::Base
          INNER JOIN "reservation_periods" ON "reservation_periods"."reservation_id" = "orders"."id"
          WHERE
           "orders"."instance_id" = ? AND
-          COALESCE("orders"."booking_type", \'daily\') != \'hourly\' AND
           "orders"."deleted_at" IS NULL AND
           "orders"."state" NOT IN (\'cancelled_by_guest\',\'cancelled_by_host\',\'rejected\',\'expired\') AND
           "reservation_periods"."date" BETWEEN ? AND ?
@@ -287,8 +279,8 @@ class Transactable < ActiveRecord::Base
     :scheduled_action_free_booking, :regular_action_free_booking, :location_not_required,
     :topics_required
 
+
   monetize :insurance_value_cents, with_model_currency: :currency, allow_nil: true
-  monetize :deposit_amount_cents, with_model_currency: :currency, allow_nil: true
 
   state_machine :state, initial: :pending do
     event :start                 do transition pending: :in_progress; end
@@ -408,13 +400,6 @@ class Transactable < ActiveRecord::Base
 
   def created_by?(user)
     user && user.admin? || user == creator
-  end
-
-  def inquiry_from!(user, attrs = {})
-    inquiries.build(attrs).tap do |i|
-      i.inquiring_user = user
-      i.save!
-    end
   end
 
   def has_photos?

@@ -260,26 +260,6 @@ class PaymentTest < ActiveSupport::TestCase
       assert_equal @payment.company_id, @payment.payable.company_id
     end
 
-    context 'update company' do
-      should 'assign correct company_id' do
-        @payment.payable.location.update_attribute(:company_id, @payment.payable.location.company_id + 1)
-        assert_equal @payment.payable.location.company_id, @payment.reload.company_id
-      end
-
-      should 'assign correct instance_id' do
-        instance = FactoryGirl.create(:instance)
-        @payment.payable.company.update_attribute(:instance_id, instance.id)
-        PlatformContext.any_instance.stubs(:instance).returns(instance)
-        assert_equal instance.id, @payment.reload.instance_id
-      end
-
-      should 'assign correct partner_id' do
-        partner = FactoryGirl.create(:partner)
-        @payment.company.update_attribute(:partner_id, partner.id)
-        assert_equal partner.id, @payment.reload.partner_id
-      end
-
-    end
   end
 end
 

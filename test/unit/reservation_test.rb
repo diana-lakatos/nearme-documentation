@@ -356,42 +356,6 @@ class ReservationTest < ActiveSupport::TestCase
       assert_equal @transactable.company_id, @reservation.company_id
     end
 
-    # should 'assign administrator_id' do
-    #   @reservation.location.update_attribute(:administrator_id, @reservation.location.creator_id + 1)
-    #   assert_equal @reservation.location.administrator_id, @reservation.reload.administrator_id
-    # end
-
-    context 'update company' do
-
-      should 'assign correct creator_id' do
-        @reservation.company.update_attribute(:creator_id, @reservation.company.creator_id + 1)
-        assert_equal @reservation.company.creator_id, @reservation.reload.creator_id
-      end
-
-      should 'assign correct company_id' do
-        @reservation.location.update_attribute(:company_id, @reservation.location.company_id + 1)
-        assert_equal @reservation.location.company_id, @reservation.reload.company_id
-      end
-
-      should 'assign correct partner_id' do
-        partner = FactoryGirl.create(:partner)
-        @reservation.company.update_attribute(:partner_id, partner.id)
-        assert_equal partner.id, @reservation.reload.partner_id
-      end
-
-      should 'assign correct instance_id' do
-        instance = FactoryGirl.create(:instance)
-        @reservation.company.update_attribute(:instance_id, instance.id)
-        PlatformContext.any_instance.stubs(:instance).returns(instance)
-        assert_equal instance.id, @reservation.reload.instance_id
-      end
-
-      # should 'update transactables_public' do
-      #   assert @reservation.transactables_public
-      #   @reservation.company.update_attribute(:transactables_public, false)
-      #   refute @reservation.reload.transactables_public
-      # end
-    end
   end
 
   context 'validations' do

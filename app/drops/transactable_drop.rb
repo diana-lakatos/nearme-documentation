@@ -374,7 +374,7 @@ class TransactableDrop < BaseDrop
   end
 
   def new_project_collaborator
-    project_collaborators.build
+    transactable_collaborators.build
   end
 
   def edit_path

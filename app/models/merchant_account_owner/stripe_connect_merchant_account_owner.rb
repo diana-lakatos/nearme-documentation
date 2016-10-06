@@ -1,3 +1,5 @@
+require 'stripe'
+
 class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountOwner
 
   ADDRESS_ATTRIBUTES = %w(address_country address_state address_city address_postal_code address_line1 address_line2)

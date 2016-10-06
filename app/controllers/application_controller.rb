@@ -1,4 +1,9 @@
+require 'user_agent'
+require 'addressable/uri'
+
 class ApplicationController < ActionController::Base
+
+  before_action :validate_request_parameters, if: -> { request.get? }
   before_action :prepend_view_paths
 
   force_ssl if: :require_ssl?
@@ -49,6 +54,10 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def validate_request_parameters
+    RequestParametersValidator.new(params).validate!
+  end
+
   def set_locale
     if request.get? && !request.xhr? && language_router.redirect? && params[:format] != 'rss'
       params_with_language = params.merge(language_router.url_params)
@@ -63,10 +72,10 @@ class ApplicationController < ActionController::Base
 
   def language_router
     @language_router ||= if language_service.available_languages.many?
-      Language::MultiLanguageRouter.new(params[:language], I18n.locale)
-    else
-      Language::SingleLanguageRouter.new(params[:language])
-    end
+                           Language::MultiLanguageRouter.new(params[:language], I18n.locale)
+                         else
+                           Language::SingleLanguageRouter.new(params[:language])
+                         end
   end
 
   def language_service
@@ -179,8 +188,7 @@ class ApplicationController < ActionController::Base
                       :request_details => request_details,
                       :anonymous_identity => anonymous_identity,
                       :session_properties => session_properties,
-                      :request_params => params,
-                      :request => user_signed_in? ? nil : request # we assume that logged in user is not a bot
+                      :request_params => params
                     )
                   end
   end

@@ -124,7 +124,7 @@ module Utils
       create_components!([
         {
           name: I18n.t('registrations.tell_us'),
-          fields: @form_componentable.instance.user_required_fields.map { |f| { 'user' => f.to_s } }
+          fields: [{ 'user' => 'name' }]
         },
         {
           name: 'Tell us a little about your company',
@@ -170,7 +170,7 @@ module Utils
       create_components!([
         {
           name: I18n.t('registrations.tell_us'),
-          fields: @form_componentable.instance.user_required_fields.map { |f| { 'user' => f.to_s } }
+          fields: [ { 'user' => 'name' } ]
         },
         {
           name: "#{@form_componentable.name.try(:pluralize)} Details",

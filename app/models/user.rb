@@ -52,9 +52,6 @@ class User < ActiveRecord::Base
   # strange bug, serialize stops to work if Taggable is included before it
   include Taggable
 
-  def to_s
-    puts "hi"
-  end
   delegate :to_s, to: :name
 
   belongs_to :domain
@@ -107,7 +104,6 @@ class User < ActiveRecord::Base
   has_many :photos, foreign_key: 'creator_id', inverse_of: :creator
   has_many :attachments, class_name: 'SellerAttachment'
   has_many :transactables, foreign_key: 'creator_id', inverse_of: :creator
-  has_many :offers, foreign_key: 'creator_id', inverse_of: :creator
   has_many :transactables_collaborated, through: :transactable_collaborators, source: :transactable
   has_many :approved_transactables_collaborated, through: :transactable_collaborators, source: :transactable
   has_many :transactable_collaborators
@@ -152,7 +148,7 @@ class User < ActiveRecord::Base
   has_one :immediate_notification_preference, -> { NotificationPreference.immediate }, class_name: 'NotificationPreference'
 
   after_create :create_blog
-  after_destroy :perform_cleanup
+  after_destroy :perform_cleanup!
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
   before_create :build_profile
@@ -848,25 +844,13 @@ class User < ActiveRecord::Base
     mailer_unsubscriptions.where(mailer: mailer_name).any?
   end
 
-  def perform_cleanup
-    # we invoke cleanup from user_ban as well. in afrer_destroy this user is not included, but in user_ban it is included
-    cleanup(0)
-  end
-
-  def cleanup(company_users_number = 1)
-    self.created_companies.each do |company|
-      if company.company_users.count == company_users_number
-        company.destroy
-      else
-        company.creator = company.company_users.find { |cu| cu.user_id != self.id }.try(:user)
-        company.save!
-      end
-    end
-    self.administered_locations.each do |location|
-      location.update_attribute(:administrator_id, nil) if location.administrator_id == self.id
-    end
-    self.orders.reservations.unconfirmed.find_each do |r|
+  def perform_cleanup!
+    self.created_companies.destroy_all
+    self.orders.unconfirmed.find_each do |r|
       r.user_cancel!
+    end
+    self.created_listings_orders.unconfirmed.find_each do |r|
+      r.reject!
     end
   end
 

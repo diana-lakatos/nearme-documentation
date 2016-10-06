@@ -13,7 +13,7 @@ class InstanceType::Searcher::ProjectsSearcher
     @fetcher = @fetcher.by_topic(selected_topic_ids).custom_order(@params[:sort])
     @fetcher = @fetcher.seek_collaborators if @params[:seek_collaborators] == "1"
     if @params[:sort] =~ /collaborators/i && selected_topic_ids.present?
-      @fetcher = @fetcher.group('project_topics.id')
+      @fetcher = @fetcher.group('transactable_topics.id')
     end
     @fetcher
   end

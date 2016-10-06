@@ -26,6 +26,7 @@ module CustomAttributes
           scope :not_internal, -> { where.not(internal: true) }
           scope :shared, -> { where(public: true) }
           scope :with_changed_attributes, -> (target_id, target_type, updated_at) { where('target_id = ? AND target_type = ? AND updated_at > ?', target_id, target_type, updated_at) }
+          scope :required, -> { where(['validation_rules ilike ?', '%presence%']) }
 
           validates_presence_of :name, :attribute_type
           validates_uniqueness_of :name, :scope => [:target_id, :target_type, :deleted_at]
@@ -155,8 +156,11 @@ module CustomAttributes
             super(sType.to_s)
           end
 
-        end
+          def required?
+            validation_rules.try(:keys).try(:include?, 'presence')
+          end
 
+        end
       end
     end
   end

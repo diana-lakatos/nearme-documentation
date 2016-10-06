@@ -8,7 +8,7 @@ section.search#content {
     margin-top: -55px;
   }
 
-  .search-filter-box select.time-select option[disabled]{
+  .search-filter-box select.time-select option[disabled] {
     display: none;
   }
 
@@ -85,7 +85,6 @@ section.search#content {
     form {
       margin-top: 30px;
     }
-
   }
 
   div.google-map {
@@ -97,7 +96,6 @@ section.search#content {
       top: 48px;
 
       @media (min-width: 1400px) {
-
         .inner {
           width: 1360px;
         }
@@ -136,13 +134,11 @@ section.search#content {
   }
 
   .location {
-
     .reserve-listing {
       margin-top: 37px;
     }
 
     .listing {
-
       .reserve-listing {
         margin-top: 0px;
       }
@@ -178,7 +174,6 @@ section.search#content {
 
 #search_row,
 .black-box {
-
   .btn-green {
     width: 100%;
     text-align: center;
@@ -201,7 +196,6 @@ form.search-box {
     position: relative;
     float: left;
     box-sizing: border-box;
-
   }
 
   input[type='submit'] {
@@ -226,7 +220,6 @@ form.search-box {
       position: absolute;
       top: 12px;
       left: 12px;
-
       color: $icon;
       width: 34px;
 
@@ -245,7 +238,7 @@ form.search-box {
   .select2-choice, .select2-container {
     border: solid #D4D4D4 1px;
     border-radius: 4px;
-    background: #e6e6e6 url('/assets/themes/buy_sell/arrow.png') right no-repeat;
+    background: #e6e6e6 url("/assets/themes/buy_sell/arrow.png") right no-repeat;
     width: 100%;
     font-size: 22px;
     box-sizing: border-box;
@@ -306,6 +299,7 @@ form.search-box {
 
   .search-transactable--radio {
     padding: 10px 0 0;
+
     label {
       margin: 0 20px 0 0;
       display: inline-block;
@@ -395,7 +389,6 @@ form.search-box {
     background: #1c7bca;
     color: #fff;
   }
-
 }
 
 /*** End Home Page Search ***/
@@ -500,7 +493,6 @@ header#listing_search {
         position: relative;
         left: -8px;
       }
-
     }
   }
 
@@ -550,9 +542,7 @@ header#listing_search {
     .header-inner {
       max-width: 100%;
     }
-
   }
-
 
   nav.search-view {
     height: 49px;
@@ -575,7 +565,6 @@ header#listing_search {
       line-height: 49px;
       font-size: 24px;
     }
-
   }
 
   form {
@@ -590,7 +579,6 @@ header#listing_search {
       @media (max-width: $ipad-width) {
         margin-top: 0px;
       }
-
     }
 
     input[type="text"].query {
@@ -618,7 +606,6 @@ header#listing_search {
     }
 
     &.search_results {
-
       .geolocation,
       .search-icon {
         transition: all .1s ease-in;
@@ -629,7 +616,7 @@ header#listing_search {
         @media (max-width: $ipad-width) {
           font-size: 18px;
           top: -2px;
-          left: 7px
+          left: 7px;
         }
       }
 
@@ -668,6 +655,7 @@ header#listing_search {
           line-height: 32px;
           width: 100%;
           height: 28px;
+
           span.text {
             display: inline;
           }
@@ -689,7 +677,6 @@ header#listing_search {
       }
     }
   }
-
 }
 
 .search-filters {
@@ -715,7 +702,7 @@ header#listing_search {
     ul {
       display: none;
       position: absolute;
-      z-index: $map-z-index+1;
+      z-index: $map-z-index + 1;
       left: -1px;
       top: 30px;
       overflow-y: auto;
@@ -761,15 +748,14 @@ header#listing_search {
     font-size: 0.8em;
     padding-right: 8px;
   }
-
 }
+
 .search__filter-row {
   margin-top: 50px;
 }
 
 /*** Listing View ***/
 section.search section#category-tree {
-
   &.list-view-category-tree {
     margin-top: 145px;
   }
@@ -894,7 +880,6 @@ section.search section#results.list {
         }
 
         .google-map-popover {
-
           .close {
             top: 0px;
             right: 10px;
@@ -939,7 +924,6 @@ section.search section#results.list {
     }
   }
 
-
   @media (max-width: $search-bar-breakpoint-desktop) {
     margin-top: 125px;
   }
@@ -947,7 +931,6 @@ section.search section#results.list {
   @media (max-width: $ipad-width) {
     margin-top: 0;
   }
-
 }
 
 /*** End Listing View ***/
@@ -1077,7 +1060,7 @@ section.search {
 
 /*** List Table View ***/
 
- nav.taxons_tree {
+nav.taxons_tree {
   margin-top: 100px;
 }
 
@@ -1086,13 +1069,12 @@ section.products_table {
 }
 
 .products_table {
-
   .search-icon {
     margin-left: 0;
     width: 112px !important;
   }
 
-  section#category-tree{
+  section#category-tree {
     margin-top: 45px !important;
   }
 
@@ -1111,7 +1093,7 @@ section.products_table {
   }
 
   th, td {
-    padding:5px;
+    padding: 5px;
   }
 
   table, th, td, p, a {
@@ -1127,8 +1109,8 @@ section.products_table {
   }
 
   th {
-    text-align:center;
-    text-decoration:underline;
+    text-align: center;
+    text-decoration: underline;
     color: #545454;
     background: #D3D3D3;
   }
@@ -1137,7 +1119,7 @@ section.products_table {
     border-bottom: 1px solid #D3D3D3;
 
     &.image {
-      text-align:center;
+      text-align: center;
     }
 
     &.number {
@@ -1158,11 +1140,11 @@ header#listing_search.products_table {
     }
   }
 }
+
 /*** End List Table View ***/
 
 /*** Infinite Scroll ***/
 .ias_loader {
-
   h1 {
     text-align: center;
     margin: 35px 0px;
@@ -1257,11 +1239,13 @@ form.search-notification-form {
     width: 285px;
     display: inline-block;
   }
+
   input[type=text], input[type=email] {
     font-size: 18px;
     font-weight: normal;
     height: 50px;
   }
+
   input[type=submit] {
     width: inherit;
     margin-left: 5px;
@@ -1341,7 +1325,6 @@ section.search section#results.mixed {
             height: 38px;
             color: $theme_white;
             cursor: pointer;
-
             border-radius: $border-radius-default;
 
             @media (max-width: $search-bar-breakpoint-desktop) {
@@ -1379,6 +1362,7 @@ section.search section#results.mixed {
             label.checkbox.small-checkbox {
               float: left;
               margin-bottom: 0px;
+
               span.filter-label-text {
                 float: left;
                 cursor: default;
@@ -1523,7 +1507,6 @@ section.search section#results.mixed {
         }
 
         .location-photos-container {
-
           .location-photos {
             width: 100%;
 
@@ -1581,7 +1564,6 @@ section.search section#results.mixed {
         }
 
         ul.nav-tabs {
-
           li {
             a {
               color: $gray100;
@@ -1603,14 +1585,14 @@ section.search section#results.mixed {
               a {
                 background-color: $gray220;
                 border: 1px solid $gray220;
-                border-top-left-radius: $border-radius-default; border-top-right-radius: $border-radius-default;
+                border-top-left-radius: $border-radius-default;
+                border-top-right-radius: $border-radius-default;
               }
             }
           }
         }
 
         .tabbable {
-
           .tab-content {
             overflow: hidden;
           }
@@ -1808,7 +1790,6 @@ section.search section#results.mixed {
   }
 }
 
-
 div.search-view-listing {
   margin-bottom: 50px;
 
@@ -1864,7 +1845,6 @@ div.search-view-listing {
   }
 }
 
-
 @media screen and (max-width: 768px) {
   .search__table-responsive {
     overflow: auto;
@@ -1879,20 +1859,20 @@ div.search-view-listing {
 }
 
 .autocomplete-categories {
-    margin: 20px 0;
+  margin: 20px 0;
 
-    label {
-        font-weight: bold;
-        color: #000;
-    }
+  label {
+    font-weight: bold;
+    color: #000;
+  }
 
-    .select2-search-choice > div {
-        line-height: 28px;
-    }
+  .select2-search-choice > div {
+    line-height: 28px;
+  }
 
-    .select2-search-choice-close {
-        top: 13px;
-    }
+  .select2-search-choice-close {
+    top: 13px;
+  }
 }
 
 .search-list-price-slider-container {
@@ -1900,3 +1880,6 @@ div.search-view-listing {
   clear: both;
 }
 
+.search-mixed-filter .price-slider-container {
+  padding: 40px 20px 15px;
+}

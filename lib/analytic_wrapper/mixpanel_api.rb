@@ -1,3 +1,4 @@
+require 'mixpanel'
 # Our internal wrapper for Mixpanel calls.
 #
 # Provides an internal interface for triggering Mixpanel calls
@@ -81,13 +82,8 @@ class AnalyticWrapper::MixpanelApi
     properties.reverse_merge!(session_properties)
     properties.reverse_merge!(request_details)
 
-    if requested_by_bot?
-      Rails.logger.info "Bot detected! Not tracking mixpanel event: #{event_name}, #{properties}, #{options}"
-    else
-      # Trigger tracking the event
-      MixpanelApiJob.perform(@mixpanel, :track, event_name, properties, options)
-      Rails.logger.info "Tracked mixpanel event: #{event_name}, #{properties}, #{options}"
-    end
+    MixpanelApiJob.perform(@mixpanel, :track, event_name, properties, options)
+    Rails.logger.info "Tracked mixpanel event: #{event_name}, #{properties}, #{options}"
   end
 
   def pixel_track_url(event_name, properties, options = {})
@@ -121,10 +117,6 @@ class AnalyticWrapper::MixpanelApi
   # Returns the distinct ID for the user of the current session.
   def distinct_id
     current_user.try(:id) || anonymous_identity
-  end
-
-  def requested_by_bot?
-    @request && @request.bot?
   end
 
   private

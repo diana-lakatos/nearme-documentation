@@ -170,8 +170,6 @@ class SecuredParams
   def category
     [
       :name,
-      :in_top_nav,
-      :top_nav_position,
       :parent_id,
       :child_index,
       :multiple_root_categories,
@@ -319,15 +317,6 @@ class SecuredParams
       :last_index_job_id,
       :linkedin_consumer_key,
       :linkedin_consumer_secret,
-      :live_balanced_api_key,
-      :live_paypal_app_id,
-      :live_paypal_client_id,
-      :live_paypal_client_secret,
-      :live_paypal_password,
-      :live_paypal_signature,
-      :live_paypal_username,
-      :live_stripe_api_key,
-      :live_stripe_public_key,
       :mark_as_locked,
       :marketplace_password,
       :name,
@@ -355,14 +344,6 @@ class SecuredParams
       :test_balanced_api_key,
       :test_email,
       :test_mode,
-      :test_paypal_app_id,
-      :test_paypal_client_id,
-      :test_paypal_client_secret,
-      :test_paypal_password,
-      :test_paypal_signature,
-      :test_paypal_username,
-      :test_stripe_api_key,
-      :test_stripe_public_key,
       :test_twilio_consumer_key,
       :test_twilio_consumer_secret,
       :test_twilio_from_number,
@@ -1036,13 +1017,6 @@ class SecuredParams
     ]
   end
 
-  def bid(reservation_type)
-    [
-      properties: Bid.public_custom_attributes_names(reservation_type),
-      payment_documents_attributes: nested(self.payment_document)
-    ]
-  end
-
   def transactable_collaborator
     [
       :approved,
@@ -1304,10 +1278,6 @@ class SecuredParams
     [
       :click_to_call
     ]
-  end
-
-  def user_instance_profiles
-
   end
 
   def workflow
@@ -1589,7 +1559,6 @@ class SecuredParams
       :amount,
       :currency,
       :commission_receiver,
-      :provider_commission_percentage,
       :status,
       :selected,
       :instance_id,
@@ -1612,7 +1581,6 @@ class SecuredParams
       :percent,
       :currency,
       :commission_receiver,
-      :provider_commission_percentage,
       :status,
       :instance_id,
       :additional_charge_type_target

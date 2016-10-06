@@ -5,6 +5,10 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   before_action :redirect_to_account_if_verification_required
   before_action :find_locations
   before_action :find_transactable_types
+  before_action :set_form_components, except: [:index, :enable, :disable, :destroy]
+  before_action :redirect_to_edit_if_single_transactable, only: [:index, :new, :create]
+  before_action :redirect_to_new_if_single_transactable, only: [:index, :edit, :update]
+
 
   def index
     @transactables = transactables_scope.order(order_param).paginate(page: params[:page], per_page: 20)
@@ -22,6 +26,36 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
 
   def find_locations
     @locations = @company.locations
+  end
+
+  def find_transactable
+    begin
+      @transactable = @transactable_type.transactables.where(company_id: @company).find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      raise Transactable::NotFound
+    end
+  end
+
+  def find_transactable_type
+    @transactable_type = TransactableType.find(params[:transactable_type_id])
+  end
+
+  def transactable_params
+    params.require(:transactable).permit(secured_params.transactable(@transactable_type, @transactable.new_record? || current_user.id == @transactable.creator_id)).tap do |whitelisted|
+      whitelisted[:properties] = params[:transactable][:properties] rescue {}
+    end
+  end
+
+  def redirect_to_edit_if_single_transactable
+    if @transactable_type.single_transactable && @transactable_type.transactables.where(company_id: @company).count > 0
+      redirect_to edit_dashboard_company_transactable_type_transactable_path(@transactable_type, @transactable_type.transactables.where(company_id: @company).first)
+    end
+  end
+
+  def redirect_to_new_if_single_transactable
+    if @transactable_type.single_transactable && @transactable_type.transactables.where(company_id: @company).count.zero?
+      redirect_to new_dashboard_company_transactable_type_transactable_path(@transactable_type)
+    end
   end
 
   def redirect_to_account_if_verification_required

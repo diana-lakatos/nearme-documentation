@@ -120,13 +120,4 @@ class AnalyticWrapper::MixpanelApiTest < ActiveSupport::TestCase
     end
   end
 
-  context 'bot activity' do
-    should 'not track when request was made by bot' do
-      request = ActionDispatch::Request.new({'HTTP_USER_AGENT' => 'Googlebot-Image/1.0'})
-      mixpanel = AnalyticWrapper::MixpanelApi.new(@mixpanel, request: request)
-
-      MixpanelApiJob.expects(:perform).never
-      mixpanel.track('Test event', { 'TestProp' => 'value' })
-    end
-  end
 end

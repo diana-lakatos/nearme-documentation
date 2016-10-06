@@ -17,31 +17,6 @@ class Admin::DashboardControllerTest < ActionController::TestCase
     end
   end
 
-  context "admin user" do
-    setup do
-      @user = FactoryGirl.create(:user, :admin => true)
-      sign_in @user
-    end
-
-    context 'GET show' do
-      should "show mixpanel data" do
-        Mixpanel::DataReceiver.any_instance.stubs(:get_funnel_data).with('New Listings').returns(real_new_listing_funnel_response)
-        Mixpanel::DataReceiver.any_instance.stubs(:get_funnel_data).with('Booking Flow').returns(real_booking_flow_funnel_response)
-        get :show
-        assert_response :success
-      end
-    end
-
-    context 'GET show' do
-      should "work if one or more funnels do not have data" do
-        Mixpanel::DataReceiver.any_instance.stubs(:get_funnel_data).with('New Listings').returns(real_new_listing_funnel_response)
-        Mixpanel::DataReceiver.any_instance.stubs(:get_funnel_data).with('Booking Flow').returns({})
-        get :show
-        assert_response :success
-      end
-    end
-  end
-
   private
 
   def real_new_listing_funnel_response
