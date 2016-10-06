@@ -91,7 +91,7 @@ class PaymentAuthorizer
   end
 
   def prepare_options(options)
-    options.merge!(@merchant_account.custom_options) if @merchant_account
+    options.merge!(@merchant_account.custom_options) if @merchant_account.try(:verified?)
     options = @payment_gateway.translate_option_keys(options)
     options.with_indifferent_access
   end

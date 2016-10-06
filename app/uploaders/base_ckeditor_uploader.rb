@@ -3,7 +3,7 @@ class BaseCkeditorUploader < BaseUploader
   include Ckeditor::Backend::CarrierWave
 
   def fog_public
-    !Ckeditor::Asset::PRIVATE_FILE_FOR_ACCESS_LEVEL.include?(:model.access_level)
+    !Ckeditor::Asset::GLOBAL_ASSET_ACCESS_LEVELS.include?(model.access_level)
   end
 
   def store_dir
