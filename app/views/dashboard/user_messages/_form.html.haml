@@ -2,7 +2,7 @@
   %h2#dialog__title
     = t('user_messages.send_a_message_to', recipient_name: @user_message.recipient_name)
 
-= dashboard_simple_form_for @user_message, url: @user_message.create_path, data: { modal: true } do |f|
+= dashboard_simple_form_for @user_message, url: @user_message.create_path do |f|
 
   .dialog__body
     = f.input :body

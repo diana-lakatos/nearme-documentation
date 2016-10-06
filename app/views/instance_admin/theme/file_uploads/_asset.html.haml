@@ -12,7 +12,7 @@
       = link_to image_tag(asset.url_thumb, :title => asset.filename), asset.url, target: '_blank'
     .img-data
       .img-name
-        = link_to asset.filename, asset.url, target: '_blank'
+        = link_to asset.title.presence || asset.filename, asset.url, target: '_blank'
       .img-name
         Access: #{asset.access_level.presence || 'public <i class="fa fa-globe"></i>'.html_safe}
       .time-size
