@@ -501,6 +501,10 @@ form {
     }
   }
 
+  .required abbr, abbr.required {
+    color: #f00;
+  }
+
   input {
     z-index: 0;
   }

@@ -14,7 +14,7 @@
       .img-name
         = link_to asset.filename, asset.url, target: '_blank'
       .img-name
-        Access Level: #{asset.access_level.presence || 'public'}
+        Access: #{asset.access_level.presence || 'public <i class="fa fa-globe"></i>'.html_safe}
       .time-size
         .time
           = asset.format_created_at
