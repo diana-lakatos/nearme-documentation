@@ -60,7 +60,7 @@ class LineItem::Transactable < LineItem
     if self.line_itemable.service_fee_line_items.any?
       service_fee = self.line_itemable.service_fee_line_items.first
       service_fee.update_attribute(
-        :unit_price_cents, service_fee.unit_price_cents + (total_price_cents * service_fee_guest_percent.to_f / BigDecimal(100))
+        :unit_price_cents, calculate_fee(service_fee_guest_percent, service_fee.unit_price_cents)
       )
     else
       if self.line_itemable.persisted?
@@ -91,7 +91,7 @@ class LineItem::Transactable < LineItem
     if self.line_itemable.host_fee_line_items.any?
       host_fee = self.line_itemable.host_fee_line_items.first
       host_fee.update_attribute(
-        :unit_price_cents, host_fee.unit_price_cents + (total_price_cents * service_fee_host_percent.to_f / BigDecimal(100))
+        :unit_price_cents, calculate_fee(service_fee_host_percent, host_fee.unit_price_cents)
       )
     else
       if self.line_itemable.persisted?
@@ -115,8 +115,8 @@ class LineItem::Transactable < LineItem
     errors.add :unit_price, :equal_to, count: 0 if !self.unit_price_cents.zero? && self.line_itemable && self.line_itemable.is_free_booking?
   end
 
-  def calculate_fee(fee_percent)
-    (total_price * fee_percent.to_f / BigDecimal(100)).to_money(currency).cents
+  def calculate_fee(fee_percent, current_fee=0)
+    current_fee + (total_price * fee_percent.to_f / BigDecimal(100)).to_money(currency).cents
   end
 
 end

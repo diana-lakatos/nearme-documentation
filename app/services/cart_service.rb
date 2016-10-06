@@ -65,7 +65,7 @@ class CartService
     if order.transactable_line_items.count < 1
       order.destroy
     else
-      order.recalculate_service_fees!
+      order.recalculate_fees!
     end
   end
 end

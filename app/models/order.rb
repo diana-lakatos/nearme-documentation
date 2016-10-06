@@ -424,20 +424,6 @@ class Order < ActiveRecord::Base
     AdditionalChargeType.where(id: ids).order(:status, :name)
   end
 
-  def recalculate_service_fees!
-    if self.service_fee_line_items.any?
-      self.service_fee_line_items.first.update_attribute(:unit_price_cents,
-        self.transactable_line_items.map {|t| t.total_price_cents * t.service_fee_guest_percent.to_f / BigDecimal(100) }.sum
-      )
-    end
-
-    if self.host_fee_line_items.any?
-      self.host_fee_line_items.first.update_attribute(:unit_price_cents,
-        self.transactable_line_items.map {|t| t.total_price_cents * t.service_fee_host_percent.to_f / BigDecimal(100) }.sum
-      )
-    end
-  end
-
   def delivery_ids=(ids)
     errors.add(:delivery_ids, :blank) if shipments.any? && ids.blank?
     if ids.present? && shipments.any?
