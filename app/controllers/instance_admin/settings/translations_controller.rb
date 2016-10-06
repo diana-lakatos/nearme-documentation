@@ -6,14 +6,22 @@ class InstanceAdmin::Settings::TranslationsController < InstanceAdmin::Settings:
   end
 
   def update
-    super
-  # This avoids errors that have occurred in the past like when
-  # the user updated the same translation key from two separate windows
-  # the second edit failing because of missing id in params which
-  # triggered a uniqueness constraint violation
-  rescue ActiveRecord::RecordNotUnique => e
+    if params[:instance].present?
+      if @instance.update_attributes(instance_params)
+        flash.now[:success] = t('flash_messages.instance_admin.settings.settings_updated')
+        find_or_build_billing_gateway_for_usd
+        redirect_to instance_admin_settings_locales_path
+      else
+        flash[:error] = @instance.errors.full_messages.to_sentence
+        redirect_to instance_admin_settings_locales_path
+      end
+    else
+      redirect_to instance_admin_settings_locales_path
+    end
+  rescue ActiveRecord::RecordNotUnique
     flash[:error] = t('general.unexpected_error_occurred')
     redirect_to instance_admin_settings_locales_path
   end
 
 end
+

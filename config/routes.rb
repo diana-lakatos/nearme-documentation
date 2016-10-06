@@ -724,6 +724,7 @@ DesksnearMe::Application.routes.draw do
     resources :approval_request_attachments, only: %i(create destroy)
 
     resources :seller_attachments, only: [:show, :index]
+    resources :custom_assets, only: [:show]
 
     namespace :dashboard do
       namespace :api do

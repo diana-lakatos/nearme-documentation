@@ -1,6 +1,7 @@
 require 'rdiscount'
 
 class Page < ActiveRecord::Base
+  VALID_LAYOUTS = %w(application dashboard).freeze
   auto_set_platform_context
   scoped_to_platform_context
   acts_as_paranoid
@@ -14,6 +15,7 @@ class Page < ActiveRecord::Base
   friendly_id :slug_candidates, use: [:slugged, :finders, :scoped], scope: :theme
 
   validates_uniqueness_of :slug, scope: :theme_id
+  validates_inclusion_of :layout_name, in: VALID_LAYOUTS, allow_blank: true
 
   # FIXME disabled Sitemap updates. Needs to be optimized.
   # include SitemapService::Callbacks
