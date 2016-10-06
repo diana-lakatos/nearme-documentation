@@ -11,6 +11,11 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
   delegate :verify_webhook, :parse_webhook, :find_transaction, :find_merchant, :onboard!, :update_onboard!,
     :client_token, :payment_settled?, to: :gateway
 
+
+  def self.supported_countries
+    ['US']
+  end
+
   def self.settings
     {
       merchant_id: { validate: [:presence] },
