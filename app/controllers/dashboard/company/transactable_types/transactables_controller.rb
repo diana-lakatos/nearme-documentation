@@ -5,7 +5,6 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
   before_action :redirect_to_new_if_single_transactable, only: [:index, :edit, :update]
   before_action :set_form_components, except: [:index, :enable, :disable, :destroy]
   before_action :find_transactable, except: [:index, :new, :create]
-  before_action :disable_unchecked_prices, only: :update
 
   def new
     @transactable = @transactable_type.transactables.build company: @company
@@ -139,14 +138,6 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
   def transactable_params
     params.require(:transactable).permit(secured_params.transactable(@transactable_type, @transactable.new_record? || current_user.id == @transactable.creator_id)).tap do |whitelisted|
       whitelisted[:properties] = params[:transactable][:properties] rescue {}
-    end
-  end
-
-  def disable_unchecked_prices
-    Transactable::PRICE_TYPES.each do |price|
-      if params[:transactable]["#{price}_price"].blank?
-        @transactable.send("#{price}_price_cents=", nil) if @transactable.respond_to?("#{price}_price_cents=")
-      end
     end
   end
 
