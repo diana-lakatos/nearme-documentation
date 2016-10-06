@@ -23,6 +23,7 @@
     label: 'Is it possible that local counsel, other than Handling Firm, will need to be engaged?'
     html_tag: 'radio_buttons'
     valid_values: ['Yes', 'No']
+    default_value: 'No'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_attorney_additional_firm_fee_split"],"hide":[]},"no":{"show":[],"hide":[".order_properties_attorney_additional_firm_fee_split"]},"default":{"show":[],"hide":[".order_properties_attorney_additional_firm_fee_split"]}}'
 
   attorney_additional_firm_fee_split:
@@ -41,6 +42,7 @@
     label: 'Is it possible that the Claims will be the subject of Multi-District Litigation or the potential for common benefit fee or expense assessments imposed against the Firms?'
     html_tag: 'radio_buttons'
     valid_values: ['Yes', 'No']
+    default_value: 'No'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_claims_will_be_subject_to_assessments_percentage"],"hide":[]},"no":{"show":[],"hide":[".order_properties_claims_will_be_subject_to_assessments_percentage"]},"default":{"show":[],"hide":[".order_properties_claims_will_be_subject_to_assessments_percentage"]}}'
 
   claims_will_be_subject_to_assessments_percentage:
@@ -55,14 +57,14 @@
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to fees?'
     html_tag: 'radio_buttons'
     valid_values: ['Yes', 'No']
+    default_value: 'No'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_language_that_needs_to_be_included"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_language_that_needs_to_be_included"]},"default":{"show":[],"hide":[".order_properties_additional_language_that_needs_to_be_included"]}}'
 
   additional_language_that_needs_to_be_included:
     label: 'Please add any additional language or provisions you wish to include regarding fees.'
     html_tag: 'textarea'
-    required: true
     max_length: 2500
-    input_html_options_string: 'class=>text optional form-control'
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
 
   #
   # Expenses
@@ -71,12 +73,14 @@
   attorneys_to_pay_litigation_expenses:
     label: 'Does the Engagement Agreement require attorneys to pay or advance litigation expenses related to the Claims?'
     html_tag: 'radio_buttons'
+    default_value: 'No'
     valid_values: ['Yes', 'No']
 
   engagement_agreement_contain_sufficient_definition_of_expenses:
     label: 'Does the Engagement Agreement contain a definition of expenses with sufficient specificity that you do not need another definition of expenses?'
     html_tag: 'radio_buttons'
     valid_values: ['Yes', 'No']
+    default_value: 'No'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_expenses_per_engagement_agreement_split"],"hide":[".order_properties_firm_agrees_to_this_litigation_expense_split"]},"no":{"show":[".order_properties_firm_agrees_to_this_litigation_expense_split"],"hide":[".order_properties_expenses_per_engagement_agreement_split", ".order_properties_firm_agrees_to_this_litigation_expense_split"]},"default":{"show":[],"hide":[".order_properties_expenses_per_engagement_agreement_split",".order_properties_firm_agrees_to_this_litigation_expense_split"]}}'
 
   expenses_per_engagement_agreement_split:
@@ -103,14 +107,15 @@
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to expenses?'
     html_tag: 'radio_buttons'
     valid_values: ['Yes', 'No']
+    default_value: 'No'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_expenses"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_expenses"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_expenses"]}}'
 
   additional_comments_for_expenses:
     label: 'Please add any additional language or provisions you wish to include regarding expenses.'
     html_tag: 'textarea'
-    required: true
     max_length: 2500
-    input_html_options_string: 'class=>text optional form-control'
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
 
   #
   # Case Responsibilities
@@ -132,14 +137,15 @@
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to case responsibilities?'
     html_tag: 'radio_buttons'
     valid_values: ['Yes', 'No']
+    default_value: 'No'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_responsibilities"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_responsibilities"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_responsibilities"]}}'
 
   additional_comments_for_responsibilities:
     label: 'Please add any additional language or provisions you wish to include regarding responsibilities.'
     html_tag: 'textarea'
-    required: true
     max_length: 2500
-    input_html_options_string: 'class=>text optional form-control'
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
 
   #
   # Additional Terms
@@ -158,6 +164,7 @@
     label: 'Do you wish for Referring Firm to be responsible for obtaining necessary written consent from Client relating to this Agreement and the association of Handling Firm on the Claims?'
     html_tag: 'radio_buttons'
     valid_values: ['Yes', 'No']
+    default_value: 'Yes'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[],"hide":[".order_properties_agreement_is_not_effective_until_client_signs_consent"]},"no":{"show":[".order_properties_agreement_is_not_effective_until_client_signs_consent"],"hide":[]},"default":{"show":[],"hide":[".order_properties_agreement_is_not_effective_until_client_signs_consent"]}}'
 
   agreement_is_not_effective_until_client_signs_consent:
@@ -185,20 +192,22 @@
     label: 'Do you wish to have disputes with Referring Firm resolved by binding arbitration with the American Arbitration Association (“AAA”) applying the AAA’s Commercial Arbitration Rules?'
     html_tag: 'radio_buttons'
     valid_values: ['Yes', 'No']
+    default_value: 'Yes'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[],"hide":[".order_properties_any_additional_language_dispute_resolution", ".order_properties_additional_comments_for_dispute_resolution"]},"no":{"show":[".order_properties_any_additional_language_dispute_resolution"],"hide":[".order_properties_additional_comments_for_dispute_resolution"]},"default":{"show":[],"hide":[".order_properties_any_additional_language_dispute_resolution", ".order_properties_additional_comments_for_dispute_resolution"]}}'
 
   any_additional_language_dispute_resolution:
-    label: 'do you have any additional language you wish to include in this Agreement pertaining to dispute resolution?'
+    label: 'Do you have any additional language you wish to include in this Agreement pertaining to dispute resolution?'
     html_tag: 'radio_buttons'
     valid_values: ['Yes', 'No']
+    default_value: 'No'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_dispute_resolution"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_dispute_resolution"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_dispute_resolution"]}}'
 
   additional_comments_for_dispute_resolution:
     label: 'Please add any additional language or provisions you wish to include regarding dispute resolution.'
     html_tag: 'textarea'
-    required: true
     max_length: 2500
-    input_html_options_string: 'class=>text optional form-control'
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
 
   no_partnership_created:
     label: 'This Agreement is not intended to create a partnership or joint venture between the Firms.'
@@ -208,13 +217,15 @@
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to any other matter?'
     html_tag: 'radio_buttons'
     valid_values: ['Yes', 'No']
+    default_value: 'No'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_any_other_matter"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_any_other_matter"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_any_other_matter"]}}'
 
   additional_comments_for_any_other_matter:
     label: 'Please add any additional language or provisions you wish to include.'
     html_tag: 'textarea'
     max_length: 2500
-    input_html_options_string: 'class=>text optional form-control'
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
 
 "Group Case checkout":
   name_of_client_or_clients:
@@ -283,9 +294,9 @@
   additional_language_that_needs_to_be_included:
     label: 'Please add any additional language or provisions you wish to include regarding fees.'
     html_tag: 'textarea'
-    required: true
     max_length: 2500
-    input_html_options_string: 'class=>text optional form-control'
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
 
   #
   # Expenses
@@ -332,9 +343,9 @@
   additional_comments_for_expenses:
     label: 'Please add any additional language or provisions you wish to include regarding expenses.'
     html_tag: 'textarea'
-    required: true
     max_length: 2500
-    input_html_options_string: 'class=>text optional form-control'
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
 
   #
   # Case Responsibilities
@@ -361,9 +372,9 @@
   additional_comments_for_responsibilities:
     label: 'Please add any additional language or provisions you wish to include regarding responsibilities.'
     html_tag: 'textarea'
-    required: true
     max_length: 2500
-    input_html_options_string: 'class=>text optional form-control'
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
 
   #
   # Additional Terms
@@ -425,9 +436,9 @@
   additional_comments_for_dispute_resolution:
     label: 'Please add any additional language or provisions you wish to include regarding dispute resolution.'
     html_tag: 'textarea'
-    required: true
     max_length: 2500
-    input_html_options_string: 'class=>text optional form-control'
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
 
   handling_firm_shall_have_the_sole_discretion_to_terminate:
     label: 'Handling Firm shall have sole discretion to terminate representation with respect to any Client or Case for any reason, including but not limited to Handling Firm determination that a case is not be economically viable. In the event Handling Firm terminates representation for any Client or Case, (Autofill name of Handling Firm) shall also terminate representation on behalf of Referring Firm by communication in writing to the Client and carbon copy to Referring Firm.'
@@ -447,4 +458,5 @@
     label: 'Please add any additional language or provisions you wish to include.'
     html_tag: 'textarea'
     max_length: 2500
-    input_html_options_string: 'class=>text optional form-control'
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
