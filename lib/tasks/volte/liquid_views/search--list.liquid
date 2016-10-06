@@ -2,18 +2,22 @@
 partial: false
 ---
 
+{% assign xhr = params['is_xhr'] == 'true' %}
+
+{% unless xhr %}
 <div class="wrapper-a search-list">
   <div class="search-box">
     <form class="search-form" action="/search" method="GET" data-search-form="filters" data-search-form-container>
-      <input type="text" name="query" placeholder="Item name" data-search-form="query" />
+      <input type="text" name="query" placeholder="Item name" data-search-form="query" autofocus="autofocus" value="{{ params['query'] }}" />
       <button class="button button-default" data-search-form="submit">SEARCH</button>
+      <input type="hidden" name="is_xhr" value="true" />
     </form>
   </div>
 
   <aside class="search-sidebar">
     <form class="form-horizontal" data-search-form="filters">
       <ul>
-        {% assign attributes = searcher.filterable_custom_attributes | reverse%}
+        {% assign attributes = searcher.filterable_custom_attributes | reverse %}
         {% for ca in attributes %}
         <li {{ ca.wrapper_html_options }}>
           <fieldset>
@@ -75,6 +79,7 @@ partial: false
       </ul>
     </form>
   </aside>
+{% endunless %}
 
   <main class="search-results" data-search-form="results">
     <div class="search-results__summary">
@@ -101,13 +106,13 @@ partial: false
 
     <section class="search-results__items">
       {% for listing in searcher.results %}
-        <article data-item-link="{{ listing.show_path }}">
+        <article data-listing>
           <div class="item-photo">
             <img src="{{ listing.photos[0].space_listing }}" />
           </div>
           <div class="item-info">
             <div class="item-description">
-              <h2>{{ listing.name }}</h2>
+              <h2><a href="{{ listing.show_path }}">{{ listing.name }}</a></h2>
               <p><strong>Designer:</strong> {{ listing.properties.designer_name }}</p>
             </div>
             <div class="item-pricing">
@@ -125,9 +130,9 @@ partial: false
               <p>Lender: <a href="{{ listing.creator.user_profile_url }}">{% if listing.creator.properties.use_alias_as_name == '1' %}{{ listing.creator.properties.user_alias }}{% else %}{{ listing.creator.name }}{% endif %}</a>
               </p>
               {% if listing.transactable_user_messages.size > 0 %}
-                <a class="button button-inverse"" data-modal="true" data-href="{{ 'dashboard_user_message_path' | generate_url: listing.transactable_user_messages.first.id, skip: true }}">Message</a>
+                <a class="button button-inverse" data-modal="true" data-href="{{ 'dashboard_user_message_path' | generate_url: listing.transactable_user_messages.first.id, skip: true }}">Message</a>
               {% else %}
-                <a class="button button-inverse"" data-modal="true" data-href="{{ 'new_listing_user_message_path' | generate_url: listing.id ,user_id: listing.creator.id, skip: true }}">Message</a>
+                <a class="button button-inverse" data-modal="true" data-href="{{ 'new_listing_user_message_path' | generate_url: listing.id, user_id: listing.creator.id, skip: true }}">Message</a>
               {% endif %}
             </div>
           </div>
@@ -162,4 +167,6 @@ partial: false
       {% endfor %}
     </section>
   </main>
+{% unless xhr %}
 </div>
+{% endunless %}
