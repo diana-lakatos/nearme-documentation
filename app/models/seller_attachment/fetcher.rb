@@ -26,7 +26,7 @@ class SellerAttachment::Fetcher
       if attachment.assetable.creator_id == @user.id
         true
       elsif attachment.accessible_to_purchasers?
-        attachment.assetable.line_item_orders.confirmed.where(user_id: user.id).any?
+        attachment.assetable.line_item_orders.confirmed.where(user_id: @user.id).any?
       elsif attachment.accessible_to_collaborators?
         attachment.assetable.approved_transactable_collaborators.for_user(@user).any?
       else
