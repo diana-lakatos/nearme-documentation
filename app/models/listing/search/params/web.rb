@@ -94,7 +94,7 @@ class Listing::Search::Params::Web < Listing::Search::Params
 
   def lntypes
     return [] if @lntype.nil?
-    @lntypes ||= LocationType.where('lower(name) = any(array[?])', @lntype.to_s.split(','))
+    @lntypes ||= LocationType.where(id: @lntype.to_s.split(','))
   end
 
   def lntypes_filters
@@ -102,7 +102,7 @@ class Listing::Search::Params::Web < Listing::Search::Params
   end
 
   def location_types_ids
-    @location_types_ids.presence || (lntypes.empty? ? nil : lntypes.map(&:id))
+    @location_types_ids.presence || (lntypes.empty? ? [] : lntypes.map(&:id)).map(&:to_s)
   end
 
   def lgtypes
