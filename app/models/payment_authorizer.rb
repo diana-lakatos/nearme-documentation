@@ -29,7 +29,7 @@ class PaymentAuthorizer
 
   def process!
     return false unless @authorizable.valid?
-
+    
     @response = @payment_gateway.gateway_authorize(@payment.total_amount.cents, credit_card_or_token, @options)
     @response.success? ? handle_success : handle_failure
   end
@@ -49,8 +49,10 @@ class PaymentAuthorizer
         ).try("[]", :id)
       end
 
-      @options.delete(:customer)
     end
+
+    # We don't want to pass customer when we user token generated with Stripe.js
+    @options.delete(:customer) if one_time_token.present?
 
     @credit_card_or_token ||= one_time_token || @credit_card.try(:to_active_merchant)
   end
