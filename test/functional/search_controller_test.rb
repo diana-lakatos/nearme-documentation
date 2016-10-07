@@ -3,15 +3,11 @@ require 'test_helper'
 class SearchControllerTest < ActionController::TestCase
   setup do
     stub_request(:get, /.*maps\.googleapis\.com.*/).to_return(status: 404, body: {}.to_json, headers: {})
-    Rails.application.config.use_elastic_search = true
-    Transactable.__elasticsearch__.index_name = 'transactables_test'
-    Transactable.__elasticsearch__.create_index!
-    Transactable.__elasticsearch__.refresh_index!
+    enable_elasticsearch!
   end
 
   teardown do
-    Transactable.__elasticsearch__.client.indices.delete index: Transactable.index_name
-    Rails.application.config.use_elastic_search = false
+    disable_elasticsearch!
   end
 
   context 'for anything when no TransactableType exists' do
@@ -75,7 +71,7 @@ class SearchControllerTest < ActionController::TestCase
             filtered_auckland = FactoryGirl.create(:location_in_auckland, location_type: filtered_location_type)
             another_auckland = FactoryGirl.create(:location_in_auckland, location_type: another_location_type)
 
-            get :index, { loc: 'Auckland', lntype: filtered_location_type.name.downcase, v: 'mixed' }
+            get :index, { loc: 'Auckland', lntype: filtered_location_type.id, v: 'mixed' }
 
             assert_location_in_result(filtered_auckland)
             refute_location_in_result(another_auckland)
@@ -165,7 +161,7 @@ class SearchControllerTest < ActionController::TestCase
                 refute_location_in_result(@auckland)
               end
 
-              context 'connectionsxxx' do
+              context 'connections' do
                 setup do
                   @me = FactoryGirl.create(:user)
                   @friend = FactoryGirl.create(:user)
@@ -290,7 +286,7 @@ class SearchControllerTest < ActionController::TestCase
           result_view: 'list',
           result_count: 0,
           custom_attributes: { 'listing_type' => [@listing_type] },
-          location_type_filter: [@location_type.name]
+          location_type_filter: [@location_type.id.to_s]
         }
         Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).with do |search, custom_options|
           expected_custom_options == custom_options
@@ -306,13 +302,13 @@ class SearchControllerTest < ActionController::TestCase
           result_view: 'mixed',
           result_count: 0,
           custom_attributes: { 'listing_type' => [@listing_type] },
-          location_type_filter: [@location_type.id],
+          location_type_filter: [@location_type.id.to_s],
           listing_pricing_filter: ['daily'],
         }
         Rails.application.config.event_tracker.any_instance.expects(:conducted_a_search).with do |search, custom_options|
           expected_custom_options == custom_options
         end
-        get :index, { loc: 'adelaide', lg_custom_attributes: { listing_type: [@listing_type] }, lntype: @location_type.name.downcase, lgpricing: 'daily', v: 'mixed' }
+        get :index, loc: 'adelaide', lg_custom_attributes: { listing_type: [@listing_type] }, lntype: @location_type.id, lgpricing: 'daily', v: 'mixed'
       end
 
       should 'track search if ignore_search flag is set to 0' do
@@ -344,7 +340,7 @@ class SearchControllerTest < ActionController::TestCase
         end
 
         should 'track search if location filter has been modified' do
-          get :index, loc: 'adelaide', lntype: FactoryGirl.create(:location_type).name.downcase
+          get :index, loc: 'adelaide', lntype: FactoryGirl.create(:location_type).id
         end
 
         should 'track search if listing pricing filter has been modified' do

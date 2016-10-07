@@ -7,35 +7,32 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::ListingTest < Active
       stub_request(:get, /.*maps\.googleapis\.com.*/).to_return(status: 404, body: {}.to_json, headers: {})
       @class_test = InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
       Transactable.destroy_all
-      Rails.application.config.use_elastic_search = true
-      Transactable.__elasticsearch__.index_name = 'transactables_test'
-      Transactable.__elasticsearch__.create_index!(force: true)
-      @public_location_type = FactoryGirl.create(:location_type, name: 'public')
-      @private_location_type = FactoryGirl.create(:location_type, name: 'private')
+      enable_elasticsearch! do
+        @public_location_type = FactoryGirl.create(:location_type, name: 'public')
+        @private_location_type = FactoryGirl.create(:location_type, name: 'private')
 
-      @public_location = FactoryGirl.create(:location, location_type: @public_location_type, location_address: FactoryGirl.build(:address, latitude: 5, longitude: 5 ))
-      @private_location = FactoryGirl.create(:location, location_type: @private_location_type, location_address: FactoryGirl.build(:address, latitude: 10, longitude: 10 ))
+        @public_location = FactoryGirl.create(:location, location_type: @public_location_type, location_address: FactoryGirl.build(:address, latitude: 5, longitude: 5 ))
+        @private_location = FactoryGirl.create(:location, location_type: @private_location_type, location_address: FactoryGirl.build(:address, latitude: 10, longitude: 10 ))
 
-      @public_listing_type = 'Desk'
-      @private_listing_type = 'Meeting Room'
-      @office_listing_type = 'Office Space'
+        @public_listing_type = 'Desk'
+        @private_listing_type = 'Meeting Room'
+        @office_listing_type = 'Office Space'
 
-      @public_listing = FactoryGirl.create(:transactable, properties: { listing_type: @public_listing_type }, location: @public_location)
-      @public_office_listing = FactoryGirl.create(:transactable, properties: { listing_type: @office_listing_type }, location: @public_location)
-      @private_listing = FactoryGirl.create(:transactable, properties: { listing_type: @private_listing_type }, location: @private_location)
-      @private_office_listing = FactoryGirl.create(:transactable, properties: { listing_type: @office_listing_type }, location: @private_location)
+        @public_listing = FactoryGirl.create(:transactable, properties: { listing_type: @public_listing_type }, location: @public_location)
+        @public_office_listing = FactoryGirl.create(:transactable, properties: { listing_type: @office_listing_type }, location: @public_location)
+        @private_listing = FactoryGirl.create(:transactable, properties: { listing_type: @private_listing_type }, location: @private_location)
+        @private_office_listing = FactoryGirl.create(:transactable, properties: { listing_type: @office_listing_type }, location: @private_location)
 
-      @public_listing_other_tt = FactoryGirl.create(:transactable, transactable_type: FactoryGirl.create(:transactable_type), properties: { listing_type: @public_listing_type }, location: @public_location)
+        @public_listing_other_tt = FactoryGirl.create(:transactable, transactable_type: FactoryGirl.create(:transactable_type), properties: { listing_type: @public_listing_type }, location: @public_location)
 
-      @free_listing = FactoryGirl.create(:transactable, :free_listing)
+        @free_listing = FactoryGirl.create(:transactable, :free_listing)
 
-      @filters = { lat: 5, lng: 5, transactable_type_id: TransactableType.first.id }
-      Transactable.__elasticsearch__.refresh_index!
+        @filters = { lat: 5, lng: 5, transactable_type_id: TransactableType.first.id }
+      end
     end
 
     teardown do
-      Transactable.__elasticsearch__.client.indices.delete index: Transactable.index_name
-      Rails.application.config.use_elastic_search = false
+      disable_elasticsearch!
     end
 
     should 'return result for right transactable type' do
