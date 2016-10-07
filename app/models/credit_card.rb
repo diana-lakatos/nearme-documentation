@@ -106,7 +106,7 @@ class CreditCard < ActiveRecord::Base
   end
 
   def to_active_merchant
-    credit_card_token || token || active_merchant_card
+    token || active_merchant_card
   end
 
   def active?
