@@ -103,6 +103,7 @@ gem 'mixpanel', '4.0.2', require: false
 
 gem 'rest-client', require: false
 gem 'jira-ruby', require: false
+gem 'daemons' # used by DelayedJob
 
 gem 'twilio-ruby', require: false
 gem 'googl', require: false
