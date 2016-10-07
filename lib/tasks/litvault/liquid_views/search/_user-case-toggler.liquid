@@ -16,7 +16,7 @@
       <a href="/search?transactable_type_id={{ platform_context.transactable_types.first.id }}&amp;transactable_type_class=TransactableType">Case Search</a>
     </li>
     <li{% if search_type == 'user' %} class="selected"{% endif %}>
-      <a href="/search/people">Lawyer Search</a>
+      <a href="/search/people?profile_type=buyer">Lawyer Search</a>
     </li>
   </ul>
 </div>

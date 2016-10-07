@@ -247,6 +247,9 @@ class User < ActiveRecord::Base
     order("CASE #{user_ids_decorated.join(' ')} END") if user_ids.present?
   }
 
+  scope :buyers, -> { joins(sanitize_sql_array(['inner join user_profiles up ON up.user_id = users.id AND up.profile_type = ?', UserProfile::BUYER])) }
+  scope :sellers, -> { joins(sanitize_sql_array(['inner join user_profiles up ON up.user_id = users.id AND up.profile_type = ?', UserProfile::SELLER])) }
+
   validates_with CustomValidators
   validates :name, :first_name, presence: true
   validate :validate_name_length_from_fullname

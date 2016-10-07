@@ -15,6 +15,8 @@ class InstanceType::Searcher::UserSearcher
     @fetcher = @transactable_type.users.search_by_query(queried_fields, @params[:query])
     @fetcher = @fetcher.by_topic(selected_values(:topic_ids)).custom_order(@params[:sort], @current_user)
     @fetcher = @fetcher.filtered_by_role(selected_values(:role))
+    @fetcher = @fetcher.buyers if @params[:profile_type] == 'buyer'
+    @fetcher = @fetcher.sellers if @params[:profile_type] == 'seller'
     @fetcher = @fetcher.with_enabled_profile(@transactable_type.id) if @transactable_type.search_only_enabled_profiles?
     @fetcher.includes(:current_address)
 
