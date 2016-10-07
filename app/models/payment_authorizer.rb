@@ -29,7 +29,7 @@ class PaymentAuthorizer
 
   def process!
     return false unless @authorizable.valid?
-    
+
     @response = @payment_gateway.gateway_authorize(@payment.total_amount.cents, credit_card_or_token, @options)
     @response.success? ? handle_success : handle_failure
   end
