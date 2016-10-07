@@ -175,11 +175,17 @@ class PaymentGateway < ActiveRecord::Base
   def self.validate_settings(payment_gateway, attribute, value)
     if payment_gateway.send(attribute.to_s.gsub('settings', 'active?'))
       value.each do |key, value|
-        next if payment_gateway.class.settings[key.to_sym].blank?
+        next if payment_gateway.class.settings[key.to_sym].blank? ||
+          payment_gateway.class.settings[key.to_sym][:validate].blank?
+
         payment_gateway.class.settings[key.to_sym][:validate].each do |validation|
           case validation
           when :presence
             payment_gateway.errors.add(attribute, ": #{key.capitalize.gsub('_id', '')} can't be blank!") if value.blank?
+          when :presence_if_direct
+            if value.blank? && payment_gateway.direct_charge?
+              payment_gateway.errors.add(attribute, ": #{key.capitalize.gsub('_id', '')} can't be blank when direct charge enabled!")
+            end
           end
         end
       end if value.present?

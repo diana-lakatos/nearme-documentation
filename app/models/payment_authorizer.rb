@@ -37,18 +37,22 @@ class PaymentAuthorizer
   private
 
   def credit_card_or_token
-    if @payment_gateway.direct_charge? && @credit_card.token && @payment.customer_id && @payment.merchant_id
-      one_time_token = @payment_gateway.create_token(
-        @credit_card.token,
-        @payment.customer_id,
-        @payment.merchant_id,
-        @payment.payment_gateway_mode
-      ).try("[]", :id)
+    if @payment_gateway.direct_charge?
+      one_time_token = if @credit_card.credit_card_token
+        @credit_card.credit_card_token
+      elsif @credit_card.token && @payment.customer_id && @payment.merchant_id
+        @payment_gateway.create_token(
+          @credit_card.token,
+          @payment.customer_id,
+          @payment.merchant_id,
+          @payment.payment_gateway_mode
+        ).try("[]", :id)
+      end
 
       @options.delete(:customer)
     end
 
-    @credit_card_or_token ||= one_time_token || @payment.credit_card.try(:to_active_merchant)
+    @credit_card_or_token ||= one_time_token || @credit_card.try(:to_active_merchant)
   end
 
   def handle_failure

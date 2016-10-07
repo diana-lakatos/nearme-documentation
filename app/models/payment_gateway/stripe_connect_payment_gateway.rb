@@ -28,7 +28,7 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
   def self.settings
     {
       login: { validate: [:presence], label:  "#{test_mode? ? 'Test' : 'Live'} Secret Key"},
-      publishable_key: { validate: [], label: "#{test_mode? ? 'Test' : 'Live'} Publishable Key"}
+      publishable_key: { validate: [:presence_if_direct], label: "#{test_mode? ? 'Test' : 'Live'} Publishable Key"}
     }
   end
 
