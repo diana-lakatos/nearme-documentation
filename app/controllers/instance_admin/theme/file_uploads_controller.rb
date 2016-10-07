@@ -34,7 +34,7 @@ class InstanceAdmin::Theme::FileUploadsController < InstanceAdmin::Theme::BaseCo
         else
           @files = Ckeditor::Asset.where(assetable: PlatformContext.current.instance).order(:id => :desc)
           @files = Ckeditor::Paginatable.new(@files).page(params[:page])
-          render text: I18n.t('flash_messages.instance_admin.theme.file_uploads.failed', errors: @file.errors.full_messages.join(', '))
+          flash[:error] = I18n.t('flash_messages.instance_admin.theme.file_uploads.failed', errors: @file.errors.full_messages.join(', '))
           render :index
         end
       end
