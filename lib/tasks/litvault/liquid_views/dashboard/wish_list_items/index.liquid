@@ -6,26 +6,59 @@
   {% endif %}
 {% endcontent_for %}
 
-<div class='panel'>
-  <div class='panel-body'>
 
-    {% if items.size > 0 %}
-      <div class='wish-list'>
-        {% if current_user.has_seller_profile? %}
+{% if items.size > 0 %}
+  {% if current_user.has_seller_profile? %}
+    <div class='panel'>
+      <div class='panel-body'>
+        <div class="favorite-lawyers">
           {% include 'dashboard/wish_list_items/wish_list_lister_item' for items %}
-        {% else %}
-          {% include 'dashboard/wish_list_items/wish_list_enquirer_item' for items %}
-        {% endif %}
+        </div>
       </div>
-    {% else %}
-      <p class='empty-resultset'>{{ 'wish_lists.empty_list' | translate }}</p>
-    {% endif %}
+    </div>
+  {% else %}
+    <div class="favorite-cases">
 
-    {% if current_user.has_seller_profile? %}
-      <div id="case-bulk-invite" class='case-invite' data-collaborations-url="{{ 'bulk_collaborations_for_current_user_dashboard_company_users_path' | generate_url }}"></div>
-    {% endif %}
+      <div class="sort-filter-search-wrapper">
+        <div class="sort-filter-a">
+          {% form_for 'wish-list-items-sort', url: '/dashboard/favorites', method: 'get' %}
+            <div class="form-group">
+              <label for="sort-by" class="control-label">{{ 'wish_lists.sort.label' | translate }}</label>
+              <select id="sort-by" name="sort_by">
+                <option value='newest'>{{ 'wish_lists.sort.options.newest' | translate }}</option>
+                <option value='oldest'>{{ 'wish_lists.sort.options.oldest' | translate }}</option>
+                <option value='alphabetical'>{{ 'wish_lists.sort.options.alphabetical' | translate }}</option>
+                <option value='individual-cases'>{{ 'wish_lists.sort.options.individual_cases' | translate }}</option>
+                <option value='group-cases'>{{ 'wish_lists.sort.options.group_cases' | translate }}</option>
+              </select>
+            </div>
+            <div class="form-action">
+              <button type="submit" class="btn btn-primary">Apply filter</button>
+            </div>
+          {% endform_for %}
+        </div>
+      </div>
+
+      <div class="search-results">
+        {% include 'dashboard/wish_list_items/wish_list_enquirer_item' for items %}
+      </div>
+    </div>
+  {% endif %}
+{% else %}
+  <div class='panel'>
+    <div class='panel-body'>
+      <p class='empty-resultset'>{{ 'wish_lists.empty_list' | translate }}</p>
+    </div>
   </div>
-</div>
+{% endif %}
+
+{% if current_user.has_seller_profile? %}
+  {% content_for 'body_bottom' %}
+  <div id="case-bulk-invite" class='case-invite' data-collaborations-url="{{ 'bulk_collaborations_for_current_user_dashboard_company_users_path' | generate_url }}"></div>
+  }
+  {% endcontent_for %}
+{% endif %}
+
 
 {% if items.size > 0 %}
   <div class='form-actions'>
