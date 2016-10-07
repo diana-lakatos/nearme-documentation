@@ -431,7 +431,7 @@ module LiquidFilters
     sort_option = %w(created_at name).detect { |valid_key| options['sort']  == valid_key } || 'created_at'
     sort_direction = %w(asc desc).detect { |valid_key| options['direction']  == valid_key } || 'desc'
     Ckeditor::Asset.where(access_level: access_level).
-      where('data_file_name LIKE ?', "%#{options['query']}%").
+      where('data_file_name LIKE ? OR title LIKE ?', "%#{options['query']}%", "%#{options['query']}%").
       order("#{sort_option} #{sort_direction}").
       paginate(page: options['page'] || 1, per_page: [(options['per_page'] || 10).to_i, 50].min)
   end
