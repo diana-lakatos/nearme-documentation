@@ -27,7 +27,7 @@ module SearcherHelper
     if result_view == 'mixed'
       InstanceType::Searcher::Elastic::GeolocationSearcher::Location.new(transactable_type, params)
     else
-      searcher = InstanceType::Elastic::Searcher::GeolocationSearcher::Listing.new(transactable_type, params)
+      searcher = InstanceType::Searcher::Elastic::GeolocationSearcher::Listing.new(transactable_type, params)
       searcher.invoke
       searcher
     end

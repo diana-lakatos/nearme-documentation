@@ -3,7 +3,7 @@ require 'braintree'
 class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
 
   supported :company_onboarding, :immediate_payout, :credit_card_payment,
-    :partial_refunds, :host_subscription, :multiple_currency
+    :partial_refunds, :host_subscription, :multiple_currency, :recurring_payment
 
   delegate :verify_webhook, :parse_webhook, :find_transaction, :find_merchant, :onboard!, :update_onboard!,
     :client_token, :payment_settled?, to: :gateway
