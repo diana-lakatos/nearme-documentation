@@ -540,10 +540,17 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    var datepickers = require('./new_ui/forms/datepickers');
     function run(){
-        $('.unavailability').on('cocoon:after-insert', function(e, insertedItem) {
+        var els = $('.unavailability');
+        if (els.length === 0) {
+          return;
+        }
+
+        require.ensure('./new_ui/forms/datepickers', function(require){
+          var datepickers = require('./new_ui/forms/datepickers');
+          els.on('cocoon:after-insert', function(e, insertedItem) {
             datepickers(insertedItem);
+          });
         });
     }
     $(document).on('init:unavailability.nearme', run);
