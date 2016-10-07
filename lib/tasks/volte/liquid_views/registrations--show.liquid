@@ -141,7 +141,7 @@ partial: false
         <strong> {{ listings_count }} </strong> {{ 'transactables.items_listed' | translate }}
       </li>
       <li>
-        <strong> 0 </strong> {{ 'transactables.items_rented' | translate }}
+        <strong> {{ user.completed_host_reservations_count }} </strong> {{ 'transactables.items_rented' | translate }}
       </li>
       <li>
         {{ 'registrations.member_since' | translate }} <strong> {{ user.created_at | to_date | l: 'short' }} </strong>

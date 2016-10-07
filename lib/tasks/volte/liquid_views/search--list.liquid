@@ -1,7 +1,6 @@
 ---
 partial: false
 ---
-
 {% assign xhr = params['is_xhr'] == 'true' %}
 
 {% unless xhr %}
@@ -10,7 +9,6 @@ partial: false
     <form class="search-form" action="/search" method="GET" data-search-form="filters" data-search-form-container>
       <input type="text" name="query" placeholder="Item name" data-search-form="query" autofocus="autofocus" value="{{ params['query'] }}" />
       <button class="button button-default" data-search-form="submit">SEARCH</button>
-      <input type="hidden" name="is_xhr" value="true" />
     </form>
   </div>
 
@@ -47,15 +45,17 @@ partial: false
             <legend>Availability</legend>
             <ul>
               <li>
-                <label>
+                <label class="availability-filter datetimepicker">
+                  <i class="fa fa-calendar"></i>
                   From:
-                  <input type="text" name="availability_exceptions[from]"/>
+                  <input type="text" name="availability_exceptions[from]" class="form-control" data-availability-filter="from" />
                 </label>
               </li>
               <li>
-                <label>
+                <label class="availability-filter datetimepicker">
+                  <i class="fa fa-calendar"></i>
                   To:
-                  <input type="text" name="availability_exceptions[to]"/>
+                  <input type="text" name="availability_exceptions[to]" class="form-control" data-availability-filter="to" />
                 </label>
               </li>
             </ul>
