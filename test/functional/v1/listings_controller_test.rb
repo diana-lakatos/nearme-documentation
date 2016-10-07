@@ -70,16 +70,13 @@ class V1::ListingsControllerTest < ActionController::TestCase
   # Query
   context 'search' do
     setup do
-      Rails.application.config.use_elastic_search = true
-      Transactable.__elasticsearch__.index_name = 'transactables_test'
-      Transactable.__elasticsearch__.create_index!(force: true)
-      Transactable.searchable.import
-      Transactable.__elasticsearch__.refresh_index!
+      enable_elasticsearch! do
+        Transactable.searchable.import
+      end
     end
 
     teardown do
-      Transactable.__elasticsearch__.client.indices.delete index: Transactable.index_name
-      Rails.application.config.use_elastic_search = false
+      disable_elasticsearch!
     end
 
     should "should search" do
