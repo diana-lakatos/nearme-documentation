@@ -109,8 +109,10 @@
 
               <div class="meta">
                 <span class="publish-date">posted {{ case.created_at | timeago }}</span>
+                {% if current_user.has_buyer_profile? %}
                 |
                 {% include 'shared/components/wish_list_button_injection.html', object: case %}
+                {% endif %}
               </div>
             </div>
           </header>

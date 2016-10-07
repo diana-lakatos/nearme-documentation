@@ -166,12 +166,8 @@ en:
       list_your_thing: 'Become a Referring Lawyer'
 
   wish_lists:
-    enquirer:
-      name: 'Favorite Handling Lawyers'
-    lister:
-      name: 'Favorite Cases'
     buttons:
-      selected_state: "Favorite"
+      selected_state: "Unfavorite"
       unselected_state: "Favorite"
       invite_to_case: "Invite to Case"
       bulk_invite_to_case: "Bulk Invite To Case"
