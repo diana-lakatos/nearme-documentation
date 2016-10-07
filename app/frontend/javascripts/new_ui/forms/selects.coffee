@@ -13,7 +13,8 @@ selects = (context = 'body')->
 
     options.allowEmptyOption = !!$(this).data('allow-empty-option')
 
-    $(this).selectize(options)
+    $(document).trigger('plugin:loaded.selectize');
 
+    $(this).selectize(options)
 
 module.exports = selects

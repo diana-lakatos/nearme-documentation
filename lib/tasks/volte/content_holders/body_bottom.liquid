@@ -9,15 +9,3 @@ position: body_bottom
 {% else %}
   <script src="https://rawgit.com/mdyd-dev/marketplaces/master/volte-webpack/dist/app.js" async></script>
 {% endif %}
-
-<script>
-  function showCustomAttributes(attribute){
-    $('[data-visibility-dependent]').hide().attr('disabled', true)
-    if(attribute.data('show-field') == 'value-dependent'){
-      $('[data-visibility-dependent="' + attribute.val().toLowerCase() + '"').show().attr('disabled', false)
-    }
-  }
-  $('[data-show-field]').on('change', function(){ showCustomAttributes($(this))});
-
-  $('[data-show-field]').each(function(){showCustomAttributes($(this));});
-</script>
