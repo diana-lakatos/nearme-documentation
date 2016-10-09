@@ -447,7 +447,9 @@ class PaymentGateway < ActiveRecord::Base
 
   def translate_option_keys(options)
     options_key_map.each do |k, v|
-      options[v] = options.delete(k)
+      if (value = options.delete(k)).present?
+        options[v] = value
+      end
     end
 
     options

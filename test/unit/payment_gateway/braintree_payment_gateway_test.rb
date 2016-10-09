@@ -10,10 +10,11 @@ class PaymentGateway::BraintreePaymentGatewayTest < ActiveSupport::TestCase
   should 'properly translate options keys' do
     @payment = FactoryGirl.build(:payment)
     @payment.stubs(:payment_gateway).returns(@braintree_marketplace_processor)
+    @payment.stubs(merchant_account: stub(verified?: true))
     options = @payment.authorize_options
     options = @payment.payment_gateway.translate_option_keys(options)
 
-    assert_equal options[:service_fee_amount], @payment.authorize_options[:application_fee]
+    assert_equal @payment.total_service_amount_cents, @payment.authorize_options[:application_fee]
     assert_equal options.size, @payment.authorize_options.size
   end
 
