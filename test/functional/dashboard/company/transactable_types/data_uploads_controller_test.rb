@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Dashboard::Company::TransactableTypes::DataUploadsControllerTest < ActionController::TestCase
-
   setup do
     @instance = FactoryGirl.create(:instance)
     PlatformContext.current = PlatformContext.new(@instance)
@@ -15,7 +14,6 @@ class Dashboard::Company::TransactableTypes::DataUploadsControllerTest < ActionC
   end
 
   context 'create' do
-
     should 'create new data upload' do
       assert_difference 'DataUpload.count' do
         post :create, transactable_type_id: @transactable_type.id, data_upload: FactoryGirl.attributes_for(:data_upload)
@@ -31,5 +29,4 @@ class Dashboard::Company::TransactableTypes::DataUploadsControllerTest < ActionC
       assert_match(/\/instances\/#{@instance.id}\/uploads\/private\/data_upload\/xml_file/, @data_upload.xml_file.path)
     end
   end
-
 end

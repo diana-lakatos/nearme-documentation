@@ -1,6 +1,6 @@
 module ListingsHelper
   def listing_inline_description(listing, length = 65)
-    raw(truncate(strip_tags(listing.company_description), :length => length))
+    raw(truncate(strip_tags(listing.company_description), length: length))
   end
 
   # Listing data for initialising a client-side bookings module
@@ -13,24 +13,24 @@ module ListingsHelper
       quantity: listing.quantity,
       initial_bookings: @initial_bookings,
       zone_offset: listing.zone_utc_offset,
-      timezone_info: listing.timezone_info,
+      timezone_info: listing.timezone_info
     }
     base_data.merge!(listing.action_type.booking_module_options)
     base_data
   end
 
   def strip_http(url)
-    url.gsub(/https?:\/\/(www\.)?/, "").gsub(/\/$/, "")
+    url.gsub(/https?:\/\/(www\.)?/, '').gsub(/\/$/, '')
   end
 
   def listing_data_attributes(listing = @listing)
     {
-      :'data-listing-id' => listing.id
+      'data-listing-id': listing.id
     }
   end
 
   def selected_listing_siblings(location, listing, user = current_user)
-    @siblings ||= ((user and user.companies.first == location.company) ? location.listings.active : location.listings.visible)  - [listing]
+    @siblings ||= ((user && user.companies.first == location.company) ? location.listings.active : location.listings.visible) - [listing]
   end
 
   def space_listing_placeholder_path(options = {})
@@ -122,7 +122,7 @@ module ListingsHelper
     return [] if current_user.nil? || current_user.friends.count.zero?
 
     friends = current_user.friends.visited_listing(listing).collect do |user|
-      "#{user.name} worked here";
+      "#{user.name} worked here"
     end
 
     hosts = current_user.friends.hosts_of_listing(listing).collect do |user|
@@ -146,5 +146,4 @@ module ListingsHelper
       ["#{dt.name} (#{dt.height} #{t(dt.height_unit, scope: 'measure_units.length')} x #{dt.width} #{t(dt.width_unit, scope: 'measure_units.length')} x #{dt.depth} #{t(dt.depth_unit, scope: 'measure_units.length')}, #{dt.weight} #{t(dt.weight_unit, scope: 'measure_units.weight')})", dt.id]
     end
   end
-
 end

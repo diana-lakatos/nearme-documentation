@@ -7,29 +7,31 @@ class Listing::Search::Params
   attr_accessor :geocoder
   attr_reader :availability, :price, :amenities, :options, :search_area, :midpoint, :bounding_box, :location
 
-  def initialize(options, transactable_type)
+  def initialize(options, _transactable_type)
     @geocoder = Listing::Search::Geocoder
     @options = options.respond_to?(:deep_symbolize_keys) ? options.deep_symbolize_keys : options.symbolize_keys
 
     if !midpoint && loc.present?
       @location = @geocoder.find_search_area(query)
       if @location.present?
-        @bounding_box, @midpoint, @radius = @location.bounds, @location.center, @location.radius
+        @bounding_box = @location.bounds
+        @midpoint = @location.center
+        @radius = @location.radius
       end
     end
 
     @availability = if @options[:availability].present?
-      Availability.new(@options[:availability])
-    else
-      NullAvailability.new
+                      Availability.new(@options[:availability])
+                    else
+                      NullAvailability.new
     end
 
     @amenities = [*@options[:amenities]].map(&:to_i)
 
     @price = if @options[:price].present?
-      PriceRange.new(@options[:price][:min], @options[:price][:max])
-    else
-      NullPriceRange.new
+               PriceRange.new(@options[:price][:min], @options[:price][:max])
+             else
+               NullPriceRange.new
     end
   end
 
@@ -83,5 +85,4 @@ class Listing::Search::Params
   def available_dates
     availability.dates
   end
-
 end

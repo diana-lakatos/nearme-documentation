@@ -1,7 +1,6 @@
 require 'csv'
 
 class DataImporter::CsvFile::TemplateCsvFile < DataImporter::CsvFile
-
   def initialize(data_upload, *csv_fields_to_check_for)
     @importable = data_upload.importable
     @options = data_upload.options.symbolize_keys.reverse_merge(send_invitational_email: false, sync_mode: false)
@@ -69,6 +68,4 @@ class DataImporter::CsvFile::TemplateCsvFile < DataImporter::CsvFile
       hash
     end
   end
-
 end
-

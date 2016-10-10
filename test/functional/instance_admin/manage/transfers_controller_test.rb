@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Manage::TransfersControllerTest < ActionController::TestCase
-
   setup do
     @user = FactoryGirl.create(:user)
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
@@ -10,10 +9,9 @@ class InstanceAdmin::Manage::TransfersControllerTest < ActionController::TestCas
   end
 
   context 'index' do
-
     should 'show a listing of payment transfers' do
       @company = FactoryGirl.create(:company)
-      @payment_transfer = FactoryGirl.create(:payment_transfer, :company => @company)
+      @payment_transfer = FactoryGirl.create(:payment_transfer, company: @company)
 
       get :index
       assert_select 'td', @company.name
@@ -35,6 +33,4 @@ class InstanceAdmin::Manage::TransfersControllerTest < ActionController::TestCas
       assert_equal [@payment_transfer].map(&:id), assigns(:payment_transfers).map(&:id)
     end
   end
-
 end
-

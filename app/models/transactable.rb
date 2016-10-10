@@ -6,9 +6,9 @@ class Transactable < ActiveRecord::Base
 
   include Impressionable
   include Searchable
-  # FIXME disabled Sitemap updates. Needs to be optimized.
+  # FIXME: disabled Sitemap updates. Needs to be optimized.
   # include SitemapService::Callbacks
-    # == Helpers
+  # == Helpers
   include Listing::Search
   include Categorizable
   include Approvable
@@ -18,7 +18,7 @@ class Transactable < ActiveRecord::Base
 
   SORT_OPTIONS = ['All', 'Featured', 'Most Recent', 'Most Popular', 'Collaborators']
 
-  DATE_VALUES = ['today', 'yesterday', 'week_ago', 'month_ago', '3_months_ago', '6_months_ago']
+  DATE_VALUES = %w(today yesterday week_ago month_ago 3_months_ago 6_months_ago)
 
   # This must go before has_custom_attributes because of how the errors for the custom
   # attributes are added to the instance
@@ -39,7 +39,7 @@ class Transactable < ActiveRecord::Base
   has_many :assigned_waiver_agreement_templates, as: :target
   has_many :billing_authorizations, as: :reference
   has_many :document_requirements, as: :item, dependent: :destroy, inverse_of: :item
-  has_many :impressions, :as => :impressionable, :dependent => :destroy
+  has_many :impressions, as: :impressionable, dependent: :destroy
   has_many :photos, as: :owner, dependent: :destroy do
     def thumb
       (first || build).thumb
@@ -67,13 +67,13 @@ class Transactable < ActiveRecord::Base
   belongs_to :company, -> { with_deleted }, inverse_of: :listings
   belongs_to :location, -> { with_deleted }, inverse_of: :listings, touch: true
   belongs_to :instance, inverse_of: :listings
-  belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :listings
+  belongs_to :creator, -> { with_deleted }, class_name: 'User', inverse_of: :listings
   belongs_to :user, -> { with_deleted }, foreign_key: :creator_id, inverse_of: :listings
   counter_culture :creator,
-    column_name: -> (t) { t.draft.nil? ? 'transactables_count' : nil },
-    column_names: { ["transactables.draft IS NULL AND transactables.deleted_at IS NULL"] => 'transactables_count' }
+                  column_name: -> (t) { t.draft.nil? ? 'transactables_count' : nil },
+                  column_names: { ['transactables.draft IS NULL AND transactables.deleted_at IS NULL'] => 'transactables_count' }
 
-  belongs_to :administrator, -> { with_deleted }, class_name: "User", inverse_of: :administered_listings
+  belongs_to :administrator, -> { with_deleted }, class_name: 'User', inverse_of: :administered_listings
   has_one :dimensions_template, as: :entity
 
   has_one :location_address, through: :location
@@ -125,11 +125,11 @@ class Transactable < ActiveRecord::Base
   before_save :set_currency
   before_save :set_is_trusted, :set_available_actions
   before_validation :set_activated_at, :set_enabled, :set_confirm_reservations,
-    :set_possible_payout, :set_action_type
+                    :set_possible_payout, :set_action_type
   after_create :set_external_id
   after_save do
     if availability.try(:days_open).present?
-      self.update_column(:opened_on_days, availability.days_open.sort)
+      update_column(:opened_on_days, availability.days_open.sort)
     end
     true
   end
@@ -144,15 +144,13 @@ class Transactable < ActiveRecord::Base
   after_commit :user_created_transactable_event, on: :create, unless: ->(record) { record.draft? || record.skip_activity_feed_event }
   def user_created_transactable_event
     event = :user_created_transactable
-    user = self.creator.try(:object).presence || self.creator
-    affected_objects = [user] + self.topics
+    user = creator.try(:object).presence || creator
+    affected_objects = [user] + topics
     ActivityFeedService.create_event(event, self, affected_objects, self)
   end
   after_update :user_created_transactable_event_on_publish, unless: ->(record) { record.skip_activity_feed_event }
   def user_created_transactable_event_on_publish
-    if draft_changed?
-      user_created_transactable_event
-    end
+    user_created_transactable_event if draft_changed?
   end
 
   # == Scopes
@@ -160,16 +158,16 @@ class Transactable < ActiveRecord::Base
   scope :featured, -> { where(featured: true) }
   scope :draft, -> { where('transactables.draft IS NOT NULL') }
   scope :active, -> { where('transactables.draft IS NULL') }
-  scope :latest, -> { order("transactables.created_at DESC") }
-  scope :visible, -> { where(:enabled => true) }
+  scope :latest, -> { order('transactables.created_at DESC') }
+  scope :visible, -> { where(enabled: true) }
   scope :searchable, -> { require_payout? ? active.visible.with_possible_payout : active.visible }
-  scope :with_possible_payout, -> { where(possible_payout: true)}
+  scope :with_possible_payout, -> { where(possible_payout: true) }
   scope :without_possible_payout, -> { where(possible_payout: false) }
   scope :for_transactable_type_id, -> transactable_type_id { where(transactable_type_id: transactable_type_id) }
   scope :for_groupable_transactable_types, -> { joins(:transactable_type).where('transactable_types.groupable_with_others = ?', true) }
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((transactables.properties->?), ',') && ARRAY[?]", property, values) unless values.blank? }
 
-  scope :not_booked_relative, -> (start_date, end_date) {
+  scope :not_booked_relative, lambda  { |start_date, end_date|
     joins(ActiveRecord::Base.send(:sanitize_sql_array, ['LEFT OUTER JOIN (
        SELECT MIN(qty) as min_qty, transactable_id, count(*) as number_of_days_booked
        FROM (SELECT SUM(orders.quantity) as qty, orders.transactable_id, reservation_periods.date
@@ -186,7 +184,7 @@ class Transactable < ActiveRecord::Base
       .where('(COALESCE(min_spots_taken_per_transactable_during_date_period.min_qty, 0) < transactables.quantity OR min_spots_taken_per_transactable_during_date_period.number_of_days_booked <= ?)', (end_date - start_date).to_i)
   }
 
-  scope :not_booked_absolute, -> (start_date, end_date) {
+  scope :not_booked_absolute, lambda  { |start_date, end_date|
     joins(ActiveRecord::Base.send(:sanitize_sql_array, ['LEFT OUTER JOIN (
        SELECT MAX(qty) as max_qty, transactable_id
        FROM (SELECT SUM(orders.quantity) as qty, orders.transactable_id, reservation_periods.date
@@ -204,35 +202,35 @@ class Transactable < ActiveRecord::Base
   }
 
   # see http://www.postgresql.org/docs/9.4/static/functions-array.html
-  scope :only_opened_on_at_least_one_of, -> (days) {
+  scope :only_opened_on_at_least_one_of, lambda  { |days|
     # check overlap -> && operator
     # for now only regular booking are supported - fixed price transactables are just returned
     where('? = ANY (transactables.available_actions) OR transactables.opened_on_days @> \'{?}\'', 'event', days)
   }
 
-  scope :only_opened_on_all_of, -> (days) {
+  scope :only_opened_on_all_of, lambda  { |days|
     # check if opened_on_days contains days -> @> operator
     # for now only regular booking are supported - fixed price transactables are just returned
     where('? = ANY (transactables.available_actions) OR transactables.opened_on_days @> \'{?}\'', 'event', days)
   }
 
-  #TODO change schedule
-  scope :overlaps_schedule_start_date, -> (date) {
+  # TODO: change schedule
+  scope :overlaps_schedule_start_date, lambda  { |date|
     where("
-      ((select count(*) from schedules where scheduable_id = transactables.id and scheduable_type = '#{self.to_s}' limit 1) = 0)
+      ((select count(*) from schedules where scheduable_id = transactables.id and scheduable_type = '#{self}' limit 1) = 0)
       OR
-      (?::timestamp::date >= (select sr_start_datetime from schedules where scheduable_id = transactables.id and scheduable_type = '#{self.to_s}' limit 1)::timestamp::date)", date)
+      (?::timestamp::date >= (select sr_start_datetime from schedules where scheduable_id = transactables.id and scheduable_type = '#{self}' limit 1)::timestamp::date)", date)
   }
 
-  scope :order_by_array_of_ids, -> (listing_ids) {
-    listing_ids_decorated = listing_ids.each_with_index.map {|lid, i| "WHEN transactables.id=#{lid} THEN #{i}" }
+  scope :order_by_array_of_ids, lambda  { |listing_ids|
+    listing_ids_decorated = listing_ids.each_with_index.map { |lid, i| "WHEN transactables.id=#{lid} THEN #{i}" }
     order("CASE #{listing_ids_decorated.join(' ')} END") if listing_ids.present?
   }
 
   scope :with_date, ->(date) { where(created_at: date) }
-  scope :by_topic, -> (topic_ids) { includes(:transactable_topics).where(transactable_topics: {topic_id: topic_ids}) if topic_ids.present?}
+  scope :by_topic, -> (topic_ids) { includes(:transactable_topics).where(transactable_topics: { topic_id: topic_ids }) if topic_ids.present? }
   scope :seek_collaborators, -> { where(seek_collaborators: true) }
-  scope :feed_not_followed_by_user, -> (current_user) {
+  scope :feed_not_followed_by_user, lambda  { |current_user|
     where.not(id: current_user.feed_followed_transactables.pluck(:id))
   }
 
@@ -242,11 +240,11 @@ class Transactable < ActiveRecord::Base
   validates :currency, presence: true, allow_nil: false, currency: true
   validates :transactable_type, :action_type, presence: true
   validates :location, presence: true, unless: ->(record) { record.location_not_required }
-  validates :photos, length: {:minimum => 1}, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
-  validates :quantity, presence: true, numericality: {greater_than: 0}, unless: ->(record) { record.action_type.is_a?(Transactable::PurchaseAction) }
+  validates :photos, length: { minimum: 1 }, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
+  validates :quantity, presence: true, numericality: { greater_than: 0 }, unless: ->(record) { record.action_type.is_a?(Transactable::PurchaseAction) }
 
   validates :topics, length: { minimum: 1 }, if: -> (record) { record.topics_required && !record.draft.present? }
-  validates_presence_of :dimensions_template, if: lambda { |record| record.shipping_profile.try(:shippo?) }
+  validates_presence_of :dimensions_template, if: ->(record) { record.shipping_profile.try(:shippo?) }
 
   validates_associated :approval_requests, :action_type
   validates :name, length: { maximum: 255 }, allow_blank: true
@@ -259,22 +257,21 @@ class Transactable < ActiveRecord::Base
   delegate :url, to: :company
   delegate :formatted_address, :local_geocoding, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration, :hours_for_guest_to_confirm_payment,
-    :custom_validators, :show_company_name, :display_additional_charges?, :auto_accept_invitation_as_collaborator?, to: :transactable_type
+           :custom_validators, :show_company_name, :display_additional_charges?, :auto_accept_invitation_as_collaborator?, to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, to: :transactable_type
   delegate :schedule_availability, :next_available_occurrences, :book_it_out_available?,
-    :exclusive_price_available?, :only_exclusive_price_available?, to: :event_booking, allow_nil: true
+           :exclusive_price_available?, :only_exclusive_price_available?, to: :event_booking, allow_nil: true
   delegate :first_available_date, :second_available_date, :availability_exceptions,
-    :custom_availability_template?, :availability, :overnight_booking?, to: :time_based_booking, allow_nil: true
+           :custom_availability_template?, :availability, :overnight_booking?, to: :time_based_booking, allow_nil: true
   delegate :open_on?, :open_now?, :bookable?, :has_price?, :hours_to_expiration, to: :action_type, allow_nil: true
 
   attr_accessor :distance_from_search_query, :photo_not_required, :enable_monthly,
-    :enable_weekly, :enable_daily, :enable_hourly, :skip_activity_feed_event,
-    :enable_weekly_subscription,:enable_monthly_subscription, :enable_deposit_amount,
-    :scheduled_action_free_booking, :regular_action_free_booking, :location_not_required,
-    :topics_required
-
+                :enable_weekly, :enable_daily, :enable_hourly, :skip_activity_feed_event,
+                :enable_weekly_subscription, :enable_monthly_subscription, :enable_deposit_amount,
+                :scheduled_action_free_booking, :regular_action_free_booking, :location_not_required,
+                :topics_required
 
   monetize :insurance_value_cents, with_model_currency: :currency, allow_nil: true
 
@@ -297,7 +294,7 @@ class Transactable < ActiveRecord::Base
     [
       :name,
       [:name, self.class.last.try(:id).to_i + 1],
-      [:name, rand(1000000)]
+      [:name, rand(1_000_000)]
     ]
   end
 
@@ -323,7 +320,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def set_is_trusted
-    self.enabled = self.enabled && is_trusted?
+    self.enabled = enabled && is_trusted?
     true
   end
 
@@ -334,15 +331,15 @@ class Transactable < ActiveRecord::Base
   def availability_for(date, start_min = nil, end_min = nil)
     if open_on?(date, start_min, end_min)
       # Return the number of free desks
-      [self.quantity - desks_booked_on(date, start_min, end_min), 0].max
+      [quantity - desks_booked_on(date, start_min, end_min), 0].max
     else
       0
     end
   end
 
   # Maximum quantity available for a given date
-  def quantity_for(date)
-    self.quantity
+  def quantity_for(_date)
+    quantity
   end
 
   def administrator
@@ -350,15 +347,15 @@ class Transactable < ActiveRecord::Base
   end
 
   def desks_booked_on(date, start_minute = nil, end_minute = nil)
-    scope = orders.confirmed.joins(:periods).where(:reservation_periods => {:date => date})
+    scope = orders.confirmed.joins(:periods).where(reservation_periods: { date: date })
 
     if start_minute
       hourly_conditions = []
       hourly_values = []
-      hourly_conditions << "(reservation_periods.start_minute IS NULL AND reservation_periods.end_minute IS NULL)"
+      hourly_conditions << '(reservation_periods.start_minute IS NULL AND reservation_periods.end_minute IS NULL)'
 
       [start_minute, end_minute].compact.each do |minute|
-        hourly_conditions << "(? BETWEEN reservation_periods.start_minute AND reservation_periods.end_minute)"
+        hourly_conditions << '(? BETWEEN reservation_periods.start_minute AND reservation_periods.end_minute)'
         hourly_values << minute
       end
 
@@ -369,7 +366,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def all_prices
-    @all_prices ||= action_type ? action_type.pricings.map{ |p| p.is_free_booking? ? 0 : p.price_cents } : []
+    @all_prices ||= action_type ? action_type.pricings.map { |p| p.is_free_booking? ? 0 : p.price_cents } : []
   end
 
   def lowest_price_with_type(price_types = [])
@@ -387,8 +384,8 @@ class Transactable < ActiveRecord::Base
     if lowest_price.present?
       full_price_cents = lowest_price.price
 
-      if !service_fee_guest_percent.to_f.zero?
-        full_price_cents = full_price_cents * (1 + service_fee_guest_percent / 100.0)
+      unless service_fee_guest_percent.to_f.zero?
+        full_price_cents *= (1 + service_fee_guest_percent / 100.0)
       end
 
       full_price_cents += Money.new(AdditionalChargeType.where(status: 'mandatory').sum(:amount_cents), full_price_cents.currency.iso_code)
@@ -414,11 +411,11 @@ class Transactable < ActiveRecord::Base
       quantity: quantity,
       transactable_pricing: pricing,
       transactable: self,
-      currency: self.currency
+      currency: currency
     )
-    reservation.build_payment(reservation.shared_payment_attributes.merge({ payment_method: payment_method }))
+    reservation.build_payment(reservation.shared_payment_attributes.merge(payment_method: payment_method))
     dates.each do |date|
-      raise ::DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
+      fail ::DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
       reservation.add_period(date)
     end
     reservation.save!
@@ -427,15 +424,15 @@ class Transactable < ActiveRecord::Base
   end
 
   def dates_fully_booked
-    orders.map(:date).select { |d| fully_booked_on?(date) }
+    orders.map(:date).select { |_d| fully_booked_on?(date) }
   end
 
   def fully_booked_on?(date)
     open_on?(date) && !available_on?(date)
   end
 
-  # TODO price per unit
-  def available_on?(date, quantity=1, start_min = nil, end_min = nil)
+  # TODO: price per unit
+  def available_on?(date, quantity = 1, start_min = nil, end_min = nil)
     quantity = 1 if transactable_type.action_price_per_unit?
     availability_for(date, start_min, end_min) >= quantity
   end
@@ -449,16 +446,16 @@ class Transactable < ActiveRecord::Base
   end
 
   def to_liquid
-    @transactable_drop ||= TransactableDrop.new(self.decorate)
+    @transactable_drop ||= TransactableDrop.new(decorate)
   end
 
   def self.xml_attributes(transactable_type = nil)
-    self.csv_fields(transactable_type || PlatformContext.current.instance.transactable_types.first)
-      .keys.reject{|k| k =~ /for_(\d*)_(\w*)_price_cents/}.sort
+    csv_fields(transactable_type || PlatformContext.current.instance.transactable_types.first)
+      .keys.reject { |k| k =~ /for_(\d*)_(\w*)_price_cents/ }.sort
   end
 
   def name_with_address
-    [name, location.street].compact.join(" at ")
+    [name, location.street].compact.join(' at ')
   end
 
   def order_attributes
@@ -475,7 +472,7 @@ class Transactable < ActiveRecord::Base
 
   def disable!
     self.enabled = false
-    self.save(validate: false)
+    save(validate: false)
   end
 
   def disabled?
@@ -483,12 +480,12 @@ class Transactable < ActiveRecord::Base
   end
 
   def payout_information_missing?
-    self.instance.require_payout? && !self.possible_payout?
+    instance.require_payout? && !self.possible_payout?
   end
 
   def enable!
     self.enabled = true
-    self.save(validate: false)
+    save(validate: false)
   end
 
   def approval_request_acceptance_cancelled!
@@ -500,11 +497,11 @@ class Transactable < ActiveRecord::Base
   end
 
   def approval_request_rejected!(approval_request_id)
-    WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Rejected, self.id, approval_request_id)
+    WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Rejected, id, approval_request_id)
   end
 
   def approval_request_questioned!(approval_request_id)
-    WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Questioned, self.id, approval_request_id)
+    WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Questioned, id, approval_request_id)
   end
 
   def self.csv_fields(transactable_type)
@@ -530,11 +527,11 @@ class Transactable < ActiveRecord::Base
   end
 
   def set_external_id
-    self.update_column(:external_id, "manual-#{id}") if self.external_id.blank?
+    update_column(:external_id, "manual-#{id}") if external_id.blank?
   end
 
   def reviews
-    @reviews ||= Review.for_transactables(self.orders.pluck(:id), self.transactable_line_items.pluck(:id))
+    @reviews ||= Review.for_transactables(orders.pluck(:id), transactable_line_items.pluck(:id))
   end
 
   def has_reviews?
@@ -543,30 +540,30 @@ class Transactable < ActiveRecord::Base
 
   def question_average_rating
     @rating_answers_rating ||= RatingAnswer.where(review_id: reviews.map(&:id))
-      .group(:rating_question_id).average(:rating)
+                               .group(:rating_question_id).average(:rating)
   end
 
   def recalculate_average_rating!
     average_rating = reviews.average(:rating) || 0.0
-    self.update(average_rating: average_rating)
+    update(average_rating: average_rating)
   end
 
-  # TODO action rfq
+  # TODO: action rfq
   def action_rfq?
-    super && self.transactable_type.action_rfq?
+    super && transactable_type.action_rfq?
   end
 
   def express_checkout_payment?
     instance.payment_gateway(company.iso_country_code, currency).try(:express_checkout_payment?)
   end
 
-  #TODO rental shipping
+  # TODO: rental shipping
   def possible_delivery?
     shipping_profile.present?
   end
 
   # TODO: to be deleted once we get rid of instance views
-  def has_action?(*args)
+  def has_action?(*_args)
     action_rfq?
   end
 
@@ -591,10 +588,10 @@ class Transactable < ActiveRecord::Base
   end
 
   def timezone
-    case self.transactable_type.timezone_rule
-    when 'location' then self.location.try(:time_zone)
-    when 'seller' then (self.creator || self.location.try(:creator) || self.company.try(:creator) || self.location.try(:company).try(:creator)).try(:time_zone)
-    when 'instance' then self.instance.time_zone
+    case transactable_type.timezone_rule
+    when 'location' then location.try(:time_zone)
+    when 'seller' then (creator || location.try(:creator) || company.try(:creator) || location.try(:company).try(:creator)).try(:time_zone)
+    when 'instance' then instance.time_zone
     end.presence || Time.zone.name
   end
 
@@ -634,17 +631,17 @@ class Transactable < ActiveRecord::Base
       action_types.build(
         transactable_type_action_type: tt_action_type,
         type: "Transactable::#{tt_action_type.class.name.demodulize}"
-      ) unless action_types.any?{ |at| at.transactable_type_action_type == tt_action_type }
+      ) unless action_types.any? { |at| at.transactable_type_action_type == tt_action_type }
     end
     self.action_type ||= action_types.find(&:enabled) || action_types.first
     self.action_type.enabled = true
   end
 
   def initialize_default_availability_template
-    if self.transactable_type.try(:default_availability_template_id).present?
-      self.action_types.each do |at|
+    if transactable_type.try(:default_availability_template_id).present?
+      action_types.each do |at|
         if at.is_a?(Transactable::TimeBasedBooking)
-          at.availability_template_id = self.transactable_type.default_availability_template_id if at.availability_template_id.blank?
+          at.availability_template_id = transactable_type.default_availability_template_id if at.availability_template_id.blank?
         end
       end
     end
@@ -655,16 +652,16 @@ class Transactable < ActiveRecord::Base
     when /most recent/i
       order('transactables.created_at DESC')
     when /most popular/i
-      #TODO check most popular sort after followers are implemented
+      # TODO: check most popular sort after followers are implemented
       order('transactables.followers_count DESC')
     when /collaborators/i
-      group('transactables.id').
-        joins("LEFT OUTER JOIN transactable_collaborators tc ON transactables.id = tc.transactable_id AND (tc.approved_by_owner_at IS NOT NULL AND tc.approved_by_user_at IS NOT NULL AND tc.deleted_at IS NULL)").
-        order('count(tc.id) DESC')
+      group('transactables.id')
+        .joins('LEFT OUTER JOIN transactable_collaborators tc ON transactables.id = tc.transactable_id AND (tc.approved_by_owner_at IS NOT NULL AND tc.approved_by_user_at IS NOT NULL AND tc.deleted_at IS NULL)')
+        .order('count(tc.id) DESC')
     when /featured/i
       where(featured: true, draft: nil)
     when /pending/i
-      where("(SELECT tc.id from transactable_collaborators tc WHERE tc.transactable_id = transactables.id AND tc.user_id = 6520 AND ( approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) IS NOT NULL")
+      where('(SELECT tc.id from transactable_collaborators tc WHERE tc.transactable_id = transactables.id AND tc.user_id = 6520 AND ( approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) IS NOT NULL')
     else
       if PlatformContext.current.instance.is_community?
         order('transactables.followers_count DESC')
@@ -695,7 +692,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def collaborators_email_recipients
-    approved_transactable_collaborators.includes(user: :notification_preference).select { |tc| u = tc.user; u.notification_preference.blank? || (u.notification_preference.email_frequency.eql?('immediately') && u.notification_preference.project_updates_enabled? ) }
+    approved_transactable_collaborators.includes(user: :notification_preference).select { |tc| u = tc.user; u.notification_preference.blank? || (u.notification_preference.email_frequency.eql?('immediately') && u.notification_preference.project_updates_enabled?) }
   end
 
   def attachments_visible_for(user)
@@ -717,12 +714,12 @@ class Transactable < ActiveRecord::Base
   end
 
   def close_request_for_quotes
-    self.transactable_tickets.with_state(:open).each { |ticket| ticket.resolve! }
+    transactable_tickets.with_state(:open).each(&:resolve!)
     true
   end
 
   def set_possible_payout
-    self.possible_payout = self.company.present? && self.company.merchant_accounts.verified.any? do |merchant_account|
+    self.possible_payout = company.present? && company.merchant_accounts.verified.any? do |merchant_account|
       merchant_account.supports_currency?(currency) && merchant_account.payment_gateway.active_in_current_mode?
     end
     true
@@ -734,14 +731,12 @@ class Transactable < ActiveRecord::Base
   end
 
   def set_activated_at
-    if enabled_changed?
-      self.activated_at = (enabled ? Time.current : nil)
-    end
+    self.activated_at = (enabled ? Time.current : nil) if enabled_changed?
     true
   end
 
   def set_enabled
-    self.enabled = is_trusted? if self.enabled
+    self.enabled = is_trusted? if enabled
     true
   end
 
@@ -757,13 +752,9 @@ class Transactable < ActiveRecord::Base
   end
 
   def decline_reservations
-    line_item_orders.unconfirmed.each do |r|
-      r.reject!
-    end
+    line_item_orders.unconfirmed.each(&:reject!)
 
-    recurring_bookings.with_state(:unconfirmed, :confirmed, :overdued).each do |booking|
-      booking.host_cancel!
-    end
+    recurring_bookings.with_state(:unconfirmed, :confirmed, :overdued).each(&:host_cancel!)
   end
 
   def document_requirement_hidden?(attributes)
@@ -781,8 +772,8 @@ class Transactable < ActiveRecord::Base
 
   # Counter culture does not play along well (on destroy) with acts_as_paranoid
   def fix_counter_caches
-    if self.creator && !self.creator.destroyed?
-      self.creator.update_column(:transactables_count, self.creator.listings.where(draft: nil).count)
+    if creator && !creator.destroyed?
+      creator.update_column(:transactables_count, creator.listings.where(draft: nil).count)
     end
     true
   end
@@ -794,7 +785,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def restore_photos
-    self.photos.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', self.deleted_at - 30.seconds, self.deleted_at + 30.seconds).each do |photo|
+    photos.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', deleted_at - 30.seconds, deleted_at + 30.seconds).each do |photo|
       begin
         photo.restore(recursive: true)
       rescue
@@ -803,7 +794,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def restore_links
-    self.links.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', self.deleted_at - 30.seconds, self.deleted_at + 30.seconds).each do |link|
+    links.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', deleted_at - 30.seconds, deleted_at + 30.seconds).each do |link|
       begin
         link.restore(recursive: true)
       rescue
@@ -818,14 +809,14 @@ class Transactable < ActiveRecord::Base
       next if collaborator_email.blank?
       user = User.find_by(email: collaborator_email)
       next unless user.present?
-      unless self.transactable_collaborators.for_user(user).exists?
-        self.transactable_collaborators.create!(user: user, email: collaborator_email, approved_by_owner_at: Time.zone.now)
+      unless transactable_collaborators.for_user(user).exists?
+        transactable_collaborators.create!(user: user, email: collaborator_email, approved_by_owner_at: Time.zone.now)
       end
     end
   end
 
   def restore_transactable_collaborators
-    self.transactable_collaborators.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', self.deleted_at - 30.seconds, self.deleted_at + 30.seconds).each do |tc|
+    transactable_collaborators.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', deleted_at - 30.seconds, deleted_at + 30.seconds).each do |tc|
       begin
         tc.restore(recursive: true)
       rescue
@@ -835,4 +826,3 @@ class Transactable < ActiveRecord::Base
 
   class NotFound < ActiveRecord::RecordNotFound; end
 end
-

@@ -1,5 +1,4 @@
 class DataImporter::Host::CsvTemplateGenerator < DataImporter::CsvTemplateGenerator
-
   def initialize(importable)
     @importable = importable
     @models = if import_model == :transactable
@@ -8,6 +7,4 @@ class DataImporter::Host::CsvTemplateGenerator < DataImporter::CsvTemplateGenera
                 [import_model]
               end
   end
-
 end
-

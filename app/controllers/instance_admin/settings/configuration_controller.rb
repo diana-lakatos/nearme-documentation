@@ -27,4 +27,3 @@ class InstanceAdmin::Settings::ConfigurationController < InstanceAdmin::Settings
     end
   end
 end
-

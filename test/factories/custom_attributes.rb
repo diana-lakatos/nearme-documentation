@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :custom_attribute, class: 'CustomAttributes::CustomAttribute' do
     sequence(:name) { |n| "Attribute #{n}" }
-    attribute_type "string"
+    attribute_type 'string'
     label 'My Label'
     hint 'this is my hint'
     required 0
@@ -13,7 +13,7 @@ FactoryGirl.define do
 
     trait :listing_types do
       name 'listing_type'
-      valid_values { ["Desk", "Meeting Room", "Office Space", "Salon Booth"] }
+      valid_values { ['Desk', 'Meeting Room', 'Office Space', 'Salon Booth'] }
       attribute_type 'string'
       required 1
     end
@@ -23,8 +23,8 @@ FactoryGirl.define do
     end
 
     factory :custom_attribute_array do
-      name "array"
-      attribute_type "array"
+      name 'array'
+      attribute_type 'array'
     end
 
     factory :custom_attribute_input do
@@ -77,8 +77,6 @@ FactoryGirl.define do
       factory :required_user_custom_attribute do
         validation_rules { { 'presence' => {} } }
       end
-
     end
-
   end
 end

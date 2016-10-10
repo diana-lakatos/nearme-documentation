@@ -1,5 +1,4 @@
 class CommunityAggregatesSearcher
-
   def initialize(params)
     default_start_date = Time.now.utc.weeks_ago(1).at_beginning_of_week
     default_end_date = Time.now.utc.weeks_ago(1).at_end_of_week
@@ -23,6 +22,4 @@ class CommunityAggregatesSearcher
 
     date_parsed.to_time.utc
   end
-
 end
-

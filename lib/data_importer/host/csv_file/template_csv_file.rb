@@ -1,7 +1,6 @@
 require 'csv'
 
 class DataImporter::Host::CsvFile::TemplateCsvFile < DataImporter::CsvFile::TemplateCsvFile
-
   def initialize(data_upload)
     @user = data_upload.uploader
     @company = @user.companies.first || @user.companies.create(name: @user.name, creator: @user)
@@ -45,6 +44,4 @@ class DataImporter::Host::CsvFile::TemplateCsvFile < DataImporter::CsvFile::Temp
       external_id: @company.external_id
     }
   end
-
 end
-

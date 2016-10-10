@@ -1,5 +1,4 @@
 FactoryGirl.define do
-
   factory :charge do
     association :user
     association(:payment, factory: :paid_payment)
@@ -7,16 +6,16 @@ FactoryGirl.define do
     success true
     amount 1000
     currency 'USD'
-    payment_gateway_mode "test"
-    response { ActiveMerchant::Billing::Response.new true, 'OK', { "id" => "123", "message" => "message", "transaction_id" => '12345' } }
+    payment_gateway_mode 'test'
+    response { ActiveMerchant::Billing::Response.new true, 'OK', 'id' => '123', 'message' => 'message', 'transaction_id' => '12345' }
 
     factory :live_charge do
-      payment_gateway_mode "live"
+      payment_gateway_mode 'live'
     end
 
     factory :test_charge do
-      amount 11000 # Amount should be the same as payment amount
-      payment_gateway_mode "test"
+      amount 11_000 # Amount should be the same as payment amount
+      payment_gateway_mode 'test'
     end
   end
 end

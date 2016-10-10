@@ -1,9 +1,8 @@
 require 'test_helper'
 
 class InstanceAdmin::Manage::AdditionalChargeTypesControllerTest < ActionController::TestCase
-
   setup do
-    @user = FactoryGirl.create(:user, :name => 'John X')
+    @user = FactoryGirl.create(:user, name: 'John X')
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
     sign_in @user
@@ -14,7 +13,7 @@ class InstanceAdmin::Manage::AdditionalChargeTypesControllerTest < ActionControl
       @act = FactoryGirl.create(:additional_charge_type)
     end
 
-    should "get index" do
+    should 'get index' do
       get :index
       assert_response :success
       assert assigns[:additional_charge_types], [@act]

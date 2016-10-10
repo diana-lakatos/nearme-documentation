@@ -12,7 +12,7 @@ class PlatformContextSetter
 
   def call(env)
     return @app.call(env) if env['PATH_INFO'] =~ /^\/assets\//
-    return [ 200, {}, ['pong'] ] if env['PATH_INFO'] == '/ping'
+    return [200, {}, ['pong']] if env['PATH_INFO'] == '/ping'
 
     ::PlatformContext.clear_current
     request = ActionDispatch::Request.new(env)
@@ -34,7 +34,7 @@ class PlatformContextSetter
         rule = platform_context.rules.detect { |r| r.path == path }
 
         user_id = begin "#{env['rack.session']['warden.user.user.key'].try(:first).try(:first)}"
-                  rescue ""
+                  rescue ''
                   end
 
         additional_headers = { 'UserId' => user_id }
@@ -56,7 +56,6 @@ class PlatformContextSetter
     end
   end
 
-  def each(&block)
+  def each(&_block)
   end
-
 end

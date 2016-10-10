@@ -1,5 +1,4 @@
 class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
-
   include ActionView::Helpers::SanitizeHelper
   include PaymentExtention::PaypalExpressModule
 
@@ -34,5 +33,4 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
   def express_gateway
     gateway
   end
-
 end

@@ -5,11 +5,11 @@ class Dashboard::Company::TransfersController < Dashboard::Company::BaseControll
     @payment_transfers = @payment_transfers.paginate(page: params[:page], per_page: 20)
 
     # PaymentTransfers specifically from the last 7 days
-    @last_week_payment_transfers = @company.
-                                    payment_transfers.
-                                    transferred.
-                                    last_x_days(6).
-                                    order('created_at ASC')
+    @last_week_payment_transfers = @company
+                                   .payment_transfers
+                                   .transferred
+                                   .last_x_days(6)
+                                   .order('created_at ASC')
 
     @chart = ChartDecorator.decorate(@last_week_payment_transfers)
   end

@@ -1,7 +1,4 @@
 class ActivityFeedEvent < ActiveRecord::Base
-  # TODO:
-  # topic_idz_content_pushed_to_page
-
   EVENT_WHITELIST = %w(
     user_followed_user
     user_followed_transactable
@@ -44,13 +41,13 @@ class ActivityFeedEvent < ActiveRecord::Base
   validates_inclusion_of :event, in: EVENT_WHITELIST
 
   scope :exclude_events, lambda {
-    where("event NOT IN (?)", ['user_followed_user', 'user_followed_transactable', 'user_followed_topic'])
+    where('event NOT IN (?)', %w(user_followed_user user_followed_transactable user_followed_topic))
   }
 
   before_create :update_affected_objects
   def update_affected_objects
-    if self.affected_objects.present?
-      objects = self.affected_objects.compact.map { |object| ActivityFeedService::Helpers.object_identifier_for(object) }
+    if affected_objects.present?
+      objects = affected_objects.compact.map { |object| ActivityFeedService::Helpers.object_identifier_for(object) }
       identifier = [ActivityFeedService::Helpers.object_identifier_for(followed)]
       self.affected_objects_identifiers = (identifier + objects).uniq
     end
@@ -61,17 +58,15 @@ class ActivityFeedEvent < ActiveRecord::Base
   end
 
   def description
-    if self.event_source.is_a?(Link)
-      ActionController::Base.helpers.link_to(self.event_source.text, self.event_source.url)
+    if event_source.is_a?(Link)
+      ActionController::Base.helpers.link_to(event_source.text, event_source.url)
     else
       followed.try(:description).presence || event_source.try(:description) || event_source.try(:text)
     end
   end
 
   def quotation_for(text)
-    if text.present?
-      "&#147;#{text}&#148;".html_safe
-    end
+    "&#147;#{text}&#148;".html_safe if text.present?
   end
 
   def event=(value)
@@ -112,18 +107,18 @@ class ActivityFeedEvent < ActiveRecord::Base
 
   def reported_by(user, ip)
     if user
-      self.spam_reports.where(user: user).first
+      spam_reports.where(user: user).first
     else
-      self.spam_reports.where(ip_address: ip, user: nil).first
+      spam_reports.where(ip_address: ip, user: nil).first
     end
   end
 
   def self.with_identifiers(sql_array)
-    where("affected_objects_identifiers && ?", sql_array).order(created_at: :desc).uniq
+    where('affected_objects_identifiers && ?', sql_array).order(created_at: :desc).uniq
   end
 
   def self.without_identifiers(sql_array)
-    where.not("affected_objects_identifiers && ?", sql_array).order(created_at: :desc).uniq
+    where.not('affected_objects_identifiers && ?', sql_array).order(created_at: :desc).uniq
   end
 
   def is_text_update?
@@ -133,7 +128,7 @@ class ActivityFeedEvent < ActiveRecord::Base
       user_updated_topic_status
       user_commented
       user_commented_on_transactable
-    ).include?(self.event)
+    ).include?(event)
   end
 
   def allowed_for_user(user)
@@ -144,5 +139,4 @@ class ActivityFeedEvent < ActiveRecord::Base
       true
     end
   end
-
 end

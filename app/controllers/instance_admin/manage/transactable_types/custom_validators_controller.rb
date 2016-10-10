@@ -1,5 +1,4 @@
 class InstanceAdmin::Manage::TransactableTypes::CustomValidatorsController < InstanceAdmin::CustomValidatorsController
-
   protected
 
   def resource_class
@@ -7,7 +6,6 @@ class InstanceAdmin::Manage::TransactableTypes::CustomValidatorsController < Ins
   end
 
   def available_attributes
-    @attributes = Transactable.column_names.map{ |column| [column.humanize, column] }
+    @attributes = Transactable.column_names.map { |column| [column.humanize, column] }
   end
-
 end

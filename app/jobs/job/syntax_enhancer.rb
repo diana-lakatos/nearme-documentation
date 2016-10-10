@@ -1,7 +1,6 @@
 # The purpose of this class is to add .enqueue method to all Mailers
 # so we can use syntax Mailer.enqueue.send_method instead of MailerJob.perform(Mailer, send_method)
 module Job::SyntaxEnhancer
-
   def self.included(base)
     base.send(:attr_accessor, :job_class)
   end
@@ -12,11 +11,11 @@ module Job::SyntaxEnhancer
     base.send(:job_class=, "#{base.name}Job")
   end
 
-  def enqueue(*args)
+  def enqueue(*_args)
     Proxy.new(self, get_job_class)
   end
 
-  def enqueue_later(when_perform, *args)
+  def enqueue_later(when_perform, *_args)
     DelayedProxy.new(self, get_job_class, when_perform)
   end
 

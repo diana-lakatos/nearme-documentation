@@ -1,5 +1,4 @@
 class Form
-
   extend ActiveModel::Naming
   include ActiveModel::Conversion
   include ActiveModel::Validations
@@ -10,7 +9,7 @@ class Form
   end
 
   def process
-    raise "Implement in the subclass"
+    fail 'Implement in the subclass'
   end
 
   def store_attributes(attribs)

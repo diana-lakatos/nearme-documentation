@@ -1,5 +1,4 @@
 FactoryGirl.define do
-
   factory :refund do
     association(:payment)
     created_at { Time.zone.now }

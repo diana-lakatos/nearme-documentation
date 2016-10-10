@@ -1,5 +1,4 @@
 class WorkflowStep::RecurringBookingWorkflow::BaseStep < WorkflowStep::BaseStep
-
   def self.belongs_to_transactable_type?
     true
   end

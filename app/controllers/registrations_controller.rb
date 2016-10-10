@@ -1,9 +1,8 @@
 class RegistrationsController < Devise::RegistrationsController
-
   before_action :set_role_if_blank
   before_action :configure_permitted_parameters, only: :create
-  skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:update_password, :set_password]
-  skip_before_filter :filter_out_token, :only => [:verify, :unsubscribe]
+  skip_before_filter :redirect_to_set_password_unless_unnecessary, only: [:update_password, :set_password]
+  skip_before_filter :filter_out_token, only: [:verify, :unsubscribe]
   skip_before_filter :force_fill_in_wizard_form
   before_filter :nm_force_ssl, only: [:new]
   before_filter :find_company, only: [:social_accounts, :edit]
@@ -15,15 +14,15 @@ class RegistrationsController < Devise::RegistrationsController
 
   # We extend the create action to clear out any stored Provider auth data used during
   # registration.
-  before_filter :set_return_to, :only => [:new, :create]
+  before_filter :set_return_to, only: [:new, :create]
 
   before_filter :authenticate_scope!, only: [:edit, :update, :destroy, :avatar, :edit_avatar, :update_avatar, :destroy_avatar, :set_password,
                                              :update_password, :edit_notification_preferences, :update_notification_preferences, :social_accounts]
-  before_filter :find_supported_providers, :only => [:social_accounts, :update]
-  after_filter :render_or_redirect_after_create, :only => [:create]
-  before_filter :redirect_to_edit_profile_if_password_set, :only => [:set_password]
+  before_filter :find_supported_providers, only: [:social_accounts, :update]
+  after_filter :render_or_redirect_after_create, only: [:create]
+  before_filter :redirect_to_edit_profile_if_password_set, only: [:set_password]
 
-  skip_before_filter :redirect_if_marketplace_password_protected, :only => [:store_geolocated_location, :store_google_analytics_id, :update_password, :set_password]
+  skip_before_filter :redirect_if_marketplace_password_protected, only: [:store_geolocated_location, :store_google_analytics_id, :update_password, :set_password]
 
   def new
     @legal_page_present = Page.exists?(slug: 'legal')
@@ -32,7 +31,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def status
-    render :json => { id: current_user.try(:id), name: current_user.try(:name) }
+    render json: { id: current_user.try(:id), name: current_user.try(:name) }
   end
 
   def create
@@ -44,21 +43,17 @@ class RegistrationsController < Devise::RegistrationsController
 
       # Only track the sign up if the user has actually been saved (i.e. there are no errors)
       if @user.persisted?
-        User.where(id: @user.id).update_all({
-          instance_profile_type_id: current_instance.default_profile_type.try(:id),
-          referer: session[:referer],
-          source: cookies.signed[:source],
-          campaign: cookies.signed[:campaign],
-          language: I18n.locale
-        })
+        User.where(id: @user.id).update_all(instance_profile_type_id: current_instance.default_profile_type.try(:id),
+                                            referer: session[:referer],
+                                            source: cookies.signed[:source],
+                                            campaign: cookies.signed[:campaign],
+                                            language: I18n.locale)
         update_analytics_google_id(@user)
         analytics_apply_user(@user)
-        event_tracker.signed_up(@user, {
-          referrer_id: platform_context.platform_context_detail.id,
-          referrer_type: platform_context.platform_context_detail.class.to_s,
-          signed_up_via: signed_up_via,
-          provider: Auth::Omni.new(session[:omniauth]).provider
-        })
+        event_tracker.signed_up(@user,           referrer_id: platform_context.platform_context_detail.id,
+                                                 referrer_type: platform_context.platform_context_detail.class.to_s,
+                                                 signed_up_via: signed_up_via,
+                                                 provider: Auth::Omni.new(session[:omniauth]).provider)
         ReengagementNoBookingsJob.perform_later(72.hours.from_now, @user.id)
         case @role
         when 'default'
@@ -78,7 +73,7 @@ class RegistrationsController < Devise::RegistrationsController
       # we are trying to handle situation when user makes double request (button hit or page refresh)
       # request are handled by two server processes so AR validation goes fine, but DB throws exception
       # trying to login this user
-      resource = User.find_for_database_authentication(:email => params[resource_name][:email])
+      resource = User.find_for_database_authentication(email: params[resource_name][:email])
       if resource && resource.valid_password?(params[resource_name][:password])
         @user = resource
         sign_in(resource_name, resource)
@@ -160,7 +155,7 @@ class RegistrationsController < Devise::RegistrationsController
       end
 
       set_flash_message :success, :updated
-      sign_in(resource, :bypass => true)
+      sign_in(resource, bypass: true)
       event_tracker.updated_profile_information(@user)
       redirect_to dashboard_profile_path
     else
@@ -174,31 +169,31 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def destroy
-    raise ActionController::RoutingError, "Feature disabled"
+    fail ActionController::RoutingError, 'Feature disabled'
   end
 
   def avatar
     @user = current_user
     @user.avatar = params[:avatar]
     if @user.save(validate: false)
-      render :text => { :url => @user.avatar_url(:medium),
-                        :resize_url =>  edit_avatar_path,
-                        :thumbnail_dimensions => @user.avatar.thumbnail_dimensions[:medium],
-                        :destroy_url => destroy_avatar_path }.to_json, :content_type => 'text/plain'
+      render text: { url: @user.avatar_url(:medium),
+                     resize_url: edit_avatar_path,
+                     thumbnail_dimensions: @user.avatar.thumbnail_dimensions[:medium],
+                     destroy_url: destroy_avatar_path }.to_json, content_type: 'text/plain'
     else
-      render :text => [{:error => @user.errors.full_messages}].to_json,:content_type => 'text/plain', :status => 422
+      render text: [{ error: @user.errors.full_messages }].to_json, content_type: 'text/plain', status: 422
     end
   end
 
   def edit_avatar
     if request.xhr?
-      render partial: 'dashboard/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url(:original) }
+      render partial: 'dashboard/photos/resize_form', locals: { form_url: update_avatar_path, object: current_user.avatar, object_url: current_user.avatar_url(:original) }
     end
   end
 
   def update_avatar
     @user = current_user
-    @user.avatar_transformation_data = { :crop => params[:crop], :rotate => params[:rotate] }
+    @user.avatar_transformation_data = { crop: params[:crop], rotate: params[:rotate] }
     if @user.save(validate: false)
       render partial: 'dashboard/photos/resize_succeeded'
     else
@@ -210,31 +205,31 @@ class RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @user.remove_avatar!
     @user.save(validate: false)
-    render :text => {}, :status => 200, :content_type => 'text/plain'
+    render text: {}, status: 200, content_type: 'text/plain'
   end
 
   def cover_image
     @user = current_user
     @user.cover_image = params[:cover_image]
     if @user.save(validate: false)
-      render :text => { :url => @user.cover_image_url,
-                        :resize_url =>  edit_cover_image_path,
-                        :thumbnail_dimensions => @user.cover_image.thumbnail_dimensions[:thumbnail],
-                        :destroy_url => destroy_cover_image_path }.to_json, :content_type => 'text/plain'
+      render text: { url: @user.cover_image_url,
+                     resize_url: edit_cover_image_path,
+                     thumbnail_dimensions: @user.cover_image.thumbnail_dimensions[:thumbnail],
+                     destroy_url: destroy_cover_image_path }.to_json, content_type: 'text/plain'
     else
-      render :text => [{:error => @user.errors.full_messages}].to_json,:content_type => 'text/plain', :status => 422
+      render text: [{ error: @user.errors.full_messages }].to_json, content_type: 'text/plain', status: 422
     end
   end
 
   def edit_cover_image
     if request.xhr?
-      render partial: 'dashboard/photos/resize_form', :locals => { :form_url => update_cover_image_path, :object => current_user.cover_image, :object_url => current_user.cover_image_url(:original) }
+      render partial: 'dashboard/photos/resize_form', locals: { form_url: update_cover_image_path, object: current_user.cover_image, object_url: current_user.cover_image_url(:original) }
     end
   end
 
   def update_cover_image
     @user = current_user
-    @user.cover_image_transformation_data = { :crop => params[:crop], :rotate => params[:rotate] }
+    @user.cover_image_transformation_data = { crop: params[:crop], rotate: params[:rotate] }
     if @user.save(validate: false)
       render partial: 'dashboard/photos/resize_succeeded'
     else
@@ -246,7 +241,7 @@ class RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @user.remove_cover_image!
     @user.save(validate: false)
-    render :text => {}, :status => 200, :content_type => 'text/plain'
+    render text: {}, status: 200, content_type: 'text/plain'
   end
 
   def set_password
@@ -262,7 +257,7 @@ class RegistrationsController < Devise::RegistrationsController
     @user.skip_custom_attribute_validation = true
     if @user.save
       flash[:success] = t('flash_messages.registrations.password_set')
-      redirect_to edit_user_registration_path(:token => @user.authentication_token)
+      redirect_to edit_user_registration_path(token: @user.authentication_token)
     else
       flash[:success] = @user.errors.full_messages.join(', ')
       render :set_password
@@ -289,7 +284,7 @@ class RegistrationsController < Devise::RegistrationsController
   def store_google_analytics_id
     cookies[:google_analytics_id] = params[:id]
     update_analytics_google_id(current_user)
-    render :nothing => true
+    render nothing: true
   end
 
   def unsubscribe
@@ -314,7 +309,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def social_accounts
-    cookies[:redirect_after_callback_to] = {value: request.path, expires: 1.hour.from_now}
+    cookies[:redirect_after_callback_to] = { value: request.path, expires: 1.hour.from_now }
     render layout: dashboard_or_community_layout
   end
 
@@ -327,7 +322,7 @@ class RegistrationsController < Devise::RegistrationsController
     params[:user][:sms_preferences] ||= {}
     if @user.update_with_password(user_params)
       flash[:success] = t('flash_messages.registrations.notification_preferences_updated_successfully')
-      redirect_to :action => 'edit_notification_preferences'
+      redirect_to action: 'edit_notification_preferences'
     else
       render :edit_notification_preferences
     end
@@ -391,11 +386,7 @@ class RegistrationsController < Devise::RegistrationsController
   # if ajax call has been made from modal and user has been created, we need to tell
   # Modal that instead of rendering content in modal, it needs to redirect to new page
   def render_or_redirect_after_create
-    if request.xhr?
-      if @user.persisted?
-        render_redirect_url_as_json
-      end
-    end
+    render_redirect_url_as_json if @user.persisted? if request.xhr?
   end
 
   def redirect_to_edit_profile_if_password_set
@@ -418,7 +409,7 @@ class RegistrationsController < Devise::RegistrationsController
                            else
                              []
                            end
-    devise_parameter_sanitizer.for(:sign_up) {|u| u.permit(*arguments)}
+    devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(*arguments) }
   end
 
   def user_params
@@ -441,7 +432,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def setup_form_component
     @role = %w(seller buyer).detect { |r| r == params[:role] }
-    @role ||= "default"
+    @role ||= 'default'
     @form_component = FormComponent.find_by(form_type: "FormComponent::#{@role.upcase}_REGISTRATION".constantize)
   end
 end

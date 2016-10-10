@@ -29,7 +29,6 @@
 #     * That is, it is not concerned that the Job executes asynchronously, or
 #       how it does that.
 class Job
-
   def initialize(platform_context_detail_class, platform_context_detail_id, *args)
     @platform_context_detail_class = platform_context_detail_class.try(:constantize)
     @platform_context_detail_id = platform_context_detail_id
@@ -52,11 +51,11 @@ class Job
     I18n.locale = job.i18n_locale if job.i18n_locale.present?
   end
 
-  def after(job)
+  def after(_job)
     PlatformContext.current = nil
   end
 
-  def after_initialize(*args)
+  def after_initialize(*_args)
   end
 
   def self.perform(*args)
@@ -73,7 +72,7 @@ class Job
     else
       # invoking get_perfming_time is unnecessary, but we want to catch errors in this method in test environment
       get_performing_time(when_perform)
-      build_new(*args).perform unless jobs_to_be_not_invoked_immediately.include?(self.name.to_s)
+      build_new(*args).perform unless jobs_to_be_not_invoked_immediately.include?(name.to_s)
     end
   end
 
@@ -82,7 +81,7 @@ class Job
   end
 
   def self.build_new(*args)
-    Rails.logger.warn "#{self.name} has no PlatformContext" if PlatformContext.current.blank?
+    Rails.logger.warn "#{name} has no PlatformContext" if PlatformContext.current.blank?
     new(PlatformContext.current.try(:platform_context_detail).try(:class).try(:name), PlatformContext.current.try(:platform_context_detail).try(:id), *args)
   end
 
@@ -99,15 +98,15 @@ class Job
                       when ActiveSupport::TimeWithZone
                         when_perform
                       when Time
-                        raise "Job.perform_later: use TimeWithZone (i.e. Time.zone.now instead of Time.now etc)"
+                        fail 'Job.perform_later: use TimeWithZone (i.e. Time.zone.now instead of Time.now etc)'
                       else
-                        raise "Job.perform_later: Unknown first argument, must be number of seconds or time with zone - was #{when_perform} (#{when_perform.class})"
+                        fail "Job.perform_later: Unknown first argument, must be number of seconds or time with zone - was #{when_perform} (#{when_perform.class})"
                       end
     performing_time
   end
 
   def self.jobs_to_be_not_invoked_immediately
-    ["OrderExpiryJob", "OrderMarkAsArchivedJob",  "ReservationExpiryJob", "RecurringBookingExpiryJob", "PaymentConfirmationExpiryJob", "ReservationMarkAsArchivedJob"]
+    %w(OrderExpiryJob OrderMarkAsArchivedJob ReservationExpiryJob RecurringBookingExpiryJob PaymentConfirmationExpiryJob ReservationMarkAsArchivedJob)
   end
 
   private
@@ -125,10 +124,10 @@ class Job
   end
 
   def self.get_priority
-    self.respond_to?(:priority) ? self.priority : 20
+    self.respond_to?(:priority) ? priority : 20
   end
 
   def self.get_queue
-    self.respond_to?(:queue) ? self.queue : 'default'
+    self.respond_to?(:queue) ? queue : 'default'
   end
 end

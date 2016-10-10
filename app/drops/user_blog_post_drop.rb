@@ -78,12 +78,11 @@ class UserBlogPostDrop < BaseDrop
   end
 
   # url for author's avatar image
-  def author_avatar_url(style=:medium)
+  def author_avatar_url(style = :medium)
     @blog_post.author_avatar.url(style)
   end
 
   def published_at
     @blog_post.decorate.published_at
   end
-
 end

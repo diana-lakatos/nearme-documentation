@@ -12,7 +12,7 @@ class DatePresenter
       if block.size == 1
         period_to_string(block.first, format)
       else
-        period_to_string(block.first, format) + " - " + period_to_string(block.last, format)
+        period_to_string(block.first, format) + ' - ' + period_to_string(block.last, format)
       end
     end
     items.join(' ; ')
@@ -27,7 +27,7 @@ class DatePresenter
       content = if block.size == 1
                   period_to_string(block.first)
                 else
-                  period_to_string(block.first) + " &ndash; " + period_to_string(block.last)
+                  period_to_string(block.first) + ' &ndash; ' + period_to_string(block.last)
                 end
       content_tag(wrapper, content.html_safe)
     end
@@ -35,15 +35,15 @@ class DatePresenter
   end
 
   def dates_in_groups
-    dates.inject([]) { |groups, datetime|
+    dates.inject([]) do |groups, datetime|
       date = datetime.to_date
-      if groups.last && ((groups.last.last+1.day) == date)
+      if groups.last && ((groups.last.last + 1.day) == date)
         groups.last << date
       else
         groups << [date]
       end
       groups
-    }
+    end
   end
 
   def period_to_string(date, format = :long)
@@ -59,13 +59,11 @@ class DatePresenter
   end
 
   def nights_in_words
-    days_count = dates_in_groups.map{|group| group.many? ? group.size - 1 : group.size }.sum
+    days_count = dates_in_groups.map { |group| group.many? ? group.size - 1 : group.size }.sum
     I18n.t('night', count: days_count).titleize
   end
 
   def days
     @dates_count ||= dates.count
   end
-
 end
-

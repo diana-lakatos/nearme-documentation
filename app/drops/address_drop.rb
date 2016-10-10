@@ -1,5 +1,4 @@
 class AddressDrop < BaseDrop
-
   attr_reader :address_object
 
   # street

@@ -15,15 +15,14 @@ class CustomAttributeDrop < BaseDrop
   end
 
   def input_html_options
-    @custom_attribute.input_html_options.map do |k,v|
+    @custom_attribute.input_html_options.map do |k, v|
       "#{k}=#{v}"
     end.join(' ')
   end
 
   def wrapper_html_options
-    @custom_attribute.wrapper_html_options.map do |k,v|
+    @custom_attribute.wrapper_html_options.map do |k, v|
       "#{k}=#{v}"
     end.join(' ')
   end
-
 end

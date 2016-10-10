@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class SellerAttachmentTest < ActiveSupport::TestCase
-
   setup do
     @attachment = FactoryGirl.create(:seller_attachment, access_level: 'users')
     @instance = @attachment.instance
@@ -9,7 +8,6 @@ class SellerAttachmentTest < ActiveSupport::TestCase
   end
 
   context '#access_level' do
-
     should 'return none if seller attachments disabled for instance' do
       @instance.update_column :seller_attachments_access_level, 'disabled'
       assert_equal 'disabled', @attachment.reload.access_level
@@ -26,7 +24,6 @@ class SellerAttachmentTest < ActiveSupport::TestCase
   end
 
   context '#set_initial_access_level' do
-
     should 'set to instance access level unless it is not set to sellers_preference' do
       @instance.update_column :seller_attachments_access_level, 'users'
       @attachment.set_initial_access_level
@@ -68,7 +65,6 @@ class SellerAttachmentTest < ActiveSupport::TestCase
       end
 
       should 'be accessible if user has reservation' do
-
         @order = FactoryGirl.create(:future_confirmed_reservation, user: @user)
         @order.transactables.first.attachments << @attachment
 
@@ -97,9 +93,8 @@ class SellerAttachmentTest < ActiveSupport::TestCase
       10.times { FactoryGirl.create(:seller_attachment, user: @user, instance: @instance, assetable: transactable) }
       attachment = FactoryGirl.build(:seller_attachment, user: @user, instance: @instance, assetable: transactable)
       refute attachment.valid?
-      assert attachment.errors.has_key?(:base)
+      assert attachment.errors.key?(:base)
       assert_equal I18n.t('seller_attachments.max_num_reached'), attachment.errors[:base][0]
     end
   end
-
 end

@@ -22,6 +22,4 @@ class BreadcrumbsList
 
     breadcrumbs.join(' > ').html_safe
   end
-
 end
-

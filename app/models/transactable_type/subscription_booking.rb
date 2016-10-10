@@ -1,5 +1,4 @@
 class TransactableType::SubscriptionBooking < TransactableType::ActionType
-
   validates :pricings, presence: true, if: :enabled?
   validates_associated :pricings
 
@@ -14,5 +13,4 @@ class TransactableType::SubscriptionBooking < TransactableType::ActionType
   def related_order_class
     'RecurringBooking'
   end
-
 end

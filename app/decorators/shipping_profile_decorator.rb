@@ -13,9 +13,8 @@ class ShippingProfileDecorator < Draper::Decorator
       [
         displayed_name.join(' - '),
         sr.id,
-        { data: { use_shippo: sr.use_shippo_for_price, is_pickup: sr.is_pickup }}
+        { data: { use_shippo: sr.use_shippo_for_price, is_pickup: sr.is_pickup } }
       ]
     end
   end
-
 end

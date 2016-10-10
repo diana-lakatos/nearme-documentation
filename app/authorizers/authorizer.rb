@@ -1,5 +1,4 @@
 class Authorizer
-
   def initialize(user)
     @user = user
   end
@@ -21,5 +20,4 @@ class Authorizer
   def instance_admin_role
     @instance_admin_role ||= instance_admin.try(:instance_admin_role)
   end
-
 end

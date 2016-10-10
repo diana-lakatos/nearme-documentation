@@ -7,7 +7,6 @@ require Rails.root.join('app', 'serializers', 'reservation_serializer.rb')
 # This test is now divided into context based on reservation state:
 # If you want to add new test please do so in correct section unless it does not fit to any
 
-
 class ReservationTest < ActiveSupport::TestCase
   include ReservationsHelper
 
@@ -16,7 +15,7 @@ class ReservationTest < ActiveSupport::TestCase
   should have_many(:periods)
   should have_one(:payment)
 
-  context "State test: " do
+  context 'State test: ' do
     setup do
       stub_active_merchant_interaction
     end
@@ -40,7 +39,7 @@ class ReservationTest < ActiveSupport::TestCase
         assert_equal 0, @reservation.payment.cancellation_policy_hours_for_cancellation
         assert_equal 0, @reservation.payment.cancellation_policy_penalty_percentage
 
-        @reservation.attributes = {cancellation_policy_hours_for_cancellation: 47, cancellation_policy_penalty_percentage: 60 }
+        @reservation.attributes = { cancellation_policy_hours_for_cancellation: 47, cancellation_policy_penalty_percentage: 60 }
         @reservation.payment_attributes = {}
         assert_equal 47, @reservation.payment.cancellation_policy_hours_for_cancellation
         assert_equal 60, @reservation.payment.cancellation_policy_penalty_percentage
@@ -62,7 +61,7 @@ class ReservationTest < ActiveSupport::TestCase
         OrderExpiryJob.expects(:perform_later).never
       end
 
-      should "be free if total zero" do
+      should 'be free if total zero' do
         Reservation::DailyPriceCalculator.any_instance.stubs(:price).returns(0.to_money).at_least(1)
         @reservation.save
         assert @reservation.is_free?
@@ -125,7 +124,7 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should 'not confirm when capture fails' do
-        stub_active_merchant_interaction({ success?: false })
+        stub_active_merchant_interaction(success?: false)
         @reservation.charge_and_confirm!
         refute @reservation.payment.reload.paid?
         refute @reservation.confirmed?
@@ -189,13 +188,13 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should 'schedule next refund attempt on fail' do
-        stub_active_merchant_interaction({success?: false, message: "fail"})
+        stub_active_merchant_interaction(success?: false, message: 'fail')
         @reservation.host_cancel!
         assert @reservation.payment.reload.paid?
       end
 
       should 'not be cancelable if at least one period has past' do
-        @reservation.add_period((Time.zone.today-2.day))
+        @reservation.add_period((Time.zone.today - 2.day))
         @reservation.save!
         refute @reservation.cancelable
       end
@@ -213,7 +212,6 @@ class ReservationTest < ActiveSupport::TestCase
       should 'not be cancelable if user canceled' do
         refute @reservation.cancelable
       end
-
     end
 
     context 'cancelled by host reservation' do
@@ -228,7 +226,6 @@ class ReservationTest < ActiveSupport::TestCase
       should 'not be cancelable when owner canceled' do
         refute @reservation.cancelable
       end
-
     end
   end
 
@@ -236,18 +233,18 @@ class ReservationTest < ActiveSupport::TestCase
     should 'should properly cast time zones' do
       Time.use_zone 'Hawaii' do
         FactoryGirl.create(:unconfirmed_reservation)
-        assert_equal 1, Reservation.where("created_at < ? ", Time.now).count
-        assert_equal 1, Reservation.where(["created_at < ?", Time.current]).count
-        assert_equal 1, Reservation.where(["created_at < ?", Time.zone.now]).count
+        assert_equal 1, Reservation.where('created_at < ? ', Time.now).count
+        assert_equal 1, Reservation.where(['created_at < ?', Time.current]).count
+        assert_equal 1, Reservation.where(['created_at < ?', Time.zone.now]).count
       end
 
       Reservation.destroy_all
 
       Time.use_zone 'Sydney' do
         FactoryGirl.create(:unconfirmed_reservation)
-        assert_equal 1, Reservation.where(["created_at < ?", Time.now]).count
-        assert_equal 1, Reservation.where(["created_at < ?", Time.current]).count
-        assert_equal 1, Reservation.where(["created_at < ?", Time.zone.now]).count
+        assert_equal 1, Reservation.where(['created_at < ?', Time.now]).count
+        assert_equal 1, Reservation.where(['created_at < ?', Time.current]).count
+        assert_equal 1, Reservation.where(['created_at < ?', Time.zone.now]).count
       end
     end
   end
@@ -260,7 +257,7 @@ class ReservationTest < ActiveSupport::TestCase
     should 'copy instance waiver agreement template details if available' do
       @waiver_agreement_template_instance = FactoryGirl.create(:waiver_agreement_template)
       assert_difference 'WaiverAgreement.count' do
-        @reservation.waiver_agreement_templates = { @waiver_agreement_template_instance.id.to_s => "1" }
+        @reservation.waiver_agreement_templates = { @waiver_agreement_template_instance.id.to_s => '1' }
         @reservation.save!
       end
       waiver_agreement = @reservation.waiver_agreements.first
@@ -274,7 +271,7 @@ class ReservationTest < ActiveSupport::TestCase
       @waiver_agreement_template_instance = FactoryGirl.create(:waiver_agreement_template)
       @waiver_agreement_template_company = FactoryGirl.create(:waiver_agreement_template, target: @reservation.company)
       assert_difference 'WaiverAgreement.count' do
-        @reservation.waiver_agreement_templates = { @waiver_agreement_template_instance.id.to_s => "1" , @waiver_agreement_template_company.id.to_s => "1" , }
+        @reservation.waiver_agreement_templates = { @waiver_agreement_template_instance.id.to_s => '1', @waiver_agreement_template_company.id.to_s => '1' }
         @reservation.save!
       end
       assert_equal @waiver_agreement_template_instance.name, @reservation.waiver_agreements.first.name
@@ -285,7 +282,7 @@ class ReservationTest < ActiveSupport::TestCase
       @waiver_agreement_template_company = FactoryGirl.create(:waiver_agreement_template, target: @reservation.company)
       @reservation.location.waiver_agreement_templates << @waiver_agreement_template_company
       assert_difference 'WaiverAgreement.count' do
-        @reservation.waiver_agreement_templates = { @waiver_agreement_template_company.id.to_s => "1"}
+        @reservation.waiver_agreement_templates = { @waiver_agreement_template_company.id.to_s => '1' }
         @reservation.save!
       end
       assert_equal @waiver_agreement_template_company.name, @reservation.waiver_agreements.first.name
@@ -299,8 +296,8 @@ class ReservationTest < ActiveSupport::TestCase
       @reservation.transactable.waiver_agreement_templates << @waiver_agreement_template_company2
       assert_difference 'WaiverAgreement.count', 2 do
         @reservation.waiver_agreement_templates = {
-          @waiver_agreement_template_company.id.to_s => "1" ,
-          @waiver_agreement_template_company2.id.to_s => "1"
+          @waiver_agreement_template_company.id.to_s => '1',
+          @waiver_agreement_template_company2.id.to_s => '1'
         }
         @reservation.save!
       end
@@ -308,8 +305,8 @@ class ReservationTest < ActiveSupport::TestCase
     end
   end
 
-  context "with serialization" do
-    should "work even if the total amount is nil" do
+  context 'with serialization' do
+    should 'work even if the total amount is nil' do
       reservation = Reservation.new state: 'unconfirmed'
       reservation.transactable = FactoryGirl.create(:transactable)
       reservation.transactable_pricing = reservation.transactable.action_type.pricings.first
@@ -320,12 +317,12 @@ class ReservationTest < ActiveSupport::TestCase
 
       expected = {
         reservation: {
-          id:nil,
+          id: nil,
           user_id: nil,
           listing_id: reservation.transactable.id,
-          state: "pending",
+          state: 'pending',
           cancelable: true,
-          total_cost: { amount: 0.0, label: "$0.00", currency_code: "USD" },
+          total_cost: { amount: 0.0, label: '$0.00', currency_code: 'USD' },
           times: []
         }
       }
@@ -337,7 +334,7 @@ class ReservationTest < ActiveSupport::TestCase
   context 'foreign keys' do
     setup do
       @transactable = FactoryGirl.create(:transactable)
-      @reservation = FactoryGirl.create(:reservation, :transactable => @transactable, company_id: nil)
+      @reservation = FactoryGirl.create(:reservation, transactable: @transactable, company_id: nil)
     end
 
     should 'assign correct key immediately' do
@@ -355,7 +352,6 @@ class ReservationTest < ActiveSupport::TestCase
     should 'assign correct company_id' do
       assert_equal @transactable.company_id, @reservation.company_id
     end
-
   end
 
   context 'validations' do
@@ -366,13 +362,13 @@ class ReservationTest < ActiveSupport::TestCase
       @transactable.action_type.availability_template = AvailabilityTemplate.first
       @transactable.save!
 
-      @reservation = Reservation.new(:user => @user, :quantity => 1, transactable: @transactable, transactable_pricing: @transactable.action_type.pricings.first)
+      @reservation = Reservation.new(user: @user, quantity: 1, transactable: @transactable, transactable_pricing: @transactable.action_type.pricings.first)
       @sunday = Time.zone.today.end_of_week
       @monday = Time.zone.today.next_week.beginning_of_week
     end
 
     context 'date availability' do
-      should "validate date quantity available" do
+      should 'validate date quantity available' do
         @reservation.add_period(@monday)
         assert @reservation.valid?
         @reservation.quantity = 1113
@@ -380,7 +376,7 @@ class ReservationTest < ActiveSupport::TestCase
         refute @reservation.errors.empty?
       end
 
-      should "validate date available" do
+      should 'validate date available' do
         assert @transactable.open_on?(@monday)
         refute @transactable.open_on?(@sunday)
 
@@ -392,7 +388,7 @@ class ReservationTest < ActiveSupport::TestCase
         refute @reservation.errors.blank?
       end
 
-      should "validate against other reservations" do
+      should 'validate against other reservations' do
         first_reservation = FactoryGirl.create(:confirmed_reservation, transactable: @transactable)
         first_reservation.add_period(@monday)
         first_reservation.save!
@@ -405,23 +401,22 @@ class ReservationTest < ActiveSupport::TestCase
 
     context 'minimum contiguous block requirement' do
       setup do
-
         @transactable.action_type.day_pricings.first.update!(number_of_units: 5)
         assert_equal 5, @transactable.action_type.minimum_booking_days
       end
 
-      should "require minimum days" do
+      should 'require minimum days' do
         4.times do |i|
           @reservation.add_period(@monday + i)
         end
 
         refute @reservation.valid?
 
-        @reservation.add_period(@monday+4)
+        @reservation.add_period(@monday + 4)
         assert @reservation.valid?
       end
 
-      should "test all blocks" do
+      should 'test all blocks' do
         5.times do |i|
           @reservation.add_period(@monday + i)
         end
@@ -433,14 +428,14 @@ class ReservationTest < ActiveSupport::TestCase
 
         refute @reservation.valid?
 
-        @reservation.add_period(@monday+ 4 + 14)
+        @reservation.add_period(@monday + 4 + 14)
         assert @reservation.valid?
       end
     end
   end
 
-  context "with reservation pricing" do
-    context "daily priced transactable" do
+  context 'with reservation pricing' do
+    context 'daily priced transactable' do
       setup do
         FactoryGirl.create(:manual_payment_method)
 
@@ -449,12 +444,12 @@ class ReservationTest < ActiveSupport::TestCase
         @reservation = FactoryGirl.build(:reservation, user: @user, owner: @user, transactable: @transactable, transactable_pricing: @transactable.action_type.pricings.first)
       end
 
-      should "set total, subtotal and service fee cost after creating a new reservation" do
-        dates              = [Time.zone.today, Date.tomorrow, Time.zone.today + 5, Time.zone.today + 6].map { |d|
+      should 'set total, subtotal and service fee cost after creating a new reservation' do
+        dates              = [Time.zone.today, Date.tomorrow, Time.zone.today + 5, Time.zone.today + 6].map do |d|
           d += 1 if d.wday == 6
           d += 1 if d.wday == 0
           d
-        }
+        end
         quantity           =  5
 
         reservation = @transactable.reservations.build(
@@ -472,12 +467,10 @@ class ReservationTest < ActiveSupport::TestCase
         assert_equal reservation.subtotal_amount_cents * 0.1, reservation.service_fee_amount_guest.cents
         assert_equal reservation.subtotal_amount_cents * 0.1, reservation.service_fee_amount_host.cents
         assert_equal reservation.subtotal_amount_cents + reservation.service_fee_amount_guest_cents, reservation.total_amount.cents
-
       end
 
-      should "not reset total cost when saving an existing reservation" do
-
-        WorkflowStepJob.expects(:perform).with do |klass, id|
+      should 'not reset total cost when saving an existing reservation' do
+        WorkflowStepJob.expects(:perform).with do |klass, _id|
           klass == WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation
         end
 
@@ -487,14 +480,13 @@ class ReservationTest < ActiveSupport::TestCase
 
         assert_not_nil reservation.total_amount_cents
 
-        assert_no_difference "reservation.total_amount_cents" do
-          reservation.confirmation_email = "joe@cuppa.com"
+        assert_no_difference 'reservation.total_amount_cents' do
+          reservation.confirmation_email = 'joe@cuppa.com'
           reservation.save
         end
-
       end
 
-      should "raise an exception if we try to reserve more desks than are available" do
+      should 'raise an exception if we try to reserve more desks than are available' do
         dates    = [Time.zone.today]
         quantity = 11
 
@@ -505,7 +497,7 @@ class ReservationTest < ActiveSupport::TestCase
         end
       end
 
-      should "charge a service fee to credit card paid reservations" do
+      should 'charge a service fee to credit card paid reservations' do
         reservation = @transactable.reservations.build(
           user: @user,
           owner: @user,
@@ -519,7 +511,7 @@ class ReservationTest < ActiveSupport::TestCase
         assert_not_equal 0, reservation.service_fee_amount_host.cents
       end
 
-      should "charge a service fee to manual payment reservations" do
+      should 'charge a service fee to manual payment reservations' do
         reservation = @transactable.reservations.build(
           user: @user,
           owner: @user,
@@ -545,14 +537,14 @@ class ReservationTest < ActiveSupport::TestCase
       end
     end
 
-    context "hourly priced transactable" do
+    context 'hourly priced transactable' do
       setup do
         @transactable = FactoryGirl.create(:transactable, quantity: 10)
         @reservation = FactoryGirl.create(:confirmed_hour_reservation, transactable: @transactable)
       end
 
-      should "set total cost based on HourlyPriceCalculator" do
-        @reservation.periods.build date: Time.zone.today.advance(weeks: 1).beginning_of_week, start_minute: 9*60, end_minute: 12*60
+      should 'set total cost based on HourlyPriceCalculator' do
+        @reservation.periods.build date: Time.zone.today.advance(weeks: 1).beginning_of_week, start_minute: 9 * 60, end_minute: 12 * 60
         @reservation.reload
         assert_equal Reservation::HourlyPriceCalculator.new(@reservation).price.cents * @reservation.quantity +
           @reservation.service_fee_amount_guest.cents, @reservation.total_amount.cents
@@ -560,4 +552,3 @@ class ReservationTest < ActiveSupport::TestCase
     end
   end
 end
-

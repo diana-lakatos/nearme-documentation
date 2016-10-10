@@ -1,7 +1,7 @@
 namespace :after_deploy do
   desc 'Runs required tasks after deployment'
-  task :run => [:environment] do
-    puts "Clearing cache"
+  task run: [:environment] do
+    puts 'Clearing cache'
     Rails.cache.clear
     RedisCache.clear
 
@@ -14,10 +14,10 @@ namespace :after_deploy do
       raise e if Rails.application.config.use_elastic_search
     end
 
-    puts "Removing all jobs from queue recurring-jobs"
-    Delayed::Job.where(queue: "recurring-jobs").delete_all
+    puts 'Removing all jobs from queue recurring-jobs'
+    Delayed::Job.where(queue: 'recurring-jobs').delete_all
 
-    puts "Re-creating jobs for queue recurring-jobs"
+    puts 'Re-creating jobs for queue recurring-jobs'
     # and queuing them again
     ScrapeSupportEmails.schedule!
     SchedulePaymentTransfers.schedule!
@@ -31,15 +31,13 @@ namespace :after_deploy do
     ScheduleCommunityAggregatesCreation.schedule!
     ScheduleSitemapsRefresh.schedule!
 
-    puts "Creating default locales"
+    puts 'Creating default locales'
     Utils::EnLocalesSeeder.new.go!
 
-    puts "Notifying Raygun about deployment"
+    puts 'Notifying Raygun about deployment'
     RaygunDeployNotifier.send!
 
-    puts "Refreshing themes"
+    puts 'Refreshing themes'
     Theme.refresh_all!
   end
-
 end
-

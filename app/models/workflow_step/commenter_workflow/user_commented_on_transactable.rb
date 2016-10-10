@@ -1,5 +1,4 @@
 class WorkflowStep::CommenterWorkflow::UserCommentedOnTransactable < WorkflowStep::CommenterWorkflow::BaseStep
-
   def lister
     @commentable.creator
   end
@@ -15,5 +14,4 @@ class WorkflowStep::CommenterWorkflow::UserCommentedOnTransactable < WorkflowSte
       transactable: @commentable
     }
   end
-
 end

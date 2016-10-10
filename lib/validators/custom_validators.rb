@@ -8,7 +8,7 @@ class CustomValidators < ActiveModel::Validator
       if validator.validation_rules.present?
         validator.validation_rules.each do |validation_rule_type, validation_rule_options|
           validation_rule_options ||= {}
-          name = validation_rule_options.fetch("redirect", validator.field_name)
+          name = validation_rule_options.fetch('redirect', validator.field_name)
           options = ({ attributes: name }.merge(validation_rule_options)).symbolize_keys
 
           klass = case validation_rule_type.to_sym
@@ -21,7 +21,7 @@ class CustomValidators < ActiveModel::Validator
                   when :length
                     ActiveModel::Validations::LengthValidator
                   else
-                    raise "Unknown validation type: #{validation_rule_type}"
+                    fail "Unknown validation type: #{validation_rule_type}"
                   end
           klass.new(options).validate(record)
         end
@@ -38,6 +38,4 @@ class CustomValidators < ActiveModel::Validator
       end
     end
   end
-
 end
-

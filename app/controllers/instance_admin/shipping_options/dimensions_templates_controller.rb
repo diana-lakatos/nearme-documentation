@@ -56,5 +56,4 @@ class InstanceAdmin::ShippingOptions::DimensionsTemplatesController < InstanceAd
   def template_params
     params.require(:dimensions_template).permit(secured_params.dimensions_template)
   end
-
 end

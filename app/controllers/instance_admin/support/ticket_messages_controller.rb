@@ -19,7 +19,7 @@ class InstanceAdmin::Support::TicketMessagesController < InstanceAdmin::Manage::
       end
     end
 
-    redirect_to [:instance_admin,ticket]
+    redirect_to [:instance_admin, ticket]
   end
 
   private
@@ -33,10 +33,10 @@ class InstanceAdmin::Support::TicketMessagesController < InstanceAdmin::Manage::
   end
 
   def close?
-    params[:commit] == "Update and Resolve"
+    params[:commit] == 'Update and Resolve'
   end
 
   def support_ticket_message_params
-     params.fetch(:support_ticket_message, {}).permit(secured_params.support_message)
+    params.fetch(:support_ticket_message, {}).permit(secured_params.support_message)
   end
 end

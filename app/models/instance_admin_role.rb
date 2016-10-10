@@ -1,8 +1,8 @@
 class InstanceAdminRole < ActiveRecord::Base
   has_paper_trail
-  has_metadata :without_db_column => true
-  auto_set_platform_context :allow_nil => [:instance_id]
-  scoped_to_platform_context :allow_nil => true
+  has_metadata without_db_column: true
+  auto_set_platform_context allow_nil: [:instance_id]
+  scoped_to_platform_context allow_nil: true
 
   PERMISSIONS = %w(Analytics Settings Theme Manage Blog Support BuySell ShippingOptions Reports Projects Groups)
 
@@ -10,18 +10,18 @@ class InstanceAdminRole < ActiveRecord::Base
   belongs_to :instance
 
   validates_presence_of :name
-  validates_uniqueness_of :name, :scope => :instance_id
+  validates_uniqueness_of :name, scope: :instance_id
 
   after_destroy :assign_default_role_to_instance_admins
 
-  default_scope -> { order("name ASC") }
+  default_scope -> { order('name ASC') }
 
   def self.administrator_role
-    self.find_by_name_and_instance_id('Administrator', nil)
+    find_by_name_and_instance_id('Administrator', nil)
   end
 
   def self.default_role
-    self.find_by_name_and_instance_id('Default', nil)
+    find_by_name_and_instance_id('Default', nil)
   end
 
   def assign_default_role_to_instance_admins
@@ -32,7 +32,6 @@ class InstanceAdminRole < ActiveRecord::Base
   end
 
   def first_permission_have_access_to
-    PERMISSIONS.find { |p| self.send("permission_#{p.downcase}") }.try(:downcase)
+    PERMISSIONS.find { |p| send("permission_#{p.downcase}") }.try(:downcase)
   end
-
 end

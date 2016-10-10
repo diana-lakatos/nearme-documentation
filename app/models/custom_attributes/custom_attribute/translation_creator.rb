@@ -1,6 +1,5 @@
 module CustomAttributes
   class CustomAttribute::TranslationCreator
-
     def initialize(custom_attribute)
       @custom_attribute = custom_attribute
       @key_value_translations = {}
@@ -92,6 +91,5 @@ module CustomAttributes
     def should_create_translations?
       true
     end
-
   end
 end

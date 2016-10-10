@@ -3,7 +3,7 @@ module SimpleForm
     # Needs to be enabled in order to do automatic lookups
     module Addons
       # Name of the component method
-      def prefix(wrapper_options = nil)
+      def prefix(_wrapper_options = nil)
         @prefix ||= begin
           options[:prefix].to_s.html_safe if options[:prefix].present?
         end
@@ -13,7 +13,7 @@ module SimpleForm
         prefix.present?
       end
 
-      def suffix(wrapper_options = nil)
+      def suffix(_wrapper_options = nil)
         @suffix ||= begin
           options[:suffix].to_s.html_safe if options[:suffix].present?
         end

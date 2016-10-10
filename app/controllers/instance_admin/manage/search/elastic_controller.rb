@@ -40,5 +40,4 @@ class InstanceAdmin::Manage::Search::ElasticController < InstanceAdmin::Manage::
   def find_instance
     @instance = platform_context.instance
   end
-
 end

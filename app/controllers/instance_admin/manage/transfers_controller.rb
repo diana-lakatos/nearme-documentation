@@ -1,11 +1,10 @@
 class InstanceAdmin::Manage::TransfersController < InstanceAdmin::Manage::BaseController
-
   skip_before_filter :check_if_locked
-  defaults :resource_class => PaymentTransfer, :collection_name => 'transfers', :instance_name => 'transfer'
+  defaults resource_class: PaymentTransfer, collection_name: 'transfers', instance_name: 'transfer'
 
   def index
     transfers_scope = PaymentTransfer.includes(:payout_attempts).order('created_at DESC')
-    @payment_transfers = PaymentTransferDecorator.decorate_collection(transfers_scope.paginate(:page => params[:page]))
+    @payment_transfers = PaymentTransferDecorator.decorate_collection(transfers_scope.paginate(page: params[:page]))
   end
 
   def not_failed
@@ -61,6 +60,6 @@ class InstanceAdmin::Manage::TransfersController < InstanceAdmin::Manage::BaseCo
   end
 
   def collection
-    @transfers ||= end_of_association_chain.order("created_at DESC").paginate(:page => params[:page])
+    @transfers ||= end_of_association_chain.order('created_at DESC').paginate(page: params[:page])
   end
 end

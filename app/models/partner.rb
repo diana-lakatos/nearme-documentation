@@ -3,7 +3,7 @@ class Partner < ActiveRecord::Base
   auto_set_platform_context
 
   has_paper_trail
-  AVAILABLE_SEARCH_SCOPE_OPTIONS = {'No scoping' => 'no_scoping', 'All associated listings' => 'all_associated_listings'}
+  AVAILABLE_SEARCH_SCOPE_OPTIONS = { 'No scoping' => 'no_scoping', 'All associated listings' => 'all_associated_listings' }
 
   belongs_to :instance
   has_one :domain, as: :target, dependent: :destroy

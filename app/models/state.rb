@@ -1,5 +1,4 @@
 class State < ActiveRecord::Base
-
   has_many :tax_rates
   belongs_to :country
 
@@ -13,6 +12,4 @@ class State < ActiveRecord::Base
   def full_name
     "#{name} (#{abbr})"
   end
-
 end
-

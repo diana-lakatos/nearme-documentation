@@ -1,5 +1,4 @@
 class DataImporter::Synchronizer
-
   attr_accessor :company
 
   def performing_real_operations?
@@ -27,4 +26,3 @@ class DataImporter::Synchronizer
     object.update_column(:mark_to_be_bulk_update_deleted, false) if object.persisted?
   end
 end
-

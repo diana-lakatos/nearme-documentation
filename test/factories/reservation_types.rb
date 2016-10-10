@@ -1,5 +1,4 @@
 FactoryGirl.define do
-
   factory :reservation_type do
     sequence(:name) { |n| "Reservation Type #{n}" }
 
@@ -12,5 +11,4 @@ FactoryGirl.define do
       Utils::FormComponentsCreator.new(reservation_type).create!
     end
   end
-
 end

@@ -50,10 +50,10 @@ class Registrations::BlogController < ApplicationController
 
   def get_blog_posts
     posts = if params[:tags].present?
-      @selected_tags = Tag.where(slug: params[:tags].split(",")).pluck(:name)
-      @user.published_blogs.tagged_with(@selected_tags, any: true)
-    else
-      @user.published_blogs
+              @selected_tags = Tag.where(slug: params[:tags].split(',')).pluck(:name)
+              @user.published_blogs.tagged_with(@selected_tags, any: true)
+            else
+              @user.published_blogs
     end
 
     posts.paginate(page: params[:page])

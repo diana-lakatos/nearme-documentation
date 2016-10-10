@@ -3,4 +3,3 @@ class CustomThemeAsset::ThemeImageFile < CustomThemeAsset
 
   validates_presence_of :file
 end
-

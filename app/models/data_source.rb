@@ -14,8 +14,6 @@ class DataSource < ActiveRecord::Base
   end
 
   def parse!
-    raise NotImplementedError.new('Must implement')
+    fail NotImplementedError.new('Must implement')
   end
-
 end
-

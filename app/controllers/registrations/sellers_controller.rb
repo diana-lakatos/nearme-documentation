@@ -1,5 +1,4 @@
 class Registrations::SellersController < ApplicationController
-
   def show
     @theme_name = 'buy-sell-theme'
     @user = User.find params[:user_id]
@@ -15,5 +14,4 @@ class Registrations::SellersController < ApplicationController
       @total_reviews_count = @reviews_count + @reviews_about_buyer_count + @reviews_left_by_seller_count + @reviews_left_by_buyer_count
     end
   end
-
 end

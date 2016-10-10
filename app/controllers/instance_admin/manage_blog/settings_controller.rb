@@ -1,5 +1,4 @@
 class InstanceAdmin::ManageBlog::SettingsController < InstanceAdmin::ManageBlog::BaseController
-
   def edit
   end
 

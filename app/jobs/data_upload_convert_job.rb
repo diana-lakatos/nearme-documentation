@@ -1,5 +1,4 @@
 class DataUploadConvertJob < Job
-
   include Job::LongRunning
 
   def after_initialize(data_upload_id)
@@ -16,7 +15,7 @@ class DataUploadConvertJob < Job
     @data_upload.queue!
     DataUploadImportJob.perform(@data_upload.id)
   rescue
-    @data_upload.encountered_error = "#{$!.inspect}\n\n#{$@[0..5]}"
+    @data_upload.encountered_error = "#{$ERROR_INFO.inspect}\n\n#{$ERROR_POSITION[0..5]}"
     @data_upload.failure!
   end
 
@@ -25,5 +24,4 @@ class DataUploadConvertJob < Job
   def csv_file
     @csv_file ||= DataImporter::CsvFile::TemplateCsvFile.new(@data_upload, 'Company External Id')
   end
-
 end

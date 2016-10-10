@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Settings::DocumentsUploadControllerTest < ActionController::TestCase
-
   setup do
     @user = FactoryGirl.create(:user)
     sign_in @user

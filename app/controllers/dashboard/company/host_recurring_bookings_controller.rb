@@ -35,7 +35,7 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
           flash[:warning] = t('flash_messages.manage.reservations.reservation_confirmed_but_not_charged')
         end
       else
-         flash[:error] = [
+        flash[:error] = [
           t('flash_messages.manage.reservations.reservation_not_confirmed'),
           *@recurring_booking.errors.full_messages
         ].join(' ')
@@ -62,7 +62,7 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
 
   def host_cancel
     if @recurring_booking.host_cancel
-      event_tracker.cancelled_a_recurring_booking(@recurring_booking, { actor: 'host' })
+      event_tracker.cancelled_a_recurring_booking(@recurring_booking, actor: 'host')
       track_recurring_booking_update_profile_informations
       flash[:deleted] = t('flash_messages.manage.reservations.reservation_cancelled')
     else
@@ -86,7 +86,7 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
   end
 
   def rejection_reason
-    params[:recurring_booking][:rejection_reason] if params[:recurring_booking] and params[:recurring_booking][:rejection_reason]
+    params[:recurring_booking][:rejection_reason] if params[:recurring_booking] && params[:recurring_booking][:rejection_reason]
   end
 
   def track_recurring_booking_update_profile_informations
@@ -101,6 +101,4 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
       data: { recurring_booking: @recurring_booking.id, listing: @recurring_booking.listing.id, reservation: recurring_booking.reservations.first.id }
     }
   end
-
 end
-

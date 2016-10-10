@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Manage::TransactableTypes::DataUploadsControllerTest < ActionController::TestCase
-
   setup do
     @instance = FactoryGirl.create(:instance)
     PlatformContext.current = PlatformContext.new(@instance)
@@ -14,7 +13,6 @@ class InstanceAdmin::Manage::TransactableTypes::DataUploadsControllerTest < Acti
   end
 
   context 'create' do
-
     should 'create new data upload with xml' do
       assert_difference 'DataUpload.count' do
         post :create, transactable_type_id: @transactable_type.id, data_upload: FactoryGirl.attributes_for(:data_upload)
@@ -23,7 +21,5 @@ class InstanceAdmin::Manage::TransactableTypes::DataUploadsControllerTest < Acti
       @data_upload.reload
       assert_match(/\/instances\/#{@instance.id}\/uploads\/private\/data_upload\/xml_file/, @data_upload.xml_file.path)
     end
-
   end
-
 end

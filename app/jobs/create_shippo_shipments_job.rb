@@ -1,5 +1,4 @@
 class CreateShippoShipmentsJob < Job
-
   def after_initialize(reservation_id)
     @reservation_id = reservation_id
   end
@@ -11,5 +10,4 @@ class CreateShippoShipmentsJob < Job
       WorkflowStepJob.new(PlatformContext.current.platform_context_detail.class.name, PlatformContext.current.platform_context_detail.id, WorkflowStep::ReservationWorkflow::ShippingDetails, @reservation.id).perform
     end
   end
-
 end

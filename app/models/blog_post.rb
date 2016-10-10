@@ -17,23 +17,22 @@ class BlogPost < ActiveRecord::Base
   mount_uploader :author_avatar, SimpleAvatarUploader
 
   scope :by_date, -> { order('COALESCE(published_at, created_at) DESC') }
-  scope :published, -> { where('published_at < ? OR published_at IS NULL', Time.zone.now ) }
-
+  scope :published, -> { where('published_at < ? OR published_at IS NULL', Time.zone.now) }
 
   def previous_blog_post
     @previous_blog_post ||= blog_instance.blog_posts
-                                         .published
-                                         .order('published_at DESC')
-                                         .where('published_at < ?', published_at)
-                                         .first
+                            .published
+                            .order('published_at DESC')
+                            .where('published_at < ?', published_at)
+                            .first
   end
 
   def next_blog_post
     @next_blog_post ||= blog_instance.blog_posts
-                                     .published
-                                     .order('published_at DESC')
-                                     .where('published_at > ?', published_at)
-                                     .last
+                        .published
+                        .order('published_at DESC')
+                        .where('published_at > ?', published_at)
+                        .last
   end
 
   def slug_changed?
@@ -48,7 +47,7 @@ class BlogPost < ActiveRecord::Base
   private
 
   def sanitize_content
-    self.content = nil if self.content.to_s.gsub(/<\/?[^>]*>/, "").empty?
+    self.content = nil if content.to_s.gsub(/<\/?[^>]*>/, '').empty?
   end
 
   def should_generate_new_friendly_id?
@@ -59,7 +58,7 @@ class BlogPost < ActiveRecord::Base
     [
       :title,
       [:title, self.class.last.try(:id).to_i + 1],
-      [:title, rand(1000000)]
+      [:title, rand(1_000_000)]
     ]
   end
 end

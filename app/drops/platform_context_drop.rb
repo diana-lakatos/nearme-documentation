@@ -1,5 +1,4 @@
 class PlatformContextDrop < BaseDrop
-
   attr_reader :platform_context_decorator
 
   # name
@@ -83,15 +82,14 @@ class PlatformContextDrop < BaseDrop
   # split_registration?
   #   Whether split registration is enabled for the instance
   delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :facebook_url, :twitter_url, :gplus_url,
-    :instagram_url, :youtube_url, :rss_url, :linkedin_url, :lessor, :lessors,
-    :lessee, :lessees, :search_by_keyword_placeholder, :address, :phone_number, :phone_number_noformat,
-    :site_name, :support_url, :support_email, :logo_image, :hero_image, :tagline, :homepage_content,
-    :is_company_theme?, :call_to_action, :projectable?, :bookable?, :transactable_types, :action_rfq?,
-    :bookable_nouns, :bookable_nouns_plural, :search_input_name, :facebook_key, :service_types,
-    :wish_lists_icon_set, :seller_attachments_enabled?, :wish_lists_enabled?,
-    :active_rating_systems_present?, :webhook_token, :instance, :enable_geo_localization, :split_registration?,
-    :enquirer_blogs_enabled, :lister_blogs_enabled, to: :platform_context_decorator
-
+           :instagram_url, :youtube_url, :rss_url, :linkedin_url, :lessor, :lessors,
+           :lessee, :lessees, :search_by_keyword_placeholder, :address, :phone_number, :phone_number_noformat,
+           :site_name, :support_url, :support_email, :logo_image, :hero_image, :tagline, :homepage_content,
+           :is_company_theme?, :call_to_action, :projectable?, :bookable?, :transactable_types, :action_rfq?,
+           :bookable_nouns, :bookable_nouns_plural, :search_input_name, :facebook_key, :service_types,
+           :wish_lists_icon_set, :seller_attachments_enabled?, :wish_lists_enabled?,
+           :active_rating_systems_present?, :webhook_token, :instance, :enable_geo_localization, :split_registration?,
+           :enquirer_blogs_enabled, :lister_blogs_enabled, to: :platform_context_decorator
 
   def initialize(platform_context_decorator)
     @platform_context_decorator = platform_context_decorator
@@ -110,12 +108,12 @@ class PlatformContextDrop < BaseDrop
 
   # url to the hero image
   def hero_url
-    @platform_context_decorator.hero_image.url || image_url("intel/hero-a-bg-a.jpg").to_s
+    @platform_context_decorator.hero_image.url || image_url('intel/hero-a-bg-a.jpg').to_s
   end
 
   # url to the "checked badge" image
   def checked_badge_url
-    image_url("themes/buy_sell/check.png")
+    image_url('themes/buy_sell/check.png')
   end
 
   # root path for this marketplace
@@ -193,5 +191,4 @@ class PlatformContextDrop < BaseDrop
   def theme_color(color)
     @platform_context_decorator.theme.hex_color(color).presence || Theme.hexify(Theme.default_value_for_color(color))
   end
-
 end

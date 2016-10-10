@@ -34,7 +34,7 @@ class InstanceAdmin::Settings::BaseController < InstanceAdmin::BaseController
   end
 
   def find_or_build_billing_gateway_for_usd
-    InstanceBillingGateway.find{|bg| bg.currency == 'USD'} || @instance.instance_billing_gateways.build(currency: 'USD')
+    InstanceBillingGateway.find { |bg| bg.currency == 'USD' } || @instance.instance_billing_gateways.build(currency: 'USD')
   end
 
   def find_instance
@@ -49,4 +49,3 @@ class InstanceAdmin::Settings::BaseController < InstanceAdmin::BaseController
     params.require(:instance).permit(secured_params.instance)
   end
 end
-

@@ -1,11 +1,10 @@
 require 'test_helper'
 
 class Listings::OrdersControllerTest < ActionController::TestCase
-
   setup do
     @transactable = FactoryGirl.create(:listing_in_san_francisco)
 
-    @user = FactoryGirl.create(:user, name: "Example LastName")
+    @user = FactoryGirl.create(:user, name: 'Example LastName')
     sign_in @user
 
     @payment_gateway = stub_billing_gateway(@transactable.instance)
@@ -13,16 +12,13 @@ class Listings::OrdersControllerTest < ActionController::TestCase
     stub_active_merchant_interaction
 
     Instance.any_instance.stubs(:use_cart?).returns(false)
-
   end
 
   context 'cancellation policy' do
     setup do
-      TransactableType::ActionType.update_all({
-        cancellation_policy_enabled: Time.zone.now,
-        cancellation_policy_hours_for_cancellation: 24,
-        cancellation_policy_penalty_percentage: 60
-      })
+      TransactableType::ActionType.update_all(cancellation_policy_enabled: Time.zone.now,
+                                              cancellation_policy_hours_for_cancellation: 24,
+                                              cancellation_policy_penalty_percentage: 60)
     end
 
     should 'store cancellation policy details if enabled' do
@@ -49,7 +45,6 @@ class Listings::OrdersControllerTest < ActionController::TestCase
         end
       end
     end
-
   end
 
   context 'Book It Out' do
@@ -57,8 +52,7 @@ class Listings::OrdersControllerTest < ActionController::TestCase
       @transactable = FactoryGirl.create(:transactable, :fixed_price)
       @params = order_params_for(@transactable)
       next_available_occurrence = @transactable.next_available_occurrences.first[:id].to_i
-      @params[:order].merge!({book_it_out: "true", dates: next_available_occurrence, quantity: 10})
-
+      @params[:order].merge!(book_it_out: 'true', dates: next_available_occurrence, quantity: 10)
     end
 
     should 'create reservation with discount' do
@@ -66,11 +60,11 @@ class Listings::OrdersControllerTest < ActionController::TestCase
       reservation = Reservation.last
       assert_redirected_to order_checkout_path(Reservation.last)
       assert_equal reservation.book_it_out_discount, @transactable.action_type.pricing.book_it_out_discount
-      assert_equal reservation.subtotal_amount, @transactable.quantity * @transactable.action_type.pricing.price * ( 1 - @transactable.action_type.pricing.book_it_out_discount / 100.to_f)
+      assert_equal reservation.subtotal_amount, @transactable.quantity * @transactable.action_type.pricing.price * (1 - @transactable.action_type.pricing.book_it_out_discount / 100.to_f)
     end
 
     should 'not create reservation with discount and wrong quantity' do
-      @params[:order].merge!({quantity: 7})
+      @params[:order].merge!(quantity: 7)
 
       post :create, @params
       assert_redirected_to @transactable.decorate.show_path
@@ -85,7 +79,6 @@ class Listings::OrdersControllerTest < ActionController::TestCase
       assert_response 302
       assert assigns(:order).errors.full_messages.include?(I18n.t('reservations_review.errors.book_it_out_not_available'))
     end
-
   end
 
   context 'Exclusive Price' do
@@ -93,8 +86,7 @@ class Listings::OrdersControllerTest < ActionController::TestCase
       @transactable = FactoryGirl.create(:transactable, :fixed_price)
       @params = order_params_for(@transactable)
       next_available_occurrence = @transactable.next_available_occurrences.first[:id].to_i
-      @params[:order].merge!({ dates: next_available_occurrence, quantity: 10, exclusive_price: "true" })
-
+      @params[:order].merge!(dates: next_available_occurrence, quantity: 10, exclusive_price: 'true')
     end
 
     should 'create reservation with exclusive price' do
@@ -113,10 +105,9 @@ class Listings::OrdersControllerTest < ActionController::TestCase
       assert_response 302
       assert assigns(:order).errors.full_messages.include?(I18n.t('reservations_review.errors.exclusive_price_not_available'))
     end
-
   end
 
-  #TODO Uncomment after adding price_per_unit_for action_types
+  # TODO: Uncomment after adding price_per_unit_for action_types
   # context 'Price per unit' do
   #   setup do
   #     @transactable = FactoryGirl.create(:transactable, :fixed_price)
@@ -142,8 +133,8 @@ class Listings::OrdersControllerTest < ActionController::TestCase
       order: {
         transactable_id: transactable.id,
         dates: [Chronic.parse('Monday')],
-        quantity: "1",
-        transactable_pricing_id: transactable.action_type.pricings.first.id,
+        quantity: '1',
+        transactable_pricing_id: transactable.action_type.pricings.first.id
       }
     }
   end
@@ -162,5 +153,4 @@ class Listings::OrdersControllerTest < ActionController::TestCase
   #     location_postcode: reservation.location.postcode
   #   }
   # end
-
 end

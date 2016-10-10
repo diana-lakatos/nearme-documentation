@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class UnreadMessagesRemindersJobTest < ActiveSupport::TestCase
-
   setup do
     @joe = FactoryGirl.create(:user)
     @jimmy = FactoryGirl.create(:user)
@@ -12,27 +11,27 @@ class UnreadMessagesRemindersJobTest < ActiveSupport::TestCase
     # We create three messages but we should only get
     # two users as two messages are for the same user
     @user_message_1 = FactoryGirl.create(:user_message,
-      thread_context: @listing,
-      thread_owner: @joe,
-      author: @joe,
-      thread_recipient: @listing_administrator
-    )
+                                         thread_context: @listing,
+                                         thread_owner: @joe,
+                                         author: @joe,
+                                         thread_recipient: @listing_administrator
+                                        )
     @user_message_1.update_column(:created_at, Time.now - 2.days)
 
     @user_message_2 = FactoryGirl.create(:user_message,
-      thread_context: @listing,
-      thread_owner: @joe,
-      author: @joe,
-      thread_recipient: @listing_administrator
-    )
+                                         thread_context: @listing,
+                                         thread_owner: @joe,
+                                         author: @joe,
+                                         thread_recipient: @listing_administrator
+                                        )
     @user_message_2.update_column(:created_at, Time.now - 2.days)
 
     @user_message_3 = FactoryGirl.create(:user_message,
-      thread_context: @listing,
-      thread_owner: @joe,
-      author: @joe,
-      thread_recipient: @jimmy
-    )
+                                         thread_context: @listing,
+                                         thread_owner: @joe,
+                                         author: @joe,
+                                         thread_recipient: @jimmy
+                                        )
     @user_message_3.update_column(:created_at, Time.now - 2.days)
   end
 
@@ -51,6 +50,4 @@ class UnreadMessagesRemindersJobTest < ActiveSupport::TestCase
     # If something's wrong it should trigger more workflow step jobs which should throw an error
     UnreadMessagesRemindersJob.perform
   end
-
 end
-

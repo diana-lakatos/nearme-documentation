@@ -6,10 +6,9 @@ class ShippingRule < ActiveRecord::Base
   has_and_belongs_to_many :countries
   belongs_to :shipping_profile
 
-  monetize :price_cents, with_model_currency: PlatformContext.current.try {|c| c.instance.default_currency }, allow_nil: true
+  monetize :price_cents, with_model_currency: PlatformContext.current.try { |c| c.instance.default_currency }, allow_nil: true
 
   def to_liquid
     @shipping_rule_drop ||= ShippingRuleDrop.new(self)
   end
-
 end

@@ -1,5 +1,4 @@
 class WorkflowStep::UserMessageWorkflow::Created < WorkflowStep::UserMessageWorkflow::BaseStep
-
   def callback_to_prepare_data_for_check
     @user_message.body = nil
   end

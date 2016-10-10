@@ -17,7 +17,7 @@ class Order < ActiveRecord::Base
   has_custom_attributes target_type: 'ReservationType', target_id: :reservation_type_id
 
   belongs_to :user, -> { with_deleted }
-  # TODO creator is not intuitive name we should switch to the "lister"
+  # TODO: creator is not intuitive name we should switch to the "lister"
   belongs_to :creator, -> { with_deleted }, class_name: 'User'
   belongs_to :owner, -> { with_deleted }, class_name: 'User', counter_cache: true
   belongs_to :administrator, -> { with_deleted }, class_name: 'User'
@@ -35,7 +35,7 @@ class Order < ActiveRecord::Base
   has_many :reviews, as: :reviewable
   has_many :shipments, dependent: :destroy, inverse_of: :order
   has_many :user_messages, as: :thread_context
-  has_many :periods, :class_name => "::ReservationPeriod", :dependent => :destroy, foreign_key: 'reservation_id', inverse_of: :reservation
+  has_many :periods, class_name: '::ReservationPeriod', dependent: :destroy, foreign_key: 'reservation_id', inverse_of: :reservation
   has_many :waiver_agreements, as: :target
   has_many :transactables, through: :transactable_line_items, source: :line_item_source, source_type: 'Transactable'
   has_many :order_items, class_name: 'RecurringBookingPeriod', dependent: :destroy, foreign_key: :order_id
@@ -47,7 +47,7 @@ class Order < ActiveRecord::Base
   accepts_nested_attributes_for :shipments
 
   validates :user, presence: true
-  validates :currency, :presence => true
+  validates :currency, presence: true
   validate :validate_acceptance_of_waiver_agreements, on: :update, if: -> { should_validate_field?('reservation', 'waiver_agreements') }
 
   before_validation :copy_billing_address, :remove_empty_documents
@@ -65,8 +65,8 @@ class Order < ActiveRecord::Base
     event :activate                 do transition inactive: :unconfirmed; end
     event :confirm                  do transition unconfirmed: :confirmed; end
     event :reject                   do transition unconfirmed: :rejected; end
-    event :host_cancel              do transition [:unconfirmed, :confirmed] => :cancelled_by_host, if: lambda {|order| order.cancelable? }; end
-    event :user_cancel              do transition [:unconfirmed, :confirmed] => :cancelled_by_guest, if: lambda {|reservation| reservation.archived_at.nil? }; end
+    event :host_cancel              do transition [:unconfirmed, :confirmed] => :cancelled_by_host, if: ->(order) { order.cancelable? }; end
+    event :user_cancel              do transition [:unconfirmed, :confirmed] => :cancelled_by_guest, if: ->(reservation) { reservation.archived_at.nil? }; end
     event :expire                   do transition unconfirmed: :expired; end
     event :completed                do transition confirmed: :completed; end
   end
@@ -75,7 +75,7 @@ class Order < ActiveRecord::Base
   scope :cart, -> { with_state(:inactive) }
   scope :complete, -> { without_state(:inactive) }
   scope :active, -> { without_state(:inactive) }
-  # TODO we should switch to use completed state instead of archived_at for Reservation
+  # TODO: we should switch to use completed state instead of archived_at for Reservation
   # and fully switch to state machine
 
   # scope :archived, -> { active.where('archived_at IS NOT NULL') }
@@ -85,13 +85,13 @@ class Order < ActiveRecord::Base
   # we probably want new state - completed
   scope :reviewable, -> { where.not(archived_at: nil).confirmed }
   scope :cancelled, -> { with_state(:cancelled_by_guest, :cancelled_by_host) }
-  scope :confirmed, -> { with_state(:confirmed)}
+  scope :confirmed, -> { with_state(:confirmed) }
   scope :confirmed_or_unconfirmed, -> { with_state(:confirmed, :unconfirmed) }
   scope :expired, -> { with_state(:expired) }
-  scope :for_listing, -> (listing) { where(:transactable_id => listing.id) }
+  scope :for_listing, -> (listing) { where(transactable_id: listing.id) }
   scope :last_x_days, -> (days_in_past) { where('DATE(orders.created_at) >= ? ', days_in_past.days.ago) }
   scope :not_rejected_or_cancelled, -> { without_state(:cancelled_by_guest, :cancelled_by_host, :rejected, :inactive) }
-  scope :past, -> { where("ends_at < ?", Time.current)}
+  scope :past, -> { where('ends_at < ?', Time.current) }
   scope :rejected, -> { with_state(:rejected) }
   scope :unconfirmed, -> { with_state(:unconfirmed) }
   scope :upcoming, -> { not_archived }
@@ -101,18 +101,18 @@ class Order < ActiveRecord::Base
   scope :offers, -> { where(type: %w(Offer)) }
   scope :for_lister_or_enquirer, -> (company, user) { where('orders.company_id = ? OR orders.user_id = ?', company.id, user.id) }
 
-  scope :on, -> (date) {
-    joins(:periods).
-    where("reservation_periods.date" => date).
-    where(:state => [:confirmed, :unconfirmed]).
-    uniq
+  scope :on, lambda  { |date|
+    joins(:periods)
+      .where('reservation_periods.date' => date)
+      .where(state: [:confirmed, :unconfirmed])
+      .uniq
   }
 
-  scope :cancelled_or_expired_or_rejected, -> {
+  scope :cancelled_or_expired_or_rejected, lambda {
     with_state(:cancelled_by_guest, :cancelled_by_host, :rejected, :expired)
   }
 
-  scope :by_period, -> (start_date, end_date = Time.zone.today.end_of_day) {
+  scope :by_period, lambda  { |start_date, end_date = Time.zone.today.end_of_day|
     where(created_at: start_date..end_date)
   }
 
@@ -122,10 +122,10 @@ class Order < ActiveRecord::Base
   # via orders_received_tabs and my_orders_tabs Instance attributes
 
   def self.workflow_class
-    raise NotImplementedError
+    fail NotImplementedError
   end
 
-  def self.dashboard_tabs(company_dashboard=false)
+  def self.dashboard_tabs(company_dashboard = false)
     if company_dashboard
       PlatformContext.current.instance.orders_received_tabs
     else
@@ -133,7 +133,7 @@ class Order < ActiveRecord::Base
     end.presence || DEFAULT_DASHBOARD_TABS
   end
 
-  def schedule_refund(transition, run_at = Time.zone.now)
+  def schedule_refund(_transition, run_at = Time.zone.now)
     if payment.paid? && !skip_payment_authorization?
       PaymentRefundJob.perform_later(run_at, payment.id)
     end
@@ -146,7 +146,7 @@ class Order < ActiveRecord::Base
   end
 
   def complete!
-    # TODO soon we will introduce "completed" state instead of archived_at timestamp
+    # TODO: soon we will introduce "completed" state instead of archived_at timestamp
     touch(:archived_at)
   end
 
@@ -155,12 +155,12 @@ class Order < ActiveRecord::Base
   end
 
   def completed?
-    # TODO soon we will introduce "completed" state instead of archived_at timestamp
+    # TODO: soon we will introduce "completed" state instead of archived_at timestamp
     archived?
   end
 
   def create_shipments!
-    CreateShippoShipmentsJob.perform(self.id) if shipments.any?(&:use_shippo?)
+    CreateShippoShipmentsJob.perform(id) if shipments.any?(&:use_shippo?)
   end
 
   def is_free?
@@ -176,7 +176,7 @@ class Order < ActiveRecord::Base
   end
 
   def subscription?
-    type == "RecurringBooking"
+    type == 'RecurringBooking'
   end
 
   def has_order_items?
@@ -184,7 +184,7 @@ class Order < ActiveRecord::Base
   end
 
   def bookable?
-    type != "Purchase"
+    type != 'Purchase'
   end
 
   def number
@@ -212,11 +212,11 @@ class Order < ActiveRecord::Base
 
   def next_form_component
     return nil if reservation_type.blank?
-    reservation_type.form_components.where.not(id: completed_form_component_ids).order(:rank).select{ |fc| fc.form_fields_except(skip_steps).any? }.first
+    reservation_type.form_components.where.not(id: completed_form_component_ids).order(:rank).find { |fc| fc.form_fields_except(skip_steps).any? }
   end
 
   def all_form_components
-    reservation_type.form_components.order(:rank).select{ |fc| fc.form_fields_except(skip_steps).any? }
+    reservation_type.form_components.order(:rank).select { |fc| fc.form_fields_except(skip_steps).any? }
   end
 
   def next_form_component_name_to_id
@@ -224,9 +224,8 @@ class Order < ActiveRecord::Base
   end
 
   def previous_step!
-    self.update_column(:completed_form_component_ids, completed_form_component_ids[0..-2].join(','))
+    update_column(:completed_form_component_ids, completed_form_component_ids[0..-2].join(','))
   end
-
 
   def completed_form_component_ids
     read_attribute(:completed_form_component_ids).to_s.split(',')
@@ -236,16 +235,16 @@ class Order < ActiveRecord::Base
     transactables.any?(&:shipping_profile)
   end
 
-  # TODO implement with shipping
+  # TODO: implement with shipping
   def shipped?
     true
   end
 
   def remove_empty_documents
-    self.payment_documents.each do |document|
+    payment_documents.each do |document|
       unless document.valid?
         unless PlatformContext.current.instance.documents_upload.is_mandatory? || document.document_requirement.is_file_required?
-          self.payment_documents.delete document
+          payment_documents.delete document
         end
       end
     end
@@ -263,15 +262,14 @@ class Order < ActiveRecord::Base
     super.presence || creator
   end
 
-  # TODO chante to order.id and adjust routes
+  # TODO: chante to order.id and adjust routes
   def express_return_url
-    PlatformContext.current.decorate.build_url_for_path("/orders/#{self.id}/express_checkout/return")
+    PlatformContext.current.decorate.build_url_for_path("/orders/#{id}/express_checkout/return")
   end
 
   def express_cancel_return_url
-    PlatformContext.current.decorate.build_url_for_path("/orders/#{self.id}/express_checkout/cancel")
+    PlatformContext.current.decorate.build_url_for_path("/orders/#{id}/express_checkout/cancel")
   end
-
 
   # ----- SETTERS ---------
   def set_cancelled_at
@@ -286,16 +284,16 @@ class Order < ActiveRecord::Base
   end
 
   def pre_booking_job
-    return true if self.starts_at.nil?
-    pre_booking_sending_date = (self.starts_at - 1.day).in_time_zone + 17.hours # send day before at 5pm
+    return true if starts_at.nil?
+    pre_booking_sending_date = (starts_at - 1.day).in_time_zone + 17.hours # send day before at 5pm
     if pre_booking_sending_date < Time.current.beginning_of_day
-      ReservationPreBookingJob.perform_later(pre_booking_sending_date, self.id)
+      ReservationPreBookingJob.perform_later(pre_booking_sending_date, id)
     end
   end
 
   def first_booking_job
-    if self.user.orders.reservations.active.count == 1
-      ReengagementOneBookingJob.perform_later(self.last_date.in_time_zone + 7.days, self.id)
+    if user.orders.reservations.active.count == 1
+      ReengagementOneBookingJob.perform_later(last_date.in_time_zone + 7.days, id)
     end
   end
 
@@ -308,13 +306,11 @@ class Order < ActiveRecord::Base
   end
 
   def copy_billing_address
-    if self.use_billing
-      self.shipping_address = nil
-    end
+    self.shipping_address = nil if use_billing
   end
 
   def restart_checkout!
-    self.update_columns(completed_form_component_ids: '')
+    update_columns(completed_form_component_ids: '')
   end
 
   def mark_as_archived!
@@ -336,12 +332,9 @@ class Order < ActiveRecord::Base
   end
 
   def schedule_void
-    if payment.try(:authorized?)
-      PaymentVoidJob.perform(payment.id)
-    end
+    PaymentVoidJob.perform(payment.id) if payment.try(:authorized?)
     true
   end
-
 
   def trigger_rating_workflow!
     if archived? && confirmed?
@@ -362,26 +355,26 @@ class Order < ActiveRecord::Base
   end
 
   def set_archived_at
-    OrderMarkAsArchivedJob.perform_later(self.ends_at, self.id) if self.ends_at
+    OrderMarkAsArchivedJob.perform_later(ends_at, id) if ends_at
   end
 
-  # TODO remove owner and stick to the user
+  # TODO: remove owner and stick to the user
   def set_owner
-    self.owner_id ||= self.user_id
+    self.owner_id ||= user_id
   end
 
   def validate_on_adding_to_cart
-    super == "true"
+    super == 'true'
   end
-  alias :validate_on_adding_to_cart? :validate_on_adding_to_cart
+  alias_method :validate_on_adding_to_cart?, :validate_on_adding_to_cart
 
   def skip_payment_authorization
-    super == "true"
+    super == 'true'
   end
-  alias :skip_payment_authorization? :skip_payment_authorization
+  alias_method :skip_payment_authorization?, :skip_payment_authorization
 
   def waiver_agreement_templates
-    @waiver_agreement_templates ? @waiver_agreement_templates.select {|k, v| v == '1'} : []
+    @waiver_agreement_templates ? @waiver_agreement_templates.select { |_k, v| v == '1' } : []
   end
 
   def waiver_agreement_templates=(selected_waiver_agreement_templates)
@@ -389,18 +382,18 @@ class Order < ActiveRecord::Base
     @waiver_agreement_templates = selected_waiver_agreement_templates
     assigned_waiver_agreement_templates.select { |w| waiver_agreement_templates.include?(w.id.to_s) }.each do |t|
       if self.persisted?
-        waiver_agreements.create(waiver_agreement_template: t, vendor_name: self.host.try(:name), guest_name: self.owner.name, target: self)
+        waiver_agreements.create(waiver_agreement_template: t, vendor_name: host.try(:name), guest_name: owner.name, target: self)
       else
-        waiver_agreements.build(waiver_agreement_template: t, vendor_name: self.host.try(:name), guest_name: self.owner.name, target: self)
+        waiver_agreements.build(waiver_agreement_template: t, vendor_name: host.try(:name), guest_name: owner.name, target: self)
       end
     end
   end
 
   def validate_acceptance_of_waiver_agreements
-    self.assigned_waiver_agreement_templates.each do |wat|
+    assigned_waiver_agreement_templates.each do |wat|
       wat_id = wat.id
       unless waiver_agreement_templates.include?("#{wat_id}")
-        self.errors.add(wat.name, I18n.t('errors.messages.accepted'))
+        errors.add(wat.name, I18n.t('errors.messages.accepted'))
       end
     end
   end
@@ -424,6 +417,20 @@ class Order < ActiveRecord::Base
     AdditionalChargeType.where(id: ids).order(:status, :name)
   end
 
+  def recalculate_service_fees!
+    if service_fee_line_items.any?
+      service_fee_line_items.first.update_attribute(:unit_price_cents,
+                                                    transactable_line_items.map { |t| t.total_price_cents * t.service_fee_guest_percent.to_f / BigDecimal(100) }.sum
+                                                   )
+    end
+
+    if host_fee_line_items.any?
+      host_fee_line_items.first.update_attribute(:unit_price_cents,
+                                                 transactable_line_items.map { |t| t.total_price_cents * t.service_fee_host_percent.to_f / BigDecimal(100) }.sum
+                                                )
+    end
+  end
+
   def delivery_ids=(ids)
     errors.add(:delivery_ids, :blank) if shipments.any? && ids.blank?
     if ids.present? && shipments.any?
@@ -445,7 +452,7 @@ class Order < ActiveRecord::Base
       inbound_shipping = outbound_shipping.dup
       inbound_shipping.direction = 'inbound'
       shipping_address.create_shippo_address
-      self.shipments << inbound_shipping
+      shipments << inbound_shipping
     end
   end
 
@@ -456,17 +463,17 @@ class Order < ActiveRecord::Base
     begin
       # Get rates for both ways shipping (rental shipping)
       shipments.each do |shipment|
-        shipment.get_rates(self).map{|rate| rate[:direction] = shipment.direction; rates << rate }
+        shipment.get_rates(self).map { |rate| rate[:direction] = shipment.direction; rates << rate }
       end
-      rates = rates.flatten.group_by{ |rate| rate[:servicelevel_name] }
-      @options = rates.to_a.map do |type, rate|
+      rates = rates.flatten.group_by { |rate| rate[:servicelevel_name] }
+      @options = rates.to_a.map do |_type, rate|
         # Skip if service is available only in one direction
         # next if rate.one?
-        price_sum = Money.new(rate.sum{|r| r[:amount_cents].to_f }, rate[0][:currency])
+        price_sum = Money.new(rate.sum { |r| r[:amount_cents].to_f }, rate[0][:currency])
         # Format options for simple_form radio
         [
-          [ price_sum.format, "#{rate[0][:provider]} #{rate[0][:servicelevel_name]}", rate[0][:duration_terms]].join(' - '),
-          rate.map{|r| "#{r[:direction]}:#{r[:object_id]}" }.join(','),
+          [price_sum.format, "#{rate[0][:provider]} #{rate[0][:servicelevel_name]}", rate[0][:duration_terms]].join(' - '),
+          rate.map { |r| "#{r[:direction]}:#{r[:object_id]}" }.join(','),
           { data: { price_formatted: price_sum.format, price: price_sum.to_f } }
         ]
       end.compact
@@ -477,7 +484,7 @@ class Order < ActiveRecord::Base
 
   def skip_steps
     steps = []
-    steps << 'payment_documents' unless transactables.any?{|t| t.upload_obligation.try(:not_required?) == false }
+    steps << 'payment_documents' unless transactables.any? { |t| t.upload_obligation.try(:not_required?) == false }
     steps << 'shipping' unless with_delivery?
     steps.join('|')
   end
@@ -509,7 +516,5 @@ class Order < ActiveRecord::Base
   end
 
   def send_rejected_workflow_alerts!
-
   end
-
 end

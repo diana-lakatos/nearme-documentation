@@ -1,5 +1,4 @@
 class WorkflowStep::UserMessageWorkflow::BaseStep < WorkflowStep::BaseStep
-
   def self.belongs_to_transactable_type?
     true
   end
@@ -35,5 +34,4 @@ class WorkflowStep::UserMessageWorkflow::BaseStep < WorkflowStep::BaseStep
   def should_be_processed?
     @user_message.present?
   end
-
 end

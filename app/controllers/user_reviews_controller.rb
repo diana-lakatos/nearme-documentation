@@ -10,7 +10,7 @@ class UserReviewsController < ApplicationController
 
     response.headers['Content-Type'] = 'application/json'
     render json: {
-      template: render_to_string(partial: 'registrations/profile/tabs/reviews_content', formats: [:html], locals: {reviews: @reviews, rating_questions: @rating_questions}, layout: false),
+      template: render_to_string(partial: 'registrations/profile/tabs/reviews_content', formats: [:html], locals: { reviews: @reviews, rating_questions: @rating_questions }, layout: false),
       count: I18n.t('user_profile.labels.tabs.reviews', count: @total_reviews)
     }
   end

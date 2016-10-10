@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class CommentTest < ActiveSupport::TestCase
-
   should belong_to(:commentable)
 
   setup do
@@ -12,20 +11,20 @@ class CommentTest < ActiveSupport::TestCase
     @comment = FactoryGirl.create :comment, commentable: @transactable, creator: @comment_creator
   end
 
-  should "not allow to remove to stranger" do
+  should 'not allow to remove to stranger' do
     assert @comment.can_remove?(@transactable_creator)
     assert @comment.can_remove?(@comment_creator)
     assert_not @comment.can_remove?(@guest)
   end
 
-  should "add activity feed event if commentable is transactable" do
+  should 'add activity feed event if commentable is transactable' do
     transactable = FactoryGirl.create(:transactable)
-    assert_difference "ActivityFeedEvent.count" do
+    assert_difference 'ActivityFeedEvent.count' do
       FactoryGirl.create(:comment, commentable: transactable)
     end
   end
 
-  should "add activity feed event if commentable is transactable" do
+  should 'add activity feed event if commentable is transactable' do
     # events:
     # 1) Project created for event_source
     # 2) Project created for followed
@@ -35,7 +34,7 @@ class CommentTest < ActiveSupport::TestCase
     # 8) For user.
     #
 
-    assert_difference "ActivityFeedEvent.count", 8 do
+    assert_difference 'ActivityFeedEvent.count', 8 do
       FactoryGirl.create(:comment, commentable: FactoryGirl.create(:activity_feed_event))
     end
   end
@@ -71,5 +70,4 @@ class CommentTest < ActiveSupport::TestCase
 
     assert @comment.errors.include?(:membership)
   end
-
 end

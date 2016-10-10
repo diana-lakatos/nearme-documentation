@@ -6,4 +6,3 @@ class PaymentSubscriptionDecorator < Draper::Decorator
     PaginatingDecorator
   end
 end
-

@@ -1,13 +1,12 @@
 require 'video_info'
 
 class HtmlWithVideos < Redcarpet::Render::HTML
-
   def initialize(options = {}, embed_options = {})
     @embed_options = embed_options
     super options
   end
 
-  def link(link, title, content)
+  def link(link, _title, content)
     video_embed = get_video_embed(link)
     if video_embed.present?
       video_embed
@@ -16,7 +15,7 @@ class HtmlWithVideos < Redcarpet::Render::HTML
     end
   end
 
-  def autolink(link, link_type)
+  def autolink(link, _link_type)
     video_embed = get_video_embed(link)
     if video_embed.present?
       video_embed
@@ -36,5 +35,4 @@ class HtmlWithVideos < Redcarpet::Render::HTML
 
     nil
   end
-
 end

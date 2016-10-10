@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :dimensions_template do
-    sequence(:name) {|n| "dimensions#{n}" }
+    sequence(:name) { |n| "dimensions#{n}" }
     creator { FactoryGirl.create(:user) }
     weight 100
     width 101

@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Support::TicketsControllerTest < ActionController::TestCase
-
   setup do
     Support::Ticket.any_instance.stubs(:admin_emails).returns(['test@test.com'])
     @user = FactoryGirl.create(:user)
@@ -31,7 +30,6 @@ class Support::TicketsControllerTest < ActionController::TestCase
   context '#show' do
     setup do
       @ticket = FactoryGirl.create(:support_ticket, user: @user)
-
     end
     should 'be protected' do
       sign_out @user
@@ -49,10 +47,10 @@ class Support::TicketsControllerTest < ActionController::TestCase
     context 'logged' do
       should 'create ticket' do
         params = {
-          "support_ticket" => {
-            "messages_attributes" => [
-              "message" => 'Message',
-              "subject" => 'Subject'
+          'support_ticket' => {
+            'messages_attributes' => [
+              'message' => 'Message',
+              'subject' => 'Subject'
             ]
           }
         }
@@ -68,12 +66,12 @@ class Support::TicketsControllerTest < ActionController::TestCase
     context 'unlogger' do
       should 'create ticket' do
         params = {
-          "support_ticket" => {
-            "messages_attributes" => [
-              "message" => 'Message',
-              "full_name" => 'Johnny',
-              "subject" => "Subject",
-              "email" => "email"
+          'support_ticket' => {
+            'messages_attributes' => [
+              'message' => 'Message',
+              'full_name' => 'Johnny',
+              'subject' => 'Subject',
+              'email' => 'email'
             ]
           }
         }

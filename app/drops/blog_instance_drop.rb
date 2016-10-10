@@ -65,5 +65,4 @@ class BlogInstanceDrop < BaseDrop
   def blog_posts_path
     routes.blog_posts_path
   end
-
 end

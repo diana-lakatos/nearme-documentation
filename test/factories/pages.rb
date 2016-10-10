@@ -1,5 +1,4 @@
 FactoryGirl.define do
-
   factory :page do
     sequence(:path) { |n| "page-#{n}" }
     sequence(:slug) { |n| "page-#{n}" }
@@ -7,5 +6,4 @@ FactoryGirl.define do
     theme_id { PlatformContext.current.instance.theme.id }
     redirect_url nil
   end
-
 end

@@ -1,9 +1,8 @@
 class ProjectTypes::ProjectWizardController < ApplicationController
-
   before_filter :authenticate_user!
   before_filter :find_project_type
   before_filter :redirect_to_dashboard_if_registration_completed, only: [:new]
-  before_filter :set_common_variables, :only => [:new, :create]
+  before_filter :set_common_variables, only: [:new, :create]
   before_filter :set_form_components
 
   layout :dashboard_or_community_layout
@@ -23,7 +22,6 @@ class ProjectTypes::ProjectWizardController < ApplicationController
       flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(@user.errors.full_messages)
       render :new
     end
-
   end
 
   private
@@ -47,7 +45,6 @@ class ProjectTypes::ProjectWizardController < ApplicationController
                end
   end
 
-
   def redirect_to_dashboard_if_registration_completed
     if current_user.try(:registration_completed?)
       redirect_to dashboard_project_type_projects_path(@transactable_type)
@@ -61,6 +58,4 @@ class ProjectTypes::ProjectWizardController < ApplicationController
   def can_delete_photo?(photo, user)
     return true if photo.creator == user                         # if the user created the photo
   end
-
 end
-

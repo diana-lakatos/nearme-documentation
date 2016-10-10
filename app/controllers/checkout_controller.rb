@@ -1,5 +1,4 @@
 class CheckoutController < ApplicationController
-
   before_filter :authenticate_user!
   before_filter :set_theme
   before_filter :set_order
@@ -21,7 +20,7 @@ class CheckoutController < ApplicationController
         return
       end
 
-      flash[:notice] = ""  unless @order.inactive?
+      flash[:notice] = ''  unless @order.inactive?
       flash[:error] = @order.errors.full_messages.join(',<br />')
     else
       set_countries_states
@@ -82,11 +81,9 @@ class CheckoutController < ApplicationController
   def build_payment_documents
     @order.transactables.each do |transactable|
       if transactable.document_requirements.blank? &&
-        PlatformContext.current.instance.force_file_upload?
-        transactable.document_requirements.create({
-          label: I18n.t("upload_documents.file.default.label"),
-          description: I18n.t("upload_documents.file.default.description")
-        })
+         PlatformContext.current.instance.force_file_upload?
+        transactable.document_requirements.create(label: I18n.t('upload_documents.file.default.label'),
+                                                  description: I18n.t('upload_documents.file.default.description'))
       end
 
       requirement_ids = @order.payment_documents.map do |pd|
@@ -94,7 +91,7 @@ class CheckoutController < ApplicationController
       end + transactable.document_requirements.map(&:id)
 
       if transactable.upload_obligation.blank? &&
-        PlatformContext.current.instance.documents_upload_enabled?
+         PlatformContext.current.instance.documents_upload_enabled?
         transactable.create_upload_obligation(level: UploadObligation.default_level)
       end
 
@@ -114,10 +111,9 @@ class CheckoutController < ApplicationController
 
   def order_params
     if params[:order] && !params[:order].blank?
-      params.require(:order).permit(secured_params.order(@order.reservation_type) )
+      params.require(:order).permit(secured_params.order(@order.reservation_type))
     else
       {}
     end
   end
 end
-

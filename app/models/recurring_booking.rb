@@ -1,31 +1,30 @@
 class RecurringBooking < Order
-
   include Bookable
   include Categorizable
 
   delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :action, allow_nil: true
   delegate :action, to: :transactable_pricing
 
-  has_one :old, class_name: "OldRecurringBooking", foreign_key: 'order_id'
+  has_one :old, class_name: 'OldRecurringBooking', foreign_key: 'order_id'
 
   # Note: additional_charges are not yet implemented for RecurringBooking
   # Following line is added only for the purpouse of including Chargebale model
 
   has_many :recurring_booking_periods, dependent: :destroy
-  has_many :periods, class_name: "RecurringBookingPeriod", dependent: :destroy
+  has_many :periods, class_name: 'RecurringBookingPeriod', dependent: :destroy
 
   scope :upcoming, -> { where('ends_at > ?', Time.zone.now) }
-  scope :archived, -> { where('ends_at < ? OR state IN (?)', Time.zone.now, ['rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest']).uniq }
+  scope :archived, -> { where('ends_at < ? OR state IN (?)', Time.zone.now, %w(rejected expired cancelled_by_host cancelled_by_guest)).uniq }
   scope :not_archived, -> { without_state(:cancelled_by_guest, :cancelled_by_host, :rejected, :expired).uniq }
   scope :needs_charge, -> (date) { with_state(:confirmed, :overdued).where('next_charge_date <= ?', date) }
 
   before_validation :set_dates, on: :create
 
-  validates :transactable_id, :presence => true
+  validates :transactable_id, presence: true
   validates :owner_id, presence: true, unless: -> { owner.present? }
 
   state_machine :state, initial: :inactive do
-    before_transition unconfirmed: :confirmed do |recurring_booking, transaction|
+    before_transition unconfirmed: :confirmed do |recurring_booking, _transaction|
       if recurring_booking.check_overbooking && recurring_booking.errors.empty? && period = recurring_booking.generate_next_period!
         period.generate_payment!
         true
@@ -39,11 +38,11 @@ class RecurringBooking < Order
       recurring_booking.rejection_reason = transition.args[0]
     end
 
-    after_transition confirmed: :overdued do |recurring_booking, transition|
+    after_transition confirmed: :overdued do |recurring_booking, _transition|
       WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::PaymentOverdue, recurring_booking.id)
     end
 
-    after_transition overdued: :confirmed do |recurring_booking, transition|
+    after_transition overdued: :confirmed do |recurring_booking, _transition|
       WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::PaymentInformationUpdated, recurring_booking.id)
     end
 
@@ -52,7 +51,6 @@ class RecurringBooking < Order
     event :guest_cancel do   transition [:unconfirmed, :confirmed] => :cancelled_by_guest; end
     event :overdue      do   transition confirmed: :overdued; end
     event :reconfirm    do   transition overdued: :confirmed; end
-
   end
 
   def self.workflow_class
@@ -66,7 +64,7 @@ class RecurringBooking < Order
 
   def set_dates
     self.starts_at = @dates ? Date.parse(@dates) : Date.current
-    self.next_charge_date = self.start_on
+    self.next_charge_date = start_on
   end
 
   def billing_address_required?
@@ -102,21 +100,20 @@ class RecurringBooking < Order
   def cancel
     update_attribute :ends_at, paid_until
     if cancelled_by_guest?
-      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::EnquirerCancelled, self.id)
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::EnquirerCancelled, id)
     elsif cancelled_by_host?
-      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::ListerCancelled, self.id)
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::ListerCancelled, id)
     end
   end
 
   def auto_confirm_reservation
     if transactable.confirm_reservations?
-      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithoutAutoConfirmation, self.id)
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithoutAutoConfirmation, id)
     else
       confirm!
-      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithAutoConfirmation, self.id)
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithAutoConfirmation, id)
     end
   end
-
 
   def cancelable?
     true
@@ -130,7 +127,7 @@ class RecurringBooking < Order
     rejected? || cancelled_by_guest? || cancelled_by_host?
   end
 
-  def schedule_refund(transition, run_at = Time.zone.now)
+  def schedule_refund(_transition, _run_at = Time.zone.now)
     true
   end
 
@@ -138,28 +135,24 @@ class RecurringBooking < Order
     @charger ||= RecurringBooking::RecurringBookingChargerFactory.get_charger(self)
   end
 
-  def charger=(charger)
-    @charger = charger
-  end
+  attr_writer :charger
 
   def to_liquid
     @recurring_booking ||= RecurringBookingDrop.new(self)
   end
 
   def recalculate_next_charge_date
-    RecurringBooking::NextDateFactory.get_calculator(transactable_pricing, self.next_charge_date).next_charge_date
+    RecurringBooking::NextDateFactory.get_calculator(transactable_pricing, next_charge_date).next_charge_date
   end
 
   def amount_calculator
     @amount_calculator ||= RecurringBooking::AmountCalculatorFactory.get_calculator(self)
   end
 
-  def amount_calculator=(calculator)
-    @amount_calculator = calculator
-  end
+  attr_writer :amount_calculator
 
   def recalculate_next_charge_date!
-    self.update_attribute(:next_charge_date, recalculate_next_charge_date)
+    update_attribute(:next_charge_date, recalculate_next_charge_date)
   end
 
   def generate_next_period!
@@ -196,11 +189,9 @@ class RecurringBooking < Order
   def total_amount_calculator
     @total_amount_calculator ||= RecurringBooking::SubscriptionPriceCalculator.new(self)
   end
-  alias price_calculator total_amount_calculator
+  alias_method :price_calculator, :total_amount_calculator
 
   def monthly?
     transactable_pricing.unit == 'subscription_month'
   end
-
 end
-

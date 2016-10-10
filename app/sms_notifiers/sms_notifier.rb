@@ -95,5 +95,4 @@ class SmsNotifier < AbstractController::Base
   def notifier_name
     self.class.name.underscore
   end
-
 end

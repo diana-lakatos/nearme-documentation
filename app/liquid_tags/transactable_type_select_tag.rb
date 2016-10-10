@@ -16,4 +16,3 @@ class TransactableTypeSelectTag < SelectTag
     %w(transactable-type-select-tag service-type-select-tag)
   end
 end
-

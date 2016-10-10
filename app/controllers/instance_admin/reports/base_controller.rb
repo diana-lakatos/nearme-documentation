@@ -1,19 +1,18 @@
 class InstanceAdmin::Reports::BaseController < InstanceAdmin::BaseController
-
   include ReportsProperties
 
   before_filter :set_scopes, :set_breadcrumbs_title
 
-   def index
+  def index
     @scope_search_form = @search_form.new
     @scope_search_form.validate(params)
     @resources = SearchService.new(@scope_class.order("#{@scope_class.table_name}.created_at DESC")).search(@scope_search_form.to_search_params).paginate(page: params[:page])
-  end
+ end
 
   def download_report
     @scope_search_form = @search_form.new
     @scope_search_form.validate(params)
-    @scope_class = @scope_class.includes(:location => :location_address) if @scope_class == Transactable
+    @scope_class = @scope_class.includes(location: :location_address) if @scope_class == Transactable
     @resources = SearchService.new(@scope_class.order(created_at: 'ASC')).search(@scope_search_form.to_search_params)
     @scope_type = @scope_type_class.find_by_id(params[:item_type_id])
 
@@ -46,8 +45,8 @@ class InstanceAdmin::Reports::BaseController < InstanceAdmin::BaseController
 
   def set_breadcrumbs_title
     @breadcrumbs_title = BreadcrumbsList.new(
-      { :title => t('instance_admin.general.reports') },
-      { :title => t("instance_admin.general.#{@scope_class.name.tableize}"), :url => polymorphic_path([:instance_admin, :reports, @scope_class]) }
+      { title: t('instance_admin.general.reports') },
+      title: t("instance_admin.general.#{@scope_class.name.tableize}"), url: polymorphic_path([:instance_admin, :reports, @scope_class])
     )
   end
 end

@@ -1,11 +1,10 @@
 class ReservationSerializer < ApplicationSerializer
-
   attribute :id
-  attribute :owner_id,  :key => :user_id
+  attribute :owner_id,  key: :user_id
   attributes :listing_id, :state
   attributes :cancelable, :total_cost
 
-  attribute :periods, :key => :times
+  attribute :periods, key: :times
 
   private
 
@@ -37,12 +36,12 @@ class ReservationSerializer < ApplicationSerializer
         start_at: timestamp_start,
         end_at: timestamp_end,
         # Who's assigned the desks
-        assignee: (object.transactable.transactable_type.action_price_per_unit? ? 1 : object.quantity.to_i).times.to_a.map { |s|
+        assignee: (object.transactable.transactable_type.action_price_per_unit? ? 1 : object.quantity.to_i).times.to_a.map do |_s|
           {
             name: object.owner.try(:name),
             email: object.owner.try(:email)
           }
-        }
+        end
       }
     end
   end

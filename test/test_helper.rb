@@ -1,4 +1,4 @@
-ENV["RAILS_ENV"] ||= "test"
+ENV['RAILS_ENV'] ||= 'test'
 
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
@@ -18,7 +18,7 @@ Minitest::Reporters.use!(Minitest::Reporters::DefaultReporter.new(reporter_optio
 
 RoutingFilter.active = false
 ActiveMerchant::Billing::Base.mode = :test
-WebMock.disable_net_connect!(allow: %r{localhost:9200})
+WebMock.disable_net_connect!(allow: /localhost:9200/)
 
 # Disable carrierwave processing in tests
 # It can be enabled on a per-test basis as needed.
@@ -29,9 +29,7 @@ end
 module Rack
   module Test
     class UploadedFile
-      def tempfile
-        @tempfile
-      end
+      attr_reader :tempfile
     end
   end
 end
@@ -66,33 +64,33 @@ ActiveSupport::TestCase.class_eval do
 
   def action_type_attibutes(options)
     pricings = if options[:prices]
-      options[:prices].each.with_index.inject({}) do |result, values|
-        price, index = values
-        result["#{index}"] = {
-          enabled: '1',
-          transactable_type_pricing_id: TransactableType.first.time_based_booking.pricing_for(price[0].to_s).try(:id),
-          price: price[1],
-          number_of_units: price[0].to_s.split('_').first,
-          unit: price[0].to_s.split('_').last
-        }
-        result
-      end
-    else
-      {
-        "0"=> {
-          transactable_type_pricing_id: TransactableType.first.time_based_booking.pricing_for('1_day').id,
-          enabled: '1',
-          price: 0,
-          number_of_units: 1,
-          unit: 'day',
-          is_free_booking: true
-        }
-      }
+                 options[:prices].each.with_index.inject({}) do |result, values|
+                   price, index = values
+                   result["#{index}"] = {
+                     enabled: '1',
+                     transactable_type_pricing_id: TransactableType.first.time_based_booking.pricing_for(price[0].to_s).try(:id),
+                     price: price[1],
+                     number_of_units: price[0].to_s.split('_').first,
+                     unit: price[0].to_s.split('_').last
+                   }
+                   result
+                 end
+               else
+                 {
+                   '0' => {
+                     transactable_type_pricing_id: TransactableType.first.time_based_booking.pricing_for('1_day').id,
+                     enabled: '1',
+                     price: 0,
+                     number_of_units: 1,
+                     unit: 'day',
+                     is_free_booking: true
+                   }
+                 }
     end
 
     {
       action_types_attributes: {
-        "0"=> {
+        '0' => {
           transactable_type_action_type_id: TransactableType.first.action_types.first.id,
           enabled: 'true',
           type: options[:type] || 'Transactable::TimeBasedBooking',
@@ -112,7 +110,7 @@ ActiveSupport::TestCase.class_eval do
     refute object.to_s.include?(unexpected), message
   end
 
-  def with_carrier_wave_processing(&blk)
+  def with_carrier_wave_processing(&_blk)
     before, CarrierWave::Uploader::Base.enable_processing = CarrierWave::Uploader::Base.enable_processing, true
     yield
   ensure
@@ -170,27 +168,27 @@ ActiveSupport::TestCase.class_eval do
     FactoryGirl.create(:stripe_payment_gateway, instance_id: instance.id)
   end
 
-  def stub_active_merchant_interaction(response={success?: true})
-    PaymentGateway.any_instance.stubs(:gateway_authorize).returns(OpenStruct.new(response.reverse_merge({authorization: "54533"})))
-    PaymentGateway.any_instance.stubs(:gateway_void).returns(OpenStruct.new(response.reverse_merge({authorization: "54533"})))
-    PaymentGateway.any_instance.stubs(:gateway_capture).returns(OpenStruct.new(response.reverse_merge({params: {"id" => '12345'}})))
-    PaymentGateway.any_instance.stubs(:gateway_refund).returns(OpenStruct.new(response.reverse_merge({params: {"id" => '12345'}})))
-    PayPal::SDK::AdaptivePayments::API.any_instance.stubs(:pay).returns(OpenStruct.new(response.reverse_merge(paymentExecStatus: "COMPLETED")))
+  def stub_active_merchant_interaction(response = { success?: true })
+    PaymentGateway.any_instance.stubs(:gateway_authorize).returns(OpenStruct.new(response.reverse_merge(authorization: '54533')))
+    PaymentGateway.any_instance.stubs(:gateway_void).returns(OpenStruct.new(response.reverse_merge(authorization: '54533')))
+    PaymentGateway.any_instance.stubs(:gateway_capture).returns(OpenStruct.new(response.reverse_merge(params: { 'id' => '12345' })))
+    PaymentGateway.any_instance.stubs(:gateway_refund).returns(OpenStruct.new(response.reverse_merge(params: { 'id' => '12345' })))
+    PayPal::SDK::AdaptivePayments::API.any_instance.stubs(:pay).returns(OpenStruct.new(response.reverse_merge(paymentExecStatus: 'COMPLETED')))
 
     stub_store_card
   end
 
   def stub_store_card
     stub = OpenStruct.new(success?: true, params: {
-      "object" => 'customer',
-      "id" => 'customer_1',
-      "default_source" => 'card_1',
-      "cards" => {
-        "data" => [
-          { "id" => "card_1" }
-        ]
-      }
-    })
+                            'object' => 'customer',
+                            'id' => 'customer_1',
+                            'default_source' => 'card_1',
+                            'cards' => {
+                              'data' => [
+                                { 'id' => 'card_1' }
+                              ]
+                            }
+                          })
     ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(stub).at_least(0)
   end
 
@@ -200,7 +198,6 @@ ActiveSupport::TestCase.class_eval do
   # end
 end
 
-
 ActionController::TestCase.class_eval do
   include Rails.application.routes.url_helpers
   include Devise::TestHelpers
@@ -208,13 +205,11 @@ ActionController::TestCase.class_eval do
   setup :return_default_host
 
   def return_default_host
-    request.host =  "example.com"
+    request.host =  'example.com'
   end
 
   def self.logged_in(factory = :admin, &block)
-
-    context "logged in as {factory}" do
-
+    context 'logged in as {factory}' do
       setup do
         @user = FactoryGirl.create(factory)
         sign_in @user
@@ -222,7 +217,6 @@ ActionController::TestCase.class_eval do
 
       merge_block(&block) if block_given?
     end
-
   end
 
   def with_versioning
@@ -248,11 +242,10 @@ DatabaseCleaner.clean_with :truncation
 DatabaseCleaner.strategy = :transaction
 
 class TestDataSeeder
-
   @@data_seeded = false
 
   def self.seed!
-    if !@@data_seeded
+    unless @@data_seeded
       @@data_seeded = true
       instance = FactoryGirl.create(:instance)
       instance.set_context!
@@ -274,7 +267,7 @@ end
 class DummyEvent < WorkflowStep::BaseStep
 end
 
-def enable_elasticsearch!(&block)
+def enable_elasticsearch!(&_block)
   Rails.application.config.use_elastic_search = true
   Transactable.__elasticsearch__.index_name = 'transactables_test'
   Transactable.__elasticsearch__.create_index!(force: true)
@@ -286,4 +279,3 @@ def disable_elasticsearch!
   Transactable.__elasticsearch__.client.indices.delete index: Transactable.index_name
   Rails.application.config.use_elastic_search = false
 end
-

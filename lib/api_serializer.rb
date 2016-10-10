@@ -1,5 +1,4 @@
 class ApiSerializer
-
   class << self
     def serialize_object(object, options = {})
       JSONAPI::Serializer.serialize(object, options)
@@ -14,4 +13,3 @@ class ApiSerializer
     end
   end
 end
-

@@ -51,13 +51,11 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
     redirect_to request.referer.presence || location_after_save
   end
 
-  # TODO this is only used for Purchase but should confirm Reservation and ReservationRequest correctly
+  # TODO: this is only used for Purchase but should confirm Reservation and ReservationRequest correctly
   # The idea is to move all host action for all Order types here
   def confirm
     if params[:order] && order_params.present?
-      unless @order.update(order_params)
-        render action: :confirmation_form
-      end
+      render action: :confirmation_form unless @order.update(order_params)
     end
     if @order.confirmed?
       flash[:warning] = t('flash_messages.manage.reservations.reservation_already_confirmed')
@@ -90,12 +88,12 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
       elsif @order.action.both_side_confirmation
         flash[:success] = t('flash_messages.manage.reservations.lender_confirmed_both_side_confirmation')
       else
-         flash[:error] = [
+        flash[:error] = [
           t('flash_messages.manage.reservations.reservation_not_confirmed'),
           *@order.errors.full_messages, *@order.payment.errors.full_messages
         ].join("\n")
       end
-     else
+    else
       flash[:error] = t('dashboard.host_reservations.reservation_is_expired') if @reservation.expired?
     end
 
@@ -126,7 +124,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   private
 
   def order_scope
-    @order_scope ||=  @company.orders.active
+    @order_scope ||= @company.orders.active
   end
 
   def track_order_update_profile_informations

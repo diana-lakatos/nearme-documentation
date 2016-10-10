@@ -39,11 +39,11 @@ class ReviewsController < ApplicationController
   def set_reviews_avg_rating_and_question_avg_rating
     case params[:subject]
     when RatingConstants::TRANSACTABLE
-      @reviews = @reviewable_parent.reviews.includes(:rating_answers, { rating_system: :rating_questions })
+      @reviews = @reviewable_parent.reviews.includes(:rating_answers, rating_system: :rating_questions)
       @average_rating = @reviewable_parent.try(:average_rating)
       @question_average_rating = @reviewable_parent.question_average_rating
     when RatingConstants::HOST
-      @reviews = Review.about_seller(@reviewable_parent).includes(:rating_answers, { rating_system: :rating_questions })
+      @reviews = Review.about_seller(@reviewable_parent).includes(:rating_answers, rating_system: :rating_questions)
       @average_rating = @reviewable_parent.seller_average_rating
       @question_average_rating = @reviewable_parent.question_average_rating(@reviews)
     end

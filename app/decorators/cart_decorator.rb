@@ -2,7 +2,7 @@ class CartDecorator
   include MoneyRails::ActionViewExtension
   include ActionView::Helpers::TagHelper
 
-  def initialize(user, order=nil, step=nil)
+  def initialize(user, order = nil, step = nil)
     @user = user
     @step = step
     @order = order
@@ -10,13 +10,13 @@ class CartDecorator
 
   def cart_orders
     @cart_orders ||= if @order
-      [@order]
-    else
-      @user.cart_orders.decorate
+                       [@order]
+                     else
+                       @user.cart_orders.decorate
     end
   end
 
-  alias orders cart_orders
+  alias_method :orders, :cart_orders
 
   def items_count
     cart_orders.size
@@ -44,7 +44,7 @@ class CartDecorator
   end
 
   def total_display
-    "#{orders.first.currency_object.try(:symbol)} #{content_tag(:span, humanized_money(total.to_money), data: {"cart-total": true})}"
+    "#{orders.first.currency_object.try(:symbol)} #{content_tag(:span, humanized_money(total.to_money), data: { "cart-total": true })}"
   end
 
   def empty?

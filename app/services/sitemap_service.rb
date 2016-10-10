@@ -47,7 +47,7 @@ module SitemapService
 
     xml.push(sitemap_xml_closing)
 
-    return xml.join
+    xml.join
   end
 
   def node_class_for_object(object)
@@ -63,9 +63,9 @@ module SitemapService
   end
 
   def save_changes!(domain, sitemap_xml)
-    system "mkdir", "-p", tmp_path
+    system 'mkdir', '-p', tmp_path
 
-    tmp_file = Tempfile.new([tmp_filename_for(domain), ".xml"])
+    tmp_file = Tempfile.new([tmp_filename_for(domain), '.xml'])
     begin
       tmp_file.write(sitemap_xml.to_s.squish)
       domain.generated_sitemap = tmp_file
@@ -75,7 +75,6 @@ module SitemapService
       tmp_file.close
       tmp_file.unlink
     end
-
   end
 
   def update_on_search_engines(domain)

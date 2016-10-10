@@ -25,13 +25,13 @@ module Auth
     end
 
     def create_authentication!(current_user)
-      current_user.authentications.create!(:provider => provider,
-                                           :uid => uid,
-                                           :token => token,
-                                           :secret => secret,
-                                           :token_expires_at => expires_at,
-                                           :token_expires => expires_at ? true : false,
-                                           :token_expired => false)
+      current_user.authentications.create!(provider: provider,
+                                           uid: uid,
+                                           token: token,
+                                           secret: secret,
+                                           token_expires_at: expires_at,
+                                           token_expires: expires_at ? true : false,
+                                           token_expired: false)
       current_user.save!(validate: false)
     end
 
@@ -59,7 +59,7 @@ module Auth
       elsif authentication
         authentication.user
       else
-        raise 'No user specified!'
+        fail 'No user specified!'
       end
     end
 

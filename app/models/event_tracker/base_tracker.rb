@@ -25,8 +25,6 @@
 # to mock out the relevant tracker instance and assert an expectation to call the
 # relevant event method(s).
 class EventTracker::BaseTracker
-
-
   def initialize(mixpanel_api, google_analytics_api)
     @mixpanel_api = mixpanel_api
     @google_analytics_api = google_analytics_api
@@ -79,6 +77,4 @@ class EventTracker::BaseTracker
   def set_person_properties(*objects)
     @mixpanel_api.set_person_properties Serializers::TrackSerializer.new(*objects).serialize
   end
-
 end
-

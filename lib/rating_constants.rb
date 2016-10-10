@@ -9,6 +9,4 @@ module RatingConstants
   # host rates guest
   GUEST = 'guest'.freeze
   RATING_SYSTEM_SUBJECTS = [HOST, TRANSACTABLE, GUEST].freeze
-
 end
-

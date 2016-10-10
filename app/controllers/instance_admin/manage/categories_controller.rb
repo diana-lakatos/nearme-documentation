@@ -1,5 +1,4 @@
 class InstanceAdmin::Manage::CategoriesController < InstanceAdmin::Manage::BaseController
-
   def index
     @categories = Category.roots.order(:position)
     @category = Category.new
@@ -50,7 +49,7 @@ class InstanceAdmin::Manage::CategoriesController < InstanceAdmin::Manage::BaseC
           flash[:success] = t 'flash_messages.instance_admin.manage.category.updated'
           redirect_to edit_instance_admin_manage_category_path(@category)
         end
-        format.js { render json: {message: rename_message}.to_json }
+        format.js { render json: { message: rename_message }.to_json }
       end
     else
       flash[:error] = @category.errors.full_messages.to_sentence
@@ -74,6 +73,4 @@ class InstanceAdmin::Manage::CategoriesController < InstanceAdmin::Manage::BaseC
   def category_params
     params.require(:category).permit(secured_params.category)
   end
-
 end
-

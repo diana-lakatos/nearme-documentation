@@ -1,5 +1,4 @@
 class RecurringBookingPeriod < ActiveRecord::Base
-
   include Payable
   include Modelable
 
@@ -9,9 +8,9 @@ class RecurringBookingPeriod < ActiveRecord::Base
   belongs_to :order
 
   delegate :payment_gateway, :company, :company_id, :user, :creator, :owner, :currency,
-    :service_fee_guest_percent, :service_fee_host_percent, :payment_subscription,
-    :transactable, :quantity, :cancellation_policy_hours_for_cancellation,
-    :cancellation_policy_penalty_percentage, :action, :host, :is_free_booking?, to: :order
+           :service_fee_guest_percent, :service_fee_host_percent, :payment_subscription,
+           :transactable, :quantity, :cancellation_policy_hours_for_cancellation,
+           :cancellation_policy_penalty_percentage, :action, :host, :is_free_booking?, to: :order
 
   scope :unpaid, -> { where(paid_at: nil) }
   scope :paid, -> { where.not(paid_at: nil) }
@@ -29,9 +28,9 @@ class RecurringBookingPeriod < ActiveRecord::Base
   def skip_payment_authorization
     false
   end
-  alias :skip_payment_authorization? :skip_payment_authorization
+  alias_method :skip_payment_authorization?, :skip_payment_authorization
 
-  # TODO unifiy with ReservationPeriod
+  # TODO: unifiy with ReservationPeriod
   def starts_at
     period_start_date
   end
@@ -66,19 +65,17 @@ class RecurringBookingPeriod < ActiveRecord::Base
   def generate_payment!
     return true if paid?
 
-    payment_object = self.payment || build_payment
+    payment_object = payment || build_payment
 
-    payment_object.attributes = shared_payment_attributes.merge({
-      credit_card: payment_subscription.credit_card,
-      payment_method: payment_subscription.payment_method,
-    })
+    payment_object.attributes = shared_payment_attributes.merge(credit_card: payment_subscription.credit_card,
+                                                                payment_method: payment_subscription.payment_method)
 
     payment_object.authorize && payment_object.capture!
     payment_object.save!
 
     if payment_object.paid?
       payment_subscription.try(:unexpire!)
-      self.update_attribute(:paid_at, Time.zone.now)
+      update_attribute(:paid_at, Time.zone.now)
       mark_recurring_booking_as_paid!
     else
       payment_subscription.try(:expire!)
@@ -97,7 +94,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
     payment.update_attribute(:credit_card_id, payment_subscription.credit_card_id)
     payment.authorize && payment.capture!
     if payment.paid?
-      self.update_attribute(:paid_at, Time.zone.now)
+      update_attribute(:paid_at, Time.zone.now)
       mark_recurring_booking_as_paid!
     end
     save!
@@ -119,15 +116,14 @@ class RecurringBookingPeriod < ActiveRecord::Base
   private
 
   def send_creation_alert
-    WorkflowStepJob.perform(WorkflowStep::OrderItemWorkflow::Created, self.id)
+    WorkflowStepJob.perform(WorkflowStep::OrderItemWorkflow::Created, id)
   end
 
   def send_approve_alert
-    WorkflowStepJob.perform(WorkflowStep::OrderItemWorkflow::Approved, self.id)
+    WorkflowStepJob.perform(WorkflowStep::OrderItemWorkflow::Approved, id)
   end
 
   def send_reject_alert
-    WorkflowStepJob.perform(WorkflowStep::OrderItemWorkflow::Rejected, self.id)
+    WorkflowStepJob.perform(WorkflowStep::OrderItemWorkflow::Rejected, id)
   end
 end
-

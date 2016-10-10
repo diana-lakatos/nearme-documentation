@@ -3,7 +3,7 @@ class RecurringBookingPeriodDrop < BaseDrop
   attr_reader :source
 
   delegate :id, :line_items, :created_at, :payment, :total_amount_cents, :pending?,
-    :approved?, :rejected?, :state, :order, :persisted?, :rejection_reason, to: :source
+           :approved?, :rejected?, :state, :order, :persisted?, :rejection_reason, to: :source
 
   def payment_state
     return 'paid' if @source.paid?
@@ -20,11 +20,10 @@ class RecurringBookingPeriodDrop < BaseDrop
 
   def show_url
     '/dashboard/order_items'
-    #urlify(routes.dashboard_company_order_items_path)
+    # urlify(routes.dashboard_company_order_items_path)
   end
 
   def recurring_booking
     @source.order
   end
-
 end

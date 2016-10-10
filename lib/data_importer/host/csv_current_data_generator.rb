@@ -1,7 +1,6 @@
 require 'csv'
 
 class DataImporter::Host::CsvCurrentDataGenerator < DataImporter::File
-
   def initialize(user, transactable_type)
     @transactable_type = transactable_type
     @user = user
@@ -52,27 +51,23 @@ class DataImporter::Host::CsvCurrentDataGenerator < DataImporter::File
                   photo
                 end
         data_row << begin
-                      if (object == 'transactable' && model.present? && !model.respond_to?(field))
-                        if field == 'listing_categories'
-                          model.categories.map { |c| c.permalink }.join(',')
-                        elsif field =~ /_price_cents/
-                          if model.action_type
-                            price = model.action_type.pricings.find{ |p| p.units_to_s == field.match(/for_(.*)_price_cents/)[1]}
-                            if price
-                              price.is_free_booking? ? 'Free' : price.price_cents
-                            end
-                          end
-                        else
-                          model.try(:properties).try(:send, field)
-                        end
-                      else
-                        model.try(:send, field)
-                      end
+          if object == 'transactable' && model.present? && !model.respond_to?(field)
+            if field == 'listing_categories'
+              model.categories.map(&:permalink).join(',')
+            elsif field =~ /_price_cents/
+              if model.action_type
+                price = model.action_type.pricings.find { |p| p.units_to_s == field.match(/for_(.*)_price_cents/)[1] }
+                price.is_free_booking? ? 'Free' : price.price_cents if price
+              end
+            else
+              model.try(:properties).try(:send, field)
+            end
+          else
+            model.try(:send, field)
+          end
         end
       end
       data_row
     end
   end
-
 end
-

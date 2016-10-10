@@ -1,7 +1,7 @@
 class Admin::VersionsController < Admin::BaseController
-  before_filter :set_instance, :except => [:destroy]
+  before_filter :set_instance, except: [:destroy]
   before_filter :set_instance_view
-  before_filter :set_version, :except => [:index]
+  before_filter :set_version, except: [:index]
 
   def index
     @versions = @instance_view.versions
@@ -14,9 +14,9 @@ class Admin::VersionsController < Admin::BaseController
   def rollback
     @instance_view = @version.reify
     if @instance_view.save
-      flash[:success] = "Page has been successfully restored to previous version."
+      flash[:success] = 'Page has been successfully restored to previous version.'
     else
-      flash[:error] = "Unable to restore page to previus version"
+      flash[:error] = 'Unable to restore page to previus version'
     end
     redirect_to [:admin, @instance, @instance_view]
   end
@@ -34,5 +34,4 @@ class Admin::VersionsController < Admin::BaseController
   def set_version
     @version = @instance_view.versions.find(params[:id])
   end
-
 end

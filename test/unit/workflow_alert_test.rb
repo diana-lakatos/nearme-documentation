@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class WorkflowAlertTest < ActiveSupport::TestCase
-
   context 'validation' do
-
     setup do
       @workflow_alert = FactoryGirl.build(:workflow_alert)
     end
@@ -46,21 +44,18 @@ class WorkflowAlertTest < ActiveSupport::TestCase
   end
 
   context 'trigger conditions' do
-
     should 'not trigger with true condition' do
       workflow_alert = FactoryGirl.create(:workflow_alert)
       # We expect platform_context.name to always be non-blank
       workflow_alert.prevent_trigger_condition = 'platform_context.name != blank'
-      refute workflow_alert.should_be_triggered?(mock(:data => {}))
+      refute workflow_alert.should_be_triggered?(mock(data: {}))
     end
 
     should 'trigger with false condition' do
       workflow_alert = FactoryGirl.create(:workflow_alert)
       # We expect platform_context.name to always be non-blank
       workflow_alert.prevent_trigger_condition = 'platform_context.name == blank'
-      assert workflow_alert.should_be_triggered?(mock(:data => {}))
+      assert workflow_alert.should_be_triggered?(mock(data: {}))
     end
-
   end
 end
-

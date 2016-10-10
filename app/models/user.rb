@@ -1,5 +1,4 @@
 class User < ActiveRecord::Base
-
   include Searchable
 
   include CreationFilter
@@ -10,7 +9,6 @@ class User < ActiveRecord::Base
   SORT_OPTIONS = [:all, :featured, :people_i_know, :most_popular, :location, :number_of_projects]
   MAX_NAME_LENGTH = 30
   SMS_PREFERENCES = %w(user_message reservation_state_changed new_reservation)
-
 
   has_paper_trail ignore: [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                            :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
@@ -31,7 +29,7 @@ class User < ActiveRecord::Base
   mount_uploader :cover_image, CoverImageUploader
 
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable,
-   :user_validatable, :token_authenticatable, :temporary_token_authenticatable
+         :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
   skip_callback :commit, :after, :remove_avatar!
   skip_callback :commit, :after, :remove_cover_image!
@@ -68,21 +66,21 @@ class User < ActiveRecord::Base
   has_many :activity_feed_events, as: :followed, dependent: :destroy
   has_many :activity_feed_subscriptions, foreign_key: 'follower_id'
   has_many :activity_feed_subscriptions_as_followed, as: :followed, class_name: 'ActivityFeedSubscription', dependent: :destroy
-  has_many :administered_locations, class_name: "Location", foreign_key: 'administrator_id', inverse_of: :administrator
-  has_many :administered_listings, class_name: "Transactable", through: :administered_locations, source: :listings, inverse_of: :administrator
+  has_many :administered_locations, class_name: 'Location', foreign_key: 'administrator_id', inverse_of: :administrator
+  has_many :administered_listings, class_name: 'Transactable', through: :administered_locations, source: :listings, inverse_of: :administrator
   has_many :authentications, dependent: :destroy
   has_many :assigned_tickets, -> { order 'updated_at DESC' }, foreign_key: 'assigned_to_id', class_name: 'Support::Ticket'
   has_many :assigned_company_tickets, -> { where(target_type: 'Transactable').order('updated_at DESC') }, foreign_key: 'assigned_to_id', class_name: 'Support::Ticket'
   has_many :approval_request_attachments, foreign_key: 'uploader_id'
   has_many :approval_requests, as: :owner, dependent: :destroy
-  has_many :authored_messages, class_name: "UserMessage", foreign_key: 'author_id', inverse_of: :author
+  has_many :authored_messages, class_name: 'UserMessage', foreign_key: 'author_id', inverse_of: :author
   has_many :blog_posts, class_name: 'UserBlogPost'
   has_many :categories_categorizable, as: :categorizable, through: :user_profiles
   has_many :charges, foreign_key: 'user_id', dependent: :destroy
   has_many :company_users, -> { order(created_at: :asc) }, dependent: :destroy
   has_many :companies, through: :company_users
   has_many :comments, inverse_of: :creator
-  has_many :created_companies, class_name: "Company", foreign_key: 'creator_id', inverse_of: :creator
+  has_many :created_companies, class_name: 'Company', foreign_key: 'creator_id', inverse_of: :creator
   has_many :feed_followers, through: :activity_feed_subscriptions_as_followed, source: :follower
   has_many :feed_followed_transactables, through: :activity_feed_subscriptions, source: :followed, source_type: 'Transactable'
   has_many :feed_followed_topics, through: :activity_feed_subscriptions, source: :followed, source_type: 'Topic'
@@ -111,8 +109,8 @@ class User < ActiveRecord::Base
   has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
   has_many :orders, foreign_key: 'owner_id'
   has_many :recurring_bookings, foreign_key: 'owner_id'
-  has_many :relationships, class_name: "UserRelationship", foreign_key: 'follower_id', dependent: :destroy
-  has_many :reverse_relationships, class_name: "UserRelationship", foreign_key: 'followed_id', dependent: :destroy
+  has_many :relationships, class_name: 'UserRelationship', foreign_key: 'follower_id', dependent: :destroy
+  has_many :reverse_relationships, class_name: 'UserRelationship', foreign_key: 'followed_id', dependent: :destroy
   has_many :reviews
   has_many :requests_for_quotes, -> { where(target_type: 'Transactable').order('updated_at DESC') }, class_name: 'Support::Ticket'
   has_many :saved_searches, dependent: :destroy
@@ -141,7 +139,7 @@ class User < ActiveRecord::Base
   has_one :seller_profile, -> { seller }, class_name: 'UserProfile'
   has_one :buyer_profile, -> { buyer }, class_name: 'UserProfile'
   has_one :default_profile, -> { default }, class_name: 'UserProfile'
-  has_one :communication, ->(user) { where(provider_key: PlatformContext.current.instance.twilio_config[:key]) }, dependent: :destroy
+  has_one :communication, ->(_user) { where(provider_key: PlatformContext.current.instance.twilio_config[:key]) }, dependent: :destroy
 
   has_one :notification_preference, dependent: :destroy
   has_one :recurring_notification_preference, -> { NotificationPreference.recurring }, class_name: 'NotificationPreference'
@@ -154,7 +152,7 @@ class User < ActiveRecord::Base
   before_create :build_profile
 
   before_create do
-    self.instance_profile_type_id ||= PlatformContext.current.present? ? InstanceProfileType.default.first.try(:id) : InstanceProfileType.default.where(instance_id: self.instance_id).try(:first).try(:id)
+    self.instance_profile_type_id ||= PlatformContext.current.present? ? InstanceProfileType.default.first.try(:id) : InstanceProfileType.default.where(instance_id: instance_id).try(:first).try(:id)
   end
 
   before_restore :recover_companies
@@ -176,7 +174,7 @@ class User < ActiveRecord::Base
   }
 
   scope :by_search_query, lambda { |query|
-    where("users.name ilike ? or users.email ilike ? or users.id = ?", query, query, query.remove('%').to_i)
+    where('users.name ilike ? or users.email ilike ? or users.id = ?', query, query, query.remove('%').to_i)
   }
 
   scope :featured, -> { where(featured: true) }
@@ -188,69 +186,69 @@ class User < ActiveRecord::Base
 
   scope :ordered_by_email, -> { order('users.email ASC') }
 
-  scope :visited_listing, ->(listing) {
+  scope :visited_listing, lambda { |listing|
     joins(:orders).merge(Order.reservations.confirmed.past.for_listing(listing)).uniq
   }
 
-  scope :hosts_of_listing, ->(listing) {
+  scope :hosts_of_listing, lambda { |listing|
     where(id: listing.try(:administrator_id)).uniq
   }
 
-  scope :know_host_of, ->(listing) {
+  scope :know_host_of, lambda { |listing|
     joins(:followers).where(user_relationships: { follower_id: listing.administrator_id }).references(:user_relationships).uniq
   }
 
-  scope :mutual_friends_of, ->(user) {
+  scope :mutual_friends_of, lambda { |user|
     joins(:followers).where(user_relationships: { follower_id: user.friends.pluck(:id) }).without(user).with_mutual_friendship_source
   }
 
-  scope :with_mutual_friendship_source, -> {
+  scope :with_mutual_friendship_source, lambda {
     joins(:followers).select('"users".*, "user_relationships"."follower_id" AS mutual_friendship_source')
   }
 
-  scope :friends_of, -> (user) {
+  scope :friends_of, lambda  { |user|
     joins(
       sanitize_sql(['INNER JOIN user_relationships ur on ur.followed_id = users.id and ur.follower_id = ?', user.id])
     ) if user.try(:id)
   }
 
-  scope :for_instance, -> (instance) {
-    where(:'users.instance_id' => instance.id)
+  scope :for_instance, lambda  { |instance|
+    where('users.instance_id': instance.id)
   }
 
-  scope :feed_not_followed_by_user, -> (current_user) {
+  scope :feed_not_followed_by_user, lambda  { |current_user|
     where.not(id: current_user.feed_followed_users.pluck(:id))
   }
 
   scope :with_date, ->(date) { where(created_at: date) }
 
   scope :admin,     -> { where(admin: true) }
-  scope :not_admin, -> { where("admin is NULL or admin is false") }
-  scope :with_joined_transactable_collaborations, -> { joins("LEFT OUTER JOIN transactable_collaborators pc ON users.id = pc.user_id AND (pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)")}
+  scope :not_admin, -> { where('admin is NULL or admin is false') }
+  scope :with_joined_transactable_collaborations, -> { joins('LEFT OUTER JOIN transactable_collaborators pc ON users.id = pc.user_id AND (pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)') }
   scope :created_transactables, -> { joins('LEFT OUTER JOIN transactables p ON users.id = p.creator_id') }
   scope :featured, -> { where(featured: true) }
 
   scope :by_topic, -> (topic_ids) do
     if topic_ids.present?
-      with_joined_transactable_collaborations.created_transactables.
-        joins(" LEFT OUTER JOIN transactable_topics pt on pt.transactable_id = pc.transactable_id OR pt.transactable_id = p.id ").
-        where('pt.topic_id IN (?)', topic_ids).group('users.id')
+      with_joined_transactable_collaborations.created_transactables
+        .joins(' LEFT OUTER JOIN transactable_topics pt on pt.transactable_id = pc.transactable_id OR pt.transactable_id = p.id ')
+        .where('pt.topic_id IN (?)', topic_ids).group('users.id')
     end
   end
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((user_profiles.properties->?), ',') && ARRAY[?]", property, values) if values.present? }
   scope :by_profile_type, -> (ipt_id) { includes(:user_profiles).where(user_profiles: { instance_profile_type_id: ipt_id }) if ipt_id.present? }
-  scope :with_enabled_profile, -> (ipt_id) { where(user_profiles: { enabled: true }) }
+  scope :with_enabled_profile, -> (_ipt_id) { where(user_profiles: { enabled: true }) }
 
-  scope :order_by_array_of_ids, -> (user_ids) {
+  scope :order_by_array_of_ids, lambda  { |user_ids|
     user_ids ||= []
-    user_ids_decorated = user_ids.each_with_index.map {|lid, i| "WHEN users.id=#{lid} THEN #{i}" }
+    user_ids_decorated = user_ids.each_with_index.map { |lid, i| "WHEN users.id=#{lid} THEN #{i}" }
     order("CASE #{user_ids_decorated.join(' ')} END") if user_ids.present?
   }
 
   validates_with CustomValidators
   validates :name, :first_name, presence: true
   validate :validate_name_length_from_fullname
-  validate :has_verified_phone_number, if: lambda { |u| u.must_have_verified_phone_number }
+  validate :has_verified_phone_number, if: ->(u) { u.must_have_verified_phone_number }
 
   # FIXME: This is an unideal coupling of 'required parameters' for specific forms
   #        to the general validations on the User model.
@@ -258,18 +256,17 @@ class User < ActiveRecord::Base
   #        a 'Form' object containing their own additional validations specific
   #        to their context.
   validates :phone, phone_number: true,
-    if: ->(u) {u.phone.present? || u.validation_for(:phone).try(:is_required?)}
+                    if: ->(u) { u.phone.present? || u.validation_for(:phone).try(:is_required?) }
   validates :mobile_number, phone_number: true,
-    if: ->(u) {u.mobile_number.present? || u.validation_for(:mobile_number).try(:is_required?)}
+                            if: ->(u) { u.mobile_number.present? || u.validation_for(:mobile_number).try(:is_required?) }
   validates_presence_of :country_name, :mobile_number, if:  ->(u)  { u.validation_for(:phone).try(:is_required?) }
 
   validates_inclusion_of :saved_searches_alerts_frequency, in: SavedSearch::ALERTS_FREQUENCIES
 
   validates_associated :companies, if: :verify_associated
-  validates_acceptance_of :accept_terms_of_service, on: :create, allow_nil: false, if: lambda { |u| PlatformContext.current.try(:instance).try(:force_accepting_tos) && u.custom_validation }
+  validates_acceptance_of :accept_terms_of_service, on: :create, allow_nil: false, if: ->(u) { PlatformContext.current.try(:instance).try(:force_accepting_tos) && u.custom_validation }
 
   class << self
-
     def find_for_database_authentication(warden_conditions)
       where(warden_conditions.to_h).order('external_id NULLS FIRST').first
     end
@@ -295,7 +292,7 @@ class User < ActiveRecord::Base
         values += role_attribute.valid_values.reject { |val| val =~ /Featured|Innovator|Black Belt/i }
       end
 
-      if values.present? && values.include?("Featured")
+      if values.present? && values.include?('Featured')
         featured
       else
         filtered_by_custom_attribute('role', values)
@@ -303,14 +300,14 @@ class User < ActiveRecord::Base
     end
 
     def xml_attributes
-      self.csv_fields.keys
+      csv_fields.keys
     end
 
     def csv_fields
       { email: 'User Email', name: 'User Name' }
     end
 
-    def reset_password_by_token(attributes={})
+    def reset_password_by_token(attributes = {})
       original_token       = attributes[:reset_password_token]
       reset_password_token = Devise.token_generator.digest(self, :reset_password_token, original_token)
 
@@ -340,12 +337,12 @@ class User < ActiveRecord::Base
         when /location/i
           return all unless user
           group('addresses.id, users.id').joins(:current_address).select('users.*')
-          .merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance', select: 'users.*'))
+            .merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance', select: 'users.*'))
         when /number_of_projects/i
           order('transactables_count + transactable_collaborators_count DESC')
         when /custom_attributes./
           parsed_order = order.match(/custom_attributes.([a-zA-Z\.\_\-]*)_(asc|desc)/)
-          order(ActiveRecord::Base.send(:sanitize_sql_array, [ "cast(user_profiles.properties -> :field_name as float) #{parsed_order[2]}", { field_name: parsed_order[1] }]))
+          order(ActiveRecord::Base.send(:sanitize_sql_array, ["cast(user_profiles.properties -> :field_name as float) #{parsed_order[2]}", { field_name: parsed_order[1] }]))
         else
           if PlatformContext.current.instance.is_community?
             order('transactables_count + transactable_collaborators_count DESC, followers_count DESC')
@@ -361,17 +358,17 @@ class User < ActiveRecord::Base
   end
 
   def get_seller_profile
-    seller_profile || self.build_seller_profile(instance_profile_type: PlatformContext.current.instance.try("seller_profile_type"))
+    seller_profile || build_seller_profile(instance_profile_type: PlatformContext.current.instance.try('seller_profile_type'))
   end
 
   def get_buyer_profile
-    buyer_profile || self.build_buyer_profile(instance_profile_type: PlatformContext.current.instance.try("buyer_profile_type"))
+    buyer_profile || build_buyer_profile(instance_profile_type: PlatformContext.current.instance.try('buyer_profile_type'))
   end
 
   def get_default_profile
-    default_profile || self.build_default_profile(instance_profile_type: PlatformContext.current.instance.try("default_profile_type"))
+    default_profile || build_default_profile(instance_profile_type: PlatformContext.current.instance.try('default_profile_type'))
   end
-  alias :build_profile :get_default_profile
+  alias_method :build_profile, :get_default_profile
 
   def custom_validators
     case force_profile
@@ -389,7 +386,7 @@ class User < ActiveRecord::Base
 
   def validation_for(field_names)
     field_names = Array(field_names).map(&:to_s)
-    custom_validators.select{ |cv| cv.field_name.in?(field_names) }
+    custom_validators.select { |cv| cv.field_name.in?(field_names) }
   end
 
   def apply_omniauth(omniauth)
@@ -413,8 +410,8 @@ class User < ActiveRecord::Base
     # Transactables with pending should only be visible on the users's own profile page
     transactables = Transactable.where("
      creator_id = ? OR
-     EXISTS (SELECT 1 from transactable_collaborators pc WHERE pc.transactable_id = transactables.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NOT NULL #{with_pending ? "OR" : "AND"} approved_by_owner_at IS NOT NULL) AND deleted_at IS NULL)
-                             ",id, id, email)
+     EXISTS (SELECT 1 from transactable_collaborators pc WHERE pc.transactable_id = transactables.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NOT NULL #{with_pending ? 'OR' : 'AND'} approved_by_owner_at IS NOT NULL) AND deleted_at IS NULL)
+                             ", id, id, email)
 
     # If the transactable is pending we add .pending_collaboration to the object (if we requested pending objects as well)
     if with_pending
@@ -424,7 +421,7 @@ class User < ActiveRecord::Base
            (SELECT pc.id from transactable_collaborators pc WHERE pc.transactable_id = transactables.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) as pending_collaboration
                                  ",
                                  id, email
-      ]
+                                ]
                                )
       )
     end
@@ -433,9 +430,9 @@ class User < ActiveRecord::Base
 
   def iso_country_code
     iso_country_code = if PlatformContext.current.instance.skip_company?
-      current_address.try(:iso_country_code) || country.try(:iso)
-    else
-      default_company.try(:iso_country_code)
+                         current_address.try(:iso_country_code) || country.try(:iso)
+                       else
+                         default_company.try(:iso_country_code)
     end
 
     iso_country_code.presence || PlatformContext.current.instance.default_country_code
@@ -476,7 +473,7 @@ class User < ActiveRecord::Base
   end
 
   def common_categories_json(category)
-    JSON.generate(common_categories(category).map { |c| { id: c.id, name: c.translated_name }})
+    JSON.generate(common_categories(category).map { |c| { id: c.id, name: c.translated_name } })
   end
 
   def create_blog
@@ -501,35 +498,35 @@ class User < ActiveRecord::Base
 
   def name(avoid_stack_too_deep = nil)
     avoid_stack_too_deep = false if avoid_stack_too_deep.nil?
-    name_from_components(avoid_stack_too_deep).presence || self.read_attribute(:name).to_s.split.collect { |w| w[0] = w[0].capitalize; w }.join(' ')
+    name_from_components(avoid_stack_too_deep).presence || read_attribute(:name).to_s.split.collect { |w| w[0] = w[0].capitalize; w }.join(' ')
   end
 
   def name_from_components(avoid_stack_too_deep)
     return '' if avoid_stack_too_deep
-    [first_name, middle_name, last_name].select { |s| s.present? }.join(' ')
+    [first_name, middle_name, last_name].select(&:present?).join(' ')
   end
 
   def first_name
-    (self.read_attribute(:first_name)) || get_first_name_from_name
+    (read_attribute(:first_name)) || get_first_name_from_name
   end
 
   def middle_name
-    (self.read_attribute(:middle_name)) || get_middle_name_from_name
+    (read_attribute(:middle_name)) || get_middle_name_from_name
   end
 
   def last_name
-    (self.read_attribute(:last_name)) || get_last_name_from_name
+    (read_attribute(:last_name)) || get_last_name_from_name
   end
 
   def name_with_state
-    name + (deleted? ? " (Deleted)" : (banned? ? " (Banned)" : ""))
+    name + (deleted? ? ' (Deleted)' : (banned? ? ' (Banned)' : ''))
   end
 
   def secret_name
     secret_name = last_name.present? ? last_name[0] : middle_name.try(:[], 0)
     secret_name = secret_name.present? ? "#{first_name} #{secret_name[0]}." : first_name
 
-    if self.properties.try(:is_intel) == true
+    if properties.try(:is_intel) == true
       secret_name += ' (Intel)'
       secret_name.html_safe
     else
@@ -540,14 +537,14 @@ class User < ActiveRecord::Base
   # Whether to validate the presence of a password
   def password_required?
     # we want to enforce skipping password for instance_admin/users#create
-    return false if self.skip_password == true
-    return true if self.skip_password == false
+    return false if skip_password == true
+    return true if skip_password == false
     # We're changing/setting password, or new user and there are no Provider authentications
     !password.blank? || (new_record? && authentications.empty?)
   end
 
   def has_active_credit_cards?
-    self.instance_clients.mode_scope.any? do |i|
+    instance_clients.mode_scope.any? do |i|
       i.payment_gateway.active_in_current_mode?
     end
   end
@@ -563,9 +560,9 @@ class User < ActiveRecord::Base
   end
 
   def generate_random_password!
-    chars = ("a".."z").to_a + ("A".."Z").to_a + ("0".."9").to_a
+    chars = ('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a
     random_pass = ''
-    1.upto(8) { |i| random_pass << chars[rand(chars.size-1)] }
+    1.upto(8) { |_i| random_pass << chars[rand(chars.size - 1)] }
     self.password = random_pass
   end
 
@@ -585,17 +582,17 @@ class User < ActiveRecord::Base
     # ugly hack, but properties do not respond to _changed, _was etc.
     if self.respond_to?(field_name)
       if self.respond_to?("#{field_name}_changed?")
-        self.send(field_name).blank? || self.send("#{field_name}_changed?")
+        send(field_name).blank? || send("#{field_name}_changed?")
       # check if it's association. The idea is to avoid send(field_name) in case the field name is "destroy" etc
       elsif self.class.reflect_on_association(field_name)
-        self.send(field_name).blank? || self.send("#{field_name}").changed?
+        send(field_name).blank? || send("#{field_name}").changed?
       else
-        db_field_value = User.find(self.id).properties[field_name]
-        self.properties[field_name].blank? || (db_field_value != self.properties[field_name])
+        db_field_value = User.find(id).properties[field_name]
+        properties[field_name].blank? || (db_field_value != properties[field_name])
       end
     else
-      db_field_value = User.find(self.id).properties[field_name]
-      self.properties[field_name].blank? || (db_field_value != self.properties[field_name])
+      db_field_value = User.find(id).properties[field_name]
+      properties[field_name].blank? || (db_field_value != properties[field_name])
     end
   end
 
@@ -611,7 +608,7 @@ class User < ActiveRecord::Base
 
   def notify_about_wrong_phone_number
     unless notified_about_mobile_number_issue_at
-      WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::WrongPhoneNumber, self.id)
+      WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::WrongPhoneNumber, id)
       update_attribute(:notified_about_mobile_number_issue_at, Time.zone.now)
     end
   end
@@ -625,9 +622,9 @@ class User < ActiveRecord::Base
   end
 
   def add_friend(users, auth = nil)
-    raise ArgumentError, "Invalid Authentication for User ##{self.id}" if auth && auth.user != self
+    fail ArgumentError, "Invalid Authentication for User ##{id}" if auth && auth.user != self
     Array.wrap(users).each do |user|
-      next if self.friends.exists?(user)
+      next if friends.exists?(user)
       friend_auth = auth.nil? ? nil : user.authentications.where(provider: auth.provider).first
       user.follow!(self, friend_auth)
       self.follow!(user, auth)
@@ -637,7 +634,7 @@ class User < ActiveRecord::Base
   alias_method :add_friends, :add_friend
 
   def friends
-    self.followed_users.without(self)
+    followed_users.without(self)
   end
 
   def social_friends_ids
@@ -652,12 +649,12 @@ class User < ActiveRecord::Base
   end
 
   def friends_know_host_of(listing)
-    # TODO Rails 4 - merge
-    self.friends && User.know_host_of(listing)
+    # TODO: Rails 4 - merge
+    friends && User.know_host_of(listing)
   end
 
   def social_connections
-    self.authentications
+    authentications
   end
 
   def mutual_friendship_source
@@ -681,7 +678,7 @@ class User < ActiveRecord::Base
     return unless mobile_number.present?
 
     number = mobile_number
-    number = "+#{country.calling_code}#{number.gsub(/^0/, "")}" if country.try(:calling_code)
+    number = "+#{country.calling_code}#{number.gsub(/^0/, '')}" if country.try(:calling_code)
     number
   end
 
@@ -698,7 +695,7 @@ class User < ActiveRecord::Base
   end
 
   def default_company
-    self.companies.first
+    companies.first
   end
 
   def all_company_transactables
@@ -722,36 +719,36 @@ class User < ActiveRecord::Base
   end
 
   def log_out!
-    self.update_attribute(:sso_log_out, true)
+    update_attribute(:sso_log_out, true)
   end
 
   def logged_out!
-    self.update_attribute(:sso_log_out, false)
+    update_attribute(:sso_log_out, false)
   end
 
   def email_verification_token
     Digest::SHA1.hexdigest(
-      "--dnm-token-#{self.id}-#{self.created_at.utc.strftime('%Y-%m-%d %H:%M:%S')}"
+      "--dnm-token-#{id}-#{created_at.utc.strftime('%Y-%m-%d %H:%M:%S')}"
     )
   end
 
   def generate_payment_token
     new_token = SecureRandom.hex(32)
-    self.update_attribute(:payment_token, new_token)
+    update_attribute(:payment_token, new_token)
     new_token
   end
 
   def verify_payment_token(token)
-    return false if self.payment_token.nil?
-    current_token = self.payment_token
-    self.update_attribute(:payment_token, nil)
+    return false if payment_token.nil?
+    current_token = payment_token
+    update_attribute(:payment_token, nil)
     current_token == token
   end
 
   def verify_email_with_token(token)
-    if token.present? && self.email_verification_token == token && !self.verified_at
+    if token.present? && email_verification_token == token && !verified_at
       self.verified_at = Time.zone.now
-      self.save(validate: false)
+      save(validate: false)
       true
     else
       false
@@ -796,7 +793,7 @@ class User < ActiveRecord::Base
   end
 
   def unread_user_message_threads_count_for(instance)
-    self.instance_unread_messages_threads_count.fetch(instance.id, 0)
+    instance_unread_messages_threads_count.fetch(instance.id, 0)
   end
 
   def listings_in_near(results_size = 3, radius_in_km = 100, without_listings_from_cancelled_reservations = false)
@@ -804,11 +801,11 @@ class User < ActiveRecord::Base
 
     locations_in_near = Location.includes(:location_address).near(current_address, radius_in_km, units: :km)
 
-    listing_ids_of_cancelled_reservations = self.orders.reservations.cancelled_or_expired_or_rejected.pluck(:transactable_id) if without_listings_from_cancelled_reservations
+    listing_ids_of_cancelled_reservations = orders.reservations.cancelled_or_expired_or_rejected.pluck(:transactable_id) if without_listings_from_cancelled_reservations
 
     listings = []
     locations_in_near.includes(:listings).each do |location|
-      if without_listings_from_cancelled_reservations and !listing_ids_of_cancelled_reservations.empty?
+      if without_listings_from_cancelled_reservations && !listing_ids_of_cancelled_reservations.empty?
         listings += location.listings.searchable.where('transactables.id NOT IN (?)', listing_ids_of_cancelled_reservations).limit((listings.size - results_size).abs)
       else
         listings += location.listings.searchable.limit((listings.size - results_size).abs)
@@ -819,11 +816,11 @@ class User < ActiveRecord::Base
   end
 
   def can_manage_location?(location)
-    location.company && location.company.company_users.where(user_id: self.id).any?
+    location.company && location.company.company_users.where(user_id: id).any?
   end
 
   def can_manage_listing?(listing)
-    listing.company && listing.company.company_users.where(user_id: self.id).any?
+    listing.company && listing.company.company_users.where(user_id: id).any?
   end
 
   def instance_admin?
@@ -831,7 +828,7 @@ class User < ActiveRecord::Base
   end
 
   def administered_locations_pageviews_30_day_total
-    scoped_locations = (!companies.count.zero? && self == self.companies.first.creator) ? self.companies.first.locations : administered_locations
+    scoped_locations = (!companies.count.zero? && self == companies.first.creator) ? companies.first.locations : administered_locations
     scoped_locations = scoped_locations.with_searchable_listings
     Impression.where('impressionable_type = ? AND impressionable_id IN (?) AND DATE(impressions.created_at) >= ?', 'Location', scoped_locations.pluck(:id), Date.current - 30.days).count
   end
@@ -845,17 +842,13 @@ class User < ActiveRecord::Base
   end
 
   def perform_cleanup!
-    self.created_companies.destroy_all
-    self.orders.unconfirmed.find_each do |r|
-      r.user_cancel!
-    end
-    self.created_listings_orders.unconfirmed.find_each do |r|
-      r.reject!
-    end
+    created_companies.destroy_all
+    orders.unconfirmed.find_each(&:user_cancel!)
+    created_listings_orders.unconfirmed.find_each(&:reject!)
   end
 
   def recover_companies
-    self.created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', [self.deleted_at, self.banned_at].compact.first, [self.deleted_at, self.banned_at].compact.first + 30.seconds).each do |company|
+    created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', [deleted_at, banned_at].compact.first, [deleted_at, banned_at].compact.first + 30.seconds).each do |company|
       begin
         company.restore(recursive: true)
       rescue
@@ -886,9 +879,9 @@ class User < ActiveRecord::Base
   end
 
   def social_url(provider)
-    authentications.where(provider: provider).
-      where('profile_url IS NOT NULL').
-      order('created_at asc').last.try(:profile_url)
+    authentications.where(provider: provider)
+      .where('profile_url IS NOT NULL')
+      .order('created_at asc').last.try(:profile_url)
   end
 
   def active_for_authentication?
@@ -924,19 +917,19 @@ class User < ActiveRecord::Base
   # please check Metadata::Base for further reference
 
   def companies_metadata
-    get_instance_metadata("companies_metadata")
+    get_instance_metadata('companies_metadata')
   end
 
   def instance_admins_metadata
     return 'analytics' if admin?
-    get_instance_metadata("instance_admins_metadata")
+    get_instance_metadata('instance_admins_metadata')
   end
 
   def instance_profile_type_id
     read_attribute(:instance_profile_type_id) || instance_profile_type.try(:id)
   end
 
-  # hack for compatibiltiy reason, to be removed soon
+  # HACK: for compatibiltiy reason, to be removed soon
   def profile
     properties
   end
@@ -959,29 +952,29 @@ class User < ActiveRecord::Base
 
   def question_average_rating(reviews)
     @rating_answers_rating ||= RatingAnswer.where(review_id: reviews.pluck(:id))
-      .group(:rating_question_id).average(:rating)
+                               .group(:rating_question_id).average(:rating)
   end
 
   def recalculate_seller_average_rating!
     seller_average_rating = reviews_about_seller.average(:rating) || 0.0
-    self.update_column(:seller_average_rating, seller_average_rating)
-    ElasticBulkUpdateJob.perform Transactable, listings.searchable.map{ |listing| [listing.id, { seller_average_rating: seller_average_rating }]}
+    update_column(:seller_average_rating, seller_average_rating)
+    ElasticBulkUpdateJob.perform Transactable, listings.searchable.map { |listing| [listing.id, { seller_average_rating: seller_average_rating }] }
     touch
   end
 
   def recalculate_buyer_average_rating!
     buyer_average_rating = reviews_about_buyer.average(:rating) || 0.0
-    self.update_column(:buyer_average_rating, buyer_average_rating)
+    update_column(:buyer_average_rating, buyer_average_rating)
     touch
   end
 
   def recalculate_left_as_buyer_average_rating!
-    self.update_column(:left_by_buyer_average_rating, Review.left_by_buyer(self).average(:rating) || 0.0)
+    update_column(:left_by_buyer_average_rating, Review.left_by_buyer(self).average(:rating) || 0.0)
     touch
   end
 
   def recalculate_left_as_seller_average_rating!
-    self.update_column(:left_by_seller_average_rating, Review.left_by_seller(self).average(:rating) || 0.0)
+    update_column(:left_by_seller_average_rating, Review.left_by_seller(self).average(:rating) || 0.0)
     touch
   end
 
@@ -1004,7 +997,7 @@ class User < ActiveRecord::Base
   end
 
   def can_update_feed_status?(record)
-    record == self || self.is_instance_owner? || record.try(:creator) === self || record.try(:user_id) === self.id
+    record == self || self.is_instance_owner? || record.try(:creator) === self || record.try(:user_id) === id
   end
 
   def social_friends
@@ -1032,7 +1025,7 @@ class User < ActiveRecord::Base
 
   def payout_payment_gateways
     if @payment_gateways.nil?
-      @payment_gateways = instance.payout_gateways(self.iso_country_code, all_currencies)
+      @payment_gateways = instance.payout_gateways(iso_country_code, all_currencies)
     end
     @payment_gateways
   end
@@ -1098,7 +1091,7 @@ class User < ActiveRecord::Base
     'UserJsonSerializer'
   end
 
-private
+  private
 
   def get_first_name_from_name
     name(true).split[0...1].join(' ')

@@ -7,5 +7,4 @@ class RatingSystemTest < ActiveSupport::TestCase
 
   should accept_nested_attributes_for(:rating_questions).allow_destroy(true)
   should accept_nested_attributes_for(:rating_hints)
-
 end

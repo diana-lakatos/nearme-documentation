@@ -56,14 +56,14 @@ class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceControl
   protected
 
   def resource_class
-    raise NotImplementedError
+    fail NotImplementedError
   end
 
   def set_breadcrumbs
     @breadcrumbs_title = BreadcrumbsList.new(
-      { :url => polymorphic_url([:instance_admin, @controller_scope, resource_class]), :title => t("instance_admin.#{@controller_scope}.#{translation_key}.#{translation_key}") },
-      { :title => @target.name.titleize },
-      { :title => t('instance_admin.manage.transactable_types.custom_attributes') }
+      { url: polymorphic_url([:instance_admin, @controller_scope, resource_class]), title: t("instance_admin.#{@controller_scope}.#{translation_key}.#{translation_key}") },
+      { title: @target.name.titleize },
+      title: t('instance_admin.manage.transactable_types.custom_attributes')
     )
   end
 
@@ -83,10 +83,9 @@ class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceControl
     params[:custom_attribute][:valid_values] = params[:custom_attribute][:valid_values].split(',').map(&:strip) if params[:custom_attribute] && params[:custom_attribute][:valid_values]
   end
 
-  def custom_attributes_params()
+  def custom_attributes_params
     params.require(:custom_attribute).permit(secured_params.custom_attribute).tap do |whitelisted|
       whitelisted[:wrapper_html_options] = params[:custom_attribute][:wrapper_html_options] if params[:custom_attribute] && params[:custom_attribute][:wrapper_html_options]
     end
   end
-
 end

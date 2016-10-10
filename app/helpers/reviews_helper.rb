@@ -28,7 +28,7 @@ module ReviewsHelper
   end
 
   def array_of_last_years(number)
-    ( number.years.ago.year..(Time.now.year - 1) ).to_a.reverse
+    (number.years.ago.year..(Time.now.year - 1)).to_a.reverse
   end
 
   def rating_stars(number)

@@ -1,7 +1,6 @@
 class NullRedisCache
   class << self
-
-    def zadd(name, timestamp, data)
+    def zadd(_name, _timestamp, data)
       @tracking << data if @tracking
       CacheExpiration.handle_cache_expiration data
     end
@@ -13,13 +12,12 @@ class NullRedisCache
       tracking
     end
 
-    def method_missing(m, *args, &block)
+    def method_missing(_m, *_args, &_block)
       nil
     end
 
-    def zrangebyscore(*args)
+    def zrangebyscore(*_args)
       []
     end
-
   end
 end

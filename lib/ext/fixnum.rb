@@ -1,5 +1,5 @@
 class Fixnum
   def ordinal
-    ordinalize.gsub(/\d+/,'')
+    ordinalize.gsub(/\d+/, '')
   end
 end

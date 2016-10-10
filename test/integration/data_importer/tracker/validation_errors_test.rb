@@ -2,11 +2,10 @@ require 'helpers/gmaps_fake'
 require 'test_helper'
 
 class DataImporter::Tracker::ValidationErrorsTest < ActiveSupport::TestCase
-
   setup do
     GmapsFake.stub_requests
-    stub_image_url("http://www.example.com/image.jpg")
-    stub_image_url("http://www.example.com/photo.jpg")
+    stub_image_url('http://www.example.com/image.jpg')
+    stub_image_url('http://www.example.com/photo.jpg')
     @instance = FactoryGirl.create(:instance)
     PlatformContext.current = PlatformContext.new(@instance)
     @location_type = FactoryGirl.create(:location_type, name: 'My Type')
@@ -19,7 +18,7 @@ class DataImporter::Tracker::ValidationErrorsTest < ActiveSupport::TestCase
     assert_no_difference 'Location.count' do
       assert_no_difference 'Transactable.count' do
         @xml_file.parse
-        assert  @validation_errors_tracker.to_s.strip.include?("My attribute can't be blank")
+        assert @validation_errors_tracker.to_s.strip.include?("My attribute can't be blank")
       end
     end
   end
@@ -59,10 +58,8 @@ class DataImporter::Tracker::ValidationErrorsTest < ActiveSupport::TestCase
     @xml_file.trackers << @validation_errors_tracker
     @xml_file.parse
 
-    assert @validation_errors_tracker.to_s.include?("Validation error for Transactable 1: ")
+    assert @validation_errors_tracker.to_s.include?('Validation error for Transactable 1: ')
     assert @validation_errors_tracker.to_s.include?("My attribute can't be blank")
-    assert @validation_errors_tracker.to_s.include?("Validation error for Location 1: ")
+    assert @validation_errors_tracker.to_s.include?('Validation error for Location 1: ')
   end
-
 end
-

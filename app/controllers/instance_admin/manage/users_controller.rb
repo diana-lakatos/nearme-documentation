@@ -1,16 +1,14 @@
 class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseController
-  defaults :resource_class => User, :collection_name => 'users', :instance_name => 'user', :route_prefix => 'instance_admin'
+  defaults resource_class: User, collection_name: 'users', instance_name: 'user', route_prefix: 'instance_admin'
 
-  skip_before_filter :authorize_user!, :only => [:restore_session]
+  skip_before_filter :authorize_user!, only: [:restore_session]
 
   def index
   end
 
   def edit
     @user = User.with_deleted.find(params[:id])
-    if request.xhr?
-      render :modal_edit, layout: false
-    end
+    render :modal_edit, layout: false if request.xhr?
   end
 
   def update
@@ -27,7 +25,7 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
   def login_as
     if resource.admin?
       flash[:error] = t('flash_messages.instance_admin.manage.users.login_as.no_permissions')
-      redirect_to(instance_admin_manage_users_path) and return
+      redirect_to(instance_admin_manage_users_path) && return
     end
 
     admin_user = current_user
@@ -36,9 +34,9 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
     # Add special session parameters to flag we're an instance admin
     # logged in as the user.
     session[:instance_admin_as_user] = {
-      :user_id => resource.id,
-      :admin_user_id => admin_user.id,
-      :redirect_back_to => request.referer
+      user_id: resource.id,
+      admin_user_id: admin_user.id,
+      redirect_back_to: request.referer
     }
 
     sign_in_resource(resource)

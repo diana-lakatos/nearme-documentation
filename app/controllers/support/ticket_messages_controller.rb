@@ -53,7 +53,7 @@ class Support::TicketMessagesController < Support::BaseController
   end
 
   def close?
-    params[:commit] == "Close Ticket"
+    params[:commit] == 'Close Ticket'
   end
 
   def message_params

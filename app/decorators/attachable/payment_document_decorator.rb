@@ -14,5 +14,4 @@ class Attachable::PaymentDocumentDecorator < Draper::Decorator
   def uploaded_file_link
     link_to "#{t('dashboard.user_reservations.uploaded_file')}: #{object.try(:payment_document_info).try(:document_requirement).try(:label).presence || object.file.file_name}", object.file.url, target: '_blank'
   end
-
 end

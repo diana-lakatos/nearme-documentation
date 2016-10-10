@@ -1,5 +1,4 @@
 class InstanceAdmin::Settings::Payments::PaymentGatewaysController < InstanceAdmin::Settings::BaseController
-
   def new
     @payment_gateway = payment_gateway_class.new
   end
@@ -28,7 +27,7 @@ class InstanceAdmin::Settings::Payments::PaymentGatewaysController < InstanceAdm
     if @payment_gateway.update_attributes(payment_gateway_params)
       redirect_to redirect_url, notice: t('flash_messages.instance_admin.settings.payments.payment_gateways.updated')
     else
-      flash.now[:error] = @payment_gateway.errors.full_messages.join(", ")
+      flash.now[:error] = @payment_gateway.errors.full_messages.join(', ')
       render :edit
     end
   end
@@ -47,16 +46,16 @@ class InstanceAdmin::Settings::Payments::PaymentGatewaysController < InstanceAdm
   private
 
   def payment_gateway_class
-    PaymentGateway::PAYMENT_GATEWAYS.values.select{ |type| type == params[:payment_gateway][:type] if params[:payment_gateway] && params[:payment_gateway][:type]}.first.try(:constantize) || PaymentGateway
+    PaymentGateway::PAYMENT_GATEWAYS.values.find { |type| type == params[:payment_gateway][:type] if params[:payment_gateway] && params[:payment_gateway][:type] }.try(:constantize) || PaymentGateway
   end
 
   def payment_gateway_params
     params.require(:payment_gateway).permit(secured_params.payment_gateway(payment_gateway_class))
   end
 
-  def redirect_url(payment_gateway=nil)
+  def redirect_url(payment_gateway = nil)
     if payment_gateway
-      url_for([:instance_admin, :settings, payment_gateway]) + "/edit"
+      url_for([:instance_admin, :settings, payment_gateway]) + '/edit'
     else
       url_for([:instance_admin, :settings, :payments])
     end
@@ -65,6 +64,4 @@ class InstanceAdmin::Settings::Payments::PaymentGatewaysController < InstanceAdm
   def permitting_controller_class
     'Settings'
   end
-
 end
-

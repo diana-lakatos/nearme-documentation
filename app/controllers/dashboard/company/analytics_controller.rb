@@ -1,5 +1,4 @@
 class Dashboard::Company::AnalyticsController < Dashboard::Company::BaseController
-
   def show
     @analytics_mode = params[:analytics_mode] || 'revenue'
 
@@ -11,7 +10,7 @@ class Dashboard::Company::AnalyticsController < Dashboard::Company::BaseControll
     when 'location_views'
       prepare_data_for_analytics_location_views
     else
-      raise NotImplementedError
+      fail NotImplementedError
     end
   end
 
@@ -19,13 +18,13 @@ class Dashboard::Company::AnalyticsController < Dashboard::Company::BaseControll
     # All paid Payment paginated
     @payments = @company.payments.paid.order('payments.paid_at DESC')
     @payments = @payments.paginate(
-      :page => params[:page],
-      :per_page => 20
+      page: params[:page],
+      per_page: 20
     )
 
     # Charges specifically from the last 7 days
-    @last_week_payments = @company.payments.paid.last_x_days(6).
-      order('payments.created_at ASC')
+    @last_week_payments = @company.payments.paid.last_x_days(6)
+                          .order('payments.created_at ASC')
 
     # Charge total summary by currency
     @all_time_totals = @company.payments.total_by_currency
@@ -37,8 +36,8 @@ class Dashboard::Company::AnalyticsController < Dashboard::Company::BaseControll
     # All company reservations paginated
     @reservations = @company.reservations.order('orders.created_at DESC')
     @reservations = @reservations.paginate(
-      :page => params[:page],
-      :per_page => 20
+      page: params[:page],
+      per_page: 20
     )
 
     @last_week_reservations = @company.reservations.last_x_days(6).order('orders.created_at ASC')
@@ -54,9 +53,9 @@ class Dashboard::Company::AnalyticsController < Dashboard::Company::BaseControll
 
     # All company location visits paginated
     @visits = @visits.order('DATE(impressions.created_at) DESC').paginate(
-      :page => params[:page],
-      :per_page => 30,
-      :total_entries => @company.locations_impressions.group('DATE(impressions.created_at)').count.size
+      page: params[:page],
+      per_page: 30,
+      total_entries: @company.locations_impressions.group('DATE(impressions.created_at)').count.size
     )
 
     @chart = ChartDecorator.decorate(@last_month_visits)

@@ -4,7 +4,7 @@ PaperTrail::Rails::Engine.eager_load!
 class PaperTrail::Version < ActiveRecord::Base
   if defined?(Rails::Console)
     PaperTrail.whodunnit = "#{`whoami`.strip}: console"
-  elsif File.basename($0) == "rake"
+  elsif File.basename($PROGRAM_NAME) == 'rake'
     PaperTrail.whodunnit = "#{`whoami`.strip}: rake #{ARGV.join ' '}"
   end
 end

@@ -20,5 +20,4 @@ class AvailabilityTemplateDecorator < Draper::Decorator
       I18n.t("simple_form.hints.availability_template.description.#{name_underscored}")
     end
   end
-
 end

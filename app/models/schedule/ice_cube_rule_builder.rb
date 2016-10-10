@@ -1,7 +1,6 @@
 require 'ice_cube'
 
 class Schedule::IceCubeRuleBuilder
-
   def initialize(schedule_rule)
     @schedule_rule = schedule_rule
   end
@@ -36,13 +35,12 @@ class Schedule::IceCubeRuleBuilder
       when ScheduleRule::SPECIFIC_MODE
         @schedule_rule.times
       else
-        raise NotImplementedError.new("Unknown run hours mode: #{@schedule_rule.run_hours_mode}")
+        fail NotImplementedError.new("Unknown run hours mode: #{@schedule_rule.run_hours_mode}")
       end
     end
   end
 
   class DatesArrayBuilder
-
     def initialize(schedule_rule)
       @schedule_rule = schedule_rule
     end
@@ -56,18 +54,16 @@ class Schedule::IceCubeRuleBuilder
         tmp = @schedule_rule.date_start
         loop do
           arr << tmp
-          break if (tmp = tmp + 1.day) > @schedule_rule.date_end
+          break if (tmp += 1.day) > @schedule_rule.date_end
         end
         arr
       else
-        raise NotImplementedError.new("Unknown run dates mode: #{@schedule_rule.run_dates_mode}")
+        fail NotImplementedError.new("Unknown run dates mode: #{@schedule_rule.run_dates_mode}")
       end
     end
-
   end
 
   class RuleArrayBuilder
-
     def initialize(schedule_rule, hours)
       @schedule_rule = schedule_rule
       @hours = hours
@@ -85,12 +81,11 @@ class Schedule::IceCubeRuleBuilder
         dates = DatesArrayBuilder.new(@schedule_rule).get_array
         RuleArrayBuilderForDates.new(@hours, dates).get_rules
       else
-        raise NotImplementedError.new("Unknown run dates mode: #{@schedule_rule.run_dates_mode}")
+        fail NotImplementedError.new("Unknown run dates mode: #{@schedule_rule.run_dates_mode}")
       end
     end
 
     class RuleArrayBuilderForDates
-
       def initialize(hours, dates)
         @hours = hours
         @dates = dates
@@ -109,8 +104,5 @@ class Schedule::IceCubeRuleBuilder
         rules
       end
     end
-
   end
-
 end
-

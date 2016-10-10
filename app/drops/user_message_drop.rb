@@ -1,5 +1,4 @@
 class UserMessageDrop < BaseDrop
-
   attr_reader :user_message
 
   # body
@@ -21,7 +20,7 @@ class UserMessageDrop < BaseDrop
   end
 
   def show_path_with_token
-    @user_message.show_path(:token => @user_message.recipient.temporary_token)
+    @user_message.show_path(token: @user_message.recipient.temporary_token)
   end
 
   # url to the section in the app for viewing the message
@@ -43,6 +42,4 @@ class UserMessageDrop < BaseDrop
   def archived_for_current_user?
     @user_message.archived_for?(@context['current_user'])
   end
-
 end
-

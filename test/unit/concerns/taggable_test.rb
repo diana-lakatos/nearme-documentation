@@ -1,11 +1,10 @@
 require 'test_helper'
 
 class TaggableTest < ActiveSupport::TestCase
-
   class TaggableModel < ActiveRecord::Base
     auto_set_platform_context
     scoped_to_platform_context
-    self.table_name = "user_blog_posts"
+    self.table_name = 'user_blog_posts'
     attr_accessor :name, :user
 
     include Taggable
@@ -17,7 +16,7 @@ class TaggableTest < ActiveSupport::TestCase
       assert_equal 0, Tagging.count
 
       user = FactoryGirl.create(:user)
-      object = TaggableModel.create(name: "Taggable", user: user, tag_list: "a,b,c")
+      object = TaggableModel.create(name: 'Taggable', user: user, tag_list: 'a,b,c')
 
       assert_equal 3, Tag.count
     end
@@ -31,24 +30,24 @@ class TaggableTest < ActiveSupport::TestCase
       tagger2 = FactoryGirl.create(:user)
 
       object = TaggableModel.create(
-        name: "Random name",
+        name: 'Random name',
         user: tagger1,
-        tag_list: "a,b,c"
+        tag_list: 'a,b,c'
       )
 
       object2 = TaggableModel.create(
-        name: "Another name",
+        name: 'Another name',
         user: tagger2,
-        tag_list: "x,y,z"
+        tag_list: 'x,y,z'
       )
 
       assert_equal 3, object.tags.count
       assert_equal 3, object2.tags.count
 
       object3 = TaggableModel.create(
-        name: "Another name",
+        name: 'Another name',
         user: tagger2,
-        tag_list: "a,b,c,x,y,z"
+        tag_list: 'a,b,c,x,y,z'
       )
 
       assert_equal Tag.count, 6

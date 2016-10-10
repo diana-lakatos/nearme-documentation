@@ -27,11 +27,11 @@ module CategoriesHelper
     if @formatted_categories.nil?
       @formatted_categories = {}
       parent_ids = categories.map(&:parent_id)
-      categories.reject{|c| c.id.in?(parent_ids)}.map do |category|
-        @formatted_categories[category.root.name] ||= {'name' => category.root.translated_name, 'children' => []}
-        @formatted_categories[category.root.name]['children'] << category.self_and_ancestors.reject{|c| c.root? }.map(&:translated_name).join(': ')
+      categories.reject { |c| c.id.in?(parent_ids) }.map do |category|
+        @formatted_categories[category.root.name] ||= { 'name' => category.root.translated_name, 'children' => [] }
+        @formatted_categories[category.root.name]['children'] << category.self_and_ancestors.reject(&:root?).map(&:translated_name).join(': ')
       end
-      @formatted_categories.each_pair{|parent, values| @formatted_categories[parent]['children'] = values['children'].join(', ')}
+      @formatted_categories.each_pair { |parent, values| @formatted_categories[parent]['children'] = values['children'].join(', ') }
     end
     @formatted_categories
   end
@@ -40,11 +40,11 @@ module CategoriesHelper
     if @formatted_categories.nil?
       @formatted_categories = {}
       parent_ids = categories.map(&:parent_id)
-      categories.reject{|c| c.id.in?(parent_ids)}.map do |category|
-        @formatted_categories[category.root.name] ||= {'name' => category.root.translated_name, 'children' => []}
-        @formatted_categories[category.root.name]['children'] << category.self_and_ancestors.reject{|c| c.root? }.map(&:translated_name)
+      categories.reject { |c| c.id.in?(parent_ids) }.map do |category|
+        @formatted_categories[category.root.name] ||= { 'name' => category.root.translated_name, 'children' => [] }
+        @formatted_categories[category.root.name]['children'] << category.self_and_ancestors.reject(&:root?).map(&:translated_name)
       end
-      @formatted_categories.each_pair{|parent, values| @formatted_categories[parent]['children'] = values['children']}
+      @formatted_categories.each_pair { |parent, values| @formatted_categories[parent]['children'] = values['children'] }
     end
     @formatted_categories
   end

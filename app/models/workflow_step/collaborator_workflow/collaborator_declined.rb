@@ -1,5 +1,4 @@
 class WorkflowStep::CollaboratorWorkflow::CollaboratorDeclined < WorkflowStep::CollaboratorWorkflow::BaseStep
-
   def initialize(transactable_id, user_id)
     @transactable = Transactable.find_by(id: transactable_id)
     @user = User.find_by(id: user_id)
@@ -10,4 +9,3 @@ class WorkflowStep::CollaboratorWorkflow::CollaboratorDeclined < WorkflowStep::C
     @transactable.present? && @user.present?
   end
 end
-

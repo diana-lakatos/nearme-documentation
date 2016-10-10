@@ -1,5 +1,4 @@
 class WorkflowStep::OfferWorkflow::BaseStep < WorkflowStep::BaseStep
-
   def self.belongs_to_transactable_type?
     true
   end
@@ -47,5 +46,4 @@ class WorkflowStep::OfferWorkflow::BaseStep < WorkflowStep::BaseStep
   def should_be_processed?
     @offer.present?
   end
-
 end

@@ -2,7 +2,6 @@ class InstanceAdmin::Settings::TaxRegionsController < InstanceAdmin::Manage::Bas
   before_filter :set_breadcrumps, only: [:index, :new, :edit]
   before_filter :find_instance
 
-
   def index
     @tax_regions = TaxRegion.order(:created_at)
   end
@@ -26,7 +25,6 @@ class InstanceAdmin::Settings::TaxRegionsController < InstanceAdmin::Manage::Bas
   def edit
     @tax_region = TaxRegion.find(params[:id])
     @tax_region.tax_rates.first_or_initialize
-
   end
 
   def update_settings

@@ -1,5 +1,5 @@
 class TransactableType::Pricing < ActiveRecord::Base
-  MAX_PRICE = 2147483647
+  MAX_PRICE = 2_147_483_647
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
@@ -16,10 +16,10 @@ class TransactableType::Pricing < ActiveRecord::Base
   before_validation :set_default_order_class
 
   validates :min_price_cents, :max_price_cents,
-    numericality: { greater_than_or_equal_to: 0,
-      less_than_or_equal_to: MAX_PRICE }, allow_blank: true
+            numericality: { greater_than_or_equal_to: 0,
+                            less_than_or_equal_to: MAX_PRICE }, allow_blank: true
   validates :min_price_cents,
-    numericality: { less_than_or_equal_to: :max_price_for_validation }, allow_blank: true
+            numericality: { less_than_or_equal_to: :max_price_for_validation }, allow_blank: true
 
   validates :number_of_units, numericality: { greater_than: 0 }, presence: true
   validates :unit, presence: true
@@ -34,7 +34,7 @@ class TransactableType::Pricing < ActiveRecord::Base
 
   def units_translation(base_key, units_key = 'reservations')
     if units_to_s == '0_free'
-      I18n.t("search.pricing_types.free")
+      I18n.t('search.pricing_types.free')
     else
       I18n.t(
         base_key,
@@ -46,16 +46,14 @@ class TransactableType::Pricing < ActiveRecord::Base
   end
 
   def max_price_for_validation
-    max_price_cents.to_i > 0  ? max_price_cents : MAX_PRICE
+    max_price_cents.to_i > 0 ? max_price_cents : MAX_PRICE
   end
 
   def build_transactable_pricing(action_type)
     action_type.pricings.new(
-      slice(:number_of_units, :unit).merge({
-        action: action_type,
-        transactable_type_pricing: self,
-        price: 0.to_money
-      })
+      slice(:number_of_units, :unit).merge(action: action_type,
+                                           transactable_type_pricing: self,
+                                           price: 0.to_money)
     )
   end
 
@@ -70,7 +68,7 @@ class TransactableType::Pricing < ActiveRecord::Base
   private
 
   def check_pricing_uniqueness
-    if action && action.pricings.select{ |p| p.units_to_s == units_to_s }.many?
+    if action && action.pricings.select { |p| p.units_to_s == units_to_s }.many?
       errors.add(:number_of_units, I18n.t('errors.messages.price_type_exists'))
     end
   end

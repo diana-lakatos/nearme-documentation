@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Support::TicketMessageAttachmentsControllerTest < ActionController::TestCase
-
   setup do
     Support::Ticket.any_instance.stubs(:admin_emails).returns(['test@test.com'])
     @user = FactoryGirl.create(:user)
@@ -21,9 +20,7 @@ class Support::TicketMessageAttachmentsControllerTest < ActionController::TestCa
       assert_equal @user.id, assigns(:ticket_message_attachment).uploader_id
       assert response['attachment_content'].present?
       assert response['modal_content'].present?
-
     end
-
   end
 
   context '#update' do
@@ -32,7 +29,7 @@ class Support::TicketMessageAttachmentsControllerTest < ActionController::TestCa
       @attachment.ticket = nil
       @attachment.save!
       assert_no_difference 'Support::TicketMessageAttachment.count' do
-        put :update, { id: @attachment.id, support_ticket_message_attachment: { :tag => 'Purchase Order' } }
+        put :update, id: @attachment.id, support_ticket_message_attachment: { tag: 'Purchase Order' }
       end
       response = ActiveSupport::JSON.decode @response.body
       assert response['attachment_content'].include?('Purchase Order')

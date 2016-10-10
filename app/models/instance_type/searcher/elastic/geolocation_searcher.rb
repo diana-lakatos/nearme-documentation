@@ -13,16 +13,14 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
   def fetcher
     @fetcher ||=
       begin
-        @search_params = @params.merge({
-          date_range: search.available_dates,
-          custom_attributes: search.lg_custom_attributes,
-          location_types_ids: search.location_types_ids,
-          listing_pricing: search.lgpricing.blank? ? [] : search.lgpricing_filters,
-          category_ids: category_ids,
-          sort: search.sort,
-          limit: per_page_elastic,
-          page: page_elastic
-        })
+        @search_params = @params.merge(date_range: search.available_dates,
+                                       custom_attributes: search.lg_custom_attributes,
+                                       location_types_ids: search.location_types_ids,
+                                       listing_pricing: search.lgpricing.blank? ? [] : search.lgpricing_filters,
+                                       category_ids: category_ids,
+                                       sort: search.sort,
+                                       limit: per_page_elastic,
+                                       page: page_elastic)
 
         geo_searcher_params = initialize_search_params
 
@@ -42,8 +40,8 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
 
   def search_query_values
     {
-      :loc => @params[:loc],
-      :query => @params[:query]
+      loc: @params[:loc],
+      query: @params[:query]
     }.merge(filters)
   end
 
@@ -96,11 +94,8 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
   end
 
   def extend_params_by_geo_filters
-
     if adjust_to_map || (!search.precise_address? && !service_radius_enabled? && search.bounding_box)
-      @search_params.merge!({
-        bounding_box: search.bounding_box
-      })
+      @search_params.merge!(bounding_box: search.bounding_box)
     end
 
     if located
@@ -108,12 +103,9 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
       radius = @transactable_type.search_radius.to_i
       radius = search.radius.to_i if radius.zero?
 
-      @search_params.merge!({
-        lat: lat,
-        lon: lng,
-        distance: "#{radius}km"
-      })
+      @search_params.merge!(lat: lat,
+                            lon: lng,
+                            distance: "#{radius}km")
     end
   end
-
 end

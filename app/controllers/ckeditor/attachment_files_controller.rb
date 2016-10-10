@@ -1,10 +1,9 @@
 class Ckeditor::AttachmentFilesController < Ckeditor::ApplicationController
-
   def index
     @attachments = Ckeditor::AttachmentFile.where(ckeditor_scope).order('id DESC')
     @attachments = Ckeditor::Paginatable.new(@attachments).page(params[:page])
 
-    respond_with(@attachments, :layout => @attachments.first_page?)
+    respond_with(@attachments, layout: @attachments.first_page?)
   end
 
   def create
@@ -14,17 +13,17 @@ class Ckeditor::AttachmentFilesController < Ckeditor::ApplicationController
 
   def destroy
     @attachment.destroy
-    respond_with(@attachment, :location => attachment_files_path)
+    respond_with(@attachment, location: attachment_files_path)
   end
 
   protected
 
-    def find_asset
-      @attachment = Ckeditor::AttachmentFile.where(ckeditor_scope).find(params[:id])
-    end
+  def find_asset
+    @attachment = Ckeditor::AttachmentFile.where(ckeditor_scope).find(params[:id])
+  end
 
-    def authorize_resource
-      model = (@attachment || Ckeditor.attachment_file_model)
-      @authorization_adapter.try(:authorize, params[:action], model)
-    end
+  def authorize_resource
+    model = (@attachment || Ckeditor.attachment_file_model)
+    @authorization_adapter.try(:authorize, params[:action], model)
+  end
 end

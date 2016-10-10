@@ -1,5 +1,4 @@
 class ApprovalRequestTemplateCreation
-
   attr_accessor :approval_request_template
 
   def initialize(approval_request_template)
@@ -46,7 +45,7 @@ class ApprovalRequestTemplateCreation
 
   def surface_approval_request_in_space_wizard
     @approval_request_template.instance.transactable_types.each do |transactable_type|
-      if !is_already_present(transactable_type)
+      unless is_already_present(transactable_type)
         form_component = get_or_create_form_component(transactable_type)
 
         form_component.form_fields << { @approval_request_template.owner_type.to_s.underscore => 'approval_requests' }
@@ -55,6 +54,4 @@ class ApprovalRequestTemplateCreation
       end
     end
   end
-
 end
-

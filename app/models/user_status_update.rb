@@ -18,9 +18,9 @@ class UserStatusUpdate < ActiveRecord::Base
   alias_attribute :creator_id, :user_id
 
   def create_activity_feed_event
-    event = "user_updated_#{self.updateable_type.to_s.downcase}_status".to_sym
-    affected_objects = [self.user] + self.topics + self.transactables + [self.updateable]
-    ActivityFeedService.create_event(event, self.user, affected_objects, self)
+    event = "user_updated_#{updateable_type.to_s.downcase}_status".to_sym
+    affected_objects = [user] + topics + transactables + [updateable]
+    ActivityFeedService.create_event(event, user, affected_objects, self)
   end
 
   private
@@ -34,5 +34,4 @@ class UserStatusUpdate < ActiveRecord::Base
   def user_status_for_group_updated?
     updateable.is_a?(Group)
   end
-
 end

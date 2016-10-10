@@ -1,6 +1,6 @@
 class Theme < ActiveRecord::Base
   include DomainsCacheable
-  has_paper_trail :ignore => [:updated_at]
+  has_paper_trail ignore: [:updated_at]
   auto_set_platform_context
   acts_as_paranoid
   DEFAULT_EMAIL = 'support@desksnear.me'
@@ -10,29 +10,29 @@ class Theme < ActiveRecord::Base
 
   # TODO: We may want the ability to have multiple themes, and draft states,
   #       etc.
-  belongs_to :owner, :polymorphic => true
+  belongs_to :owner, polymorphic: true
   belongs_to :instance
-  has_many :pages, :dependent => :destroy
-  has_many :content_holders, :dependent => :destroy
-  has_one :theme_font, :dependent => :destroy
+  has_many :pages, dependent: :destroy
+  has_many :content_holders, dependent: :destroy
+  has_one :theme_font, dependent: :destroy
   has_many :photo_upload_versions
-  has_many :default_images, :dependent => :destroy
-  delegate :bookable_noun, :to => :instance
-  delegate :lessor, :to => :instance
-  delegate :lessee, :to => :instance
+  has_many :default_images, dependent: :destroy
+  delegate :bookable_noun, to: :instance
+  delegate :lessor, to: :instance
+  delegate :lessee, to: :instance
 
   accepts_nested_attributes_for :theme_font, reject_if: proc { |params|
     ThemeFont::FONT_TYPES.map do |font_type|
       ThemeFont::FONT_EXTENSIONS.map do |file_extension|
         params["#{font_type}_#{file_extension}".to_sym].present?
       end
-    end.flatten.all?{|f| !f}
+    end.flatten.all?(&:!)
   }
 
   validates :tagline, length: { maximum: 255 }
-  validates :contact_email, presence: true, email: true, if: lambda { |t| t.owner.try(:domains).try(:first).present? }
-  validates :support_email, presence: true, email: true, if: lambda { |t| t.owner.try(:domains).try(:first).present? }
-  validates_length_of :description, :maximum => 250
+  validates :contact_email, presence: true, email: true, if: ->(t) { t.owner.try(:domains).try(:first).present? }
+  validates :support_email, presence: true, email: true, if: ->(t) { t.owner.try(:domains).try(:first).present? }
+  validates_length_of :description, maximum: 250
 
   mount_uploader :icon_image, ThemeImageUploader
   mount_uploader :icon_retina_image, ThemeImageUploader
@@ -51,11 +51,11 @@ class Theme < ActiveRecord::Base
 
   # Validations
   COLORS.each do |color|
-    validates "color_#{color}".to_sym, :hex_color => true, :allow_blank => true
+    validates "color_#{color}".to_sym, hex_color: true, allow_blank: true
   end
 
   before_validation :unhexify_colors
-  before_save :add_no_follow_to_unknown_links, :if => lambda { |theme| theme.homepage_content.present? && theme.homepage_content_changed? }
+  before_save :add_no_follow_to_unknown_links, if: ->(theme) { theme.homepage_content.present? && theme.homepage_content_changed? }
 
   def contact_email_with_fallback
     read_attribute(:contact_email).presence || DEFAULT_EMAIL
@@ -80,15 +80,15 @@ class Theme < ActiveRecord::Base
   def build_clone
     current_attributes = attributes
     cloned_theme = Theme.new
-    ['id', 'name', 'owner_id', 'owner_type', 'created_at', 'updated_at', 'deleted_at'].each do |forbidden_attribute|
+    %w(id name owner_id owner_type created_at updated_at deleted_at).each do |forbidden_attribute|
       current_attributes.delete(forbidden_attribute)
     end
 
     current_attributes.keys.each do |attribute|
       if attribute =~ /_image$/
-        url = self.send("#{attribute}_url")
-        if url[0] == "/"
-          Rails.logger.debug "local file storage not supported"
+        url = send("#{attribute}_url")
+        if url[0] == '/'
+          Rails.logger.debug 'local file storage not supported'
         else
           cloned_theme.send("remote_#{attribute}_url=", url)
         end if url
@@ -102,9 +102,9 @@ class Theme < ActiveRecord::Base
   end
 
   def hex_color(color)
-    raise ArgumentError unless COLORS.include?(color.to_s)
+    fail ArgumentError unless COLORS.include?(color.to_s)
     value = send(:"color_#{color}")
-    return "" if value.to_s.empty?
+    return '' if value.to_s.empty?
     self.class.hexify(value)
   end
 
@@ -129,27 +129,27 @@ class Theme < ActiveRecord::Base
   end
 
   def logo_image_dimensions
-    { :width => 240, :height => 60}
+    { width: 240, height: 60 }
   end
 
   def logo_retina_image_dimensions
-    { :width => 240, :height => 60}
+    { width: 240, height: 60 }
   end
 
   def favicon_image_dimensions
-    { :width => 32, :height => 32}
+    { width: 32, height: 32 }
   end
 
   def icon_image_dimensions
-    { :width => 60, :height => 60}
+    { width: 60, height: 60 }
   end
 
   def icon_retina_image_dimensions
-    { :width => 60, :height => 60}
+    { width: 60, height: 60 }
   end
 
   def hero_image_dimensions
-    { :width => 250, :height => 202}
+    { width: 250, height: 202 }
   end
 
   def self.refresh_all!
@@ -160,14 +160,13 @@ class Theme < ActiveRecord::Base
 
   def unhexify_colors
     COLORS.each do |color|
-      value = self.send("color_#{color}")
-      self.send(:"color_#{color}=", Theme.unhexify(value))
+      value = send("color_#{color}")
+      send(:"color_#{color}=", Theme.unhexify(value))
     end
   end
 
   def add_no_follow_to_unknown_links
-    rel_no_follow_adder = RelNoFollowAdder.new({:skip_domains => Domain.pluck(:name)})
-    self.homepage_content = rel_no_follow_adder.modify(self.homepage_content)
+    rel_no_follow_adder = RelNoFollowAdder.new(skip_domains: Domain.pluck(:name))
+    self.homepage_content = rel_no_follow_adder.modify(homepage_content)
   end
 end
-

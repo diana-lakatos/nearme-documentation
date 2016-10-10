@@ -65,7 +65,7 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
   def host_cancel
     if @reservation.host_cancel
       WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerCancelled, @reservation.id)
-      event_tracker.cancelled_a_booking(@reservation, { actor: 'host' })
+      event_tracker.cancelled_a_booking(@reservation, actor: 'host')
       track_reservation_update_profile_informations
       flash[:deleted] = t('flash_messages.manage.reservations.reservation_cancelled')
     else
@@ -149,7 +149,7 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
   end
 
   def rejection_reason
-    params[:reservation][:rejection_reason] if params[:reservation] and params[:reservation][:rejection_reason]
+    params[:reservation][:rejection_reason] if params[:reservation] && params[:reservation][:rejection_reason]
   end
 
   def track_reservation_update_profile_informations
@@ -170,6 +170,4 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
       redirect_to edit_registration_path(current_user)
     end
   end
-
 end
-

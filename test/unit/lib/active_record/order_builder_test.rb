@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class OrderBuilderTest < ActiveSupport::TestCase
-
   context '#can_order_by?' do
     should 'return false if order is present and is not asc or desc' do
       assert !Location.can_order_by?(sort: :created_at, order: :undefined)
@@ -25,9 +24,8 @@ class OrderBuilderTest < ActiveSupport::TestCase
     end
 
     should 'build order string if params are right' do
-      assert_equal "locations.created_at DESC", Location.build_order(sort: :created_at, order: :desc)
-      assert_equal "locations.created_at ASC", Location.build_order(sort: :created_at)
+      assert_equal 'locations.created_at DESC', Location.build_order(sort: :created_at, order: :desc)
+      assert_equal 'locations.created_at ASC', Location.build_order(sort: :created_at)
     end
   end
-
 end

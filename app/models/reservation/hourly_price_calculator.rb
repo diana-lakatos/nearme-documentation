@@ -6,9 +6,9 @@ class Reservation::HourlyPriceCalculator
 
   def price
     # Price is for each day, hours reserved in day * hourly price
-    @order.periods.map { |period|
+    @order.periods.map do |period|
       price_for_hours(period.hours)
-    }.sum.to_money
+    end.sum.to_money
   end
 
   def valid?
@@ -18,17 +18,17 @@ class Reservation::HourlyPriceCalculator
   def price_for_hours(hours)
     prices = @pricing.try(:all_prices_for_unit)
     if prices
-      block_size = prices.keys.sort.inject { |largest_block, block_days|
+      block_size = prices.keys.sort.inject do |largest_block, block_days|
         largest_block = block_days if hours >= block_days
         largest_block
-      }
+      end
       pricing = prices[block_size]
       price = pricing[:price]
 
       if @order.favourable_pricing_rate || hours < block_size
-        (((hours/block_size.to_f) * price.cents).round / BigDecimal.new(price.currency.subunit_to_unit)).to_money(price.currency)
+        (((hours / block_size.to_f) * price.cents).round / BigDecimal.new(price.currency.subunit_to_unit)).to_money(price.currency)
       else
-        priced_hours = hours/block_size
+        priced_hours = hours / block_size
         left_hours = hours - priced_hours * block_size
         calculated_price = ((priced_hours * price.cents).round / BigDecimal.new(price.currency.subunit_to_unit)).to_money(price.currency)
         if left_hours.zero?
@@ -45,6 +45,4 @@ class Reservation::HourlyPriceCalculator
   def listing
     @order.transactable
   end
-
 end
-

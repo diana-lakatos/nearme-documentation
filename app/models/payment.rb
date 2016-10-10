@@ -32,7 +32,6 @@
 #       that is refunded.
 #     - failed refund does not block Reservation status chage
 
-
 class Payment < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
@@ -40,7 +39,7 @@ class Payment < ActiveRecord::Base
   scoped_to_platform_context
 
   attr_accessor :express_checkout_redirect_url, :payment_response_params, :payment_method_nonce, :customer,
-    :recurring, :rejection_form, :chosen_credit_card_id
+                :recurring, :rejection_form, :chosen_credit_card_id
 
   # === Associations
 
@@ -56,7 +55,7 @@ class Payment < ActiveRecord::Base
   belongs_to :payer, -> { with_deleted }, class_name: 'User'
 
   has_many :billing_authorizations
-  has_many :authorizations, class_name: "BillingAuthorization"
+  has_many :authorizations, class_name: 'BillingAuthorization'
   has_many :charges, dependent: :destroy
   has_many :refunds
   has_many :line_items
@@ -69,22 +68,22 @@ class Payment < ActiveRecord::Base
 
   # === Scopes
 
-  scope :migrated_payment, -> { where("payable_type NOT IN(?)", ["OldReservation", "OldRecurringBookingPeriod", "Spree::Order"] )}
-  scope :active, -> { where(state: ['authorized', 'paid'])}
-  scope :live, -> { where(payment_gateway_mode: 'live')}
+  scope :migrated_payment, -> { where('payable_type NOT IN(?)', ['OldReservation', 'OldRecurringBookingPeriod', 'Spree::Order']) }
+  scope :active, -> { where(state: %w(authorized paid)) }
+  scope :live, -> { where(payment_gateway_mode: 'live') }
   scope :authorized, -> { where(state: 'authorized') }
   scope :paid, -> { where("#{table_name}.state = 'paid'") }
   scope :unapid, -> { where(paid_at: nil) }
-  scope :paid_or_refunded, -> { where(state: ['paid', 'refunded']) }
+  scope :paid_or_refunded, -> { where(state: %w(paid refunded)) }
   scope :refunded, -> { where("#{table_name}.state = 'refunded'") }
   scope :not_refunded, -> { where("#{table_name}.state IS NOT 'refunded'") }
-  scope :last_x_days, lambda { |days_in_past| where('DATE(payments.created_at) >= ? ', days_in_past.days.ago) }
+  scope :last_x_days, ->(days_in_past) { where('DATE(payments.created_at) >= ? ', days_in_past.days.ago) }
   scope :needs_payment_transfer, -> { paid_or_refunded.where(payment_transfer_id: nil, offline: false, exclude_from_payout: false).migrated_payment }
-  scope :transferred, -> { where.not(payment_transfer_id: nil)}
+  scope :transferred, -> { where.not(payment_transfer_id: nil) }
 
-  scope :total_by_currency, -> {
-    paid.group('payments.currency').
-    select('
+  scope :total_by_currency, lambda {
+    paid.group('payments.currency')
+      .select('
         payments.currency,
         SUM(
           payments.subtotal_amount_cents
@@ -97,18 +96,18 @@ class Payment < ActiveRecord::Base
 
   before_validation do |p|
     self.payer ||= payable.try(:owner)
-    if p.payment_method.try(:payment_method_type) == 'credit_card' && p.chosen_credit_card_id.present? &&  p.chosen_credit_card_id != 'custom'
+    if p.payment_method.try(:payment_method_type) == 'credit_card' && p.chosen_credit_card_id.present? && p.chosen_credit_card_id != 'custom'
       self.credit_card_id ||= payer.instance_clients.find_by(payment_gateway: payment_gateway.id, test_mode: test_mode?).try(:credit_cards).try(:find, p.chosen_credit_card_id).try(:id)
     end
     true
   end
 
   validates :currency, presence: true
-  validates :credit_card, presence: true, if: Proc.new { |p| p.credit_card_payment? && p.save_credit_card? && p.new_record? }
+  validates :credit_card, presence: true, if: proc { |p| p.credit_card_payment? && p.save_credit_card? && p.new_record? }
   validates :payer, presence: true
   validates :payment_gateway, presence: true
   validates :payment_method, presence: true
-  validates :payable_id, :uniqueness => { :scope => [:payable_type, :payable_id, :instance_id] }, if: Proc.new {|p| p.payable_id.present? }
+  validates :payable_id, uniqueness: { scope: [:payable_type, :payable_id, :instance_id] }, if: proc { |p| p.payable_id.present? }
 
   validates_associated :credit_card
 
@@ -136,7 +135,7 @@ class Payment < ActiveRecord::Base
 
   # TODO: now as we call that on Payment object there is no need to _payment?, instead payment.manual?
   PaymentMethod::PAYMENT_METHOD_TYPES.each do |pmt|
-    define_method("#{pmt}_payment?") { self.payment_method.try(:payment_method_type) == pmt.to_s }
+    define_method("#{pmt}_payment?") { payment_method.try(:payment_method_type) == pmt.to_s }
   end
 
   def authorize
@@ -151,7 +150,7 @@ class Payment < ActiveRecord::Base
     }
 
     if merchant_account.try(:verified?)
-      options.merge!({ application_fee: total_service_amount_cents })
+      options.merge!(application_fee: total_service_amount_cents)
     end
 
     options
@@ -180,7 +179,7 @@ class Payment < ActiveRecord::Base
     return false if refunded?
     return false if paid_at.nil? && !paid?
     return false if amount_to_be_refunded <= 0
-    return false if !active_merchant_payment?
+    return false unless active_merchant_payment?
 
     # This is special Braintree case, when transaction can't be refunded before
     # settlment, we use void instead
@@ -201,7 +200,7 @@ class Payment < ActiveRecord::Base
       if should_retry_refund?
         PaymentRefundJob.perform_later(retry_refund_at, id)
       else
-        MarketplaceLogger.error('Refund failed', "Refund for Reservation id=#{self.id} failed #{refund_attempts} times, manual intervation needed.", raise: false)
+        MarketplaceLogger.error('Refund failed', "Refund for Reservation id=#{id} failed #{refund_attempts} times, manual intervation needed.", raise: false)
       end
 
       false
@@ -256,10 +255,10 @@ class Payment < ActiveRecord::Base
       amount_cents: service_fee_refund_amount_cents,
       currency: currency,
       payment_gateway_mode: payment_gateway_mode,
-      payment_gateway: payment_gateway,
+      payment_gateway: payment_gateway
     )
 
-    token = payment_transfer.payout_attempts.successful.first.response.params["transaction_id"]
+    token = payment_transfer.payout_attempts.successful.first.response.params['transaction_id']
 
     response = payment_gateway.gateway.refund(service_fee_refund_amount_cents, token)
 
@@ -328,11 +327,9 @@ class Payment < ActiveRecord::Base
 
   def credit_card_attributes=(cc_attributes)
     return unless credit_card_payment?
-    super(cc_attributes.merge({
-      payment_gateway: payment_gateway,
-      test_mode: test_mode?,
-      instance_client: payment_gateway.try {|p| p.instance_clients.where(client: payer, test_mode: test_mode?).first_or_initialize(client: payer, test_mode: test_mode?) }
-    }))
+    super(cc_attributes.merge(payment_gateway: payment_gateway,
+                              test_mode: test_mode?,
+                              instance_client: payment_gateway.try { |p| p.instance_clients.where(client: payer, test_mode: test_mode?).first_or_initialize(client: payer, test_mode: test_mode?) }))
   end
 
   # Currently we store all CC if PamentGateway allows us to do so.
@@ -358,7 +355,7 @@ class Payment < ActiveRecord::Base
   end
 
   def final_service_fee_amount_host_cents
-    result = self.service_fee_amount_host.cents
+    result = service_fee_amount_host.cents
 
     if cancelled_by_host? || (cancelled_by_guest? && !payable.penalty_charge_apply?)
       result = 0
@@ -368,11 +365,9 @@ class Payment < ActiveRecord::Base
   end
 
   def final_service_fee_amount_guest_cents
-    result = self.service_fee_amount_guest.cents + self.service_additional_charges.cents
+    result = service_fee_amount_guest.cents + service_additional_charges.cents
 
-    if cancelled_by_host?
-      result = 0
-    end
+    result = 0 if cancelled_by_host?
 
     result
   end
@@ -391,7 +386,7 @@ class Payment < ActiveRecord::Base
 
   def amount_to_be_refunded
     if cancelled_by_guest? && payment_gateway.supports_partial_refunds?
-      (subtotal_amount.cents * (1 - cancellation_policy_penalty_percentage.to_f/BigDecimal(100))).to_i
+      (subtotal_amount.cents * (1 - cancellation_policy_penalty_percentage.to_f / BigDecimal(100))).to_i
     else
       total_amount.cents
     end
@@ -400,8 +395,8 @@ class Payment < ActiveRecord::Base
   # Dirty hack for cancellation policies not set for payment
   # Payment is built before cancelation policies are set
   def cancellation_policy_penalty_percentage
-    if self.payable.respond_to?(:cancellation_policy_penalty_percentage) && super.zero?
-      self.payable.cancellation_policy_penalty_percentage
+    if payable.respond_to?(:cancellation_policy_penalty_percentage) && super.zero?
+      payable.cancellation_policy_penalty_percentage
     else
       super
     end
@@ -416,7 +411,7 @@ class Payment < ActiveRecord::Base
   end
 
   def cancelled_by_host?
-    self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?
+    payable.respond_to?(:cancelled_by_host?) && payable.cancelled_by_host?
   end
 
   def full_refund?
@@ -436,7 +431,7 @@ class Payment < ActiveRecord::Base
   end
 
   def active_merchant_payment?
-    self.payment_method.try(:capturable?)
+    payment_method.try(:capturable?)
   end
 
   def payment_method_nonce=(token)
@@ -446,9 +441,9 @@ class Payment < ActiveRecord::Base
 
   def express_token=(token)
     write_attribute(:express_token, token)
-    if !token.blank?
+    unless token.blank?
       details = payment_gateway.gateway(subject).details_for(token)
-      self.express_payer_id = details.params["payer_id"]
+      self.express_payer_id = details.params['payer_id']
     end
   end
 
@@ -470,18 +465,18 @@ class Payment < ActiveRecord::Base
     self.payment_method = PaymentMethod.find(payment_method_id)
   end
 
-  def payment_method=payment_method
+  def payment_method=(payment_method)
     super(payment_method)
     self.payment_gateway = self.payment_method.payment_gateway
-    self.payment_gateway_mode = self.payment_gateway.mode
-    self.merchant_account = self.payment_gateway.merchant_account(company)
+    self.payment_gateway_mode = payment_gateway.mode
+    self.merchant_account = payment_gateway.merchant_account(company)
   end
 
   def authorization_token
     if self.persisted?
       successful_billing_authorization.try(:token)
     else
-      billing_authorizations.select {|b| b.success? }.first.try(:token)
+      billing_authorizations.find(&:success?).try(:token)
     end
   end
 
@@ -494,7 +489,7 @@ class Payment < ActiveRecord::Base
   end
 
   def retry_refund_at
-    self.failed_at + (refund_attempts * 6).hours
+    failed_at + (refund_attempts * 6).hours
   end
 
   def to_liquid

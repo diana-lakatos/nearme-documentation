@@ -1,5 +1,4 @@
 class TopicsController < ApplicationController
-
   def show
     @topic = Topic.find(params[:id])
     @feed = ActivityFeedService.new(@topic)
@@ -14,5 +13,4 @@ class TopicsController < ApplicationController
       per_page: ActivityFeedService::Helpers::FOLLOWED_PER_PAGE
     }
   end
-
 end

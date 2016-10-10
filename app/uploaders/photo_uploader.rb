@@ -1,6 +1,5 @@
 # encoding: utf-8
 class PhotoUploader < BaseImageUploader
-
   include CarrierWave::TransformableImage
   include DynamicPhotoUploads
 
@@ -22,8 +21,8 @@ class PhotoUploader < BaseImageUploader
     fit_to_activity_feed: { width: 600, height: 482, transform: :resize_to_fill }
   }
 
-  ASPECT_RATIO = 16.0/10.0
-  ASPECT_RATIO_PROJECT = 8.0/7.0
+  ASPECT_RATIO = 16.0 / 10.0
+  ASPECT_RATIO_PROJECT = 8.0 / 7.0
 
   def store_dir
     "#{instance_prefix}/uploads/images/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
@@ -81,18 +80,18 @@ class PhotoUploader < BaseImageUploader
     process dynamic_version: :fullscreen
   end
 
-  def generate_transactable_versions?(image)
+  def generate_transactable_versions?(_image)
     delayed_processing? && model.try(:owner_type) != 'Project'
   end
 
-  def generate_project_versions?(image)
-    ['Transactable', 'Group'].include?(model.try(:owner_type))
+  def generate_project_versions?(_image)
+    %w(Transactable Group).include?(model.try(:owner_type))
   end
 
   protected
 
   def secure_token
     var = :"@#{mounted_as}_secure_token"
-    model.instance_variable_get(var) or model.instance_variable_set(var, SecureRandom.uuid)
+    model.instance_variable_get(var) || model.instance_variable_set(var, SecureRandom.uuid)
   end
 end

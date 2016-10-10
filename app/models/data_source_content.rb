@@ -15,4 +15,3 @@ class DataSourceContent < ActiveRecord::Base
     data_source.fields
   end
 end
-

@@ -14,7 +14,7 @@ class InstanceAdmin::Settings::CertificateUploadsController < InstanceAdmin::Set
 
     respond_with :instance_admin, :settings, :aws_certificates
   rescue NearMe::IAM::UploadError
-    flash['error'] = $!.message
+    flash['error'] = $ERROR_INFO.message
     render :new
   end
 
@@ -23,7 +23,7 @@ class InstanceAdmin::Settings::CertificateUploadsController < InstanceAdmin::Set
     @certificate.destroy
     respond_with :instance_admin, :settings, @certificate
   rescue
-    flash[:error] = $!.message
+    flash[:error] = $ERROR_INFO.message
     respond_with :instance_admin, :settings, :aws_certificates
   end
 

@@ -8,9 +8,9 @@ class Support::ReceiveMails
           # If subject is following one of following patterns, invoke 'receive'
           # method in Support::TicketMessage class - it will just create new ticket message
           # in our system
-          subject("[Support Ticket #%ticket_id%]", Support::TicketMessage)
-          subject("[Ticket Support #%ticket_id%]", Support::TicketMessage)
-          subject("[Ticket Support %ticket_id%]", Support::TicketMessage)
+          subject('[Support Ticket #%ticket_id%]', Support::TicketMessage)
+          subject('[Ticket Support #%ticket_id%]', Support::TicketMessage)
+          subject('[Ticket Support %ticket_id%]', Support::TicketMessage)
 
           # If subject does not follow our convention, it means that this is new email
           # and we will create a Support::Ticket for it. We will also notify
@@ -24,7 +24,7 @@ class Support::ReceiveMails
         Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::IMAP_ERROR, e.to_s)
       end
     else
-      Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::IMAP_ERROR, "support_imap settings are not valid")
+      Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::IMAP_ERROR, 'support_imap settings are not valid')
     end
   end
 

@@ -7,9 +7,9 @@ class PaymentDecorator < Draper::Decorator
 
     if paid? && refunds.any?
       if should_retry_refund?
-        alerts_container << I18n.t("decorators.payment.refund_retry_at", retry_at: l(self.retry_refund_at, format: :long))
+        alerts_container << I18n.t('decorators.payment.refund_retry_at', retry_at: l(retry_refund_at, format: :long))
       else
-        alerts_container << I18n.t("decorators.payment.refund_failed")
+        alerts_container << I18n.t('decorators.payment.refund_failed')
       end
     end
     alerts_container
@@ -17,9 +17,9 @@ class PaymentDecorator < Draper::Decorator
 
   def payment_methods
     ids = if is_free?
-      payment_gateways.map(&:active_free_payment_methods)
-    else
-      payment_gateways.map(&:active_payment_methods)
+            payment_gateways.map(&:active_free_payment_methods)
+          else
+            payment_gateways.map(&:active_payment_methods)
     end.flatten.uniq.map(&:id)
 
     PaymentMethod.where(id: ids)
@@ -37,4 +37,3 @@ class PaymentDecorator < Draper::Decorator
     PaginatingDecorator
   end
 end
-

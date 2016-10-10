@@ -4,5 +4,4 @@ class Transactable::OfferAction < Transactable::ActionType
 
   validates :pricings, presence: true, if: :enabled?
   validates_associated :pricings, if: :enabled?
-
 end

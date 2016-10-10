@@ -1,7 +1,7 @@
 class Listing::Search::Params::Web < Listing::Search::Params
-  attr :location_string
+  attr_reader :location_string
   attr_reader :location_types_ids, :lntype, :lgtype, :lgpricing,
-    :lntypes, :sort, :order, :dates, :start_date, :end_date, :display_dates, :lg_custom_attributes, :category_ids
+              :lntypes, :sort, :order, :dates, :start_date, :end_date, :display_dates, :lg_custom_attributes, :category_ids
 
   def initialize(options, transactable_type)
     super
@@ -41,7 +41,7 @@ class Listing::Search::Params::Web < Listing::Search::Params
   def get_category_ids
     categories = Category.where(id: @options[:category_ids].split(',')) if @options[:category_ids]
     if categories.present?
-      if @transactable_type.category_search_type == "OR"
+      if @transactable_type.category_search_type == 'OR'
         parent_ids = categories.map(&:parent_id)
         categories.map do |category|
           unless parent_ids.include?(category.id)
@@ -57,27 +57,27 @@ class Listing::Search::Params::Web < Listing::Search::Params
   end
 
   def street
-    get_address_component("street")
+    get_address_component('street')
   end
 
   def suburb
-    get_address_component("suburb")
+    get_address_component('suburb')
   end
 
   def city
-    get_address_component("city")
+    get_address_component('city')
   end
 
   def state
-    get_address_component("state")
+    get_address_component('state')
   end
 
   def state_short
-    get_address_component("state", :short)
+    get_address_component('state', :short)
   end
 
   def country
-    get_address_component("country")
+    get_address_component('country')
   end
 
   def is_united_states?
@@ -85,7 +85,7 @@ class Listing::Search::Params::Web < Listing::Search::Params
   end
 
   def postcode
-    get_address_component("postcode")
+    get_address_component('postcode')
   end
 
   def precise_address?

@@ -1,5 +1,4 @@
 class CreditCard::BraintreeDecorator
-
   attr_accessor :credit_card
 
   def initialize(credit_card)
@@ -8,7 +7,7 @@ class CreditCard::BraintreeDecorator
 
   # Braintree accepts customer_vault_id as second parameter token is irrelevat
   def token
-    @token ||= primary_response.params["customer_vault_id"]
+    @token ||= primary_response.params['customer_vault_id']
   rescue
     nil
   end
@@ -29,15 +28,14 @@ class CreditCard::BraintreeDecorator
   end
 
   def name
-    [response.params["braintree_customer"]["first_name"], response.params["braintree_customer"]["last_name"]].join(' ') rescue 'Unknown'
+    [response.params['braintree_customer']['first_name'], response.params['braintree_customer']['last_name']].join(' ') rescue 'Unknown'
   end
 
   def card
-    OpenStruct.new(response.params["braintree_customer"]["credit_cards"].first) rescue OpenStruct.new(last_4: '????', expiration_date: nil)
+    OpenStruct.new(response.params['braintree_customer']['credit_cards'].first) rescue OpenStruct.new(last_4: '????', expiration_date: nil)
   end
 
   def response
     @response ||= YAML.load(credit_card.response)
   end
 end
-

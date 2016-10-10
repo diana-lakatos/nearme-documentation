@@ -29,11 +29,10 @@ FactoryGirl.define do
       end
 
       factory :confirmed_delayed_hour_reservation, class: DelayedReservation do
-        after(:build) do |reservation|
+        after(:build) do |_reservation|
         end
       end
     end
-
 
     factory :inactive_reservation do
       after(:build) do |reservation|
@@ -58,7 +57,6 @@ FactoryGirl.define do
           reservation.save!
         end
       end
-
     end
 
     factory :confirmed_reservation do
@@ -80,7 +78,6 @@ FactoryGirl.define do
         factory :reviewable_reservation do
           archived_at { Time.zone.now - 1.minute }
         end
-
       end
 
       factory :reservation_with_invoice do
@@ -112,7 +109,6 @@ FactoryGirl.define do
         association(:transactable, factory: :listing_in_san_francisco_address_components)
       end
 
-
       factory :rejected_reservation do
         state 'rejected'
       end
@@ -125,7 +121,6 @@ FactoryGirl.define do
         state 'cancelled_by_host'
       end
     end
-
 
     factory :lasting_reservation do
       after(:build) do |reservation|
@@ -165,7 +160,6 @@ FactoryGirl.define do
             reservation.confirm!
           end
         end
-
       end
     end
   end
@@ -173,7 +167,7 @@ end
 
 private
 
-def make_valid_period(reservation, date=Time.zone.now.next_week.to_date, start_minute = nil, end_minute = nil, options = {})
+def make_valid_period(reservation, date = Time.zone.now.next_week.to_date, start_minute = nil, end_minute = nil, _options = {})
   reservation.periods = []
   reservation.add_period(date, start_minute, end_minute)
   reservation

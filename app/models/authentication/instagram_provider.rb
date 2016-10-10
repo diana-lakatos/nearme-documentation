@@ -1,29 +1,23 @@
 require 'instagram'
 
 class Authentication::InstagramProvider < Authentication::BaseProvider
-
-  META   = { name: "Instagram",
-             url: "http://instagram.com/",
-             auth: "OAuth 2" }
+  META   = { name: 'Instagram',
+             url: 'http://instagram.com/',
+             auth: 'OAuth 2' }
 
   def friend_ids
-    begin
-      @friend_ids ||= connection.user_follows.map(&:id)
-    rescue Instagram::BadRequest, Instagram::NotFound
-      raise ::Authentication::InvalidToken
-    end
+    @friend_ids ||= connection.user_follows.map(&:id)
+  rescue Instagram::BadRequest, Instagram::NotFound
+    raise ::Authentication::InvalidToken
   end
 
   def info
-    begin
-      @info ||= Info.new(connection.user)
-    rescue Instagram::BadRequest, Instagram::NotFound
-      raise ::Authentication::InvalidToken
-    end
+    @info ||= Info.new(connection.user)
+  rescue Instagram::BadRequest, Instagram::NotFound
+    raise ::Authentication::InvalidToken
   end
 
   class Info < BaseInfo
-
     def initialize(raw)
       @raw          = raw
       @uid          = raw.id
@@ -35,7 +29,6 @@ class Authentication::InstagramProvider < Authentication::BaseProvider
       @website_url  = raw.website
       @provider     = 'Instagram'
     end
-
   end
 
   private
@@ -43,5 +36,4 @@ class Authentication::InstagramProvider < Authentication::BaseProvider
   def connection
     @connection ||= Instagram.client(access_token: token)
   end
-
 end

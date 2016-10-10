@@ -1,5 +1,4 @@
 class InstanceAdmin::Reports::AdvancedProjectsController < InstanceAdmin::Reports::BaseController
-
   before_filter :set_breadcrumbs_title
 
   def index
@@ -23,8 +22,8 @@ class InstanceAdmin::Reports::AdvancedProjectsController < InstanceAdmin::Report
 
   def set_breadcrumbs_title
     @breadcrumbs_title = BreadcrumbsList.new(
-      { :title => t('instance_admin.general.reports') },
-      { :title => t('instance_admin.reports.advanced_projects.community_reports'), :url => instance_admin_reports_projects_path }
+      { title: t('instance_admin.general.reports') },
+      title: t('instance_admin.reports.advanced_projects.community_reports'), url: instance_admin_reports_projects_path
     )
   end
 
@@ -33,6 +32,4 @@ class InstanceAdmin::Reports::AdvancedProjectsController < InstanceAdmin::Report
   def set_scopes
     # Not employed here
   end
-
 end
-

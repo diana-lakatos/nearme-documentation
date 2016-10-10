@@ -1,7 +1,6 @@
 # Extracts necessary attributes from objects passed to track_charge
 
 class EventTracker::BaseTracker::Serializers::TrackChargeSerializer
-
   def initialize(*objects)
     @objects = objects
   end
@@ -21,21 +20,19 @@ class EventTracker::BaseTracker::Serializers::TrackChargeSerializer
     when Reservation
       {
 
-        amount: object.service_fee_amount_guest_cents/100.to_f + object.service_fee_amount_host_cents/100.to_f,
-        guest_fee: object.service_fee_amount_guest_cents/100.to_f,
-        host_fee: object.service_fee_amount_host_cents/100.to_f,
+        amount: object.service_fee_amount_guest_cents / 100.to_f + object.service_fee_amount_host_cents / 100.to_f,
+        guest_fee: object.service_fee_amount_guest_cents / 100.to_f,
+        host_fee: object.service_fee_amount_host_cents / 100.to_f,
         guest_id: object.owner_id,
         host_id: object.host.try(:id),
         payment_id: object.payment.id,
         instance_name: object.instance.name,
-        listing_name: object.transactable.try(:name),
+        listing_name: object.transactable.try(:name)
       }
     when Hash
       object
     else
-      raise "Can't serialize #{object}."
+      fail "Can't serialize #{object}."
     end
   end
-
 end
-

@@ -1,6 +1,5 @@
 class Placeholder
-
-  IN_FILESYSTEM = ['96x96', '100x100', '144x89', '144x114', '279x279', '410x254', '895x554', '1280x960']
+  IN_FILESYSTEM = %w(96x96 100x100 144x89 144x114 279x279 410x254 895x554 1280x960)
 
   def initialize(options = {}, text = nil)
     @height = options[:height]
@@ -10,13 +9,12 @@ class Placeholder
   end
 
   def path
-    #if IN_FILESYSTEM.member?(@format)
+    # if IN_FILESYSTEM.member?(@format)
     #  "placeholders/#{@format}.gif"
-    #else
+    # else
     #  "//placehold.it/#{@format}&text=Photos+Unavailable"
-    #end
+    # end
     # Local filesystem placeholders do not work, we take all from placehold.it
     "//placehold.it/#{@format}&text=#{CGI.escape(@text)}"
   end
-
 end

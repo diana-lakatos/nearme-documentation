@@ -1,5 +1,4 @@
 module ReportsProperties
-
   def get_hstore_columns(transactables)
     if transactables.first.is_a?(User)
       InstanceProfileType.all.map do |ipt|
@@ -55,5 +54,4 @@ module ReportsProperties
 
     csv
   end
-
 end

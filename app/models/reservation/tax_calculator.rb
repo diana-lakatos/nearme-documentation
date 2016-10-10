@@ -1,6 +1,5 @@
 class Reservation::TaxCalculator
-
-  def initialize(order, item)
+  def initialize(order, _item)
     @order = order
     @seller_company = @order.company
     @buyer_address = @order.user.try(:current_address)

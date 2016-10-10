@@ -1,6 +1,5 @@
 # Use this setup block to configure all options available in SimpleForm.
 SimpleForm.setup do |config|
-
   config.wrappers :dashboard_form, tag: 'div', class: 'form-group', error_class: 'has-error' do |b|
     b.use :html5
     b.use :placeholder
@@ -24,7 +23,7 @@ SimpleForm.setup do |config|
     b.optional :readonly
     b.use :label, class: 'control-label'
 
-    b.wrapper :tag => 'div', :class => 'input-group' do |ba|
+    b.wrapper tag: 'div', class: 'input-group' do |ba|
       ba.optional :prefix, wrap_with: { tag: 'div', class: 'input-group-addon' }
       ba.use :input, class: 'form-control'
       ba.optional :suffix, wrap_with: { tag: 'div', class: 'input-group-addon' }
@@ -57,7 +56,6 @@ SimpleForm.setup do |config|
     b.use :error, wrap_with: { tag: 'span', class: 'help-block' }
     b.use :hint,  wrap_with: { tag: 'p', class: 'hint help-block' }
   end
-
 
   config.wrappers :dashboard_switch, tag: 'div', class: 'form-group', boolean_style: :inline, error_class: 'has-error' do |b|
     b.use :html5

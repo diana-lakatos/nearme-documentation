@@ -22,7 +22,7 @@ class ApiCaller
         request.add_field(key, value)
       end
       request.body = parsed_body
-        http.request(request)
+      http.request(request)
 
       result = true
     rescue => e
@@ -37,5 +37,4 @@ class ApiCaller
   def self.parser
     @parser ||= LiquidTemplateParser.new
   end
-
 end

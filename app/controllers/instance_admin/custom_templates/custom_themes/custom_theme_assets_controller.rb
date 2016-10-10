@@ -1,6 +1,6 @@
 class InstanceAdmin::CustomTemplates::CustomThemes::CustomThemeAssetsController < InstanceAdmin::CustomTemplates::BaseController
   include InstanceAdmin::Versionable
-  actions :all, except: [ :show ]
+  actions :all, except: [:show]
 
   before_filter :find_custom_theme_asset, only: [:edit, :update, :destroy]
   set_resource_method :find_custom_theme_asset
@@ -25,8 +25,8 @@ class InstanceAdmin::CustomTemplates::CustomThemes::CustomThemeAssetsController 
         tmp_file << @custom_theme_asset.body
         tmp_file.rewind
         file_params = {
-          :filename => @custom_theme_asset.name,
-          :tempfile => tmp_file
+          filename: @custom_theme_asset.name,
+          tempfile: tmp_file
         }
         @custom_theme_asset.file = ActionDispatch::Http::UploadedFile.new(file_params)
         @custom_theme_asset.save!
@@ -40,7 +40,6 @@ class InstanceAdmin::CustomTemplates::CustomThemes::CustomThemeAssetsController 
   end
 
   def update
-
     @custom_theme_asset.assign_attributes(custom_theme_asset_params)
     @body_changed = @custom_theme_asset.body_changed?
     if @custom_theme_asset.save
@@ -50,8 +49,8 @@ class InstanceAdmin::CustomTemplates::CustomThemes::CustomThemeAssetsController 
         tmp_file << @custom_theme_asset.body
         tmp_file.rewind
         file_params = {
-          :filename => @custom_theme_asset.name,
-          :tempfile => tmp_file
+          filename: @custom_theme_asset.name,
+          tempfile: tmp_file
         }
         @custom_theme_asset.file = ActionDispatch::Http::UploadedFile.new(file_params)
         @custom_theme_asset.save!
@@ -83,6 +82,4 @@ class InstanceAdmin::CustomTemplates::CustomThemes::CustomThemeAssetsController 
   def find_custom_theme_asset
     @custom_theme_asset ||= custom_theme.custom_theme_assets.find(params[:id])
   end
-
 end
-

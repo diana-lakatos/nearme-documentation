@@ -1,5 +1,4 @@
 class Admin::Blog::BlogInstancesController < Admin::Blog::ApplicationController
-
   def edit
   end
 

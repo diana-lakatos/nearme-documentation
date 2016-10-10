@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class CustomAttributeTest < ActiveSupport::TestCase
-
   context 'translations' do
-
     context 'input' do
       setup do
         @custom_attribute = FactoryGirl.create(:custom_attribute_input,
@@ -32,7 +30,6 @@ class CustomAttributeTest < ActiveSupport::TestCase
         prompt_translation_exists(nil)
         valid_valus_translations_exist(nil)
       end
-
     end
 
     context 'select' do
@@ -47,7 +44,7 @@ class CustomAttributeTest < ActiveSupport::TestCase
         placeholder_translations_exist(nil)
         hint_translations_exist('this is my hint')
         prompt_translation_exists('My Prompt')
-        valid_valus_translations_exist({'value_one' => 'Value One', 'value_two' => 'Value Two'})
+        valid_valus_translations_exist('value_one' => 'Value One', 'value_two' => 'Value Two')
       end
 
       should 'update translations for select on tta update' do
@@ -63,9 +60,8 @@ class CustomAttributeTest < ActiveSupport::TestCase
 
         @custom_attribute.valid_values = ['New One', 'New123 Three']
         @custom_attribute.save!
-        valid_valus_translations_exist({'new_one' => 'New One', 'new123_three' => 'New123 Three'})
+        valid_valus_translations_exist('new_one' => 'New One', 'new123_three' => 'New123 Three')
       end
-
     end
 
     should 'create translations for textarea' do
@@ -98,7 +94,7 @@ class CustomAttributeTest < ActiveSupport::TestCase
       placeholder_translations_exist(nil)
       hint_translations_exist('this is my hint')
       prompt_translation_exists(nil)
-      valid_valus_translations_exist({'value_one' => 'Value One', 'value_two' => 'Value Two'})
+      valid_valus_translations_exist('value_one' => 'Value One', 'value_two' => 'Value Two')
     end
 
     should 'create translations for radio_buttons' do
@@ -109,9 +105,8 @@ class CustomAttributeTest < ActiveSupport::TestCase
       placeholder_translations_exist(nil)
       hint_translations_exist('this is my hint')
       prompt_translation_exists(nil)
-      valid_valus_translations_exist({'value_one' => 'Value One', 'value_two' => 'Value Two'})
+      valid_valus_translations_exist('value_one' => 'Value One', 'value_two' => 'Value Two')
     end
-
   end
 
   private

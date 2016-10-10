@@ -1,5 +1,4 @@
 class Billing::Gateway::Processor::Response::Base
-
   def initialize(response)
     @response = response
   end
@@ -18,5 +17,4 @@ class Billing::Gateway::Processor::Response::Base
   def to_yaml
     @response.to_yaml
   end
-
 end

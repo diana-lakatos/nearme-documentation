@@ -1,14 +1,12 @@
 require 'test_helper'
 
 class ListingsControllerTest < ActionController::TestCase
-
-    setup do
-      @listing = FactoryGirl.create(:transactable,:fixed_price)
-      @transactable_type = @listing.transactable_type
-    end
+  setup do
+    @listing = FactoryGirl.create(:transactable, :fixed_price)
+    @transactable_type = @listing.transactable_type
+  end
 
   context 'GET #occurrences.json' do
-
     should 'render json' do
       get :occurrences, id: @listing.id
       assert :success
@@ -21,7 +19,6 @@ class ListingsControllerTest < ActionController::TestCase
   end
 
   context '#show' do
-
     should 'track impression' do
       assert_difference 'Impression.count' do
         get :show, id: @listing
@@ -29,8 +26,8 @@ class ListingsControllerTest < ActionController::TestCase
     end
 
     should 'display two content holders' do
-      holder = FactoryGirl.create :content_holder, inject_pages: ['service/product_page'], content: "{{ @listing.street }} and whatever"
-      holder = FactoryGirl.create :content_holder, inject_pages: ['service/product_page'], content: "This is an id of listing: {{ @listing.id }}"
+      holder = FactoryGirl.create :content_holder, inject_pages: ['service/product_page'], content: '{{ @listing.street }} and whatever'
+      holder = FactoryGirl.create :content_holder, inject_pages: ['service/product_page'], content: 'This is an id of listing: {{ @listing.id }}'
       get :show, id: @listing
       assert response.body.include?("This is an id of listing: #{ @listing.id }")
       assert response.body.include?("#{@listing.location.street} and whatever")
@@ -44,13 +41,11 @@ class ListingsControllerTest < ActionController::TestCase
     end
 
     context 'multiple listings' do
-
       setup do
-        @second_listing = FactoryGirl.create(:transactable, :location => @listing.location)
+        @second_listing = FactoryGirl.create(:transactable, location: @listing.location)
       end
 
       context 'not searchable listing' do
-
         should 'show warning if listing is inactive but there is at least one active listing' do
           @listing.update_attributes(draft: Time.now)
           get :show, id: @listing
@@ -74,11 +69,7 @@ class ListingsControllerTest < ActionController::TestCase
           assert_response :success
           assert_not_nil flash[:warning]
         end
-
       end
-
     end
-
   end
 end
-

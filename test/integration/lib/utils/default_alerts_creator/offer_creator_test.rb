@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Utils::DefaultAlertsCreator::OfferCreatorTest < ActionDispatch::IntegrationTest
-
   setup do
     @creator = Utils::DefaultAlertsCreator::OfferCreator.new
   end

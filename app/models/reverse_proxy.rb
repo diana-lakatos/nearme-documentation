@@ -22,5 +22,4 @@ class ReverseProxy < ActiveRecord::Base
   rescue JSON::ParserError
     errors.add(:headers, 'not valid json')
   end
-
 end

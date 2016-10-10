@@ -1,5 +1,4 @@
 class CommunityReportingAggregate < ActiveRecord::Base
-
   auto_set_platform_context
   scoped_to_platform_context
 
@@ -18,7 +17,7 @@ class CommunityReportingAggregate < ActiveRecord::Base
     projects_with_501_or_more_followers: 'Projects with 501 or more Followers',
     total_number_of_updates: 'Total Number of Updates',
     total_number_of_topics: 'Total Number of Topics',
-    total_number_of_comments: 'Total Number of Comments',
+    total_number_of_comments: 'Total Number of Comments'
   }
 
   def self.get_last_reporting_period
@@ -37,7 +36,7 @@ class CommunityReportingAggregate < ActiveRecord::Base
   end
 
   def get_next_reporting_period
-    day_in_next_week = self.end_date + 1.day
+    day_in_next_week = end_date + 1.day
     [day_in_next_week.at_beginning_of_week, day_in_next_week.at_end_of_week]
   end
 
@@ -81,7 +80,7 @@ class CommunityReportingAggregate < ActiveRecord::Base
       statistics[:projects_with_0_collaborators] = Transactable.joins('left join transactable_collaborators pc ON pc.transactable_id = transactables.id').where('pc.id is null').group('transactables.id').count.length
     else
       if to_collaborators.blank?
-        to_collaborators = 2 ** 32
+        to_collaborators = 2**32
         hash_key = "projects_with_#{from_collaborators}_or_more_collaborators"
       else
         hash_key = "projects_with_#{from_collaborators}_to_#{to_collaborators}_collaborators"
@@ -96,7 +95,7 @@ class CommunityReportingAggregate < ActiveRecord::Base
       statistics[:projects_with_0_followers] = Transactable.joins("left join activity_feed_subscriptions afs ON afs.followed_id = transactables.id AND afs.followed_type = 'Transactable'").where('afs.id is null').group('transactables.id').count.length
     else
       if to_followers.blank?
-        to_followers = 2 ** 32
+        to_followers = 2**32
         hash_key = "projects_with_#{from_followers}_or_more_followers"
       else
         hash_key = "projects_with_#{from_followers}_to_#{to_followers}_followers"
@@ -117,6 +116,4 @@ class CommunityReportingAggregate < ActiveRecord::Base
   def update_total_number_of_comments
     statistics[:total_number_of_comments] = Comment.created_between(start_date, end_date).count
   end
-
 end
-

@@ -24,4 +24,3 @@ class NullConversionCurrencyBank < Money::Bank::Base
 end
 
 Money.default_bank = NullConversionCurrencyBank.new
-

@@ -1,5 +1,4 @@
 class WorkflowStep::FollowerWorkflow::UserFollowedTransactable < WorkflowStep::FollowerWorkflow::BaseStep
-
   def lister
     @followed.try(:creator)
   end
@@ -15,5 +14,4 @@ class WorkflowStep::FollowerWorkflow::UserFollowedTransactable < WorkflowStep::F
       transactable: @followed
     }
   end
-
 end

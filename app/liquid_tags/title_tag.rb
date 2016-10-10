@@ -10,5 +10,4 @@ class TitleTag < Liquid::Tag
     context.registers[:action_view].send(:title, context[@title])
     nil
   end
-
 end

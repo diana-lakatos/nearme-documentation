@@ -15,7 +15,7 @@ class FeaturedItemsController < ApplicationController
   def get_target_collection
     if @target == 'transactables'
       if @type.present?
-        parent = TransactableType.where("lower(name) = ?", @type.downcase).first
+        parent = TransactableType.where('lower(name) = ?', @type.downcase).first
         Transactable.where(transactable_type_id: parent.id).featured.take(@amount)
       else
         Transactable.featured.take(@amount)
@@ -29,7 +29,7 @@ class FeaturedItemsController < ApplicationController
     if params[:target].in? TARGET_WHITELIST
       @target = params[:target]
     else
-      render text: "Invalid target provided." and return
+      render(text: 'Invalid target provided.') && return
     end
   end
 end

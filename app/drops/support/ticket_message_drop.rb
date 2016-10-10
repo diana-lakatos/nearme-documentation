@@ -1,5 +1,4 @@
 class Support::TicketMessageDrop < BaseDrop
-
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
 

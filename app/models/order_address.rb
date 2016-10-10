@@ -13,7 +13,7 @@ class OrderAddress < ActiveRecord::Base
 
   validates :street1, :city, :state, :zip, :country, :phone, :email, presence: true
   validate :country_and_state
-  validate :validate_shippo_address, if: -> (address) { address.errors.empty?  && shippo_settings_valid? }
+  validate :validate_shippo_address, if: -> (address) { address.errors.empty? && shippo_settings_valid? }
 
   def full_name
     "#{firstname} #{lastname}"
@@ -24,13 +24,13 @@ class OrderAddress < ActiveRecord::Base
   end
 
   def validate_shippo_address
-    validation = if self.shippo_id.present?
-      instance.shippo_api.validate_address(self.shippo_id)
-    else
-      create_shippo_address.validate
+    validation = if shippo_id.present?
+                   instance.shippo_api.validate_address(shippo_id)
+                 else
+                   create_shippo_address.validate
     end
     if validation.object_state == 'INVALID'
-      errors.add(:base, validation.messages.map{|m| m[:text]}.join(' '))
+      errors.add(:base, validation.messages.map { |m| m[:text] }.join(' '))
     end
   end
 
@@ -40,7 +40,7 @@ class OrderAddress < ActiveRecord::Base
   end
 
   def get_shippo_id
-    self.shippo_id.presence || create_shippo_address[:object_id]
+    shippo_id.presence || create_shippo_address[:object_id]
   end
 
   def create_shippo_address
@@ -50,17 +50,15 @@ class OrderAddress < ActiveRecord::Base
   end
 
   def to_shippo
-    attribs = self.attributes
+    attribs = attributes
     attribs['country'] = iso_country_code
     attribs['name'] = "#{firstname} #{lastname}"
     attribs['state_name'] = state.name
     attribs['email'] = 'lemkowski@gmail.com'
     attribs['street2'] ||= ''
     attribs['alternative_phone'] ||= ''
-    if iso_country_code.in? %w(US CA)
-      attribs['state'] = iso_state_code || state
-    end
-    attribs.except("id")
+    attribs['state'] = iso_state_code || state if iso_country_code.in? %w(US CA)
+    attribs.except('id')
   end
 
   def iso_country_code

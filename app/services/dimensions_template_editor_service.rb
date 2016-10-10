@@ -1,5 +1,4 @@
 class DimensionsTemplateEditorService
-
   def initialize(dimensions_template)
     @dimensions_template = dimensions_template
   end
@@ -31,5 +30,4 @@ class DimensionsTemplateEditorService
       DimensionsTemplate.where.not(id: @dimensions_template.id).where(use_as_default: true).update_all(use_as_default: false)
     end
   end
-
 end

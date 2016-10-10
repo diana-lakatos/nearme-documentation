@@ -71,4 +71,3 @@ class InstanceAdmin::Manage::SmsTemplatesController < InstanceAdmin::Manage::Bas
     @transactable_type = TransactableType.find(params[:sms_template][:transactable_type_id]) if params[:sms_template][:transactable_type_id].present? rescue nil
   end
 end
-

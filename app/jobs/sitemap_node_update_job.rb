@@ -8,7 +8,7 @@ class SitemapNodeUpdateJob < Job
 
   def perform
     @object.instance.domains.each do |domain|
-      self.send(@action, domain)
+      send(@action, domain)
     end
   end
 

@@ -8,4 +8,3 @@ class SendUnreadMessagesReminders
     UnreadMessagesRemindersJob.perform
   end
 end
-

@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class ScheduleTest < ActiveSupport::TestCase
-
   context 'schedule rules' do
-
     setup do
       @date = Time.new(2015, 10, 4, 14, 34, 49).in_time_zone
       travel_to(@date) do
@@ -12,9 +10,7 @@ class ScheduleTest < ActiveSupport::TestCase
     end
 
     context 'with specific hours' do
-
       context 'with recurring dates mode' do
-
         should 'generate proper schedule' do
           travel_to(@date) do
             @schedule_rule = FactoryGirl.create(:schedule_rule, :specific_hours_mode, :recurring_dates_mode, schedule: @schedule)
@@ -31,16 +27,14 @@ class ScheduleTest < ActiveSupport::TestCase
               Time.new(2015, 10, 9, 14, 15, 0),
               Time.new(2015, 10, 9, 19, 1, 0),
 
-              Time.new(2015, 10, 11, 10, 25, 0),
+              Time.new(2015, 10, 11, 10, 25, 0)
 
             ], 8)
           end
         end
-
       end
 
       context 'with specific dates mode' do
-
         should 'generate proper schedule' do
           travel_to(@date) do
             @schedule_rule = FactoryGirl.create(:schedule_rule, :specific_hours_mode, :specific_dates_mode, schedule: @schedule)
@@ -55,16 +49,14 @@ class ScheduleTest < ActiveSupport::TestCase
 
               Time.new(2015, 10, 11, 10, 25, 0),
               Time.new(2015, 10, 11, 14, 15, 0),
-              Time.new(2015, 10, 11, 19, 1, 0),
+              Time.new(2015, 10, 11, 19, 1, 0)
 
             ], 8)
           end
         end
-
       end
 
       context 'with date range dates mode' do
-
         should 'generate proper schedule' do
           travel_to(@date) do
             @schedule_rule = FactoryGirl.create(:schedule_rule, :specific_hours_mode, :date_range_dates_mode, schedule: @schedule)
@@ -81,17 +73,15 @@ class ScheduleTest < ActiveSupport::TestCase
 
               Time.new(2015, 10, 9, 10, 25, 0),
               Time.new(2015, 10, 9, 14, 15, 0),
-              Time.new(2015, 10, 9, 19, 1, 0),
+              Time.new(2015, 10, 9, 19, 1, 0)
 
             ], 12)
           end
         end
-
       end
     end
 
     context 'with combined rules' do
-
       should 'properly generate schedule without duplicates' do
         travel_to(@date) do
           @schedule_rule = FactoryGirl.create(:schedule_rule, :recurring_hours_mode, :recurring_dates_mode, schedule: @schedule)
@@ -127,17 +117,14 @@ class ScheduleTest < ActiveSupport::TestCase
             Time.new(2015, 10, 9, 16, 15, 0),
             Time.new(2015, 10, 9, 19, 30, 0),
 
-            Time.new(2015, 10, 11, 9, 45, 0),
+            Time.new(2015, 10, 11, 9, 45, 0)
 
           ], 23)
         end
-
       end
-
     end
 
     context 'for future years' do
-
       should 'properly generate schedule without duplicates' do
         travel_to(@date) do
           @schedule_rule = FactoryGirl.create(:schedule_rule, :specific_hours_mode, :specific_dates_mode, :future_years, schedule: @schedule)
@@ -154,11 +141,10 @@ class ScheduleTest < ActiveSupport::TestCase
 
             Time.new(2017, 10, 11, 10, 25, 0),
             Time.new(2017, 10, 11, 14, 15, 0),
-            Time.new(2017, 10, 11, 19, 1, 0),
+            Time.new(2017, 10, 11, 19, 1, 0)
 
           ], 9)
         end
-
       end
     end
   end
@@ -169,13 +155,11 @@ class ScheduleTest < ActiveSupport::TestCase
     time = @schedule.schedule.first
     times = begin
               if time.to_i == Time.zone.now.to_i
-                @schedule.schedule.first(number + 1)[1..number+1]
+                @schedule.schedule.first(number + 1)[1..number + 1]
               else
                 @schedule.schedule.first(number)
-              end.map { |t| t.in_time_zone }
+              end.map(&:in_time_zone)
             end
-    assert_equal expected_array.map { |t| t.in_time_zone }, times
+    assert_equal expected_array.map(&:in_time_zone), times
   end
-
 end
-

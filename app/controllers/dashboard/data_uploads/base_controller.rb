@@ -1,5 +1,4 @@
 class Dashboard::DataUploads::BaseController < Dashboard::BaseController
-
   before_filter :find_importable
   before_filter :set_import_job, only: :create
 
@@ -22,7 +21,7 @@ class Dashboard::DataUploads::BaseController < Dashboard::BaseController
 
   def download_csv_template
     send_data DataImporter::Host::CsvTemplateGenerator.new(@importable).generate,
-      filename: "#{@importable.name.parameterize}_csv_template.csv"
+              filename: "#{@importable.name.parameterize}_csv_template.csv"
   end
 
   def data_upload_params
@@ -30,6 +29,4 @@ class Dashboard::DataUploads::BaseController < Dashboard::BaseController
     params[:data_upload][:options][:send_invitational_email] = '0'
     params.require(:data_upload).permit(secured_params.data_upload).merge(uploader: current_user, importable: @importable)
   end
-
 end
-

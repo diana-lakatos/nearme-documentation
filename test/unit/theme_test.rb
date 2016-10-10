@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class ThemeTest < ActiveSupport::TestCase
-
   setup do
     @instance = FactoryGirl.create(:instance)
   end
@@ -20,7 +19,7 @@ class ThemeTest < ActiveSupport::TestCase
     should 'return blank string if color is nil' do
       color = nil
       @theme.send(:"color_#{@name}=", color)
-      assert_equal "", @theme.hex_color(@name)
+      assert_equal '', @theme.hex_color(@name)
     end
 
     should 'raise InvalidArgumentError when color is not defined' do
@@ -30,16 +29,15 @@ class ThemeTest < ActiveSupport::TestCase
   end
 
   context '#homepage_content' do
-
     setup do
       @theme = @instance.theme
     end
 
     should 'add no follow to unknown links' do
       @theme.homepage_content = '<div>This is an <a href="http://unknown.link.com">Unknown Link</a></div>'
-      mock = mock()
+      mock = mock
       mock.expects(:modify).with(@theme.homepage_content).once
-      RelNoFollowAdder.expects(:new).with({:skip_domains => Domain.pluck(:name)}).returns(mock)
+      RelNoFollowAdder.expects(:new).with(skip_domains: Domain.pluck(:name)).returns(mock)
       @theme.save
     end
 
@@ -56,7 +54,6 @@ class ThemeTest < ActiveSupport::TestCase
       @theme.homepage_content = 'new <a href="http://unknown.link.com">Unknown Link</a>'
       assert @theme.save
     end
-
   end
 
   context '::hexify' do
@@ -91,4 +88,3 @@ class ThemeTest < ActiveSupport::TestCase
     end
   end
 end
-

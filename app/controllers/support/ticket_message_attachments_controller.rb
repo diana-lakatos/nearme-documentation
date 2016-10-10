@@ -1,5 +1,4 @@
 class Support::TicketMessageAttachmentsController < Support::BaseController
-
   before_action :set_form_name, only: [:create, :update, :edit]
 
   def edit
@@ -13,7 +12,7 @@ class Support::TicketMessageAttachmentsController < Support::BaseController
     if @ticket_message_attachment.save
       flash.now[:success] = t('flash_messages.support.ticket_message_attachment.created')
       render json: {
-        attachment_content: render_to_string(partial: 'support/ticket_message_attachments/attachment', locals: {form_name: @form_name, ticket_message_attachment: @ticket_message_attachment}),
+        attachment_content: render_to_string(partial: 'support/ticket_message_attachments/attachment', locals: { form_name: @form_name, ticket_message_attachment: @ticket_message_attachment }),
         modal_content: render_to_string(:edit)
       }
     else
@@ -26,7 +25,7 @@ class Support::TicketMessageAttachmentsController < Support::BaseController
     @ticket_message_attachment.assign_attributes(attachment_params)
     if @ticket_message_attachment.save
       render json: {
-        attachment_content: render_to_string(partial: 'support/ticket_message_attachments/attachment', locals: {form_name: @form_name, ticket_message_attachment: @ticket_message_attachment}),
+        attachment_content: render_to_string(partial: 'support/ticket_message_attachments/attachment', locals: { form_name: @form_name, ticket_message_attachment: @ticket_message_attachment }),
         attachment_id: @ticket_message_attachment.id
       }
     else
@@ -50,4 +49,3 @@ class Support::TicketMessageAttachmentsController < Support::BaseController
     @form_name = params.delete(:form_name).presence || params.delete(:formName)
   end
 end
-

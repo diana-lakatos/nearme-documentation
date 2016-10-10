@@ -6,7 +6,7 @@ class Listing::SearchFetcher
   def initialize(filters = {}, transactable_type)
     @transactable_type = transactable_type
     if filters.fetch(:transactable_type_id, nil).blank?
-      raise NotImplementedError.new('transactable_type_id filter is mandatory')
+      fail NotImplementedError.new('transactable_type_id filter is mandatory')
     end
     @midpoint = filters[:midpoint]
     @bounding_box = filters[:bounding_box]
@@ -26,7 +26,7 @@ class Listing::SearchFetcher
 
   def filtered_locations
     @locations_scope = Location.all
-    @locations_scope = @locations_scope.includes(:location_address).near(@midpoint, @radius, :order => "#{Address.order_by_distance_sql(@midpoint[0], @midpoint[1])} ASC") if @midpoint.present? && @radius.present? && !@bounding_box.present?
+    @locations_scope = @locations_scope.includes(:location_address).near(@midpoint, @radius, order: "#{Address.order_by_distance_sql(@midpoint[0], @midpoint[1])} ASC") if @midpoint.present? && @radius.present? && !@bounding_box.present?
     @locations_scope = @locations_scope.includes(:location_address).bounding_box(@bounding_box, @midpoint) if @bounding_box.present?
     @locations_scope = @locations_scope.filtered_by_location_types_ids(@filters[:location_types_ids]) if @filters[:location_types_ids].present?
     @locations_scope = @locations_scope.order(Location.build_order(@filters.except(:price))) if Location.can_order_by?(@filters.except(:price))
@@ -42,17 +42,17 @@ class Listing::SearchFetcher
     end
 
     if @filters[:category_ids].present?
-      if @transactable_type.category_search_type == "AND"
-        @listings_scope = @listings_scope.
-          joins(:categories_categorizables).
-          where(categories_categorizables: {category_id: @filters[:category_ids]}).
-          group('transactables.id').having("count(categories_categorizables.category_id) >= #{@filters[:category_ids].size}")
+      if @transactable_type.category_search_type == 'AND'
+        @listings_scope = @listings_scope
+                          .joins(:categories_categorizables)
+                          .where(categories_categorizables: { category_id: @filters[:category_ids] })
+                          .group('transactables.id').having("count(categories_categorizables.category_id) >= #{@filters[:category_ids].size}")
       else
-        @listings_scope = @listings_scope.includes(:categories).where(categories: {id: @filters[:category_ids]})
+        @listings_scope = @listings_scope.includes(:categories).where(categories: { id: @filters[:category_ids] })
       end
     end
 
-    @listings_scope = @listings_scope.joins("inner join transactable_action_types tat ON tat.id = transactables.action_type_id inner join transactable_pricings tp ON tp.action_id = tat.id").where('tp.price_cents >= ? AND tp.price_cents <= ?', @filters[:price][:min].to_i * 100, @filters[:price][:max].to_i * 100).distinct if @filters[:price] && !@filters[:price][:max].to_i.zero?
+    @listings_scope = @listings_scope.joins('inner join transactable_action_types tat ON tat.id = transactables.action_type_id inner join transactable_pricings tp ON tp.action_id = tat.id').where('tp.price_cents >= ? AND tp.price_cents <= ?', @filters[:price][:min].to_i * 100, @filters[:price][:max].to_i * 100).distinct if @filters[:price] && !@filters[:price][:max].to_i.zero?
 
     # Date pickers
     if availability_filter?

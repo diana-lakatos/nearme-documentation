@@ -20,8 +20,8 @@ class InstanceWizardController < ActionController::Base
     @instance = Instance.new(instance_params)
 
     unless @instance.domains.first.present?
-      flash.now[:error] = "You must create a domain, e.g. your-market.near-me.com"
-      render :new and return
+      flash.now[:error] = 'You must create a domain, e.g. your-market.near-me.com'
+      render(:new) && return
     end
 
     @instance.domains.first.use_as_default = true
@@ -43,8 +43,8 @@ class InstanceWizardController < ActionController::Base
       end
     rescue
       flash.now[:error] = @user.errors.full_messages.to_sentence +
-        @instance.errors.full_messages.to_sentence
-      render :new and return
+                          @instance.errors.full_messages.to_sentence
+      render(:new) && return
     end
 
     @instance_creator.update_attribute(:created_instance, true)
@@ -74,7 +74,7 @@ class InstanceWizardController < ActionController::Base
     ipt = @instance.instance_profile_types.create!(name: 'Buyer', profile_type: InstanceProfileType::BUYER)
     Utils::FormComponentsCreator.new(ipt).create!
     tp = @instance.transactable_types.new(
-      name: @instance.bookable_noun,
+      name: @instance.bookable_noun
     )
     tp.action_types << TransactableType::TimeBasedBooking.new(
       confirm_reservations: true,
@@ -128,10 +128,10 @@ class InstanceWizardController < ActionController::Base
     @instance_creator = InstanceCreator.find_by_email(params[:instance_creator] && params[:instance_creator][:email])
     if @instance_creator && @instance_creator.created_instance?
       flash[:error] = 'Sorry, that email has already been used. Please <a href="/contact">contact us</a>.'.html_safe
-      redirect_to action: :index and return
+      redirect_to(action: :index) && return
     elsif !@instance_creator
       flash[:error] = 'Sorry, that email was not pre-approved. Please <a href="/contact">contact us</a>.'.html_safe
-      redirect_to action: :index and return
+      redirect_to(action: :index) && return
     end
   end
 
@@ -146,5 +146,4 @@ class InstanceWizardController < ActionController::Base
   def user_params
     params.require(:user).permit(secured_params.user)
   end
-
 end

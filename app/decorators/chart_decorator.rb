@@ -1,7 +1,6 @@
 class ChartDecorator < Draper::CollectionDecorator
-
   def initialize(collection, show_period = :last_7_days, options = {})
-    @options = options.reverse_merge({ :labels_max_count => 10 })
+    @options = options.reverse_merge(labels_max_count: 10)
     @show_period = show_period
     super(collection, with: ChartItemDecorator)
   end
@@ -53,14 +52,14 @@ class ChartDecorator < Draper::CollectionDecorator
   end
 
   private
+
   def grouped_by_date
     @grouped_by_date ||= begin
       hash = {}
-      decorated_collection.group_by{|i| i.formatted_date }.each do |date, date_values|
+      decorated_collection.group_by(&:formatted_date).each do |date, date_values|
         hash[date] = date_values
       end
       hash
     end
   end
-
 end

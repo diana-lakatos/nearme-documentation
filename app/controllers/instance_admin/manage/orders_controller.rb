@@ -1,5 +1,4 @@
 class InstanceAdmin::Manage::OrdersController < InstanceAdmin::Manage::BaseController
-
   skip_before_filter :check_if_locked
   before_filter :find_order, except: :index
 
@@ -25,8 +24,6 @@ class InstanceAdmin::Manage::OrdersController < InstanceAdmin::Manage::BaseContr
   end
 
   def order_scope
-    @order_scope ||= Order.without_state(:inactive).paginate(per_page: 20, :page => params[:page]).order("created_at DESC")
+    @order_scope ||= Order.without_state(:inactive).paginate(per_page: 20, page: params[:page]).order('created_at DESC')
   end
-
 end
-

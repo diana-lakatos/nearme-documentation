@@ -1,5 +1,4 @@
 class DelayedReservation < Reservation
-
   attr_accessor :dates_fake, :checkout_update
 
   validate :dates_fake_present, if: -> { checkout_update }
@@ -9,7 +8,7 @@ class DelayedReservation < Reservation
   def skip_payment_authorization
     true
   end
-  alias :skip_payment_authorization? :skip_payment_authorization
+  alias_method :skip_payment_authorization?, :skip_payment_authorization
 
   def self.workflow_class
     Reservation
@@ -19,16 +18,16 @@ class DelayedReservation < Reservation
     self.attributes = attrs
     self.reservation_type = transactable.transactable_type.reservation_type
     self.settings = reservation_type.try(:settings)
-    self.owner_id = self.user_id
+    self.owner_id = user_id
     add_line_item_without_validation_setup
     save(validate: false)
   end
 
   def add_line_item_without_validation_setup
-    self.set_inheritated_data
-    self.set_minimum_booking_minutes
+    set_inheritated_data
+    set_minimum_booking_minutes
     set_dates_from_search
-    self.build_periods
+    build_periods
     self.quantity ||= 1
     self.skip_try_to_activate = true
   end
@@ -54,22 +53,22 @@ class DelayedReservation < Reservation
   def enquirer_cancelable
     state == 'unconfirmed'
   end
-  alias :enquirer_cancelable? :enquirer_cancelable
+  alias_method :enquirer_cancelable?, :enquirer_cancelable
 
   def rebuild_first_line_item
     if transactable_line_items.any?
       transactable_line_items.destroy_all
       transactable_line_items.build(
-        user: self.user,
-        name: self.transactable.name,
+        user: user,
+        name: transactable.name,
         quantity: self.quantity,
-        line_item_source: self.transactable,
+        line_item_source: transactable,
         unit_price: price_calculator.price,
         line_itemable: self,
         service_fee_guest_percent: action.service_fee_guest_percent,
         service_fee_host_percent: action.service_fee_host_percent,
         minimum_lister_service_fee_cents: action.minimum_lister_service_fee_cents,
-        transactable_pricing_id: self.try(:transactable_pricing_id)
+        transactable_pricing_id: try(:transactable_pricing_id)
       )
       update_payment_attributes
     end
@@ -103,12 +102,11 @@ class DelayedReservation < Reservation
           build_periods
           rebuild_first_line_item
         else
-          periods.first.update_attributes({ date: date, start_minute: @start_minute, end_minute: @end_minute })
+          periods.first.update_attributes(date: date, start_minute: @start_minute, end_minute: @end_minute)
         end
       end
     end
     self.checkout_update = false
     true
   end
-
 end

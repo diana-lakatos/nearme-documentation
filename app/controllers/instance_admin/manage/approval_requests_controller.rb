@@ -1,5 +1,4 @@
 class InstanceAdmin::Manage::ApprovalRequestsController < InstanceAdmin::Manage::BaseController
-
   before_filter :find_approval_request, only: [:index]
   before_action :set_section_name
 

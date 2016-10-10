@@ -1,5 +1,4 @@
 class ElasticIndexerJob < Job
-
   def after_initialize(operation, klass, record_id, options = {})
     @operation = operation
     @klass = klass
@@ -23,7 +22,7 @@ class ElasticIndexerJob < Job
           record.__elasticsearch__.__send__ "#{@operation}_document"
         when /delete/
           client.delete index: @klass.constantize.index_name, type: @klass.constantize.document_type, id: @record_id
-        else raise ArgumentError, "ElasticIndexer Unknown operation '#{@operation}'"
+        else fail ArgumentError, "ElasticIndexer Unknown operation '#{@operation}'"
       end
     rescue Elasticsearch::Transport::Transport::Errors::NotFound
     end

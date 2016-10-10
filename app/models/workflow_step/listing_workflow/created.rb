@@ -1,5 +1,4 @@
 class WorkflowStep::ListingWorkflow::Created < WorkflowStep::ListingWorkflow::BaseStep
-
   # user:
   #   User object
   # listing:
@@ -11,6 +10,4 @@ class WorkflowStep::ListingWorkflow::Created < WorkflowStep::ListingWorkflow::Ba
   def should_be_processed?
     true
   end
-
 end
-

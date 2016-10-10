@@ -15,6 +15,4 @@ class Support::TicketMessageAttachment < ActiveRecord::Base
   TAGS = ['Informational', 'Purchase Order']
   validates_presence_of :file
   validates_inclusion_of :tag, in: TAGS
-
 end
-

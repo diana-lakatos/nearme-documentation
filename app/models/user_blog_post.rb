@@ -33,12 +33,12 @@ class UserBlogPost < ActiveRecord::Base
 
   def previous_blog_post
     @previous_blog_post ||= user.blog_posts.published.order('published_at DESC').where('published_at < ?',
-                                                                                                published_at).first
+                                                                                       published_at).first
   end
 
   def next_blog_post
     @next_blog_post ||= user.blog_posts.published.order('published_at DESC').where('published_at > ?',
-                                                                                            published_at).last
+                                                                                   published_at).last
   end
 
   def to_liquid
@@ -50,7 +50,7 @@ class UserBlogPost < ActiveRecord::Base
   end
 
   def published_at_str
-    self.published_at.try(:strftime, I18n.t('datepicker.dformat'))
+    published_at.try(:strftime, I18n.t('datepicker.dformat'))
   end
 
   def published_at_str=(value)
@@ -68,7 +68,7 @@ class UserBlogPost < ActiveRecord::Base
     [
       :title,
       [:title, self.class.last.try(:id).to_i + 1],
-      [:title, rand(1000000)]
+      [:title, rand(1_000_000)]
     ]
   end
 end

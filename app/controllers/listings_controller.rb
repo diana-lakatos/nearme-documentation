@@ -18,7 +18,7 @@ class ListingsController < ApplicationController
       @section_name = 'listings'
 
       @listing.track_impression(request.remote_ip)
-      event_tracker.viewed_a_listing(@listing, { logged_in: user_signed_in? })
+      event_tracker.viewed_a_listing(@listing, logged_in: user_signed_in?)
       @reviews = @listing.reviews.paginate(page: params[:reviews_page])
 
       @rating_questions = RatingSystem.active_with_subject(RatingConstants::TRANSACTABLE).try(:rating_questions)
@@ -65,16 +65,16 @@ class ListingsController < ApplicationController
     # we're assuming the first - will separate id from the parameterized name.
     #
     if params[:id].blank? && params[:location_id].present?
-      redirect_to Location.friendly.find(params[:location_id]).listings.searchable.first.try(:decorate).try(:show_path) || '/' and return
+      redirect_to(Location.friendly.find(params[:location_id]).listings.searchable.first.try(:decorate).try(:show_path) || '/') && return
     end
-    old_id = params[:id].split("-").first
-    old_slug = params[:id].split("-").try(:[], 1..-1).try(:join, "-")
+    old_id = params[:id].split('-').first
+    old_slug = params[:id].split('-').try(:[], 1..-1).try(:join, '-')
 
     @listing = Transactable.find_by(id: old_id).presence || Transactable.find_by(slug: old_slug)
     if @listing.present?
       redirect_to @listing.decorate.show_path, status: 301
     elsif (location = Location.friendly.find(params[:id])).present?
-      redirect_to location.listings.searchable.first.try(:decorate).try(:show_path) || '/' and return
+      redirect_to(location.listings.searchable.first.try(:decorate).try(:show_path) || '/') && return
     else
       redirect_to request.referer.presence || search_path, status: 301
     end
@@ -184,7 +184,7 @@ class ListingsController < ApplicationController
 
   def build_comment
     @comment = @transactable.comments.build
-    @comments = @transactable.comments.includes(:user).order("created_at DESC")
+    @comments = @transactable.comments.includes(:user).order('created_at DESC')
   end
 
   def pagination_params
@@ -193,5 +193,4 @@ class ListingsController < ApplicationController
       per_page: ActivityFeedService::Helpers::FOLLOWED_PER_PAGE
     }
   end
-
 end

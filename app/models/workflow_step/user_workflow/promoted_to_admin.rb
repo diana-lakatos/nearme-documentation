@@ -1,5 +1,4 @@
 class WorkflowStep::UserWorkflow::PromotedToAdmin < WorkflowStep::UserWorkflow::BaseStep
-
   def initialize(user_id, admin_id)
     @user = User.find(user_id)
     @creator = User.find(admin_id)
@@ -20,6 +19,4 @@ class WorkflowStep::UserWorkflow::PromotedToAdmin < WorkflowStep::UserWorkflow::
   def data
     { user_who_was_promoted: @user, user_who_promoted: @creator }
   end
-
 end
-

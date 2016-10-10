@@ -23,7 +23,7 @@ class PlatformContext
   @@instance_view_cache_key = {}
 
   attr_reader :domain, :platform_context_detail, :instance, :theme, :custom_theme, :domain,
-    :white_label_company, :partner, :request_host, :blog_instance
+              :white_label_company, :partner, :request_host, :blog_instance
 
   class_attribute :root_secured
   self.root_secured = Rails.application.config.root_secured
@@ -75,7 +75,7 @@ class PlatformContext
     when Instance
       initialize_with_instance(object)
     else
-      raise "Can't initialize PlatformContext with object of class #{object.class}"
+      fail "Can't initialize PlatformContext with object of class #{object.class}"
     end
   end
 
@@ -83,13 +83,11 @@ class PlatformContext
     Rails.cache.fetch("secured_domains_for_#{@request_host}_#{@instance.cache_key}") do
       result = nil
 
-      if !@request_host.blank?
+      unless @request_host.blank?
         result = @instance.domains.secured.where_hostname(@request_host)
       end
 
-      if result.blank?
-        result = @instance.domains.secured.first
-      end
+      result = @instance.domains.secured.first if result.blank?
 
       if Rails.env.development? || Rails.env.test?
         result ||= @instance.domains.first
@@ -101,12 +99,12 @@ class PlatformContext
 
   def secured_constraint
     if @secure_domain ||= fetch_secured_domain
-      {host: @secure_domain.name, protocol: 'https', only_path: false}
+      { host: @secure_domain.name, protocol: 'https', only_path: false }
     else
       if PlatformContext.current.instance.id == Instance.first.id
-        {host: Rails.application.routes.default_url_options[:host], protocol: 'https', only_path: false}
+        { host: Rails.application.routes.default_url_options[:host], protocol: 'https', only_path: false }
       else
-        raise NotImplementedError.new("Marketplace '#{instance.name}' has not configured secured domain")
+        fail NotImplementedError.new("Marketplace '#{instance.name}' has not configured secured domain")
       end
     end
   end
@@ -222,10 +220,10 @@ class PlatformContext
 
   def to_h
     { request_host: @request_host }.merge(
-      Hash[instance_variables.
-           reject{|iv| iv.to_s == '@request_host' || iv.to_s == '@decorator'}.
-           map{|iv| iv.to_s.gsub('@', '')}.
-           map{|iv| ["#{iv}_id", send(iv).try(:id)]}]
+      Hash[instance_variables
+           .reject { |iv| iv.to_s == '@request_host' || iv.to_s == '@decorator' }
+           .map { |iv| iv.to_s.gsub('@', '') }
+           .map { |iv| ["#{iv}_id", send(iv).try(:id)] }]
     )
   end
 
@@ -238,7 +236,7 @@ class PlatformContext
   def overwrite_custom_theme(user)
     return false if @custom_theme.try(:in_use_for_instance_admins?)
     return false if user.nil?
-    return false if !(user.metadata["#{@instance.id}"].try(:keys).try(:include?, 'instance_admins_metadata') || user.admin?)
+    return false unless user.metadata["#{@instance.id}"].try(:keys).try(:include?, 'instance_admins_metadata') || user.admin?
     @custom_theme = @platform_context_detail.custom_theme_for_instance_admins if @platform_context_detail.try(:custom_theme_for_instance_admins).present?
   end
 

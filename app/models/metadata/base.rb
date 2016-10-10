@@ -79,21 +79,18 @@ module Metadata::Base
   extend ActiveSupport::Concern
 
   included do
-
     def metadata_relevant_attribute_changed?(attr)
       previous_changes.keys.include?(attr) && previous_changes[attr].first != previous_changes[attr].last
     end
 
     def self.has_metadata(options = {})
-      options.reverse_merge!({
-        column_name: "metadata",
-        without_db_column: false,
-        scope_to_instance: false,
-        accessors: []
-      })
+      options.reverse_merge!(column_name: 'metadata',
+                             without_db_column: false,
+                             scope_to_instance: false,
+                             accessors: [])
 
       metadata_column = options[:column_name]
-      include options.fetch(:observer_class, "Metadata::#{self.name}#{metadata_column.capitalize}").to_s.constantize
+      include options.fetch(:observer_class, "Metadata::#{name}#{metadata_column.capitalize}").to_s.constantize
 
       unless options[:without_db_column]
 
@@ -157,7 +154,7 @@ module Metadata::Base
 
       if options[:accessors].any?
         class_eval <<-EOV
-          store_accessor :#{metadata_column}, :#{options[:accessors].join(", :")}
+          store_accessor :#{metadata_column}, :#{options[:accessors].join(', :')}
         EOV
       end
     end

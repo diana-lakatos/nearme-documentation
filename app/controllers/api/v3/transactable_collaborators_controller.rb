@@ -60,6 +60,5 @@ module Api
     def is_creator?
       @transactable.creator.id == current_user.id
     end
-
   end
 end

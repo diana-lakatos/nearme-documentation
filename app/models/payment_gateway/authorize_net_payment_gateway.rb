@@ -13,8 +13,6 @@ class PaymentGateway::AuthorizeNetPaymentGateway < PaymentGateway
   end
 
   def supported_currencies
-    ["USD", "CAD"]
+    %w(USD CAD)
   end
-
 end
-

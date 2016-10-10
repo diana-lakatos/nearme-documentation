@@ -18,11 +18,9 @@ class BillingAuthorization < ActiveRecord::Base
 
   scope :success, -> { where(success: true) }
 
-  validates_presence_of :token, if: lambda { |billing_authorization| billing_authorization.success? }
+  validates_presence_of :token, if: ->(billing_authorization) { billing_authorization.success? }
 
   def to_liquid
     @billing_authorization_drop ||= BillingAuthorizationDrop.new(self)
   end
-
 end
-

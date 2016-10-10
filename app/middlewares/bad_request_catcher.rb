@@ -4,14 +4,12 @@ class BadRequestCatcher
   end
 
   def call(env)
-    begin
-      @app.call(env)
-    rescue ActionController::BadRequest
-      ::Rails.logger.warn("WARN: 400 ActionController::BadRequest: #{env['REQUEST_URI']}")
-      [
-          400, { "Content-Type" => "text/html" },
-          [ 'BadRequest' ]
-      ]
-    end
+    @app.call(env)
+  rescue ActionController::BadRequest
+    ::Rails.logger.warn("WARN: 400 ActionController::BadRequest: #{env['REQUEST_URI']}")
+    [
+      400, { 'Content-Type' => 'text/html' },
+      ['BadRequest']
+    ]
   end
 end

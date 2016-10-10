@@ -4,5 +4,4 @@ class MarketplaceErrorGroup < ActiveRecord::Base
   acts_as_paranoid
 
   has_many :marketplace_errors, inverse_of: :marketplace_error_group
-
 end

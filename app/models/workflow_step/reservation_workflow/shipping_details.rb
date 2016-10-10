@@ -1,5 +1,4 @@
 class WorkflowStep::ReservationWorkflow::ShippingDetails < WorkflowStep::ReservationWorkflow::BaseStep
-
   # reservation:
   #   Reservation object
   # user:
@@ -15,5 +14,4 @@ class WorkflowStep::ReservationWorkflow::ShippingDetails < WorkflowStep::Reserva
   def data
     { reservation: @reservation, user: lister, host: enquirer, listing: @reservation.transactable, inbound_shipping: @reservation.shipments.inbound.first, outbound_shipping: @reservation.shipments.outbound.first }
   end
-
 end

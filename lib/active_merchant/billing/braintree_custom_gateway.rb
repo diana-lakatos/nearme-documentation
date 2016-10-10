@@ -3,7 +3,6 @@ require 'braintree'
 module ActiveMerchant
   module Billing
     class BraintreeCustomGateway < BraintreeBlueGateway
-
       def initialize(settings)
         settings.each { |k, v| Braintree::Configuration.send("#{k}=", v) if Braintree::Configuration.respond_to?("#{k}=") }
         super
@@ -50,7 +49,7 @@ module ActiveMerchant
         @client_token ||= Braintree::ClientToken.generate
       end
 
-      # TODO create_transaction_parameters method is temporal work around
+      # TODO: create_transaction_parameters method is temporal work around
       # Should be removed with upgrade of ActiveMerchant (activemerchant gem)
       # to the version higher that v1.60.0
 
@@ -63,4 +62,3 @@ module ActiveMerchant
     end
   end
 end
-

@@ -1,5 +1,4 @@
 class HomeController < ApplicationController
-
   def index
     @transactable_types = current_instance.transactable_types.searchable
     @transactable_types += current_instance.instance_profile_types.searchable
@@ -7,7 +6,7 @@ class HomeController < ApplicationController
     @transactable_type = @transactable_types.first
 
     if current_instance.is_community?
-      order = ["Networking", "Dual Screen", "Big Data", "Open Source", "Android", "Real Sense"]
+      order = ['Networking', 'Dual Screen', 'Big Data', 'Open Source', 'Android', 'Real Sense']
 
       @hide_intro_video = !!cookies['hide_intro_video']
 
@@ -28,4 +27,3 @@ class HomeController < ApplicationController
     respond_to :html
   end
 end
-

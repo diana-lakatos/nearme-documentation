@@ -26,9 +26,9 @@ class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::Base
   def edit_keys
     @translations = @instance.translations.where(locale: @locale.code)
     @default_and_custom_translations = LocalesService.new(platform_context, @locale.code, q: params[:q])
-                                                     .get_locales
-                                                     .order('key ASC')
-                                                     .paginate(:page => params[:page], :per_page => 50)
+                                       .get_locales
+                                       .order('key ASC')
+                                       .paginate(page: params[:page], per_page: 50)
   end
 
   def date_time_preferences

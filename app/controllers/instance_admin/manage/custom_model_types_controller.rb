@@ -1,6 +1,4 @@
 class InstanceAdmin::Manage::CustomModelTypesController < InstanceAdmin::Manage::TransactableTypesController
-
-
   def create
     @transactable_type = resource_class.new(transactable_type_params)
     if @transactable_type.save
@@ -21,6 +19,4 @@ class InstanceAdmin::Manage::CustomModelTypesController < InstanceAdmin::Manage:
   def transactable_type_params
     params.require(:custom_model_type).permit(secured_params.custom_model_type)
   end
-
 end
-

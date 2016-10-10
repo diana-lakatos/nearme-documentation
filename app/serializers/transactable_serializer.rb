@@ -1,11 +1,11 @@
 class TransactableSerializer < ApplicationSerializer
   PRICE_PERIODS = {
-    :free => nil,
-    :day => 'day'
+    free: nil,
+    day: 'day'
   }
 
   attributes :id, :name, :description, :company_name, :company_description,
-    :address, :price, :quantity
+             :address, :price, :quantity
 
   attribute :latitude,  key: :lat
   attribute :longitude, key: :lon
@@ -17,11 +17,11 @@ class TransactableSerializer < ApplicationSerializer
   def attributes
     hash = super
 
-    hash.merge!(:score => 0)
-    hash.merge!(:strict_match => true)
+    hash.merge!(score: 0)
+    hash.merge!(strict_match: true)
 
     # This remains for backwards compatibility for iOS
-    hash.merge!(:organizations => [])
+    hash.merge!(organizations: [])
     hash
   end
 
@@ -52,5 +52,4 @@ class TransactableSerializer < ApplicationSerializer
       PRICE_PERIODS[:day]
     end
   end
-
 end

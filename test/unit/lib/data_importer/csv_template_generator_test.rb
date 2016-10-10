@@ -1,14 +1,12 @@
 require 'test_helper'
 
 class DataImporter::CsvTemplateGeneratorTest < ActiveSupport::TestCase
-
   setup do
     @instance = FactoryGirl.create(:instance)
     PlatformContext.current = PlatformContext.new(@instance)
   end
 
   context 'transactables' do
-
     setup do
       @transactable_type = FactoryGirl.create(:transactable_type)
       CustomAttributes::CustomAttribute.destroy_all
@@ -17,7 +15,6 @@ class DataImporter::CsvTemplateGeneratorTest < ActiveSupport::TestCase
     end
 
     context 'template for MPO' do
-
       should 'contain only public attributes' do
         result_csv = DataImporter::CsvTemplateGenerator.new(@transactable_type, true).generate
         assert result_csv.include?('User Email'), "User email not included in: #{result_csv}"
@@ -39,11 +36,10 @@ class DataImporter::CsvTemplateGeneratorTest < ActiveSupport::TestCase
       end
 
       should 'allow to include custom fields in template' do
-        @transactable_type.update_attribute(:custom_csv_fields, [ {'transactable' => 'public_attribute'}, {'location' => 'email'} ])
+        @transactable_type.update_attribute(:custom_csv_fields, [{ 'transactable' => 'public_attribute' }, { 'location' => 'email' }])
         result_csv = DataImporter::Host::CsvTemplateGenerator.new(@transactable_type).generate
         assert_equal "My Public Attribute,Location Email,Company External Id\n", result_csv
       end
     end
   end
-
 end

@@ -1,7 +1,6 @@
 require 'csv'
 
 class DataImporter::CsvFile < DataImporter::File
-
   attr_accessor :hour_parser
 
   def initialize(path)
@@ -15,37 +14,37 @@ class DataImporter::CsvFile < DataImporter::File
 
   def row_as_hash
     {
-      :user => user_attributes,
-      :company => company_attributes,
-      :location => location_attributes,
-      :address => address_attributes,
-      :listing => listing_attributes,
-      :photo => photo_attributes
+      user: user_attributes,
+      company: company_attributes,
+      location: location_attributes,
+      address: address_attributes,
+      listing: listing_attributes,
+      photo: photo_attributes
     }
   end
 
   def user_attributes
-    raise NotImplementedError
+    fail NotImplementedError
   end
 
   def company_attributes
-    raise NotImplementedError
+    fail NotImplementedError
   end
 
   def location_attributes
-    raise NotImplementedError
+    fail NotImplementedError
   end
 
   def address_attributes
-    raise NotImplementedError
+    fail NotImplementedError
   end
 
   def listing_attributes
-    raise NotImplementedError
+    fail NotImplementedError
   end
 
   def photo_attributes
-    raise NotImplementedError
+    fail NotImplementedError
   end
 
   def amenities
@@ -59,5 +58,4 @@ class DataImporter::CsvFile < DataImporter::File
   def sync_mode
     @options.fetch(:sync_mode)
   end
-
 end

@@ -20,7 +20,7 @@ class RecurringBookingDecorator < OrderDecorator
     if recurring_booking_periods.any?
       recurring_booking_periods.first.payment.state.capitalize
     else
-      payment_subscription.present? ? "Authorized" : "Missing"
+      payment_subscription.present? ? 'Authorized' : 'Missing'
     end
   end
 
@@ -36,7 +36,7 @@ class RecurringBookingDecorator < OrderDecorator
 
   def total_price_host
     if subtotal_amount.to_f.zero?
-      "Free!"
+      'Free!'
     else
       render_money(total_payable_to_host)
     end
@@ -48,7 +48,7 @@ class RecurringBookingDecorator < OrderDecorator
 
   def total_price_for_guest
     if subtotal_amount.to_f.zero?
-      "Free!"
+      'Free!'
     else
       render_money(total_amount)
     end
@@ -56,7 +56,7 @@ class RecurringBookingDecorator < OrderDecorator
 
   def total_price_for(current_user)
     if total_amount.to_f.zero?
-      "Free!"
+      'Free!'
     else
       current_user == recurring_booking.host ? total_price_host : total_price_for_guest
     end
@@ -64,15 +64,15 @@ class RecurringBookingDecorator < OrderDecorator
 
   def service_fee_guest
     if service_fee_amount_guest.to_f.zero?
-      "Free!"
+      'Free!'
     else
       render_money(service_fee_amount_guest)
     end
   end
 
-  def total_price(current_user = nil)
+  def total_price(_current_user = nil)
     if total_amount.to_f.zero?
-      "Free!"
+      'Free!'
     else
       render_money(total_amount)
     end
@@ -89,9 +89,9 @@ class RecurringBookingDecorator < OrderDecorator
 
     items = dates_in_groups.map do |block|
       content = if block.size == 1
-               period_to_string(block.first)
-             else
-               period_to_string(block.first) + " &ndash; " + period_to_string(block.last)
+                  period_to_string(block.first)
+                else
+                  period_to_string(block.first) + ' &ndash; ' + period_to_string(block.last)
              end
       h.content_tag(wrapper, content.html_safe)
     end
@@ -126,7 +126,7 @@ class RecurringBookingDecorator < OrderDecorator
   end
 
   def formatted_balance
-    render_money(balance/100.0)
+    render_money(balance / 100.0)
   end
 
   def dates
@@ -141,7 +141,7 @@ class RecurringBookingDecorator < OrderDecorator
   end
 
   def manage_guests_action_column_class
-    buttons_count = [can_host_cancel?, can_confirm?, can_reject?].count(true)
+    buttons_count = [can_host_cancel?, can_confirm?, can_reject?].size(true)
     "split-#{buttons_count}"
   end
 
@@ -228,7 +228,7 @@ class RecurringBookingDecorator < OrderDecorator
 
   def status_info(text)
     if state == 'unconfirmed'
-      tooltip(text, "<span class='tooltip-spacer'>i</span>".html_safe, {class: status_icon}, nil)
+      tooltip(text, "<span class='tooltip-spacer'>i</span>".html_safe, { class: status_icon }, nil)
     else
       "<i class='#{status_icon}'></i>".html_safe
     end
@@ -237,9 +237,9 @@ class RecurringBookingDecorator < OrderDecorator
   def time_to_expiry(time_of_event)
     current_time = Time.zone.now
     total_seconds = time_of_event - current_time
-    hours = (total_seconds/1.hour).floor
-    minutes = ((total_seconds-hours.hours)/1.minute).floor
-    if hours < 1 and minutes < 1
+    hours = (total_seconds / 1.hour).floor
+    minutes = ((total_seconds - hours.hours) / 1.minute).floor
+    if hours < 1 && minutes < 1
       'less than minute'
     else
       if hours < 1
@@ -252,20 +252,18 @@ class RecurringBookingDecorator < OrderDecorator
 
   # [[20 Nov 2012, 21 Nov 2012, 22 Nov 2012], [5 Dec 2012], [7 Dec 2012, 8 Dec 2012]]
   def dates_in_groups
-    periods.map(&:date).sort.inject([]) { |groups, datetime|
+    periods.map(&:date).sort.inject([]) do |groups, datetime|
       date = datetime.to_date
-      if groups.last && ((groups.last.last+1.day) == date)
+      if groups.last && ((groups.last.last + 1.day) == date)
         groups.last << date
       else
         groups << [date]
       end
       groups
-    }
+    end
   end
 
   def period_to_string(date)
     I18n.l(date.to_date, format: :long)
   end
-
-
 end

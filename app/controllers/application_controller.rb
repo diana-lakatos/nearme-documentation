@@ -2,7 +2,6 @@ require 'user_agent'
 require 'addressable/uri'
 
 class ApplicationController < ActionController::Base
-
   before_action :validate_request_parameters, if: -> { request.get? }
   before_action :prepend_view_paths
 
@@ -10,7 +9,6 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
   layout :layout_for_request_type
-
 
   before_action :set_i18n_locale
   before_action :set_locale
@@ -104,7 +102,7 @@ class ApplicationController < ActionController::Base
     Time.use_zone(time_zone, &block)
   end
 
-  def assign_transactable_type_id_to_lookup_context(&block)
+  def assign_transactable_type_id_to_lookup_context(&_block)
     lookup_context.transactable_type_id ||= @transactable_type.try(:id)
   end
 
@@ -121,7 +119,7 @@ class ApplicationController < ActionController::Base
   end
 
   def layout_name
-    PlatformContext.current.instance.is_community? ? "community" : "application"
+    PlatformContext.current.instance.is_community? ? 'community' : 'application'
   end
 
   def dashboard_or_community_layout
@@ -176,19 +174,19 @@ class ApplicationController < ActionController::Base
 
                     # Gather information about requests
                     request_details = {
-                      :current_host => request.try(:host)
+                      current_host: request.try(:host)
                     }
 
                     # Detect an anonymous identifier, if any.
                     anonymous_identity = cookies.signed[:mixpanel_anonymous_id]
 
                     AnalyticWrapper::MixpanelApi.new(
-                      AnalyticWrapper::MixpanelApi.mixpanel_instance(),
-                      :current_user => current_user,
-                      :request_details => request_details,
-                      :anonymous_identity => anonymous_identity,
-                      :session_properties => session_properties,
-                      :request_params => params
+                      AnalyticWrapper::MixpanelApi.mixpanel_instance,
+                      current_user: current_user,
+                      request_details: request_details,
+                      anonymous_identity: anonymous_identity,
+                      session_properties: session_properties,
+                      request_params: params
                     )
                   end
   end
@@ -212,9 +210,9 @@ class ApplicationController < ActionController::Base
 
   # Used in controller actions that require authentication
   def set_cache_buster
-    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+    response.headers['Cache-Control'] = 'no-cache, no-store, max-age=0, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = 'Fri, 01 Jan 1990 00:00:00 GMT'
   end
 
   def first_time_visited?
@@ -252,7 +250,7 @@ class ApplicationController < ActionController::Base
 
   def nm_force_ssl
     if require_ssl?
-      redirect_to url_for(platform_context.secured_constraint.merge(:return_to => params[:return_to]))
+      redirect_to url_for(platform_context.secured_constraint.merge(return_to: params[:return_to]))
     end
   end
 
@@ -260,7 +258,7 @@ class ApplicationController < ActionController::Base
     !request.ssl? && platform_context.require_ssl?
   end
 
-  def stored_url_for(resource_or_scope)
+  def stored_url_for(_resource_or_scope)
     redirect_url = session[:user_return_to].presence || params[:return_to].presence || root_path
     session[:user_return_to] = session[:return_to] = nil
     redirect_url
@@ -273,7 +271,7 @@ class ApplicationController < ActionController::Base
       session[:user_return_to] = send("edit_dashboard_#{force_profile}_path")
     end
     url = stored_url_for(resource)
-    url = url_without_authentication_token(url) if url.include?("token")
+    url = url_without_authentication_token(url) if url.include?('token')
     url = add_login_token_to_url(url, resource) if redirect_to_different_host?(url)
     url
   end
@@ -302,7 +300,7 @@ class ApplicationController < ActionController::Base
   end
 
   def already_signed_in?
-    request.xhr? && current_user ? (render :json => { :redirect => stored_url_for(nil) }) : false
+    request.xhr? && current_user ? (render json: { redirect: stored_url_for(nil) }) : false
   end
 
   # Some generic information on wizard for use accross controllers
@@ -338,22 +336,22 @@ class ApplicationController < ActionController::Base
   # Assumes that the current response is a redirect.
   def render_redirect_url_as_json
     unless response.location.present?
-      raise "No redirect url provided. Need to call redirect_to first."
+      fail 'No redirect url provided. Need to call redirect_to first.'
     end
 
     redirect_json = { redirect: response.location }
     # Clear out existing response
     self.response_body = nil
     render(
-      :json => redirect_json,
-      :content_type => 'application/json',
-      :status => 200
+      json: redirect_json,
+      content_type: 'application/json',
+      status: 200
     )
   end
 
   def render_redirect_as_script
     unless response.location.present?
-      raise "No redirect url provided. Need to call redirect_to first."
+      fail 'No redirect url provided. Need to call redirect_to first.'
     end
 
     redirect_script = "document.location = '#{response.location}'"
@@ -431,9 +429,7 @@ class ApplicationController < ActionController::Base
 
   def sign_in_resource(resource)
     sign_in(resource)
-    if resource.respond_to?('logged_out!')
-      resource.logged_out!
-    end
+    resource.logged_out! if resource.respond_to?('logged_out!')
   end
 
   def redirect_if_marketplace_password_protected
@@ -459,7 +455,7 @@ class ApplicationController < ActionController::Base
     uri = Addressable::URI.parse(url)
     parameters = uri.query_values
     parameters.try(:delete, TemporaryTokenAuthenticatable::PARAMETER_NAME)
-    parameters = nil if not parameters.present?
+    parameters = nil unless parameters.present?
     uri.query_values = parameters
     uri.to_s
   end
@@ -482,7 +478,7 @@ class ApplicationController < ActionController::Base
     begin
       Raygun.configuration.custom_data = {
         platform_context: platform_context.to_h,
-        request_params: params.reject { |k,v| Rails.application.config.filter_parameters.include?(k.to_sym) },
+        request_params: params.reject { |k, _v| Rails.application.config.filter_parameters.include?(k.to_sym) },
         current_user_id: current_user.try(:id),
         process_pid: Process.pid,
         process_ppid: Process.ppid,
@@ -518,8 +514,8 @@ class ApplicationController < ActionController::Base
     # We set id/type manually to avoid having
     # UserDecorator under some circumstances here
     asset.assetable_id = current_user.id
-    asset.assetable_type = "User"
-    return true
+    asset.assetable_type = 'User'
+    true
   end
 
   def build_approval_request_for_object(object)
@@ -533,7 +529,7 @@ class ApplicationController < ActionController::Base
   helper_method :ckeditor_toolbar_creator, :enable_ckeditor_for_field?
 
   def prepend_view_paths
-    prepend_view_path("app/community_views") if PlatformContext.current.instance.is_community?
+    prepend_view_path('app/community_views') if PlatformContext.current.instance.is_community?
     prepend_view_path InstanceViewResolver.instance
   end
 

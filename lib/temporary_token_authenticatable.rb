@@ -26,12 +26,12 @@ module TemporaryTokenAuthenticatable
 end
 
 Warden::Strategies.add(:temporary_token_authenticatable, TemporaryTokenAuthenticatable::Strategy)
-Devise.add_module :temporary_token_authenticatable, :strategy => true
+Devise.add_module :temporary_token_authenticatable, strategy: true
 
 # Once a user session is stored, the authentication strategies don't fire.
 # Therefore, if we detect a temporary token based login from a link, we
 # need to clear any existing sessions.
-Warden::Manager.on_request do |proxy, *args|
+Warden::Manager.on_request do |proxy, *_args|
   # Match the presence of a query parameter matching our token parameter
   if proxy.env['QUERY_STRING'] =~ /(^|\&)#{TemporaryTokenAuthenticatable::PARAMETER_NAME}=/
     proxy.logout(:user)

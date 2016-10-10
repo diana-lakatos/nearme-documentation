@@ -1,5 +1,4 @@
 class InstanceAdmin::Manage::PaymentsController < InstanceAdmin::Manage::BaseController
-
   skip_before_filter :check_if_locked
 
   def index
@@ -22,19 +21,18 @@ class InstanceAdmin::Manage::PaymentsController < InstanceAdmin::Manage::BaseCon
         payments_scope
     end if params[:payer_id].blank?
 
-    @payments = PaymentDecorator.decorate_collection(payments_scope.paginate(per_page: 20, :page => params[:page]))
+    @payments = PaymentDecorator.decorate_collection(payments_scope.paginate(per_page: 20, page: params[:page]))
   end
 
   def update
     @payment = Payment.find(params[:id])
     if @payment.update_attributes(payment_params)
-      flash[:notice] = "Payment updated"
+      flash[:notice] = 'Payment updated'
     else
-      flash[:notice] = "Payment can not be updated"
+      flash[:notice] = 'Payment can not be updated'
     end
 
     redirect_to instance_admin_manage_payment_path(@payment)
-
   end
 
   private
@@ -42,6 +40,4 @@ class InstanceAdmin::Manage::PaymentsController < InstanceAdmin::Manage::BaseCon
   def payment_params
     params.require(:payment).permit(secured_params.admin_paymnet)
   end
-
 end
-

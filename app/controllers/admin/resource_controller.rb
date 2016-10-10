@@ -13,7 +13,7 @@ class Admin::ResourceController < Admin::BaseController
       conditions = collection_search_fields.map { |f| "#{f} ILIKE :s" }.join ' OR '
       escaped_search = ActiveRecord::Base.connection.quote_like_string(search)
 
-      scope = scope.where(conditions, :s => "#{escaped_search}%")
+      scope = scope.where(conditions, s: "#{escaped_search}%")
     end
 
     # Filter scopes
@@ -25,10 +25,10 @@ class Admin::ResourceController < Admin::BaseController
     end
 
     # Order the collection by created_at descending
-    scope = scope.order("created_at DESC")
+    scope = scope.order('created_at DESC')
 
     # Paginate the collection
-    scope.paginate(:page => params[:page])
+    scope.paginate(page: params[:page])
   end
 
   # Fields that we can search on
@@ -45,4 +45,3 @@ class Admin::ResourceController < Admin::BaseController
   def collection_default_scope
   end
 end
-

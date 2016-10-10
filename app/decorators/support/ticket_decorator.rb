@@ -4,7 +4,7 @@ class Support::TicketDecorator < Draper::Decorator
   delegate_all
 
   def show_target_path(options = {})
-    target_with_deleted = self.target_type.constantize.respond_to?(:with_deleted) ? self.target_type.constantize.with_deleted.find(self.target_id) : self.target
+    target_with_deleted = target_type.constantize.respond_to?(:with_deleted) ? target_type.constantize.with_deleted.find(target_id) : target
     target_with_deleted.decorate.show_path(options)
   end
 

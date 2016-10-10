@@ -1,6 +1,5 @@
 class InstanceAdmin::ApprovalRequestSearchForm < SearchForm
-
-  VALID_STATES = ['pending', 'rejected', 'approved', 'questioned']
+  VALID_STATES = %w(pending rejected approved questioned)
 
   property :q, virtual: true
   property :date, virtual: true
@@ -11,22 +10,15 @@ class InstanceAdmin::ApprovalRequestSearchForm < SearchForm
   end
 
   def to_search_params
-    result = { 
+    result = {
     }
 
-    if q.present?
-       result[:by_search_query] = ["%#{q}%"]
-    end
+    result[:by_search_query] = ["%#{q}%"] if q.present?
 
-    if date.present?
-      result[:with_date] = [date_from_params]
-    end
+    result[:with_date] = [date_from_params] if date.present?
 
-    if VALID_STATES.include?(show)
-      result[show] = nil
-    end
+    result[show] = nil if VALID_STATES.include?(show)
 
     result
   end
-
 end

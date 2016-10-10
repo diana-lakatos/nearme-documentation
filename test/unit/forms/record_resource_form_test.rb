@@ -28,14 +28,13 @@ class ResourceRecordFormTest < ActiveSupport::TestCase
     should 'be properly prepared' do
       assert_equal @form.type, 'CNAME'
 
-      assert_equal @form.record, {
-        name: 'api.linguamag.eu.',
-        type: 'CNAME',
-        resource_records: [
-          { value: 'linguamag.eu' }
-        ],
-        ttl: 1000,
-      }
+      assert_equal(@form.record,
+                   name: 'api.linguamag.eu.',
+                   type: 'CNAME',
+                   resource_records: [
+                     { value: 'linguamag.eu' }
+                   ],
+                   ttl: 1000)
     end
   end
 
@@ -47,14 +46,14 @@ class ResourceRecordFormTest < ActiveSupport::TestCase
     should 'be properly prepared' do
       assert_equal @form.type, 'TXT'
 
-      assert_equal @form.record, {
-        name: 'linguamag.eu.',
-        type: 'TXT',
-        resource_records: [
-          { value: "\"txt record value\""}
-        ],
-        ttl: 1000,
-      }
+      assert_equal(@form.record,
+                   name: 'linguamag.eu.',
+                   type: 'TXT',
+                   resource_records: [
+                     { value: "\"txt record value\"" }
+                   ],
+                   ttl: 1000
+                  )
     end
   end
 end

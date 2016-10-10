@@ -22,9 +22,9 @@ module AttributesParserHelper
       # if value starts with @ then get value from context as it's variable, otherwise remove trailing quotes
       value = value.sub(/^["']/, '').sub(/["']$/, '')
       value = if value[0] == '[' && value[-1] == ']'
-        value = value[1..-2].split(',').map { |v| values_value(v, context) }
-      else
-        values_value(value, context)
+                value = value[1..-2].split(',').map { |v| values_value(v, context) }
+              else
+                values_value(value, context)
       end
 
       # check if key starts with a prefix - if yes, then we should create nested hash
@@ -48,7 +48,7 @@ module AttributesParserHelper
     case value
     when /^@/
       context[value].try(:source).presence || context[value]
-    when "false"
+    when 'false'
       false
     else
       value

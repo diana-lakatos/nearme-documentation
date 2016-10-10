@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Manage::TransactableTypes::CustomAttributesControllerTest < ActionController::TestCase
-
   setup do
     @instance = FactoryGirl.create(:instance)
     PlatformContext.any_instance.stubs(:instance).returns(@instance)
@@ -13,10 +12,9 @@ class InstanceAdmin::Manage::TransactableTypes::CustomAttributesControllerTest <
   end
 
   context 'create' do
-
     should 'create a new transactable_type' do
       assert_difference 'CustomAttributes::CustomAttribute.count', 1 do
-        post :create, {"custom_attribute"=>{"name"=>"new_attribute", "label"=>"attribute label", "attribute_type"=>"string", "html_tag"=>"select", "placeholder"=>"", "prompt"=>"my prompt", "default_value"=>"value5", "hint"=>"this is hint", "public"=>"1", "valid_values"=>"value1, value2, value5", "input_html_options_string"=>"class => myclass, style => color: red", "wrapper_html_options_string"=>"class => wrapper-class, style => color: blue"}, transactable_type_id: @transactable_type.id}
+        post :create, 'custom_attribute' => { 'name' => 'new_attribute', 'label' => 'attribute label', 'attribute_type' => 'string', 'html_tag' => 'select', 'placeholder' => '', 'prompt' => 'my prompt', 'default_value' => 'value5', 'hint' => 'this is hint', 'public' => '1', 'valid_values' => 'value1, value2, value5', 'input_html_options_string' => 'class => myclass, style => color: red', 'wrapper_html_options_string' => 'class => wrapper-class, style => color: blue' }, transactable_type_id: @transactable_type.id
       end
       custom_attribute = assigns(:custom_attribute).reload
       assert_equal 'new_attribute', custom_attribute.name
@@ -26,8 +24,8 @@ class InstanceAdmin::Manage::TransactableTypes::CustomAttributesControllerTest <
       assert_equal 'my prompt', custom_attribute.prompt
       assert_equal 'value5', custom_attribute.default_value
       assert_equal %w(value1 value2 value5), custom_attribute.valid_values
-      assert_equal({'class' => 'myclass', 'style' => 'color: red'}, custom_attribute.input_html_options)
-      assert_equal({'class' => 'wrapper-class', 'style' => 'color: blue'}, custom_attribute.wrapper_html_options)
+      assert_equal({ 'class' => 'myclass', 'style' => 'color: red' }, custom_attribute.input_html_options)
+      assert_equal({ 'class' => 'wrapper-class', 'style' => 'color: blue' }, custom_attribute.wrapper_html_options)
       assert_equal @transactable_type.id, custom_attribute.target_id
       assert_equal @transactable_type.class.name, custom_attribute.target_type
       assert_equal @instance.id, custom_attribute.instance_id
@@ -35,7 +33,6 @@ class InstanceAdmin::Manage::TransactableTypes::CustomAttributesControllerTest <
   end
 
   context 'existing normal attribute' do
-
     setup do
       @custom_attribute = FactoryGirl.create(:custom_attribute, target: @transactable_type)
     end
@@ -53,5 +50,4 @@ class InstanceAdmin::Manage::TransactableTypes::CustomAttributesControllerTest <
       end
     end
   end
-
 end

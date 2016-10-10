@@ -1,6 +1,5 @@
 # Sends rating reminders at midday day after visit
 class RatingReminderJob < Job
-
   def after_initialize(date_string)
     @date = Date.parse(date_string).yesterday
   end
@@ -20,7 +19,7 @@ class RatingReminderJob < Job
 
   def orders_reminder
     orders = Order.reviewable
-    orders = orders.where("request_guest_rating_email_sent_at IS NULL OR request_host_and_product_rating_email_sent_at IS NULL")
+    orders = orders.where('request_guest_rating_email_sent_at IS NULL OR request_host_and_product_rating_email_sent_at IS NULL')
     orders = orders.select do |order|
       @date >= order.ends_at && order.transactable && order.location.local_time.hour == 12
     end
@@ -38,5 +37,4 @@ class RatingReminderJob < Job
       end
     end
   end
-
 end

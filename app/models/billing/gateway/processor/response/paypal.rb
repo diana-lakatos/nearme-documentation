@@ -1,5 +1,4 @@
 class Billing::Gateway::Processor::Response::Paypal < Billing::Gateway::Processor::Response::Base
-
   def initialize(response)
     @response = YAML.load(response.gsub('Proc {}', ''))
   end
@@ -8,9 +7,7 @@ class Billing::Gateway::Processor::Response::Paypal < Billing::Gateway::Processo
     @response.error.first.message
   end
 
-  def response
-    @response
-  end
+  attr_reader :response
 
   def params
     @response.params
@@ -19,5 +16,4 @@ class Billing::Gateway::Processor::Response::Paypal < Billing::Gateway::Processo
   def confirmation_url
     "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=#{@response.payKey}"
   end
-
 end

@@ -16,6 +16,6 @@ class AbstractElbJob < Job
   end
 
   def template_name
-    ['production', 'staging'].find(-> {'staging'}) {|e| e == ENV['RAILS_ENV']}
+    %w(production staging).find(-> { 'staging' }) { |e| e == ENV['RAILS_ENV'] }
   end
 end

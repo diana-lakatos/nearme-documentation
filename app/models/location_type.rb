@@ -4,11 +4,11 @@ class LocationType < ActiveRecord::Base
   # attr_accessible :name
 
   validates_presence_of :name
-  validates :name, :uniqueness => { scope: :instance_id }
+  validates :name, uniqueness: { scope: :instance_id }
 
   belongs_to :instance
   has_many :locations
-  has_many :listings, :through => :locations, class_name: "Transactable"
+  has_many :listings, through: :locations, class_name: 'Transactable'
 
   def to_s
     name

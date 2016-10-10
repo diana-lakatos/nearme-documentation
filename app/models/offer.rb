@@ -1,6 +1,5 @@
 class Offer < Order
-
-  #validates :host_line_items, presence: true
+  # validates :host_line_items, presence: true
   delegate :action, to: :transactable_pricing
 
   after_update :activate!, if: :inactive?
@@ -50,7 +49,7 @@ class Offer < Order
       line_itemable: self,
       service_fee_guest_percent: transactable_pricing.action.service_fee_guest_percent,
       service_fee_host_percent: transactable_pricing.action.service_fee_host_percent,
-      minimum_lister_service_fee_cents: transactable_pricing.action.minimum_lister_service_fee_cents,
+      minimum_lister_service_fee_cents: transactable_pricing.action.minimum_lister_service_fee_cents
     )
 
     transactable_type.merchant_fees.each do |merchant_fee|
@@ -63,7 +62,7 @@ class Offer < Order
     end
 
     # self.skip_checkout_validation = true
-    self.save
+    save
   end
 
   def shared_payment_attributes
@@ -103,21 +102,19 @@ class Offer < Order
       transactable.start!
       reject_related_offers!
       withdraw_invitations!
-      WorkflowStepJob.perform(WorkflowStep::OfferWorkflow::ManuallyConfirmed, self.id)
+      WorkflowStepJob.perform(WorkflowStep::OfferWorkflow::ManuallyConfirmed, id)
 
       true
     end
   end
 
   def create_payment_subscription!
-    create_payment_subscription({
-      credit_card_id: payment.credit_card_id,
-      payment_method_id: payment.payment_method_id,
-      payment_gateway_id: payment.payment_gateway_id,
-      company_id: payment.company_id,
-      test_mode: payment.payment_gateway_mode == 'test',
-      payer_id: payment.payer_id,
-    })
+    create_payment_subscription(credit_card_id: payment.credit_card_id,
+                                payment_method_id: payment.payment_method_id,
+                                payment_gateway_id: payment.payment_gateway_id,
+                                company_id: payment.company_id,
+                                test_mode: payment.payment_gateway_mode == 'test',
+                                payer_id: payment.payer_id)
   end
 
   def disable_transactable!
@@ -125,17 +122,15 @@ class Offer < Order
   end
 
   def withdraw_invitations!
-    transactable.transactable_collaborators.where.not(user: self.user).destroy_all
+    transactable.transactable_collaborators.where.not(user: user).destroy_all
   end
 
   def reject_related_offers!
-    related_offers = Offer.unconfirmed.
-      joins("INNER JOIN line_items ON line_items.line_itemable_id = orders.id AND line_items.line_itemable_type = 'Offer'").
-      where("line_items.line_item_source_type = 'Transactable' AND line_items.line_item_source_id = ?", transactable.id).where.not(id: self.id)
+    related_offers = Offer.unconfirmed
+                     .joins("INNER JOIN line_items ON line_items.line_itemable_id = orders.id AND line_items.line_itemable_type = 'Offer'")
+                     .where("line_items.line_item_source_type = 'Transactable' AND line_items.line_item_source_id = ?", transactable.id).where.not(id: id)
 
-    related_offers.each do |offer|
-      offer.reject!
-    end
+    related_offers.each(&:reject!)
   end
 
   def with_payment?
@@ -151,7 +146,7 @@ class Offer < Order
   end
 
   def activate_order!
-    WorkflowStepJob.perform(WorkflowStep::OfferWorkflow::CreatedWithoutAutoConfirmation, self.id)
+    WorkflowStepJob.perform(WorkflowStep::OfferWorkflow::CreatedWithoutAutoConfirmation, id)
   end
 
   def cancelable?
@@ -165,12 +160,12 @@ class Offer < Order
   def enquirer_cancelable
     state == 'unconfirmed'
   end
-  alias :enquirer_cancelable? :enquirer_cancelable
+  alias_method :enquirer_cancelable?, :enquirer_cancelable
 
   def enquirer_editable
-    state.in? ['unconfirmed', 'inactive']
+    state.in? %w(unconfirmed inactive)
   end
-  alias :enquirer_editable? :enquirer_editable
+  alias_method :enquirer_editable?, :enquirer_editable
 
   def to_liquid
     @offer_drop ||= OfferDrop.new(self)

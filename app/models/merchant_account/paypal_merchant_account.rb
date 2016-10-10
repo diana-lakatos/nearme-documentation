@@ -1,5 +1,4 @@
 class MerchantAccount::PaypalMerchantAccount < MerchantAccount
-
   SEPARATE_TEST_ACCOUNTS = true
 
   ATTRIBUTES = %w(email)
@@ -7,5 +6,4 @@ class MerchantAccount::PaypalMerchantAccount < MerchantAccount
   include MerchantAccount::Concerns::DataAttributes
 
   after_create :verify
-
 end

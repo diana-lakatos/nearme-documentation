@@ -5,7 +5,7 @@ class Transactable::PricingDecorator < Draper::Decorator
 
   def units_translation(base_key, units_namespace = 'reservations')
     if units_to_s == '0_free'
-      I18n.t("search.pricing_types.free")
+      I18n.t('search.pricing_types.free')
     else
       I18n.t(
         base_key,
@@ -21,7 +21,7 @@ class Transactable::PricingDecorator < Draper::Decorator
     if price_name_or_object.respond_to?(:fractional)
       actual_price = price_name_or_object
     else
-      actual_price = self.send(price_name_or_object)
+      actual_price = send(price_name_or_object)
     end
 
     render_money(Money.new(actual_price.try(:fractional), currency.blank? ? PlatformContext.current.instance.default_currency : currency))
@@ -30,5 +30,4 @@ class Transactable::PricingDecorator < Draper::Decorator
   def price_for_select
     [units_translation('search.per_unit_price'), price_with_currency(price)].join(' - ')
   end
-
 end

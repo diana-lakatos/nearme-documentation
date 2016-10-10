@@ -1,5 +1,4 @@
 class HostLineItem < ActiveRecord::Base
-
   include Modelable
 
   monetize :unit_price_cents, with_model_currency: :currency
@@ -13,6 +12,6 @@ class HostLineItem < ActiveRecord::Base
   delegate :currency, to: :line_itemable, allow_nil: true
 
   def total_price_cents
-    self.unit_price_cents
+    unit_price_cents
   end
 end

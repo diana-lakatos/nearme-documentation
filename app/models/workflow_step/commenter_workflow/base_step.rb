@@ -1,5 +1,4 @@
 class WorkflowStep::CommenterWorkflow::BaseStep < WorkflowStep::BaseStep
-
   def initialize(comment_id)
     @comment = Comment.find_by(id: comment_id)
     @commentable = @comment.try(:commentable)
@@ -11,7 +10,7 @@ class WorkflowStep::CommenterWorkflow::BaseStep < WorkflowStep::BaseStep
   end
 
   def lister
-    raise NotImplementedError.new("#{self.class.name} has to define lister method")
+    fail NotImplementedError.new("#{self.class.name} has to define lister method")
   end
 
   def workflow_type
@@ -19,7 +18,6 @@ class WorkflowStep::CommenterWorkflow::BaseStep < WorkflowStep::BaseStep
   end
 
   def should_be_processed?
-    @comment.present? && @commentable.present?# && @user.id != lister.id
+    @comment.present? && @commentable.present? # && @user.id != lister.id
   end
-
 end

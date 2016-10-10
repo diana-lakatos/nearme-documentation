@@ -1,5 +1,4 @@
 class UserSerializer < ApplicationSerializer
-
   attributes :id, :name, :email, :phone, :avatar
 
   def avatar
@@ -10,5 +9,4 @@ class UserSerializer < ApplicationSerializer
       large_url:  "#{object.avatar_url(:large)}"
     }
   end
-
 end

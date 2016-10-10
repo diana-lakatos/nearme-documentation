@@ -1,6 +1,6 @@
 class Listings::OverlapingReservationsService
   attr_reader :listing, :warnings
-  def initialize listing, date
+  def initialize(listing, date)
     @listing = listing
     @date = date
     @warnings = {}

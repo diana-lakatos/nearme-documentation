@@ -1,5 +1,4 @@
 class WorkflowStep::SignUpWorkflow::BaseStep < WorkflowStep::BaseStep
-
   def initialize(user_id)
     @user = User.find_by_id(user_id)
   end
@@ -25,5 +24,4 @@ class WorkflowStep::SignUpWorkflow::BaseStep < WorkflowStep::BaseStep
   def should_be_processed?
     @user.present?
   end
-
 end

@@ -1,7 +1,6 @@
-require "test_helper"
+require 'test_helper'
 
 class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTest
-
   context 'regular two-step payout' do
     should 'ensure that comission after payout is correct with USD which has 100 - 1 subunit conversion rate' do
       mockup_database_with_currency('USD')
@@ -14,30 +13,30 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
 
   def create_logged_in_user
     @guest = FactoryGirl.create(:user)
-    post_via_redirect '/users/sign_in', :user => { :email => @guest.email, :password => @guest.password }
+    post_via_redirect '/users/sign_in', user: { email: @guest.email, password: @guest.password }
   end
 
   def relog_to_host
     delete_via_redirect '/users/sign_out'
-    post_via_redirect '/users/sign_in', :user => { :email => @order.creator.email, :password => 'password' }
+    post_via_redirect '/users/sign_in', user: { email: @order.creator.email, password: 'password' }
   end
 
   def relog_to_guest
     delete_via_redirect '/users/sign_out'
-    post_via_redirect '/users/sign_in', :user => { :email => @guest.email, :password => 'password' }
+    post_via_redirect '/users/sign_in', user: { email: @guest.email, password: 'password' }
   end
 
   def stub_what_has_to_be_stubbed
-    stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
+    stub_request(:post, 'https://www.googleapis.com/urlshortener/v1/url')
   end
 
   def booking_params
     {
       order: {
         dates: @transactable.action_type.night_booking? ? [Chronic.parse('next week Monday'), Chronic.parse('next week Tuesday')] : [Chronic.parse('Monday')],
-        quantity: "1",
+        quantity: '1',
         transactable_pricing_id: @transactable.action_type.pricings.first.id,
-        transactable_id: @transactable.id,
+        transactable_id: @transactable.id
       }
     }
   end
@@ -48,12 +47,12 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
         payment_attributes: {
           payment_method_id: @payment_method.id,
           credit_card_attributes: {
-            number: "4111 1111 1111 1111",
+            number: '4111 1111 1111 1111',
             month: 1.year.from_now.month.to_s,
             year: 1.year.from_now.year.to_s,
             verification_value: '411',
             first_name: 'Maciej',
-            last_name: 'Krajowski',
+            last_name: 'Krajowski'
           }
         }
       }
@@ -106,20 +105,20 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
 
   def create_reservation!
     stub_billing_gateway(@instance)
-    # todo: this is proper way of stubbing probably - only 3rd party gateway integration, need to use it globally
+    # TODO: this is proper way of stubbing probably - only 3rd party gateway integration, need to use it globally
     stubs = {
-      authorize: OpenStruct.new(authorization: "54533", success?: true),
+      authorize: OpenStruct.new(authorization: '54533', success?: true),
       capture: OpenStruct.new(success?: true),
       refund: OpenStruct.new(success?: true),
       void: OpenStruct.new(success?: true),
       store: OpenStruct.new(success?: true)
     }
     gateway = stub(capture: stubs[:capture], refund: stubs[:refund], void: stubs[:void], client_token: 'my_token', store: stubs[:store])
-    gateway.expects(:authorize).with do |total_amount_cents, credit_card_or_token, options|
+    gateway.expects(:authorize).with do |total_amount_cents, _credit_card_or_token, options|
       total_amount_cents == 43.75.to_money(@transactable.currency).cents && options['service_fee_amount'] == (18.75 + 2.5).to_money(@transactable.currency).cents
     end.returns(stubs[:authorize])
     PaymentGateway::BraintreeMarketplacePaymentGateway.any_instance.stubs(:gateway).returns(gateway).at_least(0)
-    assert_difference "@transactable.orders.reservations.count" do
+    assert_difference '@transactable.orders.reservations.count' do
       post_via_redirect "/listings/#{@transactable.id}/orders", booking_params
     end
 
@@ -140,12 +139,11 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
     additional_charge = @order.additional_line_items.last
     assert_equal @transactable.currency, additional_charge.currency
     assert_equal 15.to_money(@transactable.currency), additional_charge.total_price
-
   end
 
   def confirm_reservation!
     relog_to_host
-    assert_difference "Charge.count" do
+    assert_difference 'Charge.count' do
       post_via_redirect "/dashboard/company/host_reservations/#{@order.id}/confirm"
     end
     assert @order.reload.confirmed?
@@ -161,5 +159,4 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
     assert_equal 18.75.to_money(@transactable.currency), @payment_transfer.service_fee_amount_guest
     assert_equal 2.5.to_money(@transactable.currency), @payment_transfer.service_fee_amount_host
   end
-
 end

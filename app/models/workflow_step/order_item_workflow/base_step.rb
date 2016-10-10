@@ -1,5 +1,4 @@
 class WorkflowStep::OrderItemWorkflow::BaseStep < WorkflowStep::BaseStep
-
   def self.belongs_to_transactable_type?
     true
   end
@@ -35,5 +34,4 @@ class WorkflowStep::OrderItemWorkflow::BaseStep < WorkflowStep::BaseStep
   def transactable_type_id
     @order_item.transactable.transactable_type_id
   end
-
 end

@@ -30,13 +30,13 @@ class Reservation::DailyPriceCalculator
   # not be bookable (i.e. 1 day is unbookable for a listing that requires
   # minimum of 5 days).
   def valid?
-    listing && !contiguous_blocks.empty? && contiguous_blocks.all? { |block|
+    listing && !contiguous_blocks.empty? && contiguous_blocks.all? do |block|
       block.length >= @pricing.action.minimum_booking_days
-    }
+    end
   end
 
   def number_of_nights
-    real_contiguous_blocks.map{|group| group.many? ? group.size - 1 : group.size }.sum
+    real_contiguous_blocks.map { |group| group.many? ? group.size - 1 : group.size }.sum
   end
 
   def unit_price
@@ -51,10 +51,10 @@ class Reservation::DailyPriceCalculator
 
     if prices
       # Determine the matching block size and price
-      block_size = prices.keys.sort.inject { |largest_block, block_days|
+      block_size = prices.keys.sort.inject do |largest_block, block_days|
         largest_block = block_days if days >= block_days
         largest_block
-      }
+      end
       pricing = prices[block_size]
       price = pricing[:price]
       # Our pricing logic per block is the block price
@@ -62,10 +62,10 @@ class Reservation::DailyPriceCalculator
       # Pro rate even when favourable pricing is disabled to avoid error when
       # only prices for longer period than days are enabled.
       if @reservation.favourable_pricing_rate || days < block_size
-        (((days/block_size.to_f) * price.cents).round / BigDecimal.new(price.currency.subunit_to_unit)).to_money(price.currency)
+        (((days / block_size.to_f) * price.cents).round / BigDecimal.new(price.currency.subunit_to_unit)).to_money(price.currency)
       else
-        priced_days = days/block_size
-        left_days = days - priced_days*block_size
+        priced_days = days / block_size
+        left_days = days - priced_days * block_size
         calculated_price = ((priced_days * price.cents).round / BigDecimal.new(price.currency.subunit_to_unit)).to_money(price.currency)
         if left_days.zero?
           calculated_price
@@ -87,5 +87,4 @@ class Reservation::DailyPriceCalculator
   def real_contiguous_blocks
     @contiguous_block_finder.real_contiguous_blocks
   end
-
 end

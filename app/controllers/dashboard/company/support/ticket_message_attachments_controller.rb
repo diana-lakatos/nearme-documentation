@@ -16,7 +16,7 @@ class Dashboard::Company::Support::TicketMessageAttachmentsController < Dashboar
     if @ticket_message_attachment.save
       flash.now[:success] = t('flash_messages.support.ticket_message_attachment.created')
       render json: {
-        attachment_content: render_to_string(partial: 'attachment', locals: {form_name: @form_name, ticket_message_attachment: @ticket_message_attachment}),
+        attachment_content: render_to_string(partial: 'attachment', locals: { form_name: @form_name, ticket_message_attachment: @ticket_message_attachment }),
         modal_content: render_to_string(:edit)
       }
     else
@@ -29,7 +29,7 @@ class Dashboard::Company::Support::TicketMessageAttachmentsController < Dashboar
     @ticket_message_attachment.assign_attributes(attachment_params)
     if @ticket_message_attachment.save
       render json: {
-        attachment_content: render_to_string(partial: 'attachment', locals: {form_name: @form_name, ticket_message_attachment: @ticket_message_attachment}),
+        attachment_content: render_to_string(partial: 'attachment', locals: { form_name: @form_name, ticket_message_attachment: @ticket_message_attachment }),
         attachment_id: @ticket_message_attachment.id
       }
     else
@@ -57,4 +57,3 @@ class Dashboard::Company::Support::TicketMessageAttachmentsController < Dashboar
     @form_name = params.delete(:form_name).presence || params.delete(:formName)
   end
 end
-

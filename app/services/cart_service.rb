@@ -1,5 +1,4 @@
 class CartService
-
   attr_reader :errors
 
   def initialize(user)
@@ -46,7 +45,7 @@ class CartService
   end
 
   def current_line_items
-    LineItem.where(line_itemable_type: Order::ORDER_TYPES).where(line_itemable_id: @user.cart_orders.map(&:id) )
+    LineItem.where(line_itemable_type: Order::ORDER_TYPES).where(line_itemable_id: @user.cart_orders.map(&:id))
   end
 
   def empty!

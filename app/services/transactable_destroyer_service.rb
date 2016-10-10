@@ -1,5 +1,4 @@
 class TransactableDestroyerService
-
   def initialize(transactable, event_tracker, user)
     @transactable = transactable
     @event_tracker = event_tracker
@@ -7,12 +6,9 @@ class TransactableDestroyerService
   end
 
   def destroy
-    @transactable.orders.reservations.each do |r|
-      r.perform_expiry!
-    end
+    @transactable.orders.reservations.each(&:perform_expiry!)
     @transactable.destroy
     @event_tracker.updated_profile_information(@user)
     @event_tracker.deleted_a_listing(@transactable)
   end
-
 end

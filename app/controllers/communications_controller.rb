@@ -26,7 +26,7 @@ class CommunicationsController < ApplicationController
     if request.xhr?
       render json: { status: true }
     else
-      flash[:notice] = I18n.t("flash_messages.communications.phone_number_disconnected")
+      flash[:notice] = I18n.t('flash_messages.communications.phone_number_disconnected')
       redirect_to social_accounts_path
     end
   end
@@ -40,7 +40,7 @@ class CommunicationsController < ApplicationController
   end
 
   def verified_success
-    flash[:notice] = I18n.t("flash_messages.communications.successfully_connected")
+    flash[:notice] = I18n.t('flash_messages.communications.successfully_connected')
     redirect_to social_accounts_path
   end
 
@@ -62,7 +62,6 @@ class CommunicationsController < ApplicationController
   end
 
   def add_validated_caller(caller)
-
     current_user.communication = current_user.build_communication(
       provider: 'twilio',
       provider_key: caller.account_sid,
@@ -75,7 +74,7 @@ class CommunicationsController < ApplicationController
     if request.xhr?
       render json: { status: 'verified', phone: caller.phone_number }
     else
-      flash[:notice] = I18n.t("flash_messages.communications.successfully_connected")
+      flash[:notice] = I18n.t('flash_messages.communications.successfully_connected')
       redirect_to social_accounts_path
     end
   end
@@ -85,7 +84,7 @@ class CommunicationsController < ApplicationController
       current_user.name,
       phone,
       status_webhooks_communications_url
-      )
+    )
 
     current_user.communication = current_user.build_communication(
       provider: 'twilio',
@@ -94,7 +93,7 @@ class CommunicationsController < ApplicationController
       phone_number_key: nil,
       request_key: caller.call_sid,
       verified: false
-      )
+    )
 
     message = I18n.t('flash_messages.communications.validation_code', validation_code: caller.validation_code)
 

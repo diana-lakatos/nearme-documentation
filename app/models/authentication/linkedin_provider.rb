@@ -1,9 +1,8 @@
 class Authentication::LinkedinProvider < Authentication::BaseProvider
-
-  META   = { name: "LinkedIn",
-             url: "http://linkedin.com/",
-             auth: "OAuth 2.0" }
-  FIELDS = ["id", "first-name", "last-name", "headline", "picture-url", "public-profile-url", "location"]
+  META   = { name: 'LinkedIn',
+             url: 'http://linkedin.com/',
+             auth: 'OAuth 2.0' }
+  FIELDS = ['id', 'first-name', 'last-name', 'headline', 'picture-url', 'public-profile-url', 'location']
 
   def self.setup_proc
     lambda do |env|
@@ -15,27 +14,22 @@ class Authentication::LinkedinProvider < Authentication::BaseProvider
   end
 
   def friend_ids
-    begin
-      @friend_ids ||= connection.connections.all.collect(&:id)
-    rescue LinkedIn::InvalidRequest, Faraday::ClientError
-      []
-    end
+    @friend_ids ||= connection.connections.all.collect(&:id)
+  rescue LinkedIn::InvalidRequest, Faraday::ClientError
+    []
   end
 
   def info
-    begin
-      @info ||= Info.new(connection.profile(fields: FIELDS))
-      original_image = LinkedinImageRetrieverService.new(token).retrieve_original_image
-      @info.image_url = original_image if original_image.present?
+    @info ||= Info.new(connection.profile(fields: FIELDS))
+    original_image = LinkedinImageRetrieverService.new(token).retrieve_original_image
+    @info.image_url = original_image if original_image.present?
 
-      @info
-    rescue LinkedIn::InvalidRequest
-      @info ||= Info.new(OpenStruct.new(id: nil, first_name: nil, last_name: nil, headline: nil, picture_url: nil, public_profile_url: nil, location: nil))
-    end
+    @info
+  rescue LinkedIn::InvalidRequest
+    @info ||= Info.new(OpenStruct.new(id: nil, first_name: nil, last_name: nil, headline: nil, picture_url: nil, public_profile_url: nil, location: nil))
   end
 
   class Info < BaseInfo
-
     def initialize(raw)
       @raw          = raw
       @uid          = raw.id
@@ -48,12 +42,11 @@ class Authentication::LinkedinProvider < Authentication::BaseProvider
       @location     = (raw.location || {})['name']
       @provider     = 'Linkedin'
     end
-
   end
 
   private
+
   def connection
     @connection ||= LinkedIn::API.new token
   end
-
 end

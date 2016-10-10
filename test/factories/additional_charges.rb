@@ -9,7 +9,5 @@ FactoryGirl.define do
     factory :host_additional_charge_type do
       commission_receiver 'host'
     end
-
   end
 end
-

@@ -2,16 +2,16 @@ require 'jira-ruby'
 require 'chronic'
 
 class JiraWrapper
-  NM_PROJECT_ID = 10000
+  NM_PROJECT_ID = 10_000
 
   def initialize
-    @client = JIRA::Client.new({username: 'jira-api', password: 'N#arM3123adam', context_path: '',site: 'https://near-me.atlassian.net', rest_base_path: "/rest/api/2", auth_type: :basic, read_timeout: 120 })
+    @client = JIRA::Client.new(username: 'jira-api', password: 'N#arM3123adam', context_path: '', site: 'https://near-me.atlassian.net', rest_base_path: '/rest/api/2', auth_type: :basic, read_timeout: 120)
   end
 
   def initiate_current_sprint!
     monday = Time.now.monday? ? Date.current : Chronic.parse('last monday')
-    sprint = @client.Sprint.find(monday.strftime('%Y-%m-%d'))["issues"].first["fields"]["customfield_10007"].last
-    current_sprint_id = sprint.split("id=")[1].split(',')[0].to_i
+    sprint = @client.Sprint.find(monday.strftime('%Y-%m-%d'))['issues'].first['fields']['customfield_10007'].last
+    current_sprint_id = sprint.split('id=')[1].split(',')[0].to_i
     sprint_name = sprint.split('name=')[1].split(',')[0]
     start_date = sprint.split('startDate=')[1].split(',')[0]
     end_date = sprint.split('endDate=')[1].split(',')[0]
@@ -25,16 +25,14 @@ class JiraWrapper
     tag
   end
 
-  def ensure_version_present!(name:, start_date:, user_released_data:, user_start_date:, description:  )
+  def ensure_version_present!(name:, start_date:, user_released_data:, user_start_date:, description:)
     unless version(name).present?
       current_version = @client.Version.build
-      current_version.save({
-        description: description,
-        name: name,
-        projectId: NM_PROJECT_ID,
-        userStartDate: Chronic.parse(user_start_date).strftime('%-d/%b/%y'),
-        userReleaseDate: Chronic.parse(user_released_data).strftime('%-d/%b/%y')
-      })
+      current_version.save(description: description,
+                           name: name,
+                           projectId: NM_PROJECT_ID,
+                           userStartDate: Chronic.parse(user_start_date).strftime('%-d/%b/%y'),
+                           userReleaseDate: Chronic.parse(user_released_data).strftime('%-d/%b/%y'))
       @versions << current_version
     end
     current_version
@@ -45,7 +43,7 @@ class JiraWrapper
   end
 
   def find_issue(number)
-    @issues.try(:detect) { |i| i.key == number } ||  @client.Issue.find(number)
+    @issues.try(:detect) { |i| i.key == number } || @client.Issue.find(number)
   end
 
   def epic_hash
@@ -76,8 +74,8 @@ class JiraWrapper
 
   def update_issue(number, options)
     issue = find_issue(number)
-    issue.save({ fields: { fixVersions: options[:tag] } })
-    issue.save({ fields: { customfield_10007: options[:sprint_number]}})
+    issue.save(fields: { fixVersions: options[:tag] })
+    issue.save(fields: { customfield_10007: options[:sprint_number] })
   rescue => e
     puts "Error for card: #{card_in_sprint}. #{e}"
   end
@@ -103,9 +101,7 @@ class JiraWrapper
     return @next_tag if @next_tag.present?
     arr = last_tag.split('.')
     arr[number_position] = arr[number_position].to_i + 1
-    if number_position == 1
-      arr[2] = 0
-    end
+    arr[2] = 0 if number_position == 1
     @next_tag = arr.join('.')
   end
 
@@ -114,8 +110,6 @@ class JiraWrapper
   end
 
   def release_version!(version)
-    version(version).save({ released: true })
+    version(version).save(released: true)
   end
-
 end
-

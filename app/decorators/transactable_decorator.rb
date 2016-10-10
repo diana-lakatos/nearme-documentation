@@ -17,25 +17,25 @@ class TransactableDecorator < Draper::Decorator
     if price_name_or_object.respond_to?(:fractional)
       actual_price = price_name_or_object
     else
-      actual_price = self.send(price_name_or_object)
+      actual_price = send(price_name_or_object)
     end
 
     render_money(Money.new(actual_price.try(:fractional), currency.blank? ? PlatformContext.current.instance.default_currency : currency))
   end
 
-  #TODO Refactor
+  # TODO: Refactor
   def lowest_price_with_currency(filter_pricing = [])
     return if action_type.is_free_booking?
     if event_booking
       if event_booking.pricing.price.to_f > 0
-        "#{price_with_currency(event_booking.pricing.price)} <span>/ #{self.transactable_type.action_price_per_unit? ? t("simple_form.labels.transactable.price.per_unit") : t("simple_form.labels.transactable.price.fixed")}</span>".html_safe
+        "#{price_with_currency(event_booking.pricing.price)} <span>/ #{transactable_type.action_price_per_unit? ? t('simple_form.labels.transactable.price.per_unit') : t('simple_form.labels.transactable.price.fixed')}</span>".html_safe
       elsif event_booking.pricing.exclusive_price.to_f > 0
-        "#{price_with_currency(event_booking.pricing.exclusive_price)} <span>/ #{t("simple_form.labels.transactable.price.exclusive_price")}</span>".html_safe
+        "#{price_with_currency(event_booking.pricing.exclusive_price)} <span>/ #{t('simple_form.labels.transactable.price.exclusive_price')}</span>".html_safe
       end
     else
       listing_price = lowest_price_with_type(filter_pricing)
       if listing_price
-        translated_period = listing_price.decorate.units_translation("search.per_unit_price", 'search')
+        translated_period = listing_price.decorate.units_translation('search.per_unit_price', 'search')
         "#{price_with_currency(listing_price.price)} <span>/ #{translated_period}</span>".html_safe
       end
     end
@@ -59,7 +59,7 @@ class TransactableDecorator < Draper::Decorator
   end
 
   def customizations_for(custom_model)
-    customizations.select{|c| c.custom_model_type == custom_model}.sort_by{ |c| c.created_at || 1.day.from_now }
+    customizations.select { |c| c.custom_model_type == custom_model }.sort_by { |c| c.created_at || 1.day.from_now }
   end
 
   protected
@@ -68,19 +68,19 @@ class TransactableDecorator < Draper::Decorator
     options.merge!(language: I18n.locale) if PlatformContext.current.try(:instance).try(:available_locales).try(:many?)
     if transactable_type.show_path_format
       case transactable_type.show_path_format
-      when "/:transactable_type_id/:id"
+      when '/:transactable_type_id/:id'
         h.send(:"short_transactable_type_listing_#{suffix}", transactable_type, self, options)
-      when "/listings/:id"
+      when '/listings/:id'
         h.send(:"listing_#{suffix}", self, options)
-      when "/transactable_types/:transactable_type_id/locations/:location_id/listings/:id"
+      when '/transactable_types/:transactable_type_id/locations/:location_id/listings/:id'
         h.send(:"transactable_type_location_listing_#{suffix}", transactable_type, location, self, options)
-      when "/:transactable_type_id/locations/:location_id/listings/:id"
+      when '/:transactable_type_id/locations/:location_id/listings/:id'
         h.send(:"short_transactable_type_location_listing_#{suffix}", transactable_type, location, self, options)
-      when "/:transactable_type_id/:location_id/listings/:id"
+      when '/:transactable_type_id/:location_id/listings/:id'
         h.send(:"short_transactable_type_short_location_listing_#{suffix}", transactable_type, location, self, options)
-      when "/locations/:location_id/:id"
+      when '/locations/:location_id/:id'
         h.send(:"location_#{suffix}", location, self, options)
-      when "/locations/:location_id/listings/:id"
+      when '/locations/:location_id/listings/:id'
         h.send(:"location_listing_#{suffix}", location, self, options)
       end
     elsif transactable_type.show_page_enabled?
@@ -88,7 +88,5 @@ class TransactableDecorator < Draper::Decorator
     else
       h.send(:"location_#{suffix}", location, self, options)
     end
-
   end
-
 end

@@ -1,5 +1,4 @@
 class BaseImageUploader < BaseUploader
-
   process :auto_orient
 
   def auto_orient
@@ -19,7 +18,7 @@ class BaseImageUploader < BaseUploader
     default_image, version = get_default_image_and_version(*args)
 
     if default_image.blank? || self.class == DefaultImageUploader
-      dimensions = version && self.class.dimensions.has_key?(version) ? self.class.dimensions[version] : {width: 100, height: 100}
+      dimensions = version && self.class.dimensions.key?(version) ? self.class.dimensions[version] : { width: 100, height: 100 }
       Placeholder.new(dimensions).path
     else
       default_image.photo_uploader_image.url(:transformed)

@@ -1,5 +1,4 @@
 class WorkflowStep::ListingWorkflow::DraftCreated < WorkflowStep::ListingWorkflow::BaseStep
-
   # user:
   #   creator User object
   # listing:
@@ -11,6 +10,4 @@ class WorkflowStep::ListingWorkflow::DraftCreated < WorkflowStep::ListingWorkflo
   def should_be_processed?
     @transactable.try(:draft).present?
   end
-
 end
-

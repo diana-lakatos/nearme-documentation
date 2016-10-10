@@ -1,7 +1,6 @@
 require 'stripe'
 
 class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountOwner
-
   ADDRESS_ATTRIBUTES = %w(address_country address_state address_city address_postal_code address_line1 address_line2)
   ATTRIBUTES = %w(dob_formated dob first_name last_name) + ADDRESS_ATTRIBUTES
 
@@ -32,8 +31,8 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
       file_path = document.file.is_a?(CarrierWave::SanitizedFile) ? document.file.path : document.proper_file_path
 
       Stripe::FileUpload.create(
-        {purpose: 'identity_document', file: File.new(open(file_path))},
-        {stripe_account: stripe_account_id}
+        { purpose: 'identity_document', file: File.new(open(file_path)) },
+        stripe_account: stripe_account_id
       )
     end
   end
@@ -43,12 +42,12 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
   end
 
   def default_date_format
-    "%Y-%m-%d"
+    '%Y-%m-%d'
   end
 
   def date_format
     case I18n.locale
-    when 'us' then "%m-%d-%Y"
+    when 'us' then '%m-%d-%Y'
     else
       default_date_format
     end
@@ -56,13 +55,13 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
 
   def date_format
     case I18n.locale
-    when :en then "%m-%d-%Y"
+    when :en then '%m-%d-%Y'
     else
       default_date_format
     end
   end
 
   def date_format_readable
-    date_format.gsub("%Y", "YYYY").gsub("%m", "MM").gsub("%d", "DD")
+    date_format.gsub('%Y', 'YYYY').gsub('%m', 'MM').gsub('%d', 'DD')
   end
 end

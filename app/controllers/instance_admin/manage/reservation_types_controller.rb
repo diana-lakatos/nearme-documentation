@@ -1,5 +1,4 @@
 class InstanceAdmin::Manage::ReservationTypesController < InstanceAdmin::Manage::TransactableTypesController
-
   def create
     @transactable_type = resource_class.new(transactable_type_params)
     if @transactable_type.save
@@ -39,6 +38,4 @@ class InstanceAdmin::Manage::ReservationTypesController < InstanceAdmin::Manage:
   def transactable_type_params
     params.require(:reservation_type).permit(secured_params.reservation_type)
   end
-
 end
-

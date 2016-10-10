@@ -4,25 +4,25 @@ class ActivityFeedService::Event
   include Rails.application.routes.url_helpers
   include ListingsHelper
 
-  def controller; ApplicationController; end
+  def controller
+    ApplicationController
+  end
 
   attr_accessor :image
   attr_accessor :text
 
-  def initialize(event, target="_self")
-    begin
-      @event = event
-      @target = target
-      self.send(event.event.to_sym)
-    rescue
-      self.image = nil
-      self.text = nil
-    end
+  def initialize(event, target = '_self')
+    @event = event
+    @target = target
+    send(event.event.to_sym)
+  rescue
+    self.image = nil
+    self.text = nil
   end
 
   def user_updated_user_status
     user = @event.event_source.user
-    updated = user.try(:properties).try(:[], :gender).presence rescue updated = ""
+    updated = user.try(:properties).try(:[], :gender).presence rescue updated = ''
     self.image = image_or_placeholder(user.avatar.url(:medium))
     self.text = I18n.t(@event.i18n_key, user: link_if_not_deleted(user, :secret_name), updated: updated).html_safe
   end
@@ -45,7 +45,6 @@ class ActivityFeedService::Event
   alias_method :user_followed_transactable, :user_followed_user
   alias_method :user_followed_topic, :user_followed_user
 
-
   def user_created_transactable
     transactable = @event.event_source
     self.image = image_or_placeholder(transactable.creator.avatar.url(:medium))
@@ -66,7 +65,6 @@ class ActivityFeedService::Event
     self.text = I18n.t(@event.i18n_key, user: user, transactable: link_if_not_deleted(transactable, :name)).html_safe
   end
   alias_method :user_added_links_to_transactable, :user_added_photos_to_transactable
-
 
   def user_commented
     comment = @event.event_source
@@ -124,7 +122,7 @@ class ActivityFeedService::Event
 
   private
 
-  def link_if_not_deleted(record, method_name_attempt, second_method_name_attempt=nil)
+  def link_if_not_deleted(record, method_name_attempt, second_method_name_attempt = nil)
     text = record.try(method_name_attempt).presence || record.send(second_method_name_attempt)
     if record.deleted?
       text

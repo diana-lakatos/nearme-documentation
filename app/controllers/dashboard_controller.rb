@@ -1,9 +1,9 @@
-# TODO This whole thing should not be used anymore under new dashboard
+# TODO: This whole thing should not be used anymore under new dashboard
 class DashboardController < ApplicationController
   before_filter :authenticate_user!
   before_filter :force_scope_to_instance
-  before_filter :find_company, :only => [:analytics, :transfers]
-  before_filter :redirect_if_no_company, :only => [:analytics, :transfers]
+  before_filter :find_company, only: [:analytics, :transfers]
+  before_filter :redirect_if_no_company, only: [:analytics, :transfers]
 
   def show
     if current_user.orders.reservations.visible.any?
@@ -25,11 +25,11 @@ class DashboardController < ApplicationController
     @payment_transfers = @payment_transfers.paginate(page: params[:page], per_page: 20)
 
     # PaymentTransfers specifically from the last 7 days
-    @last_week_payment_transfers = @company.
-                                    payment_transfers.
-                                    transferred.
-                                    last_x_days(6).
-                                    order('created_at ASC')
+    @last_week_payment_transfers = @company
+                                   .payment_transfers
+                                   .transferred
+                                   .last_x_days(6)
+                                   .order('created_at ASC')
 
     @chart = ChartDecorator.decorate(@last_week_payment_transfers)
   end

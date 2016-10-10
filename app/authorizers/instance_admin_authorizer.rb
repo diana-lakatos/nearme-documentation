@@ -32,8 +32,8 @@ class InstanceAdminAuthorizer < Authorizer
 
   def check_instance_admin_role
     unless instance_admin_role
-      raise UnassignedInstanceAdminRoleError,
-            "Instance admin (id=#{instance_admin.id}) has not been assigned any role"
+      fail UnassignedInstanceAdminRoleError,
+           "Instance admin (id=#{instance_admin.id}) has not been assigned any role"
     end
   end
 

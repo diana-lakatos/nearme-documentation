@@ -18,7 +18,7 @@ class PaymentAuthorizer
   # Reservation Purchase RecurringBooking class
   # depending from where authorize method is called.
 
-  def initialize(payment_gateway, payment, options={})
+  def initialize(payment_gateway, payment, options = {})
     @payment = payment
     @credit_card = @payment.credit_card
     @merchant_account = @payment.merchant_account
@@ -39,14 +39,14 @@ class PaymentAuthorizer
   def credit_card_or_token
     if @payment_gateway.direct_charge?
       one_time_token = if @credit_card.credit_card_token
-        @credit_card.credit_card_token
-      elsif @credit_card.token && @payment.customer_id && @payment.merchant_id
-        @payment_gateway.create_token(
-          @credit_card.token,
-          @payment.customer_id,
-          @payment.merchant_id,
-          @payment.payment_gateway_mode
-        ).try("[]", :id)
+                         @credit_card.credit_card_token
+                       elsif @credit_card.token && @payment.customer_id && @payment.merchant_id
+                         @payment_gateway.create_token(
+                           @credit_card.token,
+                           @payment.customer_id,
+                           @payment.merchant_id,
+                           @payment.payment_gateway_mode
+                         ).try('[]', :id)
       end
 
     end
@@ -58,20 +58,18 @@ class PaymentAuthorizer
   end
 
   def handle_failure
-    @payment.billing_authorizations.build(billing_authoriazation_params.merge({ success: false })) if @authorizable.respond_to?(:billing_authorizations)
+    @payment.billing_authorizations.build(billing_authoriazation_params.merge(success: false)) if @authorizable.respond_to?(:billing_authorizations)
     @payment.errors.add(:base, @response.message)
-    @payment.errors.add(:base, I18n.t("activemodel.errors.models.payment.attributes.base.authorization_failed"))
+    @payment.errors.add(:base, I18n.t('activemodel.errors.models.payment.attributes.base.authorization_failed'))
     false
   end
 
   def handle_success
     @payment.billing_authorizations.build(
       billing_authoriazation_params.merge(
-        {
-          success: true,
-          immediate_payout: @payment_gateway.immediate_payout(@payment.company),
-          merchant_account_id: @merchant_account.try(:id)
-        }
+        success: true,
+        immediate_payout: @payment_gateway.immediate_payout(@payment.company),
+        merchant_account_id: @merchant_account.try(:id)
       )
     )
 
@@ -79,7 +77,6 @@ class PaymentAuthorizer
     @payment.mark_as_authorized!
     true
   end
-
 
   def billing_authoriazation_params
     {

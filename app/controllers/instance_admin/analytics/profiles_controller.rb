@@ -1,27 +1,6 @@
 class InstanceAdmin::Analytics::ProfilesController < InstanceAdmin::Analytics::BaseController
-
   def show
-    columns = ['id',
-               'email',
-               'name',
-               'sign_in_count',
-               'current_sign_in_at',
-               'last_sign_in_at',
-               'current_sign_in_ip',
-               'last_sign_in_ip',
-               'orders_count',
-               'transactables_count',
-               'phone',
-               'browser',
-               'browser_version',
-               'platform',
-               'last_geolocated_location_longitude',
-               'last_geolocated_location_latitude',
-               'time_zone',
-               'language',
-               'mobile_number',
-               'created_at',
-               'deleted_at']
+    columns = %w(id email name sign_in_count current_sign_in_at last_sign_in_at current_sign_in_ip last_sign_in_ip orders_count transactables_count phone browser browser_version platform last_geolocated_location_longitude last_geolocated_location_latitude time_zone language mobile_number created_at deleted_at)
 
     columns_str = columns.collect { |column| "users.#{column}" }.join(', ')
 
@@ -35,7 +14,7 @@ class InstanceAdmin::Analytics::ProfilesController < InstanceAdmin::Analytics::B
     records_array = ActiveRecord::Base.connection.execute(sql)
 
     csv = CSV.generate do |csv|
-      csv.add_row columns + ['address', 'default_properties', 'buyer_properties', 'seller_properties']
+      csv.add_row columns + %w(address default_properties buyer_properties seller_properties)
       records_array.each do |profile|
         csv.add_row profile.values
       end
@@ -44,7 +23,5 @@ class InstanceAdmin::Analytics::ProfilesController < InstanceAdmin::Analytics::B
     respond_to do |format|
       format.csv { send_data csv }
     end
-
   end
-
 end
