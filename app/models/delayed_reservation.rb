@@ -51,6 +51,11 @@ class DelayedReservation < Reservation
     true
   end
 
+  def enquirer_cancelable
+    state == 'unconfirmed'
+  end
+  alias :enquirer_cancelable? :enquirer_cancelable
+
   def rebuild_first_line_item
     if transactable_line_items.any?
       transactable_line_items.destroy_all
