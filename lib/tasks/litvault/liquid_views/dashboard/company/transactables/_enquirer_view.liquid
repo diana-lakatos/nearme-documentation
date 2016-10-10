@@ -48,7 +48,6 @@
               <td>{{ transactable_collaborator.user.name }}</td>
               <td>{{ transactable_collaborator.created_at | to_date | l: 'short' }}</td>
               <td>{{ transactable_collaborator.status }}</td>
-              <td><a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id, skip: true }}">Send message</a></td>
             </tr>
         </tbody>
       </table>

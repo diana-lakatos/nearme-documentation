@@ -19,57 +19,59 @@
         {% include 'dashboard/company/transactables/lister_actions.html' %}
       </div>
     </div>
+    {% if current_status == "pending" %}
 
-    {% assign transactable_collaborators = transactable.transactable_collaborators %}
+      {% assign transactable_collaborators = transactable.transactable_collaborators %}
 
-    {% if transactable_collaborators != empty %}
-      <h3>Request To View Case Details:</h3>
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Handling Lawyer:</th>
-              <th>Date:</th>
-              <th>Status:</th>
-              <th>Action:</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for transactable_collaborator in transactable_collaborators %}
+      {% if transactable_collaborators != empty %}
+        <h3>Request To View Case Details:</h3>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
               <tr>
-                <td>{{ transactable_collaborator.user.name }}</td>
-                <td>{{ transactable_collaborator.created_at | to_date | l: 'short' }}</td>
-                <td>{{ transactable_collaborator.status }}</td>
-                <td>
-                  {% if transactable_collaborator.transactable_user_messages.size > 0 %}
-                    <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: transactable_collaborator.transactable_user_messages.first.id, skip: true }}">Reply</a>
-                  {% else %}
-                    <a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id ,user_id: transactable_collaborator.user.id, skip: true }}">Reply</a>
-                  {% endif %}
-
-                  {{ transactable_collaborator.user.click_to_call_button }}
-
-                  {% if transactable_collaborator.status != 'Approved' %}
-                      {% form_for transactable_collaborator, url: @transactable_collaborator.update_path, method: 'put', remote: true %}
-                        <input type='hidden' name='transactable_collaborator[approved_by_owner_at]' value='{{ "now" | parse_time }}'>
-                        <input type='hidden' name='transactable_collaborator[rejected_by_owner_at]' value=''>
-                        <input type='submit' class="btn btn-danger" data-confirm="Are you sure?" value='Accept'>
-                      {% endform_for %}
-                  {% endif %}
-
-                  {% if transactable_collaborator.status != 'Rejected' %}
-                    {% form_for transactable_collaborator, url: @transactable_collaborator.update_path, method: 'put', remote: true %}
-                      <input type='hidden' name='transactable_collaborator[rejected_by_owner_at]' value='{{ "now" | parse_time }}'>
-                      <input type='submit' class="btn btn-danger" data-confirm="Are you sure?" value='Reject'>
-                    {% endform_for %}
-                  {% endif %}
-
-                </td>
+                <th>Handling Lawyer:</th>
+                <th>Date:</th>
+                <th>Status:</th>
+                <th>Action:</th>
               </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {% for transactable_collaborator in transactable_collaborators %}
+                <tr>
+                  <td>{{ transactable_collaborator.user.name }}</td>
+                  <td>{{ transactable_collaborator.created_at | to_date | l: 'short' }}</td>
+                  <td>{{ transactable_collaborator.status }}</td>
+                  <td>
+                    {% if transactable_collaborator.transactable_user_messages.size > 0 %}
+                      <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: transactable_collaborator.transactable_user_messages.first.id, skip: true }}">Reply</a>
+                    {% else %}
+                      <a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id ,user_id: transactable_collaborator.user.id, skip: true }}">Send Message</a>
+                    {% endif %}
+
+                    {{ transactable_collaborator.user.click_to_call_button }}
+
+                    {% if transactable_collaborator.status != 'Approved' %}
+                        {% form_for transactable_collaborator, url: @transactable_collaborator.update_path, method: 'put', remote: true %}
+                          <input type='hidden' name='transactable_collaborator[approved_by_owner_at]' value='{{ "now" | parse_time }}'>
+                          <input type='hidden' name='transactable_collaborator[rejected_by_owner_at]' value=''>
+                          <input type='submit' class="btn btn-danger" data-confirm="Are you sure?" value='Accept'>
+                        {% endform_for %}
+                    {% endif %}
+
+                    {% if transactable_collaborator.status != 'Rejected' %}
+                      {% form_for transactable_collaborator, url: @transactable_collaborator.update_path, method: 'put', remote: true %}
+                        <input type='hidden' name='transactable_collaborator[rejected_by_owner_at]' value='{{ "now" | parse_time }}'>
+                        <input type='submit' class="btn btn-danger" data-confirm="Are you sure?" value='Reject'>
+                      {% endform_for %}
+                    {% endif %}
+
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
     {% endif %}
 
     {% if current_status == "pending" %}
