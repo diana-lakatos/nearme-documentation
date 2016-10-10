@@ -2,13 +2,13 @@
 partial: false
 ---
 
-<h1>{{ waiver_agreement_template.name }}</h1>
+<h2>{{ waiver_agreement_template.name }}</h2>
 
-<p>{{ current_user.name }} agrees to:</p>
+<p><strong>{{ current_user.name }}</strong> agrees to:</p>
 
 {{ waiver_agreement_template.content }}
 
-<p>
-  For Item: {{ @transactable.name }}<br />
-  Bond Value: {{ transactable.properties.bond_value }}
-</p>
+<ul>
+  <li>For Item: <strong>{{ @transactable.name }}</strong></li>
+  <li>Bond Value: <strong>{{ transactable.properties.bond_value }}</strong></li>
+</ul>
