@@ -1,14 +1,22 @@
+require 'chronic'
+
 namespace :jira do
   desc "Populate new foreign keys and flags"
-  task :release_sprint, [:sprint_number] => [:environment] do |t, args|
+  task release_sprint: :environment do
     @jira_wrapper = JiraWrapper.new
     @jira_helper = JiraHelper.new
     puts @jira_helper.commit_parser.to_s
 
-    issues = @jira_wrapper.issues(args[:sprint_number])
+    @sprint_number ||= @jira_wrapper.initiate_current_sprint!
+    if @sprint_number.nil?
+      puts "Current jira sprint is: #{@sprint_number}"
+    end
+
+
+    issues = @jira_wrapper.issues(@sprint_number)
 
     tickets_assigned_to_sprint = issues.map { |i| [i.key, i.summary].join(' ') }
-    puts "All tickets assigned to sprint #{args[:sprint_number]} - total count #{tickets_assigned_to_sprint.count}"
+    puts "All tickets assigned to sprint #{@sprint_number} - total count #{tickets_assigned_to_sprint.count}"
     puts "*******************"
     puts ""
     puts tickets_assigned_to_sprint.join("\n")
@@ -45,7 +53,7 @@ namespace :jira do
         puts "[Y]/[N] for all cards in this epic"
       end
 
-      if @remember_decision_for_epic[issue_hash[:epic]]
+      if @remember_decision_for_epic[issue_hash[:epic]] && ["IN QA", "Ready for Test Server", "Tests Failed", "Ready for Production"].include?(issue_hash[:status])
         case @remember_decision_for_epic[issue_hash[:epic]]
         when "y"
           @cards_to_be_added_to_sprint << number
@@ -54,7 +62,7 @@ namespace :jira do
           puts "\t\tautomatically skipping"
         end
       else
-        if ["IN QA", "Ready for Test Server", "Ready for Production"].include?(issue_hash[:status])
+        if ["IN QA", "Ready for Test Server", "Tests Failed", "Ready for Production"].include?(issue_hash[:status])
           if issue_hash[:fixVersions].present?
             puts "\tSkipping - fixVersion already assigned"
             next
@@ -92,12 +100,12 @@ namespace :jira do
 
     puts "Ok, time to update JIRA"
 
-    next_tag = @jira_helper.next_tag(1)
+    next_tag = @jira_wrapper.next_tag(1)
     total_count = (@cards_to_be_added_to_sprint + cards_in_commits).count
     i = 0
     (@cards_to_be_added_to_sprint + cards_in_commits).each do |card_in_sprint|
       i += 1
-      @jira_wrapper.update_issue(card_in_sprint, tag: [{ name: next_tag }], sprint_number: args[:sprint_number].to_i)
+      @jira_wrapper.update_issue(card_in_sprint, tag: [{ name: next_tag }], sprint_number: @sprint_number.to_i)
       if i % 10 == 0
         puts "Updated #{i}/#{total_count}"
       end
@@ -116,31 +124,20 @@ namespace :jira do
     @jira_helper = JiraHelper.new
     @jira_wrapper= JiraWrapper.new
 
+    tag = @jira_wrapper.initiate_hotfix!
+    puts "Relasing hotfix - #{tag}"
+
     @commits_for_hotfix = []
 
     (@jira_helper.jira_commits + @jira_helper.non_jira_commits).each do |commit|
       puts commit
-      puts "Include this commit in the hotfix? [y]/[n]"
-
-      user_input = STDIN.gets.strip
-      while(!%w(y n).include?(user_input)) do
-        puts "\tinvalid input"
-        user_input = STDIN.gets.strip
-      end
-      case user_input
-      when "y"
-        @commits_for_hotfix << commit
-        puts "\tadding to hotfix"
-      when "n"
-        puts "\tskipping"
-      end
+      @commits_for_hotfix << commit
     end
 
-    next_tag = @jira_helper.next_tag(2)
     @commits_for_hotfix.each do |commit_for_hotfix|
       if commit_for_hotfix.match(/^NM-/)
         card_number = @jira_helper.to_jira_number([commit_for_hotfix]).first
-        @jira_wrapper.update_issue(card_number, tag: [{ name: next_tag }], sprint_number: nil)
+        @jira_wrapper.update_issue(card_number, tag: [{ name: tag }], sprint_number: nil)
       end
     end
 
@@ -181,19 +178,6 @@ class JiraHelper
 
   def initialize(git_commit_parser = nil)
     @commit_parser = git_commit_parser || JiraHelper::GitCommitParser.new((ENV['BASED_TAG'].presence || `git describe`.split('-')[0]),  (ENV['HEAD_TAG'].presence || 'HEAD'))
-  end
-
-  def next_tag(number_position)
-    arr = last_tag.split('.')
-    arr[number_position] = arr[number_position].to_i + 1
-    if number_position == 1
-      arr[2] = 0
-    end
-    @next_tag = arr.join('.')
-  end
-
-  def last_tag
-    `git describe`.split('-')[0]
   end
 
   def commits_between_revisions
