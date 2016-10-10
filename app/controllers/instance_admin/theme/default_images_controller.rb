@@ -1,5 +1,4 @@
 class InstanceAdmin::Theme::DefaultImagesController < InstanceAdmin::Theme::BaseController
-
   def index
     @default_images = PlatformContext.current.theme.default_images
   end
@@ -35,6 +34,4 @@ class InstanceAdmin::Theme::DefaultImagesController < InstanceAdmin::Theme::Base
   def default_image_params
     params.require(:default_image).permit(secured_params.default_image)
   end
-
 end
-

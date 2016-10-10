@@ -56,7 +56,6 @@ class WishListsController < ApplicationController
     end
   end
 
-
   def check_wish_lists_enabled
     unless platform_context.instance.wish_lists_enabled?
       if request.xhr?
@@ -87,21 +86,21 @@ class WishListsController < ApplicationController
 
   def check_permitted_object_type(klass_name)
     unless WishListItem::PERMITTED_CLASSES.include?(klass_name)
-      raise WishListItem::NotPermitted, "Class #{klass_name} is not permitted as wish list item. You have to add it to WishListItem::PERMITTED_CLASSES"
+      fail WishListItem::NotPermitted, "Class #{klass_name} is not permitted as wish list item. You have to add it to WishListItem::PERMITTED_CLASSES"
     end
   end
 
   def find_items
     @items = JSON.parse(params[:items])
     return unless current_user
-    grouped_items = @items.group_by{|i| i["wishlistable_type"]}
+    grouped_items = @items.group_by { |i| i['wishlistable_type'] }
     grouped_items.each_pair do |klass_name, group|
       check_permitted_object_type(klass_name)
-      on_wishlist_ids = WishListItem.
-        where(wishlistable_type: klass_name, wishlistable_id: group.map{|item| item["object_id"]}).
-        joins(:wish_list).where(wish_lists: { user_id: current_user.id }).
-        pluck(:wishlistable_id)
-      @items.select{|i| i['wishlistable_type'] == klass_name && on_wishlist_ids.include?(i['object_id'].to_i)}.each{|i| i[:is_favorite] = true }
+      on_wishlist_ids = WishListItem
+                        .where(wishlistable_type: klass_name, wishlistable_id: group.map { |item| item['object_id'] })
+                        .joins(:wish_list).where(wish_lists: { user_id: current_user.id })
+                        .pluck(:wishlistable_id)
+      @items.select { |i| i['wishlistable_type'] == klass_name && on_wishlist_ids.include?(i['object_id'].to_i) }.each { |i| i[:is_favorite] = true }
     end
   end
 end

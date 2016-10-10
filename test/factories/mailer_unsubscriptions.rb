@@ -3,6 +3,6 @@
 FactoryGirl.define do
   factory :mailer_unsubscription do
     user nil
-    mailer "MyString"
+    mailer 'MyString'
   end
 end

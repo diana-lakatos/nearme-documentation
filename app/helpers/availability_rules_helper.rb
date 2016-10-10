@@ -1,5 +1,4 @@
 module AvailabilityRulesHelper
-
   def availability_summary_for_rules(rules)
     AvailabilityRule::Summary.new(rules)
   end
@@ -9,7 +8,7 @@ module AvailabilityRulesHelper
     choices = {}
     # Add choices for each of the pre-defined templates
     parent_objects = [object.instance, object.try(:transactable_type), object].compact
-    AvailabilityTemplate.for_parents(parent_objects).order("transactable_type_id ASC").decorate.each do |template|
+    AvailabilityTemplate.for_parents(parent_objects).order('transactable_type_id ASC').decorate.each do |template|
       options = {
         id: "#{id_prefix}availability_template_id_#{template.id}",
         description: template.translated_description
@@ -19,17 +18,17 @@ module AvailabilityRulesHelper
       choices[template.parent_type] << [template.id, template.translated_name, options]
     end
 
-    if !object.try(:hide_location_availability?)
-      defer_options = { :id => "availability_rules_defer" }
+    unless object.try(:hide_location_availability?)
+      defer_options = { id: 'availability_rules_defer' }
       defer_options[:description] = object.transactable.location.try(:availability) ? pretty_availability_sentence(object.transactable.location.availability).to_s : t('simple_form.hints.availability_template.description.location_hours')
       choices['use_location'] = [['', t('simple_form.labels.availability_template.use_parent_availability'), defer_options]]
     end
 
-    #Add choice for the 'Custom' rule creation
+    # Add choice for the 'Custom' rule creation
     unless choices['Transactable::TimeBasedBooking'] || choices['Location']
       custom_options = {
-        :id => "#{id_prefix}availability_rules_custom",
-        :'data-custom-rules' => true,
+        id: "#{id_prefix}availability_rules_custom",
+        'data-custom-rules': true,
         description: t('simple_form.hints.availability_template.description.custom')
       }
       custom_options[:checked] = object.custom_availability_template?
@@ -37,7 +36,7 @@ module AvailabilityRulesHelper
     end
     # Return our set of choices in proper order
     choices = [choices['Instance'], choices['TransactableType'], choices['use_location'], choices['User'], choices['Transactable::TimeBasedBooking'], choices['Location']].flatten(1).compact
-    choices.first.last[:checked] = true unless choices.find{|ch| ch.last[:checked]}
+    choices.first.last[:checked] = true unless choices.find { |ch| ch.last[:checked] }
     choices
   end
 
@@ -70,7 +69,9 @@ module AvailabilityRulesHelper
     sentence = []
 
     hour_groups.each do |group|
-      day_ranges, current_range, n = [], [], nil
+      day_ranges = []
+      current_range = []
+      n = nil
 
       group[:days].each do |d|
         if n.nil? || (n + 1) % 7 == d
@@ -98,7 +99,7 @@ module AvailabilityRulesHelper
         hour_part << I18n.l(DateTime.parse("#{hour}:#{minutes}#{ordinal}"), format: :short)
       end
 
-      sentence.push("#{day_part.join(',')} #{hour_part.join("&ndash;")}")
+      sentence.push("#{day_part.join(',')} #{hour_part.join('&ndash;')}")
     end
 
     sentence.to_sentence.html_safe
@@ -118,5 +119,4 @@ module AvailabilityRulesHelper
   def pretty_availability_rule_time_with_time_zone(rule, time_zone)
     "#{pretty_availability_rule_time(rule)} #{I18n.l(Time.now.in_time_zone(time_zone), format: '(%Z)')}"
   end
-
 end

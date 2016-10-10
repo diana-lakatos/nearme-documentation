@@ -1,5 +1,4 @@
 class LocationDrop < BaseDrop
-
   include AvailabilityRulesHelper
   include ReservationsHelper
   include SharingHelper
@@ -51,7 +50,7 @@ class LocationDrop < BaseDrop
   # state
   #   state for this location
   delegate :id, :slug, :listings, :lowest_price, :name, :description, :phone, :street, :city, :suburb, :company, :address, :latitude, :longitude, :creator, :administrator, :updated_at, :postcode,
-    :country, :state, :lowest_full_price, :to_key, :model_name, to: :location
+           :country, :state, :lowest_full_price, :to_key, :model_name, to: :location
 
   def initialize(location)
     @location = location
@@ -124,7 +123,7 @@ class LocationDrop < BaseDrop
 
   # route url to this location on Google Maps
   def google_maps_route
-    google_maps_route_url(to: location.address, from: "")
+    google_maps_route_url(to: location.address, from: '')
   end
 
   # returns true if the location has special notes added to it
@@ -149,7 +148,7 @@ class LocationDrop < BaseDrop
       location.company.name,
       location.suburb,
       location.city,
-      location.country == "United States" ? location.state_code : location.country
+      location.country == 'United States' ? location.state_code : location.country
     ].reject(&:blank?).join(', ')
 
     "#{location.name} | #{location_compound_address}"

@@ -1,5 +1,4 @@
 class CustomizationDrop < BaseDrop
-
   attr_reader :customization
 
   delegate :id, :properties, :custom_model_type, to: :customization
@@ -21,5 +20,4 @@ class CustomizationDrop < BaseDrop
       result
     end
   end
-
 end

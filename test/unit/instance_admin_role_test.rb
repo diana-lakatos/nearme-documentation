@@ -1,11 +1,9 @@
 require 'test_helper'
 
 class InstanceAdminRoleTest < ActiveSupport::TestCase
-
   should have_many(:instance_admins)
   should belong_to(:instance)
   should validate_presence_of(:name)
-
 
   should 'assign default role for instance admins whose role has been deleted' do
     @custom_role = FactoryGirl.create(:instance_admin_role)
@@ -18,19 +16,17 @@ class InstanceAdminRoleTest < ActiveSupport::TestCase
   end
 
   context 'first_permission_have_access_to' do
-
     should 'return correct first permission have access to' do
-      assert_equal "theme", FactoryGirl.create(:instance_admin_role, :permission_analytics => false, :permission_theme => true).first_permission_have_access_to
+      assert_equal 'theme', FactoryGirl.create(:instance_admin_role, permission_analytics: false, permission_theme: true).first_permission_have_access_to
     end
 
     should 'return nil if all are false' do
-      assert_nil FactoryGirl.create(:instance_admin_role, :permission_analytics => false).first_permission_have_access_to
+      assert_nil FactoryGirl.create(:instance_admin_role, permission_analytics: false).first_permission_have_access_to
     end
   end
 
   context 'metadata' do
     context 'triggering' do
-
       setup do
         @custom_role = FactoryGirl.create(:instance_admin_role)
       end
@@ -46,11 +42,9 @@ class InstanceAdminRoleTest < ActiveSupport::TestCase
         @custom_role.expects(:should_populate_metadata?).returns(true)
         @custom_role.save!
       end
-
     end
 
     context 'should_populate_metadata?' do
-
       setup do
         @instance_admin_role = FactoryGirl.create(:instance_admin_role)
       end
@@ -65,7 +59,7 @@ class InstanceAdminRoleTest < ActiveSupport::TestCase
       end
 
       should 'return false if name was changed' do
-        @instance_admin_role.update_attributes(:name => 'name was changed')
+        @instance_admin_role.update_attributes(name: 'name was changed')
         refute @instance_admin_role.should_populate_metadata?
       end
 
@@ -81,12 +75,10 @@ class InstanceAdminRoleTest < ActiveSupport::TestCase
       end
 
       should 'return true if setting that becomes first_permission is enabled' do
-        @instance_admin_role.update_attributes(:permission_analytics => false)
+        @instance_admin_role.update_attributes(permission_analytics: false)
         @instance_admin_role.update_attribute(:permission_settings, true)
         assert @instance_admin_role.should_populate_metadata?
       end
-
     end
   end
-
 end

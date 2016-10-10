@@ -60,11 +60,10 @@ module PlatformContext::DefaultScoper
   extend ActiveSupport::Concern
 
   included do
-
     def self.scoped_to_platform_context(options = {})
       if self.table_exists?
         scope_builder = DefaultScopeBuilder.new(self, options)
-        class_eval <<-RUBY, __FILE__, __LINE__+1
+        class_eval <<-RUBY, __FILE__, __LINE__ + 1
           default_scope lambda { self.platform_context_default_scope }
 
           def self.platform_context_default_scope
@@ -95,7 +94,6 @@ module PlatformContext::DefaultScoper
         RUBY
       end
     end
-
   end
 
   protected
@@ -113,7 +111,6 @@ module PlatformContext::DefaultScoper
   # None. This is internal class, used only by this method to generate proper string for class. Should not be used in application.
 
   class ::DefaultScopeBuilder
-
     def initialize(klass, options = {})
       @klass = klass
       @options = options
@@ -130,18 +127,18 @@ module PlatformContext::DefaultScoper
     end
 
     def return_company_scope_if_white_label_company
-      if (@klass.column_names.include?('company_id') || Company == @klass)
-        return %Q{
+      if @klass.column_names.include?('company_id') || Company == @klass
+        return %(
           if PlatformContext.current.white_label_company.present?
             #{company_scope_query_based_on_klass}
           else
-        }
+                )
       end
     end
 
     def company_scope_query_based_on_klass
       if Company == @klass
-       "scope.where(:'#{@klass.table_name}.id' => PlatformContext.current.white_label_company.id)"
+        "scope.where(:'#{@klass.table_name}.id' => PlatformContext.current.white_label_company.id)"
       else
         "scope.where(:'#{@klass.table_name}.company_id' => PlatformContext.current.white_label_company.id)"
       end
@@ -149,7 +146,7 @@ module PlatformContext::DefaultScoper
 
     def return_partner_scope_if_partner
       if @klass.column_names.include?('partner_id')
-        return %Q{
+        return %{
           if PlatformContext.current.partner.present? && PlatformContext.current.partner.search_scope_option == 'all_associated_listings'
             scope.where(:"#{@klass.table_name}.partner_id" => PlatformContext.current.partner.id)
           else
@@ -162,13 +159,11 @@ module PlatformContext::DefaultScoper
     end
 
     def close_end_for_company_scope_if_needed
-      "end" if (@klass.column_names.include?('company_id') || Company == @klass)
+      'end' if @klass.column_names.include?('company_id') || Company == @klass
     end
 
     def close_end_for_partner_scope_if_needed
-      "end" if @klass.column_names.include?('partner_id')
+      'end' if @klass.column_names.include?('partner_id')
     end
-
   end
-
 end

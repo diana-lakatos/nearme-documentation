@@ -3,7 +3,6 @@ require 'parser/current'
 
 # Simple documentation generator class, designed to be run locally
 class UserDocumentationGenerator
-
   def initialize
     @files = Dir.glob(File.join(File.dirname(__FILE__), '..', 'app', 'drops', '**', '*.rb'))
     @drops_documentation = {}
@@ -232,7 +231,7 @@ class UserDocumentationGenerator
     @workflow_variables = @workflow_variables.sort { |v1, v2| v1[0] <=> v2[0] }.to_h
     @workflow_variables.each do |k, v|
       @workflow_variables[k] = v.sort { |v1, v2| v1[0] <=> v2[0] }.to_h
-      @workflow_variables[k].each do |workflow_step_name, alert_infos|
+      @workflow_variables[k].each do |_workflow_step_name, alert_infos|
         alert_infos.each do |alert_info|
           alert_info[:variables] = alert_info[:variables].sort { |v1, v2| v1[0] <=> v2[0] }.to_h
         end
@@ -249,7 +248,7 @@ class UserDocumentationGenerator
     data_comment = find_data_method_comment(ast, comments_association)
 
     if data_comment.blank?
-      raise Exception, "could not find data method comment: #{file}"
+      fail Exception, "could not find data method comment: #{file}"
     end
 
     parse_variables_from_data_comment(data_comment)
@@ -273,7 +272,7 @@ class UserDocumentationGenerator
     search_array.to_a.each do |item|
       if item.type == :def
         if item.to_a[0] == :data
-          data_comment = comments_association[item].collect { |node| node.text }.join("\n").gsub(/#/, '')
+          data_comment = comments_association[item].collect(&:text).join("\n").gsub(/#/, '')
 
           break
         end
@@ -284,7 +283,7 @@ class UserDocumentationGenerator
   end
 
   def raw_parse_file(file_path)
-    if !@parsed_files[file_path]
+    unless @parsed_files[file_path]
       ast, comments = Parser::CurrentRuby.parse_with_comments(File.read(file_path))
       comments_association = Parser::Source::Comment.associate(ast, comments)
 
@@ -293,7 +292,7 @@ class UserDocumentationGenerator
       @parsed_files[file_path][:comments] = comments_association
     end
 
-    return @parsed_files[file_path][:ast], @parsed_files[file_path][:comments]
+    [@parsed_files[file_path][:ast], @parsed_files[file_path][:comments]]
   end
 
   def htmlize_node_value(node_value)
@@ -302,7 +301,7 @@ class UserDocumentationGenerator
 
   def content_tag(tag_name, styles = '')
     styles_fragment = ''
-    styles_fragment = "style='#{styles}'" if !styles.empty?
+    styles_fragment = "style='#{styles}'" unless styles.empty?
 
     output_text "<#{tag_name} #{styles_fragment}>"
     yield
@@ -323,7 +322,7 @@ class UserDocumentationGenerator
   def parse_liquid_views_variables
     @liquid_views_variables = InstanceView::DEFAULT_LIQUID_VIEWS_PATHS.dup
     @liquid_views_variables = @liquid_views_variables.sort { |v1, v2| v1[0] <=> v2[0] }.to_h
-    @liquid_views_variables.each do |k, v|
+    @liquid_views_variables.each do |k, _v|
       @liquid_views_variables[k] = @liquid_views_variables[k].sort { |v1, v2| v1[0].to_s <=> v2[0].to_s }.to_h
     end
   end
@@ -390,10 +389,10 @@ class UserDocumentationGenerator
 
     begin_node = ast.to_a.find { |node| node && node.type == :begin }
     begin_node.to_a.each do |node|
-      if !comments_association[node].empty?
+      unless comments_association[node].empty?
         node_list = node.to_a
         if node.type == :def || (node.type == :send && node_list.length >= 2 && node_list[1] == :delegate)
-          comment = comments_association[node].collect { |node| node.text }.join("\n")
+          comment = comments_association[node].collect(&:text).join("\n")
           parsed_comment = comment.gsub(/#/, '')
 
           if node.type == :def
@@ -410,6 +409,4 @@ class UserDocumentationGenerator
 
     node_documentation
   end
-
 end
-

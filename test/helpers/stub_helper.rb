@@ -1,17 +1,16 @@
 module StubHelper
-
   def stub_image_url(image_url)
-    stub_request(:get, image_url).to_return(:status => 200, :body => Rails.root.join("test", "assets", "foobear.jpeg"), :headers => {'Content-Type' => 'image/jpeg'})
+    stub_request(:get, image_url).to_return(status: 200, body: Rails.root.join('test', 'assets', 'foobear.jpeg'), headers: { 'Content-Type' => 'image/jpeg' })
   end
 
   def stub_local_time_to_return_hour(target, hour)
-    time = mock()
+    time = mock
     time.stubs(:hour).returns(hour)
     target.stubs(:local_time).returns(time)
   end
 
   def stub_us_geolocation
-    stub_request(:get, /maps.googleapis.com.*/).to_return(:status => 200, :body => GEOLOCATION_RESPONSE, :headers => {})
+    stub_request(:get, /maps.googleapis.com.*/).to_return(status: 200, body: GEOLOCATION_RESPONSE, headers: {})
   end
 end
 

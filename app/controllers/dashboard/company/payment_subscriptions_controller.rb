@@ -1,4 +1,4 @@
-class Dashboard::Company::PaymentSubscriptionsController <  Dashboard::BaseController
+class Dashboard::Company::PaymentSubscriptionsController < Dashboard::BaseController
   before_filter :find_order
   before_filter :find_payment_subscription, except: [:new, :create]
   before_filter :get_payment_gateway_data
@@ -9,7 +9,6 @@ class Dashboard::Company::PaymentSubscriptionsController <  Dashboard::BaseContr
     @redirect_to = dashboard_company_transactable_type_transactables_path(@order.transactable.transactable_type, status: 'in progress')
     render layout: false
   end
-
 
   def create
     @payment_subscription.attributes = payment_subscription_params
@@ -42,17 +41,15 @@ class Dashboard::Company::PaymentSubscriptionsController <  Dashboard::BaseContr
   private
 
   def build_payment_subscription
-    @payment_subscription ||= @order.build_payment_subscription({
-      payer: current_user.object,
-      company: @order.owner.default_company
-    })
+    @payment_subscription ||= @order.build_payment_subscription(payer: current_user.object,
+                                                                company: @order.owner.default_company)
   end
 
   def get_payment_gateway_data
     @payment_gateways = if current_instance.skip_company?
-       current_user.payout_payment_gateways
-    else
-      @order.company.payout_payment_gateways
+                          current_user.payout_payment_gateways
+                        else
+                          @order.company.payout_payment_gateways
     end
   end
 
@@ -67,6 +64,4 @@ class Dashboard::Company::PaymentSubscriptionsController <  Dashboard::BaseContr
   def find_payment_subscription
     @payment_subscription = @order.payment_subscription.decorate
   end
-
 end
-

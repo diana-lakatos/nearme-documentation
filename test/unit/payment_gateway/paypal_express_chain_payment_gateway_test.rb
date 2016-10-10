@@ -1,47 +1,46 @@
 require 'test_helper'
 
 class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::TestCase
-
   setup do
     @paypal_express_chain_processor = FactoryGirl.build(:paypal_express_chain_payment_gateway)
     @payment_method = @paypal_express_chain_processor.payment_methods.first
     Payment.any_instance.stubs(:immediate_payout?).returns(true)
   end
 
-  should "include test in settings" do
+  should 'include test in settings' do
     assert @paypal_express_chain_processor.settings[:test]
   end
 
-  should "#setup_api_on_initialize should return a ActiveMerchant PaypalGateway object" do
+  should '#setup_api_on_initialize should return a ActiveMerchant PaypalGateway object' do
     assert_equal ActiveMerchant::Billing::PaypalExpressGateway, @paypal_express_chain_processor.class.active_merchant_class
   end
 
-  should "have a refund identification based on its transaction_id key" do
-    charge_response = ActiveMerchant::Billing::Response.new true, 'OK', { "transaction_id" => "123" }
+  should 'have a refund identification based on its transaction_id key' do
+    charge_response = ActiveMerchant::Billing::Response.new true, 'OK', 'transaction_id' => '123'
     charge = Charge.new(response: charge_response)
-    assert_equal "123", @paypal_express_chain_processor.refund_identification(charge)
+    assert_equal '123', @paypal_express_chain_processor.refund_identification(charge)
   end
 
-  should "build correct boarding_url" do
+  should 'build correct boarding_url' do
     @company = create(:company)
     @merchant =  MerchantAccount::PaypalExpressChainMerchantAccount.new(
-      { merchantable: @company, payment_gateway: @paypal_express_chain_processor}
+      merchantable: @company, payment_gateway: @paypal_express_chain_processor
     )
     assert boarding_url, @paypal_express_chain_processor.boarding_url(@merchant)
   end
 
   def boarding_url
-    "https://www.paypal.com/webapps/merchantboarding/webflow/externalpartnerflow?partnerId=#{@paypal_express_chain_processor.settings["partner_id"]}&productIntentID=addipmt&countryCode=US&integrationType=T&permissionNeeded=EXPRESS_CHECKOUT,REFUND,AUTH_CAPTURE,TRANSACTION_DETAILS,TRANSACTION_SEARCH,REFERENCE_TRANSACTION,BILLING_AGREEMENT&returnToPartnerUrl=https%3A%2F%2Fwww.github.com%2Fpaypal-return%2F&receiveCredentials=FALSE&showPermissions=TRUE&productSelectionNeeded=FALSE&merchantID=#{@merchant.merchant_token}"
+    "https://www.paypal.com/webapps/merchantboarding/webflow/externalpartnerflow?partnerId=#{@paypal_express_chain_processor.settings['partner_id']}&productIntentID=addipmt&countryCode=US&integrationType=T&permissionNeeded=EXPRESS_CHECKOUT,REFUND,AUTH_CAPTURE,TRANSACTION_DETAILS,TRANSACTION_SEARCH,REFERENCE_TRANSACTION,BILLING_AGREEMENT&returnToPartnerUrl=https%3A%2F%2Fwww.github.com%2Fpaypal-return%2F&receiveCredentials=FALSE&showPermissions=TRUE&productSelectionNeeded=FALSE&merchantID=#{@merchant.merchant_token}"
   end
 
-  context "When making refund" do
+  context 'When making refund' do
     setup do
       ActiveMerchant::Billing::PaypalExpressGateway.any_instance.stubs(:refund).returns(OpenStruct.new(success: true, success?: true, refunded_ammount: 1000))
       @paypal_express_chain_processor.save
     end
 
     should 'use test mode for test charge' do
-      payment = FactoryGirl.create(:paid_payment, payment_method: @payment_method, company: create(:company) )
+      payment = FactoryGirl.create(:paid_payment, payment_method: @payment_method, company: create(:company))
 
       # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
 
@@ -58,7 +57,7 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
 
       # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
 
-      refund_payment(payment, "host_cancel", 'live')
+      refund_payment(payment, 'host_cancel', 'live')
 
       assert payment.reload.refunded?
       assert_equal 2, payment.refunds.successful.count
@@ -66,7 +65,7 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
     end
 
     should 'refund full amount when host cancel' do
-      payment = FactoryGirl.create(:paid_payment, payment_method: @payment_method, company: create(:company) )
+      payment = FactoryGirl.create(:paid_payment, payment_method: @payment_method, company: create(:company))
 
       # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
       refund_payment(payment)
@@ -87,7 +86,7 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
 
       ActiveMerchant::Billing::PaypalExpressGateway.any_instance.stubs(:refund).returns(success_response).then.returns(failed_response).then.returns(success_response)
 
-      payment = FactoryGirl.create(:paid_payment, payment_method: @payment_method, company: create(:company) )
+      payment = FactoryGirl.create(:paid_payment, payment_method: @payment_method, company: create(:company))
 
       # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
       refund_payment(payment)
@@ -100,13 +99,13 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
 
     should 'apply cancelation fee when guest cancel' do
       payment = FactoryGirl.create(:paid_payment,
-        payment_method: @payment_method,
-        company: create(:company),
-        cancellation_policy_penalty_percentage: 50,
-        service_fee_amount_host_cents: 100)
+                                   payment_method: @payment_method,
+                                   company: create(:company),
+                                   cancellation_policy_penalty_percentage: 50,
+                                   service_fee_amount_host_cents: 100)
 
       # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
-      refund_payment(payment, "user_cancel")
+      refund_payment(payment, 'user_cancel')
 
       # Host Service Fee is refunded to Host. MPO gets guest service fee
       assert_equal payment.payment_transfer.service_fee_amount_host, Money.new(payment.refunds.host.successful.first.amount)
@@ -118,8 +117,8 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
     end
   end
 
-  def refund_payment(payment, refund_with="host_cancel", mode="test")
-    payout_response = ActiveMerchant::Billing::PaypalExpressResponse.new(true, 'OK', { "id" => "123", "message" => "message", "transaction_id" => 'payout_123' })
+  def refund_payment(payment, refund_with = 'host_cancel', mode = 'test')
+    payout_response = ActiveMerchant::Billing::PaypalExpressResponse.new(true, 'OK', 'id' => '123', 'message' => 'message', 'transaction_id' => 'payout_123')
 
     payment_transfer = payment.company.payment_transfers.create!(payments: [payment.reload], payment_gateway_mode: mode, payment_gateway: payment.payment_gateway)
     payout = payment_transfer.payout_attempts.create(amount_cents: payment_transfer.amount_cents)

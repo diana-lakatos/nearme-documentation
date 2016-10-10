@@ -1,5 +1,4 @@
 class ReservationDecorator < OrderDecorator
-
   include CurrencyHelper
   include TooltipHelper
   include FeedbackDecoratorHelper
@@ -23,7 +22,7 @@ class ReservationDecorator < OrderDecorator
 
   def hourly_summary_for_first_period(show_date = true)
     reservation_period = periods.first.decorate
-    reservation_period.hourly_summary(show_date, { event_booking: transactable.event_booking? })
+    reservation_period.hourly_summary(show_date, event_booking: transactable.event_booking?)
   end
 
   def total_cost
@@ -31,7 +30,7 @@ class ReservationDecorator < OrderDecorator
   end
 
   def periods_cost
-    periods.map{|p| p.hours * unit_price }.sum
+    periods.map { |p| p.hours * unit_price }.sum
   end
 
   def additional_charges_cost
@@ -44,7 +43,7 @@ class ReservationDecorator < OrderDecorator
 
   def subtotal_price
     if subtotal_amount.to_f.zero?
-      "Free!"
+      'Free!'
     else
       render_money(subtotal_amount)
     end
@@ -52,7 +51,7 @@ class ReservationDecorator < OrderDecorator
 
   def service_fee_guest
     if service_fee_amount_guest.to_f.zero?
-      "Free!"
+      'Free!'
     else
       render_money(service_fee_amount_guest)
     end
@@ -68,7 +67,7 @@ class ReservationDecorator < OrderDecorator
 
   def total_price
     if total_amount.to_f.zero?
-      "Free!"
+      'Free!'
     else
       render_money(total_amount)
     end
@@ -111,7 +110,7 @@ class ReservationDecorator < OrderDecorator
   end
 
   def formatted_balance
-    render_money(balance/100.0)
+    render_money(balance / 100.0)
   end
 
   def dates_to_array
@@ -121,8 +120,8 @@ class ReservationDecorator < OrderDecorator
   end
 
   def manage_guests_action_column_class
-    buttons_count = [can_host_cancel?, can_confirm?, can_reject?].count(true)
-    "split-#{buttons_count}"
+    buttons_count = [can_host_cancel?, can_confirm?, can_reject?].select { |button| button }
+    "split-#{buttons_count.size}"
   end
 
   def short_dates
@@ -181,7 +180,7 @@ class ReservationDecorator < OrderDecorator
     if user_message.thread_context.present? && user_message.thread_context.listing.present? && user_message.thread_context.location
       h.link_to user_message.thread_context.name, user_message.thread_context.listing.decorate.show_path
     else
-      "[Deleted]"
+      '[Deleted]'
     end
   end
 
@@ -193,9 +192,9 @@ class ReservationDecorator < OrderDecorator
   def time_to_expiry(time_of_event)
     current_time = Time.zone.now
     total_seconds = time_of_event - current_time
-    hours = (total_seconds/1.hour).floor
-    minutes = ((total_seconds-hours.hours)/1.minute).floor
-    if hours < 1 and minutes < 1
+    hours = (total_seconds / 1.hour).floor
+    minutes = ((total_seconds - hours.hours) / 1.minute).floor
+    if hours < 1 && minutes < 1
       'less than minute'
     else
       if hours < 1
@@ -214,7 +213,7 @@ class ReservationDecorator < OrderDecorator
 
   def status_info(text)
     if state == 'unconfirmed'
-      tooltip(text, "<span class='tooltip-spacer'>i</span>".html_safe, {class: status_icon}, nil)
+      tooltip(text, "<span class='tooltip-spacer'>i</span>".html_safe, { class: status_icon }, nil)
     else
       "<i class='#{status_icon}'></i>".html_safe
     end

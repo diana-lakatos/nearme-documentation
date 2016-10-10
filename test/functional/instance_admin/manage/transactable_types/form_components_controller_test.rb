@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Manage::TransactableTypes::FormComponentsControllerTest < ActionController::TestCase
-
   setup do
     @instance = FactoryGirl.create(:instance)
     PlatformContext.current = PlatformContext.new(@instance)
@@ -29,11 +28,11 @@ class InstanceAdmin::Manage::TransactableTypes::FormComponentsControllerTest < A
   context 'create' do
     should 'create new form compponents' do
       assert_difference 'FormComponent.count' do
-        post :create, transactable_type_id: @transactable_type.id, form_component: { name: 'My section', form_fields: ["location => address", "transactable => price"], form_type: FormComponent::SPACE_WIZARD }
+        post :create, transactable_type_id: @transactable_type.id, form_component: { name: 'My section', form_fields: ['location => address', 'transactable => price'], form_type: FormComponent::SPACE_WIZARD }
       end
       form_component = assigns(:form_component)
       assert_equal 'My section', form_component.name
-      assert_equal [{ 'location' => 'address'}, {'transactable' => 'price'}], form_component.form_fields
+      assert_equal [{ 'location' => 'address' }, { 'transactable' => 'price' }], form_component.form_fields
       assert_equal @transactable_type.id, form_component.form_componentable_id
       assert_equal FormComponent::SPACE_WIZARD, form_component.form_type
       assert_redirected_to instance_admin_manage_transactable_type_form_components_path(@transactable_type)
@@ -55,19 +54,18 @@ class InstanceAdmin::Manage::TransactableTypes::FormComponentsControllerTest < A
   end
 
   context 'update' do
-
     setup do
       @form_component = FactoryGirl.create(:form_component)
     end
 
     should 'update form compponents' do
       assert_no_difference 'FormComponent.count' do
-        put :update, transactable_type_id: @transactable_type.id, id: @form_component.id, form_component: { name: 'My section', form_fields: ["location => address", "transactable => price"], form_type: FormComponent::SPACE_WIZARD }
+        put :update, transactable_type_id: @transactable_type.id, id: @form_component.id, form_component: { name: 'My section', form_fields: ['location => address', 'transactable => price'], form_type: FormComponent::SPACE_WIZARD }
       end
       form_component = assigns(:form_component)
       form_component.reload
       assert_equal 'My section', form_component.name
-      assert_equal [{ 'location' => 'address'}, {'transactable' => 'price'}], form_component.form_fields
+      assert_equal [{ 'location' => 'address' }, { 'transactable' => 'price' }], form_component.form_fields
       assert_equal @transactable_type.id, form_component.form_componentable_id
       assert_equal FormComponent::SPACE_WIZARD, form_component.form_type
       assert_redirected_to instance_admin_manage_transactable_type_form_components_path(@transactable_type)
@@ -90,6 +88,4 @@ class InstanceAdmin::Manage::TransactableTypes::FormComponentsControllerTest < A
     end
     assert_redirected_to instance_admin_manage_transactable_type_form_components_path(@transactable_type)
   end
-
 end
-

@@ -7,6 +7,4 @@ class ApprovalRequestAttachmentTemplate < ActiveRecord::Base
   belongs_to :instance
 
   has_many :approval_request_attachments, inverse_of: :approval_request_attachment_template
-
 end
-

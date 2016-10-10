@@ -6,7 +6,7 @@ class ActivityFeedService
     @options = options
   end
 
-  def events(params={})
+  def events(params = {})
     @page = params[:page].present? ? params[:page].to_i : 1
     per = ActivityFeedService::Helpers::EVENTS_PER_PAGE
 
@@ -27,18 +27,15 @@ class ActivityFeedService
       # We filter out user_commented events except for those where this user
       # commented something on another object (we filter out comments on his own
       # wall, that is, where followed = him)
-      event_names = [
-        'user_commented',
-        'user_commented_on_user_activity'
-      ]
+      event_names = %w(user_commented user_commented_on_user_activity)
 
       @events = ActivityFeedEvent
-        .with_identifiers(sql_include_array)
-        .without_identifiers(sql_exclude_array)
-        .includes(:event_source, :followed)
-        .exclude_events
-        .where('event not in (?) OR (event in (?) AND (followed_id != ? OR followed_type != ?))', event_names, event_names, @object.id, 'User')
-        .paginate(page: @page, per_page: per)
+                .with_identifiers(sql_include_array)
+                .without_identifiers(sql_exclude_array)
+                .includes(:event_source, :followed)
+                .exclude_events
+                .where('event not in (?) OR (event in (?) AND (followed_id != ? OR followed_type != ?))', event_names, event_names, @object.id, 'User')
+                .paginate(page: @page, per_page: per)
     end
   end
 

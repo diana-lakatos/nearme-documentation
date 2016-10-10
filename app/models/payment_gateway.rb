@@ -9,7 +9,7 @@ class PaymentGateway < ActiveRecord::Base
 
   self.inheritance_column = :type
 
-  scope :mode_scope, -> { test_mode? ? where(test_active: true) : where(live_active: true)}
+  scope :mode_scope, -> { test_mode? ? where(test_active: true) : where(live_active: true) }
   scope :live, -> { where(live_active: true) }
   scope :payout_type, -> { where(type: PAYOUT_GATEWAYS.values + IMMEDIATE_PAYOUT_GATEWAYS.values) }
   scope :payment_type, -> { where.not(type: PAYOUT_GATEWAYS.values) }
@@ -29,8 +29,8 @@ class PaymentGateway < ActiveRecord::Base
 
   belongs_to :payment_gateway
 
-  has_many :active_payment_methods, -> (object) { active.except_free },  class_name: "PaymentMethod"
-  has_many :active_free_payment_methods, -> (object) { active.free }, class_name: "PaymentMethod"
+  has_many :active_payment_methods, -> (_object) { active.except_free },  class_name: 'PaymentMethod'
+  has_many :active_free_payment_methods, -> (_object) { active.free }, class_name: 'PaymentMethod'
   has_many :billing_authorizations
   has_many :credit_cards
   has_many :charges
@@ -47,32 +47,32 @@ class PaymentGateway < ActiveRecord::Base
   has_many :refunds
   has_many :webhooks, as: :webhookable, dependent: :destroy
 
-  accepts_nested_attributes_for :payment_methods, :reject_if => :all_blank
+  accepts_nested_attributes_for :payment_methods, reject_if: :all_blank
 
   validates :type, presence: true
-  validates :payment_countries, presence: true, if: Proc.new { |p| p.active? }
-  validates :payment_currencies, presence: true, if: Proc.new { |p| p.active? }
-  validates :payment_methods, presence: true, if: Proc.new { |p| p.active? && !p.supports_payout?}
+  validates :payment_countries, presence: true, if: proc { |p| p.active? }
+  validates :payment_currencies, presence: true, if: proc { |p| p.active? }
+  validates :payment_methods, presence: true, if: proc { |p| p.active? && !p.supports_payout? }
   validate do
-    errors.add(:payment_methods, "At least one payment method must be selected") if active? && !supports_payout? && !payment_methods.any?{ |p| p.active? }
+    errors.add(:payment_methods, 'At least one payment method must be selected') if active? && !supports_payout? && !payment_methods.any?(&:active?)
   end
 
-  AUTH_ERROR = "Payment Gateway authorization error"
-  CAPTURE_ERROR = "Payment Gateway capture error"
-  VOID_ERROR = "Payment Gateway void error"
-  REFUND_ERROR = "Payment Gateway refund error"
-  STORE_ERROR = "Payment Gateway credit card store error"
-  UNSTORE_ERROR = "Payment Gateway credit card delete error"
-  PURCHASE_ERROR = "Payment Gateway purchase error"
+  AUTH_ERROR = 'Payment Gateway authorization error'
+  CAPTURE_ERROR = 'Payment Gateway capture error'
+  VOID_ERROR = 'Payment Gateway void error'
+  REFUND_ERROR = 'Payment Gateway refund error'
+  STORE_ERROR = 'Payment Gateway credit card store error'
+  UNSTORE_ERROR = 'Payment Gateway credit card delete error'
+  PURCHASE_ERROR = 'Payment Gateway purchase error'
 
   PAYOUT_GATEWAYS = {
-    'PayPal Adpative Payments (Payouts)' => 'PaymentGateway::PaypalAdaptivePaymentGateway',
+    'PayPal Adpative Payments (Payouts)' => 'PaymentGateway::PaypalAdaptivePaymentGateway'
   }
 
   IMMEDIATE_PAYOUT_GATEWAYS = {
     'Braintree Marketplace' => 'PaymentGateway::BraintreeMarketplacePaymentGateway',
     'PayPal Express In Chain Payments' => 'PaymentGateway::PaypalExpressChainPaymentGateway',
-    'Stripe Connect' => 'PaymentGateway::StripeConnectPaymentGateway',
+    'Stripe Connect' => 'PaymentGateway::StripeConnectPaymentGateway'
   }
 
   PAYMENT_GATEWAYS = {
@@ -91,7 +91,7 @@ class PaymentGateway < ActiveRecord::Base
     'Stripe' => 'PaymentGateway::StripePaymentGateway',
     'Stripe Connect' => 'PaymentGateway::StripeConnectPaymentGateway',
     'Worldpay' => 'PaymentGateway::WorldpayPaymentGateway',
-    'Offline Payment' => 'PaymentGateway::ManualPaymentGateway',
+    'Offline Payment' => 'PaymentGateway::ManualPaymentGateway'
   }
 
   MAX_REFUND_ATTEMPTS = 3
@@ -101,9 +101,9 @@ class PaymentGateway < ActiveRecord::Base
   not_implemented :gateway, :parse_webhook, :verify_webhook, :onboard!
 
   unsupported :payout, :any_country, :any_currency, :paypal_express_payment, :paypal_chain_payments,
-    :multiple_currency, :express_checkout_payment, :nonce_payment, :company_onboarding, :remote_paymnt,
-    :recurring_payment, :credit_card_payment, :manual_payment, :remote_payment, :free_payment, :immediate_payout, :free_payment,
-    :partial_refunds, :refund_from_host, :host_subscription
+              :multiple_currency, :express_checkout_payment, :nonce_payment, :company_onboarding, :remote_paymnt,
+              :recurring_payment, :credit_card_payment, :manual_payment, :remote_payment, :free_payment, :immediate_payout, :free_payment,
+              :partial_refunds, :refund_from_host, :host_subscription
 
   attr_encrypted :test_settings, :live_settings, marshal: true
 
@@ -112,7 +112,7 @@ class PaymentGateway < ActiveRecord::Base
   #- CLASS METHODS STARTS HERE
 
   def self.supported_countries
-    raise NotImplementedError.new("#{self.name} has not implemented self.supported_countries")
+    fail NotImplementedError.new("#{name} has not implemented self.supported_countries")
   end
 
   def config_settings
@@ -152,12 +152,12 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def self.countries
-    @@countries ||= PAYMENT_GATEWAYS.map { |key, payment_gateway_class| payment_gateway_class.supported_countries }.flatten.uniq.freeze
+    @@countries ||= PAYMENT_GATEWAYS.map { |_key, payment_gateway_class| payment_gateway_class.supported_countries }.flatten.uniq.freeze
   end
 
   def self.supported_at(alpha2_country_code)
     @@payment_gateways_at_country ||= {}
-    @@payment_gateways_at_country[alpha2_country_code] ||= PAYMENT_GATEWAYS.select { |key, payment_gateway_class| payment_gateway_class.supported_countries.include?(alpha2_country_code) }.keys.freeze
+    @@payment_gateways_at_country[alpha2_country_code] ||= PAYMENT_GATEWAYS.select { |_key, payment_gateway_class| payment_gateway_class.supported_countries.include?(alpha2_country_code) }.keys.freeze
   end
 
   def self.settings
@@ -165,7 +165,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def self.active_merchant_class
-    raise NotImplementedError.new("#{self.name} active_merchant_class not implemented")
+    fail NotImplementedError.new("#{name} active_merchant_class not implemented")
   end
 
   def self.model_name
@@ -176,7 +176,7 @@ class PaymentGateway < ActiveRecord::Base
     if payment_gateway.send(attribute.to_s.gsub('settings', 'active?'))
       value.each do |key, value|
         next if payment_gateway.class.settings[key.to_sym].blank? ||
-          payment_gateway.class.settings[key.to_sym][:validate].blank?
+                payment_gateway.class.settings[key.to_sym][:validate].blank?
 
         payment_gateway.class.settings[key.to_sym][:validate].each do |validation|
           case validation
@@ -220,7 +220,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def host
-    port = ":3000"
+    port = ':3000'
     "http://#{PlatformContext.current.decorate.host}#{Rails.env.development? ? port : ''}"
   end
 
@@ -236,7 +236,7 @@ class PaymentGateway < ActiveRecord::Base
     if supports_any_currency?
       Currency.order(:name)
     else
-      Currency.where(iso_code: self.supported_currencies).order(:name)
+      Currency.where(iso_code: supported_currencies).order(:name)
     end
   end
 
@@ -246,7 +246,7 @@ class PaymentGateway < ActiveRecord::Base
 
   def supports_currency?(currency)
     return true if self.supports_any_currency?
-    self.supported_currencies.include?(currency)
+    supported_currencies.include?(currency)
   end
 
   def configured?(country_alpha2_code)
@@ -254,7 +254,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def self.test_mode?
-    @test_mode.nil? ? PlatformContext.current.try {|c| c.instance.test_mode? } : @test_mode
+    @test_mode.nil? ? PlatformContext.current.try { |c| c.instance.test_mode? } : @test_mode
   end
 
   def test_mode?
@@ -301,31 +301,25 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def gateway_authorize(amount, cc, options)
-    begin
-      gateway.authorize(amount, cc, options)
-    rescue => e
-      MarketplaceLogger.error(AUTH_ERROR, e.to_s, raise: false)
-      OpenStruct.new({ success?: false, message: e.to_s })
-    end
+    gateway.authorize(amount, cc, options)
+  rescue => e
+    MarketplaceLogger.error(AUTH_ERROR, e.to_s, raise: false)
+    OpenStruct.new(success?: false, message: e.to_s)
   end
 
   def gateway_capture(amount, token, options)
-    begin
-      gateway.capture(amount, token, options)
-    rescue => e
-      MarketplaceLogger.error(CAPTURE_ERROR, e.to_s, raise: false)
-      @payment.update_column(:recurring_booking_error, e) if @payment
-      OpenStruct.new({ success?: false, message: e.to_s })
-    end
+    gateway.capture(amount, token, options)
+  rescue => e
+    MarketplaceLogger.error(CAPTURE_ERROR, e.to_s, raise: false)
+    @payment.update_column(:recurring_booking_error, e) if @payment
+    OpenStruct.new(success?: false, message: e.to_s)
   end
 
   def gateway_purchase(amount, credit_card_or_vault_id, options)
-    begin
-      gateway.purchase(amount, credit_card_or_vault_id, options)
-    rescue => e
-      MarketplaceLogger.error(PURCHASE_ERROR, e.to_s, raise: false)
-      OpenStruct.new({ success?: false, message: e.to_s })
-    end
+    gateway.purchase(amount, credit_card_or_vault_id, options)
+  rescue => e
+    MarketplaceLogger.error(PURCHASE_ERROR, e.to_s, raise: false)
+    OpenStruct.new(success?: false, message: e.to_s)
   end
 
   def void(payment)
@@ -337,13 +331,11 @@ class PaymentGateway < ActiveRecord::Base
     gateway_void(payment.authorization_token, options)
   end
 
-  def gateway_void(token, options={})
-    begin
-      gateway.void(token, options)
-    rescue => e
-      MarketplaceLogger.error(VOID_ERROR, e.to_s, raise: false)
-      OpenStruct.new({ success?: false, message: e.to_s })
-    end
+  def gateway_void(token, options = {})
+    gateway.void(token, options)
+  rescue => e
+    MarketplaceLogger.error(VOID_ERROR, e.to_s, raise: false)
+    OpenStruct.new(success?: false, message: e.to_s)
   end
 
   def refund(amount, currency, payment, successful_charge)
@@ -359,7 +351,7 @@ class PaymentGateway < ActiveRecord::Base
       receiver: 'guest'
     )
 
-    raise PaymentGateway::RefundNotSupportedError, "Refund isn't supported or is not implemented. Please refund this user directly on your gateway account." if !defined?(refund_identification)
+    fail PaymentGateway::RefundNotSupportedError, "Refund isn't supported or is not implemented. Please refund this user directly on your gateway account." unless defined?(refund_identification)
 
     options = custom_refund_options.merge(currency: currency)
     options.merge!(@merchant_account.custom_options) if @merchant_account
@@ -370,12 +362,10 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def gateway_refund(amount, token, options)
-    begin
-      gateway.refund(amount, token, options)
-    rescue => e
-      MarketplaceLogger.error(REFUND_ERROR, e.to_s, raise: false)
-      OpenStruct.new({ success?: false, message: e.to_s })
-    end
+    gateway.refund(amount, token, options)
+  rescue => e
+    MarketplaceLogger.error(REFUND_ERROR, e.to_s, raise: false)
+    OpenStruct.new(success?: false, message: e.to_s)
   end
 
   def store(credit_card, instance_client)
@@ -385,27 +375,23 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def gateway_store(credit_card, options)
-    begin
-      gateway.store(credit_card, options)
-    rescue => e
-      MarketplaceLogger.error(STORE_ERROR, e.to_s, raise: false)
-      OpenStruct.new({ success?: false, message: e.to_s, params: { 'error' => { 'message' => e.to_s }} })
-    end
+    gateway.store(credit_card, options)
+  rescue => e
+    MarketplaceLogger.error(STORE_ERROR, e.to_s, raise: false)
+    OpenStruct.new(success?: false, message: e.to_s, params: { 'error' => { 'message' => e.to_s } })
   end
 
   def gateway_delete(instance_client, options)
-    begin
-      gateway.delete(instance_client, options)
-    rescue => e
-      MarketplaceLogger.error(UNSTORE_ERROR, e.to_s, raise: false)
-      OpenStruct.new({ success?: false, message: e.to_s })
-    end
+    gateway.delete(instance_client, options)
+  rescue => e
+    MarketplaceLogger.error(UNSTORE_ERROR, e.to_s, raise: false)
+    OpenStruct.new(success?: false, message: e.to_s)
   end
 
   def store_credit_card(client, credit_card)
     return nil unless supports_recurring_payment?
 
-    @instance_client = self.instance_clients.where(client: client).first_or_initialize
+    @instance_client = instance_clients.where(client: client).first_or_initialize
     options = { email: client.email, default_card: true, customer: @instance_client.customer_id }
     response = gateway.store(credit_card, options)
     @instance_client.response ||= response.to_yaml
@@ -421,7 +407,8 @@ class PaymentGateway < ActiveRecord::Base
     merchant_account = merchant_account(company)
 
     if merchant_account
-      amount, reference = payout_details[:amount], payout_details[:reference]
+      amount = payout_details[:amount]
+      reference = payout_details[:reference]
       @payout = payouts.create(
         amount_cents: amount.cents,
         currency: amount.currency.iso_code,
@@ -435,13 +422,13 @@ class PaymentGateway < ActiveRecord::Base
     end
   end
 
-  def immediate_payout(company)
+  def immediate_payout(_company)
     false
   end
 
   def merchant_account(company)
     return nil if company.nil?
-    
+
     merchant_accounts.where(merchantable: company, test: test_mode?).where(state: 'verified').first
   end
 
@@ -456,7 +443,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def underscored_name
-    self.class.name.gsub("PaymentGateway::", '').underscore.gsub("_payment_gateway", '')
+    self.class.name.gsub('PaymentGateway::', '').underscore.gsub('_payment_gateway', '')
   end
 
   def merchant_account_type
@@ -465,8 +452,8 @@ class PaymentGateway < ActiveRecord::Base
 
   def build_payment_methods(active = false)
     PaymentMethod::PAYMENT_METHOD_TYPES.each do |payment_method|
-      if self.send("supports_#{payment_method}_payment?") && payment_methods.find_by_payment_method_type(payment_method).blank?
-        payment_methods.build(payment_method_type: payment_method, active: active, instance_id: self.instance_id)
+      if send("supports_#{payment_method}_payment?") && payment_methods.find_by_payment_method_type(payment_method).blank?
+        payment_methods.build(payment_method_type: payment_method, active: active, instance_id: instance_id)
       end
     end
   end
@@ -478,7 +465,7 @@ class PaymentGateway < ActiveRecord::Base
   protected
 
   def void_merchant_accounts
-    mearchant_accounts.each { |ma| ma.void! }
+    mearchant_accounts.each(&:void!)
   end
 
   # Callback invoked by processor when charge was successful
@@ -502,7 +489,7 @@ class PaymentGateway < ActiveRecord::Base
     @refund.refund_failed(response)
   end
 
-  def custom_authorize_options(payment=nil)
+  def custom_authorize_options(_payment = nil)
     {}
   end
 
@@ -533,4 +520,3 @@ class PaymentGateway < ActiveRecord::Base
     @payout.payout_pending(response)
   end
 end
-

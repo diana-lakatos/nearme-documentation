@@ -12,5 +12,4 @@ class Language::SingleLanguageRouter
   def url_params
     { language: nil }
   end
-
 end

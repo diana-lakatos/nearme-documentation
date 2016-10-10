@@ -21,7 +21,7 @@ class InstanceAdmin::Settings::ResourceRecordsController < InstanceAdmin::Settin
       flash[:notice] = 'Record has been created.'
       respond_with resource, location: instance_admin_settings_domain_path(domain)
     else
-      flash[:error] = "Problem with saving new record."
+      flash[:error] = 'Problem with saving new record.'
       render :new
     end
   end
@@ -34,9 +34,9 @@ class InstanceAdmin::Settings::ResourceRecordsController < InstanceAdmin::Settin
       flash[:error] = 'Record could not be removed. Record not found'
     end
   rescue Aws::Route53::Errors::ServiceError
-    flash[:error] = $!.to_s
+    flash[:error] = $ERROR_INFO.to_s
   rescue Aws::Route53::Errors::HostedZoneNotEmpty
-    flash[:error] = $!.to_s
+    flash[:error] = $ERROR_INFO.to_s
   ensure
     respond_with resource, location: instance_admin_settings_domain_path(domain)
   end
@@ -53,7 +53,7 @@ class InstanceAdmin::Settings::ResourceRecordsController < InstanceAdmin::Settin
 
   def resource
     @resource ||= ResourceRecordRepository
-                .find_by_zone_and_name_and_type(hosted_zone, *decode_resource_record_id)
+                  .find_by_zone_and_name_and_type(hosted_zone, *decode_resource_record_id)
   end
 
   def collection

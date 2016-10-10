@@ -1,11 +1,8 @@
 require 'test_helper'
 
 class JobTest < ActiveSupport::TestCase
-
   class SampleMailer < InstanceMailer
-
     def send_email
-
     end
   end
 
@@ -22,7 +19,6 @@ class JobTest < ActiveSupport::TestCase
   end
 
   context 'enqueue' do
-
     should 'add enqueue method to mailers that invokes MailerJob with proper arguments' do
       MailerJob.expects(:perform).with(SampleMailer, :send_email)
       SampleMailer.enqueue.send_email
@@ -33,7 +29,6 @@ class JobTest < ActiveSupport::TestCase
       MailerJob.expects(:perform_later).with(@time, SampleMailer, :send_email)
       SampleMailer.enqueue_later(@time).send_email
     end
-
   end
 
   context '#get_performing_time' do
@@ -87,6 +82,4 @@ class JobTest < ActiveSupport::TestCase
       assert_equal 'long_running', Delayed::Job.last.queue
     end
   end
-
 end
-

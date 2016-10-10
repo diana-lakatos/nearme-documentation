@@ -1,6 +1,6 @@
 class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseController
   include InstanceAdmin::Versionable
-  actions :all, :except => [ :show ]
+  actions :all, except: [:show]
 
   before_filter :find_liquid_view, only: [:edit, :update, :destroy]
   set_resource_method :find_liquid_view
@@ -26,7 +26,7 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
       view_file = DbViewResolver.virtual_path(params[:path].dup, @base_view.fetch(:is_partial, true))
       view_paths.each do |view_path|
         if path = view_path.try(:to_path)
-          if File.exists?(File.join(path, "#{view_file}.html.liquid"))
+          if File.exist?(File.join(path, "#{view_file}.html.liquid"))
             opts[:body] = File.read(File.join(path, "#{view_file}.html.liquid"))
             break
           end
@@ -68,7 +68,7 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
 
   def destroy
     @liquid_view.destroy
-      flash[:success] = t 'flash_messages.instance_admin.manage.liquid_views.deleted'
+    flash[:success] = t 'flash_messages.instance_admin.manage.liquid_views.deleted'
     redirect_to action: :index
   end
 
@@ -81,6 +81,4 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
   def find_liquid_view
     @liquid_view ||= platform_context.instance.instance_views.liquid_views.find(params[:id])
   end
-
 end
-

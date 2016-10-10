@@ -5,7 +5,10 @@ if defined?(WillPaginate)
         def per(value = nil)
           limit(value.nil? ? limit_value : value)
         end
-        def total_count() count end
+
+        def total_count
+          count
+        end
       end
     end
     module CollectionMethods

@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceTest < ActiveSupport::TestCase
-
   should validate_presence_of(:name)
 
   setup do
@@ -18,7 +17,6 @@ class InstanceTest < ActiveSupport::TestCase
   end
 
   context 'imap' do
-
     setup do
       @support_settings = {
         support_imap_username: 'supportteam@desksnear.me',
@@ -30,12 +28,12 @@ class InstanceTest < ActiveSupport::TestCase
     end
 
     should 'not be considered with imap if it is blank' do
-      @instance.update_attributes(@support_settings.merge({support_imap_username: ''}))
+      @instance.update_attributes(@support_settings.merge(support_imap_username: ''))
       assert_equal 0, Instance.with_support_imap.count
     end
 
     should 'not be considered with imap if it is nil' do
-      @instance.update_attributes(@support_settings.merge({support_imap_username: nil}))
+      @instance.update_attributes(@support_settings.merge(support_imap_username: nil))
       assert_equal 0, Instance.with_support_imap.count
     end
 
@@ -56,5 +54,4 @@ class InstanceTest < ActiveSupport::TestCase
       assert @instance_owner.user, @instance.instance_owner
     end
   end
-
 end

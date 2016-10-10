@@ -4,10 +4,10 @@ class Dashboard::ProjectsController < Dashboard::BaseController
   before_filter :set_form_components, only: [:new, :create, :edit, :update]
 
   def index
-    @transactables = @transactable_type.transactables.joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id').
-      where('transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)', current_user.id, current_user.id).
-      search_by_query([:name, :description, :summary], params[:query]).
-      group('transactables.id').order('created_at DESC').paginate(page: params[:page], per_page: 20)
+    @transactables = @transactable_type.transactables.joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id')
+                     .where('transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)', current_user.id, current_user.id)
+                     .search_by_query([:name, :description, :summary], params[:query])
+                     .group('transactables.id').order('created_at DESC').paginate(page: params[:page], per_page: 20)
   end
 
   def new
@@ -54,7 +54,7 @@ class Dashboard::ProjectsController < Dashboard::BaseController
     validate = true
     validate = false if @transactable.draft
     respond_to do |format|
-      format.html {
+      format.html do
         if @transactable.save(validate: validate)
           flash[:success] = t('flash_messages.manage.listings.listing_updated')
           redirect_to dashboard_project_type_projects_path(@transactable_type)
@@ -64,14 +64,14 @@ class Dashboard::ProjectsController < Dashboard::BaseController
           @transactable.draft = draft
           render :edit
         end
-      }
-      format.json {
+      end
+      format.json do
         if @transactable.save
-          render :json => { :success => true }
+          render json: { success: true }
         else
-          render :json => { :errors => @transactable.errors.full_messages }, :status => 422
+          render json: { errors: @transactable.errors.full_messages }, status: 422
         end
-      }
+      end
     end
   end
 
@@ -104,9 +104,8 @@ class Dashboard::ProjectsController < Dashboard::BaseController
   end
 
   def transactable_params
-    params.require(:transactable).permit(secured_params.project(@transactable_type, @transactable.nil? || current_user.id == @transactable.creator_id )).tap do |whitelisted|
+    params.require(:transactable).permit(secured_params.project(@transactable_type, @transactable.nil? || current_user.id == @transactable.creator_id)).tap do |whitelisted|
       whitelisted[:properties] = params[:transactable][:properties] rescue {}
     end
   end
-
 end

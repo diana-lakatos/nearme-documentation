@@ -13,7 +13,7 @@ class Dashboard::ReviewsControllerTest < ActionController::TestCase
   end
 
   context '#index' do
-    should "get index" do
+    should 'get index' do
       get :index
       assert_response :success
     end
@@ -37,12 +37,12 @@ class Dashboard::ReviewsControllerTest < ActionController::TestCase
     end
 
     should 'respond with success' do
-      put :update, id: @review.id, rating_system_id: @rating_system.id, review: {rating: 3, reviewable_type: @review.reviewable_type, reviewable_id: @review.reviewable_id, instance_id: @current_instance.id}
+      put :update, id: @review.id, rating_system_id: @rating_system.id, review: { rating: 3, reviewable_type: @review.reviewable_type, reviewable_id: @review.reviewable_id, instance_id: @current_instance.id }
       assert_response :success
     end
 
     should 'respond with failure' do
-      put :update, id: @review.id, rating_system_id: @rating_system.id, review: {rating: '', reviewable_type: @review.reviewable_type, reviewable_id: @review.reviewable_id, instance_id: @current_instance.id}
+      put :update, id: @review.id, rating_system_id: @rating_system.id, review: { rating: '', reviewable_type: @review.reviewable_type, reviewable_id: @review.reviewable_id, instance_id: @current_instance.id }
       assert_response 422
     end
   end

@@ -1,11 +1,10 @@
 module PaymentTransfers
   class SchedulerMethods
-
     def initialize(instance)
       @instance = instance
     end
 
-    def next_payment_transfers_date(date=Time.zone.now.beginning_of_day)
+    def next_payment_transfers_date(date = Time.zone.now.beginning_of_day)
       case @instance.payment_transfers_frequency
       when 'daily'
         date.tomorrow
@@ -18,7 +17,7 @@ module PaymentTransfers
       when 'monthly'
         date.next_month.beginning_of_month
       else
-        raise NotImplementedError
+        fail NotImplementedError
       end
     end
 
@@ -28,6 +27,5 @@ module PaymentTransfers
       date = Time.zone.now.beginning_of_day
       next_payment_transfers_date(date - 1.day) == date
     end
-
   end
 end

@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class WorkflowAlertLoggerTest < ActiveSupport::TestCase
-
   context 'db log' do
-
     setup do
       WorkflowAlertLogger.setup { |config| config.logger_type = :db }
     end
@@ -23,7 +21,6 @@ class WorkflowAlertLoggerTest < ActiveSupport::TestCase
     end
 
     context 'aggregate' do
-
       should 'correctly weekly aggregate two sms alerts' do
         @sms_alert = FactoryGirl.create(:workflow_alert_sms)
         assert_difference 'WorkflowAlertWeeklyAggregatedLog.count' do
@@ -80,7 +77,7 @@ class WorkflowAlertLoggerTest < ActiveSupport::TestCase
           assert_equal 4, workflow_alert_for_5th_week.week_number
           assert_equal 2013, workflow_alert_for_5th_week.year
           assert_difference 'WorkflowAlertWeeklyAggregatedLog.count' do
-            travel_to @base_date+ 7.days do
+            travel_to @base_date + 7.days do
               WorkflowAlertLogger.new(@email_alert).log!
             end
           end
@@ -111,7 +108,7 @@ class WorkflowAlertLoggerTest < ActiveSupport::TestCase
             end
           end
           assert_difference 'WorkflowAlertWeeklyAggregatedLog.count' do
-            travel_to @base_date+ 7.days do
+            travel_to @base_date + 7.days do
               WorkflowAlertLogger.new(@email_alert).log!
             end
           end
@@ -122,15 +119,11 @@ class WorkflowAlertLoggerTest < ActiveSupport::TestCase
           assert_equal 2, workflow_alert_for_2nd_month.month
           assert_equal 2013, workflow_alert_for_2nd_month.year
         end
-
       end
-
     end
 
     teardown do
       WorkflowAlertLogger.setup { |config| config.logger_type = :none }
     end
   end
-
 end
-

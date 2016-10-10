@@ -1,5 +1,4 @@
 class CustomAssetsController < ApplicationController
-
   def show
     attachment = Ckeditor::Asset.find(params[:id])
     if attachment.accessible_to?(current_user)
@@ -8,6 +7,4 @@ class CustomAssetsController < ApplicationController
       redirect_to root_url
     end
   end
-
 end
-

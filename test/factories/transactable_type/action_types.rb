@@ -21,7 +21,6 @@ FactoryGirl.define do
       end
     end
 
-
     factory :transactable_type_purchase_action, class: TransactableType::PurchaseAction do
       type 'TransactableType::PurchaseAction'
 
@@ -54,7 +53,5 @@ FactoryGirl.define do
         )]
       end
     end
-
-
   end
 end

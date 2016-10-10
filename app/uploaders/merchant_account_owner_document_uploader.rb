@@ -1,5 +1,4 @@
 class MerchantAccountOwnerDocumentUploader < PrivateFileUploader
-
   process :auto_orient
 
   def auto_orient

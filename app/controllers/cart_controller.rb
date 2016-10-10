@@ -1,5 +1,4 @@
 class CartController < ApplicationController
-
   skip_before_filter :log_out_if_token_exists
   skip_before_filter :filter_out_token
 
@@ -55,5 +54,4 @@ class CartController < ApplicationController
   def set_service
     @cart_service = current_user.cart
   end
-
 end

@@ -1,7 +1,6 @@
 class DbViewResolver < ActionView::Resolver
-
-  def find_templates(name, prefix, partial, details)
-    raise NotImplementedError.new('You must implement find_templates method!')
+  def find_templates(_name, _prefix, _partial, _details)
+    fail NotImplementedError.new('You must implement find_templates method!')
   end
 
   protected
@@ -29,7 +28,7 @@ class DbViewResolver < ActionView::Resolver
     ActionView::Template.new(source, identifier, handler, details)
   end
 
-  def template_body(record, format)
+  def template_body(record, _format)
     record.body
   end
 
@@ -46,4 +45,3 @@ class DbViewResolver < ActionView::Resolver
     self.class.virtual_path(path, partial)
   end
 end
-

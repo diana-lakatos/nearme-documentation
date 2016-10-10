@@ -6,7 +6,7 @@ SimpleForm.setup do |config|
   # stack. The options given below are used to wrap the
   # whole input.
   config.wrappers :default, class: :input,
-    hint_class: :field_with_hint, error_class: :field_with_errors do |b|
+                            hint_class: :field_with_hint, error_class: :field_with_errors do |b|
     ## Extensions enabled by default
     # Any of these extensions can be disabled for a
     # given input by passing: `f.inputEXTENSION_NAME: false`.
@@ -52,7 +52,6 @@ SimpleForm.setup do |config|
     b.optional :error
   end
 
-
   config.wrappers :simple do |b|
     b.use :html5
     b.use :placeholder
@@ -82,7 +81,6 @@ SimpleForm.setup do |config|
     end
   end
 
-
   config.wrappers :bs_phone, tag: 'div', class: 'control-group', error_class: 'error' do |b|
     b.use :html5
     b.use :placeholder
@@ -96,7 +94,7 @@ SimpleForm.setup do |config|
     end
   end
 
-  config.wrappers :prepend, tag: 'div', class: "control-group", error_class: 'error' do |b|
+  config.wrappers :prepend, tag: 'div', class: 'control-group', error_class: 'error' do |b|
     b.use :html5
     b.use :placeholder
     b.use :label
@@ -109,7 +107,7 @@ SimpleForm.setup do |config|
     end
   end
 
-  config.wrappers :append, tag: 'div', class: "control-group", error_class: 'error' do |b|
+  config.wrappers :append, tag: 'div', class: 'control-group', error_class: 'error' do |b|
     b.use :html5
     b.use :placeholder
     b.use :label
@@ -122,7 +120,7 @@ SimpleForm.setup do |config|
     end
   end
 
-  config.wrappers :product, tag: 'div', class: "control-group", error_class: 'error' do |b|
+  config.wrappers :product, tag: 'div', class: 'control-group', error_class: 'error' do |b|
     b.use :html5
     b.use :placeholder
     b.wrapper tag: 'div', class: 'row-fluid' do |input|

@@ -7,7 +7,6 @@ class WorkflowAlertMonthlyAggregatedLog < ActiveRecord::Base
   belongs_to :instance
 
   def self.find_or_create_for_current_month
-    self.where(instance_id: PlatformContext.current.instance.id, year: Time.zone.now.year, month: Time.zone.now.month).first_or_create
+    where(instance_id: PlatformContext.current.instance.id, year: Time.zone.now.year, month: Time.zone.now.month).first_or_create
   end
-
 end

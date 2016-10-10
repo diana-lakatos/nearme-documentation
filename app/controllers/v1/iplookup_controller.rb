@@ -1,5 +1,4 @@
 class V1::IplookupController < V1::BaseController
-
   def index
     render json: iplookup_hash
   end
@@ -11,11 +10,11 @@ class V1::IplookupController < V1::BaseController
       ip: request.remote_ip,
       boundingbox: {
         start: {
-          latitude:  request.location.try(:latitude).to_f  - 0.25,
+          latitude:  request.location.try(:latitude).to_f - 0.25,
           longitude: request.location.try(:longitude).to_f - 0.25
         },
-        :end => {
-          latitude:  request.location.try(:latitude).to_f  + 0.25,
+        end: {
+          latitude:  request.location.try(:latitude).to_f + 0.25,
           longitude: request.location.try(:longitude).to_f + 0.25
         }
       },

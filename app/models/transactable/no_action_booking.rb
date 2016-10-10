@@ -15,5 +15,4 @@ class Transactable::NoActionBooking < Transactable::ActionType
   end
 
   alias_method :no_action?, :no_action
-
 end

@@ -1,5 +1,4 @@
 class InstanceAdmin::Manage::ApprovalRequestTemplatesController < InstanceAdmin::Manage::BaseController
-
   before_action :check_for_owner_type, only: [:new]
   before_action :check_if_exists, only: [:new, :create]
   before_action :set_section_name

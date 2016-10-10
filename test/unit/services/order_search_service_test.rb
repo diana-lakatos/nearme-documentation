@@ -9,14 +9,14 @@ class OrderSearchServiceTest < ActiveSupport::TestCase
     @order_scope  = @user.orders.active
   end
 
-  should "find archived orders" do
-    assert_equal 1, OrderSearchService.new(@order_scope, {query: nil, state: 'archived',
-      type: ['Reservation']}).orders.count
-    assert_equal 2, OrderSearchService.new(@order_scope, {state: 'confirmed'} ).orders.count
-    assert_equal 1, OrderSearchService.new(@order_scope, {} ).orders.count
+  should 'find archived orders' do
+    assert_equal 1, OrderSearchService.new(@order_scope, query: nil, state: 'archived',
+                                                         type: ['Reservation']).orders.count
+    assert_equal 2, OrderSearchService.new(@order_scope, state: 'confirmed').orders.count
+    assert_equal 1, OrderSearchService.new(@order_scope, {}).orders.count
   end
 
-  should "assign correct counters" do
+  should 'assign correct counters' do
     assert_equal 1, OrderSearchService.new(@order_scope, {}).upcoming_count
     assert_equal 2, OrderSearchService.new(@order_scope, {}).confirmed_count
     assert_equal 1, OrderSearchService.new(@order_scope, {}).archived_count

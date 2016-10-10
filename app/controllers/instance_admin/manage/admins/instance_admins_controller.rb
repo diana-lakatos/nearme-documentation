@@ -1,5 +1,4 @@
 class InstanceAdmin::Manage::Admins::InstanceAdminsController < InstanceAdmin::Manage::BaseController
-
   skip_before_filter :check_if_locked
 
   def index
@@ -7,7 +6,7 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsController < InstanceAdmin::M
   end
 
   def create
-    @user = User.where(:email => params[:email]).first
+    @user = User.where(email: params[:email]).first
     if @user
       if InstanceAdmin.where(user_id: @user.id).first.present?
         flash[:warning] = "User with email #{@user.email} has already been added as admin"
@@ -24,7 +23,7 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsController < InstanceAdmin::M
         flash[:error] = t('instance_admin.manage.admins.we_could_not_find_user_with_email_address', email: params[:email])
       end
 
-      render "instance_admin/manage/admins/index"
+      render 'instance_admin/manage/admins/index'
     end
   end
 

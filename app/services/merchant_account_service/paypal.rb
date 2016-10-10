@@ -1,5 +1,4 @@
 class MerchantAccountService::Paypal
-
   def initialize(merchant_account)
     @merchant_account = merchant_account
   end
@@ -11,6 +10,4 @@ class MerchantAccountService::Paypal
   def form_data(data)
     data.slice([:email])
   end
-
 end
-

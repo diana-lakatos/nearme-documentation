@@ -9,7 +9,7 @@ class FeaturedItemsTag < Liquid::Tag
     if arguments =~ /(#{::Liquid::QuotedFragment}+)/
       @arguments = arguments
     else
-      raise SyntaxError.new("Syntax Error - Valid syntax: {% featured_items [arguments] %}")
+      fail SyntaxError.new('Syntax Error - Valid syntax: {% featured_items [arguments] %}')
     end
   end
 
@@ -25,14 +25,14 @@ class FeaturedItemsTag < Liquid::Tag
     @attributes.symbolize_keys!
 
     routes = Rails.application.routes.url_helpers
-    
+
     params = { target: @attributes[:target], amount: @attributes[:amount] }
     params.merge!(type: @attributes[:type]) if @attributes[:type].present?
     route = routes.featured_items_path(params)
-    
+
     uuid = SecureRandom.uuid
 
-    html = @view.content_tag(:div, "", class: "featured-items-#{uuid}")
+    html = @view.content_tag(:div, '', class: "featured-items-#{uuid}")
     script = "<script>window.onload = function () { $.get('#{route}', function (data) { $('.featured-items-#{uuid}').html(data) }); } </script>"
 
     [html, script].join.html_safe

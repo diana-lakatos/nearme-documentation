@@ -1,10 +1,8 @@
 # require 'test_helper'
 
-
 # ## NOTE
 # ## RecurringBooking is temporary out of service
 # ## Some refactor will happen in this area we are soon.
-
 
 # class RecurringBookingRequestTest < ActiveSupport::TestCase
 
@@ -70,7 +68,6 @@
 #       error = I18n.t("activemodel.errors.models.reservation_request.attributes.base.total_amount_changed")
 #       assert_equal error, @recurring_booking_request.errors.full_messages.to_sentence
 #     end
-
 
 #     context "invalid arguments" do
 #       context "no listing" do

@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Utils::DefaultAlertsCreator::RecurringCreatorTest < ActionDispatch::IntegrationTest
-
   setup do
     @recurring_creator = Utils::DefaultAlertsCreator::RecurringCreator.new
   end
@@ -14,11 +13,10 @@ class Utils::DefaultAlertsCreator::RecurringCreatorTest < ActionDispatch::Integr
   end
 
   context 'methods' do
-
     setup do
       @company = FactoryGirl.create(:company)
       @platform_context = PlatformContext.current
-      PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
+      PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, name: 'custom.domain.com'))
     end
 
     should 'create_analytics_email' do
@@ -30,7 +28,7 @@ class Utils::DefaultAlertsCreator::RecurringCreatorTest < ActionDispatch::Integr
       assert_equal "#{@company.creator.first_name}, we have potential guests for you!", mail.subject
       assert mail.html_part.body.include?(@company.creator.first_name)
       assert_equal [@company.creator.email], mail.to
-      assert mail.html_part.body.include?("Make sure you have plenty of photos, and that they are up to date. It will make your Desk look even better!")
+      assert mail.html_part.body.include?('Make sure you have plenty of photos, and that they are up to date. It will make your Desk look even better!')
       assert_contains 'href="https://custom.domain.com', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
@@ -49,7 +47,7 @@ class Utils::DefaultAlertsCreator::RecurringCreatorTest < ActionDispatch::Integr
       assert mail.html_part.body.include?(@user.first_name)
       assert_equal [@user.email], mail.to
       assert_contains "Share your listing on Facebook, Twitter, and LinkedIn, and start seeing #{@listing.transactable_type.translated_lessee(10)} book your Desk.", mail.html_part.body
-      assert_not_contains "translation missing:", mail.html_part.body
+      assert_not_contains 'translation missing:', mail.html_part.body
       assert mail.html_part.body.include?(@listing.name)
       assert_contains 'href="https://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
@@ -64,15 +62,14 @@ class Utils::DefaultAlertsCreator::RecurringCreatorTest < ActionDispatch::Integr
         WorkflowStepJob.perform(WorkflowStep::RecurringWorkflow::RequestPhotos, @listing.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_equal "Give the final touch to your listings with some photos!", mail.subject
+      assert_equal 'Give the final touch to your listings with some photos!', mail.subject
       assert mail.html_part.body.include?(@user.first_name)
       assert_equal [@user.email], mail.to
-      assert mail.html_part.body.include?("Listings with photos have 10x chances of getting booked.")
+      assert mail.html_part.body.include?('Listings with photos have 10x chances of getting booked.')
       assert mail.html_part.body.include?(@listing.name)
       assert_contains 'href="https://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
     end
   end
-
 end

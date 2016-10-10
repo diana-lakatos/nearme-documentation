@@ -23,12 +23,12 @@ class PaymentSubscription < ActiveRecord::Base
   accepts_nested_attributes_for :credit_card
 
   validates_associated :credit_card
-  validates :credit_card, presence: true, if: Proc.new { |p| p.new_record? }
+  validates :credit_card, presence: true, if: proc { |p| p.new_record? }
   validates :payer, presence: true
 
   before_validation do |p|
     self.payer ||= subscriber.try(:owner)
-    if p.payment_method.try(:payment_method_type) == 'credit_card' && payer.respond_to?(:instance_clients) && p.chosen_credit_card_id.present? &&  p.chosen_credit_card_id != 'custom'
+    if p.payment_method.try(:payment_method_type) == 'credit_card' && payer.respond_to?(:instance_clients) && p.chosen_credit_card_id.present? && p.chosen_credit_card_id != 'custom'
       self.credit_card_id ||= payer.instance_clients.find_by(payment_gateway: payment_gateway.id, test_mode: test_mode?).try(:credit_cards).try(:find, p.chosen_credit_card_id).try(:id)
     end
     true
@@ -56,9 +56,9 @@ class PaymentSubscription < ActiveRecord::Base
 
   def payment_methods
     ids = if payment_method
-      [payment_method]
-    else
-      fetch_payment_methods
+            [payment_method]
+          else
+            fetch_payment_methods
     end.flatten.uniq.map(&:id)
 
     PaymentMethod.where(id: ids)
@@ -66,7 +66,7 @@ class PaymentSubscription < ActiveRecord::Base
 
   def fetch_payment_methods
     payment_gateways = PlatformContext.current.instance.payment_gateways(iso_country_code, currency)
-    PaymentMethod.active.credit_card.where(payment_gateway_id: payment_gateways.select {|p| p.supports_recurring_payment? }.map(&:id) )
+    PaymentMethod.active.credit_card.where(payment_gateway_id: payment_gateways.select(&:supports_recurring_payment?).map(&:id))
   end
 
   def payment_method_id=(payment_method_id)
@@ -76,15 +76,15 @@ class PaymentSubscription < ActiveRecord::Base
   def payment_method=(payment_method)
     super(payment_method)
     self.payment_gateway = self.payment_method.payment_gateway
-    self.test_mode = self.payment_gateway.test_mode?
+    self.test_mode = payment_gateway.test_mode?
   end
 
   def credit_card_attributes=(cc_attrs)
     super(cc_attrs.merge(
-        payment_gateway: self.payment_gateway,
-        test_mode: test_mode?,
-        client: self.payer || self.subscriber.user
-      )
+      payment_gateway: payment_gateway,
+      test_mode: test_mode?,
+      client: self.payer || subscriber.user
+    )
     )
   end
 

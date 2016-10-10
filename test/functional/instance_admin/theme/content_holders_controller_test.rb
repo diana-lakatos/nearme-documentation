@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Theme::ContentHoldersControllerTest < ActionController::TestCase
-
   setup do
     @user = FactoryGirl.create(:user)
     sign_in @user
@@ -9,18 +8,17 @@ class InstanceAdmin::Theme::ContentHoldersControllerTest < ActionController::Tes
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
   end
 
-  context "Content Holder" do
-
+  context 'Content Holder' do
     should 'be created' do
       assert_difference 'ContentHolder.count', 1 do
-        post :create, content_holder: { name: "HEAD", content: "lorem ipsum head", enabled: true }
+        post :create, content_holder: { name: 'HEAD', content: 'lorem ipsum head', enabled: true }
       end
       assert_redirected_to instance_admin_theme_content_holders_path
     end
 
     context 'object' do
       setup do
-        @holder = FactoryGirl.create(:content_holder, name: "Holder1")
+        @holder = FactoryGirl.create(:content_holder, name: 'Holder1')
       end
 
       should 'be edited' do
@@ -38,5 +36,4 @@ class InstanceAdmin::Theme::ContentHoldersControllerTest < ActionController::Tes
       end
     end
   end
-
 end

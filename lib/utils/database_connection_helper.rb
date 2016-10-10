@@ -2,9 +2,9 @@ module Utils
   class DatabaseConnectionHelper
     attr_accessor :pathname, :username, :password, :name, :host
 
-    def initialize(pathname, &block)
+    def initialize(pathname, &_block)
       @pathname = pathname
-      @config   = YAML.load_file(Rails.root.join("config", "database.yml"))[ENV['RAILS_ENV'] || 'development']
+      @config   = YAML.load_file(Rails.root.join('config', 'database.yml'))[ENV['RAILS_ENV'] || 'development']
       @username = @config['username']
       @password = @config['password']
       @name     = @config['database']

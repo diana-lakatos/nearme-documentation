@@ -27,7 +27,7 @@ class LocalesService
 
   def get_locales
     default_and_custom_translations = Translation.default_and_custom_translations_for_instance(@platform_context.instance.id, @locale)
-    default_and_custom_translations = default_and_custom_translations.where("key ilike ? OR value ilike ?", "%#{@options[:q]}%", "%#{@options[:q]}%") if @options[:q].present?
+    default_and_custom_translations = default_and_custom_translations.where('key ilike ? OR value ilike ?', "%#{@options[:q]}%", "%#{@options[:q]}%") if @options[:q].present?
     default_and_custom_translations
   end
 end

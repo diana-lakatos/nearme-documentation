@@ -1,5 +1,4 @@
 class CommunityAdvancedReportsGenerator
-
   COLUMNS = {
     project_name: 'Project Name',
     project_url: 'Project URL',
@@ -19,7 +18,7 @@ class CommunityAdvancedReportsGenerator
     project_collaborator_count: 'Project Collaborator Count',
     project_follower_count: 'Project Follower Count',
     project_featured_status: 'Project Featured Status',
-    project_owner_location: 'Project Owner Location',
+    project_owner_location: 'Project Owner Location'
   }
 
   def initialize(params)
@@ -62,7 +61,7 @@ class CommunityAdvancedReportsGenerator
     when :project_topics
       project.topics.pluck(:name).join(',')
     when :project_image_urls
-      project.photos.collect { |photo| photo.original_image_url }.join(',')
+      project.photos.collect(&:original_image_url).join(',')
     when :project_links
       project.links.map { |link| [link.url, link.text, link.image.try(:url)].compact.join(',') }.join(' | ')
     when :project_seeking_collaborators
@@ -79,5 +78,4 @@ class CommunityAdvancedReportsGenerator
       project.creator.country.try(:name)
     end
   end
-
 end

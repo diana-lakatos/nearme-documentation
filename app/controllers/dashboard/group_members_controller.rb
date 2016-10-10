@@ -9,9 +9,9 @@ class Dashboard::GroupMembersController < Dashboard::BaseController
     @members = @group.memberships.by_phrase(params[:phrase])
 
     respond_to do |format|
-      format.js {
+      format.js do
         render json: { html: render_to_string(partial: @members) }
-      }
+      end
     end
   end
 

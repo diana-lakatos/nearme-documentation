@@ -6,13 +6,13 @@ class ActivityFeedEventTest < ActiveSupport::TestCase
     @activity_feed_event = build(:activity_feed_event)
   end
 
-  context "associations" do
+  context 'associations' do
     should belong_to(:followed)
     should belong_to(:event_source)
   end
 
-  context "callbacks" do
-    should "#update_affected_objects before_create" do
+  context 'callbacks' do
+    should '#update_affected_objects before_create' do
       identifier = ActivityFeedService::Helpers.object_identifier_for(@user)
       event = build(:activity_feed_event)
       event.affected_objects = [@user]
@@ -21,17 +21,17 @@ class ActivityFeedEventTest < ActiveSupport::TestCase
     end
   end
 
-  context "instance methods" do
-    should "#name" do
-      @user.first_name = "test"
+  context 'instance methods' do
+    should '#name' do
+      @user.first_name = 'test'
       @activity_feed_event.followed = @user
       assert_equal @activity_feed_event.followed.name, @activity_feed_event.name
     end
 
-    should "#description" do
-      followed = create(:transactable, description: "followed")
-      event_source1 = create(:transactable, description: "evt_source1")
-      event_source2 = create(:user_status_update, text: "evt_source2")
+    should '#description' do
+      followed = create(:transactable, description: 'followed')
+      event_source1 = create(:transactable, description: 'evt_source1')
+      event_source2 = create(:user_status_update, text: 'evt_source2')
 
       @activity_feed_event.followed = followed
       assert_equal followed.description, @activity_feed_event.description
@@ -42,13 +42,12 @@ class ActivityFeedEventTest < ActiveSupport::TestCase
 
       @activity_feed_event.event_source = event_source2
       assert_equal "#{event_source2.text}".html_safe, @activity_feed_event.description
-
     end
 
-    should "#event=" do
-      assert_not_equal "my_custom_event", @activity_feed_event.event
+    should '#event=' do
+      assert_not_equal 'my_custom_event', @activity_feed_event.event
       @activity_feed_event.event = :my_custom_event
-      assert_equal "my_custom_event", @activity_feed_event.event
+      assert_equal 'my_custom_event', @activity_feed_event.event
     end
   end
 end

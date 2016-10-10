@@ -8,17 +8,15 @@ module Api
       params[:user] ||= {}
       params[:role] ||= 'buyer' if current_instance.split_registration?
       @role = %w(seller buyer).detect { |r| r == params[:role] }
-      @role ||= "default"
+      @role ||= 'default'
       params[:user][:force_profile] = @role
       @user = User.new(user_params)
       @user.custom_validation = true
 
       if @user.save
-        event_tracker.signed_up(@user, {
-          referrer_id: platform_context.platform_context_detail.id,
-          referrer_type: platform_context.platform_context_detail.class.to_s,
-          signed_up_via: 'api'
-        })
+        event_tracker.signed_up(@user,           referrer_id: platform_context.platform_context_detail.id,
+                                                 referrer_type: platform_context.platform_context_detail.class.to_s,
+                                                 signed_up_via: 'api')
         ReengagementNoBookingsJob.perform_later(72.hours.from_now, @user.id)
         case @role
         when 'default'
@@ -52,4 +50,3 @@ module Api
     end
   end
 end
-

@@ -1,9 +1,9 @@
 require 'rack-mini-profiler'
 
 DesksnearMe::Application.configure do
-  #true to turn on caching
+  # true to turn on caching
   config.action_controller.perform_caching = false
-  #comment to turn on caching
+  # comment to turn on caching
   config.cache_store = :null_store
 
   config.cache_classes = false
@@ -14,7 +14,7 @@ DesksnearMe::Application.configure do
   config.reload_classes_only_on_change = true
 
   config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  config.action_mailer.default_url_options = { host: 'localhost:3000' }
 
   Rails.application.routes.default_url_options[:host] = 'localhost:3000'
   Rails.application.routes.default_url_options[:protocol] = 'http'
@@ -45,7 +45,7 @@ DesksnearMe::Application.configure do
   config.run_jobs_in_background = false
   config.googl_api_key = 'AIzaSyBV7BhIuT6s2HbprOP4jfXSmpdBFmocSMg'
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = { :address => "localhost", :port => 1025 }
+  config.action_mailer.smtp_settings = { address: 'localhost', port: 1025 }
 
   config.middleware.swap Rails::Rack::Logger, NullLogger, silence: %w(mini-profiler better_errors)
   config.middleware.insert_after(ActionDispatch::Static, SilentMissedImages)

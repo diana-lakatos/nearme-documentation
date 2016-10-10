@@ -1,5 +1,4 @@
 class Transactable::ActionTypeDrop < BaseDrop
-
   attr_reader :action_type
 
   delegate :id, :pricings, to: :action_type
@@ -11,5 +10,4 @@ class Transactable::ActionTypeDrop < BaseDrop
   def first_pricing
     pricings.first
   end
-
 end

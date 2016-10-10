@@ -36,10 +36,10 @@ class TransactableJsonSerializer
     object.action_type.day_booking?
   end
   attribute :action_weekly_booking do
-    object.action_type.pricings_for_types(['5_day','7_day']).any?
+    object.action_type.pricings_for_types(%w(5_day 7_day)).any?
   end
   attribute :action_monthly_booking do
-    object.action_type.pricings_for_types(['20_day','30_day']).any?
+    object.action_type.pricings_for_types(%w(20_day 30_day)).any?
   end
   attribute :action_subscription_booking do
     object.action_type.subscription_day_booking? || object.action_type.subscription_month_booking?

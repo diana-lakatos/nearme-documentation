@@ -19,11 +19,11 @@ class Transactable::Pricing < ActiveRecord::Base
     if: :monetize_price_cents?
   }
   monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true,
-    subunit_numericality: {
-      greater_than_or_equal_to: :min_price,
-      less_than: :max_price,
-      if: :has_exclusive_price
-    }
+                                   subunit_numericality: {
+                                     greater_than_or_equal_to: :min_price,
+                                     less_than: :max_price,
+                                     if: :has_exclusive_price
+                                   }
 
   delegate :allow_book_it_out_discount, :allow_exclusive_price, :allow_nil_price_cents, to: :transactable_type_pricing, allow_nil: true
   delegate :transactable, to: :action, allow_nil: true
@@ -36,12 +36,12 @@ class Transactable::Pricing < ActiveRecord::Base
   validates :book_it_out_discount, numericality: { in: 1..100 }, if: :has_book_it_out_discount
   validates_numericality_of :book_it_out_minimum_qty, greater_than: 0, if: :has_book_it_out_discount
   validates_numericality_of :book_it_out_minimum_qty, less_than: :transactable_quantity,
-    message: I18n.t('activerecord.errors.models.transactable.attributes.book_it_out_minimum_qty'), if: :has_book_it_out_discount
+                                                      message: I18n.t('activerecord.errors.models.transactable.attributes.book_it_out_minimum_qty'), if: :has_book_it_out_discount
   validate :check_pricing_uniqueness, :check_pricing_definition, unless: :transactable_type_pricing
 
   scope :by_price, -> { order('price_cents ASC') }
-  scope :order_by_unit_and_price, -> {
-    order("COALESCE(is_free_booking, false) DESC, price_cents ASC")
+  scope :order_by_unit_and_price, lambda {
+    order('COALESCE(is_free_booking, false) DESC, price_cents ASC')
   }
   scope :by_number_and_unit, -> (number, unit) { where(number_of_units: number, unit: unit) }
   scope :by_unit, -> (by_unit) { where(unit: by_unit) if by_unit.present? }
@@ -73,7 +73,7 @@ class Transactable::Pricing < ActiveRecord::Base
   end
 
   def units_and_price_cents
-    [adjusted_number_of_units, { price: price.cents, id: id } ]
+    [adjusted_number_of_units, { price: price.cents, id: id }]
   end
 
   def price_information
@@ -85,7 +85,7 @@ class Transactable::Pricing < ActiveRecord::Base
   end
 
   Transactable::ActionType::AVAILABILE_UNITS.each do |u|
-    define_method("#{u}_booking?"){ unit =~ /^#{u}/ }
+    define_method("#{u}_booking?") { unit =~ /^#{u}/ }
   end
 
   def overnight_booking?
@@ -97,11 +97,11 @@ class Transactable::Pricing < ActiveRecord::Base
   end
 
   def book_it_out_available?
-    (transactable_type_pricing.nil? || transactable_type_pricing.allow_book_it_out_discount?) &&  has_book_it_out_discount?
+    (transactable_type_pricing.nil? || transactable_type_pricing.allow_book_it_out_discount?) && has_book_it_out_discount?
   end
 
   def exclusive_price_available?
-    (transactable_type_pricing.nil? || transactable_type_pricing.allow_exclusive_price?) &&  has_exclusive_price?
+    (transactable_type_pricing.nil? || transactable_type_pricing.allow_exclusive_price?) && has_exclusive_price?
   end
 
   def only_exclusive_price_available?
@@ -173,22 +173,22 @@ class Transactable::Pricing < ActiveRecord::Base
   private
 
   def check_pricing_uniqueness
-    if action.pricings.select{ |p| p.units_to_s == units_to_s }.many?
+    if action.pricings.select { |p| p.units_to_s == units_to_s }.many?
       errors.add(:number_of_units, I18n.t('errors.messages.price_type_exists'))
     end
   end
 
   def check_pricing_definition
-    if action && action.transactable_type_action_type.pricings.find{ |p| p.units_to_s == units_to_s }
+    if action && action.transactable_type_action_type.pricings.find { |p| p.units_to_s == units_to_s }
       errors.add(:number_of_units, I18n.t('errors.messages.price_defined'))
     end
   end
 
   def default_order_class
     case action.type
-    when "Transactable::SubscriptionBooking"
+    when 'Transactable::SubscriptionBooking'
       RecurringBooking
-    when "Transactable::PurchaseAction"
+    when 'Transactable::PurchaseAction'
       Purchase
     else
       if action.transactable_type_action_type.transactable_type.try(:skip_payment_authorization?)
@@ -198,6 +198,4 @@ class Transactable::Pricing < ActiveRecord::Base
       end
     end
   end
-
 end
-

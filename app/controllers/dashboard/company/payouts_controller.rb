@@ -1,5 +1,4 @@
 class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
-
   before_action :get_payment_gateway_data
   before_action :build_merchant_account
 
@@ -25,9 +24,9 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
 
   def get_payment_gateway_data
     @payment_gateways = if current_instance.skip_company?
-       current_user.payout_payment_gateways
-    else
-      @company.payout_payment_gateways
+                          current_user.payout_payment_gateways
+                        else
+                          @company.payout_payment_gateways
     end
   end
 
@@ -55,4 +54,3 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
     end
   end
 end
-

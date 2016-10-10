@@ -1,12 +1,11 @@
 require 'test_helper'
 
 class ReservationChargeTrackerJobTest < ActiveSupport::TestCase
-
   setup do
     stub_active_merchant_interaction
     @transactable = FactoryGirl.create(:transactable, :with_time_based_booking)
     @transactable.action_type.pricing_for('1_day').price = 89.39
-    @reservation = FactoryGirl.create(:unconfirmed_reservation, :transactable => @transactable)
+    @reservation = FactoryGirl.create(:unconfirmed_reservation, transactable: @transactable)
     @reservation.charge_and_confirm!
   end
 
@@ -27,6 +26,5 @@ class ReservationChargeTrackerJobTest < ActiveSupport::TestCase
       Rails.application.config.event_tracker.any_instance.expects(:track_charge).never
       ReservationChargeTrackerJob.perform(@reservation.id)
     end
-
   end
 end

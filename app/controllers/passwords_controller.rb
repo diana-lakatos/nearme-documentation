@@ -1,7 +1,7 @@
 class PasswordsController < Devise::PasswordsController
   before_filter :set_return_to, only: [:new, :create]
-  skip_before_filter :require_no_authentication, only: [:new], if: lambda { |c| request.xhr? }
-  before_filter :redirect_if_logged_in, only: [:new], if: lambda { |c| request.xhr? }
+  skip_before_filter :require_no_authentication, only: [:new], if: ->(_c) { request.xhr? }
+  before_filter :redirect_if_logged_in, only: [:new], if: ->(_c) { request.xhr? }
   after_filter :render_or_redirect_after_create, only: [:create]
 
   private
@@ -18,9 +18,7 @@ class PasswordsController < Devise::PasswordsController
   end
 
   def render_or_redirect_after_create
-    if request.xhr? && successfully_sent?(resource)
-      render_redirect_url_as_json
-    end
+    render_redirect_url_as_json if request.xhr? && successfully_sent?(resource)
   end
 
   def set_return_to

@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Manage::Users::UserBansControllerTest < ActionController::TestCase
-
   setup do
     @instance = FactoryGirl.create(:instance)
     PlatformContext.any_instance.stubs(:instance).returns(@instance)
@@ -15,10 +14,9 @@ class InstanceAdmin::Manage::Users::UserBansControllerTest < ActionController::T
   end
 
   context 'create' do
-
     should 'ban user' do
       assert_difference 'UserBan.count', 1 do
-        post :create, { user_id: @user_to_be_banned.id }
+        post :create, user_id: @user_to_be_banned.id
       end
       @user_ban = assigns(:user_ban)
       assert_equal @user_to_be_banned.id, @user_ban.user_id
@@ -30,10 +28,9 @@ class InstanceAdmin::Manage::Users::UserBansControllerTest < ActionController::T
   end
 
   context 'delete' do
-
     should 'unban user' do
       assert_no_difference 'UserBan.count' do
-        delete :destroy, { id: @existing_user_ban.id, user_id: @existing_user_ban.user.id }
+        delete :destroy, id: @existing_user_ban.id, user_id: @existing_user_ban.user.id
       end
       assert_equal @existing_user_ban.user.reload.banned_at, nil
     end

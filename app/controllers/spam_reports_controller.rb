@@ -1,5 +1,4 @@
 class SpamReportsController < ApplicationController
-
   before_filter :find_spamable
   before_action :authenticate_user!
   before_action :partial_name
@@ -28,8 +27,8 @@ class SpamReportsController < ApplicationController
 
   def find_spamable
     params.each do |name, value|
-      if name =~ /(.+)_id$/ && ["comment_id", "activity_feed_event_id"].include?(name)
-        @spamable = $1.classify.constantize.find(value)
+      if name =~ /(.+)_id$/ && %w(comment_id activity_feed_event_id).include?(name)
+        @spamable = Regexp.last_match(1).classify.constantize.find(value)
       end
     end
     nil

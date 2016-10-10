@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class PhoneCallsControllerTest < ActionController::TestCase
-
   setup do
     @provider = Struct.new(:call, :hang_up).new
     @caller = Struct.new(:sid).new
@@ -19,7 +18,7 @@ class PhoneCallsControllerTest < ActionController::TestCase
     sign_in @user
   end
 
-  test "#create makes a call" do
+  test '#create makes a call' do
     @caller.stubs(:sid).returns('123')
 
     @provider.expects(:call).with(
@@ -39,12 +38,10 @@ class PhoneCallsControllerTest < ActionController::TestCase
     phone_call = Struct.new(:create)
     @current_user.stubs(:outgoing_phone_calls).returns(phone_call)
 
-    phone_call.expects(:create).with({
-      from: @current_user.communication.phone_number,
-      receiver_id: @user.id,
-      to: @user.communication.phone_number,
-      phone_call_key: @caller.sid
-    })
+    phone_call.expects(:create).with(from: @current_user.communication.phone_number,
+                                     receiver_id: @user.id,
+                                     to: @user.communication.phone_number,
+                                     phone_call_key: @caller.sid)
 
     xhr :post, :create, user_id: @current_user.id
   end
@@ -54,5 +51,4 @@ class PhoneCallsControllerTest < ActionController::TestCase
 
     xhr :delete, :destroy, user_id: @current_user.id, id: '123'
   end
-
 end

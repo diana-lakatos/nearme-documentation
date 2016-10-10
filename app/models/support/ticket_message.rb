@@ -11,7 +11,7 @@ class Support::TicketMessage < ActiveRecord::Base
   belongs_to :ticket, class_name: 'Support::Ticket', touch: true
   belongs_to :instance
 
-  has_many :attachments, -> {order 'created_at DESC'}, class_name: 'Support::TicketMessageAttachment', dependent: :destroy
+  has_many :attachments, -> { order 'created_at DESC' }, class_name: 'Support::TicketMessageAttachment', dependent: :destroy
 
   validates :full_name, presence: true
   validates :email, presence: true
@@ -26,17 +26,15 @@ class Support::TicketMessage < ActiveRecord::Base
   accepts_nested_attributes_for :attachments, allow_destroy: true
 
   def populate_data
-    origin = self.ticket
+    origin = ticket
     if origin && origin.first_message
-      attrs = origin.first_message.attributes.slice("full_name", "email", "subject")
-      self.assign_attributes(attrs)
+      attrs = origin.first_message.attributes.slice('full_name', 'email', 'subject')
+      assign_attributes(attrs)
     end
   end
 
   def ticket_is_open
-    if self.ticket
-      errors.add(:state, 'Bad state') unless self.ticket.open?
-    end
+    errors.add(:state, 'Bad state') unless ticket.open? if ticket
   end
 
   def can_reply?(email, ticket_id)
@@ -68,15 +66,11 @@ class Support::TicketMessage < ActiveRecord::Base
   end
 
   def user_message?
-    if ticket.messages.count > 0
-      self.email == ticket.first_message.email
-    end
+    email == ticket.first_message.email if ticket.messages.count > 0
   end
 
   def assign_ticket
-    if not ticket.assigned? and not user_message?
-      self.ticket.assign_to!(self.user)
-    end
+    ticket.assign_to!(user) if !ticket.assigned? && !user_message?
   end
 
   def full_name

@@ -2,19 +2,16 @@ require 'test_helper'
 require 'helpers/gmaps_fake'
 
 class DataImporter::XmlFileTest < ActiveSupport::TestCase
-
   setup do
     GmapsFake.stub_requests
-    stub_image_url("http://www.example.com/image.jpg")
-    stub_image_url("http://www.example.com/photo.jpg")
+    stub_image_url('http://www.example.com/image.jpg')
+    stub_image_url('http://www.example.com/photo.jpg')
     @instance = FactoryGirl.create(:instance)
     PlatformContext.current = PlatformContext.new(@instance)
     @location_type = FactoryGirl.create(:location_type, name: 'My Type')
   end
 
-
   context 'with extra listing' do
-
     setup do
       @xml_file = FactoryGirl.create(:xml_template_file)
       @xml_file.parse
@@ -23,7 +20,6 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
     end
 
     should 'remove listings which do not exist in csv if sync is on for the company' do
-
       assert_difference 'Transactable.count', -1 do
         @xml_file = FactoryGirl.create(:xml_template_file_sync_mode)
         @xml_file.parse
@@ -50,6 +46,4 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
     assert_not_nil Transactable.find_by_external_id('1')
     assert_nil Transactable.find_by_external_id('2')
   end
-
 end
-

@@ -1,5 +1,4 @@
 class WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate < WorkflowStep::CommenterWorkflow::BaseStep
-
   def lister
     @commentable.followed
   end
@@ -11,5 +10,4 @@ class WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate < WorkflowStep:
       commented_user: lister
     }
   end
-
 end

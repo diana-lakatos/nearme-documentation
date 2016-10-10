@@ -5,29 +5,23 @@ module InstanceType::Searcher::GeolocationSearcher
   def fetcher
     @fetcher ||=
       begin
-        @search_params = @params.merge({
-          date_range: search.available_dates,
-          transactable_type_id: @transactable_type.id,
-          custom_attributes: search.lg_custom_attributes,
-          category_ids: search.category_ids,
-          location_types_ids: search.location_types_ids,
-          listing_pricing: search.lgpricing.blank? ? [] : search.lgpricing_filters,
-          sort: search.sort,
-          query: search.keyword,
-          loc: search.loc,
-        })
+        @search_params = @params.merge(date_range: search.available_dates,
+                                       transactable_type_id: @transactable_type.id,
+                                       custom_attributes: search.lg_custom_attributes,
+                                       category_ids: search.category_ids,
+                                       location_types_ids: search.location_types_ids,
+                                       listing_pricing: search.lgpricing.blank? ? [] : search.lgpricing_filters,
+                                       sort: search.sort,
+                                       query: search.keyword,
+                                       loc: search.loc)
         radius = @transactable_type.search_radius.to_i
         radius = search.radius.to_i if radius.zero?
 
         if located || adjust_to_map
-          @search_params.merge!({
-            midpoint: search.midpoint,
-            radius: radius,
-          })
+          @search_params.merge!(midpoint: search.midpoint,
+                                radius: radius)
           if search.country.present? && search.city.blank? || global_map
-            @search_params.merge!({
-              bounding_box: search.bounding_box
-            })
+            @search_params.merge!(bounding_box: search.bounding_box)
           end
         end
 
@@ -50,5 +44,4 @@ module InstanceType::Searcher::GeolocationSearcher
     @filterable_location_types = LocationType.all
     @filterable_custom_attributes = @transactable_type.custom_attributes.searchable
   end
-
 end

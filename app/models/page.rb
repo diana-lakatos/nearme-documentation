@@ -17,7 +17,7 @@ class Page < ActiveRecord::Base
   validates_uniqueness_of :slug, scope: :theme_id
   validates_inclusion_of :layout_name, in: VALID_LAYOUTS, allow_blank: true
 
-  # FIXME disabled Sitemap updates. Needs to be optimized.
+  # FIXME: disabled Sitemap updates. Needs to be optimized.
   # include SitemapService::Callbacks
 
   mount_uploader :hero_image, HeroImageUploader
@@ -28,7 +28,7 @@ class Page < ActiveRecord::Base
 
   default_scope -> { rank(:position) }
 
-  before_save :convert_to_html, :if => lambda { |page| page.content.present? && (page.content_changed? || page.html_content.blank?) }
+  before_save :convert_to_html, if: ->(page) { page.content.present? && (page.content_changed? || page.html_content.blank?) }
 
   has_many :data_sources, as: :data_sourcable
   has_many :page_data_source_contents, dependent: :destroy
@@ -43,7 +43,7 @@ class Page < ActiveRecord::Base
 
   def redirect_url_in_known_domain?
     is_http_https = (redirect_url.downcase =~ /^http|^https/)
-    (is_http_https && Domain.pluck(:name).any?{|d| self.redirect_url.include?(d)}) || !is_http_https
+    (is_http_https && Domain.pluck(:name).any? { |d| redirect_url.include?(d) }) || !is_http_https
   end
 
   def self.possible_slugs(slug, format)
@@ -52,16 +52,16 @@ class Page < ActiveRecord::Base
 
   def self.redirect_statuses
     {
-      "301 - Moved Permanently" => 301,
-      "302 - Found" => 302,
-      "307 - Temporary Redirect" => 307
+      '301 - Moved Permanently' => 301,
+      '302 - Found' => 302,
+      '307 - Temporary Redirect' => 307
     }
   end
 
   private
 
   def convert_to_html
-    self.html_content = self.content.include?('<div') ? self.content : RDiscount.new(self.content).to_html
+    self.html_content = content.include?('<div') ? content : RDiscount.new(content).to_html
   end
 
   def should_generate_new_friendly_id?
@@ -73,7 +73,7 @@ class Page < ActiveRecord::Base
       :slug,
       :path,
       [:path, self.class.last.try(:id).to_i + 1],
-      [:path, rand(1000000)]
+      [:path, rand(1_000_000)]
     ]
   end
 end

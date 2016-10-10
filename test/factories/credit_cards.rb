@@ -2,15 +2,15 @@ FactoryGirl.define do
   factory :credit_card do
     association :instance_client
     association :payment_gateway, factory: :stripe_payment_gateway
-    response { OpenStruct.new({ token: 'token', success?: true, params: { "object": 'card', "id": "card_1234" } }).to_yaml }
+    response { OpenStruct.new(token: 'token', success?: true, params: { "object": 'card', "id": 'card_1234' }).to_yaml }
 
     factory :credit_card_attributes do
-      first_name "Rowan"
-      last_name "Atkinson"
-      number "4111111111111111"
+      first_name 'Rowan'
+      last_name 'Atkinson'
+      number '4111111111111111'
       month 1
       year  { Date.today.year + 2 }
-      verification_value "111"
+      verification_value '111'
 
       factory :invalid_credit_card_attributes do
         response nil
@@ -19,4 +19,3 @@ FactoryGirl.define do
     end
   end
 end
-

@@ -7,10 +7,9 @@ class V1::SocialController < V1::BaseController
 
   private
 
-  def social_network_hash(user)
+  def social_network_hash(_user)
     { facebook: ::Authentication.provider('facebook').new(user: current_user).meta_for_user,
       twitter: ::Authentication.provider('facebook').new(user: current_user).meta_for_user,
       linkedin: ::Authentication.provider('facebook').new(user: current_user).meta_for_user }
   end
-
 end

@@ -8,7 +8,4 @@ module AvailabilityRule::TargetHelper
   def availability_full_week
     availability.full_week(monday_first = true)
   end
-
 end
-
-

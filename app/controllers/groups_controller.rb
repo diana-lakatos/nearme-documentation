@@ -34,5 +34,4 @@ class GroupsController < ApplicationController
       per_page: ActivityFeedService::Helpers::FOLLOWED_PER_PAGE
     }
   end
-
 end

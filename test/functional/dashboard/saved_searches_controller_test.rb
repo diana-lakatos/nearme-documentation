@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Dashboard::SavedSearchesControllerTest < ActionController::TestCase
-
   context '#search' do
     setup do
       @saved_search = create(:saved_search, query: '?loc=Auckland&query=&transactable_type_id=1&buyable=false')

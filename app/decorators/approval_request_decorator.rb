@@ -1,5 +1,4 @@
 class ApprovalRequestDecorator < Draper::Decorator
-
   include Rails.application.routes.url_helpers
   include Draper::LazyHelpers
 
@@ -21,10 +20,10 @@ class ApprovalRequestDecorator < Draper::Decorator
     end
 
     if creator.present?
-      link_to "Login As Creator", login_as_instance_admin_manage_user_path(creator), :method => :post,
-        data: { confirm: 'This will log you out and re-log you in as this user' }
+      link_to 'Login As Creator', login_as_instance_admin_manage_user_path(creator), method: :post,
+                                                                                     data: { confirm: 'This will log you out and re-log you in as this user' }
     else
-      ""
+      ''
     end
   end
 
@@ -36,15 +35,11 @@ class ApprovalRequestDecorator < Draper::Decorator
     when Transactable
       link = owner.decorate.show_path
     when Company
-      if owner.creator.present?
-        link = user_path(owner.creator)
-      end
+      link = user_path(owner.creator) if owner.creator.present?
     when User
       link = user_path(owner)
     end
 
     link_to name, link
   end
-
-
 end

@@ -13,7 +13,7 @@ class CustomTheme < ActiveRecord::Base
 
   validates_presence_of :name
 
-  before_create { self.overwrite_existing = "1" }
+  before_create { self.overwrite_existing = '1' }
 
   after_save :mark_as_in_use, if: -> (ct) { ct.in_use_changed? && ct.in_use? }
   after_save :mark_as_in_use_for_instance_admins, if: -> (ct) { ct.in_use_for_instance_admins_changed? && ct.in_use_for_instance_admins? }
@@ -32,14 +32,11 @@ class CustomTheme < ActiveRecord::Base
     instance.custom_themes.where('id != ?', id).update_all(in_use_for_instance_admins: false)
   end
 
-
   def copy_default_template_files
     Utils::CustomTemplateLoader.new(self, File.join(Rails.root, 'app', 'default_templates', copy_from_template)).load!
   end
 
   def recalculate_instance_cache_key
-    self.instance.recalculate_cache_key!
+    instance.recalculate_cache_key!
   end
-
 end
-

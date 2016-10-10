@@ -7,7 +7,7 @@ class OrderDecorator < Draper::Decorator
   delegate :current_page, :per_page, :offset, :total_entries, :total_pages
 
   def purchase?
-    self.object.class == Purchase
+    object.class == Purchase
   end
 
   def shipping_address_required?
@@ -29,11 +29,11 @@ class OrderDecorator < Draper::Decorator
   #===============================
 
   def payment_decorator
-    (payment || self.build_payment(self.shared_payment_attributes)).decorate
+    (payment || build_payment(shared_payment_attributes)).decorate
   end
 
   def payment_subscription_decorator
-    (payment_subscription || self.build_payment_subscription(self.shared_payment_subscription_attributes)).decorate
+    (payment_subscription || build_payment_subscription(shared_payment_subscription_attributes)).decorate
   end
 
   def my_order_status_info
@@ -54,15 +54,13 @@ class OrderDecorator < Draper::Decorator
               'N/A'
             end
 
-    if object.shipped?
-      state = 'Shipped'
-    end
+    state = 'Shipped' if object.shipped?
 
     state
   end
 
   def estimated_delivery
-    #TODO  fix with shipping
+    # TODO: fix with shipping
     return 'Soon'
     result = 'N/A'
 
@@ -92,12 +90,12 @@ class OrderDecorator < Draper::Decorator
   def payment_documents
     if object.payment_documents.blank?
       transactables.each do |transactable|
-        transactable.document_requirements.select(&:should_show_file?).each_with_index do |doc, index|
+        transactable.document_requirements.select(&:should_show_file?).each_with_index do |doc, _index|
           object.payment_documents.build(
             user: @user,
             attachable: self,
             payment_document_info_attributes: {
-              attachment_id: self.id,
+              attachment_id: id,
               document_requirement_id: doc.id
             }
           )
@@ -127,7 +125,6 @@ class OrderDecorator < Draper::Decorator
   end
 
   def save_billing_address
-
   end
 
   def display_total
@@ -145,7 +142,7 @@ class OrderDecorator < Draper::Decorator
     shipping_address = []
     shipping_address << "#{object.shipping_address.street1}, #{object.shipping_address.city}"
     shipping_address << "#{object.shipping_address.state.name}, #{object.shipping_address.country.try(:iso).presence || object.shipping_address.country.try(:name)}, #{object.shipping_address.zip}"
-    shipping_address.join("<br/>").html_safe
+    shipping_address.join('<br/>').html_safe
   end
 
   def reviewable?(current_user)
@@ -162,7 +159,7 @@ class OrderDecorator < Draper::Decorator
     end
   end
 
-  def fill_address_from_user(address, billing_address=true)
+  def fill_address_from_user(address, billing_address = true)
     address_info = billing_address ? user.billing_addresses.last : user.shipping_addresses.last
 
     address.attributes = address_info.dup.attributes if address_info
@@ -174,6 +171,5 @@ class OrderDecorator < Draper::Decorator
     end
 
     address
-
   end
 end

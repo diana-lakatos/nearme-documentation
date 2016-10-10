@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class WishListItemTest < ActiveSupport::TestCase
-
   setup do
     @user = FactoryGirl.create(:user)
     @wish_list = FactoryGirl.create(:default_wish_list, user: @user)

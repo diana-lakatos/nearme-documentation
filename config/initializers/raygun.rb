@@ -10,5 +10,5 @@ Raygun.setup do |config|
                     'UserBlog::NotFound', 'MarketplaceErrorLogger::Error', 'ActionController::UnknownFormat',
                     'OAuth::Unauthorized', 'ActionDispatch::ParamsParser::ParseError',
                     'RequestParametersValidator::InvalidParameterError'
-  ]
+                   ]
 end

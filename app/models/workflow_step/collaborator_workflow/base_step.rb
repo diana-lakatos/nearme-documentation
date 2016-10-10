@@ -1,5 +1,4 @@
 class WorkflowStep::CollaboratorWorkflow::BaseStep < WorkflowStep::BaseStep
-
   def self.belongs_to_transactable_type?
     true
   end
@@ -39,5 +38,4 @@ class WorkflowStep::CollaboratorWorkflow::BaseStep < WorkflowStep::BaseStep
   def should_be_processed?
     @transactable_collaborator.present? && transactable.present? && enquirer.present?
   end
-
 end

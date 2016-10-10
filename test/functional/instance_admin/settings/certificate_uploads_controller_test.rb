@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Settings::CertificateUploadsControllerTest < ActionController::TestCase
-
   setup do
     @user = FactoryGirl.create(:user)
     sign_in @user
@@ -9,8 +8,7 @@ class InstanceAdmin::Settings::CertificateUploadsControllerTest < ActionControll
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
   end
 
-  test "#get upload form" do
-
+  test '#get upload form' do
     get :new
     assert_response :success
   end

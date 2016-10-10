@@ -1,5 +1,4 @@
 class WorkflowStep::FollowerWorkflow::UserFollowedUser < WorkflowStep::FollowerWorkflow::BaseStep
-
   def lister
     @followed
   end

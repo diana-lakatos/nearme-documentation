@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class ApprovalRequestTemplateCreationTest < ActiveSupport::TestCase
-
   setup do
     @approval_request_templates = []
 
@@ -36,6 +35,4 @@ class ApprovalRequestTemplateCreationTest < ActiveSupport::TestCase
       assert_equal 4, ApprovalRequestTemplate::OWNER_TYPES.collect { |owner_type| all_form_fields.detect { |form_field| form_field[owner_type.to_s.underscore] == 'approval_requests' } }.compact.length
     end
   end
-
 end
-

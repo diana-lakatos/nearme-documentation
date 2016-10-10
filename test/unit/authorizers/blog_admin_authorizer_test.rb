@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class BlogAdminAuthorizerTest < ActiveSupport::TestCase
-
   setup do
     @user = FactoryGirl.create(:user)
     @authorizer = BlogAdminAuthorizer.new(@user)
@@ -12,7 +11,6 @@ class BlogAdminAuthorizerTest < ActiveSupport::TestCase
   end
 
   context 'authorized?' do
-
     should 'not authorize if user isnt instance_owner nor has blog permission' do
       refute @authorizer.authorized?
     end
@@ -35,5 +33,4 @@ class BlogAdminAuthorizerTest < ActiveSupport::TestCase
       assert @authorizer.authorized?
     end
   end
-
 end

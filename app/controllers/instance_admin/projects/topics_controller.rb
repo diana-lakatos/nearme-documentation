@@ -1,5 +1,4 @@
 class InstanceAdmin::Projects::TopicsController < InstanceAdmin::Projects::BaseController
-
   def index
     @topics = Topic.all
   end
@@ -48,6 +47,4 @@ class InstanceAdmin::Projects::TopicsController < InstanceAdmin::Projects::BaseC
   def topic_params
     params.require(:topic).permit(secured_params.topic)
   end
-
 end
-

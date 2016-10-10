@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class WorkflowStep::InvokerFactoryTest < ActiveSupport::TestCase
-
   should 'return email invoker for email type' do
     assert_equal WorkflowAlert::EmailInvoker, WorkflowAlert::InvokerFactory.get_invoker(stub(alert_type: 'email')).class
   end
@@ -19,6 +18,4 @@ class WorkflowStep::InvokerFactoryTest < ActiveSupport::TestCase
       WorkflowAlert::InvokerFactory.get_invoker(stub(alert_type: 'unknown'))
     end
   end
-
 end
-

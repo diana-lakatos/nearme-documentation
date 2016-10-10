@@ -40,19 +40,19 @@ class User::FriendFinderTest < ActiveSupport::TestCase
     context 'find new friends' do
       should 'add new friends once' do
         @friends = []
-        3.times {
+        3.times do
           friend = FactoryGirl.create(:user)
           friend.authentications << FactoryGirl.create(:authentication, provider: 'facebook')
           @me.add_friend(friend)
           @friends << friend
-        }
+        end
 
         @social_friends = []
-        3.times {
+        3.times do
           friend = FactoryGirl.create(:user)
           friend.authentications << FactoryGirl.create(:authentication, provider: 'facebook')
           @social_friends << friend
-        }
+        end
 
         friend_ids = (@friends + @social_friends).collect(&:authentications).flatten.collect(&:uid)
 
@@ -67,11 +67,10 @@ class User::FriendFinderTest < ActiveSupport::TestCase
             User::FriendFinder.new(@me, @auth).find_friends!
           end
         end
-
       end
 
       should 'catch and mark expired token' do
-        connection_stub = stub()
+        connection_stub = stub
         connection_stub.expects(:get_connections).raises(Koala::Facebook::AuthenticationError.new({}, ''))
         Authentication::FacebookProvider.any_instance.expects(:connection).returns(connection_stub)
         refute @auth.token_expired?

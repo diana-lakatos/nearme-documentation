@@ -10,16 +10,12 @@ class Transactable::PurchaseAction < Transactable::ActionType
   end
 
   def booking_module_options
-    super.merge({
-      fixed_price_cents: pricing.price_cents,
-    })
+    super.merge(fixed_price_cents: pricing.price_cents)
   end
 
- def validate_all_dates_available
+  def validate_all_dates_available
     if invalid_dates.any?
       order.errors.add(:base, I18n.t('reservations_review.errors.dates_not_available', dates: invalid_dates.map(&:as_formatted_string).join(', ')))
     end
-  end
-
-
+   end
 end

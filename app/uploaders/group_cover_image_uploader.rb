@@ -24,5 +24,4 @@ class GroupCoverImageUploader < BaseUploader
       img
     end
   end
-
 end

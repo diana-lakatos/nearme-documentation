@@ -1,5 +1,4 @@
 class ApprovalRequestAttachmentsController < ApplicationController
-
   before_action :check_for_xhr
 
   before_action :check_user_present, only: :create
@@ -32,13 +31,10 @@ class ApprovalRequestAttachmentsController < ApplicationController
   private
 
   def check_user_present
-    if current_user.blank?
-      render partial: 'approval_requests/failed_attachment'
-    end
+    render partial: 'approval_requests/failed_attachment' if current_user.blank?
   end
 
   def check_for_xhr
-    raise ActionController::MethodNotAllowed unless request.xhr?
+    fail ActionController::MethodNotAllowed unless request.xhr?
   end
-
 end

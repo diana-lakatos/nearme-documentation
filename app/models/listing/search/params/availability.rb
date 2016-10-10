@@ -1,13 +1,11 @@
 class Listing::Search::Params::Availability
-  attr :min, :start, :finish
+  attr_reader :min, :start, :finish
   def initialize(hash)
-    @min = from_quantity(hash.fetch(:quantity, { min: 1 }))
+    @min = from_quantity(hash.fetch(:quantity, min: 1))
     extract_dates(hash[:dates])
   end
 
-  def dates
-    @dates
-  end
+  attr_reader :dates
 
   def from_quantity(quantity)
     if quantity.respond_to? :fetch
@@ -23,8 +21,9 @@ class Listing::Search::Params::Availability
     if dates.is_a? Array
       @dates = @dates.map { |d| coerce_date(d) }.compact
     elsif dates.is_a?(Hash) && dates[:start].present? && dates[:end].present?
-      start, finish = coerce_date(dates[:start]), coerce_date(dates[:end])
-      @dates = (start..finish) if start.present? and finish.present?
+      start = coerce_date(dates[:start])
+      finish = coerce_date(dates[:end])
+      @dates = (start..finish) if start.present? && finish.present?
     end
 
     @dates ||= default_dates

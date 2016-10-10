@@ -1,5 +1,4 @@
 class Admin::Blog::ApplicationController < Blog::ApplicationController
-
   before_filter :authenticate_user!
   before_filter :authorize_user!
 
@@ -9,10 +8,9 @@ class Admin::Blog::ApplicationController < Blog::ApplicationController
 
   def authorize_user!
     @authorizer ||= BlogAdminAuthorizer.new(current_user)
-    if not @authorizer.authorized?
+    unless @authorizer.authorized?
       flash[:warning] = t('flash_messages.authorizations.not_authorized')
       redirect_to root_path
     end
   end
-
 end

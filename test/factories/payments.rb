@@ -1,6 +1,5 @@
 FactoryGirl.define do
   factory :payment do
-
     paid_at { Time.zone.now }
     total_amount_cents { 110_00 }
     subtotal_amount_cents { 100_00 }
@@ -49,7 +48,6 @@ FactoryGirl.define do
       end
     end
 
-
     factory :refunded_payment do
       state 'refunded'
       after(:build) do |payment, evaluator|
@@ -57,6 +55,5 @@ FactoryGirl.define do
         payment.refunds = [FactoryGirl.create(:refund, payment: payment)]
       end
     end
-
   end
 end

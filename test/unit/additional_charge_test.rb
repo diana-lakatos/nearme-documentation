@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class AdditionalChargeTest < ActiveSupport::TestCase
-
   should belong_to(:instance)
   should belong_to(:additional_charge_type)
   should belong_to(:target)

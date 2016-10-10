@@ -1,11 +1,10 @@
 require 'test_helper'
 
 class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
-
   MODELS_SCOPEABLE_ONLY_TO_INSTANCE = [:amenity_type, :instance_admin, :instance_billing_gateway,
                                        :instance_client, :location_type, :user_message]
-  MODELS_SCOPEABLE_TO_WHITE_LABEL_COMPANY_AND_PARTNER = [] #[:location, :transactable, :reservation, :payment, :payment_transfer]
-  MODELS_WITH_LISTINGS_PUBLIC = [] #[:location, :transactable, :reservation]
+  MODELS_SCOPEABLE_TO_WHITE_LABEL_COMPANY_AND_PARTNER = [] # [:location, :transactable, :reservation, :payment, :payment_transfer]
+  MODELS_WITH_LISTINGS_PUBLIC = [] # [:location, :transactable, :reservation]
 
   setup do
     PlatformContext.clear_current
@@ -13,16 +12,13 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
   end
 
   context 'default scope' do
-
     setup do
-      @instance = FactoryGirl.create(:instance, :name => 'current')
-      @other_instance = FactoryGirl.create(:instance, :name => 'other')
+      @instance = FactoryGirl.create(:instance, name: 'current')
+      @other_instance = FactoryGirl.create(:instance, name: 'other')
     end
 
     context 'all models' do
-
       context 'instance' do
-
         # if we enter desksnear.me instance we don't want to see records from boatsnear.you instance
         should 'scope models to current instance' do
           ([:company] + MODELS_SCOPEABLE_ONLY_TO_INSTANCE + MODELS_SCOPEABLE_TO_WHITE_LABEL_COMPANY_AND_PARTNER).each do |model_symbol|
@@ -53,9 +49,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
           end
         end
 
-
         context 'instance admin' do
-
           # if we for example enter desksnear.me/instance_admin we actually want to see records even from privatecompany.desksnear.me
           should 'not scope entities that belong to company with private listings if scope forced to instance' do
             (MODELS_WITH_LISTINGS_PUBLIC).each do |model_symbol|
@@ -100,11 +94,9 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
             end
           end
         end
-
       end
 
       context 'white label company' do
-
         setup do
           @company_instance = FactoryGirl.create(:instance)
           @current_company = FactoryGirl.create(:white_label_company)
@@ -278,13 +270,10 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
           end
         end
       end
-
     end
 
     context 'specific models' do
-
       context 'instance_admin_role' do
-
         # there are 'global' roles that should be accessed via any instance
         should 'scope instance admin role to current instance or nil' do
           FactoryGirl.create(:instance_admin_role_default)
@@ -300,6 +289,5 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
         end
       end
     end
-
   end
 end

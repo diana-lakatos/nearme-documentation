@@ -1,5 +1,4 @@
 class Webhooks::StripeConnectsController < Webhooks::BaseWebhookController
-
   def webhook
     if request.post?
       begin
@@ -26,7 +25,7 @@ class Webhooks::StripeConnectsController < Webhooks::BaseWebhookController
             transfer_state = event.data.object.status
             if transfer_state == 'paid'
               transfer.payout_attempts.last.payout_successful(event)
-            elsif ['canceled', 'failed'].include?(transfer_state)
+            elsif %w(canceled failed).include?(transfer_state)
               transfer.payout_attempts.last.payout_failed(event)
             end
           end
@@ -48,6 +47,4 @@ class Webhooks::StripeConnectsController < Webhooks::BaseWebhookController
   def payment_gateway_class
     PaymentGateway::StripeConnectPaymentGateway
   end
-
 end
-

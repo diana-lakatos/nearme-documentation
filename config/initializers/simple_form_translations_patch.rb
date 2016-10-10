@@ -4,15 +4,14 @@
 module SimpleForm
   module Inputs
     class Base
-
-      def translate_from_namespace(namespace, default='')
+      def translate_from_namespace(namespace, default = '')
         model_names = lookup_model_names.dup
         lookups     = []
         if translation_namespace = @builder.object.try(:translation_namespace)
           lookups << :"#{translation_namespace}.#{namespace}.#{reflection_or_attribute_name}"
         end
-        while !model_names.empty?
-          joined_model_names = model_names.join(".")
+        until model_names.empty?
+          joined_model_names = model_names.join('.')
           model_names.shift
 
           lookups << :"simple_form.#{namespace}.#{joined_model_names}.#{lookup_action}.#{reflection_or_attribute_name}"
@@ -23,7 +22,6 @@ module SimpleForm
         lookups << default
         I18n.t(lookups.shift, default: lookups).presence
       end
-
     end
   end
 end

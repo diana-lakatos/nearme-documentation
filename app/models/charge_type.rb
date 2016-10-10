@@ -1,9 +1,9 @@
 class ChargeType < ActiveRecord::Base
   attr_accessor :dummy
 
-  STATUSES = ['mandatory', 'optional']
-  COMMISSION_TYPES = ['mpo', 'host']
-  CHARGE_EVENT = {order_confirm: I18n.t("charge_type.charge_at.confirm"),  }
+  STATUSES = %w(mandatory optional)
+  COMMISSION_TYPES = %w(mpo host)
+  CHARGE_EVENT = { order_confirm: I18n.t('charge_type.charge_at.confirm')  }
 
   include Modelable
 
@@ -12,15 +12,15 @@ class ChargeType < ActiveRecord::Base
   belongs_to :charge_type_target, polymorphic: true, touch: true
 
   validates :name, :status, :commission_receiver, presence: true
-  validates :amount, presence: true, numericality: { less_than: 100000 }, if: Proc.new {|a| a.percent.to_i.zero? }
-  validates :amount, absence: true, if: Proc.new {|a| !a.percent.to_i.zero? }
-  validates :percent, presence: true, numericality: { less_than: 100000 }, if: Proc.new {|a| a.amount.to_i.zero? && !a.percent.to_i.zero?}
+  validates :amount, presence: true, numericality: { less_than: 100_000 }, if: proc { |a| a.percent.to_i.zero? }
+  validates :amount, absence: true, if: proc { |a| !a.percent.to_i.zero? }
+  validates :percent, presence: true, numericality: { less_than: 100_000 }, if: proc { |a| a.amount.to_i.zero? && !a.percent.to_i.zero? }
   validates :status, inclusion: { in: STATUSES }
   validates :commission_receiver, inclusion: { in: COMMISSION_TYPES }
   validate :charge_type_target_presence
 
-  scope :admin_charges, -> {
-    where(charge_type_target_type: ['TransactableType', 'Instance'])
+  scope :admin_charges, lambda {
+    where(charge_type_target_type: %w(TransactableType Instance))
   }
   scope :mandatory_charges, -> { where(status: 'mandatory') }
   scope :optional_charges, -> { where(status: 'optional') }
@@ -42,7 +42,7 @@ class ChargeType < ActiveRecord::Base
   private
 
   def charge_type_target_presence
-    #errors.add(:charge_type_target) if charge_type_target_type.blank?
+    # errors.add(:charge_type_target) if charge_type_target_type.blank?
   end
 
   def clear_transactable_cache

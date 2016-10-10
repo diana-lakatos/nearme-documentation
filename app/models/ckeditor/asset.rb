@@ -8,7 +8,7 @@ class Ckeditor::Asset < ActiveRecord::Base
   ACCESS_LEVELS = %w(all users listers enquirers purchasers collaborators).freeze
   GLOBAL_ASSET_ACCESS_LEVELS = %w(listers enquirers).freeze
 
-  delegate :url, :current_path, :content_type, :to => :data
+  delegate :url, :current_path, :content_type, to: :data
   validates_presence_of :data
 
   belongs_to :instance

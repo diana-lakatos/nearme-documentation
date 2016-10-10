@@ -12,6 +12,4 @@ class V3::AddressJsonSerializer
   attribute :postcode
   attribute :latitude
   attribute :longitude
-
 end
-

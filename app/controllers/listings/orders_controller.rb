@@ -16,7 +16,7 @@ class Listings::OrdersController < ApplicationController
     end
   end
 
-   # Store the reservation request in the session so that it can be restored when returning to the listings controller.
+  # Store the reservation request in the session so that it can be restored when returning to the listings controller.
   def store_order
     session[:stored_order_transactable_id] = @transactable.id
     session[:stored_order_trigger] ||= {}
@@ -27,9 +27,9 @@ class Listings::OrdersController < ApplicationController
     #
     # Returns a Hash of listing id's to hash of date & quantity values.
     #  { '123' => { 'date' => '2012-08-10', 'quantity => '1' }, ... }
-    dates = @transactable.event_booking? ? order_params[:dates] : order_params[:dates].try(:split,',')
+    dates = @transactable.event_booking? ? order_params[:dates] : order_params[:dates].try(:split, ',')
     session[:stored_order_bookings] = {
-      @transactable.id => order_params.merge({ dates: dates })
+      @transactable.id => order_params.merge(dates: dates)
     }
 
     head 200 if params[:action] == 'store_order'
@@ -69,4 +69,3 @@ class Listings::OrdersController < ApplicationController
     params.require(:order).permit(secured_params.order(@transactable.transactable_type.reservation_type))
   end
 end
-

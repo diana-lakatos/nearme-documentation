@@ -1,6 +1,6 @@
 require 'test_helper'
 require 'helpers/search_params_test_helper'
-class Listing::Search::ParamsTest <  ActiveSupport::TestCase
+class Listing::Search::ParamsTest < ActiveSupport::TestCase
   include SearchParamsTestHelper
 
   context '#radius' do
@@ -29,19 +29,16 @@ class Listing::Search::ParamsTest <  ActiveSupport::TestCase
   end
 
   context '#midpoint' do
-
     context 'with params' do
-
       should 'provide a midpoint by :location params' do
-        params = build_params({location: {lat: 123, lon: 234}})
+        params = build_params(location: { lat: 123, lon: 234 })
         assert_equal([123, 234], params.midpoint)
       end
 
       should 'provide a midpoint by :lat and :lng params' do
-        params = build_params({lat: 123, lng: 234})
+        params = build_params(lat: 123, lng: 234)
         assert_equal([123, 234], params.midpoint)
       end
-
     end
 
     context 'with a location' do

@@ -1,11 +1,10 @@
 class Admin::InstanceReportsController < Admin::BaseController
-
   def show
   end
 
   def download_urls
     csv = CSV.generate do |csv|
-      csv << ['Instance', 'URL']
+      csv << %w(Instance URL)
 
       Instance.order('id ASC').each do |instance|
         domains = instance.domains
@@ -33,9 +32,9 @@ class Admin::InstanceReportsController < Admin::BaseController
         chosen_domain = domains.first
         chosen_domain_url = chosen_domain.name
         if chosen_domain.secured?
-          chosen_domain_url = "https://" + chosen_domain_url
+          chosen_domain_url = 'https://' + chosen_domain_url
         else
-          chosen_domain_url = "http://" + chosen_domain_url
+          chosen_domain_url = 'http://' + chosen_domain_url
         end
 
         values = [instance.name, chosen_domain_url]
@@ -48,6 +47,4 @@ class Admin::InstanceReportsController < Admin::BaseController
       format.csv { send_data csv }
     end
   end
-
 end
-

@@ -20,12 +20,12 @@ class AvatarUploader < BaseUploader
   end
 
   self.dimensions = {
-    :thumb => { :width => 96, :height => 96, transform: :resize_to_fill },
-    :medium => { :width => 144, :height => 144, transform: :resize_to_fill },
-    :community_small => { :width => 250, :height => 200, transform: :resize_to_fill },
-    :big => { :width => 279, :height => 279, transform: :resize_to_fill },
-    :bigger => { :width => 460, :height => 460, transform: :resize_to_fill },
-    :large => { :width => 1280, :height => 960, transform: :resize_to_fill }
+    thumb: { width: 96, height: 96, transform: :resize_to_fill },
+    medium: { width: 144, height: 144, transform: :resize_to_fill },
+    community_small: { width: 250, height: 200, transform: :resize_to_fill },
+    big: { width: 279, height: 279, transform: :resize_to_fill },
+    bigger: { width: 460, height: 460, transform: :resize_to_fill },
+    large: { width: 1280, height: 960, transform: :resize_to_fill }
   }
 
   ASPECT_RATIO = 1
@@ -54,7 +54,6 @@ class AvatarUploader < BaseUploader
     process dynamic_version: :community_small
   end
 
-
   def default_url(*args)
     default_image, version = get_default_image_and_version(*args)
 
@@ -68,6 +67,4 @@ class AvatarUploader < BaseUploader
   def clean_model
     model.update_attribute(:avatar_transformation_data, nil)
   end
-
 end
-

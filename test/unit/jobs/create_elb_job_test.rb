@@ -15,7 +15,7 @@ class CreateElbJobTest < ActiveSupport::TestCase
 
     should 'trigger Ballancer creation on valid and save dns_name' do
       dns_name = 'test-dns-name.com'
-      balancer = stub(dns_name: dns_name, :create! => nil)
+      balancer = stub(dns_name: dns_name, create!: nil)
       NearMe::Balancer.expects(:new).with(@balancer_options).returns(balancer)
       CreateElbJob.perform(@domain.id)
       @domain.reload

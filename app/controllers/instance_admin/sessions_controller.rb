@@ -6,8 +6,7 @@ class InstanceAdmin::SessionsController < SessionsController
   layout 'instance_admin'
 
   def new
-    redirect_to instance_admin_path and return if user_signed_in?
+    redirect_to(instance_admin_path) && return if user_signed_in?
     super
   end
-
 end

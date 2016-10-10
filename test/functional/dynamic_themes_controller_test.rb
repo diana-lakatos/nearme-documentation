@@ -6,24 +6,23 @@ class DynamicThemesControllerTest < ActionController::TestCase
   end
 
   should 'GET application.css' do
-    get :show, theme_id: @theme, updated_at: @theme.updated_at.to_formatted_s(:number), stylesheet: "application", format: :css
+    get :show, theme_id: @theme, updated_at: @theme.updated_at.to_formatted_s(:number), stylesheet: 'application', format: :css
     assert :success
   end
 
   should 'GET new_ui.css' do
-    get :show, theme_id: @theme, updated_at: @theme.updated_at.to_formatted_s(:number), stylesheet: "new_ui", format: :css
+    get :show, theme_id: @theme, updated_at: @theme.updated_at.to_formatted_s(:number), stylesheet: 'new_ui', format: :css
     assert :success
   end
 
   should 'GET dashboard.css' do
-    get :show, theme_id: @theme, updated_at: @theme.updated_at.to_formatted_s(:number), stylesheet: "dashboard", format: :css
+    get :show, theme_id: @theme, updated_at: @theme.updated_at.to_formatted_s(:number), stylesheet: 'dashboard', format: :css
     assert :success
   end
 
   should 'not GET wrong.css' do
     assert_raises ActionController::UrlGenerationError do
-      get :show, theme_id: @theme, updated_at: @theme.updated_at.to_formatted_s(:number), stylesheet: "wrong", format: :css
+      get :show, theme_id: @theme, updated_at: @theme.updated_at.to_formatted_s(:number), stylesheet: 'wrong', format: :css
     end
   end
 end
-

@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class GroupDecoratorTest < Draper::TestCase
-
   test '#is_owner?' do
     @user = create(:user)
     @group = create(:group, creator: @user)
@@ -44,5 +43,4 @@ class GroupDecoratorTest < Draper::TestCase
 
     assert_equal :member, @group_decorator.role_of_user(@user)
   end
-
 end

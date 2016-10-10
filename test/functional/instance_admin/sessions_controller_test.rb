@@ -1,10 +1,9 @@
 require 'test_helper'
 
 class InstanceAdmin::SessionsControllerTest < ActionController::TestCase
-
   setup do
     @user = FactoryGirl.create(:user)
-    @request.env["devise.mapping"] = Devise.mappings[:user]
+    @request.env['devise.mapping'] = Devise.mappings[:user]
   end
 
   should 'successfully sign up and track and redirected to instance admin' do

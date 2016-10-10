@@ -12,10 +12,9 @@ class TopicCoverImageUploader < BaseUploader
 
   process :auto_orient
 
-
   self.dimensions = {
     medium: { width: 575, height: 196, transform: :resize_to_fill },
-    big: { width: 575, height: 441, transform: :resize_to_fill },
+    big: { width: 575, height: 441, transform: :resize_to_fill }
   }
 
   version :big do
@@ -37,6 +36,4 @@ class TopicCoverImageUploader < BaseUploader
 
   def clean_model
   end
-
 end
-

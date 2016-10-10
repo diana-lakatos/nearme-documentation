@@ -7,8 +7,8 @@ FactoryGirl.define do
     service_fee_amount_guest_cents 10
     service_fee_amount_host_cents 15
     currency 'USD'
-    transferred_at "2013-07-17 14:44:29"
-    token "tokenowski"
+    transferred_at '2013-07-17 14:44:29'
+    token 'tokenowski'
 
     after(:create) do |payment_transfer|
       payment_transfer.payout_attempts = [FactoryGirl.create(:payout, reference: payment_transfer)]

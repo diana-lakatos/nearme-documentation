@@ -1,8 +1,6 @@
 class Listings::RecurringBookingsController < ApplicationController
-
-
   before_filter :find_listing
-  before_filter :require_login_for_recurring_booking, :only => [:review, :create]
+  before_filter :require_login_for_recurring_booking, only: [:review, :create]
   before_filter :build_recurring_booking_request, only: [:review, :create]
   before_filter :secure_payment_with_token, only: [:review]
   before_filter :load_payment_with_token, only: [:review]
@@ -15,8 +13,8 @@ class Listings::RecurringBookingsController < ApplicationController
   end
 
   def load_payment_with_token
-    if request.ssl? and params["payment_token"]
-      user, recurring_booking_params = User::PaymentTokenVerifier.find_token(params["payment_token"])
+    if request.ssl? && params['payment_token']
+      user, recurring_booking_params = User::PaymentTokenVerifier.find_token(params['payment_token'])
       sign_in user
       params[:reservation_request] = recurring_booking_params.symbolize_keys!
     end
@@ -57,11 +55,11 @@ class Listings::RecurringBookingsController < ApplicationController
 
   def hourly_availability_schedule
     schedule = if params[:date].present?
-      date = Date.parse(params[:date])
-      @listing.action_type.hourly_availability_schedule(date).as_json
+                 date = Date.parse(params[:date])
+                 @listing.action_type.hourly_availability_schedule(date).as_json
     end
 
-    render :json => schedule.presence || {}
+    render json: schedule.presence || {}
   end
 
   private
@@ -86,12 +84,12 @@ class Listings::RecurringBookingsController < ApplicationController
       @listing,
       current_user,
       platform_context,
-      recurring_booking_request_params.merge({ start_on: attributes[:start_on].to_date || attributes[:dates].try(:to_date) })
+      recurring_booking_request_params.merge(start_on: attributes[:start_on].to_date || attributes[:dates].try(:to_date))
     )
   end
 
   def recurring_booking_request_params
-     params.require(:reservation_request).permit(secured_params.recurring_booking_request(@listing.transactable_type.reservation_type))
+    params.require(:reservation_request).permit(secured_params.recurring_booking_request(@listing.transactable_type.reservation_type))
   end
 
   def set_section_name

@@ -9,4 +9,3 @@ class ScheduleSitemapsRefresh
     SitemapsRefreshJob.perform
   end
 end
-

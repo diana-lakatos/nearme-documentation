@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class GroupMemberTest < ActiveSupport::TestCase
-
   test "#owner_cannot_leave_group raises an exepction when owner's membership is deleted" do
     assert_raises GroupMember::OwnerCannotLeaveGroup do
       membership = create(:group_member, email: 'email@gexample.com')
@@ -27,5 +26,4 @@ class GroupMemberTest < ActiveSupport::TestCase
       membership.save
     end
   end
-
 end

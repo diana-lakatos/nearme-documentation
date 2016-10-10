@@ -21,13 +21,13 @@ class RobotsTxtServiceTest < ActiveSupport::TestCase
     should 'disallow everything if near-me.com subdomain' do
       disallow_root = /^Disallow: \/$/
 
-      @domain.name = "something.near-me.com"
+      @domain.name = 'something.near-me.com'
       @domain.save
       subdomain_match = (@domain.name =~ RobotsTxtService::NEARME_SUBDOMAIN_REGEX).present?
       assert subdomain_match
       assert (@domain.robots =~ disallow_root).present?
 
-      @domain.name = "mymarketplace.com"
+      @domain.name = 'mymarketplace.com'
       @domain.save
       no_subdomain_matches = (@domain.name =~ RobotsTxtService::NEARME_SUBDOMAIN_REGEX).present?
       refute no_subdomain_matches

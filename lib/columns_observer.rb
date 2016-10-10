@@ -57,29 +57,28 @@ module ColumnsObserver
   extend ActiveSupport::Concern
 
   included do
-
     def self.inherits_columns_from_association(columns, associations, callback_name = 'before_create')
       return unless self.table_exists?
       inherits_columns_from_association_string = "#{callback_name}(on: :create) do \n"
       [columns].flatten.each do |column|
-        raise ColumnsObserver::InvalidArgumentError.new("Invalid argument, #{self.name} does not contain column #{column}") unless self.column_names.include?(column.to_s)
+        fail ColumnsObserver::InvalidArgumentError.new("Invalid argument, #{name} does not contain column #{column}") unless column_names.include?(column.to_s)
         [associations].flatten.each do |association|
           inherits_columns_from_association_string += "self.#{column} ||= #{association}.#{column} if #{association}\n"
         end
       end
-      class_eval %Q{ #{inherits_columns_from_association_string + "nil\nend"} }
+      class_eval %( #{inherits_columns_from_association_string + "nil\nend"} )
     end
 
     def self.notify_associations_about_column_update(associations, columns)
       return unless self.table_exists?
       notify_associations_about_column_update = "after_update do\n"
       [columns].flatten.each do |column|
-        raise ColumnsObserver::InvalidArgumentError.new("Invalid argument, #{self.name} does not contain column #{column}") unless self.column_names.include?(column.to_s)
+        fail ColumnsObserver::InvalidArgumentError.new("Invalid argument, #{name} does not contain column #{column}") unless column_names.include?(column.to_s)
         [associations].flatten.each do |association|
           notify_associations_about_column_update += "self.#{association}.reload.with_deleted.update_all(['#{column} = ?', self.#{column}]) if self.#{column}_changed?\n"
         end
       end
-      class_eval %Q{ #{notify_associations_about_column_update + "end"} }
+      class_eval %( #{notify_associations_about_column_update + 'end'} )
     end
   end
 end

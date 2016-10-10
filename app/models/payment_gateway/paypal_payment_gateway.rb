@@ -10,21 +10,18 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
   supported :multiple_currency, :credit_card_payment, :partial_refunds
 
   def self.supported_countries
-    ["US", "GB", "CA"]
+    %w(US GB CA)
   end
 
   def supported_currencies
-   [
-      "AUD", "BRL", "CAD", "CHF", "CZK", "DKK", "EUR", "GBP", "HDK", "HUF", "HKD", "ILS", "JPY", "MXN",
-      "MYR", "NOK", "NZD", "PHP", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD", "USD"
-    ]
+    %w(AUD BRL CAD CHF CZK DKK EUR GBP HDK HUF HKD ILS JPY MXN MYR NOK NZD PHP PLN RUB SEK SGD THB TRY TWD USD)
   end
 
   def self.settings
     {
       login: { validate: [:presence] },
       password: { validate: [:presence] },
-      signature: { validate: [:presence] },
+      signature: { validate: [:presence] }
     }
   end
 
@@ -33,10 +30,10 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
   end
 
   def set_billing_agreement(options)
-    @response = express_gateway.setup_authorization(0, options.deep_merge({ billing_agreement: {
-      type: "MerchantInitiatedBilling",
-      description: "#{PlatformContext.current.instance.name} Billing Agreement"
-    }}))
+    @response = express_gateway.setup_authorization(0, options.deep_merge(billing_agreement: {
+                                                                            type: 'MerchantInitiatedBilling',
+                                                                            description: "#{PlatformContext.current.instance.name} Billing Agreement"
+                                                                          }))
   end
 
   def token
@@ -59,7 +56,7 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
     @express_gateway
   end
 
-  def gateway(subject=nil)
+  def gateway(subject = nil)
     if @gateway.nil? || subject.present?
       @gateway = self.class.active_merchant_class.new(
         login: settings[:login],
@@ -73,11 +70,10 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
   end
 
   def custom_authorize_options
-    { ip: "127.0.0.1" }
+    { ip: '127.0.0.1' }
   end
 
   def refund_identification(charge)
-    charge.response.params["transaction_id"]
+    charge.response.params['transaction_id']
   end
 end
-

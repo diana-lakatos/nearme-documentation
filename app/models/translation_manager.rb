@@ -1,5 +1,4 @@
 class TranslationManager
-
   def initialize(object)
     @object = object
   end
@@ -10,7 +9,7 @@ class TranslationManager
   def create_translations!
   end
 
-  def find_key(key, count = nil)
+  def find_key(key, _count = nil)
     I18n.t(key_with_namespace(key))
   end
 
@@ -83,6 +82,4 @@ class TranslationManager
   def translation_namespace_was
     underscore("#{@object.class.name.demodulize}.#{(@object.name_was || @object.name)}")
   end
-
 end
-

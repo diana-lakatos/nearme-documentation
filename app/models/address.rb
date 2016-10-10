@@ -17,15 +17,15 @@ class Address < ActiveRecord::Base
 
   validates_presence_of :address, unless: :accurate_address_required
   validate :check_address, if: :accurate_address_required
-  validates_presence_of :latitude, :longitude, if: lambda { |l| !l.raw_address? }
+  validates_presence_of :latitude, :longitude, if: ->(l) { !l.raw_address? }
 
-  before_validation :update_address, if: lambda { |l| !l.raw_address? }
-  before_validation :parse_address_components, if: lambda { |l| !l.raw_address? }
-  before_validation :clear_fields, if: lambda { |l| l.raw_address? }
+  before_validation :update_address, if: ->(l) { !l.raw_address? }
+  before_validation :parse_address_components, if: ->(l) { !l.raw_address? }
+  before_validation :clear_fields, if: ->(l) { l.raw_address? }
 
-  scope :bounding_box, -> (box) {
-    where('addresses.latitude > ? AND addresses.latitude < ?', box.last.first, box.first.first).
-    where('addresses.longitude > ? AND addresses.longitude < ?', box.last.last, box.first.last)
+  scope :bounding_box, lambda  { |box|
+    where('addresses.latitude > ? AND addresses.latitude < ?', box.last.first, box.first.first)
+      .where('addresses.longitude > ? AND addresses.longitude < ?', box.last.last, box.first.last)
   }
 
   after_save do
@@ -38,7 +38,7 @@ class Address < ActiveRecord::Base
 
   def clear_fields
     [:street, :formatted_address, :suburb, :city, :country, :state, :postcode, :address_components, :latitude, :longitude, :iso_country_code].each do |field|
-      self.send("#{field}=", nil)
+      send("#{field}=", nil)
     end
   end
 
@@ -49,15 +49,15 @@ class Address < ActiveRecord::Base
   end
 
   def self.order_by_distance_sql(latitude, longitude)
-    distance_sql(latitude, longitude, order: "distance")
+    distance_sql(latitude, longitude, order: 'distance')
   end
 
   def distance_from(other_latitude, other_longitude)
-    Geocoder::Calculations.distance_between([ latitude, longitude ], [ other_latitude, other_longitude ], units: :km)
+    Geocoder::Calculations.distance_between([latitude, longitude], [other_latitude, other_longitude], units: :km)
   end
 
   def street
-    super.presence || address.try { |a| a.split(",")[0] }
+    super.presence || address.try { |a| a.split(',')[0] }
   end
 
   def suburb
@@ -95,14 +95,14 @@ class Address < ActiveRecord::Base
   end
 
   def state_code
-    @state_code ||= Address::GoogleGeolocationDataParser.new(address_components).fetch_address_component("state", :short)
+    @state_code ||= Address::GoogleGeolocationDataParser.new(address_components).fetch_address_component('state', :short)
   end
 
   def street_number
     result = nil
 
     if address_components.present?
-      address_components.each do |key, value|
+      address_components.each do |_key, value|
         if value['types'].to_s.include?('street_number')
           result = value['long_name']
           break
@@ -114,24 +114,22 @@ class Address < ActiveRecord::Base
   end
 
   def parse_address_components
-    if address_components_changed?
-      parse_address_components!
-    end
+    parse_address_components! if address_components_changed?
   end
 
   def parse_address_components!
     data_parser = Address::GoogleGeolocationDataParser.new(address_components)
-    self.city = data_parser.fetch_address_component("city")
-    self.suburb = data_parser.fetch_address_component("suburb")
-    self.street = data_parser.fetch_address_component("street")
-    self.country = data_parser.fetch_address_component("country")
-    self.iso_country_code = data_parser.fetch_address_component("country", :short)
-    self.state = data_parser.fetch_address_component("state")
-    self.postcode = data_parser.fetch_address_component("postcode")
+    self.city = data_parser.fetch_address_component('city')
+    self.suburb = data_parser.fetch_address_component('suburb')
+    self.street = data_parser.fetch_address_component('street')
+    self.country = data_parser.fetch_address_component('country')
+    self.iso_country_code = data_parser.fetch_address_component('country', :short)
+    self.state = data_parser.fetch_address_component('state')
+    self.postcode = data_parser.fetch_address_component('postcode')
   end
 
   def to_s
-    self.address
+    address
   end
 
   def self.xml_attributes
@@ -212,5 +210,4 @@ class Address < ActiveRecord::Base
   def accurate_address_required
     should_check_address == 'true' && !raw_address?
   end
-
 end

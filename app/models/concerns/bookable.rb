@@ -5,7 +5,7 @@ module Bookable
     inherits_columns_from_association([:company_id, :creator_id], :transactable)
 
     attr_accessor :start_minute, :end_minute, :start_on, :end_on, :schedule_params, :total_amount_check,
-      :dates, :force_recalculate_fees, :last_search_json, :dates_fake, :start_time, :booking_type
+                  :dates, :force_recalculate_fees, :last_search_json, :dates_fake, :start_time, :booking_type
 
     has_one :address, class_name: 'Address', as: :entity
 
@@ -14,10 +14,10 @@ module Bookable
 
     accepts_nested_attributes_for :address
 
-    validates :quantity, :numericality => { :greater_than_or_equal_to => 1  } # , less_than_or_equal_to: :transactable_quantity }
+    validates :quantity, numericality: { greater_than_or_equal_to: 1  } # , less_than_or_equal_to: :transactable_quantity }
 
-    before_validation :set_inheritated_data, on: :create, if: lambda { transactable }
-    before_validation :set_excusive_quantity, on: :create, if: lambda { exclusive_price? }
+    before_validation :set_inheritated_data, on: :create, if: -> { transactable }
+    before_validation :set_excusive_quantity, on: :create, if: -> { exclusive_price? }
     before_save :set_start_and_end
     after_create :copy_dimensions_template
 
@@ -25,9 +25,9 @@ module Bookable
       return address if address.present?
       if last_search_json
         last_search = JSON.parse(last_search_json, symbolize_names: true) rescue {}
-        self.build_address(address: last_search[:loc], longitude: last_search[:lng], latitude: last_search[:lat])
+        build_address(address: last_search[:loc], longitude: last_search[:lng], latitude: last_search[:lat])
       else
-        self.build_address
+        build_address
       end
     end
 
@@ -50,7 +50,7 @@ module Bookable
     end
 
     def booking_time_start_from_search
-      last_search['time_from'].presence || 1.hour.from_now.strftime("%k:00").strip
+      last_search['time_from'].presence || 1.hour.from_now.strftime('%k:00').strip
     end
 
     def assigned_waiver_agreement_templates
@@ -59,7 +59,7 @@ module Bookable
       elsif transactable.try(:location).try(:assigned_waiver_agreement_templates).try(:any?)
         transactable.location.assigned_waiver_agreement_templates.includes(:waiver_agreement_template).map(&:waiver_agreement_template)
       else (templates = PlatformContext.current.instance.waiver_agreement_templates).any?
-        templates
+           templates
       end
     end
 
@@ -69,7 +69,7 @@ module Bookable
       self.reservation_type = transactable.transactable_type.reservation_type
       self.skip_checkout_validation = true
       self.settings = reservation_type.try(:settings)
-      self.save
+      save
     end
 
     def set_excusive_quantity
@@ -89,11 +89,11 @@ module Bookable
     end
 
     def first_period
-      periods.sort_by {|p| [p.starts_at, p.start_minute] }.first
+      periods.sort_by { |p| [p.starts_at, p.start_minute] }.first
     end
 
     def last_period
-      periods.sort_by {|p| [p.starts_at, p.start_minute] }.last
+      periods.sort_by { |p| [p.starts_at, p.start_minute] }.last
     end
 
     def set_inheritated_data
@@ -102,7 +102,6 @@ module Bookable
       self.reservation_type ||= transactable.transactable_type.reservation_type
       self.confirmation_email ||= creator.try(:email)
     end
-
 
     def copy_dimensions_template
       if transactable.dimensions_template.present?
@@ -117,8 +116,8 @@ module Bookable
     def schedule_expiry
       hours_to_expiration = transactable.hours_to_expiration.to_i.hours
       expires_at = Time.current + hours_to_expiration
-      self.update_column(:expires_at, expires_at)
-      OrderExpiryJob.perform_later(expires_at, self.id) if hours_to_expiration > 0
+      update_column(:expires_at, expires_at)
+      OrderExpiryJob.perform_later(expires_at, id) if hours_to_expiration > 0
     end
   end
 end

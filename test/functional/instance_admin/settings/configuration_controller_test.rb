@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Settings::ConfigurationControllerTest < ActionController::TestCase
-
   context 'authorization' do
     setup do
       @user = FactoryGirl.create(:user)
@@ -40,13 +39,13 @@ class InstanceAdmin::Settings::ConfigurationControllerTest < ActionController::T
     end
 
     should 'update basic configureation and nomenclature' do
-      post :update, "instance"=>{
-                      "name"=>"New Instance Name",
-                      "domains_attributes"=>{ "0"=>{"name"=>"example.org", "use_as_default" => "true"} }
-                    }
+      post :update, 'instance' => {
+        'name' => 'New Instance Name',
+        'domains_attributes' => { '0' => { 'name' => 'example.org', 'use_as_default' => 'true' } }
+      }
       instance = assigns[:instance]
-      assert_equal instance.name, "New Instance Name"
-      assert_equal instance.default_domain.name, "example.org"
+      assert_equal instance.name, 'New Instance Name'
+      assert_equal instance.default_domain.name, 'example.org'
       assert_redirected_to instance_admin_settings_configuration_path
     end
   end

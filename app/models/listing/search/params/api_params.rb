@@ -1,11 +1,11 @@
 class Listing::Search::Params::ApiParams < Listing::Search::Params
   def initialize(options, transactable_type = nil)
     super
-    raise Listing::Search::SearchTypeNotSupported unless valid_search_method?
+    fail Listing::Search::SearchTypeNotSupported unless valid_search_method?
   end
 
   def valid_search_method?
-    options.has_key?(:query) || options.has_key?(:boundingbox) || options.has_key?(:location)
+    options.key?(:query) || options.key?(:boundingbox) || options.key?(:location)
   end
 
   # The :location object provided is for the users actual location rather than the one
@@ -19,5 +19,4 @@ class Listing::Search::Params::ApiParams < Listing::Search::Params
       end
     end
   end
-
 end

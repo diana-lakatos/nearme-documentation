@@ -1,5 +1,4 @@
 class Dashboard::Company::MerchantAccountsController < Dashboard::Company::BaseController
-
   before_action :find_merchant_account, except: [:create]
 
   def update
@@ -28,7 +27,7 @@ class Dashboard::Company::MerchantAccountsController < Dashboard::Company::BaseC
 
   def all_payout_gateways
     if current_instance.skip_company?
-       current_user.payout_payment_gateways
+      current_user.payout_payment_gateways
     else
       @company.payout_payment_gateways
     end
@@ -36,7 +35,7 @@ class Dashboard::Company::MerchantAccountsController < Dashboard::Company::BaseC
 
   def boarding_complete
     @merchant_account.boarding_complete(params)
-    flash[:notice] = params["returnMessage"]
+    flash[:notice] = params['returnMessage']
     redirect_to edit_dashboard_company_payouts_path
   end
 
@@ -55,11 +54,9 @@ class Dashboard::Company::MerchantAccountsController < Dashboard::Company::BaseC
 
   def get_payment_gateway_data
     @payment_gateways = if current_instance.skip_company?
-       current_user.payout_payment_gateways
-    else
-      @company.payout_payment_gateways
+                          current_user.payout_payment_gateways
+                        else
+                          @company.payout_payment_gateways
     end
   end
-
 end
-

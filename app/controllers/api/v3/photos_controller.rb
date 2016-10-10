@@ -3,7 +3,7 @@ module Api
     before_filter :get_proper_hash, only: :create
 
     def create
-      photos = @listing_params[:photos_attributes]["0"][:image].map do |image|
+      photos = @listing_params[:photos_attributes]['0'][:image].map do |image|
         photo = Photo.new
         photo.owner = @owner
         photo.owner_type ||= @owner_type
@@ -33,23 +33,21 @@ module Api
         @owner_type = 'Transactable'
       elsif params[:group]
         @listing_params = params[:group]
-        @owner_type = "Group"
+        @owner_type = 'Group'
         if params[:group][:id].present?
           @listing = current_user.moderated_groups.find(params[:group][:id])
           @owner = @listing
         end
       elsif params[:user]
-        if params[:user][:companies_attributes]["0"][:locations_attributes]
-          @listing_params = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]
+        if params[:user][:companies_attributes]['0'][:locations_attributes]
+          @listing_params = params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0']
           @listing = Transactable.find(@listing_params[:id]) if @listing_params[:id]
         else
-          @listing_params = params[:user][:companies_attributes]["0"][:offers_attributes]["0"]
+          @listing_params = params[:user][:companies_attributes]['0'][:offers_attributes]['0']
           @listing = current_user.offers.find(@listing_params[:id]) if @listing_params[:id].present?
         end
         # we came from dashboard
       end
     end
-
   end
 end
-

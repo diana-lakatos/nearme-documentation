@@ -19,9 +19,9 @@ module LiquidFilters
   rescue => e
     if Rails.env.production?
       MarketplaceLogger.error('Url Shortening Error', e.to_s, raise: false)
-      ""
+      ''
     else
-     'http://limitreached'
+      'http://limitreached'
     end
   end
 
@@ -55,11 +55,11 @@ module LiquidFilters
     array
   end
 
-  def rotate(array, count=1)
+  def rotate(array, count = 1)
     array.rotate(count)
   end
 
-  def location_path(transactable_type, location)
+  def location_path(_transactable_type, location)
     return '' if location.blank?
     location.listings.searchable.first.try(:decorate).try(:show_path)
   end
@@ -69,11 +69,11 @@ module LiquidFilters
   end
 
   def lowest_full_price_without_cents_with_currency(object, lgpricing_filters = [])
-    get_lowest_price_with_options(object, lgpricing_filters, :full_price => true)
+    get_lowest_price_with_options(object, lgpricing_filters, full_price: true)
   end
 
   def lowest_full_price_with_cents_with_currency(object, lgpricing_filters = [])
-    get_lowest_price_with_options(object, lgpricing_filters, :full_price => true, :with_cents => true)
+    get_lowest_price_with_options(object, lgpricing_filters, full_price: true, with_cents: true)
   end
 
   def get_lowest_price_with_options(object, lgpricing_filters, options = {})
@@ -89,17 +89,17 @@ module LiquidFilters
       { 'free' => true }
     else
       if options[:with_cents]
-        { 'price' => self.price_with_cents_with_currency(pricing.price) }
+        { 'price' => price_with_cents_with_currency(pricing.price) }
       else
-        { 'price' => self.price_without_cents_with_currency(pricing.price) }
-      end.merge({ 'period' => pricing.decorate.units_translation("search.per_unit_price", 'search') })
+        { 'price' => price_without_cents_with_currency(pricing.price) }
+      end.merge('period' => pricing.decorate.units_translation('search.per_unit_price', 'search'))
     end
   end
 
   def lowest_price_with_cents_with_currency(object, lgpricing_filters = [])
     pricing = object.lowest_price(lgpricing_filters)
     if pricing
-      { 'price' => self.price_with_cents_with_currency(pricing.price), 'period' =>  pricing.decorate.units_translation("search.per_unit_price", 'search') }
+      { 'price' => price_with_cents_with_currency(pricing.price), 'period' =>  pricing.decorate.units_translation('search.per_unit_price', 'search') }
     else
       {}
     end
@@ -109,7 +109,7 @@ module LiquidFilters
     return [] if current_user.nil? || current_user.friends.count.zero?
 
     friends = current_user.friends.visited_listing(listing).collect do |user|
-      "#{user.name} worked here";
+      "#{user.name} worked here"
     end
 
     hosts = current_user.friends.hosts_of_listing(listing).collect do |user|
@@ -165,7 +165,7 @@ module LiquidFilters
     key.try(:humanize)
   end
 
-  def translate(key, options={})
+  def translate(key, options = {})
     I18n.t(key, options.deep_symbolize_keys)
   end
   alias_method :t, :translate
@@ -215,13 +215,13 @@ module LiquidFilters
 
   def strip_tags(html = '')
     return '' if html.blank?
-    @custom_sanitizer ||= CustomSanitizer.new()
+    @custom_sanitizer ||= CustomSanitizer.new
     @custom_sanitizer.strip_tags(html).html_safe
   end
 
   def nl2br(html = '')
     return '' if html.blank?
-    html.gsub!("\r\n", "<br />")
+    html.gsub!("\r\n", '<br />')
     html
   end
 
@@ -234,7 +234,7 @@ module LiquidFilters
   end
 
   def meta_attr(content)
-    Sanitize.clean(content).gsub(/\s+/,' ').strip
+    Sanitize.clean(content).gsub(/\s+/, ' ').strip
   end
 
   def request_parameter(method)
@@ -260,17 +260,17 @@ module LiquidFilters
     Digest::SHA1.hexdigest object
   end
 
-  def tag_filter_link(tag, custom_classes=[])
+  def tag_filter_link(tag, custom_classes = [])
     params = @context.registers[:controller].params
-    current_filters = params[:tags].try(:split, ",").presence || []
+    current_filters = params[:tags].try(:split, ',').presence || []
 
     if current_filters.try(:include?, tag.slug).presence
-      filters_without_current = (current_filters - [tag.slug]).join(",")
+      filters_without_current = (current_filters - [tag.slug]).join(',')
 
       href = "?tags=#{filters_without_current}"
       classes = %w(add selected)
     else
-      filters = (current_filters + [tag.slug]).uniq.join(",")
+      filters = (current_filters + [tag.slug]).uniq.join(',')
 
       href = "?tags=#{filters}"
       classes = %w(add)
@@ -278,7 +278,7 @@ module LiquidFilters
 
     classes.push(custom_classes).flatten!.uniq! if custom_classes.present?
 
-    link_to(tag.name, href, class: classes.join(" "))
+    link_to(tag.name, href, class: classes.join(' '))
   end
 
   # Renders search_box with options
@@ -290,13 +290,13 @@ module LiquidFilters
     tt = TransactableType.where(name: names) + InstanceProfileType.where(name: names)
     if tt.any?
       ordered = {}
-      tt.map{|searchable| ordered[names.index(searchable.name)] = searchable}
+      tt.map { |searchable| ordered[names.index(searchable.name)] = searchable }
       ordered = ordered.sort.to_h
       @context.registers[:action_view].render 'home/search_box_inputs.html',
-        transactable_types: ordered.values,
-        custom_search_inputs: inputs.split(',').map(&:strip),
-        class_name: class_name + ' search-box-liquid-tag',
-        transactable_type_picker: ordered.values.many?
+                                              transactable_types: ordered.values,
+                                              custom_search_inputs: inputs.split(',').map(&:strip),
+                                              class_name: class_name + ' search-box-liquid-tag',
+                                              transactable_type_picker: ordered.values.many?
     else
       "No Service or Product type with names: #{tt_names}"
     end
@@ -308,8 +308,8 @@ module LiquidFilters
   def search_button_for(tt_name, class_name = '')
     if tt = TransactableType.find_by(name: tt_name.strip) || tt = InstanceProfileType.find_by(name: tt_name.strip)
       @context.registers[:action_view].render 'home/search_button_tag.html',
-        transactable_type: tt,
-        class_name: class_name + ' search-box-liquid-tag'
+                                              transactable_type: tt,
+                                              class_name: class_name + ' search-box-liquid-tag'
     else
       "No Service or Product type with name: #{tt_name}"
     end
@@ -335,7 +335,7 @@ module LiquidFilters
   # Escape html; this is useful if you want to skip
   # using the CustomSanitizer that is applied normally
   def raw_escape_string(value)
-    CGI::escapeHTML(value.to_s).html_safe
+    CGI.escapeHTML(value.to_s).html_safe
   end
 
   def already_favorite(user, object)
@@ -407,7 +407,7 @@ module LiquidFilters
     !!(string =~ Regexp.new(regexp))
   end
 
-  def get_payment_gateway_id(str)
+  def get_payment_gateway_id(_str)
     PaymentGateway.with_credit_card.mode_scope.first.try(:id)
   end
 
@@ -428,12 +428,11 @@ module LiquidFilters
   end
 
   def get_ckeditor_assets(access_level, options = {})
-    sort_option = %w(created_at name).detect { |valid_key| options['sort']  == valid_key } || 'created_at'
-    sort_direction = %w(asc desc).detect { |valid_key| options['direction']  == valid_key } || 'desc'
-    Ckeditor::Asset.where(access_level: access_level).
-      where('data_file_name LIKE ? OR title LIKE ?', "%#{options['query']}%", "%#{options['query']}%").
-      order("#{sort_option} #{sort_direction}").
-      paginate(page: options['page'] || 1, per_page: [(options['per_page'] || 10).to_i, 50].min)
+    sort_option = %w(created_at name).detect { |valid_key| options['sort'] == valid_key } || 'created_at'
+    sort_direction = %w(asc desc).detect { |valid_key| options['direction'] == valid_key } || 'desc'
+    Ckeditor::Asset.where(access_level: access_level)
+      .where('data_file_name LIKE ? OR title LIKE ?', "%#{options['query']}%", "%#{options['query']}%")
+      .order("#{sort_option} #{sort_direction}")
+      .paginate(page: options['page'] || 1, per_page: [(options['per_page'] || 10).to_i, 50].min)
   end
-
 end

@@ -1,5 +1,4 @@
 class LocaleService
-
   attr_reader :redirect_url
   attr_reader :locale
 

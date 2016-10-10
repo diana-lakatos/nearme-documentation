@@ -2,7 +2,7 @@ class Support::Ticket < ActiveRecord::Base
   self.table_name = 'support_tickets'
 
   has_paper_trail
-  has_metadata :without_db_column => true
+  has_metadata without_db_column: true
   auto_set_platform_context
   scoped_to_platform_context
 
@@ -11,21 +11,21 @@ class Support::Ticket < ActiveRecord::Base
   belongs_to :target, -> { with_deleted }, polymorphic: true
   belongs_to :user, -> { with_deleted }
 
-  has_many :messages, -> {order 'created_at DESC'}, class_name: 'Support::TicketMessage', dependent: :destroy
+  has_many :messages, -> { order 'created_at DESC' }, class_name: 'Support::TicketMessage', dependent: :destroy
   has_many :attachments, class_name: 'Support::TicketMessageAttachment'
 
-  scope :metadata, -> {select('support_tickets.state, COUNT(*) as count').group(:state)}
-  scope :user_metadata, -> {select('support_tickets.instance_id, COUNT(*) as count').group(:instance_id)}
+  scope :metadata, -> { select('support_tickets.state, COUNT(*) as count').group(:state) }
+  scope :user_metadata, -> { select('support_tickets.instance_id, COUNT(*) as count').group(:instance_id) }
 
   serialize :reservation_details, Hash
 
   state_machine :state, initial: :open do
     event :resolve do
-      transition :open => :resolved
+      transition open: :resolved
     end
   end
 
-  scope :for_filter, ->(filter) { filter == 'all' ? all : where('support_tickets.state = ?', filter)}
+  scope :for_filter, ->(filter) { filter == 'all' ? all : where('support_tickets.state = ?', filter) }
 
   accepts_nested_attributes_for :messages
 
@@ -37,30 +37,30 @@ class Support::Ticket < ActiveRecord::Base
   end
 
   def verb
-    I18n.t("support.statuses.past.#{self.state}")
+    I18n.t("support.statuses.past.#{state}")
   end
 
   def open_text
-    I18n.t(self.state, scope: [:support, :ticket, :open_text])
+    I18n.t(state, scope: [:support, :ticket, :open_text])
   end
 
   def assigned?
-    self.assigned_to.presence
+    assigned_to.presence
   end
 
-  def receive(message, params)
+  def receive(message, _params)
     from = message.from[0]
 
     self.instance = PlatformContext.current.instance
     self.target = PlatformContext.current.instance
 
-    if self.instance
-      ticket_message = self.messages.new
+    if instance
+      ticket_message = messages.new
       ticket_message.email = from
       ticket_message.full_name = message[:from].display_names.first || 'Unknown'
       ticket_message.subject = message.subject.presence || '<no subject>'
       ticket_message.message = self.class.body_for_message(message)
-      ticket_message.instance_id = self.instance_id
+      ticket_message.instance_id = instance_id
       self.save!
       WorkflowStepJob.perform(WorkflowStep::SupportWorkflow::Created, ticket_message.id)
     end
@@ -112,7 +112,7 @@ class Support::Ticket < ActiveRecord::Base
 
   def reservation_dates
     if @reservation_dates.nil?
-      @reservation_dates = self.reservation_details['dates'].try(:split, ',') || []
+      @reservation_dates = reservation_details['dates'].try(:split, ',') || []
       @reservation_dates.map!(&:to_date)
     end
     @reservation_dates
@@ -120,7 +120,7 @@ class Support::Ticket < ActiveRecord::Base
 
   def reservation_date
     if @reservation_date.nil?
-     @reservation_date =  self.reservation_details['dates'].try(:to_datetime)
+      @reservation_date =  reservation_details['dates'].try(:to_datetime)
     end
     @reservation_date
   end
@@ -132,6 +132,6 @@ class Support::Ticket < ActiveRecord::Base
   end
 
   def target_rfq?
-    self.target_type == 'Transactable'
+    target_type == 'Transactable'
   end
 end

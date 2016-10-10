@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdminAuthorizerTest < ActiveSupport::TestCase
-
   setup do
     @user = FactoryGirl.create(:user)
     @authorizer = InstanceAdminAuthorizer.new(@user)
@@ -9,14 +8,13 @@ class InstanceAdminAuthorizerTest < ActiveSupport::TestCase
   end
 
   context 'instance_admin' do
-
     should 'know that user is not instance admin' do
       assert !@authorizer.instance_admin?
     end
 
     context 'is admin of at least one instance' do
       setup do
-        @instance_admin = InstanceAdmin.create(:user_id => @user.id)
+        @instance_admin = InstanceAdmin.create(user_id: @user.id)
       end
 
       should 'know that user is instance admin' do
@@ -28,14 +26,12 @@ class InstanceAdminAuthorizerTest < ActiveSupport::TestCase
         refute @authorizer.instance_admin?
       end
     end
-
   end
 
   context 'authorized?' do
-
     setup do
       @role = FactoryGirl.create(:instance_admin_role)
-      @instance_admin = FactoryGirl.create(:instance_admin, :user_id => @user.id)
+      @instance_admin = FactoryGirl.create(:instance_admin, user_id: @user.id)
       @instance_admin.update_attribute(:instance_owner, false)
       @instance_admin.update_attribute(:instance_admin_role_id, @role.id)
     end
@@ -118,7 +114,7 @@ class InstanceAdminAuthorizerTest < ActiveSupport::TestCase
       @role.update_attribute(:permission_analytics, false)
       @role.update_attribute(:permission_settings, true)
       @role.update_attribute(:permission_theme, true)
-      @instance_admin = FactoryGirl.create(:instance_admin, :user_id => @user.id)
+      @instance_admin = FactoryGirl.create(:instance_admin, user_id: @user.id)
       @instance_admin.update_attribute(:instance_owner, false)
       @instance_admin.update_attribute(:instance_admin_role_id, @role.id)
     end
@@ -127,5 +123,4 @@ class InstanceAdminAuthorizerTest < ActiveSupport::TestCase
       assert_equal @authorizer.first_permission_have_access_to, 'settings'
     end
   end
-
 end

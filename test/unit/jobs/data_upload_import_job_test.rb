@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class DataUploadImportJobTest < ActiveSupport::TestCase
-
   context 'mailers' do
-
     should 'send finish mail if succeeded' do
       @stub = mock(queued?: false, succeeded?: true, id: 1)
       DataUpload.stubs(:find).returns(@stub)
@@ -35,13 +33,12 @@ class DataUploadImportJobTest < ActiveSupport::TestCase
       WorkflowStepJob.expects(:perform).with(WorkflowStep::DataUploadWorkflow::Failed, 1).never
       DataUploadImportJob.perform(1)
     end
-
   end
 
   context 'with sync mode false' do
     setup do
-      @transactable_type = stub()
-      @stub = stub( xml_file: stub(proper_file_path: '/some/path'),
+      @transactable_type = stub
+      @stub = stub(xml_file: stub(proper_file_path: '/some/path'),
                    id: 1,
                    importable: @transactable_type,
                    :parsing_result_log => 'hello',
@@ -58,21 +55,21 @@ class DataUploadImportJobTest < ActiveSupport::TestCase
                   )
       DataUpload.stubs(:find).returns(@stub)
 
-      @synchronizer = stub()
+      @synchronizer = stub
       DataImporter::NullSynchronizer.expects(:new).returns(@synchronizer)
-      @inviter = stub()
+      @inviter = stub
       DataImporter::NullInviter.expects(:new).returns(@inviter)
       @validation_errors_tracker = stub(to_s: 'hello')
       DataImporter::Tracker::ValidationErrors.expects(:new).returns(@validation_errors_tracker)
-      @summary_tracker = stub(new_entities: {company: 1}, updated_entities: {company: 2}, deleted_entities: {company: 3})
+      @summary_tracker = stub(new_entities: { company: 1 }, updated_entities: { company: 2 }, deleted_entities: { company: 3 })
       DataImporter::Tracker::Summary.expects(:new).returns(@summary_tracker)
-      @progress_tracker = stub()
+      @progress_tracker = stub
       DataImporter::Tracker::ProgressTracker.expects(:new).returns(@progress_tracker)
       @trackers = [@validation_errors_tracker, @summary_tracker, @progress_tracker]
-      @xml_file_stub = stub()
+      @xml_file_stub = stub
       @counter_stub = stub(all_objects_count: 100)
       DataImporter::XmlEntityCounter.stubs(:new).returns(@counter_stub)
-      DataImporter::XmlFile.expects(:new).with('/some/path', @transactable_type, {synchronizer: @synchronizer, trackers: @trackers, inviter: @inviter }).returns(@xml_file_stub)
+      DataImporter::XmlFile.expects(:new).with('/some/path', @transactable_type, synchronizer: @synchronizer, trackers: @trackers, inviter: @inviter).returns(@xml_file_stub)
     end
 
     should 'store exception which has been raised' do
@@ -82,8 +79,5 @@ class DataUploadImportJobTest < ActiveSupport::TestCase
       end
       DataUploadImportJob.perform(1)
     end
-
   end
-
 end
-

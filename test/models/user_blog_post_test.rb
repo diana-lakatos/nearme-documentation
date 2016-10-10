@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class UserBlogPostTest < ActiveSupport::TestCase
-
   setup do
     @user_blog_post = UserBlogPost.new
   end
@@ -19,5 +18,4 @@ class UserBlogPostTest < ActiveSupport::TestCase
 
     assert_equal @user_blog_post.published_at, Date.parse('2016-04-28')
   end
-
 end

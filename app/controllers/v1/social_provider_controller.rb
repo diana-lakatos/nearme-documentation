@@ -7,17 +7,14 @@ class V1::SocialProviderController < V1::BaseController
   end
 
   def update
-
     uid = provider.info.uid
     info = provider.info.hash
 
-    raise DNM::InvalidJSONData, "token", "Invalid Credentials" if uid.blank?
+    fail DNM::InvalidJSONData, 'token', 'Invalid Credentials' if uid.blank?
 
     # Create or update the authorization for this user and provider
     auth = Authentication.where(provider: provider_name, uid: uid).first
-    if auth && auth.user != current_user
-      raise DNM::Unauthorized
-    end
+    fail DNM::Unauthorized if auth && auth.user != current_user
 
     current_user.authentications.where(provider: provider_name).first_or_create.tap do |a|
       a.uid    = uid
@@ -36,7 +33,6 @@ class V1::SocialProviderController < V1::BaseController
     render json: social_network_hash
   end
 
-
   private
 
   def provider_name
@@ -48,21 +44,20 @@ class V1::SocialProviderController < V1::BaseController
   end
 
   def token
-    json_params["token"]
+    json_params['token']
   end
 
   def secret
-    json_params["secret"]
+    json_params['secret']
   end
 
   def validate_update_params!
-    raise DNM::MissingJSONData, "token"  if token.blank?
-    raise DNM::MissingJSONData, "secret" if secret.blank? && provider.is_oauth_1?
+    fail DNM::MissingJSONData, 'token'  if token.blank?
+    fail DNM::MissingJSONData, 'secret' if secret.blank? && provider.is_oauth_1?
   end
 
   def social_network_hash
     provider = Authentication.provider(provider_name).new(user: current_user)
-    { provider_name => provider.meta_for_user}
+    { provider_name => provider.meta_for_user }
   end
-
 end

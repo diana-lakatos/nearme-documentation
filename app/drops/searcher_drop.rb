@@ -2,14 +2,14 @@ class SearcherDrop < BaseDrop
   attr_reader :original_results, :search, :searcher
 
   delegate :query, :input_value, :category_ids, :categories, :category_options,
-    :keyword, :located, :offset, :min_price, :current_min_price, :current_max_price,
-    :transactable_type, :max_price, :result_count, :located, :filterable_custom_attributes,
-    :keyword, :searchable_categories, to: :searcher
+           :keyword, :located, :offset, :min_price, :current_min_price, :current_max_price,
+           :transactable_type, :max_price, :result_count, :located, :filterable_custom_attributes,
+           :keyword, :searchable_categories, to: :searcher
 
   delegate :next_page, :previous_page, :total_pages, :total_entries, :offset, :current_page, :per_page, to: :original_results
 
   delegate :lgpricing_filters, :lntype, :category_ids, :lgpricing, :lg_custom_attributes, :display_dates,
-    :start_date, :end_date, :sort, to: :search
+           :start_date, :end_date, :sort, to: :search
 
   def initialize(searcher)
     @searcher = searcher
@@ -29,4 +29,3 @@ class SearcherDrop < BaseDrop
     [total_entries, (per_page * current_page)].min
   end
 end
-

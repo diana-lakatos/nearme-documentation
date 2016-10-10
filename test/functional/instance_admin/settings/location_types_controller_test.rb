@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Settings::LocationTypesControllerTest < ActionController::TestCase
-
   setup do
     @user = FactoryGirl.create(:user)
     sign_in @user
@@ -12,7 +11,7 @@ class InstanceAdmin::Settings::LocationTypesControllerTest < ActionController::T
   context 'create and index' do
     should 'create a new location type' do
       assert_difference 'LocationType.count', 1 do
-        post :create, "location_type"=>{"name"=>"new location type"}
+        post :create, 'location_type' => { 'name' => 'new location type' }
       end
 
       assert_equal 'New location type added.', flash[:success]
@@ -21,7 +20,7 @@ class InstanceAdmin::Settings::LocationTypesControllerTest < ActionController::T
 
     should 'not create a new location type' do
       assert_no_difference 'LocationType.count' do
-        post :create, "location_type"=>{"name"=>""}
+        post :create, 'location_type' => { 'name' => '' }
       end
 
       assert_equal "Location type can't be blank", flash[:error]
@@ -36,9 +35,9 @@ class InstanceAdmin::Settings::LocationTypesControllerTest < ActionController::T
 
   context 'destroy' do
     setup do
-      @location_type_1 = FactoryGirl.create(:location_type, name: "Location type 1")
-      @location_type_2 = FactoryGirl.create(:location_type, name: "Location type 2")
-      @location_type_3 = FactoryGirl.create(:location_type, name: "Location type 3")
+      @location_type_1 = FactoryGirl.create(:location_type, name: 'Location type 1')
+      @location_type_2 = FactoryGirl.create(:location_type, name: 'Location type 2')
+      @location_type_3 = FactoryGirl.create(:location_type, name: 'Location type 3')
       @location_2 = FactoryGirl.create(:location, location_type: @location_type_2)
       @location_3 = FactoryGirl.create(:location, location_type: @location_type_3)
     end
@@ -83,13 +82,13 @@ class InstanceAdmin::Settings::LocationTypesControllerTest < ActionController::T
 
     should 'fail if request is not xhr' do
       assert_raise ActionController::MethodNotAllowed do
-        patch :update, id: @location_type.id, location_type: {name: "new name"}
+        patch :update, id: @location_type.id, location_type: { name: 'new name' }
       end
     end
 
     should 'successfully update location type' do
-      new_name = "Updated"
-      xhr :patch, :update, id: @location_type.id, location_type: {name: new_name}
+      new_name = 'Updated'
+      xhr :patch, :update, id: @location_type.id, location_type: { name: new_name }
       assert_equal new_name, @location_type.reload.name
     end
   end

@@ -15,15 +15,15 @@ class MarketplaceError < ActiveRecord::Base
   # We want to truncate text fields to avoid swelling DB tables as
   # has happened before
   def truncate_text_fields
-    self.message = self.message.to_s[0...1000]
-    self.stacktrace = self.stacktrace.to_s[0...1000]
+    self.message = message.to_s[0...1000]
+    self.stacktrace = stacktrace.to_s[0...1000]
 
     true
   end
 
   def add_to_group
-    group = MarketplaceErrorGroup.where(error_type: self.error_type,
-                                        message_digest: self.message_digest).first_or_create! do |meg|
+    group = MarketplaceErrorGroup.where(error_type: error_type,
+                                        message_digest: message_digest).first_or_create! do |meg|
       meg.message = message
     end
 
@@ -33,16 +33,15 @@ class MarketplaceError < ActiveRecord::Base
   end
 
   def update_last_occurence
-    self.marketplace_error_group.last_occurence = self.created_at
-    self.marketplace_error_group.save!
+    marketplace_error_group.last_occurence = created_at
+    marketplace_error_group.save!
 
     true
   end
 
   def set_message_digest
-    self.message_digest = Digest::SHA256.hexdigest(self.message.to_s)
+    self.message_digest = Digest::SHA256.hexdigest(message.to_s)
 
     true
   end
-
 end

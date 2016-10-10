@@ -1,8 +1,7 @@
 require 'test_helper'
 
 class UserStatusUpdateTest < ActiveSupport::TestCase
-
-  context "included modules" do
+  context 'included modules' do
     %w(
       PlatformContext::DefaultScoper
       PlatformContext::ForeignKeysAssigner
@@ -13,14 +12,14 @@ class UserStatusUpdateTest < ActiveSupport::TestCase
     end
   end
 
-  context "associations" do
+  context 'associations' do
     should belong_to(:user)
     should have_and_belong_to_many(:topics)
   end
 
-  context "callbacks" do
-    should "#create_activity_feed_event after_commit on: :create" do
-      assert_difference "ActivityFeedEvent.count" do
+  context 'callbacks' do
+    should '#create_activity_feed_event after_commit on: :create' do
+      assert_difference 'ActivityFeedEvent.count' do
         create(:user_status_update)
       end
 

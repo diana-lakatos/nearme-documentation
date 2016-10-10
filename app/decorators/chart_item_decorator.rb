@@ -27,5 +27,4 @@ class ChartItemDecorator < Draper::Decorator
     end
     I18n.l(time.to_date, format: :day_and_month)
   end
-
 end

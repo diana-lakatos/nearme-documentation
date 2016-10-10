@@ -1,5 +1,4 @@
 class InstanceAdmin::Reports::TransactablesController < InstanceAdmin::Reports::BaseController
-
   def destroy
     @transactable = Transactable.find(params[:id])
     TransactableDestroyerService.new(@transactable, event_tracker, @transactable.creator).destroy
@@ -20,4 +19,3 @@ class InstanceAdmin::Reports::TransactablesController < InstanceAdmin::Reports::
     @search_form = InstanceAdmin::TransactableSearchForm
   end
 end
-

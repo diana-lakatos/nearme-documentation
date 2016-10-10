@@ -15,12 +15,12 @@ class InstanceAdmin::BaseController < ApplicationController
 
   REPORTS_CONTROLLERS = {
     'transactables' => { default_action: 'index', title: 'Listings' },
-    'users'         => { default_action: 'index' },
+    'users'         => { default_action: 'index' }
   }
 
   COMMUNITY_REPORTS_CONTROLLERS = {
     'projects' => { default_action: 'index' },
-    'advanced_projects' => { default_action: 'index' },
+    'advanced_projects' => { default_action: 'index' }
   }
 
   MANAGE_CONTROLLERS = {
@@ -60,7 +60,7 @@ class InstanceAdmin::BaseController < ApplicationController
     'configuration'        => { default_action: 'show', controller_class: 'InstanceAdmin::Settings::ConfigurationController' },
     'payments'             => { default_action: 'index' },
     'domains'              => { default_action: 'index' },
-    'ssl_certificates'     => { default_action: 'index', title: "SSL Certificates", controller: '/instance_admin/settings/aws_certificates' },
+    'ssl_certificates'     => { default_action: 'index', title: 'SSL Certificates', controller: '/instance_admin/settings/aws_certificates' },
     'api_keys'             => { default_action: 'index' },
     'hidden_controls'      => { default_action: 'show' },
     'locations'            => { default_action: 'show' },
@@ -68,8 +68,8 @@ class InstanceAdmin::BaseController < ApplicationController
     'integrations'         => { default_action: 'show' },
     'languages'            => { default_action: 'index', controller: '/instance_admin/settings/locales' },
     'documents_upload'     => { default_action: 'show' },
-    'seller_attachments'   => { default_action: 'show'},
-    'taxes'                => { default_action: 'index', controller: '/instance_admin/settings/tax_regions'},
+    'seller_attachments'   => { default_action: 'show' },
+    'taxes'                => { default_action: 'index', controller: '/instance_admin/settings/tax_regions' }
   }
 
   THEME_CONTROLLERS = {
@@ -86,7 +86,7 @@ class InstanceAdmin::BaseController < ApplicationController
   SHIPPING_OPTIONS_CONTROLLERS = {
     'dimensions_templates' => { default_action: 'index' },
     'providers' => { default_action: 'show' },
-    'shipping_profiles' => { default_action: 'index' },
+    'shipping_profiles' => { default_action: 'index' }
   }
 
   SUPPORT_CONTROLLERS = {
@@ -115,14 +115,14 @@ class InstanceAdmin::BaseController < ApplicationController
     support: 'support_root',
     buysell: 'buy_sell',
     customtemplates: 'custom_templates',
-    shippingoptions: ['shipping_options', 'shipping_profiles'],
-    reports: ['reports', 'listings'],
+    shippingoptions: %w(shipping_options shipping_profiles),
+    reports: %w(reports listings)
   }.with_indifferent_access
 
   def index
     first_permission = @authorizer.first_permission_have_access_to
 
-    if PERMISSIONS_CONTROLLERS.has_key?(first_permission)
+    if PERMISSIONS_CONTROLLERS.key?(first_permission)
       redirect_to url_for([:instance_admin, PERMISSIONS_CONTROLLERS[first_permission]].flatten)
     else
       redirect_to url_for([:instance_admin, first_permission])
@@ -175,11 +175,10 @@ class InstanceAdmin::BaseController < ApplicationController
   helper_method :instance_admin_roles
 
   def append_to_breadcrumbs(title, url = nil)
-    if @breadcrumbs_title.kind_of?(BreadcrumbsList)
+    if @breadcrumbs_title.is_a?(BreadcrumbsList)
       @breadcrumbs_title.append_location(title, url)
     else
       @breadcrumbs_title = title
     end
   end
-
 end

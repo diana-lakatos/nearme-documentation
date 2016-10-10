@@ -19,14 +19,13 @@ class Schedule < ActiveRecord::Base
   validates_length_of :schedule_rules, maximum: 10
 
   accepts_nested_attributes_for :schedule_exception_rules, allow_destroy: true
-  accepts_nested_attributes_for :schedule_rules, allow_destroy: true, reject_if: lambda { |params| params[:run_hours_mode].blank? && params[:run_dates_mode].blank? }
+  accepts_nested_attributes_for :schedule_rules, allow_destroy: true, reject_if: ->(params) { params[:run_hours_mode].blank? && params[:run_dates_mode].blank? }
 
   attr_accessor :timezone
 
   after_validation  do
-    self.sr_days_of_week = self.sr_days_of_week.reject(&:blank?)
+    self.sr_days_of_week = sr_days_of_week.reject(&:blank?)
   end
-
 
   def schedule
     @schedule ||= Time.use_zone(scheduable.try(:timezone) || Time.zone.name) do
@@ -35,7 +34,7 @@ class Schedule < ActiveRecord::Base
       else
         IceCube::Schedule.from_hash(JSON.parse(super || '{}'))
       end.tap do |s|
-        if self.schedule_rules.count > 0
+        if schedule_rules.count > 0
           s.start_time = Time.zone.now
           # We add the start time as an exception otherwise we'd always get the start time
           s.add_exception_time(s.start_time)
@@ -97,15 +96,15 @@ class Schedule < ActiveRecord::Base
       self.schedule = @schedule
     end
 
-    self.update_attribute(:schedule, @schedule.to_hash.to_json)
+    update_attribute(:schedule, @schedule.to_hash.to_json)
     save!
   end
 
-  def excluded_ranges_for(start_date, end_date=nil)
+  def excluded_ranges_for(start_date, end_date = nil)
     return [] unless unavailable_period_enabled?
 
-    ser = schedule_exception_rules.where('duration_range_end > ?', start_date )
-    ser = ser.where('duration_range_start < ?', end_date ) if end_date
+    ser = schedule_exception_rules.where('duration_range_end > ?', start_date)
+    ser = ser.where('duration_range_start < ?', end_date) if end_date
     ser.select('duration_range_start, duration_range_end').map do |ser|
       ser.duration_range_start..ser.duration_range_end.end_of_day
     end
@@ -113,14 +112,14 @@ class Schedule < ActiveRecord::Base
 
   def validate_schedule_rules
     Time.use_zone(timezone) do
-      schedule_rules.each { |sr| sr.parse_user_input }
-      schedule_exception_rules.each { |sr| sr.parse_user_input }
+      schedule_rules.each(&:parse_user_input)
+      schedule_exception_rules.each(&:parse_user_input)
     end
   end
 
   def days_of_week_selected
-    if self.sr_days_of_week.reject(&:blank?).blank?
-      self.errors.add(:sr_days_of_week, :blank)
+    if sr_days_of_week.reject(&:blank?).blank?
+      errors.add(:sr_days_of_week, :blank)
     end
   end
 
@@ -134,6 +133,4 @@ class Schedule < ActiveRecord::Base
     start_time_in_zone = (start_time.utc + utc_offset).in_time_zone(scheduable.try(:timezone))
     start_time_in_zone - start_time_in_zone.utc_offset
   end
-
 end
-

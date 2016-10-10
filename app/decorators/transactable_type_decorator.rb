@@ -4,11 +4,11 @@ class TransactableTypeDecorator < Draper::Decorator
   delegate_all
 
   def fulltext_search?
-    ['fulltext', 'fulltext_category'].include?(searcher_type)
+    %w(fulltext fulltext_category).include?(searcher_type)
   end
 
   def fulltext_geo_search?
-    searcher_type == "fulltext_geo"
+    searcher_type == 'fulltext_geo'
   end
 
   def fulltext_category_search?
@@ -28,7 +28,7 @@ class TransactableTypeDecorator < Draper::Decorator
   end
 
   def search_input_name
-    fulltext_search? ? "query" : "loc"
+    fulltext_search? ? 'query' : 'loc'
   end
 
   def other_search_view
@@ -36,11 +36,11 @@ class TransactableTypeDecorator < Draper::Decorator
   end
 
   def geolocation_placeholder
-    I18n.t "#{translation_namespace}.search_field_placeholder.location" , default: I18n.t('homepage.search_field_placeholder.location')
+    I18n.t "#{translation_namespace}.search_field_placeholder.location", default: I18n.t('homepage.search_field_placeholder.location')
   end
 
   def fulltext_placeholder
-    I18n.t "#{translation_namespace}.search_field_placeholder.full_text" , default: I18n.t('homepage.search_field_placeholder.full_text')
+    I18n.t "#{translation_namespace}.search_field_placeholder.full_text", default: I18n.t('homepage.search_field_placeholder.full_text')
   end
 
   def display_location_type_filter?
@@ -51,10 +51,8 @@ class TransactableTypeDecorator < Draper::Decorator
     searcher_type == 'fulltext' ? I18n.t('homepage.search_field_placeholder.full_text') : I18n.t('homepage.search_field_placeholder.location')
   end
 
-  #TODO: to refactor
+  # TODO: to refactor
   def manage_transactables_path
     [:dashboard, :company, object.becomes(TransactableType), object.becomes(TransactableType).class.name.demodulize.tableize.split('_').first.pluralize]
   end
-
 end
-

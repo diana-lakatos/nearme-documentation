@@ -10,7 +10,7 @@ module ClickToCallButtonHelper
 
       if closest_availability
         open_minute = transactable.availability.open_minute_for(closest_availability)
-        closest_availability = open_minute.present? ? closest_availability.change({ min: open_minute.modulo(60), hour: (open_minute / 60).floor }) : nil
+        closest_availability = open_minute.present? ? closest_availability.change(min: open_minute.modulo(60), hour: (open_minute / 60).floor) : nil
       end
 
       build_click_to_call_button(path_to_call, I18n.t('phone_calls.buttons.click_to_call'), transactable.open_now?, transactable.timezone, closest_availability)
@@ -48,11 +48,10 @@ module ClickToCallButtonHelper
     available_info = next_available_occurence ? I18n.t('phone_calls.tooltip.next_available_occurence', time: I18n.l(next_available_occurence, format: :with_time_zone)) : ''
 
     if available_now
-      tag = content_tag(:a, label, class: 'btn btn-info btn-green', href: path, data: { modal: true, href: path, :"modal-class" => 'ctc-dialog' }, title: time_info, rel: 'tooltip', :'data-toggle' => 'tooltip')
+      tag = content_tag(:a, label, class: 'btn btn-info btn-green', href: path, data: { modal: true, href: path, "modal-class": 'ctc-dialog' }, title: time_info, rel: 'tooltip', 'data-toggle': 'tooltip')
     else
-      tag = content_tag(:span, label, class: 'btn btn-info disabled btn-gray', title: "#{time_info}#{available_info}", rel: 'tooltip', :'data-toggle' => 'tooltip')
+      tag = content_tag(:span, label, class: 'btn btn-info disabled btn-gray', title: "#{time_info}#{available_info}", rel: 'tooltip', 'data-toggle': 'tooltip')
     end
     content_tag(:span, tag, class: 'click-to-call')
   end
-
 end

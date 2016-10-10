@@ -1,14 +1,12 @@
 require 'test_helper'
 
 class Utils::FormComponentsCreatorTest < ActiveSupport::TestCase
-
   setup do
     @transactable_type = FactoryGirl.build(:transactable_type)
     @transactable_type.save!
   end
 
-  context "#create!" do
-
+  context '#create!' do
     should 'create 4 sections by default' do
       @form_component_creator = Utils::FormComponentsCreator.new(@transactable_type)
       assert_difference 'FormComponent.count', 7 do

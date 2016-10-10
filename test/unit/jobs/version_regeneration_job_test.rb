@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class VersionRegenerationJobTest < ActiveSupport::TestCase
-
   context '#perform' do
     should 'call generate versions' do
       photo = FactoryGirl.create(:photo)
@@ -27,5 +26,4 @@ class VersionRegenerationJobTest < ActiveSupport::TestCase
       VersionRegenerationJob.perform('User', user.id, :avatar, true)
     end
   end
-
 end

@@ -1,6 +1,5 @@
 class Dashboard::UserRecurringBookingsController < Dashboard::BaseController
-
-  before_filter :only => [:user_cancel] do |controller|
+  before_filter only: [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)
       flash[:error] = t('flash_messages.reservations.invalid_operation')
       redirect_to dashboard_user_recurring_bookings_path
@@ -9,7 +8,7 @@ class Dashboard::UserRecurringBookingsController < Dashboard::BaseController
 
   def user_cancel
     if recurring_booking.guest_cancel
-      event_tracker.cancelled_a_recurring_booking(recurring_booking, { actor: 'guest' })
+      event_tracker.cancelled_a_recurring_booking(recurring_booking, actor: 'guest')
       event_tracker.updated_profile_information(recurring_booking.owner)
       event_tracker.updated_profile_information(recurring_booking.host)
       flash[:deleted] = t('flash_messages.reservations.reservation_cancelled')
@@ -22,7 +21,7 @@ class Dashboard::UserRecurringBookingsController < Dashboard::BaseController
   def export
     respond_to do |format|
       format.ics do
-        render :text => ReservationIcsBuilder.new(recurring_booking, current_user).to_s
+        render text: ReservationIcsBuilder.new(recurring_booking, current_user).to_s
       end
     end
   end
@@ -52,15 +51,12 @@ class Dashboard::UserRecurringBookingsController < Dashboard::BaseController
   def booking_successful_modal
   end
 
-
   protected
 
   def recurring_booking
-    begin
-      @recurring_booking ||= current_user.recurring_bookings.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      raise Reservation::NotFound
-    end
+    @recurring_booking ||= current_user.recurring_bookings.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    raise Reservation::NotFound
   end
 
   def recurring_bookings
@@ -74,5 +70,4 @@ class Dashboard::UserRecurringBookingsController < Dashboard::BaseController
   def current_event
     params[:event].downcase.to_sym
   end
-
 end

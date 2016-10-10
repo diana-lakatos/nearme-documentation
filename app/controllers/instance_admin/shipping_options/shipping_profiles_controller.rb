@@ -1,5 +1,4 @@
 class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin::ShippingOptions::BaseController
-
   before_filter :set_breadcrumbs
 
   before_filter :get_company
@@ -10,7 +9,7 @@ class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin
 
   def new
     @shipping_profile = ShippingProfile.new
-    render :partial => 'dashboard/shipping_profiles/shipping_profile', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post }
+    render partial: 'dashboard/shipping_profiles/shipping_profile', locals: { form_url: instance_admin_shipping_options_shipping_profiles_path, form_method: :post }
   end
 
   def create
@@ -19,24 +18,24 @@ class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin
     @shipping_profile.user_id = current_user.id
     @shipping_profile.global = true
     if @shipping_profile.save
-      render :partial => 'dashboard/shipping_profiles/shipping_profile', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post, :is_success => true }
+      render partial: 'dashboard/shipping_profiles/shipping_profile', locals: { form_url: instance_admin_shipping_options_shipping_profiles_path, form_method: :post, is_success: true }
     else
-      render :partial => 'dashboard/shipping_profiles/shipping_profile', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post }
+      render partial: 'dashboard/shipping_profiles/shipping_profile', locals: { form_url: instance_admin_shipping_options_shipping_profiles_path, form_method: :post }
     end
   end
 
   def edit
     @shipping_profile = ShippingProfile.find(params[:id])
-    render :partial => 'dashboard/shipping_profiles/shipping_profile', :locals => { :form_url => instance_admin_shipping_options_shipping_profile_path(@shipping_profile), :form_method => :put }
+    render partial: 'dashboard/shipping_profiles/shipping_profile', locals: { form_url: instance_admin_shipping_options_shipping_profile_path(@shipping_profile), form_method: :put }
   end
 
   def update
     @shipping_profile = ShippingProfile.find(params[:id])
     shipping_profile_params[:global] = true
     if @shipping_profile.update(shipping_profile_params)
-      render :partial => 'dashboard/shipping_profiles/shipping_profile', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post, :is_success => true }
+      render partial: 'dashboard/shipping_profiles/shipping_profile', locals: { form_url: instance_admin_shipping_options_shipping_profiles_path, form_method: :post, is_success: true }
     else
-      render :partial => 'dashboard/shipping_profiles/shipping_profile', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post }
+      render partial: 'dashboard/shipping_profiles/shipping_profile', locals: { form_url: instance_admin_shipping_options_shipping_profiles_path, form_method: :post }
     end
   end
 
@@ -49,7 +48,7 @@ class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin
   def get_shipping_categories_list
     @shipping_profiles = ShippingProfile.global
 
-    render partial: "categories_list"
+    render partial: 'categories_list'
   end
 
   private
@@ -69,6 +68,4 @@ class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin
   def shipping_profile_params
     params.require(:shipping_profile).permit(secured_params.shipping_profile)
   end
-
 end
-

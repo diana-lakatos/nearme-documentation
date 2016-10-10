@@ -1,12 +1,11 @@
 class Admin::ReservationsController < Admin::ResourceController
-
   def index
   end
 
   def show
     @periods =  ReservationPeriodDecorator.decorate_collection(resource.periods)
     show!
-  end 
+  end
 
   private
 
@@ -17,6 +16,4 @@ class Admin::ReservationsController < Admin::ResourceController
   def collection_default_scope
     'upcoming'
   end
-
 end
-

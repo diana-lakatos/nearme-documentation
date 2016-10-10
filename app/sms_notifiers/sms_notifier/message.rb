@@ -25,7 +25,7 @@ class SmsNotifier::Message
   # 21421: PhoneNumber is invalid
   # 21601: Phone number is not a valid SMS-capable/MMS-capable inbound phone number
   # 21614: 'To' number is not a valid mobile number
-  ERROR_CODES_FOR_FALLBACK = [21407, 21421, 21601, 21614].freeze
+  ERROR_CODES_FOR_FALLBACK = [21_407, 21_421, 21_601, 21_614].freeze
 
   def initialize(data)
     @data = data.reverse_merge(from: from_number)
@@ -97,7 +97,6 @@ class SmsNotifier::Message
     else
       SmsNotifier::Message::DummyTwilioClient
     end.new(config[:key], config[:secret])
-
   end
 
   def valid?
@@ -113,9 +112,9 @@ class SmsNotifier::Message
 
   def send_twilio_message
     self.twilio_sms = twilio_client.account.sms.messages.create(
-      :body => @data[:body],
-      :to => @data[:to],
-      :from => @data[:from]
+      body: @data[:body],
+      to: @data[:to],
+      from: @data[:from]
     )
   end
 
@@ -129,9 +128,7 @@ class SmsNotifier::Message
 
   def raise_error_if_config_invalid
     if config[:key].blank? || config[:secret].blank? || config[:from].blank?
-      Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::SMS_ERROR, "Twilio configuration is missing key, secret or from number")
+      Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::SMS_ERROR, 'Twilio configuration is missing key, secret or from number')
     end
   end
-
 end
-

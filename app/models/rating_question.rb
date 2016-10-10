@@ -21,5 +21,4 @@ class RatingQuestion < ActiveRecord::Base
       rating_answers.create!(review_id: review_id)
     end
   end
-
 end

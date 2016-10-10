@@ -1,5 +1,4 @@
 class WorkflowStep::DataUploadWorkflow::BaseStep < WorkflowStep::BaseStep
-
   def initialize(data_upload_id)
     @data_upload = DataUpload.find_by_id(data_upload_id)
   end
@@ -29,5 +28,4 @@ class WorkflowStep::DataUploadWorkflow::BaseStep < WorkflowStep::BaseStep
   def should_be_processed?
     @data_upload.present?
   end
-
 end

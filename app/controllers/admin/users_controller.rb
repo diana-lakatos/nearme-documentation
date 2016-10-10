@@ -1,5 +1,5 @@
 class Admin::UsersController < Admin::ResourceController
-  skip_before_filter :require_administrator, :only => [:restore_session]
+  skip_before_filter :require_administrator, only: [:restore_session]
   before_filter :set_platform_context_if_nil, only: [:update]
 
   def login_as
@@ -9,9 +9,9 @@ class Admin::UsersController < Admin::ResourceController
     # Add special session parameters to flag we're an admin
     # logged in as the user.
     session[:admin_as_user] = {
-      :user_id => resource.id,
-      :admin_user_id => admin_user.id,
-      :redirect_back_to => request.referer
+      user_id: resource.id,
+      admin_user_id: admin_user.id,
+      redirect_back_to: request.referer
     }
 
     sign_in(resource)
@@ -43,4 +43,3 @@ class Admin::UsersController < Admin::ResourceController
     resource.instance.set_context! if PlatformContext.current.blank? && resource.instance
   end
 end
-

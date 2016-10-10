@@ -18,21 +18,20 @@ module PlatformContext::ForeignKeysAssigner
   extend ActiveSupport::Concern
 
   included do
-
     def self.auto_set_platform_context(options = {})
       if self.table_exists?
-        class_eval <<-RUBY, __FILE__, __LINE__+1
-          #{"validates_presence_of :instance_id" if !options[:allow_nil].try(:include?, :instance_id) && self.column_names.include?('instance_id')}
+        class_eval <<-RUBY, __FILE__, __LINE__ + 1
+          #{'validates_presence_of :instance_id' if !options[:allow_nil].try(:include?, :instance_id) && column_names.include?('instance_id')}
 
           before_validation do
             if !self.persisted? && !self.marked_for_destruction? && !PlatformContext.current.nil?
-              #{"self.instance_id = PlatformContext.current.instance.id" if self.column_names.include?('instance_id') && !options[:allow_nil].try(:include?, :instance_id)}
-              #{"self.domain_id = PlatformContext.current.domain.try(:id)" if self.column_names.include?('domain_id')}
-              #{"self.partner_id = PlatformContext.current.partner.try(:id)" if self.column_names.include?('partner_id')}
-              #{"if PlatformContext.current.white_label_company" if self.column_names.include?('company_id') || self.column_names.include?('listings_public')}
-                #{"self.company_id = PlatformContext.current.white_label_company.id\n" if self.column_names.include?('company_id')}
-                #{"self.listings_public = PlatformContext.current.white_label_company.listings_public\n" if self.column_names.include?('listings_public')}
-              #{"end" if self.column_names.include?('company_id') || self.column_names.include?('listings_public')}
+              #{'self.instance_id = PlatformContext.current.instance.id' if column_names.include?('instance_id') && !options[:allow_nil].try(:include?, :instance_id)}
+              #{'self.domain_id = PlatformContext.current.domain.try(:id)' if column_names.include?('domain_id')}
+              #{'self.partner_id = PlatformContext.current.partner.try(:id)' if column_names.include?('partner_id')}
+              #{'if PlatformContext.current.white_label_company' if column_names.include?('company_id') || column_names.include?('listings_public')}
+                #{"self.company_id = PlatformContext.current.white_label_company.id\n" if column_names.include?('company_id')}
+                #{"self.listings_public = PlatformContext.current.white_label_company.listings_public\n" if column_names.include?('listings_public')}
+              #{'end' if column_names.include?('company_id') || column_names.include?('listings_public')}
             else
               true
             end
@@ -40,8 +39,5 @@ module PlatformContext::ForeignKeysAssigner
         RUBY
       end
     end
-
   end
-
-
 end

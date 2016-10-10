@@ -34,9 +34,9 @@ class Domain < ActiveRecord::Base
   before_validation -> { self.name = name.try(:strip) }
 
   validates_presence_of :name
-  validates_presence_of :aws_certificate_id, if: Proc.new { |d| d.https_required? && !d.near_me_domain?}
-  validates_uniqueness_of :name, :scope => :deleted_at
-  validates_length_of :name, :maximum => 150
+  validates_presence_of :aws_certificate_id, if: proc { |d| d.https_required? && !d.near_me_domain? }
+  validates_uniqueness_of :name, scope: :deleted_at
+  validates_length_of :name, maximum: 150
   validates_length_of :google_analytics_tracking_code, maximum: 15
 
   validates :name, domain_name: true
@@ -56,7 +56,7 @@ class Domain < ActiveRecord::Base
   scope :secured, -> { where(secured: true) }
   scope :default, -> { where(use_as_default: true) }
 
-  delegate :white_label_enabled?, :to => :target
+  delegate :white_label_enabled?, to: :target
 
   mount_uploader :uploaded_robots_txt, RobotsTxtUploader
   mount_uploader :generated_sitemap, SitemapUploader
@@ -99,7 +99,7 @@ class Domain < ActiveRecord::Base
   end
 
   def deletable?
-    not(use_as_default || near_me_domain?)
+    !(use_as_default || near_me_domain?)
   end
 
   def editable?
@@ -107,19 +107,19 @@ class Domain < ActiveRecord::Base
   end
 
   def url
-    https_required? ? "https://" + name : "http://" + name
+    https_required? ? 'https://' + name : 'http://' + name
   end
 
   def white_label_company?
-    "Company" == target_type
+    'Company' == target_type
   end
 
   def instance?
-    "Instance" == target_type
+    'Instance' == target_type
   end
 
   def partner?
-    "Partner" == target_type
+    'Partner' == target_type
   end
 
   def near_me_domain?
@@ -147,14 +147,14 @@ class Domain < ActiveRecord::Base
   private
 
   def mark_as_default
-    if use_as_default && target_type.try(:include?, "Instance")
+    if use_as_default && target_type.try(:include?, 'Instance')
       target.domains.default.where.not(id: id).update_all(use_as_default: false)
     end
   end
 
   def validate_default_domain_presence
-    if !use_as_default && target_type.try(:include?, "Instance") && target.domains.default.where.not(id: id).count.zero?
-      errors.add :use_as_default, "At least one domain needs to be default one"
+    if !use_as_default && target_type.try(:include?, 'Instance') && target.domains.default.where.not(id: id).count.zero?
+      errors.add :use_as_default, 'At least one domain needs to be default one'
     end
   end
 

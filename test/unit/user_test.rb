@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
-
   include ApplicationHelper
 
   def after_teardown
@@ -13,20 +12,20 @@ class UserTest < ActiveSupport::TestCase
     stub_active_merchant_interaction
   end
 
-  context "instance owner method" do
-    should "return true if the user is an instance owner" do
+  context 'instance owner method' do
+    should 'return true if the user is an instance owner' do
       @instance_owner = FactoryGirl.create(:instance_admin)
       assert @instance_owner.user.is_instance_owner?
     end
   end
 
-  context "#social_connections" do
-    should "be empty for new user" do
+  context '#social_connections' do
+    should 'be empty for new user' do
       user = FactoryGirl.build(:user)
       assert_equal [], user.social_connections
     end
 
-    should "return provider and count for existing connections" do
+    should 'return provider and count for existing connections' do
       user = FactoryGirl.create(:user)
       friend = FactoryGirl.create(:user)
       auth = FactoryGirl.create(:authentication, provider: 'facebook')
@@ -40,14 +39,14 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context "#without" do
-    should "handle single user" do
+  context '#without' do
+    should 'handle single user' do
       user = FactoryGirl.create(:user)
       count = User.count
       assert_equal count - 1, User.without(user).count
     end
 
-    should "handle collection" do
+    should 'handle collection' do
       3.times { FactoryGirl.create(:user) }
       users = User.first(2)
       count = User.count
@@ -89,7 +88,7 @@ class UserTest < ActiveSupport::TestCase
 
         friends_with_visit = @me.friends.first(2)
         @me.friends.last.orders << FactoryGirl.create(:future_confirmed_reservation, date: Date.tomorrow)
-        friends_with_visit.each {|f| FactoryGirl.create(:past_reservation, transactable: @listing, user:f)}
+        friends_with_visit.each { |f| FactoryGirl.create(:past_reservation, transactable: @listing, user: f) }
 
         assert_equal friends_with_visit.sort, @me.friends.visited_listing(@listing).to_a.sort
       end
@@ -109,7 +108,7 @@ class UserTest < ActiveSupport::TestCase
 
     context 'friends_know_host_of' do
       should 'find users knows host' do
-        2.times { @me.add_friend(FactoryGirl.create(:user))}
+        2.times { @me.add_friend(FactoryGirl.create(:user)) }
         @friend = FactoryGirl.create(:user)
 
         @me.add_friend(@friend)
@@ -135,7 +134,7 @@ class UserTest < ActiveSupport::TestCase
 
         mutual_friends_with_visit = @friend.friends.without(@me).first(2)
         @friend.friends.last.orders << FactoryGirl.create(:future_confirmed_reservation, date: Date.tomorrow)
-        mutual_friends_with_visit.each {|f| FactoryGirl.create(:past_reservation, transactable: @listing, user:f)}
+        mutual_friends_with_visit.each { |f| FactoryGirl.create(:past_reservation, transactable: @listing, user: f) }
 
         result = User.mutual_friends_of(@me).visited_listing(@listing)
         assert_equal mutual_friends_with_visit.sort, result.sort
@@ -144,53 +143,49 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context "validations" do
-    context "when country name provided" do
-      should "have iso code from country name" do
+  context 'validations' do
+    context 'when country name provided' do
+      should 'have iso code from country name' do
         PlatformContext.current.instance.stubs(:skip_company?).returns(true)
-        FactoryGirl.create(:country_pl) unless Country.find_by_iso("PL")
-        user = FactoryGirl.build(:user_without_country_name, country_name: "Poland", current_address: nil)
-        assert_equal "PL", user.iso_country_code
+        FactoryGirl.create(:country_pl) unless Country.find_by_iso('PL')
+        user = FactoryGirl.build(:user_without_country_name, country_name: 'Poland', current_address: nil)
+        assert_equal 'PL', user.iso_country_code
       end
     end
 
-    context "when no country name provided" do
-
-      context "when country name not required" do
-        should "be valid" do
+    context 'when no country name provided' do
+      context 'when country name not required' do
+        should 'be valid' do
           user = FactoryGirl.build(:user_without_country_name)
           assert user.valid?
         end
       end
 
-      context "when wrong phone numbers provided" do
+      context 'when wrong phone numbers provided' do
         setup do
           @user = FactoryGirl.build(:user)
           @user.build_profile
         end
 
-        should "be invalid with wrong phone" do
-          @user.phone = "3423jhjhg432"
+        should 'be invalid with wrong phone' do
+          @user.phone = '3423jhjhg432'
           refute @user.valid?
         end
 
-        should "be invalid with wrong mobile number" do
-          @user.mobile_number = "3423jhjhg432"
+        should 'be invalid with wrong mobile number' do
+          @user.mobile_number = '3423jhjhg432'
           refute @user.valid?
         end
 
-        should "be valid with empty numbers" do
+        should 'be valid with empty numbers' do
           @user.mobile_number = nil
           @user.phone = nil
           assert @user.valid?
         end
-
       end
-
     end
 
     context 'approval_requests' do
-
       setup do
         @user = FactoryGirl.build(:user)
         @user.approval_requests = []
@@ -204,11 +199,9 @@ class UserTest < ActiveSupport::TestCase
         should 'be trusted even without approval_requests' do
           assert @user.is_trusted?
         end
-
       end
 
       context 'instance does require verification' do
-
         setup do
           FactoryGirl.create(:approval_request_template)
           @approval_request = FactoryGirl.build(:approval_request)
@@ -250,13 +243,11 @@ class UserTest < ActiveSupport::TestCase
     end
 
     context 'when special requirements per instance' do
-
       should 'be valid without middle_name if has not been peristed yet' do
         @user = FactoryGirl.build(:user, middle_name: nil)
         @user.custom_validation = true
         assert @user.valid?
       end
-
     end
   end
 
@@ -266,51 +257,50 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'have capitalized name' do
-      assert_equal "Jimmy Falcon", @user.name
+      assert_equal 'Jimmy Falcon', @user.name
     end
 
     should 'have capitalized first name' do
       assert_equal 'Jimmy', @user.first_name
     end
-
   end
 
   context 'reservations' do
     should 'find rejected reservations' do
-      @user = FactoryGirl.create(:user, :orders => [
-        FactoryGirl.create(:reservation, :state => 'unconfirmed'),
-        FactoryGirl.create(:reservation, :state => 'rejected')
+      @user = FactoryGirl.create(:user, orders: [
+        FactoryGirl.create(:reservation, state: 'unconfirmed'),
+        FactoryGirl.create(:reservation, state: 'rejected')
       ])
       assert_equal 1, @user.rejected_reservations.count
     end
 
     should 'find confirmed reservations' do
-      @user = FactoryGirl.create(:user, :orders => [
-        FactoryGirl.create(:reservation, :state => 'unconfirmed'),
-        FactoryGirl.create(:reservation, :state => 'confirmed')
+      @user = FactoryGirl.create(:user, orders: [
+        FactoryGirl.create(:reservation, state: 'unconfirmed'),
+        FactoryGirl.create(:reservation, state: 'confirmed')
       ])
       assert_equal 1, @user.confirmed_reservations.count
     end
 
     should 'find expired reservations' do
-      @user = FactoryGirl.create(:user, :orders => [
-        FactoryGirl.create(:reservation, :state => 'unconfirmed'),
-        FactoryGirl.create(:reservation, :state => 'expired')
+      @user = FactoryGirl.create(:user, orders: [
+        FactoryGirl.create(:reservation, state: 'unconfirmed'),
+        FactoryGirl.create(:reservation, state: 'expired')
       ])
       assert_equal 1, @user.expired_reservations.count
     end
 
     should 'find cancelled reservations' do
-      @user = FactoryGirl.create(:user, :orders => [
-        FactoryGirl.create(:reservation, :state => 'unconfirmed'),
-        FactoryGirl.create(:reservation, :state => 'cancelled_by_guest'),
-        FactoryGirl.create(:reservation, :state => 'cancelled_by_host')
+      @user = FactoryGirl.create(:user, orders: [
+        FactoryGirl.create(:reservation, state: 'unconfirmed'),
+        FactoryGirl.create(:reservation, state: 'cancelled_by_guest'),
+        FactoryGirl.create(:reservation, state: 'cancelled_by_host')
       ])
       assert_equal 2, @user.cancelled_reservations.count
     end
   end
 
-  should "have authentications" do
+  should 'have authentications' do
     @user = FactoryGirl.create(:user)
     @user.authentications << FactoryGirl.build(:authentication)
     @user.authentications << FactoryGirl.build(:authentication_linkedin)
@@ -324,30 +314,30 @@ class UserTest < ActiveSupport::TestCase
     assert_nil @user.instagram_url
   end
 
-  should "be valid even if its company is not valid" do
+  should 'be valid even if its company is not valid' do
     @user = FactoryGirl.create(:user)
-    @company = FactoryGirl.create(:company, :creator => @user)
+    @company = FactoryGirl.create(:company, creator: @user)
     @company.name = nil
-    @company.save(:validate => false)
+    @company.save(validate: false)
     @user.reload
     assert @user.valid?
   end
 
-  should "know what authentication providers it is linked to" do
+  should 'know what authentication providers it is linked to' do
     @user = FactoryGirl.create(:user)
     @user.authentications.where(provider: 'exists').first_or_create.tap do |a|
       a.uid = @user.id
-      a.token = "abcd"
+      a.token = 'abcd'
     end.save!
-    assert @user.linked_to?("exists")
+    assert @user.linked_to?('exists')
   end
 
   should "know what authentication providers it isn't linked to" do
     @user = FactoryGirl.create(:user)
-    refute @user.linked_to?("doesntexist")
+    refute @user.linked_to?('doesntexist')
   end
 
-  should "it has reservations" do
+  should 'it has reservations' do
     @user = User.new
     @user.orders.reservations << Reservation.new
     @user.orders.reservations << Reservation.new
@@ -355,34 +345,34 @@ class UserTest < ActiveSupport::TestCase
     assert @user.orders.reservations
   end
 
-  should "allow users to use the same email across marketplaces" do
-    @user = FactoryGirl.create(:user, email: "hulk@desksnear.me")
+  should 'allow users to use the same email across marketplaces' do
+    @user = FactoryGirl.create(:user, email: 'hulk@desksnear.me')
     assert_raise ActiveRecord::RecordInvalid do
-      FactoryGirl.create(:user, email: "hulk@desksnear.me")
+      FactoryGirl.create(:user, email: 'hulk@desksnear.me')
     end
     PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
     assert_nothing_raised do
-      FactoryGirl.create(:user, email: "hulk@desksnear.me")
+      FactoryGirl.create(:user, email: 'hulk@desksnear.me')
     end
   end
 
-  should "allow users to use the same email if external id is different" do
-    @user = FactoryGirl.create(:user, email: "hulk@desksnear.me", external_id: 'something')
+  should 'allow users to use the same email if external id is different' do
+    @user = FactoryGirl.create(:user, email: 'hulk@desksnear.me', external_id: 'something')
     assert_raise ActiveRecord::RecordInvalid do
-      FactoryGirl.create(:user, email: "hulk@desksnear.me", external_id: 'something')
+      FactoryGirl.create(:user, email: 'hulk@desksnear.me', external_id: 'something')
     end
     assert_nothing_raised do
-      FactoryGirl.create(:user, email: "hulk@desksnear.me", external_id: 'different')
+      FactoryGirl.create(:user, email: 'hulk@desksnear.me', external_id: 'different')
     end
   end
 
-  should "have full email address" do
-    @user = User.new(name: "Hulk Hogan", email: "hulk@desksnear.me")
+  should 'have full email address' do
+    @user = User.new(name: 'Hulk Hogan', email: 'hulk@desksnear.me')
 
-    assert_equal "Hulk Hogan <hulk@desksnear.me>", @user.full_email
+    assert_equal 'Hulk Hogan <hulk@desksnear.me>', @user.full_email
   end
 
-  should "not have avatar if user did not upload it" do
+  should 'not have avatar if user did not upload it' do
     @user = FactoryGirl.create(:user)
     @user.remove_avatar!
     @user.save!
@@ -390,22 +380,22 @@ class UserTest < ActiveSupport::TestCase
     assert !@user.avatar.file.present?
   end
 
-  should "have avatar if user uploaded it" do
+  should 'have avatar if user uploaded it' do
     @user = FactoryGirl.build(:user)
-    @user.avatar = File.open(File.expand_path("../../assets/foobear.jpeg", __FILE__))
+    @user.avatar = File.open(File.expand_path('../../assets/foobear.jpeg', __FILE__))
     @user.avatar_versions_generated_at = Time.zone.now
     @user.save!
     assert @user.avatar.file.present?
   end
 
-  should "allow to download image from linkedin which do not have extension" do
+  should 'allow to download image from linkedin which do not have extension' do
     @user = FactoryGirl.build(:user)
-    @user.avatar = File.open(File.expand_path("../../assets/image_no_extension", __FILE__))
+    @user.avatar = File.open(File.expand_path('../../assets/image_no_extension', __FILE__))
     @user.avatar_versions_generated_at = Time.zone.now
     assert @user.save
   end
 
-  should "have mailer unsubscriptions" do
+  should 'have mailer unsubscriptions' do
     @user = FactoryGirl.create(:user)
     @user.unsubscribe('recurring_mailer/analytics')
 
@@ -432,108 +422,104 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context "#has_phone_and_country?" do
-    context "phone and country are present" do
-      should "return true" do
+  context '#has_phone_and_country?' do
+    context 'phone and country are present' do
+      should 'return true' do
         user = User.new
-        user.country_name = "United States"
-        user.phone = "1234"
+        user.country_name = 'United States'
+        user.phone = '1234'
         assert user.has_phone_and_country?
       end
     end
 
-    context "phone is missing" do
-      should "return false" do
+    context 'phone is missing' do
+      should 'return false' do
         user = User.new
-        user.country_name = "United States"
+        user.country_name = 'United States'
         assert_equal user.has_phone_and_country?, false
       end
     end
 
-    context "phone is missing" do
-      should "return true" do
+    context 'phone is missing' do
+      should 'return true' do
         user = User.new
-        user.phone = "1234"
+        user.phone = '1234'
         assert_equal user.has_phone_and_country?, false
       end
     end
   end
 
-  context "#phone_or_country_was_changed?" do
-    context "previous value was blank" do
-      context "phone was changed" do
-        should "return true" do
+  context '#phone_or_country_was_changed?' do
+    context 'previous value was blank' do
+      context 'phone was changed' do
+        should 'return true' do
           user = User.new
           user.phone = 456
           assert user.phone_or_country_was_changed?
         end
       end
 
-      context "country_name was changed" do
-        should "return true" do
+      context 'country_name was changed' do
+        should 'return true' do
           user = User.new
-          user.country_name = "Slovenia"
+          user.country_name = 'Slovenia'
           assert user.phone_or_country_was_changed?
         end
       end
     end
 
     context "previous value wasn't blank" do
-      context "phone was changed" do
-        should "return false" do
+      context 'phone was changed' do
+        should 'return false' do
           user = FactoryGirl.create(:user)
           user.phone = 456
           assert !user.phone_or_country_was_changed?
         end
       end
 
-      context "country_name was changed" do
-        should "return false" do
-
+      context 'country_name was changed' do
+        should 'return false' do
           user = FactoryGirl.create(:user)
 
-          user.country_name = "Slovenia"
+          user.country_name = 'Slovenia'
           assert !user.phone_or_country_was_changed?
         end
       end
     end
 
     context 'full_mobile_number_updated?' do
-
       should 'be true if mobile phone was updated' do
         user = FactoryGirl.create(:user)
-        user.mobile_number = "31232132"
+        user.mobile_number = '31232132'
         assert user.full_mobile_number_updated?
       end
 
       should 'be true if country was updated' do
         user = FactoryGirl.create(:user)
-        user.country_name = "Poland"
+        user.country_name = 'Poland'
         assert user.full_mobile_number_updated?
       end
 
       should 'be false if phone was updated' do
         user = FactoryGirl.create(:user)
-        user.phone = "31232132"
+        user.phone = '31232132'
         assert !user.full_mobile_number_updated?
       end
-
     end
 
-    context "update_notified_mobile_number_flag" do
-
+    context 'update_notified_mobile_number_flag' do
       setup do
         @user = FactoryGirl.create(:user)
         @user.notified_about_mobile_number_issue_at = Time.zone.now
       end
 
-      should "be false if phone or country has changed" do
+      should 'be false if phone or country has changed' do
         @user.stubs(:full_mobile_number_updated?).returns(true)
         @user.save!
         assert_nil @user.notified_about_mobile_number_issue_at
       end
 
-      should "not update timestamp when saved" do
+      should 'not update timestamp when saved' do
         travel_to Time.zone.now do
           @user.stubs(:full_mobile_number_updated?).returns(false)
           notified_at = Time.zone.now - 5.days
@@ -545,8 +531,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context "notify about invalid mobile phone" do
-
+  context 'notify about invalid mobile phone' do
     setup do
       FactoryGirl.create(:instance)
       @user = FactoryGirl.create(:user)
@@ -554,12 +539,12 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'notify user about invalid phone via email' do
-      PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
+      PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, name: 'custom.domain.com'))
       @user.notify_about_wrong_phone_number
       sent_mail = ActionMailer::Base.deliveries.last
       assert_equal [@user.email], sent_mail.to
 
-      assert sent_mail.html_part.body.encoded.include?('1.888.998.3375'), "Body did not include expected phone number 1.888.998.3375"
+      assert sent_mail.html_part.body.encoded.include?('1.888.998.3375'), 'Body did not include expected phone number 1.888.998.3375'
       assert sent_mail.html_part.body.encoded =~ /<a class="btn" href="https:\/\/custom.domain.com\/users\/edit\?#{TemporaryTokenAuthenticatable::PARAMETER_NAME}=.+" style=".+">Go to My account<\/a>/, "Body did not include expected link to edit profile #{TemporaryTokenAuthenticatable::PARAMETER_NAME}: #{"<a class='btn' href='https:\/\/custom.domain.com\/users\/edit\?#{TemporaryTokenAuthenticatable::PARAMETER_NAME}=.+' style='.+'"} in #{sent_mail.html_part.body}"
     end
 
@@ -577,14 +562,10 @@ class UserTest < ActiveSupport::TestCase
         assert_equal Time.zone.now.to_a, @user.notified_about_mobile_number_issue_at.to_a
       end
     end
-
   end
 
-
   context 'no orphaned childs' do
-
     context 'user is the only owner of company' do
-
       should 'destroy company' do
         @listing = FactoryGirl.create(:transactable)
         @location = @listing.location
@@ -594,11 +575,9 @@ class UserTest < ActiveSupport::TestCase
         assert @location.reload.deleted?
         assert @company.reload.deleted?
       end
-
     end
 
     context 'reservations' do
-
       setup do
         @user = FactoryGirl.create(:user)
       end
@@ -619,12 +598,9 @@ class UserTest < ActiveSupport::TestCase
         assert @reservation.confirmed?
       end
     end
-
   end
 
-
   context '#listings_in_near' do
-
     setup do
       @user = FactoryGirl.create(:user)
       @other_instance = FactoryGirl.create(:instance)
@@ -661,23 +637,20 @@ class UserTest < ActiveSupport::TestCase
   end
 
   context 'recovering user with all objects' do
-
     should 'recover all objects' do
       setup_user_with_all_objects
       @user.destroy
       @objects.each do |object|
         assert object.reload.paranoia_destroyed?, "#{object.class.name} was expected to be deleted via dependent => destroy but wasn't"
       end
-      @user.restore(:recursive => true)
+      @user.restore(recursive: true)
       @objects.each do |object|
         refute object.reload.paranoia_destroyed?, "#{object.class.name} was expected to be restored, but is still deleted"
       end
     end
-
   end
 
   context 'accepts sms' do
-
     setup do
       @user = FactoryGirl.create(:user)
     end
@@ -698,16 +671,13 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'accept sms with specific type if this type of sms is enabled by user' do
-      @user.sms_preferences = {"new_reservation" => '1'}
+      @user.sms_preferences = { 'new_reservation' => '1' }
       assert @user.accepts_sms_with_type?(:new_reservation)
     end
-
   end
 
   context 'metadata' do
-
     context 'populate_companies_metadata' do
-
       setup do
         @listing = FactoryGirl.create(:transactable)
         @user = @listing.creator
@@ -716,21 +686,15 @@ class UserTest < ActiveSupport::TestCase
       should 'have no active listing if company is assigned to someone else and have active listing if assigned back' do
         @company = @listing.company
         @listing.company.company_users.first.destroy
-        @user.expects(:update_instance_metadata).with({
-          companies_metadata: [],
-        })
+        @user.expects(:update_instance_metadata).with(companies_metadata: [])
         @user.reload.populate_companies_metadata!
-        @listing.company.company_users.create(:user_id => @user.id)
-        @user.expects(:update_instance_metadata).with({
-          companies_metadata: [@company.id],
-        })
+        @listing.company.company_users.create(user_id: @user.id)
+        @user.expects(:update_instance_metadata).with(companies_metadata: [@company.id])
         @user.reload.populate_companies_metadata!
       end
-
     end
 
     context 'populate_instance_admins_metadata' do
-
       setup do
         @instance_admin = FactoryGirl.create(:instance_admin)
         @user = @instance_admin.user
@@ -741,17 +705,13 @@ class UserTest < ActiveSupport::TestCase
         @random_instance_admin = FactoryGirl.create(:instance_admin)
         PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
         @other_instance_admin = FactoryGirl.create(:instance_admin, user: @user)
-        @user.expects(:update_instance_metadata).with({
-          :instance_admins_metadata => 'analytics'
-        })
+        @user.expects(:update_instance_metadata).with(instance_admins_metadata: 'analytics')
         @user.populate_instance_admins_metadata!
       end
-
     end
   end
 
   context 'custom attributes' do
-
     setup do
       @type = InstanceProfileType.default.first
       @custom_attribute = FactoryGirl.create(:custom_attribute, name: 'custom_profile_attr', label: 'Custom Profile Attr', target: @type, attribute_type: 'string')
@@ -764,11 +724,10 @@ class UserTest < ActiveSupport::TestCase
         assert_equal 'hello', @user.properties.custom_profile_attr
       end
     end
-
   end
 
   context 'custom uniqueness validation' do
-    should "allow to create new account with email that belongs to user in other marketplace" do
+    should 'allow to create new account with email that belongs to user in other marketplace' do
       @other_user = FactoryGirl.create(:user)
       @other_user.update_column(:instance_id, PlatformContext.current.instance.id + 1)
       assert_nothing_raised do
@@ -776,35 +735,35 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
-    should "not allow to create new account if other user exists with this email in this marketplace" do
+    should 'not allow to create new account if other user exists with this email in this marketplace' do
       @user = FactoryGirl.create(:user)
       assert_raise ActiveRecord::RecordInvalid do
         FactoryGirl.create(:user, email: @user.email)
       end
     end
 
-    should "not allow to create new account without external id if other user exists with this email in this marketplace with external_id set" do
+    should 'not allow to create new account without external id if other user exists with this email in this marketplace with external_id set' do
       @user = FactoryGirl.create(:user, external_id: 'something')
       assert_raise ActiveRecord::RecordInvalid do
         FactoryGirl.create(:user, email: @user.email)
       end
     end
 
-    should "allow to create new account with external id if other user exists with this email in this marketplace but with external_id set" do
+    should 'allow to create new account with external id if other user exists with this email in this marketplace but with external_id set' do
       @user = FactoryGirl.create(:user, external_id: 'something')
       assert_nothing_raised  do
         FactoryGirl.create(:user, email: @user.email, external_id: 'else')
       end
     end
 
-    should "allow to create new account with external id if other user exists with this email in this marketplace without external_id set" do
+    should 'allow to create new account with external id if other user exists with this email in this marketplace without external_id set' do
       @user = FactoryGirl.create(:user)
       assert_nothing_raised  do
         FactoryGirl.create(:user, email: @user.email, external_id: 'else')
       end
     end
 
-    should "not allow to create new account with email that belongs to admin" do
+    should 'not allow to create new account with email that belongs to admin' do
       @admin = FactoryGirl.create(:admin)
       @admin.update_column(:instance_id, PlatformContext.current.instance.id + 1)
       assert_raise ActiveRecord::RecordInvalid do
@@ -833,7 +792,7 @@ class UserTest < ActiveSupport::TestCase
       project = create(:transactable, creator_id: @user.id)
       assert_equal counter + 1, @user.reload.all_transactables_count
 
-      project.name = "Something else"
+      project.name = 'Something else'
       project.save
 
       assert_equal counter + 1, @user.reload.all_transactables_count
@@ -873,23 +832,22 @@ class UserTest < ActiveSupport::TestCase
 
   def setup_user_with_all_objects
     @user = FactoryGirl.create(:user)
-    @authentication = FactoryGirl.create(:authentication, :user => @user)
-    @company = FactoryGirl.create(:company, :creator => @user)
-    @location = FactoryGirl.create(:location, :company_id => @company.id)
-    @listing = FactoryGirl.create(:transactable, :location => @location)
-    @photo  = FactoryGirl.create(:photo, :listing => @listing, :creator => @photo)
-    @reservation = FactoryGirl.create(:reservation, :user => @user, :transactable => @listing)
+    @authentication = FactoryGirl.create(:authentication, user: @user)
+    @company = FactoryGirl.create(:company, creator: @user)
+    @location = FactoryGirl.create(:location, company_id: @company.id)
+    @listing = FactoryGirl.create(:transactable, location: @location)
+    @photo  = FactoryGirl.create(:photo, listing: @listing, creator: @photo)
+    @reservation = FactoryGirl.create(:reservation, user: @user, transactable: @listing)
     @reservation_period = @reservation.periods.first
     @payment = @reservation.payment
-    @charge = FactoryGirl.create(:charge, :payment => @payment)
-    @payment_transfer = FactoryGirl.create(:payment_transfer, :company_id => @company.id)
+    @charge = FactoryGirl.create(:charge, payment: @payment)
+    @payment_transfer = FactoryGirl.create(:payment_transfer, company_id: @company.id)
     FactoryGirl.build(:upload_obligation, level: UploadObligation::LEVELS[0], item: @listing)
     document_requirement = FactoryGirl.create(:document_requirement, item: @listing)
-    @payment_document= FactoryGirl.create(:attachable_payment_document, attachable: @reservation, user: @user,
-                                          payment_document_info: FactoryGirl.create(:payment_document_info, document_requirement: document_requirement)
-                                         )
+    @payment_document = FactoryGirl.create(:attachable_payment_document, attachable: @reservation, user: @user,
+                                                                         payment_document_info: FactoryGirl.create(:payment_document_info, document_requirement: document_requirement)
+                                          )
     @objects = [@user, @authentication, @company,
                 @location, @listing, @photo, @payment_document]
   end
 end
-

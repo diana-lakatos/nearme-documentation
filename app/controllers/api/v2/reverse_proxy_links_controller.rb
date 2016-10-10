@@ -1,6 +1,5 @@
 module Api
   class V2::ReverseProxyLinksController < BaseController
-
     skip_before_filter :require_authentication
     skip_before_filter :require_authorization, only: [:index]
 
@@ -22,7 +21,7 @@ module Api
             end
           end
         end
-        raise ActiveRecord::Rollback if @error_reverse_proxy_link.errors.any?
+        fail ActiveRecord::Rollback if @error_reverse_proxy_link.errors.any?
       end
 
       if @error_reverse_proxy_link.errors.any?
@@ -33,4 +32,3 @@ module Api
     end
   end
 end
-

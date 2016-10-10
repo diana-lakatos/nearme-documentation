@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :order_address do
-    firstname "Tomasz"
-    lastname "Lemkowski"
+    firstname 'Tomasz'
+    lastname 'Lemkowski'
     company 'NearMe'
     street1 '185 CLARA STREET #102D'
     city 'SAN FRANCISCO'

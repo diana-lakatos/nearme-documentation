@@ -6,45 +6,45 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
 
   setup do
     PaymentTransfer.any_instance.stubs(:possible_automated_payout_not_supported?).returns(false).at_least(0)
-    PaymentGateway.any_instance.stubs(:payout).returns(stub(:success => true)).at_least(0)
+    PaymentGateway.any_instance.stubs(:payout).returns(stub(success: true)).at_least(0)
   end
 
   context '#perform' do
     context 'for payments' do
       setup do
-        @company_1 = prepare_company_with_charged_reservations(:reservation_count => 2)
-        @company_2 = prepare_company_with_charged_reservations(:reservation_count => 3)
+        @company_1 = prepare_company_with_charged_reservations(reservation_count: 2)
+        @company_2 = prepare_company_with_charged_reservations(reservation_count: 3)
       end
 
-      context "with daily payment transfers frequency" do
+      context 'with daily payment transfers frequency' do
         setup do
-          @company_1.instance.update_columns(payment_transfers_frequency: "daily")
-          @company_2.instance.update_columns(payment_transfers_frequency: "daily")
+          @company_1.instance.update_columns(payment_transfers_frequency: 'daily')
+          @company_2.instance.update_columns(payment_transfers_frequency: 'daily')
         end
 
-        should "schedule payment transfers " do
+        should 'schedule payment transfers ' do
           PaymentTransferSchedulerJob.perform
           assert_equal 1, @company_1.payment_transfers.count
           assert_equal 1, @company_2.payment_transfers.count
           assert_equal 9000, @company_1.payment_transfers.first.amount.cents
           assert_equal 'USD', @company_1.payment_transfers.first.currency
-          assert_equal 13500, @company_2.payment_transfers.first.amount.cents
+          assert_equal 13_500, @company_2.payment_transfers.first.amount.cents
           assert_equal 'USD', @company_2.payment_transfers.first.currency
 
           assert_equal @company_1.payments.sort,
-            @company_1.payment_transfers[0].payments.sort
+                       @company_1.payment_transfers[0].payments.sort
 
           assert_equal @company_1.payments.sum(:subtotal_amount_cents),
-            @company_1.payment_transfers[0].payments.sum(:subtotal_amount_cents)
+                       @company_1.payment_transfers[0].payments.sum(:subtotal_amount_cents)
 
           assert_equal @company_2.payments.sort,
-            @company_2.payment_transfers[0].payments.sort
+                       @company_2.payment_transfers[0].payments.sort
 
           assert_equal @company_2.payments.sum(:subtotal_amount_cents),
-            @company_2.payment_transfers[0].payments.sum(:subtotal_amount_cents)
+                       @company_2.payment_transfers[0].payments.sum(:subtotal_amount_cents)
         end
 
-        should "include refunded reservation charges" do
+        should 'include refunded reservation charges' do
           rc = @company_1.payments.first
           rc.mark_as_refuneded!
           assert rc.refunded?
@@ -52,7 +52,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
           assert @company_1.payment_transfers[0].payments.include?(rc)
         end
 
-        should "not include manual payments" do
+        should 'not include manual payments' do
           FactoryGirl.create(:manual_payment_gateway)
           payment = FactoryGirl.create(:manual_payment, company: @company_1)
           assert payment.offline?
@@ -71,7 +71,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
           assert_equal 6000, @company_1.payment_transfers.first.amount.cents
         end
 
-        should "only include successfully paid reservation charges" do
+        should 'only include successfully paid reservation charges' do
           payment = @company_1.payments.first
           payment.update_column(:state, 'authorized')
           assert !payment.paid?
@@ -81,7 +81,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
           assert_equal (@company_1.payments - [payment]).sort, @company_1.payment_transfers[0].payments.sort
         end
 
-        should "not touch already included reservation charges" do
+        should 'not touch already included reservation charges' do
           PaymentTransferSchedulerJob.perform
 
           assert_no_difference 'PaymentTransfer.count' do
@@ -89,15 +89,15 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
           end
         end
 
-        should "generate separate transfers for separate currencies" do
+        should 'generate separate transfers for separate currencies' do
           location = FactoryGirl.create(:location,
-                                        :company => @company_1
+                                        company: @company_1
                                        )
 
           transactable = FactoryGirl.create(:transactable,
-                                       :currency => 'NZD',
-                                       :location => location
-                                      )
+                                            currency: 'NZD',
+                                            location: location
+                                           )
           transactable.action_type.day_pricings.first.update(price_cents: 5000)
           nzd_reservations = prepare_charged_reservations_for_transactable(transactable, 2)
 
@@ -106,36 +106,34 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
           assert_equal 2, @company_1.payment_transfers.count
 
           nzd_transfer = @company_1.payment_transfers.detect { |pt| pt.currency == 'NZD' }
-          assert nzd_transfer, "Expected an NZD payment transfer"
+          assert nzd_transfer, 'Expected an NZD payment transfer'
           assert_equal nzd_reservations.map(&:payment).flatten.sort,
-            nzd_transfer.payments.sort
-
+                       nzd_transfer.payments.sort
         end
       end
 
-      context "ensure that job properly used generate_payment_transfers_today? method" do
+      context 'ensure that job properly used generate_payment_transfers_today? method' do
         setup do
-          @company_1.instance.update_columns(payment_transfers_frequency: "fortnightly")
+          @company_1.instance.update_columns(payment_transfers_frequency: 'fortnightly')
         end
 
-        should "schedule payment transfers every 15th day of the month" do
+        should 'schedule payment transfers every 15th day of the month' do
           travel_to(Time.zone.now.next_month.beginning_of_month + 14.days) do
             PaymentTransferSchedulerJob.perform
           end
           assert_equal 1, @company_1.payment_transfers.count
         end
 
-        should "not schedule payment transfers first Monday after 1st day of the month" do
+        should 'not schedule payment transfers first Monday after 1st day of the month' do
           travel_to(Time.zone.now.next_month.beginning_of_month.next_week) do
             PaymentTransferSchedulerJob.perform
           end
           assert_equal 0, @company_1.payment_transfers.count
         end
       end
-
     end
 
-    # TODO fix with Purchase Action
+    # TODO: fix with Purchase Action
     # context 'for sold products' do
 
     #   setup do
@@ -167,6 +165,5 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
     #   end
 
     # end
-
   end
 end

@@ -1,7 +1,6 @@
 require 'csv'
 
 class DataImporter::CsvTemplateGenerator < DataImporter::File
-
   def initialize(importable, include_user_fields = false)
     @importable = importable
     @include_user_fields = include_user_fields
@@ -56,5 +55,4 @@ class DataImporter::CsvTemplateGenerator < DataImporter::File
   def import_model
     @import_model ||= @importable.class.name.sub('Type', '').underscore.to_sym
   end
-
 end

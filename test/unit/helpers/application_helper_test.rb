@@ -9,7 +9,7 @@ class ApplicationHelperTest < ActionView::TestCase
   end
 
   test 'truncate with elipsis works' do
-    assert_equal "<p><span class=\"truncated-ellipsis\">&hellip;</span><span class=\"truncated-text hidden\">0123456789 the rest should be truncated</span></p>", truncate_with_ellipsis("0123456789 the rest should be truncated", 10)
+    assert_equal "<p><span class=\"truncated-ellipsis\">&hellip;</span><span class=\"truncated-text hidden\">0123456789 the rest should be truncated</span></p>", truncate_with_ellipsis('0123456789 the rest should be truncated', 10)
   end
 
   test 'truncate with elipsis works for long strings' do
@@ -32,7 +32,7 @@ class ApplicationHelperTest < ActionView::TestCase
     end
 
     should 'return week day' do
-      assert_equal "12/28/2012", distance_of_time_in_words_or_date(@datetime - 4.days)
+      assert_equal '12/28/2012', distance_of_time_in_words_or_date(@datetime - 4.days)
     end
 
     should 'return date' do
@@ -42,7 +42,6 @@ class ApplicationHelperTest < ActionView::TestCase
     teardown do
       travel_back
     end
-
   end
 
   context '#mask_phone_and_email_if_necessary' do
@@ -51,7 +50,6 @@ class ApplicationHelperTest < ActionView::TestCase
     end
 
     context 'instance does want to hide emails and phones' do
-
       setup do
         PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance, apply_text_filters: true))
         FactoryGirl.create(:text_filter_email)
@@ -66,9 +64,6 @@ class ApplicationHelperTest < ActionView::TestCase
       should 'do not replace random numbers' do
         assert_equal "it's 100% safe, only 299 usd", mask_phone_and_email_if_necessary("it's 100% safe, only 299 usd")
       end
-
     end
-
   end
-
 end

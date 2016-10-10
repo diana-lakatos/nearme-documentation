@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Manage::TransactableTypes::CustomValidatorsControllerTest < ActionController::TestCase
-
   setup do
     @instance = FactoryGirl.create(:instance)
     PlatformContext.current = PlatformContext.new(@instance)
@@ -39,7 +38,7 @@ class InstanceAdmin::Manage::TransactableTypes::CustomValidatorsControllerTest <
 
     should 'render form if validation errors' do
       assert_no_difference 'CustomValidator.count' do
-        post :create, transactable_type_id: @transactable_type.id, custom_validator: { required: 1}
+        post :create, transactable_type_id: @transactable_type.id, custom_validator: { required: 1 }
       end
       assert_response :success
     end
@@ -52,22 +51,20 @@ class InstanceAdmin::Manage::TransactableTypes::CustomValidatorsControllerTest <
   end
 
   context 'update' do
-
     setup do
       @custom_validator = FactoryGirl.create(:custom_validator)
     end
 
     should 'update form compponents' do
       assert_no_difference 'CustomValidator.count' do
-        put :update, transactable_type_id: @transactable_type.id, id: @custom_validator.id, custom_validator: { field_name: 'description', valid_values: 'true,false'}
+        put :update, transactable_type_id: @transactable_type.id, id: @custom_validator.id, custom_validator: { field_name: 'description', valid_values: 'true,false' }
       end
       custom_validator = assigns(:validator)
       custom_validator.reload
       assert_equal 'description', custom_validator.field_name
-      assert_equal custom_validator.valid_values, ['true', 'false']
+      assert_equal custom_validator.valid_values, %w(true false)
       assert_redirected_to instance_admin_manage_transactable_type_custom_validators_path(@transactable_type)
     end
-
   end
 
   should 'destroy' do
@@ -77,6 +74,4 @@ class InstanceAdmin::Manage::TransactableTypes::CustomValidatorsControllerTest <
     end
     assert_redirected_to instance_admin_manage_transactable_type_custom_validators_path(@transactable_type)
   end
-
 end
-

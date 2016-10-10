@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Dashboard::Company::PaymentsControllerTest < ActionController::TestCase
-
   context 'create' do
     setup do
       @instance = PlatformContext.current.instance
@@ -12,13 +11,13 @@ class Dashboard::Company::PaymentsControllerTest < ActionController::TestCase
       stub_billing_gateway(@instance)
       stub_active_merchant_interaction
 
-      @order = FactoryGirl.create(:purchase_with_payment, user: @user, company: @company )
+      @order = FactoryGirl.create(:purchase_with_payment, user: @user, company: @company)
 
       sign_in @user
     end
 
     should 'create correct payment and update order' do
-      get :show, { orders_received_id: @order.id, id: @order.payment.id }
+      get :show, orders_received_id: @order.id, id: @order.payment.id
       assert_response :success
     end
   end

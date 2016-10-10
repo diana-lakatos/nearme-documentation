@@ -9,7 +9,7 @@ class DynamicThemesController < ActionController::Base
     @stylesheet =  params[:stylesheet]
 
     expires_in 1.year, public: true
-    fresh_when(@theme, public: true, template: "dynamic_themes/#{@stylesheet}") or render(@stylesheet.to_s)
+    fresh_when(@theme, public: true, template: "dynamic_themes/#{@stylesheet}") || render(@stylesheet.to_s)
   end
 
   private
@@ -19,7 +19,7 @@ class DynamicThemesController < ActionController::Base
     response.headers['Access-Control-Request-Method'] = '*'
 
     remove_keys = %w(X-Frame-Options X-Content-Type-Options)
-    response.headers.delete_if{|key| remove_keys.include? key}
+    response.headers.delete_if { |key| remove_keys.include? key }
 
     request.session_options[:skip] = true
   end

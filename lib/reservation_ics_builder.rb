@@ -2,7 +2,6 @@ require 'ri_cal'
 
 # Helper class to build calendar ics file for given reservation
 class ReservationIcsBuilder
-
   def initialize(reservation, user)
     @reservation = reservation
     @user = user
@@ -12,7 +11,6 @@ class ReservationIcsBuilder
   def to_s
     @calendar.to_s.gsub("\n", "\r\n")
   end
-
 
   private
 
@@ -24,13 +22,13 @@ class ReservationIcsBuilder
         cal.event do |event|
           event.description = @reservation.transactable.description || ''
           event.summary = @reservation.transactable.name || ''
-          event.uid = "#{@reservation.id}_#{period.date.to_s}"
-          hour = period.start_minute/60.floor
+          event.uid = "#{@reservation.id}_#{period.date}"
+          hour = period.start_minute / 60.floor
           minute = period.start_minute - (hour * 60)
-          event.dtstart = period.date.strftime("%Y%m%dT") + "#{"%02d" % hour}#{"%02d" % minute}00"
-          hour = period.end_minute/60.floor
+          event.dtstart = period.date.strftime('%Y%m%dT') + "#{'%02d' % hour}#{'%02d' % minute}00"
+          hour = period.end_minute / 60.floor
           minute = period.end_minute - (hour * 60)
-          event.dtend = period.date.strftime("%Y%m%dT") + "#{"%02d" % hour}#{"%02d" % minute}00"
+          event.dtend = period.date.strftime('%Y%m%dT') + "#{'%02d' % hour}#{'%02d' % minute}00"
           event.created = @reservation.created_at
           event.last_modified = @reservation.updated_at
           event.location = @reservation.transactable.address || ''

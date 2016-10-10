@@ -1,3 +1,3 @@
-#TODO to be removed
+# TODO: to be removed
 class ServiceType < TransactableType
 end

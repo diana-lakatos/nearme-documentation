@@ -1,13 +1,12 @@
 class RecurringBookingRequest < Form
-
   attr_accessor :start_minute, :end_minute, :start_on, :end_on, :schedule_params, :quantity,
-    :total_amount_cents, :guest_notes, :total_amount_check
-  attr_reader   :recurring_booking, :listing, :location, :user, :payment_subscription
+                :total_amount_cents, :guest_notes, :total_amount_check
+  attr_reader :recurring_booking, :listing, :location, :user, :payment_subscription
 
   delegate :currency, :service_fee_amount_host_cents, :service_fee_amount_guest_cents, :billing_authorization,
-    :create_billing_authorization, :total_service_amount, :total_amount, :owner, :owner_attributes=,
-    :properties, :properties=, :category_ids, :category_ids=, :transactable_pricing_id=,
-    :transactable_pricing_id, :reservation_type, to: :recurring_booking
+           :create_billing_authorization, :total_service_amount, :total_amount, :owner, :owner_attributes=,
+           :properties, :properties=, :category_ids, :category_ids=, :transactable_pricing_id=,
+           :transactable_pricing_id, :reservation_type, to: :recurring_booking
   delegate :confirm_reservations?, :location, :company, to: :listing
   delegate :mobile_number, :mobile_number=, :country_name, :country_name=, :country, to: :user
 
@@ -49,7 +48,6 @@ class RecurringBookingRequest < Form
       @card_holder_first_name ||= @user.first_name
       @card_holder_last_name ||= @user.last_name
     end
-
   end
 
   def process
@@ -72,9 +70,7 @@ class RecurringBookingRequest < Form
     false
   end
 
-  def payment_subscription_attributes=(psa_attributes)
-    @payment_subscription_attributes = psa_attributes
-  end
+  attr_writer :payment_subscription_attributes
 
   def payment_subscription_attributes
     (@payment_subscription_attributes || {}).merge(subscriber: @recurring_booking, payer: @user)
@@ -92,7 +88,7 @@ class RecurringBookingRequest < Form
   end
 
   def validate_phone_and_country
-    add_error("Please complete the contact details", :contact_info) unless user_has_mobile_phone_and_country?
+    add_error('Please complete the contact details', :contact_info) unless user_has_mobile_phone_and_country?
   end
 
   def user_has_mobile_phone_and_country?
@@ -113,14 +109,13 @@ class RecurringBookingRequest < Form
 
   def validate_payment_subscription
     if @payment_subscription.blank? || !@payment_subscription.valid?
-      errors.add(:base, I18n.t("activemodel.errors.models.reservation_request.attributes.base.payment_invalid"))
+      errors.add(:base, I18n.t('activemodel.errors.models.reservation_request.attributes.base.payment_invalid'))
     end
   end
 
   def validate_total_amount
-    if @recurring_booking.present? && self.total_amount_check.present? && @recurring_booking.total_amount.cents != self.total_amount_check.to_i
-      errors.add(:base, I18n.t("activemodel.errors.models.reservation_request.attributes.base.total_amount_changed"))
+    if @recurring_booking.present? && total_amount_check.present? && @recurring_booking.total_amount.cents != total_amount_check.to_i
+      errors.add(:base, I18n.t('activemodel.errors.models.reservation_request.attributes.base.total_amount_changed'))
     end
   end
 end
-

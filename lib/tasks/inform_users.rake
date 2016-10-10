@@ -1,6 +1,6 @@
 namespace :inform_users do
-  desc "Send internal message to all users regarding update to Terms of Use"
-  task :changes_in_terms_of_use => :environment do
+  desc 'Send internal message to all users regarding update to Terms of Use'
+  task changes_in_terms_of_use: :environment do
     body = terms_of_use_message
     dnm_instance = Instance.first
     dnm_instance.service_fee_host_percent = 10
@@ -11,14 +11,12 @@ namespace :inform_users do
 
     User.where('instance_id IS NULL OR instance_id = ?', dnm_instance.id).each do |user|
       next if UserMessage.where('author_id = ? AND thread_recipient_id = ? AND body like ?', author.id, user.id, "#{terms_of_use_message[0..100]}%").any?
-      um = UserMessage.create({
-        thread_context: author,
-        thread_owner: author,
-        author: author,
-        thread_recipient: user,
-        body: body,
-        instance_id: dnm_instance.id
-      })
+      um = UserMessage.create(thread_context: author,
+                              thread_owner: author,
+                              author: author,
+                              thread_recipient: user,
+                              body: body,
+                              instance_id: dnm_instance.id)
 
       begin
         um.send_notification(platform_context)
@@ -46,13 +44,11 @@ eof
 
   def get_author(dnm_instance)
     author = User.where(email: 'support@desksnear.me').first
-    if !author
-      author = User.new({
-        name: 'DesksNearMe',
-        email: 'support@desksnear.me',
-        password: 'ahgueX0Ahteit*ae$Th5',
-        instance_id: dnm_instance.id
-      })
+    unless author
+      author = User.new(name: 'DesksNearMe',
+                        email: 'support@desksnear.me',
+                        password: 'ahgueX0Ahteit*ae$Th5',
+                        instance_id: dnm_instance.id)
 
       author.save!
 
@@ -61,6 +57,4 @@ eof
 
     author
   end
-
 end
-

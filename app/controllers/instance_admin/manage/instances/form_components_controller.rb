@@ -1,5 +1,4 @@
 class InstanceAdmin::Manage::Instances::FormComponentsController < InstanceAdmin::FormComponentsController
-
   before_filter :form_type
   prepend_before_filter :find_form_componentable
 
@@ -16,5 +15,4 @@ class InstanceAdmin::Manage::Instances::FormComponentsController < InstanceAdmin
   def resource_class
     Instance
   end
-
 end

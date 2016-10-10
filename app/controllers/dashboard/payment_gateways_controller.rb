@@ -1,2 +1,2 @@
-class Dashboard::PaymentGatewaysController <  Dashboard::BaseController
+class Dashboard::PaymentGatewaysController < Dashboard::BaseController
 end

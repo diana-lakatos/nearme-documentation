@@ -24,7 +24,6 @@ class RatingQuestionTest < ActiveSupport::TestCase
         RatingQuestion.create!(@params)
         assert_equal 0, @review_other.rating_answers.count
         assert_equal 1, @review.rating_answers.count
-
       end
     end
   end

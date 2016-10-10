@@ -1,8 +1,7 @@
 # Stores all events that were invoked by user.
 # Used by third party software tagging system - current one is sessioncam
 class EventTracker::BaseTracker::InvokedEventsTracker
-
-  TAGGABLE_EVENTS = ['Requested a booking', 'Created a location', 'Created a listing', 'Saved a draft', 'Signed up', 'Logged in' ]
+  TAGGABLE_EVENTS = ['Requested a booking', 'Created a location', 'Created a listing', 'Saved a draft', 'Signed up', 'Logged in']
 
   attr_accessor :events
 
@@ -20,4 +19,3 @@ class EventTracker::BaseTracker::InvokedEventsTracker
     !@events.include?(event_name) && TAGGABLE_EVENTS.include?(event_name)
   end
 end
-

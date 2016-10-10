@@ -1,5 +1,4 @@
 class DataUploadDrop < BaseDrop
-
   attr_reader :data_upload
 
   # csv_file_identifier
@@ -27,7 +26,7 @@ class DataUploadDrop < BaseDrop
 
   # the parsing result log as an HTML string
   def parsing_result_log_html
-    parsing_result_log.try(:gsub, "\n", "<br />")
+    parsing_result_log.try(:gsub, "\n", '<br />')
   end
 
   # the parsing result log containing the result of the parsing as a string
@@ -38,17 +37,17 @@ class DataUploadDrop < BaseDrop
 
   # parse summary as a string showing how many objects from each category have been created
   def new_parse_summary
-    @data_upload.parse_summary[:new].map { |k, v| "#{k.to_s.humanize}: #{v}"}.join(', ')
+    @data_upload.parse_summary[:new].map { |k, v| "#{k.to_s.humanize}: #{v}" }.join(', ')
   end
 
   # parse summary as a string showing how many objects from each category have been updated
   def updated_parse_summary
-    @data_upload.parse_summary[:updated].map { |k, v| "#{k.to_s.humanize}: #{v}"}.join(', ')
+    @data_upload.parse_summary[:updated].map { |k, v| "#{k.to_s.humanize}: #{v}" }.join(', ')
   end
 
   # parse summary as a string showing how many objects from each category have been deleted
   def deleted_parse_summary
-    @data_upload.parse_summary[:deleted].present? ? @data_upload.parse_summary[:deleted].map { |k, v| "#{k.to_s.humanize}: #{v}"}.join(', ') : nil
+    @data_upload.parse_summary[:deleted].present? ? @data_upload.parse_summary[:deleted].map { |k, v| "#{k.to_s.humanize}: #{v}" }.join(', ') : nil
   end
 
   # url to create a new object of the type just imported
@@ -57,7 +56,7 @@ class DataUploadDrop < BaseDrop
     when TransactableType
       routes.new_dashboard_company_transactable_type_transactable_path(@data_upload.importable)
     else
-      raise TypeError
+      fail TypeError
     end
   end
 
@@ -71,6 +70,4 @@ class DataUploadDrop < BaseDrop
       encountered_error
     end
   end
-
 end
-

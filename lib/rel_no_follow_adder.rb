@@ -1,5 +1,4 @@
 class RelNoFollowAdder
-
   def initialize(options = {})
     @skip_domains = options.delete(:skip_domains).presence || []
   end
@@ -9,7 +8,7 @@ class RelNoFollowAdder
     html_fragment.css('a').each do |a|
       if is_link?(a) && is_not_relative_link?(a) && should_not_be_skipped?(a)
         rels = a['rel'].blank? ? [] : a['rel'].split(' ')
-        rels << "nofollow"
+        rels << 'nofollow'
         a['rel'] = rels.uniq.join(' ')
       end
     end

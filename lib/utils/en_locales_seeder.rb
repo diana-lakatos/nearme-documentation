@@ -1,8 +1,7 @@
 module Utils
   class EnLocalesSeeder
-
     def go!
-      count = {existed: 0, created: 0, updated: 0}
+      count = { existed: 0, created: 0, updated: 0 }
 
       (Dir.glob(Rails.root.join('config', 'locales', '*.en.yml')) + Dir.glob(Rails.root.join('config', 'locales', 'en.yml'))).each do |yml_filename|
         print_out "File: #{yml_filename}"
@@ -30,21 +29,21 @@ module Utils
           end
         end
       end
-      print_out "Instance cache update started..."
-      Instance.find_each{|i| i.fast_recalculate_cache_key!}
+      print_out 'Instance cache update started...'
+      Instance.find_each(&:fast_recalculate_cache_key!)
 
-      print_out "Translation populator report:"
+      print_out 'Translation populator report:'
       print_out "  #{count[:existed]} translations already existed."
       print_out "  #{count[:created]} translations were created."
       print_out "  #{count[:updated]} translations were updated."
-      print_out " ********** "
+      print_out ' ********** '
       community_go!
       CacheExpiration.send_expire_command('RebuildTranslations')
     end
 
     def community_go!
       Instance.where(is_community: true).find_each do |i|
-        count = {existed: 0, created: 0, updated: 0}
+        count = { existed: 0, created: 0, updated: 0 }
         i.set_context!
         puts "Populating community translations for: #{i.name}"
         Dir.glob(Rails.root.join('config', 'community_locales', '*.yml')).each do |yml_filename|
@@ -72,15 +71,14 @@ module Utils
             end
           end
         end
-        print_out "Instance cache update started..."
+        print_out 'Instance cache update started...'
         i.fast_recalculate_cache_key!
 
-        print_out "Translation populator report:"
+        print_out 'Translation populator report:'
         print_out "  #{count[:existed]} translations already existed."
         print_out "  #{count[:created]} translations were created."
         print_out "  #{count[:updated]} translations were updated."
       end
-
     end
 
     protected
@@ -94,7 +92,7 @@ module Utils
         key = path + k
 
         if v.is_a? Hash
-          ret.merge! convert_hash_to_dot_notation(v, key + ".")
+          ret.merge! convert_hash_to_dot_notation(v, key + '.')
         else
           ret[key] = v
         end

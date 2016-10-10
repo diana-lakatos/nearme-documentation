@@ -70,4 +70,3 @@ class InstanceAdmin::Manage::EmailLayoutTemplatesController < InstanceAdmin::Man
     @transactable_type = TransactableType.find(params[:email_layout_template][:transactable_type_id]) if params[:email_layout_template][:transactable_type_id].present? rescue nil
   end
 end
-

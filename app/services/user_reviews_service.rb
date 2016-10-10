@@ -11,7 +11,7 @@ class UserReviewsService
     when 'reviews_left_by_seller' then  Review.left_by_seller(@user)
     when 'reviews_left_by_buyer' then Review.left_by_buyer(@user)
     else
-      raise NotImplementedError
+      fail NotImplementedError
     end
   end
 
@@ -22,9 +22,7 @@ class UserReviewsService
     when 'reviews_left_by_seller' then @user.left_by_seller_average_rating
     when 'reviews_left_by_buyer' then @user.left_by_buyer_average_rating
     else
-      raise NotImplementedError
+      fail NotImplementedError
     end
   end
-
 end
-

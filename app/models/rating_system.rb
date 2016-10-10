@@ -10,7 +10,7 @@ class RatingSystem < ActiveRecord::Base
   has_many :rating_hints, dependent: :destroy
   has_many :reviews, dependent: :destroy
 
-  accepts_nested_attributes_for :rating_questions, reject_if: lambda { |attrs| attrs['text'].blank? }, allow_destroy: true
+  accepts_nested_attributes_for :rating_questions, reject_if: ->(attrs) { attrs['text'].blank? }, allow_destroy: true
   accepts_nested_attributes_for :rating_hints
 
   validates_inclusion_of :subject, in: RatingConstants::RATING_SYSTEM_SUBJECTS
@@ -21,14 +21,13 @@ class RatingSystem < ActiveRecord::Base
   scope :active_with_subject, ->(subject) { active.with_subject(subject) }
   scope :with_subject, -> (subject) { where(subject: subject) }
   scope :for_type_of_transactable_type, -> (type) { joins(:transactable_type).where('transactable_types.type = ?', type) }
-  scope :for_transactables, ->{ where(subject: RatingConstants::TRANSACTABLE) }
-  scope :for_hosts, ->{ where(subject: RatingConstants::HOST) }
-  scope :for_guests, ->{ where(subject: RatingConstants::GUEST) }
+  scope :for_transactables, -> { where(subject: RatingConstants::TRANSACTABLE) }
+  scope :for_hosts, -> { where(subject: RatingConstants::HOST) }
+  scope :for_guests, -> { where(subject: RatingConstants::GUEST) }
 
   after_commit :expire_cache
 
   def expire_cache
     Rails.cache.delete_matched('reviews_view/*')
   end
-
 end

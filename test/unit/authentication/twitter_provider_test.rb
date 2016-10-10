@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Authentication::TwitterProviderTest < ActiveSupport::TestCase
-
   context 'Having a Twitter provider' do
     setup do
       user = FactoryGirl.build(:user)
@@ -31,9 +30,9 @@ class Authentication::TwitterProviderTest < ActiveSupport::TestCase
     end
 
     should 'return friend_ids' do
-      Twitter::REST::Client.any_instance.stubs(:friend_ids).once.returns(['1', '2'])
+      Twitter::REST::Client.any_instance.stubs(:friend_ids).once.returns(%w(1 2))
 
-      assert_equal ['1', '2'], @twitter_provider.friend_ids
+      assert_equal %w(1 2), @twitter_provider.friend_ids
     end
 
     context 'when token is invalid' do
@@ -52,11 +51,10 @@ class Authentication::TwitterProviderTest < ActiveSupport::TestCase
           @twitter_provider.info
         end
       end
-
     end
 
     should 'rescue and ignore TooManyRequests error' do
-      @twitter_client_stub = mock()
+      @twitter_client_stub = mock
       @twitter_client_stub.stubs(:friend_ids).raises(Twitter::Error::TooManyRequests)
       @twitter_provider.stubs(:connection).returns(@twitter_client_stub)
 

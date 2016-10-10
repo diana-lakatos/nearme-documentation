@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :instance_billing_gateway do
-    billing_gateway "stripe"
-    currency "USD"
+    billing_gateway 'stripe'
+    currency 'USD'
   end
 end

@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Support::TicketMessagesControllerTest < ActionController::TestCase
-
   setup do
     Support::Ticket.any_instance.stubs(:admin_emails).returns(['test@test.com'])
     @user = FactoryGirl.create(:user)
@@ -13,9 +12,9 @@ class Support::TicketMessagesControllerTest < ActionController::TestCase
     context 'with message params' do
       should 'create message' do
         params = {
-          :ticket_id => @ticket.id,
-          :support_ticket_message => {
-            :message => "New message"
+          ticket_id: @ticket.id,
+          support_ticket_message: {
+            message: 'New message'
           }
         }
 
@@ -26,10 +25,10 @@ class Support::TicketMessagesControllerTest < ActionController::TestCase
 
       should 'create and close message' do
         params = {
-          :commit => "Close Ticket",
-          :ticket_id => @ticket.id,
-          :support_ticket_message => {
-            :message => "New message"
+          commit: 'Close Ticket',
+          ticket_id: @ticket.id,
+          support_ticket_message: {
+            message: 'New message'
           }
         }
 
@@ -44,8 +43,8 @@ class Support::TicketMessagesControllerTest < ActionController::TestCase
     context 'invalid params' do
       should 'not create message' do
         params = {
-          :ticket_id => @ticket.id,
-          :support_ticket_message => {
+          ticket_id: @ticket.id,
+          support_ticket_message: {
           }
         }
         assert_difference 'Support::TicketMessage.count', 0 do
@@ -55,9 +54,9 @@ class Support::TicketMessagesControllerTest < ActionController::TestCase
 
       should 'close message' do
         params = {
-          :commit => "Close Ticket",
-          :ticket_id => @ticket.id,
-          :support_ticket_message => {
+          commit: 'Close Ticket',
+          ticket_id: @ticket.id,
+          support_ticket_message: {
           }
         }
         assert_difference 'Support::TicketMessage.count', 0 do

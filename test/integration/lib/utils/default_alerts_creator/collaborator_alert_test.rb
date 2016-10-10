@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Utils::DefaultAlertsCreator::CollaboratorAlertTest < ActionDispatch::IntegrationTest
-
   setup do
     @creator = Utils::DefaultAlertsCreator::CollaboratorCreator.new
 
@@ -11,7 +10,7 @@ class Utils::DefaultAlertsCreator::CollaboratorAlertTest < ActionDispatch::Integ
     @user = @collaborator.user
   end
 
-  should "#collaborator_approved" do
+  should '#collaborator_approved' do
     @creator.create_collaborator_approved_email!
 
     assert_difference 'ActionMailer::Base.deliveries.size' do
@@ -21,20 +20,19 @@ class Utils::DefaultAlertsCreator::CollaboratorAlertTest < ActionDispatch::Integ
     mail = ActionMailer::Base.deliveries.last
 
     [mail.html_part.body, mail.text_part.body.to_s].each do |body|
-
       assert_equal [@user.email], mail.to
       assert_equal "You've been approved as a collaborator on #{@listing.name}", mail.subject
 
       assert_contains "Hi, #{@user.first_name}", body
 
       assert_not_contains 'Liquid error:', body
-      assert_not_contains "translation missing:", body
+      assert_not_contains 'translation missing:', body
     end
 
     assert_match /<a.*>#{@listing.administrator.name}<\/a> has approved you as a collaborator on/, mail.html_part.body.to_s
   end
 
-  should "#collaborator_has_quit" do
+  should '#collaborator_has_quit' do
     @creator.create_collaborator_has_quit_email!
 
     assert_difference 'ActionMailer::Base.deliveries.size' do
@@ -51,9 +49,9 @@ class Utils::DefaultAlertsCreator::CollaboratorAlertTest < ActionDispatch::Integ
       assert_contains @user.first_name, body
 
       assert_not_contains 'Liquid error:', body
-      assert_not_contains "translation missing:", body
+      assert_not_contains 'translation missing:', body
     end
 
-    assert_match /<a .*>#{@user.first_name}<\/a>/ , mail.html_part.body.to_s
+    assert_match /<a .*>#{@user.first_name}<\/a>/, mail.html_part.body.to_s
   end
 end

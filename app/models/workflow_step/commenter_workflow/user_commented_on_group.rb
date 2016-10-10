@@ -1,5 +1,4 @@
 class WorkflowStep::CommenterWorkflow::UserCommentedOnGroup < WorkflowStep::CommenterWorkflow::BaseStep
-
   def lister
     @commentable.try(:creator)
   end
@@ -15,6 +14,4 @@ class WorkflowStep::CommenterWorkflow::UserCommentedOnGroup < WorkflowStep::Comm
       group: @commentable
     }
   end
-
 end
-

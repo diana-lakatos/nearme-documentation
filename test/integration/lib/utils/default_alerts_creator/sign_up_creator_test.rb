@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::IntegrationTest
-
   setup do
     @signup_creator = Utils::DefaultAlertsCreator::SignUpCreator.new
   end
@@ -18,13 +17,12 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
   end
 
   context 'methods' do
-
     setup do
       @user = FactoryGirl.create(:user)
       @platform_context = PlatformContext.current
       @instance = @platform_context.instance
-      InstanceAdmin.create(:user_id => @user.id).update_attribute(:instance_id, @instance.id)
-      PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
+      InstanceAdmin.create(user_id: @user.id).update_attribute(:instance_id, @instance.id)
+      PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, name: 'custom.domain.com'))
     end
 
     should 'create verification email' do
@@ -56,7 +54,7 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
       assert_equal subject, mail.subject
     end
 
-    should "send no_bookings" do
+    should 'send no_bookings' do
       @signup_creator.create_reengageemnt_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
         WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::NoReservations, @user.id)
@@ -72,13 +70,14 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
 
     context 'when sending invitation email' do
       setup do
-        @new_user_token, @creator_token = 'new_user--token', 'creator--token'
+        @new_user_token = 'new_user--token'
+        @creator_token = 'creator--token'
         User.any_instance.stubs(:temporary_token).returns(@new_user_token, @creator_token)
         @signup_creator.create_create_user_by_admin_email!
         @creator = FactoryGirl.create(:user)
       end
 
-      should "create_create_user_by_admin_email" do
+      should 'create_create_user_by_admin_email' do
         assert_difference 'ActionMailer::Base.deliveries.size' do
           WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::CreatedByAdmin, @user.id, @creator.id)
         end
@@ -96,7 +95,7 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
       end
     end
 
-    should "create_notify_of_wrong_phone_number_email" do
+    should 'create_notify_of_wrong_phone_number_email' do
       @signup_creator.create_notify_of_wrong_phone_number_email!
       @user = FactoryGirl.create(:user)
       assert_difference 'ActionMailer::Base.deliveries.size' do
@@ -105,13 +104,13 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
       mail = ActionMailer::Base.deliveries.last
       assert_equal [@user.email], mail.to
       assert_equal "#{@user.first_name}, we can't reach you!", mail.subject
-      assert_contains "We tried to send you a text message, but it looks like your mobile number isn’t valid.", mail.html_part.body
+      assert_contains 'We tried to send you a text message, but it looks like your mobile number isn’t valid.', mail.html_part.body
       assert_contains 'href="https://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
     end
 
-    should "create_create_user_via_bulk_uploader_email" do
+    should 'create_create_user_via_bulk_uploader_email' do
       @signup_creator.create_create_user_via_bulk_uploader_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
         WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::CreatedViaBulkUploader, @user.id, 'cool_password')
@@ -122,7 +121,7 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
       assert_equal "#{@user.first_name}, you were invited to #{@platform_context.decorate.name}!", mail.subject
       assert_contains "Hi #{@user.first_name }", mail.html_part.body
       assert_contains "We'd like to invite you to participate in our #{@platform_context.decorate.name} marketplace", mail.html_part.body
-      assert_contains "Password: cool_password", mail.html_part.body
+      assert_contains 'Password: cool_password', mail.html_part.body
       assert_contains 'href="https://custom.domain.com', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
@@ -139,13 +138,10 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
       assert_equal "#{ @user.first_name }, you have been approved at #{ @platform_context.decorate.name }!", mail.subject
       assert mail.html_part.body.include?(@user.first_name)
       assert_equal [@user.email], mail.to
-      assert mail.html_part.body.include?("You have been approved")
+      assert mail.html_part.body.include?('You have been approved')
       assert_contains 'href="https://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
     end
-
   end
-
 end
-

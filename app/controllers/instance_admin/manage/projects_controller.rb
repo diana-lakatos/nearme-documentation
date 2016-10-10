@@ -1,5 +1,4 @@
 class InstanceAdmin::Manage::ProjectsController < InstanceAdmin::Manage::BaseController
-
   def edit
     @project = Project.find(params[:id])
     render layout: false

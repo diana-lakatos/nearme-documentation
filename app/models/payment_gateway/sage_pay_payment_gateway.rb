@@ -6,15 +6,13 @@ class PaymentGateway::SagePayPaymentGateway < PaymentGateway
   end
 
   def supported_currencies
-    ["GBP", "EUR"]
+    %w(GBP EUR)
   end
 
   def self.active_merchant_class
     ActiveMerchant::Billing::SagePayGateway
   end
 
-  def refund_identification(charge)
-
+  def refund_identification(_charge)
   end
 end
-

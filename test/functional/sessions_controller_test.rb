@@ -1,10 +1,9 @@
 require 'test_helper'
 
 class SessionsControllerTest < ActionController::TestCase
-
   setup do
     @user = FactoryGirl.create(:user)
-    @request.env["devise.mapping"] = Devise.mappings[:user]
+    @request.env['devise.mapping'] = Devise.mappings[:user]
   end
 
   should 'successfully track in mixpanel' do
@@ -34,7 +33,6 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   context 'versions' do
-
     should 'not track new version after each login' do
       assert_no_difference('PaperTrail::Version.where("item_type = ?", "User").count') do
         with_versioning do
@@ -53,4 +51,3 @@ class SessionsControllerTest < ActionController::TestCase
     end
   end
 end
-

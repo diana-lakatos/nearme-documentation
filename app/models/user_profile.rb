@@ -40,14 +40,14 @@ class UserProfile < ActiveRecord::Base
 
   def field_blank_or_changed?(field_name)
     return true unless self.persisted?
-    db_field_value = UserProfile.find_by(id: self.id).properties[field_name]
-    self.properties[field_name].blank? || (db_field_value != self.properties[field_name])
+    db_field_value = UserProfile.find_by(id: id).properties[field_name]
+    properties[field_name].blank? || (db_field_value != properties[field_name])
   end
 
   def category_blank_or_changed?(category)
     return true unless self.persisted?
-    db_value = UserProfile.find_by(id: self.id).common_categories(category)
-    self.common_categories(category).blank? || (db_value != self.common_categories(category))
+    db_value = UserProfile.find_by(id: id).common_categories(category)
+    common_categories(category).blank? || (db_value != common_categories(category))
   end
 
   def validate_mandatory_categories
@@ -61,7 +61,7 @@ class UserProfile < ActiveRecord::Base
   end
 
   def mark_as_onboarded!
-    if self.onboarded_at.nil?
+    if onboarded_at.nil?
       touch(:onboarded_at)
       if profile_type == BUYER
         WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::EnquirerOnboarded, user_id)
@@ -73,9 +73,8 @@ class UserProfile < ActiveRecord::Base
 
   private
 
-
   def assign_defaults
-    self.instance_profile_type ||= PlatformContext.current.instance.try("#{self.profile_type}_profile_type")
+    self.instance_profile_type ||= PlatformContext.current.instance.try("#{profile_type}_profile_type")
     # by default, seller and buyer profiles are enabled only if onboarding is disabled. Default profile is always enabled.
     self.enabled = !onboarding? || profile_type == DEFAULT
     true
@@ -84,10 +83,8 @@ class UserProfile < ActiveRecord::Base
   def create_company_if_needed
     if instance_profile_type.try(:create_company_on_sign_up?) && user.companies.count.zero?
       company = user.companies.create!(name: user.name, creator: user)
-      company.update_metadata({draft_at: nil, completed_at: Time.zone.now})
+      company.update_metadata(draft_at: nil, completed_at: Time.zone.now)
     end
     true
   end
-
 end
-

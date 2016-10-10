@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Manage::WaiverAgreementTemplatesControllerTest < ActionController::TestCase
-
   setup do
     @user = FactoryGirl.create(:user)
     @transactable_type = FactoryGirl.create(:transactable_type)
@@ -11,7 +10,6 @@ class InstanceAdmin::Manage::WaiverAgreementTemplatesControllerTest < ActionCont
   end
 
   context 'index' do
-
     should 'display form for new waiver agreement template' do
       get :index
       assert :success
@@ -40,7 +38,5 @@ class InstanceAdmin::Manage::WaiverAgreementTemplatesControllerTest < ActionCont
         post :create, waiver_agreement_template: { content: 'This is content', name: 'My Name' }
       end
     end
-
   end
-
 end

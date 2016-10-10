@@ -17,7 +17,7 @@ module Admin::ResourceHelper
     attrs
   end
 
-  def admin_resource_field_options(resource, field)
+  def admin_resource_field_options(_resource, _field)
     {}
   end
 end

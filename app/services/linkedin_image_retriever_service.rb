@@ -1,5 +1,4 @@
 class LinkedinImageRetrieverService
-
   def initialize(oauth_token)
     @oauth_token = oauth_token
   end
@@ -16,5 +15,4 @@ class LinkedinImageRetrieverService
   rescue Exception
     nil
   end
-
 end

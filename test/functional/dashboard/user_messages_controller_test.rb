@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Dashboard::UserMessagesControllerTest < ActionController::TestCase
-
   context 'listing' do
     setup do
       @listing = FactoryGirl.create(:listing_in_san_francisco)

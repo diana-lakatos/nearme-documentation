@@ -4,9 +4,9 @@ module ActiveRecord::ActAsNotImplemented
 
   module ClassMethods
     def not_implemented(*args)
-      args.each do |method_name, method_returns|
-        define_method method_name do |*arguments|
-          raise NotImplementedError
+      args.each do |method_name, _method_returns|
+        define_method method_name do |*_arguments|
+          fail NotImplementedError
         end
       end
     end

@@ -14,4 +14,3 @@ class WorkflowStep::InstanceWorkflow::Created < WorkflowStep::InstanceWorkflow::
     super.merge(user_password: @user_password)
   end
 end
-

@@ -1,5 +1,4 @@
 module Transactable::Pricing::OrderValidations
-
   def validate_order(order)
     @order = order
     action.try(:validate_order, @order)
@@ -29,7 +28,7 @@ module Transactable::Pricing::OrderValidations
   def validate_booking_selection
     unless price_calculator(@order).valid?
       if Reservation::HourlyPriceCalculator === price_calculator(@order)
-        @order.errors.add(:base, I18n.t('reservations_review.errors.no_minimum_minutes', minimum_minutes: sprintf('%.2f', action.minimum_booking_minutes/60.0)))
+        @order.errors.add(:base, I18n.t('reservations_review.errors.no_minimum_minutes', minimum_minutes: sprintf('%.2f', action.minimum_booking_minutes / 60.0)))
       else
         @order.errors.add(:base, I18n.t('reservations_review.errors.no_minimum_days', minimum_days: action.minimum_booking_days))
       end

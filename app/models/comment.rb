@@ -1,5 +1,4 @@
 class Comment < ActiveRecord::Base
-
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
@@ -8,7 +7,7 @@ class Comment < ActiveRecord::Base
   include CreationFilter
 
   belongs_to :commentable, polymorphic: true, touch: true
-  belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :comments
+  belongs_to :creator, -> { with_deleted }, class_name: 'User', inverse_of: :comments
 
   has_many :spam_reports, as: :spamable, dependent: :destroy
 
@@ -20,44 +19,44 @@ class Comment < ActiveRecord::Base
   after_create :trigger_workflow_alert_for_new_comment
 
   def user_commented_event
-    case self.commentable_type
-    when "ActivityFeedEvent"
+    case commentable_type
+    when 'ActivityFeedEvent'
       event = :user_commented
 
-      if self.commentable.event_source.try(:updateable_type).eql?('Group')
+      if commentable.event_source.try(:updateable_type).eql?('Group')
         event = :user_commented_on_user_activity
       end
 
-      followed = self.commentable.followed
-    when "Transactable"
+      followed = commentable.followed
+    when 'Transactable'
       event = :user_commented_on_transactable
-      followed = self.commentable
+      followed = commentable
     else
       return
     end
 
-    affected_objects = [self.creator]
+    affected_objects = [creator]
     ActivityFeedService.create_event(event, followed, affected_objects, self)
   end
 
   def trigger_workflow_alert_for_new_comment
-    klass = case self.commentable_type
-    when "Transactable"
+    klass = case commentable_type
+    when 'Transactable'
       WorkflowStep::CommenterWorkflow::UserCommentedOnTransactable
-    when "Group"
+    when 'Group'
       WorkflowStep::CommenterWorkflow::UserCommentedOnGroup
     when 'ActivityFeedEvent'
       WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate if commentable.event_source_type == 'UserStatusUpdate'
     end
-    WorkflowStepJob.perform(klass, self.id) if klass.present?
+    WorkflowStepJob.perform(klass, id) if klass.present?
     true
   end
 
   def reported_by(user, ip)
     if user
-      self.spam_reports.where(user: user).first
+      spam_reports.where(user: user).first
     else
-      self.spam_reports.where(ip_address: ip, user: nil).first
+      spam_reports.where(ip_address: ip, user: nil).first
     end
   end
 
@@ -85,5 +84,4 @@ class Comment < ActiveRecord::Base
   def group_activity_commented?
     commentable.is_a?(ActivityFeedEvent) && commentable.followed.is_a?(Group)
   end
-
 end

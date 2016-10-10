@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 
 class SecuredDomainTest < ActionDispatch::IntegrationTest
   setup do
@@ -52,9 +52,9 @@ class SecuredDomainTest < ActionDispatch::IntegrationTest
         domain = FactoryGirl.create(:unsecured_domain, name: 'unsecured.com')
         user = FactoryGirl.create(:user)
         host! domain.name
-        User::TemporaryTokenVerifier.any_instance.stubs(:generate => 'my_little_token')
+        User::TemporaryTokenVerifier.any_instance.stubs(generate: 'my_little_token')
 
-        user_hash = {user: {email: user.email, password: user.password}}
+        user_hash = { user: { email: user.email, password: user.password } }
         post user_session_url(user_hash.merge(host: 'example.com', protocol: 'https', return_to: dashboard_url(host: domain.name, protocol: 'http')))
         assert_response :redirect
         assert_redirected_to dashboard_url(host: domain.name, protocol: 'http', token: 'my_little_token')
@@ -85,7 +85,7 @@ class SecuredDomainTest < ActionDispatch::IntegrationTest
         assert_response :success
         assert_equal user, controller.current_user
 
-        delete destroy_user_session_url(:host => unsecured.name)
+        delete destroy_user_session_url(host: unsecured.name)
         follow_redirect!
         assert_response :success
 

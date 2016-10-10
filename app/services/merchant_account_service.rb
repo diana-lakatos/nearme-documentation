@@ -1,5 +1,4 @@
 class MerchantAccountService
-
   delegate :form_path, :form_data, to: :@concrete_service
 
   def initialize(merchantable)
@@ -27,6 +26,4 @@ class MerchantAccountService
   def update(data)
     @merchant_account.assign_attributes(form_data(data))
   end
-
 end
-

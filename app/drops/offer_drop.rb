@@ -1,5 +1,4 @@
 class OfferDrop < OrderDrop
-
   attr_reader :offer
 
   def initialize(offer)
@@ -21,5 +20,4 @@ class OfferDrop < OrderDrop
   def formatted_total_paid_amount
     render_money(@order.recurring_booking_periods.paid.map(&:total_amount).sum)
   end
-
 end

@@ -4,7 +4,7 @@ class User::TemporaryTokenVerifier
   # If we ever need to invalidate all oustanding tokens, we can just
   # cycle this secret.
   class_attribute :secret_token
-  self.secret_token = "8ad98c608f442abac9783d71d19c08b51abef2c8c36435ec205c1a67d028fd126ed5135f1651befe3629f58c0455f48e7829451715865b9a00b9fdd9b60f540a"
+  self.secret_token = '8ad98c608f442abac9783d71d19c08b51abef2c8c36435ec205c1a67d028fd126ed5135f1651befe3629f58c0455f48e7829451715865b9a00b9fdd9b60f540a'
 
   # Prepare a verifier for a given User
   def initialize(user)
@@ -46,9 +46,7 @@ class User::TemporaryTokenVerifier
 
     # Find the user and verify the token
     user = User.find_by_id(user_id)
-    if user && new(user).valid?(token)
-      return user
-    end
+    return user if user && new(user).valid?(token)
 
     # If we didn't match anything, then we return nil
     nil

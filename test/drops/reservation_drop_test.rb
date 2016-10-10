@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class ReservationDropTest < ActiveSupport::TestCase
-
   setup do
     @reservation = create(:reservation)
   end
@@ -19,5 +18,4 @@ class ReservationDropTest < ActiveSupport::TestCase
       assert_equal transactable_type, @reservation.to_liquid.transactable_type
     end
   end
-
 end

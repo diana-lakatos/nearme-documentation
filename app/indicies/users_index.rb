@@ -1,8 +1,7 @@
 module UsersIndex
-
   extend ActiveSupport::Concern
 
-  included do |base|
+  included do |_base|
     cattr_accessor :custom_attributes
 
     settings(index: { number_of_shards: 1 }) do
@@ -25,12 +24,10 @@ module UsersIndex
           indexes :category_ids, type: 'integer'
           indexes :properties, type: 'object' do
             if InstanceProfileType.table_exists?
-              mapped = InstanceProfileType.all.map{ |instance_profile_type|
-                instance_profile_type.custom_attributes
-              }.flatten
+              mapped = InstanceProfileType.all.map(&:custom_attributes).flatten
 
               mapped.each do |custom_attribute|
-                type = custom_attribute.attribute_type.in?(['integer', 'boolean', 'float']) ? custom_attribute.attribute_type : 'string'
+                type = custom_attribute.attribute_type.in?(%w(integer boolean float)) ? custom_attribute.attribute_type : 'string'
                 indexes custom_attribute.name, type: type, index: 'not_analyzed'
               end
             end
@@ -39,18 +36,17 @@ module UsersIndex
       end
     end
 
-    def as_indexed_json(options = {})
-
+    def as_indexed_json(_options = {})
       custom_attributes_by_type = InstanceProfileType.all.map do |instance_profile_type|
         instance_profile_type.custom_attributes.pluck(:name)
       end.flatten.uniq
 
-      profiles = self.user_profiles.map do |user_profile|
+      profiles = user_profiles.map do |user_profile|
         custom_attributes = {}
         custom_attributes_by_type.each do |custom_attribute|
           if user_profile.properties.respond_to?(custom_attribute)
             val = user_profile.properties.send(custom_attribute)
-            val = Array(val).map{|v| v.to_s.downcase }
+            val = Array(val).map { |v| v.to_s.downcase }
             if custom_attributes[custom_attribute].present?
               (Array(custom_attributes[custom_attribute]) + val).flatten
             else
@@ -59,17 +55,15 @@ module UsersIndex
           end
         end
 
-        user_profile.slice(:instance_profile_type_id, :profile_type, :enabled).merge({
-          properties: custom_attributes,
-          category_ids: user_profile.categories.map(&:id)
-        })
+        user_profile.slice(:instance_profile_type_id, :profile_type, :enabled).merge(properties: custom_attributes,
+                                                                                     category_ids: user_profile.categories.map(&:id))
       end
 
       allowed_keys = User.mappings.to_hash[:user][:properties].keys.delete_if { |prop| prop == :custom_attributes }
 
-      self.as_json(only: allowed_keys).merge(
-        instance_profile_type_ids: self.user_profiles.map(&:instance_profile_type_id),
-        tags: self.tags_as_comma_string,
+      as_json(only: allowed_keys).merge(
+        instance_profile_type_ids: user_profiles.map(&:instance_profile_type_id),
+        tags: tags_as_comma_string,
         user_profiles: profiles
       )
     end
@@ -102,6 +96,5 @@ module UsersIndex
         end.flatten.uniq
       end
     end
-
   end
 end

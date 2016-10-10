@@ -5,7 +5,6 @@
 # * CustomAttributes
 class CacheExpiration
   class << self
-
     def update_memory_cache
       last_update = RedisCache.client.get("last_cache_update_#{current_worker_id}").to_f
       RedisCache.client.zrangebyscore('cache_expiration', "(#{last_update}", '+inf', with_scores: true).each do |value, score|
@@ -19,7 +18,7 @@ class CacheExpiration
         last_update = RedisCache.client.get("last_cache_update_#{current_worker_id}").to_f
         processed_instances = []
         messages = RedisCache.client.zrangebyscore('cache_expiration', "(#{last_update}", '+inf', with_scores: true)
-        messages.each do |value, score|
+        messages.each do |value, _score|
           data = JSON.parse(value).with_indifferent_access
           data.delete(:timestamp)
           unless processed_instances.include?(data)
@@ -81,6 +80,5 @@ class CacheExpiration
       opts = { cache_type: rebuild_type, timestamp: Time.now.to_f }.merge(options)
       RedisCache.client.zadd 'cache_expiration', Time.now.to_f, opts.to_json
     end
-
   end
 end

@@ -1,5 +1,4 @@
 class Utils::DefaultAlertsCreator
-
   def create_all_workflows!
     Utils::DefaultAlertsCreator::SignUpCreator.new.create_all!
     Utils::DefaultAlertsCreator::ReservationCreator.new.create_all!
@@ -22,5 +21,4 @@ class Utils::DefaultAlertsCreator
     Utils::DefaultAlertsCreator::FollowerCreator.new.create_all!
     Utils::DefaultAlertsCreator::CommenterCreator.new.create_all!
   end
-
 end

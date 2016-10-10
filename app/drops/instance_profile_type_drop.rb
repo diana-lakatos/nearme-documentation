@@ -1,5 +1,4 @@
 class InstanceProfileTypeDrop < BaseDrop
-
   attr_reader :instance_profile_type
 
   # id
@@ -34,13 +33,13 @@ class InstanceProfileTypeDrop < BaseDrop
   # returns the container class and input size to be used for the search area
   # of the marketplace's homepage
   def calculate_elements
-    sum = 2 #search button
+    sum = 2 # search button
     sum += 4 if search_inputs.include? 'datepickers'
     sum += 2 if search_inputs.include? 'categories'
     sum += 2 if show_transactable_type_picker?
-    input_size = 12 - sum #span12
-    input_size /= 2 if (['geolocation', 'fulltext'] & search_inputs).size == 2 #two input fields
-    container = input_size == 2 ? "span12" : "span10 offset1"
+    input_size = 12 - sum # span12
+    input_size /= 2 if (%w(geolocation fulltext) & search_inputs).size == 2 # two input fields
+    container = input_size == 2 ? 'span12' : 'span10 offset1'
     [container, input_size]
   end
 
@@ -63,7 +62,7 @@ class InstanceProfileTypeDrop < BaseDrop
 
   # returns true if transactable type picker should be shown
   def show_transactable_type_picker?
-    @context["transactable_type_picker"] != false && multiple_transactable_types? && PlatformContext.current.instance.tt_select_type != 'radio'
+    @context['transactable_type_picker'] != false && multiple_transactable_types? && PlatformContext.current.instance.tt_select_type != 'radio'
   end
 
   def class_name
@@ -75,7 +74,6 @@ class InstanceProfileTypeDrop < BaseDrop
   end
 
   def searchable_categories
-     @instance_profile_type.categories.searchable.roots
+    @instance_profile_type.categories.searchable.roots
   end
-
 end

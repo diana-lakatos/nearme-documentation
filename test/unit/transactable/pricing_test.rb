@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Transactable::PricingTest < ActiveSupport::TestCase
-
   setup do
     @pricing = FactoryGirl.build(:transactable_pricing)
   end
@@ -14,15 +13,14 @@ class Transactable::PricingTest < ActiveSupport::TestCase
     end
   end
 
-  context "free flag and prices" do
-
-    should "valid if free flag is true and no price is provided" do
+  context 'free flag and prices' do
+    should 'valid if free flag is true and no price is provided' do
       @pricing.is_free_booking = true
       @pricing.price = nil
       assert @pricing.valid?
     end
 
-    should "valid if free flag is false and at daily price is greater than zero" do
+    should 'valid if free flag is false and at daily price is greater than zero' do
       @pricing.is_free_booking = false
       @pricing.price = 1
       assert @pricing.valid?
@@ -54,8 +52,6 @@ class Transactable::PricingTest < ActiveSupport::TestCase
         @pricing.price = 11
         assert @pricing.valid?, @pricing.errors.full_messages.join(', ')
       end
-
     end
   end
-
 end

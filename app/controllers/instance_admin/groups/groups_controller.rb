@@ -1,5 +1,4 @@
 class InstanceAdmin::Groups::GroupsController < InstanceAdmin::Manage::BaseController
-
   before_action :prepare_search_form, only: [:index]
 
   def index
@@ -38,5 +37,4 @@ class InstanceAdmin::Groups::GroupsController < InstanceAdmin::Manage::BaseContr
     @group_search_form.validate(params)
     @search_service = SearchService.new(Group.order('created_at DESC').with_deleted)
   end
-
 end

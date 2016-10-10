@@ -1,5 +1,4 @@
 class WorkflowStep::PaymentGatewayWorkflow::BaseStep < WorkflowStep::BaseStep
-
   def initialize(merchant_account_id)
     @merchant_account = MerchantAccount.find_by_id(merchant_account_id)
   end
@@ -19,6 +18,4 @@ class WorkflowStep::PaymentGatewayWorkflow::BaseStep < WorkflowStep::BaseStep
   def data
     { merchant_account: @merchant_account, merchantable: @merchant_account.merchantable }
   end
-
 end
-

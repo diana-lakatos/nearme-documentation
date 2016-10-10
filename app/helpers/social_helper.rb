@@ -32,7 +32,7 @@ module SocialHelper
   end
 
   def share_to_clipboard(url)
-    link_to('', url, class:"ico-link", data: {'clipboard-text' => url})
+    link_to('', url, class: 'ico-link', data: { 'clipboard-text' => url })
   end
 
   private

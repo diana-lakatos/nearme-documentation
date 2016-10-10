@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class UserBanTest < ActiveSupport::TestCase
-
   context 'create' do
-
     setup do
       @user = FactoryGirl.create(:user)
       @company = FactoryGirl.create(:company, creator: @user)
@@ -12,7 +10,6 @@ class UserBanTest < ActiveSupport::TestCase
     end
 
     context 'user is the only owner of a company' do
-
       should 'delete everything related to user and certain instance' do
         FactoryGirl.create(:user_ban, user: @user)
         assert @company.reload.deleted?
@@ -33,9 +30,6 @@ class UserBanTest < ActiveSupport::TestCase
         refute @location.reload.deleted?
         refute @listing.reload.deleted?
       end
-
     end
-
   end
 end
-

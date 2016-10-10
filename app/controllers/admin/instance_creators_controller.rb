@@ -1,5 +1,4 @@
 class Admin::InstanceCreatorsController < Admin::ResourceController
-
   def index
     @instance_creator = InstanceCreator.new
     super
@@ -16,5 +15,4 @@ class Admin::InstanceCreatorsController < Admin::ResourceController
   def collection_search_fields
     %w(email)
   end
-
 end

@@ -17,5 +17,4 @@ class RecurringBooking::SubscriptionPriceCalculator
   def price
     @pricing.price || 0
   end
-
 end

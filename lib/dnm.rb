@@ -1,13 +1,11 @@
 # rescue_from EmptyParameter, :with => :param_error
 
 module DNM
-
   class Unauthorized < ::StandardError
-    def initialize(msg = "Invalid Authentication")
+    def initialize(msg = 'Invalid Authentication')
       super
     end
   end
-
 
   class Error < ::StandardError
     attr_accessor :errors, :status
@@ -27,79 +25,79 @@ module DNM
   end
 
   class InvalidJSON < Error
-    def initialize(msg = "Body should be a JSON Hash")
+    def initialize(msg = 'Body should be a JSON Hash')
       super msg
       @status = 400
     end
   end
 
   class MissingJSONData < Error
-    def initialize(field, msg = "Missing Data")
+    def initialize(field, msg = 'Missing Data')
       super msg
-      @errors << { resource: "JSON",
+      @errors << { resource: 'JSON',
                    field:    field,
-                   code:     "missing_field" }
+                   code:     'missing_field' }
       @status = 400
     end
   end
 
   class InvalidJSONData < Error
-    def initialize(field, msg = "Invalid Data")
+    def initialize(field, msg = 'Invalid Data')
       super msg
       if field.present?
-        @errors << { resource: "JSON",
+        @errors << { resource: 'JSON',
                      field:    field,
-                     code:     "invalid" }
+                     code:     'invalid' }
       end
       @status = 400
     end
   end
 
   class InvalidJSONDate < Error
-    def initialize(field, msg = "Date is in the past")
+    def initialize(field, msg = 'Date is in the past')
       super msg
       if field.present?
-        @errors << { resource: "JSON",
+        @errors << { resource: 'JSON',
                      field:    field,
-                     code:     "invalid" }
+                     code:     'invalid' }
       end
       @status = 400
     end
   end
 
   class RecordNotFound < Error
-    def initialize(resource, field, msg = "Record Not Found")
+    def initialize(resource, field, msg = 'Record Not Found')
       super msg
       @errors << { resource:  resource,
                    field:     field,
-                   code:      "missing" }
+                   code:      'missing' }
       @status = 404
     end
   end
 
   class UnauthorizedButUserExists < Error
-    def initialize(msg = "Invalid Authentication")
+    def initialize(msg = 'Invalid Authentication')
       super msg
-      @errors << { resource:  "User",
-                   field:     "email",
-                   code:      "already_exists" }
+      @errors << { resource:  'User',
+                   field:     'email',
+                   code:      'already_exists' }
       @status = 401
     end
   end
 
   class PropertyUnavailableOnDate < Error
-    def initialize(date, requested, msg = "Property unavailable")
+    def initialize(date, requested, msg = 'Property unavailable')
       super msg
       @errors << {
-          date: date,
-          requested: requested
+        date: date,
+        requested: requested
       }
       @status = 400
     end
   end
 
   class MessageContextNotAvailable < Error
-    def initialize(msg = "Message context not available")
+    def initialize(msg = 'Message context not available')
       super msg
       @status = 400
     end

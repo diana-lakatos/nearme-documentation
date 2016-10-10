@@ -1,4 +1,4 @@
-# TODO remove 2 days after Spree removal
+# TODO: remove 2 days after Spree removal
 class ReservationExpiryJob < Job
   def after_initialize(reservation_id)
     @reservation = Order.find_by_id(reservation_id)

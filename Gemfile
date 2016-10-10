@@ -13,14 +13,14 @@ gem 'redis-rails', '~> 4.0.0'
 gem 'raygun4ruby'
 gem 'liquid', '3.0.6'
 gem 'active_model_serializers', '~> 0.8.1'
-gem 'jsonapi-serializers', github: "mdyd-dev/jsonapi-serializers", branch: 'feature/namespace'
+gem 'jsonapi-serializers', github: 'mdyd-dev/jsonapi-serializers', branch: 'feature/namespace'
 gem 'rabl'
 gem 'carrierwave'
 gem 'devise', '3.5.1'
 gem 'devise-token_authenticatable'
 gem 'rack-throttle'
 
-gem "rack-reverse-proxy", require: "rack/reverse_proxy", git: 'git@github.com:mdyd-dev/rack-reverse-proxy.git'
+gem 'rack-reverse-proxy', require: 'rack/reverse_proxy', git: 'git@github.com:mdyd-dev/rack-reverse-proxy.git'
 
 gem 'charlock_holmes', '~> 0.7.3', require: false
 gem 'stringex', require: 'stringex_lite' # used by category model
@@ -54,7 +54,7 @@ gem 'haml'
 gem 'mini_magick', '~> 4.0.1'
 gem 'money-rails', github: 'RubyMoney/money-rails'
 gem 'simple_form', '~> 3.1'
-gem "paranoia", :github => "radar/paranoia", :branch => "rails4"
+gem 'paranoia', github: 'radar/paranoia', branch: 'rails4'
 gem 'nested_form'
 
 gem 'nokogiri', '~> 1.6.0'
@@ -70,7 +70,7 @@ gem 'i18n-active_record',
 
 gem 'paper_trail', '5.2.0'
 
-gem 'rack-rewrite', :require => 'rack/rewrite'
+gem 'rack-rewrite', require: 'rack/rewrite'
 
 gem 'state_machine', '~> 1.2.0'
 gem 'state_machines-activerecord'
@@ -107,7 +107,6 @@ gem 'daemons' # used by DelayedJob
 
 gem 'twilio-ruby', require: false
 gem 'googl', require: false
-
 
 gem 'inherited_resources', '~> 1.6'
 
@@ -162,8 +161,8 @@ end
 group :development do
   gem 'thin'
   gem 'rails-dev-boost', github: 'thedarkone/rails-dev-boost'
-  gem "better_errors"
-  gem "binding_of_caller"
+  gem 'better_errors'
+  gem 'binding_of_caller'
   gem 'quiet_assets'
   gem 'pry-nav'
   gem 'pry-doc', require: false
@@ -174,22 +173,23 @@ group :development do
   gem 'mailcatcher'
   gem 'active_record_query_trace'
   gem 'web-console', '~> 2.0'
+  gem 'rubocop'
 end
 
 group :test do
   gem 'rspec', '2.14.1'
-  gem 'codeclimate-test-reporter', :require => false
+  gem 'codeclimate-test-reporter', require: false
   gem 'capybara', '2.4.4'
   gem 'launchy'
   gem 'capybara-webkit', '1.7.0'
   gem 'capybara-screenshot'
-  gem 'cucumber-rails', '~> 1.4.0', :require => false
+  gem 'cucumber-rails', '~> 1.4.0', require: false
   gem 'cucumber', '~> 1.3.0'
   gem 'database_cleaner'
   gem 'email_spec'
   gem 'json_spec'
   gem 'minitest'
-  gem 'mocha', :require => false
+  gem 'mocha', require: false
   gem 'pickle', '~> 0.5.1'
   gem 'minitest-reporters', '~> 1.0.10'
   gem 'webmock', '1.17.4'

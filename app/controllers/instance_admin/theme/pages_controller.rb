@@ -1,6 +1,6 @@
 class InstanceAdmin::Theme::PagesController < InstanceAdmin::Theme::BaseController
   include InstanceAdmin::Versionable
-  actions :all, :except => [ :show ]
+  actions :all, except: [:show]
 
   before_filter :set_redirect_form
 
@@ -15,7 +15,7 @@ class InstanceAdmin::Theme::PagesController < InstanceAdmin::Theme::BaseControll
         redirect_to action: 'index'
       end
       format.json do
-        render :nothing => true
+        render nothing: true
       end
     end
   end
@@ -31,7 +31,7 @@ class InstanceAdmin::Theme::PagesController < InstanceAdmin::Theme::BaseControll
         redirect_to action: 'index'
       end
       format.json do
-        render :nothing => true
+        render nothing: true
       end
     end
   end
@@ -66,6 +66,4 @@ class InstanceAdmin::Theme::PagesController < InstanceAdmin::Theme::BaseControll
   def begin_of_association_chain
     @theme
   end
-
 end
-

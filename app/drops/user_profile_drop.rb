@@ -1,5 +1,4 @@
 class UserProfileDrop < BaseDrop
-
   attr_accessor :source
 
   delegate :customizations, to: :source
@@ -11,5 +10,4 @@ class UserProfileDrop < BaseDrop
   def properties
     properties.to_hash
   end
-
 end

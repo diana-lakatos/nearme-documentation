@@ -7,17 +7,17 @@ namespace :elb do
                   no_match
                  ].compact.first.name
       ]
-    end.to_a.sort{|a,b| b.last.to_s <=> a.last.to_s}.each do |row|
+    end.to_a.sort { |a, b| b.last.to_s <=> a.last.to_s }.each do |row|
       puts row.inspect
     end
   end
 end
 
-def match_by_name balancer
+def match_by_name(balancer)
   domains.find { |domain| domain.name =~ /#{balancer}/ }
 end
 
-def match_by_dns balancer
+def match_by_dns(balancer)
   domains.find { |domain| domain.to_dns_name == balancer }
 end
 
@@ -33,7 +33,6 @@ def domains
   @domains ||= Domain.all
 end
 
-
 module ELBalancers
   REGIONS = %w(us-west-1 us-west-2)
   class Names
@@ -44,12 +43,12 @@ module ELBalancers
     end
 
     def regions
-      REGIONS.map{ |name| Region.new(name) }
+      REGIONS.map { |name| Region.new(name) }
     end
   end
 
   class Region
-    def initialize region
+    def initialize(region)
       @region = region
     end
 

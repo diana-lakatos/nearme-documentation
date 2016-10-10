@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :instance_profile_type do
-    sequence(:name) {|n| "Instance Profile Type #{n}"}
+    sequence(:name) { |n| "Instance Profile Type #{n}" }
     profile_type { InstanceProfileType::DEFAULT }
     instance { PlatformContext.current.instance || FactoryGirl.create(:instance) }
 
@@ -15,6 +15,5 @@ FactoryGirl.define do
     factory :buyer_profile_type do
       profile_type { InstanceProfileType::BUYER }
     end
-
   end
 end

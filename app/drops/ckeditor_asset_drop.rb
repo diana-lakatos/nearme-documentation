@@ -20,5 +20,4 @@ class CkeditorAssetDrop < BaseDrop
   def destroy_path
     routes.seller_attachment_path(@source)
   end
-
 end

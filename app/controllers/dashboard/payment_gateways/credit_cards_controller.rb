@@ -1,5 +1,4 @@
 class Dashboard::PaymentGateways::CreditCardsController < Dashboard::BaseController
-
   before_filter :find_payment_gateways
   before_filter :find_payment_gateway
   before_filter :find_instance_client
@@ -53,9 +52,7 @@ class Dashboard::PaymentGateways::CreditCardsController < Dashboard::BaseControl
     @credit_card = @instance_client.credit_cards.find(params[:id])
   end
 
-
   def credit_card_params
     params.require(:credit_card).permit(secured_params.credit_card)
   end
 end
-

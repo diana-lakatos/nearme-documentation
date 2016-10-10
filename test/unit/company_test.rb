@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class CompanyTest < ActiveSupport::TestCase
-
   should belong_to(:creator)
   should have_many(:locations)
   should validate_presence_of(:name)
@@ -16,10 +15,10 @@ class CompanyTest < ActiveSupport::TestCase
     @company = FactoryGirl.create(:company)
   end
 
-  should "be valid even if its location is not valid" do
-    @location = FactoryGirl.create(:location, :company => @company)
+  should 'be valid even if its location is not valid' do
+    @location = FactoryGirl.create(:location, company: @company)
     @location.address = nil
-    @location.save(:validate => false)
+    @location.save(validate: false)
     @company.reload
     assert @company.valid?
   end
@@ -28,7 +27,7 @@ class CompanyTest < ActiveSupport::TestCase
     setup do
       @company = FactoryGirl.create(:company)
       @company.theme = FactoryGirl.create(:theme)
-      FactoryGirl.create(:domain, {target: @company})
+      FactoryGirl.create(:domain, target: @company)
       @company.save!
       @company.reload
     end
@@ -46,14 +45,13 @@ class CompanyTest < ActiveSupport::TestCase
   end
 
   context 'schedule_payment_transfer' do
-
     context 'no payout address' do
       setup do
         PlatformContext.current = PlatformContext.new(@company)
       end
 
       should 'notify host via sms and email if company has no payout option and instance supports payouts' do
-        @created_payment_transfers = [mock()]
+        @created_payment_transfers = [mock]
         @company.stubs(:created_payment_transfers).returns(@created_payment_transfers)
         WorkflowStepJob.expects(:perform).with(::WorkflowStep::PayoutWorkflow::NoPayoutOption, @company.id, @created_payment_transfers).once
         @company.schedule_payment_transfer
@@ -67,26 +65,22 @@ class CompanyTest < ActiveSupport::TestCase
       end
 
       should 'not notify host via sms and email if mailing address present' do
-        @created_payment_transfers = [mock()]
+        @created_payment_transfers = [mock]
         @company.stubs(:created_payment_transfers).returns(@created_payment_transfers)
         @company.stubs(:mailing_address).returns('address')
         WorkflowStepJob.expects(:perform).with(::WorkflowStep::PayoutWorkflow::NoPayoutOption, @company.id, @created_payment_transfers).never
         @company.schedule_payment_transfer
       end
-
     end
-
   end
 
   context 'iso_country_code' do
-
     setup do
       Address.destroy_all
       @company.reload
     end
 
     context 'without default on instance' do
-
       should 'return nil if company has no address' do
         assert_equal nil, @company.iso_country_code
       end

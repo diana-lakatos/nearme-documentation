@@ -1,5 +1,4 @@
 class RegenerateUploaderVersionsJob < Job
-
   include Job::LongRunning
 
   def after_initialize(uploader)
@@ -90,6 +89,7 @@ class RegenerateUploaderVersionsJob < Job
     end
   end
 
-  def max_attempts; 1; end
-
+  def max_attempts
+    1
+  end
 end

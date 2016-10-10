@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class TextFilterTest < ActiveSupport::TestCase
-
   context 'validation' do
     setup do
       @text_filter = FactoryGirl.build(:text_filter)
@@ -33,6 +32,5 @@ class TextFilterTest < ActiveSupport::TestCase
         assert @text_filter.valid?
       end
     end
-
   end
 end

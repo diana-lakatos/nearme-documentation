@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Authentication::InstagramProviderTest < ActiveSupport::TestCase
-
   context 'Having a Instagram provider' do
     setup do
       user = FactoryGirl.build(:user)
@@ -33,9 +32,8 @@ class Authentication::InstagramProviderTest < ActiveSupport::TestCase
       connections = [stub(id: '1'), stub(id: '2')]
       Instagram::Client.any_instance.stubs(:user_follows).once.returns(connections)
 
-      assert_equal ['1', '2'], @instagram_provider.friend_ids
+      assert_equal %w(1 2), @instagram_provider.friend_ids
     end
-
 
     context 'when token is invalid' do
       setup do

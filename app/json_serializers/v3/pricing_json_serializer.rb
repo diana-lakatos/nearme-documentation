@@ -12,5 +12,4 @@ class V3::PricingJsonSerializer
   attribute :book_it_out_discount
   attribute :book_it_out_minimum_qty
   attribute :is_free_booking
-
 end

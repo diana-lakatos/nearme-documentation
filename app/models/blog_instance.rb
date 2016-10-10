@@ -1,5 +1,4 @@
 class BlogInstance < ActiveRecord::Base
-
   mount_uploader :header, HeroImageUploader
   mount_uploader :header_logo, HeroImageUploader
   mount_uploader :header_icon, HeroImageUploader
@@ -13,7 +12,7 @@ class BlogInstance < ActiveRecord::Base
   accepts_nested_attributes_for :owner
 
   def is_near_me?
-    self.owner_type == 'near-me'
+    owner_type == 'near-me'
   end
 
   def instance
@@ -27,5 +26,4 @@ class BlogInstance < ActiveRecord::Base
   def to_liquid
     @blog_instance_drop ||= BlogInstanceDrop.new(self)
   end
-
 end

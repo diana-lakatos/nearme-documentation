@@ -1,7 +1,6 @@
 class Dashboard::Company::TransactableTypes::DataUploadsController < Dashboard::DataUploads::BaseController
-
   def download_current_data_csv
-    send_data DataImporter::Host::CsvCurrentDataGenerator.new(current_user, @importable).generate_csv, filename: "data.csv"
+    send_data DataImporter::Host::CsvCurrentDataGenerator.new(current_user, @importable).generate_csv, filename: 'data.csv'
   end
 
   private
@@ -17,6 +16,4 @@ class Dashboard::Company::TransactableTypes::DataUploadsController < Dashboard::
   def after_import_redirect_path
     dashboard_company_transactable_type_transactables_path(@importable)
   end
-
 end
-

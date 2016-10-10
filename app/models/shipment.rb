@@ -23,7 +23,7 @@ class Shipment < ActiveRecord::Base
   scope :without_transaction, -> { where(shippo_transaction_id: nil) }
   scope :outbound, -> { where(direction: 'outbound') }
   scope :inbound, -> { where(direction: 'inbound') }
-  scope :using_shippo, -> { joins(:shipping_rule).where('shipping_rules.use_shippo_for_price = true')}
+  scope :using_shippo, -> { joins(:shipping_rule).where('shipping_rules.use_shippo_for_price = true') }
 
   def get_rates(order)
     location_address = instance.shippo_api.create_address(address_from_hash(order))[:object_id]
@@ -72,9 +72,9 @@ class Shipment < ActiveRecord::Base
   def change_line_item
     if shipping_line_item
       if shipping_rule.is_pickup?
-        self.shipping_line_item.destroy
+        shipping_line_item.destroy
       else
-        self.shipping_line_item.update(
+        shipping_line_item.update(
           name: shipping_rule.name,
           unit_price_cents: shipping_rule.price_cents,
           quantity: 1
@@ -90,17 +90,17 @@ class Shipment < ActiveRecord::Base
   def create_line_item
     self.name = shipping_rule.name
     return if shipping_rule.is_pickup? || shipping_rule.use_shippo_for_price?
-    self.shipping_line_item || self.build_shipping_line_item(line_itemable: order)
-    self.shipping_line_item.update(
+    shipping_line_item || build_shipping_line_item(line_itemable: order)
+    shipping_line_item.update(
       name: name,
       unit_price_cents: shipping_rule.price_cents,
       quantity: 1
     )
-    order.line_items << self.shipping_line_item unless order.line_items.include?(self.shipping_line_item)
+    order.line_items << shipping_line_item unless order.line_items.include?(shipping_line_item)
   end
 
   def set_attributes
-    if self.shippo_rate_id
+    if shippo_rate_id
       rate = instance.shippo_api.get_rate(shippo_rate_id)
       self.price = rate[:amount_cents]
       self.price_currency = rate[:currency]
@@ -108,13 +108,13 @@ class Shipment < ActiveRecord::Base
       self.insurance_currency = rate[:insurance_currency]
       self.name = "#{rate[:provider]} #{rate[:servicelevel_name]}"
       self.name += ' - Return' if inbound?
-      self.shipping_line_item || self.build_shipping_line_item(line_itemable: order)
-      self.shipping_line_item.update(
+      shipping_line_item || build_shipping_line_item(line_itemable: order)
+      shipping_line_item.update(
         name: "#{I18n.t('order.shipping')}#{name}",
         unit_price_cents: rate[:amount_cents],
         quantity: 1
       )
-      order.line_items << self.shipping_line_item unless order.line_items.include?(self.shipping_line_item)
+      order.line_items << shipping_line_item unless order.line_items.include?(shipping_line_item)
     end
     true
   end
@@ -131,7 +131,7 @@ class Shipment < ActiveRecord::Base
         self.shippo_transaction_id = transaction[:object_id]
       end
     end
-    self.save
+    save
   end
 
   def insurance
@@ -155,5 +155,4 @@ class Shipment < ActiveRecord::Base
   def to_liquid
     @shipment_drop ||= ShipmentDrop.new(self)
   end
-
 end

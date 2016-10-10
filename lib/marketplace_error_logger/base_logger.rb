@@ -15,14 +15,14 @@ module MarketplaceErrorLogger
     SELLER_ATTACHMENTS_ERROR = 'Seller Attachments Error'
     API_CALL_ERROR = 'Api Call failed'
 
-    def log_issue(error_type, message, options = {})
-      raise NotImplementedError
+    def log_issue(_error_type, _message, _options = {})
+      fail NotImplementedError
     end
 
     # callback that is invoked after logging an issue
-    def after_log_issue(error_type, message, options = {})
+    def after_log_issue(_error_type, _message, options = {})
       if options[:raise]
-        raise MarketplaceErrorLogger::Error.new("#{e.message} (error code=#{e.code})")
+        fail MarketplaceErrorLogger::Error.new("#{e.message} (error code=#{e.code})")
       end
     end
   end

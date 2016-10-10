@@ -1,10 +1,11 @@
 class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
-
   attr_accessor :instance_id, :default_locale
 
-  def initialize(cache, subtrees=true)
-    @cache, @subtrees = cache, subtrees
-    @store, @timestamps = {}, {}
+  def initialize(cache, subtrees = true)
+    @cache = cache
+    @subtrees = subtrees
+    @store = {}
+    @timestamps = {}
   end
 
   def rebuild!
@@ -14,7 +15,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   def set_instance(instance)
     self.instance_id = instance.id
     self.default_locale = instance.primary_locale
-    _instance_key = instance_key(self.instance_id)
+    _instance_key = instance_key(instance_id)
     populate(_instance_key) if @store[_instance_key].blank?
   end
 
@@ -35,7 +36,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   end
 
   def store_translation(translation)
-    store_translations(translation[0], convert_dot_to_hash(translation[1], translation[2]), {:instance_id => translation[3]})
+    store_translations(translation[0], convert_dot_to_hash(translation[1], translation[2]), instance_id: translation[3])
   end
 
   def store_translations(locale, data, options = {})
@@ -50,7 +51,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
           value = old_value.deep_symbolize_keys.deep_merge!(value) if old_value.is_a?(Hash)
         end
       when Proc
-        raise "Key-value stores cannot handle procs"
+        fail 'Key-value stores cannot handle procs'
       end
       @store[_instance_key][key] = ActiveSupport::JSON.encode(value) unless value.is_a?(Symbol)
     end
@@ -60,7 +61,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
     locales = @store[instance_key(nil)].keys.map { |k| k =~ /\./; $` }
     locales.uniq!
     locales.compact!
-    locales.map! { |k| k.to_sym }
+    locales.map!(&:to_sym)
     locales
   rescue
     []
@@ -75,12 +76,12 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
 
     value = lookup_for_default_key locale, key if value.blank?
 
-    if value.blank? && locale != self.default_locale
+    if value.blank? && locale != default_locale
       # Fallback to default locale
       value = lookup_for_primary_locale_instance_key(key)
       value = lookup_for_primary_locale_default_key(key) if value.blank?
       # Fallback to english as a last resort
-      if value.blank? && locale != :en && self.default_locale != :en
+      if value.blank? && locale != :en && default_locale != :en
         value = lookup_for_instance_key(:en, key)
         value = lookup_for_default_key(:en, key) if value.blank?
       end
@@ -103,11 +104,11 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   end
 
   def lookup_for_primary_locale_instance_key(key)
-    lookup_for_instance_key(self.default_locale, key)
+    lookup_for_instance_key(default_locale, key)
   end
 
   def lookup_for_primary_locale_default_key(key)
-    lookup_for_default_key(self.default_locale, key)
+    lookup_for_default_key(default_locale, key)
   end
 
   # Note that we have to JSON.decode first, as 'empty' value is "\"\"" before that and blank? would return false instead of true
@@ -118,7 +119,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   # transforms key in format "a.b.c.d" and value "x" to hash
   # { :a => { :b => { :c => { :d => "x" } } } }
   def convert_dot_to_hash(string, value = nil, hash = {})
-    arr = string.split(".")
+    arr = string.split('.')
     if arr.size == 1
       hash[arr.shift] = value
     else
@@ -132,6 +133,4 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   def instance_key(instance_id)
     instance_id.present? ? "#{instance_id}".to_sym : :default
   end
-
 end
-

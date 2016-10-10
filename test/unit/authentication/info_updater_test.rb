@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Authentication::InfoUpdaterTest < ActiveSupport::TestCase
-
   context 'When having an authentication' do
     setup do
       @authentication = FactoryGirl.create(:authentication)
@@ -15,7 +14,7 @@ class Authentication::InfoUpdaterTest < ActiveSupport::TestCase
                            description: Faker::Lorem.paragraph(50),
                            url: 'http://twitter.com/desksnearme')
       raw.stubs(:profile_image_url).returns('http://twitter.com/avatar.jpg')
-      stub_request(:get, 'http://twitter.com/avatar.jpg').to_return(:status => 200,:body => File.read(Rails.root.join("test", "assets", "foobear.jpeg")), :headers => {'Content-Type' => 'image/jpeg'})
+      stub_request(:get, 'http://twitter.com/avatar.jpg').to_return(status: 200, body: File.read(Rails.root.join('test', 'assets', 'foobear.jpeg')), headers: { 'Content-Type' => 'image/jpeg' })
       Twitter::REST::Client.any_instance.stubs(:user).once.returns(raw)
 
       Authentication::InfoUpdater.new(@authentication).update
@@ -26,7 +25,5 @@ class Authentication::InfoUpdaterTest < ActiveSupport::TestCase
       assert @user.avatar.to_s.include?('avatar.jpg')
       assert @authentication.information_fetched.present?
     end
-
   end
-
 end

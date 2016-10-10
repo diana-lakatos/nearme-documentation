@@ -2,10 +2,8 @@ require 'yaml'
 require 'benchmark'
 
 namespace :litvault do
-
   desc 'Setup LitVault'
   task setup: :environment do
-
     time = Benchmark.realtime do
       @instance = Instance.find(198)
       @instance.update_attributes(
@@ -40,7 +38,6 @@ namespace :litvault do
   end
 
   class LitvaultSetup
-
     def initialize(instance, theme_path)
       @instance = instance
       @theme_path = theme_path
@@ -57,7 +54,7 @@ namespace :litvault do
         action_monthly_booking: false,
         action_regular_booking: true,
         show_path_format: '/:transactable_type_id/:id',
-        cancellation_policy_enabled: "1",
+        cancellation_policy_enabled: '1',
         cancellation_policy_hours_for_cancellation: 24,
         cancellation_policy_penalty_hours: 1.5,
         default_search_view: 'list',
@@ -90,7 +87,7 @@ namespace :litvault do
         action_monthly_booking: false,
         action_regular_booking: true,
         show_path_format: '/:transactable_type_id/:id',
-        cancellation_policy_enabled: "1",
+        cancellation_policy_enabled: '1',
         cancellation_policy_hours_for_cancellation: 24,
         cancellation_policy_penalty_hours: 1.5,
         default_search_view: 'list',
@@ -116,42 +113,34 @@ namespace :litvault do
 
     def create_custom_attributes!
       @instance.transactable_types.each do |tt|
-        states = tt.custom_attributes.where({
-          name: 'states'
-        }).first_or_initialize
-        states.assign_attributes({
-          label: 'States',
-          attribute_type: 'array',
-          html_tag: 'select',
-          public: true,
-          searchable: true,
-          valid_values: %w(
-            AL AK AZ AR CA CO CT DE FL GA HI ID IL IA KS KY
-            LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC
-            ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY
-          )
-        })
+        states = tt.custom_attributes.where(name: 'states').first_or_initialize
+        states.assign_attributes(label: 'States',
+                                 attribute_type: 'array',
+                                 html_tag: 'select',
+                                 public: true,
+                                 searchable: true,
+                                 valid_values: %w(
+                                   AL AK AZ AR CA CO CT DE FL GA HI ID IL IA KS KY
+                                   LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC
+                                   ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY
+                                 ))
         states.save!
       end
       law_firm = InstanceProfileType.find(580).custom_attributes.where(name: 'law_firm').first_or_initialize
-      law_firm.assign_attributes({
-        label: 'Law Firm',
-        attribute_type: 'string',
-        html_tag: 'input',
-        public: true,
-        searchable: false
-      })
+      law_firm.assign_attributes(label: 'Law Firm',
+                                 attribute_type: 'string',
+                                 html_tag: 'input',
+                                 public: true,
+                                 searchable: false)
       law_firm.required = 1
       law_firm.save!
 
       law_firm = InstanceProfileType.find(579).custom_attributes.where(name: 'law_firm').first_or_initialize
-      law_firm.assign_attributes({
-        label: 'Law Firm',
-        attribute_type: 'string',
-        html_tag: 'input',
-        public: true,
-        searchable: false
-      })
+      law_firm.assign_attributes(label: 'Law Firm',
+                                 attribute_type: 'string',
+                                 html_tag: 'input',
+                                 public: true,
+                                 searchable: false)
       law_firm.required = 1
       law_firm.save!
     end
@@ -172,9 +161,7 @@ namespace :litvault do
     end
 
     def create_or_update_form_components!
-
       @instance.transactable_types.each do |tt|
-
         unless tt.form_components.any?
           Utils::FormComponentsCreator.new(tt).create!
         end
@@ -184,18 +171,18 @@ namespace :litvault do
 
         component = tt.form_components.find_by(name: "Where is your #{tt.bookable_noun} located?")
         component.form_fields = [
-          {'location'     => 'name'},
-          {'location'     => 'description'},
-          {'location'     => 'address'},
-          {'transactable' => 'states'},
-          {'location'     => 'location_type'},
-          {'location'     => 'phone'}
+          { 'location'     => 'name' },
+          { 'location'     => 'description' },
+          { 'location'     => 'address' },
+          { 'transactable' => 'states' },
+          { 'location'     => 'location_type' },
+          { 'location'     => 'phone' }
         ]
 
         component.save!
       end
-      FormComponent.find(5404).update_attribute(:form_fields, [ { "user" => "name" }, { "user" => "email" }, { "user" => "password" }, { "buyer" => "law_firm" } ])
-      FormComponent.find(5402).update_attribute(:form_fields, [ { "user" => "name" }, { "user" => "email" }, { "user" => "password" }, { "buyer" => "law_firm" } ])
+      FormComponent.find(5404).update_attribute(:form_fields, [{ 'user' => 'name' }, { 'user' => 'email' }, { 'user' => 'password' }, { 'buyer' => 'law_firm' }])
+      FormComponent.find(5402).update_attribute(:form_fields, [{ 'user' => 'name' }, { 'user' => 'email' }, { 'user' => 'password' }, { 'buyer' => 'law_firm' }])
     end
 
     def set_theme_options
@@ -219,11 +206,11 @@ namespace :litvault do
 
     def create_custom_validators!
       cv = CustomValidator.where(field_name: 'mobile_number', validatable: InstanceProfileType.seller.first).first_or_initialize
-      cv.required = "1"
+      cv.required = '1'
       cv.save!
 
       cv = CustomValidator.where(field_name: 'mobile_number', validatable: InstanceProfileType.buyer.first).first_or_initialize
-      cv.required = "1"
+      cv.required = '1'
       cv.save!
     end
 
@@ -239,10 +226,8 @@ namespace :litvault do
     def create_content_holders
       puts "\nCreating content holders:"
 
-      templates = get_templates_from_dir(File.join(@theme_path, 'content_holders'), {
-        inject_pages: 'any_page',
-        position: 'head_bottom'
-      })
+      templates = get_templates_from_dir(File.join(@theme_path, 'content_holders'),         inject_pages: 'any_page',
+                                                                                            position: 'head_bottom')
 
       templates.each do |template|
         create_content_holder(template.name, template.body, template.inject_pages, template.position)
@@ -271,9 +256,7 @@ namespace :litvault do
     def create_liquid_views
       puts "\nCreating liquid views:"
 
-      templates = get_templates_from_dir(File.join(@theme_path, 'liquid_views'), {
-        partial: true
-      })
+      templates = get_templates_from_dir(File.join(@theme_path, 'liquid_views'),         partial: true)
 
       templates.each do |template|
         create_liquid_view(template.liquid_path, template.body, template.partial)
@@ -334,7 +317,6 @@ namespace :litvault do
       puts "\n"
     end
 
-
     def expire_cache
       puts "\nClearing cache..."
       CacheExpiration.send_expire_command 'InstanceView', instance_id: @instance.id
@@ -345,115 +327,109 @@ namespace :litvault do
 
     private
 
-      def convert_hash_to_dot_notation(hash, path = '')
-        hash.each_with_object({}) do |(k, v), ret|
-          key = path + k
+    def convert_hash_to_dot_notation(hash, path = '')
+      hash.each_with_object({}) do |(k, v), ret|
+        key = path + k
 
-          if v.is_a? Hash
-            ret.merge! convert_hash_to_dot_notation(v, key + ".")
-          else
-            ret[key] = v
-          end
+        if v.is_a? Hash
+          ret.merge! convert_hash_to_dot_notation(v, key + '.')
+        else
+          ret[key] = v
         end
       end
+    end
 
-      def get_templates_from_dir(template_folder, defaults = {})
-        template_files = Dir.entries(template_folder).select{ |e| File.file?(File.join(template_folder, e)) && e != '.keep' }
-        template_files.map! { |filename| load_file_with_yaml_front_matter(File.join(template_folder, filename), defaults) }
+    def get_templates_from_dir(template_folder, defaults = {})
+      template_files = Dir.entries(template_folder).select { |e| File.file?(File.join(template_folder, e)) && e != '.keep' }
+      template_files.map! { |filename| load_file_with_yaml_front_matter(File.join(template_folder, filename), defaults) }
+    end
+
+    def create_email(path, body)
+      iv = InstanceView.where(instance_id: @instance.id, view_type: 'email', path: path, handler: 'liquid', format: 'html', partial: false).first_or_initialize
+      iv.locales = Locale.all
+      iv.transactable_types = TransactableType.all
+      iv.body = body
+      iv.save!
+
+      iv = InstanceView.where(instance_id: @instance.id, view_type: 'email', path: path, handler: 'liquid', format: 'text', partial: false).first_or_initialize
+      iv.body = ActionView::Base.full_sanitizer.sanitize(body)
+      iv.locales = Locale.all
+      iv.transactable_types = TransactableType.all
+      iv.save!
+    end
+
+    def create_sms(path, body)
+      iv = InstanceView.where(instance_id: @instance.id, view_type: 'sms', path: path, handler: 'liquid', format: 'text', partial: false).first_or_initialize
+      iv.locales = Locale.all
+      iv.transactable_types = TransactableType.all
+      iv.body = body
+      iv.save!
+    end
+
+    def create_page(path, body)
+      slug = path.parameterize
+      page = @instance.theme.pages.where(slug: slug).first_or_initialize
+      page.path = path
+      page.content = body
+      page.save
+    end
+
+    def create_content_holder(name, body, inject_pages, position)
+      inject_pages = [inject_pages] if inject_pages.is_a?(String)
+      ch = @instance.theme.content_holders.where(
+        name: name
+      ).first_or_initialize
+
+      ch.update!(content: body,
+                 inject_pages: inject_pages,
+                 position: position)
+    end
+
+    def create_translation(key, value, locale)
+      @instance.translations.where(
+        locale: locale,
+        key: key
+      ).first_or_initialize.update!(value: value)
+    end
+
+    def create_liquid_view(path, body, partial)
+      iv = InstanceView.where(
+        instance_id: @instance.id,
+        path: path
+      ).first_or_initialize
+      iv.update!(transactable_types: TransactableType.all,
+                 body: body,
+                 format: 'html',
+                 handler: 'liquid',
+                 partial: partial,
+                 view_type: 'view',
+                 locales: Locale.all)
+    end
+
+    def load_file_with_yaml_front_matter(path, config = {})
+      body = File.read(path)
+      regex = /\A---(.|\n)*?---\n/
+
+      # search for YAML front matter
+      yfm = body.match(regex)
+      if yfm
+        config = config.merge(YAML.load(yfm[0]))
+        body.gsub!(regex, '')
       end
+      config = config.merge(body: body)
 
-      def create_email(path, body)
-        iv = InstanceView.where(instance_id: @instance.id, view_type: 'email', path: path, handler: 'liquid', format: 'html', partial: false).first_or_initialize
-        iv.locales = Locale.all
-        iv.transactable_types = TransactableType.all
-        iv.body = body
-        iv.save!
+      config['liquid_path'] ||= File.basename(path, '.*').gsub('--', '/')
+      config['name'] ||= File.basename(path, '.*').gsub('--', '/').humanize.titleize
+      config['path'] ||= path
 
-        iv = InstanceView.where(instance_id: @instance.id, view_type: 'email', path: path, handler: 'liquid', format: 'text', partial: false).first_or_initialize
-        iv.body = ActionView::Base.full_sanitizer.sanitize(body)
-        iv.locales = Locale.all
-        iv.transactable_types = TransactableType.all
-        iv.save!
-      end
+      OpenStruct.new(config)
+    end
 
-      def create_sms(path, body)
-        iv = InstanceView.where(instance_id: @instance.id, view_type: 'sms', path: path, handler: 'liquid', format: 'text', partial: false).first_or_initialize
-        iv.locales = Locale.all
-        iv.transactable_types = TransactableType.all
-        iv.body = body
-        iv.save!
-      end
-
-      def create_page(path, body)
-        slug = path.parameterize
-        page = @instance.theme.pages.where(slug: slug).first_or_initialize
-        page.path = path
-        page.content = body
-        page.save
-      end
-
-      def create_content_holder(name, body, inject_pages, position)
-        inject_pages = [inject_pages] if inject_pages.kind_of?(String)
-        ch = @instance.theme.content_holders.where(
-          name: name
-        ).first_or_initialize
-
-        ch.update!({
-          content: body,
-          inject_pages: inject_pages,
-          position: position
-        })
-      end
-
-      def create_translation(key, value, locale)
-        @instance.translations.where(
-          locale: locale,
-          key: key
-        ).first_or_initialize.update!(value: value)
-      end
-
-      def create_liquid_view(path, body, partial)
-        iv = InstanceView.where(
-          instance_id: @instance.id,
-          path: path,
-        ).first_or_initialize
-        iv.update!({
-          transactable_types: TransactableType.all,
-          body: body,
-          format: 'html',
-          handler: 'liquid',
-          partial: partial,
-          view_type: 'view',
-          locales: Locale.all
-        })
-      end
-
-      def load_file_with_yaml_front_matter(path, config = {})
-        body = File.read(path)
-        regex = /\A---(.|\n)*?---\n/
-
-        # search for YAML front matter
-        yfm = body.match(regex)
-        if yfm
-          config = config.merge(YAML.load(yfm[0]))
-          body.gsub!(regex, '')
-        end
-        config = config.merge({ body: body })
-
-        config["liquid_path"] ||= File.basename(path, '.*').gsub('--','/')
-        config["name"] ||= File.basename(path, '.*').gsub('--','/').humanize.titleize
-        config["path"] ||= path
-
-        OpenStruct.new(config)
-      end
-
-      def create_custom_attribute(object, hash)
-          hash = hash.with_indifferent_access
-          attr = object.custom_attributes.where({
-            name: hash.delete(:name)
-          }).first_or_initialize
-          attr.assign_attributes(hash)
-          attr.set_validation_rules!
-      end
+    def create_custom_attribute(object, hash)
+      hash = hash.with_indifferent_access
+      attr = object.custom_attributes.where(name: hash.delete(:name)).first_or_initialize
+      attr.assign_attributes(hash)
+      attr.set_validation_rules!
+    end
   end
 end

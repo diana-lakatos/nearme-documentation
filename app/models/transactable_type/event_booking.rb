@@ -1,5 +1,4 @@
 class TransactableType::EventBooking < TransactableType::ActionType
-
   has_one :schedule, as: :scheduable, dependent: :destroy
   has_one :pricing, as: :action
   accepts_nested_attributes_for :schedule
@@ -10,5 +9,4 @@ class TransactableType::EventBooking < TransactableType::ActionType
   def available_units
     %w(event)
   end
-
 end

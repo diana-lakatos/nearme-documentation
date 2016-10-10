@@ -26,24 +26,24 @@ class OrderSearchService
     if @options[:query] && @options[:query] =~ /[P|R|S]\d{8}/
       @orders = @orders.where(id: @options[:query][1..-1].to_i)
     elsif @options[:query].present?
-      @orders = @orders.joins("INNER JOIN line_items ON line_items.line_itemable_id = orders.id AND line_items.line_itemable_type IN (\'#{Order::ORDER_TYPES.join('\',\'')}\')").
-        joins("INNER JOIN transactables ON line_items.line_item_source_id = transactables.id AND line_items.line_item_source_type = 'Transactable'").
-        where('transactables.name ILIKE(?)', '%' + @options[:query].to_s + '%')
+      @orders = @orders.joins("INNER JOIN line_items ON line_items.line_itemable_id = orders.id AND line_items.line_itemable_type IN (\'#{Order::ORDER_TYPES.join('\',\'')}\')")
+                .joins("INNER JOIN transactables ON line_items.line_item_source_id = transactables.id AND line_items.line_item_source_type = 'Transactable'")
+                .where('transactables.name ILIKE(?)', '%' + @options[:query].to_s + '%')
 
     end
 
-    @orders = @orders.paginate(per_page: 10, page: @options[:page]).
-      order('starts_at ASC')
+    @orders = @orders.paginate(per_page: 10, page: @options[:page])
+              .order('starts_at ASC')
   end
 
   def order_types
     all_types = @order_scope.select(:type).group(:type).map(&:type)
     if all_types.size > 1
       {
-        "Reservation" => "Reservations",
-        "RecurringBooking" => "Subscription",
-        "Purchase" => "Orders" }.
-        slice(*all_types).invert
+        'Reservation' => 'Reservations',
+        'RecurringBooking' => 'Subscription',
+        'Purchase' => 'Orders' }
+        .slice(*all_types).invert
     else
       {}
     end
@@ -65,7 +65,6 @@ class OrderSearchService
     end
   end
 
-
   def upcoming_count
     @upcoming_count ||= @order_scope.unconfirmed.count
   end
@@ -77,5 +76,4 @@ class OrderSearchService
   def archived_count
     @archived_count ||= @order_scope.archived.count
   end
-
 end

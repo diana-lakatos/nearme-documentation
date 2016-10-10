@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdminTest < ActiveSupport::TestCase
-
   should belong_to(:instance)
   should belong_to(:user)
   should belong_to(:instance_admin_role)

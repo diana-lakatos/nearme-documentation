@@ -40,12 +40,11 @@ class ReservationDrop < OrderDrop
   # address
   #   Returns address associated with this reservation
   delegate :id, :quantity, :subtotal_price, :service_fee_guest, :total_price, :total_price_cents, :pending?, :transactable, :state_to_string,
-    :credit_card_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, :created_at,
-    :total_payable_to_host_formatted, :total_units_text, :unit_price, :has_service_fee?, :transactable_line_items,
-    :properties, :long_dates, :address, :periods, :comment, :cancellation_policy_penalty_hours, :tax_price,
-    :manage_booking_status_info, :manage_booking_status_info_new,
-    to: :reservation
-
+           :credit_card_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, :created_at,
+           :total_payable_to_host_formatted, :total_units_text, :unit_price, :has_service_fee?, :transactable_line_items,
+           :properties, :long_dates, :address, :periods, :comment, :cancellation_policy_penalty_hours, :tax_price,
+           :manage_booking_status_info, :manage_booking_status_info_new,
+           to: :reservation
 
   # bookable_noun
   #   string representing the object to be booked (e.g. desk, room etc.)
@@ -119,11 +118,11 @@ class ReservationDrop < OrderDrop
 
   def guest_show_url
     path = if @reservation.archived_at.present?
-      'archived_dashboard_user_reservations_url'
-    else
-      'upcoming_dashboard_user_reservations_url'
+             'archived_dashboard_user_reservations_url'
+           else
+             'upcoming_dashboard_user_reservations_url'
     end
-    routes.send(path, anchor: "reservation_#{@reservation.id}", host: PlatformContext.current.decorate.host, token_key => @reservation.owner.temporary_token )
+    routes.send(path, anchor: "reservation_#{@reservation.id}", host: PlatformContext.current.decorate.host, token_key => @reservation.owner.temporary_token)
   end
 
   # url to the dashboard area for managing own reservations

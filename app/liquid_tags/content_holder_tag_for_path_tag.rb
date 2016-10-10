@@ -17,6 +17,4 @@ class ContentHolderTagForPathTag < Liquid::Tag
     @template = Liquid::Template.parse(contents)
     @template.render(context)
   end
-
 end
-

@@ -1,5 +1,4 @@
 class DataImporter::CsvToXmlConverter
-
   def initialize(csv_file, output_path, transactable_type)
     @csv_file = csv_file
     @output_path = output_path
@@ -26,8 +25,8 @@ class DataImporter::CsvToXmlConverter
     end
   end
 
-  def insert_with_new_node(node_name, attributes, attributes_data, builder, &block)
-    builder.send(node_name, (attributes_data[:external_id] ? {:id => attributes_data[:external_id]} : {} )) do |o|
+  def insert_with_new_node(node_name, attributes, attributes_data, builder, &_block)
+    builder.send(node_name, (attributes_data[:external_id] ? { id: attributes_data[:external_id] } : {})) do |o|
       insert_to_xml(attributes, attributes_data, o)
       yield if block_given?
     end
@@ -52,7 +51,7 @@ class DataImporter::CsvToXmlConverter
   def add_action_type(builder, scope)
     return unless builder.parent.search('pricings').blank?
     pricings = []
-    @hash[scope].select{|k,v| k =~ /_price_cents/ && v.to_i > 0}.each do |pricing|
+    @hash[scope].select { |k, v| k =~ /_price_cents/ && v.to_i > 0 }.each do |pricing|
       number_of_units, unit = pricing.first.to_s.match(/for_(\d*)_(\w*)_price_cents/)[1..2]
       pricings << {
         enabled: true,
@@ -90,7 +89,7 @@ class DataImporter::CsvToXmlConverter
   def add_amenities(builder, scope)
     @hash[scope][:amenities].each do |amenity|
       unless amenity_already_added?(amenity)
-        insert_with_new_node(:amenity, [:name], {:name => amenity}, builder)
+        insert_with_new_node(:amenity, [:name], { name: amenity }, builder)
       end
     end if @hash[scope][:amenities]
   end
@@ -105,7 +104,7 @@ class DataImporter::CsvToXmlConverter
   end
 
   def build_xml
-    @xml.companies {
+    @xml.companies do
       while @csv_file.next_row
         @hash = @csv_file.row_as_hash
         build_company do
@@ -124,7 +123,7 @@ class DataImporter::CsvToXmlConverter
           end
         end
       end
-    }
+    end
   end
 
   def build_company
@@ -166,7 +165,7 @@ class DataImporter::CsvToXmlConverter
   end
 
   def build_address
-    add_object(Address, @address_builder, { new_node: false })
+    add_object(Address, @address_builder, new_node: false)
   end
 
   def add_node(builder, name)
@@ -245,7 +244,7 @@ class DataImporter::CsvToXmlConverter
   def build_listing
     @scope = :listing
     if new_listing? && @hash[:listing][:external_id].present?
-      add_object(Transactable, @listing_builder, { klass_symbol: :listing }) do
+      add_object(Transactable, @listing_builder, klass_symbol: :listing) do
         @listing_builder.action_type do |action|
           @action_type_builder = Nokogiri::XML::Builder.new({}, action.parent)
         end
@@ -261,8 +260,6 @@ class DataImporter::CsvToXmlConverter
   end
 
   def build_photos
-    add_object(Photo, @photo_builder) if @hash[:photo].any? { |k, v| v.present? }
+    add_object(Photo, @photo_builder) if @hash[:photo].any? { |_k, v| v.present? }
   end
-
 end
-

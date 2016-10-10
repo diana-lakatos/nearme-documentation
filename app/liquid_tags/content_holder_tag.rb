@@ -9,9 +9,6 @@ class ContentHolderTag < Liquid::Tag
 
   def render(context)
     @template = Liquid::Template.parse(get_content_holder(@holder_name))
-    @template.render( context )
+    @template.render(context)
   end
-
 end
-
-
