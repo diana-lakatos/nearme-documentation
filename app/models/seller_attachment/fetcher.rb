@@ -16,17 +16,22 @@ class SellerAttachment::Fetcher
     return true if attachment.accessible_to_all?
     return false if @user.nil?
     return true if attachment.user_id == @user.id
-    return true if attachment.assetable.creator_id == @user.id
     return !!@user if attachment.accessible_to_users?
 
-    if attachment.assetable.is_a?(Transactable)
-      if attachment.accessible_to_purchasers?
-        @user.orders.confirmed.joins(transactables: :attachments ).where('ckeditor_assets.id = ?', attachment.id).any? || @user.orders.confirmed.joins(transactable: :attachments ).where('ckeditor_assets.id = ?', attachment.id).any?
+    if attachment.accessible_to_listers?
+      @user.seller_profile.present?
+    elsif attachment.accessible_to_enquirers?
+      @user.buyer_profile.present?
+    elsif attachment.assetable.is_a?(Transactable)
+      if attachment.assetable.creator_id == @user.id
+        true
+      elsif attachment.accessible_to_purchasers?
+        attachment.assetable.line_item_orders.confirmed.where(user_id: @user.id).any?
       elsif attachment.accessible_to_collaborators?
         attachment.assetable.approved_transactable_collaborators.for_user(@user).any?
+      else
+        raise ArgumentError
       end
-    else
-      raise ArgumentError
     end
   end
 

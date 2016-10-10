@@ -3,16 +3,12 @@ require "test_helper"
 class AvailabilitySearchTest < ActionDispatch::IntegrationTest
 
   setup do
-    Rails.application.config.use_elastic_search = true
-    Transactable.__elasticsearch__.index_name = 'transactables_test'
-    Transactable.__elasticsearch__.create_index!(force: true)
-    Transactable.__elasticsearch__.refresh_index!
+    enable_elasticsearch!
     @date_start = Time.zone.now.next_week.to_date + 7.days
   end
 
   teardown do
-    Transactable.__elasticsearch__.client.indices.delete index: Transactable.index_name
-    Rails.application.config.use_elastic_search = false
+    disable_elasticsearch!
   end
 
   context 'availability rules' do

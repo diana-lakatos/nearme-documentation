@@ -8,6 +8,14 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
   supported :company_onboarding, :recurring_payment, :nonce_payment,
     :credit_card_payment, :partial_refunds, :multiple_currency
 
+  delegate :verify_webhook, :parse_webhook, :find_transaction, :find_merchant, :onboard!, :update_onboard!,
+    :client_token, :payment_settled?, to: :gateway
+
+
+  def self.supported_countries
+    ['US']
+  end
+
   def self.settings
     {
       merchant_id: { validate: [:presence] },
@@ -17,13 +25,7 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
   end
 
   def self.active_merchant_class
-    ActiveMerchant::Billing::BraintreeBlueGateway
-  end
-
-  def payment_settled?(token)
-    configure_braintree_class
-    transaction = Braintree::Transaction.find(token)
-    transaction.status == 'settled'
+    ActiveMerchant::Billing::BraintreeCustomGateway
   end
 
   def max_refund_attempts
@@ -32,11 +34,6 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
 
   def settings
     super.merge({environment: test_mode? ? :sandbox : :production})
-  end
-
-  def client_token
-    configure_braintree_class
-    @client_token ||= Braintree::ClientToken.generate
   end
 
   def supported_currencies
@@ -56,15 +53,6 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
 
   def refund_identification(charge)
     charge.payment.authorization_token
-  end
-
-  private
-
-  def configure_braintree_class
-    Braintree::Configuration.environment = settings["environment"]
-    Braintree::Configuration.merchant_id = settings["merchant_id"]
-    Braintree::Configuration.public_key  = settings["public_key"]
-    Braintree::Configuration.private_key = settings["private_key"]
   end
 end
 

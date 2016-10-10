@@ -211,6 +211,7 @@ en:
         theme_updated_successfully: 'Theme updated.'
         file_uploads:
           failed: 'Failed to upload file: %{errors}'
+          created: 'File has been uploaded'
       admins:
         instance_admin_roles:
           role_added: "Great, new role has been added!"

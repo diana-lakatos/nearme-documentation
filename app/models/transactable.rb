@@ -8,7 +8,6 @@ class Transactable < ActiveRecord::Base
   include Searchable
   # FIXME disabled Sitemap updates. Needs to be optimized.
   # include SitemapService::Callbacks
-  include SellerAttachments
     # == Helpers
   include Listing::Search
   include Categorizable
@@ -312,6 +311,10 @@ class Transactable < ActiveRecord::Base
 
   def self.current_instance
     PlatformContext.current.try(:instance)
+  end
+
+  def attachments_for_user(user)
+    attachments.select { |attachment| attachment.accessible_to?(user) }
   end
 
   def availability_template

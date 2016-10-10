@@ -8,7 +8,7 @@
   %ul.gallery-a
     - @transactable.photos.except_cover.each do |p|
       %li
-        = image_tag p.image_url(:thumbnail), width: PhotoUploader.dimensions[:thumbnail][:width], height: PhotoUploader.dimensions[:thumbnail][:height]
+        = image_tag p.image_url(:project_thumbnail), width: PhotoUploader.dimensions[:project_thumbnail][:width], height: PhotoUploader.dimensions[:project_thumbnail][:height]
 
 - video_embed_code = project_video_embed_html(@transactable)
 - if video_embed_code.present?

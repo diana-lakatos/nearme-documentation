@@ -268,12 +268,12 @@ end
 
 When /^I provide reservation credit card details$/ do
   mock_billing_gateway
-  fill_in 'order_payment_attributes_credit_card_attributes_first_name', with: 'FirstName'
-  fill_in 'order_payment_attributes_credit_card_attributes_last_name', with: 'LastName'
-  fill_in 'order_payment_attributes_credit_card_attributes_number', :with => "4242424242424242"
+  fill_in 'order_payment_attributes_credit_card_attributes_first_name', with: 'FirstName', visible: false
+  fill_in 'order_payment_attributes_credit_card_attributes_last_name', with: 'LastName', visible: false
+  fill_in 'order_payment_attributes_credit_card_attributes_number', :with => "4242424242424242", visible: false
   select '12', from: 'order_payment_attributes_credit_card_attributes_month', visible: false
   select '2020', from: 'order_payment_attributes_credit_card_attributes_year', visible: false
-  fill_in 'order_payment_attributes_credit_card_attributes_verification_value', :with => '411'
+  fill_in 'order_payment_attributes_credit_card_attributes_verification_value', :with => '411', visible: false
   @credit_card_reservation = true
 end
 

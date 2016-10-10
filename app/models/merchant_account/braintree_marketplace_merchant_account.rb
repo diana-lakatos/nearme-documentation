@@ -79,6 +79,10 @@ class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
     })
   end
 
+  def custom_options
+    { merchant_account_id: internal_payment_gateway_account_id }
+  end
+
   def custom_braintree_id
     "#{merchantable.class.name.underscore}_#{merchantable.id}"
   end

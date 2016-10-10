@@ -57,8 +57,12 @@ DESC
       notifier.ping(":airplane_departure: Deploy started by #{ENV['AWS_USER']}: #{options[:branch]} -> #{options[:stack]} (id: #{deployment_id})", icon_emoji: ':passenger_ship:')
       if @production_deploy.present?
         production_notifier = Slack::Notifier.new('https://hooks.slack.com/services/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')
-        production_release_notes = JiraWrapper.new.release_notes(@production_deploy)
+        jira_wrapper = JiraWrapper.new
+        jira_wrapper.release_version!(@production_deploy)
+        production_release_notes = jira_wrapper.release_notes(@production_deploy)
         production_notifier.ping("Production release started #{options[:branch]} -> #{options[:stack]}. You can <a href='#{production_release_notes}'>Check Release Notes</a>. Details in #eng-deploys", icon_emoji: ':see_no_evil:')
+        cmd = "newrelic deployments -a \"Desks Near Me\" -e production -r #{@production_deploy} -u #{ENV['AWS_USER']}"
+        `#{cmd}`
       end
       if options[:watch]
         puts "Waiting until deploy is done."

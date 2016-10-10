@@ -2,7 +2,7 @@ class CreditCard < ActiveRecord::Base
   include Encryptable
   include Modelable
 
-  attr_accessor :client
+  attr_accessor :client, :credit_card_token
 
   attr_encrypted :response
 
@@ -25,7 +25,6 @@ class CreditCard < ActiveRecord::Base
   validate :validate_card
   validates :instance_client, presence: true
 
-  delegate :customer_id, to: :instance_client, allow_nil: true
   delegate :expires_at, :last_4, :name, to: :decorator, allow_nil: true
 
 
@@ -37,6 +36,12 @@ class CreditCard < ActiveRecord::Base
 
     define_method("#{accessor}") do
       active_merchant_card.send(accessor)
+    end
+  end
+
+  def customer_id
+    if credit_card_token.blank?
+      instance_client.customer_id
     end
   end
 

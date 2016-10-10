@@ -16,7 +16,7 @@ class Domain < ActiveRecord::Base
     end
 
     event :elb_created do
-      transition :preparing => :elb_secured
+      transition [:failed, :preparing] => :elb_secured
     end
 
     event :elb_updated do
@@ -24,7 +24,7 @@ class Domain < ActiveRecord::Base
     end
 
     event :failed do
-      transition [:elb_secured, :preparing] => :failed
+      transition [:failed, :elb_secured, :preparing] => :failed
     end
   end
 

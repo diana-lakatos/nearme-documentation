@@ -1,10 +1,43 @@
-require 'jira'
+require 'jira-ruby'
+require 'chronic'
 
 class JiraWrapper
   NM_PROJECT_ID = 10000
 
   def initialize
     @client = JIRA::Client.new({username: 'jira-api', password: 'N#arM3123adam', context_path: '',site: 'https://near-me.atlassian.net', rest_base_path: "/rest/api/2", auth_type: :basic, read_timeout: 120 })
+  end
+
+  def initiate_current_sprint!
+    monday = Time.now.monday? ? Date.current : Chronic.parse('last monday')
+    sprint = @client.Sprint.find(monday.strftime('%Y-%m-%d'))["issues"].first["fields"]["customfield_10007"].last
+    current_sprint_id = sprint.split("id=")[1].split(',')[0].to_i
+    sprint_name = sprint.split('name=')[1].split(',')[0]
+    start_date = sprint.split('startDate=')[1].split(',')[0]
+    end_date = sprint.split('endDate=')[1].split(',')[0]
+    ensure_version_present!(name: next_tag(1), description: sprint_name, user_released_data: end_date, user_start_date: start_date, start_date: start_date)
+    current_sprint_id
+  end
+
+  def initiate_hotfix!(description = 'Hotfix')
+    tag = next_tag(2)
+    ensure_version_present!(name: tag, description: description, user_released_data: Time.now.to_s, user_start_date: Time.now.to_s, start_date: Time.now.to_s)
+    tag
+  end
+
+  def ensure_version_present!(name:, start_date:, user_released_data:, user_start_date:, description:  )
+    unless version(name).present?
+      current_version = @client.Version.build
+      current_version.save({
+        description: description,
+        name: name,
+        projectId: NM_PROJECT_ID,
+        userStartDate: Chronic.parse(user_start_date).strftime('%-d/%b/%y'),
+        userReleaseDate: Chronic.parse(user_released_data).strftime('%-d/%b/%y')
+      })
+      @versions << current_version
+    end
+    current_version
   end
 
   def issues(sprint)
@@ -44,7 +77,7 @@ class JiraWrapper
   def update_issue(number, options)
     issue = find_issue(number)
     issue.save({ fields: { fixVersions: options[:tag] } })
-    issue.save({ fields: { customfield_10007: options[:sprint]}})
+    issue.save({ fields: { customfield_10007: options[:sprint_number]}})
   rescue => e
     puts "Error for card: #{card_in_sprint}. #{e}"
   end
@@ -64,6 +97,24 @@ class JiraWrapper
 
   def versions
     @versions ||= project.versions
+  end
+
+  def next_tag(number_position)
+    return @next_tag if @next_tag.present?
+    arr = last_tag.split('.')
+    arr[number_position] = arr[number_position].to_i + 1
+    if number_position == 1
+      arr[2] = 0
+    end
+    @next_tag = arr.join('.')
+  end
+
+  def last_tag
+    `git describe`.split('-')[0]
+  end
+
+  def release_version!(version)
+    version(version).save({ released: true })
   end
 
 end

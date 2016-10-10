@@ -52,6 +52,7 @@ module TransactablesIndex
         indexes :created_at, type: 'date'
         indexes :completed_reservations, type: 'integer'
         indexes :seller_average_rating, type: 'float'
+        indexes :average_rating, type: 'float'
         indexes :possible_payout, type: 'boolean'
         indexes :tags, type: 'string'
         indexes :state, type: 'string'

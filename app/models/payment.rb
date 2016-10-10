@@ -65,6 +65,7 @@ class Payment < ActiveRecord::Base
   has_one :successful_charge, -> { where(success: true) }, class_name: Charge
 
   before_validation :set_offline, on: :create
+  before_validation :set_merchant_account, on: :create
 
   # === Scopes
 
@@ -122,6 +123,8 @@ class Payment < ActiveRecord::Base
   monetize :host_additional_charges_cents, with_model_currency: :currency
 
   delegate :subject, to: :merchant_account, allow_nil: true
+  delegate :customer_id, to: :credit_card, allow_nil: true
+  delegate :merchant_id, to: :merchant_account, allow_nil: true
 
   state_machine :state, initial: :pending do
     event :mark_as_authorized do transition [:pending, :voided] => :authorized; end
@@ -137,7 +140,21 @@ class Payment < ActiveRecord::Base
   end
 
   def authorize
-    !!(valid? && payment_gateway.authorize(self))
+    !!(valid? && payment_gateway.authorize(self, authorize_options))
+  end
+
+  def authorize_options
+    options = {
+      customer: credit_card.try(:customer_id),
+      currency: currency,
+      payment_method_nonce: payment_method_nonce
+    }
+
+    if merchant_account.try(:verified?)
+      options.merge!({ application_fee: total_service_amount_cents })
+    end
+
+    options
   end
 
   def capture!
@@ -212,8 +229,8 @@ class Payment < ActiveRecord::Base
       credit_card_id: credit_card_id
     )
 
-    options = { currency: currency, customer_id: host_customer_id }
-    response = payment_gateway.gateway_purchase(host_refund_amount_cents, host_customer_id, options)
+    options = { currency: currency, customer_id: merchant_subscription_customer_id }
+    response = payment_gateway.gateway_purchase(host_refund_amount_cents, merchant_subscription_customer_id, options)
 
     if response.success?
       refund.refund_successful(response)
@@ -272,7 +289,10 @@ class Payment < ActiveRecord::Base
     merchant_account.try(:payment_subscription).try(:credit_card).try(:token)
   end
 
-  def host_customer_id
+  # Return customer id of Merchant Credit Card
+  # user when Merchant CC is charged for Braintree Payout
+
+  def merchant_subscription_customer_id
     merchant_account.try(:payment_subscription).try(:credit_card).try(:customer_id)
   end
 
@@ -495,5 +515,9 @@ class Payment < ActiveRecord::Base
   def set_offline
     self.offline ||= manual_payment? || free_payment?
     true
+  end
+
+  def set_merchant_account
+    self.merchant_account ||= payment_gateway.merchant_account(company)
   end
 end

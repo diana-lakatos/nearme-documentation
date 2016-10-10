@@ -20,6 +20,8 @@ class PaymentAuthorizer
 
   def initialize(payment_gateway, payment, options={})
     @payment = payment
+    @credit_card = @payment.credit_card
+    @merchant_account = @payment.merchant_account
     @authorizable = @payment.payable
     @payment_gateway = payment_gateway
     @options = prepare_options(options)
@@ -27,14 +29,32 @@ class PaymentAuthorizer
 
   def process!
     return false unless @authorizable.valid?
-    @response = @payment_gateway.gateway_authorize(@payment.total_amount.cents, credit_card, @options)
+
+    @response = @payment_gateway.gateway_authorize(@payment.total_amount.cents, credit_card_or_token, @options)
     @response.success? ? handle_success : handle_failure
   end
 
   private
 
-  def credit_card
-    @credit_card ||= @payment.credit_card.try(:to_active_merchant)
+  def credit_card_or_token
+    if @payment_gateway.direct_charge?
+      one_time_token = if @credit_card.credit_card_token
+        @credit_card.credit_card_token
+      elsif @credit_card.token && @payment.customer_id && @payment.merchant_id
+        @payment_gateway.create_token(
+          @credit_card.token,
+          @payment.customer_id,
+          @payment.merchant_id,
+          @payment.payment_gateway_mode
+        ).try("[]", :id)
+      end
+
+    end
+
+    # We don't want to pass customer when we user token generated with Stripe.js
+    @options.delete(:customer) if one_time_token.present?
+
+    @credit_card_or_token ||= one_time_token || @credit_card.try(:to_active_merchant)
   end
 
   def handle_failure
@@ -50,19 +70,16 @@ class PaymentAuthorizer
         {
           success: true,
           immediate_payout: @payment_gateway.immediate_payout(@payment.company),
-          merchant_account_id: merchant_account.try(:id)
+          merchant_account_id: @merchant_account.try(:id)
         }
       )
     )
-    @payment.merchant_account_id = merchant_account.try(:id)
+
     @payment.credit_card = nil unless @payment.save_credit_card?
     @payment.mark_as_authorized!
     true
   end
 
-  def merchant_account
-    @payment_gateway.merchant_account(@payment.company)
-  end
 
   def billing_authoriazation_params
     {
@@ -80,14 +97,9 @@ class PaymentAuthorizer
   end
 
   def prepare_options(options)
-    options.merge({
-      customer: @payment.credit_card.try(:customer_id),
-      company: @payment.company,
-      currency: @payment.currency,
-      merchant_account: merchant_account,
-      payment_method_nonce: @payment.try(:payment_method_nonce),
-      service_fee_host: @payment.total_service_amount_cents
-    }).with_indifferent_access
+    options.merge!(@merchant_account.custom_options) if @merchant_account.try(:verified?)
+    options = @payment_gateway.translate_option_keys(options)
+    options.with_indifferent_access
   end
 
   def platform_context

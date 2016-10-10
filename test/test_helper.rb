@@ -274,3 +274,16 @@ end
 class DummyEvent < WorkflowStep::BaseStep
 end
 
+def enable_elasticsearch!(&block)
+  Rails.application.config.use_elastic_search = true
+  Transactable.__elasticsearch__.index_name = 'transactables_test'
+  Transactable.__elasticsearch__.create_index!(force: true)
+  yield if block_given?
+  Transactable.__elasticsearch__.refresh_index!
+end
+
+def disable_elasticsearch!
+  Transactable.__elasticsearch__.client.indices.delete index: Transactable.index_name
+  Rails.application.config.use_elastic_search = false
+end
+
