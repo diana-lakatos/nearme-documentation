@@ -121,7 +121,7 @@ class Reservation < Order
     unless skip_payment_authorization?
       action.try(:validate_all_dates_available, self)
     end
-    if self.errors.empty? && self.valid?
+    if self.errors.empty? && self.valid? && check_double_cofirmation
       if block_given? ? yield : true
         self.create_shipments!
         self.confirm!
@@ -129,6 +129,18 @@ class Reservation < Order
         self.transactable.touch
       end
     end
+  end
+
+  def check_double_cofirmation
+    !action.both_side_confirmation || (lister_confirmed_at && enquirer_confirmed_at)
+  end
+
+  def lister_confirmed!
+    update_attribute :lister_confirmed_at, Time.now
+  end
+
+  def enquirer_confirmed!
+    update_attribute :enquirer_confirmed_at, Time.now
   end
 
   def charge_and_confirm!

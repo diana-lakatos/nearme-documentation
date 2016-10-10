@@ -86,6 +86,7 @@ namespace :volte do
         service_fee_host_percent: 15,
       )
 
+      transactable_type.time_based_booking.both_side_confirmation = true
       transactable_type.time_based_booking.pricings.where(unit: 'day', number_of_units: 4).first_or_initialize
       transactable_type.time_based_booking.pricings.where(unit: 'day', number_of_units: 8).first_or_initialize
       transactable_type.time_based_booking.pricings.where(unit: 'day', number_of_units: 30).first_or_initialize
@@ -464,6 +465,7 @@ namespace :volte do
     end
 
     def create_workflow_alerts
+      Utils::DefaultAlertsCreator::ReservationCreator.new.notify_enquirer_of_lister_confirmed_with_double_confirmation!
     end
 
     def set_theme_options

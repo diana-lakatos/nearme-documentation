@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161006135250) do
+ActiveRecord::Schema.define(version: 20161007150808) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1725,7 +1725,9 @@ ActiveRecord::Schema.define(version: 20161006135250) do
     t.boolean  "exclusive_price"
     t.boolean  "book_it_out"
     t.datetime "completed_at"
-    t.boolean  "is_free_booking",                                           default: false
+    t.boolean  "is_free_booking",                                          default: false
+    t.datetime "lister_confirmed_at"
+    t.datetime "enquirer_confirmed_at"
   end
 
   add_index "orders", ["billing_address_id"], name: "index_orders_on_billing_address_id", using: :btree
@@ -2959,6 +2961,7 @@ ActiveRecord::Schema.define(version: 20161006135250) do
     t.boolean  "send_alert_hours_before_expiry",             default: false, null: false
     t.integer  "send_alert_hours_before_expiry_hours",       default: 0,     null: false
     t.integer  "minimum_lister_service_fee_cents",           default: 0
+    t.boolean  "both_side_confirmation",                     default: false
   end
 
   add_index "transactable_type_action_types", ["instance_id", "transactable_type_id", "deleted_at"], name: "instance_tt_deleted_at_idx", using: :btree

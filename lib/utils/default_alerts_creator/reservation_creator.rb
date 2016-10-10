@@ -91,6 +91,10 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
     create_alert!({associated_class: WorkflowStep::ReservationWorkflow::ManuallyConfirmed, name: 'notify_guest_of_confirmation_sms', path: 'reservation_sms_notifier/notify_guest_with_state_change', alert_type: 'sms', recipient_type: 'enquirer'})
   end
 
+  def notify_enquirer_of_lister_confirmed_with_double_confirmation!
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::ListerConfirmedWithDoubleConfirmation, name: 'notify_enquirer_of_lister_confirmed_with_double_confirmation', path: 'reservation_mailer/notify_enquirer_of_lister_confirmed_with_double_confirmation', subject: "[{{platform_context.name}}] Your booking has been accepted",  alert_type: 'email', recipient_type: 'enquirer'})
+  end
+
   def notify_guest_reservation_host_cancel_sms!
     create_alert!({associated_class: WorkflowStep::ReservationWorkflow::ListerCancelled, name: 'notify_guest_of_confirmation_sms', path: 'reservation_sms_notifier/notify_guest_with_state_change', alert_type: 'sms', recipient_type: 'enquirer'})
   end

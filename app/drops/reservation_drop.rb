@@ -43,8 +43,8 @@ class ReservationDrop < OrderDrop
     :credit_card_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, :created_at,
     :total_payable_to_host_formatted, :total_units_text, :unit_price, :has_service_fee?, :transactable_line_items,
     :properties, :long_dates, :address, :periods, :comment, :cancellation_policy_penalty_hours, :tax_price,
-    :manage_booking_status_info, :manage_booking_status_info_new,
-    to: :reservation
+    :manage_booking_status_info, :manage_booking_status_info_new, :lister_confirmed_at,
+    :enquirer_confirmed_at, to: :reservation
 
 
   # bookable_noun

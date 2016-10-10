@@ -322,6 +322,7 @@ en:
           allow_action_rfq: 'Allow Request for Quote'
           allow_no_action: 'Allow to disable booking'
           allow_custom_pricings: 'Allow custom pricings'
+          both_side_confirmation: 'Reservation is confirmed only if both sides accepts it'
           pricings:
             allow_book_it_out_discount: "Allow Bulk Booking Discount"
             allow_exclusive_price: "Allow Exclusive Price"

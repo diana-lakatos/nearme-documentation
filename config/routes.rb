@@ -947,6 +947,7 @@ DesksnearMe::Application.routes.draw do
           get :success
           post :generate_next_period
           post :enquirer_cancel
+          post :approve
         end
       end
 

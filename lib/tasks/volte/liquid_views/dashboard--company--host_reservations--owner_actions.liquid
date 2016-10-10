@@ -2,7 +2,7 @@
 partial: true
 ---
 
-{% if reservation.can_confirm? %}
+{% if reservation.can_confirm? and reservation.lister_confirmed_at == blank %}
   {% if platform_context.instance.enable_reply_button_on_host_reservations? %}
     {% if reservation.user_messages.size == 0 %}
       <a class="button button-default" data-modal="true" href="{{ 'new_reservation_user_message_path' | generate_url: reservation.id, skip: true }}">{{ 'general.reply' | t | upcase }}</a>
@@ -10,11 +10,7 @@ partial: true
       <a class="button button-default" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: reservation.user_messages.first.id }}">{{ 'general.reply' | t | upcase }}</a>
     {% endif %}
   {% endif %}
-  <form class="edit_reservation" action="{{ 'confirm_dashboard_company_host_reservation_path' | generate_url: reservation.id, listing_id: reservation.transactable }}" accept-charset="UTF-8" method="post">
-    <input name="utf8" type="hidden" value="&#x2713;" />
-    <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
-    <input type="submit" name="commit" value="{{ 'dashboard.host_reservations.actions.confirm' | t | upcase }}" data-confirm="{{ 'dashboard.host_reservations.confirmations.confirm' | t }}" data-disable-with="{{ 'general.processing' | t | upcase }}" class="button button-default" />
-  </form>
+  <a class="button button-default" data-modal="true" href="{{ 'confirmation_form_dashboard_company_orders_received_path' | generate_url: reservation.id, listing_id: reservation.transactable }}">Confirm</a>
 {% endif %}
 
 {% if reservation.can_reject? %}
@@ -34,9 +30,6 @@ partial: true
 {% endif%}
 
 {% if reservation.confirmed? %}
-  {% if reservation.can_complete_checkout? %}
-    <a class="button button-default" href="{{ 'complete_reservation_dashboard_company_host_reservation_path' | generate_url: reservation.id }}">{{ 'dashboard.host_reservations.actions.complete_reservation' | t | upcase }}</a>
-  {% endif %}
   {% if reservation.can_approve_or_decline_checkout? %}
     <div class='pending-approval'>{{ 'dashboard.host_reservations.pending_approval' | t | upcase }}</div>
   {% endif %}

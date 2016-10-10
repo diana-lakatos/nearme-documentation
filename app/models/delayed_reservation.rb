@@ -51,13 +51,6 @@ class DelayedReservation < Reservation
     true
   end
 
-  def authorize_payment
-    if transactable_pricing.day_booking? && transactable_line_items.any? && transactable_line_items.first.unit_price != price_calculator.price
-      rebuild_first_line_item
-    end
-    super
-  end
-
   def rebuild_first_line_item
     if transactable_line_items.any?
       transactable_line_items.destroy_all
@@ -103,6 +96,7 @@ class DelayedReservation < Reservation
           end.join(',')
           periods.destroy_all
           build_periods
+          rebuild_first_line_item
         else
           periods.first.update_attributes({ date: date, start_minute: @start_minute, end_minute: @end_minute })
         end
