@@ -481,7 +481,7 @@ GEM
       hashie (>= 0.4.0)
       multi_json (~> 1.0, >= 1.0.3)
     ipaddress (0.8.3)
-    jira-ruby (0.1.18)
+    jira-ruby (1.1.0)
       activesupport
       oauth (~> 0.5, >= 0.5.0)
     jmespath (1.2.4)
