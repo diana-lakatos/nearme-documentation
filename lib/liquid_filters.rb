@@ -382,16 +382,20 @@ module LiquidFilters
     will_paginate_collection.total_entries
   end
 
+  def get_enquirer_draft_orders(user, transactable)
+    transactable.line_item_orders.where(user_id: user.id).order('created_at ASC')
+  end
+
   def get_enquirer_orders(user, transactable)
-    transactable.line_item_orders.where(user_id: user.id).order('created_at ASC').active
+    get_enquirer_draft_orders(user, transactable).active
   end
 
   def get_enquirer_confirmed_orders(user, transactable)
-    transactable.line_item_orders.where(user_id: user.id).confirmed.order('created_at ASC')
+    get_enquirer_draft_orders(user, transactable).confirmed
   end
 
-  def get_lister_orders(company, transactable)
-    transactable.line_item_orders.where(company: company).order('created_at ASC')
+  def get_lister_orders(user, transactable)
+    transactable.line_item_orders.where(company: user.companies).active.order('created_at ASC')
   end
 
   def get_data_contents(external_id, options = {})

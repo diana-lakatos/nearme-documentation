@@ -98,6 +98,7 @@ en:
       cancelled_by_host: "Cancelled by Referring Lawyer"
       confirmed: "Open"
       unconfirmed: "Pending"
+      inactive: "Draft"
 
   reservations_review:
     disabled_buttons:

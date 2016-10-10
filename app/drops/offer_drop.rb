@@ -10,6 +10,10 @@ class OfferDrop < OrderDrop
     ''
   end
 
+  def unconfirmed_or_draft?
+    @offer.unconfirmed? || @offer.inactive?
+  end
+
   def formatted_total_amount
     render_money(@order.recurring_booking_periods.not_rejected.map(&:total_amount).sum)
   end

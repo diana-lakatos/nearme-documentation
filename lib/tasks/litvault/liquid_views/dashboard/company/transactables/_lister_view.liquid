@@ -76,7 +76,7 @@
 
     {% if current_status == "pending" %}
 
-      {% assign orders = transactable.line_item_orders %}
+      {% assign orders = current_user | get_lister_orders: transactable %}
 
       {% if orders != empty  %}
         <h3>Offers ({{ orders.size }})</h3>
