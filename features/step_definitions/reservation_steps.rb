@@ -6,11 +6,10 @@ Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed
   @listing.company.add_creator_to_company_users
   @listing.reload
   reservation = @listing.reserve!(reserver, [next_regularly_available_day], 1)
-  unless confirmed != " "
+  unless confirmed != ' '
     reservation.confirm!
     reservation.save!
   end
-
 end
 
 Given /^Reservation alerts exist$/ do
@@ -22,7 +21,7 @@ Given /^#{capture_model} is reserved hourly$/ do |listing_instance|
   listing.save!
 end
 
-Given /^#{capture_model} has an hourly price of \$?([0-9\.]+)$/ do |listing_instance, price|
+Given /^#{capture_model} has an hourly price of \$?([0-9\.]+)$/ do |listing_instance, _price|
   listing = model!(listing_instance)
   listing.time_based_booking.pricings.where(unit: 'hour').first.update_attribute(:price, 100)
 end
@@ -34,7 +33,7 @@ Given /^bookings for #{capture_model} do( not)? need to be confirmed$/ do |listi
 end
 
 When(/^I cancel (.*) reservation$/) do |number|
-  PaymentGateway.any_instance.stubs(:gateway_void).returns(OpenStruct.new({success?: true, authorization: "54533"}))
+  PaymentGateway.any_instance.stubs(:gateway_void).returns(OpenStruct.new(success?: true, authorization: '54533'))
 
   within(:css, "#reservation_#{number}") do
     find(:css, "input[value='Cancel']").click
@@ -56,116 +55,116 @@ Given /^Extra fields are prepared for booking$/ do
   rt = FactoryGirl.create(:reservation_type)
   rt.transactable_types << TransactableType.all
   rt.form_components.last.update_attribute(:form_fields, [
-    { 'user' => 'phone' }, { 'user' => 'first_name' }, { 'user' => 'last_name' }, { 'reservation' => 'payments'}
+    { 'user' => 'phone' }, { 'user' => 'first_name' }, { 'user' => 'last_name' }, { 'reservation' => 'payments' }
   ])
 end
 
 When /^I book space for:$/ do |table|
-  step "I select to book space for:", table
-  step "I click to review the booking"
-  step "I provide reservation credit card details"
-  step "I click to confirm the booking"
+  step 'I select to book space for:', table
+  step 'I click to review the booking'
+  step 'I provide reservation credit card details'
+  step 'I click to confirm the booking'
 end
 
 When /^I book space for with extra fields:$/ do |table|
-  step "I select to book space for:", table
-  step "I click to review the booking"
-  step "I provide reservation credit card details"
+  step 'I select to book space for:', table
+  step 'I click to review the booking'
+  step 'I provide reservation credit card details'
   page.should have_css('input#order_user_attributes_mobile_number')
   page.should have_css('input#order_user_attributes_last_name')
   page.should have_css('input#order_user_attributes_phone')
   fill_in 'order_user_attributes_mobile_number', with: '123123412345'
   fill_in 'order_user_attributes_last_name', with: 'Aaa'
   fill_in 'order_user_attributes_phone', with: '12312341'
-  step "I click to confirm the booking"
+  step 'I click to confirm the booking'
 end
 
 When /^I book space for with extra fields without company_name:$/ do |table|
-  step "I select to book space for:", table
-  step "I click to review the booking"
-  step "I provide reservation credit card details"
+  step 'I select to book space for:', table
+  step 'I click to review the booking'
+  step 'I provide reservation credit card details'
   page.should have_css('input#order_user_attributes_mobile_number')
   page.should have_css('input#order_user_attributes_last_name')
   page.should have_css('input#order_user_attributes_phone')
   fill_in 'order_user_attributes_mobile_number', with: '123123412345'
   fill_in 'order_user_attributes_last_name', with: 'Aaa'
   fill_in 'order_user_attributes_phone', with: '12312341'
-  step "I click to confirm the booking"
+  step 'I click to confirm the booking'
 end
 
 When /^I fail to book space for without extra fields:$/ do |table|
-  step "I select to book space for:", table
-  step "I click to review the booking"
+  step 'I select to book space for:', table
+  step 'I click to review the booking'
 
-  step "I provide reservation credit card details"
+  step 'I provide reservation credit card details'
   page.should have_css('input#order_user_attributes_mobile_number')
   page.should have_css('input#order_user_attributes_last_name')
   page.should have_css('input#order_user_attributes_phone')
-  step "I click and fail to confirm the booking"
+  step 'I click and fail to confirm the booking'
 end
 
 When /^I fail to book space for without extra fields mobile number:$/ do |table|
-  step "I select to book space for:", table
-  step "I click to review the booking"
-  step "I provide reservation credit card details"
+  step 'I select to book space for:', table
+  step 'I click to review the booking'
+  step 'I provide reservation credit card details'
   page.should have_css('input#order_user_attributes_mobile_number')
   page.should have_css('input#order_user_attributes_last_name')
   page.should have_css('input#order_user_attributes_phone')
   fill_in 'order_user_attributes_last_name', with: 'Aaa'
   fill_in 'order_user_attributes_phone', with: '123123412345'
-  step "I click and fail to confirm the booking"
+  step 'I click and fail to confirm the booking'
 end
 
 When /^I fail to book space for without extra fields license number:$/ do |table|
-  step "I select to book space for:", table
-  step "I click to review the booking"
-  step "I provide reservation credit card details"
+  step 'I select to book space for:', table
+  step 'I click to review the booking'
+  step 'I provide reservation credit card details'
   page.should have_css('input#order_user_attributes_mobile_number')
   page.should have_css('input#order_user_attributes_last_name')
   page.should have_css('input#order_user_attributes_phone')
   fill_in 'order_user_attributes_last_name', with: 'Aaa'
   fill_in 'order_user_attributes_phone', with: '12312341'
-  step "I click and fail to confirm the booking"
+  step 'I click and fail to confirm the booking'
 end
 
 When /^I fail to book space for without extra fields last name:$/ do |table|
-  step "I select to book space for:", table
-  step "I click to review the booking"
-  step "I provide reservation credit card details"
+  step 'I select to book space for:', table
+  step 'I click to review the booking'
+  step 'I provide reservation credit card details'
   page.should have_css('input#order_user_attributes_mobile_number')
   page.should have_css('input#order_user_attributes_last_name')
   page.should have_css('input#order_user_attributes_phone')
   fill_in 'order_user_attributes_mobile_number', with: '123123412345'
   fill_in 'order_user_attributes_phone', with: '12312341'
-  step "I click and fail to confirm the booking"
+  step 'I click and fail to confirm the booking'
 end
 
 When /^I fail to book space for without extra fields first name:$/ do |table|
-  step "I select to book space for:", table
-  step "I click to review the booking"
-  step "I provide reservation credit card details"
+  step 'I select to book space for:', table
+  step 'I click to review the booking'
+  step 'I provide reservation credit card details'
   page.should have_css('input#order_user_attributes_mobile_number')
   page.should have_css('input#order_user_attributes_last_name')
   page.should have_css('input#order_user_attributes_phone')
   fill_in 'order_user_attributes_mobile_number', with: '123123412345'
   fill_in 'order_user_attributes_last_name', with: 'Aaa'
   fill_in 'order_user_attributes_phone', with: '12312341'
-  step "I click and fail to confirm the booking"
+  step 'I click and fail to confirm the booking'
 end
 
 When /^I book space as new user for:$/ do |table|
-  step "I select to book space for:", table
-  step "I click to review the booking"
+  step 'I select to book space for:', table
+  step 'I click to review the booking'
   step 'I sign up as a user in the modal'
   # this line will have to be removed and missing feature implemented
-  step "I select to book space for:", table
-  step "I click to review the booking"
+  step 'I select to book space for:', table
+  step 'I click to review the booking'
 
   # here we might want to add extra fields
 
-  step "I provide reservation credit card details"
-  step "I click to confirm the booking"
-  store_model("user", "user", User.last)
+  step 'I provide reservation credit card details'
+  step 'I click to confirm the booking'
+  store_model('user', 'user', User.last)
 end
 
 When /^(.*) books a space for that listing$/ do |person|
@@ -173,16 +172,15 @@ When /^(.*) books a space for that listing$/ do |person|
 end
 
 When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user, action|
-
-  if user == "visitor"
-    login User.find_by_name("Keith Contractor")
+  if user == 'visitor'
+    login User.find_by_name('Keith Contractor')
     visit dashboard_user_reservations_path
   else
-    login User.find_by_name("Bo Jeanes")
+    login User.find_by_name('Bo Jeanes')
     visit dashboard_company_host_reservations_path
   end
-  if action == 'cancel' and user == 'owner'
-    within('main') { click_on 'Confirmed'}
+  if action == 'cancel' && user == 'owner'
+    within('main') { click_on 'Confirmed' }
   end
   if action == 'decline'
     step 'I reject reservation with reason'
@@ -193,10 +191,10 @@ When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user,
 end
 
 When /^the reservation expires/ do
-  login User.find_by_name("Keith Contractor")
+  login User.find_by_name('Keith Contractor')
   visit dashboard_user_reservations_path
 
-  reservation = User.find_by_name("Keith Contractor").orders.first
+  reservation = User.find_by_name('Keith Contractor').orders.first
   reservation.perform_expiry!
 
   visit dashboard_user_reservations_path
@@ -222,12 +220,11 @@ When /^I select to book( and review)? space for:$/ do |and_review, table|
     start_to_book(bookings.first[:listing], bookings.map { |b| b[:date] }, bookings.first[:quantity])
   end
 
-  step "I click to review the booking" if and_review
-
+  step 'I click to review the booking' if and_review
 end
 
 Then /^the user should have a reservation:$/ do |table|
-  user = model!("the user")
+  user = model!('the user')
   bookings = extract_reservation_options(table)
   listing = bookings.first[:listing]
   reservation = user.orders.last
@@ -263,27 +260,27 @@ Then /^the reservation total should show \$?([0-9\.,]+)$/ do |cost|
 end
 
 When /^I click to review the bookings?$/ do
-  click_button "Book"
+  click_button 'Book'
 end
 
 When /^I provide reservation credit card details$/ do
   mock_billing_gateway
   fill_in 'order_payment_attributes_credit_card_attributes_first_name', with: 'FirstName', visible: false
   fill_in 'order_payment_attributes_credit_card_attributes_last_name', with: 'LastName', visible: false
-  fill_in 'order_payment_attributes_credit_card_attributes_number', :with => "4242424242424242", visible: false
+  fill_in 'order_payment_attributes_credit_card_attributes_number', with: '4242424242424242', visible: false
   select '12', from: 'order_payment_attributes_credit_card_attributes_month', visible: false
   select '2020', from: 'order_payment_attributes_credit_card_attributes_year', visible: false
-  fill_in 'order_payment_attributes_credit_card_attributes_verification_value', :with => '411', visible: false
+  fill_in 'order_payment_attributes_credit_card_attributes_verification_value', with: '411', visible: false
   @credit_card_reservation = true
 end
 
 When /^I click to confirm the booking$/ do
-  click_button "Request Booking"
+  click_button 'Request Booking'
   page.should have_content('Your reservation has been made')
 end
 
 When /^I click and fail to confirm the booking$/ do
-  click_button "Request Booking"
+  click_button 'Request Booking'
   page.should_not have_content('Your reservation has been made')
 end
 
@@ -294,8 +291,8 @@ Then(/^I should see the booking confirmation screen for:$/) do |table|
   if reservation[:start_minute]
     # Hourly booking
     date = I18n.l(reservation[:date], format: :short)
-    start_time = reservation[:start_at].strftime("%-H:%M")
-    end_time   = reservation[:end_at].strftime("%-H:%M")
+    start_time = reservation[:start_at].strftime('%-H:%M')
+    end_time   = reservation[:end_at].strftime('%-H:%M')
     assert page.has_content?(start_time), "Expected to see: #{start_time}"
     assert page.has_content?(end_time), "Expected to see: #{end_time}"
     assert page.has_content?(date), "Expected to see: #{date}"
@@ -303,12 +300,11 @@ Then(/^I should see the booking confirmation screen for:$/) do |table|
     # Daily booking
     assert page.has_content?("#{reservation[:listing].name}")
   end
-
 end
 
 Then(/^I should be asked to sign up before making a booking$/) do
   within '.sign-up-modal' do
-    assert page.has_content?("Sign up")
+    assert page.has_content?('Sign up')
   end
 end
 
@@ -334,22 +330,22 @@ When /^#{capture_model} is free$/ do |transactable|
 end
 
 Then /^I should see the following reservations in order:$/ do |table|
-  found    = all(".dates").map { |b| b.text.gsub(/\n\s*/,' ').gsub("<br>",' ').strip }
+  found    = all('.dates').map { |b| b.text.gsub(/\n\s*/, ' ').gsub('<br>', ' ').strip }
   expected = table.raw.flatten
 
   found.should == expected
 end
 
 Then /^a confirm reservation email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "just booked your Desk!"
+  last_email_for(email).subject.should include 'just booked your Desk!'
 end
 
 Then /^a reservation awaiting confirmation email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "your booking is pending confirmation"
+  last_email_for(email).subject.should include 'your booking is pending confirmation'
 end
 
 Then /^a reservation confirmed email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "your booking has been confirmed"
+  last_email_for(email).subject.should include 'your booking has been confirmed'
 end
 
 Then /^a reservation cancelled email should be sent to (.*)$/ do |email|
@@ -357,7 +353,7 @@ Then /^a reservation cancelled email should be sent to (.*)$/ do |email|
 end
 
 Then /^a reservation email of cancellation by visitor should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "You just cancelled a booking"
+  last_email_for(email).subject.should include 'You just cancelled a booking'
 end
 
 Then /^a reservation cancelled by owner email should be sent to (.*)$/ do |email|
@@ -365,28 +361,28 @@ Then /^a reservation cancelled by owner email should be sent to (.*)$/ do |email
 end
 
 Then /^a reservation email of cancellation by owner should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should match "You just declined a booking"
+  last_email_for(email).subject.should match 'You just declined a booking'
 end
 
 Then /^a reservation email of rejection should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should match "Can we help"
+  last_email_for(email).subject.should match 'Can we help'
   last_email_for(email).html_part.body.should include 'We noticed that you declined'
   last_email_for(email).text_part.body.should include 'We noticed that you declined'
 end
 
 Then /^a reservation rejected email should be sent to (.*)$/ do |email|
-  last_email_for(email, with_subject: "Can we help").tap do |found|
+  last_email_for(email, with_subject: 'Can we help').tap do |found|
     found.html_part.body.should include 'has been declined by the host'
     found.text_part.body.should include 'has been declined by the host'
   end
 end
 
 Then /^a new reservation email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "just booked your Desk!"
+  last_email_for(email).subject.should include 'just booked your Desk!'
 end
 
 Then /^a reservation expiration email should be sent to (.*)$/ do |email|
-  last_email_for(email).subject.should include "expired"
+  last_email_for(email).subject.should include 'expired'
 end
 
 Then /^I should be redirected to bookings page$/ do
@@ -397,7 +393,7 @@ end
 Then /^The second booking should be highlighted$/ do
   page.should have_css(".reservation-list.just-booked #reservation_#{Reservation.last.id}")
   page.should have_css("#reservation_#{Reservation.last.id}")
-  page.should have_css(".order", :count => 2)
+  page.should have_css('.order', count: 2)
 end
 
 Then /^I should be offered calendar and manage options$/ do

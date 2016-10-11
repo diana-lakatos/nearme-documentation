@@ -23,14 +23,14 @@ class UserMessage < ActiveRecord::Base
   scope :for_thread, lambda { |thread_owner, thread_recipient, thread_context|
     where(thread_context_id: thread_context.id, thread_context_type: thread_context.class.to_s, thread_owner_id: thread_owner.id, thread_recipient_id: thread_recipient.id)
   }
-  scope :for_user, ->(user) {
+  scope :for_user, lambda { |user|
     where('"user_messages"."thread_owner_id" = ? OR "user_messages"."thread_recipient_id" = ?', user.id, user.id).order('user_messages.created_at asc')
   }
-  scope :by_created, -> {order('created_at desc')}
+  scope :by_created, -> { order('created_at desc') }
   scope :for_transactable, -> (transactable) do
     where('("user_messages"."thread_context_type" = ? AND "user_messages"."thread_context_id" IN (?)) OR
           ("user_messages"."thread_context_type" = ? AND "user_messages"."thread_context_id" = ?)',
-          "TransactableCollaborator", transactable.transactable_collaborators.pluck(:id), "Transactable", transactable.id)
+          'TransactableCollaborator', transactable.transactable_collaborators.pluck(:id), 'Transactable', transactable.id)
   end
 
   after_create :update_recipient_unread_message_counter, :mark_as_read_for_author

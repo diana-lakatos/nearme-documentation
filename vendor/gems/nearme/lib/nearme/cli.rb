@@ -7,7 +7,7 @@ module NearMe
   class CLI < Thor
     include Thor::Actions
 
-    desc "info", "currect opsworks stack info"
+    desc 'info', 'currect opsworks stack info'
     long_desc <<DESC
     get info about the current opsworks stacks
     for example:
@@ -18,11 +18,11 @@ module NearMe
 DESC
 
     def info
-      puts "Retrieving opsworks stack info..."
+      puts 'Retrieving opsworks stack info...'
       NearMe::Info.new(options).status
     end
 
-    desc "deploy", "deploy NearMe application to AWS OpsWorks"
+    desc 'deploy', 'deploy NearMe application to AWS OpsWorks'
     long_desc <<DESC
     deploy NearMe application to AWS OpsWorks
 
@@ -32,23 +32,23 @@ DESC
 
     will deploy branch my-little-staging to nm-staging AWS OpsWorks stack
 DESC
-    method_option "branch", required: true, type: :string,
-                  aliases: :r, desc: "git branch to deploy"
-    method_option "stack", required: true, type: :string,
-                  aliases: :e, desc: "AWS OpsWorks stack name"
-    method_option "environment", required: false, type: :string,
-                  aliases: :v, desc: "Rails environtment"
-    method_option "migrate", required: false, type: :boolean,
-                  default: true, desc: "Trigger migration"
-    method_option "comment", required: false, type: :string,
-                  desc: "deploy comment"
-    method_option "watch", required: false, type: :boolean,
-                  default: true, desc: "wait until deploy is finished and print report"
+    method_option 'branch', required: true, type: :string,
+                            aliases: :r, desc: 'git branch to deploy'
+    method_option 'stack', required: true, type: :string,
+                           aliases: :e, desc: 'AWS OpsWorks stack name'
+    method_option 'environment', required: false, type: :string,
+                                 aliases: :v, desc: 'Rails environtment'
+    method_option 'migrate', required: false, type: :boolean,
+                             default: true, desc: 'Trigger migration'
+    method_option 'comment', required: false, type: :string,
+                             desc: 'deploy comment'
+    method_option 'watch', required: false, type: :boolean,
+                           default: true, desc: 'wait until deploy is finished and print report'
 
     def deploy
       deployment_check
 
-      puts "Deploying..."
+      puts 'Deploying...'
       deploy = NearMe::Deploy.new(options)
       result = deploy.start!
       deployment_id = result.data[:deployment_id]
@@ -65,7 +65,7 @@ DESC
         `#{cmd}`
       end
       if options[:watch]
-        puts "Waiting until deploy is done."
+        puts 'Waiting until deploy is done.'
         result_hash = deploy.watch!(deployment_id)
         message = begin
                     if result_hash.any? { |arr| arr[:status] != 'successful' }
@@ -77,14 +77,14 @@ DESC
                         [icon, status, log_url].compact.join(' ')
                       end.join("\n")
                     else
-                      ":white_check_mark: All good."
+                      ':white_check_mark: All good.'
                     end
                   end
         notifier.ping(":airplane_arriving: Deploy finished: #{ENV['AWS_USER']} #{options[:branch]} -> #{options[:stack]} (id: #{deployment_id})\n#{message}", icon_emoji: ':passenger_ship:')
       end
     end
 
-    desc "capture", "capture db dump to S3"
+    desc 'capture', 'capture db dump to S3'
     long_desc <<DESC
     dump stack database to S3
     for example:
@@ -93,20 +93,20 @@ DESC
 
     will dump the nm-production stack db and store it in S3
 DESC
-    method_option "stack", required: true, type: :string,
-                  aliases: :e, default: 'nm-production', desc: "AWS OpsWorks stack name"
-    method_option "host", required: false, type: :string,
-                  aliases: :h, desc: "AWS OpsWorks host name"
-    method_option "environment", required: false, type: :string,
-                  aliases: :v, desc: "Rails environtment"
+    method_option 'stack', required: true, type: :string,
+                           aliases: :e, default: 'nm-production', desc: 'AWS OpsWorks stack name'
+    method_option 'host', required: false, type: :string,
+                          aliases: :h, desc: 'AWS OpsWorks host name'
+    method_option 'environment', required: false, type: :string,
+                                 aliases: :v, desc: 'Rails environtment'
 
     def capture
-      puts "Capturing db to S3..."
+      puts 'Capturing db to S3...'
       NearMe::Backup.new(options).capture!
-      puts "Capture done."
+      puts 'Capture done.'
     end
 
-    desc "restore", "restore db from S3"
+    desc 'restore', 'restore db from S3'
     long_desc <<DESC
     restore stack database from S3
     for example:
@@ -115,23 +115,22 @@ DESC
 
     will restore the qa-1 stack db from the captured dump in S3
 DESC
-    method_option "stack", required: true, type: :string,
-                  aliases: :e, desc: "AWS OpsWorks stack name"
-    method_option "host", required: false, type: :string,
-                  aliases: :h, desc: "AWS OpsWorks host name"
-    method_option "environment", required: false, type: :string,
-                  aliases: :v, desc: "Rails environtment"
+    method_option 'stack', required: true, type: :string,
+                           aliases: :e, desc: 'AWS OpsWorks stack name'
+    method_option 'host', required: false, type: :string,
+                          aliases: :h, desc: 'AWS OpsWorks host name'
+    method_option 'environment', required: false, type: :string,
+                                 aliases: :v, desc: 'Rails environtment'
 
     def restore
       deployment_check
 
-      puts "Restoring db from S3..."
+      puts 'Restoring db from S3...'
       NearMe::Backup.new(options).restore!
-      puts "Restore done."
+      puts 'Restore done.'
     end
 
     no_commands do
-
       def deployment_check
         stack = options[:stack]
         environment = options[:environment].to_s
@@ -156,12 +155,12 @@ DESC
 BANNER
 
         info = ''
-        info << "Branch: #{options[:branch]}\n" if options.has_key?('branch')
-        info << "Environment: #{options[:environment]}\n" if options.has_key?('environment')
-        info << "Migrate: #{options[:migrate]}\n" if options.has_key?('migrate')
-        info << "Watch: #{options[:watch]}\n" if options.has_key?('watch')
-        info << "Host: #{options[:host]}\n" if options.has_key?('host')
-        info << "Comment: #{options[:comment]}\n" if options.has_key?('comment')
+        info << "Branch: #{options[:branch]}\n" if options.key?('branch')
+        info << "Environment: #{options[:environment]}\n" if options.key?('environment')
+        info << "Migrate: #{options[:migrate]}\n" if options.key?('migrate')
+        info << "Watch: #{options[:watch]}\n" if options.key?('watch')
+        info << "Host: #{options[:host]}\n" if options.key?('host')
+        info << "Comment: #{options[:comment]}\n" if options.key?('comment')
 
         banner << info
 
