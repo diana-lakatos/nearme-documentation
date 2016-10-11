@@ -36,7 +36,7 @@ module Payable
 
     def authorize_payment
       if (payment && payment.valid? && payment.pending? && self.valid?)
-        if (skip_payment_authorization? || payment.authorize) && inactive?
+        if (skip_payment_authorization? || payment.authorize) && inactive? && (payment.credit_card.blank? || payment.credit_card.store!)
           activate! unless payment.express_checkout_payment?
         end
       elsif payment_subscription && payment_subscription.valid? && payment.blank? && self.valid? && payment_subscription.credit_card.store!
