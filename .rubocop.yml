@@ -1,4 +1,6 @@
 Documentation:
   Enabled: false
-Metrics/LineLength:
-  Enabled: false
+AllCops:
+  Exclude:
+    - db/schema.rb
+  RunRailsCops: true
