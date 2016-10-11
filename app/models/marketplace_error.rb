@@ -4,6 +4,11 @@ class MarketplaceError < ActiveRecord::Base
   acts_as_paranoid
 
   before_save :truncate_text_fields
+  before_save :set_message_digest
+  before_create :add_to_group
+  after_create :update_last_occurence
+
+  belongs_to :marketplace_error_group, inverse_of: :marketplace_errors, counter_cache: true
 
   protected
 
@@ -12,6 +17,30 @@ class MarketplaceError < ActiveRecord::Base
   def truncate_text_fields
     self.message = self.message.to_s[0...1000]
     self.stacktrace = self.stacktrace.to_s[0...1000]
+
+    true
+  end
+
+  def add_to_group
+    group = MarketplaceErrorGroup.where(error_type: self.error_type,
+                                        message_digest: self.message_digest).first_or_create! do |meg|
+      meg.message = message
+    end
+
+    self.marketplace_error_group = group
+
+    true
+  end
+
+  def update_last_occurence
+    self.marketplace_error_group.last_occurence = self.created_at
+    self.marketplace_error_group.save!
+
+    true
+  end
+
+  def set_message_digest
+    self.message_digest = Digest::SHA256.hexdigest(self.message.to_s)
 
     true
   end
