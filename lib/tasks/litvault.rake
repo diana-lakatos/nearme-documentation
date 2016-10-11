@@ -300,6 +300,10 @@ namespace :litvault do
     end
 
     def create_or_update_form_components_for_instance_profile_types
+      # cleanup - remove unused seller profile component
+      seller_profile_fc = FormComponent.where(id: 5401).first
+      seller_profile_fc.destroy! if seller_profile_fc
+
       puts "\nUpdating existing form components"
       instance_profile_types = YAML.load_file(File.join(@theme_path, 'form_components', 'instance_profile_types.yml'))
 
@@ -513,9 +517,10 @@ namespace :litvault do
 
     def expire_cache
       puts "\nClearing cache..."
-      CacheExpiration.send_expire_command 'InstanceView', instance_id: @instance.id
-      CacheExpiration.send_expire_command 'Translation', instance_id: @instance.id
-      CacheExpiration.send_expire_command 'CustomAttribute', instance_id: @instance.id
+
+      CacheExpiration.send_expire_command 'RebuildInstanceView', instance_id: @instance.id
+      CacheExpiration.send_expire_command 'RebuildTranslations', instance_id: @instance.id
+      CacheExpiration.send_expire_command 'RebuildCustomAttributes', instance_id: @instance.id
       Rails.cache.clear
     end
 
