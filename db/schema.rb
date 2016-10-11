@@ -1525,16 +1525,34 @@ ActiveRecord::Schema.define(version: 20161005125252) do
   add_index "mailer_unsubscriptions", ["user_id", "mailer"], name: "index_mailer_unsubscriptions_on_user_id_and_mailer", unique: true, using: :btree
   add_index "mailer_unsubscriptions", ["user_id"], name: "index_mailer_unsubscriptions_on_user_id", using: :btree
 
+  create_table "marketplace_error_groups", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.string   "error_type"
+    t.text     "message"
+    t.string   "message_digest"
+    t.datetime "last_occurence"
+    t.integer  "marketplace_errors_count", default: 0, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "marketplace_error_groups", ["instance_id", "error_type", "message_digest"], name: "meg_instance_type_digest", unique: true, using: :btree
+
   create_table "marketplace_errors", force: :cascade do |t|
     t.integer  "instance_id"
-    t.string   "error_type",  limit: 255
+    t.string   "error_type",                 limit: 255
     t.text     "message"
     t.text     "stacktrace"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "url"
+    t.string   "message_digest"
+    t.integer  "marketplace_error_group_id"
   end
+
+  add_index "marketplace_errors", ["instance_id", "error_type", "message_digest"], name: "errors_type_digest_instance", using: :btree
 
   create_table "merchant_account_owners", force: :cascade do |t|
     t.integer  "instance_id"

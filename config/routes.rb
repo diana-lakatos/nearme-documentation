@@ -1034,8 +1034,6 @@ DesksnearMe::Application.routes.draw do
       resources :tags, only: :index
     end
 
-    resources :marketplace_logger
-
     resources :reservations do
       resources :payment_notifications, controller: 'reservations/payment_notifications'
     end

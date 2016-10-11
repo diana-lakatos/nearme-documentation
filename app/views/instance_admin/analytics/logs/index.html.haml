@@ -23,8 +23,8 @@
               %td= log.error_type
               %td
                 %p= log.message
-              %td= log.count
-              %td= l(log.last_occurence, format: :long)
+              %td= log.marketplace_errors_count
+              %td= l(log.last_occurence.utc, format: :long)
               %td
                 = link_to t('instance_admin.analytics.logs.show'), instance_admin_analytics_log_path(log)
                 |
