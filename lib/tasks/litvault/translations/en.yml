@@ -18,8 +18,8 @@ en:
     user_profile:
       sections:
         default: 'Profile'
-        seller: 'Handling Lawyer Details'
-        buyer: 'Referring Lawyer Details'
+        seller: 'Referring Lawyer Details'
+        buyer: 'Handling Lawyer Details'
     orders:
       state:
         unconfirmed: "Cases Open"
