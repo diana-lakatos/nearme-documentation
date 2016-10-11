@@ -1166,7 +1166,7 @@ DesksnearMe::Application.routes.draw do
 
     resource :stripe_connect, only: [] do
       collection do
-        match '', via: %i(get post), as: :webhook, action: :webhook
+        match '', via: :post, as: :webhook, action: :webhook
       end
     end
 
