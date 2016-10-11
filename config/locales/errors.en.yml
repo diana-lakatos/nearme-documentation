@@ -69,6 +69,10 @@ en:
           attributes:
             name:
               taken: "already exists."
+        schedule_exception_rule:
+          attributes:
+            user_duration_range_end:
+              after: 'must be later than start date'
         instance_view:
           attributes:
             transactable_type:

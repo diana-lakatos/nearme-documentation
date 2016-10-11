@@ -19,6 +19,8 @@ class ScheduleExceptionRule < ActiveRecord::Base
   scope :at, -> (date) { where('duration_range_start <= ? AND duration_range_end >= ?', date, date) }
   scope :future, -> (date = Date.current) { where('duration_range_end >= ?', date) }
 
+  validate :end_time_after_start_time
+
   def parse_user_input
     self.duration_range_start = date_time_handler.convert_to_datetime(user_duration_range_start).try(:beginning_of_day) if user_duration_range_start.present?
     self.duration_range_end = date_time_handler.convert_to_datetime(user_duration_range_end).try(:end_of_day) if user_duration_range_end.present?
@@ -26,6 +28,14 @@ class ScheduleExceptionRule < ActiveRecord::Base
     self.user_duration_range_start = duration_range_start
     self.user_duration_range_end = duration_range_end
     true
+  end
+
+  def end_time_after_start_time
+    errors.add(:user_duration_range_end, :after) if end_time_before_start_time?
+  end
+
+  def end_time_before_start_time?
+    duration_range_end.present? && duration_range_start.present? && duration_range_start > duration_range_end
   end
 
   def to_liquid
