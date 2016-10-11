@@ -835,6 +835,7 @@ namespace :uot do
 
     def create_my_cases!
       load_template('dashboard/offers/offer')
+      load_template('dashboard/order_items/project_info')
       load_template('dashboard/company/offers/offer')
       load_template('dashboard/company/transactables/index', false)
       load_template('dashboard/company/transactables/listing')
