@@ -4,6 +4,7 @@
   - user: name
   - user: email
   - user: password
+  - user: avatar
 
   - user: bar_id
   - user: company_name
