@@ -25,6 +25,26 @@ namespace :fix do
     end
   end
 
+  task marketplace_errors: [:environment] do
+    Instance.find_each do |i|
+      i.set_context!
+      MarketplaceError.order('id ASC').find_each do |marketplace_error|
+        index += 1
+        puts "At error #{index}" if index % 10_000 == 0
+
+        group = MarketplaceErrorGroup.where(error_type: marketplace_error.error_type,
+                                            message_digest: marketplace_error.message_digest,
+                                            instance_id: marketplace_error.instance_id).first_or_create! do |meg|
+                                              meg.message = marketplace_error.message
+                                              meg.instance_id = marketplace_error.instance_id
+                                            end
+
+                                            group.marketplace_errors << marketplace_error
+                                            group.update_column(:last_occurence, marketplace_error.created_at)
+      end
+    end
+  end
+
   task payments_payer: [:environment] do
     Instance.find_each do |i|
       puts "Processing #{i.name}"
