@@ -129,6 +129,7 @@ namespace :litvault do
         cancellation_policy_penalty_hours: 1.5,
         service_fee_guest_percent: 0,
         service_fee_host_percent: 30,
+        allow_drafts: true
       )
 
       pricing = transactable_type.offer_action.pricings.first_or_initialize
@@ -198,6 +199,7 @@ namespace :litvault do
         cancellation_policy_penalty_hours: 1.5,
         service_fee_guest_percent: 0,
         service_fee_host_percent: 30,
+        allow_drafts: true
       )
 
       pricing = transactable_type.offer_action.pricings.first_or_initialize

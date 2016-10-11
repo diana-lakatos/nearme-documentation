@@ -8,15 +8,7 @@
   = dashboard_simple_form_for @user, url: transactable_type_space_wizard_list_url(@transactable_type), html: { class: "new_company", multipart: true, id: 'list-space-flow-form', :"data-includes-address-field" => true }, method: :post do |f|
 
     = render "errors", f: f
-
-    .row
-      .col-md-4.col-md-offset-8.hidden-sm
-        - if @transactable_type.require_transactable_during_onboarding?
-          %p.listing-draft-cta
-            %i<
-              = t('onboarding_wizard.finish_later')
-
-              = f.submit t('onboarding_wizard.save_draft.label'), :name => "save_as_draft", data: { disable_with: t('onboarding_wizard.save_draft.disable_with') }, :class => "saveasdraft btn-link"
+    = render "draft_button" if @transactable_type.require_transactable_during_onboarding?
 
 
     = f.simple_fields_for :seller_profile, @user.get_seller_profile do |seller_profile_form|

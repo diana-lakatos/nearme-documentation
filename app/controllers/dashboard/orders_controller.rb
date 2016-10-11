@@ -34,11 +34,15 @@ class Dashboard::OrdersController < Dashboard::BaseController
   end
 
   def new
-    @order = @transactable_pricing.order_class.new(user: current_user)
-    @order.add_line_item!(params)
-    build_payment_documents
-    @update_path = dashboard_order_path(@order)
-    render template: 'checkout/show'
+    @order = @transactable_pricing.order_class.where(user: current_user, transactable_id: @transactable.id).first_or_initialize
+    if @order.persisted?
+      redirect_to(action: 'edit', id: @order)
+    else
+      @order.add_line_item!(params)
+      build_payment_documents
+      @update_path = dashboard_order_path(@order)
+      render template: 'checkout/show'
+    end
   end
 
   def edit
@@ -50,8 +54,17 @@ class Dashboard::OrdersController < Dashboard::BaseController
     @order.checkout_update = true
     @order.save_draft = true if params[:save_draft]
     @order.cancel_draft = true if params[:cancel_draft]
-
-    if @order.update_attributes(order_params)
+    @order.attributes = order_params
+    if @order.inactive? && @order.save_draft && @order.save(validate: false)
+      @update_path = dashboard_order_path(@order)
+      respond_to do |format|
+        format.json { render json: nil, status: :ok}
+        format.html do
+          flash[:notice] = t('flash_messages.orders.draft_saved')
+          render template: 'checkout/show'
+        end
+      end
+    elsif @order.save
       if @order.payment && @order.payment.express_checkout_payment? && @order.payment.express_checkout_redirect_url
         redirect_to @order.payment.express_checkout_redirect_url
         return
