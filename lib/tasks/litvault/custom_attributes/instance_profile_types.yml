@@ -33,6 +33,7 @@
     attribute_type: array
     html_tag: 'select'
     valid_values: ['Award 1', 'Award 2', 'Award 3']
+    input_html_options_string: 'multiple=>multiple'
   number_of_cases_referred_in_the_past:
     label: 'Number of cases referred in the past'
     html_tag: 'textarea'
