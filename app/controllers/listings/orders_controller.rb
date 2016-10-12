@@ -1,6 +1,13 @@
 class Listings::OrdersController < ApplicationController
-  before_filter :find_transactable
-  before_filter :find_or_create_order
+  # if current_user is nil, most likely authenticity_token
+  # was not passed :)
+  before_action :authenticate_user!, unless: -> { current_instance.use_cart? }
+  before_action :restore_params, only: [:index]
+  before_action :find_transactable
+  before_action :find_or_create_order, except: :index
+
+  def index
+  end
 
   def create
     @order.try(:last_search_json=, cookies[:last_search])
@@ -20,7 +27,7 @@ class Listings::OrdersController < ApplicationController
   def store_order
     session[:stored_order_transactable_id] = @transactable.id
     session[:stored_order_trigger] ||= {}
-    session[:stored_order_trigger]["#{@transactable.id}"] = params[:commit]
+    session[:stored_order_trigger][@transactable.id.to_s] = params[:commit]
 
     # Marshals the booking request parameters into a better structured hash format for transmission and
     # future assignment to the Bookings JS controller.
@@ -52,9 +59,10 @@ class Listings::OrdersController < ApplicationController
         user: current_user,
         currency: @transactable.currency,
         reservation_type: @transactable.transactable_type.reservation_type,
-        company_id: @transactable.company_id).first_or_initialize(
-          user: current_user
-        )
+        company_id: @transactable.company_id
+      ).first_or_initialize(
+        user: current_user
+      )
     else
       @order = @transactable_pricing.order_class.new(
         currency: @transactable.currency,
@@ -63,6 +71,16 @@ class Listings::OrdersController < ApplicationController
     end
     @order.user.try(:skip_validations_for=, [:seller, :buyer, :default])
     @order
+  end
+
+  def authenticate_user!
+    session[:order_params] = params[:order] if params[:order].present?
+    super
+  end
+
+  def restore_params
+    params[:order] = session[:order_params]
+    session[:order_params] = nil
   end
 
   def order_params

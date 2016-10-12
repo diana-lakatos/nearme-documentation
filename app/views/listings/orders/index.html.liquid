@@ -1,0 +1,9 @@
+Please wait while we redirect you to your Order.
+
+<form id="order_form_{{ transactable.id }}" novalidate="novalidate" class="order" action="{{ 'listing_orders_path' | generate_url: transactable }}" accept-charset="UTF-8" method="post">
+  <input name="utf8" type="hidden" value="">
+  <input name="authenticity_token" value="{{ form_authenticity_token }}" data-authenticity-token type="hidden">
+  <input value="{{ transactable.id }}" type="hidden" name="order[transactable_id]" id="order_transactable_id">
+  <input value="{{ transactable.action_type.pricings.first.id }}" type="hidden" name="order[transactable_pricing_id]" id="order_transactable_pricing_id">
+  <input type="submit" class="button button-default" value="Continue to Checkout">
+</form>

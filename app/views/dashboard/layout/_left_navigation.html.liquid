@@ -111,7 +111,7 @@
 
           {% if orders_visible and orders_enabled or orders_received_show %}
             <li id="dashboard-nav-orders_header" class="{% if orders_selected or orders_received_selected %}selected{% endif %}">
-              <span>{{ 'dashboard.nav.orders_header' | t }} {{ current_user.reservations_count }}</span>
+              <span>{{ 'dashboard.nav.orders_header' | t }} <span class="count">{{ current_user.reservations_count }}</span></span>
 
               <ul>
                 {% if orders_visible and orders_enabled %}
