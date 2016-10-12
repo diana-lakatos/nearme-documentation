@@ -20,4 +20,9 @@ form.search {
             width: $button-mid-min-width;
         }
     }
+
+    &.user-message-search {
+      margin-bottom: 20px;
+    }
 }
+

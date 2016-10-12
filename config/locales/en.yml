@@ -2446,6 +2446,10 @@ en:
       one: "Inbox (1)"
       other: "Inbox (%{count})"
       zero: Inbox
+    search:
+      filter_by_transactable: 'Only for'
+      order_by: 'Sort By'
+      search: 'Apply'
     no_new_messages: "No new messages"
     no_archived_messages: 'No archived messages'
     send_a_message_to: "Send a message to %{recipient_name}"

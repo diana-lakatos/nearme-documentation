@@ -699,6 +699,10 @@ class Transactable < ActiveRecord::Base
     ::SellerAttachment::Fetcher.new(user).attachments_for(self)
   end
 
+  def message_context_object
+    self
+  end
+
   private
 
   def check_expenses

@@ -7,11 +7,11 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
   helper_method :user_messages_decorator
 
   def index
-    @threaded_user_messages = user_messages_decorator.inbox.fetch
+    @threaded_user_messages = order_messages(user_messages_decorator.inbox.fetch)
   end
 
   def archived
-    @threaded_user_messages = user_messages_decorator.archived.fetch
+    @threaded_user_messages = order_messages(user_messages_decorator.archived.fetch)
     render :index
   end
 
@@ -73,7 +73,15 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
   private
 
   def user_messages_decorator
-    @user_messages_decorator ||= UserMessagesDecorator.new(current_user.user_messages, current_user)
+    @user_messages_decorator ||= UserMessagesDecorator.new(user_messages_scope, current_user)
+  end
+
+  def user_messages_scope
+    initial_scope = current_user.user_messages
+    if (@transactable = Transactable.find_by(id: params[:transactable_id]))
+      initial_scope = initial_scope.for_transactable(@transactable)
+    end
+    initial_scope
   end
 
   def redirect_to_login
@@ -97,5 +105,10 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
     end
 
     render :missing_phone_number
+  end
+
+  def order_messages(collection)
+    collection.sort! { |a, b| [a.last.last.the_other_user(current_user).name, a.last.last.created_at.to_i * -1] <=> [b.last.last.the_other_user(current_user).name, b.last.last.created_at.to_i * -1] } if params[:order_way] == 'author_name'
+    collection
   end
 end
